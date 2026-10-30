@@ -48,7 +48,7 @@ func _run() -> void:
 	_check(not bool(BUYBACK.quote("nonexistent",1,"",inventory,records,physical,equipped,100).get("ok")), "forged item name rejected")
 	_check_price_bounds(records)
 	_check_wallet_revalidation(records)
-	var map_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/aden_field.json"))
+	var map_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/npc_service_field.json"))
 	_check(map_value is Dictionary, "Aden map parses")
 	if map_value is Dictionary:
 		var found: bool = false

@@ -43,7 +43,7 @@ func _run() -> void:
 	_check(not bool(CRAFT.quote("__forged__",1,inventory,9999,catalog,weights,0,100).get("ok")), "unlisted recipe rejected")
 	for amount: int in [-1,0,51,1000]:
 		_check(not bool(CRAFT.quote("hp_mid",amount,inventory,99999,catalog,weights,0,9999).get("ok")), "invalid count: " + str(amount))
-	var map_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/aden_field.json"))
+	var map_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/npc_service_field.json"))
 	_check(map_value is Dictionary, "Aden map preserved")
 	if map_value is Dictionary:
 		var artisan: bool = false

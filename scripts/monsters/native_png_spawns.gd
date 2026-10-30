@@ -8,7 +8,7 @@ const RULES_PATH := "res://data/monsters/renewed_map_spawn_rules.json"
 const PLAN_PATH := "res://data/maps/native_png_plan.json"
 const EXTRA_LAYOUT_PATH := "res://data/monsters/aden_faith_png_spawn_layout.json"
 const EXTRA_PLAN_PATH := "res://data/maps/aden_faith_png_plan.json"
-const EXTRA_MAP_IDS := ["aden_world","faith_01","faith_02","faith_03","faith_04"]
+const EXTRA_MAP_IDS := ["faith_01","faith_02","faith_03","faith_04"]
 const CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 const LOOT = preload("res://scripts/loot_drop.gd")
 

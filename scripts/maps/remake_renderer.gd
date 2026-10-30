@@ -4,9 +4,6 @@ class_name RemakeSourceRenderer
 ## Existing TWILIGHT art, no random pillars or inferred iron fences.
 const CHUNK_SIZE: int = 32
 const MAX_CHUNKS: int = 49
-const GIRAN_REVIEW = preload("res://scripts/maps/aden_giran_review/chunk.gd")
-const ADEN_WORLD_VISUALS = preload("res://scripts/maps/aden_world_visuals/chunk.gd")
-const PNG_PACK = preload("res://scripts/maps/aden_png_pack.gd")
 const PNG_CHUNK = preload("res://scripts/maps/aden_png_chunk.gd")
 const PNG_REVIEW_PACK = preload("res://scripts/maps/source_png_review_pack.gd")
 var png_pack: RefCounted
@@ -51,11 +48,6 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		png_pack = review
 		png_review_active = true
 		png_review_spawn = review.review_spawn
-	elif str(source.data.map_id) == "aden_world":
-		png_pack = PNG_PACK.new()
-		var pack_path: String = OS.get_environment("TWILIGHT_ADEN_PNG_PACK")
-		if pack_path.is_empty(): pack_path = "user://aden_png"
-		png_pack.configure(pack_path,source)
 	if png_pack != null: png_textures = png_pack.textures
 	var backdrop := Polygon2D.new()
 	backdrop.name = "MapVoid"
@@ -125,8 +117,6 @@ func refresh_visible() -> void:
 		var png_region: Dictionary = png_pack.region_for(key) if png_pack != null and not debug_collision else {}
 		if not png_region.is_empty(): chunk = PNG_CHUNK.new()
 		elif png_review_active and not debug_collision: chunk = Node2D.new()
-		elif ADEN_WORLD_VISUALS.applies(source,key): chunk = ADEN_WORLD_VISUALS.new()
-		elif GIRAN_REVIEW.applies(source,key): chunk = GIRAN_REVIEW.new()
 		else: chunk = RemakeChunk.new()
 		chunk.name = "SourceChunk_%d_%d" % [key.x,key.y]
 		chunk.y_sort_enabled = true

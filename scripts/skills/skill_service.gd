@@ -1,6 +1,8 @@
 extends RefCounted
 class_name TwilightOriginalSkillService
 
+const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
+var local_runtime = LOCAL.new()
 const Catalog = preload("res://scripts/skills/skill_catalog.gd")
 const Status = preload("res://scripts/skills/status_service.gd")
 const VFX = preload("res://scripts/skills/skill_vfx.gd")
@@ -38,8 +40,10 @@ func configure(owner: Node) -> void:
 	vfx.z_index = 12
 	owner.add_child(vfx)
 	summons.configure(self)
+	local_runtime.configure(self)
 
 func clear() -> void:
+	if local_runtime.world != null: local_runtime.suspend()
 	summons.clear()
 	status.clear()
 	for id: String in shields.keys(): remove_guardian_shield_buff(id)
@@ -51,6 +55,7 @@ func clear() -> void:
 
 func tick(delta: float) -> void:
 	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")))
+	local_runtime.tick(delta)
 	status.tick(delta)
 	summons.tick(delta)
 	combat_elapsed += delta
@@ -124,7 +129,7 @@ func refresh_buffs_after_learning(learned_id: String) -> void:
 		buff["speed"] = float(buff.skill_stats.get("speed", 1))
 
 func stat(key: String) -> float:
-	var result := catalog.stat(key)
+	var result: float = catalog.stat(key) + local_runtime.stat(key)
 	for buff: Dictionary in world.active_skill_buffs.values():
 		if buff.has("skill_id"): result += float(buff.get("skill_stats", {}).get(key, 0))
 	for entry: Dictionary in stacks.values(): result += float(entry.get("stats", {}).get(key, 0)) * float(entry.get("count", 0))
@@ -139,6 +144,7 @@ func equipment_modifier(skill: Dictionary, key: String) -> float:
 	return result
 
 func cost_reason(skill: Dictionary) -> String:
+	if bool(skill.get("runtime_blocked", false)): return Catalog.CURRENT.blocked_reason(skill)
 	if world.mp < int(skill.get("mp", 0)): return "MP 부족"
 	if world.hp <= int(skill.get("hp", 0)): return "HP 부족"
 	for item: String in skill.get("items", {}):
@@ -153,6 +159,10 @@ func spend(skill: Dictionary) -> bool:
 	return true
 
 func ready(skill: Dictionary, announce: bool = false) -> bool:
+	if bool(skill.get("runtime_blocked", false)):
+		if announce: world.hud.show_message(Catalog.CURRENT.blocked_reason(skill))
+		return false
+	if local_runtime.can_disable(skill): return true
 	var reason := ""
 	if not catalog.owned(skill): reason = "미습득 또는 직업 제한"
 	elif str(skill.activation) == "passive": reason = "패시브 기술"
@@ -169,6 +179,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 func cast(record: Dictionary) -> bool:
 	if not ready(record, true): return false
 	var skill := catalog.resolve(record)
+	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.cast(skill)
 	# Cast-speed options reduce cooldown through the world's shared policy;
 	# they must not also accelerate the contact/presentation timeline.
 	skill["cast_time"] = float(skill.get("cast_time", .42))
@@ -342,6 +353,11 @@ func hit_chance(skill: Dictionary, target: TwilightMonster) -> float:
 	if str(skill.get("attack_type", "")) == "magic":
 		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), maxi(0, target.magic_resistance + int(status.modifier(target, "mr"))))
 	var accuracy: int = world._ranged_accuracy_stat() if str(skill.get("attack_type", "")) == "ranged" else world._melee_accuracy_stat()
+	return physical_hit_chance(accuracy, target)
+
+func physical_hit_chance(accuracy: int, target: TwilightMonster) -> float:
+	# Normal attacks and physical skills read the same live, life-scoped defense.
+	# Keep the shared formula's AC normalization and nonnegative DG floor.
 	return world._physical_hit_chance(accuracy, target.armor_class + int(status.modifier(target, "ac")), int(status.modifier(target, "dg")))
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
@@ -379,6 +395,7 @@ func heal(skill: Dictionary, amount: int) -> void:
 func stack(id: String, stats: Dictionary, limit: int, duration: float) -> void:
 	var count := mini(limit, int(stacks.get(id, {}).get("count", 0)) + 1)
 	stacks[id] = {"count":count,"stats":stats,"remaining":duration}
+	vfx.emit_skill(id, "impact", world.player.global_position)
 
 func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = {}) -> void:
 	if event == "on_hit" and str(source_skill.get("mode", "")) != "summon": summons.notify_attack(target)
@@ -404,6 +421,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 					var count := (int(previous.get("count", 0)) if Status.same_life(previous, target) else 0) + 1
 					marks[key] = {"target":weakref(target),"life_id":target.life_id,"count":count,"remaining":10.0}
 					status.set_modifiers(target, "mark:" + id, 10.0, {"ac":int(abs(target.armor_class) * .05) * count,"dg":-3 * count})
+					vfx.emit_skill(id, "impact", target.combat_hit_position())
 					if count >= int(skill.get("stacks", 3)):
 						deal_damage(skill, target)
 						var control := skill.duplicate(true)
@@ -429,10 +447,14 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 			"proc":
 				if event == "on_skill" and str(source_skill.get("school", "")) != str(skill.get("trigger_school", "rune")): continue
 				if skill.has("heal"): heal(skill, int(skill.heal))
-				if skill.has("mana"): world.mp = mini(world._effective_max_mp(), world.mp + int(skill.mana))
+				if skill.has("mana"):
+					world.mp = mini(world._effective_max_mp(), world.mp + int(skill.mana))
+					vfx.emit_skill(id, "impact", world.player.global_position)
 				if skill.has("power") and event == "on_hit" and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
 		world.skill_cooldowns[id] = float(skill.get("proc_cooldown", 0))
-	if event == "on_hit" and is_instance_valid(target) and not target.dead: trigger_equipment(target)
+	if event == "on_hit" and is_instance_valid(target) and not target.dead:
+		local_runtime.on_hit(target,source_skill)
+		trigger_equipment(target)
 	proc_depth -= 1
 
 func trigger_equipment(target: TwilightMonster) -> void:
@@ -530,6 +552,7 @@ static func roll_counter(random: RandomNumberGenerator, chance: float) -> bool:
 func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 	if not ready(skill): return false
 	skill = catalog.resolve(skill)
+	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.auto_wants(skill)
 	match str(skill.mode):
 		"turn_undead": return turn_undead_chance(skill, target) > 0
 		"heal": return float(world.hp) / float(world._effective_max_hp()) <= float(skill.get("auto_hp_threshold", .65))
@@ -549,6 +572,7 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 	combat_elapsed = 0
 	summons.notify_threat(attacker)
 	last_evaded = false
+	amount = local_runtime.incoming(attacker,kind,amount)
 	if stat("invulnerable") > 0: return 0
 	if counter(attacker, kind, amount):
 		last_evaded = true
@@ -585,7 +609,7 @@ func remove_guardian_shield_buff(id: String) -> void:
 	vfx.remove_persistent(id)
 
 func export_state() -> Dictionary:
-	return {"toggles":toggles.duplicate(true),"shields":shields.duplicate(true),"summon":summons.export_state()}
+	return {"local_design":local_runtime.export_state(),"toggles":toggles.duplicate(true),"shields":shields.duplicate(true),"summon":summons.export_state()}
 
 func import_state(data: Dictionary) -> void:
 	clear()
@@ -623,3 +647,4 @@ func import_state(data: Dictionary) -> void:
 		var skill := catalog.resolve(base)
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		vfx.maintain(str(skill.id), world.player, float(buff.get("remaining", 0)))
+	local_runtime.restore(data.get("local_design",{}))

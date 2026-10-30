@@ -1,0 +1,1014 @@
+{
+  "schema_version": 2,
+  "as_of": "2026-10-29",
+  "requested_skill_count": 12,
+  "records": [
+    {
+      "name": "슈팅 스타",
+      "historical_aliases": [],
+      "class": "요정",
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2026-06-29",
+        "accessed_date": "2026-10-29",
+        "observed_via": "official webpage rendered browser DOM",
+        "current_name": "슈팅 스타",
+        "learning_level": 10,
+        "mp_cost": 26,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "target": "10칸 내 NPC",
+        "cooldown_seconds": null,
+        "not_automatically_backported": true,
+        "dash_is_not_numeric_zero": true,
+        "grade": "일반",
+        "grade_source": "https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR",
+        "grade_status": "POST_CUTOFF_ONLY",
+        "mode": "toggle_proc",
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "hp_display": "-",
+        "mp_display": "26",
+        "duration_status": "DASH_NOT_ZERO",
+        "cost_application_phase": "UNCONFIRMED; MP26 is guide field, not independently confirmed toggle-vs-proc charge",
+        "mode_source": "https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR",
+        "mode_date": "2026-06-24",
+        "cooldown_group": "general_attack_magic"
+      },
+      "historical": {
+        "source_url": "https://about.ncsoft.com/news/article/news-lineage-m-update-230322",
+        "published_date": "2023-03-22",
+        "existence_verified": true,
+        "effect_summary": "몬스터 적중 시 화살이 두 갈래로 분열하여 여러 적을 타격한다.",
+        "grade": null,
+        "learning_level": null,
+        "mp_cost": null,
+        "hp_cost": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "mode": null,
+        "numeric_status": "UNKNOWN_NOT_ZERO",
+        "reason": "기준일 전 공식 보도자료는 효과 개요를 설명하지만 요청된 운용 수치를 게시하지 않음"
+      },
+      "implementation_gate": "Use confirmed current fields only. Unknown damage/heal/proc/cooldown MUST NOT receive invented original values; registration and visual association do not imply functional completion."
+    },
+    {
+      "name": "아쿠아 애로우",
+      "historical_aliases": [],
+      "class": "요정",
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2026-06-29",
+        "accessed_date": "2026-10-29",
+        "observed_via": "official webpage rendered browser DOM",
+        "current_name": "아쿠아 애로우",
+        "learning_level": 80,
+        "mp_cost": 5,
+        "hp_cost": null,
+        "material": "명예 코인 1개",
+        "duration": "순간",
+        "target": "12칸 내 아군 PC",
+        "cooldown_seconds": null,
+        "not_automatically_backported": true,
+        "dash_is_not_numeric_zero": true,
+        "grade": null,
+        "grade_source": null,
+        "grade_status": "UNKNOWN",
+        "mode": null,
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "hp_display": "-",
+        "mp_display": "5",
+        "duration_status": "PUBLISHED",
+        "cost_application_phase": null,
+        "mode_status": "healing arrow role explicit; toggle vs dedicated cast not established from retrieved current official text"
+      },
+      "historical": {
+        "source_url": "https://about.ncsoft.com/news/article/news-lineage-m-update-230322",
+        "published_date": "2023-03-22",
+        "existence_verified": true,
+        "effect_summary": "화살을 발사하여 대상을 치유한다.",
+        "grade": null,
+        "learning_level": null,
+        "mp_cost": null,
+        "hp_cost": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "mode": null,
+        "numeric_status": "UNKNOWN_NOT_ZERO",
+        "reason": "기준일 전 공식 보도자료는 효과 개요를 설명하지만 요청된 운용 수치를 게시하지 않음"
+      },
+      "implementation_gate": "Use confirmed current fields only. Unknown damage/heal/proc/cooldown MUST NOT receive invented original values; registration and visual association do not imply functional completion."
+    },
+    {
+      "name": "엘리멘탈 가디언",
+      "historical_aliases": [],
+      "class": "요정",
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2026-06-29",
+        "accessed_date": "2026-10-29",
+        "observed_via": "official webpage rendered browser DOM",
+        "current_name": "엘리멘탈 가디언",
+        "learning_level": 80,
+        "mp_cost": 600,
+        "hp_cost": null,
+        "material": "정령옥 100개",
+        "duration": 3600,
+        "target": "술자",
+        "cooldown_seconds": null,
+        "not_automatically_backported": true,
+        "dash_is_not_numeric_zero": true,
+        "grade": "신화",
+        "grade_source": "https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR",
+        "grade_status": "POST_CUTOFF_ONLY",
+        "mode": "summon",
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "hp_display": "-",
+        "mp_display": "600",
+        "duration_status": "PUBLISHED",
+        "cost_application_phase": "summon_cast",
+        "mode_status": "guide explicitly describes summoned guardian"
+      },
+      "historical": {
+        "source_url": "https://about.ncsoft.com/news/article/news-lineage-m-update-230322",
+        "published_date": "2023-03-22",
+        "existence_verified": true,
+        "effect_summary": "선택한 정령 계열의 마법을 자동 사용하며 몬스터 대상 광역 공격을 한다.",
+        "grade": null,
+        "learning_level": null,
+        "mp_cost": null,
+        "hp_cost": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "mode": null,
+        "numeric_status": "UNKNOWN_NOT_ZERO",
+        "reason": "기준일 전 공식 보도자료는 효과 개요를 설명하지만 요청된 운용 수치를 게시하지 않음"
+      },
+      "implementation_gate": "Use confirmed current fields only. Unknown damage/heal/proc/cooldown MUST NOT receive invented original values; registration and visual association do not imply functional completion."
+    },
+    {
+      "name": "엘리멘탈 웨폰",
+      "historical_aliases": [
+        "엘리멘탈 애로우"
+      ],
+      "class": "요정",
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2026-06-29",
+        "accessed_date": "2026-10-29",
+        "observed_via": "official webpage rendered browser DOM",
+        "current_name": "엘리멘탈 웨폰",
+        "learning_level": 80,
+        "mp_cost": null,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "target": "술자",
+        "cooldown_seconds": null,
+        "not_automatically_backported": true,
+        "dash_is_not_numeric_zero": true,
+        "mode": "passive",
+        "grade": "신화",
+        "grade_source": "https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR",
+        "grade_status": "POST_CUTOFF_ONLY",
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "hp_display": "-",
+        "mp_display": "패시브",
+        "duration_status": "DASH_NOT_ZERO",
+        "cost_application_phase": null,
+        "aliases": [
+          "엘리멘탈 애로우"
+        ],
+        "mode_source": "https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR",
+        "mode_date": "2026-06-24"
+      },
+      "historical": {
+        "source_url": "https://about.ncsoft.com/news/article/news-lineage-m-update-230315",
+        "published_date": "2023-03-15",
+        "existence_verified": true,
+        "effect_summary": "속성 화살을 소환하여 원거리 방어 능력을 무력화한다.",
+        "grade": null,
+        "learning_level": null,
+        "mp_cost": null,
+        "hp_cost": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "mode": null,
+        "numeric_status": "UNKNOWN_NOT_ZERO",
+        "reason": "기준일 전 공식 보도자료는 효과 개요를 설명하지만 요청된 운용 수치를 게시하지 않음"
+      },
+      "implementation_gate": "Use confirmed current fields only. Unknown damage/heal/proc/cooldown MUST NOT receive invented original values; registration and visual association do not imply functional completion."
+    },
+    {
+      "name": "엘븐 윙 슈즈",
+      "historical_aliases": [],
+      "class": "요정",
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2026-06-29",
+        "accessed_date": "2026-10-29",
+        "observed_via": "official webpage rendered browser DOM",
+        "current_name": "엘븐 윙 슈즈",
+        "learning_level": 80,
+        "mp_cost": null,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "target": "술자",
+        "cooldown_seconds": null,
+        "not_automatically_backported": true,
+        "dash_is_not_numeric_zero": true,
+        "mode": "passive",
+        "grade": "전설",
+        "grade_source": "https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR",
+        "grade_status": "POST_CUTOFF_ONLY",
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "hp_display": "-",
+        "mp_display": "패시브",
+        "duration_status": "DASH_NOT_ZERO",
+        "cost_application_phase": null,
+        "recent_patch_url": "https://lounge.plaync.com/feed/74273?country=KR&locale=ko-KR",
+        "recent_patch_date": "2026-07-01",
+        "recent_patch_note": "ranged PVP continuous dash prevention added; dash/wing-shield mechanics described in 2026-06-24 update",
+        "recent_patch_date_status": "verified official full page"
+      },
+      "historical": {
+        "source_url": "https://about.ncsoft.com/news/article/news-lineage-m-update-230315",
+        "published_date": "2023-03-15",
+        "existence_verified": true,
+        "effect_summary": "마법의 신발을 통해 고유 비전 스킬을 활성화한다.",
+        "grade": null,
+        "learning_level": null,
+        "mp_cost": null,
+        "hp_cost": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "mode": null,
+        "numeric_status": "UNKNOWN_NOT_ZERO",
+        "reason": "기준일 전 공식 보도자료는 효과 개요를 설명하지만 요청된 운용 수치를 게시하지 않음"
+      },
+      "implementation_gate": "Use confirmed current fields only. Unknown damage/heal/proc/cooldown MUST NOT receive invented original values; registration and visual association do not imply functional completion."
+    },
+    {
+      "name": "아쿠아 프리즌",
+      "historical_aliases": [],
+      "class": "요정",
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2026-06-29",
+        "accessed_date": "2026-10-29",
+        "observed_via": "official webpage rendered browser DOM",
+        "current_name": "아쿠아 프리즌",
+        "learning_level": 10,
+        "mp_cost": null,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "target": "12칸 내 PC 또는 NPC 1인",
+        "cooldown_seconds": null,
+        "not_automatically_backported": true,
+        "dash_is_not_numeric_zero": true,
+        "grade": null,
+        "grade_source": null,
+        "grade_status": "UNKNOWN",
+        "mode": "on_attack_proc",
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "hp_display": "-",
+        "mp_display": "-",
+        "duration_status": "DASH_NOT_ZERO",
+        "cost_application_phase": null,
+        "mode_status": "trigger explicitly described by current guide; exact probability unpublished"
+      },
+      "historical": {
+        "source_url": "https://about.ncsoft.com/news/article/news-lineage-m-update-230315",
+        "published_date": "2023-03-15",
+        "existence_verified": true,
+        "effect_summary": "대상을 물 감옥에 가두고 행동을 제약하며 회피 능력을 낮춘다.",
+        "grade": null,
+        "learning_level": null,
+        "mp_cost": null,
+        "hp_cost": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "mode": null,
+        "numeric_status": "UNKNOWN_NOT_ZERO",
+        "reason": "기준일 전 공식 보도자료는 효과 개요를 설명하지만 요청된 운용 수치를 게시하지 않음"
+      },
+      "implementation_gate": "Use confirmed current fields only. Unknown damage/heal/proc/cooldown MUST NOT receive invented original values; registration and visual association do not imply functional completion."
+    },
+    {
+      "name": "아쿠아 프리즌(스피릿)",
+      "historical_aliases": [],
+      "class": "요정",
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2026-06-29",
+        "accessed_date": "2026-10-29",
+        "observed_via": "official webpage rendered browser DOM",
+        "current_name": "아쿠아 프리즌(스피릿)",
+        "learning_level": 80,
+        "mp_cost": null,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "target": "술자",
+        "cooldown_seconds": null,
+        "not_automatically_backported": true,
+        "dash_is_not_numeric_zero": true,
+        "grade": "전설",
+        "grade_source": "https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR",
+        "grade_status": "POST_CUTOFF_ONLY",
+        "mode": "upgrade_passive",
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "hp_display": "-",
+        "mp_display": "-",
+        "duration_status": "DASH_NOT_ZERO",
+        "cost_application_phase": null,
+        "mode_status": "current guide says improves base; passive classification structural; do not create separate damaging cast",
+        "requires_skill": "아쿠아 프리즌"
+      },
+      "historical": {
+        "source_url": "https://about.ncsoft.com/news/article/news-lineage-m-update-230315",
+        "published_date": "2023-03-15",
+        "existence_verified": true,
+        "effect_summary": "물 감옥 효과를 강화하고 아쿠아 샤크를 소환해 대상 HP를 흡수한다.",
+        "grade": null,
+        "learning_level": null,
+        "mp_cost": null,
+        "hp_cost": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "damage_or_healing_amount": null,
+        "trigger_probability": null,
+        "mode": null,
+        "numeric_status": "UNKNOWN_NOT_ZERO",
+        "reason": "기준일 전 공식 보도자료는 효과 개요를 설명하지만 요청된 운용 수치를 게시하지 않음"
+      },
+      "implementation_gate": "Use confirmed current fields only. Unknown damage/heal/proc/cooldown MUST NOT receive invented original values; registration and visual association do not imply functional completion."
+    },
+    {
+      "name": "리포스트",
+      "class": "기사",
+      "grade": "전설",
+      "current_official": {
+        "minimum_level": 80,
+        "mp": null,
+        "hp": null,
+        "materials": null,
+        "duration_seconds": null,
+        "activation": "passive",
+        "mode": "counter_proc",
+        "weapon_requirements": [
+          "양손검"
+        ],
+        "target": "self",
+        "raw_values": {
+          "mp": "패시브",
+          "hp": "-",
+          "materials": "-",
+          "duration": "-"
+        },
+        "effect_summary": "확률 방어 후 응수 활성화; 근거리 피해에 비례한 피해 경감; 응수 공격 적중 보장; 돌진 방어 시 경직 부여.",
+        "source_id": "current_official_knight",
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "cooldown_seconds": null,
+        "proc_probability": null,
+        "damage_coefficients": null,
+        "numeric_null_note": "Hyphen preserved as null; not assumed numeric zero. Cooldown, proc probability and damage coefficients not published in guide table."
+      },
+      "historical": {
+        "name": "리포스트",
+        "class": "기사",
+        "grade": "전설",
+        "minimum_level": null,
+        "mp": null,
+        "hp": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "activation": null,
+        "mode": null,
+        "official_effect_summary": "상대의 공격과 돌진을 튕겨낸 뒤 응수하는 반격 계열 기술.",
+        "effect_stages": [
+          "deflect",
+          "counter_hit"
+        ],
+        "candidate_runtime_mode": "counter",
+        "candidate_runtime_mode_status": "structural inference, not official activation classification",
+        "evidence_ids": [
+          "nc_20240925"
+        ],
+        "missing_fields": [
+          "minimum_level",
+          "mp",
+          "hp",
+          "cooldown_seconds",
+          "duration_seconds",
+          "activation",
+          "mode"
+        ],
+        "notes": "공식 보도자료는 전설 등급과 반격 역할만 명시. 패시브/액티브 및 정확 확률·피해배율을 만들지 말 것.",
+        "historical_evidence_ids": [
+          "nc_20240925"
+        ]
+      },
+      "implementation_gate": "Use confirmed official definitions only; unknown cooldown, probability and damage must not be filled with claimed original values."
+    },
+    {
+      "name": "프라이드",
+      "class": "기사",
+      "grade": "영웅",
+      "current_official": {
+        "minimum_level": 80,
+        "mp": 30,
+        "hp": null,
+        "materials": [
+          {
+            "name": "명예 코인",
+            "count": 8
+          }
+        ],
+        "duration_seconds": 7,
+        "activation": "mixed_active_passive",
+        "mode": "self_speed_buff_with_passive_stats",
+        "weapon_requirements": null,
+        "target": "self",
+        "raw_values": {
+          "hp": "-"
+        },
+        "effect_summary": "사용 시 이동속도 상승; 패시브 부분은 양손검 공격속도 증가와 상대 근거리 회피 무시.",
+        "source_id": "current_official_knight",
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "cooldown_seconds": null,
+        "proc_probability": null,
+        "damage_coefficients": null,
+        "numeric_null_note": "Hyphen preserved as null; not assumed numeric zero. Cooldown, proc probability and damage coefficients not published in guide table."
+      },
+      "historical": {
+        "name": "프라이드",
+        "class": "기사",
+        "grade": "영웅",
+        "minimum_level": null,
+        "mp": null,
+        "hp": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "activation": null,
+        "mode": null,
+        "official_effect_summary": "양손검 공격 속도와 기동력을 강화하는 기사 기술.",
+        "effect_stages": [
+          "self_enhancement",
+          "movement"
+        ],
+        "candidate_runtime_mode": null,
+        "candidate_runtime_mode_status": "mixed active/passive classification not established in pre-cutoff official material",
+        "evidence_ids": [
+          "nc_20240925"
+        ],
+        "missing_fields": [
+          "minimum_level",
+          "mp",
+          "hp",
+          "cooldown_seconds",
+          "duration_seconds",
+          "activation",
+          "mode"
+        ],
+        "notes": "현재 비공식 페이지는 액티브/패시브 혼합 설명을 보이나 기준일 공식 근거가 없어 수입하지 않음.",
+        "historical_evidence_ids": [
+          "nc_20240925"
+        ]
+      },
+      "implementation_gate": "Use confirmed official definitions only; unknown cooldown, probability and damage must not be filled with claimed original values."
+    },
+    {
+      "name": "디그니티",
+      "class": "군주",
+      "grade": "일반",
+      "current_official": {
+        "minimum_level": 40,
+        "mp": null,
+        "hp": null,
+        "materials": null,
+        "duration_seconds": 1200,
+        "activation": "toggle",
+        "mode": "toggle_proc",
+        "weapon_requirements": [
+          "근거리 무기"
+        ],
+        "target": "self; ON affects NPC around selected target within 2 cells",
+        "raw_values": {
+          "mp": "-",
+          "hp": "-",
+          "materials": "-",
+          "duration": "20분"
+        },
+        "effect_summary": "공격 시 확률 더블 스탭; OFF는 단일 대상, ON은 선택 대상과 주변 NPC에 범위 적용.",
+        "source_id": "current_official_monarch",
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EA%B5%B0%EC%A3%BC%20%EB%A7%88%EB%B2%95",
+        "cooldown_seconds": null,
+        "proc_probability": null,
+        "damage_coefficients": null,
+        "numeric_null_note": "Hyphen preserved as null; not assumed numeric zero. Cooldown, proc probability and damage coefficients not published in guide table."
+      },
+      "historical": {
+        "name": "디그니티",
+        "class": "군주",
+        "grade": "일반",
+        "minimum_level": null,
+        "mp": null,
+        "hp": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "activation": null,
+        "mode": null,
+        "official_effect_summary": "공격 중 확률적으로 더블 스탭이 발생하며 NPC에는 범위 피해가 적용된다. 2024년 케어에서 광역 피해 강화와 무기 착용 제한 삭제가 안내되었다.",
+        "effect_stages": [
+          "on_attack_proc",
+          "npc_area_hit"
+        ],
+        "candidate_runtime_mode": "proc",
+        "candidate_runtime_mode_status": "role supported; toggle/passive activation not established",
+        "evidence_ids": [
+          "nc_20230920",
+          "nc_20241127",
+          "patch_20241204"
+        ],
+        "missing_fields": [
+          "minimum_level",
+          "mp",
+          "hp",
+          "cooldown_seconds",
+          "duration_seconds",
+          "activation",
+          "mode",
+          "proc_probability",
+          "damage"
+        ],
+        "notes": "리니지2M 동명 신화 버프와 혼동 금지. 단순 버튼형 광역 공격으로 확정하지 말 것.",
+        "historical_evidence_ids": [
+          "nc_20230920",
+          "nc_20241127",
+          "patch_20241204"
+        ]
+      },
+      "implementation_gate": "Use confirmed official definitions only; unknown cooldown, probability and damage must not be filled with claimed original values."
+    },
+    {
+      "name": "블러디 크로우",
+      "class": "다크엘프",
+      "grade": "일반",
+      "current_official": {
+        "minimum_level": 40,
+        "mp": null,
+        "hp": null,
+        "materials": null,
+        "duration_seconds": null,
+        "activation": "toggle",
+        "mode": "toggle_proc",
+        "weapon_requirements": [
+          "크로우",
+          "이도류"
+        ],
+        "target": "NPC in area",
+        "on_proc_materials": [
+          {
+            "name": "흑요석",
+            "count": 1
+          }
+        ],
+        "raw_values": {
+          "mp": "-",
+          "hp": "-",
+          "materials": "-",
+          "duration": "-"
+        },
+        "effect_summary": "공격 시 확률 발톱 광역 타격; 주대상 HP 흡수; 발동마다 흑요석 소모. 토글 분류는 2024-12-04 공식 패치에서 별도 확인.",
+        "source_id": "current_official_darkelf",
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%8B%A4%ED%81%AC%EC%97%98%ED%94%84%20%EB%A7%88%EB%B2%95",
+        "cooldown_seconds": null,
+        "proc_probability": null,
+        "damage_coefficients": null,
+        "numeric_null_note": "Hyphen preserved as null; not assumed numeric zero. Cooldown, proc probability and damage coefficients not published in guide table."
+      },
+      "historical": {
+        "name": "블러디 크로우",
+        "class": "다크엘프",
+        "grade": "일반",
+        "previous_names": [
+          "파이널 번"
+        ],
+        "minimum_level": null,
+        "mp": null,
+        "hp": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "activation": "toggle",
+        "mode": "toggle_proc",
+        "official_effect_summary": "켜기/끄기형 범위 공격 기술. 공격 중 확률적으로 광역 타격이 발생하고 발동할 때 HP를 흡수한다. 발톱 소환 형태로 개편되었다.",
+        "effect_stages": [
+          "on_attack_proc",
+          "claw_area_hit",
+          "life_drain"
+        ],
+        "candidate_runtime_mode": "toggle_proc",
+        "candidate_runtime_mode_status": "official patch explicitly establishes toggle area proc",
+        "evidence_ids": [
+          "nc_20241127",
+          "patch_20241204"
+        ],
+        "missing_fields": [
+          "minimum_level",
+          "mp",
+          "hp",
+          "cooldown_seconds",
+          "duration_seconds",
+          "proc_probability",
+          "damage",
+          "drain_amount"
+        ],
+        "notes": "원작 공식수치가 없는 곳에 소스3 FINAL_BURN의 비용/피해/체력소모를 대신 넣지 말 것.",
+        "historical_evidence_ids": [
+          "nc_20241127",
+          "patch_20241204"
+        ]
+      },
+      "implementation_gate": "Use confirmed official definitions only; unknown cooldown, probability and damage must not be filled with claimed original values."
+    },
+    {
+      "name": "버서커스",
+      "class": "마법사",
+      "grade": "일반",
+      "current_official": {
+        "minimum_level": 42,
+        "mp": 40,
+        "hp": null,
+        "materials": [
+          {
+            "name": "명예 코인",
+            "count": 5
+          }
+        ],
+        "duration_seconds": 1800,
+        "activation": "active",
+        "mode": "self_melee_buff",
+        "weapon_requirements": null,
+        "target": "self",
+        "raw_values": {
+          "hp": "-",
+          "duration": "30분"
+        },
+        "effect_summary": "근거리 명중·피해, INT 비례 근거리 피해, 일반공격 사거리 강화; 매너모드 자동 NPC 타겟에 배타적 타격 권한; AC 상승의 대가.",
+        "source_id": "current_official_wizard",
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "cooldown_seconds": null,
+        "proc_probability": null,
+        "damage_coefficients": null,
+        "numeric_null_note": "Hyphen preserved as null; not assumed numeric zero. Cooldown, proc probability and damage coefficients not published in guide table."
+      },
+      "historical": {
+        "name": "버서커스",
+        "class": "마법사",
+        "grade": "일반",
+        "minimum_level": null,
+        "mp": null,
+        "hp": null,
+        "cooldown_seconds": null,
+        "duration_seconds": null,
+        "activation": null,
+        "mode": null,
+        "official_effect_summary": "2024년 케어에서 적중 시 배타적 타격 권한을 얻고 근거리 피해가 추가되는 것으로 안내되었다.",
+        "effect_stages": [
+          "on_hit",
+          "melee_damage_enhancement",
+          "exclusive_target_claim"
+        ],
+        "candidate_runtime_mode": null,
+        "candidate_runtime_mode_status": "official patch delta does not establish complete base activation or damage mechanism",
+        "evidence_ids": [
+          "nc_20241127",
+          "patch_20241204"
+        ],
+        "missing_fields": [
+          "minimum_level",
+          "mp",
+          "hp",
+          "cooldown_seconds",
+          "duration_seconds",
+          "activation",
+          "mode",
+          "damage"
+        ],
+        "notes": "구형 PC 버서커스 버프와 동일시하거나, 변경 공지 일부만으로 직접 공격/버프 전체 명세를 만들어서는 안 됨.",
+        "historical_evidence_ids": [
+          "nc_20241127",
+          "patch_20241204"
+        ]
+      },
+      "implementation_gate": "Use confirmed official definitions only; unknown cooldown, probability and damage must not be filled with claimed original values."
+    },
+    {
+      "name": "프로즌 클라우드",
+      "class": "마법사",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2024-12-30",
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "프로즌 클라우드",
+        "learning_level": 12,
+        "mp_cost": 20,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "active",
+        "activation": "active",
+        "effect_summary": "냉기로 지정 대상 주변을 타격한다.",
+        "numeric_status": "Published level and MP only; dash is unknown, not zero. Damage/cooldown are not published here."
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "published_date": "2024-12-30",
+        "existence_verified": true,
+        "effect_summary": "냉기로 지정 대상 주변을 타격한다."
+      },
+      "implementation_gate": "TWILIGHT adaptation: player-only healing; no original formulas or PvP parity claimed."
+    },
+    {
+      "name": "파이어 볼",
+      "class": "마법사",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2024-12-30",
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "파이어 볼",
+        "learning_level": 24,
+        "mp_cost": 20,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "active",
+        "activation": "active",
+        "effect_summary": "화염구로 지정 대상 주변을 타격한다.",
+        "numeric_status": "Published level and MP only; dash is unknown, not zero. Damage/cooldown are not published here."
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "published_date": "2024-12-30",
+        "existence_verified": true,
+        "effect_summary": "화염구로 지정 대상 주변을 타격한다."
+      },
+      "implementation_gate": "TWILIGHT adaptation: player-only healing; no original formulas or PvP parity claimed."
+    },
+    {
+      "name": "콘 오브 콜드",
+      "class": "마법사",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2024-12-30",
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "콘 오브 콜드",
+        "learning_level": 30,
+        "mp_cost": 18,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "active",
+        "activation": "active",
+        "effect_summary": "전방의 적을 냉기로 타격한다.",
+        "numeric_status": "Published level and MP only; dash is unknown, not zero. Damage/cooldown are not published here."
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "published_date": "2024-12-30",
+        "existence_verified": true,
+        "effect_summary": "전방의 적을 냉기로 타격한다."
+      },
+      "implementation_gate": "TWILIGHT adaptation: player-only healing; no original formulas or PvP parity claimed."
+    },
+    {
+      "name": "그레이터 힐",
+      "class": "마법사",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2024-12-30",
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "그레이터 힐",
+        "learning_level": 30,
+        "mp_cost": 20,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "active",
+        "activation": "active",
+        "effect_summary": "대상의 HP를 회복하며, 언데드 대상에는 피해를 준다. 대상에 따라 비용이 다르다.",
+        "numeric_status": "Published level and MP only; dash is unknown, not zero. Damage/cooldown are not published here.",
+        "cost_application_phase": "Guide lists MP20 but target-dependent costs; original self-heal cost not independently verified."
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "published_date": "2024-12-30",
+        "existence_verified": true,
+        "effect_summary": "대상의 HP를 회복한다. 우리 게임에서는 자신을 치유한다."
+      },
+      "implementation_gate": "TWILIGHT adaptation: player-only healing; no original formulas or PvP parity claimed."
+    },
+    {
+      "name": "콜 라이트닝",
+      "class": "마법사",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2024-12-30",
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "콜 라이트닝",
+        "learning_level": 36,
+        "mp_cost": 18,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "active",
+        "activation": "active",
+        "effect_summary": "번개로 지정한 적을 타격한다.",
+        "numeric_status": "Published level and MP only; dash is unknown, not zero. Damage/cooldown are not published here."
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "published_date": "2024-12-30",
+        "existence_verified": true,
+        "effect_summary": "번개로 지정한 적을 타격한다."
+      },
+      "implementation_gate": "TWILIGHT adaptation: player-only healing; no original formulas or PvP parity claimed."
+    },
+    {
+      "name": "선 버스트",
+      "class": "마법사",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2024-12-30",
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "선 버스트",
+        "learning_level": 36,
+        "mp_cost": 20,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "active",
+        "activation": "active",
+        "effect_summary": "집중한 마법으로 가까운 적을 타격한다.",
+        "numeric_status": "Published level and MP only; dash is unknown, not zero. Damage/cooldown are not published here."
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "published_date": "2024-12-30",
+        "existence_verified": true,
+        "effect_summary": "집중한 마법으로 가까운 적을 타격한다."
+      },
+      "implementation_gate": "TWILIGHT adaptation: player-only healing; no original formulas or PvP parity claimed."
+    },
+    {
+      "name": "블레스드 아머",
+      "class": "마법사",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "updated_date": "2024-12-30",
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "블레스드 아머",
+        "learning_level": 18,
+        "mp_cost": 20,
+        "hp_cost": null,
+        "material": null,
+        "duration": 1800,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "active",
+        "activation": "active",
+        "effect_summary": "술자에게 방어력을 부여한다.\n대상 : 술자",
+        "numeric_status": "Published level, MP and 1800s duration are official; AC bonus/cooldown are TWILIGHT design.",
+        "target": "술자"
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "published_date": "2024-12-30",
+        "existence_verified": true,
+        "effect_summary": "술자에게 방어력을 부여한다.\n대상 : 술자"
+      },
+      "implementation_gate": "TWILIGHT self-defense adaptation; no original AC formula or animation parity claimed."
+    }
+  ],
+  "sources": [
+    {
+      "id": "nc_20240925",
+      "url": "https://about.ncsoft.com/news/article/lineagem_update_240925",
+      "publication_date": "2024-09-25",
+      "official": true,
+      "retrieval": "web search and full page open",
+      "kind": "NC update release"
+    },
+    {
+      "id": "nc_20230920",
+      "url": "https://about.ncsoft.com/news/article/lineagem-update-230920",
+      "publication_date": "2023-09-20",
+      "official": true,
+      "retrieval": "web search full indexed page",
+      "kind": "NC update release"
+    },
+    {
+      "id": "nc_20241127",
+      "url": "https://about.ncsoft.com/news/article/lineagem_update_241127",
+      "publication_date": "2024-11-27",
+      "effective_date": "2024-12-04",
+      "official": true,
+      "retrieval": "web search full indexed page",
+      "kind": "NC class care announcement"
+    },
+    {
+      "id": "patch_20241204",
+      "url": "https://lounge.plaync.com/feed/17105",
+      "publication_date": "2024-12-04",
+      "official": true,
+      "retrieval": "web search full indexed official patch table; direct open returned HTTP500",
+      "kind": "Official Purple Lounge update notice"
+    },
+    {
+      "id": "current_official_knight",
+      "url": "https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC%20%EB%A7%88%EB%B2%95",
+      "document_updated": "2024-09-27",
+      "observed_date": "2026-10-29",
+      "official": true,
+      "retrieval": "Live official guidebook rendered table read with browser accessibility API; document footer update date observed",
+      "caveat": "Official guide warns some content may differ from the game; cooldown column absent."
+    },
+    {
+      "id": "current_official_monarch",
+      "url": "https://lineagem.plaync.com/guidebook/view?title=%EA%B5%B0%EC%A3%BC%20%EB%A7%88%EB%B2%95",
+      "document_updated": "2024-12-24",
+      "observed_date": "2026-10-29",
+      "official": true,
+      "retrieval": "Live official guidebook rendered table read with browser accessibility API; document footer update date observed",
+      "caveat": "Official guide warns some content may differ from the game; cooldown column absent."
+    },
+    {
+      "id": "current_official_darkelf",
+      "url": "https://lineagem.plaync.com/guidebook/view?title=%EB%8B%A4%ED%81%AC%EC%97%98%ED%94%84%20%EB%A7%88%EB%B2%95",
+      "document_updated": "2024-12-30",
+      "observed_date": "2026-10-29",
+      "official": true,
+      "retrieval": "Live official guidebook rendered table read with browser accessibility API; document footer update date observed",
+      "caveat": "Official guide warns some content may differ from the game; cooldown column absent."
+    },
+    {
+      "id": "current_official_wizard",
+      "url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+      "document_updated": "2024-12-30",
+      "observed_date": "2026-10-29",
+      "official": true,
+      "retrieval": "Live official guidebook rendered table read with browser accessibility API; document footer update date observed",
+      "caveat": "Official guide warns some content may differ from the game; cooldown column absent."
+    }
+  ],
+  "policy": "Current official guide and latest patch precedence; unknown null is not zero; preserve existing125 IDs, balance and save state. Register historical alias not duplicate skill.",
+  "registered_skill_count": 18
+}

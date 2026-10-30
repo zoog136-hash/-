@@ -21,7 +21,7 @@ func run() -> void:
 		var map_id: String = str(record.id)
 		if map_id not in RETIRED_MAPS:
 			registered[map_id] = true
-	var entries: Array = [{"map_id":"aden_world","path":"res://data/maps/aden_field.json"}]
+	var entries: Array = []
 	# The disk index also retains source files for retired areas: only test live maps.
 	for entry: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json")):
 		if str(entry.map_id) in RETIRED_MAPS:
@@ -64,6 +64,12 @@ func run() -> void:
 				var point: Vector2 = field.sample_spawn(str(region.id),rng)
 				check(point.is_finite() and field.walkable(point) and field.point_clear(point) and not field.is_safe(point),id+" spawn sampling: "+str(region.id))
 		print("REMAKE_MAP_VERIFIED ",id," entry=",valid," portals=",data.portal.size()," spawn_regions=",data.monster_spawn.size()," blockers=",field.blockers.size())
+	var source_aden=preload("res://scripts/maps/source_map_runtime.gd").load_field("aden_world")
+	check(source_aden!=null,"source84 Aden supplies current portal hub")
+	graph["aden_world"]=[]
+	if source_aden!=null:
+		for portal:Dictionary in source_aden.data.portal:graph["aden_world"].append(str(portal.target_map))
+		source_aden.close()
 	var reachable: Array[String] = ["aden_world"]
 	var cursor: int = 0
 	while cursor<reachable.size():
@@ -72,7 +78,7 @@ func run() -> void:
 		for target: String in graph.get(id,[]):
 			if not reachable.has(target): reachable.append(target)
 	check(entered.size()==entries.size(),"all authored entries verified")
-	check(reachable.size()==entries.size(),"all authored maps reachable via checked portal graph")
+	for id:String in entered:check(reachable.has(id),"retained map reachable via current Aden hub "+id)
 	# Optional source maps are counted only if supplied by their actual catalog;
 	# code support or absent external terrain never counts as a rendered map.
 	var source_loadable: Array[String] = []

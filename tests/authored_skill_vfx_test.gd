@@ -66,6 +66,7 @@ func run() -> void:
 	library.trim()
 	check(library.entries.is_empty(), "idle trim releases textures")
 	var vfx: TwilightOriginalSkillVFX = VFX.new()
+	vfx.use_private_sources = false
 	var flights: TwilightCombatFlights = FLIGHTS.new()
 	var target := Node2D.new()
 	root.add_child(vfx)

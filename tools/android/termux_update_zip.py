@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Update a ZIP-installed TWILIGHT Godot project without requiring Git metadata.
 
-Downloads only changed gameplay files from a pinned GitHub main commit. It never
+Downloads changed gameplay files from a pinned GitHub commit (main by default). It never
 deletes untracked game files or Godot user:// save files. Replaced old files are
 preserved in a timestamped backup directory. No destructive git operations.
 """
@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 import stat
+import subprocess
 from pathlib import Path, PurePosixPath
 import sys
 import tempfile
@@ -77,6 +78,8 @@ RUNTIME_ROOTS = frozenset((
     'addons', 'assets', 'data', 'external_map_packs', 'scenes', 'scripts',
 ))
 RUNTIME_FILES = frozenset(('project.godot', 'Main.tscn'))
+MAP_INSTALL_TOOLS = frozenset(('tools/source84_inputs.py', 'tools/source84_delivery.py',
+                             'tools/source_map_pack.py', 'tools/install_source_map_local_pack.py'))
 RUNTIME_SUFFIXES = frozenset((
     '.gd', '.gdshader', '.gdshaderinc', '.gdextension', '.tscn', '.tres',
     '.res', '.uid', '.cfg', '.json', '.bin', '.nav', '.l1jpng',
@@ -84,9 +87,11 @@ RUNTIME_SUFFIXES = frozenset((
     '.ogg', '.wav', '.mp3', '.flac', '.glb',
 ))
 # Map source PNGs alone exceed half a gigabyte and are NOT loaded by gameplay.
-# These four directories hold the actual runtime map packs.
+# Only these directories hold runtime map packs; source84 is installed privately.
 RUNTIME_MAP_PACKS = frozenset((
     'native_png_v5', 'aden_faith_png_v1', 'domination_png_v1', 'oman_png_v1',
+    'source84_v3',
+    'oman_v2',  # Required legacy gameplay/topology input for source84 Oman replacement.
 ))
 # Match the already audited Android export exclusions for offline map drafting.
 OFFLINE_DIRS = (
@@ -115,6 +120,7 @@ def is_runtime_tree(path):
     """Whether a repository directory can contain mobile gameplay files."""
     relative = safe_path(path)
     parts = relative.parts
+    if path == 'tools': return True  # Only the four pinned installer files below are retained.
     if parts[0] not in RUNTIME_ROOTS:
         return False
     if any(path == prefix or path.startswith(prefix + '/') for prefix in OFFLINE_DIRS):
@@ -135,8 +141,12 @@ def is_runtime_path(path):
     relative = safe_path(path)
     if path in RUNTIME_FILES:
         return True
+    if path in MAP_INSTALL_TOOLS:
+        return True
     if path == 'external_map_packs/.gdignore':
         return True  # Keep Godot from importing the manually streamed map packs.
+    if path.startswith('external_map_packs/source84_v3/') and path.endswith('.u8.gz'):
+        return True
     if not is_runtime_tree(path) or path in OFFLINE_FILES:
         return False
     if relative.name.endswith(('.bak', '.tmp', '.backup')):
@@ -144,7 +154,7 @@ def is_runtime_path(path):
     return relative.suffix.lower() in RUNTIME_SUFFIXES
 
 
-def get_inventory():
+def get_inventory(ref='main'):
     """Read a complete Git tree even after GitHub's recursive response limit.
 
     A recursive request for the entire repository can return HTTP 200 with
@@ -153,7 +163,7 @@ def get_inventory():
     Read the root's direct children and shard by their *immutable tree SHAs*.
     If a subtree is itself truncated, subdivide it again.
     """
-    commit = fetch_json(API + '/commits/main')
+    commit = fetch_json(API + '/commits/' + urllib.parse.quote(ref, safe=''))
     sha = commit['sha']
     tree_sha = commit['commit']['tree']['sha']
     if not isinstance(sha, str) or len(sha) != 40 or not isinstance(tree_sha, str) or len(tree_sha) != 40:
@@ -278,7 +288,7 @@ def load_old_state(root):
         raise RuntimeError('Invalid updater state; refusing to delete previous files') from ex
 
 
-def update(root, assume_yes=False, install_fresh=False):
+def update(root, assume_yes=False, ref='main', install_fresh=False):
     # Fresh installs may create ONLY an absent or empty destination. Never
     # overwrite a partly installed game, user files, or an existing Git checkout.
     candidate = root.expanduser()
@@ -301,10 +311,10 @@ def update(root, assume_yes=False, install_fresh=False):
                            'For a deleted folder, use --install-fresh.')
     if (root / '.git').exists():
         raise RuntimeError('This folder has Git metadata. ZIP updater refuses Git checkouts.')
-    commit_sha, inventory = get_inventory()
+    commit_sha, inventory = get_inventory() if ref == 'main' else get_inventory(ref)
     old_state = load_old_state(root)
     changed = []
-    print('GitHub main:', commit_sha[:12], 'tracked files:', len(inventory), flush=True)
+    print('GitHub ref:', ref, commit_sha[:12], 'tracked files:', len(inventory), flush=True)
     for idx, (name, row) in enumerate(inventory.items(), 1):
         relative = safe_path(name)
         ensure_not_symlink(root, relative)
@@ -393,7 +403,7 @@ def update(root, assume_yes=False, install_fresh=False):
 # Keep the game, save data, Godot import cache and update rollback backups.
 CLEANUP_DIRECTORIES = (
     'docs', 'tests', 'tools', 'samples', '.github', 'legacy',
-    'external_map_packs/source_pngs', 'external_map_packs/oman_v2',
+    'external_map_packs/source_pngs',
     'assets/original_sheets',
 ) + OFFLINE_DIRS
 CLEANUP_FILES = OFFLINE_FILES | frozenset((
@@ -536,6 +546,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('project', type=Path, help='Existing ZIP-extracted Godot project directory')
     parser.add_argument('--yes', action='store_true', help='Skip the YES confirmation after verifying changes')
+    parser.add_argument('--ref', default='main', help='Explicit branch/SHA; default remains main')
+    parser.add_argument('--source84-inputs', type=Path, help='Existing eight ZIPs or 14 split files plus ZIP08, downloaded from Space')
+    parser.add_argument('--source84-linkage', type=Path, help='Existing maps_source3_linkage_90maps_20261029.zip v3')
     cleanup = parser.add_mutually_exclusive_group()
     cleanup.add_argument('--cleanup-preview', action='store_true',
                          help='List unused report/authoring files and possible space saved; no deletion')
@@ -544,12 +557,23 @@ def main():
     cleanup.add_argument('--install-fresh', action='store_true',
                          help='Restore game files into a deleted or empty TWILIGHT_Play folder')
     args = parser.parse_args()
+    if bool(args.source84_inputs) != bool(args.source84_linkage):
+        parser.error('--source84-inputs and --source84-linkage must be supplied together')
     try:
         if args.cleanup_preview or args.cleanup_unused:
             cleanup_unused(args.project, delete=args.cleanup_unused)
         else:
-            update(args.project, args.yes, install_fresh=args.install_fresh)
-    except (OSError, ValueError, RuntimeError) as ex:
+            update(args.project, args.yes, args.ref, install_fresh=args.install_fresh)
+            if args.source84_inputs:
+                subprocess.run([sys.executable, str(args.project / 'tools/source84_inputs.py'),
+                                'rebuild', '--inputs', str(args.source84_inputs.resolve()),
+                                '--linkage', str(args.source84_linkage.resolve()),
+                                '--project', str(args.project.resolve())], check=True)
+            elif (args.project / 'data/maps/source84_delivery_manifest.json').is_file():
+                subprocess.run([sys.executable, str(args.project / 'tools/source84_delivery.py'),
+                                'verify', '--pack-root', str(args.project / 'external_map_packs/source84_v3')], check=True)
+                print('SOURCE84 FROM GIT VERIFIED: complete runtime pack; no Space download required.')
+    except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as ex:
         print('UPDATE STOPPED:', ex, file=sys.stderr)
         return 1
     return 0

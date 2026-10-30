@@ -263,7 +263,6 @@ add_map('domination_summit',['데스나이트','흑장로','정예 다크엘프'
         note='그림 리퍼 정상 보스와 기존 지형 보존. 일반 몬스터의 정확한 정상 출현 근거는 미확인.')
 
 # Field geometry stays intact; all named field biomes use explicit rectangles.
-aden=json.loads((ROOT/'data/maps/aden_field.json').read_text())
 field_specs=[
  ('meadow','은기사 마을 주변',[2550,4220,1700,850],['말하는 섬 들개','말하는 섬 고블린','오크'],4),
  ('forest','오크 숲·오크 부락',[1600,1300,2300,1500],['오크','오크 궁수','오크 마법사'],12),

@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "enabled": true,
+  "policy": "EXISTING_SUCCESSFUL_GRADE_EMPTY_POOL_ONLY",
+  "game_rate_source": "scripts/loot_drop.gd existing grade rates only; source chance is evidence, never evaluated",
+  "integration_snapshot": "6f23e5b5fe5c4e3cdf3b6c08bc17a02513c7d530; before final NPC placement",
+  "integration_snapshot_library": "libfile_a1e6fb5f80a88191b3d52d8447531e15",
+  "shortlist_library": "libfile_88766f07f4088191948859f6a5a78aa7",
+  "required_monster_identity": {
+    "name": "대법관 바로드",
+    "sourceId": "l1j_tw380_npc_45962",
+    "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45962",
+    "source_npc_id": "45962",
+    "source_name_original": "長老．巴陸德",
+    "source_version": "3.80c",
+    "source_locale": "Taiwan",
+    "import_enabled": true,
+    "identity_approval": "OFFLINE_PROVISIONAL_NEW_NAMED_NPC_IDENTITY_SUPPORTED",
+    "local_application_authorization": "USER_AUTHORIZED_LOCAL_NAMED_V2_CATALOG_ONLY",
+    "appearance_status": "",
+    "raw_npc_name": "長老．巴陸德",
+    "raw_npc_nameid": "$4296",
+    "raw_npc_gfxid": "5471",
+    "npc_sql_row_sha256": "1eb0c3646d17240b2ecdd7f0e77e1d884ba9860cd07581ea7f8d08656221e81c"
+  },
+  "item_source_key": "source3:tw380:Taiwan:weapon:11",
+  "item_game_source_id": "423",
+  "item_name": "수정 단검",
+  "item_grade": "희귀",
+  "item_type": "단검",
+  "quantity": 1,
+  "source_enchant": 0,
+  "source_drop_fields": {
+    "mobId": "45962",
+    "itemId": "11",
+    "min": "1",
+    "max": "1",
+    "chance": "5000",
+    "enchantlvl": "0"
+  },
+  "source_drop_provenance": {
+    "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+    "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+    "tuple_sha256": "b4425e1b060980cbd1defeed244dc197f37792285b53e316a3a0b3a920bd4f1f",
+    "line": 8637,
+    "byte_offset": 648100,
+    "byte_length": 38
+  },
+  "source_npc_provenance": {
+    "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/npc.sql",
+    "file_sha256": "e14d2a0c074a842c0acbbb4ccc066d6c555ac08284e403cb89c14e977668896e",
+    "tuple_sha256": "1eb0c3646d17240b2ecdd7f0e77e1d884ba9860cd07581ea7f8d08656221e81c",
+    "line": 982,
+    "byte_offset": 408094,
+    "byte_length": 447
+  },
+  "identity_review": {
+    "SQL": {
+      "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/npc.sql",
+      "line": 982,
+      "row_sha256": "1eb0c3646d17240b2ecdd7f0e77e1d884ba9860cd07581ea7f8d08656221e81c"
+    },
+    "nameid_cross_language": {
+      "original_nameid": "$4296",
+      "token": 4296,
+      "strict_sourceC_equal": true,
+      "table_entries": {
+        "c": {
+          "value": "長老‧巴陸德",
+          "line_index_zero_based": 4297,
+          "state": "present"
+        },
+        "e": {
+          "value": "Supreme Court Justice Barode",
+          "line_index_zero_based": 4297,
+          "state": "present"
+        },
+        "k": {
+          "value": "대법관 바로드",
+          "line_index_zero_based": 4297,
+          "state": "present"
+        }
+      },
+      "single_token_number_alone_used_as_translation_proof": false,
+      "local_crosslang_map_file": "source_monster_nameid_crosslang.jsonl",
+      "mapping_status": "strict_normalized_sourceC_equal_local_crosslang_alias_evidence"
+    },
+    "actual_form_review": "금색무늬의푸른긴망토와세로긴금색지팡이/장식의인간형. Localname=barod와C/E/K명시named인물정보가함께부합.",
+    "existing_318_and_prior102_duplicate_checks": {
+      "aliases_checked": [
+        "長老．巴陸德",
+        "長老‧巴陸德",
+        "Supreme Court Justice Barode",
+        "대법관 바로드",
+        "Barode",
+        "바로드",
+        "barod"
+      ],
+      "exact_name_hits": [],
+      "raw_record_token_alias_hits": [],
+      "same_explicit_source_npc_id_hits": [],
+      "exact_propername_body_hits": [],
+      "prior_cumulative_unique_source_ids_checked": 102,
+      "prior_named_alias_hits": [],
+      "strict142_existing318_directhit_intersection": []
+    },
+    "generic_family_limit": "長老/titleelder를일반장로와동일인물로접지않음. strictC→E/K고유명대법관을보존. dark_knight/mage공용body는named캐릭터동일성증거아님."
+  },
+  "runtime_index_NOT_used": 416,
+  "out_of_scope_rows_on_HOLD": 22,
+  "association_boundary_library": "libfile_fc7a8389200881919a7c86c3a26b63ff",
+  "association_boundary_zip_sha256": "859325f896dc18a8e6664c3612d081b8353ee39bd1ce156eaa73ac6fc7e6550b",
+  "craft_boundary": {
+    "source_recipes": 534,
+    "new_executable_recipes": 0,
+    "current_six_NPC_explicit_recipe_owners": 0,
+    "current_six_NPC_source_shop_rows": 0,
+    "wallet40308_candidate_only": true
+  }
+}

@@ -1,0 +1,2611 @@
+{
+  "schema": "twilight-npc-six-input-v1",
+  "approved_scope": "User authorized NPC additions; source-side preparation only, game application remains consumer task",
+  "npcs": [
+    {
+      "id": "l1j_tw380_npc_70649",
+      "source_npc_id": "70649",
+      "name": "래리",
+      "source_name": "萊利",
+      "source_impl": "L1Merchant",
+      "role": "dialogue",
+      "visual_binding_id": "M70649",
+      "spawns": [
+        {
+          "source_spawn_key": "spawnlist_npc:89853",
+          "source_map_id": 4,
+          "target_map_id_from_retained84_handoff": "aden_world",
+          "source_position": [
+            33603,
+            32503
+          ],
+          "source_heading": "4",
+          "source_position_mode": "fixed_point",
+          "source_random_offsets": [
+            0,
+            0
+          ],
+          "source_area": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "source_count": 1,
+          "dynamic_spawn_policy": "fixed original source anchor",
+          "chunk_source": "4/800D7FFB.S32",
+          "chunk_sha256": "9d423bef70621ee29d2a08e18de1a20208d900e688506e6834a2739dd76629e1",
+          "position_transform_policy": "Use currently installed source map coordinates.to_world; never use overview_xy as runtime position. Verify walkability/actor foot at runtime; HOLD placement if no valid source-map binding."
+        }
+      ],
+      "has_verified_normal_dialogue": true,
+      "shop_enabled": false,
+      "quest_execution_enabled": false,
+      "combat_enabled": false,
+      "source_stats_import_enabled": false,
+      "new_item_creation_enabled": false,
+      "fallback_other_identity_allowed": false,
+      "visual": {
+        "atlas": "res://assets/npc/source_six/70649.png",
+        "sha256": "4b617616cbddbdcdcccd453e2f516655af9fbb9c601712f84f79f10552221990",
+        "atlas_rgba_sha256": "924e989624c47340cee7964682816b927f75859d2eab8d7984ae942442145039",
+        "cell_size": [
+          48,
+          72
+        ],
+        "frames": 16,
+        "heading_slots": 8,
+        "canvas_bounds": [
+          0,
+          -48,
+          48,
+          24
+        ],
+        "pixel_origin_in_canvas": [
+          0,
+          48
+        ],
+        "actor_foot": null,
+        "actor_foot_status": "HOLD: raster origin is not an anatomical foot",
+        "direction_semantics_verified": false,
+        "heading_policy": "literal slots; horse explicitly reuses same-identity slot 0",
+        "seconds_per_frame": 0.12,
+        "timing_policy": "TWILIGHT cosmetic loop; original duration units unverified",
+        "source_binding": {
+          "binding_id": "M70649",
+          "representative_id": "SPR-U-eb159579f11fa4f65007",
+          "source": "source1",
+          "body_model_prefix": 796,
+          "variant": "all_nonconflicting_packs",
+          "definition_id": "source1:Text.pak/list.spr:definition_index:4258",
+          "source_gfxid": 4258,
+          "definition_index": 4258,
+          "definition_name": "lary",
+          "explicit_resolved_body_prefix": 796,
+          "actions": [
+            {
+              "code": 0,
+              "label": "walk",
+              "raw": "1 8,0.0:4 0.1:4 0.2:4 0.3:4 0.4:4 0.5:4 0.6:4 0.7:4",
+              "references": [
+                {
+                  "group": 0,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 1,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 2,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 3,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 4,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 5,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 6,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 7,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 3,
+              "label": "breath",
+              "raw": "1 16,8.0:4 8.1:4 8.2:4 8.3:4 8.4:4 8.5:4 8.6:4 8.7:4 8.8:4 8.9:4 8.10:4 8.11:4 8.12:4 8.13:4 8.14:4 8.15:4",
+              "references": [
+                {
+                  "group": 8,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 1,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 2,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 3,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 4,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 5,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 6,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 7,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 8,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 9,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 10,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 11,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 12,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 13,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 14,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 15,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 19,
+              "label": "hairup",
+              "raw": "1 6,16.0:5 16.1:5 16.2:5 16.3:5 16.4:5 16.5:5",
+              "references": [
+                {
+                  "group": 16,
+                  "frame": 0,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 16,
+                  "frame": 1,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 16,
+                  "frame": 2,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 16,
+                  "frame": 3,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 16,
+                  "frame": 4,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 16,
+                  "frame": 5,
+                  "duration_raw": 5
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            }
+          ],
+          "disabled_actions": [],
+          "attachments": [],
+          "identity_approval": "SUPPORTED_LOCAL_NPC_ALIAS_PLUS_EXPLICIT_DEFINITION_BASE_PLUS_ACTUAL_PNG_REVIEW; provisional cross-version correspondence, no combat/shop/quest functionality",
+          "import_enabled": true,
+          "map_spawn_changes_allowed": false
+        },
+        "rgba_sha256": [
+          "6e7ce0d9f8455632d66859e622b3eafcdc286fdd62a880bf0fbee3be9c949201",
+          "b7b5cfdb2e2a157554a2a992197e5939af743935e977bfb781ba145d4ed98a9a",
+          "16390ea3fda40e0bbd51d1fd303f648c63789b36cc7683add3fd6422bfe824ca",
+          "3eee0aea8fab025b35bfbf8a33f439b5ec63fce6942384c523de616152036271",
+          "7dec61de8e18c32c9f4c249124437c4710aaee709b347e2486a5c6797aafd64e",
+          "a19f7829c61878278672a2c5f417eaaafd446743dcd1a1e3d764ec827c6543ac",
+          "4bb3dc36e275468c94c11754c76089cc6b70005b37ad1f2b802788e360d0ad3b",
+          "2dae620637bc6f66c990cb1e01aa59e352963705aac8b483897642a626b87257",
+          "876dba51effdd603ef68b10c734386b23619cf222151daf4c9515cd80e09ec9f",
+          "29f39536e6223d14935a65a9870df50089c34bc83b549a7d6ba252f1da7c7624",
+          "01b987d341b568b32e59950a245f38b806792281aca0d95a262acf77afd49f8f",
+          "298f61008695d8181c69e1da535367388e6252381994d719bfac42802a7799ae",
+          "0edb95fab90c26252f54a9b89514db6b27f82283e73cad414c22a2dd2fca1875",
+          "875103f0da52b65d0cccac447b8c9fb70e9ae5da59769acc166cf7322811e37b",
+          "422acf61f16af5b6ca68e71c813050a7a877579868fb30a88238769eeb06dcb3",
+          "798c76d5b48a3cad90ed12e5bdffc2e37d3fd8d7f5afe88ee256b8caced02bfd",
+          "5fedf53b92f3bc2b58280143e1ee4549b436e5d0685a863f78d424c3f82611e3",
+          "033596a7f612a1691be1a6fc306a6a9005276a186d763fbf8bc0f613cd56f440",
+          "f01d724a0d9aa5dcb638e2713d2b59f7176be1578c56f4f4b46066afac8e505d",
+          "5b05728f6bb22324d8e626b1e94623739a098793ff0725d38251a98fbedd0c93",
+          "930c8db1b7498eeacadf6e1b03609a5b55dffd5dd0fdb0eec520f9a9b935f4c5",
+          "12d84dc0703c0cecbeb2a199aa6863813ea900eccea4c0988d0acd0780a2b94c",
+          "46139049ff5ebdc6ef919a5050d3995106b1b1b27ec90a4b32d2c7a31d2656c9",
+          "1f5c5f265df3816ffbc25bd4e8590ae189267e30da24b1978e6b3d35e8b01e1e",
+          "713fc8dd3c26477b5828abe35c958e71f3af35cf14056fa9dc5a9bf1fd58ae4f",
+          "110b2acf91abfcbf3aa989dd9de05b7faf1293daf272183c5db3ba6c902e89dc",
+          "2e0bb39a6a3f8e3d16bf0dc32cc8938547b353d6cb931de820743b97bb184b6e",
+          "a9396a4d80c9aab2c71c9490fc191f8a03d4fac113f1bc3d21b04496bf14d692",
+          "87f15ac9fb13c0edaea4d97ee0299a7e7ac473eee0e0e24413a3c57e52e0d060",
+          "558391dd2f7e00a2088fffb2c48a864cfd2a9198ce27b8e0ede8847dc7a351b1",
+          "9cd994c66bd23f33491cb8762908c1f07feff8e9e0681c71ee2dbc3f5422a4cb",
+          "86f4ec776639fdbc10a96792264ce3b2d8e73de0a17916e43701233c7d3a856e",
+          "b1c444c46d3e3d0cb4ada9670e92b2319f0e4cec2cb98ec32baee3e1c2ad836e",
+          "5472375aacd09ed1cdceaee4943e2ad909425eaabc9dbd6a1b5522a0aade7a6f",
+          "d8ce4decf74b3dd9bae9a93a85cbfe7324e182fb5e318f723a37569dbddadbc4",
+          "4fc37dc2a43a96192991b9f3735b0d9575156603f2e9d520133d5edd3a483d0f",
+          "b6893ca7bef4c6702e82c8741e2dd1f91e2378154666cef08dec369523fd62ce",
+          "b3923a42cfca57a5c4c33ca46eda2532fe1128676cfdc9d416d670690b01b8e2",
+          "e1947a60b062e17aa25e56071b068d71bf5c8031bf257e3f4ff8c549e394fe33",
+          "16046c9b0bfac9641b4b2d279094cdd9fffdd084f87b3a77718f9d417e4b13f7",
+          "4ade7cf1cdf9426df9b34812b2726d3af0515b01b5447a29d57355a136aed528",
+          "0265fcf82c817f2e378303301826e2c4a97e8579d8003b07ead068028be8b39d",
+          "e5ada2d38cf343c739abc5ee8196e5ef9ca5851a5536ae2f47465b3023e660ec",
+          "4fd93dd54e9996a56a1b5bc9e9c75f3b4d14d03a9f66818af5b0c3af41ec6007",
+          "82a9f28065c6a16139e2d8994a366af88e1cdb9959255d31d3444f70eaf1614e",
+          "c3f4ae49996cc0a37c1379c1b53a7a5992a058d3a4821ba9321caf7ed63714b1",
+          "9a199894b222619d0804eb9e579773da4d816fa41f336c488894cd0c41d6ff14",
+          "49af30dd2fc0099c4c72e9799f5d31c0f8f0538a2e16fdf6fbb68f33d088b488",
+          "88444e4cdc758fd52f354b0c5c5495da7994f8dc450efb12b475026ca6006014",
+          "d1310e9c032ad6e2ba297a8f0e31743019281783ed2f752be2beb4e9f43b03ad",
+          "32c488d1c5e49918b4b4dc249e6030e2f3651d0ee413bdef9b5a56938ab9ede3",
+          "7daa3eac8c6ac9dc7a3a60cbb5b56ae01ea1b7eda48e870761241a30c6bfc8fc",
+          "614866b9d2f77bfb880dd9a65bede19002f26a1eddd95399f36b3b651ac5b57d",
+          "73ed84f4eaa140c4039383251de6c23588daf4e5212dd8eb48aaca5899ba14c5",
+          "6e95d0046664109f2d760dddd8267f669eacd701fc7c0c616b2cda9cca8d7d2e",
+          "2d82b007f454d8d125991b4dbc505a72d23207661db58c3d66abf35c1664627d",
+          "b501c49e521f99210e749f5b72e0d113aef1b027c9ee3d007985259ee404222b",
+          "ace00850bc2ec1bbe2220af496913a641670813b24812283ac3a0525293a1a19",
+          "492aaa711ab2814d270d080f5181f466fb307db4974965c83076ec7ffdce802f",
+          "61d899a9ae1e59ae6403981a707a683d1946c6dbf29b6b7d1649ec1594c9119d",
+          "e496373e856a73342226bd29d690967d953a568d0def121bc5436b9fce9f7886",
+          "9fa72bb9f575d4d5497664ebab01e820ffcfaf8beb12145653192813f59e52c8",
+          "84ffed6f5157d1438d24d3fabe5bc389a9b723f9c37eb837f09bccb07e5446e6",
+          "b2e5540549763d909f4cc72cb4a90938722b0fb5c18e99d2dfa45bb5fc60b24f",
+          "e25adee580dab2d54ee2ce269db25fc3e7e31e8339883fec9c8526d0755aeea2",
+          "a7ccc16006078ce3e915c4ef80086d5413895412d83ea3c52cdd9f10ea7749b7",
+          "6cf53df91eca8c0e3793873cb4d8abfc0f81a2ec080ea64c84a7ffc9f2719569",
+          "21e1c985509b1fb0a0b742bf2abcdf6886d79642468c83bf0595da75ece7b252",
+          "607b521d3c6460abe9422769dd62d8b9291e76812e995da23d1f9108b453d7f0",
+          "cc8bdefa30357bf4e15a80d301f0c50112996d6df6d7225457a6fd784e957ab5",
+          "157ed03895cec2d2fc39a92a29b76ea3f6c3554f599243a0527db104a0d121e2",
+          "3f2c0e5e1d02e25effa241d3bf40c7ce581807109ff04c9a00d8a2163eab3183",
+          "f09bb209352230fcb6fae89ebc3b6faeaa77d8ed11fad889a60ef7ad0ccba452",
+          "8e517201faf9fd49a3ce62ba52773bd520d2d392f29f8fb02be2f9d803e00ce0",
+          "891c9091da52f0494686a88c213990ce8b7f4ef846dec255bed102b703dee9da",
+          "dcb8101908a410534ce67480e3bd108cda18409134e63d3ab47ff07ac5b910d9",
+          "eac181666650b9ef1837f3dcdfe3015a075c40f38a0ce782ceb06caa5fb8914a",
+          "18caecd1a488df1dea8cf1db2567234d274aa03bf08c6a2986ec25bbda98690d",
+          "4f233d9d624235a85f0e95e52860001d77a89f16250d0a642014d429e358b6b3",
+          "27262cfaf821b9a324fe9ce95e3fcffb8937b79882e987d8c9a16d9148784fdf",
+          "e944de19b98cda0988be8908d22d809bc59d82555bf1a72075cc8fcd75d09921",
+          "0e4060e1c77d2ba9d5289be792efb2c81e9c6f35bc728addecd1f328b78a7878",
+          "4874d2216eee9f17606c96284fb28041b345d55ec51b83eb8f54ef032fe856b2",
+          "706e61e6bc2caccaf0a02dd989f95e097f310fcf3b531ae97838257a9b7ea606",
+          "9d7ef259209ae4f15f18e14db416df00ea7f35c276f964afb6cdb12f19752010",
+          "5fee35c00e9121a44f390e90bd95492cc90ff23b7e3e31127322830e320f046a",
+          "b8237d45bb04f6fa621a99479148011ddcb1191ec0f0b883829dd7eafce4776e",
+          "b8370abe27c723d50b8c028e2202321dd6abf6199300a26e17683d5b3ead6d4e",
+          "526145ae81c4c6e02d843c32bc5355d84ec0f263c2acaa9ba89b0e66959d2896",
+          "cc621e179c365b56f891e6bf08f29cf2a9b2635f49009b57cf6ad90d239c0d03",
+          "bd9915095a7a4cf9a874fb8cc973aa29231e345b6398e18985c4ca11686ba43d",
+          "7ce3bbb8651307769e087894b276a3121b460364ee81f050b34b1e61445883b0",
+          "ad344d154242f2778c2769745afae85962b1c69297a87cb3ef5d1cf140998b5c",
+          "be1b6ffed5479d0f968a3bd428d535e7f34b00d05fad2f8cbcee01c6b1813518",
+          "6984e8a5476d47837c0567c25057500c43046119c844e24e06f6886457b85fcf",
+          "6c0280a75aafe2634c56eb52d9e610223ca5b982d096920f3d53193c867c5e82",
+          "f63b4327a0b3018d61c8cba15dd9242019d504a1a99afbc4b8bc6ab4e444431c",
+          "b6240b91fd9e8e21603e1fa2b802618d6713eb4c12b2b42e73b84a9ac7b7ac2d",
+          "76d701ec3970eab1e27c6a60c1410347a231b1b3e6a29718509400c891d524b0",
+          "7c3a3c6ca8c9e85168cdc9194c4197f519113e9f4fc807bb93333e0c146f3797",
+          "361df48fb97c3033e0deae8b8ff36a88b7d39d7f8d05ea43b173d08c985b3226",
+          "4dcc4dc1a10433e913ae9a2edfe2d71444caf03b80234081d5839002d93ff407",
+          "a03f7873823de220ded76288d21054ad496ddb8e3c8fa8b7e2f5f54cce7a1363",
+          "086b42d2505de33f1a93915b0cf5c604312cc336f9ee52e27ac4a8ebaa65106e",
+          "b0c0194f3e093e306699921bbb886c92561a1087919ca4960c1aeb04a3d08f4b",
+          "4cb23deef1b41b271f9f5777f8756ced924c3136f6bc6932e88bed2d65f69957",
+          "8b39423b58ee7883751ca613e9634e9a613b2016ea149ef5ffe125579929c478",
+          "d9e93f992aa47ead9726001ead0a2231f44c4a47b613c80867451c3ac8d34394",
+          "7dca93a95fc85effe12e759c6d4c5000831d9c8e183575b2da6aa3266d50ce7b",
+          "8b422bc74c0a5684cdb1fe65c9bf7c2e2bd9ae089a3f9315a41874a69eaa521f",
+          "481abfcca8342146e19f0c389ea4a5b030c76c50b0bcc6d5958bedb96b068e50",
+          "171e6796f5533069a6414641e429b811bf094825a5872d19ccd48a9b889c6170",
+          "ecb150b27fe05e3ac6abf9bc2db9fb05859f26ab01eb29478f12d4b4656caeff",
+          "217977ae02fafc1cdadc68060fc7e68c4443d9ba79650b047d3fc4abfc35c660",
+          "e4e78deda2044ddff3b8033a51bb9e1fcb0fb984bd4af114b36ea17538d27f4d",
+          "b8db584a28202b006edcb09a9ce2041f0b1bc669e845cd81ff481a3d90f85506",
+          "9f18df113ac509ef4d6bcd2a4d6c8cd01a00ed3547392d0cc56cd6054ca6f99a",
+          "6515cf68c80bab856b70300d0d5f3c5d19d106509b2fd485d2aad02ce12e6472",
+          "ab473b82675d8db4709e0e09d16a2d80bf105005f64942c2228c6eddd12c225c",
+          "7a7a50dede97a6a63ffe4b687f2d166d90537d95527a011b08569f60ba6c9976",
+          "07e82d4dcc8c4eeaffe25ac5e07ab326910659fa9c1b9ccfc3fc4d0ba4c68a50",
+          "63703476d6dada788aa8b8c10ab10bf3e51d32b4eb058827dae6fe6926123794",
+          "699683b7bb49d221f1a3edff81252646a8e877357aafff9e3b0d1ec22f9d00fe",
+          "84d2be0db6979b61d2e29dd91dde9b5040e243951ade833d2c918b9764d525f4",
+          "c11b8fe067a2307280dd145aa78afed94e3f64961830417bbf0eee0566bea538",
+          "57badfe7a8627abce7a560c41f60db51d3ed4993bba03f80af0026dc51a1fe02",
+          "8d6b2463ed5e88cdf7daca2bad286d6f403fba3909492b12e7b3c7364ecb0364",
+          "a09c456cf454bc8b78cd85e1dd1955b219e19f840f559e547396a0edd714d755"
+        ]
+      },
+      "placement_status": "HOLD: current source-map binding, collision and actor foot require integration review"
+    },
+    {
+      "id": "l1j_tw380_npc_70650",
+      "source_npc_id": "70650",
+      "name": "래리의 말",
+      "source_name": "萊利的馬",
+      "source_impl": "L1Npc",
+      "role": "source_npc_display_only",
+      "visual_binding_id": "M70650",
+      "spawns": [
+        {
+          "source_spawn_key": "spawnlist_npc:89854",
+          "source_map_id": 4,
+          "target_map_id_from_retained84_handoff": "aden_world",
+          "source_position": [
+            33604,
+            32503
+          ],
+          "source_heading": "4",
+          "source_position_mode": "fixed_point",
+          "source_random_offsets": [
+            0,
+            0
+          ],
+          "source_area": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "source_count": 1,
+          "dynamic_spawn_policy": "fixed original source anchor",
+          "chunk_source": "4/800D7FFB.S32",
+          "chunk_sha256": "9d423bef70621ee29d2a08e18de1a20208d900e688506e6834a2739dd76629e1",
+          "position_transform_policy": "Use currently installed source map coordinates.to_world; never use overview_xy as runtime position. Verify walkability/actor foot at runtime; HOLD placement if no valid source-map binding."
+        }
+      ],
+      "has_verified_normal_dialogue": false,
+      "shop_enabled": false,
+      "quest_execution_enabled": false,
+      "combat_enabled": false,
+      "source_stats_import_enabled": false,
+      "new_item_creation_enabled": false,
+      "fallback_other_identity_allowed": false,
+      "visual": {
+        "atlas": "res://assets/npc/source_six/70650.png",
+        "sha256": "afc14d2a38f251ac34e586c271084d76da72baf0778f75bb0b0af40bcf3d3da0",
+        "atlas_rgba_sha256": "78bdf839cdac2adc5ff4779ed8758be783f9e7ec9e0526989659b6fe5ffa9e39",
+        "cell_size": [
+          96,
+          84
+        ],
+        "frames": 12,
+        "heading_slots": 1,
+        "canvas_bounds": [
+          -24,
+          -60,
+          72,
+          24
+        ],
+        "pixel_origin_in_canvas": [
+          24,
+          60
+        ],
+        "actor_foot": null,
+        "actor_foot_status": "HOLD: raster origin is not an anatomical foot",
+        "direction_semantics_verified": false,
+        "heading_policy": "literal slots; horse explicitly reuses same-identity slot 0",
+        "seconds_per_frame": 0.12,
+        "timing_policy": "TWILIGHT cosmetic loop; original duration units unverified",
+        "source_binding": {
+          "binding_id": "M70650",
+          "representative_id": "SPR-U-6f6da4058fa7ec2627bd",
+          "source": "source1",
+          "body_model_prefix": 271,
+          "variant": "all_nonconflicting_packs",
+          "definition_id": "source1:Text.pak/list.spr:definition_index:4363",
+          "source_gfxid": 4363,
+          "definition_index": 4363,
+          "definition_name": "horse of lary",
+          "explicit_resolved_body_prefix": 271,
+          "actions": [
+            {
+              "code": 3,
+              "label": "breath",
+              "raw": "0 12,0.0:5 0.1:5 0.2:3 0.3:3 0.4:5 0.5:5 0.6:3 0.7:5 0.8:5 0.9:5 0.10:5 0.11:4",
+              "references": [
+                {
+                  "group": 0,
+                  "frame": 0,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 0,
+                  "frame": 1,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 0,
+                  "frame": 2,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 3,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 4,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 0,
+                  "frame": 5,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 0,
+                  "frame": 6,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 7,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 0,
+                  "frame": 8,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 0,
+                  "frame": 9,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 0,
+                  "frame": 10,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 0,
+                  "frame": 11,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "0",
+              "eight_slot_bounds_pass_conditional": false,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": true,
+              "direction_fallback_policy": "EXPLICIT_SAME_SEQUENCE_HEADING0_REUSE; never adjacent different-action files.",
+              "eight_slot_failures": [
+                {
+                  "step": 0,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 0,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 0,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 0,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 0,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 0,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 0,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 0,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 0,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 0,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 0,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 0,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 0,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 0,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 1,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 1,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 1,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 1,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 1,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 1,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 1,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 1,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 1,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 1,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 1,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 1,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 1,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 1,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 2,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 2,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 2,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 2,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 2,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 2,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 2,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 2,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 2,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 2,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 2,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 2,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 2,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 2,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 3,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 3,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 3,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 3,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 3,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 3,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 3,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 3,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 3,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 3,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 3,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 3,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 3,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 3,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 4,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 4,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 4,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 4,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 4,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 4,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 4,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 4,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 4,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 4,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 4,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 4,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 4,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 4,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 5,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 5,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 5,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 5,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 5,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 5,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 5,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 5,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 5,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 5,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 5,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 5,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 5,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 5,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 6,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 6,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 6,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 6,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 6,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 6,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 6,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 6,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 6,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 6,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 6,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 6,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 6,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 6,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 7,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 7,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 7,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 7,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 7,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 7,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 7,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 7,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 7,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 7,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 7,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 7,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 7,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 7,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 8,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 8,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 8,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 8,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 8,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 8,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 8,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 8,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 8,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 8,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 8,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 8,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 8,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 8,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 9,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 9,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 9,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 9,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 9,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 9,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 9,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 9,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 9,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 9,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 9,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 9,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 9,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 9,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 10,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 10,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 10,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 10,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 10,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 10,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 10,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 10,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 10,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 10,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 10,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 10,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 10,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 10,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 11,
+                  "heading_slot": 1,
+                  "group": 0,
+                  "frame": 11,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 11,
+                  "heading_slot": 2,
+                  "group": 0,
+                  "frame": 11,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 11,
+                  "heading_slot": 3,
+                  "group": 0,
+                  "frame": 11,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 11,
+                  "heading_slot": 4,
+                  "group": 0,
+                  "frame": 11,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 11,
+                  "heading_slot": 5,
+                  "group": 0,
+                  "frame": 11,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 11,
+                  "heading_slot": 6,
+                  "group": 0,
+                  "frame": 11,
+                  "status": "missing_file"
+                },
+                {
+                  "step": 11,
+                  "heading_slot": 7,
+                  "group": 0,
+                  "frame": 11,
+                  "status": "missing_file"
+                }
+              ],
+              "execution_enabled": true
+            }
+          ],
+          "disabled_actions": [],
+          "attachments": [],
+          "identity_approval": "SUPPORTED_LOCAL_NPC_ALIAS_PLUS_EXPLICIT_DEFINITION_BASE_PLUS_ACTUAL_PNG_REVIEW; provisional cross-version correspondence, no combat/shop/quest functionality",
+          "import_enabled": true,
+          "map_spawn_changes_allowed": false
+        },
+        "rgba_sha256": [
+          "f3505c465a53fab26486dce17d74701c4407bf453a10cc641511c3838d3f74bd",
+          "637e5f603bca845df60b47e10c7e99af8798058255fbc142b2cf162b7a910135",
+          "a3faa90a823aa22f0575cb48b25d4806303a743aae56b8c5eefcfe0a9aa0a8fe",
+          "5b28c2bffe56526dabc1376484284a7439973992a29d8f500b90475c42231068",
+          "bb6738545b62c2060efb44eaf3ee5353f62c4ee908e11a2d7e7c6d201244a890",
+          "209981a0659b2b74514632c32640bd4640cf34b21c4e8fc1447dfcc8d977e5e1",
+          "49e73bbb361235c8757cb71b7e577760bb0577c4e7aeed9bad18f4924e7c129b",
+          "261cf386f4d73d783e6dca93010ecf7e386b792e1d21a9928475c6604636e24d",
+          "4553bb1306fe6889d142270989a78af9521d87a864d4ef38b6c51d8489bc941e",
+          "6bd572e2580daa30a9481fb3b541e86c6bd25cd90cc54636720c213113edd11a",
+          "bb96af3f01820b36445bfa68358168fc1f072dca4f884b4760a012e692d4966d",
+          "38817c39ce58b470d2a865e22ecf9a0604ba9e5f8ea5f9ac8d370025eea10c75"
+        ]
+      },
+      "placement_status": "HOLD: current source-map binding, collision and actor foot require integration review"
+    },
+    {
+      "id": "l1j_tw380_npc_70739",
+      "source_npc_id": "70739",
+      "name": "디가르뎅",
+      "source_name": "迪嘉勒廷",
+      "source_impl": "L1Merchant",
+      "role": "dialogue",
+      "visual_binding_id": "M70739",
+      "spawns": [
+        {
+          "source_spawn_key": "spawnlist_npc:87536",
+          "source_map_id": 77,
+          "target_map_id_from_retained84_handoff": "source_77",
+          "source_position": [
+            32765,
+            32796
+          ],
+          "source_heading": "5",
+          "source_position_mode": "fixed_point",
+          "source_random_offsets": [
+            0,
+            0
+          ],
+          "source_area": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "source_count": 1,
+          "dynamic_spawn_policy": "fixed original source anchor",
+          "chunk_source": "77/7fff8000.s32",
+          "chunk_sha256": "164fb1f93e6c187716f9a05d055b009b80f8299139f609ea36ed2fb3a969d3c6",
+          "position_transform_policy": "Use currently installed source map coordinates.to_world; never use overview_xy as runtime position. Verify walkability/actor foot at runtime; HOLD placement if no valid source-map binding."
+        }
+      ],
+      "has_verified_normal_dialogue": true,
+      "shop_enabled": false,
+      "quest_execution_enabled": false,
+      "combat_enabled": false,
+      "source_stats_import_enabled": false,
+      "new_item_creation_enabled": false,
+      "fallback_other_identity_allowed": false,
+      "visual": {
+        "atlas": "res://assets/npc/source_six/70739.png",
+        "sha256": "0cdcaba3ff1e3f7046e83c95988e7e8f6933c6896416e92d778df0b178740012",
+        "atlas_rgba_sha256": "2e3e1455b0a3a061303a4fdf4786e930ad443767748d6a67adf35fb92757da09",
+        "cell_size": [
+          48,
+          72
+        ],
+        "frames": 8,
+        "heading_slots": 8,
+        "canvas_bounds": [
+          0,
+          -48,
+          48,
+          24
+        ],
+        "pixel_origin_in_canvas": [
+          0,
+          48
+        ],
+        "actor_foot": null,
+        "actor_foot_status": "HOLD: raster origin is not an anatomical foot",
+        "direction_semantics_verified": false,
+        "heading_policy": "literal slots; horse explicitly reuses same-identity slot 0",
+        "seconds_per_frame": 0.12,
+        "timing_policy": "TWILIGHT cosmetic loop; original duration units unverified",
+        "source_binding": {
+          "binding_id": "M70739",
+          "representative_id": "SPR-U-35347f68eb7fe2b94209",
+          "source": "source1",
+          "body_model_prefix": 2767,
+          "variant": "all_nonconflicting_packs",
+          "definition_id": "source1:Text.pak/list.spr:definition_index:2767",
+          "source_gfxid": 2767,
+          "definition_index": 2767,
+          "definition_name": "dicarding",
+          "explicit_resolved_body_prefix": 2767,
+          "actions": [
+            {
+              "code": 0,
+              "label": "walk",
+              "raw": "1 12,0.0:2 0.1:2 0.2:2 0.3:2 0.4:2 0.5:2 0.6:2 0.7:2 0.8:2 0.9:2 0.10:2 0.11:2",
+              "references": [
+                {
+                  "group": 0,
+                  "frame": 0,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 1,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 2,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 3,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 4,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 5,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 6,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 7,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 8,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 9,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 10,
+                  "duration_raw": 2
+                },
+                {
+                  "group": 0,
+                  "frame": 11,
+                  "duration_raw": 2
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 3,
+              "label": "breath",
+              "raw": "1 8,8.7:5 8.0:5 8.1:5 8.2:5 8.3:5 8.4:5 8.5:5 8.6:5",
+              "references": [
+                {
+                  "group": 8,
+                  "frame": 7,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 8,
+                  "frame": 0,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 8,
+                  "frame": 1,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 8,
+                  "frame": 2,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 8,
+                  "frame": 3,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 8,
+                  "frame": 4,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 8,
+                  "frame": 5,
+                  "duration_raw": 5
+                },
+                {
+                  "group": 8,
+                  "frame": 6,
+                  "duration_raw": 5
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 2,
+              "label": "damage",
+              "raw": "1 4,8.0:4 16.0:0<704 16.0:6<3228<3229 16.1:4",
+              "references": [
+                {
+                  "group": 8,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 0,
+                  "duration_raw": 0
+                },
+                {
+                  "group": 16,
+                  "frame": 0,
+                  "duration_raw": 6
+                },
+                {
+                  "group": 16,
+                  "frame": 1,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            }
+          ],
+          "disabled_actions": [],
+          "attachments": [],
+          "identity_approval": "SUPPORTED_LOCAL_NPC_ALIAS_PLUS_EXPLICIT_DEFINITION_BASE_PLUS_ACTUAL_PNG_REVIEW; provisional cross-version correspondence, no combat/shop/quest functionality",
+          "import_enabled": true,
+          "map_spawn_changes_allowed": false
+        },
+        "rgba_sha256": [
+          "21f0464d0f79dcc9187d115ab1956fdbf146ced7118cd098e94a5bbde1861803",
+          "3323a7758b86c672faf76b1a5014791faaf13c3625a032be93fa3ea11f0ebbab",
+          "21f0464d0f79dcc9187d115ab1956fdbf146ced7118cd098e94a5bbde1861803",
+          "075034dd8e31509a7fb034e9269e8aba665d89aee9a7a40eeb8f48441110f1b1",
+          "e28c36a3da6cbf7972c7f4f060557e742b1b026da8ab00d4664b51c16fac2b1f",
+          "1c1bc8ef703da0b0f4e5cfc86f5d86694a928f856ae791c6b86a2e93dbed5d9b",
+          "e28c36a3da6cbf7972c7f4f060557e742b1b026da8ab00d4664b51c16fac2b1f",
+          "075034dd8e31509a7fb034e9269e8aba665d89aee9a7a40eeb8f48441110f1b1",
+          "e1f5fd893a5f173ff78ba8f1a34ff2d7dcf83020284a0f109f8821cf2ef3fcbd",
+          "8e1d2dbf847d5306e4481c0b92e4727a3bf725a2c3499c4b764f51508934076e",
+          "e1f5fd893a5f173ff78ba8f1a34ff2d7dcf83020284a0f109f8821cf2ef3fcbd",
+          "4c6daa1695764ad8d2056dc55c5704948a441535bf8da89bd167fbd9ee1b1372",
+          "0d0b0851f9a3806a3b0cf50688d84b41e20894d459f8a791f52c9cb7bfe07c42",
+          "8b3339015933565370d7281bd7362edde7f049d84cd49f3c8a6576f940d05237",
+          "0d0b0851f9a3806a3b0cf50688d84b41e20894d459f8a791f52c9cb7bfe07c42",
+          "4c6daa1695764ad8d2056dc55c5704948a441535bf8da89bd167fbd9ee1b1372",
+          "e795b23210d6fb96c7bc9e918721fb82ff2e26ff5229fbcafb23c2d0fb14def6",
+          "769692803f519a4f3ecb8179cbfb0eecc7a45157ab9c3c43c35dc2680f73fdad",
+          "e795b23210d6fb96c7bc9e918721fb82ff2e26ff5229fbcafb23c2d0fb14def6",
+          "3a5794576d2184103bd1cb087fd87784059002d10af52117d670882c425bc4e5",
+          "7c939e233a60ced57ef4e07c90b80e02ec257692773ed2f267477b109f0e6d2c",
+          "f79b234d91e4f908ad8b716e1977bfdf3ecf5d5e2d1e2137dc29f696c80d1b4f",
+          "7c939e233a60ced57ef4e07c90b80e02ec257692773ed2f267477b109f0e6d2c",
+          "3a5794576d2184103bd1cb087fd87784059002d10af52117d670882c425bc4e5",
+          "ca3b5c96fd4fdba4a1b3a40170147ee992b6938ad777e9a2ac3778fa2a0378c3",
+          "5682d0df17459df3c69ed2fd23198d133efe8e3adf2645867092050555cdda6e",
+          "ca3b5c96fd4fdba4a1b3a40170147ee992b6938ad777e9a2ac3778fa2a0378c3",
+          "9d2c6a60ed743a9da95ca669b41a789f235171d0a9a74c70d9ea4d3f10700a58",
+          "715a8b2c051b95345b4b4010912855c91668030edd0a358b6229224313baeb25",
+          "bb62c7cc123409d63a61973f93f97955dbfa74be05c439a67df04d6f28665d18",
+          "715a8b2c051b95345b4b4010912855c91668030edd0a358b6229224313baeb25",
+          "c54e4be2e91c7426ba32ed994cf847ff6ba46a59f7cce44b23aef8781020a11d",
+          "256bda6e2d1f0fe8845172b440142d761a2b7da6776726dd52a1437cae539da8",
+          "75b01523419c2d27255125e3c42f67aed44cd706927a91c0572402b31a2f18c6",
+          "256bda6e2d1f0fe8845172b440142d761a2b7da6776726dd52a1437cae539da8",
+          "807c7a731fa26686dac67ac85f1c2e3e0fcabb4908c8fb3a8ef3d3e00a724e1b",
+          "c69195f69b02fe1b4e9625d1f4b24a9160efdf414858c9c54a86ce0dcb3e71c1",
+          "99b9a5555dd7ac2e6057fe85153980f407eccdcb3dfe8c6e3dcb4968670929c7",
+          "c69195f69b02fe1b4e9625d1f4b24a9160efdf414858c9c54a86ce0dcb3e71c1",
+          "807c7a731fa26686dac67ac85f1c2e3e0fcabb4908c8fb3a8ef3d3e00a724e1b",
+          "2f0aa5cfba6fa412b6d7087fa7e01ef0c934be8d1a17c504a08a9c214bc51b2d",
+          "00a717111801621cd0054e300c7372a5d380771c18ccbaea059ccaebfe71f5f5",
+          "2f0aa5cfba6fa412b6d7087fa7e01ef0c934be8d1a17c504a08a9c214bc51b2d",
+          "5f2a94179ecdc58423cf4ac1c8e25a878213c48bb74e9d5200c59e2463c842d9",
+          "6fcefa8797eb6717d3c5a4e2e835f4aaa9962f60c87e2131f7f3b6376e85d336",
+          "1bfb453ee26498e91cc77f3d40a50e285fcf01669e54694220eddc72eb4bc5e4",
+          "6fcefa8797eb6717d3c5a4e2e835f4aaa9962f60c87e2131f7f3b6376e85d336",
+          "5f2a94179ecdc58423cf4ac1c8e25a878213c48bb74e9d5200c59e2463c842d9",
+          "ea72df540120f46ca75a99e4ca47c8ed20ed8893d098c9a3dd38596575f5ac86",
+          "27b73498fc9db28a0fd7166a53256c9bae8ae6ae2bfa28c294b335aa276c2983",
+          "ea72df540120f46ca75a99e4ca47c8ed20ed8893d098c9a3dd38596575f5ac86",
+          "2ca158e192eaa223f8b60e2384e3a405c454b719c64b185a535465e1da1973ea",
+          "00222bc3ff54507e5984b2e084a379397de92405e5d2318913df2b136939b417",
+          "8f8643021c565516fea8fd07af251b6359e0dfca16b9a4120a48367f01a5fbd0",
+          "00222bc3ff54507e5984b2e084a379397de92405e5d2318913df2b136939b417",
+          "2ca158e192eaa223f8b60e2384e3a405c454b719c64b185a535465e1da1973ea",
+          "797cd77e54e023bed0eafce3b0ab4ecd410af721a189081686b2f1640c7f9808",
+          "591efee07d39376ad0b25374da116668cebf52f8999bb66103f158be994fef7e",
+          "797cd77e54e023bed0eafce3b0ab4ecd410af721a189081686b2f1640c7f9808",
+          "a09a9b8156deefb3037eaaa36b450ebac11f223849c50240ab45d9031f16fceb",
+          "644539c99f36e33e6dbf7aed86e6b5479d3ae50fdcb91c0f681c7463e0c203a8",
+          "cc404a4fed4d56452363046b4808df0ab66e2b2a9243a6279a7dc664846f411c",
+          "644539c99f36e33e6dbf7aed86e6b5479d3ae50fdcb91c0f681c7463e0c203a8",
+          "a09a9b8156deefb3037eaaa36b450ebac11f223849c50240ab45d9031f16fceb"
+        ]
+      },
+      "placement_status": "HOLD: current source-map binding, collision and actor foot require integration review"
+    },
+    {
+      "id": "l1j_tw380_npc_70794",
+      "source_npc_id": "70794",
+      "name": "게라드",
+      "source_name": "傑瑞德",
+      "source_impl": "L1Merchant",
+      "role": "source_npc_display_only",
+      "visual_binding_id": "M70794",
+      "spawns": [
+        {
+          "source_spawn_key": "spawnlist_npc:87509",
+          "source_map_id": 4,
+          "target_map_id_from_retained84_handoff": "aden_world",
+          "source_position": [
+            33098,
+            33352
+          ],
+          "source_heading": "4",
+          "source_position_mode": "fixed_point",
+          "source_random_offsets": [
+            0,
+            0
+          ],
+          "source_area": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "source_count": 1,
+          "dynamic_spawn_policy": "fixed original source anchor",
+          "chunk_source": "4/80058009.s32",
+          "chunk_sha256": "9f05745065798e38d6ff7f3b49413339eaf1ce458dc97520d62a1cb025b7f3fd",
+          "position_transform_policy": "Use currently installed source map coordinates.to_world; never use overview_xy as runtime position. Verify walkability/actor foot at runtime; HOLD placement if no valid source-map binding."
+        }
+      ],
+      "has_verified_normal_dialogue": false,
+      "shop_enabled": false,
+      "quest_execution_enabled": false,
+      "combat_enabled": false,
+      "source_stats_import_enabled": false,
+      "new_item_creation_enabled": false,
+      "fallback_other_identity_allowed": false,
+      "visual": {
+        "atlas": "res://assets/npc/source_six/70794.png",
+        "sha256": "15b70239975c35005003683a148a722e88f0764ded8a68211b36a5e168119571",
+        "atlas_rgba_sha256": "d083d5a970c883cc16ea6d94cdaa05f0dc36659d6eaee48e5b455dc2d956533d",
+        "cell_size": [
+          48,
+          72
+        ],
+        "frames": 9,
+        "heading_slots": 8,
+        "canvas_bounds": [
+          0,
+          -48,
+          48,
+          24
+        ],
+        "pixel_origin_in_canvas": [
+          0,
+          48
+        ],
+        "actor_foot": null,
+        "actor_foot_status": "HOLD: raster origin is not an anatomical foot",
+        "direction_semantics_verified": false,
+        "heading_policy": "literal slots; horse explicitly reuses same-identity slot 0",
+        "seconds_per_frame": 0.12,
+        "timing_policy": "TWILIGHT cosmetic loop; original duration units unverified",
+        "source_binding": {
+          "binding_id": "M70794",
+          "representative_id": "SPR-U-efb19804be28893fb53a",
+          "source": "source1",
+          "body_model_prefix": 994,
+          "variant": "all_nonconflicting_packs",
+          "definition_id": "source1:Text.pak/list.spr:definition_index:994",
+          "source_gfxid": 994,
+          "definition_index": 994,
+          "definition_name": "gerard",
+          "explicit_resolved_body_prefix": 994,
+          "actions": [
+            {
+              "code": 0,
+              "label": "walk",
+              "raw": "1 4,0.0:4 0.1:4 0.2:4 0.3:4",
+              "references": [
+                {
+                  "group": 0,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 1,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 2,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 0,
+                  "frame": 3,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 3,
+              "label": "breath",
+              "raw": "1 9,8.8:4 8.0:4 8.1:4 8.2:4 8.3:4 8.4:4 8.5:4 8.6:4 8.7:4",
+              "references": [
+                {
+                  "group": 8,
+                  "frame": 8,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 1,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 2,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 3,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 4,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 5,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 6,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 7,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            }
+          ],
+          "disabled_actions": [],
+          "attachments": [],
+          "identity_approval": "SUPPORTED_LOCAL_NPC_ALIAS_PLUS_EXPLICIT_DEFINITION_BASE_PLUS_ACTUAL_PNG_REVIEW; provisional cross-version correspondence, no combat/shop/quest functionality",
+          "import_enabled": true,
+          "map_spawn_changes_allowed": false
+        },
+        "rgba_sha256": [
+          "5675622d4e11553f4473eaeb1217f6e7e67ac2df8b4d071d88aaf46e1d1fdc58",
+          "dccd101696f0d213e3d4a1d83d80a4c063b733e47a3b096449a0e93a021b6883",
+          "004c097334b0e05790704774f4abfb646e3e8c2512a061279dfdff98c8e4d74e",
+          "8e2dcaf8af125f6856da6e971632b872c7f622e2ee6d9bbdfe0c9cd766bbe1e2",
+          "31cc93612137b7b99cd97ded55381d01799f0d71b168a50bfebd74ff464ba4ab",
+          "c1545b17cb18a85d94ae1f514961ce194ca6db19b2c886fe6220cf9c8e2e5376",
+          "e52b8964e02da3920337ec44c1ea5b45b486198b3404c0638e48a695cd13c1d7",
+          "6db545c5eb394085435537833a53098b19a2e04a35f864df82b009c54bd3555e",
+          "c3460587769ac4149e080da56d752a48d3d9df4d7254a5bbb312c8eae55816e6",
+          "fdf067b0da0b9c5cd70cd19a8b64070f9b2a9b62aafc7cddce0b91f097a019d8",
+          "c282f50c5f5842dec16a8724c51316a15bfb35cb361dd194be26068db55220da",
+          "962b893a749ed9c3b9bab37f838025c1411641eabc4a94e7452628043752853e",
+          "56a912141b4349f60a3cbff74a89bb81aaa54ca178a15633b6f86aa1db697cce",
+          "f7669ea2d12d47477234592cbec52a0ef85ab5b2363e85399bdf47baa6326969",
+          "2a9fd2b702304ca5a8f94da269c81e3c8ab4a62c8cb7da56d4f220d5f852507e",
+          "7a7103fe57bd3666d7530d75e3094c8e0680c256ed3f079ff800d52c91c6d5c4",
+          "3f1e23da33dc2e181d3979b04212f4b7e35362089ab5a8c51b90dcc62a1d7735",
+          "0d2bfb25bdba45dff1e90c457368657cf24cb4bbd482c7843be91cfe699f8310",
+          "1fbdb98cb1ae1cc0a5ef5e8fb0caca37747435e8942073b06c309a4dd336c598",
+          "5827ff389dfed28a186a83c25416b0b09015b2012f9be1a5198ba5e65ccf78fa",
+          "4a0a0498b1b4adbf90d566e1634c02da9247992bf7ee5b7595f022c1ecc064c4",
+          "e0d73c252b0c11ca26c684c2855effc11899d07ef3f417e6a510b66dfb1de84f",
+          "d8b4ad0de1c82bd00dd1ef83431ac8cb066fc78961f8df6b7ba6f1f862b4d031",
+          "1255f825afc8ce2d79bf403f30ddfb86cd3521d9b872de45e662994a42bd9aae",
+          "32087116dee8abdcefeaa8f92339bf77d29574982b951e63dea99f88ef7827df",
+          "eb7b3103d3dea322e570c1c3a88646f2b48a399fd7a3914e6ef4b54063b9cf54",
+          "60f54d082a5b2e2276673bc721456b511c5cb1752648b9d7ea1a6307dbbd43fa",
+          "85898e4d9c9a2d4ada12c0827b10fe5fe06da75d0740cf8f38135e6fc38b1ed0",
+          "f02a8532e2afbd491f798075115c4c2311b4835fb8f400b136cfe02ae187e4d5",
+          "b7c5e79d31471723ee885d3fd04a1466d226693f9ade834931bd10f030709468",
+          "d47d77bce0dd7b974c93b361bfaf0a845bf5f71f2024245f60f4076b3648cb23",
+          "75e7294553e6c65f38fd5e5c444d0152920a00543e1d7c14f5fb167e03c2d6c2",
+          "58bb5fbb5024ba1b293e17a76dfac362b03c0754c4bf4c37e737bd5262fe4f61",
+          "6209643d0d474562a044de0b1be90f08e5c2f28b1f42fb7bb885df1735241ce9",
+          "9339408b60333163550a100405425337b2fca3684a0cfe38f9c389d16de1f114",
+          "9fdaea5e48667ab97bf8410e03bd01a012e1b0bb96a4c06d2ad29c2411bf8f87",
+          "b1006c26afa952d111f6105e6389cfeac1d8e2e3eaa9e4b03748d2ce33eb1ba7",
+          "b2b9c9cfa41ef2ff5e2ae6b47020da15ab3c44985aa6ad177868777752fa03be",
+          "17dd06d94beafbd9f25ea997a4f66309e70892a8af62600d78f555165fdd78a2",
+          "4bbdf9d0234d901e560705830c49b676bb87547fe4a33c802e24365de4b023ea",
+          "35ee224c3ba73ab8d9b0924e4a40ac5b1ce074f70fdc42d6226ee46e653cfddb",
+          "6b2109cfa8ffd67846110f581dcf764d23f2503e442dacec1e94f11489066a10",
+          "4c6804342aa03abfc446406027748fdadd2f71284bf238e0e72a00e1528d9589",
+          "c57810a160160a6160f97dc55db51e641b6ce02c32e268c6dd0aeca05e1425be",
+          "fe0ee364a946d8479c74e14fcd9f2b7c304322b28d113abf85fd61fe58e71fe6",
+          "d0c8393c73289d2f08be8099830797cc9438fc09faa3e8a6516dee995e445cf6",
+          "b742c4f84ff81a550ce4f5f4687bbd3cc06ea45839946b5330cfa0a5f411f2c9",
+          "1319bca694d6bd8df9d07199af63fb6177973bf32cd4d58eca51f774d95a6c35",
+          "7b8edb88f2aa3911754088d8aac4b62a79c22fc01df0d1687761fbd738aed20a",
+          "893bad51b71e528ef377f682fe4da3c5d02cfcd609f98b889f0e723cb12a7a3f",
+          "b8da1a1451ede3713aff9c8788d02b89e9ab8b2dc6fa8dc693a39c846376273e",
+          "e021eeefc57f71371957f4a7a41179d7a371ca99f0f2a864742e7f5ec7ec7831",
+          "e49756e7dfe2b928b79dd0a0e2e8eb571fc080eefef90bef53837d72cbbb7041",
+          "154dc290786a80d6e3b3e564d46df4592d7a1c3d2f52ae1051ec5a8c8415d8ec",
+          "61df3636f56bd45c1e035c03dfe807c817cfb4bfa97e566bac2d0416e33276f5",
+          "c162ecc53f799e2a62abb1209a918306bedeabefb4f28e94381195d74f28a3ae",
+          "24a617b288daf324292390ec3c27c359ac55ae2dd5ee081f775de7073388e7b5",
+          "38954e91b983612a59ba66bc90a44c548ec02926e3d0f605ed622d0220c2e938",
+          "f769b77c7055fe531118d1db170fd13ca391bb833c532c17330c67710c6863a7",
+          "61a56b53b26a4830f8c44abf29f03ab86c57e4b2bcb1a4ed4d0fc1f86a031c10",
+          "f1cd1aa69b44704410cbd66857eeb13b43972452ce0dd70106ea782acf1caa28",
+          "2bec2fd4fa65036eac97be5fd13b0f0992b772d3b0942c475819820086ab9249",
+          "721c516927b8f8956f2fed4a432dec61c13168d488f968c9c5e440be66b532d8",
+          "f782cb063723bbcaf570adb01ad63e8036379df081709f751b97ca41b78ad0cf",
+          "d42204a1df65b4ea0180eff29d797f796cbb22c9a3fe6d05aedc2b9987e3a1b3",
+          "f87f70f50dbb22005d435442693bfebb1790bd675fbd3434d2254364434a39ef",
+          "eee3c7f41838b232494fbb1f0f66e8f426dee04d2f5080f8a3b56b7ac8f96e16",
+          "ad536b95e32d539f63e750ee96c77f3ea16a9b1184d02a32638c170311ae85de",
+          "3a5975a5815adb1f64ef238e3051d2c494734a59fa49826011e4cd79282266b6",
+          "269537c0bc91a30a2c164fe7f8bb315cb881e42ab2120d11a9cd8551d48cd393",
+          "a936bce07271f704d868c6bcc2ff934892498441d174e0b68363f0a2d1fa029c",
+          "7e4953f9706d1ff0e87dae236f16913bf5428b0c1799e2e095574e4320747aa4"
+        ]
+      },
+      "placement_status": "HOLD: current source-map binding, collision and actor foot require integration review"
+    },
+    {
+      "id": "l1j_tw380_npc_71094",
+      "source_npc_id": "71094",
+      "name": "엔디아",
+      "source_name": "安迪亞",
+      "source_impl": "L1Quest",
+      "role": "source_npc_display_only",
+      "visual_binding_id": "M71094",
+      "spawns": [
+        {
+          "source_spawn_key": "spawnlist:62091",
+          "source_map_id": 4,
+          "target_map_id_from_retained84_handoff": "aden_world",
+          "source_position": [
+            32928,
+            32276
+          ],
+          "source_heading": "0",
+          "source_position_mode": "random_offsets",
+          "source_random_offsets": [
+            10,
+            10
+          ],
+          "source_area": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "source_count": 1,
+          "dynamic_spawn_policy": "HOLD until random-offset walkability is verified",
+          "chunk_source": "4/80027ff8.s32",
+          "chunk_sha256": "0b82e79a02e2bd0ad556696c675d60e0df8e9b4cd487472f0b603f5f3ebf57b0",
+          "position_transform_policy": "Use currently installed source map coordinates.to_world; never use overview_xy as runtime position. Verify walkability/actor foot at runtime; HOLD placement if no valid source-map binding."
+        }
+      ],
+      "has_verified_normal_dialogue": false,
+      "shop_enabled": false,
+      "quest_execution_enabled": false,
+      "combat_enabled": false,
+      "source_stats_import_enabled": false,
+      "new_item_creation_enabled": false,
+      "fallback_other_identity_allowed": false,
+      "visual": {
+        "atlas": "res://assets/npc/source_six/71094.png",
+        "sha256": "a1d21618d5349eb21fec13b262ffcaca4ff754eb7b1544e6d9bf3d8f97128b27",
+        "atlas_rgba_sha256": "5949b04d7857a2ea5498c9988e26ab1c3d4950d51ffd515d82bde876cc780822",
+        "cell_size": [
+          48,
+          72
+        ],
+        "frames": 15,
+        "heading_slots": 8,
+        "canvas_bounds": [
+          0,
+          -48,
+          48,
+          24
+        ],
+        "pixel_origin_in_canvas": [
+          0,
+          48
+        ],
+        "actor_foot": null,
+        "actor_foot_status": "HOLD: raster origin is not an anatomical foot",
+        "direction_semantics_verified": false,
+        "heading_policy": "literal slots; horse explicitly reuses same-identity slot 0",
+        "seconds_per_frame": 0.12,
+        "timing_policy": "TWILIGHT cosmetic loop; original duration units unverified",
+        "source_binding": {
+          "binding_id": "M71094",
+          "representative_id": "SPR-U-756a55488adb28f1d7ee",
+          "source": "source1",
+          "body_model_prefix": 3097,
+          "variant": "all_nonconflicting_packs",
+          "definition_id": "source1:Text.pak/list.spr:definition_index:3097",
+          "source_gfxid": 3097,
+          "definition_index": 3097,
+          "definition_name": "endia",
+          "explicit_resolved_body_prefix": 3097,
+          "actions": [
+            {
+              "code": 0,
+              "label": "walk",
+              "raw": "1 12,0.0:3 0.1:3 0.2:3 0.3:3 0.4:3 0.5:3 0.6:3 0.7:3 0.8:3 0.9:3 0.10:3 0.11:3",
+              "references": [
+                {
+                  "group": 0,
+                  "frame": 0,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 1,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 2,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 3,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 4,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 5,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 6,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 7,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 8,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 9,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 10,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 0,
+                  "frame": 11,
+                  "duration_raw": 3
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 3,
+              "label": "breath",
+              "raw": "1 15,16.14:4 16.0:4 16.1:4 16.2:4 16.3:4 16.4:4 16.5:4 16.6:4 16.7:4 16.8:4 16.9:4 16.10:4 16.11:4 16.12:4 16.13:4",
+              "references": [
+                {
+                  "group": 16,
+                  "frame": 14,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 1,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 2,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 3,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 4,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 5,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 6,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 7,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 8,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 9,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 10,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 11,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 12,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 13,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 2,
+              "label": "damage",
+              "raw": "1 4,16.0:4 16.0:0<704 8.0:6<3205<3206 8.1:4",
+              "references": [
+                {
+                  "group": 16,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 0,
+                  "duration_raw": 0
+                },
+                {
+                  "group": 8,
+                  "frame": 0,
+                  "duration_raw": 6
+                },
+                {
+                  "group": 8,
+                  "frame": 1,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 8,
+              "label": "death",
+              "raw": "1 10,24.9:4 24.0:4[3207 24.1:4 24.2:4 24.3:4 24.4:4 24.5:4 24.6:4 24.7:4 24.8:4",
+              "references": [
+                {
+                  "group": 24,
+                  "frame": 9,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 24,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 24,
+                  "frame": 1,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 24,
+                  "frame": 2,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 24,
+                  "frame": 3,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 24,
+                  "frame": 4,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 24,
+                  "frame": 5,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 24,
+                  "frame": 6,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 24,
+                  "frame": 7,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 24,
+                  "frame": 8,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            }
+          ],
+          "disabled_actions": [],
+          "attachments": [],
+          "identity_approval": "SUPPORTED_LOCAL_NPC_ALIAS_PLUS_EXPLICIT_DEFINITION_BASE_PLUS_ACTUAL_PNG_REVIEW; provisional cross-version correspondence, no combat/shop/quest functionality",
+          "import_enabled": true,
+          "map_spawn_changes_allowed": false
+        },
+        "rgba_sha256": [
+          "0272a860082f12eee09cdfc47777f864c53434c3e165276cfdaa6b6af2292812",
+          "eb94fe0ba067993a281e0ba004fc309636ca5a3c07e49a89d7fbdc8bc3f5e7ad",
+          "7e03e623a64813ff76521e587508fa2ae0dbb20a75089e43831922270c37d9dd",
+          "1cc82d8c65fa1c61a9506da3f9b3537a9e2e038f8c9c9191fbdc1527437d04e0",
+          "84476adfb16830234b38947381cfb2dfd6df38485c55712c1c32502b5bcfe53a",
+          "e6a54ef48bb81ec0a7d9ca53161c499cd534410bf54b344476b583c8d737199e",
+          "a1f569229637776bc12713aa36693fb68932bff7197a80e8691d6f82a94ef47a",
+          "f357f9156218a56974038127d3eb808843c9fc445609fc12f8356d31e325aaef",
+          "c79ba1bf6660baaf241027dde8877988cb5e72ea4d54bf7af4662b4cfd48044b",
+          "5d2e67bb54bfa1e5736de2fc21a9cc30a3984702cff8d85a52d3bc92ce5260e7",
+          "087077b90e360fbd058e5b876883f4dc860f706dcb103d247caabae29e87bbe4",
+          "c2211bd1de2a8eacbe7a95502675b75e596ef89bad6f2e575b9602fe0d10b9d9",
+          "e07f80d0f86a355cd7bdc7ac6c5fc5624ec0fc3c64ed39b073c2480b6fe50a8d",
+          "aab072d99e7849e212e6f0e0d0466633be9cd6b5bcd94a65fd0393fcd15c91f1",
+          "d5f7fbd2c8e95769571338abc57917b94e6877e0092aff01e8dae3c7bb567d6b",
+          "70e31e75c2558bfce13da9f194ff3b1feaf38142ba0eba07b1427a22b91d46e2",
+          "c70a2d1cbd10aa4abe2635ff3ad899a5bbff09541ba8d06a253dbf7c8625625f",
+          "39e4636ee4123dea5c11b9a37a19452f1311872f43ee406fe5905098457189b9",
+          "ddd9991dcdd12b66edb9ec86591269a897c93468c903e720452fc6d87e7ab56d",
+          "eef88ee64396267a33f3bf5b557c835284eba8372662373243a59fe9b418a446",
+          "30e55df5d6bb64becf1cd70a0f52bfbb539f69007dce5bd6c1faf2edd2691773",
+          "192338f51dcccc207b5671b2b2e31f6bc80a679f433f377856eb2f8e7cde40fb",
+          "757aed452d5e27c7a38f983f3cc024075f81c753df0988f95071ee0500b5fc3c",
+          "d498efe5bfbdbd1a2fad48ef04f89d771b80ae290f451b6dcd9d04a49b5d0ce1",
+          "f8295c58e51596e2d2c3e27d6694650e22a361c0af108c7f5b08d6fff30daf2c",
+          "372c9172b7fde4089e8dab1e9cceae38a8840d3acc225d19426b552047e54750",
+          "66e39df1a852239c3f856e4c1c7c30cd87b5c5a7fcc43dc10c4d5b4120b13420",
+          "3f683e3aca39c0cc8ae3ec698b86f519c2ac4797a4f0798b661b0cfceee086e7",
+          "a9d19197858d7569e4dc1410249fe3d01679154b2baf28f2b2cb15f894cf5013",
+          "ae54071b04d1a2038450b4cbd79c355de53a3f549ff1ce7cc7d06169e6721d75",
+          "a6d6aadea06a8656e16885518711fec8dc83347faece372fe86a9da30ca5038d",
+          "8accef3dc87e0dea30b24d4b85d747404d3612d15023c460430d26579dcba196",
+          "e774ee055adf5d439dfce6e772c6785bb57004e58ab964e40243123caadbfd43",
+          "f34da59d64b9d5346cfe6bd4cb51084b8347c5f96cb4473885c5b8277a368a58",
+          "1d628b939337b0213bcc3ff5f99c0b88c9c009a8ee8375b0ecd48bbb733ebfff",
+          "ac58604f9c154a5f7676d22cd444499205dc8b2f6e71677258eaed6759aa9eb5",
+          "4ff28159dafcd7eb2995157b5a24c132bd2ad1101fceeffb975eb2317a30a8d4",
+          "c041303995b22fab8ebdd14445e3c51fdc09887c1471569c1df74f8227b00750",
+          "0f9cc972b7c210d3d7c5dd29804becabded96cd391291b1b43f7cdab74eb2749",
+          "fda406eca04ebc80d882d780c2a39de10c94dae252c6feb3710a71150ba73bf5",
+          "8bb899f147a29dd607efdb2385b723258e89a268444ab04fba2e080a71ab65f4",
+          "b41564059e94b36eff51c993475403f5f606a0a3dd85b65e06d6d0aa319db0b0",
+          "042e23d54740eefa7849d60eb24ab7d44085de6c285ed66b6916c14e990b2306",
+          "93b25c488eccf2ba59ebb904490ca18d4faf0c76265941c2036ade2d3367abfd",
+          "818d07cb8faf5bc90d3d218b3ff9ece85f46f462d5061a0840bd0e3959809c5d",
+          "5b0b73ca3af4cc4c780214ce4fd5809cc6902c79c0be28906cfcdb7f743709eb",
+          "b9eea8b27d38044724b7f1d3c8ac0bb8acb6c1ba5355c3890176adaf117b9e42",
+          "f296d777e0ba9fc0385d06f735e33cd80e45972a5ad9c1601a35e05a2b558e33",
+          "15965286d664717be3abfff911841be81657ae8014aee9b956b535915ed4f2e0",
+          "85e55a5e2af89fd39cc80052e7216973015c33c041579b6a5b6e40c3a4c178fe",
+          "8d931f379f77fd3caf09a75232826f4a7320938de2ef0195c7ad5de0af9154ff",
+          "40ff082ec275e50c8f7acae040091704c214fb0cfddbea6db7d67d1188bbe27f",
+          "7488fabe4a9e7344098c3f7cebd91fd3f5deca6d121b5af5a15a88a3f86b2295",
+          "5b7ab64584f170d4268ce94f5f73a5ce86191c3bfa61c22ab22de957eb79645c",
+          "25eb1c5bd5001171be3346115b0a1a358de037444b72fb8e2453f222c7455a54",
+          "8cd71d777ab01f7e1737fe74e27ac6fc964f23f40f9c101d4f631e3f8f212a05",
+          "c145523fa3c8b34c809b910fdd8480590420f24d59b8d10733b64a42eea6764e",
+          "f5761aacd164622411c46f298e70d8dc8dc1064812c28e577fac3a0205c16d51",
+          "5a2f5c70654e3498deabd085d6f42e3617ef6e7682f97fdb260ca450a29e9ee4",
+          "3a7139107348bc01882d24146db25dc207a5f61fee3459bdd6832452eabdc87f",
+          "be0358cd5d491974a6c189c84abdc1cb605bc98f05ab7d98241a5b0db0ca7995",
+          "0cbbd7aa06c53bbe2037489a5b85a60c49986c2426b97366b46756bd547112ce",
+          "381ce5789c2291613d14a0b33949a7ed016ac3a5fc0f575be90376bee4a93141",
+          "ed4f6519b5354e4de387d51345646a89d3f188a16135e1412d5f9d3eef25fcdb",
+          "f79719449ee2663c2dd338baed15f4c86bebcfccfcbb836b46c5473f16e59783",
+          "50246a5bb7fbd621558556ca252b9a0db592eb99f188f2b3a2bed3a27f096099",
+          "7c8701c6b869ab25db1c86e7a4724f7169c11b265bdc684c904bf81207d23781",
+          "77fcd8591f91f5cef5e7a4d946700f00575ccbd7adf1f9e40bbcb6016b1a9b43",
+          "a1629fdb725351e554cfea09320a2d876850be84c22fb6f0f3251e0a38ee615e",
+          "af4604d6883bf1e2ef82b34a36d6785893454618be8837a3d774c4fba0e0a27e",
+          "6a9fa683ea7a2c34bf68531b896c907a05773f0d602e1dfe562ab74b67066f79",
+          "80da0434652ba177ac88235c173142d238a25ad3161773f8b5b4ef589e6a6af2",
+          "3744d8b4dc39fffc8bb0f72ec5a0faec9af57b1b4cf5638d35596a79f843b7ea",
+          "4d10c510278f0703cef63ddf84364db35cbb1bf0a986f1bdceb1750b24159f63",
+          "672465a10da31b585e2fd45295c6b96699d8cfbac1abe88a1bb6e9c994ae2fcb",
+          "ac5d3d264e0f7bf74c2f6c7d9a6862cad7939f3b73fda50305567b60ef897758",
+          "bf0c561af51701c5cc06ad1212182ca807297a7984d0329ce90b87734c3bc316",
+          "7832da6e0659196308598abcc3a99efb97cf3a8965e3b6648e9ea5627f9378e0",
+          "f73be1879b5fd988066a0c90b2ceb216bb7e601ceaa90335bca84154aca4d4aa",
+          "48e65f2b2962c38c934179a5c75c72d74ef8c1c43a4c9348484a80da7ca79187",
+          "22b908c02a6253b59e222eff963b14b5c2d5d71e0d715fccdb8f007b4b06a763",
+          "d396f5a2e67adead5bac15ce0efdb2c20fbdcfb97a997dc31ea9c33ee2eb6ebc",
+          "70c636fa79e4b395649aa1b4b9b65145c003c42c4c2117de9e1fc33f3d341260",
+          "a6fa1e9d82acf62f4a1c5169aead40c6364d3e23fe327ee28364379e48d8aa0d",
+          "78f00190e50e23f71bce1c9796139d3172028051eff3a718095e2366c6aa8115",
+          "4e5efe5436b64b64f30879b6ce9a548a71f19778d1ddec836a64573ac15e8327",
+          "a9688b96b6922d3638168ddbb1ed1e7b918a0300d24b6d35bd2ee65110ac841f",
+          "12f96eebfada320f41ae86170b34efc580f4a454d4d67c129b9370c782eadc62",
+          "aaebef231027aeb20468d8679eed8973bbfc8585898e54669bffc56219758425",
+          "cccca1ed37f40b37891dd02b038d620733a815d456993971498b0a4beeb996cd",
+          "58200f26497024872bf9addcd55294e6ca9f3067aab1d7886265eea211703b2b",
+          "c5ba6129e6311468bdae831f824891859d822b7757b2a900b3024b9362240058",
+          "82ddf22ec0d316ac94b8f183da8cdb23d3603f0a8b724d2716b6bfdf52f1e027",
+          "ce3cf5281bfedc9a10e8e7f00716e2a18591ea02e41f36eaf0c83c6b49f99157",
+          "d1686074e2201ac0b538e5c9caa0f5260a76814d129c0075d42f9e479d9eee90",
+          "3f990516957174ab40f53668f23ffb383f21f51068f5066018f57f55deb1fe4f",
+          "70a8006aeaa252503c71ee4de5b5ecaca8e8241783dca0bb54be6324279aa768",
+          "9035c152eea059d2804bbca0f615dd6e180a4e306dbafee749c7d258b4ca6131",
+          "206e1a91cc792b5dc6ec80cb7fce314b919ee81a528c8da86d3c3641c57c4b22",
+          "3b7538f79de573cf717424b248c74fbba46837788638ff39d0a29cdf99bde47b",
+          "212cd7ebc1df1aa65b0756146819f1a0cdd83ca255691b0a3d73a5e51e240819",
+          "3fb72ca3067c93eadae9645710c017bdd9a5c856296286d03429402a4468e290",
+          "e12971ec8601bbf4e77b0240a423523c6cc84caeb0ed29db03e3b1ea0a07c9b7",
+          "5df449858de42d517ec4001f146f580f3545cb1c6060846e5c09505098774753",
+          "0e2d59a0fc1c11f4ed9cdd3021fedcb8b856938ac6f186b937a30fa0fc1024c5",
+          "dadbc94d242dfcd0a22fb31366b011826b8e53798241a9aa31cf17d020173cfa",
+          "3d02dd70433132f0e50348b3d506ef6698f2f85bab184af1f5fdafca53f6b6d5",
+          "81feb3f433de7eb2d7b31d2cc89889cf624c83baac59b47d411c2b217c5b4281",
+          "c227ee5e77710c6aee9f78e13b8fb19f84450c836b443418ec9c15b8acef1d77",
+          "4ac2926c32e446b2ace809645ef37a6ef273472dc083f0d8fe0fbdddfcc97150",
+          "df92e694300e275f42b024ef54afddd642419582e4afae6f8d13dd3c066d1022",
+          "743c7aec31ab5e429961a32ab426971b2c8d1f72c608de700b8cceb4ec139dba",
+          "41a993d4b41683fb71eb2bbe216bbf7a70334e259497960ba57004e92efb4458",
+          "f3afca4967727ba24451218580ec5a0d0c06d90f771feb3ab5d561a8e2e2cd17",
+          "5195f1a6ca28e0008f1e66ec8a11f2d47cdf7e31086c02616e353462d48a4604",
+          "8036503e953687a4240cf9dfb27ec3745654652f1f26fb4af9721d35a96a3401",
+          "bfb3ea5b028a9c91f49c6c56f21d728d870a4cbfe267c6d88421a26fd31ace6e",
+          "f4e011a9668c476cd17b65a8b9e0ba5429a53ee2bbe9269d08e55d905b26baab",
+          "874e2ea4331f19a510efd12373b463d6c875ab2f4c5a56f447fdf15481e50c88",
+          "b4f6f486baeb6c6e192c0ae77a16dfc9bd7f84f9605354a6f046d0f88070c02a"
+        ]
+      },
+      "placement_status": "HOLD: current source-map binding, collision and actor foot require integration review"
+    },
+    {
+      "id": "l1j_tw380_npc_80093",
+      "source_npc_id": "80093",
+      "name": "지타",
+      "source_name": "吉塔",
+      "source_impl": "L1Merchant",
+      "role": "dialogue",
+      "visual_binding_id": "M80093",
+      "spawns": [
+        {
+          "source_spawn_key": "spawnlist_npc:89236",
+          "source_map_id": 4,
+          "target_map_id_from_retained84_handoff": "aden_world",
+          "source_position": [
+            32620,
+            32733
+          ],
+          "source_heading": "6",
+          "source_position_mode": "fixed_point",
+          "source_random_offsets": [
+            0,
+            0
+          ],
+          "source_area": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "source_count": 1,
+          "dynamic_spawn_policy": "fixed original source anchor",
+          "chunk_source": "4/7ffd7fff.s32",
+          "chunk_sha256": "e46be6852e0884a84563f3e3b816cea2973215eddff2f0b9a1284bf9278ac542",
+          "position_transform_policy": "Use currently installed source map coordinates.to_world; never use overview_xy as runtime position. Verify walkability/actor foot at runtime; HOLD placement if no valid source-map binding."
+        }
+      ],
+      "has_verified_normal_dialogue": true,
+      "shop_enabled": false,
+      "quest_execution_enabled": false,
+      "combat_enabled": false,
+      "source_stats_import_enabled": false,
+      "new_item_creation_enabled": false,
+      "fallback_other_identity_allowed": false,
+      "visual": {
+        "atlas": "res://assets/npc/source_six/80093.png",
+        "sha256": "eaee716c9528066284fe23fa4364048f7aa96f77df9cf8eac889f90595d00729",
+        "atlas_rgba_sha256": "0bb774b5257346f788e560b4c90bad171b7120e9320bf459187122e76b39aef6",
+        "cell_size": [
+          48,
+          72
+        ],
+        "frames": 6,
+        "heading_slots": 8,
+        "canvas_bounds": [
+          0,
+          -48,
+          48,
+          24
+        ],
+        "pixel_origin_in_canvas": [
+          0,
+          48
+        ],
+        "actor_foot": null,
+        "actor_foot_status": "HOLD: raster origin is not an anatomical foot",
+        "direction_semantics_verified": false,
+        "heading_policy": "literal slots; horse explicitly reuses same-identity slot 0",
+        "seconds_per_frame": 0.12,
+        "timing_policy": "TWILIGHT cosmetic loop; original duration units unverified",
+        "source_binding": {
+          "binding_id": "M80093",
+          "representative_id": "SPR-U-d5678f599c05cddc5459",
+          "source": "source1",
+          "body_model_prefix": 200,
+          "variant": "all_nonconflicting_packs",
+          "definition_id": "source1:Text.pak/list.spr:definition_index:703",
+          "source_gfxid": 703,
+          "definition_index": 703,
+          "definition_name": "jyta",
+          "explicit_resolved_body_prefix": 200,
+          "actions": [
+            {
+              "code": 0,
+              "label": "walk",
+              "raw": "1 4,8.0:4 8.1:4 8.2:4 8.3:4",
+              "references": [
+                {
+                  "group": 8,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 1,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 2,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 8,
+                  "frame": 3,
+                  "duration_raw": 4
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 3,
+              "label": "Breath",
+              "raw": "1 6,0.0:8 0.1:8 0.2:8 0.3:8 0.4:8 0.5:8",
+              "references": [
+                {
+                  "group": 0,
+                  "frame": 0,
+                  "duration_raw": 8
+                },
+                {
+                  "group": 0,
+                  "frame": 1,
+                  "duration_raw": 8
+                },
+                {
+                  "group": 0,
+                  "frame": 2,
+                  "duration_raw": 8
+                },
+                {
+                  "group": 0,
+                  "frame": 3,
+                  "duration_raw": 8
+                },
+                {
+                  "group": 0,
+                  "frame": 4,
+                  "duration_raw": 8
+                },
+                {
+                  "group": 0,
+                  "frame": 5,
+                  "duration_raw": 8
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 2,
+              "label": "Damage",
+              "raw": "1 4,0.0:4 16.0:0<704 16.0:6<3166<3167 16.1:3",
+              "references": [
+                {
+                  "group": 0,
+                  "frame": 0,
+                  "duration_raw": 4
+                },
+                {
+                  "group": 16,
+                  "frame": 0,
+                  "duration_raw": 0
+                },
+                {
+                  "group": 16,
+                  "frame": 0,
+                  "duration_raw": 6
+                },
+                {
+                  "group": 16,
+                  "frame": 1,
+                  "duration_raw": 3
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            },
+            {
+              "code": 8,
+              "label": "Death",
+              "raw": "1 6,24.5:3 24.0:3[3168 24.1:3 24.2:3 24.3:3 24.4:5",
+              "references": [
+                {
+                  "group": 24,
+                  "frame": 5,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 24,
+                  "frame": 0,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 24,
+                  "frame": 1,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 24,
+                  "frame": 2,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 24,
+                  "frame": 3,
+                  "duration_raw": 3
+                },
+                {
+                  "group": 24,
+                  "frame": 4,
+                  "duration_raw": 5
+                }
+              ],
+              "duration_units_verified": false,
+              "leading_value_opaque": "1",
+              "eight_slot_bounds_pass_conditional": true,
+              "literal_heading0_sequence_verified": true,
+              "direction_fallback_required": false,
+              "direction_fallback_policy": null,
+              "eight_slot_failures": [],
+              "execution_enabled": true
+            }
+          ],
+          "disabled_actions": [],
+          "attachments": [],
+          "identity_approval": "SUPPORTED_LOCAL_NPC_ALIAS_PLUS_EXPLICIT_DEFINITION_BASE_PLUS_ACTUAL_PNG_REVIEW; provisional cross-version correspondence, no combat/shop/quest functionality",
+          "import_enabled": true,
+          "map_spawn_changes_allowed": false
+        },
+        "rgba_sha256": [
+          "9226465b39cc7bc576463372c85c118e1be2c3b5c1c6754699dfe192468ec5c7",
+          "f3216331f7cf93a8f430d3a5448465222f73be55beeed8b94399c2e3b2d5e66d",
+          "c88323dc7770697dbe7a22dc45264f1d7a4389e5831a38cda4e856b74450724f",
+          "1db87526ec79b980ae6e6b4f8541c2bf2429ee656ea471d147e5b9aecfe825fb",
+          "b399355981fd3cd8297dd288578f8c408b123071765b9c25389b5005f4046cd2",
+          "a9ea3418da49d8296c17c636c87117aca4e154e9aa5bfea68bec70cee56fbcb8",
+          "37c2cb3e243402e5992bbac79bb9036a6a5fcd5d5514ca87923f1427a1c1d39b",
+          "78fd5bde79afb2dd25276996c394c0c0ebbf96c6a401866e17b1f623d1b8fbfe",
+          "678cb53611e07c5786a4479b37a70c79e35a5372542b17be18d793fdf8634ba4",
+          "8cf11729fc4d7dc6c5ccea72e310fccecfa7763c806d4abdd7187e75a9fff1c8",
+          "f43c289cf7b669ce3a592e7c0e84edcfad75596eb4ca8349c86325c7997e918b",
+          "e3775773f9c0ac21a6e25ddbc2ebdcf0718c4804a3ff4977afaea4cf32e169de",
+          "ace985e43468aad93d79681cde5a9584237581e2312b6c9402e38c12e2a6a13e",
+          "0c9529216a3b23f68f4bf105132182cc76e77e0f572907d7fe30723c59b1f639",
+          "b76ec145275d977b1ed8197162b1fc2a4d765e24143241b2bbc611c0d1c9f9d7",
+          "d1d7398d8636471a90c395ce3f2131c8617af4ed89321f339ad9776b659ea092",
+          "e59db7d5bd65442a1b5d48d9d714a75babd8026de1e2d6abc6276007f6c7a8ef",
+          "4dd6bfcc8d338f17dfb3b01a40d1176d319c055c111d2d8a9e59eba1fd8eeafa",
+          "a6936fffa7b253ffc19bc2a62efd230b044c0b90f0e012b72befa6718f08d569",
+          "2b7cb1a381f1a6ddd9defb783351ad7a202f4a92040f2078101f0905c73c460b",
+          "90a80b23268e100adecb5fdbdef441d85a8e4cc7b33d1c406fdd157cca939421",
+          "ad07d80bb1a37332858da39042e87d908880b276d583f80c6506172b5b62b11e",
+          "ce8354ed1b7626f5850ba3ed2fdf0dc8c58da71bd0a190bbccba9b93ecc18b23",
+          "70367cf20cdf76930b892a43cb9e4d4c583d55d481f1447d6177c993dc35403b",
+          "b9d8d4f4f43589891dcec9f6d3ec8ad9c4164d247bbf6f1b5b48f3a46e8cb7bb",
+          "f26b520eb2d919b445e2b4f4694a44aeaf5e3b2bb199e5a16766ce899ff6cb0d",
+          "715d26ae9c9776ca7d114010706a4ddfbdc9b8e03e182c8c82c245fd6c3f5f4c",
+          "a6afa955cf8ad12bdf19191f3e9d33b9ce2236bc4c1cc8593bdf38c21f227633",
+          "3591efbd324d2fc00c64bd26a0165aaca7a17a9c1d586f547cceecc1aa08f8dd",
+          "a36c1b7e4f5ddee0430811c25138e34be9045f68d45db1f4088c331df764acb0",
+          "42826031ba8ea7c6bb0aba6ae3db91e94d5e2a94fb4e783cc263c23126df2913",
+          "547791a42a3b3592744756b4a0d9a7d08829e033dcbb760f07d3c87104bf62d5",
+          "2c1eb9c333f666137dd7ab494b0d5d0d778688d506503b92e9e953a9349ede07",
+          "21f4769b12bb7bbb020b12358f270eca5458f7a3366ee08a3c925672adfd1415",
+          "589d65ebc6d1b57f470d5b6eb1e14e1cf9a8be19fda74f5e5bc8d127d7746a11",
+          "c48735f0f58fbdc49db7a4037ae0d0307f455c2e64c3b197f06746f0e7673931",
+          "057fa9224a675a893d892c281f5d09e0333f626c52daeabcad2588fa3e7c7f48",
+          "0c3114d0ff8102c1d2113381afc26970114b51196d34614925e90071ebcdd58d",
+          "3ba89bd12713f7f44bc86c66a5603c01d7f932524ebf3806873c5809e12c9150",
+          "ce86a47c0ee1a9352866b74870510a4e4aa63e0d78f665c3dfaa6068231cb269",
+          "ae6026f044c1d8d78ad2ced39b2c008dda7925ad0bd554c518998b21c77924ba",
+          "9d0d0e8f280348fce476c06380271408f4dbd321ebcfdc53047b85ca776f9296",
+          "a31494d70fd872f7089aeb3ed24b96f90a3c18737a653176c9e03e7b17644342",
+          "f43cadf6bf45d7492696bbffec461422bae1b089b609f1ebdb0b1e8c9618f312",
+          "6f6610753fc4add1d2c925a7dc81548e02d3202c6c79936e0cc5fecacb2f28d3",
+          "f213f8b8cbf015c24d630968e4cc489b85712603473e9efcfad44c706041c99d",
+          "891895592796b1b2e697e5e81baa1e6a5d57bae967acc36a22e44e74f3cbb6d9",
+          "74993f52c88e11b8ef1b1449f4b811f1477578e8e50c8291a2be6d772ccb2a0c"
+        ]
+      },
+      "placement_status": "HOLD: current source-map binding, collision and actor foot require integration review"
+    }
+  ],
+  "preserve_existing_npc_rows": true,
+  "preserve_existing_dialogue_ids": [
+    "warden",
+    "merchant",
+    "warehouse_keeper",
+    "teleport_guide",
+    "craft_artisan",
+    "buyback_trader"
+  ],
+  "protected_map_ids": [
+    "albino_01",
+    "albino_02",
+    "escaros_01",
+    "escaros_02",
+    "escaros_03",
+    "escaros_04",
+    "escaros_05",
+    "faith_01",
+    "faith_02",
+    "faith_03",
+    "faith_04"
+  ],
+  "excluded_overlap_source_npc_ids": [
+    70100,
+    70101,
+    70102
+  ],
+  "existing_main_reference": {
+    "commit": "4ad6e0a3",
+    "library_id": "libfile_c6436d9a7bfc8191bf6b8b46ae4c724f",
+    "zip_sha256": "2e66dc40bf90c5e5940372401a49dbed927fec305ab9ccc0bb9c510f343ecf67"
+  },
+  "existing_profile_preserve": [
+    "ext:a3:npc:70039",
+    "ext:a3:npc:70047",
+    "ext:a3:npc:70068",
+    "ext:a3:npc:70095"
+  ],
+  "shop_mapping_result": "No first-six source shop rows. Existing main reviewed shops come from different SQL bytes/gfx/prices; no new item mapping asserted and no shop updates allowed.",
+  "duplicate_review": {
+    "existing_map_npc_rows_scanned": 33,
+    "first_six_exact_game_id_or_korean_name_overlap": 0,
+    "same_numeric_source_id_is_not_cross_version_identity": true
+  },
+  "runtime_validation_required": [
+    "current source-map ID/coordinate binding",
+    "collision and actor-foot projection",
+    "NPC render and directions",
+    "dialogue distance gate",
+    "existing IDs/save/profile preservation"
+  ],
+  "source3_pixel_identity_authenticated": false,
+  "handoff": {
+    "library_file_id": "libfile_52e6fe00307081918f0b17bc13c5ae56",
+    "version": 1,
+    "sha256": "4a8fe87073024226e1ce4c4e1b68a7fbdf9c7904ebbbb40e52d6a82df6bf31c0",
+    "raw_spr_count": 129,
+    "decoded_frames": 988
+  }
+}

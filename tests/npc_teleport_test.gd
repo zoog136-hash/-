@@ -32,8 +32,8 @@ func _run() -> void:
 		if int(rule["min_level"]) > 1:
 			_check(not bool(POLICY.quote(id,by_id,"not_current",int(rule["min_level"])-1,100000).get("ok")), "reject lower level: " + id)
 	_check(not bool(POLICY.quote("__made_up__",by_id,"aden_world",100,100000).get("ok")), "reject forged destination")
-	var original_npc: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/aden_field.json"))
-	_check(original_npc is Dictionary, "original Aden field parses")
+	var original_npc: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/npc_service_field.json"))
+	_check(original_npc is Dictionary, "NPC service fixture parses")
 	if original_npc is Dictionary:
 		var present: bool = false
 		var existing: Dictionary = {}
@@ -43,7 +43,7 @@ func _run() -> void:
 				existing[str(v.get("id",""))] = v
 				if v.get("id","") == "teleport_guide":
 					present = str(v.get("role","")) == "teleport"
-		_check(present, "NPC teleport guide connected in actual Aden field")
+		_check(present, "NPC teleport guide connected in isolated service fixture")
 		_check(existing.has("merchant") and existing.has("warden") and existing.has("warehouse_keeper"), "existing NPCs preserved")
 		var position: Variant = existing.get("merchant",{}).get("position",[])
 		var retained: bool = position is Array and position.size() == 2

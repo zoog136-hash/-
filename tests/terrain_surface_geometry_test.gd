@@ -13,7 +13,7 @@ func material(_index: int) -> ShaderMaterial:
 	return ShaderMaterial.new()
 
 func _initialize() -> void:
-	var paths: Array[String] = ["res://data/maps/aden_field.json"]
+	var paths: Array[String] = []
 	for entry: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json")):
 		paths.append(str(entry.path))
 	for path: String in paths:

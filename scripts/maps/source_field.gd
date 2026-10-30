@@ -58,6 +58,7 @@ func configure_source(value: Dictionary) -> bool:
 			"rect":[p.x-48,p.y-48,96,96],"source_row":row,"source_name":record.source_name,
 			"respawn_time":maxf(1,float(row.get("min_respawn_delay",60))),"roaming_radius":float(row.get("movement_distance",0))*26.83})
 	preload("res://scripts/maps/source_gameplay.gd").apply(self)
+	preload("res://scripts/npc/source_npc_catalog.gd").append_to_field(self)
 	return walkable(spawn)
 
 func _source_spawn_rect(row: Dictionary) -> Rect2i:

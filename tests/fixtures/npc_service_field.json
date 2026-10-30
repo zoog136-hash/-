@@ -1,0 +1,165 @@
+{
+  "map_id": "aden_world",
+  "bounds": [
+    0,
+    0,
+    48000,
+    25120
+  ],
+  "spawn_position": [
+    11250,
+    16320
+  ],
+  "npc_spawn": [
+    {
+      "id": "warden",
+      "name": "순찰대장",
+      "position": [
+        10870,
+        16140
+      ],
+      "role": "guide"
+    },
+    {
+      "id": "merchant",
+      "name": "변경 상인",
+      "position": [
+        10800,
+        16060
+      ],
+      "role": "shop"
+    },
+    {
+      "id": "warehouse_keeper",
+      "name": "아덴 창고지기",
+      "position": [
+        10460,
+        16100
+      ],
+      "role": "warehouse"
+    },
+    {
+      "id": "teleport_guide",
+      "name": "아덴 텔레포트 안내인",
+      "position": [
+        10830,
+        16460
+      ],
+      "role": "teleport"
+    },
+    {
+      "id": "craft_artisan",
+      "name": "아덴 제작 장인",
+      "position": [
+        10650,
+        16600
+      ],
+      "role": "craft"
+    },
+    {
+      "id": "buyback_trader",
+      "name": "아덴 아이템 매입상",
+      "position": [
+        11290,
+        16060
+      ],
+      "role": "buyback"
+    },
+    {
+      "id": "giran_shop",
+      "name": "기란 잡화 상인",
+      "role": "shop",
+      "position": [
+        25610,
+        9070
+      ],
+      "placement_group": "reference_object_pass_1",
+      "placement_verification": "reference_composition_local_approximation"
+    },
+    {
+      "id": "giran_warehouse",
+      "name": "기란 창고지기",
+      "role": "warehouse",
+      "position": [
+        26070,
+        9090
+      ],
+      "placement_group": "reference_object_pass_1",
+      "placement_verification": "reference_composition_local_approximation"
+    },
+    {
+      "id": "giran_teleport",
+      "name": "기란 이동 안내인",
+      "role": "teleport",
+      "position": [
+        26040,
+        9440
+      ],
+      "placement_group": "reference_object_pass_1",
+      "placement_verification": "reference_composition_local_approximation"
+    }
+  ],
+  "portal": [
+    {
+      "id": "town_waystone",
+      "name": "기란 이동석",
+      "position": [
+        11050,
+        16540
+      ],
+      "target_map": "aden_world",
+      "target_position": [
+        25840,
+        9940
+      ],
+      "radius": 56
+    },
+    {
+      "id": "ruin_waystone",
+      "name": "글루디오 이동석",
+      "position": [
+        26540,
+        9540
+      ],
+      "target_map": "aden_world",
+      "target_position": [
+        11250,
+        16320
+      ],
+      "radius": 56
+    },
+    {
+      "id": "oman_gate",
+      "name": "황혼 산맥 · 오만의 탑 입구",
+      "position": [
+        45440,
+        6240
+      ],
+      "target_map": "oman_01",
+      "radius": 68,
+      "verification_status": "public_geographical_approach_local_position_not_server_coordinate"
+    }
+  ],
+  "roads": [],
+  "water": [],
+  "bridges": [],
+  "props": [],
+  "regions": [],
+  "collision": [],
+  "reservations": [],
+  "streaming": {
+    "chunk_size": 1024,
+    "margin": 360,
+    "monster_sleep_distance": 2100
+  },
+  "structure_reference": {
+    "image_to_world_scale": [
+      40.0,
+      40.0
+    ],
+    "image_to_world_offset": [
+      0,
+      0
+    ]
+  }
+}

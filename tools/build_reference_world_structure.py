@@ -285,10 +285,8 @@ def build_aden(definition,profiles):
 
 def main():
     profiles=json.loads((ROOT/'data/monsters/world_spawn_profiles.json').read_text())
-    aden=json.loads((ROOT/'data/maps/aden_field.json').read_text())
     oman=json.loads((ROOT/'data/maps/oman_01.json').read_text())
-    assert aden['layout_revision']==1 and oman['layout_revision']==2,"Run once from the preserved PR84 baseline; do not rerun over finished maps"
-    dump(Path('data/maps/aden_field.json'),build_aden(aden,profiles))
+    assert oman['layout_revision']==2,"Run once from the preserved PR84 baseline; do not rerun over finished maps"
     dump(Path('data/maps/oman_01.json'),build_oman(oman,profiles))
     (ROOT/'data/monsters/world_spawn_profiles.json').write_text(json.dumps(profiles,ensure_ascii=False,indent=2)+'\n')
     index=json.loads((ROOT/'data/maps/field_index.json').read_text())

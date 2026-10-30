@@ -168,7 +168,7 @@ func inspect(mid: String) -> void:
 	print("ADEN_FAITH_PNG_MONSTER_MAP ",JSON.stringify(records[-1]))
 
 func legacy_boss_identity_migration(mid: String, field: NativePngField) -> void:
-	var path: String="res://data/maps/aden_field.json" if mid=="aden_world" else "res://data/maps/"+mid+".json"
+	var path: String="res://data/maps/"+mid+".json"
 	var legacy: Dictionary=CATALOG.apply_map(REGISTRY.read_json(path))
 	var old_bosses: Dictionary={}
 	for row: Dictionary in legacy.monster_spawn:
@@ -429,7 +429,7 @@ func restart_cooldown() -> void:
 	var identities: int=0
 	for identity: String in tested_bosses:
 		if restarted.field_population.boss_director.states.has(identity): identities+=1
-	check(identities==9,"fresh Main retains all nine previously visited boss identities")
+	check(identities==4,"fresh Main retains all four visited Faith boss identities")
 	for slot: Dictionary in restarted.field_population.slots:
 		if str(slot.region.get("mode",""))=="boss": check(not is_instance_valid(slot.monster),"fresh Main cannot duplicate its saved dead boss")
 	restarted.queue_free()
@@ -525,7 +525,7 @@ func run() -> void:
 		if mid=="aden_world": await gate_habitat_walk()
 		await normal_lifecycle(mid)
 		await boss_lifecycle(mid)
-	check(tested_bosses.size()==9,"all nine actual boss identities completed save/death/wall-clock lifecycle")
+	check(tested_bosses.size()==4,"all four Faith boss identities completed save/death/wall-clock lifecycle")
 	await restart_cooldown()
 	world.queue_free()
 	await ticks(3)
