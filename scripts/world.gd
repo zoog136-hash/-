@@ -5221,7 +5221,7 @@ func _on_self_mode_changed(enabled: bool) -> void:
 	self_mode_enabled = enabled
 	auto_buff_check_timer = 0.0
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 
 func _skill_activation(skill: Dictionary) -> String:
 	var activation: String = str(skill.get("activation", "")).strip_edges().to_lower()

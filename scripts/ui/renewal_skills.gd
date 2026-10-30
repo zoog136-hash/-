@@ -94,7 +94,7 @@ func configure(controller: Node) -> void:
 		var world: Node = hud.get_parent()
 		world.original_skills.catalog.schools["요정"] = schools[index]
 		world._update_hud()
-		world._save_game(true)
+		world._request_deferred_save()
 		refresh())
 	toolbar.add_child(school_filter)
 	var state: Dictionary = hud.character_state
