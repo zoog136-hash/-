@@ -64,7 +64,7 @@ func run() -> void:
 				check(view.options.get_child_count()>0 and not hud.catalog_detail.visible and not hud.card_controls.is_visible_in_tree(),"options separated from existing fusion controls")
 				check(hud.catalog_list.fixed_icon_size==Vector2i(94,116) if extent.x==1280 else hud.catalog_list.fixed_icon_size==Vector2i(78,92),"approved native card sizes preserved")
 				check(hud.catalog_list.get_item_text(0)==" " and str(hud.catalog_list.get_item_metadata(0))==Cards.card_id(hud.catalog_results[0]),"portrait-only grid retains the exact selectable ID")
-				check(view.tabs[2].disabled,"unimplemented collection never impersonates equipment collection")
+				check(not view.tabs[2].disabled and not world.card_collections.snapshot(category).is_empty(),"implemented automatic card collection has its own category data, separate from equipment registration")
 				if hud.catalog_details_tab.is_visible_in_tree():tap(hud.catalog_details_tab);await frames()
 				check(view.sheet.is_visible_in_tree() and hud.catalog_card_chrome.preview_frame.is_visible_in_tree(),"detail and approved frame/aura remain reachable")
 				check(hud.catalog_preview.get_global_rect().end.x<=view.sheet.get_global_rect().position.x+1,"guide preview stays left of its option sheet")

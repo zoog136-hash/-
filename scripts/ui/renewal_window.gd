@@ -207,7 +207,7 @@ func fit_viewport() -> void:
 	var viewport: Vector2 = available.size/scale
 	var shelf: bool = current_section in ["inventory","skills","menu","quickbind"]
 	var left: bool = current_section in ["character","stats","warehouse","sell"]
-	var fullscreen: bool = current_section in ["변신","마법인형","성물","shop","map","class_select","아이템","option_awakening","emblems","guardians"]
+	var fullscreen: bool = current_section in ["변신","마법인형","성물","card_collections","shop","map","class_select","아이템","option_awakening","emblems","guardians"]
 	var width: float = 378 if shelf or left else 840
 	var height: float = minf(508,viewport.y-150)
 	if current_section == "menu": width = 450
@@ -282,7 +282,7 @@ func _on_title_drag_input(event: InputEvent) -> void:
 
 func open(section: String, title: String, description: String) -> void:
 	current_section = section
-	var full_browser: bool=section in ["변신","마법인형","성물","아이템","shop","equipment_collections"]
+	var full_browser: bool=section in ["변신","마법인형","성물","아이템","shop","equipment_collections","card_collections"]
 	get_node("WindowMaterialSurface").visible=not full_browser
 	if full_browser:
 		add_theme_stylebox_override("panel",ReferenceSurfaces.inset(8))
@@ -292,7 +292,7 @@ func open(section: String, title: String, description: String) -> void:
 		add_theme_stylebox_override("panel",frame)
 	title_dragged = false
 	heading.text = title
-	section_icon.texture = UI.icon({"stats":"character","npc_shop":"shop","detailed_status":"character"}.get(section,section))
+	section_icon.texture = UI.icon({"stats":"character","npc_shop":"shop","detailed_status":"character","card_collections":"catalog"}.get(section,section))
 	subtitle.text = description
 	var can_navigate: bool = not navigate.get_connections().is_empty()
 	compact_menu_button.visible = can_navigate and section not in ["menu","class_select"]

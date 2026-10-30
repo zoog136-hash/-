@@ -61,8 +61,7 @@ func configure(controller: Node) -> void:
 		Surfaces.card_tab(button)
 		header.add_child(button)
 		tabs.append(button)
-	tabs[2].disabled=true
-	tabs[2].tooltip_text="카드 컬렉션은 현재 플레이 빌드에서 지원하지 않습니다"
+	tabs[2].tooltip_text="최초 획득 시 자동 적용되는 카드 컬렉션"
 	var space:=Control.new()
 	space.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	header.add_child(space)
@@ -151,6 +150,9 @@ func configure(controller: Node) -> void:
 		button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		button.disabled=true;button.tooltip_text=str(spec[1]);UI.primary_button(button)
 		footer_actions.add_child(button)
+		if spec[0]=="컬렉션 보기":
+			button.disabled=false;button.tooltip_text="선택 카드가 포함된 컬렉션"
+			button.pressed.connect(func() -> void:hud.open_normal_card_collections(category,Cards.card_id(hud.selected_catalog_record)))
 	footer_actions.hide()
 
 func activate(value: String) -> void:
@@ -183,8 +185,7 @@ func activate(value: String) -> void:
 	detail_visible=hud.catalog_detail.visible
 	collection_visible=hud.equipment_collection_button.visible
 	hud.catalog_detail.hide()
-	# Preserve main's implemented, explicitly named equipment route. The
-	# separate card-collection tab/footer still stay disabled.
+	# Equipment registration and permanent card ownership are separate routes.
 	hud.equipment_collection_button.visible=collection_visible
 	sheet.show()
 	controls_home=hud.card_controls.get_parent()
@@ -229,6 +230,8 @@ func deactivate() -> void:
 	hud.catalog_clear_button.text="현재 적용 해제"
 
 func select_tab(index: int) -> void:
+	if index==2:
+		hud.open_normal_card_collections(category);return
 	# Use the integration branch's existing fusion screen when it is present.
 	# This branch otherwise exposes the original controls without new rules.
 	if index==1 and hud.has_method("open_card_fusion"):

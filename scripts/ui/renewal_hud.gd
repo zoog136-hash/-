@@ -134,6 +134,9 @@ var catalog_clear_button: Button
 var catalog_grade_column: VBoxContainer
 var catalog_grade_buttons: Dictionary = {}
 var card_collection_state: Dictionary = {}
+var normal_card_collection_view: Control
+var normal_card_collection_category: String="변신"
+var normal_card_collection_focus: String=""
 var card_controls: VBoxContainer
 var card_draw_button: Button
 var card_reveal_preview: Button
@@ -880,6 +883,7 @@ func _navigate(section: String) -> void:
 			if not option_awakening_snapshot.is_empty():
 				option_awakening_open_requested.emit(str(option_awakening_snapshot.get("category", "")), str(option_awakening_snapshot.get("target_id", "")))
 		"equipment_collections": open_equipment_collections()
+		"card_collections": open_normal_card_collections(normal_card_collection_category,normal_card_collection_focus)
 		"emblems", "guardians": open_growth(section)
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
@@ -2263,6 +2267,19 @@ func _add_original_map_controls(regions: VBoxContainer) -> void:
 		populate.call()
 	regions.add_child(UI.label("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11,UI.MUTED))
 	regions.add_child(UI.label("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11,UI.MUTED))
+
+
+func open_normal_card_collections(category: String,identity: String="") -> void:
+	if not CARD_RULES.CATEGORIES.has(category):return
+	normal_card_collection_category=category;normal_card_collection_focus=identity
+	_open_window("card_collections",category+" 컬렉션","")
+	normal_card_collection_view=preload("res://scripts/cards/collection_view.gd").new()
+	workspace.mount(normal_card_collection_view)
+	normal_card_collection_view.configure(self,category,identity)
+
+func refresh_normal_card_collections() -> void:
+	if active_section=="card_collections" and is_instance_valid(normal_card_collection_view) and not normal_card_collection_view.is_queued_for_deletion():
+		normal_card_collection_view.refresh()
 
 
 func open_equipment_collections() -> void:

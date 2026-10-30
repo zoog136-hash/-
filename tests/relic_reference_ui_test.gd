@@ -121,7 +121,7 @@ func run() -> void:
 		check(modal()!=null,"native immediate summon retains confirmation")
 		if modal()!=null:tap(modal().cancel_button);await frames()
 		check(world.equipped_catalog["성물"].is_empty(),"cancel never applies selected relic")
-		check(view.tab_buttons[2].disabled and view.find_child("RelicRegister",true,false).disabled,"absent collection/quick-registration service is not impersonated")
+		check(not view.tab_buttons[2].disabled and not world.card_collections.snapshot("성물").is_empty() and view.find_child("RelicRegister",true,false).disabled,"automatic relic collection is connected while absent quick-registration stays disabled")
 		swipe_list(hud.catalog_list,-75);await frames()
 		var saved_page: int=hud.catalog_page
 		var saved_scroll: float=hud.catalog_list.get_v_scroll_bar().value

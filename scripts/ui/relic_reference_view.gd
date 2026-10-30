@@ -202,8 +202,10 @@ func configure(controller: Node) -> void:
 		button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		UI.primary_button(button)
 		footer.add_child(button)
-	tab_buttons[2].disabled=true
-	tab_buttons[2].tooltip_text="성물 컬렉션 서비스 미지원"
+		if spec[0]=="컬렉션 보기":
+			button.disabled=false;button.tooltip_text="선택 성물이 포함된 컬렉션"
+			button.pressed.connect(func() -> void:hud.open_normal_card_collections("성물",CardRules.card_id(hud.selected_catalog_record)))
+	tab_buttons[2].tooltip_text="최초 획득 시 자동 적용되는 성물 컬렉션"
 	fusion_scroll=ScrollContainer.new()
 	fusion_scroll.name="RelicExistingFusionPane"
 	fusion_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
@@ -332,6 +334,8 @@ func _reset_filters() -> void:
 	hud._refresh_catalog_list("")
 
 func _select_tab(index: int) -> void:
+	if index==2:
+		hud.open_normal_card_collections("성물");return
 	active_tab=index
 	for i: int in range(tab_buttons.size()):tab_buttons[i].button_pressed=i==index
 	main_body.visible=index==0
