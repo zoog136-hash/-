@@ -93,7 +93,7 @@ func configure(owner_hud: Node,value: String,identity: String="") -> void:
 	effects_scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL;totals_side.add_child(effects_scroll)
 	totals_body=VBoxContainer.new();totals_body.size_flags_horizontal=Control.SIZE_EXPAND_FILL;effects_scroll.add_child(totals_body)
 	hud.workspace.register_scroll_drag(effects_scroll,totals_body)
-	var policy: Label=UI.label("최초 획득 시 자동 반영\n카드 소모 없음\n미지원 효과는 적용 보류",12,UI.MUTED);policy.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;totals_side.add_child(policy)
+	var policy: Label=UI.label("최초 획득 시 자동 반영\n카드 소모 없음\n합성 후에도 달성 유지",12,UI.MUTED);policy.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;totals_side.add_child(policy)
 	resized.connect(_fit)
 	refresh();call_deferred("_fit")
 
@@ -137,7 +137,8 @@ func _filter() -> void:
 				count+=1
 				if row.completed:done+=1
 		button.text="%s\n(%d/%d)" % [grade,done,count];button.button_pressed=grade==selected_grade
-	summary.text="완성 %d / 확인된 %d개 · 적용 가능 %d개 · 적용 보류 %d개" % [complete_count,rows.size(),active_count,rows.size()-active_count]
+	summary.text="완성 %d / 컬렉션 %d개" % [complete_count,rows.size()]
+	if active_count<rows.size():summary.text+=" · 적용 보류 %d개" % (rows.size()-active_count)
 	if not focus_card.is_empty():summary.text+=" · 선택 카드 포함 (초기화로 전체)"
 	if filtered.is_empty():summary.text+=" · 해당하는 컬렉션 없음"
 	canvas.custom_minimum_size.y=filtered.size()*ROW_HEIGHT

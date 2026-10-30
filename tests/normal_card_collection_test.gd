@@ -44,7 +44,7 @@ func run() -> void:
 	data=JSON.parse_string(FileAccess.get_file_as_string("res://data/cards/normal_collections.json"))
 	var catalog: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))
 	var core=Core.new();check(core.configure(data,catalog),"versioned official definitions configure: "+core.error)
-	check(core.definitions.size()==195,"all selected dated source table rows retained; no unversioned 2026 imports")
+	check(core.definitions.size()==139 and data.reviewed_definition_count==195 and data.excluded_definition_count==56,"139 playable definitions remain from 195 reviewed rows after the explicitly requested 56 exclusions")
 	var counts: Dictionary={};var blocked: Dictionary={};var active: int=0
 	for row: Dictionary in core.definitions:
 		counts[row.category]=int(counts.get(row.category,0))+1
@@ -52,6 +52,14 @@ func run() -> void:
 		if core.availability[row.id].is_empty():active+=1
 		for reason: String in core.availability[row.id]:blocked[reason.get_slice(":",0)]=int(blocked.get(reason.get_slice(":",0),0))+1
 	print("NORMAL_COLLECTION_COVERAGE ",counts," applicable=",active," blocked_reasons=",blocked)
+	check(counts=={"변신":28,"마법인형":27,"성물":84} and active==139 and blocked.is_empty(),"all three categories have exact playable counts and no blocked rows remain in game data")
+	for binding: Array in [["변신","신화 : 천둥의 신","source:283","신화-뇌신(남)","신화"],["변신","어둠의 선생님","source:170","포노스 오크 마법사","전설"],["마법인형","탱커 듀오","source:102","광전사(남)","고급"]]:
+		var row: Dictionary=definition(binding[0],binding[1])
+		check(row.grade==binding[4] and row.requirements.any(func(q: Dictionary) -> bool:return q.id==binding[2] and q.catalog_name==binding[3] and not q.identity_binding.url.is_empty()),"verified legacy card name binds the existing exact ID/grade: "+binding[1])
+		var acquired: Dictionary=empty_ownership()
+		for q: Dictionary in row.requirements:acquired[row.category][q.id]=true
+		var completed: Dictionary=core.derive({"owned":acquired,"spare":{}})
+		check(completed.completed.has(row.id),"fixed collection auto-completes on permanent ownership with zero spare: "+binding[1])
 	var bug: Dictionary=definition("변신","둥둥이 형제")
 	check(bug.requirements[0].id=="source:62" and bug.requirements[1].id=="source:61" and bug.effects[0].value==5,"2019 official Bugbear pair +5HP exact IDs")
 	var wolf: Dictionary=definition("마법인형","나의 살던 고향은 북섬")
@@ -76,6 +84,9 @@ func run() -> void:
 	check(result.completed.size()==active,"unsupported PvP/evasion/rate, missing IDs and awakening conditions never award partial effects")
 	for key: String in result.totals:check(not key.begins_with("pvp_"),"PvP effects not converted into solo PvE: "+key)
 	var unsafe: Dictionary={"schema_version":1,"collections":[bug.duplicate(true)]}
+	unsafe.collections[0].effects=[{"key":"pvp_damage_reduction","unit":"flat","value":1}]
+	check(core.configure(unsafe,catalog) and core.availability[bug.id].has("effect_unsupported:pvp_damage_reduction:flat"),"the capability guard still rejects unsupported data rather than silently converting PvP to PvE")
+	unsafe.collections[0].effects=bug.effects.duplicate(true)
 	unsafe.collections[0].source.date="2026-01-01"
 	check(core.configure(unsafe,catalog) and core.availability[bug.id].has("source_version_unverified"),"post-2025 source cannot become active by setting a flag")
 	unsafe.collections[0].source=bug.source.duplicate(true);unsafe.collections[0].effects=["not an effect"]

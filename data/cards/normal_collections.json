@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "ownership_policy": "Existing card_draw_fusion.owned is the permanent first-acquisition ledger. No registration, card consumption, or repeated grants. Derived again on legacy load.",
-  "scope": "Only the explicitly cited pre-2026 official patch tables and two corroborated base pairs. This is not the full current live collection list.",
-  "version_exclusions": "The live guide root was updated in 2026 despite stale 2023 paragraph timestamps. Those unversioned additions are not imported. Awakening conditions and unsupported combat effects are displayed as blocked, never approximated or converted from PvP to PvE.",
+  "scope": "139 playable definitions from 195 reviewed pre-2026 official rows. Three verified existing card IDs are bound explicitly; the other 56 previously blocked definitions were excluded at user direction. This is not the full original or current live collection list.",
+  "version_exclusions": "The live guide root was updated in 2026 despite stale 2023 paragraph timestamps. Those unversioned additions are not imported. Unsupported definitions are excluded, never approximated or converted from PvP to PvE. Existing card ownership, cards, art and equipment collections are unchanged.",
   "collections": [
     {
       "id": "cardcol_c83deb1c367c67dc6084",
@@ -267,151 +267,6 @@
       }
     },
     {
-      "id": "cardcol_83fe3cba3ad786bf9855",
-      "name": "콕!콕!콕!",
-      "category": "변신",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:281",
-          "name": "로즈마리",
-          "catalog_name": "로즈마리",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:247",
-          "name": "눈의 리자드맨",
-          "catalog_name": "눈의 리자드맨",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:231",
-          "name": "유니크 랜서",
-          "catalog_name": "유니크 랜서",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 대미지 리덕션 +1"
-        }
-      ],
-      "raw_effects": "PVP 대미지 리덕션 +1",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 6,
-        "row_index": 5,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_df76385e152646104cdc",
-      "name": "틀 안에 이상형",
-      "category": "변신",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:344",
-          "name": "세라",
-          "catalog_name": "세라",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:281",
-          "name": "로즈마리",
-          "catalog_name": "로즈마리",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:296",
-          "name": "플레임 텅",
-          "catalog_name": "플레임 텅",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 10,
-        "row_index": 1,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_382b027e43aa60b3b206",
-      "name": "암흑 여제",
-      "category": "변신",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:344",
-          "name": "세라",
-          "catalog_name": "세라",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:164",
-          "name": "암흑기사단 릴리",
-          "catalog_name": "암흑기사단 릴리",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "PVP 대미지 리덕션 무시 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 10,
-        "row_index": 2,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_84018b71585dc4e7a815",
       "name": "고대의 암흑기사",
       "category": "변신",
@@ -494,49 +349,6 @@
         "updated_at": "2024-02-06T19:30:11.284Z",
         "table_index": 10,
         "row_index": 4,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_adaec1e9fa63ae9689df",
-      "name": "판도라와 야수",
-      "category": "변신",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:401",
-          "name": "크라켄",
-          "catalog_name": "크라켄",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:158",
-          "name": "판도라",
-          "catalog_name": "판도라",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_melee_damage",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP근거리 대미지 +1"
-        }
-      ],
-      "raw_effects": "PVP근거리 대미지 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 58,
-        "row_index": 1,
         "verified_pre2026": true
       }
     },
@@ -639,49 +451,6 @@
         "updated_at": "2024-02-06T19:30:11.284Z",
         "table_index": 58,
         "row_index": 3,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_ddda83f70812e9004639",
-      "name": "새로운 시작",
-      "category": "변신",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:273",
-          "name": "과거의 나이트발드",
-          "catalog_name": "과거의 나이트발드",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:274",
-          "name": "암살의 아리아 울프",
-          "catalog_name": "암살의 아리아 울프",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "fear_resistance",
-          "unit": "percent",
-          "value": 2,
-          "label": "공포 내성 +2%"
-        }
-      ],
-      "raw_effects": "공포 내성 +2%",
-      "server_note": "그림리퍼 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=623a23b88c8f285b48855b98",
-        "date": "2022-03-23",
-        "published_at": "2022-03-22T19:30:00.001Z",
-        "updated_at": "2022-05-24T05:14:11.840Z",
-        "table_index": 15,
-        "row_index": 1,
         "verified_pre2026": true
       }
     },
@@ -863,65 +632,6 @@
       }
     },
     {
-      "id": "cardcol_215071a364229ebee246",
-      "name": "어둠을 삼키는 자",
-      "category": "변신",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:274",
-          "name": "암살의 아리아 울프",
-          "catalog_name": "암살의 아리아 울프",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:122",
-          "name": "다크 슬레이어",
-          "catalog_name": "다크 슬레이어",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:192",
-          "name": "칠흑의 데스나이트",
-          "catalog_name": "칠흑의 데스나이트",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:245",
-          "name": "베리스",
-          "catalog_name": "베리스",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +1",
-      "server_note": "그림리퍼 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=623a23b88c8f285b48855b98",
-        "date": "2022-03-23",
-        "published_at": "2022-03-22T19:30:00.001Z",
-        "updated_at": "2022-05-24T05:14:11.840Z",
-        "table_index": 15,
-        "row_index": 5,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_e3b7ca9ff7321d34a2bb",
       "name": "암살자",
       "category": "변신",
@@ -981,63 +691,6 @@
       }
     },
     {
-      "id": "cardcol_b49e00fc6642c0043ca5",
-      "name": "전설의 여인",
-      "category": "변신",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:274",
-          "name": "암살의 아리아 울프",
-          "catalog_name": "암살의 아리아 울프",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:190",
-          "name": "백조의 로엔그린",
-          "catalog_name": "백조의 로엔그린",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:226",
-          "name": "가드리아",
-          "catalog_name": "가드리아",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_melee_evasion",
-          "unit": "flat",
-          "value": 1,
-          "label": "근거리 회피력 무시 +1"
-        },
-        {
-          "key": "ignore_ranged_evasion",
-          "unit": "flat",
-          "value": 1,
-          "label": "원거리 회피력 무시 +1"
-        }
-      ],
-      "raw_effects": "근거리 회피력 무시 +1\n원거리 회피력 무시 +1",
-      "server_note": "그림리퍼 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=623a23b88c8f285b48855b98",
-        "date": "2022-03-23",
-        "published_at": "2022-03-22T19:30:00.001Z",
-        "updated_at": "2022-05-24T05:14:11.840Z",
-        "table_index": 15,
-        "row_index": 7,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_ef19ba74ae2c640e5516",
       "name": "스피어 군단",
       "category": "변신",
@@ -1077,57 +730,6 @@
         "updated_at": "2022-08-25T05:24:49.846Z",
         "table_index": 6,
         "row_index": 6,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_5f2164d1eb660cbdb8b2",
-      "name": "공격 전문가",
-      "category": "변신",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:282",
-          "name": "젠",
-          "catalog_name": "젠",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:143",
-          "name": "나이트 슬레이셔",
-          "catalog_name": "나이트 슬레이셔",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:275",
-          "name": "Mr. 스모커",
-          "catalog_name": "Mr. 스모커",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +1",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 6,
-        "row_index": 7,
         "verified_pre2026": true
       }
     },
@@ -1179,49 +781,6 @@
         "updated_at": "2022-08-25T05:24:49.846Z",
         "table_index": 6,
         "row_index": 8,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_59bbfdb20eea9e479beb",
-      "name": "신화 : 천둥의 신",
-      "category": "변신",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "unmapped:신화-뇌신",
-          "name": "신화-뇌신",
-          "catalog_name": "",
-          "grade": "",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:282",
-          "name": "젠",
-          "catalog_name": "젠",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "melee_hit",
-          "unit": "flat",
-          "value": 2,
-          "label": "근거리 명중 +2"
-        }
-      ],
-      "raw_effects": "근거리 명중 +2",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 6,
-        "row_index": 9,
         "verified_pre2026": true
       }
     },
@@ -1316,49 +875,6 @@
         "updated_at": "2023-04-05T19:19:30.180Z",
         "table_index": 9,
         "row_index": 2,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_035f0a08e39bd1be6b64",
-      "name": "나도 각성 맞지?",
-      "category": "변신",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:330",
-          "name": "암흑룡 아툰",
-          "catalog_name": "암흑룡 아툰",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:209",
-          "name": "각성 알폰스",
-          "catalog_name": "각성 알폰스",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_melee_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "근거리 대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "근거리 대미지 리덕션 무시 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 3,
         "verified_pre2026": true
       }
     },
@@ -1528,116 +1044,6 @@
         "updated_at": "2023-04-05T19:19:30.180Z",
         "table_index": 9,
         "row_index": 6,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_7da30cbd5a9f9d9d33c0",
-      "name": "질리언 컬렉션",
-      "category": "변신",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:331",
-          "name": "암흑룡 질리언",
-          "catalog_name": "암흑룡 질리언",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:113",
-          "name": "달의 질리언",
-          "catalog_name": "달의 질리언",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:94",
-          "name": "질리언",
-          "catalog_name": "질리언",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_damage_reduction",
-          "unit": "flat",
-          "value": 2,
-          "label": "PVP 대미지 리덕션 +2"
-        }
-      ],
-      "raw_effects": "PVP 대미지 리덕션 +2",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 7,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_31dc7dca1578087204f8",
-      "name": "후방 지원",
-      "category": "변신",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:331",
-          "name": "암흑룡 질리언",
-          "catalog_name": "암흑룡 질리언",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:145",
-          "name": "크리스터(활)",
-          "catalog_name": "크리스터(활)",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:250",
-          "name": "오렌 보우",
-          "catalog_name": "오렌 보우",
-          "grade": "희귀",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:235",
-          "name": "오크 보우",
-          "catalog_name": "오크 보우",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_ranged_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "원거리 대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "원거리 대미지 리덕션 무시 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 8,
         "verified_pre2026": true
       }
     },
@@ -1878,65 +1284,6 @@
       }
     },
     {
-      "id": "cardcol_919002284dad8e91cb96",
-      "name": "내가 가르쳐 주마",
-      "category": "변신",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "변신",
-          "id": "source:332",
-          "name": "암흑룡 조우",
-          "catalog_name": "암흑룡 조우",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:230",
-          "name": "유니크 매지션",
-          "catalog_name": "유니크 매지션",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:170",
-          "name": "포노스 오크 마법사",
-          "catalog_name": "포노스 오크 마법사",
-          "grade": "희귀",
-          "awakened": false
-        },
-        {
-          "category": "변신",
-          "id": "source:314",
-          "name": "카멜레온 마스터",
-          "catalog_name": "카멜레온 마스터",
-          "grade": "고급",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_magic_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "마법 대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "마법 대미지 리덕션 무시 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 13,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_960f22ee6fe6b5a19826",
       "name": "블랙 앤 화이트",
       "category": "변신",
@@ -2054,11 +1401,16 @@
         },
         {
           "category": "변신",
-          "id": "unmapped:포노스 오크 법사",
+          "id": "source:170",
           "name": "포노스 오크 법사",
-          "catalog_name": "",
-          "grade": "",
-          "awakened": false
+          "catalog_name": "포노스 오크 마법사",
+          "grade": "희귀",
+          "awakened": false,
+          "identity_binding": {
+            "url": "https://lineagem.inven.co.kr/db/polymorph/170",
+            "collection_name": "어둠의 선생님",
+            "verification": "Same collection, other required cards and original effect match the dated official patch row; use the existing catalog ID without editing any catalog name, art, or save identity."
+          }
         },
         {
           "category": "변신",
@@ -2086,6 +1438,54 @@
         "updated_at": "2023-04-05T19:19:30.180Z",
         "table_index": 9,
         "row_index": 16,
+        "verified_pre2026": true
+      }
+    },
+    {
+      "id": "cardcol_59bbfdb20eea9e479beb",
+      "name": "신화 : 천둥의 신",
+      "category": "변신",
+      "grade": "신화",
+      "requirements": [
+        {
+          "category": "변신",
+          "id": "source:283",
+          "name": "신화-뇌신",
+          "catalog_name": "신화-뇌신(남)",
+          "grade": "신화",
+          "awakened": false,
+          "identity_binding": {
+            "url": "https://lineagem.inven.co.kr/db/polymorph/283",
+            "collection_name": "신화 : 천둥의 신",
+            "verification": "Same collection, other required cards and original effect match the dated official patch row; use the existing catalog ID without editing any catalog name, art, or save identity."
+          }
+        },
+        {
+          "category": "변신",
+          "id": "source:282",
+          "name": "젠",
+          "catalog_name": "젠",
+          "grade": "전설",
+          "awakened": false
+        }
+      ],
+      "effects": [
+        {
+          "key": "melee_hit",
+          "unit": "flat",
+          "value": 2,
+          "label": "근거리 명중 +2"
+        }
+      ],
+      "raw_effects": "근거리 명중 +2",
+      "server_note": "그림리퍼/발록 서버 제외",
+      "source": {
+        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
+        "date": "2022-08-24",
+        "published_at": "2022-08-23T19:30:00.001Z",
+        "updated_at": "2022-08-25T05:24:49.846Z",
+        "table_index": 6,
+        "row_index": 9,
         "verified_pre2026": true
       }
     },
@@ -2190,11 +1590,16 @@
         },
         {
           "category": "마법인형",
-          "id": "unmapped:광전사",
+          "id": "source:102",
           "name": "광전사",
-          "catalog_name": "",
-          "grade": "",
-          "awakened": false
+          "catalog_name": "광전사(남)",
+          "grade": "고급",
+          "awakened": false,
+          "identity_binding": {
+            "url": "https://lineagem.inven.co.kr/db/magicdoll/102",
+            "collection_name": "탱커 듀오",
+            "verification": "Same collection, other required cards and original effect match the dated official patch row; use the existing catalog ID without editing any catalog name, art, or save identity."
+          }
         }
       ],
       "effects": [
@@ -2476,49 +1881,6 @@
       }
     },
     {
-      "id": "cardcol_e3fa4cc0bf2a339b8f9c",
-      "name": "최초의 전설",
-      "category": "마법인형",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:115",
-          "name": "드래곤 슬레이어",
-          "catalog_name": "드래곤 슬레이어",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:1",
-          "name": "데스나이트",
-          "catalog_name": "데스나이트",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +1",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 7,
-        "row_index": 5,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_42a0258ee0a79cdaffff",
       "name": "얘들아 용 잡자",
       "category": "마법인형",
@@ -2629,55 +1991,6 @@
       }
     },
     {
-      "id": "cardcol_cf4eb10d3d66ab4d1be2",
-      "name": "슬레이어의 롤 모델",
-      "category": "마법인형",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:115",
-          "name": "드래곤 슬레이어",
-          "catalog_name": "드래곤 슬레이어",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:87",
-          "name": "군터",
-          "catalog_name": "군터",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_melee_damage",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 근거리 추가 대미지 +1"
-        },
-        {
-          "key": "pvp_ranged_damage",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 원거리 추가 대미지 +1"
-        }
-      ],
-      "raw_effects": "PVP 근거리 추가 대미지 +1\nPVP 원거리 추가 대미지 +1",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 7,
-        "row_index": 8,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_d72e5374e83b2e54ef81",
       "name": "알비노 마법인형",
       "category": "마법인형",
@@ -2725,49 +2038,6 @@
         "updated_at": "2023-04-05T19:19:30.180Z",
         "table_index": 9,
         "row_index": 17,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_1fb01c55e2b6c7db9aac",
-      "name": "데몬 컬렉션",
-      "category": "마법인형",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:121",
-          "name": "알비노 데몬",
-          "catalog_name": "알비노 데몬",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:32",
-          "name": "데몬",
-          "catalog_name": "데몬",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "melee_damage_reduction_rate",
-          "unit": "percent",
-          "value": 2,
-          "label": "근거리 대미지 감소 +2%"
-        }
-      ],
-      "raw_effects": "근거리 대미지 감소 +2%",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 18,
         "verified_pre2026": true
       }
     },
@@ -2862,167 +2132,6 @@
         "updated_at": "2023-04-05T19:19:30.180Z",
         "table_index": 9,
         "row_index": 20,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_e55bd1f563cbfa67eb0b",
-      "name": "불로 다스리다",
-      "category": "마법인형",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:121",
-          "name": "알비노 데몬",
-          "catalog_name": "알비노 데몬",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:108",
-          "name": "좀비로드",
-          "catalog_name": "좀비로드",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:78",
-          "name": "아르피어",
-          "catalog_name": "아르피어",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 대미지 리덕션 +1"
-        }
-      ],
-      "raw_effects": "PVP 대미지 리덕션 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 21,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_947c4b528d0426a8ca6c",
-      "name": "레드와 블루",
-      "category": "마법인형",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:121",
-          "name": "알비노 데몬",
-          "catalog_name": "알비노 데몬",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:63",
-          "name": "에틴(레드)",
-          "catalog_name": "에틴(레드)",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:64",
-          "name": "에틴(블루)",
-          "catalog_name": "에틴(블루)",
-          "grade": "희귀",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:93",
-          "name": "하피(블루)",
-          "catalog_name": "하피(블루)",
-          "grade": "희귀",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:37",
-          "name": "블레그",
-          "catalog_name": "블레그",
-          "grade": "일반",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "PVP 대미지 리덕션 무시 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 22,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_f50ac51bcc5331c88e0b",
-      "name": "순백은 아니야",
-      "category": "마법인형",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:122",
-          "name": "알비노 피닉스",
-          "catalog_name": "알비노 피닉스",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:33",
-          "name": "얼음여왕",
-          "catalog_name": "얼음여왕",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ranged_damage_reduction_rate",
-          "unit": "percent",
-          "value": 2,
-          "label": "원거리 대미지 감소 +2%"
-        }
-      ],
-      "raw_effects": "원거리 대미지 감소 +2%",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 23,
         "verified_pre2026": true
       }
     },
@@ -3231,49 +2340,6 @@
       }
     },
     {
-      "id": "cardcol_7629f63fb1a3aa9bcebd",
-      "name": "타락의 아이콘",
-      "category": "마법인형",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:123",
-          "name": "알비노 유니콘",
-          "catalog_name": "알비노 유니콘",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:61",
-          "name": "타락",
-          "catalog_name": "타락",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "magic_damage_reduction_rate",
-          "unit": "percent",
-          "value": 2,
-          "label": "마법 대미지 감소 +2%"
-        }
-      ],
-      "raw_effects": "마법 대미지 감소 +2%",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 28,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_76938e3f40c401b0aad8",
       "name": "큰 발의 유니콘",
       "category": "마법인형",
@@ -3419,57 +2485,6 @@
       }
     },
     {
-      "id": "cardcol_49fefe0a4bfcb888a0b8",
-      "name": "상상과 이상",
-      "category": "마법인형",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:123",
-          "name": "알비노 유니콘",
-          "catalog_name": "알비노 유니콘",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:9",
-          "name": "드레이크",
-          "catalog_name": "드레이크",
-          "grade": "희귀",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:85",
-          "name": "호랑이",
-          "catalog_name": "호랑이",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=642c7ab9af956e56ff7b89ae",
-        "date": "2023-04-05",
-        "published_at": "2023-04-04T15:00:00.001Z",
-        "updated_at": "2023-04-05T19:19:30.180Z",
-        "table_index": 9,
-        "row_index": 32,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_a2b875ce5dfadd822b8d",
       "name": "4대 용의 결속",
       "category": "마법인형",
@@ -3531,167 +2546,6 @@
         "updated_at": "2022-08-25T05:24:49.846Z",
         "table_index": 37,
         "row_index": 1,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_7180d7fbfce678b02aba",
-      "name": "딱! 봐도 까칠해 보여",
-      "category": "마법인형",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:116",
-          "name": "린드비오르",
-          "catalog_name": "린드비오르",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:111",
-          "name": "발라카스",
-          "catalog_name": "발라카스",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:32",
-          "name": "데몬",
-          "catalog_name": "데몬",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 3,
-          "label": "대미지 리덕션 무시 +3"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +3",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 37,
-        "row_index": 2,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_1a4897d39c93e41f2600",
-      "name": "동남풍이 불면",
-      "category": "마법인형",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:116",
-          "name": "린드비오르",
-          "catalog_name": "린드비오르",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:111",
-          "name": "발라카스",
-          "catalog_name": "발라카스",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:72",
-          "name": "피닉스",
-          "catalog_name": "피닉스",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:114",
-          "name": "발록",
-          "catalog_name": "발록",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "fear_hit",
-          "unit": "percent",
-          "value": 2,
-          "label": "공포 적중 +2%"
-        }
-      ],
-      "raw_effects": "공포 적중 +2%",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 37,
-        "row_index": 3,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_e2838a856dc1bfe3506e",
-      "name": "하딘의 꿈",
-      "category": "마법인형",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:116",
-          "name": "린드비오르",
-          "catalog_name": "린드비오르",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:94",
-          "name": "파푸리온",
-          "catalog_name": "파푸리온",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:112",
-          "name": "다크 하딘",
-          "catalog_name": "다크 하딘",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "stunned_damage_reduction",
-          "unit": "flat",
-          "value": 5,
-          "label": "스턴 상태 시 대미지 리덕션 +5"
-        }
-      ],
-      "raw_effects": "스턴 상태 시 대미지 리덕션 +5",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 37,
-        "row_index": 4,
         "verified_pre2026": true
       }
     },
@@ -3802,175 +2656,6 @@
         "updated_at": "2022-08-25T05:24:49.846Z",
         "table_index": 37,
         "row_index": 6,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_0ab0e5d6cf0b243161c9",
-      "name": "집요한 공격",
-      "category": "마법인형",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:116",
-          "name": "린드비오르",
-          "catalog_name": "린드비오르",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:60",
-          "name": "안타라스",
-          "catalog_name": "안타라스",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:88",
-          "name": "오우거 킹",
-          "catalog_name": "오우거 킹",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:109",
-          "name": "쿠거",
-          "catalog_name": "쿠거",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 대미지 리덕션 +1"
-        }
-      ],
-      "raw_effects": "PVP 대미지 리덕션 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 37,
-        "row_index": 7,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_86608b4df4d49e6f60b4",
-      "name": "너도 잡아주마",
-      "category": "마법인형",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:116",
-          "name": "린드비오르",
-          "catalog_name": "린드비오르",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:86",
-          "name": "디바인 크루세이더",
-          "catalog_name": "디바인 크루세이더",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:87",
-          "name": "군터",
-          "catalog_name": "군터",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "critical_damage_reduction",
-          "unit": "flat",
-          "value": 2,
-          "label": "치명타 대미지 리덕션 +2"
-        }
-      ],
-      "raw_effects": "치명타 대미지 리덕션 +2",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 37,
-        "row_index": 8,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_f904e97b9f179ac571fa",
-      "name": "격동의 바람",
-      "category": "마법인형",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "마법인형",
-          "id": "source:116",
-          "name": "린드비오르",
-          "catalog_name": "린드비오르",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:33",
-          "name": "얼음여왕",
-          "catalog_name": "얼음여왕",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:77",
-          "name": "큰 발의 마요",
-          "catalog_name": "큰 발의 마요",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "마법인형",
-          "id": "source:11",
-          "name": "다이아몬드 골렘",
-          "catalog_name": "다이아몬드골렘",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "stunned_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "스턴 상태 시 대미지 리덕션 +1"
-        }
-      ],
-      "raw_effects": "스턴 상태 시 대미지 리덕션 +1",
-      "server_note": "",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=63052ab89d59e3180628d0e4",
-        "date": "2022-08-24",
-        "published_at": "2022-08-23T19:30:00.001Z",
-        "updated_at": "2022-08-25T05:24:49.846Z",
-        "table_index": 37,
-        "row_index": 9,
         "verified_pre2026": true
       }
     },
@@ -4635,49 +3320,6 @@
         "updated_at": "2023-07-11T23:29:04.887Z",
         "table_index": 29,
         "row_index": 56,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_5637478f69852b3cbae1",
-      "name": "단단해",
-      "category": "성물",
-      "grade": "고급",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:2005",
-          "name": "유니콘의 뿔",
-          "catalog_name": "유니콘의 뿔",
-          "grade": "고급",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:1005",
-          "name": "크러스트시안의 해골",
-          "catalog_name": "크러스트시안의 해골",
-          "grade": "일반",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "critical_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "치명타 대미지 리덕션 +1"
-        }
-      ],
-      "raw_effects": "치명타 대미지 리덕션 +1",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 57,
         "verified_pre2026": true
       }
     },
@@ -5543,49 +4185,6 @@
         "updated_at": "2023-07-11T23:29:04.887Z",
         "table_index": 29,
         "row_index": 47,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_c0db4310249b2aafb715",
-      "name": "내 뿔이야?",
-      "category": "성물",
-      "grade": "희귀",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:3003",
-          "name": "바포메트의 지팡이",
-          "catalog_name": "바포메트의 지팡이",
-          "grade": "희귀",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:2005",
-          "name": "유니콘의 뿔",
-          "catalog_name": "유니콘의 뿔",
-          "grade": "고급",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "magic_penetration",
-          "unit": "percent",
-          "value": 1,
-          "label": "마법 관통 1%"
-        }
-      ],
-      "raw_effects": "마법 관통 1%",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 48,
         "verified_pre2026": true
       }
     },
@@ -6472,49 +5071,6 @@
       }
     },
     {
-      "id": "cardcol_eb90a285ad93e8ef0d7b",
-      "name": "선착장 공기는 어때?",
-      "category": "성물",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:4004",
-          "name": "타로스의 창",
-          "catalog_name": "타로스의 창",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3004",
-          "name": "커츠의 검",
-          "catalog_name": "커츠의 검",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "PvP 대미지 리덕션 +1"
-        }
-      ],
-      "raw_effects": "PvP 대미지 리덕션 +1",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 29,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_63e417c0828763360ff8",
       "name": "2층 지겹다",
       "category": "성물",
@@ -6867,49 +5423,6 @@
       }
     },
     {
-      "id": "cardcol_9be830346a84cbad715f",
-      "name": "부자 군왕",
-      "category": "성물",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:4012",
-          "name": "바란카의 가면",
-          "catalog_name": "바란카의 가면",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4013",
-          "name": "헬바인의 건틀렛",
-          "catalog_name": "헬바인의 건틀렛",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 2,
-          "label": "대미지 리덕션 무시 +2"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +2",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 17,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_855aeefc3111524ee45f",
       "name": "창으로 가면 돼?",
       "category": "성물",
@@ -6949,92 +5462,6 @@
         "updated_at": "2024-02-06T19:30:11.284Z",
         "table_index": 40,
         "row_index": 18,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_5096063a02880dd77afe",
-      "name": "빌려줘 철퇴",
-      "category": "성물",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:4012",
-          "name": "바란카의 가면",
-          "catalog_name": "바란카의 가면",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3001",
-          "name": "리칸트의 철퇴",
-          "catalog_name": "리칸트의 철퇴",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "PVP 대미지 리덕션 무시 +1",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 19,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_a9c0e449934e191ee6ce",
-      "name": "수성과 공성",
-      "category": "성물",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:4012",
-          "name": "바란카의 가면",
-          "catalog_name": "바란카의 가면",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3014",
-          "name": "공성 병기",
-          "catalog_name": "공성 병기",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "critical_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "치명타 대미지 리덕션 +1"
-        }
-      ],
-      "raw_effects": "치명타 대미지 리덕션 +1",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 20,
         "verified_pre2026": true
       }
     },
@@ -7121,49 +5548,6 @@
         "updated_at": "2024-02-06T19:30:11.284Z",
         "table_index": 40,
         "row_index": 22,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_754c6f62f59fed068fb0",
-      "name": "난 비수가 있어",
-      "category": "성물",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:4013",
-          "name": "헬바인의 건틀렛",
-          "catalog_name": "헬바인의 건틀렛",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3004",
-          "name": "커츠의 검",
-          "catalog_name": "커츠의 검",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 대미지 리덕션 +1"
-        }
-      ],
-      "raw_effects": "PVP 대미지 리덕션 +1",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 23,
         "verified_pre2026": true
       }
     },
@@ -7293,49 +5677,6 @@
         "updated_at": "2024-02-06T19:30:11.284Z",
         "table_index": 40,
         "row_index": 26,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_9046aae170720636eae4",
-      "name": "저항력",
-      "category": "성물",
-      "grade": "영웅",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:4011",
-          "name": "눈꽃 결정",
-          "catalog_name": "눈꽃 결정",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4006",
-          "name": "듀라한의 투구",
-          "catalog_name": "듀라한의 투구",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +1",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 27,
         "verified_pre2026": true
       }
     },
@@ -7485,57 +5826,6 @@
       }
     },
     {
-      "id": "cardcol_d3b9714cd214b6a40ce5",
-      "name": "입장 진행 시켜",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5003",
-          "name": "나그바스의 지팡이",
-          "catalog_name": "나그바스의 지팡이",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5002",
-          "name": "포세이돈의 왕관",
-          "catalog_name": "포세이돈의 왕관",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4006",
-          "name": "듀라한의 투구",
-          "catalog_name": "듀라한의 투구",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_damage_reduction",
-          "unit": "flat",
-          "value": 3,
-          "label": "PvP 대미지 리덕션 +3"
-        }
-      ],
-      "raw_effects": "PvP 대미지 리덕션 +3",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 15,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_5dd0c4251b615da8f2b7",
       "name": "지팡이 집합",
       "category": "성물",
@@ -7591,57 +5881,6 @@
         "updated_at": "2023-07-11T23:29:04.887Z",
         "table_index": 29,
         "row_index": 16,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_d782583939e5cf566322",
-      "name": "상자 속에 티아라",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5003",
-          "name": "나그바스의 지팡이",
-          "catalog_name": "나그바스의 지팡이",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4001",
-          "name": "얼음여왕의 티아라",
-          "catalog_name": "얼음여왕의 티아라",
-          "grade": "영웅",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3010",
-          "name": "판도라의 물약",
-          "catalog_name": "판도라의 물약",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "magic_damage_reduction_rate",
-          "unit": "percent",
-          "value": 1,
-          "label": "마법 대미지 감소 +1%"
-        }
-      ],
-      "raw_effects": "마법 대미지 감소 +1%",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 17,
         "verified_pre2026": true
       }
     },
@@ -7775,49 +6014,6 @@
       }
     },
     {
-      "id": "cardcol_78271c6a6d9ac5a5d251",
-      "name": "나도 각성 왕관 시켜줘",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5002",
-          "name": "포세이돈의 왕관",
-          "catalog_name": "포세이돈의 왕관",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4003",
-          "name": "헬바인의 활",
-          "catalog_name": "헬바인의 활",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ranged_damage_reduction_rate",
-          "unit": "percent",
-          "value": 1,
-          "label": "원거리 대미지 감소 +1%"
-        }
-      ],
-      "raw_effects": "원거리 대미지 감소 +1%",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 21,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_c4a9158c813b8f6e01f6",
       "name": "카운트 시작",
       "category": "성물",
@@ -7908,135 +6104,6 @@
         "updated_at": "2023-07-11T23:29:04.887Z",
         "table_index": 29,
         "row_index": 23,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_c7225e8e21ffb2118b9d",
-      "name": "죽음의 맹약",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5001",
-          "name": "사신의 낫",
-          "catalog_name": "사신의 낫",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5003",
-          "name": "나그바스의 지팡이",
-          "catalog_name": "나그바스의 지팡이",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "weapon_parry",
-          "unit": "percent",
-          "value": 1,
-          "label": "무기 막기 +1%"
-        }
-      ],
-      "raw_effects": "무기 막기 +1%",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 24,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_b49e452b115e5d555289",
-      "name": "사신은 낫이지",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5001",
-          "name": "사신의 낫",
-          "catalog_name": "사신의 낫",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4002",
-          "name": "이프리트의 창",
-          "catalog_name": "이프리트의 창",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "melee_damage_reduction_rate",
-          "unit": "percent",
-          "value": 1,
-          "label": "근거리 대미지 감소 +1%"
-        }
-      ],
-      "raw_effects": "근거리 대미지 감소 +1%",
-      "server_note": "-",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 25,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_94247901beae753095b4",
-      "name": "인생 선배",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5006",
-          "name": "게렝의 지팡이",
-          "catalog_name": "게렝의 지팡이",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5007",
-          "name": "가드리아의 활",
-          "catalog_name": "가드리아의 활",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 3,
-          "label": "대미지 리덕션 무시 +3"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +3",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 8,
         "verified_pre2026": true
       }
     },
@@ -8170,135 +6237,6 @@
       }
     },
     {
-      "id": "cardcol_fa596c86befd8f8edb8f",
-      "name": "다음 서먼은 데몬",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5006",
-          "name": "게렝의 지팡이",
-          "catalog_name": "게렝의 지팡이",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3005",
-          "name": "데몬의 투구",
-          "catalog_name": "데몬의 투구",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_magic_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "마법 대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "마법 대미지 리덕션 무시 +1",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 12,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_149470340544dea59daf",
-      "name": "쏠 수 있어",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5007",
-          "name": "가드리아의 활",
-          "catalog_name": "가드리아의 활",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4003",
-          "name": "헬바인의 활",
-          "catalog_name": "헬바인의 활",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_ranged_damage",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 원거리 추가 대미지 +1"
-        }
-      ],
-      "raw_effects": "PVP 원거리 추가 대미지 +1",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 13,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_8391b7843c263a06acbe",
-      "name": "공통점 찾기",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5007",
-          "name": "가드리아의 활",
-          "catalog_name": "가드리아의 활",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4010",
-          "name": "슬레이브의 이도류",
-          "catalog_name": "슬레이브의 이도류",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_ignore_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "PVP 대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "PVP 대미지 리덕션 무시 +1",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 14,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_8f693210f3ad8339b9d3",
       "name": "멀리서 널 보았을때",
       "category": "성물",
@@ -8342,326 +6280,6 @@
       }
     },
     {
-      "id": "cardcol_cc99f839bbc765ac7720",
-      "name": "미녀와 야수",
-      "category": "성물",
-      "grade": "전설",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:5007",
-          "name": "가드리아의 활",
-          "catalog_name": "가드리아의 활",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3003",
-          "name": "바포메트의 지팡이",
-          "catalog_name": "바포메트의 지팡이",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_ranged_damage_reduction",
-          "unit": "flat",
-          "value": 1,
-          "label": "원거리 대미지 리덕션 무시 +1"
-        }
-      ],
-      "raw_effects": "원거리 대미지 리덕션 무시 +1",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 16,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_ebd6453877fc793ab24b",
-      "name": "오대장",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6002",
-          "name": "그랑카인의 현신",
-          "catalog_name": "그랑카인의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6001",
-          "name": "아인하사드의 현신",
-          "catalog_name": "아인하사드의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5001",
-          "name": "사신의 낫",
-          "catalog_name": "사신의 낫",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5003",
-          "name": "나그바스의 지팡이",
-          "catalog_name": "나그바스의 지팡이",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5002",
-          "name": "포세이돈의 왕관",
-          "catalog_name": "포세이돈의 왕관",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_damage_reduction_rate",
-          "unit": "percent",
-          "value": 3,
-          "label": "PvP 대미지 감소 +3%"
-        }
-      ],
-      "raw_effects": "PvP 대미지 감소 +3%",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 1,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_26b9dd61e04f01b4ccf1",
-      "name": "에바 라이벌이 너냐?",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6002",
-          "name": "그랑카인의 현신",
-          "catalog_name": "그랑카인의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6001",
-          "name": "아인하사드의 현신",
-          "catalog_name": "아인하사드의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5002",
-          "name": "포세이돈의 왕관",
-          "catalog_name": "포세이돈의 왕관",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 3,
-          "label": "대미지 리덕션 무시 +3"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +3",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 2,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_a0f0c66a8f40ce5e5853",
-      "name": "우리도 언젠가는 저걸 짚겠지",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6002",
-          "name": "그랑카인의 현신",
-          "catalog_name": "그랑카인의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6001",
-          "name": "아인하사드의 현신",
-          "catalog_name": "아인하사드의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5003",
-          "name": "나그바스의 지팡이",
-          "catalog_name": "나그바스의 지팡이",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3002",
-          "name": "베레스의 지팡이",
-          "catalog_name": "베레스의 지팡이",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "rapid_ranged_damage_reduction",
-          "unit": "flat",
-          "value": 5,
-          "label": "원거리 연사 대미지 리덕션 +5"
-        }
-      ],
-      "raw_effects": "원거리 연사 대미지 리덕션 +5",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 3,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_cddbab2084443e72d76f",
-      "name": "낫 놓고 기역 자는 알지",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6002",
-          "name": "그랑카인의 현신",
-          "catalog_name": "그랑카인의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6001",
-          "name": "아인하사드의 현신",
-          "catalog_name": "아인하사드의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5001",
-          "name": "사신의 낫",
-          "catalog_name": "사신의 낫",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "stunned_damage_reduction",
-          "unit": "flat",
-          "value": 5,
-          "label": "스턴 상태 시 대미지 리덕션 +5"
-        }
-      ],
-      "raw_effects": "스턴 상태 시 대미지 리덕션 +5",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 4,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_658bb37fef3332f2e6a9",
-      "name": "칙칙해",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6002",
-          "name": "그랑카인의 현신",
-          "catalog_name": "그랑카인의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4005",
-          "name": "피닉스의 깃털",
-          "catalog_name": "피닉스의 깃털",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_melee_evasion",
-          "unit": "flat",
-          "value": 2,
-          "label": "근거리 회피력 무시 +2"
-        },
-        {
-          "key": "ignore_ranged_evasion",
-          "unit": "flat",
-          "value": 2,
-          "label": "원거리 회피력 무시 +2"
-        }
-      ],
-      "raw_effects": "근거리 회피력 무시 +2\n원거리 회피력 무시 +2",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 5,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_1561ac444ade375de2ea",
       "name": "너에게 의지 하지 않겠어",
       "category": "성물",
@@ -8701,57 +6319,6 @@
         "updated_at": "2023-07-11T23:29:04.887Z",
         "table_index": 29,
         "row_index": 6,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_db77f608deb2138096b9",
-      "name": "왕관아 너 녹슬겠다",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6002",
-          "name": "그랑카인의 현신",
-          "catalog_name": "그랑카인의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5003",
-          "name": "나그바스의 지팡이",
-          "catalog_name": "나그바스의 지팡이",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3003",
-          "name": "바포메트의 지팡이",
-          "catalog_name": "바포메트의 지팡이",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "dot_damage_reduction_rate",
-          "unit": "percent",
-          "value": 5,
-          "label": "지속 대미지 감소 +5%"
-        }
-      ],
-      "raw_effects": "지속 대미지 감소 +5%",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 7,
         "verified_pre2026": true
       }
     },
@@ -8858,100 +6425,6 @@
         "updated_at": "2023-07-11T23:29:04.887Z",
         "table_index": 29,
         "row_index": 9,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_a4e11664615971ad6a77",
-      "name": "이번에는 지팡이 만들어 줄게",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6001",
-          "name": "아인하사드의 현신",
-          "catalog_name": "아인하사드의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5003",
-          "name": "나그바스의 지팡이",
-          "catalog_name": "나그바스의 지팡이",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_ignore_damage_reduction",
-          "unit": "flat",
-          "value": 2,
-          "label": "PvP 대미지 리덕션 무시 +2"
-        }
-      ],
-      "raw_effects": "PvP 대미지 리덕션 무시 +2",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 10,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_378ec1163840f0ac2297",
-      "name": "난 티아라가 좋은데",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6001",
-          "name": "아인하사드의 현신",
-          "catalog_name": "아인하사드의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5002",
-          "name": "포세이돈의 왕관",
-          "catalog_name": "포세이돈의 왕관",
-          "grade": "전설",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4006",
-          "name": "듀라한의 투구",
-          "catalog_name": "듀라한의 투구",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "fear_hit",
-          "unit": "percent",
-          "value": 1,
-          "label": "공포 적중 +1%"
-        }
-      ],
-      "raw_effects": "공포 적중 +1%",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1",
-        "date": "2023-07-12",
-        "published_at": "2023-07-11T19:30:00.001Z",
-        "updated_at": "2023-07-11T23:29:04.887Z",
-        "table_index": 29,
-        "row_index": 11,
         "verified_pre2026": true
       }
     },
@@ -9066,132 +6539,6 @@
       }
     },
     {
-      "id": "cardcol_a71fd45e6a0c6c6d9edb",
-      "name": "소환계 거물",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6001",
-          "name": "아인하사드의 현신",
-          "catalog_name": "아인하사드의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6002",
-          "name": "그랑카인의 현신",
-          "catalog_name": "그랑카인의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6003",
-          "name": "영광의 면류관",
-          "catalog_name": "영광의 면류관",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6004",
-          "name": "진명황의 보주",
-          "catalog_name": "진명황의 보주",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:5004",
-          "name": "군터의 방패",
-          "catalog_name": "군터의 방패",
-          "grade": "전설",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "ignore_damage_reduction",
-          "unit": "flat",
-          "value": 5,
-          "label": "대미지 리덕션 무시 +5"
-        }
-      ],
-      "raw_effects": "대미지 리덕션 무시 +5",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 2,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_d4926f7aa71642b33da0",
-      "name": "4대 성물",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6001",
-          "name": "아인하사드의 현신",
-          "catalog_name": "아인하사드의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6002",
-          "name": "그랑카인의 현신",
-          "catalog_name": "그랑카인의 현신",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6003",
-          "name": "영광의 면류관",
-          "catalog_name": "영광의 면류관",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:6004",
-          "name": "진명황의 보주",
-          "catalog_name": "진명황의 보주",
-          "grade": "신화",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_ignore_damage_reduction_rate",
-          "unit": "percent",
-          "value": 3,
-          "label": "PVP 대미지 감소 무시 +3%"
-        }
-      ],
-      "raw_effects": "PVP 대미지 감소 무시 +3%",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 3,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_f8c0e64e7f3979ede78f",
       "name": "수호 기사",
       "category": "성물",
@@ -9243,98 +6590,6 @@
       }
     },
     {
-      "id": "cardcol_014323318b3b7eccad85",
-      "name": "암습을 명한다",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6004",
-          "name": "진명황의 보주",
-          "catalog_name": "진명황의 보주",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:4010",
-          "name": "슬레이브의 이도류",
-          "catalog_name": "슬레이브의 이도류",
-          "grade": "영웅",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "melee_evasion",
-          "unit": "flat",
-          "value": 1,
-          "label": "근거리 회피력 +1"
-        },
-        {
-          "key": "er",
-          "unit": "flat",
-          "value": 1,
-          "label": "원거리 회피력 +1"
-        }
-      ],
-      "raw_effects": "근거리 회피력 +1\n원거리 회피력 +1",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 5,
-        "verified_pre2026": true
-      }
-    },
-    {
-      "id": "cardcol_60a75dcf5953103a09eb",
-      "name": "구슬 집합",
-      "category": "성물",
-      "grade": "신화",
-      "requirements": [
-        {
-          "category": "성물",
-          "id": "source:6004",
-          "name": "진명황의 보주",
-          "catalog_name": "진명황의 보주",
-          "grade": "신화",
-          "awakened": false
-        },
-        {
-          "category": "성물",
-          "id": "source:3015",
-          "name": "케플리샤의 마법 구슬",
-          "catalog_name": "케플리샤의 마법 구슬",
-          "grade": "희귀",
-          "awakened": false
-        }
-      ],
-      "effects": [
-        {
-          "key": "pvp_damage_reduction_rate",
-          "unit": "percent",
-          "value": 1,
-          "label": "PVP 대미지 감소 +1%"
-        }
-      ],
-      "raw_effects": "PVP 대미지 감소 +1%",
-      "server_note": "그림리퍼/발록 서버 제외",
-      "source": {
-        "url": "https://lineagem.plaync.com/board/update/view?articleId=65663fb89270d83237184cec",
-        "date": "2023-11-29",
-        "published_at": "2023-11-28T19:30:00.001Z",
-        "updated_at": "2024-02-06T19:30:11.284Z",
-        "table_index": 40,
-        "row_index": 6,
-        "verified_pre2026": true
-      }
-    },
-    {
       "id": "cardcol_36ad942ea90dd6a0aa4c",
       "name": "보주 위치 제보",
       "category": "성물",
@@ -9377,5 +6632,7 @@
         "verified_pre2026": true
       }
     }
-  ]
+  ],
+  "reviewed_definition_count": 195,
+  "excluded_definition_count": 56
 }
