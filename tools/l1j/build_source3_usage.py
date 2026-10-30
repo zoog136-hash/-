@@ -57,7 +57,7 @@ def generate(root, source, desc, runtime):
     summary={'items':counts(item_rows),'drops':counts([r for r in projected if r['kind']=='drop']),'shops':counts([r for r in projected if r['kind']=='shop']),'npcactions':counts(actions),'recipes':counts(recipes)}
     assert len(item_rows)==2992 and len(projected)==12760 and len(actions)==1112 and len(recipes)==534
     assert len(runtime_links)==26 and len(links)==252
-    assert summary['drops'].get('existing_registered_drop_membership')==32
+    assert summary['drops'].get('existing_registered_drop_membership')==34
     return {'schema':1,'gameplay_enabled':False,'policy':'Read-only source classification. Catalog identity, runtime identity, existing drop membership and functional activation are separate. Never execute source SQL, HTML or NPC actions, import source prices/probabilities, revive excluded features, or replace existing local recipes.','input_sha256':guards,'current_item_record_guards_preserved':252,'runtime_item_identities':26,'existing_vendor_identity_conflict_ids':sorted(npc_conflicts),'summary':summary,'items':item_rows,'drop_and_shop_links':projected,'npcactions':actions,'recipes':recipes}
 
 def main():

@@ -115,6 +115,48 @@
         }
       ]
     },
+    "45130": {
+      "identity": {
+        "name": "해골 도끼병",
+        "sourceId": "l1j_tw380_npc_45130",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45130",
+        "source_npc_id": "45130",
+        "source_name_original": "骷髏斧手",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "1104",
+        "raw_npc_nameid": "$987",
+        "npc_sql_sha256": "2b2e3739b21791b4d353c9c33e401bcea5743e000ad45bb075d061dd71420ef9"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20056",
+          "item_name": "마법 망토",
+          "game_source_id": "914",
+          "grade": "일반",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45130",
+            "itemId": "20056",
+            "min": "1",
+            "max": "1",
+            "chance": "100000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "e1e7ba101af145abedaab7943da21dc167e1096e9699dd21f7cd55ae3236a170",
+            "line": 544,
+            "byte_offset": 39423,
+            "byte_length": 43
+          }
+        }
+      ]
+    },
     "45131": {
       "identity": {
         "name": "해골 창병",
@@ -681,6 +723,48 @@
             "line": 6417,
             "byte_offset": 480784,
             "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45649": {
+      "identity": {
+        "name": "데몬",
+        "sourceId": "l1j_tw380_npc_45649",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45649",
+        "source_npc_id": "45649",
+        "source_name_original": "惡魔",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "1180",
+        "raw_npc_nameid": "$1175",
+        "npc_sql_sha256": "79845f1793974bd50441a0d59e2f37b49de7de6a376db61a5736dbd8939f9a23"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20264",
+          "item_name": "완력의 목걸이",
+          "game_source_id": "394",
+          "grade": "고급",
+          "type": "목걸이",
+          "slot": "necklace",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45649",
+            "itemId": "20264",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "346e098a168d4c3b6a5bd844a51f1c9c2b819a8ff599a019de66ed6ffbee387a",
+            "line": 6440,
+            "byte_offset": 482480,
+            "byte_length": 42
           }
         }
       ]

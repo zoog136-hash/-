@@ -12,6 +12,7 @@ def identity(record):
             'raw_npc_gfxid':raw['gfxid'],'raw_npc_nameid':raw['nameid'],
             'npc_sql_sha256':evidence.get('row_sha256',evidence.get('tuple_sha256'))}
 def build(root, source, runtime):
+    assert runtime and all(k.startswith('source3:tw380:Taiwan:') for k in runtime), 'Expected source-keyed runtime item snapshot; refusing to overwrite registry'
     links=json.loads((root/'data/l1j/source3_item_links.json').read_text())
     all_items=json.loads((root/'data/catalog_v19.json').read_text())['아이템']
     by_game={str(row['sourceId']):row for row in all_items}
@@ -54,6 +55,7 @@ def build(root, source, runtime):
         assert all(old['item_name']!=target['item_name'] for old in group['drops'])
         group['drops'].append(target)
     output=dict(schema=1,policy='EXISTING_SUCCESSFUL_GRADE_EMPTY_POOL_ONLY',source_chance_policy='Positive source chance proves membership only; never evaluate or convert it. Existing TWILIGHT grade roll and equal within-grade weights remain.',item_links_sha256=sha((root/'data/l1j/source3_item_links.json').read_bytes()),source_drop_input_sha256=sha((source/'source_drops.jsonl').read_bytes()),entries=grouped,holds=holds)
+    assert len(grouped)==19 and sum(len(r['drops']) for r in grouped.values())==33 and len(holds)==1, 'Reviewed drop inventory changed; refusing to overwrite registry'
     path=root/'data/monsters/source3_drop_extensions.json';path.write_text(json.dumps(output,ensure_ascii=False,indent=2)+'\n')
     print('DROP_EXTENSIONS',len(grouped),'identities',sum(len(r['drops']) for r in grouped.values()),'rows',len(holds),'holds','sha256',sha(path.read_bytes()))
 if __name__=='__main__':
