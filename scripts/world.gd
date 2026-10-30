@@ -232,6 +232,9 @@ var general_save_pending: bool = false
 # warehouse) save after a quiet window rather than one synchronous disk write per
 # action. Transactions and the pause/quit notifications still save immediately.
 const DEFERRED_SAVE_GATE = preload("res://scripts/deferred_save_gate.gd")
+# General autosave interval. A save costs ~25 ms since the source-map
+# verification cache; pause/quit and transactions still save immediately.
+const AUTOSAVE_SECONDS: float = 60.0
 const DEFERRED_SAVE_SECONDS: float = 10.0
 const PERF_LOG_THRESHOLD_USEC: int = 30000
 var deferred_save: DEFERRED_SAVE_GATE = DEFERRED_SAVE_GATE.new(DEFERRED_SAVE_SECONDS)
@@ -466,7 +469,7 @@ func _process(delta: float) -> void:
 	_run_auto_buff_quickslots(delta)
 	_run_auto_item_quickslots(delta)
 	save_timer += delta
-	if save_timer >= 30.0:
+	if save_timer >= AUTOSAVE_SECONDS:
 		save_timer = 0.0
 		_request_general_save()
 	if deferred_save.tick(delta):
@@ -4339,7 +4342,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 			return pointer_result
 		pending_map_save_record.clear()
 	# This save already holds every earlier change, so a queued one is redundant.
-	# A failed deferred write is not re-queued here; the 30 s general autosave in
+	# A failed deferred write is not re-queued here; the 60 s general autosave in
 	# _process keeps retrying, and pause/quit still attempt a final save.
 	if collection_override.is_empty(): deferred_save.cancel()
 	if not quiet:
