@@ -105,6 +105,7 @@ var grade: String = "일반"
 var is_boss: bool = false
 var status_immunities: Array = []
 var drop_items: Array[String] = []
+var loot_source_identity: Dictionary = {}
 var target_player: TwilightPlayer = null
 var world_controller: Node = null
 var attack_cooldown: float = 0.0
@@ -157,6 +158,8 @@ func retire_for_pool() -> void:
 	drop_items.clear()
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
+	# Reset with every pooled life. Keep only the small reviewed identity tuple.
+	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1
 	motion = MOTION.new()

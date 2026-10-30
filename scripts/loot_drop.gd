@@ -15,6 +15,7 @@ const L1J_REGISTRY_PATH = "res://data/monsters/l1j_drop_overrides.json"
 const CRAFTING_DROPS_PATH: String = "res://data/monsters/twilight_crafting_drops.json"
 const MATERIAL_DROP_RATE: float = 0.28
 const BOSS_MATERIAL_DROP_RATE: float = 0.65
+const SOURCE3_REVIEWED = preload("res://scripts/loot/source3_reviewed_drop.gd")
 
 static func is_boss_record(record: Dictionary) -> bool:
 	if record.has("is_boss"):
@@ -182,7 +183,7 @@ static func _missing(monster_name: String, grade: String) -> Dictionary:
 		push_warning("TWILIGHT_DROP_UNMAPPED_GRADE: " + report_id + " — skipped; no arbitrary substitution")
 	return {}
 
-static func _pick_equipment_entry(grade: String, monster_drops: Array[String], catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "") -> Dictionary:
+static func _pick_equipment_entry(grade: String, monster_drops: Array[String], catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}) -> Dictionary:
 	var by_name: Dictionary = catalog.get("by_name", {})
 	var mapped: Dictionary = catalog.get("l1j_monster_drops", {})
 	var candidates: Array[Dictionary] = []
@@ -264,6 +265,9 @@ static func _pick_equipment_entry(grade: String, monster_drops: Array[String], c
 			if not exists:
 				candidates.append({"item_name":candidate_name, "weight":1, "min":1, "max":1})
 	if candidates.is_empty():
+		var reviewed: Dictionary = SOURCE3_REVIEWED.candidate(grade, by_name, monster_identity)
+		if not reviewed.is_empty(): candidates.append(reviewed)
+	if candidates.is_empty():
 		return _missing(monster_name, grade)
 	var total_weight: int = 0
 	for item: Dictionary in candidates:
@@ -303,7 +307,7 @@ static func _pick_material(monster_name: String, is_boss: bool, catalog: Diction
 	return ""
 
 
-static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "") -> Array[Dictionary]:
+static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}) -> Array[Dictionary]:
 	var earned: Array[Dictionary] = []
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
@@ -315,7 +319,7 @@ static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: 
 		var equipment_grade: String = _roll_equipment_grade(is_boss, rng)
 		if equipment_grade.is_empty():
 			continue
-		var equipment: Dictionary = _pick_equipment_entry(equipment_grade, monster_drops, catalog, rng, monster_name)
+		var equipment: Dictionary = _pick_equipment_entry(equipment_grade, monster_drops, catalog, rng, monster_name, monster_identity)
 		if not equipment.is_empty():
 			earned.append(equipment)
 	# One independent resource roll, after gear/potions; all loot remains on ground.
