@@ -16,6 +16,8 @@ on:
       - 'data/**'
       - 'tests/android*'
       - 'tools/android_animation_export_scope.py'
+      - 'tools/android_runtime_reachability.py'
+      - 'tools/verify_android_animation_export.py'
       - '.github/workflows/twilight-android-playtest-apk.yml'
   workflow_dispatch:
 
@@ -41,7 +43,9 @@ jobs:
         run: |
           set -euo pipefail
           python3 tests/android_animation_export_scope_test.py
+          python3 tests/android_runtime_reachability_test.py
           python3 tools/android_animation_export_scope.py --output build/android-validation/export-scope.json
+          python3 tools/android_runtime_reachability.py --check --output build/android-validation/unreachable-revisions.json
       - name: Install Godot 4.7.2 and export templates
         shell: bash
         run: |
