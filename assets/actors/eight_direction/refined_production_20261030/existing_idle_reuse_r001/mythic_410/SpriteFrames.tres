@@ -1,0 +1,986 @@
+[gd_resource type="SpriteFrames" load_steps=192 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/run-1dd5f857dd7b.png" id="run"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/attack-0d2625315a01.png" id="attack"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/hit-03db7f9db84d.png" id="hit"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/death-e020a31b9f85.png" id="death"]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/idle-c322e65e684e.png" id="restored_idle_source"]
+
+[sub_resource type="AtlasTexture" id="run_E_0"]
+atlas = ExtResource("run")
+region = Rect2(0,3,181,174)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_E_1"]
+atlas = ExtResource("run")
+region = Rect2(181,3,181,174)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_E_2"]
+atlas = ExtResource("run")
+region = Rect2(362,3,181,174)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_E_3"]
+atlas = ExtResource("run")
+region = Rect2(543,3,181,174)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_E_4"]
+atlas = ExtResource("run")
+region = Rect2(724,3,181,174)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_E_5"]
+atlas = ExtResource("run")
+region = Rect2(905,3,181,174)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SE_0"]
+atlas = ExtResource("run")
+region = Rect2(0,178,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SE_1"]
+atlas = ExtResource("run")
+region = Rect2(181,178,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SE_2"]
+atlas = ExtResource("run")
+region = Rect2(362,178,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SE_3"]
+atlas = ExtResource("run")
+region = Rect2(543,178,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SE_4"]
+atlas = ExtResource("run")
+region = Rect2(724,178,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SE_5"]
+atlas = ExtResource("run")
+region = Rect2(905,178,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_S_0"]
+atlas = ExtResource("run")
+region = Rect2(0,346,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_S_1"]
+atlas = ExtResource("run")
+region = Rect2(181,346,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_S_2"]
+atlas = ExtResource("run")
+region = Rect2(362,346,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_S_3"]
+atlas = ExtResource("run")
+region = Rect2(543,346,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_S_4"]
+atlas = ExtResource("run")
+region = Rect2(724,346,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_S_5"]
+atlas = ExtResource("run")
+region = Rect2(905,346,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SW_0"]
+atlas = ExtResource("run")
+region = Rect2(0,529,181,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SW_1"]
+atlas = ExtResource("run")
+region = Rect2(181,529,181,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SW_2"]
+atlas = ExtResource("run")
+region = Rect2(362,529,181,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SW_3"]
+atlas = ExtResource("run")
+region = Rect2(543,529,181,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SW_4"]
+atlas = ExtResource("run")
+region = Rect2(724,529,181,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_SW_5"]
+atlas = ExtResource("run")
+region = Rect2(905,529,181,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_W_0"]
+atlas = ExtResource("run")
+region = Rect2(0,711,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_W_1"]
+atlas = ExtResource("run")
+region = Rect2(181,711,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_W_2"]
+atlas = ExtResource("run")
+region = Rect2(362,711,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_W_3"]
+atlas = ExtResource("run")
+region = Rect2(543,711,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_W_4"]
+atlas = ExtResource("run")
+region = Rect2(724,711,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_W_5"]
+atlas = ExtResource("run")
+region = Rect2(905,711,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NW_0"]
+atlas = ExtResource("run")
+region = Rect2(0,902,181,173)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NW_1"]
+atlas = ExtResource("run")
+region = Rect2(181,902,181,173)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NW_2"]
+atlas = ExtResource("run")
+region = Rect2(362,902,181,173)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NW_3"]
+atlas = ExtResource("run")
+region = Rect2(543,902,181,173)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NW_4"]
+atlas = ExtResource("run")
+region = Rect2(724,902,181,173)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NW_5"]
+atlas = ExtResource("run")
+region = Rect2(905,902,181,173)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_N_0"]
+atlas = ExtResource("run")
+region = Rect2(0,1064,181,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_N_1"]
+atlas = ExtResource("run")
+region = Rect2(181,1064,181,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_N_2"]
+atlas = ExtResource("run")
+region = Rect2(362,1064,181,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_N_3"]
+atlas = ExtResource("run")
+region = Rect2(543,1064,181,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_N_4"]
+atlas = ExtResource("run")
+region = Rect2(724,1064,181,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_N_5"]
+atlas = ExtResource("run")
+region = Rect2(905,1064,181,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NE_0"]
+atlas = ExtResource("run")
+region = Rect2(0,1237,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NE_1"]
+atlas = ExtResource("run")
+region = Rect2(181,1237,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NE_2"]
+atlas = ExtResource("run")
+region = Rect2(362,1237,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NE_3"]
+atlas = ExtResource("run")
+region = Rect2(543,1237,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NE_4"]
+atlas = ExtResource("run")
+region = Rect2(724,1237,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="run_NE_5"]
+atlas = ExtResource("run")
+region = Rect2(905,1237,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_E_0"]
+atlas = ExtResource("attack")
+region = Rect2(0,3,181,172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_E_1"]
+atlas = ExtResource("attack")
+region = Rect2(181,3,181,172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_E_2"]
+atlas = ExtResource("attack")
+region = Rect2(362,3,181,172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_E_3"]
+atlas = ExtResource("attack")
+region = Rect2(543,3,181,172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_E_4"]
+atlas = ExtResource("attack")
+region = Rect2(724,3,181,172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_E_5"]
+atlas = ExtResource("attack")
+region = Rect2(905,3,181,172)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SE_0"]
+atlas = ExtResource("attack")
+region = Rect2(0,165,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SE_1"]
+atlas = ExtResource("attack")
+region = Rect2(181,165,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SE_2"]
+atlas = ExtResource("attack")
+region = Rect2(362,165,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SE_3"]
+atlas = ExtResource("attack")
+region = Rect2(543,165,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SE_4"]
+atlas = ExtResource("attack")
+region = Rect2(724,165,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SE_5"]
+atlas = ExtResource("attack")
+region = Rect2(905,165,181,191)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_S_0"]
+atlas = ExtResource("attack")
+region = Rect2(0,345,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_S_1"]
+atlas = ExtResource("attack")
+region = Rect2(181,345,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_S_2"]
+atlas = ExtResource("attack")
+region = Rect2(362,345,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_S_3"]
+atlas = ExtResource("attack")
+region = Rect2(543,345,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_S_4"]
+atlas = ExtResource("attack")
+region = Rect2(724,345,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_S_5"]
+atlas = ExtResource("attack")
+region = Rect2(905,345,181,197)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SW_0"]
+atlas = ExtResource("attack")
+region = Rect2(0,532,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SW_1"]
+atlas = ExtResource("attack")
+region = Rect2(181,532,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SW_2"]
+atlas = ExtResource("attack")
+region = Rect2(362,532,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SW_3"]
+atlas = ExtResource("attack")
+region = Rect2(543,532,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SW_4"]
+atlas = ExtResource("attack")
+region = Rect2(724,532,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_SW_5"]
+atlas = ExtResource("attack")
+region = Rect2(905,532,181,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_W_0"]
+atlas = ExtResource("attack")
+region = Rect2(0,718,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_W_1"]
+atlas = ExtResource("attack")
+region = Rect2(181,718,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_W_2"]
+atlas = ExtResource("attack")
+region = Rect2(362,718,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_W_3"]
+atlas = ExtResource("attack")
+region = Rect2(543,718,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_W_4"]
+atlas = ExtResource("attack")
+region = Rect2(724,718,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_W_5"]
+atlas = ExtResource("attack")
+region = Rect2(905,718,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NW_0"]
+atlas = ExtResource("attack")
+region = Rect2(0,885,181,203)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NW_1"]
+atlas = ExtResource("attack")
+region = Rect2(181,885,181,203)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NW_2"]
+atlas = ExtResource("attack")
+region = Rect2(362,885,181,203)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NW_3"]
+atlas = ExtResource("attack")
+region = Rect2(543,885,181,203)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NW_4"]
+atlas = ExtResource("attack")
+region = Rect2(724,885,181,203)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NW_5"]
+atlas = ExtResource("attack")
+region = Rect2(905,885,181,203)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_N_0"]
+atlas = ExtResource("attack")
+region = Rect2(0,1064,181,199)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_N_1"]
+atlas = ExtResource("attack")
+region = Rect2(181,1064,181,199)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_N_2"]
+atlas = ExtResource("attack")
+region = Rect2(362,1064,181,199)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_N_3"]
+atlas = ExtResource("attack")
+region = Rect2(543,1064,181,199)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_N_4"]
+atlas = ExtResource("attack")
+region = Rect2(724,1064,181,199)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_N_5"]
+atlas = ExtResource("attack")
+region = Rect2(905,1064,181,199)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NE_0"]
+atlas = ExtResource("attack")
+region = Rect2(0,1241,181,195)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NE_1"]
+atlas = ExtResource("attack")
+region = Rect2(181,1241,181,195)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NE_2"]
+atlas = ExtResource("attack")
+region = Rect2(362,1241,181,195)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NE_3"]
+atlas = ExtResource("attack")
+region = Rect2(543,1241,181,195)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NE_4"]
+atlas = ExtResource("attack")
+region = Rect2(724,1241,181,195)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="attack_NE_5"]
+atlas = ExtResource("attack")
+region = Rect2(905,1241,181,195)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_E_0"]
+atlas = ExtResource("hit")
+region = Rect2(0,9,181,169)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_E_1"]
+atlas = ExtResource("hit")
+region = Rect2(181,9,181,169)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_E_2"]
+atlas = ExtResource("hit")
+region = Rect2(362,9,181,169)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_E_3"]
+atlas = ExtResource("hit")
+region = Rect2(543,9,181,169)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_E_4"]
+atlas = ExtResource("hit")
+region = Rect2(724,9,181,169)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_E_5"]
+atlas = ExtResource("hit")
+region = Rect2(905,9,181,169)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SE_0"]
+atlas = ExtResource("hit")
+region = Rect2(0,182,181,181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SE_1"]
+atlas = ExtResource("hit")
+region = Rect2(181,182,181,181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SE_2"]
+atlas = ExtResource("hit")
+region = Rect2(362,182,181,181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SE_3"]
+atlas = ExtResource("hit")
+region = Rect2(543,182,181,181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SE_4"]
+atlas = ExtResource("hit")
+region = Rect2(724,182,181,181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SE_5"]
+atlas = ExtResource("hit")
+region = Rect2(905,182,181,181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_S_0"]
+atlas = ExtResource("hit")
+region = Rect2(0,353,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_S_1"]
+atlas = ExtResource("hit")
+region = Rect2(181,353,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_S_2"]
+atlas = ExtResource("hit")
+region = Rect2(362,353,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_S_3"]
+atlas = ExtResource("hit")
+region = Rect2(543,353,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_S_4"]
+atlas = ExtResource("hit")
+region = Rect2(724,353,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_S_5"]
+atlas = ExtResource("hit")
+region = Rect2(905,353,181,188)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SW_0"]
+atlas = ExtResource("hit")
+region = Rect2(0,534,181,177)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SW_1"]
+atlas = ExtResource("hit")
+region = Rect2(181,534,181,177)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SW_2"]
+atlas = ExtResource("hit")
+region = Rect2(362,534,181,177)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SW_3"]
+atlas = ExtResource("hit")
+region = Rect2(543,534,181,177)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SW_4"]
+atlas = ExtResource("hit")
+region = Rect2(724,534,181,177)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_SW_5"]
+atlas = ExtResource("hit")
+region = Rect2(905,534,181,177)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_W_0"]
+atlas = ExtResource("hit")
+region = Rect2(0,715,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_W_1"]
+atlas = ExtResource("hit")
+region = Rect2(181,715,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_W_2"]
+atlas = ExtResource("hit")
+region = Rect2(362,715,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_W_3"]
+atlas = ExtResource("hit")
+region = Rect2(543,715,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_W_4"]
+atlas = ExtResource("hit")
+region = Rect2(724,715,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_W_5"]
+atlas = ExtResource("hit")
+region = Rect2(905,715,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NW_0"]
+atlas = ExtResource("hit")
+region = Rect2(0,904,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NW_1"]
+atlas = ExtResource("hit")
+region = Rect2(181,904,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NW_2"]
+atlas = ExtResource("hit")
+region = Rect2(362,904,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NW_3"]
+atlas = ExtResource("hit")
+region = Rect2(543,904,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NW_4"]
+atlas = ExtResource("hit")
+region = Rect2(724,904,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NW_5"]
+atlas = ExtResource("hit")
+region = Rect2(905,904,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_N_0"]
+atlas = ExtResource("hit")
+region = Rect2(0,1070,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_N_1"]
+atlas = ExtResource("hit")
+region = Rect2(181,1070,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_N_2"]
+atlas = ExtResource("hit")
+region = Rect2(362,1070,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_N_3"]
+atlas = ExtResource("hit")
+region = Rect2(543,1070,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_N_4"]
+atlas = ExtResource("hit")
+region = Rect2(724,1070,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_N_5"]
+atlas = ExtResource("hit")
+region = Rect2(905,1070,181,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NE_0"]
+atlas = ExtResource("hit")
+region = Rect2(0,1243,181,198)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NE_1"]
+atlas = ExtResource("hit")
+region = Rect2(181,1243,181,198)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NE_2"]
+atlas = ExtResource("hit")
+region = Rect2(362,1243,181,198)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NE_3"]
+atlas = ExtResource("hit")
+region = Rect2(543,1243,181,198)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NE_4"]
+atlas = ExtResource("hit")
+region = Rect2(724,1243,181,198)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="hit_NE_5"]
+atlas = ExtResource("hit")
+region = Rect2(905,1243,181,198)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_0"]
+atlas = ExtResource("death")
+region = Rect2(0,367,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_1"]
+atlas = ExtResource("death")
+region = Rect2(181,367,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_2"]
+atlas = ExtResource("death")
+region = Rect2(362,367,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_3"]
+atlas = ExtResource("death")
+region = Rect2(543,367,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_4"]
+atlas = ExtResource("death")
+region = Rect2(724,367,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_5"]
+atlas = ExtResource("death")
+region = Rect2(905,367,181,192)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_0_0"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(7,1,166,184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_0_1"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(9,181,162,186)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_0_2"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(3,364,170,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_0_3"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(6,545,166,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_0_4"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(4,725,167,184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_0_5"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(6,907,166,184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_1_0"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(178,3,178,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_1_1"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(177,182,181,186)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_1_2"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(175,366,181,181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_1_3"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(179,545,175,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_1_4"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(177,726,179,184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_1_5"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(184,908,170,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_2_0"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(367,5,169,181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_2_1"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(367,183,171,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_2_2"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(364,366,174,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_2_3"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(362,546,175,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_2_4"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(368,726,170,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_2_5"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(359,908,181,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_3_0"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(564,7,158,179)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_3_1"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(555,182,169,187)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_3_2"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(559,365,175,184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_3_3"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(555,545,172,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_3_4"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(555,726,176,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_3_5"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(555,908,175,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_4_0"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(732,3,169,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_4_1"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(733,181,167,185)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_4_2"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(733,363,162,184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_4_3"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(734,544,169,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_4_4"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(734,725,167,182)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_4_5"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(734,907,167,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_5_0"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(916,2,157,181)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_5_1"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(917,180,163,184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_5_2"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(917,365,167,179)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_5_3"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(916,543,163,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_5_4"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(916,724,166,183)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="restored_idle_5_5"]
+atlas = ExtResource("restored_idle_source")
+region = Rect2(917,907,164,182)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames":[{"duration":1.0,"texture":SubResource("run_E_0")},{"duration":1.0,"texture":SubResource("run_E_1")},{"duration":1.0,"texture":SubResource("run_E_2")},{"duration":1.0,"texture":SubResource("run_E_3")},{"duration":1.0,"texture":SubResource("run_E_4")},{"duration":1.0,"texture":SubResource("run_E_5")}],"loop":true,"name":&"run_0","speed":12.5},
+{"frames":[{"duration":1.0,"texture":SubResource("run_SE_0")},{"duration":1.0,"texture":SubResource("run_SE_1")},{"duration":1.0,"texture":SubResource("run_SE_2")},{"duration":1.0,"texture":SubResource("run_SE_3")},{"duration":1.0,"texture":SubResource("run_SE_4")},{"duration":1.0,"texture":SubResource("run_SE_5")}],"loop":true,"name":&"run_1","speed":12.5},
+{"frames":[{"duration":1.0,"texture":SubResource("run_S_0")},{"duration":1.0,"texture":SubResource("run_S_1")},{"duration":1.0,"texture":SubResource("run_S_2")},{"duration":1.0,"texture":SubResource("run_S_3")},{"duration":1.0,"texture":SubResource("run_S_4")},{"duration":1.0,"texture":SubResource("run_S_5")}],"loop":true,"name":&"run_2","speed":12.5},
+{"frames":[{"duration":1.0,"texture":SubResource("run_SW_0")},{"duration":1.0,"texture":SubResource("run_SW_1")},{"duration":1.0,"texture":SubResource("run_SW_2")},{"duration":1.0,"texture":SubResource("run_SW_3")},{"duration":1.0,"texture":SubResource("run_SW_4")},{"duration":1.0,"texture":SubResource("run_SW_5")}],"loop":true,"name":&"run_3","speed":12.5},
+{"frames":[{"duration":1.0,"texture":SubResource("run_W_0")},{"duration":1.0,"texture":SubResource("run_W_1")},{"duration":1.0,"texture":SubResource("run_W_2")},{"duration":1.0,"texture":SubResource("run_W_3")},{"duration":1.0,"texture":SubResource("run_W_4")},{"duration":1.0,"texture":SubResource("run_W_5")}],"loop":true,"name":&"run_4","speed":12.5},
+{"frames":[{"duration":1.0,"texture":SubResource("run_NW_0")},{"duration":1.0,"texture":SubResource("run_NW_1")},{"duration":1.0,"texture":SubResource("run_NW_2")},{"duration":1.0,"texture":SubResource("run_NW_3")},{"duration":1.0,"texture":SubResource("run_NW_4")},{"duration":1.0,"texture":SubResource("run_NW_5")}],"loop":true,"name":&"run_5","speed":12.5},
+{"frames":[{"duration":1.0,"texture":SubResource("run_N_0")},{"duration":1.0,"texture":SubResource("run_N_1")},{"duration":1.0,"texture":SubResource("run_N_2")},{"duration":1.0,"texture":SubResource("run_N_3")},{"duration":1.0,"texture":SubResource("run_N_4")},{"duration":1.0,"texture":SubResource("run_N_5")}],"loop":true,"name":&"run_6","speed":12.5},
+{"frames":[{"duration":1.0,"texture":SubResource("run_NE_0")},{"duration":1.0,"texture":SubResource("run_NE_1")},{"duration":1.0,"texture":SubResource("run_NE_2")},{"duration":1.0,"texture":SubResource("run_NE_3")},{"duration":1.0,"texture":SubResource("run_NE_4")},{"duration":1.0,"texture":SubResource("run_NE_5")}],"loop":true,"name":&"run_7","speed":12.5},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_E_0")},{"duration":1.0,"texture":SubResource("attack_E_1")},{"duration":1.0,"texture":SubResource("attack_E_2")},{"duration":1.0,"texture":SubResource("attack_E_3")},{"duration":1.0,"texture":SubResource("attack_E_4")},{"duration":1.0,"texture":SubResource("attack_E_5")}],"loop":false,"name":&"attack_0","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_SE_0")},{"duration":1.0,"texture":SubResource("attack_SE_1")},{"duration":1.0,"texture":SubResource("attack_SE_2")},{"duration":1.0,"texture":SubResource("attack_SE_3")},{"duration":1.0,"texture":SubResource("attack_SE_4")},{"duration":1.0,"texture":SubResource("attack_SE_5")}],"loop":false,"name":&"attack_1","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_S_0")},{"duration":1.0,"texture":SubResource("attack_S_1")},{"duration":1.0,"texture":SubResource("attack_S_2")},{"duration":1.0,"texture":SubResource("attack_S_3")},{"duration":1.0,"texture":SubResource("attack_S_4")},{"duration":1.0,"texture":SubResource("attack_S_5")}],"loop":false,"name":&"attack_2","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_SW_0")},{"duration":1.0,"texture":SubResource("attack_SW_1")},{"duration":1.0,"texture":SubResource("attack_SW_2")},{"duration":1.0,"texture":SubResource("attack_SW_3")},{"duration":1.0,"texture":SubResource("attack_SW_4")},{"duration":1.0,"texture":SubResource("attack_SW_5")}],"loop":false,"name":&"attack_3","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_W_0")},{"duration":1.0,"texture":SubResource("attack_W_1")},{"duration":1.0,"texture":SubResource("attack_W_2")},{"duration":1.0,"texture":SubResource("attack_W_3")},{"duration":1.0,"texture":SubResource("attack_W_4")},{"duration":1.0,"texture":SubResource("attack_W_5")}],"loop":false,"name":&"attack_4","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_NW_0")},{"duration":1.0,"texture":SubResource("attack_NW_1")},{"duration":1.0,"texture":SubResource("attack_NW_2")},{"duration":1.0,"texture":SubResource("attack_NW_3")},{"duration":1.0,"texture":SubResource("attack_NW_4")},{"duration":1.0,"texture":SubResource("attack_NW_5")}],"loop":false,"name":&"attack_5","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_N_0")},{"duration":1.0,"texture":SubResource("attack_N_1")},{"duration":1.0,"texture":SubResource("attack_N_2")},{"duration":1.0,"texture":SubResource("attack_N_3")},{"duration":1.0,"texture":SubResource("attack_N_4")},{"duration":1.0,"texture":SubResource("attack_N_5")}],"loop":false,"name":&"attack_6","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_NE_0")},{"duration":1.0,"texture":SubResource("attack_NE_1")},{"duration":1.0,"texture":SubResource("attack_NE_2")},{"duration":1.0,"texture":SubResource("attack_NE_3")},{"duration":1.0,"texture":SubResource("attack_NE_4")},{"duration":1.0,"texture":SubResource("attack_NE_5")}],"loop":false,"name":&"attack_7","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("hit_E_0")},{"duration":1.0,"texture":SubResource("hit_E_1")},{"duration":1.0,"texture":SubResource("hit_E_2")},{"duration":1.0,"texture":SubResource("hit_E_3")},{"duration":1.0,"texture":SubResource("hit_E_4")},{"duration":1.0,"texture":SubResource("hit_E_5")}],"loop":false,"name":&"hit_0","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("hit_SE_0")},{"duration":1.0,"texture":SubResource("hit_SE_1")},{"duration":1.0,"texture":SubResource("hit_SE_2")},{"duration":1.0,"texture":SubResource("hit_SE_3")},{"duration":1.0,"texture":SubResource("hit_SE_4")},{"duration":1.0,"texture":SubResource("hit_SE_5")}],"loop":false,"name":&"hit_1","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("hit_S_0")},{"duration":1.0,"texture":SubResource("hit_S_1")},{"duration":1.0,"texture":SubResource("hit_S_2")},{"duration":1.0,"texture":SubResource("hit_S_3")},{"duration":1.0,"texture":SubResource("hit_S_4")},{"duration":1.0,"texture":SubResource("hit_S_5")}],"loop":false,"name":&"hit_2","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("hit_SW_0")},{"duration":1.0,"texture":SubResource("hit_SW_1")},{"duration":1.0,"texture":SubResource("hit_SW_2")},{"duration":1.0,"texture":SubResource("hit_SW_3")},{"duration":1.0,"texture":SubResource("hit_SW_4")},{"duration":1.0,"texture":SubResource("hit_SW_5")}],"loop":false,"name":&"hit_3","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("hit_W_0")},{"duration":1.0,"texture":SubResource("hit_W_1")},{"duration":1.0,"texture":SubResource("hit_W_2")},{"duration":1.0,"texture":SubResource("hit_W_3")},{"duration":1.0,"texture":SubResource("hit_W_4")},{"duration":1.0,"texture":SubResource("hit_W_5")}],"loop":false,"name":&"hit_4","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("hit_NW_0")},{"duration":1.0,"texture":SubResource("hit_NW_1")},{"duration":1.0,"texture":SubResource("hit_NW_2")},{"duration":1.0,"texture":SubResource("hit_NW_3")},{"duration":1.0,"texture":SubResource("hit_NW_4")},{"duration":1.0,"texture":SubResource("hit_NW_5")}],"loop":false,"name":&"hit_5","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("hit_N_0")},{"duration":1.0,"texture":SubResource("hit_N_1")},{"duration":1.0,"texture":SubResource("hit_N_2")},{"duration":1.0,"texture":SubResource("hit_N_3")},{"duration":1.0,"texture":SubResource("hit_N_4")},{"duration":1.0,"texture":SubResource("hit_N_5")}],"loop":false,"name":&"hit_6","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("hit_NE_0")},{"duration":1.0,"texture":SubResource("hit_NE_1")},{"duration":1.0,"texture":SubResource("hit_NE_2")},{"duration":1.0,"texture":SubResource("hit_NE_3")},{"duration":1.0,"texture":SubResource("hit_NE_4")},{"duration":1.0,"texture":SubResource("hit_NE_5")}],"loop":false,"name":&"hit_7","speed":27.272727272727273},
+{"frames":[{"duration":1.0,"texture":SubResource("restored_idle_0_0")},{"duration":1.0,"texture":SubResource("restored_idle_0_1")},{"duration":1.0,"texture":SubResource("restored_idle_0_2")},{"duration":1.0,"texture":SubResource("restored_idle_0_3")},{"duration":1.0,"texture":SubResource("restored_idle_0_4")},{"duration":1.0,"texture":SubResource("restored_idle_0_5")}],"loop":true,"name":&"idle_0","speed":6.0},
+{"frames":[{"duration":1.0,"texture":SubResource("restored_idle_1_0")},{"duration":1.0,"texture":SubResource("restored_idle_1_1")},{"duration":1.0,"texture":SubResource("restored_idle_1_2")},{"duration":1.0,"texture":SubResource("restored_idle_1_3")},{"duration":1.0,"texture":SubResource("restored_idle_1_4")},{"duration":1.0,"texture":SubResource("restored_idle_1_5")}],"loop":true,"name":&"idle_1","speed":6.0},
+{"frames":[{"duration":1.0,"texture":SubResource("restored_idle_2_0")},{"duration":1.0,"texture":SubResource("restored_idle_2_1")},{"duration":1.0,"texture":SubResource("restored_idle_2_2")},{"duration":1.0,"texture":SubResource("restored_idle_2_3")},{"duration":1.0,"texture":SubResource("restored_idle_2_4")},{"duration":1.0,"texture":SubResource("restored_idle_2_5")}],"loop":true,"name":&"idle_2","speed":6.0},
+{"frames":[{"duration":1.0,"texture":SubResource("restored_idle_3_0")},{"duration":1.0,"texture":SubResource("restored_idle_3_1")},{"duration":1.0,"texture":SubResource("restored_idle_3_2")},{"duration":1.0,"texture":SubResource("restored_idle_3_3")},{"duration":1.0,"texture":SubResource("restored_idle_3_4")},{"duration":1.0,"texture":SubResource("restored_idle_3_5")}],"loop":true,"name":&"idle_3","speed":6.0},
+{"frames":[{"duration":1.0,"texture":SubResource("restored_idle_4_0")},{"duration":1.0,"texture":SubResource("restored_idle_4_1")},{"duration":1.0,"texture":SubResource("restored_idle_4_2")},{"duration":1.0,"texture":SubResource("restored_idle_4_3")},{"duration":1.0,"texture":SubResource("restored_idle_4_4")},{"duration":1.0,"texture":SubResource("restored_idle_4_5")}],"loop":true,"name":&"idle_4","speed":6.0},
+{"frames":[{"duration":1.0,"texture":SubResource("restored_idle_5_0")},{"duration":1.0,"texture":SubResource("restored_idle_5_1")},{"duration":1.0,"texture":SubResource("restored_idle_5_2")},{"duration":1.0,"texture":SubResource("restored_idle_5_3")},{"duration":1.0,"texture":SubResource("restored_idle_5_4")},{"duration":1.0,"texture":SubResource("restored_idle_5_5")}],"loop":true,"name":&"idle_5","speed":6.0},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_N_0")},{"duration":1.0,"texture":SubResource("attack_N_0")},{"duration":1.0,"texture":SubResource("attack_N_0")},{"duration":1.0,"texture":SubResource("attack_N_0")},{"duration":1.0,"texture":SubResource("attack_N_0")},{"duration":1.0,"texture":SubResource("attack_N_0")}],"loop":true,"name":&"idle_6","speed":6.0},
+{"frames":[{"duration":1.0,"texture":SubResource("attack_NE_0")},{"duration":1.0,"texture":SubResource("attack_NE_0")},{"duration":1.0,"texture":SubResource("attack_NE_0")},{"duration":1.0,"texture":SubResource("attack_NE_0")},{"duration":1.0,"texture":SubResource("attack_NE_0")},{"duration":1.0,"texture":SubResource("attack_NE_0")}],"loop":true,"name":&"idle_7","speed":6.0},
+{"frames":[{"duration":1.0,"texture":SubResource("death_S_0")},{"duration":1.0,"texture":SubResource("death_S_1")},{"duration":1.0,"texture":SubResource("death_S_2")},{"duration":1.0,"texture":SubResource("death_S_3")},{"duration":1.0,"texture":SubResource("death_S_4")},{"duration":1.0,"texture":SubResource("death_S_5")}],"loop":false,"name":&"death_2","speed":13.0}
+]
+metadata/twilight_reviewed_frame_registration = {"run_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,168.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"run_1":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"run_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"run_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,174.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,174.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,174.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,174.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,174.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,174.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"run_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"run_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,168.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,168.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"run_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,180.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,180.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,180.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,180.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,180.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,180.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"run_7":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,191.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"attack_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,166.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,166.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,166.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,166.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,166.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,166.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"attack_1":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,187.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"attack_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,193.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,193.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,193.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,193.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,193.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,193.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"attack_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,177.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"attack_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,182.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,182.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,182.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,182.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,182.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,182.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"attack_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,196.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,196.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,196.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,196.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,196.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,196.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"attack_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"attack_7":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"hit_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,163.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,163.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,163.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,163.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,163.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,163.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"hit_1":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,177.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,177.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"hit_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,184.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,184.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,184.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,184.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,184.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,184.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"hit_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,167.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,167.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,167.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,167.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,167.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,167.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"hit_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"hit_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,171.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,171.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,171.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,171.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,171.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,171.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"hit_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,181.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,181.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,181.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,181.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,181.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,181.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"hit_7":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,191.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,191.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"idle_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(83.5,179.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(81.5,181.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(87.5,175.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(84.5,179.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(86.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(84.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"idle_1":{"semantic_review":"PASS","frames":[{"anchor":Vector2(93.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(94.5,182.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(96.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(92.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(94.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(87.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"idle_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(85.5,176.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(85.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(88.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,179.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(84.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(93.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"idle_3":{"semantic_review":"PASS","frames":[{"anchor":Vector2(69.5,174.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(78.5,182.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(74.5,179.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(78.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(78.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(78.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"idle_4":{"semantic_review":"PASS","frames":[{"anchor":Vector2(82.5,175.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(81.5,180.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(81.5,179.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(80.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(80.5,177.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(80.5,176.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"idle_5":{"semantic_review":"PASS","frames":[{"anchor":Vector2(79.5,176.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(78.5,179.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(78.5,174.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(79.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(79.5,178.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(78.5,177.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"idle_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,188.5),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"idle_7":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,189.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]},"death_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,183.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]}}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = true
+metadata/twilight_detailed_completed = false
+metadata/twilight_final_quality_approved = false
+metadata/twilight_authored_track_count = 31
+metadata/twilight_authored_pose_count = 186
+metadata/twilight_declared_static_guard_aliases = {"idle_6":{"source_clip":"attack_6","source_phase":0,"timeline_references":6,"distinct_source_poses":1,"new_authored_poses":0},"idle_7":{"source_clip":"attack_7","source_phase":0,"timeline_references":6,"distinct_source_poses":1,"new_authored_poses":0}}
+metadata/twilight_new_S_death_source = {"source":"res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/death-e020a31b9f85.png","selected_picture_row":2,"production_death_directions":1,"selected_pose_slots":6,"detected_body_row_markers":8,"all_unselected_source_rows_preserved":true}
+metadata/twilight_runtime_review_status = "PENDING_PRECISION_EXISTING_SOURCE_REUSE_MAIN_REVIEW"
+metadata/twilight_refinement_existing_idle_sources = {"idle_0":{"source":"res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/idle-c322e65e684e.png","source_sha256":"c322e65e684e68fd54ceddb2d4650164f5f1bd89e325c73ee0f052db797aba11","source_camera_column":0,"picture_rows":[0,1,2,3,4,5],"distinct_source_poses":6,"cycle_seconds":1.0},"idle_1":{"source":"res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/idle-c322e65e684e.png","source_sha256":"c322e65e684e68fd54ceddb2d4650164f5f1bd89e325c73ee0f052db797aba11","source_camera_column":1,"picture_rows":[0,1,2,3,4,5],"distinct_source_poses":6,"cycle_seconds":1.0},"idle_2":{"source":"res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/idle-c322e65e684e.png","source_sha256":"c322e65e684e68fd54ceddb2d4650164f5f1bd89e325c73ee0f052db797aba11","source_camera_column":2,"picture_rows":[0,1,2,3,4,5],"distinct_source_poses":6,"cycle_seconds":1.0},"idle_3":{"source":"res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/idle-c322e65e684e.png","source_sha256":"c322e65e684e68fd54ceddb2d4650164f5f1bd89e325c73ee0f052db797aba11","source_camera_column":3,"picture_rows":[0,1,2,3,4,5],"distinct_source_poses":6,"cycle_seconds":1.0},"idle_4":{"source":"res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/idle-c322e65e684e.png","source_sha256":"c322e65e684e68fd54ceddb2d4650164f5f1bd89e325c73ee0f052db797aba11","source_camera_column":4,"picture_rows":[0,1,2,3,4,5],"distinct_source_poses":6,"cycle_seconds":1.0},"idle_5":{"source":"res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/idle-c322e65e684e.png","source_sha256":"c322e65e684e68fd54ceddb2d4650164f5f1bd89e325c73ee0f052db797aba11","source_camera_column":5,"picture_rows":[0,1,2,3,4,5],"distinct_source_poses":6,"cycle_seconds":1.0}}

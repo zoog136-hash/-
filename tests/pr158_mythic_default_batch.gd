@@ -12,6 +12,56 @@ func tick(actor: Node, velocity: Vector2) -> void:
 func invariant(world: Node) -> String:
 	return JSON.stringify([world.hp,world.gold,world.inventory,world.equipped_items,world.equipped_catalog,world.player.position,world.player.get_node("CollisionShape2D").transform,world.player.move_speed,world.player.attack_speed_multiplier])
 
+func refined_idle_contract(frames: SpriteFrames, key: String, played_tracks: Dictionary, played_poses: Dictionary) -> void:
+	var manifest_path: String=frames.resource_path.get_base_dir().get_base_dir().path_join("source-provenance.json")
+	var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
+	check(manifest.actors.has(key),"Refined source provenance contains the actual actor "+key)
+	if not manifest.actors.has(key):return
+	var spec: Dictionary=manifest.actors[key]
+	check(FileAccess.get_sha256(frames.resource_path)==str(spec.candidate_sha256) and FileAccess.get_sha256(str(spec.original_selected_frames))==str(spec.original_selected_frames_sha256),"Current and preserved baseline SpriteFrames SHA pins match "+key)
+	var restored: Dictionary=frames.get_meta("twilight_refinement_existing_idle_sources")
+	var guards: Dictionary=frames.get_meta("twilight_declared_static_guard_aliases")
+	var registration: Dictionary=frames.get_meta("twilight_reviewed_frame_registration")
+	var original: SpriteFrames=load(str(spec.original_selected_frames))
+	var old_registration: Dictionary=original.get_meta("twilight_reviewed_frame_registration")
+	check(restored.size()==int(spec.restored_existing_idle_clip_count) and restored.size()+guards.size()==8,"Restored IDLE views and remaining declared guards cover exactly eight directions "+key)
+	check(frames.get_animation_names()==original.get_animation_names() and frames.get_animation_names().size()==33,"All original required tracks retained "+key)
+	var restored_poses:=0
+	for clip: String in restored:
+		check(spec.clips.has(clip) and clip.begins_with("idle_") and not guards.has(clip),"Only explicit existing IDLE source clips replace guards "+key+" "+clip)
+		var source: Dictionary=spec.clips[clip]
+		var count:=frames.get_frame_count(clip)
+		restored_poses+=count
+		check(count==int(restored[clip].distinct_source_poses) and count==source.poses.size(),"Exact distinct source/timeline count; no invented repeated poses "+key+" "+clip)
+		check(int(restored[clip].source_camera_column)==int(clip.trim_prefix("idle_")),"Reviewed source camera column matches selected direction "+key+" "+clip)
+		check(FileAccess.get_sha256(str(source.source))==str(source.source_sha256),"Byte-exact original IDLE source selected "+key+" "+clip)
+		var duration:=0.
+		for phase in range(count):
+			duration+=frames.get_frame_duration(clip,phase)
+			var texture: AtlasTexture=frames.get_frame_texture(clip,phase) as AtlasTexture
+			var pose: Dictionary=source.poses[phase]
+			var region: Array=pose.source_region
+			check(texture!=null and texture.atlas.resource_path==str(source.source) and texture.region==Rect2(region[0],region[1],region[2],region[3]),"Exact safe source rectangle, no image masking/resampling "+key+" "+clip)
+			check(int(pose.other_figure_core_pixels_inside_region)==0,"Selected rectangle excludes another intact figure core "+key+" "+clip)
+			check(registration[clip].frames[phase].anchor==Vector2(pose.anchor[0],pose.anchor[1]) and registration[clip].frames[phase].scale==Vector2(pose.scale[0],pose.scale[1]) and registration[clip].frames[phase].target==Vector2(pose.target[0],pose.target[1]),"Pinned source C/scale/target preserved "+key+" "+clip)
+		check(frames.get_animation_loop(clip) and is_equal_approx(duration/frames.get_animation_speed(clip),float(source.loop_seconds_unchanged)),"Existing IDLE loop duration preserved with variable source pose count "+key+" "+clip)
+	for clip: String in frames.get_animation_names():
+		if restored.has(clip):continue
+		check(frames.get_frame_count(clip)==original.get_frame_count(clip) and frames.get_animation_loop(clip)==original.get_animation_loop(clip) and frames.get_animation_speed(clip)==original.get_animation_speed(clip) and registration[clip]==old_registration[clip],"Unchanged clip timing and registration "+key+" "+clip)
+		for phase in range(frames.get_frame_count(clip)):
+			var texture: AtlasTexture=frames.get_frame_texture(clip,phase) as AtlasTexture
+			var old_texture: AtlasTexture=original.get_frame_texture(clip,phase) as AtlasTexture
+			check(texture.atlas.resource_path==old_texture.atlas.resource_path and texture.region==old_texture.region and texture.margin==old_texture.margin and frames.get_frame_duration(clip,phase)==original.get_frame_duration(clip,phase),"All normal source pixels/Atlas geometry and phase durations retained "+key+" "+clip)
+	for alias: String in guards:
+		var original_clip: String=alias.replace("idle_","attack_")
+		for phase in range(6):
+			check(frames.get_frame_texture(alias,phase)==frames.get_frame_texture(original_clip,0) and registration[alias].frames[phase]==registration[original_clip].frames[0],"Remaining exact same-view ATK0 guard Texture/C/scale reuse "+key+" "+alias)
+	var authored_poses:=150+restored_poses
+	var runtime_refs:=authored_poses+guards.size()*6
+	check(int(frames.get_meta("twilight_authored_track_count"))==25+restored.size() and int(frames.get_meta("twilight_authored_pose_count"))==authored_poses,"Authored source counts exclude remaining static guard repeats "+key)
+	check(played_tracks.size()==33 and played_poses.size()==runtime_refs and runtime_refs==int(spec.runtime_timeline_reference_count),"Every existing source pose and declared guard timeline reference actually played "+key)
+	report.cases.append({"id":key,"default_frames":frames.resource_path,"restored_idle_clips":restored.size(),"existing_idle_source_poses":restored_poses,"remaining_guard_alias_clips":guards.size(),"authored_source_poses":authored_poses,"runtime_timeline_references":runtime_refs})
+
 func run() -> void:
 	root.size=Vector2i(1280,720)
 	var before_mode:=OS.get_environment("PR158_REVIEW_MODE")=="before"
@@ -131,6 +181,8 @@ func run() -> void:
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All legendary required tracks and poses actually played")
 				if report.errors.is_empty():
 					print("PR158_LEGENDARY_DEFAULT_PASS id=",key," tracks=33 poses=198 candidate_injection=0")
+			elif frames.has_meta("twilight_refinement_existing_idle_sources"):
+				refined_idle_contract(frames,key,exercised_tracks,exercised_poses)
 			elif retained4:
 				check(exercised_tracks.size()==20 and exercised_poses.size()==120,"All policy-required retained cardinal directions and poses actually played; existing WALK extras preserved")
 				check(count==int(frames.get_meta("twilight_retained_track_count")) and count in [24,28],"All original retained source tracks preserved, including optional CAST or ranged attacks")
