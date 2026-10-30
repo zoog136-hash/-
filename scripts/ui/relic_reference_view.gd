@@ -401,7 +401,7 @@ func refresh_state(force_cards: bool=false) -> void:
 			var quantity: int=(1 if owned.has(identity) else 0)+int(spare.get(identity,0))
 			hud.catalog_list.set_item_text(index," ")
 			hud.catalog_list.set_item_tooltip(index,str(record.get("name",""))+" · "+str(record.get("grade",""))+" · "+str(record.get("type",""))+"\n보유 "+str(quantity)+" · 원본 ID "+str(record.get("sourceId","")))
-			hud.catalog_list.set_item_custom_bg_color(index,Color(UI.grade(str(record.get("grade","일반"))),.17))
+			hud.catalog_list.set_item_custom_bg_color(index,Color(UI.grade(str(record.get("grade","일반"))),.17) if owned.has(identity) else Color(.2,.2,.2,.04))
 	card_frames.queue_redraw()
 	var record: Dictionary={} if hud.catalog_results.is_empty() else hud.selected_catalog_record
 	var key: String=CardRules.card_id(record)+":"+str(hash(record.get("sourceOptions",[])))

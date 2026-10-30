@@ -38,6 +38,7 @@ var screen_backdrop: ColorRect
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
+const CardOwnership = preload("res://scripts/ui/catalog_card_ownership.gd")
 const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
 const CardFusionView = preload("res://scripts/ui/card_fusion_view.gd")
 var card_reveal_stage: Control
@@ -1219,6 +1220,12 @@ func open_catalog(category: String) -> void:
 		catalog_search.text = str(saved.get("query",""))
 		_refresh_catalog_list(catalog_search.text)
 		catalog_page = clampi(int(saved.get("page",0)),0,maxi(0,_catalog_page_count()-1))
+		if CARD_RULES.CATEGORIES.has(category):
+			for index: int in range(catalog_filtered_results.size()):
+				var record: Dictionary=catalog_filtered_results[index]
+				if str(record.get("sourceId",record.get("name","")))==str(saved.get("id","")):
+					catalog_page=index/catalog_page_size
+					break
 		_apply_catalog_page()
 		for i: int in range(catalog_results.size()):
 			if str(catalog_results[i].get("sourceId",catalog_results[i].get("name",""))) == str(saved.get("id","")): _select_catalog_index(i)
@@ -1475,7 +1482,12 @@ func _build_catalog_panel() -> void:
 
 func set_card_collection_state(value: Dictionary) -> void:
 	if card_collection_state == value: return
+	var previous_owned: Dictionary=card_collection_state.get("owned",{}).get(catalog_category,{})
+	var next_owned: Dictionary=value.get("owned",{}).get(catalog_category,{})
+	var reorder: bool=previous_owned!=next_owned
 	card_collection_state = value.duplicate(true)
+	if reorder and active_section==catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list!=null:
+		_refresh_catalog_owned_order()
 	_refresh_card_controls()
 	_refresh_option_awakening_markers()
 	if active_section == "card_fusion" and is_instance_valid(card_fusion_view) and not card_fusion_view.is_queued_for_deletion():
@@ -1571,9 +1583,15 @@ func _refresh_option_awakening_markers() -> void:
 	if catalog_list == null or not CARD_RULES.CATEGORIES.has(catalog_category): return
 	var owned: Dictionary = (card_collection_state.get("owned", {}) as Dictionary).get(catalog_category, {}) as Dictionary
 	var spare: Dictionary = (card_collection_state.get("spare", {}) as Dictionary).get(catalog_category, {}) as Dictionary
+	var background_alpha: float=.17 if catalog_category=="성물" else .08
 	for index: int in range(mini(catalog_results.size(), catalog_list.item_count)):
 		var record: Dictionary = catalog_results[index]
 		var identity: String = CARD_RULES.card_id(record)
+		var acquired: bool=owned.has(identity)
+		catalog_list.set_item_metadata(index,identity)
+		catalog_list.set_item_icon(index,CardOwnership.icon_for(record,acquired))
+		catalog_list.set_item_icon_modulate(index,Color.WHITE if acquired else CardOwnership.UNOWNED_ICON_TINT)
+		catalog_list.set_item_custom_bg_color(index,Color(UI.grade(str(record.get("grade","일반"))),background_alpha) if acquired else Color(.2,.2,.2,.04))
 		var duplicates: int = maxi(0, int(spare.get(identity, 0)))
 		var copies: int = (1 if owned.has(identity) else 0) + duplicates
 		var awakened: bool = bool(_option_awakening_card_state(catalog_category, record).get("awakened", false))
@@ -1582,6 +1600,7 @@ func _refresh_option_awakening_markers() -> void:
 		catalog_list.set_item_tooltip(index, "%s · %s · 총 %d장 · 합성/각성 재료 %d장" % [str(record.get("grade", "")), title, copies, duplicates])
 	if is_instance_valid(companion_detail_view) and companion_detail_view.active:
 		companion_detail_view.decorate_roster(true)
+	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
 
 func _refresh_option_awakening_entry() -> void:
 	if not is_instance_valid(option_awakening_button):
@@ -1877,6 +1896,11 @@ func _refresh_item_filter_controls() -> void:
 		rarity_filter.select(maxi(0,["전체","일반","고급","희귀","영웅","전설","신화","유일"].find(item_grade_filter)))
 
 func _refresh_catalog_list(filter_text: String) -> void:
+	_filter_catalog_results(filter_text)
+	catalog_page=0
+	_apply_catalog_page()
+
+func _filter_catalog_results(filter_text: String) -> void:
 	ReferenceSurfaces.refresh_grade_counts(self)
 	# The original paging, selection and native touch handler remain in use.
 	catalog_filtered_results.clear()
@@ -1896,8 +1920,22 @@ func _refresh_catalog_list(filter_text: String) -> void:
 		if query!="" and not searchable.to_lower().contains(query): continue
 		if catalog_category=="성물" and is_instance_valid(relic_reference_view) and not relic_reference_view.matches_type(record):continue
 		catalog_filtered_results.append(record)
-	catalog_page=0
+	if CARD_RULES.CATEGORIES.has(catalog_category):
+		catalog_filtered_results.assign(CardOwnership.owned_first(catalog_filtered_results,card_collection_state.get("owned",{}).get(catalog_category,{})))
+
+func _refresh_catalog_owned_order() -> void:
+	var identity: String=CARD_RULES.card_id(selected_catalog_record)
+	var scroll: float=catalog_list.get_v_scroll_bar().value
+	var selected_index: int=-1
+	_filter_catalog_results(catalog_search.text)
+	for index: int in range(catalog_filtered_results.size()):
+		if CARD_RULES.card_id(catalog_filtered_results[index])==identity:
+			selected_index=index
+			catalog_page=index/catalog_page_size
+			break
 	_apply_catalog_page()
+	if selected_index>=0:_select_catalog_index(selected_index%catalog_page_size)
+	catalog_list.get_v_scroll_bar().set_deferred("value",scroll)
 
 func _apply_catalog_page() -> void:
 	UI.clear_item_visual(catalog_preview)

@@ -2,6 +2,7 @@ extends Node
 
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
+const Ownership=preload("res://scripts/ui/catalog_card_ownership.gd")
 const ATLAS=preload("res://assets/ui/card_frame_atlas.png")
 const METAL=preload("res://assets/effects/catalog_card_metal.gdshader")
 const AURA=preload("res://assets/effects/catalog_card_aura.gdshader")
@@ -147,6 +148,7 @@ func _refresh_layout() -> void:
 		layout_size=listing.size
 		layout_icon_size=listing.fixed_icon_size
 	var bounds:=Rect2(Vector2.ZERO,listing.size)
+	var owned: Dictionary=hud.card_collection_state.get("owned",{}).get(hud.catalog_category,{})
 	for index: int in range(mini(listing.item_count,hud.catalog_results.size())):
 		# Expanded hit rectangles can stretch a row's last cell across empty space.
 		var cell: Rect2=listing.get_item_rect(index,false)
@@ -157,7 +159,7 @@ func _refresh_layout() -> void:
 		var rect: Rect2=cell.grow(-1)
 		# Native names/quantity remain outside the illustrated rim and aura.
 		if hud.catalog_category!="성물":rect.size.y=minf(rect.size.y,float(listing.fixed_icon_size.y)+8.0)
-		visible_cards.append({"index":index,"rect":rect,"rank":rank})
+		visible_cards.append({"index":index,"rect":rect,"rank":rank,"owned":owned.has(Cards.card_id(record))})
 	for rank: int in range(GRADES.size()):
 		var used: bool=visible_cards.any(func(card: Dictionary) -> bool:return card.rank==rank)
 		frame_layers[rank].visible=used
@@ -180,8 +182,9 @@ func _refresh_layout() -> void:
 func _draw_rank(layer: Control, rank: int, aura: bool) -> void:
 	for card: Dictionary in visible_cards:
 		if card.rank!=rank:continue
-		if aura:layer.draw_rect(card.rect,Color.WHITE)
-		else:layer.draw_texture_rect(texture_for(rank),card.rect,false)
+		if aura:
+			if card.owned:layer.draw_rect(card.rect,Color.WHITE)
+		else:layer.draw_texture_rect(texture_for(rank),card.rect,false,Color.WHITE if card.owned else Ownership.UNOWNED_FRAME_TINT)
 
 func _draw_card_quantities() -> void:
 	if not active or not hud.catalog_category in ["변신","마법인형"]:return
