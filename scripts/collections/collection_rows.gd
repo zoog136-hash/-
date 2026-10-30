@@ -24,6 +24,8 @@ func configure(owner_hud: Node, owner_presenter: Node=null) -> void:
 	canvas=Control.new()
 	canvas.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	add_child(canvas)
+	# Empty gutters between recycled rows must forward the same native swipe.
+	hud.workspace.register_scroll_drag(self,canvas)
 	get_v_scroll_bar().value_changed.connect(func(_value: float) -> void:_show_rows())
 	resized.connect(_show_rows)
 
@@ -98,7 +100,7 @@ func _fill(button: Button, index: int) -> void:
 	title_column.size_flags_vertical=Control.SIZE_SHRINK_CENTER
 	title_column.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	line.add_child(title_column)
-	var title: Label=UI.label(str(record.name),12,UI.TEXT)
+	var title: Label=UI.label(str(record.name),12,UI.grade(str(record.grade)))
 	title.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	title.max_lines_visible=2
 	title.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
