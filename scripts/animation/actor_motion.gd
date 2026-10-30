@@ -56,6 +56,7 @@ var _track_source: SpriteFrames = null
 var _resolved_profile: PROFILE = null
 var _resolved_state: String = ""
 var _resolved_facing: int = -1
+var _resolved_facing4: int = -1
 var _resolved_key: String = ""
 var _resolved_role: String = "legacy"
 var _resolved_frame_index: int = 0
@@ -375,10 +376,11 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 		_tracks.clear()
 		_resolved_state = ""
 		_legacy_frames = profile.frames_path.is_empty() and profile.animation_names.is_empty() and bool(frames.get_meta("twilight_generated_sheet", false))
-	if _resolved_profile == profile and _resolved_state == state and _resolved_facing == facing8: return
+	if _resolved_profile == profile and _resolved_state == state and _resolved_facing == facing8 and _resolved_facing4 == facing4: return
 	_resolved_profile = profile
 	_resolved_state = state
 	_resolved_facing = facing8
+	_resolved_facing4 = facing4
 	_resolved_key = ""
 	_resolved_role = "legacy"
 	_resolved_directional = false

@@ -41,6 +41,7 @@ func run() -> void:
 		var sprite:AnimatedSprite2D=actor.transform_sprite
 		var frames:SpriteFrames=sprite.sprite_frames
 		var legendary:=frames.resource_path.contains("legendary_production/")
+		var retained4:=int(frames.get_meta("twilight_retained_source_directions",0))==4
 		var state_before:=invariant(world)
 		var record_before:=JSON.stringify(selected)
 		var exercised_poses: Dictionary={}
@@ -56,15 +57,22 @@ func run() -> void:
 				var aim:=Vector2.RIGHT.rotated(d*PI/4.)
 				for role: String in ["idle","run","attack","hit"]:
 					actor.motion.dead=false;actor.motion.cancel_attack();actor.motion.hit_clock=0.
-					actor.motion.advance(2.,Vector2.ZERO);actor.motion.face(aim)
-					var name:=role+"_"+str(d)
+					actor.motion.advance(2.,Vector2.ZERO);actor.motion.face(aim*actor.move_speed if role=="run" else aim)
+					var suffix: String=["down","up","left","right"][actor.motion.facing4] if retained4 else str(d)
+					var name:=role+"_"+suffix
 					check(frames.has_animation(name),"Dedicated actual track "+key+" "+name)
 					var expected:=frames.get_frame_count(name)
 					if role=="run":check(expected==6,"Six genuine RUN poses")
 					var velocity: Vector2=aim*actor.move_speed if role=="run" else Vector2.ZERO
 					var strike_start:=strikes.size()
 					var sequence: int=-1
-					if role=="attack":sequence=actor.start_combat_attack(actor.global_position+aim,.9,actor.motion.profile.motion_style)
+					if role=="attack":
+						sequence=actor.start_combat_attack(actor.global_position+aim,.9,"magic" if key=="136" and retained4 else actor.motion.profile.motion_style)
+						if retained4:
+							actor.motion._resolve_frames(frames)
+							name=str(actor.motion._resolved_key)
+							var actual_suffix: String=["down","up","left","right"][actor.motion.facing4]
+							check(name in ["attack_"+actual_suffix,"cast_"+actual_suffix,"ranged_attack_"+actual_suffix],"Existing retained attack/cast source direction")
 					if role=="hit":actor.motion.react(false,Vector2.ZERO)
 					var seen:Dictionary={};var marker_seen:=false
 					for n in range(300):
@@ -90,7 +98,7 @@ func run() -> void:
 					check(invariant(world)==state_before,"Gameplay/collision state preserved")
 				actor.motion.dead=false;actor.motion.cancel_attack();actor.motion.hit_clock=0.
 				actor.motion.face(aim);actor.motion.die()
-				var death_name:="death_"+str(d) if frames.has_animation("death_"+str(d)) else "death_2"
+				var death_name: String="death_"+["down","up","left","right"][actor.motion.facing4] if retained4 else ("death_"+str(d) if frames.has_animation("death_"+str(d)) else "death_2")
 				var death_seen:Dictionary={}
 				for n in range(180):
 					tick(actor,Vector2.ZERO)
@@ -114,6 +122,12 @@ func run() -> void:
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All legendary required tracks and poses actually played")
 				if report.errors.is_empty():
 					print("PR158_LEGENDARY_DEFAULT_PASS id=",key," tracks=33 poses=198 candidate_injection=0")
+			elif retained4:
+				check(exercised_tracks.size()==20 and exercised_poses.size()==120,"All policy-required retained cardinal directions and poses actually played; existing WALK extras preserved")
+				check(count==int(frames.get_meta("twilight_retained_track_count")) and count in [24,28],"All original retained source tracks preserved, including optional CAST")
+				check(int(frames.get_meta("twilight_new_authored_directions"))==0,"Retained four-view routing creates no new eight-direction artwork")
+				if report.errors.is_empty():
+					print("PR158_RETAINED_DEFAULT_PASS id=",key," source_directions=4 policy_tracks=20 policy_poses=120 retained_tracks=",count," candidate_injection=0")
 			elif frames.has_meta("twilight_declared_presentation_aliases"):
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"Every declared reaction-fallback presentation reference played")
 				check(int(frames.get_meta("twilight_authored_track_count"))==32 and int(frames.get_meta("twilight_authored_pose_count"))==192,"Authored count excludes six reaction alias references")
