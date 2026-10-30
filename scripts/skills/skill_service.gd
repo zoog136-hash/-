@@ -179,7 +179,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 func cast(record: Dictionary) -> bool:
 	if not ready(record, true): return false
 	var skill := catalog.resolve(record)
-	if bool(skill.get("local_design",false)): return local_runtime.cast(skill)
+	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.cast(skill)
 	# Cast-speed options reduce cooldown through the world's shared policy;
 	# they must not also accelerate the contact/presentation timeline.
 	skill["cast_time"] = float(skill.get("cast_time", .42))
@@ -552,7 +552,7 @@ static func roll_counter(random: RandomNumberGenerator, chance: float) -> bool:
 func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 	if not ready(skill): return false
 	skill = catalog.resolve(skill)
-	if bool(skill.get("local_design",false)): return local_runtime.auto_wants(skill)
+	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.auto_wants(skill)
 	match str(skill.mode):
 		"turn_undead": return turn_undead_chance(skill, target) > 0
 		"heal": return float(world.hp) / float(world._effective_max_hp()) <= float(skill.get("auto_hp_threshold", .65))

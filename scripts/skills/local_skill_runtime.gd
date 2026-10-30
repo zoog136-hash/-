@@ -1,5 +1,5 @@
 extends RefCounted
-## User-authorized TWILIGHT behavior for exactly twelve current official skills.
+## Specialized TWILIGHT proc/toggle behavior; generic spells use SkillService.
 ## All damage observes real gameplay events; texture/animation callbacks are absent.
 var owner_ref: WeakRef
 var service: RefCounted:

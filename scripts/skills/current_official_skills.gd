@@ -87,13 +87,13 @@ static func detail_text(row: Dictionary) -> String:
 	var weapons: Variant = spec.get("weapon_requirements")
 	var weapon_text := "미확인" if weapons == null else " · ".join(weapons)
 	var prerequisite := str(spec.get("requires_skill", "미확인"))
-	return ("[font_size=20]%s[/font_size]\n%s · %s · %s\n2026 현재 공식 자료 · 실행 보류\n%s\n\n습득 레벨 %s\nMP %s / HP %s\n재료 %s\n지속 %s / 재사용 %s\n대상 %s\n이전 명칭 %s\n\n%s\n\n공식 출처: %s" % [str(row.name),str(row["class"]),str(row.grade) + (" (TWILIGHT)" if row.design_provenance.grade.status=="local_design" else ""),mode_label(row),str(row.desc),value_text(row.minimum_level),value_text(row.mp),value_text(row.hp),material_text,duration,value_text(row.cooldown,"초"),str(spec.get("target","미확인"))," · ".join(aliases) if not aliases.is_empty() else "없음",blocked_reason(row),str(spec.get("source_url",""))]) + "\n사용 무기 " + weapon_text + "\n선행 스킬 " + prerequisite
+	return ("[font_size=20]%s[/font_size]\n%s · %s · %s\n2026 현재 공식 자료 · 실행 보류\n%s\n\n습득 레벨 %s\nMP %s / HP %s\n재료 %s\n지속 %s / 재사용 %s\n대상 %s\n이전 명칭 %s\n\n%s\n\n공식 출처: %s" % [str(row.name),str(row["class"]),str(row.grade) + (" (TWILIGHT)" if row.get("design_provenance",{}).get("grade",{}).get("status","")=="local_design" else ""),mode_label(row),str(row.desc),value_text(row.minimum_level),value_text(row.mp),value_text(row.hp),material_text,duration,value_text(row.cooldown,"초"),str(spec.get("target","미확인"))," · ".join(aliases) if not aliases.is_empty() else "없음",blocked_reason(row),str(spec.get("source_url",""))]) + "\n사용 무기 " + weapon_text + "\n선행 스킬 " + prerequisite
 
 static func runtime_text(row: Dictionary) -> String:
 	var source: Dictionary = row.official
 	var official_mp: Variant = source.get("mp_cost",source.get("mp"))
 	var official_duration: Variant = source.get("duration_seconds",source.get("duration"))
-	var text := "[font_size=20]%s[/font_size]\n%s · %s · %s\n%s\n\n공식 공개: Lv.%s / MP %s / 지속 %s\n공식 대상: %s\n\nTWILIGHT 설계 · 원작 수치 아님\n" % [str(row.name),str(row["class"]),str(row.grade) + (" (TWILIGHT)" if row.design_provenance.grade.status=="local_design" else ""),mode_label(row),str(row.desc),value_text(row.minimum_level),value_text(official_mp),value_text(official_duration),str(source.get("target","미확인"))]
+	var text := "[font_size=20]%s[/font_size]\n%s · %s · %s\n%s\n\n공식 공개: Lv.%s / MP %s / 지속 %s\n공식 대상: %s\n\nTWILIGHT 설계 · 원작 수치 아님\n" % [str(row.name),str(row["class"]),str(row.grade) + (" (TWILIGHT)" if row.get("design_provenance",{}).get("grade",{}).get("status","")=="local_design" else ""),mode_label(row),str(row.desc),value_text(row.minimum_level),value_text(official_mp),value_text(official_duration),str(source.get("target","미확인"))]
 	var labels := {"cooldown":"재사용(초)","book_cost":"스킬북(아데나)","proc_chance":"발동 확률","proc_cooldown":"발동 간격(초)","power":"추가 피해","heal":"치유량","stats":"버프","passive_stats":"패시브","proc_mp":"발동 MP","wing_reduction":"윙 실드 경감","dash_distance":"대시 거리"}
 	for key: String in labels:
 		if row.has(key):
