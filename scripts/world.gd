@@ -3469,8 +3469,8 @@ func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dic
 	if source_id != "":
 		var identified: Dictionary = _catalog_item_from_source_id(source_id)
 		return identified if str(identified.get("name", "")) == item_name else {}
-	return ITEM_CATALOG_LOOKUP.find_many(
-		[catalog_db.get("아이템", []), item_db], item_instances, [item_name]).get(item_name, {})
+	# Indexed, self-validating equivalent of the previous one-name find_many scan.
+	return ITEM_CATALOG_LOOKUP.find_one([catalog_db.get("아이템", []), item_db], item_instances, item_name)
 
 func _safe_enhancement_level(kind: String) -> int:
 	match kind:
