@@ -1,0 +1,54 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_337/reviewed_parts_r152/NW-attack-0.png" id="r152_NW_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_337/reviewed_parts_r152/NW-attack-1.png" id="r152_NW_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_337/reviewed_parts_r152/NW-attack-2.png" id="r152_NW_2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_337/reviewed_parts_r152/NW-attack-3.png" id="r152_NW_3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_337/reviewed_parts_r152/NW-attack-4.png" id="r152_NW_4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_337/reviewed_parts_r152/NW-attack-5.png" id="r152_NW_5"]
+
+[sub_resource type="AtlasTexture" id="batch0_c12_pose_0"]
+atlas = ExtResource("r152_NW_0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c12_pose_1"]
+atlas = ExtResource("r152_NW_1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c12_pose_2"]
+atlas = ExtResource("r152_NW_2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c12_pose_3"]
+atlas = ExtResource("r152_NW_3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c12_pose_4"]
+atlas = ExtResource("r152_NW_4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_c12_pose_5"]
+atlas = ExtResource("r152_NW_5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("batch0_c12_pose_0")},
+{"duration": 1.0, "texture": SubResource("batch0_c12_pose_1")},
+{"duration": 1.0, "texture": SubResource("batch0_c12_pose_2")},
+{"duration": 1.0, "texture": SubResource("batch0_c12_pose_3")},
+{"duration": 1.0, "texture": SubResource("batch0_c12_pose_4")},
+{"duration": 1.0, "texture": SubResource("batch0_c12_pose_5")}], "loop": false, "name": &"attack_5", "speed": 14.285714286}
+]
+metadata/twilight_reviewed_frame_registration = {"attack_5":{"semantic_review":"HOLD","frames":[{"anchor":Vector2(289.0,489.0),"scale":Vector2(0.293725,0.293725),"target":Vector2(0,0)},{"anchor":Vector2(815.0,493.0),"scale":Vector2(0.293725,0.293725),"target":Vector2(0,0)},{"anchor":Vector2(1309.0,497.0),"scale":Vector2(0.293725,0.293725),"target":Vector2(0,0)},{"anchor":Vector2(475.5,991.0),"scale":Vector2(0.293725,0.293725),"target":Vector2(0,0)},{"anchor":Vector2(743.5,986.5),"scale":Vector2(0.293725,0.293725),"target":Vector2(0,0)},{"anchor":Vector2(1349.0,998.0),"scale":Vector2(0.293725,0.293725),"target":Vector2(0,0)}]}}
+metadata/twilight_clip_quality_holds = {"attack_5":"HOLD_NW_ATTACK_INTERNAL_STAFF_HAND_FLIP_AND_CANONICAL_CONFLICT"}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_SOURCE_EDGES_CANONICAL_FRONT_REAR_STAFF_CONFLICT_AND_RUN"
+metadata/twilight_final_quality_approved = false
