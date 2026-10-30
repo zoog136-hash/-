@@ -121,8 +121,8 @@ func movement_case(id:String,d:int) -> void:
  report.cases.append({"id":id,"direction":d,"role":"physical_run_stop","required":key,"available":available,"seen":seen.keys(),"displacement":boss.global_position-start})
 
 func expected_boss_routes() -> Array:
- # The existing connection ledger remains historical. Verify each immutable
- # export-path revision against its exact parent SHA before selecting its route.
+ # The connection ledger pins the current selection. Export provenance retains
+ # the immutable prior source/SHA separately; neither is a new art approval.
  var ledger:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_monster_boss_runtime_connections.json"))
  var moved:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/source-provenance.json"))
  check(moved.actors.size()==2 and moved.actors.has("monster:그림 리퍼") and moved.actors.has("monster:교만의 왕자 데우스"),"Exactly two declared export-safe source paths")
@@ -131,8 +131,8 @@ func expected_boss_routes() -> Array:
   var row={"key":str(original.id),"frames":str(original.frames),"sha256":str(original.frames_sha256)}
   if moved.actors.has(row.key):
    var move:Dictionary=moved.actors[row.key]
-   check(row.frames==move.prior_selected_frames and row.sha256==move.prior_frames_sha256,"Explicit export revision matches independently recorded original boss route")
-   row.frames=move.selected_frames;row.sha256=move.selected_sha256
+   check(row.frames==move.selected_frames and row.sha256==move.selected_sha256,"Current connection ledger matches the independently pinned export revision")
+   check(FileAccess.get_sha256(move.prior_selected_frames)==move.prior_frames_sha256,"Immutable prior boss selection remains byte-identical in export provenance")
   rows.append(row)
  return rows
 
