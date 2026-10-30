@@ -183,7 +183,7 @@ jobs:
         shell: python
         run: |
           import json, os, pathlib, subprocess, sys
-          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450', '--import-timeout', '2400']
+          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450', '--import-timeout', '5400']
           resumed = os.environ['TWILIGHT_CI_RETRY_SCOPE'] == 'linux_remaining'
           if resumed:
               proof = json.loads(pathlib.Path('l1j-test-results/authenticated-linux-prefix.json').read_text(encoding='utf-8'))

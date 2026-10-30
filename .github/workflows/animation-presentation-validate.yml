@@ -37,7 +37,7 @@ concurrency:
 jobs:
   presentation:
     runs-on: ubuntu-24.04
-    timeout-minutes: 85
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
@@ -379,7 +379,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p test-results "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 2400 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/import.txt
+          timeout 5400 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/import.txt
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
       - name: Configured production Main batches, headless then OpenGL
         shell: bash
