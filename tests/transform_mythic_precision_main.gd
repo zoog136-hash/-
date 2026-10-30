@@ -62,8 +62,8 @@ func controlled_role(id:String,d:int,role:String) -> void:
 	var seen={}
 	for tick in range(int(ceil(seconds*120.))+5):
 		pose_tick()
-		if str(sprite.animation)==clip:
-			var phase=sprite.frame
+		var phase=precision_source_phase(id,d,role,clip)
+		if phase>=0:
 			if not seen.has(phase):
 				seen[phase]=true;record_pose(id,d,role)
 				if role=="idle" and phase==0:await take_compact(d*5)
@@ -108,6 +108,25 @@ func physical_run(id:String,d:int,home:Vector2) -> void:
 	check(actor.position.distance_to(stopped)<.05 and str(sprite.animation).begins_with("idle_"),"Real movement stop returns to IDLE without body drift "+id)
 	report.cases.append({"id":id,"direction":d,"role":"physical_run_stop","expected":frames.get_frame_count(clip),"seen":seen.keys(),"displacement":actor.position-start,"stopped":stopped})
 
+func precision_actor_ids(world:Node) -> Array:
+	var selected_ids=["413","412","258"]
+	for row:Dictionary in world.catalog_db["변신"]:
+		if str(row.get("grade",""))=="신화" and not str(row.get("sourceId","")) in selected_ids:selected_ids.append(str(row.sourceId))
+	check(selected_ids.size()==29,"Exact current catalog29 mythic scope")
+	return selected_ids
+
+func expected_visual_route(selected:Dictionary) -> Dictionary:
+	return {"path":str(selected.animation_profile.frames_path)}
+
+func precision_source_phase(_id:String,_d:int,_role:String,clip:String) -> int:
+	return actor.transform_sprite.frame if str(actor.transform_sprite.animation)==clip else -1
+
+func precision_actor_finished(_id:String) -> void:
+	pass
+
+func precision_output_name() -> String:
+	return "mythic29-actual-Main-overview.jpg"
+
 func run() -> void:
 	root.size=Vector2i(1280,720)
 	var world=load("res://Main.tscn").instantiate();world_ref=world;root.add_child(world)
@@ -138,13 +157,10 @@ func run() -> void:
 				homes[d]=candidate;break
 			if homes.has(d):break
 		if not check(homes.has(d),"Actual native330px route/collider clearance "+str(d)):finish(1);return
-	var selected_ids=["413","412","258"]
-	for row:Dictionary in world.catalog_db["변신"]:
-		if str(row.get("grade",""))=="신화" and not str(row.get("sourceId","")) in selected_ids:selected_ids.append(str(row.sourceId))
-	check(selected_ids.size()==29,"Exact current catalog29 mythic scope")
+	var selected_ids=precision_actor_ids(world)
 	var requested=OS.get_environment("TRANSFORM_PRECISION_IDS").split(",",false)
 	if not requested.is_empty():
-		for key:String in requested:check(key in selected_ids,"Explicit precision scope is an actual mythic catalog ID")
+		for key:String in requested:check(key in selected_ids,"Explicit precision scope belongs to the requested catalog group")
 		selected_ids=Array(requested)
 		if selected_ids.size()==1:
 			run_pose_sheet=Image.create(1200,1760,false,Image.FORMAT_RGBA8)
@@ -156,8 +172,12 @@ func run() -> void:
 		for row:Dictionary in world.catalog_db["변신"]:
 			if str(row.get("sourceId",""))==id:selected=row
 		reset_action();world._apply_transform_visual(selected)
-		var selected_path=str(selected.animation_profile.frames_path)
-		check(actor.transform_sprite.sprite_frames.resource_path==selected_path,"Actual default resource selection, no injected candidate "+id)
+		var route=expected_visual_route(selected)
+		var selected_path=str(route.path)
+		check(actor.transform_active and actor.transform_sprite.visible and actor.transform_sprite.sprite_frames.resource_path==selected_path,"Actual independently expected default resource, no fallback/injected candidate "+id)
+		if route.has("sha256"):check(FileAccess.get_sha256(selected_path)==str(route.sha256),"Selected resource matches independent expected SHA "+id)
+		if not report.has("selected_visual_routes"):report["selected_visual_routes"]=[]
+		report.selected_visual_routes.append({"id":id,"catalog_path":str(selected.animation_profile.frames_path),"actual_path":actor.transform_sprite.sprite_frames.resource_path,"expected_path":selected_path,"profile_id":actor.motion.profile.profile_id,"explicit_source_override":bool(route.get("source_override",false))})
 		var baseline=JSON.stringify([world.hp,world.mp,world.gold,world.inventory,world.equipped_items,world.equipped_catalog,world.item_instances,actor.move_speed,actor.attack_speed_multiplier,actor.collision_layer,actor.collision_mask,actor.get_node("CollisionShape2D").transform,selected])
 		for d in range(8):
 			reset_action();actor.position=homes[d]
@@ -168,11 +188,12 @@ func run() -> void:
 			await controlled_role(id,d,"hit")
 		await controlled_role(id,2,"death")
 		check(JSON.stringify([world.hp,world.mp,world.gold,world.inventory,world.equipped_items,world.equipped_catalog,world.item_instances,actor.move_speed,actor.attack_speed_multiplier,actor.collision_layer,actor.collision_mask,actor.get_node("CollisionShape2D").transform,selected])==baseline,"HP stats inventory physical equipment collider and saved identity unchanged "+id)
+		precision_actor_finished(id)
 		actor_row+=1
 		report["actor_order"]=selected_ids;report["completed_actors"]=actor_row
 		report["projection_samples"]=projection_samples;report["samples"]=samples
 		var f=FileAccess.open(output.path_join("report.json"),FileAccess.WRITE);f.store_string(JSON.stringify(report,"\t")+"\n");f.close()
-		compact.save_jpg(output.path_join("mythic29-actual-Main-overview.jpg"),.9)
+		compact.save_jpg(output.path_join(precision_output_name()),.9)
 		print("CURRENT_MAIN_MYTHIC ",id," completed=",actor_row," errors=",report.errors.size())
 	if run_pose_sheet!=null:run_pose_sheet.save_jpg(output.path_join("scope-RUN-all-existing-poses.jpg"),.94)
 	actor.position=origin;reset_action()

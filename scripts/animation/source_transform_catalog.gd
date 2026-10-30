@@ -24,3 +24,14 @@ static func configure(profile: Resource, kind: String, record: Dictionary) -> vo
 	profile.sprite_offset = Vector2(float(entry.sprite_offset[0]), float(entry.sprite_offset[1]))
 	profile.color_tint = Color.WHITE
 	profile.authored_motion_weight = 0.0
+	# Reviewed aliases may opt in to their canonical action clock. Pass the
+	# declaration once; ActorMotion validates and caches identical timelines.
+	if bool(entry.get("canonical_alias_clocks", false)):
+		var aliases: Variant = entry.get("same_model_aliases", {})
+		if aliases is Dictionary:
+			var clock_aliases: Dictionary = {}
+			for pair: Array in [["recovery", "attack"], ["corpse", "death"]]:
+				if str(aliases.get(pair[0], "")) == pair[1]:
+					clock_aliases[pair[0]] = pair[1]
+			if not clock_aliases.is_empty():
+				profile.set_meta("twilight_explicit_role_timeline_aliases", clock_aliases)
