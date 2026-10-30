@@ -936,6 +936,111 @@
         "effect_summary": "술자에게 방어력을 부여한다.\n대상 : 술자"
       },
       "implementation_gate": "TWILIGHT self-defense adaptation; no original AC formula or animation parity claimed."
+    },
+    {
+      "name": "엘리멘탈 스피드",
+      "class": "요정",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+        "updated_date": [
+          "2026-06-28"
+        ],
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "엘리멘탈 스피드",
+        "learning_level": 10,
+        "mp_cost": null,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "passive",
+        "activation": "passive",
+        "effect_summary": "상시 공격·이동 속도 25%, 시전 속도 12.5% 증가. 기존 TWILIGHT 시전속도 정책은 재사용 시간에 적용합니다.",
+        "published_percentages": {
+          "movement": 25,
+          "attack": 25,
+          "cast": 12.5
+        },
+        "numeric_status": "Percentages and learning level are published. No unpublished damage, proc rate, or duration supplied."
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9A%94%EC%A0%95%20%EB%A7%88%EB%B2%95",
+        "existence_verified": true
+      },
+      "implementation_gate": "Published passive percentages mapped into existing shared speed/cooldown policy; acquisition uses existing TWILIGHT book policy."
+    },
+    {
+      "name": "다크 러쉬",
+      "class": "암흑기사",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%95%94%ED%9D%91%EA%B8%B0%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "updated_date": [
+          "2025-12-15"
+        ],
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "다크 러쉬",
+        "learning_level": 20,
+        "mp_cost": null,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "passive",
+        "activation": "passive",
+        "effect_summary": "상시 공격·이동 속도 25%, 시전 속도 25% 증가. 기존 TWILIGHT 시전속도 정책은 재사용 시간에 적용합니다.",
+        "published_percentages": {
+          "movement": 25,
+          "attack": 25,
+          "cast": 25
+        },
+        "numeric_status": "Percentages and learning level are published. No unpublished damage, proc rate, or duration supplied."
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%95%94%ED%9D%91%EA%B8%B0%EC%82%AC%20%EB%A7%88%EB%B2%95",
+        "existence_verified": true
+      },
+      "implementation_gate": "Published passive percentages mapped into existing shared speed/cooldown policy; acquisition uses existing TWILIGHT book policy."
+    },
+    {
+      "name": "고스트 스텝",
+      "class": "사신",
+      "historical_aliases": [],
+      "current_official": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%82%AC%EC%8B%A0%20%EB%A7%88%EB%B2%95",
+        "updated_date": [
+          "2024-03-20"
+        ],
+        "accessed_date": "2026-10-30",
+        "observed_via": "official guide rendered table",
+        "current_name": "고스트 스텝",
+        "learning_level": 20,
+        "mp_cost": null,
+        "hp_cost": null,
+        "material": null,
+        "duration": null,
+        "cooldown_seconds": null,
+        "grade": null,
+        "mode": "passive",
+        "activation": "passive",
+        "effect_summary": "상시 공격·이동 속도 30%, 시전 속도 25% 증가. 기존 TWILIGHT 시전속도 정책은 재사용 시간에 적용합니다.",
+        "published_percentages": {
+          "movement": 30,
+          "attack": 30,
+          "cast": 25
+        },
+        "numeric_status": "Percentages and learning level are published. No unpublished damage, proc rate, or duration supplied."
+      },
+      "historical": {
+        "source_url": "https://lineagem.plaync.com/guidebook/view?title=%EC%82%AC%EC%8B%A0%20%EB%A7%88%EB%B2%95",
+        "existence_verified": true
+      },
+      "implementation_gate": "Published passive percentages mapped into existing shared speed/cooldown policy; acquisition uses existing TWILIGHT book policy."
     }
   ],
   "sources": [

@@ -54,6 +54,7 @@ static func range_pixels(skill: Dictionary) -> float:
 	return maxf(80.0, float(skill.get("range", 120.0)))
 
 static func can_auto_cast(skill: Dictionary) -> bool:
+	if bool(skill.get("runtime_blocked",false)): return false
 	if is_passive(skill):
 		return false
 	if bool(skill.get("local_design",false)): return skill.get("mode", "") in ["local_heal","local_buff","summon"]

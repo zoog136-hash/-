@@ -9,13 +9,15 @@ var windows: Dictionary = {}
 var cooldowns: Dictionary = {}
 var depth := 0
 var proc_events: Dictionary = {}
+var runtime_rows: Array = []
 
 func configure(owner: RefCounted) -> void:
 	owner_ref = weakref(owner)
 	world = owner.world
+	runtime_rows = owner.catalog.current_official.records.filter(func(row: Dictionary) -> bool: return bool(row.get("local_design",false)))
 
 func rows() -> Array:
-	return service.catalog.current_official.records
+	return runtime_rows
 
 func row_named(name_value: String) -> Dictionary:
 	return service.catalog.record_for(name_value)

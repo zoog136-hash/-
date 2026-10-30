@@ -49,6 +49,10 @@ func configure(owner: Node) -> void:
 		by_id[str(record.id)] = record
 		by_name[str(record.name)] = str(record.id)
 		for alias: String in record.historical_aliases: by_name[alias] = str(record.id)
+	var roster: Dictionary = read_json("official_roster.json")
+	for alias: String in roster.get("aliases",{}):
+		var canonical: String = str(roster.aliases[alias])
+		if by_name.has(canonical): by_name[alias] = by_name[canonical]
 	relations.merge(current_official.local_design.get("relations",{}))
 	seed_starters()
 

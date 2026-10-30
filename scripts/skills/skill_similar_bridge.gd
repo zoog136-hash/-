@@ -26,6 +26,13 @@ func _init() -> void:
 		var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "manifest.json"))
 		if manifest is Dictionary: effects = manifest.get("effects", {})
 
+	var roster: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/official_roster.json"))
+	for row: Dictionary in roster.get("references",[]):
+		var source: String = str(row.get("visual_reference_id",""))
+		if source.is_empty() or not bindings.has(source): continue
+		var id: String = "lmref_" + (str(row["class"])+":"+str(row.name)).sha256_text().substr(0,16)
+		bindings[id] = {"inherits_visual":source,"matching_basis":"Base-skill preview only; enhancement animation and behavior remain unverified."}
+
 func binding_for(id: String) -> Dictionary:
 	var visited: Dictionary = {}
 	while bindings.has(id) and not visited.has(id):
