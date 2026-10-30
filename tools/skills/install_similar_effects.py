@@ -22,9 +22,11 @@ def install(source, root):
     destination = root / 'assets/external_spx/similar_skills'
     destination.mkdir(parents=True, exist_ok=True)
     effects = {}
-    for binding in bindings['bindings']:
-        alias = binding['selected_alias']
-        record = records[alias['selected_sha256']]
+    selected = {b['selected_alias']['selected_sha256']: b for b in bindings['bindings']}
+    for raw_sha, record in sorted(records.items()):
+        binding = selected.get(raw_sha)
+        alias = binding['selected_alias'] if binding else None
+        key = binding['effect_id'] if binding else 'SPR-RAW-' + raw_sha
         sprite = Sprite((source / record['package_blob']).read_bytes())
         images = [sprite.render(i, fixed_canvas=True)[0] for i in range(len(sprite.frames))]
         width, height = images[0].size
@@ -35,17 +37,28 @@ def install(source, root):
         atlas = Image.new('RGBA', (width * columns, height * ((count + columns - 1) // columns)))
         for i, image in enumerate(images):
             atlas.paste(image, ((i % columns) * width, (i // columns) * height))
-        name = binding['effect_id'] + '.png'
+        name = 'SPR-' + raw_sha + '.png'
         atlas.save(destination / name)
         # Keep the original grid origin rather than alpha-crop centering frames.
         bounds = sprite.file_bounds('original-grid')
-        effects[binding['effect_id']] = {'atlas': name, 'width': width, 'height': height,
+        effects[key] = {'atlas': name, 'width': width, 'height': height,
             'columns': columns, 'count': count, 'offset': list(bounds[:2]),
             'sha256': hashlib.sha256((destination / name).read_bytes()).hexdigest(),
-            'raw_sha256': record['sha256'], 'model_id': alias['model_id'], 'fps': 12}
+            'raw_sha256': record['sha256'], 'model_id': alias['model_id'] if alias else record['numeric_sprite_prefix'], 'fps': 12,
+            'source_records': [{'record_key': r['record_key'], 'name': r['name']} for r in bindings['raw_sprite_records'] if r['sha256'] == raw_sha],
+            'source_record_key': record['record_key'], 'source_name': record['name'],
+            'source_names': record.get('source1_local_action_names', []),
+            'resource_scope': 'selected_effect_group' if binding else 'unassigned_source_sprite_variant',
+            'skill_binding_required': False,
+            'frame_rgba_sha256': [hashlib.sha256(im.tobytes()).hexdigest() for im in images]}
     (destination / 'manifest.json').write_text(json.dumps({'schema_version': 1,
         'timing': '12fps presentation convention; original action ticks unverified',
-        'blend': 'unmodified RGBA; no additive assumption', 'effects': effects}, indent=2) + '\n')
+        'blend': 'unmodified RGBA; no additive assumption',
+        'scope': {'reported_full_effect_groups': 2774, 'provided_effect_groups': len(bindings['bindings']),
+                  'provided_unique_spr': len(records), 'full_source_inventory_included': False,
+                  'source_library_id': 'libfile_ade7b761ab9081918ce1541397671373',
+                  'policy': 'All supplied raw sprites load lazily; unassigned variants are not inferred new effects or forced skill bindings.'},
+        'effects': effects}, indent=2) + '\n')
     return {'effects': len(effects), 'raw_records_verified': len(bindings['raw_sprite_records']),
             'directory': str(destination)}
 

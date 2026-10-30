@@ -1,6 +1,6 @@
 extends RefCounted
 
-## Similar substitute art is visual-only. Missing private pack preserves fallback.
+## Similar substitute art is visual-only; all supplied SPR variants are lazy resources.
 const ROOT := "res://assets/external_spx/similar_skills/"
 var bindings: Dictionary = {}
 var effects: Dictionary = {}
@@ -38,8 +38,16 @@ func binding_for(id: String) -> Dictionary:
 func layout_for(id: String, phase: String) -> Dictionary:
 	return effects.get(str(binding_for(id).get("phases", {}).get(phase, "")), {})
 
+func resource_catalog() -> Dictionary:
+	# Metadata only: listing unused resources never decodes or pins textures.
+	return effects.duplicate(true)
+
 func frames_for(id: String, phase: String) -> SpriteFrames:
 	var key := str(binding_for(id).get("phases", {}).get(phase, ""))
+	return frames_for_resource(key)
+
+func frames_for_resource(key: String) -> SpriteFrames:
+	# Explicit on-demand access includes supplied source variants without a skill.
 	if not effects.has(key): return null
 	if cache.has(key):
 		cache[key].users += 1

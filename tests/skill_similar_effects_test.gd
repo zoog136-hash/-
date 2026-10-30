@@ -9,9 +9,30 @@ func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	var bridge = BRIDGE.new()
 	if bridge.effects.is_empty():
-		print("SIMILAR_EFFECTS_SKIP: optional private SPR pack absent")
-		quit(0)
+		push_error("SIMILAR_EFFECTS_FAIL: tracked SPR pack absent")
+		quit(1)
 		return
+	var catalog: Dictionary = bridge.resource_catalog()
+	check(catalog.size() == 91, "all supplied unique SPR resources registered")
+	check(bridge.cache.is_empty(), "catalog listing must not preload textures")
+	var checked_frames: int = 0
+	for key: String in catalog:
+		var spec: Dictionary = catalog[key]
+		var resource: SpriteFrames = bridge.frames_for_resource(key)
+		check(resource != null, "unbound resource must load: " + key)
+		if resource != null:
+			check(resource.get_frame_count(&"source") == int(spec.count), "source frame count preserved")
+			for frame: int in range(resource.get_frame_count(&"source")):
+				var pixels: Image = resource.get_frame_texture(&"source", frame).get_image()
+				var digest := HashingContext.new()
+				digest.start(HashingContext.HASH_SHA256)
+				digest.update(pixels.get_data())
+				check(digest.finish().hex_encode() == str(spec.frame_rgba_sha256[frame]), "decoded source pixels preserved: " + key)
+				checked_frames += 1
+		bridge.release(key)
+		bridge.trim()
+		check(bridge.cache.is_empty(), "catalog resource releases without resident texture")
+	print("SIMILAR_RESOURCE_CATALOG resources=", catalog.size(), " frames=", checked_frames)
 	var master: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/master.json"))
 	var mapped := 0
 	for row: Dictionary in master.records:

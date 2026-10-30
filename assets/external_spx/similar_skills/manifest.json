@@ -1,0 +1,3669 @@
+{
+  "schema_version": 1,
+  "timing": "12fps presentation convention; original action ticks unverified",
+  "blend": "unmodified RGBA; no additive assumption",
+  "scope": {
+    "reported_full_effect_groups": 2774,
+    "provided_effect_groups": 45,
+    "provided_unique_spr": 91,
+    "full_source_inventory_included": false,
+    "source_library_id": "libfile_ade7b761ab9081918ce1541397671373",
+    "policy": "All supplied raw sprites load lazily; unassigned variants are not inferred new effects or forced skill bindings."
+  },
+  "effects": {
+    "SPR-RAW-010bb4bcdc15cedc5465c64f2576c2dfad37a45cbc9898f18ae8b00bbd47fd66": {
+      "atlas": "SPR-010bb4bcdc15cedc5465c64f2576c2dfad37a45cbc9898f18ae8b00bbd47fd66.png",
+      "width": 96,
+      "height": 84,
+      "columns": 8,
+      "count": 22,
+      "offset": [
+        24,
+        -48
+      ],
+      "sha256": "087d40fc3aeed1e8f4b5ea4aa8b9dcbff93e1c71f18f73abedf136dee2b62c37",
+      "raw_sha256": "010bb4bcdc15cedc5465c64f2576c2dfad37a45cbc9898f18ae8b00bbd47fd66",
+      "model_id": 3669,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:49908",
+          "name": "3669-2.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:49908",
+      "source_name": "3669-2.spr",
+      "source_names": [
+        "baranka basic summon e"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "834088faccf6260b04dc8aa1f20d0e2ceced16615951839ede26f7b165a4a8fc",
+        "6471eaa0cf64029dad2fe1103e98082d4f7736663dbcd32918231743f2a80cdd",
+        "d610c78d58a88856f02bd636c1fa3631bd12b6f2017a696dde14ff9e46d53031",
+        "27785afeb5a408f1a32cd79ccc5366737cc36b4ed2e3cac5b509c3ad8168e738",
+        "9eafba6a6828f1466b1053eee5756664ce19d3a5de71582053a4061da587b3e7",
+        "2223529a5327d1f1105f6fa78ce0c0d213d7ac4269641cab7fd720604201e662",
+        "2676b446fefe8158aea6decc415bd1fa539b2b8ffa27f18f9e2b97b0691a8635",
+        "e532e46a9275ed965460c706fa0f30cc7a8118c25ab75d5ab2045ed1de0a1c1f",
+        "6baa4ef5567e836f8f42c2cd4b75b8bdcb069c1a3f47a3de79b34e8b01253c31",
+        "4e288286a97b579cd2fd04e3060ff96584cf0bc84a9f4e84b2bd265823be349e",
+        "bb6c2f1cec90d588a807a9ebafa799225abf032778fac84c3c5c213445e5382f",
+        "6b8cc51e8b3d98f2c20feb470cd35041b144be413c21d24ab100d0269bec3681",
+        "68d085b3908552af8dbf6d1725a0b08aead774b8087e79d3d700f80a88adf909",
+        "c71796d85399a573302c11796db0b3f790879e6b5912fa6361969e145616e612",
+        "aa188f167310f00ceb038d2d57b6cc6de7d598678f19f721b7bce124629833b5",
+        "6f35afe84f89aceea70915bce554dc2acbc306af98b689fc486e2a79a08600c4",
+        "0e563020d83336c6ef16feb354d9032d4957677d95c026af5a43fdbab4201e53",
+        "3f944796f7105f7c42803d0af45c14d2625809167bc0f436b5e19be10adcbbac",
+        "3b1d197036bf5e74fbb554a8338e0bc0c5121ed15ea54c48ae6fd11dc7da5763",
+        "81e09a6dcd7f46f2107cf6dd5e3da39ce1104a73434bf37568ae81c693500688",
+        "4d6a827034d6cc9fcdbcd3958debe7d81d0ce410920920e110e97e273d5b18b5",
+        "47a22accc6fb0aedaf4a5cf8014bdd569ead0efad399fdb8de134235e7c9bb10"
+      ]
+    },
+    "SPR-RAW-014f85fc35ac9e7825efd431ee5bb98437bfcd200a9381dc4cbba408b5ee5194": {
+      "atlas": "SPR-014f85fc35ac9e7825efd431ee5bb98437bfcd200a9381dc4cbba408b5ee5194.png",
+      "width": 360,
+      "height": 180,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        0,
+        -120
+      ],
+      "sha256": "0408ef138b5baaef90e650754fa687e728b895fa5be3d81eab5c89f655718208",
+      "raw_sha256": "014f85fc35ac9e7825efd431ee5bb98437bfcd200a9381dc4cbba408b5ee5194",
+      "model_id": 170,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:27319",
+          "name": "170-3.SPR"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:27319",
+      "source_name": "170-3.SPR",
+      "source_names": [],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "0ac43ef1f79e9b55cba64c06e78cbde096a960c33876f67a0eb88e0110d0e974",
+        "b7cc9b9f1bf47a7df64ae63f9b43ed0d725e6da5779c96da68293ca2b78f3472",
+        "5c41c3b31496636a7265f0417b54cb1d537f43e1648f6c7d32c7172e19f2633a",
+        "ee3da67a08418cceb10f2196133fb76b4d3c3f036d580d7a4409f5b745735017",
+        "c938d25af598b15813205893af7d5fc1b945203326e9adc11a4dc02c78cc5075",
+        "8cadd12cb92f4ec68d92f4fa8587f5557cc948fd61679408b0cbddddd71a3e3c"
+      ]
+    },
+    "SPR-U-829e1513665f73218513": {
+      "atlas": "SPR-0c5085aeecba056b1296c4b43ab62c2ee67e88979d5ffd75f36eebd10d841b83.png",
+      "width": 384,
+      "height": 264,
+      "columns": 8,
+      "count": 21,
+      "offset": [
+        -168,
+        -144
+      ],
+      "sha256": "7ebc6927d5aca624a6a4cfe1a83b379586044142fb9d2cc7dc38810b5c029099",
+      "raw_sha256": "0c5085aeecba056b1296c4b43ab62c2ee67e88979d5ffd75f36eebd10d841b83",
+      "model_id": 754,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:87889",
+          "name": "754-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:87889",
+      "source_name": "754-0.spr",
+      "source_names": [
+        "turn undead"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "2ef9b1449cc456565b245eef281ac56136108145c95360685ac1df19e0bf9bb9",
+        "ac313d951fdd154ca9678c5b14df006492570ecddec69f5503f07478239bf034",
+        "a30b3bfa55eb3496c4128aa6eae578d8727ce07c8878a56837f27159835d6add",
+        "281b7da80c3a1d514e59ae29f4e041a314457414e7071f0604d11255b68427df",
+        "7422bbc463c8df3ebeec26ca0eb95a20a6f97f94777fc1c4e807ad09b4e2a830",
+        "71fdf22bbd934205f4d9584e326a2e17249c13d1f6e2f332da69e6fd96c8ebdd",
+        "32374a224d6a848599621b2dffe98403e31c62d3e4988eea62863be08119130f",
+        "0ae69105d0bc9b654eefda1369c05f5e7771aed07be04ccbc194235bc34308a1",
+        "bfcfb6bfdf5ddb4910112c267412babe887fee3d8ee5eee5b6fe070746683c4e",
+        "48536699fefb3c42b5cd5fc0bee4ee023db72dbb60b1cc546a50ed98f13f5401",
+        "72757dce4e0e23b9c49fc503c5a3c30e6ee6db5510510756ee86bbcaa07c0aa7",
+        "16f4f3de8360d84a21aaad301588d31531c558822852a86fa9f28124b8f80cb9",
+        "18eb77852aa5421d7a3c9ee5d6a989469e84e7efeb56301e51e6c97cf7824f9f",
+        "b3b94f8ed968645e67eab8d070bc675090f9951514dae1b2b3406b25b5a7d71b",
+        "be902ad49210271bcc447a84e799c3e0901b6d0f30f48cad6edf1e66a810647d",
+        "e2c5c3996fcbf70ea96fbf1938239ea318782d748c3a7b166040ed46fcf05eb1",
+        "5c8c5f3a0e91966741c8aa9d40a280deba4faa23aacc215f63d9fc36553d6e63",
+        "2b8368de6ff1ec753a6041fe467bf5340f5a1c80d696c2fa7ed8549a6c09b7ff",
+        "0302b6299ac0de281ca482a325ba83bb2d66928bfb8fa59bf60bc7aa2a7989fe",
+        "de8d757c34194bd1f250cba8eae9d348869a0be3180a19d8c01465c353be1bfa",
+        "b90c292683145327409bb671fd3117d5ba48bfc09d8db98e5e5138c58287477f"
+      ]
+    },
+    "SPR-U-d49c3e341b305fd7c9a5": {
+      "atlas": "SPR-0d75f8b98a5b66df4cdfa3731441783ffd94ad177c69487831da1e2014232b0c.png",
+      "width": 48,
+      "height": 96,
+      "columns": 8,
+      "count": 19,
+      "offset": [
+        0,
+        -120
+      ],
+      "sha256": "361840c22b8ad10b0294df8806123e561d329de9719502050c35318e86dbb434",
+      "raw_sha256": "0d75f8b98a5b66df4cdfa3731441783ffd94ad177c69487831da1e2014232b0c",
+      "model_id": 747,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:87857",
+          "name": "747-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:87857",
+      "source_name": "747-0.spr",
+      "source_names": [
+        "enchant weapon"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "9a0954ff752179d00718473879357dbed210a3cb7074832d08a3a819d6e365bb",
+        "08fc8ea9292d9f03c977bd6c27b4360385cab758da69f25ecb5d1365231ae31c",
+        "1a751d1d2086f4deb4858ed7a876cd6b35f9dccc6300088bd3dda915a24a1e7e",
+        "e61d610aa38fd0e7d0133e810789b237173c3b3a6343e60ec44ea9936348da5a",
+        "9efd329f2094cb8b4781dc0db2679cd4f12c492462122e0e01a9f9183e0eddd5",
+        "679b6bd2742ee91e40a7244b05bdaf55d0c23c6a92d2180d57b57849aa4cf0b9",
+        "dc0e15aeee102955533e2e166c91fb69658d6a80490f1624fc650cf767d1bee6",
+        "86abd5c8d6fd1c32473eded27d227c255cc23e67a8ed59fad00b53fcdfcce3c1",
+        "762dbefbe4c77b7a70bb5713e3c4f0d57f6aa405f041c3f18d474ac4e0aa4d4a",
+        "70f027472ec3eb2f3c7912892d0ffd851b5456dbb79295b2f4cc807589d1970e",
+        "d1ea940a758f8af2abbd5ef6af43a1b3b7303029a5f5873d10b81178c02f2562",
+        "3b564c2b95c54739599e0ddfe0ceadbda87ef4fcb8564471d76ee3978103c59b",
+        "7132312aa7798579ca5b3bf4de95fedef3be82b71a621a738736df7be64d5f3e",
+        "598abfa81465754a7db418f08cac7c5c9009247c026824835bb0feb99267e9ac",
+        "3a4412fcc77d26af5335ef0e2ecd06fa3a7e7ca68b99a42141d7e9e5e368ff1c",
+        "df830cbb2d6f44bb84bdb2b7ce34f1934deaad03facd0bbdf682390f03bd283c",
+        "23a9aaa312e9d5cb23e8d69aca856c4e17dc0c727e548a21e284c98aee148817",
+        "e1f54536c387467e822f5f6a855a9759ddec92d347b88c0982753490b63afce5",
+        "dd4b76a60b1e434ae6ef6bc5d77dba2f639cc0122fcb5e3aa16326df52dcc69b"
+      ]
+    },
+    "SPR-U-2deb7d3b63bc06b8a0c2": {
+      "atlas": "SPR-0e56f1b871780c20b111ea7ea33beedc8859d49a5540e18591ed2df7b8bffec3.png",
+      "width": 72,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -36
+      ],
+      "sha256": "6f5e70ae313ef472382230c7d384c18af10d83ba7ac1c1d6d6f267b730156e41",
+      "raw_sha256": "0e56f1b871780c20b111ea7ea33beedc8859d49a5540e18591ed2df7b8bffec3",
+      "model_id": 1809,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18372",
+          "name": "1809-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18372",
+      "source_name": "1809-0.spr",
+      "source_names": [
+        "coneofcold shooting"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "e1a1c49ae227ffd5f40d289f91fd3e6b20c6717e06a518f8b41afc0a2be0d109",
+        "e4d0dca62364c37b046089cc00c76cfd493a1d18be0104ee91898c8249dcde6f",
+        "2d52c72854ef858c693249bffcf52e9398a2e7fa4045634dbb1c043742128340"
+      ]
+    },
+    "SPR-RAW-10203c4448611db2de1e2de50a3aebda5ad38857d31f348690fb56636ecb5cae": {
+      "atlas": "SPR-10203c4448611db2de1e2de50a3aebda5ad38857d31f348690fb56636ecb5cae.png",
+      "width": 48,
+      "height": 96,
+      "columns": 1,
+      "count": 1,
+      "offset": [
+        0,
+        -60
+      ],
+      "sha256": "961fad5420c00795124983214f8557faf65b21aa3fdf7f9f3056d45acc4c3eef",
+      "raw_sha256": "10203c4448611db2de1e2de50a3aebda5ad38857d31f348690fb56636ecb5cae",
+      "model_id": 10710,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite13.pak:581",
+          "name": "10710-4.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite13.pak:581",
+      "source_name": "10710-4.spr",
+      "source_names": [
+        "counter barrier hit",
+        "counter barrier hit"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "2ab7a3b40f3dfb730b5f7b2d0843ef7120c3265060470d4e92c571cab31e1353"
+      ]
+    },
+    "SPR-U-8ca83544f7e7fab36473": {
+      "atlas": "SPR-1233fcd8d2f538b08c7c5be85d6faf397bb9292cb54c01afcf4a71d854f343d8.png",
+      "width": 408,
+      "height": 384,
+      "columns": 8,
+      "count": 13,
+      "offset": [
+        -168,
+        -252
+      ],
+      "sha256": "fc24a5dbefdd4fb1fba114b0d602b3007facdded6fa9301ad0c792d98e17a4f2",
+      "raw_sha256": "1233fcd8d2f538b08c7c5be85d6faf397bb9292cb54c01afcf4a71d854f343d8",
+      "model_id": 3924,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:52378",
+          "name": "3924-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:52378",
+      "source_name": "3924-0.spr",
+      "source_names": [
+        "lightning storm"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "37fd65f59222a6ebb3c092a3e25b110e8687080b21427e36af4314cd150f71aa",
+        "a189ea8e57f10407a2c931406e6735b7c012f02339ad075315c56c195865f796",
+        "36528b7865fe18c38eeb65a99817315dc7e0fb0532bb60ae56c614303645ba90",
+        "bf9ce1a2ce94ea3ab2060c8bc24d664c0372b50f5dc19999eb83a4d357f3a4e7",
+        "c6a36ac59350e7d86f3ff1da263c9652fe0a3a1b71013bf6ab111fa0c55e1572",
+        "f770a2edfcba034ba88b8f3fc26a86a64991ccde24025431fd726410d749ccb1",
+        "884217a5b3ef5f83b0934193acbb155bd8383496c6b01731a16834694b92eec5",
+        "605867ffd3d5da75644f76ce1e64f9c38f95a7882e120ceffd37519becb00cb0",
+        "2ac1c79c3577f14176fd47a367e739f6963c4c2a58de049e217337db369e7837",
+        "c3368159a561850f7da921a3a0ccd844620d2a9e32d3c96ee526b9b879e09c24",
+        "8337a181927e21a161727eca5a24ea101f2c875b06a21e7aa6ea3fcfa5f0a6f6",
+        "afdcceeb121d64f46ff7d43af4cc5422aa71141b76abcc50adb352c5565ca09f",
+        "37fd65f59222a6ebb3c092a3e25b110e8687080b21427e36af4314cd150f71aa"
+      ]
+    },
+    "SPR-RAW-13ca2dbe2fe1a1c463dfe1d3f340345b51e6633b18b9cfd23c1d8e4260b20a9e": {
+      "atlas": "SPR-13ca2dbe2fe1a1c463dfe1d3f340345b51e6633b18b9cfd23c1d8e4260b20a9e.png",
+      "width": 144,
+      "height": 60,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -48,
+        -60
+      ],
+      "sha256": "b17fa55b3778a316414e782f7365c84c79706df9b6afb37fe3e30bf0c7cb93d9",
+      "raw_sha256": "13ca2dbe2fe1a1c463dfe1d3f340345b51e6633b18b9cfd23c1d8e4260b20a9e",
+      "model_id": 11762,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite08.pak:1066",
+          "name": "11762-7.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite08.pak:1066",
+      "source_name": "11762-7.spr",
+      "source_names": [
+        "renewal triple arrow fly sc"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "edadd49922e7f2d74aa6ddfadcf525e32624fa357df2eb20429b3d94106705b1",
+        "bcf5d6e567afba6f9a40df85770666af1b0a4b18f20ee765f3b4e3091db70cb3",
+        "c8d6af33f8d28f153a6f8e9a77499692a9c99256130fc8b31ab0e4702fa9084a"
+      ]
+    },
+    "SPR-RAW-1971ca95e137ba72ba39e3c7f8a8b5a433adbbd6351378525f9088c8b7a641ac": {
+      "atlas": "SPR-1971ca95e137ba72ba39e3c7f8a8b5a433adbbd6351378525f9088c8b7a641ac.png",
+      "width": 96,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "b0fcc758571f152a9d1cbb64b7d69cbfc03354ce428a8bd3e57472ce104e6458",
+      "raw_sha256": "1971ca95e137ba72ba39e3c7f8a8b5a433adbbd6351378525f9088c8b7a641ac",
+      "model_id": 11762,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite05.pak:1253",
+          "name": "11762-4.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite05.pak:1253",
+      "source_name": "11762-4.spr",
+      "source_names": [
+        "renewal triple arrow fly sc"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "5aeea94d3e3e41263bd9d5c697df165ac1a9a5943fe45b80f82187331079f91c",
+        "8cc94f78fb63157e0bbd4cf6a4657cfbcee58edf1dfc97222d2057cda4e06f53",
+        "c557deba79814b2f865a85460e9f25515814ea20b05b7705d51ff48b84067b41"
+      ]
+    },
+    "SPR-RAW-1d9db5548fc49ef5a42af09f7582cdad72955493d15da95e6c4507975f2db86d": {
+      "atlas": "SPR-1d9db5548fc49ef5a42af09f7582cdad72955493d15da95e6c4507975f2db86d.png",
+      "width": 96,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "856beb837e7fe1dcdaf8055f6bf2ad88ac0afee7809d24e86f81d520f1ad14ea",
+      "raw_sha256": "1d9db5548fc49ef5a42af09f7582cdad72955493d15da95e6c4507975f2db86d",
+      "model_id": 11762,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite07.pak:1126",
+          "name": "11762-6.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite07.pak:1126",
+      "source_name": "11762-6.spr",
+      "source_names": [
+        "renewal triple arrow fly sc"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "f913cd1c2b253c9cc2997c5df5652653bd3e435a2796e82fec9fe4da926f447a",
+        "410e57319a76c240cc43ab5ecfa4e8f9935c5828585690f3153f4af7ea295c42",
+        "b1529f516d6369d37fb53ef7e406e834c4c7436b07f6703e74ba47fb0969a4ee"
+      ]
+    },
+    "SPR-U-37b28f97d4c2328834a9": {
+      "atlas": "SPR-1f87b71c4f9d08433cf7b2c25e9f56f29bee6091e6d8fe7d19b1ddc4def25477.png",
+      "width": 96,
+      "height": 96,
+      "columns": 8,
+      "count": 22,
+      "offset": [
+        -48,
+        -60
+      ],
+      "sha256": "87180800e1c606c384aa18646c858869881c453861b4eafeb8c8c7ef241d0221",
+      "raw_sha256": "1f87b71c4f9d08433cf7b2c25e9f56f29bee6091e6d8fe7d19b1ddc4def25477",
+      "model_id": 3669,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:49906",
+          "name": "3669-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:49906",
+      "source_name": "3669-0.spr",
+      "source_names": [
+        "baranka basic summon e"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "43ac927d14f6ea607389878a98d9423d0ce51660ab8e1d0eb76e84962bec766a",
+        "6eff27cb83f7a7551ee86c30c63cfaf2b4b0cdd6f9deeefc63e4ad4c19631eba",
+        "1ef4bfb746bdb538abd3a7b52f9562073ade97957187142dcb625bc86fd71b30",
+        "8b981a0759ffc06a3168424a6a8bc4c9148205ae1711e267b3298a11e6c85f86",
+        "4eb4d369cf840636688d7537b9bba1fc8ed9edca90d79cfdd49ab95d0dbf1eac",
+        "f7232cc8bb9ccf5fa73540ce38ef256bb3db5f5034f1e29eb271216a0c4299cd",
+        "9ccdbaa3257fc546423ff889501732b000cf60b278c1442b4c200ad625c5ac3f",
+        "1b454fbb815571494baac1700547df9c6791064b8bf22291104811ac1c1b194a",
+        "ccbd2ab9cef09237025fdf572a10002ffe33e64a49e608e9497dbe960c2052d2",
+        "e50daa896887f8c489d971faf190f5c1fcbd75d32ec11d7b70006875f04b6fa2",
+        "4dcf2874798b4ce41a281930b200efafdcb186ce4cdb6ab2f06152c3772baf26",
+        "dd25fbf7d8f4e547ffdc0815bbf884dec517227714dcc150238109de53d69649",
+        "6c65a41711be369678195e1484946d067e069e8ce5c4357e9608d8b4165c25e4",
+        "20f6e5cc2cf73e0d967eeda14438ca902188e996ca2758879e89f811a3731a36",
+        "00acf93ef0dcde74e05503ca7671ff75d1506f33a9421e988634d97f40d76f39",
+        "e3e334793e5fe09c07819c5c40b980c21fb2a2005b706f47da2381ff76e7d3f8",
+        "4ef2b9d3de7867a3beef863791838f278a791c5d0a695e39e0d9260dc5dc2a96",
+        "7d6e384270ff1ae1c57e2bd5693ee59d627c445e04797aa918890720f66abb3e",
+        "b632bbdd3cf74caa4feba5088975a1fc0cd62384a04740dabb50f1703ad1f037",
+        "9acd251711c072a82e52c585786e5fee7375184c9014a6cc866244f336655eb3",
+        "2ed9768f65d507c6f7e0fe9e91e22aefb93f791b21b8d49fb2fb83d3e70a09c5",
+        "1c0273095382988333e2f2b5ae487cea460737ed9be65cbad9c5de537f95bf75"
+      ]
+    },
+    "SPR-U-550d127fd508524cd773": {
+      "atlas": "SPR-1f926bb8f80b08a74a1ce914f4171162ca79fd40a4f2905089ac5fba28cbb494.png",
+      "width": 240,
+      "height": 240,
+      "columns": 8,
+      "count": 31,
+      "offset": [
+        -96,
+        -132
+      ],
+      "sha256": "ee4fe7bf63dff9db2c82781e99c57652ab345ebf5ec77efe974ca41e5878465e",
+      "raw_sha256": "1f926bb8f80b08a74a1ce914f4171162ca79fd40a4f2905089ac5fba28cbb494",
+      "model_id": 2234,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:22801",
+          "name": "2234-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:22801",
+      "source_name": "2234-0.spr",
+      "source_names": [
+        "absolute barrier e",
+        "absolute barrier a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "2993a655608ed8383f8079e671b211701204654a5fbb1d5a440ddcb8124eaf20",
+        "c1a69aaff08fa75b08503d20655399f92eef04a0266310808d1eb0744e9a596e",
+        "12ebb3af449a9e0e7fb5464d82494b358a4caf5ecd49ac2bd3bb58905264e6e1",
+        "cc574f074f5a27bde8a8f03f13f1d6d56b9ce0b110a31c29d96475cf6ddcb2ff",
+        "2bdea7d0069634d274d2a38d82a7005072dd8b6e930c66761243de2f3dbf16a3",
+        "fc447f1197826d686f70a29f4c3e4d7863edda719dc194072626d98bae214768",
+        "03a5536f92a2120313915c75e6702717fc32e1464c064ad25307c0fb6e2d5c0a",
+        "b566c8d9f7347b02349278cfb07a01c0619aeeddd74fccf353a40dfb5a4dbc37",
+        "ddd91be74786fc846b9d70a05f7a622d9795448fe700c113c8acdc6c94efb27e",
+        "23596abd270636e1197bd567e4c3ed5dc903eb726199aa5172ae57577acd0bdb",
+        "0b456b78bd65a03227174649c7f411cf3b2d6c50e0e47418d09ba4cc10f3a6bc",
+        "4e6675fec4e80770f31c66cf99b9fab316e56e8e1d9c71ce8a26e3e935a6748c",
+        "36588d748fd51ac08bc3bd2582a0ba380397538758ebc275040e77808cda0911",
+        "bc92b24da28cc19e92041b8004f4973f1d53015b244c7dc6bc880131be179d8f",
+        "a98421e4a87fee14e7958ca74e0aabe86e0f6c60cb4a2410bc3cf5ffbc45e55b",
+        "c22e08123d60673ab7b145a37782743de8d80fec43567e0e81458275d5cd8102",
+        "e36cf5b5f10ac0ac5f830d4368a0d2530a3854be5017ce3fd51e76bf86568eb5",
+        "36522b7e900d3ad77ea60b061e90d5cdd29625f3b30ad42119ac84a84d607132",
+        "cda9ce0435b12c8d6c9788b3defbd636b17f79e4d6997a627c621107c51c47a0",
+        "1c7df2890ba8d849e150a184f27729e06d2c830801d83fdc7d978fb46294c936",
+        "168ad909d43934748f30b99dc99e27c940509e6bcb4d308c9e917c9c2b620fc2",
+        "370694153daaeb6a2fc92e42e00014bb26b080b8f9045da8845e3f8d7d724759",
+        "6ad9bb0a12613a2d980b02f934341ed63523abb3439452b84e43eb618463022c",
+        "7ef02531f38beb1d3c8afcd97e938f01a3670aed80af75d13a7d7f049a631425",
+        "7af642895abb1e620a5255b75bb2f601ce9918de8fc2604a1038fb5e50e73902",
+        "fd2384246d1c5e594c3a6bf1f0df5887c3532a8e7f7b032c07e40c037e1ee162",
+        "cae06568800ec294d5a955725547c24f899ff2d235f9e1d4777c4061d7337dd8",
+        "f8c228058a0a61e4ad71881955768bebb5031cccd39118788f99a4364cc3dd65",
+        "417ae11d85f50fac15565b9bbee6ec98c46e546f5fd93c44134958645eeee166",
+        "87d5970ffb217170b05f660c7f2ca59b886e726b62bea9178dd31a9c215e7d8e",
+        "ca1219906395437c0bcf65a8ff796b1d6356ed4f8043811fa7c7b353e885467b"
+      ]
+    },
+    "SPR-RAW-2225a32a23f1710ab37f7ee406ae0b90e10d4ce07ff2ab44f347c8eb007d3d28": {
+      "atlas": "SPR-2225a32a23f1710ab37f7ee406ae0b90e10d4ce07ff2ab44f347c8eb007d3d28.png",
+      "width": 96,
+      "height": 72,
+      "columns": 8,
+      "count": 22,
+      "offset": [
+        -72,
+        -24
+      ],
+      "sha256": "3014edafc2c43817893a6859f9573a5d675819ee5ef4dffd2ce7f29dc1c9b325",
+      "raw_sha256": "2225a32a23f1710ab37f7ee406ae0b90e10d4ce07ff2ab44f347c8eb007d3d28",
+      "model_id": 3669,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:49913",
+          "name": "3669-7.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:49913",
+      "source_name": "3669-7.spr",
+      "source_names": [
+        "baranka basic summon e"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "c606bbc544d926d4c6630615f27ddcdad4b7492e3043c496f42157979a739082",
+        "fc1c85e971a608b6910692b341012290a96f71a36c004b48870d56c22be071e9",
+        "d25ea5810a814594cb192ecfa66da493ec8555c0f0be9ec43dd37c743bae0228",
+        "3088e3952510c4cc3f11fc3c00d51dea25e97d4749416cb51230504e63f16a63",
+        "5481788ef1118cb712f50eb72e615af8823613ba60c2962da6cd79ce1ca41db5",
+        "497fd513c16ba944dcc36c6a79ee756753fdb656441c61b27a779eb818044483",
+        "5bb563f8f394e0bf1cf206a79d53b027afad170cce8327105d87c665eaea7a4f",
+        "9c3f1e61a2d5cfa7700acc1fbbd11f1dae851a95bbfc2b7ccd9640821be5ad54",
+        "65cd5d0b0851aefe3cba4a2dd5ed6baa0aded4d47085a6fcef67b37b6e4be2b4",
+        "4b5cbdabceb4368a5c0833777decd455a59f84c98ca09901e33989711cee0b23",
+        "3eeb88aae4a93beec80ca1888f37b014ea42b8137bd07b4329b427b78d581396",
+        "8dab890abc9a20205e39fdd355037bc19b41b248a8002f2cf6ae49c5714c455d",
+        "97ea9030c6db30899ee3aee419ad8d5912b6fb299eceb7ae07a01940c8778690",
+        "fa345bedeb626fc684594ff2a37424ea62a3431941934c2be9e27ef69eb5b67a",
+        "2172e7b35dbf0fa201902eb6ad75666148320cf4ec397512dd0c417088a4fa1e",
+        "65dc34368b5f69bb375e7c25ad8c0586d951d2ced3c1f2212473ba5508fb9539",
+        "9666f0a1e229a7c7fd004f72b109e6b337d6d05f329b0317b6099991c9e31c53",
+        "c3a12174da8d66a99367d9e41c83b203597b23987e0207c69bd5cc157201dc49",
+        "e7a4883e11a7f94de3ecf9f89cc35de6c330333ba0f6a2cf021a780fd2454b1d",
+        "fbc976f739f94c1dd21e38f18a535e6be1d38c2176a0fd223889d5f44b72d3f8",
+        "362b3655f0e85ec2aaf1aaf14459379a76bb63a37425611552af1ce0321b9ea0",
+        "0a182a88ffcf20dcc892515a01db9af1a707814b982b9c21e1d9b3b4b203ceef"
+      ]
+    },
+    "SPR-RAW-22f87556717dda1773a4a5e18697ff9933281177c25b890c4a3c88d21f897d95": {
+      "atlas": "SPR-22f87556717dda1773a4a5e18697ff9933281177c25b890c4a3c88d21f897d95.png",
+      "width": 72,
+      "height": 60,
+      "columns": 4,
+      "count": 4,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "91dc8062ebc06c22b805094e1b751dac4d63fbf72b834d4bd138542ea1be75ac",
+      "raw_sha256": "22f87556717dda1773a4a5e18697ff9933281177c25b890c4a3c88d21f897d95",
+      "model_id": 167,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:16779",
+          "name": "167-2.SPR"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:16779",
+      "source_name": "167-2.SPR",
+      "source_names": [
+        "energy bolt"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "a5029e5e5d62a547c243533685e8b8452ef015bb2d8ba2ca5c1f59060d76443b",
+        "e1d5bcf74ad5d9e3f35da594cb1a0be7f580faccbf66175861e8effca980c27e",
+        "46e868eae6ba7f9eb540d3dbaf5813340db0bc0959cdf85960001416857767f8",
+        "18120a870e2ed5224eb8b8c050bf169aea3384ea212b5ca5ac5560d25dd4fc1e"
+      ]
+    },
+    "SPR-U-61a8e48cfe48df1f33da": {
+      "atlas": "SPR-2452b1ff916bef7e4e2c929d2b9c3372636d42de02b1901a0c5a6d9385bacb04.png",
+      "width": 96,
+      "height": 144,
+      "columns": 8,
+      "count": 17,
+      "offset": [
+        -24,
+        -96
+      ],
+      "sha256": "cee0a6bc15f4158d7661ccceb4ffce203a3c351a5acaa0bfbd32184d87ea5b63",
+      "raw_sha256": "2452b1ff916bef7e4e2c929d2b9c3372636d42de02b1901a0c5a6d9385bacb04",
+      "model_id": 2173,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:22643",
+          "name": "2173-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:22643",
+      "source_name": "2173-0.spr",
+      "source_names": [
+        "meditation e",
+        "star circle effect white one",
+        "meditation a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "b327402ac57676081e35fe3e52c19bced18d13d82ad4e950ad096ed2296b4e08",
+        "f6ef10f386e1fabddc1a07f6f8c9978165ca0598f9809c1f36a21e9d3041ca4f",
+        "1aae863a02283474acbfa583889d8c1ca592a70c24e2f3dd84d48de6009bc3b3",
+        "3032e813f1f1b10929e1ccb1f8d453c4369b0471d815329973f214a6d4398317",
+        "70d358168d056e9893a98b7365f466e01bb41d3a527d7c05a0033f13d76349e3",
+        "20345c51702b62001a29480725e72a63748df93524d1fbf94edc31bbcbc0cd2c",
+        "46eb7e43ac2a67453b7da1f548840b3571a6700c0f449ed66b0ecddcb9757021",
+        "d48d31911b2ee9437b01cc210028bff9022c204bf67067679482f8dccb3dc36a",
+        "3d7b49aec83e4f4819faa7dc5eb47af84f9478f14723beff5849b2bd9fbd5714",
+        "b1272425b1c6c0a2baa2f065e79b3fc970c83fcb612b3c4e6798893373baef2c",
+        "7c1aeab5de9690414f43c981511e076f060e2ba1ef6164c1340424ca61332bf5",
+        "9898802e1473b793e976bd8ac07619138a66a6b4e6689da0e1b88aa3d3c1edae",
+        "5542cc082723461592470ff34aaf576c074c44f5fa0fcdb1bf50fed85cd5d9b3",
+        "534c29bc40bc0a862399a452d5e635ed74e757038e42207aa7f4f54af53bd79b",
+        "0b0cba3cd2f23aa2325a94c01a50c90a5f336ec772bf5eb5498e63e77848382c",
+        "235f4bfb69aa290e1a373ee785f5fa8fcf45837c52d0fc7853a2eb644da4614e",
+        "abe524f868b49ef9a61e8a6fc3423409171b5ad6b40448b60faa22444a581d8e"
+      ]
+    },
+    "SPR-U-d2ad5be6a4f6beb6f56d": {
+      "atlas": "SPR-254d10c15cdd1c8a250a8037c0cf39135e8b532a5beed6134c83320137295ba1.png",
+      "width": 96,
+      "height": 192,
+      "columns": 8,
+      "count": 11,
+      "offset": [
+        -24,
+        -144
+      ],
+      "sha256": "3d72a02fac8ef112a30318f9eae5a1ac86a38b1d662918a0fa5f7b085298b245",
+      "raw_sha256": "254d10c15cdd1c8a250a8037c0cf39135e8b532a5beed6134c83320137295ba1",
+      "model_id": 168,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:16813",
+          "name": "168-0.SPR"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:16813",
+      "source_name": "168-0.SPR",
+      "source_names": [
+        "fire wall"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "deb40032794cb07d11fe3d62c80ec5b70bdee20378b1cbe805b748fa30258ee3",
+        "1c16097297f6b1f11e5cbf3bcd67a50fee24b494d414d415a560f4a488aef35e",
+        "c8b4291195cda3e99ae554f4fb777744b9404f89507d5013b6a4da52a2c4c7a4",
+        "50a6481532ca60de9a64e282cbaa41480090b4e71727e93d578da9fd94d3b396",
+        "e1ad5421f8ed5e5c04c5a06902983d0e2467cf24aece97bf445f08e7cec22811",
+        "0fdf372e0ade2893165e5a10c7b01c125ee5d9336f8ca611026995250cddf789",
+        "9a27d964ac78d155a163aca49ceb86cbfe24e8a0b2b06f3859098dc6e849ebfe",
+        "268fc579b53a63654e261c9865fa07bb77dbaef4a6bab0b95574b14ea879dd7b",
+        "1008c3f273b2f200f42faabc4cb1e7cfee962b134dcbc70f1f54b5ab4af61100",
+        "f76ea82138d2ad210395204ebe4df927c84b310223673647c80a1bc13d71a503",
+        "e1fa6c49d430e6ebb77e5badf5d10dcc536a8303f4fb2ad563cb1107db7a54f8"
+      ]
+    },
+    "SPR-U-21a4234b021c5a65094d": {
+      "atlas": "SPR-258794054a83c9cc55beb7a420597365c439b002ec98b00184b78e808e983491.png",
+      "width": 144,
+      "height": 180,
+      "columns": 8,
+      "count": 13,
+      "offset": [
+        -48,
+        -132
+      ],
+      "sha256": "15cd2539f0a564240d7421cef020ac392b0b250a8fb5c654868272dcd3533bd8",
+      "raw_sha256": "258794054a83c9cc55beb7a420597365c439b002ec98b00184b78e808e983491",
+      "model_id": 2949,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:34549",
+          "name": "2949-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:34549",
+      "source_name": "2949-0.spr",
+      "source_names": [
+        "armor break",
+        "double beake sequela",
+        "critical breake sequela"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "ae853516c42f9f7328cfc5e58977dc448bc46cea3c0158f94dc85f2880d5b8bb",
+        "44e78751ca9855ff377712c7d0e74832240dc788bf4111799f96fddc049c199f",
+        "db13644b9debda8fe037527844d1bc96603b79c350d05838ca5b58cdb9eb8d0c",
+        "1dd67f0e7bf04a4157c91d1cec6f79d6cd185f8abe9adce20c2db8de843aae5b",
+        "c49f46d0b0e68c5cb4a1366e4aaa91c5f9cb38bbfa1695a42ffac7a87fc7c087",
+        "376f5ca289a8f91650f7bcba7e9361f65c2008c283d46addc70595a44e0ce1b3",
+        "c2d6d9258bbe4749cbeea7bdb0e4a8804ea076411f5d03004b957a3e46d1a9a5",
+        "af67ee11c3388edd5d31be97344d8444919d0a6280a04eb19e4d3a5bab225acf",
+        "1dc8cd3dcd2af35b436743d388fa79de3155266d25ad717aef7b4014bd142555",
+        "2c099d0447c832c2db9ade18e065c88c532443da5f9ecdf91c9c625dfed468a5",
+        "b4d33d7eb50d6e90a6d5458c5dcc7fe01ef8d4a97c9f85d6fa1a99fe331e5178",
+        "ed8a8e50d9ae7c83b3fa7648d04881684ae91a64235f084ba430bf6f4e13adb9",
+        "ab4ba753267deceab8e7f80dbed22ef709d6b485e617b419d0e0626e224fe45a"
+      ]
+    },
+    "SPR-U-d54776c109e62d2443fa": {
+      "atlas": "SPR-272a8ef95db5932a5b07fc89960bd2e9d4aa806aa8264732d66335aff8c64263.png",
+      "width": 72,
+      "height": 60,
+      "columns": 4,
+      "count": 4,
+      "offset": [
+        0,
+        -60
+      ],
+      "sha256": "6a1a45d00fb4a59f72b01aacfe6596c77044af0de2c335f79122e49a52fba3ff",
+      "raw_sha256": "272a8ef95db5932a5b07fc89960bd2e9d4aa806aa8264732d66335aff8c64263",
+      "model_id": 167,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:16777",
+          "name": "167-0.SPR"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:16777",
+      "source_name": "167-0.SPR",
+      "source_names": [
+        "energy bolt"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "17515f9281101eaa3081d6a92a7b3767043a341a73241a85016ee18472dcbc2d",
+        "802b89ceb143518e9fc5dff3dd6aea533da19792076abc765f7ec921020b404f",
+        "e85ee9473a8d58a17e3fa9bc7da4907c57eb577f33812f42441f43f555bbcce9",
+        "fea6fdaac5ca8cd6cc136995658d9ae924297435b89b05d146fc42d6e3022efe"
+      ]
+    },
+    "SPR-U-e2b026b9b369b2d19d90": {
+      "atlas": "SPR-2d89562b8d5dae095a221c0a05677fcb2cbd379b86372e10729f4d4107315163.png",
+      "width": 96,
+      "height": 96,
+      "columns": 8,
+      "count": 17,
+      "offset": [
+        -24,
+        -96
+      ],
+      "sha256": "6291d5d33aa69a9117c82ef61cd35178ed4c75ebddd27366f3d589a2663d23b0",
+      "raw_sha256": "2d89562b8d5dae095a221c0a05677fcb2cbd379b86372e10729f4d4107315163",
+      "model_id": 5832,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:84822",
+          "name": "5832-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:84822",
+      "source_name": "5832-0.spr",
+      "source_names": [
+        "counter barrier",
+        "counter barrier a",
+        "counter barrier"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "7a7209e93ea8b9bdd4eeec715a9a875ed27261e20d5c67eda4fce6aa3ef49e27",
+        "bd9706cefba17f44d9c76bb3c2bd16fa43f48a90fe7fda1f96eb99e1d5d90ceb",
+        "1d3004bcd1d9fc0fceb1e935fef5cc466b92f2cead9e141b8152500459c23d68",
+        "898356705b4ec8c80619a5f15f196dd30a16fa1a0f0f3cccc54a1b885214c585",
+        "66e0b9348eb03b8c5a17604cbefc1fa1c163d38228a20546605d96a56afd3d1b",
+        "9d988cbd10394edd16b3b0fa5b0f63c33414c0db2681ba1f356293741468d002",
+        "1b943b41318ed4da86cb116c46de6f991fb32aa3541c1d18369f9d3c571bf197",
+        "53fe6773239a9532a18f585c9e955aa735af251db3e99dbfca78b86a70476417",
+        "9b9edff85703d6fe62bac130932899fd27f147af6261b158d4b5f56a59edd519",
+        "bab46996f53da070d2a7da893e5427e2b6a3634c24ef2079083aac6abe80d0a7",
+        "bba7efb9a0d98f969493df2b0669a9c3649cd957b64bab6963f6a755bff14c7d",
+        "1f4cbe46836fbdedcf002cdb6088bb6f23faa06eb7a9e4fc37992d39ad58e801",
+        "13930716fded983a07712c37174f2b8e2a91662ffc168bb8e1f1e5b0f96a2147",
+        "b49d215b9282166f1d68de3920dc902595ec5d4ff87564892d1833f7f88fbb1f",
+        "8550aed69a192a256f48d1f153d7e03c5ddcb5929ae2d80a775f58dc1ba5b414",
+        "f9662c2cbc03b2876f25f9c05b04b5d48fee79dd9140e817e2c0f93d67c60921",
+        "5984dc45010c9e57c3a22e3fc626b12144b9cf80b71c77a9526f72dfaab24547"
+      ]
+    },
+    "SPR-U-11208e25ff708da09fc3": {
+      "atlas": "SPR-3539387ac20517efdf41577b1b3f9965cdea835279f11b31ce3f89757c323aae.png",
+      "width": 240,
+      "height": 408,
+      "columns": 8,
+      "count": 21,
+      "offset": [
+        0,
+        -384
+      ],
+      "sha256": "ab1b1898ceda79474ee576767d1efde6c43c6a28e397856000671710b3b374ba",
+      "raw_sha256": "3539387ac20517efdf41577b1b3f9965cdea835279f11b31ce3f89757c323aae",
+      "model_id": 1815,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18395",
+          "name": "1815-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18395",
+      "source_name": "1815-0.spr",
+      "source_names": [
+        "disintegrate spear"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "6c0f6a1404773a8e7bfe43f7c7e11d54c45ca01b4a2a0c6cd7012be3a98b4094",
+        "d5d8a5e602e017fd9786d0f185698861f619f0254bd2661404008bdf2f3d2be8",
+        "b2fdf3330b1919e2b0c24911246e559f7636992c4927d6f95fc5bced63d3c9ad",
+        "75581e1920bf39268ae0e673fc344a134b6baff915339599c3abee08632901b4",
+        "687b030c412b06bf6df5ec13098c4c55a089bc3ef2870bf485500fe5c93e9175",
+        "713da9865ff223cd89c41a02cb91fdeadbf4af4ae559ee586668a3d16902a770",
+        "46c0aa4732028a5eea78d661e05071e0ebd2a21bea00b4179fca0292287eade4",
+        "dabcf1a1b7f4bfa79a54c3257219bfbc603002d1e93e376b9800e0080c2d2158",
+        "4e0a90beb27a8bd24bc565f17298ad7c0c981c0c282028f30f7baff60871e523",
+        "0dd0ae9020c91fb7285588b91a5ec03bc7b817bbd0bcc07bb109cca93dd5b4b7",
+        "e3a368cabdf52e60865daeac32aa469f08d9a1e5b9c5e880abba7acc02e1b44c",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f",
+        "3e8106a6e51de0b94d80ad24ca02e8abff9a427cc040c3a5ea347141cf80d43f"
+      ]
+    },
+    "SPR-U-46761d94fca235ff08da": {
+      "atlas": "SPR-38e28396b2dbb26333c550498710e6c8b69a8e5ed7a62d858e2fbd5ebe5b2831.png",
+      "width": 144,
+      "height": 228,
+      "columns": 8,
+      "count": 19,
+      "offset": [
+        -48,
+        -192
+      ],
+      "sha256": "42cd355dd862b44482f1851280d3c98061e7516fe5238636ab648e6b0e05cf8a",
+      "raw_sha256": "38e28396b2dbb26333c550498710e6c8b69a8e5ed7a62d858e2fbd5ebe5b2831",
+      "model_id": 3935,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:52642",
+          "name": "3935-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:52642",
+      "source_name": "3935-0.spr",
+      "source_names": [
+        "advance holiness",
+        "advance spirit a",
+        "advance spirit a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "9e11e77b54140574e3ef38e59f8c8ab54a313cae299ec8becab238195f5f7757",
+        "fd887cf2427452d008a7ea09d1b4d9a681dbaf894173dbfbf3cf41d1641e2630",
+        "4b5aee72549012a11d6512aabd21bf8534bdf21b8ad695d6678579450275f4c5",
+        "0ac1f9d5ca69e3740c540a4953c29b3a65797674a7057c1ae064b6fcc5cfdbe2",
+        "218ca148c4652e1f68a6119328de355d44c18518028b544d4fbc9b2825e72e8e",
+        "c5e678bd60c5fac516aaacbd0adab24ca280441053f6a69a022185065037f631",
+        "c7b7aa2513f7f24c9bd6405ab4c526e33af6615a5e383228ded43ed9f822b646",
+        "d698fc9319eae3ae293f31999df0d95746b805c1abe07c6d54c0822fe43d5912",
+        "efe249f1ae0a3550c495725fb388005f5df1e0180ba92e474dc1fe3e26d4d05d",
+        "a4e19169bd2de21961423b835cc715c93afc64e65f4f9c2625f915af6e0e0432",
+        "950973cd92e7095cd6c88f8b1acf003f43af6a976bb6a579025d22e41e9fc4d7",
+        "3d758260d7d340096657cad3a9b83977f8226c12547ef50f67b4ef93f442fb28",
+        "4c79402fe44ee24540ec45c47d9a1073c9d977d4f0e329e38cf40cbb4fd0ff03",
+        "cd815305cbe2ce898a1d647b8b7f2702b9a3ad91c3535c8a8a43fda3ad7d28a1",
+        "225e535e0b9d09a512a89ff5b1467f3d0ac7f6f25ec95838f6111cf440404212",
+        "73819b77531c34c1b0c25ead430e08da3dece0ab7f2ea532925090b3d119dd02",
+        "99d2b74f6d20d98ef0fa5ba74688c1b8eee945461039798de4f8a6bc2d5d8215",
+        "c7983d38577783cd48f9fd0ffc9047a9e716f9eced6f9649baa00e0b288e8905",
+        "9e11e77b54140574e3ef38e59f8c8ab54a313cae299ec8becab238195f5f7757"
+      ]
+    },
+    "SPR-RAW-3ef810dfff269440b8f86766b18544b87aa1febc3f75d1630ab848074fdae1b6": {
+      "atlas": "SPR-3ef810dfff269440b8f86766b18544b87aa1febc3f75d1630ab848074fdae1b6.png",
+      "width": 48,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -72
+      ],
+      "sha256": "14a7e77bb3baa829f608948ca4af50568f651900063f7c0873e82a745394a8ca",
+      "raw_sha256": "3ef810dfff269440b8f86766b18544b87aa1febc3f75d1630ab848074fdae1b6",
+      "model_id": 11762,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite02.pak:1311",
+          "name": "11762-1.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite02.pak:1311",
+      "source_name": "11762-1.spr",
+      "source_names": [
+        "renewal triple arrow fly sc"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "b749b91f5d5e5e7590262b72bd9cbc73c1dddabb9d16f47d7d6b10957fa268d3",
+        "e13d5ff22123f626856c64a8c23bfbb83a9fac81cabbf68084c1f47d6be20783",
+        "69e12229381b9ffa240ece54620b911e239ac79a3a38815acec43a8dad9ec5e1"
+      ]
+    },
+    "SPR-U-5a28d8a75a2b589769d2": {
+      "atlas": "SPR-477a2d961e81fbc996ea3078e35de94bf38e8f2923cc2a44bdb0c7a857a0c804.png",
+      "width": 408,
+      "height": 492,
+      "columns": 8,
+      "count": 20,
+      "offset": [
+        -168,
+        -288
+      ],
+      "sha256": "6ce7399eebf0dd5ba3f3c67bdbeab47ab1d31b8bb4ec96bb3fd3eeec7508bcd1",
+      "raw_sha256": "477a2d961e81fbc996ea3078e35de94bf38e8f2923cc2a44bdb0c7a857a0c804",
+      "model_id": 762,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:87932",
+          "name": "762-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:87932",
+      "source_name": "762-0.spr",
+      "source_names": [
+        "strike",
+        "crash bomb"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "e234ef47c2798c6bb81b8dbf2c0361d3e42b3d10eca195a1fd1a8e1231e2d2bc",
+        "3c83d894ec8324d7c26b5e1cea96849c0de49e99f044c974d25eb7639610197e",
+        "f97b5057d5918c2d02110838352a0beeda87fcadcce01644ed61f4f339f159be",
+        "65d5609b6c4fd7d137b384a5a7862ff36f3f3d99485fbb83cd44e23ff3dba28c",
+        "37ad019e3fef236de06b4e8b9ed52f06e41d412dd259de295bcf7241b248e67c",
+        "d5b7bfc16a8d0218404fdad167399b9710d35a2fba127c7e982efe230aad4770",
+        "18a8aa1516eda033fda6de959505f7b225a77b657e93c6c1dca1d5f3e69128d6",
+        "8f6359ce3e466f9c9e3055181357e59f29b8040d1f356fd2ece8ce4cb8fe7713",
+        "50e9e1d666c6ff343a00bd986b31eb40cdb1972ea8040a11a0077088406d60cd",
+        "81cc9bb503bf56d37222857b76705fdd8e5b624532c9e7ba4b662e793eec9224",
+        "ad20f91b8b8d043f0cbb8e91ebc6ed505e36bbcbaae2533a304cc1bd3a57a261",
+        "fca10be8e9bd77d37db769262b6dcdabc5267ed07c9ffd454737f5bd7dbfd791",
+        "47e72201bca4759851a815a6a2940d42a0315a27563ddf7d755709398f1e4306",
+        "831f9da685d29c7364f7b4269b7c23e85c8cc466786adda018567ad12c8c286b",
+        "b9f9da5f9a57583a684165d173c98a0a0fbd59bb087fcebaf2660c82b5e4889e",
+        "405dcbffa0462d3ce069fa2408572cde7aeacbcc14eb23cd2331ffa1b33f6582",
+        "042e63356932cbe1299688c4cd659e62ae843e38bed745f87d3e48d0bdccbc6b",
+        "88d0f7f075c9f714ed17210b9a052e37f9b9ca3367843b93960c472f4ca73a9b",
+        "1ab93a2f859a8a616c72e30be1d13b3a4f7e8f383d2797996ec83f33c167ad4f",
+        "6351e5dbfcfedc91f7139d7c2ad9934e57902e455df18f1c41723590dcae3310"
+      ]
+    },
+    "SPR-RAW-4795b0d2150d7d075d753efc378799b8d471e52d32cdce47eec77fa502bb758c": {
+      "atlas": "SPR-4795b0d2150d7d075d753efc378799b8d471e52d32cdce47eec77fa502bb758c.png",
+      "width": 48,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "aff30e03ef502bd9ef86c8f0ca64e0233b443f09e4423f0a5e2e317cb752a095",
+      "raw_sha256": "4795b0d2150d7d075d753efc378799b8d471e52d32cdce47eec77fa502bb758c",
+      "model_id": 66,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:85892",
+          "name": "66-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:85892",
+      "source_name": "66-0.spr",
+      "source_names": [
+        "arrow"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "86d502ef8b73c8c61cf064737295d38b1783c0b814fc41509fa7d6deb589d2ac",
+        "98d2281a81b71dcad45a12dea52db6be390b4a8509480d2b5221645a1c098888",
+        "5452d82c994f8bea0ec4e8c35448a9a4892484fd50f5b0a809040c185a48745e"
+      ]
+    },
+    "SPR-RAW-4c58cb2b65bdc5dda2bcd3354859f1775a22f6bc1432c406724fed86e28c5dc6": {
+      "atlas": "SPR-4c58cb2b65bdc5dda2bcd3354859f1775a22f6bc1432c406724fed86e28c5dc6.png",
+      "width": 96,
+      "height": 84,
+      "columns": 8,
+      "count": 22,
+      "offset": [
+        -48,
+        -12
+      ],
+      "sha256": "8c53df8295ae97d5749e1c1bb93056e2c71b445c0ab095994a4f448ee9c29986",
+      "raw_sha256": "4c58cb2b65bdc5dda2bcd3354859f1775a22f6bc1432c406724fed86e28c5dc6",
+      "model_id": 3669,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:49912",
+          "name": "3669-6.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:49912",
+      "source_name": "3669-6.spr",
+      "source_names": [
+        "baranka basic summon e"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "e8103fecda66dd40f5802bb19794a1e4bd05690d6f19ddc7ab06cbea738eb6ac",
+        "5e071d7e529ecc085569dd5382b2d09087ab5fcc3f5dfe3191ba93640a73234d",
+        "c574fb267bb27573c9458a3a5e4dee464ad15751d35bf0d15b0c443a4f2947f0",
+        "8f142e6a26e90bba2ffdfe5039d616899fb2125708d319954d2a19f11d0426b0",
+        "ec2dcf16d0d7838e80bd4c0a81a013dc8001d6ef2128b1ed3b289fa954c6806c",
+        "62213fb0c34bb8714c669590947d828efe0768bbcbf010752b1501ceec4b0e91",
+        "27d1b2beb38b4c2066c293fdefdcc8a0d33e8fe355ff26bc24fb85e4e5d0ea55",
+        "cca9a3fa5259807e446faa25cce9931a05ee3e53c6ecd4705194a1d4e07b3209",
+        "2565e36dd0197106a2891b54e6f911e75eec2e3d2e5eec2b409b123a5484f48d",
+        "cf0c7eed8b2f8a625e153cc08ebee1e46c38701ddf592f43117492d53c01658a",
+        "bb2d342ae5caccc94d141ffcb1d7ac6bd98ca40264b359477c1a87132c58570e",
+        "d761f8d9967a90e944e52c3473201186bbe2764e18c474bbdeef50d8275358af",
+        "03b4f98c9f2cb884228cefd27dd7b5e9bdbeb4da051d2f0c4e3b7ecca5b718e1",
+        "1f3da3e477e223541822ba436922836bfbfeb7ed61b121754b704faf65db4a62",
+        "0f7d0aeec3ef2d23d52d700c5863a7ac8129b04600b8df225552a203057844af",
+        "40c038f553ffc62a2ef2457e695cc1f91f743e95168913f78421ff46e844385f",
+        "ed3f8a21c384b9bc1b6e29a9ce95d1417af61132057f16524aef66eda272a97f",
+        "d3d786a634ecac5389e899c112e5a329171ccc9b2dfb36232c98b869a14277f9",
+        "7d563a73c07a2a454d9af2809782748d628430e38835733f0e4b3949936c1257",
+        "33fa0c7bc2c0696ca03ecc88a0f7b2212ea940b81a8f302da32fda331f477820",
+        "75c609d475a3e867838a082e2eff09afa271eaf582adf09e803231dcb479474d",
+        "47a22accc6fb0aedaf4a5cf8014bdd569ead0efad399fdb8de134235e7c9bb10"
+      ]
+    },
+    "SPR-RAW-4e097e50e4552d1d3e4dc8255bda366450cd92cd40ddbb96be043c1ca9e10cc7": {
+      "atlas": "SPR-4e097e50e4552d1d3e4dc8255bda366450cd92cd40ddbb96be043c1ca9e10cc7.png",
+      "width": 48,
+      "height": 120,
+      "columns": 1,
+      "count": 1,
+      "offset": [
+        0,
+        -72
+      ],
+      "sha256": "aac7034a938bf0981429220fc38aaefff12b3c4e9cca22d8b5df171c33df23a3",
+      "raw_sha256": "4e097e50e4552d1d3e4dc8255bda366450cd92cd40ddbb96be043c1ca9e10cc7",
+      "model_id": 10710,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite14.pak:638",
+          "name": "10710-5.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite14.pak:638",
+      "source_name": "10710-5.spr",
+      "source_names": [
+        "counter barrier hit",
+        "counter barrier hit"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "c6beae3c937cd73b84e2eee9b16542bd5ae616f404b811b0ddf1f8c27e30e5fb"
+      ]
+    },
+    "SPR-U-6051712039cfea392a6f": {
+      "atlas": "SPR-4e92006772e5b846cc7314a53583b9b2449ef9ff5ce363a10f7cf0be565952f1.png",
+      "width": 72,
+      "height": 84,
+      "columns": 8,
+      "count": 9,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "9a1ab6764db66899e330a589cc6c7441614636bb4e680e86e48938b1ddf1116c",
+      "raw_sha256": "4e92006772e5b846cc7314a53583b9b2449ef9ff5ce363a10f7cf0be565952f1",
+      "model_id": 1990,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:19900",
+          "name": "1990-0.spr"
+        },
+        {
+          "record_key": "source1:Sprite.pak:19901",
+          "name": "1990-1.spr"
+        },
+        {
+          "record_key": "source1:Sprite.pak:19902",
+          "name": "1990-2.spr"
+        },
+        {
+          "record_key": "source1:Sprite.pak:19904",
+          "name": "1990-4.spr"
+        },
+        {
+          "record_key": "source1:Sprite.pak:19905",
+          "name": "1990-5.spr"
+        },
+        {
+          "record_key": "source1:Sprite.pak:19906",
+          "name": "1990-6.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:19906",
+      "source_name": "1990-6.spr",
+      "source_names": [
+        "seed explosion e"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "b6f5e35672ee11078d01b77ef697d5488b39b612b98b11fa598e14dd4f11d3ca",
+        "d395e3fcd78ad63d521fa3df57ed51ff1d400513b0843a01b9c6f7f184202722",
+        "5c9587bdf6112645ad1fa5200f3bc08ae7112567eb619f0838ebd732f54352d7",
+        "4fe2bd12a683b0d90388b0474dd6908facfa496015cc79f1929dc2a60965aa4b",
+        "97db981c77cc740c46e1d6e1bca0148ffe3c7e20ceb02d30ea4ea1bf5af6f7b4",
+        "5dd07a4b47f2e4ea5339e98d76705e2a8004c9efd115c56b0a2ab51259043c02",
+        "c317893a26cbbb1ab6b80908e775d7eb7057c8d9b4cb71cc34342a10fd099502",
+        "cbdd6078e71536034e6512e8a693f2ffa26292fcfd81c52fa1d8f53598d0d019",
+        "65a64ec4b34680687d98cd473b8d954d240c68f72194c2d45ccfa304c84ba3ef"
+      ]
+    },
+    "SPR-U-c174b93eedfadaae02ee": {
+      "atlas": "SPR-50685463d63edf3ac69b38d343ab453e74eaf6dd9230cd519ccaf378f4c4b54d.png",
+      "width": 120,
+      "height": 108,
+      "columns": 8,
+      "count": 15,
+      "offset": [
+        -24,
+        -120
+      ],
+      "sha256": "e4e4374356a5dee2f8b096883715bd1d5197169a207d831894a800a1287e54b6",
+      "raw_sha256": "50685463d63edf3ac69b38d343ab453e74eaf6dd9230cd519ccaf378f4c4b54d",
+      "model_id": 6531,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite15.pak:13928",
+          "name": "6531-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite15.pak:13928",
+      "source_name": "6531-0.spr",
+      "source_names": [
+        "dragon skin",
+        "ev dragon skin",
+        "body shield a",
+        "dragon skin a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "d8d644c2de1739d4791d4cf324f5eafa9b29fa9c8db235462f0af08a8e00b73f",
+        "e535a39face62eaf1bbf1c1a13a1ad7d7af52ff53383aa687db40e54f5b06000",
+        "422f43c5d623cbb4d859e35ab471a63e20c80bdd6e108390c190f59d4914c033",
+        "3c47ed1462dd55b33665ad50630f7ad0b1a54a962df0d488df052ee8b5c1ad64",
+        "1ab61a4c47163435394f47155c5c2d87cba8df7f8908da03a583583c547fe687",
+        "0e0bfc6364817a39f1f9326ebba33ec91cb82ec9fcdb93a40e2d064dfeb06d9b",
+        "629d75b70ab7ed9a057aa7084fbebacbf79b64e3d821fe2e3b785b5104030ee1",
+        "16f43d078fb46ec74553f7fcabf47bfdda03e3853a696bb7f248a2c91c179833",
+        "ff9ad1bd4eb21b3fa4493101e912898d5e89b63a70be8993cc63c39d7b4b401b",
+        "2d5029ccfabf491b14dd6ba1e3ba6901d87cc68477c69be1df695dc90ea4b50f",
+        "42f9c3e4478ec85c21c5fcbdb2a58baa3a4b5a5243a94fcda932732568bed09b",
+        "2b9f20a342971d8dcf2238afda377a0710377cfdd1dec235b2a7dc4a7fceee49",
+        "7f8e6da47cf33539cd3c0520db93223fb9048b6b2b25b0cd50cd0dfabfcadb67",
+        "ed8106de113e0f2ecab5b9ab1c6b2ecc90e47bb5a12dfc57ca047491d440f6bb",
+        "49c17d9baf93a9e8e16ff765c3958dd2c34f4155b3fa3609a2e3cbed5a034fd2"
+      ]
+    },
+    "SPR-RAW-50f17ee8ef5e8c4e622ce87d6681f6c739b549819f1e75def3b2e0ef0aae88d2": {
+      "atlas": "SPR-50f17ee8ef5e8c4e622ce87d6681f6c739b549819f1e75def3b2e0ef0aae88d2.png",
+      "width": 48,
+      "height": 96,
+      "columns": 1,
+      "count": 1,
+      "offset": [
+        0,
+        -60
+      ],
+      "sha256": "b2626410c758817dbe1c671f3bb9c028488465001ad343fbaee507a91fa0bd5b",
+      "raw_sha256": "50f17ee8ef5e8c4e622ce87d6681f6c739b549819f1e75def3b2e0ef0aae88d2",
+      "model_id": 10710,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite15.pak:682",
+          "name": "10710-6.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite15.pak:682",
+      "source_name": "10710-6.spr",
+      "source_names": [
+        "counter barrier hit",
+        "counter barrier hit"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "fd5709b64bf81a1bbb87195ab83a903db52693573bbe02fc35996e64e832e2a6"
+      ]
+    },
+    "SPR-U-ed24b35595b54cd9074d": {
+      "atlas": "SPR-5532e36edcd31152777b044f7f15cc1424c0d178bde875c31b35358a99a2819c.png",
+      "width": 48,
+      "height": 96,
+      "columns": 8,
+      "count": 21,
+      "offset": [
+        0,
+        -84
+      ],
+      "sha256": "c6d44a9a8cc0e5b78e0ebdd116b1381d19af26459976cfd6ee6321e7fbfbfee7",
+      "raw_sha256": "5532e36edcd31152777b044f7f15cc1424c0d178bde875c31b35358a99a2819c",
+      "model_id": 744,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:87845",
+          "name": "744-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:87845",
+      "source_name": "744-0.spr",
+      "source_names": [
+        "heal",
+        "extra heal",
+        "greater heal",
+        "full heal",
+        "heal all"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "40fbb4629a995b187a64efb45f64a657899bb43794eb7c26b8e05712f3b76cec",
+        "2a169344349009784bd1341cf043f30853d1f1c7d4ab5d8713a217a8ca1383f6",
+        "8db5cfb007fcda102a67e9fe4e6877c7fd2af89b20bab4a8a3e171d1f1e6441f",
+        "44797aaf675ea195f44b8b17f6e47f32dde4f92e9664092e5bf3d92abbc84325",
+        "b977280aa39cb5b4df02ea214cad94a0c37d790754aea104246858794ae2d7dc",
+        "9b518c2f5da148406808ebfe83fc558ff5d57f4cfc6f17c4ccdd0867402992f5",
+        "867d885014bb393e3fda4c7ca29a1ca55a106010730b432aeda6acf4ac06b433",
+        "24eacd7f6b51b2b0323c345971bda5621e07a5b4b2c9c8f6547393ba1d815c1c",
+        "3301235eef1e5aa527972312c3858368a1d22e56bab97905e61e9d258eb058dd",
+        "3746661794ecc1af026303c6d64d9b3fdbb8ad8c158e230f8bd1e7a106431f2b",
+        "d5eeccc87e9fa9cfb7e23b021b861695028ad87306739764238677555d3aa663",
+        "d3d4470cca1326a2d18f445548cc1713e7d0d88cdc79dcf5d05a99deb9cbefff",
+        "495229ee37cc319fcfd1348c9694ab7ce40f07265cf39382dbd3bdb1cd57de25",
+        "13462869370bc10405568b136e0b6af96f71e6ff6e69e915febd5c50bcee3bf1",
+        "9ba2cd0afb845441cc42ec2eded675bfceb828056e71fc1528088378922f78b8",
+        "7528ab647b09134c7802fd8e1ab57d4315ce927b71aa25c5687da3afde295034",
+        "d0e91cbf99554c2004608ed56dfd5bb6106d1d24576a5fc791c2546a5536b1e8",
+        "c303bee1a60152c71ec1572d7aaa9bdbbe28aa31a6ed3576860cdc44c749af72",
+        "b246bc9d48391c890db4c9e0ea9e638ae6205a5a10a7ab5b26155cf2bcf3a735",
+        "1cb4182a85ede44de780ec7758716332b90ed35c6ecaa3c3af239ae5c24aa402",
+        "c50b07bf274aa1c6eb8d34559548aef1c76f584b3496cd6dc62d6b7b542ae2c0"
+      ]
+    },
+    "SPR-RAW-6259b491fe16c03f56120adeb81e3af373598d8ddc1cd42712e3ae1c22d028e5": {
+      "atlas": "SPR-6259b491fe16c03f56120adeb81e3af373598d8ddc1cd42712e3ae1c22d028e5.png",
+      "width": 72,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -36
+      ],
+      "sha256": "3d6e500247614b0bee26f6c39b2502b0c204b48b843a84868d680f94c0b9be13",
+      "raw_sha256": "6259b491fe16c03f56120adeb81e3af373598d8ddc1cd42712e3ae1c22d028e5",
+      "model_id": 1809,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18374",
+          "name": "1809-2.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18374",
+      "source_name": "1809-2.spr",
+      "source_names": [
+        "coneofcold shooting"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "a3b966f5609bbaa9cce03e2432e3d82c2b1d929be619e1c6646bf5a2aa336d8a",
+        "75a5a883bb3b7d2f55753d36c7d5cd5f6ae0c6e34635a0296821278345f6c768",
+        "0ae1ea75d2af42dcc4a42b5abda5b11ee44c9a85e82ebcc07e0917a3f2ae38b4"
+      ]
+    },
+    "SPR-RAW-632952f2f3265c91325b1a3f235e66e6f128101d86152b02b54765d450ffb52c": {
+      "atlas": "SPR-632952f2f3265c91325b1a3f235e66e6f128101d86152b02b54765d450ffb52c.png",
+      "width": 144,
+      "height": 288,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        -48,
+        -252
+      ],
+      "sha256": "b6040835fd709fc8d2c2de72ce8e9b40195a97e959477baebd015e5f8bab7d62",
+      "raw_sha256": "632952f2f3265c91325b1a3f235e66e6f128101d86152b02b54765d450ffb52c",
+      "model_id": 170,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:27317",
+          "name": "170-1.SPR"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:27317",
+      "source_name": "170-1.SPR",
+      "source_names": [],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "c61d0d37ab2809e2be2f5eadd65b33c9410669f94db4c19a06669c5793ed9425",
+        "d189bee43d9b9aa7373a795b9d21b26ff8d1c4e2db6d95fdcd4f53c8ed713b9d",
+        "8d9ecc5b378edb3b3df90e8241b147f37737339902be0018759b830c2d2fb713",
+        "c1a04f15ed89e9ddc861ffb6830058472b02264f908f606a3ccdb1edf3e760c3",
+        "04c0a21c328ad996952644e2044f862b1bb48f6c9af189199c1e9a9feb00a90e",
+        "451b678e67bfd75ad87c2b111228e8b42b902fffd57837067f5af2cb388b9272"
+      ]
+    },
+    "SPR-U-4f674aae20b21c09ae7f": {
+      "atlas": "SPR-676e1b7c3ad84a1a16a9d1b7c4041e7191919264430959188c1c0f8b6e42d95b.png",
+      "width": 336,
+      "height": 348,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        -192,
+        -324
+      ],
+      "sha256": "57096a5bda809aecba2929d67be8ad822a73dd7cb4da52ada296a76acd38df23",
+      "raw_sha256": "676e1b7c3ad84a1a16a9d1b7c4041e7191919264430959188c1c0f8b6e42d95b",
+      "model_id": 170,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:27316",
+          "name": "170-0.SPR"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:27316",
+      "source_name": "170-0.SPR",
+      "source_names": [],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "c736d12918f6063ffb6f08b8c21d93067db7f69e3dfea704ee621215a296c16b",
+        "3d95d71ced63be4d6f3b7e35efe4d27e58fe21b2687ef8dcf89af5798f8753f3",
+        "725f241f8f744efb67fada01d65e2c29da13fb43778dff45d3bb739b7e10500d",
+        "b9165d08837dba93b459a98ea2b8a9e02b6751cdb7c9e047176b672cb907ada7",
+        "57b5553ea6cfa60d0050976f88ff53a4dc34a0fcad582d7b029044a32fb286c6",
+        "23950d542e9b6d0dd720d0a08cbd601ba30f70ed21de9180da01859554ffa136"
+      ]
+    },
+    "SPR-RAW-6f33d09dd7c3afa5a938544bfb42ccb7200a9d32421fd0b67fb6d1c3981c0583": {
+      "atlas": "SPR-6f33d09dd7c3afa5a938544bfb42ccb7200a9d32421fd0b67fb6d1c3981c0583.png",
+      "width": 240,
+      "height": 192,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        0,
+        -168
+      ],
+      "sha256": "a50218b09df13b878f2a5cb1f0506f2e3e98d54fe795783b7fda0f037f004f6d",
+      "raw_sha256": "6f33d09dd7c3afa5a938544bfb42ccb7200a9d32421fd0b67fb6d1c3981c0583",
+      "model_id": 170,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:27318",
+          "name": "170-2.SPR"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:27318",
+      "source_name": "170-2.SPR",
+      "source_names": [],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "657414771279e4534fef8cfb8ec7d088e5dc7a1307234230b7541e092dc2b275",
+        "04a2bb3965045df9f38e893f99c3aee32ee1ffb565111c450557bd0303a71bff",
+        "e329e5f8f5d20e16f82ae51fa1aa0ff97015fd062bf222b415993ce0af8356e0",
+        "61d7ad4c3b8066fbd7ea9c1557e8e2e5e003209e1aea5fb303c6829939d430b4",
+        "cb19ff7b4f985057fde35044b13dac506a2ad209be5351760b2f6b76f311c4e3",
+        "4fdd5783a4c8cf43f146cc434b6fd722bb11eb107174b9362e4c3a6cee4cb532"
+      ]
+    },
+    "SPR-RAW-7056d176a9d13f62e349ab473e4a837846781ad4a10de44fb8e9f0fe83c172c3": {
+      "atlas": "SPR-7056d176a9d13f62e349ab473e4a837846781ad4a10de44fb8e9f0fe83c172c3.png",
+      "width": 384,
+      "height": 192,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        -336,
+        -120
+      ],
+      "sha256": "3ea676fe6578c9a5ea47a838319177a4d6b28d7ece194f2e746a6ab2a798347e",
+      "raw_sha256": "7056d176a9d13f62e349ab473e4a837846781ad4a10de44fb8e9f0fe83c172c3",
+      "model_id": 170,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:27323",
+          "name": "170-7.SPR"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:27323",
+      "source_name": "170-7.SPR",
+      "source_names": [],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "615340343629cef9b40b37b5dbcc9012143e85bcd968129ffa4f316afb5e4c73",
+        "8c792794e08b7f15e8ac76e2006f36bad87204f76777fd820dd38555e68d6ece",
+        "e632c92682478972242dff26af481a108320bc3678d31652ee285a35f32d1ec3",
+        "cbf956710d8ffa1c732678707440120692ac4eebda5041a26a3d619974dfa1c0",
+        "b197818b1640a3a2446ea0e96899f9647dcce82e6649e53903fe2e959459ab47",
+        "c91d0f5f13e6c77be643d124b70524ce8aebbed62bf9fdb2c44922800a5a0e4b"
+      ]
+    },
+    "SPR-U-e5041bd65abccade3257": {
+      "atlas": "SPR-75691e4aac923635171434981013d9ef699b0649528847a760d1a42a5b64056c.png",
+      "width": 120,
+      "height": 120,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        -24,
+        -108
+      ],
+      "sha256": "446224f41d7ce3703ff1a58c0ca6d26a855cc1ab976e4fe05b7d32a1ed50ad60",
+      "raw_sha256": "75691e4aac923635171434981013d9ef699b0649528847a760d1a42a5b64056c",
+      "model_id": 10710,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite09.pak:470",
+          "name": "10710-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite09.pak:470",
+      "source_name": "10710-0.spr",
+      "source_names": [
+        "counter barrier hit",
+        "counter barrier hit"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "a8e0482b936d4cee05d64749d0062264189b75b9fec1fe4ee6f1d9dff8c8beb0",
+        "e9a46c689cc7b9532534323a1c9b037ca38d44667125e13bb0eb4375a1d8957c",
+        "7da7104634fe166bc28104e3315010fdf709af54c757c5822c5257fa72094c00",
+        "ad227f0961d8a2763751a4ba4e87a9f6dcfa7c46ee38596b11efd0e38936d4f7",
+        "ef59de006126bc3520b52808705ebcb1279469eac8aaf3fa4c08dab1e1b4d6d2",
+        "dc379fa2eb650d0c817c90bdc26e1693bc6168f791be7648c10d74c57c9b05c6"
+      ]
+    },
+    "SPR-RAW-7ef8fe83fa9df57b2dd858d3c07cfbd81bd43e5f48fe8f263f6dcd9412cd0d58": {
+      "atlas": "SPR-7ef8fe83fa9df57b2dd858d3c07cfbd81bd43e5f48fe8f263f6dcd9412cd0d58.png",
+      "width": 72,
+      "height": 84,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -48
+      ],
+      "sha256": "3787a8cba09c1fd8b9e52d95433d73267d66286ebed7f925caf44fca6868f5dd",
+      "raw_sha256": "7ef8fe83fa9df57b2dd858d3c07cfbd81bd43e5f48fe8f263f6dcd9412cd0d58",
+      "model_id": 66,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:85898",
+          "name": "66-6.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:85898",
+      "source_name": "66-6.spr",
+      "source_names": [
+        "arrow"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "ed713bfa8df0b7ec5401c5ff53ffb8d65d8d274a734aa4b1175abd68759246b9",
+        "4e53b0ba81d4d9af3f421d106705cf338a15fbbaeb4110444a463a4873d01252",
+        "2b70a963afe34598292f5569dfece47b5c0b0e4aa882ae52da808dc2ce41a4eb"
+      ]
+    },
+    "SPR-RAW-7fa834dbbe553e79b42d476096a6065ba46ce1f738f84c2b1da070988db1fe64": {
+      "atlas": "SPR-7fa834dbbe553e79b42d476096a6065ba46ce1f738f84c2b1da070988db1fe64.png",
+      "width": 96,
+      "height": 84,
+      "columns": 8,
+      "count": 22,
+      "offset": [
+        0,
+        -60
+      ],
+      "sha256": "003415dd170ee4718e4a6208008b0006d5af7a9c0157d89405334c8dd7ded333",
+      "raw_sha256": "7fa834dbbe553e79b42d476096a6065ba46ce1f738f84c2b1da070988db1fe64",
+      "model_id": 3669,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:49907",
+          "name": "3669-1.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:49907",
+      "source_name": "3669-1.spr",
+      "source_names": [
+        "baranka basic summon e"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "06d5fe77219e29da70b63abd854f1fdd16a218f001ae4a36093a276ba73141b4",
+        "68ca86312cbabde1df896f88331175ccd6d111bde70f9f1b2eb32fd70b02c157",
+        "ff63f26f8b9d75d5e1daeeaea78fc4d15d22b9ac4d7810d32535beb92097b35a",
+        "30673e3509a133775a340f7ba2734d20064c46314d162ee109031f83291207cb",
+        "8aca57c9e50b852ceee29ce98ae63a8db88b019d2d5ee70b23819b8dadd8b536",
+        "5598ca58e39d514f35e9d978abf8b427e1d52d5e1d1fa3e18f2652e3d69145a1",
+        "52597fb597c484e25dfebb23c9b57079d978025d0e6ddd7024fe9d6e29e91b69",
+        "67352b6dd7d28b0dbcd1b7e1d4c93a728b65ff7dd96d3e78f1314523fe7dd759",
+        "1c8ac6cde62f60f03b5499b181374e6ac0a727b5261201c86b9af0d89f826033",
+        "9749ee74e58724bf94baf1919667116837decdf945b4a6ffd86906f7b41fe94b",
+        "770ee55e3c908c4479f47081a62e540e4ef66110d5520396ab3bdcff8930c602",
+        "ca63c85e388b5a82341e5cf38244bcd53f388fcf0f7229f75323ab8f31749d53",
+        "9c1e3b99af5afaab61045a7a8bcb0be2a350ac9f092a7b64670d4440d946fcdb",
+        "8ef7ac1c3f4d6c145a84b11431678497625735b9e8a8139102f290f7e9acdd7d",
+        "b8e3f5c21812aec9b3428e06c66d75ac273f3a8bee2e2e5c6562d313d3d2904c",
+        "2d2354c2ce847f3f803e1e91b256b95d649813d80b1e2b7c7d4e21832cda3bb2",
+        "20eca3acb3832943fdb095cb0a5aa2c603ac48f1e9355d6963ea37242556a77f",
+        "9ad686de2d54fbad76389828bbb648b0d05c45dbfb08b68c6a7a3e9d110dc5cd",
+        "8005cb486c30bde3146838355a639b1f186e2b44ad4695d4a93a1550a0f55788",
+        "848d2ea646f6783051bd707a357a5330a28f82a257a84dfaa3e470ea18be1f61",
+        "722d6bef1ed8b47903a4411386316bf3d4572795d74a38cbbe3ef6821e060ba4",
+        "47a22accc6fb0aedaf4a5cf8014bdd569ead0efad399fdb8de134235e7c9bb10"
+      ]
+    },
+    "SPR-RAW-819812f66e701a78094976e9e21b802d44d598baa8b5dc80d4d24ee2c26b3f21": {
+      "atlas": "SPR-819812f66e701a78094976e9e21b802d44d598baa8b5dc80d4d24ee2c26b3f21.png",
+      "width": 48,
+      "height": 84,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -72
+      ],
+      "sha256": "470952e83d9503d5b67f8293f87856e599dd422ee20408e0b32559da92cf2693",
+      "raw_sha256": "819812f66e701a78094976e9e21b802d44d598baa8b5dc80d4d24ee2c26b3f21",
+      "model_id": 11762,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite06.pak:1195",
+          "name": "11762-5.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite06.pak:1195",
+      "source_name": "11762-5.spr",
+      "source_names": [
+        "renewal triple arrow fly sc"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "ad4c967fd3f2365c641acacdd731147ef8cd227f3f4474faa01b97a59ae2b35d",
+        "f63ce6c29185564f72ed5a4ec1a366566f635929445fed0338133791b405e989",
+        "6a70b90244ded970f337e82ee3dde0679c2da64976a12e641d4a2f2dc9a373b8"
+      ]
+    },
+    "SPR-RAW-83f2b07cd964a3b9a402a16e5489ec6abb84cd63bbead2bcac4721d565e15745": {
+      "atlas": "SPR-83f2b07cd964a3b9a402a16e5489ec6abb84cd63bbead2bcac4721d565e15745.png",
+      "width": 48,
+      "height": 84,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "1ca2ae66ac0ee125bbf01c10748670c49cfad63398bde8d7ed3233d88ee52f6c",
+      "raw_sha256": "83f2b07cd964a3b9a402a16e5489ec6abb84cd63bbead2bcac4721d565e15745",
+      "model_id": 66,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:85896",
+          "name": "66-4.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:85896",
+      "source_name": "66-4.spr",
+      "source_names": [
+        "arrow"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "89cc0c65d8e045a93a6816e49dd8e310e3a28abaa80b43a9193f5022b5e7df08",
+        "810f4068c99dbfbfdf26f43e702cfdeca9bd1ed1b972322a12f7870adf9e84e1",
+        "67b19a3f816c72af3fd92e9d5a3c0511b82763b7a7e3c38f03f1da620eda2fb0"
+      ]
+    },
+    "SPR-U-3c850206e4ece25f720b": {
+      "atlas": "SPR-85f6872052fa335cab1ee565c3e184e2d4e718a6137c87d28850c88ecca6f8e5.png",
+      "width": 96,
+      "height": 132,
+      "columns": 8,
+      "count": 21,
+      "offset": [
+        -24,
+        -96
+      ],
+      "sha256": "0f330a8f32b332c4eccc43087cad0cac4397bbd85a20e9707cb577c4b2d0bd1e",
+      "raw_sha256": "85f6872052fa335cab1ee565c3e184e2d4e718a6137c87d28850c88ecca6f8e5",
+      "model_id": 11722,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite13.pak:1025",
+          "name": "11722-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite13.pak:1025",
+      "source_name": "11722-0.spr",
+      "source_names": [
+        "renewal heal eff sc"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "e322feefa8d4c76d8749f88c9b877e3e119418c4ac0b18a8cfb7260638cc588d",
+        "5a223077af4eeac50c169e0b1c9605742037cf2cdaf66b16072a133e84b63d9c",
+        "af501a557851e748a7ced6eda8764bb1676040a9ed5b0d3e3c0546bdabf8217a",
+        "cfd050446d3a662adbd6326d0ae42a4b96a1f420c88e3517df9c0d6713044144",
+        "d0999fa4f9bf453df053c93c1ebe8ac6afe1ebfaa23dc96264e7ea5dd0fab3f5",
+        "fcbe2e98cdf439e59bd398e21093f9f2c4ab6f72f89695a9557e62bfce0da65f",
+        "f2578b0b12e39dc7791fd94f4462311dd2d036e5364308311d6f27f72b49aca0",
+        "00fbe2a133a442b4e291b4831aa725ca283e19eb7e2a29b30253f38ca228f995",
+        "426aeb343d57c0b3b5617b0ada3092cb842f6df13a51475173c5683eea27de04",
+        "242d805d21b0144dbe03ed2440fc3a808a28e9f29f7438e5bb790b67e15983aa",
+        "abb82c304cf901f21b2407dad92cc52199704b4d2697bc8b4ef74f77103068ff",
+        "4f37ae5adac06db15573994cba5fc6eeff13b7f7eac99f281c479f71cd903bda",
+        "25e5b9d88b2a6b1037efa7a7dbb89541d8e4f2653224ebb728b170869a7a71a9",
+        "e322feefa8d4c76d8749f88c9b877e3e119418c4ac0b18a8cfb7260638cc588d",
+        "e322feefa8d4c76d8749f88c9b877e3e119418c4ac0b18a8cfb7260638cc588d",
+        "e322feefa8d4c76d8749f88c9b877e3e119418c4ac0b18a8cfb7260638cc588d",
+        "e322feefa8d4c76d8749f88c9b877e3e119418c4ac0b18a8cfb7260638cc588d",
+        "e322feefa8d4c76d8749f88c9b877e3e119418c4ac0b18a8cfb7260638cc588d",
+        "e322feefa8d4c76d8749f88c9b877e3e119418c4ac0b18a8cfb7260638cc588d",
+        "e322feefa8d4c76d8749f88c9b877e3e119418c4ac0b18a8cfb7260638cc588d",
+        "e322feefa8d4c76d8749f88c9b877e3e119418c4ac0b18a8cfb7260638cc588d"
+      ]
+    },
+    "SPR-RAW-88dd9a9d988d20567af8ca4053ed28c1adc34e7751a68a8f10fb1e04743ad6a1": {
+      "atlas": "SPR-88dd9a9d988d20567af8ca4053ed28c1adc34e7751a68a8f10fb1e04743ad6a1.png",
+      "width": 216,
+      "height": 180,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        -168,
+        -60
+      ],
+      "sha256": "efeacf33660ac0bf472277a5205a689d32d0dbc57ba9acf52188ac2ed12dcef1",
+      "raw_sha256": "88dd9a9d988d20567af8ca4053ed28c1adc34e7751a68a8f10fb1e04743ad6a1",
+      "model_id": 170,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:27322",
+          "name": "170-6.SPR"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:27322",
+      "source_name": "170-6.SPR",
+      "source_names": [],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "1ff896e9284c329a7ad99613427bcb687d3ccb10a5fa203fe3f2b6c7d0e1c72b",
+        "d67517dea5c8b159ec07496203879ac2a3429183db71dadf47cc2baee5adb8bb",
+        "9b2db9870fccb99566c505442b273287bff42bc89d7d8b464ae5ffa3913da615",
+        "656e6ab8fd3e0d8b6d5645446bcc8e3fa82dc5877f7c301283a73aed9815f200",
+        "a8cf591bacf052059e3f20ee159c2f9e94af07e75c77398ff45a881417621d00",
+        "6b8cdb6976301948770585ee4599e364b12e0ddcf876a431e989ecea3b99914c"
+      ]
+    },
+    "SPR-RAW-89a570bfce019ae62e9292f8a748323f2c6cd989f00d28b0b900260f804657af": {
+      "atlas": "SPR-89a570bfce019ae62e9292f8a748323f2c6cd989f00d28b0b900260f804657af.png",
+      "width": 96,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "e9a9d37bcd8053e99f43e764d8f9064bad77c920b661dd4f0d352f5f7facb631",
+      "raw_sha256": "89a570bfce019ae62e9292f8a748323f2c6cd989f00d28b0b900260f804657af",
+      "model_id": 1809,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18378",
+          "name": "1809-6.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18378",
+      "source_name": "1809-6.spr",
+      "source_names": [
+        "coneofcold shooting"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "7d460cabcb058deecb9d868803c429dbbc06dac6783faeca6bedf1e273c3b11b",
+        "1a7217d46824ae38dedbd861670f80a7aa01fd3e8c86690706be7f68dda4dd4a",
+        "0f5e532bd79c7a7bf75eb7a831cd8ad4c5e4a6c98d2225ba85e983ac98f3f6a7"
+      ]
+    },
+    "SPR-RAW-8d3783010113d74cdfbcbc948427da281415fe83b11fc80e106c438ded3fd78c": {
+      "atlas": "SPR-8d3783010113d74cdfbcbc948427da281415fe83b11fc80e106c438ded3fd78c.png",
+      "width": 72,
+      "height": 84,
+      "columns": 8,
+      "count": 9,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "9a1ab6764db66899e330a589cc6c7441614636bb4e680e86e48938b1ddf1116c",
+      "raw_sha256": "8d3783010113d74cdfbcbc948427da281415fe83b11fc80e106c438ded3fd78c",
+      "model_id": 1990,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:19903",
+          "name": "1990-3.spr"
+        },
+        {
+          "record_key": "source1:Sprite.pak:19907",
+          "name": "1990-7.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:19907",
+      "source_name": "1990-7.spr",
+      "source_names": [
+        "seed explosion e"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "b6f5e35672ee11078d01b77ef697d5488b39b612b98b11fa598e14dd4f11d3ca",
+        "d395e3fcd78ad63d521fa3df57ed51ff1d400513b0843a01b9c6f7f184202722",
+        "5c9587bdf6112645ad1fa5200f3bc08ae7112567eb619f0838ebd732f54352d7",
+        "4fe2bd12a683b0d90388b0474dd6908facfa496015cc79f1929dc2a60965aa4b",
+        "97db981c77cc740c46e1d6e1bca0148ffe3c7e20ceb02d30ea4ea1bf5af6f7b4",
+        "5dd07a4b47f2e4ea5339e98d76705e2a8004c9efd115c56b0a2ab51259043c02",
+        "c317893a26cbbb1ab6b80908e775d7eb7057c8d9b4cb71cc34342a10fd099502",
+        "cbdd6078e71536034e6512e8a693f2ffa26292fcfd81c52fa1d8f53598d0d019",
+        "65a64ec4b34680687d98cd473b8d954d240c68f72194c2d45ccfa304c84ba3ef"
+      ]
+    },
+    "SPR-RAW-900093de54f0fbfc358c8e7f82cb4af2d0735a425d8570f52bc7cba21b7c94e2": {
+      "atlas": "SPR-900093de54f0fbfc358c8e7f82cb4af2d0735a425d8570f52bc7cba21b7c94e2.png",
+      "width": 144,
+      "height": 60,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -48,
+        -60
+      ],
+      "sha256": "ae4646cd09933e03291fa73419985ec1b04d33b63f79492fa54903009db7d468",
+      "raw_sha256": "900093de54f0fbfc358c8e7f82cb4af2d0735a425d8570f52bc7cba21b7c94e2",
+      "model_id": 11762,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite04.pak:1306",
+          "name": "11762-3.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite04.pak:1306",
+      "source_name": "11762-3.spr",
+      "source_names": [
+        "renewal triple arrow fly sc"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "5057c24b48e232689d750d6a7a1cd52c32937a34f53a6617867f1b818f168a55",
+        "20804f1cdb3472ec5ca7c3bccba5d8dc95f570f952bf7f3fad9a97e24db6f4fc",
+        "d7a1c292bc161cc60041c1fea0cb299f75b7f354fe47e947689722159bd076df"
+      ]
+    },
+    "SPR-U-58ff2d20ddff393dfebb": {
+      "atlas": "SPR-903403631a3b9178fe361dc9602d7400f58e5663c83713a3ee29730a89a85917.png",
+      "width": 120,
+      "height": 192,
+      "columns": 8,
+      "count": 11,
+      "offset": [
+        -48,
+        -144
+      ],
+      "sha256": "8d5f10b6d8bd4d30c39438159239523c0e3aa042a3d7c1c5380b160180dcb278",
+      "raw_sha256": "903403631a3b9178fe361dc9602d7400f58e5663c83713a3ee29730a89a85917",
+      "model_id": 169,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:27297",
+          "name": "169-0.spr"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:27297",
+      "source_name": "169-0.spr",
+      "source_names": [],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "f7a7f1c984c0d4b6ea0f6d58598df22f6df559e0c3d641d2265c93f3db818736",
+        "8e18fd93ae3bdf714dd77b19a51350b8294cf23893e8b9746ddf4fce674368b1",
+        "3a1b4a0643057f71a305942ae878e6a915c910221378b8c48b7c52a265451260",
+        "db17c908d36fdf8ae00efbd2d132e987152ad60a1898d82d601515d7d04a0dc3",
+        "367617859f44543a8ce63e4a26ee23eb20e57a41b2ae4d03cc20a3167ed58d67",
+        "5d842f76562b4693b98e43ace3b656b667c1b4fb437c62e21863c8a2a9b7c0ca",
+        "ceaf01c4e37ea547c337fc210643923a324621214ace25585db204db96811111",
+        "7981d14afb151af5bcdbcce3fac7d066909357f5473f2767f61125e0b665efbe",
+        "6d0dc7106134ce8d8789d8572d06355e9b94bbd6534742cf92f579b7c6e2ed79",
+        "50dc626051fc381efffef7a081a3a6fbee0253112a117762b5be7e719dd3b4f8",
+        "5321420e64119877485f1598b882514a591a8981f8fc437bdf136c345fd5ea61"
+      ]
+    },
+    "SPR-RAW-90b4c738925d38ad928b6e4adfa36225627b047f9059eba52aac67f6fd1a3117": {
+      "atlas": "SPR-90b4c738925d38ad928b6e4adfa36225627b047f9059eba52aac67f6fd1a3117.png",
+      "width": 48,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "65ed016e04775906e473d2bf322558c6169bf20b5dd283f403544adae30f560a",
+      "raw_sha256": "90b4c738925d38ad928b6e4adfa36225627b047f9059eba52aac67f6fd1a3117",
+      "model_id": 66,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:85893",
+          "name": "66-1.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:85893",
+      "source_name": "66-1.spr",
+      "source_names": [
+        "arrow"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "5e523e024b9dff192f73e53c2c15da1685eeed64905cfcabdf493b07db272dbe",
+        "f96a424f4572e734632500b6f7ff0ca570ce0306e4ef4855cea6af697cc79c63",
+        "2e5d3f005e052308728d18b0ce10535ef8bd7f953e561629cb9a419070652dca"
+      ]
+    },
+    "SPR-RAW-913a0850970435bc8b28a05a0abf6af30a0535350690697d0d914795020e6c51": {
+      "atlas": "SPR-913a0850970435bc8b28a05a0abf6af30a0535350690697d0d914795020e6c51.png",
+      "width": 96,
+      "height": 84,
+      "columns": 8,
+      "count": 22,
+      "offset": [
+        -24,
+        0
+      ],
+      "sha256": "acdaf7c501080ef5ca78767fda83ffe17c18315521b6f05a14aea230a3b7e1c0",
+      "raw_sha256": "913a0850970435bc8b28a05a0abf6af30a0535350690697d0d914795020e6c51",
+      "model_id": 3669,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:49911",
+          "name": "3669-5.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:49911",
+      "source_name": "3669-5.spr",
+      "source_names": [
+        "baranka basic summon e"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "8a94cfbbbb5b098b35793cd5145ee51b32304b9e10d91270c53c1185b7e3a222",
+        "2f0dc35e4e304caa8014625949c021accff31146ba013d9607c581da91a46dc4",
+        "ed39e85afe8ee3bc40ddef94b16fa4cd23fd68d33b230a300dad292a5391a515",
+        "087516090df2720d20d22ee943df668da319113e7a8b77a63abe42da87465cba",
+        "345aeca2886e38c988902aa5569628a4c89724b6f18232142983862fbae13b8d",
+        "66f98180f455a4c2be29455d9b7e2e42bfbb3a990d744a5b332a0eae68701ee1",
+        "798e51dbc3a447440b17078c06064c927f957f7365b1000a98cee41bdd3e8bb4",
+        "70ca071163fbbfce4fc83a8b84061f579f5b559e944b1fc5683e0b6a02e1394c",
+        "7d9d5f139a9aada061279e25527af3d7b79fe4b0bfc94f25ee546e57fd49c168",
+        "8bc2db365650415ada13602e2404d143d7470e3310bc82d13e081c54b0aa903f",
+        "7a176aa61c77cf196f8957b415c8ba683bf262494f245fba2f78bd676b5e3fb4",
+        "21fa2ea14f75358796ce5bab079f1fc7b6ba8b51e569b6076116bb62b213316d",
+        "0b8f303d3a79d3b5a4da0a82a9c6a4692b207911b78d6e77d20b148e3cdc6d3d",
+        "8e1a99ccacbe395b01fc906169cd257bd156a6d5e2abef690cb54f15dfeccdbc",
+        "e3f7b4efc5f236e826bd9e4a50c4856e9039cfd0e0e8997f12e0fa73092ca18b",
+        "e27d1a17d3b58c1ebea9e85efc7c4f2c791da852d58bbc1d7ec3449197359b02",
+        "48509b985f367e122cc641ffd73d5999d44d506bf5284eccc0739b2d71573cba",
+        "79d321f082a22b77a50ce27f72ec43dc22cdc4285d2e66b13bd4d0e191702e5e",
+        "d0946b0102d62811dcb0f583af7ddc525b8ac4bc0ea7a8d67e9880e121af8409",
+        "c13a834e1421591a642244c2a7863a3d8c9cbac480a07a6e3f95427a5678a0c9",
+        "6c178ed696233ccc192075d99eef7b942055bed01bcd0876deac3010cac47ddc",
+        "47a22accc6fb0aedaf4a5cf8014bdd569ead0efad399fdb8de134235e7c9bb10"
+      ]
+    },
+    "SPR-U-2664da2d5bcf847bf783": {
+      "atlas": "SPR-91cd448ff2f1433b0204598eb015c55cd175dd22d5c3584903f6e3bb18347884.png",
+      "width": 168,
+      "height": 192,
+      "columns": 8,
+      "count": 14,
+      "offset": [
+        -72,
+        -132
+      ],
+      "sha256": "a0fb748d52e0a3d31fafc2ca25bf5f0ed9b22a094a64c1efd4d0e75817f6ef23",
+      "raw_sha256": "91cd448ff2f1433b0204598eb015c55cd175dd22d5c3584903f6e3bb18347884",
+      "model_id": 1819,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18403",
+          "name": "1819-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18403",
+      "source_name": "1819-0.spr",
+      "source_names": [
+        "firestorm"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "8fa6996456ecdcbf588667cd6af4e3303c92094661403625c2d7206edc9079b0",
+        "2503e382f6c9174281a33fa57f94aa279401f223bd9ee09e5afcad5110166a3e",
+        "9203e3df6700172a8f6de7d56be4ef86b61788bf801daf06d8cd845c4751c7dc",
+        "5bfba7eeba319323a06dae524300d8d8d7ce3f284075bb8b6207b3fff7948376",
+        "f3efdc1f66ee63abf733d86e69d554cb62c3977705d521e06fc34ad12b0a9447",
+        "c6547b4633379c44124107bf7856fdb75905baaac678ab4f147cc27ea305a706",
+        "e28a367a59e16d3d977cb72be741705b1c750a8e0526d3880eb2747451009707",
+        "f3efdc1f66ee63abf733d86e69d554cb62c3977705d521e06fc34ad12b0a9447",
+        "5bfba7eeba319323a06dae524300d8d8d7ce3f284075bb8b6207b3fff7948376",
+        "08a3a524bca3f189ba566ae15e0850c9681c17d800eb11f5bddcc5d87987f35f",
+        "00f74dfa525df6f3307550c0d6c946e307b43b1a9c23d4a78160ee9f18142217",
+        "4200561d80118b730477deb587dda8f0ce92d300b847141ba7efd2143b600246",
+        "4ba42f5edc4ed6a851713ba163ff96deb6d9b83e81cc6cec5cae73ba5ef4a630",
+        "bc0ef12f0a1586cddfe0e2b76695db8ee0bd16e7c0a931c1cadb126df1e2e053"
+      ]
+    },
+    "SPR-RAW-94169b1d0fcdada57b967fbab14206bab0ac39fe568e9cae91300586619796cc": {
+      "atlas": "SPR-94169b1d0fcdada57b967fbab14206bab0ac39fe568e9cae91300586619796cc.png",
+      "width": 48,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "2facf825c4e896aa466c40162d3327d421a36195d0b8d9ec24bc3deab8b8c104",
+      "raw_sha256": "94169b1d0fcdada57b967fbab14206bab0ac39fe568e9cae91300586619796cc",
+      "model_id": 1809,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18377",
+          "name": "1809-5.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18377",
+      "source_name": "1809-5.spr",
+      "source_names": [
+        "coneofcold shooting"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "d2ba147da8faebee3a1da053a200ea2a0991b627503dbbf7f34e1e4720ea7cc9",
+        "f12a8b9fb16458068101d5c5185c0c9ebaa21c8a9e5c0739f07f90e354a618ef",
+        "22bf6e3c2962b33fdeaf8d3c697f3b24530302ad5c92dfd745554e6f7a6bde86"
+      ]
+    },
+    "SPR-RAW-96bcedf936244343221e1786b233ece5f6d35782cfcca9d0a1f2618076a919cd": {
+      "atlas": "SPR-96bcedf936244343221e1786b233ece5f6d35782cfcca9d0a1f2618076a919cd.png",
+      "width": 144,
+      "height": 252,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        -48,
+        -60
+      ],
+      "sha256": "5da42224cfafaada4522717b972f14da08b714d953e1d2d10fce26812f00bf40",
+      "raw_sha256": "96bcedf936244343221e1786b233ece5f6d35782cfcca9d0a1f2618076a919cd",
+      "model_id": 170,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:27321",
+          "name": "170-5.SPR"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:27321",
+      "source_name": "170-5.SPR",
+      "source_names": [],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "fe5dc569a1d47b7cdaac683ad19a536fe35fea9fd67bb8a7b54318791f14a5f6",
+        "bd45fbc2a35f3ebd8f587b9d0a8cdecb59d08210978548831de8cd43edf9a450",
+        "b92238ea24a842ef09d8ab9adbb7106d2343cffb66adbce26267b0a03cdad1a9",
+        "c221136318d2e749ff707866a1d093f8079de3b22755373e02b29cfc5771c97a",
+        "e805029c881785acc7b97e489f10ee5d8ee7ee0b1bdba8075b56892087d72bad",
+        "6407a55bef30ac41328a76a09e6da617772483954d8ba137582b60e97428d978"
+      ]
+    },
+    "SPR-RAW-9a06c31d403b323d92e12190ce16c3ff03de87ae40d1176034867980387393dd": {
+      "atlas": "SPR-9a06c31d403b323d92e12190ce16c3ff03de87ae40d1176034867980387393dd.png",
+      "width": 48,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "760bdc261fb6e7894e97a09959a076bd83166c0e91e51b8738e072c0494ad385",
+      "raw_sha256": "9a06c31d403b323d92e12190ce16c3ff03de87ae40d1176034867980387393dd",
+      "model_id": 66,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:85897",
+          "name": "66-5.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:85897",
+      "source_name": "66-5.spr",
+      "source_names": [
+        "arrow"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "b76b4f719e7a6517e2dae5716c2072b40f23cbcca80f5fbf278c97c047aaacb8",
+        "2c8b7ff7176599e6225fb6c7a3fe38904ed10100c7ce9dc3ad4e8f33485d8a0f",
+        "3668f66fe368cf149c09186f5207e0ed3d31d5262d7fa5130d289f00c94c883f"
+      ]
+    },
+    "SPR-RAW-9f484757d69551b6cfb767f078855d76eaf8554d4025f17d21ee3c3e9e156cdd": {
+      "atlas": "SPR-9f484757d69551b6cfb767f078855d76eaf8554d4025f17d21ee3c3e9e156cdd.png",
+      "width": 96,
+      "height": 84,
+      "columns": 8,
+      "count": 22,
+      "offset": [
+        24,
+        -12
+      ],
+      "sha256": "258aab89a73076eb045df381ef6e9c690a5981fec0944131932a56f47f650ec6",
+      "raw_sha256": "9f484757d69551b6cfb767f078855d76eaf8554d4025f17d21ee3c3e9e156cdd",
+      "model_id": 3669,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:49910",
+          "name": "3669-4.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:49910",
+      "source_name": "3669-4.spr",
+      "source_names": [
+        "baranka basic summon e"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "8d8a35a4e41363c6fc485e5f6bf86c44a990936b4d474955f38bc57cf33fb5f2",
+        "c05b06df5fa52ad7dc653e7438337dd5550f7eeb89ef217a99ee7e1b03685e8f",
+        "5d61c9335cdf79f258c39cda06fa6db53b7b2267b863881a39a7ba2af708c36f",
+        "72213d2695e9b54b3c9540d49a6a910c92a22c9cea21456a25407bc4d897edb5",
+        "0031222756f8d5cb9210fc34ff611f5e39f9e5f986557f857ec01303edb58ce9",
+        "9038dd4dd028fece796c8797f4bbae3ac127b97f44cda296daeaa2a8b374696a",
+        "6489dec44613eac7dc831d140aae1661b27944567042de0166cf45ab5f301ffd",
+        "c801985b74880c23c3aa7bf5812937dafadaab4c9c7636e5c9531457a6faa6f4",
+        "dc77d4a5426dd739bd23b5f9da5eae07a7122856abf30b3937fb7f346637552a",
+        "c6d3c136b5cf1685cc4b7eb27f23528d25821b367bd130bf45e29b9dedf8656e",
+        "aacb71f58ab27c3419eb055d0ef0c251d32ea82207ed571e8995cc2db19beacd",
+        "6a7eb12b8bccd5d5e4efdeb46523a77daf8151689668da460ce92582ed67dd93",
+        "ceef1e808dfe460c877ff650aaf8b04022ec41cd3d8e63dc7dbf29966ed0238c",
+        "0c0342b50fd1e8d82b650490a4841ee0d2636d1c9c9d3b97376a667ec33ad8e2",
+        "5a48c9b738c1d5d0ec7c6472a6dd2a710cccdd1579fe03580d2b1f2fe96dd476",
+        "3dc187775ab6191f67af4a6164f726f7e19e7c72f3ca78907b20baeb6678e233",
+        "8bab54a8d277bc0b964bfe14b546570d25e1e74b9a445e71a2ac8d99e5715225",
+        "8a51d21d01fbff2da603d00d1e5002edb759d35c2db14d73827c10cf4876e407",
+        "43bfd3b4026ff79ca2310497b27b4d9196087c7e8a85d2c12b02c974dfaa846b",
+        "142c02ade57f63b4e314d05a9e728fc3e32efa2a2a20238b7fde2924ac2613fd",
+        "94b58926c71383b00b3b96d8077b8dcd5f9c4d2d7e810fa78e9558d03f541f2f",
+        "47a22accc6fb0aedaf4a5cf8014bdd569ead0efad399fdb8de134235e7c9bb10"
+      ]
+    },
+    "SPR-U-7ab4204aa92188c1ca01": {
+      "atlas": "SPR-9f5b8c89045cc92349e02ec50589f8dae21fcfa9de7081abcea008d406e3d4ac.png",
+      "width": 192,
+      "height": 168,
+      "columns": 8,
+      "count": 17,
+      "offset": [
+        -72,
+        -132
+      ],
+      "sha256": "093e197efd6dd420655f067948e40aa4260cadebea316dcd7d123fe6371e39d5",
+      "raw_sha256": "9f5b8c89045cc92349e02ec50589f8dae21fcfa9de7081abcea008d406e3d4ac",
+      "model_id": 2176,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:39048",
+          "name": "2176-0.spr"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:39048",
+      "source_name": "2176-0.spr",
+      "source_names": [],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "39e5420d345d0656ddebc1c758cae02ccd62e1506d1670993fe86a17e690955d",
+        "99d28f248b55bd3d34b6f367174e65d98f4d4f5799b1cd4188ae170eafe5c71e",
+        "47e86a508893fe50e646369684780688a17461ddd35cb78ccb412a5e9144bb64",
+        "5ac979c1ab7b0a73dc06cbfa2f943ea10fde1b19d74b67f388a2182e002c2948",
+        "787a13f559b6cf5bb0193bd52aea0c022457bcff34030609a1402348407d6d6e",
+        "2e176124881f4d29bd15aa507de56b2cfb3068b56ad6464f7b09fb2e687ea1b0",
+        "d47130b1973e970919f01847fea2841c9b7dc6ab66428cc1523fc007eb072fda",
+        "95a4d896f80a08ad85ee87311a625a5b7f4a0392d835ab6a38033f61b208dda5",
+        "c94113752fc79d43aff115173f9004c5ede770e14cb1b1912f899aac0468a96f",
+        "a498a2ac5afef6f6102f69883d27cbdb7afc831c99db788711bc8fac01d60efe",
+        "561392d9fe0a8afc5ad86a97ee1acb06e2f5da95a92a0cedead5c35c97170ac4",
+        "2b8965052d34b08ad8f69f7f1639cec89b75d549d5c36ea52c84d88171aa6785",
+        "516b35e60d51e55b916f8747de29e17b5a576a20142952076559d2e86cf61049",
+        "71cc084643f977e1c9d58143ccceebe75703c766141c0e98fabd10ce8d70fbd3",
+        "4f55f21b19d6b42cccc1100e4cbd28fb22454aa7a848ab146cbd93c1ed6f4621",
+        "f97b1ee8c74b85d445620608cf7d42b103f24aa6fb78e4daca010ddecff5d96e",
+        "6233cba4a871258c91104588787fd8af040de2575bc8af973b76bd6e18b6893d"
+      ]
+    },
+    "SPR-RAW-a2271e8e482c78c6961428400a907c3fd02a730141ce32c754ee7979ae01a4f1": {
+      "atlas": "SPR-a2271e8e482c78c6961428400a907c3fd02a730141ce32c754ee7979ae01a4f1.png",
+      "width": 96,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -48,
+        -48
+      ],
+      "sha256": "6bde40b988d4115273cd7d244c294cbfbef07202b2ddf1027e2c78989465d5d6",
+      "raw_sha256": "a2271e8e482c78c6961428400a907c3fd02a730141ce32c754ee7979ae01a4f1",
+      "model_id": 1809,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18376",
+          "name": "1809-4.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18376",
+      "source_name": "1809-4.spr",
+      "source_names": [
+        "coneofcold shooting"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "a830a5d3a1b39a1ed831a2f7de33bee02352eacf34f1b86ed16102911a237993",
+        "05b4587fd0aad649382da26cbcdab7c2791dd909a51b75bc8ea112f26cf3d1cf",
+        "15c2cfe76723fa4bfeb203156f08be92c1be1308e550cda4e67c1d735dfe9fc8"
+      ]
+    },
+    "SPR-U-8b11fc7b318a8f569f87": {
+      "atlas": "SPR-a5c0123330302e89f4404abcacce5d7b80c397fc67719d5891c78b1d63ae45f6.png",
+      "width": 144,
+      "height": 132,
+      "columns": 8,
+      "count": 16,
+      "offset": [
+        -48,
+        -96
+      ],
+      "sha256": "a95d55ac77e1234e1c2b02188c46d74758d05ad4c52ad2bf7e8635cc6d3eeccd",
+      "raw_sha256": "a5c0123330302e89f4404abcacce5d7b80c397fc67719d5891c78b1d63ae45f6",
+      "model_id": 6509,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite04.pak:13030",
+          "name": "6509-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite04.pak:13030",
+      "source_name": "6509-0.spr",
+      "source_names": [
+        "foe slayer"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "108316decc9d653541ca65df2c66ff8f55c8f510e609b29322178a6c229f472e",
+        "e0a3d5ee305c49b11e104a2dc49c9c8d064724806b4cd6a8c141132b1b39d6ba",
+        "24621287199ce9cff5b28e40690ad5be204589fec4eabb39dd161664f17ed0f5",
+        "db6578e9485731e6f812a0e0ac3855603cd39bfcefab01d41d9fa6427509c7c1",
+        "e5ac8f17534060b47f42e7f7723d4f49665b933d5ace99b33a50c7be37bd2c90",
+        "63758a0de792ba434f1a007cb51c746936370813e3de608fd0fbd8c52a19709c",
+        "896d9429781ed2a27a721439cdb2bbd24bd5c5d9e7287b741e5e30b161a63b7b",
+        "1ec98d88289b7bdd27add1871f6d063dc64712bda996a2e794aede143833cc87",
+        "ccf08999ef0c4fe5443b3fe90b9f0c822157e14c796e7a6a1af1373adb194854",
+        "84234ac3fc4baff66ebe1a52327abcdc82e3eb7de70142d885c4f68598f8281d",
+        "34e6daa0f4fb7086bf6a43bfa6e184ea714835230ce57c887d094fe7ae1525a2",
+        "4a4281303db03479ec966d599a181336976868ecfe59a8cf0e1d3fae7056189b",
+        "1119e638318f4af58c33674432421fe17d9c97f69d94518bd1f52b2033b09dd4",
+        "deaecc459d0af3dd5eb9d5934b30ef9e0594d596ef7a5578ad67341dfccb57dc",
+        "3cbfe6c38e799f4230bf7b54c3ef82aea1028886738c428cedd90560cefe5dee",
+        "1ec98d88289b7bdd27add1871f6d063dc64712bda996a2e794aede143833cc87"
+      ]
+    },
+    "SPR-U-2efc1653f816f586a840": {
+      "atlas": "SPR-a738ef0425d756770663b631029f69b6fbfb9de2ae7ba57fac83f98e6e7eb5a1.png",
+      "width": 96,
+      "height": 108,
+      "columns": 8,
+      "count": 9,
+      "offset": [
+        -24,
+        -72
+      ],
+      "sha256": "ae1cd3bba9941f24baa08eb9d8b522c49ad9d16394cfa6bf586fe988906697eb",
+      "raw_sha256": "a738ef0425d756770663b631029f69b6fbfb9de2ae7ba57fac83f98e6e7eb5a1",
+      "model_id": 2277,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:23324",
+          "name": "2277-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:23324",
+      "source_name": "2277-0.spr",
+      "source_names": [
+        "glowing aura"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "a4c75dbaa08a0e3f2dd70477e88ab2de666135ccd3d4ba3646c34e3d5d5a50f3",
+        "3ef114088753702359ca4f96eacff33be75d88d514e7af311b931a38d3b81d17",
+        "2146a622508302340e004c8780ffefd5a06f0de54094c46aa02beff3194e5570",
+        "24185f311bd0b2f821aa790ed20fc2e328c0bc6ee36f07d88ee79eaa01f67a3c",
+        "93a794a409c8bb01303e54068984d685b1c159c1d54df0765e0abb81aaae80a1",
+        "68f0db493c8e30d2baa129e96aac3a5431ae940c48d36830daacfd6ad597531b",
+        "9540e82ffe0958e64ba88816a0d1f6f104149fbc44e446cf0194e118e872dc43",
+        "bedba28e0ee9c439a5afe267ca91371fd8610acf12f9be1e0091ba391a9404ad",
+        "85fe4649850e03e1052d8c62f8f637090804d1f50a2df111b78fbb3863bd5bb4"
+      ]
+    },
+    "SPR-RAW-a81583a609b3aceaf1a87925e5116c67a5b2fc8cb72964275f98f3c6ff18278c": {
+      "atlas": "SPR-a81583a609b3aceaf1a87925e5116c67a5b2fc8cb72964275f98f3c6ff18278c.png",
+      "width": 96,
+      "height": 96,
+      "columns": 1,
+      "count": 1,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "d035a0ec6f506bf70a43a6d90f22a87da1968a8e2cb287639e0ae636ffe73bf8",
+      "raw_sha256": "a81583a609b3aceaf1a87925e5116c67a5b2fc8cb72964275f98f3c6ff18278c",
+      "model_id": 10710,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite00.pak:730",
+          "name": "10710-7.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite00.pak:730",
+      "source_name": "10710-7.spr",
+      "source_names": [
+        "counter barrier hit",
+        "counter barrier hit"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "e54f9b03efa4367c3517535c309989c1f66d8f9ea367f2c50472692121daadff"
+      ]
+    },
+    "SPR-U-acf3be57d4e42c0bb410": {
+      "atlas": "SPR-a8b2af332a232ea03eac21ea0374bf8d1e4fec73d1c28f6b26bde740df083ff7.png",
+      "width": 144,
+      "height": 144,
+      "columns": 8,
+      "count": 10,
+      "offset": [
+        -48,
+        -72
+      ],
+      "sha256": "3ec3c4a5575e7ba6358e67091ecdd31d78a48a5bc2d2ad7845986396cf8863a2",
+      "raw_sha256": "a8b2af332a232ea03eac21ea0374bf8d1e4fec73d1c28f6b26bde740df083ff7",
+      "model_id": 1810,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18385",
+          "name": "1810-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18385",
+      "source_name": "1810-0.spr",
+      "source_names": [
+        "coneofcold bomb"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "c1b19a03f868466b21177e15fb51adc5b6ff5444a04c3ccc36c9785330dfed3e",
+        "75c06528bb0d42ada1dc50ec07cc3a8c0cf455d89af6f220a932bd4f2051a45b",
+        "563c25abfd763a5b2d3ebe5e942e3c71e95e422ba1d8bfe6ccef5be42ae6ac18",
+        "bf9f10011f5e52c56b9d1a48282d896c83c45d141b84d62d8ee6f19e0009ddd1",
+        "ff0ac3dd4eeeaeb30c398f2c6f2a65df51dd43f3b934ecd680dd97e9556f46f5",
+        "a943dd05c98a2ef9e3c9481554c40ad89798024ea304282c48192e285351c99a",
+        "3e911c5525b82451c6f282709209f1be9eee3a690cb53ec205096e17187ea898",
+        "9158a4f72be48adaa5cb79da97c1a8d4893351c5d978429790a3d5463476659d",
+        "433eb2223e2bae5fe0000cbd4f7254fd7fd94934dc5d827bddd95aac090b4c0b",
+        "ddaa30b64768b8705914a43c5281f4efc45c7194b5f8097c316883754c215367"
+      ]
+    },
+    "SPR-RAW-ae8c20d43bc961d23e3a3c4bc9c750d43c6c69cb86ff53d3bb78f48cbadf5d22": {
+      "atlas": "SPR-ae8c20d43bc961d23e3a3c4bc9c750d43c6c69cb86ff53d3bb78f48cbadf5d22.png",
+      "width": 96,
+      "height": 96,
+      "columns": 8,
+      "count": 22,
+      "offset": [
+        48,
+        -36
+      ],
+      "sha256": "fd35cc57efaf5cbad28c3ca505ed6ec5fb4e7754f84b3f738bb98c2079205637",
+      "raw_sha256": "ae8c20d43bc961d23e3a3c4bc9c750d43c6c69cb86ff53d3bb78f48cbadf5d22",
+      "model_id": 3669,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:49909",
+          "name": "3669-3.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:49909",
+      "source_name": "3669-3.spr",
+      "source_names": [
+        "baranka basic summon e"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "3f9b0a77b1cf3c12813f83bf5dc61d61742635e224fa6bf62db96ae1bd12b990",
+        "64d5dbe04abb80f2fff31bbba142fb91ed0bc83927cce4d1e94cac8be198b04e",
+        "9083c8d640149ad85883f39b9a67f72907432f5d6fd63a5eb02548ad07c7d3be",
+        "219f63a0c21b38e1915caa57fb00bb53ed9a11173afea7933f0a9bd84617e491",
+        "7eca26f7d7c97e8111534cc811e3fe7597473480954f5876d00b8380a2642858",
+        "26d125021eb4ffbcfd0666df64c9bb36072757a2a38062670e68a52cdbc03d74",
+        "881b5229e19ef00b843d0b5ad140501ab9cbf195eb100b16f00e6c019957b2be",
+        "482563b5a0796055b81ddb91b306960eef66b63364d47e1aa54b894bdc91b536",
+        "83676e438ed60868f35448273379d267dbd5894f244fc2c9d585c644f4d77c92",
+        "1dfd20f92ecbde17306fade53b0876801a358b2553fded4c16365f44f0d07cc1",
+        "2c06dadfef54bcda0be2ba8c9dafb608f895e9d71623d27515ed9f573eca0e0f",
+        "d80988fe9377305d6122ddc7fe0b66374cc05e0e4cbf5063b862ee8fba0d1190",
+        "d55839e72b45b9f048e12eca04b899a8e93debd3fdc7725853d291dba2c15009",
+        "009672014f2c8c896cc9af9c9d7fb7e5de27c8774c173f7f2be3e20cec9a9a0c",
+        "4b183b59566a330e35a2e33fd15e27d7627f3a4501052d534b2db82ee568bd42",
+        "0b41b3785dd03d71b30c7273c371b9ee214f305ad824db300835a114d7c124df",
+        "a4bd235a0684b54d104211fc8769c255fc3ef813cff9bf3570c198119548dc15",
+        "7eb5fcb8fe397075b3ad86ab30595c36e8ef11502003d78b7da0e3b0d4104227",
+        "5dd79ede4a8d90a1c68704fb79b8b8f705b458565a5b396ac8b1bdc833906d5d",
+        "cf67c31e00c7844b826fabd98b2d416c0b41c25e35e16ce75c3ca007aaf29a9f",
+        "60a4a524f790578a64780af753b1beb356f0a70b90df2b1c9fe0d739598abef0",
+        "1c0273095382988333e2f2b5ae487cea460737ed9be65cbad9c5de537f95bf75"
+      ]
+    },
+    "SPR-U-8f9f7fdb5eae206fd8b3": {
+      "atlas": "SPR-af84af8c0ce0bd7459545c6e94e1676c9df2826c785802362848fdb0dd8abafc.png",
+      "width": 48,
+      "height": 72,
+      "columns": 8,
+      "count": 9,
+      "offset": [
+        0,
+        -96
+      ],
+      "sha256": "dee198d3688bdc7c2563f45ad2e8465617dec861dd8ffe97d9daa2221f763b41",
+      "raw_sha256": "af84af8c0ce0bd7459545c6e94e1676c9df2826c785802362848fdb0dd8abafc",
+      "model_id": 2942,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:34542",
+          "name": "2942-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:34542",
+      "source_name": "2942-0.spr",
+      "source_names": [
+        "enchant venom",
+        "venom bleed a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "0fc60c9e3ebd3b7a43552710d2578cb1525f63cbafade0ac74ed774023c18233",
+        "f4949d32f2fe1b616bfa285c5e3e79d61394c68205475633bf2b37b64f19bad4",
+        "494350fa1ef109029f36ece71038856cb79332552fab379a682235cfa0e7b94a",
+        "496df05416433bf11a39b4ac5c0e1e2ae0eef874e2fec57e18b707cafe98e385",
+        "bcb83743ca7d31397fd6c9bdf4ae7164d1995fa7b02c5786afa5beb3c4935edd",
+        "a0655c9261273ea84f4ad2cfe6a560c398a05d0f5b0a1987870a7467f4ba7898",
+        "abd60aaf73d4bd915ddbab14a16e766cae4da2974f867c455d328fd781b1bb0b",
+        "473ddfda2ef0982d4315f0f56d422cebfb9b1fc965b7ac49c3804edbde704be6",
+        "1a55a378e2246b6889b2c0cf2ea4e040f20c0c323e7b889c1da424a889dd859e"
+      ]
+    },
+    "SPR-U-9479ea4ba63ced88f4dd": {
+      "atlas": "SPR-af95c6f53dc105296c6880ac325799452b12df858ba9588d834802bb4b4c6c32.png",
+      "width": 120,
+      "height": 144,
+      "columns": 8,
+      "count": 10,
+      "offset": [
+        -24,
+        -96
+      ],
+      "sha256": "5b052c8f744cd8ae7ca3a627f5b31609550a7436b072204a4dcf81ff0990b420",
+      "raw_sha256": "af95c6f53dc105296c6880ac325799452b12df858ba9588d834802bb4b4c6c32",
+      "model_id": 219,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:22681",
+          "name": "219-0.SPR"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:22681",
+      "source_name": "219-0.SPR",
+      "source_names": [
+        "take water"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "19bb15abda8fce2527af9b8bf90c6be308db478b411862ac9e2fb5e9d86f9769",
+        "c72a2559e4a4c2b0e3c83cbb527439a07e098d657919d6856324b1badf72a5f0",
+        "e616c998e536b9961dd6a61b2e968d02436858cecc960cc0f7c090d9e86fd979",
+        "5ede83755c91aa4907b49122e5727ceec2145e99b1d11c91096707283236664c",
+        "d0d9604157e8d498507ed0fe69dff67199e162a8379f8ceb4d79a0e022470799",
+        "682c1f8eec3f9baec0b2c270399bd2dd70257c27760f1b3049d3db635b909356",
+        "39d35bb9e6689916e9e85f9307cbf12d9c6c40a14bf832d0b6b067c0953e6940",
+        "f013d4fc3577cfc5328817a529a4f060b61141dec7536abec6335e97d3dc8802",
+        "0bad79e7743e909285bdd1af02daa445337ed456daa8b6100ef518d65690fcf0",
+        "dbc75d6cbfdbed57ae8f94ac03b04dc15dedabe38bc43980fe158da29a9c158f"
+      ]
+    },
+    "SPR-RAW-b23ab3e957b60d1807f7a659c59d88613ec088fbb8ad643f33ff49d391697c93": {
+      "atlas": "SPR-b23ab3e957b60d1807f7a659c59d88613ec088fbb8ad643f33ff49d391697c93.png",
+      "width": 48,
+      "height": 96,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -60
+      ],
+      "sha256": "8a194dc740ddb156a9d04b188ca1b628e7bfb1dea1da24ba1fa44c5084ae1181",
+      "raw_sha256": "b23ab3e957b60d1807f7a659c59d88613ec088fbb8ad643f33ff49d391697c93",
+      "model_id": 66,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:85894",
+          "name": "66-2.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:85894",
+      "source_name": "66-2.spr",
+      "source_names": [
+        "arrow"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "3490497ae0d245fa9af664b39d26ce1e01b838614cf95fd5e20cfbf47d53b9d7",
+        "7348c85ea850deb7a492a02cbae7829c92025133cac4a7df1e46befdf1eb6a78",
+        "ce447bce08d868e2341dce9ee9e716b8de0eeb09e4057cee4878753d761bc2c7"
+      ]
+    },
+    "SPR-RAW-b2b6443b4cbd2e703fe1fd18c5bc96557051b6055a1ebd39e2d3cba9bbbf48ff": {
+      "atlas": "SPR-b2b6443b4cbd2e703fe1fd18c5bc96557051b6055a1ebd39e2d3cba9bbbf48ff.png",
+      "width": 72,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -48
+      ],
+      "sha256": "3d8584d7974ca40df54cd3758f0e1145da57aa966916733a28e49c7fe6b8bdc9",
+      "raw_sha256": "b2b6443b4cbd2e703fe1fd18c5bc96557051b6055a1ebd39e2d3cba9bbbf48ff",
+      "model_id": 66,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:85899",
+          "name": "66-7.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:85899",
+      "source_name": "66-7.spr",
+      "source_names": [
+        "arrow"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "5d7669810245efd72b58b28e02857ac83dd74095f9f90727981dc3f9e38f1c6e",
+        "665854e712115cebbc4e8ab284554359c28f3117cedb99d59380e6cc6fbc044e",
+        "eb9a15fab4f2e8de5fba194b176d377c505e85ab9012a05615d986c358b2f27d"
+      ]
+    },
+    "SPR-U-a666f5d7c21ae9419d2a": {
+      "atlas": "SPR-b3441672c33e5da614ef9bcb069e74ff274a914dd82e841e892cc4a64a705910.png",
+      "width": 96,
+      "height": 84,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -72
+      ],
+      "sha256": "4243b5e9d68bcb8ed3351aae7ccdb1d58658f7c3e8c34213dd77e626ecd2adeb",
+      "raw_sha256": "b3441672c33e5da614ef9bcb069e74ff274a914dd82e841e892cc4a64a705910",
+      "model_id": 220,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:22709",
+          "name": "220-0.SPR"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:22709",
+      "source_name": "220-0.SPR",
+      "source_names": [
+        "shield hit"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "956b8987cefd8d2d4aaad8f97cab517634b259b311004fba39e253f40d8d7601",
+        "2ff52ab2d9e9e9f763ad004f8b894c5c74074b0a9526cd97c3e8c48e47f8afe3",
+        "596b0fc84ea9119fddb2105b85f23350add1a85b047e3cec6bc3d1983d81b4b6"
+      ]
+    },
+    "SPR-RAW-b348eb3ef8f2e53f56d8d17116d6e66413c37526d354853e8f0bda159552a089": {
+      "atlas": "SPR-b348eb3ef8f2e53f56d8d17116d6e66413c37526d354853e8f0bda159552a089.png",
+      "width": 48,
+      "height": 48,
+      "columns": 4,
+      "count": 4,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "d905d20d3790dca45df548f0166f5ac21e41c22c65fa693797ba4dd6ae3aff27",
+      "raw_sha256": "b348eb3ef8f2e53f56d8d17116d6e66413c37526d354853e8f0bda159552a089",
+      "model_id": 167,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:16778",
+          "name": "167-1.SPR"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:16778",
+      "source_name": "167-1.SPR",
+      "source_names": [
+        "energy bolt"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "c4b81429a45996e16f6176542e3d6fd9ddd1a10b56ae51acb2638ed50818fd1c",
+        "f9ad65e17c6fc0eb9b3f373622f6249e8cb29081e7b7ed94b8324b87bd3f6f9c",
+        "99328748d07b6f8575f2f06eaddf0c9c24e451af920ffe7b43439e98ee92857b",
+        "a41c53580cd819b5fb1a635d8a590dc3bc5c3a76105613a4319fee36ea456088"
+      ]
+    },
+    "SPR-RAW-b6610d3121eeffd2ac2f0e80aad45d229914029b203e79fd1c2ac2660903c227": {
+      "atlas": "SPR-b6610d3121eeffd2ac2f0e80aad45d229914029b203e79fd1c2ac2660903c227.png",
+      "width": 120,
+      "height": 60,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -48,
+        -36
+      ],
+      "sha256": "2276477d2bed0fbe9c75d45702d2fbdc14de18c643a4cd30281f981475f35080",
+      "raw_sha256": "b6610d3121eeffd2ac2f0e80aad45d229914029b203e79fd1c2ac2660903c227",
+      "model_id": 1809,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18375",
+          "name": "1809-3.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18375",
+      "source_name": "1809-3.spr",
+      "source_names": [
+        "coneofcold shooting"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "a7b8569576fc89e008a6894432441286a3d045f66f9dadcfe235ccb4a895187c",
+        "3feee008f6bfc29ab24e208b052998a7d22ec3ef1cc9c671505c0b5d37615e11",
+        "fd0c9308352d5cc0bee647e3f5172ab482329ada433980e7234e38a8598c356c"
+      ]
+    },
+    "SPR-U-4d0b0af69fecbe0b3432": {
+      "atlas": "SPR-b7ca4fe85254240dd0b050650d7d1462b87f95fe5d0d377e3f86fdbbc6e1ef90.png",
+      "width": 96,
+      "height": 108,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        -24,
+        -48
+      ],
+      "sha256": "053116f0a7a77e9447b0147af954cff08e0097880479f3516262be7c3baccc1d",
+      "raw_sha256": "b7ca4fe85254240dd0b050650d7d1462b87f95fe5d0d377e3f86fdbbc6e1ef90",
+      "model_id": 4434,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:60771",
+          "name": "4434-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:60771",
+      "source_name": "4434-0.spr",
+      "source_names": [
+        "shock sturn"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "7bc2e3a66be154befef21a91a6fad85db1263898b0fb66a90c12de285c76e411",
+        "7439263b922296221c6303da977292d2cfc75ce42cd833b721d20081efe4fff3",
+        "29520514ab320cc603c2f429a50ae2f06af303423b6656c600bdb05f327ccd3b",
+        "1d8f3df3ba501d9df656a1e638aa2bb213102e816e2d4bf6587fdd328a9c3882",
+        "6ef6ca12bcefa298b160bb591896126c62cae5081729eefd2c077ba7ee99e311",
+        "3da6e87b6a3612a211db5dac2579ec3023a31917f766c1f266749991023a6434"
+      ]
+    },
+    "SPR-U-ab9042a8eacce90ed2ea": {
+      "atlas": "SPR-b8bedd86acbb49ed042688190d7e8f218ffa5de16fb14a7740fd2d4414208a6f.png",
+      "width": 120,
+      "height": 120,
+      "columns": 8,
+      "count": 10,
+      "offset": [
+        0,
+        -72
+      ],
+      "sha256": "1467c91153f51873eba690617230c2c51915351b8f04e8fa1c5eb18b85068537",
+      "raw_sha256": "b8bedd86acbb49ed042688190d7e8f218ffa5de16fb14a7740fd2d4414208a6f",
+      "model_id": 6512,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite14.pak:14088",
+          "name": "6512-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite14.pak:14088",
+      "source_name": "6512-0.spr",
+      "source_names": [
+        "thunder grab object"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "c72274a22cba2dcef62e0f62834446ee39b0cd95ad0faa27a89b3b49f48aa390",
+        "2f1ac139189e8e99693e19ccc934a2354b15e84fc7499c6450e79be79b82a4b5",
+        "e7a98a55acb274fb827e8777787818574c8f9166e8c46b205abfa56abf612ffb",
+        "818db2272bfaf8833c663db450c3f8c66339f49ba7404c51112bc5984a0eab55",
+        "55a2f2df7669d4858abb15074881e029524d509046b4935239d79f650de1e9e0",
+        "ba3191d106b75543561617060314caf8ebe479a1b276322bab81943e1392b345",
+        "341c7c6f9c276ec485c38d210506150d951f97cdf879fb0251fa0c4fc5749273",
+        "77d2a30cf1fa77b9269cf802863088350fd89ee0132a5d01b92997698ae58327",
+        "4a5ac38a99a89e108601f8bd62ec31f155b62c9fa5bec849e76240f55d5a82a4",
+        "2ca1de3f66309607857d7509f25b02ff300702bcbc738a850cb10f6983ea7c82"
+      ]
+    },
+    "SPR-U-2aa8d083f0dcb049e988": {
+      "atlas": "SPR-b90c450146296e77043090948b11075c0731fc7b15093734dc37935a114d975b.png",
+      "width": 144,
+      "height": 192,
+      "columns": 8,
+      "count": 21,
+      "offset": [
+        -48,
+        -108
+      ],
+      "sha256": "1da4d8f09b2a02dd97c850b09a1a1c27f2e21f52fb80eedf4a9e3747f0913ffa",
+      "raw_sha256": "b90c450146296e77043090948b11075c0731fc7b15093734dc37935a114d975b",
+      "model_id": 2251,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:22870",
+          "name": "2251-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:22870",
+      "source_name": "2251-0.spr",
+      "source_names": [
+        "earth bind e",
+        "earth bind a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "7c98d2da7afa2bdee9765910c81cb588e14781b77538fb54df84f7e7039e4348",
+        "d4c4ff7ffd8c402911cd82a4d679a4b49e6e5b341dc18d9eec14fc6e90f42275",
+        "55ac949faea30ddfdb80b3683d3e1f9fdcb3ccf96fe1c47e97d482619f8f4d03",
+        "de38033fc4d37dd6c1aea2d114ed76bd086c9588b6cb52d54f2e396c950de251",
+        "31063df502652c6539736b24e9250f452facb5636d7995b67596bc4c0561e5ba",
+        "5bdb51bed8fb65ba4e3f077b80af7274a33ed8c411a1441b0ee99285671bf4b7",
+        "142be2f4bb7f034fa2cbf07eb800a44eb30599b03c55acefa3c0873d6b406bd6",
+        "f308eb61804874785b088eca8a844f4124b5ad2327bee0ab5fd4b520a154d544",
+        "6ae73f4fed8fc575447e1b55456e43339b7b49dbe212547ba4bf4fc2499bb638",
+        "509d3d80f8c063d2b3035d3e58a01fb706b75c3a0c53b5f1d15cd2ee541f03be",
+        "93e724e0b8db9fc767d33d88883be15e5fcfec3a60822ce25e511f153753c0f6",
+        "805332f80a8efe9732ed8b5574b922ebeb29d162aba6a8957a1964bdfbc1231f",
+        "c3137974fddb9d227fcd1dc44eb1747cdf1d1858764ff2539072e6b2a9ccba10",
+        "7c4bb23e40ba270ce5e4bbedf45978a2cc59cce773e1cffc028c7ef5a46e7342",
+        "d70fde679b4a4a5fc0aae4be50bea3de9d8e67b16ad6e5c6e1b14e571ef07018",
+        "78d4b848e3cf787755e50182307b11a42e2e7c7fb3fcdc33ca14111035851043",
+        "e9a7964e6d2cb7641ced4884d8a09341e15307c6e992b167c35363727d03b290",
+        "c99bd8d18d531e6bb53b6c3e9a4570064c7a1a44e2770633ef594a49484f5216",
+        "8945c2755f1cf28e32fc05c41113b5313c857f3059bc51c9f82f299c6144ac6e",
+        "adee2c567a80044105ad2439426872702de943e6671342d7d3f7270a28b0db59",
+        "830247c3942ae04630b83a7d749cea9070bb47d4fcdd5ebe1acc70c30459a835"
+      ]
+    },
+    "SPR-U-50e333128753eacd5365": {
+      "atlas": "SPR-baa7e02ad05e518c1fd59ed388dcdbd98a97558ca58182fc242bd9bd1080a3b5.png",
+      "width": 72,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -48
+      ],
+      "sha256": "74c6def05ca9769912021b35f90e7b9697d6e536532974cfd2509d25c6c3e80d",
+      "raw_sha256": "baa7e02ad05e518c1fd59ed388dcdbd98a97558ca58182fc242bd9bd1080a3b5",
+      "model_id": 66,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:85895",
+          "name": "66-3.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:85895",
+      "source_name": "66-3.spr",
+      "source_names": [
+        "arrow"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "4153a656f7e9654192ba8f0ddd6ce8c01000dbf8a29947132427dc7823b2438c",
+        "1365d692eaccb977ecca655c296ff747847e3439f577fbffd7cf7fd3a6b2a8d2",
+        "967c980128319a30b697b0b4bb08fa4076d4be1c4be0c6a71bfd5e1474e1b793"
+      ]
+    },
+    "SPR-U-6beacba806be1ed0491c": {
+      "atlas": "SPR-c2d5b57b500ac2f175bb9a2e22ed7d2c67a439fd10f9e1c6c482d0afaacedd26.png",
+      "width": 168,
+      "height": 144,
+      "columns": 7,
+      "count": 7,
+      "offset": [
+        -48,
+        -192
+      ],
+      "sha256": "dbf5410952b4aa7c97e6f9b2ed5b50ece7159728e565d4979da74206817f9b42",
+      "raw_sha256": "c2d5b57b500ac2f175bb9a2e22ed7d2c67a439fd10f9e1c6c482d0afaacedd26",
+      "model_id": 4394,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite04.pak:11748",
+          "name": "4394-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite04.pak:11748",
+      "source_name": "4394-0.spr",
+      "source_names": [
+        "triple arrow"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "61a8099ba814d0d6a0403631c92473d259c517b922eaf8c511d1ba0a40924e41",
+        "bcb957ab87e4b9ba1e956db97c77bf8e37cb7c5f6243fd7f469fb4c652f52922",
+        "8c84612561b04c00f7848fc4f0d51600afc563d75b3438b734db07ad630bd2bf",
+        "e5a55ca1f04994dcac8f7119a3f0da4f223808c984f30da1707169641c03b248",
+        "9d21e6ad926f084000b7222e144a44097179d516927fc70aa3786d078fd8e57f",
+        "63ca9731941e4dd2949dd684cf33d42ae9bbfec621adbbfee19bb784be3be857",
+        "f205ea1f46454b1a52aab5afccc82a4302f6ae71d7780c6ea3f51f158aa3af62"
+      ]
+    },
+    "SPR-U-97ae8b3b8921635166c1": {
+      "atlas": "SPR-c35c9896b6885be475242fb0fa4a25a23199b5da043103d7cc626302dc7911ce.png",
+      "width": 240,
+      "height": 240,
+      "columns": 8,
+      "count": 20,
+      "offset": [
+        -96,
+        -192
+      ],
+      "sha256": "51e818f8e6c35abecca55ce2a71465317b7fa6475a4fe179c57b4c9306d29ba9",
+      "raw_sha256": "c35c9896b6885be475242fb0fa4a25a23199b5da043103d7cc626302dc7911ce",
+      "model_id": 758,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:87912",
+          "name": "758-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:87912",
+      "source_name": "758-0.spr",
+      "source_names": [
+        "Tornado"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "be113a60cea1321d80a512241c36e5f0f299ade668a345c49083775d51e1e69f",
+        "461fd88bc643bfa011e6cd245f806cdc1caf5de7f3104bb4707b14fb520fd4e3",
+        "9770535de7b3d04f6fa5858c41e2fdef73c90830b26403420f9806d11ddc2b6f",
+        "e801d3a254e0cba7078098b72d4c2165b2db66b0be74aa445d5a24cbb3cb60ca",
+        "ae8ea3b4d12f3354bae158ab21487b88e7dc28f73e376c921459c10810b1a533",
+        "bb2a35e3da787453cb38181cefec753cce3b7fc31d647a88e31c51adf5552800",
+        "4e77cb4b8b0b4075220151785cbaa9f8c084c79a0adc78f112f5099ae6a304eb",
+        "4a681014920e0dbd149511e869e8e2e9fba5aa7a0073f43050c6b679be77217a",
+        "50e0e977b73434ebea35478caa7e631734db197b8e43bf0a2757b41d3f84121d",
+        "50c49e5f6ecfb6ede62f5fd945001133aff3db3c4033359bb3e8b24b6723af7a",
+        "0c189598840681a2bee0aba6ea40e49bb6085ab4b4b2fb07f74919062c5856a8",
+        "8be83cdc5b0ef06892429ca534997dc3e364d500ecd81671f66a8022304a567f",
+        "537d73e544a7ca49d6e7737f1e0fda1e18b8bac07a16556bde599797f79da803",
+        "61af0595749b00993edeb1b1860be4311da58e6d3749290f4629efd5c3160681",
+        "195a2deee71e2c5fd7fd188bfa2aca63f352701a24971b6072cc3241295e2413",
+        "91c43a5ba688edfe66c05c7ff11244f2150659898c750a1a37398f7af1dab171",
+        "62021ed5e178b1c385f94ddd0c8860a752f3166f4c6908f8d89f203aab5f8298",
+        "f730dc706b67677297517d396a441f0d13d51a300f0519753f760f582be15e09",
+        "7a18fd69adc7940b4e90901e76f36b8c40626694628d63e90bd04de0a158cad0",
+        "a9698b9da91b5ddac784d1e42d249b815d598d7b05431ceb2f73fa526e4f56d9"
+      ]
+    },
+    "SPR-RAW-c3f7b33b641cd9fdff854d80ea915e8f9540d4b4b50cbbaa09d9cf0869eaa104": {
+      "atlas": "SPR-c3f7b33b641cd9fdff854d80ea915e8f9540d4b4b50cbbaa09d9cf0869eaa104.png",
+      "width": 216,
+      "height": 192,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        0,
+        -72
+      ],
+      "sha256": "67a380b2cd79b7440ab4afc553ffc264675906121d3366379f3e6c69087555e4",
+      "raw_sha256": "c3f7b33b641cd9fdff854d80ea915e8f9540d4b4b50cbbaa09d9cf0869eaa104",
+      "model_id": 170,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:27320",
+          "name": "170-4.SPR"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:27320",
+      "source_name": "170-4.SPR",
+      "source_names": [],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "06e0d892e19aac21c8e91569c28e4e8f8c16aaeb871e5fa3018290a6fdf3d8b7",
+        "77845b5d7239964a884f2c4a0bf0a6571a220a8387ce19555ca30b58b6ac5f99",
+        "7f7f60d09e2a5d722478e550a154604681914e8b6058e67d5a9dc4b7833ff23b",
+        "0190e6036d646cae57f1d071f64c6eaa9f709ae5d8c7d48a41faebb8ee8ffed6",
+        "df399cf2a21865d53e1ad9d7e7ec0d03ab8e2ce238d4a5b3e81ee159b81947e6",
+        "7fc7333718c756785be1a62a2ccc760bdb56929654eda4d2abcba6c5763b42b4"
+      ]
+    },
+    "SPR-RAW-c86ffaa3b4b7bce3c4d72d6dd5cb7a2f67832007db17fbd36eb97c59907bd6f3": {
+      "atlas": "SPR-c86ffaa3b4b7bce3c4d72d6dd5cb7a2f67832007db17fbd36eb97c59907bd6f3.png",
+      "width": 48,
+      "height": 72,
+      "columns": 1,
+      "count": 1,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "7c41d872d4e803b7d2a4ce6e8664c03e413da82ff001ea8912cef963c78223e4",
+      "raw_sha256": "c86ffaa3b4b7bce3c4d72d6dd5cb7a2f67832007db17fbd36eb97c59907bd6f3",
+      "model_id": 10710,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite11.pak:499",
+          "name": "10710-2.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite11.pak:499",
+      "source_name": "10710-2.spr",
+      "source_names": [
+        "counter barrier hit",
+        "counter barrier hit"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "b7769cd19d3b15916bfa395ed7c3adc14c29bd184c72d7392b5a4b10c410f4cd"
+      ]
+    },
+    "SPR-U-3469541a1c33bcd820d6": {
+      "atlas": "SPR-c95056e4df3b4872b007a8223248cfff577cebdf6e1320c3c8dd01e82e74eae6.png",
+      "width": 96,
+      "height": 60,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "a8c4c42856c50e45b5863410ca571371808822fd5c7c7b7e4d88a0c8e35744be",
+      "raw_sha256": "c95056e4df3b4872b007a8223248cfff577cebdf6e1320c3c8dd01e82e74eae6",
+      "model_id": 11762,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite01.pak:1286",
+          "name": "11762-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite01.pak:1286",
+      "source_name": "11762-0.spr",
+      "source_names": [
+        "renewal triple arrow fly sc"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "ed9a4377c3b497c70aa668bfb8fcb9804baeb0a7b10bef375279364fe678fba5",
+        "c5887ba93ae55867837e90343b00a56050563e34732770a9f74c74d5ad092d1f",
+        "ad23c85871079e10bd75e446141fbea7be5d6e1712984a1809aaa1f9d2ef0a84"
+      ]
+    },
+    "SPR-U-94206c9552a81fae8955": {
+      "atlas": "SPR-c98f445121d480c0b7adf24ad6d48a8ccf7842f71ac78e14cab41e9983eea501.png",
+      "width": 240,
+      "height": 120,
+      "columns": 8,
+      "count": 16,
+      "offset": [
+        -96,
+        -48
+      ],
+      "sha256": "55eae188e4b637bfadfc863ca18b7a2e34a5b338afe58859239a628b71233964",
+      "raw_sha256": "c98f445121d480c0b7adf24ad6d48a8ccf7842f71ac78e14cab41e9983eea501",
+      "model_id": 1812,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18389",
+          "name": "1812-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18389",
+      "source_name": "1812-0.spr",
+      "source_names": [
+        "earthquake",
+        "earthquake a",
+        "earthquake b"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "11a77d3cb90a766b789ca84d463faef14d741f4299a980f726f7587102446649",
+        "681a830b92c496bef136d9868450d432e2c91c078076849faa6170fda5828e38",
+        "4537ed1ff9241e279b3e9997b1da4022fb8e213ac0d4968ac23e750c1cc273c8",
+        "8b6a070e634da5f322dfc78b3adf2d7a8c7606dc1fabc8faeca31ff536c73092",
+        "c7ce2206e6e04d18e6863f7bb876798d2f507898dc6d7b438fc8d5dc87884dec",
+        "17f55f08e33b6aa601bf025e1fd8f788f509f9e73c488e43bdb300d9f4688682",
+        "9134ae0fe6f4a17326acf76e38f52f19ccdeb7d3cd9a3219b7ea70d8c831e43a",
+        "6ffed5f2667dd02c9c8350cb7fc27c54ec744098fa7db5dcb9825ca686f1ee52",
+        "470c24a5ceff5ca33fc3220886b993622d05932ae56a092eec6db1ed5da3d053",
+        "7aa2713b9240bae0411eb97692cfb6d3fe72922b82de2dacf9e6f332063e2eb3",
+        "00444a02409a98d5f5da4274b962008fedfa827f61cd38d82c21e3e7d433ae42",
+        "608267f0bfedb61cec2545e9b00eb26016958cc524c055bb8aaa106d8de1461b",
+        "7f379283420a47187c4ac80e68ca061e89732f696a6032c017323c200dcb7578",
+        "e77cd2e8b6467d07f655c289082b08f100e581ac1a2cf02cfcce08d776bd6604",
+        "318181709ce1be1af60f8eac8c8a25e2c2c0becd7bc88ab3f2db5d4aa2dcae7c",
+        "d8b443032200e143b1c49820b6d78c32d519553a3f63a38f48e8bc31da084f0a"
+      ]
+    },
+    "SPR-RAW-cb632677dfd8913ddb4ad9cda2f4400678bf9ede8da9db6843cea5461b3b3c9a": {
+      "atlas": "SPR-cb632677dfd8913ddb4ad9cda2f4400678bf9ede8da9db6843cea5461b3b3c9a.png",
+      "width": 48,
+      "height": 96,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "65a448e2cbb07de2a109903c856d43f727c7cdc59739def3a7637743237f56b4",
+      "raw_sha256": "cb632677dfd8913ddb4ad9cda2f4400678bf9ede8da9db6843cea5461b3b3c9a",
+      "model_id": 1809,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18373",
+          "name": "1809-1.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18373",
+      "source_name": "1809-1.spr",
+      "source_names": [
+        "coneofcold shooting"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "20d7f3c73cc12beb0f4e4713bcee8ad0932297c43a5ca1eccc9f5c3af8c6e7b1",
+        "5ca7931d1af75670d9c60c123e7bb66b863a297facd61de2794148f86ea103ba",
+        "389eff71dcc6a8165d62a08c160aa9f02eecbcbf41cb1c779aabd3571780e69f"
+      ]
+    },
+    "SPR-U-2c79867de24798ae66a2": {
+      "atlas": "SPR-cddbec0ca946d10273a3926788ffe376c06c9476c987831734395df04925e507.png",
+      "width": 120,
+      "height": 96,
+      "columns": 8,
+      "count": 17,
+      "offset": [
+        -48,
+        -60
+      ],
+      "sha256": "603cb70ea533043745af26feeace0342dcacb801bb2a5847e8a822a1ddd61b00",
+      "raw_sha256": "cddbec0ca946d10273a3926788ffe376c06c9476c987831734395df04925e507",
+      "model_id": 1805,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18357",
+          "name": "1805-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18357",
+      "source_name": "1805-0.spr",
+      "source_names": [
+        "earthjail"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "9a2b123ac1ffb753f7be293cc05740831b54d4b1eee814bc7803ae39f592c16a",
+        "c653a151eddec93ded50cbf275f4649a718f15e93e53ae4f636f9f370d308513",
+        "710c53877f0969360b3acbbcdb64f90ff303374654b259baa145e004331dfbf7",
+        "0b6c2b8570748ae40ca90662f8d0d51c3a2538375a396efe4f460c617ca7933c",
+        "09471560069d15f24fd9b4708f074cc18a419704b1ef2fc4f5f24ab7291a3cbe",
+        "0fbf53c54976d55dd8bc6d99e9afc2eaf20d3e8d3024fc3f6fae7f9c2b076e26",
+        "66b4e9ca88c55773f1c938921ed65a1024afc94adc15a077414d1f8fafdb6e27",
+        "c389336e2572b677597236fe695d49d3ef803f44e80a6bdbd78e7845072967c8",
+        "3e3d713acdceaf1a3fe02ee7b0aa42154e5f6283c2d2b27dd72f34b9b2580b73",
+        "6a8fe8fbabb3739b76c13663225dac79c1e58e306df09016b5ab5fc8c8b91d4c",
+        "494e2ef7f1454cdd265353c825259fe636882b235a689e10177cd60b606c691c",
+        "da29f129d138028f4fd5d4b0df173205e517aaea428ead6cdefbd5eb1d17f5b7",
+        "ecbcebfb6256cf3b21f6ade93867740e97ac1058d54076b9b3f560a40912a102",
+        "bff8299ec5668c458db8f2d5496d3e5df228dc958f10d021f0edc5098cce4e1b",
+        "92336697041ce592c20d5c3ac3c3d07b46678c314cd3a35b850f28b0c9fe7b8e",
+        "7e36bec0af80ff78cd2cba3643b862a6c0e3ec56e52acabe92b246dcd6ad4816",
+        "7e36bec0af80ff78cd2cba3643b862a6c0e3ec56e52acabe92b246dcd6ad4816"
+      ]
+    },
+    "SPR-U-032f3e68eac24934a901": {
+      "atlas": "SPR-d4b1c6594357ff6e04d0d77107ee0d14bec21a914509933aec8d4dadaed27b7b.png",
+      "width": 120,
+      "height": 156,
+      "columns": 8,
+      "count": 8,
+      "offset": [
+        -48,
+        -132
+      ],
+      "sha256": "4ec535582f4201985dedeb0386cc16e6e58d963ccfa01f46c480f62b26587a64",
+      "raw_sha256": "d4b1c6594357ff6e04d0d77107ee0d14bec21a914509933aec8d4dadaed27b7b",
+      "model_id": 2175,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source2:Sprite.pak:39046",
+          "name": "2175-0.spr"
+        }
+      ],
+      "source_record_key": "source2:Sprite.pak:39046",
+      "source_name": "2175-0.spr",
+      "source_names": [],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "ba432deac22de5d3843a38fd73a6500b459a63c12a12c45c699b668c21d539cd",
+        "b5d21bb46654b9e94bad92670239972f9ba6800b8bd9961d9efd02f93b6874c5",
+        "74f08d545ff1beb33a39558d390d4a0db741a04136cec58fe57513ad72694872",
+        "f2e149b1abc854a96918a65ea49abf29de7895d5f1b37d9a9bbf11f6dad9836c",
+        "450f1e01589b1a71fbf22b2541299f24f157cffa66a0790cdde34cf4e11ec88b",
+        "b3db5ca9e35bb5c790085cc51234312e4bedd61603bc1d7c84bb7e562862ab3d",
+        "fffaecdad6d8fb898d6d29a6a76d1d0379ab52bb548eb25799d12192bbe91e5d",
+        "6ecc426f9815dc81ae38afc19947759965e21e54ce35bb3d05f7dd0cf5d63cbe"
+      ]
+    },
+    "SPR-RAW-d99e9f6a217f3cf4d249bef4c4c4901c2945d70964745b220d2d23385be93891": {
+      "atlas": "SPR-d99e9f6a217f3cf4d249bef4c4c4901c2945d70964745b220d2d23385be93891.png",
+      "width": 96,
+      "height": 72,
+      "columns": 4,
+      "count": 4,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "28629d1d43e51914a0c15a65117a174b60370de9bbcbdfebf5464da6067ae049",
+      "raw_sha256": "d99e9f6a217f3cf4d249bef4c4c4901c2945d70964745b220d2d23385be93891",
+      "model_id": 167,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:16780",
+          "name": "167-3.SPR"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:16780",
+      "source_name": "167-3.SPR",
+      "source_names": [
+        "energy bolt"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "b61be5133bd7defe9ed3f4e79b41ee952f9bdb2d2f9c1000da618dfd32ffb752",
+        "2ec63104fb898f3dd6f208c8888915c30ffe6cf38d5a12441b4ff8e12d8583ea",
+        "dd46bad001e9b1e5a92e1408137b98aacbb31548cbd28c8af34fe80a79561692",
+        "4e5045f1dcefbe6c92d498f50826ce4eaa8b1acf0ef93c92829da3f89f445646"
+      ]
+    },
+    "SPR-U-81e5eafdd92ba47be327": {
+      "atlas": "SPR-d9efb0374c1285993ca6b9731b1dde4dfdb0135859013cf7433716d8448be80e.png",
+      "width": 48,
+      "height": 72,
+      "columns": 8,
+      "count": 13,
+      "offset": [
+        0,
+        -96
+      ],
+      "sha256": "4bf71e936e316028dcd72977c3f522c9505d0758a55ed3a8da1fa351c607299c",
+      "raw_sha256": "d9efb0374c1285993ca6b9731b1dde4dfdb0135859013cf7433716d8448be80e",
+      "model_id": 2170,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:22637",
+          "name": "2170-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:22637",
+      "source_name": "2170-0.spr",
+      "source_names": [
+        "decrease weight e",
+        "dawn of swan a",
+        "bag of elf a",
+        "decrease weight a",
+        "shadow bag a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "c7ad4fdcd3fef3b6f2847ddc7cdb2f1434c46941c69276cbaebe62604ddac87d",
+        "cec760c816bd10e276faf57f783b625e94540c781cb2bf777f6593f717b3763d",
+        "340a7dc9a81c034252d27cd37b5754aceb1c2f08ce2e44216b0960c0d3538a66",
+        "9b50a40d3628c2324703be95e3059837792633d86a77dcf794fdabce3ec8a24a",
+        "716825e4eae321e88375519588a60502d37ef718b1fb86d74cec8bcb46b5adcc",
+        "ac6ede8911597fd46fa37590658a28a394cf3211e13c51cb2c1da95fee5d7c9e",
+        "d732fc2960cb3f5c0cbd9b37cf427e95aefa84db92496cbbf3efba470d0ab16b",
+        "45c49da13f8c039c7bb2cef08ed6531ff17f90cb90f6be4af604fda28121e533",
+        "184e59c67086944698332c2d4f69f4bbeb42d13aa496c8905277bcf60127bb37",
+        "78e5f46d637c4d9a4cca445ecc683719134f7823ed74fdcdcf85e9f818c3f3c0",
+        "a1f31b381b27062f8163b7dcbc5ec10fe4e82ab2f465fb72a35a9c754e4b115c",
+        "206b71083f948d20136368f1449c1d609abcd0121b86c0463b01a55f79a974c5",
+        "dc0d74ced1ed5682b23809a2d531086e5bbc04eebf5e5fa03779df41f63ab415"
+      ]
+    },
+    "SPR-U-9ba5139bd0f9a14c0e00": {
+      "atlas": "SPR-da9c995d021ba622a737c0d75fb7d8783548420ce8040ec6bdb36e5a816043f7.png",
+      "width": 96,
+      "height": 144,
+      "columns": 8,
+      "count": 12,
+      "offset": [
+        -24,
+        -96
+      ],
+      "sha256": "d158102c8e40e63b3dae24223e691d95049bed853c22ee84ab9d6d7c1d20115f",
+      "raw_sha256": "da9c995d021ba622a737c0d75fb7d8783548420ce8040ec6bdb36e5a816043f7",
+      "model_id": 6523,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite00.pak:13699",
+          "name": "6523-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite00.pak:13699",
+      "source_name": "6523-0.spr",
+      "source_names": [
+        "bloodlust multi",
+        "bloodlust multi a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "42ddd86b88e8c12a7a2fd4cbe22596b4ac9f30cecf1f463473443342f0ab9beb",
+        "39ddb1b6d701be52e15b723439f74a34336c1ba655834846c50394877d4923b7",
+        "46b7598a30031a405f0310dc6a2a8d506c5fee912712cff8d1aeda2575d70a85",
+        "878b14de39392dad16be0eec50bd681d438cf32648316d6a93fbb985ffa280d1",
+        "3ca8f5175fc0647d37f01c25d27abed0082c56d261458e3e0f8dd35c60a029c4",
+        "25fa51ab312a91128dedc92608761b8b45d494343f02835d9ef3a7add0d2ff5e",
+        "0a0a173dca6a3c7a80d53f10006a5e2b8b07d4aab8547913af6320948effcd6c",
+        "5a3deace22ed1564ad66f16baeda55edeaecfccd9d395eed50c625ca1db0f020",
+        "524937a6e0bb88ce52fc3c59760fb543b8bc884cb31b9f4cb0acd1006ca36716",
+        "0632fa24fad26687ac319e8c9a3e22d386507190d36c2741348ba89214bf9170",
+        "64b6be8b531a6b64dfa9e69496313460d1a8d8a371f3c954e1f8dcd446c5a23d",
+        "584eade080d27494ce677ce7e7f3d6d3bf5493fc21e37ea3e231f22a079561d9"
+      ]
+    },
+    "SPR-U-524a8360c301faf0e398": {
+      "atlas": "SPR-df21d91c19f6b6e50525e3a6acf8bb3dd59445d2e709ca44fa9bfcbb19de3567.png",
+      "width": 144,
+      "height": 144,
+      "columns": 8,
+      "count": 17,
+      "offset": [
+        -48,
+        -96
+      ],
+      "sha256": "bd0d3fb774d33d3186d8509fb2bbd0757b37c97ed266919a204c30c800df7295",
+      "raw_sha256": "df21d91c19f6b6e50525e3a6acf8bb3dd59445d2e709ca44fa9bfcbb19de3567",
+      "model_id": 2177,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:22651",
+          "name": "2177-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:22651",
+      "source_name": "2177-0.spr",
+      "source_names": [
+        "silence e",
+        "silence a",
+        "barrier of silence"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "4cb76b1e3ce3250b4eecb7916fe6698388b6a222fb4e82f66e6fe95f09f517a8",
+        "1f920957804ace83bb181a46fb58f818e71850bd8872ab15f3fb891aeb5760a5",
+        "79aaad1d86bd16bfe1418a898dc416ee638ce6ae09d9bef777b22281544fac8b",
+        "0e5213140395cd0c5c3d6ee6fbdd461eedfadbc04728dd2f41132980ea166b88",
+        "e27d1cb381e58a9b803e64a01bd49447d0ff5b99b2b3728fd1201606455e9e00",
+        "b1e0a9c1779e807953e173f467802e6716ab4c898cce297c142b23d12724ec1c",
+        "cd5b1609f8d58dbfcd8d29a0e4c1c2d3c2bbe329a1e0e7c1621bd0c540c64520",
+        "a92acc8f8ca2f331b53a792c2b72d43f1def0ccb3e57442c78750129d2fe7984",
+        "576a6bf1a0d22f0e15978ea1136199640226b666161aad96a59cd57fc6d116d1",
+        "d89b3904f1a5eae2f9047762f50f6ac6e15b322e321548e66656f0b3ce268e0e",
+        "f6b6ca0ebb3cc6b005b53a65d14c82212317281d13f056144194045e5212d46a",
+        "bfb68715984c14375d9124b282b923f232b25a5b32c545fb1b56f4a2275bbe0d",
+        "cdd4b57b66691ee977f6167d4ac95c8ee10cbbdeec871c05b2a971dacfcaba9f",
+        "ac552b051178f3f99b5dd552f8982e1eb7d309eaaa3d4475c7374d8dc8ea632e",
+        "da3950d9ca9bcabb831d91dc0b1a99b725741885f45659792e02aa06a0a15836",
+        "5a40d7aeb2218b75d8e85a9d15d829b319ff3a661a593d3e3be58b937a50ec03",
+        "2d1726b6b34982186c75058b5621615846f2be07e0d5b7670c276d98b9484d30"
+      ]
+    },
+    "SPR-RAW-e033b6a8120424eafd08d7b5b12f2fbea76562dd5c6723847d031d0879cab030": {
+      "atlas": "SPR-e033b6a8120424eafd08d7b5b12f2fbea76562dd5c6723847d031d0879cab030.png",
+      "width": 48,
+      "height": 72,
+      "columns": 1,
+      "count": 1,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "85d7789869b5b86cc8e8df76dc16725f778003e98b39c09b740bd74777b29c72",
+      "raw_sha256": "e033b6a8120424eafd08d7b5b12f2fbea76562dd5c6723847d031d0879cab030",
+      "model_id": 10710,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite10.pak:476",
+          "name": "10710-1.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite10.pak:476",
+      "source_name": "10710-1.spr",
+      "source_names": [
+        "counter barrier hit",
+        "counter barrier hit"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "05865e24d652a1d52361b93d29380ec710054b97f8f67e70840bd785e3ba6d4c"
+      ]
+    },
+    "SPR-U-6cad8ecda8df6495b818": {
+      "atlas": "SPR-e20d87a4787a737d96d6b16d77e952bbde463ff195f45e7ec85bcadc0b321e4d.png",
+      "width": 72,
+      "height": 84,
+      "columns": 8,
+      "count": 15,
+      "offset": [
+        0,
+        -60
+      ],
+      "sha256": "0015022270ccd6db904a5d3c37444b9e87625d24596f9fc92d6e15799110f688",
+      "raw_sha256": "e20d87a4787a737d96d6b16d77e952bbde463ff195f45e7ec85bcadc0b321e4d",
+      "model_id": 2950,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:34553",
+          "name": "2950-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:34553",
+      "source_name": "2950-0.spr",
+      "source_names": [
+        "uncanny dodge",
+        "uncanny dodge a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "267011dd5be1b026cd6fc8bc5a195432200593d5d3a57ca6ec51246971cfbd2e",
+        "f40aaae1005a4f35451265f8d01b3d0a19f4456cfa59e63e59e755f19d3da5fa",
+        "d0753ac9b2825d6461cb35785b3863fe3f37364f4097f18acf00dba2e22bbce2",
+        "ceccd5bb88d370e620dcaa5a16300232dda9f1fb49264dd3eb0c23dba6889533",
+        "6ba3b75b0eb7a461275f03f7f7043db5c262330720fb16d3730694c9d1d6044f",
+        "5b5b9e3785799421bf83c1ed9b38df5c4ea1ae57ea88fb95de100d04a169819e",
+        "794d817053d4cac9584768ed40225b37e5e4c434454ae5b83ff37ac93bb68c39",
+        "fb686965b6a4f2d584411621bdf06f78e117573322d2d7760c8915c1e7f12c88",
+        "8ed5ee623e40aaab5cd8234b9eff49ab63f05f53b4b79b9d2a921b9b08f32e68",
+        "81e78bb79b6dd83dc00a25ac75ed799a90beb16b8838d3df6ef3f1df0895a619",
+        "035ba67dd45837c1146cc03722af163f9225cc26aa00da6167c53228f1d3e692",
+        "e7914c03562f74c5745914c0ee58b2be88722df2df69b72d1a6b0a6321ffdbb9",
+        "17420e9204e71f53c8b7c60ea0ad42f1b85bfe0b2580267ef4b126390b7cc120",
+        "784dcc73c4f7a49868f6bf28437713e07387c06282bf6998a07a0e2d1d01e2c8",
+        "968de09571b962d93e069491630a8047ce6eda050daf102c494fb52ad7694941"
+      ]
+    },
+    "SPR-U-9ca3aa52e8e20c6f21e8": {
+      "atlas": "SPR-e344a514980513989ed7cf9d79413546f521aa28164e49d274099c1ceb536edc.png",
+      "width": 48,
+      "height": 72,
+      "columns": 8,
+      "count": 8,
+      "offset": [
+        0,
+        -48
+      ],
+      "sha256": "b9233239b9cc33fcde396032a396b2777425c7086e245da3b94eb2537e76fe7b",
+      "raw_sha256": "e344a514980513989ed7cf9d79413546f521aa28164e49d274099c1ceb536edc",
+      "model_id": 745,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:87849",
+          "name": "745-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:87849",
+      "source_name": "745-0.spr",
+      "source_names": [
+        "curse poison"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "ddcc98cda9b41034f62f80228a85c5a837eeb96091030f18c61adfb5ac5b5ba9",
+        "aeeb19e53ecbe3d58838cc477edb7f86aa7458775cc52f7de92d72738b9e8a1f",
+        "c794fa4012d26fccc0f1aece2fba2c3a4939b5b8fa38eb28de143e44d086c837",
+        "fcf22adc58fee0a28a90ecc8bcbd575855d8db5d217b11dc759ab9cfd8b73634",
+        "67815be904f5db8b38a4ea570b6d20214da9ced94395c7592fe1acdaecac49e0",
+        "fe9fb23a7783a5fab72bc08cf51c039fe5b248eaa8c60897b6fc924b09272c49",
+        "380f24d5d5ceef1baf52ea93c0bb9cd44c159d1b3cda8039083cec4c4cbfd566",
+        "dd147425abd36f3121e09487720275a07101ed788f4cc19b817e9a08148cdd93"
+      ]
+    },
+    "SPR-RAW-e506bf8e1ed67e7d58e16a98f3dd0c2c4cd5db83f6b6c5cf97509b01b0c04973": {
+      "atlas": "SPR-e506bf8e1ed67e7d58e16a98f3dd0c2c4cd5db83f6b6c5cf97509b01b0c04973.png",
+      "width": 120,
+      "height": 60,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -36
+      ],
+      "sha256": "1fe731e806d22cf6de121a537ba07174f2ef0534111b38ec50c57aff4747e1e8",
+      "raw_sha256": "e506bf8e1ed67e7d58e16a98f3dd0c2c4cd5db83f6b6c5cf97509b01b0c04973",
+      "model_id": 1809,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18379",
+          "name": "1809-7.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18379",
+      "source_name": "1809-7.spr",
+      "source_names": [
+        "coneofcold shooting"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "21c4488defde8cf2c98bb42e48e135bf4f96afa005e43dbc2ce1f65a0acb9553",
+        "4f86e5c4b173fde7bec144dde5499235b43d15eecffcc0e19acb49aefdd1d557",
+        "191d647c2bc0f313c618448e6cdd04dda62653cbee9093538fe8a92d58480f39"
+      ]
+    },
+    "SPR-RAW-e5b9d2dcf653881b8d16fb2eef7cd62ef8a092642b0d6957d6b5fa68bc9a93cf": {
+      "atlas": "SPR-e5b9d2dcf653881b8d16fb2eef7cd62ef8a092642b0d6957d6b5fa68bc9a93cf.png",
+      "width": 96,
+      "height": 72,
+      "columns": 3,
+      "count": 3,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "57347f2522db902a3c151decf4f26f3b3feb9675318ab3bb0c2bb54c519946d9",
+      "raw_sha256": "e5b9d2dcf653881b8d16fb2eef7cd62ef8a092642b0d6957d6b5fa68bc9a93cf",
+      "model_id": 11762,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite03.pak:1329",
+          "name": "11762-2.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite03.pak:1329",
+      "source_name": "11762-2.spr",
+      "source_names": [
+        "renewal triple arrow fly sc"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "72baf922062f341c8c3bdd27a56c003cf8149f51eabd918a8362be242ea99ede",
+        "df90abcbf683a944d9b9e211464bde3188957a279a5e1b3deeac1ffba898976c",
+        "8d26903c8ff06397dc839d61601a7468de2a372f7cc0e1434c3c66ce278d824c"
+      ]
+    },
+    "SPR-RAW-e69871cb2ab82a622db290c86b77f60c7db385d6d394522b2d4e65ba2ea49790": {
+      "atlas": "SPR-e69871cb2ab82a622db290c86b77f60c7db385d6d394522b2d4e65ba2ea49790.png",
+      "width": 96,
+      "height": 96,
+      "columns": 1,
+      "count": 1,
+      "offset": [
+        -24,
+        -60
+      ],
+      "sha256": "31a2970f88cfce9f6372e82fdcf88ccc3fa07dcf007c60d7380f48a1fa9e3669",
+      "raw_sha256": "e69871cb2ab82a622db290c86b77f60c7db385d6d394522b2d4e65ba2ea49790",
+      "model_id": 10710,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite12.pak:534",
+          "name": "10710-3.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite12.pak:534",
+      "source_name": "10710-3.spr",
+      "source_names": [
+        "counter barrier hit",
+        "counter barrier hit"
+      ],
+      "resource_scope": "unassigned_source_sprite_variant",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "ee644a4e55588c3e5ee2969b06612ae55975178fe46f074bfabc6fdd10fd8271"
+      ]
+    },
+    "SPR-U-839b5318eca619ba06ac": {
+      "atlas": "SPR-fd49e50e4eb17e19de23048925ab15ca9fc3505a152c42b72d4e9762ad3fe716.png",
+      "width": 48,
+      "height": 84,
+      "columns": 8,
+      "count": 13,
+      "offset": [
+        0,
+        -108
+      ],
+      "sha256": "c1e75a366cc5f3c78c29172d3760d893c1986a2d380812c4a2e754488ffa9674",
+      "raw_sha256": "fd49e50e4eb17e19de23048925ab15ca9fc3505a152c42b72d4e9762ad3fe716",
+      "model_id": 2943,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:34543",
+          "name": "2943-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:34543",
+      "source_name": "2943-0.spr",
+      "source_names": [
+        "shadow armor",
+        "shadow armor a"
+      ],
+      "resource_scope": "selected_effect_group",
+      "skill_binding_required": false,
+      "frame_rgba_sha256": [
+        "dbd7e2a1e3209b7914264834f82f4463e09ad552c19280705c64a1fb97c86292",
+        "dbd7e2a1e3209b7914264834f82f4463e09ad552c19280705c64a1fb97c86292",
+        "dbd7e2a1e3209b7914264834f82f4463e09ad552c19280705c64a1fb97c86292",
+        "dbd7e2a1e3209b7914264834f82f4463e09ad552c19280705c64a1fb97c86292",
+        "59225416f4d917724414ee18c73bd8eb1b62ffb5da463a1acdca5db709108d74",
+        "60898cc92133f7e523218f6d09fb485d620b5b75c53e509860dfc2f6485d0a94",
+        "68dff6685c00b88883d6bc8e909f1b50df16d613b61e57be2d73ebd94946e7e9",
+        "6dff06197ad8ccb4278db8ccf68d00806dbecd9910a2ab519e9a306cf685ca7b",
+        "9e9e7ca25fe6d1c92993b22c59b5621512bb402b6ff7afc3377b32866160015e",
+        "f305c3cab5cc402e70e2f942e81627c4ee0a09b4877b7c5da84b7ea0a15278bd",
+        "c2310745a88235f54b993ce4aa13ac4746045eac97ed2085e450e5aadf4ba7bb",
+        "2b74e32d27d47a510ca292f7902557b2a602582a9907f8a267e78d305a3cce71",
+        "236d63bc90d574ca14ba5c3e78cdffefb76031e15155c412a4f371cb7a10488f"
+      ]
+    }
+  }
+}
