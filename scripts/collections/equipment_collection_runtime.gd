@@ -161,7 +161,10 @@ func write_save(path: String, data: Dictionary) -> Error:
 	# A transaction whose bytes are already durable can acknowledge immediately;
 	# any changed content still uses the existing flushed atomic writer.
 	payload_json_builds+=1
-	var payload_hash: String=JSON.stringify(data,"",true,true).sha256_text()
+	# Keep the serialised text: the writer below stores these exact bytes, so a
+	# changed save is stringified once instead of once for the hash and again to write.
+	var payload_json: String=JSON.stringify(data,"",true,true)
+	var payload_hash: String=payload_json.sha256_text()
 	if _disk_path==path and not current_hash.is_empty() and payload_hash==_last_payload_hash and current_hash==payload_hash:
 		_last_payload_revision=payload_revision
 		_last_payload_snapshot=data.duplicate(true)
@@ -172,7 +175,7 @@ func write_save(path: String, data: Dictionary) -> Error:
 	if test_save_writer.is_valid():
 		error = test_save_writer.call(path,data.duplicate(true))
 	else:
-		error = preload("res://scripts/skills/save_writer.gd").write(path,data)
+		error = preload("res://scripts/skills/save_writer.gd").write_text(path,payload_json)
 	if error == OK:
 		_disk_path = path
 		_disk_hash = FileAccess.get_sha256(path)
