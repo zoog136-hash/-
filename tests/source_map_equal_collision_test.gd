@@ -30,7 +30,7 @@ func run():
  var field:RemakePlayableField=RUN.load_field('source_602')
  check(field!=null and field.data.map_id=='source_602' and field.definition.source_map_id==602,'source Balrog room retains independent ID instead of guessing existing temple alias')
  if field!=null:
-  check(field.data.monster_spawn.is_empty() and field.runtime_record.doors.is_empty(),'no NPC, monster or dynamic-door data silently imported');field.close()
+  check(field.data.monster_spawn.all(func(r):return r.get("local_habitat",false)) and field.runtime_record.doors.is_empty(),'only explicit local habitats; no dynamic doors silently imported');field.close()
  var temp:String='user://equal-collision-bad-'+str(Time.get_ticks_usec())
  DirAccess.make_dir_recursive_absolute(temp+'/equal-collision-v1')
  check(EQ.spec(temp,602).is_empty(),'missing supplement has no candidate fallback')

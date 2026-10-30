@@ -64,18 +64,23 @@ func configure(controller: Node, value: PlayableField) -> void:
 			if source.is_empty() or str(source.get("source_npc_id",""))!=str(region.source_npc_id) or region.monster_types!=[str(source.name)]:continue
 			records[str(source.name)]=source
 		for index: int in range(int(region["max_count"])):
-			var slot: Dictionary = {"region":region,"index":index,"slot_id":slots.size(),"monster":null,"remaining":0.0}
+			var slot: Dictionary = {"region":region,"index":index,"slot_id":slots.size(),"monster":null,"remaining":0.0,"has_spawned":false}
 			slots.append(slot)
 			if _zone_active(region):
 				# Boss state is restored immediately. Normal PNG populations fill in
 				# bounded batches while retaining their authored slot and RNG order.
-				if (field is NativePngField or region.has("source_game_id")) and str(region.get("mode","normal"))!="boss":
+				if region.has("local_habitat") or ((field is NativePngField or region.has("source_game_id")) and str(region.get("mode","normal"))!="boss"):
 					pending_initial_spawns.append(slot)
 					pending_spawn_ids[int(slot.slot_id)]=true
 				else:_spawn_slot(slot)
 
+func _source_visible(point:Vector2) -> bool:
+	var camera:Camera2D=world.player.camera
+	var extent:Vector2=get_viewport().get_visible_rect().size/camera.zoom
+	return Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(48.0).has_point(point)
+
 func _zone_active(region: Dictionary) -> bool:
-	if region.has("source_game_id"):
+	if region.has("source_game_id") or region.has("local_habitat"):
 		var r:Array=region.rect
 		return Rect2(r[0],r[1],r[2],r[3]).grow(1600.0).has_point(world.player.global_position)
 	# One Escaros PNG includes five former fields (165 slots). Creating every
@@ -99,9 +104,9 @@ func _spawn_point(region: Dictionary) -> Vector2:
 	# authored population target or weakening collision/spacing constraints.
 	var attempts: int = 160 if str(region.get("mode", "normal")) == "dense" else 64
 	for attempt: int in range(attempts):
-		var p: Vector2 = field.sample_spawn(str(region.id),world.rng)
+		var p: Vector2 = preload("res://scripts/maps/source_map_spawns.gd").sample_spawn(field,region,world.rng) if region.has("source_sampling") else field.sample_spawn(str(region.id),world.rng)
 		if not p.is_finite(): return Vector2.INF
-		if region.has("source_game_id") and not preload("res://scripts/maps/source_map_spawns.gd").floor_allowed(field,p):continue
+		if (region.has("source_game_id") or region.has("local_habitat")) and not preload("res://scripts/maps/source_map_spawns.gd").floor_allowed(field,p):continue
 		if radius > 0. and p.distance_to(center) > radius: continue
 		var clear: bool = true
 		for slot: Dictionary in slots:
@@ -129,6 +134,9 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if boss and not boss_director.can_spawn(str(field.data.map_id),region): return
 	var p: Vector2 = _spawn_point(region)
 	if not p.is_finite(): return
+	if bool(slot.get("has_spawned",false)) and region.has("respawn_on_screen") and not bool(region.respawn_on_screen) and _source_visible(p):
+		slot.remaining=3.0
+		return
 	var names: Array = region.monster_types
 	var name_value: String = str(names[int(slot.index)%names.size()])
 	var weights: Array = region.get("weights",[])
@@ -203,6 +211,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 	monster.set_meta("source_game_id",str(region.get("source_game_id","")))
 	monster.set_meta("source_spawn_key",str(region.get("source_key","")))
 	slot.monster = monster
+	slot.has_spawned=true
 	slot.remaining = 0.
 	if boss:
 		var state: Dictionary = boss_director.state_for(str(field.data.map_id),region)
@@ -228,6 +237,8 @@ func destination_allowed(monster: TwilightMonster, point: Vector2) -> bool:
 	var id: int = int(monster.get_meta("field_slot",-1))
 	if id < 0 or id >= slots.size(): return true
 	var region: Dictionary = slots[id].region
+	if region.has("source_game_id") or region.has("local_habitat"):
+		return preload("res://scripts/maps/source_map_spawns.gd").floor_allowed(field,point) and point.distance_to(monster.home_position)<=float(monster.ai.get("leash_distance",1050.0))
 	if field is RemakePlayableField:
 		return (field as RemakePlayableField).remake_region_contains(str(region.id),point)
 	var patrol: Dictionary = region.get("patrol_region",{})
@@ -241,7 +252,7 @@ func release(monster: TwilightMonster) -> void:
 	slot.remaining = 0.0 if str(slot.region.get("mode","normal"))=="boss" else float(slot.region.respawn_time)
 	if slot.region.has("source_respawn_seconds"):
 		var delay:Array=slot.region.source_respawn_seconds
-		slot.remaining=world.rng.randf_range(float(delay[0]),float(delay[1]))
+		slot.remaining=float(world.rng.randi_range(int(delay[0]),maxi(int(delay[0]),int(delay[1])-1)))
 	if str(slot.region.get("mode","normal"))=="boss":
 		boss_director.died(str(field.data.map_id),slot.region)
 		_clear_summons(monster.get_instance_id())
@@ -376,7 +387,7 @@ func _process(delta: float) -> void:
 		if not is_instance_valid(monster):
 			slot.remaining = maxf(0.,float(slot.remaining)-delta)
 			if float(slot.remaining)<=0. and (refresh or str(slot.region.get("mode",""))=="boss") and _zone_active(slot.region):
-				if slot.region.has("source_game_id"):
+				if slot.region.has("source_game_id") or slot.region.has("local_habitat"):
 					pending_initial_spawns.append(slot)
 					pending_spawn_ids[int(slot.slot_id)]=true
 					continue
@@ -403,7 +414,7 @@ func _drain_initial_spawns() -> void:
 		pending_spawn_ids.erase(int(pending.slot_id))
 		if _zone_active(pending.region):
 			_spawn_slot(pending)
-			if not is_instance_valid(pending.monster):pending.remaining=2.0
+			if not is_instance_valid(pending.monster):pending.remaining=maxf(2.0,float(pending.remaining))
 		initial_count+=1
 
 func _update_activity(monster: TwilightMonster, view: Rect2 = Rect2(), view_radius: float = -1.0) -> void:

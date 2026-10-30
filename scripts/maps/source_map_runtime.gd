@@ -95,6 +95,7 @@ static func load_field(mid: String) -> RemakePlayableField:
 	var npc_holds:Array=preload("res://scripts/npc/source_npc_catalog.gd").append_to_field(field)
 	if not npc_holds.is_empty():field.close();return null
 	preload("res://scripts/maps/source_map_spawns.gd").append_to_field(field)
+	if not "--without-local-habitats" in OS.get_cmdline_user_args() and not preload("res://scripts/maps/source_map_habitats.gd").append_to_field(field):field.close();return null
 	seen[mid]=identity(mid)
 	return field
 

@@ -11,7 +11,7 @@ func run() -> void:
 	var field: RemakePlayableField=RUNTIME.load_field("source_77")
 	check(field!=null,"real full-resolution pack, raw grid, reviewed probes and entry")
 	if field==null:quit(1);return
-	check(field.data.monster_spawn.is_empty(),"no automatic new monster spawns")
+	check(field.data.monster_spawn.all(func(r):return r.has("source_key") or r.get("local_habitat",false)),"only explicit reviewed source or game habitat spawns")
 	var start:=Vector2(field.data.spawn_position[0],field.data.spawn_position[1])
 	var gate:=Vector2(field.data.portal[0].position[0],field.data.portal[0].position[1])
 	check(field.point_clear(start,4),"entry foot clearance")

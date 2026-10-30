@@ -22,7 +22,7 @@ func run():
   check(field.point_clear(entry,4),'entry has exact foot clearance '+mid)
   if mid.begins_with('source_variant_'):
    check(field.definition.source_map_id>=910001 and not ids.has(field.definition.source_map_id),'own stable runtime ID '+mid);ids[field.definition.source_map_id]=true
-   check(field.runtime_record.original_source_map_id==null and field.data.monster_spawn.is_empty(),'no base identity, collision or monster import '+mid)
+   check(field.runtime_record.original_source_map_id==null and field.data.monster_spawn.all(func(r):return r.get("local_habitat",false)),'no guessed base identity or collision; only authored habitat rows '+mid)
   for id:String in field.local_doors:
    var cell:Vector2i=field.local_doors[id][0]
    check(id!='107','dangerous source door107 remains excluded')

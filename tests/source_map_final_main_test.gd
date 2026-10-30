@@ -31,7 +31,7 @@ func run() -> void:
 	for ground: Sprite2D in world.field_renderer.chunks.values():
 		if ground.z_index>=world.player.z_index:ground_below_actor=false
 	check(ground_below_actor,"all terrain stays behind the actual player even on maps with over thirty chunks")
-	check(world.monsters_root.get_child_count()==0,"new source map adds zero monster spawns")
+	check(world.field_map.data.monster_spawn.all(func(r):return r.has("source_key") or r.get("local_habitat",false)),"new source map uses explicit reviewed habitat rows")
 	var start: Vector2=world.player.global_position
 	check(world.field_map.point_clear(start,4),"real Player starts at verified source point")
 	var gate:=Vector2(world.field_map.data.portal[0].position[0],world.field_map.data.portal[0].position[1])

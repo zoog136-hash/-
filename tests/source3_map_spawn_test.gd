@@ -9,12 +9,14 @@ func check(ok:bool,label:String):
  if not ok:errors+=1;printerr("SOURCE_SPAWN_FAIL ",label)
 func _initialize():call_deferred("run")
 func run():
+ root.size=Vector2i(800,600)
+ var target_map:String="source_77" if "--zero-delay" in OS.get_cmdline_user_args() else "source_440"
  var total:int=0
  var slots:int=0
  var held:int=0
  var chosen:Dictionary={}
  var maps:Array=RUN.policy().keys() if "--all-maps" in OS.get_cmdline_user_args() else ["source_440","source_0","source_783","source_303","source_69","aden_world"]
- if "--runtime-only" in OS.get_cmdline_user_args():maps=["source_440"]
+ if "--runtime-only" in OS.get_cmdline_user_args():maps=[target_map]
  for mid:String in maps:
   var field=RUN.load_field(mid)
   check(field!=null,"verified field "+mid)
@@ -22,7 +24,7 @@ func run():
   var ids:Dictionary={}
   for region:Dictionary in field.data.monster_spawn:
    check(not ids.has(str(region.id)),"unique region "+str(region.id));ids[str(region.id)]=true
-   if not region.has("source_game_id"):continue
+   if not region.has("source_key"):continue
    total+=1;slots+=int(region.max_count)
    var cells:PackedInt32Array=field.region_cells[region.id]
    check(not cells.is_empty(),"admitted floor "+str(region.id))
@@ -33,9 +35,9 @@ func run():
     var source:Vector2=field.coordinates.to_source(p).floor()
     var a:Array=region.source_bounds
     check(source.x>=a[0] and source.x<=a[2] and source.y>=a[1] and source.y<=a[3],"exact source bounds")
-   if mid=="source_440" and chosen.is_empty():chosen={"map":mid,"region":region.duplicate(true),"point":field.sample_spawn(str(region.id),random)}
+   if mid==target_map and chosen.is_empty():chosen={"map":mid,"region":region.duplicate(true),"point":field.sample_spawn(str(region.id),random)}
   held+=field.get_meta("source_spawn_holds",[]).size()
-  print("SOURCE_SPAWN_MAP ",mid," admitted=",field.data.monster_spawn.filter(func(r):return r.has("source_game_id")).size()," holds=",field.get_meta("source_spawn_holds",[]).size())
+  print("SOURCE_SPAWN_MAP ",mid," admitted=",field.data.monster_spawn.filter(func(r):return r.has("source_key")).size()," holds=",field.get_meta("source_spawn_holds",[]).size())
   field.close()
  if "--geometry-only" in OS.get_cmdline_user_args():
   print("SOURCE3_MAP_SPAWN_GEOMETRY checks=",checks," errors=",errors," admitted_rows=",total," slots=",slots," floor_holds=",held)
@@ -46,6 +48,7 @@ func run():
   check(QA.enter_game(world),"actual Main entry")
   world.set_process(false);world.player.set_physics_process(false);world.player.set_auto_enabled(false);world.field_population.set_process(false);world.save_timer=-100000;world.portal_cooldown=100000
   world.player.global_position=chosen.point
+  world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
   var population:FieldPopulation=world.field_population
   for i:int in range(40):population._process(.4);await process_frame
   var slot:Dictionary={}
@@ -56,15 +59,30 @@ func run():
    var actor:TwilightMonster=slot.monster
    check(actor.get_meta("source_game_id","")==chosen.region.source_game_id,"exact source identity")
    check(SPAWN.floor_allowed(world.field_map,actor.home_position),"actual actor floor")
+   var gate:Dictionary=world.field_map.data.portal[0]
+   check(not population.destination_allowed(actor,Vector2(gate.position[0],gate.position[1])),"roaming cannot enter portal safety reservation")
    check(not bool(actor.ai.get("aggressive",true)),"source passive animal stays passive")
    world._deal_successful_player_hit(actor,actor.max_hp+1,false)
    check(actor.dead and slot.monster==null,"actual kill releases slot")
    var delay:float=slot.remaining
    check(delay>=float(slot.region.source_respawn_seconds[0]) and delay<=float(slot.region.source_respawn_seconds[1]),"source respawn interval")
-   population._process(delay-.1);check(slot.monster==null,"no early respawn")
+   if delay>0.0:population._process(delay-.1);check(slot.monster==null,"no early respawn")
    population._process(.2)
+   for i:int in range(4):population._process(.1);await process_frame
+   check(slot.monster==null or not population._source_visible(slot.monster.home_position),"source respawn cannot appear inside the visible viewport")
+   var home:Vector2=actor.home_position
+   var center:Vector2i=world.field_map.world_to_cell(home)
+   var moved:bool=false
+   for y:int in range(-40,41,4):
+    for x:int in range(-40,41,4):
+     if moved:continue
+     var p:Vector2=world.field_map.cell_to_world(center+Vector2i(x,y))
+     if p.distance_to(home)<900 or p.distance_to(home)>1400 or not world.field_map.point_clear(p,4):continue
+     world.player.global_position=p;world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
+     if not population._source_visible(home):moved=true
+   check(moved,"valid offscreen player floor within activation distance")
    for i:int in range(20):population._process(.4);await process_frame
-   check(is_instance_valid(slot.monster) and not slot.monster.dead,"production clock respawns actor")
+   check(is_instance_valid(slot.monster) and not slot.monster.dead,"offscreen production clock respawns actor")
   var count:int=population.slots.size()
   var portal:Dictionary=world.field_map.data.portal[0]
   world.player.global_position=Vector2(portal.position[0],portal.position[1]);world.portal_cooldown=0
