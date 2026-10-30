@@ -27359,8 +27359,131 @@
       "scripts/skills/source_spr_decoder.gd",
       "tools/skills/spr_decode.py"
     ],
-    "missing_input": "Same-version client renderer implementation/table for list.spr 104.attr and 105.clothes, including blend factors or color-key/lighting rule and child action/frame/layer selection; or an authoritative same-version frame/composition reference. Absent from supplied consumer selection; parent original archive roots have not been inspected here.",
-    "source3_limit": "Received Java excerpts describe server NPC lifecycle/karma/hidden state; no client sprite layer renderer.",
-    "implementation": "No guessed composite, layer order or group70 system added."
+    "missing_input": "Not a missing-binary claim: five client binaries and C++ source are now received. Same-version correspondence to supplied SPRs, complete child file/action/frame/layer selection, and protected older-client renderer semantics are still unproved. No execution/unpacking that executes client code was attempted.",
+    "source3_limit": "Earlier server Java excerpts have no renderer. Newly received source3 l1j-client-master C++ stores attr in widgets/sprite.cpp:163-168, but case105 only parses/prints clothing IDs; num_clothing and clothing fields remain initialized to zero. sprite_motion.cpp:324 uses SDL_BlitSurface without an attr/clothing compositor.",
+    "implementation": "No guessed composite, layer order or group70 system added.",
+    "client_static_followup": {
+      "policy": "Strictly static byte/PE/disassembly analysis. Client binaries not run, installed, loaded as executable modules or dynamically unpacked. No gameplay or composite changes.",
+      "source_parts": [
+        {
+          "library_file_id": "libfile_42d2f964bc008191b37c6a8d482f7e00",
+          "file": "111.z01",
+          "bytes": 100000000,
+          "sha256": "87c8dc27e16b3569a8d6e4ac477f906fa896dad94ade9dc5fca40cabf6770088"
+        },
+        {
+          "library_file_id": "libfile_39166c8c2f648191abab51318f428c1b",
+          "file": "111.z78",
+          "bytes": 100000000,
+          "sha256": "698010750e0a74f9868e363f44685eb616826cd71a122e53e97984376cdbbe6a"
+        },
+        {
+          "library_file_id": "libfile_3d05252156e08191a853a965191bcccc",
+          "file": "l1j-client-master.zip",
+          "bytes": 7918016,
+          "sha256": "12cd5de2b3cf6daadf1c530179ff61890fe772e6d6cb9178b1a16d7aa78bf5dd"
+        }
+      ],
+      "extraction_proof": "Each local header filename/method/flags, raw-deflate stream end, data-descriptor compressed/uncompressed sizes and CRC32 matched. All five complete files retained outside repository. TWClient.bin and TW13032701.bin have equal SHA256.",
+      "binaries": [
+        {
+          "file": "Lin.bin",
+          "source_part_sha256": "87c8dc27e16b3569a8d6e4ac477f906fa896dad94ade9dc5fca40cabf6770088",
+          "header_filename": "111/【3.81c】Ver5.0/Lin.bin",
+          "local_header_offset": 28790995,
+          "data_start": 28791054,
+          "data_end": 33953456,
+          "descriptor_offset": 33953456,
+          "flags": 2056,
+          "compressed_bytes": 5162402,
+          "bytes": 16810496,
+          "crc32": "52bf9453",
+          "sha256": "e12949cf8912c5d62ef269ba02ca37eb5cabf8f379c3d5e10189279bf09641a2",
+          "PE_timestamp_UTC": "2016-08-26T02:34:53+00:00",
+          "entry_point_VA": "0x103ded9"
+        },
+        {
+          "file": "Lineage.exe",
+          "source_part_sha256": "87c8dc27e16b3569a8d6e4ac477f906fa896dad94ade9dc5fca40cabf6770088",
+          "header_filename": "111/【3.81c】Ver5.0/Lineage.exe",
+          "local_header_offset": 33954970,
+          "data_start": 33955033,
+          "data_end": 35880787,
+          "descriptor_offset": 35880787,
+          "flags": 2056,
+          "compressed_bytes": 1925754,
+          "bytes": 4219072,
+          "crc32": "64660b52",
+          "sha256": "2544bde1e792bb3575b3d7185ea8324dbeeb33e22a977723d9471a2023ed2adb",
+          "PE_timestamp_UTC": "2016-08-19T00:52:37+00:00",
+          "entry_point_VA": "0x62e73d"
+        },
+        {
+          "file": "Lin_t.bin",
+          "source_part_sha256": "87c8dc27e16b3569a8d6e4ac477f906fa896dad94ade9dc5fca40cabf6770088",
+          "header_filename": "111/【3.81c】Ver5.0/Lin_t.bin",
+          "local_header_offset": 35886575,
+          "data_start": 35886636,
+          "data_end": 41253144,
+          "descriptor_offset": 41253144,
+          "flags": 2056,
+          "compressed_bytes": 5366508,
+          "bytes": 5634552,
+          "crc32": "86e380dd",
+          "sha256": "a08a34ea5231dc9c4b6da4ff1f1fa2fa0837c791d07952e9647ed74c0b864848",
+          "PE_timestamp_UTC": "2015-09-07T07:03:36+00:00",
+          "entry_point_VA": "0x17b5000"
+        },
+        {
+          "file": "TW13032701.bin",
+          "header_filename": "111/【3.81c】Ver5.0/TW13032701.bin",
+          "part_sha256": "698010750e0a74f9868e363f44685eb616826cd71a122e53e97984376cdbbe6a",
+          "local_header_offset": 25189432,
+          "data_start": 25189498,
+          "compressed_bytes": 2332239,
+          "bytes": 2582376,
+          "crc32": "7d704d41",
+          "sha256": "049e0579c193a666665eec0c10c4e28e8aa2184f1c0d26c1767e77212e6beda4",
+          "PE_timestamp_UTC": "2013-03-27T03:19:43+00:00",
+          "entry_point_VA": "0xcb0000"
+        },
+        {
+          "file": "TWClient.bin",
+          "header_filename": "111/【3.81c】Ver5.0/TWClient.bin",
+          "part_sha256": "698010750e0a74f9868e363f44685eb616826cd71a122e53e97984376cdbbe6a",
+          "local_header_offset": 33231356,
+          "data_start": 33231420,
+          "compressed_bytes": 2332239,
+          "bytes": 2582376,
+          "crc32": "7d704d41",
+          "sha256": "049e0579c193a666665eec0c10c4e28e8aa2184f1c0d26c1767e77212e6beda4",
+          "PE_timestamp_UTC": "2013-03-27T03:19:43+00:00",
+          "entry_point_VA": "0xcb0000"
+        }
+      ],
+      "Lin_2016_static_evidence": {
+        "binary_sha256": "e12949cf8912c5d62ef269ba02ca37eb5cabf8f379c3d5e10189279bf09641a2",
+        "image_base": "0x00400000",
+        "VA_only_not_file_offsets": true,
+        "list_spr_loader": "0x0087c890: direct list.spr string reference, numeric directive dispatch",
+        "directive104": "0x0087d67b checks 104; 0x0087d69f stores numeric value in model-indexed uint32 array pointed to by 0x013cd84c",
+        "directive105": "0x0087d6a7 checks105; count/list at global0x013cd87c, stride8, allocates count*2 bytes and stores uint16 child model IDs",
+        "child_resources": "0x00a45160 reads child IDs in list order, calls resource lookup0x0079e260 and retains child attr words at parent+0x188; draw loops0x00a46290/0x00a463c0 pass parent byte+0x34 to child frame readers. Full action/group mapping is not proved.",
+        "tile_queue": "0x00a0b790 reads indexed frame tile references and calls0x00f0ed00. Queue insertion compares the tile-reference byte and moves entries; flat parent/child call order alone is not a complete layer-order proof.",
+        "attr8_dispatch": "0x00f00d01 tests flag8 on queued attr; 0x00f00d15 calls pointer0x01410588. Initializers0x0097c0d9/0x0097c237 select wrapper0x00977f60; 0x0097c386 selects0x00977f30. These call0x009775e0/0x00977460 using channel LUTs.",
+        "channel_LUT": "0x0097b700, particularly0x0097b766..0x0097b81b, computes trunc(max(a,b)+(31-max(a,b))*min(a,b)/31) for 5-bit a,b, then shifts red/green/blue according to display format. Helpers0x004e7f50 and0x0064d7f0 statically verified as max/min. This supports screen-like blend in this binary; not plain saturated addition.",
+        "opcode_pins_verified": [
+          "0x0087d67b:83bd",
+          "0x0087d69f:89048a",
+          "0x0087d6a7:83bd",
+          "0x00f00d01:83e108",
+          "0x0097b7ce:f20f58c8",
+          "0x0097b7d2:f20f2cc1"
+        ]
+      },
+      "older_binary_limit": "Lin_t.bin (2015) and identical TW binaries (2013-03-27) have high-entropy unnamed/protected-looking sections, tiny entry stubs and only one visible kernel32 import (lstrcpy / LockResource). Their original renderer was not recovered statically; no specific packer attribution or execution attempted.",
+      "version_limit": "Folder name 3.81c does not establish binary/SPR version equivalence. Lin.bin PE timestamp is 2016-08-26. The 2016 reconstructed routine is evidence for that SHA only, not permission to apply it to the supplied sprite set.",
+      "outcome": "More concrete parser, child-table and blend evidence obtained. Full same-version frame/layer/composition rule remains unproved; all attachments stay inactive."
+    }
   }
 }
