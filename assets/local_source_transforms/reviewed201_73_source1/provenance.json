@@ -1,0 +1,6668 @@
+{
+  "schema": 1,
+  "input_library_ids": [
+    "libfile_a451565065d48191bc7b716bd7b40a2b",
+    "libfile_92edfa9d2a4c8191ac18c41323dd0209",
+    "libfile_12e4793a89108191b4f0222ce066467c",
+    "libfile_a1d369d2ce4c819188215a9ced430daa"
+  ],
+  "decoder_sha256": "615f9f89d8a8d847cf531f2b4214ee1613b39bdabbeec7248410e3f3e6a07449",
+  "definition": {
+    "record_key": "source1:Text.pak:list.spr:definition:790",
+    "source": "source1",
+    "table": "Text.pak/list.spr",
+    "definition_id": 790,
+    "base_sprite_id": 790,
+    "local_name": "ofb",
+    "korean_candidate": null,
+    "match_status": "unknown",
+    "match_detail": {},
+    "urls": [],
+    "versions": [],
+    "roles_confirmed": [],
+    "role_candidates": [
+      "actor_hurt_action",
+      "casting_action",
+      "type10_monster_like"
+    ],
+    "raw_type": "10",
+    "action_definitions": [
+      {
+        "id": 0,
+        "name": "walk",
+        "definition": "1 4,0.0:4 0.1:4 0.2:4 0.3:4"
+      },
+      {
+        "id": 3,
+        "name": "breath",
+        "definition": "1 6,8.0:6 8.1:6 8.2:6 8.3:6 8.4:6 8.5:6"
+      },
+      {
+        "id": 2,
+        "name": "damage",
+        "definition": "1 3,0.0:4 16.0:6[51 16.1:3"
+      },
+      {
+        "id": 1,
+        "name": "attack",
+        "definition": "1 5,8.0:5 24.0:5[14 24.1:5 24.2:14 24.3:9!"
+      },
+      {
+        "id": 19,
+        "name": "spellnd",
+        "definition": "1 5,8.0:5 24.0:5[14 24.1:5 24.2:14 24.3:9!"
+      },
+      {
+        "id": 18,
+        "name": "spell",
+        "definition": "1 5,8.0:5 24.0:5[14 24.1:5 24.2:14 24.3:9!"
+      },
+      {
+        "id": 17,
+        "name": "zap",
+        "definition": "1 5,8.0:5 24.0:5[14 24.1:5 24.2:14 24.3:9!"
+      },
+      {
+        "id": 101,
+        "name": "shadow",
+        "definition": "791"
+      },
+      {
+        "id": 102,
+        "name": "type",
+        "definition": "10"
+      }
+    ],
+    "relation_metadata": [
+      {
+        "kind": "shadow",
+        "value": "791"
+      }
+    ],
+    "semantic_references": [],
+    "raw_definition": "#790  32      ofb                 0.walk(1 4,0.0:4 0.1:4 0.2:4 0.3:4) 3.breath(1 6,8.0:6 8.1:6 8.2:6 8.3:6 8.4:6 8.5:6) 2.damage(1 3,0.0:4 16.0:6[51 16.1:3) 8=784 1.attack(1 5,8.0:5 24.0:5[14 24.1:5 24.2:14 24.3:9!) 19.spellnd(1 5,8.0:5 24.0:5[14 24.1:5 24.2:14 24.3:9!) 18.spell(1 5,8.0:5 24.0:5[14 24.1:5 24.2:14 24.3:9!) 17.zap(1 5,8.0:5 24.0:5[14 24.1:5 24.2:14 24.3:9!) 101.shadow(791) 102.type(10)\r\n",
+    "raw_definition_sha256": "036a696728874baf0885e4f58c96149aa1689550e90a5bc6ded36aade1554897"
+  },
+  "corroborating_source_identity": {
+    "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/npc.sql",
+    "file_sha256": "e14d2a0c074a842c0acbbb4ccc066d6c555ac08284e403cb89c14e977668896e",
+    "tuple_sha256": "b9b506371758ee9432d7323555c61cbd6306895166e5f8d4ee884a2222535e55",
+    "line": 219,
+    "byte_offset": 61248,
+    "byte_length": 398
+  },
+  "identity_visual_review": "Green orc with bow, hood and fur shoulder roll. Death alias 8=784 is opaque; never interpreted as another body.",
+  "role_action_codes": {
+    "idle": 3,
+    "walk": 0,
+    "run": 0,
+    "attack": 1,
+    "hit": 2,
+    "death": 3,
+    "cast": 18
+  },
+  "tracks": {
+    "idle_0": [
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "idle_1": [
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "idle_2": [
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "idle_3": [
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "idle_4": [
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "idle_5": [
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "idle_6": [
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "idle_7": [
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "walk_0": [
+      {
+        "blob_sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "walk_1": [
+      {
+        "blob_sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "walk_2": [
+      {
+        "blob_sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "walk_3": [
+      {
+        "blob_sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "walk_4": [
+      {
+        "blob_sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "walk_5": [
+      {
+        "blob_sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "walk_6": [
+      {
+        "blob_sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "walk_7": [
+      {
+        "blob_sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "run_0": [
+      {
+        "blob_sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "run_1": [
+      {
+        "blob_sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "run_2": [
+      {
+        "blob_sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "run_3": [
+      {
+        "blob_sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "run_4": [
+      {
+        "blob_sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "run_5": [
+      {
+        "blob_sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "run_6": [
+      {
+        "blob_sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "run_7": [
+      {
+        "blob_sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+        "frame_index": 1,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+        "frame_index": 3,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "attack_0": [
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "attack_1": [
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "attack_2": [
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "attack_3": [
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "attack_4": [
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "attack_5": [
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "attack_6": [
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "attack_7": [
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "hit_0": [
+      {
+        "blob_sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "3f11c50d6a9fd331eb443e65c058f2906f68991aed4a328516cc9e27e4a63da5",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 19,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "3f11c50d6a9fd331eb443e65c058f2906f68991aed4a328516cc9e27e4a63da5",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 19,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "hit_1": [
+      {
+        "blob_sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "6aef87f8977161cd10d1c583930bddbac342b9c9ee1c2027998bd0565120799a",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 20,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "6aef87f8977161cd10d1c583930bddbac342b9c9ee1c2027998bd0565120799a",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 20,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "hit_2": [
+      {
+        "blob_sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "2ca662e9a671ad14cd6b6210189478454cbd3d6f17d45a027c02041492c8c6a9",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 21,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "2ca662e9a671ad14cd6b6210189478454cbd3d6f17d45a027c02041492c8c6a9",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 21,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "hit_3": [
+      {
+        "blob_sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "3432ad801a00fc0a9890cc5bca01cee585df7a82c8427f3c5a51889a356ad591",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 22,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "3432ad801a00fc0a9890cc5bca01cee585df7a82c8427f3c5a51889a356ad591",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 22,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "hit_4": [
+      {
+        "blob_sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "ffa528adb3fdb9bc69b9c5af516551dc49e1cc491a3534d41c93eb45f176059c",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 23,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "ffa528adb3fdb9bc69b9c5af516551dc49e1cc491a3534d41c93eb45f176059c",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 23,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "hit_5": [
+      {
+        "blob_sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "d7d668559a56faeecaa3caabcf998d5d05a8f450f496d065df208835e35bc9ab",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 16,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "d7d668559a56faeecaa3caabcf998d5d05a8f450f496d065df208835e35bc9ab",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 16,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "hit_6": [
+      {
+        "blob_sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "08b09cd0a9915d4acb55e42a89b8d236967a357bf626e37ed882a8bd94f68dae",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 17,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "08b09cd0a9915d4acb55e42a89b8d236967a357bf626e37ed882a8bd94f68dae",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 17,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "hit_7": [
+      {
+        "blob_sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "958da0d512b87d6335bc0f119d0e824dc162185043c1ea119cd6b11e0f76aeda",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 18,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "958da0d512b87d6335bc0f119d0e824dc162185043c1ea119cd6b11e0f76aeda",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 18,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "death_0": [
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "death_1": [
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "death_2": [
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "death_3": [
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "death_4": [
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "death_5": [
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "death_6": [
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "death_7": [
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "cast_0": [
+      {
+        "blob_sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "cast_1": [
+      {
+        "blob_sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "cast_2": [
+      {
+        "blob_sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "cast_3": [
+      {
+        "blob_sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "cast_4": [
+      {
+        "blob_sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "cast_5": [
+      {
+        "blob_sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "cast_6": [
+      {
+        "blob_sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "cast_7": [
+      {
+        "blob_sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81",
+        "frame_index": 1,
+        "duration_raw": 5,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81",
+        "frame_index": 2,
+        "duration_raw": 14,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81",
+        "frame_index": 3,
+        "duration_raw": 9,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ]
+  },
+  "visual_frame_durations_raw": {
+    "idle_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "walk_0": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "walk_1": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "walk_2": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "walk_3": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "walk_4": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "walk_5": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "walk_6": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "walk_7": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "run_0": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "run_1": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "run_2": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "run_3": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "run_4": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "run_5": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "run_6": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "run_7": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "attack_0": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "attack_1": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "attack_2": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "attack_3": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "attack_4": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "attack_5": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "attack_6": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "attack_7": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "hit_0": [
+      4,
+      6,
+      3
+    ],
+    "hit_1": [
+      4,
+      6,
+      3
+    ],
+    "hit_2": [
+      4,
+      6,
+      3
+    ],
+    "hit_3": [
+      4,
+      6,
+      3
+    ],
+    "hit_4": [
+      4,
+      6,
+      3
+    ],
+    "hit_5": [
+      4,
+      6,
+      3
+    ],
+    "hit_6": [
+      4,
+      6,
+      3
+    ],
+    "hit_7": [
+      4,
+      6,
+      3
+    ],
+    "death_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "death_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "death_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "death_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "death_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "death_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "death_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "death_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "cast_0": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "cast_1": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "cast_2": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "cast_3": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "cast_4": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "cast_5": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "cast_6": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "cast_7": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "turn_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "ranged_attack_0": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "ranged_attack_1": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "ranged_attack_2": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "ranged_attack_3": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "ranged_attack_4": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "ranged_attack_5": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "ranged_attack_6": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "ranged_attack_7": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "special_0": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "special_1": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "special_2": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "special_3": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "special_4": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "special_5": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "special_6": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "special_7": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "corpse_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "corpse_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "corpse_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "corpse_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "corpse_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "corpse_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "corpse_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "corpse_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "recovery_0": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "recovery_1": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "recovery_2": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "recovery_3": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "recovery_4": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "recovery_5": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "recovery_6": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "recovery_7": [
+      5,
+      5,
+      5,
+      14,
+      9
+    ],
+    "summon_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "despawn_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "despawn_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "despawn_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "despawn_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "despawn_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "despawn_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "despawn_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "despawn_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ]
+  },
+  "unique_frames": [
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "a70f1591bbb8ae08ee7237e0ff40f023239f60099be4d9e36a6a0f86c7cd1232"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        144,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "7472aeb8632b481e8a1d06faedd44d5bf362bf651d0a8c7011e9c5f0e47d2ffb"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        288,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "f1849c95b7176e9db741fb9bf861d394fdf38e545b30f95bad7e6118b038ad51"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        432,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "ab11fbce2a178f5e4549077cdddc79415cfb19c10facee2b37b71f1e80c934a7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "a5f23e3bdc17ef63dd037eab02ec4012b3b035e4d4bdc2ff43fd82f0fd68aa1d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        720,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "88f285b36b42d41bb523ec2093fcccf90d5829586ce1e52470c1d3a780870500"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        864,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "647ca2e3c435b3dbe2e3ce79d87a245b69a905b66ebb5bdd2cf3c0eb4138ce93"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1008,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "a7735ab5164d158aee2b65ee49da37d7775aa527d1ca02d4a2d676c8097320d4"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "97b3b5651a511cca563598ce96e620886ce06f7ec50f1a3d80ceec9d316eadac"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1296,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "0d0b15926662dc15c3f165616123e8c06c99281209a658c3fc4e01d294063426"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1440,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "b56af8cc4e123c2b76d9c7d5ba3a127bb2f359fc37122c456af411d26d59264b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1584,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "cddc78cdceb51ef9b8f1b8ccebda3843127bf6e68456366285089fe8e4f7e100"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "b1854aded5a7c68f63f33a5a8f735eef4d16975f75f7504ac13529df6d2fcb64"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1872,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "7c828cf6550d977b96d76a2cdcda4319922b2b94c4f4b06076c4c5c9553f833f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2016,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "5e04afe7a759d6f66af84c9bdc52b2a393b33717263848cb95a143eca3c777cc"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2160,
+        0,
+        144,
+        120
+      ],
+      "rgba_sha256": "3e51d4eef406cd992c3f89ef8045a8a97039fb4097bb4cb85041e09526858e0a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "53e28429cf7cb81d81b1554cef7bc29258a88cbd946fa7a258d4cd789056d3ff"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        144,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "517109cdac08bf7de914b216f0247c7656fdc3bcd5ede1e4dd4a08bd746f452d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        288,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "9038d424234afac5531b5ef8a3a052b56eedd4307beefbaa4452c5defef2217a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        432,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "066fda7fc2d5e85bbb36bf710dfe88716125a202b9a65b7ce4da2c0b1bc10134"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "0c55f7a15aed30e9df617726bae31c87f0f62705083bd104c231fe7ae767ec66"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        720,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "7442bf511287a162419df3ce96dff2508d290572e553b82eb672a04d271aa464"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        864,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "5a65e7a05210348f5ba9d708e9e4132371a7e9b19a999375094b952ff5453b14"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1008,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "eef92d0540ec688ef39c9371fb3fd610444755ca2feefd68144be81aa5ec7754"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "16343cc83758d7b2494367760f8ddcbec030c62bda6f8abc6901ff74978b1207"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1296,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "ba5ac1d5cf9b2796643e42572650fcef1c0de3b9bf4802be34f47f5932de75be"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1440,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "3dea801feb17d01c79610a694e6dacda96e1a0e32131e794dd2c7cb92c9e312d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1584,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "dd38aa0c644e3e8b7670c375031e03525103547a4d11628f3f164d714dde71a9"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "bd11f1b3e43203d0ac2b4cf10f9fce2178a4cf766ec6109a187af0ac94039d7b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1872,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "a2f0b62bb656790b51085569f32e9ebb7aab0896ad1da5d120b5bf68b9f6a111"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2016,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "a1445f85ad9ae6f50366355abf38ffb7b269b079f30693b40767357669aece01"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2160,
+        120,
+        144,
+        120
+      ],
+      "rgba_sha256": "518326185052bea30e64858f9ab5c632d2a15a1525e8adabfa3ed0f4962b8aaa"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "01e81e40ba95bdaea3999284af2ebd4d00ed89ef801574c704b5d8d37773aead"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        144,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "b93bfabc89bc05f3cb22c018e86475b4667e76aa62704a46fadeadc34b74603a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        288,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "05960210a6f44ab1b4b6e49cdf98dfd2c47cefaba9f001e6c2d3d5105ce5e4e9"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        432,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "cbe5635a6a2d7453cf31bc92733d5d21667ca848fb3ca523bf767265d76839dc"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "87960bf6ae1a068fcdbdcc43f18314d509018efdfee33703e65aa5fd06c35627"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        720,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "1f3c454ff46a7a12d58fb6814c70b1c8430ca1a510346d4d779ba38772a8473b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        864,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "de687e4c6f4476350c561dc098389bd7199e3529d09e9278ce3a8a7051470af4"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1008,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "e72d45d90e376eea43312d647ada019a90bab7b0da6c4c1ddd4f26ee2efd7f46"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "89c16df4bdb7b089f205d5c69044bd5fcfc422b1352cb8824048211117150702"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1296,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "97b3ef55b56ece8f6afaeb9dd9e57ce2f7ecfb4bb57d13357358765c486d220f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1440,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "e1508d0b9959e959de62ea461237fc722e9d9014abd463025bdfea1254cc1eec"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1584,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "e634c95113d019c60d4050f03fe371e3cc37dcb55744b72e98ca11568c261dac"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "7377ee44ad386682789e4775a4a79ba7448962169973a6b28359854c0aa4a47d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1872,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "c6d6f25e90ab69961e5b4eb9f8609a8a8641fc6d930e55cdf5adf8ad612ed033"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2016,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "a8f80af9b9f76bd98df298ecc7119089a598a658c65525641a9070f34276882c"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2160,
+        240,
+        144,
+        120
+      ],
+      "rgba_sha256": "744e35b520136d50c97f5cfc48b1ecc820e4ae16fb52833d81b4ab91f1080f05"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "120fc7587f43bf8ecd5b4c23d9f4e56f189d7bbcf67e8568f231069594e0c75d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        144,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "db3a1d11ccb599898649dbf6cbfeef1df86fc2c98bb9fedef444dafc3fe47e79"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        288,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "0decb2a184439d336e693cfcd1d04a632c2cdb9b4692e85a0b6f6950e491ce98"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        432,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "01c602f14368c2970cc4862c729b1391eede677355aab2dc1ee292d2a89f47d6"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "2e5ebad4232251f3aedf4e69eaa04827ce1a3347446d5616e32021e119400593"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        720,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "40d74449e873c24ad4db4e4a3feaa5fa73c8896e31ac171c9ac7d16901ffa2e7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        864,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "6b675da4c9b50e35a01326aee9c0afed76fdc159ae175b8614b2235a22cd44e0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1008,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "45cb4ba431d6694f3e9253363f891b6c94ea01629432c4056bafe2c7f5a4cefb"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "9da8c3572c78d6fa571c245549d2528f2c940f44aa3f3e3ca627439e0d57a996"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1296,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "190ef2f7657e640c35d0eb18da7bacfdc1922a388ae64499d2440f78718e7d5e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1440,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "11d60e9e78586bb3ed1ca1e580f43853cb15a32ed365d23e92c87a238b869680"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1584,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "b856dc3dfa01a8e18d54cb5958244b03318c243488eb360bceff37bc799d66ae"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "48d70a1e633cf4cb3ba0581788f1e9f2564fd9beb75840a8606835fb3306b770"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1872,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "cc31e4c1b280007424cb08c747c0da23a2d32f2e958ba24268c3734dd17a11a4"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2016,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "562e125bbbd383f5c6918941be22072338f9703b624f556e21454a1da9e7eff6"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2160,
+        360,
+        144,
+        120
+      ],
+      "rgba_sha256": "0ada4242993e02785c9f319dec7673ec2466213e83ebbc7f2867308ffe5ea93f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "0d902be40ba845fad3881ac9b58afc894ab3386e8c7090474525212ae523c632"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        144,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "8942561a3af867646ffc71c507658b9ef2513c70f6721fe2e342c9e16cd8a43c"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        288,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "fbad6536e5a59ec3fabc81e94ac5c701c880a7bb53dea940ae7b3a0d7119f10b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        432,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "478080f9649c62a5963fa335e704249e26b7ce88ac5cfa912690273742228a06"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "8655ea30619c9bc0b8aebeeac26ab0b22073293b1f09a754bd086ec49ffd8ec9"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        720,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "75c4c4be51d346f45e1f9dbd5fb3d8011e3b228b4f56f2ef8d941852bad5cb5b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        864,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "31fb7e1254dd1ab889383908378a8cc165c27201eab59f0aa3ca988e1e5972b4"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1008,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "bdc772548f7e454ab4b32180b84a2cba859531ce56647170beea5e7f122ee32b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "e8690f7853f98f5598c5e7096cfed5409497eadcae3e2b1228146cd17f7b3519"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1296,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "06bda306892daa5028881ba4f157f9a85584cf0e8cc0c2ea1580209a5d8bbaf8"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1440,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "0d90676cc3020e152a8592c64b073310ef0e31c509cc08ca2c451620bb46783d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1584,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "7acf9e0436018760ff62981ff7bd5e9802a4ee0e6920157d663b3134fde697b0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "26dbd559c173e403b15a2a3e6f264de0cd29216d99ed67529451a9d234c699bd"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1872,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "832258a9f2a9dc1a8d2c8156072a88abb3e8707525d19351ea9f97d9ecac6903"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2016,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "deace56054a268df34bce3be31cfac17b6b3a59ec7578681e4319db6236703d7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2160,
+        480,
+        144,
+        120
+      ],
+      "rgba_sha256": "8ebb9793f44198eb108675fee2ef13b1b6664c3f6dd0cf9f960c980e3a5d4ee8"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "ad19d6e426e0db3fe09fdf6dbc33b5fee125c1e905f12f031d6e8c84a2249bb7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        144,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "b75b717d20ca88f7e1778e262bb86437bfab4681f66624cf5078845127d6be6e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        288,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "ce0f091c56fde4ff8f8c5894a230995007f9a171c5154a4e4477f26c26889c37"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        432,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "37b0111068fd3887f5c08a5c26e67f468c92881c7e7806052bac56144794e561"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "01a6647d9c2f1593992d6769827662aaaff4b091c809410bddd863d275dcdee5"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        720,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "93d30cb6fb4a6a851289c41173963954dd07276bfdf01fdbd47a066eb7d0c0a2"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        864,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "9e00f6eb29b188da7a3f6f659dd239795bfde38cd6d0ebd70aea375f8898f256"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1008,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "491bb46212c5edf3dae77b029c2ed01153ef73c5d930b41fade8f75686941064"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "e7767023f8ffd964e8228da6847001ef0a5e1a297d7b9de60b1c5ee3f0aa4f27"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1296,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "ae31796d18aacb741f09fa7689c61137d2efa741ab0c918a8af30d1a0f1572af"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1440,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "9c7c2c7128af9deee0277f9e5d1e16b046e20152f855a261421e60bea130db6f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1584,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "91f93152f56ad83d9c7a5b2ae6b537302da57333b8f28932310145dc07438fad"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "a6157e75126935692d70e888438eeb6d6f1c444bba9e5d8cca740c844b2fd475"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1872,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "dfb7897d55be507f15d5abfcc12e60d8ff20645c2d36a60eaf74f98c0d38c943"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2016,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "25fa5be4c0227d518f2f20d7db3e9babec2bcbc5492eb85cfbcceeba05a06bf2"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2160,
+        600,
+        144,
+        120
+      ],
+      "rgba_sha256": "71d93044a8d08dfb5b71d74cba0acd7da125cfc8925db7bbc47a5e98631aef2b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "388477dcd946512fb35b472bfc32b515c7a236367b1fe3e95622db7ddda80d5c"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        144,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "ba957fcc17f16bb0f372e5c3383b4a146a961ac6af1760c14eeb183d9497ca38"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        288,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "752eda8d210ac0759ebcf21968bc95e0a7f1566b4509f3f0865dbcb26a2d0e3b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        432,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "cd0d86d911d74b2aede15e4042485450785cf59033df838f5c870ebbcb61a6fc"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "deab705f1bfd6d6797971ae7fc0316fc93aa7158fe190a37497f978a83f7fca3"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        720,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "81a2e9f64af864bd29e5cd40c50d1433dc08d6fd2b953b6e2c976d48a8dad03a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        864,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "12beb11ede4bc879fe4c820e27717f771a90374ff9326d18dd0dca59c8456033"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1008,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "65020036e149bf3175b8b00a7b86b12aac08b9c2382261ef911ce43983886445"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "2153bff282b80ee5cf2e489ddc5671c80c6c20163a0cf9c2072d33d9e111a85b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1296,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "291423e8b37da6b83ccb0ecf3389bcc00f05a1f5c4d292b9bcb1ae677e32f63b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1440,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "61cf23ae336e8ae76fe168299a5050f91299cd7ecbadd32870200cf2baf20d02"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1584,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "bf101e4e9eb1d8935945110344d545e27a8919e4ea66c454d5d08901b54fa287"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "0ea2e41ff89c9bba510cd716de94267f464a48c437a1952b46051dabbcbc3a55"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1872,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "0ed7dd9d93e972e8ddce2526f12dd5ef927b86170ed912e8e8df4e48fad149dc"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2016,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "36b619a17ca4f2b7494f4592231f5620c7d72cd5333685d049af88dd2577d9ec"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2160,
+        720,
+        144,
+        120
+      ],
+      "rgba_sha256": "287a8d13ce113ffc636b782cfde712c1411bb25221b6280b51d5af86ca1962fd"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "ced2f5356e4e3dc4de7e5997567dfbcfe517358cdaae4fed68e594a70fee027b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        144,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "948de9335a51687c3e020a16ef1dbf23147f4d3c8728bd87902dc0ed3c21fb80"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        288,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "4da2bc4bb20bf62262ca7320f707dc8df536dc5dfc38d9befed4120e56fb62a0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        432,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "b53d2ee82b12c92ef2bd5c2ffd2471b8e04b896ca4b9eb8120e860397f3e8a02"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "289f8c6376233bcdcf2dab2f79cb93fa24bf217c45eae066a064ee63dc23e7ef"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        720,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "c484a90620b43e2b9e9cb5df1bd498c5e1a58fd9e3d3795cee682dba8165a4ff"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        864,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "2410fadeff45509408932a187f145990ccd38f6113e10041bf31e55784652681"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1008,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "56dc9ede8a9e68f0c80dc3d8a92a52133acfadcfa077b82a2a709e6db3885d3c"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "da8bab5af2c6149e1397dfa01a55317d872ff3d16d27d72e5847289dc1ef5f0e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1296,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "df6130c8b0d2a39080b0fb5a244cc710a5791a6e458bba22089247eb1809ccee"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1440,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "af1f0dc4cc24d70ec1f797358c3489e38108d9825788d9bf9f72a83906e01450"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1584,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "834309bef8e140fd9dcb4983b5d776cf35d01ca0d7d29358ca5c6792a96d9e05"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "ee8d3b39003ee5ce4c7c5c2f13b381c5ea71b43220a81a79e97ba7a5f54bc495"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1872,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "98b7f651b0c994737bbd80cdf1f38957b58d0bc9cd4012ced29f14e2a6040922"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2016,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "8a3a9f916e93fa341fb26231d0762bf60565abd6f880dec472728ec11f7a72a4"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2160,
+        840,
+        144,
+        120
+      ],
+      "rgba_sha256": "ddc676c2a7be09e1abd1a4f45b05fc8af01ae772b8e6ea07e956ca89a78d701c"
+    }
+  ],
+  "transparent_frames": [],
+  "source_records": [
+    {
+      "record_key": "source1:Sprite.pak:88391",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88391,
+      "name": "790-11.spr",
+      "extension": ".spr",
+      "offset": 955290571,
+      "size": 8608,
+      "sha256": "768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 66,
+      "pixels": 4803,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 66,
+        "pixels": 4803,
+        "frame_refs": 66,
+        "palette": 64,
+        "consumed": 8608,
+        "trailing": 0,
+        "checksum": "0x8bbce3c3598feba8",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 12594
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/768fb8be096e216af5df0b64357ba07b5ea525034779d62085e6e5304662a18c.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88392",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88392,
+      "name": "790-12.spr",
+      "extension": ".spr",
+      "offset": 955280896,
+      "size": 9675,
+      "sha256": "2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 6054,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 6054,
+        "frame_refs": 60,
+        "palette": 64,
+        "consumed": 9675,
+        "trailing": 0,
+        "checksum": "0xe88b39874d559075",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 14966
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/2c52aa980156a5dbfa8137c98c15b2bf159e5512b333d74f163e35601b63638f.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88393",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88393,
+      "name": "790-13.spr",
+      "extension": ".spr",
+      "offset": 955270860,
+      "size": 10036,
+      "sha256": "8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 6194,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 6194,
+        "frame_refs": 60,
+        "palette": 64,
+        "consumed": 10036,
+        "trailing": 0,
+        "checksum": "0x5bce9eff2a9b0b37",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 15467
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/8395ec7d9dc1664e304e5ec1e2941fa6f7a37ef1e755d527a1bf8c8834039b1c.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88394",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88394,
+      "name": "790-14.spr",
+      "extension": ".spr",
+      "offset": 955261490,
+      "size": 9370,
+      "sha256": "d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 5693,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 5693,
+        "frame_refs": 60,
+        "palette": 64,
+        "consumed": 9370,
+        "trailing": 0,
+        "checksum": "0x78dd20107bf762bb",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 14300
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/d889c92172aab7125cdc34c876d0d561e7807f1fd9583dcd4b2840f5dbdd2a1f.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88395",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88395,
+      "name": "790-15.spr",
+      "extension": ".spr",
+      "offset": 955252287,
+      "size": 9203,
+      "sha256": "df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 66,
+      "pixels": 5142,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 66,
+        "pixels": 5142,
+        "frame_refs": 66,
+        "palette": 64,
+        "consumed": 9203,
+        "trailing": 0,
+        "checksum": "0x4cadf6f7a8fa7399",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 13528
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/df612826b21de3248f9744e9f1fb976c7f7457e96cca4547f9662f9871747c05.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88418",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88418,
+      "name": "790-8.spr",
+      "extension": ".spr",
+      "offset": 955121057,
+      "size": 10306,
+      "sha256": "117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 6468,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 6468,
+        "frame_refs": 60,
+        "palette": 64,
+        "consumed": 10306,
+        "trailing": 0,
+        "checksum": "0xfeb3198366967ddc",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 16011
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/117f5a8653562ba9c5589463ba4dfc4d450cafcd914972ff1f4ff0cdf0a2d472.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88419",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88419,
+      "name": "790-9.spr",
+      "extension": ".spr",
+      "offset": 955110610,
+      "size": 10447,
+      "sha256": "a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 6609,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 6609,
+        "frame_refs": 60,
+        "palette": 64,
+        "consumed": 10447,
+        "trailing": 0,
+        "checksum": "0x4377e97eb3c49596",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 16293
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/a012830333bb9fbbaaf9e3d2a2fbfd13badd82c38a6fd214dffdea7acf3561cb.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88390",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88390,
+      "name": "790-10.spr",
+      "extension": ".spr",
+      "offset": 955299179,
+      "size": 9592,
+      "sha256": "da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 5870,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 5870,
+        "frame_refs": 60,
+        "palette": 64,
+        "consumed": 9592,
+        "trailing": 0,
+        "checksum": "0x420d095a541bd308",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 14699
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/da5dab35964025aff2f479ff331cddf8d988598dac4c1555cd14a8c9c4fced34.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88411",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88411,
+      "name": "790-3.spr",
+      "extension": ".spr",
+      "offset": 955171309,
+      "size": 5796,
+      "sha256": "a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 40,
+      "pixels": 3430,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 40,
+        "pixels": 3430,
+        "frame_refs": 40,
+        "palette": 128,
+        "consumed": 5796,
+        "trailing": 0,
+        "checksum": "0xa2b3c0f681a5e5d1",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 8543
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/a42b43cb304a4503d9cac83baf2c79c0c7939c201a812b1f8e4308a5914420ed.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88414",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88414,
+      "name": "790-4.spr",
+      "extension": ".spr",
+      "offset": 955150479,
+      "size": 5877,
+      "sha256": "49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 39,
+      "pixels": 3513,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 39,
+        "pixels": 3513,
+        "frame_refs": 39,
+        "palette": 128,
+        "consumed": 5877,
+        "trailing": 0,
+        "checksum": "0x86db19990ef368e8",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 8716
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/49ee2dda80433cd4b4ad76b241e06e96d68c819ec6a221c05c92edacac238c70.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88415",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88415,
+      "name": "790-5.spr",
+      "extension": ".spr",
+      "offset": 955144222,
+      "size": 6257,
+      "sha256": "10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 40,
+      "pixels": 3779,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 40,
+        "pixels": 3779,
+        "frame_refs": 40,
+        "palette": 128,
+        "consumed": 6257,
+        "trailing": 0,
+        "checksum": "0x2e4d54c7e7e5a2cd",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9353
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/10a7e0891fd9b3e307a26562c673c9f3ed0a159825bd93dfc00ced2b53aae86e.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88416",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88416,
+      "name": "790-6.spr",
+      "extension": ".spr",
+      "offset": 955137885,
+      "size": 6337,
+      "sha256": "0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 39,
+      "pixels": 3891,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 39,
+        "pixels": 3891,
+        "frame_refs": 39,
+        "palette": 64,
+        "consumed": 6337,
+        "trailing": 0,
+        "checksum": "0x7c54e15ad8bd2b15",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9682
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/0b93a19ebe456ced3c00865131e0eefea249eefe60929a6c51d92d7de17a3ede.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88417",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88417,
+      "name": "790-7.spr",
+      "extension": ".spr",
+      "offset": 955131363,
+      "size": 6522,
+      "sha256": "6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 51,
+      "pixels": 3814,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 51,
+        "pixels": 3814,
+        "frame_refs": 51,
+        "palette": 64,
+        "consumed": 6522,
+        "trailing": 0,
+        "checksum": "0x1aa9994b34fd21c1",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9682
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/6838c7abd6347239ac60f25414969b7e2035d9130b7145e19936a6792d206f24.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88388",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88388,
+      "name": "790-0.spr",
+      "extension": ".spr",
+      "offset": 955315166,
+      "size": 6192,
+      "sha256": "4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 38,
+      "pixels": 3783,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 38,
+        "pixels": 3783,
+        "frame_refs": 38,
+        "palette": 128,
+        "consumed": 6192,
+        "trailing": 0,
+        "checksum": "0x70ae6c7b47fd98bb",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9310
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/4451a4165d8cd046ade3fc596c341fd320d07d525b7869af4eb2f0e1fd5016d8.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88389",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88389,
+      "name": "790-1.spr",
+      "extension": ".spr",
+      "offset": 955308771,
+      "size": 6395,
+      "sha256": "31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 44,
+      "pixels": 3849,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 44,
+        "pixels": 3849,
+        "frame_refs": 44,
+        "palette": 64,
+        "consumed": 6395,
+        "trailing": 0,
+        "checksum": "0x17c769eb9c806092",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9653
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/31d08497a8c67b37010af60348ed3d1a7196864145104d309493fe432fb37924.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88400",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88400,
+      "name": "790-2.spr",
+      "extension": ".spr",
+      "offset": 955231551,
+      "size": 6260,
+      "sha256": "ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 42,
+      "pixels": 3839,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 42,
+        "pixels": 3839,
+        "frame_refs": 42,
+        "palette": 128,
+        "consumed": 6260,
+        "trailing": 0,
+        "checksum": "0x5f46c99372b3c4b1",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9398
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/ba493fcd868a1f23d45e591ad9803b522f6faba025813776f64dafb247bc2292.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88408",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88408,
+      "name": "790-27.spr",
+      "extension": ".spr",
+      "offset": 955190164,
+      "size": 7541,
+      "sha256": "802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 48,
+      "pixels": 4588,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 48,
+        "pixels": 4588,
+        "frame_refs": 48,
+        "palette": 64,
+        "consumed": 7541,
+        "trailing": 0,
+        "checksum": "0xc9128d06f28d6f38",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 11502
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/802216380c589a948ff1902d4c74b67f1526d7adf2fea79950def803c3aad9d3.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88409",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88409,
+      "name": "790-28.spr",
+      "extension": ".spr",
+      "offset": 955183150,
+      "size": 7014,
+      "sha256": "f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 45,
+      "pixels": 4337,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 45,
+        "pixels": 4337,
+        "frame_refs": 45,
+        "palette": 64,
+        "consumed": 7014,
+        "trailing": 0,
+        "checksum": "0x7ed820849ac6df5b",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 10751
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/f0518b4b304be787fc8042a2c3e53e63a6b5a43a335f9103b84e793a576eb889.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88410",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88410,
+      "name": "790-29.spr",
+      "extension": ".spr",
+      "offset": 955177105,
+      "size": 6045,
+      "sha256": "a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 41,
+      "pixels": 3474,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 41,
+        "pixels": 3474,
+        "frame_refs": 41,
+        "palette": 128,
+        "consumed": 6045,
+        "trailing": 0,
+        "checksum": "0xbd9784854d9a86be",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 8827
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/a54f5f77c820d7322433deab564b80b59602857deed1430eb28b5272bd4a2f95.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88412",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88412,
+      "name": "790-30.spr",
+      "extension": ".spr",
+      "offset": 955164198,
+      "size": 7111,
+      "sha256": "31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 47,
+      "pixels": 4126,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 47,
+        "pixels": 4126,
+        "frame_refs": 47,
+        "palette": 64,
+        "consumed": 7111,
+        "trailing": 0,
+        "checksum": "0xba222422015c42f4",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 10619
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/31ea2d00065834959d3213cfa0eff5324e2eee552009904350da46c295d8c015.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88413",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88413,
+      "name": "790-31.spr",
+      "extension": ".spr",
+      "offset": 955156356,
+      "size": 7842,
+      "sha256": "e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 53,
+      "pixels": 4745,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 53,
+        "pixels": 4745,
+        "frame_refs": 53,
+        "palette": 64,
+        "consumed": 7842,
+        "trailing": 0,
+        "checksum": "0x305a8f25cf189c24",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 11915
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/e9f69867f36c5d65c53bcc5f5cd0e2db5b97d40849952eaefd76f773c1c83f5c.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88405",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88405,
+      "name": "790-24.spr",
+      "extension": ".spr",
+      "offset": 955210998,
+      "size": 7627,
+      "sha256": "752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 50,
+      "pixels": 4677,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 50,
+        "pixels": 4677,
+        "frame_refs": 50,
+        "palette": 64,
+        "consumed": 7627,
+        "trailing": 0,
+        "checksum": "0xb15eff32b9ef1886",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 11659
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/752e72c4a8eb8b6b9437f2e130fdd6529bff9c47cec66ac32b584329842bc25a.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88406",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88406,
+      "name": "790-25.spr",
+      "extension": ".spr",
+      "offset": 955204632,
+      "size": 6366,
+      "sha256": "20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 44,
+      "pixels": 3642,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 44,
+        "pixels": 3642,
+        "frame_refs": 44,
+        "palette": 128,
+        "consumed": 6366,
+        "trailing": 0,
+        "checksum": "0x5cf74ae539609172",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9289
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/20aa5f1b3d6b8c9fb2881bfa9a450c600019f2d8a9f9e48cfa769268b4d5102b.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88407",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88407,
+      "name": "790-26.spr",
+      "extension": ".spr",
+      "offset": 955197705,
+      "size": 6927,
+      "sha256": "5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 48,
+      "pixels": 4095,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 48,
+        "pixels": 4095,
+        "frame_refs": 48,
+        "palette": 64,
+        "consumed": 6927,
+        "trailing": 0,
+        "checksum": "0x43d176a8fc54b5df",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 10395
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/5a2e3a64cdf87f0f63daa1c29ebaab70df55eb542a447c6f3c5545eae1333a81.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88399",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88399,
+      "name": "790-19.spr",
+      "extension": ".spr",
+      "offset": 955237811,
+      "size": 3612,
+      "sha256": "3f11c50d6a9fd331eb443e65c058f2906f68991aed4a328516cc9e27e4a63da5",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 24,
+      "pixels": 2037,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 24,
+        "pixels": 2037,
+        "frame_refs": 24,
+        "palette": 128,
+        "consumed": 3612,
+        "trailing": 0,
+        "checksum": "0xb3d4cc0e7384ab37",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 5138
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/3f11c50d6a9fd331eb443e65c058f2906f68991aed4a328516cc9e27e4a63da5.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88401",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88401,
+      "name": "790-20.spr",
+      "extension": ".spr",
+      "offset": 955228121,
+      "size": 3430,
+      "sha256": "6aef87f8977161cd10d1c583930bddbac342b9c9ee1c2027998bd0565120799a",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 24,
+      "pixels": 1893,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 24,
+        "pixels": 1893,
+        "frame_refs": 24,
+        "palette": 128,
+        "consumed": 3430,
+        "trailing": 0,
+        "checksum": "0x72ab10a6de5e5a70",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4812
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/6aef87f8977161cd10d1c583930bddbac342b9c9ee1c2027998bd0565120799a.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88402",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88402,
+      "name": "790-21.spr",
+      "extension": ".spr",
+      "offset": 955225087,
+      "size": 3034,
+      "sha256": "2ca662e9a671ad14cd6b6210189478454cbd3d6f17d45a027c02041492c8c6a9",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 19,
+      "pixels": 1738,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 19,
+        "pixels": 1738,
+        "frame_refs": 19,
+        "palette": 128,
+        "consumed": 3034,
+        "trailing": 0,
+        "checksum": "0xdd3266c7c76b1679",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4306
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/2ca662e9a671ad14cd6b6210189478454cbd3d6f17d45a027c02041492c8c6a9.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88403",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88403,
+      "name": "790-22.spr",
+      "extension": ".spr",
+      "offset": 955222129,
+      "size": 2958,
+      "sha256": "3432ad801a00fc0a9890cc5bca01cee585df7a82c8427f3c5a51889a356ad591",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 21,
+      "pixels": 1592,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 21,
+        "pixels": 1592,
+        "frame_refs": 21,
+        "palette": 128,
+        "consumed": 2958,
+        "trailing": 0,
+        "checksum": "0x7fae5eb3cfc1e074",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4066
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/3432ad801a00fc0a9890cc5bca01cee585df7a82c8427f3c5a51889a356ad591.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88404",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88404,
+      "name": "790-23.spr",
+      "extension": ".spr",
+      "offset": 955218625,
+      "size": 3504,
+      "sha256": "ffa528adb3fdb9bc69b9c5af516551dc49e1cc491a3534d41c93eb45f176059c",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 23,
+      "pixels": 1988,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 23,
+        "pixels": 1988,
+        "frame_refs": 23,
+        "palette": 128,
+        "consumed": 3504,
+        "trailing": 0,
+        "checksum": "0x35f6291eeb168b1e",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4990
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/ffa528adb3fdb9bc69b9c5af516551dc49e1cc491a3534d41c93eb45f176059c.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88396",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88396,
+      "name": "790-16.spr",
+      "extension": ".spr",
+      "offset": 955248413,
+      "size": 3874,
+      "sha256": "d7d668559a56faeecaa3caabcf998d5d05a8f450f496d065df208835e35bc9ab",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 25,
+      "pixels": 2212,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 25,
+        "pixels": 2212,
+        "frame_refs": 25,
+        "palette": 128,
+        "consumed": 3874,
+        "trailing": 0,
+        "checksum": "0x8cf88aea12d741ad",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 5566
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/d7d668559a56faeecaa3caabcf998d5d05a8f450f496d065df208835e35bc9ab.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88397",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88397,
+      "name": "790-17.spr",
+      "extension": ".spr",
+      "offset": 955244829,
+      "size": 3584,
+      "sha256": "08b09cd0a9915d4acb55e42a89b8d236967a357bf626e37ed882a8bd94f68dae",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 22,
+      "pixels": 2058,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 22,
+        "pixels": 2058,
+        "frame_refs": 22,
+        "palette": 128,
+        "consumed": 3584,
+        "trailing": 0,
+        "checksum": "0xe6d6fd591debd269",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 5149
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/08b09cd0a9915d4acb55e42a89b8d236967a357bf626e37ed882a8bd94f68dae.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite.pak:88398",
+      "source": "source1",
+      "pak": "Sprite.pak",
+      "index_row": 88398,
+      "name": "790-18.spr",
+      "extension": ".spr",
+      "offset": 955241423,
+      "size": 3406,
+      "sha256": "958da0d512b87d6335bc0f119d0e824dc162185043c1ea119cd6b11e0f76aeda",
+      "numeric_sprite_prefix": 790,
+      "source1_action_ids": [
+        790,
+        2323,
+        8732,
+        8860,
+        11342
+      ],
+      "source1_local_action_names": [
+        "ofb",
+        "orc scout polymorph",
+        "ofb",
+        "orc scout polymorph",
+        "lv orc scout"
+      ],
+      "source1_korean_candidates": [
+        "오크 스카우트 변신 후보"
+      ],
+      "source1_match_statuses": [
+        "probable_version_related_alias"
+      ],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 23,
+      "pixels": 1855,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 23,
+        "pixels": 1855,
+        "frame_refs": 23,
+        "palette": 128,
+        "consumed": 3406,
+        "trailing": 0,
+        "checksum": "0xfd8c69d9e7d2230f",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4759
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/958da0d512b87d6335bc0f119d0e824dc162185043c1ea119cd6b11e0f76aeda.spr",
+      "variant_context": "base_pack",
+      "range_sha256_verified": true
+    }
+  ],
+  "canvas_original_grid": [
+    -48,
+    -72,
+    96,
+    48
+  ],
+  "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+  "unresolved_action_aliases": [
+    "8=784"
+  ],
+  "source_unit_conversion": false
+}

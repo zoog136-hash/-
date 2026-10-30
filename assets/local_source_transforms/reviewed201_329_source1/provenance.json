@@ -1,0 +1,7295 @@
+{
+  "schema": 1,
+  "input_library_ids": [
+    "libfile_a451565065d48191bc7b716bd7b40a2b",
+    "libfile_92edfa9d2a4c8191ac18c41323dd0209",
+    "libfile_12e4793a89108191b4f0222ce066467c",
+    "libfile_a1d369d2ce4c819188215a9ced430daa"
+  ],
+  "decoder_sha256": "615f9f89d8a8d847cf531f2b4214ee1613b39bdabbeec7248410e3f3e6a07449",
+  "definition": {
+    "record_key": "source1:Text.pak:list.spr:definition:5912",
+    "source": "source1",
+    "table": "Text.pak/list.spr",
+    "definition_id": 5912,
+    "base_sprite_id": 5912,
+    "local_name": "red orc",
+    "korean_candidate": null,
+    "match_status": "unknown",
+    "match_detail": {},
+    "urls": [],
+    "versions": [],
+    "roles_confirmed": [],
+    "role_candidates": [
+      "actor_hurt_action",
+      "type10_monster_like"
+    ],
+    "raw_type": "10",
+    "action_definitions": [
+      {
+        "id": 0,
+        "name": "walk",
+        "definition": "1 4,0.0:6 0.1:6 0.2:6 0.3:6"
+      },
+      {
+        "id": 3,
+        "name": "breath",
+        "definition": "1 6,8.0:6 8.1:6 8.2:6 8.3:6 8.4:6 8.5:6"
+      },
+      {
+        "id": 2,
+        "name": "damage",
+        "definition": "1 3,0.0:4 16.0:6[51 16.1:3"
+      },
+      {
+        "id": 8,
+        "name": "death",
+        "definition": "1 6,24.5:4 24.0:3 24.1:8[52 24.2:4 24.3:6 24.4:4"
+      },
+      {
+        "id": 1,
+        "name": "attack",
+        "definition": "1 5,0.0:5 32.0:5 32.1:7 32.2:3 32.3:6[12!"
+      },
+      {
+        "id": 101,
+        "name": "shadow",
+        "definition": "785"
+      },
+      {
+        "id": 102,
+        "name": "type",
+        "definition": "10"
+      }
+    ],
+    "relation_metadata": [
+      {
+        "kind": "shadow",
+        "value": "785"
+      }
+    ],
+    "semantic_references": [],
+    "raw_definition": "#5912 40 red orc\r\n  0.walk(1 4,0.0:6 0.1:6 0.2:6 0.3:6)\r\n\t3.breath(1 6,8.0:6 8.1:6 8.2:6 8.3:6 8.4:6 8.5:6)\r\n  2.damage(1 3,0.0:4 16.0:6[51 16.1:3)\r\n\t8.death(1 6,24.5:4 24.0:3 24.1:8[52 24.2:4 24.3:6 24.4:4)\r\n  1.attack(1 5,0.0:5 32.0:5 32.1:7 32.2:3 32.3:6[12!)\r\n\t101.shadow(785)\r\n  102.type(10)\r\n",
+    "raw_definition_sha256": "db3e31a186467559d5aaa2e0dd21b28220b036252ffbfa11cdc04af8ac6e8fa7"
+  },
+  "corroborating_source_identity": {
+    "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/npc.sql",
+    "file_sha256": "e14d2a0c074a842c0acbbb4ccc066d6c555ac08284e403cb89c14e977668896e",
+    "tuple_sha256": "09d1e4f2433c9cada4219a8fec75395d1ffc7aa45bbbf2ec683a11f744926e9d",
+    "line": 2665,
+    "byte_offset": 1115685,
+    "byte_length": 424
+  },
+  "identity_visual_review": "Named red orc Kuzak with pale fur shoulder trim and dark armor/shield.",
+  "role_action_codes": {
+    "idle": 3,
+    "walk": 0,
+    "run": 0,
+    "attack": 1,
+    "hit": 2,
+    "death": 8,
+    "cast": 1
+  },
+  "tracks": {
+    "idle_0": [
+      {
+        "blob_sha256": "6be7c73126c46da57a63c97dd6e67ec9be7b7a3257082375b7081c13a2f32008",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "6be7c73126c46da57a63c97dd6e67ec9be7b7a3257082375b7081c13a2f32008",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "6be7c73126c46da57a63c97dd6e67ec9be7b7a3257082375b7081c13a2f32008",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "6be7c73126c46da57a63c97dd6e67ec9be7b7a3257082375b7081c13a2f32008",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "6be7c73126c46da57a63c97dd6e67ec9be7b7a3257082375b7081c13a2f32008",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "6be7c73126c46da57a63c97dd6e67ec9be7b7a3257082375b7081c13a2f32008",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 11,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "idle_1": [
+      {
+        "blob_sha256": "5921e40feed8eaa3779b7c47b3ba2e4aa100d2036e8c8427fa61eeb1064c3317",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "5921e40feed8eaa3779b7c47b3ba2e4aa100d2036e8c8427fa61eeb1064c3317",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "5921e40feed8eaa3779b7c47b3ba2e4aa100d2036e8c8427fa61eeb1064c3317",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "5921e40feed8eaa3779b7c47b3ba2e4aa100d2036e8c8427fa61eeb1064c3317",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "5921e40feed8eaa3779b7c47b3ba2e4aa100d2036e8c8427fa61eeb1064c3317",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "5921e40feed8eaa3779b7c47b3ba2e4aa100d2036e8c8427fa61eeb1064c3317",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 12,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "idle_2": [
+      {
+        "blob_sha256": "331eb24456ed2473b8f68a8b5fbc700b75e1b5eca5798f550f82e365b969a27a",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "331eb24456ed2473b8f68a8b5fbc700b75e1b5eca5798f550f82e365b969a27a",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "331eb24456ed2473b8f68a8b5fbc700b75e1b5eca5798f550f82e365b969a27a",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "331eb24456ed2473b8f68a8b5fbc700b75e1b5eca5798f550f82e365b969a27a",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "331eb24456ed2473b8f68a8b5fbc700b75e1b5eca5798f550f82e365b969a27a",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "331eb24456ed2473b8f68a8b5fbc700b75e1b5eca5798f550f82e365b969a27a",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 13,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "idle_3": [
+      {
+        "blob_sha256": "add71a18296a408ad82c788aaec901b35c242e700bfe3cb5cee7f0907bd2c2e0",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "add71a18296a408ad82c788aaec901b35c242e700bfe3cb5cee7f0907bd2c2e0",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "add71a18296a408ad82c788aaec901b35c242e700bfe3cb5cee7f0907bd2c2e0",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "add71a18296a408ad82c788aaec901b35c242e700bfe3cb5cee7f0907bd2c2e0",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "add71a18296a408ad82c788aaec901b35c242e700bfe3cb5cee7f0907bd2c2e0",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "add71a18296a408ad82c788aaec901b35c242e700bfe3cb5cee7f0907bd2c2e0",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 14,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "idle_4": [
+      {
+        "blob_sha256": "dbdeabbefb2045e655bda354a57f3231b9e6899d9b03a10c118f4b7e4e309357",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "dbdeabbefb2045e655bda354a57f3231b9e6899d9b03a10c118f4b7e4e309357",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "dbdeabbefb2045e655bda354a57f3231b9e6899d9b03a10c118f4b7e4e309357",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "dbdeabbefb2045e655bda354a57f3231b9e6899d9b03a10c118f4b7e4e309357",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "dbdeabbefb2045e655bda354a57f3231b9e6899d9b03a10c118f4b7e4e309357",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "dbdeabbefb2045e655bda354a57f3231b9e6899d9b03a10c118f4b7e4e309357",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 15,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "idle_5": [
+      {
+        "blob_sha256": "53f64e2e344f6ee6f4b83788f4f9ac2cdcb6e0b33901dbb38ae3a1ac09bf09ce",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "53f64e2e344f6ee6f4b83788f4f9ac2cdcb6e0b33901dbb38ae3a1ac09bf09ce",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "53f64e2e344f6ee6f4b83788f4f9ac2cdcb6e0b33901dbb38ae3a1ac09bf09ce",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "53f64e2e344f6ee6f4b83788f4f9ac2cdcb6e0b33901dbb38ae3a1ac09bf09ce",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "53f64e2e344f6ee6f4b83788f4f9ac2cdcb6e0b33901dbb38ae3a1ac09bf09ce",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "53f64e2e344f6ee6f4b83788f4f9ac2cdcb6e0b33901dbb38ae3a1ac09bf09ce",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 8,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "idle_6": [
+      {
+        "blob_sha256": "9239fb0ededcd9c93a2c17f777d5dabe6a952b68d2dd97df8548583376622ea9",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "9239fb0ededcd9c93a2c17f777d5dabe6a952b68d2dd97df8548583376622ea9",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "9239fb0ededcd9c93a2c17f777d5dabe6a952b68d2dd97df8548583376622ea9",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "9239fb0ededcd9c93a2c17f777d5dabe6a952b68d2dd97df8548583376622ea9",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "9239fb0ededcd9c93a2c17f777d5dabe6a952b68d2dd97df8548583376622ea9",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "9239fb0ededcd9c93a2c17f777d5dabe6a952b68d2dd97df8548583376622ea9",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 9,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "idle_7": [
+      {
+        "blob_sha256": "6cc3bd82b5d43693931a33e3c54ac2ec39c4f14e9799bf39eaaa87f47354306a",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "6cc3bd82b5d43693931a33e3c54ac2ec39c4f14e9799bf39eaaa87f47354306a",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "6cc3bd82b5d43693931a33e3c54ac2ec39c4f14e9799bf39eaaa87f47354306a",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "6cc3bd82b5d43693931a33e3c54ac2ec39c4f14e9799bf39eaaa87f47354306a",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "6cc3bd82b5d43693931a33e3c54ac2ec39c4f14e9799bf39eaaa87f47354306a",
+        "frame_index": 4,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "6cc3bd82b5d43693931a33e3c54ac2ec39c4f14e9799bf39eaaa87f47354306a",
+        "frame_index": 5,
+        "duration_raw": 6,
+        "file_suffix": 10,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "walk_0": [
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "walk_1": [
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "walk_2": [
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "walk_3": [
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "walk_4": [
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "walk_5": [
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "walk_6": [
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "walk_7": [
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "run_0": [
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "run_1": [
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "run_2": [
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "run_3": [
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "run_4": [
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "run_5": [
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "run_6": [
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "run_7": [
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 1,
+        "duration_raw": 6,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 2,
+        "duration_raw": 6,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "attack_0": [
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 35,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 35,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 35,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 35,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "attack_1": [
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 36,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 36,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 36,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 36,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "attack_2": [
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 37,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 37,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 37,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 37,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "attack_3": [
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 38,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 38,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 38,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 38,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "attack_4": [
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 39,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 39,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 39,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 39,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "attack_5": [
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 32,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 32,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 32,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 32,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "attack_6": [
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 33,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 33,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 33,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 33,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "attack_7": [
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 34,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 34,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 34,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 34,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "hit_0": [
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "8bcfd96c8083fdea573f52784ec6c4b3c991838217f3752af397651a8fe04465",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 19,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "8bcfd96c8083fdea573f52784ec6c4b3c991838217f3752af397651a8fe04465",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 19,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "hit_1": [
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "4e7d922b33bb9d134071067fc8a924366ad95950ba4eea198c6f764420965901",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 20,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "4e7d922b33bb9d134071067fc8a924366ad95950ba4eea198c6f764420965901",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 20,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "hit_2": [
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "5936dbeaf1e14af6c029a2a3e2af35baa68d7af413babe1cff6bc920edc2717e",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 21,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "5936dbeaf1e14af6c029a2a3e2af35baa68d7af413babe1cff6bc920edc2717e",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 21,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "hit_3": [
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "6b15ada63017d52f3f055faad1a07e12e7ee3590eea2e94bc71a38ef12a38141",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 22,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "6b15ada63017d52f3f055faad1a07e12e7ee3590eea2e94bc71a38ef12a38141",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 22,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "hit_4": [
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "266bf8e8104000a1284d9efd80c679092b7335bc8bd64ef37f43950869878cce",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 23,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "266bf8e8104000a1284d9efd80c679092b7335bc8bd64ef37f43950869878cce",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 23,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "hit_5": [
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "60c1357b5e03fca80184eb42ab6502e808e6c61e4997462e292669312858db28",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 16,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "60c1357b5e03fca80184eb42ab6502e808e6c61e4997462e292669312858db28",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 16,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "hit_6": [
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "d07fd2133ae67a7e16d840f1a295bc74870f8a4f21e7e606207e68a2d9335425",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 17,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "d07fd2133ae67a7e16d840f1a295bc74870f8a4f21e7e606207e68a2d9335425",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 17,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "hit_7": [
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 0,
+        "duration_raw": 4,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "8e18f7145784824b7c68ab5c5557d25ec315cccaa80337bfe15d24cbf883549f",
+        "frame_index": 0,
+        "duration_raw": 6,
+        "file_suffix": 18,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "8e18f7145784824b7c68ab5c5557d25ec315cccaa80337bfe15d24cbf883549f",
+        "frame_index": 1,
+        "duration_raw": 3,
+        "file_suffix": 18,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "death_0": [
+      {
+        "blob_sha256": "c72c5920bc5004be29fcf7423f509777297c9ab5a17888dbe18c018a3b092670",
+        "frame_index": 5,
+        "duration_raw": 4,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "c72c5920bc5004be29fcf7423f509777297c9ab5a17888dbe18c018a3b092670",
+        "frame_index": 0,
+        "duration_raw": 3,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "c72c5920bc5004be29fcf7423f509777297c9ab5a17888dbe18c018a3b092670",
+        "frame_index": 1,
+        "duration_raw": 8,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "c72c5920bc5004be29fcf7423f509777297c9ab5a17888dbe18c018a3b092670",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "c72c5920bc5004be29fcf7423f509777297c9ab5a17888dbe18c018a3b092670",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "c72c5920bc5004be29fcf7423f509777297c9ab5a17888dbe18c018a3b092670",
+        "frame_index": 4,
+        "duration_raw": 4,
+        "file_suffix": 27,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "death_1": [
+      {
+        "blob_sha256": "76bbf7ba2f047a9166211bccfdd5eb6061a2a57b0960cd6293066bd4505cd68e",
+        "frame_index": 5,
+        "duration_raw": 4,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76bbf7ba2f047a9166211bccfdd5eb6061a2a57b0960cd6293066bd4505cd68e",
+        "frame_index": 0,
+        "duration_raw": 3,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76bbf7ba2f047a9166211bccfdd5eb6061a2a57b0960cd6293066bd4505cd68e",
+        "frame_index": 1,
+        "duration_raw": 8,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76bbf7ba2f047a9166211bccfdd5eb6061a2a57b0960cd6293066bd4505cd68e",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76bbf7ba2f047a9166211bccfdd5eb6061a2a57b0960cd6293066bd4505cd68e",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "76bbf7ba2f047a9166211bccfdd5eb6061a2a57b0960cd6293066bd4505cd68e",
+        "frame_index": 4,
+        "duration_raw": 4,
+        "file_suffix": 28,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "death_2": [
+      {
+        "blob_sha256": "9a0c2603b7c741120ae4271140f57eeb6fa89bbb256e6fd2ea4c532237b372d5",
+        "frame_index": 5,
+        "duration_raw": 4,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "9a0c2603b7c741120ae4271140f57eeb6fa89bbb256e6fd2ea4c532237b372d5",
+        "frame_index": 0,
+        "duration_raw": 3,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "9a0c2603b7c741120ae4271140f57eeb6fa89bbb256e6fd2ea4c532237b372d5",
+        "frame_index": 1,
+        "duration_raw": 8,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "9a0c2603b7c741120ae4271140f57eeb6fa89bbb256e6fd2ea4c532237b372d5",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "9a0c2603b7c741120ae4271140f57eeb6fa89bbb256e6fd2ea4c532237b372d5",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "9a0c2603b7c741120ae4271140f57eeb6fa89bbb256e6fd2ea4c532237b372d5",
+        "frame_index": 4,
+        "duration_raw": 4,
+        "file_suffix": 29,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "death_3": [
+      {
+        "blob_sha256": "0f38beba5e3353ac1652d4d43f55bf19c0d9aa0f797e728130b260dbabaf8669",
+        "frame_index": 5,
+        "duration_raw": 4,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0f38beba5e3353ac1652d4d43f55bf19c0d9aa0f797e728130b260dbabaf8669",
+        "frame_index": 0,
+        "duration_raw": 3,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0f38beba5e3353ac1652d4d43f55bf19c0d9aa0f797e728130b260dbabaf8669",
+        "frame_index": 1,
+        "duration_raw": 8,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0f38beba5e3353ac1652d4d43f55bf19c0d9aa0f797e728130b260dbabaf8669",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0f38beba5e3353ac1652d4d43f55bf19c0d9aa0f797e728130b260dbabaf8669",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "0f38beba5e3353ac1652d4d43f55bf19c0d9aa0f797e728130b260dbabaf8669",
+        "frame_index": 4,
+        "duration_raw": 4,
+        "file_suffix": 30,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "death_4": [
+      {
+        "blob_sha256": "8225977a5cad2c6e43edd1e5d008a8b655daa424232c4d41f3f5e7ddbd3a9814",
+        "frame_index": 5,
+        "duration_raw": 4,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "8225977a5cad2c6e43edd1e5d008a8b655daa424232c4d41f3f5e7ddbd3a9814",
+        "frame_index": 0,
+        "duration_raw": 3,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "8225977a5cad2c6e43edd1e5d008a8b655daa424232c4d41f3f5e7ddbd3a9814",
+        "frame_index": 1,
+        "duration_raw": 8,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "8225977a5cad2c6e43edd1e5d008a8b655daa424232c4d41f3f5e7ddbd3a9814",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "8225977a5cad2c6e43edd1e5d008a8b655daa424232c4d41f3f5e7ddbd3a9814",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "8225977a5cad2c6e43edd1e5d008a8b655daa424232c4d41f3f5e7ddbd3a9814",
+        "frame_index": 4,
+        "duration_raw": 4,
+        "file_suffix": 31,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "death_5": [
+      {
+        "blob_sha256": "8f5bdcc622ce1749d824807986a6eae3a71c2aa8ba24fed4ba43def676ff0495",
+        "frame_index": 5,
+        "duration_raw": 4,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "8f5bdcc622ce1749d824807986a6eae3a71c2aa8ba24fed4ba43def676ff0495",
+        "frame_index": 0,
+        "duration_raw": 3,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "8f5bdcc622ce1749d824807986a6eae3a71c2aa8ba24fed4ba43def676ff0495",
+        "frame_index": 1,
+        "duration_raw": 8,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "8f5bdcc622ce1749d824807986a6eae3a71c2aa8ba24fed4ba43def676ff0495",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "8f5bdcc622ce1749d824807986a6eae3a71c2aa8ba24fed4ba43def676ff0495",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "8f5bdcc622ce1749d824807986a6eae3a71c2aa8ba24fed4ba43def676ff0495",
+        "frame_index": 4,
+        "duration_raw": 4,
+        "file_suffix": 24,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "death_6": [
+      {
+        "blob_sha256": "319ff23180b0022fd4138471ddad45322f9f4c9cfcb3a6f6bf652c0471cce033",
+        "frame_index": 5,
+        "duration_raw": 4,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "319ff23180b0022fd4138471ddad45322f9f4c9cfcb3a6f6bf652c0471cce033",
+        "frame_index": 0,
+        "duration_raw": 3,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "319ff23180b0022fd4138471ddad45322f9f4c9cfcb3a6f6bf652c0471cce033",
+        "frame_index": 1,
+        "duration_raw": 8,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "319ff23180b0022fd4138471ddad45322f9f4c9cfcb3a6f6bf652c0471cce033",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "319ff23180b0022fd4138471ddad45322f9f4c9cfcb3a6f6bf652c0471cce033",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "319ff23180b0022fd4138471ddad45322f9f4c9cfcb3a6f6bf652c0471cce033",
+        "frame_index": 4,
+        "duration_raw": 4,
+        "file_suffix": 25,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "death_7": [
+      {
+        "blob_sha256": "df288036a16a07dba16513f0356e5dad0e94d490b9e3c968983d1d3995b94746",
+        "frame_index": 5,
+        "duration_raw": 4,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "df288036a16a07dba16513f0356e5dad0e94d490b9e3c968983d1d3995b94746",
+        "frame_index": 0,
+        "duration_raw": 3,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "df288036a16a07dba16513f0356e5dad0e94d490b9e3c968983d1d3995b94746",
+        "frame_index": 1,
+        "duration_raw": 8,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "df288036a16a07dba16513f0356e5dad0e94d490b9e3c968983d1d3995b94746",
+        "frame_index": 2,
+        "duration_raw": 4,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "df288036a16a07dba16513f0356e5dad0e94d490b9e3c968983d1d3995b94746",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "df288036a16a07dba16513f0356e5dad0e94d490b9e3c968983d1d3995b94746",
+        "frame_index": 4,
+        "duration_raw": 4,
+        "file_suffix": 26,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ],
+    "cast_0": [
+      {
+        "blob_sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 3,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 35,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 35,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 35,
+        "requested_heading": 3,
+        "source_heading": 3
+      },
+      {
+        "blob_sha256": "7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 35,
+        "requested_heading": 3,
+        "source_heading": 3
+      }
+    ],
+    "cast_1": [
+      {
+        "blob_sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 4,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 36,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 36,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 36,
+        "requested_heading": 4,
+        "source_heading": 4
+      },
+      {
+        "blob_sha256": "533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 36,
+        "requested_heading": 4,
+        "source_heading": 4
+      }
+    ],
+    "cast_2": [
+      {
+        "blob_sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 5,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 37,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 37,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 37,
+        "requested_heading": 5,
+        "source_heading": 5
+      },
+      {
+        "blob_sha256": "580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 37,
+        "requested_heading": 5,
+        "source_heading": 5
+      }
+    ],
+    "cast_3": [
+      {
+        "blob_sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 6,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 38,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 38,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 38,
+        "requested_heading": 6,
+        "source_heading": 6
+      },
+      {
+        "blob_sha256": "1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 38,
+        "requested_heading": 6,
+        "source_heading": 6
+      }
+    ],
+    "cast_4": [
+      {
+        "blob_sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 7,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 39,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 39,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 39,
+        "requested_heading": 7,
+        "source_heading": 7
+      },
+      {
+        "blob_sha256": "33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 39,
+        "requested_heading": 7,
+        "source_heading": 7
+      }
+    ],
+    "cast_5": [
+      {
+        "blob_sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 0,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 32,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 32,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 32,
+        "requested_heading": 0,
+        "source_heading": 0
+      },
+      {
+        "blob_sha256": "41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 32,
+        "requested_heading": 0,
+        "source_heading": 0
+      }
+    ],
+    "cast_6": [
+      {
+        "blob_sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 1,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 33,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 33,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 33,
+        "requested_heading": 1,
+        "source_heading": 1
+      },
+      {
+        "blob_sha256": "f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 33,
+        "requested_heading": 1,
+        "source_heading": 1
+      }
+    ],
+    "cast_7": [
+      {
+        "blob_sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 2,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a",
+        "frame_index": 0,
+        "duration_raw": 5,
+        "file_suffix": 34,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a",
+        "frame_index": 1,
+        "duration_raw": 7,
+        "file_suffix": 34,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a",
+        "frame_index": 2,
+        "duration_raw": 3,
+        "file_suffix": 34,
+        "requested_heading": 2,
+        "source_heading": 2
+      },
+      {
+        "blob_sha256": "d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a",
+        "frame_index": 3,
+        "duration_raw": 6,
+        "file_suffix": 34,
+        "requested_heading": 2,
+        "source_heading": 2
+      }
+    ]
+  },
+  "visual_frame_durations_raw": {
+    "idle_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "idle_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "walk_0": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "walk_1": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "walk_2": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "walk_3": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "walk_4": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "walk_5": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "walk_6": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "walk_7": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "run_0": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "run_1": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "run_2": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "run_3": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "run_4": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "run_5": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "run_6": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "run_7": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "attack_0": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "attack_1": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "attack_2": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "attack_3": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "attack_4": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "attack_5": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "attack_6": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "attack_7": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "hit_0": [
+      4,
+      6,
+      3
+    ],
+    "hit_1": [
+      4,
+      6,
+      3
+    ],
+    "hit_2": [
+      4,
+      6,
+      3
+    ],
+    "hit_3": [
+      4,
+      6,
+      3
+    ],
+    "hit_4": [
+      4,
+      6,
+      3
+    ],
+    "hit_5": [
+      4,
+      6,
+      3
+    ],
+    "hit_6": [
+      4,
+      6,
+      3
+    ],
+    "hit_7": [
+      4,
+      6,
+      3
+    ],
+    "death_0": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "death_1": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "death_2": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "death_3": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "death_4": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "death_5": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "death_6": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "death_7": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "cast_0": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "cast_1": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "cast_2": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "cast_3": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "cast_4": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "cast_5": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "cast_6": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "cast_7": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "turn_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "turn_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "ranged_attack_0": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "ranged_attack_1": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "ranged_attack_2": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "ranged_attack_3": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "ranged_attack_4": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "ranged_attack_5": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "ranged_attack_6": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "ranged_attack_7": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "special_0": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "special_1": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "special_2": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "special_3": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "special_4": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "special_5": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "special_6": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "special_7": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "corpse_0": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "corpse_1": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "corpse_2": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "corpse_3": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "corpse_4": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "corpse_5": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "corpse_6": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "corpse_7": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "recovery_0": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "recovery_1": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "recovery_2": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "recovery_3": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "recovery_4": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "recovery_5": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "recovery_6": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "recovery_7": [
+      5,
+      5,
+      7,
+      3,
+      6
+    ],
+    "summon_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "summon_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "despawn_0": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "despawn_1": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "despawn_2": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "despawn_3": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "despawn_4": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "despawn_5": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "despawn_6": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "despawn_7": [
+      4,
+      3,
+      8,
+      4,
+      6,
+      4
+    ],
+    "float_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "float_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "energy_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "equip_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "unequip_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_0": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_1": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_2": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_3": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_4": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_5": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_6": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "activate_7": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ]
+  },
+  "unique_frames": [
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "511f307a9ecc113e2f7b59e80994a082e6b5663b904d498acf05300d653243e0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "44478832b389cd03755574e5d311a0cd8e77d05af78223675f1eb21c4b58dc60"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "6a6929554c7b3f7bd319d0a397fa7f57f3b25643324b87eb8d4e745fbb47369c"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "71bd9ea61f09d51b9281c81ef8581754f34c515e292fd0f07d74ad8913e2cc76"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "2de16b2a1516c5a6cd79f9590fc4de156baf874e8d7fa3eb3ee3f14aeee55df9"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "3f3e8ae532f6b5e72fc4a8a5fd6390a17b6f4a2dbb1286ced0471389809801fc"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "efbd6fefc0a3822cec6efcd65cb86cf076f200677540520a11b1541adb8f26c5"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "f36179c3b9e9b518efd7f227b1d94f41ad9c60c17dea29f172e5ff3bb3a5a05d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "b3098f234eeb49fe36c7743142f9de68d3d00c2f6b61905d763db80a66b3bece"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "0f2e08781cf2b16ace97d23b7879084bacbc72977f645ec8897026c6965e842f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "4974a9817a14bbac5e8c5c6a95e24144ae4db6920202d0425e2ff05593768779"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "b07a3d795162008e7282471de2920bfacb654d58b2fd55d893d3b86856894c9c"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "610f9cd4848b8c849f7c1c3fc2033ead547df091614a2cda96b70672d7405011"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "782f0a4e9cadb05269be9e8e7f3736157ca946657e14c6d97b396f7c929caadd"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "991fdbc139f67d98ea8d2bbebaa57c4426fd77e1f7aa36ed9e0d6b8528677c24"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        0,
+        192,
+        144
+      ],
+      "rgba_sha256": "077e12c1de6c1a3e2e2b277c36565ec8fcb87044fd3696cffc8106270eef3de1"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "713515a5ac7c1fa1fb7207f57fe99db8fd3fdd93dd16798e77e5476a91805507"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "8af21740a4829561e3070a404d2769d007b7fea5e90d80fd467ddc602603bfa5"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "2ca11dc3ab1c337ba15a426ad94369b7cd3757945bb2812ad9419c10df3276ec"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "78ea65b507085f6cf99a85c3ab2169ee450f455d4317f6fd3b1f1733a7ae687f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "4b3c032419077421955b40f9f1d32fd60602bdef6d20e88d9e2baae081f0bf99"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "db77258c51d5bd0acabd4e0fde6daba01b8b33dc4b5f1c6a4b491462054f8b2a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "6db5384c9691c62a828eb614e17b980149c147783274a7c712a7b596c02bdf52"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "360fc2affea0c1475bba403960c0517a478b35382ad4cfe7970748a2be4189d4"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "0ee8347389e7f9f3f97e03c43f4e6a3b8897f482cfd94b53c33804999f6558fb"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "24620881067b9355b35c550cc58695fbd6d7b3877a738b1e9cd2251d8617ae5c"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "865f17d352d545ba2782d5c464e0069072b5fd364d4f2b4e3b7b37c5ba9b350f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "ddb00b353a2b0dedb97c78bc1e72073d5739093f88693df8a0d318f5bf43a088"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "0bb6add94de58eff53c7973af3dd5c94422a9443c0bfab4db592aba1977e205d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "144eb879a22b0b8d821b1e7b7fbe6dc4162fe98056a202498931b4db8aabe230"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "dc60f9c01bfde4e3aa6a3581f589c7875a67c98e5469517d63424519397f3a7f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        144,
+        192,
+        144
+      ],
+      "rgba_sha256": "77f36e8df64786d7321d7f72ee69afa8a0aac908c73ac3bd704214f89e11e81b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "478dbb6046f229db7cdf168adcb59d525ca53a7fe8685338463e9fd6801a8908"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "1f6d4a23aa7ef1f5b99a3056a3370a2248d8f370c0bfe942aab4c58cd2c31e28"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "19538ffd2e2476069e7148e9275487607eaf722b3bb4c1fa16c7e140f3f13fb4"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "8459a49d40e807811592ecf8709ecc2c8c84056225e4f1a4bca99778a6da018d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "03291611a3573b18190d829f358311eb05ed29460ab3c3ea988d4579c6388e88"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "5c28b48eaa19d6d3bc6ee8882723a80676b5cd2b827eb9e4ab04a3e8b7eef015"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "147c20858550459df3548ce53ba6d7c78bab6cf4e9f167614b2be2f1fbcf7b07"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "1f2b94e226ef4e80b44aa4a41e3cd111006ba8e39852abffa1283b8e0c3b3061"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "30850ee4cc508b47833e5101de84703148dcd3dd05bbe1b83abfe0fbda81ff36"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "0df2d4b3fca984767f315164cfa393134bbc5a8bc91870c8f66b3d4d785822aa"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "d5be9d84015f1c631091074b486fa1098578792b495cfcc6d16afd00b1a7ddc0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "aee681cfa72986c890fd93971f3e00b204aa76a1dcb5d7980071533b3897f483"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "66fc0a94db6cc40104bca201df4ce197bbbf56741c27e956917308cefccd5895"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "6e2c087c4bfccd1f6aaca7b66005cc3d897ced30dacecbcb498fda552a4b7f4a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "7cb644cc099a5e4a93aa541472e2e6104d21e030d9b8a09d68484d271deb6450"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        288,
+        192,
+        144
+      ],
+      "rgba_sha256": "dda61845da9960877585c6f6bc05ab54c9085ab5f717b9ef89838cbc03ca21fa"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "b018550ce6b0479b75dca915386b3983d104b1b67b5a0a0aa122088994190a52"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "e8e6fa005fdcfc18724aba06eae8883945edffd5fda1e8306bdb2a8795c6f85b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "32eb0f4aafa7fc4dd60d7e2668584541b393b3f2f8c8bbc7e707a8c9d12be3c7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "06b4423a1a5a4b88f6eadc4625cb2382efe1a40c4f4fe57cf01cb7b51fd7acc2"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "0ed6da5dbf2218eb634e08216d0da2954793b6a5a43ad26fc12c11da50cc5951"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "261fa041e6fde9025ec2b63f0efef13dde418904369d8cc66573cabda29c2028"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "b50b29dd1a87a1b25ed3a1a90ebc920794b252bef6eb3da6577bc9980d5972bf"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "0b30034633b19245b492992149bfa36b40d830fcda602ff40f1991a00167cd1a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "6e9007f4539abcff87cfee0002e293801c8a84e5ad00ffa74d1a972e51c8389a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "78cba10522ad436f0d70da66550e90d9c24b4960071c7b60f3d8eb745049abda"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "65ed610aa1ef0e1427a36246dcc5a687986859f518ecf831549589c6ac7ec73d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "b3b5e5ccab1d3d07ff6079de7f2f38d31841d902ffb8003f70df7a56f01e9ae0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "051d8ec6bb171f0d6dcbedf58ae4413e04e4192693e23ad2d55e643fac4682a4"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "8d320f40ae96ccd252d8c33f7fbeaabe6c2881dd940be08a8969383867915757"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "0e30936e610c8e285dda92baae84d09230e3c551892ad16daf64f6d2aabe1f18"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        432,
+        192,
+        144
+      ],
+      "rgba_sha256": "b9a505f2db6341d7d9d8b958fc84f7fe367001a23b6aea0bf82786a4fc481bd5"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "af14fe7d127c7e19f6a21a8429355c50978f561c6c3c9add0f643d3be906afaf"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "881ecb7317e9281e7886f1fe69556ac7a8cbe7c0985455d5a98472855f41bd10"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "41d780825e82b6c2f50f4adb45b054698aab50e7d4ed1d54e273ea6413294e9a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "b640dbb10a32fd9a3ac9fcc75d27c2758143755e4abd9571be3c11093cc15c4d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "965762f3b80f3895f5170645e2259484aa09a3de3a1624cc17af2d344f7c212e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "31b428a5060ceab8c25bbbbc666fa6958f707727772757e2cb384fff73c8937f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "0788801dbbece63cb0e886eb7419f384770d7a88cbf9c9fcac1af5bd01ef2fc9"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "750b7f4ddcd249ffee23b8481b4bf73431bfaf15b124b60f6f5d155dda56967a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "76f072e5f62b0bc5931c3dd26f7991f3ebe4251be86619803f2dffb6d9d26735"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "f53a7b7cb2fbbd2d12540bbed469e211242b883d2bd969562998edbe19763157"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "59be46581bc5c16153889d0314f06b76399adddfeb7b93e02d943803c07007b2"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "3947d022ff84fc13a10eed95e99c0938be48ae52c566b4268c96248467e62773"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "ab008208dfd749e8ec99473df205d0bcd251fb6be30a4959c5d90d1b0c15d0b7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "6892bcd4d76f32f200270de810bef50431726d74eeed831f096ab36109fa834b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "3879f89ccf468bb1b39e7bcde7247d234d3e4494f835fe4680b5d162f6aeffba"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        576,
+        192,
+        144
+      ],
+      "rgba_sha256": "0faf51319bfb5171c52be3add83d9a6e499fcea52dfb761966d1462af925d31d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "bcee3666a34076950583efa03cc5b12582d5f100ca24577e190231be4a79434b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "f211f953e6930eccf710e1522a5011d0ce4345b3eef8960edc0adca2c407db19"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "52209da03feae1828efd976e7229cc9111fe0696ff8b315433fcddf97901bbb0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "8de18a9214fe2d80ec3eea77ca5f1bc04d8b487772e3c8442e294bfc036503a3"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "876a33df8b3c168c6e0375794a8454ffbed85987670352fab0d780ca1a541f06"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "7b36dbb5be63e5cdc9045f26d8d3af630007bcafffa04b211d3de3b478f0ca61"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "266c327ea808ddaa283178fd7c018f886f2e14b0bbd6194833dae4eabfd0adfb"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "2c1aec675d1eaab3174435bfa8a038797f517c6b974f1dcead61efa3034fb069"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "9979d1486f8d92f0be43519aff7379cbc0eb18fe91719d36157e4e4fd91ff1e3"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "01eb8b9d7e1e6ce40edb75644455274afc1aefce6f521347a608488f6b3f0d58"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "4199bd68eefa56f923d0eb1bb2c09d833dd474f3661a101a7a831718df4f7867"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "876cfc452c075d935785b7b6594e8fbc3a45255e1114d8fb41ec663da96414b1"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "d13e7c37e38f31938b301324cb9389ec2b3086ad9bbfd2cfecd96815b7dbb561"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "8f8633ceb5b85280c10298e38458eb9e887c110cea7a3c458d97f7cf762492e0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "c9d19529dcdbeda5b100e33d62288a89315b62c7701a096e948243f59ed6aa27"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        720,
+        192,
+        144
+      ],
+      "rgba_sha256": "ad9234d081cbf75c467cbdc01b77238a8f40e8788fab641fcd3f8c2f0777e082"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "a3bc7401b791fa4e3117328433ba644ed7c74fde756055f192f6c91c8030fa4d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "60a6d163ff535f9630125d118df1e597e1955ff967bc06540f2dd84078256712"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "5f9a1070c80d16dc531b67bc16394dbdcea1fc70cd815c38a9bbc37fb71e0f04"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "20dfcae11b207111af64bc2d569b42b9bd3a8fa019352b432a7152fff3517ed9"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "49470fec71665b22b4e58da23d0f554042463d89c02ea78d313ae192a8772e74"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "d072ee22e833da94d1f7f50f4382d21a3446d62bea0d0ff2c1079f9319f30da4"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "4a15892782286a668cb44302899def5212759868216f4b2d7e32b6db3c8ba990"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "095da0d966ff656ed522da2ecba80bc486451fd6a9e0d8c46ad79bb17be8c712"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "9e8e9ee8fbca8a4f601d65c957eb4fa81d47a1891ca11b9dc51c9e5b4d308be8"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "f3b428805a820d9564c08d17db2e0b904f08a418441ad09a5bfb8b5421af721f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "f2a45da180ef597944461e701304b31a9be0b4219ed49d801f18f7be81250c3b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "51681105b412652bf49071870d126eb82f35ffc0706edc719ae5ac1fb7fd3438"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "187ab96787c2c2900b2ccb2424f106e1860eb54ae021c7af0781927aa9fe2e6b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "6bf551fe39cd387d9c86058c7b74c6fe031c9f5c12ce28bac9d4b4b7d2fad328"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "a9f135943852b06e4000ac04de9d558611343d42a0be37035d49703d306f9e1e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        864,
+        192,
+        144
+      ],
+      "rgba_sha256": "21dba940b6eeeeea20106c1ec5cd0095bdd6f2eca03d6144856743f2cd0286ac"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "31773794b6d595f32bdb51b4dbf7a1686fce97c46f9f16351285ba3b125a855b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "756300ece71c2f3858ad0a434458325a63a53af408699ded1529265df81e77cc"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "679427a2795698f420e4ca88c5ac36d4e53f5e03eae83e51d9726956807f9e86"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "16c9e9d4f1af6459d607001a8d7a1078879fc555b33fb937eaf42b9b137f6e03"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "170ae3438580d472ce1ca9a11a3ab0d13c70315f36efaa58540e0ed11dbd66e9"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "1f05bb26788cde67b00612f97efb458189699026a7f454aa3fb9458dafcb1d59"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "2ab70304c9effac4588780ff14d8a8bf557d04b3fcc8d34f74c76f8d99f2a272"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "89b243b488f5bba7b68954aa16d64e1267554e67de004e0e4bbd6766d309e3b5"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "87dc574ac3fb44fcd4630cfde2a7f4d34a9bdb72c4718b2fc4a531ea375b3556"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "51f33e18a551f92a2b5945fea0186d4079098f5df72d7fe79e6cea9fcd9349f6"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "246f083708a6657e094c60caef2c69130b392ac3753d5421ab81a90a5727bdc7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "b27eb5c89aed633e7ddd58c179cffd9c40ee59669852109dd64af8fd1f5b1e25"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "0a8271e72e2785d73af8519d7ae6a2799a49aee0be318bb877112509dbcfb273"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "0fd08b880ffb982981e27e2dbb4cdbb64284ed28edd146a804ce80a2978abec1"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "aacc2e4ab37e5e7eabf03f9d6320cdad68c1cce692491afbf2d8e2c3b2a42d5d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        1008,
+        192,
+        144
+      ],
+      "rgba_sha256": "13643ca579d2215a51dd59808e0824036b94eed3ccec20a21713decbd3b4179e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "fd245bb8512a8e3403f43e9c7aafcf57d3dfec13b7727758af3557aaa0122b12"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "900232e6bb3cc062165fefc25164c52dc3fe8df65ce58e43e4398da7bbd9283f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "f8f6e414376f1f4e83156a7b3fc74627e4482ae607e1c9a9a26690420e592220"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "e0420db8856b0248141c54526ff458cc678b63c1c1c3672f181ae4015462aada"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "90a69e09f0e35905be55e8a3e9ced7403ed43255c7d218413b76c331ed3d26b0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "e4e95a991b8ae78f1e91b1e1f67509d196a2bba0c1ddb0b8e2102031036cd27c"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "28aabe9c33b5cea12122c8dc5521f5e5f27cbceb675e08c26d70258574c85e8b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "4e25ba5e62879b8d3d52ed0532fa0e3bc1ba6043bf432d5deb38f6588f33fefa"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "97227525b29e128019b3765c458bebc99e40f1fdad02ba4581e53f6ad255c821"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "a3cb39a1d2e32384dc7ce920db9ab1471abaffd03c785777979de005e7f2221b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "b9489aa68ba9bbc23199a466a6d0f90c773c0b37781a001fd783e3222201b1d9"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "2188f6228eb1cafe375c6fa44e044da8b0ae02637f10d493e47d5cecee7d3a3f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "b82cd2a61ec233fdd152c026b905305c53d14e9e09e8ebf3ce3e49f64049d6c3"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "4a91b4f87819f7f1c0e9c507e32952654e1fab63e49b6130481dafe6d9c7fe0a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "8d86a40486d46b7e0d35732f7c24899b7f15d94492179e830d56fba79463814e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        1152,
+        192,
+        144
+      ],
+      "rgba_sha256": "4d0311eec6c83837ccd8d1322a8b4a5e490b2b500026b06f83f0429572bb150e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "56eae93ccbb2d071d061bf48986e73264ef02f0c703a3aef96b4d85a911a4554"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "cf575770edd7d1db7d0cf7e56210e49753a47cb7be292bba775160891b3838f5"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "5949526941b954080f34564bb21e52907a30b3c7bfb7ae3035730b3b5e2d587a"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "e883e9edf4b8092dc6d3b5ced59ba6ceeab450af887d41efdc21dc42c16c777f"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "c271cb4cf51fd9c649b5e0f54af4661a79d0639df8046a5fa08ba27fe2add9d7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "81e18df3d65461c96d90559341cc3da1e400a9842c9e45c7f37375072ba79fbb"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "2c42252dceb8dd2efe4cc36ccb7662a8becee3d6daf35fa3258e0f3518a58fa1"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "7d9308d62354d70b3075a574797625049c59300b3d9b465eb6bd493c6b9e7415"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "05d61fdeea293993913e97885dd88766e0ee4bd2d8951b2dfd54c4c79e2d54c7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "4efaa16eb301676c8f72ea851a8c37f3ee3290f33c38a1e002411cfd0bfbe24e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "e8722c28daf03e0aced104c17a2632e69e5e3bc869a3aeeeb48b99cf1ebc7f24"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "6708d920990b77be5ff75c5e3c032798619fe0ec3a171d7ae4119885ee2906f7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "0fdf5208b3ff11154070efee9a97786e2ee07a733a7915c60c4a13bb5500b4b7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "2814ed7426c9a6bc82718afddd56bb1c9de196e7f39f972769281120b34b67e8"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "1158385acf9ba3f9738595ec3bafddc1a93b3f5f86b3d8290d434f211dc25e81"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        1296,
+        192,
+        144
+      ],
+      "rgba_sha256": "b670c1aa64157b3b17352555b630cf8ffef6da797fa0c4e536b9a3a0c547dbe6"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        0,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "e27ea088a73e88d43f0801b158bbdc3939fd3d6a291deae6421779739c0ee73d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        192,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "394fcd2878ab4ab20ea953b5540831b377d918911d79b52fc031f90c3ee50aa8"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        384,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "4461a6169b4672464f63d9a0a0b5f5a8cabb9ac11fc90086daa062910a8c16cd"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        576,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "e089164fb2752d561bd89cae7f8975cc85838056e6aed3e365f99771b171bf1e"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        768,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "9b6dbb55e341f5a1b757ba141dc1b026bbf2726f03683c1ce75c0935a7dc3f70"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        960,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "0d35c76f3eba89256f80116ce3a215f03719a1736f552f20edd53321369b033d"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1152,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "29403c7f6d3e6430535183756af992ec38e6f7c631cc3755b103337c95223fb0"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1344,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "73fa1367e56d1c5b5ab6cf0f4d4802be60bf90cbad0ae377bb2ed331ce4a02c8"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1536,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "c6329f4b090f2e2efe85780fc46c71359c33c775151bb21bce9975312e4d17a7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1728,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "c731059df780e75c6fc3313c6c518bb85a315e258cf8d29ca88495ee256dece7"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        1920,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "3228d640a6f1fbae80e183ca4d18f14535fde6ee6665c93e24954b77c9527ff2"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2112,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "c985bcf7a6aaefae9afc8f5e6cb99072ecebf26e7c39acc51bb526c6a0c7df27"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2304,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "c36f81f20a6b41d08db1e803dc694fcbfc5d267b79b9aad98392060a5a87348c"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2496,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "8bf0eb2d6f3aa735321da1d70ae8ac4ed7a0f54684ca5c28ae3a7e73231d54df"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2688,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "8fe4db817739af7955581600ad902775021d245bc512f96d7d5c4d05c8dbf28b"
+    },
+    {
+      "atlas": "atlas_000.png",
+      "region": [
+        2880,
+        1440,
+        192,
+        144
+      ],
+      "rgba_sha256": "5caffbcd9726aa2d0483aea50bc28bc00c1c245e574b4243a2dd4086dec61d58"
+    }
+  ],
+  "transparent_frames": [],
+  "source_records": [
+    {
+      "record_key": "source1:Sprite03.pak:12583",
+      "source": "source1",
+      "pak": "Sprite03.pak",
+      "index_row": 12583,
+      "name": "5912-11.spr",
+      "extension": ".spr",
+      "offset": 11797205,
+      "size": 10968,
+      "sha256": "6be7c73126c46da57a63c97dd6e67ec9be7b7a3257082375b7081c13a2f32008",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 59,
+      "pixels": 3959,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 59,
+        "pixels": 3959,
+        "frame_refs": 60,
+        "palette": 0,
+        "consumed": 10968,
+        "trailing": 0,
+        "checksum": "0xa473ea6738c01330",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 10339
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/6be7c73126c46da57a63c97dd6e67ec9be7b7a3257082375b7081c13a2f32008.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite04.pak:12512",
+      "source": "source1",
+      "pak": "Sprite04.pak",
+      "index_row": 12512,
+      "name": "5912-12.spr",
+      "extension": ".spr",
+      "offset": 11953362,
+      "size": 13287,
+      "sha256": "5921e40feed8eaa3779b7c47b3ba2e4aa100d2036e8c8427fa61eeb1064c3317",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 5078,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 5078,
+        "frame_refs": 60,
+        "palette": 0,
+        "consumed": 13287,
+        "trailing": 0,
+        "checksum": "0x2d960f2efd19cf55",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 12654
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/5921e40feed8eaa3779b7c47b3ba2e4aa100d2036e8c8427fa61eeb1064c3317.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite05.pak:12454",
+      "source": "source1",
+      "pak": "Sprite05.pak",
+      "index_row": 12454,
+      "name": "5912-13.spr",
+      "extension": ".spr",
+      "offset": 13129060,
+      "size": 15852,
+      "sha256": "331eb24456ed2473b8f68a8b5fbc700b75e1b5eca5798f550f82e365b969a27a",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 6149,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 6149,
+        "frame_refs": 60,
+        "palette": 0,
+        "consumed": 15852,
+        "trailing": 0,
+        "checksum": "0xe5f7b8ac6acc470d",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 15219
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/331eb24456ed2473b8f68a8b5fbc700b75e1b5eca5798f550f82e365b969a27a.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite06.pak:12518",
+      "source": "source1",
+      "pak": "Sprite06.pak",
+      "index_row": 12518,
+      "name": "5912-14.spr",
+      "extension": ".spr",
+      "offset": 15472996,
+      "size": 13881,
+      "sha256": "add71a18296a408ad82c788aaec901b35c242e700bfe3cb5cee7f0907bd2c2e0",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 5360,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 5360,
+        "frame_refs": 60,
+        "palette": 0,
+        "consumed": 13881,
+        "trailing": 0,
+        "checksum": "0x74b06cbe60f96db5",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 13248
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/add71a18296a408ad82c788aaec901b35c242e700bfe3cb5cee7f0907bd2c2e0.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite07.pak:12668",
+      "source": "source1",
+      "pak": "Sprite07.pak",
+      "index_row": 12668,
+      "name": "5912-15.spr",
+      "extension": ".spr",
+      "offset": 13463839,
+      "size": 11078,
+      "sha256": "dbdeabbefb2045e655bda354a57f3231b9e6899d9b03a10c118f4b7e4e309357",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 59,
+      "pixels": 4007,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 59,
+        "pixels": 4007,
+        "frame_refs": 60,
+        "palette": 0,
+        "consumed": 11078,
+        "trailing": 0,
+        "checksum": "0x31c6e2ddc775b0c0",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 10449
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/dbdeabbefb2045e655bda354a57f3231b9e6899d9b03a10c118f4b7e4e309357.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite09.pak:13029",
+      "source": "source1",
+      "pak": "Sprite09.pak",
+      "index_row": 13029,
+      "name": "5912-8.spr",
+      "extension": ".spr",
+      "offset": 13168876,
+      "size": 14545,
+      "sha256": "53f64e2e344f6ee6f4b83788f4f9ac2cdcb6e0b33901dbb38ae3a1ac09bf09ce",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 5603,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 5603,
+        "frame_refs": 60,
+        "palette": 0,
+        "consumed": 14545,
+        "trailing": 0,
+        "checksum": "0x4e2cbd1b15262ce2",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 13912
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/53f64e2e344f6ee6f4b83788f4f9ac2cdcb6e0b33901dbb38ae3a1ac09bf09ce.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite10.pak:13227",
+      "source": "source1",
+      "pak": "Sprite10.pak",
+      "index_row": 13227,
+      "name": "5912-9.spr",
+      "extension": ".spr",
+      "offset": 11988213,
+      "size": 16861,
+      "sha256": "9239fb0ededcd9c93a2c17f777d5dabe6a952b68d2dd97df8548583376622ea9",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 6598,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 6598,
+        "frame_refs": 60,
+        "palette": 0,
+        "consumed": 16861,
+        "trailing": 0,
+        "checksum": "0x61492dc99d8f5197",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 16228
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/9239fb0ededcd9c93a2c17f777d5dabe6a952b68d2dd97df8548583376622ea9.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite02.pak:12723",
+      "source": "source1",
+      "pak": "Sprite02.pak",
+      "index_row": 12723,
+      "name": "5912-10.spr",
+      "extension": ".spr",
+      "offset": 11754484,
+      "size": 14922,
+      "sha256": "6cc3bd82b5d43693931a33e3c54ac2ec39c4f14e9799bf39eaaa87f47354306a",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 60,
+      "pixels": 5770,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 60,
+        "pixels": 5770,
+        "frame_refs": 60,
+        "palette": 0,
+        "consumed": 14922,
+        "trailing": 0,
+        "checksum": "0x81b126011aeaa0f6",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 14289
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/6cc3bd82b5d43693931a33e3c54ac2ec39c4f14e9799bf39eaaa87f47354306a.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite04.pak:12514",
+      "source": "source1",
+      "pak": "Sprite04.pak",
+      "index_row": 12514,
+      "name": "5912-3.spr",
+      "extension": ".spr",
+      "offset": 11970844,
+      "size": 7920,
+      "sha256": "a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 33,
+      "pixels": 3067,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 33,
+        "pixels": 3067,
+        "frame_refs": 33,
+        "palette": 0,
+        "consumed": 7920,
+        "trailing": 0,
+        "checksum": "0x3b0c518a008183c9",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 7558
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/a0dc777a1636959f5bf3673c090bd91a46a163f0bdb787e36ea5031379971a4e.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite05.pak:12457",
+      "source": "source1",
+      "pak": "Sprite05.pak",
+      "index_row": 12457,
+      "name": "5912-4.spr",
+      "extension": ".spr",
+      "offset": 13164846,
+      "size": 8971,
+      "sha256": "76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 37,
+      "pixels": 3431,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 37,
+        "pixels": 3431,
+        "frame_refs": 37,
+        "palette": 0,
+        "consumed": 8971,
+        "trailing": 0,
+        "checksum": "0xdbe29473f3422d93",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 8573
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/76d2be0a003e25ec4c71e26b9ed705db50fe5e5b1da6eb3505f56815c7d0a003.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite06.pak:12521",
+      "source": "source1",
+      "pak": "Sprite06.pak",
+      "index_row": 12521,
+      "name": "5912-5.spr",
+      "extension": ".spr",
+      "offset": 15501763,
+      "size": 10044,
+      "sha256": "f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 40,
+      "pixels": 3895,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 40,
+        "pixels": 3895,
+        "frame_refs": 40,
+        "palette": 0,
+        "consumed": 10044,
+        "trailing": 0,
+        "checksum": "0x82ed114fd1675e4",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9619
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/f3b2ecf729efce6132518352a287568e0c14a81e6a6e93b6bb23b84f3b224d12.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite07.pak:12671",
+      "source": "source1",
+      "pak": "Sprite07.pak",
+      "index_row": 12671,
+      "name": "5912-6.spr",
+      "extension": ".spr",
+      "offset": 13500511,
+      "size": 9033,
+      "sha256": "3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 37,
+      "pixels": 3434,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 37,
+        "pixels": 3434,
+        "frame_refs": 37,
+        "palette": 0,
+        "consumed": 9033,
+        "trailing": 0,
+        "checksum": "0xda5378f92684a5fa",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 8635
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/3e6e7f86725bbaea1324e41651cb1ed26bac1229dbf4627b5d785483dcb0c7f4.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite08.pak:12811",
+      "source": "source1",
+      "pak": "Sprite08.pak",
+      "index_row": 12811,
+      "name": "5912-7.spr",
+      "extension": ".spr",
+      "offset": 12837849,
+      "size": 8143,
+      "sha256": "96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 42,
+      "pixels": 3072,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 42,
+        "pixels": 3072,
+        "frame_refs": 42,
+        "palette": 0,
+        "consumed": 8143,
+        "trailing": 0,
+        "checksum": "0xea084f20884070e7",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 7700
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/96071a2d26b97d1acfbee972ddbf754d69b5919866a474eeb074dadaf5d9e977.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite01.pak:12924",
+      "source": "source1",
+      "pak": "Sprite01.pak",
+      "index_row": 12924,
+      "name": "5912-0.spr",
+      "extension": ".spr",
+      "offset": 12520073,
+      "size": 9761,
+      "sha256": "c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 42,
+      "pixels": 3750,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 42,
+        "pixels": 3750,
+        "frame_refs": 42,
+        "palette": 0,
+        "consumed": 9761,
+        "trailing": 0,
+        "checksum": "0x13ccc01d3ddb0ef2",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9318
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/c0407fba9a4e6951a3a33fcb06dd2f0610ade758fe53209c331b5e57134cf65a.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite02.pak:12722",
+      "source": "source1",
+      "pak": "Sprite02.pak",
+      "index_row": 12722,
+      "name": "5912-1.spr",
+      "extension": ".spr",
+      "offset": 11743775,
+      "size": 10709,
+      "sha256": "a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 44,
+      "pixels": 4142,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 44,
+        "pixels": 4142,
+        "frame_refs": 44,
+        "palette": 0,
+        "consumed": 10709,
+        "trailing": 0,
+        "checksum": "0xf5a8f6259119e273",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 10248
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/a2be47e9c21cfd7a2b024e16e3d59f14f3ae8a867b9e769130542aeded5a0e8e.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite03.pak:12584",
+      "source": "source1",
+      "pak": "Sprite03.pak",
+      "index_row": 12584,
+      "name": "5912-2.spr",
+      "extension": ".spr",
+      "offset": 11808173,
+      "size": 9840,
+      "sha256": "29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 43,
+      "pixels": 3757,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 43,
+        "pixels": 3757,
+        "frame_refs": 43,
+        "palette": 0,
+        "consumed": 9840,
+        "trailing": 0,
+        "checksum": "0x7c5fc588b1dffe43",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9388
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/29df0c1c99ebbd0cda20a9ed2fde786395e7a7bf29f963c5f498b46989815155.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite09.pak:13028",
+      "source": "source1",
+      "pak": "Sprite09.pak",
+      "index_row": 13028,
+      "name": "5912-35.spr",
+      "extension": ".spr",
+      "offset": 13159780,
+      "size": 9096,
+      "sha256": "7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 36,
+      "pixels": 3501,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 36,
+        "pixels": 3501,
+        "frame_refs": 36,
+        "palette": 0,
+        "consumed": 9096,
+        "trailing": 0,
+        "checksum": "0x4e368521e543f1c6",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 8707
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/7a93e55e7ea04af2ec22df027d6cfcae8a47a252f3350184c6b7f178b396797e.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite10.pak:13226",
+      "source": "source1",
+      "pak": "Sprite10.pak",
+      "index_row": 13226,
+      "name": "5912-36.spr",
+      "extension": ".spr",
+      "offset": 11978509,
+      "size": 9704,
+      "sha256": "533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 37,
+      "pixels": 3805,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 37,
+        "pixels": 3805,
+        "frame_refs": 37,
+        "palette": 0,
+        "consumed": 9704,
+        "trailing": 0,
+        "checksum": "0xb5e5fa29d9c3309e",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9306
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/533286b1f17217b383f4359bd8e08c6cdd79a705f047bdf3cc04167fea48da7c.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite11.pak:13393",
+      "source": "source1",
+      "pak": "Sprite11.pak",
+      "index_row": 13393,
+      "name": "5912-37.spr",
+      "extension": ".spr",
+      "offset": 11080867,
+      "size": 8363,
+      "sha256": "580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 36,
+      "pixels": 3205,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 36,
+        "pixels": 3205,
+        "frame_refs": 36,
+        "palette": 0,
+        "consumed": 8363,
+        "trailing": 0,
+        "checksum": "0x132b9a5eb4e266f4",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 7974
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/580ebb86977c42b284a1e7b2a30dbea6f49a74f3e313c5cc18a4236939df5e85.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite12.pak:13515",
+      "source": "source1",
+      "pak": "Sprite12.pak",
+      "index_row": 13515,
+      "name": "5912-38.spr",
+      "extension": ".spr",
+      "offset": 10895229,
+      "size": 7853,
+      "sha256": "1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 38,
+      "pixels": 2941,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 38,
+        "pixels": 2941,
+        "frame_refs": 38,
+        "palette": 0,
+        "consumed": 7853,
+        "trailing": 0,
+        "checksum": "0x76fcbd8c502bee6a",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 7446
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/1fecb536d032447ae7f3fcd39e7f9ec491f1a007045d4aae53d5b416a86ea50c.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite13.pak:13549",
+      "source": "source1",
+      "pak": "Sprite13.pak",
+      "index_row": 13549,
+      "name": "5912-39.spr",
+      "extension": ".spr",
+      "offset": 10703691,
+      "size": 9328,
+      "sha256": "33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 39,
+      "pixels": 3606,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 39,
+        "pixels": 3606,
+        "frame_refs": 39,
+        "palette": 0,
+        "consumed": 9328,
+        "trailing": 0,
+        "checksum": "0x856b729b975c0ffc",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 8912
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/33bc379eed0d9aa705f1ad968fe1cadc699fb067ce9910b175d3d8d5a946b289.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite06.pak:12520",
+      "source": "source1",
+      "pak": "Sprite06.pak",
+      "index_row": 12520,
+      "name": "5912-32.spr",
+      "extension": ".spr",
+      "offset": 15491287,
+      "size": 10476,
+      "sha256": "41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 41,
+      "pixels": 4066,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 41,
+        "pixels": 4066,
+        "frame_refs": 41,
+        "palette": 0,
+        "consumed": 10476,
+        "trailing": 0,
+        "checksum": "0xed68380500d23730",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 10042
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/41391b3be487dcd606d9f420721d4106ed83aadd2188934dee63608fa2a4723c.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite07.pak:12670",
+      "source": "source1",
+      "pak": "Sprite07.pak",
+      "index_row": 12670,
+      "name": "5912-33.spr",
+      "extension": ".spr",
+      "offset": 13490639,
+      "size": 9872,
+      "sha256": "f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 41,
+      "pixels": 3772,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 41,
+        "pixels": 3772,
+        "frame_refs": 41,
+        "palette": 0,
+        "consumed": 9872,
+        "trailing": 0,
+        "checksum": "0x14fe53a4dc74d8e8",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 9438
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/f5d7c1cf07f4345914b1df4739f7291915e915065e41652e72d6635b79f58f46.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite08.pak:12810",
+      "source": "source1",
+      "pak": "Sprite08.pak",
+      "index_row": 12810,
+      "name": "5912-34.spr",
+      "extension": ".spr",
+      "offset": 12829004,
+      "size": 8845,
+      "sha256": "d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 4,
+      "blocks": 41,
+      "pixels": 3282,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 4,
+        "blocks": 41,
+        "pixels": 3282,
+        "frame_refs": 41,
+        "palette": 0,
+        "consumed": 8845,
+        "trailing": 0,
+        "checksum": "0xde0b313c75d54f1d",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 8411
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/d2a1b5532a1ed436bd73c30ded279a8ef1c4ad1413b2cf7c21c0bb650c83272a.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite11.pak:13391",
+      "source": "source1",
+      "pak": "Sprite11.pak",
+      "index_row": 13391,
+      "name": "5912-19.spr",
+      "extension": ".spr",
+      "offset": 11061429,
+      "size": 4838,
+      "sha256": "8bcfd96c8083fdea573f52784ec6c4b3c991838217f3752af397651a8fe04465",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 21,
+      "pixels": 1837,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 21,
+        "pixels": 1837,
+        "frame_refs": 21,
+        "palette": 0,
+        "consumed": 4838,
+        "trailing": 0,
+        "checksum": "0xf4c7c55cfbc39373",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4612
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/8bcfd96c8083fdea573f52784ec6c4b3c991838217f3752af397651a8fe04465.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite03.pak:12585",
+      "source": "source1",
+      "pak": "Sprite03.pak",
+      "index_row": 12585,
+      "name": "5912-20.spr",
+      "extension": ".spr",
+      "offset": 11818013,
+      "size": 4448,
+      "sha256": "4e7d922b33bb9d134071067fc8a924366ad95950ba4eea198c6f764420965901",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 19,
+      "pixels": 1725,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 19,
+        "pixels": 1725,
+        "frame_refs": 19,
+        "palette": 0,
+        "consumed": 4448,
+        "trailing": 0,
+        "checksum": "0xd5a82d153b2469de",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4240
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/4e7d922b33bb9d134071067fc8a924366ad95950ba4eea198c6f764420965901.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite04.pak:12513",
+      "source": "source1",
+      "pak": "Sprite04.pak",
+      "index_row": 12513,
+      "name": "5912-21.spr",
+      "extension": ".spr",
+      "offset": 11966649,
+      "size": 4195,
+      "sha256": "5936dbeaf1e14af6c029a2a3e2af35baa68d7af413babe1cff6bc920edc2717e",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 18,
+      "pixels": 1633,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 18,
+        "pixels": 1633,
+        "frame_refs": 18,
+        "palette": 0,
+        "consumed": 4195,
+        "trailing": 0,
+        "checksum": "0x62c642c755095977",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 3996
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/5936dbeaf1e14af6c029a2a3e2af35baa68d7af413babe1cff6bc920edc2717e.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite05.pak:12455",
+      "source": "source1",
+      "pak": "Sprite05.pak",
+      "index_row": 12455,
+      "name": "5912-22.spr",
+      "extension": ".spr",
+      "offset": 13144912,
+      "size": 3893,
+      "sha256": "6b15ada63017d52f3f055faad1a07e12e7ee3590eea2e94bc71a38ef12a38141",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 14,
+      "pixels": 1475,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 14,
+        "pixels": 1475,
+        "frame_refs": 14,
+        "palette": 0,
+        "consumed": 3893,
+        "trailing": 0,
+        "checksum": "0x98ac56cbe031e683",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 3730
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/6b15ada63017d52f3f055faad1a07e12e7ee3590eea2e94bc71a38ef12a38141.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite06.pak:12519",
+      "source": "source1",
+      "pak": "Sprite06.pak",
+      "index_row": 12519,
+      "name": "5912-23.spr",
+      "extension": ".spr",
+      "offset": 15486877,
+      "size": 4410,
+      "sha256": "266bf8e8104000a1284d9efd80c679092b7335bc8bd64ef37f43950869878cce",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 20,
+      "pixels": 1693,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 20,
+        "pixels": 1693,
+        "frame_refs": 20,
+        "palette": 0,
+        "consumed": 4410,
+        "trailing": 0,
+        "checksum": "0x3cd0dfc720bc9d2f",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4193
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/266bf8e8104000a1284d9efd80c679092b7335bc8bd64ef37f43950869878cce.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite08.pak:12808",
+      "source": "source1",
+      "pak": "Sprite08.pak",
+      "index_row": 12808,
+      "name": "5912-16.spr",
+      "extension": ".spr",
+      "offset": 12809829,
+      "size": 5140,
+      "sha256": "60c1357b5e03fca80184eb42ab6502e808e6c61e4997462e292669312858db28",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 22,
+      "pixels": 1976,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 22,
+        "pixels": 1976,
+        "frame_refs": 22,
+        "palette": 0,
+        "consumed": 5140,
+        "trailing": 0,
+        "checksum": "0x1af9659303ede524",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4905
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/60c1357b5e03fca80184eb42ab6502e808e6c61e4997462e292669312858db28.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite09.pak:13026",
+      "source": "source1",
+      "pak": "Sprite09.pak",
+      "index_row": 13026,
+      "name": "5912-17.spr",
+      "extension": ".spr",
+      "offset": 13141529,
+      "size": 4934,
+      "sha256": "d07fd2133ae67a7e16d840f1a295bc74870f8a4f21e7e606207e68a2d9335425",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 20,
+      "pixels": 1890,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 20,
+        "pixels": 1890,
+        "frame_refs": 20,
+        "palette": 0,
+        "consumed": 4934,
+        "trailing": 0,
+        "checksum": "0xce3bd2ab46dcff0a",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4717
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/d07fd2133ae67a7e16d840f1a295bc74870f8a4f21e7e606207e68a2d9335425.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite10.pak:13224",
+      "source": "source1",
+      "pak": "Sprite10.pak",
+      "index_row": 13224,
+      "name": "5912-18.spr",
+      "extension": ".spr",
+      "offset": 11959152,
+      "size": 4710,
+      "sha256": "8e18f7145784824b7c68ab5c5557d25ec315cccaa80337bfe15d24cbf883549f",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 2,
+      "blocks": 22,
+      "pixels": 1761,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 2,
+        "blocks": 22,
+        "pixels": 1761,
+        "frame_refs": 22,
+        "palette": 0,
+        "consumed": 4710,
+        "trailing": 0,
+        "checksum": "0x72fd146afa524238",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 4475
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/8e18f7145784824b7c68ab5c5557d25ec315cccaa80337bfe15d24cbf883549f.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite10.pak:13225",
+      "source": "source1",
+      "pak": "Sprite10.pak",
+      "index_row": 13225,
+      "name": "5912-27.spr",
+      "extension": ".spr",
+      "offset": 11963862,
+      "size": 14647,
+      "sha256": "c72c5920bc5004be29fcf7423f509777297c9ab5a17888dbe18c018a3b092670",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 69,
+      "pixels": 5666,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 69,
+        "pixels": 5666,
+        "frame_refs": 69,
+        "palette": 0,
+        "consumed": 14647,
+        "trailing": 0,
+        "checksum": "0x9b885e5c1193bc11",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 13933
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/c72c5920bc5004be29fcf7423f509777297c9ab5a17888dbe18c018a3b092670.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite11.pak:13392",
+      "source": "source1",
+      "pak": "Sprite11.pak",
+      "index_row": 13392,
+      "name": "5912-28.spr",
+      "extension": ".spr",
+      "offset": 11066267,
+      "size": 14600,
+      "sha256": "76bbf7ba2f047a9166211bccfdd5eb6061a2a57b0960cd6293066bd4505cd68e",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 64,
+      "pixels": 5674,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 64,
+        "pixels": 5674,
+        "frame_refs": 64,
+        "palette": 0,
+        "consumed": 14600,
+        "trailing": 0,
+        "checksum": "0xf2c1b1556a5a67bf",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 13931
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/76bbf7ba2f047a9166211bccfdd5eb6061a2a57b0960cd6293066bd4505cd68e.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite12.pak:13514",
+      "source": "source1",
+      "pak": "Sprite12.pak",
+      "index_row": 13514,
+      "name": "5912-29.spr",
+      "extension": ".spr",
+      "offset": 10881483,
+      "size": 13746,
+      "sha256": "9a0c2603b7c741120ae4271140f57eeb6fa89bbb256e6fd2ea4c532237b372d5",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 62,
+      "pixels": 5221,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 62,
+        "pixels": 5221,
+        "frame_refs": 62,
+        "palette": 0,
+        "consumed": 13746,
+        "trailing": 0,
+        "checksum": "0xbb40e00d88adc9ae",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 13095
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/9a0c2603b7c741120ae4271140f57eeb6fa89bbb256e6fd2ea4c532237b372d5.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite04.pak:12515",
+      "source": "source1",
+      "pak": "Sprite04.pak",
+      "index_row": 12515,
+      "name": "5912-30.spr",
+      "extension": ".spr",
+      "offset": 11978764,
+      "size": 14528,
+      "sha256": "0f38beba5e3353ac1652d4d43f55bf19c0d9aa0f797e728130b260dbabaf8669",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 71,
+      "pixels": 5544,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 71,
+        "pixels": 5544,
+        "frame_refs": 71,
+        "palette": 0,
+        "consumed": 14528,
+        "trailing": 0,
+        "checksum": "0xd9f1b76e171f95fb",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 13796
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/0f38beba5e3353ac1652d4d43f55bf19c0d9aa0f797e728130b260dbabaf8669.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite05.pak:12456",
+      "source": "source1",
+      "pak": "Sprite05.pak",
+      "index_row": 12456,
+      "name": "5912-31.spr",
+      "extension": ".spr",
+      "offset": 13148805,
+      "size": 16041,
+      "sha256": "8225977a5cad2c6e43edd1e5d008a8b655daa424232c4d41f3f5e7ddbd3a9814",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 74,
+      "pixels": 6171,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 74,
+        "pixels": 6171,
+        "frame_refs": 74,
+        "palette": 0,
+        "consumed": 16041,
+        "trailing": 0,
+        "checksum": "0xcd8bb19c0dc7118b",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 15282
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/8225977a5cad2c6e43edd1e5d008a8b655daa424232c4d41f3f5e7ddbd3a9814.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite07.pak:12669",
+      "source": "source1",
+      "pak": "Sprite07.pak",
+      "index_row": 12669,
+      "name": "5912-24.spr",
+      "extension": ".spr",
+      "offset": 13474917,
+      "size": 15722,
+      "sha256": "8f5bdcc622ce1749d824807986a6eae3a71c2aa8ba24fed4ba43def676ff0495",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 70,
+      "pixels": 6115,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 70,
+        "pixels": 6115,
+        "frame_refs": 70,
+        "palette": 0,
+        "consumed": 15722,
+        "trailing": 0,
+        "checksum": "0xc1b5abe0809b161c",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 14999
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/8f5bdcc622ce1749d824807986a6eae3a71c2aa8ba24fed4ba43def676ff0495.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite08.pak:12809",
+      "source": "source1",
+      "pak": "Sprite08.pak",
+      "index_row": 12809,
+      "name": "5912-25.spr",
+      "extension": ".spr",
+      "offset": 12814969,
+      "size": 14035,
+      "sha256": "319ff23180b0022fd4138471ddad45322f9f4c9cfcb3a6f6bf652c0471cce033",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 65,
+      "pixels": 5336,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 65,
+        "pixels": 5336,
+        "frame_refs": 65,
+        "palette": 0,
+        "consumed": 14035,
+        "trailing": 0,
+        "checksum": "0x477a01117e051839",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 13357
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/319ff23180b0022fd4138471ddad45322f9f4c9cfcb3a6f6bf652c0471cce033.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    },
+    {
+      "record_key": "source1:Sprite09.pak:13027",
+      "source": "source1",
+      "pak": "Sprite09.pak",
+      "index_row": 13027,
+      "name": "5912-26.spr",
+      "extension": ".spr",
+      "offset": 13146463,
+      "size": 13317,
+      "sha256": "df288036a16a07dba16513f0356e5dad0e94d490b9e3c968983d1d3995b94746",
+      "numeric_sprite_prefix": 5912,
+      "source1_action_ids": [
+        5912,
+        8005,
+        9267
+      ],
+      "source1_local_action_names": [
+        "red orc",
+        "red orc change",
+        "red orc"
+      ],
+      "source1_korean_candidates": [],
+      "source1_match_statuses": [],
+      "role_relation": "See source1_actions by definition_id; one model can serve multiple definitions.",
+      "validation_state": "pixel_decode_pass",
+      "validation_kind": "all-source-row hash plus unique-content RGBA block decode",
+      "frames": 6,
+      "blocks": 63,
+      "pixels": 5114,
+      "trailing_bytes": 0,
+      "wrapper": null,
+      "validation_result": {
+        "frames": 6,
+        "blocks": 63,
+        "pixels": 5114,
+        "frame_refs": 63,
+        "palette": 0,
+        "consumed": 13317,
+        "trailing": 0,
+        "checksum": "0xec34f38c80ef9001",
+        "error": 0,
+        "error_pos": 0,
+        "odd_gap": 0,
+        "unknown_end": 12657
+      },
+      "source1_same_content_sha256": null,
+      "content_reference_policy": "No pack precedence or unique-character identity inferred.",
+      "index_bounds_valid": true,
+      "package_blob": "sprites/df288036a16a07dba16513f0356e5dad0e94d490b9e3c968983d1d3995b94746.spr",
+      "variant_context": "numbered_pack_shards",
+      "range_sha256_verified": true
+    }
+  ],
+  "canvas_original_grid": [
+    -72,
+    -72,
+    120,
+    72
+  ],
+  "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+  "unresolved_action_aliases": [],
+  "source_unit_conversion": false
+}
