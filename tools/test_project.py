@@ -12,7 +12,7 @@ import tempfile
 import re
 import json
 import sys
-from test_project_support import classify_result, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS, select_checks, PR122_NATIVE_FIXTURE_MODES, native_fixture_environment, run_native_fixture_cases
+from test_project_support import classify_result, failure_annotation, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS, select_checks, PR122_NATIVE_FIXTURE_MODES, native_fixture_environment, run_native_fixture_cases
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
@@ -163,6 +163,7 @@ for name,extra in tests:
             # Artifact delivery may fail independently of the test. Retain the
             # bounded failure detail in ordinary job logs as well as the file.
             print('FAILED_OUTPUT_BEGIN '+name+'\n'+output[-16000:]+'\nFAILED_OUTPUT_END '+name,flush=True)
+            if os.environ.get('GITHUB_ACTIONS')=='true':print(failure_annotation(name,output),flush=True)
             if name in ('import','bake_navigation'):
                 # Do not manufacture unrelated failures after broken preparation.
                 not_run=[remaining for remaining,_ in tests[len(executed):]]

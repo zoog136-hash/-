@@ -72,7 +72,7 @@ jobs:
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
           mkdir -p test-results
           "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/presentation-import.txt
-          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then exit 1; fi
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt | head -n 10 | sed 's/^/::error title=Godot import::/'; exit 1; fi
           python3 tests/animation_expansion_plan_test.py 2>&1 | tee test-results/animation-expansion-plan.txt
           python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
           python3 tests/eight_direction_coverage_audit_test.py
@@ -260,7 +260,7 @@ jobs:
           set -euo pipefail
           mkdir -p test-results
           XDG_DATA_HOME="${RUNNER_TEMP}/original-import" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/import.txt
-          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt | head -n 10 | sed 's/^/::error title=Godot import::/'; exit 1; fi
       - name: Production Main headless and rendered gameplay
         shell: bash
         env:
@@ -379,8 +379,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p test-results "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 5400 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/import.txt
-          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
+          timeout 5400 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/import.txt || { status=$?; echo "::error title=Godot import::import exited $status (124 = cold import exceeded 90 minutes)"; exit $status; }
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt | head -n 10 | sed 's/^/::error title=Godot import::/'; exit 1; fi
       - name: Configured production Main batches, headless then OpenGL
         shell: bash
         env:

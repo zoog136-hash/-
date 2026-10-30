@@ -104,6 +104,7 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --import --path . 2>&1 | tee godot-parse.log
           if grep -E "SCRIPT ERROR:|ERROR:" godot-parse.log; then
             echo "Godot import/parse reported an error."
+            grep -E "SCRIPT ERROR:|ERROR:" godot-parse.log | head -n 10 | sed 's/^/::error title=Godot import::/'
             exit 1
           fi
 

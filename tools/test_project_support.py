@@ -240,6 +240,24 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
     return requested
 
 
+ANNOTATION_LINE = re.compile(r"SCRIPT ERROR|ERROR:|_FAIL\b|FAIL:|FAILED|TIMEOUT|Traceback|Error\b")
+
+
+def failure_annotation(name: str, output: str, limit: int = 900) -> str:
+    """One GitHub `::error::` line naming the failed check and its first causes.
+
+    Job logs and artifacts can be unreachable from review tooling, while
+    check-run annotations stay readable. The full log is still written.
+    """
+    lines = [line.strip() for line in output.splitlines() if ANNOTATION_LINE.search(line)]
+    if not lines:
+        lines = [line.strip() for line in output.splitlines() if line.strip()][-3:]
+    detail = " | ".join(dict.fromkeys(lines[:12]))[:limit]
+    detail = detail.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+    title = re.sub(r"[^A-Za-z0-9_. -]", "_", name)
+    return "::error title=TWILIGHT check failed: " + title + "::" + (detail or "no output")
+
+
 def classify_result(name: str, returncode: int, output: str, *,
                     expected_native_keys: Sequence[str] | None = None) -> tuple[bool, bool]:
     """Return (passed, skipped); errors always override success/skip markers."""

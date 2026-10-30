@@ -65,7 +65,7 @@ jobs:
           python3 tools/test_project.py \
             --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 \
             --logs debug-results \
-            --import-timeout 1800 \
+            --import-timeout 5400 \
             --no-ci-synthetic-fixtures \
             --shard-index ${{ matrix.shard }} --shard-count 4
       - name: Require complete shard coverage, preserving optional SKIP counts
