@@ -1,0 +1,569 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "SW",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v03six",
+  "status": "REQUESTED_NOT_APPROVED",
+  "request_kind": "LOSSLESS_EXACT_RGBA_ALLNEW_INDEPENDENTLY_REVIEWED_SINGLE_POSE_ASSEMBLY_NO_IMAGEGEN",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "transparent_background": true,
+  "references": [
+    "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/girtas-SW-run-LEFT-heel-landing0-v01.png",
+    "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/girtas-SW-run-LEFT-load1-v01.png",
+    "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png",
+    "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/girtas-SW-run-RIGHT-heel-landing3-crown-v02.png",
+    "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/girtas-SW-run-RIGHT-load4-v01.png",
+    "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/girtas-SW-run-LEFT-heel-landing0-v01.png": "00db6dba6679ef9975003b92a5b4dacb314a23363a0752c4d45ac60dc54cef10",
+    "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/girtas-SW-run-LEFT-load1-v01.png": "c19cabcc735b628bc6ba2e24b8d82b766278822198a6575b919004cc97169c55",
+    "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png": "65cbdbe184ddfff32ae29696500a8dfc96b5558879e2549de1fabd88771ab0d2",
+    "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/girtas-SW-run-RIGHT-heel-landing3-crown-v02.png": "76dfe7e8bdd4c66eac1c0ac34b96eda6b68d0fa6c320228d3674085d91a50f50",
+    "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/girtas-SW-run-RIGHT-load4-v01.png": "42f0d4c5df389d123606493d8f928adc5d6a2392ededae89cbdeb10429764d44",
+    "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png": "243255600b19d7c0ced485a5c18c5aecaa0f32369d093934e18f3001a507f937"
+  },
+  "source_provenance": {
+    "status": "ALL_SIX_INDIVIDUAL_SOURCE_PASS_ONLY_PHYSICAL_PENDING",
+    "key": "transform:267",
+    "direction": "SW",
+    "role": "run",
+    "sources": [
+      {
+        "phase": 0,
+        "path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/girtas-SW-run-LEFT-heel-landing0-v01.png",
+        "source_sha256": "00db6dba6679ef9975003b92a5b4dacb314a23363a0752c4d45ac60dc54cef10",
+        "source_rgba_sha256": "1c84f819ddb84fcf2ea545fcce5a03a932f2df76e12a8d7091b9c1c3d2b57e0f",
+        "request_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/request.json",
+        "request_sha256": "cc26d8b90a55271425c9b0a9d91a5d0ce02d0030c7ab07c88f0e02500492ce68",
+        "request": {
+          "key": "transform:267",
+          "name": "기르타스",
+          "direction": "SW",
+          "role": "run",
+          "version": "v01LEFTlanding0",
+          "source_pose": 0,
+          "status": "REQUESTED_NOT_APPROVED",
+          "source_batch": "batch03",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "transparent_background": true,
+          "references": [
+            "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/SW-run-landing0-fixedbone.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/SW-run-landing0-fixedbone.png": "2dfe43a9001e2a5d489a2139dd6a534b70285da19ab6b8b39da79d2c46d1e6e5",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png": "b70d3643318e4db6cfbbf48865cbb833ff718e57c10a78de4d30675072affcd2",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png": "8d2ed75ce974a84abd5e1ccf1cfbc4d3a93cea1c6d41eacbae533872882e5fd3",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png": "bc4b9ddb3fc7b950347df4c875d75dd810f99f59968968feee01f5618728da8f"
+          },
+          "prompt": "Create ONE complete high-detail Girtas production RUN landing key0 on transparent background, generous empty margins around whole crown/hair/blade/boots, no labels/guides/ground/scene. ONE character, ONE new pose. This is true RUN HEEL LANDING followed by next compression; not walking, not a terminal push-off.\nImage1 is PRIMARY exact constant-bone SW camera/physical stance authority. Dress this three-dimensional mannequin faithfully in Girtas black/gold equipment. Preserve its actual hip/knee/ankle angles and near/far depth, not another old generic stance. NEAR anatomical LEFT BLUE leg is the LEADING heel-contact support to DOWNLEFT; FAR anatomical RIGHT ORANGE leg folds BACK/UPRIGHT into recovery AIR. Show a COMPLETE DISTINCT farRIGHT recovery boot visibly raised behind, framed by separated flowing robe panels: never hide the recovery boot under robe or behind the other shin, never add a third boot. Front heel actually touches its projected ground, toe slightly UP. Opposite rear recovery foot is clearly AIRBORNE with knee folded and sole clear of its own projected plane, not touching toe. Exactly TWO connected fully armored legs. Keep visible actual hip→upperthigh→knee connections through natural longrobe side slits; all thighs covered in faithful darkblack under-armor with gold edging, NO bare pink skin, no generic trousers. Blue/orange are ownership guides ONLY; final colors faithful black/gold.\nImages2/3 provide ONLY current selected correct SW identity/upperbody, with OLD LEGS REMOVED: pale face actually visible in SW front3/4 looking DOWNLEFT, long pale hair, THIN HARD STRAIGHT gold radial metal rays, original black/gold armor. Image4 is only ankle-length dark longrobe cloth/gold trim: maintain complete long flowing panels, naturally separate cloth around moving thighs and rearAIR boot, never shorten coat or replace robe with pants. Image5 is only permanent original LONG SINUOUS blade material/shape. Anatomical RIGHT FAR=imageLEFT shoulder→elbow→LOWgrip remains ONE connected weapon arm, gripping the SAME wavy gold-edged blade pointing FORWARD/DOWNLEFT from lowgrip exactly as original SW reference/guide. Anatomical LEFT NEAR=imageRIGHT stays EMPTY, only that arm counter-swings. Exactly TWO arms, no additional empty right fist/extra blade/grip growing from waist. Original gloves/boots/armor/rays remain same high-quality boss model. Do not paint a mannequin or copy generic guide colors. Camera strictly SW FRONT DOWNLEFT (not NW rear/E side), same face/hips/boots orientation throughout. Body modest forward running lean as primary. Full distinct rearAIR recovery boot is mandatory. Whole original blade tip, rays, cloth and each boot complete inside canvas.",
+          "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-run-v01.png",
+          "replaces_selected_source_sha256": "0e197a0fd737bd0d5e27971c5b3b7e9cb621ce7c1a40938c042c8908d1ab67fb",
+          "corrective_reason": "New true SWrun opposite heel-contact key from constantbone 3D authority and legless correct originalSW identity; no oldgenericlegs, no walk recolour/reuse. Contactpair SOURCE QC before four new load/AIR phases.",
+          "reference_preinspection": {
+            "identity": {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-selected-reference-legless-crops-independent-QC-v01.json",
+              "sha256": "64504bf296863f951b3db9afbf89a5fa320dee146e976707678581fb357dc72c"
+            },
+            "constantbone_guide": {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-two-contact-guide-only-independent-QC-v01.json",
+              "sha256": "f177a6450837d179212a8d54ba36e522dc68c1174a40c333015e01e61277a465"
+            }
+          },
+          "bone_authority": {
+            "path": "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/constantbone-joint-and-ground-authority.json",
+            "sha256": "7acd0d93a614e20264c50811847289602bd61ac4a286b10b3d80eb410679add4"
+          },
+          "quality_gate": "Correct SW nearLEFT/farRIGHT permanentblade, true assigned leadingheel+otherfoldedAIRboot visiblycomplete, connected2arms2legs, original fullyblackgold armor/longrobe/rays. Geometry is not visual/actorapproval.",
+          "requested_at": "2026-10-19T15:53:44.515232+00:00"
+        },
+        "result_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/result.json",
+        "result_sha256": "b4ec48eddf2b2df3f52fe8d03a9021e9deff7b32b0a28055835ea7177f3f50eb",
+        "source_visual_status": "PASS"
+      },
+      {
+        "phase": 1,
+        "path": "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/girtas-SW-run-LEFT-load1-v01.png",
+        "source_sha256": "c19cabcc735b628bc6ba2e24b8d82b766278822198a6575b919004cc97169c55",
+        "source_rgba_sha256": "dfe60ce2ec5f6a06b76b5fde53e9930d9396a836a0141891e1f633feb643691a",
+        "request_path": "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/request.json",
+        "request_sha256": "b59f84b9b21a00d8d803e714c788200b1edba29fe8ddab4d240a0bfba40c89d0",
+        "request": {
+          "key": "transform:267",
+          "name": "기르타스",
+          "direction": "SW",
+          "role": "run",
+          "version": "v01LEFTLOAD1",
+          "source_pose": 1,
+          "status": "REQUESTED_NOT_APPROVED",
+          "source_batch": "batch03",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "transparent_background": true,
+          "references": [
+            "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase1-fixedbone.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase1-fixedbone.png": "1e162492a71f267d890dac6e95d2f8aef33d45b81b2575c9c5a32d5cc6ae23e6",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png": "b70d3643318e4db6cfbbf48865cbb833ff718e57c10a78de4d30675072affcd2",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png": "8d2ed75ce974a84abd5e1ccf1cfbc4d3a93cea1c6d41eacbae533872882e5fd3",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png": "bc4b9ddb3fc7b950347df4c875d75dd810f99f59968968feee01f5618728da8f"
+          },
+          "prompt": "Create ONE full high-detail Girtas SW RUN production key1 on transparent background. One character/one pose, no scene/text/guides/floor. Generous CLEAR transparent margins around ALL rays/weapon/boots; every top HARD gold spike ends in a complete tapered point well INSIDE the canvas, ideally60px or more from edges. No gear clipped.\nImage1 is PRIMARY exact fixed-bone three-dimensional pose/camera authority. Faithfully dress this mannequin, do not substitute old legs/another stance. This exact phase1 is RUN LEFT COMPRESSION/LOAD, after its heel landing. NEAR anatomical LEFT BLUE is the ONLY support: FULL SOLE FLAT under the hip, planted and carrying weight, knee visibly DEEPLY BENT with actual hip LOWERED as the primary. Not a heel contact step, not terminal toeoff, not standing idle. FAR anatomical RIGHT ORANGE leg folds behind into recovery AIR, with its entire boot visibly separated from ground and the support shin. Reproduce genuine lower knee/hip compression with fixed limb lengths, not shrinking the whole character.  Anatomical RIGHT FAR=imageLEFT, anatomical LEFT NEAR=imageRIGHT. Guide orange/blue indicate ownership ONLY; final colors original BLACK/GOLD. Exactly TWO connected fully armored legs. Expose actual near hip→thigh→knee through natural longrobe slit, faithful black under-armor/gold trim on ALL thighs, NO bare pink skin/generic trousers. MANDATORY two COMPLETE DISTINCT boots visible: in phase1 the farRIGHT recovery boot must not disappear behind nearLEFT thigh or robe. Swing/part only flowing robe panels naturally to frame that real boot, no extra foot or disconnected boot.\nImages2/3 supply ONLY same original approved SW upperbody/crown identity (oldlegs removed), image4 only ankle-length longrobe material/gold trim, image5 only original long SINUOUS blade. Same pale SW FRONT3/4 face looking DOWNLEFT, long pale hair, THIN HARD STRAIGHT radial gold metal rays, blackgold armor, original full longrobe panels. Hair/longrobe stream consistently BACK/UPRIGHT behind the run direction, modest coherent motion; never shorten robe/replace with pants. Original permanent RIGHT FAR=imageLEFT shoulder→elbow→LOW grip remains ONE continuous arm holding that same wavy gold-edged blade FORWARD/DOWNLEFT. EMPTY nearLEFT=imageRIGHT arm alone counter-swings; exactly TWO arms, no empty right fist/extra blade. Same skull/pauldron/torso/hip/boot physical proportions at every phase; compression/flight comes from real fixed-bone articulation/translation not body resizing. Strict SW FRONT DOWNLEFT camera, never NWrear/Eside. Preserve Girtas unique boss model/equipment and detailed art; no mannequin colors/primitives. Both boots and whole blade/crown/hair/robe complete inside frame.",
+          "corrective_reason": "New distinct actual LOAD phase after independently passed opposite contact0/3; sameconstantbones/selectedSWleglessidentity, no oldgenericlegs or sharedmotion. Keep actual load/trueAIR, not labels or geometry-only completion.",
+          "contact_pair_QC": [
+            {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-contact0-3-independent-source-QC-v01.json",
+              "sha256": "67333f6d3a4dfda582f504e88e1f20fb25347a9f5ec4ba3d61c4c4928acd7af3"
+            },
+            {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-repaired-contact3-independent-source-QC-v01.json",
+              "sha256": "907b10c63fd7797d381e5f7f569743b56e6fd6f6c858a7fa0d24d902930b4aca"
+            }
+          ],
+          "guide_preinspection": {
+            "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-four-role-guide-only-independent-QC-v01.json",
+            "sha256": "7291aaef31ee09c8541904a899a31669277c05458181ed908c8a3d9124953e47"
+          },
+          "bone_authority": {
+            "path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/constantbone-joint-and-ground-authority.json",
+            "sha256": "32df7c3b8443cb714e7802f8309e5f745bc8dbc69017b859d17b37d4937a9133"
+          },
+          "requested_at": "2026-10-19T16:12:03.752572+00:00"
+        },
+        "result_path": "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/result.json",
+        "result_sha256": "86fdfe40f07efaf5362f2dc5ddec8e8c6ac4b186a0352c3f45dbcbf9e6fea0f8",
+        "source_visual_status": "PASS"
+      },
+      {
+        "phase": 2,
+        "path": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png",
+        "source_sha256": "65cbdbe184ddfff32ae29696500a8dfc96b5558879e2549de1fabd88771ab0d2",
+        "source_rgba_sha256": "c8e87d8b3933196426ff1b694d2fa00e88e7dea777abb4ac587d57f4cd3db6a1",
+        "request_path": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/request.json",
+        "request_sha256": "f45935ca0bf7536eb97a903932d9e94b94dd19b34c90f882a4be274b0f3adacb",
+        "request": {
+          "key": "transform:267",
+          "name": "기르타스",
+          "direction": "SW",
+          "role": "run",
+          "version": "v01RIGHTAIR2",
+          "source_pose": 2,
+          "status": "REQUESTED_NOT_APPROVED",
+          "source_batch": "batch03",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "transparent_background": true,
+          "references": [
+            "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase2-fixedbone.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase2-fixedbone.png": "0dbdbe3446a372ffccd22b9c198abf575f27f7ad16807a4db6e2ff0faebb6845",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png": "b70d3643318e4db6cfbbf48865cbb833ff718e57c10a78de4d30675072affcd2",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png": "8d2ed75ce974a84abd5e1ccf1cfbc4d3a93cea1c6d41eacbae533872882e5fd3",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png": "bc4b9ddb3fc7b950347df4c875d75dd810f99f59968968feee01f5618728da8f"
+          },
+          "prompt": "Create ONE full high-detail Girtas SW RUN production key2 on transparent background. One character/one pose, no scene/text/guides/floor. Generous CLEAR transparent margins around ALL rays/weapon/boots; every top HARD gold spike ends in a complete tapered point well INSIDE the canvas, ideally60px or more from edges. No gear clipped.\nImage1 is PRIMARY exact fixed-bone three-dimensional pose/camera authority. Faithfully dress this mannequin, do not substitute old legs/another stance. This exact phase2 is true RUN FLIGHT/AIR: BOTH feet airborne, NONE touching its projected ground. FAR anatomical RIGHT ORANGE advances FORWARD/DOWNLEFT in AIR approaching its next heel landing; NEAR anatomical LEFT BLUE trails BACK/UPRIGHT in AIR with knee flexion. The rear toe MUST be airborne too, not terminal push-off touching ground. Preserve actual opposite hip→thigh→knee→ankle chains and positive guide clearances on BOTH boots; not a standing/single-support pose with an AIR label. Body rises naturally with the primary, never normalize flight away.  Anatomical RIGHT FAR=imageLEFT, anatomical LEFT NEAR=imageRIGHT. Guide orange/blue indicate ownership ONLY; final colors original BLACK/GOLD. Exactly TWO connected fully armored legs. Expose actual near hip→thigh→knee through natural longrobe slit, faithful black under-armor/gold trim on ALL thighs, NO bare pink skin/generic trousers. MANDATORY two COMPLETE DISTINCT boots visible: in phase1 the farRIGHT recovery boot must not disappear behind nearLEFT thigh or robe. Swing/part only flowing robe panels naturally to frame that real boot, no extra foot or disconnected boot.\nImages2/3 supply ONLY same original approved SW upperbody/crown identity (oldlegs removed), image4 only ankle-length longrobe material/gold trim, image5 only original long SINUOUS blade. Same pale SW FRONT3/4 face looking DOWNLEFT, long pale hair, THIN HARD STRAIGHT radial gold metal rays, blackgold armor, original full longrobe panels. Hair/longrobe stream consistently BACK/UPRIGHT behind the run direction, modest coherent motion; never shorten robe/replace with pants. Original permanent RIGHT FAR=imageLEFT shoulder→elbow→LOW grip remains ONE continuous arm holding that same wavy gold-edged blade FORWARD/DOWNLEFT. EMPTY nearLEFT=imageRIGHT arm alone counter-swings; exactly TWO arms, no empty right fist/extra blade. Same skull/pauldron/torso/hip/boot physical proportions at every phase; compression/flight comes from real fixed-bone articulation/translation not body resizing. Strict SW FRONT DOWNLEFT camera, never NWrear/Eside. Preserve Girtas unique boss model/equipment and detailed art; no mannequin colors/primitives. Both boots and whole blade/crown/hair/robe complete inside frame.",
+          "corrective_reason": "New distinct actual AIR phase after independently passed opposite contact0/3; sameconstantbones/selectedSWleglessidentity, no oldgenericlegs or sharedmotion. Keep actual load/trueAIR, not labels or geometry-only completion.",
+          "contact_pair_QC": [
+            {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-contact0-3-independent-source-QC-v01.json",
+              "sha256": "67333f6d3a4dfda582f504e88e1f20fb25347a9f5ec4ba3d61c4c4928acd7af3"
+            },
+            {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-repaired-contact3-independent-source-QC-v01.json",
+              "sha256": "907b10c63fd7797d381e5f7f569743b56e6fd6f6c858a7fa0d24d902930b4aca"
+            }
+          ],
+          "guide_preinspection": {
+            "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-four-role-guide-only-independent-QC-v01.json",
+            "sha256": "7291aaef31ee09c8541904a899a31669277c05458181ed908c8a3d9124953e47"
+          },
+          "bone_authority": {
+            "path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/constantbone-joint-and-ground-authority.json",
+            "sha256": "32df7c3b8443cb714e7802f8309e5f745bc8dbc69017b859d17b37d4937a9133"
+          },
+          "requested_at": "2026-10-19T16:12:03.753874+00:00"
+        },
+        "result_path": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/result.json",
+        "result_sha256": "73bc12e3d6699a41e5c4dd72ad5485f7596df81f04dd882bc9b68660e3202a94",
+        "source_visual_status": "PASS"
+      },
+      {
+        "phase": 3,
+        "path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/girtas-SW-run-RIGHT-heel-landing3-crown-v02.png",
+        "source_sha256": "76dfe7e8bdd4c66eac1c0ac34b96eda6b68d0fa6c320228d3674085d91a50f50",
+        "source_rgba_sha256": "8df0d3b44462e99b083af4a7c90a1227b96fb3f8aa2a77130e807372fad15c8a",
+        "request_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/request.json",
+        "request_sha256": "25e2a5dfa0584d0ea5c131aa540567dc187032544fd9f5b9bbb0beda330bff26",
+        "request": {
+          "key": "transform:267",
+          "name": "기르타스",
+          "direction": "SW",
+          "role": "run",
+          "version": "v02RIGHTlanding3crown",
+          "source_pose": 3,
+          "status": "REQUESTED_NOT_APPROVED",
+          "source_batch": "batch03",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "transparent_background": true,
+          "references": [
+            "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/girtas-SW-run-RIGHT-heel-landing3-v01.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/girtas-SW-run-RIGHT-heel-landing3-v01.png": "eca89dafeff2f7f5fd88e8bc53e9f81cecf890d05c39bc91284cb7fd7bb820dd",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec"
+          },
+          "prompt": "Repair ONE specific production-art defect in image1, preserving its exact faithful Girtas SW RUN RIGHT landing pose and model. Transparent background, ONE complete full character, no text/guide/scene. Image1 has independently approved anatomy/camera/model/actual farRIGHT front heel landing and nearLEFT rear recovery AIR. The ONLY source defect is the TOP GOLD CROWN RAY APEX CLIPPED by the upper edge at approximately image1 native(525,0). Restore that ray as the complete original HARD THIN straight gold metal spike with a full sharply tapered POINT, faithful to the uncut original crown design in image2. This is actual artwork restoration of the cut tip. Give the complete crown/rays real clear transparent top margin and keep comfortable clear margins on sides/bottom so no other gear or boot is cut. Do not just pad an already-cut ray, alpha-erase its boundary, crop anything, or leave a blunt broken spike. Preserve the whole character's exact physical proportions and high detail, all joint angles, longrobe, hand/boot placements and ground-contact stance; frame the complete repaired figure comfortably in the square canvas.\nKeep actual RIGHT FAR=imageLEFT hip→thigh→knee→front boot as the DOWNLEFT leading HEEL contact, toe slightly raised. Keep actual LEFT NEAR=imageRIGHT leg folded behind into a visibly complete distinct recovery AIR boot, no toe ground-contact and no hidden/extra boot. Exactly TWO connected fully blackgold armored legs, no bare thigh. Keep original pale SW front3/4 face looking DOWNLEFT, long pale hair, THIN HARD radial gold rays, full original blackgold armor and ankle-length longrobe panels. Keep permanent RIGHT FAR low shoulder→elbow→grip arm continuously holding the original long SINUOUS blade FORWARD/DOWNLEFT; nearLEFT arm remains EMPTY. Exactly TWO arms, no added empty right hand or extra blade. Image2 is only original SW crown/upperbody identity, not an instruction to replace the approved pose. Every blade/ray/hair/robe/boot must be complete inside the final canvas. No pose redesign or other equipment change; only faithful crown-tip restoration and clear framing.",
+          "corrective_reason": "Localized actual restoration of clipped top crown ray only; sourcev01 anatomy/motion/model conceptualPASS but2strongsourceedgepixels strictHOLD. Preserve exact approved pose/gear, no padding/repack/alpha workaround or full6retry.",
+          "preserve_prior_raw": {
+            "path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/girtas-SW-run-RIGHT-heel-landing3-v01.png",
+            "sha256": "eca89dafeff2f7f5fd88e8bc53e9f81cecf890d05c39bc91284cb7fd7bb820dd"
+          },
+          "independent_source_inspection": {
+            "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-contact0-3-independent-source-QC-v01.json",
+            "sha256": "67333f6d3a4dfda582f504e88e1f20fb25347a9f5ec4ba3d61c4c4928acd7af3"
+          },
+          "strict_boundary_hold": {
+            "path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/boundary-HOLD-proof.json",
+            "sha256": "c9e29c0024e5f7aaede0c1fd4641e6f1a49fc74f4e4f264ddd59a857b955b88d"
+          },
+          "requested_at": "2026-10-19T16:05:20.887855+00:00"
+        },
+        "result_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/result.json",
+        "result_sha256": "a9603d196e1235f6edd364d7ae0f02c07fad6752f6767566858c0739340b5c8d",
+        "source_visual_status": "PASS"
+      },
+      {
+        "phase": 4,
+        "path": "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/girtas-SW-run-RIGHT-load4-v01.png",
+        "source_sha256": "42f0d4c5df389d123606493d8f928adc5d6a2392ededae89cbdeb10429764d44",
+        "source_rgba_sha256": "6c8c4e6a9b4579003202e299bde33464eba9a6b9c0f1cec5098d7cd38185ad9d",
+        "request_path": "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/request.json",
+        "request_sha256": "fff49986076dae9445f15bd63704b67404622776000d982516017c6b054beddb",
+        "request": {
+          "key": "transform:267",
+          "name": "기르타스",
+          "direction": "SW",
+          "role": "run",
+          "version": "v01RIGHTLOAD4",
+          "source_pose": 4,
+          "status": "REQUESTED_NOT_APPROVED",
+          "source_batch": "batch03",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "transparent_background": true,
+          "references": [
+            "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase4-fixedbone.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase4-fixedbone.png": "7dd56ba4190da003e8ff276b700808b7fc48295bcd025647ba11a7f6f6b4df3f",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png": "b70d3643318e4db6cfbbf48865cbb833ff718e57c10a78de4d30675072affcd2",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png": "8d2ed75ce974a84abd5e1ccf1cfbc4d3a93cea1c6d41eacbae533872882e5fd3",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png": "bc4b9ddb3fc7b950347df4c875d75dd810f99f59968968feee01f5618728da8f"
+          },
+          "prompt": "Create ONE full high-detail Girtas SW RUN production key4 on transparent background. One character/one pose, no scene/text/guides/floor. Generous CLEAR transparent margins around ALL rays/weapon/boots; every top HARD gold spike ends in a complete tapered point well INSIDE the canvas, ideally60px or more from edges. No gear clipped.\nImage1 is PRIMARY exact fixed-bone three-dimensional pose/camera authority. Faithfully dress this mannequin, do not substitute old legs/another stance. This exact phase4 is RUN RIGHT COMPRESSION/LOAD, after its heel landing. FAR anatomical RIGHT ORANGE is the ONLY support: FULL SOLE FLAT under the hip, planted and carrying weight, knee visibly DEEPLY BENT with actual hip LOWERED as the primary. Not a heel contact step, not terminal toeoff, not standing idle. NEAR anatomical LEFT BLUE leg folds behind into recovery AIR, with its entire boot visibly separated from ground and the support shin. Reproduce genuine lower knee/hip compression with fixed limb lengths, not shrinking the whole character.  Anatomical RIGHT FAR=imageLEFT, anatomical LEFT NEAR=imageRIGHT. Guide orange/blue indicate ownership ONLY; final colors original BLACK/GOLD. Exactly TWO connected fully armored legs. Expose actual near hip→thigh→knee through natural longrobe slit, faithful black under-armor/gold trim on ALL thighs, NO bare pink skin/generic trousers. MANDATORY two COMPLETE DISTINCT boots visible: in phase1 the farRIGHT recovery boot must not disappear behind nearLEFT thigh or robe. Swing/part only flowing robe panels naturally to frame that real boot, no extra foot or disconnected boot.\nImages2/3 supply ONLY same original approved SW upperbody/crown identity (oldlegs removed), image4 only ankle-length longrobe material/gold trim, image5 only original long SINUOUS blade. Same pale SW FRONT3/4 face looking DOWNLEFT, long pale hair, THIN HARD STRAIGHT radial gold metal rays, blackgold armor, original full longrobe panels. Hair/longrobe stream consistently BACK/UPRIGHT behind the run direction, modest coherent motion; never shorten robe/replace with pants. Original permanent RIGHT FAR=imageLEFT shoulder→elbow→LOW grip remains ONE continuous arm holding that same wavy gold-edged blade FORWARD/DOWNLEFT. EMPTY nearLEFT=imageRIGHT arm alone counter-swings; exactly TWO arms, no empty right fist/extra blade. Same skull/pauldron/torso/hip/boot physical proportions at every phase; compression/flight comes from real fixed-bone articulation/translation not body resizing. Strict SW FRONT DOWNLEFT camera, never NWrear/Eside. Preserve Girtas unique boss model/equipment and detailed art; no mannequin colors/primitives. Both boots and whole blade/crown/hair/robe complete inside frame.",
+          "corrective_reason": "New distinct actual LOAD phase after independently passed opposite contact0/3; sameconstantbones/selectedSWleglessidentity, no oldgenericlegs or sharedmotion. Keep actual load/trueAIR, not labels or geometry-only completion.",
+          "contact_pair_QC": [
+            {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-contact0-3-independent-source-QC-v01.json",
+              "sha256": "67333f6d3a4dfda582f504e88e1f20fb25347a9f5ec4ba3d61c4c4928acd7af3"
+            },
+            {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-repaired-contact3-independent-source-QC-v01.json",
+              "sha256": "907b10c63fd7797d381e5f7f569743b56e6fd6f6c858a7fa0d24d902930b4aca"
+            }
+          ],
+          "guide_preinspection": {
+            "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-four-role-guide-only-independent-QC-v01.json",
+            "sha256": "7291aaef31ee09c8541904a899a31669277c05458181ed908c8a3d9124953e47"
+          },
+          "bone_authority": {
+            "path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/constantbone-joint-and-ground-authority.json",
+            "sha256": "32df7c3b8443cb714e7802f8309e5f745bc8dbc69017b859d17b37d4937a9133"
+          },
+          "requested_at": "2026-10-19T16:12:03.755039+00:00"
+        },
+        "result_path": "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/result.json",
+        "result_sha256": "0d24207934277f30663cd9e57b56477a1926d1bea763ea1e846f1f43eaec0e34",
+        "source_visual_status": "PASS"
+      },
+      {
+        "phase": 5,
+        "path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png",
+        "source_sha256": "243255600b19d7c0ced485a5c18c5aecaa0f32369d093934e18f3001a507f937",
+        "source_rgba_sha256": "497837997b3eb05d9d5c0d75a2a52c87f90c6f4cb26ad9e35643aed8f07d9601",
+        "request_path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/request.json",
+        "request_sha256": "aae6eed55bcafba3bcc158c73f8bb414061835dd132cacb04f2c987e5fdc199b",
+        "request": {
+          "key": "transform:267",
+          "name": "기르타스",
+          "direction": "SW",
+          "role": "run",
+          "version": "v01LEFTAIR5",
+          "source_pose": 5,
+          "status": "REQUESTED_NOT_APPROVED",
+          "source_batch": "batch03",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "transparent_background": true,
+          "references": [
+            "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase5-fixedbone.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/SW-run-phase5-fixedbone.png": "5af373bbbeb8d2a34e31659a382d845830231437607a6aac4b00b9c1b27f3320",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png": "b70d3643318e4db6cfbbf48865cbb833ff718e57c10a78de4d30675072affcd2",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png": "8d2ed75ce974a84abd5e1ccf1cfbc4d3a93cea1c6d41eacbae533872882e5fd3",
+            "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png": "bc4b9ddb3fc7b950347df4c875d75dd810f99f59968968feee01f5618728da8f"
+          },
+          "prompt": "Create ONE full high-detail Girtas SW RUN production key5 on transparent background. One character/one pose, no scene/text/guides/floor. Generous CLEAR transparent margins around ALL rays/weapon/boots; every top HARD gold spike ends in a complete tapered point well INSIDE the canvas, ideally60px or more from edges. No gear clipped.\nImage1 is PRIMARY exact fixed-bone three-dimensional pose/camera authority. Faithfully dress this mannequin, do not substitute old legs/another stance. This exact phase5 is true RUN FLIGHT/AIR: BOTH feet airborne, NONE touching its projected ground. NEAR anatomical LEFT BLUE advances FORWARD/DOWNLEFT in AIR approaching its next heel landing; FAR anatomical RIGHT ORANGE trails BACK/UPRIGHT in AIR with knee flexion. The rear toe MUST be airborne too, not terminal push-off touching ground. Preserve actual opposite hip→thigh→knee→ankle chains and positive guide clearances on BOTH boots; not a standing/single-support pose with an AIR label. Body rises naturally with the primary, never normalize flight away.  Anatomical RIGHT FAR=imageLEFT, anatomical LEFT NEAR=imageRIGHT. Guide orange/blue indicate ownership ONLY; final colors original BLACK/GOLD. Exactly TWO connected fully armored legs. Expose actual near hip→thigh→knee through natural longrobe slit, faithful black under-armor/gold trim on ALL thighs, NO bare pink skin/generic trousers. MANDATORY two COMPLETE DISTINCT boots visible: in phase1 the farRIGHT recovery boot must not disappear behind nearLEFT thigh or robe. Swing/part only flowing robe panels naturally to frame that real boot, no extra foot or disconnected boot.\nImages2/3 supply ONLY same original approved SW upperbody/crown identity (oldlegs removed), image4 only ankle-length longrobe material/gold trim, image5 only original long SINUOUS blade. Same pale SW FRONT3/4 face looking DOWNLEFT, long pale hair, THIN HARD STRAIGHT radial gold metal rays, blackgold armor, original full longrobe panels. Hair/longrobe stream consistently BACK/UPRIGHT behind the run direction, modest coherent motion; never shorten robe/replace with pants. Original permanent RIGHT FAR=imageLEFT shoulder→elbow→LOW grip remains ONE continuous arm holding that same wavy gold-edged blade FORWARD/DOWNLEFT. EMPTY nearLEFT=imageRIGHT arm alone counter-swings; exactly TWO arms, no empty right fist/extra blade. Same skull/pauldron/torso/hip/boot physical proportions at every phase; compression/flight comes from real fixed-bone articulation/translation not body resizing. Strict SW FRONT DOWNLEFT camera, never NWrear/Eside. Preserve Girtas unique boss model/equipment and detailed art; no mannequin colors/primitives. Both boots and whole blade/crown/hair/robe complete inside frame.",
+          "corrective_reason": "New distinct actual AIR phase after independently passed opposite contact0/3; sameconstantbones/selectedSWleglessidentity, no oldgenericlegs or sharedmotion. Keep actual load/trueAIR, not labels or geometry-only completion.",
+          "contact_pair_QC": [
+            {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-contact0-3-independent-source-QC-v01.json",
+              "sha256": "67333f6d3a4dfda582f504e88e1f20fb25347a9f5ec4ba3d61c4c4928acd7af3"
+            },
+            {
+              "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-repaired-contact3-independent-source-QC-v01.json",
+              "sha256": "907b10c63fd7797d381e5f7f569743b56e6fd6f6c858a7fa0d24d902930b4aca"
+            }
+          ],
+          "guide_preinspection": {
+            "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-four-role-guide-only-independent-QC-v01.json",
+            "sha256": "7291aaef31ee09c8541904a899a31669277c05458181ed908c8a3d9124953e47"
+          },
+          "bone_authority": {
+            "path": "/workspace/scratch/girtas-SW-run-four-load-air-solid-guide-v01/constantbone-joint-and-ground-authority.json",
+            "sha256": "32df7c3b8443cb714e7802f8309e5f745bc8dbc69017b859d17b37d4937a9133"
+          },
+          "requested_at": "2026-10-19T16:12:03.756130+00:00"
+        },
+        "result_path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/result.json",
+        "result_sha256": "b58f71b476a18c5d906638417d55fca483dd0fd6e90be2d1ea0130ae98f6c487",
+        "source_visual_status": "PASS"
+      }
+    ],
+    "selected_phase_order": [
+      "nearLEFT_HEEL_LANDING0",
+      "nearLEFT_FLAT_COMPRESSION1",
+      "farRIGHT_LEAD_TRUE_AIR2",
+      "farRIGHT_HEEL_LANDING3_CROWN_REPAIRED",
+      "farRIGHT_FLAT_COMPRESSION4",
+      "nearLEFT_LEAD_TRUE_AIR5"
+    ],
+    "independent_source_review": {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-selected-six-final-independent-source-QC-v01.json",
+      "sha256": "d80966877c6ae1452dffd5e7ea2c0e200dd3f558f473f01f9170bf0d5c4a96c4"
+    },
+    "source_review_addendum": {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-final-source-stale-gear-sentence-correction-v01.json",
+      "sha256": "46b38b1bf824fc3e370af942034a9a963c63f8739c0ebff1dd933a8387e405e2"
+    },
+    "unselected_history": "Old clipped source3 and already-started hilt5service raw preserved. All uncalled hilt0/1/2/4 requests preserved. No hilt service art selected, no original-source poses replaced after hiltHOLD withdrawal."
+  },
+  "source_pose_map": {
+    "schema": "pr122-reviewed-pose-map-v1",
+    "key": "transform:267",
+    "direction": "SW",
+    "role": "run",
+    "poses": [
+      {
+        "path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/girtas-SW-run-LEFT-heel-landing0-v01.png",
+        "source_sha256": "00db6dba6679ef9975003b92a5b4dacb314a23363a0752c4d45ac60dc54cef10",
+        "source_pose": 0,
+        "target_pose": 0,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "1c84f819ddb84fcf2ea545fcce5a03a932f2df76e12a8d7091b9c1c3d2b57e0f",
+        "newly_authored": true,
+        "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration."
+      },
+      {
+        "path": "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/girtas-SW-run-LEFT-load1-v01.png",
+        "source_sha256": "c19cabcc735b628bc6ba2e24b8d82b766278822198a6575b919004cc97169c55",
+        "source_pose": 0,
+        "target_pose": 1,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "dfe60ce2ec5f6a06b76b5fde53e9930d9396a836a0141891e1f633feb643691a",
+        "newly_authored": true,
+        "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration."
+      },
+      {
+        "path": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png",
+        "source_sha256": "65cbdbe184ddfff32ae29696500a8dfc96b5558879e2549de1fabd88771ab0d2",
+        "source_pose": 0,
+        "target_pose": 2,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "c8e87d8b3933196426ff1b694d2fa00e88e7dea777abb4ac587d57f4cd3db6a1",
+        "newly_authored": true,
+        "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration."
+      },
+      {
+        "path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/girtas-SW-run-RIGHT-heel-landing3-crown-v02.png",
+        "source_sha256": "76dfe7e8bdd4c66eac1c0ac34b96eda6b68d0fa6c320228d3674085d91a50f50",
+        "source_pose": 0,
+        "target_pose": 3,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "8df0d3b44462e99b083af4a7c90a1227b96fb3f8aa2a77130e807372fad15c8a",
+        "newly_authored": true,
+        "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration."
+      },
+      {
+        "path": "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/girtas-SW-run-RIGHT-load4-v01.png",
+        "source_sha256": "42f0d4c5df389d123606493d8f928adc5d6a2392ededae89cbdeb10429764d44",
+        "source_pose": 0,
+        "target_pose": 4,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "6c8c4e6a9b4579003202e299bde33464eba9a6b9c0f1cec5098d7cd38185ad9d",
+        "newly_authored": true,
+        "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration."
+      },
+      {
+        "path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png",
+        "source_sha256": "243255600b19d7c0ced485a5c18c5aecaa0f32369d093934e18f3001a507f937",
+        "source_pose": 0,
+        "target_pose": 5,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "497837997b3eb05d9d5c0d75a2a52c87f90c6f4cb26ad9e35643aed8f07d9601",
+        "newly_authored": true,
+        "review_basis": "Fresh independent actual SW SOURCE PASS confirmed 2026-10-19 by /root/girtas_remaining_run_source_runtime_qc_v02: original0/1/2/repaired3/4/5 camera/model/gear/anatomical support and trueflight coherent; idle-only hilt HOLD withdrawn after actual current SWwalk0/SWattack3 confirms original prongs. Preserve original six; no service hilt edit selected. Formal final source proof pinned separately in result before integration."
+      }
+    ],
+    "physical_scale_review": "REQUIRED independent rigid skull/pauldron sizing and actual support/ground/AIR projection. No silhouette bbox normalization, no lowestAIRsole root, no standing near-far invariant."
+  },
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+    "base_geometry_sha256": "bf481de03545ec1d95efefe2fd2fefd0458f96e41b3b0249c7db5e3b9fc446de",
+    "direction": "SW",
+    "review_basis": "Six individually strict complete source PNGs, one exact1254-square pose per1536 cell, source SHA/RGBA pinned in pose-map; include original low-alpha fringes by outward metadata only. Independent full selected source proof d80966877c6ae1452dffd5e7ea2c0e200dd3f558f473f01f9170bf0d5c4a96c4. No resize/repack/alpha cleanup or original error deletion. Retain original automatic transparent 1-2px top padding in phases0/1 as well: each review rectangle is exact union of original base rectangle and full selected1254source rectangle. No pixel change.",
+    "regions": [
+      [
+        141,
+        139,
+        1254,
+        1256
+      ],
+      [
+        1677,
+        140,
+        1254,
+        1255
+      ],
+      [
+        141,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        141,
+        3213,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        3213,
+        1254,
+        1254
+      ]
+    ],
+    "nearest_owner_sha256": "a1f71a5a0eae4162022fc6d03ba7bbf0533f386efb980500e279c04d87b9aa3f"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+    "canvas_size": 2048,
+    "review_basis": "Six exact full1254 source PNGs assembled in1536cells with rawRGBA unchanged. Reviewed outward source rectangles preserve all alpha16 ownership and original automatic1-2px transparent top padding; immutable failed atlas and error finalized under existing strict guards. Physical bodyC/root not defined by bbox."
+  },
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-SW-run-v01.png",
+  "replaces_selected_source_sha256": "0e197a0fd737bd0d5e27971c5b3b7e9cb621ce7c1a40938c042c8908d1ab67fb",
+  "corrective_reason": "Replace original uncorrected SWrun with SIX genuine faithful opposite landing/compression/trueAIR phases from constantbone authority and selected current SW identity. Permanent farRIGHT long sinuous blade/nearLEFT empty hand, original gear/camera/longrobe and two-arm/two-leg chains retained. Actual crown-tip source3 repair selected, earlier badraw retained. ExactRGBA/strict sourceownership/cross288 unique verified. Physical candidate and actual Player approval remain separate.",
+  "user_authorization": "User authorized continuous real animation production from Unique onward, production image tools without chat image attachments, preserving prior assets/results and normal small checkpoints to existing PR122.",
+  "approval": "NO_ACTOR_APPROVAL",
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "requested_at": "2026-10-19T16:57:16.152367+00:00",
+  "physical_status": "PENDING_INDEPENDENT_C_ROOT_AIR_REVIEW",
+  "ready_for_integration": false,
+  "assembly_authoring_request": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/pose-map.json",
+    "sha256": "0997f3c2434fef670389519a01e68057d10907abfb0ff1d983398975d9475406"
+  }
+}

@@ -1,0 +1,111 @@
+name: Aden PNG source and physics validation
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/maps/**'
+      - 'scripts/world.gd'
+      - 'tests/aden_png*'
+      - 'tests/png_world_runtime_test.gd'
+      - 'tests/png_refinement_runtime_test.gd'
+      - 'tests/domination_111_runtime_test.gd'
+      - 'data/maps/aden_png_alignment.json'
+      - 'data/maps/png_map_sources.json'
+      - 'data/maps/domination_111_calibration.json'
+      - 'data/map_png_review/**'
+      - 'tools/map_restore/aden_png.py'
+      - 'tools/map_restore/test_aden_png.py'
+      - 'tools/map_restore/build_png_review_pack.py'
+      - 'tools/map_restore/build_domination_111.py'
+      - 'tools/map_restore/make_domination_void_mask.py'
+      - 'tools/map_restore/test_png_review_compile.py'
+      - 'tools/map_restore/png_layers.py'
+      - '.github/workflows/aden-png-source-validate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-main-physics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/**/*.zip
+            !/docs/**/*.part*
+            !/docs/**/*.png
+            !/docs/**/*.jpg
+            !/docs/**/*.mp4
+            !/docs/**/*.webm
+            !/docs/**/*.gif
+      - name: Official Godot 4.7.2 and real software display
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri python3-numpy python3-pil python3-scipy
+          curl -fsSL --retry 2 https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o /tmp/godot.zip
+          curl -fsSL --retry 2 https://github.com/godotengine/godot/releases/download/4.7.2-stable/SHA512-SUMS.txt -o /tmp/godot-sums.txt
+          expected=$(awk '/Godot_v4.7.2-stable_linux.x86_64.zip$/ {print $1}' /tmp/godot-sums.txt)
+          echo "$expected  /tmp/godot.zip" | sha512sum -c -
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version
+      - name: Existing source delivery and numerical survey contracts
+        run: |
+          mkdir -p aden-png-evidence
+          python3 tools/check_resource_integrity.py --root . | tee aden-png-evidence/resource-integrity.log
+          python3 tools/check_aden_world_delivery.py | tee aden-png-evidence/aden-delivery.log
+          python3 tools/map_restore/test_aden_png.py
+          python3 -m py_compile tools/map_restore/build_png_review_pack.py
+          python3 -m py_compile tools/map_restore/png_layers.py
+          python3 tools/map_restore/test_png_review_compile.py
+          python3 -m py_compile tools/map_restore/build_domination_111.py
+          python3 -m py_compile tools/map_restore/make_domination_void_mask.py
+      - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Import and parse all production scripts
+        run: |
+          XDG_DATA_HOME="$RUNNER_TEMP/aden-import" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > aden-png-evidence/import.log 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:' aden-png-evidence/import.log; then exit 1; fi
+      - name: Actual Main actors, every sampled obstacle direction, occlusion and saves
+        run: |
+          XDG_DATA_HOME="$RUNNER_TEMP/aden-physics" LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/aden_png_source_integration_test.gd -- --capture --output="$GITHUB_WORKSPACE/aden-png-evidence/actual-main" > aden-png-evidence/actual-main.log 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:|ADEN_PNG_SOURCE_FAIL' aden-png-evidence/actual-main.log; then exit 1; fi
+      - name: Relevant regression checks with isolated saves
+        run: |
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs aden-png-evidence/regressions --only boot,actor_motion_test,aden_building_test,aden_courtyard_test,aden_ground_continuity_test,aden_remake_runtime_test,aden_shoreline_test,aden_terrain_polish_test,animation_restore_test,boss_presentation_test,combat_resolution_equivalence_test,combat_timeline_lifecycle_test,consumable_smoke_test,crafting_atomic_test,eight_interactions_test,field_world_test,monster_world_test,npc_dialogue_branching_test,npc_teleport_test,remake_world_lifecycle_test,stage5_save_compatibility_test,warehouse_persistence_test,aden_giran_review_test,aden_world_systems_test,aden_world_visuals_test,aden_source_routes_test,remake_coordinates_and_state_test,remake_map_population_test,remake_source_runtime_test,aden_png_pack_test,road_surface_mesh_test,png_world_runtime_test,png_refinement_runtime_test,domination_111_runtime_test
+      - name: Drop, hunting, monster motion and HUD regressions
+        run: |
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s '-screen 0 1600x1000x24' python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --timeout 300 --logs aden-png-evidence/gameplay-regressions --only ground_loot_system_test,hunting_paths_test,monster_motion_test,authored_state_motion_test,consumable_auto_safety_test,ui_navigation_preservation_test,l1j_source_navigation_test
+      - name: State original-art scope explicitly
+        if: always()
+        run: |
+          echo 'Aden.png and Oman 101-111.png are local third-party resources, not downloaded or redistributed by public CI. User selected Oman summit 111.png as the visual basis of game domination_summit. Actual local PNG review gameplay is recorded separately; full image/collision/foreground correspondence remains REVIEW_REQUIRED. Android device NOT_RUN.' > aden-png-evidence/SCOPE.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aden-png-source-${{ github.sha }}
+          path: aden-png-evidence/
+          if-no-files-found: error

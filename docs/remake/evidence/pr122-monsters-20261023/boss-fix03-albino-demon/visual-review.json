@@ -1,0 +1,183 @@
+{
+  "schema": "pr122-albino-demon-boss-repair-visual-review-v1",
+  "id": "monster:알비노 데몬",
+  "date": "2026-10-23",
+  "frozen": true,
+  "revision": "r002",
+  "current_review": "HOLD",
+  "required_quality": "mythic_transform",
+  "original_production_status": "NOT_AUTHORED",
+  "original_approval": false,
+  "prior_status_unchanged": true,
+  "existing_approved_assets_preserved": true,
+  "new_approvals": 0,
+  "production_connected": false,
+  "default_catalog_switches": 0,
+  "method": "Actual private vision of the exact reference, every generated combat/death source sheet and representative repaired S/NW RUN sheets. Child RUN review separately viewed all generated RUN sheets. Static source observations and headless real ActorMotion playback are reported separately; no chat images were forwarded.",
+  "candidate": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/candidate-r002.json",
+    "bytes": 103853,
+    "sha256": "4dd450c6a85811119e2677f78ef749c7279f6a047ac1657c23f72cd455730a22"
+  },
+  "native_profile": {
+    "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/NativeMotionProfile.tres",
+    "bytes": 840,
+    "sha256": "1e6386126f17300dcdcc7d9c703c9832e3a2cd26127024b5cbcd8c2a64232710"
+  },
+  "SpriteFrames": {
+    "path": "assets/actors/eight_direction/monster_boss_repair/albino_demon/r002/SpriteFrames.tres",
+    "bytes": 31210,
+    "sha256": "256be5143504a4af4eb0eaa8a74fa53ee2c03d20e38862a3f72560fc56b11cee"
+  },
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_1.png",
+    "region": [
+      631,
+      623,
+      316,
+      311
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 1,
+    "cell": 10,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+    "image_size": [
+      1263,
+      1246
+    ],
+    "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+  },
+  "reference_crop": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/reference-crop.png",
+    "bytes": 196146,
+    "sha256": "1a8eac63329b5df0663484d9446cee52580c7e2b30a61243e6d203224c47d27b"
+  },
+  "selected_tracks": 33,
+  "selected_source_PNGs": 18,
+  "selected_unique_poses": 107,
+  "examined_views": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "examined_roles": {
+    "idle": 8,
+    "run": 8,
+    "attack": 8,
+    "hit": 8,
+    "death_S_only": 1
+  },
+  "role_pose_counts": {
+    "idle": 16,
+    "run": 48,
+    "attack": 24,
+    "hit": 16,
+    "death": 3
+  },
+  "findings": [
+    {
+      "criterion": "dedicated_boss_identity",
+      "result": "PASS_WITHIN_STATIC_SCOPE",
+      "observation": "New original generated sources replace the prior squat lava-fist golem with the pinned red muscular demon: one head/two black ridged horns/two arms/two clawed legs, spiked gunmetal shoulder/forearm/shin armor, skull belt/chains, thick tail and a large iron axe. No white recolor, wings or shared golem source was used.",
+      "limit": "Appearance restoration only; it does not grant mythic production, release or Main approval."
+    },
+    {
+      "criterion": "eight_view_camera",
+      "result": "PARTIAL_STATIC_PASS",
+      "observation": "S is front-facing, W is left-facing, and N/NW/NE show the back of the head, rear straps, muscular back and rear tail root. New combat SW-v02 actually corrects the right-facing SW-v01 to front-left. Front/back directions are no longer a tinted proxy.",
+      "limit": "E/SE and W/SW angle separation remains weak in several poses, and timed directional transitions have not had an in-game visual review."
+    },
+    {
+      "criterion": "NW_anatomical_weapon_ownership_repair",
+      "result": "PASS_WITHIN_STATIC_SCOPE",
+      "observation": "Initial NW combat-v01 placed the axe in the near arm. Combat-v02 restores a near LEFT empty claw and far RIGHT weapon for idle/hit but still changed ownership in its contact pose. The final r002 uses only its idle/hit, plus a newly generated focused NW attack source whose far RIGHT shoulder/elbow/fist carries the axe and near LEFT claw remains separately empty in all three static poses.",
+      "limit": "This fixes the observed ownership defect; it does not approve the attack contact trajectory."
+    },
+    {
+      "criterion": "action_separation_and_weight",
+      "result": "PASS_WITHIN_STATIC_SCOPE",
+      "observation": "Combat sources include a loaded knee/hip windup, extended or overhead axe action, lower follow-through, chest/head recoil and a braced recovery distinct from neutral breathing. Death progresses from buckling to a low side-lying terminal corpse with the weapon attached to its gripping arm.",
+      "limit": "Two-frame idle and hit and three-frame attack are a minimum candidate. Fluidity, timed weight transfer and transitions still require review."
+    },
+    {
+      "criterion": "attack_contact_direction",
+      "result": "HOLD",
+      "observation": "E/W attacks visibly extend the axe blade beyond the head toward the facing side. Some diagonal views and N project laterally, and the focused NW contact remains high overhead rather than a demonstrated full forward chop. Headless contact-frame visitation cannot prove a real target impact.",
+      "limit": "Correct the specific contact direction/trajectory before approving the affected boss clips."
+    },
+    {
+      "criterion": "RUN_opposite_support",
+      "result": "PARTIAL_STATIC_PASS",
+      "observation": "S RUN-v02 phases0/3 visibly alternate anatomical RIGHT=screen-left and LEFT=screen-right toeplant while the axe stays in the anatomical RIGHT hand. NW RUN-v03 also repairs near-left empty/far-right weapon ownership.",
+      "limit": "Other RUN views do not establish a complete alternating support cycle. Full six-phase timing and moving-world ground contact are not approved."
+    },
+    {
+      "criterion": "clipping_and_complete_source_regions",
+      "result": "PASS_WITHIN_GEOMETRY_SCOPE",
+      "observation": "Every selected PNG passed the unchanged strict complete-pose importer. All selected regions retain their actual source pixels; all 107 selected RGBA/visible poses are distinct. Godot loaded every texture/AtlasTexture and visited every selected source pose with no flipped or rotated replacement.",
+      "limit": "BBox/canvas-foot anchors are technical anchors; they do not independently establish anatomical sole contact."
+    },
+    {
+      "criterion": "boss_scale",
+      "result": "PASS_WITHIN_METADATA_SCOPE",
+      "observation": "Original visual_height128 is preserved by native standing reference64 and pixel_scale2.0. Each source has its own proportional virtual canvas; source pixels are never rescaled. The first dying pose uses native58/display116 to stay below standing height.",
+      "limit": "Cross-source perceived proportions and physical ground contact remain subject to visual Main review."
+    },
+    {
+      "criterion": "source_metadata_conflict",
+      "result": "HOLD",
+      "observation": "The existing presentation visual.weapon metadata says sword while the exact pinned artwork visibly carries an axe. This new dedicated art follows the visible axe identity and leaves the shared DB unchanged."
+    }
+  ],
+  "representative_support_repair": {
+    "source": "albino-demon-S-run6-v02",
+    "sha256": "93e59af435f78e38c5ae0987cba17ebb774f2b5dbdc65ecc77448acbb491283b",
+    "result": "PASS_WITHIN_STATIC_SCOPE",
+    "frames": [
+      {
+        "phase": 0,
+        "grid_cell": "top-left",
+        "observed_support": "anatomical RIGHT = SCREEN LEFT toeplant",
+        "observation": "Right lower leg reaches the lowest foot line with splayed flattened toes; left knee/foot is raised on screen-right above the planted sole."
+      },
+      {
+        "phase": 3,
+        "grid_cell": "middle-right",
+        "observed_support": "anatomical LEFT = SCREEN RIGHT toeplant",
+        "observation": "Left lower leg reaches the low foot line with splayed toes; right knee/foot is raised on screen-left. Axe remains screen-left RIGHT hand and left hand empty, so this is not a whole-body mirror."
+      }
+    ],
+    "improvement": "Prior S-v01 did not establish opposite support; new S-v02 exposes opposite anatomical toeplant in phases0/3.",
+    "limit": "Static pose support only. Phase1/2 ordering, full cycle timing, ground-plane collision and actual moving-world contact remain NOT_REVIEWED. No whole six-phase gait approval.",
+    "review_note": "Parent assembler agent also privately viewed the actual S-v02 sheet and observed the two different anatomical toeplant poses, with the RIGHT axe hand fixed."
+  },
+  "run_private_review": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/run-production/quality-review.json",
+    "bytes": 10004,
+    "sha256": "038cb5baa4de8153e4b86a9ec1b46ea65b3db4f9aa4f1f6c3a9f94d7211fa022"
+  },
+  "headless_playback": {
+    "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix03-albino-demon/godot-playback-r002.json",
+    "bytes": 7590,
+    "sha256": "1001957378fbcd143fefccee53a8d90348be2ed38d4ea516f8864119ed76b155"
+  },
+  "headless_playback_result": "PASS: 33 clips,107 actual source poses,8 contact markers,NPC speed124 RUN and S death terminal hold from8 headings",
+  "unseen_not_reviewed": [
+    "Default Main integration and timed visual transitions",
+    "Full eight-direction alternating anatomical gait/support cycle",
+    "Real moving-world ground plane/collision/sole contact",
+    "Real target/hitbox overlap and attack contact trajectory",
+    "GPU tint/material/VFX presentation",
+    "Final mythic boss quality/release approval"
+  ],
+  "reasons": [
+    "E/W attacks visibly extend the axe blade beyond the head toward the facing side. Some diagonal views and N project laterally, and the focused NW contact remains high overhead rather than a demonstrated full forward chop. Headless contact-frame visitation cannot prove a real target impact.",
+    "The existing presentation visual.weapon metadata says sword while the exact pinned artwork visibly carries an axe. This new dedicated art follows the visible axe identity and leaves the shared DB unchanged."
+  ]
+}

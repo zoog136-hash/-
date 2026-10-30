@@ -1,0 +1,24 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "run",
+  "pose": 3,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-run-RIGHT-support-and-AIR-single-authorities-v03/pose-guide-0.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-run-RIGHT-support-and-AIR-single-authorities-v03/pose-guide-0.png": "ab6ffabbc3da34040e365ce40c58583d23d09bda659f899a69d62c36c245aa02",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png": "1d51c981f6ea0f8436543289381ca16c3bd9d014fe66f483949273e6f0df14d0",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png": "073692cc9c4307c3ce38c7821c5f07a2c2beee358ba7475b3db2a50fa838e738"
+  },
+  "prompt": "Dress the ONE 3D MANNEQUIN of image1 as the exactGIRTAS of image2/3, in this EXACT RIGHT-FOOT LANDING RUN pose. This is ONEframe, notatlas. Image1legjoint/depth/occlusion is absoluteauthority; blue=anatomicalLEFT NEAR limb, orange=anatomicalRIGHT FAR limb. Image2identityONLY hasalloldlegsremoved, neveroverride3Dpose. Keep exact UPLEFT NORTHWEST rear-LEFT3/4camera/head/torso/hips. Required support is FAR RIGHT LEG: orangefarRIGHT hip->thigh->knee->shin extends FORWARD/UPPERLEFT toorangeRIGHT boot with HEEL/SOLE TOUCHINGground, weightlanding. This farRIGHTleadinglegpartlybehindrobe/nearleftthighbutbootmustbevisibleUPLEFT. Required RECOVERYleg is NEAR LEFT: blueLEFTthigh/shin foreground folds BACK/LOWERRIGHT, its blueboot RAISed HIGH behindrightside andknee bent, no groundcontact. The visibleforegroundnearLEFTleg is FOLDEDWITHBOOTUP, itmustNOTstretchtoscreenLEFTground. DoNOToutputnearLEFTlandingwhichiswrong. Matchexact3DLEGCHAINS, including farRIGHTgroundboot+nearLEFTfoldedbootraised. OnlyTWO continuous legs/boots, no danglingextrafoot, hide joints naturally underlongrobe butretaintrueanatomy.\n\nExactfaithfulGIRTASALLdetails fromimage2/3: pointedgoldcrown/helmet, paleprofileonlyasvisible, longPALESILVERhair, blackgoldlayeredpauldrons/bodyarmor, thinHARDSTRAIGHTGOLD RADIAL BACKRAYS rigidmetalNOTfeathers/wings, SAME LONG DARK GOLDTRIM ROBE andboots restoredaroundnewlegs usingimage3, ONE LONG SINUOUS GOLD/YELLOWBLADE. NearLEFTimageLEFTarm LOWEMPTYhand, farRIGHTimageRIGHTarm holding SAMElowoutwardblade besidefarhip with continuousclosedgrip. ExactlyTWOarms/twohands, no raisedemptyfist/thirdarm/floatingblade/handflip. Longrobeopens/trailsnaturally revealingrequiredtwo shin/boots, NEVERshortskirt/pantsreplacement. Hair/clothtrailrun, metalraysrigidnottwitchfeathers, samebodysize/equipment. Noattack, no sideWcamera/Naxialrear/NEflip.\n\nONEcompletecrispfine-detailRPGgamecutout transparent1024x1024 PNG centeredwithatleast100px alpha0border, fullcrown/hair/rays/robe/boots/bladetip visible. Neverclip/shortenblade/rays. Opaquearmor/cloth/metal, thinAAedge, no colorskeleton/guidelines/text/labels/floor/shadow/glow/haze/particles. FAR RIGHT supportslandingUPLEFT, NEAR LEFTfoldedbootraisedBACK/RIGHT essential; no nearLEFTgroundlanding.",
+  "transparent_background": true,
+  "material_change": "Full6repeatedLEFTlanding3; useONEexplicitRIGHTlanding3DwithmoreseparatednearLEFTfoldedbackbootY-.60Z.75/farRIGHTforwardheelY+.65Z.075. Nooldcharacterlegs supplied, noidenticalretry.",
+  "requested_at": "2026-10-19T14:51:50.663876+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0
+}

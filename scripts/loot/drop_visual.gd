@@ -12,6 +12,17 @@ var selected: bool = false
 var clock: float = 0.0
 var redraw_time: float = 0.0
 var source_icon: Sprite2D
+var screen_notifier: VisibleOnScreenNotifier2D
+
+func _ready() -> void:
+	# The item and its hit target remain alive; only invisible beam animation
+	# stops. A large farming field can otherwise redraw every rare drop at 20Hz.
+	screen_notifier = VisibleOnScreenNotifier2D.new()
+	screen_notifier.rect = Rect2(-40, -220, 80, 260)
+	screen_notifier.screen_entered.connect(func() -> void: set_process(rank >= 2); queue_redraw())
+	screen_notifier.screen_exited.connect(func() -> void: set_process(false))
+	add_child(screen_notifier)
+	set_process(false)
 
 static func grade_color(grade: String) -> Color:
 	return COLORS[maxi(0, GRADES.find(grade))]

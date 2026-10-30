@@ -1,0 +1,121 @@
+{
+  "schema": "conditional-C1920-actual-body-registered-contact0-guide-v1",
+  "status": "CONDITIONAL_ONLY_NEEDS_INDEPENDENT_FIXED_C_APPROVAL",
+  "actual_source_sha256": "a4f96847b5a786b96087f65e1c8736b657e19e719323b5cddca51cf75c2470a8",
+  "candidate_canvas": 1920,
+  "scale_from_v05_raw512_body": 1.875,
+  "registration": "match guide neck marker to uncertain actual napeproxy645,390; independent bodygeometry review required",
+  "registration_translate": [
+    182.8125,
+    111.44205318788039
+  ],
+  "body_root_not_shifted_to_fix_gait": true,
+  "registered_world_underpelvis_ground_projection_y": 917.6920531878804,
+  "registered_guide_points_actual1254": {
+    "pelvis": [
+      645.0,
+      632.632684371488
+    ],
+    "chest": [
+      645.0,
+      424.9052288346603
+    ],
+    "neck": [
+      645.0,
+      390.0
+    ],
+    "head": [
+      645.0,
+      340.5509258175646
+    ],
+    "L_hip": [
+      595.125,
+      632.632684371488
+    ],
+    "L_knee": [
+      601.0811079928085,
+      611.018307028454
+    ],
+    "L_ankle": [
+      612.9375,
+      762.1418108578307
+    ],
+    "L_shoulder": [
+      563.0625,
+      424.9052288346603
+    ],
+    "L_elbow": [
+      563.0625,
+      566.5296262066042
+    ],
+    "L_wrist": [
+      563.0625,
+      638.6569423635933
+    ],
+    "L_heel": [
+      612.9375,
+      797.1601879188124
+    ],
+    "L_toe": [
+      612.9375,
+      726.8971373442064
+    ],
+    "R_hip": [
+      694.875,
+      632.632684371488
+    ],
+    "R_knee": [
+      708.740119273413,
+      818.3402945549717
+    ],
+    "R_ankle": [
+      712.6875,
+      988.9206710565725
+    ],
+    "R_shoulder": [
+      726.9375,
+      424.9052288346603
+    ],
+    "R_elbow": [
+      726.9375,
+      557.1478387990619
+    ],
+    "R_wrist": [
+      726.9375,
+      522.5985256011102
+    ],
+    "R_heel": [
+      712.6875,
+      1010.1821112389248
+    ],
+    "R_toe": [
+      712.6875,
+      994.9468081788361
+    ]
+  },
+  "heel_ground_test": {
+    "actual_visible_Lheel_goldtip": [
+      628.5,
+      857
+    ],
+    "candidate_guide_Lheel_ground": [
+      612.9375,
+      797.1601879188124
+    ],
+    "actual_minus_target": [
+      15.5625,
+      59.839812081187574
+    ],
+    "actual_N_ground_distance_if_heel_z0": 29.507851154268508,
+    "required_N_ground_distance": 58.60135146016584,
+    "limitation": "actual heel ground state is unknown; this conditional requested-leftheelground test maps foot relative calibrated pelvis/ground, not rawY alone"
+  },
+  "physical_clock": {
+    "world_delta_per_phase": 16.8,
+    "source_required_N_ground_delta_for_C1920": 132.87272727286256
+  },
+  "left_knee_observation_caution": "raw623,737 is boot-contour candidate only; exact knee may be hidden nearer skirt. Do not treat decorative motif as actual rigid joint. Preserve supplied uncertainty; require anatomy/perspective review.",
+  "real_edit_required_if_phase_wrong": true,
+  "no_generation_or_resampling_from_this_math": true,
+  "completed_added": 0
+}

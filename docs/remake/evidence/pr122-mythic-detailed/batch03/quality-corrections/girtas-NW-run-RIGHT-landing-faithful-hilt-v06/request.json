@@ -1,0 +1,30 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "run",
+  "pose": 3,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-key-v03/girtas-NW-run-RIGHT-landing3-v03.png",
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/current-NW-idle0-small-collar-hilt-exactcrop.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-key-v03/girtas-NW-run-RIGHT-landing3-v03.png": "19f288db198792a3b7103b351b40fa59a473c37343484f8101250f2b1b76a960",
+    "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/current-NW-idle0-small-collar-hilt-exactcrop.png": "3f3712d9deb8c0c4671e26dd20d6dd35ba026bc07edff3f563d720ccf57145fd"
+  },
+  "correct_current_idle_source": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+  "correct_current_idle_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+  "correct_current_idle_native_crop_xyxy": [
+    235,
+    210,
+    380,
+    385
+  ],
+  "prompt": "Make ONE precise localized character-art correction to FIRST transparent PNG. Preserve the exact entire GIRTAS NORTHWEST rear-left camera, SAME far anatomical RIGHT forward landing leg and near LEFT bent backward raised leg, SAME skull/face/silverhair/hardgoldrays/armor/longrobe, all poses and framing. The ONLY defect is the newly invented big FOUR-PRONG/DIAMOND/FLOWER CROSSGUARD at the far RIGHT hand where the glowing sinuous blade starts. Remove this ornamental crossguard completely. SECOND image is an exact unmodified crop from CURRENT approved correctNWidle: its RIGHT hand holds the continuous glowing sinuous blade through a SIMPLE SMALL GOLD COLLAR/short plain grip, with NO diamond/flower/star guard. Match that faithful small collar and same hand-to-blade continuity in FIRST image. Do not alter anatomy/weaponhand ownership, blade long sinuous curve, body proportions, equipment, rays, robe or stance. Empty near LEFT hand must remain empty. Do not re-pose legs, no duplicated limbs, no camera rotation, no mirroring, no recolor, no new ornaments. Keep generous transparent alpha margins and full foreground including long blade tip and all ray tips. Output exactly ONE complete unlabelled faithful character pose, no text/diagram/grid/extra frame.",
+  "transparent_background": true,
+  "material_change": "localized remove invented large diamond/four-prong hilt; preserve actual independently accepted opposite RIGHTlanding anatomy",
+  "requested_at": "2026-10-19T15:42:44.907089+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0
+}

@@ -4,42 +4,87 @@ extends AStar2D
 var field_ref: WeakRef
 var grid_point_limit: int
 var edge_checks: Dictionary = {}
-var sample_checks=preload("res://scripts/maps/native_line_sample_cache.gd").new()
-var sample_cache_supported: bool=false
 const ROUTE_CACHE_LIMIT: int=128
 var route_cache: Dictionary={}
 var route_order: Array[Vector4i]=[]
-# Unlike positive interiors, failed paths are valid only for these EXACT
-# endpoints. The field geometry is immutable until configure/replacement.
-# No timer, rounded cell key or moving-target failure is reused.
-var failed_routes: Dictionary={}
-var failed_order: Array[Vector4]=[]
+const GRAPH_VERSION: int=2
+const IDLE_GRAPH_LIMIT: int=2
+static var idle_graphs: Dictionary={}
+static var idle_order: Array[String]=[]
+var geometry_key: String=""
+var point_cursor: int=0
+var edge_cursor: int=0
+var build_phase: int=0
+var build_calls: int=0
+var build_usec: int=0
 
-func configure(field: RefCounted) -> void:
+static func take_idle(key: String, field: RefCounted) -> AStar2D:
+	if not idle_graphs.has(key):return null
+	var graph: AStar2D=idle_graphs[key]
+	idle_graphs.erase(key)
+	idle_order.erase(key)
+	graph.field_ref=weakref(field)
+	return graph
+
+func park_idle() -> void:
+	if build_phase!=2 or geometry_key.is_empty():return
+	field_ref=null
+	if idle_order.has(geometry_key):idle_order.erase(geometry_key)
+	idle_graphs[geometry_key]=self
+	idle_order.append(geometry_key)
+	while idle_order.size()>IDLE_GRAPH_LIMIT:
+		idle_graphs.erase(idle_order.pop_front())
+
+func begin(field: RefCounted, key: String="") -> void:
 	clear()
-	edge_checks.clear();sample_checks.clear();route_cache.clear();route_order.clear()
-	sample_cache_supported=field.has_method("cached_line_clear")
-	failed_routes.clear();failed_order.clear()
 	field_ref=weakref(field)
+	geometry_key=key
 	grid_point_limit=field.width*field.height
 	neighbor_filter_enabled=true
-	# Reachability builders and snapshots contain binary 0/1 bytes. Search the
-	# packed array in native code, preserving the exact ascending point order.
-	# Empty map margins no longer require a GDScript iteration per grid cell.
-	var reachable: PackedByteArray=field.reachable
-	reserve_space(reachable.count(1)+2)
-	var point_id: int=reachable.find(1)
-	while point_id>=0:
-		var cell:=Vector2i(point_id%field.width,point_id/field.width)
-		if not field.astar.is_point_solid(cell):add_point(point_id,field.cell_to_world(cell))
-		point_id=reachable.find(1,point_id+1)
-	for id: int in get_point_ids():
-		var cell:=Vector2i(id%field.width,id/field.width)
-		for offset: Vector2i in [Vector2i.RIGHT,Vector2i.DOWN,Vector2i(1,1),Vector2i(-1,1)]:
-			var neighbor: Vector2i=cell+offset
-			if not field.astar.is_in_boundsv(neighbor):continue
-			var next: int=neighbor.y*field.width+neighbor.x
-			if has_point(next):connect_points(id,next)
+	edge_checks.clear();route_cache.clear();route_order.clear()
+	point_cursor=0;edge_cursor=0;build_phase=0;build_calls=0;build_usec=0
+
+func ready() -> bool:
+	return build_phase==2
+
+func advance(max_cells: int=256, max_usec: int=2000) -> bool:
+	if ready():return true
+	var field: RefCounted=field_ref.get_ref() if field_ref!=null else null
+	if field==null:return false
+	var started: int=Time.get_ticks_usec()
+	var remaining: int=maxi(1,max_cells)
+	build_calls+=1
+	while remaining>0 and not ready():
+		if build_phase==0:
+			if point_cursor>=grid_point_limit:
+				build_phase=1
+				continue
+			var id: int=point_cursor
+			point_cursor+=1
+			var cell:=Vector2i(id%field.width,id/field.width)
+			if field.reachable[id]!=0 and not field.astar.is_point_solid(cell):
+				add_point(id,field.cell_to_world(cell))
+		else:
+			if edge_cursor>=grid_point_limit:
+				build_phase=2
+				continue
+			var id: int=edge_cursor
+			edge_cursor+=1
+			if has_point(id):
+				var cell:=Vector2i(id%field.width,id/field.width)
+				for offset: Vector2i in [Vector2i.RIGHT,Vector2i.DOWN,Vector2i(1,1),Vector2i(-1,1)]:
+					var neighbor: Vector2i=cell+offset
+					if not field.astar.is_in_boundsv(neighbor):continue
+					var next: int=neighbor.y*field.width+neighbor.x
+					if has_point(next):connect_points(id,next)
+		remaining-=1
+		if Time.get_ticks_usec()-started>=max_usec:break
+	build_usec+=Time.get_ticks_usec()-started
+	return ready()
+
+func configure(field: RefCounted) -> void:
+	begin(field)
+	while not advance(4096,1000000):pass
 
 func _filter_neighbor(from_id: int, neighbor_id: int) -> bool:
 	var field: RefCounted=field_ref.get_ref()
@@ -52,11 +97,7 @@ func _filter_neighbor(from_id: int, neighbor_id: int) -> bool:
 	var key:=Vector2i(mini(from_id,neighbor_id),maxi(from_id,neighbor_id))
 	if not edge_checks.has(key):
 		# Physical edges are undirected; retain a check valid in both directions.
-		# Shared exact samples avoid repeating the same immutable physical test.
-		if sample_cache_supported:
-			edge_checks[key]=field.cached_line_clear(from,to,sample_checks) and field.cached_line_clear(to,from,sample_checks)
-		else:
-			edge_checks[key]=field.line_clear(from,to) and field.line_clear(to,from)
+		edge_checks[key]=field.line_clear(from,to) and field.line_clear(to,from)
 	return not bool(edge_checks[key])
 
 func _safe_destination(point: Vector2) -> Vector2:
@@ -98,15 +139,9 @@ func _attach_endpoint(id: int, point: Vector2) -> bool:
 				connected=true
 	return connected
 
-func has_failed_route(from: Vector2, to: Vector2) -> bool:
-	return failed_routes.has(Vector4(from.x,from.y,to.x,to.y))
-
 func route(from: Vector2, to: Vector2) -> PackedVector2Array:
 	var field: RefCounted=field_ref.get_ref()
-	if field==null:return PackedVector2Array()
-	var failure_key:=Vector4(from.x,from.y,to.x,to.y)
-	if failed_routes.has(failure_key):return PackedVector2Array()
-	if not field.line_clear(from,from):return PackedVector2Array()
+	if field==null or not field.line_clear(from,from):return PackedVector2Array()
 	var target: Vector2=_safe_destination(to)
 	if not target.is_finite():return PackedVector2Array()
 	if field.line_clear(from,target):return PackedVector2Array([target])
@@ -128,10 +163,6 @@ func route(from: Vector2, to: Vector2) -> PackedVector2Array:
 	if start_attached and target_attached:result=get_point_path(start_id,target_id)
 	remove_point(start_id)
 	remove_point(target_id)
-	if result.is_empty():
-		if failed_order.size()>=ROUTE_CACHE_LIMIT:failed_routes.erase(failed_order.pop_front())
-		failed_order.append(failure_key)
-		failed_routes[failure_key]=true
 	if result.size()>2:
 		if not route_cache.has(key):
 			if route_order.size()>=ROUTE_CACHE_LIMIT:route_cache.erase(route_order.pop_front())

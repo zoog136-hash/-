@@ -1,0 +1,200 @@
+"""Keep archived first-pass clips out of APKs without dropping runtime resources."""
+from __future__ import annotations
+
+import argparse
+import fnmatch
+import hashlib
+import json
+from pathlib import Path
+import re
+
+DRAFT_EXPORT_PATTERN = "assets/actors/eight_direction/native_locomotion_staging/transform_*/draft001/*"
+DRAFT_ROOT = "assets/actors/eight_direction/native_locomotion_staging"
+RESOURCE_PATH = re.compile(r'"(res://[^"\n]+)"')
+REQUIRED_RUNTIME_JSON = (
+    "data/combat_animation_profiles.json", "data/animation_presentation.json",
+    "data/catalog_v19.json",
+)
+# Archived original PNG build metadata is excluded from the APK. The actual
+# runtime streams from the separate aden_mobile_pack.json and encoded .bin data.
+ARCHIVED_SOURCE_MANIFEST = "assets/maps/aden_city_region/compiled/manifest.json"
+ADEN_RUNTIME_MANIFEST = "data/maps/aden_mobile_pack.json"
+# Editor-only map review script. Never ship it in Android with its excluded PNG inputs.
+ADEN_PREVIEW_RENDERER = "scripts/maps/aden_modular_preview_renderer.gd"
+# These five trees are offline map-composition inputs, never gameplay catalogs.
+# Keep the authoring allowlist exact: newly added JSON must be reviewed.
+ADEN_AUTHORING_ROOTS = (
+    "assets/maps/aden_city_region/",
+    "assets/maps/aden_modular_district_01/",
+    "assets/maps/aden_modular_pilot/",
+    "assets/maps/aden_rebuild_preview/",
+    "assets/maps/aden_world_draft/",
+)
+# Exactly two build/research files filtered by the Android preset. These
+# are inputs to offline map/skill tools, not executable catalog data. Keep
+# this allowlist narrow; a newly excluded runtime JSON must fail closed.
+OFFLINE_AUTHORING_JSON = frozenset((
+    "data/map_remake/private/aden/effective_layouts_build.json",
+    "data/skills/research_inventory.json",
+))
+
+ADEN_AUTHORING_JSON = frozenset((
+    ARCHIVED_SOURCE_MANIFEST,
+    "assets/maps/aden_city_region/layout.json",
+    "assets/maps/aden_city_region/sha256.json",
+    "assets/maps/aden_modular_district_01/compiled/manifest.json",
+    "assets/maps/aden_modular_district_01/layout.json",
+    "assets/maps/aden_modular_district_01/sha256.json",
+    "assets/maps/aden_modular_district_01/world_worklist.json",
+    "assets/maps/aden_modular_pilot/compiled/manifest.json",
+    "assets/maps/aden_modular_pilot/layout.json",
+    "assets/maps/aden_modular_pilot/sha256.json",
+    "assets/maps/aden_rebuild_preview/preview.json",
+    "assets/maps/aden_rebuild_preview/candidates/palace_east_garden_01.json",
+    "assets/maps/aden_world_draft/audit.json",
+    "assets/maps/aden_world_draft/delivery_checkpoint.json",
+    "assets/maps/aden_world_draft/geography.json",
+    "assets/maps/aden_world_draft/landmark_layout.json",
+    "assets/maps/aden_world_draft/manifest.json",
+    "assets/maps/aden_world_draft/placements.json",
+    "assets/maps/aden_world_draft/reused_generated_sources.json",
+    "assets/maps/aden_world_draft/source_sha256.json",
+))
+
+
+def audit_authoring_exclusions(root: Path) -> dict:
+    """Prove the exact excluded files are detached, docs-backed review clips.
+
+    A new runtime/catalog reference or a changed kind of file fails closed. All
+    selected native clips, approved resources, textures and production catalog
+    entries remain inside the existing APK verification scope.
+    """
+    root = root.resolve()
+    preset = (root / "export_presets.cfg").read_text(encoding="utf-8")
+    filters = re.findall(r'^exclude_filter="([^"]*)"$', preset, re.MULTILINE)
+    if len(filters) != 1 or DRAFT_EXPORT_PATTERN not in filters[0].split(","):
+        raise ValueError("Android preset must explicitly exclude only the archived draft001 scope")
+    excluded_patterns = filters[0].split(",")
+    if (root / ADEN_PREVIEW_RENDERER).is_file() and ADEN_PREVIEW_RENDERER not in excluded_patterns:
+        raise ValueError("Android preset must explicitly exclude the authoring-only Aden preview renderer")
+    archived_map_json = {name for name in ADEN_AUTHORING_JSON if (root / name).is_file()
+                         and any(fnmatch.fnmatchcase(name, pat) for pat in excluded_patterns)}
+    offline_json = {name for name in OFFLINE_AUTHORING_JSON if (root / name).is_file()
+                    and any(fnmatch.fnmatchcase(name, pat) for pat in excluded_patterns)}
+    excluded = []
+    for folder in sorted((root / DRAFT_ROOT).glob("transform_*/draft001")):
+        actor = folder.parent.name
+        if not re.fullmatch(r"transform_[0-9]+", actor):
+            raise ValueError("Unexpected authoring folder: " + str(folder))
+        expected_source = re.compile(
+            r"res://docs/remake/evidence/pr122-mythic-detailed/batch03/"
+            + re.escape(actor) + r"-.+-draft-v01\.png")
+        for path in sorted(folder.iterdir()):
+            if not path.is_file() or path.is_symlink() or path.suffix != ".tres":
+                raise ValueError("Only archived review SpriteFrames may be excluded: " + str(path))
+            content = path.read_text(encoding="utf-8")
+            references = RESOURCE_PATH.findall(content)
+            if not content.startswith('[gd_resource type="SpriteFrames"') or len(references) != 1:
+                raise ValueError("Excluded resource is not a single-source review clip: " + str(path))
+            if not expected_source.fullmatch(references[0]):
+                raise ValueError("Excluded clip no longer references its archived draft PNG: " + str(path))
+            excluded.append({"path": path.relative_to(root).as_posix(),
+                             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                             "source": references[0]})
+
+    paths = {row["path"] for row in excluded}
+    forbidden = re.compile(r"(?:res://)?" + re.escape(DRAFT_ROOT)
+                           + r"/transform_[0-9]+/draft001/")
+    checked = 0
+    for relative in REQUIRED_RUNTIME_JSON:
+        if paths and not (root / relative).is_file():
+            raise ValueError("Missing runtime catalog for export closure: " + relative)
+    # Runtime code can load new JSON manifests indirectly. Check every exported
+    # JSON in the runtime trees, not a fixed allowlist of known catalog names.
+    json_files = sorted(path for top in ("data", "assets", "scenes", "scripts")
+                        for path in (root / top).rglob("*.json") if path.is_file())
+    for path in json_files:
+        relative = path.relative_to(root).as_posix()
+        content = path.read_text(encoding="utf-8")
+        json.loads(content)
+        excluded_by_preset = any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns)
+        if forbidden.search(content):
+            raise ValueError("Runtime or selected staging manifest references excluded draft001: " + relative)
+        if not excluded_by_preset and ADEN_PREVIEW_RENDERER in content:
+            raise ValueError("Exported runtime catalog references excluded Aden preview renderer: " + relative)
+        if not excluded_by_preset and any(("res://" + name) in content for name in archived_map_json):
+            raise ValueError("Exported runtime catalog references excluded Aden authoring JSON: " + relative)
+        # The tracked delivery ledger inventories original and offline sources;
+        # it is not a runtime loader. Preserve its audit records without
+        # mistaking inventory filenames for exported dependency references.
+        # All other exported JSON and runtime scripts retain the strict gate.
+        if (relative != "data/resource_delivery_ledger.json"
+                and not excluded_by_preset
+                and any(name in content for name in offline_json)):
+            raise ValueError("Exported runtime catalog references excluded offline JSON: " + relative)
+        if excluded_by_preset:
+            # Only audited, exact authoring JSON paths may be omitted; a new
+            # gameplay catalog must never be silently excluded from the APK.
+            if relative not in ADEN_AUTHORING_JSON and relative not in OFFLINE_AUTHORING_JSON:
+                raise ValueError("Runtime catalog excluded by Android preset: " + relative)
+            # Aden inputs require a pinned exported runtime pack. Skill research
+            # is purely an offline curation inventory and needs no map fixture.
+            if relative != "data/skills/research_inventory.json":
+                runtime = root / ADEN_RUNTIME_MANIFEST
+                if not runtime.is_file() or any(fnmatch.fnmatchcase(ADEN_RUNTIME_MANIFEST, pattern)
+                                                for pattern in excluded_patterns):
+                    raise ValueError("Aden runtime pack manifest is missing from Android export")
+                pack = json.loads(runtime.read_text(encoding="utf-8"))
+                if pack.get("schema") != 1 or pack.get("map_id") != "aden_world" or not re.fullmatch(
+                        r"[0-9a-f]{64}", str(pack.get("manifest_sha256", ""))):
+                    raise ValueError("Invalid Aden runtime pack manifest")
+            continue
+        checked += 1
+    files = [root / "Main.tscn", root / "project.godot"]
+    for top in ("assets", "scenes", "scripts"):
+        files.extend(path for path in (root / top).rglob("*")
+                     if path.suffix in {".gd", ".tres", ".tscn", ".png", ".webp", ".svg"})
+    for path in files:
+        relative = path.relative_to(root).as_posix()
+        if relative in paths or not path.is_file():
+            continue
+        if any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns):
+            if relative == ADEN_PREVIEW_RENDERER and path.suffix == ".gd" and not path.is_symlink():
+                continue
+            # Original-resolution map PNGs across the five authoring-only
+            # districts are compilation inputs, not APK gameplay assets.
+            if path.suffix == ".png" and any(relative.startswith(folder) for folder in ADEN_AUTHORING_ROOTS):
+                continue
+            raise ValueError("Non-archive runtime resource excluded by Android preset: " + relative)
+        if path.suffix not in {".png", ".webp"}:
+            runtime_text = path.read_text(encoding="utf-8")
+            if forbidden.search(runtime_text):
+                raise ValueError("Exported code/resource references excluded draft001: " + relative)
+            if ADEN_PREVIEW_RENDERER in runtime_text:
+                raise ValueError("Exported code/resource references excluded Aden preview renderer: " + relative)
+            if any(("res://" + folder) in runtime_text for folder in ADEN_AUTHORING_ROOTS):
+                raise ValueError("Exported code/resource references excluded Aden authoring input: " + relative)
+            if any(name in runtime_text for name in offline_json):
+                raise ValueError("Exported code/resource references excluded offline JSON: " + relative)
+        checked += 1
+    return {"excluded_authoring_resources": excluded,
+            "excluded_count": len(excluded), "runtime_closure_files_checked": checked,
+            "production_resources_excluded": 0, "source_files_deleted": 0}
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    report = audit_authoring_exclusions(args.root)
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print("ANDROID_ANIMATION_SCOPE_OK archived_review_clips=%d runtime_closure_files=%d production_excluded=0" %
+          (report["excluded_count"], report["runtime_closure_files_checked"]))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

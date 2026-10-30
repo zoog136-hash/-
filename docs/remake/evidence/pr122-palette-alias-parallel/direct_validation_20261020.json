@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "actor": "DIRECT_ASSISTANT_NOT_CODEX",
+  "branch": "feature/pr122-palette-alias-20261020",
+  "parent_sha": "855047df03d61ec6ba7de2c7d89a461391b3a5c1",
+  "native_head_observed": "500ac94f0826aeeb93a9eb325f72b15165c15382",
+  "status": "CODE_AND_LEGACY_PREVIEW_IMPLEMENTED_ART_PRODUCTION_HOLD",
+  "python_unit_tests": {
+    "status": "PASS",
+    "tests": 30,
+    "failures": 0,
+    "errors": 0,
+    "scope": "SYNTHETIC_FIXTURES_AND_STATIC_PREVIEW_METADATA_NOT_ORIGINAL_ART",
+    "python": "3.13.5"
+  },
+  "python_compile": "PASS",
+  "godot_parse": "NOT_RUN",
+  "godot_playback": "NOT_RUN",
+  "main_render": "NOT_RUN",
+  "android": "NOT_RUN",
+  "resource_integrity_preflight": "NOT_RUN_FULL_CHECKOUT_AND_SOURCE_BYTES_UNAVAILABLE",
+  "preview_target_scenes_written": 2,
+  "new_palette_png": 0,
+  "new_motion_poses": 0,
+  "new_game_connections": 0,
+  "new_identity_approvals": 0,
+  "existing_54_recounted": false,
+  "shared_files_changed": 0,
+  "codex_tasks_requested": 0,
+  "full_ci_requested": false,
+  "blocked_on": [
+    "Godot executable and complete project bytes for actual playback",
+    "Same-model identity/source motion review",
+    "Reviewed per-atlas semantic masks; not fabricated"
+  ],
+  "file_hashes": {
+    "assets/actors/eight_direction/palette_alias_pr122/Preview.gd": {
+      "sha256": "cdcfa347de47a3c75adf4773a1a3d99bc63bba1fda5415b365437600f5c75dcd",
+      "git_blob": "70d94092d60bd7d53ef66b8de4a06594e661e410"
+    },
+    "assets/actors/eight_direction/palette_alias_pr122/Preview.tscn": {
+      "sha256": "8e3462f6565577dca06834675dcd270ce785bbf67f731fcc307bc1e943155e55",
+      "git_blob": "5205a5f935160a275577bdd6f24b303ff9905415"
+    },
+    "assets/actors/eight_direction/palette_alias_pr122/VariantPlayer.gd": {
+      "sha256": "5bfe6109cecbbf6d47490f4c0bacd20b76d987daaa580c2f754fb68761b166e0",
+      "git_blob": "49bb2fb72382e3d7b211d893b8a7386743961ca7"
+    },
+    "assets/actors/eight_direction/palette_alias_pr122/lance_master_blue.tscn": {
+      "sha256": "1b1c5bd539a8f288ea899b47a20bface85d551c32f01b2b8f5aaf2ab7830a36a",
+      "git_blob": "0abc1a723af81e1cf065be4e82347ac5f7910534"
+    },
+    "assets/actors/eight_direction/palette_alias_pr122/lance_master_red.tscn": {
+      "sha256": "e67e72d8d4caca3c74a115e14c8eb88e92e22bdf9606ede107a481ef190ddc24",
+      "git_blob": "ec8905a132f8257476eaf409b5a1f7f4a156227a"
+    },
+    "data/pr122_palette_alias_parallel/preview_targets.json": {
+      "sha256": "39e6742186c50136cec2e2ddbd4fed2d66907f10a277275fe5aabed5e64c5ffb",
+      "git_blob": "a6468d70acf86fc8d51fa3f79f0d0b77db916585"
+    },
+    "docs/remake/evidence/pr122-palette-alias-parallel/DIRECT_WORK_20261020.md": {
+      "sha256": "8e533208a59d0cfaec4f7d90118e861877359c82e3c4b829468e806359cfb2b4",
+      "git_blob": "a8d9b6f0548c1f4a98cbf0577691ad13f3cab9c6"
+    },
+    "tests/pr122_palette_alias_smoke.gd": {
+      "sha256": "f7f47cda712c019e68d06cfcc00dead00edb62502fbce448b2f35dc0cc715ea1",
+      "git_blob": "19d0bbcb11674fdffd8201c4218169d6589e63a3"
+    },
+    "tests/pr122_palette_alias_test.py": {
+      "sha256": "03ba09ec530ca578b71fb42dca589b600e18245c942183bb23858309276692ce",
+      "git_blob": "36c5d0c71efa51679b6d994a86b1900817052986"
+    },
+    "tools/pr122_palette_alias_pipeline.py": {
+      "sha256": "3cd7826aa7c1273dbbded15b3871d8c99cef0cf82a97b2ece559c1e8fa133178",
+      "git_blob": "04c15aab9d37bae9f0ff8b76648ece4ee9ec1f60"
+    }
+  }
+}

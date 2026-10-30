@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 167, in <module>
+    main()
+  File "/workspace/twilight-recovery/tools/run_pr122_locomotion_source_preview.py", line 36, in main
+    assert fixture['ground_registration_contract'] == 'QA_ONLY_BOUNDED_AIRBORNE_V1'
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'ground_registration_contract'

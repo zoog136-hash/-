@@ -9,6 +9,7 @@ const MAX_FRAME_CACHE = 96
 const MAX_FRAME_CACHE_BYTES = 96 * 1024 * 1024
 static var records: Dictionary = {}
 static var frame_cache: Dictionary = {}
+static var frame_weak: Dictionary = {}
 static var frame_order: Array[String] = []
 static var frame_costs: Dictionary = {}
 static var frame_cache_bytes: int = 0
@@ -28,7 +29,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	if record.get("animation_profile", {}) is Dictionary:
 		settings = settings.duplicate(true)
 		settings.merge(record.get("animation_profile", {}), true)
-	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "action_hit_frames", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
+	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "movement_cadence_width_ratio", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "action_hit_frames", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
 		if settings.has(property): result.set(property, settings[property])
 	result.use_profile_hit_ratio = settings.has("attack_hit_ratio")
 	for property: String in ["sprite_offset", "collision_offset", "projectile_origin", "hit_position", "shadow_size"]:
@@ -51,9 +52,14 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	PRESENTATION.configure(result, kind, record)
 	# Explicit sequential-art settings outrank the generic portrait rig. Native
 	# poses already contain limb motion; moving/rotating the root adds foot slip.
-	for property: String in ["pixel_scale", "embedded_shadow", "authored_motion_weight", "hit_recoil", "death_duration", "body_kind"]:
+	for property: String in ["pixel_scale", "native_width_ratio", "embedded_shadow", "authored_motion_weight", "hit_recoil", "death_duration", "body_kind"]:
 		if settings.has(property): result.set(property, settings[property])
-	if settings.has("color_tint"): result.color_tint = Color.from_string(str(settings.color_tint), Color.WHITE)
+	if settings.has("color_tint"):
+		var tint: Variant = settings.color_tint
+		if tint is Array and tint.size() == 4:
+			result.color_tint = Color(float(tint[0]),float(tint[1]),float(tint[2]),float(tint[3]))
+		else:
+			result.color_tint = Color.from_string(str(tint), Color.WHITE)
 	return result
 
 static func frames(path: String, layout: String) -> SpriteFrames:
@@ -62,6 +68,14 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 		frame_order.erase(key)
 		frame_order.append(key)
 		return frame_cache[key]
+	# A live actor may still own a SpriteFrames after its strong lookup entry
+	# expires. Reuse that exact resource instead of loading or generating it again.
+	var existing: WeakRef=frame_weak.get(key)
+	if existing!=null:
+		var retained: SpriteFrames=existing.get_ref() as SpriteFrames
+		if retained!=null:
+			_cache_frames(key,retained)
+			return retained
 	var result: SpriteFrames = SpriteFrames.new()
 	result.remove_animation("default")
 	if path.is_empty() or not ResourceLoader.exists(path): return result
@@ -101,8 +115,8 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 	return result
 
 static func _cache_frames(key: String, result: SpriteFrames) -> void:
-	# Bound decoded texture estimates as well as entry count. A live actor keeps
-	# its own resource reference when this lookup cache evicts an old appearance.
+	# This bounds only strong lookup references. Active actors and Godot's own
+	# resource cache are separate owners, so this is not a whole-game RAM cap.
 	var textures: Dictionary = {}
 	var bytes: int = 0
 	for animation: String in result.get_animation_names():
@@ -114,6 +128,7 @@ static func _cache_frames(key: String, result: SpriteFrames) -> void:
 				bytes += texture.get_width() * texture.get_height() * 4
 	frame_cache_bytes -= int(frame_costs.get(key,0))
 	frame_cache[key] = result
+	frame_weak[key] = weakref(result)
 	frame_costs[key] = bytes
 	frame_cache_bytes += bytes
 	frame_order.erase(key)
@@ -123,6 +138,19 @@ static func _cache_frames(key: String, result: SpriteFrames) -> void:
 		frame_cache_bytes -= int(frame_costs.get(old,0))
 		frame_costs.erase(old)
 		frame_cache.erase(old)
+	if frame_weak.size()>MAX_FRAME_CACHE*4:
+		for stale: String in frame_weak.keys():
+			if (frame_weak[stale] as WeakRef).get_ref()==null:frame_weak.erase(stale)
+
+static func release_region_frames() -> void:
+	# Boss pages are region-specific and much larger than shared outfit sheets.
+	# Weak lookup handles still find an actor-owned source during map turnover.
+	for key: String in frame_cache.keys():
+		if not key.contains("/monster_boss_repair/") and not key.contains("/boss_draft_first/"):continue
+		frame_cache.erase(key)
+		frame_order.erase(key)
+		frame_cache_bytes-=int(frame_costs.get(key,0))
+		frame_costs.erase(key)
 
 static func first_texture(source: SpriteFrames) -> Texture2D:
 	if source == null: return null

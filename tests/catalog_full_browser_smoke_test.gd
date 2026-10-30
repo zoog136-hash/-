@@ -76,7 +76,7 @@ func _run() -> void:
 		if option_text.contains("PVE"):
 			saw_pve = true
 	_check(saw_pve, "verified PvP text must appear as PvE")
-	# Source artwork explicitly encodes hero/legend rank for some gear.
+	# Original item quality, rather than an artwork filename, supplies rarity.
 	var rank_counts: Dictionary = {}
 	for raw: Variant in all_items:
 		if raw is Dictionary:
@@ -87,7 +87,7 @@ func _run() -> void:
 	_check(int(rank_counts.get("전설", 0)) >= 13, "source legendary equipment grades recovered")
 	var cloak: Dictionary = _find_record(all_items, "기억의 망토")
 	_check(str(cloak.get("grade", "")) == "영웅", "hero-art cloak grade recovered")
-	_check(str(cloak.get("grade_evidence", "")) == "inven_original_artwork_filename", "inferred rank provenance retained")
+	_check(str(cloak.get("grade_evidence", "")) == "inven_item_quality", "original item quality provenance retained")
 	var memory_cloak: Dictionary = _find_record(all_items, "진 기억의 망토")
 	_check(str(memory_cloak.get("grade", "")) == "전설", "legend-art cloak grade recovered")
 	var trophy: Dictionary = _find_record(all_items, "전설급 스킬 상자(기사)")

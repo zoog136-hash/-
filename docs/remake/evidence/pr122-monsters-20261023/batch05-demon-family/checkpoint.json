@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "date": "2026-10-23",
+  "shared_family": "demon",
+  "same_reference_species": [
+    "monster:오만의 탑 공포의 악마",
+    "monster:마계 악마전사",
+    "monster:교만의 제노사이더",
+    "monster:탐욕의 코아쿡"
+  ],
+  "source_reference": {
+    "path": "res://assets/monsters/original/atlas_1.png",
+    "region": [
+      631,
+      623,
+      316,
+      311
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 1,
+    "cell": 10,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+    "image_size": [
+      1263,
+      1246
+    ],
+    "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+  },
+  "new_source_PNGs": 9,
+  "selected_PNGs": 8,
+  "source_hold_PNGs": 1,
+  "shared_unique_clips": 33,
+  "shared_unique_poses": 91,
+  "candidate_species": 4,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "HOLD": {
+    "source_trial": "demon_combat_E_SE bbox includes neighboring body; preserved, E/SE reauthored separately",
+    "quality": "Text-brief source identity/hand ownership/direction/support/contact, source-plane anchors, four individual Main visual approvals pending"
+  },
+  "Godot": {
+    "NPC_speed_124_RUN": "PASS",
+    "PNG_load": "PASS",
+    "S_death_8_headings_terminal_hold_per_binding": "PASS",
+    "SpriteFrames_load": "PASS",
+    "actors": {
+      "monster:교만의 제노사이더": {
+        "binding_clips": 33,
+        "default_Main": "NOT_RUN",
+        "new_approvals": 0,
+        "new_source_poses": 0,
+        "shared_poses_replayed": 91,
+        "source_quality": "HOLD"
+      },
+      "monster:마계 악마전사": {
+        "binding_clips": 33,
+        "default_Main": "NOT_RUN",
+        "new_approvals": 0,
+        "new_source_poses": 0,
+        "shared_poses_replayed": 91,
+        "source_quality": "HOLD"
+      },
+      "monster:오만의 탑 공포의 악마": {
+        "binding_clips": 33,
+        "default_Main": "NOT_RUN",
+        "new_approvals": 0,
+        "new_source_poses": 91,
+        "shared_poses_replayed": 91,
+        "source_quality": "HOLD"
+      },
+      "monster:탐욕의 코아쿡": {
+        "binding_clips": 33,
+        "default_Main": "NOT_RUN",
+        "new_approvals": 0,
+        "new_source_poses": 0,
+        "shared_poses_replayed": 91,
+        "source_quality": "HOLD"
+      }
+    },
+    "actual_ActorMotion_playback": "PASS",
+    "binding_clips_tested": 132,
+    "candidate_species": 4,
+    "canvas_foot_anchor_and_regions": "PASS",
+    "default_Main": "NOT_RUN",
+    "engine": "4.7.2-stable (official)",
+    "new_approvals": 0,
+    "new_walk_sources": 0,
+    "shared_unique_clips": 33,
+    "shared_unique_poses": 91,
+    "source_identity_hand_direction_support_contact_review": "HOLD"
+  },
+  "existing_assets": "No approved asset or source changed; no new WALK or palette-only completion"
+}

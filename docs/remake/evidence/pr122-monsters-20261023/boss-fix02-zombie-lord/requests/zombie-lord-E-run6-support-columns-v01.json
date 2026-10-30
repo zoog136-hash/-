@@ -1,0 +1,31 @@
+{
+  "name": "zombie-lord-E-run6-support-columns-v01",
+  "direction": "E",
+  "role": "run",
+  "rows": 6,
+  "directions_axis": "phase_grid2",
+  "reference_rows": [
+    0,
+    1
+  ],
+  "playback_source_rows": [
+    0,
+    2,
+    4,
+    1,
+    3,
+    5
+  ],
+  "support_columns": {
+    "left": "anatomical_RIGHT_grounded",
+    "right": "anatomical_LEFT_grounded"
+  },
+  "request": {
+    "prompt": "Use the supplied EXACT project ZOMBIE LORD reference as the only character design. A massive corpulent undead boss, pale gray-green mottled stitched skin, HUGE round exposed distended belly as the center of mass, tiny hunched neck and broad snarling head with sparse dark hair, very thick heavy arms and oversized bare feet. Preserve rusted nails/spikes in shoulder/back, heavy gold-rusted chains draped around neck/shoulders/chest and attached wrist shackles, ragged gray-brown skirt/loincloth, ornate antique gold pointed waist plate/belt. Both hands are EMPTY heavy fists/claws with connected chains; do not invent a sword, axe, shield, cape, horns or wings. Keep the SAME exceptional belly volume, broad shoulder/hip proportions, face, chain hardware and original muted palette in every pose. High-detail painted rendered mythic-tier fantasy RPG sprite, fixed elevated orthographic isometric camera. Non-graphic monster art: old mottled scar/stitch texture, no fresh blood or internal organs. Ignore unrelated tiny fragments at reference crop edges; reconstruct the complete top of head and full intact toes, never crop them.\n\nExact SAME RIGHT-facing SIDE CAMERA as second supplied reference. Nose and belly bulge screenRIGHT, shoulder spikes screenLEFT; one eye/ear, no frontal chest. Near leg = anatomical RIGHT; far leg = anatomical LEFT.\n\nThis is a SUPPORT-LEG COLUMN comparison sheet, NOT row-major chronological poses. EXACTLY TWO columns THREE rows, SIX full bodies. LEFT COLUMN = RIGHT-leg SUPPORT half-cycle. RIGHT COLUMN = LEFT-leg SUPPORT half-cycle. Read down leftcolumn first, then down rightcolumn to animate: source order [topLEFT,middleLEFT,bottomLEFT,topRIGHT,middleRIGHT,bottomRIGHT]. In LEFT column RIGHT leg remains planted in all three, opposite LEFT leg swings: TOP-left LEFT foot trailing lightly AIRBORNE behindhip, MIDDLE-left LEFT knee bent and heel lifted BEHIND with foot entirely aboveground, BOTTOM-left LEFT knee and whole LEFT foot lifted swinging FORWARD ready to plant. In RIGHT column LEFT leg remains planted in all three, opposite RIGHT leg swings: TOP-right RIGHT foot trailing lightly AIRBORNE behindhip, MIDDLE-right RIGHT knee bent and heel lifted BEHIND, BOTTOM-right RIGHT knee and whole RIGHT foot lifted swinging FORWARD. Same supporting foot throughout one column, OPPOSITE supporting foot in other column. The change of planted anatomical leg between columns is the entire point of this repair; do not repeat the same planted leg in both columns. Belly and hips lean subtly over support side, knees compress under mass, shoulders/chains countershift while attached. Full giant belly must not hide feet or lower knees. Very heavy grounded boss shuffle, never hopping.\n\nLEFT COLUMN all3 poses: NEAR/anatomicalRIGHT leg is ALWAYS planted with full sole on ground and knee weight-bearing. FAR/anatomicalLEFT foot is airborne in all3. RIGHT COLUMN all3 poses: FAR/anatomicalLEFT leg is ALWAYS planted full sole on ground, visible ahead below belly; NEAR/anatomicalRIGHT foot is ALWAYS clearly AIRBORNE bent with its sole entirely above ground. The nearest RIGHT foot must NEVER touch ground anywhere in right column.\n\nPreserve exact body palette/chains/spikes/mass/camera of supplied references while REDRAWING each real articulated pose. No horizontal mirroring, no palette swapping, no duplicated frame. Fixed physical scale all six. Huge alpha0 spacing: complete SMALL bodies central45% of two equalwidth columns/threeequalheight rows, no bounding rectangles intersect. Full attached chains/head/feet intact. Pure transparent alpha0, NO floor/ground/shadow/marks/text/diagram/arrows/grid/labels/specks. Every cell one connected figure.",
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/reference-project-crop.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-fix02-zombie-lord/raw/zombie-lord-E-run6-v02.png"
+    ]
+  }
+}

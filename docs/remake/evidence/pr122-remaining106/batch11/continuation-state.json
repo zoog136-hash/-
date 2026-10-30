@@ -1,0 +1,111 @@
+{
+  "starting_PR_HEAD": "846b71d14f847a302692064e6a8e9e34b37e3261",
+  "previous_checkpoint": "c7d9c2b",
+  "target": 498,
+  "historical_completed_preserved": 392,
+  "reported398_difference_unsubstantiated": 6,
+  "runtime_connected": 394,
+  "CI_pending": 2,
+  "existing_HOLD": 16,
+  "legacy_not_authored_or_connected": 88,
+  "actual_legacy_remaining": 106,
+  "new_approved": 0,
+  "raw_PNGs_this_batch": 23,
+  "strict_source_geometry_pass_files": 10,
+  "unapproved_production_applied": false,
+  "actual_Main_new_candidate_checks": 8786,
+  "actual_Main_new_candidate_failures": 0,
+  "actual_Main_PNG_bodies_in_Git_ZIP": 70,
+  "art_quality": "HOLD; technical PASS does not approve tail pop, model size, full gait or source packing defects",
+  "Android_real_device": "NOT_RUN",
+  "active_authoring": {
+    "monster:알비노 디어": {
+      "status": "HOLD",
+      "planned_contract": {
+        "idle": 2,
+        "walk": 8,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "directions": 8,
+        "unique_poses": 144
+      },
+      "complete_approved_source_matrix": false,
+      "currently_valid_source_parts": [
+        "idle-pilot02:16",
+        "walk-N-NE:16",
+        "walk-S-SW-v02:16",
+        "hit-v02:16",
+        "death-pilot01:24"
+      ],
+      "next": "Re-author E,SE,W,NW walk and all8 attack with complete separated source bodies. Existing strict importer rejects overlapping source bounds and attack-v03 missing3 bodies. No copied/interpolated substitute.",
+      "blocker": "Complete144 source matrix unavailable: E/SE/W/NW walk rectangles overlap neighboring bodies; attack-v03 contains21 rather than24 bodies. Gait/model/alpha/Main approval incomplete; no source omissions or threshold changes allowed."
+    },
+    "monster:알비노 몽크": {
+      "status": "HOLD",
+      "planned_contract": {
+        "idle": 2,
+        "walk": 6,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "directions": 8,
+        "unique_poses": 128
+      },
+      "complete_approved_source_matrix": false,
+      "source_reference": "res://assets/monsters/original/atlas_3.png region[0,899,328,300]",
+      "source_SHA256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+      "note": "Independent authoring while deer/sourceHOLD remain; no production install.",
+      "blocker": "Whole128 matrix unavailable: six sheets fail unchanged ownership/body-count guards. All8 standalone E originals fail strict8-neighbor alpha>100 body rule; only3 qualify for unchanged3/11-pixel microrepair. Correct opposite support and stable model/camera remain unapproved."
+    }
+  },
+  "quality14": {
+    "status": "WIP_HOLD",
+    "counted_as_new_species": false,
+    "transform2_outside498_but_still_required": true
+  },
+  "priority_HOLD_preserved": [
+    "death_servant:cloth/light/contact/source",
+    "tomb269:model/ground/contact",
+    "unicorn:alpha+two missing originals",
+    "wolf+wilddog:limb alternation and head/core"
+  ],
+  "resume": [
+    "Read actual remote PR122 HEAD and this complete source-HOLD checkpoint in isolated worktree; preserve392 historical bindings, source45 and Main70 PNGs.",
+    "Continue from failed subject matrices only after valid full-body/alpha/gait sources; keep accepted historical art. Do not reduce phase counts, skip directions, erase substantial islands or force an importer PASS.",
+    "Use existing original Drive kit without re-upload; establish authoritative target mapping/private delivery before named production use. Kit contains2 bodies, not full498 assets.",
+    "Inspect exact latest SHA required33-workflow states; previous SHA results never approve newer commit.",
+    "Android NOT_RUN; no main merge, force push, reset or approved asset overwrite."
+  ],
+  "doguri_registered_height": {
+    "original": 105.988006591797,
+    "candidate": 105.9921875,
+    "source_RGBA_regions_anchors_unchanged": true,
+    "final_gait": "HOLD"
+  },
+  "servant_S05": "Strict standalone source geometry PASS; cloth fan/near-hand model HOLD. Actual Main for this source NOT_RUN; no production change.",
+  "latest_source_batch": "batch11",
+  "current_active_authoring": 0,
+  "current_source_HOLD_including_new": 18,
+  "not_started_after_two_new_source_attempts": 86,
+  "actual_Main_checks_this_continuation": 8786,
+  "raw_PNGs_batch10": 23,
+  "raw_PNGs_batch11": 22,
+  "total_new_raw_PNGs": 45,
+  "raw_PNG_bytes": 85840707,
+  "derived_alpha_microcandidates": 3,
+  "new_motion_poses_from_microrepair": 0,
+  "qualified_completed_count_change": 0,
+  "private_original_source_kit": {
+    "Drive_file_ID": "1FlU7ZvaIaZT-8VPQef3zjbXj5QpRY7Mo",
+    "SHA256": "99dd0cb2f02da039b56923b9f3b947ed7ef4f73843d7f4e0c0dcdd7006b98a98",
+    "native_RGBA_verified": 3512,
+    "body_IDs": [
+      "21624",
+      "21653"
+    ],
+    "target_binding": "UNCONFIRMED: exact142/411 mapping requested, no substitute installed",
+    "public_originals_uploaded": false
+  },
+  "reported398_scope_candidate": "394 current target runtime bindings +4 base class bindings outside fixed180+258+60 can total398 connections; neither excludes CI waits nor proves398 approved target species."
+}

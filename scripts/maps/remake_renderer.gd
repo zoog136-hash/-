@@ -11,6 +11,11 @@ const PNG_CHUNK = preload("res://scripts/maps/aden_png_chunk.gd")
 const PNG_REVIEW_PACK = preload("res://scripts/maps/source_png_review_pack.gd")
 var png_pack: RefCounted
 var png_textures: Dictionary = {}
+var png_texture_usage: Dictionary = {}
+var retiring_png_chunks: Array[WeakRef] = []
+# Lookup-only budget. Visible meshes and sprites can own more than this.
+var png_lookup_budget_bytes: int = (48 if OS.has_feature("mobile") else 96)*1024*1024
+var png_lookup_bytes: int = 0
 var png_review_active: bool = false
 var png_review_spawn: Vector2 = Vector2.INF
 var debug_collision: bool = false
@@ -20,6 +25,15 @@ var stream_build_usec: int = 0
 var built_chunks: int = 0
 var freed_chunks: int = 0
 var rendered_door_states: Dictionary = {}
+var pending_visible_chunks: bool = false
+const MAX_NEW_CHUNKS_PER_FRAME: int = 3
+const CHUNK_BUILD_BUDGET_USEC: int = 4000
+
+func _process(delta: float) -> void:
+	if pending_visible_chunks:
+		refresh_visible()
+	else:
+		super._process(delta)
 
 func configure(value: PlayableField, actor: Node2D) -> void:
 	field = value
@@ -73,7 +87,9 @@ func refresh_visible() -> void:
 	# Source bytes stay immutable; only these derived visible batches are rebuilt.
 	if rendered_door_states != source.source_doors.opened:
 		rendered_door_states=source.source_doors.opened.duplicate()
-		for chunk: Node in chunks.values(): remove_child(chunk);chunk.queue_free();freed_chunks+=1
+		for chunk: Node in chunks.values():
+			retiring_png_chunks.append(weakref(chunk))
+			remove_child(chunk);chunk.queue_free();freed_chunks+=1
 		chunks.clear()
 	var rect: Rect2 = get_viewport_rect()
 	var transform: Transform2D = get_canvas_transform().affine_inverse()
@@ -93,9 +109,16 @@ func refresh_visible() -> void:
 		for x: int in range(lower.x,upper.x+1): keys.append(Vector2i(x,y))
 	keys.sort_custom(func(a: Vector2i,b: Vector2i) -> bool: return (a*CHUNK_SIZE-focus).length_squared()<(b*CHUNK_SIZE-focus).length_squared())
 	var start: int = Time.get_ticks_usec()
+	var built_now: int = 0
+	pending_visible_chunks = false
 	for key: Vector2i in keys.slice(0,MAX_CHUNKS):
 		needed[key] = true
 		if chunks.has(key): continue
+		# Keep map entry responsive. The nearest missing chunks win; remaining
+		# chunks continue on the next frame without changing their final layout.
+		if built_now>=MAX_NEW_CHUNKS_PER_FRAME or (built_now>0 and Time.get_ticks_usec()-start>=CHUNK_BUILD_BUDGET_USEC):
+			pending_visible_chunks=true
+			continue
 		# Source Aden has a separate visual layer. Other maps keep their renderer;
 		# all maps retain the verified collision/navigation stream.
 		var chunk: Node2D
@@ -110,6 +133,7 @@ func refresh_visible() -> void:
 		add_child(chunk)
 		if not png_region.is_empty():
 			chunk.texture_cache = png_textures
+			chunk.texture_usage = png_texture_usage
 			chunk.build_png(source,key,png_pack,png_region)
 		elif not png_review_active or debug_collision: chunk.build(source,key,floor_material,render_profile,debug_collision)
 		# PNG-only chunks do not use RemakeChunk's source-edge pass. Overlay
@@ -118,16 +142,56 @@ func refresh_visible() -> void:
 			_append_png_door_boundaries(chunk,key)
 		chunks[key] = chunk
 		built_chunks += 1
+		built_now += 1
 	for key: Vector2i in chunks.keys():
 		if needed.has(key): continue
+		retiring_png_chunks.append(weakref(chunks[key]))
 		remove_child(chunks[key]); chunks[key].queue_free(); chunks.erase(key)
 		freed_chunks += 1
-	# Meshes retain textures while visible; the shared lookup need not retain
-	# every original PNG chunk visited during a long world journey.
-	if png_textures.size() > MAX_CHUNKS*2: png_textures.clear()
+	_prune_png_lookup()
 	stream_build_usec = maxi(stream_build_usec,Time.get_ticks_usec()-start)
 	_refresh_markers()
 	if source is RemakePlayableField and is_instance_valid(source.collision_stream): source.collision_stream.refresh()
+
+func _prune_png_lookup() -> void:
+	var protected: Dictionary={}
+	var owners: Array=chunks.values()
+	for index: int in range(retiring_png_chunks.size()-1,-1,-1):
+		var chunk: Node=retiring_png_chunks[index].get_ref()
+		if not is_instance_valid(chunk):retiring_png_chunks.remove_at(index)
+		else:owners.append(chunk)
+	for chunk: Node in owners:
+		for child: Node in chunk.get_children():
+			var texture: Texture2D=null
+			if child is MeshInstance2D:texture=(child as MeshInstance2D).texture
+			elif child is Sprite2D:texture=(child as Sprite2D).texture
+			if texture!=null:protected[texture.get_instance_id()]=true
+	var counts: Dictionary={}
+	var costs: Dictionary={}
+	png_lookup_bytes=0
+	for path: String in png_textures:
+		var texture: Texture2D=png_textures[path]
+		if texture==null:continue
+		var id: int=texture.get_instance_id()
+		if not counts.has(id):
+			counts[id]=0
+			costs[id]=int(texture.get_meta("decoded_image_bytes",texture.get_width()*texture.get_height()*4))
+			png_lookup_bytes+=int(costs[id])
+		counts[id]=int(counts[id])+1
+	if png_lookup_bytes<=png_lookup_budget_bytes:return
+	var idle: Array=png_textures.keys().filter(func(path: Variant) -> bool:
+		var texture: Texture2D=png_textures[path]
+		return texture!=null and not protected.has(texture.get_instance_id()))
+	idle.sort_custom(func(a: Variant,b: Variant) -> bool:
+		return int(png_texture_usage.get(a,0))<int(png_texture_usage.get(b,0)))
+	for path: Variant in idle:
+		if png_lookup_bytes<=png_lookup_budget_bytes:break
+		var texture: Texture2D=png_textures[path]
+		var id: int=texture.get_instance_id()
+		png_textures.erase(path)
+		png_texture_usage.erase(path)
+		counts[id]=int(counts[id])-1
+		if int(counts[id])==0:png_lookup_bytes-=int(costs[id])
 
 
 func _append_png_door_boundaries(chunk: Node2D,key: Vector2i) -> void:
@@ -152,7 +216,9 @@ func set_visual_mode(mode: String) -> void:
 	var collision: bool = mode == "collision"
 	if collision == debug_collision: return
 	debug_collision = collision
-	for chunk: Node in chunks.values(): remove_child(chunk); chunk.queue_free()
+	for chunk: Node in chunks.values():
+		retiring_png_chunks.append(weakref(chunk))
+		remove_child(chunk); chunk.queue_free()
 	chunks.clear()
 	refresh_visible()
 

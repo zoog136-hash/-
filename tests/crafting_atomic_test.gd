@@ -22,7 +22,7 @@ func _run() -> void:
 			items[str((raw as Dictionary).get("name",""))] = raw
 	var service = CRAFTING.new()
 	service.load_recipes()
-	_check(service.recipes.size() == 413,"413 DB-backed crafting recipes loaded")
+	_check(service.recipes.size() == 414,"414 DB-backed crafting recipes loaded")
 	for id: String in service.recipes:
 		var recipe: Dictionary = service.recipes[id]
 		_check(items.has(str((recipe["result"] as Dictionary).get("item",""))), "known output item for " + id)
@@ -37,7 +37,7 @@ func _run() -> void:
 		var recipe: Dictionary = service.recipes[id]
 		if (recipe.get("materials",[]) as Array).any(func(raw: Variant) -> bool: return str((raw as Dictionary).get("item","")) in resource_names):
 			resource_recipes += 1
-	_check(resource_recipes == 413, "all 413 recipes require obtainable harvested resources")
+	_check(resource_recipes == 414, "all 414 recipes require obtainable harvested resources")
 	var category_counts: Dictionary = {}
 	for id: String in service.recipes:
 		var record: Dictionary = service.recipes[id]
@@ -127,7 +127,7 @@ func _run() -> void:
 				found = str((raw as Dictionary).get("role","")) == "craft"
 	_check(found, "real craft master connected in Aden NPC data")
 	if failures.is_empty():
-		print("CRAFTING_OK: 413 DB-backed recipes, batches, weight, enchant safety, atomic inventory and save")
+		print("CRAFTING_OK: 414 DB-backed recipes, batches, weight, enchant safety, atomic inventory and save")
 		quit(0)
 	else:
 		print("CRAFTING_FAILED: %d" % failures.size())

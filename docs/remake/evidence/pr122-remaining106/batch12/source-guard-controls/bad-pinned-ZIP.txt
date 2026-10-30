@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/twilight-pr122/tools/run_pr122_native_tick_preview.py", line 180, in <module>
+    main()
+  File "/workspace/twilight-pr122/tools/run_pr122_native_tick_preview.py", line 48, in main
+    assert sha(args.source_zip) == KIT_SHA, 'Wrong or changed source kit'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Wrong or changed source kit

@@ -1,0 +1,34 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NW",
+  "role": "attack",
+  "source_batch": "batch03",
+  "version": "phase3-contact-v04",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "requested_game_phase": 3,
+  "references": [
+    "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png",
+    "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/NW-contact3-two-arm-chain-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-NW-attack-phase2-loaded-v04/halpas-NW-attack-phase2-loaded-v04.png": "a2bc8a43cae0c1b5e89d0fb0ebb24df51acf5b9767c10eba2a74498b76eeb956",
+    "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/NW-contact3-two-arm-chain-guide.png": "60ef038f65047c0e35ba8373a06718113382d6f19962d8ab7995c3c1eea930e0"
+  },
+  "reference_phase2_review": {
+    "path": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/reference-phase2-private-review.json",
+    "sha256": "a991ee73db69d04a6c605cc8c722edf45f869b7ea7ef3700f4b581a273ede015"
+  },
+  "guide_proof": "/workspace/scratch/halpas-NW-attack-phase3-repair-v04/guide-proof.json",
+  "transparent_background": true,
+  "corrective_reason": "FullsixNWattackv03 has3arms in2/3/4. This isONEcontact3 edit fromNEWcorrecttwoarmloaded2ONLY, no bad3armreference, explicittwoarmguide. ExtendexistingraisedfarRIGHTarmratherthanaddanotherarm; nearLEFTfree.",
+  "user_authorization": "Privateproductionimage tools allowed, no mainchat images/binary. One localizedmissingphase edit, no fullsixretry or identicalretry.",
+  "prompt": "Edit ONE existing correct loaded-windup RIGHT arm into ONE NORTHWEST CONTACT/HIT key of the exact SAME Halpas boss. Single fullbody pose only, not a sheet. Image1 is the NEW VALID TWO-ARM loaded phase2; preserve same model/camera and use its SAME arms. Image2 is a reference-only two-arm contact3 anatomical guide, never copy diagram style/colors/text/arrows.\n\nLOCAL ARM MOTION: The existing FAR anatomicalRIGHT arm in image1 is ALREADY RAISED above the upper/right shoulder with bent elbow and same purpleblade grip. Open/extend THAT SAME right elbow FORWARD toward screenUPPER-LEFT over/above the helmet to deliver a decisive NW strike. Same right shoulder→same upperarm→same elbow→same forearm→same wrist→closed right grip→same soleblade must remain continuous. The original right upperarm MOVES into the contact position, not left behind as another limb. The right wrist reaches farther UP-LEFT and the original purple crystal blade points UP-LEFT into targetspace beyond helmet in a true completed contact endpoint, with rightelbow more extended than loaded image1. Use image2's farRIGHT shoulder→raisedelbow→overheadwrist→UPLEFTblade path; physical two-limb skeleton, no attackarm from the nearLEFT shoulder.\n\nEXACTLY TWO ARMS/HANDS TOTAL. Existing NEAR anatomicalLEFT arm is the lower-left arm, keep its same empty freefist counterbalancing lower-left in front of cape. It never holds blade. FarRIGHT is the raised strikingarm and ALONE owns blade. DO NOT add or retain a right arm/forearm/fist hanging downRIGHT below the right shoulder: that arm is the one now extended overhead, not a third arm. No duplicated arm stump, extra fist, ghost sword, transferred grip or disconnected hand. Exactly two legs/knees/boots too.\n\nSAME NW rear-left camera as image1: visible black/gold segmented back/spine, helmet back/side left-away profile, nearLEFT shoulder lower-left and farRIGHT shoulder upper-right, head/back/hips still NW/UPLEFT throughout actual strike. No N/NE/SW/front-facing torso, no frontal chestskull or face, no wholebody/camera rotation or horizontalmirror. Modest true NW forward weight/lunge through existing hips/knees permitted for force, same general NW bootaxes/stance and plausible jointchains. Keep original uniqueHalpas goldhorn crown, black/gold armor/materials, TWO solidpurple crystalline featherfans at two goldbackroots, tatteredburgundyLEFT/back cape and original compactbroad purplecrystallineblade. Exact sourceblade geometry/model, no long sinuous yellow Girtasweapon or new shield. Same physical head/torso/limb sizes and elevated orthographic camera.\n\nContact3 should visibly advance from bent loaded2: rightarm extends NW, blade tip clearly UPLEFT and more forward, shoulders/back carry force, nearLEFT emptyfist/cape/feathers respond subtly with lag, hips/knees absorb. Wings may fold/react naturally but keep both original fans/roots, never hide all arm continuity or turn into limbs. Whole silhouette complete and consistent. No magical effect, blast, trail, alternate blade image or arbitrary motionblur to substitute a real pose.\n\nOutputONE detailed fullbody cutout, PNG1024x1024transparent. Keep entire high/extendedUPLEFTblade/horns/wings/cape/boots inside generous central750x800region with at least100px blanktransparentmargin around completepose. Do not zoom/crop/shorten gear. Rich crisp productionRPG sprite, opaque solidarmor/cloth/crystals, alpha0 background/gaps,1-2px edgeantialiasing. Purplecolor/light INSIDE solidwings/bladeonly. No outerglow,bloom,halo,haze,fog,shadow,floor,ground,particles,sparks,blur,trails,text,numbers,grid,labels,guidearrows,coloredlimbcoding,frames or extrafigure. Required success ONE NWcontact key, exactTWO arms, continuous originalfarRIGHT strikegrip, nearLEFT remainsEMPTY, bladecontacttoUPLEFT and faithfulbody/gear.",
+  "requested_at": "2026-10-19T12:38:20.756003+00:00",
+  "imagegen_attempt_limit": 1,
+  "private_jpeg_budget_cumulative_estimate_before_source": 4410734,
+  "private_jpeg_budget_limit": 8000000
+}

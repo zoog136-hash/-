@@ -1,0 +1,287 @@
+{
+  "status": "CANDIDATE_SOURCE_LAYOUT_REVIEW_NOT_ACTUAL_PLAYER",
+  "reference_actualFrames": "res://assets/actors/eight_direction/native_locomotion_staging/girtas_267/r084/SpriteFrames.tres",
+  "reference_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-attack-v05assembled01.png",
+  "reference_source_sha256": "9b88d4bf994868e3153e482ac50d9a27d0c362e5b1dd6821630dc3e33c9d5b1b",
+  "reference_guard_frame": {
+    "row": 0,
+    "direction": "NW",
+    "region": [
+      168,
+      196,
+      944,
+      887
+    ],
+    "margin": [
+      424,
+      216,
+      752,
+      809
+    ],
+    "source_anchor": [
+      592,
+      1040
+    ],
+    "rgba_sha256": "ced6870d0c27f18201bbadda41e1e37fc1677791484eef1127114d04b6b8b87b",
+    "canvas_size": [
+      1696,
+      1696
+    ],
+    "foot": [
+      848,
+      1060
+    ]
+  },
+  "source_guard_reference_canvas": 1696,
+  "new_idle_perpose_canvas_candidate": 944,
+  "poses": [
+    {
+      "phase": 0,
+      "virtual_canvas_proposal": 944,
+      "two_boot_ROIs": [
+        [
+          70,
+          418,
+          110,
+          65
+        ],
+        [
+          265,
+          418,
+          85,
+          65
+        ]
+      ],
+      "two_source_solid_sole_contacts": [
+        [
+          147.2127659574468,
+          459.4255319148936
+        ],
+        [
+          313.2926829268293,
+          452.4146341463415
+        ]
+      ],
+      "two_sole_centroid": [
+        230.25272444213806,
+        455.92008303061755
+      ],
+      "source_anchor_proposal": [
+        240,
+        456
+      ],
+      "target_actualNWattackguard0_sole_centroid_normalized1024": [
+        -10.373700423565644,
+        -0.4018097805160068
+      ],
+      "method": "Independent manual two-bootROI + last2 alpha>100 rows each; mean2feet supports abstractbodyroot/depth, not singlefoot or wholebbox anchoring. Bothfeetretain authoredstance; genuinebreath/cloth/hair motion untouched."
+    },
+    {
+      "phase": 1,
+      "virtual_canvas_proposal": 944,
+      "two_boot_ROIs": [
+        [
+          582,
+          418,
+          110,
+          65
+        ],
+        [
+          777,
+          418,
+          85,
+          65
+        ]
+      ],
+      "two_source_solid_sole_contacts": [
+        [
+          642.8888888888889,
+          460.22222222222223
+        ],
+        [
+          808.3703703703703,
+          454.25925925925924
+        ]
+      ],
+      "two_sole_centroid": [
+        725.6296296296296,
+        457.24074074074076
+      ],
+      "source_anchor_proposal": [
+        735,
+        458
+      ],
+      "target_actualNWattackguard0_sole_centroid_normalized1024": [
+        -10.373700423565644,
+        -0.4018097805160068
+      ],
+      "method": "Independent manual two-bootROI + last2 alpha>100 rows each; mean2feet supports abstractbodyroot/depth, not singlefoot or wholebbox anchoring. Bothfeetretain authoredstance; genuinebreath/cloth/hair motion untouched."
+    },
+    {
+      "phase": 2,
+      "virtual_canvas_proposal": 944,
+      "two_boot_ROIs": [
+        [
+          70,
+          930,
+          110,
+          65
+        ],
+        [
+          265,
+          930,
+          85,
+          65
+        ]
+      ],
+      "two_source_solid_sole_contacts": [
+        [
+          149.66666666666669,
+          967.3333333333334
+        ],
+        [
+          316.0,
+          959.4047619047619
+        ]
+      ],
+      "two_sole_centroid": [
+        232.83333333333334,
+        963.3690476190477
+      ],
+      "source_anchor_proposal": [
+        242,
+        964
+      ],
+      "target_actualNWattackguard0_sole_centroid_normalized1024": [
+        -10.373700423565644,
+        -0.4018097805160068
+      ],
+      "method": "Independent manual two-bootROI + last2 alpha>100 rows each; mean2feet supports abstractbodyroot/depth, not singlefoot or wholebbox anchoring. Bothfeetretain authoredstance; genuinebreath/cloth/hair motion untouched."
+    },
+    {
+      "phase": 3,
+      "virtual_canvas_proposal": 944,
+      "two_boot_ROIs": [
+        [
+          582,
+          930,
+          110,
+          65
+        ],
+        [
+          777,
+          930,
+          85,
+          65
+        ]
+      ],
+      "two_source_solid_sole_contacts": [
+        [
+          650.2083333333334,
+          970.2083333333334
+        ],
+        [
+          816.5,
+          963.2666666666667
+        ]
+      ],
+      "two_sole_centroid": [
+        733.3541666666667,
+        966.7375
+      ],
+      "source_anchor_proposal": [
+        743,
+        967
+      ],
+      "target_actualNWattackguard0_sole_centroid_normalized1024": [
+        -10.373700423565644,
+        -0.4018097805160068
+      ],
+      "method": "Independent manual two-bootROI + last2 alpha>100 rows each; mean2feet supports abstractbodyroot/depth, not singlefoot or wholebbox anchoring. Bothfeetretain authoredstance; genuinebreath/cloth/hair motion untouched."
+    },
+    {
+      "phase": 4,
+      "virtual_canvas_proposal": 944,
+      "two_boot_ROIs": [
+        [
+          70,
+          1442,
+          110,
+          65
+        ],
+        [
+          265,
+          1442,
+          85,
+          65
+        ]
+      ],
+      "two_source_solid_sole_contacts": [
+        [
+          150.37037037037038,
+          1476.2592592592594
+        ],
+        [
+          321.0,
+          1469.375
+        ]
+      ],
+      "two_sole_centroid": [
+        235.6851851851852,
+        1472.8171296296296
+      ],
+      "source_anchor_proposal": [
+        245,
+        1473
+      ],
+      "target_actualNWattackguard0_sole_centroid_normalized1024": [
+        -10.373700423565644,
+        -0.4018097805160068
+      ],
+      "method": "Independent manual two-bootROI + last2 alpha>100 rows each; mean2feet supports abstractbodyroot/depth, not singlefoot or wholebbox anchoring. Bothfeetretain authoredstance; genuinebreath/cloth/hair motion untouched."
+    },
+    {
+      "phase": 5,
+      "virtual_canvas_proposal": 944,
+      "two_boot_ROIs": [
+        [
+          582,
+          1442,
+          110,
+          65
+        ],
+        [
+          777,
+          1442,
+          85,
+          65
+        ]
+      ],
+      "two_source_solid_sole_contacts": [
+        [
+          640.8484848484849,
+          1472.3030303030303
+        ],
+        [
+          809.12,
+          1467.24
+        ]
+      ],
+      "two_sole_centroid": [
+        724.9842424242424,
+        1469.7715151515151
+      ],
+      "source_anchor_proposal": [
+        735,
+        1470
+      ],
+      "target_actualNWattackguard0_sole_centroid_normalized1024": [
+        -10.373700423565644,
+        -0.4018097805160068
+      ],
+      "method": "Independent manual two-bootROI + last2 alpha>100 rows each; mean2feet supports abstractbodyroot/depth, not singlefoot or wholebbox anchoring. Bothfeetretain authoredstance; genuinebreath/cloth/hair motion untouched."
+    }
+  ],
+  "source_rgba_unchanged": true,
+  "full_actor_approval": false
+}

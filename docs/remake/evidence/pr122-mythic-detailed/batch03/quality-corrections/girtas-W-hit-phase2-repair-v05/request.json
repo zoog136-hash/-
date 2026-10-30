@@ -1,0 +1,100 @@
+{
+  "key": "transform:267",
+  "name": "지배자 기르타스",
+  "direction": "W",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v05",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "standalone_corrected_pose",
+  "source_phase": 2,
+  "output_pose_count": 1,
+  "newly_authored_pose_count": 1,
+  "reused_existing_pose_count": 5,
+  "reused_phases": [
+    0,
+    1,
+    3,
+    4,
+    5
+  ],
+  "reused_source": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+  "reused_source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+  "references": [
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/girtas-W-hit-phase2-v04.png",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase1-lossless.png",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase3-lossless.png",
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/girtas-W-hit-phase2-v04.png": "1fd52bd6e54cdceeb27e055173bcf479e3df3d12dfcd3d394d2c40c2c1640b52",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase1-lossless.png": "a8126b42ae5cab4352368438badd89dc02e9795e2676525449f4389506f8ee21",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase3-lossless.png": "6f270261e3ef9ad7778fe0fbe5ffd997136c6bfe6942c8587d387cbbe85ff565",
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-idle-phase0-lossless.png": "81a80c77b05148b2fa5e6b173135b8253fe5e0e3a232a3a1d559ab08ee58c10b"
+  },
+  "reference_roles": [
+    "EDIT_TARGET_v04_bad_nearLEFT_upperarm_route",
+    "GOOD_Wv03_phase1_continuous_raisedLEFT_arm",
+    "GOOD_Wv03_phase3_coherent_two_arms",
+    "faithful_Widle_single_body_guide"
+  ],
+  "neighbor_lossless_crop_proofs": [
+    {
+      "source": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+      "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "source_phase": 1,
+      "source_region": [
+        526,
+        84,
+        478,
+        412
+      ],
+      "geometry_sha256": "94f02ecdb76c645113ed31424958f45bbb8079652e5400e983571ad593667a8c",
+      "crop": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase1-lossless.png",
+      "crop_sha256": "a8126b42ae5cab4352368438badd89dc02e9795e2676525449f4389506f8ee21",
+      "crop_rgba_sha256": "b81150b30d92fe977cdac9844299a5c0c4ae9e067b12f7fdf1186ad5c4de9e7e",
+      "source_geometry_rgba_sha256": "b81150b30d92fe977cdac9844299a5c0c4ae9e067b12f7fdf1186ad5c4de9e7e",
+      "operations": "Exact RGBA region crop only; no scaling/alpha edit/mirror/redraw"
+    },
+    {
+      "source": "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png",
+      "source_sha256": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d",
+      "source_phase": 3,
+      "source_region": [
+        532,
+        564,
+        461,
+        404
+      ],
+      "geometry_sha256": "94f02ecdb76c645113ed31424958f45bbb8079652e5400e983571ad593667a8c",
+      "crop": "/workspace/scratch/girtas-W-hit-phase2-repair-v05/good-W-hit-v03-phase3-lossless.png",
+      "crop_sha256": "6f270261e3ef9ad7778fe0fbe5ffd997136c6bfe6942c8587d387cbbe85ff565",
+      "crop_rgba_sha256": "eca51fcfe00db08b551d94f32f1f3bf66df2fe64dcb784ab09de089e025544e2",
+      "source_geometry_rgba_sha256": "eca51fcfe00db08b551d94f32f1f3bf66df2fe64dcb784ab09de089e025544e2",
+      "operations": "Exact RGBA region crop only; no scaling/alpha edit/mirror/redraw"
+    }
+  ],
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "corrective_reason": "New localized COMPLETE LEFT shoulder/upperarm/elbow/forearm rebuild with newly supplied correct W hit neighbors1/3; not repeating v04 remove-fist-only operation. Keep five retained phases and all prior source/QC unchanged.",
+  "prior_source_protection": {
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/girtas-W-hit-phase2-v04.png": "1fd52bd6e54cdceeb27e055173bcf479e3df3d12dfcd3d394d2c40c2c1640b52",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/request.json": "bc4062321c5b0562b1857445c7c47969e751c447c844d318e31624c785003e7d",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/result.json": "e733cf7de12853198874ccfe69545dacb3537c15d06e56323e5c48349a92cafe",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/reassessment.json": "80c1f9b336f5a72af3b6993a492d74e86418b877992668e252897d339a3c2733",
+    "/workspace/scratch/girtas-W-hit-phase2-repair-v04/reassessment-independent-anatomy.json": "e69125d8685b78af166ab9c08af548e2df85d6c86156f187e92dbe50294c6afd",
+    "/workspace/scratch/girtas-W-hit-repair-v03/girtas-W-hit-v03.png": "dfa5c31227463dee168e3034c5ba30b1ac61981bb7218c5c718c4836159eb79d"
+  },
+  "source_layout_candidate_only": {
+    "target_canvas": [
+      1254,
+      1254
+    ],
+    "previous_QC_uniform_display_scale": 0.511,
+    "previous_virtual_canvas_hint": 2004,
+    "hint_is_NOT_runtime_default": true,
+    "requires_reviewed_foot_anchor_and_new_source_calibration": true
+  },
+  "prompt": "EDIT FIRST IMAGE ONLY into ONE corrected single WEST-facing HIT phase2 sprite. This is a materially NEW local ANATOMY REBUILD, NOT just removing a hand and NOT a six-pose animation sheet. Keep the first image's maximal backward recoil, LEFT pale facial direction, head/chest/hip pitch, original boots/feet, full weapon, long pale hair, gold radial spines and long dark gold-trimmed skirt. Same original Girtas model, camera and physical proportions. The second reference is the GOOD neighboring W HIT PHASE1 with a clearly continuous bent near-LEFT arm; third is GOOD W HIT PHASE3 with correct two-arm anatomy. Fourth is the faithful W idle body/equipment model. Use these correct chains to rebuild the bad arm on the first image while preserving its STRONGER phase2 recoil pose.\n\nACTUAL PROBLEM TO REBUILD: The first image's near/anatomical LEFT shoulder at IMAGE RIGHT still has a lowered armored upper-arm stub, while its raised empty forearm emerges from the wrong/opposite chest side. Do NOT merely erase the fist or hide the connection. REBUILD THE COMPLETE NEAR LEFT SHOULDER/UPPER ARM/ELBOW/FOREARM/WRIST/OPEN HAND as ONE clearly visible anatomically continuous foreground chain, matching the second reference's joint logic but at phase2 recoil. Exactly two human arm chains total, not two hands plus a third upper-arm remnant.\n\nREPLACE the entire old hanging upper-arm armor stack below the near LEFT pauldron (approximately first-canvas rawx795..840,y480..585), including its pointed stump. Rotate/repose that same original shoulder armor and upper arm FORWARD-LEFT across the FRONT of the torso. Draw a continuous visible upper arm from near shoulder toward an elbow slightly LEFT/DOWN of the shoulder. The elbow bends and the forearm then rises UPPER-LEFT to the open unarmed hand. Foreground upper arm/forearm must visibly overlap the front breastplate where appropriate, not vanish under it or start from the far/opposite chest. Integrate the shoulder cap into the actual joint, not a hanging empty shell.\n\nProjected chain guide on the FIRST1254pixel canvas: near LEFT shoulder/pauldron roughly(800,470) -> visible upper arm diagonally forward/down-left -> elbow roughly(710,555) -> forearm bends up-left -> wrist roughly(600,510) -> raised OPEN empty hand roughly(565,475). These are coherent approximate locations, not diagram labels to draw. Rebuild the old raised forearm's wrong chest attachment too, so that there is ONE continuous near LEFT shoulder-to-open-hand chain. Use balanced upper-arm and forearm lengths and the same black/gold articulated armor. The second image clearly shows the correct near LEFT shoulder-to-elbow-to-raised-hand geometry: adapt that anatomy, do not copy its milder body pose.\n\nKEEP the other original FAR ANATOMICAL RIGHT arm/hand and its one long sinuous original weapon UNCHANGED. The weapon hand stays low IMAGE LEFT near the hip, around(558,650), holding the full original curve/blade/tip. No swapping it to the rebuilt near arm. No deleting this required arm, no extra hand, upper arm, elbow or stump. No arm emerging from the opposite chest. Exactly TWO shoulders, TWO connected upper arms, TWO elbows, TWO forearms and TWO hands: one near raised/open LEFT hand and one far low RIGHT weapon grip. Both chains must read clearly under this LEFT/W side camera.\n\nEverything except the necessary local near LEFT shoulder/arm reconstruction should preserve the first image's position, model ratios and maximal recoil: pale face/nose still LEFT, long pale hair, original gold head structure, thin hard-gold physical radial spines, complete long dark gold-trimmed skirt, original boots and one original long thin sinuous weapon. Do not shorten the weapon, crop gear, turn frontal/SW/right, replace the pose with idle/phase1, straighten the recoil, add ornaments or redesign armor. Keep native framing and large transparent margins if possible; a different source resolution is acceptable only with unchanged relative body/equipment proportions and uniformly calibratable physical scale. Do not enlarge individual body parts or move the feet independently.\n\nOutput ONE complete corrected sprite on transparent square canvas, not a collage or sheet. Fully opaque original dark armor/skirt and hard gold materials, original weapon light contained in the real blade. Alpha0 outside silhouette and in gaps, crisp1-2pixel antialias edges. No floor, shadow, background, text, labels, grid, glow fog, detached parts or extra figures. The decisive change is a clearly connected NEAR LEFT SHOULDER -> UPPER ARM -> ELBOW -> RAISED EMPTY FOREARM/HAND, replacing both the hanging stump and wrong chest attachment, with the original FAR RIGHT weapon arm untouched.",
+  "requested_at": "2026-10-19T11:29:32.157279+00:00"
+}

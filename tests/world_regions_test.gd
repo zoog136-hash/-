@@ -85,9 +85,13 @@ func _run() -> void:
 	var index: Array = JSON.parse_string(FileAccess.get_file_as_string(world.FIELD_INDEX_PATH))
 	index=index.filter(func(record: Dictionary) -> bool: return str(record.map_id) not in ["albino_03","albino_04"])
 	var prefix: String = ""
+	var requested_ids: Array[String] = []
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--prefix="):
 			prefix = argument.trim_prefix("--prefix=")
+		elif argument.begins_with("--map-ids="):
+			for region_id: String in argument.trim_prefix("--map-ids=").split(","):
+				requested_ids.append(region_id)
 	for assertion: Dictionary in preload("res://tests/map_catalog_assertions.gd").checks(world):
 		check(bool(assertion.ok),str(assertion.label))
 	var tested: int = 0
@@ -97,7 +101,7 @@ func _run() -> void:
 	rng.seed = 20261007
 	for entry: Dictionary in index:
 		var id: String = str(entry["map_id"])
-		if not id.begins_with(prefix):
+		if not id.begins_with(prefix) or (not requested_ids.is_empty() and not requested_ids.has(id)):
 			continue
 		tested += 1
 		var started_ms: int = Time.get_ticks_msec()
@@ -264,6 +268,13 @@ func _run() -> void:
 		check(world.field_map != null and world.field_minimap.field==world.field_map,id+" world services refresh after portal")
 		print("REGION TIMING ",id," full_ms=",Time.get_ticks_msec()-started_ms)
 		print("REGION CHECKED ",id)
+	if not requested_ids.is_empty():
+		var actual_ids: Array[String] = []
+		for entry: Dictionary in index:
+			var map_id: String = str(entry["map_id"])
+			if map_id.begins_with(prefix) and requested_ids.has(map_id):
+				actual_ids.append(map_id)
+		check(actual_ids == requested_ids and tested == requested_ids.size(),"shard tests every requested map exactly once")
 	if prefix.is_empty():
 		check(tested==22 and families.size()==5,"all 22 live maps and all five families tested")
 		check(authored_variant_probes==21,"all 21 active maps with authored level variants exercise real population overrides")

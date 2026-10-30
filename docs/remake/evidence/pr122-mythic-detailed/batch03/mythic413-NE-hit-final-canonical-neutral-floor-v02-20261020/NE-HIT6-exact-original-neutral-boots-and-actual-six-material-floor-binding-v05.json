@@ -1,0 +1,452 @@
+{
+  "schema": "MYTHIC413_NE_HIT_EXACT_FIXED_NEUTRAL_BOOTS_ACTUAL_SIX_MATERIAL_SURFACE_BINDING_V05",
+  "status": "FINITE_ONCE_CHOSEN_MODEL_PENDING_INDEPENDENT_AUDIT",
+  "exact_HIT_final_roster": {
+    "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-settled-guard-v04/NE-HIT6-exact-final-source-roster-v04.json",
+    "sha256": "1b6ddc5589d59f66a284e1484e9dca4d7e111608cf46c7e6155a02e806341306",
+    "bytes": 17290
+  },
+  "neutral_once_capture_reference": {
+    "path": "/workspace/scratch/mythic413-NE-idle-author-20261020-v01/NE-IDLE-v02-original-neutral-material-sole-staff-and-whole-six-floor-binding-v02.json",
+    "sha256": "f7562590cea4a246f8f67f3f5019c7c893e4c65da3eaadc38c87f50410967d19",
+    "bytes": 15539
+  },
+  "unchanged_original_native_identity": {
+    "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/NE-contact0-actual-native-background-AA-clean-r002.png",
+    "sha256": "99ffa7da2332144f3d449e9e23881bbaa130ace3027e837518148b705d92c127",
+    "bytes": 761279
+  },
+  "C": 2432,
+  "bodyunit": 2.375,
+  "common_unpadded_root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "projection": "screen=(716.2291666666666 + (10/9)*X,1054.2766007046484 + D - Z), native units; fixed chosen 2.5D material model only",
+  "shoe_capture_models": [
+    {
+      "side": "R",
+      "exact_original_foot_model": {
+        "visible_heel_native": [
+          799.5,
+          1028.0
+        ],
+        "visible_forefoot_support_native": [
+          855,
+          1005
+        ],
+        "source_plane_anchor_world": [
+          74.94375000000004,
+          -16.38063708895771,
+          9.895963615690736
+        ],
+        "source_U": [
+          0.8999999999999999,
+          -0.5230244457077886,
+          -0.5230244457077886
+        ],
+        "source_V": [
+          0.0,
+          -0.2620807276861854,
+          -1.2620807276861854
+        ],
+        "visible_sole_paint_height_native": 9.895963615690736,
+        "ground_heel_support_world": [
+          74.94375000000004,
+          -26.276600704648445,
+          0.0
+        ],
+        "ground_ball_support_world": [
+          124.89375000000003,
+          -49.276600704648445,
+          0.0
+        ],
+        "fixed_camera_ray_support_thickness_vector": [
+          0.0,
+          9.895963615690736,
+          9.895963615690736
+        ],
+        "fixed_camera_ray_support_thickness_length": 13.99500595806053,
+        "ground_control_projection_residual": 0.0,
+        "sole_longitudinal_world_axis": [
+          0.8314325254225621,
+          -0.38284180349787655,
+          -5.551115123125783e-17
+        ],
+        "native_guard": 2.0,
+        "scope": "A single compatible neutral source-plane capture plus finite occluded sole material thickness; not a unique recovered foot mesh or a per-pose footfit.",
+        "side": "R",
+        "source_native_ankle": [
+          811,
+          944
+        ],
+        "ankle_relative_heel_height": 100.0,
+        "original_actual_material": {
+          "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/actual-NE-LOAD1-semantic-speck-finish-v03/original-native-RIGHT-complete-shoe-and-leg-material-staff-speck-excluded.png",
+          "sha256": "b7074202c1a47e5c8a6b1436ef09294cbf5394206dfb3c26965d7f63a1c7d1c9",
+          "bytes": 60021
+        },
+        "source": {
+          "all_alpha_gt0_texel_count": 19727,
+          "native_texel_quad_plus_guard_min_Z": 0.9999999999999991,
+          "guard_native": 2.0,
+          "all_texel_quads_included": true
+        },
+        "P_camera_ray_thickness": [
+          0.0,
+          0.0
+        ],
+        "sole_heel_forefoot_ground_control_Z": [
+          0.0,
+          0.0
+        ],
+        "exact_native_alpha_support_mask": {
+          "path": "/workspace/scratch/mythic413-NE-idle-author-20261020-v01/NE-IDLE-original-neutral-chosen-material-floor-parts-v02/original-neutral-R-complete-native-visible-boot-exact-alpha-mask.png",
+          "sha256": "024991836415249eaedc48075ba6ab9c1a40f090ac538c4d8388b7cbdd0b7d3d",
+          "bytes": 3514
+        }
+      },
+      "all_source_alpha_texel_quad_count": 19727,
+      "guarded_source_min_Z": 0.9999999999999991
+    },
+    {
+      "side": "L",
+      "exact_original_foot_model": {
+        "visible_heel_native": [
+          527.5,
+          1187.0
+        ],
+        "visible_forefoot_support_native": [
+          575,
+          1183
+        ],
+        "source_plane_anchor_world": [
+          -169.85624999999996,
+          140.16604872992343,
+          7.44264943457189
+        ],
+        "source_U": [
+          0.8999999999999999,
+          -0.07602394754347619,
+          -0.07602394754347619
+        ],
+        "source_V": [
+          0.0,
+          0.09721562292122021,
+          -0.9027843770787798
+        ],
+        "visible_sole_paint_height_native": 7.44264943457189,
+        "ground_heel_support_world": [
+          -169.85624999999996,
+          132.72339929535156,
+          0.0
+        ],
+        "ground_ball_support_world": [
+          -127.10624999999996,
+          128.72339929535156,
+          0.0
+        ],
+        "fixed_camera_ray_support_thickness_vector": [
+          0.0,
+          7.4426494345718766,
+          7.44264943457189
+        ],
+        "fixed_camera_ray_support_thickness_length": 10.525495770360004,
+        "ground_control_projection_residual": 0.0,
+        "sole_longitudinal_world_axis": [
+          0.8968257368321179,
+          -0.08391351923575373,
+          0.0
+        ],
+        "native_guard": 2.0,
+        "scope": "A single compatible neutral source-plane capture plus finite occluded sole material thickness; not a unique recovered foot mesh or a per-pose footfit.",
+        "side": "L",
+        "source_native_ankle": [
+          554,
+          1074
+        ],
+        "ankle_relative_heel_height": 100.0,
+        "original_actual_material": {
+          "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/actual-NE-LOAD1-rig-v02/original-native-complete-LEFT-visible-boot-material.png",
+          "sha256": "a590b3a7f48497832d9e2cfe74765bf11ae48eff80ed251017c96858ce118e80",
+          "bytes": 54375
+        },
+        "source": {
+          "all_alpha_gt0_texel_count": 18010,
+          "native_texel_quad_plus_guard_min_Z": 1.0,
+          "guard_native": 2.0,
+          "all_texel_quads_included": true
+        },
+        "P_camera_ray_thickness": [
+          0.0,
+          -1.3322676295501878e-14
+        ],
+        "sole_heel_forefoot_ground_control_Z": [
+          0.0,
+          0.0
+        ],
+        "exact_native_alpha_support_mask": {
+          "path": "/workspace/scratch/mythic413-NE-idle-author-20261020-v01/NE-IDLE-original-neutral-chosen-material-floor-parts-v02/original-neutral-L-complete-native-visible-boot-exact-alpha-mask.png",
+          "sha256": "3b9c4b40a962ffb3bd000cfe9cf8900bf14a20e128b279851b349234ba9859b6",
+          "bytes": 3478
+        }
+      },
+      "all_source_alpha_texel_quad_count": 18010,
+      "guarded_source_min_Z": 0.9999999999999996
+    }
+  ],
+  "remaining_material_plane": {
+    "source_anchor": [
+      716.2291666666666,
+      1054.2766007046484
+    ],
+    "world_anchor": [
+      0.0,
+      180.0,
+      180.0
+    ],
+    "U": [
+      0.8999999999999999,
+      0.0,
+      0.0
+    ],
+    "V": [
+      0.0,
+      0.0,
+      -1.0
+    ],
+    "source_native_RGBA": {
+      "all_alpha_gt0_texel_count": 258082,
+      "native_texel_quad_plus_guard_min_Z": 114.77660070464844,
+      "guard_native": 8.0,
+      "all_texel_quads_included": true
+    },
+    "guard_including_entire_original_staff": 8.0
+  },
+  "frames": [
+    {
+      "phase": 0,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-articulated-v03/phase0-actual-NE-hit-stable_guard-v01/thunder_female-NE-hit-phase0-stable_guard-actual-native-v01.png",
+        "sha256": "589f871ad4b06d991455dee2bfb151916db4354c4d2533e5b8a2c4a0e4d9a0a0",
+        "bytes": 762136
+      },
+      "shoes": [
+        {
+          "side": "R",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 19727,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999991
+        },
+        {
+          "side": "L",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 18010,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999996
+        }
+      ],
+      "remaining_actual_head_torso_guard_legs_cloth_ribbon_fullstaff": {
+        "alpha_texel_quad_count": 258021,
+        "D_native": 180.0,
+        "guard_native": 8.0,
+        "all_centered_texel_quad_guarded_min_Z": 114.77660070464844
+      },
+      "all_actual_alpha_texels_assigned_exactly_once": true,
+      "storage_only_translation": [
+        128,
+        128
+      ]
+    },
+    {
+      "phase": 1,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-articulated-v03/phase1-actual-NE-hit-impact_response-v01/thunder_female-NE-hit-phase1-impact_response-actual-native-v01.png",
+        "sha256": "4a5c77e933156379433746128cc45ec5237d9ecf2585ded038c263bf22925d39",
+        "bytes": 739110
+      },
+      "shoes": [
+        {
+          "side": "R",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 19727,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999991
+        },
+        {
+          "side": "L",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 18010,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999996
+        }
+      ],
+      "remaining_actual_head_torso_guard_legs_cloth_ribbon_fullstaff": {
+        "alpha_texel_quad_count": 252204,
+        "D_native": 180.0,
+        "guard_native": 8.0,
+        "all_centered_texel_quad_guarded_min_Z": 114.77660070464844
+      },
+      "all_actual_alpha_texels_assigned_exactly_once": true,
+      "storage_only_translation": [
+        128,
+        128
+      ]
+    },
+    {
+      "phase": 2,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-articulated-v03/phase2-actual-NE-hit-maximum_recoil-v01/thunder_female-NE-hit-phase2-maximum_recoil-actual-native-v01.png",
+        "sha256": "ccee3c406748d584e7d660e32c779687870fcdea5037e51cb25c8abc3d8272c7",
+        "bytes": 723535
+      },
+      "shoes": [
+        {
+          "side": "R",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 19727,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999991
+        },
+        {
+          "side": "L",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 18010,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999996
+        }
+      ],
+      "remaining_actual_head_torso_guard_legs_cloth_ribbon_fullstaff": {
+        "alpha_texel_quad_count": 245829,
+        "D_native": 180.0,
+        "guard_native": 8.0,
+        "all_centered_texel_quad_guarded_min_Z": 114.77660070464844
+      },
+      "all_actual_alpha_texels_assigned_exactly_once": true,
+      "storage_only_translation": [
+        128,
+        128
+      ]
+    },
+    {
+      "phase": 3,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-articulated-v03/phase3-actual-NE-hit-counterbalance-v01/thunder_female-NE-hit-phase3-counterbalance-actual-native-v01.png",
+        "sha256": "3221a5d1dcc4b37fc2a3a43a144af3dc53de554c82e28481db005fdf7ae6bdbf",
+        "bytes": 741363
+      },
+      "shoes": [
+        {
+          "side": "R",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 19727,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999991
+        },
+        {
+          "side": "L",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 18010,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999996
+        }
+      ],
+      "remaining_actual_head_torso_guard_legs_cloth_ribbon_fullstaff": {
+        "alpha_texel_quad_count": 253004,
+        "D_native": 180.0,
+        "guard_native": 8.0,
+        "all_centered_texel_quad_guarded_min_Z": 114.77660070464844
+      },
+      "all_actual_alpha_texels_assigned_exactly_once": true,
+      "storage_only_translation": [
+        128,
+        128
+      ]
+    },
+    {
+      "phase": 4,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-articulated-v03/phase4-actual-NE-hit-regaining_control-v01/thunder_female-NE-hit-phase4-regaining_control-actual-native-v01.png",
+        "sha256": "8ab36e6645958e244e300d4cbf652702cc6340a6e2f75338468659b95173b008",
+        "bytes": 755407
+      },
+      "shoes": [
+        {
+          "side": "R",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 19727,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999991
+        },
+        {
+          "side": "L",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 18010,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999996
+        }
+      ],
+      "remaining_actual_head_torso_guard_legs_cloth_ribbon_fullstaff": {
+        "alpha_texel_quad_count": 258976,
+        "D_native": 180.0,
+        "guard_native": 8.0,
+        "all_centered_texel_quad_guarded_min_Z": 114.77660070464844
+      },
+      "all_actual_alpha_texels_assigned_exactly_once": true,
+      "storage_only_translation": [
+        128,
+        128
+      ]
+    },
+    {
+      "phase": 5,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-NE-hit-author-20261020-v01/actual-NE-HIT6-own-native-settled-guard-v04/phase5-actual-NE-hit-regained_guard_settled-v01/thunder_female-NE-hit-phase5-regained_guard_settled-actual-native-v04.png",
+        "sha256": "18a9208863375df1e4a5e9830a3770e72a7873e15ee7b3f78a7405fd7ec6113c",
+        "bytes": 754400
+      },
+      "shoes": [
+        {
+          "side": "R",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 19727,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999991
+        },
+        {
+          "side": "L",
+          "original_native_boot_RGBA_mismatch": 0,
+          "actual_alpha_texel_quad_count": 18010,
+          "guard_native": 2.0,
+          "all_centered_texel_quad_guarded_min_Z": 0.9999999999999996
+        }
+      ],
+      "remaining_actual_head_torso_guard_legs_cloth_ribbon_fullstaff": {
+        "alpha_texel_quad_count": 259186,
+        "D_native": 180.0,
+        "guard_native": 8.0,
+        "all_centered_texel_quad_guarded_min_Z": 114.77660070464844
+      },
+      "all_actual_alpha_texels_assigned_exactly_once": true,
+      "storage_only_translation": [
+        128,
+        128
+      ]
+    }
+  ],
+  "stationary_fixed_material_controls_shared_all6": true,
+  "perpose_C_root_ground_or_foot_fit": false,
+  "scope_and_limits": [
+    "This bounds a single compatible collection of source-capture material surfaces; hidden unique anatomy or bone lengths cannot be inferred from one unchanged 2D stance.",
+    "The two visible full-boot material capture planes and original body/staff plane are distinct. Occluded joins can be connected along finite same-projection camera-ray ruled seams between positive-height surfaces; no new painted material, root, scale or stance adjustment is asserted.",
+    "Actual boot geometry and all original RGBA remain bitexact. The finite hidden sole thickness model is declared, not presented as a measured bitmap vertex. RIGHT capture matches retained NE canonical HFA plane exactly; LEFT uses the original ankle554,1074 as one finite100native-height capture control, not unique recovered anatomy.",
+    "All alpha>0 original/raster texel quads and guards are counted. Sole support groundcontrols are explicit authoring controls, and no global alpha-height floor is assumed.",
+    "The neutral original source99ffa boots and once-chosen capture models are reused only after independently checking every actual HIT boot RGBA and every actual six-frame raster texel. RUN pose0 is not substituted.",
+    "This is a bounded compatible material/support construction, not uniquely recovered hidden anatomy or exact 3D body bone evidence. Actual head/torso and guard fields supply the material motion; numerical positive bounds do not replace actual source/cycle quality approval."
+  ],
+  "role_seconds": 0.22,
+  "phase_seconds": 0.03666666666666667,
+  "Godot_hit_window_or_profile_modified": false,
+  "actor_approvals_added": 0
+}

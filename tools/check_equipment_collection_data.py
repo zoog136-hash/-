@@ -50,7 +50,14 @@ def audit(root):
     hud=(root/'scripts/ui/renewal_hud.gd').read_text()
     assert '"equipment_collections": open_equipment_collections()' in hud
     assert '["equipment_collections","장비 컬렉션"]' in hud
-    assert 'equipment_collection_button.disabled = category != "아이템"' in hud
+    # PR183 makes the equipment-collection route available from every catalog
+    # category, including compact card views. Enforce its real control binding,
+    # its visible label, and its always-enabled state instead of the old
+    # item-only rule, which would invalidate the improved touch navigation.
+    assert 'equipment_collection_button = UI.button("장비 컬렉션",open_equipment_collections' in hud
+    assert 'equipment_collection_button.disabled = false' in hud
+    assert 'equipment_collection_button.text = "장비 컬렉션"' in hud
+    assert 'equipment_collection_button.disabled = category != "아이템"' not in hud
     report={'scope':'STATIC_DATA_AND_BINDING_ONLY_NOT_GODOT_EXECUTION','collection_count':447,'data_ready':390,'slots':1659,'item_names':432,'exact_bound_names':len({x['name'] for x in d['item_names']}&names),'binding_status':dict(reasons),'unmatched_names':sorted({x['name'] for x in d['item_names']}-names),'supported_effect_codes':sorted(codes),'save_keys_checked':len(keys),'rows':rows,'data_sha256':hashlib.sha256((root/'data/collections/equipment_collections.json').read_bytes()).hexdigest()}
     return report
 if __name__=='__main__':

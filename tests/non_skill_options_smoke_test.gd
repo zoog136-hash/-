@@ -32,11 +32,15 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	world.set("equipped_items", {})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_catalog", {"변신":{},"마법인형":{},"성물":{}})
+	world.call("_invalidate_equipment_static")
 	var max_mp_before: int = int(world.call("_effective_max_mp"))
 	world.set("equipped_items", {"tshirt":{"name":"테스트용 MP+30 티셔츠", "slot":"tshirt", "desc":"방어 +2 · MP +30"}})
+	world.call("_invalidate_equipment_static")
 	check(int(world.call("_effective_max_mp")) == max_mp_before + 30, "item MP+30 must increase actual max MP")
 	world.set("equipped_items", {"tshirt":{"name":"테스트용 MP+30 티셔츠", "slot":"tshirt", "mpFlat":30, "desc":"방어 +2 · MP +30"}})
+	world.call("_invalidate_equipment_static")
 	check(int(world.call("_effective_max_mp")) == max_mp_before + 30, "typed MP bonus must not stack with same description")
 
 	var weight: Dictionary = world.call("_character_stats_snapshot")
@@ -47,6 +51,7 @@ func _run() -> void:
 	check(str(world.call("_monster_size_class", {"name":"테스트", "size_class":"large"})) == "large", "explicit large metadata")
 
 	world.set("equipped_items", {})
+	world.call("_invalidate_equipment_static")
 	world.set("inventory", {"낡은 장검":2, "무기 마법 주문서 (각인)":5})
 	world.set("item_instances", {})
 	world.set("enhancement_levels", {})
@@ -70,6 +75,7 @@ func _run() -> void:
 		check(levels.has(4) and levels.has(8), "enhancement chooser uses each instance level")
 		var weapon: Dictionary = {"name":"낡은 장검","slot":"weapon","instance_id":ids[1]}
 		world.set("equipped_items", {"weapon":weapon})
+		world.call("_invalidate_equipment_static")
 		check(int(world.call("_equipment_enhancement_level", "weapon")) == 8, "equipped copy gains own enhancement")
 		var attack_before: int = int(world.call("_effective_attack"))
 		(instances[ids[0]] as Dictionary)["level"] = 12

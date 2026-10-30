@@ -1,0 +1,37 @@
+name: TWILIGHT Consolidated Specialized Preflight
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: consolidated-preflight-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install pinned offline resource verification dependencies
+        run: python3 -m pip install 'Pillow==12.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
+      - name: Run source, map, visual, inventory and CI contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/ci_consolidated_preflight.py 2>&1 | tee ci-consolidated-preflight.log
+          git diff --exit-code -- scripts data assets tools tests .github
+      - name: Preserve consolidated evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-ci-consolidated-${{ github.sha }}
+          path: ci-consolidated-preflight.log
+          if-no-files-found: warn

@@ -1,0 +1,164 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "N",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v02iso01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-N-current-idle-phase0-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-N-current-idle-phase0-lossless.png": "e4e0809784769d0d9fe73c7a8db7b17c81ea1f89a7269f559c5f7b47dc2c5258"
+  },
+  "reference_provenance": {
+    "direction": "N",
+    "selected_idle_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
+    "source_sha256": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488",
+    "region": [
+      49,
+      97,
+      451,
+      372
+    ],
+    "reference": "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-N-current-idle-phase0-lossless.png",
+    "reference_sha256": "e4e0809784769d0d9fe73c7a8db7b17c81ea1f89a7269f559c5f7b47dc2c5258",
+    "operation": "exact_RGBA_crop_no_resize_no_recolor",
+    "role": "idle",
+    "stage_revision": "r062",
+    "raw_rgba_sha256": "92165cfc800a53f769e88c8e64b8620004a7c470c270dfdbbeaaead0dd0629af"
+  },
+  "transparent_background": true,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v01.png",
+  "corrective_reason": "Confirmed current hit peak phase2 duplicated empty RIGHT fist plus existing low RIGHT blade/grip, creating three arms. New six-pose source uses ONLY correct current directional idle. Continuous LOW right blade arm through all six; only EMPTY LEFT arm flinches. Fix rear/front plane where required without losing hit jerk.",
+  "user_authorization": "Private production image generation and bounded private JPEG inspection allowed; no mainchat images/binary. Root handles Git/native integration.",
+  "prompt": "CAMERA N / DUE NORTH: pure BACK view as reference, helmet rear plates and back spinal armor toward viewer, face and front pink chest jewel HIDDEN away. Body/pelvis/head point UP/NORTH in all six. Anatomical RIGHT is image RIGHT with same low blade; anatomical LEFT is image LEFT near cape. Do not draw a frontal pink breastplate or turn face toward viewer during recoil.\n\nEdit the SAME Halpas winged armored boss in the ONLY reference into SIX different directional HIT-REACTION poses. Preserve exact closed gold-horn black helmet, black/gold segmented armor, purple-pink crystal feather fan wings with warm veins rooted at the two upper-back shoulder sockets, torn burgundy LEFT/back cape and ONE short broad purple crystal blade. Same model, equipment, proportions, perspective and directional body plane in all six. Existing flying/hovering stance is deliberate: keep believable complete two-leg chains, do not invent a floor.\n\nCRITICAL TWO-ARM ANATOMY: only TWO arms total. Anatomical RIGHT arm CONTINUOUSLY grips the existing blade LOW beside its same hip in ALL SIX. Keep the right shoulder, upper arm, elbow, forearm, wrist, hand and blade connected as ONE unbroken natural low chain, moving only a small amount with torso recoil. NEVER lift an empty RIGHT fist while leaving the original low blade arm behind. NEVER add a third arm or another hand near the chest/helmet. The OTHER anatomical LEFT arm is always EMPTY and is the ONLY arm that flinches upward, with one visibly connected left shoulder/elbow/wrist chain. No duplicated forearms/fists, no floating sword, no hand swap. Wings are BACK appendages, never spare arms.\n\nReading order 0 guard with blade low and empty left hand relaxed; 1 immediate impact jerk, head/upper torso recoil, empty LEFT elbow begins to bend; 2 clear peak recoil: upper torso/head lean back slightly and EMPTY LEFT forearm alone braces toward upper chest while RIGHT hand still holds blade LOW at hip; 3 release, left forearm starts to drop, knees and wing roots absorb recoil; 4 recovery half-way toward guard with cape/wings lagging; 5 settle near guard, left hand low again. Six genuinely distinct head/torso/left-arm/wing-root/cloth poses with a visible brief hit jerk at 1-2, no attack swing, no extra striking arm, no shared static translation, no camera rotation or body spin. Allow natural partial far-arm occlusion, never fill that gap with an extra fist.\n\nTransparent PNG, exact 1024x1536, two columns by three rows, six complete figures. Keep every full silhouette including wing tips, cape, blade, horns and toes inside its own 512px cell with at least 42px transparent gutter around all sides; target overall figure width 390px and same head-to-hip pixel scale all six. Preserve full feather fans and blade rather than clipping or shrinking individual gear. Clean detailed RPG sprite cutouts, opaque materials, alpha0 background and interior gaps, thin 1px edge antialias. No outer glow, mist, shadow, floor, particles, sparks, trails, labels, numbers, grids, extra objects or afterimages.",
+  "requested_at": "2026-10-19T13:02:44.541266+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "All six preserve due NORTH pure rear plane: closed helmet rear plates, rear spinal/hip armor, purple fan roots and burgundy LEFT-back cape. No frontal face or pink chest breastplate appears during reaction.",
+      "Two arms throughout: anatomical RIGHT/imageRIGHT shoulder-elbow-wrist stays low and continuously holds the same compact purple blade. EMPTY anatomical LEFT/imageLEFT arm alone extends then bends toward helmet at peak2 and lowers through recovery. No extra right empty fist, disconnected grip or third arm.",
+      "Six distinct reaction poses: low guard0; empty LEFT arm lifts outward1 while head/shoulders recoil; left elbow folds to head/upper torso at2; releases3; drops4; settles5. Wings fan/root and cape folds respond without turning the north-facing torso or replacing the reaction with a weapon attack.",
+      "Same gold horns, black/gold plate segments, full purple crystal fan wings, original blade and torn burgundy cape. Complete uncut silhouettes; zero alpha>100 pixels on outer image edge. Existing flight/overlapping legs match reference; no standing-foot direction test imposed."
+    ],
+    "visual_limitations": [
+      "Source-only review. Actual SpriteFrames scale/anchors, hit cadence and idle entry require root integration and physical runtime quality review. No actor approval or default catalog enable."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "801249dae822e4a0523a55f4d9a8aa7e818260a68555b838fccbeeccce6c70b5",
+    "raw_bytes": 2736274,
+    "request_sha256": "b074e0a769211ee2eef510ca0c0dbccc1161884bf557687f371251eaf21f39c5",
+    "review_sha256": "40b1a9832f3a1f91bde50f6e922586d84149201cf75c336ece97c87f926e7fda"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-e4e0809784769d0d9fe73c7a8db7b17c81ea1f89a7269f559c5f7b47dc2c5258.png",
+      "sha256": "e4e0809784769d0d9fe73c7a8db7b17c81ea1f89a7269f559c5f7b47dc2c5258",
+      "bytes": 321663,
+      "original_reference": "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-N-current-idle-phase0-lossless.png"
+    }
+  ],
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "docs/remake/evidence/pr122-mythic-detailed/batch03/request-166-halpas-N-hit-v02.json",
+  "parent_request_sha256": "d9f791196975b112f94bdf6d92ebdf553d319d3c902ec832daf119ad1dacd4f9",
+  "processing_proof": {
+    "source_sha256": "801249dae822e4a0523a55f4d9a8aa7e818260a68555b838fccbeeccce6c70b5",
+    "output_sha256": "c07306fb8348b7b60379d47a50b4ec4e97f08b20548c649e408bfe6fae4012e3",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v02.png",
+    "output": "/workspace/scratch/halpas-N-hit-v02iso01.png",
+    "preserved_foreground_rgba": true,
+    "source_canvas": [
+      1024,
+      1536
+    ],
+    "output_canvas": [
+      1536,
+      1536
+    ],
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 88360,
+    "maximum_removed_alpha": 15,
+    "foreground_pixels": 681407,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          23
+        ],
+        "pixels": 117411,
+        "foreground_pixels": 110865,
+        "rgba_sha256": "07f20dce4f84c1da2f7adb41bee6f41c9a1e91ca84693a3e1bf62ae197f5b28c"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          6
+        ],
+        "pixels": 112676,
+        "foreground_pixels": 106285,
+        "rgba_sha256": "e5dde9d665f630158d181f93ce148232f1dd67fa375005d4cc246ca1ba055fca"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          43
+        ],
+        "pixels": 126269,
+        "foreground_pixels": 119232,
+        "rgba_sha256": "f69a9beab6d6109ea88acbccacd2b2f2ac57314e34d86e1cbe8d9722a3a4aed8"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          43
+        ],
+        "pixels": 117640,
+        "foreground_pixels": 111119,
+        "rgba_sha256": "a8adcfb489c601be5c492d0d9f4dd5a4b7f0628f4641d18dceb2c808facab4c8"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          54
+        ],
+        "pixels": 123413,
+        "foreground_pixels": 116839,
+        "rgba_sha256": "b095fe6e46963d0d32d7a0740b32bb809abb08e0e2b1de62f7d01d77a7ff7749"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          58
+        ],
+        "pixels": 123787,
+        "foreground_pixels": 117067,
+        "rgba_sha256": "7cfd23d7aa7846d4039a98f1c5797b11885a8bbf7ee840c95464eb69adcca29f"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-hit-v02iso01.png",
+  "output_sha256": "c07306fb8348b7b60379d47a50b4ec4e97f08b20548c649e408bfe6fae4012e3",
+  "output_bytes": 2009777,
+  "original_generated_file": "/workspace/scratch/halpas-N-hit-v02iso01.png"
+}

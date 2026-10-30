@@ -1,0 +1,138 @@
+{
+  "schema": "independent-private-actual-NW-run-load1-v02-gate-v1",
+  "status": "HOLD_ACTUAL_LOWERBODY_JOINT_AND_RUN_RECOVERY_COMPLETION",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v02/thunder_female-NW-run-load1-actual-rig-v02.png",
+    "sha256": "e849707a43251e400d8941175d9bd4ffc57e63ae3774264fcb3a96b0370cb04b",
+    "bytes": 806288
+  },
+  "author_provenance": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v02/load1-actual-rig-placement-and-source-provenance-v02.json",
+    "sha256": "eea746850ee36e734bb2aadce8385911f090ca045fd5838229982957819d5ec0",
+    "bytes": 3301
+  },
+  "contact0_static_dependency": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-contact0-v08-independent-static-source-PASS-v02.json",
+    "sha256": "999b5aff5ecbd471219953eac26568b544977871317bbcdc89348637acb9f572",
+    "bytes": 5974
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "raw_canvas": [
+    1536,
+    1536
+  ],
+  "whole_source_scale_change": false,
+  "actual_part_rigging_policy": "Allowed. Final visible anatomy/material/joints/motion judged directly; no automatic method HOLD.",
+  "private_actual_views": [
+    "Full actual LOAD source",
+    "One narrow knee/ankle/feet crop"
+  ],
+  "same_two_actual_lowerbody_defects": [
+    {
+      "name": "Unfinished LEFT calf/tarsal-to-shoe connection",
+      "ROI_xyxy": [
+        625,
+        1060,
+        800,
+        1195
+      ],
+      "actual_visible_finding": "Faceted missing wedges and broken/duplicate-looking gold collar boundaries at distal calf-to-rigid shoe; final source still reads as part joins rather than finished anatomy.",
+      "minimum_fix": "Retouch continuous actual calf/tarsal/shoe material, edge and AA while preserving the real stiletto shoe geometry and planted support locator."
+    },
+    {
+      "name": "RIGHT recovery not a folded RUN load/passing phase",
+      "actual_visible_finding": "Far leg hangs almost extended and its shoe clusters beside planted stance shoe; actual passing foot lacks the requested clear folded-run recovery.",
+      "minimum_fix": "Raise actual RIGHT tarsal/ankle and fold/drivetheknee using consistent bones and correctly bound actual source knee/tarsal material. Preserve shoe shape.",
+      "finite_proposal_not_authority": {
+        "R_ankle_from": [
+          669,
+          1167
+        ],
+        "R_ankle_to": [
+          669,
+          1015
+        ],
+        "R_knee_about": [
+          527,
+          875
+        ],
+        "R_toe_y_about": 1132,
+        "note": "Anatomical intent only; actual finished image/bone fit must validate it. No global/C/root change."
+      }
+    }
+  ],
+  "scoped_pair_clock_check": {
+    "rig_common_root_both": [
+      669,
+      1267.95
+    ],
+    "storage_translation": [
+      0,
+      0
+    ],
+    "absolute_body_ground_root_status": "Author model proposal only, not independently approved. Same root used for pair, no perpose heel fit.",
+    "target_continuous_heel0": [
+      583.5,
+      1191
+    ],
+    "target_continuous_heel1": [
+      722.6928985028028,
+      1316.2736086525224
+    ],
+    "exact_continuous_source_delta": [
+      139.19289850280273,
+      125.27360865252246
+    ],
+    "Player_source_to_world_xy": [
+      0.08534482758612,
+      0.0948275862068
+    ],
+    "Player_NW_step_world_xy": [
+      -11.879393923933998,
+      -11.879393923933998
+    ],
+    "continuous_clock_world_drift": [
+      0,
+      0
+    ],
+    "independent_raster_alpha16_heel1": {
+      "y": 1316,
+      "x_range": [
+        718,
+        728
+      ],
+      "center_x": 723
+    },
+    "raster_heel_marker_versus_continuous_world_drift": [
+      0.02620952432973997,
+      -0.02594564808399949
+    ],
+    "raster_marker_uncertainty_raw": [
+      4,
+      2
+    ],
+    "decision": "PASS_CLOCK_TRANSFORM_ONLY_WITHIN_RASTER_MARKER_UNCERTAINTY, not actual physical source approval.",
+    "shoe_geometry": "Foot affine has unchanged source/destination vector, so rigid translation without geometric resize/rotation. Rendering uses BICUBIC subpixel sampling; not a bit-exact pixel-copy claim."
+  },
+  "unverified_physical_requirements": [
+    "Actual finished anatomical knee/tarsal chain",
+    "Consistent 3D bone interpretation/body-ground root",
+    "Raised actual RIGHT recovery foot under source body registration",
+    "Full phase/loop/runtime clock and footprint"
+  ],
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger-through-load1-v02-frozen.json",
+    "sha256": "964132f0f18bdb27a4c0c8e656a245293fd99e6e4997659503033ca559bdb945",
+    "bytes": 7369
+  },
+  "clock_transform_only_pass": true,
+  "actual_source_phase_approved": false,
+  "physical_planting_approved": false,
+  "allow_dependent_FLIGHT_as_approved_cycle": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

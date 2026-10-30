@@ -1,0 +1,158 @@
+{
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "death",
+  "version": "NEdeathSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "55d0ccc20491a68e4487a93f30439a6c898df30f4599b7dafb33e36ca0cf619f",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "55d0ccc20491a68e4487a93f30439a6c898df30f4599b7dafb33e36ca0cf619f",
+    "base_geometry_sha256": "e876effb4bfa23b56c28cc517456ddc0a4455f4d2649f3ed76e787e05a355687",
+    "direction": "NE",
+    "regions": [
+      [
+        523,
+        324,
+        768,
+        1123
+      ],
+      [
+        2828,
+        377,
+        840,
+        1166
+      ],
+      [
+        585,
+        2944,
+        1104,
+        1136
+      ],
+      [
+        3022,
+        3264,
+        1132,
+        976
+      ],
+      [
+        590,
+        5829,
+        1319,
+        842
+      ],
+      [
+        2793,
+        5855,
+        1427,
+        782
+      ]
+    ],
+    "nearest_owner_sha256": "1f09c912b2f82a2dbdd2983fc3da063cccd6b3c88d4256e55b7498194ce099ca",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof 3f1cfc96941fb4e9a065a486db12f50d1849a721836834042e7ea5930d2aedd8"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "55d0ccc20491a68e4487a93f30439a6c898df30f4599b7dafb33e36ca0cf619f",
+    "direction": "NE",
+    "role": "death",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        972,
+        1310
+      ],
+      [
+        3276,
+        1310
+      ],
+      [
+        972,
+        3614
+      ],
+      [
+        3276,
+        3614
+      ],
+      [
+        972,
+        5918
+      ],
+      [
+        3276,
+        5918
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2432,
+      2432,
+      2432,
+      2432,
+      2432,
+      2432
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "3f1cfc96941fb4e9a065a486db12f50d1849a721836834042e7ea5930d2aedd8",
+  "authored_common_root_float": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "common_root_integer": [
+    716,
+    1054
+  ],
+  "common_root_rounding_delta": [
+    -0.22916666666662877,
+    -0.27660070464844466
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "The actual NE six-source sequence shows loss of balance, buckling, knees down, forward torso collapse, prone settling, then a held dead terminal. The head, torso, pelvis and limbs change through dedicated articulated poses while retaining the same character, costume and anatomical RIGHT staff.",
+      "The original straight leather card ends and RIGHT white/gold elbow gaps were held in v05. The accepted repairs use the actual original black/gold knee strip continuously across the existing femur/calf surfaces, bounded native ankle leather, and the complete curved white/gold sleeve; narrow actual checks covered repaired knees2/5 and all remaining new joints0/1/3/4. The rejected broad circular caps remain historical HOLD evidence.",
+      "The complete hand/grip and both staff ends remain a single rigid node through the fall; full equipment, white skirt, blue/gold coattails and original skin material remain recognizable and complete without source-edge clipping. Source v13 moves the genuine small ribbon and LEFT cuff remnants to their proper moving owners with unchanged original RGBA.",
+      "The visible body progression, cloth settling and final prone hold are coherent for a non-looping death. The final terminal does not visibly return toward a living pose. Actual runtime death sampling is .8 seconds; the staged resource role duration .65 seconds is retained separately.",
+      "All114 actual editable rasters reproduce the six final PNGs exactly. The independently checked authored finite surface model includes source and actual raster texel quads, continuous knee/sleeve and arclength cloth, fixed275.2625 femur/tibia lengths, and rigid grip/staff source Gram; the smallest guarded surface clearance is0.5810119386 native."
+    ],
+    "visual_limitations": [
+      "Source appearance and visible fall/terminal quality are approved for this exact six-PNG scope. This is not full actor approval, production binding, or evidence of any game test.",
+      "Hidden depth, foot yaw, anatomical joint centers and the finite60native torso/head support hull are declared compatible construction choices, not unique3D measurements recovered from the image. Source and actual material bounds validate that chosen model only.",
+      "The original v05 whole-six view is reused with narrowly viewed accepted repairs and exact unchanged-control/owner-transfer evidence; no duplicate whole-six view was introduced. Remaining tiny diagonal AA source-edge components are recorded without changing thresholds.",
+      "The actual .8-second runtime death clock is distinct from the unchanged .65-second resource authoring duration; the final phase is held rather than looped.",
+      "The final atlas and request preserve all six reviewed source RGBA images, with one identical integer root quantization for all poses. No new image view was needed."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "55d0ccc20491a68e4487a93f30439a6c898df30f4599b7dafb33e36ca0cf619f",
+    "raw_bytes": 5023894,
+    "request_sha256": "907284cab17e1ac2c7848054146045df1cbe002321baa30cab4a3f1d4e33ce14",
+    "review_sha256": "adaab90a19df6e8c64e4aa95d1a0a8b76abecbd438ed2d508148360098006a3e"
+  },
+  "frozen_author_inputs": {
+    "original_generated_file": "/workspace/scratch/mythic413-NE-death-actual-packed-r001-20261020/thunder_female-NE-death-six-actual-poses-r001.png",
+    "snapshot_generated_file": "/tmp/twilight-413-frozen-input-fxbm_azl/reviewed-source.png",
+    "sha256": {
+      "/workspace/scratch/mythic413-NE-death-actual-packed-r001-20261020/request-NEdeathSixActualRig01.json": "907284cab17e1ac2c7848054146045df1cbe002321baa30cab4a3f1d4e33ce14",
+      "/workspace/scratch/mythic413-NE-death-actual-packed-r001-20261020/thunder_female-NE-death-six-actual-poses-r001.png": "55d0ccc20491a68e4487a93f30439a6c898df30f4599b7dafb33e36ca0cf619f",
+      "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEdeathSixActualRig01-independent-final-source-cycle-PASS-v01.json": "adaab90a19df6e8c64e4aa95d1a0a8b76abecbd438ed2d508148360098006a3e",
+      "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+    }
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch04/thunder_female-NE-death-NEdeathSixActualRig01.png",
+  "output_sha256": "55d0ccc20491a68e4487a93f30439a6c898df30f4599b7dafb33e36ca0cf619f",
+  "output_bytes": 5023894,
+  "original_generated_file": "/tmp/twilight-413-frozen-input-fxbm_azl/reviewed-source.png"
+}

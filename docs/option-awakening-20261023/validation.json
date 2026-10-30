@@ -1,0 +1,1277 @@
+{
+  "generated_utc": "2026-10-23T14:41:14.278672+00:00",
+  "pr": "https://github.com/zoog136-hash/-/pull/152",
+  "implementation_commit": "10e3ad3986327790e1f642cf6d19c6d6bb64c854",
+  "base_commit": "e0a14f07da7764598822be669d05b3c2985d13eb",
+  "environment": {
+    "godot": "4.7.2",
+    "platform": "Linux",
+    "renderer": "OpenGL Compatibility / Mesa llvmpipe",
+    "isolated_user_saves": true,
+    "synthetic_ci_fixtures": "disabled"
+  },
+  "full_regression": {
+    "registered_checks": 263,
+    "passed": 247,
+    "failed": [
+      "hunting_paths_test",
+      "remake_door_runtime_test"
+    ],
+    "skipped": [
+      "aden_faith_png_runtime_test",
+      "domination_111_runtime_test",
+      "l1j_map_grid_test",
+      "l1j_png_load_test",
+      "l1j_spx_frames_test",
+      "native_png_normal_travel_test",
+      "native_png_review_runtime_test",
+      "native_png_runtime_test",
+      "native_png_streaming_test",
+      "original_map_catalog_test",
+      "original_world_runtime_test",
+      "png_refinement_runtime_test",
+      "png_world_runtime_test",
+      "source_first_map_test"
+    ],
+    "not_run": [],
+    "execution": "53 completed prefix checks, then all 210 remaining checks in three independent project copies (70 each). No registered check omitted.",
+    "timeouts": "Prefix default 150 seconds; parallel remainder and bounded rechecks requested 300 seconds. Existing longer per-test budgets retained.",
+    "initial_failures": [
+      "aden_faith_png_monster_spawns_test",
+      "hunting_paths_test",
+      "hunting_world_capture_test",
+      "option_awakening_field_render_test",
+      "option_awakening_vfx_test",
+      "remake_door_runtime_test"
+    ],
+    "successful_rechecks": [
+      {
+        "check": "aden_faith_png_monster_spawns_test",
+        "initial_status": "FAIL",
+        "final_status": "PASS",
+        "log": "aden-recheck/aden_faith_png_monster_spawns_test.log"
+      },
+      {
+        "check": "hunting_world_capture_test",
+        "initial_status": "FAIL",
+        "final_status": "PASS",
+        "log": "capture-recheck/hunting_world_capture_test.log"
+      },
+      {
+        "check": "option_awakening_field_render_test",
+        "initial_status": "FAIL",
+        "final_status": "PASS",
+        "log": "producer-recheck/option_awakening_field_render_test.log"
+      },
+      {
+        "check": "option_awakening_vfx_test",
+        "initial_status": "FAIL",
+        "final_status": "PASS",
+        "log": "producer-recheck/option_awakening_vfx_test.log"
+      }
+    ],
+    "results": {
+      "import": {
+        "status": "PASS",
+        "log": "prefix/import.log"
+      },
+      "bake_navigation": {
+        "status": "PASS",
+        "log": "prefix/bake_navigation.log"
+      },
+      "boot": {
+        "status": "PASS",
+        "log": "prefix/boot.log"
+      },
+      "actor_motion_test": {
+        "status": "PASS",
+        "log": "prefix/actor_motion_test.log"
+      },
+      "aden_boss_special_test": {
+        "status": "PASS",
+        "log": "prefix/aden_boss_special_test.log"
+      },
+      "aden_building_test": {
+        "status": "PASS",
+        "log": "prefix/aden_building_test.log"
+      },
+      "aden_courtyard_test": {
+        "status": "PASS",
+        "log": "prefix/aden_courtyard_test.log"
+      },
+      "aden_faith_png_monster_spawns_test": {
+        "status": "PASS",
+        "log": "aden-recheck/aden_faith_png_monster_spawns_test.log",
+        "initial_log": "prefix/aden_faith_png_monster_spawns_test.log"
+      },
+      "aden_faith_png_runtime_test": {
+        "status": "SKIP",
+        "log": "prefix/aden_faith_png_runtime_test.log",
+        "reason": "ADEN_FAITH_SKIP: real private PNG pack and OpenGL required; no PNG runtime claim"
+      },
+      "aden_faith_png_save_migration_test": {
+        "status": "PASS",
+        "log": "prefix/aden_faith_png_save_migration_test.log"
+      },
+      "aden_giran_review_test": {
+        "status": "PASS",
+        "log": "prefix/aden_giran_review_test.log"
+      },
+      "aden_ground_continuity_test": {
+        "status": "PASS",
+        "log": "prefix/aden_ground_continuity_test.log"
+      },
+      "aden_png_pack_test": {
+        "status": "PASS",
+        "log": "prefix/aden_png_pack_test.log"
+      },
+      "aden_png_scale_migration_test": {
+        "status": "PASS",
+        "log": "prefix/aden_png_scale_migration_test.log"
+      },
+      "aden_png_source_integration_test": {
+        "status": "PASS",
+        "log": "prefix/aden_png_source_integration_test.log"
+      },
+      "aden_remake_runtime_test": {
+        "status": "PASS",
+        "log": "prefix/aden_remake_runtime_test.log"
+      },
+      "aden_shoreline_test": {
+        "status": "PASS",
+        "log": "prefix/aden_shoreline_test.log"
+      },
+      "aden_source_routes_test": {
+        "status": "PASS",
+        "log": "prefix/aden_source_routes_test.log"
+      },
+      "aden_terrain_polish_test": {
+        "status": "PASS",
+        "log": "prefix/aden_terrain_polish_test.log"
+      },
+      "aden_world_systems_test": {
+        "status": "PASS",
+        "log": "prefix/aden_world_systems_test.log"
+      },
+      "aden_world_visuals_test": {
+        "status": "PASS",
+        "log": "prefix/aden_world_visuals_test.log"
+      },
+      "ain_exp_progression_test": {
+        "status": "PASS",
+        "log": "prefix/ain_exp_progression_test.log"
+      },
+      "ainhasad_smoke_test": {
+        "status": "PASS",
+        "log": "prefix/ainhasad_smoke_test.log"
+      },
+      "animation_catalog_test": {
+        "status": "PASS",
+        "log": "prefix/animation_catalog_test.log"
+      },
+      "animation_presentation_test": {
+        "status": "PASS",
+        "log": "prefix/animation_presentation_test.log"
+      },
+      "animation_restore_test": {
+        "status": "PASS",
+        "log": "prefix/animation_restore_test.log"
+      },
+      "authored_frames_test": {
+        "status": "PASS",
+        "log": "prefix/authored_frames_test.log"
+      },
+      "authored_state_motion_test": {
+        "status": "PASS",
+        "log": "prefix/authored_state_motion_test.log"
+      },
+      "blessed_scroll_item_visual_test": {
+        "status": "PASS",
+        "log": "prefix/blessed_scroll_item_visual_test.log"
+      },
+      "boss_presentation_test": {
+        "status": "PASS",
+        "log": "prefix/boss_presentation_test.log"
+      },
+      "card_draw_fusion_test": {
+        "status": "PASS",
+        "log": "prefix/card_draw_fusion_test.log"
+      },
+      "card_pack_items_test": {
+        "status": "PASS",
+        "log": "prefix/card_pack_items_test.log"
+      },
+      "card_special_policy_test": {
+        "status": "PASS",
+        "log": "prefix/card_special_policy_test.log"
+      },
+      "catalog_effects_smoke_test": {
+        "status": "PASS",
+        "log": "prefix/catalog_effects_smoke_test.log"
+      },
+      "catalog_full_browser_smoke_test": {
+        "status": "PASS",
+        "log": "prefix/catalog_full_browser_smoke_test.log"
+      },
+      "combat_hud_test": {
+        "status": "PASS",
+        "log": "prefix/combat_hud_test.log"
+      },
+      "combat_resolution_equivalence_test": {
+        "status": "PASS",
+        "log": "prefix/combat_resolution_equivalence_test.log"
+      },
+      "combat_timeline_lifecycle_test": {
+        "status": "PASS",
+        "log": "prefix/combat_timeline_lifecycle_test.log"
+      },
+      "combat_timing_test": {
+        "status": "PASS",
+        "log": "prefix/combat_timing_test.log"
+      },
+      "combat_vfx_test": {
+        "status": "PASS",
+        "log": "prefix/combat_vfx_test.log"
+      },
+      "consumable_auto_safety_test": {
+        "status": "PASS",
+        "log": "prefix/consumable_auto_safety_test.log"
+      },
+      "consumable_smoke_test": {
+        "status": "PASS",
+        "log": "prefix/consumable_smoke_test.log"
+      },
+      "crafting_atomic_test": {
+        "status": "PASS",
+        "log": "prefix/crafting_atomic_test.log"
+      },
+      "crafting_material_drop_test": {
+        "status": "PASS",
+        "log": "prefix/crafting_material_drop_test.log"
+      },
+      "crafting_scroll_grade_test": {
+        "status": "PASS",
+        "log": "prefix/crafting_scroll_grade_test.log"
+      },
+      "critical_damage_bonus_test": {
+        "status": "PASS",
+        "log": "prefix/critical_damage_bonus_test.log"
+      },
+      "domination_111_runtime_test": {
+        "status": "SKIP",
+        "log": "prefix/domination_111_runtime_test.log",
+        "reason": "DOM111_RUNTIME_SKIP: actual private 111 pack and isolated review session required"
+      },
+      "eight_direction_animation_test": {
+        "status": "PASS",
+        "log": "prefix/eight_direction_animation_test.log"
+      },
+      "eight_interactions_test": {
+        "status": "PASS",
+        "log": "prefix/eight_interactions_test.log"
+      },
+      "enhancement_feedback_gameplay_test": {
+        "status": "PASS",
+        "log": "prefix/enhancement_feedback_gameplay_test.log"
+      },
+      "enhancement_reveal_render_test": {
+        "status": "PASS",
+        "log": "prefix/enhancement_reveal_render_test.log"
+      },
+      "enhancement_reveal_test": {
+        "status": "PASS",
+        "log": "prefix/enhancement_reveal_test.log"
+      },
+      "equipment_blessing_smoke_test": {
+        "status": "PASS",
+        "log": "prefix/equipment_blessing_smoke_test.log"
+      },
+      "equipment_collection_bindings_test": {
+        "status": "PASS",
+        "log": "shard-1/equipment_collection_bindings_test.log"
+      },
+      "equipment_slot_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/equipment_slot_smoke_test.log"
+      },
+      "field_world_test": {
+        "status": "PASS",
+        "log": "shard-1/field_world_test.log"
+      },
+      "full_inven_catalog_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/full_inven_catalog_smoke_test.log"
+      },
+      "ground_alpha_test": {
+        "status": "PASS",
+        "log": "shard-1/ground_alpha_test.log"
+      },
+      "ground_loot_system_test": {
+        "status": "PASS",
+        "log": "shard-1/ground_loot_system_test.log"
+      },
+      "hp_mp_unique_effects_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/hp_mp_unique_effects_smoke_test.log"
+      },
+      "hunting_world_capture_test": {
+        "status": "PASS",
+        "log": "capture-recheck/hunting_world_capture_test.log",
+        "initial_log": "shard-1/hunting_world_capture_test.log"
+      },
+      "inventory_db_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/inventory_db_smoke_test.log"
+      },
+      "item_icon_art_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/item_icon_art_smoke_test.log"
+      },
+      "item_rarity_render_test": {
+        "status": "PASS",
+        "log": "shard-1/item_rarity_render_test.log"
+      },
+      "item_weight_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/item_weight_smoke_test.log"
+      },
+      "l1j_map_grid_test": {
+        "status": "SKIP",
+        "log": "shard-1/l1j_map_grid_test.log",
+        "reason": "L1J_MAP_GRID_SKIP: coordinate checks passed; optional original map and explicit CI fixture are absent"
+      },
+      "l1j_packed_assets_test": {
+        "status": "PASS",
+        "log": "shard-1/l1j_packed_assets_test.log"
+      },
+      "l1j_runtime_game_test": {
+        "status": "PASS",
+        "log": "shard-1/l1j_runtime_game_test.log"
+      },
+      "l1j_spx_frames_test": {
+        "status": "SKIP",
+        "log": "shard-1/l1j_spx_frames_test.log",
+        "reason": "L1J_SPX_FRAMES_SKIP: optional original SPX sequence and explicit CI fixture are absent; original art remains unavailable"
+      },
+      "lineage_side_ui_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/lineage_side_ui_smoke_test.log"
+      },
+      "loot_balance_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/loot_balance_smoke_test.log"
+      },
+      "main_debug_input_bindings_test": {
+        "status": "PASS",
+        "log": "shard-1/main_debug_input_bindings_test.log"
+      },
+      "monster_ai_leash_path_test": {
+        "status": "PASS",
+        "log": "shard-1/monster_ai_leash_path_test.log"
+      },
+      "monster_motion_test": {
+        "status": "PASS",
+        "log": "shard-1/monster_motion_test.log"
+      },
+      "native_png_catalog_test": {
+        "status": "PASS",
+        "log": "shard-1/native_png_catalog_test.log"
+      },
+      "native_png_normal_travel_test": {
+        "status": "SKIP",
+        "log": "shard-1/native_png_normal_travel_test.log",
+        "reason": "NATIVE_NORMAL_SKIP: actual private pack required; no PNG validation claimed"
+      },
+      "native_png_runtime_test": {
+        "status": "SKIP",
+        "log": "shard-1/native_png_runtime_test.log",
+        "reason": "NATIVE_PNG_RUNTIME_SKIP: real private pack and --native-png-maps required; no PNG integration claimed"
+      },
+      "non_skill_options_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/non_skill_options_smoke_test.log"
+      },
+      "option_awakening_field_render_test": {
+        "status": "PASS",
+        "log": "producer-recheck/option_awakening_field_render_test.log",
+        "initial_log": "shard-1/option_awakening_field_render_test.log"
+      },
+      "option_awakening_vfx_test": {
+        "status": "PASS",
+        "log": "producer-recheck/option_awakening_vfx_test.log",
+        "initial_log": "shard-1/option_awakening_vfx_test.log"
+      },
+      "original_based_albino_frog_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_albino_frog_gameplay_test.log"
+      },
+      "original_based_asitagio_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_asitagio_gameplay_test.log"
+      },
+      "original_based_bugbear_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_bugbear_gameplay_test.log"
+      },
+      "original_based_crabman_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_crabman_gameplay_test.log"
+      },
+      "original_based_ettin_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_ettin_gameplay_test.log"
+      },
+      "original_based_ghoul_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_ghoul_gameplay_test.log"
+      },
+      "original_based_ice_golem_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_ice_golem_gameplay_test.log"
+      },
+      "original_based_king_bugbear_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_king_bugbear_gameplay_test.log"
+      },
+      "original_based_lizard_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_lizard_gameplay_test.log"
+      },
+      "original_based_mummy_lord_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_mummy_lord_gameplay_test.log"
+      },
+      "original_based_raziel_watcher_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_raziel_watcher_gameplay_test.log"
+      },
+      "original_based_saber_tiger_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_saber_tiger_gameplay_test.log"
+      },
+      "original_based_scorpion_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_scorpion_gameplay_test.log"
+      },
+      "original_based_spear_captain_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_spear_captain_gameplay_test.log"
+      },
+      "original_based_spear_guard_red_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_spear_guard_red_gameplay_test.log"
+      },
+      "original_based_transform_batch_test": {
+        "status": "PASS",
+        "log": "shard-1/original_based_transform_batch_test.log"
+      },
+      "original_counter_probability_test": {
+        "status": "PASS",
+        "log": "shard-1/original_counter_probability_test.log"
+      },
+      "original_skill_audio_test": {
+        "status": "PASS",
+        "log": "shard-1/original_skill_audio_test.log"
+      },
+      "original_skill_provenance_test": {
+        "status": "PASS",
+        "log": "shard-1/original_skill_provenance_test.log"
+      },
+      "original_skill_status_coexistence_test": {
+        "status": "PASS",
+        "log": "shard-1/original_skill_status_coexistence_test.log"
+      },
+      "original_skill_target_state_test": {
+        "status": "PASS",
+        "log": "shard-1/original_skill_target_state_test.log"
+      },
+      "original_turn_undead_test": {
+        "status": "PASS",
+        "log": "shard-1/original_turn_undead_test.log"
+      },
+      "passive_skill_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/passive_skill_smoke_test.log"
+      },
+      "png_refinement_runtime_test": {
+        "status": "SKIP",
+        "log": "shard-1/png_refinement_runtime_test.log",
+        "reason": "PNG_REFINE_SKIP: actual private PNG pack and explicit review session required"
+      },
+      "potion_feedback_render_test": {
+        "status": "PASS",
+        "log": "shard-1/potion_feedback_render_test.log"
+      },
+      "pr80_original_resources_test": {
+        "status": "PASS",
+        "log": "shard-1/pr80_original_resources_test.log"
+      },
+      "pr99_ci_contract_test": {
+        "status": "PASS",
+        "log": "shard-1/pr99_ci_contract_test.log"
+      },
+      "reference_object_capture_test": {
+        "status": "PASS",
+        "log": "shard-1/reference_object_capture_test.log"
+      },
+      "remake_coordinates_and_state_test": {
+        "status": "PASS",
+        "log": "shard-1/remake_coordinates_and_state_test.log"
+      },
+      "remake_map_population_test": {
+        "status": "PASS",
+        "log": "shard-1/remake_map_population_test.log"
+      },
+      "remake_ui_local_item_icons_test": {
+        "status": "PASS",
+        "log": "shard-1/remake_ui_local_item_icons_test.log"
+      },
+      "renewed_map_spawn_test": {
+        "status": "PASS",
+        "log": "shard-1/renewed_map_spawn_test.log"
+      },
+      "shield_rules_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/shield_rules_smoke_test.log"
+      },
+      "shop_consumables_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-1/shop_consumables_gameplay_test.log"
+      },
+      "skill_icon_asset_integrity_test": {
+        "status": "PASS",
+        "log": "shard-1/skill_icon_asset_integrity_test.log"
+      },
+      "source_first_map_test": {
+        "status": "SKIP",
+        "log": "shard-1/source_first_map_test.log",
+        "reason": "SOURCE_FIRST_MAP_SKIP: private source pack not installed"
+      },
+      "speed_option_smoke_test": {
+        "status": "PASS",
+        "log": "shard-1/speed_option_smoke_test.log"
+      },
+      "terrain_surface_render_test": {
+        "status": "PASS",
+        "log": "shard-1/terrain_surface_render_test.log"
+      },
+      "ui_fidelity_regression_test": {
+        "status": "PASS",
+        "log": "shard-1/ui_fidelity_regression_test.log"
+      },
+      "ui_renewal_integration_test": {
+        "status": "PASS",
+        "log": "shard-1/ui_renewal_integration_test.log"
+      },
+      "volley_motion_test": {
+        "status": "PASS",
+        "log": "shard-1/volley_motion_test.log"
+      },
+      "weapon_size_damage_test": {
+        "status": "PASS",
+        "log": "shard-1/weapon_size_damage_test.log"
+      },
+      "world_structure_capture_test": {
+        "status": "PASS",
+        "log": "shard-1/world_structure_capture_test.log"
+      },
+      "equipment_collection_runtime_test": {
+        "status": "PASS",
+        "log": "shard-2/equipment_collection_runtime_test.log"
+      },
+      "external_a2_bridge_smoke_test": {
+        "status": "PASS",
+        "log": "shard-2/external_a2_bridge_smoke_test.log"
+      },
+      "flight_lifecycle_test": {
+        "status": "PASS",
+        "log": "shard-2/flight_lifecycle_test.log"
+      },
+      "full_visual_manifest_test": {
+        "status": "PASS",
+        "log": "shard-2/full_visual_manifest_test.log"
+      },
+      "ground_capture_layout_test": {
+        "status": "PASS",
+        "log": "shard-2/ground_capture_layout_test.log"
+      },
+      "hit_feedback_render_test": {
+        "status": "PASS",
+        "log": "shard-2/hit_feedback_render_test.log"
+      },
+      "hunting_navigation_cache_test": {
+        "status": "PASS",
+        "log": "shard-2/hunting_navigation_cache_test.log"
+      },
+      "input_routing_test": {
+        "status": "PASS",
+        "log": "shard-2/input_routing_test.log"
+      },
+      "item_buff_description_smoke_test": {
+        "status": "PASS",
+        "log": "shard-2/item_buff_description_smoke_test.log"
+      },
+      "item_optional_icons_test": {
+        "status": "PASS",
+        "log": "shard-2/item_optional_icons_test.log"
+      },
+      "item_visual_repair_test": {
+        "status": "PASS",
+        "log": "shard-2/item_visual_repair_test.log"
+      },
+      "job_smoke_test": {
+        "status": "PASS",
+        "log": "shard-2/job_smoke_test.log"
+      },
+      "l1j_map_recovery_test": {
+        "status": "PASS",
+        "log": "shard-2/l1j_map_recovery_test.log"
+      },
+      "l1j_png_load_test": {
+        "status": "SKIP",
+        "log": "shard-2/l1j_png_load_test.log",
+        "reason": "L1J_PNG_LOAD_SKIP: optional original PNG pack and explicit CI fixture are absent; original art remains unavailable"
+      },
+      "l1j_source_map_catalog_test": {
+        "status": "PASS",
+        "log": "shard-2/l1j_source_map_catalog_test.log"
+      },
+      "l1j_visual_link_test": {
+        "status": "PASS",
+        "log": "shard-2/l1j_visual_link_test.log"
+      },
+      "lineagem_ui_visual_smoke_test": {
+        "status": "PASS",
+        "log": "shard-2/lineagem_ui_visual_smoke_test.log"
+      },
+      "main_debug_crafting_blessing_test": {
+        "status": "PASS",
+        "log": "shard-2/main_debug_crafting_blessing_test.log"
+      },
+      "map_visual_toggle_test": {
+        "status": "PASS",
+        "log": "shard-2/map_visual_toggle_test.log"
+      },
+      "monster_attack_profiles_test": {
+        "status": "PASS",
+        "log": "shard-2/monster_attack_profiles_test.log"
+      },
+      "monster_world_test": {
+        "status": "PASS",
+        "log": "shard-2/monster_world_test.log"
+      },
+      "native_png_layer_ownership_test": {
+        "status": "PASS",
+        "log": "shard-2/native_png_layer_ownership_test.log"
+      },
+      "native_png_polygon_index_test": {
+        "status": "PASS",
+        "log": "shard-2/native_png_polygon_index_test.log"
+      },
+      "native_png_streaming_test": {
+        "status": "SKIP",
+        "log": "shard-2/native_png_streaming_test.log",
+        "reason": "NATIVE_STREAM_SKIP: actual private PNGs and rendered --native-png-maps session required"
+      },
+      "npc_dialogue_branching_test": {
+        "status": "PASS",
+        "log": "shard-2/npc_dialogue_branching_test.log"
+      },
+      "option_awakening_service_test": {
+        "status": "PASS",
+        "log": "shard-2/option_awakening_service_test.log"
+      },
+      "option_awakening_world_test": {
+        "status": "PASS",
+        "log": "shard-2/option_awakening_world_test.log"
+      },
+      "original_based_albino_giant_crab_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_albino_giant_crab_gameplay_test.log"
+      },
+      "original_based_basilisk_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_basilisk_gameplay_test.log"
+      },
+      "original_based_canvas_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_canvas_test.log"
+      },
+      "original_based_cyclops_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_cyclops_gameplay_test.log"
+      },
+      "original_based_fire_egg_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_fire_egg_gameplay_test.log"
+      },
+      "original_based_harpy_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_harpy_gameplay_test.log"
+      },
+      "original_based_ice_man_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_ice_man_gameplay_test.log"
+      },
+      "original_based_kraken_transform_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_kraken_transform_gameplay_test.log"
+      },
+      "original_based_lycanthrope_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_lycanthrope_gameplay_test.log"
+      },
+      "original_based_ogre_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_ogre_gameplay_test.log"
+      },
+      "original_based_reaper_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_reaper_gameplay_test.log"
+      },
+      "original_based_salah_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_salah_gameplay_test.log"
+      },
+      "original_based_seer_boss_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_seer_boss_gameplay_test.log"
+      },
+      "original_based_spear_guard_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_spear_guard_gameplay_test.log"
+      },
+      "original_based_succubus_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_succubus_gameplay_test.log"
+      },
+      "original_based_transform_temporal_main_test": {
+        "status": "PASS",
+        "log": "shard-2/original_based_transform_temporal_main_test.log"
+      },
+      "original_lineagem_effects_smoke_test": {
+        "status": "PASS",
+        "log": "shard-2/original_lineagem_effects_smoke_test.log"
+      },
+      "original_skill_catalog_runtime_test": {
+        "status": "PASS",
+        "log": "shard-2/original_skill_catalog_runtime_test.log"
+      },
+      "original_skill_reduction_test": {
+        "status": "PASS",
+        "log": "shard-2/original_skill_reduction_test.log"
+      },
+      "original_skill_summon_test": {
+        "status": "PASS",
+        "log": "shard-2/original_skill_summon_test.log"
+      },
+      "original_skill_warehouse_migration_test": {
+        "status": "PASS",
+        "log": "shard-2/original_skill_warehouse_migration_test.log"
+      },
+      "original_world_coordinates_test": {
+        "status": "PASS",
+        "log": "shard-2/original_world_coordinates_test.log"
+      },
+      "per_instance_enchantments_smoke_test": {
+        "status": "PASS",
+        "log": "shard-2/per_instance_enchantments_smoke_test.log"
+      },
+      "png_world_runtime_test": {
+        "status": "SKIP",
+        "log": "shard-2/png_world_runtime_test.log",
+        "reason": "PNG_WORLD_REVIEW_SKIP: actual private PNG pack and --png-review required"
+      },
+      "potion_feedback_test": {
+        "status": "PASS",
+        "log": "shard-2/potion_feedback_test.log"
+      },
+      "pr80_resource_assets_test": {
+        "status": "PASS",
+        "log": "shard-2/pr80_resource_assets_test.log"
+      },
+      "quickslot_smoke_test": {
+        "status": "PASS",
+        "log": "shard-2/quickslot_smoke_test.log"
+      },
+      "reference_object_placement_test": {
+        "status": "PASS",
+        "log": "shard-2/reference_object_placement_test.log"
+      },
+      "remake_door_runtime_test": {
+        "status": "FAIL",
+        "log": "shard-2/remake_door_runtime_test.log"
+      },
+      "remake_map_readability_test": {
+        "status": "PASS",
+        "log": "shard-2/remake_map_readability_test.log"
+      },
+      "remake_ui_presentation_test": {
+        "status": "PASS",
+        "log": "shard-2/remake_ui_presentation_test.log"
+      },
+      "road_surface_mesh_test": {
+        "status": "PASS",
+        "log": "shard-2/road_surface_mesh_test.log"
+      },
+      "shop_authority_test": {
+        "status": "PASS",
+        "log": "shard-2/shop_authority_test.log"
+      },
+      "shop_consumables_test": {
+        "status": "PASS",
+        "log": "shard-2/shop_consumables_test.log"
+      },
+      "skill_mechanism_smoke_test": {
+        "status": "PASS",
+        "log": "shard-2/skill_mechanism_smoke_test.log"
+      },
+      "source_pack_guard_test": {
+        "status": "PASS",
+        "log": "shard-2/source_pack_guard_test.log"
+      },
+      "stage5_save_compatibility_test": {
+        "status": "PASS",
+        "log": "shard-2/stage5_save_compatibility_test.log"
+      },
+      "terrain_variation_texture_test": {
+        "status": "PASS",
+        "log": "shard-2/terrain_variation_texture_test.log"
+      },
+      "ui_navigation_preservation_test": {
+        "status": "PASS",
+        "log": "shard-2/ui_navigation_preservation_test.log"
+      },
+      "ui_stage4_item_instance_test": {
+        "status": "PASS",
+        "log": "shard-2/ui_stage4_item_instance_test.log"
+      },
+      "warehouse_persistence_test": {
+        "status": "PASS",
+        "log": "shard-2/warehouse_persistence_test.log"
+      },
+      "world_region_portals_test": {
+        "status": "PASS",
+        "log": "shard-2/world_region_portals_test.log"
+      },
+      "world_structure_test": {
+        "status": "PASS",
+        "log": "shard-2/world_structure_test.log"
+      },
+      "equipment_collection_stats_test": {
+        "status": "PASS",
+        "log": "shard-3/equipment_collection_stats_test.log"
+      },
+      "external_spx_actor_runtime_test": {
+        "status": "PASS",
+        "log": "shard-3/external_spx_actor_runtime_test.log"
+      },
+      "follower_motion_test": {
+        "status": "PASS",
+        "log": "shard-3/follower_motion_test.log"
+      },
+      "github_update_autoload_maps_test": {
+        "status": "PASS",
+        "log": "shard-3/github_update_autoload_maps_test.log"
+      },
+      "ground_drop_smoke_test": {
+        "status": "PASS",
+        "log": "shard-3/ground_drop_smoke_test.log"
+      },
+      "hit_feedback_test": {
+        "status": "PASS",
+        "log": "shard-3/hit_feedback_test.log"
+      },
+      "hunting_paths_test": {
+        "status": "FAIL",
+        "log": "shard-3/hunting_paths_test.log"
+      },
+      "inven_inventory_icons_test": {
+        "status": "PASS",
+        "log": "shard-3/inven_inventory_icons_test.log"
+      },
+      "item_db_slot_smoke_test": {
+        "status": "PASS",
+        "log": "shard-3/item_db_slot_smoke_test.log"
+      },
+      "item_options_runtime_smoke_test": {
+        "status": "PASS",
+        "log": "shard-3/item_options_runtime_smoke_test.log"
+      },
+      "item_visual_test": {
+        "status": "PASS",
+        "log": "shard-3/item_visual_test.log"
+      },
+      "l1j_full_source_data_test": {
+        "status": "PASS",
+        "log": "shard-3/l1j_full_source_data_test.log"
+      },
+      "l1j_optional_bridge_test": {
+        "status": "PASS",
+        "log": "shard-3/l1j_optional_bridge_test.log"
+      },
+      "l1j_reviewed_shop_test": {
+        "status": "PASS",
+        "log": "shard-3/l1j_reviewed_shop_test.log"
+      },
+      "l1j_source_navigation_test": {
+        "status": "PASS",
+        "log": "shard-3/l1j_source_navigation_test.log"
+      },
+      "lineage_inventory_ui_smoke_test": {
+        "status": "PASS",
+        "log": "shard-3/lineage_inventory_ui_smoke_test.log"
+      },
+      "local_crafting_test": {
+        "status": "PASS",
+        "log": "shard-3/local_crafting_test.log"
+      },
+      "main_debug_failed_load_test": {
+        "status": "PASS",
+        "log": "shard-3/main_debug_failed_load_test.log"
+      },
+      "mobile_scroll_smoke_test": {
+        "status": "PASS",
+        "log": "shard-3/mobile_scroll_smoke_test.log"
+      },
+      "monster_capture_landing_test": {
+        "status": "PASS",
+        "log": "shard-3/monster_capture_landing_test.log"
+      },
+      "native_animation_expansion_test": {
+        "status": "PASS",
+        "log": "shard-3/native_animation_expansion_test.log"
+      },
+      "native_png_monster_spawns_test": {
+        "status": "PASS",
+        "log": "shard-3/native_png_monster_spawns_test.log"
+      },
+      "native_png_review_runtime_test": {
+        "status": "SKIP",
+        "log": "shard-3/native_png_review_runtime_test.log",
+        "reason": "NATIVE_REVIEW_SKIP: actual private PNGs and explicit mode required"
+      },
+      "native_png_teleport_test": {
+        "status": "PASS",
+        "log": "shard-3/native_png_teleport_test.log"
+      },
+      "npc_teleport_test": {
+        "status": "PASS",
+        "log": "shard-3/npc_teleport_test.log"
+      },
+      "option_awakening_ui_test": {
+        "status": "PASS",
+        "log": "shard-3/option_awakening_ui_test.log"
+      },
+      "option_finalize_smoke_test": {
+        "status": "PASS",
+        "log": "shard-3/option_finalize_smoke_test.log"
+      },
+      "original_based_ancient_penguin_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_ancient_penguin_gameplay_test.log"
+      },
+      "original_based_bone_dragon_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_bone_dragon_gameplay_test.log"
+      },
+      "original_based_cockatrice_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_cockatrice_gameplay_test.log"
+      },
+      "original_based_dire_wolf_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_dire_wolf_gameplay_test.log"
+      },
+      "original_based_ghost_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_ghost_gameplay_test.log"
+      },
+      "original_based_horn_cerberus_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_horn_cerberus_gameplay_test.log"
+      },
+      "original_based_iron_golem_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_iron_golem_gameplay_test.log"
+      },
+      "original_based_lava_golem_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_lava_golem_gameplay_test.log"
+      },
+      "original_based_monster_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_monster_gameplay_test.log"
+      },
+      "original_based_pan_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_pan_gameplay_test.log"
+      },
+      "original_based_reaper_male_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_reaper_male_gameplay_test.log"
+      },
+      "original_based_sand_worm_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_sand_worm_gameplay_test.log"
+      },
+      "original_based_snowman_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_snowman_gameplay_test.log"
+      },
+      "original_based_spear_guard_green_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_spear_guard_green_gameplay_test.log"
+      },
+      "original_based_temporal_main_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_temporal_main_test.log"
+      },
+      "original_based_yeti_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/original_based_yeti_gameplay_test.log"
+      },
+      "original_map_catalog_test": {
+        "status": "SKIP",
+        "log": "shard-3/original_map_catalog_test.log",
+        "reason": "ORIGINAL_MAP_CATALOG_SKIP: private source pack not installed"
+      },
+      "original_skill_learning_conditions_test": {
+        "status": "PASS",
+        "log": "shard-3/original_skill_learning_conditions_test.log"
+      },
+      "original_skill_restore_guard_test": {
+        "status": "PASS",
+        "log": "shard-3/original_skill_restore_guard_test.log"
+      },
+      "original_skill_system_test": {
+        "status": "PASS",
+        "log": "shard-3/original_skill_system_test.log"
+      },
+      "original_turn_undead_rewards_test": {
+        "status": "PASS",
+        "log": "shard-3/original_turn_undead_rewards_test.log"
+      },
+      "original_world_runtime_test": {
+        "status": "SKIP",
+        "log": "shard-3/original_world_runtime_test.log",
+        "reason": "ORIGINAL_WORLD_SKIP: private source pack not installed"
+      },
+      "playtest_catalog_drag_test": {
+        "status": "PASS",
+        "log": "shard-3/playtest_catalog_drag_test.log"
+      },
+      "potion_feedback_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/potion_feedback_gameplay_test.log"
+      },
+      "pr100_direction_gameplay_test": {
+        "status": "PASS",
+        "log": "shard-3/pr100_direction_gameplay_test.log"
+      },
+      "pr93_landing_bounds_test": {
+        "status": "PASS",
+        "log": "shard-3/pr93_landing_bounds_test.log"
+      },
+      "reference_expansion_test": {
+        "status": "PASS",
+        "log": "shard-3/reference_expansion_test.log"
+      },
+      "relic_motion_test": {
+        "status": "PASS",
+        "log": "shard-3/relic_motion_test.log"
+      },
+      "remake_map_inventory_test": {
+        "status": "PASS",
+        "log": "shard-3/remake_map_inventory_test.log"
+      },
+      "remake_source_runtime_test": {
+        "status": "PASS",
+        "log": "shard-3/remake_source_runtime_test.log"
+      },
+      "remake_world_lifecycle_test": {
+        "status": "PASS",
+        "log": "shard-3/remake_world_lifecycle_test.log"
+      },
+      "road_surface_render_test": {
+        "status": "PASS",
+        "log": "shard-3/road_surface_render_test.log"
+      },
+      "shop_buyback_test": {
+        "status": "PASS",
+        "log": "shard-3/shop_buyback_test.log"
+      },
+      "skill_element_integration_smoke_test": {
+        "status": "PASS",
+        "log": "shard-3/skill_element_integration_smoke_test.log"
+      },
+      "skill_private_icon_binding_test": {
+        "status": "PASS",
+        "log": "shard-3/skill_private_icon_binding_test.log"
+      },
+      "source_spx_skill_effect_test": {
+        "status": "PASS",
+        "log": "shard-3/source_spx_skill_effect_test.log"
+      },
+      "terrain_surface_geometry_test": {
+        "status": "PASS",
+        "log": "shard-3/terrain_surface_geometry_test.log"
+      },
+      "tower_png_normal_runtime_test": {
+        "status": "PASS",
+        "log": "shard-3/tower_png_normal_runtime_test.log"
+      },
+      "ui_pointer_transfer_test": {
+        "status": "PASS",
+        "log": "shard-3/ui_pointer_transfer_test.log"
+      },
+      "visible_gameplay_smoke_test": {
+        "status": "PASS",
+        "log": "shard-3/visible_gameplay_smoke_test.log"
+      },
+      "weapon_rules_smoke_test": {
+        "status": "PASS",
+        "log": "shard-3/weapon_rules_smoke_test.log"
+      },
+      "world_regions_test": {
+        "status": "PASS",
+        "log": "shard-3/world_regions_test.log"
+      },
+      "world_terrain_coverage_test": {
+        "status": "PASS",
+        "log": "shard-3/world_terrain_coverage_test.log"
+      }
+    }
+  },
+  "feature_capture_assertions": {
+    "service": 133,
+    "world": 138,
+    "native_ui": 112,
+    "vfx": 39,
+    "field": 65,
+    "total": 487,
+    "note": "Initial individual runs with capture assertions where supported; full-run capture-free totals differ."
+  },
+  "runner_unit_tests": {
+    "passed": 27,
+    "failed": 0,
+    "seconds": 8.086,
+    "stdout_source": "tool execution session 12945; no raw log file retained"
+  },
+  "recheck_reasons": {
+    "aden_faith_png_monster_spawns_test": "150-second timeout; unchanged 1,261 assertions passed in 166.5 seconds with a 300-second budget. Add only this test to bounded 300-second helper budget.",
+    "hunting_world_capture_test": "Restore unchanged tracked cameras.json excluded by sparse checkout; 75 actual OpenGL captures passed in 80.0 seconds.",
+    "option_awakening_field_render_test": "All assertions passed but producer lacked runner success markers; add structured RESULT and success-only OK, then rerun through unchanged classifier.",
+    "option_awakening_vfx_test": "All assertions passed but producer lacked runner success markers; add structured RESULT with failure labels and success-only OK, then rerun through unchanged classifier."
+  },
+  "baseline_comparisons": [
+    {
+      "base_commit": "e0a14f07da7764598822be669d05b3c2985d13eb",
+      "feature_commit": "10e3ad3986327790e1f642cf6d19c6d6bb64c854",
+      "test": "hunting_paths_test",
+      "assertions": 7115,
+      "identical_failure_lines": true,
+      "failure_line_count": 92,
+      "logs": {
+        "feature": "/tmp/twilight-option-shard-3/hunting_paths_test.log",
+        "base": "/tmp/twilight-option-baseline-hunting/hunting_paths_test.log"
+      }
+    },
+    {
+      "base_commit": "e0a14f07da7764598822be669d05b3c2985d13eb",
+      "feature_commit": "10e3ad3986327790e1f642cf6d19c6d6bb64c854",
+      "test": "remake_door_runtime_test",
+      "assertions": 14,
+      "identical_failure_lines": true,
+      "identical_structured_result": true,
+      "failure_line_count": 2,
+      "result": {
+        "checks": 14,
+        "door_provenance": "SYNTHETIC_QA_OVERLAY_NOT_A3_DOOR",
+        "failures": [
+          "rendered stone boundary follows door state",
+          "rendered stone boundary follows door state"
+        ]
+      },
+      "logs": {
+        "feature": "/tmp/twilight-option-shard-2/remake_door_runtime_test.log",
+        "base": "/tmp/twilight-option-baseline-door/remake_door_runtime_test.log"
+      },
+      "archive_logs": {
+        "feature": "shard-2/remake_door_runtime_test.log",
+        "base": "baseline-door/remake_door_runtime_test.log"
+      }
+    }
+  ],
+  "existing_transform_temporal_batch": {
+    "cases": 10,
+    "assertions": 607712,
+    "failures": [],
+    "archive_path": "shard-2/original_based_transform_temporal_main_test.batch.json"
+  },
+  "runtime_files_unchanged_since_implementation_commit": [
+    {
+      "path": "data/cards/option_awakening_cards.json",
+      "sha256": "fbeba0a7617447b886134625098d3637850875178dfeda601c87b071eb8903b5"
+    },
+    {
+      "path": "data/cards/option_awakening_policy.json",
+      "sha256": "4d4b0f90ad99594b0bd3403008dabcd8916fe9f0ef99b62b0e30c97f399663ef"
+    },
+    {
+      "path": "scripts/cards/option_awakening_service.gd",
+      "sha256": "c08c52ac1122e3eda54bd8d37fdda19e5d519e72789778ea604d62d2c1403d15"
+    },
+    {
+      "path": "scripts/cards/option_awakening_runtime.gd",
+      "sha256": "a498a6fa5c645c31dd203914d1ea423d0333a548c3bfb0cc4d4640635ac1367a"
+    },
+    {
+      "path": "scripts/animation/option_awakening_aura.gd",
+      "sha256": "1bef42c258235aedf8794e4a5ec811fc18e138ef9125a0e9e0c6b200f01e9ab0"
+    },
+    {
+      "path": "scripts/ui/option_awakening_view.gd",
+      "sha256": "9f12e8c06b9dccf6ca18a01b0c2ab7c9ceb0c9bb070c858128d565ec7b16b29b"
+    },
+    {
+      "path": "scripts/ui/option_awakening_border.gd",
+      "sha256": "0c7442d762766946413b9593df0ef2790a6ebd9d784a7a5766fe65b69d9e5142"
+    },
+    {
+      "path": "scripts/ui/option_awakening_reveal.gd",
+      "sha256": "b30f5be8006194b64d690a695461e558f288d246a137cea5adfb845afa7dce22"
+    },
+    {
+      "path": "scripts/ui/renewal_hud.gd",
+      "sha256": "8132de56748cf48a543fe53325b8882d5f94ea3b7f4983f3bccef2537fcddd8c"
+    },
+    {
+      "path": "scripts/ui/renewal_window.gd",
+      "sha256": "2c450ed7fce2ba148ee020b95aa587bf81efe0aab9b0d08cd556b271e985859b"
+    },
+    {
+      "path": "scripts/world.gd",
+      "sha256": "d0ce76bb25e6446c7466e7139e2d559f2921a4dc0b64999c2da64029c60eeca8"
+    },
+    {
+      "path": "scripts/collections/equipment_collection_runtime.gd",
+      "sha256": "d389ac57cc2d1ce61e78922f2aef90975219522a35803c102c8380ecd000f229"
+    }
+  ],
+  "resource_integrity": {
+    "status": "PASS",
+    "atlas_count": 723,
+    "frame_count": 41442,
+    "bytes": 233420026,
+    "scope": "Existing tracked runtime catalog resources; not delivery of every original Lineage asset."
+  },
+  "ci": {
+    "status": "Not asserted as passing by this local report. Refer to PR #152 for exact latest HEAD workflow status."
+  },
+  "log_archive": {
+    "path": "validation_logs.zip",
+    "bytes": 182318,
+    "sha256": "6a618903ad9e43c75ecab72fa1ca0b8c00be7342adb72e029b3580fe22bc2ab1"
+  }
+}

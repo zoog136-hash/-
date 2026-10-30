@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "SW",
+  "role": "idle",
+  "version": "v03",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/scratch/girtas-S-idle-repair/girtas-S-idle-v02.png",
+    "/workspace/scratch/girtas-W-idle-repair/girtas-W-idle-v02.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/scratch/girtas-S-idle-repair/girtas-S-idle-v02.png": "316af651aa200384be8a9d43c6bd4a36eb30b5ef29f8cfef241067afa5612641",
+    "/workspace/scratch/girtas-W-idle-repair/girtas-W-idle-v02.png": "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85"
+  },
+  "prompt": "Production new SOUTHWEST/frontLEFT idle master for the exact original Girtas. This attempt uses TWO CORRECT ORTHOGONAL SOURCE VIEWS: image2 is faithful FRONT/S Girtas, image3 is faithful LEFT/W Girtas. Interpolate the SAME physical character HALFWAY BETWEEN FRONT/S AND LEFT/W to produce FRONT-LEFT/SW, pointing DOWN-LEFT. Image1 tiny original is identity/material authority only, NOT heading authority. Heading MUST come from the correct S and W views; no frontRIGHT pose is allowed. Do not copy the tiny original's rightward head pose.\n\nABSOLUTE LEFT DIRECTION: in ALL6 output poses the NOSE POINTS LEFT, face looks LEFT-and-toward-viewer, front-left chest/pelvis aim DOWNLEFT, both boot toes aim DOWNLEFT. This is a 45-degree FRONT-LEFT view, halfway between supplied front/S and left/profile/W, not a rear view. Nose MUST NOT POINT RIGHT in any pose, never frontRIGHT/SE, never NE. Both pale eyes/face are seen in frontLEFT perspective, with nose on LEFT side of face silhouette. Leftward orientation of supplied W head/boots is essential. Do not alternate headings across phases.\n\nANATOMICAL HAND/LAYERING: original weapon belongs to anatomicalRIGHT hand. In this SW frontLEFT view, the RIGHT weapon arm is the FAR arm on projected IMAGELEFT; connect it to the actual far right shoulder/elbow/grip, with natural partial occlusion. The near anatomicalLEFT arm is camera-side, projected IMAGERIGHT, and that hand is EMPTY. Use the far-right-weapon/near-left-empty layering seen in the correct W source combined with correct front S hand assignment. Do not mirror any source and silently swap weapon hands. Keep same original LONG THIN SINUOUS orange/gold weapon fully visible down toward imageLEFT/lowerLEFT, never a new broad short sword.\n\nExactly2columns x3rows of512cells on transparent1024x1536, six complete full-body figures row-major0..5. Same physical model, pixel scale and equipment ratios in every cell. CROWN-to-BOOT core height about315px (helmet top localy120, soles localy435); don't enlarge body to fill cell or crop spikes/blade. Entire silhouette including every radial spike and full long curved weapon within localx45..467,y45..467 with generous transparent gutters. Face/torso/hips/boots must all share same FRONTLEFT heading.\n\nORIGINAL IDENTITY from supplied real S/W sources and tiny portrait: VISIBLE PALE human face, LONG PALE hair, same original tall dark/gold head ornaments, THIN HARD LONG GOLD RADIAL SPINES physically connected behind original back/shoulder structure, original LONG DARK skirt/coat silhouette with GOLD EDGE TRIM and dark boots, same black/gold armor and long sinuous original weapon with flowing curve sequence and taper. Preserve same anatomical body proportions/equipment silhouette; no invented new back badges/gear, no closed redV mask, no broad orange flame-feather fan, no demon redesign or fitted segmented legs replacing skirt. Do not use any former frontRIGHT enlarged draft or failedSW art.\n\nSix actual subtle planted-foot idle states:0 relaxed frontLEFT baseline;1 local inhale starts with ribcage/shoulder/elbow response;2 inhale peaks with small chest lift;3 exhale shoulders relax;4 hair/robe/wrist settle;5 returns toward exact0 for clean loop. Keep both soles/pelvis anchor fixed, no walking, stepping, knee-lifting or weapon attack. Local connected chest/shoulder/forearm/hair/robe articulation, never global translation/rotation/scaling/tint. Keep rigid gold spine shapes/attachments fixed and weapon contour/hand unchanged, with only slight natural wrist response.\n\nHigh-quality opaque dark/gold materials, alpha0 outside actual silhouette and between connected thin spikes. NO outer glow cloud/halo, detached sparks, floor, shadow, background, grid, text, labels, border or extra figures. Native accurate game sprite source. Critically compare final result against supplied LEFT/W view: if output nose/boots pointRIGHT, it is the WRONG DIRECTION. Every frame must clearly point FRONTLEFT/DOWNLEFT.",
+  "transparent_background": true,
+  "expected_poses": 6,
+  "phase_contract": [
+    "frontLEFT_relaxed_baseline",
+    "frontLEFT_inhale_begin",
+    "frontLEFT_inhale_peak",
+    "frontLEFT_exhale_begin",
+    "frontLEFT_exhale_settle",
+    "frontLEFT_return_baseline"
+  ],
+  "corrective_reason": "Materially change poseconditioning after immutable v02SW wrong-SE HOLD: EXCLUDE frontRIGHT canonical/SE/NE/badSW; use newly available faithful frontS and trueLEFT W sources to interpolate actual SW, preserving anatomicalRIGHT far weapon and nearLEFT empty arm. One new corrective attempt only.",
+  "previous_hold_source": "/workspace/scratch/girtas-SW-idle-repair/girtas-SW-idle-v02.png",
+  "previous_hold_raw_sha256": "09db80efb3bcee225a624360981e90b8eb19a71e2f0eabd0ce358c7086203424",
+  "user_authorization": "New exactSW master production from materially corrected S/W pose sources, one generation, private bounded review only, no repo/index or chat images and no actor approval.",
+  "repo_mutations": false,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "Actual ALL6 face FRONTLEFT/SW: pale nose/chin point LEFT, front-left pale face/chest remain visible, pelvis and both boot toe projections aim DOWNLEFT. None defaults to right-facing/SE or rear view.",
+      "AnatomicalRIGHT FAR shoulder/arm projects imageLEFT and grips original long thin sinuous orange/gold blade. Near anatomicalLEFT shoulder/arm is foreground imageRIGHT and its hand EMPTY. Correct layered arm assignment rather than mirrored SE swap.",
+      "Original pale human face, long pale hair, tall gold/dark ornaments, thin hard gold radial spines, long DARK goldtrim skirt and black/gold armor are retained; no redmask/flamefeather/shortblade redesign.",
+      "Both boot soles/pelvis anchor remain planted in stable guard; real local chest/shoulder/head/forearm and hair/robe lag vary through six restrained inhale/exhale/settle poses without stepping or attack.",
+      "Full body/gear/rigid spine attachments and entire same long curved blade/tip remain visible and coherent across6.",
+      "Unchanged strict geometry analyzer rows6/phase_grid2/canvas1024/reference_rows0,3 passes6 distinct physical frames."
+    ],
+    "visual_limitations": [
+      "Static source-art PASS only: runtime exact foot lock, body scale by stable landmarks, subtle idle amplitude and5->0 loop seam remain to verify.",
+      "Tiny original108x132 lacks exact hidden-side engraving/clipped ray/blade endpoints; major identity and correct leftward construction preserved conservatively from real S/W masters.",
+      "Generated source again uses most512cell height rather than requested~315px core; consistent anatomical proportions must be normalized at runtime without spike/weapon bbox scaling.",
+      "No actor completion, approval-count increase or Main approval is implied. Prior v02wrongSE remains immutableHOLD, not relabelled or mirrored."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "336949ad14a6f3a87f7887c88ce3137a270309fe9070e3acb1272d033d245942",
+    "raw_bytes": 2567978,
+    "request_sha256": "63410c0e8615a3ef1a1f85a5f509960754c1e3820d3a696c06e2acc08d0688ca",
+    "review_sha256": "d84189bbd51c0ea4b4a8c1592d1f8c6a43131aedc03cdd40deba8e93f7f6b0a5"
+  },
+  "available_repository_reference_sources": {
+    "316af651aa200384be8a9d43c6bd4a36eb30b5ef29f8cfef241067afa5612641": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-S-idle-v02.png",
+    "e54a4beb912352a3880c89ace26051ad6b503e5f130c36be7836570981304a85": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-idle-v02.png"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-SW-idle-v03.png",
+  "output_sha256": "336949ad14a6f3a87f7887c88ce3137a270309fe9070e3acb1272d033d245942",
+  "output_bytes": 2567978,
+  "original_generated_file": "/workspace/scratch/girtas-SW-idle-repair-v03/girtas-SW-idle-v03.png"
+}

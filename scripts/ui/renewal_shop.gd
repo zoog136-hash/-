@@ -32,6 +32,7 @@ var list_mouse_travel: float = 0.0
 var raw_touch_index: int = -1
 var raw_touch_start: Vector2 = Vector2.ZERO
 var raw_touch_travel: float = 0.0
+var raw_touch_name: String = ""
 
 func configure(controller: Node, at_npc: bool = false) -> void:
 	hud = controller
@@ -115,11 +116,22 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY
 	purchase_quantity.step = 1
 	purchase_quantity.value = 1
-	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY if selected_vendor_id.is_empty() else 1
-	purchase_quantity.editable = selected_vendor_id.is_empty()
+	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY
+	purchase_quantity.editable = true
 	purchase_quantity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	purchase_quantity.value_changed.connect(func(_value: float) -> void: _refresh_selection())
 	amount_row.add_child(purchase_quantity)
+	# Always-visible mobile-friendly quantity presets; SpinBox stays editable.
+	var preset_row := HBoxContainer.new()
+	preset_row.name = "ShopQuantityPresets"
+	preset_row.add_theme_constant_override("separation", 4)
+	side.add_child(preset_row)
+	for amount: int in [1, 10, 100, 1000]:
+		var preset: int = amount
+		var button: Button = UI.button(str(amount), func() -> void: _set_purchase_quantity(preset), Vector2(52, 44))
+		button.name = "ShopQuantity" + str(amount)
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		preset_row.add_child(button)
 	purchase = UI.button("상품 선택",_buy,Vector2(0,54))
 	UI.primary_button(purchase)
 	purchase.name = "ShopBuy"
@@ -136,6 +148,7 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	_refresh()
 
 func _refresh() -> void:
+	_cancel_listing_touch()
 	var selected_name: String = str(selected[0]) if not selected.is_empty() else ""
 	var old_scroll: float = listing.get_v_scroll_bar().value
 	filtered.clear()
@@ -149,9 +162,7 @@ func _refresh() -> void:
 		if category != "전체" and str(entry[2]) != category: continue
 		if query != "" and not name.to_lower().contains(query): continue
 		filtered.append(entry)
-		var count: int = int(hud.lineage_inventory_ui.inventory.get(name,0))
-		var caption: String = "%s    %s 아데나 · 보유 %s" % [name,UI.number_text(int(entry[1])),UI.number_text(count)] if npc_mode else "%s\n%s 아데나\n보유 %s" % [name,UI.number_text(int(entry[1])),UI.number_text(count)]
-		listing.add_item(caption,UI.item_icon(hud.lineage_inventory_ui._find_item_record(name),name,hud.item_image_index.get("아이템",{})))
+		listing.add_item(_caption(entry),UI.item_icon(hud.lineage_inventory_ui._find_item_record(name),name,hud.item_image_index.get("아이템",{})))
 	if filtered.is_empty():
 		detail.text = "검색 조건에 맞는 상품이 없습니다."
 		purchase.disabled = true
@@ -166,14 +177,43 @@ func _refresh() -> void:
 		_select(index)
 		listing.get_v_scroll_bar().set_deferred("value",old_scroll)
 
+func _caption(entry: Array) -> String:
+	var name: String = str(entry[0])
+	var count: int = int(hud.lineage_inventory_ui.inventory.get(name,0))
+	return "%s    %d 아데나 · 보유 %d" % [name,int(entry[1]),count] if npc_mode else "%s\n%d 아데나\n보유 %d" % [name,int(entry[1]),count]
+
+func refresh_balances() -> void:
+	# Purchasing changes wallet/counts, not the selected offer, filter or layout.
+	# Keeping ItemList rows avoids scroll reset and a release landing on a neighbor.
+	wallet.text = "보유 아데나  %d" % int(hud.character_state.get("gold",0))
+	for index: int in range(mini(filtered.size(),listing.item_count)):
+		listing.set_item_text(index,_caption(filtered[index]))
+	_refresh_selection()
+
+func _selection_blocked() -> bool:
+	var modal: Control = hud.get_node_or_null("Root/TwilightConfirmation") as Control
+	return modal != null and modal.is_visible_in_tree()
+
+func _cancel_listing_touch() -> void:
+	raw_touch_index = -1
+	raw_touch_name = ""
+	list_touch_index = -1
+	list_touch_dragging = false
+	list_mouse_dragging = false
+
 func _change_vendor(index: int) -> void:
 	selected_vendor_id = str(vendor_filter.get_item_metadata(index))
 	search_field.text = ""
 	category_filter.select(0)
 	purchase_quantity.value = 1
-	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY if selected_vendor_id.is_empty() else 1
-	purchase_quantity.editable = selected_vendor_id.is_empty()
+	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY
+	purchase_quantity.editable = true
 	_refresh()
+
+func _set_purchase_quantity(amount: int) -> void:
+	if purchase_quantity == null: return
+	purchase_quantity.value = clampi(amount, 1, SHOP_CATALOG.MAX_QUANTITY)
+	_refresh_selection()
 
 func _goods() -> Array:
 	if selected_vendor_id.is_empty(): return SHOP_CATALOG.GOODS.duplicate(true)
@@ -188,8 +228,8 @@ func _raw_touch_local(point: Vector2) -> Vector2:
 	return listing.get_global_transform_with_canvas().affine_inverse() * point
 
 func _input(event: InputEvent) -> void:
-	if listing == null or not is_visible_in_tree() or not listing.visible:
-		raw_touch_index = -1
+	if listing == null or not is_visible_in_tree() or not listing.visible or _selection_blocked():
+		_cancel_listing_touch()
 		return
 	if event is InputEventScreenTouch:
 		var touch: InputEventScreenTouch = event
@@ -197,13 +237,19 @@ func _input(event: InputEvent) -> void:
 		if touch.pressed and not touch.canceled and raw_touch_index == -1:
 			var local: Vector2 = _raw_touch_local(touch.position)
 			if Rect2(Vector2.ZERO, listing.size).has_point(local):
+				var row: int = listing.get_item_at_position(local,true)
+				if row < 0 or row >= filtered.size(): return
 				raw_touch_index = touch.index
 				raw_touch_start = touch.position
 				raw_touch_travel = 0.0
+				raw_touch_name = str(filtered[row][0])
 		elif touch.index == raw_touch_index and (not touch.pressed or touch.canceled):
 			var local: Vector2 = _raw_touch_local(touch.position)
-			var is_tap: bool = not touch.canceled and raw_touch_travel < 12.0 and raw_touch_start.distance_to(touch.position) < 18.0
+			var row: int = listing.get_item_at_position(local,true)
+			var same_offer: bool = row >= 0 and row < filtered.size() and str(filtered[row][0]) == raw_touch_name
+			var is_tap: bool = not touch.canceled and raw_touch_travel < 12.0 and raw_touch_start.distance_to(touch.position) < 18.0 and same_offer
 			raw_touch_index = -1
+			raw_touch_name = ""
 			if is_tap and Rect2(Vector2.ZERO, listing.size).has_point(local):
 				_select_at_position(local)
 	elif event is InputEventScreenDrag and event.index == raw_touch_index:
@@ -224,15 +270,19 @@ func _scroll_listing(delta_y: float) -> void:
 		bar.value = clampf(bar.value-delta_y,bar.min_value,maxf(bar.min_value,bar.max_value-bar.page))
 
 func _on_listing_input(event: InputEvent) -> void:
+	if _selection_blocked():
+		_cancel_listing_touch()
+		return
 	if event is InputEventScreenTouch:
 		var touch: InputEventScreenTouch = event
+		if touch.device == InputEvent.DEVICE_ID_EMULATION: return
 		if touch.pressed and not touch.canceled and list_touch_index == -1:
 			list_touch_index = touch.index
 			list_touch_travel = 0.0
 			list_touch_dragging = false
 		elif (not touch.pressed or touch.canceled) and touch.index == list_touch_index:
-			if not touch.canceled and not list_touch_dragging:
-				_select_at_position(touch.position)
+			# The raw handler validates the same offer at press and release.
+			# This GUI path owns scrolling only, never a second selection.
 			list_touch_index = -1
 			listing.accept_event()
 	elif event is InputEventScreenDrag and event.index == list_touch_index:
@@ -293,6 +343,7 @@ func _refresh_selection() -> void:
 
 func _buy() -> void:
 	if selected.is_empty() or purchase.disabled: return
+	_cancel_listing_touch()
 	var name: String = str(selected[0])
 	var quantity: int = int(purchase_quantity.value)
 	var vendor: String = selected_vendor_id

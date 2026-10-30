@@ -1,0 +1,75 @@
+{
+  "label": "bossfix-min012",
+  "checked_new_sheets": 6,
+  "safe_played_clips": 0,
+  "held": [
+    {
+      "slug": "thebes_osiris",
+      "clip": "W-attack-v02",
+      "reason": "Each phase_grid2 cell must contain exactly one separated pose"
+    },
+    {
+      "slug": "ugnus",
+      "clip": "SW-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "ugnus",
+      "clip": "SW-hit-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-hit-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-idle-v02",
+      "reason": "Expected exactly 6 separated poses, found 5; review/re-author, never invent slots"
+    },
+    {
+      "slug": "zeros",
+      "clip": "SW-attack-v02",
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "production_connections_changed": 0,
+  "new_approvals": 0,
+  "full_visual_review": "TARGETED_CORRECTIONS_ONLY",
+  "normal_art_changed": 0,
+  "candidates": [],
+  "runtime": null,
+  "source_pins": [
+    {
+      "slug": "thebes_osiris",
+      "clip": "W-attack-v02",
+      "sha256": "0b00da3e0d007c56a6e0c8c9626d3668f9798af2aa399e8e372dfdca02a6f058"
+    },
+    {
+      "slug": "ugnus",
+      "clip": "SW-attack-v02",
+      "sha256": "50ebcfcec9cbfca28df5f0e466320eb57079ac73dabfecd0fd835d02ba508275"
+    },
+    {
+      "slug": "ugnus",
+      "clip": "SW-hit-v02",
+      "sha256": "d6bd9f6338f007a3633cb24fcd5ac894d42ba5f4e87141e16b8f9ac2a1902cd0"
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-hit-v02",
+      "sha256": "ff76220987a37791322ddb99b02377e37fd6330e1478b69eecfb50acc144a66c"
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-idle-v02",
+      "sha256": "926c0e4905b49722832d45dfd6056188be0835c7e7de4896c43945decbd603de"
+    },
+    {
+      "slug": "zeros",
+      "clip": "SW-attack-v02",
+      "sha256": "ea7c0c31aef08c3fdb409c65676ced14f6a0521eaf5e772d0c40663b7f6df384"
+    }
+  ]
+}

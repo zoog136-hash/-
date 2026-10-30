@@ -1,0 +1,98 @@
+{
+  "status": "HOLD_NEW_NE_DEATH_NATIVE_FOLDED_KNEE_MATERIAL_FINISH",
+  "source_visual_status": "HOLD",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "death",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v05/actual-NE-DEATH-six-source-contract-v05.json",
+    "sha256": "5b29e61efcd26fb2f8f6f28143a265f05a789375d0f68a5f954377f070e9e4ff",
+    "bytes": 49534
+  },
+  "six_sources": [
+    {
+      "phase": 0,
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v05/NE-death-phase0-actual-native-v05.png",
+      "sha256": "9a0b9a298e618be358d171e0b70f7a6a251e830844d7a680b769389457e50908"
+    },
+    {
+      "phase": 1,
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v05/NE-death-phase1-actual-native-v05.png",
+      "sha256": "2b30b803b028d088e722e05d3e5d97af72fac4cc1c092b9198fdf3fbfddfae93"
+    },
+    {
+      "phase": 2,
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v05/NE-death-phase2-actual-native-v05.png",
+      "sha256": "385a1abf95b9bd0745bf30e00bdbab70474ad2a8853f7124e650088e61774a1a"
+    },
+    {
+      "phase": 3,
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v05/NE-death-phase3-actual-native-v05.png",
+      "sha256": "5884644a3e2acd99802bf7212f3962366890330e221218b228d1a5b6055f6288"
+    },
+    {
+      "phase": 4,
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v05/NE-death-phase4-actual-native-v05.png",
+      "sha256": "c8ad6f0709b2d11179983c40b3e67da564d98f0cf1e5a7da8835d11a2365f437"
+    },
+    {
+      "phase": 5,
+      "path": "/workspace/scratch/mythic413-NE-death-author-20261020-v01/actual-NE-DEATH-six-native-v05/NE-death-phase5-actual-native-v05.png",
+      "sha256": "09da2f2b4050a63f56fbdb893ebf72a23f71fbdb5141539a76493e231d51f06e"
+    }
+  ],
+  "positive_observations": [
+    "Actual dedicated loss-of-balance through buckle/kneel/torso fall to prone held terminal is visible at fixed body density.",
+    "Both complete staff ends and actual grip, head/bun/ribbons and complete counter/stiletto modules remain identifiable; no crop loss was observed."
+  ],
+  "findings": [
+    {
+      "phase": 2,
+      "side": "R",
+      "native_stored_ROI": [
+        1137,
+        1409,
+        1337,
+        1609
+      ],
+      "finding": "Rigid-looking straight transverse or diagonal material terminations remain around the compressed folded-knee joining surfaces."
+    },
+    {
+      "phase": 5,
+      "side": "R",
+      "native_stored_ROI": [
+        791,
+        1322,
+        991,
+        1522
+      ],
+      "finding": "At the folded knee the two leather planes terminate angularly around an open V-shaped inner region. A natural inner knee fold is allowed; the visible outside overlap and rounded material continuity must be checked and finished, not rejected from the V shape alone."
+    },
+    {
+      "phase": 0,
+      "side": "R",
+      "native_stored_ROI": [
+        941,
+        1074,
+        1141,
+        1274
+      ],
+      "finding": "The heavily foreshortened shin shows a broad straight material-end edge. Verify source ownership and close any actual polygon cut with native rounded leather overlap."
+    }
+  ],
+  "requested_scope": "Preserve all fixed bone/root/C/2304storage/whole body and complete counter/stiletto. Inspect actual femur/calf endpoint ownership and finish only genuine cut/join defects with original native leather/gold overlap; do not alter pose just to match a screenshot.",
+  "source_bounds_or_unique_3D_pass": false,
+  "actual_game_status": "NOT_ADOPTED",
+  "immutable_private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NEdeath-v05-source-HOLD-view84-frozen.json",
+    "sha256": "ad7ae5f76292abf260b39518b15b708862d73cef4140265df057fd19d4876433",
+    "bytes": 41605
+  },
+  "native_crop_metadata": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEdeath-v05-native-joint-crop-metadata-v01.json",
+    "sha256": "3a1d74589d14ef8945fb30c25baf1e2c473f106231c556ce6d8e196dd35fe934",
+    "bytes": 1553
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}

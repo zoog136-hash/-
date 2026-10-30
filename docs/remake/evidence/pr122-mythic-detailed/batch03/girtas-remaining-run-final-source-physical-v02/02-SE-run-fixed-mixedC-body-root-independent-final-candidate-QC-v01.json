@@ -1,0 +1,95 @@
+{
+  "schema": "PR122_SE_RUN_BODY_C_ROOT_AIR_CANDIDATE_FINAL_INDEPENDENT_QC_V1",
+  "utc": "2026-10-19T16:28:42.501792+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "status": "PASS_SCOPED_BODY_SCALE_GAIT_CONTACT_AIR_CANDIDATE_SOURCE_GEAR_HOLD",
+  "raw_sha256": "745b91215185c47a360d2d10a68ee8c287248956fe4a21632d39b54661822994",
+  "authored_pose_canvas_sizes": [
+    2304,
+    2304,
+    2304,
+    2168,
+    2168,
+    2304
+  ],
+  "source_native_root_anchors": [
+    [
+      757,
+      1244
+    ],
+    [
+      778,
+      1220
+    ],
+    [
+      760,
+      1305
+    ],
+    [
+      734,
+      1169
+    ],
+    [
+      734,
+      1135
+    ],
+    [
+      800,
+      1298
+    ]
+  ],
+  "source_visual_status": "HOLD_HILT_ONLY_SEPARATE_ADDENDUM",
+  "body_scale_and_gait_status": "PASS_SCOPED_PHYSICAL_CANDIDATE",
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "actual_runtime_status": "HOLD_NOT_COMPILED",
+  "candidate_pins": [
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/authored-ground-root-numeric-DRAFT-mixedC-v01.json",
+      "sha256": "0818e8bb0c972a792d7021c9a73eca8a07c9cabc988530dcf7ee292b06882893"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-configuration-v01.json",
+      "sha256": "5737ae413de35ea93a058564eb51c7784d1739d64a40fcc5516f75da7e26a5e5"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/geometry-derived.json",
+      "sha256": "466bbc4e5f2fa34c30baccd9e3f0caad1724876ff62d235866b612b678df4f1e"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/reviewed_runtime_layout.proposal.json",
+      "sha256": "9a8810d695ff0e46a0427f513bb9c6fae27bc303756005f9f9a444abfd73dbdc"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/reviewed_runtime_layout.validation.json",
+      "sha256": "45421d1d57afe468a3cbb8a42e12411ed32a2a09d92c6b3e774ea5c3eb2132f2"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/reviewed_source_regions.proposal.json",
+      "sha256": "369bcec3674235b1608d2698ad7d892f34268eac1892a642252fcc5aed128687"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/reviewed_source_regions.validation.json",
+      "sha256": "8f92e4be231b64a039f70144596ff928187a759772a6c2ef7dbe0c40d87c7b30"
+    }
+  ],
+  "visual_findings": [
+    "At fixedCs[2304,2304,2304,2168,2168,2304], visible skull/neck/nearpauldron/waist core have a reasonable common character scale against selectedSEidle. Torso pitch, knee flex and hiddenhip interval explain projection changes; no actual uniform longleg/bodyratio defect warrants pose regeneration.",
+    "Actual0farLEFTcontact\u21921farLEFTflexedload\u21922nearRIGHTleadingAIR\u21923nearRIGHTcontact\u21924nearRIGHTflexedload\u21925farLEFTleadingAIR\u21920 retains genuine oppositehip-to-boot chains and readable complete recoveryboots.",
+    "Semantically traced supportboots0/1/3/4 sit on the declared authoredprojected farLEFT/nearRIGHT supportplanes; recoveryboots visibly clear them. Source4 grounding uses actualbootY1135, never lowerweaponendpoint1177.",
+    "AIR2/5 use explicit authoredroots with every originalalpha>16 foregroundpixel above the HIGHER declaredsupportplane by11.22449world. Thus bothcompleteboots clear thatplane without invented sourcefloor labels. Body/head/waist arcs and5\u21920 are plausible run contact/compression/flight transitions.",
+    "The whitewaistdiamond is only a moving frontsurface registrationmarker. Its first-half near-constant contact/load height does not certify a hiddenpelvis nor contradict visible knee/torso compression. No exact hiddenbone metrology demanded.",
+    "C/rootcandidate is frozen. No further art/body/leg/C/root trial is justified by current visibleevidence. Actualornatehilt defect is isolated in separategearHOLD and must be fixed without changing approvedbodymotion."
+  ],
+  "projection_scope": "This is an authored2D projectedground candidate with actualanatomicalsupport verification, not a certified exact3Dcamera/skeleton reconstruction.26canonical idle near/far is the declared baseline here, not a rule imposed on allfuturegaits. SourcePNG alone has no floor.",
+  "remaining_HOLD": [
+    "Restore actualfaithfulsmallcollar/hand-to-blade junction in affectedsourcehilts, then verify localrepairseams and unchangedbody/C/root applicability.",
+    "ActualcompiledTRES/profile/Player/Godot and finalindependentactor approval remainpending;actor2670/catalogOFF."
+  ],
+  "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_ledger_sha256": "2b28d8706460bf2b8bff9f98b271d6978afaa4b5c30ab96ca1c8f1f954eb75e9",
+  "repository_mutations": false
+}

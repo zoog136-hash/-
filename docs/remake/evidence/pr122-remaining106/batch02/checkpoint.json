@@ -1,0 +1,31 @@
+{
+  "observed_utc": "2026-10-16T05:52:34.736950+00:00",
+  "last_successful_pushed_commit": "f244b7155fa0d6334ec06e654232b52926db3a54",
+  "fully_completed": 392,
+  "runtime_connected": 394,
+  "local_PASS_pending_CI_APK": 2,
+  "HOLD": 16,
+  "not_authored_or_not_connected": 88,
+  "completed_added": 0,
+  "production_changed_in_batch02": false,
+  "new_original_authored_source_pngs": 4,
+  "subjects": {
+    "death_servant": {
+      "native_GL": 104,
+      "temporal_checks": 40364,
+      "actual_AI_checks": 1412,
+      "status": "HOLD_S_CONTACT; new single S impact repair01 unapproved, other103 source poses untouched"
+    },
+    "tomb269": {
+      "new_NE_walk_palette_repairs": 3,
+      "strict_source_poses": 112,
+      "status": "SOURCE_ONLY_HOLD; all final visual flags false; anchors/model/Main pending"
+    },
+    "unicorn": {
+      "new_edit_attempts": 1,
+      "status": "REJECTED; foreground redrawn, components9to35;2missing approved originals remain HOLD"
+    }
+  },
+  "evidence": "servant-trial01-evidence/manifest.json;314members, all source PNG bytes/SHA preserved; includes rejected invocation and successful isolated invocation",
+  "continuation": "Continue single defective Death Servant S-impact pose/source-scale review; other103 poses preserved. Tomb269 revised112 source candidate has all visual flags FALSE: calibrate72 nonwalk anchors and source helmet/core before Main. Unicorn single-pixel edit01 rejected (35components);2missing approved PNGs still HOLD. Never stop solely for queued CI or some actor HOLD."
+}

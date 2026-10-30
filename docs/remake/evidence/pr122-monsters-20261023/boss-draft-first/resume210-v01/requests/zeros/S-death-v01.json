@@ -1,0 +1,23 @@
+{
+  "slug": "zeros",
+  "actor": "monster:제로스",
+  "clip": "S-death-v01",
+  "direction": "S",
+  "role": "death",
+  "layout": "phase_grid3",
+  "phase_count": 6,
+  "reference_sha256": "faa21ea1f6d6507a377112ce549b146c6cdb60191ee26cb1d5c517c4c849dd71",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique dark sorcerer-knight, narrow crowned black iron helm with three gold prongs, purple-black engraved plate and high collar, broad gold geometric chest emblem, long split violet tabard, heavy articulated dark boots, one long narrow blacksteel sword with an ornate gold circular guard in anatomical RIGHT hand, LEFT gauntlet empty. Angular crown and split violet cloak distinguish from other dark knights.\nFixed camera throughout this sheet: SOUTH straight FRONT facing DOWN toward viewer. Anatomical RIGHT weapon hand is viewerLEFT, LEFT empty hand viewerRIGHT.\nAction DEATH: Six non-graphic SOUTH death stages:0 wounded upright,1 knees/legs weaken,2 body descends,3 collapses,4 settles on ground,5 motionless full corpse. All armor/limbs/weapon/wings/tail remain attached or contiguous and fully visible. No gore, blood, dissolving particles or vanished body. Horse/spider collapse naturally with all limbs present.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.\nRESUME CORRECTION TO CAMERA AND SPACING: All SIX poses face straight DOWN/towards camera; front torso and face, no side-facing first pose. Exactly6 full poses, arranged3 columns x2 rows with at least100px of genuinely empty alpha between complete figures. On a1536x1024 sheet each body is about300px tall, each pose including weapon under400px wide, leaving transparent outer margins and clear row gutters. No overlapping source poses. No label text. Keep every limb/held object connected to its own whole body; do not create detached ornaments.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/canonical-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "resume_attempt": 1,
+  "resume_reason": "User requested remaining210 after previous provider reset time elapsed; unchanged existing285 sheets are excluded.",
+  "original_request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/requests/S-death-v01.json",
+  "original_request_sha256": "dd97a603dde908ab3dd2c5409f6be9066a90a7b52fc7911eea22c1392a1d4032",
+  "original_hold_cause": "NOT_SUBMITTED_GLOBAL_USAGE_LIMIT",
+  "order": 4
+}

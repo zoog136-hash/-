@@ -6,7 +6,7 @@ const ANIMATION = preload("res://scripts/animation/animation_catalog.gd")
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 var failures: Array[String] = []
 var checks: int = 0
-var world: TwilightWorld
+var world: Variant = null  # Defer production-world class resolution until this test runs.
 
 func _initialize() -> void: call_deferred("_run")
 func check(ok: bool, message: String) -> void:

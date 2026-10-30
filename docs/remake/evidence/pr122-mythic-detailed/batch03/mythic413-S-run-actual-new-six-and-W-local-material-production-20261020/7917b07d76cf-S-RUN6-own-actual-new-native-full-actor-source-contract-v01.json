@@ -1,0 +1,3845 @@
+{
+  "actor": "transform:413",
+  "direction": "S",
+  "motion": "run",
+  "C": 2560.0,
+  "bodyunit": 2.5,
+  "common_unpadded_root": [
+    655.0833333333334,
+    1017.9227375838406
+  ],
+  "storage_canvas": [
+    2048,
+    2048
+  ],
+  "storage_translation": [
+    256,
+    256
+  ],
+  "source_RGBA_rescaled": false,
+  "phase_seconds_authored": 0.08,
+  "cycle_seconds_authored": 0.48,
+  "fps_authored": 12.5,
+  "reference_speed": 210,
+  "runtime_speed_ratio": 1.25,
+  "actual_phase_seconds": 0.064,
+  "actual_run_speed": 262.5,
+  "pixel_scale": 0.23706896551724138,
+  "native_to_game_scale": 0.09482758620689655,
+  "world_phase_displacement": 16.8,
+  "native_support_contact_to_load_step": 177.16363636363639,
+  "source_inputs": {
+    "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/own-S-DEATH-complete-native-materials-and-QA-cape-source-handoff-v07.json",
+    "bytes": 8657,
+    "sha256": "08b04ee5b0cc0968ff4f71e9c5dafdf0e28871fdb98acfd504edd2b59e2c10ea"
+  },
+  "once": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-native-one-time-body-density-C2560-root-registration-v01.json",
+    "bytes": 3681,
+    "sha256": "c9a5c8752e3daf303b4685c02fed424628aa621fe8ad05ff97ddbab838673480"
+  },
+  "sole": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-original-neutral-once-true-sole-and-HIT-six-material-floor-binding-v01.json",
+    "bytes": 16073,
+    "sha256": "b937fcb0e1fea65fae7227ebefbe508b5f352c521055006522ab10b16f02a3c2"
+  },
+  "projection": [
+    [
+      1.1111111111111112,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      -1.0
+    ]
+  ],
+  "source_body_U": [
+    0.9,
+    0.0,
+    0.0
+  ],
+  "source_body_V": [
+    0.0,
+    0.16,
+    -0.84
+  ],
+  "source_neutral_projection_Jacobian": [
+    [
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0
+    ]
+  ],
+  "source_neutral_projection_max_error": 0.0,
+  "fixed_femur_tibia": 289.75,
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0,
+  "status": "ACTUAL_NEW_OWN_S_RUN6_FINAL_SHARED_V08_CORRECT_LEFTUPPER_BLUEBACKING_PENDING_ACTUAL_SOURCE_CONTACT_LOOP_JOINT_QC",
+  "source_materials": {
+    "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v08/own-S-DEATH-complete-native-materials-and-QA-cape-source-handoff-v08.json",
+    "bytes": 8640,
+    "sha256": "0797ea8c294b7b2daa6f9dcfc01de0b4f54815be50f902db2d7a9a28c0843b30"
+  },
+  "leg_controls": {
+    "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-leg-controls-v05/S-RUN6-new-native-leg-controls-and-exact-clock-v01.json",
+    "bytes": 41724,
+    "sha256": "2c4e4341e4ec0884f460daecfe90e9935f676987488c2fd2df0223761e1e4471"
+  },
+  "renderer": {
+    "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/author_S_RUN6_actual_native_v04.py",
+    "bytes": 7142,
+    "sha256": "d847bc7ad26be78b823f38cfa48295edbfccf2df243d9f1f669e78492ef86d21"
+  },
+  "surface_renderer": {
+    "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/native_run_surface_v03.py",
+    "bytes": 10744,
+    "sha256": "2740766e6e5d2030e9937392a7007dcca955e128396b24d23f788c664e0a3638"
+  },
+  "frames": [
+    {
+      "phase": 0,
+      "name": "LEFT-CONTACT",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase0-LEFT-CONTACT-actual-native-v01.png",
+      "bytes": 869024,
+      "sha256": "57110c162f63fbc71fd64fde4d6c3f5c3002125a46cba5933182ce2c51fe2254",
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "pelvis": [
+        -8.0,
+        80.0,
+        460.92273758384044
+      ],
+      "torso_forward_lean_degrees": -5,
+      "torso_roll_degrees": -1.5,
+      "original_cloak_lag_native": -13,
+      "actual_native_nodes": [
+        {
+          "name": "pelvis-pleated-hem",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase0-actual-pelvis-pleated-hem-native.png",
+          "bytes": 97832,
+          "sha256": "dd8b7b4478c85dbf51db8102f1cd3fa99e9d31e0b19c050a126a1032809a76e2",
+          "surface": {
+            "original_source_texels": 31731,
+            "output_texels": 32284,
+            "source_bbox": [
+              414,
+              565,
+              820,
+              682
+            ],
+            "stored_bbox": [
+              677,
+              808,
+              1088,
+              934
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999451693655123,
+                0.001861650509554808
+              ],
+              [
+                -0.009424605704621215,
+                0.9999912270984819
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 429.420594849418,
+            "selected_output_texel_quad_guarded_min_Z": 427.420594849418,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 31731,
+              "actual_source_quad_and_interior_min_Z": 430.2627375838404,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 428.2627375838404,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "torso-blue-gold-bodice",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase0-actual-torso-blue-gold-bodice-native.png",
+          "bytes": 140683,
+          "sha256": "ce69f1b21f9073812a033015ecff3f59ce0ef21073bb096e40c5b3da66660a4b",
+          "surface": {
+            "original_source_texels": 41708,
+            "output_texels": 40365,
+            "source_bbox": [
+              319,
+              9,
+              783,
+              580
+            ],
+            "stored_bbox": [
+              580,
+              285,
+              1051,
+              837
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9996573249755574,
+                0.00465367969917745
+              ],
+              [
+                -0.025522927640248196,
+                0.9368693950811309
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 514.6752029525103,
+            "selected_output_texel_quad_guarded_min_Z": 512.6752029525103,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 41708,
+              "actual_source_quad_and_interior_min_Z": 515.5189953145352,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 513.5189953145352,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "head-bun-curls-blue-ribbons",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase0-actual-head-bun-curls-blue-ribbons-native.png",
+          "bytes": 146072,
+          "sha256": "4e6dc036822383b3133c28e5e8f3bb2ae3d266e98231952074a52ad02f0109d3",
+          "surface": {
+            "original_source_texels": 44830,
+            "output_texels": 43862,
+            "source_bbox": [
+              423,
+              101,
+              818,
+              446
+            ],
+            "stored_bbox": [
+              683,
+              365,
+              1086,
+              714
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9990482215818579,
+                0.007754557753837512
+              ],
+              [
+                -0.04190028064155151,
+                0.9499671116914211
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 630.2069489371856,
+            "selected_output_texel_quad_guarded_min_Z": 628.2069489371856,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 44830,
+              "actual_source_quad_and_interior_min_Z": 630.4024468942617,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 628.4024468942617,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "complete-original-cloak-two-coattails",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase0-actual-complete-original-cloak-two-coattails-native.png",
+          "bytes": 236707,
+          "sha256": "ac80f3cf361ddaa9de80204eeecfcf3daa3e51283c9274cafdb28f147d5e20c4",
+          "surface": {
+            "original_source_texels": 99960,
+            "output_texels": 102132,
+            "inverse_max_residual": 1.1368683772161603e-13,
+            "source_bbox": [
+              261,
+              576,
+              992,
+              989
+            ],
+            "stored_bbox": [
+              507,
+              814,
+              1264,
+              1248
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 173.96281330294397,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 99960,
+              "actual_source_quad_and_interior_min_Z": 173.53995980606268,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 171.53995980606268,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase0-actual-R-upper-arm-proximal-native-skin-native.png",
+          "bytes": 51043,
+          "sha256": "db89aa3a4d1cfb92e027b57c1bf81c057975227012dafaf667065b67d6975bcf",
+          "surface": {
+            "original_source_texels": 10551,
+            "output_texels": 11737,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              467,
+              322,
+              591,
+              496
+            ],
+            "stored_bbox": [
+              725,
+              580,
+              863,
+              781
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 591.9960412154551,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 10551,
+              "actual_source_quad_and_interior_min_Z": 591.9497474843213,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 589.9497474843213,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-complete-forearm-hand-entire-rigidstaff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase0-actual-R-complete-forearm-hand-entire-rigidstaff-native.png",
+          "bytes": 178266,
+          "sha256": "85a08eabd9ecc9884cf6902fe19887e1ba451f0cc706d0fc92e54ac641309b3f",
+          "surface": {
+            "original_source_texels": 52144,
+            "output_texels": 54609,
+            "source_bbox": [
+              321,
+              11,
+              524,
+              1127
+            ],
+            "stored_bbox": [
+              583,
+              273,
+              792,
+              1416
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                -0.0015513840885998107
+              ],
+              [
+                0.007631526583745378,
+                1.01859090954522
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 65.17709771886503,
+            "selected_output_texel_quad_guarded_min_Z": 63.17709771886503,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 52144,
+              "actual_source_quad_and_interior_min_Z": 65.2496569790543,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 63.24965697905429,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase0-actual-L-upper-arm-proximal-native-skin-native.png",
+          "bytes": 36003,
+          "sha256": "5b40786513405c9c84cbf1b0dd3e7a6ae9be11c3d4de039959b6128488a375e8",
+          "surface": {
+            "original_source_texels": 9314,
+            "output_texels": 5719,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              695,
+              331,
+              785,
+              529
+            ],
+            "stored_bbox": [
+              953,
+              583,
+              1058,
+              719
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 565.3207655972944,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 9314,
+              "actual_source_quad_and_interior_min_Z": 564.5699512003657,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 562.5699512003657,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-complete-forearm-hand-curved-cuff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase0-actual-L-complete-forearm-hand-curved-cuff-native.png",
+          "bytes": 49351,
+          "sha256": "9f06efa9b91da66e082beed3e0223633b2705a2b20ac4a0436a428631595d407",
+          "surface": {
+            "original_source_texels": 12206,
+            "output_texels": 9514,
+            "source_bbox": [
+              711,
+              470,
+              896,
+              687
+            ],
+            "stored_bbox": [
+              974,
+              663,
+              1164,
+              834
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                -0.0015513840885998107
+              ],
+              [
+                0.00981604350794573,
+                0.7558379792685418
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 430.84363326655256,
+            "selected_output_texel_quad_guarded_min_Z": 428.84363326655256,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 12206,
+              "actual_source_quad_and_interior_min_Z": 430.67327719977163,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 428.67327719977163,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        }
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            -83.73824621625774,
+            50.02877164552059,
+            716.8174101111101
+          ],
+          "elbow": [
+            -120.98081257553004,
+            84.9569025350627,
+            611.0859723854355
+          ],
+          "upper_UV": [
+            [
+              0.8996915924780016,
+              0.004188311729259705
+            ],
+            [
+              -0.023383646374223983,
+              0.2611232133986515
+            ],
+            [
+              -0.0028711507523678887,
+              -0.8142463542867237
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              -0.0013962456797398295
+            ],
+            [
+              0.007850819838089974,
+              0.1833857049998219
+            ],
+            [
+              0.00021929325434459656,
+              -0.8352052045453979
+            ]
+          ],
+          "sagittal_counter_degrees": 12,
+          "complete_foregrip_and_full_original_staff_rigid": true,
+          "same_source_material_original_RGBA": true
+        },
+        "L": {
+          "shoulder": [
+            58.42140201872503,
+            46.49282572439043,
+            715.4403479669769
+          ],
+          "elbow": [
+            114.03973202423283,
+            3.1765376310838036,
+            571.5863881562852
+          ],
+          "upper_UV": [
+            [
+              0.8996915924780016,
+              0.004188311729259705
+            ],
+            [
+              -0.02099144855309097,
+              -0.23883982802027315
+            ],
+            [
+              0.010695677259552854,
+              -0.8210590688836613
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              -0.0013962456797398295
+            ],
+            [
+              0.007506685505461925,
+              -0.09407281381448893
+            ],
+            [
+              -0.002309358002483806,
+              -0.8499107930830307
+            ]
+          ],
+          "sagittal_counter_degrees": -22,
+          "complete_foregrip_and_full_original_staff_rigid": false,
+          "same_source_material_original_RGBA": true
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/R-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "3299dfd6e9439e5d94a614e70b0c3286cba437e658f4046139fc2dcebe2cda3e",
+            "bytes": 104532
+          },
+          "hip": [
+            -70.1,
+            80.8,
+            456.72273758384046
+          ],
+          "knee": [
+            -99.4375,
+            357.2156556376268,
+            374.93790456346363
+          ],
+          "ankle": [
+            -128.775,
+            82.61077255749952,
+            462.61077255749944
+          ],
+          "heel": [
+            -114.375,
+            -57.7253784155691,
+            192.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -80,
+          "sole_lift": 170,
+          "native_capture": {
+            "original_source_texels": 36798,
+            "output_texels": 38769,
+            "source_bbox": [
+              443,
+              640,
+              617,
+              1199
+            ],
+            "stored_bbox": [
+              675,
+              878,
+              896,
+              1274
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 178.3228574480842,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 176.87799800243843,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36798,
+              "actual_source_quad_and_interior_min_Z": 173.0,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 171.0,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/L-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "a0de9c46ccf711ae65702a5e4ef26bfb898303c0b5ace3c6cc808b203d97552c",
+            "bytes": 106568
+          },
+          "hip": [
+            41.5,
+            80.8,
+            456.72273758384046
+          ],
+          "knee": [
+            75.6125,
+            348.9442203991434,
+            561.0782688712889
+          ],
+          "ankle": [
+            109.725,
+            382.2810394610202,
+            275.2810394610202
+          ],
+          "heel": [
+            90.825,
+            257.9181905678537,
+            17.918190567853703
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75000000000006,
+          "support": true,
+          "physical_sole_depth": 240,
+          "sole_lift": 0,
+          "native_capture": {
+            "original_source_texels": 36919,
+            "output_texels": 43292,
+            "source_bbox": [
+              651,
+              637,
+              851,
+              1201
+            ],
+            "stored_bbox": [
+              903,
+              882,
+              1131,
+              1545
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 4.10991473464566,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 2.858711654761157,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36919,
+              "actual_source_quad_and_interior_min_Z": 2.9999999999999982,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 0.9999999999999982,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "strong_components_ge200": [
+        320540
+      ],
+      "stored_alpha_bbox": [
+        517,
+        276,
+        1249,
+        1542
+      ],
+      "storage_border_alpha_contact": false
+    },
+    {
+      "phase": 1,
+      "name": "LEFT-LOAD",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase1-LEFT-LOAD-actual-native-v01.png",
+      "bytes": 800864,
+      "sha256": "3b2faa29868f3b0a1e9c3678177d41d44df20a756506fc3251f85d82ddafde96",
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "pelvis": [
+        -3.0,
+        80.0,
+        422.92273758384044
+      ],
+      "torso_forward_lean_degrees": -7,
+      "torso_roll_degrees": -0.5,
+      "original_cloak_lag_native": -7,
+      "actual_native_nodes": [
+        {
+          "name": "pelvis-pleated-hem",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase1-actual-pelvis-pleated-hem-native.png",
+          "bytes": 96907,
+          "sha256": "aad0f90a065c7bdd43f2f280ef32a4558c95189c2cbf12d05ec93debc78ff6d6",
+          "surface": {
+            "original_source_texels": 31731,
+            "output_texels": 32331,
+            "source_bbox": [
+              414,
+              565,
+              820,
+              682
+            ],
+            "stored_bbox": [
+              683,
+              847,
+              1094,
+              971
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999939076577905,
+                0.0006205602515953301
+              ],
+              [
+                -0.003141586273701359,
+                0.9999990252252464
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 391.42342802589616,
+            "selected_output_texel_quad_guarded_min_Z": 389.42342802589616,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 31731,
+              "actual_source_quad_and_interior_min_Z": 392.2627375838404,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 390.2627375838404,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "torso-blue-gold-bodice",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase1-actual-torso-blue-gold-bodice-native.png",
+          "bytes": 134963,
+          "sha256": "0d1843ed02ba4ff1a7b222bb4c990028b1c365ff45c9aeff96395ff6bffc9569",
+          "surface": {
+            "original_source_texels": 41708,
+            "output_texels": 39214,
+            "source_bbox": [
+              319,
+              9,
+              783,
+              580
+            ],
+            "stored_bbox": [
+              587,
+              341,
+              1057,
+              869
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                0.0015513840885998107
+              ],
+              [
+                -0.008752487739714881,
+                0.909668208761455
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 476.82130233931565,
+            "selected_output_texel_quad_guarded_min_Z": 474.82130233931565,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 41708,
+              "actual_source_quad_and_interior_min_Z": 477.62589160547253,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 475.62589160547253,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "head-bun-curls-blue-ribbons",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase1-actual-head-bun-curls-blue-ribbons-native.png",
+          "bytes": 141624,
+          "sha256": "b102458461de810f7144b931ba47c4a5bb6d97cf8077df95283ba06cbea9cafe",
+          "surface": {
+            "original_source_texels": 44830,
+            "output_texels": 42113,
+            "source_bbox": [
+              423,
+              101,
+              818,
+              446
+            ],
+            "stored_bbox": [
+              691,
+              424,
+              1092,
+              747
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                0.0015513840885998107
+              ],
+              [
+                -0.008752487739714881,
+                0.909668208761455
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 591.7349634586842,
+            "selected_output_texel_quad_guarded_min_Z": 589.7349634586842,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 44830,
+              "actual_source_quad_and_interior_min_Z": 592.2276669485605,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 590.2276669485605,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "complete-original-cloak-two-coattails",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase1-actual-complete-original-cloak-two-coattails-native.png",
+          "bytes": 239571,
+          "sha256": "867f5bebbf00ca013c9ecd0962d0b1064b8441c0f32ef8f1875622fb1af06720",
+          "surface": {
+            "original_source_texels": 99960,
+            "output_texels": 104133,
+            "inverse_max_residual": 1.1368683772161603e-13,
+            "source_bbox": [
+              261,
+              576,
+              992,
+              989
+            ],
+            "stored_bbox": [
+              519,
+              854,
+              1269,
+              1291
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 133.40180944933456,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 99960,
+              "actual_source_quad_and_interior_min_Z": 133.54273758384045,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 131.54273758384045,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase1-actual-R-upper-arm-proximal-native-skin-native.png",
+          "bytes": 48328,
+          "sha256": "018024b75b1fe1b89a9880edacaae09a56e85dbd708c80facbde022a86cb2189",
+          "surface": {
+            "original_source_texels": 10551,
+            "output_texels": 10543,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              467,
+              322,
+              591,
+              496
+            ],
+            "stored_bbox": [
+              732,
+              624,
+              869,
+              805
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 549.351689027686,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 10551,
+              "actual_source_quad_and_interior_min_Z": 549.3958513835277,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 547.3958513835277,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-complete-forearm-hand-entire-rigidstaff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase1-actual-R-complete-forearm-hand-entire-rigidstaff-native.png",
+          "bytes": 167540,
+          "sha256": "005af035b86819076cead8655446d1bcb019de34c46ae288739c7aa984f204ad",
+          "surface": {
+            "original_source_texels": 52144,
+            "output_texels": 50404,
+            "source_bbox": [
+              321,
+              11,
+              524,
+              1127
+            ],
+            "stored_bbox": [
+              589,
+              337,
+              798,
+              1392
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                -0.0015513840885998107
+              ],
+              [
+                0.008483533182345388,
+                0.9395853450490457
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 13.354362104039689,
+            "selected_output_texel_quad_guarded_min_Z": 11.354362104039689,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 52144,
+              "actual_source_quad_and_interior_min_Z": 13.628388577032865,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 11.628388577032865,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase1-actual-L-upper-arm-proximal-native-skin-native.png",
+          "bytes": 42030,
+          "sha256": "7a14b3e981ab0c2545a45248778cdd0b1b3cd6d8c467e1fd7882a789602d39b1",
+          "surface": {
+            "original_source_texels": 9314,
+            "output_texels": 7688,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              695,
+              331,
+              785,
+              529
+            ],
+            "stored_bbox": [
+              960,
+              630,
+              1064,
+              803
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 521.1133525711242,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 9314,
+              "actual_source_quad_and_interior_min_Z": 520.6843403792354,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 518.6843403792354,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-complete-forearm-hand-curved-cuff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase1-actual-L-complete-forearm-hand-curved-cuff-native.png",
+          "bytes": 52394,
+          "sha256": "0e6d252a130e43ba0a0d702cca97ad883d95525b3f47b976aaa4ad2363de2052",
+          "surface": {
+            "original_source_texels": 12206,
+            "output_texels": 10666,
+            "source_bbox": [
+              711,
+              470,
+              896,
+              687
+            ],
+            "stored_bbox": [
+              979,
+              742,
+              1170,
+              932
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                -0.0015513840885998107
+              ],
+              [
+                0.009251311500631614,
+                0.8458570068585598
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 386.3929592145751,
+            "selected_output_texel_quad_guarded_min_Z": 384.3929592145751,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 12206,
+              "actual_source_quad_and_interior_min_Z": 386.2590947442452,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 384.2590947442452,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        }
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            -78.0518025319107,
+            55.31938949054473,
+            679.4619349550516
+          ],
+          "elbow": [
+            -115.6688512853702,
+            70.70441745285794,
+            569.3057796223663
+          ],
+          "upper_UV": [
+            [
+              0.8999657307577542,
+              0.0013962456797398295
+            ],
+            [
+              -0.007843118476284392,
+              0.11581243835622515
+            ],
+            [
+              0.0004110404219958549,
+              -0.8472222433458574
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              -0.0013962456797398295
+            ],
+            [
+              0.007826337279105247,
+              0.08914339813763084
+            ],
+            [
+              -0.0006571959032401414,
+              -0.8504419469114148
+            ]
+          ],
+          "sagittal_counter_degrees": 4,
+          "complete_foregrip_and_full_original_staff_rigid": true,
+          "same_source_material_original_RGBA": true
+        },
+        "L": {
+          "shoulder": [
+            64.14557541917395,
+            54.20058790040465,
+            677.9066900102634
+          ],
+          "elbow": [
+            119.28922423503117,
+            42.67345351809542,
+            527.9401458472216
+          ],
+          "upper_UV": [
+            [
+              0.8999657307577542,
+              0.0013962456797398295
+            ],
+            [
+              -0.007586267410716957,
+              -0.06286575039917895
+            ],
+            [
+              0.0020327342262681527,
+              -0.8527871644934332
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              -0.0013962456797398295
+            ],
+            [
+              0.007698934083032253,
+              -0.009194750094608203
+            ],
+            [
+              -0.0015523774175993617,
+              -0.855051756953168
+            ]
+          ],
+          "sagittal_counter_degrees": -8,
+          "complete_foregrip_and_full_original_staff_rigid": false,
+          "same_source_material_original_RGBA": true
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/R-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "3299dfd6e9439e5d94a614e70b0c3286cba437e658f4046139fc2dcebe2cda3e",
+            "bytes": 104532
+          },
+          "hip": [
+            -65.1,
+            80.8,
+            418.72273758384046
+          ],
+          "knee": [
+            -96.9375,
+            -71.56060363639435,
+            174.33026111759665
+          ],
+          "ankle": [
+            -128.775,
+            2.6107725574995015,
+            452.61077255749944
+          ],
+          "heel": [
+            -114.375,
+            -137.7253784155691,
+            182.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -160,
+          "sole_lift": 160,
+          "native_capture": {
+            "original_source_texels": 36798,
+            "output_texels": 20288,
+            "source_bbox": [
+              443,
+              640,
+              617,
+              1199
+            ],
+            "stored_bbox": [
+              677,
+              807,
+              897,
+              1055
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 167.51688143078545,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 157.61643829208523,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36798,
+              "actual_source_quad_and_interior_min_Z": 163.0,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 161.0,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/L-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "a0de9c46ccf711ae65702a5e4ef26bfb898303c0b5ace3c6cc808b203d97552c",
+            "bytes": 106568
+          },
+          "hip": [
+            46.5,
+            80.8,
+            418.72273758384046
+          ],
+          "knee": [
+            78.1125,
+            348.45539822780574,
+            525.1008375070139
+          ],
+          "ankle": [
+            109.725,
+            205.11740309738383,
+            275.2810394610202
+          ],
+          "heel": [
+            90.825,
+            80.75455420421731,
+            17.918190567853703
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.74999999999994,
+          "tibia_native": 289.7499999999999,
+          "support": true,
+          "physical_sole_depth": 62.836363636363615,
+          "sole_lift": 0,
+          "native_capture": {
+            "original_source_texels": 36919,
+            "output_texels": 29715,
+            "source_bbox": [
+              651,
+              637,
+              851,
+              1201
+            ],
+            "stored_bbox": [
+              904,
+              920,
+              1133,
+              1368
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 3.8106759561001287,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 2.559472876215626,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36919,
+              "actual_source_quad_and_interior_min_Z": 2.9999999999999982,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 0.9999999999999982,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "strong_components_ge200": [
+        289549
+      ],
+      "stored_alpha_bbox": [
+        527,
+        340,
+        1260,
+        1389
+      ],
+      "storage_border_alpha_contact": false
+    },
+    {
+      "phase": 2,
+      "name": "RIGHT-DRIVE-FLIGHT",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase2-RIGHT-DRIVE-FLIGHT-actual-native-v01.png",
+      "bytes": 759617,
+      "sha256": "094554b44940d4c28ae71dd2e5fb64d41e461cf2423ff28f3918a227d4d7933e",
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "pelvis": [
+        5.0,
+        80.0,
+        497.92273758384044
+      ],
+      "torso_forward_lean_degrees": -9,
+      "torso_roll_degrees": 1.5,
+      "original_cloak_lag_native": 11,
+      "actual_native_nodes": [
+        {
+          "name": "pelvis-pleated-hem",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase2-actual-pelvis-pleated-hem-native.png",
+          "bytes": 97629,
+          "sha256": "a01c97652503d17daa441a68d927fd7b0bddf12450f616825944188f01c86e06",
+          "surface": {
+            "original_source_texels": 31731,
+            "output_texels": 32342,
+            "source_bbox": [
+              414,
+              565,
+              820,
+              682
+            ],
+            "stored_bbox": [
+              692,
+              771,
+              1103,
+              897
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999451693655123,
+                -0.001861650509554808
+              ],
+              [
+                0.009424605704621215,
+                0.9999912270984819
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 466.4211272684111,
+            "selected_output_texel_quad_guarded_min_Z": 464.4211272684111,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 31731,
+              "actual_source_quad_and_interior_min_Z": 467.2627375838404,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 465.2627375838404,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "torso-blue-gold-bodice",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase2-actual-torso-blue-gold-bodice-native.png",
+          "bytes": 133507,
+          "sha256": "d763817df3cd091e2318daa52100b31790fe63c090749406847fb94de6098aa5",
+          "surface": {
+            "original_source_texels": 41708,
+            "output_texels": 37984,
+            "source_bbox": [
+              319,
+              9,
+              783,
+              580
+            ],
+            "stored_bbox": [
+              597,
+              275,
+              1068,
+              795
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9996573249755574,
+                -0.00465367969917745
+              ],
+              [
+                0.02695467918687826,
+                0.8812501743981189
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 551.429891013251,
+            "selected_output_texel_quad_guarded_min_Z": 549.429891013251,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 41708,
+              "actual_source_quad_and_interior_min_Z": 552.3152735912216,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 550.3152735912216,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "head-bun-curls-blue-ribbons",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase2-actual-head-bun-curls-blue-ribbons-native.png",
+          "bytes": 134086,
+          "sha256": "1d78b9ed356cf0643a968f7a8df62fb1baacb1354deee5fd8dc9a015b8a30418",
+          "surface": {
+            "original_source_texels": 44830,
+            "output_texels": 39315,
+            "source_bbox": [
+              423,
+              101,
+              818,
+              446
+            ],
+            "stored_bbox": [
+              701,
+              361,
+              1103,
+              678
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9990482215818579,
+                -0.007754557753837512
+              ],
+              [
+                0.046026853060740766,
+                0.8516985226793489
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 665.4722552551956,
+            "selected_output_texel_quad_guarded_min_Z": 663.4722552551956,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 44830,
+              "actual_source_quad_and_interior_min_Z": 666.0620590945313,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 664.0620590945313,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "complete-original-cloak-two-coattails",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase2-actual-complete-original-cloak-two-coattails-native.png",
+          "bytes": 233717,
+          "sha256": "bb9e70781481b4174d051641cb8af7a57736f61a36d84ac4a64625da62bb2a41",
+          "surface": {
+            "original_source_texels": 99960,
+            "output_texels": 100448,
+            "inverse_max_residual": 1.1368683772161603e-13,
+            "source_bbox": [
+              261,
+              576,
+              992,
+              989
+            ],
+            "stored_bbox": [
+              535,
+              777,
+              1290,
+              1205
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 217.92587322804977,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 99960,
+              "actual_source_quad_and_interior_min_Z": 217.53023758384046,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 215.53023758384046,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase2-actual-R-upper-arm-proximal-native-skin-native.png",
+          "bytes": 40159,
+          "sha256": "efcf4f1ff692c4c071762b74218279cd62869cabec0ddbecfbb458099c4d201e",
+          "surface": {
+            "original_source_texels": 10551,
+            "output_texels": 7325,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              467,
+              322,
+              591,
+              496
+            ],
+            "stored_bbox": [
+              742,
+              551,
+              879,
+              686
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 627.6882245358618,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 10551,
+              "actual_source_quad_and_interior_min_Z": 627.2664596796828,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 625.2664596796828,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-complete-forearm-hand-entire-rigidstaff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase2-actual-R-complete-forearm-hand-entire-rigidstaff-native.png",
+          "bytes": 144696,
+          "sha256": "e50d978e35acf45382a130c49086518ea50733ba420fffa01db7021a04f22ac8",
+          "surface": {
+            "original_source_texels": 52144,
+            "output_texels": 40772,
+            "source_bbox": [
+              321,
+              11,
+              524,
+              1127
+            ],
+            "stored_bbox": [
+              599,
+              307,
+              808,
+              1165
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                0.0015513840885998107
+              ],
+              [
+                -0.009779520401737582,
+                0.7624097553069114
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 90.74459276733714,
+            "selected_output_texel_quad_guarded_min_Z": 88.74459276733714,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 52144,
+              "actual_source_quad_and_interior_min_Z": 90.77231220195563,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 88.77231220195563,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase2-actual-L-upper-arm-proximal-native-skin-native.png",
+          "bytes": 49741,
+          "sha256": "8abc05170a0e659da97b46753c758817693171a84d8514cc08520c4d44656eaf",
+          "surface": {
+            "original_source_texels": 9314,
+            "output_texels": 11013,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              695,
+              331,
+              785,
+              529
+            ],
+            "stored_bbox": [
+              969,
+              565,
+              1074,
+              805
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 612.402029314215,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 9314,
+              "actual_source_quad_and_interior_min_Z": 612.4068211346532,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 610.4068211346532,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-complete-forearm-hand-curved-cuff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase2-actual-L-complete-forearm-hand-curved-cuff-native.png",
+          "bytes": 60974,
+          "sha256": "7996e37bff77cac2e3b04b4623d8ff6615fbc823638ae666239fe8f8405cf22f",
+          "surface": {
+            "original_source_texels": 12206,
+            "output_texels": 13164,
+            "source_bbox": [
+              711,
+              470,
+              896,
+              687
+            ],
+            "stored_bbox": [
+              989,
+              730,
+              1179,
+              964
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                0.0015513840885998107
+              ],
+              [
+                -0.0071765419244306464,
+                1.0528695167135989
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 482.70213429626403,
+            "selected_output_texel_quad_guarded_min_Z": 480.70213429626403,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 12206,
+              "actual_source_quad_and_interior_min_Z": 482.4971462529159,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 480.4971462529159,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        }
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            -68.61055813509053,
+            59.3705893787762,
+            755.1674022193886
+          ],
+          "elbow": [
+            -106.94208554397036,
+            34.93186097076291,
+            646.9104737561181
+          ],
+          "upper_UV": [
+            [
+              0.8996915924780016,
+              -0.004188311729259705
+            ],
+            [
+              0.021686407169373794,
+              -0.18098384082230454
+            ],
+            [
+              -0.009205333697466596,
+              -0.8357196344504928
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              0.0013962456797398295
+            ],
+            [
+              -0.007522624802167852,
+              -0.08813707284981517
+            ],
+            [
+              0.00225689559956973,
+              -0.8505468281567266
+            ]
+          ],
+          "sagittal_counter_degrees": -14,
+          "complete_foregrip_and_full_original_staff_rigid": true,
+          "same_source_material_original_RGBA": true
+        },
+        "L": {
+          "shoulder": [
+            73.5323368529752,
+            63.10026503618467,
+            752.875738216474
+          ],
+          "elbow": [
+            127.67638112978359,
+            132.2917882483265,
+            618.9182196333999
+          ],
+          "upper_UV": [
+            [
+              0.8996915924780016,
+              -0.004188311729259705
+            ],
+            [
+              0.022646607952424267,
+              0.3852845461763861
+            ],
+            [
+              0.006493810333446383,
+              -0.7633729603034907
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              0.0013962456797398295
+            ],
+            [
+              -0.007826907810601417,
+              0.22900330332418348
+            ],
+            [
+              -0.00065036588617077,
+              -0.8238662133894155
+            ]
+          ],
+          "sagittal_counter_degrees": 25,
+          "complete_foregrip_and_full_original_staff_rigid": false,
+          "same_source_material_original_RGBA": true
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/R-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "3299dfd6e9439e5d94a614e70b0c3286cba437e658f4046139fc2dcebe2cda3e",
+            "bytes": 104532
+          },
+          "hip": [
+            -57.1,
+            80.8,
+            493.72273758384046
+          ],
+          "knee": [
+            -92.9375,
+            241.18669211981165,
+            732.3581186249064
+          ],
+          "ankle": [
+            -128.775,
+            307.6107725574995,
+            452.61077255749944
+          ],
+          "heel": [
+            -114.375,
+            167.2746215844309,
+            182.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": 145,
+          "sole_lift": 160,
+          "native_capture": {
+            "original_source_texels": 36798,
+            "output_texels": 35815,
+            "source_bbox": [
+              443,
+              640,
+              617,
+              1199
+            ],
+            "stored_bbox": [
+              695,
+              734,
+              930,
+              1291
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 164.29297736158924,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 162.84811791594348,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36798,
+              "actual_source_quad_and_interior_min_Z": 163.0,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 161.0,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/L-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "a0de9c46ccf711ae65702a5e4ef26bfb898303c0b5ace3c6cc808b203d97552c",
+            "bytes": 106568
+          },
+          "hip": [
+            54.5,
+            80.8,
+            493.72273758384046
+          ],
+          "knee": [
+            82.1125,
+            106.84181489115534,
+            206.4694761211988
+          ],
+          "ankle": [
+            109.725,
+            2.2810394610201996,
+            475.2810394610202
+          ],
+          "heel": [
+            90.825,
+            -122.0818094321463,
+            217.9181905678537
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.74999999999994,
+          "tibia_native": 289.74999999999994,
+          "support": false,
+          "physical_sole_depth": -140,
+          "sole_lift": 200,
+          "native_capture": {
+            "original_source_texels": 36919,
+            "output_texels": 34708,
+            "source_bbox": [
+              651,
+              637,
+              851,
+              1201
+            ],
+            "stored_bbox": [
+              889,
+              775,
+              1139,
+              1199
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 202.77475993315733,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 202.46406879689943,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36919,
+              "actual_source_quad_and_interior_min_Z": 202.68259941504402,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 200.68259941504402,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "strong_components_ge200": [
+        276244
+      ],
+      "stored_alpha_bbox": [
+        550,
+        281,
+        1282,
+        1288
+      ],
+      "storage_border_alpha_contact": false
+    },
+    {
+      "phase": 3,
+      "name": "RIGHT-CONTACT",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase3-RIGHT-CONTACT-actual-native-v01.png",
+      "bytes": 846046,
+      "sha256": "698c25cbf77705a15ae23ba5cb7f51230031f4ff571b06b5becaed1056370fce",
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "pelvis": [
+        8.0,
+        80.0,
+        460.92273758384044
+      ],
+      "torso_forward_lean_degrees": -5,
+      "torso_roll_degrees": 1.5,
+      "original_cloak_lag_native": 13,
+      "actual_native_nodes": [
+        {
+          "name": "pelvis-pleated-hem",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase3-actual-pelvis-pleated-hem-native.png",
+          "bytes": 98621,
+          "sha256": "7da4c6c27a0881d092d9f8fb31250555bc645e82fd3e41dbf5692a36344c59d1",
+          "surface": {
+            "original_source_texels": 31731,
+            "output_texels": 32274,
+            "source_bbox": [
+              414,
+              565,
+              820,
+              682
+            ],
+            "stored_bbox": [
+              695,
+              808,
+              1106,
+              934
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999451693655123,
+                -0.001861650509554808
+              ],
+              [
+                0.009424605704621215,
+                0.9999912270984819
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 429.4208495170039,
+            "selected_output_texel_quad_guarded_min_Z": 427.4208495170039,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 31731,
+              "actual_source_quad_and_interior_min_Z": 430.2627375838404,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 428.2627375838404,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "torso-blue-gold-bodice",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase3-actual-torso-blue-gold-bodice-native.png",
+          "bytes": 140355,
+          "sha256": "26cf657a6cab494e0bb0702e86dd10754db686a9a570a7b61fca7dcfb2575527",
+          "surface": {
+            "original_source_texels": 41708,
+            "output_texels": 40453,
+            "source_bbox": [
+              319,
+              9,
+              783,
+              580
+            ],
+            "stored_bbox": [
+              600,
+              281,
+              1072,
+              833
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9996573249755574,
+                -0.00465367969917745
+              ],
+              [
+                0.025522927640248196,
+                0.9368693950811309
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 514.7556608567563,
+            "selected_output_texel_quad_guarded_min_Z": 512.7556608567563,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 41708,
+              "actual_source_quad_and_interior_min_Z": 515.5559551507721,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 513.5559551507721,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "head-bun-curls-blue-ribbons",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase3-actual-head-bun-curls-blue-ribbons-native.png",
+          "bytes": 146322,
+          "sha256": "a2db5417e543e840490551f2fbd310d13a4eb2ffe251bfe10e118941875bfb2f",
+          "surface": {
+            "original_source_texels": 44830,
+            "output_texels": 43846,
+            "source_bbox": [
+              423,
+              101,
+              818,
+              446
+            ],
+            "stored_bbox": [
+              704,
+              364,
+              1107,
+              713
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9990482215818579,
+                -0.007754557753837512
+              ],
+              [
+                0.04190028064155151,
+                0.9499671116914211
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 629.1027999757896,
+            "selected_output_texel_quad_guarded_min_Z": 627.1027999757896,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 44830,
+              "actual_source_quad_and_interior_min_Z": 629.5740613426334,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 627.5740613426334,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "complete-original-cloak-two-coattails",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase3-actual-complete-original-cloak-two-coattails-native.png",
+          "bytes": 232863,
+          "sha256": "aedbff363b254ce78fec1b64e09f897815fbded8976656eab127325a3d3393d5",
+          "surface": {
+            "original_source_texels": 99960,
+            "output_texels": 99902,
+            "inverse_max_residual": 1.1368683772161603e-13,
+            "source_bbox": [
+              261,
+              576,
+              992,
+              989
+            ],
+            "stored_bbox": [
+              539,
+              814,
+              1295,
+              1240
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 173.94528574576844,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 99960,
+              "actual_source_quad_and_interior_min_Z": 173.53995980606268,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 171.53995980606268,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase3-actual-R-upper-arm-proximal-native-skin-native.png",
+          "bytes": 43663,
+          "sha256": "3468b6edc7820f027c6c734d738c49b776462bee9007e1eea74f46b94043fbdc",
+          "surface": {
+            "original_source_texels": 10551,
+            "output_texels": 8413,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              467,
+              322,
+              591,
+              496
+            ],
+            "stored_bbox": [
+              745,
+              575,
+              883,
+              727
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 586.8680680549651,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 10551,
+              "actual_source_quad_and_interior_min_Z": 586.9599927141085,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 584.9599927141085,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-complete-forearm-hand-entire-rigidstaff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase3-actual-R-complete-forearm-hand-entire-rigidstaff-native.png",
+          "bytes": 154157,
+          "sha256": "927b44521d65da434216d7f36224589c7a355f320e83b780f6b30b88d5ba5f85",
+          "surface": {
+            "original_source_texels": 52144,
+            "output_texels": 45209,
+            "source_bbox": [
+              321,
+              11,
+              524,
+              1127
+            ],
+            "stored_bbox": [
+              602,
+              308,
+              812,
+              1255
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                0.0015513840885998107
+              ],
+              [
+                -0.00927271062519901,
+                0.8428350703152852
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 47.618669343301995,
+            "selected_output_texel_quad_guarded_min_Z": 45.618669343301995,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 52144,
+              "actual_source_quad_and_interior_min_Z": 47.97390180821674,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 45.97390180821674,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase3-actual-L-upper-arm-proximal-native-skin-native.png",
+          "bytes": 49933,
+          "sha256": "99a57a89dbb1b7b3281ca06754f927a69c348f08024245258f5ca91b35033c78",
+          "surface": {
+            "original_source_texels": 9314,
+            "output_texels": 11069,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              695,
+              331,
+              785,
+              529
+            ],
+            "stored_bbox": [
+              973,
+              589,
+              1078,
+              830
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 575.8317827764157,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 9314,
+              "actual_source_quad_and_interior_min_Z": 575.9481568102863,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 573.9481568102863,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-complete-forearm-hand-curved-cuff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase3-actual-L-complete-forearm-hand-curved-cuff-native.png",
+          "bytes": 61110,
+          "sha256": "516757ac73acd87aaf2888864ccd2804531533aec7fd01857fdab5fac9cc6eba",
+          "surface": {
+            "original_source_texels": 12206,
+            "output_texels": 13559,
+            "source_bbox": [
+              711,
+              470,
+              896,
+              687
+            ],
+            "stored_bbox": [
+              992,
+              754,
+              1183,
+              994
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                0.0015513840885998107
+              ],
+              [
+                -0.00682290648693051,
+                1.0763756494939802
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 447.57713511658693,
+            "selected_output_texel_quad_guarded_min_Z": 445.57713511658693,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 12206,
+              "actual_source_quad_and_interior_min_Z": 447.6153509082519,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 445.6153509082519,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        }
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            -65.61055813509053,
+            46.13281748031177,
+            717.1582619341825
+          ],
+          "elbow": [
+            -103.94208554397036,
+            33.14389735392588,
+            606.939833527438
+          ],
+          "upper_UV": [
+            [
+              0.8996915924780016,
+              -0.004188311729259705
+            ],
+            [
+              0.022529826147075868,
+              -0.0926359032939131
+            ],
+            [
+              -0.00688805910109065,
+              -0.8500594376076177
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              0.0013962456797398295
+            ],
+            [
+              -0.007693468370061464,
+              -0.012179381702542236
+            ],
+            [
+              0.0015792422551375463,
+              -0.8550144520178273
+            ]
+          ],
+          "sagittal_counter_degrees": -12,
+          "complete_foregrip_and_full_original_staff_rigid": true,
+          "same_source_material_original_RGBA": true
+        },
+        "L": {
+          "shoulder": [
+            76.5323368529752,
+            50.01326623512129,
+            715.1323493316705
+          ],
+          "elbow": [
+            130.67638112978358,
+            121.53213230278301,
+            582.4027917126275
+          ],
+          "upper_UV": [
+            [
+              0.8996915924780016,
+              -0.004188311729259705
+            ],
+            [
+              0.022529826147075868,
+              0.39854856064028465
+            ],
+            [
+              0.00688805910109065,
+              -0.7565325524102818
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              0.0013962456797398295
+            ],
+            [
+              -0.007793657893915125,
+              0.26259230493016894
+            ],
+            [
+              -0.000970751406984615,
+              -0.8137833445638113
+            ]
+          ],
+          "sagittal_counter_degrees": 22,
+          "complete_foregrip_and_full_original_staff_rigid": false,
+          "same_source_material_original_RGBA": true
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/R-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "3299dfd6e9439e5d94a614e70b0c3286cba437e658f4046139fc2dcebe2cda3e",
+            "bytes": 104532
+          },
+          "hip": [
+            -54.1,
+            80.8,
+            456.72273758384046
+          ],
+          "knee": [
+            -91.4375,
+            343.22635488111183,
+            573.7414619725585
+          ],
+          "ankle": [
+            -128.775,
+            402.61077255749956,
+            292.6107725574995
+          ],
+          "heel": [
+            -114.375,
+            262.2746215844309,
+            22.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": true,
+          "physical_sole_depth": 240,
+          "sole_lift": 0,
+          "native_capture": {
+            "original_source_texels": 36798,
+            "output_texels": 43208,
+            "source_bbox": [
+              443,
+              640,
+              617,
+              1199
+            ],
+            "stored_bbox": [
+              695,
+              885,
+              904,
+              1546
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 4.292977361589681,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 2.8481179159438432,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36798,
+              "actual_source_quad_and_interior_min_Z": 3.0,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 1.0,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/L-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "a0de9c46ccf711ae65702a5e4ef26bfb898303c0b5ace3c6cc808b203d97552c",
+            "bytes": 106568
+          },
+          "hip": [
+            57.5,
+            80.8,
+            456.72273758384046
+          ],
+          "knee": [
+            83.6125,
+            223.10832184940602,
+            205.6818218426891
+          ],
+          "ankle": [
+            109.725,
+            62.2810394610202,
+            445.2810394610202
+          ],
+          "heel": [
+            90.825,
+            -62.0818094321463,
+            187.9181905678537
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -80,
+          "sole_lift": 170,
+          "native_capture": {
+            "original_source_texels": 36919,
+            "output_texels": 38606,
+            "source_bbox": [
+              651,
+              637,
+              851,
+              1201
+            ],
+            "stored_bbox": [
+              890,
+              865,
+              1141,
+              1316
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 175.64985698681124,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 174.39865390692674,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36919,
+              "actual_source_quad_and_interior_min_Z": 173.0,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 171.0,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "strong_components_ge200": [
+        310883
+      ],
+      "stored_alpha_bbox": [
+        555,
+        287,
+        1287,
+        1543
+      ],
+      "storage_border_alpha_contact": false
+    },
+    {
+      "phase": 4,
+      "name": "RIGHT-LOAD",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase4-RIGHT-LOAD-actual-native-v01.png",
+      "bytes": 795305,
+      "sha256": "94a2c6288b71e57aa4cbdb6f8ff6f0f22469fd9281cf88fd3d7f60ff85e9af3d",
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "pelvis": [
+        3.0,
+        80.0,
+        422.92273758384044
+      ],
+      "torso_forward_lean_degrees": -7,
+      "torso_roll_degrees": 0.5,
+      "original_cloak_lag_native": 7,
+      "actual_native_nodes": [
+        {
+          "name": "pelvis-pleated-hem",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase4-actual-pelvis-pleated-hem-native.png",
+          "bytes": 96285,
+          "sha256": "291edf764919e77fdd16ec8c0e0462aed145161087bd904fa60f81843dde5a9f",
+          "surface": {
+            "original_source_texels": 31731,
+            "output_texels": 32380,
+            "source_bbox": [
+              414,
+              565,
+              820,
+              682
+            ],
+            "stored_bbox": [
+              689,
+              847,
+              1100,
+              971
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999939076577905,
+                -0.0006205602515953301
+              ],
+              [
+                0.003141586273701359,
+                0.9999990252252464
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 391.42562714754183,
+            "selected_output_texel_quad_guarded_min_Z": 389.42562714754183,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 31731,
+              "actual_source_quad_and_interior_min_Z": 392.2627375838404,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 390.2627375838404,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "torso-blue-gold-bodice",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase4-actual-torso-blue-gold-bodice-native.png",
+          "bytes": 135173,
+          "sha256": "699778cdd09dc825b795e00280b1dc413a3a4f85b2aa705a2a50f2a0a682d518",
+          "surface": {
+            "original_source_texels": 41708,
+            "output_texels": 39220,
+            "source_bbox": [
+              319,
+              9,
+              783,
+              580
+            ],
+            "stored_bbox": [
+              594,
+              339,
+              1064,
+              868
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                -0.0015513840885998107
+              ],
+              [
+                0.008752487739714881,
+                0.909668208761455
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 476.8200935810923,
+            "selected_output_texel_quad_guarded_min_Z": 474.8200935810923,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 41708,
+              "actual_source_quad_and_interior_min_Z": 477.64312025932503,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 475.64312025932503,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "head-bun-curls-blue-ribbons",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase4-actual-head-bun-curls-blue-ribbons-native.png",
+          "bytes": 143101,
+          "sha256": "1394405cd3ad99b1988af34213997a183a926ea2246992f8124857bcf8b47209",
+          "surface": {
+            "original_source_texels": 44830,
+            "output_texels": 41954,
+            "source_bbox": [
+              423,
+              101,
+              818,
+              446
+            ],
+            "stored_bbox": [
+              699,
+              424,
+              1099,
+              746
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                -0.0015513840885998107
+              ],
+              [
+                0.008752487739714881,
+                0.909668208761455
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 592.0336138478929,
+            "selected_output_texel_quad_guarded_min_Z": 590.0336138478929,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 44830,
+              "actual_source_quad_and_interior_min_Z": 591.9386084228131,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 589.9386084228131,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "complete-original-cloak-two-coattails",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase4-actual-complete-original-cloak-two-coattails-native.png",
+          "bytes": 230776,
+          "sha256": "2d2a18ccff274978228de2a7fac357a440ca4e2adc85be9e4d134ead865a7271",
+          "surface": {
+            "original_source_texels": 99960,
+            "output_texels": 99068,
+            "inverse_max_residual": 1.1368683772161603e-13,
+            "source_bbox": [
+              261,
+              576,
+              992,
+              989
+            ],
+            "stored_bbox": [
+              533,
+              854,
+              1283,
+              1273
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 133.69092893682227,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 99960,
+              "actual_source_quad_and_interior_min_Z": 133.54273758384045,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 131.54273758384045,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase4-actual-R-upper-arm-proximal-native-skin-native.png",
+          "bytes": 46145,
+          "sha256": "44e185aa616e02faacf6062c777abba79f1bd57540dd4a6513c12e7a4b3062b4",
+          "surface": {
+            "original_source_texels": 10551,
+            "output_texels": 9402,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              467,
+              322,
+              591,
+              496
+            ],
+            "stored_bbox": [
+              739,
+              622,
+              876,
+              786
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 549.1274105718796,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 10551,
+              "actual_source_quad_and_interior_min_Z": 548.4259134480034,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 546.4259134480034,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-complete-forearm-hand-entire-rigidstaff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase4-actual-R-complete-forearm-hand-entire-rigidstaff-native.png",
+          "bytes": 158201,
+          "sha256": "49c1d0a735571faa931e2c0c460fea3fc6cfe62337124c1804ac2b6ff13abd6f",
+          "surface": {
+            "original_source_texels": 52144,
+            "output_texels": 47118,
+            "source_bbox": [
+              321,
+              11,
+              524,
+              1127
+            ],
+            "stored_bbox": [
+              596,
+              350,
+              806,
+              1337
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                0.0015513840885998107
+              ],
+              [
+                -0.009008539666926005,
+                0.8784100694569492
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 9.191037650272646,
+            "selected_output_texel_quad_guarded_min_Z": 7.191037650272646,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 52144,
+              "actual_source_quad_and_interior_min_Z": 9.756130333736564,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 7.756130333736564,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase4-actual-L-upper-arm-proximal-native-skin-native.png",
+          "bytes": 47142,
+          "sha256": "ca083f19a6b41895d015e8faefd23148b12ca155a218877bbdfae9917e7e91aa",
+          "surface": {
+            "original_source_texels": 9314,
+            "output_texels": 9775,
+            "inverse_max_residual": 2.5421149729252077e-13,
+            "source_bbox": [
+              695,
+              331,
+              785,
+              529
+            ],
+            "stored_bbox": [
+              967,
+              632,
+              1071,
+              846
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 523.0264627550398,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 9314,
+              "actual_source_quad_and_interior_min_Z": 523.3297789960117,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 521.3297789960117,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-complete-forearm-hand-curved-cuff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase4-actual-L-complete-forearm-hand-curved-cuff-native.png",
+          "bytes": 57069,
+          "sha256": "1078902a5907150746edeef17ff8025585111f4c48efc0b3c563e8a7fe71e5f3",
+          "surface": {
+            "original_source_texels": 12206,
+            "output_texels": 12198,
+            "source_bbox": [
+              711,
+              470,
+              896,
+              687
+            ],
+            "stored_bbox": [
+              986,
+              777,
+              1177,
+              993
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                0.0015513840885998107
+              ],
+              [
+                -0.008202072478798582,
+                0.9681173754593232
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 390.3055099303289,
+            "selected_output_texel_quad_guarded_min_Z": 388.3055099303289,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 12206,
+              "actual_source_quad_and_interior_min_Z": 390.4053254593896,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 388.4053254593896,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        }
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            -71.3425087738765,
+            54.02536300016951,
+            679.6208214294691
+          ],
+          "elbow": [
+            -109.32258140406836,
+            53.28228614308914,
+            568.521397849552
+          ],
+          "upper_UV": [
+            [
+              0.8999657307577542,
+              -0.0013962456797398295
+            ],
+            [
+              0.007709584016272375,
+              -0.003225187141514903
+            ],
+            [
+              -0.0014985913244062376,
+              -0.8550951108887853
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              0.0013962456797398295
+            ],
+            [
+              -0.0077528516930025215,
+              0.023635590810661713
+            ],
+            [
+              0.0012556879739234843,
+              -0.8547744786462875
+            ]
+          ],
+          "sagittal_counter_degrees": -4,
+          "complete_foregrip_and_full_original_staff_rigid": true,
+          "same_source_material_original_RGBA": true
+        },
+        "L": {
+          "shoulder": [
+            70.84928419448919,
+            55.36988894592443,
+            677.7631178948261
+          ],
+          "elbow": [
+            125.50145453107798,
+            86.58370555763256,
+            530.4454369124296
+          ],
+          "upper_UV": [
+            [
+              0.8999657307577542,
+              -0.0013962456797398295
+            ],
+            [
+              0.007852685764274647,
+              0.17462956125049645
+            ],
+            [
+              0.0001370691398763039,
+              -0.8370797852268689
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              0.0013962456797398295
+            ],
+            [
+              -0.007845796925198559,
+              0.12172429509981628
+            ],
+            [
+              0.00035627555360002365,
+              -0.8463930803595069
+            ]
+          ],
+          "sagittal_counter_degrees": 8,
+          "complete_foregrip_and_full_original_staff_rigid": false,
+          "same_source_material_original_RGBA": true
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/R-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "3299dfd6e9439e5d94a614e70b0c3286cba437e658f4046139fc2dcebe2cda3e",
+            "bytes": 104532
+          },
+          "hip": [
+            -59.1,
+            80.8,
+            418.72273758384046
+          ],
+          "knee": [
+            -93.9375,
+            -25.08107907036063,
+            151.27067049770625
+          ],
+          "ankle": [
+            -128.775,
+            225.44713619386312,
+            292.6107725574995
+          ],
+          "heel": [
+            -114.375,
+            85.11098522079452,
+            22.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": true,
+          "physical_sole_depth": 62.836363636363615,
+          "sole_lift": 0,
+          "native_capture": {
+            "original_source_texels": 36798,
+            "output_texels": 30043,
+            "source_bbox": [
+              443,
+              640,
+              617,
+              1199
+            ],
+            "stored_bbox": [
+              696,
+              923,
+              899,
+              1369
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 3.971301789275071,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 2.5264423436293075,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36798,
+              "actual_source_quad_and_interior_min_Z": 3.0,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 1.0,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/L-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "a0de9c46ccf711ae65702a5e4ef26bfb898303c0b5ace3c6cc808b203d97552c",
+            "bytes": 106568
+          },
+          "hip": [
+            52.5,
+            80.8,
+            418.72273758384046
+          ],
+          "knee": [
+            81.1125,
+            -15.52749336755992,
+            146.95555530225465
+          ],
+          "ankle": [
+            109.725,
+            -17.718960538979786,
+            435.2810394610202
+          ],
+          "heel": [
+            90.825,
+            -142.0818094321463,
+            177.9181905678537
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -160,
+          "sole_lift": 160,
+          "native_capture": {
+            "original_source_texels": 36919,
+            "output_texels": 26084,
+            "source_bbox": [
+              651,
+              637,
+              851,
+              1201
+            ],
+            "stored_bbox": [
+              888,
+              797,
+              1138,
+              1136
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 142.74754499926397,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 142.39173401219864,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36919,
+              "actual_source_quad_and_interior_min_Z": 142.4300600661429,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 140.4300600661429,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "strong_components_ge200": [
+        286323
+      ],
+      "stored_alpha_bbox": [
+        545,
+        343,
+        1277,
+        1366
+      ],
+      "storage_border_alpha_contact": false
+    },
+    {
+      "phase": 5,
+      "name": "LEFT-DRIVE-FLIGHT",
+      "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/S-RUN-phase5-LEFT-DRIVE-FLIGHT-actual-native-v01.png",
+      "bytes": 778709,
+      "sha256": "b3ce6fa4920b8bb723d045357bb9b8b2477385c060b4bc7d714508fac73477e3",
+      "C": 2560.0,
+      "bodyunit": 2.5,
+      "common_unpadded_root": [
+        655.0833333333334,
+        1017.9227375838406
+      ],
+      "storage_translation": [
+        256,
+        256
+      ],
+      "pelvis": [
+        -5.0,
+        80.0,
+        497.92273758384044
+      ],
+      "torso_forward_lean_degrees": -9,
+      "torso_roll_degrees": -1.5,
+      "original_cloak_lag_native": -11,
+      "actual_native_nodes": [
+        {
+          "name": "pelvis-pleated-hem",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase5-actual-pelvis-pleated-hem-native.png",
+          "bytes": 96838,
+          "sha256": "9100655b17eefb15e8e379b894f1ed1f71ded2e991b104c8ef1e43f6369dd9e1",
+          "surface": {
+            "original_source_texels": 31731,
+            "output_texels": 32342,
+            "source_bbox": [
+              414,
+              565,
+              820,
+              682
+            ],
+            "stored_bbox": [
+              680,
+              771,
+              1092,
+              897
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999451693655123,
+                0.001861650509554808
+              ],
+              [
+                -0.009424605704621215,
+                0.9999912270984819
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 466.42165968740426,
+            "selected_output_texel_quad_guarded_min_Z": 464.42165968740426,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 31731,
+              "actual_source_quad_and_interior_min_Z": 467.2627375838404,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 465.2627375838404,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "torso-blue-gold-bodice",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase5-actual-torso-blue-gold-bodice-native.png",
+          "bytes": 132984,
+          "sha256": "bc0bb2f65c24c42a56c812cb58970ea4967771f08184e1b73a73ec2fe5ca36b3",
+          "surface": {
+            "original_source_texels": 41708,
+            "output_texels": 37990,
+            "source_bbox": [
+              319,
+              9,
+              783,
+              580
+            ],
+            "stored_bbox": [
+              583,
+              279,
+              1054,
+              800
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9996573249755574,
+                0.00465367969917745
+              ],
+              [
+                -0.02695467918687826,
+                0.8812501743981189
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 551.4336345091098,
+            "selected_output_texel_quad_guarded_min_Z": 549.4336345091098,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 41708,
+              "actual_source_quad_and_interior_min_Z": 552.2489349653617,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 550.2489349653617,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "head-bun-curls-blue-ribbons",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase5-actual-head-bun-curls-blue-ribbons-native.png",
+          "bytes": 134105,
+          "sha256": "b501a6b35542875add3cf8b63577a699b66319a328e3566318a1c7666ede2c95",
+          "surface": {
+            "original_source_texels": 44830,
+            "output_texels": 39328,
+            "source_bbox": [
+              423,
+              101,
+              818,
+              446
+            ],
+            "stored_bbox": [
+              687,
+              362,
+              1089,
+              679
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9990482215818579,
+                0.007754557753837512
+              ],
+              [
+                -0.046026853060740766,
+                0.8516985226793489
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 667.8380309288127,
+            "selected_output_texel_quad_guarded_min_Z": 665.8380309288127,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 44830,
+              "actual_source_quad_and_interior_min_Z": 668.3318531336104,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 666.3318531336104,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "complete-original-cloak-two-coattails",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase5-actual-complete-original-cloak-two-coattails-native.png",
+          "bytes": 228657,
+          "sha256": "577aa23d9c95b0ec6dbef72520768cc70f86f38ccce9df9c7cb37c2da9268541",
+          "surface": {
+            "original_source_texels": 99960,
+            "output_texels": 97669,
+            "inverse_max_residual": 1.1368683772161603e-13,
+            "source_bbox": [
+              261,
+              576,
+              992,
+              989
+            ],
+            "stored_bbox": [
+              513,
+              777,
+              1267,
+              1195
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 217.98558403896666,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 99960,
+              "actual_source_quad_and_interior_min_Z": 217.53023758384046,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 215.53023758384046,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase5-actual-R-upper-arm-proximal-native-skin-native.png",
+          "bytes": 50540,
+          "sha256": "d716a4077828dbbf0f66479aeee8a8bab7c216a7d74ae60d79d34f656f9b83db",
+          "surface": {
+            "original_source_texels": 10551,
+            "output_texels": 11436,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              467,
+              322,
+              591,
+              496
+            ],
+            "stored_bbox": [
+              729,
+              557,
+              867,
+              754
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 628.7282777211104,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 10551,
+              "actual_source_quad_and_interior_min_Z": 628.3312927841687,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 626.3312927841687,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "R-complete-forearm-hand-entire-rigidstaff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase5-actual-R-complete-forearm-hand-entire-rigidstaff-native.png",
+          "bytes": 173345,
+          "sha256": "377135fdd674a94471b91b57e544941b400ace985132841d02fed64754f08de1",
+          "surface": {
+            "original_source_texels": 52144,
+            "output_texels": 52656,
+            "source_bbox": [
+              321,
+              11,
+              524,
+              1127
+            ],
+            "stored_bbox": [
+              586,
+              261,
+              796,
+              1367
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                -0.0015513840885998107
+              ],
+              [
+                0.008030044072150055,
+                0.984308993533315
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 95.98904933513829,
+            "selected_output_texel_quad_guarded_min_Z": 93.98904933513829,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 52144,
+              "actual_source_quad_and_interior_min_Z": 96.52223540467958,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 94.52223540467958,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-upper-arm-proximal-native-skin",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase5-actual-L-upper-arm-proximal-native-skin-native.png",
+          "bytes": 31750,
+          "sha256": "ca0523adf8d557db5a50c2223d52956e58cc0160e646939940441c529c1b3c70",
+          "surface": {
+            "original_source_texels": 9314,
+            "output_texels": 4488,
+            "inverse_max_residual": 2.2737367544323206e-13,
+            "source_bbox": [
+              695,
+              331,
+              785,
+              529
+            ],
+            "stored_bbox": [
+              957,
+              559,
+              1062,
+              670
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 609.1598210247886,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 9314,
+              "actual_source_quad_and_interior_min_Z": 609.200113881505,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 607.200113881505,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        },
+        {
+          "name": "L-complete-forearm-hand-curved-cuff",
+          "path": "/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01/actual-S-RUN6-native-full-actor-v04/phase5-actual-L-complete-forearm-hand-curved-cuff-native.png",
+          "bytes": 46795,
+          "sha256": "4d894519db3088eebf82032129964c566bce8158870a1fb841575d0a81b49d90",
+          "surface": {
+            "original_source_texels": 12206,
+            "output_texels": 8214,
+            "source_bbox": [
+              711,
+              470,
+              896,
+              687
+            ],
+            "stored_bbox": [
+              977,
+              620,
+              1167,
+              770
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "source_to_native_projection_matrix": [
+              [
+                0.9999619230641714,
+                -0.0015513840885998107
+              ],
+              [
+                0.010280039805226052,
+                0.6592295434605033
+              ]
+            ],
+            "selected_output_texel_quad_min_Z": 476.8795743807406,
+            "selected_output_texel_quad_guarded_min_Z": 474.8795743807406,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 12206,
+              "actual_source_quad_and_interior_min_Z": 477.1491265895726,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 475.1491265895726,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          }
+        }
+      ],
+      "arms": {
+        "R": {
+          "shoulder": [
+            -80.73824621625774,
+            63.23327657420177,
+            754.5556126697924
+          ],
+          "elbow": [
+            -117.98081257553004,
+            94.4501562278746,
+            647.6696094904082
+          ],
+          "upper_UV": [
+            [
+              0.8996915924780016,
+              0.004188311729259705
+            ],
+            [
+              -0.023469603404872433,
+              0.23254735623590922
+            ],
+            [
+              -0.0020533242353757645,
+              -0.8228634061328451
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              -0.0013962456797398295
+            ],
+            [
+              0.00785186043254236,
+              0.14089536654886656
+            ],
+            [
+              -0.00017818363960769442,
+              -0.8434136269844484
+            ]
+          ],
+          "sagittal_counter_degrees": 14,
+          "complete_foregrip_and_full_original_staff_rigid": true,
+          "same_source_material_original_RGBA": true
+        },
+        "L": {
+          "shoulder": [
+            61.42140201872503,
+            59.609885040318204,
+            753.4285600986393
+          ],
+          "elbow": [
+            117.03973202423283,
+            -0.9149176384395972,
+            615.9257934788513
+          ],
+          "upper_UV": [
+            [
+              0.8996915924780016,
+              0.004188311729259705
+            ],
+            [
+              -0.019531506313852167,
+              -0.337121481781891
+            ],
+            [
+              0.01317416735545492,
+              -0.785831766070856
+            ]
+          ],
+          "fore_UV": [
+            [
+              0.8999657307577542,
+              -0.0013962456797398295
+            ],
+            [
+              0.00724285756432542,
+              -0.17729067064161214
+            ],
+            [
+              -0.003037182240900632,
+              -0.8365202141021155
+            ]
+          ],
+          "sagittal_counter_degrees": -25,
+          "complete_foregrip_and_full_original_staff_rigid": false,
+          "same_source_material_original_RGBA": true
+        }
+      },
+      "bones": {
+        "R": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/R-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "3299dfd6e9439e5d94a614e70b0c3286cba437e658f4046139fc2dcebe2cda3e",
+            "bytes": 104532
+          },
+          "hip": [
+            -67.1,
+            80.8,
+            493.72273758384046
+          ],
+          "knee": [
+            -97.9375,
+            57.1817508056298,
+            206.58811863526677
+          ],
+          "ankle": [
+            -128.775,
+            22.610772557499516,
+            492.61077255749944
+          ],
+          "heel": [
+            -114.375,
+            -117.7253784155691,
+            222.2746215844309
+          ],
+          "heel_source": [
+            528.0,
+            1170.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              -0.9239237271476313,
+              -0.9657951641438962
+            ],
+            [
+              -0.9239237271476313,
+              -1.9657951641438962
+            ]
+          ],
+          "femur_native": 289.75,
+          "tibia_native": 289.75,
+          "support": false,
+          "physical_sole_depth": -140,
+          "sole_lift": 200,
+          "native_capture": {
+            "original_source_texels": 36798,
+            "output_texels": 32730,
+            "source_bbox": [
+              443,
+              640,
+              617,
+              1199
+            ],
+            "stored_bbox": [
+              676,
+              788,
+              897,
+              1143
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 202.87508445578987,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 202.54598397187132,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36798,
+              "actual_source_quad_and_interior_min_Z": 202.65337263466387,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 200.65337263466387,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        },
+        "L": {
+          "source": {
+            "path": "/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/L-complete-native-skin-thigh-shaft-counter-stiletto.png",
+            "sha256": "a0de9c46ccf711ae65702a5e4ef26bfb898303c0b5ace3c6cc808b203d97552c",
+            "bytes": 106568
+          },
+          "hip": [
+            44.5,
+            80.8,
+            493.72273758384046
+          ],
+          "knee": [
+            77.1125,
+            256.8007412138631,
+            721.5718684488074
+          ],
+          "ankle": [
+            109.725,
+            287.2810394610202,
+            435.2810394610202
+          ],
+          "heel": [
+            90.825,
+            162.9181905678537,
+            177.9181905678537
+          ],
+          "heel_source": [
+            756.0,
+            1173.0
+          ],
+          "foot_UV": [
+            [
+              0.8999999999999999,
+              0.0
+            ],
+            [
+              0.6737247353224254,
+              -0.8286814244465832
+            ],
+            [
+              0.6737247353224254,
+              -1.8286814244465832
+            ]
+          ],
+          "femur_native": 289.75000000000006,
+          "tibia_native": 289.7500000000001,
+          "support": false,
+          "physical_sole_depth": 145,
+          "sole_lift": 160,
+          "native_capture": {
+            "original_source_texels": 36919,
+            "output_texels": 34286,
+            "source_bbox": [
+              651,
+              637,
+              851,
+              1201
+            ],
+            "stored_bbox": [
+              861,
+              729,
+              1131,
+              1290
+            ],
+            "premultiplied_float_4channel": true,
+            "final_clamp_after_unpremultiply": true,
+            "original_source_RGBA_recolored": false,
+            "hidden_surface_min_sampled_Z": 164.10991473464568,
+            "visible_overlap_camera_depth": "selected maximum Y+Z of actual source UV triangles",
+            "selected_raster_texel_quad_min_Z": 162.85871165476118,
+            "all_source_texel_quad_floor": {
+              "all_actual_alpha_positive_source_texel_quads_count": 36919,
+              "actual_source_quad_and_interior_min_Z": 163.0,
+              "conservative_guard_native": 2.0,
+              "guarded_min_Z": 161.0,
+              "above_floor": true,
+              "scope": "Finite declared source UV model with all actual alpha-positive texel corners plus interior strip samples; no unique hidden3D recovery claim."
+            }
+          },
+          "original_own_side_material": true,
+          "opposite_side_mirrored": false
+        }
+      },
+      "strong_components_ge200": [
+        283181
+      ],
+      "stored_alpha_bbox": [
+        522,
+        264,
+        1254,
+        1364
+      ],
+      "storage_border_alpha_contact": false
+    }
+  ],
+  "shared_pure_boots_unchanged_from_exact_leg_controls": true,
+  "correct_original_bluewall_owner": "LEFT-upper-arm-cuff-source-triangle-native750397775435",
+  "contact_parity": {
+    "phase0": "LEFT_PLANT",
+    "phase3": "RIGHT_PLANT"
+  },
+  "source_RGBA_recolored": false,
+  "whole_actor_mirror": false,
+  "perpose_root_or_C_fit": false,
+  "limits": [
+    "One declared conditional fixedbone native surface model, not unique hidden anatomy.",
+    "All actual six source pixels require independent source/joint/cycle review and bounded actual game/operator checks.",
+    "Original cuff/puff and continuous proximal actual-skin material overlap must be judged on these exact new poses; shared LEFT shoulder old action HOLD does not constitute RUN acceptance."
+  ]
+}

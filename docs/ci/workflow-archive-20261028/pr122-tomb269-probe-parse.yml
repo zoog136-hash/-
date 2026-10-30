@@ -1,0 +1,42 @@
+name: PR122 Tomb269 additive probe parse
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tests/pr122_tomb269_small_native_sw_probe.gd'
+      - '.github/workflows/pr122-tomb269-probe-parse.yml'
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  static-godot-script-parse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install exact production Godot executable
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/pr122-godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo 'cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  /tmp/pr122-godot.zip' | sha256sum -c -
+          unzip -q /tmp/pr122-godot.zip -d /tmp
+      - name: Parse-only additive QA script (NOT live WIP/Main visual approval)
+        run: |
+          set -euo pipefail
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          export XDG_DATA_HOME="${RUNNER_TEMP}/pr122-tomb-data"
+          export XDG_CONFIG_HOME="${RUNNER_TEMP}/pr122-tomb-config"
+          export XDG_CACHE_HOME="${RUNNER_TEMP}/pr122-tomb-cache"
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME"
+          timeout 1500 "$ENGINE" --headless --path . --import
+          timeout 120 "$ENGINE" --headless --path . --check-only --script res://tests/pr122_tomb269_small_native_sw_probe.gd
+          echo 'GDScript parse complete; unapproved Tomb269 art and real Main tests remain HOLD'

@@ -1,0 +1,72 @@
+name: TWILIGHT card draw and fusion
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/card_draw_fusion.gd'
+      - 'scripts/world.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'tests/card_draw_fusion_test.gd'
+      - '.github/workflows/card-draw-fusion.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  card-draw-fusion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and check scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout --signal=TERM --kill-after=15s 1800s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --import 2>&1 | tee card-import.log
+          for script in scripts/card_draw_fusion.gd scripts/ui/renewal_hud.gd scripts/world.gd; do
+            ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --check-only --script "res://$script" 2>&1 | tee -a card-parse.log
+          done
+          ! grep -E 'SCRIPT ERROR:|ERROR:' card-import.log card-parse.log
+      - name: Run deterministic and statistical draw/fusion tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$PWD/card-validation-data"
+          timeout 240 ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/card_draw_fusion_test.gd 2>&1 | tee card-test.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|CARD_DRAW_FUSION_FAIL:|CARD_DRAW_FUSION_FAILED' card-test.log
+          grep -q 'CARD_DRAW_FUSION_OK' card-test.log
+      - name: Upload concise validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-card-draw-fusion-validation
+          path: |
+            card-import.log
+            card-parse.log
+            card-test.log
+          if-no-files-found: warn

@@ -1,0 +1,942 @@
+{
+  "status": "ACTUAL_SINGLE_PHASE0_NATIVE_UPPER_REST_TWIST_CORRECTION_PENDING_QC",
+  "actor_id": 413,
+  "direction": "NW",
+  "action": "death",
+  "loop": false,
+  "physical_canvas_fixed": 2048,
+  "body_unit_fixed": 2,
+  "logical_canvas": 1024,
+  "common_unpadded_root": [
+    641.0,
+    1058.3
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "storage_canvas": [
+    1536,
+    1536
+  ],
+  "frame_duration": 0.13333333333333333,
+  "runtime_death_duration": 0.8,
+  "resource_role_seconds": 0.65,
+  "resource_role_fps": 9.23076923076923,
+  "terminal_held": true,
+  "profile_or_fade_modified": false,
+  "new_services": 0,
+  "new_author_images": 0,
+  "actor_approval_added": 0,
+  "method_source_readonly": {
+    "path": "/workspace/scratch/mythic413-N-death-author-20261020-v01/author-N-death-dedicated-native-six-v09.py",
+    "sha256": "f72b6cf2a24ab311a7d4bfa901bb510105d348358bd33053d40230e91c5b91c0",
+    "bytes": 20201
+  },
+  "material_inputs": [
+    {
+      "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v03/actual-native-head-torso-skirt-coat-old-arms-legs-staff-removed-INPUT.png",
+      "sha256": "a346566811dc61e3a18b4cb71771f8cc3e08b477da0fe576f1bba39c07b314e9",
+      "bytes": 264838
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NW-walk-Rload4-author-20261020-v03/Rload4-actual-stance-leg-layer-v04.png",
+      "sha256": "8c748fe32826e5a549f0be7eead38955bd0f16d7b29818e065eb5c809f327575",
+      "bytes": 47172
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-braced-stance-v03/LEFT-continuous-calf-and-complete-flat-shoe-material.png",
+      "sha256": "424a632d644bbd86311944dc7fc056b6b43449b317bbce79223007e3b2a8e6d3",
+      "bytes": 485726
+    }
+  ],
+  "camera_depth": 0.45,
+  "constant_true_leg_length_native_world": 200,
+  "original_assets_modified": false,
+  "frames": [
+    {
+      "phase": 0,
+      "name": "STAGGER0",
+      "path": "/workspace/scratch/mythic413-NW-death-author-20261020-v01/actual-NW-DEATH-single-phase0-rest-transverse-raw-v10/thunder_female-NW-DEATH-0-STAGGER0-raw-native-v10.png",
+      "sha256": "e84b7941f6258a837e9f39f7dfd2ff4e2f5c54e3e9f4124766056ea92e65f7bb",
+      "bytes": 498282,
+      "state": {
+        "name": "STAGGER0",
+        "hip": [
+          641,
+          0,
+          352.3
+        ],
+        "pelvis": 0,
+        "torso": 0,
+        "head": 0,
+        "roll": -3,
+        "yaw": 0,
+        "foot_pitch": 0,
+        "arm": 0.015
+      },
+      "leg_world_joints": {
+        "LEFT": {
+          "hip": [
+            612.0397434921174,
+            0.0,
+            350.78225726895465
+          ],
+          "knee": [
+            554.0,
+            -66.45468851012771,
+            171.2964289972186
+          ],
+          "ankle": [
+            520.0,
+            -240.18025128440462,
+            78.21888692201787
+          ],
+          "heel": [
+            514.3543188022422,
+            -240.18025128440462,
+            6.0
+          ],
+          "bone_lengths": [
+            200.00000000000003,
+            199.99999999999997
+          ],
+          "source_controls_are_approximate": true
+        },
+        "RIGHT": {
+          "hip": [
+            670.483616070312,
+            0.0,
+            343.8314473834996
+          ],
+          "knee": [
+            700.0,
+            -34.08104928038907,
+            148.9795416713333
+          ],
+          "ankle": [
+            704.0,
+            140.53085982670686,
+            51.53888692201804
+          ],
+          "heel": [
+            704.4843188022421,
+            140.53085982670686,
+            6.0
+          ],
+          "bone_lengths": [
+            200.00000000000003,
+            199.99999999999997
+          ],
+          "source_controls_are_approximate": true
+        }
+      },
+      "RIGHT_arm": {
+        "shoulder": [
+          692.3474143598477,
+          0.0,
+          576.2942924240663
+        ],
+        "elbow": [
+          726.1353179404971,
+          0.0,
+          543.0170093074304
+        ],
+        "grip": [
+          808.5472793179499,
+          -67.03287018007117,
+          600.8777294666451
+        ],
+        "rigid_U": [
+          0.9999747445951107,
+          -0.006658436635697279,
+          0.0024850339055740886
+        ],
+        "rigid_V": [
+          0.006658436635697277,
+          0.755457044764867,
+          -0.6551643448301366
+        ]
+      },
+      "LEFT_arm": {
+        "shoulder": [
+          576.0919470445122,
+          0.0,
+          597.2386548945013
+        ],
+        "elbow": [
+          542.3789908133781,
+          0.0,
+          495.3345991255691
+        ]
+      },
+      "actual_material_surfaces": [
+        {
+          "name": "pelvis_skirt",
+          "source_anchor": [
+            641.0,
+            706.0
+          ],
+          "world_anchor": [
+            641.0,
+            0.0,
+            352.3
+          ],
+          "U": [
+            0.998629534754574,
+            0.0,
+            0.05233595624294384
+          ],
+          "V": [
+            0.05233595624294384,
+            0.0,
+            -0.998629534754574
+          ],
+          "source_alpha_nonzero_pixels": 25252,
+          "actual_source_texel_min_Z": 330.51826222967793,
+          "raster_support_guard_min_Z": 328.94181399318165,
+          "projected_matrix": [
+            [
+              0.998629534754574,
+              0.05233595624294384
+            ],
+            [
+              -0.05233595624294384,
+              0.998629534754574
+            ]
+          ]
+        },
+        {
+          "name": "torso_corset",
+          "source_anchor": [
+            625.0,
+            584.0
+          ],
+          "world_anchor": [
+            618.6369407822878,
+            0.0,
+            473.29542794017095
+          ],
+          "U": [
+            0.998629534754574,
+            0.0,
+            0.05233595624294384
+          ],
+          "V": [
+            0.05233595624294384,
+            0.0,
+            -0.998629534754574
+          ],
+          "source_alpha_nonzero_pixels": 18286,
+          "actual_source_texel_min_Z": 446.87277552878146,
+          "raster_support_guard_min_Z": 445.2963272922852,
+          "projected_matrix": [
+            [
+              0.998629534754574,
+              0.05233595624294384
+            ],
+            [
+              -0.05233595624294384,
+              0.998629534754574
+            ]
+          ]
+        },
+        {
+          "name": "head_bun_ribbon",
+          "source_anchor": [
+            628.0,
+            422.0
+          ],
+          "world_anchor": [
+            613.1544044751946,
+            0.0,
+            635.2304204391407
+          ],
+          "U": [
+            0.998629534754574,
+            0.0,
+            0.05233595624294384
+          ],
+          "V": [
+            0.05233595624294384,
+            0.0,
+            -0.998629534754574
+          ],
+          "source_alpha_nonzero_pixels": 23030,
+          "actual_source_texel_min_Z": 621.4716898759644,
+          "raster_support_guard_min_Z": 619.8952416394682,
+          "projected_matrix": [
+            [
+              0.998629534754574,
+              0.05233595624294384
+            ],
+            [
+              -0.05233595624294384,
+              0.998629534754574
+            ]
+          ]
+        },
+        {
+          "name": "LEFT_complete_foot",
+          "source_anchor": [
+            625.3543188022422,
+            1044.2188869220179
+          ],
+          "world_anchor": [
+            514.3543188022422,
+            -240.18025128440462,
+            6.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "source_alpha_nonzero_pixels": 4561,
+          "actual_source_texel_min_Z": 4.218886922017873,
+          "raster_support_guard_min_Z": 2.718886922017873,
+          "projected_matrix": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "LEFT_thigh",
+          "source_anchor": [
+            612.0,
+            706.0
+          ],
+          "world_anchor": [
+            612.0397434921174,
+            0.0,
+            350.78225726895465
+          ],
+          "U": [
+            -0.4568118424293015,
+            0.8472379855130968,
+            0.6868258949875101
+          ],
+          "V": [
+            -0.7884659193250311,
+            -0.2445100707841762,
+            -1.4297192099740006
+          ],
+          "source_alpha_nonzero_pixels": 9187,
+          "actual_source_texel_min_Z": 158.6532257874485,
+          "raster_support_guard_min_Z": 155.47840813000622,
+          "projected_matrix": [
+            [
+              -0.4568118424293015,
+              -0.7884659193250311
+            ],
+            [
+              -0.3055688015066165,
+              1.3196896781211214
+            ]
+          ]
+        },
+        {
+          "name": "LEFT_actual_calf_shaft",
+          "source_anchor": [
+            579.0,
+            850.0
+          ],
+          "world_anchor": [
+            554.0,
+            -66.45468851012771,
+            171.2964289972186
+          ],
+          "U": [
+            -1.0033190133694152,
+            -0.3369431989363243,
+            -0.2751894580344802
+          ],
+          "V": [
+            0.14895564504270167,
+            -1.2803648887671149,
+            -0.6456368053885881
+          ],
+          "source_alpha_nonzero_pixels": 8871,
+          "actual_source_texel_min_Z": 72.60925566208425,
+          "raster_support_guard_min_Z": 71.22801626694965,
+          "projected_matrix": [
+            [
+              -1.0033190133694152,
+              0.14895564504270167
+            ],
+            [
+              0.12356501851313426,
+              0.0694726054433864
+            ]
+          ]
+        },
+        {
+          "name": "LEFT_actual_kneecap",
+          "source_anchor": [
+            579.0,
+            850.0
+          ],
+          "world_anchor": [
+            554.0,
+            -66.45468851012771,
+            171.2964289972186
+          ],
+          "U": [
+            -1.0033190133694152,
+            -0.3369431989363243,
+            -0.2751894580344802
+          ],
+          "V": [
+            0.14895564504270167,
+            -1.2803648887671149,
+            -0.6456368053885881
+          ],
+          "source_alpha_nonzero_pixels": 1179,
+          "actual_source_texel_min_Z": 158.48953498869088,
+          "raster_support_guard_min_Z": 157.10829559355628,
+          "projected_matrix": [
+            [
+              -1.0033190133694152,
+              0.14895564504270167
+            ],
+            [
+              0.12356501851313426,
+              0.0694726054433864
+            ]
+          ]
+        },
+        {
+          "name": "LEFT_actual_anklecap",
+          "source_anchor": [
+            579.0,
+            850.0
+          ],
+          "world_anchor": [
+            554.0,
+            -66.45468851012771,
+            171.2964289972186
+          ],
+          "U": [
+            -1.0033190133694152,
+            -0.3369431989363243,
+            -0.2751894580344802
+          ],
+          "V": [
+            0.14895564504270167,
+            -1.2803648887671149,
+            -0.6456368053885881
+          ],
+          "source_alpha_nonzero_pixels": 1373,
+          "actual_source_texel_min_Z": 63.10463514997029,
+          "raster_support_guard_min_Z": 61.72339575483569,
+          "projected_matrix": [
+            [
+              -1.0033190133694152,
+              0.14895564504270167
+            ],
+            [
+              0.12356501851313426,
+              0.0694726054433864
+            ]
+          ]
+        },
+        {
+          "name": "LEFT_counter_stiletto_foreground",
+          "source_anchor": [
+            625.3543188022422,
+            1044.2188869220179
+          ],
+          "world_anchor": [
+            514.3543188022422,
+            -240.18025128440462,
+            6.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "source_alpha_nonzero_pixels": 2563,
+          "actual_source_texel_min_Z": 4.218886922017873,
+          "raster_support_guard_min_Z": 2.718886922017873,
+          "projected_matrix": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "RIGHT_complete_foot",
+          "source_anchor": [
+            705.4843188022421,
+            1014.538886922018
+          ],
+          "world_anchor": [
+            704.4843188022421,
+            140.53085982670686,
+            6.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "source_alpha_nonzero_pixels": 2707,
+          "actual_source_texel_min_Z": 4.538886922018037,
+          "raster_support_guard_min_Z": 3.038886922018037,
+          "projected_matrix": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "RIGHT_thigh",
+          "source_anchor": [
+            670.0,
+            716.0
+          ],
+          "world_anchor": [
+            670.483616070312,
+            0.0,
+            343.8314473834996
+          ],
+          "U": [
+            -0.6812436694171546,
+            -0.6946343397664924,
+            -0.3418278104439222
+          ],
+          "V": [
+            0.3902123606657131,
+            -0.07750727206169133,
+            -1.357257482644985
+          ],
+          "source_alpha_nonzero_pixels": 8075,
+          "actual_source_texel_min_Z": 137.78970775886017,
+          "raster_support_guard_min_Z": 135.24107981922683,
+          "projected_matrix": [
+            [
+              -0.6812436694171546,
+              0.3902123606657131
+            ],
+            [
+              0.02924235754900062,
+              1.3223792102172238
+            ]
+          ]
+        },
+        {
+          "name": "RIGHT_actual_calf_shaft",
+          "source_anchor": [
+            678.4843188022421,
+            760.538886922018
+          ],
+          "world_anchor": [
+            700.0,
+            -34.08104928038907,
+            148.9795416713333
+          ],
+          "U": [
+            0.9941489293358121,
+            0.08212817487700846,
+            -0.05850899002692015
+          ],
+          "V": [
+            -0.10726478307249566,
+            0.8271769351063504,
+            -0.4599862660557128
+          ],
+          "source_alpha_nonzero_pixels": 11574,
+          "actual_source_texel_min_Z": 47.85091113941269,
+          "raster_support_guard_min_Z": 47.073168255288735,
+          "projected_matrix": [
+            [
+              0.9941489293358121,
+              -0.10726478307249566
+            ],
+            [
+              0.09546666872157396,
+              0.8322158868535705
+            ]
+          ]
+        },
+        {
+          "name": "RIGHT_actual_kneecap",
+          "source_anchor": [
+            678.4843188022421,
+            760.538886922018
+          ],
+          "world_anchor": [
+            700.0,
+            -34.08104928038907,
+            148.9795416713333
+          ],
+          "U": [
+            0.9941489293358121,
+            0.08212817487700846,
+            -0.05850899002692015
+          ],
+          "V": [
+            -0.10726478307249566,
+            0.8271769351063504,
+            -0.4599862660557128
+          ],
+          "source_alpha_nonzero_pixels": 1193,
+          "actual_source_texel_min_Z": 140.68346151925144,
+          "raster_support_guard_min_Z": 139.9057186351275,
+          "projected_matrix": [
+            [
+              0.9941489293358121,
+              -0.10726478307249566
+            ],
+            [
+              0.09546666872157396,
+              0.8322158868535705
+            ]
+          ]
+        },
+        {
+          "name": "RIGHT_actual_anklecap",
+          "source_anchor": [
+            678.4843188022421,
+            760.538886922018
+          ],
+          "world_anchor": [
+            700.0,
+            -34.08104928038907,
+            148.9795416713333
+          ],
+          "U": [
+            0.9941489293358121,
+            0.08212817487700846,
+            -0.05850899002692015
+          ],
+          "V": [
+            -0.10726478307249566,
+            0.8271769351063504,
+            -0.4599862660557128
+          ],
+          "source_alpha_nonzero_pixels": 1132,
+          "actual_source_texel_min_Z": 41.41918906879238,
+          "raster_support_guard_min_Z": 40.641446184668425,
+          "projected_matrix": [
+            [
+              0.9941489293358121,
+              -0.10726478307249566
+            ],
+            [
+              0.09546666872157396,
+              0.8322158868535705
+            ]
+          ]
+        },
+        {
+          "name": "RIGHT_counter_stiletto_foreground",
+          "source_anchor": [
+            705.4843188022421,
+            1014.538886922018
+          ],
+          "world_anchor": [
+            704.4843188022421,
+            140.53085982670686,
+            6.0
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "source_alpha_nonzero_pixels": 1211,
+          "actual_source_texel_min_Z": 4.538886922018037,
+          "raster_support_guard_min_Z": 3.038886922018037,
+          "projected_matrix": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "RIGHT_real_proximal_shoulderpad",
+          "source_anchor": [
+            704.0,
+            485.0
+          ],
+          "world_anchor": [
+            692.3474143598477,
+            0.0,
+            576.2942924240663
+          ],
+          "U": [
+            0.998629534754574,
+            0.0,
+            0.05233595624294384
+          ],
+          "V": [
+            0.05233595624294384,
+            0.0,
+            -0.998629534754574
+          ],
+          "source_alpha_nonzero_pixels": 2754,
+          "actual_source_texel_min_Z": 552.8066999284202,
+          "raster_support_guard_min_Z": 551.230251691924,
+          "projected_matrix": [
+            [
+              0.998629534754574,
+              0.05233595624294384
+            ],
+            [
+              -0.05233595624294384,
+              0.998629534754574
+            ]
+          ]
+        },
+        {
+          "name": "RIGHT_upper_arm",
+          "source_anchor": [
+            704.0,
+            485.0
+          ],
+          "world_anchor": [
+            692.3474143598477,
+            0.0,
+            576.2942924240663
+          ],
+          "U": [
+            0.480752741031917,
+            -0.7380288120022733,
+            -0.47348735426071514
+          ],
+          "V": [
+            0.5258233105036593,
+            0.6747691995449356,
+            -0.5178767937226572
+          ],
+          "source_alpha_nonzero_pixels": 2558,
+          "actual_source_texel_min_Z": 537.4387364150464,
+          "raster_support_guard_min_Z": 535.9516901930713,
+          "projected_matrix": [
+            [
+              0.480752741031917,
+              0.5258233105036593
+            ],
+            [
+              0.1413743888596921,
+              0.8215229335178782
+            ]
+          ]
+        },
+        {
+          "name": "RIGHT_forearm_full_rigid_staff",
+          "source_anchor": [
+            736.0,
+            520.0
+          ],
+          "world_anchor": [
+            726.1353179404971,
+            0.0,
+            543.0170093074304
+          ],
+          "U": [
+            0.9999747445951107,
+            -0.006658436635697279,
+            0.0024850339055740886
+          ],
+          "V": [
+            0.006658436635697277,
+            0.755457044764867,
+            -0.6551643448301366
+          ],
+          "source_alpha_nonzero_pixels": 33985,
+          "actual_source_texel_min_Z": 271.7889106833761,
+          "raster_support_guard_min_Z": 270.80243661527254,
+          "projected_matrix": [
+            [
+              0.9999747445951107,
+              0.006658436635697277
+            ],
+            [
+              -0.005481330391637864,
+              0.9951200149743268
+            ]
+          ]
+        },
+        {
+          "name": "LEFT_real_proximal_shoulderpad",
+          "source_anchor": [
+            589.0,
+            458.0
+          ],
+          "world_anchor": [
+            576.0919470445122,
+            0.0,
+            597.2386548945013
+          ],
+          "U": [
+            0.998629534754574,
+            0.0,
+            0.05233595624294384
+          ],
+          "V": [
+            0.05233595624294384,
+            0.0,
+            -0.998629534754574
+          ],
+          "source_alpha_nonzero_pixels": 2778,
+          "actual_source_texel_min_Z": 565.7662724869574,
+          "raster_support_guard_min_Z": 564.1898242504611,
+          "projected_matrix": [
+            [
+              0.998629534754574,
+              0.05233595624294384
+            ],
+            [
+              -0.05233595624294384,
+              0.998629534754574
+            ]
+          ]
+        },
+        {
+          "name": "LEFT_original_continuous_white_sleeve_goldcuff_and_glove",
+          "kind": "CONTINUOUS_ORIGINAL_RGBA_3D_UV_MESH",
+          "source_elbow_approx": [
+            550.0,
+            558.0
+          ],
+          "world_elbow": [
+            542.3789908133781,
+            0.0,
+            495.3345991255691
+          ],
+          "upper_U": [
+            0.9986295347545739,
+            0.0,
+            0.05233595624294346
+          ],
+          "upper_V": [
+            0.05233595624294329,
+            0.0,
+            -0.9986295347545743
+          ],
+          "fore_U": [
+            0.9999599737614376,
+            -0.003320861673164141,
+            -0.008307993306015605
+          ],
+          "fore_V": [
+            -0.0033208616731641417,
+            0.7244776764349434,
+            -0.6892902641305569
+          ],
+          "source_white_transition_y": [
+            540,
+            570
+          ],
+          "source_goldband_y_le540_ownership": "UPPER",
+          "source_distal_white_y_ge570_ownership": "FORE",
+          "source_alpha_nonzero_pixels": 12901,
+          "actual_source_texel_min_Z": 391.368354328408,
+          "raster_support_guard_min_Z": 387.8216607275456,
+          "guard_rule": "Entire mesh vertex domain includes original actualalpha bbox plus3nativepx; every rasterized triangle barycentricZ>=vertexmin; transparent outside semantic UV",
+          "source_RGBA_colors": "Original only, premultiplied native interpolation; no synthetic color",
+          "triangles": 4070,
+          "degenerate_triangles_skipped": 0,
+          "source_uv_bounds_padded": [
+            446,
+            466,
+            631,
+            713
+          ]
+        },
+        {
+          "name": "far_blue_gold_coat_hanging",
+          "source_anchor": [
+            775.0,
+            650.0
+          ],
+          "world_anchor": [
+            771.885544107508,
+            0.0,
+            415.2362720828106
+          ],
+          "U": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "V": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "source_alpha_nonzero_pixels": 32584,
+          "actual_source_texel_min_Z": 135.23627208281061,
+          "raster_support_guard_min_Z": 133.73627208281061,
+          "projected_matrix": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ]
+          ]
+        }
+      ],
+      "minimum_actual_surface_raster_guard_Z": 2.718886922017873,
+      "strong_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 159956,
+          "bbox": [
+            571,
+            143,
+            1187,
+            1245
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_CYCLE_AND_FLOOR_QC"
+    }
+  ]
+}

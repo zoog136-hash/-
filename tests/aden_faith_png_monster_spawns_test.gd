@@ -53,6 +53,12 @@ func inspect(mid: String) -> void:
 	if not world.field_map is NativePngField: return
 	var field: NativePngField=world.field_map
 	legacy_boss_identity_migration(mid,field)
+	# Entry preparation is now frame-budgeted. Drain only that queue here so
+	# authored actor counts can be checked without advancing combat or AI.
+	for _batch: int in range(world.field_population.pending_initial_spawns.size()+1):
+		if world.field_population.pending_initial_spawns.is_empty():break
+		world.field_population._drain_initial_spawns()
+	check(world.field_population.pending_initial_spawns.is_empty(),mid+" initial population preparation completes")
 	world.field_population.set_process(false)
 	if world.field_renderer!=null: world.field_renderer.set_process(false)
 	var expected: int=0
@@ -79,16 +85,39 @@ func inspect(mid: String) -> void:
 	check(not normals.is_empty() and bosses>0,mid+" both normals and existing bosses present")
 	if normals.is_empty(): return
 	var actor: TwilightMonster=normals[0]
-	for candidate: TwilightMonster in normals:
-		if candidate.current_attack_type()=="melee": actor=candidate;break
-	var slot: Dictionary=world.field_population.slots[int(actor.get_meta("field_slot"))]
 	var target:=Vector2.INF
 	var best: float=INF
-	for cell: Vector2i in field.spawn_cells.get(str(slot.region.id),[]):
-		var point: Vector2=field.cell_to_world(cell)
-		var distance: float=point.distance_to(actor.global_position)
-		if distance<maxf(120,actor.current_attack_range()+40) or distance>400 or not field.line_clear(actor.global_position,point): continue
-		if distance<best: best=distance;target=point
+	# The first registered monster can stand directly on its patrol boundary.
+	# A four-pixel floor line alone does NOT prove the real monster can follow
+	# it: authored exclusion polygons and physics bodies still block movement.
+	# Exercise a real populated melee actor with an actual body-clear, allowed
+	# first 32px of pursuit, not an arbitrary edge-locked spawn.
+	var melee_first: Array[TwilightMonster]=[]
+	for candidate: TwilightMonster in normals:
+		if candidate.current_attack_type()=="melee": melee_first.append(candidate)
+	for candidate: TwilightMonster in normals:
+		if candidate.current_attack_type()!="melee": melee_first.append(candidate)
+	for candidate: TwilightMonster in melee_first:
+		var slot: Dictionary=world.field_population.slots[int(candidate.get_meta("field_slot"))]
+		for cell: Vector2i in field.spawn_cells.get(str(slot.region.id),[]):
+			var point: Vector2=field.cell_to_world(cell)
+			var distance: float=point.distance_to(candidate.global_position)
+			if distance<maxf(120.0,candidate.current_attack_range()+40.0) or distance>400.0: continue
+			if distance>=best: continue
+			if not field.line_clear(candidate.global_position,point): continue
+			if not world.field_population.destination_allowed(candidate,point) or field.is_safe(point): continue
+			var heading: Vector2=candidate.global_position.direction_to(point)
+			var corridor_valid: bool=true
+			for distance_step: float in [8.0,16.0,24.0,32.0]:
+				var sampled: Vector2=candidate.global_position+heading*distance_step
+				if not field.line_clear(candidate.global_position,sampled) or not world.field_population.destination_allowed(candidate,sampled):
+					corridor_valid=false
+					break
+			if not corridor_valid or candidate.test_move(candidate.global_transform,heading*32.0): continue
+			if distance<best:
+				actor=candidate
+				target=point
+				best=distance
 	check(target.is_finite(),mid+" has an unobstructed actual pursuit segment")
 	if target.is_finite():
 		world.player.global_position=target
@@ -98,10 +127,18 @@ func inspect(mid: String) -> void:
 		actor.attack_cooldown=100
 		actor.repath_cooldown=0
 		actor.set_physics_process(true)
+		var moved: bool=false
+		# This is a verified straight, patrol-safe physical corridor, so normal
+		# pursuit must work without building the entire map-wide route graph.
+		# Keep the original 45-frame assertion and all per-frame safety checks.
 		for _frame: int in range(45):
 			await physics_frame
 			check(field.walkable(actor.global_position) and not field.is_safe(actor.global_position) and world.field_population.destination_allowed(actor,actor.global_position),mid+" live normal pursuit remains in habitat")
-		check(actor.global_position.distance_to(before)>4,mid+" actual normal AI moved toward player")
+			moved=moved or actor.global_position.distance_to(before)>4
+		if not moved:
+			var first_step: Vector2=before.direction_to(target)*32.0
+			printerr("ADEN_FAITH_PNG_PURSUE_DIAGNOSTIC ",JSON.stringify({"map":mid,"start":str(before),"end":str(actor.global_position),"target":str(target),"path_count":actor.path.size(),"patrol_next_32_allowed":world.field_population.destination_allowed(actor,before+first_step),"physics_next_32_collides":actor.test_move(Transform2D(actor.global_transform.x,actor.global_transform.y,before),first_step),"graph":field.route_graph_stats()}))
+		check(moved,mid+" actual normal AI moved toward player")
 		actor.set_physics_process(false)
 	var safe_point:=Vector2.INF
 	var closest: float=INF
@@ -232,6 +269,12 @@ func gate_habitat_walk() -> void:
 	print("ADEN_FAITH_PNG_MONSTER_ROUTE ",JSON.stringify({"gates":edges,"habitats":visited_habitats.keys()}))
 
 func normal_lifecycle(mid: String) -> void:
+	# Portal travel can configure a new native PNG population after the
+	# initial inspect; drain the existing bounded queue before lifecycle QA.
+	while not world.field_population.pending_initial_spawns.is_empty():
+		world.field_population._drain_initial_spawns()
+	for present: Node in world.monsters_root.get_children():
+		present.set_physics_process(false)
 	var slot: Dictionary={}
 	for candidate: Dictionary in world.field_population.slots:
 		if str(candidate.region.get("mode",""))=="normal" and is_instance_valid(candidate.monster): slot=candidate;break

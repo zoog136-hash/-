@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "version": "v01",
+  "source_batch": "batch03",
+  "status": "SOURCE_QC_PENDING_NOT_APPROVED",
+  "source_visual_status": "HOLD",
+  "raw_path": "/workspace/scratch/girtas-E-run-left-compression-key-v01/girtas-E-run-left-compression-key-v01.png",
+  "raw_sha256": "277db3fc7f71611af6290a72926e8ecd2d782c1f38e86f22a61feefa63c6f34f",
+  "raw_bytes": 1593273,
+  "request_path": "/workspace/scratch/girtas-E-run-left-compression-key-v01/request-girtas-E-run-left-compression-key-v01.json",
+  "request_sha256": "0b0187ce2b9ee955f94f8c78c59b83e7da37852db5a3bad62a12997c2c2afbcb",
+  "corrective_reason": "Author genuinely missing LEFT loaded run compression from independently valid opposite LEFT forward landing22ef; fixed forward support boot plus material pelvis drop and actual bent knee, never prior terminal-push-off source.",
+  "geometry": {
+    "status": "GEOMETRY_PASS",
+    "frames": 1,
+    "region": [
+      0,
+      99,
+      1165,
+      1129
+    ],
+    "distinct": 1,
+    "canvas_size": 2048
+  },
+  "intended_game_phase": 1,
+  "visual_findings": [
+    "Distinct missing pose generated once and preserved; no requested label used as evidence."
+  ],
+  "visual_limitations": [
+    "No six-pose root/composite or actor approval."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "generation_attempts": 1
+}

@@ -1,0 +1,102 @@
+{
+  "schema": "independent-private-actual-NW-run-contact0-v04-gate-v1",
+  "status": "STATIC_CONTACT_CANDIDATE_COHERENT_HOLD_ORIGINAL_VISIBLE_GARMENT_IDENTITY",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v04-localized-composite.png",
+    "sha256": "e37a2866b069ece600288777962d44a535ce17a88bd8f4f4b30dd6f56219228a",
+    "bytes": 761481
+  },
+  "approved_appearance_master": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v01-service.png",
+    "sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+    "bytes": 817927
+  },
+  "localized_mask": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/NW-run-contact0-localized-union-editable-mask-v04.png",
+    "sha256": "d8115f8b78640bfd1a4497891dd91daae923cf2ee809726e783a381badf5e012",
+    "bytes": 3488
+  },
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger.json",
+    "sha256": "1f97a28e8850e951cb7278d5e0fcef706ccca4a343ec10e0dfc1d7f2d59ec087",
+    "bytes": 2886
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "independent_numeric_checks": {
+    "outside_mask_changed_RGBA_pixels": 0,
+    "inside_mask_RGBA_not_equal_actual_service_pixels": 0,
+    "raw_canvas": [
+      1254,
+      1254
+    ],
+    "identity_fullcanvas_placement": true
+  },
+  "actual_static_pose_read": {
+    "LEFT_free_arm": "Now visibly rear toward hip; near upperarm/elbow angle moves screenright from shoulder, freehand returns toward near hip. Prior clear counterphase blocker improved.",
+    "LEFT_leg": "Coherent extended near LEFT landing candidate; hip-knee-boot continuity maintained with slight flex. Body-relative heel is slightly forward. Actual static3D root/planting proof is reserved for paired LOAD.",
+    "RIGHT_leg": "Folded recovery behind near leg; boot/sole visibly elevated.",
+    "shoe": "Gold high stiletto is visibly connected to rear underside of black shoe as a structural heel, not inferred solely from its lowest gold alpha. Toe/forefoot lifted with natural outward yaw; shoe yaw need not equal body NW heading.",
+    "heel_support_alpha16_bbox_bottom": {
+      "x_range": [
+        580,
+        587
+      ],
+      "y": 1191,
+      "center_x": 583.5,
+      "alpha128_bottom_y": 1190,
+      "use": "support silhouette locator, with anatomical heel identity independently inspected"
+    },
+    "physical_cycle_approval": false
+  },
+  "one_blocking_appearance_defect": {
+    "name": "Previously visible original garment identity changed inside the service mask",
+    "not_new_occlusion_exposure": true,
+    "findings": [
+      "Original visible blue/gold crossed-back bodice and gold/blue neckline trim replaced by broad bare upper back.",
+      "Original waist ornament arrangement changed.",
+      "Part of original white pleated skirt replaced by long blue panels."
+    ],
+    "original_regions_changed_locator_only": [
+      [
+        588,
+        340,
+        725,
+        570
+      ],
+      [
+        540,
+        540,
+        825,
+        705
+      ]
+    ],
+    "proof_method": "One native cropped master915 versus actualv04 body comparison; original arm was outleft, so these back/waist/skirt surfaces were already visible."
+  },
+  "minimal_fix": {
+    "method": "Restore exact original915 visible garment RGBA behind the actual new LEFTarm/gauntlet/hand; preserve new actual foreground arm occlusion and new actual legs. No new body model generation needed.",
+    "mask_definition": "Trace original visible blue/gold bodice/trim/waist/skirt/coat garment pixels inside the original editable mask. Subtract the actual new arm/gauntlet/hand foreground silhouette and new limb/skin pixels. Preserve oldarm-removal repair regions so original wrong arm is not resurrected. Locator rectangles are not final restoration masks.",
+    "expected_provenance": "Retain garment restoration mask and arm preservation mask, source/master SHA and exact identity placement. Verify restored garment pixels equal original master and preserved arm/leg pixels equal actualv04.",
+    "body_unit": "Exact restored original torso garment anchors will retain the accepted C2.5 density; no body/C/root normalization.",
+    "next_gate": "Independent finite restored CONTACT0 view and numeric restoration check, then dependent actual LOAD1/FLIGHT2 production; paired actual sources must establish planting/ground/loop."
+  },
+  "planting_dependency": {
+    "required_source_relative_root_delta_heel0_to_load1": [
+      139.1928985028027,
+      125.27360865252244
+    ],
+    "unpacked_load_heel_from_current_support": [
+      722.6928985028027,
+      1316.2736086525224
+    ],
+    "packing_rule": "Allow only wholepose raw art and raw root-anchor equal translations with exact inverse placement, retaining real bob/limb changes and fixed density. Fit canvas without clipping staff/feet.",
+    "no_current_actual_ground_root_pin": true
+  },
+  "source_phase_approved": false,
+  "full_source_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

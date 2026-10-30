@@ -1,0 +1,95 @@
+{
+  "cases": [
+    {
+      "key": "monster:공포의 뱀파이어",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+      "slug": "dread_vampire_attack",
+      "directions": [
+        "E",
+        "N",
+        "NE",
+        "NW"
+      ],
+      "roles": [
+        "attack"
+      ],
+      "move_speed": 103.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:공포의 뱀파이어",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+      "slug": "dread_vampire_hit",
+      "directions": [
+        "E",
+        "NW",
+        "S",
+        "SE",
+        "SW"
+      ],
+      "roles": [
+        "hit"
+      ],
+      "move_speed": 103.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:공포의 뱀파이어",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+      "slug": "dread_vampire_idle",
+      "directions": [
+        "N",
+        "S"
+      ],
+      "roles": [
+        "idle"
+      ],
+      "move_speed": 103.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:공포의 뱀파이어",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+      "slug": "dread_vampire_death",
+      "directions": [
+        "S"
+      ],
+      "roles": [
+        "death"
+      ],
+      "move_speed": 103.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    },
+    {
+      "key": "monster:공포의 뱀파이어",
+      "native_profile": "res://assets/actors/eight_direction/boss_draft_first/dread_vampire/reviewed-fixes-v01/NativeMotionProfile.tres",
+      "slug": "dread_vampire_run",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "roles": [
+        "run"
+      ],
+      "move_speed": 103.0,
+      "attack_seconds": 1.2,
+      "attack_range": 58.0,
+      "run_seconds": 1.05,
+      "idle_seconds": 1.25
+    }
+  ],
+  "output": "/workspace/runtime/reviewed-fixes-v01-dread_vampire",
+  "capture": true
+}

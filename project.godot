@@ -7,10 +7,14 @@ config/name="황혼의 기사 · Offline RPG V20 LINEAGE HUD"
 config/icon="res://assets/ui/sword.png"
 run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.7")
-run/max_fps=60
+run/max_fps=30
 
 [debug]
 gdscript/warnings/treat_warnings_as_errors=false
+
+[editor]
+; Limit peak memory on Android Godot 4.7 during first asset import.
+import/use_multiple_threads=false
 
 [display]
 window/size/viewport_width=1280

@@ -1,0 +1,80 @@
+{
+  "status": "INDEPENDENT_ACTUAL_SOURCE_JOINT_QUALITY_HOLD",
+  "actor_id": 413,
+  "direction": "NW",
+  "role": "death",
+  "source_contract": "/workspace/scratch/mythic413-NW-death-author-20261020-v01/actual-NW-DEATH6-dedicated-native-v03/NW-DEATH-six-actual-native-source-common-root-and-floor-contract-v03.json",
+  "source_contract_sha256": "d6e71ddd7bcb1b7150480a5134f26a4bbfebd5d6e701c166cc8dc8e667b0df77",
+  "reviewed_only_new_source_version": "v03",
+  "not_viewed_older_versions": [
+    "v01",
+    "v02"
+  ],
+  "C": 2048,
+  "unit": 2,
+  "root": [
+    641,
+    1058.3
+  ],
+  "storage": [
+    128,
+    128
+  ],
+  "observed_motion": "Stagger, buckle, kneel, collapse, impact and held terminal are distinct and retain full RIGHTstaff and costume. Full approval awaits natural joint continuity.",
+  "findings": [
+    {
+      "id": "RIGHT_SHOULDER_PUFF_TORSO_GAP",
+      "status": "HOLD",
+      "phase_stored_ROIs": {
+        "1": [
+          745,
+          600,
+          850,
+          700
+        ],
+        "2": [
+          700,
+          690,
+          800,
+          790
+        ],
+        "3": [
+          660,
+          770,
+          760,
+          865
+        ]
+      },
+      "observation": "Far RIGHT upper blue puff separates from torso/back with a dark background wedge as shoulder plane rotates. Existing LEFT proximal correction does not close opposite shoulder.",
+      "recommended_causal_fix": "Actual original RIGHT proximal shoulder material follows torso and transitions into true upperarm surface; preserve full rigid forearm/staff."
+    },
+    {
+      "id": "LEFT_ELBOW_UPSTREAM_SLEEVE_CUT",
+      "status": "HOLD",
+      "phase_stored_elbows": {
+        "2": [
+          606.5440883927927,
+          775.368887956289
+        ],
+        "3": [
+          564.867397067422,
+          857.7569227821499
+        ]
+      },
+      "source_donor_elbow_ROI": [
+        520,
+        485,
+        610,
+        580
+      ],
+      "observation": "Source upper contains straight-cut white sleeve wedge while forearm contains overlapping upstream gold/white material; relative strong rigid planes expose an abrupt cut/torn sleeve contour. Source control553,531 is near cuff interface; approximate anatomical elbow550,558 is lower.",
+      "recommended_causal_fix": "Use one declared approximate common anatomical hinge and actual continuous elbow sleeve surface around sourcey535..570, preserving sourceRGBA without line filler or painting."
+    }
+  ],
+  "quality_approval": false,
+  "source_visual_status": "HOLD",
+  "game_validation": false,
+  "actor_approval_added": 0,
+  "images_to_root_or_user": 0,
+  "cumulative_private_image_ledger_at_issue": 3094774
+}

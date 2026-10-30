@@ -1,0 +1,76 @@
+name: TWILIGHT AUTO Pursuit Reliability
+on:
+  pull_request:
+    paths:
+      - 'tests/l1j_runtime_game_test.gd'
+      - 'scripts/world.gd'
+      - 'scripts/player.gd'
+      - '.github/workflows/auto-hunt-reliability.yml'
+  workflow_dispatch:
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deterministic-pursuit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Build source-independent fixture
+        run: python3 tools/l1j_ci_make_fixture.py --root .
+      - name: Install Godot 4.7.2
+        run: |
+          curl -fL --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import all resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Previous 900s limit killed an active 90%-complete PNG import.
+          timeout --signal=TERM --kill-after=15s 1800s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --import 2>&1 | tee import.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' import.log; then exit 1; fi
+      - name: Run eight independent live AUTO-hunt simulations
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p pursuit-results
+          for attempt in $(seq 1 8); do
+            echo "AUTO_PURSUIT_ATTEMPT_${attempt}"
+            userdata="$(mktemp -d)"
+            export XDG_DATA_HOME="$userdata"
+            export APPDATA="$userdata"
+            export LOCALAPPDATA="$userdata"
+            if ! timeout --signal=TERM --kill-after=15s 180s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/l1j_runtime_game_test.gd > "pursuit-results/run_${attempt}.log" 2>&1; then
+              cat "pursuit-results/run_${attempt}.log"
+              exit 1
+            fi
+            cat "pursuit-results/run_${attempt}.log" | grep -E 'L1J_COMBAT_TRACE|L1J_RUNTIME_OK' || true
+            if grep -E 'SCRIPT ERROR:|ERROR:|L1J_RUNTIME_FAIL' "pursuit-results/run_${attempt}.log"; then exit 1; fi
+            grep -q 'L1J_RUNTIME_OK' "pursuit-results/run_${attempt}.log"
+            rm -rf "$userdata"
+          done
+          echo 'AUTO_PURSUIT_RELIABILITY_OK 8/8'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: twilight-auto-pursuit-reliability-logs
+          path: |
+            import.log
+            pursuit-results/*.log
+          if-no-files-found: warn

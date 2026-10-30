@@ -1,0 +1,166 @@
+{
+  "schema": "INDEPENDENT_FINAL_SOURCE_PHYSICAL_CANDIDATE_QC_V1",
+  "utc": "2026-10-19T17:04:32.617886+00:00",
+  "reviewer": "girtas_remaining_run_source_runtime_qc_v02",
+  "independent": true,
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "run",
+  "status": "PASS_SOURCE_AND_AUTHORED_ROOT_PHYSICAL_CANDIDATE",
+  "source_visual_status": "PASS",
+  "raw_sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+  "raw": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/girtas-SW-run-v03six.png",
+    "sha256": "d05fb9088f2c6c856249f2bfea47fe76c7776d559dd7bced75321524ce71ed05",
+    "bytes": 9138747
+  },
+  "authored_pose_canvas_sizes": [
+    2304,
+    2304,
+    2304,
+    2304,
+    2304,
+    2304
+  ],
+  "source_native_root_anchors": [
+    [
+      558,
+      1159
+    ],
+    [
+      508,
+      1146
+    ],
+    [
+      608,
+      1204
+    ],
+    [
+      528,
+      1209
+    ],
+    [
+      518,
+      1135
+    ],
+    [
+      588,
+      1219
+    ]
+  ],
+  "atlas_runtime_geometry": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-geometry.trial-v02.json",
+    "sha256": "9fe47828c3f3fe2c2e93e8113b5da0b8b1f42a8a27931c3862782d8f0f46dbf5",
+    "bytes": 3048
+  },
+  "chosen_layout": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/reviewed_runtime_layout.trial-v02.json",
+    "sha256": "9b15f80e40af73ff358852bff7a5a7f270ee226740bdb47b312ba56b9863e988",
+    "bytes": 1006
+  },
+  "layout_proof": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/runtime-layout.trial-v02-proof.json",
+    "sha256": "1a0c4476f2caffa17f4960797cc974558ed26587f791a4860e6de82f0559da2a",
+    "bytes": 2021
+  },
+  "projection_evidence": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/common-groundprojection-hypothesis.v02.DRAFT.json",
+    "sha256": "cb0abbf5b49824e025d891e823eeb3de3fd66f80d6fdeeddb314783eec67f641",
+    "bytes": 3909
+  },
+  "independent_numeric_proof": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-v02-authored-projection-independent-numeric-proof.json",
+    "sha256": "d30a6bf6076c33cda1d8640871057686da71c0237f4ee8f5d21084ccf17f83d4",
+    "bytes": 9420
+  },
+  "selected_sources": [
+    {
+      "phase": 0,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/girtas-SW-run-LEFT-heel-landing0-v01.png",
+      "raw_sha256": "00db6dba6679ef9975003b92a5b4dacb314a23363a0752c4d45ac60dc54cef10"
+    },
+    {
+      "phase": 1,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-load1-key-v01/girtas-SW-run-LEFT-load1-v01.png",
+      "raw_sha256": "c19cabcc735b628bc6ba2e24b8d82b766278822198a6575b919004cc97169c55"
+    },
+    {
+      "phase": 2,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png",
+      "raw_sha256": "65cbdbe184ddfff32ae29696500a8dfc96b5558879e2549de1fabd88771ab0d2"
+    },
+    {
+      "phase": 3,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-crown-repair-v02/girtas-SW-run-RIGHT-heel-landing3-crown-v02.png",
+      "raw_sha256": "76dfe7e8bdd4c66eac1c0ac34b96eda6b68d0fa6c320228d3674085d91a50f50"
+    },
+    {
+      "phase": 4,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-load4-key-v01/girtas-SW-run-RIGHT-load4-v01.png",
+      "raw_sha256": "42f0d4c5df389d123606493d8f928adc5d6a2392ededae89cbdeb10429764d44"
+    },
+    {
+      "phase": 5,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-air5-key-v01/girtas-SW-run-LEFT-air5-v01.png",
+      "raw_sha256": "243255600b19d7c0ced485a5c18c5aecaa0f32369d093934e18f3001a507f937"
+    }
+  ],
+  "visual_findings": [
+    "Actual common1024 skull/face/neck, solid pauldron cores, chest and visible waist agree with selected SWidle within pose/lean/yaw and manual-marker uncertainty. C2304 is retained for all six; no bbox or ray-span normalization and no whole-boss/body/leg regeneration.",
+    "The source leg chains retain genuine nearLEFT landing0\u2192flexed flat support1\u2192opposite farRIGHT-leading flight2\u2192farRIGHT landing3\u2192farRIGHT compressed flat support4\u2192nearLEFT-leading flight5\u21920. Actual separate recovery boots remain raised. Occluded hips are bounded by visible upperleg/waist and knee/shin continuity; exact hidden joint points are not required.",
+    "Previous trial v01 overconstrained phase1 with the fitted narrow contact0/3 lane. Only phase1 native root Y1225\u21921146 is accepted, with its explicit nearLEFT projected offset+43.04077canonical. This stays within the observed idle near projection55.8 and permits the actual flat supporting foot stance. No standing near/far separation or generic-guide lane is imposed on every run phase.",
+    "With this correction, the visible waist-surface estimate follows approximately369\u2192384\u2192349\u2192369\u2192398\u2192349canonical: both loads compress and both flights rise, while rigid head/shoulder flow remains coherent. This surface registration is not a hidden hip or COM measurement. The5\u21920 transition descends into the next genuine opposite-cycle contact.",
+    "Actual sole contact-point residuals are below0.35canonical from integer anchor rounding. All original alpha16 pixels inside the eight semantic recovery/flight boot ROIs remain conservatively above their declared sloped projected ground centerline by at least5.9229world at actualr098 profile scale. Cloth tails and blade endpoints are excluded from semantic soles.",
+    "Authored projection is a reasonable candidate tied to actual leg poses and observed idle boots, not a claim that the generic3D guide or transparent PNG proves the exact production floor. Source/roots are ready for focused actual compiled idle\u2192run6\u21925to0 review; no further source/C/root tuning is required absent an actual new contradiction.",
+    "Same-direction current SWattack/walk guard comparison withdrew the prior idle-only hiltHOLD. Original selected0/1/2/crown-repaired3/4/5 art is unchanged; generated hilt5 patch stays unselected."
+  ],
+  "source_scope_dependencies": [
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-selected-six-final-independent-source-QC-v01.json",
+      "sha256": "d80966877c6ae1452dffd5e7ea2c0e200dd3f558f473f01f9170bf0d5c4a96c4",
+      "bytes": 5407
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-final-source-stale-gear-sentence-correction-v01.json",
+      "sha256": "46b38b1bf824fc3e370af942034a9a963c63f8739c0ebff1dd933a8387e405e2",
+      "bytes": 848
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-SW-hilt-current-walk-attack-crosscheck-HOLD-withdrawal-v01.json",
+      "sha256": "67c349dca493ef69e00b6ab27ae4130aaa30117cdbf2a9b3557b938d6fc135f1",
+      "bytes": 4673
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-native-semantic-boot-ROIs-and-surface-search-observations-v02.json",
+      "sha256": "4e61f1860aea77cee36c31f47c3df5f31e6a29c36889cfbda7def51e673dd75e",
+      "bytes": 8658
+    }
+  ],
+  "reviewed_private_common_board": {
+    "path": "/workspace/scratch/girtas-SW-run-six-fixedbone-assembly-v03/physical-trial-v02-seven-private.jpg",
+    "sha256": "c6a1da6e598ee2797c0284dd5ac48f2cdabe4f588d73026a97c802f5941875b4",
+    "bytes": 149566
+  },
+  "reviewed_private_rigid_focus": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-SW-firsttrial-rigid-upperbody-common-canonical-focus.jpg",
+    "sha256": "fc5c54e05440439b5058d900471595f6773b0646700966595ca1916a5b8db421",
+    "bytes": 131709
+  },
+  "current_profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r098/NativeMotionProfile.tres",
+    "sha256": "422bee5350cd55a4b8c13778dc4758e54b2e0851bd661a054d3f6eb80cf60ee5",
+    "bytes": 960
+  },
+  "pixel_scale": 0.219105011732,
+  "actual_runtime_status": "HOLD_PENDING_FOCUSED_ACTUAL_COMPILED_SW_IDLE_RUN6_LOOP_QC",
+  "actual_Godot_render_screenshot": false,
+  "PIL_board_scope": "Exact selected atlas RGBA/crops/C/root reconstruction; not a Godot screenshot",
+  "remaining_HOLD": [
+    "Actual compiled SW idle\u2192run six\u21925to0 after integration",
+    "Wholeactor finalquality, timing, actualMain/defaultcatalog approval"
+  ],
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "repository_mutations": false,
+  "images_attached_to_main_or_parent": false
+}

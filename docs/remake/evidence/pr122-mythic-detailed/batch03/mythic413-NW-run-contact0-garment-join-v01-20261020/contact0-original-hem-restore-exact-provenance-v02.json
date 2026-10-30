@@ -1,0 +1,209 @@
+{
+  "status": "ORIGINAL_HEM_MASK_CORRECTION_PENDING_STATIC_QC",
+  "master": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v01-service.png",
+    "sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007"
+  },
+  "previous": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v04-localized-composite.png",
+    "sha256": "e37a2866b069ece600288777962d44a535ce17a88bd8f4f4b30dd6f56219228a"
+  },
+  "parent_restore_proof_sha256": "37f64d970c85958e84c366dc61bc429e38d29b89b32bb916f0826c8f6b5ec68d",
+  "output": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v06-original-hem-restored.png",
+    "sha256": "8ee2ca11c418ca717abf45a219bb1d06c18e8f014d3af19f17ee6e67c3ef4160",
+    "bytes": 764329,
+    "canvas": [
+      1254,
+      1254
+    ]
+  },
+  "original_mask_sha256": "d8115f8b78640bfd1a4497891dd91daae923cf2ee809726e783a381badf5e012",
+  "extra_semantic_polygon": [
+    [
+      540,
+      635
+    ],
+    [
+      825,
+      635
+    ],
+    [
+      835,
+      760
+    ],
+    [
+      800,
+      755
+    ],
+    [
+      740,
+      748
+    ],
+    [
+      680,
+      742
+    ],
+    [
+      620,
+      735
+    ],
+    [
+      550,
+      725
+    ],
+    [
+      525,
+      705
+    ]
+  ],
+  "near_actual_boot_protect_polygon": [
+    [
+      519,
+      711
+    ],
+    [
+      530,
+      698
+    ],
+    [
+      539,
+      691
+    ],
+    [
+      553,
+      690
+    ],
+    [
+      568,
+      694
+    ],
+    [
+      583,
+      699
+    ],
+    [
+      596,
+      711
+    ],
+    [
+      603,
+      727
+    ],
+    [
+      622,
+      740
+    ],
+    [
+      632,
+      780
+    ],
+    [
+      620,
+      850
+    ],
+    [
+      480,
+      850
+    ],
+    [
+      480,
+      735
+    ]
+  ],
+  "far_actual_leg_protect_polygon": [
+    [
+      604,
+      735
+    ],
+    [
+      629,
+      724
+    ],
+    [
+      649,
+      716
+    ],
+    [
+      671,
+      716
+    ],
+    [
+      691,
+      720
+    ],
+    [
+      709,
+      728
+    ],
+    [
+      704,
+      740
+    ],
+    [
+      693,
+      750
+    ],
+    [
+      720,
+      750
+    ],
+    [
+      741,
+      754
+    ],
+    [
+      760,
+      765
+    ],
+    [
+      778,
+      779
+    ],
+    [
+      800,
+      800
+    ],
+    [
+      820,
+      820
+    ],
+    [
+      835,
+      850
+    ],
+    [
+      605,
+      850
+    ]
+  ],
+  "far_protect_material_condition": "below760 or near-blackactualboot; no white/gold residual skirt retained by this foregroundmask",
+  "masks": [
+    {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-original-garment-restore-semantic-mask-v02.png",
+      "sha256": "29eaa6804d842ed543b2162900a245093d301bda92361ea0db635481780cfe50"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-new-nearboot-cuff-protect-mask-v02.png",
+      "sha256": "ce03b80649b4a773c778144fc10d35021d620681596abc64901e5e1dfe443232"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-new-farleg-foreground-protect-mask-v02.png",
+      "sha256": "5e18f723d40b71499ae442796a9f2cc983b259e2b33be20f9121ecc65870bc1f"
+    },
+    {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact0-actual-new-arm-foreground-protect-mask-v01.png",
+      "sha256": "37c9f6f4e51c222b6514fbccec188ff7088208e323bad053379c461e75a4a082"
+    }
+  ],
+  "changed_pixels": 58996,
+  "outside_restore_changed": 0,
+  "outside_original_editmask_changed": 0,
+  "new_arm_nearboot_farleg_foreground_changed": 0,
+  "lowerbody_y760_down_exact": true,
+  "newly_revealed_upperhip_pixels": "exact915master below one originalhem; no oldleg BELOWbodyjoin reintroduced",
+  "source_resampled": false,
+  "native_C": 2560,
+  "no_image_service_invoked": true,
+  "actor_approvals_added": 0
+}

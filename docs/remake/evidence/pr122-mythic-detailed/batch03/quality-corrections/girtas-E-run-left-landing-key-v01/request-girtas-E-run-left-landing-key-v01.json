@@ -1,0 +1,103 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "single_missing_run_keypose",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 0,
+  "intended_anatomical_support": "LEFT_far",
+  "references": [
+    "/workspace/scratch/girtas-E-run-left-landing-key-v01/E-run-left-landing-material-joint-guide.png",
+    "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-run-left-landing-key-v01/E-run-left-landing-material-joint-guide.png": "8deb854b26c28dbe537a721359cdb372dd3b43f2394ddc1c66e9f1d5ff614774",
+    "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Existing E RUN sheets retain wrong identity and/or repeated same support; author dedicated faithful far-LEFT landing with near-RIGHT knee drive from current E idle and explicit anatomical scaffold. Never reuse old failed E run.",
+  "prompt": "Create exactly ONE complete full-body production animation key for GIRTAS, native transparent RGBA PNG, square canvas, NO labels, NO diagram, NO floor, NO shadows or glow haze. This is a new E-facing RUN phase0, not a neutral standing/walk pose. Reference1 is the material joint guide: follow its BLUE anatomical FAR LEFT planted forward leg and MAGENTA anatomical NEAR RIGHT raised driving knee. The guide overlays a pale ghost of the old IDLE; replace its old neutral leg positions completely. Blue FAR LEFT hip -> knee -> ankle extends diagonally forward toward image RIGHT into a coherent LEFT landing boot, heel/sole horizontal on the higher far support plane. LEFT knee softly bent for impact, the full LEFT boot solidly planted. Anatomical NEAR RIGHT thigh drives high forward toward RIGHT, RIGHT knee visibly lifted near hip height, RIGHT shin folds back/down and the ENTIRE RIGHT boot is clearly raised, at least one boot height clear of the lower near support plane. Correct visible two-leg anatomy; do not swap legs. Shoulders and pelvis lean forward into genuine fast running, retain controlled head axis. Reference2 exact selected E idle is authority for camera/model/equipment: established E camera shows some front chest, but face, nose, helmet, pelvis, boots and running travel point RIGHT, never down-right/SE and never rear. Reference3 original portrait is authority for identity. Preserve pale visible human face, long PALE hair, narrow rigid hard GOLD dorsal radial spines, ornate black/gold armor and LONG DARK gold-trim ROBE/SKIRT with split panels allowing two booted legs. Preserve original long sinuous gold-orange blade in permanent anatomical RIGHT/near hand, extending back down LEFT; LEFT/far hand is empty and counter-swings. No red V mask, no orange feather/flame fan, no broad short blade, no invented pants. Long robe and hair flow backward LEFT due to running, but never hide or merge both legs. Keep rigid helmet/head/shoulder/hip proportions identical to selected idle; do not stretch torso. Complete uncropped body, blade tip, all thin spines, hair and robe; full transparent gaps around every extremity, at least 60 native pixels to each edge. Figure including equipment must fit within 1120x1120 on a 1254-equivalent native canvas; scale WHOLE figure uniformly if needed, do not shorten equipment. One figure only, no duplicates, no outer glow/soft alpha bridges. Render polished original game art at full quality. Actual airborne phases are not requested here: only unmistakable FAR LEFT forward landing + NEAR RIGHT high knee drive. No mirror of identity/weapon hand.",
+  "requested_at": "2026-10-19T14:13:15.686637+00:00",
+  "user_authorization": "Private production images authorized; no main-chat attachment. One attempt for this missing landing key; failures HOLD.",
+  "pose_guide_proof": {
+    "purpose": "PRODUCTION_REFERENCE_ONLY_NOT_GAME_ART",
+    "idle": "/workspace/scratch/girtas-E-run-production-v01/Eidle0-lossless.png",
+    "idle_sha256": "b7ee692d348984565b6dd7eaac6a1b97747179503d723d3b25f6f4197fb811fd",
+    "guide": "/workspace/scratch/girtas-E-run-left-landing-key-v01/E-run-left-landing-material-joint-guide.png",
+    "guide_sha256": "8deb854b26c28dbe537a721359cdb372dd3b43f2394ddc1c66e9f1d5ff614774",
+    "reference_only_resize": [
+      2,
+      1
+    ],
+    "overlay_joint_coordinates": {
+      "pelvis_far_LEFT": [
+        700,
+        600
+      ],
+      "LEFT_knee": [
+        800,
+        760
+      ],
+      "LEFT_ankle": [
+        855,
+        965
+      ],
+      "LEFT_heel": [
+        830,
+        980
+      ],
+      "LEFT_toe": [
+        925,
+        980
+      ],
+      "pelvis_near_RIGHT": [
+        650,
+        600
+      ],
+      "RIGHT_knee": [
+        875,
+        690
+      ],
+      "RIGHT_ankle": [
+        780,
+        825
+      ],
+      "RIGHT_heel": [
+        765,
+        840
+      ],
+      "RIGHT_toe": [
+        850,
+        840
+      ],
+      "shoulder": [
+        700,
+        390
+      ],
+      "head": [
+        738,
+        210
+      ]
+    },
+    "near_side": "anatomicalRIGHT",
+    "far_side": "anatomicalLEFT",
+    "idle_ground_depth_native_estimate": 20,
+    "guide_contact_planes": {
+      "far_LEFT": 980,
+      "near_RIGHT": 1020
+    },
+    "guide_art_pixels_must_not_be_copied_as_final": true
+  },
+  "pose_guide_proof_sha256": "d5d6a61913bc422bb68706a824990616aaa72155bcfc4817f24831f25460cfb4",
+  "newly_authored_pose_target": 1,
+  "reused_game_animation_poses": 0,
+  "complete_clip": false,
+  "actor_approval": false
+}

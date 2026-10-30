@@ -1,0 +1,269 @@
+{
+  "status": "PASS_FINITE_ONCE_NEUTRAL_CAPTURE_AND_EXACT_ACTUAL_MATERIAL_QUAD_FLOOR_BINDING",
+  "model": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-original-neutral-once-true-sole-and-HIT-six-material-floor-binding-v01.json",
+    "sha256": "b937fcb0e1fea65fae7227ebefbe508b5f352c521055006522ab10b16f02a3c2",
+    "bytes": 16073
+  },
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/actual-S-HIT6-own-native-articulated-v01/S-HIT6-actual-own-native-body-head-LEFTguard-source-contract-v01.json",
+    "sha256": "8d0849843efc996e7ef7c2d9525d0e5c309091d5d01f8ae9957c03ab11486290",
+    "bytes": 23619
+  },
+  "once_body_registration": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-native-one-time-body-density-C2560-root-registration-v01.json",
+    "sha256": "c9a5c8752e3daf303b4685c02fed424628aa621fe8ad05ff97ddbab838673480",
+    "bytes": 3681
+  },
+  "original": {
+    "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "dbfbca5fd54a9f5d4f704de59c7d61e586f2d9c410f48f07f233b14096a98e25",
+    "bytes": 919345
+  },
+  "source_original_material_checks": [
+    {
+      "side": "RIGHT-near-imageleft",
+      "exact_source_mask": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-original-neutral-actual-sole-support-capture-parts-v01/RIGHT-near-imageleft-original-native-sole-and-lowerboot-capture-support-mask.png",
+        "sha256": "8cd88274787daf70d5b81fc30b86bff6d9e6b5ec68a337702e9d1f1db3556072",
+        "bytes": 2573
+      },
+      "exact_original_material": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-original-neutral-actual-sole-support-capture-parts-v01/RIGHT-near-imageleft-exact-original-native-sole-and-lowerboot-material.png",
+        "sha256": "841f297e3d0946f2f1fd023e0e9edbba538f8a89d00bf79fce3b7f1ba7931f92",
+        "bytes": 39578
+      },
+      "actual_alpha_gt0_texel_quad_count": 10186,
+      "guard_native": 2,
+      "guarded_min_Z": 0.9999999999999973,
+      "declared_visible_paint_height": 22.2746215844309,
+      "camera_null_thickness_projection": [
+        0.0,
+        0.0
+      ],
+      "ground_HF_Z": [
+        0.0,
+        3.552713678800501e-15
+      ],
+      "declared_ankle_relative_sole_height": 100.0
+    },
+    {
+      "side": "LEFT-far-imageright",
+      "exact_source_mask": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-original-neutral-actual-sole-support-capture-parts-v01/LEFT-far-imageright-original-native-sole-and-lowerboot-capture-support-mask.png",
+        "sha256": "e4ade69f91be74b3babe8165dc9c63efccd49fd3589157f738744bfc50e66be9",
+        "bytes": 2578
+      },
+      "exact_original_material": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/S-original-neutral-actual-sole-support-capture-parts-v01/LEFT-far-imageright-exact-original-native-sole-and-lowerboot-material.png",
+        "sha256": "48da97822237f56e3e14eca51fc591c6c292b6427b07eed0a4070cd2419ae0bb",
+        "bytes": 40980
+      },
+      "actual_alpha_gt0_texel_quad_count": 10858,
+      "guard_native": 2,
+      "guarded_min_Z": 1.0000000000000004,
+      "declared_visible_paint_height": 17.918190567853703,
+      "camera_null_thickness_projection": [
+        0.0,
+        0.0
+      ],
+      "ground_HF_Z": [
+        0.0,
+        -3.552713678800501e-15
+      ],
+      "declared_ankle_relative_sole_height": 100.0
+    }
+  ],
+  "actual_six_checks": [
+    {
+      "phase": 0,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/actual-S-HIT6-own-native-articulated-v01/phase0-actual-S-hit-stable_guard-v01/thunder_female-S-hit-phase0-stable_guard-actual-native-v01.png",
+        "sha256": "b2891e02f5faf40071a32e35b347fbaec75888a3177077290a7d24c6b82a3204",
+        "bytes": 926120
+      },
+      "stationary_original_sole_and_lowerboot_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10186,
+          "guard_native": 2,
+          "guarded_min_Z": 0.9999999999999973
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10858,
+          "guard_native": 2,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "entire_remaining_actual_material_including_full_staff": {
+        "actual_alpha_gt0_texel_quad_count": 336934,
+        "guard_native": 8,
+        "guarded_min_Z": 63.42273758384056
+      },
+      "every_actual_alpha_positive_texel_assigned_exactly_once": true
+    },
+    {
+      "phase": 1,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/actual-S-HIT6-own-native-articulated-v01/phase1-actual-S-hit-impact_response-v01/thunder_female-S-hit-phase1-impact_response-actual-native-v01.png",
+        "sha256": "60a993286a0cf8404a36365e6bea06711d2845a296329100e3afaf7d2bb2e2ae",
+        "bytes": 907269
+      },
+      "stationary_original_sole_and_lowerboot_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10186,
+          "guard_native": 2,
+          "guarded_min_Z": 0.9999999999999973
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10858,
+          "guard_native": 2,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "entire_remaining_actual_material_including_full_staff": {
+        "actual_alpha_gt0_texel_quad_count": 333809,
+        "guard_native": 8,
+        "guarded_min_Z": 63.42273758384056
+      },
+      "every_actual_alpha_positive_texel_assigned_exactly_once": true
+    },
+    {
+      "phase": 2,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/actual-S-HIT6-own-native-articulated-v01/phase2-actual-S-hit-maximum_recoil-v01/thunder_female-S-hit-phase2-maximum_recoil-actual-native-v01.png",
+        "sha256": "61d66c2f0523f2494344ace58c05e2f28f6eaaaff7f2fe8d4fcee2ef69d789a3",
+        "bytes": 882630
+      },
+      "stationary_original_sole_and_lowerboot_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10186,
+          "guard_native": 2,
+          "guarded_min_Z": 0.9999999999999973
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10858,
+          "guard_native": 2,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "entire_remaining_actual_material_including_full_staff": {
+        "actual_alpha_gt0_texel_quad_count": 324316,
+        "guard_native": 8,
+        "guarded_min_Z": 63.42273758384056
+      },
+      "every_actual_alpha_positive_texel_assigned_exactly_once": true
+    },
+    {
+      "phase": 3,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/actual-S-HIT6-own-native-articulated-v01/phase3-actual-S-hit-counterbalance-v01/thunder_female-S-hit-phase3-counterbalance-actual-native-v01.png",
+        "sha256": "f400208faef69f693bb563989505fe741b21b5a207c05a90e0158925215fe1b7",
+        "bytes": 912143
+      },
+      "stationary_original_sole_and_lowerboot_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10186,
+          "guard_native": 2,
+          "guarded_min_Z": 0.9999999999999973
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10858,
+          "guard_native": 2,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "entire_remaining_actual_material_including_full_staff": {
+        "actual_alpha_gt0_texel_quad_count": 336248,
+        "guard_native": 8,
+        "guarded_min_Z": 63.42273758384056
+      },
+      "every_actual_alpha_positive_texel_assigned_exactly_once": true
+    },
+    {
+      "phase": 4,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/actual-S-HIT6-own-native-articulated-v01/phase4-actual-S-hit-regaining_control-v01/thunder_female-S-hit-phase4-regaining_control-actual-native-v01.png",
+        "sha256": "6844290cc18a5db1a314f9a67f8fe5ac4f23909ee27b9dae5f147c1ae3f7e6a9",
+        "bytes": 919189
+      },
+      "stationary_original_sole_and_lowerboot_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10186,
+          "guard_native": 2,
+          "guarded_min_Z": 0.9999999999999973
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10858,
+          "guard_native": 2,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "entire_remaining_actual_material_including_full_staff": {
+        "actual_alpha_gt0_texel_quad_count": 337924,
+        "guard_native": 8,
+        "guarded_min_Z": 63.42273758384056
+      },
+      "every_actual_alpha_positive_texel_assigned_exactly_once": true
+    },
+    {
+      "phase": 5,
+      "actual_source": {
+        "path": "/workspace/scratch/mythic413-S-hit-author-20261020-v01/actual-S-HIT6-own-native-articulated-v01/phase5-actual-S-hit-regained_guard_settled-v01/thunder_female-S-hit-phase5-regained_guard_settled-actual-native-v01.png",
+        "sha256": "ef3f7f2836c6ae4675f21e1a902ab8924d7af71d34054a3c56910684ac0aa3b0",
+        "bytes": 918490
+      },
+      "stationary_original_sole_and_lowerboot_patches": [
+        {
+          "side": "RIGHT-near-imageleft",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10186,
+          "guard_native": 2,
+          "guarded_min_Z": 0.9999999999999973
+        },
+        {
+          "side": "LEFT-far-imageright",
+          "original_RGBA_mismatch": 0,
+          "actual_alpha_gt0_texel_quad_count": 10858,
+          "guard_native": 2,
+          "guarded_min_Z": 1.0000000000000004
+        }
+      ],
+      "entire_remaining_actual_material_including_full_staff": {
+        "actual_alpha_gt0_texel_quad_count": 337899,
+        "guard_native": 8,
+        "guarded_min_Z": 63.42273758384056
+      },
+      "every_actual_alpha_positive_texel_assigned_exactly_once": true
+    }
+  ],
+  "limits": [
+    "One declared compatible original neutral capture model only. The fixed ankle height100 is an authored capture control with stated marker uncertainty, not measured hidden anatomy or a recovered fixed bone skeleton.",
+    "The visible painted shoe patches are lifted by one fixed camera-null finite sole thickness, leaving all actual RGBA and original screen H/F unchanged; underlying authored support controls have Z0.",
+    "All original and actual painted texel quads, both sole masks and the entire remaining material partition are independently evaluated. Remaining body/staff uses the declared positive-height source plane. No per-pose C/root/foot or alpha-height fit is introduced.",
+    "This numeric compatibility witness adds no source/art/cycle/game/actor approval and no global 3D uniqueness claim. Actual source quality remains the fresh primary reviewer scope."
+  ],
+  "images_viewed": 0,
+  "tests_run": 0,
+  "repo_writes": 0,
+  "actor_approvals_added": 0
+}

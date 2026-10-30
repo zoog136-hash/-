@@ -9,14 +9,127 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+from xml.etree import ElementTree
 from PIL import Image
 
 
 STATES = ("original_linked", "inven_exact_name", "inven_visual_alias", "original_review_pending", "self_authored_substitute", "bundled_ui_art", "image_missing")
 
 
+def runtime_image_dimensions(path: Path) -> list[int]:
+    """Verify Godot-loadable runtime artwork without treating SVG as a raster."""
+    if path.suffix.lower() != ".svg":
+        with Image.open(path) as image:
+            image.load()
+            return list(image.size)
+    raw = path.read_bytes()
+    if len(raw) > 1024 * 1024 or b"<!doctype" in raw.lower() or b"<!entity" in raw.lower():
+        raise ValueError("unsafe/oversized SVG")
+    root = ElementTree.fromstring(raw)
+    if root.tag != "{http://www.w3.org/2000/svg}svg":
+        raise ValueError("not an SVG root")
+    view_box = root.get("viewBox", "").replace(",", " ").split()
+    if len(view_box) != 4:
+        raise ValueError("runtime SVG requires a four-number viewBox")
+    dimensions = [float(view_box[2]), float(view_box[3])]
+    if not all(0 < value <= 8192 for value in dimensions):
+        raise ValueError("invalid SVG viewport")
+    drawable = {"path", "rect", "circle", "ellipse", "line", "polyline", "polygon", "text", "use"}
+    found_art = False
+    for element in root.iter():
+        kind = element.tag.rsplit("}", 1)[-1]
+        if kind in {"script", "foreignObject"}:
+            raise ValueError("active SVG content forbidden")
+        for key, value in element.attrib.items():
+            if (key == "href" or key.endswith("}href")) and not value.startswith("#"):
+                raise ValueError("external SVG resource forbidden")
+        if kind in drawable:
+            found_art = True
+    if not found_art:
+        raise ValueError("SVG has no drawable content")
+    return [int(dimensions[0]), int(dimensions[1])]
+
+
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def approved_grade_repair(root: Path, path: str, base_bytes: bytes) -> bool:
+    """Allow only the evidenced #183 grade metadata migration, never asset/identity edits.
+
+    Both data files were intentionally changed by the item-grade repair. Comparing
+    their bytes to the PR base would reject all legitimate grade corrections.
+    Rebuild the exact allowed rows from the unchanged baseline and the recorded
+    2,129 source qualities; reject even one unrelated gameplay or visual field.
+    """
+    if path not in ("data/catalog_v19.json", "data/game_db_v17.json"):
+        return False
+    try:
+        before = json.loads(base_bytes)
+        after = json.loads((root / path).read_bytes())
+        evidence = json.loads((root / "data/catalog_item_grade_audit_20261026.json").read_bytes())
+        qualities = evidence["source_quality_by_id"]
+        grade_map = evidence["quality_map"]
+        if set(before) != set(after):
+            return False
+        if any(before[key] != after[key] for key in before if key != "아이템"):
+            return False
+        originals = before["아이템"]
+        updated = after["아이템"]
+        if not isinstance(originals, list) or len(originals) != len(updated):
+            return False
+        if path == "data/catalog_v19.json":
+            if len(originals) != len(qualities):
+                return False
+            for old, row in zip(originals, updated):
+                identity = str(old["sourceId"])
+                if identity not in qualities:
+                    return False
+                source_quality = qualities[identity]
+                grade = grade_map.get(str(source_quality))
+                expected = dict(old)
+                expected["sourceQuality"] = source_quality
+                expected["grade_evidence"] = (
+                    "inven_item_quality" if grade else "inven_item_quality_unmapped"
+                )
+                if grade and grade != old["grade"]:
+                    expected["grade"] = grade
+                    expected.setdefault("grade_original", old["grade"])
+                if row != expected:
+                    return False
+            return True
+
+        # Gameplay records may be annotated only when they resolve to a
+        # same-named catalog source with a confirmed standard quality.
+        catalog_rows = json.loads((root / "data/catalog_v19.json").read_bytes())["아이템"]
+        catalog_by_id = {str(row["sourceId"]): row for row in catalog_rows}
+        for old, row in zip(originals, updated):
+            if row == old:
+                continue
+            identity = str(row.get("grade_source_id", ""))
+            if identity not in qualities or identity not in catalog_by_id:
+                return False
+            original_art = catalog_by_id[identity]
+            source_quality = qualities[identity]
+            grade = grade_map.get(str(source_quality))
+            if not grade or original_art["name"] != old["name"]:
+                return False
+            if original_art.get("sourceQuality") != source_quality:
+                return False
+            expected = dict(old)
+            expected.update({
+                "sourceQuality": source_quality,
+                "grade_source_id": identity,
+                "grade_evidence": "inven_item_quality",
+                "grade": grade,
+            })
+            if grade != old["grade"]:
+                expected.setdefault("grade_original", old["grade"])
+            if row != expected:
+                return False
+        return True
+    except (KeyError, TypeError, ValueError, OSError, json.JSONDecodeError):
+        return False
 
 
 def audit(root: Path, runtime: dict, sources: dict, base: str) -> tuple[dict, dict]:
@@ -109,12 +222,16 @@ def audit(root: Path, runtime: dict, sources: dict, base: str) -> tuple[dict, di
         reference = base if path in pinned_data else "HEAD"
         original = subprocess.check_output(["git", "show", f"{reference}:{path}"], cwd=root)
         unchanged = original == (root / path).read_bytes()
+        grade_only = (not unchanged and path in pinned_data
+                      and approved_grade_repair(root, path, original))
         protected[path] = {"sha256": sha(root / path), "reference": reference,
-                           "unchanged_from_reference": unchanged}
+                           "unchanged_from_reference": unchanged,
+                           "approved_grade_metadata_only": grade_only}
         if path in pinned_data:
             protected[path]["unchanged_from_base"] = unchanged
-        if not unchanged:
-            errors.append("protected source changed relative to " + reference + ": " + path)
+        if not unchanged and not grade_only:
+            errors.append("protected source changed outside verified grade repair relative to "
+                          + reference + ": " + path)
     sets = {}
     for group in ("catalog", "legacy", "runtime"):
         rows = runtime.get(group, [])
@@ -133,10 +250,12 @@ def audit(root: Path, runtime: dict, sources: dict, base: str) -> tuple[dict, di
             if path and path not in files:
                 local = root / path.removeprefix("res://")
                 if local.is_file():
-                    with Image.open(local) as image:
-                        image.load()
-                        files[path] = {"sha256":sha(local),"bytes":local.stat().st_size,"size":list(image.size),
+                    try:
+                        dimensions = runtime_image_dimensions(local)
+                        files[path] = {"sha256":sha(local),"bytes":local.stat().st_size,"size":dimensions,
                                        "decoded":True,"tracked":path.removeprefix("res://") in tracked}
+                    except (OSError, ValueError, ElementTree.ParseError) as exc:
+                        errors.append(f"runtime image decode failed {path}: {exc}")
             if path in files:
                 row["sha256"] = files[path]["sha256"]
                 if not files[path]["tracked"]: errors.append("untracked runtime image: " + path)
@@ -173,7 +292,7 @@ def main() -> None:
     parser.add_argument("--runtime", type=Path, required=True)
     parser.add_argument("--source-evidence", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--base", default="434b904d957fd2146b6d2e73325693a402028035")
+    parser.add_argument("--base", default="f24c0a8372adc33dda4dcf76735b90ec7e537aba")
     parser.add_argument("--write-provenance", action="store_true")
     args = parser.parse_args()
     report, proofs = audit(args.root, json.loads(args.runtime.read_text()), json.loads(args.source_evidence.read_text()), args.base)

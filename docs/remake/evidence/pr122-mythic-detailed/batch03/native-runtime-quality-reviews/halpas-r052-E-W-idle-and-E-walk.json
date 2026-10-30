@@ -1,0 +1,84 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "HOLD_CURRENT_E_IDLE_TO_WALK_LAYOUT",
+  "actor_key": "transform:393",
+  "revision": "r052",
+  "frames": "res://assets/actors/eight_direction/native_locomotion_staging/halpas_393/r052/SpriteFrames.tres",
+  "frames_sha256": "991854c9b65d40328e0b5983695fd89954fdc6a9ed9be8215278c354ca3f05fd",
+  "actual_tres_regions_and_margins_match_saved_track_geometry": true,
+  "all_18_sampled_atlas_crop_sha256_match": true,
+  "E_idle": {
+    "status": "PASS_SCOPED_RUNTIME_SUPPORT_AND_LOOP",
+    "canvas": 1280,
+    "source_rgba_unchanged": true,
+    "all_six_correct_east_heading": true,
+    "boot_toe_world_offsets_x": [
+      6.1239,
+      6.6138,
+      7.3486,
+      6.8587,
+      6.8587,
+      7.1037
+    ],
+    "loop_5_to_0_toe_delta_world": -0.9798,
+    "review": "All six physical ankle/heel support columns remain at actor root. Front toe naturally remains 6.1\u20137.3world px forward, with less than1world px toe change at seam; cape/wing breathing remains. No cell-column root snap."
+  },
+  "W_idle": {
+    "status": "PASS_SCOPED_RUNTIME_SUPPORT_AND_LOOP",
+    "canvas": 1152,
+    "source_rgba_unchanged": true,
+    "all_six_correct_west_heading": true,
+    "both_boot_support_midpoint_world_offsets_x": [
+      -0.1361,
+      0.0,
+      0.0,
+      0.0,
+      -0.1361,
+      0.0
+    ],
+    "maximum_midpoint_error_world": 0.1361,
+    "loop_5_to_0_midpoint_delta_world": -0.1361,
+    "review": "All six paired-boot support spans are centered within0.14world px of root; prior approximately5.4world px column/loop drift is absent. Helmet/shoulder/hip size stays consistent; cloth/wing movement remains."
+  },
+  "E_walk": {
+    "status": "HOLD_CURRENT_RUNTIME_SCALE_AND_ROOT",
+    "source_visual_direction": "All six inspected source poses face true east and retain body/weapon/wing identity; no new source-art rejection. Flight knees/feet must not be planted-foot locked.",
+    "current_canvas": 1024,
+    "current_runtime_scale": 0.30619345859429364,
+    "idle_runtime_scale": 0.2449547668754349,
+    "current_scale_ratio_versus_equal_native_body_size": 1.25,
+    "phase0_approximate_landmarks_source": {
+      "hip": [
+        451,
+        379
+      ],
+      "crown_y": 142,
+      "shoulder_y": 236
+    },
+    "idle0_approximate_landmarks_source": {
+      "hip": [
+        310,
+        310
+      ],
+      "crown_y": 80,
+      "shoulder_y": 180
+    },
+    "phase0_current_hip_world": [
+      20.515,
+      -46.2352
+    ],
+    "idle0_hip_world": [
+      -2.4495,
+      -40.6625
+    ],
+    "review": "Actual r052 Ewalk is visibly enlarged on transition from Eidle and packed-cell anchor384/1152 lies behind pelvis. Native crown-to-bent-toe and shoulder-to-pelvis lengths are comparable to Eidle, so source pixel resolution is not permission to retain25 percent runtime enlargement. Uniform same1280 canvas and+80sourceX anchor proposal removes dominant scale/forward snap while preserving all per-pose Y/bob/leg/wing displacement. Proposal still requires compiled revision transition/loop review; no actor approval.",
+    "metadata_only_proposal": "/workspace/scratch/halpas-r052-runtime-qc/E-walk-runtime-layout-proposal-v01.json",
+    "proposal_status": "REVIEWED_LAYOUT_PROPOSAL_REQUIRES_NEW_COMPILED_QC",
+    "proposal_preserves_all_source_RGBA": true,
+    "proposal_resamples_source": false
+  },
+  "approval_granted": false,
+  "full_actor_status": "HOLD_UNCHANGED",
+  "private_previews_not_for_chat": true,
+  "private_preview_total_bytes": 2175714
+}

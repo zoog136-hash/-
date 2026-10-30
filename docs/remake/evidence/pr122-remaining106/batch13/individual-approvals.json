@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "policy_UTC": "2026-10-18T13:19:47.679314+00:00",
+  "authorization": "Latest user instruction sections3,8,13: finish the two already-authored waiting species first, and defer full integration CI/APK until final production; do not delay otherwise-qualified species for repeated full CI. This supersedes the older CI/APK-before-species-count checkpoint rule.",
+  "baseline_completed_preserved": 392,
+  "new_completed": 2,
+  "completed": 394,
+  "remaining": 104,
+  "final_release_or_merge_approved": false,
+  "decisions": [
+    {
+      "id": "monster:알비노 이구아나",
+      "name": "알비노 이구아나",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T13:19:47.679314+00:00",
+      "scope": "Per-species local completion under latest user production-first directive; final exact-HEAD integration CI and APK remain pending",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "PASS; preserved separate post-authoring resuming-agent review, not a claim of independent human review",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 4,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 112,
+        "run": "Not separately defined by this monster contract; no walk speed-up presented as a run"
+      },
+      "runtime_connected": true,
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch01/batch01-production-preservation.json",
+      "reviewed_profile_sha256": "95c0c40161a09ab159630feb581cdc382e0881d61106993a8667cedfcbb6a541",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch01/albino_iguana_monster_authored-independent-review.json",
+          "sha256": "e0b19e57b139759e672717774d8ba0ddf8f04ce2f658cd2aa9228c92876a2c29"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch01/batch01-production-preservation.json",
+          "sha256": "bbaca723ca45683de1867a1a5668123e773a911e1be37bfe15171abea6839fdc"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch06/checkpoint.json",
+          "sha256": "3726eaddf91ab8ca607f95dc1d2bfeec849242487f71998426d6e23aa5be4cbd"
+        },
+        {
+          "path": "assets/actors/eight_direction/original_based/albino_iguana_monster_authored/provenance.json",
+          "sha256": "cd7c40e9ea67acb3c568e5364f19f76bcf4ebf6de162bdedc2d9e1118b120c3c"
+        }
+      ],
+      "latest_production_byte_comparison": {
+        "reviewed_Main_commit": "dc20ab525a73dc85a994fc204def9ae0e12ce62a",
+        "compared_HEAD": "e840f0ef7ee0b44f3d972a43745ad1fc5aefdae2",
+        "changed_paths_in_assets_data_scripts_scenes_Main_project": [],
+        "checked_source_and_SpriteFrames_files": 49,
+        "all49_SHA_equal": true
+      },
+      "integration_CI": "DEFERRED_TO_FINAL_INTEGRATION",
+      "Android_APK": "FINAL_BUILD_PENDING",
+      "Android_real_device": "NOT_RUN",
+      "new_source_authored_this_decision": false
+    },
+    {
+      "id": "monster:공포의 아그니",
+      "name": "공포의 아그니",
+      "status": "APPROVED",
+      "decided_UTC": "2026-10-18T13:19:47.679314+00:00",
+      "scope": "Per-species local completion under latest user production-first directive; final exact-HEAD integration CI and APK remain pending",
+      "species_gates": {
+        "source_review": "PASS",
+        "static_image_gate": "PASS",
+        "temporal_gate": "PASS",
+        "game_function_gate": "PASS",
+        "actual_Main_visual_gate": "PASS",
+        "baseline_comparison": "PASS"
+      },
+      "independent_visual_review": "PASS; preserved separate post-authoring resuming-agent review, not a claim of independent human review",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "motion_contract": {
+        "idle": 2,
+        "walk": 3,
+        "attack": 3,
+        "hit": 2,
+        "death": 3,
+        "unique_poses": 104,
+        "run": "Not separately defined by this monster contract; no walk speed-up presented as a run"
+      },
+      "runtime_connected": true,
+      "source_preservation_manifest": "docs/remake/evidence/pr122-remaining106/batch01/batch01-production-preservation.json",
+      "reviewed_profile_sha256": "322d68f8b9964cd4a8536d753fee074e58632aa7c343eba72db3ae2f85f32bf3",
+      "evidence_pins": [
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch01/fear_agni_monster_authored_v2-independent-review.json",
+          "sha256": "2f159f1b2764e6e1c57fd92e86882de562620f4b5f0c66b6588df94bb79c1f8c"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch01/batch01-production-preservation.json",
+          "sha256": "bbaca723ca45683de1867a1a5668123e773a911e1be37bfe15171abea6839fdc"
+        },
+        {
+          "path": "docs/remake/evidence/pr122-remaining106/batch06/checkpoint.json",
+          "sha256": "3726eaddf91ab8ca607f95dc1d2bfeec849242487f71998426d6e23aa5be4cbd"
+        },
+        {
+          "path": "assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/provenance.json",
+          "sha256": "75710bcdcf1a53f2cf738e66ab0b9da352280fbe6e819146dccca5853f68fadd"
+        }
+      ],
+      "latest_production_byte_comparison": {
+        "reviewed_Main_commit": "dc20ab525a73dc85a994fc204def9ae0e12ce62a",
+        "compared_HEAD": "e840f0ef7ee0b44f3d972a43745ad1fc5aefdae2",
+        "changed_paths_in_assets_data_scripts_scenes_Main_project": [],
+        "checked_source_and_SpriteFrames_files": 49,
+        "all49_SHA_equal": true
+      },
+      "integration_CI": "DEFERRED_TO_FINAL_INTEGRATION",
+      "Android_APK": "FINAL_BUILD_PENDING",
+      "Android_real_device": "NOT_RUN",
+      "new_source_authored_this_decision": false
+    }
+  ]
+}

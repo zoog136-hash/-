@@ -1,0 +1,118 @@
+{
+  "schema": "PR122-independent-actual-NE-attack-six-source-cycle-prepacking-v1",
+  "status": "PASS_ACTUAL_NE_ATTACK_SIX_DEDICATED_ONE_SHOT_SOURCE_CYCLE_PREPACKING",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "attack",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/NE-ATTACK6-exact-final-actual-native-source-provenance-contract-v07.json",
+    "sha256": "42d0cdd6fc986e08baabcbec8c9ed958daa016d8c93783b1de5205173df762c2",
+    "bytes": 28245
+  },
+  "all_six_independent_binding": [
+    {
+      "phase": 0,
+      "name": "READY",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-0-READY-actual-native-v06.png",
+        "sha256": "7c0a1c2d4e928e2e34e5e60ade6a5e68d850ca329157308116c97842535ddac5",
+        "bytes": 769728
+      },
+      "rgba_sha256": "466615d93d62ead3c17deaf71f7f1d11603c9aa1ba28f34548b77f6adadf98eb"
+    },
+    {
+      "phase": 1,
+      "name": "WINDUP",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-1-WINDUP-actual-native-v06.png",
+        "sha256": "33102b2db1212701ca60e1659ef551a55b4ffb3a033d0896ea4bfbfe98b46780",
+        "bytes": 746885
+      },
+      "rgba_sha256": "e194cb8c13b359992954c81a4d9c532b274cd6c4bf65594c78f00cc6c0f1fd1d"
+    },
+    {
+      "phase": 2,
+      "name": "COIL",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-2-COIL-actual-native-v06.png",
+        "sha256": "26f26a7f566b47b5c29a5cbad5c2cd9ec4d0ebd8da64044a46149102328852e8",
+        "bytes": 732911
+      },
+      "rgba_sha256": "c2146908cf90ee38dadb757b8c2b4beea9fd7bfbfcfd08fa7a45f2a834e43e72"
+    },
+    {
+      "phase": 3,
+      "name": "STRIKE3",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-3-STRIKE3-actual-native-v06.png",
+        "sha256": "ec413d2a2ab3cd15eb27159effe6f72a3ad216ff078180811f5ec02709bf14fd",
+        "bytes": 735662
+      },
+      "rgba_sha256": "af66701946cd71000180da1a8b79dba962ab01a1c9dfcc9e810764e8620c9926"
+    },
+    {
+      "phase": 4,
+      "name": "FOLLOW",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-4-FOLLOW-actual-native-v06.png",
+        "sha256": "72fbb4b030e74f3ab3f015e3fd4f8406d2491108f5e7ddb097d8d4801741dac9",
+        "bytes": 740108
+      },
+      "rgba_sha256": "7f8e0916bd8379d6787dbe8775181bec079515dc03edea8f14023b127bdb4650"
+    },
+    {
+      "phase": 5,
+      "name": "RECOVER",
+      "source": {
+        "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-native-rig-v06/thunder_female-NE-attack-5-RECOVER-actual-native-v06.png",
+        "sha256": "87974e828153d149d4bf225fb2ebff3eba472ba30146b70d97915ab0077e1c23",
+        "bytes": 765073
+      },
+      "rgba_sha256": "376a062d2fe2252151d643e412b2ab9b891b5ee8d1a96679c86587a06ffcb581"
+    }
+  ],
+  "C_fixed": 2432,
+  "bodyunit_fixed": 2.375,
+  "common_rig_root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "source_canvas": [
+    1536,
+    1536
+  ],
+  "loop": false,
+  "cycle_seconds": 0.42,
+  "phase_seconds": 0.07,
+  "resource_fps": 14.285714285714286,
+  "intended_contact_frame": 3,
+  "visual_findings": [
+    "Own rear NE identity, gold hair/bun and blue ribbons, gold-blue coat/white pleats, thigh-high boots and anatomical RIGHT near-hand double-ended gold-turquoise staff remain consistent across all six. Both staff ends, actual grip and complete hands are preserved.",
+    "READY transitions through a distinct loaded WINDUP and COIL to extended NE STRIKE3, FOLLOW and RECOVER. The near arm, free far arm, torso lean, knees and lagging coat articulate as one dedicated attack; planted support stays stable.",
+    "Native LEFT shoulder cap, white/gold cuff, elbow and hand join continuously in all six. Native RIGHT elbow/forearm/grip and full rigid staff remain connected. No old detached limb/staff trace or obvious joint cut is visible in the six board and native joint/grip view.",
+    "Fixed original distal shoe material and five visible heel/forefoot support samples are RGBA-identical across all six. The complete eight-layer native compositions reproduce all six final PNGs exactly; each has one strong connected body and no alpha100 detached component of at least3pixels."
+  ],
+  "visual_limitations": [
+    "Reviewed one bounded actual six-pose board and one native six-joint/grip composite. One native diagnostic JPEG exceeded150000B by2837B and is exactly recorded in the immutable ledger; no repeat view or source regeneration was performed.",
+    "Attack/source review establishes visible role, continuity and stable authored support, not an absolute unique hidden 3D skeletal or sole solution. Actual Godot attack contact, one-shot timing, default game binding and actor approval remain pending.",
+    "A fixed full foot node can be occluded by moving pole or cloth in the final composite; background rectangle differences are not mislabeled as foot drift.",
+    "Only this new NE attack is reviewed. Previously completed motions and user-excluded WALK are unchanged."
+  ],
+  "exact_numeric_binding": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/NEattack-v06-independent-exact-node-support-and-rigid-staff-binding-v01.json",
+    "sha256": "9f82f6654c5607a4bc5885493d06591926fb698514b49074df55b7ad796ce34f",
+    "bytes": 28989
+  },
+  "immutable_private_image_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NEattack-final-source-view82-frozen.json",
+    "sha256": "577b10025156ed117d46486f4f3a52164579c159d25bae59231c47b5bfc26092",
+    "bytes": 40650
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}

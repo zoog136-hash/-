@@ -52,11 +52,12 @@ func _run() -> void:
 	# A configured monster must never inherit an unrelated item or grade.
 	var strict_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	strict_rng.seed = 3189
-	_check(LOOT._pick_equipment("희귀", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이") == "", "grade miss must not substitute unrelated rare equipment")
+	_check(LOOT._pick_equipment("희귀", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이") == "수정 단검", "verified rare crystal dagger stays in its source grade")
+	_check(LOOT._pick_equipment("전설", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이") == "", "grade miss must not substitute unrelated legendary equipment")
 	var live_spatoy_low: String = LOOT._pick_equipment("일반", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이")
-	_check(live_spatoy_low in ["청동 이도류", "청동 크로우"], "verified Spatoy common L1J source must not roll unrelated equipment")
+	_check(live_spatoy_low in ["청동 이도류", "청동 크로우", "강철 이도류", "강철 크로우"], "verified Spatoy common L1J source must not roll unrelated equipment")
 	var live_spatoy_mid: String = LOOT._pick_equipment("고급", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이")
-	_check(live_spatoy_mid in ["강철 이도류", "강철 크로우", "수정 단검"], "verified Spatoy uncommon L1J source coexists with registered legacy item")
+	_check(live_spatoy_mid == "", "corrected common steel weapons and rare dagger cannot drop in an uncommon roll")
 	_check(LOOT._pick_equipment("유일", ["HP 물약"], catalog, strict_rng, "고스트") == "", "potion-only monster must not inherit Unique equipment")
 	_check(LOOT._pick_equipment("일반", ["없는 아이템"], catalog, strict_rng, "잘못된 몬스터") == "", "unmapped item must be rejected")
 	# The optional L1J mapping changes ONLY item selection within the grade,
@@ -65,32 +66,38 @@ func _run() -> void:
 	mapped_catalog["l1j_monster_drops"] = {
 		"스파토이":[
 			{"item_name":"수정 단검", "weight":9, "min":2, "max":4},
-			{"item_name":"강철 판금 갑옷", "weight":1, "min":1, "max":1}
+			{"item_name":"마족의 단검", "weight":1, "min":1, "max":1}
 		]
 	}
 	var samples: Dictionary = {}
 	for sample_index: int in range(500):
-		var pick: Dictionary = LOOT._pick_equipment_entry("고급", ["마족의 단검"], mapped_catalog, strict_rng, "스파토이")
+		var pick: Dictionary = LOOT._pick_equipment_entry("희귀", ["강철 판금 갑옷"], mapped_catalog, strict_rng, "스파토이")
 		var pick_name: String = str(pick.get("item_name", ""))
-		_check(pick_name in ["수정 단검", "강철 판금 갑옷"], "mapping must override unrelated legacy drop")
+		_check(pick_name in ["수정 단검", "마족의 단검"], "mapping must override unrelated legacy drop")
 		if pick_name == "수정 단검":
 			_check(int(pick.get("quantity", 0)) >= 2 and int(pick.get("quantity", 0)) <= 4, "mapped count range preserved")
 		samples[pick_name] = int(samples.get(pick_name, 0)) + 1
-	_check(int(samples.get("수정 단검",0)) > int(samples.get("강철 판금 갑옷",0)) * 5, "within-grade weights honored")
-	_check(LOOT._pick_equipment_entry("희귀", ["마족의 단검"], mapped_catalog, strict_rng, "스파토이").get("item_name", "") == "마족의 단검", "partial L1J mapping preserves legacy monster items")
+	_check(int(samples.get("수정 단검",0)) > int(samples.get("마족의 단검",0)) * 5, "within-grade weights honored")
+	_check(LOOT._pick_equipment_entry("고급", ["강철 판금 갑옷"], mapped_catalog, strict_rng, "스파토이").get("item_name", "") == "강철 판금 갑옷", "partial L1J mapping preserves legacy monster items")
 	_check(LOOT._pick_equipment_entry("유일", ["HP 물약"], mapped_catalog, strict_rng, "스파토이").is_empty(), "registered mob without Unique source or legacy entry cannot substitute")
 	# Verified L1J 46141 Ice Queen -> 11 Crystal Dagger: real opt-in registry
 	# enters the same selection path without dropping TWILIGHT's own boss loot.
 	var live_map: Dictionary = catalog.get("l1j_monster_drops", {})
 	_check(live_map.has("얼음 여왕"), "real Ice Queen source mapping loaded from JSON")
-	var queen_loot: Dictionary = LOOT._pick_equipment_entry("고급", ["마법 망토"], catalog, strict_rng, "얼음 여왕")
+	var queen_loot: Dictionary = LOOT._pick_equipment_entry("희귀", ["마법 망토"], catalog, strict_rng, "얼음 여왕")
 	_check(str(queen_loot.get("item_name", "")) == "수정 단검", "L1J Crystal Dagger mapped through live catalog")
 	_check(int(queen_loot.get("quantity", 0)) == 1, "real source quantity preserved")
-	_check(LOOT._pick_equipment_entry("희귀", ["마법 망토"], catalog, strict_rng, "얼음 여왕").get("item_name", "") == "마법 망토", "Ice Queen retains her preexisting rare cloak with L1J import")
-	var live_death_knight: Dictionary = LOOT._pick_equipment_entry("영웅", ["진명황의 집행검"], catalog, strict_rng, "데스나이트")
-	_check(str(live_death_knight.get("item_name", "")) == "론드의 이도류", "source mob 45601 / weapon 76 must map to real Death Knight drop")
-	_check(int(live_death_knight.get("quantity", 0)) == 1, "source Death Knight quantity must survive equipment pick")
-	_check(LOOT._pick_equipment_entry("희귀", ["진명황의 집행검"], catalog, strict_rng, "데스나이트").get("item_name", "") == "완력의 목걸이", "Death Knight source strength amulet uses its rare grade")
+	_check(LOOT._pick_equipment_entry("일반", ["마법 망토"], catalog, strict_rng, "얼음 여왕").get("item_name", "") == "마법 망토", "Ice Queen retains her registered cloak at its corrected common grade")
+	var saw_ronde: bool = false
+	# The corrected legendary Ronde now shares the grade with five existing
+	# local boss drops. Its source row must remain reachable, not monopolize it.
+	for _sample: int in range(64):
+		var live_death_knight: Dictionary = LOOT._pick_equipment_entry("전설", ["진명황의 집행검"], catalog, strict_rng, "데스나이트")
+		if str(live_death_knight.get("item_name", "")) == "론드의 이도류":
+			saw_ronde = true
+			_check(int(live_death_knight.get("quantity", 0)) == 1, "source Death Knight quantity must survive equipment pick")
+	_check(saw_ronde, "source mob 45601 / weapon 76 participates in Death Knight's corrected legendary pool")
+	_check(LOOT._pick_equipment_entry("고급", ["진명황의 집행검"], catalog, strict_rng, "데스나이트").get("item_name", "") == "완력의 목걸이", "Death Knight source strength amulet uses its verified uncommon grade")
 	_check(LOOT._pick_equipment_entry("신화", ["진명황의 집행검"], catalog, strict_rng, "데스나이트").get("item_name", "") == "진명황의 집행검", "Death Knight legacy mythic gear must remain configured")
 	var real_spatoy_rows: Array = live_map.get("스파토이", [])
 	_check(real_spatoy_rows.size() == 4, "four explicit original Spatoy weapons must load")
@@ -101,7 +108,7 @@ func _run() -> void:
 	for required_spatoy_id: int in [69, 71, 152, 153]:
 		_check(source_spatoy_ids.has(required_spatoy_id), "missing verified Spatoy item source ID " + str(required_spatoy_id))
 
-	_check(LOOT._pick_equipment_entry("희귀", ["마족의 단검"], catalog, strict_rng, "얼음 여왕").get("item_name", "") == "마족의 단검", "legacy registered rare item remains available")
+	_check(LOOT._pick_equipment_entry("희귀", ["마족의 단검"], catalog, strict_rng, "얼음 여왕").get("item_name", "") in ["수정 단검", "마족의 단검"], "source and legacy rare items coexist without substituting unrelated items")
 	# Every catalog equipment item must be present in at least one usable
 	# monster pool (audited L1J, legacy record, or balance supplement).
 	var registered: Dictionary = {}

@@ -1,0 +1,51 @@
+name: TWILIGHT NPC Teleport
+
+on:
+  pull_request:
+    branches:
+      - feature/twilight-warehouse-persistent-instances-20261010
+      - main
+  workflow_dispatch:
+
+# Preserve in-flight PR122 audits; avoid automatic cancellation of costly Godot imports.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' && github.event.pull_request.number != 157 && github.event.pull_request.number != 158 }}
+
+jobs:
+  npc-transit:
+    # Covered by the superset Shop Buyback regression on normal PRs.
+    # Preserve standalone runs on protected PR #157/#158 and manual dispatch.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.number == 157 || github.event.pull_request.number == 158 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Godot 4.7.2
+        uses: ./.github/actions/setup-godot-linux
+      - name: Project import and parse
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee teleport-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' teleport-import.log
+      - name: Teleport policy and 25 map data regression
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/npc_teleport_test.gd 2>&1 | tee teleport-test.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' teleport-test.log
+          grep -q NPC_TELEPORT_OK teleport-test.log
+      - name: Warehouse and shop regression
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/warehouse_persistence_test.gd 2>&1 | tee -a teleport-test.log
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/shop_authority_test.gd 2>&1 | tee -a teleport-test.log
+          grep -q WAREHOUSE_OK teleport-test.log
+          grep -q SHOP_AUTHORITY_OK teleport-test.log
+      - name: Preserve outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-teleport-evidence
+          path: |
+            teleport-import.log
+            teleport-test.log

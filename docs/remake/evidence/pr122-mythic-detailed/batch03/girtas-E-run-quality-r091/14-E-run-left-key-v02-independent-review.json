@@ -1,0 +1,70 @@
+{
+  "schema": "pr122-independent-single-source-pose-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "source_visual_status": "SOURCE_PASS",
+  "status": "PASS_SCOPED_FAR_LEFT_FORWARD_CONTACT_KEY",
+  "raw_path": "/workspace/scratch/girtas-E-run-left-landing-key-v02/girtas-E-run-left-landing-key-v02.png",
+  "raw_sha256": "22efb7bf18a10018e0b053a4ddb5cb14786b83d68c2cac554dd9d9438c87d35d",
+  "candidate_game_phase": 0,
+  "actual_support": "anatomical_LEFT_far",
+  "checks": {
+    "faithful_original_E_camera_identity_permanent_RIGHT_weapon": true,
+    "two_connected_arm_leg_chains": true,
+    "far_LEFT_forward_flat_landing": true,
+    "near_RIGHT_high_folded_knee_drive": true,
+    "actual_opposite_support_from_RIGHT_key_8e4f1ac6": true,
+    "loaded_compression_already_present": false
+  },
+  "findings": [
+    "The near/weapon-side RIGHT thigh is raised across the front from its imageLEFT hip to the forward high knee, then folds back to a boot suspended near imageLEFT below the knee. The far LEFT leg remains separately visible behind that raised knee and extends down to the only planted sole. This visible chain distinguishes the legs, rather than relying only on contact depth.",
+    "The far LEFT support heel and toe are ahead of the far hip toward imageRIGHT on a nearly flat sole. Unlike failed LEFT v01, this is a forward contact, not a backward straight trailing push-off. Near RIGHT boot is wholly above support.",
+    "The source preserves the selected E idle front-chest/profile camera: nose/chest/pelvis travel RIGHT, pale face and long pale hair, HARD thin radial gold rays, long dark gold-trim robe, near anatomical RIGHT long sinuous blade and empty LEFT hand. No extra leg or wrong hand is visible.",
+    "This supplies the actual opposite contact to the separately approved near RIGHT contact8e4f1ac6. It is a single contact key only; a distinct loaded LEFT knee and both airborne phases/root/complete6 remain unapproved."
+  ],
+  "approximate_raw_landmarks": {
+    "far_LEFT_hip_under_robe": [
+      900,
+      610
+    ],
+    "far_LEFT_support_knee": [
+      990,
+      905
+    ],
+    "far_LEFT_support_ankle": [
+      1018,
+      1138
+    ],
+    "far_LEFT_support_heel_sole": [
+      965,
+      1208
+    ],
+    "far_LEFT_support_toe_sole": [
+      1145,
+      1208
+    ],
+    "near_RIGHT_hip_under_robe": [
+      818,
+      615
+    ],
+    "near_RIGHT_raised_knee": [
+      1007,
+      695
+    ],
+    "near_RIGHT_raised_ankle": [
+      802,
+      899
+    ]
+  },
+  "landmark_limitations": [
+    "Raw image1165x1350. Partly occluded hips/knees estimated +/-30px, visible sole endpoints approximately +/-12px; these are guide estimates, not measured skeleton/worldroot.",
+    "Raw extent and source pose placement differ from the earlier RIGHT contact/compression. Actual physical scale and full6 authored root must be calibrated from rigid skull/shoulder identity and projected near/far support, not nominal canvas or PNG bbox."
+  ],
+  "preview_budget_total_bytes": 1472336,
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_or_gameplay_claim": false,
+  "reviewed_at": "2026-10-19T14:30:10.728800+00:00"
+}

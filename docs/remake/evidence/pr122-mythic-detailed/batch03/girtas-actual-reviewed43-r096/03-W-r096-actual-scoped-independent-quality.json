@@ -1,0 +1,82 @@
+{
+  "schema": "pr122-native-independent-scoped-quality-v1",
+  "key": "transform:267",
+  "status": "PASS_SCOPED_ACTUAL_COMPILED_W_RUN_IDLE_LOOP_ENTRY_EXIT",
+  "independent": true,
+  "reviewer": "/root/girtas_final_actual_quality_v03; did not author source or layout",
+  "reviewed_staging_frames": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r096/SpriteFrames.tres",
+    "sha256": "0b7bb7a9804630422252ef65b93427d0a4bc76ff2b6625831573eb1394fd5787"
+  },
+  "reviewed_staging_profile": {
+    "path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r096/NativeMotionProfile.tres",
+    "sha256": "13a674145c53299c7cc61a6843b02f2da26cad75fa09ed1a74f753473947c346"
+  },
+  "register_snapshot": {
+    "path": "/workspace/scratch/girtas-final-actual-quality-v03/register-r096-compiled-candidate.json",
+    "sha256": "bef1bf0288061cf478a2f00e9d39ccb019888870adb89fed7dd96211eeac4663"
+  },
+  "effective_profile": {
+    "pixel_scale": 0.219105011732,
+    "sprite_offset": [
+      0,
+      -28.045441501663
+    ],
+    "reference_canvas": [
+      1024,
+      1024
+    ]
+  },
+  "track": "W:run",
+  "actual_selected_source_sha256": "015eceba797b0891696c3495ca051dcc6a5e3ff8b0a55b2dbdfc54884c3c3a81",
+  "immutable_source_geometry_pin": "7845ad83902d39b820755843813df274068979ffd60627351a3f0b6b0930f1ac",
+  "coverage": {
+    "run_poses": 6,
+    "idle_baseline_pose": 0,
+    "ordered_phases": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      0
+    ],
+    "entry_exit": "idle0->run0 and run5/run0->idle0 visual transitions",
+    "other_tracks_reviewed_in_this_scoped_certificate": 0
+  },
+  "checks": {
+    "identity_equipment": "PASS",
+    "compass_W": "PASS",
+    "anatomy_continuity": "PASS",
+    "motion_specificity": "PASS",
+    "loops_transitions": "PASS",
+    "runtime_scale_footing": "PASS"
+  },
+  "visual_findings": [
+    "All six current AtlasTexture poses preserve W face/chest heading, pale exposed face and long hair, narrow hard radial gold rays, long dark gold-edged robe and one long sinuous RIGHT weapon. No confirmed added equipment structure or wrong direction.",
+    "Genuine alternate near LEFT contact/load0/1 to RIGHT-forward AIR2 and far RIGHT contact/load3/4 to LEFT-forward AIR5 are visible. Two anatomical leg chains persist through robe occlusion; hanging robe V is not measured as pelvis.",
+    "Physical skull/core scale remains coherent with actual W idle; arm/torso rotation changes projected shoulder span. Contact3 vs0 and load4 vs1 preserve coherent pelvis heights, not the previous opposite-half baseline jump.",
+    "0->1 compresses,1->2 rises into two-boots-clear AIR,2->3 lands with opposite leg,3->4 loads,4->5 recovers airborne,5->0 returns to near LEFT contact. Current5->0 and idle entry/exit have no unexplained camera/scale/root discontinuity.",
+    "Full six source RGBA is retained with no alpha-positive omitted or duplicated; actual region/margin/C/root and cropped RGBA exactly equal canonical reviewed candidate.",
+    "Neutral projected near/far24canonical is a reference, not a gait-invariant clamp. Contact foot depths legitimately change with fore/aft stride; neither paired boot Y nor all head Y were flattened."
+  ],
+  "numeric_proof": {
+    "path": "/workspace/scratch/girtas-final-actual-quality-v03/W-r096-actual-numeric-proof.json",
+    "sha256": "1a41435a3313bf81535dea244d77d234fbc86a122605d3aeb0bce1b387e54b44"
+  },
+  "preserved_independent_source_gear_and_rigid_review": {
+    "path": "/workspace/scratch/girtas-W-run-reviewed-composite-v01/independent-SE-author-commonphysical-v03-final-review.json",
+    "sha256": "65d537b60cd0f3e67dcf7dd94fa29eb8af58e98cad6bed52f209a091313c73e0"
+  },
+  "limitations": [
+    "These private previews are PIL reconstructions from actual compiled TRES and current profile; they are not Godot screenshots. Root runs actual Godot Player/actions separately.",
+    "Partly robe-occluded pelvis positions remain inferred with ~20native uncertainty; no exact hidden-joint measurement is claimed.",
+    "Whole actor48/288 final9checks, actual default Main, production catalog connection and actor approval are outside this scoped result."
+  ],
+  "actor_approved": false,
+  "completed_added": 0,
+  "detailed_completed": false,
+  "counts_changed": false,
+  "main_chat_image_attachments": 0
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "pr122-actual-native-clip-integration-proof-v1",
+  "key": "transform:413",
+  "direction": "N",
+  "role": "attack",
+  "game_commit": "7cbc1464e76fed07a0fff47bc8bbcadf83d7bbfb",
+  "remote_push_verified": true,
+  "added_clips": 1,
+  "added_poses": 6,
+  "actor_tracks": 16,
+  "actor_poses": 96,
+  "total_clips": 112,
+  "total_poses": 672,
+  "detailed_completed": 2,
+  "detailed_target": 31,
+  "tests": [
+    "pr122_native_locomotion_resource_test.gd",
+    "pr122_native_player_connection_test.gd",
+    "pr122_native_action_test.gd"
+  ],
+  "status": "SOURCE_CYCLE_AND_ACTUAL_PLAYER_ACTIONS_PASS",
+  "profile_literals_retained": true,
+  "impact_frame_retained": 3,
+  "full_actor_approved": false,
+  "request_sha256": "f0072517af971eac916c17f6c175171d029968a5a667e5e6c6cdf792e536398b",
+  "raw_sha256": "ee0de24eae8c268ef16143eeaa90fa6ca18bfb0f61d9c2626003b966814aee54",
+  "review_sha256": "2bf01454c12c174511b84edb31badbfdc925caf7f3820a98845773627d431c1c"
+}

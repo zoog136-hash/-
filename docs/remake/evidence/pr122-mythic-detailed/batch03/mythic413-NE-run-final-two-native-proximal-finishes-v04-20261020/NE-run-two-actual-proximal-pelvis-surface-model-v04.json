@@ -1,0 +1,173 @@
+{
+  "schema": "MYTHIC413_NE_RUN_ACTUAL_TWO_PROXIMAL_FLEXIBLE_SKIN_SURFACE_V04",
+  "status": "FINITE_AUTHOR_MODEL_PENDING_INDEPENDENT_AUDIT",
+  "unchanged_original_rig": {
+    "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-six-fixed-rig-v02/NE-run-six-actual-causal-rig-shoe-surface-and-source-contract-v02.json",
+    "sha256": "1c17170e46401d2fd7483159a77e82e5b1fd675d78ed90d13aee0b91604f21b6",
+    "bytes": 36750
+  },
+  "projection": [
+    [
+      1.1111111111111112,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      -1.0
+    ]
+  ],
+  "frames": [
+    {
+      "phase": 2,
+      "source_actual_mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-two-proximal-pelvis-finish-v04/phase2-actual-pelvis-finish-v04/RIGHT-actual-proximal-skin-pelvis-bound-thigh-calf-actual-forward-mesh.json",
+        "sha256": "0c685ecf398e5de620604e4f52f89f20b01ce203f8bc2843f6ee36eaf3469da9",
+        "bytes": 169277
+      },
+      "pelvis_surface_matrix": [
+        [
+          0.9,
+          0.0
+        ],
+        [
+          -0.439448035900885,
+          -1.4993607041862833
+        ],
+        [
+          -0.439448035900885,
+          -2.4993607041862833
+        ]
+      ],
+      "pelvis_surface_offset": [
+        -717.7500000000001,
+        1703.798230558934,
+        2769.798230558934
+      ],
+      "femur_surface_matrix": [
+        [
+          0.7112099293210585,
+          -0.8766962513091973
+        ],
+        [
+          0.24210750090568384,
+          -0.4784173934031224
+        ],
+        [
+          -0.49415441074886873,
+          -2.8105032111341908
+        ]
+      ],
+      "femur_surface_offset": [
+        63.10160065335949,
+        437.11128806364104,
+        3037.408139721558
+      ],
+      "calf_surface_matrix": [
+        [
+          0.2755557029099746,
+          -0.8122997655899957
+        ],
+        [
+          0.6959163334228955,
+          -1.291750010325667
+        ],
+        [
+          -0.25450483988600486,
+          -1.5633868735854584
+        ]
+      ],
+      "calf_surface_offset": [
+        354.7853036569665,
+        741.4683931669176,
+        1831.685163637679
+      ],
+      "original_forward_knee_blend_tangent": [
+        0.16692509099358044,
+        0.9859695806650349
+      ],
+      "pelvis_weight": "smoothstep(clip((source_y-716)/48,0,1)); same actual material operator",
+      "maximum_actual_mesh_vertex_projection_error": 5.684341886080801e-13,
+      "minimum_all_actual_Rleg_mesh_vertex_Z": 142.063889468762,
+      "minimum_Z_with_8native_hidden_thickness": 134.063889468762,
+      "hip_knee_ankle_physical_controls_unchanged": true
+    },
+    {
+      "phase": 3,
+      "source_actual_mesh": {
+        "path": "/workspace/scratch/mythic413-NE-run-author-20261020-v01/actual-NE-run-two-proximal-pelvis-finish-v04/phase3-actual-pelvis-finish-v04/RIGHT-actual-proximal-skin-pelvis-bound-thigh-calf-actual-forward-mesh.json",
+        "sha256": "25c767ed957df56795b04f5b070428b5241e77ac3fb9ea527718c59568eb58b2",
+        "bytes": 168709
+      },
+      "pelvis_surface_matrix": [
+        [
+          0.9,
+          0.0
+        ],
+        [
+          -0.439448035900885,
+          -1.4993607041862833
+        ],
+        [
+          -0.439448035900885,
+          -2.4993607041862833
+        ]
+      ],
+      "pelvis_surface_offset": [
+        -719.5500000000001,
+        1703.798230558934,
+        2731.798230558934
+      ],
+      "femur_surface_matrix": [
+        [
+          0.7032348222169515,
+          -0.70716216654364
+        ],
+        [
+          0.19782715623232572,
+          -1.3237275626521978
+        ],
+        [
+          -0.45598027166757926,
+          -2.5933877951093574
+        ]
+      ],
+      "femur_surface_offset": [
+        -55.26834381832514,
+        1083.388837377151,
+        2812.669794870661
+      ],
+      "calf_surface_matrix": [
+        [
+          -0.0995785036880927,
+          -0.6116965226554267
+        ],
+        [
+          0.7583183508963334,
+          -1.5654789618630844
+        ],
+        [
+          -0.2286889190341771,
+          -1.4048033597813734
+        ]
+      ],
+      "calf_surface_offset": [
+        501.149683877766,
+        837.6281839494575,
+        1664.4133114979663
+      ],
+      "original_forward_knee_blend_tangent": [
+        0.16692509099358044,
+        0.9859695806650349
+      ],
+      "pelvis_weight": "smoothstep(clip((source_y-716)/48,0,1)); same actual material operator",
+      "maximum_actual_mesh_vertex_projection_error": 4.547473508864641e-13,
+      "minimum_all_actual_Rleg_mesh_vertex_Z": 146.18024787564127,
+      "minimum_Z_with_8native_hidden_thickness": 138.18024787564127,
+      "hip_knee_ankle_physical_controls_unchanged": true
+    }
+  ],
+  "scope": "Same fixed hip/knee/ankle bones; actual native skin/garter surface at pelvis follows body then same actual femur/calf charts. Explicit compatible authored 2.5D surface, not unique hidden anatomy. No source pixels changed by numeric model.",
+  "actor_approvals_added": 0
+}

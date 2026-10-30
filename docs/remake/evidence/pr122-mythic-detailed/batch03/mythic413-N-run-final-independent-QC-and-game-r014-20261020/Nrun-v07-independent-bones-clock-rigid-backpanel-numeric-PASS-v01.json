@@ -1,0 +1,167 @@
+{
+  "schema": "PR122-independent-Nrun-constructive-model-numeric-v1",
+  "status": "PASS_CONSTRUCTIVE_12_LEG_BONES_CLOCK_AND_FRONT_BACKPANEL_RIGIDPROJECTION",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v07/actual-N-run-six-source-contract-v07.json",
+    "sha256": "f2d4f7f1be5f0d068562edc4d4771763aa6830a40c954ab18e0e24ad4f8af812"
+  },
+  "source_frame_digests_verified": [
+    {
+      "phase": 0,
+      "sha256": "c74de30990aee8387f06a45c516e4aaa11a5fa794ac0bcdca531986dfad831b8"
+    },
+    {
+      "phase": 1,
+      "sha256": "763e30e5d8eda687925da132a3089ca1a9844161cd78e599f8634ea36ed6d46a"
+    },
+    {
+      "phase": 2,
+      "sha256": "5d686bd1a31f84bfa11f06a0991167a7ee1b3dfb23c2dded9dcc50908d690741"
+    },
+    {
+      "phase": 3,
+      "sha256": "45b1083f58716309008aa1ae00b041eb2088bc8142a35f501f6d2c857b8b2606"
+    },
+    {
+      "phase": 4,
+      "sha256": "ea0a7d9dbc1b53d8fab825858b4b2ce3a3d8567c1fcc1923f2b7241e02f7861d"
+    },
+    {
+      "phase": 5,
+      "sha256": "a1db22d1b0c724cc1f74fae8f4db6faf688a847c79e51a2e8a0a7c63d8124911"
+    }
+  ],
+  "C": 1920,
+  "common_rig_root": [
+    662.8125,
+    917.6920531878804
+  ],
+  "storage_translation": [
+    128,
+    128
+  ],
+  "projection": "x=X; y=ROOTY+.45*depth-height",
+  "same_bones_native": [
+    187.5,
+    187.5
+  ],
+  "independent_max_errors_native": {
+    "bone_length": 5.684341886080802e-14,
+    "hip_knee_ankle_control_projection": 0.0,
+    "heel_control_projection": 0.0,
+    "foot_length": 0.0,
+    "heel_to_ankle": 0.0
+  },
+  "exact_stance_heel_clock": [
+    {
+      "phases": [
+        0,
+        1
+      ],
+      "side": "L",
+      "native_heel_delta": [
+        0.0,
+        132.87272727286256
+      ],
+      "world_heel_delta": [
+        0.0,
+        16.799999999999997
+      ],
+      "residual_world": [
+        0.0,
+        -3.552713678800501e-15
+      ]
+    },
+    {
+      "phases": [
+        3,
+        4
+      ],
+      "side": "R",
+      "native_heel_delta": [
+        0.0,
+        132.87272727286256
+      ],
+      "world_heel_delta": [
+        0.0,
+        16.799999999999997
+      ],
+      "residual_world": [
+        0.0,
+        -3.552713678800501e-15
+      ]
+    }
+  ],
+  "front_shoe_surface_construction": {
+    "source_contact_pitch_degrees": 3.99890216311585,
+    "load_rotation_degrees": 3.99890216311585,
+    "heel_to_ankle_projected_length_before": 86.95652173913045,
+    "heel_to_ankle_projected_length_after": 90,
+    "same_visible_heel_counter_backpanel_projection": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.035
+      ]
+    ],
+    "independent_errors": {
+      "rigid_rotation_orthogonality": 6.902843003835465e-18,
+      "heel_ankle_mapping": 1.4210854715202004e-14,
+      "heel_toe_mapping": 1.4210854715202004e-14,
+      "source_backpanel_projection_identity": 0.0,
+      "actual_front_backpanel_2D_scale": 0.0
+    },
+    "explanation": "One rigid heel/counter backpanel is spanned by lateralX and the heel-to-ankle vector. Its projection is exactly diag(1,1.035) under the same rigid rotation that sends the declared off-panel toe to flat ground."
+  },
+  "declared_AIR_marker_bounds": [
+    {
+      "phase": 0,
+      "side": "R",
+      "declared_heel_toe_min_height_native": 189.69205318788045
+    },
+    {
+      "phase": 1,
+      "side": "R",
+      "declared_heel_toe_min_height_native": 68.69205318788045
+    },
+    {
+      "phase": 2,
+      "side": "L",
+      "declared_heel_toe_min_height_native": 211.69205318788045
+    },
+    {
+      "phase": 2,
+      "side": "R",
+      "declared_heel_toe_min_height_native": 60.69205318788045
+    },
+    {
+      "phase": 3,
+      "side": "L",
+      "declared_heel_toe_min_height_native": 189.69205318788045
+    },
+    {
+      "phase": 4,
+      "side": "L",
+      "declared_heel_toe_min_height_native": 68.69205318788045
+    },
+    {
+      "phase": 5,
+      "side": "L",
+      "declared_heel_toe_min_height_native": 60.69205318788045
+    },
+    {
+      "phase": 5,
+      "side": "R",
+      "declared_heel_toe_min_height_native": 211.69205318788045
+    }
+  ],
+  "limitations": [
+    "Hip depths, knee branches, foot90 and the visible heel/counter backpanel are explicit authored constructive choices, not unique recovery from source pixels.",
+    "This verifies model controls and source digests only. Full actual shoe paint/perimeter-to-surface binding, visible artwork, whole6/5→0 and actual game remain with the primary independent reviewer.",
+    "No Nrun images were viewed for this step and no tests, source/repo/Git or Godot changes occurred."
+  ],
+  "actor_approvals_added": 0
+}

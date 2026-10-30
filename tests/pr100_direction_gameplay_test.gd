@@ -81,6 +81,14 @@ func find_clearing() -> Vector2:
 			" definition_exists=" + str(FileAccess.file_exists(definition_path)) +
 			" definition_sha_matches=" + str(FileAccess.file_exists(definition_path) and FileAccess.get_sha256(definition_path) == str(entry.get("sha256", ""))))
 		return Vector2.INF
+	# Populate staged native-PNG monster slots through the same bounded production
+	# drain as runtime, before freezing AI for reproducible directional QA.
+	# Otherwise there is no skeleton to relocate and inherited tests crash on Nil.
+	if world.field_map is NativePngField:
+		while not world.field_population.pending_initial_spawns.is_empty():
+			world.field_population._drain_initial_spawns()
+		for spawned: Node in world.monsters_root.get_children():
+			spawned.set_physics_process(false)
 	# Prefer a live skeleton for the base game regression. On source-pack
 	# mainland and isolated Windows fixtures its spawn may not be near an
 	# unobstructed arena. Search other real actor/source cells with identical

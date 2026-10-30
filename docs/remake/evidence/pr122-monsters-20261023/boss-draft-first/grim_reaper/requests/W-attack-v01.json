@@ -1,0 +1,17 @@
+{
+  "slug": "grim_reaper",
+  "actor": "monster:그림 리퍼",
+  "clip": "W-attack-v01",
+  "direction": "W",
+  "role": "attack",
+  "layout": "phase_grid3",
+  "phase_count": 6,
+  "reference_sha256": "4c341f23997fc03f8355c4ba92e5de3ca5e699418743190413a4d44cc206807e",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A towering skeletal GRIM REAPER, visible ivory skull deep inside a huge ragged midnight hood, skeletal rib cage partly under layered charcoal robes, iron chain belt, long torn hanging sleeves and hanging robe strips. One giant long-handled curved silver SCYTHE gripped by anatomical RIGHT hand, LEFT skeletal hand empty. Floats slightly above ground, no humanoid knight legs exposed; robe hems and chain react to motion. No smoke or glow.\nFixed camera throughout this sheet: WEST pure LEFT profile; nose and toes LEFT, not front chest. Anatomical RIGHT weapon arm is FAR, LEFT empty hand near/foreground.\nAction ATTACK: Six distinct attack stages:0 ready stance,1 loaded anticipation,2 forward strike/contact extension,3 follow-through,4 recoil/recovery,5 guard restored. Preserve anatomical RIGHT weapon ownership; EMPTY LEFT hand stays visibly separate. Contact weapon extends forward toward facing enemy, not still overhead. Caster uses staff and free-hand spell thrust rather than changing to sword; unicorn lunges its single horn with grounded hindleg support; spider strikes with claws/front legs.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/grim_reaper/raw/canonical-v01.png"
+    ],
+    "transparent_background": true
+  }
+}

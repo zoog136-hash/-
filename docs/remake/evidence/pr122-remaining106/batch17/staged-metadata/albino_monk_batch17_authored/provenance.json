@@ -1,0 +1,4347 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_3.png",
+    "region": [
+      0,
+      899,
+      328,
+      300
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 3,
+    "cell": 12,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+    "image_size": [
+      1312,
+      1199
+    ],
+    "region_rgba_sha256": "7ea3960c7b010a83b5187dd5ace956f5b765ab0d013a482e378f448486bd1955"
+  },
+  "target_keys": [
+    "monster:알비노 몽크"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 3,
+      "cell": 12,
+      "body": "ape",
+      "variant": 6,
+      "width": 0.998,
+      "weapon": "sword",
+      "crest": 3,
+      "accent": "aa8aaf"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:알비노 몽크": {
+      "path": "res://assets/monsters/original/atlas_3.png",
+      "region": [
+        0,
+        899,
+        328,
+        300
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 3,
+      "cell": 12,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+      "image_size": [
+        1312,
+        1199
+      ],
+      "region_rgba_sha256": "7ea3960c7b010a83b5187dd5ace956f5b765ab0d013a482e378f448486bd1955"
+    }
+  },
+  "target_presentations": {
+    "monster:알비노 몽크": {
+      "visual": {
+        "atlas": 3,
+        "cell": 12,
+        "body": "ape",
+        "variant": 6,
+        "width": 0.998,
+        "weapon": "sword",
+        "crest": 3,
+        "accent": "aa8aaf"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "Resume batch17: retain112 prior source poses, redraw16 Southwest poses in idle2/walk6/combat8 whole-source sheets. Exact saved generation requests accompany every new source. Rejected full SW v05 and prior raw18 remain unchanged. Newly authored reference-based motion, not recovered SPX.",
+  "instruction_record_kind": "batch_instructions_with_exact_saved_image_generation_requests",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Provisional source-stage input: original white gorilla and eight heading sources, all mandatory roles present, strict complete-source/uniqueness/clipping guards. Southwest muzzles point left. This does not approve gait/support, actual Main or production connection; those require separate recorded review."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 128,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        55,
+        76,
+        253,
+        205
+      ],
+      "margin": [
+        121,
+        104,
+        235,
+        283
+      ],
+      "source_anchor": [
+        178,
+        277
+      ],
+      "rgba_sha256": "2159baac22b60c6a1b17039d972a0268265c841991a9b56f1daa0f78f7a4aeee",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        419,
+        71,
+        232,
+        211
+      ],
+      "margin": [
+        128,
+        98,
+        256,
+        277
+      ],
+      "source_anchor": [
+        535,
+        278
+      ],
+      "rgba_sha256": "1f207e03cff446a1bdd649160f0d8d09fbc12fdd9f278d4510060c0361c8e39e",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        744,
+        77,
+        296,
+        202
+      ],
+      "margin": [
+        97,
+        107,
+        192,
+        286
+      ],
+      "source_anchor": [
+        891,
+        275
+      ],
+      "rgba_sha256": "92e48e70d7e9325ef5f97da1e40e10cf90753a8733efd05bfb07ede0868c30ce",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        1099,
+        77,
+        299,
+        202
+      ],
+      "margin": [
+        95,
+        107,
+        189,
+        286
+      ],
+      "source_anchor": [
+        1248,
+        275
+      ],
+      "rgba_sha256": "cf58122640b3717faac41a1c51e02df474add9a4aa04bcd14d60e108b054ac05",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        50,
+        334,
+        284,
+        199
+      ],
+      "margin": [
+        116,
+        110,
+        204,
+        289
+      ],
+      "source_anchor": [
+        178,
+        529
+      ],
+      "rgba_sha256": "24c07f119757f7e219d7bf34e4c0822119670066e5ea40a67aec84e70e45f87a",
+      "sheet": 0
+    },
+    {
+      "row": 5,
+      "direction": "E",
+      "region": [
+        411,
+        334,
+        267,
+        200
+      ],
+      "margin": [
+        120,
+        109,
+        221,
+        288
+      ],
+      "source_anchor": [
+        535,
+        530
+      ],
+      "rgba_sha256": "0d4e7673233c91fb6e86bf2e04b263483d50d7bb3ae20b4745162eda03c11cb6",
+      "sheet": 0
+    },
+    {
+      "row": 6,
+      "direction": "E",
+      "region": [
+        752,
+        336,
+        294,
+        197
+      ],
+      "margin": [
+        105,
+        112,
+        194,
+        291
+      ],
+      "source_anchor": [
+        891,
+        529
+      ],
+      "rgba_sha256": "17d8151f95b8793ecf50a4d7efc2cfa08099f2c536282fc4216c743590d99aff",
+      "sheet": 0
+    },
+    {
+      "row": 7,
+      "direction": "E",
+      "region": [
+        1102,
+        333,
+        289,
+        199
+      ],
+      "margin": [
+        98,
+        110,
+        199,
+        289
+      ],
+      "source_anchor": [
+        1248,
+        528
+      ],
+      "rgba_sha256": "c585676a76c8aa67c06e4e90ae6f938294c966aed217c2a04c6345d7ffc7a014",
+      "sheet": 0
+    },
+    {
+      "row": 8,
+      "direction": "E",
+      "region": [
+        71,
+        548,
+        237,
+        260
+      ],
+      "margin": [
+        137,
+        49,
+        251,
+        228
+      ],
+      "source_anchor": [
+        178,
+        804
+      ],
+      "rgba_sha256": "d5cd07a5db0586f21b0abc28747a933cd092ffda94db006bd2a82745c7247463",
+      "sheet": 0
+    },
+    {
+      "row": 9,
+      "direction": "E",
+      "region": [
+        396,
+        578,
+        351,
+        229
+      ],
+      "margin": [
+        105,
+        80,
+        137,
+        259
+      ],
+      "source_anchor": [
+        535,
+        803
+      ],
+      "rgba_sha256": "dfcc15b4c67a25006168488fc3de6c2a8363a79dea288488dab38d6672777831",
+      "sheet": 0
+    },
+    {
+      "row": 10,
+      "direction": "E",
+      "region": [
+        759,
+        595,
+        295,
+        211
+      ],
+      "margin": [
+        112,
+        98,
+        193,
+        277
+      ],
+      "source_anchor": [
+        891,
+        802
+      ],
+      "rgba_sha256": "a8a3fa5cf24e4ec22edeaa1b697aacb364024b1282ddc8dee5923b205635646e",
+      "sheet": 0
+    },
+    {
+      "row": 11,
+      "direction": "E",
+      "region": [
+        1133,
+        576,
+        230,
+        231
+      ],
+      "margin": [
+        129,
+        78,
+        258,
+        257
+      ],
+      "source_anchor": [
+        1248,
+        803
+      ],
+      "rgba_sha256": "5b04a7b85fe22b1867945d78eee47e6120885c29e037628541580844f681e906",
+      "sheet": 0
+    },
+    {
+      "row": 12,
+      "direction": "E",
+      "region": [
+        65,
+        841,
+        230,
+        216
+      ],
+      "margin": [
+        131,
+        93,
+        258,
+        272
+      ],
+      "source_anchor": [
+        178,
+        1053
+      ],
+      "rgba_sha256": "07da7d1a992923d50ed887f5e59fd0a6b26ccc96064956cb326d4917300faf9c",
+      "sheet": 0
+    },
+    {
+      "row": 13,
+      "direction": "E",
+      "region": [
+        385,
+        872,
+        309,
+        178
+      ],
+      "margin": [
+        94,
+        131,
+        179,
+        310
+      ],
+      "source_anchor": [
+        535,
+        1046
+      ],
+      "rgba_sha256": "5783941163d7774ce93d25210aa153e93ecfa32ed71e934caf1da3b27624b1e8",
+      "sheet": 0
+    },
+    {
+      "row": 14,
+      "direction": "E",
+      "region": [
+        723,
+        894,
+        325,
+        161
+      ],
+      "margin": [
+        76,
+        148,
+        163,
+        327
+      ],
+      "source_anchor": [
+        891,
+        1051
+      ],
+      "rgba_sha256": "20b597b1557bad20e7a9e0258113a4f69002546da489fa3b247b97cdfdf25b09",
+      "sheet": 0
+    },
+    {
+      "row": 15,
+      "direction": "E",
+      "region": [
+        1069,
+        911,
+        329,
+        146
+      ],
+      "margin": [
+        65,
+        163,
+        159,
+        342
+      ],
+      "source_anchor": [
+        1248,
+        1053
+      ],
+      "rgba_sha256": "335df5ae5501bf4f0572df325a82e5f923a64890dad3ae1a535541e5eef37659",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        43,
+        78,
+        238,
+        214
+      ],
+      "margin": [
+        135,
+        110,
+        274,
+        298
+      ],
+      "source_anchor": [
+        164,
+        288
+      ],
+      "rgba_sha256": "79e9713a9a02a8fefd57642c2c7b74a16d954aa2b68e091c79220da594d259c5",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        353,
+        72,
+        244,
+        219
+      ],
+      "margin": [
+        117,
+        105,
+        268,
+        293
+      ],
+      "source_anchor": [
+        492,
+        287
+      ],
+      "rgba_sha256": "38a8a671da790bb650a46ac7d0710626e56799a2978f901bd889ff8836393297",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        677,
+        75,
+        268,
+        220
+      ],
+      "margin": [
+        113,
+        104,
+        244,
+        292
+      ],
+      "source_anchor": [
+        820,
+        291
+      ],
+      "rgba_sha256": "aeb1043d1046081ca291f7b4bea065386f07452dfe7c85f89199e5861499b68f",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        1004,
+        77,
+        280,
+        218
+      ],
+      "margin": [
+        112,
+        106,
+        232,
+        294
+      ],
+      "source_anchor": [
+        1148,
+        291
+      ],
+      "rgba_sha256": "3da8cef53fb7a5a0de724c746fd6968c61dbd457aae8a92b075fb4446ffe7cef",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        32,
+        366,
+        276,
+        214
+      ],
+      "margin": [
+        124,
+        110,
+        236,
+        298
+      ],
+      "source_anchor": [
+        164,
+        576
+      ],
+      "rgba_sha256": "156a76138b25aebffa3f1058b2e3ae4b22c615f891e9536c3285a8a783f3d0e0",
+      "sheet": 1
+    },
+    {
+      "row": 5,
+      "direction": "SE",
+      "region": [
+        359,
+        373,
+        275,
+        216
+      ],
+      "margin": [
+        123,
+        108,
+        237,
+        296
+      ],
+      "source_anchor": [
+        492,
+        585
+      ],
+      "rgba_sha256": "75d6301f2891bdf14de88fddf06f6ba8b970dbb5bf08572fbed9ef6cdca795ec",
+      "sheet": 1
+    },
+    {
+      "row": 6,
+      "direction": "SE",
+      "region": [
+        680,
+        372,
+        261,
+        222
+      ],
+      "margin": [
+        116,
+        102,
+        251,
+        290
+      ],
+      "source_anchor": [
+        820,
+        590
+      ],
+      "rgba_sha256": "0deb1280a1a88df94785ccfa03074cc3e39bbec8521ee9e2c7771a7ecb74905b",
+      "sheet": 1
+    },
+    {
+      "row": 7,
+      "direction": "SE",
+      "region": [
+        1005,
+        375,
+        276,
+        215
+      ],
+      "margin": [
+        113,
+        109,
+        236,
+        297
+      ],
+      "source_anchor": [
+        1148,
+        586
+      ],
+      "rgba_sha256": "85e4462cd5f03599aac00a5815452979c01ab421da86b67b97fbe83b74a10b7d",
+      "sheet": 1
+    },
+    {
+      "row": 8,
+      "direction": "SE",
+      "region": [
+        39,
+        608,
+        274,
+        279
+      ],
+      "margin": [
+        131,
+        45,
+        238,
+        233
+      ],
+      "source_anchor": [
+        164,
+        883
+      ],
+      "rgba_sha256": "4cb9cc1e3f58f0c69d148cc0bdc1df4759ffa74e79ffa4ecb8c81b0dc1636976",
+      "sheet": 1
+    },
+    {
+      "row": 9,
+      "direction": "SE",
+      "region": [
+        348,
+        672,
+        311,
+        221
+      ],
+      "margin": [
+        112,
+        103,
+        201,
+        291
+      ],
+      "source_anchor": [
+        492,
+        889
+      ],
+      "rgba_sha256": "f30d1a85c153bf041c883639a3f81624f68c59a0e2049f74a4f1f281c6da8f5c",
+      "sheet": 1
+    },
+    {
+      "row": 10,
+      "direction": "SE",
+      "region": [
+        685,
+        675,
+        288,
+        209
+      ],
+      "margin": [
+        121,
+        115,
+        224,
+        303
+      ],
+      "source_anchor": [
+        820,
+        880
+      ],
+      "rgba_sha256": "61abc5d1e8675b7356e77ec26ec3a330d42d9030c0c4007e99e513646b5dede6",
+      "sheet": 1
+    },
+    {
+      "row": 11,
+      "direction": "SE",
+      "region": [
+        1030,
+        654,
+        243,
+        230
+      ],
+      "margin": [
+        138,
+        94,
+        269,
+        282
+      ],
+      "source_anchor": [
+        1148,
+        880
+      ],
+      "rgba_sha256": "29708f099af9b5f01ccb23bc45b5d900e6a2548bb7b251a844d41c1ad6ac8fea",
+      "sheet": 1
+    },
+    {
+      "row": 12,
+      "direction": "SE",
+      "region": [
+        35,
+        922,
+        272,
+        226
+      ],
+      "margin": [
+        127,
+        98,
+        240,
+        286
+      ],
+      "source_anchor": [
+        164,
+        1144
+      ],
+      "rgba_sha256": "63168a0e87f8d9da99b1505e1919c0c84f0a82175caebc12a9d910b47f1d06f4",
+      "sheet": 1
+    },
+    {
+      "row": 13,
+      "direction": "SE",
+      "region": [
+        345,
+        951,
+        303,
+        199
+      ],
+      "margin": [
+        109,
+        125,
+        209,
+        313
+      ],
+      "source_anchor": [
+        492,
+        1146
+      ],
+      "rgba_sha256": "788bd575ae68e66226d636cedee57cafbde743aae1213dbb7cba7d6863ec6f09",
+      "sheet": 1
+    },
+    {
+      "row": 14,
+      "direction": "SE",
+      "region": [
+        667,
+        970,
+        311,
+        182
+      ],
+      "margin": [
+        103,
+        142,
+        201,
+        330
+      ],
+      "source_anchor": [
+        820,
+        1148
+      ],
+      "rgba_sha256": "8c8fb5082a2bb2abea6afbd5407032f3c7087463aa1e7315f3bdb18d7fcdb851",
+      "sheet": 1
+    },
+    {
+      "row": 15,
+      "direction": "SE",
+      "region": [
+        1001,
+        989,
+        284,
+        158
+      ],
+      "margin": [
+        109,
+        166,
+        228,
+        354
+      ],
+      "source_anchor": [
+        1148,
+        1143
+      ],
+      "rgba_sha256": "81471fb6ddfeb7fb0c86e8744b45994fedbc8a0a5071543ade2ec86d02e4ba3f",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        94,
+        111,
+        251,
+        211
+      ],
+      "margin": [
+        161,
+        103,
+        245,
+        285
+      ],
+      "source_anchor": [
+        181,
+        318
+      ],
+      "rgba_sha256": "9ba45c580bd97093dbb6a843a15468dd17537037d8065e8cf2c3e4586d74e18b",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        432,
+        110,
+        251,
+        209
+      ],
+      "margin": [
+        137,
+        105,
+        245,
+        287
+      ],
+      "source_anchor": [
+        543,
+        315
+      ],
+      "rgba_sha256": "3d7f26ba554c85bd5dcdfbf48ed40054021fae3f4748c439b5529bc6645eab9a",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        781,
+        112,
+        239,
+        211
+      ],
+      "margin": [
+        124,
+        103,
+        257,
+        285
+      ],
+      "source_anchor": [
+        905,
+        319
+      ],
+      "rgba_sha256": "bbe85245dcf99929ac6c6d691709318d6a67d8b5e3031f2811dc136532cb780b",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        1124,
+        111,
+        263,
+        218
+      ],
+      "margin": [
+        105,
+        96,
+        233,
+        278
+      ],
+      "source_anchor": [
+        1267,
+        325
+      ],
+      "rgba_sha256": "1ecb67cca9d55dff0167826f0536153346c9f324155d5b0d065fa32dbe21574a",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        91,
+        349,
+        248,
+        215
+      ],
+      "margin": [
+        158,
+        99,
+        248,
+        281
+      ],
+      "source_anchor": [
+        181,
+        560
+      ],
+      "rgba_sha256": "522cdc847b38191bf90895fc47d03e8885a5718f8d290a59a2c7b7a0cd2fdabb",
+      "sheet": 2
+    },
+    {
+      "row": 5,
+      "direction": "S",
+      "region": [
+        439,
+        349,
+        239,
+        216
+      ],
+      "margin": [
+        144,
+        98,
+        257,
+        280
+      ],
+      "source_anchor": [
+        543,
+        561
+      ],
+      "rgba_sha256": "c9d0cbae154b29b01884a06fc55cb27a26338fe702ccc9575e136114791dfef8",
+      "sheet": 2
+    },
+    {
+      "row": 6,
+      "direction": "S",
+      "region": [
+        775,
+        350,
+        242,
+        216
+      ],
+      "margin": [
+        118,
+        98,
+        254,
+        280
+      ],
+      "source_anchor": [
+        905,
+        562
+      ],
+      "rgba_sha256": "38e31a5f900e7e64723139a4a888932c0c9808867e715a7c744c4a59f415b5e1",
+      "sheet": 2
+    },
+    {
+      "row": 7,
+      "direction": "S",
+      "region": [
+        1132,
+        349,
+        255,
+        214
+      ],
+      "margin": [
+        113,
+        100,
+        241,
+        282
+      ],
+      "source_anchor": [
+        1267,
+        559
+      ],
+      "rgba_sha256": "0cdb51678efe1f2d327cfcf669aed5a50918e985ea82ebbc2bafbd54703dbeaf",
+      "sheet": 2
+    },
+    {
+      "row": 8,
+      "direction": "S",
+      "region": [
+        67,
+        591,
+        296,
+        215
+      ],
+      "margin": [
+        134,
+        99,
+        200,
+        281
+      ],
+      "source_anchor": [
+        181,
+        802
+      ],
+      "rgba_sha256": "33d80e8d02880bbd5b5dc4650f54e0ce0d4d628e7912017f91b3dca60d3c4554",
+      "sheet": 2
+    },
+    {
+      "row": 9,
+      "direction": "S",
+      "region": [
+        423,
+        589,
+        252,
+        226
+      ],
+      "margin": [
+        128,
+        88,
+        244,
+        270
+      ],
+      "source_anchor": [
+        543,
+        811
+      ],
+      "rgba_sha256": "219aca6b43981b244a0eb08928e5da1397b37762113da6d3d7b968f24dc59c3d",
+      "sheet": 2
+    },
+    {
+      "row": 10,
+      "direction": "S",
+      "region": [
+        780,
+        591,
+        252,
+        218
+      ],
+      "margin": [
+        123,
+        96,
+        244,
+        278
+      ],
+      "source_anchor": [
+        905,
+        805
+      ],
+      "rgba_sha256": "047996582bd412817ad5de7bd295ab6bed8c1338888101e8a521a72543b5e070",
+      "sheet": 2
+    },
+    {
+      "row": 11,
+      "direction": "S",
+      "region": [
+        1140,
+        597,
+        251,
+        216
+      ],
+      "margin": [
+        121,
+        98,
+        245,
+        280
+      ],
+      "source_anchor": [
+        1267,
+        809
+      ],
+      "rgba_sha256": "0a6347b1ffe8313cea3824978d9cf4fb90ef1e88fc18481fd19e29eb09869693",
+      "sheet": 2
+    },
+    {
+      "row": 12,
+      "direction": "S",
+      "region": [
+        79,
+        836,
+        263,
+        202
+      ],
+      "margin": [
+        146,
+        112,
+        233,
+        294
+      ],
+      "source_anchor": [
+        181,
+        1034
+      ],
+      "rgba_sha256": "204952dd27cc499a3fdb491adcbed869b768b4c39c7b147c2f7c2eae98daec80",
+      "sheet": 2
+    },
+    {
+      "row": 13,
+      "direction": "S",
+      "region": [
+        420,
+        856,
+        290,
+        184
+      ],
+      "margin": [
+        125,
+        130,
+        206,
+        312
+      ],
+      "source_anchor": [
+        543,
+        1036
+      ],
+      "rgba_sha256": "57415c939ef640161e58633c04427176c3e0505b0c335612e11db99ad2fb5636",
+      "sheet": 2
+    },
+    {
+      "row": 14,
+      "direction": "S",
+      "region": [
+        740,
+        864,
+        330,
+        176
+      ],
+      "margin": [
+        83,
+        138,
+        166,
+        320
+      ],
+      "source_anchor": [
+        905,
+        1036
+      ],
+      "rgba_sha256": "60279bce2f6ddb01b192cd3419b3455bde3e6d395cf990f505e07ac475583157",
+      "sheet": 2
+    },
+    {
+      "row": 15,
+      "direction": "S",
+      "region": [
+        1094,
+        875,
+        309,
+        160
+      ],
+      "margin": [
+        75,
+        154,
+        187,
+        336
+      ],
+      "source_anchor": [
+        1267,
+        1031
+      ],
+      "rgba_sha256": "4d9b8a3ce4d369fabc26b011570198f42a481c122807bb231e37426c0ea8ddbf",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        40,
+        58,
+        242,
+        239
+      ],
+      "margin": [
+        156,
+        115,
+        318,
+        321
+      ],
+      "source_anchor": [
+        164,
+        293
+      ],
+      "rgba_sha256": "3fe8b2cac9f1ca40b4ff219e020f67bda6e6368e63b903755730c98d5153b4e9",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        359,
+        59,
+        254,
+        238
+      ],
+      "margin": [
+        147,
+        116,
+        306,
+        322
+      ],
+      "source_anchor": [
+        492,
+        293
+      ],
+      "rgba_sha256": "4ddad43b6f0c266ab4c7ba5a65693153878a646196f195708fe2e707f844c967",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        674,
+        62,
+        283,
+        233
+      ],
+      "margin": [
+        134,
+        121,
+        277,
+        327
+      ],
+      "source_anchor": [
+        820,
+        291
+      ],
+      "rgba_sha256": "a7aaba6e1e92c96605fd32803339c6071f175e9f4bdc07d995aa8c1e527651a5",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        1017,
+        65,
+        276,
+        232
+      ],
+      "margin": [
+        149,
+        122,
+        284,
+        328
+      ],
+      "source_anchor": [
+        1148,
+        293
+      ],
+      "rgba_sha256": "60bb7a99bb053f74b8b35a969ca5baa5fdd07e6f39c8d67a4ff133ad24b38746",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        18,
+        350,
+        289,
+        241
+      ],
+      "margin": [
+        134,
+        113,
+        271,
+        319
+      ],
+      "source_anchor": [
+        164,
+        587
+      ],
+      "rgba_sha256": "967d5729a561d63897fef7f24a469846ce71d69e2ad85af60c7fa79c71ffc69b",
+      "sheet": 3
+    },
+    {
+      "row": 5,
+      "direction": "W",
+      "region": [
+        360,
+        351,
+        282,
+        239
+      ],
+      "margin": [
+        148,
+        115,
+        278,
+        321
+      ],
+      "source_anchor": [
+        492,
+        586
+      ],
+      "rgba_sha256": "5d98f82098ed12bfcfded57fec2d1f7d141b9dd4af26c258b55290a5f5b3a974",
+      "sheet": 3
+    },
+    {
+      "row": 6,
+      "direction": "W",
+      "region": [
+        687,
+        356,
+        267,
+        235
+      ],
+      "margin": [
+        147,
+        119,
+        293,
+        325
+      ],
+      "source_anchor": [
+        820,
+        587
+      ],
+      "rgba_sha256": "5219475bafd10b1a9356c265238683e06a5a724a50f26c829ba181efffdd1811",
+      "sheet": 3
+    },
+    {
+      "row": 7,
+      "direction": "W",
+      "region": [
+        1013,
+        352,
+        264,
+        238
+      ],
+      "margin": [
+        145,
+        116,
+        296,
+        322
+      ],
+      "source_anchor": [
+        1148,
+        586
+      ],
+      "rgba_sha256": "7857d32adf9d9bec7c762f0f5aa44f62b54f630b788c58eb9228e2f0707c9826",
+      "sheet": 3
+    },
+    {
+      "row": 8,
+      "direction": "W",
+      "region": [
+        24,
+        618,
+        290,
+        279
+      ],
+      "margin": [
+        140,
+        75,
+        270,
+        281
+      ],
+      "source_anchor": [
+        164,
+        893
+      ],
+      "rgba_sha256": "f7b53fd75ba052a3f3b81ba75133534b18daddc6911c145d52b33ab55910bd8d",
+      "sheet": 3
+    },
+    {
+      "row": 9,
+      "direction": "W",
+      "region": [
+        328,
+        662,
+        326,
+        236
+      ],
+      "margin": [
+        116,
+        118,
+        234,
+        324
+      ],
+      "source_anchor": [
+        492,
+        894
+      ],
+      "rgba_sha256": "20f010156816b24292d039798450794af46b6b38bb0e65fb5572d4e3530c42db",
+      "sheet": 3
+    },
+    {
+      "row": 10,
+      "direction": "W",
+      "region": [
+        658,
+        652,
+        317,
+        233
+      ],
+      "margin": [
+        118,
+        121,
+        243,
+        327
+      ],
+      "source_anchor": [
+        820,
+        881
+      ],
+      "rgba_sha256": "e2bb0eab253adfe09407687790f56db7549c1bd230be44d7e0a739800f343c98",
+      "sheet": 3
+    },
+    {
+      "row": 11,
+      "direction": "W",
+      "region": [
+        1039,
+        657,
+        247,
+        233
+      ],
+      "margin": [
+        171,
+        121,
+        313,
+        327
+      ],
+      "source_anchor": [
+        1148,
+        886
+      ],
+      "rgba_sha256": "a6d0eb72e7b0caee9b10d426a0af36948f8964a905c48de7f7cee7b53e4915a7",
+      "sheet": 3
+    },
+    {
+      "row": 12,
+      "direction": "W",
+      "region": [
+        40,
+        939,
+        250,
+        227
+      ],
+      "margin": [
+        156,
+        127,
+        310,
+        333
+      ],
+      "source_anchor": [
+        164,
+        1162
+      ],
+      "rgba_sha256": "d006a12abf1ed57401d2e409bfb2279efa53290f8ae7330ef2df2a1fe8c4b13e",
+      "sheet": 3
+    },
+    {
+      "row": 13,
+      "direction": "W",
+      "region": [
+        337,
+        970,
+        309,
+        202
+      ],
+      "margin": [
+        125,
+        152,
+        251,
+        358
+      ],
+      "source_anchor": [
+        492,
+        1168
+      ],
+      "rgba_sha256": "eda6a4681d4aef5d9bb5e45dcae53285e3b3953817c7b7f16e8176e752e2094a",
+      "sheet": 3
+    },
+    {
+      "row": 14,
+      "direction": "W",
+      "region": [
+        666,
+        988,
+        308,
+        179
+      ],
+      "margin": [
+        126,
+        175,
+        252,
+        381
+      ],
+      "source_anchor": [
+        820,
+        1163
+      ],
+      "rgba_sha256": "7b22b50dfacceb2dcfb80e8d0a718a9707e884dc7107ddbca658c09fe5e48be1",
+      "sheet": 3
+    },
+    {
+      "row": 15,
+      "direction": "W",
+      "region": [
+        1000,
+        1020,
+        296,
+        135
+      ],
+      "margin": [
+        132,
+        219,
+        264,
+        425
+      ],
+      "source_anchor": [
+        1148,
+        1151
+      ],
+      "rgba_sha256": "139953ded4437919a4eec4b7a58502b5de50e1f7b177d74689281fa9ac76fb7d",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        32,
+        34,
+        263,
+        251
+      ],
+      "margin": [
+        160,
+        118,
+        321,
+        333
+      ],
+      "source_anchor": [
+        164,
+        281
+      ],
+      "rgba_sha256": "53f431b4f86e3336e715d290d663e89c4dbb87a69374f87504919f48190578ef",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        391,
+        36,
+        231,
+        246
+      ],
+      "margin": [
+        191,
+        123,
+        353,
+        338
+      ],
+      "source_anchor": [
+        492,
+        278
+      ],
+      "rgba_sha256": "506741ecfe86655015588a8dba09e0a8c236319f091a33d872543157efc6b245",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        709,
+        38,
+        238,
+        251
+      ],
+      "margin": [
+        181,
+        118,
+        346,
+        333
+      ],
+      "source_anchor": [
+        820,
+        285
+      ],
+      "rgba_sha256": "250605c29504745fea1499cb6a6d38a2c3cce867a7822ff47d79aa7a6896089a",
+      "sheet": 4
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        1013,
+        26,
+        265,
+        264
+      ],
+      "margin": [
+        157,
+        105,
+        319,
+        320
+      ],
+      "source_anchor": [
+        1148,
+        286
+      ],
+      "rgba_sha256": "27dce01690271ff8298ea270cf122a43484807e40ccbcd30d686febe2db680ab",
+      "sheet": 4
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        39,
+        323,
+        261,
+        265
+      ],
+      "margin": [
+        167,
+        104,
+        323,
+        319
+      ],
+      "source_anchor": [
+        164,
+        584
+      ],
+      "rgba_sha256": "713f27757e0fe2712859c4129d44076f982c25c5c419c52efcdcb1d1cf43dc20",
+      "sheet": 4
+    },
+    {
+      "row": 5,
+      "direction": "NW",
+      "region": [
+        387,
+        328,
+        225,
+        259
+      ],
+      "margin": [
+        187,
+        110,
+        359,
+        325
+      ],
+      "source_anchor": [
+        492,
+        583
+      ],
+      "rgba_sha256": "a921f6fb5ec85f9ae393c585999ffe4cc5a839ca027f5dcd388642e6fe450fa5",
+      "sheet": 4
+    },
+    {
+      "row": 6,
+      "direction": "NW",
+      "region": [
+        711,
+        324,
+        243,
+        268
+      ],
+      "margin": [
+        183,
+        101,
+        341,
+        316
+      ],
+      "source_anchor": [
+        820,
+        588
+      ],
+      "rgba_sha256": "d5fbb197540ee5ed0b83733f36513223bfa5e5ffae8291497040cd13f22a31e8",
+      "sheet": 4
+    },
+    {
+      "row": 7,
+      "direction": "NW",
+      "region": [
+        1012,
+        325,
+        272,
+        258
+      ],
+      "margin": [
+        156,
+        111,
+        312,
+        326
+      ],
+      "source_anchor": [
+        1148,
+        579
+      ],
+      "rgba_sha256": "422afd8d2a32166e04f27a6bc6d1025112b81cb3f99981a1ebdf80fc82745b6f",
+      "sheet": 4
+    },
+    {
+      "row": 8,
+      "direction": "NW",
+      "region": [
+        32,
+        607,
+        273,
+        276
+      ],
+      "margin": [
+        160,
+        93,
+        311,
+        308
+      ],
+      "source_anchor": [
+        164,
+        879
+      ],
+      "rgba_sha256": "912c71928f9b3aeee9f956583ea5a6864d876e3d576574a36e89e7cd331d6ad8",
+      "sheet": 4
+    },
+    {
+      "row": 9,
+      "direction": "NW",
+      "region": [
+        331,
+        620,
+        328,
+        263
+      ],
+      "margin": [
+        131,
+        106,
+        256,
+        321
+      ],
+      "source_anchor": [
+        492,
+        879
+      ],
+      "rgba_sha256": "38f5b7882089a426e40d7645bd4db37bc7976b95f341f35c218119d0226a552b",
+      "sheet": 4
+    },
+    {
+      "row": 10,
+      "direction": "NW",
+      "region": [
+        707,
+        622,
+        257,
+        263
+      ],
+      "margin": [
+        179,
+        106,
+        327,
+        321
+      ],
+      "source_anchor": [
+        820,
+        881
+      ],
+      "rgba_sha256": "4779d60a2ae031b268a66e183947c1e7fd96ddfd0df14a72a6ae595cf849e52e",
+      "sheet": 4
+    },
+    {
+      "row": 11,
+      "direction": "NW",
+      "region": [
+        1046,
+        623,
+        237,
+        262
+      ],
+      "margin": [
+        190,
+        107,
+        347,
+        322
+      ],
+      "source_anchor": [
+        1148,
+        881
+      ],
+      "rgba_sha256": "c1eb8c05368f3ec740358270c4fea601fb56a8026da3bd491646acd664cd9d77",
+      "sheet": 4
+    },
+    {
+      "row": 12,
+      "direction": "NW",
+      "region": [
+        42,
+        919,
+        240,
+        244
+      ],
+      "margin": [
+        170,
+        125,
+        344,
+        340
+      ],
+      "source_anchor": [
+        164,
+        1159
+      ],
+      "rgba_sha256": "15e188e4dfbba43faad0308f552c4b65aaeb5ab55a48b8fc03cfc81b5bd8f0a4",
+      "sheet": 4
+    },
+    {
+      "row": 13,
+      "direction": "NW",
+      "region": [
+        340,
+        922,
+        301,
+        230
+      ],
+      "margin": [
+        140,
+        139,
+        283,
+        354
+      ],
+      "source_anchor": [
+        492,
+        1148
+      ],
+      "rgba_sha256": "dd3d8447bcadb7e93089802cf3860419064fae43a34990072f0a2eaca78b8797",
+      "sheet": 4
+    },
+    {
+      "row": 14,
+      "direction": "NW",
+      "region": [
+        673,
+        964,
+        303,
+        187
+      ],
+      "margin": [
+        145,
+        182,
+        281,
+        397
+      ],
+      "source_anchor": [
+        820,
+        1147
+      ],
+      "rgba_sha256": "5741eb98dcfe85e0c917c03266f2e406c6e17bfcc9ea7080b98b7b2a1c83f8e4",
+      "sheet": 4
+    },
+    {
+      "row": 15,
+      "direction": "NW",
+      "region": [
+        1004,
+        979,
+        281,
+        150
+      ],
+      "margin": [
+        148,
+        219,
+        303,
+        434
+      ],
+      "source_anchor": [
+        1148,
+        1125
+      ],
+      "rgba_sha256": "72249274dbc7f5955858bbff9514147f6a0a7f9f2564fbf2962631c94b63e81e",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        44,
+        28,
+        249,
+        258
+      ],
+      "margin": [
+        184,
+        126,
+        359,
+        350
+      ],
+      "source_anchor": [
+        164,
+        282
+      ],
+      "rgba_sha256": "695734edcb62df6a0fef440f9f2c3da84b6e1ecc91811b1913dabfa612672689",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        368,
+        26,
+        249,
+        260
+      ],
+      "margin": [
+        180,
+        124,
+        359,
+        348
+      ],
+      "source_anchor": [
+        492,
+        282
+      ],
+      "rgba_sha256": "bb7f4e09f6ae5520ecddabab3ea0afebd49c50630e1a1da5617bfb40cf92f87f",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        697,
+        25,
+        243,
+        265
+      ],
+      "margin": [
+        181,
+        119,
+        365,
+        343
+      ],
+      "source_anchor": [
+        820,
+        286
+      ],
+      "rgba_sha256": "1be7cad2dff19cc80a63ade2508565e6d929f6e4a055751feceff7260419a195",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        1020,
+        21,
+        251,
+        269
+      ],
+      "margin": [
+        176,
+        115,
+        357,
+        339
+      ],
+      "source_anchor": [
+        1148,
+        286
+      ],
+      "rgba_sha256": "e189625c0fe4361e81db1cc6215317dfaa50a389a115c0d3511aab4548d88f0f",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        40,
+        320,
+        251,
+        264
+      ],
+      "margin": [
+        180,
+        120,
+        357,
+        344
+      ],
+      "source_anchor": [
+        164,
+        580
+      ],
+      "rgba_sha256": "af67f49b42b0785aba164cbae23f1386d2cae1269cc22ca0a7f4ebeb73997dea",
+      "sheet": 5
+    },
+    {
+      "row": 5,
+      "direction": "N",
+      "region": [
+        363,
+        332,
+        259,
+        250
+      ],
+      "margin": [
+        175,
+        134,
+        349,
+        358
+      ],
+      "source_anchor": [
+        492,
+        578
+      ],
+      "rgba_sha256": "34fe16c838975f4780b1d0bdaf553c6af9ce7bd5b86d39580de2bd293cc40581",
+      "sheet": 5
+    },
+    {
+      "row": 6,
+      "direction": "N",
+      "region": [
+        695,
+        324,
+        251,
+        261
+      ],
+      "margin": [
+        179,
+        123,
+        357,
+        347
+      ],
+      "source_anchor": [
+        820,
+        581
+      ],
+      "rgba_sha256": "393067cd21b5efe01f28d2baa3340cc311018458094fea812c76f1403c282aa0",
+      "sheet": 5
+    },
+    {
+      "row": 7,
+      "direction": "N",
+      "region": [
+        1017,
+        323,
+        245,
+        265
+      ],
+      "margin": [
+        173,
+        119,
+        363,
+        343
+      ],
+      "source_anchor": [
+        1148,
+        584
+      ],
+      "rgba_sha256": "f4e7c938f8484921ebf74ee5405f8c59b7837594a404f9294f7d6c39135de426",
+      "sheet": 5
+    },
+    {
+      "row": 8,
+      "direction": "N",
+      "region": [
+        36,
+        619,
+        271,
+        262
+      ],
+      "margin": [
+        176,
+        122,
+        337,
+        346
+      ],
+      "source_anchor": [
+        164,
+        877
+      ],
+      "rgba_sha256": "d29b1c0a963d06878c109153bf22de8ee78531ba616c2b08693cd1d6e4d2ada5",
+      "sheet": 5
+    },
+    {
+      "row": 9,
+      "direction": "N",
+      "region": [
+        359,
+        641,
+        256,
+        248
+      ],
+      "margin": [
+        171,
+        136,
+        352,
+        360
+      ],
+      "source_anchor": [
+        492,
+        885
+      ],
+      "rgba_sha256": "c761fb24bbe37738e7673a79d67ea565c0f57b29327abd771bcbfc87a96cd68f",
+      "sheet": 5
+    },
+    {
+      "row": 10,
+      "direction": "N",
+      "region": [
+        666,
+        665,
+        290,
+        223
+      ],
+      "margin": [
+        150,
+        161,
+        318,
+        385
+      ],
+      "source_anchor": [
+        820,
+        884
+      ],
+      "rgba_sha256": "54f6a19232bb1719c31bd39eb12c523116e906f1c33f4e00cb3ecada8feee3f9",
+      "sheet": 5
+    },
+    {
+      "row": 11,
+      "direction": "N",
+      "region": [
+        1010,
+        637,
+        266,
+        237
+      ],
+      "margin": [
+        166,
+        147,
+        342,
+        371
+      ],
+      "source_anchor": [
+        1148,
+        870
+      ],
+      "rgba_sha256": "af0a91ca213597a0495d74aef2d75982bb7e2406dfb1d8b948767e64ed84049d",
+      "sheet": 5
+    },
+    {
+      "row": 12,
+      "direction": "N",
+      "region": [
+        38,
+        914,
+        266,
+        260
+      ],
+      "margin": [
+        178,
+        124,
+        342,
+        348
+      ],
+      "source_anchor": [
+        164,
+        1170
+      ],
+      "rgba_sha256": "34426f7eae69f77bf3182b66f7ee0e99475a066032d40f43569b4e6e2c282db8",
+      "sheet": 5
+    },
+    {
+      "row": 13,
+      "direction": "N",
+      "region": [
+        338,
+        947,
+        299,
+        223
+      ],
+      "margin": [
+        150,
+        161,
+        309,
+        385
+      ],
+      "source_anchor": [
+        492,
+        1166
+      ],
+      "rgba_sha256": "950b5a6d31f30f49376f6ae0c380d6e9db959ed3c74f38429d81727acd9b3703",
+      "sheet": 5
+    },
+    {
+      "row": 14,
+      "direction": "N",
+      "region": [
+        642,
+        975,
+        315,
+        191
+      ],
+      "margin": [
+        126,
+        193,
+        293,
+        417
+      ],
+      "source_anchor": [
+        820,
+        1162
+      ],
+      "rgba_sha256": "138f4d1b3e269e2461e65d4daae93280f618f838aa7a12e630da4ff93285d4bd",
+      "sheet": 5
+    },
+    {
+      "row": 15,
+      "direction": "N",
+      "region": [
+        976,
+        964,
+        318,
+        182
+      ],
+      "margin": [
+        132,
+        202,
+        290,
+        426
+      ],
+      "source_anchor": [
+        1148,
+        1142
+      ],
+      "rgba_sha256": "5d09260a8e1780ec5188f097ad479803eddb230a489b62c5cb009c84c8c030bb",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        43,
+        41,
+        246,
+        254
+      ],
+      "margin": [
+        175,
+        120,
+        346,
+        338
+      ],
+      "source_anchor": [
+        164,
+        291
+      ],
+      "rgba_sha256": "8d87e88f6a8f2ce89d629b346fefbf6cce3f2f71a7609c14a82c3c90b86b1d2e",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        379,
+        48,
+        243,
+        247
+      ],
+      "margin": [
+        183,
+        127,
+        349,
+        345
+      ],
+      "source_anchor": [
+        492,
+        291
+      ],
+      "rgba_sha256": "f1e9540511030e778db20461b4589422f380e1df71de474d2cd55c9cb888b5c1",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        699,
+        40,
+        246,
+        254
+      ],
+      "margin": [
+        175,
+        120,
+        346,
+        338
+      ],
+      "source_anchor": [
+        820,
+        290
+      ],
+      "rgba_sha256": "d6f7091a0944fbed220929770a6ac89c3c6c190e3f099527c41274ef2aa295de",
+      "sheet": 6
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1014,
+        40,
+        272,
+        256
+      ],
+      "margin": [
+        162,
+        118,
+        320,
+        336
+      ],
+      "source_anchor": [
+        1148,
+        292
+      ],
+      "rgba_sha256": "89dd29365422c64be7aaa124b5aabf6dc7f356bb29443d5f4180c2cb1270e16e",
+      "sheet": 6
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        36,
+        335,
+        270,
+        248
+      ],
+      "margin": [
+        168,
+        126,
+        322,
+        344
+      ],
+      "source_anchor": [
+        164,
+        579
+      ],
+      "rgba_sha256": "f55a1d240dfcd90c95089f8adc53357f10c19156e4153d2d858af8eb3ef01ed1",
+      "sheet": 6
+    },
+    {
+      "row": 5,
+      "direction": "NE",
+      "region": [
+        381,
+        338,
+        256,
+        247
+      ],
+      "margin": [
+        185,
+        127,
+        336,
+        345
+      ],
+      "source_anchor": [
+        492,
+        581
+      ],
+      "rgba_sha256": "23fc655049cd908c44ed178c72a1bbe86bd0a4f5647079e6ff74fc9027a0937c",
+      "sheet": 6
+    },
+    {
+      "row": 6,
+      "direction": "NE",
+      "region": [
+        697,
+        344,
+        269,
+        241
+      ],
+      "margin": [
+        173,
+        133,
+        323,
+        351
+      ],
+      "source_anchor": [
+        820,
+        581
+      ],
+      "rgba_sha256": "9926d5a6445b9cc35ba489c287baeaddb1d54c0407c9d9cbdf5b79564dc4c93c",
+      "sheet": 6
+    },
+    {
+      "row": 7,
+      "direction": "NE",
+      "region": [
+        1027,
+        341,
+        254,
+        245
+      ],
+      "margin": [
+        175,
+        129,
+        338,
+        347
+      ],
+      "source_anchor": [
+        1148,
+        582
+      ],
+      "rgba_sha256": "873728c185c0524912d625b43e3d293e5f70621d3590459d380d399780168163",
+      "sheet": 6
+    },
+    {
+      "row": 8,
+      "direction": "NE",
+      "region": [
+        52,
+        605,
+        272,
+        285
+      ],
+      "margin": [
+        184,
+        89,
+        320,
+        307
+      ],
+      "source_anchor": [
+        164,
+        886
+      ],
+      "rgba_sha256": "6d253a65f1cf9a86e21b998ef82ba5696289baf77199d1dd0eafd5bf9c9aa441",
+      "sheet": 6
+    },
+    {
+      "row": 9,
+      "direction": "NE",
+      "region": [
+        355,
+        659,
+        294,
+        223
+      ],
+      "margin": [
+        159,
+        151,
+        298,
+        369
+      ],
+      "source_anchor": [
+        492,
+        878
+      ],
+      "rgba_sha256": "43dbae5a6ba317a2a4a54818ae3c8f46ebe9886633a7bd6e7e3d646dcc5e19a7",
+      "sheet": 6
+    },
+    {
+      "row": 10,
+      "direction": "NE",
+      "region": [
+        684,
+        658,
+        307,
+        227
+      ],
+      "margin": [
+        160,
+        147,
+        285,
+        365
+      ],
+      "source_anchor": [
+        820,
+        881
+      ],
+      "rgba_sha256": "3d57793e666b2ef3c04d2ccf1018ea613a32081fb00dbc46ec23085faffcfb87",
+      "sheet": 6
+    },
+    {
+      "row": 11,
+      "direction": "NE",
+      "region": [
+        1039,
+        627,
+        253,
+        258
+      ],
+      "margin": [
+        187,
+        116,
+        339,
+        334
+      ],
+      "source_anchor": [
+        1148,
+        881
+      ],
+      "rgba_sha256": "ec8180c4bc10cb91e74f6416bd4089e596407b6a819bbd7abb808e404456167a",
+      "sheet": 6
+    },
+    {
+      "row": 12,
+      "direction": "NE",
+      "region": [
+        36,
+        921,
+        264,
+        228
+      ],
+      "margin": [
+        168,
+        146,
+        328,
+        364
+      ],
+      "source_anchor": [
+        164,
+        1145
+      ],
+      "rgba_sha256": "f17b3e144da4370b26b0b0d67e2f599d327940d7b027a5d209cef1f0a072059d",
+      "sheet": 6
+    },
+    {
+      "row": 13,
+      "direction": "NE",
+      "region": [
+        362,
+        952,
+        276,
+        200
+      ],
+      "margin": [
+        166,
+        174,
+        316,
+        392
+      ],
+      "source_anchor": [
+        492,
+        1148
+      ],
+      "rgba_sha256": "5f775710b9e741f20803cf836b5d43b5188353a8f807665ccb20091d04860291",
+      "sheet": 6
+    },
+    {
+      "row": 14,
+      "direction": "NE",
+      "region": [
+        678,
+        964,
+        274,
+        187
+      ],
+      "margin": [
+        154,
+        187,
+        318,
+        405
+      ],
+      "source_anchor": [
+        820,
+        1147
+      ],
+      "rgba_sha256": "69f3ceb4c1a039633d40c5a60662f31a55fcbbc29de265cbbbc9eeb58ebb3c41",
+      "sheet": 6
+    },
+    {
+      "row": 15,
+      "direction": "NE",
+      "region": [
+        1003,
+        974,
+        283,
+        173
+      ],
+      "margin": [
+        151,
+        201,
+        309,
+        419
+      ],
+      "source_anchor": [
+        1148,
+        1143
+      ],
+      "rgba_sha256": "9f6bafa9902c0823093351b5ab50adff0669945a77773bd093b07e62e985f292",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        153,
+        146,
+        735,
+        568
+      ],
+      "margin": [
+        309,
+        251,
+        569,
+        736
+      ],
+      "source_anchor": [
+        496,
+        710
+      ],
+      "rgba_sha256": "28123891bedcf33ce828a821143c32f4aaffce4dc40a1190dca7e2b32cae8a66",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1016,
+        209,
+        878,
+        522
+      ],
+      "margin": [
+        181,
+        297,
+        426,
+        782
+      ],
+      "source_anchor": [
+        1487,
+        727
+      ],
+      "rgba_sha256": "4f369264047d49854d359a05ec6bf5caef6f5556dc9b33c3395f9d45c869a1fc",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        95,
+        50,
+        513,
+        336
+      ],
+      "margin": [
+        161,
+        163,
+        279,
+        456
+      ],
+      "source_anchor": [
+        330,
+        382
+      ],
+      "rgba_sha256": "5b6b045f2fa61c802cdf3c9d3efea6b298152d2bbad4414051a4e7b535a446f6",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        705,
+        44,
+        550,
+        342
+      ],
+      "margin": [
+        109,
+        157,
+        242,
+        450
+      ],
+      "source_anchor": [
+        992,
+        382
+      ],
+      "rgba_sha256": "9f7a6506f738436a16980075c11d84b3b96f8458000e321868e03b4a5a503ebc",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1346,
+        51,
+        512,
+        337
+      ],
+      "margin": [
+        90,
+        162,
+        280,
+        455
+      ],
+      "source_anchor": [
+        1652,
+        384
+      ],
+      "rgba_sha256": "50ab0578d3ef0c4be23c8abc2b89a9d68c3c8c6f7ef04158682c1dabeff14812",
+      "sheet": 8
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        91,
+        418,
+        507,
+        333
+      ],
+      "margin": [
+        157,
+        166,
+        285,
+        459
+      ],
+      "source_anchor": [
+        330,
+        747
+      ],
+      "rgba_sha256": "1e341bf0793562849dab638bca4f24bc725e922555f4d3ed307d28974f407695",
+      "sheet": 8
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        706,
+        413,
+        547,
+        340
+      ],
+      "margin": [
+        110,
+        159,
+        245,
+        452
+      ],
+      "source_anchor": [
+        992,
+        749
+      ],
+      "rgba_sha256": "977751295e12ade97e4dbd0eaaa6160bc8647b91a42320cec4944a92ec2262e1",
+      "sheet": 8
+    },
+    {
+      "row": 5,
+      "direction": "SW",
+      "region": [
+        1345,
+        421,
+        528,
+        334
+      ],
+      "margin": [
+        89,
+        165,
+        264,
+        458
+      ],
+      "source_anchor": [
+        1652,
+        751
+      ],
+      "rgba_sha256": "7994b24a0b9cfd725243b313accfaf67adce251ba4e0f416b6e3460128f75108",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        71,
+        64,
+        320,
+        309
+      ],
+      "margin": [
+        159,
+        115,
+        352,
+        363
+      ],
+      "source_anchor": [
+        248,
+        369
+      ],
+      "rgba_sha256": "868f7f21b095608b6b7b069c9831d493ea8fa1d44dfc1f207a20a810227e54c1",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        493,
+        96,
+        398,
+        289
+      ],
+      "margin": [
+        85,
+        135,
+        274,
+        383
+      ],
+      "source_anchor": [
+        744,
+        381
+      ],
+      "rgba_sha256": "84a962228794831cf883cd816692732b97371c4e28f7a4ae113ae92bc1937288",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1080,
+        97,
+        381,
+        285
+      ],
+      "margin": [
+        177,
+        139,
+        291,
+        387
+      ],
+      "source_anchor": [
+        1239,
+        378
+      ],
+      "rgba_sha256": "1ca193d7b83155b07f9dea97df40960847627eb8ee5ffa1906842ddd5e7cbf57",
+      "sheet": 9
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        1592,
+        98,
+        304,
+        278
+      ],
+      "margin": [
+        193,
+        146,
+        368,
+        394
+      ],
+      "source_anchor": [
+        1735,
+        372
+      ],
+      "rgba_sha256": "7e993429e33b1ab098e0562a232f7c0171fa9937c081f1d40cce3eb02b5241fd",
+      "sheet": 9
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        64,
+        451,
+        327,
+        266
+      ],
+      "margin": [
+        152,
+        158,
+        345,
+        406
+      ],
+      "source_anchor": [
+        248,
+        713
+      ],
+      "rgba_sha256": "069a11dd1884d35e26db84734d5c8d821a39526756cdd98a34d3e374c79d493b",
+      "sheet": 9
+    },
+    {
+      "row": 5,
+      "direction": "SW",
+      "region": [
+        545,
+        481,
+        395,
+        248
+      ],
+      "margin": [
+        137,
+        176,
+        277,
+        424
+      ],
+      "source_anchor": [
+        744,
+        725
+      ],
+      "rgba_sha256": "166de863d9581e13b93687cae5f19740de1f269694a82cf338a1f8ae6c892376",
+      "sheet": 9
+    },
+    {
+      "row": 6,
+      "direction": "SW",
+      "region": [
+        994,
+        512,
+        450,
+        222
+      ],
+      "margin": [
+        91,
+        202,
+        222,
+        450
+      ],
+      "source_anchor": [
+        1239,
+        730
+      ],
+      "rgba_sha256": "13603179f834413514a57c4422098e035a8aec0bb0139b2e276186153888cae4",
+      "sheet": 9
+    },
+    {
+      "row": 7,
+      "direction": "SW",
+      "region": [
+        1479,
+        556,
+        467,
+        174
+      ],
+      "margin": [
+        80,
+        250,
+        205,
+        498
+      ],
+      "source_anchor": [
+        1735,
+        726
+      ],
+      "rgba_sha256": "de1abcdc481b75ffea1b3562421509cf60bb1d073a6d248cc0be5242193a9d5d",
+      "sheet": 9
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "sha256": "dceebe3c90b9de75eebe1d032168a69a9ba28e5b583d8ffe58cfbc7ac810566d",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            488,
+            488
+          ],
+          "foot": [
+            244,
+            305
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "sha256": "b43f1f74605bd9acaf917e9c09753a5ab7e8cd0737b94b162dc51cef38adee2a",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "sha256": "c900d22b6369e0e2e923828886525a7365ce0f46b981ea91e20f95c3823b3040",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            496,
+            496
+          ],
+          "foot": [
+            248,
+            310
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "sha256": "f61b5a4df9ac95c136b28a230b5c778472c094a05e772e0a2a0cf19412d97647",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            560,
+            560
+          ],
+          "foot": [
+            280,
+            350
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "sha256": "5d58d7a7b1dc316129a52e03c7057ac8a56b35a17c88b183fe57dd21940f5b1c",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            584,
+            584
+          ],
+          "foot": [
+            292,
+            365
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "sha256": "fe88b5ad7242265765d63bcd0b43bdd2a22286b37d9bc889bb8c02e0b9beaeaf",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "sha256": "f143cd7775592437c2f4c0c16e95d414b184775818e095ab28a45084642a67b4",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            592,
+            592
+          ],
+          "foot": [
+            296,
+            370
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-7.png",
+          "sha256": "815a23eac55bb057f8ce7454f3cabc1043ffd8af37ca41b3afc9168c7071d256",
+          "size": [
+            1983,
+            793
+          ],
+          "canvas_size": [
+            1304,
+            1304
+          ],
+          "foot": [
+            652,
+            815
+          ],
+          "directions_axis": "phase_grid2",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-7.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "sha256": "dceebe3c90b9de75eebe1d032168a69a9ba28e5b583d8ffe58cfbc7ac810566d",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            488,
+            488
+          ],
+          "foot": [
+            244,
+            305
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "sha256": "b43f1f74605bd9acaf917e9c09753a5ab7e8cd0737b94b162dc51cef38adee2a",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "sha256": "c900d22b6369e0e2e923828886525a7365ce0f46b981ea91e20f95c3823b3040",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            496,
+            496
+          ],
+          "foot": [
+            248,
+            310
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "sha256": "f61b5a4df9ac95c136b28a230b5c778472c094a05e772e0a2a0cf19412d97647",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            560,
+            560
+          ],
+          "foot": [
+            280,
+            350
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "sha256": "5d58d7a7b1dc316129a52e03c7057ac8a56b35a17c88b183fe57dd21940f5b1c",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            584,
+            584
+          ],
+          "foot": [
+            292,
+            365
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "sha256": "fe88b5ad7242265765d63bcd0b43bdd2a22286b37d9bc889bb8c02e0b9beaeaf",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "sha256": "f143cd7775592437c2f4c0c16e95d414b184775818e095ab28a45084642a67b4",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            592,
+            592
+          ],
+          "foot": [
+            296,
+            370
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-8.png",
+          "sha256": "6c72091e772bdef1e738c8d4d0b65082663ccd8fd0c9977f27078e1e13afe250",
+          "size": [
+            1983,
+            793
+          ],
+          "canvas_size": [
+            792,
+            792
+          ],
+          "foot": [
+            396,
+            495
+          ],
+          "directions_axis": "phase_grid3",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-8.png",
+          "source_rows": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      "source_frames_per_direction": 6,
+      "unique_frames_per_direction": 6,
+      "direction_unique_frames": {
+        "E": 6,
+        "SE": 6,
+        "S": 6,
+        "SW": 6,
+        "W": 6,
+        "NW": 6,
+        "N": 6,
+        "NE": 6
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "sha256": "dceebe3c90b9de75eebe1d032168a69a9ba28e5b583d8ffe58cfbc7ac810566d",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            488,
+            488
+          ],
+          "foot": [
+            244,
+            305
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "sha256": "b43f1f74605bd9acaf917e9c09753a5ab7e8cd0737b94b162dc51cef38adee2a",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "sha256": "c900d22b6369e0e2e923828886525a7365ce0f46b981ea91e20f95c3823b3040",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            496,
+            496
+          ],
+          "foot": [
+            248,
+            310
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "sha256": "f61b5a4df9ac95c136b28a230b5c778472c094a05e772e0a2a0cf19412d97647",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            560,
+            560
+          ],
+          "foot": [
+            280,
+            350
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "sha256": "5d58d7a7b1dc316129a52e03c7057ac8a56b35a17c88b183fe57dd21940f5b1c",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            584,
+            584
+          ],
+          "foot": [
+            292,
+            365
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "sha256": "fe88b5ad7242265765d63bcd0b43bdd2a22286b37d9bc889bb8c02e0b9beaeaf",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "sha256": "f143cd7775592437c2f4c0c16e95d414b184775818e095ab28a45084642a67b4",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            592,
+            592
+          ],
+          "foot": [
+            296,
+            370
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-9.png",
+          "sha256": "9a0fbc8a1113519197252c4ca53b6c5e38c4d0bc04cffcf7484ce3191cc56749",
+          "size": [
+            1983,
+            793
+          ],
+          "canvas_size": [
+            672,
+            672
+          ],
+          "foot": [
+            336,
+            420
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-9.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "source_rows": [
+            8,
+            9,
+            10
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "sha256": "dceebe3c90b9de75eebe1d032168a69a9ba28e5b583d8ffe58cfbc7ac810566d",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            488,
+            488
+          ],
+          "foot": [
+            244,
+            305
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "sha256": "b43f1f74605bd9acaf917e9c09753a5ab7e8cd0737b94b162dc51cef38adee2a",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "sha256": "c900d22b6369e0e2e923828886525a7365ce0f46b981ea91e20f95c3823b3040",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            496,
+            496
+          ],
+          "foot": [
+            248,
+            310
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "sha256": "f61b5a4df9ac95c136b28a230b5c778472c094a05e772e0a2a0cf19412d97647",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            560,
+            560
+          ],
+          "foot": [
+            280,
+            350
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "sha256": "5d58d7a7b1dc316129a52e03c7057ac8a56b35a17c88b183fe57dd21940f5b1c",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            584,
+            584
+          ],
+          "foot": [
+            292,
+            365
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "sha256": "fe88b5ad7242265765d63bcd0b43bdd2a22286b37d9bc889bb8c02e0b9beaeaf",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "sha256": "f143cd7775592437c2f4c0c16e95d414b184775818e095ab28a45084642a67b4",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            592,
+            592
+          ],
+          "foot": [
+            296,
+            370
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-9.png",
+          "sha256": "9a0fbc8a1113519197252c4ca53b6c5e38c4d0bc04cffcf7484ce3191cc56749",
+          "size": [
+            1983,
+            793
+          ],
+          "canvas_size": [
+            672,
+            672
+          ],
+          "foot": [
+            336,
+            420
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-9.png",
+          "source_rows": [
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "source_rows": [
+            11,
+            12
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "sha256": "dceebe3c90b9de75eebe1d032168a69a9ba28e5b583d8ffe58cfbc7ac810566d",
+          "size": [
+            1426,
+            1103
+          ],
+          "canvas_size": [
+            488,
+            488
+          ],
+          "foot": [
+            244,
+            305
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "sha256": "b43f1f74605bd9acaf917e9c09753a5ab7e8cd0737b94b162dc51cef38adee2a",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "sha256": "c900d22b6369e0e2e923828886525a7365ce0f46b981ea91e20f95c3823b3040",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            496,
+            496
+          ],
+          "foot": [
+            248,
+            310
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "sha256": "f61b5a4df9ac95c136b28a230b5c778472c094a05e772e0a2a0cf19412d97647",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            560,
+            560
+          ],
+          "foot": [
+            280,
+            350
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "sha256": "5d58d7a7b1dc316129a52e03c7057ac8a56b35a17c88b183fe57dd21940f5b1c",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            584,
+            584
+          ],
+          "foot": [
+            292,
+            365
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "sha256": "fe88b5ad7242265765d63bcd0b43bdd2a22286b37d9bc889bb8c02e0b9beaeaf",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "sha256": "f143cd7775592437c2f4c0c16e95d414b184775818e095ab28a45084642a67b4",
+          "size": [
+            1312,
+            1199
+          ],
+          "canvas_size": [
+            592,
+            592
+          ],
+          "foot": [
+            296,
+            370
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-9.png",
+          "sha256": "9a0fbc8a1113519197252c4ca53b6c5e38c4d0bc04cffcf7484ce3191cc56749",
+          "size": [
+            1983,
+            793
+          ],
+          "canvas_size": [
+            672,
+            672
+          ],
+          "foot": [
+            336,
+            420
+          ],
+          "directions_axis": "phase_grid4",
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "One whole-source scale calibrated from upright neutral or attack recovery, never per-phase scaling. Source bytes unchanged; Main body/gait/root review pending."
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-0.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-1.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-2.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-9.png",
+          "source_rows": [
+            5,
+            6,
+            7
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-3.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-4.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-5.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_monk_batch17_authored/poses-6.png",
+          "source_rows": [
+            13,
+            14,
+            15
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 139.5
+}

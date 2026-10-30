@@ -1,0 +1,82 @@
+{
+  "status": "AUTHOR_RIGID_C_STAGE_PROBE_PENDING_INDEPENDENT_SKULL_PAULDRON_TORSO_QC",
+  "source_sha256": "18d108d2d0cc63b8cfbb2c34cf2a7bdc64a78ffa37eb39109a6119ada6b3e5f6",
+  "reference_source": "/workspace/scratch/girtas-NE-idle-repair-v03/girtas-NE-idle-v03.png",
+  "reference_source_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+  "reference_C": 832,
+  "poseCs": [
+    1936,
+    2240,
+    1936,
+    1776,
+    2048,
+    1936
+  ],
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+      "source_sha256": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+      "C_candidate": 1936,
+      "pale_hair_root_native_Y": 205,
+      "registration_X_manual": 770,
+      "registration_is_preview_only_not_groundroot": true
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-compression1-complete-endpoint-v03/girtas-NE-run-LEFT-compression1-complete-endpoint-v03.png",
+      "source_sha256": "aeee4ab97376b2520e07f6ce140434930cf9400f2fe928d1fb63afa8d58d87c6",
+      "C_candidate": 2240,
+      "pale_hair_root_native_Y": 336,
+      "registration_X_manual": 875,
+      "registration_is_preview_only_not_groundroot": true
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-flight2-from-run3-v01/girtas-NE-run-RIGHT-flight2-from-run3-v01.png",
+      "source_sha256": "2e4dd041fc58fc0faa25eb91008875e9525d3c93b842a70e00cd6f7793367177",
+      "C_candidate": 1936,
+      "pale_hair_root_native_Y": 205,
+      "registration_X_manual": 790,
+      "registration_is_preview_only_not_groundroot": true
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-landing3-key-v01/girtas-NE-run-RIGHT-landing3-key-v01.png",
+      "source_sha256": "513b5c852b9a907e58e9a12f99df5e8c7856b719f39f3a721a9cd9fed2f7292a",
+      "C_candidate": 1776,
+      "pale_hair_root_native_Y": 165,
+      "registration_X_manual": 760,
+      "registration_is_preview_only_not_groundroot": true
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/scratch/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02/girtas-NE-run-RIGHT-compression4-bounded-chain-repair-v02.png",
+      "source_sha256": "c86670e35fbfb1f2a1af607130f119878b3bf089e7be5e610f55f24f5e5b2279",
+      "C_candidate": 2048,
+      "pale_hair_root_native_Y": 207,
+      "registration_X_manual": 810,
+      "registration_is_preview_only_not_groundroot": true
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/scratch/girtas-NE-run-LEFT-flight5-from-run0-v01/girtas-NE-run-LEFT-flight5-from-run0-v01.png",
+      "source_sha256": "7b07b03dd9a17c1efbe56da03d9e2d18330adac5b7aec0f524f9d3e976187c31",
+      "C_candidate": 1936,
+      "pale_hair_root_native_Y": 213,
+      "registration_X_manual": 775,
+      "registration_is_preview_only_not_groundroot": true
+    }
+  ],
+  "preview": "/workspace/scratch/girtas-NE-run-reviewed-composite-v01/private-rigid-C-stage-seven-candidate-v01.jpg",
+  "preview_sha256": "ce2f1b8d3136a281e771491280a52cc215bcfe8db9ff04846f5b87ba7aa29480",
+  "preview_bytes": 105075,
+  "method": "Initialactualhead/nearhardpauldron/torso visualestimate informedbyactualcorrectNEwalk0 scale1936 fornewbounded0; notfullbboxnormalization. Crest\u2192hairroot alone varieswithornament/headpitch and isNOTcertifiedsizeproof. Independent reviewer mustaccept/rejectactualrigidcore, thisisnotPASS.",
+  "explicit_uncertainties": [
+    "Centralcrown/hairroot span is ornament/pitch sensitive; do notforceallcrestheightsequal.",
+    "Hardarmor rotateswitharms; onlycombine skull/neck/nearpauldron/waist observations.",
+    "No hiddenhip/floor/C-to-frame approval fromhairregisteredprobe."
+  ],
+  "physical_root_candidate_status": "PENDING_RIGID_C_STAGE_BEFORE_AUTHORING_SUPPORT_GROUND_ARC",
+  "actor_approval": false
+}

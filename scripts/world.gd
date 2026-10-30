@@ -21,7 +21,9 @@ const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
 const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
 const SOURCE_PNG_GAME = preload("res://scripts/maps/source_png_game_registry.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
-const NATIVE_PNG_RENDERER = preload("res://scripts/maps/native_png_renderer.gd")
+const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
+# Do not preload this heavy optional renderer while parsing the main game class.
+# Android editor import may otherwise resolve the PNG class graph recursively.
 # PR #137's shipped entry-only PNG plan (594438d). Only this reviewed layout
 # upgrade may cross a plan hash; unknown plans still fail before state changes.
 const NATIVE_PNG_SAVE_MIGRATIONS: Dictionary = {
@@ -41,6 +43,7 @@ const ORIGINAL_SKILLS = preload("res://scripts/skills/skill_service.gd")
 var original_skills: TwilightOriginalSkillService = null
 var legacy_skills_db: Array = []
 const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
+const ITEM_CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const PHYSICAL_RESOLUTION = preload("res://scripts/combat/physical_resolution.gd")
 const INVEN_OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
@@ -49,7 +52,14 @@ const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const EQUIPMENT_COLLECTION_RUNTIME = preload("res://scripts/collections/equipment_collection_runtime.gd")
 var equipment_collections = EQUIPMENT_COLLECTION_RUNTIME.new()
+const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
+var growth = GROWTH.new()
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
+const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.gd")
+const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
+var option_awakening = OPTION_AWAKENING.new()
+var option_awakening_auras: Dictionary = {}
+var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
@@ -116,6 +126,14 @@ var pending_ground_pickup: Button = null
 const GROUND_PICKUP_RADIUS: float = 60.0
 const AUTO_GROUND_PICKUP_SCAN: float = 460.0
 var auto_stuck_time: float = 0.0
+# Bound repeated unreachable-target pathfinding during AUTO, not manual selection.
+const AUTO_TARGET_FAILED_PATH_RETRY_MS: int = 900
+const AUTO_TARGET_EMPTY_RETRY_MS: int = 250
+var auto_target_failed_paths: Dictionary = {}
+var auto_target_next_search_ms: int = 0
+var auto_target_failed_search_actor_count: int = -1
+var auto_target_path_checks: int = 0
+var manual_route_pending_target: Vector2 = Vector2.INF
 var region_id: String = ""
 var return_gate: Node2D = null
 var return_gate_position: Vector2 = Vector2.INF
@@ -140,6 +158,10 @@ var monster_size_index: Dictionary = {}
 var item_db: Array = []
 var item_weight_index: Dictionary = {}
 var skills_db: Array = []
+var skill_record_index: Dictionary = {}
+var indexed_skills_db: Array = []
+var indexed_skills_count: int = -1
+var non_original_skill_rows: Array[Dictionary] = []
 var job_classes: Array = []
 var job_class: String = "기사"
 var active_skill_buffs: Dictionary = {}
@@ -192,8 +214,15 @@ var charge_target: TwilightMonster = null
 var charge_skill: Dictionary = {}
 var charge_speed: float = 1150.0
 var save_timer: float = 0.0
+var general_save_pending: bool = false
 var hp_recovery_elapsed: float = 0.0
 var mp_recovery_elapsed: float = 0.0
+var equipment_effects_dirty: bool = true
+var equipment_effects: Dictionary = {}
+var equipment_effect_rebuilds: int = 0
+var equipment_records_dirty: bool = true
+var equipment_records_cache: Array[Dictionary] = []
+var equipment_record_rebuilds: int = 0
 const UNIQUE_RECOVERY_INTERVAL: float = 30.0
 const UNIQUE_RECOVERY_AMOUNT: int = 5
 var collision_debug: bool = false
@@ -319,6 +348,7 @@ func _ready() -> void:
 	crafting.load_recipes()
 	_load_data()
 	card_draw_fusion.configure(catalog_db)
+	option_awakening.configure(self)
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
@@ -347,6 +377,17 @@ func _ready() -> void:
 	_set_map(active_map_id, false)
 	var creating_character: bool = not FileAccess.file_exists(save_path())
 	_load_game(true)
+	if creating_character and growth.development: growth.seed_lab()
+	if growth.development:
+		var lab_badge := Label.new()
+		lab_badge.text = "개발용 성장 실험 · 근사 수치 / 일반 저장과 분리"
+		lab_badge.position = Vector2(440,80)
+		lab_badge.z_index = 200
+		lab_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lab_badge.add_theme_color_override("font_color",Color("ffcf76"))
+		hud.get_node("Root").add_child(lab_badge)
+		lab_badge.visible = not hud.workspace.visible
+		hud.workspace.visibility_changed.connect(func() -> void: lab_badge.visible = not hud.workspace.visible)
 	if NATIVE_PNG.enabled():
 		for argument: String in OS.get_cmdline_user_args():
 			if argument.begins_with("--native-png-map="): _set_map(argument.trim_prefix("--native-png-map="),false)
@@ -376,6 +417,7 @@ func _process(delta: float) -> void:
 		return
 	if stat_hud_refresh_pending:
 		_update_hud()
+	_advance_native_route_preparation()
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
 	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
@@ -403,7 +445,7 @@ func _process(delta: float) -> void:
 	save_timer += delta
 	if save_timer >= 30.0:
 		save_timer = 0.0
-		_save_game(true)
+		_request_general_save()
 	if player.auto_enabled and not player.is_stunned() and charge_skill.is_empty():
 		_run_auto_heal_quickslots()
 		_run_auto_hunt()
@@ -489,6 +531,7 @@ func _load_data() -> void:
 		original_skills = ORIGINAL_SKILLS.new()
 		original_skills.configure(self)
 	skills_db = original_skills.catalog.records.duplicate(true)
+	_rebuild_skill_record_index()
 	_ensure_ammo_items()
 	_enrich_weapon_records(item_db)
 	loot_catalog = LOOT_DROP.build_catalog(item_db)
@@ -526,6 +569,7 @@ func _load_data() -> void:
 	catalog_image_index["아이템"] = image_records
 	_build_job_classes()
 	equipment_collections.configure(self)
+	growth.configure(self)
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -721,16 +765,30 @@ func _load_verified_catalog_options() -> void:
 					entries[index] = _verified_catalog_record(category, entries[index] as Dictionary)
 
 func _has_hp_absorption() -> bool:
-	for record: Dictionary in _all_equipped_records():
-		if bool(record.get("hpAbsorption", record.get("hp_absorption", false))) or str(record.get("desc", "")).contains("HP 흡수"):
-			return true
-	return false
+	_refresh_equipment_effects()
+	return bool(equipment_effects.hp_absorption)
 
 func _has_recovery_effect(key: String) -> bool:
+	_refresh_equipment_effects()
+	return bool(equipment_effects.get(key,false))
+
+func _refresh_equipment_effects() -> void:
+	if not equipment_effects_dirty:return
+	equipment_effects_dirty=false
+	equipment_effect_rebuilds+=1
+	var flags: Dictionary={"hpAbsoluteRecovery":false,"hpRecoveryTick":false,"mpRecoveryTick":false,"hp_absorption":false,"damage_amp_pct":0.0}
 	for record: Dictionary in _all_equipped_records():
-		if int(record.get(key, 0)) > 0:
-			return true
-	return false
+		for key: String in ["hpAbsoluteRecovery","hpRecoveryTick","mpRecoveryTick"]:
+			if int(record.get(key,0))>0:flags[key]=true
+		if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"):
+			flags.hp_absorption=true
+		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
+	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))
+	equipment_effects=flags
+
+func _invalidate_equipment_static() -> void:
+	equipment_effects_dirty=true
+	equipment_records_dirty=true
 
 func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
@@ -745,7 +803,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		var previous_hp: int = hp
 		hp = mini(_effective_max_hp(), hp + stolen)
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
-	var amplification: float = clampf(_equipped_numeric_sum("damage_amp_pct"), 0.0, 300.0)
+	_refresh_equipment_effects()
+	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
 	target.take_damage(adjusted_damage + stolen, critical)
@@ -754,8 +813,10 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 
 func _tick_catalog_recovery(delta: float) -> void:
 	var elapsed: float = maxf(0.0, delta)
+	_refresh_equipment_effects()
 	var hp_enabled: bool = _has_recovery_effect("hpAbsoluteRecovery") or _has_recovery_effect("hpRecoveryTick")
-	var mp_enabled: bool = _has_recovery_effect("mpRecoveryTick") or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp_recovery") > 0
+	var mp_tick_amount: int = int(equipment_effects.mp_tick_amount)
+	var mp_enabled: bool = mp_tick_amount>0
 	var changed: bool = false
 	if hp_enabled:
 		hp_recovery_elapsed += elapsed
@@ -775,7 +836,7 @@ func _tick_catalog_recovery(delta: float) -> void:
 			var cycles: int = int(floor(mp_recovery_elapsed / UNIQUE_RECOVERY_INTERVAL))
 			mp_recovery_elapsed = fmod(mp_recovery_elapsed, UNIQUE_RECOVERY_INTERVAL)
 			var old_mp: int = mp
-			mp = mini(_effective_max_mp(), mp + cycles * UNIQUE_RECOVERY_AMOUNT)
+			mp = mini(_effective_max_mp(), mp + cycles * mp_tick_amount)
 			if mp > old_mp:
 				hud.append_log("MP 자동회복 · +%d" % (mp - old_mp))
 				changed = true
@@ -791,7 +852,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -909,7 +970,7 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.accuracy(_source_catalog_record("아이템", entry as Dictionary), kind)
-	return result + int(equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat"))
+	return result + int(growth.bonus(kind+"_hit:flat") + equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat"))
 
 func _equipment_potion_heal_stat(label: String) -> int:
 	var sum: int = 0
@@ -938,7 +999,7 @@ func _equipment_additional_damage(kind: String) -> int:
 					var segment: String = fragment.strip_edges()
 					if segment.begins_with("대미지 리덕션 무시"):
 						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
-	return result + int(equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat"))
+	return result + int(growth.bonus(kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	# Kept for older source audit callers; not used in the live damage path.
@@ -1105,6 +1166,25 @@ func _merge_local_consumables_into_catalog() -> void:
 				break
 		if not found:
 			catalog_items.append(spec.duplicate(true))
+	# The six shop/draw items must also be present in the runtime catalog:
+	# inventory, shop, details and quickslot all resolve the same real icon.
+	for item_name: String in CARD_PACK_ITEMS.PACKS:
+		var pack_record: Dictionary = CARD_PACK_ITEMS.inventory_record(item_name)
+		var present: bool = false
+		for index: int in range(catalog_items.size()):
+			var raw: Variant = catalog_items[index]
+			if not (raw is Dictionary) or str((raw as Dictionary).get("name", "")) != item_name:
+				continue
+			var existing: Dictionary = raw as Dictionary
+			# Never reinterpret an existing verified source-ID item as a local pack.
+			if str(existing.get("sourceId", "")).is_empty():
+				var merged: Dictionary = existing.duplicate(true)
+				merged.merge(pack_record, true)
+				catalog_items[index] = merged
+			present = true
+			break
+		if not present:
+			catalog_items.append(pack_record)
 	catalog_db["아이템"] = catalog_items
 
 func _connect_signals() -> void:
@@ -1151,6 +1231,10 @@ func _connect_signals() -> void:
 		hud.connect("card_pack_draw_requested", _on_card_pack_draw_requested)
 	if hud.has_signal("card_fusion_requested"):
 		hud.connect("card_fusion_requested", _on_card_fusion_requested)
+	if hud.has_signal("option_awakening_open_requested"):
+		hud.connect("option_awakening_open_requested", _on_option_awakening_open_requested)
+		hud.connect("option_awakening_feed_requested", _on_option_awakening_feed_requested)
+		hud.connect("option_awakening_attempt_requested", _on_option_awakening_attempt_requested)
 	hud.class_selected.connect(_on_class_selected)
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
 	hud.job_class_selected.connect(_on_job_class_selected)
@@ -1181,6 +1265,8 @@ func _connect_signals() -> void:
 	if hud.has_signal("ain_auto_changed"):
 		hud.connect("ain_auto_changed", _on_ain_auto_changed)
 	hud.inventory_item_activated.connect(_on_inventory_item_activated)
+	if hud.has_signal("blessing_target_requested"):
+		hud.connect("blessing_target_requested", _on_blessing_target_requested)
 	hud.enhancement_requested.connect(_attempt_enhancement)
 	# Optional validation tools live only in the isolated playtest HUD branch.
 	if hud.has_signal("playtest_catalog_grant_requested"):
@@ -1227,6 +1313,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		hud.show_message("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
 		return
 	_clear_combat_actions()
+	manual_route_pending_target=Vector2.INF
 	if is_instance_valid(world_interactions):
 		world_interactions.cancel_gesture()
 		world_interactions.clear_selection()
@@ -1244,9 +1331,15 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			old_node.queue_free()
 	field_renderer = null
 	field_physics = null
+	if field_map is NativePngField:(field_map as NativePngField).park_precise_routes()
 	field_map = null
+	if requested_native is NativePngField:(requested_native as NativePngField).prepare_precise_routes_step(256,2000)
 	loot_pickup.map_changed()
 	ground_loot.hide_map()
+	# Cached failed routes are map- and life-specific; never retain them on travel.
+	auto_target_failed_paths.clear()
+	auto_target_next_search_ms = 0
+	auto_target_failed_search_actor_count = -1
 	active_map_id = map_id
 	active_map = maps_by_id[map_id] as Dictionary
 	if requested_native != null:
@@ -1309,7 +1402,13 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		if field_map is NativePngField: field_renderer = NATIVE_PNG_RENDERER.new()
+		if field_map is NativePngField:
+			# Instantiate only when an actual native-PNG field is active.
+			var native_renderer_script: Variant = load(NATIVE_PNG_RENDERER_PATH)
+			if native_renderer_script == null:
+				push_error("Native PNG renderer script could not be loaded")
+				return
+			field_renderer = native_renderer_script.new() as FieldRenderer
 		elif field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
 		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
 		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
@@ -1433,6 +1532,9 @@ func _build_collision_debug_tiles() -> void:
 				collision_tiles.set_cell(Vector2i(column, row), 0, Vector2i.ZERO, 0)
 
 func _spawn_position() -> Vector2:
+	if field_map is NativePngField:
+		var safe: Vector2=field_map.nearest_safe_click_destination(COORD.array_vector(field_map.data["spawn_position"]),6)
+		if safe.is_finite(): return safe
 	if field_map != null:
 		return field_map.cell_to_world(field_map.nearest_cell(COORD.array_vector(field_map.data["spawn_position"])))
 	var spawn_value: Variant = active_map.get("navigation_spawn", {})
@@ -1456,6 +1558,10 @@ func _world_to_cell(position_value: Vector2) -> Vector2i:
 	return Vector2i(int(floor(position_value.x / tile_size)), int(floor(position_value.y / tile_size)))
 
 func _is_walkable_world(position_value: Vector2) -> bool:
+	if not position_value.is_finite(): return false
+	# A native PNG cell may be nominally open while the real 4px foot still
+	# overlaps a hand-reviewed obstacle or an exact floor boundary.
+	if field_map is NativePngField: return field_map.line_clear(position_value,position_value)
 	if field_map != null: return field_map.walkable(position_value)
 	if astar == null:
 		return false
@@ -1478,6 +1584,22 @@ func find_world_path(from_position: Vector2, to_position: Vector2) -> PackedVect
 	for cell: Vector2i in cell_path:
 		result.append(_cell_to_world(cell))
 	return result
+
+func _advance_native_route_preparation() -> void:
+	if not field_map is NativePngField:return
+	var native: NativePngField=field_map as NativePngField
+	var was_ready: bool=native.precise_routes!=null and native.precise_routes.ready()
+	if not native.prepare_precise_routes_step(512,2000):return
+	if not was_ready:auto_target_next_search_ms=0
+	if manual_route_pending_target.is_finite():
+		var deferred_target: Vector2=manual_route_pending_target
+		manual_route_pending_target=Vector2.INF
+		if player.click_path.is_empty() and not player.has_manual_movement():
+			var deferred_path: PackedVector2Array=find_world_path(player.global_position,deferred_target)
+			if not deferred_path.is_empty():player.set_manual_click_path(deferred_path,deferred_target)
+
+func _native_route_pending() -> bool:
+	return field_map is NativePngField and (field_map as NativePngField).route_pending
 
 func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 	if field_map is OriginalPlayableField: return field_map.nearest_cell(field_map.cell_to_world(origin))
@@ -1519,6 +1641,7 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
+	manual_route_pending_target=Vector2.INF
 	if field_map != null:
 		for npc: Dictionary in field_map.data["npc_spawn"]:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
@@ -1540,9 +1663,23 @@ func _set_click_destination(target: Vector2) -> void:
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
-	var path: PackedVector2Array = find_world_path(player.global_position, target)
-	if path.size() > 0:
-		player.set_manual_click_path(path, target)
+	var destination: Vector2=target
+	if field_map is NativePngField:
+		# Blocked or visually misleading tap locations must resolve to vetted, full-foot-safe floor.
+		destination=field_map.nearest_safe_click_destination(target)
+		if not destination.is_finite():
+			player.clear_click_path()
+			hud.show_message("통행 불가 %s (%d,%d)" % [active_map_id,roundi(target.x),roundi(target.y)])
+			return
+	var path: PackedVector2Array = find_world_path(player.global_position,destination)
+	if not path.is_empty():
+		player.set_manual_click_path(path,destination)
+	elif _native_route_pending():
+		player.clear_click_path()
+		manual_route_pending_target=destination
+	elif field_map is NativePngField:
+		player.clear_click_path()
+		hud.show_message("우회 경로 없음 %s (%d,%d)" % [active_map_id,roundi(target.x),roundi(target.y)])
 
 func _spawn_monsters(count: int) -> void:
 	if monster_db.is_empty():
@@ -2032,11 +2169,19 @@ func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
 
 func _skill_target(max_distance: float) -> TwilightMonster:
+	# Explicit target selection is authoritative. A spell may fail against a
+	# distant/obstructed target, but may never silently strike a different mob.
+	if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty():
+		if not world_interactions.valid(world_interactions.selections[0]):
+			world_interactions.prune()
 	var target: TwilightMonster = selected_monster
 	if is_instance_valid(target) and not target.dead:
-		if player.global_position.distance_to(target.global_position) <= max_distance:
+		if player.global_position.distance_squared_to(target.global_position) <= max_distance * max_distance:
 			if _has_line_of_sight_world(player.global_position, target.global_position):
 				return target
+		return null
+	if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty():
+		return null
 	return _nearest_visible_monster(max_distance)
 
 func _cast_bleed_from_hud() -> void:
@@ -2146,7 +2291,14 @@ func _run_auto_hunt() -> void:
 	if _run_auto_ground_pickup():
 		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
+		if Time.get_ticks_msec() < auto_target_next_search_ms and monsters_root.get_child_count() == auto_target_failed_search_actor_count:
+			selected_monster = null
+			player.clear_click_path()
+			return
 		auto_target = _nearest_reachable_monster(99999.0)
+		auto_target_failed_search_actor_count = monsters_root.get_child_count()
+		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
+		if _native_route_pending():auto_stuck_time=0.0
 	if auto_target == null:
 		selected_monster = null
 		player.clear_click_path()
@@ -2180,14 +2332,26 @@ func _run_auto_hunt() -> void:
 		# Keep A* for obstructed targets; do not bypass collision or map bounds.
 		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
 		if path.is_empty():
+			if _native_route_pending():
+				auto_repath_timer=0.05
+				auto_stuck_time=0.0
+				return
 			if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
+			_remember_auto_target_path_failure(auto_target)
 			auto_target = _nearest_reachable_monster(99999.0)
 			if auto_target == null:
+				auto_target_failed_search_actor_count = monsters_root.get_child_count()
+				auto_target_next_search_ms = Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
+				if _native_route_pending():auto_stuck_time=0.0
 				selected_monster = null
 				player.clear_click_path()
 				return
 			selected_monster = auto_target
 			path = find_world_path(player.global_position, auto_target.global_position)
+			if path.is_empty() and _native_route_pending():
+				auto_repath_timer=0.05
+				auto_stuck_time=0.0
+				return
 		player.set_click_path(path, auto_target.global_position)
 
 func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> PackedVector2Array:
@@ -2253,23 +2417,48 @@ func _nearest_visible_monster(max_distance: float) -> TwilightMonster:
 		best = monster
 	return best
 
-func _nearest_reachable_monster(max_distance: float) -> TwilightMonster:
-	# Preserve strict distance and scene-order ties, but ask expensive navigation
-	# about the nearest candidates first. No cached failures can hide a newly
-	# opened route or a moving target. All-unreachable searches still test all.
+func _auto_target_failure_key(monster: TwilightMonster) -> String:
+	# Recheck when either actor enters a different nav cell or a pooled actor
+	# begins a new life. Never cache a positive route as terrain can change.
+	return "%s|%d|%d|%s|%s" % [
+		active_map_id, monster.get_instance_id(), monster.life_id,
+		str(_world_to_cell(player.global_position)), str(_world_to_cell(monster.global_position))]
+
+func _remember_auto_target_path_failure(monster: TwilightMonster) -> void:
+	if not is_instance_valid(monster): return
+	if auto_target_failed_paths.size() >= 512: auto_target_failed_paths.clear()
+	auto_target_failed_paths[_auto_target_failure_key(monster)] = Time.get_ticks_msec() + AUTO_TARGET_FAILED_PATH_RETRY_MS
+
+func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false) -> TwilightMonster:
+	# Distance-first preserves the previous nearest-reachable rule, while
+	# avoiding an expensive A*/source route for every closer actor seen so far.
 	var candidates: Array[Dictionary] = []
+	var origin: Vector2 = player.global_position
+	var max_distance_squared: float = max_distance * max_distance
+	var order: int = 0
 	for node: Node in monsters_root.get_children():
-		if not (node is TwilightMonster): continue
+		if not node is TwilightMonster: continue
 		var monster: TwilightMonster = node
-		if monster.dead: continue
-		var distance: float = player.global_position.distance_to(monster.global_position)
-		if distance >= max_distance: continue
-		candidates.append({"monster":monster,"distance":distance,"order":candidates.size()})
-	candidates.sort_custom(func(a: Dictionary,b: Dictionary) -> bool:
-		return int(a.order)<int(b.order) if a.distance==b.distance else a.distance<b.distance)
+		if monster.dead or monster.is_queued_for_deletion(): continue
+		var distance_squared: float = origin.distance_squared_to(monster.global_position)
+		if distance_squared < max_distance_squared:
+			candidates.append({"actor":monster, "distance_squared":distance_squared, "order":order})
+		order += 1
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if float(a.distance_squared) == float(b.distance_squared):
+			return int(a.order) < int(b.order)
+		return float(a.distance_squared) < float(b.distance_squared))
+	var now: int = Time.get_ticks_msec()
 	for candidate: Dictionary in candidates:
-		var monster: TwilightMonster = candidate.monster
-		if not find_world_path(player.global_position,monster.global_position).is_empty(): return monster
+		var monster: TwilightMonster = candidate.actor
+		var key: String = _auto_target_failure_key(monster)
+		if not force_refresh and int(auto_target_failed_paths.get(key, 0)) > now: continue
+		auto_target_path_checks += 1
+		if not find_world_path(origin, monster.global_position).is_empty():
+			auto_target_failed_paths.erase(key)
+			return monster
+		if _native_route_pending():return null
+		_remember_auto_target_path_failure(monster)
 	return null
 
 func _select_monster(monster: TwilightMonster) -> void:
@@ -2277,8 +2466,11 @@ func _select_monster(monster: TwilightMonster) -> void:
 	else: selected_monster = monster
 
 func _update_target_hud() -> void:
-	# Combat selection is independent of the removed top-center readout.
-	if is_instance_valid(world_interactions): world_interactions.prune()
+	# The selection controller prunes every 0.2s already; in the frame loop
+	# only perform a full scan when the primary entry has actually gone stale.
+	if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty():
+		if not world_interactions.valid(world_interactions.selections[0]):
+			world_interactions.prune()
 	if not is_instance_valid(selected_monster) or selected_monster.dead: selected_monster = null
 
 func _on_monster_died(monster: TwilightMonster) -> void:
@@ -2309,6 +2501,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	_roll_drop(monster, can_drop_equipment)
 	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
+	var level_before: int = level
 	_check_level_up()
 	if player.auto_enabled:
 		_auto_recharge_ain()
@@ -2318,7 +2511,14 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		auto_target = null
 	if monster.get_parent() == monsters_root and is_instance_valid(combat_corpses):
 		monster.reparent(combat_corpses, true)
-	_update_hud()
+	# Ordinary kills only change rewards/vitals/blessing. Rebuilding every
+	# equipment, skill, collection and inventory surface here stalls the very
+	# frame in which loot appears. Level changes still publish all new stats.
+	if level != level_before:
+		_update_hud()
+	else:
+		_refresh_combat_hud()
+		_update_ain_hud()
 	call_deferred("_ensure_monster_count")
 
 func recycle_monster(monster: TwilightMonster) -> bool:
@@ -2373,7 +2573,6 @@ func _collect_ground_drop(drop: Button) -> bool:
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
 	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null
-	hud.refresh_inventory(inventory)
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
 	_update_hud()
@@ -2541,6 +2740,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
+	reduced = growth.incoming_damage(reduced)
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
 		if original_skills.last_evaded:
@@ -2738,9 +2938,10 @@ func _check_level_up() -> void:
 		hud.call_deferred("open_character")
 
 func _select_nearest_target() -> void:
-	var target: TwilightMonster = _nearest_reachable_monster(600.0)
+	# An explicit tap must retry even if AUTO recently cached a failed route.
+	var target: TwilightMonster = _nearest_reachable_monster(600.0, true)
 	if target == null:
-		hud.show_message("선택할 수 있는 몬스터가 없습니다")
+		hud.show_message("경로 준비 중 · 잠시 후 다시 시도하세요" if _native_route_pending() else "선택할 수 있는 몬스터가 없습니다")
 		return
 	_select_monster(target)
 	hud.show_message("대상 선택: %s" % target.monster_name)
@@ -2822,6 +3023,7 @@ func _grant_playtest_aden() -> void:
 	_save_game(true)
 
 func _use_card_pack_item(item_name: String) -> void:
+	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
 	var spec: Dictionary = CARD_PACK_ITEMS.definition(item_name)
@@ -2833,12 +3035,16 @@ func _use_card_pack_item(item_name: String) -> void:
 	if not card_draw_fusion.can_draw(category):
 		hud.show_message("해당 종류의 뽑기 카드 목록이 부족합니다")
 		return
-	# The draw service validates before granting; spend only on success.
+	# Persist an atomic (card ownership + ticket debit) transaction. Never show
+	# a new card or consume the ticket if the old save cannot be replaced.
+	var cards_before: Dictionary = card_draw_fusion.export_state()
+	var roll_before: int = card_draw_fusion.rng.state
+	var ticket_before: int = int(inventory.get(item_name, 0))
 	var outcome: Dictionary = card_draw_fusion.draw_cards(category, count)
 	if not bool(outcome.get("ok", false)):
 		hud.show_message(str(outcome.get("error", "뽑기 실패")))
 		return
-	var remaining: int = int(inventory.get(item_name, 0)) - 1
+	var remaining: int = ticket_before - 1
 	if remaining == 0:
 		inventory.erase(item_name)
 	else:
@@ -2851,13 +3057,27 @@ func _use_card_pack_item(item_name: String) -> void:
 	var message: String = "%s %d회 완료 · 고급 %d · 희귀 %d · 영웅 %d · 전설 %d" % [
 		category, count, int(grades.get("고급", 0)), int(grades.get("희귀", 0)),
 		int(grades.get("영웅", 0)), int(grades.get("전설", 0))]
+	if _save_game(true) != OK:
+		card_draw_fusion.import_state(cards_before)
+		card_draw_fusion.rng.state = roll_before
+		inventory[item_name] = ticket_before
+		hud.refresh_inventory(inventory)
+		hud.show_message("뽑기 저장 실패 · 뽑기권과 카드 보유 상태를 복구했습니다")
+		return
 	hud.refresh_inventory(inventory)
-	hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	_update_hud()
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.show_message(message)
 	hud.append_log(message)
-	_save_game(true)
 	hud.call("present_card_reveal", category, outcome, false)
+
+func _on_blessing_target_requested(scroll_name: String, target_reference: String) -> void:
+	if consumable_service == null: return
+	if int(inventory.get(scroll_name, 0)) < 1:
+		hud.show_message("축복 주문서가 없습니다")
+		return
+	consumable_service.call("apply_bless_scroll", scroll_name, target_reference)
+	_update_hud()
 
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
@@ -3245,25 +3465,8 @@ func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dic
 	if source_id != "":
 		var identified: Dictionary = _catalog_item_from_source_id(source_id)
 		return identified if str(identified.get("name", "")) == item_name else {}
-	if CONSUMABLE_RULES.is_removed_item(item_name):
-		return {}
-	var sources: Array = [catalog_db.get("아이템", []), item_db]
-	for source_value: Variant in sources:
-		if not (source_value is Array):
-			continue
-		for value: Variant in source_value as Array:
-			if not (value is Dictionary):
-				continue
-			var record: Dictionary = value as Dictionary
-			if str(record.get("name", "")) == item_name:
-				return record
-	# Runtime-earned / generated equipment may not exist in either catalog.
-	for raw_instance: Variant in item_instances.values():
-		if raw_instance is Dictionary:
-			var physical: Dictionary = raw_instance as Dictionary
-			if str(physical.get("name", "")) == item_name and physical.get("record", {}) is Dictionary:
-				return (physical.get("record", {}) as Dictionary).duplicate(true)
-	return {}
+	return ITEM_CATALOG_LOOKUP.find_many(
+		[catalog_db.get("아이템", []), item_db], item_instances, [item_name]).get(item_name, {})
 
 func _safe_enhancement_level(kind: String) -> int:
 	match kind:
@@ -3469,6 +3672,7 @@ func _destroy_enhancement_target(item_name: String, item_id: String = "") -> voi
 		var value: Variant = equipped_items.get(slot, {})
 		if value is Dictionary and (str((value as Dictionary).get("instance_id", "")) == item_id or (item_id.is_empty() and str((value as Dictionary).get("name", "")) == item_name)):
 			equipped_items[slot] = {}
+			_invalidate_equipment_static()
 
 func _equipment_enhancement_level(slot: String) -> int:
 	var value: Variant = equipped_items.get(slot, {})
@@ -3528,6 +3732,7 @@ func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 		hud.show_message("드래곤의 성수는 45레벨부터 사용 가능합니다")
 		return false
 	var amount: int = AIN_SERVICE.charge_amount(base_name, level)
+	amount = int(round(float(amount)*(1.0+growth.bonus("blessing_charge:percent")/100.0)))
 	var charged: int = ain_service.charge(amount)
 	if charged <= 0:
 		hud.show_message("아인하사드 축복이 최대치입니다")
@@ -3784,7 +3989,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 		hud.show_message("HP 물약 재사용 대기 %s" % _format_seconds_short(cooldown_left))
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
-	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS
+	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
 	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
@@ -3822,6 +4027,9 @@ func _on_map_selected(map_id: String) -> void:
 
 func _update_hud() -> void:
 	stat_hud_refresh_pending = false
+	# Every equipment, enhancement, card, collection, growth, awakening,
+	# passive-learning and load transaction publishes through this entry point.
+	_invalidate_equipment_static()
 	_sync_item_instances()
 	_refresh_speed_modifiers()
 	var display_max_hp: int = _effective_max_hp()
@@ -3853,6 +4061,8 @@ func _update_hud() -> void:
 	hud.set_character_state(character_state)
 	if hud.has_method("set_card_collection_state"):
 		hud.call("set_card_collection_state", card_draw_fusion.export_state())
+	if hud.has_method("set_option_awakening_state"):
+		hud.call("set_option_awakening_state", option_awakening.export_state())
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	if hud.has_method("set_quickslot_state"):
@@ -3866,25 +4076,42 @@ func _refresh_combat_hud() -> void:
 	# HP-only changes must not queue an equipment/character/inventory rebuild.
 	var display_max_hp: int = int(hud.character_state.get("max_hp", max_hp))
 	var display_max_mp: int = int(hud.character_state.get("max_mp", max_mp))
+	hud.character_state["gold"] = gold
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
 func save_path() -> String:
+	if growth.development: return "user://twilight_growth_lab_v1.json"
 	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
 
+func _request_general_save() -> void:
+	# Autosave requests in one frame share one commit. Transactions and explicit
+	# saves still call _save_game directly and complete before returning.
+	if general_save_pending:return
+	general_save_pending=true
+	call_deferred("_commit_general_save")
+
+func _commit_general_save() -> void:
+	if not general_save_pending:return
+	general_save_pending=false
+	_save_game(true)
+
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if option_awakening.save_blocked or not option_awakening.problem.is_empty():
+		if not quiet: hud.show_message("각성 저장 보호 중 · 정상 저장을 다시 불러오세요")
+		return ERR_UNAVAILABLE
 	if equipment_collections.save_blocked:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","growth"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
 	if source_save_blocked:
 		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
 		return ERR_UNAVAILABLE
-	# The collection transaction already validated a staged inventory; do not mutate live gear before disk commit.
-	if not collection_override.has("inventory"): _sync_item_instances()
+	# Transactions supply validated staged state. Commit it before mutating live resources.
+	if collection_override.is_empty(): _sync_item_instances()
 	var data: Dictionary = {
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
@@ -3911,6 +4138,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"gold": gold,
 		"inventory": inventory,
 		"equipment_collections": equipment_collections.export_state(),
+		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"crafting_log": crafting_log,
@@ -3933,6 +4161,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
 		"card_draw_fusion": card_draw_fusion.export_state(),
+		"card_option_awakening": option_awakening.export_state(),
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
@@ -3978,10 +4207,20 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var growth_error: String = growth.validate(data.get("growth",growth.empty_state()))
+	if not growth_error.is_empty():
+		equipment_collections.save_blocked = true
+		hud.show_message(growth_error)
+		return
 	var collection_error: String = equipment_collections.check_load(data)
 	if not collection_error.is_empty():
 		equipment_collections.save_blocked = true
 		hud.show_message(collection_error)
+		return
+	var awakening_error: String = option_awakening.check_load(data)
+	if not awakening_error.is_empty():
+		equipment_collections.save_blocked = true
+		hud.show_message(awakening_error)
 		return
 	var saved_map_id: String = str(data.get("map_id", ""))
 	if saved_map_id in ["albino_03","albino_04"]:
@@ -4019,7 +4258,7 @@ func _load_game(quiet: bool) -> void:
 			and saved_map_id in migration.map_ids
 			and int(data.get("map_layout_revision",-1))==int(migration.from_revision)
 			and (int(native_saved_field.data.layout_revision)==int(migration.to_revision)
-				or (saved_map_id=="aden_world" and int(migration.to_revision)==2026102002 and int(native_saved_field.data.layout_revision)==preload("res://scripts/maps/png_world_scale.gd").ADEN_REVISION))
+				or (saved_map_id in ["aden_world","faith_01","faith_02","faith_03","faith_04"] and int(migration.to_revision)==2026102002 and int(native_saved_field.data.layout_revision)==(preload("res://scripts/maps/png_world_scale.gd").ADEN_REVISION if saved_map_id=="aden_world" else preload("res://scripts/maps/png_world_scale.gd").FAITH_REVISION)))
 			and str(data.get("native_png_review_sha256",""))==saved_plan)
 		if native_saved_field==null or (plan_changed and not known_native_upgrade):
 			source_save_blocked=true
@@ -4036,17 +4275,17 @@ func _load_game(quiet: bool) -> void:
 				return
 			data=data.duplicate(true)
 			data["position"]=[];data["map_layout_revision"]=-1
-		elif has_native_position and saved_map_id=="aden_world" and not plan_changed and int(data.get("map_layout_revision",-1))!=int(native_saved_field.data.layout_revision):
+		elif has_native_position and saved_map_id in ["aden_world","faith_01","faith_02","faith_03","faith_04"] and not plan_changed and int(data.get("map_layout_revision",-1))!=int(native_saved_field.data.layout_revision):
 			# Same authenticated PNG/plan, explicit old world units. Never guess
 			# a ratio from arbitrary saved pixels or overwrite the original save.
-			var old_scales: Dictionary={2026102002:1.0,2026102003:2.0}
+			var old_scales: Dictionary={2026102002:1.0,2026102003:2.0} if saved_map_id=="aden_world" else {2026102002:1.0}
 			var old_revision: int=int(data.get("map_layout_revision",-1))
 			if not old_scales.has(old_revision):
-				source_save_blocked=true;hud.show_message("아덴 저장 좌표 버전을 확인할 수 없습니다");return
+				source_save_blocked=true;hud.show_message("지도 저장 좌표 버전을 확인할 수 없습니다");return
 			var original_hash: String=FileAccess.get_sha256(save_path())
 			var backup_path: String=save_path()+".pre-aden-scale-"+original_hash
 			if (not FileAccess.file_exists(backup_path) and DirAccess.copy_absolute(save_path(),backup_path)!=OK) or FileAccess.get_sha256(backup_path)!=original_hash:
-				source_save_blocked=true;hud.show_message("아덴 좌표 이전 백업 실패: 저장 파일을 보존합니다");return
+				source_save_blocked=true;hud.show_message("지도 좌표 이전 백업 실패: 저장 파일을 보존합니다");return
 			data=data.duplicate(true)
 			var raw: Variant=data.get("position",[])
 			var position: Vector2=Vector2.INF
@@ -4081,7 +4320,15 @@ func _load_game(quiet: bool) -> void:
 			hud.append_log("스킬 저장 이전 중단 · 원본 백업 실패 · 오류 %d" % backup_error)
 			if not quiet: hud.show_message("저장 이전 백업 실패")
 			return
+	if not option_awakening.prepare_load(data):
+		equipment_collections.save_blocked = true
+		hud.show_message("각성 저장 이전 실패 · 기존 저장을 보존합니다")
+		return
 	if not equipment_collections.accept_load(data): return
+	if not option_awakening.accept_load(data):
+		equipment_collections.save_blocked = true
+		return
+	growth.restore(data.get("growth",growth.empty_state()))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
 	source_save_blocked = false
@@ -4164,6 +4411,8 @@ func _load_game(quiet: bool) -> void:
 		enhancement_levels = enhancement_value as Dictionary
 	var stored_instances: Variant = data.get("item_instances", {})
 	item_instances = stored_instances as Dictionary if stored_instances is Dictionary else {}
+	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
+		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
 	for raw_id: Variant in item_instances.keys():
 		if str(raw_id).is_valid_int():
@@ -4175,6 +4424,7 @@ func _load_game(quiet: bool) -> void:
 	consumable_service.call("migrate_legacy_elemental")
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
+	_invalidate_equipment_static()
 	_restore_equipped_visuals()
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 	_refresh_skill_stealth_visual()
@@ -4202,6 +4452,10 @@ func _load_game(quiet: bool) -> void:
 		var position_array: Array = position_value as Array
 		if position_array.size() >= 2:
 			var saved_position: Vector2 = Vector2(float(position_array[0]), float(position_array[1]))
+			if field_map is NativePngField and not field_map.line_clear(saved_position,saved_position):
+				# Old saves can refer to a cell that is open in AStar but blocked
+				# at the actor's true foot. Snap nearby, never into an obstacle.
+				saved_position=field_map.nearest_safe_click_destination(saved_position,4)
 			if _is_walkable_world(saved_position):
 				player.global_position = saved_position
 				player.camera.reset_smoothing()
@@ -4317,6 +4571,7 @@ func _ensure_job_class_visual() -> void:
 	if record.is_empty():
 		return
 	equipped_catalog["변신"] = record.duplicate(true)
+	_invalidate_equipment_static()
 	_apply_transform_visual(record)
 	_refresh_speed_modifiers()
 
@@ -4332,6 +4587,7 @@ func _on_job_class_selected(job_name: String) -> void:
 	var record: Dictionary = _job_transform_record(job_class)
 	if not record.is_empty():
 		equipped_catalog["변신"] = record.duplicate(true)
+		_invalidate_equipment_static()
 		_apply_transform_visual(record)
 	_enforce_weapon_class_compatibility(false)
 	_enforce_shield_weapon_compatibility(false)
@@ -4641,6 +4897,7 @@ func _unequip_item_reference(reference: String) -> void:
 	for slot: String in equipped_items.keys():
 		if str(equipped_items[slot].get("instance_id","")) != id: continue
 		equipped_items.erase(slot)
+		_invalidate_equipment_static()
 		hp = mini(hp,_effective_max_hp())
 		mp = mini(mp,_effective_max_mp())
 		_refresh_speed_modifiers()
@@ -4709,6 +4966,11 @@ func _run_auto_item_quickslots(delta: float) -> void:
 	var settings: Dictionary = get_consumable_auto_settings()
 	var candidates: Array[Dictionary] = []
 	var seen: Dictionary = {}
+	var active_entries: Array[Dictionary] = []
+	# Candidate collection does not consume items or change buffs. Reuse these
+	# expensive derived stats for this poll; the next poll reads fresh values.
+	var maximum_hp: int = -1
+	var maximum_mp: int = -1
 	for value: Variant in quickslots:
 		if not value is Dictionary:
 			continue
@@ -4719,11 +4981,19 @@ func _run_auto_item_quickslots(delta: float) -> void:
 		if seen.has(item) or int(inventory.get(item, 0)) <= 0 or float(item_use_cooldowns.get(item, 0)) > 0:
 			continue
 		seen[item] = true
-		var record: Dictionary = _find_catalog_item_record(item)
+		active_entries.append(entry)
+	var records: Dictionary = ITEM_CATALOG_LOOKUP.find_many(
+		[catalog_db.get("아이템", []), item_db], item_instances, seen.keys())
+	for entry: Dictionary in active_entries:
+		var item: String = str(entry.get("id", ""))
+		var record: Dictionary = records.get(item, {})
 		if int(record.get("heal", 0)) > 0 and float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0)) > 0.0:
 			continue
 		var spec: Dictionary = CONSUMABLE_RULES.definition(item)
-		if not CONSUMABLE_AUTO.wanted(item, record, spec, settings, hp, _effective_max_hp(), mp, _effective_max_mp(), job_class, active_item_buffs):
+		if maximum_hp < 0:
+			maximum_hp = _effective_max_hp()
+			maximum_mp = _effective_max_mp()
+		if not CONSUMABLE_AUTO.wanted(item, record, spec, settings, hp, maximum_hp, mp, maximum_mp, job_class, active_item_buffs):
 			continue
 		if not _quickslot_auto_allowed(entry):
 			continue
@@ -4763,13 +5033,16 @@ func _skill_owned_for_current_job(skill: Dictionary) -> bool:
 	var skill_class: String = str(skill.get("class", "공용"))
 	return skill_class == "공용" or skill_class == job_class
 
+func _non_original_skill_rows() -> Array[Dictionary]:
+	# Keep legacy migration data in its own array. The active 125-row catalogue
+	# normally contains only original IDs, so scanning it for extra passive
+	# fields on every stat query does no useful work.
+	_ensure_skill_record_index()
+	return non_original_skill_rows
+
 func _passive_skill_total(key: String) -> int:
 	var total: int = int(original_skills.stat(key)) if original_skills != null else 0
-	for value: Variant in skills_db:
-		if not (value is Dictionary):
-			continue
-		var skill: Dictionary = value as Dictionary
-		if skill.get("origin", "") == "LINEAGEM_20250617": continue
+	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill) or SKILL_RULES.passive_trigger(skill) != "always":
 			continue
 		total += int(skill.get(key, 0))
@@ -5000,11 +5273,7 @@ func _break_invisibility() -> void:
 
 func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> void:
 	if original_skills != null: original_skills.trigger(trigger_name, target)
-	for value: Variant in skills_db:
-		if not (value is Dictionary):
-			continue
-		var skill: Dictionary = value as Dictionary
-		if skill.get("origin", "") == "LINEAGEM_20250617": continue
+	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
 			continue
 		if SKILL_RULES.passive_trigger(skill) != trigger_name:
@@ -5042,13 +5311,28 @@ func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> voi
 			skill_cooldowns[skill_name] = cooldown
 		hud.append_log("%s 패시브 발동" % skill_name)
 
-func _skill_record(skill_name: String) -> Dictionary:
+func _rebuild_skill_record_index() -> void:
+	# Keep first-match name/ID precedence of the former linear scan. Tests and
+	# migration adapters may replace skills_db with another Array at runtime.
+	skill_record_index.clear()
+	non_original_skill_rows.clear()
 	for value: Variant in skills_db:
-		if value is Dictionary:
-			var skill: Dictionary = value as Dictionary
-			if str(skill.get("name", "")) == skill_name or str(skill.get("id", "")) == skill_name:
-				return skill
-	return {}
+		if not value is Dictionary: continue
+		var record: Dictionary = value
+		if record.get("origin","")!="LINEAGEM_20250617":non_original_skill_rows.append(record)
+		for key: String in [str(record.get("name", "")), str(record.get("id", ""))]:
+			if not skill_record_index.has(key):
+				skill_record_index[key] = record
+	indexed_skills_db = skills_db
+	indexed_skills_count = skills_db.size()
+
+func _ensure_skill_record_index() -> void:
+	if not is_same(indexed_skills_db, skills_db) or indexed_skills_count != skills_db.size():
+		_rebuild_skill_record_index()
+
+func _skill_record(skill_name: String) -> Dictionary:
+	_ensure_skill_record_index()
+	return skill_record_index.get(skill_name, {})
 
 func _cast_job_skill(skill_name: String) -> bool:
 	var skill: Dictionary = _skill_record(skill_name)
@@ -5084,7 +5368,14 @@ func _cast_job_skill(skill_name: String) -> bool:
 		_start_skill_cooldown(skill)
 		if SKILL_RULES.has_target(effect):
 			auto_attack_timer = maxf(auto_attack_timer, SKILL_RULES.global_cooldown_seconds(skill))
-		_update_hud()
+		# Damage/status casts only spend MP/ammo and queue a motion marker.
+		# Buffs, healing and teleport still publish the complete derived sheet.
+		if effect in ["damage", "turnUndead", "charge", "stun", "silence", "poison", "bleed", "hold", "fear"]:
+			_refresh_combat_hud()
+			if int(skill.get("ammo_per_hit", 0)) > 0 and hud.has_method("set_quick_items"):
+				hud.call("set_quick_items", inventory)
+		else:
+			_update_hud()
 	return success
 
 func _spend_skill_mp(skill: Dictionary) -> bool:
@@ -5229,7 +5520,7 @@ func _cast_job_charge_skill(skill: Dictionary) -> bool:
 		return true
 	var path: PackedVector2Array = find_world_path(source, target.global_position)
 	if path.is_empty():
-		hud.show_message("돌진 경로를 찾을 수 없습니다")
+		hud.show_message("돌진 경로 준비 중 · 잠시 후 다시 시도하세요" if _native_route_pending() else "돌진 경로를 찾을 수 없습니다")
 		return false
 	var planned: PackedVector2Array = PackedVector2Array()
 	var previous: Vector2 = source
@@ -5554,8 +5845,11 @@ func _on_class_selected(value: int) -> void:
 func _on_card_pack_draw_requested(category: String) -> void:
 	if not OS.is_debug_build():
 		return
+	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
+	var cards_before: Dictionary = card_draw_fusion.export_state()
+	var roll_before: int = card_draw_fusion.rng.state
 	var result: Dictionary = card_draw_fusion.draw_pack(category)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "뽑기 실패")))
@@ -5570,16 +5864,23 @@ func _on_card_pack_draw_requested(category: String) -> void:
 		category, int(grades["고급"]), int(grades["희귀"]),
 		int(grades["영웅"]), int(grades["전설"])
 	]
+	if _save_game(true) != OK:
+		card_draw_fusion.import_state(cards_before)
+		card_draw_fusion.rng.state = roll_before
+		hud.show_message("뽑기 저장 실패 · 카드 획득 내역을 복구했습니다")
+		return
+	_update_hud()
 	hud.show_message(message)
 	hud.append_log(message)
 	hud.call("set_card_draw_fusion_result", category, message)
-	hud.call("set_card_collection_state", card_draw_fusion.export_state())
-	_save_game(true)
 	hud.call("present_card_reveal", category, result, false)
 
 func _on_card_fusion_requested(category: String, grade: String) -> void:
+	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
+	var cards_before: Dictionary = card_draw_fusion.export_state()
+	var roll_before: int = card_draw_fusion.rng.state
 	var result: Dictionary = card_draw_fusion.fuse(category, grade)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "합성 실패")))
@@ -5592,12 +5893,64 @@ func _on_card_fusion_requested(category: String, grade: String) -> void:
 	var pity_card: Dictionary = result.get("pity_reward", {}) as Dictionary
 	if not pity_card.is_empty():
 		message += " · 누적 실패 보상: %s" % str(pity_card.get("name", ""))
+	if _save_game(true) != OK:
+		card_draw_fusion.import_state(cards_before)
+		card_draw_fusion.rng.state = roll_before
+		hud.show_message("합성 저장 실패 · 중복 카드 재료를 복구했습니다")
+		return
+	_update_hud()
 	hud.show_message(message)
 	hud.append_log(message)
 	hud.call("set_card_draw_fusion_result", category, message)
-	hud.call("set_card_collection_state", card_draw_fusion.export_state())
-	_save_game(true)
 	hud.call("present_card_reveal", category, result, true)
+
+func _option_awakening_busy() -> bool:
+	return option_awakening_transaction_busy or (hud.has_method("is_option_awakening_busy") and bool(hud.call("is_option_awakening_busy")))
+
+func _on_option_awakening_open_requested(category: String, target_id: String) -> void:
+	if _option_awakening_busy(): return
+	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")): return
+	hud.call("set_option_awakening_view", option_awakening.view(category, target_id))
+
+func _on_option_awakening_feed_requested(category: String, target_id: String, materials: Dictionary) -> void:
+	if _option_awakening_busy(): return
+	option_awakening_transaction_busy = true
+	var result: Dictionary = option_awakening.feed(category, target_id, materials)
+	option_awakening_transaction_busy = false
+	var snapshot: Dictionary = result.get("snapshot", option_awakening.view(category, target_id))
+	hud.call("set_option_awakening_view", snapshot)
+	if not bool(result.get("ok", false)):
+		hud.show_message(str(result.get("error", "각성 재료를 적용하지 못했습니다")))
+		return
+	_update_hud()
+	var message: String = "옵션 각성 경험치 %d / %d · 중복 카드 재료 적용 완료" % [int(snapshot.get("experience", 0)), int(snapshot.get("required_experience", 100))]
+	hud.show_message(message)
+	hud.append_log(message)
+
+func _on_option_awakening_attempt_requested(category: String, target_id: String) -> void:
+	if _option_awakening_busy(): return
+	option_awakening_transaction_busy = true
+	var result: Dictionary = option_awakening.awaken(category, target_id)
+	option_awakening_transaction_busy = false
+	var snapshot: Dictionary = result.get("snapshot", option_awakening.view(category, target_id))
+	hud.call("set_option_awakening_view", snapshot)
+	if not bool(result.get("ok", false)):
+		hud.show_message(str(result.get("error", "옵션 각성을 진행하지 못했습니다")))
+		return
+	_update_hud()
+	# The runtime commits gold, experience, outcome and RNG together before this point.
+	_sync_option_awakening_auras()
+	var card: Dictionary = snapshot.get("target_record", {})
+	var success: bool = bool(result.get("success", false))
+	var message: String = "%s 옵션 각성 %s" % [str(card.get("name", "")), "성공" if success else "실패"]
+	if not success:
+		message += " · 경험치 %d 환급" % int(result.get("refunded_experience", 0))
+	hud.append_log(message)
+	var presentation: Dictionary = result.duplicate(true)
+	presentation["category"] = category
+	presentation["message"] = message
+	presentation["bonus_lines"] = snapshot.get("applied_options", []) if success else []
+	hud.call("present_option_awakening_result", card, presentation, presentation_settings)
 
 func _equip_catalog(category: String, record: Dictionary) -> void:
 	if category == "아이템":
@@ -5607,6 +5960,7 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		return
 	var old_max_hp: int = _effective_max_hp()
 	equipped_catalog[category] = record.duplicate(true)
+	_invalidate_equipment_static()
 	if category == "마법인형" or category == "성물":
 		hp_recovery_elapsed = 0.0
 		mp_recovery_elapsed = 0.0
@@ -5691,6 +6045,7 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 		equipped_items[equip_slot]["instance_id"] = selected_id
 		if equip_slot == "weapon":
 			_enforce_shield_weapon_compatibility(false)
+		_invalidate_equipment_static()
 		_refresh_speed_modifiers()
 		var new_max_hp: int = _effective_max_hp()
 		if new_max_hp > old_max_hp:
@@ -5708,6 +6063,22 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 
 func _directional_image_path(kind: String, record: Dictionary) -> String:
 	var source_id: String = str(record.get("sourceId", ""))
+	# PR122: explicit presentation-only source sharing; combat/catalog IDs remain distinct.
+	# Mythic male Dark Elf/Gunner use their female source; both colored
+	# Lance Masters use the ordinary transform:44 source with independent tints.
+	if kind == "transform":
+		var visual_donors: Dictionary = {"138":"139", "140":"141", "179":"44", "182":"44"}
+		if visual_donors.has(source_id):
+			var donor_id: String = str(visual_donors[source_id])
+			var donor_metadata: Dictionary = directional_art.get("transform:" + donor_id, {})
+			var donor_directional: String = str(donor_metadata.get("path", ""))
+			if not donor_directional.is_empty() and ResourceLoader.exists(donor_directional):
+				return donor_directional
+			for donor_record: Dictionary in catalog_db.get("변신", []):
+				if str(donor_record.get("sourceId", "")) == donor_id:
+					var donor_path: String = str(donor_record.get("image_path", ""))
+					if ResourceLoader.exists(donor_path): return donor_path
+					break
 	var key: String = "%s:%s" % [kind, source_id]
 	var value: Variant = directional_art.get(key, {})
 	if value is Dictionary:
@@ -5721,13 +6092,16 @@ func _directional_image_path(kind: String, record: Dictionary) -> String:
 func _apply_transform_visual(record: Dictionary) -> void:
 	if record.is_empty():
 		player.clear_transform_visual()
+		_sync_option_awakening_aura("변신")
 		return
 	var path: String = _directional_image_path("transform", record)
 	var speed_multiplier: float = float(record.get("speed", 1.0))
 	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", record, path))
+	_sync_option_awakening_aura("변신")
 
 func _apply_doll_visual(record: Dictionary) -> void:
 	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)
+	_sync_option_awakening_aura("마법인형")
 
 func _build_directional_frames(sprite: AnimatedSprite2D, texture: Texture2D) -> void:
 	var frames: SpriteFrames = SpriteFrames.new()
@@ -5757,6 +6131,42 @@ func _direction_animation_name(direction_value: int) -> String:
 
 func _apply_relic_visual(record: Dictionary) -> void:
 	relic_motion.configure(record, relic_sprite, player, _drop_grade_color(str(record.get("grade", "일반"))))
+	_sync_option_awakening_aura("성물")
+
+func _sync_option_awakening_auras() -> void:
+	for category: String in ["변신", "마법인형", "성물"]:
+		_sync_option_awakening_aura(category)
+
+func _sync_option_awakening_aura(category: String) -> void:
+	var raw: Variant = equipped_catalog.get(category, {})
+	var record: Dictionary = raw if raw is Dictionary else {}
+	var awakened: bool = not record.is_empty() and option_awakening.is_awakened(category, record)
+	var aura: Node2D = option_awakening_auras.get(category) as Node2D
+	if not awakened:
+		if is_instance_valid(aura): aura.call("set_awakened", false)
+		return
+	var target: Node2D
+	var parent: Node2D
+	match category:
+		"변신":
+			target = player.transform_sprite
+			parent = player
+		"마법인형":
+			target = companion_sprite
+			parent = $Companion
+		"성물":
+			target = relic_sprite
+			parent = self
+		_:
+			return
+	if not is_instance_valid(target): return
+	if not is_instance_valid(aura):
+		aura = OPTION_AWAKENING_AURA.new()
+		aura.name = "OptionAwakeningAura"
+		parent.add_child(aura)
+		option_awakening_auras[category] = aura
+	aura.call("configure", target, category, str(record.get("grade", "영웅")), awakened, presentation_settings)
+	aura.z_index = target.z_index
 
 func _restore_equipped_visuals() -> void:
 	var transform_value: Variant = equipped_catalog.get("변신", {})
@@ -5771,6 +6181,9 @@ func _restore_equipped_visuals() -> void:
 	_refresh_speed_modifiers()
 
 func _all_equipped_records() -> Array[Dictionary]:
+	if not equipment_records_dirty:return equipment_records_cache
+	equipment_records_dirty=false
+	equipment_record_rebuilds+=1
 	var records: Array[Dictionary] = []
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
@@ -5782,7 +6195,11 @@ func _all_equipped_records() -> Array[Dictionary]:
 			records.append(_source_catalog_record("아이템", item_value as Dictionary))
 	var collection_record: Dictionary = equipment_collections.stat_record()
 	if not collection_record.is_empty(): records.append(collection_record)
-	return records
+	var growth_record: Dictionary = growth.stat_record()
+	if not growth_record.is_empty(): records.append(growth_record)
+	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
+	equipment_records_cache=records
+	return equipment_records_cache
 
 func _normalized_weapon_type(raw_type: String) -> String:
 	var value: String = raw_type.strip_edges()
@@ -6023,6 +6440,7 @@ func _enforce_shield_weapon_compatibility(quiet: bool = false) -> void:
 		return
 	var offhand_name: String = str(offhand.get("name", "방패"))
 	equipped_items["offhand"] = {}
+	_invalidate_equipment_static()
 	if not quiet:
 		hud.show_message("현재 무기와 방패를 함께 착용할 수 없어 방패가 해제되었습니다")
 	hud.append_log("방패 자동 해제 · %s / 무기 %s" % [offhand_name, _current_weapon_type()])
@@ -6048,6 +6466,7 @@ func _enforce_weapon_class_compatibility(quiet: bool = false) -> void:
 		return
 	var item_name: String = str(weapon.get("name", "무기"))
 	equipped_items["weapon"] = {}
+	_invalidate_equipment_static()
 	_refresh_speed_modifiers()
 	if not quiet:
 		hud.show_message("클래스 변경으로 %s 장착 해제" % item_name)
@@ -6159,7 +6578,7 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
-	var total: int = 0
+	var total: int = option_awakening.accuracy_bonus(kind)
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -6196,8 +6615,12 @@ func _record_attack_speed_percent(record: Dictionary) -> float:
 
 func _effective_move_speed_multiplier() -> float:
 	var multiplier: float = 1.0
+	var awakening_percent: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		multiplier *= _record_move_speed_multiplier(record)
+		awakening_percent += float(record.get("speedBonusPct", 0.0))
+	# Awakening adds percentage points before the existing buff/encumbrance factors.
+	multiplier += awakening_percent / 100.0
 	multiplier *= _passive_skill_speed_multiplier()
 	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
 	multiplier *= _inventory_encumbrance_multiplier()
@@ -6529,7 +6952,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
-	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat"))
+	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat"))
 
 func _record_dg(record: Dictionary) -> int:
 	if record.has("dg"):
@@ -6894,7 +7317,11 @@ func _queue_player_area_attack(skill: Dictionary) -> bool:
 	return true
 
 func _cancel_player_attack(id: int) -> void:
-	if int(pending_attack.get("id", -1)) == id: pending_attack.clear()
+	if int(pending_attack.get("id", -1)) == id:
+		var original: Dictionary = pending_attack.get("original_skill", pending_attack.get("area_skill", {}))
+		if original_skills != null and not original.is_empty():
+			original_skills.vfx.cancel_cast(TwilightOriginalSkillService.presentation_id(original))
+		pending_attack.clear()
 
 func _release_player_attack(id: int) -> void:
 	if int(pending_attack.get("id", -1)) != id: return
@@ -6988,6 +7415,10 @@ func apply_presentation_settings(settings: Dictionary) -> void:
 		combat_vfx.detail_limit = 6 if presentation_settings.effect_detail == "low" else COMBAT_VFX.VISUALS.DETAIL_LIMIT
 	if is_instance_valid(combat_flights):
 		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" else 64
+	for raw: Variant in option_awakening_auras.values():
+		if is_instance_valid(raw): raw.call("apply_settings", presentation_settings)
+	if is_instance_valid(hud) and hud.has_method("apply_option_awakening_settings"):
+		hud.call("apply_option_awakening_settings", presentation_settings)
 	if is_instance_valid(player):
 		player.motion.reduced_motion = presentation_settings.reduced_motion
 		if bool(presentation_settings.reduced_motion): player.motion.visual_hold = 0.0
@@ -7004,19 +7435,56 @@ func _notification(what: int) -> void:
 func constrain_original_motion(actor: CharacterBody2D) -> void:
 	if field_map is NativePngField and actor.velocity!=Vector2.ZERO:
 		var delta: float=actor.get_physics_process_delta_time()
+		if delta<=0.0: return
 		var motion: Vector2=actor.velocity*delta
-		if not field_map.line_clear(actor.global_position,actor.global_position+motion):
-			# Godot's circle/convex vertex solver can settle inside the precise
-			# foot margin at low FPS. Resolve the real physics contact's tangent
-			# before moving, using the same reviewed geometry as navigation.
+		var origin: Vector2=actor.global_position
+		if not field_map.line_clear(origin,origin+motion):
+			# Never push through a genuine obstacle. Preserve a legal tangent or
+			# one safe axis when a diagonal foot sweep grazes coarse PNG cells.
 			var contact:=KinematicCollision2D.new()
-			var tangent: Vector2=Vector2.ZERO
-			if actor.test_move(actor.global_transform,motion,contact):tangent=motion.slide(contact.get_normal())
-			actor.velocity=tangent/delta if field_map.line_clear(actor.global_position,actor.global_position+tangent) else Vector2.ZERO
+			var options: Array[Vector2]=[]
+			if actor.test_move(actor.global_transform,motion,contact):
+				options.append(motion.slide(contact.get_normal()))
+			if actor is TwilightPlayer:
+				var horizontal:=Vector2(motion.x,0.0)
+				var vertical:=Vector2(0.0,motion.y)
+				if absf(motion.x)>=absf(motion.y):
+					options.append(horizontal);options.append(vertical)
+				else:
+					options.append(vertical);options.append(horizontal)
+			actor.velocity=Vector2.ZERO
+			for candidate: Vector2 in options:
+				if candidate.length_squared()<0.000001: continue
+				if not field_map.line_clear(origin,origin+candidate): continue
+				if actor.test_move(actor.global_transform,candidate): continue
+				actor.velocity=candidate/delta
+				break
 	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
-		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
-		var source_clear: bool = field_map.source_line_clear(actor.global_position,target) if field_map is RemakePlayableField else field_map.line_clear(actor.global_position,target)
-		if not source_clear: actor.velocity = Vector2.ZERO
+		var delta: float=actor.get_physics_process_delta_time()
+		if delta<=0.0: return
+		var origin: Vector2=actor.global_position
+		var motion: Vector2=actor.velocity*delta
+		var target: Vector2=origin+motion
+		var source_clear: bool = field_map.source_line_clear(origin,target) if field_map is RemakePlayableField else field_map.line_clear(origin,target)
+		if not source_clear:
+			actor.velocity=Vector2.ZERO
+			# Source-grid diagonal checks can reject a step that has a clear
+			# cardinal component. Try only physically and navigationally legal
+			# axes; never turn source walls into traversable terrain.
+			if actor is TwilightPlayer:
+				var horizontal:=Vector2(motion.x,0.0)
+				var vertical:=Vector2(0.0,motion.y)
+				var options: Array[Vector2]=[]
+				if absf(motion.x)>=absf(motion.y):
+					options.append(horizontal);options.append(vertical)
+				else:
+					options.append(vertical);options.append(horizontal)
+				for candidate: Vector2 in options:
+					if candidate.length_squared()<0.000001: continue
+					if not field_map.line_clear(origin,origin+candidate): continue
+					if actor.test_move(actor.global_transform,candidate): continue
+					actor.velocity=candidate/delta
+					break
 		elif field_map is RemakePlayableField and not field_map.point_clear(target):
 			# A streamed wall lets move_and_slide resolve the real circular foot
 			# and keep its tangent motion. Zeroing first deadlocks glancing paths.

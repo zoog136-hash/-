@@ -1,0 +1,36 @@
+{
+  "key": "transform:267",
+  "name": "Girtas",
+  "direction": "W",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v01-3D-load101",
+  "raw_path": "/workspace/scratch/girtas-W-run-load1-3D-v01/girtas-W-run-load1-3D-v01.png",
+  "raw_png": "/workspace/scratch/girtas-W-run-load1-3D-v01/girtas-W-run-load1-3D-v01.png",
+  "raw_sha256": "99303c22adbe291f1c6a0f60fcca7c02919688095f957152f613e822a523e1f3",
+  "raw_bytes": 1318315,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "request_sha256": "8b551c6da2e22b33e4df353dc5d4c3b2b6b2bacc7d2a957e45ba75a795df354b",
+  "expected_poses": 1,
+  "game_phases": [
+    1
+  ],
+  "newly_authored_poses": 1,
+  "source_visual_status": "PASS",
+  "identity_visual_status": "PASS",
+  "geometry_status": "PASS_STRICT_PARTIAL1",
+  "integration_ready": false,
+  "actor_approval": false,
+  "approved_actor_count_added": 0,
+  "visual_findings": [
+    "Independent actual nearLEFT flexed flatsole load1 and farRIGHTfrontdrive/nearLEFTreartrail AIR2 visible; faithful original Wmodel, longrobe, hardgoldrays and proper weapon/emptyhand.",
+    "Exactphysical Cs/scale/root/AIRfloor and full6compiledruntime remain HOLD, partialexpected1 sourceonly."
+  ],
+  "runtime_validation": "NOT_RUN_PARTIAL_SOURCE_ONLY",
+  "motion_visual_status": "PASS_SCOPED_ANATOMICAL_LEFT_LOAD_OR_OPPOSITE_DRIVE_AIR",
+  "independent_source_review_path": "/workspace/scratch/girtas-private-qc-v02-20261019/W-run-new-load1-AIR2-independent-source-QC-v01.json",
+  "independent_source_review_sha256": "cf16a5b43cb731df4549329e2099d52236f14d94d5883e8b666c46ed626d362f"
+}

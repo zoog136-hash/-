@@ -105,6 +105,8 @@ func all_maps() -> void:
 		if not filename.ends_with(".json"): continue
 		var definition: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/" + filename))
 		if not definition is Dictionary or not definition.has("map_id"): continue
+		# Only authored road geometry maps carry the bounds/roads schema.
+		if not definition.has("bounds") or not definition.has("roads"): continue
 		var before: String = JSON.stringify(definition)
 		var b: Array = definition.bounds
 		var bounds := Rect2(b[0], b[1], b[2], b[3])

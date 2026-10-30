@@ -1,0 +1,74 @@
+[
+  {
+    "key": "transform:412",
+    "direction": "N",
+    "role": "idle",
+    "generated_path": "/workspace/scratch/pr122-visual-repair-20261024/412-N-idle-five-original-one-repaired.png",
+    "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-N-idle-draft-v01.png",
+    "request": {
+      "prompt": "Repair this ONE existing NORTH/back-facing idle frame for character 412, using the padded 1024x1024 reference. Keep the character at EXACTLY THE SAME SMALL NATIVE SIZE and location in this 1024 canvas: about 500px tall, centered around x512/y512, with roughly 250px transparent margin above/below/left/right. Do not enlarge or reframe. Preserve all existing art, silver hair, black-gold-teal robe, anatomical hand grips, stance, boots, scythe shape and chains. There is a clipped gold outer scythe tip on the right, around x767,y580..610. Draw the missing tapered gold tip naturally into the available transparent margin to its right, reconnecting the same blade; do not shorten the blade, do not change the rest of the character, do not add particles/limbs. This is a tiny outpainting completion of an existing cut weapon, not a new character or pose. Fully transparent alpha PNG, same 1024x1024 canvas and same approximately 500px body size, no background haze or shadow rectangle, no text. Local production only; no chat image.",
+      "transparent_background": true,
+      "reference": "single clipped phase5 with transparent padded canvas",
+      "new_HD_file": "/workspace/generated_images/exec-adef8437-3361-475f-a2de-1cfb0edbc5a8.png",
+      "normalization_proof": "idle-phase5-normalization-proof.json"
+    },
+    "newly_authored_frames": 1,
+    "visual_review": {
+      "source_identity": "PASS: complete same scythe tip authored, original5 phases preserved exact RGBA",
+      "phase5_native_height": "462px strong height matches original462px after one HD-frame normalization",
+      "remaining": "Composed6-pose atlas/runtime inspection required, no final approval"
+    }
+  },
+  {
+    "key": "transform:412",
+    "direction": "S",
+    "role": "attack",
+    "generated_path": "/workspace/scratch/pr122-visual-repair2-20261024/412-S-attack-reviewed-contour-spacing.png",
+    "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-S-attack-draft-v01.png",
+    "request": {
+      "prompt": "LOCAL SPRITE PRODUCTION ONLY, no chat image. Repair the existing 412 female death-goddess S ATTACK six-frame sheet, preserving the character, all six original articulated poses and their reading order, camera, exact equipment and native scale. All six face SOUTH / screen DOWN, same front-facing view in every frame. Preserve silver hair, original black-gold-teal armor, slim body, connected arms, boots, chains and the SAME double-ended scythe. Fix the actual source ownership defect: loose solid gold/teal particles in the attack trail are incorrectly disconnected large components. Naturally integrate those effects into their OWN matching continuous scythe trails; no loose solid fragments or extra body components. Keep guard -> backswing -> loaded attack -> contact at frame3 -> follow-through -> recovery. Do not erase the attack effect or simplify body detail. Exactly six separate complete silhouettes, THREE equal columns TWO equal rows, true transparent background. Keep every blade tip, arm, hair strand, chain and effect fully INSIDE its own source cell with transparent breathing room; no neighboring-pose connections, no cut tips, no straight rectangular cuts, no direction flips or duplicate pose. No new weapon or limbs, no captions or grid, no haze joining cells. Output one PNG, same 1536x1024 sheet dimensions as reference. This is cleanup of the given existing six poses, not a new design.",
+      "transparent_background": true,
+      "reference": "original S attack plus catalog",
+      "postprocess": "Explicit visual binding of one alpha17 turquoise trail texel at342,569 to phase3. Complete exact RGBA contours translated into768px cells. No checker thresholds changed."
+    },
+    "newly_authored_frames": 6,
+    "visual_review": {
+      "source_identity": "PASS: front facing original equipment, black-gold-teal detail retained",
+      "phase_order": "PASS: six different poses, contact at phase3, follow-through and recovery",
+      "remaining": "Runtime and residue review required; no final approval",
+      "fragment": "RGBA114,160,140,17 belongs to phase3 turquoise trail; checked120x120 context crop, preserved once."
+    }
+  },
+  {
+    "key": "transform:412",
+    "direction": "W",
+    "role": "attack",
+    "generated_path": "/workspace/scratch/pr122-visual-repair2-20261024/412-W-attack-reviewed-contour-spacing.png",
+    "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-W-attack-draft-v01.png",
+    "newly_authored_frames": 0,
+    "request": {
+      "method": "Existing original6 contours, no new art service call. Explicitly reviewed one detached low-alpha effect texel at [271, 532] as phase3 trail; exact RGBA native part ownership, then768px source cells, no source pixel resampling.",
+      "source_checker_threshold_changes": 0
+    },
+    "visual_review": {
+      "component_context": "Internal160x160 context confirms turquoise blade-trail fragment; retained once in phase3; no anatomy changed",
+      "remaining": "Final visual/runtime approval remains HOLD"
+    }
+  },
+  {
+    "key": "transform:412",
+    "direction": "SE",
+    "role": "attack",
+    "generated_path": "/workspace/scratch/pr122-visual-repair2-20261024/412-SE-attack-reviewed-contour-spacing.png",
+    "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-SE-attack-draft-v01.png",
+    "newly_authored_frames": 0,
+    "request": {
+      "method": "Existing original6 contours, no new art service call. Explicitly reviewed one detached low-alpha effect texel at [574, 811] as phase3 trail; exact RGBA native part ownership, then768px source cells, no source pixel resampling.",
+      "source_checker_threshold_changes": 0
+    },
+    "visual_review": {
+      "component_context": "Internal160x160 context confirms turquoise blade-trail fragment; retained once in phase3; no anatomy changed",
+      "remaining": "Final visual/runtime approval remains HOLD"
+    }
+  }
+]

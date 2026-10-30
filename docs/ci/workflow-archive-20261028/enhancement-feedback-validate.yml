@@ -1,0 +1,54 @@
+name: Enhancement Feedback Validate
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/world.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'scripts/ui/enhancement_reveal.gd'
+      - 'assets/enhancement/**'
+      - 'tools/build_enhancement_audio.py'
+      - 'tests/enhancement*'
+      - 'tests/ui_stage4_item_instance_test.gd'
+      - '.github/workflows/enhancement-feedback-validate.yml'
+permissions:
+  contents: read
+concurrency:
+  group: enhancement-feedback-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  enhancement-feedback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resource preflight
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned engine and OpenGL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import, boot and physical-item regressions
+        run: python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1800 --logs test-results/enhancement --only import,bake_navigation,boot,enhancement_reveal_test,enhancement_feedback_gameplay_test,per_instance_enchantments_smoke_test,ui_stage4_item_instance_test,ui_pointer_transfer_test
+      - name: Actual OpenGL enhancement captures
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/enhancement-feedback"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          xvfb-run -a -s '-screen 0 1920x1480x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/enhancement_reveal_render_test.gd 2>&1 | tee test-results/enhancement/render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' test-results/enhancement/render.log; then exit 1; fi
+          grep -q ENHANCEMENT_RENDER_OK test-results/enhancement/render.log
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: enhancement-review-${{ github.sha }}
+          path: |
+            test-results/enhancement/
+            ${{ runner.temp }}/enhancement-feedback/**/enhancement-review/
+          if-no-files-found: error

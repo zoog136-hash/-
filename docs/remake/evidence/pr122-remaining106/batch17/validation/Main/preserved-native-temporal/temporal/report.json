@@ -1,0 +1,113 @@
+{
+	"capture_root": "/workspace/runtime/batch17/Preserved-Native-Temporal/temporal/captures",
+	"cases": [
+		{
+			"name": "알비노 변이된 골렘",
+			"native_phases": 144,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_2.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 144,
+			"report": "/workspace/runtime/batch17/Preserved-Native-Temporal/temporal/report-cases/preserved-golem.json",
+			"report_sha256": "b00c022a33c703b4e9ecc3b8c1ed1cdc2054ad9e4731663c97b11734c525606f",
+			"roles": 40,
+			"slug": "preserved-golem"
+		},
+		{
+			"name": "알비노 디어",
+			"native_phases": 144,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_4.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_4.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 144,
+			"report": "/workspace/runtime/batch17/Preserved-Native-Temporal/temporal/report-cases/preserved-deer.json",
+			"report_sha256": "dae8825df9474ad1cb8b149a1d47862e331a30df3ff2c57721934d0be0f1c22c",
+			"roles": 40,
+			"slug": "preserved-deer"
+		},
+		{
+			"name": "스파이더",
+			"native_phases": 128,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_1.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_1.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 128,
+			"report": "/workspace/runtime/batch17/Preserved-Native-Temporal/temporal/report-cases/preserved-spider.json",
+			"report_sha256": "2047bdda2189faf32d486362436d6530e8ed99da3613fc017aa37d61b84d1522",
+			"roles": 40,
+			"slug": "preserved-spider"
+		},
+		{
+			"name": "검은숲 거미",
+			"native_phases": 128,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_1.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_1.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 128,
+			"report": "/workspace/runtime/batch17/Preserved-Native-Temporal/temporal/report-cases/preserved-dark-spider.json",
+			"report_sha256": "34f6fd0798225e6c9adb8a2ba4063ffd42be6c8115bba08f7d30097de3101520",
+			"roles": 40,
+			"slug": "preserved-dark-spider"
+		},
+		{
+			"name": "왜곡의 타란툴라",
+			"native_phases": 128,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_1.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_1.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 128,
+			"report": "/workspace/runtime/batch17/Preserved-Native-Temporal/temporal/report-cases/preserved-tarantula.json",
+			"report_sha256": "71b7b12250fd84d7999267f2757b28f888e30a8c4a067cb801313fcc3dc7698f",
+			"roles": 40,
+			"slug": "preserved-tarantula"
+		},
+		{
+			"name": "알비노 이구아나",
+			"native_phases": 112,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_2.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 112,
+			"report": "/workspace/runtime/batch17/Preserved-Native-Temporal/temporal/report-cases/preserved-iguana-baseline.json",
+			"report_sha256": "c702314f49b8d99895826d6c2fe00717ca3ea8b86aeb9b04d07fce99b92b41dc",
+			"roles": 40,
+			"slug": "preserved-iguana-baseline"
+		}
+	],
+	"checks": 250861,
+	"clock": "all120Hz production advance/apply steps checked/logged; rich samples at20Hz plusnativechanges; actualdraw onnativechanges/start/end held across frame_post_draw and PNG I/O",
+	"completed_added": 0,
+	"direct_texture_assignment": false,
+	"failures": [],
+	"production_game_or_guard_changes": false,
+	"rendered": true,
+	"scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+	"simulation_step_seconds": 0.00833333333333333,
+	"user_directory": "/workspace/runtime/batch17/Preserved-Native-Temporal/temporal/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD",
+	"wall_microseconds": 367825533,
+	"wall_time_performance_claim": false
+}

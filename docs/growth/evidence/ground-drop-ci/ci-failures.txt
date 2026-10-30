@@ -1,0 +1,9 @@
+item-options	Existing equipment regression	2026-10-24T08:25:23.1494766Z [36;1m  if grep -E "SCRIPT ERROR:|ERROR:|SMOKE_FAILED|SMOKE FAIL|GROUND_DROP_FAIL:|ELEMENT INTEGRATION FAIL:" "${test}.log"; then exit 1; fi[0m
+item-options	Existing equipment regression	2026-10-24T08:26:17.6641747Z GROUND_DROP_FAIL: manual walk-to-pickup failed
+item-options	Existing equipment regression	2026-10-24T08:26:17.6642262Z GROUND_DROP_FAIL: manual item was not removed
+item-options	Existing equipment regression	2026-10-24T08:26:17.6646895Z GROUND_DROP_FAIL: AUTO did not find nearby ground drop
+item-options	Existing equipment regression	2026-10-24T08:26:17.6647383Z GROUND_DROP_FAIL: AUTO ground pickup did not grant loot
+item-options	Existing equipment regression	2026-10-24T08:26:17.6647842Z GROUND_DROP_FAIL: AUTO collected item was not removed
+item-options	Existing equipment regression	2026-10-24T08:26:17.6650456Z GROUND_DROP_FAIL: ground item missing from save snapshot
+item-options	Existing equipment regression	2026-10-24T08:26:17.6656180Z GROUND_DROP_FAIL: saved drop was not restored
+item-options	Existing equipment regression	2026-10-24T08:26:17.8197593Z GROUND_DROP_SMOKE_FAILED: 7 failure(s)

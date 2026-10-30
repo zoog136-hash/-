@@ -1,0 +1,71 @@
+{
+  "schema": "pr122-selective-two-support-repair-v1",
+  "actor": "transform:413",
+  "direction": "W",
+  "action": "run",
+  "confirmed_cause": "Native stance foot displacement did not match retained Player scale and cadence; prior fixture also omitted retained canvas metadata and passed Vector2.ONE instead of actual base_scale.",
+  "actual_fix": "Per-leg local phase-1 stance X only; actual fixture now retains canvas and base-scale metadata. Body, joints, materials, root, action order, clocks and game runtime code unchanged.",
+  "frames_rerendered": 2,
+  "frames_reused": 4,
+  "nodes_rerendered": 2,
+  "nodes_reused": 58,
+  "source_original_ownership": {
+    "original_visible_texels": 109922,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "minimum_owned_jacobian": 0.21403100001710285,
+  "known_defect_regressions_rejected": 5,
+  "measured_contact_scope": "ACTUAL_MAIN_PLAYER_SPRITE_TRANSFORM_WITH_PRESCRIBED_WORLD_TRANSLATION_NO_COLLISION_PHYSICS",
+  "before_contact_pairs": [
+    {
+      "elapsed": 0.08,
+      "phases": [
+        0.0,
+        1.0
+      ],
+      "side": "L-near",
+      "world_dx": -10.33984375,
+      "world_dy": 0.00390625
+    },
+    {
+      "elapsed": 0.08,
+      "phases": [
+        3.0,
+        4.0
+      ],
+      "side": "R-far",
+      "world_dx": -9.908203125,
+      "world_dy": 0.01953125
+    }
+  ],
+  "after_contact_pairs": [
+    {
+      "elapsed": 0.08,
+      "phases": [
+        0.0,
+        1.0
+      ],
+      "side": "L-near",
+      "world_dx": 0.00390625,
+      "world_dy": 0.033203125
+    },
+    {
+      "elapsed": 0.08,
+      "phases": [
+        3.0,
+        4.0
+      ],
+      "side": "R-far",
+      "world_dx": 0.001953125,
+      "world_dy": 0.01953125
+    }
+  ],
+  "six_pose_loop_runtime": "PASS",
+  "gameplay_and_saves_unchanged": true,
+  "collision_physics_contact": "NOT_TESTED",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "final_motion_approvals_added": 0,
+  "existing_unapproved_game_clips_replaced": 0,
+  "production_connected": false
+}

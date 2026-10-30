@@ -1,0 +1,53 @@
+{
+  "status": "ALLNEW6_SOURCE_VISUAL_STRICT_GEOMETRY_CROSSTRACK_UNIQUENESS_AND_RUNTIME_PROPOSAL_PASS_ACTOR_HOLD",
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "hit",
+  "version": "v04composite01",
+  "request_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/request.json",
+  "request_sha256": "b111245cbcb70d4142f8020e99a483446dcd387c5f2759845ff1546d4675e2f8",
+  "raw_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/halpas-NE-hit-v04composite01.png",
+  "raw_png": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/halpas-NE-hit-v04composite01.png",
+  "raw_sha256": "26709de9b0d14a538f6ab9f8eeb9f4136a48a6c37660cb03d120e9629d6afa97",
+  "raw_bytes": 7922740,
+  "image_size": [
+    3072,
+    4608
+  ],
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "new_imagegen_poses_this_revision": 3,
+  "previous_good_new_poses_preserved": 3,
+  "source_visual_status": "PASS",
+  "integration_ready": true,
+  "geometry_validation": "STRICT_COMPLETE6PASS_NOMINAL2048_ALL_ALPHA16_AND_RGBA_PRESERVED",
+  "cross_track_uniqueness_status": "PASS_NO_NEW6_RGBA_DUPLICATES_WITH_CURRENT_OTHER47_NATIVE_TRACKS",
+  "runtime_metadata_validation": "apply_reviewed_layout_PASS_NO_SOURCE_REGION_RGBA_OR_BYTES_CHANGE",
+  "private_normalized_source_flow_status": "PASS",
+  "visual_findings": [
+    "All six have correct NErear-right body/head/hip plane, rearhelmet/back spinal armor, no front face/pink breastplate. Faithful goldhorn closedhelmet, blackgoldplate, TWO solid purple crystal fan wings on samebackroots, LEFT-back tornburgundycape, original compactpurpleblade and coherent completehoveringlegs.",
+    "Exactly TWO continuous arm chains all6. Near/imageRIGHT shoulder-elbow-lowforearm-wrist-closedhand keeps originalblade LOW andgripped at hip. Only original EMPTY imageLEFT arm changes, with no thirdarm/downarm duplicate/raisedemptyRIGHTfist or detachedfloatingblade.",
+    "Six REAL reaction phases: NEW0 closedLEFTwaistfist/outward bracedelbow readyguard; preservedNEW1 smallonset LEFTfistbelowshoulder/ribs; preservedNEW2 clearhighLEFTpeak/headbackjerk; preservedNEW3 LEFTforearmdropsbelowhelmettosoulderbase/release; NEW4 handrelaxesatupperhip/elbowcloseribs residualrecoil; NEW5 handlowersinwardbesidethigh withlastwing/capesettle. Guard0andlate4/settle5 are actualnewart, not reusedidle frames.",
+    "Allsix forhit authored independently of idle/otherroles. Thisrevision adds3new0/4/5 while exactpriorgood1/2/3unchanged, so total6authored/0idleReuse. Scopedcurrentother47native tracks282savedgeometryframes checkedwithsameexistingstage rgba_sha256 guard: zero duplicate matches. No test/uniquenessguard weakened.",
+    "ExactRGBA noresample/mirror/mask/recolor/clean preservedallfullbody crops/alpha16, 6distinctvisiblefingerprints, unchanged strictcomplete6geometryC2048PASS with1536packingcells. Runtimeproposal helperPASS sourcebytes/regions/fingerprintsunchanged.",
+    "Private normalized7panel comparison againstactualNEidle0 showsconsistentphysicalhelmet/pauldron/girdle andcoherent0→1→2→3→4→5reaction/return; proposedCs[2496,2496,2624,2496,2608,2608] usephysicalbody landmarks/waistroot, never silhouettebbox or footclamp. ActualnativePlayer/rootQA stillneeded."
+  ],
+  "visual_limitations": [
+    "Rootmust integrate immutable newSpriteFrames/profile and run existingfocusedstage/resource/Player/action checks unchanged, thenactualrendered physicalscale/idleentry/hitreturn QC. Read-only assembly/sourceproposalPASS isnotactualPlayer or actorapproval.",
+    "Original v03 duplicate-failed raw/request and all failed/full/partial sourcework preserved. Existing405history/detail0/31/defaultOFF unchanged, actor/detailedcompletion+0."
+  ],
+  "assembly_proof_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/halpas-NE-hit-v04composite01.assembly.json",
+  "cross_track_uniqueness_proof_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/cross-track-uniqueness-proof.json",
+  "reviewed_runtime_layout_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/reviewed-runtime-layout-proposal.json",
+  "physical_landmark_proposal_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/physical-landmark-proposal.json",
+  "private_preview": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v04/allnew-sixflow-normalized-private.jpg",
+  "private_preview_bytes": 181226,
+  "chat_image_attachments": 0,
+  "imagegen_attempts_at_assembly": 0,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "reviewed_at": "2026-10-19T13:59:08.968754+00:00"
+}

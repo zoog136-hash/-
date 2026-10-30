@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-author-six-pose-atlas-v04.py", line 123, in <module>
+    main()
+  File "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-author-six-pose-atlas-v04.py", line 65, in main
+    require(type(canvas) is int and 256 <= canvas <= 4096 and canvas % 8 == 0, "Single fixed body-unit canvas required")
+  File "/workspace/scratch/mythic413-explicit-1536-or-2304-storage-proposal-20261020-v07/pr122-author-six-pose-atlas-v04.py", line 13, in require
+    raise ValueError(message)
+ValueError: Single fixed body-unit canvas required

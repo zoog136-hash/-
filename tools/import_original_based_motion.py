@@ -136,13 +136,17 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
     sheet has len(directions) physical rows and rows_count physical columns. A
     directions_axis="blocks4x2" sheet places E/SE/S/SW in a phase's first
     physical row and W/NW/N/NE in its second row, using four columns.
+    phase_grid2/3/4 use two/three/four temporal poses per physical row for one direction,
+    so newly authored long-limbed bodies can retain generous source gutters.
     Partial-direction columns/rows sheets need an explicitly reviewed canvas.
     Pixels stay untouched; only the resulting frame indices are normalized.
     """
     selected = reviewed_directions(directions)
     direction_count = len(selected)
-    if directions_axis not in {"columns", "rows", "blocks4x2"}:
+    if directions_axis not in {"columns", "rows", "blocks4x2", "phase_grid4", "phase_grid3", "phase_grid2"}:
         raise ValueError("Unknown direction axis")
+    if directions_axis in {"phase_grid4", "phase_grid3", "phase_grid2"} and direction_count != 1:
+        raise ValueError(directions_axis + " requires exactly one explicitly reviewed direction")
     if directions_axis == "blocks4x2" and direction_count != 8:
         raise ValueError("blocks4x2 does not support a direction subset")
     if directions_axis == "blocks4x2" and (type(rows_count) is not int or rows_count < 1):
@@ -174,7 +178,25 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
             raise ValueError(f"Expected exactly {expected} separated poses, found {len(bodies)}; review/re-author, never invent slots")
         # Normalize metadata to phase-major order, without transposing pixels.
         # Some long-weapon atlases put the eight directions in physical rows.
-        if directions_axis == "blocks4x2":
+        if directions_axis in {"phase_grid4", "phase_grid3", "phase_grid2"}:
+            # Spacious single-view authoring: the explicit temporal columns.
+            # This changes metadata ordering only. Keep every whole-source,
+            # connected-body, foreign-body, uniqueness and clipping guard.
+            columns = int(directions_axis[-1])
+            grid_rows = (rows_count + columns - 1) // columns
+            slots = [None] * rows_count
+            for item in bodies:
+                x1, y1, x2, y2 = item["box"]
+                column = int((x1 + x2) / 2 / source.width * columns)
+                physical_row = int((y1 + y2) / 2 / source.height * grid_rows)
+                slot = physical_row * columns + column
+                if slot >= rows_count or slots[slot] is not None:
+                    raise ValueError("Each " + directions_axis + " cell must contain exactly one separated pose")
+                slots[slot] = item
+            if any(item is None for item in slots):
+                raise ValueError("Each " + directions_axis + " cell must contain exactly one separated pose")
+            rows = [[item] for item in slots]
+        elif directions_axis == "blocks4x2":
             columns = 4
             physical_rows = [[None] * columns for _ in range(rows_count * 2)]
             for item in bodies:
@@ -221,6 +243,8 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                 x1, y1, x2, y2 = item["box"]
                 center_x = (x1 + x2) / 2
                 column = row_index if directions_axis == "rows" else direction
+                if directions_axis in {"phase_grid4", "phase_grid3", "phase_grid2"}:
+                    column = row_index % columns
                 if directions_axis == "blocks4x2":
                     column %= 4
                 if abs(center_x / source.width * columns - (column + .5)) > .55:
@@ -232,7 +256,7 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                     raise ValueError("A pose rectangle includes another body; cannot safely crop")
                 width, height = x2 - x1, y2 - y1
                 anchor_x = (round(source.width / columns * (column + .5))
-                            if directions_axis == "rows" else column_anchors[direction])
+                            if directions_axis in {"rows", "phase_grid4", "phase_grid3", "phase_grid2"} else column_anchors[direction])
                 anchor_y = item["box"][3] - 1
                 if source_anchors is not None:
                     anchor = source_anchors[row_index * direction_count + direction]
@@ -323,12 +347,20 @@ def reviewed_action_aliases(candidate):
 def import_sheet(root, candidate, actor, keys, apply):
     # Optional representation only. Keep the established sheet parser,
     # per-sheet temporal guard and serialized legacy outputs unchanged.
+    if candidate.get("input_mode") == "pose_patch_v1":
+        import original_based_pose_patch
+        return original_based_pose_patch.install(root, candidate, actor, keys, apply)
     if candidate.get("input_mode") == "pose_files_v1":
         return import_pose_files(root, candidate, actor, keys, apply)
     if candidate.get("input_mode") == "mixed_sources_v1":
         return import_mixed_sources(root, candidate, actor, keys, apply)
     if candidate.get("input_mode") is not None:
         raise ValueError("Unknown input_mode")
+    return _legacy_sheet(root, candidate, actor, keys, apply, read_only=False)
+
+
+def _legacy_sheet(root, candidate, actor, keys, apply, *, read_only):
+    """Run the unchanged legacy preflight before any optional installation."""
     plan = expansion.read(root / "data/animation_authoring_sources.json")
     targets = {row["key"]: row for row in plan["targets"]}
     bindings = [targets[key] for key in keys]
@@ -536,6 +568,13 @@ def import_sheet(root, candidate, actor, keys, apply):
         require_preserved_output(sheet, source_sha)
     for path, content in metadata:
         require_preserved_output(path, hashlib.sha256(content.encode()).hexdigest())
+    if read_only:
+        return {"resource": str(folder), "identities": keys,
+                "poses": geometry["distinct_pixel_frames"], "original_unchanged": True,
+                "applied": False, "read_only": True, "profiles_checked": bool(apply),
+                "output_files": [str(destination) for _, destination, _ in copies]
+                                + [str(path) for path, _ in metadata],
+                "actual_Main": "not_run", "completed_added": 0}
     # All input, output and profile checks passed. Identical reruns need no
     # asset writes and preserve the reviewed SpriteFrames/provenance bytes.
     folder.mkdir(parents=True, exist_ok=True)
@@ -564,6 +603,23 @@ def _pose_file_source(root, value):
     return path
 
 
+def _pose_file_profile(previous, target, first, frames_path, reference_height, walk_count, aliases):
+    """Build a profile value without authorizing or writing a catalog change."""
+    profile = previous.copy()
+    if "prior_visual_profile" not in profile:
+        profile["prior_visual_profile"] = profile.copy() or None
+    scale = round(float(first["presentation_to_preserve"].get("visual_height", 100)) / reference_height, 6)
+    profile.update({"name": target["name"], "frames_path": frames_path,
+                    "layout": "directional8", "pixel_scale": scale, "color_tint": "ffffff",
+                    "sprite_offset": [0, round(-32 * scale, 6)], "embedded_shadow": False,
+                    "authored_motion_weight": 0, "hit_recoil": 0,
+                    "action_hit_frames": {"attack": 1, **{alias: 1 for alias in aliases}},
+                    "attack_hit_frame": 1, "death_duration": SECONDS["death"],
+                    "movement_fps": walk_count / SECONDS["walk"],
+                    "authoring_reference": target["reference"]["path"]})
+    return profile
+
+
 def _pose_file_profiles(root, targets, keys, first, folder, reference_height, walk_count, aliases):
     """Prepare, but never write, the same production profile convention."""
     path = root / "data/combat_animation_profiles.json"
@@ -577,19 +633,10 @@ def _pose_file_profiles(root, targets, keys, first, folder, reference_height, wa
         previous = document["profiles"].get(key, {})
         if not isinstance(previous, dict):
             raise ValueError("Runtime animation profile must be an object: " + key)
-        profile = previous.copy()
-        if "prior_visual_profile" not in profile:
-            profile["prior_visual_profile"] = profile.copy() or None
-        scale = round(float(first["presentation_to_preserve"].get("visual_height", 100)) / reference_height, 6)
-        profile.update({"name": targets[key]["name"],
-                        "frames_path": "res://" + str((folder / "SpriteFrames.tres").relative_to(root)),
-                        "layout": "directional8", "pixel_scale": scale, "color_tint": "ffffff",
-                        "sprite_offset": [0, round(-32 * scale, 6)], "embedded_shadow": False,
-                        "authored_motion_weight": 0, "hit_recoil": 0,
-                        "action_hit_frames": {"attack": 1, **{alias: 1 for alias in aliases}},
-                        "attack_hit_frame": 1, "death_duration": SECONDS["death"],
-                        "movement_fps": walk_count / SECONDS["walk"],
-                        "authoring_reference": targets[key]["reference"]["path"]})
+        profile = _pose_file_profile(
+            previous, targets[key], first,
+            "res://" + str((folder / "SpriteFrames.tres").relative_to(root)),
+            reference_height, walk_count, aliases)
         previous_frames = str(previous.get("frames_path", ""))
         native = (previous_frames.startswith("res://assets/actors/eight_direction/")
                   and previous_frames.endswith("/SpriteFrames.tres")
@@ -1228,13 +1275,28 @@ def import_mixed_sources(root, candidate, actor, keys, apply=False):
     return _install_optional_plan(_prepare_mixed_sources(root, candidate, actor, keys, apply))
 
 
+def validate_candidate(root, candidate, actor, keys):
+    """Preflight every supported representation, including profiles; never write."""
+    mode = candidate.get("input_mode")
+    if mode == "pose_patch_v1":
+        import original_based_pose_patch
+        return original_based_pose_patch.validate(root, candidate, actor, keys)
+    if mode == "pose_files_v1":
+        return validate_pose_files(root, candidate, actor, keys)
+    if mode == "mixed_sources_v1":
+        return validate_mixed_sources(root, candidate, actor, keys)
+    if mode is not None:
+        raise ValueError("Unknown input_mode")
+    return _legacy_sheet(Path(root).resolve(), candidate, actor, keys, True, read_only=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("."))
     parser.add_argument("--analyze", type=Path)
     parser.add_argument("--candidate", type=Path)
     parser.add_argument("--validate-candidate", type=Path,
-                        help="Read-only optional-input preflight, including prospective profile/output conflicts; writes nothing")
+                        help="Read-only sheet/pose/mixed preflight, including prospective profile/output conflicts; writes nothing")
     parser.add_argument("--actor")
     parser.add_argument("--key", action="append")
     parser.add_argument("--apply", action="store_true")
@@ -1243,8 +1305,7 @@ def main():
         if args.analyze or args.candidate or not args.actor or not args.key:
             parser.error("--validate-candidate requires --actor/--key and excludes --candidate/--analyze")
         candidate = expansion.read(args.validate_candidate)
-        validate = validate_mixed_sources if candidate.get("input_mode") == "mixed_sources_v1" else validate_pose_files
-        print(json.dumps(validate(args.root.resolve(), candidate, args.actor, args.key), ensure_ascii=False))
+        print(json.dumps(validate_candidate(args.root.resolve(), candidate, args.actor, args.key), ensure_ascii=False))
     elif args.analyze:
         result = analyze(args.analyze)
         print(json.dumps({key: result[key] for key in ("image_size", "distinct_pixel_frames")}))

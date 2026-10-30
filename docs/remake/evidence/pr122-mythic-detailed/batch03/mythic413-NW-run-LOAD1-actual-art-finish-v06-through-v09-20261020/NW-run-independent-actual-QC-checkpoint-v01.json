@@ -1,0 +1,87 @@
+{
+  "schema": "private-actual-NW-RUN-QC-checkpoint-v1",
+  "scope": "Independent source art and finite physical phase review; no repo/source mutation or actor approval.",
+  "checkpoint_image_ledger_bytes": 5095136,
+  "working_image_ledger_limit_bytes": 6000000,
+  "root_rotates_context": true,
+  "artifacts": {
+    "contact0_static": {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-contact0-v08-independent-static-source-PASS-v02.json",
+      "sha256": "999b5aff5ecbd471219953eac26568b544977871317bbcdc89348637acb9f572",
+      "status": "PASS_STATIC_CONTACT0_SOURCE_FOR_DEPENDENT_LOAD_AUTHORING_ONLY"
+    },
+    "load1_static": {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-load1-v08-independent-static-source-PASS-v01.json",
+      "sha256": "da4af87e531aefd136a2dbeedbd61a76a84d6b45a0b7e3d07123cc1b013ce485",
+      "status": "PASS_STATIC_ACTUAL_LOAD1_SOURCE_FOR_DEPENDENT_FLIGHT_AUTHORING"
+    },
+    "pair_physical": {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-contact0-load1-independent-actual-footroll-physical-HOLD-v01.json",
+      "sha256": "e97babdf39eb0f080ff0d41f73eb180bed3d8906b77ce1e2ee2f61a07b5506ae",
+      "status": "PHYSICAL_HOLD_NO_OBSERVED_HEEL_ONLY_TO_FOREFOOT_LOAD_ROLL"
+    },
+    "flight2_actual": {
+      "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/NW-run-flight2-v02-independent-actual-HOLD-v01.json",
+      "sha256": "2e5acdfe8b034638a85700d4877ee15a676e2a775e1584235b229f350fc92c3a",
+      "status": "HOLD_HIP_THIGH_MATERIAL_CONTINUITY_AND_DETACHED_SLIVER"
+    }
+  },
+  "current_sources": {
+    "contact0": {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+      "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+      "status": "STATIC_ACTUAL_PASS_ONLY"
+    },
+    "load1": {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v08/thunder_female-NW-run-load1-actual-rig-v08.png",
+      "sha256": "c2b97494baa8d1f7376f1d8ca1ab0c4d5aebad4962f3940d8a02c3f099fbb915",
+      "status": "STATIC_ACTUAL_PASS_ONLY; PHYSICAL_FOOTROLL_HOLD"
+    },
+    "flight2": {
+      "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight2-actual-rig-v02/thunder_female-NW-run-flight2-actual-rig-v02.png",
+      "sha256": "a826feb0d988dc6b921542b65d1666d1e9210b02a1f4b93cde9b7198910751af",
+      "status": "ACTUAL_ART_HOLD_HIP_THIGH_CONTINUITY_AND_SLIVER; AIR_UNAPPROVED"
+    }
+  },
+  "frozen_conditions": {
+    "native_C": [
+      2560,
+      2560
+    ],
+    "body_unit_factor": 2.5,
+    "raw_to_world_xy": [
+      0.08534482758612,
+      0.0948275862068
+    ],
+    "same_unpadded_common_root": [
+      669,
+      1267.95
+    ],
+    "contact_to_load_native_heel_delta": [
+      139.19289850280273,
+      125.27360865252246
+    ],
+    "true_structural_heel0": [
+      583.5,
+      1191.0
+    ],
+    "true_forefoot_sole0": [
+      535.0,
+      1164.0
+    ],
+    "true_tarsal0": [
+      564.0,
+      1075.0
+    ],
+    "natural_toeout_allowed": true,
+    "no_single_dot9_groundline_for_all_shoe_perimeter": true
+  },
+  "remaining_review": {
+    "load": "Render genuine same-heel footroll and anatomical calf/tarsal at finite model pins in physical-HOLD proof, then changed sole/ankle ROI only.",
+    "flight": "Continuous actual hip/leg material, no detached sliver; review changed ROI only. Both-feet AIR requires final actual pins/model, not rasterY alone.",
+    "constructive_depth_limit": "Z14 forefoot/Z100 tarsal and previous hip depth are declared construction choices; do not promote arithmetic to unique recovered anatomy or actual physical proof."
+  },
+  "actor_approval_added": 0,
+  "whole_cycle_approved": false,
+  "root_never_views_images": true
+}

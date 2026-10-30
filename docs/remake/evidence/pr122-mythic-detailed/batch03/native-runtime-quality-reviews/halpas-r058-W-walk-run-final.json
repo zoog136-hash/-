@@ -1,0 +1,28 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_W_WALK_RUN_RUNTIME_TRANSITIONS_AND_LOOPS",
+  "actor_key": "transform:393",
+  "revision": "r058",
+  "checkpoint": "8da97150b85533c1d0f0c5d837744ec609892260",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/halpas_393/r058/SpriteFrames.tres",
+  "frames_sha256": "34dc7e439c6c85e71abda1db235d3a32504f298c195ee3405d54820b424090d2",
+  "scope": [
+    "Widle0_to_Wwalk0",
+    "Widle0_to_Wrun0",
+    "Wwalkall6_and5_to0",
+    "Wrunall6_and5_to0"
+  ],
+  "all_sixteen_actual_tres_regions_margins_and_crop_SHA_match": true,
+  "canvas_size_all3roles": 1152,
+  "findings": [
+    "Reviewedidle/walk/run now share comparable physical head, shoulder, torso and pelvis scale. Former12.5percent wholebody enlargement is removed.",
+    "Physical pelvis-reference anchors remove packedwingbbox/cellcolumn placement drift, particularly in runoddcolumns. No arbitrary far shift occurs when changing idle/walk/run.",
+    "Walking keeps comparatively upright hover while running retains stronger forwardlean and rearward legtrail. Wingstroke and bodypitch/bob remain authored differences rather than rigidly silhouette/foot locked.",
+    "All12poses keep trueW heading, farRIGHT weapon, nearLEFT unarmed arm and unchanged goldblackarmor/purplegoldwings/redcape. Both sixphasecycles and5\u21920 seams retain identity/body scale and coherent wingreturn."
+  ],
+  "source_RGBA_changed": false,
+  "actor_approval_granted": false,
+  "detailed_complete_added": 0,
+  "private_previews_not_for_chat": true,
+  "private_preview_bytes": 261709
+}

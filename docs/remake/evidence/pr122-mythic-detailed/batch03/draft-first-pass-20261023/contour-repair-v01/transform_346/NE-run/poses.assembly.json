@@ -1,0 +1,2139 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:346",
+  "role": "run",
+  "assembler_sha256": "e7503f3806d81cebc17370b288bb8e9df852ed82b894d775ce39ccff1013d025",
+  "direction": "NE",
+  "metadata_sha256": "7f4b20e51aa8282832fa22d64572c19f2b488d46980724b528e93b703c315046",
+  "metadata_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_346/NE-run/pose-map.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_346/NE-run/poses.png",
+  "output_sha256": "b691b7c32ceebf66b0d5e2a27d4739536553345e6f807f960256f75254939398",
+  "output_canvas": [
+    2560,
+    3840
+  ],
+  "cell_size": [
+    1280,
+    1280
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_346/NE-run/parts/phase_0.png",
+      "source_sha256": "a6f2cd622077224f19f4e5655d0b535c34e8f3c226b5224a3290fd5b284e83fd",
+      "source_pose": 0,
+      "source_region": [
+        35,
+        24,
+        541,
+        488
+      ],
+      "rgba_sha256": "5a6b860717d4ab199ccdb772d3dd062821d203e680d3e3e9e14b5046d8aa050b",
+      "visible_pose_sha256": "1c80e94c1e0388ab6e5b16fc56c01a215b2905a3bef3710b9ca0600ece021c43",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        369,
+        396,
+        541,
+        488
+      ],
+      "translation": [
+        334,
+        372
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 104050
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_346/NE-run/parts/phase_1.png",
+      "source_sha256": "913845cd893da749aa8c91d6816e9511bbd09dc1b5e09408daafcd0d8c2746f1",
+      "source_pose": 1,
+      "source_region": [
+        561,
+        21,
+        514,
+        455
+      ],
+      "rgba_sha256": "3aaed6b2251debef4ca07eb4546d10754165974d10e8650f5c9b122033c42315",
+      "visible_pose_sha256": "eb0d13ba0487ac8d1aa15c64d1bcf67b4872c3708936fb1704b339bf8466e131",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        1663,
+        412,
+        514,
+        455
+      ],
+      "translation": [
+        1102,
+        391
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 102142
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_346/NE-run/parts/phase_2.png",
+      "source_sha256": "62fbf32815ce870ff6523323776249f95fe81b56a92baf1d4f07e0a15c46dbd8",
+      "source_pose": 2,
+      "source_region": [
+        1037,
+        6,
+        499,
+        459
+      ],
+      "rgba_sha256": "36427eed71b7dbdf05df6a01c488d0828e02f1407b3084dd3033c15c7a08aeeb",
+      "visible_pose_sha256": "6fe52bc55b4d29a7dba5324099754980dae1d7525d0e4e5a916d78cb33915c02",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        390,
+        1690,
+        499,
+        459
+      ],
+      "translation": [
+        -647,
+        1684
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 66,
+        "retained_boundary_max_alpha": 49,
+        "retained_boundary_pixels_xy_rgba": [
+          {
+            "xy": [
+              1535,
+              352
+            ],
+            "rgba": [
+              179,
+              133,
+              248,
+              17
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              353
+            ],
+            "rgba": [
+              179,
+              133,
+              248,
+              18
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              354
+            ],
+            "rgba": [
+              180,
+              134,
+              249,
+              19
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              355
+            ],
+            "rgba": [
+              180,
+              134,
+              249,
+              20
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              356
+            ],
+            "rgba": [
+              180,
+              135,
+              249,
+              20
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              357
+            ],
+            "rgba": [
+              180,
+              135,
+              249,
+              21
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              358
+            ],
+            "rgba": [
+              181,
+              136,
+              249,
+              23
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              359
+            ],
+            "rgba": [
+              181,
+              136,
+              249,
+              24
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              360
+            ],
+            "rgba": [
+              181,
+              135,
+              250,
+              24
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              361
+            ],
+            "rgba": [
+              182,
+              135,
+              250,
+              26
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              362
+            ],
+            "rgba": [
+              182,
+              135,
+              250,
+              26
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              363
+            ],
+            "rgba": [
+              182,
+              135,
+              249,
+              26
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              364
+            ],
+            "rgba": [
+              182,
+              135,
+              250,
+              27
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              365
+            ],
+            "rgba": [
+              182,
+              136,
+              250,
+              28
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              366
+            ],
+            "rgba": [
+              182,
+              137,
+              250,
+              28
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              367
+            ],
+            "rgba": [
+              183,
+              138,
+              249,
+              28
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              368
+            ],
+            "rgba": [
+              183,
+              138,
+              249,
+              28
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              369
+            ],
+            "rgba": [
+              183,
+              139,
+              248,
+              29
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              370
+            ],
+            "rgba": [
+              183,
+              139,
+              248,
+              28
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              371
+            ],
+            "rgba": [
+              183,
+              139,
+              248,
+              29
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              372
+            ],
+            "rgba": [
+              184,
+              139,
+              249,
+              28
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              373
+            ],
+            "rgba": [
+              184,
+              139,
+              249,
+              30
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              374
+            ],
+            "rgba": [
+              184,
+              139,
+              249,
+              29
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              375
+            ],
+            "rgba": [
+              183,
+              139,
+              248,
+              31
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              376
+            ],
+            "rgba": [
+              183,
+              139,
+              248,
+              31
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              377
+            ],
+            "rgba": [
+              183,
+              140,
+              249,
+              32
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              378
+            ],
+            "rgba": [
+              182,
+              140,
+              249,
+              33
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              379
+            ],
+            "rgba": [
+              183,
+              140,
+              249,
+              33
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              380
+            ],
+            "rgba": [
+              183,
+              140,
+              248,
+              33
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              381
+            ],
+            "rgba": [
+              183,
+              140,
+              247,
+              35
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              382
+            ],
+            "rgba": [
+              183,
+              140,
+              248,
+              35
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              383
+            ],
+            "rgba": [
+              183,
+              140,
+              248,
+              36
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              384
+            ],
+            "rgba": [
+              184,
+              140,
+              247,
+              37
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              385
+            ],
+            "rgba": [
+              183,
+              139,
+              246,
+              39
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              386
+            ],
+            "rgba": [
+              183,
+              140,
+              246,
+              41
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              387
+            ],
+            "rgba": [
+              183,
+              139,
+              245,
+              42
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              388
+            ],
+            "rgba": [
+              182,
+              138,
+              245,
+              43
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              389
+            ],
+            "rgba": [
+              181,
+              137,
+              244,
+              44
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              390
+            ],
+            "rgba": [
+              182,
+              138,
+              244,
+              45
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              391
+            ],
+            "rgba": [
+              181,
+              139,
+              243,
+              46
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              392
+            ],
+            "rgba": [
+              180,
+              138,
+              242,
+              47
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              393
+            ],
+            "rgba": [
+              178,
+              138,
+              241,
+              47
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              394
+            ],
+            "rgba": [
+              178,
+              138,
+              241,
+              48
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              395
+            ],
+            "rgba": [
+              179,
+              138,
+              241,
+              49
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              396
+            ],
+            "rgba": [
+              178,
+              138,
+              240,
+              49
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              397
+            ],
+            "rgba": [
+              177,
+              137,
+              240,
+              49
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              398
+            ],
+            "rgba": [
+              177,
+              137,
+              239,
+              49
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              399
+            ],
+            "rgba": [
+              177,
+              135,
+              239,
+              49
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              400
+            ],
+            "rgba": [
+              178,
+              134,
+              239,
+              49
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              401
+            ],
+            "rgba": [
+              178,
+              132,
+              239,
+              49
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              402
+            ],
+            "rgba": [
+              177,
+              132,
+              240,
+              49
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              403
+            ],
+            "rgba": [
+              177,
+              131,
+              239,
+              47
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              404
+            ],
+            "rgba": [
+              177,
+              130,
+              238,
+              47
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              405
+            ],
+            "rgba": [
+              175,
+              129,
+              237,
+              46
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              406
+            ],
+            "rgba": [
+              173,
+              128,
+              236,
+              45
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              407
+            ],
+            "rgba": [
+              171,
+              126,
+              234,
+              43
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              408
+            ],
+            "rgba": [
+              168,
+              126,
+              229,
+              41
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              409
+            ],
+            "rgba": [
+              166,
+              127,
+              226,
+              39
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              410
+            ],
+            "rgba": [
+              165,
+              126,
+              225,
+              37
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              411
+            ],
+            "rgba": [
+              163,
+              125,
+              223,
+              34
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              412
+            ],
+            "rgba": [
+              160,
+              123,
+              221,
+              31
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              413
+            ],
+            "rgba": [
+              159,
+              122,
+              220,
+              29
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              414
+            ],
+            "rgba": [
+              158,
+              121,
+              218,
+              26
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              415
+            ],
+            "rgba": [
+              157,
+              121,
+              216,
+              23
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              416
+            ],
+            "rgba": [
+              155,
+              119,
+              213,
+              19
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              417
+            ],
+            "rgba": [
+              154,
+              118,
+              210,
+              17
+            ]
+          }
+        ]
+      },
+      "alpha_gt16_pixels": 96482
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_346/NE-run/parts/phase_3.png",
+      "source_sha256": "8e92ebe538d9e61ac799cea7790b7ca4afbdfda0d179e982367a498f85ae9a7d",
+      "source_pose": 3,
+      "source_region": [
+        51,
+        510,
+        537,
+        468
+      ],
+      "rgba_sha256": "1de557329bca265d3eff5fba2d94d18b2dc84b6bd7b35ab370aa166e8f8f404e",
+      "visible_pose_sha256": "917c839f525386135d96e5e86321fe0b5c263cf50348293007b856a4099513fb",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        1651,
+        1686,
+        537,
+        468
+      ],
+      "translation": [
+        1600,
+        1176
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 107592
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_346/NE-run/parts/phase_4.png",
+      "source_sha256": "bc49ea8d786f50d796ffd60bdcb30acf06d29c5c215977366dac225ecfaf209d",
+      "source_pose": 4,
+      "source_region": [
+        547,
+        517,
+        526,
+        462
+      ],
+      "rgba_sha256": "12311b9e72dfefd7372c1d8dce31c3ff5924b40ed731b05216b0692ebfeea713",
+      "visible_pose_sha256": "ca65c6a2c5be5b4170ed32c96638dbbe4734cce0a2e5d71a7cc44a0a0e5ba5f6",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        377,
+        2969,
+        526,
+        462
+      ],
+      "translation": [
+        -170,
+        2452
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 98681
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_346/NE-run/parts/phase_5.png",
+      "source_sha256": "60caa733231e46d785e8833d51e4068cd126344f18823cdda9a4675158da9ef8",
+      "source_pose": 5,
+      "source_region": [
+        1049,
+        520,
+        487,
+        426
+      ],
+      "rgba_sha256": "b35eadb78d357fb6ad9cda493e1b0bf978faf62a5a6c1cda8fc2acdae0c2481f",
+      "visible_pose_sha256": "214568c63366dab04f43ef76ecfd46d0adaf8c72803225d702e3a85b670bf891",
+      "newly_authored": false,
+      "review_basis": "Exact source-alpha contour material. Original positions/RGBA retained, all alpha>16 parts topology-owned with unchanged >32 margin. Complete original RGBA storage ownership includes separate unclassified alpha<=16 residue; visual approval remains HOLD.",
+      "output_region": [
+        1676,
+        2987,
+        487,
+        426
+      ],
+      "translation": [
+        627,
+        2467
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 56,
+        "retained_boundary_max_alpha": 63,
+        "retained_boundary_pixels_xy_rgba": [
+          {
+            "xy": [
+              1535,
+              851
+            ],
+            "rgba": [
+              185,
+              136,
+              250,
+              17
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              852
+            ],
+            "rgba": [
+              185,
+              136,
+              249,
+              18
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              853
+            ],
+            "rgba": [
+              184,
+              136,
+              250,
+              20
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              854
+            ],
+            "rgba": [
+              184,
+              136,
+              249,
+              21
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              855
+            ],
+            "rgba": [
+              183,
+              136,
+              250,
+              22
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              856
+            ],
+            "rgba": [
+              183,
+              136,
+              249,
+              23
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              857
+            ],
+            "rgba": [
+              183,
+              135,
+              249,
+              25
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              858
+            ],
+            "rgba": [
+              183,
+              136,
+              249,
+              26
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              859
+            ],
+            "rgba": [
+              183,
+              136,
+              249,
+              26
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              860
+            ],
+            "rgba": [
+              183,
+              136,
+              249,
+              27
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              861
+            ],
+            "rgba": [
+              184,
+              137,
+              249,
+              27
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              862
+            ],
+            "rgba": [
+              184,
+              137,
+              249,
+              28
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              863
+            ],
+            "rgba": [
+              184,
+              137,
+              249,
+              28
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              864
+            ],
+            "rgba": [
+              184,
+              138,
+              248,
+              29
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              865
+            ],
+            "rgba": [
+              184,
+              138,
+              248,
+              30
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              866
+            ],
+            "rgba": [
+              184,
+              139,
+              248,
+              31
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              867
+            ],
+            "rgba": [
+              184,
+              139,
+              249,
+              32
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              868
+            ],
+            "rgba": [
+              184,
+              139,
+              248,
+              34
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              869
+            ],
+            "rgba": [
+              184,
+              138,
+              247,
+              36
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              870
+            ],
+            "rgba": [
+              184,
+              138,
+              247,
+              38
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              871
+            ],
+            "rgba": [
+              184,
+              138,
+              247,
+              41
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              872
+            ],
+            "rgba": [
+              183,
+              138,
+              246,
+              43
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              873
+            ],
+            "rgba": [
+              182,
+              138,
+              245,
+              46
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              874
+            ],
+            "rgba": [
+              182,
+              138,
+              245,
+              48
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              875
+            ],
+            "rgba": [
+              181,
+              138,
+              246,
+              50
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              876
+            ],
+            "rgba": [
+              181,
+              138,
+              245,
+              51
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              877
+            ],
+            "rgba": [
+              180,
+              138,
+              245,
+              52
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              878
+            ],
+            "rgba": [
+              180,
+              139,
+              244,
+              53
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              879
+            ],
+            "rgba": [
+              180,
+              138,
+              243,
+              53
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              880
+            ],
+            "rgba": [
+              179,
+              139,
+              243,
+              53
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              881
+            ],
+            "rgba": [
+              180,
+              140,
+              242,
+              54
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              882
+            ],
+            "rgba": [
+              179,
+              139,
+              242,
+              55
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              883
+            ],
+            "rgba": [
+              178,
+              139,
+              242,
+              55
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              884
+            ],
+            "rgba": [
+              178,
+              139,
+              241,
+              55
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              885
+            ],
+            "rgba": [
+              178,
+              138,
+              240,
+              56
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              886
+            ],
+            "rgba": [
+              177,
+              138,
+              239,
+              58
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              887
+            ],
+            "rgba": [
+              177,
+              137,
+              239,
+              59
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              888
+            ],
+            "rgba": [
+              178,
+              136,
+              240,
+              60
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              889
+            ],
+            "rgba": [
+              178,
+              135,
+              240,
+              62
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              890
+            ],
+            "rgba": [
+              178,
+              135,
+              239,
+              63
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              891
+            ],
+            "rgba": [
+              177,
+              134,
+              239,
+              63
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              892
+            ],
+            "rgba": [
+              177,
+              132,
+              238,
+              62
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              893
+            ],
+            "rgba": [
+              175,
+              131,
+              236,
+              60
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              894
+            ],
+            "rgba": [
+              174,
+              130,
+              235,
+              56
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              895
+            ],
+            "rgba": [
+              173,
+              130,
+              233,
+              49
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              896
+            ],
+            "rgba": [
+              170,
+              130,
+              229,
+              42
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              897
+            ],
+            "rgba": [
+              168,
+              130,
+              225,
+              35
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              898
+            ],
+            "rgba": [
+              166,
+              128,
+              223,
+              31
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              899
+            ],
+            "rgba": [
+              165,
+              127,
+              223,
+              28
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              900
+            ],
+            "rgba": [
+              163,
+              126,
+              221,
+              26
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              901
+            ],
+            "rgba": [
+              160,
+              124,
+              219,
+              25
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              902
+            ],
+            "rgba": [
+              158,
+              122,
+              217,
+              24
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              903
+            ],
+            "rgba": [
+              157,
+              120,
+              214,
+              22
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              904
+            ],
+            "rgba": [
+              155,
+              119,
+              210,
+              20
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              905
+            ],
+            "rgba": [
+              154,
+              118,
+              209,
+              19
+            ]
+          },
+          {
+            "xy": [
+              1535,
+              906
+            ],
+            "rgba": [
+              153,
+              117,
+              207,
+              17
+            ]
+          }
+        ]
+      },
+      "alpha_gt16_pixels": 99697
+    }
+  ],
+  "newly_authored_poses": 0,
+  "reused_poses": 6,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      2560,
+      3840
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "NE",
+        "region": [
+          369,
+          396,
+          541,
+          488
+        ],
+        "margin": [
+          753,
+          806,
+          1507,
+          1560
+        ],
+        "source_anchor": [
+          640,
+          870
+        ],
+        "rgba_sha256": "5a6b860717d4ab199ccdb772d3dd062821d203e680d3e3e9e14b5046d8aa050b"
+      },
+      {
+        "row": 1,
+        "direction": "NE",
+        "region": [
+          1663,
+          412,
+          514,
+          455
+        ],
+        "margin": [
+          767,
+          833,
+          1534,
+          1593
+        ],
+        "source_anchor": [
+          1920,
+          859
+        ],
+        "rgba_sha256": "3aaed6b2251debef4ca07eb4546d10754165974d10e8650f5c9b122033c42315"
+      },
+      {
+        "row": 2,
+        "direction": "NE",
+        "region": [
+          390,
+          1690,
+          499,
+          459
+        ],
+        "margin": [
+          774,
+          825,
+          1549,
+          1589
+        ],
+        "source_anchor": [
+          640,
+          2145
+        ],
+        "rgba_sha256": "36427eed71b7dbdf05df6a01c488d0828e02f1407b3084dd3033c15c7a08aeeb"
+      },
+      {
+        "row": 3,
+        "direction": "NE",
+        "region": [
+          1650,
+          1686,
+          538,
+          468
+        ],
+        "margin": [
+          754,
+          816,
+          1510,
+          1580
+        ],
+        "source_anchor": [
+          1920,
+          2150
+        ],
+        "rgba_sha256": "288f96a254be945762421094ddb20a3903676ed33d9f7d397f636261538d235f"
+      },
+      {
+        "row": 4,
+        "direction": "NE",
+        "region": [
+          377,
+          2969,
+          526,
+          462
+        ],
+        "margin": [
+          761,
+          822,
+          1522,
+          1586
+        ],
+        "source_anchor": [
+          640,
+          3427
+        ],
+        "rgba_sha256": "12311b9e72dfefd7372c1d8dce31c3ff5924b40ed731b05216b0692ebfeea713"
+      },
+      {
+        "row": 5,
+        "direction": "NE",
+        "region": [
+          1676,
+          2987,
+          487,
+          427
+        ],
+        "margin": [
+          780,
+          857,
+          1561,
+          1621
+        ],
+        "source_anchor": [
+          1920,
+          3410
+        ],
+        "rgba_sha256": "80a7912c78e1ea42c9571834c24f6d70809e4e6516e2d898ee16a73bd9d99364"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 456.0,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": null,
+  "region_height_span": [
+    426,
+    488
+  ],
+  "possible_region_height_mismatch": false,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed.",
+  "finalization": "EXISTING_IMMUTABLE_ATLAS_WITH_REVIEWED_OUTPUT_REGIONS",
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "b691b7c32ceebf66b0d5e2a27d4739536553345e6f807f960256f75254939398",
+    "base_geometry_sha256": "feaf9d969c6c29255d9bb6563d55c92f4a5cc5eb34f61b1f72e232e24b9f0d19",
+    "direction": "NE",
+    "review_basis": "Expanded exact source-contour material output rectangles preserve every selected nonzero-alpha RGBA texel; old importer and ownership gates unchanged",
+    "regions": [
+      [
+        369,
+        396,
+        541,
+        488
+      ],
+      [
+        1663,
+        412,
+        514,
+        455
+      ],
+      [
+        390,
+        1690,
+        499,
+        459
+      ],
+      [
+        1650,
+        1686,
+        538,
+        468
+      ],
+      [
+        377,
+        2969,
+        526,
+        462
+      ],
+      [
+        1676,
+        2987,
+        487,
+        427
+      ]
+    ],
+    "nearest_owner_sha256": "eaeac86a8a7f8f5ed90af0151f268605ada24d278193a0196ef19287c69b057d"
+  },
+  "source_region_proof": {
+    "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+    "source_sha256": "b691b7c32ceebf66b0d5e2a27d4739536553345e6f807f960256f75254939398",
+    "source_RGBA_sha256": "e540bdc27043bdc56a2664f3d62cf863ac682110710a67dcc302cafd00eb8a47",
+    "base_geometry_sha256": "feaf9d969c6c29255d9bb6563d55c92f4a5cc5eb34f61b1f72e232e24b9f0d19",
+    "derived_geometry_sha256": "9fafcd57996612c68ec308236d335dec22d372dec3c008f547b2bcc57f6fcd0b",
+    "review_sha256": "d24d277a210e814f73ae28b21f66e2338c5d8f5a73fc32d74747eb7a7bd12bbe",
+    "review_basis": "Expanded exact source-contour material output rectangles preserve every selected nonzero-alpha RGBA texel; old importer and ownership gates unchanged",
+    "source_unchanged": true,
+    "canonical_canvas_foot_anchors_unchanged": true,
+    "all_alpha_gt16_covered_exactly_once": true,
+    "foreign_foreground_pixels": 0,
+    "alpha_gt16_pixels": 608644,
+    "added_alpha_gt16_pixels": 1232,
+    "all_alpha_positive_covered": true,
+    "expanded_regions": [
+      [
+        369,
+        396,
+        541,
+        488
+      ],
+      [
+        1663,
+        412,
+        514,
+        455
+      ],
+      [
+        390,
+        1690,
+        499,
+        459
+      ],
+      [
+        1650,
+        1686,
+        538,
+        468
+      ],
+      [
+        377,
+        2969,
+        526,
+        462
+      ],
+      [
+        1676,
+        2987,
+        487,
+        427
+      ]
+    ],
+    "default_importer_repacker_unchanged": true,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "eaeac86a8a7f8f5ed90af0151f268605ada24d278193a0196ef19287c69b057d",
+    "foreground_owner_sha256": "c08e1c169cc7e162ba651dbbfac0f4bc44f3d1b0af349b89e323293466175f67",
+    "detached_pixels": 99,
+    "detached_fragments": [
+      {
+        "row": 1,
+        "pixels": 30,
+        "bbox": [
+          1797,
+          512,
+          1803,
+          521
+        ],
+        "nearest_max": 16.15549442140351,
+        "second_nearest_min": 955.2219637340842,
+        "owner_margin_min": 939.1907441922028
+      },
+      {
+        "row": 1,
+        "pixels": 1,
+        "bbox": [
+          1755,
+          554,
+          1756,
+          555
+        ],
+        "nearest_max": 4.242640687119285,
+        "second_nearest_min": 904.900547021605,
+        "owner_margin_min": 900.6579063344857
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          495,
+          556,
+          496,
+          557
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 1153.0156113427086,
+        "owner_margin_min": 1150.7795433652088
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          515,
+          557,
+          516,
+          558
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 1149.9886955966133,
+        "owner_margin_min": 1147.160268471867
+      },
+      {
+        "row": 0,
+        "pixels": 1,
+        "bbox": [
+          695,
+          625,
+          696,
+          626
+        ],
+        "nearest_max": 3.1622776601683795,
+        "second_nearest_min": 984.3515632130626,
+        "owner_margin_min": 981.1892855528943
+      },
+      {
+        "row": 2,
+        "pixels": 58,
+        "bbox": [
+          471,
+          1788,
+          479,
+          1801
+        ],
+        "nearest_max": 23.40939982143925,
+        "second_nearest_min": 923.2995180330162,
+        "owner_margin_min": 899.8901182115769
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          1773,
+          1801,
+          1774,
+          1802
+        ],
+        "nearest_max": 4.123105625617661,
+        "second_nearest_min": 932.6746485243394,
+        "owner_margin_min": 928.5515428987218
+      },
+      {
+        "row": 3,
+        "pixels": 1,
+        "bbox": [
+          2002,
+          1929,
+          2003,
+          1930
+        ],
+        "nearest_max": 3.605551275463989,
+        "second_nearest_min": 1073.0740887748618,
+        "owner_margin_min": 1069.4685374993978
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          476,
+          3119,
+          477,
+          3120
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 976.2335786070872,
+        "owner_margin_min": 973.2335786070872
+      },
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          1776,
+          3128,
+          1777,
+          3129
+        ],
+        "nearest_max": 5.0,
+        "second_nearest_min": 932.3282683690333,
+        "owner_margin_min": 927.3282683690333
+      },
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          1801,
+          3142,
+          1802,
+          3143
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 953.5182221646318,
+        "owner_margin_min": 951.2821541871319
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          729,
+          3257,
+          730,
+          3258
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 952.6473639285421,
+        "owner_margin_min": 950.4112959510422
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          738,
+          3281,
+          739,
+          3282
+        ],
+        "nearest_max": 2.0,
+        "second_nearest_min": 945.3909244328507,
+        "owner_margin_min": 943.3909244328507
+      }
+    ],
+    "minimum_required_owner_margin": 32.0
+  },
+  "original_failed_receipt": {
+    "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/contour-repair-v01/transform_346/NE-run/poses.assembly-error.json",
+    "sha256": "de1bee92020b2d2d002a3827e66f3931462396456515ac74d91fd3ceab8b3aca"
+  },
+  "atlas_and_original_error_unchanged": true
+}

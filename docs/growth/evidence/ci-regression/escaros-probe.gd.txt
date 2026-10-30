@@ -1,0 +1,28 @@
+extends SceneTree
+func _initialize() -> void: call_deferred("run")
+func run() -> void:
+	var world=load("res://Main.tscn").instantiate()
+	root.add_child(world)
+	world.hud.complete_class_selection()
+	world.hud._close_workspace()
+	world.set_process(false)
+	world.save_timer=-10000
+	world.player.set_auto_enabled(false)
+	var reports: Array=[]
+	var failures: Array=[]
+	var checks: int=0
+	for mid: String in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]:
+		world._set_map(mid,false)
+		if world.active_map_id!=mid or world.field_map.data.map_id!="escaros_world":
+			print("ESCAROS_PROBE_WRONG_MAP ",mid," ",world.active_map_id);quit(2);return
+		world.portal_cooldown=10000
+		world.player.set_physics_process(false)
+		world.field_population.set_process(false)
+		for actor: Node in world.monsters_root.get_children(): actor.set_physics_process(false)
+		await physics_frame
+		var result: Dictionary=await preload("res://tests/native_png_route_checks.gd").run(self,world)
+		checks+=int(result.checks);failures.append_array(result.failures);reports.append(result.metric)
+	print("ESCAROS_BASELINE_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"metrics":reports}))
+	world.queue_free()
+	await process_frame
+	quit(0 if failures.is_empty() else 1)

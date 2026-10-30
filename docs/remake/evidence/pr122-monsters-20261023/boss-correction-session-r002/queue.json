@@ -1,0 +1,75 @@
+{
+  "schema": "pr122-boss-correction-queue-v1",
+  "date": "2026-10-23",
+  "normal_scope": "frame omissions only; unchanged",
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "work_queue": [
+    {
+      "key": "monster:얼음 여왕",
+      "state": "TECHNICAL_PLAYBACK_PASS_QUALITY_HOLD",
+      "clips": 33,
+      "poses": 108,
+      "newly_generated_selected_poses": 9,
+      "missing_required_tracks": [],
+      "profile": "res://assets/actors/eight_direction/monster_boss_repair/ice_queen/combined-r002/NativeMotionProfile.tres",
+      "next_focus": [
+        "기존 N IDLE 0/1의 pale slit 좌우 변화. 새 N RUN 회귀와 구분한다."
+      ]
+    },
+    {
+      "key": "monster:죽음의 좀비 로드",
+      "state": "TECHNICAL_PLAYBACK_PASS_QUALITY_HOLD",
+      "clips": 33,
+      "poses": 116,
+      "newly_generated_selected_poses": 3,
+      "missing_required_tracks": [],
+      "profile": "res://assets/actors/eight_direction/monster_boss_repair/zombie_lord/r003/NativeMotionProfile.tres",
+      "next_focus": [
+        "E 보행의 약한 전방 swing arc와 3/5 유사 지지 자세."
+      ]
+    },
+    {
+      "key": "monster:알비노 데몬",
+      "state": "TECHNICAL_PLAYBACK_PASS_QUALITY_HOLD",
+      "clips": 33,
+      "poses": 107,
+      "newly_generated_selected_poses": 6,
+      "missing_required_tracks": [],
+      "profile": "res://assets/actors/eight_direction/monster_boss_repair/albino_demon/r003/NativeMotionProfile.tres",
+      "next_focus": [
+        "기존 SE RUN 0/3 같은 지지발 반복.",
+        "기존 NW ATTACK의 overhead contact. fix11 수정본은 잘림/영역혼입/도끼 손 반전으로 미채택."
+      ]
+    },
+    {
+      "key": "monster:커츠",
+      "state": "TECHNICAL_PLAYBACK_PASS_QUALITY_HOLD",
+      "clips": 17,
+      "poses": 58,
+      "newly_generated_selected_poses": 12,
+      "missing_required_tracks": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_4",
+        "attack_5",
+        "attack_6",
+        "attack_7",
+        "hit_3",
+        "hit_4",
+        "hit_5",
+        "idle_3",
+        "idle_4",
+        "idle_5",
+        "run_3",
+        "run_4",
+        "run_5"
+      ],
+      "profile": "res://assets/actors/eight_direction/monster_boss_repair/kurtz/r003/NativeMotionProfile.tres",
+      "next_focus": [
+        "필수16슬롯 미제작/오류 선택 제외. 상세 목록은 missing_required_tracks를 따른다."
+      ]
+    }
+  ]
+}

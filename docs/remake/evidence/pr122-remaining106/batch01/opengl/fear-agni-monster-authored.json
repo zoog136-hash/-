@@ -1,0 +1,2145 @@
+{
+	"boss": [],
+	"checks": 2133,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 200,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1792124998.55364,
+				"expires_at": 1792125598.55364,
+				"grade": "일반",
+				"hunt_batch": "5a8b3eeea6eb0395ef818621577cdd35",
+				"id": "3a35e5715c78a764cec9d3fda1ee2584",
+				"item_name": "HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					15141.7255859375,
+					6498.2744140625
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 1410,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 125
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(80.0, 0.0)",
+			"name": "공포의 아그니",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(59.39062, 59.39062)",
+			"name": "공포의 아그니",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 86.0)",
+			"name": "공포의 아그니",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-60.80469, 60.80469)",
+			"name": "공포의 아그니",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-86.0, 0.0)",
+			"name": "공포의 아그니",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-60.80469, -60.80469)",
+			"name": "공포의 아그니",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -86.0)",
+			"name": "공포의 아그니",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(60.80469, -60.80469)",
+			"name": "공포의 아그니",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 106,
+			"facing": 0,
+			"kind": "magic",
+			"name": "공포의 아그니"
+		},
+		{
+			"damage": 106,
+			"facing": 1,
+			"kind": "magic",
+			"name": "공포의 아그니"
+		},
+		{
+			"damage": 106,
+			"facing": 2,
+			"kind": "magic",
+			"name": "공포의 아그니"
+		},
+		{
+			"damage": 106,
+			"facing": 3,
+			"kind": "magic",
+			"name": "공포의 아그니"
+		},
+		{
+			"damage": 106,
+			"facing": 4,
+			"kind": "magic",
+			"name": "공포의 아그니"
+		},
+		{
+			"damage": 106,
+			"facing": 5,
+			"kind": "magic",
+			"name": "공포의 아그니"
+		},
+		{
+			"damage": 106,
+			"facing": 6,
+			"kind": "magic",
+			"name": "공포의 아그니"
+		},
+		{
+			"damage": 106,
+			"facing": 7,
+			"kind": "magic",
+			"name": "공포의 아그니"
+		}
+	],
+	"monster_projectiles": [
+		{
+			"compass": "E",
+			"delta": "(13.33301, -0.084961)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "SE",
+			"delta": "(9.470703, 9.384766)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "S",
+			"delta": "(0.0, 13.3335)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "SW",
+			"delta": "(-9.47168, 9.384766)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "W",
+			"delta": "(-13.33301, -0.086426)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "NW",
+			"delta": "(-9.384766, -9.47168)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "N",
+			"delta": "(0.0, -13.3335)",
+			"kind": "magic",
+			"toward_player": true
+		},
+		{
+			"compass": "NE",
+			"delta": "(9.384766, -9.47168)",
+			"kind": "magic",
+			"toward_player": true
+		}
+	],
+	"physics_ticks": 3401,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"remaining106_visual": [
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14712.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-E-walk.png",
+			"physics_tick": 18,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_0",
+			"sha256": "b89841767b1453f590631eee42a40b2aae08f1492fe3d00342d4f4c9ba77cdfc",
+			"visible_body_viewport": [
+				567.158569335938,
+				257.774627685547,
+				217.873779296875,
+				188.073425292969
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14791.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-E-attack-0.png",
+			"physics_tick": 99,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "69bb62b642e4f1a9dc64ec29c1256578197790a796001869b44e7f93b5b44c21",
+			"visible_body_viewport": [
+				546.984436035156,
+				253.123840332031,
+				137.905700683594,
+				191.692962646484
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14791.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-E-attack-1.png",
+			"physics_tick": 121,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "3cd366dad6ae379eeb02cf9960d5e9aee649faee10ea222d24183cbb9945dbaa",
+			"visible_body_viewport": [
+				565.18310546875,
+				267.278381347656,
+				196.141540527344,
+				177.942810058594
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14791.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 0,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-E-attack-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-E-attack-2.png",
+			"physics_tick": 132,
+			"player_hp": 1832,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_0",
+			"sha256": "499fae7c8b2c7c74f027f73794add4c31bc0601eb3dc1d82bd40696d0a44813d",
+			"visible_body_viewport": [
+				552.646240234375,
+				261.212158203125,
+				143.971923828125,
+				184.009063720703
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14791.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-E-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-E-contact.png",
+			"physics_tick": 146,
+			"player_hp": 1729,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_0",
+			"sha256": "c6c5e0009aeb9a7e0e72066e644addf702592fbf9dc26d34bf6b583984bc24dd",
+			"visible_body_viewport": [
+				557.22119140625,
+				261.085784912109,
+				143.041748046875,
+				184.762268066406
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14826.6611328125,
+				6223.2099609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SE-walk.png",
+			"physics_tick": 160,
+			"player_hp": 1729,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_1",
+			"sha256": "aafab72dcb288e5b507af99b70eb16d2289a4748a9b0587620cf5217e0dc84a1",
+			"visible_body_viewport": [
+				550.598876953125,
+				267.045837402344,
+				214.562622070312,
+				179.464416503906
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14885.3447265625,
+				6281.8935546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SE-attack-0.png",
+			"physics_tick": 245,
+			"player_hp": 1729,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "c9e9572dbd9b33318bd720d9dd3128f2a29536324c24beef1715223fa7a4567f",
+			"visible_body_viewport": [
+				563.161071777344,
+				256.359161376953,
+				162.170593261719,
+				188.862030029297
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14885.3447265625,
+				6281.8935546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SE-attack-1.png",
+			"physics_tick": 267,
+			"player_hp": 1729,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "a9fdb619e080ac701ac604abff44918ef7418e72379db4522ecb7c54ffb7b681",
+			"visible_body_viewport": [
+				570.440551757812,
+				271.726959228516,
+				171.876586914062,
+				173.08984375
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14885.3447265625,
+				6281.8935546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 1,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-attack-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SE-attack-2.png",
+			"physics_tick": 278,
+			"player_hp": 1729,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_1",
+			"sha256": "06e06bc9edfc4192854f09e69e28be005aa552ca525f7a0c22008dfd681b2a15",
+			"visible_body_viewport": [
+				558.712463378906,
+				261.212158203125,
+				150.442565917969,
+				183.604644775391
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14885.3447265625,
+				6281.8935546875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SE-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SE-contact.png",
+			"physics_tick": 291,
+			"player_hp": 1626,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_1",
+			"sha256": "bb9b70a308428324b21c0969532596327700da1c53c415e19b364425891d6adc",
+			"visible_body_viewport": [
+				554.572265625,
+				262.410247802734,
+				173.50439453125,
+				183.437835693359
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6109.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-S-walk.png",
+			"physics_tick": 304,
+			"player_hp": 1626,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_2",
+			"sha256": "b1ca046814e9d33dd7af91f454076aa21a763a8410ee88302819bdedb124f000",
+			"visible_body_viewport": [
+				538.066833496094,
+				268.839752197266,
+				188.442260742188,
+				177.041839599609
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6194.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-S-attack-0.png",
+			"physics_tick": 391,
+			"player_hp": 1626,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "d3c130b00d76d0c1365a8b9e7a68c7f48a1a8945abeb5ec28960a2669e8972cd",
+			"visible_body_viewport": [
+				557.168640136719,
+				261.558776855469,
+				159.355773925781,
+				183.322204589844
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6194.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-S-attack-1.png",
+			"physics_tick": 413,
+			"player_hp": 1626,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "6fceed2feac494e1b2537c0bc5bec3a1b0dd7c21ccb86cb4afee3696a616d566",
+			"visible_body_viewport": [
+				548.338928222656,
+				261.558776855469,
+				176.17431640625,
+				183.322204589844
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6194.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 2,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-S-attack-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-S-attack-2.png",
+			"physics_tick": 424,
+			"player_hp": 1626,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_2",
+			"sha256": "686b29c7e267caecab1621f9532741a1b77a938158c6d80ac6f8a00e26e95114",
+			"visible_body_viewport": [
+				555.48681640625,
+				260.717864990234,
+				174.492431640625,
+				184.583587646484
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6194.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-S-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-S-contact.png",
+			"physics_tick": 437,
+			"player_hp": 1523,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_2",
+			"sha256": "593473b4087ed05225c7619c51573f996738de99c4166d0ae0baeef437fa8b22",
+			"visible_body_viewport": [
+				553.490905761719,
+				260.792388916016,
+				178.383056640625,
+				185.089202880859
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15376.7900390625,
+				6223.2099609375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SW-walk.png",
+			"physics_tick": 450,
+			"player_hp": 1523,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_3",
+			"sha256": "0665a86019df6327af980a0daa6bcc9157fac1d6bd6f38438753874008ac16e3",
+			"visible_body_viewport": [
+				525.3251953125,
+				270.180969238281,
+				187.10107421875,
+				175.700622558594
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15316.6923828125,
+				6283.3076171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SW-attack-0.png",
+			"physics_tick": 537,
+			"player_hp": 1523,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "070f42e3da5281bf470980fc2b86fd1755661d6455bef0f07e28cd1d908d2ae5",
+			"visible_body_viewport": [
+				564.316528320312,
+				267.024841308594,
+				162.719482421875,
+				177.856140136719
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15316.6923828125,
+				6283.3076171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SW-attack-1.png",
+			"physics_tick": 559,
+			"player_hp": 1523,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "d893010f2e317a89877d24b0d0dce92f2b84f4ab8fceb8a9547691600621d085",
+			"visible_body_viewport": [
+				518.906433105469,
+				275.854553222656,
+				190.470092773438,
+				169.026428222656
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15316.6923828125,
+				6283.3076171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 3,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-attack-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SW-attack-2.png",
+			"physics_tick": 570,
+			"player_hp": 1523,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_3",
+			"sha256": "05bc68f1c405cbab211a29653a3298dce289db70ae902ac85913c40fd188537d",
+			"visible_body_viewport": [
+				568.941650390625,
+				262.820190429688,
+				150.526000976562,
+				182.060791015625
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15316.6923828125,
+				6283.3076171875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-SW-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-SW-contact.png",
+			"physics_tick": 583,
+			"player_hp": 1420,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_3",
+			"sha256": "b9e0f0a468a5670115eeac342f35adf94186ef457a934fb18d9498faa8823351",
+			"visible_body_viewport": [
+				553.490905761719,
+				263.474853515625,
+				177.712463378906,
+				182.40673828125
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15490.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-W-walk.png",
+			"physics_tick": 596,
+			"player_hp": 1420,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_4",
+			"sha256": "fe0b736c86b417519a4cfed1fba5cd72a07dd6ddf82af446ba6a0ca9b02d7d77",
+			"visible_body_viewport": [
+				523.451354980469,
+				260.953338623047,
+				194.254211425781,
+				185.071319580078
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15405.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-W-attack-0.png",
+			"physics_tick": 683,
+			"player_hp": 1420,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "2cb3eee4470fc59ffcd6b0157e821f01bf6f8c678e1930d1b1bdbd0317b0f69a",
+			"visible_body_viewport": [
+				554.022521972656,
+				253.866394042969,
+				155.027038574219,
+				191.069732666016
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15405.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-W-attack-1.png",
+			"physics_tick": 705,
+			"player_hp": 1420,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "3047c03acde5c697be1a70f417889f62a2f938a1edee59770e9f67f31f3e90f6",
+			"visible_body_viewport": [
+				500.60986328125,
+				265.156860351562,
+				201.925964355469,
+				179.779235839844
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15405.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 4,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-W-attack-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-W-attack-2.png",
+			"physics_tick": 716,
+			"player_hp": 1420,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_4",
+			"sha256": "057bc8e4a39d6979ac4890ed88efb1182f14bf3f1a2d3ce82b1baf124b76b070",
+			"visible_body_viewport": [
+				555.325256347656,
+				262.117126464844,
+				152.855773925781,
+				183.253234863281
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15405.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-W-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-W-contact.png",
+			"physics_tick": 729,
+			"player_hp": 1317,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_4",
+			"sha256": "d3606a72eb8af8307a9047df24e1d60d5a87b177e7109f06a436255487e5d070",
+			"visible_body_viewport": [
+				555.94482421875,
+				260.246948242188,
+				170.237365722656,
+				186.484069824219
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15376.7900390625,
+				6773.3388671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NW-walk.png",
+			"physics_tick": 742,
+			"player_hp": 1317,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_5",
+			"sha256": "9683591836d35d11a4068e1206da9d741fd266d839fddf510ee1f829ee12889c",
+			"visible_body_viewport": [
+				521.328308105469,
+				261.659729003906,
+				200.611633300781,
+				184.364929199219
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15316.6923828125,
+				6713.2412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NW-attack-0.png",
+			"physics_tick": 829,
+			"player_hp": 1317,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "f16f7f323becfb9131615249b75630c39eb92634ded125487055d92e9f437652",
+			"visible_body_viewport": [
+				555.321350097656,
+				262.551391601562,
+				151.9873046875,
+				182.819000244141
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15316.6923828125,
+				6713.2412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NW-attack-1.png",
+			"physics_tick": 851,
+			"player_hp": 1317,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "990767fe19fde526eab93c3636530015943ec3e63ac90258f47a907a0e2597a0",
+			"visible_body_viewport": [
+				521.884155273438,
+				268.630859375,
+				184.990234375,
+				176.305236816406
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15316.6923828125,
+				6713.2412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 5,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-attack-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NW-attack-2.png",
+			"physics_tick": 862,
+			"player_hp": 1317,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_5",
+			"sha256": "09b86de21150da47bec2c3eab190b82ee3618298f531c511ba118ff442279981",
+			"visible_body_viewport": [
+				557.058349609375,
+				260.380126953125,
+				145.039306640625,
+				184.990234375
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15316.6923828125,
+				6713.2412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NW-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NW-contact.png",
+			"physics_tick": 875,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_5",
+			"sha256": "4d1a184f771ad66991fd0db28b67fcb68e5b52ff91954de6fdcec32d8966cca6",
+			"visible_body_viewport": [
+				550.289855957031,
+				265.191619873047,
+				165.999084472656,
+				180.833038330078
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6887.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-N-walk.png",
+			"physics_tick": 888,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_6",
+			"sha256": "18fcfb686373620b9fef34e339a78b36127015742e8048968f2dc33012a7841d",
+			"visible_body_viewport": [
+				540.980773925781,
+				259.036010742188,
+				179.117553710938,
+				187.316589355469
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6802.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-N-attack-0.png",
+			"physics_tick": 975,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "bc1cd2c8c029cd69200d7e15d7a80ca3c6cea463a2dfa405ae598fe19481a3e6",
+			"visible_body_viewport": [
+				551.962280273438,
+				262.449188232422,
+				175.296264648438,
+				183.866302490234
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6802.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-N-attack-1.png",
+			"physics_tick": 997,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "ba317c2e745aeb9c21614826757b4b17976e19cb2108fbe1ea71a29f61b34ef9",
+			"visible_body_viewport": [
+				563.648742675781,
+				222.715362548828,
+				156.598022460938,
+				223.600128173828
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6802.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 6,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-N-attack-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-N-attack-2.png",
+			"physics_tick": 1008,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_6",
+			"sha256": "0dd0b2531f8223aa06166c01a30af08d59e09a1c7e374635860b1fa3f001b443",
+			"visible_body_viewport": [
+				548.066833496094,
+				267.902862548828,
+				191.657287597656,
+				179.191741943359
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				15101.7255859375,
+				6802.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-N-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-N-contact.png",
+			"physics_tick": 1021,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_6",
+			"sha256": "eb075fba837fdcc6c11d60e45786514401d059940f6a6fdd93527cd100a5a8da",
+			"visible_body_viewport": [
+				558.640258789062,
+				262.820190429688,
+				168.395751953125,
+				182.901733398438
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14826.6611328125,
+				6773.3388671875
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-walk",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NE-walk.png",
+			"physics_tick": 1034,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "walk_7",
+			"sha256": "6c553076f1c9c0eee5e6bdf130d82c592ce9e21144ba39ee9477cd08f491f7ff",
+			"visible_body_viewport": [
+				576.930419921875,
+				260.297424316406,
+				160.827392578125,
+				186.05517578125
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14886.7587890625,
+				6713.2412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0166666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NE-attack-0.png",
+			"physics_tick": 1121,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "ef4ac6ceb2d7b605235054e8f93b726536d665be251b24ced63adee39a754e1f",
+			"visible_body_viewport": [
+				574.700988769531,
+				275.0234375,
+				162.631469726562,
+				170.639831542969
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14886.7587890625,
+				6713.2412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.366666666666667,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NE-attack-1.png",
+			"physics_tick": 1143,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "3a19132ba47a2ba0a3a88e3ea9a521ddb325c1a48beeae2b372db8497f9a4ee5",
+			"visible_body_viewport": [
+				580.861267089844,
+				263.318878173828,
+				214.377868652344,
+				182.344360351562
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14886.7587890625,
+				6713.2412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.533333333333333,
+			"camera_only_detail": true,
+			"contact_count": 7,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-attack-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NE-attack-2.png",
+			"physics_tick": 1154,
+			"player_hp": 1214,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "attack_7",
+			"sha256": "74f326e9950dd94f490bcc7e9f49bcd9dca32b4667e97c211638a36816a676d6",
+			"visible_body_viewport": [
+				538.971374511719,
+				265.166961669922,
+				210.681640625,
+				180.496276855469
+			]
+		},
+		{
+			"actor_hp": 1410,
+			"actor_world": [
+				14886.7587890625,
+				6713.2412109375
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.683333333333334,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "ai-NE-contact",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/ai-NE-contact.png",
+			"physics_tick": 1167,
+			"player_hp": 1111,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "ae87f46fad3f34659f800bff4e1cb39c4861fb797483345cac3c1a982e885824",
+			"visible_body_viewport": [
+				559.27099609375,
+				260.928100585938,
+				155.781799316406,
+				184.793823242188
+			]
+		},
+		{
+			"actor_hp": 1365,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-hit",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/lifecycle-hit.png",
+			"physics_tick": 1394,
+			"player_hp": 1111,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "hit_7",
+			"sha256": "0076ecc3c37a124450ee98b9dda3fa190a372ad9deeb6e76e993e6e5fe52c309",
+			"visible_body_viewport": [
+				575.933044433594,
+				273.175354003906,
+				153.391052246094,
+				172.487915039062
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-ground-drop",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/lifecycle-ground-drop.png",
+			"physics_tick": 3298,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "idle_7",
+			"sha256": "ab4c3762f9415e8ccd435be76f32be2140d6ccbb14eabcadd4fc8240ba8a2cd4",
+			"visible_body_viewport": [
+				559.27099609375,
+				260.928100585938,
+				155.781799316406,
+				184.793823242188
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 1,
+			"kind": "lifecycle-death-0",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/lifecycle-death-0.png",
+			"physics_tick": 3300,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "745a1488fbd214bb9a76928b531d46df1f1824558f5f0742f911e7e54dd5d222",
+			"visible_body_viewport": [
+				585.902282714844,
+				271.951965332031,
+				128.715209960938,
+				173.112609863281
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 0,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-manual-pickup",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/lifecycle-manual-pickup.png",
+			"physics_tick": 3311,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "b8d4f6eb4648ca700dd2c46f8abb9d96d94b265ee6c13143ad32fc1f752b3e37",
+			"visible_body_viewport": [
+				585.902282714844,
+				271.951965332031,
+				128.715209960938,
+				173.112609863281
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 1,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-1",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/lifecycle-death-1.png",
+			"physics_tick": 3314,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "6a773d548c98a8f0a3ba8b199f2629d0a0f75ca9e9195d89ccda01f38a8a3af0",
+			"visible_body_viewport": [
+				574.709716796875,
+				343.211669921875,
+				133.192260742188,
+				101.479797363281
+			]
+		},
+		{
+			"actor_hp": 0,
+			"actor_world": [
+				15141.7255859375,
+				6498.2744140625
+			],
+			"actual_Main": true,
+			"attack_elapsed": 0.0,
+			"camera_only_detail": true,
+			"contact_count": 8,
+			"frame": 2,
+			"ground_drop_count": 0,
+			"kind": "lifecycle-death-2",
+			"path": "/workspace/scratch/remaining106-main-review-20261016/visual-actual/captures/fear-agni-monster-authored/lifecycle-death-2.png",
+			"physics_tick": 3328,
+			"player_hp": 1922,
+			"production_stats_or_map_changes": false,
+			"resolved_key": "death_7",
+			"sha256": "ae68509c185167fe5c5c38d4ab0fd49d8eb4f5ee8d6eb7b0c2e062d5af098a43",
+			"visible_body_viewport": [
+				562.397827148438,
+				369.327789306641,
+				152.5927734375,
+				75.7367858886719
+			]
+		}
+	],
+	"scope": "original-based fear_agni_monster_authored_v2, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"ai-E-walk.png",
+		"ai-E-attack-0.png",
+		"ai-E-attack-1.png",
+		"ai-E-attack-2.png",
+		"ai-E-contact.png",
+		"monster-E.png",
+		"ai-SE-walk.png",
+		"ai-SE-attack-0.png",
+		"ai-SE-attack-1.png",
+		"ai-SE-attack-2.png",
+		"ai-SE-contact.png",
+		"monster-SE.png",
+		"ai-S-walk.png",
+		"ai-S-attack-0.png",
+		"ai-S-attack-1.png",
+		"ai-S-attack-2.png",
+		"ai-S-contact.png",
+		"monster-S.png",
+		"ai-SW-walk.png",
+		"ai-SW-attack-0.png",
+		"ai-SW-attack-1.png",
+		"ai-SW-attack-2.png",
+		"ai-SW-contact.png",
+		"monster-SW.png",
+		"ai-W-walk.png",
+		"ai-W-attack-0.png",
+		"ai-W-attack-1.png",
+		"ai-W-attack-2.png",
+		"ai-W-contact.png",
+		"monster-W.png",
+		"ai-NW-walk.png",
+		"ai-NW-attack-0.png",
+		"ai-NW-attack-1.png",
+		"ai-NW-attack-2.png",
+		"ai-NW-contact.png",
+		"monster-NW.png",
+		"ai-N-walk.png",
+		"ai-N-attack-0.png",
+		"ai-N-attack-1.png",
+		"ai-N-attack-2.png",
+		"ai-N-contact.png",
+		"monster-N.png",
+		"ai-NE-walk.png",
+		"ai-NE-attack-0.png",
+		"ai-NE-attack-1.png",
+		"ai-NE-attack-2.png",
+		"ai-NE-contact.png",
+		"monster-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png",
+		"lifecycle-hit.png",
+		"lifecycle-ground-drop.png",
+		"lifecycle-death-0.png",
+		"lifecycle-manual-pickup.png",
+		"lifecycle-death-1.png",
+		"lifecycle-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"map": "aden_world",
+		"normal": "공포의 아그니",
+		"normal_is_existing_population_actor": false,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				15125.7255859375,
+				6498.2744140625
+			],
+			"offset": [
+				0.0,
+				0.0
+			],
+			"other_actor_clear": true,
+			"repositioned": false,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_2.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_2.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"stats_overridden": false,
+		"synthetic_fixture": false,
+		"visual_approaches": {
+			"E": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					14711.7255859375,
+					6498.2744140625
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"N": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15101.7255859375,
+					6888.2744140625
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"NE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					14825.9541015625,
+					6774.0458984375
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"NW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15377.4970703125,
+					6774.0458984375
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"S": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15101.7255859375,
+					6108.2744140625
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"SE": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					14825.9541015625,
+					6222.5029296875
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"SW": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15377.4970703125,
+					6222.5029296875
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			},
+			"W": {
+				"foreground_and_other_actor_clear": true,
+				"map_modified": false,
+				"start": [
+					15491.7255859375,
+					6498.2744140625
+				],
+				"target": [
+					15101.7255859375,
+					6498.2744140625
+				],
+				"unchanged_attack_range": 310.0,
+				"unchanged_start_distance": 390.0,
+				"walkable_line": true
+			}
+		}
+	},
+	"staff_normal": []
+}

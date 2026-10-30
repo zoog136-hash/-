@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-fixed-declared-rig-root-baseline-proposal-20261020-v08/pr122-build-authored-clip-request-v06.py", line 163, in <module>
+    if __name__ == '__main__': main()
+                               ^^^^^^
+  File "/workspace/scratch/mythic413-fixed-declared-rig-root-baseline-proposal-20261020-v08/pr122-build-authored-clip-request-v06.py", line 138, in main
+    derived, layout_proof = apply_reviewed_layout(atlas, expanded, layout, source_region_review=source_regions)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/twilight/tools/pr122_reviewed_runtime_layout.py", line 126, in apply_reviewed_layout
+    checked, _ = reviewed_regions.apply_reviewed_regions(path, canonical, source_region_review)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/twilight/tools/pr122_reviewed_source_regions.py", line 162, in apply_reviewed_regions
+    raise ValueError("Reviewed base geometry SHA256 does not match")
+ValueError: Reviewed base geometry SHA256 does not match

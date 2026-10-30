@@ -1,0 +1,233 @@
+{
+  "status": "LOSSLESS_OWNED_PARTS_PASS",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/thebes_osiris/raw/S-attack-v01.png",
+  "source_sha256": "d467d8ae4df53ddff4d6e270d7ac3bdb79d74c9ad7e7fe37bca1e2bd8adea874",
+  "texture": "assets/actors/eight_direction/boss_draft_first/thebes_osiris/owned_parts_v01/S-attack-v01.png",
+  "texture_sha256": "996f564a4f413623bb93601af3a36700da0b8a2f5935457cb928e6535f4260da",
+  "geometry": {
+    "image_size": [
+      1824,
+      1216
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "S",
+        "region": [
+          3,
+          3,
+          519,
+          583
+        ],
+        "margin": [
+          515,
+          410,
+          953,
+          889
+        ],
+        "source_anchor": [
+          224,
+          513
+        ],
+        "rgba_sha256": "ac92ab8ec45f6803a7c5d1117a0e62c9db85e0654ad169e6ebf569e4550f1522",
+        "original_source_region": [
+          35,
+          1,
+          519,
+          583
+        ],
+        "original_source_anchor": [
+          256,
+          511
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "S",
+        "region": [
+          611,
+          3,
+          599,
+          600
+        ],
+        "margin": [
+          487,
+          426,
+          873,
+          872
+        ],
+        "source_anchor": [
+          860,
+          497
+        ],
+        "rgba_sha256": "370645ee75c39397b6aeea89a67af583b6eb4579da37603a6f235e781d62d5d9",
+        "original_source_region": [
+          519,
+          16,
+          599,
+          600
+        ],
+        "original_source_anchor": [
+          768,
+          510
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "S",
+        "region": [
+          1219,
+          3,
+          497,
+          546
+        ],
+        "margin": [
+          479,
+          432,
+          975,
+          926
+        ],
+        "source_anchor": [
+          1476,
+          491
+        ],
+        "rgba_sha256": "e23fd8b5ed487d8bf8f2c4d0c0bb5744103b911248758543470ecf074f0667ad",
+        "original_source_region": [
+          1023,
+          22,
+          497,
+          546
+        ],
+        "original_source_anchor": [
+          1280,
+          510
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "S",
+        "region": [
+          3,
+          611,
+          565,
+          519
+        ],
+        "margin": [
+          541,
+          438,
+          907,
+          953
+        ],
+        "source_anchor": [
+          198,
+          1093
+        ],
+        "rgba_sha256": "821aa6dc199d68ede006e24af197cf4567ba428302c994c40f9101f6941f6fc9",
+        "original_source_region": [
+          61,
+          505,
+          565,
+          519
+        ],
+        "original_source_anchor": [
+          256,
+          987
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "S",
+        "region": [
+          611,
+          611,
+          577,
+          495
+        ],
+        "margin": [
+          479,
+          432,
+          895,
+          977
+        ],
+        "source_anchor": [
+          868,
+          1099
+        ],
+        "rgba_sha256": "c26b4b3ba0f10db33a68ed9fada06d9114027e26a77ed93a10386cf9749fcb26",
+        "original_source_region": [
+          511,
+          513,
+          577,
+          495
+        ],
+        "original_source_anchor": [
+          768,
+          1001
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "S",
+        "region": [
+          1219,
+          611,
+          479,
+          536
+        ],
+        "margin": [
+          493,
+          391,
+          993,
+          936
+        ],
+        "source_anchor": [
+          1462,
+          1140
+        ],
+        "rgba_sha256": "47c69ce925939c87f8709401d935507c2d630afc5adf5cc1de4d020d4653a534",
+        "original_source_region": [
+          1037,
+          471,
+          479,
+          536
+        ],
+        "original_source_anchor": [
+          1280,
+          1000
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 551.0,
+    "canvas_size": [
+      1472,
+      1472
+    ],
+    "foot": [
+      736,
+      920
+    ]
+  },
+  "proof": {
+    "original_visible_texels": 528160,
+    "missing": 0,
+    "duplicate": 0,
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "852aad42795f401e21ded6e51fc392da9d94e2f386cacc08327046c319e903fc",
+    "foreground_owner_sha256": "578ceeab0c4f3683f9c4aef7031247040733630f54c6e85213d0943ed0dec4c0",
+    "detached_pixels": 0,
+    "detached_fragments": [],
+    "minimum_required_owner_margin": 32.0,
+    "subthreshold_fringe_texels": 131652,
+    "rule": "alpha16 topology; alpha1..16 nearest proven foreground only",
+    "pose_regions_may_interleave_in_source": true,
+    "original_png_unchanged": true,
+    "pose_pixels_invented": 0
+  },
+  "actor": "monster:테베 오시리스",
+  "slug": "thebes_osiris",
+  "clip": "S-attack-v01",
+  "role": "attack",
+  "direction": "S",
+  "original_cause": "foreign_body_rectangle"
+}

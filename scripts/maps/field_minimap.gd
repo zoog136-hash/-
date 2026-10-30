@@ -3,44 +3,36 @@ class_name FieldMinimap
 
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
-const RASTER_CACHE = preload("res://scripts/maps/minimap_raster_cache.gd")
-const GEOGRAPHY_CACHE = preload("res://scripts/maps/minimap_geography_cache.gd")
-var geography_cache = GEOGRAPHY_CACHE.new()
-var raster_cache = RASTER_CACHE.new()
-var static_cache_enabled: bool = true
-var static_only: bool = false
 var source_overview: Texture2D
+var boss_region_mesh: MultiMesh
 var world: Node
 var field: PlayableField
 var bounds := Rect2(0,0,1,1)
 var clock: float = 0.0
 var area := Rect2(9,27,204,136)
+# Map geometry is immutable while the minimap redraws at ~8 Hz.
+var cached_structure_floor: Array[PackedVector2Array] = []
+var cached_structure_zones: Array[Dictionary] = []
+var cached_structure_pits: Array[PackedVector2Array] = []
+var cached_hunting_polygons: Dictionary = {}
+var cached_static_geometry_ready: bool = false
 
 func configure(controller: Node, value: PlayableField) -> void:
 	world = controller
 	field = value
-	geography_cache.configure(value)
 	bounds = field.bounds if field != null else Rect2(Vector2.ZERO,world.world_size)
 	source_overview = (field as OriginalPlayableField).overview_texture() if field is OriginalPlayableField else null
 	if field is NativePngField: source_overview = field.overview_texture()
-	if not static_only: raster_cache.invalidate()
+	_prepare_static_geometry()
+	_cache_boss_markers()
 	queue_redraw()
 
 func _ready() -> void:
-	if static_only:
-		clip_contents = true
-		set_process(false)
-		return
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	clip_contents = true
 	tooltip_text = "클릭: 이동 경로 · 청록: 이동석 · 금색: 마을 · 빨강: 보스"
 
-func set_static_cache_enabled(enabled: bool) -> void:
-	static_cache_enabled = enabled
-	queue_redraw()
-
 func _process(delta: float) -> void:
-	if not static_only and is_visible_in_tree(): raster_cache.prepare(self)
 	clock -= delta
 	if clock <= 0.0:
 		clock = .12
@@ -50,28 +42,15 @@ func _point(p: Vector2) -> Vector2:
 	return COORD.world_to_minimap(p,bounds,area)
 
 func _draw() -> void:
-	if world == null: return
-	if static_only:
-		_draw_static()
+	if world == null:
 		return
-	_draw_frame()
-	if static_cache_enabled and raster_cache.ready:
-		draw_texture_rect(raster_cache.texture(), Rect2(raster_cache.logical_origin, raster_cache.logical_extent), false)
-	else:
-		_draw_static()
-	_draw_dynamic()
-
-func _draw_frame() -> void:
-	# Keep text and translucent chrome in the main canvas at native DPI.
 	draw_style_box(_panel(),Rect2(Vector2.ZERO,size))
+	draw_rect(area,Color("202e27"))
+	if source_overview != null: draw_texture_rect(source_overview,area,false)
 	var font: Font = get_theme_default_font()
 	var heading: String = str(field.data.get("minimap",{}).get("title","ADEN  /  WORLD")) if field != null else "REGION  /  MAP"
 	if field is OriginalPlayableField: heading = str(field.data.map_name)
 	draw_string(font,Vector2(10,18),heading.to_upper(),HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("decfae"))
-
-func _draw_static() -> void:
-	draw_rect(area,Color("202e27"))
-	if source_overview != null: draw_texture_rect(source_overview,area,false)
 	if field != null:
 		_draw_structure_geography()
 		for surface: Dictionary in field.data.get("surfaces",[]):
@@ -115,9 +94,6 @@ func _draw_static() -> void:
 				draw_circle(_point(COORD.array_vector(region["center"])),3.0,Color("e6c16f") if str(region["type"])=="safe" else Color("dd7762"))
 		_draw_boss_regions()
 		_draw_hunting_obstacles()
-
-func _draw_dynamic() -> void:
-	var font: Font = get_theme_default_font()
 	for monster: TwilightMonster in world.monsters_root.get_children():
 		if monster.global_position.distance_squared_to(world.player.global_position) < 1600000:
 			draw_circle(_point(monster.global_position),1.3,Color("d68b73"))
@@ -143,20 +119,85 @@ func _map_polygon(record: Dictionary, key: String = "polygon") -> PackedVector2A
 	for p: Vector2 in REGION_GEOMETRY.polygon(record,key): points.append(_point(p))
 	return points
 
+func _prepare_static_geometry() -> void:
+	cached_structure_floor.clear()
+	cached_structure_zones.clear()
+	cached_structure_pits.clear()
+	cached_hunting_polygons.clear()
+	cached_static_geometry_ready = false
+	if field == null: return
+	if field.data.has("world_geometry"):
+		var structure: Dictionary = field.data.world_geometry
+		for raw: Array in field.data.navigable_polygons:
+			cached_structure_floor.append(_map_polygon({"polygon":raw}))
+		for zone: Dictionary in structure.terrain_zones:
+			var zone_shape: PackedVector2Array = REGION_GEOMETRY.polygon(zone)
+			for raw: Array in field.data.navigable_polygons:
+				for clipped: PackedVector2Array in Geometry2D.intersect_polygons(zone_shape,REGION_GEOMETRY.polygon({"polygon":raw})):
+					var mapped := PackedVector2Array()
+					for p: Vector2 in clipped: mapped.append(_point(p))
+					cached_structure_zones.append({"points":mapped, "color":Color(str(zone.tint))})
+		for shape: Dictionary in field.data.collision:
+			if str(shape.kind) == "dungeon_pit":
+				cached_structure_pits.append(_map_polygon(shape,"points"))
+	if field.data.has("hunting_paths"):
+		for region: Dictionary in field.data.regions:
+			if str(region.get("type","")) == "safe" or region.has("polygon"): continue
+			var outlines: Array[PackedVector2Array] = []
+			for spawn: Dictionary in field.data.get("monster_spawn",[]):
+				if str(spawn.id) != str(region.id): continue
+				var geometry: PackedVector2Array
+				if spawn.has("polygon"):
+					geometry = REGION_GEOMETRY.polygon(spawn)
+				else:
+					var a: Array = spawn.rect
+					geometry = PackedVector2Array([Vector2(a[0],a[1]), Vector2(a[0]+a[2],a[1]), Vector2(a[0]+a[2],a[1]+a[3]), Vector2(a[0],a[1]+a[3])])
+				for floor: PackedVector2Array in field.navigable_polygons:
+					for clipped: PackedVector2Array in Geometry2D.intersect_polygons(geometry,floor):
+						var outline := PackedVector2Array()
+						for p: Vector2 in clipped: outline.append(_point(p))
+						outlines.append(outline)
+			cached_hunting_polygons[str(region.id)] = outlines
+	cached_static_geometry_ready = true
+
 func _draw_structure_geography() -> void:
 	if not field.data.has("world_geometry"): return
 	var structure: Dictionary = field.data.world_geometry
 	draw_rect(area,Color(str(structure.void_color)))
-	for raw: Array in field.data.navigable_polygons:
-		draw_colored_polygon(_map_polygon({"polygon":raw}),Color("64715d") if str(field.data.map_id)=="aden_world" else Color("777578"))
-	for region: Dictionary in geography_cache.terrain:
-		var points := PackedVector2Array()
-		for p: Vector2 in region.polygon: points.append(_point(p))
-		draw_colored_polygon(points,region.color)
-	for shape: Dictionary in field.data.collision:
-		if str(shape.kind)=="dungeon_pit": draw_colored_polygon(_map_polygon(shape,"points"),Color("090b10"))
+	for outline: PackedVector2Array in cached_structure_floor:
+		draw_colored_polygon(outline,Color("64715d") if str(field.data.map_id)=="aden_world" else Color("777578"))
+	for entry: Dictionary in cached_structure_zones:
+		draw_colored_polygon(entry.points,entry.color)
+	for outline: PackedVector2Array in cached_structure_pits:
+		draw_colored_polygon(outline,Color("090b10"))
+
+func _cache_boss_markers() -> void:
+	boss_region_mesh=null
+	if not field is NativePngField or str(field.data.map_id)!="escaros_world":return
+	# The same sampled floor dots previously submitted ~2,000 separate draws
+	# every displayed frame. Geometry is static for the lifetime of this field.
+	var positions:=PackedVector2Array()
+	for spawn: Dictionary in field.data.get("monster_spawn",[]):
+		if str(spawn.get("mode",""))!="boss" or (not spawn.has("polygon") and not spawn.has("polygons")):continue
+		var cells: Array=field.spawn_cells.get(str(spawn.id),[])
+		var stride: int=maxi(1,ceili(float(cells.size())/480.0))
+		for i: int in range(0,cells.size(),stride):positions.append(_point(field.cell_to_world(cells[i])))
+	if positions.is_empty():return
+	var vertices:=PackedVector3Array()
+	for i: int in range(16):
+		var a:=Vector2.from_angle(TAU*i/16.0)*1.1
+		var b:=Vector2.from_angle(TAU*(i+1)/16.0)*1.1
+		vertices.append(Vector3.ZERO);vertices.append(Vector3(a.x,a.y,0));vertices.append(Vector3(b.x,b.y,0))
+	var arrays: Array=[];arrays.resize(Mesh.ARRAY_MAX);arrays[Mesh.ARRAY_VERTEX]=vertices
+	var mesh:=ArrayMesh.new();mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+	boss_region_mesh=MultiMesh.new();boss_region_mesh.transform_format=MultiMesh.TRANSFORM_2D
+	boss_region_mesh.use_colors=true;boss_region_mesh.mesh=mesh;boss_region_mesh.instance_count=positions.size()
+	for i: int in range(positions.size()):
+		boss_region_mesh.set_instance_transform_2d(i,Transform2D(0,positions[i]))
+		boss_region_mesh.set_instance_color(i,Color(.9,.35,.25,.45))
 
 func _draw_boss_regions() -> void:
+	if boss_region_mesh!=null:draw_multimesh(boss_region_mesh,null)
 	for spawn: Dictionary in field.data.get("monster_spawn",[]):
 		if str(spawn.get("mode",""))!="boss": continue
 		var raw_polygons: Array=[]
@@ -165,8 +206,9 @@ func _draw_boss_regions() -> void:
 		if raw_polygons.is_empty(): continue
 		var cells: Array = field.spawn_cells.get(str(spawn.id),[])
 		var stride: int = maxi(1,ceili(float(cells.size())/480.0))
-		for i: int in range(0,cells.size(),stride):
-			draw_circle(_point(field.cell_to_world(cells[i])),1.1,Color(.9,.35,.25,.45))
+		if boss_region_mesh==null:
+			for i: int in range(0,cells.size(),stride):
+				draw_circle(_point(field.cell_to_world(cells[i])),1.1,Color(.9,.35,.25,.45))
 		for raw: Array in raw_polygons:
 			if raw.size()<3: continue
 			var points: PackedVector2Array=_map_polygon({"polygon":raw})
@@ -175,9 +217,7 @@ func _draw_boss_regions() -> void:
 
 func _draw_hunting_region(region: Dictionary) -> void:
 	if str(region.type)=="safe": return
-	for polygon: PackedVector2Array in geography_cache.hunting.get(str(region.id),[]):
-		var outline := PackedVector2Array()
-		for p: Vector2 in polygon: outline.append(_point(p))
+	for outline: PackedVector2Array in cached_hunting_polygons.get(str(region.id),[]):
 		draw_colored_polygon(outline,Color(str(region.color),.16))
 
 func _draw_hunting_obstacles() -> void:

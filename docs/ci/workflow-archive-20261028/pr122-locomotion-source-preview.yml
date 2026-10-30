@@ -1,0 +1,121 @@
+name: PR122 partial locomotion source previews
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'docs/remake/evidence/pr122-remaining106/batch07/**'
+      - 'docs/remake/evidence/pr122-remaining106/batch08/**'
+      - 'docs/remake/evidence/pr122-remaining106/batch09/**'
+      - 'docs/remake/evidence/pr122-remaining106/batch10/**'
+      - 'tools/run_pr122_locomotion_source_preview.py'
+      - 'tools/check_pr122_locomotion_source_controls.py'
+      - 'tests/pr122_reaper_locomotion_source_preview.gd'
+      - '.github/workflows/pr122-locomotion-source-preview.yml'
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  source-main-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        actor: [reaper, doguri, doguri-W, doguri-N, doguri-run-E, doguri-N-registered]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/**
+            /docs/*.md
+            /docs/remake/*.md
+            /docs/remake/*.json
+            /docs/remake/evidence/**/*.json
+            /docs/remake/evidence/**/*.md
+            /docs/remake/evidence/pr122-remaining106/batch07/reaper-male-E-walk-standalone/*.png
+            /docs/remake/evidence/pr122-remaining106/batch07/doguri-E-walk6-pilot02/*.png
+            /docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/*.png
+            /docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot02/*.png
+            /docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/*.png
+            /docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-far-contact-pilot01/*.png
+            /docs/remake/evidence/pr122-remaining106/batch10/doguri-N-pilot04/*.png
+      - name: Install pinned Godot and software OpenGL
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 -o /tmp/pr122-gait-godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          printf '%s  %s\n' cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4 /tmp/pr122-gait-godot.zip | sha256sum -c -
+          unzip -q /tmp/pr122-gait-godot.zip -d /tmp
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
+      - name: Retain original resources and import actual Main
+        env:
+          REVIEW_ROOT: ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$REVIEW_ROOT"
+          git rev-parse HEAD > "$REVIEW_ROOT/checkout-SHA.txt"
+          python3 tools/check_resource_integrity.py --root .
+          python3 tools/audit_pr122_recovery.py --root . --output "$REVIEW_ROOT/392-reconciliation.json"
+          python3 tools/check_pr122_locomotion_source_controls.py --root . --output "$REVIEW_ROOT/source-controls"
+          export XDG_DATA_HOME="$REVIEW_ROOT/import-user/data"
+          export XDG_CONFIG_HOME="$REVIEW_ROOT/import-user/config"
+          export XDG_CACHE_HOME="$REVIEW_ROOT/import-user/cache"
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME"
+          timeout 900 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --import > "$REVIEW_ROOT/import.log" 2>&1
+          python3 - "$REVIEW_ROOT/import.log" <<'PY'
+          from pathlib import Path
+          import sys
+          sys.path.insert(0,'tools')
+          from test_project_support import classify_result
+          assert classify_result('import',0,Path(sys.argv[1]).read_text()) == (True,False)
+          PY
+      - name: Three-speed native playback and real keyboard movement
+        env:
+          REVIEW_ROOT: ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          REVIEW_ACTOR: ${{ matrix.actor }}
+        run: |
+          set -euo pipefail
+          case "$REVIEW_ACTOR" in
+            reaper) FIXTURE=docs/remake/evidence/pr122-remaining106/batch07/reaper-male-E-preview.json ;;
+            doguri) FIXTURE=docs/remake/evidence/pr122-remaining106/batch08/doguri-E-walk-preview.json ;;
+            doguri-W) FIXTURE=docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-preview-v03.json ;;
+            doguri-N) FIXTURE=docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-preview.json ;;
+            doguri-run-E) FIXTURE=docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-preview-v02.json ;;
+            doguri-N-registered) FIXTURE=docs/remake/evidence/pr122-remaining106/batch10/doguri-N-pilot04-preview-canvas1144.json ;;
+            *) exit 1 ;;
+          esac
+          xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_pr122_locomotion_source_preview.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --fixture "$FIXTURE" --output "$REVIEW_ROOT/actual-Main"
+          echo 'Technical source preview only. Final identity/gait/eight-direction/run approval remains HOLD; completed_added=0.'
+      - name: Preserve compact reports and failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr122-gait-${{ matrix.actor }}-reports-${{ github.sha }}
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/*.json
+            ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/*.txt
+            ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/*.log
+            ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/actual-Main/*.json
+            ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/actual-Main/*.log
+            ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/source-controls/*.json
+            ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/source-controls/*.txt
+      - name: Preserve every native actual Main PNG
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr122-gait-${{ matrix.actor }}-actual-PNG-${{ github.sha }}
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/pr122-gait-${{ matrix.actor }}/actual-Main/captures

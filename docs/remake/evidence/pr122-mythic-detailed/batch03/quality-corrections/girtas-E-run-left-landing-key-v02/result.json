@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "SOURCE_SINGLE_LEFT_LANDING_PASS_NOT_COMPLETE_CLIP",
+  "source_visual_status": "PASS",
+  "raw_path": "/workspace/scratch/girtas-E-run-left-landing-key-v02/girtas-E-run-left-landing-key-v02.png",
+  "raw_sha256": "22efb7bf18a10018e0b053a4ddb5cb14786b83d68c2cac554dd9d9438c87d35d",
+  "raw_bytes": 1485073,
+  "request_path": "/workspace/scratch/girtas-E-run-left-landing-key-v02/request-girtas-E-run-left-landing-key-v02.json",
+  "request_sha256": "5175fd9d294d5870df37a710d58cf5a5880378e45faf5ab467592acc0bf2ead7",
+  "corrective_reason": "First whole-pose LEFT request produced terminal push-off/HOLD. Materially different localized source-conditioned authoring preserves already forward farLEFT chain from actual selected Eidle and changes ONLY nearRIGHT leg into high knee drive; no failed run PNG or uncertain Ewalk candidate used. This remains a genuinely missing phase0, not repeated full6 or relabeled failed art.",
+  "geometry": {
+    "status": "GEOMETRY_PASS",
+    "frames": 1,
+    "region": [
+      7,
+      6,
+      1149,
+      1219
+    ],
+    "distinct": 1,
+    "canvas_size": 2048
+  },
+  "intended_game_phase": 0,
+  "independent_review_path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-left-key-v02-independent-review.json",
+  "independent_review_sha256": "442c8858f47bd55652ee033a68546d0051c841d8d0bba558ec04d1872cd450c2",
+  "visual_findings": [
+    "Independent reviewer confirms FAR LEFT separate chain leads forward/down to unique flat planted sole, while NEAR RIGHT thigh drives forward/up with folded raised boot.",
+    "Actual opposite anatomical support contact pair with RIGHT landing8e4 independently acknowledged.",
+    "Faithful original E model/camera/permanent RIGHT weapon hand and two legs. Strict geometry PASS."
+  ],
+  "visual_limitations": [
+    "No six-pose run/root/composite or actor approval."
+  ],
+  "complete_clip": false,
+  "actor_approval": false,
+  "generation_attempts": 1
+}

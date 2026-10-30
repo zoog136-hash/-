@@ -31,6 +31,9 @@ var summon_order: OptionButton
 var touch_start: Vector2
 var dragging: bool = false
 var touch_active: bool = false
+# Grayscale variants are created once per source texture while this view lives.
+# Do not re-read/decompress icons during the cooldown polling loop.
+var unlearned_icons: Dictionary = {}
 
 func configure(controller: Node) -> void:
 	hud=controller
@@ -119,8 +122,10 @@ func configure(controller: Node) -> void:
 	side.add_child(actions)
 	learn_button = UI.button("스킬 습득", func() -> void:
 		if selected.is_empty(): return
-		hud.get_parent().original_skills.catalog.learn(str(selected.id))
-		select(cards.get_selected_items()[0]))
+		if hud.get_parent().original_skills.catalog.learn(str(selected.id)):
+			refresh()
+		else:
+			select(cards.get_selected_items()[0]))
 	learn_button.name = "LearnOriginalSkill"
 	learn_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	actions.add_child(learn_button)
@@ -211,9 +216,10 @@ func refresh() -> void:
 		var record: Dictionary=filtered[index]
 		var passive := RULES.is_passive(record)
 		var learned: bool = hud.get_parent().original_skills.catalog.owned(record)
-		var icon: Texture2D = load(str(record.icon)) as Texture2D if record.has("icon") else hud._skill_icon(str(record.get("effect","")),str(record.get("type","")))
+		var icon: Texture2D = _icon_for_skill(record,learned)
 		cards.add_item(("" if learned else "미습득 ") + str(record.get("name",""))+"\n"+("패시브" if passive else "MP %d" % int(record.get("mp",0))),icon)
-		var color: Color=UI.grade(str(record.get("grade","일반")))
+		var color: Color=UI.grade(str(record.get("grade","일반"))) if learned else Color("aaa7a1")
+		cards.set_item_icon_modulate(index,Color.WHITE if learned else Color(.68,.68,.68,.62))
 		cards.set_item_custom_fg_color(index,color)
 		cards.set_item_custom_bg_color(index,Color(color,.07))
 	if filtered.is_empty():
@@ -225,6 +231,32 @@ func refresh() -> void:
 		cards.select(chosen)
 		select(chosen)
 		cards.get_v_scroll_bar().set_deferred("value",scroll_position)
+
+func _icon_for_skill(record: Dictionary, learned: bool) -> Texture2D:
+	var path: String = str(record.get("icon",""))
+	if not learned and not path.is_empty() and unlearned_icons.has(path):
+		return unlearned_icons[path] as Texture2D
+	var source: Texture2D = load(path) as Texture2D if not path.is_empty() else hud._skill_icon(str(record.get("effect","")),str(record.get("type","")))
+	return source if learned else _unlearned_icon(source)
+
+func _unlearned_icon(source: Texture2D) -> Texture2D:
+	if source == null: return null
+	var key: String = source.resource_path if not source.resource_path.is_empty() else "texture:%d" % source.get_instance_id()
+	if unlearned_icons.has(key): return unlearned_icons[key] as Texture2D
+	var source_image: Image = source.get_image()
+	if source_image == null or source_image.is_empty(): return source
+	var image: Image = source_image.duplicate() as Image
+	if image.is_compressed() and image.decompress() != OK: return source
+	# ItemList cannot apply a different shader per row. Use the native luminance
+	# conversion once at the displayed icon size, preserving source alpha.
+	var extent: int = maxi(image.get_width(),image.get_height())
+	if extent > 54:
+		var ratio: float = 54.0 / float(extent)
+		image.resize(maxi(1,roundi(image.get_width()*ratio)),maxi(1,roundi(image.get_height()*ratio)),Image.INTERPOLATE_LANCZOS)
+	image.convert(Image.FORMAT_LA8)
+	var gray: ImageTexture = ImageTexture.create_from_image(image)
+	unlearned_icons[key] = gray
+	return gray
 
 func select(index: int) -> void:
 	if index<0 or index>=filtered.size(): return

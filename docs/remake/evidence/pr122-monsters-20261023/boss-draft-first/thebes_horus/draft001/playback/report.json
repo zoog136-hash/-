@@ -1,0 +1,242 @@
+{
+	"camera_zoom": 1.0,
+	"capture_enabled": true,
+	"cases": [
+		{
+			"actual_Monster_reference_speed": 62.0,
+			"capture_count": 29,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/draft001/SpriteFrames.tres",
+			"key": "monster:테베 아누비스",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-28.6666660308838
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 0.895833333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_anubis/draft001/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-draft-first-min-batch001/thebes_anubis/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 62.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_0:0",
+						"idle_0:1",
+						"idle_0:2",
+						"idle_0:3",
+						"idle_0:4",
+						"idle_0:5"
+					],
+					"simulated_seconds": 1.6,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 2.131442
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 62.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"idle_2:2",
+						"idle_2:3",
+						"idle_2:4",
+						"idle_2:5"
+					],
+					"simulated_seconds": 1.6,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.65229
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "SW",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 62.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_3:0",
+						"idle_3:1",
+						"idle_3:2",
+						"idle_3:3",
+						"idle_3:4",
+						"idle_3:5"
+					],
+					"simulated_seconds": 1.6,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.622561
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "W",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 62.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_4:0",
+						"idle_4:1",
+						"idle_4:2",
+						"idle_4:3",
+						"idle_4:4",
+						"idle_4:5"
+					],
+					"simulated_seconds": 1.6,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.624919
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 64.0,
+			"capture_count": 7,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/draft001/SpriteFrames.tres",
+			"key": "monster:테베 호루스",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-28.6666660308838
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 0.895833333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_horus/draft001/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-draft-first-min-batch001/thebes_horus/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.2,
+					"direction": "W",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 64.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_4:0",
+						"idle_4:1",
+						"idle_4:2",
+						"idle_4:3",
+						"idle_4:4",
+						"idle_4:5"
+					],
+					"simulated_seconds": 1.6,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.594087
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		},
+		{
+			"actual_Monster_reference_speed": 60.0,
+			"capture_count": 22,
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/draft001/SpriteFrames.tres",
+			"key": "monster:테베 오시리스",
+			"movement_cadence_width_ratio": 1.0,
+			"movement_fps": 12.5,
+			"native_sprite_offset": [
+				0.0,
+				-28.6666660308838
+			],
+			"native_width_ratio": 1.0,
+			"original_profile_reference_speed": 210.0,
+			"pixel_scale": 0.895833333333,
+			"profile": "res://assets/actors/eight_direction/boss_draft_first/thebes_osiris/draft001/NativeMotionProfile.tres",
+			"samples_file": "/workspace/runtime/boss-draft-first-min-batch001/thebes_osiris/samples.json",
+			"segments": [
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "E",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 60.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_0:0",
+						"idle_0:1",
+						"idle_0:2",
+						"idle_0:3",
+						"idle_0:4",
+						"idle_0:5"
+					],
+					"simulated_seconds": 1.6,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.600368
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "S",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 60.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_2:0",
+						"idle_2:1",
+						"idle_2:2",
+						"idle_2:3",
+						"idle_2:4",
+						"idle_2:5"
+					],
+					"simulated_seconds": 1.6,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.619331
+				},
+				{
+					"attack_contact_source_index": 2,
+					"attack_seconds": 1.27,
+					"direction": "W",
+					"gait_delta_rule": "dt * movement_fps * actual_speed / reference_speed, plus original ActorMotion cadence-width adapter",
+					"move_speed": 60.0,
+					"role": "idle",
+					"sampled_clip_frames": [
+						"idle_4:0",
+						"idle_4:1",
+						"idle_4:2",
+						"idle_4:3",
+						"idle_4:4",
+						"idle_4:5"
+					],
+					"simulated_seconds": 1.6,
+					"status": "PLAYED_AT_GAME_SCALE",
+					"strike_events": [],
+					"virtual_foot_is_not_anatomical_contact_proof": true,
+					"wall_seconds": 1.62936
+				}
+			],
+			"source_canvas_metadata": "Vector2(256, 256)"
+		}
+	],
+	"display_server": "X11",
+	"engine": "4.7.2-stable (official)",
+	"quality_approval_changes": 0,
+	"schema": "pr122-boss-fix-real-speed-qa-v1",
+	"scope": "Original ActorMotion applied to a game-scale AnimatedSprite2D in a diagnostic ground arena; not actual Main, combat damage or automatic visual approval.",
+	"simulation_dt": 0.0166666666666667,
+	"speed_scale": 1.0,
+	"video_adapter": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

@@ -1,0 +1,37 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "SW",
+  "role": "run",
+  "version": "v02RIGHTlanding3crown",
+  "source_pose": 3,
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_batch": "batch03",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 1,
+  "transparent_background": true,
+  "references": [
+    "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/girtas-SW-run-RIGHT-heel-landing3-v01.png",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/girtas-SW-run-RIGHT-heel-landing3-v01.png": "eca89dafeff2f7f5fd88e8bc53e9f81cecf890d05c39bc91284cb7fd7bb820dd",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec"
+  },
+  "prompt": "Repair ONE specific production-art defect in image1, preserving its exact faithful Girtas SW RUN RIGHT landing pose and model. Transparent background, ONE complete full character, no text/guide/scene. Image1 has independently approved anatomy/camera/model/actual farRIGHT front heel landing and nearLEFT rear recovery AIR. The ONLY source defect is the TOP GOLD CROWN RAY APEX CLIPPED by the upper edge at approximately image1 native(525,0). Restore that ray as the complete original HARD THIN straight gold metal spike with a full sharply tapered POINT, faithful to the uncut original crown design in image2. This is actual artwork restoration of the cut tip. Give the complete crown/rays real clear transparent top margin and keep comfortable clear margins on sides/bottom so no other gear or boot is cut. Do not just pad an already-cut ray, alpha-erase its boundary, crop anything, or leave a blunt broken spike. Preserve the whole character's exact physical proportions and high detail, all joint angles, longrobe, hand/boot placements and ground-contact stance; frame the complete repaired figure comfortably in the square canvas.\nKeep actual RIGHT FAR=imageLEFT hip→thigh→knee→front boot as the DOWNLEFT leading HEEL contact, toe slightly raised. Keep actual LEFT NEAR=imageRIGHT leg folded behind into a visibly complete distinct recovery AIR boot, no toe ground-contact and no hidden/extra boot. Exactly TWO connected fully blackgold armored legs, no bare thigh. Keep original pale SW front3/4 face looking DOWNLEFT, long pale hair, THIN HARD radial gold rays, full original blackgold armor and ankle-length longrobe panels. Keep permanent RIGHT FAR low shoulder→elbow→grip arm continuously holding the original long SINUOUS blade FORWARD/DOWNLEFT; nearLEFT arm remains EMPTY. Exactly TWO arms, no added empty right hand or extra blade. Image2 is only original SW crown/upperbody identity, not an instruction to replace the approved pose. Every blade/ray/hair/robe/boot must be complete inside the final canvas. No pose redesign or other equipment change; only faithful crown-tip restoration and clear framing.",
+  "corrective_reason": "Localized actual restoration of clipped top crown ray only; sourcev01 anatomy/motion/model conceptualPASS but2strongsourceedgepixels strictHOLD. Preserve exact approved pose/gear, no padding/repack/alpha workaround or full6retry.",
+  "preserve_prior_raw": {
+    "path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/girtas-SW-run-RIGHT-heel-landing3-v01.png",
+    "sha256": "eca89dafeff2f7f5fd88e8bc53e9f81cecf890d05c39bc91284cb7fd7bb820dd"
+  },
+  "independent_source_inspection": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-contact0-3-independent-source-QC-v01.json",
+    "sha256": "67333f6d3a4dfda582f504e88e1f20fb25347a9f5ec4ba3d61c4c4928acd7af3"
+  },
+  "strict_boundary_hold": {
+    "path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/boundary-HOLD-proof.json",
+    "sha256": "c9e29c0024e5f7aaede0c1fd4641e6f1a49fc74f4e4f264ddd59a857b955b88d"
+  },
+  "requested_at": "2026-10-19T16:05:20.887855+00:00"
+}

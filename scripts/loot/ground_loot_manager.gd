@@ -2,8 +2,11 @@ extends RefCounted
 class_name TwilightGroundLootManager
 
 const LOOT = preload("res://scripts/loot/ground_loot.gd")
+const GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const LIFETIME: float = 600.0
 const MIN_VISIBLE_MS: int = 850
+const OCCUPANCY_CELL: float = 64.0
+const SEPARATION: float = 36.0
 var world: Node
 var records: Dictionary = {}
 var views: Dictionary = {}
@@ -11,6 +14,10 @@ var current_map: String = ""
 var current_batch: String = ""
 var expiry_timer: float = 0.0
 var revision: int = 0
+# Only the active map participates in placement. Spatial buckets keep a burst
+# of boss drops independent of the number of items left in distant maps.
+var occupancy: Dictionary = {}
+var occupancy_probes: int = 0
 
 func configure(owner_world: Node) -> void:
 	world = owner_world
@@ -31,10 +38,28 @@ func _icon(item_name: String) -> Texture2D:
 	var images: Dictionary = (world.get("catalog_image_index") as Dictionary).get("아이템", {})
 	return preload("res://scripts/ui/item_visual_resolver.gd").texture(item_record(item_name),item_name,images,true)
 
+func _index_record(record: Dictionary) -> void:
+	if str(record["map_id"]) != current_map: return
+	var key := Vector2i((_position(record) / OCCUPANCY_CELL).floor())
+	if not occupancy.has(key): occupancy[key] = {}
+	occupancy[key][str(record["id"])] = true
+
+func _unindex_record(record: Dictionary) -> void:
+	if str(record["map_id"]) != current_map: return
+	var key := Vector2i((_position(record) / OCCUPANCY_CELL).floor())
+	if not occupancy.has(key): return
+	occupancy[key].erase(str(record["id"]))
+	if occupancy[key].is_empty(): occupancy.erase(key)
+
 func _occupied(point: Vector2) -> bool:
-	for record: Dictionary in records.values():
-		if str(record["map_id"]) == current_map and _position(record).distance_squared_to(point) < 36.0 * 36.0:
-			return true
+	var low := Vector2i(((point - Vector2.ONE * SEPARATION) / OCCUPANCY_CELL).floor())
+	var high := Vector2i(((point + Vector2.ONE * SEPARATION) / OCCUPANCY_CELL).floor())
+	for y: int in range(low.y, high.y + 1):
+		for x: int in range(low.x, high.x + 1):
+			for id: String in occupancy.get(Vector2i(x, y), {}):
+				occupancy_probes += 1
+				if records.has(id) and _position(records[id]).distance_squared_to(point) < SEPARATION * SEPARATION:
+					return true
 	return false
 
 func _position(record: Dictionary) -> Vector2:
@@ -62,6 +87,7 @@ func spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: String 
 	for key: String in ["physical_item","item_record","player_dropped"]:
 		if metadata.has(key): record[key] = metadata[key]
 	records[record["id"]] = record
+	_index_record(record)
 	revision += 1
 	return _create_view(record)
 
@@ -69,10 +95,8 @@ func _create_view(record: Dictionary) -> Button:
 	var view: TwilightGroundLoot = LOOT.new()
 	var item_data: Dictionary = record.get("item_record",item_record(str(record["item_name"])))
 	var visual_slot: String = "scroll" if bool(item_data.get("crafting_scroll",false)) else ("material" if bool(item_data.get("crafting_material",false)) else str(item_data.get("slot","")))
-	var icon: Texture2D = _icon(str(record["item_name"]))
-	if record.has("item_record"):
-		var images: Dictionary = world.catalog_image_index.get("아이템",{})
-		icon = preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,str(record["item_name"]),images,true)
+	var images: Dictionary = world.catalog_image_index.get("아이템",{})
+	var icon: Texture2D = preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,str(record["item_name"]),images,true)
 	view.configure(record, icon, visual_slot)
 	(world.get("drops_root") as Node).add_child(view)
 	view.pressed.connect(world._on_ground_drop_clicked.bind(view))
@@ -90,12 +114,16 @@ func activate(map_id: String) -> void:
 	hide_map()
 	current_map = map_id
 	prune()
+	occupancy.clear()
+	for record: Dictionary in records.values(): _index_record(record)
 	for record: Dictionary in records.values():
 		if str(record["map_id"]) == current_map:
 			if not bool(world.call("_is_walkable_world", _position(record))):
 				var position_value: Vector2 = _find_spot(_position(record))
 				if not position_value.is_finite(): continue
+				_unindex_record(record)
 				record["position"] = [position_value.x, position_value.y]
+				_index_record(record)
 			_create_view(record)
 	revision += 1
 
@@ -120,6 +148,7 @@ func take(view: Button, from: Vector2, radius: float) -> Dictionary:
 	return record
 
 func _remove(id: String) -> void:
+	if records.has(id): _unindex_record(records[id])
 	if views.has(id):
 		var view: Button = views[id]
 		if is_instance_valid(view):
@@ -151,6 +180,7 @@ func snapshot() -> Array:
 func restore(saved: Variant) -> void:
 	hide_map()
 	records.clear()
+	occupancy.clear()
 	var now: float = Time.get_unix_time_from_system()
 	if saved is Array:
 		for entry: Variant in saved:
@@ -182,4 +212,8 @@ func restore(saved: Variant) -> void:
 			record.merge({"id":id, "item_name":item_name, "grade":str(item.get("grade", "일반")), "quantity":quantity,
 				"map_id":map_id, "created_at":float(record.get("created_at", now)), "expires_at":expires, "state":"ground", "hunt_batch":str(record.get("hunt_batch", ""))}, true)
 			records[id] = record
+	var source_catalog: Variant = world.get("catalog_db")
+	var gameplay_items: Variant = world.get("item_db")
+	if source_catalog is Dictionary and gameplay_items is Array:
+		GRADES.synchronize_ground_grades(source_catalog.get("아이템", []), gameplay_items, records.values())
 	activate(current_map)

@@ -1,0 +1,63 @@
+{
+  "schema": "PR122_NW_RUN_REPAIRED_PHASE3_SMALL_HILT_INDEPENDENT_SOURCE_QC_V1",
+  "utc": "2026-10-19T15:49:37.779011+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "SOURCE_PHASE3_REPAIR_PASS",
+  "scope": "Only actual new phase3 ad33f... faithful-small-hilt source repair and retained farRIGHT landing/nearLEFT folded recovery. No other source re-review or whole6/physical/runtime approval.",
+  "actor_approval_increment": 0,
+  "source_pin": {
+    "path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/girtas-NW-run-RIGHT-landing3-faithful-hilt-v06.png",
+    "sha256": "ad33fabdfa1ea7aa3b516d5d3769b15216f58e32f4c506f638d42d26fc066a6e",
+    "bytes": 1055980,
+    "actual_image_size": [
+      1254,
+      1254
+    ]
+  },
+  "request_pin": {
+    "path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/request.json",
+    "sha256": "3b531e8ad924678ad703e7fe29fad22822ae7e2b5013b576b3a24fdf994779ad"
+  },
+  "result_pin": {
+    "path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/result.json",
+    "sha256": "e219272bb9c61d9b96393c2d48dad612a7dfea5409f3a006583bbeeee248543d"
+  },
+  "geometry_pin": {
+    "path": "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/geometry-base2048.json",
+    "sha256": "de2f286d991112d4455dea45cd797863ae6e31d0d1689b300b6db83fcec85e9f",
+    "nominal_canvas_not_source_dimension": 2048
+  },
+  "reference_pins": {
+    "correct_selected_NWidle": {
+      "path": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+      "sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+      "hilt_ROI_xyxy": [
+        235,
+        210,
+        380,
+        385
+      ]
+    },
+    "request_references": {
+      "/workspace/scratch/girtas-NW-run-RIGHT-landing-key-v03/girtas-NW-run-RIGHT-landing3-v03.png": "19f288db198792a3b7103b351b40fa59a473c37343484f8101250f2b1b76a960",
+      "/workspace/scratch/girtas-NW-run-RIGHT-landing-faithful-hilt-v06/current-NW-idle0-small-collar-hilt-exactcrop.png": "3f3712d9deb8c0c4671e26dd20d6dd35ba026bc07edff3f563d720ccf57145fd"
+    }
+  },
+  "findings": {
+    "hilt": "Invented large diamond/four-prong guard is absent. FarRIGHT hand transitions through a small simple gold collar/short grip into the continuous sinuous blade, faithful to exact correct NWidle hilt crop.",
+    "actual_anatomy": "Rear-left NW camera retained. FarRIGHT leg leads forward/up-left from the far hip through robe occlusion to the visible forward landing boot. NearLEFT leg bends backward and exposes a separate upturned/dark sole recovery boot near image-center/right below the robe, preserving actual opposite-chain ownership.",
+    "model_endpoints": "Faithful silver/pale hair, hard gold crown/rays, long dark gold-trim robe, armor and full sinuous blade/endpoints retained. No new material rigid-body proportion or missing endpoint defect visible."
+  },
+  "remaining_HOLD": [
+    "Whole6 remains pending repaired phase1 visible recovery boot and repaired phase2 actual opposite RIGHT-leading AIR; phase0/4/5 prior scoped statuses untouched.",
+    "Physical roots/sole/AIR/scale assembly, actual compiledTRES/Godot and final actor approval remain unapproved. Actor267 remains0/defaultcatalogOFF."
+  ],
+  "prior_HOLD_preserved": {
+    "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/NW-run-six-v02-independent-source-HOLD-with-detail.json",
+    "sha256": "9246493e9d73298a39ef18c455d949ea5c95f5355a1d6d919ba27b53f0ab9d52",
+    "note": "Historical prior phase3 hilt defect remains recorded; this new raw resolves only that defect."
+  },
+  "private_review_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_review_ledger_sha256": "c058c183fc9f29ebd6c2bcb2a4b130e04df0e15780b8a5ff3c3638e4d93986cd",
+  "repository_mutations": false
+}

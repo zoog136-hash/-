@@ -1,0 +1,80 @@
+{
+  "schema": "PR122_SW_RUN_CONTACT0_3_INDEPENDENT_SOURCE_QC_V1",
+  "utc": "2026-10-19T16:03:59.675056+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "SOURCE0_PASS_SOURCE3_HOLD_TOP_CROWN_CLIPPING_ONLY",
+  "scope": "Actual new SW0 and SW3 singleton camera/model/opposite actual chains/gear/endpoints. Source3 conceptual anatomy/identity pass but overallsourceHOLD until real clipped crown tip repaired.",
+  "actor_approval_increment": 0,
+  "source_pins": [
+    {
+      "phase": 0,
+      "raw_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/girtas-SW-run-LEFT-heel-landing0-v01.png",
+      "raw_sha256": "00db6dba6679ef9975003b92a5b4dacb314a23363a0752c4d45ac60dc54cef10",
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/request.json",
+      "request_sha256": "cc26d8b90a55271425c9b0a9d91a5d0ce02d0030c7ab07c88f0e02500492ce68",
+      "receipt_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/generation-receipt.json",
+      "receipt_sha256": "65664488f1f377609fc9f28d6f8dbc70cca79513707c3624df4b2c177899936d",
+      "result_path": "/workspace/scratch/girtas-SW-run-LEFT-heel-landing0-key-v01/result.json",
+      "result_sha256": "896d210493fd2da86ad036b31a68dcf1616e321cd792fce3218a8ac24ceb7fa8",
+      "reference_pins": {
+        "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/SW-run-landing0-fixedbone.png": "2dfe43a9001e2a5d489a2139dd6a534b70285da19ab6b8b39da79d2c46d1e6e5",
+        "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec",
+        "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png": "b70d3643318e4db6cfbbf48865cbb833ff718e57c10a78de4d30675072affcd2",
+        "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png": "8d2ed75ce974a84abd5e1ccf1cfbc4d3a93cea1c6d41eacbae533872882e5fd3",
+        "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png": "bc4b9ddb3fc7b950347df4c875d75dd810f99f59968968feee01f5618728da8f"
+      },
+      "boundary_gt100_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    },
+    {
+      "phase": 3,
+      "raw_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/girtas-SW-run-RIGHT-heel-landing3-v01.png",
+      "raw_sha256": "eca89dafeff2f7f5fd88e8bc53e9f81cecf890d05c39bc91284cb7fd7bb820dd",
+      "actual_image_size": [
+        1254,
+        1254
+      ],
+      "request_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/request.json",
+      "request_sha256": "c8805b7d7e7dd3a9e1278d20e82fd8453c7db6bdc39e02eb1561bbf981145d59",
+      "receipt_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/generation-receipt.json",
+      "receipt_sha256": "85d79f340b861fec050d0d6a046efd4965a61fc0920f06c149ade9288ec8e12e",
+      "result_path": "/workspace/scratch/girtas-SW-run-RIGHT-heel-landing3-key-v01/result.json",
+      "result_sha256": "1c4fcee5a3091d36fa7eb57d07d5c537abb53004a6e240c1486d2770552454d6",
+      "reference_pins": {
+        "/workspace/scratch/girtas-SW-run-two-landing-solid-guide-v04/SW-run-landing3-fixedbone.png": "69796407b4046532123b3bf291a76ae9b35be0597cf28fd7e674f3ffd4ae90c5",
+        "/workspace/scratch/girtas-SW-run-production-reference-v01/upperbody-no-oldlegs.png": "c5649608c43e1bb8aaa8c9468451540dc07def45fd14177dc099825dad949cec",
+        "/workspace/scratch/girtas-SW-run-production-reference-v01/attack-upperbody-no-oldlegs.png": "b70d3643318e4db6cfbbf48865cbb833ff718e57c10a78de4d30675072affcd2",
+        "/workspace/scratch/girtas-SW-run-production-reference-v01/longrobe-material-no-oldlegs.png": "8d2ed75ce974a84abd5e1ccf1cfbc4d3a93cea1c6d41eacbae533872882e5fd3",
+        "/workspace/scratch/girtas-SW-run-production-reference-v01/permanent-sinuous-blade-material-no-oldlegs.png": "bc4b9ddb3fc7b950347df4c875d75dd810f99f59968968feee01f5618728da8f"
+      },
+      "boundary_gt100_counts": {
+        "left": 0,
+        "right": 0,
+        "top": 2,
+        "bottom": 0
+      }
+    }
+  ],
+  "findings": {
+    "phase0": "SOURCE_PASS. Actual nearLEFT thigh emerges on near/image-right pelvis side, reaches forward/down-left into complete knee/shin and heel-leading toe-up landing boot. FarRIGHT chain folds behind with a separate complete rear boot visible below/behind long-robe hem. Correct two arms/two legs and actual opposite single support.",
+    "phase3": "ANATOMY_CAMERA_MODEL_GEAR_PASS; SOURCE_HOLD. Actual farRIGHT thigh emerges on far/image-left side of apron into complete forward/down-left knee/shin/heel-contact boot. NearLEFT chain folds rear/image-right into complete separate recovery boot. This genuinely reverses phase0. Top crown/ray endpoint hits raw boundary (two alpha>100 pixels on top), so source cannot pass.",
+    "identity": "Both proper SW front/down-left camera; pale human face/long pale hair, hard gold rays/crown/pauldrons, long dark gold-trim billowing robe, farRIGHT low wrist with complete long sinuous blade forward/down-left, empty nearLEFT hand retained. No other material model/limb/endpoints defect observed.",
+    "proportion_limits": "No material source-only mismatch evident under pose flex; exact rigid head/pauldron/waist-to-leg scale requires physical fit. Generic guide bones not certified exact character ratios."
+  },
+  "single_material_fix_for3": "Restore the actually clipped top crown/ray apex with a complete tapered tip and real transparent margin through one localized production-art repair. Preserve actual opposite leg pose, armor, crown rays, weapon and long robe. No padding/repack/alpha-threshold workaround.",
+  "remaining_HOLD": [
+    "Fresh independent repaired3 source inspection required before remaining4 costly actual source calls. Phase0 not to redo.",
+    "Whole6 semantic roles, physical C/root/floor/AIR arc, actualcompiled/Godot and finalactor quality pending; actor267 remains0/catalogOFF."
+  ],
+  "private_ledger_path": "/workspace/scratch/girtas-private-qc-v02-20261019/private-preview-byte-ledger.json",
+  "private_ledger_sha256": "85e316a203e7a7e2542ea667582cc505c62fe81a04175394127d3f124b433dae",
+  "repository_mutations": false
+}

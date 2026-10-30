@@ -1,0 +1,158 @@
+2026-10-24T05:55:43.3452483Z FAIL aden_faith_png_monster_spawns_test
+2026-10-24T05:55:43.3453017Z FAILED_OUTPUT_BEGIN aden_faith_png_monster_spawns_test
+2026-10-24T05:55:43.3454229Z TIMEOUT Command '['/tmp/Godot_v4.7.2-stable_linux.x86_64', '--headless', '--path', '/home/runner/work/-/-', '--script', 'res://tests/aden_faith_png_monster_spawns_test.gd']' timed out after 150 seconds
+2026-10-24T05:55:43.3455539Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+2026-10-24T05:55:43.3455976Z 
+2026-10-24T05:55:43.3456341Z ADEN_FAITH_PNG_MONSTER_MAP {"bosses":5,"expected":77,"live":77,"map":"aden_world","normals":72}
+2026-10-24T05:55:43.3458643Z ADEN_FAITH_PNG_MONSTER_ROUTE {"gates":18,"habitats":["png_aden_meadow","png_aden_forest","png_aden_riverbank","png_aden_ruins","png_aden_east","png_aden_desert","png_aden_sand_worm","png_aden_bandits","png_aden_dragon_valley","png_aden_oren","png_aden_fire_land","png_aden_wind_land","png_aden_western_approach","png_aden_drake","png_aden_dark_elder","png_aden_phoenix","png_aden_death_knight"]}
+2026-10-24T05:55:43.3461374Z ADEN_FAITH_PNG_MONSTER_LIFECYCLE {"actual_normal_drops":2,"bosses":5,"map":"aden_world","normal_deaths":1}
+2026-10-24T05:55:43.3462298Z ADEN_FAITH_PNG_MONSTER_MAP {"bosses":1,"expected":7,"live":7,"map":"faith_01","normals":6}
+2026-10-24T05:55:43.3463189Z ADEN_FAITH_PNG_MONSTER_LIFECYCLE {"actual_normal_drops":4,"bosses":1,"map":"faith_01","normal_deaths":2}
+2026-10-24T05:55:43.3464082Z ADEN_FAITH_PNG_MONSTER_MAP {"bosses":1,"expected":7,"live":7,"map":"faith_02","normals":6}
+2026-10-24T05:55:43.3464796Z ADEN_FAITH_PNG_MONSTER_LIFECYCLE {"actual_normal_drops":6,"bosses":1,"map":"faith_02","normal_deaths":3}
+2026-10-24T05:55:43.3465433Z ADEN_FAITH_PNG_MONSTER_MAP {"bosses":1,"expected":7,"live":7,"map":"faith_03","normals":6}
+2026-10-24T05:55:43.3466385Z ADEN_FAITH_PNG_MONSTER_LIFECYCLE {"actual_normal_drops":8,"bosses":1,"map":"faith_03","normal_deaths":4}
+2026-10-24T05:55:43.3467073Z ADEN_FAITH_PNG_MONSTER_MAP {"bosses":1,"expected":10,"live":10,"map":"faith_04","normals":9}
+2026-10-24T05:55:43.3467585Z 
+2026-10-24T05:55:43.3467590Z 
+2026-10-24T05:55:43.3467729Z FAILED_OUTPUT_END aden_faith_png_monster_spawns_test
+2026-10-24T05:58:13.7707842Z FAIL aden_faith_png_runtime_test
+2026-10-24T05:58:13.7708297Z FAILED_OUTPUT_BEGIN aden_faith_png_runtime_test
+2026-10-24T05:58:13.7709464Z TIMEOUT Command '['/tmp/Godot_v4.7.2-stable_linux.x86_64', '--rendering-driver', 'opengl3', '--audio-driver', 'Dummy', '--path', '/home/runner/work/-/-', '--script', 'res://tests/aden_faith_png_runtime_test.gd']' timed out after 150 seconds
+2026-10-24T05:58:13.7711054Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+2026-10-24T05:58:13.7711885Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+2026-10-24T05:58:13.7712483Z 
+2026-10-24T05:58:13.7712490Z 
+2026-10-24T05:58:13.7712863Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+2026-10-24T05:58:13.7713669Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+2026-10-24T05:58:13.7713994Z 
+2026-10-24T05:58:13.7714141Z FAILED_OUTPUT_END aden_faith_png_runtime_test
+2026-10-24T05:58:51.7357938Z PASS aden_faith_png_save_migration_test
+2026-10-24T05:59:06.9204245Z PASS animation_restore_test
+2026-10-24T05:59:07.0796631Z PASS combat_resolution_equivalence_test
+2026-10-24T05:59:31.8399183Z PASS field_world_test
+2026-10-24T06:01:19.4281543Z FAIL hunting_paths_test
+2026-10-24T06:01:19.4282327Z FAILED_OUTPUT_BEGIN hunting_paths_test
+2026-10-24T06:01:19.4283300Z VALIDATION_SCOPE ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE
+2026-10-24T06:01:19.4284385Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+2026-10-24T06:01:19.4284876Z 
+2026-10-24T06:01:19.4285351Z HUNTING_MAP_CHECKED aden_world native_physical_detour=408.387191295624
+2026-10-24T06:01:19.4286387Z HUNTING_MAP_CHECKED oman_01 source_physical_detour=805.162381649017
+2026-10-24T06:01:19.4287197Z HUNTING_MAP_CHECKED oman_02 source_physical_detour=173.249918937683
+2026-10-24T06:01:19.4288123Z HUNTING_MAP_CHECKED oman_03 source_physical_detour=864.815177440643
+2026-10-24T06:01:19.4289018Z HUNTING_MAP_CHECKED oman_04 source_physical_detour=128.800169467926
+2026-10-24T06:01:19.4289843Z HUNTING_MAP_CHECKED oman_05 source_physical_detour=864.107982158661
+2026-10-24T06:01:19.4290973Z HUNTING_MAP_CHECKED oman_06 source_physical_detour=464.382111549377
+2026-10-24T06:01:19.4291931Z HUNTING_MAP_CHECKED oman_07 source_physical_detour=99.0003776550293
+2026-10-24T06:01:19.4292866Z HUNTING_MAP_CHECKED oman_08 source_physical_detour=302.685732841492
+2026-10-24T06:01:19.4293718Z HUNTING_MAP_CHECKED oman_09 source_physical_detour=211.076500415802
+2026-10-24T06:01:19.4294614Z HUNTING_MAP_CHECKED oman_10 source_physical_detour=173.249918937683
+2026-10-24T06:01:19.4295483Z HUNTING_MAP_CHECKED domination_summit native_physical_detour=212.312664985657
+2026-10-24T06:01:19.4296313Z HUNTING_MAP_CHECKED escaros_01 native_physical_detour=517.201281070709
+2026-10-24T06:01:19.4297159Z HUNTING_MAP_CHECKED escaros_02 native_physical_detour=517.201281070709
+2026-10-24T06:01:19.4297971Z HUNTING_MAP_CHECKED escaros_03 native_physical_detour=517.201281070709
+2026-10-24T06:01:19.4298743Z HUNTING_MAP_CHECKED escaros_04 native_physical_detour=517.201281070709
+2026-10-24T06:01:19.4299516Z HUNTING_MAP_CHECKED escaros_05 native_physical_detour=517.201281070709
+2026-10-24T06:01:19.4300402Z HUNTING_MAP_CHECKED albino_01 native_physical_detour=56.9546675682068
+2026-10-24T06:01:19.4300908Z HUNTING_MAP_CHECKED albino_02 native_physical_detour=618.326891899109
+2026-10-24T06:01:19.4301702Z HUNTING_MAP_CHECKED albino_03 native_physical_detour=618.326891899109
+2026-10-24T06:01:19.4302241Z HUNTING_MAP_CHECKED albino_04 native_physical_detour=618.326891899109
+2026-10-24T06:01:19.4302927Z HUNTING_MAP_CHECKED faith_01 native_physical_detour=463.394178390503
+2026-10-24T06:01:19.4303344Z HUNTING_MAP_CHECKED faith_02 native_physical_detour=463.394178390503
+2026-10-24T06:01:19.4303898Z HUNTING_MAP_CHECKED faith_03 native_physical_detour=172.286731719971
+2026-10-24T06:01:19.4304318Z HUNTING_MAP_CHECKED faith_04 native_physical_detour=463.394178390503
+2026-10-24T06:01:19.4304672Z HUNTING_PATHS_FAILED 7115 failures=92
+2026-10-24T06:01:19.4305070Z HUNTING_PATH_FAIL domination_summit reviewed route remains connected [8270.0, 3660.0]
+2026-10-24T06:01:19.4305562Z HUNTING_PATH_FAIL domination_summit detour respects native walls
+2026-10-24T06:01:19.4306003Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4306448Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4306884Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4307361Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4307800Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4308234Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4308680Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4309115Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4309547Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4309980Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4310694Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4311133Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4311566Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4311999Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4312449Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4312885Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4313329Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4313746Z HUNTING_PATH_FAIL escaros_world detour respects native walls
+2026-10-24T06:01:19.4314165Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4314601Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4315036Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4315470Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4315919Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4316367Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4316831Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4317270Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4317709Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4318142Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4318575Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4319009Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4319448Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4319887Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4320546Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4321005Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4321686Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4322117Z HUNTING_PATH_FAIL escaros_world detour respects native walls
+2026-10-24T06:01:19.4322540Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4323097Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4323534Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4323969Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4324411Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4324881Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4325313Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4325748Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4326182Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4326624Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4327119Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4327867Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4330538Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4331311Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4332060Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4332829Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4333559Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4334185Z HUNTING_PATH_FAIL escaros_world detour respects native walls
+2026-10-24T06:01:19.4334620Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4335093Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4335562Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4336009Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4336454Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4336887Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4337322Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4337755Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4338190Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4338630Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4339062Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4339502Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4339944Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4340781Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4341241Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4341678Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4342113Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4342527Z HUNTING_PATH_FAIL escaros_world detour respects native walls
+2026-10-24T06:01:19.4342945Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4343394Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4343840Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4344285Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4344906Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4345341Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4345882Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4346319Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4346753Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4347185Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4347620Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4348062Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4348498Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4348949Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4349407Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4349851Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4350527Z HUNTING_PATH_FAIL escaros_world route respects native obstacle corners
+2026-10-24T06:01:19.4350946Z HUNTING_PATH_FAIL escaros_world detour respects native walls
+2026-10-24T06:01:19.4351192Z 
+2026-10-24T06:01:19.4351293Z FAILED_OUTPUT_END hunting_paths_test

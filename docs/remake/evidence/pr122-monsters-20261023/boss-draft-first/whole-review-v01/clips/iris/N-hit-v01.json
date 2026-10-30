@@ -1,0 +1,306 @@
+{
+  "actor": "monster:잔혹한 아이리스",
+  "slug": "iris",
+  "clip": "N-hit-v01",
+  "role": "hit",
+  "direction": "N",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/iris/raw/N-hit-v01.png",
+  "source_sha256": "889d4c4b73718abbae075a077417b41dc2caabd61f4c9e8fdbab94a6a8ede410",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      92119,
+      87554,
+      81660,
+      80866,
+      78519,
+      77279
+    ]
+  },
+  "geometry": {
+    "image_size": [
+      1536,
+      1024
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "N",
+        "region": [
+          65,
+          1,
+          438,
+          509
+        ],
+        "margin": [
+          425,
+          265,
+          794,
+          723
+        ],
+        "source_anchor": [
+          256,
+          506
+        ],
+        "rgba_sha256": "6b4ba7b7a6b69ee8676260323920a795344a464996d3854cb2fc68fe9b02490c",
+        "canvas_size": [
+          1232,
+          1232
+        ],
+        "foot": [
+          616,
+          770
+        ]
+      },
+      {
+        "row": 1,
+        "direction": "N",
+        "region": [
+          599,
+          1,
+          442,
+          510
+        ],
+        "margin": [
+          447,
+          264,
+          790,
+          722
+        ],
+        "source_anchor": [
+          768,
+          507
+        ],
+        "rgba_sha256": "441dc1eedc80608f8b15839e41e4e61b8df08fe087864977eaa2cf3130421c0b",
+        "canvas_size": [
+          1232,
+          1232
+        ],
+        "foot": [
+          616,
+          770
+        ]
+      },
+      {
+        "row": 2,
+        "direction": "N",
+        "region": [
+          1075,
+          30,
+          456,
+          476
+        ],
+        "margin": [
+          411,
+          298,
+          776,
+          756
+        ],
+        "source_anchor": [
+          1280,
+          502
+        ],
+        "rgba_sha256": "62e60fc36f09ab92575999ec31ba2032e97245305e5f8c3810cc6e9df9d358de",
+        "canvas_size": [
+          1232,
+          1232
+        ],
+        "foot": [
+          616,
+          770
+        ]
+      },
+      {
+        "row": 3,
+        "direction": "N",
+        "region": [
+          45,
+          569,
+          488,
+          426
+        ],
+        "margin": [
+          405,
+          348,
+          744,
+          806
+        ],
+        "source_anchor": [
+          256,
+          991
+        ],
+        "rgba_sha256": "b28692d8640143ef64a341177d6281f2b72fe3de164d2f5f5bd3a65f233dc0d6",
+        "canvas_size": [
+          1232,
+          1232
+        ],
+        "foot": [
+          616,
+          770
+        ]
+      },
+      {
+        "row": 4,
+        "direction": "N",
+        "region": [
+          578,
+          518,
+          453,
+          488
+        ],
+        "margin": [
+          426,
+          286,
+          779,
+          744
+        ],
+        "source_anchor": [
+          768,
+          1002
+        ],
+        "rgba_sha256": "31abdacb330b917178212d1aa6b8b620e5354691ec158cd22d5c80f7a2c7bf6d",
+        "canvas_size": [
+          1232,
+          1232
+        ],
+        "foot": [
+          616,
+          770
+        ]
+      },
+      {
+        "row": 5,
+        "direction": "N",
+        "region": [
+          1104,
+          508,
+          431,
+          499
+        ],
+        "margin": [
+          440,
+          275,
+          801,
+          733
+        ],
+        "source_anchor": [
+          1280,
+          1003
+        ],
+        "rgba_sha256": "c2ecffc697916ddc219de529a78396bcb0d98dd5c6a673515b1fadce64371102",
+        "canvas_size": [
+          1232,
+          1232
+        ],
+        "foot": [
+          616,
+          770
+        ]
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 461.5,
+    "canvas_size": [
+      1232,
+      1232
+    ],
+    "foot": [
+      616,
+      770
+    ],
+    "strict_source_analysis_canvas": 2048
+  },
+  "foreground_ownership": {
+    "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+    "nearest_owner_sha256": "dfaa6867d7615933e280ad906c53c8f8410490289b78708ba9ffb1ea5e62ea74",
+    "foreground_owner_sha256": "643d446ef66111ee94aba790214bf712802f6614ff28b9ea66dfc8ebe3f82f3b",
+    "detached_pixels": 8,
+    "detached_fragments": [
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1187,
+          72,
+          1188,
+          73
+        ],
+        "nearest_max": 3.0,
+        "second_nearest_min": 309.04045042680093,
+        "owner_margin_min": 306.04045042680093
+      },
+      {
+        "row": 2,
+        "pixels": 3,
+        "bbox": [
+          1105,
+          151,
+          1107,
+          154
+        ],
+        "nearest_max": 8.0,
+        "second_nearest_min": 199.48934808655824,
+        "owner_margin_min": 191.48934808655824
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1121,
+          156,
+          1122,
+          157
+        ],
+        "nearest_max": 3.1622776601683795,
+        "second_nearest_min": 212.07781590727495,
+        "owner_margin_min": 208.91553824710658
+      },
+      {
+        "row": 2,
+        "pixels": 1,
+        "bbox": [
+          1169,
+          196,
+          1170,
+          197
+        ],
+        "nearest_max": 4.47213595499958,
+        "second_nearest_min": 232.69937687926884,
+        "owner_margin_min": 228.22724092426927
+      },
+      {
+        "row": 5,
+        "pixels": 1,
+        "bbox": [
+          1229,
+          713,
+          1230,
+          714
+        ],
+        "nearest_max": 2.8284271247461903,
+        "second_nearest_min": 235.28068344001383,
+        "owner_margin_min": 232.45225631526765
+      },
+      {
+        "row": 4,
+        "pixels": 1,
+        "bbox": [
+          691,
+          719,
+          692,
+          720
+        ],
+        "nearest_max": 2.23606797749979,
+        "second_nearest_min": 223.0201784592596,
+        "owner_margin_min": 220.7841104817598
+      }
+    ],
+    "minimum_required_owner_margin": 32.0,
+    "omitted_pixels": 0,
+    "foreign_owner_pixels": 0
+  },
+  "status": "STRUCTURAL_PASS",
+  "visual_review": "AWAITING_SINGLE_WHOLE_SCOPE_VISUAL_PASS"
+}

@@ -1,0 +1,54 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "W",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png",
+    "/workspace/scratch/halpas-E-walk-repair/halpas-E-walk-v03.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-W-idle-v02.png": "c7c629f1b047c11e9ebcfd7db222ed237748ca536bea86d25064d4095004c651",
+    "/workspace/scratch/halpas-E-walk-repair/halpas-E-walk-v03.png": "069c0d434a153855b313c32076457253daafc98a62c6500f43cc03b150ba427d"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Existing selected W walk is incorrectly SW/front-left. Construct genuine trueLEFT sixphase slowflight from corrected W idle with nearLEFT free hand/farRIGHT weapon; opposite E walk wingphase guide only, no mirroring.",
+  "user_authorization": "Production image tools allowed. No chat images/binary/previewlinks. One new W slot sourceEDIT attempt, no identical retry.",
+  "prompt": "Edit the SAME unique boss Halpas from image1 into a NEW SIX-PHASE TRUE WEST/LEFT SLOW AIRBORNE LOCOMOTION/WALK animation atlas. Image1 is the exact approved trueLEFT model/identity/handedness authority. Image2 is the SAME character's opposite EAST slow flight, supplied ONLY as a reference to smooth wingbeat phases and material/body proportions. Reconstruct the genuine WEST view based on image1, NEVER horizontally mirror image2 or copy its rightward heading/near-weapon hand. Six complete independent new poses, not a recolor or timed replay of old movement.\n\nABSOLUTE COMPASS: Every visor/nose profile points horizontally screen-LEFT/WEST, chest/pelvis/hip axes remain a true LEFT lateral elevated orthographic view as image1. No SW/front-left threequarter, no broad frontal chest or face toward viewer, no head/torso turns. The side profile and shoulder occlusion must remain fixed leftward in all6. Same physical model proportions, gold horn helmet, black/gold segmented armor, established purple CRYSTALLINE feather-fan wings with both gold shoulder/back roots, burgundy tattered cape, existing compact broad purple crystal blade.\n\nHANDEDNESS: Anatomical LEFT is the NEAR arm in this WEST view and remains UNARMED, with its free LEFT fist visible on near side in front of torso/hip. Anatomical RIGHT is the FAR arm and still holds the SINGLE original blade; far hand/forearm and blade can emerge slightly AHEAD toward LEFT around far/front body silhouette just as image1. Never put blade in nearLEFT fist. Two anatomically connected shoulders→elbows→hands total, two legs/boots, no extra forearm/hand, shield, weapon or wingpair. NearLEFT and farRIGHT arm occlusion must be reconstructed, not mirrored from image2. Cape and wing attachments remain on original anatomical sides. In LEFT flight, cape trails behind toward screenRIGHT; same two crystal wing fans rotate behind shoulders toward screenRIGHT, with correct far-wing occlusion and unchanged solid feather parts.\n\nWALK = GENTLE SLOW AIRBORNE FLIGHT as established opposite E walk. No ground contacts or running step; BOTH boots remain airborne. Body relatively upright with only a modest natural LEFT forward lean, gentler than sprint. Existing knees/ankles flex/tuck and trail slightly RIGHT as body floats LEFT, subtle coherent vertical bob, mantle/cape lag. New six-phase articulated NORMAL wingbeat, not six wings parked above shoulder: FRAME0 upper fan extension with wing tips clearly HIGH above gold roots, knees gently bent; FRAME1 downstroke through broad near-HORIZONTAL sweep to rear/RIGHT, torso begins small lift and cape lags; FRAME2 lowest DOWN/BACK wing fan, tips reach BELOW SHOULDER toward hip/lowerRIGHT, genuine gold-root rotation and mild foot tuck; FRAME3 low-rear sweep folds slightly as recovery starts, cape follows through and ankles relax; FRAME4 upstroke/recovery passes MIDDLE height with flexed wingjoint/narrower fan; FRAME5 late raised fan/opening returning smoothly toward HIGH0, knee/hip/cape response smoothly resolves. Required clear HIGH0→horizontal1→LOW2→lowrecovery3→middleup4→high5→0, preserving SAME feather fans/roots through rotations. Both actual wing roots/fans remain present as angle allows; natural overlap permitted, don't invent new parts or detach wings. Gentle full-cycle stroke and articulated cape/forearm/knee changes distinguish real motion from translated duplicate stills. Same heading/body scale/equipment across all6.\n\nLAYOUT exact transparentPNG1024x1536, TWO512px COLUMNS by THREE512px ROWS, SIX full figures only, reading left-to-right then down. Each ENTIRE figure including all high/low wing tips, blade, cape, horns and boots fits CENTRAL340x340 area of its own cell. Physical crown-to-boot height approximately270-300pixels, leave at least80px transparent margin to every cell edge, uniform physical scale. Spacious transparent gutters; full pose bounding rectangles must stay detached and uncropped even at lowest wingstroke. Do not erase/shorten/crop existing equipment to fit. Rich crisp high-detail RPG cutouts with opaque solid armor/cloth/crystal, alpha0 gaps/background, only1-2px edge antialiasing. Purple color/light stays INSIDE solid crystal wings/blade. No diffuse exterior glow, bloom, halo, haze, fog, trails, particles, motion blur, shadows, ground, floor, text, labels, numbers, grids or panels. Highest priority is TRUE LEFT lateral camera every phase, nearLEFT free fist/farRIGHT weapon preserved, full coherent gentle wingbeat and original boss identity.",
+  "requested_at": "2026-10-19T11:47:27.888817+00:00",
+  "imagegen_attempt_limit": 1,
+  "private_jpeg_budget_cumulative_estimate_before_source": 2736486,
+  "private_jpeg_budget_limit": 8000000,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All6 helmet/visor/nose profiles, foreshortened lateral chest, pelvis and motion heading remain true horizontal LEFT/WEST, distinct from old SW/front-left selected movement. No source-heading blending or horizontal mirror used.",
+      "Near anatomicalLEFT free fist remains visible hanging on the near side; far anatomicalRIGHT hand/forearm carries the sole purple crystal blade ahead/LEFT. Two connected arms/hands and two legs/boots remain coherent, no near-hand blade transfer.",
+      "A new genuine normal slow airborne wingcycle is visible:0 HIGH raised crystal fan,1 broad horizontal sweep,2 DOWN/BACK feather fan below shoulder toward hip/lowerRIGHT,3 low-rear recovery with partly closed fan,4 rising middle/upper recovery,5 high opening returning toward0. Gold-root articulation and fan parts remain coherent.",
+      "Body has gentle leftward lean, both boots airborne with local knee/ankle tuck/trail changes; cape follows through behind toward RIGHT with distinct delayed folds. No invented grounded walking contacts or forced alternating leg requirement.",
+      "Original gold horn crown, black/gold segmented armor, established solid crystalline fan wings/root layering, burgundy cape, same farRIGHT compact purple blade and W physical model remain intact. Far wing naturally overlaps/occludes as in W identity source.",
+      "All silhouettes appear complete and uncropped; no opaque alpha>100pixels touch outerimageedge. Strict unchanged geometry+complete-region checker PASS with exactly6 distinct frames. Source pixel scale remains unmodified; runtime physical scale/bodyroot requires separate review."
+    ],
+    "visual_limitations": [
+      "Source art+local strict6framegeometry PASS only. No SpriteFrames/game connection/actualPlayer/native temporal approval performed in this scratch-only authoring task.",
+      "Final actor approval/default profile and total counts remain unchanged."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "45dd8ee7408dd604a7ee3ba2dbbf32f7532320bb9896bd767c2844bf57026264",
+    "raw_bytes": 2364475,
+    "request_sha256": "6a3c3522e08737fbafaeb847135a87e2987e056e4ce3705883bd19116ac9966e",
+    "review_sha256": "ffff780d8018ae1cf0767d36a7f18609b538a3e4df9206318307b88d2ceacfa1"
+  },
+  "available_repository_reference_sources": {
+    "069c0d434a153855b313c32076457253daafc98a62c6500f43cc03b150ba427d": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v03.png"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-W-walk-v03.png",
+  "output_sha256": "45dd8ee7408dd604a7ee3ba2dbbf32f7532320bb9896bd767c2844bf57026264",
+  "output_bytes": 2364475,
+  "original_generated_file": "/workspace/scratch/halpas-W-walk-repair-v03/halpas-W-walk-v03.png"
+}

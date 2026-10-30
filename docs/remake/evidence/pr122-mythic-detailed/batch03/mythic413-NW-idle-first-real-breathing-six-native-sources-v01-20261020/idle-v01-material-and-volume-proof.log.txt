@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/verify-NW-IDLE6-native-fixed-material-and-breath-volume-v01.py", line 21, in <module>
+    assert all(z['actual_leg_RGBA_changes']==z['actual_complete_RIGHTstaff_RGBA_changes']==0 for z in records)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

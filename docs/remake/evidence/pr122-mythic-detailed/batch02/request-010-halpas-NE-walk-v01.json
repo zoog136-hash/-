@@ -1,0 +1,25 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "walk",
+  "version": "v01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png"
+  ],
+  "prompt": "Draw six detailed isometric RPG game sprites of EXACTLY 해방된 할파스 from the attached original character portrait. Preserve the specific reference body, face, helmet/horns, armor, wings, cloak, colors and actual weapon design. Do not invent new anatomy or add a long energy trail.\n\nThis is a deliberately SPARSE technical atlas, not a full-page illustration. EXACTLY TWO COLUMNS and THREE ROWS,1024x1536 pixels. Six cells of512x512 each. Each complete character silhouette must be AT MOST320x320 pixels, including every wing/horn/weapon/flame tip. This size cap is mandatory. Position each figure inside the central320x320 portion of its cell. Leave at least96pixels of completely empty transparent space on every cell edge. More than70percent of the whole image should remain empty transparent background. Do NOT enlarge characters to fill the empty canvas. The empty gutters are essential. No pair of character bounding rectangles may overlap.\n\nALL6 full figures face screenUPPER-RIGHT/NORTH-EAST45degrees, REAR-RIGHT view, back armor and back of head visible, same camera, same body proportions and uniform scale. Temporal order left-to-right then down. Animate six slow airborne locomotion phases with coherent wing propulsion, opposite arm/leg response and cape recovery. Keep the exact crystalline energy wing structure and rigid armor. One coherent character per cell; no detached ornaments, spare weapons, copies or extra figures. Entire anatomy and equipment visible, no cropping. Crisp, hard-edged game sprite cutouts with detailed material shading INSIDE each body. All black armor/skin materials fully opaque. Colored energy must remain contained in the original wing/blade shapes. NO bloom, diffuse aura, surrounding halo, glow circles, colored fog, environmental light gradient, floor, shadow, background panels, text, numbers or grid lines. Outside the exact character silhouette: alpha0, completely transparent. Edge antialiasing only one or two pixels. Use local shading for detailed armor rather than surrounding glow. Keep strong separated poses and the reference identity.\nThe second reference is an accepted SPARSE6-pose east WALK layout and identity source. Keep its exact model and scale, but draw the requested NEW role/direction above. Never copy the entire reference sheet or its existing poses. Every figure must match the requested facing, including head, chest, toes, wings and weapon perspective. Keep weapon handedness anatomically consistent. Strict6-figure2-column3-row sparse layout with320px maximum complete bounding box and96px empty gutters remains mandatory.\nTHIS IS THE NEW NE VIEW. Rotate the ENTIRE actual character coherently into this requested direction. All six phases must keep this same facing. Match the precise original anatomical weapon hand and wing attachment; render new surfaces and occlusion correctly. Do not mirror an east sprite or reuse its old facing. Keep the same elevated orthographic isometric camera and local lighting. For any rear view, show the back of the head and back surfaces consistently; no front face turned toward the camera. Preserve exact design and320px complete silhouette cap in every512cell.\nThe second reference establishes full-back armor and wing construction; the third preserves the established east-facing side and equipment. Author a new NORTHEAST back-right view, always facing up-right with back and right-facing side visible, face/chest mostly hidden. Keep the same anatomical weapon hand and asymmetric equipment. Do not mirror NORTHWEST frames or turn toward the viewer.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-N-walk-v01.png": "cda2208c2362e1259794649bb6048dda78b8d299b69268e347dcd217463c0f68",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-E-walk-v02.png": "18231ba6c4e94c59bd359e7c13e6d7261f56301b397eac998c8ec49a1350e35a"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-NE-walk-v01.png",
+  "output_sha256": "8eaae7e2f362b5500e94d48ac8874735f5bbc0369433d6d16e0d6910dd2b4fea",
+  "output_bytes": 2189160,
+  "original_generated_file": "/workspace/generated_images/exec-ed9b07f2-5ef9-4cd7-b21d-af655b7b3543.png"
+}

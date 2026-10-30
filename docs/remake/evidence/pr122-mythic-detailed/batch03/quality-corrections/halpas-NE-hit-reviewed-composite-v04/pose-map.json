@@ -1,0 +1,101 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:393",
+  "direction": "NE",
+  "role": "hit",
+  "poses": [
+    {
+      "path": "/workspace/scratch/halpas-NE-hit-guard0-key-v04/halpas-NE-hit-guard0-v04.png",
+      "source_sha256": "6e7b78306912b8ae16a1d9e4fa7780b23a4f640825c0c6b16d07393289b3798e",
+      "region": [
+        43,
+        36,
+        1179,
+        1118
+      ],
+      "rgba_sha256": "541282e8b2c379d4b29f4c1972ef1ec749f982a9031fd17c7d674a4bcf62cfe5",
+      "source_pose": "new_game0",
+      "newly_authored": true,
+      "review_basis": "New genuine game0 SOURCEVISUAL and strictsinglePASS with sameNErear camera/twoarms/lowRIGHTblade/EMPTYLEFT local guard-or-recovery. Replaces prior exactidle duplicate without weakening existing native cross-track uniqueness."
+    },
+    {
+      "path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+      "source_sha256": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+      "region": [
+        33,
+        97,
+        1194,
+        1031
+      ],
+      "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f",
+      "source_pose": "new_game1",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 1."
+    },
+    {
+      "path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+      "source_sha256": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+      "region": [
+        29,
+        70,
+        1216,
+        1105
+      ],
+      "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c",
+      "source_pose": "new_game2",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 2."
+    },
+    {
+      "path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png",
+      "source_sha256": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020",
+      "region": [
+        35,
+        92,
+        1210,
+        1082
+      ],
+      "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9",
+      "source_pose": "new_game3",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 3."
+    },
+    {
+      "path": "/workspace/scratch/halpas-NE-hit-late4-key-v04/halpas-NE-hit-late4-v04.png",
+      "source_sha256": "387a0e540977eb714f2ba048489efb89d44a03e0dc2b7ef0ff87899c52905ad9",
+      "region": [
+        41,
+        89,
+        1207,
+        1088
+      ],
+      "rgba_sha256": "13a1b30cfc727699ea586a1077cb1e216fd3ccf15094a68d742454c9a662b473",
+      "source_pose": "new_game4",
+      "newly_authored": true,
+      "review_basis": "New genuine game4 SOURCEVISUAL and strictsinglePASS with sameNErear camera/twoarms/lowRIGHTblade/EMPTYLEFT local guard-or-recovery. Replaces prior exactidle duplicate without weakening existing native cross-track uniqueness."
+    },
+    {
+      "path": "/workspace/scratch/halpas-NE-hit-settle5-key-v04/halpas-NE-hit-settle5-v04.png",
+      "source_sha256": "21b74b8d17d5265a1b3003b828b0656ac471a374f1f7138142860a05665f4fe3",
+      "region": [
+        61,
+        58,
+        1167,
+        1115
+      ],
+      "rgba_sha256": "3cdb4dfdb8b37f714b3a552d9396983fb7afee1f0b112fd3115cf8d7b5acfa8f",
+      "source_pose": "new_game5",
+      "newly_authored": true,
+      "review_basis": "New genuine game5 SOURCEVISUAL and strictsinglePASS with sameNErear camera/twoarms/lowRIGHTblade/EMPTYLEFT local guard-or-recovery. Replaces prior exactidle duplicate without weakening existing native cross-track uniqueness."
+    }
+  ],
+  "newly_authored_poses_in_clip": 6,
+  "new_imagegen_poses_this_revision": 3,
+  "previously_authored_good_poses_preserved": 3,
+  "reused_idle_poses": 0,
+  "physical_scale_review": {
+    "status": "PENDING_EXTERNAL_SAME_BODY_LANDMARK_PROPOSAL",
+    "no_silhouette_bbox_scaling": true
+  },
+  "previous_v03_preserved_HOLD": "Existing native cross-track uniqueness rejected exactidle0/4/5 reuse; v03 raw/request and all prior good1/2/3 unchanged."
+}

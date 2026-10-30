@@ -1,0 +1,171 @@
+{
+  "jobs": [
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "NE-run-v02",
+      "direction": "NE",
+      "role": "run",
+      "corrects": "NE-run-v01",
+      "causes": [
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/NE-run-v02.json"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-attack-v02",
+      "direction": "W",
+      "role": "attack",
+      "corrects": "W-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch",
+        "source_outer_boundary"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/W-attack-v02.json"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-hit-v02",
+      "direction": "W",
+      "role": "hit",
+      "corrects": "W-hit-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/W-hit-v02.json"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-idle-v02",
+      "direction": "W",
+      "role": "idle",
+      "corrects": "W-idle-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/W-idle-v02.json"
+    },
+    {
+      "actor": "monster:아크모",
+      "slug": "arcmo",
+      "clip": "W-run-v02",
+      "direction": "W",
+      "role": "run",
+      "corrects": "W-run-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/arcmo/W-run-v02.json"
+    },
+    {
+      "actor": "monster:탐욕의 여왕 벨리엘",
+      "slug": "belial",
+      "clip": "NE-attack-v02",
+      "direction": "NE",
+      "role": "attack",
+      "corrects": "NE-attack-v01",
+      "causes": [
+        "authored_camera_facing_mismatch"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/belial/NE-attack-v02.json"
+    }
+  ],
+  "source_pins": [
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/NE-run-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-c0b0db51-7c10-4f5e-8901-977ac7c0d8d6.png",
+      "sha256": "bdf3febc8318ee3098350cfd0ef461ee2db4fb92ca14fa7d28c65f1ebb89644c",
+      "bytes": 2335540,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 991624,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/W-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-5b0e92b8-4e7b-4e97-9390-c03bf689533d.png",
+      "sha256": "f414fa85edf75d9bde3e9d987c193b58ff6d484ab5e5f6eb9c1fce31ebe06807",
+      "bytes": 2270807,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1047035,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/W-hit-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-b1991031-ae4a-4bce-8f03-8a69bd47ae69.png",
+      "sha256": "abb22478135c95d04a25a507bf7b8f87a8b5a2f0ec178d7565ddc16534b06485",
+      "bytes": 2344873,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1001767,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/W-idle-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-b407ec3c-6215-4c9b-b44c-c187ea44c7a7.png",
+      "sha256": "cc30e13d06b12f094aa4b078da1a74c1728d9ae260f4bd199ad3750b2022f748",
+      "bytes": 2076530,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1125260,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/arcmo/raw/W-run-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-427181e0-1d17-46bf-87b2-8fd425a4bd76.png",
+      "sha256": "53585ecfbc7a17443879180ef0f0d0a446c9427d70574711a1e2d5c61803029c",
+      "bytes": 2389544,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 973551,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    },
+    {
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/raw/NE-attack-v02.png",
+      "source_imagegen_path": "/workspace/generated_images/exec-5d14aa43-aa57-43b1-a886-f5d9e6749456.png",
+      "sha256": "46e3064a6eb54fc9d140feecb2e2a9673f2be1de7cc345c30c0154c8d67a08b7",
+      "bytes": 2244677,
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "RGBA": true,
+      "transparent_pixels": 1049550,
+      "status": "DRAFT_SOURCE_SAVED",
+      "full_review": "DEFERRED_UNTIL_ALL_DRAFTS",
+      "new_approval": false
+    }
+  ],
+  "normal_art_changes": 0,
+  "whole_quality_review": "TARGETED_CORRECTIONS_ONLY"
+}

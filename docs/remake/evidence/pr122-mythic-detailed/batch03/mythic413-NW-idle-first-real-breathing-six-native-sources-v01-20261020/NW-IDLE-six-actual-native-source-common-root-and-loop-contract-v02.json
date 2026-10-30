@@ -1,0 +1,698 @@
+{
+  "status": "ACTUAL_NEW_NW_IDLE6_NATIVE_THORAX_AND_RELAX_PENDING_SOURCE_LOOP_QC",
+  "actor_id": 413,
+  "direction": "NW",
+  "action": "idle",
+  "loop": true,
+  "loop_seconds": 1.2,
+  "physical_canvas_fixed": 2048,
+  "body_unit_fixed": 2,
+  "logical_canvas": 1024,
+  "common_rig_root_in_unpadded_frame": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "storage_size": [
+    1536,
+    1536
+  ],
+  "base_native_source": {
+    "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-braced-stance-v03/thunder_female-NW-HIT-braced-fixed-stance-candidate-v03.png",
+    "sha256": "6374043ddbafcf220b9bb2aa1edbe6fbbf816c52645ecca8c36f8be54168c0e0",
+    "bytes": 473596
+  },
+  "LEFT_upper_material": {
+    "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v03/actual-original-NW-LEFT-upper-arm-material.png",
+    "sha256": "946b05947bdf4ed2b877b7dff0d066f17a94f20d40f687ce9d30fec60b2cee2b",
+    "bytes": 31839
+  },
+  "LEFT_forearm_material": {
+    "path": "/workspace/scratch/mythic413-NW-attack-author-20261020-v01/actual-NW-ATTACK6-native-rig-v03/actual-original-NW-LEFT-forearm-hand-material.png",
+    "sha256": "c64a914f8d115aa61ead9910be0eff1b392276d9bf6c21b2f381d420e0d4775a",
+    "bytes": 38930
+  },
+  "fixed_stance_contract": {
+    "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-braced-stance-v03/NW-HIT-actual-braced-stance-source-and-fixed-contract-v03.json",
+    "sha256": "2e5a587e519334e8f553ef284837992f5612235d999233d4c3913fd59efb47af",
+    "bytes": 3824
+  },
+  "production_method": "Actual rib/corset transverse volume and spinal surface; dedicated relaxed LEFT arm bones; complete head/bun/ribbon on delayed neck node; native farcoat lag; fixed real feet/RIGHTstaff",
+  "original_assets_modified": false,
+  "new_services": 0,
+  "new_author_image_receipts": 0,
+  "actor_approval_added": 0,
+  "frames": [
+    {
+      "phase": 0,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-0-native-breath-relax-v02.png",
+      "sha256": "da557d3ba1653dcd02b56ba0372205c6d09469e931c117ddf85132fa589c0c09",
+      "bytes": 509904,
+      "pose_nodes": {
+        "thorax_amplitude": 0.0,
+        "neck_angle_deg": -0.5196152422706631,
+        "cloth_delta": [
+          -2.1650635094610964,
+          -1.2
+        ],
+        "LEFT_elbow": [
+          570.0,
+          548.0
+        ],
+        "LEFT_wrist": [
+          526.0,
+          646.0
+        ]
+      },
+      "LEFT_upper": {
+        "source_joint_pair": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            570.0,
+            548.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.9807744912954423,
+            0.22339563954295777
+          ],
+          [
+            -0.30380043758186365,
+            1.0830573184527796
+          ]
+        ],
+        "offset": [
+          -90.9913782836901,
+          140.89820588434463
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "LEFT_forearm": {
+        "source_joint_pair": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            570.0,
+            548.0
+          ],
+          [
+            526.0,
+            646.0
+          ]
+        ],
+        "matrix": [
+          [
+            0.9766796384998724,
+            0.1761078466701285
+          ],
+          [
+            -0.13726493279481686,
+            0.9520167464544825
+          ]
+        ],
+        "offset": [
+          -63.617106672267596,
+          118.3866154682035
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 170492,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_AND_IDLE_LOOP_QC"
+    },
+    {
+      "phase": 1,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-1-native-breath-relax-v02.png",
+      "sha256": "2582b831ec10aca8c92717c12fec98626ef8826d437934cfaa0b8bd51e41c3e9",
+      "bytes": 510360,
+      "pose_nodes": {
+        "thorax_amplitude": 1.2499999999999998,
+        "neck_angle_deg": 0.0,
+        "cloth_delta": [
+          0.0,
+          -0.6
+        ],
+        "LEFT_elbow": [
+          571.1928203230276,
+          547.375
+        ],
+        "LEFT_wrist": [
+          527.4910254037844,
+          645.9910254037844
+        ]
+      },
+      "LEFT_upper": {
+        "source_joint_pair": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            588.8312373891938,
+            457.89915404964023
+          ],
+          [
+            571.1928203230276,
+            547.375
+          ]
+        ],
+        "matrix": [
+          [
+            0.9757829606135493,
+            0.23958588377974763
+          ],
+          [
+            -0.3127460662098671,
+            1.0714655831069118
+          ]
+        ],
+        "offset": [
+          -95.63526118331117,
+          151.37534998428634
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "LEFT_forearm": {
+        "source_joint_pair": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            571.1928203230276,
+            547.375
+          ],
+          [
+            527.4910254037844,
+            645.9910254037844
+          ]
+        ],
+        "matrix": [
+          [
+            0.9768746743414062,
+            0.1794088818077021
+          ],
+          [
+            -0.1439831117131257,
+            0.954139068910326
+          ]
+        ],
+        "offset": [
+          -64.28499082765984,
+          120.34981518597544
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 170319,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_AND_IDLE_LOOP_QC"
+    },
+    {
+      "phase": 2,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-2-native-breath-relax-v02.png",
+      "sha256": "9b394e26aafda8e709295205aa838f83458c7e87860f6729653231572028314a",
+      "bytes": 507912,
+      "pose_nodes": {
+        "thorax_amplitude": 3.7499999999999996,
+        "neck_angle_deg": 0.5196152422706631,
+        "cloth_delta": [
+          2.1650635094610964,
+          0.5999999999999998
+        ],
+        "LEFT_elbow": [
+          572.1928203230276,
+          546.125
+        ],
+        "LEFT_wrist": [
+          528.7410254037844,
+          644.2410254037844
+        ]
+      },
+      "LEFT_upper": {
+        "source_joint_pair": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            588.4937121675815,
+            457.69746214892064
+          ],
+          [
+            572.1928203230276,
+            546.125
+          ]
+        ],
+        "matrix": [
+          [
+            0.9705883120986399,
+            0.2553464026163989
+          ],
+          [
+            -0.3179206112573909,
+            1.0545533677508672
+          ]
+        ],
+        "offset": [
+          -100.13145605682814,
+          161.96725974962675
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "LEFT_forearm": {
+        "source_joint_pair": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            572.1928203230276,
+            546.125
+          ],
+          [
+            528.7410254037844,
+            644.2410254037844
+          ]
+        ],
+        "matrix": [
+          [
+            0.9757341601344964,
+            0.18131620222442116
+          ],
+          [
+            -0.1417231522585715,
+            0.9503105315292872
+          ]
+        ],
+        "offset": [
+          -63.66707361251656,
+          119.88301095693856
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 170260,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_AND_IDLE_LOOP_QC"
+    },
+    {
+      "phase": 3,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-3-native-breath-relax-v02.png",
+      "sha256": "8e7408b8df41b003091192b683f9a223fcc40049ddfda9870983c95b681f480f",
+      "bytes": 508237,
+      "pose_nodes": {
+        "thorax_amplitude": 5.0,
+        "neck_angle_deg": 0.519615242270663,
+        "cloth_delta": [
+          2.1650635094610964,
+          1.2
+        ],
+        "LEFT_elbow": [
+          572.0,
+          545.5
+        ],
+        "LEFT_wrist": [
+          528.5,
+          642.5
+        ]
+      },
+      "LEFT_upper": {
+        "source_joint_pair": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            588.3249495567753,
+            457.59661619856087
+          ],
+          [
+            572.0,
+            545.5
+          ]
+        ],
+        "matrix": [
+          [
+            0.9705024337320842,
+            0.2549744939394481
+          ],
+          [
+            -0.31390170712839366,
+            1.049355100613931
+          ]
+        ],
+        "offset": [
+          -100.07930213568955,
+          161.88008561600435
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "LEFT_forearm": {
+        "source_joint_pair": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            572.0,
+            545.5
+          ],
+          [
+            528.5,
+            642.5
+          ]
+        ],
+        "matrix": [
+          [
+            0.974384470575992,
+            0.17991316144373934
+          ],
+          [
+            -0.13270879843222083,
+            0.9443835584808757
+          ]
+        ],
+        "offset": [
+          -62.3685009551491,
+          117.42029597967314
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 170293,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_AND_IDLE_LOOP_QC"
+    },
+    {
+      "phase": 4,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-4-native-breath-relax-v02.png",
+      "sha256": "b534c4e465fe931da1c2861b0a0a1d6afc784a71198d07d6badf3614d776a90e",
+      "bytes": 510507,
+      "pose_nodes": {
+        "thorax_amplitude": 3.750000000000001,
+        "neck_angle_deg": 7.347880794884119e-17,
+        "cloth_delta": [
+          3.061616997868383e-16,
+          0.6000000000000004
+        ],
+        "LEFT_elbow": [
+          570.8071796769724,
+          546.125
+        ],
+        "LEFT_wrist": [
+          527.0089745962156,
+          642.5089745962156
+        ]
+      },
+      "LEFT_upper": {
+        "source_joint_pair": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            588.4937121675815,
+            457.69746214892064
+          ],
+          [
+            570.8071796769724,
+            546.125
+          ]
+        ],
+        "matrix": [
+          [
+            0.9755602341111437,
+            0.23881693064920614
+          ],
+          [
+            -0.3046112536980458,
+            1.0611168865472564
+          ]
+        ],
+        "offset": [
+          -95.48941996121857,
+          151.12195653842616
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "LEFT_forearm": {
+        "source_joint_pair": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            570.8071796769724,
+            546.125
+          ],
+          [
+            527.0089745962156,
+            642.5089745962156
+          ]
+        ],
+        "matrix": [
+          [
+            0.9741420216688653,
+            0.1765808538586471
+          ],
+          [
+            -0.1259296618005322,
+            0.9423014421764105
+          ]
+        ],
+        "offset": [
+          -61.657791704851775,
+          115.40203718002033
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 170361,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_AND_IDLE_LOOP_QC"
+    },
+    {
+      "phase": 5,
+      "path": "/workspace/scratch/mythic413-NW-idle-author-20261020-v01/actual-NW-IDLE6-native-thorax-v02/thunder_female-NW-IDLE-5-native-breath-relax-v02.png",
+      "sha256": "65c183bcb97c56687277714618260a3c31e8932219f18b461b2db28a59f7e806",
+      "bytes": 509215,
+      "pose_nodes": {
+        "thorax_amplitude": 1.2499999999999998,
+        "neck_angle_deg": -0.5196152422706632,
+        "cloth_delta": [
+          -2.1650635094610973,
+          -0.6000000000000001
+        ],
+        "LEFT_elbow": [
+          569.8071796769724,
+          547.375
+        ],
+        "LEFT_wrist": [
+          525.7589745962156,
+          644.2589745962156
+        ]
+      },
+      "LEFT_upper": {
+        "source_joint_pair": [
+          [
+            589.0,
+            458.0
+          ],
+          [
+            553.0,
+            531.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            588.8312373891938,
+            457.89915404964023
+          ],
+          [
+            569.8071796769724,
+            547.375
+          ]
+        ],
+        "matrix": [
+          [
+            0.9806373741404936,
+            0.22299846242241592
+          ],
+          [
+            -0.2996879680957162,
+            1.0779051931358081
+          ]
+        ],
+        "offset": [
+          -90.89747176902335,
+          140.73478880181693
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "LEFT_forearm": {
+        "source_joint_pair": [
+          [
+            553.0,
+            531.0
+          ],
+          [
+            491.0,
+            625.0
+          ]
+        ],
+        "target_joint_pair": [
+          [
+            569.8071796769724,
+            547.375
+          ],
+          [
+            525.7589745962156,
+            644.2589745962156
+          ]
+        ],
+        "matrix": [
+          [
+            0.9752970688452623,
+            0.17468311901754732
+          ],
+          [
+            -0.12822628150976406,
+            0.9461057993894703
+          ]
+        ],
+        "offset": [
+          -62.288835592775285,
+          115.90195419909082
+        ],
+        "UV": "Actual native semantic material only; no endpoint clamp"
+      },
+      "body_components_alpha100_4conn_gte200": [
+        {
+          "pixels": 170511,
+          "bbox": [
+            463,
+            18,
+            1067,
+            1117
+          ]
+        }
+      ],
+      "quality": "PENDING_INDEPENDENT_ACTUAL_SOURCE_AND_IDLE_LOOP_QC"
+    }
+  ]
+}

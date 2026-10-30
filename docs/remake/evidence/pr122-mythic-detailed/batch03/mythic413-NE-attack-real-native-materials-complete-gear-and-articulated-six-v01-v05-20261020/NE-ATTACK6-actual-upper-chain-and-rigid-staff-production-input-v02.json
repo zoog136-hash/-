@@ -1,0 +1,437 @@
+{
+  "schema": "PR122-actual-NE-attack-six-upper-chain-production-input-v1",
+  "status": "ACTUAL_NEW_NE_ATTACK_UPPER_CHAIN6_INPUT_PENDING_LEGS_SOURCE_AND_STRIKE3_QC",
+  "own_native_materials": {
+    "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/own-native-directional-materials-v04/NE-ATTACK-native-own-material-input-and-controls-v04.json",
+    "sha256": "00ec447265cf84721da932736fbedf911e77393530ac936af5e9c499911e19eb",
+    "bytes": 5754
+  },
+  "C": 2432,
+  "bodyunit": 2.375,
+  "common_rig_root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "whole_actor_mirrored_or_C_changed": false,
+  "one_shot": true,
+  "fps": 14.285714285714286,
+  "role_seconds_preserved": 0.42,
+  "intended_contact_frame": 3,
+  "frames": [
+    {
+      "phase": 0,
+      "name": "READY",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/NE-attack-0-READY-actual-upper-chain-ONLY-INPUT-v02.png",
+      "sha256": "047e68f3bb0d5b41691b220873f17c602a01981648478c6e8b921b0735122af3",
+      "actual_upper_rig_nodes": {
+        "name": "READY",
+        "ang": 0,
+        "delta": [
+          0,
+          0
+        ],
+        "re": [
+          807,
+          552
+        ],
+        "rw": [
+          903,
+          552
+        ],
+        "le": [
+          559,
+          550
+        ],
+        "lw": [
+          481,
+          645
+        ],
+        "staff": 0,
+        "cloth": 0
+      },
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "native_size": [
+        1536,
+        1536
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        944.0,
+        536.0
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 0.0,
+      "RIGHT_staff_actual_top_tip_target": [
+        975.0,
+        72.0
+      ],
+      "strong_upper_components_ge200": [
+        238866
+      ],
+      "status": "UPPER_CHAIN_ONLY_INPUT_LEGS_AND_FULL_SOURCE_QC_PENDING"
+    },
+    {
+      "phase": 1,
+      "name": "WINDUP",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/NE-attack-1-WINDUP-actual-upper-chain-ONLY-INPUT-v02.png",
+      "sha256": "f0cb6ffbcc6e975f8546da4aaedc62298c9fd77a841ec8a3b3b1f96b28955006",
+      "actual_upper_rig_nodes": {
+        "name": "WINDUP",
+        "ang": -3,
+        "delta": [
+          -6,
+          7
+        ],
+        "re": [
+          748,
+          564
+        ],
+        "rw": [
+          828,
+          510
+        ],
+        "le": [
+          551,
+          561
+        ],
+        "lw": [
+          555,
+          685
+        ],
+        "staff": -23,
+        "cloth": 7
+      },
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "native_size": [
+        1536,
+        1536
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        853.2151009866498,
+        473.67592121478964
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.9205048534524404,
+          0.39073112848927377
+        ],
+        [
+          -0.39073112848927377,
+          0.9205048534524404
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 7.16352799252993e-18,
+      "RIGHT_staff_actual_top_tip_target": [
+        700.4515078246523,
+        34.449004229689805
+      ],
+      "strong_upper_components_ge200": [
+        230937
+      ],
+      "status": "UPPER_CHAIN_ONLY_INPUT_LEGS_AND_FULL_SOURCE_QC_PENDING"
+    },
+    {
+      "phase": 2,
+      "name": "COIL",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/NE-attack-2-COIL-actual-upper-chain-ONLY-INPUT-v02.png",
+      "sha256": "e13c5cf32495240c0fd794fd5215b337c4888cb1fb5a1283a239022a4aab4aab",
+      "actual_upper_rig_nodes": {
+        "name": "COIL",
+        "ang": -6,
+        "delta": [
+          -10,
+          13
+        ],
+        "re": [
+          731,
+          571
+        ],
+        "rw": [
+          810,
+          516
+        ],
+        "le": [
+          551,
+          572
+        ],
+        "lw": [
+          576,
+          693
+        ],
+        "staff": -30,
+        "cloth": 13
+      },
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "native_size": [
+        1536,
+        1536
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        834.5976821160003,
+        479.3793221908612
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.8660254037844387,
+          0.49999999999999994
+        ],
+        [
+          -0.49999999999999994,
+          0.8660254037844387
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 7.437084071668725e-18,
+      "RIGHT_staff_actual_top_tip_target": [
+        629.4444696333178,
+        62.04353483488166
+      ],
+      "strong_upper_components_ge200": [
+        226850
+      ],
+      "status": "UPPER_CHAIN_ONLY_INPUT_LEGS_AND_FULL_SOURCE_QC_PENDING"
+    },
+    {
+      "phase": 3,
+      "name": "STRIKE3",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/NE-attack-3-STRIKE3-actual-upper-chain-ONLY-INPUT-v02.png",
+      "sha256": "43975c8b8a8c00c7e50e0a43c3d0478ba3726c58f6d437edc7d4b80e26301460",
+      "actual_upper_rig_nodes": {
+        "name": "STRIKE3",
+        "ang": 6,
+        "delta": [
+          17,
+          -10
+        ],
+        "re": [
+          901,
+          418
+        ],
+        "rw": [
+          994,
+          393
+        ],
+        "le": [
+          585,
+          530
+        ],
+        "lw": [
+          503,
+          618
+        ],
+        "staff": 65,
+        "cloth": -8
+      },
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "native_size": [
+        1536,
+        1536
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        1029.5651330260932,
+        366.8714615237336
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.42261826174069944,
+          -0.9063077870366499
+        ],
+        [
+          0.9063077870366499,
+          0.42261826174069944
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 4.268913590150549e-18,
+      "RIGHT_staff_actual_top_tip_target": [
+        1463.1931123250606,
+        198.87212947418539
+      ],
+      "strong_upper_components_ge200": [
+        226282
+      ],
+      "status": "UPPER_CHAIN_ONLY_INPUT_LEGS_AND_FULL_SOURCE_QC_PENDING"
+    },
+    {
+      "phase": 4,
+      "name": "FOLLOW",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/NE-attack-4-FOLLOW-actual-upper-chain-ONLY-INPUT-v02.png",
+      "sha256": "d918e447dcb45a867899acf4075034a8005844d1c36e1e37abd3e767ab68b8cc",
+      "actual_upper_rig_nodes": {
+        "name": "FOLLOW",
+        "ang": 8,
+        "delta": [
+          26,
+          -3
+        ],
+        "re": [
+          909,
+          443
+        ],
+        "rw": [
+          1006,
+          440
+        ],
+        "le": [
+          595,
+          533
+        ],
+        "lw": [
+          510,
+          621
+        ],
+        "staff": 82,
+        "cloth": -17
+      },
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "native_size": [
+        1536,
+        1536
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        1046.932474470318,
+        422.72639676251094
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.13917310096006547,
+          -0.9902680687415704
+        ],
+        [
+          0.9902680687415704,
+          0.13917310096006547
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 2.220446049250313e-16,
+      "RIGHT_staff_actual_top_tip_target": [
+        1510.7312244961688,
+        388.8483880480293
+      ],
+      "strong_upper_components_ge200": [
+        229420
+      ],
+      "status": "UPPER_CHAIN_ONLY_INPUT_LEGS_AND_FULL_SOURCE_QC_PENDING"
+    },
+    {
+      "phase": 5,
+      "name": "RECOVER",
+      "path": "/workspace/scratch/mythic413-NE-attack-author-20261020-v01/actual-NE-ATTACK6-upper-chain-input-v02/NE-attack-5-RECOVER-actual-upper-chain-ONLY-INPUT-v02.png",
+      "sha256": "f3aedb534112b5fd02f036ebf7787498a2e4fc8353dfbd3e37938e506e4dd77f",
+      "actual_upper_rig_nodes": {
+        "name": "RECOVER",
+        "ang": 0,
+        "delta": [
+          0,
+          0
+        ],
+        "re": [
+          809,
+          551
+        ],
+        "rw": [
+          905,
+          552
+        ],
+        "le": [
+          560,
+          551
+        ],
+        "lw": [
+          483,
+          646
+        ],
+        "staff": 3,
+        "cloth": -3
+      },
+      "physical_C": 2432,
+      "bodyunit": 2.375,
+      "common_rig_root_in_unpadded_frame": [
+        716.2291666666666,
+        1054.2766007046484
+      ],
+      "storage_translation": [
+        0,
+        0
+      ],
+      "native_size": [
+        1536,
+        1536
+      ],
+      "RIGHT_grip_same_forearm_affine_target": [
+        946.1666576251571,
+        536.4279513182528
+      ],
+      "RIGHT_staff_rigid_matrix": [
+        [
+          0.9986295347545738,
+          -0.052335956242943835
+        ],
+        [
+          0.052335956242943835,
+          0.9986295347545738
+        ]
+      ],
+      "RIGHT_staff_orthogonality_error": 1.1102230246251565e-16,
+      "RIGHT_staff_actual_top_tip_target": [
+        1001.4080568992748,
+        74.68626183566175
+      ],
+      "strong_upper_components_ge200": [
+        239205
+      ],
+      "status": "UPPER_CHAIN_ONLY_INPUT_LEGS_AND_FULL_SOURCE_QC_PENDING"
+    }
+  ],
+  "game_binding_or_actor_approvals_added": 0
+}

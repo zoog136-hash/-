@@ -1,0 +1,69 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "SW",
+  "role": "run",
+  "version": "v02HILT2",
+  "source_pose": 2,
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_batch": "batch03",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "newly_authored_poses": 0,
+  "reused_poses": 0,
+  "transparent_background": true,
+  "corrective_reason": "Actual local equipment repair only: invented pointed guard must become selected original simple small gold collar. Preserve original candidate pose/body/legs and raw history; this adds zero new keyframes.",
+  "source_candidate": {
+    "path": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png",
+    "sha256": "65cbdbe184ddfff32ae29696500a8dfc96b5558879e2549de1fabd88771ab0d2",
+    "request": "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/request.json",
+    "request_sha256": "f45935ca0bf7536eb97a903932d9e94b94dd19b34c90f882a4be274b0f3adacb"
+  },
+  "hilt_repair_ROI_XYWH": [
+    340,
+    470,
+    210,
+    220
+  ],
+  "reference_crop_proof": {
+    "status": "EXACT_SELECTED_SMALL_COLLAR_REFERENCE_CROP_ONLY",
+    "source": "/workspace/scratch/girtas-SW-run-production-reference-v01/current-SW-idle0-exactRGBA.png",
+    "source_sha256": "c958307064c726abcd933b652a7fcd62879e5566d1ab3a8921c5b85121a356a3",
+    "crop_XYWH": [
+      140,
+      240,
+      95,
+      95
+    ],
+    "crop": "/workspace/scratch/girtas-SW-run-production-reference-v01/selected-small-collar-native-exactRGBA.png",
+    "crop_sha256": "ec48c8f0e60f6903702b30756fa98d7b5d90c2a72a544df5c6b4483a48fb1640",
+    "rgba_sha256": "5de40922e8357597884467cedff6a2e0c21b61f3b57112e59d815fb851f0836e",
+    "basis": "Fresh SW source reviewer inspected actual selected SWidle collar nativeXYWH[140,240,95,95]. No old complete leg chains in this crop."
+  },
+  "independent_hilt_basis": {
+    "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+    "confirmed_source_message": "Confirmed SW0/1/2/4 hilt-only repairXYWH; only remove ornate guard to simple collar; formal pin pending."
+  },
+  "local_art_composition": {
+    "method": "Service edits preserved raw; exact original-size generated art within approved native ROI may be composed onto original source, leaving every outside RGBA byte unchanged.",
+    "resampling": false,
+    "mirroring": false,
+    "new_keyframes_added": 0,
+    "requirements": [
+      "Preserve all service raw PNGs and requests",
+      "Same native size and no output rescale",
+      "Record source/generated/composite SHA and outside-ROI byte proof",
+      "Independent final small-collar/fingers/blade and seam/pose QC before SOURCEPASS"
+    ]
+  },
+  "references": [
+    "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/selected-small-collar-native-exactRGBA.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-SW-run-RIGHT-air2-key-v01/girtas-SW-run-RIGHT-air2-v01.png": "65cbdbe184ddfff32ae29696500a8dfc96b5558879e2549de1fabd88771ab0d2",
+    "/workspace/scratch/girtas-SW-run-production-reference-v01/selected-small-collar-native-exactRGBA.png": "ec48c8f0e60f6903702b30756fa98d7b5d90c2a72a544df5c6b4483a48fb1640"
+  },
+  "prompt": "Make one precise local equipment art correction to IMAGE 1, preserving its ORIGINAL 1254 by 1254 transparent canvas and every pose. IMAGE 1 is the authoritative finished Girtas SW run pose 2. IMAGE 2 is the ORIGINAL selected small sword collar reference, an exact native crop. Do NOT create a new body, gait, action, costume or weapon design. This is only a hilt correction, not another animation phase.\n\nEdit ONLY the equipment hilt/collar inside native rectangle x=340, y=470, width=210, height=220 in image1. Remove the invented ornate pointed gold crossguard/star/fork prongs around the far anatomical RIGHT fist and replace them with the SIMPLE SMALL ROUNDED GOLD COLLAR shown in image2, snug at the original dark fist and blade base. This original weapon has NO huge ornate guard and NO protruding star/spikes at the grip. Preserve the real fist fingers, thumb, wrist, forearm attachment, and the existing long sinuous curved blade shape, blade thickness, colour and its FORWARD DOWNLEFT path. Fill places where only the invented prongs are removed with the locally correct transparent background or existing dark robe material, as anatomically appropriate. Do not erase fingers or sever the blade/grip.\n\nEverything else must stay in EXACT same native positions and same shape: faithful SW front DOWNLEFT camera; pale face and hair; thin HARD straight gold radial crown rays with all tips and real transparent margins; original full blackgold armor/underarmor; long ankle robe; two connected arms and legs; anatomical RIGHT far/imageLEFT weapon arm and EMPTY near LEFT/imageRIGHT hand. Keep the exact already authored support/AIR boots, knee/hip chains, ground projections, running compression or flight, clothing folds, silhouette, blade tip and transparent canvas. Do not move, resize, recolour or redraw nondefect body/gear. Return one full transparent 1254-square PNG with the corrected small rounded collar in the SAME ROI. No padding, rescale, mirroring, labels, new limbs or extra weapons.",
+  "requested_at": "2026-10-19T16:29:00.677924+00:00"
+}

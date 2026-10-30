@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "status": "PASS_SCOPED_ACTUAL_R092_W_IDLE_TO_SIX_WALK_AND_LOOP_SOURCE_LAYOUT_PHYSICAL_QC",
+  "key": "transform:267",
+  "direction": "W",
+  "role": "walk",
+  "reviewer": "/root/girtas_se_walk_author (independent reviewer; did not author W source or layout)",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r092/SpriteFrames.tres",
+  "frames_sha256": "a261d4c2bc0c813908df6a754e1f2780dd11f91b84e1565c2ad946b84aba33fb",
+  "profile": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r092/NativeMotionProfile.tres",
+  "profile_sha256": "3e9dcb1afd3186ef860d51a2db9b9b51a38c7c6ab46f5e26e158c85fe4bf9589",
+  "profile_pixel_scale": 0.225409836066,
+  "source_sha256": "05997491fbc9919c3defafc837e152b873807ba5146f0d34e0ac279e8bedc77b",
+  "prior_independent_candidate_review": "/workspace/scratch/girtas-W-walk-reviewed-composite-v02/independent-SE-author-common-physical-six-gait-review-v02.json",
+  "prior_independent_candidate_review_sha256": "20f4a2232f976b1c83c7db904956f25b30d9c9f4954b44049cdfd2d46f128f75",
+  "actual_sample_proof": "/workspace/scratch/girtas-r092-W-walk-runtime-qc/actual-layout-measurements.json",
+  "actual_sample_proof_sha256": "67436b1d174eff862434973f17dec5cea9a38e73b14dac200a128d0ab45f02ac",
+  "private_panel": "/workspace/scratch/girtas-r092-W-walk-runtime-qc/private-W-idle-six-walk-actual-r092.jpg",
+  "private_panel_sha256": "35da5baad8e38150c0619201e57a97d2d4815fc16b01adc3293a9e2d2d414598",
+  "private_panel_bytes": 138603,
+  "sample_count": 7,
+  "walk_fps": 12.5,
+  "walk_loop": true,
+  "walk_pose_Cs": [
+    2560,
+    1792,
+    1792,
+    2560,
+    1728,
+    1728
+  ],
+  "exact_RGBA_regions_margins_Cs_anchors_textures_match_selected_tracks": true,
+  "findings": [
+    "Actual compiled r092 idle_4 phase0 plus all walk_4 phases0..5 exact textures/sourceSHA/croppedRGBA/regions/margins/perframeC/sourceanchors match selected register and prior independently reviewed physical candidate.",
+    "Current profile .225409836066 applied equally to selected W idle and allsix walk frames, so rigid skull/neck/pauldron/belt scale remains matched through idle\u2192walk andloop. Completegear remains in underlying exactRGBA; preview reconstruction is bounded and does not alter gamepixels.",
+    "Actual left-facing W camera, longsilverhair/hardgoldradialspines/longrobe/originalRIGHTsinuousweapon/emptyLEFT/twoarmslegs preserved, actualoppositeLEFT andRIGHT support alternation/loadedknee/passing/toeoff/precontact remains coherent.",
+    "Support offsets retain near/far perspective rather than universalflatsoleY; contacts0/3 and mids1/4 read weightbearing, reaches2/5 keep trailingtoe support withoutflight. Head/body/root arc and5\u21920 are consistent with priorcandidate, no material new compiledscale/crop/pose defect found."
+  ],
+  "scope": "Actual compiled TRES physical reconstruction with exactRGBA metadata, not an engine screenshot. Root separately reports scoped Godot resource/Player/32action PASS; this agent did not rerun fullCI or wholeactor.",
+  "limitations": [
+    "No new wholeactor/defaultMain approval; remaining Girtas movements/holds stay pending.",
+    "Isolated PNG has no physicalfloor; sourcecontact semantics/near-far camera plus exact authored layout reviewed as animation candidate, not a numerical3Dsimulation guarantee."
+  ],
+  "actor_approval": false,
+  "new_approvals": 0,
+  "repository_mutated": false,
+  "created_at": "2026-10-19T15:32:55.804319+00:00"
+}

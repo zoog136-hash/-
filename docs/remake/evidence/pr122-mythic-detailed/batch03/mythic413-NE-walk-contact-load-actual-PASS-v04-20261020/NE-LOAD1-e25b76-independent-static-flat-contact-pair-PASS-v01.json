@@ -1,0 +1,98 @@
+{
+  "schema": "PR122-independent-actual-source-and-visible-flat-contact-pair-v1",
+  "status": "PASS_NE_LOAD1_STATIC_SOURCE_AND_FLAT_CONTACT_UNIT_PAIR",
+  "source_visual_status": "PASS_UNIT_PAIR_ONLY",
+  "key": "transform:413",
+  "direction": "NE",
+  "role": "walk",
+  "source0": {
+    "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/NE-contact0-actual-native-background-AA-clean-r002.png",
+    "sha256": "99ffa7da2332144f3d449e9e23881bbaa130ace3027e837518148b705d92c127",
+    "bytes": 761279
+  },
+  "source1": {
+    "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/actual-NE-LOAD1-rig-v02/NE-LOAD1-actual-native-part-rig-v02.png",
+    "sha256": "e25b76b5de15326613c0605700ce226a9db43c886296e1f06d0b0be4bf1cb67c",
+    "bytes": 721572
+  },
+  "author_sole_material_pair_proof": {
+    "path": "/workspace/scratch/mythic413-NE-walk-author-20261020-v01/NE-actual-RIGHT-stiletto-forefoot-0-to1-observation-and-native-art-pair-v03.json",
+    "sha256": "d3e463b9761e550d89d7ab2f596fd11a6e55bca000e6087f47183bbe0ddf915a",
+    "bytes": 2602
+  },
+  "physical_C_fixed": 2432,
+  "bodyunit_fixed": 2.375,
+  "common_rig_root": [
+    716.2291666666666,
+    1054.2766007046484
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "source1_body_bob": [
+    9,
+    11
+  ],
+  "independent_source0_bob_comparison": {
+    "head_neck_ROI": [
+      500,
+      120,
+      850,
+      520
+    ],
+    "head_neck_RGBA_changes": 0,
+    "right_staff_ROI": [
+      910,
+      60,
+      1050,
+      1130
+    ],
+    "right_staff_visible_alpha_gt16_RGBA_changes": 0,
+    "right_staff_background_alpha_le16_RGBA_changes": 173
+  },
+  "actual_flat_contact_landmarks": {
+    "RIGHT_stiletto_0": [
+      799.5,
+      1028
+    ],
+    "RIGHT_stiletto_1": [
+      667.5,
+      1147
+    ],
+    "RIGHT_forefoot_0": [
+      841,
+      1011
+    ],
+    "RIGHT_forefoot_1": [
+      709,
+      1130
+    ],
+    "integer_material_translation": [
+      -132,
+      119
+    ],
+    "raster_rounding_world_residual": [
+      0.0209547224941673,
+      -0.0009910201348404257
+    ]
+  },
+  "visual_findings": [
+    "Actual rear NE identity, complete RIGHT-held double-ended staff and fixed material scale remain coherent.",
+    "New articulated RIGHT support leg retrogrades under the body; LEFT leg passes airborne beneath the genuine coat rather than translating an unchanged full figure.",
+    "Natural thigh/boot silhouette and complete LEFT free hand are retained without a visible cut wrist, old detached fingers or costume seam.",
+    "The complete original foot remains a flat-contact plant through0→1; heel and forefoot both follow the actual Player clock within0.021world raster rounding."
+  ],
+  "visual_limitations": [
+    "This is a static source and unit flat-contact pair gate, not all-six/5→0/game approval.",
+    "No heel-only→flat footroll is claimed: the same native shoe is translated with a plausible finite toeout plane.",
+    "Hidden hip and contact ground depths remain authored assumptions; actual terminal2 toeoff and the later six-cycle must be checked."
+  ],
+  "private_ledger_snapshot": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-NE-LOAD1-view54-frozen.json",
+    "sha256": "5e5d920141324db333765c7da8584ee4c4d8d1aeb8ba39438ddd3f2fdf6114e1",
+    "bytes": 25865
+  },
+  "images_forwarded": 0,
+  "actor_approvals_added": 0
+}

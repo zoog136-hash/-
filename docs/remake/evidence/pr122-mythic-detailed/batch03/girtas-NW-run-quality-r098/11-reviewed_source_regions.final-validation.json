@@ -1,0 +1,75 @@
+{
+  "status": "DERIVED_SOURCE_REGIONS_PROPOSAL_NOT_APPROVED",
+  "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+  "source_RGBA_sha256": "5b3391ecfbf8d7ead9d2be83041ff20665400a0e37b4eb7bf07c9ebaf07a7a1d",
+  "base_geometry_sha256": "0dca59dad22c112b8a655ab6419a0ee680c9f1316a06a83cb04d9026e22c02f2",
+  "derived_geometry_sha256": "e92473ef7607561dd09d790bdfb006137d95744425ba62a1f3b9c10b51bfb15b",
+  "review_sha256": "5e8292a29162e51fc8a66016e2e0f4afec928461e2f75ed07ef8ee97e76d6ed9",
+  "review_basis": "Outward-only completeownedalpha16 exact source rectangles plus transparent authoredAIRgroundroot space. No source pixels/alpha threshold/ownership relaxed. Source/physical candidate evidence is independent; no geometry-only actor approval.",
+  "source_unchanged": true,
+  "canonical_canvas_foot_anchors_unchanged": true,
+  "all_alpha_gt16_covered_exactly_once": true,
+  "foreign_foreground_pixels": 0,
+  "alpha_gt16_pixels": 1854623,
+  "added_alpha_gt16_pixels": 0,
+  "all_alpha_positive_covered": true,
+  "expanded_regions": [
+    [
+      430,
+      413,
+      419,
+      453
+    ],
+    [
+      1351,
+      109,
+      1138,
+      1062
+    ],
+    [
+      134,
+      1352,
+      1011,
+      1262
+    ],
+    [
+      1420,
+      1354,
+      1001,
+      1132
+    ],
+    [
+      126,
+      2636,
+      1028,
+      1127
+    ],
+    [
+      1691,
+      2957,
+      457,
+      486
+    ]
+  ],
+  "default_importer_repacker_unchanged": true,
+  "ownership_rule": "alpha16-components-alpha100-body-seeds-detached-nearest-v1",
+  "nearest_owner_sha256": "b17e7c5c69af2851aefc72923ae3307da0cbb556fe0ddf86ae053243816e62a7",
+  "foreground_owner_sha256": "540022b321b36d32708fb6f1a1bccab380e6587ddfc4164ecb1af8598e1cab96",
+  "detached_pixels": 1,
+  "detached_fragments": [
+    {
+      "row": 4,
+      "pixels": 1,
+      "bbox": [
+        580,
+        3224,
+        581,
+        3225
+      ],
+      "nearest_max": 2.23606797749979,
+      "second_nearest_min": 818.443644975022,
+      "owner_margin_min": 816.2075769975222
+    }
+  ],
+  "minimum_required_owner_margin": 32.0
+}

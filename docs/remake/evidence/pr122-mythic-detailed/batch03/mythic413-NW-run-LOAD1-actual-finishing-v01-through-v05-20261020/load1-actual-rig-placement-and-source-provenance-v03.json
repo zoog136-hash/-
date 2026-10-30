@@ -1,0 +1,160 @@
+{
+  "status": "ACTUAL_LOAD1_POSE_RENDERED_PENDING_INDEPENDENT_ART_AND_PLANT_QC",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+    "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482"
+  },
+  "output": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v03/thunder_female-NW-run-load1-actual-rig-v03.png",
+    "sha256": "65ac35903cba712b7ad8369c68a714ab4562bd6081850c0120993c7777caa295",
+    "bytes": 805970,
+    "canvas": [
+      1536,
+      1536
+    ],
+    "alpha16_bbox": [
+      323,
+      85,
+      1039,
+      1317
+    ]
+  },
+  "rig_common_root_in_unpadded_frame": [
+    669.0,
+    1267.95
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "native_C": 2560,
+  "source_body_density_factor": 2.5,
+  "whole_source_resampled": false,
+  "actual_art_part_projection": true,
+  "body_node_bob_and_lean": [
+    4.0,
+    70.0
+  ],
+  "source_heel0_marker": [
+    583.5,
+    1191.0
+  ],
+  "target_heel1_marker": [
+    722.6928985028028,
+    1316.2736086525224
+  ],
+  "exact_plant_source_delta": [
+    139.19289850280273,
+    125.27360865252246
+  ],
+  "same_heel_part_rigid_translation": [
+    139.19289850280273,
+    125.27360865252246
+  ],
+  "genuine_new_support_knee": [
+    577.9547668598952,
+    1004.3339455542197
+  ],
+  "genuine_far_passing_knee": [
+    528.668751101061,
+    872.4968751835102
+  ],
+  "parts": [
+    {
+      "part": "Lwhole_support_thigh_shin",
+      "method": "continuous nativewidth curved actual-material skeletal skinning",
+      "source_knots": [
+        [
+          610,
+          692
+        ],
+        [
+          566,
+          900
+        ],
+        [
+          547,
+          1082
+        ]
+      ],
+      "target_knots": [
+        [
+          614.0,
+          762.0
+        ],
+        [
+          577.9547668598952,
+          1004.3339455542197
+        ],
+        [
+          686.1928985028028,
+          1207.2736086525224
+        ]
+      ]
+    },
+    {
+      "part": "Rwhole_recovery_thigh_shin",
+      "method": "continuous nativewidth curved actual-material skeletal skinning",
+      "source_knots": [
+        [
+          705,
+          705
+        ],
+        [
+          642,
+          785
+        ],
+        [
+          775,
+          861
+        ]
+      ],
+      "target_knots": [
+        [
+          709.0,
+          775.0
+        ],
+        [
+          528.668751101061,
+          872.4968751835102
+        ],
+        [
+          669.0,
+          1015.0
+        ]
+      ]
+    },
+    {
+      "part": "Lactual_heel_and_stiletto",
+      "method": "EXACT rigid translation, no foot geometry scaling",
+      "translation": [
+        139.19289850280273,
+        125.27360865252246
+      ]
+    },
+    {
+      "part": "Ractual_foot",
+      "method": "rigid native boot placement",
+      "translation": [
+        -106.0,
+        154.0
+      ]
+    },
+    {
+      "part": "Larm_true_shoulder_rotation",
+      "angle_degrees": 15,
+      "source_shoulder": [
+        559.0,
+        383.0
+      ],
+      "target_shoulder": [
+        563.0,
+        453.0
+      ]
+    }
+  ],
+  "original_profile_preserved": true,
+  "source_approved": false,
+  "cycle_approved": false,
+  "actor_approvals_added": 0
+}

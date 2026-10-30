@@ -1,0 +1,34 @@
+{
+  "schema": "PR122-local-painted-cloth-boundary-registration-v1",
+  "status": "FINITE_LOCAL_ART_BOUNDARY_REGISTRATION_CANDIDATE_PENDING_NATIVE_VISUAL_QC",
+  "input_material": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-own-E-ATTACK-native-complete-materials-v04/E-ATTACK-own-complete-native-parts-and-actual-local-cape-provenance-v04.json",
+    "sha256": "37881ba912557365f23fd164d3a3671b31304f5c7e96b57a0fd369500445de55",
+    "bytes": 13457
+  },
+  "paint_input": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-own-E-ATTACK-native-complete-materials-v04/actual-local-painted-cape-fixed-native-250-registration-v04.png",
+    "sha256": "29f1c4257d4c6ef5f05e16b5012f8c23055442b67afcc882cafc52eef4f00109",
+    "bytes": 68011
+  },
+  "actual_painted_native_output": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/actual-E-local-cloth-native-boundary-registration-v05/actual-new-cape-paint-250-once-visible-boundary-registered-v05.png",
+    "sha256": "5b2ece1d827c2c9e6de0fb5fef54a0a1c4e77531e92a722c93f9bbfc9741b1c9",
+    "bytes": 65950
+  },
+  "registration_only_on_original_visible_cloth_outside_replacement_mask": true,
+  "protected_original_samples": 18097,
+  "six_parameter_native_local_texture_mapping": [
+    -0.26566066230231333,
+    0.013746563352083976,
+    0.003242157678539012,
+    0.0021049388902576547,
+    0.00043495914643055427,
+    9.117699879008213e-05
+  ],
+  "initial_error": 0.08481477717491077,
+  "registered_error": 0.07016973732756616,
+  "nfev": 13,
+  "source_actor_C_or_unit_root_or_feet_or_pose_modified": false,
+  "scope": "Only one local cloth painting registration, reused unchanged across all six action poses. Original source and service RAW unchanged."
+}

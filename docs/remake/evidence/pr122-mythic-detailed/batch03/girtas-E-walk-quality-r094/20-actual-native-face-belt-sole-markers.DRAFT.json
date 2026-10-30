@@ -1,0 +1,484 @@
+{
+  "status": "DRAFT_ACTUAL_ALPHA100_SOLE_ROI_MEASUREMENT_REVIEWER_ROI_NOT_FINAL_ROOT_QC",
+  "key": "transform:267",
+  "sources_raw_unchanged": true,
+  "baseline_idle": {
+    "brow": [
+      312,
+      94
+    ],
+    "chin": [
+      317,
+      114
+    ],
+    "face_interval": 20,
+    "crest": [
+      304,
+      253
+    ],
+    "root": [
+      210,
+      491
+    ],
+    "near_floor_y": 491,
+    "far_floor_y": 471,
+    "canonical_near_far_depth": 20,
+    "canvas_size": 1024
+  },
+  "candidate_pose_canvases": [
+    2256,
+    2408,
+    2352,
+    2352,
+    2408,
+    2304
+  ],
+  "estimated_beltVtips": [
+    [
+      854,
+      550
+    ],
+    [
+      875,
+      550
+    ],
+    [
+      920,
+      550
+    ],
+    [
+      880,
+      555
+    ],
+    [
+      835,
+      600
+    ],
+    [
+      895,
+      535
+    ]
+  ],
+  "sole_measurements": [
+    {
+      "phase": 0,
+      "label": "farLEFTfore_support",
+      "source": "/workspace/scratch/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09.png",
+      "source_sha256": "196f221e73c263aeda59c60b9e688b669fce515fcf441cd115ba6e7ce7e51574",
+      "reviewer_approx_roi": [
+        990,
+        1080,
+        250,
+        160
+      ],
+      "strong_bbox": [
+        990,
+        1080,
+        204,
+        111
+      ],
+      "strong_pixel_count": 14550,
+      "sole_last2_point": [
+        1015.0098039215686,
+        1189.4901960784314
+      ],
+      "last2_pixel_count": 102,
+      "sole_y_max": 1190,
+      "last2_xrange": [
+        990,
+        1041
+      ],
+      "roi_edge_contacts": {
+        "left": true,
+        "right": false,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 0,
+      "label": "nearRIGHTrear_support",
+      "source": "/workspace/scratch/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09.png",
+      "source_sha256": "196f221e73c263aeda59c60b9e688b669fce515fcf441cd115ba6e7ce7e51574",
+      "reviewer_approx_roi": [
+        390,
+        1035,
+        270,
+        185
+      ],
+      "strong_bbox": [
+        390,
+        1035,
+        270,
+        146
+      ],
+      "strong_pixel_count": 15377,
+      "sole_last2_point": [
+        546.265306122449,
+        1179.469387755102
+      ],
+      "last2_pixel_count": 147,
+      "sole_y_max": 1180,
+      "last2_xrange": [
+        508,
+        585
+      ],
+      "roi_edge_contacts": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 1,
+      "label": "farLEFTsole_support",
+      "source": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13.png",
+      "source_sha256": "d3b774f65b5e4a8e77a365ea9fe815f18298914ef1fe912c575514fa0ade666e",
+      "reviewer_approx_roi": [
+        780,
+        1080,
+        260,
+        160
+      ],
+      "strong_bbox": [
+        783,
+        1080,
+        257,
+        114
+      ],
+      "strong_pixel_count": 15039,
+      "sole_last2_point": [
+        912.4561403508771,
+        1192.0877192982457
+      ],
+      "last2_pixel_count": 57,
+      "sole_y_max": 1193,
+      "last2_xrange": [
+        887,
+        938
+      ],
+      "roi_edge_contacts": {
+        "left": false,
+        "right": true,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 2,
+      "label": "farLEFTrear_support",
+      "source": "/workspace/scratch/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11.png",
+      "source_sha256": "0503368555dae9b3bc6a73209728c0f5e681e21aba2c4386ea16bb49646fc9b3",
+      "reviewer_approx_roi": [
+        360,
+        1000,
+        290,
+        185
+      ],
+      "strong_bbox": [
+        382,
+        1000,
+        268,
+        123
+      ],
+      "strong_pixel_count": 12758,
+      "sole_last2_point": [
+        485.52941176470586,
+        1121.436974789916
+      ],
+      "last2_pixel_count": 119,
+      "sole_y_max": 1122,
+      "last2_xrange": [
+        451,
+        517
+      ],
+      "roi_edge_contacts": {
+        "left": false,
+        "right": true,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 3,
+      "label": "nearRIGHTfore_support",
+      "source": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png",
+      "source_sha256": "1f3c6196b4d27db4bebfd74761593a289e731b9dda7b4d3742d99c13cad466ee",
+      "reviewer_approx_roi": [
+        990,
+        1080,
+        250,
+        155
+      ],
+      "strong_bbox": [
+        990,
+        1080,
+        221,
+        105
+      ],
+      "strong_pixel_count": 15854,
+      "sole_last2_point": [
+        1023.58,
+        1183.46
+      ],
+      "last2_pixel_count": 100,
+      "sole_y_max": 1184,
+      "last2_xrange": [
+        998,
+        1051
+      ],
+      "roi_edge_contacts": {
+        "left": true,
+        "right": false,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 3,
+      "label": "farLEFTrear_support",
+      "source": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png",
+      "source_sha256": "1f3c6196b4d27db4bebfd74761593a289e731b9dda7b4d3742d99c13cad466ee",
+      "reviewer_approx_roi": [
+        360,
+        1030,
+        290,
+        185
+      ],
+      "strong_bbox": [
+        360,
+        1030,
+        290,
+        137
+      ],
+      "strong_pixel_count": 15714,
+      "sole_last2_point": [
+        505.3606557377049,
+        1165.049180327869
+      ],
+      "last2_pixel_count": 61,
+      "sole_y_max": 1166,
+      "last2_xrange": [
+        477,
+        534
+      ],
+      "roi_edge_contacts": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 4,
+      "label": "nearRIGHTsole_support",
+      "source": "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/girtas-E-walk-RIGHT-midstance4-freshlegs-v05.png",
+      "source_sha256": "8fc156a5061214a47ce394c90d9b3aa3ec9f6d2d71ba4196453269b7b556d583",
+      "reviewer_approx_roi": [
+        490,
+        1090,
+        310,
+        150
+      ],
+      "strong_bbox": [
+        490,
+        1090,
+        310,
+        133
+      ],
+      "strong_pixel_count": 18466,
+      "sole_last2_point": [
+        652.6138613861386,
+        1221.3960396039604
+      ],
+      "last2_pixel_count": 101,
+      "sole_y_max": 1222,
+      "last2_xrange": [
+        624,
+        684
+      ],
+      "roi_edge_contacts": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 5,
+      "label": "nearRIGHTrear_support",
+      "source": "/workspace/scratch/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12.png",
+      "source_sha256": "389e5a4da7cdb5f204d3bcca387c0589d243c89649a60295d71c3125d8304a0e",
+      "reviewer_approx_roi": [
+        430,
+        1030,
+        260,
+        210
+      ],
+      "strong_bbox": [
+        430,
+        1030,
+        157,
+        156
+      ],
+      "strong_pixel_count": 13015,
+      "sole_last2_point": [
+        549.6086956521739,
+        1184.2463768115942
+      ],
+      "last2_pixel_count": 69,
+      "sole_y_max": 1185,
+      "last2_xrange": [
+        523,
+        574
+      ],
+      "roi_edge_contacts": {
+        "left": true,
+        "right": false,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 1,
+      "label": "nearRIGHTrear_AIR",
+      "source": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13.png",
+      "source_sha256": "d3b774f65b5e4a8e77a365ea9fe815f18298914ef1fe912c575514fa0ade666e",
+      "reviewer_approx_roi": [
+        420,
+        950,
+        220,
+        160
+      ],
+      "strong_bbox": [
+        420,
+        950,
+        220,
+        160
+      ],
+      "strong_pixel_count": 9072,
+      "sole_last2_point": [
+        609.2631578947369,
+        1108.4736842105262
+      ],
+      "last2_pixel_count": 19,
+      "sole_y_max": 1109,
+      "last2_xrange": [
+        605,
+        614
+      ],
+      "roi_edge_contacts": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "phase": 2,
+      "label": "nearRIGHTfore_AIR",
+      "source": "/workspace/scratch/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11.png",
+      "source_sha256": "0503368555dae9b3bc6a73209728c0f5e681e21aba2c4386ea16bb49646fc9b3",
+      "reviewer_approx_roi": [
+        1015,
+        1000,
+        230,
+        165
+      ],
+      "strong_bbox": [
+        1019,
+        1000,
+        209,
+        105
+      ],
+      "strong_pixel_count": 13221,
+      "sole_last2_point": [
+        1067.1538461538462,
+        1103.2307692307693
+      ],
+      "last2_pixel_count": 13,
+      "sole_y_max": 1104,
+      "last2_xrange": [
+        1063,
+        1072
+      ],
+      "roi_edge_contacts": {
+        "left": false,
+        "right": false,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 4,
+      "label": "farLEFTfore_AIR",
+      "source": "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/girtas-E-walk-RIGHT-midstance4-freshlegs-v05.png",
+      "source_sha256": "8fc156a5061214a47ce394c90d9b3aa3ec9f6d2d71ba4196453269b7b556d583",
+      "reviewer_approx_roi": [
+        990,
+        1010,
+        255,
+        165
+      ],
+      "strong_bbox": [
+        990,
+        1010,
+        212,
+        155
+      ],
+      "strong_pixel_count": 16250,
+      "sole_last2_point": [
+        1039.2142857142858,
+        1163.2857142857142
+      ],
+      "last2_pixel_count": 14,
+      "sole_y_max": 1164,
+      "last2_xrange": [
+        1035,
+        1044
+      ],
+      "roi_edge_contacts": {
+        "left": true,
+        "right": false,
+        "top": true,
+        "bottom": false
+      }
+    },
+    {
+      "phase": 5,
+      "label": "farLEFTfore_AIR",
+      "source": "/workspace/scratch/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12.png",
+      "source_sha256": "389e5a4da7cdb5f204d3bcca387c0589d243c89649a60295d71c3125d8304a0e",
+      "reviewer_approx_roi": [
+        1030,
+        1000,
+        215,
+        165
+      ],
+      "strong_bbox": [
+        1030,
+        1000,
+        176,
+        118
+      ],
+      "strong_pixel_count": 12358,
+      "sole_last2_point": [
+        1060.4705882352941,
+        1116.3529411764705
+      ],
+      "last2_pixel_count": 17,
+      "sole_y_max": 1117,
+      "last2_xrange": [
+        1056,
+        1066
+      ],
+      "roi_edge_contacts": {
+        "left": true,
+        "right": false,
+        "top": true,
+        "bottom": false
+      }
+    }
+  ]
+}

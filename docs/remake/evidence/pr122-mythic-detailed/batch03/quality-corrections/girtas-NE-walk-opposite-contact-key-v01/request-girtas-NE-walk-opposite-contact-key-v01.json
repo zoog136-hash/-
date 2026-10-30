@@ -1,0 +1,41 @@
+{
+  "key": "267",
+  "name": "Girtas",
+  "direction": "NE",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "opposite-contact-key-v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "source_kind": "missing_opposite_walk_contact_key",
+  "expected_poses": 1,
+  "requested_poses": 1,
+  "intended_game_phase": 3,
+  "intended_anatomical_support": "RIGHT",
+  "intended_swing_leg": "LEFT",
+  "references": [
+    "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/faithful-NE-idle-source-row0-lossless.png",
+    "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/right-support-opposite-contact-production-guide.png",
+    "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/faithful-NE-walk-source-row0-lossless.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/faithful-NE-idle-source-row0-lossless.png": "2d45d9c51502e69503a7f58d38fa325d750e9a9f4e94aa695d71120c515a55ba",
+    "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/right-support-opposite-contact-production-guide.png": "594c260f1b0aad621a73f0737652ba8900c077f0ad75ea892c02944dad903a23",
+    "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/faithful-NE-walk-source-row0-lossless.png": "27e286b42647d76756152d5ed9fba0f1300a41cfd5ca78c52e85eb237a8c0b8a"
+  },
+  "transparent_background": true,
+  "corrective_reason": "Existing faithful NEwalk v02 has only LEFT support / RIGHT raised in every row. Preserve its one valid existing contact; author ONLY the truly missing opposite RIGHT-support key from faithful idle plus explicit joint-and-contact guide, not another six-pose retry.",
+  "prompt": "Create ONE NEW missing OPPOSITE-SUPPORT WALK CONTACT KEY for unique boss GIRTAS, editing the FIRST supplied faithful NE IDLE figure. This is ONE full-body sprite, NOT a six-frame sheet. FIRST image is the PRIMARY model, camera and identity authority, standing in true NORTHEAST back/rear-right three-quarter view heading UP-RIGHT. SECOND image is a production-only skeletal/contact guide from that SAME body; use its actual hip\u2192knee\u2192ankle\u2192sole geometry, not its colors or labels. THIRD image is an EXISTING LEFT-SUPPORT WALK CONTACT for identity/gear/side evidence ONLY. The third pose is the OLD HALF and MUST NOT be copied: it has LEFT planted and RIGHT lifted. Produce the genuinely OPPOSITE support now.\n\nMANDATORY NEW LEG POSE: Anatomical RIGHT leg (imageRIGHT side of this rear view) is the sole weight-bearing SUPPORT leg. Its long visible lower leg descends from the RIGHT hip through the slightly flexed knee to the RIGHT ankle/boot; RIGHT boot sole is FLAT and visibly GROUNDED below the pelvis on the projected NE ground plane. The anatomical LEFT leg (imageLEFT hip) is the PASSING/swing leg: LEFT thigh and knee advance towards UP-RIGHT, LEFT knee flexed, LEFT ankle and boot raised visibly CLEAR OF GROUND; LEFT boot is higher than the grounded RIGHT sole, not another long left boot planted. Make a real slow-walk opposite contact, not a jump or run. The projected colored guide shows ONE magenta RIGHT support foot on the ground tangent, ONE green LEFT boot raised roughly70 guidepx above it. Use the spatial constraint; a changed label or skirt sway does not change actual support.\n\nThe helmet, nose glimpses, shoulder girdle, back/pelvis and boot toe direction MUST all remain NE UP-RIGHT, with dominant back armor/pale hair/dark robe rear and just the existing right-side glimpse. NO North straight-back, East side, Northwest left or front chest/face turn. Preserve the exact original proportions and equipment: visible pale hair; thin narrow rigid gold radial spines, no orange feather/flame fan; long DARK gold-trim skirt/robe panels, moving coherently around the actual legs; original gold armor and boots; one long SINUOUS orange-gold weapon in the SAME ANATOMICAL RIGHT hand as first image (imageRIGHT). Left hand stays empty. Exactly two arms and two anatomically continuous legs; no mirroring, limb swap, extra hand, black armored trousers or redesigned body. Open only enough original skirt panels to reveal the correct planted RIGHT boot and flexed raised LEFT boot. Preserve all original rays, original weapon length and delicate gear endpoints.\n\nOutput ONE complete finished natural sprite on fully transparent RGBA alpha0, 1024x1024 requested. Whole figure about500-600px body height, entire gear envelope <=800x800px with >=96px empty alpha at every canvas edge; shrink WHOLE character uniformly to fit if necessary, never shorten weapon/spines or crop boots. No extra figure/pose. No colored chains, labels, arrows, plane/ground line, cast shadow, glow halo, haze, scenery or background. The final support change must be visibly true in the gold-armored knees/ankles/boots, not merely hidden by the skirt.",
+  "requested_at": "2026-10-19T12:41:58.056597+00:00",
+  "user_authorization": "Production image edits authorized, no main-chat images. Exactly one missing opposite-contact key attempt; failure HOLD.",
+  "source_crops_proof": "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/conditioning-source-crops-proof.json",
+  "source_crops_proof_sha256": "be24b4b4b43729da2827c230d6817a83f36ed3098582fae1bbe0551a49fc2eb1",
+  "source_crops_review": "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/conditioning-source-crops-private-review.json",
+  "source_crops_review_sha256": "1b415c1ab66f9905d8db1587ae3e5e441b94f5421672e176bdc2dcdab1ae938f",
+  "production_guide_proof": "/workspace/scratch/girtas-NE-walk-opposite-contact-key-v01/production-guide-proof.json",
+  "production_guide_proof_sha256": "ace890e6ed888d4bc94a25ba4243cfc7b32603f5b7906279948178eec59fcd58",
+  "imagegen_attempt_limit": 1,
+  "newly_authored_pose_target": 1,
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_final_status": "HOLD_PENDING_COMPLETE_NE_WALK"
+}

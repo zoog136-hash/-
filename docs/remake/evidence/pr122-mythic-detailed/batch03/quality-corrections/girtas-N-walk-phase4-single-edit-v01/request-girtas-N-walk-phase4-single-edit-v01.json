@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "key": "transform:267",
+  "actor": "transform:267",
+  "direction": "N",
+  "role": "walk",
+  "version": "v01",
+  "source_batch": "batch03",
+  "asset_type": "localized_single_walk_phase_edit",
+  "status": "REQUESTED_NOT_APPROVED",
+  "references": [
+    "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/padded-native-contact3.png",
+    "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/localized-left-leg-edit-guide.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/padded-native-contact3.png": "edf431063194dd3c1421d5ae0a520232a7ea376845250d7b51103f8d2df2e4fa",
+    "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/localized-left-leg-edit-guide.png": "ee47ddbc53d37dc9a3c48e8c3945b898c0cf940bd0a2755930e8ae33a9f14394"
+  },
+  "prompt": "Perform ONE SMALL LOCALIZED EDIT on the exact supplied image1. This is NOT a new character illustration and NOT a full-body redraw. Image1 is the immutable native-pixel1024x1024 transparent base: a faithful N/BACK Girtas right-support contact with body physically occupying x272..751,y265..758. Image2 is a marked instruction guide of the SAME base showing the ONLY editable LEFT knee/lower-leg/boot region. Do not render any guide colored marks, labels or box in final art.\n\nOutput exactly1024x1024 with same transparent canvas and absolutely the SAME body pixel size, location, camera, NORTH back-facing head/torso/hips, hair, helmet, shoulders, thin hard gold radial spines, long dark goldtrim skirt, both arms/hands, same long sinuous RIGHT/imageRIGHT weapon, and especially SAME LONG PLANTED RIGHT LEG/BOOT. Copy all pixels outside the small local edit rectangle unchanged; do not regenerate, rescale, mirror or translate whole character. No face/eyes/nose/front cheststar or turn. Native reference body must stay about493px tall in the same position, not expand to fill canvas.\n\nThe ONE requested change: inside ONLY rectangle x422..493,y635..735, change anatomicalLEFT/imageLEFT knee/boot into a clearly BENT FORWARD/UP passing leg under the pelvis, while the RIGHT/imageRIGHT long leg stays planted/supporting. The old LEFT boot ends near canvas y728. Lift that SAME left boot about25pixels UP, so new heel/boot bottom is aroundy703 (20-30px higher), still entirely visible just below original robe hem, with knee flexion and ankle angle that read as walking passing phase4. Keep both complete equal-physical-length legs attached to correct hips; the left is projected shorter because bent/lifted/away, not amputated. Preserve original dark boot/gold greave design/material, robe identity and long coat silhouette; natural occlusion under existing hem is allowed, but do not shorten/redesign robe. Only local left leg anatomy changes. Remove the old displaced left-boot silhouette in that small rectangle so there is exactly ONE left leg/boot plus the unchanged RIGHT leg/boot, no ghost/extra foot.\n\nThis is missing N WALK phase4: RIGHT support, LEFT passingUP. Existing right-support contact is the base, not something to re-author. Input guide BLUE knee/foot path and PINK edit rectangle indicate target location ONLY, no color/line/text should survive. All other body/gear/arm/right-leg pixels and absolute native size remain locked. Alpha0 outside actual physical source silhouette, no new glow cloud, ray, sparkle, floor, shadow, backdrop, grid, text, guide marks or extra figure. Return the same native-pixel transparent boss with ONLY that left leg/knee/boot passing-pose edit.",
+  "transparent_background": true,
+  "expected_poses": 1,
+  "intended_game_phase": 4,
+  "target_role": "RIGHT_long_down_planted_support_LEFT_bent_lifted_passing_UP",
+  "expected_output_canvas": [
+    1024,
+    1024
+  ],
+  "native_body_placement": [
+    272,
+    265,
+    479,
+    493
+  ],
+  "edit_roi_xyxy": [
+    422,
+    635,
+    493,
+    735
+  ],
+  "locked_outside_roi_expected": true,
+  "source_padded_proof_path": "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/padded-source-proof.json",
+  "guide_proof_path": "/workspace/scratch/girtas-N-walk-phase4-single-edit-v01/localized-guide-proof.json",
+  "corrective_reason": "Create only missing phase4 by localized native-pad edit of already validated RIGHT-support/opposite key3. Existingcontacts reused and three newhalfcycle rows salvaged; do not repeatfour/sixpose source or redo contacts. Lock body/gear/otherlimbs; onlyLEFTpassing knee/boot changes.",
+  "user_authorization": "One localized imagegen edit attempt, preserve original/raw/receipt, privateboundedQC only; no repo/index or chat images and no fullanimation approval.",
+  "repo_mutations": false,
+  "new_approvals": 0
+}

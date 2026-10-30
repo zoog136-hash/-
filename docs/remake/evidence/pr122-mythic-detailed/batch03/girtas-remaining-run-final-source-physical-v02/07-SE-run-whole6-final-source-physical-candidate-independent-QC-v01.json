@@ -1,0 +1,114 @@
+{
+  "schema": "PR122_SE_RUN_WHOLE6_FINAL_SOURCE_PHYSICAL_CANDIDATE_INDEPENDENT_QC_V1",
+  "utc": "2026-10-19T16:34:05.616203+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "key": "transform:267",
+  "direction": "SE",
+  "role": "run",
+  "status": "PASS_SCOPED_SOURCE_WHOLE6_BODY_SCALE_AUTHORED_ROOT_CONTACT_AIR_CANDIDATE",
+  "source_visual_status": "PASS",
+  "raw_sha256": "745b91215185c47a360d2d10a68ee8c287248956fe4a21632d39b54661822994",
+  "authored_pose_canvas_sizes": [
+    2304,
+    2304,
+    2304,
+    2168,
+    2168,
+    2304
+  ],
+  "source_native_root_anchors": [
+    [
+      757,
+      1244
+    ],
+    [
+      778,
+      1220
+    ],
+    [
+      760,
+      1305
+    ],
+    [
+      734,
+      1169
+    ],
+    [
+      734,
+      1135
+    ],
+    [
+      800,
+      1298
+    ]
+  ],
+  "visual_findings": [
+    "At fixedCs[2304,2304,2304,2168,2168,2304], visible skull/neck/nearpauldron/waist core have a reasonable common character scale against selectedSEidle. Torso pitch, knee flex and hiddenhip interval explain projection changes; no actual uniform longleg/bodyratio defect warrants pose regeneration.",
+    "Actual0farLEFTcontact\u21921farLEFTflexedload\u21922nearRIGHTleadingAIR\u21923nearRIGHTcontact\u21924nearRIGHTflexedload\u21925farLEFTleadingAIR\u21920 retains genuine oppositehip-to-boot chains and readable complete recoveryboots.",
+    "Semantically traced supportboots0/1/3/4 sit on the declared authoredprojected farLEFT/nearRIGHT supportplanes; recoveryboots visibly clear them. Source4 grounding uses actualbootY1135, never lowerweaponendpoint1177.",
+    "AIR2/5 use explicit authoredroots with every originalalpha>16 foregroundpixel above the HIGHER declaredsupportplane by11.22449world. Thus bothcompleteboots clear thatplane without invented sourcefloor labels. Body/head/waist arcs and5\u21920 are plausible run contact/compression/flight transitions.",
+    "The whitewaistdiamond is only a moving frontsurface registrationmarker. Its first-half near-constant contact/load height does not certify a hiddenpelvis nor contradict visible knee/torso compression. No exact hiddenbone metrology demanded.",
+    "Same-direction actualcurrentwalk/attack structuralhilt crosscheck withdraws idle-only gearHOLD; originalsourcegear retained. No source/art/C/root change needed."
+  ],
+  "chosen_body_root_candidate_pins": [
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/authored-ground-root-numeric-DRAFT-mixedC-v01.json",
+      "sha256": "0818e8bb0c972a792d7021c9a73eca8a07c9cabc988530dcf7ee292b06882893"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-configuration-v01.json",
+      "sha256": "5737ae413de35ea93a058564eb51c7784d1739d64a40fcc5516f75da7e26a5e5"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/geometry-derived.json",
+      "sha256": "466bbc4e5f2fa34c30baccd9e3f0caad1724876ff62d235866b612b678df4f1e"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/reviewed_runtime_layout.proposal.json",
+      "sha256": "9a8810d695ff0e46a0427f513bb9c6fae27bc303756005f9f9a444abfd73dbdc"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/reviewed_runtime_layout.validation.json",
+      "sha256": "45421d1d57afe468a3cbb8a42e12411ed32a2a09d92c6b3e774ea5c3eb2132f2"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/reviewed_source_regions.proposal.json",
+      "sha256": "369bcec3674235b1608d2698ad7d892f34268eac1892a642252fcc5aed128687"
+    },
+    {
+      "path": "/workspace/scratch/girtas-SE-run-physical-layout-authoring-v01/UNREVIEWED-mixedC-contact-calibrated-candidate-v01/reviewed_source_regions.validation.json",
+      "sha256": "8f92e4be231b64a039f70144596ff928187a759772a6c2ef7dbe0c40d87c7b30"
+    }
+  ],
+  "body_root_review_pin": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-fixed-mixedC-body-root-independent-final-candidate-QC-v01.json",
+    "sha256": "b8ef5b5ddb1e11af5a02c9c02457132bcdb2051fc02b3ef77bdbbfd1e400e537"
+  },
+  "gear_withdrawal_pin": {
+    "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-SW-hilt-current-walk-attack-crosscheck-HOLD-withdrawal-v01.json",
+    "sha256": "67c349dca493ef69e00b6ab27ae4130aaa30117cdbf2a9b3557b938d6fc135f1"
+  },
+  "source_scope_proof_pins": [
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-contact-pair-independent-source-QC-v02.json",
+      "sha256": "bab8afd4dd6ce288ba3c7296d0f4786dd9d985c7d77b0b6c16934e6004505390"
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-compression1-4-independent-source-QC-v01.json",
+      "sha256": "3a8a75dfe8e1e46a3519ae5fa8bf4545ad5877edc090056c58939bf6ed731eac"
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-opposite-AIR2-5-independent-source-QC-v01.json",
+      "sha256": "c69973988d31615eec7dbd62112fb8c607d495688c3757ae7496990c2324943b"
+    }
+  ],
+  "physical_projection_scope": "This is an authored2D projectedground candidate with actualanatomicalsupport verification, not a certified exact3Dcamera/skeleton reconstruction.26canonical idle near/far is the declared baseline here, not a rule imposed on allfuturegaits. SourcePNG alone has no floor.",
+  "actual_runtime_status": "HOLD_NOT_YET_ACTUAL_COMPILED_REVIEWED",
+  "actor_approval": false,
+  "actor_approval_increment": 0,
+  "remaining_HOLD": [
+    "Root officiallatestfixture/prepare/canonical andactualSpriteFrames/profile/Player/Godot compilation checks, then scopedactualcompiledQC.",
+    "Wholeactor267 finalindependent48role quality andactualMain/defaultcatalog activation remainpending; detailedCOMPLETE1/31Halpas393 only."
+  ],
+  "repository_mutations": false
+}

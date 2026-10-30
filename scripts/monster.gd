@@ -118,6 +118,44 @@ var spawn_region_id: String = ""
 var roaming_radius: float = 180.0
 var roam_clock: float = 0.0
 
+func retire_for_pool() -> void:
+	# Death presentation is complete before this is called. Release all visual
+	# owners while keeping the lightweight body for the next life/region.
+	set_physics_process(false)
+	input_pickable = false
+	collision_layer = 0
+	collision_mask = 0
+	velocity = Vector2.ZERO
+	path = PackedVector2Array()
+	path_index = 0
+	damage_hit_count = 0
+	special_attack.clear()
+	if is_instance_valid(world_controller):
+		var died_callback:=Callable(world_controller,"_on_monster_died")
+		var hit_callback:=Callable(world_controller,"_on_player_hit")
+		var selected_callback:=Callable(world_controller,"_select_monster")
+		if died.is_connected(died_callback): died.disconnect(died_callback)
+		if player_hit.is_connected(hit_callback): player_hit.disconnect(hit_callback)
+		if selected.is_connected(selected_callback): selected.disconnect(selected_callback)
+	target_player = null
+	world_controller = null
+	motion = MOTION.new()
+	motion_connected = false
+	sprite.texture = null
+	sprite.material = null
+	if is_instance_valid(species_visual):
+		species_visual.effect_texture = null
+		# These dictionaries may alias catalog records; replace the references.
+		species_visual.visual = {}
+		species_visual.special = {}
+		species_visual.warning_active = false
+		species_visual.original_source = false
+		species_visual.hide()
+	ai.clear()
+	status_immunities.clear()
+	element_resistance.clear()
+	drop_items.clear()
+
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1
@@ -829,6 +867,8 @@ func _setup_animation(record: Dictionary) -> void:
 		animation_base_scale = Vector2.ONE
 	if motion.profile.pixel_scale > 0.0:
 		animation_base_scale = Vector2.ONE * motion.profile.pixel_scale
+	if motion.frame_source != null:
+		animation_base_scale.x *= motion.profile.native_width_ratio
 	# Foot anchor and hit point depend on visible body size, not one fixed offset.
 	motion.profile.sprite_offset = Vector2(0, -visual_height * 0.46)
 	motion.profile.hit_position = Vector2(0, -visual_height * 0.42)

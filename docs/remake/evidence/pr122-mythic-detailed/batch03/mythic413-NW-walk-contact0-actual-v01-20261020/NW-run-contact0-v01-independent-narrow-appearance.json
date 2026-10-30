@@ -1,0 +1,44 @@
+{
+  "schema": "pr122-independent-new-413-NW-run-contact0-narrow-identity-v1",
+  "status": "PASS_NARROW_REAR_IDENTITY_AND_ANATOMICAL_RIGHT_GRIP_ONLY",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-author-20261020-r001/thunder_female-NW-run-contact0-v01-service.png",
+    "sha256": "915b1a2dfbaf90529bd63601a25cece5ece5dfbda5520489a38f3bdb0c1f5007",
+    "bytes": 817927
+  },
+  "source_image_size": [
+    1254,
+    1254
+  ],
+  "source_alpha16_bbox": [
+    319,
+    15,
+    1035,
+    1192
+  ],
+  "raw_RGBA_resampled": false,
+  "source_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false,
+  "private_image_ledger_immutable": {
+    "path": "/workspace/scratch/mythic413-nw-n-walk-independent-qc-20261020/private-image-ledger-through-run-contact0-view05-frozen.json",
+    "sha256": "cc56b83135c8e55e3d4a023d655a6bfab0477dd27d24ee7cf024f81e905869db",
+    "bytes": 2831
+  },
+  "actual_visual_findings": [
+    "Correct NW upper-left away rear three-quarter; rear blue/gold bodice, bun, long blue ribbon and white pleated skirt remain legible.",
+    "Anatomical RIGHT far shoulder traces through bent forearm to screen-right gold/turquoise double-ended staff grip. LEFT near arm and hand are free.",
+    "Both weapon ends are visible; coherent single staff and equipment.",
+    "Near LEFT leg is extended as support with pointed heel/toe-up landing intention; opposite RIGHT leg folds into recovery without obvious disconnected joints."
+  ],
+  "pose_interpretation_limit": "Single unanchored source supports contact intention only; actual heel-ground plane, joint landmarks and subsequent impact/load geometry have not passed independent physical binding.",
+  "scale_and_binding_status": "HOLD_UNTIL_BODY_LIMB_BASELINE_CONSTANT_UNIT_FACTOR_AND_C_CAN_BE_PINNED",
+  "size_policy": "1254 source width and1177 alpha height alone do not require regeneration or resampling. One uniform body-unit/C fit may preserve all original pixels and old profile; never normalize each future pose by alpha height or fake gait through roots.",
+  "next_required": [
+    "Measure actual body/limb reference unit against retained413 neutral anatomy, with uncertainty and consistent landmark definitions.",
+    "Calibrate one constant native unit factor/virtualC for this master and all subsequent edits; preserve genuine pelvis/limb bob and packing inverse anchors.",
+    "Review actual heel contact\u2192load planted motion against retained actual Player16.8world/phase, then real flight/loop once all six sources exist."
+  ],
+  "full_source_status": "HOLD",
+  "whole_cycle_status": "NOT_AVAILABLE"
+}

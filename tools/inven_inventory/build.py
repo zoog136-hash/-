@@ -34,8 +34,15 @@ def targets(root: Path) -> dict[str, dict]:
     for row in read(root/'data/game_db_v17.json')['아이템']:
         if row['name'] not in names: result.setdefault(row['name'],row)
     gd = (root/'scripts/consumable_rules.gd').read_text(encoding='utf-8')
-    literal = gd.split('static func records()',1)[1].split('\nstatic func definition',1)[0]
-    records = json.loads(literal[literal.index('return [')+7:].strip())
+    literal = gd.split('static func records()', 1)[1]
+    # Read only the data array. Subsequent GDScript static declarations are not JSON.
+    literal = literal[literal.index('return [') + 7:].lstrip()
+    records, end = json.JSONDecoder().raw_decode(literal)
+    trailing = literal[end:].lstrip()
+    if trailing and not trailing.startswith(('static var ', 'static func ')):
+        raise ValueError('Unexpected trailing content in consumable records')
+    if not isinstance(records, list) or any(not isinstance(row, dict) for row in records):
+        raise ValueError('Invalid consumable records array')
     for row in records:
         if row['name'] not in names: result[row['name']] = row
     for name in EXTRA_SCROLLS:

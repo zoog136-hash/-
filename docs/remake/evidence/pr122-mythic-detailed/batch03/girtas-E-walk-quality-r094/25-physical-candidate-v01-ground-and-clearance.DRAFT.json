@@ -1,0 +1,247 @@
+{
+  "status": "DRAFT_COMMON_PROJECTION_NOT_INDEPENDENT_ANATOMY_APPROVAL",
+  "source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+  "hypothesis": {
+    "status": "DRAFT_COMMON_GROUNDPROJECTION_HYPOTHESIS_REQUIRES_ACTUAL_ANATOMY_PHYSICAL_QC",
+    "camera_forward_slope_y_per_x": 0.028659992885037386,
+    "forward_angle_degrees": 1.6416472512124183,
+    "walking_near_minus_far_lane_canonical": 1.5493472447063796,
+    "standing_neutral_near_minus_far_lane_canonical": 23.754459067939898,
+    "actor_root_from_body_midplane_canonical": 12.450429391670696,
+    "fit_source": "Actual strongboottoe/heel last2rows of both SOURCEPASS contact0/3, faceCsinitialDRAFT. Not assuming neutral20 invariant.",
+    "independent_gate": "Narrower walking lane must agree with actual hip/knee/ankle shape/occlusion and commonbody scale; fitting coordinates alone is not source approval. No newart or forced AIR.",
+    "pose_anchors": [
+      {
+        "pose": 0,
+        "canvas_size": 2256,
+        "source_anchor_original": [
+          647,
+          1208
+        ],
+        "source_anchor_atlas": [
+          788,
+          1349
+        ],
+        "basis": "Both actual heel/toe support contacts under common forwardprojection+walkinglane, midpoint model. No AIR relabel."
+      },
+      {
+        "pose": 1,
+        "canvas_size": 2408,
+        "source_anchor_original": [
+          654,
+          1216
+        ],
+        "source_anchor_atlas": [
+          2331,
+          1357
+        ],
+        "basis": "farLEFTsole_support actualsole with same fitted forwardprojection/walklane; otherfoot remains sourceAIR."
+      },
+      {
+        "pose": 2,
+        "canvas_size": 2352,
+        "source_anchor_original": [
+          704,
+          1158
+        ],
+        "source_anchor_atlas": [
+          845,
+          2835
+        ],
+        "basis": "farLEFTrear_support actualsole with same fitted forwardprojection/walklane; otherfoot remains sourceAIR."
+      },
+      {
+        "pose": 3,
+        "canvas_size": 2352,
+        "source_anchor_original": [
+          664,
+          1200
+        ],
+        "source_anchor_atlas": [
+          2341,
+          2877
+        ],
+        "basis": "Both actual heel/toe support contacts under common forwardprojection+walkinglane, midpoint model. No AIR relabel."
+      },
+      {
+        "pose": 4,
+        "canvas_size": 2408,
+        "source_anchor_original": [
+          614,
+          1248
+        ],
+        "source_anchor_atlas": [
+          755,
+          4461
+        ],
+        "basis": "nearRIGHTsole_support actualsole with same fitted forwardprojection/walklane; otherfoot remains sourceAIR."
+      },
+      {
+        "pose": 5,
+        "canvas_size": 2304,
+        "source_anchor_original": [
+          684,
+          1214
+        ],
+        "source_anchor_atlas": [
+          2361,
+          4427
+        ],
+        "basis": "nearRIGHTrear_support actualsole with same fitted forwardprojection/walklane; otherfoot remains sourceAIR."
+      }
+    ]
+  },
+  "actual_ground_or_AIR_measurements": [
+    {
+      "pose": 0,
+      "leg": "farLEFTfore_support",
+      "canonical_measured_sole": [
+        679.0399109998609,
+        631.5983868724795
+      ],
+      "canonical_hypothesis_floor_y": 631.5622596467495,
+      "clearance_above_hypothesis_floor": -0.03612722573006977,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 0,
+      "leg": "nearRIGHTrear_support",
+      "canonical_measured_sole": [
+        466.2764510059343,
+        627.049934867564
+      ],
+      "canonical_hypothesis_floor_y": 627.0138076418339,
+      "clearance_above_hypothesis_floor": -0.036127225730183454,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 1,
+      "leg": "farLEFTsole_support",
+      "canonical_measured_sole": [
+        621.9082590196421,
+        629.8313224922772
+      ],
+      "canonical_hypothesis_floor_y": 629.9248669074859,
+      "clearance_above_hypothesis_floor": 0.0935444152087257,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 2,
+      "leg": "farLEFTrear_support",
+      "canonical_measured_sole": [
+        416.88355342136856,
+        624.0814039901675
+      ],
+      "canonical_hypothesis_floor_y": 624.0488603037826,
+      "clearance_above_hypothesis_floor": -0.032543686384883586,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 3,
+      "leg": "nearRIGHTfore_support",
+      "canonical_measured_sole": [
+        668.5518367346938,
+        632.7989115646259
+      ],
+      "canonical_hypothesis_floor_y": 632.8110187576383,
+      "clearance_above_hypothesis_floor": 0.012107193012411699,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 3,
+      "leg": "farLEFTrear_support",
+      "canonical_measured_sole": [
+        442.93253038920477,
+        624.7833166053308
+      ],
+      "canonical_hypothesis_floor_y": 624.7954237983432,
+      "clearance_above_hypothesis_floor": 0.012107193012411699,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 4,
+      "leg": "nearRIGHTsole_support",
+      "canonical_measured_sole": [
+        528.420512483142,
+        628.6866879378966
+      ],
+      "canonical_hypothesis_floor_y": 628.794856001618,
+      "clearance_above_hypothesis_floor": 0.1081680637213367,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 5,
+      "leg": "nearRIGHTrear_support",
+      "canonical_measured_sole": [
+        452.2705314009662,
+        626.7761674718196
+      ],
+      "canonical_hypothesis_floor_y": 626.6123980856071,
+      "clearance_above_hypothesis_floor": -0.16376938621249337,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 1,
+      "leg": "nearRIGHTrear_AIR",
+      "canonical_measured_sole": [
+        492.97569505158236,
+        594.2745235180976
+      ],
+      "canonical_hypothesis_floor_y": 627.779007786218,
+      "clearance_above_hypothesis_floor": 33.50448426812045,
+      "excluded_incomplete_ROI": true,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 2,
+      "leg": "nearRIGHTfore_AIR",
+      "canonical_measured_sole": [
+        670.1077969649398,
+        616.1548927263215
+      ],
+      "canonical_hypothesis_floor_y": 632.8556125667666,
+      "clearance_above_hypothesis_floor": 16.700719840445117,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 4,
+      "leg": "farLEFTfore_AIR",
+      "canonical_measured_sole": [
+        692.8220218319886,
+        603.9753203607022
+      ],
+      "canonical_hypothesis_floor_y": 631.957254845139,
+      "clearance_above_hypothesis_floor": 27.981934484436806,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    },
+    {
+      "pose": 5,
+      "leg": "farLEFTfore_AIR",
+      "canonical_measured_sole": [
+        679.3202614379085,
+        596.6013071895424
+      ],
+      "canonical_hypothesis_floor_y": 631.5702944883092,
+      "clearance_above_hypothesis_floor": 34.96898729876682,
+      "excluded_incomplete_ROI": false,
+      "source_actual_point_unchanged": true
+    }
+  ],
+  "limits": [
+    "0/3 contacts fit common model; fit itself is not independent proof.",
+    "Single-support anchors use the same hypothesis; independent body/hip/knee/ankle and lane credibility required.",
+    "AIR1 bottomROI incomplete, cannot claim its measured clearance; actual wholepose must be reviewed.",
+    "No source PNG, limb, or pixel location edited; no AIR relabeling."
+  ],
+  "actor_approval": false
+}

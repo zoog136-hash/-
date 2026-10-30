@@ -1,0 +1,1832 @@
+{
+  "status": "ALL6_ACTUAL_CAUSAL_JOINTS_FIXED_BOOTS_STAFF_AND_RENDERED_FOOT_SURFACE_AIR_BOUND_CONSTRUCTION_PENDING_INDEPENDENT_QC",
+  "roster": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/Mythic413-NW-run-final-six-actual-source-roster-v01.json",
+    "sha256": "92f75e0bf221fa58aa1e7c73da197d3ad0b005d8881adbb453760568ed449aa7"
+  },
+  "projection": "rawx=X/.9, rawy=Y-Z; worldunit=.0948275862068; all coordinates unpadded except explicit storage",
+  "native_C": 2560,
+  "common_rigroot_raw": [
+    669,
+    1267.95
+  ],
+  "fixed_femur_tibia_native": [
+    250,
+    250
+  ],
+  "fixed_boot_HF_HA_FA_lengths": [
+    47.64790131789645,
+    102.78133342197891,
+    89.92335625409008
+  ],
+  "maximum_bone_length_error": 8.526512829121202e-14,
+  "maximum_actual_leg_control_projection_error": 1.1368683772161603e-13,
+  "maximum_same_boot_triangle_error": 4.263256414560601e-14,
+  "foot_surface_templates": {
+    "canonical_stance": {
+      "actual_source_path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/clean-actual-stiletto-modules-v01/LEFT-actual-complete-stiletto-native.png",
+      "actual_source_sha256": "c4f8a1e010051d4b5fc18d420cf75b7f08c4d7c5cae3df64533144654fafca73",
+      "native_C": 2560,
+      "XYZ_marker_order": [
+        "true structural heel",
+        "structural forefoot sole-ball",
+        "true tarsal"
+      ],
+      "actual_marker_raw": [
+        [
+          583.5,
+          1191.0
+        ],
+        [
+          535.0,
+          1164.0
+        ],
+        [
+          564.0,
+          1075.0
+        ]
+      ],
+      "fixed_marker_XYZ": [
+        [
+          525.15,
+          1191.0,
+          0.0
+        ],
+        [
+          481.5,
+          1178.0,
+          14.0
+        ],
+        [
+          507.6,
+          1175.0,
+          100.0
+        ]
+      ],
+      "pixel_to_authored_surface_XYZ_affine": [
+        [
+          0.9,
+          0.21100107853711253,
+          0.211001078537113
+        ],
+        [
+          -3.497915836317202e-16,
+          0.102461025590744,
+          -0.8975389744092561
+        ],
+        [
+          4.956061707382719e-13,
+          945.8497891950187,
+          945.8497891950186
+        ]
+      ],
+      "opaque_or_AA_texel_vertices": 12834,
+      "all_texel_centers_minZ": -2.9555838807726786,
+      "all_texel_centers_maxZ": 160.86577115403486,
+      "pixel_quad_halfwidth_z_guard": 0.5542700264731846,
+      "unobserved_surface_thickness_bound_native": 8,
+      "physical_geometry_interpretation": "one fixed authored textured 2.5D bootplane, same fixed H/F/A bone triangle across views; not unique recovery of hidden shoe3D",
+      "triangle_error_vs_canonical": 0.0
+    },
+    "original915_stance": {
+      "actual_source_path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/original915-complete-near-leg-native-v01/actual-original-complete-stiletto-native.png",
+      "actual_source_sha256": "65ff1207aaaee3c32b1ebce27c4ab5ecbc445322b509a95c6ec19601826ac577",
+      "native_C": 2560,
+      "XYZ_marker_order": [
+        "true structural heel",
+        "structural forefoot sole-ball",
+        "true tarsal"
+      ],
+      "actual_marker_raw": [
+        [
+          771.0,
+          1186.0
+        ],
+        [
+          720.6732365245826,
+          1167.228399508298
+        ],
+        [
+          749.0,
+          1068.0
+        ]
+      ],
+      "fixed_marker_XYZ": [
+        [
+          693.9,
+          1186.0,
+          0.0
+        ],
+        [
+          648.6059128721243,
+          1181.228399508298,
+          14.0
+        ],
+        [
+          674.1,
+          1167.0622172376916,
+          99.06221723769166
+        ]
+      ],
+      "pixel_to_authored_surface_XYZ_affine": [
+        [
+          0.9000000000000008,
+          0.037562800222643265,
+          0.03756280022264568
+        ],
+        [
+          -6.121870640484362e-16,
+          0.15348645048652765,
+          -0.8465135495134734
+        ],
+        [
+          0.0,
+          975.0041507513203,
+          975.0041507513196
+        ]
+      ],
+      "opaque_or_AA_texel_vertices": 10212,
+      "all_texel_centers_minZ": -6.038283247262257,
+      "all_texel_centers_maxZ": 124.96607207060549,
+      "pixel_quad_halfwidth_z_guard": 0.4420381748680595,
+      "unobserved_surface_thickness_bound_native": 8,
+      "physical_geometry_interpretation": "one fixed authored textured 2.5D bootplane, same fixed H/F/A bone triangle across views; not unique recovery of hidden shoe3D",
+      "triangle_error_vs_canonical": 2.842170943040401e-14
+    },
+    "folded_recovery": {
+      "actual_source_path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/clean-actual-stiletto-modules-v01/RIGHT-actual-complete-stiletto-native.png",
+      "actual_source_sha256": "4b501909b263f1a0e32f47284c393ff04a4b64941f3419be17e062b4e48a9090",
+      "native_C": 2560,
+      "XYZ_marker_order": [
+        "true structural heel",
+        "structural forefoot sole-ball",
+        "true tarsal"
+      ],
+      "actual_marker_raw": [
+        [
+          791.0,
+          906.0
+        ],
+        [
+          774.7422370477915,
+          950.8209139730858
+        ],
+        [
+          750.0,
+          858.0
+        ]
+      ],
+      "fixed_marker_XYZ": [
+        [
+          711.9,
+          906.0,
+          0.0
+        ],
+        [
+          697.2680133430124,
+          951.3426429026124,
+          0.5217289295265495
+        ],
+        [
+          675.0,
+          945.4444343500672,
+          87.4444343500673
+        ]
+      ],
+      "pixel_to_authored_surface_XYZ_affine": [
+        [
+          0.9,
+          -1.5066222753431122,
+          -1.5066222753431135
+        ],
+        [
+          6.26326579306267e-17,
+          0.46514747789583777,
+          -0.5348525221041631
+        ],
+        [
+          0.0,
+          1676.3146048227725,
+          1676.3146048227745
+        ]
+      ],
+      "opaque_or_AA_texel_vertices": 7661,
+      "all_texel_centers_minZ": -29.84622279040923,
+      "all_texel_centers_maxZ": 122.09674668295906,
+      "pixel_quad_halfwidth_z_guard": 1.0207373987236383,
+      "unobserved_surface_thickness_bound_native": 8,
+      "physical_geometry_interpretation": "one fixed authored textured 2.5D bootplane, same fixed H/F/A bone triangle across views; not unique recovery of hidden shoe3D",
+      "triangle_error_vs_canonical": 4.263256414560601e-14
+    }
+  },
+  "folded_native_forefoot_ball_marker_refinement": {
+    "native_point": [
+      774.7422370477916,
+      950.8209139730859
+    ],
+    "actual_source_RGBA": [
+      78,
+      53,
+      24,
+      253
+    ],
+    "prior765960_is_distal_toe_not_ball": true,
+    "anatomical_scope": "one supported interior forefoot sole-ball choice, not unique hidden pose measurement"
+  },
+  "body_height_native_pattern": [
+    585.2754704912418,
+    571.4292914636495,
+    623.2754704912418,
+    585.2754704912418,
+    571.4292914636495,
+    623.2754704912418
+  ],
+  "body_root_never_refit_to_feet": true,
+  "frames": [
+    {
+      "phase": 0,
+      "actual_image": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+        "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+        "bytes": 762243,
+        "size": [
+          1254,
+          1254
+        ]
+      },
+      "native_C": 2560,
+      "storage_translation": [
+        0,
+        0
+      ],
+      "common_root_unpadded": [
+        669,
+        1267.95
+      ],
+      "actual_body_bob_raw": [
+        0,
+        0
+      ],
+      "body_whole_node_translation_XYZ": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "left_free_arm_whole_actual_part_rotation_degrees": 0,
+      "leg_controls": {
+        "L": {
+          "actual_control_raw": [
+            [
+              610,
+              692
+            ],
+            [
+              566,
+              900
+            ],
+            [
+              564,
+              1075
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              549.0,
+              1277.2754704912418,
+              585.2754704912418
+            ],
+            [
+              509.40000000000003,
+              1241.0972981533205,
+              341.09729815332037
+            ],
+            [
+              507.6,
+              1175.0,
+              100.0
+            ]
+          ],
+          "projected_XYZ_error": 1.1368683772161603e-13,
+          "femur_tibia_lengths": [
+            249.99999999999994,
+            250.0
+          ]
+        },
+        "R": {
+          "actual_control_raw": [
+            [
+              705,
+              705
+            ],
+            [
+              642,
+              785
+            ],
+            [
+              750,
+              858
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              634.5,
+              1290.2754704912418,
+              585.2754704912418
+            ],
+            [
+              577.8000000000001,
+              1162.8163560782007,
+              377.81635607820067
+            ],
+            [
+              675.0,
+              1358.0419998790685,
+              500.0419998790686
+            ]
+          ],
+          "projected_XYZ_error": 1.1368683772161603e-13,
+          "femur_tibia_lengths": [
+            249.99999999999994,
+            249.99999999999991
+          ]
+        }
+      },
+      "feet": {
+        "L": {
+          "actual_fixed_surface_template": "canonical_stance",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "actual_projected_HFA": [
+            [
+              583.5,
+              1191.0
+            ],
+            [
+              535.0,
+              1164.0
+            ],
+            [
+              564.0,
+              1075.0
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              525.15,
+              1191.0,
+              0.0
+            ],
+            [
+              481.5,
+              1178.0,
+              14.0
+            ],
+            [
+              507.6,
+              1175.0,
+              100.0
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": -3.509853907245863,
+          "conservative_surface_plus8native_thickness_minZ": -11.509853907245862,
+          "critical_heel_Z": 0.0,
+          "critical_forefoot_Z": 14.0,
+          "AIR_surface_bound_approved_by_this_model": false
+        },
+        "R": {
+          "actual_fixed_surface_template": "folded_recovery",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            0.0,
+            412.59756552900126,
+            412.5975655290013
+          ],
+          "actual_projected_HFA": [
+            [
+              791.0,
+              906.0
+            ],
+            [
+              774.7422370477915,
+              950.8209139730858
+            ],
+            [
+              750.0,
+              857.9999999999999
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              711.9,
+              1318.5975655290013,
+              412.5975655290013
+            ],
+            [
+              697.2680133430124,
+              1363.9402084316137,
+              413.11929445852786
+            ],
+            [
+              675.0,
+              1358.0419998790685,
+              500.0419998790686
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": 381.7306053398685,
+          "conservative_surface_plus8native_thickness_minZ": 373.7306053398685,
+          "critical_heel_Z": 412.5975655290013,
+          "critical_forefoot_Z": 413.11929445852786,
+          "AIR_surface_bound_approved_by_this_model": false
+        }
+      },
+      "staff": {
+        "top": [
+          806.4,
+          1200.0,
+          1186.0
+        ],
+        "grip": [
+          815.4,
+          1200.0,
+          767.0
+        ],
+        "tip": [
+          833.4,
+          1200.0,
+          90.0
+        ]
+      },
+      "staff_tip_clearance_native": 90.0,
+      "staff_tip_uncertainty_guarded_clearance_native": 85.0,
+      "staff_length_native": 1096.332522549614
+    },
+    {
+      "phase": 1,
+      "actual_image": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v10/thunder_female-NW-run-load1-actual-rig-v10.png",
+        "sha256": "cd86f447f8126f018c7fc7a68d6dc803d9d9e15738dfbf932248760bfc39ba5d",
+        "bytes": 785643,
+        "size": [
+          1536,
+          1536
+        ]
+      },
+      "native_C": 2560,
+      "storage_translation": [
+        0,
+        0
+      ],
+      "common_root_unpadded": [
+        669,
+        1267.95
+      ],
+      "actual_body_bob_raw": [
+        4,
+        70
+      ],
+      "body_whole_node_translation_XYZ": [
+        3.6,
+        56.15382097240774,
+        -13.846179027592257
+      ],
+      "left_free_arm_whole_actual_part_rotation_degrees": 15,
+      "leg_controls": {
+        "L": {
+          "actual_control_raw": [
+            [
+              614.0,
+              762.0
+            ],
+            [
+              582.7881766604897,
+              1004.7318237199474
+            ],
+            [
+              672.9094395379984,
+              1202.8542974367783
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              552.6,
+              1333.4292914636494,
+              571.4292914636495
+            ],
+            [
+              524.5093589944407,
+              1327.807907178121,
+              323.07608345817357
+            ],
+            [
+              605.6184955841986,
+              1292.1563928475234,
+              89.3020954107451
+            ]
+          ],
+          "projected_XYZ_error": 1.1368683772161603e-13,
+          "femur_tibia_lengths": [
+            250.0,
+            250.00000000000009
+          ]
+        },
+        "R": {
+          "actual_control_raw": [
+            [
+              709.0,
+              775.0
+            ],
+            [
+              528.668751101061,
+              872.4968751835102
+            ],
+            [
+              669.0,
+              1015.0
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              638.1,
+              1346.4292914636494,
+              571.4292914636495
+            ],
+            [
+              475.80187599095495,
+              1269.8651227305218,
+              397.36824754701155
+            ],
+            [
+              602.1,
+              1476.0151906541425,
+              461.0151906541426
+            ]
+          ],
+          "projected_XYZ_error": 1.1368683772161603e-13,
+          "femur_tibia_lengths": [
+            249.99999999999997,
+            249.99999999999991
+          ]
+        }
+      },
+      "feet": {
+        "L": {
+          "actual_fixed_surface_template": "canonical_stance",
+          "rigid_rotation": [
+            [
+              0.9594563415300105,
+              -0.012074858192665842,
+              -0.28159852005554803
+            ],
+            [
+              -0.012074858192665842,
+              0.9964038223022988,
+              -0.08386668409443589
+            ],
+            [
+              0.28159852005554803,
+              0.08386668409443589,
+              0.9558601638323093
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            160.94626700550253,
+            135.89776807036287,
+            -247.7666835636442
+          ],
+          "actual_projected_HFA": [
+            [
+              722.6928985028028,
+              1316.2736086525224
+            ],
+            [
+              671.9532591338495,
+              1302.6732929453801
+            ],
+            [
+              672.9094395379984,
+              1202.854297436778
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              650.4236086525225,
+              1316.2736086525224,
+              -2.842170943040401e-14
+            ],
+            [
+              604.7579332204646,
+              1302.6732929453801,
+              -2.842170943040401e-14
+            ],
+            [
+              605.6184955841986,
+              1292.1563928475232,
+              89.30209541074507
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 2.2914314707516465e-13,
+          "all_rendered_texel_quad_surface_minZ": -14.836984084077608,
+          "conservative_surface_plus8native_thickness_minZ": -22.836984084077606,
+          "critical_heel_Z": -2.842170943040401e-14,
+          "critical_forefoot_Z": -2.842170943040401e-14,
+          "AIR_surface_bound_approved_by_this_model": false
+        },
+        "R": {
+          "actual_fixed_surface_template": "folded_recovery",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            -72.89999999999998,
+            530.5707563040753,
+            373.5707563040753
+          ],
+          "actual_projected_HFA": [
+            [
+              710.0,
+              1063.0
+            ],
+            [
+              693.7422370477916,
+              1107.820913973086
+            ],
+            [
+              669.0,
+              1015.0
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              639.0,
+              1436.5707563040753,
+              373.5707563040753
+            ],
+            [
+              624.3680133430124,
+              1481.9133992066877,
+              374.09248523360185
+            ],
+            [
+              602.1,
+              1476.0151906541425,
+              461.0151906541426
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": 342.70379611494246,
+          "conservative_surface_plus8native_thickness_minZ": 334.70379611494246,
+          "critical_heel_Z": 373.5707563040753,
+          "critical_forefoot_Z": 374.09248523360185,
+          "AIR_surface_bound_approved_by_this_model": false
+        }
+      },
+      "staff": {
+        "top": [
+          810.0,
+          1256.1538209724076,
+          1172.1538209724076
+        ],
+        "grip": [
+          819.0,
+          1256.1538209724076,
+          753.1538209724077
+        ],
+        "tip": [
+          837.0,
+          1256.1538209724076,
+          76.15382097240774
+        ]
+      },
+      "staff_tip_clearance_native": 76.15382097240774,
+      "staff_tip_uncertainty_guarded_clearance_native": 71.15382097240774,
+      "staff_length_native": 1096.332522549614
+    },
+    {
+      "phase": 2,
+      "actual_image": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight2-actual-rig-v04/thunder_female-NW-run-flight2-actual-rig-v04.png",
+        "sha256": "768ccddc4b44d3baa455da7cb31501dfbab5cc76ed82dc4c5d9d4ebb56d3ae6f",
+        "bytes": 813864,
+        "size": [
+          1536,
+          1536
+        ]
+      },
+      "native_C": 2560,
+      "storage_translation": [
+        128,
+        128
+      ],
+      "common_root_unpadded": [
+        669,
+        1267.95
+      ],
+      "actual_body_bob_raw": [
+        -2,
+        -38
+      ],
+      "body_whole_node_translation_XYZ": [
+        -1.8,
+        0.0,
+        38.0
+      ],
+      "left_free_arm_whole_actual_part_rotation_degrees": 30,
+      "leg_controls": {
+        "L": {
+          "actual_control_raw": [
+            [
+              608.0,
+              654.0
+            ],
+            [
+              662.1877957782449,
+              892.932381205845
+            ],
+            [
+              796.0,
+              1080.0
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              547.2,
+              1277.2754704912418,
+              623.2754704912418
+            ],
+            [
+              595.9690162004205,
+              1271.0888822460713,
+              378.1565010402263
+            ],
+            [
+              716.4,
+              1241.133357811421,
+              161.13335781142118
+            ]
+          ],
+          "projected_XYZ_error": 1.1368683772161603e-13,
+          "femur_tibia_lengths": [
+            250.0,
+            249.99999999999994
+          ]
+        },
+        "R": {
+          "actual_control_raw": [
+            [
+              703.0,
+              667.0
+            ],
+            [
+              500.77241893647545,
+              700.600676439554
+            ],
+            [
+              585.0,
+              882.0
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              632.7,
+              1290.2754704912418,
+              623.2754704912418
+            ],
+            [
+              450.69517704282794,
+              1187.0555152358513,
+              486.45483879629734
+            ],
+            [
+              526.5,
+              1135.8031225710292,
+              253.80312257102923
+            ]
+          ],
+          "projected_XYZ_error": 0.0,
+          "femur_tibia_lengths": [
+            250.00000000000003,
+            249.99999999999997
+          ]
+        }
+      },
+      "feet": {
+        "L": {
+          "actual_fixed_surface_template": "original915_stance",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            42.299999999999955,
+            74.07114057372951,
+            62.07114057372952
+          ],
+          "actual_projected_HFA": [
+            [
+              817.9999999999999,
+              1198.0
+            ],
+            [
+              767.6732365245825,
+              1179.228399508298
+            ],
+            [
+              796.0,
+              1080.0
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              736.1999999999999,
+              1260.0711405737295,
+              62.07114057372952
+            ],
+            [
+              690.9059128721243,
+              1255.2995400820275,
+              76.07114057372952
+            ],
+            [
+              716.4,
+              1241.133357811421,
+              161.13335781142118
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": 55.590819151599206,
+          "conservative_surface_plus8native_thickness_minZ": 47.590819151599206,
+          "critical_heel_Z": 62.07114057372952,
+          "critical_forefoot_Z": 76.07114057372952,
+          "AIR_surface_bound_approved_by_this_model": true
+        },
+        "R": {
+          "actual_fixed_surface_template": "folded_recovery",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            -148.5,
+            190.358688220962,
+            166.35868822096194
+          ],
+          "actual_projected_HFA": [
+            [
+              626.0,
+              930.0
+            ],
+            [
+              609.7422370477915,
+              974.8209139730859
+            ],
+            [
+              585.0,
+              882.0
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              563.4,
+              1096.358688220962,
+              166.35868822096194
+            ],
+            [
+              548.7680133430124,
+              1141.7013311235744,
+              166.88041715048848
+            ],
+            [
+              526.5,
+              1135.8031225710292,
+              253.80312257102923
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": 135.49172803182907,
+          "conservative_surface_plus8native_thickness_minZ": 127.49172803182907,
+          "critical_heel_Z": 166.35868822096194,
+          "critical_forefoot_Z": 166.88041715048848,
+          "AIR_surface_bound_approved_by_this_model": true
+        }
+      },
+      "staff": {
+        "top": [
+          804.6,
+          1200.0,
+          1224.0
+        ],
+        "grip": [
+          813.6,
+          1200.0,
+          805.0
+        ],
+        "tip": [
+          831.6,
+          1200.0,
+          128.0
+        ]
+      },
+      "staff_tip_clearance_native": 128.0,
+      "staff_tip_uncertainty_guarded_clearance_native": 123.0,
+      "staff_length_native": 1096.332522549614
+    },
+    {
+      "phase": 3,
+      "actual_image": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/contact3-actual-rig-v06/thunder_female-NW-run-contact3-actual-rig-v06.png",
+        "sha256": "97595bd604a6efbfd6e60305c5637d5d0ba7e0f3a4ae98ca8ba1e5ff64b5a5aa",
+        "bytes": 779463,
+        "size": [
+          1536,
+          1536
+        ]
+      },
+      "native_C": 2560,
+      "storage_translation": [
+        128,
+        128
+      ],
+      "common_root_unpadded": [
+        669,
+        1267.95
+      ],
+      "actual_body_bob_raw": [
+        0,
+        0
+      ],
+      "body_whole_node_translation_XYZ": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "left_free_arm_whole_actual_part_rotation_degrees": 30,
+      "leg_controls": {
+        "L": {
+          "actual_control_raw": [
+            [
+              610,
+              692
+            ],
+            [
+              547,
+              772
+            ],
+            [
+              655,
+              845
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              549.0,
+              1277.2754704912418,
+              585.2754704912418
+            ],
+            [
+              492.30000000000007,
+              1149.8163560782007,
+              377.81635607820067
+            ],
+            [
+              589.5,
+              1345.0419998790685,
+              500.0419998790686
+            ]
+          ],
+          "projected_XYZ_error": 1.1368683772161603e-13,
+          "femur_tibia_lengths": [
+            249.99999999999994,
+            249.99999999999991
+          ]
+        },
+        "R": {
+          "actual_control_raw": [
+            [
+              705.0,
+              705.0
+            ],
+            [
+              666.8799208266498,
+              908.6694118359951
+            ],
+            [
+              659.0,
+              1088.0
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              634.5,
+              1290.2754704912418,
+              585.2754704912418
+            ],
+            [
+              600.1919287439848,
+              1249.6630957303394,
+              340.99368389434426
+            ],
+            [
+              593.1,
+              1187.0622172376916,
+              99.06221723769166
+            ]
+          ],
+          "projected_XYZ_error": 0.0,
+          "femur_tibia_lengths": [
+            249.99999999999994,
+            250.00000000000006
+          ]
+        }
+      },
+      "feet": {
+        "L": {
+          "actual_fixed_surface_template": "folded_recovery",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            -85.5,
+            399.59756552900126,
+            412.5975655290013
+          ],
+          "actual_projected_HFA": [
+            [
+              696.0,
+              893.0
+            ],
+            [
+              679.7422370477915,
+              937.8209139730858
+            ],
+            [
+              655.0,
+              844.9999999999999
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              626.4,
+              1305.5975655290013,
+              412.5975655290013
+            ],
+            [
+              611.7680133430124,
+              1350.9402084316137,
+              413.11929445852786
+            ],
+            [
+              589.5,
+              1345.0419998790685,
+              500.0419998790686
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": 381.7306053398685,
+          "conservative_surface_plus8native_thickness_minZ": 373.7306053398685,
+          "critical_heel_Z": 412.5975655290013,
+          "critical_forefoot_Z": 413.11929445852786,
+          "AIR_surface_bound_approved_by_this_model": false
+        },
+        "R": {
+          "actual_fixed_surface_template": "original915_stance",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            -81.0,
+            20.0,
+            0.0
+          ],
+          "actual_projected_HFA": [
+            [
+              681.0,
+              1206.0
+            ],
+            [
+              630.6732365245826,
+              1187.228399508298
+            ],
+            [
+              659.0,
+              1088.0
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              612.9,
+              1206.0,
+              0.0
+            ],
+            [
+              567.6059128721243,
+              1201.228399508298,
+              14.0
+            ],
+            [
+              593.1,
+              1187.0622172376916,
+              99.06221723769166
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": -6.4803214221303165,
+          "conservative_surface_plus8native_thickness_minZ": -14.480321422130316,
+          "critical_heel_Z": 0.0,
+          "critical_forefoot_Z": 14.0,
+          "AIR_surface_bound_approved_by_this_model": false
+        }
+      },
+      "staff": {
+        "top": [
+          806.4,
+          1200.0,
+          1186.0
+        ],
+        "grip": [
+          815.4,
+          1200.0,
+          767.0
+        ],
+        "tip": [
+          833.4,
+          1200.0,
+          90.0
+        ]
+      },
+      "staff_tip_clearance_native": 90.0,
+      "staff_tip_uncertainty_guarded_clearance_native": 85.0,
+      "staff_length_native": 1096.332522549614
+    },
+    {
+      "phase": 4,
+      "actual_image": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load4-actual-rig-v04/thunder_female-NW-run-load4-actual-rig-v04.png",
+        "sha256": "6f72df61022942796edd52899c5810fb13bbf692296d4c0a2a455131bfa3975d",
+        "bytes": 795667,
+        "size": [
+          1536,
+          1536
+        ]
+      },
+      "native_C": 2560,
+      "storage_translation": [
+        128,
+        128
+      ],
+      "common_root_unpadded": [
+        669,
+        1267.95
+      ],
+      "actual_body_bob_raw": [
+        4,
+        70
+      ],
+      "body_whole_node_translation_XYZ": [
+        3.6,
+        56.15382097240774,
+        -13.846179027592257
+      ],
+      "left_free_arm_whole_actual_part_rotation_degrees": 15,
+      "leg_controls": {
+        "L": {
+          "actual_control_raw": [
+            [
+              614.0,
+              762.0
+            ],
+            [
+              433.668751101061,
+              859.4968751835102
+            ],
+            [
+              574.0,
+              1002.0
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              552.6,
+              1333.4292914636494,
+              571.4292914636495
+            ],
+            [
+              390.30187599095495,
+              1256.8651227305218,
+              397.36824754701155
+            ],
+            [
+              516.6,
+              1463.0151906541425,
+              461.0151906541426
+            ]
+          ],
+          "projected_XYZ_error": 1.1368683772161603e-13,
+          "femur_tibia_lengths": [
+            249.99999999999997,
+            249.99999999999991
+          ]
+        },
+        "R": {
+          "actual_control_raw": [
+            [
+              709.0,
+              775.0
+            ],
+            [
+              678.0734164575471,
+              1017.7275780350784
+            ],
+            [
+              767.0873381563642,
+              1221.065625923444
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              638.1,
+              1346.4292914636494,
+              571.4292914636495
+            ],
+            [
+              610.2660748117924,
+              1340.775495007307,
+              323.04791697222856
+            ],
+            [
+              690.3786043407279,
+              1309.3866335163345,
+              88.32100759289055
+            ]
+          ],
+          "projected_XYZ_error": 1.1368683772161603e-13,
+          "femur_tibia_lengths": [
+            249.99999999999997,
+            249.99999999999994
+          ]
+        }
+      },
+      "feet": {
+        "L": {
+          "actual_fixed_surface_template": "folded_recovery",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            -158.39999999999998,
+            517.5707563040753,
+            373.5707563040753
+          ],
+          "actual_projected_HFA": [
+            [
+              615.0,
+              1050.0
+            ],
+            [
+              598.7422370477916,
+              1094.820913973086
+            ],
+            [
+              574.0,
+              1002.0
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              553.5,
+              1423.5707563040753,
+              373.5707563040753
+            ],
+            [
+              538.8680133430124,
+              1468.9133992066877,
+              374.09248523360185
+            ],
+            [
+              516.6,
+              1463.0151906541425,
+              461.0151906541426
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": 342.70379611494246,
+          "conservative_surface_plus8native_thickness_minZ": 334.70379611494246,
+          "critical_heel_Z": 373.5707563040753,
+          "critical_forefoot_Z": 374.09248523360185,
+          "AIR_surface_bound_approved_by_this_model": false
+        },
+        "R": {
+          "actual_fixed_surface_template": "original915_stance",
+          "rigid_rotation": [
+            [
+              0.9563446513451813,
+              -0.004598964154386494,
+              -0.2922049920384152
+            ],
+            [
+              -0.004598964154386494,
+              0.999515512487128,
+              -0.030782947004802545
+            ],
+            [
+              0.2922049920384152,
+              0.030782947004802545,
+              0.9558601638323093
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            80.02042657120353,
+            149.0394320695175,
+            -239.26961912315213
+          ],
+          "actual_projected_HFA": [
+            [
+              820.1928985028026,
+              1331.2736086525224
+            ],
+            [
+              767.5421391347762,
+              1326.2816645667147
+            ],
+            [
+              767.0873381563642,
+              1221.065625923444
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              738.1736086525224,
+              1331.2736086525224,
+              0.0
+            ],
+            [
+              690.7879252212986,
+              1326.2816645667147,
+              -2.842170943040401e-14
+            ],
+            [
+              690.3786043407279,
+              1309.3866335163345,
+              88.32100759289054
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 1.4210854715202004e-14,
+          "all_rendered_texel_quad_surface_minZ": -13.198234058933176,
+          "conservative_surface_plus8native_thickness_minZ": -21.198234058933174,
+          "critical_heel_Z": 0.0,
+          "critical_forefoot_Z": -2.842170943040401e-14,
+          "AIR_surface_bound_approved_by_this_model": false
+        }
+      },
+      "staff": {
+        "top": [
+          810.0,
+          1256.1538209724076,
+          1172.1538209724076
+        ],
+        "grip": [
+          819.0,
+          1256.1538209724076,
+          753.1538209724077
+        ],
+        "tip": [
+          837.0,
+          1256.1538209724076,
+          76.15382097240774
+        ]
+      },
+      "staff_tip_clearance_native": 76.15382097240774,
+      "staff_tip_uncertainty_guarded_clearance_native": 71.15382097240774,
+      "staff_length_native": 1096.332522549614
+    },
+    {
+      "phase": 5,
+      "actual_image": {
+        "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/flight5-actual-rig-v04/thunder_female-NW-run-flight5-actual-rig-v04.png",
+        "sha256": "acdf6200986dde80f8a320850a3f98dd9206fc78a951385bd8560be664b68f97",
+        "bytes": 770496,
+        "size": [
+          1536,
+          1536
+        ]
+      },
+      "native_C": 2560,
+      "storage_translation": [
+        128,
+        128
+      ],
+      "common_root_unpadded": [
+        669,
+        1267.95
+      ],
+      "actual_body_bob_raw": [
+        -2,
+        -38
+      ],
+      "body_whole_node_translation_XYZ": [
+        -1.8,
+        0.0,
+        38.0
+      ],
+      "left_free_arm_whole_actual_part_rotation_degrees": 0,
+      "leg_controls": {
+        "L": {
+          "actual_control_raw": [
+            [
+              608.0,
+              654.0
+            ],
+            [
+              405.77241893647545,
+              687.600676439554
+            ],
+            [
+              490.0,
+              869.0
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              547.2,
+              1277.2754704912418,
+              623.2754704912418
+            ],
+            [
+              365.19517704282794,
+              1174.0555152358513,
+              486.45483879629734
+            ],
+            [
+              441.0,
+              1122.8031225710292,
+              253.80312257102923
+            ]
+          ],
+          "projected_XYZ_error": 0.0,
+          "femur_tibia_lengths": [
+            250.00000000000003,
+            249.99999999999997
+          ]
+        },
+        "R": {
+          "actual_control_raw": [
+            [
+              703.0,
+              667.0
+            ],
+            [
+              757.1877957782449,
+              905.932381205845
+            ],
+            [
+              891.0,
+              1093.0
+            ]
+          ],
+          "joint_XYZ": [
+            [
+              632.7,
+              1290.2754704912418,
+              623.2754704912418
+            ],
+            [
+              681.4690162004205,
+              1284.0888822460713,
+              378.1565010402263
+            ],
+            [
+              801.9,
+              1254.133357811421,
+              161.13335781142118
+            ]
+          ],
+          "projected_XYZ_error": 1.1368683772161603e-13,
+          "femur_tibia_lengths": [
+            250.0,
+            249.99999999999994
+          ]
+        }
+      },
+      "feet": {
+        "L": {
+          "actual_fixed_surface_template": "folded_recovery",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            -234.0,
+            177.358688220962,
+            166.35868822096194
+          ],
+          "actual_projected_HFA": [
+            [
+              531.0,
+              917.0
+            ],
+            [
+              514.7422370477915,
+              961.8209139730859
+            ],
+            [
+              490.0,
+              869.0
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              477.9,
+              1083.358688220962,
+              166.35868822096194
+            ],
+            [
+              463.2680133430124,
+              1128.7013311235744,
+              166.88041715048848
+            ],
+            [
+              441.0,
+              1122.8031225710292,
+              253.80312257102923
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": 135.49172803182907,
+          "conservative_surface_plus8native_thickness_minZ": 127.49172803182907,
+          "critical_heel_Z": 166.35868822096194,
+          "critical_forefoot_Z": 166.88041715048848,
+          "AIR_surface_bound_approved_by_this_model": true
+        },
+        "R": {
+          "actual_fixed_surface_template": "original915_stance",
+          "rigid_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "rigid_translation_XYZ": [
+            127.79999999999995,
+            87.07114057372951,
+            62.07114057372952
+          ],
+          "actual_projected_HFA": [
+            [
+              912.9999999999999,
+              1211.0
+            ],
+            [
+              862.6732365245825,
+              1192.228399508298
+            ],
+            [
+              891.0,
+              1093.0
+            ]
+          ],
+          "actual_HFA_XYZ": [
+            [
+              821.6999999999999,
+              1273.0711405737295,
+              62.07114057372952
+            ],
+            [
+              776.4059128721243,
+              1268.2995400820275,
+              76.07114057372952
+            ],
+            [
+              801.9,
+              1254.133357811421,
+              161.13335781142118
+            ]
+          ],
+          "source_tarsal_to_leg_A_error": 0.0,
+          "all_rendered_texel_quad_surface_minZ": 55.590819151599206,
+          "conservative_surface_plus8native_thickness_minZ": 47.590819151599206,
+          "critical_heel_Z": 62.07114057372952,
+          "critical_forefoot_Z": 76.07114057372952,
+          "AIR_surface_bound_approved_by_this_model": true
+        }
+      },
+      "staff": {
+        "top": [
+          804.6,
+          1200.0,
+          1224.0
+        ],
+        "grip": [
+          813.6,
+          1200.0,
+          805.0
+        ],
+        "tip": [
+          831.6,
+          1200.0,
+          128.0
+        ]
+      },
+      "staff_tip_clearance_native": 128.0,
+      "staff_tip_uncertainty_guarded_clearance_native": 123.0,
+      "staff_length_native": 1096.332522549614
+    }
+  ],
+  "plant_clock_pairs": [
+    {
+      "phases": [
+        0,
+        1
+      ],
+      "side": "L",
+      "heel_ground_delta_native": [
+        125.27360865252251,
+        125.2736086525224,
+        -2.842170943040401e-14
+      ],
+      "heel_ground_delta_world": [
+        11.879393923934005,
+        11.879393923933995
+      ],
+      "heel_delta_world_length": 16.8,
+      "controller_compensated_world_heel_error": 8.08548630346877e-15,
+      "source_raw_heel_delta": [
+        139.1928985028028,
+        125.2736086525224
+      ]
+    },
+    {
+      "phases": [
+        3,
+        4
+      ],
+      "side": "R",
+      "heel_ground_delta_native": [
+        125.2736086525224,
+        125.2736086525224,
+        0.0
+      ],
+      "heel_ground_delta_world": [
+        11.879393923933995,
+        11.879393923933995
+      ],
+      "heel_delta_world_length": 16.799999999999994,
+      "controller_compensated_world_heel_error": 7.623069592498292e-15,
+      "source_raw_heel_delta": [
+        139.19289850280256,
+        125.2736086525224
+      ]
+    }
+  ],
+  "maximum_staff_length_change": 0.0,
+  "all_staff_tip_guards_positive": true,
+  "source_rgba_not_modified": true,
+  "source6_inherited_staticPASS": true,
+  "interpretation": "Finite authored compatible 2.5D actor rig with actual material/surface projections and explicit8native hidden-thickness bound; no unique original3D claim. AIR uses full rendered shoe-surface vertices/quads plus bound, not lowestalphaY.",
+  "grounded_contact_scope": "actual observed heelclock/17deg forefootroll and critical true H/F control surfaces in the declared model; full hidden mesh-ground penetration is not uniquely measured",
+  "cycle_art_approved": false,
+  "game_connected": false,
+  "actor_approvals_added": 0
+}

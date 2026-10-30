@@ -1,0 +1,42 @@
+{
+  "lossless_repaired": 98,
+  "held": [
+    {
+      "actor": "monster:오만한 우그누스",
+      "slug": "ugnus",
+      "clip": "N-run-v02",
+      "direction": "N",
+      "role": "run",
+      "corrects": "N-run-v01",
+      "causes": [
+        "unprovable_detached_foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/ugnus/N-run-v02.json"
+    },
+    {
+      "actor": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "clip": "E-attack-v02",
+      "direction": "E",
+      "role": "attack",
+      "corrects": "E-attack-v01",
+      "causes": [
+        "unprovable_detached_foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zenith_queen/E-attack-v02.json"
+    },
+    {
+      "actor": "monster:왜곡의 제니스 퀸",
+      "slug": "zenith_queen",
+      "clip": "S-death-v02",
+      "direction": "S",
+      "role": "death",
+      "corrects": "S-death-v01",
+      "causes": [
+        "unprovable_detached_foreground_ownership"
+      ],
+      "request": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/corrections-v01/requests/zenith_queen/S-death-v02.json"
+    }
+  ],
+  "rule": "No guessed part ownership; one corrected source attempt only"
+}

@@ -1,0 +1,84 @@
+{
+  "key": "transform:412",
+  "name": "신화-사신(여)",
+  "grade": "신화",
+  "reference": "res://assets/catalog/e090d7a50d6f7a23fe55576c.png",
+  "reference_sha256": "d0c26b83f744e9ba811eb2649ac78ae32938a437ef5d3f6984f2c9c3cc367af7",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 production asset, new animation source draft for transform:412, Mythic female Reaper. Use the referenced existing catalog character as the exact identity, costume, face, hair, silhouette, colors, weapon and equipment reference. Do not modify or replace that original. Produce exactly ONE transparent-background PNG sprite sheet containing exactly SIX distinct full-body SOUTH-facing ATTACK poses, in an orderly 3-column by 2-row grid in reading order. All six depict the SAME female Reaper and exact same weapon, armor details, boots, jewelry, head features, and proportions, with consistent camera, painting style and lighting faithful to the reference. Direction SOUTH means facing the viewer, appropriate top-down/isometric game camera as in the original. Animation progression: 0 balanced ready guard, 1 visible wind-up, 2 fully loaded anticipation, 3 strong decisive active weapon strike/contact, 4 natural follow-through, 5 controlled recovery toward the original guard. Real articulated shoulders, elbows, hips, knees, hands and weapon movement; retain grip with connected wrists, complete weapon and costume. Do not imitate movement by shifting or recoloring a static character. Keep each complete pose including full weapon effects and every ornament inside its individual cell, generous transparent gutter, no neighboring-cell overlap, no clipping. Stationary common floor height and character body scale across all cells, feet and original footwear clearly preserved; no detached or doubled limbs. Crisp high-detail painted game sprite artwork matching the supplied character, not a simplified silhouette or a generic substitute. No text, labels, grid lines, ground, background, logos, guide marks, or extra characters. This is an unapproved first animation draft for local game production; output only the single sprite-sheet image.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/e090d7a50d6f7a23fe55576c.png"
+    ],
+    "transparent_background": true
+  },
+  "policy": "Produce first animation drafts across remaining actors before further polish; preserve approved Unique and 413 work; new death S only; no new mythic walk; no chat image output.",
+  "status": "GENERATED_DRAFT_NOT_REVIEWED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-S-attack-draft-v01.png",
+  "source_sha256": "459b760ff7a322423554b44119521e7df19e570e9c7c030e0cce393a1ad8884c",
+  "source_bytes": 2508050,
+  "generated_original_path": "/workspace/generated_images/exec-0cff3857-e012-4f62-847b-5a99ec0d9d71.png",
+  "output_spriteframes": "res://assets/actors/eight_direction/native_locomotion_staging/transform_412/draft001/SpriteFrames.tres",
+  "direction": "S",
+  "role": "attack",
+  "poses": 6,
+  "cell_size": [
+    512,
+    512
+  ],
+  "frame_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "automatic_checks": [
+    {
+      "index": 0,
+      "rgba_sha256": "d23009d1896ae765201e9600bb1bbb5c4320e059d0c9e043ffeea745c9190f78",
+      "visible_pixels": 74842,
+      "border_alpha_pixels": 0
+    },
+    {
+      "index": 1,
+      "rgba_sha256": "3332621e9176be3a3f5e522b2b9214f7b87c79f044f8f46ea4ae63f69d4c546e",
+      "visible_pixels": 79070,
+      "border_alpha_pixels": 231
+    },
+    {
+      "index": 2,
+      "rgba_sha256": "152990955192a0a87696726b323d8f7f6572890e44b72dd4a914f79280d90ab1",
+      "visible_pixels": 89770,
+      "border_alpha_pixels": 244
+    },
+    {
+      "index": 3,
+      "rgba_sha256": "a8acae5b3da91ecf596537a9393d7471dace14e979abb40b5035f1cb7e0609c4",
+      "visible_pixels": 107403,
+      "border_alpha_pixels": 303
+    },
+    {
+      "index": 4,
+      "rgba_sha256": "a3b6282c03b2edd33ca354c23580cd45b89fe650f5d1b3897bb9e12fc3364c16",
+      "visible_pixels": 86530,
+      "border_alpha_pixels": 627
+    },
+    {
+      "index": 5,
+      "rgba_sha256": "fed7d885c9f84c0ce9657ebb4862c3a93e451fe707fe70c0890e04caac6a0182",
+      "visible_pixels": 91832,
+      "border_alpha_pixels": 351
+    }
+  ],
+  "geometry_review": "NOT_RUN",
+  "source_visual_status": "HOLD_NOT_REVIEWED",
+  "actual_Main_Player": "NOT_RUN",
+  "final_motion_approvals_added": 0,
+  "actor_approvals_added": 0,
+  "production_connected": false,
+  "compiler_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "generation_request_sha256": "dd2402efd04ce4326c7184314d00c211fc801af24f0b0cf12dfdf5a31dfe0c37",
+  "generation_service": "image_gen.imagegen",
+  "Godot_resource_six_pose_once": "PASS"
+}

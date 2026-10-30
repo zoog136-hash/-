@@ -1,0 +1,38 @@
+{
+  "total": 13,
+  "passed": 13,
+  "failed": [],
+  "skipped": [],
+  "not_run": [],
+  "checks": [
+    "import",
+    "bake_navigation",
+    "boot",
+    "animation_catalog_test",
+    "animation_presentation_test",
+    "combat_resolution_equivalence_test",
+    "combat_timeline_lifecycle_test",
+    "combat_timing_test",
+    "combat_vfx_test",
+    "monster_ai_leash_path_test",
+    "source_actor_timing_test",
+    "source_spx_timing_test",
+    "stage5_save_compatibility_test"
+  ],
+  "validation_scopes": {
+    "import": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "bake_navigation": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "boot": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "animation_catalog_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "animation_presentation_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "combat_resolution_equivalence_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "combat_timeline_lifecycle_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "combat_timing_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "combat_vfx_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "monster_ai_leash_path_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "source_actor_timing_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "source_spx_timing_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "stage5_save_compatibility_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+  },
+  "selection": "import,bake_navigation,boot,source_spx_timing_test,source_actor_timing_test,combat_timing_test,combat_timeline_lifecycle_test,animation_catalog_test,animation_presentation_test,combat_vfx_test,combat_resolution_equivalence_test,monster_ai_leash_path_test,stage5_save_compatibility_test"
+}

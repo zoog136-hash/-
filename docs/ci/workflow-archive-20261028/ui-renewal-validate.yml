@@ -1,0 +1,118 @@
+name: UI Renewal Validate
+
+on:
+  pull_request:
+    branches: [main, 'integration/twilight-complete-20261009']
+    paths:
+      - 'scripts/ui/renewal_*.gd'
+      - 'scripts/ui/pointer_transfer.gd'
+      - 'scripts/ui/reference_layout.gd'
+      - 'scripts/ui/item_icon_art.gd'
+      - 'scripts/animation/combat_vfx.gd'
+      - '.github/workflows/ui-renewal-validate.yml'
+      - 'tests/ui_fidelity_regression_test.gd'
+      - 'tests/capture_ui_fidelity.gd'
+      - 'tests/item_icon_art_smoke_test.gd'
+      - 'tests/ui_renewal_integration_test.gd'
+      - 'tests/capture_ui_renewal.gd'
+      - 'tests/capture_ui_reference.gd'
+      - 'tests/ui_pointer_transfer_test.gd'
+  workflow_dispatch:
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ui-renewal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
+      - name: Install Godot and virtual OpenGL
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+      - name: Parse project
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --import 2>&1 | tee ui-parse.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --check-only --script res://scripts/ui/renewal_class_select.gd 2>&1 | tee class-parse.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" class-parse.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" ui-parse.log
+      - name: Run UI integration assertions
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="$PWD/ui-integration-data"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ui_renewal_integration_test.gd 2>&1 | tee ui-integration.log
+          ! grep -E "SCRIPT ERROR:|ERROR:|UI RENEWAL FAIL:|UI_RENEWAL_INTEGRATION_FAILED" ui-integration.log
+          grep -q "UI_RENEWAL_INTEGRATION_OK" ui-integration.log
+      - name: Native touch, readable layout, visible art and confirmations
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="$PWD/ui-fidelity-test-data"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ui_fidelity_regression_test.gd 2>&1 | tee ui-fidelity-test.log
+          ! grep -E "SCRIPT ERROR:|ERROR:|UI FIDELITY FAIL:|UI_FIDELITY_REGRESSION_FAILED" ui-fidelity-test.log
+          grep -q "UI_FIDELITY_REGRESSION_OK" ui-fidelity-test.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/item_icon_art_smoke_test.gd 2>&1 | tee item-art-test.log
+          ! grep -E "SCRIPT ERROR:|ERROR:|ITEM_ICON_FAIL" item-art-test.log
+          grep -q "ITEM_ICON_ART_OK" item-art-test.log
+      - name: Mouse and native touch transfers, identity, confirmation and save roundtrips
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="$PWD/ui-pointer-data"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ui_pointer_transfer_test.gd 2>&1 | tee ui-pointer-test.log
+          ! grep -E "SCRIPT ERROR:|ERROR:|UI_POINTER FAIL:" ui-pointer-test.log
+          grep -q '"failures":\[\]' ui-pointer-test.log
+      - name: Capture 68 OpenGL screen states including class selection
+        run: |
+          set -o pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="$PWD/ui-render-data"
+          xvfb-run -a -s "-screen 0 2560x1440x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_ui_renewal.gd 2>&1 | tee ui-capture.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" ui-capture.log
+          grep -q "UI_RENEWAL_CAPTURE_OK" ui-capture.log
+      - name: Capture 150 list-detail states on small PC and Android-size surfaces
+        run: |
+          set -o pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="$PWD/ui-fidelity-render-data"
+          xvfb-run -a -s "-screen 0 2560x1440x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_ui_fidelity.gd 2>&1 | tee ui-fidelity-capture.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" ui-fidelity-capture.log
+          grep -q "UI_FIDELITY_CAPTURE_OK" ui-fidelity-capture.log
+      - name: Capture 102 reference states at 1280, 1920 and ultrawide 2400
+        run: |
+          set -o pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="$PWD/ui-reference-render-data"
+          xvfb-run -a -s "-screen 0 2560x1440x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_ui_reference.gd 2>&1 | tee ui-reference-capture.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" ui-reference-capture.log
+          grep -q "UI_REFERENCE_CAPTURE_OK" ui-reference-capture.log
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-ui-renewal-evidence
+          path: |
+            ui-parse.log
+            class-parse.log
+            ui-integration.log
+            ui-capture.log
+            ui-fidelity-test.log
+            item-art-test.log
+            ui-fidelity-capture.log
+            ui-pointer-test.log
+            ui-reference-capture.log
+            ui-render-data/**/ui-renewal-review/*.json
+            ui-render-data/**/ui-renewal-review/*.png
+            ui-fidelity-render-data/**/ui-fidelity-review/*.json
+            ui-fidelity-render-data/**/ui-fidelity-review/*.png
+            ui-reference-render-data/**/ui-reference-review/*.json
+            ui-reference-render-data/**/ui-reference-review/*.png
+          if-no-files-found: warn

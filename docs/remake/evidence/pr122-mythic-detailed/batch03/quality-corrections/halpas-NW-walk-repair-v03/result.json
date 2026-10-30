@@ -1,0 +1,58 @@
+{
+  "status": "GENERATED_PRIVATE_VISUAL_HOLD_NOT_APPROVED",
+  "key": "transform:393",
+  "direction": "NW",
+  "role": "walk",
+  "version": "v03",
+  "source_batch": "batch03",
+  "expected_poses": 6,
+  "request_path": "/workspace/scratch/halpas-NW-walk-repair-v03/request-halpas-NW-walk-v03.json",
+  "request_sha256": "4adedcf230d1e5e83bbbb4b3ab25d35d6b1c7ebd26201edfa9ba47e4bb6b2dad",
+  "original_generated_file": "/workspace/generated_images/exec-736432ff-bc7f-43d6-9b28-e0d9d4001774.png",
+  "raw_png": "/workspace/scratch/halpas-NW-walk-repair-v03/halpas-NW-walk-v03.png",
+  "raw_sha256": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c",
+  "raw_bytes": 2514671,
+  "image_size": [
+    1024,
+    1536
+  ],
+  "source_visual_status": "HOLD",
+  "strict_geometry_status": "PASS",
+  "strict_geometry_distinct_complete_poses": 6,
+  "geometry_path": "/workspace/scratch/halpas-NW-walk-repair-v03/source.geometry.json",
+  "geometry_qc": "/workspace/scratch/halpas-NW-walk-repair-v03/source-geometry-qc.json",
+  "visual_findings": [
+    "All six preserve the new rear-left/NW helmet profile, exposed segmented back/spine armor, burgundy left/back cape, two original purple crystalline fans, nearLEFT empty arm and farRIGHT original single blade. No front skull breastplate or added weapon is visible.",
+    "The six phases show a real high→mid→low→lower return→midrise→high wing cycle, altered airborne knee/leg articulation and delayed cape silhouettes; these are distinct new motion drawings rather than repeated or tinted figures.",
+    "Concrete heading defect: in all six enlarged lower-body views, the long pointed gold boot toe boxes extend toward SCREEN LOWER-RIGHT, while the approved NW canonical projects its pointed toe boxes UPPER-LEFT and leaves rear heel plates LOWER-RIGHT. Thus foot-facing is opposite to the required NW heading although the head/back remain rear-left. This cannot be accepted as an all-six correct NW locomotion source.",
+    "The sparse central320px/96px-cell-gutter request was not followed: source complete-pose regions span roughly442–467px. All six separate complete poses pass the unchanged strict coverage/RGBA geometry check, and no strong alpha touches the outer image edge; source resolution/layout is recorded separately and is not itself the reason for art HOLD."
+  ],
+  "visual_limitations": [
+    "Private JPEG inspection only; the root/main chat receives text and paths, no image blocks or generated-image links.",
+    "Exactly one changed-conditioning production edit was attempted from the new correct NW canonical only. Previous v02 HOLD assets remain unchanged and were not referenced. No retries or automatic heading inference.",
+    "No SpriteFrames/runtime selection, actor approval or detailed completion was changed. Source remains HOLD pending meaningful new correction evidence; geometry PASS does not override the foot-facing defect."
+  ],
+  "phase_contract": [
+    "0 HIGH: wings lifted at both real shoulder-root joints, feather fans high and open; gentle upper-left travel lean, one leg softly forward-bent and the other trailing bent.",
+    "1 MID DOWN: both wing roots rotate through a middle downstroke with articulated feather fans; hips and shoulders counterbalance, leading knee tucks and trailing knee releases.",
+    "2 LOW: deepest coherent downstroke, both complete fan tips low beside the body, shoulder roots and elbows visibly articulated; airborne legs trail and exchange soft bends.",
+    "3 LOWER RETURN: distinct folding return after low stroke, wing fans slightly tucked backward with different silhouette from phase2; opposite knee bends, cape lags behind.",
+    "4 MID RISE: wings rise through midstroke and fan outward, shoulder and torso settle; airborne legs pass toward original arrangement while cape follows with delay.",
+    "5 HIGH RETURN: wings reach a second high recovery with visibly different sweep/elbow/fan angles from phase0; gentle upper-left forward lean continues, leg pose distinct and naturally loops to phase0."
+  ],
+  "production_receipt": "/workspace/scratch/halpas-NW-walk-repair-v03/production-receipt.json",
+  "production_receipt_sha256": "eb482528b2891a1b42d577712498d1ad643743635b7dbc7a0a16a29f8adba5a6",
+  "references_unchanged": true,
+  "strong_alpha_outer_edge_pixels": 0,
+  "private_previews": [
+    "/workspace/scratch/halpas-NW-walk-repair-v03/private-overview.jpg",
+    "/workspace/scratch/halpas-NW-walk-repair-v03/private-boots-review.jpg"
+  ],
+  "private_preview_total_bytes": 275765,
+  "created_at": "2026-10-19T12:17:56.885696+00:00",
+  "repository_mutated": false,
+  "imagegen_attempts": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "chat_image_attachments": 0
+}

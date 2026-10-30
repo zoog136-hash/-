@@ -1,0 +1,90 @@
+name: Item Visuals Validate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/ui/**'
+      - 'scripts/loot/ground_loot_manager.gd'
+      - 'addons/twilight_l1j/twilight_*assets.gd'
+      - 'addons/twilight_l1j/twilight_external_a2_bridge.gd'
+      - 'data/item_visual_provenance.json'
+      - 'data/item_icon_art_profiles_v1.json'
+      - 'tests/*item_visual*'
+      - 'tests/item_rarity_render_test.gd'
+      - 'tools/*item_visual*'
+      - 'tools/verify_item_source_images.py'
+      - '.github/workflows/item-visuals-validate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: item-visuals-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  identity-and-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
+      - name: Resource integrity before changes or fixtures
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned engine and software GL
+        run: |
+          curl -sS -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          python3 -m pip install Pillow
+          python3 tools/test_item_source_verification.py
+          # Pin catalog identity to the checked PR base, not an obsolete 2026-10-12 main.
+          git fetch --depth=1 origin "${{ github.event.pull_request.base.sha || github.sha }}"
+      - name: Import and identity, input, save, equipment regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-results
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/item-config"
+          export XDG_CACHE_HOME="$RUNNER_TEMP/item-cache"
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          "$ENGINE" --headless --path . --editor --quit > test-results/import.txt 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
+          for name in blessed_scroll_item_visual_test item_visual_test item_icon_art_smoke_test l1j_runtime_game_test catalog_full_browser_smoke_test ui_stage4_item_instance_test ui_fidelity_regression_test ui_renewal_integration_test original_skill_warehouse_migration_test; do
+            export XDG_DATA_HOME="$RUNNER_TEMP/item-$name"
+            "$ENGINE" --headless --path . --script "res://tests/$name.gd" > "test-results/$name.txt" 2>&1
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|_FAILED' "test-results/$name.txt"; then exit 1; fi
+            grep -q '_OK' "test-results/$name.txt"
+          done
+      - name: Every runtime item loads, and original evidence still matches
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/item-config"
+          export XDG_DATA_HOME="$RUNNER_TEMP/item-audit"
+          export TWILIGHT_ITEM_AUDIT="$PWD/test-results/runtime.json"
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tools/export_item_visual_audit.gd > test-results/audit.txt 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|_FAILED' test-results/audit.txt; then exit 1; fi
+          grep -q 'ITEM_VISUAL_AUDIT_OK' test-results/audit.txt
+          python3 tools/check_item_visuals.py --runtime test-results/runtime.json --source-evidence docs/item-visuals/evidence/source-verification.json --output test-results/audit --base "${{ github.event.pull_request.base.sha || github.sha }}"
+      - name: Actual Compatibility renders, sequence, and measured stress case
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/item-config"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export TWILIGHT_ITEM_CAPTURES="$PWD/test-results/captures"
+          export TWILIGHT_ITEM_BENCHMARK="$PWD/test-results/benchmark.json"
+          for name in item_rarity_render_test capture_item_visuals benchmark_item_visuals; do
+            export XDG_DATA_HOME="$RUNNER_TEMP/item-$name"
+            xvfb-run -a -s '-screen 0 1600x1000x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/$name.gd" > "test-results/$name.txt" 2>&1
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|_FAILED' "test-results/$name.txt"; then exit 1; fi
+            grep -q '_OK' "test-results/$name.txt"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: item-visuals-${{ github.sha }}
+          path: test-results/
+          if-no-files-found: error

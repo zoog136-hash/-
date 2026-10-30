@@ -1109,12 +1109,30 @@
   "pipeline_resume_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/pipeline-resume-20261015",
   "batch30_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch30",
   "batch31_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch31",
-  "status": "STOPPED_BY_USER_FINAL_HANDOFF",
+  "status": "PR100_MERGE_STOPPED_BY_USER_FOLLOWUP_WORK_ACTIVE",
   "final_handoff_document": "docs/remake/PR100_FINAL_HANDOFF.md",
   "final_preservation_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/final-handoff-20261015",
   "unqualified_live_profiles_archived_and_parked": true,
   "batch29_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch29",
   "final_handoff_commit_resolution": "git log -1 --format=%H -- docs/remake/PR100_FINAL_HANDOFF.md",
   "future_new_PR_branch_NOT_CREATED": "feature/twilight-animation-remaining-20261015",
-  "final_source_archive_checkpoint": "0ae8538aaf0bea0736553e79e60d696d38b8e563"
+  "final_source_archive_checkpoint": "0ae8538aaf0bea0736553e79e60d696d38b8e563",
+  "resume_20261016": {
+    "observed_utc": "2026-10-16T03:15:02.877627+00:00",
+    "parent_remote_head": "80f22e190d4e9b1920fab0ba3e2a31975e693d17",
+    "observed_main": "e2119c37293a783e93b421ee0055d1318271b071",
+    "merge": "NOT_PERFORMED",
+    "completed": 392,
+    "remaining": 106,
+    "evidence": "docs/remake/evidence/pr100-direction-fix/merge-final-20261016/checkpoint.json",
+    "repair_commit_resolution": "git log -1 --format=%H -- tests/qa_original_source_frame.gd",
+    "asset_checkpoint_unchanged": "fdfbab2c22ad0ff1b9f15e41742476a737c7481f",
+    "full_CI": "Pending exact repaired SHA; parent80 has actual failures",
+    "new_production_branch_PR": "Not created until PR100 merge passes"
+  },
+  "user_override_20261016": {
+    "instruction": "Stop merging PR #100. Commit current work and continue remaining106 in a separate PR first.",
+    "merge": "not_performed",
+    "followup_checkpoint": "docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json"
+  }
 }

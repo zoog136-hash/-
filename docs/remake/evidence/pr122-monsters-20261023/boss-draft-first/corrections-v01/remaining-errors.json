@@ -1,0 +1,320 @@
+{
+  "schema": "pr122-final-remaining-errors-v1",
+  "first_draft_missing_slots": 0,
+  "remaining_boss_error_clips": 37,
+  "common_causes": {
+    "affected_existing_camera_error": 1,
+    "unprovable_whole_pose_ownership": 20,
+    "physical_component_count": 4,
+    "source_outer_boundary": 6,
+    "repeated_authored_camera_error": 5,
+    "targeted_generation_hold": 1
+  },
+  "clips": [
+    {
+      "slug": "thebes_horus",
+      "clip": "W-run-v01",
+      "reason": "Left-camera reference triage shows the original W run advances right. Preserve it but do not qualify this actor as corrected WEST; no new generation during wrap-up.",
+      "cause": "affected_existing_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "arcmo",
+      "clip": "NE-run-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "arcmo",
+      "clip": "W-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "NE-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "SE-attack-v02",
+      "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots",
+      "cause": "physical_component_count",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "SW-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "SW-idle-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "belial",
+      "clip": "W-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "dread_vampire",
+      "clip": "SW-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "E-idle-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "grim_reaper",
+      "clip": "W-attack-v02",
+      "reason": "Full owned pose cannot fit its unchanged registration",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "E-attack-v02",
+      "reason": "Full owned pose cannot fit its unchanged registration",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "E-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "S-run-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-idle-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "SW-run-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "W-hit-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "iris",
+      "clip": "W-run-v02",
+      "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots",
+      "cause": "physical_component_count",
+      "automatic_retry": false
+    },
+    {
+      "slug": "isabelle",
+      "clip": "N-run-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NE-hit-v02",
+      "reason": "Expected exactly 6 separated poses, found 7; review/re-author, never invent slots",
+      "cause": "physical_component_count",
+      "automatic_retry": false
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NE-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "isabelle",
+      "clip": "NW-idle-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "jopnir",
+      "clip": "SW-hit-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "jopnir",
+      "clip": "SW-idle-v02",
+      "reason": "Foreground connects two different physical bodies",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "prince_deus",
+      "clip": "W-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "SW-idle-v02",
+      "reason": "A visible pose touches the image boundary",
+      "cause": "source_outer_boundary",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-attack-v02",
+      "reason": "Initial/restored WEST guards face right around leftward strike",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-hit-v02",
+      "reason": "WEST brace and restored poses still face right; not merely head recoil",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_horus",
+      "clip": "W-idle-v02",
+      "reason": "All six WEST idle poses still face right",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-attack-v02",
+      "reason": "Front-right ready/recovery guards remain around leftward contact",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "thebes_osiris",
+      "clip": "SW-idle-v02",
+      "reason": "SW standing poses retain front-right canonical facing",
+      "cause": "repeated_authored_camera_error",
+      "automatic_retry": false
+    },
+    {
+      "slug": "ugnus",
+      "clip": "NE-idle-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-attack-v02",
+      "reason": "Confirmed visual or missing-output HOLD",
+      "cause": "targeted_generation_hold",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-hit-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "SW-idle-v02",
+      "reason": "Expected exactly 6 separated poses, found 5; review/re-author, never invent slots",
+      "cause": "physical_component_count",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zeros",
+      "clip": "W-hit-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    },
+    {
+      "slug": "zenith_queen",
+      "clip": "E-attack-v02",
+      "reason": "Detached foreground has ambiguous physical-body ownership",
+      "cause": "unprovable_whole_pose_ownership",
+      "automatic_retry": false
+    }
+  ],
+  "policy": "No regeneration of good clips; repeated source errors stay HOLD; no further automatic attempts",
+  "normal_runtime_missing_frames": 0,
+  "normal_inactive_draft_missing_slots": 63,
+  "prior_unchanged_boss_quality_followups": [
+    "monster:개미굴의 지배자",
+    "monster:거대 드레이크",
+    "monster:검은숲의 지배자",
+    "monster:그라디움",
+    "monster:글루디오 던전의 지배자",
+    "monster:기란 평원의 지배자",
+    "monster:네크로맨서",
+    "monster:데스나이트",
+    "monster:듀페리온",
+    "monster:드레이크",
+    "monster:라스타바드의 지배자",
+    "monster:마계의 지배자",
+    "monster:말하는 섬의 지배자",
+    "monster:바포메트",
+    "monster:베레스",
+    "monster:분노의 주시자 라즈엘",
+    "monster:불멸의 리치",
+    "monster:불사의 머미 로드",
+    "monster:불신의 시어",
+    "monster:살라흐",
+    "monster:샌드 웜",
+    "monster:수룡의 둥지의 지배자",
+    "monster:시간의 균열의 지배자",
+    "monster:아틀란티스의 지배자",
+    "monster:알비노 피닉스",
+    "monster:어둠의 나이트발드",
+    "monster:에바 왕국의 지배자",
+    "monster:오만의 탑의 지배자",
+    "monster:용의 계곡의 지배자",
+    "monster:웨링",
+    "monster:이프리트",
+    "monster:잊혀진 섬의 지배자",
+    "monster:종말의 성역의 지배자",
+    "monster:지룡의 둥지의 지배자",
+    "monster:지옥의 쿠거",
+    "monster:천상계의 지배자",
+    "monster:테베라스의 지배자",
+    "monster:풍룡의 둥지의 지배자",
+    "monster:피닉스",
+    "monster:화룡의 둥지의 지배자",
+    "monster:흑장로"
+  ]
+}

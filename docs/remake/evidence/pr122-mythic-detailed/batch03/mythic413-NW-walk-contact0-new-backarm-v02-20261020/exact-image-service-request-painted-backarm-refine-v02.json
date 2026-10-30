@@ -1,0 +1,18 @@
+{
+  "tool": "image_gen.imagegen",
+  "args": {
+    "transparent_background": true,
+    "referenced_image_paths": [
+      "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/DERIVED-PAINTED-native1254-LEFTbackswing-pose-control-only.png",
+      "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/DERIVED-new-backswing-arm-close-control-only.png"
+    ],
+    "prompt": "Refine the existing nearLEFT arm IN PLACE on image1. Its current NEW BACKSWING POSITION is already correct and must remain EXACTLY THERE. Image2 is the close-up of that SAME NEW ARM for detail, not another pose. Paint a natural connected shoulder/elbow/forearm/wrist/emptyglove over this pose-control, fixing cloth seams and anatomical joints, while retaining its exact current shoulder-to-hand direction toward SCREEN LOWER-RIGHT. This is a local production edit, not a redesign or another walking pose.\n\nNative1254x1254 transparent image. NearLEFT shoulder(589,458), elbow(632,550), emptyblackglove wrist(674,648), fingers around(710,690). The new arm clearly lies to the RIGHT of its shoulder, toward the back/hip. Do not move the elbow or hand leftward. DO NOT RESTORE any arm extending toward screenleft. Preserve current rear NW3/4 body direction, frontLEFT heel-contact leg and rearRIGHT departureleg, head/bun/ribbon, body position and exact original proportions. Existing anatomical RIGHTfar arm holds its full gold/cyanstaff atscreenright; leave it unchanged. LEFTnear hand holds nothing and never touches the staff.\n\nMake real freshly painted coherent anatomy and costume in this exactarm pose: bluepuffed goldtrim shoulder, whitefolded sleeve, intricate gold/navy gauntlet and relaxed BLACK empty glove. Repair the temporary segment seam at elbow and natural sleeve/gauntlet joining. Preserve same detailed design and same physical limb lengths; perspective articulation only. Remove tiny stray oldLEFTglove fragments left of hip. Bodybehind the former left arm should have a clean transparent silhouette and correct existing back/cloth where visible. No floating gold fragments or duplicate hands.\n\nKeep all other parts fixed. No wholebody rotation, resize, crop, recenter, pose change, mirror, legredraw or staffredraw. Preserve all complete weapon ends, original colors, body and camera. Existing natural occlusion of the moved neararm over back/hip stays. Transparent background, opaque crisp body1-2pixel antialias edge. No diagram, colored guides, extrafigure, floor, shadow, aura, particle or text. ONE complete existing figure with newly refined arm at its CURRENT rightward BACKSWING position."
+  },
+  "original_master_sha256": "dc5da66b30171bdff9ab4c25cf5a22327debe8c8b41088693824433cb4e684db",
+  "fixed_C": 2048,
+  "fixed_body_unit_factor": 2,
+  "actual_control_input_sha256": "3a9c9be5ff6cb8a7881728d18769ce8c51682d4e706b15877cfcfaf5f92f2c9a",
+  "final_allowed_mask_sha256": "455d3552cdd4252168ad54df86a3f2ba515e18a50aa8d99bc8e93df003024181",
+  "material_change_from_failed_attempt": "Actual-costume arm already positioned in correct backswing as CONTROL ONLY; service refines real anatomy in place instead of interpreting pinkskeleton. No oldforward material reference. Only service art may supply final arm; outsideoriginalmask RGBAexact.",
+  "approval_added": 0
+}

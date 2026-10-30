@@ -49,14 +49,18 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	world.set("equipped_items", {})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_catalog", {"변신": {}, "마법인형": {}, "성물": {}})
+	world.call("_invalidate_equipment_static")
 	_check(is_zero_approx(float(world.call("_blessing_consumption_reduction_percent"))), "unequipped baseline")
 	world.set("equipped_catalog", {
 		"변신": {},
 		"마법인형": {"name":"__ain_test_doll__", "sourceOptions":["축복 소모량 감소 +25%"]},
 		"성물": {}
 	})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_items", {"weapon":{"name":"__ain_test_weapon__", "atk":0, "blessing_consumption_reduction_pct":20}})
+	world.call("_invalidate_equipment_static")
 	_check(is_equal_approx(float(world.call("_blessing_consumption_reduction_percent")), 45.0), "equipped doll and weapon stack")
 	var ain: TwilightAinhasadService = world.get("ain_service") as TwilightAinhasadService
 	_check(ain != null, "existing blessing service present")
@@ -66,7 +70,9 @@ func _run() -> void:
 		_check(ain.consume_for_kill(42000, float(world.call("_blessing_consumption_reduction_percent"))) == 0, "45 percent reduction saves first blessing point")
 		_check(ain.consume_for_kill(42000, float(world.call("_blessing_consumption_reduction_percent"))) == 1 and ain.blessing == 199, "reduction accumulates fractional spend")
 	world.set("equipped_items", {})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_catalog", {"변신": {}, "마법인형": {}, "성물": {}})
+	world.call("_invalidate_equipment_static")
 	_check(is_zero_approx(float(world.call("_blessing_consumption_reduction_percent"))), "unequip removes reduction")
 	world.queue_free()
 	await process_frame

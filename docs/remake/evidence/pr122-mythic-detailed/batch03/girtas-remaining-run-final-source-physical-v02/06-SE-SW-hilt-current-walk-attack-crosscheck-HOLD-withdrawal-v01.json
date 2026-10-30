@@ -1,0 +1,92 @@
+{
+  "schema": "PR122_SE_SW_HILT_STRUCTURAL_CROSSCHECK_WITHDRAWAL_FINAL_V1",
+  "utc": "2026-10-19T16:34:05.616203+00:00",
+  "reviewer": "/root/girtas_remaining_run_source_runtime_qc_v02",
+  "status": "IDLE_ONLY_GEAR_HOLD_WITHDRAWN_NO_ART_CHANGE_REQUIRED",
+  "scope": "Only newSE/SW hiltstructuraladdition concern adjudicated against same-direction currentfaithfulwalk0 andattack3 actualAtlasTexture crops; no oldclip reapproval.",
+  "actor_approval_increment": 0,
+  "current_same_direction_reference_pins": [
+    {
+      "direction": "SE",
+      "role": "attack",
+      "phase": 3,
+      "subresource": "track_30_3",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r064/SE-attack.png",
+      "atlas_sha256": "b1f11bf66bbfb23b49dc1a68b54d6d56dcebe69344a7a17abd3216ae2f833512",
+      "region": [
+        528,
+        532,
+        483,
+        438
+      ],
+      "local_reference_png_path": "/workspace/scratch/girtas-private-qc-v02-20261019/PRIVATE-REFERENCE-SE-attack3-actual-Atlas-region.png",
+      "local_reference_png_sha256": "d6bc2df99957effd506ad1098c61ef12d6c82220452d5bb1bdf3e22e5fc74be7"
+    },
+    {
+      "direction": "SE",
+      "role": "walk",
+      "phase": 0,
+      "subresource": "track_35_0",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r086/SE-walk.png",
+      "atlas_sha256": "fa4befe04bac4c4e905efad1dc0935ec4b99a5bb62221f0ea83d4b19198aa88d",
+      "region": [
+        99,
+        43,
+        1082,
+        1194
+      ],
+      "local_reference_png_path": "/workspace/scratch/girtas-private-qc-v02-20261019/PRIVATE-REFERENCE-SE-walk0-actual-Atlas-region.png",
+      "local_reference_png_sha256": "5b0f3b07096c1286c6d763f6742fc8056db748309d00392a3518ec15bbd1823c"
+    },
+    {
+      "direction": "SW",
+      "role": "attack",
+      "phase": 3,
+      "subresource": "track_36_3",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r081/SW-attack.png",
+      "atlas_sha256": "f54566d9663af5210cdf82531c6bae81c890f41969797bf6242fbf8bf4581044",
+      "region": [
+        516,
+        583,
+        465,
+        386
+      ],
+      "local_reference_png_path": "/workspace/scratch/girtas-private-qc-v02-20261019/PRIVATE-REFERENCE-SW-attack3-actual-Atlas-region.png",
+      "local_reference_png_sha256": "a0688c84c967da20dfb035994038de7a9e30d9df9dcee9742b8eba87db02f531"
+    },
+    {
+      "direction": "SW",
+      "role": "walk",
+      "phase": 0,
+      "subresource": "track_41_0",
+      "atlas_path": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r087/SW-walk.png",
+      "atlas_sha256": "5db8575ad4ef6a173a58c0b1c611966a0621e169d25e8a06290a405774302c94",
+      "region": [
+        147,
+        155,
+        1241,
+        1231
+      ],
+      "local_reference_png_path": "/workspace/scratch/girtas-private-qc-v02-20261019/PRIVATE-REFERENCE-SW-walk0-actual-Atlas-region.png",
+      "local_reference_png_sha256": "8ed3e462b90e0d638483e21c3a97ae5e47efb87315aee105a19b87a66348be17"
+    }
+  ],
+  "findings": [
+    "CurrentSEwalk0 andSWwalk0 visibly contain pointedgoldbladebase/sideprong geometry under thefist. Attack3 changes wrist/bladeorientation and partly hides thehilt; idle edge-on fist doesnot establish absence of rear/prongstructures.",
+    "Newrun widerornate/star exposure cannot be distinguished confidently from rotation/widerface exposure of that existingbase. No definite extra prongcount/independentnewgear structure is proven by the reviewedfaithfulsame-direction references.",
+    "Therefore sourceHOLD inferred solely from idle-only visiblecollar was too strong and is withdrawn. ExistingoriginalSE/SW sources remainselected, no hilt/body regeneration or removal of possiblyoriginalguard geometry.",
+    "Smallcollar repairedSW3 remainsunchanged; anyalreadygeneratedcollarpatch ispreservedunselected. HistoricalHOLD/PASS/withdrawal evidence remainsimmutable."
+  ],
+  "superseded_gear_only_HOLD_pins": [
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SE-run-exact-hilt-only-HOLD-addendum-v01.json",
+      "sha256": "bcdaf101d3781e54d6ece291877ab478e489f1940a443085ee4e449b4c7afd46"
+    },
+    {
+      "path": "/workspace/scratch/girtas-private-qc-v02-20261019/SW-run-new-four-gait-PASS-exact-hilt-only-HOLD-addendum-v01.json",
+      "sha256": "61f39dd08b14c0f185d8eb23398ba6573e6021d4c3236673d24da0e79dd83cce"
+    }
+  ],
+  "limitations": "Thiswithdraws unsupported materialgearHOLD. It doesnot claim exactunseenbackside metrology or wholeactorfinalqualityapproval.",
+  "repository_mutations": false
+}

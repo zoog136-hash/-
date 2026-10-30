@@ -243,6 +243,10 @@ func equipment_and_services() -> void:
 	bag._refresh_inventory_grid()
 	hud.show_companion_equipment()
 	await frames(5)
+	var pooled_valid: bool = true
+	for button: Button in bag.reusable_slots:
+		pooled_valid = pooled_valid and is_instance_valid(button)
+	check(pooled_valid,"reused inventory cells remain valid after panel navigation")
 	var source: Vector2 = point(bag.slot_buttons[first])
 	var old_equipment: Dictionary = world.equipped_items.duplicate(true)
 	await drag(source,point(hud.lineage_side_ui.equipment_buttons.helmet))

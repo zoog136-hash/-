@@ -1,0 +1,578 @@
+{
+  "schema": "pr122-kurtz-r003-source-checks-v1",
+  "prior_frozen_files_verified": 62,
+  "prior_manifest_sha256": "b9afb98477841218279a93b94147d3b4758be33ecec4e0a69dff8939b12b0fa3",
+  "prior_candidate_sha256": "cfa1b7f5137a0474fd2533261f5062c9b4bce02d86894cba1ff6a99bee952f5e",
+  "new_imagegen_calls": 4,
+  "selected_source_PNGs": 3,
+  "held_source_PNGs": 1,
+  "sources": [
+    {
+      "name": "kurtz-S-idle-hit4-v01",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-S-idle-hit4-v01.png",
+      "source_sha256": "18aa6362fa7704ac1aa93de4b59df086ce77b6a725510008a69a50f6e84dc3d7",
+      "bytes": 1959904,
+      "requested_direction": "S",
+      "selected_direction": "S",
+      "selected": true,
+      "strict_source_geometry": "PASS_FOUR_COMPLETE_DISTINCT_RGBA_POSES",
+      "status": "SELECTED_STATIC_FIRST_PASS_ONLY",
+      "geometry": {
+        "image_size": [
+          1254,
+          1254
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "S",
+            "region": [
+              80,
+              5,
+              516,
+              600
+            ],
+            "margin": [
+              508,
+              386,
+              1044,
+              960
+            ],
+            "source_anchor": [
+              352,
+              594
+            ],
+            "rgba_sha256": "8943df67ca982376eb0041f7c5d06041bcb42dce8119568aa6b0541467100b22"
+          },
+          {
+            "row": 1,
+            "direction": "S",
+            "region": [
+              694,
+              8,
+              496,
+              596
+            ],
+            "margin": [
+              500,
+              390,
+              1064,
+              964
+            ],
+            "source_anchor": [
+              974,
+              593
+            ],
+            "rgba_sha256": "a723273ff35cde480fbdd901803fab7caf13cb42da898e8d640a8a16eea776fd"
+          },
+          {
+            "row": 2,
+            "direction": "S",
+            "region": [
+              63,
+              650,
+              524,
+              561
+            ],
+            "margin": [
+              493,
+              425,
+              1036,
+              999
+            ],
+            "source_anchor": [
+              350,
+              1200
+            ],
+            "rgba_sha256": "e085f663eed3bb52392decc948821c48905d4972676f9c5839bc0675ca5e2659"
+          },
+          {
+            "row": 3,
+            "direction": "S",
+            "region": [
+              663,
+              639,
+              573,
+              574
+            ],
+            "margin": [
+              458,
+              414,
+              987,
+              986
+            ],
+            "source_anchor": [
+              985,
+              1200
+            ],
+            "rgba_sha256": "0c6591c5a126a89a1344daa8940c29d739b9e390e9b7b082b66aeb8e22db328f"
+          }
+        ],
+        "distinct_pixel_frames": 4,
+        "neutral_height": 592.0,
+        "canvas_size": [
+          1560,
+          1560
+        ],
+        "foot": [
+          780,
+          975
+        ],
+        "reference_body_height": 96,
+        "standing_head_to_boot_source_height": 584.0,
+        "standing_head_to_boot_landmarks": [
+          [
+            8,
+            594
+          ],
+          [
+            11,
+            593
+          ]
+        ],
+        "canvas_basis": "One source-specific virtual canvas, body-height normalized without changing source RGBA",
+        "ground_anchor_basis": "Manual private source-view first pass to near-side armored boot plane and stance midpoint; blade tip excluded. Estimated uncertainty 8 source px; physical contact remains unapproved.",
+        "physical_ground_contact_approved": false
+      },
+      "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/r003/kurtz-S-idle-hit4-v01.png"
+    },
+    {
+      "name": "kurtz-E-idle-hit4-v01",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v01.png",
+      "source_sha256": "978d10177b5fba11d14d57333e97dabb72a5608664c79b3ef53a519c4b6c3769",
+      "bytes": 1692280,
+      "requested_direction": "E",
+      "selected_direction": "SE",
+      "selected": true,
+      "strict_source_geometry": "PASS_FOUR_COMPLETE_DISTINCT_RGBA_POSES",
+      "status": "SELECTED_STATIC_FIRST_PASS_ONLY",
+      "geometry": {
+        "image_size": [
+          1254,
+          1254
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SE",
+            "region": [
+              65,
+              5,
+              501,
+              619
+            ],
+            "margin": [
+              522,
+              400,
+              1123,
+              1005
+            ],
+            "source_anchor": [
+              355,
+              620
+            ],
+            "rgba_sha256": "813598bd7dca8a6015354ed59ef708a8cca5e1fb7eb195f65f8fefcf92ffc8f4"
+          },
+          {
+            "row": 1,
+            "direction": "SE",
+            "region": [
+              679,
+              12,
+              516,
+              613
+            ],
+            "margin": [
+              496,
+              406,
+              1108,
+              1011
+            ],
+            "source_anchor": [
+              995,
+              621
+            ],
+            "rgba_sha256": "7b9b709fe5847f7e68472e80dba4dfb5f753ffef5bcab9d694322059f739417b"
+          },
+          {
+            "row": 2,
+            "direction": "SE",
+            "region": [
+              49,
+              653,
+              501,
+              559
+            ],
+            "margin": [
+              516,
+              460,
+              1123,
+              1065
+            ],
+            "source_anchor": [
+              345,
+              1208
+            ],
+            "rgba_sha256": "c169edec69fa3467ef634ef50e12d1d6a89e7ee9da89b91b7a240136b21c9169"
+          },
+          {
+            "row": 3,
+            "direction": "SE",
+            "region": [
+              683,
+              655,
+              529,
+              563
+            ],
+            "margin": [
+              479,
+              456,
+              1095,
+              1061
+            ],
+            "source_anchor": [
+              1016,
+              1214
+            ],
+            "rgba_sha256": "f5b60b1aeb3dc3be8f6d5ae63a12b5ce24a1fb19e394d716858164831e2e1c35"
+          }
+        ],
+        "distinct_pixel_frames": 4,
+        "neutral_height": 610.0,
+        "canvas_size": [
+          1624,
+          1624
+        ],
+        "foot": [
+          812,
+          1015
+        ],
+        "reference_body_height": 96,
+        "standing_head_to_boot_source_height": 609.0,
+        "standing_head_to_boot_landmarks": [
+          [
+            8,
+            620
+          ],
+          [
+            15,
+            621
+          ]
+        ],
+        "canvas_basis": "One source-specific virtual canvas, body-height normalized without changing source RGBA",
+        "ground_anchor_basis": "Manual private source-view first pass to armored boot sole plane and stance midpoint. Estimated uncertainty 8 source px; physical contact remains unapproved.",
+        "physical_ground_contact_approved": false
+      },
+      "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/r003/kurtz-E-idle-hit4-v01.png"
+    },
+    {
+      "name": "kurtz-E-idle-hit4-v02",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-E-idle-hit4-v02.png",
+      "source_sha256": "8ae4dad2afcbf156a0586b7f8dd0fcacfbf4b21a39356a33f5c9776ead69f061",
+      "bytes": 1474740,
+      "requested_direction": "E",
+      "selected_direction": "E",
+      "selected": true,
+      "strict_source_geometry": "PASS_FOUR_COMPLETE_DISTINCT_RGBA_POSES",
+      "status": "SELECTED_STATIC_FIRST_PASS_ONLY",
+      "geometry": {
+        "image_size": [
+          1254,
+          1254
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "E",
+            "region": [
+              91,
+              5,
+              404,
+              608
+            ],
+            "margin": [
+              479,
+              395,
+              1188,
+              984
+            ],
+            "source_anchor": [
+              408,
+              605
+            ],
+            "rgba_sha256": "7aea856f8c849a74007488993d074f29d310ae9b4dac622eef6df7c7c1744cd5"
+          },
+          {
+            "row": 1,
+            "direction": "E",
+            "region": [
+              716,
+              6,
+              390,
+              607
+            ],
+            "margin": [
+              486,
+              395,
+              1202,
+              985
+            ],
+            "source_anchor": [
+              1026,
+              606
+            ],
+            "rgba_sha256": "25b20dffd28d6124e91be10c40d6d9d357df735528002247c31d91d554f6a66b"
+          },
+          {
+            "row": 2,
+            "direction": "E",
+            "region": [
+              66,
+              643,
+              471,
+              579
+            ],
+            "margin": [
+              466,
+              437,
+              1121,
+              1013
+            ],
+            "source_anchor": [
+              396,
+              1201
+            ],
+            "rgba_sha256": "7f11452b83ef39d1410409b44f791af2503bacb038505f9a057dd21a1267da7f"
+          },
+          {
+            "row": 3,
+            "direction": "E",
+            "region": [
+              715,
+              674,
+              471,
+              551
+            ],
+            "margin": [
+              463,
+              458,
+              1121,
+              1041
+            ],
+            "source_anchor": [
+              1048,
+              1211
+            ],
+            "rgba_sha256": "88ee887abd06fe3d6073b6e44e2b1c43340b6e01f5b40d74106417330e90ea2e"
+          }
+        ],
+        "distinct_pixel_frames": 4,
+        "neutral_height": 601.5,
+        "canvas_size": [
+          1592,
+          1592
+        ],
+        "foot": [
+          796,
+          995
+        ],
+        "reference_body_height": 96,
+        "standing_head_to_boot_source_height": 597.0,
+        "standing_head_to_boot_landmarks": [
+          [
+            8,
+            605
+          ],
+          [
+            9,
+            606
+          ]
+        ],
+        "canvas_basis": "One source-specific virtual canvas, body-height normalized without changing source RGBA",
+        "ground_anchor_basis": "Manual private source-view first pass to armored boot sole plane and stance midpoint; blade tip excluded. Estimated uncertainty 8 source px; physical contact remains unapproved.",
+        "physical_ground_contact_approved": false
+      },
+      "texture": "assets/actors/eight_direction/monster_boss_repair/kurtz/r003/kurtz-E-idle-hit4-v02.png"
+    },
+    {
+      "name": "kurtz-SW-idle-hit4-v01",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix09-kurtz/raw/kurtz-SW-idle-hit4-v01.png",
+      "source_sha256": "aee4c6fb1b959747830bc621e8fcd7512583632c3ec8e3e973275eb3c7679a03",
+      "bytes": 2191829,
+      "requested_direction": "SW",
+      "selected_direction": null,
+      "selected": false,
+      "strict_source_geometry": "PASS_FOUR_COMPLETE_DISTINCT_RGBA_POSES",
+      "status": "HOLD_NOT_SELECTED",
+      "reason": "Requested SW is not present: broad frontal cuirass, skull clasp and front/right visor expose S-to-SE camera. Preserve the complete raw generation and exact request; never select or silently rename as SW. No additional generation in this four-call batch.",
+      "geometry": {
+        "image_size": [
+          1254,
+          1254
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "SW",
+            "region": [
+              42,
+              6,
+              570,
+              625
+            ],
+            "margin": [
+              752,
+              659,
+              1478,
+              1423
+            ],
+            "source_anchor": [
+              314,
+              627
+            ],
+            "rgba_sha256": "e55adc035ee7ebe9809cce2cfdd03973a9da07e4943e27aa8171372292332a90"
+          },
+          {
+            "row": 1,
+            "direction": "SW",
+            "region": [
+              669,
+              5,
+              560,
+              625
+            ],
+            "margin": [
+              753,
+              659,
+              1488,
+              1423
+            ],
+            "source_anchor": [
+              940,
+              626
+            ],
+            "rgba_sha256": "db9e2ddc06cbb41184e9ed32a8f0d13c33c28e2e77a35c846e4e43afae6cdadd"
+          },
+          {
+            "row": 2,
+            "direction": "SW",
+            "region": [
+              9,
+              656,
+              622,
+              555
+            ],
+            "margin": [
+              719,
+              729,
+              1426,
+              1493
+            ],
+            "source_anchor": [
+              314,
+              1207
+            ],
+            "rgba_sha256": "8832604328499af1db7374188e548a5e62df7129ef0ef0266de4a3f5cbf149ec"
+          },
+          {
+            "row": 3,
+            "direction": "SW",
+            "region": [
+              640,
+              637,
+              614,
+              583
+            ],
+            "margin": [
+              724,
+              701,
+              1434,
+              1465
+            ],
+            "source_anchor": [
+              940,
+              1216
+            ],
+            "rgba_sha256": "1f14247fb17a0b060cc1c7340fd08d3118ff5ce060eca06df15b99dda7fe0fd9"
+          }
+        ],
+        "distinct_pixel_frames": 4,
+        "neutral_height": 619.0,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      }
+    }
+  ],
+  "excluded_prior_tracks": [
+    {
+      "animation": "run_3",
+      "direction": "SW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/raw/run-front4-v02.png",
+      "source_sha256": "00a72871c581991522d2dfa73a440ebac9ad298a8d40ac1642938381c467c59f",
+      "reason": "Independent source review finds sword in anatomical LEFT hand; camera/hand not corrected by metadata."
+    },
+    {
+      "animation": "run_4",
+      "direction": "W",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/raw/run-back4-v01.png",
+      "source_sha256": "d24402081912b7a01bc2dabde82e230d66b066d0eeddcbcb629f2c2cb3eeae13",
+      "reason": "Baked source W camera flips toward E in phases3-5."
+    },
+    {
+      "animation": "run_5",
+      "direction": "NW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/raw/run-back4-v01.png",
+      "source_sha256": "d24402081912b7a01bc2dabde82e230d66b066d0eeddcbcb629f2c2cb3eeae13",
+      "reason": "Baked source NW camera flips toward opposite view in phases3-5."
+    },
+    {
+      "animation": "idle_4",
+      "direction": "W",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/idle-hit-back4-v03.png",
+      "source_sha256": "98efb320c221b20df0ca0ec2d409c17ed333ea2d055ea127390ead5ac0d858de",
+      "reason": "Source camera is E rather than requested W."
+    },
+    {
+      "animation": "hit_4",
+      "direction": "W",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/idle-hit-back4-v03.png",
+      "source_sha256": "98efb320c221b20df0ca0ec2d409c17ed333ea2d055ea127390ead5ac0d858de",
+      "reason": "Source camera is E rather than requested W."
+    },
+    {
+      "animation": "idle_5",
+      "direction": "NW",
+      "role": "idle",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/idle-hit-back4-v03.png",
+      "source_sha256": "98efb320c221b20df0ca0ec2d409c17ed333ea2d055ea127390ead5ac0d858de",
+      "reason": "Source camera is NE rather than requested NW."
+    },
+    {
+      "animation": "hit_5",
+      "direction": "NW",
+      "role": "hit",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/idle-hit-back4-v03.png",
+      "source_sha256": "98efb320c221b20df0ca0ec2d409c17ed333ea2d055ea127390ead5ac0d858de",
+      "reason": "Source camera is NE rather than requested NW."
+    },
+    {
+      "animation": "attack_2",
+      "direction": "S",
+      "role": "attack",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/boss-fix04-kurtz/r002/raw/attack-S4-v03.png",
+      "source_sha256": "e6e962d5b58318a890f9856a93e7642a4327feb532712e63f3522eb68dbb5c61",
+      "reason": "S overhead sword-hand identity is inconsistent and target contact extends laterally; requires new source."
+    }
+  ]
+}

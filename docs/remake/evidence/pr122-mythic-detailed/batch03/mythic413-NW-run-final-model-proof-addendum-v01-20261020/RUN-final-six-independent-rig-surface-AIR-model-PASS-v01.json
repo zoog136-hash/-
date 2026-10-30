@@ -1,0 +1,675 @@
+{
+  "schema": "PR122-independent-all6-authored-rig-and-actual-foot-surface-QC-v1",
+  "status": "PASS_EXACT_ACTUAL_CONTROL_AND_DECLARED_COMPATIBLE_FULL_TEXTURE_AIR_BOUNDS",
+  "author_model": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/final-six-actual-causal-rig-and-full-foot-surface-AIR-bounds-v01.json",
+    "sha256": "153dff6932bd7fef3943bb5bc7ea957775508994b3a928b63602b74d685707e2"
+  },
+  "roster": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/Mythic413-NW-run-final-six-actual-source-roster-v01.json",
+    "sha256": "92f75e0bf221fa58aa1e7c73da197d3ad0b005d8881adbb453760568ed449aa7"
+  },
+  "template_results": [
+    {
+      "name": "canonical_stance",
+      "sha256": "c4f8a1e010051d4b5fc18d420cf75b7f08c4d7c5cae3df64533144654fafca73",
+      "nonzero_alpha_texels": 12834,
+      "common_boot_triangle_lengths": [
+        47.64790131789645,
+        102.78133342197891,
+        89.92335625409008
+      ],
+      "max_template_projection_error": 0.0
+    },
+    {
+      "name": "original915_stance",
+      "sha256": "65ff1207aaaee3c32b1ebce27c4ab5ecbc445322b509a95c6ec19601826ac577",
+      "nonzero_alpha_texels": 10212,
+      "common_boot_triangle_lengths": [
+        47.647901317896455,
+        102.7813334219789,
+        89.92335625409011
+      ],
+      "max_template_projection_error": 0.0
+    },
+    {
+      "name": "folded_recovery",
+      "sha256": "4b501909b263f1a0e32f47284c393ff04a4b64941f3419be17e062b4e48a9090",
+      "nonzero_alpha_texels": 7661,
+      "common_boot_triangle_lengths": [
+        47.647901317896405,
+        102.78133342197887,
+        89.92335625409007
+      ],
+      "max_template_projection_error": 0.0
+    }
+  ],
+  "frames": [
+    {
+      "phase": 0,
+      "actual_source_sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+      "legs": {
+        "L": {
+          "bones": [
+            249.99999999999994,
+            250.0
+          ],
+          "actual_projection_error": 1.1368683772161603e-13
+        },
+        "R": {
+          "bones": [
+            249.99999999999994,
+            249.99999999999991
+          ],
+          "actual_projection_error": 1.1368683772161603e-13
+        }
+      },
+      "feet": {
+        "L": {
+          "template": "canonical_stance",
+          "all_nonzero_source_texel_quad_minZ": -3.509853907245863,
+          "declared_eight_native_hidden_thickness_lower_bound": -11.509853907245862,
+          "critical_HF_Z": [
+            0.0,
+            14.0
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0,
+              -4.718447854656915e-16
+            ],
+            [
+              -3.8865731514635577e-16,
+              1.0000000000000002
+            ],
+            [
+              5.506735230425244e-13,
+              1.1368683772161603e-13
+            ]
+          ]
+        },
+        "R": {
+          "template": "folded_recovery",
+          "all_nonzero_source_texel_quad_minZ": 381.7306053398685,
+          "declared_eight_native_hidden_thickness_lower_bound": 373.7306053398685,
+          "critical_HF_Z": [
+            412.5975655290013,
+            413.11929445852786
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0,
+              1.3322676295501878e-15
+            ],
+            [
+              6.959184214514078e-17,
+              1.0000000000000009
+            ],
+            [
+              0.0,
+              -2.1032064978498966e-12
+            ]
+          ]
+        }
+      },
+      "staff_length_native": 1096.332522549614,
+      "staff_tip_five_native_guarded_clearance": 85.0
+    },
+    {
+      "phase": 1,
+      "actual_source_sha256": "cd86f447f8126f018c7fc7a68d6dc803d9d9e15738dfbf932248760bfc39ba5d",
+      "legs": {
+        "L": {
+          "bones": [
+            250.0,
+            250.00000000000009
+          ],
+          "actual_projection_error": 1.1368683772161603e-13
+        },
+        "R": {
+          "bones": [
+            249.99999999999997,
+            249.99999999999991
+          ],
+          "actual_projection_error": 1.1368683772161603e-13
+        }
+      },
+      "feet": {
+        "L": {
+          "template": "canonical_stance",
+          "all_nonzero_source_texel_quad_minZ": -14.836984084077608,
+          "declared_eight_native_hidden_thickness_lower_bound": -22.836984084077606,
+          "critical_HF_Z": [
+            -2.842170943040401e-14,
+            -2.842170943040401e-14
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              0.8906058975877763,
+              -0.29114320635289936
+            ],
+            [
+              0.27945382725726364,
+              1.0266948598243597
+            ],
+            [
+              -129.80515100306562,
+              263.3620915086266
+            ]
+          ]
+        },
+        "R": {
+          "template": "folded_recovery",
+          "all_nonzero_source_texel_quad_minZ": 342.70379611494246,
+          "declared_eight_native_hidden_thickness_lower_bound": 334.70379611494246,
+          "critical_HF_Z": [
+            373.5707563040753,
+            374.09248523360185
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0,
+              1.3322676295501878e-15
+            ],
+            [
+              6.959184214514078e-17,
+              1.0000000000000009
+            ],
+            [
+              -80.99999999999997,
+              156.99999999999795
+            ]
+          ]
+        }
+      },
+      "staff_length_native": 1096.332522549614,
+      "staff_tip_five_native_guarded_clearance": 71.15382097240774
+    },
+    {
+      "phase": 2,
+      "actual_source_sha256": "768ccddc4b44d3baa455da7cb31501dfbab5cc76ed82dc4c5d9d4ebb56d3ae6f",
+      "legs": {
+        "L": {
+          "bones": [
+            250.0,
+            249.99999999999994
+          ],
+          "actual_projection_error": 1.1368683772161603e-13
+        },
+        "R": {
+          "bones": [
+            250.00000000000003,
+            249.99999999999997
+          ],
+          "actual_projection_error": 0.0
+        }
+      },
+      "feet": {
+        "L": {
+          "template": "original915_stance",
+          "all_nonzero_source_texel_quad_minZ": 55.590819151599206,
+          "declared_eight_native_hidden_thickness_lower_bound": 47.590819151599206,
+          "critical_HF_Z": [
+            62.07114057372952,
+            76.07114057372952
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0000000000000009,
+              -2.4147350785597155e-15
+            ],
+            [
+              -6.802078489427068e-16,
+              1.0000000000000009
+            ],
+            [
+              46.99999999999995,
+              12.000000000000668
+            ]
+          ]
+        },
+        "R": {
+          "template": "folded_recovery",
+          "all_nonzero_source_texel_quad_minZ": 135.49172803182907,
+          "declared_eight_native_hidden_thickness_lower_bound": 127.49172803182907,
+          "critical_HF_Z": [
+            166.35868822096194,
+            166.88041715048848
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0,
+              1.3322676295501878e-15
+            ],
+            [
+              6.959184214514078e-17,
+              1.0000000000000009
+            ],
+            [
+              -165.0,
+              23.99999999999801
+            ]
+          ]
+        }
+      },
+      "staff_length_native": 1096.332522549614,
+      "staff_tip_five_native_guarded_clearance": 123.0
+    },
+    {
+      "phase": 3,
+      "actual_source_sha256": "97595bd604a6efbfd6e60305c5637d5d0ba7e0f3a4ae98ca8ba1e5ff64b5a5aa",
+      "legs": {
+        "L": {
+          "bones": [
+            249.99999999999994,
+            249.99999999999991
+          ],
+          "actual_projection_error": 1.1368683772161603e-13
+        },
+        "R": {
+          "bones": [
+            249.99999999999994,
+            250.00000000000006
+          ],
+          "actual_projection_error": 0.0
+        }
+      },
+      "feet": {
+        "L": {
+          "template": "folded_recovery",
+          "all_nonzero_source_texel_quad_minZ": 381.7306053398685,
+          "declared_eight_native_hidden_thickness_lower_bound": 373.7306053398685,
+          "critical_HF_Z": [
+            412.5975655290013,
+            413.11929445852786
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0,
+              1.3322676295501878e-15
+            ],
+            [
+              6.959184214514078e-17,
+              1.0000000000000009
+            ],
+            [
+              -95.0,
+              -13.000000000002103
+            ]
+          ]
+        },
+        "R": {
+          "template": "original915_stance",
+          "all_nonzero_source_texel_quad_minZ": -6.4803214221303165,
+          "declared_eight_native_hidden_thickness_lower_bound": -14.480321422130316,
+          "critical_HF_Z": [
+            0.0,
+            14.0
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0000000000000009,
+              -2.4147350785597155e-15
+            ],
+            [
+              -6.802078489427068e-16,
+              1.0000000000000009
+            ],
+            [
+              -90.0,
+              20.000000000000682
+            ]
+          ]
+        }
+      },
+      "staff_length_native": 1096.332522549614,
+      "staff_tip_five_native_guarded_clearance": 85.0
+    },
+    {
+      "phase": 4,
+      "actual_source_sha256": "6f72df61022942796edd52899c5810fb13bbf692296d4c0a2a455131bfa3975d",
+      "legs": {
+        "L": {
+          "bones": [
+            249.99999999999997,
+            249.99999999999991
+          ],
+          "actual_projection_error": 1.1368683772161603e-13
+        },
+        "R": {
+          "bones": [
+            249.99999999999997,
+            249.99999999999991
+          ],
+          "actual_projection_error": 1.1368683772161603e-13
+        }
+      },
+      "feet": {
+        "L": {
+          "template": "folded_recovery",
+          "all_nonzero_source_texel_quad_minZ": 342.70379611494246,
+          "declared_eight_native_hidden_thickness_lower_bound": 334.70379611494246,
+          "critical_HF_Z": [
+            373.5707563040753,
+            374.09248523360185
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0,
+              1.3322676295501878e-15
+            ],
+            [
+              6.959184214514078e-17,
+              1.0000000000000009
+            ],
+            [
+              -175.99999999999997,
+              143.99999999999795
+            ]
+          ]
+        },
+        "R": {
+          "template": "original915_stance",
+          "all_nonzero_source_texel_quad_minZ": -13.198234058933176,
+          "declared_eight_native_hidden_thickness_lower_bound": -21.198234058933174,
+          "critical_HF_Z": [
+            0.0,
+            -2.842170943040401e-14
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              0.9439571094432254,
+              -0.2677963308105646
+            ],
+            [
+              0.2740551181244699,
+              0.9838940848043289
+            ],
+            [
+              -232.62740297354551,
+              370.8461951295336
+            ]
+          ]
+        }
+      },
+      "staff_length_native": 1096.332522549614,
+      "staff_tip_five_native_guarded_clearance": 71.15382097240774
+    },
+    {
+      "phase": 5,
+      "actual_source_sha256": "acdf6200986dde80f8a320850a3f98dd9206fc78a951385bd8560be664b68f97",
+      "legs": {
+        "L": {
+          "bones": [
+            250.00000000000003,
+            249.99999999999997
+          ],
+          "actual_projection_error": 0.0
+        },
+        "R": {
+          "bones": [
+            250.0,
+            249.99999999999994
+          ],
+          "actual_projection_error": 1.1368683772161603e-13
+        }
+      },
+      "feet": {
+        "L": {
+          "template": "folded_recovery",
+          "all_nonzero_source_texel_quad_minZ": 135.49172803182907,
+          "declared_eight_native_hidden_thickness_lower_bound": 127.49172803182907,
+          "critical_HF_Z": [
+            166.35868822096194,
+            166.88041715048848
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0,
+              1.3322676295501878e-15
+            ],
+            [
+              6.959184214514078e-17,
+              1.0000000000000009
+            ],
+            [
+              -260.0,
+              10.99999999999801
+            ]
+          ]
+        },
+        "R": {
+          "template": "original915_stance",
+          "all_nonzero_source_texel_quad_minZ": 55.590819151599206,
+          "declared_eight_native_hidden_thickness_lower_bound": 47.590819151599206,
+          "critical_HF_Z": [
+            62.07114057372952,
+            76.07114057372952
+          ],
+          "causal_source_to_unpadded_raster_affine": [
+            [
+              1.0000000000000009,
+              -2.4147350785597155e-15
+            ],
+            [
+              -6.802078489427068e-16,
+              1.0000000000000009
+            ],
+            [
+              141.99999999999994,
+              25.000000000000668
+            ]
+          ]
+        }
+      },
+      "staff_length_native": 1096.332522549614,
+      "staff_tip_five_native_guarded_clearance": 123.0
+    }
+  ],
+  "plant_clock_pairs": [
+    {
+      "phases": [
+        0,
+        1
+      ],
+      "support_side": "L",
+      "controller_compensated_world_heel_error": 7.944109290391274e-15,
+      "heel_forefoot_Z_before_after": [
+        [
+          0.0,
+          14.0
+        ],
+        [
+          -2.842170943040401e-14,
+          -2.842170943040401e-14
+        ]
+      ]
+    },
+    {
+      "phases": [
+        3,
+        4
+      ],
+      "support_side": "R",
+      "controller_compensated_world_heel_error": 5.0242958677880805e-15,
+      "heel_forefoot_Z_before_after": [
+        [
+          0.0,
+          14.0
+        ],
+        [
+          0.0,
+          -2.842170943040401e-14
+        ]
+      ]
+    }
+  ],
+  "maximum_bone_error": 8.526512829121202e-14,
+  "maximum_actual_control_projection_error": 1.1368683772161603e-13,
+  "maximum_rigid_rotation_error": 1.653171169325285e-17,
+  "staff_length_change": 0.0,
+  "actual_staff_end_pixel_checks": [
+    {
+      "phase": 0,
+      "checks": [
+        {
+          "native_source0_region": [
+            870,
+            0,
+            940,
+            100
+          ],
+          "source0_opaque_pixels": 1594,
+          "changed_pixels": 0
+        },
+        {
+          "native_source0_region": [
+            915,
+            1075,
+            940,
+            1118
+          ],
+          "source0_opaque_pixels": 86,
+          "changed_pixels": 0
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "checks": [
+        {
+          "native_source0_region": [
+            870,
+            0,
+            940,
+            100
+          ],
+          "source0_opaque_pixels": 1594,
+          "changed_pixels": 0
+        },
+        {
+          "native_source0_region": [
+            915,
+            1075,
+            940,
+            1118
+          ],
+          "source0_opaque_pixels": 86,
+          "changed_pixels": 0
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "checks": [
+        {
+          "native_source0_region": [
+            870,
+            0,
+            940,
+            100
+          ],
+          "source0_opaque_pixels": 1594,
+          "changed_pixels": 0
+        },
+        {
+          "native_source0_region": [
+            915,
+            1075,
+            940,
+            1118
+          ],
+          "source0_opaque_pixels": 86,
+          "changed_pixels": 0
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "checks": [
+        {
+          "native_source0_region": [
+            870,
+            0,
+            940,
+            100
+          ],
+          "source0_opaque_pixels": 1594,
+          "changed_pixels": 0
+        },
+        {
+          "native_source0_region": [
+            915,
+            1075,
+            940,
+            1118
+          ],
+          "source0_opaque_pixels": 86,
+          "changed_pixels": 0
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "checks": [
+        {
+          "native_source0_region": [
+            870,
+            0,
+            940,
+            100
+          ],
+          "source0_opaque_pixels": 1594,
+          "changed_pixels": 0
+        },
+        {
+          "native_source0_region": [
+            915,
+            1075,
+            940,
+            1118
+          ],
+          "source0_opaque_pixels": 86,
+          "changed_pixels": 0
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "checks": [
+        {
+          "native_source0_region": [
+            870,
+            0,
+            940,
+            100
+          ],
+          "source0_opaque_pixels": 1594,
+          "changed_pixels": 0
+        },
+        {
+          "native_source0_region": [
+            915,
+            1075,
+            940,
+            1118
+          ],
+          "source0_opaque_pixels": 86,
+          "changed_pixels": 0
+        }
+      ]
+    }
+  ],
+  "claim_limits": [
+    "This independently verifies one explicitly authored compatible 2.5D rig; hidden depths, shoe-card surfaces and eight-native thickness are declared construction choices, not uniquely recovered physical anatomy.",
+    "Every nonzero actual shoe texture texel and its pixel quad was included in the source-card AIR bound; no lowest-alpha-Y floor rule or selected-marker-only AIR substitution.",
+    "Grounded support is observed heel clock/real footroll plus critical H/F controls in this model. Full hidden 3D sole contact/penetration is not uniquely observed; support-card AA extrema can lie below critical H/F plane.",
+    "Skeletal/control/AIR construction does not alone approve artwork, full actor actions or game connection; separate actual source/cycle and exact request/atlas review are required.",
+    "Frozen roster clock field actor_run_speed_world=210 names the retained reference speed. Actual game RUN262.5 uses effective15.625Hz/dt.064; both produce16.8world perphase."
+  ],
+  "actual_source_pixels_changed": false,
+  "physical_declared_model_compatible": true,
+  "uniquely_recovered_physical_anatomy": false,
+  "whole_actor_approved": false,
+  "actor_approvals_added": 0
+}

@@ -1,0 +1,29 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "opposite-contact-v01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "requested_poses": 1,
+  "requested_game_phase": 3,
+  "newly_authored_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-contact0-padded.png",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-contact0-padded.png": "ca12906450ef3eb855196608903f99d031cf7472a4953d2b06ed7d20432bb346",
+    "/workspace/scratch/girtas-identity-repair/girtas-canonical-identity-v01.png": "94cb8cd7b3134554ed296a47f6f2ca12e0e0ee8082745662e32b7fd2a288f802"
+  },
+  "transparent_background": true,
+  "corrective_reason": "v03/v04 all retain nearRIGHT leading leg; edit one opposite farLEFT leading/nearRIGHT trailing contact, not whole-six regeneration.",
+  "source_contact_proof": "/workspace/scratch/girtas-E-walk-opposite-contact-key-v01/source-crop-proof.json",
+  "preserved_upper_body_source": "/workspace/scratch/girtas-E-walk-repair/girtas-E-walk-v03.png",
+  "preserved_upper_body_source_sha256": "baa853544e2f886fb05f5a9134eb1c131479956ceb511c276f3afad4626db388",
+  "user_authorization": "Production image tools allowed, no images or binary in main chat. One localized missingpose edit only.",
+  "prompt": "Edit ONLY the WALK CONTACT PHASE of this SAME RIGHT-FACING GIRTAS character. Produce ONE single complete full-body character on transparent canvas, NOT a sprite sheet. Image1 is exact current EAST contact0, where the near-camera anatomical RIGHT leg is ahead toward screen-right and the far LEFT leg is behind. We need the OPPOSITE contact3 with the FAR anatomical LEFT leg leading toward screen-right and the NEAR anatomical RIGHT leg trailing toward screen-left. Image2 is faithful original identity authority only.\n\nKEEP the whole upper body from image1: visible pale masculine face, long pale hair, same sharp gold horn crown, black-gold chest/shoulder/arm armor, narrow rigid gold radial spines, long DARK black skirt with gold edge panels, long thin SINUOUS yellow-orange weapon in the exact SAME NEAR/ANATOMICAL RIGHT HAND. Preserve exact TWO arms, arm pose, weapon shape and original E heading. The unarmed far LEFT hand remains unarmed. The head/nose, chest, hips and boots all face true screen-RIGHT/EAST. Same elevated orthographic camera, same physical head/torso/pelvis/armor proportions, same full equipment. Absolutely NO mirroring, facing reversal, camera turn, equipment-hand swap, broad short sword, red mask, thick flame-feathers, pants redesign, extra limbs or extra weapons.\n\nLOCAL LEG EDIT below pelvis, anatomically reconstruct opposite stride. Near anatomical RIGHT thigh now travels BACKWARD from its near hip, down-left; its knee is BEHIND the pelvis toward screen-left, lower shin slopes to a trailing boot on screen-left, heel raised with toe/push-off contact. This near RIGHT thigh/knee/shin is the front/near occluding leg at their overlap. Far anatomical LEFT thigh now travels FORWARD from its far hip to a forward knee on screen-right; its shin reaches the LEADING boot on screen-right with heel contact and slightly lifted toe. Far LEFT upper thigh partly passes BEHIND the near RIGHT thigh and dark skirt, then forward LEFT knee/shin and heel emerge ahead on the RIGHT. This must visibly reverse the original near/far leg identity, not merely shift the same front boot. Precisely two hips→two knees→two ankles→two boots, no ghost feet or detached limb. Keep normal calf/thigh lengths, use same black-gold knee/shin armor design but correct overlap/shading for far leading versus near trailing. The dark long skirt panels respond locally to these swapped legs, but retain same long skirt, gold trim and overall body; do not hide both knees under invented cloth. Match a normal grounded walking contact, not a jump or high-knee passing pose. Feet spread naturally to either side of pelvis on a coherent same-level virtual ground plane; no giant stride or torso lean.\n\nAll changes restricted to legitimate gait articulation and necessary local skirt response. Keep existing head, chest, right weapon arm, far unarmed arm, radial spikes and weapon pose as close as possible to image1. This is ONE newly drawn missing OPPOSITE contact key, not a six-frame animation. High-detail crisp RPG sprite.1024x1024 transparent PNG, entire single character centrally placed, crown-to-boot height roughly490pixels like the padded input, with wide transparent margins around full spikes/weapon/boots. No cropping or zoom fill. Exact dark opaque armor, solid equipment with thin edge antialiasing. Background/gaps alpha0. No floor, shadow, labels, arrows, text, halos, haze, bloom, smoke, particles, trails, motion blur, duplicate figure, grid or sheet.",
+  "requested_at": "2026-10-19T11:30:39.059436+00:00",
+  "imagegen_attempt_limit": 1
+}

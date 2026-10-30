@@ -8,18 +8,67 @@ const DOMINATION_GAMEPLAY=preload("res://scripts/maps/domination_png_gameplay.gd
 const PRECISE_ROUTE_GRAPH=preload("res://scripts/maps/native_png_route_graph.gd")
 var artwork_scale: float=1.0
 var precise_routes: AStar2D
+var route_graph_key: String=""
+var precise_route_required: bool=false
+var route_pending: bool=false
+var deferred_route_requests: int=0
+const ROUTE_FOOT_RADIUS: float=4.0
+
+func final_route_key() -> String:
+	# This fingerprint is made only after alpha solids and reachability have
+	# settled. It covers the actual grid, corrected shapes, scale, and the
+	# physical foot rules used by both edges and endpoint projection.
+	var snapshot: Dictionary=navigation_snapshot()
+	var material: String=JSON.stringify([
+		PRECISE_ROUTE_GRAPH.GRAPH_VERSION,geometry_signature(),str(data.get("map_id","")),
+		int(data.get("layout_revision",0)),str(data.get("collision_scope","")),
+		artwork_scale,ROUTE_FOOT_RADIUS,LANDING_BODY_OFFSETS,
+		png_manifest.get("sha256","") if png_manifest!=null else "",
+		png_manifest.get("source_sha256","") if png_manifest!=null else "",
+		png_manifest.get("alpha_guard_cell_size",0) if png_manifest!=null else 0,
+		png_manifest.get("alpha_solid_runs",[]) if png_manifest!=null else []
+	],"",true,true)
+	var context:=HashingContext.new()
+	context.start(HashingContext.HASH_SHA256)
+	context.update(material.to_utf8_buffer())
+	var solid_bytes: PackedByteArray=(snapshot.solid_runs as PackedInt32Array).to_byte_array()
+	if not solid_bytes.is_empty():context.update(solid_bytes)
+	if not reachable.is_empty():context.update(reachable)
+	return context.finish().hex_encode()
+
+func prepare_precise_routes_step(max_cells: int=256,max_usec: int=2000) -> bool:
+	if route_graph_key.is_empty():route_graph_key=final_route_key()
+	if precise_routes==null:
+		precise_routes=PRECISE_ROUTE_GRAPH.take_idle(route_graph_key,self)
+		if precise_routes==null:
+			precise_routes=PRECISE_ROUTE_GRAPH.new()
+			precise_routes.begin(self,route_graph_key)
+	var complete: bool=precise_routes.advance(max_cells,max_usec)
+	if complete:route_pending=false
+	return complete
+
+func park_precise_routes() -> void:
+	if precise_routes!=null and precise_routes.ready():precise_routes.park_idle()
+	precise_routes=null
+	precise_route_required=false
+	route_pending=false
+
+func route_graph_stats() -> Dictionary:
+	return {"key":route_graph_key,"ready":precise_routes!=null and precise_routes.ready(),
+		"points":precise_routes.get_point_count() if precise_routes!=null else 0,
+		"build_calls":int(precise_routes.build_calls) if precise_routes!=null else 0,
+		"build_usec":int(precise_routes.build_usec) if precise_routes!=null else 0,
+		"pending":route_pending,
+		"deferred_requests":deferred_route_requests}
 
 func path(from: Vector2, to: Vector2) -> PackedVector2Array:
-	# Immutable graph failures also avoid repeating the long direct-line probe.
-	# Other graph implementations retain the normal path below.
-	if precise_routes!=null and precise_routes.has_method("has_failed_route") and precise_routes.has_failed_route(from,to):
-		return PackedVector2Array()
+	route_pending=false
 	if walkable(from) and walkable(to):
 		var start: Vector2i=world_to_cell(from)
 		var finish: Vector2i=world_to_cell(to)
 		if reachable[start.y*width+start.x]!=0 and reachable[finish.y*width+finish.x]!=0 and line_clear(from,to):
 			return PackedVector2Array([to])
-	if precise_routes!=null:return precise_routes.route(from,to)
+	if precise_route_required and precise_routes!=null and precise_routes.ready():return precise_routes.route(from,to)
 	var route: PackedVector2Array=super.path(from,to)
 	if route.is_empty():return route
 	var previous: Vector2=from
@@ -30,8 +79,14 @@ func path(from: Vector2, to: Vector2) -> PackedVector2Array:
 	if valid:return route
 	# Cell centers alone cannot prove the intervening segment clears a wall
 	# or narrow floor corner. Build exact edge checks only when one is needed.
-	precise_routes=PRECISE_ROUTE_GRAPH.new()
-	precise_routes.configure(self)
+	precise_route_required=true
+	if precise_routes==null:prepare_precise_routes_step(1,1000)
+	if not precise_routes.ready():
+		# The caller must retry after bounded map-frame preparation. An empty
+		# path here is pending, never a proven unreachable destination.
+		route_pending=true
+		deferred_route_requests+=1
+		return PackedVector2Array()
 	return precise_routes.route(from,to)
 
 const FLOOR_BUCKET: int=512
@@ -78,8 +133,13 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 	landing_candidates.clear()
 	landing_candidates_ready = false
 	precise_routes=null
+	route_graph_key=""
+	precise_route_required=false
+	route_pending=false
+	deferred_route_requests=0
 	var spec: Dictionary = plan.maps[mid]
-	artwork_scale=PNG_SCALE.ADEN_SCALE if mid=="aden_world" else 1.0
+	var faith_map: bool=mid in ["faith_01","faith_02","faith_03","faith_04"]
+	artwork_scale=PNG_SCALE.map_scale(mid)
 	var spawn: Array = spec.spawn.duplicate(true)
 	var portals: Array = [{"id":"aden_return","name":"아덴 귀환","position":[spawn[0]-60,spawn[1]],"target_map":"aden_world","radius":18}]
 	if mid.begins_with("albino_"):
@@ -99,17 +159,20 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 		monster_spawns=gameplay.get("monster_spawn",[])
 		npcs=gameplay.get("npc_spawn",[])
 		portals=gameplay.get("portal",[])
-	var geometry: Dictionary=PNG_SCALE.geometry(spec,artwork_scale)
-	spawn=PNG_SCALE.geometry(spawn,artwork_scale,"spawn")
-	portals=PNG_SCALE.geometry(portals,artwork_scale)
-	monster_spawns=PNG_SCALE.geometry(monster_spawns,artwork_scale)
-	if mid=="aden_world":
-		for zone: Dictionary in monster_spawns:zone.layout_revision=PNG_SCALE.ADEN_REVISION
+	var geometry: Dictionary=PNG_SCALE.geometry(spec,artwork_scale,"",mid)
+	spawn=PNG_SCALE.geometry(spawn,artwork_scale,"spawn",mid)
+	portals=PNG_SCALE.geometry(portals,artwork_scale,"",mid)
+	monster_spawns=PNG_SCALE.geometry(monster_spawns,artwork_scale,"",mid)
+	if mid=="aden_world" or faith_map:
+		for zone: Dictionary in monster_spawns:
+			zone.layout_revision=PNG_SCALE.ADEN_REVISION if mid=="aden_world" else PNG_SCALE.FAITH_REVISION
 	for portal: Dictionary in portals:
-		if str(portal.get("target_map",""))==mid and portal.has("target_layout_revision") and mid=="aden_world":portal.target_layout_revision=PNG_SCALE.ADEN_REVISION
+		if str(portal.get("target_map",""))==mid and portal.has("target_layout_revision"):
+			if mid=="aden_world":portal.target_layout_revision=PNG_SCALE.ADEN_REVISION
+			elif faith_map:portal.target_layout_revision=PNG_SCALE.FAITH_REVISION
 	var value: Dictionary = {
 		"map_id":mid,"map_name":spec.name,"short_name":spec.name,
-		"layout_revision":PNG_SCALE.ADEN_REVISION if mid=="aden_world" else int(spec.get("layout_revision",plan.revision)),"bounds":PNG_SCALE.geometry(manifest.bounds,artwork_scale,"bounds"),"native_png":true,
+		"layout_revision":PNG_SCALE.ADEN_REVISION if mid=="aden_world" else (PNG_SCALE.FAITH_REVISION if faith_map else int(spec.get("layout_revision",plan.revision))),"bounds":PNG_SCALE.geometry(manifest.bounds,artwork_scale,"bounds"),"native_png":true,
 		"navigation":{"cell_size":48 if mid=="aden_world" else 16,"clearance":4,"use_baked_cache":false},
 		"streaming":{"chunk_size":1024,"margin":360,"monster_sleep_distance":2100},
 		"camera":{"zoom":1.0,"offset":[0,0],"follow_speed":7.0},
@@ -145,40 +208,70 @@ func configure_png(mid: String, plan: Dictionary, manifest: Dictionary, local_ro
 			if not point_clear(cell_to_world(cell),12.0): continue
 			candidates.append(cell)
 		spawn_cells[zone_id]=candidates
+	route_graph_key=final_route_key()
+
+## Resolve a tapped position to the nearest connected, full-foot-safe floor.
+## This is UI-only: AI navigation, collision data and portal landings stay exact.
+## A bounded cell search cannot silently open unreviewed terrain.
+func nearest_safe_click_destination(raw: Vector2, max_radius_cells: int = 4) -> Vector2:
+	if not raw.is_finite() or not bounds.has_point(raw): return Vector2.INF
+	var origin: Vector2i=world_to_cell(raw)
+	if not astar.is_in_boundsv(origin): return Vector2.INF
+	var origin_key: int=origin.y*width+origin.x
+	if reachable[origin_key]!=0 and line_clear(raw,raw): return raw
+	for radius: int in range(maxi(0,max_radius_cells)+1):
+		var nearest: Vector2=Vector2.INF
+		var best_distance: float=INF
+		for y: int in range(maxi(0,origin.y-radius),mini(height-1,origin.y+radius)+1):
+			for x: int in range(maxi(0,origin.x-radius),mini(width-1,origin.x+radius)+1):
+				if maxi(absi(x-origin.x),absi(y-origin.y))!=radius: continue
+				var cell:=Vector2i(x,y)
+				if astar.is_point_solid(cell) or reachable[y*width+x]==0: continue
+				var point: Vector2=cell_to_world(cell)
+				if not line_clear(point,point): continue
+				var distance: float=raw.distance_squared_to(point)
+				if distance<best_distance:
+					best_distance=distance
+					nearest=point
+		if nearest.is_finite(): return nearest
+	return Vector2.INF
 
 func _portal_endpoint(raw: Variant) -> Vector2:
 	if not raw is Array or raw.size()!=2: return Vector2.INF
 	if not (raw[0] is float or raw[0] is int) or not (raw[1] is float or raw[1] is int): return Vector2.INF
 	var point := Vector2(float(raw[0]),float(raw[1]))
-	if not point.is_finite() or not walkable(point) or not point_clear(point,4.0): return Vector2.INF
+	if not point.is_finite() or not walkable(point) or not point_clear(point,ROUTE_FOOT_RADIUS): return Vector2.INF
 	for offset: Vector2 in LANDING_BODY_OFFSETS:
 		if not walkable(point+offset): return Vector2.INF
 	return point
 
 func line_clear(from: Vector2,to: Vector2) -> bool:
-	return _line_clear_points(from,to,null)
-
-func cached_line_clear(from: Vector2,to: Vector2, samples: RefCounted) -> bool:
-	# Used only by the immutable route graph; exact sample coordinates, never
-	# rounded cells. The graph owns and releases this bounded memo on configure.
-	return _line_clear_points(from,to,samples)
-
-func _line_clear_points(from: Vector2,to: Vector2,samples: Variant) -> bool:
-	# Preserve the original 2px interpolation and physical-foot checks exactly.
-	# Opposite directions still evaluate their own floating-point sample points.
+	# The raster physics occupies entire cells. Center-only shortcut tests can
+	# cut a solid cell corner with the real foot, stranding a click path before
+	# its next waypoint. Use the same foot for shortcutting and actor motion.
+	# Ordinary per-frame movement spans only one or two raster cells. Prove the
+	# whole swept foot's bounding box clear once, rather than checking the same
+	# cells nine times per two-pixel sample. When that conservative test fails,
+	# retain the exact original samples (including narrow/corner paths).
+	var raster_clear: bool = _foot_raster_box_clear(from, to)
 	var steps: int=maxi(1,ceili(from.distance_to(to)/2.0))
 	for i: int in range(steps+1):
 		var point: Vector2=from.lerp(to,float(i)/steps)
-		var cached: int=-1 if samples==null else samples.lookup(point)
-		if cached>=0:
-			if cached==0:return false
-			continue
-		var clear: bool=walkable(point) and point_clear(point,4.0)
-		if clear:
+		if not point_clear(point,ROUTE_FOOT_RADIUS):return false
+		if not raster_clear:
+			if not walkable(point): return false
 			for offset: Vector2 in LANDING_BODY_OFFSETS:
-				if not walkable(point+offset):clear=false;break
-		if samples!=null:samples.store(point,clear)
-		if not clear:return false
+				if not walkable(point+offset):return false
+	return true
+
+func _foot_raster_box_clear(from: Vector2, to: Vector2) -> bool:
+	var low: Vector2i = world_to_cell(from.min(to) - Vector2.ONE * ROUTE_FOOT_RADIUS)
+	var high: Vector2i = world_to_cell(from.max(to) + Vector2.ONE * ROUTE_FOOT_RADIUS)
+	var span: Vector2i = high - low + Vector2i.ONE
+	if span.x * span.y > 16 or not astar.is_in_boundsv(low) or not astar.is_in_boundsv(high): return false
+	for y: int in range(low.y, high.y + 1):
+		for x: int in range(low.x, high.x + 1):
+			if astar.is_point_solid(Vector2i(x, y)): return false
 	return true
 
 func _flood_portal_component(start: Vector2i) -> void:

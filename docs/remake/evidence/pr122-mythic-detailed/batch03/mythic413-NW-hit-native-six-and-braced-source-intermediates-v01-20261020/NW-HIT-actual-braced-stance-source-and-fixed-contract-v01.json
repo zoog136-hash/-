@@ -1,0 +1,214 @@
+{
+  "status": "ACTUAL_NEW_BRACED_HIT_INPUT_PENDING_INDEPENDENT_SOURCE_QC",
+  "source0": {
+    "path": "/workspace/scratch/mythic413-NW-walk-contact0-author-20261020-v01/left-backswing-native-edit-v02/thunder_female-NW-walk-contact0-LEFTbackswing-bounded-v02.png",
+    "sha256": "0874d56a0adf0d76b5e91c565ec41d601d8bbb76457c64e703a89dba54cf0645",
+    "bytes": 519225
+  },
+  "LEFT_flat_shoe_source": {
+    "path": "/workspace/scratch/mythic413-NW-walk-LOAD1-author-20261020-v01/thunder_female-NW-walk-LOAD1-rigged-retouched-v04.png",
+    "sha256": "396c0803145a31990f7caeff6a889aac8d41966c2efe27e3362734268670b886",
+    "bytes": 517801
+  },
+  "RIGHT_flat_shoe_source": {
+    "path": "/workspace/scratch/mythic413-NW-walk-Rload4-author-20261020-v03/thunder_female-NW-walk-Rload4-finished-native-body-v04.png",
+    "sha256": "227b81a7e4add82f4df3ec12d54d7c14938aeafbf80ae1cd15a75a8aa0aeab2a",
+    "bytes": 519087
+  },
+  "physical_canvas": 2048,
+  "body_unit": 2,
+  "common_rig_root": [
+    641,
+    1058.3
+  ],
+  "storage_translation": [
+    0,
+    0
+  ],
+  "source_size": [
+    1254,
+    1254
+  ],
+  "fixed_shoe_integer_translations": {
+    "LEFT": [
+      -111,
+      -100
+    ],
+    "RIGHT": [
+      -1,
+      101
+    ]
+  },
+  "fixed_heel_controls": {
+    "LEFT": [
+      514.3543188022422,
+      944.2188869220179
+    ],
+    "RIGHT": [
+      704.4843188022421,
+      1115.538886922018
+    ]
+  },
+  "sole_yaw": "Preserve each actual approved flatshoe native yaw; no forced perimeter slope",
+  "leg_operations": [
+    {
+      "name": "RIGHT-thigh",
+      "source_control": [
+        [
+          670,
+          716
+        ],
+        [
+          704,
+          851
+        ]
+      ],
+      "target_control": [
+        [
+          670,
+          716
+        ],
+        [
+          700,
+          861
+        ]
+      ],
+      "matrix": [
+        [
+          1.0022358011940216,
+          -0.030192720300716524
+        ],
+        [
+          0.05790243843926782,
+          1.0594912377264067
+        ]
+      ],
+      "offset": [
+        20.120000935318558,
+        -81.39035996641667
+      ],
+      "anatomical_joints": "author projected control; hidden anatomy uncertain"
+    },
+    {
+      "name": "RIGHT-calf",
+      "source_control": [
+        [
+          704,
+          851
+        ],
+        [
+          790,
+          1046
+        ]
+      ],
+      "target_control": [
+        [
+          700,
+          861
+        ],
+        [
+          704,
+          1070
+        ]
+      ],
+      "matrix": [
+        [
+          0.9223748214230534,
+          -0.3862781263711928
+        ],
+        [
+          0.3782118838381224,
+          0.9049937332816483
+        ]
+      ],
+      "offset": [
+        379.3708112600555,
+        -175.41083324472083
+      ],
+      "anatomical_joints": "author projected control; hidden anatomy uncertain"
+    },
+    {
+      "name": "LEFT-thigh",
+      "source_control": [
+        [
+          612,
+          706
+        ],
+        [
+          563,
+          808
+        ]
+      ],
+      "target_control": [
+        [
+          612,
+          706
+        ],
+        [
+          563,
+          808
+        ]
+      ],
+      "matrix": [
+        [
+          1.0,
+          1.6572321009320527e-17
+        ],
+        [
+          1.6572321009320527e-17,
+          1.0
+        ]
+      ],
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "anatomical_joints": "author projected control; hidden anatomy uncertain"
+    },
+    {
+      "name": "LEFT-calf",
+      "source_control": [
+        [
+          563,
+          808
+        ],
+        [
+          521,
+          890
+        ]
+      ],
+      "target_control": [
+        [
+          563,
+          808
+        ],
+        [
+          520,
+          872
+        ]
+      ],
+      "matrix": [
+        [
+          0.9515511095723685,
+          -0.037010407292201515
+        ],
+        [
+          0.17968553063177667,
+          0.8725218571528613
+        ]
+      ],
+      "offset": [
+        57.18113440285532,
+        1.839385674797768
+      ],
+      "anatomical_joints": "author projected control; hidden anatomy uncertain"
+    }
+  ],
+  "output": {
+    "path": "/workspace/scratch/mythic413-NW-hit-author-20261020-v01/actual-braced-stance-v01/thunder_female-NW-HIT-braced-fixed-stance-candidate-v01.png",
+    "sha256": "306810bc844e38c0d547fa448c24410345b96e1ee7754acbb2a953084fce5e9e",
+    "bytes": 502746
+  },
+  "approval_added": 0,
+  "new_service_calls": 0
+}

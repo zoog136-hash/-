@@ -1,0 +1,60 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "E",
+  "role": "idle",
+  "version": "v02",
+  "source_batch": "batch03",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-N-idle-v01.png": "e0394d22c998c747fbfe4c7dcb1a6dd22f58c56a39402812b1baf06ff4202488",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-S-idle-v01iso01.png": "cce2f00b4afe0f82ccb9de1f1d40ef0c58011d2b304b413cd536e143bc3baf2e"
+  },
+  "transparent_background": true,
+  "canonical_forward": [
+    1,
+    0
+  ],
+  "phase_contract": [
+    "neutral",
+    "inhale",
+    "inhale_peak",
+    "exhale",
+    "recovery",
+    "neutral_return"
+  ],
+  "corrective_reason": "Existing selected E idle reads front-right/SE and lacks clear projected cardinal distinction. Construct true screen-RIGHT lateral heading from original portrait plus N rear and S front references; never use old E/SE as direction guide.",
+  "user_authorization": "Production image tools authorized; private bounded preview only, no images or image links in main chat. One exact imagegen attempt.",
+  "requested_at": "2026-10-19T10:26:44.539158+00:00",
+  "prompt": "Author a NEW exact-EAST idle animation for the SAME unique boss 해방된 할파스 / Halpas. Six newly drawn full-body game sprites, not a modified old view. First reference is the original character portrait. Second reference shows the character from the BACK, third from the FRONT; use these as a model-design turnaround ONLY, and construct the missing true RIGHT-facing LATERAL view between them. There is deliberately NO old east or diagonal reference. Preserve the original identity: closed black/gold armored helmet and actual horns/face construction, gold-trimmed black armor plates, existing two crystalline purple wings and their attachments, burgundy cape, established purple crystal blade and the same anatomical weapon hand. No extra armor, limbs, crystals, wings or weapons.\n\nCOMPASS CONTRACT: TRUE EAST = screen STRAIGHT RIGHT, forward vector(1,0). Not southeast/down-right and not facing the camera. ALL SIX heads and bodies remain exactly right-facing. The helmet's nose/visor projects RIGHT, and the sternum, pelvis, knees and visible boot toes face RIGHT with the same lateral heading. Show the anatomical side of the body, with front breastplate substantially foreshortened and far shoulder/hip naturally occluded. A little elevated-camera visibility is allowed, but DO NOT turn the face, chest or pelvis towards screen-bottom/viewer. No broad frontal chest, no front three-quarter face, no down-right model. The nose/eye-line, torso forward axis and foot direction must agree on horizontal RIGHT. One coherent side-view model across all six phases, not a sequence of rotations.\n\nCamera remains the SAME elevated orthographic isometric/top-down RPG camera as the references, merely viewing this model's exact east heading. Do not use a flat orthographic character-design side elevation with a different low camera; keep the elevated view showing top planes consistently. Cape and existing wings attach at the back of shoulders and trail to screen-left. The near and far wing overlap/foreshorten naturally in the lateral view, not a front-facing symmetrical V. Preserve the actual anatomical weapon hand; the near weapon arm, blade and armor render consistently as the same established model turned to the right. The blade may rest at a relaxed angle, but neither blade angle nor cape direction substitutes for correct head/torso/pelvis facing.\n\nSix distinct subtle IDLE poses, time order left-to-right then top-to-bottom:0 neutral hovering guard;1 slow inhale with tiny shoulder/wing lift and arm-elbow response;2 inhale peak with small existing wing-joint opening and cape settling;3 exhale with wing flex/cape delayed fold and weight shift through hips/knees;4 opposite small recovery in knees/shoulders and wing feathers, same right-facing head;5 smooth return towards neutral. Use genuinely articulated body/wing/cloth changes, never translations, duplicate crops, rigid rotations, or walking/running strides. Same body proportions, identity, equipment, viewpoint and scale in every frame. The loop must flow0→1→2→3→4→5→0. Every pose keeps exact horizontal RIGHT facing.\n\nTechnical atlas: transparent1024x1536 PNG, EXACTLY TWO COLUMNS and THREE ROWS, six full figures only in six512x512 cells. Keep physical helmet-crown-to-boot body height about300-330pixels, consistent with the native model, never oversized. Entire silhouette INCLUDING wings, horns, cape, boots and blade must fit inside the central360x360 area of its cell, with at least76pixels completely empty transparent gutter on all four cell edges. Keep each whole figure complete, separated, uncropped and at uniform pixel scale. Leave enough transparent room even around fully extended wing/blade tips; no body bounding rectangle overlaps a neighboring cell. Do not fill the atlas with giant figures.\n\nDetailed crisp production RPG sprite cutouts with opaque black materials, gold trim and internal armor shading. All background and openings transparent alpha0, only1-2px edge antialiasing. Purple energy stays INSIDE the existing solid wing/blade forms. NO floor, shadows, drop shadow, diffuse glow, halo, aura, bloom, haze, smoke, fog, light trails, motion blur, backdrop, panel, text, captions, grid or numbers. Prioritize a convincing true EAST/right-facing native model that is visibly different from any front-right/southeast three-quarter sprite.",
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png",
+  "private_source_review": {
+    "visual_findings": [
+      "All six helmet nose/visor, foreshortened sternum, pelvis and side-view legs retain true screen-RIGHT heading; this is clearly different from the old front-right/SE model.",
+      "Near/far shoulders and hips occlude as a coherent lateral elevated-camera view; helmet and shoulder upper planes remain visible. No concrete camera-elevation mismatch identified at game-view detail.",
+      "Black/gold helmet and armor, burgundy cape, crystalline wings, single established blade and anatomical weapon hand remain coherent. Far wing is naturally occluded by lateral projection.",
+      "Six articulated idle phases vary wing joints, feather spread, cape fold and shoulder/hip response while retaining exact heading; no translation-only or view-rotation sequence.",
+      "Complete, uncropped figures. Source physical pixel height is larger than N/S references, but private QC-only uniform0.80x display aligns shoulder, hip and boot landmarks closely; no isolated torso/limb elongation remains evident."
+    ],
+    "visual_limitations": [
+      "Source art/compass pass is NOT final game-size or actor approval.",
+      "Strict geometry, SpriteFrames, runtime/source scale compensation, actual Player/Main integration and final visual render review remain for root.",
+      "Original108x132 portrait limits exact tiny landmarks."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
+    "raw_bytes": 2482337,
+    "request_sha256": "db8d8d1bbdac65fc447efe196ffd3cc9569c5943fc4296ae8b54cf7d7a4bfb1c",
+    "review_sha256": "9fcb6ec666457bc89edd591286faa8ca3ce18aa623503e0d3f8e26f4b9ffd5fb"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v02.png",
+  "output_sha256": "ddbddd44e823d94b5df7f5d1ccde7350fc905540f5c95de442507ad1d5334007",
+  "output_bytes": 2482337,
+  "original_generated_file": "/workspace/scratch/halpas-E-idle-repair/halpas-E-idle-v02.png"
+}

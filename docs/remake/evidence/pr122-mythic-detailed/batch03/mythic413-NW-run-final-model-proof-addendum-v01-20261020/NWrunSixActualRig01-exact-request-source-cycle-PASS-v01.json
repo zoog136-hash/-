@@ -1,0 +1,150 @@
+{
+  "schema": "PR122-independent-exact-request-actual-source-cycle-review-v1",
+  "source_visual_status": "PASS",
+  "key": "transform:413",
+  "direction": "NW",
+  "role": "run",
+  "version": "NWrunSixActualRig01",
+  "request_path": "/workspace/scratch/mythic413-NW-run-actual-packed-r001-20261020/request-NWrunSixActualRig01.json",
+  "request_sha256": "3e5a0214cf0e14992e95267a82cef842faec1ad55c873419d7e6dc3d48575702",
+  "raw_path": "/workspace/scratch/mythic413-NW-run-actual-packed-r001-20261020/thunder_female-NW-run-six-actual-poses-r001.png",
+  "raw_sha256": "f037ddd26b7a05317c40b4090a840e8dc397d2b5de3e07986e74e67b91903065",
+  "raw_bytes": 4738172,
+  "visual_findings": [
+    "Reviewed all six exact authored NW RUN poses at one fixed body unit/root, including the phase5→0→1 seam and phase2→3→4 counterpart.",
+    "Opposite LEFT/RIGHT heel contact, compressed loaded stance and high-knee/trailing flight poses are distinct and coherent; this is actual new gait artwork, not a shared motion or color-only substitution.",
+    "Body bob [0,70,-38] repeats across the two steps and free LEFT arm follows0/15/30/30/15/0 counterphase; phase5→0 returns naturally with stable identity and registration.",
+    "Accepted actor413 hair/ribbon, blue/gold bodice/white pleats/split coat, full boots and original RIGHT gold/turquoise double-ended staff are retained. Both true staff-end opaque pixels are byte-exact to accepted SOURCE0 at each actual body translation.",
+    "All recent narrow ankle joins use real blackleather source material and are continuous; original opaque thigh/shaft/gold ornaments and complete shoes remain unchanged, with no translucent fades, detached shoe cuff or missing structural heel.",
+    "Independent exact control audit confirms all twelve250/250 leg chains and rigid congruent boot triangles; actual same-heel clock compensates16.8world perphase and both support steps include genuine heel-pinned17degree forefoot roll.",
+    "Independent authored shoe-card surface audit includes every nonzero actual shoe texel/pixel quad and an explicit eight-native thickness bound; phase2 and5 full rendered shoe surfaces remain above the declared ground by at least47.590819native.",
+    "Exact atlas comparison preserves every original pose RGBA pixel, source order/storage inverse and one C2560 body unit; one common root rounding [0,+0.05] affects all poses equally."
+  ],
+  "visual_limitations": [
+    "3D depths, authored2.5D shoe planes and eight-native hidden thickness are explicit compatible construction choices; they are not uniquely recovered hidden anatomy.",
+    "Ground support assessment covers actual heelclock/footroll and critical structural H/F patches in that model; a full hidden volumetric sole/floor mesh was not uniquely measured.",
+    "Frozen roster clock210 names the retained reference speed. Actual game RUN262.5 uses effective15.625Hz/dt0.064 and the same16.8world step.",
+    "This approves this exact six-pose NW RUN source/cycle for native integration; complete actor actions and actual game validation remain separate gates, detailed actor approval is unchanged."
+  ],
+  "source_roster": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/Mythic413-NW-run-final-six-actual-source-roster-v01.json",
+    "sha256": "92f75e0bf221fa58aa1e7c73da197d3ad0b005d8881adbb453760568ed449aa7"
+  },
+  "static_source_3_4_5_proof": {
+    "path": "/workspace/scratch/mythic413-nw-run-cycle-qc-fresh-v02-20261020/opposite3-4-5-final-short-joints-independent-static-source-PASS-v01.json",
+    "sha256": "0ab645eb0cd3653b1ac353994dbf9bffbc5fcb271a812cddeefa116e8e369a37"
+  },
+  "independent_physical_model_proof": {
+    "path": "/workspace/scratch/mythic413-nw-run-cycle-qc-fresh-v02-20261020/RUN-final-six-independent-rig-surface-AIR-model-PASS-v01.json",
+    "sha256": "f33c637ca5a9f22a1c1ab879c298ea283ea18d23f00c4afef65d4a90603dfc5f"
+  },
+  "packing_proof_sha256": "5f6c1839c10b05660b63d3b316c59e49f0506f4e7aa299e9cfb5031cac27d890",
+  "independent_exact_RGBA_copy_checks": [
+    {
+      "phase": 0,
+      "source_sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+      "source_rgba_sha256": "b44f3e2704032b6594d05d87f4af5aa2c47e90c82192d76114b7ce4d17500af0",
+      "exact_RGBA_atlas_copy": true,
+      "storage_translation": [
+        0,
+        0
+      ],
+      "atlas_origin": [
+        0,
+        0
+      ]
+    },
+    {
+      "phase": 1,
+      "source_sha256": "cd86f447f8126f018c7fc7a68d6dc803d9d9e15738dfbf932248760bfc39ba5d",
+      "source_rgba_sha256": "acf12a4e338e3af5d30224d0490f0d52e3957977a4d446f7b6c601596ebeb6f3",
+      "exact_RGBA_atlas_copy": true,
+      "storage_translation": [
+        0,
+        0
+      ],
+      "atlas_origin": [
+        1536,
+        0
+      ]
+    },
+    {
+      "phase": 2,
+      "source_sha256": "768ccddc4b44d3baa455da7cb31501dfbab5cc76ed82dc4c5d9d4ebb56d3ae6f",
+      "source_rgba_sha256": "6d2401fb21ebc0c1d61b045758c235d922e0cd2e8c2cc78afb3a125428f03af1",
+      "exact_RGBA_atlas_copy": true,
+      "storage_translation": [
+        128,
+        128
+      ],
+      "atlas_origin": [
+        0,
+        1536
+      ]
+    },
+    {
+      "phase": 3,
+      "source_sha256": "97595bd604a6efbfd6e60305c5637d5d0ba7e0f3a4ae98ca8ba1e5ff64b5a5aa",
+      "source_rgba_sha256": "ea66c8225e7a97d2a0b04b2daac958b9d30964e140a0963d434690fdc78d3fa0",
+      "exact_RGBA_atlas_copy": true,
+      "storage_translation": [
+        128,
+        128
+      ],
+      "atlas_origin": [
+        1536,
+        1536
+      ]
+    },
+    {
+      "phase": 4,
+      "source_sha256": "6f72df61022942796edd52899c5810fb13bbf692296d4c0a2a455131bfa3975d",
+      "source_rgba_sha256": "8a4c80faa943b1913b62d0a8352367eb58ebda77dead9fbd1fc8b66e7ad5a005",
+      "exact_RGBA_atlas_copy": true,
+      "storage_translation": [
+        128,
+        128
+      ],
+      "atlas_origin": [
+        0,
+        3072
+      ]
+    },
+    {
+      "phase": 5,
+      "source_sha256": "acdf6200986dde80f8a320850a3f98dd9206fc78a951385bd8560be664b68f97",
+      "source_rgba_sha256": "4b919a8768df0da2d3ed1b6a3dcaa28785570173e2fc9dec455951589da64746",
+      "exact_RGBA_atlas_copy": true,
+      "storage_translation": [
+        128,
+        128
+      ],
+      "atlas_origin": [
+        1536,
+        3072
+      ]
+    }
+  ],
+  "fixed_C": 2560,
+  "same_unpadded_root": [
+    669,
+    1267.95
+  ],
+  "one_global_integer_root": [
+    669,
+    1268
+  ],
+  "uniform_quantization_delta": [
+    0,
+    0.05
+  ],
+  "actual_visible_source_cycle_approved": true,
+  "observed_support_clock_and_footroll_approved": true,
+  "declared_2_5D_rig_and_full_rendered_surface_AIR_model_approved": true,
+  "uniquely_recovered_hidden_3D_anatomy": false,
+  "native_game_validation_pending": true,
+  "whole_actor_detailed_approval_added": 0,
+  "actor_approvals_added": 0,
+  "private_image_ledger_bytes": 858507,
+  "source_pixels_changed_by_reviewer": false
+}

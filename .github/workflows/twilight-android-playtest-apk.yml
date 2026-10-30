@@ -5,6 +5,18 @@ on:
     branches:
       - main
       - integration/twilight-complete-20261009
+    paths:
+      - 'Main.tscn'
+      - 'project.godot'
+      - 'export_presets.cfg'
+      - 'scripts/**'
+      - 'scenes/**'
+      - 'addons/**'
+      - 'assets/**'
+      - 'data/**'
+      - 'tests/android*'
+      - 'tools/android_animation_export_scope.py'
+      - '.github/workflows/twilight-android-playtest-apk.yml'
   workflow_dispatch:
 
 permissions:
@@ -18,10 +30,18 @@ concurrency:
 jobs:
   build-android-apk:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    # Cold PNG import missed all four trusted-main shards; preserve full import/export/inspection.
+    timeout-minutes: 180
     steps:
       - name: Checkout isolated validated playtest
         uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
+      - name: Prove archived drafts are detached from exported gameplay
+        run: |
+          set -euo pipefail
+          python3 tests/android_animation_export_scope_test.py
+          python3 tools/android_animation_export_scope.py --output build/android-validation/export-scope.json
       - name: Install Godot 4.7.2 and export templates
         shell: bash
         run: |
@@ -65,8 +85,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          timeout 900 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > /tmp/import-android.txt 2>&1 || { echo "IMPORT_FAILED"; tail -n 100 /tmp/import-android.txt; exit 1; }
-          echo "ANDROID_IMPORT_DONE"
+          if timeout 5400 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > /tmp/import-android.txt 2>&1; then
+            echo "ANDROID_IMPORT_DONE"
+          else
+            import_status=$?
+            echo "IMPORT_FAILED exit_code=$import_status"
+            if [[ "$import_status" -eq 124 ]]; then
+              echo "::error::Godot cold-cache Android import exceeded its 90-minute limit"
+            fi
+            tail -n 100 /tmp/import-android.txt
+            exit "$import_status"
+          fi
       - name: Configure Android SDK in Godot editor settings
         shell: bash
         run: |
@@ -96,7 +125,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build
-          timeout 360 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
+          timeout 3600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
           test -s build/TWILIGHT_ANDROID_PLAYTEST.apk
           unzip -tqq build/TWILIGHT_ANDROID_PLAYTEST.apk
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging build/TWILIGHT_ANDROID_PLAYTEST.apk | head -n 16

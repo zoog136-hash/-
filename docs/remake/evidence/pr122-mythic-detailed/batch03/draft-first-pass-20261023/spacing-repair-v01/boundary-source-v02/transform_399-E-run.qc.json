@@ -1,0 +1,31 @@
+{
+  "key": "transform:399",
+  "direction": "E",
+  "role": "run",
+  "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-run-draft-v01.png",
+  "original_source_sha256": "1957bf52c2ec5b2bc39533f378ca6afaaa2d71ad8367ed27d3e71211814fe73e",
+  "generation_request": {
+    "prompt": "TWILIGHT PR122 new E RUN six-pose animation for transform:399, 진 드래곤 슬레이어. First original catalog reference is authoritative for exact identity, original costume, face, hair, skin, colors, armor, ornaments, footwear and original equipment. Other saved drafts are style/identity and facing guides only, never copy their poses, clipping or errors. Create ONE transparent PNG, exactly SIX new full-body poses in THREE equal columns and TWO equal rows, reading order. ALL six must face EAST / screen right. A true side profile facing screen RIGHT; the anatomical RIGHT side is nearer the viewer, LEFT is farther. Keep the same original top-down game camera and painted sprite detail, and the same facing throughout. Newly draw the correct body perspective and occlusion; no whole-image mirroring, flipped equipment, recoloring, rotating a static body or generic substitute. Retain original equipment in the correct anatomical hand, with proper grip and connected joints; never invent a weapon, wings or tail absent from the original. Required progression 0: anatomical LEFT foot contact with RIGHT recovering; 1: LEFT weight compression with RIGHT swinging; 2: flight transition, RIGHT reaching; 3: anatomical RIGHT foot contact with LEFT recovering; 4: RIGHT compression with LEFT swinging; 5: flight transition, LEFT reaching toward frame0. A genuine articulated running cycle with opposite feet supporting frames0 and3, real flight in2 and5 and natural counter-swing. Carry only original equipment safely, do not attack, cast, substitute walking or animate a translated still. Consistent body scale and common floor. Every full figure, complete weapon tip, original hair ornament and full toes/heels must stay entirely inside its cell with generous transparent gutters, no overlap between cells or clipping. No ground, opaque background, scenery, labels, grids, text, logos or extra figures. This is an unapproved first animation draft for local game production, output only the one six-pose sheet.\nFRAMING REPAIR FOR THIS NEW CLIP ONLY: Keep the identity, equipment and intended six-phase motion from the saved request. Each complete character including weapon tips/cape/wings/feet must fit within a 310 by 310 pixel area centered in its own 512 by 512 cell, with at least 96 transparent pixels to every cell border. Exactly 1536 by 1024 overall, 3 columns by 2 rows. Keep fixed camera, scale and artboard root across all phases; preserve authored vertical running flight and alternating left/right foot contacts. No clipped anatomy, no detached limbs, no floating equipment, no disconnected decorative particles or separate oval shadows; hands visibly grip equipment and limbs join the torso naturally. Do not connect parts by artificial bridges. Six complete distinct poses, no text, true transparent RGBA. Existing draft is an identity guide, not a crop to copy. Do not zoom to fill each cell.",
+    "referenced_image_paths": [
+      "/workspace/twilight/assets/catalog/91797a43d00c9efdab401444.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-attack-draft-v01.png",
+      "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-idle-draft-v01.png"
+    ],
+    "transparent_background": true
+  },
+  "generation_request_sha256": "7c8a31dcee744adc0c5317834ad23c082af904bb4e62d69e6e0b2a4476f95da2",
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/91797a43d00c9efdab401444.png": "ada9edb58135b3d3ef6f9957083848cdeca6aefcd2a585214b6011de1187a2d2",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-S-attack-draft-v01.png": "4a1fdb45dbd24205342a241e2e7e6e19308653c3a5ee301c261cb936de400125",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/transform_399-E-idle-draft-v01.png": "7a23a90531f0966df91c869010389008a0f384608dbb872af440e317a4348e60"
+  },
+  "generated_original_path": "/workspace/generated_images/exec-45209864-213f-4fd3-a831-d3c8bdf05f91.png",
+  "final_approvals_added": 0,
+  "retried": false,
+  "source_visual_quality": "NOT_REVIEWED",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/spacing-repair-v01/boundary-source-v02/transform_399-E-run.png",
+  "sha256": "1f166cf0d8064870562fad7ec776cade6c0499c64870ee57cdc9ff8770008fea",
+  "bytes": 2485879,
+  "status": "HOLD_SOURCE_QC",
+  "cause": "Expected exactly 6 separated poses, found 18; review/re-author, never invent slots"
+}

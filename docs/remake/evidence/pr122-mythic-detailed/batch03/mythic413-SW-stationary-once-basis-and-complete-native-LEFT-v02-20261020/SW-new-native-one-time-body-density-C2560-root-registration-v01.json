@@ -1,0 +1,113 @@
+{
+  "schema": "MYTHIC413_NEW_SW_ONCE_BODY_DENSITY_ROOT_REGISTRATION_V01",
+  "status": "PROVISIONAL_ONCE_BODY_REGISTRATION_PENDING_INDEPENDENT_SOURCE_AND_BODY_GATE",
+  "source": {
+    "path": "/workspace/scratch/mythic413-SW-hit-author-20261020-v01/SW-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "145ab2a2ee58ae4f3c2c15cdd6d37a6d55eb1716533246c7ca145d4d6e8bf4e8",
+    "bytes": 870287
+  },
+  "raw_service_source_sha256": "1e5de9a93d8755783a2405733eddb21f7f59b3141acb9f5204332228a7a263ee",
+  "native_size": [
+    1254,
+    1254
+  ],
+  "canonical_N": {
+    "source": {
+      "path": "/workspace/scratch/mythic413-N-walk-load-author-fresh-20261020-v01/actual-N-skin-joint-finish-v05/N-contact0-native-skin-joint-finished-v05.png",
+      "sha256": "1bc3bfac78376f3d76669306d39c89bc54698f05c0f559b3833f15680910eb47",
+      "bytes": 452591
+    },
+    "C": 1920,
+    "bodyunit": 1.875,
+    "common_rig_root": [
+      662.8125,
+      917.6920531878804
+    ],
+    "markers": {
+      "gold_bun_crown": [
+        639,
+        239
+      ],
+      "nape_proxy": [
+        645,
+        390
+      ],
+      "upper_back_goldbar": [
+        650,
+        519
+      ],
+      "waist_diamond_same_back_ornament": [
+        649,
+        550
+      ],
+      "visible_central_hem_proxy": [
+        650.0,
+        638.0
+      ]
+    }
+  },
+  "reference_E_once_registration": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "393e66b3d965b2286fc2a1bea1ac561444f9463b2b30de140f3b06ee0f46d886",
+    "bytes": 3295
+  },
+  "new_SW_fixed_C": 2560.0,
+  "new_SW_fixed_bodyunit": 2.5,
+  "once_density_ratio": 1.3333333333333333,
+  "common_rig_root_in_unpadded_frame": [
+    668.0833333333334,
+    1012.9227375838406
+  ],
+  "production_storage_translation": [
+    128,
+    128
+  ],
+  "production_stored_common_root": [
+    796.0833333333334,
+    1140.9227375838404
+  ],
+  "body_markers": {
+    "gold_bun_crown": [
+      644,
+      129
+    ],
+    "lower_neck_center_front_left_proxy": [
+      628,
+      320
+    ],
+    "gold_waist_belt_center_front_left_proxy": [
+      655,
+      535
+    ],
+    "visible_central_hem_proxy": [
+      651.0,
+      640.0
+    ]
+  },
+  "marker_uncertainty_native": {
+    "lower_neck_front_left_vs_back_nape_proxy": 10,
+    "waist_beltline_front_left_vs_back_proxy": 10,
+    "hairstyle_view": 12,
+    "hem_proxy": 10
+  },
+  "density_method": "Anatomical front-left lower-neck proxy to garment beltline proxy: SW215/N160=1.34375 gives exact native C2580; nearest64 C2560. Front/back proxies have explicit view/observation uncertainty, not identical visible back ornaments. No source feet, full-alpha height, per-pose fit or source resize enters calibration.",
+  "density_checks": {
+    "N_nape_to_waist": 160,
+    "SW_neck_to_waist": 215,
+    "N_span_scaled": 213.33333333333331,
+    "vertical_span_error_fraction": 0.0078125,
+    "full_2D_span_crosscheck_fraction": 0.015411093723480374,
+    "N_normalized_crown_height": 0.35348544436868773,
+    "SW_normalized_crown_height": 0.3452823193686877,
+    "N_normalized_nape_height": 0.2748396110353544,
+    "SW_normalized_neck_height": 0.2706729443686877
+  },
+  "root_method": "SWhem+(Nroot-Nhem)*(SW_C/N_C), one-time common body-coordinate registration. Hem/body registration is not a unique hidden pelvis/ground proof or independently fitted heel.",
+  "direction_and_stance_scope": "Actual shallow front-left quarter SW identity in stationary wide brace. Near image-right boot outward turnout is preserved; this source gate does not approve SW movement/RUN planting or infer footyaw from body direction.",
+  "source_pixel_resampling": false,
+  "source_whole_alpha_height_normalization": false,
+  "perpose_C_root_or_footfit": false,
+  "old_SW_atlas_or_approved_clips_changed": false,
+  "source_gate_and_game_pending": true,
+  "actor_approvals_added": 0
+}

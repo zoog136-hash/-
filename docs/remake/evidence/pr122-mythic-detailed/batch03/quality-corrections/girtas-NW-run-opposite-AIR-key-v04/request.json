@@ -1,0 +1,24 @@
+{
+  "key": "transform:267",
+  "direction": "NW",
+  "role": "run",
+  "pose": 2,
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 1,
+  "references": [
+    "/workspace/scratch/girtas-NW-run-opposite-AIR-expanded-guide-v04/pose-guide-0.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-run-opposite-AIR-expanded-guide-v04/pose-guide-0.png": "f64f56032d5f8113e28b5557d352812b7008cf056e0d30a3d9b02a020a7e1f46",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png": "1d51c981f6ea0f8436543289381ca16c3bd9d014fe66f483949273e6f0df14d0",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png": "073692cc9c4307c3ce38c7821c5f07a2c2beee358ba7475b3db2a50fa838e738"
+  },
+  "prompt": "Dress the ONE airborne3Dmannequin ofimage1 as EXACTGIRTAS fromimage2/3, preserving exact legchains/occlusion. This is the NEW opposite RUNNING AIR key: anatomicalFAR RIGHTleg leadsFORWARD/UPPERLEFT and anatomicalNEAR LEFTleg folds/trailsBACK/LOWERRIGHT. Image1 isABSOLUTEhip-knee-ankle-depthauthority; BLUE=anatomicalNEAR LEFT, ORANGE=anatomicalFAR RIGHT. Image2identityreferencehasALLoldlegsremoved, doNOTsubstitutethegenericnearLEFTleadingrun. Copyactual3Dchains: BLUEnearLEFTthighforemost goesdownfromnearLEFThip, knee flexed, shin turnsBACK/DOWNRIGHT toRAISEDnearLEFTboot lowerRIGHT; ORANGEfarRIGHTthigh/kneeleadsforwardbehindrobe/blueleftthigh, its shin/boot emergesUPPERLEFT justleftofblueleg, FAR RIGHTleadingheelRAISED prelanding. FarRIGHTbootisupperleft, nearLEFTbootistrailinglowerRight, oppositelegownershipfromLEFTleadingAIR. LongrobeopensnaturallytoallowvisiblepartofcorrectfarRIGHTshin/upperleftboot, jointmayoccludebutdoNOTinventthirdleg. ExactlyTWOlegs/twoboots, anatomicallycontinuous. Bothknees flexed, bothBOOTSRAISED/cleartheground; noleftsupportstraightleg/righttoecontact/heelplant. This is definite AIR with neitherfootweightbearing, notWALKtoeoff/contact. Hip/bodyriseselevatednormallyfromcompression; no giantjump/attack/death.\n\nExact same UPLEFT NORTHWEST REAR-LEFT3/4 camera/head/hips allintact, noaxialNrear/Wside/NEflip. ExactGIRTAS fromimage2/3: pointedgoldcrown, paleprofileonlywherevisible, longPALESILVERhair, ornateBLACK/GOLDlayeredpauldrons/armor, THINHARDSTRAIGHT GOLD RADIAL BACKRAYS rigidmetalNOTfeathers/wings, sameLONGDARKROBEwithoriginalgoldtrimpanelsandboots, ONE ORIGINAL LONG SINUOUS GOLD/YELLOW BLADE with originalnarrowserpentineS-curves andoriginalsmallgrip/noextraornatecrossguard. ExactlyTWOarms/hands: nearLEFTimageLEFTlowEMPTYhand, farRIGHTimageRIGHThandclosedonsameLOWoutwardblade besidehip, continuouscorrectshoulder/elbow/wrist. Noextraarm/floatingweapon/handflip. Robeopens/trailsaroundnewlegsbutremainsfullLONGrobe, noshortskirt/pants. Hairclothrunlag, metalraysrigidattachedback, noflap/trailduplicates. Samebody/skull/equipmentphysicalproportions.\n\nONEcompletecrispfine-detailRPGgamecutout transparent1024x1024 PNG centeredwithatleast100pxalpha0margin, fullcrown/rays/hair/robe/boots/bladetip visible. Neverclip/shortenrays/blade. Opaquearmor/cloth/metal thinAAedge. No3D/colorskeleton/guides/text/grid/labels/floor/shadow/glow/haze/particles. FarRIGHTLEADS upperLEFT, nearLEFTTRAILS lowerRIGHT, BOTHFEETAIR, exact3Djointpose essential.",
+  "transparent_background": true,
+  "material_change": "Firstfull6AIR2/5bothLEFTleadHOLD. NewONEoppositeAIRposeauthority, fixedbones.57/.57, RIGHTleadingankleY+.63Z.25 andLEFTtrailingankleY-.60Z.55, bothfootclear>.1m, widerfootseparation. Nooriginalcharacterlegspassed; NOTidenticalretry.",
+  "requested_at": "2026-10-19T14:56:56.058697+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0
+}

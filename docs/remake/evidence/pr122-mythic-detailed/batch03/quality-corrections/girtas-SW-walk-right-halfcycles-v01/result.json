@@ -1,0 +1,49 @@
+{
+  "key": "transform:267",
+  "direction": "SW",
+  "role": "walk",
+  "source_kind": "two_same_support_walk_halfcycle_poses",
+  "expected_poses": 2,
+  "intended_game_phases": [
+    4,
+    5
+  ],
+  "original_generated_file": "/workspace/generated_images/exec-87d4599d-ce31-4e4a-8ccf-9d593cc190fa.png",
+  "raw_path": "/workspace/scratch/girtas-SW-walk-right-halfcycles-v01/girtas-SW-walk-right-halfcycles-v01.png",
+  "raw_png": "/workspace/scratch/girtas-SW-walk-right-halfcycles-v01/girtas-SW-walk-right-halfcycles-v01.png",
+  "raw_sha256": "7414be322303eb4b5076f0c3f1ae447bfa551fd568b0ece38776acf336757bbe",
+  "raw_bytes": 1379939,
+  "image_size": [
+    1774,
+    887
+  ],
+  "request_path": "/workspace/scratch/girtas-SW-walk-right-halfcycles-v01/request.json",
+  "request_sha256": "f8645bbaf1c40ed57882005242a18911f1ec4dab2030b3cd9e1522d75b645e9b",
+  "imagegen_attempts": 1,
+  "source_visual_status": "HOLD",
+  "complete_clip": false,
+  "actor_approval": false,
+  "geometry_status": "PASS",
+  "geometry_path": "/workspace/scratch/girtas-SW-walk-right-halfcycles-v01/geometry-base2048.json",
+  "status": "HOLD_ONE_USABLE_KEY_ONE_WRONG_FORWARD_LEG",
+  "per_pose_review": [
+    {
+      "source_pose": 0,
+      "intended_game_phase": 4,
+      "source_visual_status": "PASS",
+      "finding": "FarRIGHT long grounded lowerLEFT, nearLEFT knee/boot bends and passes raisedupperRIGHT, genuine opposite midstance."
+    },
+    {
+      "source_pose": 1,
+      "intended_game_phase": 5,
+      "source_visual_status": "HOLD",
+      "finding": "Wrong farRIGHTleg still longforwardLOWERLEFT/nearLEFTshorttrailingUPPERRIGHT; requested nearLEFTforwardLOWERRIGHT notmade."
+    }
+  ],
+  "usable_game_phases": [
+    4
+  ],
+  "integration_ready": false,
+  "new_approvals": 0,
+  "identity_camera_review": "FaithfulcurrentSW originalpale face/hair/hardgoldspines/longdarkrobe/RIGHTfarimageLEFTsinuousweapon/emptyLEFTnearimageRIGHT, noextralimbs."
+}

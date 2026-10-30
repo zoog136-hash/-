@@ -1,0 +1,49 @@
+{
+  "status": "PASS_SCOPED_SIX_POSE_SOURCE_CAMERA_ANATOMY_ONLY_NOT_RUNTIME_OR_ACTOR",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "idle",
+  "version": "v03",
+  "reviewer": "/root/girtas_nw_walk_author (independentofNEsourceauthor)",
+  "raw_path": "/workspace/scratch/girtas-NE-idle-repair-v03/girtas-NE-idle-v03.png",
+  "raw_sha256": "a53a5c9a8ad6af62ac51d070ab4231e08cec4e69591f774d0206368cb543f91f",
+  "raw_bytes": 1322121,
+  "request_path": "/workspace/scratch/girtas-NE-idle-repair-v03/request.json",
+  "request_sha256": "2badf07d2ae815f713f153d4c52034a8e42ef60a8c6f48aa3850d621081ed7d3",
+  "geometry_path": "/workspace/scratch/girtas-NE-idle-repair-v03/geometry-base1024.json",
+  "geometry_sha256": "8d4f1929d43a3c4b10689035be58ac22ebaac837c20e56f30b7c9e5b94900b1e",
+  "geometry_validation": "STRICT6_DISTINCT_COMPLETE_RGBA_POSES_PASS",
+  "outer_edge_alpha100_count": 0,
+  "correct_camera_guard_reference": {
+    "path": "/workspace/scratch/girtas-NE-walk-production-v01/NEattack0-lossless.png",
+    "sha256": "9b4bdec70ba1b577ec991173cca3403dea504cb9716ecd600d63bdedf6a52d0e"
+  },
+  "private_previews": [
+    {
+      "path": "/workspace/scratch/girtas-NE-idle-repair-v03/private-NE-idle-six-v03.jpg",
+      "sha256": "f96348d5074b9fda6a02f63c110cc98281ec4064788fd58bbf5c0428a2fefe4d",
+      "bytes": 135226
+    },
+    {
+      "path": "/workspace/scratch/girtas-NE-idle-repair-v03/private-NE-head-feet-native-coordinate-probe.jpg",
+      "sha256": "7cf80cdf21ed35e531164df972b6adc2d7e59c239295e78d51be497e001b50d3",
+      "bytes": 79842
+    }
+  ],
+  "private_preview_bytes_this_review": 215068,
+  "findings": [
+    "All6matchONLYcorrectNEattackguardrear-RIGHT3/4camera: nearRIGHTpauldron/arm/hiponimageRIGHT, farLEFTsidebehindlonghaironimageLEFT; helmet/backneck/hipsandstancebootsfaceUPRIGHTawayinconsistentpureNfront-backabsent. Directnew0-vsNEguardhead/footcomparisonsamecorrectview; oldpureNNEidlewasnotused.",
+    "FaithfulGirtaslongPALESILVERhair/pointedgoldhelmet/blackgoldlayeredpauldronsandbodyarmor/THINHARDSTRAIGHTGOLDbackradialrays/LONGDARKGOLDTRIMrobe/originalboots/ONEsinousgoldyellowblade all6. Rayssolidrigidmetalfollowback, neverfeathers/fanwing/Halpasgear. Noarmoredpants/shortskirtreplacement.",
+    "Exactly2arms/hands: nearanatomicalRIGHTarmimageRIGHTcontinuouslydescendsfromshoulderthroughgoldelbow/forearmtoclosedhandandONEbladepointinglowoutwardRIGHT; farLEFTemptyarmmostlyoccludedbyhair/robeasguard, noextraemptyraisedfist/grip/handflip. Twolegsinretainedfixedguardstance, noextrafoot/head/weapon.",
+    "Sixactualsubtlebreathing/settlingarticulationsratherthanwalking: shoulder/backsmallinhale/exhale, hairstrands/bunchedsilverendsandrobe/trimpanelslaglocally, slightweightsettlereturnnear0; bothbootskeeppairedNEguardfootplacementandorientationswithoutsteplegswap/AIR/attack. Rigidraysstayattachedtosamebackplane. Sourceall6distinctstrictRGBAframesandvisuallocalarticulationconfirmnotmerewholeimagetranslation.",
+    "Allcrown/hair/rays/robe/boots/bladesilhouettescompletealpha0background, no guidecolors/text/floor/afterimage; strict6regionsandallforegroundcoveragePASSandouteralpha100clipping0."
+  ],
+  "limitations": [
+    "Source/camera/anatomyPASSonly. MetadataC/rootphysicalnormalizationbelongsseparateauthorcandidateproposal; thisreviewdoesNOTapprovephysicalscale/compiledTRES/Player/defaultMain/finalactor.",
+    "Finalbreathcadenceandidleentry/exitstillrequireactualimmutableSpriteFrames/runtimeQC afterstaging."
+  ],
+  "actor_approval_added": 0,
+  "detailed_completion_added": 0,
+  "repository_mutated": false,
+  "created_at": "2026-10-19T14:55:17.739144+00:00"
+}

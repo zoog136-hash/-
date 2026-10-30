@@ -1,0 +1,26 @@
+{
+  "actor": "monster:제로스",
+  "slug": "zeros",
+  "clip": "SW-idle-v02",
+  "role": "idle",
+  "direction": "SW",
+  "importer_sha256": "e1d4103167f356bde4a46dbef0b5e99ed9b09f1aab167aaab63058e9b2bd794a",
+  "layout": "phase_grid2",
+  "source": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zeros/raw/SW-idle-v02.png",
+  "source_sha256": "8ed0d7aa12418758a42288fcee6446844382a2550e241325bb89b8337ec9aef3",
+  "component_inventory": {
+    "strong_alpha100_bodies_ge200": 6,
+    "foreground_alpha16_parts_ge200": 6,
+    "strong_component_areas": [
+      53555,
+      48670,
+      48564,
+      47970,
+      44518,
+      42785
+    ]
+  },
+  "status": "HOLD",
+  "cause": "foreign_body_rectangle",
+  "reason": "A pose rectangle includes another body; cannot safely crop"
+}

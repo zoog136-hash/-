@@ -1,0 +1,163 @@
+{
+  "report_type": "independent_private_anatomy_reassessment",
+  "timestamp_utc": "2026-10-19T12:19:53.790974+00:00",
+  "scope": "Visible anatomy and camera/hand continuity only across six source poses, assessed directly from source-derived private views against the new standing canonical. No actor approval, animation implementation approval, generation, or asset/index/Git mutation.",
+  "source": {
+    "path": "/workspace/scratch/halpas-NW-walk-repair-v03/halpas-NW-walk-v03.png",
+    "sha256": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c",
+    "size_px": [
+      1024,
+      1536
+    ]
+  },
+  "standing_reference": {
+    "path": "/workspace/scratch/halpas-NW-canonical-key-v01/halpas-NW-canonical-key-v01.png",
+    "sha256": "253725e7eb3e361cef5b2c6a04f72ef103f08c00be4a5106518551c54c46659a",
+    "size_px": [
+      1254,
+      1254
+    ]
+  },
+  "source_art": "PASS",
+  "verdict_basis": "The lower-right pointed boot direction is compatible with legs trailing a flying NW-facing body and ankles held extended/plantarflexed. Direction on the canvas alone does not demonstrate a 180-degree boot reversal. Across all six poses, the visible paired hip exits, knees, shins, ankle rims and boots form coherent continuous chains without an evident knee/ankle contradiction.",
+  "actual_defects_found": [],
+  "limits": [
+    "Hip sockets and parts of upper thighs are occluded by armor/cape. This is uncertainty about hidden geometry, not an observed disconnection.",
+    "Gold armor flares can obscure precise joint centers and heel/toe boundaries. The report assesses visible continuity and a plausible pose, not a uniquely determined hidden skeleton.",
+    "The source is visually a flying/trailing-leg pose sequence; this reassessment does not assert grounded walking foot mechanics."
+  ],
+  "comparison_to_standing": "Standing-reference near boot projects more to image left with a flexed ankle; source boots extend down-right relative to their shins. The change can arise from an extended trailing ankle and a different airborne leg pose without rotating the dorsal torso or pelvis toward NE. Helmet/back/pelvis and weapon/empty-hand sides remain consistent with the standing NW view.",
+  "frames": [
+    {
+      "frame_index_zero_based": 0,
+      "sheet_position": {
+        "row": 1,
+        "column": 1
+      },
+      "near_left_leg_trace": "Near left upper thigh descends from the left pelvic opening beside the cape, bends at the gold-rimmed knee, and continues into the broad black calf that narrows down-right to a gold ankle rim. The black boot throat joins that rim; its pointed gold distal end continues down-right.",
+      "far_right_leg_trace": "Far right thigh emerges under the right pelvic plate, reaches the higher/right knee, and continues into a narrower calf down-right to the ankle cuff. The black boot upper and gold toe follow continuously in the same trailing direction.",
+      "hip_visibility_limit": "Exact hip socket and portions of upper thigh are covered by pelvic armor and/or cape; the visible exits and downstream segments support the stated connections. Hidden skeletal rotations cannot be proved from this painted view.",
+      "body_camera": "Rear three-quarter body remains oriented toward upper-left/NW: horned helmet/profile faces image upper-left, layered dorsal spine and back plates remain visible, pelvis follows the back. No visible NE-facing camera turn.",
+      "arm_sides": "Near image-left arm ends in the empty armored fist; farther image-right arm holds the purple weapon.",
+      "actual_boot_reversal_visible": false,
+      "knee_ankle_contradiction_visible": false,
+      "disconnected_or_extra_leg_visible": false,
+      "frame_assessment": "PASS"
+    },
+    {
+      "frame_index_zero_based": 1,
+      "sheet_position": {
+        "row": 1,
+        "column": 2
+      },
+      "near_left_leg_trace": "Near left thigh remains connected beneath the left hip plate/cape edge. Its knee sits lower than the far knee; the calf tapers diagonally down-right into the ankle opening, black boot upper, and pointed gold toe. No discontinuity appears at the ankle.",
+      "far_right_leg_trace": "Far right thigh emerges from the right pelvis to the higher knee. The calf slopes down-right to a gold ankle rim and black boot upper; the gold toe continues beyond it. It is a separate coherent chain from the near leg.",
+      "hip_visibility_limit": "Exact hip socket and portions of upper thigh are covered by pelvic armor and/or cape; the visible exits and downstream segments support the stated connections. Hidden skeletal rotations cannot be proved from this painted view.",
+      "body_camera": "Rear three-quarter body remains oriented toward upper-left/NW: horned helmet/profile faces image upper-left, layered dorsal spine and back plates remain visible, pelvis follows the back. No visible NE-facing camera turn.",
+      "arm_sides": "Near image-left arm ends in the empty armored fist; farther image-right arm holds the purple weapon.",
+      "actual_boot_reversal_visible": false,
+      "knee_ankle_contradiction_visible": false,
+      "disconnected_or_extra_leg_visible": false,
+      "frame_assessment": "PASS"
+    },
+    {
+      "frame_index_zero_based": 2,
+      "sheet_position": {
+        "row": 2,
+        "column": 1
+      },
+      "near_left_leg_trace": "Near left upper leg emerges beside the cape and leads to a lower-left knee under the pelvic armor. The broad calf narrows down-right into the ankle cuff, black boot upper, and gold tip. The whole trailing chain is visible below the occluded hip.",
+      "far_right_leg_trace": "Far right thigh runs from the right pelvic opening to the right/high knee; the calf descends diagonally down-right to the ankle rim, black boot throat, and gold pointed end. No cross-connection with the near calf is visible.",
+      "hip_visibility_limit": "Exact hip socket and portions of upper thigh are covered by pelvic armor and/or cape; the visible exits and downstream segments support the stated connections. Hidden skeletal rotations cannot be proved from this painted view.",
+      "body_camera": "Rear three-quarter body remains oriented toward upper-left/NW: horned helmet/profile faces image upper-left, layered dorsal spine and back plates remain visible, pelvis follows the back. No visible NE-facing camera turn.",
+      "arm_sides": "Near image-left arm ends in the empty armored fist; farther image-right arm holds the purple weapon.",
+      "actual_boot_reversal_visible": false,
+      "knee_ankle_contradiction_visible": false,
+      "disconnected_or_extra_leg_visible": false,
+      "frame_assessment": "PASS"
+    },
+    {
+      "frame_index_zero_based": 3,
+      "sheet_position": {
+        "row": 2,
+        "column": 2
+      },
+      "near_left_leg_trace": "Near left thigh descends to the left knee; the calf runs down-right behind a gold ankle rim into the black boot upper and gold distal tip. The foot lies just left of the farther foot. At this closer spacing, the two ankle/boot chains remain separately identifiable.",
+      "far_right_leg_trace": "Far right thigh leads to a knee close to but right of the near knee. Its calf remains traceable to the right ankle rim and separate right boot. The black boot upper and gold point align as an extended trailing foot.",
+      "hip_visibility_limit": "Exact hip socket and portions of upper thigh are covered by pelvic armor and/or cape; the visible exits and downstream segments support the stated connections. Hidden skeletal rotations cannot be proved from this painted view.",
+      "body_camera": "Rear three-quarter body remains oriented toward upper-left/NW: horned helmet/profile faces image upper-left, layered dorsal spine and back plates remain visible, pelvis follows the back. No visible NE-facing camera turn.",
+      "arm_sides": "Near image-left arm ends in the empty armored fist; farther image-right arm holds the purple weapon.",
+      "actual_boot_reversal_visible": false,
+      "knee_ankle_contradiction_visible": false,
+      "disconnected_or_extra_leg_visible": false,
+      "frame_assessment": "PASS"
+    },
+    {
+      "frame_index_zero_based": 4,
+      "sheet_position": {
+        "row": 3,
+        "column": 1
+      },
+      "near_left_leg_trace": "Near left thigh and knee remain beside the cape. The calf projects down-right into the visible gold ankle rim, black boot upper, and pointed gold toe. This boot is lower-left of the far boot and remains connected to the near calf.",
+      "far_right_leg_trace": "Far right thigh projects farther right from the pelvis, followed by its knee, tapering down-right calf, ankle cuff, black boot upper, and gold point. The increased lateral spread does not detach or reverse the foot.",
+      "hip_visibility_limit": "Exact hip socket and portions of upper thigh are covered by pelvic armor and/or cape; the visible exits and downstream segments support the stated connections. Hidden skeletal rotations cannot be proved from this painted view.",
+      "body_camera": "Rear three-quarter body remains oriented toward upper-left/NW: horned helmet/profile faces image upper-left, layered dorsal spine and back plates remain visible, pelvis follows the back. No visible NE-facing camera turn.",
+      "arm_sides": "Near image-left arm ends in the empty armored fist; farther image-right arm holds the purple weapon.",
+      "actual_boot_reversal_visible": false,
+      "knee_ankle_contradiction_visible": false,
+      "disconnected_or_extra_leg_visible": false,
+      "frame_assessment": "PASS"
+    },
+    {
+      "frame_index_zero_based": 5,
+      "sheet_position": {
+        "row": 3,
+        "column": 2
+      },
+      "near_left_leg_trace": "Near left thigh emerges beneath the left pelvis; its knee and calf lead down-right to the gold ankle cuff, black boot upper, and pointed gold toe. The near boot sits left of the far boot. There is no detached third limb or exchanged ankle connection.",
+      "far_right_leg_trace": "Far right thigh and knee remain on the weapon-side/right. The calf narrows down-right to the right ankle and its own black-and-gold boot. The two boots approach one another but their connections remain readable.",
+      "hip_visibility_limit": "Exact hip socket and portions of upper thigh are covered by pelvic armor and/or cape; the visible exits and downstream segments support the stated connections. Hidden skeletal rotations cannot be proved from this painted view.",
+      "body_camera": "Rear three-quarter body remains oriented toward upper-left/NW: horned helmet/profile faces image upper-left, layered dorsal spine and back plates remain visible, pelvis follows the back. No visible NE-facing camera turn.",
+      "arm_sides": "Near image-left arm ends in the empty armored fist; farther image-right arm holds the purple weapon.",
+      "actual_boot_reversal_visible": false,
+      "knee_ankle_contradiction_visible": false,
+      "disconnected_or_extra_leg_visible": false,
+      "frame_assessment": "PASS"
+    }
+  ],
+  "original_hold_report": {
+    "path": "/workspace/scratch/halpas-NW-walk-repair-v03/result.json",
+    "preserved_untouched": true,
+    "note": "This independent reassessment is a new /tmp artifact; it does not overwrite or silently relabel the earlier HOLD."
+  },
+  "private_image_handling": {
+    "main_chat_images_sent": false,
+    "new_qc_jpeg_count": 2,
+    "viewed_private_jpeg_total_bytes": 642297,
+    "viewed_private_jpegs": [
+      {
+        "path": "/workspace/scratch/halpas-NW-walk-repair-v03/private-overview.jpg",
+        "bytes": 165830
+      },
+      {
+        "path": "/workspace/scratch/halpas-NW-walk-repair-v03/private-boots-review.jpg",
+        "bytes": 109935
+      },
+      {
+        "path": "/workspace/scratch/halpas-NW-canonical-key-v01/private-camera-hand-foot-detail.jpg",
+        "bytes": 89904
+      },
+      {
+        "path": "/tmp/halpas-independent-six-leg-traces.jpg",
+        "bytes": 210473
+      },
+      {
+        "path": "/tmp/halpas-independent-standing-ref.jpg",
+        "bytes": 66155
+      }
+    ]
+  },
+  "source_visual_status": "PASS",
+  "rawSHA": "db937f30e6678e9b4281e6315c812637eb6e72a283dd35650fddf4d125ff9b9c",
+  "canonicalSHA": "253725e7eb3e361cef5b2c6a04f72ef103f08c00be4a5106518551c54c46659a"
+}

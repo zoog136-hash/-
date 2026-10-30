@@ -1,0 +1,175 @@
+{
+  "schema": "pr122-monster-staging-v1",
+  "batch": "docs/remake/evidence/pr122-monsters-20261023/batch07-monk",
+  "actors": {
+    "monster:알비노 몽크": {
+      "kind": "normal",
+      "quality_tier": "hero_transform",
+      "frames": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/SpriteFrames.tres",
+      "frames_sha256": "cf9b05fa8a6f5131cd4b146d0dbdc7c367198100e854e4f7623a0f420f9ba7fb",
+      "native_profile": "res://assets/actors/eight_direction/monster_staging/monk_batch07/r001/NativeMotionProfile.tres",
+      "native_profile_sha256": "036c517802c3e31c8bb9ea3091e5700bedcf6dc9ed088f4571ac20929e2b811a",
+      "native_track_count": 1,
+      "native_pose_count": 6,
+      "production_connected": false,
+      "detailed_completed": false,
+      "tracks": [
+        {
+          "role": "run",
+          "direction": "SW",
+          "animation": "run_3",
+          "source": "docs/remake/evidence/pr122-monsters-20261023/batch07-monk/raw/albino-monk-SW-run6-v01.png",
+          "texture": "assets/actors/eight_direction/monster_staging/monk_batch07/r001/SW-run.png",
+          "source_sha256": "0a44a73930cdf93f072b88569bb851babe43d4ee1f49fd52f74f871432fca6a7",
+          "geometry": {
+            "image_size": [
+              1536,
+              1024
+            ],
+            "frames": [
+              {
+                "row": 0,
+                "direction": "SW",
+                "region": [
+                  108,
+                  153,
+                  300,
+                  293
+                ],
+                "margin": [
+                  196,
+                  141,
+                  388,
+                  395
+                ],
+                "source_anchor": [
+                  256,
+                  442
+                ],
+                "rgba_sha256": "9939ebf3c38ed367ebc2fc485be9299a5f5df0d8fd69a9cb5733f2e3ffb20a1d"
+              },
+              {
+                "row": 1,
+                "direction": "SW",
+                "region": [
+                  663,
+                  153,
+                  280,
+                  293
+                ],
+                "margin": [
+                  239,
+                  141,
+                  408,
+                  395
+                ],
+                "source_anchor": [
+                  768,
+                  442
+                ],
+                "rgba_sha256": "522fe6c5ca6fc9c07f4c8adc186ff4bd6332f5907dacc5f94abdeba5f5beda49"
+              },
+              {
+                "row": 2,
+                "direction": "SW",
+                "region": [
+                  1104,
+                  157,
+                  361,
+                  273
+                ],
+                "margin": [
+                  168,
+                  161,
+                  327,
+                  415
+                ],
+                "source_anchor": [
+                  1280,
+                  426
+                ],
+                "rgba_sha256": "26ab2a999c5fc8ac6be9849cbd2985797b7b912f5fdd9450ea5de174378b5b5a"
+              },
+              {
+                "row": 3,
+                "direction": "SW",
+                "region": [
+                  102,
+                  633,
+                  306,
+                  288
+                ],
+                "margin": [
+                  190,
+                  146,
+                  382,
+                  400
+                ],
+                "source_anchor": [
+                  256,
+                  917
+                ],
+                "rgba_sha256": "0832925a44c28c3969c32f94c2c0060702b89b2900cdd98e2fb0c1d7f212d65e"
+              },
+              {
+                "row": 4,
+                "direction": "SW",
+                "region": [
+                  629,
+                  625,
+                  308,
+                  280
+                ],
+                "margin": [
+                  205,
+                  154,
+                  380,
+                  408
+                ],
+                "source_anchor": [
+                  768,
+                  901
+                ],
+                "rgba_sha256": "f0274946bce06f47179bb2e06c3c088323c2eef85bf371b4f6d1acba9fc9a918"
+              },
+              {
+                "row": 5,
+                "direction": "SW",
+                "region": [
+                  1171,
+                  634,
+                  281,
+                  281
+                ],
+                "margin": [
+                  235,
+                  153,
+                  407,
+                  407
+                ],
+                "source_anchor": [
+                  1280,
+                  911
+                ],
+                "rgba_sha256": "e2c35ef06089d616926e416284f33283f372a394460c5fdf44100919c93825ff"
+              }
+            ],
+            "distinct_pixel_frames": 6,
+            "neutral_height": 284.5,
+            "canvas_size": [
+              688,
+              688
+            ],
+            "foot": [
+              344,
+              430
+            ]
+          }
+        }
+      ],
+      "quality_review": "HOLD: documented model and SW heading requested; actual opposite hind support, source-plane anchors, cross-role identity and Main review remain unapproved"
+    }
+  },
+  "new_approvals": 0,
+  "default_catalog_switches": 0
+}

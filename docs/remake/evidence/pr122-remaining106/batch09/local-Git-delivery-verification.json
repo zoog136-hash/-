@@ -1,0 +1,907 @@
+{
+  "status": "PASS",
+  "verified_deliverable_files": 176,
+  "excluded_generated_cache": [
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-far-contact-pilot01/doguri-E-run-far-contact-pilot01.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-00-near-contact.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-01-near-compression.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-02-flight-A.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-04-far-compression-v02.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-04-far-compression.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-05-flight-B.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot02/doguri-E-run6-pilot02.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot03/doguri-E-run6-pilot03.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot04/doguri-E-run6-pilot04.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot01/doguri-N-walk6-pilot01.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot02/doguri-N-walk6-pilot02.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-pass-A-pilot01/doguri-W-pass-A-pilot01.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot01/doguri-W-walk6-pilot01.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot02/doguri-W-walk6-pilot02.png.import",
+    "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/doguri-W-walk6-pilot03.png.import"
+  ],
+  "files": [
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/392-reconciliation-before-commit.json",
+      "bytes": 895835,
+      "sha256": "d2250e1830608f962c9d39f2b6bcca3cb73da9b8f189d0bebbad9bcc2df2887c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/airborne-anchor-on-foot.txt",
+      "bytes": 416,
+      "sha256": "0b83514ba9b4a79fba255fbad15219b740d2e22c4264ee8c98ad1f1bd4c09c07"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/airborne-gap-over-limit.txt",
+      "bytes": 416,
+      "sha256": "0b83514ba9b4a79fba255fbad15219b740d2e22c4264ee8c98ad1f1bd4c09c07"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/attempted-production-promotion.txt",
+      "bytes": 498,
+      "sha256": "3c0fe32f038fe3f3437836a711c92641d9caf729f45425fed839f316e057783c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/controls.json",
+      "bytes": 3143,
+      "sha256": "b85c7f87f13979f92a59cd56bc0f0d22491f788071090a3a8244d25edd0b2510"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/cropped-source-region.txt",
+      "bytes": 328,
+      "sha256": "6bfc3d8702b341ee52a5060a561940deab7248519c4fed90b1a12d5415f98975"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/duplicate-body-missing-row.txt",
+      "bytes": 404,
+      "sha256": "2376a8f301476847cc3e205c66e13c768c4b5807d290d0a56fd09723f574cb2b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/missing-run-contract.txt",
+      "bytes": 429,
+      "sha256": "a7f003027934b411eec745160ddba51e4593f690134220521faf61d57c21f652"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/out-of-order-phase.txt",
+      "bytes": 404,
+      "sha256": "2376a8f301476847cc3e205c66e13c768c4b5807d290d0a56fd09723f574cb2b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/walk-speed-labelled-run.txt",
+      "bytes": 356,
+      "sha256": "7563a8e4ac034fdb53a3b77f09a9514bc32029e38ae4c232f837943414ac3575"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/wrong-declared-direction.txt",
+      "bytes": 402,
+      "sha256": "b11ec1a3cd1b10a335ab008c2707ee86e76254649e645365b2fda4f06c1253b6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/wrong-ground-margin.txt",
+      "bytes": 362,
+      "sha256": "4147e621bf120343c4b0b0a7c273a5a525260b7ec68eff517cc4f0fcbc0536ef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/wrong-horizontal-axis.txt",
+      "bytes": 661,
+      "sha256": "811dc6b16a2eadfb903f1208c63897b4209a5d9fda67ce2ad6e9f64e9d14dacc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/CI-source-controls-local-check/wrong-whole-PNG-SHA.txt",
+      "bytes": 440,
+      "sha256": "85b7e899afbeb6262c1ae2526ef0fe11db09405c3c87805675d98156febd7e70"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/README.md",
+      "bytes": 6349,
+      "sha256": "e693b6a14ac48137d193903ac00c267169ef1154689e7379aa003e446d65a7b8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/actual-Main-delivery.json",
+      "bytes": 612,
+      "sha256": "b2bc9b1be22eee24d0fd21090211b42d828be9600a430b1a71e60216179d29b8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/authored-source-files.json",
+      "bytes": 8199,
+      "sha256": "cc8791deb9b21c230fdc1378039c7c52e5337589107a750b133e97e6b4abbac4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-Main/E-run-original3-vs-source6.mp4",
+      "bytes": 1548633,
+      "sha256": "3cc7540840a7c2906ca93b51660c54c884613cf6053fedc2bc511d4d1b9956ae"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-Main/actual-Main-captures-01.zip",
+      "bytes": 22065126,
+      "sha256": "1fa725ccee0d07a62cb34a450aa7dfe5a87b7cb15ed201c441d100486225c621"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-Main/actual-Main-captures-02.zip",
+      "bytes": 20924832,
+      "sha256": "d80d0fb38ca9721788c651e5e6e6b22aff7f34525498b5f347c67279f728d951"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-Main/delivery-proof.json",
+      "bytes": 7958,
+      "sha256": "7467be91c0a645ca3d1287e6499a97b6391cc534c2bfb653b6a423d87c9ba432"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-Main/process-result.json",
+      "bytes": 508,
+      "sha256": "6ec90a61138d110ce3342734713ef050bd9c391e39fa58930218ef1517e09390"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-Main/report.json",
+      "bytes": 212851,
+      "sha256": "9922f7ba0e3689f900626ff9bee5fb44897fd7e96f43509f254db25912ea0633"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-Main/run-log.txt",
+      "bytes": 747,
+      "sha256": "c960ad9af264e678fd2ca1ad827785ea45946fec03651f1de828ba29f28f5e06"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-Main/source-preflight.json",
+      "bytes": 1834,
+      "sha256": "c954704d7a8c633544c827e54228921f358507863fa6800c267b17617a491adb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-Main/validation.json",
+      "bytes": 8604,
+      "sha256": "3d215e7c3f7591f648078f78239646ea479390e06d311a4ef608463914078771"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-canvas-review.json",
+      "bytes": 2426,
+      "sha256": "cfa9b2f02358deeb690ea83ff4826376ddc24c51b600ccfa474634d3e8d16bfc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-far-contact-pilot01/doguri-E-run-far-contact-pilot01.png",
+      "bytes": 1217269,
+      "sha256": "e7d38740ec8741db041e9c32d1b7183b9df5d4fec01ece19dd6d309e8917737a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-far-contact-pilot01/doguri-E-run-far-contact-pilot01.result.json",
+      "bytes": 1434,
+      "sha256": "870c673c0ebb96ed6f799dd136ddeca6729310c9bf37e842a322fc47ee41e28d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-far-contact-pilot01/request.json",
+      "bytes": 2325,
+      "sha256": "833c47d9ddfcc0829c055548767bd23845a0a077e086befe6ad6e1611057d580"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-preview-v02.json",
+      "bytes": 10938,
+      "sha256": "05cc59567f8c5de80a831d79c5d2512b6a45692bbdaed69fa982969ce2e7e7da"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-preview.json",
+      "bytes": 10597,
+      "sha256": "409f28a66f978d6d3f6f59cdd1d2fe493735c595559704f86a944e6a19d2c8ef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/flight-A-attempt01-tool-error.json",
+      "bytes": 291,
+      "sha256": "172dd95d21f921c93d167edfc098c5c7d6e13a75ff5f7fbc180a51e80edf29ec"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/request-far-compression-B-v02.json",
+      "bytes": 1763,
+      "sha256": "40a9576b4c5493a6a48cf1cc84a1eae3f71160ba67556651ab884086b028fd42"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/request-far-compression-B.json",
+      "bytes": 1839,
+      "sha256": "71c5257a541615d48518a683f53ed68ae65b998389adf77e0f556aa04488a110"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/request-flight-A-attempt01.json",
+      "bytes": 1933,
+      "sha256": "0adbecc2f395f5a805ac3aec190fa975828cf1e02cd57d20b5d681dd5c6e591e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/request-flight-A-v02.json",
+      "bytes": 1826,
+      "sha256": "d37a2e276c3417d8f61ed9700d90f326a5bef6d3072b513d85b0ee4bc29c5a2d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/request-flight-B.json",
+      "bytes": 2097,
+      "sha256": "325f4b26ff71464225af06fed359e28aae959f33ca7a2f4b3147b9acc2b65575"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/request-near-compression-A.json",
+      "bytes": 1751,
+      "sha256": "d68fd7074f8af1c6658cb63399aad7aacf58cf392475576d73bcecd8fe0aefcf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/request-near-contact-A.json",
+      "bytes": 1652,
+      "sha256": "0da70fab3825ffac22243ef1dc7993ca62a55f3edf159e599cf5b1dbefa3ccb4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-00-near-contact.png",
+      "bytes": 1204611,
+      "sha256": "cf9d01414d4d0660dcf13cfb09f19c4905c6fcf77c6c3a0758b11efc3977c0c6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-00-near-contact.result.json",
+      "bytes": 1333,
+      "sha256": "b1961546aeccff6d35ec0cee1c0862adfb5b2216df720a0b5fed46f72ed2474a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-01-near-compression.png",
+      "bytes": 1211257,
+      "sha256": "387b4c7c64437a57fd678c38e6a1cb39c7d3bb0da595b726034f7ea2a74cb98b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-01-near-compression.result.json",
+      "bytes": 1335,
+      "sha256": "ab7de47695b5f0fa22d90654164ab0f0ef0310bd7e564c2c7b59f97307fc32af"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-02-flight-A.png",
+      "bytes": 1126324,
+      "sha256": "7f7f705c94bd186c6217ab87197c552e772b5243cc5a300a62e3334682182687"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-02-flight-A.result.json",
+      "bytes": 1402,
+      "sha256": "3df196b19c1f3905d8636c001fba8e41954b66831725b5e01cd909b762de9c73"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-04-far-compression-v02.png",
+      "bytes": 1205480,
+      "sha256": "85f4b211d897b5a52dc975687ef2364e27b79b7ef627c4213eefb61ea6f2ec7f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-04-far-compression-v02.result.json",
+      "bytes": 1390,
+      "sha256": "d819deca69fba64f13500982429a999bfecdde9e24ef218bcfe4963624317b2e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-04-far-compression.png",
+      "bytes": 1179941,
+      "sha256": "a42dc2c648a428266bf0bc0e898e29fc173a0d6879d9a2c0f09aa51994a62aa9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-04-far-compression.result.json",
+      "bytes": 1375,
+      "sha256": "d00905328d4a3f1017213fbc02a87cd63714c840b975217f96db0f9a53e9737f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-05-flight-B.png",
+      "bytes": 1284034,
+      "sha256": "1a89a8c1062a363ba082526427c80bf7b5c5ac06eb9ee7b7932191083d437488"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run-standalone/run-E-05-flight-B.result.json",
+      "bytes": 1420,
+      "sha256": "fc7f3ebf232923d4be49ac0018aa7a9618c25ceb254267b616ade052815f8923"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot02/doguri-E-run6-pilot02.png",
+      "bytes": 656098,
+      "sha256": "abbeec31e65296fb92857249d70b7e27aee7391be6d3312d1928b6094ac7e1ad"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot02/request.json",
+      "bytes": 3346,
+      "sha256": "cd1cfb98f52518721a6f5ff4d1a95d530b348dfa15132ce4c08503c05c64031a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot02/result.json",
+      "bytes": 3413,
+      "sha256": "67eaca6fcafb0d27a2d5f09f47fc0fdfd0c850ea4a385ae9439377db6a0d79c6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot03/doguri-E-run6-pilot03.png",
+      "bytes": 713463,
+      "sha256": "9321442e0ca2ae63dfd5ee30900032d56adf17e933e03d3168978742823ec36a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot03/request.json",
+      "bytes": 2877,
+      "sha256": "b15d184dc754d08b16840499086146a97f18662898608461f58aa5d4f381d204"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot03/result.json",
+      "bytes": 3468,
+      "sha256": "4b14600023f612bb541d9ad7893948d0bfc23ab70f64df9b9d68d08d12162073"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot04/doguri-E-run6-pilot04.png",
+      "bytes": 772837,
+      "sha256": "d4453b768996d24431b71c0166ecb6d305a82605ba632ccad2c42398933cff29"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot04/request.json",
+      "bytes": 2711,
+      "sha256": "9d02e96ac445d619e03ace6fb3d3f1c29a267515abdd5a2cd35a7be9c91a2666"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-E-run6-pilot04/result.json",
+      "bytes": 3448,
+      "sha256": "932058e142a9a06f1ae6a067aae8f99ee8712391051fd9038434549aa1c7ca74"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/N-walk-original3-vs-source6.gif",
+      "bytes": 1556472,
+      "sha256": "8303de0972bf8c3dfade199b6f10fcd141ba807bf99a31b477b2c40bb192294e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/N-walk-original3-vs-source6.mp4",
+      "bytes": 1505047,
+      "sha256": "05752f53ba227a8ad34a983a360ded4d5cffdba9559c834bd7f88c56f4009732"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/actual-Main-captures-01.zip",
+      "bytes": 22247051,
+      "sha256": "6c02d431fca104be24fbfda6ad46a953138c7b445f2910c5a8c828a873270700"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/actual-Main-captures-02.zip",
+      "bytes": 18845641,
+      "sha256": "8409c661b2bfa4268117db9635e7f42314e97e030d688e5547c08b1c32b610bf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/delivery-proof.json",
+      "bytes": 8196,
+      "sha256": "59ee6c69df8bcee1db657f1524e0dbd9c080411e4ccb75eeca7620a3e2dc2309"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/process-result.json",
+      "bytes": 508,
+      "sha256": "dcdf3466b715b5551f61c76c02e440eea1f05e2ecb7f8557fdb1a69ca93b59a5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/report.json",
+      "bytes": 292332,
+      "sha256": "391caa43d241b0e4d687cd4d7edc20e3a34446911b16511c06d52aa9ee36bfbf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/run-log.txt",
+      "bytes": 749,
+      "sha256": "4727b05f92df5e8dc943f1c6821d1e8a55836d55c94ab3d189bae05e2f0dfb82"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/source-preflight.json",
+      "bytes": 1806,
+      "sha256": "0d85ea1dc92388414650efed9db7964095b2e84decec85b73338585de4cb4684"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-Main/validation.json",
+      "bytes": 8642,
+      "sha256": "fb1c21afa49adc3fa2a47819839e7bf4c5707c54e4ff6a090d7943e54f4013aa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk-preview.json",
+      "bytes": 12308,
+      "sha256": "772ea2120b95fa50f92a4dc76eac48511e81f7b44e21a3927d167a0a24e3e4a5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot01/doguri-N-walk6-pilot01.png",
+      "bytes": 782299,
+      "sha256": "d31c2bbbeea7ae4b1c694d5ab2ea48aa2e4436b4937e91531f0e1008be06b2e6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot01/request.json",
+      "bytes": 3783,
+      "sha256": "7b10ee01ce536478ab32ba1104b744fe80b2bd918d16398e2e8a308236597734"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot01/result.json",
+      "bytes": 3361,
+      "sha256": "d8f45dbcff24c0dd91360f7f7df6b9ca824805d5afc2690900030e5f013b281c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot02/doguri-N-walk6-pilot02.png",
+      "bytes": 851104,
+      "sha256": "53ab4aac0c71397e7e9101ccadc8120600a0eb6e2ac902920dac8bb6114b49da"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot02/request.json",
+      "bytes": 3181,
+      "sha256": "525a56f896a24e503e303a291dde4a43c4eb91a3bff8408cd8d882b352d021a0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-N-walk6-pilot02/result.json",
+      "bytes": 3414,
+      "sha256": "70af03691b898911cacdd66d2365e696d5609eb57ccb08799ed89c7f1dabb027"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-pass-A-pilot01/doguri-W-pass-A-pilot01.png",
+      "bytes": 1034280,
+      "sha256": "1babd736d04e10da30e73d133fa0617844adcafb23a6bfbe34f0b395aa059cce"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-pass-A-pilot01/doguri-W-pass-A-pilot01.result.json",
+      "bytes": 1423,
+      "sha256": "552dff148fcca767ffc85a81a5d440929d3bfd7234356650681191814ca76fef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-pass-A-pilot01/request.json",
+      "bytes": 2464,
+      "sha256": "ef2d63f6198d179e5bf50bb3a033bcac01b2059767fea7b0666e397e30b57088"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/W-walk-original3-vs-source6.gif",
+      "bytes": 1636036,
+      "sha256": "168c9f6636a68f1564656957f469474a58d8f30164e1aad961e4330f97588a66"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/W-walk-original3-vs-source6.mp4",
+      "bytes": 1316730,
+      "sha256": "583c97cbc05240d0684a7466da290d8336265806ec0a7edb1049f88fe13c3ca0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/actual-Main-captures-01.zip",
+      "bytes": 22667977,
+      "sha256": "61b94e49771871d41643a8cbdc96db0934a1c0205a60b9c39e229d242f7f94b1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/actual-Main-captures-02.zip",
+      "bytes": 19230599,
+      "sha256": "0e974d16824f0cf9039227e1f43988c8285f46bb889332c1e2705d2062f39aab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/delivery-proof.json",
+      "bytes": 8196,
+      "sha256": "2403f5ec02458387c6dd0270a22047acfdabcafac0e925cd5ea679e1fe1a13bb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/process-result.json",
+      "bytes": 508,
+      "sha256": "f90178e946c3c90fc7e3a23ba7eaf5c6b0b18835a21bb08117bb32e6c95b6404"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/report.json",
+      "bytes": 297325,
+      "sha256": "1248beb125ba35c7e67190ebe1a3fcac570e6726990e68c1611162b5120e2aaf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/run-log.txt",
+      "bytes": 749,
+      "sha256": "46aeec6bd57408459556ab1e744a5ff015e0d900837f7ca05560e035e07a4551"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/source-preflight.json",
+      "bytes": 1806,
+      "sha256": "f280ccb296d8feb1bd637d14fa48d0dd0f8a5fcab501b83f4e646f0fcd5d0e25"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-Main/validation.json",
+      "bytes": 8642,
+      "sha256": "24cb3ae31e541ea0cec74465877424db03b5a4cc19127a814dadf599e3738067"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-preview-v03.json",
+      "bytes": 12314,
+      "sha256": "9c9e0f4953597ff8f24be7bdf8add1d8aef65498d7eb3ef525dab62984b3c951"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk-preview.json",
+      "bytes": 12273,
+      "sha256": "b25731fd2e7224e82e452ea87b1eba961ccc861d8844c797fb3cc314fa28e901"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot01/doguri-W-walk6-pilot01.png",
+      "bytes": 1195193,
+      "sha256": "a9361ad9968c4d59b82d5e249a95635056ec403af98bae60efcee44716882bb2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot01/request.json",
+      "bytes": 3482,
+      "sha256": "bdd52f1d680a4d8aecd1d9db41c7403177ab0c63b1e60dbe62be63bbdd86e115"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot01/result.json",
+      "bytes": 3475,
+      "sha256": "29ee3a9a7ec1a7ef9399aef3f2190f1d8d1dcacec7748ba04532b1cdbb913a5a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot02/doguri-W-walk6-pilot02.png",
+      "bytes": 717023,
+      "sha256": "e8120384ffa7ea46a3ff51cdba60ff806ae4cd28bc2acc196a2757c77d649386"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot02/request.json",
+      "bytes": 3439,
+      "sha256": "39763c2cf180020242d73c0531074c003b8e9f1a006e31b2ecdd6b12880c7ddf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot02/result.json",
+      "bytes": 3298,
+      "sha256": "ee3723bf17ae3771a323e24d8ab2e0586752026d9bb4422aab8aa768273ffbc4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/doguri-W-walk6-pilot03.png",
+      "bytes": 725203,
+      "sha256": "9867913c5f5af0f27d40f7d90d7ef908e6f39d78e9cbb4e75d3f621f3d3c0b60"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/request.json",
+      "bytes": 3067,
+      "sha256": "5336e77f9bfd8dce940874f60efc701e22ed5f5bc8dca1e7dab1eb732688f91b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/doguri-W-walk6-pilot03/result.json",
+      "bytes": 3432,
+      "sha256": "7d50858c1a12e4691db1883695cd4e2c04825d1246480e8a416b0cb03c80d0d8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/delivery-status.json",
+      "bytes": 176,
+      "sha256": "9e1d58c856020ee881d003ff00fe5a84e67ee28d76a1455b2121849bb40f905b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-E-run-source-preview01/process-result.json",
+      "bytes": 507,
+      "sha256": "eb52fe06d552185e0274c2f9d0709f44dd6c5e6d1703816b679e5492b31a3811"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-E-run-source-preview01/report.json",
+      "bytes": 210659,
+      "sha256": "3f60d588fdfa55e7c7d55d72ca82d6f56304e7645d2e4bf80a5d814babd2e23e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-E-run-source-preview01/run-log.txt",
+      "bytes": 747,
+      "sha256": "c3170d9978c60ca7f70a84fec5543cd759accd306db39c04f01c4ca8e95a3e63"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-E-run-source-preview01/source-preflight.json",
+      "bytes": 1834,
+      "sha256": "c954704d7a8c633544c827e54228921f358507863fa6800c267b17617a491adb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-E-run-source-preview01/validation.json",
+      "bytes": 8604,
+      "sha256": "1cb1d97c7c5cf4011bab5a5e39f547603a47170d711509c9ce3a919348539c07"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-N-gait-source-preview01/process-result.json",
+      "bytes": 506,
+      "sha256": "cfe1bfa4c2811b74cbd47c0407fee49bef9e5dfe7cf2521e512eeafc3b4b9a03"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-N-gait-source-preview01/report.json",
+      "bytes": 291957,
+      "sha256": "ccc6d0992ac92e9e2c18abcd85630b7a350537ea3501ed9b6a6051a26a0c5795"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-N-gait-source-preview01/run-log.txt",
+      "bytes": 748,
+      "sha256": "4034e3d60627ae8976a8291bcbb3100ac9410d90f9e9af71866b92007d0fa52c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-N-gait-source-preview01/source-preflight.json",
+      "bytes": 1788,
+      "sha256": "1a308cd4a955cbff9b2428def15c606e89dc82b8bb4d27ef333d0b63fb6ca04f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-N-gait-source-preview01/validation.json",
+      "bytes": 8624,
+      "sha256": "c7fe5eff8c2d6f45f110894a0ec27fc123e160fcaecf51903e0a424f1be7d30d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview01/process-result.json",
+      "bytes": 508,
+      "sha256": "795559d0ced69271c74941f79cd53ad94cb3f9af1f824b019ea3792a98d30ab5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview01/report.json",
+      "bytes": 296914,
+      "sha256": "ca48c4a6e524129a91436ee76f451288a42d3987bf3de171c9efe70e8c542900"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview01/run-log.txt",
+      "bytes": 748,
+      "sha256": "5a51c8f799a106f7c1839d0853958abd24b15d12819e0d6b29d58d8f3bc67db1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview01/source-preflight.json",
+      "bytes": 1788,
+      "sha256": "45d16a6c721d9b43f709523e427125dc7969d65cdb04af58859bf0569effaf68"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview01/validation.json",
+      "bytes": 8624,
+      "sha256": "a7032986e293ccd7372b64e90b225f14ceb98b2e2503f9f76ee5c756620b72cd"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview02/process-result.json",
+      "bytes": 507,
+      "sha256": "ef4d117b0344ec209408c5a2c9e08076cdd90e0456ec8d7e8a589803bbbc211e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview02/report.json",
+      "bytes": 296950,
+      "sha256": "ddf6ae6e139ca002ee3c65b5ebc4899cddfde889711bfda0f90fb77a69012aaf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview02/run-log.txt",
+      "bytes": 748,
+      "sha256": "df3d22317c7b81d90b6f7e84bc98bc18c655bdfbe481770c11f5e13151cc6763"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview02/source-preflight.json",
+      "bytes": 1788,
+      "sha256": "2217393e68ad78010dab24a7cecd7219e59794e5811b8eef13706ee9622368aa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-W-gait-source-preview02/validation.json",
+      "bytes": 8624,
+      "sha256": "7d72e1b1b320489824ac748555da60b6f87b8340853058feca29198ae974c4db"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview02/process-result.json",
+      "bytes": 507,
+      "sha256": "dd2ce498e6ac5f255c54cb61d15f8249e93ae86923d88b9119ea561501ff08ab"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview02/report.json",
+      "bytes": 290923,
+      "sha256": "fea5487579dfa03cbdf1755fd02bdf1efe005c9710753bfdb84383710232488c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview02/run-log.txt",
+      "bytes": 746,
+      "sha256": "52401ae580b146504aaa4964e6097374d411606497d868d96326cf4bcf84f2fc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview02/source-preflight.json",
+      "bytes": 1794,
+      "sha256": "a6576a450e11b901de931b254f1723cf945dd1d8daac80f93000f43a24f22741"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview02/validation.json",
+      "bytes": 8553,
+      "sha256": "f4df1fb84bc8cce6dde734778e9e1ddceb227d9e2e0627d02dbfd967a5bc9205"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview03/process-result.json",
+      "bytes": 507,
+      "sha256": "2a36b8e6b9c679ebb3218f992a085dba3c1a4460aff5d604a0bada4ae8ab79d6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview03/report.json",
+      "bytes": 291298,
+      "sha256": "6660064d4f01a4b07a74da54e1b8fad274a8d71957837d3586a9e33a6c810a32"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview03/run-log.txt",
+      "bytes": 747,
+      "sha256": "a65c52da4b37187e00829f2f308b12f7c05c4c9b0badcdfdf6dcacc77a0b34b2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview03/source-preflight.json",
+      "bytes": 1812,
+      "sha256": "6c5bcfa28f44d8e53be3083071d56ad215a51f0dd6bace103821e7889968082f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/doguri-gait-source-preview03/validation.json",
+      "bytes": 8571,
+      "sha256": "f06eaf556a304f212cf763d4a52618638ee24e7be6e43ae65bfe680e786d41a1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview05/process-result.json",
+      "bytes": 508,
+      "sha256": "6c23d0bbb82b01706f51d05c180f17a77ee43f74ae367ad627107318a2458036"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview05/report.json",
+      "bytes": 286355,
+      "sha256": "47ccc68db78f664c064df4a0ea5bc5a515fb4f3b60e4e72c997c6685e09e038b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview05/run-log.txt",
+      "bytes": 746,
+      "sha256": "f17a6a9eccd493ac1ba8eccb5c32d87f35a817f1655f523482f093cda46e779e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview05/source-preflight.json",
+      "bytes": 1814,
+      "sha256": "fd171d2e38b4c6395315fb9fde2e5b1eebe3daf543aa11769afb055b3668a4d5"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview05/validation.json",
+      "bytes": 7867,
+      "sha256": "2c2e740a62e160f66f853674fd5709d961eadfcdbd9968b92d0c113be58c5942"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview06/process-result.json",
+      "bytes": 508,
+      "sha256": "a33fd260f27947b65195b883913ee6b1b19991e2637558402d10aeebe05b28f0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview06/report.json",
+      "bytes": 286730,
+      "sha256": "8fca70ca7758ad4d972bb631a0e159a7f9264de3ff480728f2ab59570aaa73b0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview06/run-log.txt",
+      "bytes": 747,
+      "sha256": "9700cc0fca9afe7ae27cf4aec594e12f024591cfbc73ac9edd7764baf22474a7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview06/source-preflight.json",
+      "bytes": 1832,
+      "sha256": "14418d3fdf8aabd993a62b15e7b85a55c7ca367a516bef59a6fecaad3fb16eb2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/earlier-and-regression-reports/reaper-gait-source-preview06/validation.json",
+      "bytes": 7885,
+      "sha256": "3f8800f9a6736339716da2a069ca7eb34596b8271c76f4e5132a086b5629eacf"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-anchor-on-foot.json",
+      "bytes": 10938,
+      "sha256": "f0f377f52f8e92a7f6a2f2d5f153754d57ae8cd47d037b2345ef2bfc353d7cfa"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-anchor-on-foot.refusal.txt",
+      "bytes": 416,
+      "sha256": "0b83514ba9b4a79fba255fbad15219b740d2e22c4264ee8c98ad1f1bd4c09c07"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-gap-over-limit.json",
+      "bytes": 10938,
+      "sha256": "4d9315c5344e0296aa3be80416138973d18df20b6e08a14e95a2f6733f5683a8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/airborne-gap-over-limit.refusal.txt",
+      "bytes": 416,
+      "sha256": "0b83514ba9b4a79fba255fbad15219b740d2e22c4264ee8c98ad1f1bd4c09c07"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/attempted-production-promotion.refusal.txt",
+      "bytes": 498,
+      "sha256": "3c0fe32f038fe3f3437836a711c92641d9caf729f45425fed839f316e057783c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/cropped-source-region.refusal.txt",
+      "bytes": 328,
+      "sha256": "6bfc3d8702b341ee52a5060a561940deab7248519c4fed90b1a12d5415f98975"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/duplicate-body-missing-row.refusal.txt",
+      "bytes": 404,
+      "sha256": "2376a8f301476847cc3e205c66e13c768c4b5807d290d0a56fd09723f574cb2b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/missing-run-contract.json",
+      "bytes": 10873,
+      "sha256": "050d314350be418683567e80f15b1a36107623f83f2af35b324534a0dfe1987a"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/missing-run-contract.refusal.txt",
+      "bytes": 429,
+      "sha256": "a7f003027934b411eec745160ddba51e4593f690134220521faf61d57c21f652"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/out-of-order-phase.refusal.txt",
+      "bytes": 404,
+      "sha256": "2376a8f301476847cc3e205c66e13c768c4b5807d290d0a56fd09723f574cb2b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/receipt.json",
+      "bytes": 4132,
+      "sha256": "d3f75b62afa647cafc11d04b377ea03eec5161251b556e65f7432a7a4e5da568"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/walk-speed-labelled-run.json",
+      "bytes": 10938,
+      "sha256": "ff773998b024ee3d658478ca08a52867286eda040ba4be13998c55d5dddba636"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/walk-speed-labelled-run.refusal.txt",
+      "bytes": 356,
+      "sha256": "7563a8e4ac034fdb53a3b77f09a9514bc32029e38ae4c232f837943414ac3575"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-declared-direction.refusal.txt",
+      "bytes": 402,
+      "sha256": "b11ec1a3cd1b10a335ab008c2707ee86e76254649e645365b2fda4f06c1253b6"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-ground-margin.json",
+      "bytes": 10938,
+      "sha256": "0ba4cc088ca2cf931bf96c21ba4f391db5b8ab8fe44352899b5ccd65913187d9"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-ground-margin.refusal.txt",
+      "bytes": 362,
+      "sha256": "4147e621bf120343c4b0b0a7c273a5a525260b7ec68eff517cc4f0fcbc0536ef"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-horizontal-axis.refusal.txt",
+      "bytes": 661,
+      "sha256": "811dc6b16a2eadfb903f1208c63897b4209a5d9fda67ce2ad6e9f64e9d14dacc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-run-registration-controls/wrong-whole-PNG-SHA.refusal.txt",
+      "bytes": 440,
+      "sha256": "85b7e899afbeb6262c1ae2526ef0fe11db09405c3c87805675d98156febd7e70"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/attempted-production-promotion.refusal.txt",
+      "bytes": 498,
+      "sha256": "8122741bcc0780e855513d661fe6eb6422287fdc42088214c3ec1f4e0a8e8e18"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/cropped-source-region.refusal.txt",
+      "bytes": 328,
+      "sha256": "20ce841cc6a6bff5e45e546fc468342d491ff4a344063e5799506ea3d8540478"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/duplicate-body-missing-row.refusal.txt",
+      "bytes": 404,
+      "sha256": "f1961141ecf650dfa5dad188fd86b2d080133e30fbed3306ace296d5ee7afa05"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/out-of-order-phase.json",
+      "bytes": 12314,
+      "sha256": "5424c07d9008b439559157bcd2ba2acf48b8566129ed521f4309c24d31cfad1f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/out-of-order-phase.refusal.txt",
+      "bytes": 404,
+      "sha256": "f1961141ecf650dfa5dad188fd86b2d080133e30fbed3306ace296d5ee7afa05"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/receipt.json",
+      "bytes": 2572,
+      "sha256": "98692a8d6f085ff76b06cdce4d6fbc51fca1115677854f54fa9ae39b8a0e70ad"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/wrong-declared-direction.json",
+      "bytes": 12314,
+      "sha256": "17597092d88a45317118f4c74f363098dbd8fc7e31b731b0851c74c4b96a32e7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/wrong-declared-direction.refusal.txt",
+      "bytes": 402,
+      "sha256": "7dc12721a43e8a7d6d2cf2ac3437bf6c16604253fa39f9b7d2b2fe1cba44d37b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/wrong-horizontal-axis.json",
+      "bytes": 12317,
+      "sha256": "6deb8554ca0a36f0bbf42f6599578ce1338cc4211ab3507cbd78cacca359a74b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/wrong-horizontal-axis.refusal.txt",
+      "bytes": 661,
+      "sha256": "5da5ca1739673d179fd622febd23da026c10a4ec779026d78e0e25b370d13f4e"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/negative-source-controls/wrong-whole-PNG-SHA.refusal.txt",
+      "bytes": 440,
+      "sha256": "e00bbbfefb5682823d69a6e8624fe0ad51a3a3283f3a169758faaee7c6121dbb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/project-import-boot/boot.log.txt",
+      "bytes": 137,
+      "sha256": "03ec8cbb9bea0492319a3549ec61107699c4aec7919f0190c7564813cc5abee8"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/project-import-boot/delivery.json",
+      "bytes": 558,
+      "sha256": "0112a5e8b6b0e926133dee1b64f328c2d3a5f595ea900c91aab395dc1615f8eb"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/project-import-boot/import.log.txt",
+      "bytes": 12748,
+      "sha256": "868e00c72d81fb11821fdd763525f934ff45caf97e541f694cacf6c30fec4a69"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-remaining106/batch09/project-import-boot/summary.json",
+      "bytes": 311,
+      "sha256": "d75945bcc6f8245d78deece7484048dedd398116131d6cd9ce6e6e6b951541bd"
+    }
+  ],
+  "all_actual_source_PNGs_tracked": 16,
+  "commit": "233ff40684819621f9b8c0f5b7c7a87f93216f53",
+  "raw_log_whitespace": "Exact boot log retains final blank line; raw log bytes deliberately unchanged. Code/metadata whitespace checked separately."
+}

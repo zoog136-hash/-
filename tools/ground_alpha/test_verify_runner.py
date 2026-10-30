@@ -18,10 +18,16 @@ class AlphaRunnerTests(unittest.TestCase):
             result = verify.run_engine(['engine'], {}, importing=importing, script=script)
             return result, isolated.call_args
 
-    def test_import_has_900_second_bound(self):
+    def test_import_has_1800_second_bound(self):
         result, args = self.response(importing=True)
-        self.assertEqual(result, ('outerr', 0, 900))
-        self.assertEqual(args.kwargs['timeout'], 900)
+        self.assertEqual(result, ('outerr', 0, 1800))
+        self.assertEqual(args.kwargs['timeout'], 1800)
+
+    def test_explicit_import_timeout_override_keeps_strict_deadline(self):
+        with patch.object(verify, 'run_isolated', return_value=subprocess.CompletedProcess(['engine'], 0, 'ok', '')) as isolated:
+            text, code, budget = verify.run_engine(['engine'], {}, importing=True, import_timeout=900)
+        self.assertEqual((text, code, budget), ('ok', 0, 900))
+        self.assertEqual(isolated.call_args.kwargs['timeout'], 900)
 
     def test_normal_stage_retains_240_second_bound(self):
         result, args = self.response(script='ground_alpha_test')
@@ -44,10 +50,10 @@ class AlphaRunnerTests(unittest.TestCase):
         self.assertEqual(args.kwargs['cwd'], str(verify.ROOT))
 
     def test_timeout_preserves_both_streams_and_fails(self):
-        error = subprocess.TimeoutExpired(['engine'], 900, output=b'progress\xff', stderr=b'error detail')
+        error = subprocess.TimeoutExpired(['engine'], 1800, output=b'progress\xff', stderr=b'error detail')
         with patch.object(verify, 'run_isolated', side_effect=error):
             text, code, budget = verify.run_engine(['engine'], {}, importing=True)
-        self.assertEqual((code, budget), (124, 900))
+        self.assertEqual((code, budget), (124, 1800))
         self.assertIn('progress', text); self.assertIn('error detail', text); self.assertIn('TIMEOUT', text)
 
     def test_text_timeout_output(self):

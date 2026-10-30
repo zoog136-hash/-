@@ -1,0 +1,82 @@
+{
+  "tool": "image_gen__imagegen",
+  "actual_service_calls_for_SW": 1,
+  "elapsed_ms": 58931,
+  "result_keys": [
+    "image_url",
+    "output_hint"
+  ],
+  "image_url_characters": 1267114,
+  "payload_characters": 1267092,
+  "actual_chunks": 26,
+  "actual_writer_session": 99180,
+  "mask_used": false,
+  "source_original": {
+    "path": "/workspace/scratch/mythic413-SW-private-base-generation-continuing-20261020-v01/service-SW-fullbody-base-native-r001.png",
+    "sha256": "1e5de9a93d8755783a2405733eddb21f7f59b3141acb9f5204332228a7a263ee",
+    "bytes": 950319,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "native_untouched": true
+  },
+  "image_url_sha256": "8aa63d9f85e5ce75ce722cb3ede1184059f42f9feddcff7b1665702bf3ddc93b",
+  "writer_sha256": "b53df21208a35f6cae806c12bf95076dffce336d858ad96ca67abe5deb3ea0c6",
+  "request_sha256": "558bf0bfaa783b2746e7e9ce26dbd1e91de9394d0b7b55ca92712b17f87cfe68",
+  "output_hint_sha256": "c5597e5f13dc703b879da3a4798518104fd35175388c41156cc72b2136c36455",
+  "source_alpha_stats": {
+    "1": {
+      "bbox": [
+        17,
+        9,
+        1240,
+        1254
+      ],
+      "foreground_pixels": 356608,
+      "border_pixels": 6,
+      "component_count": 2027,
+      "components_at_least_100px": 2,
+      "largest_component_pixels": 351401
+    },
+    "8": {
+      "bbox": [
+        306,
+        38,
+        990,
+        1170
+      ],
+      "foreground_pixels": 315159,
+      "border_pixels": 0,
+      "component_count": 252,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 314840
+    },
+    "100": {
+      "bbox": [
+        307,
+        39,
+        988,
+        1167
+      ],
+      "foreground_pixels": 306249,
+      "border_pixels": 0,
+      "component_count": 18,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 306225
+    }
+  },
+  "preview": {
+    "path": "/workspace/scratch/mythic413-SW-private-base-generation-continuing-20261020-v01/private-produced-SW-base-quality-v01.jpg",
+    "sha256": "0b825b210b162371976d3e24788702f7a6b0ddaf09f613da312959073a78f5d0",
+    "bytes": 67479,
+    "size": [
+      760,
+      760
+    ]
+  },
+  "image_forwarded": false,
+  "base64_forwarded": false,
+  "raw_resampled": false
+}

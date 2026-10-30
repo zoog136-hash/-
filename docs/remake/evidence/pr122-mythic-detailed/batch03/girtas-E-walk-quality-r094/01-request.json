@@ -1,0 +1,273 @@
+{
+  "key": "transform:267",
+  "name": "기르타스",
+  "direction": "E",
+  "role": "walk",
+  "source_batch": "batch03",
+  "version": "v14six",
+  "status": "SOURCE_SIX_COMPLETE_PENDING_PHYSICAL_RUNTIME_QC_NOT_APPROVED",
+  "request_kind": "LOSSLESS_EXACT_RGBA_ALLNEW_INDEPENDENTLY_REVIEWED_SINGLE_POSE_ASSEMBLY_NO_IMAGEGEN",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "reused_poses": 0,
+  "transparent_background": true,
+  "references": [
+    "/workspace/scratch/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09.png",
+    "/workspace/scratch/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13.png",
+    "/workspace/scratch/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/girtas-E-walk-RIGHT-midstance4-freshlegs-v05.png",
+    "/workspace/scratch/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09.png": "196f221e73c263aeda59c60b9e688b669fce515fcf441cd115ba6e7ce7e51574",
+    "/workspace/scratch/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13.png": "d3b774f65b5e4a8e77a365ea9fe815f18298914ef1fe912c575514fa0ade666e",
+    "/workspace/scratch/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11.png": "0503368555dae9b3bc6a73209728c0f5e681e21aba2c4386ea16bb49646fc9b3",
+    "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png": "1f3c6196b4d27db4bebfd74761593a289e731b9dda7b4d3742d99c13cad466ee",
+    "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/girtas-E-walk-RIGHT-midstance4-freshlegs-v05.png": "8fc156a5061214a47ce394c90d9b3aa3ec9f6d2d71ba4196453269b7b556d583",
+    "/workspace/scratch/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12.png": "389e5a4da7cdb5f204d3bcca387c0589d243c89649a60295d71c3125d8304a0e"
+  },
+  "source_provenance": {
+    "status": "ALL_SIX_INDIVIDUAL_SOURCE_PASS_ONLY",
+    "key": "transform:267",
+    "sources": [
+      {
+        "target_pose": 0,
+        "request": "/workspace/scratch/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09/request.json",
+        "request_sha256": "7c7ce592c58b36e5a99ff7014e16f2e9511ba80d1db032e8f0b7cd21b8f9dee3",
+        "raw_path": "/workspace/scratch/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09.png",
+        "raw_sha256": "196f221e73c263aeda59c60b9e688b669fce515fcf441cd115ba6e7ce7e51574",
+        "independent_source_review": {
+          "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-LEFT-contact0-v09-independent-source-review.json",
+          "sha256": "56bae43901758cadb837418d69621a869b641604766b8b9e61c9db9ec2035a24",
+          "status": "SCOPED_SINGLE_SOURCE_PASS"
+        }
+      },
+      {
+        "target_pose": 1,
+        "request": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13/request.json",
+        "request_sha256": "3bdfab0b56286d1dd3cb46b5e9f3a7529ea74f90da41c47ae488e3d30a5b9904",
+        "raw_path": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13.png",
+        "raw_sha256": "d3b774f65b5e4a8e77a365ea9fe815f18298914ef1fe912c575514fa0ade666e",
+        "independent_source_review": {
+          "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-LEFT-midstance1-underarmor-v13-independent-source-review.json",
+          "sha256": "e67042c2c8d16db362bf20260265500c4aa46e0e4a48a4c19b028c6eecddabb6",
+          "status": "SCOPED_SINGLE_SOURCE_PASS"
+        }
+      },
+      {
+        "target_pose": 2,
+        "request": "/workspace/scratch/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11/request.json",
+        "request_sha256": "458f1194d65871201f0d16f4fd2f239929c48c39454afed5a5eca365d72156f5",
+        "raw_path": "/workspace/scratch/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11.png",
+        "raw_sha256": "0503368555dae9b3bc6a73209728c0f5e681e21aba2c4386ea16bb49646fc9b3",
+        "independent_source_review": {
+          "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11-independent-source-review.json",
+          "sha256": "df1d2766a74fa2d83659e6888bb6ddc7616e4add29d615c3b991d9028900856b",
+          "status": "PASS"
+        }
+      },
+      {
+        "target_pose": 3,
+        "request": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/request.json",
+        "request_sha256": "c305fac2140a76f289eadc6a4901649f0dd0e93d5eb89faf0094fa094dd354a0",
+        "raw_path": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png",
+        "raw_sha256": "1f3c6196b4d27db4bebfd74761593a289e731b9dda7b4d3742d99c13cad466ee",
+        "independent_source_review": {
+          "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-RIGHT-visible-hip-v08-independent-source-review.json",
+          "sha256": "215605660184d4b219ff2f20ade3df0e5e4b742b4810e667b08dbc5b36ebbd61",
+          "status": "SCOPED_SINGLE_SOURCE_PASS"
+        }
+      },
+      {
+        "target_pose": 4,
+        "request": "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/request.json",
+        "request_sha256": "bde290bfc0990586b0d203012e1132ef1e49b4778791ac77054b3d2364cff647",
+        "raw_path": "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/girtas-E-walk-RIGHT-midstance4-freshlegs-v05.png",
+        "raw_sha256": "8fc156a5061214a47ce394c90d9b3aa3ec9f6d2d71ba4196453269b7b556d583",
+        "independent_source_review": {
+          "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-RIGHT-midstance4-v05-independent-source-review.json",
+          "sha256": "6d0cba1c97d3efb2a943d37c03d9c37b884ead6c6fd6061a07681264e913bdb5",
+          "status": "SCOPED_SINGLE_SOURCE_PASS"
+        }
+      },
+      {
+        "target_pose": 5,
+        "request": "/workspace/scratch/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12/request.json",
+        "request_sha256": "23ef00d08a80cf3b752999f4649e0846981a4efe4641a8357732a7e82d6241b3",
+        "raw_path": "/workspace/scratch/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12.png",
+        "raw_sha256": "389e5a4da7cdb5f204d3bcca387c0589d243c89649a60295d71c3125d8304a0e",
+        "independent_source_review": {
+          "path": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12-independent-source-review.json",
+          "sha256": "cd6137b004103ce103f2d633458d56184739ecfd31032c89c813932fbf61294a",
+          "status": "PASS"
+        }
+      }
+    ],
+    "newly_authored_poses": 6,
+    "reused_poses": 0,
+    "actor_increment": 0
+  },
+  "source_pose_map": {
+    "schema": "pr122-reviewed-pose-map-v1",
+    "key": "transform:267",
+    "direction": "E",
+    "role": "walk",
+    "poses": [
+      {
+        "path": "/workspace/scratch/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09/girtas-E-walk-LEFT-contact0-visible-RIGHT-backhip-v09.png",
+        "source_sha256": "196f221e73c263aeda59c60b9e688b669fce515fcf441cd115ba6e7ce7e51574",
+        "source_pose": 0,
+        "target_pose": 0,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "4a9338dadfb58b859db43d6bfc9a4d979b0c9626899a080b823b04863f7985e6",
+        "newly_authored": true,
+        "review_basis": "Independent actual single SOURCE PASS: /workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-LEFT-contact0-v09-independent-source-review.json SHA256=56bae43901758cadb837418d69621a869b641604766b8b9e61c9db9ec2035a24; no actor/physicalruntime approval."
+      },
+      {
+        "path": "/workspace/scratch/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13/girtas-E-walk-LEFT-midstance1-faithful-underarmor-v13.png",
+        "source_sha256": "d3b774f65b5e4a8e77a365ea9fe815f18298914ef1fe912c575514fa0ade666e",
+        "source_pose": 0,
+        "target_pose": 1,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "d245421d05a4cd0844e9bbf43485488829d592d6094437ea9ada4f481dad61a9",
+        "newly_authored": true,
+        "review_basis": "Independent actual single SOURCE PASS: /workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-LEFT-midstance1-underarmor-v13-independent-source-review.json SHA256=e67042c2c8d16db362bf20260265500c4aa46e0e4a48a4c19b028c6eecddabb6; no actor/physicalruntime approval."
+      },
+      {
+        "path": "/workspace/scratch/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11/girtas-E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11.png",
+        "source_sha256": "0503368555dae9b3bc6a73209728c0f5e681e21aba2c4386ea16bb49646fc9b3",
+        "source_pose": 0,
+        "target_pose": 2,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "fd45d7567b519b574ecfa27c2405e657910fbc2f5968855958512561d82da162",
+        "newly_authored": true,
+        "review_basis": "Independent actual single SOURCE PASS: /workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-LEFT-toeoff2-visible-RIGHT-reach-v11-independent-source-review.json SHA256=df1d2766a74fa2d83659e6888bb6ddc7616e4add29d615c3b991d9028900856b; no actor/physicalruntime approval."
+      },
+      {
+        "path": "/workspace/scratch/girtas-E-walk-RIGHT-contact3-visible-hip-v08/girtas-E-walk-RIGHT-contact3-visible-hip-v08.png",
+        "source_sha256": "1f3c6196b4d27db4bebfd74761593a289e731b9dda7b4d3742d99c13cad466ee",
+        "source_pose": 0,
+        "target_pose": 3,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "3165754b3e0a5ffa60f8f7497b209daf13372015ad23a60f18f9dcfc5650f984",
+        "newly_authored": true,
+        "review_basis": "Independent actual single SOURCE PASS: /workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-RIGHT-visible-hip-v08-independent-source-review.json SHA256=215605660184d4b219ff2f20ade3df0e5e4b742b4810e667b08dbc5b36ebbd61; no actor/physicalruntime approval."
+      },
+      {
+        "path": "/workspace/scratch/girtas-E-walk-RIGHT-midstance4-freshlegs-v05/girtas-E-walk-RIGHT-midstance4-freshlegs-v05.png",
+        "source_sha256": "8fc156a5061214a47ce394c90d9b3aa3ec9f6d2d71ba4196453269b7b556d583",
+        "source_pose": 0,
+        "target_pose": 4,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "fa28a7573ba212116b7b84b6d4a7acdb48402b87a7d884e451ab32873891f44a",
+        "newly_authored": true,
+        "review_basis": "Independent actual single SOURCE PASS: /workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-RIGHT-midstance4-v05-independent-source-review.json SHA256=6d0cba1c97d3efb2a943d37c03d9c37b884ead6c6fd6061a07681264e913bdb5; no actor/physicalruntime approval."
+      },
+      {
+        "path": "/workspace/scratch/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12/girtas-E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12.png",
+        "source_sha256": "389e5a4da7cdb5f204d3bcca387c0589d243c89649a60295d71c3125d8304a0e",
+        "source_pose": 0,
+        "target_pose": 5,
+        "region": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "rgba_sha256": "f9954806237763116bc027e75b29fe464a36fe21f97aadbf401f1df39eed0ce1",
+        "newly_authored": true,
+        "review_basis": "Independent actual single SOURCE PASS: /workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-walk-RIGHT-toeoff5-visible-RIGHT-backhip-v12-independent-source-review.json SHA256=cd6137b004103ce103f2d633458d56184739ecfd31032c89c813932fbf61294a; no actor/physicalruntime approval."
+      }
+    ],
+    "physical_scale_review": "REQUIRED actual rigid head/shoulder markers and 20canonical near/far E ground projection; no silhouette bbox normalization."
+  },
+  "source_region_review": {
+    "schema": 1,
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+    "base_geometry_sha256": "b364c1a905fec67c35c80cea61006000a6c76f2da4a07be6f5ffc198a6905aef",
+    "direction": "E",
+    "review_basis": "Metadata-only outward union of each exact1254fullRGBA pasted source rectangle with unchanged automatic region. Six disjoint1536cells, strict physical owner rule and allalpha16 coverage, no source pixel edit/resizing/mirror. Source individual6 anatomy independently PASS. Physical/runtimeapproval remains separate.",
+    "regions": [
+      [
+        141,
+        141,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        141,
+        1254,
+        1254
+      ],
+      [
+        141,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        1677,
+        1254,
+        1254
+      ],
+      [
+        141,
+        3213,
+        1254,
+        1254
+      ],
+      [
+        1677,
+        3213,
+        1254,
+        1254
+      ]
+    ],
+    "nearest_owner_sha256": "95903ffd1765abc9ecbdf1727cf7c2761f70b85c2a302a0cabec6ca89bfec3e1"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "1f222e10e86ad6a1e088e8212dba9ee3c88b0f0ea08194a5433304c7bf01fa54",
+    "canvas_size": 2048,
+    "review_basis": "ExactRGBA full1254source×6 in1536cells; source/outputsource region outward metadata includes1previously omitted alpha16fringe pixel. Tested strict finalizer, unchanged raw PNG/error receipts, complete sourceownership. Actual rigidmarker perposeC/root QC separate, no bbox normalization."
+  },
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-E-walk-v02.png",
+  "replaces_selected_source_sha256": "84e17c6b4bbe6ee9f4268167529d7888959e6ce8af7465243466afb047345492",
+  "corrective_reason": "Replace old Girtas Ewalk with SIX genuinely new faithful walk phases, actual anatomically alternating LEFTcontact/midstance/toeoff,RIGHTcontact/midstance/toeoff and opposite AIR reach. All six independently SOURCEPASS with visible hip/thigh ownership, phase1 actual underarmor restored. Strict source/alpha16 ownership and cross288 uniqueness preserved. Existing oldsource/HOLDs/requests retained. Actor completion remains separate.",
+  "user_authorization": "Continuous actual Unique boss animation, no mainchat PNG/image/binary; root only Git/data/integration; no PR100/fullCI.",
+  "partial_request_actor_label_note": "Original single-image authoring requests preserve transform_267 textual label unchanged; provenance maps all six to canonical transform:267 and final wrapper uses canonical key only.",
+  "approval": false,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "requested_at": "2026-10-19T15:16:22.982382+00:00"
+}

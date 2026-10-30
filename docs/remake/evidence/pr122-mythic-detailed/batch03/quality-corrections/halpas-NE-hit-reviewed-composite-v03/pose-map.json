@@ -1,0 +1,98 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:393",
+  "direction": "NE",
+  "role": "hit",
+  "poses": [
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+      "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+      "region": [
+        167,
+        50,
+        498,
+        415
+      ],
+      "rgba_sha256": "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511",
+      "source_pose": 0,
+      "newly_authored": false,
+      "review_basis": "Exact current selected correct NEidle 0 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion."
+    },
+    {
+      "path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+      "source_sha256": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+      "region": [
+        33,
+        97,
+        1194,
+        1031
+      ],
+      "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f",
+      "source_pose": "new_game1",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 1."
+    },
+    {
+      "path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+      "source_sha256": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+      "region": [
+        29,
+        70,
+        1216,
+        1105
+      ],
+      "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c",
+      "source_pose": "new_game2",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 2."
+    },
+    {
+      "path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png",
+      "source_sha256": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020",
+      "region": [
+        35,
+        92,
+        1210,
+        1082
+      ],
+      "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9",
+      "source_pose": "new_game3",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 3."
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+      "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+      "region": [
+        165,
+        1068,
+        498,
+        425
+      ],
+      "rgba_sha256": "7c580f92ef822f7fcaf07648304f7319fcc67c7e6fcea136cf7b34528e388a8e",
+      "source_pose": 4,
+      "newly_authored": false,
+      "review_basis": "Exact current selected correct NEidle 4 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion."
+    },
+    {
+      "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+      "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+      "region": [
+        906,
+        1068,
+        497,
+        426
+      ],
+      "rgba_sha256": "b2092d1e3de55fc326c800bf1e9337ef5056da634e6aa2bf68d1c59f7d05a692",
+      "source_pose": 5,
+      "newly_authored": false,
+      "review_basis": "Exact current selected correct NEidle 5 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion."
+    }
+  ],
+  "physical_scale_review": {
+    "status": "PENDING_EXTERNAL_LANDMARK_PROPOSAL",
+    "basis": "Source RGBA dimensions deliberately untouched, including large single-key resolution. No silhouette bbox normalization. Body neck/pauldron/pelvis scale and runtime hip anchors reviewed separately before integration."
+  },
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

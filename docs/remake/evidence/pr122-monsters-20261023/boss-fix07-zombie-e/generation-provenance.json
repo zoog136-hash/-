@@ -1,0 +1,71 @@
+[
+  {
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/raw/zombie-lord-E-far-left-plant-single-v01.png",
+      "bytes": 2001410,
+      "sha256": "6e01d0488c3dc7eb9c34035348656693df0840db2cd9949e27898ee49ac82a32"
+    },
+    "exact_request": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/requests/zombie-lord-E-far-left-plant-single-v01.json",
+      "bytes": 2400,
+      "sha256": "0fc139f84fd22b6b6b0719008cb9f03c40e4e9397cb3f25c7f600b82fa87332f"
+    },
+    "original_generated_path": "/workspace/generated_images/exec-d2f376d6-23c2-4912-83a9-c26245a73ca5.png",
+    "raw_pose_slots": 1,
+    "selected_source_rows": [],
+    "actual_source_findings": "Near large thigh still connects to forward grounded sole, only smaller far leg lifts behind. Independent queen reviewer agrees; semantic HOLD. Core2048 fit error is an importer limit, not a visual-quality rejection.",
+    "whole_sheet_as_ordered_RUN": "HOLD",
+    "new_approval": false,
+    "strict_whole_source_geometry": "IMPORTER_LIMIT_UNSELECTED",
+    "importer_note": "Pose cannot fit the foot-anchored canvas",
+    "alpha0_fraction": 0.459451279605786,
+    "low_alpha_1_to100_fraction": 0.018067715784453982
+  },
+  {
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/raw/zombie-lord-E-far-left-support3-guide-v01.png",
+      "bytes": 1449343,
+      "sha256": "19d1ea1c69d6b46dd563f7f084f0ff1ca74456befe8ddb280c706db027e2d5aa"
+    },
+    "exact_request": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/requests/zombie-lord-E-far-left-support3-guide-v01.json",
+      "bytes": 2737,
+      "sha256": "883af8b38b08c82da03bfccaef2417f3b015611cc306889e6388b23898144201"
+    },
+    "original_generated_path": "/workspace/generated_images/exec-b93e1921-3cf6-46b6-a4e1-4aad1538df8d.png",
+    "raw_pose_slots": 3,
+    "selected_source_rows": [
+      1,
+      2
+    ],
+    "actual_source_findings": "Row0 retains near support and is excluded. Rows1/2 clearly raise large near thigh/foot with smaller far leg grounded; independent queen reviewer confirms partial source-plane improvement.",
+    "whole_sheet_as_ordered_RUN": "HOLD",
+    "new_approval": false,
+    "strict_whole_source_geometry": "PASS",
+    "alpha0_fraction": 0.6477193236825571,
+    "low_alpha_1_to100_fraction": 0.02896504709650013
+  },
+  {
+    "source": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/raw/zombie-lord-E-run6-structural-final-v01.png",
+      "bytes": 2389491,
+      "sha256": "fba05c84ca0e8e9a54035c6e6f215dace724cba7e143e4b025c39f3efef9fe6a"
+    },
+    "exact_request": {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-fix07-zombie-e/requests/zombie-lord-E-run6-structural-final-v01.json",
+      "bytes": 3338,
+      "sha256": "11638650579bebc45595bed0b4f3d5d21ad5aab23ff062bbbd6ea70f7db79388"
+    },
+    "original_generated_path": "/workspace/generated_images/exec-3dbb77ff-d284-45d4-8a21-01f0c512abdc.png",
+    "raw_pose_slots": 6,
+    "selected_source_rows": [
+      4
+    ],
+    "actual_source_findings": "As a whole ordered sheet rows0/3 still repeat near support, so whole6 rejected. Only reviewed row4 far support selected; every raw pixel and all failed source poses preserved.",
+    "whole_sheet_as_ordered_RUN": "HOLD",
+    "new_approval": false,
+    "strict_whole_source_geometry": "PASS",
+    "alpha0_fraction": 0.6012630462646484,
+    "low_alpha_1_to100_fraction": 0.04296875
+  }
+]

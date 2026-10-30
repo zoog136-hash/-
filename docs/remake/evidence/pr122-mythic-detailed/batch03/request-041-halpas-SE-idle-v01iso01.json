@@ -1,0 +1,116 @@
+{
+  "key": "transform:393",
+  "direction": "SE",
+  "role": "idle",
+  "name": "해방된 할파스",
+  "version": "v01iso01",
+  "references": [
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/0a4de2a60525e7bdee76bd2d.png": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SE-walk-v02.png": "33c423be898e41466aac2cc862d409bd3950d4ea847421c773db457fd0b53b2b",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-E-idle-v01iso01.png": "77fdf18c910fdf1e80da6d6e05fcf4e1217472267a916d3f38bf9e2a1274880e"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG IDLE animation sprites of EXACTLY 해방된 할파스. The first original portrait is identity authority. The second saved SE native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for SE.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces SOUTHEAST / screen down-right, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: neutral breathing; 1: inhale begins; 2: inhale peak; 3: weight / wing settling; 4: exhale; 5: return close to initial guard.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nThis is an idle breathing/hover loop. Keep the support/root stable, with coherent chest and wing articulation. Last phase should lead naturally back to phase0.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "neutral breathing",
+    "inhale begins",
+    "inhale peak",
+    "weight / wing settling",
+    "exhale",
+    "return close to initial guard"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "request-040-halpas-SE-idle-v01.json",
+  "processing_proof": {
+    "source_sha256": "c75c61bf961b35437731ee73c946ac277c8401d8d6cf1dc6476e1500a21bc6f1",
+    "output_sha256": "87b7690fad0a65ba2db12202a3b8b736fd67a2d2b71ac0429cd2e0b131198cd3",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-idle-v01.png",
+    "output": "/workspace/scratch/halpas-SE-idle-v01iso01.png",
+    "preserved_foreground_rgba": true,
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 85010,
+    "maximum_removed_alpha": 14,
+    "foreground_pixels": 559051,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -22
+        ],
+        "pixels": 96454,
+        "foreground_pixels": 91004,
+        "rgba_sha256": "58540e38fd399d1096fbd01f56dad641b0480d4b1bc1ae32064f245adf8039ce"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -4
+        ],
+        "pixels": 104089,
+        "foreground_pixels": 98397,
+        "rgba_sha256": "0f0bbbc572d22c2212eaf19ba33d3cadc821fbdd85c1e05d97ca03edf62560e9"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          22
+        ],
+        "pixels": 110470,
+        "foreground_pixels": 104535,
+        "rgba_sha256": "f66da2dc88f0bdaa6f1d17901b0eb80145fc0f2093066fd2024c0aa697618221"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          -6
+        ],
+        "pixels": 93890,
+        "foreground_pixels": 88696,
+        "rgba_sha256": "21261efebf11bf9b5e151c03a3dcb4ac5f942af7d4ae1ce8ed959d06369d02c5"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          41
+        ],
+        "pixels": 94906,
+        "foreground_pixels": 89723,
+        "rgba_sha256": "6fbdd5f3dc9d6c0a78b382465a58e729d1f89f5df0a0012c8777c1a4e665bcd0"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          30
+        ],
+        "pixels": 91737,
+        "foreground_pixels": 86696,
+        "rgba_sha256": "61edbf83b4e425078a1bd1d7908789b1a1adc192c0aceefb5627b2b5987b3a3e"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-SE-idle-v01iso01.png",
+  "output_sha256": "87b7690fad0a65ba2db12202a3b8b736fd67a2d2b71ac0429cd2e0b131198cd3",
+  "output_bytes": 1634104,
+  "original_generated_file": "/workspace/scratch/halpas-SE-idle-v01iso01.png"
+}

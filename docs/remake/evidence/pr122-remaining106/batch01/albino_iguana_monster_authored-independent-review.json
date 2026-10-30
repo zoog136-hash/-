@@ -1,0 +1,80 @@
+{
+  "observed_utc": "2026-10-16T04:43:54.566804+00:00",
+  "key": "monster:알비노 이구아나",
+  "actor": "albino_iguana_monster_authored",
+  "status": "INDEPENDENT_LOCAL_VISUAL_PASS_PRODUCTION_LINK_ALLOWED_CI_PENDING",
+  "review_stage": "Separate post-authoring review by resuming agent; this review did not generate or edit source PNGs. Actual framebuffer outputs, chronological native samples and original reference compared; not an independent human-review claim.",
+  "source_review": {
+    "status": "PASS",
+    "identity": "Source atlas_2 cell8 blue/teal scaled reptile, blue crest, pale throat, gold/brown straps and scaled shield, right-hand spear and attached tail retained. W view correctly shows foreground left shield; N/NE/NW show rear straps and nape, not pasted frontal chest. No donor actor frames.",
+    "motion": "All32 walk phases reviewed in chronological actual-Main samples. In E0 near leg reaches forward while E2 near leg reaches back; E1/E3 exchange support/recovery with knees/ankles attached. Same opposition visible in other views. Articulated knees/hips/tail, not translation or mirror-only poses. Skull and torso model stay coherent through gait. Spear grip remains attached across three attack poses; complete attached collapse through death3."
+  },
+  "static_image_gate": {
+    "status": "PASS",
+    "directions": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "roles": [
+      "idle",
+      "walk",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "unique_native_poses": 112
+  },
+  "temporal_gate": {
+    "status": "PASS",
+    "actual_Main": true,
+    "native_rendered": 112,
+    "all_roles": 40,
+    "simulation_step_seconds": 0.008333333333333333,
+    "production_MotionController": true,
+    "direct_texture_assignment": false,
+    "wall_time_performance_claim": false
+  },
+  "game_function_gate": {
+    "status": "PASS",
+    "AI_directions": 8,
+    "actual_strikes_and_contacts": 8,
+    "original_HP": 1880,
+    "hit": true,
+    "death": true,
+    "death_screens": [
+      0,
+      1,
+      2
+    ],
+    "real_ground_drop": true,
+    "manual_UI_pickup": true,
+    "game_stats_maps_paths_changed": false
+  },
+  "actual_Main_visual_gate": {
+    "status": "PASS",
+    "tree_or_other_actor_occlusion": "none in final review positions; conservative existing256x176 body and192px actor exclusion retained",
+    "body_inside_viewport": true,
+    "actual_frame_atomic_readback": true,
+    "prior_obscured_captures": "preserved; not used as approval"
+  },
+  "baseline_comparison": {
+    "status": "PASS",
+    "baseline": "지옥의 쿠거 / hell_cougar_monster_boss_v3",
+    "actual_same_Main_camera": true,
+    "checks": 295,
+    "full_actor_viewport_and_minimap_exclusion": true,
+    "notes": "Painterly 2D outlines, material detail and source-driven native scale consistent. Quad/biped/fire anatomy and source-specific dimensions remain distinct. New elemental retains its original floating presentation; lizard and cougar meet their respective ground roots. No baseline asset changed."
+  },
+  "source_PNG_changed": false,
+  "source_claim": "Newly authored motion from existing project references, not extracted original game animation",
+  "CI_gate": "PENDING exact pushed code head workflows",
+  "Android_APK_gate": "PENDING",
+  "Android_real_device": "UNVERIFIED",
+  "completed_added": 0
+}

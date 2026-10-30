@@ -1,0 +1,19 @@
+from pathlib import Path
+import json,hashlib,copy,numpy as np
+from PIL import Image
+L=Path('/workspace/scratch/pr122-death-s-only-20261022-v01');B=Path('/workspace/scratch/mythic413-S-run-author-fresh-20261020-v01');mp=Path('/workspace/scratch/mythic413-S-death-author-20261020-v01/actual-own-S-DEATH-complete-native-materials-v07/own-S-DEATH-complete-native-materials-and-QA-cape-source-handoff-v07.json');m=json.loads(mp.read_text());key='complete-original-blue-gold-cape-and-both-coattails'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def pin(p):return dict(path=str(p),bytes=p.stat().st_size,sha256=sha(p))
+corep=Path(m['source_cape_CORE']['path']);assert sha(corep)==m['source_cape_CORE']['sha256'];core=np.array(Image.open(corep).convert('RGBA'));owned=np.zeros(core.shape[:2],bool);arrays={}
+for k,r in m['materials'].items():
+ p=Path(r['path']);assert sha(p)==r['sha256'];a=np.array(Image.open(p).convert('RGBA'));assert a.shape==core.shape;arrays[k]=a
+ if k!=key:owned|=a[:,:,3]>0
+cape=arrays[key];y,x=np.indices(core.shape[:2]);band=(x>=510)&(x<=755)&(y>=682)&(y<=690);orphan=band&(core[:,:,3]>0)&(cape[:,:,3]==0)&~owned;count=int(orphan.sum());assert count>0,'No exact orphan source texels: HOLD without repainting'
+new=cape.copy();new[orphan]=core[orphan];assert np.array_equal(new[~orphan],cape[~orphan]);assert np.array_equal(new[orphan],core[orphan]);assert not (orphan&owned).any()
+O=B/'actual-S-RUN6-exact-original-cape-root-strip-material-v05-20261022';O.mkdir();p=O/'complete-original-blue-gold-cape-and-both-coattails-with-original-root-strip-v05.png';Image.fromarray(new).save(p);mask=O/'original-previously-unassigned-cape-root-texel-ownership-v05.png';Image.fromarray((orphan*255).astype(np.uint8)).save(mask)
+newm=copy.deepcopy(m);newm['materials'][key]=pin(p);oldmask=Path(m['mattes']['complete-native-cape']['path']);cm=np.array(Image.open(oldmask).convert('L'));cm[orphan]=255;cmask=O/'complete-native-cape-owner-mask-with-original-root-strip-v05.png';Image.fromarray(cm).save(cmask);newm['mattes']['complete-native-cape']=pin(cmask);newm['source_root_strip_repair']=dict(status='EXACT_ORIGINAL_SOURCE_TEXELS_RECOVERED_PENDING_NATIVE_SOURCE_REVIEW',source_core=pin(corep),prior_material_contract=pin(mp),native_orphan_region=[510,682,756,691],restored_unassigned_original_RGBA_texels=count,previously_owned_other_material_texels_changed=0,old_cape_RGBA_outside_patch_mismatch=0,new_colors_synthesized=False,source_RGBA_scaled=False,owner_mask=pin(mask),source_visual_status='HOLD_NOT_REVIEWED',actor_approvals_added=0)
+newmp=O/'own-S-native-cape-original-root-strip-material-handoff-v05.json';newmp.write_text(json.dumps(newm,indent=2)+'\n')
+src=B/'author_S_RUN6_actual_native_v04.py';code=src.read_text();assert code.count(str(mp))==1;code=code.replace(str(mp),str(newmp)).replace('actual-S-RUN6-native-full-actor-v04','actual-S-RUN6-native-full-actor-v05-exact-cape-root-20261022');needle='g=np.clip((uv[:,1]-630)/360,0,1)';assert code.count(needle)==1;code=code.replace(needle,'g=np.clip((uv[:,1]-690)/300,0,1)');newscript=B/'author_S_RUN6_actual_native_v05_exact_cape_root_20261022.py'
+with newscript.open('x') as f:f.write(code)
+proof=dict(status='ACTUAL_ORIGINAL_UNASSIGNED_CAPE_SOURCE_STRIP_RESTORED_NEEDS_FULL_SIX_RENDER',restored_original_source_texels=count,original_RGBA_recovered=True,other_material_owners_unchanged=True,original_inputs_unchanged=True,new_material_contract=pin(newmp),new_rig=pin(newscript),cape_root_motion='Exactly pelvis-bound through native y690, then the same six-phase lag to full tail weight by y990; original matrices, root, C and leg clocks unchanged.',actor_approvals_added=0,game_clips_adopted=0,source_visual_status='HOLD')
+(L/'S-run-exact-original-cape-root-strip-restoration-proof.json').write_text(json.dumps(proof,indent=2)+'\n');print(json.dumps(dict(restored_original_RGBA_texels=count,source_image_generated=False,new_native_rig_prepared=True,approvals_added=0)))

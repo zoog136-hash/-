@@ -1,0 +1,528 @@
+{
+  "status": "ACTUAL_FULL_STAFF_FIXED_RIGID_PLANE_FLOOR_GUARD_PENDING_INDEPENDENT_REVIEW",
+  "actor": "transform:413",
+  "direction": "N",
+  "motion": "run",
+  "source_contract": {
+    "path": "/workspace/scratch/mythic413-N-run-author-fresh-20261020-v01/actual-six-native-articulation-v08/actual-N-run-six-source-contract-v08.json",
+    "sha256": "3b508543fdd43c06112cfa6090d024a5f8d5c179f601bcfdddf12c69dd732bcb"
+  },
+  "camera": "X=X; screenY=917.6920531878804+.45*D-Z",
+  "fixed_source_plane": {
+    "U": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "V": [
+      0.0,
+      0.7484407484407484,
+      -0.6632016632016631
+    ],
+    "unit_normal": [
+      -0.0,
+      0.6632016632016631,
+      0.7484407484407484
+    ],
+    "pivot_native": [
+      663,
+      635
+    ],
+    "pivot_world": [
+      663.0,
+      11.226611226611226,
+      287.74402823985554
+    ],
+    "source_pelvis_y620_has_depth": 0,
+    "source_plane_units": "native physical C1920, bodyunit1.875; U,V are orthogonal unit vectors, no scale fit",
+    "projection": "screen(U)=([1,0]); screen(V)=([0,1])"
+  },
+  "rigid_rotation": "The actual PNG body/staff 2D rotation [u,v]->[cos*u+sin*v,-sin*u+cos*v] is the same determinant+1 3D rotation about the fixed source-plane unit normal. All shaft/tips/right grip share this exact rigid node, plus the same bob and constant pelvis depth40 on LOAD.",
+  "whole_staff_conservative_semantic_envelope_native": [
+    744.0,
+    138.0,
+    862.0,
+    978.0
+  ],
+  "envelope_scope": "Conservative semantic bounds of the real complete gold/turquoise double-ended staff, including both actual tips and shaft; x744..862,y138..978 plus8 native vertical Z thickness. This bounds the real weapon independently of diffuse tiny source-background alpha noise beyond its tip. No alpha-height floor fitting, source changes, or perpose plane search.",
+  "limits": "One compatible finite chosen isometric 2.5D source-surface model. Not unique hidden 3D anatomy, not a new measured staff/hand depth claim. Body/leg source joints retain their original chosen rig contracts; source-plane skin is a projected artwork surface, not a replacement of exact legbone controls.",
+  "rows": [
+    {
+      "phase": 0,
+      "rigid_torso_lean_degrees": 1.75,
+      "same_body_bob": [
+        -10,
+        -10
+      ],
+      "same_pelvis_depth_translation": 0.0,
+      "conservative_complete_staff_envelope_min_Z": 72.01246427779321,
+      "additional_fixed_Z_thickness_guard": 8.0,
+      "envelope_plus_guard_min_Z": 64.01246427779321,
+      "all_complete_staff_tips_and_shaft_above_ground": true,
+      "projected_envelope_corners": [
+        {
+          "source": [
+            744.0,
+            138.0
+          ],
+          "world": [
+            718.7845797924919,
+            -362.4263058580106,
+            628.8420297676176
+          ],
+          "projected": [
+            718.7845797924919,
+            125.75818578415806
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            744.0,
+            978.0
+          ],
+          "world": [
+            744.436930888743,
+            265.9706959486879,
+            72.01246427779321
+          ],
+          "projected": [
+            744.436930888743,
+            965.3664020869967
+          ],
+          "projection_residual": 2.2737367544323206e-13
+        },
+        {
+          "source": [
+            862.0,
+            138.0
+          ],
+          "world": [
+            836.7295435112239,
+            -365.1233454446078,
+            631.2319065124079
+          ],
+          "projected": [
+            836.7295435112239,
+            122.15464122539902
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            862.0,
+            978.0
+          ],
+          "world": [
+            862.381894607475,
+            263.27365636209066,
+            74.40234102258353
+          ],
+          "projected": [
+            862.381894607475,
+            961.7628575282378
+          ],
+          "projection_residual": 1.1368683772161603e-13
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "rigid_torso_lean_degrees": 0.5,
+      "same_body_bob": [
+        -3,
+        35
+      ],
+      "same_pelvis_depth_translation": 40.0,
+      "conservative_complete_staff_envelope_min_Z": 43.743303114762114,
+      "additional_fixed_Z_thickness_guard": 8.0,
+      "envelope_plus_guard_min_Z": 35.743303114762114,
+      "all_complete_staff_tips_and_shaft_above_ground": true,
+      "projected_envelope_corners": [
+        {
+          "source": [
+            744.0,
+            138.0
+          ],
+          "world": [
+            736.6598276255061,
+            -321.26331195379225,
+            600.8114879469354
+          ],
+          "projected": [
+            736.6598276255061,
+            172.31207486173855
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            744.0,
+            978.0
+          ],
+          "world": [
+            743.9901174441402,
+            307.4029781389424,
+            43.743303114762114
+          ],
+          "projected": [
+            743.9901174441402,
+            1012.2800902356425
+          ],
+          "projection_residual": 0.0
+        },
+        {
+          "source": [
+            862.0,
+            138.0
+          ],
+          "world": [
+            854.6553345470783,
+            -322.0340047354366,
+            601.4944073840035
+          ],
+          "projected": [
+            854.6553345470783,
+            171.28234367293055
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            862.0,
+            978.0
+          ],
+          "world": [
+            861.9856243657123,
+            306.6322853572981,
+            44.42622255183028
+          ],
+          "projected": [
+            861.9856243657123,
+            1011.2503590468343
+          ],
+          "projection_residual": 0.0
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "rigid_torso_lean_degrees": -1.25,
+      "same_body_bob": [
+        12,
+        -48
+      ],
+      "same_pelvis_depth_translation": 0.0,
+      "conservative_complete_staff_envelope_min_Z": 105.4409254667134,
+      "additional_fixed_Z_thickness_guard": 8.0,
+      "envelope_plus_guard_min_Z": 97.4409254667134,
+      "all_complete_staff_tips_and_shaft_above_ground": true,
+      "projected_envelope_corners": [
+        {
+          "source": [
+            744.0,
+            138.0
+          ],
+          "world": [
+            766.8227220556495,
+            -359.33742169964563,
+            664.1049351939553
+          ],
+          "projected": [
+            766.8227220556495,
+            91.88527822908463
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            744.0,
+            978.0
+          ],
+          "world": [
+            748.4982186266182,
+            269.203195741029,
+            107.14811029513535
+          ],
+          "projected": [
+            748.4982186266182,
+            931.6853809762082
+          ],
+          "projection_residual": 1.1368683772161603e-13
+        },
+        {
+          "source": [
+            862.0,
+            138.0
+          ],
+          "world": [
+            884.7946412510788,
+            -357.4108181315205,
+            662.3977503655333
+          ],
+          "projected": [
+            884.7946412510788,
+            94.45943466316294
+          ],
+          "projection_residual": 1.1368683772161603e-13
+        },
+        {
+          "source": [
+            862.0,
+            978.0
+          ],
+          "world": [
+            866.4701378220475,
+            271.1297993091541,
+            105.4409254667134
+          ],
+          "projected": [
+            866.4701378220475,
+            934.2595374102864
+          ],
+          "projection_residual": 1.1368683772161603e-13
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "rigid_torso_lean_degrees": -1.75,
+      "same_body_bob": [
+        10,
+        -10
+      ],
+      "same_pelvis_depth_translation": 0.0,
+      "conservative_complete_staff_envelope_min_Z": 66.34157030710432,
+      "additional_fixed_Z_thickness_guard": 8.0,
+      "envelope_plus_guard_min_Z": 58.34157030710432,
+      "all_complete_staff_tips_and_shaft_above_ground": true,
+      "projected_envelope_corners": [
+        {
+          "source": [
+            744.0,
+            138.0
+          ],
+          "world": [
+            769.1398619230556,
+            -358.7235904933601,
+            625.561012541719
+          ],
+          "projected": [
+            769.1398619230556,
+            130.70542492414938
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            744.0,
+            978.0
+          ],
+          "world": [
+            743.4875108268045,
+            269.6734113133383,
+            68.7314470518946
+          ],
+          "projected": [
+            743.4875108268045,
+            970.3136412269881
+          ],
+          "projection_residual": 1.1368683772161603e-13
+        },
+        {
+          "source": [
+            862.0,
+            138.0
+          ],
+          "world": [
+            887.0848256417878,
+            -356.02655090676296,
+            623.1711357969286
+          ],
+          "projected": [
+            887.0848256417878,
+            134.30896948290842
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            862.0,
+            978.0
+          ],
+          "world": [
+            861.4324745455367,
+            272.3704508999355,
+            66.34157030710432
+          ],
+          "projected": [
+            861.4324745455367,
+            973.917185785747
+          ],
+          "projection_residual": 2.2737367544323206e-13
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "rigid_torso_lean_degrees": -0.5,
+      "same_body_bob": [
+        3,
+        35
+      ],
+      "same_pelvis_depth_translation": 40.0,
+      "conservative_complete_staff_envelope_min_Z": 42.12281631493937,
+      "additional_fixed_Z_thickness_guard": 8.0,
+      "envelope_plus_guard_min_Z": 34.12281631493937,
+      "all_complete_staff_tips_and_shaft_above_ground": true,
+      "projected_envelope_corners": [
+        {
+          "source": [
+            744.0,
+            138.0
+          ],
+          "world": [
+            751.3340039108897,
+            -320.20524220272125,
+            599.8739205841807
+          ],
+          "projected": [
+            751.3340039108897,
+            173.72577361247522
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            744.0,
+            978.0
+          ],
+          "world": [
+            744.0037140922557,
+            308.4610478900134,
+            42.805735752007536
+          ],
+          "projected": [
+            744.0037140922557,
+            1013.693788986379
+          ],
+          "projection_residual": 1.1368683772161603e-13
+        },
+        {
+          "source": [
+            862.0,
+            138.0
+          ],
+          "world": [
+            869.3295108324619,
+            -319.43454942107695,
+            599.1910011471125
+          ],
+          "projected": [
+            869.3295108324619,
+            174.75550480128334
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            862.0,
+            978.0
+          ],
+          "world": [
+            861.9992210138278,
+            309.23174067165775,
+            42.12281631493937
+          ],
+          "projected": [
+            861.9992210138278,
+            1014.7235201751871
+          ],
+          "projection_residual": 0.0
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "rigid_torso_lean_degrees": 1.25,
+      "same_body_bob": [
+        -12,
+        -48
+      ],
+      "same_pelvis_depth_translation": 0.0,
+      "conservative_complete_staff_envelope_min_Z": 109.49187251720613,
+      "additional_fixed_Z_thickness_guard": 8.0,
+      "envelope_plus_guard_min_Z": 101.49187251720613,
+      "all_complete_staff_tips_and_shaft_above_ground": true,
+      "projected_envelope_corners": [
+        {
+          "source": [
+            744.0,
+            138.0
+          ],
+          "world": [
+            721.1387263312957,
+            -361.98241981859695,
+            666.4486974160261
+          ],
+          "projected": [
+            721.1387263312957,
+            88.35126685348564
+          ],
+          "projection_residual": 5.684341886080802e-14
+        },
+        {
+          "source": [
+            744.0,
+            978.0
+          ],
+          "world": [
+            739.4632297603271,
+            266.55819762207767,
+            109.49187251720613
+          ],
+          "projected": [
+            739.4632297603271,
+            928.1513696006092
+          ],
+          "projection_residual": 1.1368683772161603e-13
+        },
+        {
+          "source": [
+            862.0,
+            138.0
+          ],
+          "world": [
+            839.1106455267251,
+            -363.909023386722,
+            668.1558822444481
+          ],
+          "projected": [
+            839.1106455267251,
+            85.77711041940745
+          ],
+          "projection_residual": 0.0
+        },
+        {
+          "source": [
+            862.0,
+            978.0
+          ],
+          "world": [
+            857.4351489557564,
+            264.6315940539526,
+            111.19905734562809
+          ],
+          "projected": [
+            857.4351489557564,
+            925.577213166531
+          ],
+          "projection_residual": 1.1368683772161603e-13
+        }
+      ]
+    }
+  ],
+  "min_all_staff_guard_Z": 34.12281631493937,
+  "actor_approvals_added": 0,
+  "game_clips_adopted": 0
+}

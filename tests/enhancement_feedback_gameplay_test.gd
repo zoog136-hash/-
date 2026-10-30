@@ -16,6 +16,9 @@ func _run() -> void:
 	await process_frame
 	world.set_process(false)
 	world.set_physics_process(false)
+	# Pending PNG monster spawns use the gameplay RNG. Pause that unrelated
+	# subsystem while asserting that reveal skip/confirm never draw a roll.
+	world.field_population.set_process(false)
 	# test_project.py gives this process an isolated user directory.
 	world.set("source_save_blocked",false)
 	world.set("equipped_items",{})

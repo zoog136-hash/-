@@ -1,0 +1,46 @@
+{
+  "schema": "pr122-exact-bounded-lowerbody-edit-proof-v2",
+  "key": "transform:267",
+  "direction": "NE",
+  "role": "run",
+  "phase": 0,
+  "source_path": "/workspace/scratch/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03/girtas-NE-run-LEFT-landing0-from-correct-farLEFT-walk-v03.png",
+  "source_sha256": "e1e4f0415ca67ddabc44557c61522e010cff379c11672d25404167fb23ebd987",
+  "generated_raw_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/generated-uncomposited-original.png",
+  "generated_raw_sha256": "14b43d76bbd447dff5502559a8b5f12f2fa4aee1f3dd585f0b3ac3e73c302b07",
+  "prior_candidate_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v01.png",
+  "prior_candidate_sha256": "99eacae26b148d58339441ed91ba0985d0eb7b54dbebb766dc8191e353bfc90e",
+  "mask_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/exact-lowerbody-edit-mask-v02.png",
+  "mask_sha256": "27e63ae5dd80a5c690022dc0d10c0fe0e6f2da18400216be601df8604cdf544f",
+  "output_path": "/workspace/scratch/girtas-NE-run-contact0-bounded-leg-repair-v01/girtas-NE-run-contact0-bounded-leg-repair-v02.png",
+  "output_sha256": "216ac0a0834189ab6d4ecd9aed07a76abc902ea6df15c121f6b994027514ad02",
+  "output_bytes": 1147908,
+  "image_size": [
+    1254,
+    1254
+  ],
+  "rescale": false,
+  "refinement_reason": "Restore immutable nearRIGHT recovery antialias edge touched by original mask tip; stricter subset of independently scope-approved mask, no new image generation.",
+  "protected_recovery_roi_xyxy": [
+    690,
+    680,
+    940,
+    905
+  ],
+  "protected_recovery_rgba_changed_pixels": 0,
+  "v01_to_v02_restored_pixels": 63,
+  "v01_to_v02_farLEFT_boot_rgba_changed_pixels": 0,
+  "changed_pixels": 77359,
+  "outside_mask_changed_pixels": 0,
+  "outside_mask_rgba_sha256_before": "55b913a1b257b4ca0ff83c3f43b833e622d8552163470a74e314e41638e8feb2",
+  "outside_mask_rgba_sha256_after": "55b913a1b257b4ca0ff83c3f43b833e622d8552163470a74e314e41638e8feb2",
+  "visible_alpha16_bbox_xywh": [
+    59,
+    53,
+    1186,
+    1002
+  ],
+  "fixed_runtime_canvas": 1936,
+  "source_visual_status": "HOLD_PENDING_INDEPENDENT_SOURCE_REVIEW",
+  "actor_approval": false
+}

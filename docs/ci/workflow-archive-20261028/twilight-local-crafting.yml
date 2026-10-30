@@ -1,0 +1,67 @@
+name: TWILIGHT Local Crafting
+
+on:
+  pull_request:
+    branches:
+      - feature/twilight-npc-teleport-20261010
+      - main
+  workflow_dispatch:
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  crafting:
+    # Covered by the complete Shop Buyback superset on ordinary PRs.
+    # Preserve independent manual and PR #157/#158 audits.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.number == 157 || github.event.pull_request.number == 158 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot 4.7.2
+        uses: ./.github/actions/setup-godot-linux
+      - name: Restore trusted Godot imported resources
+        if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.number != 157 && github.event.pull_request.number != 158) }}
+        id: trusted-import-cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Project asset import and GDScript parse
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee craft-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' craft-import.log
+      - name: Crafting and NPC regression
+        run: |
+          set -o pipefail
+          for test in tests/local_crafting_test.gd tests/npc_teleport_test.gd tests/warehouse_persistence_test.gd tests/shop_authority_test.gd; do
+            /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://$test" 2>&1 | tee -a craft-test.log
+          done
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' craft-test.log
+          for marker in CRAFT_OK NPC_TELEPORT_OK WAREHOUSE_OK SHOP_AUTHORITY_OK; do grep -q "$marker" craft-test.log; done
+      - name: Run actual main scene headless for 120 frames
+        run: |
+          set -o pipefail
+          timeout 30s /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 120 2>&1 | tee craft-main-boot.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' craft-main-boot.log
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-crafting-evidence
+          path: |
+            craft-import.log
+            craft-test.log
+            craft-main-boot.log

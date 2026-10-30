@@ -39,20 +39,25 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	world.set("equipped_catalog", {"변신":{}, "마법인형":{}, "성물":{}})
+	world.call("_invalidate_equipment_static")
 	world.set("equipped_items", {})
+	world.call("_invalidate_equipment_static")
 	var baseline_hit: int = int(world.call("_melee_accuracy_stat"))
 	var baseline_damage: int = int(world.call("_melee_damage_stat"))
 	var baseline_str: int = int(world.call("_effective_attribute", "STR"))
 	world.set("equipped_items", {"weapon":dagger})
+	world.call("_invalidate_equipment_static")
 	_check(int(world.call("_melee_accuracy_stat")) == baseline_hit + 10, "equipped dagger hit not reflected in runtime")
 	_check(int(world.call("_melee_damage_stat")) == baseline_damage + 7, "weapon base excluded, flat option retained once")
 	_check(int(world.call("_weapon_size_adjustment", null)) == 0, "null target must not introduce size damage")
 	var equipped_dagger: Dictionary = {"name":"군터의 단도", "type":"단검", "slot":"weapon", "atk":23, "hit":4, "desc":"23/12 · 추가 대미지 +9 · STR +2"}
 	world.set("equipped_items", {"weapon":equipped_dagger})
+	world.call("_invalidate_equipment_static")
 	_check(int(world.call("_effective_attribute", "STR")) == baseline_str + 2, "equipped STR option missing")
 	_check(int(world.call("_melee_accuracy_stat")) == baseline_hit + 6, "STR and hit must stack on accuracy")
 	_check(int(world.call("_melee_damage_stat")) == baseline_damage + 9 + 1, "STR step and flat weapon bonus affect melee, not base size")
 	world.set("equipped_items", {"helmet":{"name":"test helmet", "slot":"helmet", "desc":"CON +3 · WIS +2"}})
+	world.call("_invalidate_equipment_static")
 	_check(int(world.call("_effective_max_hp")) >= int(world.get("max_hp")) + 30, "CON must affect maximum HP")
 	_check(int(world.call("_effective_mr")) >= 10 + int(world.get("level")) + (int(world.get("wis_stat")) + 2) * 2, "WIS must affect MR")
 	var weighted: Dictionary = world.get("item_weight_index") as Dictionary

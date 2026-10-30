@@ -1,0 +1,71 @@
+{
+  "schema": "PR122-E-cape-actual-local-art-retouch-generation-handoff-v1",
+  "status": "ACTUAL_NEW_HIDDEN_CAPE_FABRIC_REQUIRED_CODE_ONLY_PLATE_REJECTED_HOLD",
+  "source_original_immutable": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-high-quality-native-background-AA-clean-v01.png",
+    "sha256": "35883c6c11693141bd3988c47399298a1cd37152ba12403e9d94678ab75fbf62",
+    "bytes": 974323
+  },
+  "source_native_size": [
+    1254,
+    1254
+  ],
+  "crop_input": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/E-cape-native-pole-occlusion-local-retouch-handoff-v01/original-E-cape-and-foreground-pole-native-crop-250.png",
+    "sha256": "f02bc24ba689dfebb6e6ed94435855a8f6e72c1e7291b664bcedb1a3a78e2928",
+    "bytes": 80418
+  },
+  "crop_native_rect_xyxy": [
+    260,
+    770,
+    510,
+    1020
+  ],
+  "crop_size": [
+    250,
+    250
+  ],
+  "crop_origin_in_original_native": [
+    260,
+    770
+  ],
+  "replacement_mask_crop": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/E-cape-native-pole-occlusion-local-retouch-handoff-v01/replace-only-original-pole-occluded-real-cape-native-mask-250.png",
+    "sha256": "714410d22f63c6b810252090eca7f857b18c1b24ec1554be0fcbf5438ae96335",
+    "bytes": 686
+  },
+  "replacement_mask_fullnative": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/E-cape-native-pole-occlusion-local-retouch-handoff-v01/replace-only-original-pole-occluded-real-cape-fullnative-mask.png",
+    "sha256": "c60bf81552bc3b532f301e8ddc3ff1dcf2076d4da90237452c85b0adcaf5b8f5",
+    "bytes": 2329
+  },
+  "replacement_native_bbox": [
+    369,
+    779,
+    417,
+    967
+  ],
+  "replacement_native_pixels": 5113,
+  "protected_original_outside_mask": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/E-cape-native-pole-occlusion-local-retouch-handoff-v01/protected-original-native-cape-outside-replacement-mask.png",
+    "sha256": "cf43ebf4971f9d2f3e8115abce7a884d67c961da0dc5355f7381f8ecb01c3bbf",
+    "bytes": 70655
+  },
+  "protected_outside_required_RGBA_difference": 0,
+  "source_body_C_root_unit_resample_or_perpose_footfit": false,
+  "paint_only_this": "Original foreground gold pole occludes the same blue/gold cape. Paint the newly revealed cape inside white mask only: continuous dark royal blue folded silk, coherent diagonal thick gold hem with original warm gold highlights, seamless continuation of visible gold trim and stars. Remove pole from only masked cape area. All existing visible gold cross/diamond/star emblems and visible cape boundary remain exactly from original outside mask. No disconnected gold chunks, black strip, straight-edged hole, new logo, or substituted clothing. No body/hand/boots or equipment redesign.",
+  "service_input_context": "Use original crop and actual replacement mask; fullsource may be read for material identity only. Retouch is a new actual localized cloth painting, not a wholeactor pose/source remake.",
+  "output_contract": "Return file paths/SHA/request/provenance only; no imageblocks/Base64 to root/user. Keep original raw result and fixed rectangle registration to native250 crop. The author will composite ONLY replacement mask; all outsideRGBA copied exact original. Do not adopt rejected code-only plate.",
+  "failed_code_only_plate": {
+    "path": "/workspace/scratch/mythic413-E-attack-author-20261020-v01/common-own-E-native-arm-staff-materials-v02/actual-E-full-old-arms-staff-erased-body-with-original-legs-and-native-coat-fabric-restoration-INPUT-v02.png",
+    "sha256": "ce1f31041b43e602d1cc57421cf839154af283c96b837b7c2118ce0cc3961663",
+    "bytes": 766677
+  },
+  "failed_plate_status": "HOLD_UNACCEPTED_VISIBLE_DISCONTINUITY",
+  "shared_registration": {
+    "path": "/workspace/scratch/mythic413-E-hit-author-20261020-v01/E-new-native-one-time-body-density-C2816-root-registration-v01.json",
+    "sha256": "393e66b3d965b2286fc2a1bea1ac561444f9463b2b30de140f3b06ee0f46d886",
+    "bytes": 3295
+  },
+  "actor_approvals_added": 0
+}

@@ -1,0 +1,1121 @@
+{
+  "key": "transform:393",
+  "name": "해방된 할파스",
+  "direction": "NE",
+  "role": "hit",
+  "source_batch": "batch03",
+  "version": "v03composite01",
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "request_kind": "LOSSLESS_EXACT_RGBA_REVIEWED_POSE_ASSEMBLY_NO_IMAGEGEN",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 3,
+  "reused_poses": 3,
+  "references": [
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+    "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+    "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+    "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+    "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+    "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+    "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020"
+  },
+  "transparent_background": true,
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v01.png",
+  "corrective_reason": "Replace confirmed old hit extra-arm/disconnected weapon ownership and camera defects with six correct NE reaction poses: continuous original low imageRIGHT blade arm in every frame, only same EMPTY imageLEFT arm flinches. Three genuine new single-key phases plus three exactRGBA valid prior keys, never wholebadsource/temporary sharedmotion approval.",
+  "prompt": "No image generation at assembly stage. Exact reviewed six-pose map, spacious1536 cells, no resampling/masking/recolor/mirroring or pixelsdiscarded. All actual imagegeneration requests were preserved before their respective calls and embedded in source_provenance.",
+  "user_authorization": "Continue actual Unique boss animation production; productionimagegen/private bounded JPEG permitted, no images/binary in mainchat; root controls PR122 integration/normalpush/approval.",
+  "requested_at": "2026-10-19T13:36:14.364293+00:00",
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged strict complete six-pose importer PASS for exactRGBA mixed-resolution assembly in3072x4608 image with1536 cells. Perpose runtime canvas scale handled separately; no relaxation of ownership/fringe/clipping/region guards."
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+    "canvas_size": 2048,
+    "authored_pose_canvas_sizes": [
+      1024,
+      2496,
+      2624,
+      2496,
+      1024,
+      1024
+    ],
+    "source_anchors": [
+      [
+        736,
+        971
+      ],
+      [
+        2254,
+        1243
+      ],
+      [
+        721,
+        2822
+      ],
+      [
+        2264,
+        2775
+      ],
+      [
+        738,
+        4048
+      ],
+      [
+        2301,
+        4049
+      ]
+    ],
+    "review_basis": "Lossless exact sixpose composite retains original source RGBA resolutions. Perpose body-scale proposal from same closed-helmet/pauldron/girdle landmarks against actual selected NEidle, never whole silhouette bbox. Waist-based abstract flight roots match idle body origin while preserving local hit head/torso/arm/wing/cape motion; no standing-foot clamp. Final actual Player/physical QA required before actor approval."
+  },
+  "source_provenance": {
+    "schema": "pr122-exact-reviewed-pose-assembly-v1",
+    "pose_map_sha256": "0fc545d3cc69b7b643c76d1966c26f41976a3d5b5dd15fcbaf9c29271be61bc7",
+    "pose_map": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:393",
+      "direction": "NE",
+      "role": "hit",
+      "poses": [
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+          "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+          "region": [
+            167,
+            50,
+            498,
+            415
+          ],
+          "rgba_sha256": "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511",
+          "source_pose": 0,
+          "newly_authored": false,
+          "review_basis": "Exact current selected correct NEidle 0 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion."
+        },
+        {
+          "path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+          "source_sha256": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+          "region": [
+            33,
+            97,
+            1194,
+            1031
+          ],
+          "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f",
+          "source_pose": "new_game1",
+          "newly_authored": true,
+          "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 1."
+        },
+        {
+          "path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+          "source_sha256": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+          "region": [
+            29,
+            70,
+            1216,
+            1105
+          ],
+          "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c",
+          "source_pose": "new_game2",
+          "newly_authored": true,
+          "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 2."
+        },
+        {
+          "path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png",
+          "source_sha256": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020",
+          "region": [
+            35,
+            92,
+            1210,
+            1082
+          ],
+          "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9",
+          "source_pose": "new_game3",
+          "newly_authored": true,
+          "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 3."
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+          "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+          "region": [
+            165,
+            1068,
+            498,
+            425
+          ],
+          "rgba_sha256": "7c580f92ef822f7fcaf07648304f7319fcc67c7e6fcea136cf7b34528e388a8e",
+          "source_pose": 4,
+          "newly_authored": false,
+          "review_basis": "Exact current selected correct NEidle 4 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion."
+        },
+        {
+          "path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+          "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+          "region": [
+            906,
+            1068,
+            497,
+            426
+          ],
+          "rgba_sha256": "b2092d1e3de55fc326c800bf1e9337ef5056da634e6aa2bf68d1c59f7d05a692",
+          "source_pose": 5,
+          "newly_authored": false,
+          "review_basis": "Exact current selected correct NEidle 5 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion."
+        }
+      ],
+      "physical_scale_review": {
+        "status": "PENDING_EXTERNAL_LANDMARK_PROPOSAL",
+        "basis": "Source RGBA dimensions deliberately untouched, including large single-key resolution. No silhouette bbox normalization. Body neck/pauldron/pelvis scale and runtime hip anchors reviewed separately before integration."
+      },
+      "approved_actor_change": 0,
+      "detailed_completion_change": 0
+    },
+    "assembly_proof_sha256": "bcc787dcac1f908800c5aa412911f3bafb66636ce26ae0602f68510175be3c73",
+    "assembly_proof": {
+      "schema": "pr122-reviewed-pose-map-v1",
+      "key": "transform:393",
+      "role": "hit",
+      "assembler_sha256": "a9ee1e4f861a30b7c4a458722ddbb55d04948ee3702e69f2ef7e902cd938203c",
+      "direction": "NE",
+      "metadata_sha256": "0fc545d3cc69b7b643c76d1966c26f41976a3d5b5dd15fcbaf9c29271be61bc7",
+      "metadata_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/pose-map.json",
+      "metadata_hash_basis": "file_bytes",
+      "output": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/halpas-NE-hit-v03composite01.png",
+      "output_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+      "output_canvas": [
+        3072,
+        4608
+      ],
+      "cell_size": [
+        1536,
+        1536
+      ],
+      "virtual_canvas_size": 2048,
+      "poses": [
+        {
+          "phase": 0,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+          "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+          "source_pose": 0,
+          "source_region": [
+            167,
+            50,
+            498,
+            415
+          ],
+          "rgba_sha256": "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511",
+          "visible_pose_sha256": "ce4fea3c54b6c46518cb880c4810d416304ed437ce1d4405c85bc0731b72e2f8",
+          "newly_authored": false,
+          "review_basis": "Exact current selected correct NEidle 0 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion.",
+          "output_region": [
+            519,
+            560,
+            498,
+            415
+          ],
+          "translation": [
+            352,
+            510
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 85198
+        },
+        {
+          "phase": 1,
+          "source_path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+          "source_sha256": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+          "source_pose": "new_game1",
+          "source_region": [
+            33,
+            97,
+            1194,
+            1031
+          ],
+          "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f",
+          "visible_pose_sha256": "cbbc7ea182e4a88ad804a862c0dc812f622d59a8110cbfc0c03c1e53a027fb6f",
+          "newly_authored": true,
+          "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 1.",
+          "output_region": [
+            1707,
+            252,
+            1194,
+            1031
+          ],
+          "translation": [
+            1674,
+            155
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 518197
+        },
+        {
+          "phase": 2,
+          "source_path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+          "source_sha256": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+          "source_pose": "new_game2",
+          "source_region": [
+            29,
+            70,
+            1216,
+            1105
+          ],
+          "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c",
+          "visible_pose_sha256": "dc89a32aa48fc00789d09b3d74b168256c07c4f1c3a5680a1205a47c81df8b60",
+          "newly_authored": true,
+          "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 2.",
+          "output_region": [
+            160,
+            1751,
+            1216,
+            1105
+          ],
+          "translation": [
+            131,
+            1681
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 540662
+        },
+        {
+          "phase": 3,
+          "source_path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png",
+          "source_sha256": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020",
+          "source_pose": "new_game3",
+          "source_region": [
+            35,
+            92,
+            1210,
+            1082
+          ],
+          "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9",
+          "visible_pose_sha256": "37dfa535d5803461d50cc310876b31e81d77990dc7da6eb180ec91e78358762e",
+          "newly_authored": true,
+          "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 3.",
+          "output_region": [
+            1699,
+            1763,
+            1210,
+            1082
+          ],
+          "translation": [
+            1664,
+            1671
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 540670
+        },
+        {
+          "phase": 4,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+          "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+          "source_pose": 4,
+          "source_region": [
+            165,
+            1068,
+            498,
+            425
+          ],
+          "rgba_sha256": "7c580f92ef822f7fcaf07648304f7319fcc67c7e6fcea136cf7b34528e388a8e",
+          "visible_pose_sha256": "93057da579870a0beb31462ca46a198e9e1d06f77d9d62add5d21eaa037bb17e",
+          "newly_authored": false,
+          "review_basis": "Exact current selected correct NEidle 4 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion.",
+          "output_region": [
+            519,
+            3627,
+            498,
+            425
+          ],
+          "translation": [
+            354,
+            2559
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 86569
+        },
+        {
+          "phase": 5,
+          "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+          "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+          "source_pose": 5,
+          "source_region": [
+            906,
+            1068,
+            497,
+            426
+          ],
+          "rgba_sha256": "b2092d1e3de55fc326c800bf1e9337ef5056da634e6aa2bf68d1c59f7d05a692",
+          "visible_pose_sha256": "d52bdffbbd91d45110a48626b0a557435512b68446ea47242355917b6da6691c",
+          "newly_authored": false,
+          "review_basis": "Exact current selected correct NEidle 5 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion.",
+          "output_region": [
+            2055,
+            3627,
+            497,
+            426
+          ],
+          "translation": [
+            1149,
+            2559
+          ],
+          "source_edge_antialias_review": {
+            "strong_boundary_alpha_threshold": 100,
+            "selected_strong_boundary_pixels": 0,
+            "retained_alpha_gt16_boundary_pixels": 0,
+            "retained_boundary_max_alpha": 0,
+            "retained_boundary_pixels_xy_rgba": []
+          },
+          "alpha_gt16_pixels": 89531
+        }
+      ],
+      "newly_authored_poses": 3,
+      "reused_poses": 3,
+      "preserved_region_rgba_exact": true,
+      "preserved_pose_alpha_gt16": true,
+      "resampled": false,
+      "mirrored": false,
+      "recolored": false,
+      "cleaned_pixels": 0,
+      "strict_importer": "PASS",
+      "geometry": {
+        "image_size": [
+          3072,
+          4608
+        ],
+        "frames": [
+          {
+            "row": 0,
+            "direction": "NE",
+            "region": [
+              519,
+              560,
+              498,
+              415
+            ],
+            "margin": [
+              775,
+              869,
+              1550,
+              1633
+            ],
+            "source_anchor": [
+              768,
+              971
+            ],
+            "rgba_sha256": "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511"
+          },
+          {
+            "row": 1,
+            "direction": "NE",
+            "region": [
+              1707,
+              252,
+              1194,
+              1031
+            ],
+            "margin": [
+              427,
+              253,
+              854,
+              1017
+            ],
+            "source_anchor": [
+              2304,
+              1279
+            ],
+            "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f"
+          },
+          {
+            "row": 2,
+            "direction": "NE",
+            "region": [
+              160,
+              1751,
+              1216,
+              1105
+            ],
+            "margin": [
+              416,
+              179,
+              832,
+              943
+            ],
+            "source_anchor": [
+              768,
+              2852
+            ],
+            "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c"
+          },
+          {
+            "row": 3,
+            "direction": "NE",
+            "region": [
+              1699,
+              1763,
+              1210,
+              1082
+            ],
+            "margin": [
+              419,
+              202,
+              838,
+              966
+            ],
+            "source_anchor": [
+              2304,
+              2841
+            ],
+            "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9"
+          },
+          {
+            "row": 4,
+            "direction": "NE",
+            "region": [
+              519,
+              3627,
+              498,
+              425
+            ],
+            "margin": [
+              775,
+              859,
+              1550,
+              1623
+            ],
+            "source_anchor": [
+              768,
+              4048
+            ],
+            "rgba_sha256": "7c580f92ef822f7fcaf07648304f7319fcc67c7e6fcea136cf7b34528e388a8e"
+          },
+          {
+            "row": 5,
+            "direction": "NE",
+            "region": [
+              2055,
+              3627,
+              497,
+              426
+            ],
+            "margin": [
+              775,
+              858,
+              1551,
+              1622
+            ],
+            "source_anchor": [
+              2304,
+              4049
+            ],
+            "rgba_sha256": "b2092d1e3de55fc326c800bf1e9337ef5056da634e6aa2bf68d1c59f7d05a692"
+          }
+        ],
+        "distinct_pixel_frames": 6,
+        "neutral_height": 742.5,
+        "canvas_size": [
+          2048,
+          2048
+        ],
+        "foot": [
+          1024,
+          1280
+        ]
+      },
+      "approval": false,
+      "visual_approval": "NOT_RUN",
+      "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+      "external_physical_scale_review": {
+        "status": "PENDING_EXTERNAL_LANDMARK_PROPOSAL",
+        "basis": "Source RGBA dimensions deliberately untouched, including large single-key resolution. No silhouette bbox normalization. Body neck/pauldron/pelvis scale and runtime hip anchors reviewed separately before integration."
+      },
+      "region_height_span": [
+        415,
+        1105
+      ],
+      "possible_region_height_mismatch": true,
+      "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+    },
+    "new_single_pose_generation_records": [
+      {
+        "scratch_directory": "/workspace/scratch/halpas-NE-hit-onset1-key-v04",
+        "request_sha256": "44de0b3c41e0bf58b751b33dd85fd2ef193ec40717ab82145ab9afc7d25ff820",
+        "request": {
+          "key": "transform:393",
+          "name": "해방된 할파스",
+          "direction": "NE",
+          "role": "hit",
+          "source_batch": "batch03",
+          "version": "v04onset1",
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "source_pose": 1,
+          "references": [
+            "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png",
+            "/workspace/scratch/halpas-NE-hit-onset1-key-v04/NE-onset1-low-left-authority-guide.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png": "8d8638d316bbc4f43bc539a434a6976c160544ae24d7cb27e216a2dfd6580496",
+            "/workspace/scratch/halpas-NE-hit-onset1-key-v04/NE-onset1-low-left-authority-guide.png": "34079b670c8a624fefd401f3e694af42d49fb72ba63d8b827b88910e043c1d8e"
+          },
+          "transparent_background": true,
+          "guide_joint_authority": {
+            "fixed_RIGHT_shoulder_elbow_grip": [
+              [
+                352,
+                164
+              ],
+              [
+                375,
+                218
+              ],
+              [
+                398,
+                245
+              ]
+            ],
+            "moving_LOW_EMPTY_LEFT_shoulder_elbow_wrist": [
+              [
+                256,
+                158
+              ],
+              [
+                232,
+                193
+              ],
+              [
+                219,
+                177
+              ]
+            ],
+            "reference_canvas": [
+              498,
+              415
+            ],
+            "fist_below_shoulder": true
+          },
+          "corrective_reason": "Materially new neutral-primary SINGLE low onset1 after pair copied highpeak and geometry bridged. New explicit LOW LEFT joint authority prevents peakduplication; never bad hitpair source. Preserve fixed low RIGHT blade chain.",
+          "prompt": "Create ONE new EARLY HIT ONSET1 key of the SAME Halpas from NEUTRAL image1. Image2 is an explicit small-motion ownership guide, not output. True NE BACK-RIGHT/UP-RIGHT camera: closed horned helmet REAR and spinal/back armor visible, front face and pink breastplate HIDDEN away. Exact original black/gold segmented armor, TWO solid purple crystal feather fan wings on upper back, torn burgundy LEFT/back cape, one same compact purple blade and hovering two-legged pose. Same camera, proportions, pelvis and equipment in all respects.\n\nEXACTLY TWO ARMS. GREEN guide: same near/imageRIGHT pauldron -> upperarm -> elbow -> LOW forearm -> CLOSED HAND GRIPPING original blade at hip. This right weapon arm is FIXED LOW, unbroken and attached to hilt. Do not raise an empty right fist. Never leave a separate floating blade.\n\nCYAN guide: only original far/imageLEFT EMPTY arm makes a SMALL flinch. Same LEFT shoulder (256,158 in498x415ref) -> elbow (232,193) -> EMPTY wrist (219,177). Empty LEFT fist stays BELOW LEFT SHOULDER at upper-rib level, clearly BELOW neck and helmet base. Bend elbow only a little, about20degrees from original, NOT high above shoulder/head and NOT beside/above helmet. Keep hand low enough that it cannot be mistaken for peak2. Redraw the original LEFT forearm/hand into this mild bent position, do not add a second empty hand or leave the old downarm. Same imageLEFT shoulder owns it, never imageRIGHT pauldron. Natural far-arm occlusion under LEFT wing root allowed, but two arm chains only.\n\nEarly onset1, not peak: SMALL initial head/upper-back recoil only, just enough to show impact beginning, subtle left shoulder lift and wing-root tension/cape twitch. Head remains almost original NE rear angle and hip unchanged. The left wrist remains down at ribs while torso jerks slightly; high fist is explicitly wrong. Preserve full silhouette with two leg chains, blade length, fan feathers and horns. No attack, no spin/camera turn or extra striking arm.\n\nONE full centered transparent1024x1024 cutout. Whole figure inside central700x800 with at least120px clear transparent gutters around extreme horn/wing/cape/blade/toe tips. Never crop or shorten equipment. Opaque crisp RPG sprite materials, thin edgeAA, alpha0 background/gaps. No text, labels, panels, guide marks, colored lines/dots, glow, particles, shadow, floor, trails or extra objects.",
+          "requested_at": "2026-10-19T13:24:38.559129+00:00",
+          "imagegen_attempt_limit": 1,
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0
+        },
+        "result_sha256": "1163babc791a6d38b6ff66f5979307e05b7552a1a1c42856b7145eae6ffd9924",
+        "result": {
+          "key": "transform:393",
+          "direction": "NE",
+          "role": "hit",
+          "version": "v04onset1",
+          "status": "GENERATED_SINGLE_LOW_ONSET1_SOURCE_VISUAL_AND_GEOMETRY_PASS_FULLCLIP_HOLD",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "game_pose_map": [
+            1
+          ],
+          "request_path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/request.json",
+          "request_sha256": "44de0b3c41e0bf58b751b33dd85fd2ef193ec40717ab82145ab9afc7d25ff820",
+          "original_generated_file": "/workspace/generated_images/exec-391b43a1-7d1b-4c84-a8c3-b83915897ed7.png",
+          "raw_path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+          "raw_png": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+          "raw_sha256": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+          "raw_bytes": 1244841,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "private_preview": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/generated-private.jpg",
+          "private_preview_bytes": 119985,
+          "source_visual_status": "PASS",
+          "integration_ready": false,
+          "imagegen_attempts": 1,
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0,
+          "created_at": "2026-10-19T13:25:46.586943+00:00",
+          "geometry_validation": "GEOMETRY_PASS_1_POSES_NOT_SIX",
+          "outer_edge_alpha100_count": 0,
+          "valid_source_phases": [
+            1
+          ],
+          "visual_findings": [
+            "NE back-right camera retained: helmet rear plates and spinal armor visible, no front face or pink breastplate, same gold horns/black-gold plate/two purple back fans/burgundy cape/original blade.",
+            "Exactly two arms: same imageRIGHT near arm stays continuously low from pauldron through elbow and wrist to blade grip beside hip. The original imageLEFT EMPTY arm alone now bends modestly at elbow, empty fist remains below left shoulder beside upper ribs. No high peak-like fist, extra downarm, third arm or floating blade.",
+            "Real early onset1 distinct from good high peak2: small left elbow bend and mild head/upperback recoil, low empty hand under shoulder, wingroot tension/cape twitch, pelvis remains rear-right. Higher peak2 wrist remains a later distinct gesture, not copied here.",
+            "Unchanged strict ONE-pose2048 column geometry+complete-region PASS, no alpha>100 source outer-edge clipping, no source resample/mask/recolor/guide residue."
+          ],
+          "visual_limitations": [
+            "One game1 key only. Need new single release3 exactsource plus idle0/4/5 reuse, exact6assembly and actual native physicalscale/runtime validation before any actor approval."
+          ]
+        },
+        "generation_receipt": {
+          "request_path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/request.json",
+          "request_sha256": "44de0b3c41e0bf58b751b33dd85fd2ef193ec40717ab82145ab9afc7d25ff820",
+          "original_generated_file": "/workspace/generated_images/exec-391b43a1-7d1b-4c84-a8c3-b83915897ed7.png",
+          "raw_path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+          "raw_sha256": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+          "raw_bytes": 1244841,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "created_at": "2026-10-19T13:25:46.586943+00:00",
+          "imagegen_attempts": 1
+        }
+      },
+      {
+        "scratch_directory": "/workspace/scratch/halpas-NE-hit-peak2-key-v03",
+        "request_sha256": "eebc76262bbf2c8920a5401b3c1d32bce0849d1966f00985ec44279ffc79432d",
+        "request": {
+          "key": "transform:393",
+          "name": "해방된 할파스",
+          "direction": "NE",
+          "role": "hit",
+          "source_batch": "batch03",
+          "version": "v03peak2",
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "source_pose": 2,
+          "references": [
+            "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png",
+            "/workspace/scratch/halpas-NE-hit-peak2-key-v03/NE-peak2-two-arm-authority-guide.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png": "8d8638d316bbc4f43bc539a434a6976c160544ae24d7cb27e216a2dfd6580496",
+            "/workspace/scratch/halpas-NE-hit-peak2-key-v03/NE-peak2-two-arm-authority-guide.png": "0ef1eb5a3861649586f27e0f04a53e61cd8dd22dedb453c1490bf4efda6878b0"
+          },
+          "reference_provenance": {
+            "direction": "NE",
+            "selected_idle_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+            "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+            "region": [
+              167,
+              50,
+              498,
+              415
+            ],
+            "reference": "/workspace/scratch/halpas-hit-correct-current-idle-references-v02/halpas-NE-current-idle-phase0-lossless.png",
+            "reference_sha256": "8d8638d316bbc4f43bc539a434a6976c160544ae24d7cb27e216a2dfd6580496",
+            "operation": "exact_RGBA_crop_no_resize_no_recolor",
+            "role": "idle",
+            "stage_revision": "r062",
+            "raw_rgba_sha256": "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511"
+          },
+          "guide_joint_authority": {
+            "coordinates_in_reference": [
+              498,
+              415
+            ],
+            "fixed_RIGHT_should_elbow_grip": [
+              [
+                352,
+                164
+              ],
+              [
+                375,
+                218
+              ],
+              [
+                398,
+                245
+              ]
+            ],
+            "moving_EMPTY_LEFT_shoulder_elbow_wrist": [
+              [
+                256,
+                158
+              ],
+              [
+                211,
+                181
+              ],
+              [
+                223,
+                129
+              ]
+            ],
+            "body_camera": "NE_BACK_RIGHT",
+            "same_arm_replacement_only": true
+          },
+          "transparent_background": true,
+          "corrective_reason": "Materially new SINGLE peak2 production after full6 NEv02 weapon-arm ownership HOLD. Only faithful current NE idle + explicit actual joint authority reference; never invalid hit sheet. Preserve low RIGHT blade chain, move EMPTY far LEFT only.",
+          "user_authorization": "Private production imagegen and bounded private JPEG only, no chat image attachments; parent controls Git/native approvals.",
+          "prompt": "Make ONE full-body NORTH-EAST HIT PEAK2 key pose of the SAME Halpas in reference1. Reference2 is ONLY an arm ownership diagram, never render its marks. True BACK-RIGHT/UP-RIGHT view: helmet REAR and back spinal armor visible, front face and pink chest breastplate hidden. Keep same 3/4 rear camera/hips, exact gold-horn black/gold armor, two solid purple crystal wing fans rooted on upper back, same torn burgundy left/back cape, same compact purple crystal blade and hovering two legs.\n\nANATOMY IS THE ENTIRE EDIT. Follow GREEN diagram chain: existing near/imageRIGHT gold pauldron at (352,164) -> right elbow (375,218) -> LOW right gripping wrist (398,245) in the 498x415 reference coordinates. Preserve this ONE continuous low RIGHT arm holding the same blade beside hip. Do NOT lift it. Do NOT add another right fist, forearm, hand or a disconnected blade. Keep real wrist attached to hilt, no floating weapon.\n\nFollow CYAN diagram for the ONLY moving arm: same far/imageLEFT shoulder (256,158) -> LEFT elbow (211,181) -> EMPTY LEFT wrist (223,129). Redraw the ORIGINAL LEFT down-arm into this bent flinch position; do not leave original down-left arm as well. The empty fist must belong to left shoulder on imageLEFT of rear torso, NOT near/imageRIGHT pauldron. Exactly TWO total arms/hands: one low RIGHT blade grip, one lifted EMPTY LEFT fist. Natural partial far-arm occlusion behind same wing/cape root permitted; do not invent any extra visible hand to explain an occlusion.\n\nA real brief hit peak: head and upper torso recoil a little backward while empty LEFT elbow flexes/fist braces beside back-left helmet/upper shoulder; knees/wing roots/cape absorb jerk. Keep rear-facing back armor readable, no front chest and no camera turn. Low RIGHT blade arm follows torso only a tiny amount and never releases grip. Same body physical proportions, no gear redesign, complete horns/wings/cape/boots/blade. This is ONE peak reaction key, not attack or idle and not a sprite sheet.\n\nTransparent PNG single centered cutout, 1024x1024, whole silhouette inside central800x800 and at least110px clear transparent gutter all sides. Opaque armor/cloth/crystal, crisp game sprite, thin edge antialias. No guide, colored joints/lines, text, numbers, panels, floor, shadows, glow, particles, extra objects or motion trails.",
+          "requested_at": "2026-10-19T13:10:13.759374+00:00",
+          "imagegen_attempt_limit": 1,
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0
+        },
+        "result_sha256": "65f509943fbbdb076e1e6f0be6135ba4222769e288fb4e7777cb19669ea7dc79",
+        "result": {
+          "key": "transform:393",
+          "direction": "NE",
+          "role": "hit",
+          "version": "v03peak2",
+          "status": "GENERATED_SINGLE_PEAK2_SOURCE_VISUAL_AND_GEOMETRY_PASS_FULLCLIP_HOLD",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "source_pose": 2,
+          "request_path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/request.json",
+          "request_sha256": "eebc76262bbf2c8920a5401b3c1d32bce0849d1966f00985ec44279ffc79432d",
+          "original_generated_file": "/workspace/generated_images/exec-ed64e204-d50c-49bf-8511-83996bb30ce8.png",
+          "raw_path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+          "raw_png": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+          "raw_sha256": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+          "raw_bytes": 1334418,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "private_preview": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/generated-private.jpg",
+          "private_preview_bytes": 114764,
+          "source_visual_status": "PASS",
+          "integration_ready": false,
+          "imagegen_attempts": 1,
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0,
+          "created_at": "2026-10-19T13:11:45.365766+00:00",
+          "geometry_validation": "GEOMETRY_PASS_SINGLE_POSE_NOT_SIX",
+          "outer_edge_alpha100_count": 0,
+          "valid_source_phases": [
+            2
+          ],
+          "reviewed_at": "2026-10-19T13:12:10.743429+00:00",
+          "visual_findings": [
+            "ONE actual NE back-right peak2 pose only, same rear helmet and spinal armor; no front face or pink breastplate. Correct gold horns, black/gold armor, original purple crystal fan wing roots, burgundy left-back cape and same compact purple blade.",
+            "Exactly TWO arms: original near/imageRIGHT gold pauldron→upperarm→elbow→low forearm→closed hand continuously grips same low blade beside hip. No raised empty right fist and no detached weapon.",
+            "The original far/imageLEFT arm alone is redrawn upward: left shoulder below same wing root→bent left elbow→forearm→EMPTY left fist above/back-left of helmet. Original old down LEFT arm is not left behind. No third hand/forearm or guide residue.",
+            "Peak reaction clearly articulates EMPTY LEFT arm, shoulder/back/head and wingroot/cloth while maintaining NE pelvis/back plane. Full silhouette uncut and zero alpha>100 outer-image clipping. Unchanged single-pose column geometry+complete-region checker PASS; no source pixels edited after imagegen."
+          ],
+          "visual_limitations": [
+            "Only newly authored peak2 key. Remaining onset/release/recovery poses must be genuinely authored or exact reused approved guard keys, assembled six with correct provenance and physicalscale before native integration. Parent controls missing-phase plan. No fullclip/actor approval or default enable."
+          ]
+        },
+        "generation_receipt": {
+          "request_path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/request.json",
+          "request_sha256": "eebc76262bbf2c8920a5401b3c1d32bce0849d1966f00985ec44279ffc79432d",
+          "original_generated_file": "/workspace/generated_images/exec-ed64e204-d50c-49bf-8511-83996bb30ce8.png",
+          "raw_path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+          "raw_sha256": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+          "raw_bytes": 1334418,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "created_at": "2026-10-19T13:11:45.365766+00:00",
+          "imagegen_attempts": 1
+        }
+      },
+      {
+        "scratch_directory": "/workspace/scratch/halpas-NE-hit-release3-key-v04",
+        "request_sha256": "d0104ca01e95b5b81421fd42064805780af6ac31984e0e13342831cde3be2d8c",
+        "request": {
+          "key": "transform:393",
+          "name": "해방된 할파스",
+          "direction": "NE",
+          "role": "hit",
+          "source_batch": "batch03",
+          "version": "v04release3",
+          "status": "REQUESTED_NOT_APPROVED",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "source_pose": 3,
+          "references": [
+            "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+            "/workspace/scratch/halpas-NE-hit-release3-key-v04/NE-release3-left-lowering-authority-guide.png",
+            "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png"
+          ],
+          "reference_sha256": {
+            "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+            "/workspace/scratch/halpas-NE-hit-release3-key-v04/NE-release3-left-lowering-authority-guide.png": "b4d7d562396d06031b0b52311a7594e32b89342b39802ebb750012572de15dd4",
+            "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9"
+          },
+          "transparent_background": true,
+          "guide_joint_authority": {
+            "fixed_RIGHT_shoulder_elbow_grip": [
+              [
+                895,
+                548
+              ],
+              [
+                946,
+                677
+              ],
+              [
+                987,
+                766
+              ]
+            ],
+            "moving_EMPTY_LEFT_shoulder_elbow_wrist": [
+              [
+                698,
+                455
+              ],
+              [
+                620,
+                525
+              ],
+              [
+                620,
+                430
+              ]
+            ],
+            "reference_canvas": [
+              1254,
+              1254
+            ],
+            "fist_below_helmet_base": true
+          },
+          "corrective_reason": "Materially new SINGLE release3 with wide one-pose layout after visualgood pair release could not be exactly isolated. New explicit LEFT lowering guide + verified peak2/lowonset1, no failed pair ref or identical pair/repack retry. Keep continuous low RIGHT blade arm.",
+          "prompt": "Create ONE new HIT RELEASE3 key of the SAME Halpas immediately after good peak2 in PRIMARY image1. Image2 is ONLY a joint authority guide; image3 is correct LOW onset1 for anatomy/camera. True NE BACK-RIGHT/UP-RIGHT view throughout: original closed gold-horn helmet REAR and back spinal armor, front face and pink breastplate HIDDEN. Same black/gold plate segments, TWO solid purple crystal fan wings on back roots, LEFT-back torn burgundy cape, ONE original compact purple blade, two complete hovering legs and exact model/proportions. No camera/body spin or equipment redesign.\n\nEXACTLY TWO arms, same ownership as good peak2. Keep original imageRIGHT low blade arm LOCKED LOW, continuous same near/right gold pauldron -> upperarm -> elbow -> forearm -> closed grippinghand -> same blade beside hip (GREEN guide). No empty raised right fist, no loose/floating blade, no additional arm or hand.\n\nREDRAW ONLY far/imageLEFT EMPTY arm from peak: same LEFT shoulder beside back wing root -> elbow dropping BELOW left shoulder -> forearm bending upward only a little -> EMPTY LEFT wrist at upper-rib/left-shoulder-base height (CYAN guide), clearly BELOW helmet base and far LOWER than peak2 fist above horn. The hand is now beside upper back/left ribs, not above or beside top of helmet. Elbow descends with natural contiguous upperarm/forearm chain. REMOVE the previous high peak forearm/fist by actually replacing the same arm; never leave both high and lowered hands. It belongs to imageLEFT pauldron, never the right blade shoulder. Original imageRIGHT weapon chain stays low/attached.\n\nDistinct release3: LEFT arm coming down from high peak but still more bent/raised than low onset1 image3; head/back easing from peak recoil toward normal NE rear angle, wing roots partly relax and cape lags. Same hips, hovering leg pose and rear camera. Show real local head/shoulder/cape recovery, no duplicate peak or no-motion tracing, no attack swing. Natural partial far-arm occlusion under LEFT wing permitted with no invented extra hand.\n\nONE complete centered transparent1024x1024 cutout, figure silhouette inside central700x800 with at least120px clear transparent gutters all sides. All horns/fan feathers/cape/blade/toes full and uncut. Opaque crisp RPG materials and thin edgeAA, alpha0 background/gaps. No guide marks, lines/dots, labels, text, panels, floor, shadows, glow, particles, trails or other objects.",
+          "requested_at": "2026-10-19T13:26:57.020415+00:00",
+          "imagegen_attempt_limit": 1,
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0
+        },
+        "result_sha256": "d32ac81b2cb9c465f529c4046e251e752606b8e6806c9b57065f8a36d8e68517",
+        "result": {
+          "key": "transform:393",
+          "direction": "NE",
+          "role": "hit",
+          "version": "v04release3",
+          "status": "GENERATED_SINGLE_RELEASE3_SOURCE_VISUAL_AND_GEOMETRY_PASS_FULLCLIP_HOLD",
+          "expected_poses": 1,
+          "requested_poses": 1,
+          "newly_authored_poses": 1,
+          "game_pose_map": [
+            3
+          ],
+          "request_path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/request.json",
+          "request_sha256": "d0104ca01e95b5b81421fd42064805780af6ac31984e0e13342831cde3be2d8c",
+          "original_generated_file": "/workspace/generated_images/exec-7d9b8ad1-7fb9-4191-8d15-891811d7bcdd.png",
+          "raw_path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png",
+          "raw_png": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png",
+          "raw_sha256": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020",
+          "raw_bytes": 1324314,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "private_preview": "/workspace/scratch/halpas-NE-hit-release3-key-v04/generated-private.jpg",
+          "private_preview_bytes": 128427,
+          "source_visual_status": "PASS",
+          "integration_ready": false,
+          "imagegen_attempts": 1,
+          "approved_actor_change": 0,
+          "detailed_completion_change": 0,
+          "created_at": "2026-10-19T13:28:16.199434+00:00",
+          "geometry_validation": "GEOMETRY_PASS_1_POSES_NOT_SIX",
+          "outer_edge_alpha100_count": 0,
+          "valid_source_phases": [
+            3
+          ],
+          "visual_findings": [
+            "Correct NE back-right helmet rear and spinal/hip armor plane retained, no front face/chest jewel. Same gold horns/blackgoldplate/two purple crystal wing fans/LEFT-back torn burgundy cape/original compact purple blade and hovering two leg chains.",
+            "Exactly two continuous arm chains. Near/imageRIGHT shoulder-upperarm-elbow-lowforearm-hand stays gripping blade beside hip. Far/imageLEFT arm alone now bends down from highpeak: elbow below shoulder, EMPTY left fist beside upper ribs/left shoulderbase below helmet. Old high fist removed, no extra downarm/rightfist/third arm or floating weapon.",
+            "Genuinely distinct release3: left wrist much lower than good peak2 above horn, but still higher/more flexed than low onset1; head/back ease from recoil toward rear-right guard, wingroot tension and cape lag recover. Hips stay NE without camera spin.",
+            "Unchanged strict ONE-pose2048 columns geometry+complete-region checks PASS and zero alpha>100 outer-image clipping. Generated source PNG preserved byte-exact with no postgeneration rescale/mask/recolor/guide residue."
+          ],
+          "visual_limitations": [
+            "Only game3 key; exact6map needs idle0/4/5 reuse plus new1/2/3, physicalsize/root review and native Player checks before fullclip/actor approval."
+          ]
+        },
+        "generation_receipt": {
+          "request_path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/request.json",
+          "request_sha256": "d0104ca01e95b5b81421fd42064805780af6ac31984e0e13342831cde3be2d8c",
+          "original_generated_file": "/workspace/generated_images/exec-7d9b8ad1-7fb9-4191-8d15-891811d7bcdd.png",
+          "raw_path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png",
+          "raw_sha256": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020",
+          "raw_bytes": 1324314,
+          "image_size": [
+            1254,
+            1254
+          ],
+          "created_at": "2026-10-19T13:28:16.199434+00:00",
+          "imagegen_attempts": 1
+        }
+      }
+    ],
+    "physical_landmark_proposal_sha256": "8041b6bb2b18137f6f5fbd5ea3fbc6168957270c63036905f51b7b16f03f17b8",
+    "physical_landmark_proposal": {
+      "status": "SOURCE_NORMALIZATION_PROPOSAL_NOT_ACTOR_APPROVAL",
+      "direction": "NE",
+      "reference_idle_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+      "reference_idle_source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+      "reference_waist_minus_idle_root_1024": [
+        88,
+        -193
+      ],
+      "poses": [
+        {
+          "phase": 0,
+          "source_anchor_before_assembly": [
+            384,
+            461
+          ],
+          "source_waist_proposal": null,
+          "virtual_canvas": 1024,
+          "basis": "Exact current selected idle source anchor reused unchanged, retains idle native body root."
+        },
+        {
+          "phase": 1,
+          "source_anchor_before_assembly": [
+            580,
+            1088
+          ],
+          "source_waist_proposal": [
+            795,
+            618
+          ],
+          "virtual_canvas": 2496,
+          "basis": "Manual same rigid gold waist/spinal-girdle landmark normalization vs selected NEidle0. Body helmet/pauldron/pelvis scale proposal, not full silhouette/gear bbox; flight leg and wing articulation preserved."
+        },
+        {
+          "phase": 2,
+          "source_anchor_before_assembly": [
+            590,
+            1141
+          ],
+          "source_waist_proposal": [
+            815,
+            646
+          ],
+          "virtual_canvas": 2624,
+          "basis": "Manual same rigid gold waist/spinal-girdle landmark normalization vs selected NEidle0. Body helmet/pauldron/pelvis scale proposal, not full silhouette/gear bbox; flight leg and wing articulation preserved."
+        },
+        {
+          "phase": 3,
+          "source_anchor_before_assembly": [
+            600,
+            1104
+          ],
+          "source_waist_proposal": [
+            814,
+            634
+          ],
+          "virtual_canvas": 2496,
+          "basis": "Manual same rigid gold waist/spinal-girdle landmark normalization vs selected NEidle0. Body helmet/pauldron/pelvis scale proposal, not full silhouette/gear bbox; flight leg and wing articulation preserved."
+        },
+        {
+          "phase": 4,
+          "source_anchor_before_assembly": [
+            384,
+            1489
+          ],
+          "source_waist_proposal": null,
+          "virtual_canvas": 1024,
+          "basis": "Exact current selected idle source anchor reused unchanged, retains idle native body root."
+        },
+        {
+          "phase": 5,
+          "source_anchor_before_assembly": [
+            1152,
+            1490
+          ],
+          "source_waist_proposal": null,
+          "virtual_canvas": 1024,
+          "basis": "Exact current selected idle source anchor reused unchanged, retains idle native body root."
+        }
+      ],
+      "no_source_resampling": true,
+      "no_default_enable": true
+    },
+    "no_imagegen_for_assembly": true,
+    "source_rgba_preserved": true,
+    "newly_authored_poses": 3,
+    "reused_poses": 3,
+    "new_actor_approval": false
+  },
+  "approval": false,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0,
+  "private_source_review": {
+    "visual_findings": [
+      "All six retain correct NE same-model camera, closed gold-horn helmet, black/gold segmented armor, TWO solid purple back crystal fan wings, same left-back burgundy cape and one original compact purple blade. No gear redesign, front/back mix or camera turn.",
+      "Exactly TWO arm chains in every frame. Original imageRIGHT blade arm stays continuously LOW from same pauldron through upperarm/elbow/forearm/wrist/grippinghand to same blade beside hip. Only original EMPTY imageLEFT arm changes. No third arm, extra downarm/empty right fist, disconnected wrist or floating blade.",
+      "Six actual phases: exact selected NEidle0 neutral guard; NEW low onset1 EMPTY LEFT fist below left shoulder/ribs with small head/back jerk; NEW clear peak2 LEFT fist above back-left helmet with real recoil; NEW release3 fist drops below helmet to upper ribs/shoulderbase; exact selected NEidle4 and5 used only as neutral late recovery/settle. Three newly authored+three reused poses, no failed pair peak duplication counted as onset.",
+      "ExactRGBA assembly proof preserves each reviewed full source crop and all alpha>16 foreground, with zero resizing, recolor, masks, mirrored poses or cleaned pixels. Six distinct visible fingerprints; unchanged strict six-pose complete-source geometry PASS at virtual2048. New explicit1536 packing cells retain1233px-wide source whole with generous transparent gutters.",
+      "Private metadata-normalized seven-cell comparison against actual selected directional idle0 reviewed all six for source physicalbody/camera/reaction flow. Closed helmet/pauldron/girdle scale and waist roots proposed from rigid landmarks, not whole silhouette bbox or standing-foot lock. Proposals keep head/torso/emptyarm/wing/cape response; actual Player runtime final QC still required."
+    ],
+    "visual_limitations": [
+      "Root must integrate new native immutable SpriteFrames/profile, run focused actual Player hit/action/locomotion checks and inspect actual rendered idle-entry/hit/return physicalbody scale/anchors before actor approval. Metadata-normalized private source sheet is not actual Player or full actor approval.",
+      "Existing405 approved history, detailed0/31 and selected boss finalHOLD/default-off unchanged. Failed full6/pair sources and all sourcegeneration requests/receipts remain preserved; no new actor/detailed completion counted."
+    ],
+    "source_visual_status": "PASS",
+    "raw_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+    "raw_bytes": 4650316,
+    "request_sha256": "d3a2638e9ad4449294efcd17294fd8d4d8b33c5a338b3fd158bd0fa3c8dade17",
+    "review_sha256": "0c0b5f6205bd7b3412c34bff9132ce7118073d0a92a8256769b2373fc507dc72"
+  },
+  "available_repository_reference_sources": {
+    "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702": "docs/remake/evidence/pr122-mythic-detailed/batch03/quality-corrections/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png"
+  },
+  "preserved_reference_files": [
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9.png",
+      "sha256": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+      "bytes": 1244841,
+      "original_reference": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png"
+    },
+    {
+      "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/authoring-references/ref-5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020.png",
+      "sha256": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020",
+      "bytes": 1324314,
+      "original_reference": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png"
+    }
+  ],
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v03composite01.png",
+  "output_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+  "output_bytes": 4650316,
+  "original_generated_file": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/halpas-NE-hit-v03composite01.png",
+  "runtime_integration_hold": {
+    "status": "RUNTIME_HOLD_PRESERVED",
+    "slot": "transform:393:NE:hit",
+    "preserved_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v03composite01.png",
+    "source_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+    "reason": "Strict existing cross-track native pose uniqueness rejected exact NEidle0/4/5 reuse. No gate or tests relaxed. Requires three genuinely new hit neutral/recovery/settle poses.",
+    "selected_source_preserved": "docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-hit-v01.png",
+    "source_geometry_status": "GEOMETRY_PASS",
+    "actor_approval_added": 0
+  }
+}

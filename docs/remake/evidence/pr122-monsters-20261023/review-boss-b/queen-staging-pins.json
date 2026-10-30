@@ -1,0 +1,97 @@
+{
+  "registers": [
+    {
+      "register": "data/pr122_monster_animation_staging.json",
+      "profile": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/monster_staging/ice_queen/r002/SpriteFrames.tres",
+      "pixel_scale": 0.614285714286,
+      "profile_sha256": "04ee8d89f9b02f7150fbf73bc06b8ca381dde6f83995286afac3c2da229e7723",
+      "frames_sha256": "35613dcf25fde5343783d87c40c0f8eab04d6c60695ba9f7219ff6765ee32413"
+    },
+    {
+      "register": "data/pr122_monster_queen_run_staging.json",
+      "profile": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NativeMotionProfile.tres",
+      "frames": "res://assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SpriteFrames.tres",
+      "pixel_scale": 2.25389025389,
+      "profile_sha256": "44ec1e8cf7b71d9ead4c347da1449d47900451f3f2feb49c4376497fb3a454d2",
+      "frames_sha256": "0487825374e9642545a1875ec6276e2e3beb0e5c2f3a397accb14557fb5e1b01"
+    }
+  ],
+  "tracks": [
+    {
+      "direction": "E",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-E-run6.png",
+      "source_sha256": "85577468992a1b7406f84159452baec3113c79950d43ddd4dea1a478ee7e0cdb",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/E-run.png",
+      "inspection_pixel_scale": 0.614285714286
+    },
+    {
+      "direction": "S",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch01/raw/queen-S-run6.png",
+      "source_sha256": "ab9c86f29fb2f24901bb4a2e61306d25f45ebdf2ec9d1c8ac37ef2d08ed44133",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/r002/S-run.png",
+      "inspection_pixel_scale": 0.614285714286
+    },
+    {
+      "direction": "SE",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-SE-run6-v01.png",
+      "source_sha256": "85de5856c079d199271dc59467ab5c94e4991849ebd1e4924cad6f0f8dc3cec4",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SE-run.png",
+      "inspection_pixel_scale": 2.25389025389
+    },
+    {
+      "direction": "SW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-SW-run6-v01.png",
+      "source_sha256": "0e804061dd55f756239ca2b7fab6b68ff5865086c5a2cfafe679c1d28d5383c7",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/SW-run.png",
+      "inspection_pixel_scale": 2.25389025389
+    },
+    {
+      "direction": "W",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-W-run6-v01.png",
+      "source_sha256": "f7c6abcd1b3d6417a0faf3166a640256c43497bfb34ee2138f712e13e8497156",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/W-run.png",
+      "inspection_pixel_scale": 2.25389025389
+    },
+    {
+      "direction": "NW",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-NW-run6-v01.png",
+      "source_sha256": "2d7bab89f617bf46151877c89335431a2c52c9baabf956f61b9d49eb7975890e",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NW-run.png",
+      "inspection_pixel_scale": 2.25389025389
+    },
+    {
+      "direction": "N",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-N-run6-v01.png",
+      "source_sha256": "ce9d143a809930f76fb7e5563c2b815a920d64a96d4b4fb92ee403f7e159845f",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/N-run.png",
+      "inspection_pixel_scale": 2.25389025389
+    },
+    {
+      "direction": "NE",
+      "role": "run",
+      "source": "docs/remake/evidence/pr122-monsters-20261023/batch03-queen/raw/queen-NE-run6-v01.png",
+      "source_sha256": "3979658a0110bc31190460cfb95c0ba5e85f2d8f0a4ca3071af70635f986894d",
+      "texture": "assets/actors/eight_direction/monster_staging/ice_queen/batch03/r001/NE-run.png",
+      "inspection_pixel_scale": 2.25389025389
+    }
+  ],
+  "all_views": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "poses": 48
+}

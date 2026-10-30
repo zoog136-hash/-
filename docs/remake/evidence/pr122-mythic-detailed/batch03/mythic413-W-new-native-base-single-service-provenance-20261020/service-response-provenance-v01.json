@@ -1,0 +1,88 @@
+{
+  "tool": "image_gen__imagegen",
+  "actual_service_calls_for_W": 1,
+  "elapsed_ms": 52128,
+  "result_keys": [
+    "image_url",
+    "output_hint"
+  ],
+  "image_url_characters": 1142398,
+  "payload_characters": 1142376,
+  "actual_chunks": 24,
+  "actual_writer_session": 51578,
+  "writer_ready_marker_verified_before_payload": true,
+  "echo_and_icanon_disabled": true,
+  "image_or_base64_forwarded_to_parent": false,
+  "generatedImage_called": false,
+  "raw_directly_viewed": false,
+  "source_original": {
+    "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/service-W-fullbody-base-native-r001.png",
+    "sha256": "fc440f258979b615d3375f4a288f767d69649de2b46495bc93be652998bb076e",
+    "bytes": 856782,
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "native_untouched": true
+  },
+  "source_alpha_stats": {
+    "1": {
+      "bbox": [
+        25,
+        17,
+        1234,
+        1220
+      ],
+      "foreground_pixels": 315019,
+      "border_pixels": 0,
+      "component_count": 812,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 313284
+    },
+    "8": {
+      "bbox": [
+        338,
+        18,
+        1009,
+        1187
+      ],
+      "foreground_pixels": 281636,
+      "border_pixels": 0,
+      "component_count": 221,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 281362
+    },
+    "100": {
+      "bbox": [
+        339,
+        20,
+        1008,
+        1186
+      ],
+      "foreground_pixels": 273242,
+      "border_pixels": 0,
+      "component_count": 12,
+      "components_at_least_100px": 1,
+      "largest_component_pixels": 273219
+    }
+  },
+  "private_preview": {
+    "path": "/workspace/scratch/mythic413-W-private-base-generation-fresh-20261020-v01/private-produced-W-base-quality-v01.jpg",
+    "sha256": "da8541e7c3bf21571614dbe6348344607a3d2ef65ed9c5ad91bfd5fc5ad71a49",
+    "bytes": 62155,
+    "size": [
+      760,
+      760
+    ]
+  },
+  "image_url_sha256": "f460eb1f931a73b8bd435eb63cd7b98ff5236869272f07ebfcca5732d50d8786",
+  "writer_sha256": "b53df21208a35f6cae806c12bf95076dffce336d858ad96ca67abe5deb3ea0c6",
+  "request_sha256": "9393e03e79fb36517ae0a4a040f1f0750eadfa7b47ea9d43eb2d93ebc3eb4ec9",
+  "output_hint_sha256": "edf06e6d406811cf71ccc4f1fc7ff52f32318b47cc035ff267ac3dd626512e1b",
+  "original_references_not_modified": true,
+  "final_source_C_or_root_registered": false,
+  "actor_approvals_added": 0,
+  "ci_runs": 0,
+  "git_mutations": 0
+}

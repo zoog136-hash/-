@@ -1,0 +1,56 @@
+{
+  "status": "UNEXECUTED_SPARSE_TRACKED_REQUEST_READ_ONLY_BLOB_GUARD_REVISION_PENDING_INCREMENTAL_REVIEW",
+  "v01_helper_sha256": "6c94585b57f2d4681af81617f36e3c91b65e2f23c2a2985c85f7a1cfe54f93fe",
+  "v02_helper_sha256": "91e9492ca3bd65d61ac9e1104eab5b0f1d0e7466a65efe3e6b662911525605b1",
+  "changes": [
+    {
+      "old": "    for relative,expected in [(audit_rel,audit_sha),(previous_source,held['sha256']),(str(Path(previous_source).with_suffix('.geometry.json')),held['geometry_sha256']),(audit['source_prefix']+held['request'],held['request_sha256'])]:\n        require(digest(actual_file(ROOT/relative)) == expected, 'Held source, geometry, request or audit changed')\n        immutable[relative] = expected\n",
+      "new": "    for relative,expected in [(audit_rel,audit_sha),(previous_source,held['sha256']),(str(Path(previous_source).with_suffix('.geometry.json')),held['geometry_sha256'])]:\n        require(digest(actual_file(ROOT/relative)) == expected, 'Held source, geometry or audit changed')\n        immutable[relative] = expected\n    original_request_rel = audit['source_prefix'] + held['request']\n    original_request_blob = git('show','HEAD:'+original_request_rel)\n    require(hashlib.sha256(original_request_blob).hexdigest() == held['request_sha256'], 'Exact tracked original request blob differs from independent audit')\n    if os.path.lexists(ROOT/original_request_rel):\n        require(digest(actual_file(ROOT/original_request_rel)) == held['request_sha256'], 'Existing original request differs; preserve worktree')\n"
+    },
+    {
+      "old": "        require(cm['selected_locomotion_sheets'][slot] in (previous_source,source_rel.as_posix()), 'Only exact held RUN to reviewed new source replacement allowed')\n",
+      "new": "        require(cm['selected_locomotion_sheets'][slot] in (previous_source,source_rel.as_posix()), 'Only exact held RUN to reviewed new source replacement allowed')\n        require(git('show','HEAD:'+original_request_rel) == original_request_blob, 'Original sparse request Git blob changed')\n        if os.path.lexists(ROOT/original_request_rel):\n            require(digest(actual_file(ROOT/original_request_rel)) == held['request_sha256'], 'Existing original request changed during replacement')\n"
+    }
+  ],
+  "exact_tracked_request_blobs": [
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/request-002-thunder_female-E-run-v01.json",
+      "bytes": 5036,
+      "sha256": "9fb153df4054c30b782e3d951977ec318be09f5f9264cf6c35cbff1df1f3213d",
+      "worktree_exists": false,
+      "materialized": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/request-004-thunder_female-SE-run-v01.json",
+      "bytes": 5892,
+      "sha256": "12e56f1b399cb526772c40e7fbacffabb180ca6838105ac84f55d12a0142125c",
+      "worktree_exists": false,
+      "materialized": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/request-006-thunder_female-S-run-v01.json",
+      "bytes": 5860,
+      "sha256": "832f072abad3dee23efca09e1fb98283289f2078cdcd13fdb42a0cdf4e0d0a5e",
+      "worktree_exists": false,
+      "materialized": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/request-008-thunder_female-SW-run-v01.json",
+      "bytes": 5890,
+      "sha256": "3e79f4a803d25a170d115572d7b1cdd25df4cfb9850ddc20f2f85227a699d187",
+      "worktree_exists": false,
+      "materialized": false
+    },
+    {
+      "path": "docs/remake/evidence/pr122-mythic-detailed/batch04/request-010-thunder_female-W-run-v01.json",
+      "bytes": 5869,
+      "sha256": "e64da8b28c0f0b09292d909bf32c2514ad3ed1a4665170a9bc6186668105096f",
+      "worktree_exists": false,
+      "materialized": false
+    }
+  ],
+  "request_blobs_materialized": false,
+  "root_or_index_writes": false,
+  "source_approval_changed": false,
+  "actor_approvals_added": 0
+}

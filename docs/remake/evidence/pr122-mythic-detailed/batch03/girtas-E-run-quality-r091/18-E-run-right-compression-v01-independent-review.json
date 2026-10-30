@@ -1,0 +1,68 @@
+{
+  "schema": "pr122-independent-single-source-pose-review-v1",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "key": "transform:267",
+  "direction": "E",
+  "role": "run",
+  "source_visual_status": "SOURCE_PASS",
+  "status": "PASS_SCOPED_NEAR_RIGHT_LOADED_COMPRESSION_KEY",
+  "raw_path": "/workspace/scratch/girtas-E-run-right-compression-key-v01/girtas-E-run-right-compression-key-v01.png",
+  "raw_sha256": "f730390ab28948a8f142e3df0dcfdc476a16406786fcb295bea238ff01141ce3",
+  "reference_landing_path": "/workspace/scratch/girtas-E-run-right-landing-key-v01/girtas-E-run-right-landing-key-v01.png",
+  "reference_landing_sha256": "8e4f1ac67c6ee2bab6a832f8a14a8ab58301868bd426df237ac18007ae047299",
+  "candidate_game_phase": 4,
+  "actual_support": "anatomical_RIGHT_near",
+  "checks": {
+    "faithful_original_identity_E_camera_permanent_RIGHT_weapon": true,
+    "two_arm_two_leg_continuity": true,
+    "near_RIGHT_knee_loaded_bent_under_lowered_body": true,
+    "far_LEFT_leg_drive_boot_wholly_raised": true,
+    "distinct_from_straighter_RIGHT_landing_key": true
+  },
+  "findings": [
+    "Near anatomical RIGHT support remains traceable below the near/weapon-side hip: its thigh advances to the bent knee and the shin folds back to the flat supporting RIGHT boot. This is an actual flexed loaded chain, not the old nearly straight trailing leg relabeled as compression.",
+    "The source head/pelvis lie lower relative to the visible support sole than in the preceding correct RIGHT landing. The kneebend, front torso lean and trailing hair/cloth jointly read as run loading. Exact rigid physical-scale/root authorship remains separate because raw crops have different extents and placements.",
+    "Far anatomical LEFT knee stays driven ahead/high and its entire boot is raised, with no second planted support or third leg. Original pale face/long pale hair/hard narrow gold rays/long dark robe and near RIGHT long sinuous blade are retained.",
+    "Empty far LEFT arm and near RIGHT weapon arm remain connected; chest/profile and travel continue RIGHT with matching slight chest exposure."
+  ],
+  "approximate_raw_landmarks": {
+    "near_RIGHT_hip_under_robe": [
+      896,
+      713
+    ],
+    "near_RIGHT_knee": [
+      995,
+      877
+    ],
+    "near_RIGHT_ankle": [
+      846,
+      1056
+    ],
+    "near_RIGHT_heel_sole": [
+      764,
+      1152
+    ],
+    "near_RIGHT_toe_sole": [
+      982,
+      1152
+    ],
+    "far_LEFT_raised_knee": [
+      1160,
+      710
+    ],
+    "far_LEFT_raised_ankle": [
+      1118,
+      885
+    ]
+  },
+  "landmark_limitations": [
+    "Hip and knee estimates roughly +/-30px from private source image; upper thigh partly occluded. Sole endpoints approximately +/-12px. These estimates only guide new production anatomy and are not measured bones, scale calibration or authored world-root proof.",
+    "Raw source sole location differs from the landing source. Preserve source geometry and determine per-pose C/root from rigid identity and explicitly authored gait; do not infer identical raw canvas/floor from nominal2048.",
+    "Opposite LEFT landing/load and both flight phases are still absent/unapproved; this is one source key only."
+  ],
+  "preview_budget_total_bytes": 1157849,
+  "complete_clip": false,
+  "actor_approval": false,
+  "runtime_or_gameplay_claim": false,
+  "reviewed_at": "2026-10-19T14:27:40.135192+00:00"
+}

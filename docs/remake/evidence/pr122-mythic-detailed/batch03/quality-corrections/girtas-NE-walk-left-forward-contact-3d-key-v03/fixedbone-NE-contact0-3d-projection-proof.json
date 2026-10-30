@@ -1,0 +1,119 @@
+{
+  "schema": "pr122-private-single-fixedbone-3d-authority-v1",
+  "camera": [
+    5,
+    -7,
+    5
+  ],
+  "camera_target": [
+    0,
+    0,
+    1.0
+  ],
+  "forward_world_axis": "+Y projects NE UP-RIGHT",
+  "anatomical_RIGHT": "+X near/imageRIGHT hip, GREEN, originalweaponhand",
+  "anatomical_LEFT": "-X far/imageLEFT hip, MAGENTA, emptyhand",
+  "phase": "LEFT_FORWARD_HEEL_CONTACT0_RIGHT_TRAILING_TOE",
+  "bone_lengths": {
+    "thigh": 0.57,
+    "shin": 0.57
+  },
+  "joints": {
+    "LEFT": {
+      "hip": [
+        -0.18,
+        0,
+        1.0
+      ],
+      "knee": [
+        -0.18,
+        0.4215589476899834,
+        0.6163490471502595
+      ],
+      "ankle": [
+        -0.18,
+        0.6,
+        0.075
+      ],
+      "foot_center": [
+        -0.18000000715255737,
+        0.6800000071525574,
+        0.06686410307884216
+      ],
+      "contact": "FORWARD_HEEL_CONTACT",
+      "thigh_length": 0.5700000011293511,
+      "shin_length": 0.5700000011293511,
+      "foot_mesh_minZ": -3.725290298461914e-09,
+      "world_forward_axis": "+Y",
+      "anatomical_side_worldX": -0.18,
+      "projected_hip_knee_ankle_pixels": {
+        "hip": [
+          346.5032730102539,
+          372.7071533203125
+        ],
+        "knee": [
+          409.22996520996094,
+          424.7376937866211
+        ],
+        "ankle": [
+          435.781494140625,
+          534.7288513183594
+        ],
+        "foot_center": [
+          447.6852264404297,
+          529.5907516479492
+        ]
+      }
+    },
+    "RIGHT": {
+      "hip": [
+        0.18,
+        0,
+        1.0
+      ],
+      "knee": [
+        0.18,
+        -0.1320907626462543,
+        0.4455164290769916
+      ],
+      "ankle": [
+        0.18,
+        -0.6,
+        0.12
+      ],
+      "foot_center": [
+        0.18000000715255737,
+        -0.5199999809265137,
+        0.0891450047492981
+      ],
+      "contact": "TRAILING_TOE_SUPPORT",
+      "thigh_length": 0.5699999668174659,
+      "shin_length": 0.5700000403429318,
+      "foot_mesh_minZ": -3.725290298461914e-09,
+      "world_forward_axis": "+Y",
+      "anatomical_side_worldX": 0.18,
+      "projected_hip_knee_ankle_pixels": {
+        "hip": [
+          421.49693298339844,
+          395.29296112060547
+        ],
+        "knee": [
+          401.8422546386719,
+          535.6081924438477
+        ],
+        "ankle": [
+          332.21875762939453,
+          652.2690696716309
+        ],
+        "foot_center": [
+          344.1225357055664,
+          652.4048194885254
+        ]
+      }
+    }
+  },
+  "critical_projected_crossing": "FarLEFT leadingfoot projects UP-RIGHT ofitsownLEFT hip; nearRIGHT trailingtoe projects DOWN-LEFT ofitsownRIGHT hip. Foot screenX order MAY CROSS unlike hip screenX order. Do notforceLEFTbootleft/RIGHTbootright: that caused backwardstride.",
+  "guide_only": true,
+  "not_game_resource": true,
+  "actor_approval": false
+}

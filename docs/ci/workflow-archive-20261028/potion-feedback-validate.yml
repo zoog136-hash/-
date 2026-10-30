@@ -1,0 +1,74 @@
+name: Potion Feedback Validate
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Main.tscn'
+      - 'scripts/world.gd'
+      - 'scripts/consumable_service.gd'
+      - 'scripts/consumable_rules.gd'
+      - 'scripts/potion_feedback_world.gd'
+      - 'scripts/animation/potion_feedback.gd'
+      - 'scripts/animation/impact_visuals.gd'
+      - 'tests/potion_feedback*'
+      - '.github/workflows/potion-feedback-validate.yml'
+permissions:
+  contents: read
+concurrency:
+  group: potion-feedback-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  potion-feedback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
+      - name: Restore trusted compact Godot import cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Resource preflight
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned engine and OpenGL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import, boot and actual potion use regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 1800 --logs test-results/potion --only import,bake_navigation,boot,potion_feedback_test,potion_feedback_gameplay_test,inventory_db_smoke_test,consumable_auto_safety_test,hit_feedback_test
+      - name: Actual OpenGL light captures
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/potion-feedback"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          mkdir -p test-results/potion
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/potion_feedback_render_test.gd 2>&1 | tee test-results/potion/render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' test-results/potion/render.log; then exit 1; fi
+          grep -q POTION_FEEDBACK_RENDER_OK test-results/potion/render.log
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: potion-feedback-review-${{ github.sha }}
+          path: |
+            test-results/potion/
+            ${{ runner.temp }}/potion-feedback/**/potion-feedback-review/
+          if-no-files-found: error

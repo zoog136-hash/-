@@ -1,0 +1,445 @@
+name: Animation Presentation Validate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/animation/**'
+      - 'scripts/monsters/**'
+      - 'scripts/monster.gd'
+      - 'scripts/player.gd'
+      - 'scripts/world.gd'
+      - 'data/animation_presentation.json'
+      - 'data/combat_animation_profiles.json'
+      - 'assets/actors/eight_direction/**'
+      - 'tools/build_animation_expansion.py'
+      - 'tools/build_open_sprite_sample.gd'
+      - 'tools/audit_eight_direction_coverage.py'
+      - 'tools/*original_based_motion*'
+      - 'tools/link_original_based_identity.py'
+      - 'data/animation_authoring_sources.json'
+      - 'tests/original_based*'
+      - 'tests/test_original_based_pose_files.py'
+      - 'tests/test_original_based_direction_canvases.py'
+      - 'tests/run_original_based*batch.gd'
+      - 'tests/pr100_direction_gameplay_test.gd'
+      - 'tests/fixtures/pr100_batch*.json'
+      - 'tests/fixtures/pr100_transform*.json'
+      - 'tests/fixtures/pr100_temporal*.json'
+      - 'tests/*animation*'
+      - 'tests/*presentation*'
+      - '.github/workflows/animation-presentation-validate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: animation-presentation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  presentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore trusted-main PNG import shards
+        uses: ./.github/actions/restore-godot-png-cache
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Verify existing resource ledger
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned Godot and software GL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import and full identity / combat regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          mkdir -p test-results
+          "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/presentation-import.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then exit 1; fi
+          python3 tests/animation_expansion_plan_test.py 2>&1 | tee test-results/animation-expansion-plan.txt
+          python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
+          python3 tests/eight_direction_coverage_audit_test.py
+          python3 tests/original_based_motion_import_test.py
+          python3 tests/test_original_based_pose_files.py
+          python3 tests/test_original_based_direction_canvases.py
+          python3 tests/original_based_identity_link_test.py
+          python3 tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage
+          for name in eight_direction_animation_test native_animation_expansion_test original_based_canvas_test; do
+            "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "test-results/${name}.txt"; then exit 1; fi
+          done
+          XDG_DATA_HOME="${RUNNER_TEMP}/transform-batch-guards" "$ENGINE" --headless --path . --script res://tests/original_based_transform_batch_test.gd > test-results/transform-batch-guards.txt 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/transform-batch-guards.txt; then exit 1; fi
+          grep -q 'PR100_TRANSFORM_BATCH_GUARD_OK' test-results/transform-batch-guards.txt
+          for name in actor_motion_test animation_presentation_test boss_presentation_test authored_state_motion_test animation_restore_test monster_attack_profiles_test combat_timing_test combat_resolution_equivalence_test volley_motion_test hit_feedback_test combat_vfx_test; do
+            "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' "test-results/${name}.txt"; then exit 1; fi
+            grep -q '_OK' "test-results/${name}.txt"
+          done
+          XDG_DATA_HOME="${RUNNER_TEMP}/aden-boss-special" "$ENGINE" --headless --path . --script res://tests/aden_boss_special_test.gd 2>&1 | tee test-results/aden-boss-special.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|ADEN_BOSS_SPECIAL_FAIL' test-results/aden-boss-special.txt; then exit 1; fi
+          grep -q 'ADEN_BOSS_SPECIAL_OK' test-results/aden-boss-special.txt
+          "$ENGINE" --headless --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-direction-gameplay.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-direction-gameplay.txt; then exit 1; fi
+          grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-direction-gameplay.txt
+      - name: All boss poses and real gameplay renders
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          for name in capture_presentation_gallery capture_presentation_sequences capture_combat benchmark_presentation_battles; do
+            args=()
+            if [ "$name" = benchmark_presentation_battles ]; then args=(-- --legacy-aden-faith-layouts); fi
+            xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" "${args[@]}" 2>&1 | tee "test-results/${name}.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|FAILED' "test-results/${name}.txt"; then exit 1; fi
+          done
+          export TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/pr100-main-directions"
+          export TWILIGHT_PR100_REPORT="${RUNNER_TEMP}/pr100-main-directions/gameplay.json"
+          XDG_DATA_HOME="${RUNNER_TEMP}/pr100-main-user" timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-main-render.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-main-render.txt; then exit 1; fi
+          grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-main-render.txt
+      - name: Preserve runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: animation-presentation-${{ github.sha }}
+          path: |
+            test-results/
+            ${{ runner.temp }}/presentation/**/animation-presentation-coverage.json
+            ${{ runner.temp }}/presentation/**/boss-presentation-results.json
+            ${{ runner.temp }}/presentation/**/presentation-gallery/
+            ${{ runner.temp }}/presentation/**/presentation-sequences/
+            ${{ runner.temp }}/presentation/**/combat-review/
+            ${{ runner.temp }}/presentation/**/presentation-benchmark/
+            ${{ runner.temp }}/aden-boss-special/**/aden-boss-special-results.json
+            ${{ runner.temp }}/pr100-main-directions/
+          if-no-files-found: error
+  original-based:
+    name: Original-based Main / ${{ matrix.group }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - group: werewolf-ghost
+            cases: |
+              werewolf|original_based_monster_gameplay_test||poses
+              ghost|original_based_ghost_gameplay_test||poses
+              ghost-gludio|original_based_ghost_gameplay_test|글루디오 던전 유령|directions
+              ghost-hell|original_based_ghost_gameplay_test|지옥의 고스트|directions
+          - group: ogre-reaper
+            cases: |
+              ogre|original_based_ogre_gameplay_test||poses
+              reaper|original_based_reaper_gameplay_test||poses
+              ogre-giran|original_based_ogre_gameplay_test|기란 평원 오우거|directions
+              ogre-ancient|original_based_ogre_gameplay_test|잊혀진 섬 고대오우거|directions
+          - group: golems-cyclops
+            cases: |
+              lava-golem|original_based_lava_golem_gameplay_test||poses
+              ice-golem|original_based_ice_golem_gameplay_test||poses
+              lava-golem-nest|original_based_lava_golem_gameplay_test|화룡의 둥지 라바 골렘|directions
+              cyclops|original_based_cyclops_gameplay_test||poses
+          - group: cockatrice-spear
+            cases: |
+              cockatrice|original_based_cockatrice_gameplay_test||poses
+              cockatrice-giran|original_based_cockatrice_gameplay_test|기란 평원 코카트리스|directions
+              cockatrice-ancient|original_based_cockatrice_gameplay_test|잊혀진 섬 고대코카트리스|directions
+              cockatrice-distorted|original_based_cockatrice_gameplay_test|왜곡의 코카트리스|directions
+              spear-captain|original_based_spear_captain_gameplay_test||poses
+          - group: harpy-lycanthrope
+            cases: |
+              harpy|original_based_harpy_gameplay_test||poses
+              harpy-nest|original_based_harpy_gameplay_test|풍룡의 둥지 하피|directions
+              lycanthrope|original_based_lycanthrope_gameplay_test||poses
+              lycanthrope-cruel|original_based_lycanthrope_gameplay_test|잔혹한 라이칸스로프|directions
+          - group: succubus-field
+            cases: |
+              succubus|original_based_succubus_gameplay_test||poses
+              succubus-earth-queen|original_based_succubus_gameplay_test|지룡의 서큐버스 퀸|directions
+              succubus-valley|original_based_succubus_gameplay_test|용의 계곡 서큐버스|directions
+          - group: succubus-regional
+            cases: |
+              succubus-nest|original_based_succubus_gameplay_test|지룡의 둥지 지룡서큐버스|directions
+              succubus-disbelief|original_based_succubus_gameplay_test|불신의 서큐버스|directions
+              succubus-dark-queen|original_based_succubus_gameplay_test|암흑의 서큐버스 퀸|directions
+              succubus-arrogant-queen|original_based_succubus_gameplay_test|오만한 서큐버스 퀸|directions
+          - group: bugbear-sand-worm-reaper
+            cases: |
+              bugbear|original_based_bugbear_gameplay_test||poses
+              sand-worm|original_based_sand_worm_gameplay_test||poses
+              reaper-male|original_based_reaper_male_gameplay_test||poses
+          - group: iron-golem-ghoul
+            cases: |
+              iron-golem|original_based_iron_golem_gameplay_test||poses
+              iron-golem-hell|original_based_iron_golem_gameplay_test|지옥의 아이언골렘|directions
+              ghoul-gludio|original_based_ghoul_gameplay_test||poses
+              ghoul-undying|original_based_ghoul_gameplay_test|불사의 구울|directions
+          - group: lizard-regional
+            cases: |
+              lizard|original_based_lizard_gameplay_test||poses
+              lizard-albino|original_based_lizard_gameplay_test|알비노 도마뱀|directions
+          - group: crabman-asitagio
+            cases: |
+              crabman|original_based_crabman_gameplay_test||poses
+              crabman-eva|original_based_crabman_gameplay_test|에바 왕국 크랩맨|directions
+              asitagio|original_based_asitagio_gameplay_test||poses
+              asitagio-arrogant|original_based_asitagio_gameplay_test|오만한 아시타지오|directions
+          - group: spear-guards
+            cases: |
+              spear-guard-green|original_based_spear_guard_green_gameplay_test||poses
+              spear-guard|original_based_spear_guard_gameplay_test||poses
+              spear-guard-red|original_based_spear_guard_red_gameplay_test||poses
+          - group: frog-fire-egg
+            cases: |
+              albino-frog|original_based_albino_frog_gameplay_test||poses
+              albino-horned-frog|original_based_albino_frog_gameplay_test|알비노 뿔 개구리|directions
+              fire-egg|original_based_fire_egg_gameplay_test||poses
+              fire-egg-fear|original_based_fire_egg_gameplay_test|공포의 파이어 에그|directions
+          - group: horn-cerberus
+            cases: |
+              horn-cerberus|original_based_horn_cerberus_gameplay_test||poses
+              horn-cerberus-cruel|original_based_horn_cerberus_gameplay_test|잔혹한 혼 켈베로스|directions
+          - group: mummy-seer-bosses
+            case_timeout: 450
+            cases: |
+              mummy-lord|original_based_mummy_lord_gameplay_test||poses
+              seer-boss|original_based_seer_boss_gameplay_test||poses
+          - group: raziel-watcher-boss
+            case_timeout: 450
+            cases: |
+              raziel-watcher|original_based_raziel_watcher_gameplay_test||poses
+          - group: salah-boss
+            case_timeout: 450
+            cases: |
+              salah|original_based_salah_gameplay_test||poses
+          - group: bone-dragons
+            cases: |
+              bone-dragon|original_based_bone_dragon_gameplay_test||poses
+              bone-dragon-immortal|original_based_bone_dragon_gameplay_test|불멸의 본 드래곤|directions
+              bone-dragon-hell|original_based_bone_dragon_gameplay_test|지옥의 본 드래곤|directions
+          - group: king-bugbear-ettin
+            cases: |
+              king-bugbear|original_based_king_bugbear_gameplay_test||poses
+              ettin|original_based_ettin_gameplay_test||poses
+          - group: penguin-pan-transform
+            cases: |
+              ancient-penguin|original_based_ancient_penguin_gameplay_test||poses
+              pan|original_based_pan_gameplay_test||poses
+          - group: crab-kraken-transform
+            cases: |
+              albino-giant-crab|original_based_albino_giant_crab_gameplay_test||poses
+              kraken-transform|original_based_kraken_transform_gameplay_test||poses
+          - group: snowman-yeti
+            cases: |
+              snowman|original_based_snowman_gameplay_test||poses
+              yeti|original_based_yeti_gameplay_test||poses
+          - group: ice-man-scorpion
+            cases: |
+              ice-man|original_based_ice_man_gameplay_test||poses
+              scorpion|original_based_scorpion_gameplay_test||poses
+          - group: wolf-tiger-basilisk
+            cases: |
+              dire-wolf|original_based_dire_wolf_gameplay_test||poses
+              saber-tiger|original_based_saber_tiger_gameplay_test||poses
+              saber-tiger-cruel|original_based_saber_tiger_gameplay_test|잔혹한 샤벨타이거|directions
+              basilisk|original_based_basilisk_gameplay_test||poses
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Verify existing resource ledger
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned Godot and software GL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import actual TWILIGHT project
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-results
+          XDG_DATA_HOME="${RUNNER_TEMP}/original-import" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/import.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
+      - name: Production Main headless and rendered gameplay
+        shell: bash
+        env:
+          ORIGINAL_CASES: ${{ matrix.cases }}
+          ORIGINAL_CASE_TIMEOUT: ${{ matrix.case_timeout || 300 }}
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          while IFS='|' read -r label script subject capture_mode; do
+            [ -n "$label" ] || continue
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-headless.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-headless-user" timeout "$ORIGINAL_CASE_TIMEOUT" "$ENGINE" --headless --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-headless.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-headless.txt"; then exit 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-headless.txt"
+            pose_capture=0
+            if [ "$capture_mode" = poses ]; then pose_capture=1; fi
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_ORIGINAL_POSE_CAPTURE="$pose_capture" TWILIGHT_PR100_CAPTURE_DIR="${PWD}/test-results/${label}-render" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-render-user" timeout "$ORIGINAL_CASE_TIMEOUT" xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-render.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-render.txt"; then exit 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-render.txt"
+          done <<< "$ORIGINAL_CASES"
+      - name: Preserve actual Main logs and captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-based-${{ matrix.group }}-${{ github.sha }}
+          path: test-results/
+          if-no-files-found: error
+  original-batch:
+    name: Original-based batch${{ matrix.batch }} / shared engine per mode
+    strategy:
+      fail-fast: false
+      matrix:
+        batch: [15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30]
+        include:
+          - batch: 27
+            script: run_original_based_boss_batch
+            timeout: 1200
+          - batch: 29
+            script: run_original_based_boss_batch
+            timeout: 1200
+          - batch: 31
+            config: res://tests/fixtures/pr100_transform_batch31.json
+            script: original_based_transform_temporal_main_test
+            marker: PR100_TRANSFORM_BATCH_OK
+          - batch: 21
+            config: res://tests/fixtures/pr100_batch21_accepted.json
+            script: run_original_based_transform_batch
+            marker: PR100_TRANSFORM_BATCH_OK
+            timeout: 1200
+          - batch: transform-regression
+            config: res://tests/fixtures/pr100_transform_regression.json
+            script: run_original_based_transform_batch
+            marker: PR100_TRANSFORM_BATCH_OK
+            timeout: 1200
+            render_timeout: 2400
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    env:
+      TWILIGHT_PR100_BATCH_ISOLATED: '1'
+      TWILIGHT_PR100_BATCH_CONFIG: ${{ matrix.config || format('res://tests/fixtures/pr100_batch{0}.json', matrix.batch) }}
+      BATCH_SCRIPT: ${{ matrix.script || 'run_original_based_batch' }}
+      BATCH_OK_MARKER: ${{ matrix.marker || 'PR100_ORIGINAL_BATCH_OK' }}
+      BATCH_TIMEOUT: ${{ matrix.timeout || 600 }}
+      BATCH_RENDER_TIMEOUT: ${{ matrix.render_timeout || matrix.timeout || 600 }}
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore trusted compact Godot import cache (read-only)
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: |
+            .godot/imported/*.webp-*
+            .godot/imported/*.svg-*
+            .godot/imported/*.ttf-*
+            .godot/imported/*.wav-*
+            **/*.import
+          key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
+          restore-keys: |
+            twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Verify existing resource ledger
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned Godot and software GL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import actual TWILIGHT project once
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-import/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-import/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-import/config
+        run: |
+          set -euo pipefail
+          mkdir -p test-results/batch${{ matrix.batch }} "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+          timeout 1500 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/batch${{ matrix.batch }}/import.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/batch${{ matrix.batch }}/import.txt; then exit 1; fi
+      - name: Configured production Main cases in one headless engine
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-headless/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-headless/config
+          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch${{ matrix.batch }}/headless.json
+        run: |
+          set -euo pipefail
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+          timeout "$BATCH_TIMEOUT" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path . --script "res://tests/${BATCH_SCRIPT}.gd" > test-results/batch${{ matrix.batch }}/headless.txt 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/headless.txt; then exit 1; fi
+          grep -q "$BATCH_OK_MARKER" test-results/batch${{ matrix.batch }}/headless.txt
+      - name: Configured production Main cases in one OpenGL engine
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-render/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-render/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-render/config
+          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch${{ matrix.batch }}/render.json
+          TWILIGHT_PR100_BATCH_CAPTURE_DIR: ${{ github.workspace }}/test-results/batch${{ matrix.batch }}/render-captures
+        run: |
+          set -euo pipefail
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+          timeout "$BATCH_RENDER_TIMEOUT" xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${BATCH_SCRIPT}.gd" > test-results/batch${{ matrix.batch }}/render.txt 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/render.txt; then exit 1; fi
+          grep -q "$BATCH_OK_MARKER" test-results/batch${{ matrix.batch }}/render.txt
+      - name: Preserve small batch diagnostics and generated saves
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-based-batch${{ matrix.batch }}-${{ github.sha }}-diagnostics
+          path: |
+            test-results/batch${{ matrix.batch }}/*.json
+            test-results/batch${{ matrix.batch }}/*.jsonl
+            test-results/batch${{ matrix.batch }}/*.txt
+            test-results/batch${{ matrix.batch }}/*.log
+            test-results/batch${{ matrix.batch }}/*-cases/*.json
+            ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data/**/pr100-batch-preserved/
+            ${{ runner.temp }}/batch${{ matrix.batch }}-render/data/**/pr100-batch-preserved/
+            ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data/**/pr100-transform-batch-preserved/
+            ${{ runner.temp }}/batch${{ matrix.batch }}-render/data/**/pr100-transform-batch-preserved/
+          if-no-files-found: error
+      - name: Preserve every batch PNG capture separately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-based-batch${{ matrix.batch }}-${{ github.sha }}-captures
+          path: test-results/batch${{ matrix.batch }}/render-captures/
+          if-no-files-found: ignore

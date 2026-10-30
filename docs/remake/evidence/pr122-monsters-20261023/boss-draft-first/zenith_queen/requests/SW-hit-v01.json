@@ -1,0 +1,17 @@
+{
+  "slug": "zenith_queen",
+  "actor": "monster:왜곡의 제니스 퀸",
+  "clip": "SW-hit-v01",
+  "direction": "SW",
+  "role": "hit",
+  "layout": "phase_grid3",
+  "phase_count": 6,
+  "reference_sha256": "9b4466690a9756efc46c55361eb635541bd9dc081cb90aae2c277601586e2856",
+  "request": {
+    "prompt": "Create a dedicated MYTHIC boss animation source sheet for exactly the supplied character, preserving its unique costume/materials/anatomy. A unique monstrous SPIDER QUEEN: regal pale female head and dark flowing hair under a thorn crown, armored purple-black female upper torso with exactly TWO clawed arms, merging naturally into ONE huge purple-black spider abdomen and exactly EIGHT segmented spider walking legs. Gold chitin ornaments, purple waist plating and hooked claws. No human legs, hand-held weapon or extra human torso. Eight spider legs spread naturally around connected thorax; distinct spider silhouette, no loose webs or effects.\nFixed camera throughout this sheet: SOUTHWEST front three-quarter facing DOWN-LEFT. Anatomical RIGHT weapon arm is far/screenLEFT, LEFT empty hand near/screenRIGHT.\nAction HIT: Six distinct brief hit reactions and recovery:0 impact flinch,1 torso recoil,2 recoil peak,3 feet/body brace,4 recover,5 guard restored. Preserve body parts and weapon hand. No weapon swing interpreted as an attack, no dismemberment or loose floating parts.\nLayout is EXACTLY SIX separate complete poses in THREE COLUMNS and TWO ROWS (3x2), read row-major: TOP LEFT0, TOP MIDDLE1, TOP RIGHT2, BOTTOM LEFT3, BOTTOM MIDDLE4, BOTTOM RIGHT5. WIDE LANDSCAPE transparent canvas. Each full figure fits in the central45percent width and central60percent height of its own cell; huge clear gutters and outer margins. Keep head/body scale the same in all cells. All connected horns, cape, hair, weapons, wings, claws, tail and feet belong fully to their one pose, never reach another cell or canvas edge. Six distinct complete character bodies only, no detached fragments. TRUE empty alpha background, no floor/cast shadow/haze/aura/effects/grid/labels/text. Rotate in real3D for this view, never mirror the whole character or swap weapon hands. Full identity and silhouette at each phase; original source will be preserved exactly for whole-pose region extraction, not cut through fixed cell borders. This creature has NO hand-held weapon; ignore humanoid weapon-side instructions. Preserve four horse legs or eight spider legs exactly as canonical identity.",
+    "referenced_image_paths": [
+      "/workspace/twilight/docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/zenith_queen/raw/canonical-v01.png"
+    ],
+    "transparent_background": true
+  }
+}

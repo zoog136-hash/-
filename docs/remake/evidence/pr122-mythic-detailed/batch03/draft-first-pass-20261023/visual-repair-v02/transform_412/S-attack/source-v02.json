@@ -1,0 +1,27 @@
+{
+  "key": "transform:412",
+  "direction": "S",
+  "role": "attack",
+  "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/draft-first-pass-20261023/visual-repair-v02/transform_412/S-attack/source-v02.png",
+  "source_sha256": "81d19637125c34bbef99949066e6ef72ad0ec1e18d3788762e3694cae9d1a72a",
+  "previous_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/transform_412-S-attack-draft-v01.png",
+  "previous_source_sha256": "459b760ff7a322423554b44119521e7df19e570e9c7c030e0cce393a1ad8884c",
+  "reference": "res://assets/catalog/e090d7a50d6f7a23fe55576c.png",
+  "reference_sha256": "d0c26b83f744e9ba811eb2649ac78ae32938a437ef5d3f6984f2c9c3cc367af7",
+  "generation_request": {
+    "prompt": "LOCAL SPRITE PRODUCTION ONLY, no chat image. Repair the existing 412 female death-goddess S ATTACK six-frame sheet, preserving the character, all six original articulated poses and their reading order, camera, exact equipment and native scale. All six face SOUTH / screen DOWN, same front-facing view in every frame. Preserve silver hair, original black-gold-teal armor, slim body, connected arms, boots, chains and the SAME double-ended scythe. Fix the actual source ownership defect: loose solid gold/teal particles in the attack trail are incorrectly disconnected large components. Naturally integrate those effects into their OWN matching continuous scythe trails; no loose solid fragments or extra body components. Keep guard -> backswing -> loaded attack -> contact at frame3 -> follow-through -> recovery. Do not erase the attack effect or simplify body detail. Exactly six separate complete silhouettes, THREE equal columns TWO equal rows, true transparent background. Keep every blade tip, arm, hair strand, chain and effect fully INSIDE its own source cell with transparent breathing room; no neighboring-pose connections, no cut tips, no straight rectangular cuts, no direction flips or duplicate pose. No new weapon or limbs, no captions or grid, no haze joining cells. Output one PNG, same 1536x1024 sheet dimensions as reference. This is cleanup of the given existing six poses, not a new design.",
+    "transparent_background": true,
+    "reference": "original S attack plus catalog",
+    "postprocess": "Explicit visual binding of one alpha17 turquoise trail texel at342,569 to phase3. Complete exact RGBA contours translated into768px cells. No checker thresholds changed."
+  },
+  "generation_service": "image_gen.imagegen",
+  "newly_authored_frames": 6,
+  "source_visual_review": {
+    "source_identity": "PASS: front facing original equipment, black-gold-teal detail retained",
+    "phase_order": "PASS: six different poses, contact at phase3, follow-through and recovery",
+    "remaining": "Runtime and residue review required; no final approval",
+    "fragment": "RGBA114,160,140,17 belongs to phase3 turquoise trail; checked120x120 context crop, preserved once."
+  },
+  "final_approval": false,
+  "previous_source_preserved": true
+}

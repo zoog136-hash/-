@@ -1,0 +1,393 @@
+{
+  "schema": "pr122-reviewed-pose-map-v1",
+  "key": "transform:393",
+  "role": "hit",
+  "assembler_sha256": "a9ee1e4f861a30b7c4a458722ddbb55d04948ee3702e69f2ef7e902cd938203c",
+  "direction": "NE",
+  "metadata_sha256": "0fc545d3cc69b7b643c76d1966c26f41976a3d5b5dd15fcbaf9c29271be61bc7",
+  "metadata_path": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/pose-map.json",
+  "metadata_hash_basis": "file_bytes",
+  "output": "/workspace/scratch/halpas-NE-hit-reviewed-composite-v03/halpas-NE-hit-v03composite01.png",
+  "output_sha256": "1991e0152babcc7c14d719f2525cedc78248e5620b4287ad1808f6bbdd2d513b",
+  "output_canvas": [
+    3072,
+    4608
+  ],
+  "cell_size": [
+    1536,
+    1536
+  ],
+  "virtual_canvas_size": 2048,
+  "poses": [
+    {
+      "phase": 0,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+      "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+      "source_pose": 0,
+      "source_region": [
+        167,
+        50,
+        498,
+        415
+      ],
+      "rgba_sha256": "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511",
+      "visible_pose_sha256": "ce4fea3c54b6c46518cb880c4810d416304ed437ce1d4405c85bc0731b72e2f8",
+      "newly_authored": false,
+      "review_basis": "Exact current selected correct NEidle 0 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion.",
+      "output_region": [
+        519,
+        560,
+        498,
+        415
+      ],
+      "translation": [
+        352,
+        510
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 85198
+    },
+    {
+      "phase": 1,
+      "source_path": "/workspace/scratch/halpas-NE-hit-onset1-key-v04/halpas-NE-hit-onset1-v04.png",
+      "source_sha256": "4189022f8696a00c791078d8ed908e84fef0dc3650f4ca0faa8fece6840b62e9",
+      "source_pose": "new_game1",
+      "source_region": [
+        33,
+        97,
+        1194,
+        1031
+      ],
+      "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f",
+      "visible_pose_sha256": "cbbc7ea182e4a88ad804a862c0dc812f622d59a8110cbfc0c03c1e53a027fb6f",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 1.",
+      "output_region": [
+        1707,
+        252,
+        1194,
+        1031
+      ],
+      "translation": [
+        1674,
+        155
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 518197
+    },
+    {
+      "phase": 2,
+      "source_path": "/workspace/scratch/halpas-NE-hit-peak2-key-v03/halpas-NE-hit-peak2-v03.png",
+      "source_sha256": "e32c0ec1902fd0f02767d68d0588717391b47e8a651702e71176195ecd906702",
+      "source_pose": "new_game2",
+      "source_region": [
+        29,
+        70,
+        1216,
+        1105
+      ],
+      "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c",
+      "visible_pose_sha256": "dc89a32aa48fc00789d09b3d74b168256c07c4f1c3a5680a1205a47c81df8b60",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 2.",
+      "output_region": [
+        160,
+        1751,
+        1216,
+        1105
+      ],
+      "translation": [
+        131,
+        1681
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 540662
+    },
+    {
+      "phase": 3,
+      "source_path": "/workspace/scratch/halpas-NE-hit-release3-key-v04/halpas-NE-hit-release3-v04.png",
+      "source_sha256": "5d982c389ecc836df428bf044031de3df3149ea58d970dc2b76a89ee70e0d020",
+      "source_pose": "new_game3",
+      "source_region": [
+        35,
+        92,
+        1210,
+        1082
+      ],
+      "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9",
+      "visible_pose_sha256": "37dfa535d5803461d50cc310876b31e81d77990dc7da6eb180ec91e78358762e",
+      "newly_authored": true,
+      "review_basis": "Privately reviewed exact ONE-pose same-model/camera/anatomy PASS. Fixed low imageRIGHT blade chain and existing EMPTY imageLEFT arm only; distinct actual game phase 3.",
+      "output_region": [
+        1699,
+        1763,
+        1210,
+        1082
+      ],
+      "translation": [
+        1664,
+        1671
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 540670
+    },
+    {
+      "phase": 4,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+      "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+      "source_pose": 4,
+      "source_region": [
+        165,
+        1068,
+        498,
+        425
+      ],
+      "rgba_sha256": "7c580f92ef822f7fcaf07648304f7319fcc67c7e6fcea136cf7b34528e388a8e",
+      "visible_pose_sha256": "93057da579870a0beb31462ca46a198e9e1d06f77d9d62add5d21eaa037bb17e",
+      "newly_authored": false,
+      "review_basis": "Exact current selected correct NEidle 4 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion.",
+      "output_region": [
+        519,
+        3627,
+        498,
+        425
+      ],
+      "translation": [
+        354,
+        2559
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 86569
+    },
+    {
+      "phase": 5,
+      "source_path": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/halpas-NE-idle-v01iso01.png",
+      "source_sha256": "55064fc77d87f90a0c3e938f68734ffd93b0187d89ef869bf89b9d08d8b73a33",
+      "source_pose": 5,
+      "source_region": [
+        906,
+        1068,
+        497,
+        426
+      ],
+      "rgba_sha256": "b2092d1e3de55fc326c800bf1e9337ef5056da634e6aa2bf68d1c59f7d05a692",
+      "visible_pose_sha256": "d52bdffbbd91d45110a48626b0a557435512b68446ea47242355917b6da6691c",
+      "newly_authored": false,
+      "review_basis": "Exact current selected correct NEidle 5 reused as guard/neutral recovery, not newly authored. Full reaction flow requires external private normalized QC; no standalone detailed completion.",
+      "output_region": [
+        2055,
+        3627,
+        497,
+        426
+      ],
+      "translation": [
+        1149,
+        2559
+      ],
+      "source_edge_antialias_review": {
+        "strong_boundary_alpha_threshold": 100,
+        "selected_strong_boundary_pixels": 0,
+        "retained_alpha_gt16_boundary_pixels": 0,
+        "retained_boundary_max_alpha": 0,
+        "retained_boundary_pixels_xy_rgba": []
+      },
+      "alpha_gt16_pixels": 89531
+    }
+  ],
+  "newly_authored_poses": 3,
+  "reused_poses": 3,
+  "preserved_region_rgba_exact": true,
+  "preserved_pose_alpha_gt16": true,
+  "resampled": false,
+  "mirrored": false,
+  "recolored": false,
+  "cleaned_pixels": 0,
+  "strict_importer": "PASS",
+  "geometry": {
+    "image_size": [
+      3072,
+      4608
+    ],
+    "frames": [
+      {
+        "row": 0,
+        "direction": "NE",
+        "region": [
+          519,
+          560,
+          498,
+          415
+        ],
+        "margin": [
+          775,
+          869,
+          1550,
+          1633
+        ],
+        "source_anchor": [
+          768,
+          971
+        ],
+        "rgba_sha256": "cf0b95fc6d14a0a155c0dd29e6a51913346204f3839574bed508c2034b692511"
+      },
+      {
+        "row": 1,
+        "direction": "NE",
+        "region": [
+          1707,
+          252,
+          1194,
+          1031
+        ],
+        "margin": [
+          427,
+          253,
+          854,
+          1017
+        ],
+        "source_anchor": [
+          2304,
+          1279
+        ],
+        "rgba_sha256": "5cfeada5a15ffbb4b0f7bfb6b361e22e07af5655e69c3d5456a4fda1fe27225f"
+      },
+      {
+        "row": 2,
+        "direction": "NE",
+        "region": [
+          160,
+          1751,
+          1216,
+          1105
+        ],
+        "margin": [
+          416,
+          179,
+          832,
+          943
+        ],
+        "source_anchor": [
+          768,
+          2852
+        ],
+        "rgba_sha256": "e3a6bab467103584004f63e21cf6ba087ac76a6a647466b56f56fea372df8d4c"
+      },
+      {
+        "row": 3,
+        "direction": "NE",
+        "region": [
+          1699,
+          1763,
+          1210,
+          1082
+        ],
+        "margin": [
+          419,
+          202,
+          838,
+          966
+        ],
+        "source_anchor": [
+          2304,
+          2841
+        ],
+        "rgba_sha256": "01ea803acc99db047ff1854a8e076a0ede7e20f297d2f4fef498ffe7db3b99d9"
+      },
+      {
+        "row": 4,
+        "direction": "NE",
+        "region": [
+          519,
+          3627,
+          498,
+          425
+        ],
+        "margin": [
+          775,
+          859,
+          1550,
+          1623
+        ],
+        "source_anchor": [
+          768,
+          4048
+        ],
+        "rgba_sha256": "7c580f92ef822f7fcaf07648304f7319fcc67c7e6fcea136cf7b34528e388a8e"
+      },
+      {
+        "row": 5,
+        "direction": "NE",
+        "region": [
+          2055,
+          3627,
+          497,
+          426
+        ],
+        "margin": [
+          775,
+          858,
+          1551,
+          1622
+        ],
+        "source_anchor": [
+          2304,
+          4049
+        ],
+        "rgba_sha256": "b2092d1e3de55fc326c800bf1e9337ef5056da634e6aa2bf68d1c59f7d05a692"
+      }
+    ],
+    "distinct_pixel_frames": 6,
+    "neutral_height": 742.5,
+    "canvas_size": [
+      2048,
+      2048
+    ],
+    "foot": [
+      1024,
+      1280
+    ]
+  },
+  "approval": false,
+  "visual_approval": "NOT_RUN",
+  "physical_body_scale_review": "REQUIRED_EXTERNAL_LANDMARK_REVIEW",
+  "external_physical_scale_review": {
+    "status": "PENDING_EXTERNAL_LANDMARK_PROPOSAL",
+    "basis": "Source RGBA dimensions deliberately untouched, including large single-key resolution. No silhouette bbox normalization. Body neck/pauldron/pelvis scale and runtime hip anchors reviewed separately before integration."
+  },
+  "region_height_span": [
+    415,
+    1105
+  ],
+  "possible_region_height_mismatch": true,
+  "height_note": "Gear/pose extents are not anatomical scale. No bbox normalization performed."
+}

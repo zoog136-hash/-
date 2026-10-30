@@ -1,0 +1,88 @@
+{
+  "schema": "independent-private-actual-NW-run-load1-v08-static-gate-v1",
+  "status": "PASS_STATIC_ACTUAL_LOAD1_SOURCE_FOR_DEPENDENT_FLIGHT_AUTHORING",
+  "source": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v08/thunder_female-NW-run-load1-actual-rig-v08.png",
+    "sha256": "c2b97494baa8d1f7376f1d8ca1ab0c4d5aebad4962f3940d8a02c3f099fbb915",
+    "bytes": 789149
+  },
+  "contact0": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/thunder_female-NW-run-contact0-v08-original-cloth-joint-occlusion.png",
+    "sha256": "c4f6d79437f1f0d142a765af3b04e11c2413b0975c2fa32a87764a5e9aa6a482",
+    "static_source_proof_sha256": "999b5aff5ecbd471219953eac26568b544977871317bbcdc89348637acb9f572"
+  },
+  "author_provenance": {
+    "path": "/workspace/scratch/mythic413-NW-run-load-fresh-20261020-v01/load1-actual-rig-v08/load1-actual-rig-placement-and-source-provenance-v08.json",
+    "sha256": "8988dbc11b96e9ac4d54343ad3ec53c04d929326543469bb52ccc17f40c83d5b"
+  },
+  "native_C": [
+    2560,
+    2560
+  ],
+  "body_unit_factor": 2.5,
+  "common_unpadded_root": [
+    669,
+    1267.95
+  ],
+  "root_scope": "Same declared common rigroot; absolute ground/depth not independently observed from isolated raster.",
+  "changed_vs_reviewed_v06": {
+    "changed_pixels": 24535,
+    "bbox": [
+      489,
+      743,
+      708,
+      1041
+    ],
+    "outside_bbox_changes": 0
+  },
+  "independent_actual_art_findings": [
+    "FAR upper thigh, folded calf and complete original RIGHT shoe now form coherent material and occlusion; flat-ended stub removed.",
+    "LEFT leather-to-counter ankle closure accepted in v06 remains unchanged.",
+    "Actual white/gold underhem detail compared to v06 is original garment occlusion, not new FAR cloth contamination; FAR opaque-white count in suspect ROI is zero.",
+    "Source body, RIGHT staff, handedness and native costume density retained; no wholeactor mirror."
+  ],
+  "heel_clock": {
+    "status": "PASS_TRANSFORM_AND_RASTER_MARKER_WITH_UNCERTAINTY_ONLY",
+    "source0_structural_heel": [
+      583.5,
+      1191
+    ],
+    "source1_declared_same_shoe_heel": [
+      722.6928985028028,
+      1316.2736086525224
+    ],
+    "source1_actual_alpha16_structural_heel_marker": [
+      723.0,
+      1316
+    ],
+    "marker_uncertainty_raw_xy": [
+      4,
+      2
+    ],
+    "exact_native_delta_per_16_8_world_phase": [
+      139.19289850280273,
+      125.27360865252246
+    ],
+    "continuous_clock_residual_raw": [
+      5.684341886080802e-14,
+      -5.684341886080802e-14
+    ],
+    "raster_marker_residual_world": [
+      0.02620952432973512,
+      -0.0259456480839941
+    ],
+    "sampling": "BICUBIC fractional translation, whole actual shoe geometry scale1 and rotation0; not bit-copy."
+  },
+  "material_method": "Actual own native costume counterpart on forward continuous bone-weighted mesh plus genuine local leather joint surface; final actual art judged.",
+  "ground_model_scope": "Existing b9fa independent proof is declared constructive geometry arithmetic only; final source pins need numeric repin.",
+  "private_ledger": {
+    "path": "/workspace/scratch/mythic413-nw-run-contact-independent-qc-20261020/private-image-ledger-through-load1-v08-frozen.json",
+    "sha256": "70174ac1907db727320f71a1fa9864ed6c6023a35206e6da6bcc79fc6d037b26",
+    "total_image_bytes": 5045821
+  },
+  "actual_static_source_phase_approved": true,
+  "physical_planting_approved": false,
+  "whole_cycle_approved": false,
+  "actor_approval_added": 0,
+  "counts_changed": false
+}

@@ -76,29 +76,36 @@ func _run() -> void:
 	assert_ok(int(index.get("다마스커스 검 (각인)",0)) == 45, "verified Damascus weight =45")
 	print("OPTION_FINALIZE_TRACE: monster and weights checked")
 	world.set("equipped_catalog", {"변신":{},"마법인형":{},"성물":{}})
+	world.call("_invalidate_equipment_static")
 	world.set("inventory", {})
 	world.set("equipped_items", {})
+	world.call("_invalidate_equipment_static")
 	world.set("item_instances", {"11":{"name":"마법 망토","level":5}, "12":{"name":"룸티스의 보랏빛 귀걸이","level":8}})
 	world.set("equipped_items", {"cloak":{"name":"마법 망토","slot":"cloak","instance_id":"11"}, "earring1":{"name":"룸티스의 보랏빛 귀걸이","slot":"earring","instance_id":"12"}})
+	world.call("_invalidate_equipment_static")
 	var mp_base: int = int(world.get("max_mp"))
 	assert_ok(int(world.call("_effective_max_mp")) == mp_base + 100, "original purple earring MP +5 base and +95 enhancement")
 	assert_ok(int(world.call("_effective_mr")) >= 10, "special cloak enhancement MR actually applied")
 	var cloak_detail: Dictionary = {"name":"마법 망토","slot":"cloak","instance_id":"11","desc":"물리 방어력(AC) -1 · 마법 방어력(MR) +10"}
 	var only_cloak: Dictionary = {"cloak":cloak_detail}
 	world.set("equipped_items", only_cloak)
+	world.call("_invalidate_equipment_static")
 	var original_mr: int = int(world.call("_effective_mr"))
 	assert_ok(original_mr >= 20, "base cloak MR+10 and +5 enhancement MR+10 both apply")
 	var blue_earring: Dictionary = {"name":"룸티스의 푸른빛 귀걸이","slot":"earring","desc":"물약 회복률 +2% · 물약 회복량 +2"}
 	var equipped_potion: Dictionary = {"earring1":blue_earring}
 	world.set("equipped_items", equipped_potion)
+	world.call("_invalidate_equipment_static")
 	assert_ok(int(world.call("_equipment_potion_heal_stat", "물약 회복량")) == 2, "blue earring +0 base potion flat+2")
 	assert_ok(int(world.call("_equipment_potion_heal_stat", "물약 회복률")) == 2, "blue earring +0 base potion +2%")
 	world.set("equipped_items", {"cloak":{"name":"마법 망토","slot":"cloak","instance_id":"11"}, "earring1":{"name":"룸티스의 보랏빛 귀걸이","slot":"earring","instance_id":"12"}})
+	world.call("_invalidate_equipment_static")
 	var earring_slots: Array[String] = ["earring1", "earring2"]
 	assert_ok(int(world.call("_enhancement_stat_for_slots", earring_slots, "mp_recovery")) == 3, "earring MP tick wired")
 
 	print("OPTION_FINALIZE_TRACE: enhancement MP/MR checked")
 	world.set("equipped_items", {"tshirt":{"name":"테스트용 MP+30 티셔츠","slot":"tshirt","desc":"방어 +2 · MP +30"}})
+	world.call("_invalidate_equipment_static")
 	world.set("max_mp", 200)
 	world.set("mp", 200)
 	world.set("inventory", {"마녀의 마력 회복제":1})

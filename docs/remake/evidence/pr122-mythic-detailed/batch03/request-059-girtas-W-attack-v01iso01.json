@@ -1,0 +1,117 @@
+{
+  "key": "transform:267",
+  "direction": "W",
+  "role": "attack",
+  "name": "지배자 기르타스",
+  "version": "v01iso01",
+  "references": [
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-W-walk-v01.png",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/d4c5f056d66c079ee53f766f.png": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-W-walk-v01.png": "3706a93ebbae3bbe083a838cb2e9e44e19cd5687ec9e91be3022e690225038bc",
+    "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-attack-v01iso01.png": "a31ce63849645182dc6242460c73ca0c0973caedbc5f9716913146531dbd8c8e"
+  },
+  "prompt": "Author SIX independently drawn, high-detail isometric RPG ATTACK animation sprites of EXACTLY 지배자 기르타스. The first original portrait is identity authority. The second saved W native WALK sheet establishes facing and anatomy ONLY, not the requested motion. Any third sheet establishes this action's phase progression only; redraw its anatomy and occlusion for W.\n\nTransparent atlas: 1024x1536, EXACTLY TWO COLUMNS and THREE ROWS in temporal order left-to-right then down. Six 512x512 cells. ONE complete connected character in each cell, inside the central 300x300 area; at least106 transparent pixels at every edge. Keep coherent head/torso scale; fold/re-angle existing wings rather than crop them. Never let bounding rectangles overlap. All equipment and wing/weapon tips must remain inside each cell.\n\nEvery phase faces WEST / screen left, with the same isometric camera, correct view-dependent face and armor occlusion, unchanged weapon hand, original horns/helmet, black armor, wings, colors and materials. Retain the exact character rather than a generic demon. Do not invent weapons, limbs or ornaments. Animate actual joints and coherent body mechanics: 0: poised guard; 1: visible backswing / anticipation; 2: loaded compression; 3: active forward strike / CONTACT; 4: follow-through; 5: recovery toward guard.\n\nSix true successive poses with independently articulated body/arms/legs/weapon/wings. No copying locomotion, rigid translation/rotation/recoloring, mirroring, mixed directions, sprite clones, or perspective changes. Preserve all existing equipment and connected anatomy. High-detail material shading stays inside fully opaque bodies, including dark materials. No background, floor, shadows, grid, labels, smoke, diffuse aura, halos, detached effects, long energy trails, or spare body parts. Alpha0 outside each silhouette, antialiasing only one or two edge pixels.\nPhase3 must visibly extend the actual referenced weapon or natural striking limb toward the facing direction, at contact. Strong anticipation, release and follow-through; hands retain the same weapon throughout.",
+  "transparent_background": true,
+  "user_authorization": "production image tools allowed; no chat image attachments",
+  "phase_contract": [
+    "poised guard",
+    "visible backswing / anticipation",
+    "loaded compression",
+    "active forward strike / CONTACT",
+    "follow-through",
+    "recovery toward guard"
+  ],
+  "status": "GENERATED_GEOMETRY_PASS_NOT_APPROVED",
+  "intended_contact_frame": 3,
+  "kind": "pixel_preserving_derived_source",
+  "parent_request": "request-058-girtas-W-attack-v01.json",
+  "processing_proof": {
+    "source_sha256": "be7c94cea64746af13907652040db3b50b9fc4102a30424a30eb00bf6f83d304",
+    "output_sha256": "e8dd1957d25e117d8b05fd5dc4a5f8de88db5ec219a5eb4c0852bdf9d521064b",
+    "source": "/workspace/twilight/docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v01.png",
+    "output": "/workspace/scratch/girtas-W-attack-v01iso01.png",
+    "preserved_foreground_rgba": true,
+    "resampled": false,
+    "recolored": false,
+    "newly_authored_poses": 0,
+    "foreground_alpha_threshold": 16,
+    "retained_fringe_distance": 2,
+    "body_seed_alpha": 16,
+    "maximum_foreground_distance": 2.0,
+    "removed_background_pixels": 119641,
+    "maximum_removed_alpha": 16,
+    "foreground_pixels": 516999,
+    "poses": [
+      {
+        "phase": 0,
+        "translation": [
+          128,
+          -20
+        ],
+        "pixels": 86772,
+        "foreground_pixels": 81181,
+        "rgba_sha256": "2b3cd241440ae7100afafadb87ab0bcb4c8a8f75bdb8d5854672102c0f10e156"
+      },
+      {
+        "phase": 1,
+        "translation": [
+          384,
+          -8
+        ],
+        "pixels": 97321,
+        "foreground_pixels": 91055,
+        "rgba_sha256": "cba9c92c516bb36cd8aff392d4897f7f5b3c3f4848609a6d45424aa7ae8b2ca3"
+      },
+      {
+        "phase": 2,
+        "translation": [
+          128,
+          12
+        ],
+        "pixels": 98219,
+        "foreground_pixels": 92183,
+        "rgba_sha256": "6f6f767bcece1d4a81d13b099c96739aa7f49c226b00f97c2058785ee9c507dc"
+      },
+      {
+        "phase": 3,
+        "translation": [
+          384,
+          0
+        ],
+        "pixels": 90495,
+        "foreground_pixels": 84451,
+        "rgba_sha256": "628b9539d0b6fe616b0cb83ee0a69c2ca195bb8f1f432388f73b02bfc26e43ca"
+      },
+      {
+        "phase": 4,
+        "translation": [
+          128,
+          26
+        ],
+        "pixels": 89928,
+        "foreground_pixels": 84130,
+        "rgba_sha256": "33e0031bc021ccc443377099bbed21052061cc8e68678beb7e7ed7caf72b68b0"
+      },
+      {
+        "phase": 5,
+        "translation": [
+          384,
+          23
+        ],
+        "pixels": 89641,
+        "foreground_pixels": 83999,
+        "rgba_sha256": "465cd05a42596c85986a663e665d8537bc6a544831a05ca7efdcbabefeb9d025"
+      }
+    ],
+    "strict_importer": "PASS",
+    "visual_approval": "NOT_RUN"
+  },
+  "output_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-attack-v01iso01.png",
+  "output_sha256": "e8dd1957d25e117d8b05fd5dc4a5f8de88db5ec219a5eb4c0852bdf9d521064b",
+  "output_bytes": 1459549,
+  "original_generated_file": "/workspace/scratch/girtas-W-attack-v01iso01.png"
+}

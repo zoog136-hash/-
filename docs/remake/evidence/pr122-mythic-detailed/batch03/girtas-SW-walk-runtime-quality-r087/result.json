@@ -1,0 +1,53 @@
+{
+  "schema": "pr122-private-runtime-visual-qc-v1",
+  "status": "PASS_SCOPED_ACTUAL_R087_SW_WALK_COMPILED_LAYOUT_AND_GAIT",
+  "reviewer": "girtas_movement_source_runtime_qc",
+  "actor_key": "transform:267",
+  "revision": "r087",
+  "checkpoint": "1a9a520cc727",
+  "frames": "/workspace/twilight/assets/actors/eight_direction/native_locomotion_staging/girtas_267/r087/SpriteFrames.tres",
+  "frames_sha256": "8396e581e899eb48af9c5ceeee154d08d7daa5cac4a900b7920660148b87e61f",
+  "source_sha256": "5db8575ad4ef6a173a58c0b1c611966a0621e169d25e8a06290a405774302c94",
+  "scope": [
+    "actualSWidle0_to_actualSWwalk0",
+    "actualSWwalk_all6_texture_crop_margin_canvas_anchor_physicalscale",
+    "opposite_support_knee_ankle_and_projected_near_far_root",
+    "actualSWwalk5_to0_sixpose_loop"
+  ],
+  "pose_canvas_sizes": [
+    2560,
+    1472,
+    1472,
+    2560,
+    1752,
+    2560
+  ],
+  "all_eight_actual_TRES_texture_region_margin_RGBA_SHA_anchor_checks": "PASS",
+  "walk_frame_count": 6,
+  "walk_speed": 12.5,
+  "walk_loop": true,
+  "cycle_seconds": 0.48,
+  "findings": [
+    "Actual r087 SpriteFrames selects the exact reviewed six SW source RGBA regions with C[2560,1472,1472,2560,1752,2560]. Source SHA, all eight sampled RGBA hashes, regions, margins and computed anchors match the current staging records.",
+    "All six retain a true SW front-left face/chest camera, pale profile/hair, narrow HARD gold rays, original long dark gold-trim robe and anatomical RIGHT long sinuous blade. No camera flip, equipment hand swap or extra leg is introduced.",
+    "Actual near LEFT contact0 -> LEFT support/RIGHT passing1 -> LEFT toe-off/RIGHT reaching2 alternates into far RIGHT contact3 -> RIGHT support/LEFT passing4 -> RIGHT trailing toe-off/LEFT precontact5. The two knee/boot chains exchange support, and hair/robe trail through their different poses.",
+    "The compiled root preserves the authored nine-canonical-pixel SW projected side-depth relationship instead of leveling both sides into one horizontal support plane. Far RIGHT support3/4 remains above the near reference plane; near LEFT precontact5 then plants in0 without a source-canvas scale jump.",
+    "Head/helmet/shoulder/waist proportions remain coherent across the six independently sized source crops. Selected SW idle and walking entry have close upright heights; individual knee passage and heel roll explain the small vertical body arc rather than uniform rescaling.",
+    "The 5-to0 seam continues the same near LEFT advancing foot into its actual contact, while the far RIGHT trailing support proceeds into swing. Six ordered distinct poses at12.5fps yield a0.48s cycle; no duplicated source or contact relabel is used to fill a missing half."
+  ],
+  "evidence": {
+    "actual_layout_measurements": "/workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/actual-r087-SW-walk/actual-layout-measurements.json",
+    "actual_layout_measurements_sha256": "166c8b166efdd700130e4459b000d9d7e947c2242afbb6b7333fb12b1dfacd46",
+    "reviewed_runtime_layout": "/workspace/scratch/girtas-SW-walk-reviewed-composite-v02/reviewed_runtime_layout.proposal.json",
+    "reviewed_runtime_layout_sha256": "c3d6835a5f2381bfe0b3cfb87f1dd9deeb39a536684378afa6d9ad1080a2b3c3",
+    "private_preview_bytes": 143940,
+    "private_context_total_bytes": 1077639
+  },
+  "limits": [
+    "This private panel reconstructs the real compiled TRES textures/physical layout; it is not a Godot-rendered screenshot. Root separately reports focused resource/Player/action PASS at the pinned checkpoint.",
+    "Only SW walk and its selected idle/loop transition are approved in this scoped review. No all48 Girtas/default game connection/actor approval, exact occluded skeletal coordinate measurement or preservation-history reset is implied."
+  ],
+  "actor_approval": false,
+  "new_approvals": 0,
+  "reviewed_at": "2026-10-19T14:26:34.045713+00:00"
+}

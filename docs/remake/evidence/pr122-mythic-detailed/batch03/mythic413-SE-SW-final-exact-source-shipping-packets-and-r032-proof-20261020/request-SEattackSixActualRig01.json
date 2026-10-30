@@ -1,0 +1,123 @@
+{
+  "status": "REQUESTED_NOT_APPROVED",
+  "key": "transform:413",
+  "direction": "SE",
+  "role": "attack",
+  "version": "SEattackSixActualRig01",
+  "source_batch": "batch04",
+  "references": [
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png"
+  ],
+  "reference_sha256": {
+    "/workspace/twilight/assets/catalog/e82707989c7744b45919684b.png": "7f0d692317b0010aa2c890e71d306e600d52d5a84a66668e557d322873782e94"
+  },
+  "source_canvas_review": {
+    "status": "REVIEWED_SOURCE_CANVAS_PROPOSAL",
+    "source_sha256": "1d5806a3c021dfc9c14c0f2a2cd3073a99954f2bd5ed0d81008a05b120959039",
+    "canvas_size": 2048,
+    "review_basis": "Unchanged nominal compiler basis with explicitly retained per-pose physical body unit."
+  },
+  "source_region_review": {
+    "status": "REVIEWED_SOURCE_REGIONS_PROPOSAL",
+    "source_sha256": "1d5806a3c021dfc9c14c0f2a2cd3073a99954f2bd5ed0d81008a05b120959039",
+    "base_geometry_sha256": "7d0404ebce780d69f3054b96cc54dfcdad798e328d781d94c54ffdeaa0d59544",
+    "direction": "SE",
+    "regions": [
+      [
+        690,
+        127,
+        765,
+        1210
+      ],
+      [
+        2982,
+        125,
+        778,
+        1212
+      ],
+      [
+        646,
+        2429,
+        811,
+        1212
+      ],
+      [
+        2989,
+        2432,
+        1085,
+        1209
+      ],
+      [
+        683,
+        4736,
+        1082,
+        1209
+      ],
+      [
+        2993,
+        4736,
+        765,
+        1209
+      ]
+    ],
+    "nearest_owner_sha256": "5d613d9d9035f1b57a1ce7104f550083da4d9a99af5b3b597496b031f69b4171",
+    "review_basis": "Minimal disjoint expansions retain every alpha-positive RGBA pixel, canonical source rectangle and fixed rig root; immutable packing proof ac892c59d1ec3ff25da3014a46d40a467cc9899331599d67c50c8ad132949739"
+  },
+  "reviewed_runtime_layout": {
+    "status": "REVIEWED_LAYOUT_PROPOSAL",
+    "source_sha256": "1d5806a3c021dfc9c14c0f2a2cd3073a99954f2bd5ed0d81008a05b120959039",
+    "direction": "SE",
+    "role": "attack",
+    "canvas_size": 2048,
+    "source_anchors": [
+      [
+        1152,
+        1195
+      ],
+      [
+        3456,
+        1195
+      ],
+      [
+        1152,
+        3499
+      ],
+      [
+        3456,
+        3499
+      ],
+      [
+        1152,
+        5803
+      ],
+      [
+        3456,
+        5803
+      ]
+    ],
+    "authored_pose_canvas_sizes": [
+      2816,
+      2816,
+      2816,
+      2816,
+      2816,
+      2816
+    ],
+    "review_basis": "One fixed authored body unit/root; one common integer root rounding, storage-only translations; no per-pose foot fitting or resizing."
+  },
+  "authored_packing_proof_sha256": "ac892c59d1ec3ff25da3014a46d40a467cc9899331599d67c50c8ad132949739",
+  "authored_common_root_float": [
+    723.7916666666666,
+    1067.2150113422247
+  ],
+  "common_root_integer": [
+    724,
+    1067
+  ],
+  "common_root_rounding_delta": [
+    0.20833333333337123,
+    -0.21501134222467044
+  ],
+  "source_visual_status": "PENDING_INDEPENDENT_FINAL_CYCLE_REVIEW",
+  "actor_approvals_added": 0
+}

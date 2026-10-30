@@ -5,7 +5,11 @@ var source: OriginalPlayableField
 var terrain_table: Dictionary={}
 var terrain_packs: Dictionary={}
 var tile_mapping: Dictionary={}
+# Reuse recently visible atlas pages rather than evicting them by insertion order.
+# This remains capped at the same 128 textures as the original implementation.
+const SOURCE_TEXTURE_LIMIT: int = 128
 var source_textures: Dictionary={}
+var source_texture_recency: Array[String]=[]
 var source_markers: Dictionary={}
 var last_chunk:=Vector2i(-999,-999)
 var loaded_terrain_chunks: int=0
@@ -38,12 +42,21 @@ func configure(value: PlayableField,actor: Node2D) -> void:
 func set_visual_mode(_mode: String) -> void: pass
 func tile_texture(tile: int,index: int) -> Texture2D:
 	var key: String="%d:%d" % [tile,index]
-	if source_textures.has(key): return source_textures[key]
+	if source_textures.has(key):
+		source_texture_recency.erase(key)
+		source_texture_recency.append(key)
+		return source_textures[key] as Texture2D
 	var entry: Dictionary=tile_mapping.get(str(tile),{}).get("images",{}).get(str(index),{})
-	if str(entry.get("path","")).is_empty() or not ResourceLoader.exists(str(entry.path)): return null
-	if source_textures.size()>=128: source_textures.erase(source_textures.keys()[0])
-	source_textures[key]=load(str(entry.path)) as Texture2D
-	return source_textures[key]
+	var path: String=str(entry.get("path",""))
+	if path.is_empty() or not ResourceLoader.exists(path): return null
+	var found: Texture2D=load(path) as Texture2D
+	if found==null: return null
+	if source_textures.size()>=SOURCE_TEXTURE_LIMIT:
+		var oldest: String=source_texture_recency.pop_front()
+		source_textures.erase(oldest)
+	source_textures[key]=found
+	source_texture_recency.append(key)
+	return found
 func _terrain(key: Vector2i) -> Dictionary:
 	if not terrain_table.has(key): return {}
 	var ref: Dictionary=terrain_table[key]

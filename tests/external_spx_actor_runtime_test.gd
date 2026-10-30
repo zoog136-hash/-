@@ -15,6 +15,11 @@ func _run() -> void:
 	_check(EXTERNAL_SPX.frames("../../evil") == null, "reject relative paths")
 	_check(EXTERNAL_SPX.frames("99999") == null, "reject unknown sprites")
 	_check(EXTERNAL_SPX.frames("21625") == null, "reject unreviewed effects layers")
+	_check(EXTERNAL_SPX.review_transform_source("transform:142") == "21624", "male transform is a candidate only")
+	_check(EXTERNAL_SPX.review_transform_source("transform:411") == "21653", "female transform is a candidate only")
+	_check(EXTERNAL_SPX.review_transform_source("transform:412").is_empty(), "do not alter adjacent transformations")
+	_check(EXTERNAL_SPX.review_transform_source("monster:바포메트").is_empty(), "do not remap monsters")
+	_check(not EXTERNAL_SPX.chain_review_available("21625"), "do not accept effects as an actor")
 	# The game must also boot unmodified when the optional SPX pack is absent.
 	# Full-project CI deliberately has no user-provided artwork installed.
 	var has_first: bool = EXTERNAL_SPX.available("21624")

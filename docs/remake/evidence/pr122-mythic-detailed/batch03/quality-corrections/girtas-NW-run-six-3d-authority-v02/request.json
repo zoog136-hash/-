@@ -1,0 +1,41 @@
+{
+  "key": "transform:267",
+  "name": "\uae30\ub974\ud0c0\uc2a4",
+  "direction": "NW",
+  "role": "run",
+  "source_batch": "batch03",
+  "version": "v02rig01",
+  "status": "REQUESTED_NOT_APPROVED",
+  "expected_poses": 6,
+  "requested_poses": 6,
+  "newly_authored_poses": 6,
+  "references": [
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/SIX-actual-alternating-NW-RUN-3D-authority.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png"
+  ],
+  "reference_sha256": {
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/SIX-actual-alternating-NW-RUN-3D-authority.png": "8ade124adf341ee0252820eeff5006698a3e1bbf4eb57f76cd9be1074caf1106",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-identity-NO-OLD-LEGS.png": "1d51c981f6ea0f8436543289381ca16c3bd9d014fe66f483949273e6f0df14d0",
+    "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/correct-NW-idle0-LONG-robe-trim-detail.png": "073692cc9c4307c3ce38c7821c5f07a2c2beee358ba7475b3db2a50fa838e738"
+  },
+  "reference_provenance": {
+    "only_character_identity": "CorrectNEWNWidle0, oldgenericredwingNWrun andbadNcameraNWidle NOTreferenced. Exactupperbodyonlysource+longrobetrimcrop.",
+    "character_parent": "/workspace/scratch/girtas-NW-idle-repair-v03/girtas-NW-idle-v03.png",
+    "character_parent_sha256": "5562014a7acb0b58c7ae0b4115b30b6b8371754ab69d3981021bf9eda9666758",
+    "3d_joint_table": "/workspace/scratch/girtas-NW-run-six-3d-authority-v02/3d-run-joint-authority.json",
+    "3d_joint_table_sha256": "7decaff306c2eb98a9463bb7c60e5b8bdc391fc8ee9ffc17dcabd824f5b4a69d",
+    "fixed_thigh_shin_lengths": [
+      0.57,
+      0.57
+    ]
+  },
+  "replaces_selected_source": "docs/remake/evidence/pr122-mythic-detailed/batch01/girtas-NW-run-v01.png",
+  "corrective_reason": "CurrentNWrun genericredwing/noGirtaslonghair/sinousblade/longrobe H0LD mustbe materiallyre-authored faithfulNWrun6. Neworiginalsolid3Dfixedbone/depth/contact/AIRguide +correctNWidleidentitywithALLoldlegsremoved. Independentphaseownership/deepLOAD/bothAIRsourceart/strict6geometry/realrootarc/actualPlayerrequiredbeforeapproval.",
+  "prompt": "Dress all SIX 3D MANNEQUINS in IMAGE1 as the EXACT SAME GIRTAS from IMAGE2/3, producing six actual NORTHWEST RUNNING frames. IMAGE1 is ABSOLUTE camera, anatomical leg chain, knee bend, support and AIR-clearance authority. Copy EVERY distinct hip/knee/ankle/foot pose, including actual deep load1/4 and actual BOTH-FEET-IN-AIR2/5. BLUE=anatomicalLEFT nearleg and emptyneararm; ORANGE=anatomicalRIGHT farleg and weaponarm. Remove mannequincolors fromfinishedart. NORTHWEST UPLEFT rearLEFT3/4 camera exactlysameall6, forwardUPPERLEFT/backLOWERRIGHT. Image2 identityreference intentionallycontainsNOoldlegs; it supplies Girtasappearance ONLY, NEVERoverride3Djointpose. Image3 originalLONGrobe goldtrimdesign. DoNOTmakewalking contactposes orsixstaticidlefigures.\n\nSixframes0,1toprow;2,3middlerow;4,5bottomrow matchimage1. 0 LEFTLANDING: nearLEFT leg forward/down heel/sole plants, farRIGHT recoveryleg flexed and folded BEHINDwithbootRAISED. 1 LEFTLOAD: nearLEFT sole remainsgroundsupportunderhips, supporting knee bendsdeeplyforward, hip/body visiblycompresslower; farRIGHT recoveringknee passesforward withbootRAISED. SupportingLEFT mustbeactuallyBENT, notstiffstraightlegandonlybodytranslation. 2 AIR LEFTTO RIGHT: BOTH BOOTS CLEAR THE GROUND, nearLEFTleg TRAILSback/LOWERRIGHT withknee flexed, farRIGHT knee/boot LEADSforward/UPLEFT preparingnextlanding, hip/body rises; no toe/heelgroundcontact. 3 RIGHTLANDING: farRIGHT leg forward/down heel/sole plants, nearLEFT recoveryleg flexed/foldedBEHINDbootRAISED, actual OPPOSITElead/supportfrom0. NearLEFTrecoverylegvisibleforemost, farRIGHTsupportnaturallypartlybehindrobe/leftthigh; doNOTrelabelfirstsamelegasright. 4 RIGHTLOAD: farRIGHT sole groundsupportunderhips, RIGHTsupportknee deeplyflexed, hip/bodycompresslower, nearLEFT recoveringkneepassesforward withbootRAISED. Actual opposite supportfrom1. 5 AIR RIGHTTO LEFT: BOTH BOOTS CLEAR GROUND, farRIGHTleg TRAILSback/LOWERRIGHT flexed, nearLEFTknee/boot LEADSforward/UPLEFT preparing0, hip/bodyrises. OppositeAIRlegleadfrom2, notsameairdrawing. AIR2/5 musthave BOTH distinct boots flexed/raised, no weightbearingstraightleg, no toe contactingground. Allbones validcontinuouship->thigh->knee->shin->boot, exact2legs/2boots.\n\nExactGIRTASidentityALL6: longflowing PALE SILVERhair, pointed GOLDcrown/helmet, paleprofileonlywherevisible, ornate BLACK/GOLDlayeredpauldrons/bodyarmor, thin HARD STRAIGHT GOLD RADIAL BACK RAYS rigidmetalNOTfeathers/wings/flames, SAME LONG DARK GOLDTRIM ROBE andboots, ONE LONG SINUOUS GOLD/YELLOW BLADE. LONGrobe retainedtoankle/shin, panelsopen/trailtorevealbothrequiredknee/ankle/boots butneverreplacewithpants/shortskirt. ExactlyTWOARMS/HANDS: nearanatomicalLEFTimageLEFT/lowerleft LOWEMPTYhand; faranatomicalRIGHTimageRIGHT/upperrightpartlybehindhair continuousarmholding SAME lowsinuousblade, no raisedemptyfist/thirdarm/handflip/floatingblade. Allhead/shoulders/hips faceUPLEFTrearLEFT, no axialNback/Wside/NEflip. Samephysicalskull/armor/pelvissizeall6, genuinejointflexion/bodyload-rise notrescaling. Hair/longrobe trailsoftly, rigidmetalraysfollowbackWITHOUTflapping. LowweaponfollowsfarRIGHTwrist slightcounterbalance, noattack/afterimage.\n\nTransparent1024x1536 PNG, exact2columnsx3rows512cells, SIX completecenteredcutoutfigures only. Fullcrown/hair/rays/robe/boots/bladetips with35pxalphazeroedge/gutters, neverclip/shortenblade/rays. CrispdetailedRPGgamequality, opaquearmor/cloth/metal thinAAedge. No coloredguides/text/labels/numbers/frames/floor/shadow/glow/haze/particles/extraobjects. DeepflexedLOAD1/4 andactualBOTHFEETAIR2/5 withoppositelegs are essential.",
+  "transparent_background": true,
+  "requested_at": "2026-10-19T14:45:30.682653+00:00",
+  "imagegen_attempt_limit": 1,
+  "approved_actor_change": 0,
+  "detailed_completion_change": 0
+}

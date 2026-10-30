@@ -1,0 +1,43 @@
+name: TWILIGHT Shop Authority
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Manual audits stay independent; newer automatic revisions release old runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  shop-authority:
+    # Covered by the superset Shop Buyback regression on normal PRs.
+    # Preserve standalone runs on protected PR #157/#158 and manual dispatch.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.number == 157 || github.event.pull_request.number == 158 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot 4.7.2
+        uses: ./.github/actions/setup-godot-linux
+      - name: Godot import and GDScript parse
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee shop-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' shop-import.log
+      - name: Authoritative transaction tests
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/shop_authority_test.gd 2>&1 | tee shop-test.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' shop-test.log
+          grep -q SHOP_AUTHORITY_OK shop-test.log
+      - name: Store validation output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-shop-authority
+          path: |
+            shop-import.log
+            shop-test.log

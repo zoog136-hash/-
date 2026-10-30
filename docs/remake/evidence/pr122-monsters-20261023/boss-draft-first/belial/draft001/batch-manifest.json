@@ -1,0 +1,238 @@
+{
+  "schema": "pr122-boss-production-batch-v1",
+  "actor": "monster:탐욕의 여왕 벨리엘",
+  "clips": 8,
+  "poses": 48,
+  "missing_required_slots": 25,
+  "root_Godot_real_speed": "PASS",
+  "viewport_captures": 21,
+  "new_approvals": 0,
+  "default_catalog_switches": 0,
+  "files": [
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/draft001/NativeMotionProfile.tres",
+      "bytes": 792,
+      "sha256": "538c624157d4768562bcfd9b93da661b7a93438ac6ae899fb3ffca71e0a83b07"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/draft001/SpriteFrames.tres",
+      "bytes": 12393,
+      "sha256": "be28fee475b5177dc906efafffc3b573d94bde74e10f86085e257514176f505c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/E-idle-v01.png",
+      "bytes": 2466865,
+      "sha256": "430759d57e39a8f8809b2476424035f0c1e897db8fa244f6ca467e9585def096"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/E-run-v01.png",
+      "bytes": 2650288,
+      "sha256": "f992eacaf4cbc31a20d1064502ac9ced57ed9cae6cae9f6ef873b4a14786ee8c"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/N-idle-v01.png",
+      "bytes": 2483914,
+      "sha256": "214d672613c6198b0c4a10c493cfe86cee974fe7c60bbff42602e33dfa8501dc"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/NE-idle-v01.png",
+      "bytes": 2549850,
+      "sha256": "55986915566b0474b2b673f7f2b4fc7c59b0ac8477954bb65e0d42ec103eb0bc"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/NW-idle-v01.png",
+      "bytes": 2388649,
+      "sha256": "238d099bbab4797b9027c5c7c843e5bf8efc1f9652f41673ad40d86bd12a9b37"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/SE-idle-v01.png",
+      "bytes": 2613840,
+      "sha256": "9042d5cee27c6dfeecf74ba53b6f30a9002219a64048d171b65d9aff7053cb6d"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/SE-run-v01.png",
+      "bytes": 2591692,
+      "sha256": "e85723babba7a319027348d91fd804d31dfc39bf9a899dba34cde6e228a6b4cc"
+    },
+    {
+      "path": "assets/actors/eight_direction/boss_draft_first/belial/sources/W-idle-v01.png",
+      "bytes": 2479168,
+      "sha256": "b56e062dc9b339537f655f90e8db4c6257460c92052f7643669a7b74c8662491"
+    },
+    {
+      "path": "data/pr122_monster_boss_repair_staging.json",
+      "bytes": 779487,
+      "sha256": "fe9e6e5fa941241fd171fbe61e8d14d816d6d01e91f190352abc464fd66b6d6e"
+    },
+    {
+      "path": "data/pr122_monster_production_scope.json",
+      "bytes": 906869,
+      "sha256": "01b036e97fd7f9ab26da2b3e65a792da11a5ee3d354dba26291c30912f7fa9c4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/candidate.json",
+      "bytes": 45867,
+      "sha256": "494d6c63a03dce3d78f2ca624c974f725e3bab84f12cf7cdb16a4837aea06a93"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/belial/captures/run-E-action-run_0-0.png",
+      "bytes": 59540,
+      "sha256": "3264bb9f2e7b1722063d2ee94eb6c41d3765f3c51741bbb7353d93bce7712533"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/belial/captures/run-E-action-run_0-1.png",
+      "bytes": 58645,
+      "sha256": "fdb70b2b1e47e9d90be0531aba3e64fa5ce082dcc89564b18db695eb4317fd3f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/belial/captures/run-E-action-run_0-2.png",
+      "bytes": 59699,
+      "sha256": "6b8e596c3f3686aabbc1f494a5b01f36dd0555909c1b9eafeb6c409b5d3d5474"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/belial/captures/run-E-action-run_0-3.png",
+      "bytes": 57952,
+      "sha256": "92c4994330182b8d1e587e1e5fd2a042b056f42180068f8ffe799783f70cb5c0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/belial/captures/run-E-action-run_0-4.png",
+      "bytes": 57194,
+      "sha256": "b6faab731eec0fc111f64898ed859366d1ad552e63c2f4d4edc60b0c0eaba69b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/belial/captures/run-E-action-run_0-5.png",
+      "bytes": 57393,
+      "sha256": "688b8ee660e94aacbbbbf23b48be82451e13703c3959a8458e26ab357665128b"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/belial/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 49793,
+      "sha256": "dd1c60458f8ab094e44881fda689bb3f9a203a522b1121a14b4a634218c62fdc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/belial/samples.json",
+      "bytes": 76728,
+      "sha256": "162731f2c717362806e87b356a25db6f09d3bd48f91aaee179ea2c131ecde406"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/capture-manifest.json",
+      "bytes": 4754,
+      "sha256": "415aad45958d1cc3671504563324a4a945dac4686cf87490216507f00768d8a2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/command.json",
+      "bytes": 379,
+      "sha256": "6a63c0fb142773bb91ea0d33a7e4269cb8ceead6ea063c88ea227c9e1db85f8c"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/config.json",
+      "bytes": 1385,
+      "sha256": "dd3c91fcf6cab8f03e46928a1c2c71c525f2056513eb5fa2ddf0348f51ce21e4"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/godot-run.txt",
+      "bytes": 692,
+      "sha256": "032abd0f027e2bb8ff6b039d2c7138c93767a553b60ed55a3decc7a458c8fe64"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/iris/captures/run-E-action-run_0-0.png",
+      "bytes": 54086,
+      "sha256": "6627ca37e23f2bb5f9227926d02c5c52a3f9d8b5f7d532c09d5e374c31fcb5a3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/iris/captures/run-E-action-run_0-1.png",
+      "bytes": 53559,
+      "sha256": "56084e49c5847e86eff9ace692cf44e40a94e46158676012fa8656d47393d49d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/iris/captures/run-E-action-run_0-2.png",
+      "bytes": 52510,
+      "sha256": "56471cfb9690d2b95d28b80d7b181a9cc5d85209c01576d5d8f7437bfbdd6335"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/iris/captures/run-E-action-run_0-3.png",
+      "bytes": 53773,
+      "sha256": "f29c9eff05e6223091b8d76000935bee8039c13421306a8e77e0946842480073"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/iris/captures/run-E-action-run_0-4.png",
+      "bytes": 50697,
+      "sha256": "aca631ab25c72e9df8cd9f5850a9888b0d9bc6049b434e629804004253c67a6d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/iris/captures/run-E-action-run_0-5.png",
+      "bytes": 52213,
+      "sha256": "cfe4511267f8ba41e4f5cf2cea0c9541baeab53ca6de77ad05441659cb1560af"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/iris/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 47487,
+      "sha256": "ce18fde81e614ae693b9b1ea51a526800589390a0c4801e9d35775242020affc"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/iris/samples.json",
+      "bytes": 75048,
+      "sha256": "d881b0e7ff7fab4a315dd151a1a9dfccdd37ca5f0505ee106080d539ff1524c1"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/isabelle/captures/run-E-action-run_0-0.png",
+      "bytes": 54032,
+      "sha256": "0b867a095c70fb0808b4dc50fb93fe72481ce71f40fa3d92aefcdcc55512014f"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/isabelle/captures/run-E-action-run_0-1.png",
+      "bytes": 52980,
+      "sha256": "1d080517f854e1b9ecd63ed940b6fb35f1e84d7aa18d14ac55e3dbc726ae7056"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/isabelle/captures/run-E-action-run_0-2.png",
+      "bytes": 53768,
+      "sha256": "0358b33acd2e8becbbda9834e97939f75a81125b1daac5c52e6f538858311f2d"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/isabelle/captures/run-E-action-run_0-3.png",
+      "bytes": 52624,
+      "sha256": "9aabed47a09c2d83c1031e7f0992d6eec2a98e4e685254c8ba065c32f2a97186"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/isabelle/captures/run-E-action-run_0-4.png",
+      "bytes": 51966,
+      "sha256": "f9250b955ca07cefd5a96e97d792793830be43ff0aa584ae45a91b1921d8ffc3"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/isabelle/captures/run-E-action-run_0-5.png",
+      "bytes": 52566,
+      "sha256": "d03cae3bc5c976add19631fbb87973007628f540d4423ebbed3b228ee6fe23f2"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/isabelle/captures/run-E-pre-idle-idle_0-0.png",
+      "bytes": 49976,
+      "sha256": "24d7a630f4fa72604135240070b673a221529b6b026895bc758cce465149a572"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/isabelle/samples.json",
+      "bytes": 74826,
+      "sha256": "2a174bac3bee208f411cd2754995c81a9dbfc1758e94b3db2bc6e813739eacc0"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/process.json",
+      "bytes": 246,
+      "sha256": "6922d01725a9a2883b26f7aa0106d5c8a17e429434afd79e25ea8c6da7560770"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/report.json",
+      "bytes": 4558,
+      "sha256": "0adc392fd780ea1a4c39cdfc1c83c7fb3df448e197aa19f6f08ee432421f2781"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-draft-first/belial/draft001/playback/xvfb-run.txt",
+      "bytes": 64,
+      "sha256": "87e9572cf030493a1f7ba83d385129046b224374ca1414911674b30fc44276d7"
+    },
+    {
+      "path": "docs/remake/evidence/pr122-monsters-20261023/boss-production-r003/save_batch.py",
+      "bytes": 4548,
+      "sha256": "f4194633e76dd92459a1c48ba959f9e2b5aded692f261377fd80f8cdfbb17ab2"
+    }
+  ]
+}
