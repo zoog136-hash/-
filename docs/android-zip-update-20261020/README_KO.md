@@ -48,6 +48,23 @@ python "$HOME/twilight_update.py" "$HOME/storage/downloads/TWILIGHT_Play" --inst
 - 게임 코드와 리소스는 복원하지만 **삭제한 로컬 개인 파일은 자동으로 복구하지 못합니다.** Godot 사용자 저장 데이터(`user://`)가 앱 내부에 남아 있다면 별도로 보존됩니다. 앱 데이터까지 삭제했다면 세이브 복원은 보장되지 않습니다.
 - Termux의 `$HOME/storage/downloads`가 없으면 `termux-setup-storage` 후 Android 저장소 접근 권한을 허용하세요.
 
+## 느린 최초 설치 개선 (2026-10-30)
+
+대량의 PNG·JSON을 한 개씩 받는 Termux 방식은 HTTP 연결 시간이 오래 걸렸습니다. 이제 기본 **6개 병렬 다운로드**를 사용하며, 각 파일의 크기와 Git Blob SHA-1 검증은 유지합니다. 검증 후에만 프로젝트에 반영합니다. `Verified: X / Y files; A / B MiB`로 진행 상황도 확인할 수 있습니다.
+
+네트워크가 끊기거나 Termux를 닫으면 현재 커밋의 검증 완료 파일은 `.twilight_update_stage_<Git SHA>` 폴더에 보존됩니다. **다음 실행에서 동일한 커밋이면 이미 검증된 파일을 재사용합니다.** GitHub 메인이 그사이 변경되면 새 커밋으로 별도 다운로드가 시작될 수 있습니다. 다운로드가 완전히 끝나면 해당 임시 폴더를 자동으로 제거합니다.
+
+새 설치 시 기존 폴더가 비어 있거나 **업데이터가 만든 임시 저장 폴더만** 있어도 `--install-fresh`를 재실행할 수 있습니다. 일반 업데이트에서도 동일하게 재개할 수 있습니다. 기존 프로젝트 파일이나 사용자 개인 자료는 임의로 삭제하지 않습니다.
+
+```bash
+curl -fL --retry 3 -o "$HOME/twilight_update.py" "https://raw.githubusercontent.com/zoog136-hash/-/main/tools/android/termux_update_zip.py" &&
+python "$HOME/twilight_update.py" "$HOME/storage/downloads/TWILIGHT_Play" --install-fresh --workers 6
+```
+
+`--workers`는 1~12 범위로 변경할 수 있지만 휴대폰에서는 기본값 6을 권장합니다. 실제 성능은 통신사 연결 및 저장장치 상태에 따라 달라집니다.
+
+**기존 스크립트로 이미 진행 중인 다운로드에는 적용되지 않습니다.** 다운로드를 중지하면 예전 방식의 임시 파일은 사라질 수 있으므로 진행률이 많이 남지 않았다면 기존 설치를 끝내는 편이 낫습니다. 새로운 버전으로 시작한 다운로드부터는 재실행 시 정상적으로 재개됩니다.
+
 ## 2026-10-25 대형 저장소 트리 잘림 복구
 
 `Incomplete GitHub inventory` 오류는 GitHub 재귀 파일 목록이 수만 건으로 늘어나 HTTP 200 결과가 `truncated=true`로 잘릴 때 안전 중단하던 문제였습니다.
