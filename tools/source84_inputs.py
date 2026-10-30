@@ -129,7 +129,7 @@ def finish(workspace, linkage, project):
                 raise ValueError('Equality collision grid changed: ' + sid)
             (destination / grid['file']).write_bytes(packed)
     shutil.copyfile(EQUAL, destination / 'index.json')
-    install_corrections(ROOT / 'external_map_packs/source84_local_v1', assembled)
+    install_corrections(ROOT / 'external_map_packs/source84_v3', assembled)
     result = verify(assembled, spec)
     target.parent.mkdir(parents=True, exist_ok=True)
     assembled.rename(target)

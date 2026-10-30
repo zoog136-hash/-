@@ -91,7 +91,6 @@ RUNTIME_SUFFIXES = frozenset((
 RUNTIME_MAP_PACKS = frozenset((
     'native_png_v5', 'aden_faith_png_v1', 'domination_png_v1', 'oman_png_v1',
     'source84_v3',
-    'source84_local_v1',
 ))
 # Match the already audited Android export exclusions for offline map drafting.
 OFFLINE_DIRS = (
@@ -539,8 +538,10 @@ def main():
                                 'rebuild', '--inputs', str(args.source84_inputs.resolve()),
                                 '--linkage', str(args.source84_linkage.resolve()),
                                 '--project', str(args.project.resolve())], check=True)
-            elif not (args.project / 'external_map_packs/source84_v3/index.json').is_file():
-                print('SOURCE84 NOT INSTALLED: Git updater cannot fetch private Space art. Supply --source84-inputs and --source84-linkage.')
+            elif (args.project / 'data/maps/source84_delivery_manifest.json').is_file():
+                subprocess.run([sys.executable, str(args.project / 'tools/source84_delivery.py'),
+                                'verify', '--pack-root', str(args.project / 'external_map_packs/source84_v3')], check=True)
+                print('SOURCE84 FROM GIT VERIFIED: complete runtime pack; no Space download required.')
     except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as ex:
         print('UPDATE STOPPED:', ex, file=sys.stderr)
         return 1

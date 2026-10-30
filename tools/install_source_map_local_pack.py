@@ -17,7 +17,10 @@ def sha(path):
 
 
 def install(source, root):
-    manifest = json.loads((source / 'file_manifest.json').read_text())
+    manifest_path = source / 'file_manifest.json'
+    if not manifest_path.is_file():
+        manifest_path = Path(__file__).resolve().parents[1] / 'data/maps/source84_local_files.json'
+    manifest = json.loads(manifest_path.read_text())
     receipt = json.loads((Path(__file__).resolve().parents[1] /
                           'data/maps/source_map_local_pack.json').read_text())
     if sha(root / 'index.json') != manifest['base_index_sha256']:
@@ -58,6 +61,6 @@ def install(source, root):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--pack-root', type=Path, required=True)
-    parser.add_argument('--source', type=Path, default=Path(__file__).resolve().parents[1] / 'external_map_packs/source84_local_v1')
+    parser.add_argument('--source', type=Path, default=Path(__file__).resolve().parents[1] / 'external_map_packs/source84_v3')
     args = parser.parse_args()
     print(install(args.source.resolve(), args.pack_root.resolve()))
