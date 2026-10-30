@@ -23,7 +23,7 @@ func run():
   actor.global_position=point+Vector2(30+i*20,0);actor.set_physics_process(false);actors.append(actor)
  world.selected_monster=actors[0]
  var service=world.original_skills
- for name:String in ["프로즌 클라우드","파이어 볼","콘 오브 콜드","그레이터 힐","콜 라이트닝","선 버스트"]:
+ for name:String in ["프로즌 클라우드","파이어 볼","콘 오브 콜드","그레이터 힐","콜 라이트닝","선 버스트","블레스드 아머"]:
   var skill:Dictionary=service.catalog.record_for(name)
   check(not skill.is_empty() and skill.local_kind=="generic","registered named adaptation "+name)
   check(service.catalog.buy_book(skill.id) and service.catalog.learn(skill.id),"real book purchase and learning "+name)
@@ -31,12 +31,22 @@ func run():
   for actor:TwilightMonster in actors:actor.hp=1000000
   world.hp=maxi(1,world._effective_max_hp()/2)
   var hp_before:int=world.hp
+  var ac_before:int=world._effective_ac()
   check(service.cast(skill),"real cast accepted "+name)
   check(world.mp==1000-int(skill.mp),"exact disclosed MP cost "+name)
   if skill.mode=="attack":
    check(actors[0].hp==1000000,"no damage before contact marker "+name)
    CLOCK.settle(world)
    check(actors[0].hp<1000000,"production marker applies damage "+name)
+  elif skill.mode=="buff":
+   check(world.active_skill_buffs.has(name),"production buff installed")
+   check(world._effective_ac()==ac_before-3,"armor improves live defense by disclosed local AC")
+   var defense:int=world._effective_ac()
+   service.apply_buff(skill)
+   check(world._effective_ac()==defense,"recast refreshes rather than stacking defense")
+   world._tick_skill_buffs(1801)
+   service.tick(0)
+   check(not world.active_skill_buffs.has(name) and world._effective_ac()==ac_before,"armor duration expires and restores defense")
   else:check(world.hp>hp_before,"production heal changes player HP")
   check(not service.vfx.similar_bridge.binding_for(skill.id).is_empty(),"analogous source visual mapped "+name)
   check(not service.vfx.library.profile_for(skill.id).is_empty(),"authored fallback remains loadable "+name)
@@ -45,5 +55,5 @@ func run():
  var ids:Dictionary=service.catalog.learned.duplicate(true);world._load_game(true)
  for id:String in ids:check(int(service.catalog.learned.get(id,0))==int(ids[id]),"learned stable ID restored "+id)
  world.queue_free();await process_frame;await process_frame
- print("OFFICIAL_WIZARD_GAP_RESULT checks=",checks," errors=",errors," added=6")
+ print("OFFICIAL_WIZARD_GAP_RESULT checks=",checks," errors=",errors," added=7")
  quit(0 if errors==0 else 1)

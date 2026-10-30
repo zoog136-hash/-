@@ -3797,5 +3797,34 @@
         "note": "mechanics reference; dated VFX/video comparison pending"
       }
     ]
+  },
+  "lmref_64f77fcd9c52a02b": {
+    "cast_vfx": "lm_ea8ce04ed942acae:cast",
+    "projectile_vfx": "lm_ea8ce04ed942acae:projectile",
+    "impact_vfx": "lm_ea8ce04ed942acae:impact",
+    "persistent_vfx": "lm_ea8ce04ed942acae:persistent",
+    "end_vfx": "lm_ea8ce04ed942acae:end",
+    "status_vfx": "lm_ea8ce04ed942acae:status",
+    "audio_profile": "lm_ea8ce04ed942acae:audio",
+    "motif": "shield",
+    "hue": 0.7277777777777777,
+    "seed": 4369582,
+    "animation_timeline": {
+      "cast": 0,
+      "release": "player_motion_event",
+      "impact": "collision_or_attack_marker",
+      "end": 0.7
+    },
+    "visual_verification": "UNKNOWN",
+    "references": [
+      {
+        "source": "knight23",
+        "url": "https://mysmallplace.tistory.com/2",
+        "upload_date": null,
+        "timestamp": null,
+        "status": "UNKNOWN",
+        "note": "mechanics reference; dated VFX/video comparison pending"
+      }
+    ]
   }
 }

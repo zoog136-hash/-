@@ -63,7 +63,7 @@ func run() -> void:
 	world.set_process(false);world.player.set_physics_process(false);world.player.set_auto_enabled(false);world.save_timer=-100000
 	world._clear_monsters();world.level=90;world.gold=100000000;world.max_mp=1000
 	service=world.original_skills;catalog=service.catalog
-	check(catalog.records.size()==143,"143 runtime records")
+	check(catalog.records.size()==144,"144 runtime records")
 	check(catalog.record_for("엘리멘탈 애로우").id==row("엘리멘탈 웨폰").id,"alias stable identity")
 	arena=POSITIONS.combat(world,[Vector2(30,0),Vector2(50,0)],25)
 	check(arena.is_finite(),"real native walkable combat lane")

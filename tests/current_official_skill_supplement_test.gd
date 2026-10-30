@@ -11,7 +11,7 @@ func run() -> void:
 	if not QA.enter_game(world):quit(1);return
 	world.set_process(false);world.player.set_auto_enabled(false);world.level=90;world.gold=10000000;world.max_mp=1000;world.mp=1000
 	var catalog:=world.original_skills.catalog
-	check(catalog.records.size()==143,"143 usable runtime skills")
+	check(catalog.records.size()==144,"144 usable runtime skills")
 	var master: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/master.json"))
 	var balance: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/balance.json"))
 	check(master.records.size()==125,"base master unchanged")
@@ -27,7 +27,7 @@ func run() -> void:
 	world._update_hud();world.hud.open_skills()
 	for i: int in range(2):await process_frame
 	var view: Node=world.hud.skills_view;view.search.text="프라이드";view.refresh()
-	check(view.records.size()==143 and view.filtered.size()==1,"real UI contains exactly143")
+	check(view.records.size()==144 and view.filtered.size()==1,"real UI contains exactly144")
 	view.book_button.pressed.emit();check(not view.learn_button.disabled,"UI book purchase enables learning")
 	view.learn_button.pressed.emit();check(catalog.owned(view.selected),"UI actual learning")
 	world.inventory["명예 코인"]=8;world.skill_global_cooldown=0;world.skill_cooldowns.clear();view.select(0)
@@ -47,4 +47,4 @@ func run() -> void:
 	vfx.emit_skill(str(catalog.record_for("프라이드").id),"impact",world.player.global_position)
 	check(not vfx.live.is_empty() and vfx.live[0].get("layers")!=null,"new twelve retain committed authored visual fallback without private SPR pack")
 	world.queue_free();await process_frame
-	print("CURRENT_OFFICIAL_RUNTIME_UI_RESULT checks=%d errors=%d usable=143" % [checks,errors.size()]);quit(0 if errors.is_empty() else 1)
+	print("CURRENT_OFFICIAL_RUNTIME_UI_RESULT checks=%d errors=%d usable=144" % [checks,errors.size()]);quit(0 if errors.is_empty() else 1)
