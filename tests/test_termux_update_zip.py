@@ -294,5 +294,60 @@ class ZipUpdaterTest(unittest.TestCase):
             self.assertEqual(external.read_bytes(), b'do not touch')
 
 
+
+    def test_fresh_install_restores_deleted_project_without_report_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'TWILIGHT_Play'
+            files = {
+                'project.godot': b'new Godot project',
+                'Main.tscn': b'entry scene',
+                'scripts/world.gd': b'gameplay',
+                'external_map_packs/native_png_v5/index.json': b'active map',
+            }
+            inventory = {name: record(blob) for name, blob in files.items()}
+            def fake_download(sha, name, row, destination):
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(files[name])
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=('a'*40, inventory)), mock.patch.object(
+                                       updater, 'download_verified', side_effect=fake_download):
+                updater.update(root, assume_yes=True, install_fresh=True)
+            for name, data in files.items():
+                self.assertEqual((root/name).read_bytes(), data)
+            self.assertFalse((root/'docs').exists())
+            self.assertFalse((root/'tools').exists())
+            self.assertFalse(list(root.glob('.twilight_update_backup_*')))
+            self.assertTrue((root/updater.STATE_FILE).is_file())
+
+    def test_fresh_install_refuses_nonempty_folder_without_modifying_it(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'TWILIGHT_Play'
+            root.mkdir()
+            user = root / 'important-user-data.txt'
+            user.write_bytes(b'keep me')
+            with mock.patch.object(updater, 'get_inventory',
+                                   side_effect=AssertionError('must not fetch')):
+                with self.assertRaisesRegex(RuntimeError, 'EMPTY'):
+                    updater.update(root, assume_yes=True, install_fresh=True)
+            self.assertEqual(user.read_bytes(), b'keep me')
+
+    def test_fresh_install_failed_download_leaves_no_partial_game(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'TWILIGHT_Play'
+            inventory = {
+                'project.godot': record(b'project'),
+                'Main.tscn': record(b'scene'),
+            }
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=('a'*40, inventory)), mock.patch.object(
+                                       updater, 'download_verified', side_effect=RuntimeError('offline')):
+                with self.assertRaisesRegex(RuntimeError, 'offline'):
+                    updater.update(root, assume_yes=True, install_fresh=True)
+            self.assertTrue(root.is_dir())
+            self.assertFalse((root/'project.godot').exists())
+            self.assertFalse((root/'Main.tscn').exists())
+            self.assertFalse(list(root.glob('.twilight_update_backup_*')))
+
+
 if __name__ == '__main__':
     unittest.main()

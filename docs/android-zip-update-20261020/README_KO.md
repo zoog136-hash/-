@@ -26,6 +26,28 @@ python "$HOME/twilight_update.py" "$HOME/storage/downloads/TWILIGHT_Play"
 - GitHub API 접근/네트워크가 실패하거나 변경 파일의 해시가 다르면 업데이트를 중단합니다.
 - **맵 리소스 최신화와 실제 PNG 모드 활성화는 별개입니다.** 알비노·에스카로스 실제 PNG 모드는 현재 명시 실행 옵션을 사용하며, 옛 몬스터 배치를 자동으로 새 이미지로 옮기지 않습니다.
 
+## TWILIGHT_Play 폴더까지 삭제했을 때: 새 설치 (2026-10-30)
+
+기존 업데이트/정리 명령은 `project.godot`이 있어야 실행됩니다. `Download/TWILIGHT_Play` 폴더를 지웠다면 **`--install-fresh`**로 완전히 새로 설치합니다.
+
+1. Godot 앱을 종료하고 Termux에서 최신 스크립트를 다시 받습니다.
+2. 아래 명령어를 한 번에 실행합니다.
+
+```bash
+pkg install -y python curl &&
+curl -fL --retry 3 -o "$HOME/twilight_update.py" "https://raw.githubusercontent.com/zoog136-hash/-/main/tools/android/termux_update_zip.py" &&
+python "$HOME/twilight_update.py" "$HOME/storage/downloads/TWILIGHT_Play" --install-fresh
+```
+
+`Type YES:`에 `YES` 입력. `INSTALL OK:`가 나오면 Android Godot 편집기에서 `Download/TWILIGHT_Play/project.godot`을 새 프로젝트로 가져옵니다.
+
+- `--install-fresh`는 **폴더가 없거나 완전히 비어 있을 때만** 실행됩니다. 기존 파일이 남은 곳에는 덮어쓰지 않습니다. 원래 설치가 온전히 남아 있는 경우에는 종전 업데이트 명령(`--install-fresh` 없이)을 사용합니다.
+- 최신 GitHub `main`에서 실행에 필요한 장면/스크립트/이미지/지도 팩을 가져오며 개발 보고서/지도 원본 저장본은 받지 않습니다.
+- 모든 내려받은 파일은 지정 커밋의 Git Blob SHA와 크기를 검증하고, 파일을 전부 받아야 게임 폴더에 적용합니다. 네트워크 중단 시 이미 받은 임시 파일은 보장되지 않으므로 재시도해야 할 수 있습니다.
+- 여유 저장공간이 부족하면 설치 전에 중단합니다.
+- 게임 코드와 리소스는 복원하지만 **삭제한 로컬 개인 파일은 자동으로 복구하지 못합니다.** Godot 사용자 저장 데이터(`user://`)가 앱 내부에 남아 있다면 별도로 보존됩니다. 앱 데이터까지 삭제했다면 세이브 복원은 보장되지 않습니다.
+- Termux의 `$HOME/storage/downloads`가 없으면 `termux-setup-storage` 후 Android 저장소 접근 권한을 허용하세요.
+
 ## 2026-10-25 대형 저장소 트리 잘림 복구
 
 `Incomplete GitHub inventory` 오류는 GitHub 재귀 파일 목록이 수만 건으로 늘어나 HTTP 200 결과가 `truncated=true`로 잘릴 때 안전 중단하던 문제였습니다.
