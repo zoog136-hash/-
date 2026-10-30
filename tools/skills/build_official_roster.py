@@ -6,6 +6,9 @@ import argparse, collections, hashlib, json, re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def norm(value): return re.sub(r'\s+', '', value).replace('디스인티그레이트','디스인트그레이트').replace('셋팅업','세팅업')
+SHARED_REVIEW = {(cls,name) for cls,names in {
+    "요정":["블레스드 아머","턴 언데드","프로즌 클라우드","파이어 볼","콘 오브 콜드","그레이터 힐","콜 라이트닝","선 버스트"],
+    "신성검사":["블레스드 아머","턴 언데드","프로즌 클라우드"]}.items() for name in names}
 def build(source):
     guides=json.loads(source.read_text())['guides']
     master=json.loads((ROOT/'data/skills/master.json').read_text())['records']
@@ -26,6 +29,11 @@ def build(source):
                 if prior:
                     facts.update(status='existing_alias' if re.sub(r'\s+','',name)!=re.sub(r'\s+','',prior['name']) else 'existing_name',runtime_name=prior['name'])
                     if facts['status']=='existing_alias':aliases[name]=prior['name']
+                    if guide['class'] not in prior.get('classes',[prior['class']]):
+                        facts['status']='existing_shared_class' if (guide['class'],prior['name']) in SHARED_REVIEW else 'existing_class_unreviewed'
+                        if facts['status']=='existing_shared_class':
+                            assert facts['level_display'].isdigit() and facts['mp_display'].isdigit()
+                            facts['semantic_review']='Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients.'
                 elif key=='콜클랜':facts['status']='excluded_clan_only'
                 else:
                     facts['status']='missing_enhancement' if re.search(r'\([^)]*\)|Lv\d|그랜드 마스터',name) else 'missing_base'
@@ -49,7 +57,7 @@ def build(source):
         references.append({'visual_reference_id':base.get('id','lmref_'+hashlib.sha256((base['class']+':'+base['name']).encode()).hexdigest()[:16]) if base else '', 'visual_reference_name':base['name'] if base else '', 'name':name,'class':classes[0],'classes':classes,'historical_aliases':[],'class_observations':rows,
             'current_official':official,'historical':{'source_url':row['source_url'],'existence_verified':True},
             'classification':row['status'],'implementation_gate':'Reference only; do not synthesize combat effects or values.',
-            'missing_runtime_fields':['effect-specific coefficients and state transitions','unpublished cooldown and acquisition rules']})
+            'missing_runtime_fields':['피해·회복·확률·강화 계수와 발동 조건','공개되지 않은 재사용·습득 규칙']})
     output={'schema':1,'scope':'Observed official guide pages, not a claim of a complete live-service roster.',
         'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'class_count':len(guides),
         'observations':observations,'aliases':aliases,'references':references,'counts':dict(collections.Counter(r['status'] for r in observations))}

@@ -1788,8 +1788,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "1800초",
-      "status": "existing_name",
-      "runtime_name": "블레스드 아머"
+      "status": "existing_shared_class",
+      "runtime_name": "블레스드 아머",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "요정",
@@ -1803,8 +1804,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "-",
-      "status": "existing_name",
-      "runtime_name": "턴 언데드"
+      "status": "existing_shared_class",
+      "runtime_name": "턴 언데드",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "요정",
@@ -1832,8 +1834,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "-",
-      "status": "existing_name",
-      "runtime_name": "프로즌 클라우드"
+      "status": "existing_shared_class",
+      "runtime_name": "프로즌 클라우드",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "요정",
@@ -1847,8 +1850,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "-",
-      "status": "existing_name",
-      "runtime_name": "파이어 볼"
+      "status": "existing_shared_class",
+      "runtime_name": "파이어 볼",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "요정",
@@ -1904,8 +1908,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "-",
-      "status": "existing_name",
-      "runtime_name": "콘 오브 콜드"
+      "status": "existing_shared_class",
+      "runtime_name": "콘 오브 콜드",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "요정",
@@ -1919,8 +1924,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "-",
-      "status": "existing_name",
-      "runtime_name": "그레이터 힐"
+      "status": "existing_shared_class",
+      "runtime_name": "그레이터 힐",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "요정",
@@ -1976,8 +1982,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "-",
-      "status": "existing_name",
-      "runtime_name": "콜 라이트닝"
+      "status": "existing_shared_class",
+      "runtime_name": "콜 라이트닝",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "요정",
@@ -1991,8 +1998,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "-",
-      "status": "existing_name",
-      "runtime_name": "선 버스트"
+      "status": "existing_shared_class",
+      "runtime_name": "선 버스트",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "요정",
@@ -5844,8 +5852,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "1800초",
-      "status": "existing_name",
-      "runtime_name": "블레스드 아머"
+      "status": "existing_shared_class",
+      "runtime_name": "블레스드 아머",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "신성검사",
@@ -5859,8 +5868,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "-",
-      "status": "existing_name",
-      "runtime_name": "턴 언데드"
+      "status": "existing_shared_class",
+      "runtime_name": "턴 언데드",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "신성검사",
@@ -5888,8 +5898,9 @@
       "hp_display": "-",
       "material_display": "-",
       "duration_display": "-",
-      "status": "existing_name",
-      "runtime_name": "프로즌 클라우드"
+      "status": "existing_shared_class",
+      "runtime_name": "프로즌 클라우드",
+      "semantic_review": "Same named self-defense, undead-only, elemental attack or self-heal spell; reuse existing TWILIGHT mechanics, not unpublished original coefficients."
     },
     {
       "class": "광전사",
@@ -8442,8 +8453,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -8498,8 +8509,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -8554,8 +8565,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -8610,8 +8621,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -8666,8 +8677,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -8722,8 +8733,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -8778,8 +8789,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -8834,8 +8845,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -8890,8 +8901,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -8946,8 +8957,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9002,8 +9013,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9058,8 +9069,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9114,8 +9125,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9170,8 +9181,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9226,8 +9237,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9282,8 +9293,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9338,8 +9349,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9529,8 +9540,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9585,8 +9596,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9641,8 +9652,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9697,8 +9708,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9753,8 +9764,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9809,8 +9820,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9865,8 +9876,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9921,8 +9932,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -9977,8 +9988,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10033,8 +10044,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10089,8 +10100,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10145,8 +10156,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10201,8 +10212,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10257,8 +10268,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10313,8 +10324,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10369,8 +10380,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10425,8 +10436,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10481,8 +10492,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10537,8 +10548,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10593,8 +10604,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10649,8 +10660,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10705,8 +10716,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10761,8 +10772,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10817,8 +10828,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10873,8 +10884,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10929,8 +10940,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -10985,8 +10996,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11041,8 +11052,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11097,8 +11108,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11153,8 +11164,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11209,8 +11220,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11265,8 +11276,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11321,8 +11332,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11377,8 +11388,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11433,8 +11444,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11489,8 +11500,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11545,8 +11556,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11601,8 +11612,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11657,8 +11668,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11713,8 +11724,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11769,8 +11780,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11825,8 +11836,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11881,8 +11892,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11937,8 +11948,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -11993,8 +12004,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12049,8 +12060,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12105,8 +12116,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12161,8 +12172,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12217,8 +12228,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12273,8 +12284,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12329,8 +12340,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12385,8 +12396,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12441,8 +12452,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12497,8 +12508,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12583,8 +12594,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12654,8 +12665,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12725,8 +12736,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12796,8 +12807,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12867,8 +12878,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -12938,8 +12949,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13009,8 +13020,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13080,8 +13091,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13136,8 +13147,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13192,8 +13203,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13248,8 +13259,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13304,8 +13315,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13360,8 +13371,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13416,8 +13427,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13472,8 +13483,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13528,8 +13539,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13584,8 +13595,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13640,8 +13651,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13696,8 +13707,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13752,8 +13763,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13808,8 +13819,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13864,8 +13875,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13920,8 +13931,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -13976,8 +13987,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14032,8 +14043,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14088,8 +14099,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14144,8 +14155,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14200,8 +14211,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14256,8 +14267,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14312,8 +14323,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14368,8 +14379,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14424,8 +14435,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14480,8 +14491,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14536,8 +14547,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14592,8 +14603,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14648,8 +14659,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14704,8 +14715,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14760,8 +14771,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14816,8 +14827,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14872,8 +14883,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14928,8 +14939,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -14984,8 +14995,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15040,8 +15051,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15096,8 +15107,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15152,8 +15163,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15208,8 +15219,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15264,8 +15275,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15320,8 +15331,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15376,8 +15387,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15432,8 +15443,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15488,8 +15499,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15544,8 +15555,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15600,8 +15611,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15656,8 +15667,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15712,8 +15723,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15768,8 +15779,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15824,8 +15835,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15880,8 +15891,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15936,8 +15947,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -15992,8 +16003,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16048,8 +16059,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16104,8 +16115,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16160,8 +16171,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16216,8 +16227,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16272,8 +16283,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16328,8 +16339,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16384,8 +16395,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16440,8 +16451,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16496,8 +16507,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16552,8 +16563,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16608,8 +16619,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16664,8 +16675,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16720,8 +16731,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16776,8 +16787,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16832,8 +16843,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16888,8 +16899,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -16944,8 +16955,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17000,8 +17011,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17056,8 +17067,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17112,8 +17123,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17168,8 +17179,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17224,8 +17235,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17280,8 +17291,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17336,8 +17347,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17392,8 +17403,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17448,8 +17459,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17504,8 +17515,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17560,8 +17571,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17616,8 +17627,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17672,8 +17683,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17728,8 +17739,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17784,8 +17795,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17840,8 +17851,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17896,8 +17907,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -17952,8 +17963,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18008,8 +18019,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18064,8 +18075,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18120,8 +18131,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18176,8 +18187,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18232,8 +18243,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18288,8 +18299,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18344,8 +18355,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18400,8 +18411,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18456,8 +18467,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18512,8 +18523,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18568,8 +18579,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18624,8 +18635,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18680,8 +18691,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18736,8 +18747,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18792,8 +18803,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18848,8 +18859,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18904,8 +18915,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -18960,8 +18971,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19016,8 +19027,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19072,8 +19083,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19128,8 +19139,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19184,8 +19195,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19240,8 +19251,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19296,8 +19307,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19352,8 +19363,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19408,8 +19419,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19464,8 +19475,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19520,8 +19531,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19576,8 +19587,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19632,8 +19643,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19688,8 +19699,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19744,8 +19755,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19800,8 +19811,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19856,8 +19867,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19912,8 +19923,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -19968,8 +19979,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20024,8 +20035,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20080,8 +20091,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20136,8 +20147,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20192,8 +20203,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20248,8 +20259,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20304,8 +20315,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20360,8 +20371,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20416,8 +20427,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20472,8 +20483,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20528,8 +20539,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20584,8 +20595,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20640,8 +20651,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20696,8 +20707,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20752,8 +20763,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20808,8 +20819,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20864,8 +20875,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20920,8 +20931,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -20976,8 +20987,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21032,8 +21043,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21088,8 +21099,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21144,8 +21155,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21200,8 +21211,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21256,8 +21267,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21312,8 +21323,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21368,8 +21379,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21424,8 +21435,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21480,8 +21491,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21536,8 +21547,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21592,8 +21603,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21648,8 +21659,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21704,8 +21715,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21760,8 +21771,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21816,8 +21827,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21872,8 +21883,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21928,8 +21939,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -21984,8 +21995,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22040,8 +22051,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22096,8 +22107,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22152,8 +22163,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22208,8 +22219,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22264,8 +22275,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22320,8 +22331,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22376,8 +22387,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22432,8 +22443,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22488,8 +22499,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22544,8 +22555,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22600,8 +22611,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22656,8 +22667,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22712,8 +22723,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22768,8 +22779,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22824,8 +22835,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22880,8 +22891,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22936,8 +22947,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -22992,8 +23003,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23048,8 +23059,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23104,8 +23115,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23160,8 +23171,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23216,8 +23227,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23272,8 +23283,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23328,8 +23339,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23384,8 +23395,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23440,8 +23451,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23496,8 +23507,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23552,8 +23563,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23608,8 +23619,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23664,8 +23675,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23720,8 +23731,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23776,8 +23787,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23832,8 +23843,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23888,8 +23899,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -23944,8 +23955,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24000,8 +24011,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24056,8 +24067,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24112,8 +24123,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24168,8 +24179,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24224,8 +24235,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24280,8 +24291,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24336,8 +24347,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24392,8 +24403,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24448,8 +24459,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24504,8 +24515,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24560,8 +24571,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24616,8 +24627,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24672,8 +24683,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24728,8 +24739,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24784,8 +24795,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24840,8 +24851,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24896,8 +24907,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -24952,8 +24963,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25008,8 +25019,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25064,8 +25075,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25120,8 +25131,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25176,8 +25187,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25232,8 +25243,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25288,8 +25299,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25344,8 +25355,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25400,8 +25411,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25456,8 +25467,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25512,8 +25523,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25568,8 +25579,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25624,8 +25635,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25680,8 +25691,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25736,8 +25747,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25792,8 +25803,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25848,8 +25859,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25904,8 +25915,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -25960,8 +25971,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26016,8 +26027,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26072,8 +26083,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26128,8 +26139,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26184,8 +26195,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26240,8 +26251,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26296,8 +26307,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26352,8 +26363,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26408,8 +26419,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26464,8 +26475,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26520,8 +26531,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26576,8 +26587,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26632,8 +26643,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26688,8 +26699,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26744,8 +26755,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26800,8 +26811,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26856,8 +26867,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26912,8 +26923,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -26968,8 +26979,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -27024,8 +27035,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -27080,8 +27091,8 @@
       "classification": "missing_enhancement",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -27136,8 +27147,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -27192,8 +27203,8 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     },
     {
@@ -27248,16 +27259,17 @@
       "classification": "missing_base",
       "implementation_gate": "Reference only; do not synthesize combat effects or values.",
       "missing_runtime_fields": [
-        "effect-specific coefficients and state transitions",
-        "unpublished cooldown and acquisition rules"
+        "피해·회복·확률·강화 계수와 발동 조건",
+        "공개되지 않은 재사용·습득 규칙"
       ]
     }
   ],
   "counts": {
     "missing_base": 245,
-    "existing_name": 228,
+    "existing_name": 217,
     "missing_enhancement": 105,
     "excluded_clan_only": 1,
+    "existing_shared_class": 11,
     "existing_alias": 3
   }
 }

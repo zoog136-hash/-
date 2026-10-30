@@ -36,6 +36,19 @@ func _initialize():
   check(CATALOG.CURRENT.runtime_text(row).contains("(TWILIGHT)"),"unknown official grade is clearly labeled shared local policy")
   check(is_equal_approx(catalog.speed(),values[2]) and catalog.stat("attackSpeed")==values[3] and catalog.stat("castSpeed")==values[4],"exact published percentages enter shared runtime stats")
   owner.job_class="기사";check(not catalog.enabled(row) and catalog.stat("attackSpeed")==0,"no cross-class passive leakage")
+ var roster:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/official_roster.json"))
+ var extensions:Array=roster.observations.filter(func(r):return r.status=="existing_shared_class")
+ check(extensions.size()==11,"all explicitly reviewed common-spell class extensions")
+ for fact:Dictionary in extensions:
+  var row:Dictionary=catalog.record_for(fact.runtime_name);var stable:String=row.id
+  catalog.learned[stable]=1;owner.job_class=fact["class"];owner.level=int(fact.level_display)-1
+  check(not catalog.enabled(row) and catalog.level_locked(row),"old shared learned save cannot bypass new class level")
+  owner.level=int(fact.level_display)
+  check(catalog.enabled(row),"published new-class permission enabled")
+  var resolved:Dictionary=catalog.resolve(row)
+  check(resolved.id==stable and int(resolved.mp)==int(fact.mp_display) and int(resolved.minimum_level)==owner.level,"one stable ID with published class-specific level/MP")
+  owner.job_class="마법사";owner.level=90
+  check(catalog.resolve(row).mp==row.mp and catalog.resolve(row).minimum_level==row.minimum_level,"original wizard balance unchanged after class switch")
  owner.queue_free()
  print("OFFICIAL_ROSTER_REGISTRY_RESULT checks=",checks," errors=",errors," playable=147 references=332")
  quit(0 if errors==0 else 1)

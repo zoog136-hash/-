@@ -166,6 +166,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	var reason := ""
 	if not catalog.owned(skill): reason = "미습득 또는 직업 제한"
 	elif str(skill.activation) == "passive": reason = "패시브 기술"
+	elif catalog.level_locked(skill): reason = "Lv.%d 필요" % catalog.minimum_level_for(skill)
 	elif not catalog.enabled(skill): reason = "속성 계열 또는 사용 무기 제한"
 	elif str(skill.mode) == "summon" and (summons.active() or world.active_skill_buffs.has(str(skill.name))): reason = "가디언 또는 보호막 유지 중"
 	elif not world.pending_attack.is_empty(): reason = "시전 중"
