@@ -287,7 +287,7 @@ def _default_main(reader, pin, key, expected):
 
 class ApprovalState:
     """A validated completion snapshot, used to freeze approved actors on writes."""
-    def __init__(self, root, manifest, register, approvals, registry_digest=None):
+    def __init__(self, root, manifest, register, approvals, registry_digest=None, regressions=None):
         self.root = Path(root).resolve()
         self.manifest = manifest
         self.completed_count = len(approvals)
@@ -295,6 +295,9 @@ class ApprovalState:
         self._actor_hashes = {}
         self._certificates = dict(approvals)
         self._registry_digest = registry_digest
+        self.regressions = regressions or {}
+        require(not self.approved_keys.intersection(self.regressions),
+                'A regressed actor cannot remain approved')
         self._validate(manifest, register)
 
     def _validate(self, manifest, register):
@@ -310,10 +313,24 @@ class ApprovalState:
         require(isinstance(actors, dict) and self.approved_keys.issubset(actors), 'Approved actor record is missing')
         for key, actor in actors.items():
             approved = key in self.approved_keys
-            require(actor.get('production_connected') is approved and actor.get('detailed_completed') is approved,
+            regressed = key in self.regressions
+            require(actor.get('production_connected') is (approved or regressed) and actor.get('detailed_completed') is approved,
                     f'Unbacked or missing completion flags: {key}')
             require(type(actor.get('completed_added')) is int and actor['completed_added'] == int(approved),
                     f'Unbacked completed_added: {key}')
+            if regressed:
+                regression = self.regressions[key]
+                require(isinstance(regression, dict) and regression.get('reason')
+                        and actor.get('status') == 'PRODUCTION_QUALITY_REGRESSION'
+                        and actor.get('visual_review') == 'FAIL',
+                        'A retained runtime regression must explicitly fail quality')
+                prior = reader.json_pin(regression.get('prior_certificate'))
+                require(prior.get('key') == key and prior.get('status') == 'APPROVED'
+                        and prior.get('schema') == 'pr122-native-production-certificate-v1',
+                        'Retained runtime regression requires its preserved prior certificate')
+                # Connection is a fact, not an approval. Keep strict live source,
+                # profile and catalog checks, without reusing the revoked PASS.
+                _actor_description(reader, key, actor, manifest)
             if not approved:
                 continue
             require(actor.get('status') == 'APPROVED_DETAILED_PRODUCTION'
@@ -370,5 +387,8 @@ def load_state(root, *, manifest=None, register=None):
                 'Invalid production approval registry/history')
         approvals = value.get('approved_actors')
         require(isinstance(approvals, dict), 'Invalid approved_actors map')
+    regressions = value.get('quality_regressions', {})
+    require(isinstance(regressions, dict) and set(regressions).issubset(register.get('actors', {})),
+            'Invalid quality_regressions map')
     return ApprovalState(root, manifest, register, approvals,
-                         reader.digest(str(APPROVALS)) if path.exists() else None)
+                         reader.digest(str(APPROVALS)) if path.exists() else None, regressions)

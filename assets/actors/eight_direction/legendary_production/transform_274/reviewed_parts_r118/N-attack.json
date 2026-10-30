@@ -1,0 +1,106 @@
+{
+  "actor": "transform:274",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_274/repaired_source_r118/N-attack-source.png",
+  "source_sha256": "a9ffe5c461558d99c938151de9b9478355283a8b4f53bd2297661666068d1a39",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/corrections/isolation-v14/N-attack-source-v01-isolated.png",
+  "original_source_sha256": "a83927b7557be5d15a3f91700846995da2c17603afa1a9776b37aebd59a69ed9",
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r118/N-attack-1.png",
+      "anchor": [
+        350,
+        575
+      ],
+      "scale": 0.245,
+      "sha256": "11b414345267c2ab04288cafee424c1e5eebd6b017dbf7d76ca3d414180b0c2f"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r118/N-attack-2.png",
+      "anchor": [
+        1040,
+        580
+      ],
+      "scale": 0.245,
+      "sha256": "05768fb8102cc58cc323dcffb93cab83b5234e5c1028e4e94515355807fbb495"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r118/N-attack-3.png",
+      "anchor": [
+        350,
+        1140
+      ],
+      "scale": 0.245,
+      "sha256": "f0083c286392945aac8566323a5ca58b889e9f91fe763328e3329fc72de00960"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r118/N-attack-4.png",
+      "anchor": [
+        1040,
+        1152
+      ],
+      "scale": 0.245,
+      "sha256": "be8960811507f4aa1697a08b95bc9c14cfa7691e17d7260922f1e4d7d0ca4e81"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 579611,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_N_RUN_LATE_HALF_WEAPON_ARMOR_CONTINUITY",
+  "registration_basis": "Same body scale per source; projected pelvis X and contact sole ground Y reviewed per source action pose; guards reuse unchanged original IDLE0",
+  "replacement_basis": "Confirmed N source changed the canonical crescent melee weapon into a strung bow/arrow. Separate repair restores the large RIGHT crescent blade and small LEFT dagger, rear NORTH camera, northward melee strike; normal N IDLE guard phases0/5 and attack clock/marker3 retained unchanged.",
+  "final_quality_approved": false,
+  "remaining_actor_issue": {
+    "animation": "run_6",
+    "phases": [
+      3,
+      4,
+      5
+    ],
+    "status": "HOLD_CONTINUITY_REVIEW",
+    "source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/N-run-source-v01.png",
+    "reason": "Late-half weapon/shoulder-armour presentation reverses relative to early half; preserve the source and require weapon/armour continuity review before selecting this actor. Do not resolve by a blind mirror or repeating the failed half-strip generation approach.",
+    "source_sha256": "1a3a4a7b8af9a891c2c5780333bf004881cbd358c014211d245f6b7a276a0f5e"
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/N-idle-source-v01.png",
+      "sha256": "6791916950017069b14d25edebd1d0f992e0ed012ba82ed89ff29feda9290cc3",
+      "bytes": 2106449
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r118/N-attack-1.png",
+      "sha256": "11b414345267c2ab04288cafee424c1e5eebd6b017dbf7d76ca3d414180b0c2f",
+      "bytes": 345098
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r118/N-attack-2.png",
+      "sha256": "05768fb8102cc58cc323dcffb93cab83b5234e5c1028e4e94515355807fbb495",
+      "bytes": 359913
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r118/N-attack-3.png",
+      "sha256": "f0083c286392945aac8566323a5ca58b889e9f91fe763328e3329fc72de00960",
+      "bytes": 344759
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_274/reviewed_parts_r118/N-attack-4.png",
+      "sha256": "be8960811507f4aa1697a08b95bc9c14cfa7691e17d7260922f1e4d7d0ca4e81",
+      "bytes": 310860
+    }
+  ],
+  "native_import": "PASS: native CompressedTexture2D AtlasTexture decode; whole33 resource imported, then changed N/SW repaired clips separately checked at final source bytes. Import is not final art approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: exact source clips played in real Main Player candidate profile, every phase and marker3 where applicable. Newly repaired N/SW clips also checked in same-Player IDLE/ATTACK/IDLE without rebind. Final default binding remains0.",
+  "local_player": "PASS: candidate profile injection, 32 stationary/moving HIT cases at30/60fps in all8 directions and one real Player E joystick case; not Android/device or final default connection."
+}

@@ -1,0 +1,96 @@
+{
+  "source_ref": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "active_source_clips": 1319,
+  "required_source_clips": 1320,
+  "source_frames": 7914,
+  "actors": 40,
+  "proposal_generation": {
+    "clips": 1319,
+    "frames": 7914
+  },
+  "new_accepted_registration_clips": 0,
+  "new_default_connections": 0,
+  "new_final_approvals": 0,
+  "reviewed_normalized_NW_hit_clips": 40,
+  "NW_review_purpose": "Registration review only; prior 40/40 playback validation was not rerun. Crosshairs remain unapproved proposals.",
+  "confirmed_exceptions": [
+    "176 source body proportions change between legacy guards and generated poses; several attack/death tracks return to idle in mid-action.",
+    "213 alpha heuristic can select the low axe instead of feet.",
+    "402/337 robe hem is not sufficient anatomical ground evidence.",
+    "176 v01 revised S/N run swaps weapon hand between rows.",
+    "176 v01 revised SW/W/NW/NE idle and several NW/NE actions retain front-facing reference guards.",
+    "192 N attack pinned source impact crosses the 627px uniform cell boundary; attack body/helmet reads frontward, but precise guard-direction comparison remains HOLD."
+  ],
+  "integration_constraint": {
+    "type": "Visual transition integrity, not a code prohibition",
+    "code": [
+      "scripts/animation/animation_catalog.gd:16",
+      "scripts/player.gd:257",
+      "data/combat_animation_profiles.json"
+    ],
+    "reason": "Current 39-actor default frames often point to shared expanded proxy bodies. Inserting only a new NW hit would switch identity mid-animation. Whole corresponding role bundles need reviewed source registration, marker/transition checks, and preservation of existing alias/tint rules.",
+    "resolution": "Use the new reviewed frame registration adapter with complete reviewed bundles; do not promote proposal coordinates or attach isolated new-body hit clips to old proxy bodies."
+  },
+  "missing_separate_branch_input": [
+    "transform:274 NE attack absent from c23aff8b (PR158 supplemental draft exists, but is not part of that branch denominator)."
+  ],
+  "work_remaining_not_external_blocker": [
+    "All 39 actor registrations still require semantic review/corrections across their complete selected bundles.",
+    "176 correction candidates are not selected; known failed candidates require directional/hand fixes and strict extraction."
+  ],
+  "CI": "Not queried, run, rerun, cancelled or configured.",
+  "additional_normalized_pages_reviewed": [
+    "transform:375 E/N",
+    "transform:244 E/N",
+    "transform:243 E/N",
+    "transform:194 E/N",
+    "transform:193 E/N",
+    "transform:192 E/N"
+  ],
+  "176_correction_drafts": {
+    "v01": {
+      "generated": 33,
+      "geometry_pass": 20,
+      "geometry_fail": 13
+    },
+    "v02": {
+      "generated": 4,
+      "geometry_pass": 4,
+      "specific_defect_improvements": [
+        "S run weapon hand fixed",
+        "N run weapon hand fixed",
+        "NE idle rear-right orientation fixed"
+      ],
+      "remaining": [
+        "S/N run gait alternation and loop unapproved",
+        "NW idle remains wrong diagonal"
+      ]
+    },
+    "production_selected": 0,
+    "final_quality_approved": 0
+  },
+  "reviewed_normalized_N_attack_clips": 40,
+  "N_attack_review": {
+    "scope": "All 40 N attack sequences inspected together, not a complete all-direction quality approval.",
+    "confirmed_review_followups": [
+      "176 contact slot returns to legacy idle guard instead of attack contact.",
+      "177/226/274/331 bows and 275 gun visibly release horizontally while N is selected; require source-direction verification/correction before final compass approval.",
+      "192 source impact crosses 627px uniform cell partition; four authored attack poses present a frontward body/helmet reading. Exact guard comparison remains HOLD."
+    ],
+    "candidate_ownership_edges": [
+      113,
+      114,
+      160,
+      166,
+      192,
+      226,
+      227,
+      245,
+      275,
+      330,
+      332,
+      339
+    ],
+    "edge_policy": "A preview edge alone is not proof of damaged source. Compare the pinned full image and ownership metadata before deciding extraction repair versus re-authoring."
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "actor": "transform:243",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r135/S-run-3-source.png",
+  "source_sha256": "e57130e1196fa656426e926c8cbddf5b9032a934a6535d6a9a9625d36885019e",
+  "original_source_preserved": true,
+  "source_pixels_resampled": false,
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "original_selected_resource": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/S-run-SpriteFrames.tres",
+  "original_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/S-run-source-v01.png",
+      "sha256": "871683d55ddd0bed0d29a1d731f2c0a1216284d68f460080f56e888d8720f920"
+    }
+  ],
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-run-0.png",
+      "anchor": [
+        265,
+        500
+      ],
+      "scale": 0.264106,
+      "sha256": "3c757a232b2264776e7635646114ebce0b94ff8f07023f19731bd7adbd508fc8"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-run-1.png",
+      "anchor": [
+        780,
+        500
+      ],
+      "scale": 0.264106,
+      "sha256": "78997b5cc93d0eda90f5afa1e5fcac3973d80d269c594a90c8151ee7055e953f"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-run-2.png",
+      "anchor": [
+        1295,
+        500
+      ],
+      "scale": 0.264106,
+      "sha256": "839c0bc86187d055177c1940e682717dbad0f06fc64381129ca77d080aad3f49"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r135/S-run-3-source.png",
+      "anchor": [
+        630,
+        1205
+      ],
+      "scale": 0.1075,
+      "sha256": "e57130e1196fa656426e926c8cbddf5b9032a934a6535d6a9a9625d36885019e"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/S-run-4.png",
+      "anchor": [
+        520,
+        790
+      ],
+      "scale": 0.17,
+      "sha256": "b0843d426ee37c61c7409bc7e492ae84856e376fe6372ef408a8fba913075061"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/S-run-5.png",
+      "anchor": [
+        1510,
+        790
+      ],
+      "scale": 0.17,
+      "sha256": "db7bbffe7a3c90cc796a9264fb31ba582e8eda7c878a32ad7524464649a2481e"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 733742,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "production_connected": false,
+  "final_quality_approved": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "whole_actor_gate": "HOLD_REQUIRED_W_RUN_RECIPROCAL_GAIT_AND_WHOLE_ACTOR_DIRECTIONAL_REVIEW",
+  "replacement_basis": "Confirmed whole late half3/4/5 switches sword to LEFT in original source. Separate repairs restore canonical RIGHT sword/viewerLEFT, LEFT empty fist in all3 while retaining opposite leading/support/push leg phases. Original early normal0/1/2 source RGBA kept exact. Explicit C-root corrections remove aura/neighbour/lifted-boot-derived translations; original .264106 scales for early3 retained; new3 .1075 and new4/5 .17 match standing-equivalent body size. Loop12.5/6 unit durations preserved.",
+  "fragment_review_basis": "SE generated detached ember24 belongs to upper flank of left impact cone near its tip; distinct from right recovery sword point. Other parts have independent bodies and unambiguous fragments.",
+  "prior_proposal_anchors": [
+    [
+      141.75,
+      489.0
+    ],
+    [
+      758.5,
+      483.0
+    ],
+    [
+      1169.5,
+      433.5
+    ],
+    [
+      384.5,
+      959.0
+    ],
+    [
+      752.0,
+      999.0
+    ],
+    [
+      1308.5,
+      927.6700000000001
+    ]
+  ],
+  "source_parts": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r135/S-run-3-source.png",
+      "sha256": "e57130e1196fa656426e926c8cbddf5b9032a934a6535d6a9a9625d36885019e",
+      "selected_phases": [
+        3
+      ]
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r135/S-run-late-source.png",
+      "sha256": "20812c11afdd54228c0089488d815f301285362077b8a5608198721622546564",
+      "selected_phases": [
+        4,
+        5
+      ]
+    }
+  ],
+  "runtime_default_connected": false,
+  "native_import_validation": "PASS separate official Godot4.7.2 real CompressedTexture2D AtlasTexture decode;6 changed clips36frames in bounded4+1+1 batches, original loop/speed/durations checked. Does not claim native imported whole Main/export or device.",
+  "local_main_validation": "PASS confirmed normal completion of required bounded rerun:actual Main Player SOUTH joystick RUN uses6 dedicated poses,physically advances,emits no attack,preserves inventory/equipment/health/collision. Corrected harness restores Player PROCESS_MODE_ALWAYS and awaits physics-space registration. Official Godot4.7.2 process returncode0,engine errors0,elapsed21.24sec;candidate injection1,default binding0. Earlier IDLE/RUN/IDLE18source captures reviewed; original test and missing-receipt history retained separately.",
+  "candidate_profile_injection": true,
+  "actual_default_binding": false,
+  "clock_preservation": {
+    "loop": true,
+    "speed": 12.5,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "matches_original_selected_clock": true,
+    "attack_marker_frame": null
+  },
+  "source_boundary_audit": "PASS current complete local243 candidate198actual source regions:0opaque cross-pose/source-edge flags, originally32. This is extraction/boundary success, not whole-actor direction/gait/default approval.",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r135/S-run-3-source.png",
+      "sha256": "e57130e1196fa656426e926c8cbddf5b9032a934a6535d6a9a9625d36885019e",
+      "bytes": 1283782
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-run-0.png",
+      "sha256": "3c757a232b2264776e7635646114ebce0b94ff8f07023f19731bd7adbd508fc8",
+      "bytes": 362989
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-run-1.png",
+      "sha256": "78997b5cc93d0eda90f5afa1e5fcac3973d80d269c594a90c8151ee7055e953f",
+      "bytes": 349722
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-run-2.png",
+      "sha256": "839c0bc86187d055177c1940e682717dbad0f06fc64381129ca77d080aad3f49",
+      "bytes": 336611
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/S-run-4.png",
+      "sha256": "b0843d426ee37c61c7409bc7e492ae84856e376fe6372ef408a8fba913075061",
+      "bytes": 781051
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/S-run-5.png",
+      "sha256": "db7bbffe7a3c90cc796a9264fb31ba582e8eda7c878a32ad7524464649a2481e",
+      "bytes": 817556
+    }
+  ],
+  "preserved_original_selected_resource": {
+    "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/S-run-SpriteFrames.tres",
+    "commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+    "sha256": "dd8419864daa6e167b2d4a524611e252b4c3749ace092cf260dc9a1b4bf0f359"
+  },
+  "remaining_actor_issue": "Confirmed W RUN selected original repeats leading/support leg half-cycle. New r136 raw candidate did not provide required RIGHT far-foot forward contact and was not selected; keep whole actor inactive. Other directions require final whole-actor play approval after W is repaired.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER",
+  "prior_main_attempt_notes": "Initial combined test source-motion IDLE/RUN/IDLE capture18/assertions succeeded but its added physics stage FAILED because disabled Player had no physics space. Corrected ONLY the physical stage using process_mode ALWAYS and awaited physics registration: actual Main Player South joystick RUN6poses/movement/no attack/inventory/equipment/health/collision assertions PASS, game finish result0 and report errors0. Runner process.json was not retained after tool session loss; no external return-code receipt is claimed and no duplicate rerun performed. Source gait images independently reviewed: correct RIGHT sword and opposite support leg half-cycles; C roots remove source-aura/neighbour translations.",
+  "actual_player_physics_validation": {
+    "returncode": 0,
+    "engine_errors": 0,
+    "poses": 6,
+    "actual_player_cases": 1,
+    "source_head": "dfc5a0f3437f9f3ff54f384b176d74766c92b79c",
+    "runtime_default_connected": false,
+    "isolated_user_data": true,
+    "native_export_validation": false,
+    "android_validation": false
+  }
+}

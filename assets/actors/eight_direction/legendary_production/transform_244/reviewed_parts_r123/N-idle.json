@@ -1,0 +1,136 @@
+{
+  "actor": "transform:244",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_244/repaired_source_r123/N-idle-source.png",
+  "source_sha256": "dfba81767f39a26b1acf3e0526ed4b13c0b1ad5bb91a7580194b50f764280ef8",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+  "original_source_sha256": "b09db0b1ec3ea26f700930c54a8be863851fcfc2605a64ad998dc8ff124b6aae",
+  "canonical_reference": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-run-source-v01-isolated.png",
+  "canonical_reference_sha256": "ef45c23c6982bb4b8373bcc862372e9d8118a986b7ecc98a511320ad87a3c9b4",
+  "source_pixels_resampled": false,
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-0.png",
+      "anchor": [
+        285,
+        466
+      ],
+      "scale": 0.267315,
+      "sha256": "3d5d0336b8808c11aad22f9e1c9c7943597eca250ba649c5e2676183af7d8957"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-1.png",
+      "anchor": [
+        773,
+        465
+      ],
+      "scale": 0.267315,
+      "sha256": "d4425b602f933064e534924cf3f5102bf324a7e8d439d4e5fa40460fcbcc7fcf"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-2.png",
+      "anchor": [
+        1273,
+        464
+      ],
+      "scale": 0.267315,
+      "sha256": "ad7703358e937fcdbbe9d00e7d6717fc49c87d27cf5401068319d3a5c52797e1"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-3.png",
+      "anchor": [
+        285,
+        941
+      ],
+      "scale": 0.267315,
+      "sha256": "8f78b5a1a2690f4ba5eb9f684b81604d1811b11be8374e5606b8fec927d1f113"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-4.png",
+      "anchor": [
+        773,
+        939
+      ],
+      "scale": 0.267315,
+      "sha256": "58275fa18bccbeae510b7b1d27fee2a3ab3cb60fe810dec2db0de18031191f2f"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-5.png",
+      "anchor": [
+        1273,
+        940
+      ],
+      "scale": 0.267315,
+      "sha256": "60b1d88918c4964757da507bae86995a39e4ccb96fb03c356b8224ff4ecc4fb1"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 702763,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_OTHER_REQUIRED_CLIP_DEFECTS",
+  "replacement_basis": "Original six NORTH idle poses incorrectly show chest/front and left sword; separate generated revision uses actual NORTH RUN rear white hair/back cape and anatomical right sword. Six planted idle poses only, no mirror.",
+  "registration_basis": "Constant .267315 body scale matches canonical N RUN; projected pelvis X and individual planted boot ground Y; original six-frame5fps idle loop retained.",
+  "local_main": "PASS same real Main Player N IDLE/RUN/IDLE:12 unique poses,18 captures, unchanged gameplay/collision, original5fps six-frame idle loop and right sword throughout. Candidate profile only.",
+  "native_import": "PASS actual native CompressedTexture2D AtlasTexture6frames; isolated writable user data.",
+  "remaining_actor_issue": "N ATTACK phases0/3 retain left sword in original source and are not activated. The separate phase3 image edit request has uncertain result; no duplicate call. Other required direction/foot continuity review remains.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "sha256": "b09db0b1ec3ea26f700930c54a8be863851fcfc2605a64ad998dc8ff124b6aae",
+      "bytes": 1451078
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-run-source-v01-isolated.png",
+      "sha256": "ef45c23c6982bb4b8373bcc862372e9d8118a986b7ecc98a511320ad87a3c9b4",
+      "bytes": 1672938
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/repaired_source_r123/N-idle-source.png",
+      "sha256": "dfba81767f39a26b1acf3e0526ed4b13c0b1ad5bb91a7580194b50f764280ef8",
+      "bytes": 1578644
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-0.png",
+      "sha256": "3d5d0336b8808c11aad22f9e1c9c7943597eca250ba649c5e2676183af7d8957",
+      "bytes": 278268
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-1.png",
+      "sha256": "d4425b602f933064e534924cf3f5102bf324a7e8d439d4e5fa40460fcbcc7fcf",
+      "bytes": 277135
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-2.png",
+      "sha256": "ad7703358e937fcdbbe9d00e7d6717fc49c87d27cf5401068319d3a5c52797e1",
+      "bytes": 241750
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-3.png",
+      "sha256": "8f78b5a1a2690f4ba5eb9f684b81604d1811b11be8374e5606b8fec927d1f113",
+      "bytes": 278846
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-4.png",
+      "sha256": "58275fa18bccbeae510b7b1d27fee2a3ab3cb60fe810dec2db0de18031191f2f",
+      "bytes": 272697
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/reviewed_parts_r123/N-idle-5.png",
+      "sha256": "60b1d88918c4964757da507bae86995a39e4ccb96fb03c356b8224ff4ecc4fb1",
+      "bytes": 245398
+    }
+  ]
+}

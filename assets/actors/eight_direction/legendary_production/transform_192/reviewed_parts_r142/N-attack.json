@@ -1,0 +1,204 @@
+{
+  "actor": "transform:192",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_192/repaired_source_r142/N-attack-source.png",
+  "source_sha256": "048597775d333fd5c998da8f99ba0f121b93dc80064198e6ee3980695a81c7c0",
+  "source_pixels_resampled": false,
+  "original_source_preserved": true,
+  "original_selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_192/corrections/isolation-v08/N-attack-SpriteFrames.tres",
+  "original_source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r019/N-idle.png",
+      "region": [
+        80.0,
+        80.0,
+        594.0,
+        608.0
+      ],
+      "margin": null,
+      "anchor": [
+        334.0,
+        487.0
+      ],
+      "scale": 0.23404255319148937,
+      "sha256": "5eab7bb26e036061177523b41f2883920e07c50857b7074429fec25263c3179d",
+      "existing_guard_alias": "N-idle:0"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-attack-1.png",
+      "region": [
+        0,
+        0,
+        1448,
+        1086
+      ],
+      "margin": null,
+      "anchor": [
+        420,
+        553
+      ],
+      "scale": 0.27,
+      "sha256": "3aafcfe6f368676635521e127cf6a729d3d2a5b982e4995bedc4d172c1487890",
+      "existing_guard_alias": null
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-attack-2.png",
+      "region": [
+        0,
+        0,
+        1448,
+        1086
+      ],
+      "margin": null,
+      "anchor": [
+        960,
+        555
+      ],
+      "scale": 0.27,
+      "sha256": "5d9b3386e9ea36796943a34d01079060b73994c57bb6076c8683afef67e820bb",
+      "existing_guard_alias": null
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-attack-3.png",
+      "region": [
+        0,
+        0,
+        1448,
+        1086
+      ],
+      "margin": null,
+      "anchor": [
+        420,
+        1058
+      ],
+      "scale": 0.27,
+      "sha256": "0bcb79add94796b77e2c768f425cb2f875899f4ded8f124e7f478aab9aff8358",
+      "existing_guard_alias": null
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-attack-4.png",
+      "region": [
+        0,
+        0,
+        1448,
+        1086
+      ],
+      "margin": null,
+      "anchor": [
+        960,
+        1059
+      ],
+      "scale": 0.27,
+      "sha256": "30ee5e5db49bf028ba28dd0d81fa30326a401b09ace2889385035b00fed21570",
+      "existing_guard_alias": null
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r019/N-idle.png",
+      "region": [
+        1600.0,
+        3120.0,
+        1081.0,
+        1346.0
+      ],
+      "margin": null,
+      "anchor": [
+        614.0,
+        1165.0
+      ],
+      "scale": 0.10784313725490197,
+      "sha256": "5eab7bb26e036061177523b41f2883920e07c50857b7074429fec25263c3179d",
+      "existing_guard_alias": "N-idle:5"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 465465,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "reviewed_fragments": {
+    "15": {
+      "area": 93,
+      "bounds": [
+        499,
+        562,
+        517,
+        577
+      ],
+      "owner_source_index": 2
+    },
+    "16": {
+      "area": 72,
+      "bounds": [
+        592,
+        564,
+        610,
+        574
+      ],
+      "owner_source_index": 2
+    },
+    "17": {
+      "area": 101,
+      "bounds": [
+        489,
+        590,
+        503,
+        611
+      ],
+      "owner_source_index": 2
+    }
+  },
+  "fragment_review_basis": "All detached N impact arc fragments15/16/17 continue lower-left phase3 raised blade/arc, not upper-left windup cape; exact areas/bounds pinned. HIT parts unambiguous. All raw RGBA retained once.",
+  "replacement_basis": "Original N action incorrectly displayed front visor/chest. New1..4 stay true rear NORTH, WHITE ponytail and RIGHT sword viewer RIGHT throughout; existing reviewed N IDLE0/5 are explicitly shared guard aliases retaining exact source pixels/region/root/scale. Attack impact remains phase3 pointing NORTH; four newly drawn action poses, not six new drafts.",
+  "registration_basis": "New HIT roots use planted boot plane612/1321/1320 and common .19 scale; maximum authored recoil compresses body about7worldpixels. New ATTACK uses .27 constant body scale and planted boot planes553/555/1058/1059; sword arc and cape extents do not determine C. Native guard roots/scales are unchanged.",
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_NW_CAMERA_AND_OTHER_REQUIRED_DIRECTIONAL_REVIEW",
+  "local_main_validation": "PASS real Main same Player no rebind N IDLE/HIT/IDLE/ATTACK/IDLE30captures18unique poses, all6 per action, NORTH rear WHITE ponytail and RIGHT sword continuous, original phase3 attack marker; normal process exit0/errors0,20.24s; candidate injection, not default binding.",
+  "native_import_validation": "PASS official Godot4.7.2 native2clips12 AtlasTextures with actual CompressedTexture2D and nonempty decoded images;8 newly generated action poses and4 existing guard aliases. Separate from source-byte Main loader.",
+  "player_physics_validation": "Attack marker and state checked in actual Main; affected locomotion-during-hit result recorded in N-hit.",
+  "boundary_result": "At r142 delivery full198frame candidate has7remaining flags (NW3/W4), versus prior9; replaced N attack removes2 crossed frame regions. Other unresolved original sources and candidates preserved; no whole actor approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/repaired_source_r142/N-attack-source.png",
+      "sha256": "048597775d333fd5c998da8f99ba0f121b93dc80064198e6ee3980695a81c7c0",
+      "bytes": 1124208
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r019/N-idle.png",
+      "sha256": "5eab7bb26e036061177523b41f2883920e07c50857b7074429fec25263c3179d",
+      "bytes": 3736934
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-attack-1.png",
+      "sha256": "3aafcfe6f368676635521e127cf6a729d3d2a5b982e4995bedc4d172c1487890",
+      "bytes": 285774
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-attack-2.png",
+      "sha256": "5d9b3386e9ea36796943a34d01079060b73994c57bb6076c8683afef67e820bb",
+      "bytes": 260813
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-attack-3.png",
+      "sha256": "0bcb79add94796b77e2c768f425cb2f875899f4ded8f124e7f478aab9aff8358",
+      "bytes": 322216
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r142/N-attack-4.png",
+      "sha256": "30ee5e5db49bf028ba28dd0d81fa30326a401b09ace2889385035b00fed21570",
+      "bytes": 270198
+    }
+  ],
+  "remaining_actor_issue": "N/S RUN, N HIT/ATTACK and W ATTACK local repairs passed; actor still requires NW camera and remaining directional/weapon/gait review. No default binding or whole actor approval."
+}

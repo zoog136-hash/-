@@ -1,0 +1,54 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r153/S-death-0.png" id="r153_S_death_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r153/S-death-1.png" id="r153_S_death_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r153/S-death-2.png" id="r153_S_death_2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r153/S-death-3.png" id="r153_S_death_3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r153/S-death-4.png" id="r153_S_death_4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_143/reviewed_parts_r153/S-death-5.png" id="r153_S_death_5"]
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_c17_pose_0"]
+atlas = ExtResource("r153_S_death_0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_c17_pose_1"]
+atlas = ExtResource("r153_S_death_1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_c17_pose_2"]
+atlas = ExtResource("r153_S_death_2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_c17_pose_3"]
+atlas = ExtResource("r153_S_death_3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_c17_pose_4"]
+atlas = ExtResource("r153_S_death_4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="batch0_batch0_c17_pose_5"]
+atlas = ExtResource("r153_S_death_5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("batch0_batch0_c17_pose_0")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_c17_pose_1")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_c17_pose_2")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_c17_pose_3")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_c17_pose_4")},
+{"duration": 1.0, "texture": SubResource("batch0_batch0_c17_pose_5")}], "loop": false, "name": &"death_2", "speed": 9.230769231}
+]
+metadata/twilight_reviewed_frame_registration = {"death_2":{"semantic_review":"HOLD","frames":[{"anchor":Vector2(248.0,479.0),"scale":Vector2(0.289473684211,0.289473684211),"target":Vector2(0,0)},{"anchor":Vector2(795.0,471.5),"scale":Vector2(0.289473684211,0.289473684211),"target":Vector2(0,0)},{"anchor":Vector2(1366.5,462.33),"scale":Vector2(0.289473684211,0.289473684211),"target":Vector2(0,0)},{"anchor":Vector2(273.5,925.0),"scale":Vector2(0.289473684211,0.289473684211),"target":Vector2(0,0)},{"anchor":Vector2(827.0,929.0),"scale":Vector2(0.289473684211,0.289473684211),"target":Vector2(0,0)},{"anchor":Vector2(1268.0,928.0),"scale":Vector2(0.289473684211,0.289473684211),"target":Vector2(0,0)}]}}
+metadata/twilight_clip_quality_holds = {"death_2":"HOLD_SOURCE_ISOLATION_ONLY_ART_ORIGINAL_EDGE_REVIEW_REQUIRED"}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_ART_REVIEW_OR_ORIGINAL_SOURCE_EDGE"
+metadata/twilight_final_quality_approved = false

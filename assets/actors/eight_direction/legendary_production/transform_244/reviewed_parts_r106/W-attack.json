@@ -1,0 +1,104 @@
+{
+  "actor": "transform:244",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_244/repaired_source_r106/W-attack-source.png",
+  "source_sha256": "3dee9055310ed82a1b16d7a0c85f29c1a4218bad27e48be166d5c9c7fe8654aa",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/draft001/W-attack-source-v01.png",
+  "original_source_sha256": "15f4f6930c810a015c0743ca65e89c60da4d69e1b7b9249ba1386d102005a2d2",
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/repaired_source_r106/W-attack-3.png",
+      "anchor": [
+        900,
+        915
+      ],
+      "scale": 0.165,
+      "sha256": "9dabfdd7ee13687984e077811680c50a297174ea56af41352ccee34d19776144"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_244/repaired_source_r106/W-attack-4.png",
+      "anchor": [
+        770,
+        1115
+      ],
+      "scale": 0.135,
+      "sha256": "9811da9a3044e193586e8e793b8d6e25d35a597b164d1815dde01b762b836ca8"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 605670,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_N_IDLE_LEFT_HAND_N_ATTACK_IMPACT_HAND_AND_REMAINING_ACTOR_REVIEW",
+  "registration_basis": "One scale per source; root X at projected pelvis, Y at source boot contact plane; no source pixels painted or resampled during separation",
+  "replacement_basis": "Separate repair of confirmed cross-pose opacity connections; complete original costume, right-hand sword and body proportions retained; SW release corrected to southwest; W source phases3/4 separately corrected after composite effect connection and left source-edge failure; same source phases1/2 preserved; original normal preparation/wind-up phases1/2 restored exactly via original Atlas regions, original registrations and timing; only failed phases3/4 selected from repairs",
+  "unselected_source_phases": [
+    3,
+    4
+  ],
+  "unchanged_original_source_phases": [
+    1,
+    2
+  ],
+  "unselected_generated_source_phases": [
+    1,
+    2
+  ],
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/W-idle-source-v01-isolated.png",
+      "sha256": "33f17e94cf1f984ffd45782187a21160e002b03de65c2fc4f479aa3984960301",
+      "bytes": 1359145
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_244/draft001/W-attack-source-v01.png",
+      "sha256": "15f4f6930c810a015c0743ca65e89c60da4d69e1b7b9249ba1386d102005a2d2",
+      "bytes": 1361811
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/repaired_source_r106/W-attack-3.png",
+      "sha256": "9dabfdd7ee13687984e077811680c50a297174ea56af41352ccee34d19776144",
+      "bytes": 1690801
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_244/repaired_source_r106/W-attack-4.png",
+      "sha256": "9811da9a3044e193586e8e793b8d6e25d35a597b164d1815dde01b762b836ca8",
+      "bytes": 1339785
+    }
+  ],
+  "native_import": "PASS: this clip 6 AtlasTexture frames backed by real imported CompressedTexture2D under Godot4.7.2; default binding remains disabled",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "local_main": "PASS: changed clip all6 poses in actual Main candidate path, projected foot anchor, marker3, directions and gameplay/collision invariant; 177E/244W normal phases1/2 are original source Atlas geometry and registration",
+  "local_player": "PASS: actual Player E joystick movement and all8 HIT tracks at30/60fps stationary/moving; candidate profile injection, default binding unchanged",
+  "remaining_actor_failures": [
+    {
+      "animation": "idle_6",
+      "status": "HOLD",
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-idle-source-v01-isolated.png",
+      "reason": "Rear NORTH idle holds sword on anatomical LEFT; canonical N RUN and N HIT hold on RIGHT.",
+      "source_sha256": "b09db0b1ec3ea26f700930c54a8be863851fcfc2605a64ad998dc8ff124b6aae",
+      "source_bytes": 1451078,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    },
+    {
+      "animation": "attack_6",
+      "status": "HOLD",
+      "phases": [
+        0,
+        3
+      ],
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_244/corrections/isolation-v12/N-attack-source-v01-isolated.png",
+      "reason": "Start and impact switch to anatomical LEFT sword; wind-up/recovery and N HIT are RIGHT. Do not activate actor based on C-ground/data passes.",
+      "source_sha256": "bfa84a0d2775e8846a3fe77549b06b46b52fffe07cbd7e180ecc7a13304bc07c",
+      "source_bytes": 1347086,
+      "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71"
+    }
+  ]
+}

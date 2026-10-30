@@ -1,0 +1,56 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-0.png" id="r151_N_idle_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-1.png" id="r151_N_idle_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-2.png" id="r151_N_idle_2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-3.png" id="r151_N_idle_3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-4.png" id="r151_N_idle_4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r151/N-idle-5.png" id="r151_N_idle_5"]
+
+[sub_resource type="AtlasTexture" id="c6_pose_0"]
+atlas = ExtResource("r151_N_idle_0")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c6_pose_1"]
+atlas = ExtResource("r151_N_idle_1")
+region = Rect2(0,0,1328,1184)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c6_pose_2"]
+atlas = ExtResource("r151_N_idle_2")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c6_pose_3"]
+atlas = ExtResource("r151_N_idle_3")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c6_pose_4"]
+atlas = ExtResource("r151_N_idle_4")
+region = Rect2(0,0,1280,1229)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c6_pose_5"]
+atlas = ExtResource("r151_N_idle_5")
+region = Rect2(0,0,1254,1254)
+filter_clip = true
+
+[resource]
+animations = [
+{
+"frames": [{"duration": 1.0, "texture": SubResource("c6_pose_0")}, {"duration": 1.0, "texture": SubResource("c6_pose_1")}, {"duration": 1.0, "texture": SubResource("c6_pose_2")}, {"duration": 1.0, "texture": SubResource("c6_pose_3")}, {"duration": 1.0, "texture": SubResource("c6_pose_4")}, {"duration": 1.0, "texture": SubResource("c6_pose_5")}],
+"loop": true,
+"name": &"idle_6",
+"speed": 5.0
+}
+]
+metadata/twilight_reviewed_frame_registration = {"idle_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(627.41,1159.0),"scale":Vector2(0.09970306564513616,0.09970306564513616),"target":Vector2(0,0)},{"anchor":Vector2(654.080334987593,1125.5),"scale":Vector2(0.10408554652715934,0.10408554652715934),"target":Vector2(0,0)},{"anchor":Vector2(632.1452991452991,1127.0),"scale":Vector2(0.10348462214678043,0.10348462214678043),"target":Vector2(0,0)},{"anchor":Vector2(598.2262443438914,1203.0),"scale":Vector2(0.10931694939999209,0.10931694939999209),"target":Vector2(0,0)},{"anchor":Vector2(627.0582728592162,1169.0),"scale":Vector2(0.10243628913091685,0.10243628913091685),"target":Vector2(0,0)},{"anchor":Vector2(598.6161682833038,1189.0),"scale":Vector2(0.10295801352235068,0.10295801352235068),"target":Vector2(0,0)}]}}
+metadata/twilight_reviewed_run_grounding = {}
+metadata/twilight_reviewed_N_planted_support = {"idle_6":[{"contact_points":[[428.5,1160.0],[826.3199999999999,1158.0]],"registered_pair_C":Vector2(627.41,1159.0),"planted":true,"max_vertical_depth_world":0.09970306564513616},{"contact_points":[[470.31451612903226,1124.0],[837.8461538461538,1127.0]],"registered_pair_C":Vector2(654.080334987593,1125.5),"planted":true,"max_vertical_depth_world":0.15612831979073902},{"contact_points":[[447.1025641025641,1127.0],[817.1880341880342,1127.0]],"registered_pair_C":Vector2(632.1452991452991,1127.0),"planted":true,"max_vertical_depth_world":0.0},{"contact_points":[[421.9230769230769,1203.0],[774.5294117647059,1203.0]],"registered_pair_C":Vector2(598.2262443438914,1203.0),"planted":true,"max_vertical_depth_world":0.0},{"contact_points":[[433.2769230769231,1169.0],[820.8396226415094,1169.0]],"registered_pair_C":Vector2(627.0582728592162,1169.0),"planted":true,"max_vertical_depth_world":0.0},{"contact_points":[[409.78195488721803,1189.0],[787.4503816793894,1189.0]],"registered_pair_C":Vector2(598.6161682833038,1189.0),"planted":true,"max_vertical_depth_world":0.0}]}
+metadata/twilight_clip_quality_holds = {}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_N_ATTACK_MODERATION_AND_W_SW_ARCHER_MECHANISM"
+metadata/twilight_final_quality_approved = false

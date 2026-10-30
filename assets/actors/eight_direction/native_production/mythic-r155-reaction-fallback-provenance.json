@@ -1,0 +1,100 @@
+{
+  "criteria": "User explicitly permits same-form same-facing IDLE presentation during one missing short HIT angle; not newly authored HIT, no new artwork.",
+  "new_PNGs": 0,
+  "actors": {
+    "367": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_367/r155/SpriteFrames.tres",
+      "candidate_sha256": "b0c450302f6f53227d14f1e486989072020c83a195e9be82e2593823c44e713f",
+      "prior_candidate": "res://assets/actors/eight_direction/native_production/mythic_367/r154/SpriteFrames.tres",
+      "prior_candidate_sha256": "39c64c6d3e90622c8efc815b0ef326b42d504cd8ae10eb6783ac5570315e87ad",
+      "prior_animation_profile": null,
+      "authored_tracks": 32,
+      "authored_poses": 192,
+      "presentation_alias": {
+        "target": "hit_1",
+        "source": "idle_1",
+        "frame_references": 6,
+        "reaction_seconds": 0.22,
+        "new_authored_poses": 0
+      },
+      "actual_default_connected": true,
+      "runtime_verified": true,
+      "formal_authored_HIT_completion": false,
+      "all32_existing_animation_blocks_and_all_existing_RGBA_C_scales_preserved": true,
+      "actual_Main": {
+        "status": "PASS_CURRENT_DEFAULT_198_PRESENTATION_REFS_192_AUTHORED_POSES",
+        "same_actor_same_facing_IDLE_reaction_alias_identity": "PASS",
+        "normal_physical_movement_stop_turn_attack_marker3_game_state": "PASS",
+        "formal_new_authored_HIT_approval": false
+      }
+    },
+    "411": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_411/r157/SpriteFrames.tres",
+      "candidate_sha256": "e5790bdc93f036530e228931b9279ea4a949009a5efa8f2e814b282b4aa9cb27",
+      "prior_candidate": "res://assets/actors/eight_direction/native_production/mythic_411/r154/SpriteFrames.tres",
+      "prior_candidate_sha256": "b4bd5770f2f743d3e88d725b6a450235ed5a3c0a625466be44a87df626487544",
+      "prior_animation_profile": null,
+      "authored_tracks": 32,
+      "authored_poses": 192,
+      "presentation_alias": {
+        "target": "hit_5",
+        "source": "idle_5",
+        "frame_references": 6,
+        "reaction_seconds": 0.22,
+        "new_authored_poses": 0
+      },
+      "actual_default_connected": true,
+      "runtime_verified": true,
+      "formal_authored_HIT_completion": false,
+      "alias_introduced_candidate": "res://assets/actors/eight_direction/native_production/mythic_411/r155/SpriteFrames.tres",
+      "alias_introduced_candidate_sha256": "5857f53e4783ccd9009f542bdea7e6532980a9ae669d9f17795bfeb62cee98ae",
+      "alias_introduction_preserved_all32_animation_blocks_RGBA_C_scales": true,
+      "subsequent_big_root_registration_fix": "W attack3/4 regions and C corrected; original PNG pixels, scales and all32authored clock blocks unchanged.",
+      "actual_Main": {
+        "status": "PASS_CURRENT_DEFAULT_198_PRESENTATION_REFS_192_AUTHORED_POSES",
+        "same_actor_same_facing_IDLE_reaction_alias_identity": "PASS",
+        "normal_physical_movement_stop_turn_attack_marker3_game_state": "PASS",
+        "formal_new_authored_HIT_approval": false
+      }
+    }
+  },
+  "validation": {
+    "status": "ACTUAL_MAIN_DEFAULT_FUNCTIONAL_PASS_MINOR_REACTION_ALIAS_ALLOWED",
+    "authored_counts_per_actor": [
+      32,
+      192
+    ],
+    "presentation_references_per_actor": 198,
+    "receipt": {
+      "process": "/workspace/scratch/pr158-mythic-alias-functional-r155-main/process.json",
+      "process_sha256": "0dd3ae546c74c0db1120f605f6af46e45e05c293738e5543ba5d4ee05aaa8cb2",
+      "report": "/workspace/scratch/pr158-mythic-alias-functional-r155-main/report.json",
+      "report_sha256": "93dcf750dcc576a009007f5ee8c4eff1a47ce9f0e8771aaa56f186136aaded1d",
+      "normal_exit": 0,
+      "engine_errors": 0,
+      "elapsed_seconds": 27.42
+    },
+    "411_subsequent_W_root_fix_receipts": [
+      {
+        "process": "/workspace/scratch/pr158-mythic-impact-root-r156-main/process.json",
+        "process_sha256": "32442082d6702feda3a1142548daa70ac1d163ef72ba00d1acc274c1ebf78506",
+        "report": "/workspace/scratch/pr158-mythic-impact-root-r156-main/report.json",
+        "report_sha256": "88b253af452215239c9bd376244cfba0db1c7dbf3d64f75cda469914a1bcec9f",
+        "normal_exit": 0,
+        "engine_errors": 0,
+        "elapsed_seconds": 32.63
+      },
+      {
+        "process": "/workspace/scratch/pr158-mythic-follow-root-r157-main/process.json",
+        "process_sha256": "8ab0d64de5271e126b7f3dd240b8395f1009790bb73e879ba1dfce4fc723d625",
+        "report": "/workspace/scratch/pr158-mythic-follow-root-r157-main/report.json",
+        "report_sha256": "e2d9b882f837ffcd5e15eb0695f06db56a07f4c602850e94545d085bd46df19c",
+        "normal_exit": 0,
+        "engine_errors": 0,
+        "elapsed_seconds": 25.78
+      }
+    ],
+    "native_export_Android_not_run": true,
+    "no_PNG_source_changes": true
+  }
+}

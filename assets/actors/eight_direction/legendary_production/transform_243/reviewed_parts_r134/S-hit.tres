@@ -1,0 +1,45 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-0.png" id="t0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-1.png" id="t1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-2.png" id="t2"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-3.png" id="t3"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-4.png" id="t4"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r134/S-hit-5.png" id="t5"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("t0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("t1")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("t2")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("t3")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("t4")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("t5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":false,"name":&"hit_2","speed":27.272727273}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "PASS_LOCAL_CLIP_ACTOR_HOLD"
+metadata/twilight_reviewed_frame_registration = {"hit_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(273.75,447.5),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(781.75,433.4),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(1232.5,441.5),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(238.0,940.0),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(755.75,961.6700000000001),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)},{"anchor":Vector2(1291.0,954.5),"scale":Vector2(0.293764,0.293764),"target":Vector2(0,0)}]}}
+metadata/twilight_final_quality_approved = false

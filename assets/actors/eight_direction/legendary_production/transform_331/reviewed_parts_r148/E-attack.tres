@@ -1,0 +1,54 @@
+[gd_resource type="SpriteFrames" load_steps=10 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_331/corrections/isolation-v16/E-attack-source-v01-isolated.png" id="c0_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r148/E-idle-0.png" id="isolated_attack_0_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r148/E-idle-5.png" id="isolated_attack_0_5"]
+
+[sub_resource type="AtlasTexture" id="c0_pose_0"]
+atlas = ExtResource("isolated_attack_0_0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c0_pose_1"]
+atlas = ExtResource("c0_texture_1")
+region = Rect2(0, 0, 819, 730)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c0_pose_2"]
+atlas = ExtResource("c0_texture_1")
+region = Rect2(819, 0, 819, 730)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c0_pose_3"]
+atlas = ExtResource("c0_texture_1")
+region = Rect2(0, 730, 819, 730)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c0_pose_4"]
+atlas = ExtResource("c0_texture_1")
+region = Rect2(819, 730, 819, 730)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c0_pose_5"]
+atlas = ExtResource("isolated_attack_0_5")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[resource]
+animations = [
+{
+"frames": [{"duration": 1.0, "texture": SubResource("c0_pose_0")}, {"duration": 1.0, "texture": SubResource("c0_pose_1")}, {"duration": 1.0, "texture": SubResource("c0_pose_2")}, {"duration": 1.0, "texture": SubResource("c0_pose_3")}, {"duration": 1.0, "texture": SubResource("c0_pose_4")}, {"duration": 1.0, "texture": SubResource("c0_pose_5")}],
+"loop": false,
+"name": &"attack_0",
+"speed": 14.285714286
+}
+]
+metadata/twilight_reviewed_frame_registration = {"attack_0":{"semantic_review":"HOLD","frames":[{"anchor":Vector2(259.5,468.0),"scale":Vector2(0.255517,0.255517),"target":Vector2(0,0)},{"anchor":Vector2(380.75,623.5),"scale":Vector2(0.254777,0.254777),"target":Vector2(0,0)},{"anchor":Vector2(374.25,629.5),"scale":Vector2(0.254777,0.254777),"target":Vector2(0,0)},{"anchor":Vector2(375.5,592),"scale":Vector2(0.254777,0.254777),"target":Vector2(0,0)},{"anchor":Vector2(378.25,597),"scale":Vector2(0.254777,0.254777),"target":Vector2(0,0)},{"anchor":Vector2(1325.0,969.0),"scale":Vector2(0.255517,0.255517),"target":Vector2(0,0)}]}}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_ORIGINAL_SOURCE_EDGE_AND_RUN_OWNERSHIP"
+metadata/twilight_final_quality_approved = false

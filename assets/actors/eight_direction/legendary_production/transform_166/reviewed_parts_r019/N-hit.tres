@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_166/reviewed_parts_r019/N-hit.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("1")
+region = Rect2(80,80,467,501)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("1")
+region = Rect2(808,80,484,446)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("1")
+region = Rect2(80,808,491,465)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("1")
+region = Rect2(808,808,562,453)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("1")
+region = Rect2(80,1536,523,435)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("1")
+region = Rect2(808,1536,464,514)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":false,"name":&"hit_6","speed":27.272727273}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_OTHER_CLIPS"
+metadata/twilight_reviewed_frame_registration = {"hit_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(233,452),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(249,441),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(212,460),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(260,387),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(280,428),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(237,445),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)}]}}

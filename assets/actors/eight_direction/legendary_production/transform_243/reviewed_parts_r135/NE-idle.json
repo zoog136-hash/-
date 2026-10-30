@@ -1,0 +1,161 @@
+{
+  "actor": "transform:243",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_243/repaired_source_r135/NE-idle-source.png",
+  "source_sha256": "f776b8248ad3062626b1630fbdb88c78c897e9eed7d5059c536badea1a1ac840",
+  "original_source_preserved": true,
+  "source_pixels_resampled": false,
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "original_selected_resource": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NE-idle-SpriteFrames.tres",
+  "original_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NE-idle-source-v01.png",
+      "sha256": "9069aa7ab5daa86f2548522235d0767a10c010a455cf61edda1c2c2e4fbb676c"
+    }
+  ],
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-0.png",
+      "anchor": [
+        350.0,
+        440.0
+      ],
+      "scale": 0.285714,
+      "sha256": "bf8245d2b5f25135823e3a1824b446cebb141f32a36513490c1a2a3bb45ca9cb"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-1.png",
+      "anchor": [
+        862.5,
+        442.67
+      ],
+      "scale": 0.285714,
+      "sha256": "543aded25cd38117dc7666b6f13a6bc6cf7521ef3ce2f2a2764044edcf107d57"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-2.png",
+      "anchor": [
+        620,
+        805
+      ],
+      "scale": 0.155,
+      "sha256": "e2e15b7951aea3387e6c70efc84c249ce85b57e04043d24bb52865b2fe9cb2a2"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-3.png",
+      "anchor": [
+        370.0,
+        942.6700000000001
+      ],
+      "scale": 0.285714,
+      "sha256": "1c077a54e8123bfc2b07d4564ab839ccf4117878ae14a7c93c629e24c89616e1"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-4.png",
+      "anchor": [
+        879.0,
+        947.6700000000001
+      ],
+      "scale": 0.285714,
+      "sha256": "9efb55b2ea5c5df815c7a7ec31776ce044b39457095a308666200a8037a447be"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-5.png",
+      "anchor": [
+        1560,
+        805
+      ],
+      "scale": 0.155,
+      "sha256": "4f573e104460a423d458021f48a38a5ac7c09cd8dc289948a20febe3fdafe819"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 717530,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "production_connected": false,
+  "final_quality_approved": false,
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "whole_actor_gate": "HOLD_REQUIRED_W_RUN_RECIPROCAL_GAIT_AND_WHOLE_ACTOR_DIRECTIONAL_REVIEW",
+  "replacement_basis": "Only two actually truncated sword-tip phases2/5 receive image repairs;4normal source poses remain native RGBA extracted from original source, original registration/scale preserved for those4. New fully tapered sword tips and entire effects stay inside source bounds. Same RIGHT sword and rear NE camera, existing idle clock retained.",
+  "fragment_review_basis": "SE generated detached ember24 belongs to upper flank of left impact cone near its tip; distinct from right recovery sword point. Other parts have independent bodies and unambiguous fragments.",
+  "normal_native_source_ownership_proof": {
+    "original_visible_texels": 803895,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "normal_source_phases_kept_exact": [
+    0,
+    1,
+    3,
+    4
+  ],
+  "old_clipped_phase2_and5_preserved_in_original_source": true,
+  "runtime_default_connected": false,
+  "native_import_validation": "PASS separate official Godot4.7.2 real CompressedTexture2D AtlasTexture decode;6 changed clips36frames in bounded4+1+1 batches, original loop/speed/durations checked. Does not claim native imported whole Main/export or device.",
+  "local_main_validation": "PASS actual Main candidate NE IDLE/HIT/IDLE/ATTACK/IDLE and SE IDLE/ATTACK/IDLE;5tracks30unique source poses, original markers3, no mirror, registered feet and gameplay/collision preserved.",
+  "candidate_profile_injection": true,
+  "actual_default_binding": false,
+  "clock_preservation": {
+    "loop": true,
+    "speed": 5.0,
+    "frame_durations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "matches_original_selected_clock": true,
+    "attack_marker_frame": null
+  },
+  "source_boundary_audit": "PASS current complete local243 candidate198actual source regions:0opaque cross-pose/source-edge flags, originally32. This is extraction/boundary success, not whole-actor direction/gait/default approval.",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-0.png",
+      "sha256": "bf8245d2b5f25135823e3a1824b446cebb141f32a36513490c1a2a3bb45ca9cb",
+      "bytes": 330801
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-1.png",
+      "sha256": "543aded25cd38117dc7666b6f13a6bc6cf7521ef3ce2f2a2764044edcf107d57",
+      "bytes": 352154
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-2.png",
+      "sha256": "e2e15b7951aea3387e6c70efc84c249ce85b57e04043d24bb52865b2fe9cb2a2",
+      "bytes": 811206
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-3.png",
+      "sha256": "1c077a54e8123bfc2b07d4564ab839ccf4117878ae14a7c93c629e24c89616e1",
+      "bytes": 390659
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-4.png",
+      "sha256": "9efb55b2ea5c5df815c7a7ec31776ce044b39457095a308666200a8037a447be",
+      "bytes": 347886
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_243/reviewed_parts_r135/NE-idle-5.png",
+      "sha256": "4f573e104460a423d458021f48a38a5ac7c09cd8dc289948a20febe3fdafe819",
+      "bytes": 787509
+    }
+  ],
+  "preserved_original_selected_resource": {
+    "path": "res://assets/actors/eight_direction/legendary_parallel/transform_243/draft001/NE-idle-SpriteFrames.tres",
+    "commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+    "sha256": "f36a0b3ee081407c7a7a766532b79672e1e56ce30085f37879954011b4d3af1b"
+  },
+  "remaining_actor_issue": "Confirmed W RUN selected original repeats leading/support leg half-cycle. New r136 raw candidate did not provide required RIGHT far-foot forward contact and was not selected; keep whole actor inactive. Other directions require final whole-actor play approval after W is repaired.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER"
+}

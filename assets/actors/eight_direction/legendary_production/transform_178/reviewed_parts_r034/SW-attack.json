@@ -1,0 +1,96 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_178/draft001/SW-attack-source-v01.png",
+  "source_sha256": "3ac20463df1ebcab5a6656b096ef9ac7cbada8419bb01d9c7989574b92325a1d",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_178/reviewed_parts_r034/SW-attack-0.png",
+      "anchor": [
+        429.0,
+        463.0
+      ],
+      "scale": 0.304709,
+      "source_body_label": 6,
+      "sha256": "efa39e26625cebdebbc7774f958ec36b437ed4990f0f0968719c11b5a18a1739"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_178/reviewed_parts_r034/SW-attack-1.png",
+      "anchor": [
+        672.5,
+        478.0
+      ],
+      "scale": 0.304709,
+      "source_body_label": 4,
+      "sha256": "31eea29486699a15ad2598e5de8fbd6a77dd51f7048ba2493fb9dd03b9f9ee0e"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_178/reviewed_parts_r034/SW-attack-2.png",
+      "anchor": [
+        1403.0,
+        487.0
+      ],
+      "scale": 0.304709,
+      "source_body_label": 1,
+      "sha256": "d5180b1a99ccd0550b24ce7c439f468c29347e7a56219e73d21838f42c7b9571"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_178/reviewed_parts_r034/SW-attack-3.png",
+      "anchor": [
+        278.0,
+        963.0
+      ],
+      "scale": 0.304709,
+      "source_body_label": 24,
+      "sha256": "6767880cdc1779c1ef80adf4c5049baea32d8eee6e78ef893bb06bfb74d1c4e1"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_178/reviewed_parts_r034/SW-attack-4.png",
+      "anchor": [
+        892.0,
+        918.5
+      ],
+      "scale": 0.304709,
+      "source_body_label": 28,
+      "sha256": "d30e66dc84c7d2fcca8ec932e1bcdd7efcbb11d1af0ec6897528ddcede1bff98"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_178/reviewed_parts_r034/SW-attack-5.png",
+      "anchor": [
+        1255.25,
+        902.5
+      ],
+      "scale": 0.304709,
+      "source_body_label": 27,
+      "sha256": "1d9c55d4ee34447fb8f8817c12a37702072afda17661370aa10ce6109fe244b2"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 770350,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS actual Main Player candidate: all 6 poses, root, direction, gameplay invariants and attack marker when applicable",
+  "production_connected": false,
+  "reviewed_fragment_exceptions": {
+    "14": [
+      616,
+      [
+        1105,
+        783,
+        1140,
+        811
+      ],
+      4
+    ]
+  },
+  "fragment_basis": "Pinned full component is visibly the phase3 upper flame continuation (165), or phase4 cape tip (178); other components retain >32px automatic margin.",
+  "native_import": "PASS isolated CompressedTexture2D, all 6 frames",
+  "runtime_default_connected": false,
+  "status": "PASS_LOCAL_CLIP_ACTOR_HOLD"
+}

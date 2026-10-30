@@ -1,0 +1,120 @@
+{
+  "actor": "transform:338",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_338/draft001/E-attack-source-v01.png",
+  "source_sha256": "ecfa99a6452b5db6652847b059bfdc19d1120dc30b3afccb0f2d1282949c9e2c",
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/E-attack-1.png",
+      "anchor": [
+        329.0,
+        589.5
+      ],
+      "scale": 0.250569,
+      "sha256": "3cb5a33b6f383cd485d9ca9461418d2f86c0fecefae4d8ae3900dfae97232673"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/E-attack-2.png",
+      "anchor": [
+        929.5,
+        582.33
+      ],
+      "scale": 0.250569,
+      "sha256": "fd4db1b0e827a0fea2f7b0e59b2fe6c4768749d410263873e8e5435230b5712f"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/E-attack-3.png",
+      "anchor": [
+        280.0,
+        1184.0
+      ],
+      "scale": 0.250569,
+      "sha256": "f6465a8928b0583d83f015b6d3d02054355fb88d2db25f51454a7b61babbe10c"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/E-attack-4.png",
+      "anchor": [
+        984.25,
+        1176.67
+      ],
+      "scale": 0.250569,
+      "sha256": "02fafcf0039570098ade6b66810120e54230a6555581e52b77f7a5dff5c51cc3"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 703923,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_EXTRACTION_ACTOR_HOLD",
+  "production_connected": false,
+  "whole_actor_gate": "HOLD_REQUIRED_ACTOR_REVIEW",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "reviewed_fragments": {
+    "25": {
+      "area": 618,
+      "bounds": [
+        701,
+        717,
+        725,
+        789
+      ],
+      "owner_source_index": 3
+    },
+    "31": {
+      "area": 326,
+      "bounds": [
+        710,
+        792,
+        742,
+        818
+      ],
+      "owner_source_index": 3
+    }
+  },
+  "fragment_review_basis": "Detached orange trail shards immediately precede the lower-right recovery hand and retain that recovery trail; separate from the lower-left cast projectile.",
+  "selection_basis": "Lossless whole-figure/effect isolation; every original source RGBA pixel retained exactly once, originals preserved. No new image generation.",
+  "registration_basis": "Original actor source anchors/scales/timing retained; death uses standing first phase scale to preserve collapse size.",
+  "final_quality_approved": false,
+  "local_main": "PASS same real Main Player IDLE/ATTACK/IDLE per direction; all6 frames, strike marker3, authored feet, no mirror, gameplay and collision unchanged; candidate only.",
+  "native_import": "PASS2clips12frames using actual CompressedTexture2D AtlasTexture images; isolated writable user data.",
+  "remaining_actor_issue": "SE/SW attack source effects join neighboring figures; no automatic cut permitted. Other direction, hand and RUN continuity review remains before whole actor activation.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_338/draft001/E-attack-source-v01.png",
+      "sha256": "ecfa99a6452b5db6652847b059bfdc19d1120dc30b3afccb0f2d1282949c9e2c",
+      "bytes": 1767250
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_338/draft001/E-idle-source-v01.png",
+      "sha256": "508b70ebe8b81fbda59f25871d4bbaddaafa10cc6a3a7f77be893c1ba08a414a",
+      "bytes": 2381836
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/E-attack-1.png",
+      "sha256": "3cb5a33b6f383cd485d9ca9461418d2f86c0fecefae4d8ae3900dfae97232673",
+      "bytes": 436214
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/E-attack-2.png",
+      "sha256": "fd4db1b0e827a0fea2f7b0e59b2fe6c4768749d410263873e8e5435230b5712f",
+      "bytes": 394132
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/E-attack-3.png",
+      "sha256": "f6465a8928b0583d83f015b6d3d02054355fb88d2db25f51454a7b61babbe10c",
+      "bytes": 457025
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_338/reviewed_parts_r122/E-attack-4.png",
+      "sha256": "02fafcf0039570098ade6b66810120e54230a6555581e52b77f7a5dff5c51cc3",
+      "bytes": 415690
+    }
+  ]
+}

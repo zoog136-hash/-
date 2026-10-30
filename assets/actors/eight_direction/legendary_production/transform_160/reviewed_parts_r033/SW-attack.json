@@ -1,0 +1,152 @@
+{
+  "source": "assets/actors/eight_direction/legendary_production/transform_160/repaired_source_r033/SW-attack-part0.png",
+  "source_sha256": "9c6c6a3d8e01366662c3c747efcd9fe7c8a10600f371dc321491071696b935d0",
+  "proof": {
+    "original_visible_texels": 810780,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "physical_bodies": 6,
+  "reviewed_body_labels": [
+    19,
+    5,
+    1,
+    109,
+    103,
+    104
+  ],
+  "automatic_owner_margin": 32,
+  "reviewed_fragment_exceptions": {
+    "24": {
+      "pixels": 380,
+      "bbox": [
+        169,
+        557,
+        226,
+        571
+      ],
+      "owner": 3
+    },
+    "25": {
+      "pixels": 246,
+      "bbox": [
+        235,
+        560,
+        275,
+        572
+      ],
+      "owner": 3
+    }
+  },
+  "manual_basis": "Two small source-coordinate pinned fire fragments continue the upper edge of phase3 southwest chain arc. Both have one nearest owner (phase3); complete components preserved.",
+  "ownership_basis": "Visually reviewed complete mounted bodies; alpha16 whole connected components preserved, detached authored flame fragments have one whole-component nearest owner with >32px margin; all source RGBA texels owned exactly once. No importer acceptance criteria or production approval flags changed.",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r033/SW-attack-0.png",
+      "sha256": "09e9b2157e2c7027cc193623a0091e1e41ec17db671ca91921142e68f366bb2b",
+      "anchor": [
+        256,
+        520
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 19,
+      "source_bbox": [
+        0,
+        33,
+        632,
+        568
+      ]
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r033/SW-attack-1.png",
+      "sha256": "388d1a51ae335077a9dbe11d12e8e95d24926b2698a77ffaf46e632691460db6",
+      "anchor": [
+        768,
+        520
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 5,
+      "source_bbox": [
+        605,
+        29,
+        1102,
+        585
+      ]
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r033/SW-attack-2.png",
+      "sha256": "9adcff052a22d7ffd2cc5afb284c68b572c2eff194653e3eac48d235f6993de4",
+      "anchor": [
+        1280,
+        520
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 1,
+      "source_bbox": [
+        1071,
+        0,
+        1524,
+        600
+      ]
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r033/SW-attack-3.png",
+      "sha256": "1cfe279471eb8579525d0f14f1a427844336432f38ce43cdf687dbba6a230c8b",
+      "anchor": [
+        256,
+        1000
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 109,
+      "source_bbox": [
+        0,
+        535,
+        612,
+        1024
+      ]
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r033/SW-attack-4.png",
+      "sha256": "9dc7630cee634e769505e5198b665f63d8408d42a45f71f7c4f06eb819f7a8a9",
+      "anchor": [
+        768,
+        1000
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 103,
+      "source_bbox": [
+        551,
+        492,
+        1126,
+        1006
+      ]
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r033/SW-attack-5.png",
+      "sha256": "952b7448654e03cfc83f7bf09593c8def69713a69cc0ac289281bb4c15677334",
+      "anchor": [
+        1280,
+        1000
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 104,
+      "source_bbox": [
+        1082,
+        495,
+        1536,
+        1010
+      ]
+    }
+  ],
+  "production_connected": false,
+  "local_playback": "PASS actual Main default catalog: 33 tracks / 198 poses, no candidate injection",
+  "native_import": "PASS isolated 33 tracks / 198 CompressedTexture2D frames",
+  "runtime_default_connected": true
+}
