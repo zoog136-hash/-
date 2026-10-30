@@ -94,6 +94,7 @@ static func load_field(mid: String) -> RemakePlayableField:
 	if not field.apply_local_door_states(door_states.get(mid,{})):field.close();return null
 	var npc_holds:Array=preload("res://scripts/npc/source_npc_catalog.gd").append_to_field(field)
 	if not npc_holds.is_empty():field.close();return null
+	preload("res://scripts/maps/source_map_spawns.gd").append_to_field(field)
 	seen[mid]=identity(mid)
 	return field
 

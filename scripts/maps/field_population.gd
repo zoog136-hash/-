@@ -53,21 +53,31 @@ func configure(controller: Node, value: PlayableField) -> void:
 	set_process(field != null)
 	if field == null: return
 	records.clear()
+	var reviewed:Dictionary={}
 	for record: Dictionary in world.monster_db:
 		if not bool(record.get("catalog_only", false)): records[str(record.name)] = record
+		elif preload("res://scripts/monsters/monster_catalog.gd").reviewed_record_allowed(record):reviewed[str(record.get("sourceId",""))]=record
+	# Catalog-only identities opt in through an exact verified source region.
 	for region: Dictionary in field.data["monster_spawn"]:
+		if region.has("source_game_id"):
+			var source:Dictionary=reviewed.get(str(region.source_game_id),{})
+			if source.is_empty() or str(source.get("source_npc_id",""))!=str(region.source_npc_id) or region.monster_types!=[str(source.name)]:continue
+			records[str(source.name)]=source
 		for index: int in range(int(region["max_count"])):
 			var slot: Dictionary = {"region":region,"index":index,"slot_id":slots.size(),"monster":null,"remaining":0.0}
 			slots.append(slot)
 			if _zone_active(region):
 				# Boss state is restored immediately. Normal PNG populations fill in
 				# bounded batches while retaining their authored slot and RNG order.
-				if field is NativePngField and str(region.get("mode","normal"))!="boss":
+				if (field is NativePngField or region.has("source_game_id")) and str(region.get("mode","normal"))!="boss":
 					pending_initial_spawns.append(slot)
 					pending_spawn_ids[int(slot.slot_id)]=true
 				else:_spawn_slot(slot)
 
 func _zone_active(region: Dictionary) -> bool:
+	if region.has("source_game_id"):
+		var r:Array=region.rect
+		return Rect2(r[0],r[1],r[2],r[3]).grow(1600.0).has_point(world.player.global_position)
 	# One Escaros PNG includes five former fields (165 slots). Creating every
 	# distant normal monster on entry freezes the map; activate nearby habitats
 	# while keeping every slot, boss identity and respawn timer intact.
@@ -91,6 +101,7 @@ func _spawn_point(region: Dictionary) -> Vector2:
 	for attempt: int in range(attempts):
 		var p: Vector2 = field.sample_spawn(str(region.id),world.rng)
 		if not p.is_finite(): return Vector2.INF
+		if region.has("source_game_id") and not preload("res://scripts/maps/source_map_spawns.gd").floor_allowed(field,p):continue
 		if radius > 0. and p.distance_to(center) > radius: continue
 		var clear: bool = true
 		for slot: Dictionary in slots:
@@ -132,6 +143,9 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if record.is_empty():
 		push_error("Unknown field monster: "+name_value)
 		return
+	if region.has("source_game_id"):
+		record=record.duplicate(true)
+		record["ai"]={"aggressive":str(record.get("source_raw_fields",{}).get("agro","0"))=="1"}
 	var variant: Dictionary = region.get("variants",{}).get(name_value,{})
 	if not variant.is_empty():
 		record = record.duplicate(true)
@@ -186,6 +200,8 @@ func _spawn_slot(slot: Dictionary) -> void:
 	monster.set_meta("field_slot",int(slot.slot_id))
 	monster.set_meta("population_generation",generation)
 	monster.set_meta("summoned",false)
+	monster.set_meta("source_game_id",str(region.get("source_game_id","")))
+	monster.set_meta("source_spawn_key",str(region.get("source_key","")))
 	slot.monster = monster
 	slot.remaining = 0.
 	if boss:
@@ -223,6 +239,9 @@ func release(monster: TwilightMonster) -> void:
 	var slot: Dictionary = slots[id]
 	slot.monster = null
 	slot.remaining = 0.0 if str(slot.region.get("mode","normal"))=="boss" else float(slot.region.respawn_time)
+	if slot.region.has("source_respawn_seconds"):
+		var delay:Array=slot.region.source_respawn_seconds
+		slot.remaining=world.rng.randf_range(float(delay[0]),float(delay[1]))
 	if str(slot.region.get("mode","normal"))=="boss":
 		boss_director.died(str(field.data.map_id),slot.region)
 		_clear_summons(monster.get_instance_id())
@@ -357,6 +376,10 @@ func _process(delta: float) -> void:
 		if not is_instance_valid(monster):
 			slot.remaining = maxf(0.,float(slot.remaining)-delta)
 			if float(slot.remaining)<=0. and (refresh or str(slot.region.get("mode",""))=="boss") and _zone_active(slot.region):
+				if slot.region.has("source_game_id"):
+					pending_initial_spawns.append(slot)
+					pending_spawn_ids[int(slot.slot_id)]=true
+					continue
 				_spawn_slot(slot)
 				# Full/blocked regions can fail all 64–160 candidate probes. Do not
 				# repeat that costly search at every 0.4s wake until a later retry.
