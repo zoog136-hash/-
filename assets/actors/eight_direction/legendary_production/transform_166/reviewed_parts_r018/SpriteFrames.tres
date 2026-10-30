@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_166/reviewed_parts_r018/N-attack.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="p0"]
+atlas = ExtResource("1")
+region = Rect2(80,80,542,546)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p1"]
+atlas = ExtResource("1")
+region = Rect2(1776,80,756,694)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p2"]
+atlas = ExtResource("1")
+region = Rect2(80,1776,955,1536)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p3"]
+atlas = ExtResource("1")
+region = Rect2(1776,1776,1010,1536)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p4"]
+atlas = ExtResource("1")
+region = Rect2(80,3472,667,510)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="p5"]
+atlas = ExtResource("1")
+region = Rect2(1776,3472,515,554)
+filter_clip = true
+
+[resource]
+animations = [{"frames":[{"duration":1.0,"texture":SubResource("p0")},{"duration":1.0,"texture":SubResource("p1")},{"duration":1.0,"texture":SubResource("p2")},{"duration":1.0,"texture":SubResource("p3")},{"duration":1.0,"texture":SubResource("p4")},{"duration":1.0,"texture":SubResource("p5")}],"loop":false,"name":&"attack_6","speed":14.285714286}]
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_CANONICAL_HAND_ALIGNMENT"
+metadata/twilight_reviewed_frame_registration = {"attack_6":{"semantic_review":"PASS","frames":[{"anchor":Vector2(257,474),"scale":Vector2(0.25,0.25),"target":Vector2(0,0)},{"anchor":Vector2(364,552),"scale":Vector2(0.25882352941176473,0.25882352941176473),"target":Vector2(0,0)},{"anchor":Vector2(577,1433),"scale":Vector2(0.10805500982318271,0.10805500982318271),"target":Vector2(0,0)},{"anchor":Vector2(527,1472),"scale":Vector2(0.09649122807017543,0.09649122807017543),"target":Vector2(0,0)},{"anchor":Vector2(351,495),"scale":Vector2(0.26763990267639903,0.26763990267639903),"target":Vector2(0,0)},{"anchor":Vector2(263,507),"scale":Vector2(0.24175824175824176,0.24175824175824176),"target":Vector2(0,0)}]}}

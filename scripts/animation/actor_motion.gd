@@ -3,6 +3,7 @@ class_name TwilightActorMotion
 
 const PROFILE = preload("res://scripts/animation/animation_profile.gd")
 const TRANSFORM_MOVEMENT_SCOPE = preload("res://scripts/animation/transformation_movement_scope.gd")
+const FRAME_REGISTRATION = preload("res://scripts/animation/reviewed_frame_registration.gd")
 const CLASS_DIRECTIONS = ["walk_down", "walk_up", "walk_left", "walk_right"]
 const SHEET_DIRECTIONS = ["dir_down", "dir_up", "dir_left", "dir_right"]
 signal strike(sequence: int)
@@ -55,8 +56,10 @@ var _track_source: SpriteFrames = null
 var _resolved_profile: PROFILE = null
 var _resolved_state: String = ""
 var _resolved_facing: int = -1
+var _resolved_facing4: int = -1
 var _resolved_key: String = ""
 var _resolved_role: String = "legacy"
+var _resolved_frame_index: int = 0
 var _resolved_directional: bool = false
 var _legacy_frames: bool = false
 
@@ -134,6 +137,17 @@ func _clear_native_hit_presentation() -> void:
 func _native_hit_presenting() -> bool:
 	return _native_hit_clock > 0.0 and _native_hit_profile == profile and _native_hit_source == _track_source
 
+static func _has_authored_hit_presentation(frames: SpriteFrames, key: String) -> bool:
+	if bool(frames.get_meta("twilight_native_locomotion_staging", false)): return true
+	# Reviewed production sets retain source-timed hit presentation after their
+	# staging tag is removed. Registration does not activate an optional set.
+	var registrations: Variant = frames.get_meta(FRAME_REGISTRATION.META, {})
+	if not registrations is Dictionary: return false
+	var track: Variant = registrations.get(key)
+	if not track is Dictionary or track.get("semantic_review") != "PASS": return false
+	var poses: Variant = track.get("frames")
+	return poses is Array and poses.size() == frames.get_frame_count(key)
+
 func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	if dead: return
 	# Repeated hits replace a bounded envelope, never accumulate displacement.
@@ -145,9 +159,9 @@ func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	visual_hold = 0.028 if critical and not reduced_motion else 0.0
 	_clear_native_hit_presentation()
 	# Form setup resolves this cache before damage can request an authored hit.
-	if _track_source != null and _resolved_profile == profile and bool(_track_source.get_meta("twilight_native_locomotion_staging", false)):
+	if _track_source != null and _resolved_profile == profile:
 		var key: String = "hit_" + str(facing8)
-		if _track_source.has_animation(key) and _track_source.get_frame_count(key) > 0:
+		if _track_source.has_animation(key) and _track_source.get_frame_count(key) > 0 and _has_authored_hit_presentation(_track_source, key):
 			_native_hit_duration = maxf(hit_duration, presentation_seconds(_track_source, key, hit_duration))
 			_native_hit_clock = _native_hit_duration
 			_native_hit_profile = profile
@@ -231,6 +245,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 		_set_state("turn" if turn_clock > 0.0 else "idle", delta)
 
 func apply(sprite: Node2D, base_scale: Vector2) -> void:
+	FRAME_REGISTRATION.restore_offset(sprite)
 	if not is_instance_valid(sprite): return
 	sprite.self_modulate = profile.color_tint
 	if impact_pose_pending and not dead:
@@ -339,6 +354,7 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 		var pose: Texture2D = (sprite as Sprite2D).texture if sprite is Sprite2D else source.get_frame_texture((sprite as AnimatedSprite2D).animation, (sprite as AnimatedSprite2D).frame)
 		if pose != null and reference_canvas.x > 0. and reference_canvas.y > 0. and pose.get_width() > 0 and pose.get_height() > 0:
 			sprite.scale *= reference_canvas / pose.get_size()
+	FRAME_REGISTRATION.apply(sprite, source, _resolved_key, _resolved_frame_index, base_scale)
 	impact_pose_pending = false
 
 func _available_death_key(frames: SpriteFrames, requested: int) -> String:
@@ -360,10 +376,11 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 		_tracks.clear()
 		_resolved_state = ""
 		_legacy_frames = profile.frames_path.is_empty() and profile.animation_names.is_empty() and bool(frames.get_meta("twilight_generated_sheet", false))
-	if _resolved_profile == profile and _resolved_state == state and _resolved_facing == facing8: return
+	if _resolved_profile == profile and _resolved_state == state and _resolved_facing == facing8 and _resolved_facing4 == facing4: return
 	_resolved_profile = profile
 	_resolved_state = state
 	_resolved_facing = facing8
+	_resolved_facing4 = facing4
 	_resolved_key = ""
 	_resolved_role = "legacy"
 	_resolved_directional = false
@@ -512,6 +529,7 @@ func apply_frames(sprite: Node2D) -> void:
 		var progress: float = state_clock * float(track.fps) / ends[-1]
 		frame_value = _weighted_frame(track, fposmod(progress, 1.0) if track.loop else minf(progress, 1.0))
 	var mirrored: bool = profile.layout == "still" and not _resolved_directional and direction.x < -0.1
+	_resolved_frame_index = frame_value
 	if profile.layout == "class5" and presenting_attack and not _resolved_directional: mirrored = facing4 == 2
 	if sprite is AnimatedSprite2D:
 		var animated: AnimatedSprite2D = sprite as AnimatedSprite2D

@@ -1,0 +1,136 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_160/draft001/SE-attack-source-v01.png",
+  "source_sha256": "e769581b46bf55132e3a40c9354445b1d5ffad36927cd4677d20573935ef01e9",
+  "proof": {
+    "original_visible_texels": 850770,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "physical_bodies": 4,
+  "reviewed_body_labels": [
+    1,
+    4,
+    30,
+    31
+  ],
+  "automatic_owner_margin": 32,
+  "reviewed_fragment_exceptions": {
+    "15": {
+      "pixels": 384,
+      "bbox": [
+        785,
+        697,
+        806,
+        722
+      ],
+      "owner": 2
+    },
+    "18": {
+      "pixels": 214,
+      "bbox": [
+        793,
+        731,
+        808,
+        751
+      ],
+      "owner": 2
+    },
+    "19": {
+      "pixels": 424,
+      "bbox": [
+        802,
+        762,
+        822,
+        794
+      ],
+      "owner": 2
+    },
+    "23": {
+      "pixels": 162,
+      "bbox": [
+        710,
+        885,
+        724,
+        900
+      ],
+      "owner": 2
+    }
+  },
+  "manual_basis": "Source-coordinate visual review: four complete flame fragments continue the phase3 extended chain tip and its lower trail, not the adjacent recovery wrist/chain. Whole components retained, no repaint or division.",
+  "ownership_basis": "Visually reviewed complete mounted bodies; alpha16 whole connected components preserved, detached authored flame fragments have one whole-component nearest owner with >32px margin; all source RGBA texels owned exactly once. No importer acceptance criteria or production approval flags changed.",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r030/SE-attack-1.png",
+      "sha256": "baf039c482f751715817d22417cbcd79cdc1b8dbc314998c93bcbcce4ff10345",
+      "anchor": [
+        313,
+        600
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 1,
+      "source_bbox": [
+        0,
+        0,
+        657,
+        664
+      ]
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r030/SE-attack-2.png",
+      "sha256": "636bbf42feadd8d059c6a4ac4ff2a27e32c51cdd77eb09caaeeb8961b057e976",
+      "anchor": [
+        940,
+        600
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 4,
+      "source_bbox": [
+        636,
+        9,
+        1251,
+        683
+      ]
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r030/SE-attack-3.png",
+      "sha256": "9ab1b09cc6789d85f89c2fed4b3ac1730979e2ad90336ef9f70dca139369a746",
+      "anchor": [
+        313,
+        1220
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 30,
+      "source_bbox": [
+        0,
+        596,
+        850,
+        1254
+      ]
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r030/SE-attack-4.png",
+      "sha256": "f8e524a9fe4da770c2ad292da56bf2a6d961dd10c41b370a6b3e5ea5648560f3",
+      "anchor": [
+        940,
+        1220
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 31,
+      "source_bbox": [
+        628,
+        642,
+        1254,
+        1254
+      ]
+    }
+  ],
+  "production_connected": false,
+  "local_playback": "PASS actual Main default catalog: 33 tracks / 198 poses, no candidate injection",
+  "native_import": "PASS isolated 33 tracks / 198 CompressedTexture2D frames",
+  "runtime_default_connected": true
+}

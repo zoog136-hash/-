@@ -1,0 +1,118 @@
+{
+  "actor": "transform:282",
+  "source": "res://assets/actors/eight_direction/legendary_production/transform_282/repaired_source_r127/N-hit-2-4-source.png",
+  "source_sha256": "01df762f4befb65813d6e054e36b7c42405e0021af9356c21a7712f4c14f0a75",
+  "original_source": "res://assets/actors/eight_direction/legendary_parallel/transform_282/draft001/N-hit-source-v01.png",
+  "original_source_sha256": "162cb19e0fe259a3c413b28f524daf2ddd436b668a16ceaf3ebcfe0e0c9864f0",
+  "original_source_preserved": true,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_282/reviewed_parts_r127/N-hit-1.png",
+      "anchor": [
+        388.0,
+        576.67
+      ],
+      "scale": 0.245171,
+      "sha256": "c2e62547144d5fefb9e4ab8b07b7ffdbb0b892c62e997f1f2ed3bc6c4823b960"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_282/reviewed_parts_r127/N-hit-2.png",
+      "anchor": [
+        490,
+        735
+      ],
+      "scale": 0.174,
+      "sha256": "71ed65ca160cb5a295afa028481ce4974eccea9547b130ea8ca26a45cf3c3507"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_282/reviewed_parts_r127/N-hit-3.png",
+      "anchor": [
+        331.75,
+        1142.0
+      ],
+      "scale": 0.245171,
+      "sha256": "c57881476b26ba29157a0936b79e3f0c7fe8947ced8840d5ba62fef224adfda0"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_282/reviewed_parts_r127/N-hit-4.png",
+      "anchor": [
+        1525,
+        755
+      ],
+      "scale": 0.174,
+      "sha256": "93346f186738c8504841197b94f2048dd85b2255e21e5f826230622d8c4c7447"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_282/repaired_source_r127/N-idle-5-source.png",
+      "anchor": [
+        805,
+        936
+      ],
+      "scale": 0.13,
+      "sha256": "7c6465393aa76e89de64e0247ef06146641de32d4673c15237e37316a179f24e"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 589757,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_E_ATTACK_SOURCE_OVERLAP_AND_REQUIRED_RUN_DIRECTION_FOOT_CONTINUITY",
+  "replacement_basis": "N HIT phases2/4 had weapon glow cut at actual right source edge; separate ImageGen revision retains each rear pose, right-hand polearm and distinct recoil/settle. Normal HIT1/3 isolated losslessly without painting; original frame0 guard unchanged. Phase5 shares repaired N IDLE5 only, preserving source identity/alias and six-phase timing.",
+  "local_main": "PASS real Main Player N IDLE/ATTACK/IDLE/HIT/IDLE30captures18unique source poses, original marker3/clock, foot registration, unchanged inventory/health/collision; native-only approval not inferred. Candidate profile injection1, default binding0.",
+  "native_import": "PASS3clips18 actual CompressedTexture2D AtlasTexture frames. After direction review, unchanged production registration helper explicitly rejects N ATTACK HOLD without changing Sprite scale/offset.",
+  "source_boundary_repair": "N selected resource regions now0 opaque source-edge/cross-pose flags. Combined actor198regions flags17->6; remaining six E ATTACK source regions genuinely join neighbors.",
+  "remaining_actor_issue": "N ATTACK original impact phase3 points east and is semantic HOLD; E ATTACK source figures/effects join; RUN hand/direction/foot alternation review still required. No whole actor/default approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_282/draft001/N-hit-source-v01.png",
+      "sha256": "162cb19e0fe259a3c413b28f524daf2ddd436b668a16ceaf3ebcfe0e0c9864f0",
+      "bytes": 1575224
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_282/draft001/N-idle-source-v01.png",
+      "sha256": "9033fc5f50d48f2e1b98dec7f61d5d1094b52cb74784dc1c536ad761cf5c2d3e",
+      "bytes": 2321061
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_282/repaired_source_r127/N-hit-2-4-source.png",
+      "sha256": "01df762f4befb65813d6e054e36b7c42405e0021af9356c21a7712f4c14f0a75",
+      "bytes": 1451478
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_282/repaired_source_r127/N-idle-5-source.png",
+      "sha256": "7c6465393aa76e89de64e0247ef06146641de32d4673c15237e37316a179f24e",
+      "bytes": 1684465
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_282/reviewed_parts_r127/N-hit-1.png",
+      "sha256": "c2e62547144d5fefb9e4ab8b07b7ffdbb0b892c62e997f1f2ed3bc6c4823b960",
+      "bytes": 413907
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_282/reviewed_parts_r127/N-hit-2.png",
+      "sha256": "71ed65ca160cb5a295afa028481ce4974eccea9547b130ea8ca26a45cf3c3507",
+      "bytes": 724322
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_282/reviewed_parts_r127/N-hit-3.png",
+      "sha256": "c57881476b26ba29157a0936b79e3f0c7fe8947ced8840d5ba62fef224adfda0",
+      "bytes": 338149
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_282/reviewed_parts_r127/N-hit-4.png",
+      "sha256": "93346f186738c8504841197b94f2048dd85b2255e21e5f826230622d8c4c7447",
+      "bytes": 695855
+    }
+  ]
+}

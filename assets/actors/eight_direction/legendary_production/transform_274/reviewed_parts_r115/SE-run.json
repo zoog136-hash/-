@@ -1,0 +1,122 @@
+{
+  "actor": "transform:274",
+  "direction": "SE",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "selected_frames": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/SE-run-SpriteFrames.tres",
+  "selected_frames_sha256": "a38fa9e16ab933d2582ff814388276c0872d5eee61fc69db2fbe605b3918c7fc",
+  "source_files": [
+    [
+      "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/SE-run-source-v01.png",
+      "9999117247b3bf6ebf7a1e49915f5d5d1a6b48f52011ac04a3da4b1c4ea10ca0"
+    ]
+  ],
+  "quality_status": "PASS_C_GROUND_PROPOSAL_ACTOR_HOLD",
+  "production_connected": false,
+  "source_pixels_changed": false,
+  "frame_order_timing_loop_unchanged": true,
+  "contact_plane_basis": "Per source row C-ground averages contact/passing source phases0-1 or3-4. All three phases share that projected plane rather than following lifted soles; original torso motion retained.",
+  "row_ground_y": [
+    490.5,
+    487.0
+  ],
+  "registration": [
+    {
+      "phase": 0,
+      "old_anchor": [
+        347.0,
+        493.0
+      ],
+      "new_anchor": [
+        347.0,
+        490.5
+      ],
+      "delta_world_y": 0.6539825
+    },
+    {
+      "phase": 1,
+      "old_anchor": [
+        317.0,
+        488.0
+      ],
+      "new_anchor": [
+        317.0,
+        490.5
+      ],
+      "delta_world_y": -0.6539825
+    },
+    {
+      "phase": 2,
+      "old_anchor": [
+        319.5,
+        441.5
+      ],
+      "new_anchor": [
+        319.5,
+        490.5
+      ],
+      "delta_world_y": -12.818057000000001
+    },
+    {
+      "phase": 3,
+      "old_anchor": [
+        384.0,
+        488.0
+      ],
+      "new_anchor": [
+        384.0,
+        487.0
+      ],
+      "delta_world_y": 0.261593
+    },
+    {
+      "phase": 4,
+      "old_anchor": [
+        353.0,
+        486.0
+      ],
+      "new_anchor": [
+        353.0,
+        487.0
+      ],
+      "delta_world_y": -0.261593
+    },
+    {
+      "phase": 5,
+      "old_anchor": [
+        453.0,
+        484.0
+      ],
+      "new_anchor": [
+        453.0,
+        487.0
+      ],
+      "delta_world_y": -0.7847790000000001
+    }
+  ],
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_N_RUN_LATE_HALF_WEAPON_ARMOR_CONTINUITY",
+  "remaining_actor_issue": {
+    "animation": "run_6",
+    "phases": [
+      3,
+      4,
+      5
+    ],
+    "status": "HOLD_CONTINUITY_REVIEW",
+    "source": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/N-run-source-v01.png",
+    "reason": "Late-half weapon/shoulder-armour presentation reverses relative to early half; preserve the source and require weapon/armour continuity review before selecting this actor. Do not resolve by a blind mirror or repeating the failed half-strip generation approach.",
+    "source_sha256": "1a3a4a7b8af9a891c2c5780333bf004881cbd358c014211d245f6b7a276a0f5e"
+  },
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_274/draft001/SE-run-source-v01.png",
+      "sha256": "9999117247b3bf6ebf7a1e49915f5d5d1a6b48f52011ac04a3da4b1c4ea10ca0",
+      "bytes": 2326996
+    }
+  ],
+  "native_import": "PASS: native CompressedTexture2D AtlasTexture decode; whole33 resource imported, then changed N/SW repaired clips separately checked at final source bytes. Import is not final art approval.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "coordinate_scope": "Original pixels, scale, frame order, speed and loop retained; C-ground proposal follows the proven contact-plane rule. Whole actor remains held. The N RUN runtime semantic gate is HOLD, so its proposal is not enabled.",
+  "local_player": "PASS: candidate profile injection, 32 stationary/moving HIT cases at30/60fps in all8 directions and one real Player E joystick case; not Android/device or final default connection."
+}

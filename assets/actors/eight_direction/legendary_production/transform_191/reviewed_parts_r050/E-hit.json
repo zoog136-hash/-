@@ -1,0 +1,91 @@
+{
+  "source": "assets/actors/eight_direction/legendary_production/transform_191/repaired_source_r050/E-hit.png",
+  "source_sha256": "50c764a09e9321b6f369aaeacca1125616565b04c8252a871e85479e16f388d8",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-idle-0.png",
+      "anchor": [
+        335,
+        505
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 1,
+      "sha256": "20209846b30ecdfff7efb2c7aec2a92243acb04aee4f1abdf3c10f8fe0dc50cd"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r050/E-hit-1.png",
+      "anchor": [
+        410,
+        535
+      ],
+      "scale": 0.22,
+      "source_body_label": 1,
+      "sha256": "45a4be8769ea8e810b436dcec5d5f9894f3423a136222835e1e34b8bec06f768"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/repaired_source_r050/E-hit-2.png",
+      "anchor": [
+        865,
+        920
+      ],
+      "scale": 0.11,
+      "sha256": "330acda762e4c4306b9e97349d0bd26511d09d67b53180e795f49a3ed87256ac"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r050/E-hit-3.png",
+      "anchor": [
+        390,
+        1175
+      ],
+      "scale": 0.22,
+      "source_body_label": 31,
+      "sha256": "bec3009edf09b57e70ead920579a3f60c7b5a23348cf30cab99740e032a7fe14"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r050/E-hit-4.png",
+      "anchor": [
+        975,
+        1180
+      ],
+      "scale": 0.22,
+      "source_body_label": 29,
+      "sha256": "70071e8e0b9db839df1e1ad6c0d93eca0ee2e290cb5abdd911a0f9991b6537dd"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r048/E-idle-5.png",
+      "anchor": [
+        1359,
+        1008
+      ],
+      "scale": 0.23404255319148937,
+      "source_body_label": 78,
+      "sha256": "751ef981cf4044a01c488ed5838dc09f3876a09e7f1066ae694061f6bee3c09f"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 676675,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS: actual Main candidate injection, six poses, foot anchors and gameplay state; no mirror; no spurious attack marker",
+  "production_connected": false,
+  "unselected_source_phase": {
+    "phase": 2,
+    "reason": "Gold orb finial clipped at source right boundary; separate repair required; original retained"
+  },
+  "fixed_defects": [
+    "Right-hand blue orb staff replaces sword throughout flinch",
+    "Original phase2 clipped finial replaced with complete standalone pose",
+    "Entry and recovery guards reuse corrected E idle"
+  ],
+  "native_import": "PASS: isolated Godot 4.7.2 import, six CompressedTexture2D AtlasTexture frames",
+  "whole_actor_gate": "HOLD: remaining directional weapon identity and locomotion defects",
+  "android_device_test": "NOT_RUN"
+}

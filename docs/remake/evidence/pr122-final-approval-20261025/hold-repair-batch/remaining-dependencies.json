@@ -1,0 +1,65 @@
+{
+  "mythic": {
+    "requested_clips": 528,
+    "draft_sources": 525,
+    "selected_clips": 301,
+    "selected_visual_exceptions_before": 15,
+    "specific_visual_exceptions_fixed_cumulative": 15,
+    "geometry_HOLD_unselected": 224,
+    "missing_authored": [
+      [
+        "transform:367",
+        "SE",
+        "hit"
+      ],
+      [
+        "transform:399",
+        "S",
+        "death"
+      ],
+      [
+        "transform:411",
+        "NW",
+        "hit"
+      ]
+    ],
+    "unbound_selected_idle": {
+      "actor": "transform:399",
+      "reason": "No authored locomotion sizing reference"
+    },
+    "overlap_note": "Unbound idle is already one of 301 selected, not an additional missing request"
+  },
+  "legendary": {
+    "required": 1320,
+    "source_branch_selected": 1319,
+    "separate_PR158_supplement": 1,
+    "complete_anatomical_registered_actors": 1,
+    "actors_missing_complete_registration": 39,
+    "QA_Main_registered_clips": 33,
+    "timing_only_NW_hit_clips": 40,
+    "new_default_connections": 0,
+    "blockers": [
+      "176 guard/authored model continuity HOLD",
+      "39 actors lack full semantic foot/scale registration",
+      "274 NE attack supplement lacks Player registration/profile"
+    ]
+  },
+  "unpublished_bosses": {
+    "requested": 429,
+    "selected": 392,
+    "selected_five_pose_defects_remaining": 0,
+    "missing_valid_selected_sources": 37
+  },
+  "map_gate": {
+    "state": "Historical environment/arena failure unresolved",
+    "missing_evidence": [
+      "failed environment field implementation",
+      "pack index SHA/availability",
+      "candidate cell rejection counts"
+    ],
+    "candidate_animation_evaluation_at_failure": "NOT_EVALUATED"
+  },
+  "device": "NOT_TESTED",
+  "final_approval_added": 0,
+  "CI": "EXCLUDED_BY_USER"
+}

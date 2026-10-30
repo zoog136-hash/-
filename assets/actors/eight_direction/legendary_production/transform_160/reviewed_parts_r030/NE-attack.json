@@ -1,0 +1,126 @@
+{
+  "source": "assets/actors/eight_direction/legendary_parallel/transform_160/draft001/NE-attack-source-v01.png",
+  "source_sha256": "1426b9189e1a5b4581d7267321e463aaa2190662bffa7b432770a1dff8a8f1e0",
+  "proof": {
+    "original_visible_texels": 840110,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "physical_bodies": 4,
+  "reviewed_body_labels": [
+    1,
+    2,
+    65,
+    64
+  ],
+  "automatic_owner_margin": 32,
+  "reviewed_fragment_exceptions": {
+    "38": {
+      "pixels": 290,
+      "bbox": [
+        674,
+        807,
+        703,
+        826
+      ],
+      "owner": 2
+    },
+    "42": {
+      "pixels": 98,
+      "bbox": [
+        616,
+        874,
+        631,
+        885
+      ],
+      "owner": 2
+    },
+    "43": {
+      "pixels": 498,
+      "bbox": [
+        556,
+        884,
+        601,
+        922
+      ],
+      "owner": 2
+    }
+  },
+  "manual_basis": "Source-coordinate visual review: E and NE fragments continue the phase3 chain-impact flame trail, including fragments nearest the adjacent recovery cape; S fragment is below the phase4 recovery chain tip. Whole connected components assigned, never divided or repainted.",
+  "ownership_basis": "Visually reviewed complete mounted bodies; alpha16 whole connected components preserved, detached authored flame fragments have one whole-component nearest owner with >32px margin; all source RGBA texels owned exactly once. No importer acceptance criteria or production approval flags changed.",
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r030/NE-attack-1.png",
+      "sha256": "a7a3c602ecd7f3b34febb5405397608b2e8ccec8b2eab8c9c23d645de17d46ae",
+      "anchor": [
+        313,
+        600
+      ],
+      "scale": 0.22,
+      "source_body_label": 1,
+      "source_bbox": [
+        0,
+        11,
+        653,
+        621
+      ]
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r030/NE-attack-2.png",
+      "sha256": "c1b7118105118e08de16685446763ecf70f7fefa5d97ca9a4e0bfff36b82373d",
+      "anchor": [
+        940,
+        600
+      ],
+      "scale": 0.22,
+      "source_body_label": 2,
+      "source_bbox": [
+        590,
+        0,
+        1251,
+        651
+      ]
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r030/NE-attack-3.png",
+      "sha256": "81a028a775f29f126c91f8311683c8536f7f9f7444d4540ab5b057988b340473",
+      "anchor": [
+        313,
+        1210
+      ],
+      "scale": 0.22,
+      "source_body_label": 65,
+      "source_bbox": [
+        0,
+        617,
+        820,
+        1228
+      ]
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_160/reviewed_parts_r030/NE-attack-4.png",
+      "sha256": "4bc537533654d9feb6650bd9f83a388dc92d5d7404a3e9ca320b9c71add506ef",
+      "anchor": [
+        940,
+        1210
+      ],
+      "scale": 0.22,
+      "source_body_label": 64,
+      "source_bbox": [
+        611,
+        634,
+        1253,
+        1254
+      ]
+    }
+  ],
+  "production_connected": false,
+  "local_playback": "PASS actual Main default catalog: 33 tracks / 198 poses, no candidate injection",
+  "native_import": "PASS isolated 33 tracks / 198 CompressedTexture2D frames",
+  "runtime_default_connected": true
+}

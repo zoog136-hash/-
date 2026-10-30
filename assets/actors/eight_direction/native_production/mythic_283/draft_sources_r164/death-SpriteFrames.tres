@@ -1,0 +1,44 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/native_production/mythic_283/draft_sources_r164/death-3f97f8fe3fc5.png" id="death"]
+
+[sub_resource type="AtlasTexture" id="death_S_0"]
+atlas = ExtResource("death")
+region = Rect2(0,374,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_1"]
+atlas = ExtResource("death")
+region = Rect2(181,374,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_2"]
+atlas = ExtResource("death")
+region = Rect2(362,374,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_3"]
+atlas = ExtResource("death")
+region = Rect2(543,374,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_4"]
+atlas = ExtResource("death")
+region = Rect2(724,374,181,180)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="death_S_5"]
+atlas = ExtResource("death")
+region = Rect2(905,374,181,180)
+filter_clip = true
+
+[resource]
+animations = [
+{"frames":[{"duration":1.0,"texture":SubResource("death_S_0")},{"duration":1.0,"texture":SubResource("death_S_1")},{"duration":1.0,"texture":SubResource("death_S_2")},{"duration":1.0,"texture":SubResource("death_S_3")},{"duration":1.0,"texture":SubResource("death_S_4")},{"duration":1.0,"texture":SubResource("death_S_5")}],"loop":false,"name":&"death_2","speed":13.0}
+]
+metadata/twilight_reviewed_frame_registration = {"death_2":{"semantic_review":"PASS","frames":[{"anchor":Vector2(90.5,176.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,176.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,176.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,176.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,176.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)},{"anchor":Vector2(90.5,176.0),"scale":Vector2(0.75,0.75),"target":Vector2(0,0)}]}}
+metadata/twilight_clip_quality_holds = {}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "DRAFT_SOURCE_ACTUAL_BODY_ROW_METADATA;NOT_FORMAL_ART_APPROVAL"
+metadata/twilight_final_quality_approved = false

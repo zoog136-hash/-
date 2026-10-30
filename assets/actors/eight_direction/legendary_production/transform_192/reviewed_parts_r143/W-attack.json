@@ -1,0 +1,179 @@
+{
+  "actor": "transform:192",
+  "source": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/W-attack-source-v01.png",
+  "source_sha256": "7a98b41f60867fc1aca939a87b05a7846ff660d98c2c3af327a6a3b5b96f0c49",
+  "source_commit": "c23aff8b8fa34b822e6d6012cf272f4a804f4b71",
+  "original_source_preserved": true,
+  "source_pixels_resampled": false,
+  "poses": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-1.png",
+      "anchor": [
+        400.0,
+        612.5
+      ],
+      "scale": 0.226454,
+      "sha256": "8b371732a5ecc256e20a9bb2249788797a9a7e1f575b9342a5699b5ec979b335"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-2.png",
+      "anchor": [
+        1005.5,
+        610.5
+      ],
+      "scale": 0.226454,
+      "sha256": "fafb72774a9f8527ae47dd8c31fd751ede8346dc4d7a6e93c21046daba56ce57"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-3.png",
+      "anchor": [
+        434.0,
+        1148.0
+      ],
+      "scale": 0.226454,
+      "sha256": "195413f58383eb5caa54754f1b95798e2b0e1af6b925291f44c4771048866732"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/repaired_source_r143/W-attack-4-source.png",
+      "anchor": [
+        650,
+        1290
+      ],
+      "scale": 0.0981,
+      "sha256": "6673bbbd75207752505b21570b5d3df0748db5e24e65317ff77f03a36b837a94"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 576300,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "quality_status": "PASS_LOCAL_CLIP_ACTOR_HOLD",
+  "production_connected": false,
+  "runtime_default_connected": false,
+  "final_quality_approved": false,
+  "whole_actor_gate": "HOLD_NW_CAMERA_AND_OTHER_REQUIRED_DIRECTIONAL_REVIEW",
+  "reviewed_fragments": {},
+  "fragment_review_basis": "Reviewed source context: S recovery4 owns the detached red curved sword sparks to its right; SW recovery4 owns the leftward blade-tip sparks between recovery sword and impact3 cape, not the unrelated impact; death4 owns the ember near its grounded blade. No ambiguous piece discarded or assigned by threshold alone.",
+  "registration_basis": "Original source root/scale/phase clock and frame3 marker retained for all normal frames. New4 projected C [650,1290] and constant scale .0981 match the original helmet-to-root height (490px*.226454 approximately1131px*.0981), without using sword/cape bounds.",
+  "prior_proposal_anchors": [
+    [
+      338.0,
+      479.5
+    ],
+    [
+      400.0,
+      612.5
+    ],
+    [
+      378.5,
+      610.5
+    ],
+    [
+      434.0,
+      521.0
+    ],
+    [
+      355.0,
+      568.0
+    ],
+    [
+      273.5,
+      479.5
+    ]
+  ],
+  "original_source_parts": [
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-1.png",
+      "anchor": [
+        400.0,
+        612.5
+      ],
+      "scale": 0.226454,
+      "sha256": "8b371732a5ecc256e20a9bb2249788797a9a7e1f575b9342a5699b5ec979b335"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-2.png",
+      "anchor": [
+        1005.5,
+        610.5
+      ],
+      "scale": 0.226454,
+      "sha256": "fafb72774a9f8527ae47dd8c31fd751ede8346dc4d7a6e93c21046daba56ce57"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-3.png",
+      "anchor": [
+        434.0,
+        1148.0
+      ],
+      "scale": 0.226454,
+      "sha256": "195413f58383eb5caa54754f1b95798e2b0e1af6b925291f44c4771048866732"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-4.png",
+      "anchor": [
+        982,
+        1195
+      ],
+      "scale": 0.226454,
+      "sha256": "2c26c1c2e064e286d4468a05bdb3c68a3827ed75d11907771ae2656010312020"
+    }
+  ],
+  "proof_scope": "Lossless original source parts, including the unselected clipped recovery4, preserve every original visible texel exactly once. New recovery artwork is separately pinned and not claimed pixel-identical.",
+  "repaired_source_parts": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/repaired_source_r143/W-attack-4-source.png",
+      "sha256": "6673bbbd75207752505b21570b5d3df0748db5e24e65317ff77f03a36b837a94",
+      "selected_phase": 4
+    }
+  ],
+  "replacement_basis": "Precise original native ownership isolated the source failure to recovery4 rear boot toe touching the right canvas edge(alpha252), not impact3 sword. Original1/2/3 exact RGBA, roots/scales and guard0/5 are preserved; only failed recovery4 completed separately with same WEST camera, hair, armor, stance and sword ownership. Old clipped4 part and entire raw source retained.",
+  "boundary_result": "At r143 delivery candidate198source regions:3remaining flags all NW attack (versus prior7); all4W flags removed. Across r141..r143,19/22original boundary/source-edge frame flags resolved; no actor approval inferred from this.",
+  "native_import_validation": "PASS official Godot4.7.2 bounded6frames actual native CompressedTexture2D AtlasTexture decode; original attack clock and phase3 marker preserved.",
+  "local_main_validation": "PASS same actual Main Player W IDLE/ATTACK/IDLE18captures12unique poses, completed rear recovery boot, all6 attack phases/phase3 strike, no flip, source C roots and inventory/health/collision unchanged; normal exit0/errors0,20.03s. Candidate injected, not default binding.",
+  "player_physics_validation": "Attack controller checked in actual Main; affected North locomotion check recorded in N-run.",
+  "deployment_validation": "NOT_RUN",
+  "android_device_validation": "NOT_RUN",
+  "ci_validation": "EXCLUDED_BY_USER",
+  "runtime_sources": [
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/W-attack-source-v01.png",
+      "sha256": "7a98b41f60867fc1aca939a87b05a7846ff660d98c2c3af327a6a3b5b96f0c49",
+      "bytes": 1457602
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_parallel/transform_192/draft001/W-idle-source-v01.png",
+      "sha256": "f5a71936cf1da8e6776d8d3ade99a666c5710db011bd908bcc092c3ca5898daf",
+      "bytes": 2136011
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/repaired_source_r143/W-attack-4-source.png",
+      "sha256": "6673bbbd75207752505b21570b5d3df0748db5e24e65317ff77f03a36b837a94",
+      "bytes": 1324344
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-1.png",
+      "sha256": "8b371732a5ecc256e20a9bb2249788797a9a7e1f575b9342a5699b5ec979b335",
+      "bytes": 369025
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-2.png",
+      "sha256": "fafb72774a9f8527ae47dd8c31fd751ede8346dc4d7a6e93c21046daba56ce57",
+      "bytes": 382638
+    },
+    {
+      "path": "res://assets/actors/eight_direction/legendary_production/transform_192/reviewed_parts_r143/W-attack-3.png",
+      "sha256": "195413f58383eb5caa54754f1b95798e2b0e1af6b925291f44c4771048866732",
+      "bytes": 385809
+    }
+  ]
+}

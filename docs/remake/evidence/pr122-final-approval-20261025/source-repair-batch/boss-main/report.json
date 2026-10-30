@@ -1,0 +1,79 @@
+{
+	"actors": [
+		{
+			"clips": [
+				{
+					"authored_frame_count": 6,
+					"clip": "attack_6",
+					"final_quality_approval": false,
+					"markers": 1,
+					"phases": [
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					],
+					"quality_pose_gate_pass": true,
+					"required_quality_pose_count": 6
+				}
+			],
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/pr158-source-repair-v01/SpriteFrames.tres",
+			"id": "monster:그림 리퍼",
+			"phase_sheet": "/workspace/scratch/pr122-followup-audit/boss-repaired-main/monster_그림 리퍼-Main-phases.png",
+			"sheet_rows_follow_clip_order": true
+		},
+		{
+			"clips": [
+				{
+					"authored_frame_count": 6,
+					"clip": "attack_6",
+					"final_quality_approval": false,
+					"markers": 1,
+					"phases": [
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					],
+					"quality_pose_gate_pass": true,
+					"required_quality_pose_count": 6
+				},
+				{
+					"authored_frame_count": 6,
+					"clip": "attack_5",
+					"final_quality_approval": false,
+					"markers": 1,
+					"phases": [
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					],
+					"quality_pose_gate_pass": true,
+					"required_quality_pose_count": 6
+				}
+			],
+			"frames": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/pr158-source-repair-v01/SpriteFrames.tres",
+			"id": "monster:교만의 왕자 데우스",
+			"phase_sheet": "/workspace/scratch/pr122-followup-audit/boss-repaired-main/monster_교만의 왕자 데우스-Main-phases.png",
+			"sheet_rows_follow_clip_order": true
+		}
+	],
+	"actual_Main": true,
+	"blocked": [],
+	"candidate_injections": 3,
+	"cases": [],
+	"completed_clips": 3,
+	"errors": [],
+	"expected_clips": 3,
+	"new_quality_approvals": 0,
+	"repair_plan": "/workspace/pr122-approval/docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/boss-repair-plan.json",
+	"scope": "Explicit repaired boss batch in actual Main/Monster; original all-392 default unchanged",
+	"walk_resolution_checks": 0
+}

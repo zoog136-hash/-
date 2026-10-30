@@ -1,0 +1,55 @@
+[gd_resource type="SpriteFrames" load_steps=10 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_parallel/transform_331/corrections/isolation-v16/E-hit-source-v01-isolated.png" id="c1_texture_1"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/reviewed_parts_r148/E-idle-0.png" id="isolated_hit_0_0"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/legendary_production/transform_331/repaired_source_r149/E-idle-5.png" id="r149_E_idle_5"]
+
+[sub_resource type="AtlasTexture" id="c1_pose_0"]
+atlas = ExtResource("isolated_hit_0_0")
+region = Rect2(0,0,1536,1024)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c1_pose_1"]
+atlas = ExtResource("c1_texture_1")
+region = Rect2(0, 0, 674, 746)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c1_pose_2"]
+atlas = ExtResource("c1_texture_1")
+region = Rect2(674, 0, 674, 746)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c1_pose_3"]
+atlas = ExtResource("c1_texture_1")
+region = Rect2(0, 746, 674, 746)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c1_pose_4"]
+atlas = ExtResource("c1_texture_1")
+region = Rect2(674, 746, 674, 746)
+margin = Rect2(0, 0, 0, 0)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="c1_pose_5"]
+atlas = ExtResource("r149_E_idle_5")
+region = Rect2(0,0,1191,1320)
+filter_clip = true
+
+[resource]
+animations = [
+{
+"frames": [{"duration": 1.0, "texture": SubResource("c1_pose_0")}, {"duration": 1.0, "texture": SubResource("c1_pose_1")}, {"duration": 1.0, "texture": SubResource("c1_pose_2")}, {"duration": 1.0, "texture": SubResource("c1_pose_3")}, {"duration": 1.0, "texture": SubResource("c1_pose_4")}, {"duration": 1.0, "texture": SubResource("c1_pose_5")}],
+"loop": false,
+"name": &"hit_0",
+"speed": 27.272727273
+}
+]
+metadata/twilight_reviewed_frame_registration = {"hit_0":{"semantic_review":"PASS","frames":[{"anchor":Vector2(259.5,468.0),"scale":Vector2(0.255517,0.255517),"target":Vector2(0,0)},{"anchor":Vector2(360,606),"scale":Vector2(0.232313,0.232313),"target":Vector2(0,0)},{"anchor":Vector2(347,616),"scale":Vector2(0.232313,0.232313),"target":Vector2(0,0)},{"anchor":Vector2(346.5,620),"scale":Vector2(0.232313,0.232313),"target":Vector2(0,0)},{"anchor":Vector2(355.5,622),"scale":Vector2(0.232313,0.232313),"target":Vector2(0,0)},{"anchor":Vector2(675.7591118932855,1123.7435311605832),"scale":Vector2(0.11254421203358933,0.11254421203358933),"target":Vector2(0,0)}]}}
+metadata/twilight_clip_quality_holds = {}
+metadata/twilight_native_locomotion_staging = false
+metadata/twilight_production_connected = false
+metadata/twilight_quality_status = "HOLD_ARCHER_MECHANISM_AND_N_CANONICAL_AND_S_N_RUN_OWNERSHIP"
+metadata/twilight_final_quality_approved = false

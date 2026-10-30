@@ -1,0 +1,509 @@
+{
+  "reason": "Actual Main exposed large W impact body shift and cropped far boot from a fixed512cell center. Correct only these gross outliers using two physical boot projections; original pixels/scale/timing preserved.",
+  "new_PNGs": 0,
+  "actors": {
+    "130": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_130/r157/SpriteFrames.tres",
+      "candidate_sha256": "a8299fcc33be47e469cbf1bdb1c4c97e3866a30b670d3e1148dc60a000c7d109",
+      "prior_candidate": "res://assets/actors/eight_direction/native_production/mythic_130/r154/SpriteFrames.tres",
+      "prior_candidate_sha256": "206cfae0bbf16b16d456223e116e23ad48ff5a48b310d7d846166b6a75069036",
+      "source": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_130-W-attack-draft-v01.png",
+      "source_sha256": "94c1e0988a719d4a1f348acf7d1c15dff3ca4c0a129456c72b25cfa25d50e24f",
+      "clip": "attack_4",
+      "phase": 3,
+      "prior_region": [
+        0.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "new_region": [
+        0,
+        512,
+        624,
+        512
+      ],
+      "prior_margin": [
+        256.0,
+        157.0,
+        512.0,
+        512.0
+      ],
+      "new_margin": [
+        103.5,
+        198.5,
+        400,
+        512
+      ],
+      "prior_C_native": [
+        256.0,
+        483.0
+      ],
+      "new_C_native": [
+        408.5,
+        441.5
+      ],
+      "horizontal_world_root_correction": 38.652,
+      "scale_unchanged": true,
+      "all33_animation_blocks_unchanged": true,
+      "physical_basis": "Two alpha100 boot clusters in bottom52pixel band of lower-body ROI. Equal-weight midpoint X and mean sole contact Y; excludes upper sword/FX extent. Tight right-only Atlas expansion restores far boot already present in source, without copying or editing source pixels.",
+      "runtime_status": "PASS_SCOPED_ACTUAL_MAIN_DEFAULT_BIG_ROOT_CORRECTION",
+      "impact_revision_candidate": "res://assets/actors/eight_direction/native_production/mythic_130/r156/SpriteFrames.tres",
+      "impact_revision_candidate_sha256": "7ab5d9924b2f0737b879147bfdbcc7dd1c7030b6f51b66bb1f948dddae36c791",
+      "all_other196_frames_unchanged": true,
+      "changed_frame_references": [
+        [
+          "attack_4",
+          3
+        ],
+        [
+          "attack_4",
+          4
+        ]
+      ],
+      "followthrough_correction": {
+        "phase": 4,
+        "prior_region": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "new_region": [
+          512,
+          512,
+          576,
+          512
+        ],
+        "prior_margin": [
+          256.0,
+          157.0,
+          512.0,
+          512.0
+        ],
+        "new_margin": [
+          152.3,
+          199.0,
+          448,
+          512
+        ],
+        "prior_C_native": [
+          256.0,
+          483.0
+        ],
+        "new_C_native": [
+          359.7,
+          441.0
+        ],
+        "horizontal_world_root_correction": 26.283,
+        "basis": "Source physical boot pair midpoint and sole mean. Excludes known neighboring impact boot and upper weapon/FX; only the same gross fixed-cell registration error corrected."
+      }
+    },
+    "174": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_174/r156/SpriteFrames.tres",
+      "candidate_sha256": "ffa7d8b01c27da98634fafe2b1fd5318b484910a4703d59bbd6782471ffa7b99",
+      "prior_candidate": "res://assets/actors/eight_direction/native_production/mythic_174/r154/SpriteFrames.tres",
+      "prior_candidate_sha256": "38a2637820a774805683a986d137231cf40db4566a3cf9ec5fe86ed320ce8bbd",
+      "source": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_174-W-attack-draft-v01.png",
+      "source_sha256": "9df316be14d7732bf2fd8c6934c10308da4f5898f18cfcf1a01cd48ffb6a96e2",
+      "clip": "attack_4",
+      "phase": 3,
+      "prior_region": [
+        0.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "new_region": [
+        0,
+        512,
+        568,
+        512
+      ],
+      "prior_margin": [
+        256.0,
+        165.75,
+        512.0,
+        512.0
+      ],
+      "new_margin": [
+        146.0,
+        230.0,
+        456,
+        512
+      ],
+      "prior_C_native": [
+        256.0,
+        474.25
+      ],
+      "new_C_native": [
+        366.0,
+        410.0
+      ],
+      "horizontal_world_root_correction": 26.564,
+      "scale_unchanged": true,
+      "all33_animation_blocks_unchanged": true,
+      "all_other197_frames_unchanged": true,
+      "physical_basis": "Two alpha100 boot clusters in bottom52pixel band of lower-body ROI. Equal-weight midpoint X and mean sole contact Y; excludes upper sword/FX extent. Tight right-only Atlas expansion restores far boot already present in source, without copying or editing source pixels.",
+      "runtime_status": "PASS_SCOPED_ACTUAL_MAIN_DEFAULT_BIG_ROOT_CORRECTION"
+    },
+    "189": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_189/r157/SpriteFrames.tres",
+      "candidate_sha256": "f1f7a4673ba55e34ff33164d131922d5e261e2256e83e99fdbb9b205069d101e",
+      "prior_candidate": "res://assets/actors/eight_direction/native_production/mythic_189/r154/SpriteFrames.tres",
+      "prior_candidate_sha256": "349d5a2f443c1478ebecffd06f18e002df98244770d8afe3f032d409b38efa18",
+      "source": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_189-W-attack-draft-v01.png",
+      "source_sha256": "1b385160b8e0187949cbd56cfbac2ae9c1e5a4da3068b1a14556d5b42cdbbb1b",
+      "clip": "attack_4",
+      "phase": 3,
+      "prior_region": [
+        0.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "new_region": [
+        0,
+        512,
+        632,
+        512
+      ],
+      "prior_margin": [
+        256.0,
+        184.25,
+        512.0,
+        512.0
+      ],
+      "new_margin": [
+        93.5,
+        215.0,
+        392,
+        512
+      ],
+      "prior_C_native": [
+        256.0,
+        455.75
+      ],
+      "new_C_native": [
+        418.5,
+        425.0
+      ],
+      "horizontal_world_root_correction": 43.598,
+      "scale_unchanged": true,
+      "all33_animation_blocks_unchanged": true,
+      "physical_basis": "Two alpha100 boot clusters in bottom52pixel band of lower-body ROI. Equal-weight midpoint X and mean sole contact Y; excludes upper sword/FX extent. Tight right-only Atlas expansion restores far boot already present in source, without copying or editing source pixels.",
+      "runtime_status": "PASS_SCOPED_ACTUAL_MAIN_DEFAULT_BIG_ROOT_CORRECTION",
+      "impact_revision_candidate": "res://assets/actors/eight_direction/native_production/mythic_189/r156/SpriteFrames.tres",
+      "impact_revision_candidate_sha256": "cda89ffbb309b6c3d8dfc25e05bdb879ce7d03599c6c8479f9336aeff45279a7",
+      "all_other196_frames_unchanged": true,
+      "changed_frame_references": [
+        [
+          "attack_4",
+          3
+        ],
+        [
+          "attack_4",
+          4
+        ]
+      ],
+      "followthrough_correction": {
+        "phase": 4,
+        "prior_region": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "new_region": [
+          512,
+          512,
+          576,
+          512
+        ],
+        "prior_margin": [
+          256.0,
+          184.25,
+          512.0,
+          512.0
+        ],
+        "new_margin": [
+          149.2,
+          216.0,
+          448,
+          512
+        ],
+        "prior_C_native": [
+          256.0,
+          455.75
+        ],
+        "new_C_native": [
+          362.8,
+          424.0
+        ],
+        "horizontal_world_root_correction": 28.654,
+        "basis": "Source physical boot pair midpoint and sole mean. Excludes known neighboring impact boot and upper weapon/FX; only the same gross fixed-cell registration error corrected."
+      }
+    },
+    "346": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_346/r157/SpriteFrames.tres",
+      "candidate_sha256": "ae2ac9dd89abf415f1cd291a7547c631ae55d442e7a627f6da0542cfe23eb10a",
+      "prior_candidate": "res://assets/actors/eight_direction/native_production/mythic_346/r154/SpriteFrames.tres",
+      "prior_candidate_sha256": "2e150e43bcf85f7e578a87c57794456633939f51dd11e9f40a046459a0520256",
+      "source": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_346-W-attack-draft-v01.png",
+      "source_sha256": "3865507d27f417b9ce254d6efa604ef8d1a063c6a9219c6672723452995bd2c7",
+      "clip": "attack_4",
+      "phase": 3,
+      "prior_region": [
+        0.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "new_region": [
+        0,
+        512,
+        576,
+        512
+      ],
+      "prior_margin": [
+        256.0,
+        180.5,
+        512.0,
+        512.0
+      ],
+      "new_margin": [
+        139.45,
+        219.0,
+        448,
+        512
+      ],
+      "prior_C_native": [
+        256.0,
+        459.5
+      ],
+      "new_C_native": [
+        372.55,
+        421.0
+      ],
+      "horizontal_world_root_correction": 28.762,
+      "scale_unchanged": true,
+      "all33_animation_blocks_unchanged": true,
+      "physical_basis": "Two alpha100 boot clusters in bottom52pixel band of lower-body ROI. Equal-weight midpoint X and mean sole contact Y; excludes upper sword/FX extent. Tight right-only Atlas expansion restores far boot already present in source, without copying or editing source pixels.",
+      "runtime_status": "PASS_SCOPED_ACTUAL_MAIN_DEFAULT_BIG_ROOT_CORRECTION",
+      "impact_revision_candidate": "res://assets/actors/eight_direction/native_production/mythic_346/r156/SpriteFrames.tres",
+      "impact_revision_candidate_sha256": "f32c49f75e9600a0e76fa174acb61cea4fd4dae5a89b8a0056128d8e949fb90f",
+      "all_other196_frames_unchanged": true,
+      "changed_frame_references": [
+        [
+          "attack_4",
+          3
+        ],
+        [
+          "attack_4",
+          4
+        ]
+      ],
+      "followthrough_correction": {
+        "phase": 4,
+        "prior_region": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "new_region": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "prior_margin": [
+          256.0,
+          180.5,
+          512.0,
+          512.0
+        ],
+        "new_margin": [
+          164.89999999999998,
+          215.5,
+          512,
+          512
+        ],
+        "prior_C_native": [
+          256.0,
+          459.5
+        ],
+        "new_C_native": [
+          347.1,
+          424.5
+        ],
+        "horizontal_world_root_correction": 22.481,
+        "basis": "Source physical boot pair midpoint and sole mean. Excludes known neighboring impact boot and upper weapon/FX; only the same gross fixed-cell registration error corrected."
+      }
+    },
+    "411": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_411/r157/SpriteFrames.tres",
+      "candidate_sha256": "e5790bdc93f036530e228931b9279ea4a949009a5efa8f2e814b282b4aa9cb27",
+      "prior_candidate": "res://assets/actors/eight_direction/native_production/mythic_411/r155/SpriteFrames.tres",
+      "prior_candidate_sha256": "5857f53e4783ccd9009f542bdea7e6532980a9ae669d9f17795bfeb62cee98ae",
+      "source": "res://docs/remake/evidence/pr122-mythic-detailed/batch03/transform_411-W-attack-draft-v01.png",
+      "source_sha256": "f2e72162c2ad481a526b1fc8e614d8fa11005eb6ca6083c52cd079d46df64d2e",
+      "clip": "attack_4",
+      "phase": 3,
+      "prior_region": [
+        0.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "new_region": [
+        0,
+        512,
+        624,
+        512
+      ],
+      "prior_margin": [
+        256.0,
+        200.25,
+        512.0,
+        512.0
+      ],
+      "new_margin": [
+        68.44999999999999,
+        225.0,
+        400,
+        512
+      ],
+      "prior_C_native": [
+        256.0,
+        439.75
+      ],
+      "new_C_native": [
+        443.55,
+        415.0
+      ],
+      "horizontal_world_root_correction": 49.179,
+      "scale_unchanged": true,
+      "all33_animation_blocks_unchanged": true,
+      "physical_basis": "Two alpha100 boot clusters in bottom52pixel band of lower-body ROI. Equal-weight midpoint X and mean sole contact Y; excludes upper sword/FX extent. Tight right-only Atlas expansion restores far boot already present in source, without copying or editing source pixels.",
+      "runtime_status": "PASS_SCOPED_ACTUAL_MAIN_DEFAULT_BIG_ROOT_CORRECTION",
+      "impact_revision_candidate": "res://assets/actors/eight_direction/native_production/mythic_411/r156/SpriteFrames.tres",
+      "impact_revision_candidate_sha256": "0fbbde88618d708d860a098f64ff5cc1aad14fa50f3a8fde0228f47958c8dd74",
+      "all_other196_frames_unchanged": true,
+      "changed_frame_references": [
+        [
+          "attack_4",
+          3
+        ],
+        [
+          "attack_4",
+          4
+        ]
+      ],
+      "followthrough_correction": {
+        "phase": 4,
+        "prior_region": [
+          512.0,
+          512.0,
+          512.0,
+          512.0
+        ],
+        "new_region": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "prior_margin": [
+          256.0,
+          200.25,
+          512.0,
+          512.0
+        ],
+        "new_margin": [
+          160.75,
+          217.0,
+          512,
+          512
+        ],
+        "prior_C_native": [
+          256.0,
+          439.75
+        ],
+        "new_C_native": [
+          351.25,
+          423.0
+        ],
+        "horizontal_world_root_correction": 24.976,
+        "basis": "Source physical boot pair midpoint and sole mean. Excludes known neighboring impact boot and upper weapon/FX; only the same gross fixed-cell registration error corrected."
+      }
+    }
+  },
+  "diagnostic_unchanged": {
+    "346_NE": "Source phase3 boot projections71.9/370.2 =>root221.05 versusold256, only8.6worldpx horizontal delta; no gross rightward source outlier. Left untouched; include in actual scoped view."
+  },
+  "six_pose_review": {
+    "scope": "All six physical W boot/body projections of five affected source clips inspected once. Phases0/1/2/5 less than about20world lateral deviation retained.",
+    "174_phase4_not_changed": "Physical boot midpoint264.3 versusold256 is2.0world lateral delta; no gross rightward registration error. Minor natural offset retained.",
+    "346_NE_not_changed": "Source phase3 horizontal delta only8.6world; no gross rightward source error.",
+    "no_pose_pixels_or_scales_or_clocks_changed": true
+  },
+  "validation": {
+    "status": "PASS_ACTUAL_GAME_BIG_BODY_POP_AND_CROPPED_BOOT_CORRECTED",
+    "impact_receipt": {
+      "process": "/workspace/scratch/pr158-mythic-impact-root-r156-main/process.json",
+      "process_sha256": "32442082d6702feda3a1142548daa70ac1d163ef72ba00d1acc274c1ebf78506",
+      "report": "/workspace/scratch/pr158-mythic-impact-root-r156-main/report.json",
+      "report_sha256": "88b253af452215239c9bd376244cfba0db1c7dbf3d64f75cda469914a1bcec9f",
+      "normal_exit": 0,
+      "engine_errors": 0,
+      "elapsed_seconds": 32.63
+    },
+    "conditional_followthrough_receipt": {
+      "process": "/workspace/scratch/pr158-mythic-follow-root-r157-main/process.json",
+      "process_sha256": "8ab0d64de5271e126b7f3dd240b8395f1009790bb73e879ba1dfce4fc723d625",
+      "report": "/workspace/scratch/pr158-mythic-follow-root-r157-main/report.json",
+      "report_sha256": "e2d9b882f837ffcd5e15eb0695f06db56a07f4c602850e94545d085bd46df19c",
+      "normal_exit": 0,
+      "engine_errors": 0,
+      "elapsed_seconds": 25.78
+    },
+    "visual_review": "Parent reviewed all6action phases in scoped actual Main contacts; corrected impact/followthrough bodies near physical feet and full boots. Prior about25–50world lateral body pop resolved. Minor foreignFX retained; no pixel cleanup.",
+    "source_pixels_scales_clocks_unchanged": true,
+    "new_art_approval": false,
+    "native_export_Android_not_run": true,
+    "existing_comparison_updated": "docs/remake/evidence/pr158-girtas-before-after.png",
+    "comparison_basis": "Appended literal actual Main411Wimpact3 before/after crops; original640x1820pixels retained exactly."
+  },
+  "saved_transform_render_refresh": {
+    "source": "scripts/world.gd",
+    "source_sha256": "67e4db5bcc8743631f2180b0fee8b58d811fa088c1d9e076ba48694c161cdde2",
+    "scope": "Current rendering fields only on a transient copy. Exact unique sourceId or provably unique legacy name. Numeric sourceId is filled only on legacy presentation copy for donor and RUN policy; saved dictionary is not migrated. Original saved speed argument and donor/tint path policy retained. Unknown or ambiguous identity unchanged.",
+    "durable_test": "tests/pr158_stale_transform_visual_save_main.gd",
+    "durable_test_sha256": "7ea75cd94e960ac404985f8b59d417dd3b01b0f9cd331c39677714cc4c55f2ff",
+    "actual_Main_real_save_load": "PASS_CURRENT_DEFAULT_AFTER_STALE_SAVE",
+    "cases": [
+      "267 explicit obsolete r001 profile",
+      "258 no saved animation_profile: old global WALK",
+      "130 no saved animation_profile: old generic model"
+    ],
+    "all_saved_ids_names_stats_speed_inventory_physical_instance_ids_collision_preserved": true,
+    "saved_file_bytes_unchanged_on_load": true,
+    "legacy_unique_name_slowed_mythic_visible_RUN": "PASS",
+    "unknown_ambiguous_identities_unchanged": "PASS",
+    "explicit_donor_tints_preserved": "PASS",
+    "normal_exit": 0,
+    "engine_errors": 0,
+    "elapsed_seconds": 26.94,
+    "local_receipts": [
+      {
+        "path": "/workspace/scratch/pr158-stale-transform-save-r157-v2-main/process.json",
+        "sha256": "28ba5307ab10ad720540b3d87d4d2c4de3f86a3c4928b9a11076e1917ae67cf5"
+      },
+      {
+        "path": "/workspace/scratch/pr158-stale-transform-save-r157-v2-main/report.json",
+        "sha256": "9a06b2e9ad54dd7bf10bbfe43ac5f2bad80208d61360750370cc00a175a104aa"
+      }
+    ]
+  }
+}

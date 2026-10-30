@@ -1,0 +1,88 @@
+{
+  "source": "assets/actors/eight_direction/legendary_production/transform_191/repaired_source_r051/NE-idle.png",
+  "source_sha256": "d10e759bcc4a6912264f98409cb5921f8bbd0ca1835e66902890c84b24fc3c88",
+  "poses": [
+    {
+      "phase": 0,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r051/NE-idle-0.png",
+      "anchor": [
+        355,
+        490
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 2,
+      "sha256": "86b3bc76f52fd1f728cfa60eb833c3d29d96f023947c0b4c3805f7d7034cb816"
+    },
+    {
+      "phase": 1,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r051/NE-idle-1.png",
+      "anchor": [
+        825,
+        490
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 1,
+      "sha256": "b89115f1385a18b0069e49bbe6763af24c59a1c7331e5b7eaaa03f0a0df87001"
+    },
+    {
+      "phase": 2,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r051/NE-idle-2.png",
+      "anchor": [
+        1340,
+        490
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 3,
+      "sha256": "9a3a0ea11d059bf4573039b722b8e871e1b97f5b5142544495a1cc1e3b319641"
+    },
+    {
+      "phase": 3,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r051/NE-idle-3.png",
+      "anchor": [
+        355,
+        985
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 57,
+      "sha256": "ca90076e0ea299b77d86bd0bcec92dc097080940b374ed47848f9ce7098d0c3b"
+    },
+    {
+      "phase": 4,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r051/NE-idle-4.png",
+      "anchor": [
+        825,
+        985
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 59,
+      "sha256": "19c893040439b20f46954bbf3f4a45530e0c4917271a8fdb63aa17d6e164e8e4"
+    },
+    {
+      "phase": 5,
+      "texture": "res://assets/actors/eight_direction/legendary_production/transform_191/reviewed_parts_r051/NE-idle-5.png",
+      "anchor": [
+        1340,
+        985
+      ],
+      "scale": 0.24444444444444444,
+      "source_body_label": 60,
+      "sha256": "aa4b2b30afc24c772a59c5a5e2b59ab0dd01bbd1092d980b2173c1d1a3b99c5f"
+    }
+  ],
+  "proof": {
+    "original_visible_texels": 813230,
+    "missing": 0,
+    "duplicate": 0
+  },
+  "source_pixels_resampled": false,
+  "local_playback": "PASS: actual Main candidate profile injection, six idle poses, directional selection, registered anchors, unchanged gameplay/collision state",
+  "production_connected": false,
+  "native_import": "PASS: isolated Godot 4.7.2 native import, six CompressedTexture2D AtlasTexture frames",
+  "whole_actor_gate": "HOLD: remaining directional weapon identity and RUN leg alternation; local idle correction is not whole actor approval",
+  "android_device_test": "NOT_RUN",
+  "fixed_defects": [
+    "Replaced wrong sword with canonical N idle blue orb staff",
+    "Consistent anatomical right hand through all six poses",
+    "Original direction, idle frame count and time preserved"
+  ]
+}
