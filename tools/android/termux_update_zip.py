@@ -91,6 +91,7 @@ RUNTIME_SUFFIXES = frozenset((
 RUNTIME_MAP_PACKS = frozenset((
     'native_png_v5', 'aden_faith_png_v1', 'domination_png_v1', 'oman_png_v1',
     'source84_v3',
+    'oman_v2',  # Required legacy gameplay/topology input for source84 Oman replacement.
 ))
 # Match the already audited Android export exclusions for offline map drafting.
 OFFLINE_DIRS = (
@@ -374,7 +375,7 @@ def update(root, assume_yes=False, ref='main'):
 # Keep the game, save data, Godot import cache and update rollback backups.
 CLEANUP_DIRECTORIES = (
     'docs', 'tests', 'tools', 'samples', '.github', 'legacy',
-    'external_map_packs/source_pngs', 'external_map_packs/oman_v2',
+    'external_map_packs/source_pngs',
     'assets/original_sheets',
 ) + OFFLINE_DIRS
 CLEANUP_FILES = OFFLINE_FILES | frozenset((

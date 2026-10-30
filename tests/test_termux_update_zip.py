@@ -139,6 +139,8 @@ class ZipUpdaterTest(unittest.TestCase):
                      'external_map_packs/source84_v3/index.json',
                      'external_map_packs/source84_v3/chunks/example.webp',
                      'external_map_packs/source84_v3/collision/77.u8.gz',
+                     'external_map_packs/oman_v2/effective_layouts.json',
+                     'external_map_packs/oman_v2/data/map_remake/private/navigation-00.bin',
                      'external_map_packs/.gdignore',
                      'data/visuals/runtime_manifest.json',
                      'data/maps/navigation/oman_01.nav',
@@ -151,7 +153,6 @@ class ZipUpdaterTest(unittest.TestCase):
                      'tools/android/termux_update_zip.py', 'export_presets.cfg',
                      'external_map_packs/source_pngs/13474.png',
                      'external_map_packs/source84_v3/private.zip',
-                     'external_map_packs/oman_v2/effective_layouts.json',
                      'external_map_packs/TWILIGHT-map-remake-private-20261015-v2.zip',
                      'assets/maps/aden_world_draft/placements.json',
                      'assets/maps/aden_modular_pilot/compiled/tile.png',
@@ -183,6 +184,13 @@ class ZipUpdaterTest(unittest.TestCase):
             with mock.patch.object(updater, 'get_inventory', return_value=('a'*40, {})) as inventory:
                 updater.update(root, assume_yes=True, ref='integration/source-recovery-20261030')
             inventory.assert_called_once_with('integration/source-recovery-20261030')
+
+    def test_cleanup_preserves_required_oman_gameplay_input(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            name = 'external_map_packs/oman_v2/data/map_remake/private/navigation-00.bin'
+            path = root / name; path.parent.mkdir(parents=True); path.write_bytes(b'topology')
+            self.assertNotIn(name, updater.list_unused_files(root))
 
     def test_new_scope_never_deletes_previously_downloaded_sources(self):
         with tempfile.TemporaryDirectory() as directory:

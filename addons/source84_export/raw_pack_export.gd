@@ -8,7 +8,7 @@ func _get_name() -> String:
 
 func _export_begin(_features: PackedStringArray, _debug: bool, _path: String, _flags: int) -> void:
 	if not FileAccess.file_exists(ROOT + "index.json"):
-		push_warning("SOURCE84_NOT_BUNDLED: install the private pack and use tools/source84_delivery.py export for a complete-map build")
+		push_warning("SOURCE84_NOT_BUNDLED: restore tracked source84_v3 files and use tools/source84_delivery.py export for a complete-map build")
 		return
 	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST))
 	# Check all bytes before adding any raw map files. The offline build wrapper
