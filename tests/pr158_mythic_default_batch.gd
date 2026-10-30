@@ -48,9 +48,10 @@ func run() -> void:
 		print("PR158_DEFAULT_BINDING ",key," ",frames.resource_path)
 		if before_mode:
 			actor.motion.advance(.5,Vector2.ZERO)
-			for n in range(6):tick(actor,Vector2(1,-1).normalized()*300.)
+			for n in range(6):tick(actor,Vector2(1,-1).normalized()*actor.move_speed)
 		else:
-			check(legendary or (frames.resource_path.contains("native_production/") if key=="413" else frames.resource_path.contains("reaper_")),"Expected authored default path "+key)
+			var expected_default: String = str(selected.get("animation_profile", {}).get("frames_path", ""))
+			check(not expected_default.is_empty() and frames.resource_path == expected_default,"Exact authored catalog default path "+key)
 			for d in range(8):
 				var aim:=Vector2.RIGHT.rotated(d*PI/4.)
 				for role: String in ["idle","run","attack","hit"]:
@@ -60,7 +61,7 @@ func run() -> void:
 					check(frames.has_animation(name),"Dedicated actual track "+key+" "+name)
 					var expected:=frames.get_frame_count(name)
 					if role=="run":check(expected==6,"Six genuine RUN poses")
-					var velocity: Vector2=aim*actor.motion.profile.reference_speed*1.25 if role=="run" else Vector2.ZERO
+					var velocity: Vector2=aim*actor.move_speed if role=="run" else Vector2.ZERO
 					var strike_start:=strikes.size()
 					var sequence: int=-1
 					if role=="attack":sequence=actor.start_combat_attack(actor.global_position+aim,.9,actor.motion.profile.motion_style)
@@ -101,7 +102,7 @@ func run() -> void:
 				check(sprite.frame==frames.get_frame_count(death_name)-1 and actor.motion.state=="corpse","Terminal death hold")
 			actor.motion.dead=false;actor.motion.cancel_attack();actor.motion.hit_clock=0.
 			actor.motion.advance(.5,Vector2.ZERO)
-			for n in range(6):tick(actor,Vector2(1,-1).normalized()*300.)
+			for n in range(6):tick(actor,Vector2(1,-1).normalized()*actor.move_speed)
 			check(JSON.stringify(selected)==record_before,"Catalog record unchanged by playback")
 		await RenderingServer.frame_post_draw
 		var screen:Vector2=actor.get_global_transform_with_canvas()*Vector2.ZERO
@@ -113,6 +114,10 @@ func run() -> void:
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All legendary required tracks and poses actually played")
 				if report.errors.is_empty():
 					print("PR158_LEGENDARY_DEFAULT_PASS id=",key," tracks=33 poses=198 candidate_injection=0")
+			elif frames.resource_path.contains("native_production/mythic_"):
+				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All required native mythic tracks and poses actually played")
+				if report.errors.is_empty():
+					print("PR158_MYTHIC_DEFAULT_PASS id=",key," tracks=33 poses=198 candidate_injection=0")
 			elif key=="413":
 				print("PR158_DEFAULT_RUNTIME_COVERAGE key=transform:",key," exercised_tracks=",exercised_tracks.size()," exercised_poses=",exercised_poses.size()," authored_tracks=",count," authored_poses=",count*6," WALK excluded by existing transform scope")
 				check(exercised_tracks.size()==38 and exercised_poses.size()==228,"Every policy-required track and pose actually played")
