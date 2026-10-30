@@ -44,6 +44,15 @@ func run() -> void:
 		var retained4:=int(frames.get_meta("twilight_retained_source_directions",0))==4
 		var state_before:=invariant(world)
 		var record_before:=JSON.stringify(selected)
+		if frames.has_meta("twilight_new_S_death_source"):
+			var contract: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/actors/eight_direction/native_production/mythic-new-r165-source-provenance.json"))
+			var old_saved: Dictionary=selected.duplicate(true)
+			old_saved.animation_profile=contract.actors[key].prior_default_profile.duplicate(true)
+			var old_saved_before:=JSON.stringify(old_saved)
+			world._apply_transform_visual(old_saved)
+			check(actor.transform_sprite.sprite_frames.resource_path==str(selected.animation_profile.frames_path),"Old saved visual record uses current selected frames "+key)
+			check(JSON.stringify(old_saved)==old_saved_before and invariant(world)==state_before,"Old saved record/stats/physical collision state remain unchanged "+key)
+
 		var exercised_poses: Dictionary={}
 		var exercised_tracks: Dictionary={}
 		print("PR158_DEFAULT_BINDING ",key," ",frames.resource_path)
@@ -128,6 +137,21 @@ func run() -> void:
 				check(int(frames.get_meta("twilight_new_authored_directions"))==0,"Retained four-view routing creates no new eight-direction artwork")
 				if report.errors.is_empty():
 					print("PR158_RETAINED_DEFAULT_PASS id=",key," source_directions=4 policy_tracks=20 policy_poses=120 retained_tracks=",count," candidate_injection=0")
+			elif frames.has_meta("twilight_new_S_death_source"):
+				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All33 runtime tracks/198timeline references, including declared guards")
+				var guards: Dictionary=frames.get_meta("twilight_declared_static_guard_aliases",{})
+				var registration: Dictionary=frames.get_meta("twilight_reviewed_frame_registration",{})
+				check(guards.is_empty() or guards.size()==8,"All eight exact-view static guard aliases are explicitly declared")
+				check(int(frames.get_meta("twilight_authored_track_count"))==(25 if not guards.is_empty() else 33),"Authored tracks exclude reused static IDLE guards")
+				check(int(frames.get_meta("twilight_authored_pose_count"))==(150 if not guards.is_empty() else 198),"Authored source slots exclude repeated guard timeline refs")
+				for alias: String in guards:
+					var original: String=str(guards[alias].source_clip)
+					check(original==alias.replace("idle_","attack_") and int(guards[alias].source_phase)==0 and int(guards[alias].timeline_references)==6 and int(guards[alias].distinct_source_poses)==1 and int(guards[alias].new_authored_poses)==0,"Exact same-view existing ready0 only; not six new idle poses")
+					for phase in range(6):
+						check(frames.get_frame_texture(alias,phase)==frames.get_frame_texture(original,0),"Static IDLE reuses exact same-view source guard")
+						check(registration[alias].frames[phase]==registration[original].frames[0],"Static guard source C/scale/target remain exact")
+				var south: Dictionary=frames.get_meta("twilight_new_S_death_source")
+				check(int(south.selected_picture_row)==2 and int(south.production_death_directions)==1 and int(south.selected_pose_slots)==6,"Only actual South death row selected; no eight-death completion claim")
 			elif frames.has_meta("twilight_retained_death_source"):
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"Eight-view living tracks plus declared existing same-form S death all play")
 				check(int(frames.get_meta("twilight_authored_track_count"))==32 and int(frames.get_meta("twilight_authored_pose_count"))==192,"Authored counts exclude existing retained death references")

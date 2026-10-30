@@ -1,0 +1,3454 @@
+{
+  "source_head": "21c2779f340ac9c87f9d881e54a2339ea456d957",
+  "source_manifest": "res://assets/actors/eight_direction/native_production/mythic-r164-draft-sources.json",
+  "source_manifest_sha256": "b9dea74b3d4d75ffddde5ede54b38dc2538be81b4d68907b0b314ef003e94625",
+  "source_pixels_painted_resampled_or_composited": false,
+  "actors": {
+    "410": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_410/r165/SpriteFrames.tres",
+      "candidate_sha256": "113d825ca9343620f3cf3ec4696724ea4acd2e3714375cb8b84cb77d816b83af",
+      "prior_default_profile": {
+        "frames_path": "res://assets/actors/eight_direction/native_production/mythic_410/retained_r158/SpriteFrames.tres",
+        "layout": "directional8",
+        "animation_names": {},
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0.0,
+          -53.550000000000004
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0.0,
+        "hit_recoil": 0.0,
+        "color_tint": "ffffff",
+        "reference_speed": 210.0,
+        "movement_fps": 10.0,
+        "movement_cadence_width_ratio": 1.0,
+        "native_width_ratio": 1.0,
+        "attack_hit_frame": 3,
+        "action_hit_frames": {
+          "attack": 3
+        },
+        "floating": false
+      },
+      "new_authored_living_clips": 24,
+      "new_authored_living_pose_slots": 144,
+      "retained_same_actor_S_death_clips": 0,
+      "retained_same_actor_S_death_references": 0,
+      "registered_reference_pixel_scale": 0.75,
+      "scale_basis": "One fixed .75world scale for181px source-cell resolution, normalized only for actual grid pixel pitch. No weapon/glow bounding-box size normalization. Actual body size requires Main visual review.",
+      "contact_basis": "One actual source-row constant guard/contact plane; opaque component/alpha data is extraction evidence, not anatomical-foot or gait-quality proof. AIR and flinch source displacement preserved. Actual Main must assess big errors.",
+      "runtime_verified": true,
+      "formal_new_art_approval": false,
+      "new_S_death_source": {
+        "source": "res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/death-e020a31b9f85.png",
+        "selected_picture_row": 2,
+        "production_death_directions": 1,
+        "selected_pose_slots": 6,
+        "detected_body_row_markers": 8,
+        "all_unselected_source_rows_preserved": true
+      },
+      "new_S_death_pose_slots": 6,
+      "static_guard_idle_aliases": {
+        "idle_0": {
+          "source_clip": "attack_0",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_1": {
+          "source_clip": "attack_1",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_2": {
+          "source_clip": "attack_2",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_3": {
+          "source_clip": "attack_3",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_4": {
+          "source_clip": "attack_4",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_5": {
+          "source_clip": "attack_5",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_6": {
+          "source_clip": "attack_6",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_7": {
+          "source_clip": "attack_7",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        }
+      },
+      "authored_track_count": 25,
+      "authored_pose_slots": 150,
+      "runtime_timeline_references": 198,
+      "source_row_metadata_correction": {
+        "run": [
+          {
+            "row": 0,
+            "top": 3,
+            "bottom": 177,
+            "ground": 171.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 178,
+            "bottom": 360,
+            "ground": 356.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 346,
+            "bottom": 537,
+            "ground": 533.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 529,
+            "bottom": 712,
+            "ground": 703.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 711,
+            "bottom": 903,
+            "ground": 898.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 902,
+            "bottom": 1075,
+            "ground": 1070.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1064,
+            "bottom": 1249,
+            "ground": 1244.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1237,
+            "bottom": 1434,
+            "ground": 1428.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "attack": [
+          {
+            "row": 0,
+            "top": 3,
+            "bottom": 175,
+            "ground": 169.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 165,
+            "bottom": 356,
+            "ground": 352.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 345,
+            "bottom": 542,
+            "ground": 538.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 532,
+            "bottom": 714,
+            "ground": 709.5,
+            "body_components": 3,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 718,
+            "bottom": 906,
+            "ground": 900.5,
+            "body_components": 5,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 885,
+            "bottom": 1088,
+            "ground": 1081.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1064,
+            "bottom": 1263,
+            "ground": 1252.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1241,
+            "bottom": 1436,
+            "ground": 1430.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "hit": [
+          {
+            "row": 0,
+            "top": 9,
+            "bottom": 178,
+            "ground": 172.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 182,
+            "bottom": 363,
+            "ground": 359.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 353,
+            "bottom": 541,
+            "ground": 537.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 534,
+            "bottom": 711,
+            "ground": 701.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 715,
+            "bottom": 902,
+            "ground": 898.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 904,
+            "bottom": 1084,
+            "ground": 1075.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1070,
+            "bottom": 1257,
+            "ground": 1251.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1243,
+            "bottom": 1441,
+            "ground": 1434.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "death": [
+          {
+            "row": 0,
+            "top": 9,
+            "bottom": 196,
+            "ground": 177.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 129,
+            "bottom": 377,
+            "ground": 368.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 367,
+            "bottom": 559,
+            "ground": 550.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 486,
+            "bottom": 739,
+            "ground": 721.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 667,
+            "bottom": 935,
+            "ground": 906.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 850,
+            "bottom": 1112,
+            "ground": 1088.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1015,
+            "bottom": 1273,
+            "ground": 1267.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1209,
+            "bottom": 1442,
+            "ground": 1437.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ]
+      },
+      "new_S_death_source_selected": true,
+      "unused_original_idle_source_status": "HOLD_TRANSPOSED_DIRECTION_COLUMNS;PRESERVED_UNSELECTED. Production uses exact same-view ATK ready0 static guard, not six new distinct idle poses."
+    },
+    "345": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_345/r165/SpriteFrames.tres",
+      "candidate_sha256": "c9027c3ad86ae33c3ecf120a753cc120e341c0f6456e509f5455b5fd35a5c088",
+      "prior_default_profile": {
+        "frames_path": "res://assets/actors/eight_direction/native_production/mythic_345/retained_r158/SpriteFrames.tres",
+        "layout": "directional8",
+        "animation_names": {},
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0.0,
+          -53.550000000000004
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0.0,
+        "hit_recoil": 0.0,
+        "color_tint": "ffffff",
+        "reference_speed": 210.0,
+        "movement_fps": 10.0,
+        "movement_cadence_width_ratio": 1.0,
+        "native_width_ratio": 1.0,
+        "attack_hit_frame": 3,
+        "action_hit_frames": {
+          "attack": 3
+        },
+        "floating": false
+      },
+      "new_authored_living_clips": 24,
+      "new_authored_living_pose_slots": 144,
+      "retained_same_actor_S_death_clips": 0,
+      "retained_same_actor_S_death_references": 0,
+      "registered_reference_pixel_scale": 0.75,
+      "scale_basis": "One fixed .75world scale for181px source-cell resolution, normalized only for actual grid pixel pitch. No weapon/glow bounding-box size normalization. Actual body size requires Main visual review.",
+      "contact_basis": "One actual source-row constant guard/contact plane; opaque component/alpha data is extraction evidence, not anatomical-foot or gait-quality proof. AIR and flinch source displacement preserved. Actual Main must assess big errors.",
+      "runtime_verified": true,
+      "formal_new_art_approval": false,
+      "new_S_death_source": {
+        "source": "res://assets/actors/eight_direction/native_production/mythic_345/draft_sources_r164/death-ff9c061f32b3.png",
+        "selected_picture_row": 2,
+        "production_death_directions": 1,
+        "selected_pose_slots": 6,
+        "detected_body_row_markers": 7,
+        "all_unselected_source_rows_preserved": true
+      },
+      "new_S_death_pose_slots": 6,
+      "static_guard_idle_aliases": {
+        "idle_0": {
+          "source_clip": "attack_0",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_1": {
+          "source_clip": "attack_1",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_2": {
+          "source_clip": "attack_2",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_3": {
+          "source_clip": "attack_3",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_4": {
+          "source_clip": "attack_4",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_5": {
+          "source_clip": "attack_5",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_6": {
+          "source_clip": "attack_6",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_7": {
+          "source_clip": "attack_7",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        }
+      },
+      "authored_track_count": 25,
+      "authored_pose_slots": 150,
+      "runtime_timeline_references": 198,
+      "source_row_metadata_correction": {
+        "run": [
+          {
+            "row": 0,
+            "top": 13,
+            "bottom": 171,
+            "ground": 167,
+            "body_components": 0,
+            "basis": "Core-row fallback; actual Main visual required"
+          },
+          {
+            "row": 1,
+            "top": 176,
+            "bottom": 353,
+            "ground": 344.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 354,
+            "bottom": 534,
+            "ground": 530.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 537,
+            "bottom": 706,
+            "ground": 699.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 708,
+            "bottom": 878,
+            "ground": 873.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 882,
+            "bottom": 1057,
+            "ground": 1052.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1061,
+            "bottom": 1242,
+            "ground": 1237.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1244,
+            "bottom": 1433,
+            "ground": 1427.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "attack": [
+          {
+            "row": 0,
+            "top": 0,
+            "bottom": 179,
+            "ground": 174.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 176,
+            "bottom": 360,
+            "ground": 354.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 366,
+            "bottom": 551,
+            "ground": 546.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 541,
+            "bottom": 729,
+            "ground": 722.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 720,
+            "bottom": 907,
+            "ground": 903.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 914,
+            "bottom": 1102,
+            "ground": 1095.0,
+            "body_components": 5,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1103,
+            "bottom": 1270,
+            "ground": 1260.5,
+            "body_components": 3,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1259,
+            "bottom": 1441,
+            "ground": 1436.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "hit": [
+          {
+            "row": 0,
+            "top": 10,
+            "bottom": 180,
+            "ground": 176.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 185,
+            "bottom": 360,
+            "ground": 355.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 363,
+            "bottom": 546,
+            "ground": 542.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 545,
+            "bottom": 720,
+            "ground": 715.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 718,
+            "bottom": 897,
+            "ground": 884.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 899,
+            "bottom": 1078,
+            "ground": 1072.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1075,
+            "bottom": 1254,
+            "ground": 1249.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1252,
+            "bottom": 1443,
+            "ground": 1435.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "death": [
+          {
+            "row": 0,
+            "top": 65,
+            "bottom": 205,
+            "ground": 197.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 208,
+            "bottom": 384,
+            "ground": 371.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 395,
+            "bottom": 569,
+            "ground": 562.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 573,
+            "bottom": 750,
+            "ground": 738.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 749,
+            "bottom": 926,
+            "ground": 915.0,
+            "body_components": 3,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 935,
+            "bottom": 1141,
+            "ground": 1108.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1120,
+            "bottom": 1332,
+            "ground": 1299.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ]
+      },
+      "new_S_death_source_selected": true,
+      "unused_original_idle_source_status": "HOLD_TRANSPOSED_DIRECTION_COLUMNS;PRESERVED_UNSELECTED. Production uses exact same-view ATK ready0 static guard, not six new distinct idle poses."
+    },
+    "283": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_283/r165/SpriteFrames.tres",
+      "candidate_sha256": "08b4e7053e80d35a949ca77353610a898a955e1b0dd3d268cd3f53a621eaec79",
+      "prior_default_profile": {
+        "frames_path": "res://assets/actors/eight_direction/native_production/mythic_283/retained_r158/SpriteFrames.tres",
+        "layout": "directional8",
+        "animation_names": {},
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0.0,
+          -53.550000000000004
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0.0,
+        "hit_recoil": 0.0,
+        "color_tint": "ffffff",
+        "reference_speed": 210.0,
+        "movement_fps": 10.0,
+        "movement_cadence_width_ratio": 1.0,
+        "native_width_ratio": 1.0,
+        "attack_hit_frame": 3,
+        "action_hit_frames": {
+          "attack": 3
+        },
+        "floating": false
+      },
+      "new_authored_living_clips": 24,
+      "new_authored_living_pose_slots": 144,
+      "retained_same_actor_S_death_clips": 0,
+      "retained_same_actor_S_death_references": 0,
+      "registered_reference_pixel_scale": 0.75,
+      "scale_basis": "One fixed .75world scale for181px source-cell resolution, normalized only for actual grid pixel pitch. No weapon/glow bounding-box size normalization. Actual body size requires Main visual review.",
+      "contact_basis": "One actual source-row constant guard/contact plane; opaque component/alpha data is extraction evidence, not anatomical-foot or gait-quality proof. AIR and flinch source displacement preserved. Actual Main must assess big errors.",
+      "runtime_verified": true,
+      "formal_new_art_approval": false,
+      "new_S_death_source": {
+        "source": "res://assets/actors/eight_direction/native_production/mythic_283/draft_sources_r164/death-3f97f8fe3fc5.png",
+        "selected_picture_row": 2,
+        "production_death_directions": 1,
+        "selected_pose_slots": 6,
+        "detected_body_row_markers": 8,
+        "all_unselected_source_rows_preserved": true
+      },
+      "new_S_death_pose_slots": 6,
+      "static_guard_idle_aliases": {
+        "idle_0": {
+          "source_clip": "attack_0",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_1": {
+          "source_clip": "attack_1",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_2": {
+          "source_clip": "attack_2",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_3": {
+          "source_clip": "attack_3",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_4": {
+          "source_clip": "attack_4",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_5": {
+          "source_clip": "attack_5",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_6": {
+          "source_clip": "attack_6",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_7": {
+          "source_clip": "attack_7",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        }
+      },
+      "authored_track_count": 25,
+      "authored_pose_slots": 150,
+      "runtime_timeline_references": 198,
+      "source_row_metadata_correction": {
+        "run": [
+          {
+            "row": 0,
+            "top": 9,
+            "bottom": 183,
+            "ground": 171.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 190,
+            "bottom": 359,
+            "ground": 352.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 361,
+            "bottom": 553,
+            "ground": 548.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 550,
+            "bottom": 725,
+            "ground": 719.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 730,
+            "bottom": 906,
+            "ground": 896.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 911,
+            "bottom": 1097,
+            "ground": 1086.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1090,
+            "bottom": 1271,
+            "ground": 1267.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1267,
+            "bottom": 1442,
+            "ground": 1432.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "attack": [
+          {
+            "row": 0,
+            "top": 0,
+            "bottom": 183,
+            "ground": 177.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 181,
+            "bottom": 359,
+            "ground": 355.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 362,
+            "bottom": 556,
+            "ground": 546.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 548,
+            "bottom": 725,
+            "ground": 716.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 727,
+            "bottom": 907,
+            "ground": 898.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 902,
+            "bottom": 1097,
+            "ground": 1092.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1089,
+            "bottom": 1277,
+            "ground": 1272.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1266,
+            "bottom": 1448,
+            "ground": 1442.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "hit": [
+          {
+            "row": 0,
+            "top": 3,
+            "bottom": 180,
+            "ground": 175.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 191,
+            "bottom": 366,
+            "ground": 361.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 366,
+            "bottom": 554,
+            "ground": 548.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 551,
+            "bottom": 732,
+            "ground": 724.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 729,
+            "bottom": 914,
+            "ground": 904.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 910,
+            "bottom": 1100,
+            "ground": 1088.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1093,
+            "bottom": 1274,
+            "ground": 1266.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1268,
+            "bottom": 1447,
+            "ground": 1435.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "death": [
+          {
+            "row": 0,
+            "top": 0,
+            "bottom": 190,
+            "ground": 181.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 182,
+            "bottom": 370,
+            "ground": 358.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 374,
+            "bottom": 554,
+            "ground": 550.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 560,
+            "bottom": 736,
+            "ground": 723.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 728,
+            "bottom": 919,
+            "ground": 904.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 914,
+            "bottom": 1117,
+            "ground": 1097.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1092,
+            "bottom": 1282,
+            "ground": 1272.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1268,
+            "bottom": 1448,
+            "ground": 1444.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ]
+      },
+      "new_S_death_source_selected": true,
+      "unused_original_idle_source_status": "HOLD_TRANSPOSED_DIRECTION_COLUMNS;PRESERVED_UNSELECTED. Production uses exact same-view ATK ready0 static guard, not six new distinct idle poses."
+    },
+    "161": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_161/r165/SpriteFrames.tres",
+      "candidate_sha256": "26fb7394e77fe45ebc8ac3cf4dbee20ca7876f38e110d1df7e5da9592f693c48",
+      "prior_default_profile": {
+        "frames_path": "res://assets/actors/eight_direction/native_production/mythic_161/retained_r158/SpriteFrames.tres",
+        "layout": "directional8",
+        "animation_names": {},
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0.0,
+          -53.550000000000004
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0.0,
+        "hit_recoil": 0.0,
+        "color_tint": "ffffff",
+        "reference_speed": 210.0,
+        "movement_fps": 10.0,
+        "movement_cadence_width_ratio": 1.0,
+        "native_width_ratio": 1.0,
+        "attack_hit_frame": 3,
+        "action_hit_frames": {
+          "attack": 3
+        },
+        "floating": false
+      },
+      "new_authored_living_clips": 32,
+      "new_authored_living_pose_slots": 192,
+      "retained_same_actor_S_death_clips": 0,
+      "retained_same_actor_S_death_references": 0,
+      "registered_reference_pixel_scale": 0.75,
+      "scale_basis": "One fixed .75world scale for181px source-cell resolution, normalized only for actual grid pixel pitch. No weapon/glow bounding-box size normalization. Actual body size requires Main visual review.",
+      "contact_basis": "One actual source-row constant guard/contact plane; opaque component/alpha data is extraction evidence, not anatomical-foot or gait-quality proof. AIR and flinch source displacement preserved. Actual Main must assess big errors.",
+      "runtime_verified": true,
+      "formal_new_art_approval": false,
+      "new_S_death_source": {
+        "source": "res://assets/actors/eight_direction/native_production/mythic_161/draft_sources_r164/death-e9d5f5189844.png",
+        "selected_picture_row": 2,
+        "production_death_directions": 1,
+        "selected_pose_slots": 6,
+        "detected_body_row_markers": 8,
+        "all_unselected_source_rows_preserved": true
+      },
+      "new_S_death_pose_slots": 6,
+      "static_guard_idle_aliases": {},
+      "authored_track_count": 33,
+      "authored_pose_slots": 198,
+      "runtime_timeline_references": 198,
+      "source_row_metadata_correction": {
+        "idle": [
+          {
+            "row": 0,
+            "top": 7,
+            "bottom": 175,
+            "ground": 170.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 185,
+            "bottom": 359,
+            "ground": 352.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 362,
+            "bottom": 538,
+            "ground": 533.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 545,
+            "bottom": 716,
+            "ground": 711.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 731,
+            "bottom": 902,
+            "ground": 897.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 907,
+            "bottom": 1093,
+            "ground": 1089.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1099,
+            "bottom": 1266,
+            "ground": 1262.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1269,
+            "bottom": 1441,
+            "ground": 1436.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "run": [
+          {
+            "row": 0,
+            "top": 7,
+            "bottom": 154,
+            "ground": 148.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 162,
+            "bottom": 325,
+            "ground": 319.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 329,
+            "bottom": 499,
+            "ground": 494.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 506,
+            "bottom": 670,
+            "ground": 659.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 672,
+            "bottom": 836,
+            "ground": 830.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 843,
+            "bottom": 1018,
+            "ground": 1011.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1020,
+            "bottom": 1216,
+            "ground": 1205.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1221,
+            "bottom": 1406,
+            "ground": 1401.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "attack": [
+          {
+            "row": 0,
+            "top": 0,
+            "bottom": 190,
+            "ground": 185.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 181,
+            "bottom": 364,
+            "ground": 356.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 350,
+            "bottom": 542,
+            "ground": 536.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 528,
+            "bottom": 713,
+            "ground": 708.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 741,
+            "bottom": 903,
+            "ground": 897.5,
+            "body_components": 3,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 899,
+            "bottom": 1087,
+            "ground": 1080.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1093,
+            "bottom": 1261,
+            "ground": 1256.0,
+            "body_components": 3,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1268,
+            "bottom": 1440,
+            "ground": 1436.0,
+            "body_components": 3,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "hit": [
+          {
+            "row": 0,
+            "top": 16,
+            "bottom": 170,
+            "ground": 164.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 186,
+            "bottom": 355,
+            "ground": 345.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 357,
+            "bottom": 526,
+            "ground": 521.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 536,
+            "bottom": 696,
+            "ground": 692.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 709,
+            "bottom": 874,
+            "ground": 867.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 882,
+            "bottom": 1057,
+            "ground": 1046.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1059,
+            "bottom": 1242,
+            "ground": 1232.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1242,
+            "bottom": 1428,
+            "ground": 1422.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "death": [
+          {
+            "row": 0,
+            "top": 23,
+            "bottom": 181,
+            "ground": 169.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 189,
+            "bottom": 358,
+            "ground": 343.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 367,
+            "bottom": 534,
+            "ground": 517.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 542,
+            "bottom": 717,
+            "ground": 691.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 715,
+            "bottom": 894,
+            "ground": 872.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 892,
+            "bottom": 1086,
+            "ground": 1048.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1099,
+            "bottom": 1252,
+            "ground": 1247.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1260,
+            "bottom": 1430,
+            "ground": 1413.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ]
+      },
+      "new_S_death_source_selected": true
+    },
+    "142": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_142/r165/SpriteFrames.tres",
+      "candidate_sha256": "bd1f9d8c24358ce19e3992a36ab488f3cc6b1042f597d710d1c557cb793b0bf5",
+      "prior_default_profile": {
+        "frames_path": "res://assets/actors/eight_direction/native_production/mythic_142/retained_r158/SpriteFrames.tres",
+        "layout": "directional8",
+        "animation_names": {},
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0.0,
+          -53.550000000000004
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0.0,
+        "hit_recoil": 0.0,
+        "color_tint": "ffffff",
+        "reference_speed": 210.0,
+        "movement_fps": 10.0,
+        "movement_cadence_width_ratio": 1.0,
+        "native_width_ratio": 1.0,
+        "attack_hit_frame": 3,
+        "action_hit_frames": {
+          "attack": 3
+        },
+        "floating": false
+      },
+      "new_authored_living_clips": 32,
+      "new_authored_living_pose_slots": 192,
+      "retained_same_actor_S_death_clips": 0,
+      "retained_same_actor_S_death_references": 0,
+      "registered_reference_pixel_scale": 0.75,
+      "scale_basis": "One fixed .75world scale for181px source-cell resolution, normalized only for actual grid pixel pitch. No weapon/glow bounding-box size normalization. Actual body size requires Main visual review.",
+      "contact_basis": "One actual source-row constant guard/contact plane; opaque component/alpha data is extraction evidence, not anatomical-foot or gait-quality proof. AIR and flinch source displacement preserved. Actual Main must assess big errors.",
+      "runtime_verified": true,
+      "formal_new_art_approval": false,
+      "new_S_death_source": {
+        "source": "res://assets/actors/eight_direction/native_production/mythic_142/draft_sources_r164/death-b71b63c9997c.png",
+        "selected_picture_row": 2,
+        "production_death_directions": 1,
+        "selected_pose_slots": 6,
+        "detected_body_row_markers": 8,
+        "all_unselected_source_rows_preserved": true
+      },
+      "new_S_death_pose_slots": 6,
+      "static_guard_idle_aliases": {},
+      "authored_track_count": 33,
+      "authored_pose_slots": 198,
+      "runtime_timeline_references": 198,
+      "source_row_metadata_correction": {
+        "idle": [
+          {
+            "row": 0,
+            "top": 9,
+            "bottom": 181,
+            "ground": 176.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 187,
+            "bottom": 360,
+            "ground": 355.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 366,
+            "bottom": 543,
+            "ground": 539.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 544,
+            "bottom": 722,
+            "ground": 715.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 727,
+            "bottom": 909,
+            "ground": 902.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 914,
+            "bottom": 1102,
+            "ground": 1096.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1101,
+            "bottom": 1276,
+            "ground": 1271.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1273,
+            "bottom": 1444,
+            "ground": 1439.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "run": [
+          {
+            "row": 0,
+            "top": 12,
+            "bottom": 182,
+            "ground": 176.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 198,
+            "bottom": 365,
+            "ground": 360.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 373,
+            "bottom": 543,
+            "ground": 539.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 551,
+            "bottom": 724,
+            "ground": 706.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 732,
+            "bottom": 912,
+            "ground": 890.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 920,
+            "bottom": 1101,
+            "ground": 1095.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1101,
+            "bottom": 1274,
+            "ground": 1268.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1278,
+            "bottom": 1448,
+            "ground": 1442.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "attack": [
+          {
+            "row": 0,
+            "top": 3,
+            "bottom": 183,
+            "ground": 177.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 180,
+            "bottom": 371,
+            "ground": 362.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 364,
+            "bottom": 552,
+            "ground": 546.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 536,
+            "bottom": 726,
+            "ground": 714.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 713,
+            "bottom": 915,
+            "ground": 906.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 905,
+            "bottom": 1105,
+            "ground": 1095.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1087,
+            "bottom": 1277,
+            "ground": 1269.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1275,
+            "bottom": 1448,
+            "ground": 1443.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "hit": [
+          {
+            "row": 0,
+            "top": 11,
+            "bottom": 182,
+            "ground": 176.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 199,
+            "bottom": 364,
+            "ground": 357.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 371,
+            "bottom": 542,
+            "ground": 534.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 547,
+            "bottom": 720,
+            "ground": 714.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 731,
+            "bottom": 908,
+            "ground": 900.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 916,
+            "bottom": 1100,
+            "ground": 1093.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1103,
+            "bottom": 1279,
+            "ground": 1274.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1278,
+            "bottom": 1448,
+            "ground": 1444.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "death": [
+          {
+            "row": 0,
+            "top": 14,
+            "bottom": 184,
+            "ground": 180.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 193,
+            "bottom": 364,
+            "ground": 358.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 368,
+            "bottom": 541,
+            "ground": 533.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 546,
+            "bottom": 726,
+            "ground": 714.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 728,
+            "bottom": 915,
+            "ground": 900.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 913,
+            "bottom": 1106,
+            "ground": 1091.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1101,
+            "bottom": 1274,
+            "ground": 1269.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1278,
+            "bottom": 1448,
+            "ground": 1444.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ]
+      },
+      "new_S_death_source_selected": true
+    },
+    "136": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_136/r165/SpriteFrames.tres",
+      "candidate_sha256": "e9359a2bf440c46c53b9e20b3ef8de680575c55f63d3935fa15ccc0543c4379e",
+      "prior_default_profile": {
+        "frames_path": "res://assets/actors/eight_direction/native_production/mythic_136/retained_r158/SpriteFrames.tres",
+        "layout": "directional8",
+        "animation_names": {},
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0.0,
+          -53.550000000000004
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0.0,
+        "hit_recoil": 0.0,
+        "color_tint": "ffffff",
+        "reference_speed": 210.0,
+        "movement_fps": 10.0,
+        "movement_cadence_width_ratio": 1.0,
+        "native_width_ratio": 1.0,
+        "attack_hit_frame": 3,
+        "action_hit_frames": {
+          "attack": 3
+        },
+        "floating": false
+      },
+      "new_authored_living_clips": 32,
+      "new_authored_living_pose_slots": 192,
+      "retained_same_actor_S_death_clips": 0,
+      "retained_same_actor_S_death_references": 0,
+      "registered_reference_pixel_scale": 0.75,
+      "scale_basis": "One fixed .75world scale for181px source-cell resolution, normalized only for actual grid pixel pitch. No weapon/glow bounding-box size normalization. Actual body size requires Main visual review.",
+      "contact_basis": "One actual source-row constant guard/contact plane; opaque component/alpha data is extraction evidence, not anatomical-foot or gait-quality proof. AIR and flinch source displacement preserved. Actual Main must assess big errors.",
+      "runtime_verified": true,
+      "formal_new_art_approval": false,
+      "new_S_death_source": {
+        "source": "res://assets/actors/eight_direction/native_production/mythic_136/draft_sources_r164/death-de7ef6d76293.png",
+        "selected_picture_row": 2,
+        "production_death_directions": 1,
+        "selected_pose_slots": 6,
+        "detected_body_row_markers": 7,
+        "all_unselected_source_rows_preserved": true
+      },
+      "new_S_death_pose_slots": 6,
+      "static_guard_idle_aliases": {},
+      "authored_track_count": 33,
+      "authored_pose_slots": 198,
+      "runtime_timeline_references": 198,
+      "source_row_metadata_correction": {
+        "idle": [
+          {
+            "row": 0,
+            "top": 7,
+            "bottom": 182,
+            "ground": 176.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 188,
+            "bottom": 367,
+            "ground": 361.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 373,
+            "bottom": 552,
+            "ground": 548.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 552,
+            "bottom": 732,
+            "ground": 726.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 735,
+            "bottom": 917,
+            "ground": 912.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 923,
+            "bottom": 1102,
+            "ground": 1098.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1098,
+            "bottom": 1273,
+            "ground": 1266.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1259,
+            "bottom": 1441,
+            "ground": 1435.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "run": [
+          {
+            "row": 0,
+            "top": 4,
+            "bottom": 183,
+            "ground": 176.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 186,
+            "bottom": 368,
+            "ground": 362.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 367,
+            "bottom": 553,
+            "ground": 548.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 551,
+            "bottom": 733,
+            "ground": 725.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 735,
+            "bottom": 917,
+            "ground": 904.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 914,
+            "bottom": 1098,
+            "ground": 1093.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1092,
+            "bottom": 1275,
+            "ground": 1267.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1259,
+            "bottom": 1445,
+            "ground": 1439.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "attack": [
+          {
+            "row": 0,
+            "top": 0,
+            "bottom": 182,
+            "ground": 173.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 174,
+            "bottom": 368,
+            "ground": 357.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 353,
+            "bottom": 552,
+            "ground": 548.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 549,
+            "bottom": 734,
+            "ground": 728.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 728,
+            "bottom": 920,
+            "ground": 914.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 920,
+            "bottom": 1120,
+            "ground": 1112.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1093,
+            "bottom": 1288,
+            "ground": 1281.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1269,
+            "bottom": 1448,
+            "ground": 1448.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "hit": [
+          {
+            "row": 0,
+            "top": 5,
+            "bottom": 183,
+            "ground": 178.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 186,
+            "bottom": 370,
+            "ground": 365.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 371,
+            "bottom": 562,
+            "ground": 557.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 558,
+            "bottom": 743,
+            "ground": 734.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 743,
+            "bottom": 923,
+            "ground": 918.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 924,
+            "bottom": 1107,
+            "ground": 1102.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1101,
+            "bottom": 1277,
+            "ground": 1273.0,
+            "body_components": 5,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1259,
+            "bottom": 1446,
+            "ground": 1442.0,
+            "body_components": 5,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "death": [
+          {
+            "row": 0,
+            "top": 1,
+            "bottom": 194,
+            "ground": 180.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 191,
+            "bottom": 382,
+            "ground": 367.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 372,
+            "bottom": 568,
+            "ground": 561.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 553,
+            "bottom": 759,
+            "ground": 736.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 746,
+            "bottom": 951,
+            "ground": 934.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 941,
+            "bottom": 1142,
+            "ground": 1128.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1125,
+            "bottom": 1384,
+            "ground": 1313.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ]
+      },
+      "new_S_death_source_selected": true
+    },
+    "134": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_134/r165/SpriteFrames.tres",
+      "candidate_sha256": "1669c5e71a33ad9b69c1aa807324f8760f893d10ce743b029d28908abb5c5c6f",
+      "prior_default_profile": {
+        "frames_path": "res://assets/actors/eight_direction/native_production/mythic_134/retained_r158/SpriteFrames.tres",
+        "layout": "directional8",
+        "animation_names": {},
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0.0,
+          -53.550000000000004
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0.0,
+        "hit_recoil": 0.0,
+        "color_tint": "ffffff",
+        "reference_speed": 210.0,
+        "movement_fps": 10.0,
+        "movement_cadence_width_ratio": 1.0,
+        "native_width_ratio": 1.0,
+        "attack_hit_frame": 3,
+        "action_hit_frames": {
+          "attack": 3
+        },
+        "floating": false
+      },
+      "new_authored_living_clips": 32,
+      "new_authored_living_pose_slots": 192,
+      "retained_same_actor_S_death_clips": 0,
+      "retained_same_actor_S_death_references": 0,
+      "registered_reference_pixel_scale": 0.75,
+      "scale_basis": "One fixed .75world scale for181px source-cell resolution, normalized only for actual grid pixel pitch. No weapon/glow bounding-box size normalization. Actual body size requires Main visual review.",
+      "contact_basis": "One actual source-row constant guard/contact plane; opaque component/alpha data is extraction evidence, not anatomical-foot or gait-quality proof. AIR and flinch source displacement preserved. Actual Main must assess big errors.",
+      "runtime_verified": true,
+      "formal_new_art_approval": false,
+      "new_S_death_source": {
+        "source": "res://assets/actors/eight_direction/native_production/mythic_134/draft_sources_r164/death-4f7577c5001c.png",
+        "selected_picture_row": 2,
+        "production_death_directions": 1,
+        "selected_pose_slots": 6,
+        "detected_body_row_markers": 7,
+        "all_unselected_source_rows_preserved": true
+      },
+      "new_S_death_pose_slots": 6,
+      "static_guard_idle_aliases": {},
+      "authored_track_count": 33,
+      "authored_pose_slots": 198,
+      "runtime_timeline_references": 198,
+      "source_row_metadata_correction": {
+        "idle": [
+          {
+            "row": 0,
+            "top": 6,
+            "bottom": 187,
+            "ground": 181.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 189,
+            "bottom": 374,
+            "ground": 368.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 372,
+            "bottom": 561,
+            "ground": 555.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 560,
+            "bottom": 740,
+            "ground": 735.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 742,
+            "bottom": 929,
+            "ground": 924.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 927,
+            "bottom": 1113,
+            "ground": 1109.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1112,
+            "bottom": 1294,
+            "ground": 1288.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1286,
+            "bottom": 1446,
+            "ground": 1442.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "run": [
+          {
+            "row": 0,
+            "top": 9,
+            "bottom": 186,
+            "ground": 158.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 190,
+            "bottom": 373,
+            "ground": 347.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 367,
+            "bottom": 551,
+            "ground": 525.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 548,
+            "bottom": 728,
+            "ground": 702.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 729,
+            "bottom": 912,
+            "ground": 890.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 913,
+            "bottom": 1095,
+            "ground": 1069.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1086,
+            "bottom": 1269,
+            "ground": 1234.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1262,
+            "bottom": 1439,
+            "ground": 1425.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "attack": [
+          {
+            "row": 0,
+            "top": 5,
+            "bottom": 183,
+            "ground": 178.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 183,
+            "bottom": 363,
+            "ground": 354.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 361,
+            "bottom": 547,
+            "ground": 541.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 542,
+            "bottom": 730,
+            "ground": 723.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 726,
+            "bottom": 912,
+            "ground": 907.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 907,
+            "bottom": 1098,
+            "ground": 1093.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1087,
+            "bottom": 1271,
+            "ground": 1266.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1265,
+            "bottom": 1443,
+            "ground": 1439.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "hit": [
+          {
+            "row": 0,
+            "top": 12,
+            "bottom": 187,
+            "ground": 182.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 193,
+            "bottom": 366,
+            "ground": 359.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 369,
+            "bottom": 558,
+            "ground": 550.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 559,
+            "bottom": 734,
+            "ground": 726.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 736,
+            "bottom": 916,
+            "ground": 912.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 921,
+            "bottom": 1094,
+            "ground": 1089.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1093,
+            "bottom": 1270,
+            "ground": 1264.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1271,
+            "bottom": 1446,
+            "ground": 1438.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "death": [
+          {
+            "row": 0,
+            "top": 18,
+            "bottom": 199,
+            "ground": 189.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 204,
+            "bottom": 387,
+            "ground": 367.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 385,
+            "bottom": 566,
+            "ground": 552.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 570,
+            "bottom": 756,
+            "ground": 738.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 757,
+            "bottom": 949,
+            "ground": 930.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 955,
+            "bottom": 1164,
+            "ground": 1143.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1175,
+            "bottom": 1381,
+            "ground": 1369.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ]
+      },
+      "new_S_death_source_selected": true
+    },
+    "132": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_132/r165/SpriteFrames.tres",
+      "candidate_sha256": "e2b4e2614541c1068e60a3f14f41214e6bcaf9b9651252e2174412543ba0b14b",
+      "prior_default_profile": {
+        "frames_path": "res://assets/actors/eight_direction/native_production/mythic_132/retained_r158/SpriteFrames.tres",
+        "layout": "directional8",
+        "animation_names": {},
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0.0,
+          -53.550000000000004
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0.0,
+        "hit_recoil": 0.0,
+        "color_tint": "ffffff",
+        "reference_speed": 210.0,
+        "movement_fps": 10.0,
+        "movement_cadence_width_ratio": 1.0,
+        "native_width_ratio": 1.0,
+        "attack_hit_frame": 3,
+        "action_hit_frames": {
+          "attack": 3
+        },
+        "floating": false
+      },
+      "new_authored_living_clips": 24,
+      "new_authored_living_pose_slots": 144,
+      "retained_same_actor_S_death_clips": 0,
+      "retained_same_actor_S_death_references": 0,
+      "registered_reference_pixel_scale": 0.75,
+      "scale_basis": "One fixed .75world scale for181px source-cell resolution, normalized only for actual grid pixel pitch. No weapon/glow bounding-box size normalization. Actual body size requires Main visual review.",
+      "contact_basis": "One actual source-row constant guard/contact plane; opaque component/alpha data is extraction evidence, not anatomical-foot or gait-quality proof. AIR and flinch source displacement preserved. Actual Main must assess big errors.",
+      "runtime_verified": true,
+      "formal_new_art_approval": false,
+      "new_S_death_source": {
+        "source": "res://assets/actors/eight_direction/native_production/mythic_132/draft_sources_r164/death-d682c0a93d67.png",
+        "selected_picture_row": 2,
+        "production_death_directions": 1,
+        "selected_pose_slots": 6,
+        "detected_body_row_markers": 7,
+        "all_unselected_source_rows_preserved": true
+      },
+      "new_S_death_pose_slots": 6,
+      "static_guard_idle_aliases": {
+        "idle_0": {
+          "source_clip": "attack_0",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_1": {
+          "source_clip": "attack_1",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_2": {
+          "source_clip": "attack_2",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_3": {
+          "source_clip": "attack_3",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_4": {
+          "source_clip": "attack_4",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_5": {
+          "source_clip": "attack_5",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_6": {
+          "source_clip": "attack_6",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        },
+        "idle_7": {
+          "source_clip": "attack_7",
+          "source_phase": 0,
+          "timeline_references": 6,
+          "distinct_source_poses": 1,
+          "new_authored_poses": 0
+        }
+      },
+      "authored_track_count": 25,
+      "authored_pose_slots": 150,
+      "runtime_timeline_references": 198,
+      "source_row_metadata_correction": {
+        "run": [
+          {
+            "row": 0,
+            "top": 9,
+            "bottom": 181,
+            "ground": 177.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 187,
+            "bottom": 361,
+            "ground": 357.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 367,
+            "bottom": 543,
+            "ground": 537.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 544,
+            "bottom": 720,
+            "ground": 716.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 724,
+            "bottom": 899,
+            "ground": 895.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 906,
+            "bottom": 1086,
+            "ground": 1079.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1089,
+            "bottom": 1262,
+            "ground": 1258.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1263,
+            "bottom": 1438,
+            "ground": 1426.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "attack": [
+          {
+            "row": 0,
+            "top": 0,
+            "bottom": 188,
+            "ground": 183.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 203,
+            "bottom": 371,
+            "ground": 367.0,
+            "body_components": 2,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 381,
+            "bottom": 550,
+            "ground": 545.5,
+            "body_components": 3,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 556,
+            "bottom": 720,
+            "ground": 714.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 730,
+            "bottom": 892,
+            "ground": 887.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 906,
+            "bottom": 1071,
+            "ground": 1067.0,
+            "body_components": 2,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1067,
+            "bottom": 1250,
+            "ground": 1246.0,
+            "body_components": 5,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1260,
+            "bottom": 1429,
+            "ground": 1425.0,
+            "body_components": 2,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "hit": [
+          {
+            "row": 0,
+            "top": 13,
+            "bottom": 182,
+            "ground": 178.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 185,
+            "bottom": 370,
+            "ground": 363.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 368,
+            "bottom": 549,
+            "ground": 544.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 552,
+            "bottom": 727,
+            "ground": 722.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 729,
+            "bottom": 904,
+            "ground": 899.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 908,
+            "bottom": 1088,
+            "ground": 1081.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1086,
+            "bottom": 1259,
+            "ground": 1254.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1260,
+            "bottom": 1438,
+            "ground": 1433.5,
+            "body_components": 3,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "death": [
+          {
+            "row": 0,
+            "top": 18,
+            "bottom": 196,
+            "ground": 185.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 203,
+            "bottom": 383,
+            "ground": 375.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 391,
+            "bottom": 569,
+            "ground": 559.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 572,
+            "bottom": 754,
+            "ground": 744.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 754,
+            "bottom": 943,
+            "ground": 931.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 944,
+            "bottom": 1141,
+            "ground": 1132.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1155,
+            "bottom": 1344,
+            "ground": 1340,
+            "body_components": 0,
+            "basis": "Core-row fallback; actual Main visual required"
+          }
+        ]
+      },
+      "new_S_death_source_selected": true,
+      "unused_original_idle_source_status": "HOLD_TRANSPOSED_DIRECTION_COLUMNS;PRESERVED_UNSELECTED. Production uses exact same-view ATK ready0 static guard, not six new distinct idle poses."
+    },
+    "131": {
+      "candidate": "res://assets/actors/eight_direction/native_production/mythic_131/r165/SpriteFrames.tres",
+      "candidate_sha256": "19147b14155274287dd643f8f0c93a450ffa6294a1ccbae02843c01ae78c9cc7",
+      "prior_default_profile": {
+        "frames_path": "res://assets/actors/eight_direction/native_production/mythic_131/retained_r158/SpriteFrames.tres",
+        "layout": "directional8",
+        "animation_names": {},
+        "pixel_scale": 1.05,
+        "sprite_offset": [
+          0.0,
+          -53.550000000000004
+        ],
+        "embedded_shadow": false,
+        "authored_motion_weight": 0.0,
+        "hit_recoil": 0.0,
+        "color_tint": "ffffff",
+        "reference_speed": 210.0,
+        "movement_fps": 10.0,
+        "movement_cadence_width_ratio": 1.0,
+        "native_width_ratio": 1.0,
+        "attack_hit_frame": 3,
+        "action_hit_frames": {
+          "attack": 3
+        },
+        "floating": false
+      },
+      "new_authored_living_clips": 32,
+      "new_authored_living_pose_slots": 192,
+      "retained_same_actor_S_death_clips": 0,
+      "retained_same_actor_S_death_references": 0,
+      "registered_reference_pixel_scale": 0.75,
+      "scale_basis": "One fixed .75world scale for181px source-cell resolution, normalized only for actual grid pixel pitch. No weapon/glow bounding-box size normalization. Actual body size requires Main visual review.",
+      "contact_basis": "One actual source-row constant guard/contact plane; opaque component/alpha data is extraction evidence, not anatomical-foot or gait-quality proof. AIR and flinch source displacement preserved. Actual Main must assess big errors.",
+      "runtime_verified": true,
+      "formal_new_art_approval": false,
+      "new_S_death_source": {
+        "source": "res://assets/actors/eight_direction/native_production/mythic_131/draft_sources_r164/death-7539bc1825fd.png",
+        "selected_picture_row": 2,
+        "production_death_directions": 1,
+        "selected_pose_slots": 6,
+        "detected_body_row_markers": 7,
+        "all_unselected_source_rows_preserved": true
+      },
+      "new_S_death_pose_slots": 6,
+      "static_guard_idle_aliases": {},
+      "authored_track_count": 33,
+      "authored_pose_slots": 198,
+      "runtime_timeline_references": 198,
+      "source_row_metadata_correction": {
+        "idle": [
+          {
+            "row": 0,
+            "top": 3,
+            "bottom": 184,
+            "ground": 178.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 182,
+            "bottom": 365,
+            "ground": 360.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 364,
+            "bottom": 546,
+            "ground": 542.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 545,
+            "bottom": 727,
+            "ground": 722.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 728,
+            "bottom": 917,
+            "ground": 912.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 915,
+            "bottom": 1104,
+            "ground": 1100.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1099,
+            "bottom": 1270,
+            "ground": 1265.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1267,
+            "bottom": 1448,
+            "ground": 1443.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "run": [
+          {
+            "row": 0,
+            "top": 0,
+            "bottom": 183,
+            "ground": 179.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 184,
+            "bottom": 373,
+            "ground": 366.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 363,
+            "bottom": 549,
+            "ground": 543.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 546,
+            "bottom": 733,
+            "ground": 728.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 731,
+            "bottom": 925,
+            "ground": 916.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 919,
+            "bottom": 1105,
+            "ground": 1100.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1099,
+            "bottom": 1278,
+            "ground": 1273.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1272,
+            "bottom": 1448,
+            "ground": 1443.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "attack": [
+          {
+            "row": 0,
+            "top": 6,
+            "bottom": 183,
+            "ground": 179.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 184,
+            "bottom": 364,
+            "ground": 359.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 368,
+            "bottom": 555,
+            "ground": 547.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 548,
+            "bottom": 732,
+            "ground": 725.5,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 731,
+            "bottom": 910,
+            "ground": 903.0,
+            "body_components": 4,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 917,
+            "bottom": 1108,
+            "ground": 1094.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1105,
+            "bottom": 1275,
+            "ground": 1268.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1262,
+            "bottom": 1438,
+            "ground": 1432.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "hit": [
+          {
+            "row": 0,
+            "top": 5,
+            "bottom": 183,
+            "ground": 179.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 184,
+            "bottom": 367,
+            "ground": 362.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 365,
+            "bottom": 547,
+            "ground": 542.5,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 545,
+            "bottom": 726,
+            "ground": 722.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 728,
+            "bottom": 910,
+            "ground": 906.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 914,
+            "bottom": 1101,
+            "ground": 1096.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1098,
+            "bottom": 1270,
+            "ground": 1266.0,
+            "body_components": 5,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 7,
+            "top": 1265,
+            "bottom": 1441,
+            "ground": 1436.0,
+            "body_components": 5,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ],
+        "death": [
+          {
+            "row": 0,
+            "top": 25,
+            "bottom": 194,
+            "ground": 190.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 1,
+            "top": 206,
+            "bottom": 391,
+            "ground": 381.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 2,
+            "top": 392,
+            "bottom": 583,
+            "ground": 566.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 3,
+            "top": 576,
+            "bottom": 770,
+            "ground": 753.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 4,
+            "top": 765,
+            "bottom": 969,
+            "ground": 949.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 5,
+            "top": 963,
+            "bottom": 1169,
+            "ground": 1144.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          },
+          {
+            "row": 6,
+            "top": 1160,
+            "bottom": 1383,
+            "ground": 1346.0,
+            "body_components": 6,
+            "basis": "Opaque connected main-figure row envelope; constant guard/contact plane, never per-frame AIR normalization"
+          }
+        ]
+      },
+      "new_S_death_source_selected": true
+    }
+  },
+  "actual_default_runtime_status": "PASS_ACTUAL_DEFAULT_MAIN_AND_NATIVE_SELECTED_PCK_UNDER_CURRENT_BIG_ERROR_CRITERIA",
+  "selected_new_S_death_source_slots": 54,
+  "all_eight_death_directions_completed": false,
+  "all_source_png_bytes_unchanged": true,
+  "formal_new_art_approvals": 0,
+  "all_requested_new_distinct_idle_art_completed": false,
+  "formal_art_completion_claimed": false,
+  "validation": {
+    "actual_Main_returncode": 0,
+    "actual_Main_elapsed_seconds": 55.03,
+    "engine_errors": 0,
+    "actual_current_default_actors": 9,
+    "runtime_tracks": 297,
+    "runtime_timeline_references": 1782,
+    "authored_selected_tracks": 265,
+    "authored_selected_source_slots": 1590,
+    "static_guard_alias_clips": 32,
+    "reused_guard_timeline_references": 192,
+    "static_guard_distinct_source_poses_per_clip": 1,
+    "all_guard_source_poses_already_present_in_ATK0": true,
+    "old_saved_visual_record_regressions": 9,
+    "old_saved_visual_record_scope": "Executed Main lines current-frames selection, original legacy dictionary and move_speed unchanged for each9. This does not claim nine full file-save reloads; existing real save/load regression remains separate.",
+    "physical_move_stop_turn_all8_attack_marker3_HIT_DEATH_HP_inventory_equipment_collision_preserved": true,
+    "Main_report_reaction_alias_field": "declared_presentation_aliases is reaction-only and empty by design; static_guard_aliases is separate and explicitly populated for410/345/283/132. Original report unchanged.",
+    "visual_review": "Parent reviewed all8-direction IDLE/RUN/ATK Main overview and same-Player S idle-to-all6-death/terminal captures. No BIG body/direction/foot/jump/action fault identified. Static guards and small FX/weapon edges are accepted under current criteria; no formal fine-art approval.",
+    "native_selected_resource_PCK": {
+      "actors": 9,
+      "selected_source_images": 41,
+      "decoded_frame_references": 1782,
+      "all_four_stages_exit0_and_engine_errors0": true,
+      "empty_consumer_source_fallback": false,
+      "all_32_guard_alias_metadata_texture_C_scale_preserved": true,
+      "verified_PCK_sha256": "2921cf334a13878ccb8d364f91915515c80a345cdbd2a4a74e4a9f55670b34ab",
+      "derived_test_pack_and_imported_cache_removed_after_success": true,
+      "sources_sourcepins_results_compiled_resources_and_logs_preserved": true,
+      "application_APK_Android_delivery_claimed": false
+    },
+    "durable_regression": "Existing tests/pr158_mythic_default_batch.gd now asserts exact same-view ATK0 Tex/C/scale/static one-source-pose aliases,25/150 vs33/198 authored denominators, one actual S death row, and old saved visual-record invariants. Godot check-only passed; Main/native independently executed these contracts; no full nine rerun after test-only edit.",
+    "receipts": {
+      "actual_Main": [
+        {
+          "path": "/workspace/scratch/pr158-new-mythic-r165-main/process.json",
+          "sha256": "167ee5dbcab3a5270ed44b370ff60e194fd528687603987f5eac6ee98f97ffa7"
+        },
+        {
+          "path": "/workspace/scratch/pr158-new-mythic-r165-main/report.json",
+          "sha256": "582889ca2988b7996ea19c4940802a30ecc5606808e79f6fbbb955750821ec8c"
+        }
+      ],
+      "actual_native_PCK": [
+        {
+          "path": "/workspace/scratch/pr158-native-new9-r165/process.json",
+          "sha256": "521db25c7d829e6d3a2b8d51077d0e57940054edc442effb447d400ee4af9dd3"
+        },
+        {
+          "path": "/workspace/scratch/pr158-native-new9-r165/native-before.json",
+          "sha256": "9f329c62d0f8d969dfe7181cd430c8fdc935f5ff7cf62eee80343c2cd1f2707a"
+        },
+        {
+          "path": "/workspace/scratch/pr158-native-new9-r165/native-packed.json",
+          "sha256": "9f329c62d0f8d969dfe7181cd430c8fdc935f5ff7cf62eee80343c2cd1f2707a"
+        },
+        {
+          "path": "/workspace/scratch/pr158-native-new9-r165/source-pins.json",
+          "sha256": "a27c4dc5750671b922059dfb157184cbde7666d7cd3a2ddd43ad6f76f51dc864"
+        }
+      ],
+      "comparison": [
+        {
+          "path": "/workspace/scratch/pr158-new9-comparison-pins-r165.json",
+          "sha256": "78589e4bac691175e8887efa9b07fd8bec97b1fa397db86e8b467f78d44ee42e"
+        }
+      ]
+    },
+    "current_unique_eight_view_bindings": 2,
+    "current_mythic_eight_view_bindings": 29,
+    "current_legendary_eight_view_bindings": 40,
+    "current_total_eight_view_bindings": 71,
+    "formal_new_art_approvals": 0
+  }
+}
