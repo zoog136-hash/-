@@ -4205,7 +4205,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("저장 실패")
 		return result
 	# This save already holds every earlier change, so a queued one is redundant.
-	# A failed write keeps the request pending and is retried when its window ends.
+	# A failed deferred write is not re-queued here; the 30 s general autosave in
+	# _process keeps retrying, and pause/quit still attempt a final save.
 	if collection_override.is_empty(): deferred_save.cancel()
 	if not quiet:
 		hud.show_message("저장 완료")
