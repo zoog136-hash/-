@@ -47,4 +47,4 @@ func run() -> void:
 	vfx.emit_skill(str(catalog.record_for("프라이드").id),"impact",world.player.global_position)
 	check(not vfx.live.is_empty() and vfx.live[0].get("layers")!=null,"new twelve retain committed authored visual fallback without private SPR pack")
 	world.queue_free();await process_frame
-	print("CURRENT_OFFICIAL_RUNTIME_UI_RESULT checks=%d errors=%d usable=144" % [checks,errors.size()]);quit(0 if errors.is_empty() else 1)
+	print("CURRENT_OFFICIAL_RUNTIME_UI_RESULT ",JSON.stringify({"checks":checks,"failures":errors,"usable":144}));quit(0 if errors.is_empty() else 1)

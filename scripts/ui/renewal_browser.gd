@@ -6,6 +6,7 @@ var panes: HBoxContainer
 var tabs: HBoxContainer
 var listing: Control
 var details: Control
+var detail_frame: PanelContainer
 var detail_active: bool = false
 var detail_width: float = 280
 var touch_index: int = -1
@@ -26,7 +27,12 @@ func configure(list_control: Control, detail_control: Control, width: float = 28
 	panes.add_theme_constant_override("separation",12)
 	add_child(panes)
 	listing.reparent(panes)
-	details.reparent(panes)
+	detail_frame=PanelContainer.new()
+	detail_frame.name="SelectionInspector"
+	detail_frame.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	detail_frame.add_theme_stylebox_override("panel",UI.box(Color("10100e"),Color("584631"),6))
+	panes.add_child(detail_frame)
+	details.reparent(detail_frame)
 	resized.connect(reflow)
 	reflow()
 
@@ -35,9 +41,12 @@ func reflow() -> void:
 	var compact: bool = size.x < 660
 	tabs.visible = compact
 	listing.visible = not compact or not detail_active
-	details.visible = not compact or detail_active
-	details.custom_minimum_size.x = 0 if compact else detail_width
-	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
+	detail_frame.visible = not compact or detail_active
+	details.show()
+	detail_frame.custom_minimum_size.x = 0 if compact else detail_width
+	detail_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
+	details.custom_minimum_size.x = 0
+	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	(tabs.get_child(0) as Button).disabled = not detail_active
 	(tabs.get_child(1) as Button).disabled = detail_active
 

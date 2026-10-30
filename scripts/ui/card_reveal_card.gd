@@ -5,6 +5,7 @@ signal reveal_requested
 const FX = preload("res://scripts/ui/card_reveal_effects.gd")
 const PROFILES = preload("res://scripts/ui/card_reveal_profiles.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const ConfirmedChrome = preload("res://scripts/ui/card_reveal_chrome.gd")
 const ATLAS = preload("res://assets/card_reveal/authored_atlas.webp")
 const LIGHTNING_EARLY_SECONDS: float = 0.1
 const CONFIRM_DELAY_SECONDS: float = 2.0
@@ -19,6 +20,8 @@ var aura: Control
 var surface_fx: Control
 var promotion_fx: Control
 var face: Control
+var confirmed_chrome: Control
+var art_missing: bool=false
 var name_label: Label
 var grade_label: Label
 var grade_heading: Label
@@ -77,12 +80,6 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 	record = value.duplicate(true)
 	grade = str(record.get("grade","일반"))
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	aura = FX.new()
-	aura.grade = grade
-	aura.reduced_motion = reduced_motion
-	aura.detail_scale = detail_scale
-	aura.intensity_scale = intensity_scale
-	add_child(aura)
 	var clip := Control.new()
 	clip.name = "CardSurfaceClip"
 	clip.clip_contents = true
@@ -93,10 +90,13 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 	face.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	face.candidates = candidates
 	face.tint = PROFILES.color(grade)
-	face.artwork = authored_art()
 	var path: String = str(record.get("image_path",""))
 	if not path.is_empty() and ResourceLoader.exists(path):
 		face.artwork = load(path) as Texture2D
+	elif str(record.get("id","")).is_empty() and str(record.get("sourceId","")).is_empty():
+		# The explicitly marked developer showcase has no awarded card identity.
+		face.artwork = authored_art()
+	art_missing=face.artwork==null
 	var back := AtlasTexture.new()
 	back.atlas = ATLAS
 	var cell: Vector2 = ATLAS.get_size()/Vector2(4,3)
@@ -125,11 +125,15 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 	style.set_border_width_all(2)
 	rim.add_theme_stylebox_override("panel",style)
 	add_child(rim)
-	name_label = UI.label(str(record.get("name","")),17,PROFILES.color(grade))
+	confirmed_chrome=ConfirmedChrome.new()
+	add_child(confirmed_chrome)
+	confirmed_chrome.configure(grade,reduced_motion,detail_scale,intensity_scale)
+	aura=confirmed_chrome.glow
+	name_label = UI.label(str(record.get("name","")),17,UI.grade(grade))
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	add_child(name_label)
-	grade_label = UI.label(grade,16,PROFILES.color(grade))
+	grade_label = UI.label(grade+(" · 원화 없음" if art_missing else ""),16,UI.grade(grade))
 	grade_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	add_child(grade_label)
 	grade_heading = UI.label(grade,28,PROFILES.color(grade))
@@ -152,14 +156,13 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 func _fit() -> void:
 	if face == null:
 		return
-	aura.position = Vector2(-size.x*0.5,-size.y/3.0)
-	aura.size = Vector2(size.x*2.0,size.y/0.6)
 	var clip: Control = face.get_parent()
 	clip.size = size
 	face.size = size
 	surface_fx.size = size
 	promotion_fx.size = size
 	(get_node("MetalRim") as Control).size = size
+	confirmed_chrome.size=size
 	name_label.position = Vector2(-size.x*0.2,size.y+8)
 	name_label.size = Vector2(size.x*1.4,26)
 	grade_label.position = Vector2(0,size.y+34)
@@ -201,7 +204,8 @@ func seek(value: float, successful_fusion: bool = false) -> void:
 	face.elapsed = local
 	face.duration = reveal_at()-open_at
 	face.queue_redraw()
-	aura.set_time(clock-reveal_at() if revealed else -1.0,clock)
+	# Shared bitmap atmosphere replaces the older persistent aura. Inside-card
+	# lightning and the confirmation clock remain on their original passes.
 	surface_fx.set_time(clock-lightning_at(),clock)
 	# Keep the full primary sequence when the success discharge overlaps it.
 	promotion_fx.set_time(clock-promotion_at() if successful_fusion else -1.0,clock)
@@ -209,5 +213,10 @@ func seek(value: float, successful_fusion: bool = false) -> void:
 	grade_label.visible = revealed
 	var tint: Color = PROFILES.color(grade) if revealed else Color("9b8a6b")
 	var rim: Panel = get_node("MetalRim")
+	rim.show()
+	confirmed_chrome.visible=revealed
 	(rim.get_theme_stylebox("panel") as StyleBoxFlat).border_color = tint
 	queue_redraw()
+
+func set_sequence_playing(value: bool) -> void:
+	if is_instance_valid(confirmed_chrome):confirmed_chrome.set_ambient_playing(value)

@@ -32,7 +32,7 @@ func _run() -> void:
 	var confirm: Button = view.find_child("CardFusionConfirm", true, false) as Button
 	check(overall != null and overall.text.contains("총 5장"), "five drawn copies are visible")
 	check(materials != null and materials.text.contains("4 / 4장"), "four spendable duplicates are visible")
-	check(roster != null and roster.item_count == 1 and roster.get_item_text(0).contains("보유 5장"), "one base copy plus duplicates")
+	check(roster != null and roster.item_count == 1 and roster.get_item_metadata(0).copies == 5 and roster.get_item_text(0) == "4" and roster.get_item_tooltip(0).contains("보유 5장"), "one base copy plus duplicates, with spendable count on the portrait")
 	check(confirm != null and not confirm.disabled, "ready fusion is enabled")
 	var emitted: Array = []
 	view.fuse_requested.connect(func(category: String, grade: String) -> void:

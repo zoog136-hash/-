@@ -1,7 +1,7 @@
 extends RefCounted
 
-# Measured from the official Korean guide screenshots, normalized to 1280x720.
-# See docs/ui-rebuild-20261012/REFERENCES.md for image sizes and uncertainty.
+# Connected landscape UI baseline. These are project layout choices informed
+# by LineageM screen density, not claims of measured original pixel dimensions.
 const BASE = Vector2(1280,720)
 const SHELF = Rect2(890,82,378,508)
 const CHARACTER = Rect2(12,82,378,610)
