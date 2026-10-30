@@ -226,7 +226,9 @@ func cast(record: Dictionary) -> bool:
 			var amount := int(skill.get("heal", 0)) + int(world._effective_max_hp() * float(skill.get("heal_percent", 0)))
 			heal(skill, amount)
 			if bool(skill.get("stealth_after", false)): apply_buff(skill, true)
-		"cleanse": Status.cleanse(world.player, skill.get("statuses", []))
+		"cleanse":
+			Status.cleanse(world.player, skill.get("statuses", []))
+			vfx.emit_skill(presentation_id(skill), "impact", world.player.global_position)
 		"convert":
 			world.mp = mini(world._effective_max_mp(), world.mp + int(skill.get("mana", 0)))
 			vfx.emit_skill(id, "impact", world.player.global_position)

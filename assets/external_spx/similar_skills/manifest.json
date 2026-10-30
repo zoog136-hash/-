@@ -12,8 +12,8 @@
     "source_inventory_catalog": "res://data/skills/source_effects/catalog.json",
     "permitted_full_effect_groups": 2764,
     "explicitly_excluded_groups": 10,
-    "additional_reviewed_cast_groups": 7,
-    "reviewed_cast_resource_count": 98
+    "additional_reviewed_cast_groups": 9,
+    "reviewed_cast_resource_count": 100
   },
   "effects": {
     "SPR-RAW-010bb4bcdc15cedc5465c64f2576c2dfad37a45cbc9898f18ae8b00bbd47fd66": {
@@ -4858,6 +4858,263 @@
         ]
       ],
       "source_group_id": "SPR-U-65995a45fd43c03b3aeb",
+      "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+    },
+    "SPR-U-3bc093ad24d391ac1d01": {
+      "atlas": "reviewed201_cast_192_source1.png",
+      "width": 192,
+      "height": 180,
+      "columns": 6,
+      "count": 6,
+      "offset": [
+        -72,
+        -120
+      ],
+      "sha256": "a89e06b49144a3a821114fb0c1d71be6e39caeeec070f5c8a6834f28b1cc5823",
+      "raw_sha256": "7ab0d33dc2a2bef6c1d2afb0c030a297478b9956278e89294fea7b53c2134790",
+      "model_id": 192,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:19697",
+          "name": "192-0.SPR"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:19697",
+      "source_name": "192-0.SPR",
+      "source_names": [
+        "큐어 포이즌"
+      ],
+      "resource_scope": "reviewed_existing_active_cast",
+      "skill_binding_required": true,
+      "frame_rgba_sha256": [
+        "748caac7ed75c3df731b7ee69fe96d0a7299f635f1d489cbabf9afdf4b53916e",
+        "d04a3e76a79b23390a363704bc8df622d13e0f0dba8ace3f514acab3283df95b",
+        "e41fc039f94502eb93f7e7d3da63389b4648d6e9c6fbffabece00e2297861f3f",
+        "1a9ceee047849ee11c3a61b3d26aff4de751438f7596a8b84ea9f9e30f0216b5",
+        "6201ad09f6838d36d5b8bab4d1158974ef5fb67dfe92caff82ac62b354b1db46",
+        "69e62be31f1a7b6b6569b33db5830817feac4527374b82fc27ce3b11faa12bb0"
+      ],
+      "native_frame_bounds": [
+        [
+          -72,
+          -120,
+          192,
+          180
+        ],
+        [
+          -72,
+          -108,
+          192,
+          168
+        ],
+        [
+          -72,
+          -120,
+          192,
+          180
+        ],
+        [
+          -72,
+          -96,
+          168,
+          144
+        ],
+        [
+          -48,
+          -84,
+          144,
+          120
+        ],
+        [
+          -24,
+          -72,
+          96,
+          96
+        ]
+      ],
+      "source_group_id": "SPR-U-3bc093ad24d391ac1d01",
+      "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+    },
+    "SPR-U-1ca0ed4e4413ca7ed32f": {
+      "atlas": "reviewed201_cast_1817_source1.png",
+      "width": 408,
+      "height": 600,
+      "columns": 8,
+      "count": 21,
+      "offset": [
+        -168,
+        -396
+      ],
+      "sha256": "e592410e32e2d452d7aad5ffade215142f95f045371a6b6b87d439d8e4b35c15",
+      "raw_sha256": "7d1e5e362ab21889f77a19bd96ea6283292df15352c9d5da5629ebab0e9c3929",
+      "model_id": 1817,
+      "fps": 12,
+      "source_records": [
+        {
+          "record_key": "source1:Sprite.pak:18399",
+          "name": "1817-0.spr"
+        }
+      ],
+      "source_record_key": "source1:Sprite.pak:18399",
+      "source_name": "1817-0.spr",
+      "source_names": [
+        "디스인트그레이트"
+      ],
+      "resource_scope": "reviewed_existing_active_cast",
+      "skill_binding_required": true,
+      "frame_rgba_sha256": [
+        "5c8b5e1fa1806933d7e5beae0ede61ffa5fa8c978272b5d1d2e9bd233ee93722",
+        "79fcbc30750c850fd3f1a79fc77b112374ec54643fdfc4e1c678f5bef0de4791",
+        "e3abf52e21a92d65dbbc18e314364a9f21a3412fd9943db4aa1dce0936b7053b",
+        "d8fec46fa0bdf4fe25006ef44f484f6b2af000386b677d92083122aab162a602",
+        "9b62226f3fe2c2548474ea19d928e7b98a1dfda989e91b40787bc1aab0f21659",
+        "4554f503fb6a545a9650ff1f18d99a6ad48b3edc8aad417e9de9add688490ed8",
+        "a7eea7bfad31a7a579e870dac1f791a82658fa5be1326b0420352fc09f27af55",
+        "39a3894bbbb4edc48374bdd96faf466c1c55da3d532b410c39f106eb76bb6041",
+        "84ce7f5d0d0141ad8fe86283283c9acf16fc0af68da526e4088d404ab8a0e390",
+        "05fec2b6a60e4523ab7e0c1253718025e787d2defa5a39eae5485718b81c8d7b",
+        "fa665a95ea06c909e517375c9830e82b453de8f6a9d6777e45a0c7c8bda1986d",
+        "ad825834b7a53f7eb4cc3b51e81697e83428064109563254b0ff0ab6008c626e",
+        "5bea165e7d38f28946c5c89e74026df86b3474234e096a2f7874fa58547ecd49",
+        "0ae0a50bc429272a2ab6ec5b837196ddff469a4ecd4972644f76db92a3e0d8d4",
+        "ad44f5155acf93b63213d9104b52608bfc21e923e9fd89998c422dea0c6a6941",
+        "92e02d1f320ddc55fa1cdef404c0e45a3baa2545dd859b1424ecb0e5910964db",
+        "a94195deec9b5f2596024db099cb3aad6039f329b8d3b6c56a7b293c738a4a00",
+        "3e6a52fda93442638dd95bf860638270e70cf40f9b43e1de27dc5d98d50d0033",
+        "8f07cb6b743a299d738d0ce6e7c39b5c76c9b8cb9619391a9c2f2dd8fec58955",
+        "944fd7cdac3ff255c4c52b1bfb34649a12a78606f221fca284dfd5485b6a0a3a",
+        "c852912d716b959b1483811c1d176341401ede6956b41e2312c3f4875d2dfc02"
+      ],
+      "native_frame_bounds": [
+        [
+          72,
+          -396,
+          168,
+          240
+        ],
+        [
+          24,
+          -360,
+          192,
+          264
+        ],
+        [
+          24,
+          -348,
+          192,
+          288
+        ],
+        [
+          24,
+          -348,
+          192,
+          312
+        ],
+        [
+          0,
+          -324,
+          192,
+          336
+        ],
+        [
+          -168,
+          -288,
+          384,
+          492
+        ],
+        [
+          -96,
+          -240,
+          288,
+          360
+        ],
+        [
+          -48,
+          -204,
+          216,
+          276
+        ],
+        [
+          0,
+          -156,
+          144,
+          204
+        ],
+        [
+          0,
+          -156,
+          120,
+          204
+        ],
+        [
+          0,
+          -156,
+          120,
+          204
+        ],
+        [
+          0,
+          -156,
+          120,
+          204
+        ],
+        [
+          -24,
+          -156,
+          144,
+          192
+        ],
+        [
+          -24,
+          -156,
+          144,
+          192
+        ],
+        [
+          -24,
+          -156,
+          144,
+          192
+        ],
+        [
+          -24,
+          -156,
+          168,
+          192
+        ],
+        [
+          -24,
+          -156,
+          168,
+          192
+        ],
+        [
+          -48,
+          -156,
+          192,
+          192
+        ],
+        [
+          -48,
+          -156,
+          192,
+          192
+        ],
+        [
+          -48,
+          -144,
+          192,
+          180
+        ],
+        [
+          -48,
+          -156,
+          192,
+          192
+        ]
+      ],
+      "source_group_id": "SPR-U-1ca0ed4e4413ca7ed32f",
       "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
     }
   }

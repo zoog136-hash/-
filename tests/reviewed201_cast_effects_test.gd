@@ -95,9 +95,9 @@ func run():
  var service=SERVICE.new();service.configure(world);service.catalog.learned.clear()
  var frame_checks:int=0;var casts:int=0;var attacks:int=0
  root.content_scale_size=Vector2i.ZERO;root.content_scale_mode=Window.CONTENT_SCALE_MODE_DISABLED
- root.size=Vector2i(800,2010)
+ root.size=Vector2i(800,2570)
  for row_index:int in range(plan.cases.size()):
-  var spec:Dictionary=plan.cases[row_index];var row:Dictionary=service.catalog.record_for(str(spec.skill_id));world.job_class=str(row["class"]);service.catalog.learned={str(row.id):1}
+  var spec:Dictionary=plan.cases[row_index];var row:Dictionary=service.catalog.record_for(str(spec.skill_id));world.job_class="마법사" if str(row["class"])=="공용" else str(row["class"]);service.catalog.learned={str(row.id):1}
   check(not bool(row.get("runtime_blocked",false)) and str(row.get("activation","active"))=="active","only an existing active skill")
   var resource:Dictionary=bridge.effects[spec.group_id];var frames:SpriteFrames=bridge.frames_for_resource(str(spec.group_id))
   check(frames!=null,"on-demand committed native atlas")
@@ -110,6 +110,7 @@ func run():
    frame_checks+=1
   bridge.release(str(spec.group_id));bridge.trim()
   service.vfx.clear();world.skill_cooldowns.clear();world.skill_global_cooldown=0;world.pending_attack.clear();world.active_skill_buffs.clear();world.mp=10000;world.hp=100;world.target.hp=10000
+  if row.mode=="cleanse":world.player.apply_poison(30,1)
   var resolved:Dictionary=service.catalog.resolve(row)
   for item:String in resolved.get("items",{}):world.inventory[item]=10000
   var mp:int=world.mp;var target_hp:int=world.target.hp
@@ -122,6 +123,7 @@ func run():
    check(not service.cast(row) and world.mp==mp-int(resolved.mp),"busy/cooldown rejects second charge")
    world.pending_attack.clear();world.queued.call()
    check(world.target.hp<target_hp and service.event_counts.get(str(row.id),0)==1,"production impact applies one hit")
+  elif row.mode=="cleanse":check(not world.player.is_poisoned(),"production poison removal")
   elif row.mode=="heal":check(world.hp>100,"production healing applied")
   else:check(world.active_skill_buffs.has(str(row.name)),"production buff applied")
   var emitted:Dictionary={}
@@ -130,12 +132,15 @@ func run():
   check(not emitted.is_empty(),"actual cast/impact reaches reviewed source, not preview-only")
   if not emitted.is_empty():
    var sprite:AnimatedSprite2D=emitted.spx_sprite
-   var point:Vector2=world.player.global_position if str(spec.phases[0])=="cast" or row.mode=="heal" else world.target.combat_hit_position()
+   var point:Vector2=world.player.global_position if str(spec.phases[0])=="cast" or row.mode in ["heal","cleanse"] else world.target.combat_hit_position()
    check(sprite.global_position==point,"existing cast/impact anchor")
    check(not sprite.sprite_frames.get_animation_loop("source"),"one-shot active effect")
    if DisplayServer.get_name()!="headless":
     var old_key:String=str(spec.previous_phases[spec.phases[0]]);var before:SpriteFrames=bridge.frames_for_resource(old_key)
-    comparison(before,bridge.effects[old_key],Vector2(200,240+row_index*280),str(spec.name)+" / before")
+    if bool(spec.get("previous_runtime_emission",true)):
+     comparison(before,bridge.effects[old_key],Vector2(200,240+row_index*280),str(spec.name)+" / before")
+    else:
+     var absent=Label.new();absent.text=str(spec.name)+" / before: no cast effect";absent.position=Vector2(50,50+row_index*280);root.add_child(absent)
     comparison(sprite.sprite_frames,resource,Vector2(600,240+row_index*280),str(spec.name)+" / after")
     bridge.release(old_key)
   service.vfx.clear()
@@ -143,11 +148,11 @@ func run():
  for name:String in ["엘리멘탈 스피드","다크 러쉬","고스트 스텝"]:
   var row:Dictionary=service.catalog.record_for(name);var phases:Dictionary=bridge.binding_for(str(row.id)).phases
   check(phases.keys()==["learn"],"speed passive stays learn-only")
- check(casts==7 and attacks==3 and frame_checks==136,"seven real service casts, three controlled hit markers, 136 native frames")
+ check(casts==9 and attacks==4 and frame_checks==163,"nine real service casts, four controlled hit markers, 163 native frames")
  if DisplayServer.get_name()!="headless":
   service.vfx.set_process(false);await process_frame;await process_frame;await RenderingServer.frame_post_draw
   var image:Image=root.get_texture().get_image();check(image!=null and image.get_used_rect().size!=Vector2i.ZERO,"actual OpenGL viewport readback")
-  check(image.get_size()==Vector2i(800,2010),"all seven comparison rows fit the rendered viewport")
+  check(image.get_size()==Vector2i(800,2570),"all nine comparison rows fit the rendered viewport")
   var path:String=OS.get_environment("TWILIGHT_CAST_COMPARISON")
   if not path.is_empty():check(image.save_png(path)==OK,"single before/after evidence saved")
  service.clear();world.queue_free();await process_frame

@@ -9,7 +9,7 @@ func check(ok: bool, note: String) -> void:
 func _initialize() -> void:
 	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "manifest.json"))
 	var valid := EXPORT.validate_supplied_effects(spec, ROOT)
-	check(valid.error.is_empty() and valid.files.size() == 98, "98 actual SHA-verified resources accepted")
+	check(valid.error.is_empty() and valid.files.size() == 100, "100 actual SHA-verified resources accepted")
 	var legacy: Dictionary = spec.duplicate(true)
 	for key: String in spec.effects:
 		if str(spec.effects[key].atlas).begins_with("reviewed201_cast_"): legacy.effects.erase(key)

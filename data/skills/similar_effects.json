@@ -42,11 +42,18 @@
     "lm_2b058c083f711c56": {
       "phases": {
         "cast": "SPR-U-ed24b35595b54cd9074d",
-        "impact": "SPR-U-ed24b35595b54cd9074d",
+        "impact": "SPR-U-3bc093ad24d391ac1d01",
         "learn": "SPR-U-ed24b35595b54cd9074d"
       },
       "event_policy": "on_cast",
-      "motif": "cleanse"
+      "motif": "cleanse",
+      "source_review": {
+        "group_id": "SPR-U-3bc093ad24d391ac1d01",
+        "record_key": "source1:Sprite.pak:19697",
+        "raw_sha256": "7ab0d33dc2a2bef6c1d2afb0c030a297478b9956278e89294fea7b53c2134790",
+        "basis": "Blue-white cleansing flash at the existing successful cleanse anchor.",
+        "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+      }
     },
     "lm_1ec7e7edbce9ac29": {
       "phases": {
@@ -365,11 +372,18 @@
     },
     "lm_b39dbcf394503410": {
       "phases": {
-        "impact": "SPR-U-11208e25ff708da09fc3",
+        "impact": "SPR-U-1ca0ed4e4413ca7ed32f",
         "learn": "SPR-U-11208e25ff708da09fc3"
       },
       "event_policy": "on_cast",
-      "motif": "lance"
+      "motif": "lance",
+      "source_review": {
+        "group_id": "SPR-U-1ca0ed4e4413ca7ed32f",
+        "record_key": "source1:Sprite.pak:18399",
+        "raw_sha256": "7d1e5e362ab21889f77a19bd96ea6283292df15352c9d5da5629ebab0e9c3929",
+        "basis": "White disintegration streak and dissipation; explicitly source1 BASE, not red numbered-shard variant. Existing successful attack impact only.",
+        "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+      }
     },
     "lm_4577052891abbbc4": {
       "phases": {

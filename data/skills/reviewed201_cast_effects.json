@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "policy": "Existing seven active skills only. Visual substitute reviewed from exact source bytes; no claim of LineageM pixel or timing equivalence. Original blend fields remain uninterpreted. Combat markers/costs/damage/passives unchanged.",
+  "policy": "Existing nine active skills only. Visual substitute reviewed from exact source bytes; no claim of LineageM pixel or timing equivalence. Original blend fields remain uninterpreted. Combat markers/costs/damage/passives unchanged.",
   "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing.",
   "cases": [
     {
@@ -120,6 +120,41 @@
       "atlas": "reviewed201_cast_11725_source1.png",
       "previous_phases": {
         "impact": "SPR-U-3c850206e4ece25f720b"
+      }
+    },
+    {
+      "name": "큐어 포이즌",
+      "skill_id": "lm_2b058c083f711c56",
+      "group_id": "SPR-U-3bc093ad24d391ac1d01",
+      "record_key": "source1:Sprite.pak:19697",
+      "raw_sha256": "7ab0d33dc2a2bef6c1d2afb0c030a297478b9956278e89294fea7b53c2134790",
+      "model_id": 192,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Blue-white cleansing flash at the existing successful cleanse anchor.",
+      "atlas": "reviewed201_cast_192_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-ed24b35595b54cd9074d"
+      },
+      "previous_runtime_emission": false
+    },
+    {
+      "name": "디스인트그레이트",
+      "skill_id": "lm_b39dbcf394503410",
+      "group_id": "SPR-U-1ca0ed4e4413ca7ed32f",
+      "record_key": "source1:Sprite.pak:18399",
+      "raw_sha256": "7d1e5e362ab21889f77a19bd96ea6283292df15352c9d5da5629ebab0e9c3929",
+      "model_id": 1817,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "White disintegration streak and dissipation; explicitly source1 BASE, not red numbered-shard variant. Existing successful attack impact only.",
+      "atlas": "reviewed201_cast_1817_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-11208e25ff708da09fc3"
       }
     }
   ]

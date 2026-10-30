@@ -27301,5 +27301,66 @@
       "map_id": "source_491",
       "local_named": false
     }
+  },
+  "attachment_rule_evidence": {
+    "catalog_archive_sha256": "638adc0a6fb47fbe40b62979869efec68c299c4a1029d4fc28f09958dcfb848c",
+    "member": "sprites/source1_actions.csv",
+    "definitions": [
+      {
+        "record_key": "source1:Text.pak:list.spr:definition:856",
+        "raw_definition_sha256": "7e4821f581734016a20ed7c1c969bc9386d16ad30addb71ef62dfe9af50d7fa7",
+        "raw_definition": "#856  40      fairy wings         104.attr(8)\r\n",
+        "action_definitions": [
+          {
+            "id": 104,
+            "name": "attr",
+            "definition": "8"
+          }
+        ]
+      },
+      {
+        "record_key": "source1:Text.pak:list.spr:definition:2540",
+        "raw_definition_sha256": "134bca8ecc90905e774654afcb84ad580c2ccde858e31936810628da789c1f51",
+        "raw_definition": "#2540\t56\tbaloc e\r\n\t102.type(0)\r\n\t104.attr(8)\r\n",
+        "action_definitions": [
+          {
+            "id": 102,
+            "name": "type",
+            "definition": "0"
+          },
+          {
+            "id": 104,
+            "name": "attr",
+            "definition": "8"
+          }
+        ]
+      },
+      {
+        "record_key": "source1:Text.pak:list.spr:definition:5558",
+        "raw_definition_sha256": "1fccfad6cf0ab99b5b0e603a2d50ff0d10ba8558b18ee6496aec3da59988a4ae",
+        "raw_definition": "#5558 40 fairy e\r\n  104.attr(8)\r\n",
+        "action_definitions": [
+          {
+            "id": 104,
+            "name": "attr",
+            "definition": "8"
+          }
+        ]
+      }
+    ],
+    "verified_fact": "856,2540,5558 explicitly declare attr8. None contains idle/walk/attack/hit/death frame sequences. Parent clothes IDs/counts are known. attr8 is not proof of a particular blend equation or inherited sequence rule.",
+    "local_scope_scanned": [
+      "source201_next_metadata.zip",
+      "pr201_monster70_metadata.zip",
+      "pr201_npc96_exact_context.zip",
+      "lineage_name_matching_catalog_2026-10-28.zip",
+      "source3-selected/source_snapshots",
+      "npc96-context/verified/raw/source_excerpts",
+      "scripts/skills/source_spr_decoder.gd",
+      "tools/skills/spr_decode.py"
+    ],
+    "missing_input": "Same-version client renderer implementation/table for list.spr 104.attr and 105.clothes, including blend factors or color-key/lighting rule and child action/frame/layer selection; or an authoritative same-version frame/composition reference. Absent from supplied consumer selection; parent original archive roots have not been inspected here.",
+    "source3_limit": "Received Java excerpts describe server NPC lifecycle/karma/hidden state; no client sprite layer renderer.",
+    "implementation": "No guessed composite, layer order or group70 system added."
   }
 }
