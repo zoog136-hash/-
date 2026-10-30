@@ -6,8 +6,12 @@ const UI=preload("res://scripts/ui/renewal_theme.gd")
 var listing: ItemList
 var layers: Array[Control]=[]
 var quantities: Control
+static var count_font: FontVariation
 
 func configure(source: ItemList) -> void:
+	if count_font==null:
+		count_font=FontVariation.new();count_font.base_font=UI.FONT
+		count_font.variation_opentype={2003265652:650.0}
 	listing=source
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
 	clip_contents=true
@@ -39,9 +43,11 @@ func _paint_quantities() -> void:
 		if not Rect2(Vector2.ZERO,size).intersects(cell):continue
 		var extent:=Vector2(listing.fixed_icon_size)
 		var at:=cell.position+Vector2((cell.size.x-extent.x)*.5+3,extent.y-5)
-		var number: String=str((listing.get_item_metadata(index) as Dictionary).get("duplicates",0))
-		quantities.draw_string_outline(UI.FONT,at,number,HORIZONTAL_ALIGNMENT_RIGHT,extent.x-9,16,2,Color("10151b"))
-		quantities.draw_string(UI.FONT,at,number,HORIZONTAL_ALIGNMENT_RIGHT,extent.x-9,16,Color("ecece4"))
+		var duplicates: int=int((listing.get_item_metadata(index) as Dictionary).get("duplicates",0))
+		if duplicates<=0:continue
+		var number: String=str(duplicates)
+		quantities.draw_string_outline(count_font,at,number,HORIZONTAL_ALIGNMENT_RIGHT,extent.x-9,14,2,Color("090d12"))
+		quantities.draw_string(count_font,at,number,HORIZONTAL_ALIGNMENT_RIGHT,extent.x-9,14,Color("f2f2eb"))
 
 func _paint(layer: Control, rank: int, aura: bool) -> void:
 	if not is_visible_in_tree():return

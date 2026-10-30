@@ -50,7 +50,7 @@ func run() -> void:
 			var first: Rect2=view._cards.get_item_rect(0)
 			var fourth: Rect2=view._cards.get_item_rect(3)
 			check(is_equal_approx(first.position.y,fourth.position.y) and fourth.end.x<=view._cards.size.x+1,"four actual columns fit without clipping "+str(extent))
-			check(view._left.get_global_rect().end.x<=view._cards.get_global_rect().position.x and view._cards.get_global_rect().end.x<=view._right.get_global_rect().position.x,"filters, portraits and registered materials occupy separate columns")
+			check(view._left.get_global_rect().end.x<=view._right.get_global_rect().position.x and view._right.get_global_rect().end.x<=view._cards.get_global_rect().position.x,"waiting pane is left of the roster, with original filters and equal column widths preserved")
 			if view._cards.get_v_scroll_bar().max_value>view._cards.get_v_scroll_bar().page:
 				var selected: PackedInt32Array=view._cards.get_selected_items()
 				await swipe(view._cards)
@@ -72,6 +72,22 @@ func run() -> void:
 				var awarded: int=1 if str(outcome.result.id)==str(entry.id) and not bool(outcome.result.new) else 0
 				var remaining: int=int(model.spare[category].get(entry.id,0))-awarded
 				check(int(before.spare[category][entry.id])-remaining==int(entry.count),"displayed exact material ID/count agrees with Cards.fuse")
+			var partial: bool=false
+			for index: int in range(view.registered_materials.size()):
+				var entry: Dictionary=view.registered_materials[index]
+				var cell: Control=view._previews[index]
+				check((cell.find_child("FusionOwnedDuplicates",true,false) as Label).text==str(before.spare[category][entry.id]),"corner count is real spare ownership, including partial allocations")
+				check((cell.find_child("FusionRegisteredCount",true,false) as Label).text=="등록 %d장" % int(entry.count),"registered consumption is labeled separately")
+				partial=partial or int(entry.count)<int(before.spare[category][entry.id])
+			check(partial,"fixture distinguishes owned duplicates from selected consumption")
+			hud.set_card_collection_state(model.export_state());await frames()
+			for index: int in range(view._cards.item_count):
+				var data: Dictionary=view._cards.get_item_metadata(index)
+				check(int(data.duplicates)==int(model.spare[category].get(data.id,0)),"post-fusion HUD update refreshes the actual roster ownership")
+			for index: int in range(view.registered_materials.size()):
+				var entry: Dictionary=view.registered_materials[index]
+				check((view._previews[index].find_child("FusionOwnedDuplicates",true,false) as Label).text==str(model.spare[category].get(entry.id,0)),"post-fusion waiting card shows current ownership instead of the old allocation")
+			hud.set_card_collection_state(before);await frames()
 			check(consumed==Cards.FUSION_MATERIALS["일반"],"preview counts the actual required duplicates")
 			tap(view.find_child("CardFusionProbability",true,false));await frames()
 			check(view._note.is_visible_in_tree() and view._note.text.contains("35.00%"),"visible probability is the current game's rule")

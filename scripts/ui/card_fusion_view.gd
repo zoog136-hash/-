@@ -174,6 +174,8 @@ func _build() -> void:
   if child!=actions and child!=_last_result:child.reparent(details)
  _right.add_child(_details_scroll);_right.move_child(_details_scroll,0)
  _pity=UI.label("",12,Color("b4bdbb"));_pity.name="CardFusionPity";_pity.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;column.add_child(_pity)
+ # Swap only the two equal-width panes; the existing filters and window stay put.
+ _body.move_child(_right,1)
  resized.connect(_fit)
  _cards.resized.connect(_fit)
  var host: Node=get_parent()
@@ -203,7 +205,7 @@ func _fit() -> void:
  _auto.custom_minimum_size.y=_fuse.custom_minimum_size.y
  for preview: Control in _previews:
   var extent: float=minf(100,(_right.size.x-32)/4.0)
-  extent=minf(extent,maxf(60,size.y-235)*.74)
+  extent=minf(extent,maxf(60,size.y-251)*.74)
   preview.custom_minimum_size=Vector2(extent,0)
   (preview.get_child(0) as Control).custom_minimum_size.y=extent/.74
 
@@ -306,8 +308,14 @@ func _refresh_previews() -> void:
   var frame:=TextureRect.new();frame.texture=Chrome.texture_for(maxi(0,Cards.GRADES.find(str(record.grade))));frame.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;frame.stretch_mode=TextureRect.STRETCH_SCALE;frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
   art.add_child(frame);frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
   frame.material=Chrome.material_for(maxi(0,Cards.GRADES.find(str(record.grade))),false,true)
-  var amount:=UI.label(str(entry.count),16);amount.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;amount.vertical_alignment=VERTICAL_ALIGNMENT_BOTTOM
+  # The corner is actual spendable ownership, never this transaction's allocation.
+  var duplicates: int=maxi(0,int(collection.get("spare",{}).get(category,{}).get(entry.id,0)))
+  var amount:=UI.label(str(duplicates),14);amount.name="FusionOwnedDuplicates"
+  amount.add_theme_color_override("font_outline_color",Color("090d12"));amount.add_theme_constant_override("outline_size",2)
+  amount.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;amount.vertical_alignment=VERTICAL_ALIGNMENT_BOTTOM
   amount.mouse_filter=Control.MOUSE_FILTER_IGNORE;art.add_child(amount);amount.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+  var allocated:=UI.label("등록 %d장" % int(entry.count),11,Color("c2c9c9"));allocated.name="FusionRegisteredCount"
+  allocated.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;cell.add_child(allocated)
   cell.tooltip_text=str(record.name)+" · "+str(entry.id)+" · 합성에 사용될 중복 "+str(entry.count)+"장"
  if registered_materials.is_empty():
   var message:=UI.label("왼쪽 카드를 선택해 주세요.",14,Color("929fa7"));message.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;_preview.add_child(message)
