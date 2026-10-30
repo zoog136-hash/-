@@ -6,7 +6,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from android_runtime_reachability import (check_generated, unreachable_actor_folders,
+from android_runtime_reachability import (OFFLINE_PROVENANCE_JSON, generated_patterns, check_generated, unreachable_actor_folders,
                                           write_preset, preset_patterns)
 from android_animation_export_scope import DRAFT_EXPORT_PATTERN, audit_authoring_exclusions
 
@@ -114,6 +114,11 @@ class AndroidRuntimeReachabilityTest(unittest.TestCase):
                 root = Path(directory)
                 self.fixture(root)
                 self.assert_exclusion_rejected(root, pattern, message)
+
+    def test_offline_provenance_files_are_not_generated_exclusions(self):
+        records = sorted(OFFLINE_PROVENANCE_JSON)
+        folder = "assets/actors/eight_direction/boss_draft_first/x/r001/*"
+        self.assertEqual(generated_patterns([*records, folder, DRAFT_EXPORT_PATTERN]), [folder])
 
     def test_unlisted_dead_folder_only_reports(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -6,6 +6,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
+from android_runtime_reachability import OFFLINE_PROVENANCE_JSON
 from android_animation_export_scope import ADEN_PREVIEW_RENDERER, OFFLINE_AUTHORING_JSON, DRAFT_EXPORT_PATTERN, DRAFT_ROOT, audit_authoring_exclusions
 
 
@@ -244,6 +245,26 @@ class AndroidAnimationExportScopeTest(unittest.TestCase):
                 scene = root / "Main.tscn"
                 scene.write_text('load("res://' + relative + '")\n')
                 with self.assertRaisesRegex(ValueError, "excluded offline JSON"):
+                    audit_authoring_exclusions(root)
+
+    def test_offline_provenance_may_name_drafts_only_while_excluded(self):
+        for record in sorted(OFFLINE_PROVENANCE_JSON):
+            with self.subTest(record=record), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                archive, _ = self.fixture(root)
+                path = root / record
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('{"template": "res://' + archive.relative_to(root).as_posix() + '"}')
+                # Packed into the APK: the draft reference is still rejected.
+                with self.assertRaisesRegex(ValueError, 'must be excluded from Android export'):
+                    audit_authoring_exclusions(root)
+                preset = root / "export_presets.cfg"
+                preset.write_text(preset.read_text().replace('docs/*,', 'docs/*,' + record + ','))
+                audit_authoring_exclusions(root)
+                # Once excluded, nothing exported may load it.
+                (root / "scripts").mkdir()
+                (root / "scripts/loader.gd").write_text('const P := "res://' + record + '"\n')
+                with self.assertRaisesRegex(ValueError, 'excluded offline JSON'):
                     audit_authoring_exclusions(root)
 
     def test_unknown_archive_contents_fail_closed(self):
