@@ -119,6 +119,27 @@ func _build() -> void:
 	_last_result.name = "CardFusionResult"
 	_last_result.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(_last_result)
+	resized.connect(func() -> void:headline.visible=size.y>=400)
+	# Keep the authoritative confirmation inside the existing window at short
+	# landscape sizes. Category, grade, ownership and the real card list scroll.
+	var scroll := ScrollContainer.new()
+	scroll.name = "CardFusionContentScroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var content := VBoxContainer.new()
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_theme_constant_override("separation",8)
+	scroll.add_child(content)
+	for child: Node in get_children():
+		if child != _fuse and child != _last_result: child.reparent(content)
+	add_child(scroll)
+	move_child(scroll,0)
+	var host: Node = get_parent()
+	while host != null:
+		if host.has_method("register_scroll_drag"):
+			host.call("register_scroll_drag",scroll,content)
+			break
+		host = host.get_parent()
 
 func _refresh() -> void:
 	if not _built or not Cards.CATEGORIES.has(category): return
