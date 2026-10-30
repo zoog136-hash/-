@@ -1,0 +1,648 @@
+{
+  "engine": "Godot 4.7.2",
+  "renderer": "Linux llvmpipe Compatibility",
+  "fixture": "Same fixed seed20261025; real Main isolated source-record QA equipment fixture; simulation paused for menu capture",
+  "comparison": "UI-only A/B. Before uses three original main UI files; other world state/camera/performance code is shared. Not a whole-main performance baseline. After also fixes compact catalog layout in HUD.",
+  "captures_per_version": 62,
+  "resolutions": [
+    [
+      1280,
+      720
+    ],
+    [
+      854,
+      480
+    ]
+  ],
+  "logical_layout_differences": [],
+  "capture_bytes": 65022251,
+  "images": [
+    {
+      "path": "after/catalog-detail-마법인형-1280x720.png",
+      "bytes": 275025,
+      "sha256": "42064499e6e94f0cf22b8dafc7cccecdd2449ab6de7a833dcc48c0687cbbcde6"
+    },
+    {
+      "path": "after/catalog-detail-마법인형-854x480.png",
+      "bytes": 71505,
+      "sha256": "e3b22c53b95fae72da5b74868f6200450b461e6e35e67109222492af3d43af06"
+    },
+    {
+      "path": "after/catalog-detail-변신-1280x720.png",
+      "bytes": 391578,
+      "sha256": "eb0ca26e9b0f5caa21301052fcf987e2dbea4dbfbf29e4c05ecfe8f13113c9b1"
+    },
+    {
+      "path": "after/catalog-detail-변신-854x480.png",
+      "bytes": 101192,
+      "sha256": "e7ed0b65635532c474e7ee3c96089906aa9ae204371a6b778932d586fa70f80d"
+    },
+    {
+      "path": "after/catalog-detail-성물-1280x720.png",
+      "bytes": 336017,
+      "sha256": "189832d005faed48e420dde5026af1f94ab42320bad7004bf12aa04def33178e"
+    },
+    {
+      "path": "after/catalog-detail-성물-854x480.png",
+      "bytes": 94850,
+      "sha256": "292777d7969f8e76d2a6d32e175ae5eb910f7684a2d6659ea340c6aef91f2e3c"
+    },
+    {
+      "path": "after/catalog-detail-아이템-1280x720.png",
+      "bytes": 277007,
+      "sha256": "35144a9ac3c9b45d455f8bfddb09a7707b85ba7065e11cda97c2427e48b3b2d4"
+    },
+    {
+      "path": "after/catalog-detail-아이템-854x480.png",
+      "bytes": 83075,
+      "sha256": "c7b802c9cb6dca418c63cee199deecd8840e240efc51e80b30cc070d45feabda"
+    },
+    {
+      "path": "after/catalog-마법인형-1280x720.png",
+      "bytes": 275025,
+      "sha256": "42064499e6e94f0cf22b8dafc7cccecdd2449ab6de7a833dcc48c0687cbbcde6"
+    },
+    {
+      "path": "after/catalog-마법인형-854x480.png",
+      "bytes": 112323,
+      "sha256": "6a5f1035070f691b264a510b0021a58b8ed9edaed018be0c69536b2ffdabe585"
+    },
+    {
+      "path": "after/catalog-변신-1280x720.png",
+      "bytes": 391578,
+      "sha256": "eb0ca26e9b0f5caa21301052fcf987e2dbea4dbfbf29e4c05ecfe8f13113c9b1"
+    },
+    {
+      "path": "after/catalog-변신-854x480.png",
+      "bytes": 137508,
+      "sha256": "59fb36158ed19edd6cec8e25743ab1d7c8309b53231e2a30d1da1ec0f28363e2"
+    },
+    {
+      "path": "after/catalog-성물-1280x720.png",
+      "bytes": 336017,
+      "sha256": "189832d005faed48e420dde5026af1f94ab42320bad7004bf12aa04def33178e"
+    },
+    {
+      "path": "after/catalog-성물-854x480.png",
+      "bytes": 142099,
+      "sha256": "1750838b640160425cdadc9d43631b5967878d6ff8c48d5e678cbc3ed7b38677"
+    },
+    {
+      "path": "after/catalog-아이템-1280x720.png",
+      "bytes": 277656,
+      "sha256": "e72157f528078161a458b4222018aa56a64a37376de48c6f4b9e4dcbdd64019e"
+    },
+    {
+      "path": "after/catalog-아이템-854x480.png",
+      "bytes": 118339,
+      "sha256": "7a8783e83682b2f542269509a9731cbe94d04378532b7c94fd2bb60d2078bb74"
+    },
+    {
+      "path": "after/character-1280x720.png",
+      "bytes": 1197319,
+      "sha256": "63e286159786533bc485ee54b4ac52c0eca12a6246aba45adc306045ce7ef684"
+    },
+    {
+      "path": "after/character-854x480.png",
+      "bytes": 564263,
+      "sha256": "f2215e1781cfb0f8c9177792f0e82f1863a732b0f436c2d96d2597d38b7b8169"
+    },
+    {
+      "path": "after/character-equipment-2-1280x720.png",
+      "bytes": 1170817,
+      "sha256": "7f36db3e47f886e9327c9fa6b1ed5245cc68abbe0cb8dd9f77a352eb287e49ee"
+    },
+    {
+      "path": "after/character-equipment-2-854x480.png",
+      "bytes": 552247,
+      "sha256": "479792882ec8039d802e318edfebb73e380df96c91e8f62ce97c14aac7bf7fd9"
+    },
+    {
+      "path": "after/character-stats-1280x720.png",
+      "bytes": 1114286,
+      "sha256": "49cd32ad8cc745afb6d696ba9616471c1a5b134f31dc401654c694816f41bc61"
+    },
+    {
+      "path": "after/character-stats-854x480.png",
+      "bytes": 538894,
+      "sha256": "b9ca26d27bddbd323a28fa7e1c2b129c3cd4737e56e06e5d1ef0fc627bbc4381"
+    },
+    {
+      "path": "after/class-select-1280x720.png",
+      "bytes": 107537,
+      "sha256": "6c86f0e58b438f44345e242a465ff9238b237dce97203d6239a8124811d67f98"
+    },
+    {
+      "path": "after/class-select-854x480.png",
+      "bytes": 95786,
+      "sha256": "8e07b1fc18e271293c46c9722d2f00de6f4e2bda4990051e75197c152a19bef2"
+    },
+    {
+      "path": "after/crafting-1280x720.png",
+      "bytes": 778007,
+      "sha256": "44e3638598149cc834d36d653591557abb70342caca53adbaad1286437e41315"
+    },
+    {
+      "path": "after/crafting-854x480.png",
+      "bytes": 239344,
+      "sha256": "e43c702dc910a737ec39204f800b0ce62885792758b69bc6f8e8615cf5aec960"
+    },
+    {
+      "path": "after/detailed-stats-1280x720.png",
+      "bytes": 626059,
+      "sha256": "13c0500df1b174a11dba1f36231797935f497089f6f0443a61e378ab3e99f51e"
+    },
+    {
+      "path": "after/detailed-stats-854x480.png",
+      "bytes": 264707,
+      "sha256": "c684382ad024febbc11c06fd15a7aa359d1c4338b5cd4b82a77ba3b3b72a94e2"
+    },
+    {
+      "path": "after/equipment-collections-1280x720.png",
+      "bytes": 772241,
+      "sha256": "7c5da5c9a34b09c7fbbc8a4f46853ca96ab85b4aa97ec5ce476efb978da2c193"
+    },
+    {
+      "path": "after/equipment-collections-854x480.png",
+      "bytes": 239216,
+      "sha256": "edaab38355062a80f86a3a609c592655bacb072c0ec7fdeb4ade8f7cd08d22c6"
+    },
+    {
+      "path": "after/forge-1280x720.png",
+      "bytes": 797465,
+      "sha256": "5b012288ca7d2f5110bc98cf26923946002c45dd5f2ee4f421ee106a73c557b3"
+    },
+    {
+      "path": "after/forge-854x480.png",
+      "bytes": 256863,
+      "sha256": "0a5b7244bf16973fcc7e036a6cfd0465a8503421606b6c5b82ac8cd439ba7661"
+    },
+    {
+      "path": "after/forge-target-1280x720.png",
+      "bytes": 733068,
+      "sha256": "ad1682ff402851190d664fb5dcd6ee58aeb7faee48ab54b2ac38a7b5e8e1902d"
+    },
+    {
+      "path": "after/forge-target-854x480.png",
+      "bytes": 179611,
+      "sha256": "9b44d91ad4df6dfbcf58649098e3bc6ae062816156f2ec1ef861b4abd5f3083e"
+    },
+    {
+      "path": "after/hud-1280x720.png",
+      "bytes": 1414038,
+      "sha256": "d4d7ef7d4933502c7bd3b2125ebdb66631d0908b45325b20a361dc63b08ade9f"
+    },
+    {
+      "path": "after/hud-854x480.png",
+      "bytes": 747891,
+      "sha256": "47647244cfacf70f9a0489857c75efa13915d654ce6e83103b2ce916bc5fd878"
+    },
+    {
+      "path": "after/inventory-1280x720.png",
+      "bytes": 1245285,
+      "sha256": "ca2fc3799dfc3636b3db6b8c0a2626a9ca433cfdfd54654bfe5bddc95c90c785"
+    },
+    {
+      "path": "after/inventory-854x480.png",
+      "bytes": 591268,
+      "sha256": "923310f539b496aea46392339274aeffe9dbed0a26f887eaba0ccdec0c17a388"
+    },
+    {
+      "path": "after/inventory-detail-1280x720.png",
+      "bytes": 1029514,
+      "sha256": "952e171449acca7c494069d51adb98402b1bbcf2ba5811e063147d604d8c49ac"
+    },
+    {
+      "path": "after/inventory-detail-854x480.png",
+      "bytes": 436326,
+      "sha256": "07164656e11d92cd00a6cfd52efc261e0becb808005e7d72e642bfd279f41218"
+    },
+    {
+      "path": "after/inventory-equipment-1280x720.png",
+      "bytes": 1013435,
+      "sha256": "ae4d2367285f610448cdd8e919dd9df981034ab02d84610e8637f1a41e97fc79"
+    },
+    {
+      "path": "after/inventory-equipment-854x480.png",
+      "bytes": 393988,
+      "sha256": "bd0ffc0fae96408d080b0eeabe2c9070a0c18439b679b5463a4fe3990a82ba37"
+    },
+    {
+      "path": "after/inventory-expanded-1280x720.png",
+      "bytes": 1070145,
+      "sha256": "3d8e009a7d765d82801292c5f7d32d77bd22423b3707fa660cfe88f100b1a171"
+    },
+    {
+      "path": "after/inventory-expanded-854x480.png",
+      "bytes": 430824,
+      "sha256": "a1786b9bf3e7b7da5b5b89868da35e3d9237e1d72d8056f93c997add0ae05f86"
+    },
+    {
+      "path": "after/map-1280x720.png",
+      "bytes": 478507,
+      "sha256": "0ebb7ab435be914ea4c5295579ddd314638220b9f1716528ed656d5080365307"
+    },
+    {
+      "path": "after/map-854x480.png",
+      "bytes": 216434,
+      "sha256": "ca1488bf55753f81500db90f3e1eea3f78961c3f506269e05cc6f2c71b75e844"
+    },
+    {
+      "path": "after/menu-1280x720.png",
+      "bytes": 1132521,
+      "sha256": "d5b07a7e2d5ef2f1be83d18ee61d1b376e2437d79ce4bdf28c838833b6df4fc3"
+    },
+    {
+      "path": "after/menu-854x480.png",
+      "bytes": 529978,
+      "sha256": "c472dfafb4669b7d4942eac3f2d402de4ff52c54f3b7dcf392e73a235c81158f"
+    },
+    {
+      "path": "after/npc-shop-1280x720.png",
+      "bytes": 758844,
+      "sha256": "410c6efc1af8477f1c3dbf80c8688affaef4e5ac9f865c513617329be65265a1"
+    },
+    {
+      "path": "after/npc-shop-854x480.png",
+      "bytes": 170484,
+      "sha256": "1c6ae2122150802497fd22f5e5c5d5d9d7123170b479dc3f97148abaeb4631cc"
+    },
+    {
+      "path": "after/purchase-confirm-1280x720.png",
+      "bytes": 630216,
+      "sha256": "46c5102484bc68dc05ed4c446566d03c5591f25053f13376281dc7e0f1da8a71"
+    },
+    {
+      "path": "after/purchase-confirm-854x480.png",
+      "bytes": 149716,
+      "sha256": "9b31622c22554c41844493d4d39e66dece5b80f764b3641d5de0bc6182232ebc"
+    },
+    {
+      "path": "after/sell-1280x720.png",
+      "bytes": 997569,
+      "sha256": "f203e28e81cf40175293484ffe635aa7f835a6628b0c59f3f365e3e6cb9a3752"
+    },
+    {
+      "path": "after/sell-854x480.png",
+      "bytes": 394499,
+      "sha256": "71104a49cf279c421e6f8327bb37e5c2a504d5517ffa73e597d137f5145ae56b"
+    },
+    {
+      "path": "after/shop-1280x720.png",
+      "bytes": 208584,
+      "sha256": "e45700b14e074237c83041c5f80d77ce15afe73cf6b387697d956503f5be4a4d"
+    },
+    {
+      "path": "after/shop-854x480.png",
+      "bytes": 83936,
+      "sha256": "e78970c6787500e0cef368ae893f5e2c4a9fea2f8e148a20573ebe9bb654ec87"
+    },
+    {
+      "path": "after/skill-detail-1280x720.png",
+      "bytes": 1161292,
+      "sha256": "ffba5d49c14e0523eedcd19a91c8ea931e94856a57bf71c71f4ccb42f7ef3b1a"
+    },
+    {
+      "path": "after/skill-detail-854x480.png",
+      "bytes": 559678,
+      "sha256": "e62e2c55bdca366038ce9bb909a1df37d42652fe18b6293477223d1d42d2c377"
+    },
+    {
+      "path": "after/skills-1280x720.png",
+      "bytes": 1211762,
+      "sha256": "fefa808579863d2f215a10290d2bd2014540e8312f10cad2753b07cb0fdcd04d"
+    },
+    {
+      "path": "after/skills-854x480.png",
+      "bytes": 559678,
+      "sha256": "e62e2c55bdca366038ce9bb909a1df37d42652fe18b6293477223d1d42d2c377"
+    },
+    {
+      "path": "after/warehouse-1280x720.png",
+      "bytes": 1007319,
+      "sha256": "3c6546c241d29112e84f1e4b0a242d2f3c041e1ae3f9c15bab8b8f63603d6e5f"
+    },
+    {
+      "path": "after/warehouse-854x480.png",
+      "bytes": 404990,
+      "sha256": "b6e425c0945125aa8b52f8bfdcc01be3d643c85eb91003305a80326d9d87b903"
+    },
+    {
+      "path": "before/catalog-detail-마법인형-1280x720.png",
+      "bytes": 267806,
+      "sha256": "86433362cfd4378351e82b15c53e006399856c3656fc9f59c02e1e2ebb872423"
+    },
+    {
+      "path": "before/catalog-detail-마법인형-854x480.png",
+      "bytes": 48906,
+      "sha256": "9c4323a775e34ceab5572e8a99833946b24e2ce58b6ec9f7871b21618001a7dd"
+    },
+    {
+      "path": "before/catalog-detail-변신-1280x720.png",
+      "bytes": 384153,
+      "sha256": "7f1d44be4940304f51ff1aa51178f71813887bf203d63aa668d46b09653f10d3"
+    },
+    {
+      "path": "before/catalog-detail-변신-854x480.png",
+      "bytes": 47680,
+      "sha256": "c443411c1f82faa77eeabb386c9bf1de6e35bd7f2253a1203d0cfbf2d1aca958"
+    },
+    {
+      "path": "before/catalog-detail-성물-1280x720.png",
+      "bytes": 329259,
+      "sha256": "f0db3e6c04398e03f1e5706bf9bdc54566fba2eb836fa45e0939462c6be523ca"
+    },
+    {
+      "path": "before/catalog-detail-성물-854x480.png",
+      "bytes": 48852,
+      "sha256": "6bb0a0840ea392ea58d57b9ba0422b7b635c9540167133b5e015eeb10dfced25"
+    },
+    {
+      "path": "before/catalog-detail-아이템-1280x720.png",
+      "bytes": 270289,
+      "sha256": "8d06af039e7d6ff0ab534e6b74c2a35cec988675fa5d4f2b019c7573b6225e53"
+    },
+    {
+      "path": "before/catalog-detail-아이템-854x480.png",
+      "bytes": 62281,
+      "sha256": "872479c2445cf38df078ab4f9bf64c0bb9731191ae9a1dee4d710800cc58aaf1"
+    },
+    {
+      "path": "before/catalog-마법인형-1280x720.png",
+      "bytes": 267806,
+      "sha256": "86433362cfd4378351e82b15c53e006399856c3656fc9f59c02e1e2ebb872423"
+    },
+    {
+      "path": "before/catalog-마법인형-854x480.png",
+      "bytes": 110571,
+      "sha256": "29e1c8097a825967073f66315563bac30f7ba08c1aa86679f927d6c1619db71f"
+    },
+    {
+      "path": "before/catalog-변신-1280x720.png",
+      "bytes": 384153,
+      "sha256": "7f1d44be4940304f51ff1aa51178f71813887bf203d63aa668d46b09653f10d3"
+    },
+    {
+      "path": "before/catalog-변신-854x480.png",
+      "bytes": 135290,
+      "sha256": "738ab91340db103dbb920182b31523c6a529eefbf969ec5be8783b8d946f890b"
+    },
+    {
+      "path": "before/catalog-성물-1280x720.png",
+      "bytes": 329259,
+      "sha256": "f0db3e6c04398e03f1e5706bf9bdc54566fba2eb836fa45e0939462c6be523ca"
+    },
+    {
+      "path": "before/catalog-성물-854x480.png",
+      "bytes": 140375,
+      "sha256": "226128d7b3908679e89ff0c4b259f75fc7fc31057037943b198db3d79187ecf5"
+    },
+    {
+      "path": "before/catalog-아이템-1280x720.png",
+      "bytes": 270289,
+      "sha256": "8d06af039e7d6ff0ab534e6b74c2a35cec988675fa5d4f2b019c7573b6225e53"
+    },
+    {
+      "path": "before/catalog-아이템-854x480.png",
+      "bytes": 116246,
+      "sha256": "f7e7b54548a2758b8d2282f3101854f380aa9beb4e46a6f61bd4ac4c3384ef9b"
+    },
+    {
+      "path": "before/character-1280x720.png",
+      "bytes": 1195369,
+      "sha256": "0bdf26dbd6daa1474f0b89e6e5c68f8c9531ad636bb45c6bc62d66ddbd5cece3"
+    },
+    {
+      "path": "before/character-854x480.png",
+      "bytes": 563064,
+      "sha256": "12e9322087f37787c5ffa09eaeba00b6e5758ac9a38c45f0e79fa82cf98170b7"
+    },
+    {
+      "path": "before/character-equipment-2-1280x720.png",
+      "bytes": 1166213,
+      "sha256": "ba549b180d6cc8a279a91c2876033fed4a80a066f748955a51adffb71fb2f991"
+    },
+    {
+      "path": "before/character-equipment-2-854x480.png",
+      "bytes": 550207,
+      "sha256": "0e204a18938e61f4e9e5c24518644ce4a71a206765b5bef59538b40d0faf8bb9"
+    },
+    {
+      "path": "before/character-stats-1280x720.png",
+      "bytes": 1111887,
+      "sha256": "27bd2bedcd22f441d7a44704d2c6f78d8ded1dd1c6393579a01b89fc0ad60993"
+    },
+    {
+      "path": "before/character-stats-854x480.png",
+      "bytes": 536964,
+      "sha256": "8d374aec8e29f77fae1c6dd613a357c195153449b0bd56f437d06f03e74b0e09"
+    },
+    {
+      "path": "before/class-select-1280x720.png",
+      "bytes": 102031,
+      "sha256": "20928636d78891730c65915539c1f03d49f2f1675f433400901fd5507056ef24"
+    },
+    {
+      "path": "before/class-select-854x480.png",
+      "bytes": 93675,
+      "sha256": "dab5bb77bee117284b52175b5d4fb0701392f8343f8511f1bf763de63d0e92b0"
+    },
+    {
+      "path": "before/crafting-1280x720.png",
+      "bytes": 773498,
+      "sha256": "8f12e1a9e92d39b8d4cf706d701b907a2dec4194fbec2b28eebf027de6bb5a78"
+    },
+    {
+      "path": "before/crafting-854x480.png",
+      "bytes": 235175,
+      "sha256": "ca04a0ce2bb934c2136d3f0af597d7a9e47837d635c18ff187c4780e6694fd87"
+    },
+    {
+      "path": "before/detailed-stats-1280x720.png",
+      "bytes": 623082,
+      "sha256": "8af41803df1075571b90390090fee7252ed76da348d2537b8b6c27c661b38def"
+    },
+    {
+      "path": "before/detailed-stats-854x480.png",
+      "bytes": 263099,
+      "sha256": "d3035e75099b5718b2a438006e176657be2b546cc529b5b22d257c1d64730a14"
+    },
+    {
+      "path": "before/equipment-collections-1280x720.png",
+      "bytes": 767791,
+      "sha256": "c9935282e310d40893874ae35afc15da7133f44d8b378ff104f5ce17cd2dcd6b"
+    },
+    {
+      "path": "before/equipment-collections-854x480.png",
+      "bytes": 235603,
+      "sha256": "0fe1509149ec4abcad304b7bc74677fdf00ebeb2b85d9656cd1c9e46256ba136"
+    },
+    {
+      "path": "before/forge-1280x720.png",
+      "bytes": 794626,
+      "sha256": "0a37ad1a05f3ca4fcd3169f63fce83ecb2bdeb85eb38d72e79b3f91f9990c201"
+    },
+    {
+      "path": "before/forge-854x480.png",
+      "bytes": 254407,
+      "sha256": "39f57ffc3425af8231504d8c9df4f7cef084a84c5a011c748123dcf955be127e"
+    },
+    {
+      "path": "before/forge-target-1280x720.png",
+      "bytes": 729839,
+      "sha256": "86cd09238ff8b7c5b7fbff492376714560477f0ba1860a3fdaa6165b69f591d0"
+    },
+    {
+      "path": "before/forge-target-854x480.png",
+      "bytes": 176852,
+      "sha256": "5406a99f7187e393f255f1b7c6b261066e4aece300c42574cd58fa811c528870"
+    },
+    {
+      "path": "before/hud-1280x720.png",
+      "bytes": 1413452,
+      "sha256": "bd71b98a4d37dccbafec0db8c4fe1ffc28362776ddcef3378eb0bf6c80af6b73"
+    },
+    {
+      "path": "before/hud-854x480.png",
+      "bytes": 747110,
+      "sha256": "542f743b37597c763dcb7b44da618dcfd38e14b727b41b16feb83b44c00565ab"
+    },
+    {
+      "path": "before/inventory-1280x720.png",
+      "bytes": 1244426,
+      "sha256": "27fa651d25360453f90c419efeddae8fb4579284723b730fa53b11f1496a825b"
+    },
+    {
+      "path": "before/inventory-854x480.png",
+      "bytes": 590547,
+      "sha256": "de81ae46f26ec445edbb698f683da9285b0cd2887671d62d7fb1c52902c9842c"
+    },
+    {
+      "path": "before/inventory-detail-1280x720.png",
+      "bytes": 1026810,
+      "sha256": "4915b6bce1d64abd8d7d2b4707b3ce91cacfe981dfe224967f9c831df18ea739"
+    },
+    {
+      "path": "before/inventory-detail-854x480.png",
+      "bytes": 434639,
+      "sha256": "3a2e8806ac26cba3a65c90592814df7996907fb5209b6e3c773c7324ea73b38b"
+    },
+    {
+      "path": "before/inventory-equipment-1280x720.png",
+      "bytes": 1010617,
+      "sha256": "6d440d79893ee3c1a620f291a7c13bf025e99cb40c54346d87818b674d5aafe8"
+    },
+    {
+      "path": "before/inventory-equipment-854x480.png",
+      "bytes": 391949,
+      "sha256": "4631d406fa3b81485c679f9a73649ff188442281fc85e7236dfba33ebff64947"
+    },
+    {
+      "path": "before/inventory-expanded-1280x720.png",
+      "bytes": 1066391,
+      "sha256": "b4cc85c0a51ea1061b729fb72fd917339800818fc0ee5d296c463fcc11a51b4f"
+    },
+    {
+      "path": "before/inventory-expanded-854x480.png",
+      "bytes": 430520,
+      "sha256": "61a20246e4b447c0b1bab0ed353bc0b3e637b3b3dc0ff9984f5d97df9e0c62aa"
+    },
+    {
+      "path": "before/map-1280x720.png",
+      "bytes": 476576,
+      "sha256": "59dfbb7a4434cb0ee06ee236b557d803144b542a022f73a50edf61aa3382ec89"
+    },
+    {
+      "path": "before/map-854x480.png",
+      "bytes": 214725,
+      "sha256": "7ac355e3b97be01f8ff4959241745fb58cc82d3dfd8ac0440a34e33d4846c2b2"
+    },
+    {
+      "path": "before/menu-1280x720.png",
+      "bytes": 1127454,
+      "sha256": "212076986da211e7ccd53eb86f810a0576c13ce1d4afdba1b8003601da88f15b"
+    },
+    {
+      "path": "before/menu-854x480.png",
+      "bytes": 528901,
+      "sha256": "0e6fb579b7bd1747c33250579de106a0d6d2f27a6c41ae093f449d781588aae7"
+    },
+    {
+      "path": "before/npc-shop-1280x720.png",
+      "bytes": 754164,
+      "sha256": "a2a2b542fd639b853b4cc1b0cd5ee1fc968afca98453a5d76c384261767cdf92"
+    },
+    {
+      "path": "before/npc-shop-854x480.png",
+      "bytes": 166464,
+      "sha256": "18feac81cb28f6db09c8281c5ace0afe8cdeafc715c2cad8884d5195aec0112e"
+    },
+    {
+      "path": "before/purchase-confirm-1280x720.png",
+      "bytes": 625643,
+      "sha256": "30cd1d47078be91e4e0a9ba9a55d1a17937876a5cf5d81cf145d8b6f61d3996c"
+    },
+    {
+      "path": "before/purchase-confirm-854x480.png",
+      "bytes": 145877,
+      "sha256": "951f597b913e8ff2be7e51a9b280dd4bcd7ed5e7ffdfd8d6fe4c07aa17748bf7"
+    },
+    {
+      "path": "before/sell-1280x720.png",
+      "bytes": 994530,
+      "sha256": "7149a6c2eee81048ba28a7bda54e1d6669da2cbc0fba14fca8fbc5cb39b7fd8d"
+    },
+    {
+      "path": "before/sell-854x480.png",
+      "bytes": 393233,
+      "sha256": "efecf1e33ba814281c4b814e474b767a0ac82cb4bc15316dd448421dac8ebbd8"
+    },
+    {
+      "path": "before/shop-1280x720.png",
+      "bytes": 205265,
+      "sha256": "6d4ec7c44945cee3eaf87d732aa364099bf05c4c06f7a1497240a70e21e044c3"
+    },
+    {
+      "path": "before/shop-854x480.png",
+      "bytes": 80963,
+      "sha256": "64cc69ed38a3b1846a00fa010d8334dc2d6c30cbf85d9a00888802ec4b20ea6e"
+    },
+    {
+      "path": "before/skill-detail-1280x720.png",
+      "bytes": 1157257,
+      "sha256": "7077b48d7cab957d97f22605dbbe83f61613da29ea9e317afc1b9fb03a518ae9"
+    },
+    {
+      "path": "before/skill-detail-854x480.png",
+      "bytes": 556946,
+      "sha256": "64175eada608ae603cab8891008cc4369cc878e9ffc1a5e5097f7685a9936510"
+    },
+    {
+      "path": "before/skills-1280x720.png",
+      "bytes": 1208761,
+      "sha256": "bbd08bd99952a2c6c4a4a443a7c8d4679bc64ad76ce64e42ecefe73be8832aab"
+    },
+    {
+      "path": "before/skills-854x480.png",
+      "bytes": 556946,
+      "sha256": "64175eada608ae603cab8891008cc4369cc878e9ffc1a5e5097f7685a9936510"
+    },
+    {
+      "path": "before/warehouse-1280x720.png",
+      "bytes": 1006330,
+      "sha256": "bd2253072909f5ffd52e05a7b87ca18d5e89be507c4d192b255a88bc03fddee1"
+    },
+    {
+      "path": "before/warehouse-854x480.png",
+      "bytes": 401913,
+      "sha256": "0596b97859ff950f446ece3a5b0bac1ae6bf7523ee02f692d0cdb327e322bc48"
+    }
+  ],
+  "limitations": [
+    "No Android device run",
+    "No actual audio listening",
+    "No claim of frame/pixel equality to LineageM",
+    "Existing artwork and animation unchanged",
+    "Pre-refinement capture was superseded after inspecting tiled seams and collapsed mobile catalog detail"
+  ]
+}

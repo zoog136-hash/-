@@ -2,6 +2,9 @@ extends VBoxContainer
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
+const SelectionSheet=preload("res://scripts/ui/selection_detail_sheet.gd")
+var selection_sheet: Control
+const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
 const RULES = preload("res://scripts/skill_rules.gd")
 var hud: Node
@@ -34,12 +37,32 @@ var touch_active: bool = false
 # Grayscale variants are created once per source texture while this view lives.
 # Do not re-read/decompress icons during the cooldown polling loop.
 var unlearned_icons: Dictionary = {}
+var class_only: bool = false
+var scope_buttons: Array[Button] = []
 
 func configure(controller: Node) -> void:
 	hud=controller
 	visibility_changed.connect(_sync_visibility)
 	records=hud.job_skills.duplicate(true)
+	# The inspected 2023 menu has direct All/Technique tabs above an icon grid.
+	# Names, costs and learning information remain in the existing inspector.
+	var scope:=HBoxContainer.new();scope.name="SkillReferenceTabs"
+	add_child(scope)
+	for current: int in range(2):
+		var selection: int=current
+		var button: Button=UI.button("전체" if current==0 else "기술",func() -> void:
+			class_only=selection==1
+			type_filter.select(4 if class_only else 0);class_filter.select(0);refresh(),Vector2(100,44))
+		button.name="SkillAllTab" if current==0 else "SkillTechniqueTab"
+		button.toggle_mode=true
+		scope.add_child(button);scope_buttons.append(button)
+	var spacer:=Control.new();spacer.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scope.add_child(spacer)
 	var toolbar := HFlowContainer.new()
+	var filters_button: Button=UI.button("검색",func() -> void:toolbar.visible=not toolbar.visible,Vector2(64,44))
+	filters_button.name="SkillFiltersToggle"
+	filters_button.tooltip_text="이름 · 종류 · 직업 · 등급 검색"
+	scope.add_child(filters_button)
+	toolbar.hide()
 	add_child(toolbar)
 	search=LineEdit.new()
 	search.name="SkillSearch"
@@ -49,7 +72,7 @@ func configure(controller: Node) -> void:
 	search.text_changed.connect(func(_value: String) -> void: refresh())
 	toolbar.add_child(search)
 	type_filter=OptionButton.new()
-	for text: String in ["현재 직업 · 공용","액티브","패시브","등록 스킬 전체 · 조회"]: type_filter.add_item(text)
+	for text: String in ["현재 직업 · 공용","액티브","패시브","등록 스킬 전체 · 조회","직업 기술"]: type_filter.add_item(text)
 	type_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	toolbar.add_child(type_filter)
 	class_filter = OptionButton.new()
@@ -75,7 +98,7 @@ func configure(controller: Node) -> void:
 		refresh())
 	toolbar.add_child(school_filter)
 	var state: Dictionary = hud.character_state
-	add_child(UI.section("Lv.%d %s / 등록 %d · 신규 %d" % [state.get("level",1),state.get("job_class","기사"),records.size(),hud.get_parent().original_skills.catalog.current_official.records.size()],14))
+	scope.tooltip_text="Lv.%d %s / 등록 %d · 신규 %d" % [state.get("level",1),state.get("job_class","기사"),records.size(),hud.get_parent().original_skills.catalog.current_official.records.size()]
 	var body := Browser.new()
 	body.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	add_child(body)
@@ -85,11 +108,11 @@ func configure(controller: Node) -> void:
 	cards.max_columns=4
 	cards.fixed_column_width=76
 	cards.fixed_icon_size=Vector2i(54,54)
-	cards.add_theme_font_size_override("font_size",11)
+	cards.add_theme_font_size_override("font_size",1)
 	cards.add_theme_constant_override("h_separation",6)
 	cards.add_theme_constant_override("v_separation",6)
 	cards.icon_mode=ItemList.ICON_MODE_TOP
-	cards.max_text_lines=2
+	cards.max_text_lines=1
 	cards.same_column_width=true
 	cards.item_selected.connect(select)
 	# Shared PointerTransfer handles native touch, scrolling and actual drops.
@@ -151,6 +174,7 @@ func configure(controller: Node) -> void:
 	viewport.add_child(preview_vfx)
 	preview_button = UI.button("이펙트 프리뷰", func() -> void:
 		if selected.is_empty() or not is_visible_in_tree(): return
+		if selection_sheet!=null and hud.workspace.was_scroll_dragged(selection_sheet.scroll):return
 		preview_container.visible = true
 		preview_vfx.clear()
 		preview_vfx.emit_skill(str(selected.id), "cast", Vector2(90,45))
@@ -193,7 +217,14 @@ func configure(controller: Node) -> void:
 		if not world.original_skills.summons.command(orders[index],world.selected_monster): world.hud.show_message("소환수 또는 공격 대상 없음"))
 	summon_controls.add_child(summon_order)
 	summon_controls.add_child(UI.button("소환 해제",func() -> void: hud.get_parent().original_skills.summons.command("dismiss")))
-	body.configure(cards,side_scroll,278)
+	selection_sheet=SelectionSheet.new()
+	var inspector: Control=selection_sheet.bind_skill(self,side_scroll,side)
+	body.configure(cards,inspector,278)
+	body.move_child(body.tabs,body.get_child_count()-1)
+	(body.tabs.get_child(0) as Button).text="스킬 목록"
+	(body.tabs.get_child(1) as Button).text="상세보기"
+	cards.add_theme_stylebox_override("panel",UI.MATERIAL.from_flat(UI.box(Color("211b14"),Color("675640"),4),true))
+	for button: Button in [learn_button,book_button,use_button,quick_button]:ReferenceSurfaces.action(button)
 	hud.workspace.register_scroll_drag(side_scroll,side_scroll)
 	refresh()
 
@@ -204,6 +235,8 @@ func refresh() -> void:
 	var job := str(hud.character_state.get("job_class","기사")) if class_filter.selected == 0 else class_filter.get_item_text(class_filter.selected)
 	var selected_id: String = str(selected.get("id",selected.get("name","")))
 	var query := search.text.to_lower().strip_edges()
+	class_only=type_filter.selected==4
+	for index: int in range(scope_buttons.size()):scope_buttons[index].button_pressed=(index==1)==class_only
 	for value: Variant in records:
 		if not value is Dictionary: continue
 		var record: Dictionary=value
@@ -214,6 +247,7 @@ func refresh() -> void:
 			if job == "공용":
 				if str(record.get("class", "")) != "공용": continue
 			elif not allowed.has(job): continue
+		if class_only and str(record.get("class","공용"))=="공용":continue
 		if grade_filter.selected > 0 and str(record.get("grade", "")) != grade_filter.get_item_text(grade_filter.selected): continue
 		if type_filter.selected==1 and activation=="passive": continue
 		if type_filter.selected==2 and activation!="passive": continue
@@ -229,20 +263,15 @@ func refresh() -> void:
 		var learned: bool = hud.get_parent().original_skills.catalog.owned(record)
 		var icon: Texture2D = _icon_for_skill(record,learned)
 		var subtitle: String = CURRENT.mode_label(record) if bool(record.get("runtime_blocked", false)) else "패시브" if passive else "MP %d" % int(record.get("mp",0))
-		cards.add_item(("확인중 " if bool(record.get("runtime_blocked", false)) else "" if learned else "미습득 ") + str(record.get("name",""))+"\n"+subtitle,icon)
+		cards.add_item(" ",icon)
+		cards.set_item_metadata(index,str(record.get("id",record.get("name",""))))
+		cards.set_item_tooltip(index,("실행 보류 · " if bool(record.get("runtime_blocked",false)) else "습득 · " if learned else "미습득 · ")+str(record.get("name",""))+" · "+subtitle)
 		var color: Color=UI.grade(str(record.get("grade","일반"))) if learned else Color("aaa7a1")
 		cards.set_item_icon_modulate(index,Color.WHITE if learned else Color(.68,.68,.68,.62))
 		cards.set_item_custom_fg_color(index,color)
 		cards.set_item_custom_bg_color(index,Color(color,.07))
 	if filtered.is_empty():
-		selected={}
-		official_toggle_preview.visible = false
-		detail.text="검색 조건에 맞는 스킬이 없습니다."
-		learn_button.disabled = true
-		book_button.disabled = true
-		preview_button.disabled = true
-		use_button.disabled=true
-		quick_button.disabled=true
+		_clear_selection()
 	else:
 		var chosen: int = 0
 		for i: int in range(filtered.size()):
@@ -279,7 +308,18 @@ func _unlearned_icon(source: Texture2D) -> Texture2D:
 
 func select(index: int) -> void:
 	if index<0 or index>=filtered.size(): return
+	if str(selected.get("id",selected.get("name","")))!=str(filtered[index].get("id",filtered[index].get("name",""))):
+		preview_vfx.clear()
+		preview_container.hide()
 	selected=filtered[index]
+	summon_controls.hide()
+	learn_button.disabled=true
+	book_button.disabled=true
+	preview_button.disabled=true
+	learn_button.tooltip_text="이 스킬은 습득 조작을 지원하지 않습니다."
+	book_button.tooltip_text="이 스킬은 스킬북 구입을 지원하지 않습니다."
+	use_button.tooltip_text=""
+	quick_button.tooltip_text=""
 	official_toggle_preview.set_pressed_no_signal(false)
 	official_toggle_preview.visible = bool(selected.get("toggle_classified", false)) and bool(selected.get("runtime_blocked",false))
 	reagent_button.visible = false
@@ -295,6 +335,7 @@ func select(index: int) -> void:
 		book_button.tooltip_text = "습득 스킬북·입수/가격 미확인"
 		summon_controls.visible = false
 		cooldown.text = "확인된 수치만 표시 · 프리뷰 가능"
+		selection_sheet.show_skill()
 		return
 	use_button.text = "스킬 사용"
 	if selected.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:
@@ -311,6 +352,22 @@ func select(index: int) -> void:
 	quick_button.disabled=passive or not owned or not supported
 	use_button.text="패시브 · 자동 적용" if passive else "스킬 사용"
 	clock=0
+	selection_sheet.show_skill()
+
+func _clear_selection() -> void:
+	selected={}
+	detail.text="검색 조건에 맞는 스킬이 없습니다."
+	cooldown.text=""
+	for button: Button in [learn_button,book_button,use_button,quick_button,preview_button]:
+		button.disabled=true
+		button.tooltip_text="스킬을 먼저 선택하세요."
+	use_button.text="스킬 사용"
+	summon_controls.hide()
+	official_toggle_preview.hide()
+	reagent_button.hide()
+	preview_vfx.clear()
+	preview_container.hide()
+	selection_sheet.show_skill()
 
 func original_field_text(value: String, field: Dictionary) -> String:
 	var display := UI.safe(value)
@@ -329,6 +386,8 @@ func select_original() -> void:
 	var service: TwilightOriginalSkillService = world.original_skills
 	var catalog: TwilightOriginalSkillCatalog = service.catalog
 	var skill: Dictionary = catalog.resolve(selected)
+	preview_button.disabled=skill.is_empty()
+	preview_button.tooltip_text="선택한 스킬의 기존 이펙트 미리보기" if not preview_button.disabled else "미리보기를 지원하지 않는 스킬입니다."
 	var learned: bool = catalog.owned(selected)
 	var passive: bool = RULES.is_passive(selected)
 	var base_cooldown: float = float(skill.get("cooldown",0))
@@ -355,6 +414,7 @@ func select_original() -> void:
 	quick_button.disabled = passive or not learned
 	quick_button.tooltip_text = use_button.tooltip_text
 	clock = 0
+	selection_sheet.show_skill()
 
 func _process(delta: float) -> void:
 	if bool(selected.get("runtime_blocked", false)): return
@@ -443,3 +503,4 @@ func select_local() -> void:
 	summon_controls.visible = selected.mode=="summon" and owned
 	cooldown.text = "패시브 적용" if passive and owned else "미습득" if not owned else "ON" if service.local_runtime.is_on(selected) else "준비 / 재사용 확인"
 	clock = 0
+	selection_sheet.show_skill()

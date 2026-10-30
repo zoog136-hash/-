@@ -1,0 +1,43 @@
+{
+  "engine": "4.7.2-stable (official)",
+  "registry_source_sha256": "77361f5554420cacfc3076ad32dbc704eddf7a9725ee58e57c45900bf9915b38",
+  "samples": [
+    {
+      "cache_hit": false,
+      "cells": 1434265,
+      "detailed_calls": {},
+      "load_field_us": 1570515,
+      "map": "aden_world",
+      "physics_shapes": 413,
+      "registry_before_after_configure_us": 282272,
+      "timings": {
+        "base_configure_us": 1232459,
+        "build_physics_us": 137506,
+        "configure_png_us": 1288243,
+        "reachability_us": [
+          6938,
+          6893
+        ]
+      }
+    },
+    {
+      "cache_hit": false,
+      "cells": 285915,
+      "detailed_calls": {},
+      "load_field_us": 2065147,
+      "map": "escaros_world",
+      "physics_shapes": 929,
+      "registry_before_after_configure_us": 195863,
+      "timings": {
+        "base_configure_us": 1654816,
+        "build_physics_us": 32729,
+        "configure_png_us": 1869284,
+        "reachability_us": [
+          14656,
+          15145
+        ]
+      }
+    }
+  ],
+  "scope": "standalone native registry+field stages; no actor/sprite loading, no normal Main wall-frame claim; nested timings are inclusive"
+}

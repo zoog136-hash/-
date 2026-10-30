@@ -1,0 +1,152 @@
+{
+  "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "android": "NOT_RUN",
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "gpu_memory": "UNKNOWN",
+  "map": "escaros_world",
+  "population": 133,
+  "position": [
+    7433.0,
+    2904.0
+  ],
+  "samples": [
+    {
+      "draw_calls": {
+        "max": 2465.0,
+        "median": 2465.0,
+        "p95": 2465.0,
+        "p99": 2465.0
+      },
+      "frame_ms": {
+        "max": 47.051,
+        "median": 31.394,
+        "p95": 41.989,
+        "p99": 45.779
+      },
+      "frames": 180,
+      "minimap_visible": true,
+      "peak_sampled_rss_kib": 1591112,
+      "phase": 0,
+      "physics_monitor_ms": {
+        "max": 0.099,
+        "median": 0.065,
+        "p95": 0.099,
+        "p99": 0.099
+      },
+      "process_monitor_ms": {
+        "max": 46.993,
+        "median": 41.17,
+        "p95": 46.993,
+        "p99": 46.993
+      },
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 0,
+      "static_memory_bytes": 344638984.0
+    },
+    {
+      "draw_calls": {
+        "max": 213.0,
+        "median": 213.0,
+        "p95": 213.0,
+        "p99": 213.0
+      },
+      "frame_ms": {
+        "max": 18.774,
+        "median": 9.546,
+        "p95": 15.623,
+        "p99": 18.491
+      },
+      "frames": 180,
+      "minimap_visible": false,
+      "peak_sampled_rss_kib": 1591120,
+      "phase": 1,
+      "physics_monitor_ms": {
+        "max": 0.186,
+        "median": 0.186,
+        "p95": 0.186,
+        "p99": 0.186
+      },
+      "process_monitor_ms": {
+        "max": 36.609,
+        "median": 18.714,
+        "p95": 36.609,
+        "p99": 36.609
+      },
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 0,
+      "static_memory_bytes": 344642812.0
+    },
+    {
+      "draw_calls": {
+        "max": 2465.0,
+        "median": 2465.0,
+        "p95": 2465.0,
+        "p99": 2465.0
+      },
+      "frame_ms": {
+        "max": 57.394,
+        "median": 31.373,
+        "p95": 41.742,
+        "p99": 54.167
+      },
+      "frames": 180,
+      "minimap_visible": true,
+      "peak_sampled_rss_kib": 1591124,
+      "phase": 2,
+      "physics_monitor_ms": {
+        "max": 2.114,
+        "median": 0.082,
+        "p95": 2.114,
+        "p99": 2.114
+      },
+      "process_monitor_ms": {
+        "max": 57.315,
+        "median": 41.494,
+        "p95": 57.315,
+        "p99": 57.315
+      },
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 2,
+      "static_memory_bytes": 344646560.0
+    },
+    {
+      "draw_calls": {
+        "max": 213.0,
+        "median": 213.0,
+        "p95": 213.0,
+        "p99": 213.0
+      },
+      "frame_ms": {
+        "max": 18.373,
+        "median": 12.061,
+        "p95": 14.846,
+        "p99": 17.243
+      },
+      "frames": 180,
+      "minimap_visible": false,
+      "peak_sampled_rss_kib": 1591124,
+      "phase": 3,
+      "physics_monitor_ms": {
+        "max": 0.093,
+        "median": 0.078,
+        "p95": 0.093,
+        "p99": 0.093
+      },
+      "process_monitor_ms": {
+        "max": 44.056,
+        "median": 18.317,
+        "p95": 44.056,
+        "p99": 44.056
+      },
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 0,
+      "static_memory_bytes": 344650332.0
+    }
+  ],
+  "scope": "diagnostic minimap hide/restore only; same loaded Main and frozen simulation;180frames each after30warm frames; visible-hidden-visible-hidden; no screenshot readback; no gameplay/production visibility change",
+  "zoom": [
+    1.0,
+    1.0
+  ]
+}

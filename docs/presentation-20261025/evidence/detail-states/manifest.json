@@ -1,0 +1,81 @@
+{
+  "baseline": "95cfb271",
+  "fixture": "same real catalog item equipped+locked; actual shop99x450000; wallet100000000 then0; no purchases; fixed seed20261025",
+  "before_checks": 37,
+  "before_expected_failures": 22,
+  "after_checks": 37,
+  "after_failures": [],
+  "images": [
+    {
+      "path": "after/equipped-locked-1280x720.png",
+      "bytes": 983833,
+      "sha256": "83b61d548f1d2d00e6c5857caf3fa6302badcf72937c06a56bdbe841c2e43ef8"
+    },
+    {
+      "path": "after/equipped-locked-854x480.png",
+      "bytes": 429777,
+      "sha256": "291c2418ea21f4139e5bba8047a74c4239c57dad81380e32338b8e84083108ed"
+    },
+    {
+      "path": "after/shop-disabled-1280x720.png",
+      "bytes": 210472,
+      "sha256": "86e3fe62714554cfab502d72fc4ce90e30388275c36c176d7d40ee10c08fe6cc"
+    },
+    {
+      "path": "after/shop-disabled-854x480.png",
+      "bytes": 87287,
+      "sha256": "f30133628f755e60dd4ac182bb19eef27c007d3fcbbd8d1be16d3a9d4cf10c1c"
+    },
+    {
+      "path": "after/shop-long-name-1280x720.png",
+      "bytes": 215098,
+      "sha256": "b27c4c74f56c57f1c33dacbba13fa12b3cc67105de4b6a53434500a692c02896"
+    },
+    {
+      "path": "after/shop-long-name-854x480.png",
+      "bytes": 96474,
+      "sha256": "3cc561c358a82e2eb0daf586652ec1cecc47336b2690a8f313448d457b6a19fd"
+    },
+    {
+      "path": "before/equipped-locked-1280x720.png",
+      "bytes": 1033335,
+      "sha256": "baae013496ed9c2bd575b3d5d2c1ab27185223c7a0974b6e3ef34f0bbd105299"
+    },
+    {
+      "path": "before/equipped-locked-854x480.png",
+      "bytes": 429134,
+      "sha256": "28051a06b7eb37019518a48476afc3b7ace62e9882a0163e192c07b370f2c589"
+    },
+    {
+      "path": "before/shop-disabled-1280x720.png",
+      "bytes": 216544,
+      "sha256": "e256f34068c13c7ebb6d5597472b9543379fc3624b6331eab36df5bb770438da"
+    },
+    {
+      "path": "before/shop-disabled-854x480.png",
+      "bytes": 90994,
+      "sha256": "c66aa4affefbdeb539267d7d424d2b9242380821c86025bbe13c7e4a9f127e14"
+    },
+    {
+      "path": "before/shop-long-name-1280x720.png",
+      "bytes": 218548,
+      "sha256": "1b9948afe7aec8c6b1951f860daf62643907a1fcaa5a8850693ec85e521df1a9"
+    },
+    {
+      "path": "before/shop-long-name-854x480.png",
+      "bytes": 94545,
+      "sha256": "9f5b49c92c04cfc0e546fdecafac48aff5dd1525d797d11c5f7dff36c5a0cd2a"
+    }
+  ],
+  "total_bytes": 4106041,
+  "not_measured": [
+    "Android device",
+    "audio listening",
+    "official LineageM pixel accuracy"
+  ],
+  "source_files": [
+    "scripts/ui/renewal_inventory.gd",
+    "scripts/ui/renewal_shop.gd",
+    "scripts/ui/renewal_theme.gd"
+  ]
+}

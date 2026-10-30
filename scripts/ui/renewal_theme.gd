@@ -5,6 +5,10 @@ extends RefCounted
 # legible parchment copy. No source-game textures are bundled.
 const ITEM_ART = preload("res://scripts/ui/item_icon_art.gd")
 const ICONS = preload("res://scripts/ui/renewal_icons.gd")
+const MATERIAL = preload("res://scripts/ui/renewal_material_style.gd")
+const NATIVE_TEXT=preload("res://scripts/ui/native_touch_text.gd")
+static var source_icon_cache: Dictionary = {}
+static var recess_style: StyleBoxTexture
 
 const GOLD = Color("dcc391")
 const BRONZE = Color("766452")
@@ -44,36 +48,73 @@ static func chrome_panel(bg: Color = Color("0c0d11"), rim: Color = GOLD, margin:
 	s.shadow_color = Color(0,0,0,.55)
 	return s
 
+static func screen_frame() -> StyleBoxTexture:
+	return MATERIAL.window_frame()
+
+static func primary_button(button: Button) -> void:
+	button.add_theme_stylebox_override("normal",MATERIAL.from_flat(box(Color("493822"),Color("b69a65"),7)))
+	button.add_theme_stylebox_override("hover",MATERIAL.from_flat(box(Color("5b4629"),GOLD,7)))
+	button.add_theme_stylebox_override("pressed",MATERIAL.from_flat(box(Color("302414"),GOLD,7),true))
+	button.add_theme_color_override("font_color",Color("f7e8c9"))
+
 static func slot_frame(rim: Color = BRONZE, active: bool = false) -> StyleBoxFlat:
-	var s := box(Color("26343c") if active else Color("080808"), rim, 3)
+	var s := box(Color("29251e") if active else Color("0c0b09"), rim, 3)
 	s.set_corner_radius_all(1)
 	s.shadow_size = 0
 	return s
 
 static func item_frame(grade_name: String, active: bool = false) -> StyleBoxFlat:
 	var tint := grade(grade_name)
-	var s := slot_frame(tint,active)
+	var s := slot_frame(BRONZE if grade_name == "일반" and not active else tint,active)
 	s.bg_color = Color("111317").lerp(tint,.055)
 	s.border_width_bottom = 2
 	s.shadow_size = 3 if grade_name in ["희귀","영웅","전설","신화","유일"] else 0
 	s.shadow_color = Color(tint,.18)
 	return s
+
+static func slot_recess() -> StyleBoxTexture:
+	# The grid draws consecutive recesses with this one shared texture before
+	# any item art. No extra per-slot CanvasItem or per-frame allocation.
+	if recess_style == null:
+		recess_style = MATERIAL.from_flat(box(Color("0c0b09"),Color("42372b"),0),true)
+	return recess_style
+
+static func menu_tile(active: bool = false) -> StyleBoxFlat:
+	var style := box(Color("2b241b") if active else Color(0.065,0.054,0.042,0.3),Color("7a6547") if active else Color(0.40,0.32,0.23,0.36),0)
+	style.shadow_size = 0
+	style.border_width_top = 1 if active else 0
+	style.border_width_left = 1 if active else 0
+	style.border_width_right = 1 if active else 0
+	return style
 static func icon(kind: String) -> Texture2D:
+	if kind == "attack":
+		if not source_icon_cache.has(kind):source_icon_cache[kind]=load("res://assets/ui/attack_sword_painted.png")
+		return source_icon_cache[kind]
+	# Service navigation shares one embossed symbol family. Item/skill art
+	# continues through its existing record-based resolvers below.
+	if ICONS.PATHS.has(str(ICONS.ALIASES.get(kind,kind))): return ICONS.texture(kind)
 	var files: Dictionary = {"inventory":"bag","shop":"shop","skills":"skill","settings":"settings","auto":"macro","map":"teleport","attack":"attack","return":"return","enhance":"sword"}
-	if files.has(kind): return load("res://assets/ui/"+str(files[kind])+".png") as Texture2D
+	if files.has(kind):
+		if source_icon_cache.has(kind): return source_icon_cache[kind]
+		var path: String = "res://assets/ui/"+str(files[kind])+".png"
+		if ResourceLoader.exists(path):
+			var source: Texture2D = load(path) as Texture2D
+			if source != null:
+				source_icon_cache[kind] = source
+				return source
 	return ICONS.texture(kind)
 static func section(value: String, font_size: int = 16) -> Label:
 	var l := label(value,font_size,GOLD)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return l
 
-static func tab_frame(active: bool = false) -> StyleBoxFlat:
-	var s := box(Color("463620") if active else Color("17171b"), GOLD if active else Color("3e3529"), 7)
+static func tab_frame(active: bool = false) -> StyleBoxTexture:
+	var s := box(Color("342b20") if active else Color("211c17"), Color("b69b6e") if active else Color("514637"), 7)
 	s.set_corner_radius_all(1)
 	s.shadow_size = 0
 	if active:
 		s.border_width_bottom = 2
-	return s
+	return MATERIAL.from_flat(s,active)
 
 static func _divider(vertical: bool) -> StyleBoxLine:
 	var line := StyleBoxLine.new()
@@ -87,7 +128,7 @@ static func make_theme() -> Theme:
 	var readable := FontVariation.new()
 	readable.base_font = FONT
 	# Font axes use integer OpenType tags (wght), not string keys.
-	readable.variation_opentype = {2003265652:500.0}
+	readable.variation_opentype = {2003265652:550.0}
 	t.default_font = readable
 	t.default_font_size = 14
 
@@ -96,10 +137,10 @@ static func make_theme() -> Theme:
 		t.set_color("font_disabled_color",type,MUTED)
 	for type: String in ["Button","OptionButton"]:
 		t.set_stylebox("normal",type,tab_frame())
-		t.set_stylebox("hover",type,box(Color("302a20"),GOLD,7))
+		t.set_stylebox("hover",type,MATERIAL.from_flat(box(Color("302a20"),BRONZE.lightened(.22),7)))
 		t.set_stylebox("pressed",type,tab_frame(true))
 		t.set_stylebox("hover_pressed",type,tab_frame(true))
-		t.set_stylebox("disabled",type,box(Color("121317"),Color("40392e"),7))
+		t.set_stylebox("disabled",type,MATERIAL.from_flat(box(Color("181817"),Color("403b34"),7),true))
 		var focus := box(Color(0,0,0,0),GOLD,0)
 		focus.set_border_width_all(2)
 		focus.shadow_size = 0
@@ -112,14 +153,17 @@ static func make_theme() -> Theme:
 	t.set_stylebox("panel","PanelContainer",chrome_panel())
 	t.set_stylebox("panel","Panel",chrome_panel())
 	t.set_stylebox("panel","PopupMenu",chrome_panel(Color("101014"),BRONZE,6))
-	t.set_stylebox("normal","LineEdit",box(Color("0b1015"),Color("4d463b"),8))
-	t.set_stylebox("focus","LineEdit",box(Color("121a20"),GOLD,8))
+	t.set_stylebox("normal","LineEdit",MATERIAL.from_flat(box(Color("10100f"),Color("4d463b"),8),true))
+	t.set_stylebox("focus","LineEdit",MATERIAL.from_flat(box(Color("181713"),GOLD,8),true))
 	t.set_stylebox("normal","TextEdit",box(Color("0b1015"),BRONZE,7))
 	t.set_stylebox("focus","TextEdit",box(Color("111922"),GOLD,7))
 	t.set_color("font_placeholder_color","LineEdit",MUTED)
 	t.set_color("caret_color","LineEdit",GOLD)
 	t.set_color("selection_color","LineEdit",Color("574222"))
-	t.set_stylebox("panel","ItemList",box(Color("111216"),BRONZE,6))
+	var list_panel := MATERIAL.from_flat(box(Color("12100d"),Color("514233"),6),true)
+	# Tall lists need one shallow surface, rather than repeating button seams.
+	list_panel.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	t.set_stylebox("panel","ItemList",list_panel)
 	t.set_stylebox("selected","ItemList",slot_frame(GOLD,true))
 	t.set_stylebox("selected_focus","ItemList",slot_frame(GOLD,true))
 	t.set_stylebox("hovered","ItemList",slot_frame(Color("97805c")))
@@ -127,7 +171,7 @@ static func make_theme() -> Theme:
 	t.set_stylebox("panel","TabContainer",chrome_panel(Color("101116"),BRONZE,6))
 	t.set_stylebox("tab_selected","TabBar",tab_frame(true))
 	t.set_stylebox("tab_unselected","TabBar",tab_frame())
-	t.set_stylebox("tab_hovered","TabBar",box(Color("302a20"),GOLD,7))
+	t.set_stylebox("tab_hovered","TabBar",MATERIAL.from_flat(box(Color("302a20"),BRONZE.lightened(.22),7)))
 	t.set_stylebox("background","ProgressBar",slot_frame(Color("3b3328")))
 	t.set_stylebox("fill","ProgressBar",box(Color("a98950"),GOLD,0))
 	t.set_stylebox("separator","HSeparator",_divider(false))
@@ -171,10 +215,15 @@ static func button(value: String, action: Callable, min_size: Vector2 = Vector2(
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	if action.is_valid():
 		b.pressed.connect(action)
+	b.pressed.connect(func() -> void:
+		if not b.is_inside_tree() or b.disabled: return
+		var audio: Node = b.get_tree().get_first_node_in_group("presentation_audio")
+		if audio != null: audio.call("play_ui","button"))
 	return b
 
 static func rich(value: String) -> RichTextLabel:
 	var r := RichTextLabel.new()
+	r.set_script(NATIVE_TEXT)
 	r.bbcode_enabled = true
 	r.text = value
 	r.fit_content = true
@@ -196,3 +245,12 @@ static func clear_item_visual(view: TextureRect) -> void:
 
 static func set_reduced_motion(enabled: bool) -> void:
 	preload("res://scripts/ui/item_visual.gd").set_reduced_motion(enabled)
+
+# Display-only grouping; callers retain integer IDs/prices/quantities.
+static func number_text(value: int) -> String:
+	var digits: String = str(absi(value))
+	var grouped: String = ""
+	for index: int in range(digits.length()):
+		if index > 0 and (digits.length()-index)%3 == 0: grouped += ","
+		grouped += digits[index]
+	return ("-" if value < 0 else "")+grouped

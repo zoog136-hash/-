@@ -62,6 +62,8 @@ const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const EQUIPMENT_COLLECTION_RUNTIME = preload("res://scripts/collections/equipment_collection_runtime.gd")
 var equipment_collections = EQUIPMENT_COLLECTION_RUNTIME.new()
+const CARD_COLLECTION_RUNTIME = preload("res://scripts/cards/collection_runtime.gd")
+var card_collections = CARD_COLLECTION_RUNTIME.new()
 const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
 var growth = GROWTH.new()
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
@@ -76,6 +78,8 @@ const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
 var ground_loot: TwilightGroundLootManager = GROUND_LOOT_MANAGER.new()
 var loot_pickup: TwilightLootPickupController = LOOT_PICKUP_CONTROLLER.new()
+const PRESENTATION_AUDIO = preload("res://scripts/audio/presentation_audio.gd")
+var presentation_audio: Node
 const RELIC_MOTION = preload("res://scripts/animation/relic_motion.gd")
 var relic_motion: TwilightRelicMotion = RELIC_MOTION.new()
 const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
@@ -357,12 +361,19 @@ func _ready() -> void:
 	crafting.load_recipes()
 	_load_data()
 	card_draw_fusion.configure(catalog_db)
+	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
 	ground_loot.configure(self)
 	loot_pickup.configure(self, ground_loot)
+	presentation_audio = PRESENTATION_AUDIO.new()
+	add_child(presentation_audio)
+	# Observe the existing released attack event; never drive its frame or timing.
+	player.attack_strike.connect(func(cycle: int) -> void:
+		if int(pending_attack.get("id", -1)) == cycle and bool(pending_attack.get("normal", false)):
+			presentation_audio.play_world("attack", player.global_position))
 	_connect_signals()
 	if hud.has_signal("consumable_auto_settings_changed"):
 		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
@@ -783,10 +794,12 @@ func _refresh_equipment_effects() -> void:
 		if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"):
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
-	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))
+	flags.hp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))
+	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
 	equipment_effects=flags
 
 func _invalidate_equipment_static() -> void:
+	card_collections.invalidate()
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
@@ -814,7 +827,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 func _tick_catalog_recovery(delta: float) -> void:
 	var elapsed: float = maxf(0.0, delta)
 	_refresh_equipment_effects()
-	var hp_enabled: bool = _has_recovery_effect("hpAbsoluteRecovery") or _has_recovery_effect("hpRecoveryTick")
+	var hp_tick_amount: int = int(equipment_effects.hp_tick_amount)
+	var hp_enabled: bool = hp_tick_amount>0
 	var mp_tick_amount: int = int(equipment_effects.mp_tick_amount)
 	var mp_enabled: bool = mp_tick_amount>0
 	var changed: bool = false
@@ -824,7 +838,7 @@ func _tick_catalog_recovery(delta: float) -> void:
 			var cycles: int = int(floor(hp_recovery_elapsed / UNIQUE_RECOVERY_INTERVAL))
 			hp_recovery_elapsed = fmod(hp_recovery_elapsed, UNIQUE_RECOVERY_INTERVAL)
 			var old_hp: int = hp
-			hp = mini(_effective_max_hp(), hp + cycles * UNIQUE_RECOVERY_AMOUNT)
+			hp = mini(_effective_max_hp(), hp + cycles * hp_tick_amount)
 			if hp > old_hp:
 				hud.append_log("HP 자동회복 · +%d" % (hp - old_hp))
 				changed = true
@@ -852,7 +866,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -949,7 +963,7 @@ func _equipment_attribute_bonus(stat: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.attribute(_source_catalog_record("아이템", entry as Dictionary), stat)
-	return result + int(equipment_collections.bonus(stat.to_lower()+":flat"))
+	return result + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat"))
 
 func _effective_attribute(stat: String) -> int:
 	var base: int = 0
@@ -970,7 +984,7 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.accuracy(_source_catalog_record("아이템", entry as Dictionary), kind)
-	return result + int(growth.bonus(kind+"_hit:flat") + equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat"))
+	return result + int(growth.bonus(kind+"_hit:flat") + equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat") + card_collections.bonus(kind+"_hit:flat") + card_collections.bonus("pve_"+kind+"_hit:flat"))
 
 func _equipment_potion_heal_stat(label: String) -> int:
 	var sum: int = 0
@@ -999,7 +1013,7 @@ func _equipment_additional_damage(kind: String) -> int:
 					var segment: String = fragment.strip_edges()
 					if segment.begins_with("대미지 리덕션 무시"):
 						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
-	return result + int(growth.bonus(kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat"))
+	return result + int(growth.bonus(kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	# Kept for older source audit callers; not used in the live damage path.
@@ -2589,7 +2603,10 @@ func _drop_grade_color(grade: String) -> Color:
 			return Color("eeeeee")
 
 func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: int = 1, source_batch: String = "") -> Button:
-	return ground_loot.spawn(item_name, world_position, quantity, source_batch)
+	var view: Button = ground_loot.spawn(item_name, world_position, quantity, source_batch)
+	if is_instance_valid(view) and is_instance_valid(presentation_audio):
+		presentation_audio.play_world("drop", world_position)
+	return view
 
 func _collect_ground_drop(drop: Button) -> bool:
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
@@ -2604,6 +2621,7 @@ func _collect_ground_drop(drop: Button) -> bool:
 	var quantity: int = int(record["quantity"])
 	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
@@ -2780,6 +2798,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			_refresh_combat_hud()
 			return
 	hp = maxi(0, hp - reduced)
+	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
 	if attacker.dead:
@@ -3091,6 +3110,7 @@ func _use_card_pack_item(item_name: String) -> void:
 	if _save_game(true) != OK:
 		card_draw_fusion.import_state(cards_before)
 		card_draw_fusion.rng.state = roll_before
+		_invalidate_equipment_static()
 		inventory[item_name] = ticket_before
 		hud.refresh_inventory(inventory)
 		hud.show_message("뽑기 저장 실패 · 뽑기권과 카드 보유 상태를 복구했습니다")
@@ -4088,12 +4108,17 @@ func _update_hud() -> void:
 	character_state["item_instances"] = item_instances
 	character_state["gold"] = gold
 	character_state["equipment_collection_bonuses"] = equipment_collections.totals.duplicate(true)
+	character_state["card_collection_bonuses"] = card_collections.totals.duplicate(true)
 	character_state["item_locks"] = ui_preferences.get("item_locks",{})
 	hud.set_character_state(character_state)
 	if hud.has_method("set_card_collection_state"):
 		hud.call("set_card_collection_state", card_draw_fusion.export_state())
 	if hud.has_method("set_option_awakening_state"):
 		hud.call("set_option_awakening_state", option_awakening.export_state())
+	var completed_cards: Array[String] = card_collections.reconcile()
+	if not completed_cards.is_empty():
+		hud.append_log("카드 컬렉션 자동 완성 · %d개" % completed_cards.size())
+	if hud.has_method("refresh_normal_card_collections"):hud.call("refresh_normal_card_collections")
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	if hud.has_method("set_quickslot_state"):
@@ -4491,6 +4516,9 @@ func _load_game(quiet: bool) -> void:
 	player.set_class_index(class_index)
 	player.clear_status_effects()
 	card_draw_fusion.import_state(data.get("card_draw_fusion", {}))
+	# Old version-1 ownership is already permanent. Derive silently before HP/MP
+	# clamping, with no card consumption, grant, or new mutable save field.
+	card_collections.restore_from_owned()
 	var equipped_value: Variant = data.get("equipped_catalog", equipped_catalog)
 	if equipped_value is Dictionary:
 		equipped_catalog = equipped_value as Dictionary
@@ -5960,6 +5988,7 @@ func _on_card_pack_draw_requested(category: String) -> void:
 	if _save_game(true) != OK:
 		card_draw_fusion.import_state(cards_before)
 		card_draw_fusion.rng.state = roll_before
+		_invalidate_equipment_static()
 		hud.show_message("뽑기 저장 실패 · 카드 획득 내역을 복구했습니다")
 		return
 	_update_hud()
@@ -5989,6 +6018,7 @@ func _on_card_fusion_requested(category: String, grade: String) -> void:
 	if _save_game(true) != OK:
 		card_draw_fusion.import_state(cards_before)
 		card_draw_fusion.rng.state = roll_before
+		_invalidate_equipment_static()
 		hud.show_message("합성 저장 실패 · 중복 카드 재료를 복구했습니다")
 		return
 	_update_hud()
@@ -6315,6 +6345,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 			records.append(_source_catalog_record("아이템", item_value as Dictionary))
 	var collection_record: Dictionary = equipment_collections.stat_record()
 	if not collection_record.is_empty(): records.append(collection_record)
+	var card_collection_record: Dictionary = card_collections.stat_record()
+	if not card_collection_record.is_empty(): records.append(card_collection_record)
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
@@ -6728,7 +6760,7 @@ func _record_move_speed_multiplier(record: Dictionary) -> float:
 	return clampf(value, 0.5, 2.0)
 
 func _record_attack_speed_percent(record: Dictionary) -> float:
-	if bool(record.get("_equipment_collection_bonus",false)):
+	if bool(record.get("_equipment_collection_bonus",false)) or bool(record.get("_card_collection_bonus",false)):
 		return maxf(0.0,float(record.get("collection_attack_speed",0.0)))
 	var value: float = CATALOG_EFFECTS.attack_speed_percent(record)
 	if str(record.get("slot", "")) == "weapon":
@@ -7061,7 +7093,7 @@ func _critical_damage(raw_damage: int) -> int:
 # Crit damage bonuses are flat values added AFTER the base 1.5x critical hit.
 # Keep monster critical hits on _critical_damage so player gear never buffs enemies.
 func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
-	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat"))
+	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat") + card_collections.bonus(attack_type+"_critical_damage:flat"))
 	var option_key: String = ""
 	match attack_type:
 		"ranged":
@@ -7074,7 +7106,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
-	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat"))
+	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat"))
 
 func _record_dg(record: Dictionary) -> int:
 	if record.has("dg"):
@@ -7507,6 +7539,7 @@ func _impact_player_attack(action: Dictionary) -> void:
 	resolving_combat_action = false
 
 func _clear_combat_actions() -> void:
+	if is_instance_valid(presentation_audio): presentation_audio.clear()
 	if original_skills != null: original_skills.clear()
 	combat_generation += 1
 	pending_attack.clear()
@@ -7520,6 +7553,9 @@ func show_combat_number(point: Vector2, value: String, color: Color, critical: b
 	if is_instance_valid(combat_vfx): combat_vfx.number(point, value, color, critical)
 
 func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kind: String = "") -> void:
+	# Named skill hits retain their existing skill audio path.
+	if damage_kind.is_empty() and is_instance_valid(presentation_audio):
+		presentation_audio.play_world("impact", target.combat_hit_position(), critical)
 	if not is_instance_valid(combat_vfx): return
 	var style: String = feedback_style if damage_kind.is_empty() else damage_kind
 	combat_vfx.impact(target.combat_hit_position(), player.global_position.direction_to(target.global_position), style, critical)

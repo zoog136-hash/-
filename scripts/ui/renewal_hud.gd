@@ -33,9 +33,12 @@ var detail_window: PanelContainer
 var status_view: Control
 var pointer_transfer: Node
 var quick_page_buttons: Array[Button] = []
+var screen_backdrop: ColorRect
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
+const CardOwnership = preload("res://scripts/ui/catalog_card_ownership.gd")
 const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
 const CardFusionView = preload("res://scripts/ui/card_fusion_view.gd")
 var card_reveal_stage: Control
@@ -55,6 +58,9 @@ var option_awakening_catalog_status: Label
 var option_awakening_catalog_border: Control
 var option_awakening_reveal: Control
 var option_awakening_source_detail: bool = false
+var relic_reference_view: Control
+var catalog_card_chrome: Node
+var companion_detail_view: Node
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
@@ -128,8 +134,12 @@ var catalog_clear_button: Button
 var catalog_grade_column: VBoxContainer
 var catalog_grade_buttons: Dictionary = {}
 var card_collection_state: Dictionary = {}
+var normal_card_collection_view: Control
+var normal_card_collection_category: String="변신"
+var normal_card_collection_focus: String=""
 var card_controls: VBoxContainer
 var card_draw_button: Button
+var card_reveal_preview: Button
 var card_fusion_grade_select: OptionButton
 var card_fusion_button: Button
 var card_owned_label: Label
@@ -210,11 +220,18 @@ func _ready() -> void:
 	catalog_drag_icon.z_index = 250
 	$Root.add_child(catalog_drag_icon)
 	catalog_drag_icon.hide()
+	screen_backdrop=ColorRect.new()
+	screen_backdrop.name="ScreenFocusBackdrop"
+	screen_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	screen_backdrop.z_index=145
+	screen_backdrop.hide()
+	$Root.add_child(screen_backdrop)
 	workspace = RenewalWindowScript.new()
 	$Root.add_child(workspace)
 	workspace.navigate.connect(_navigate)
 	workspace.back_requested.connect(_go_back)
 	workspace.closed.connect(_close_workspace)
+	workspace.visibility_changed.connect(_sync_screen_focus)
 	workspace.resized.connect(_fit_catalog_browser_layout)
 	workspace.content.resized.connect(_fit_catalog_browser_layout)
 	get_window().size_changed.connect(_fit_catalog_browser_layout)
@@ -249,8 +266,8 @@ func _polish_hud_chrome() -> void:
 		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
 	if v20_map_name != null:
 		v20_map_name.add_theme_color_override("font_color",UI.GOLD)
-		_place(v20_map_name.get_parent(),755,10,933,44)
-		v20_map_name.add_theme_font_size_override("font_size",11)
+		_place(v20_map_name.get_parent(),746,16,930,48)
+		v20_map_name.add_theme_font_size_override("font_size",13)
 		v20_map_name.clip_text = true
 
 func _build_lineage_inventory_ui() -> void:
@@ -280,6 +297,7 @@ func _build_lineage_side_ui() -> void:
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
 	if is_instance_valid(status_view): status_view.refresh(value)
+	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 
 func blocks_keyboard_input() -> bool:
 	if is_enhancement_presenting() or is_option_awakening_busy(): return true
@@ -332,8 +350,8 @@ func _build_v20_top_menu() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "MainShortcuts"
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,943,9,1268,78)
-	panel.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	_place(panel,950,10,1268,83)
+	panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.07,.06,.045,.80),UI.BRONZE,4))
 	v20_layer.add_child(panel)
 	var row := HBoxContainer.new()
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -341,7 +359,7 @@ func _build_v20_top_menu() -> void:
 	panel.add_child(row)
 	for spec: Array in [["shop","상점","shop.png"],["inventory","가방","bag.png"],["skills","스킬","skill.png"],["map","지도","quest.png"],["menu","메뉴","menu.png"]]:
 		var id := str(spec[0])
-		var b := UI.button("",_navigate.bind(id),Vector2(59,53))
+		var b := UI.button("",_navigate.bind(id),Vector2(58,60))
 		b.name = "Shortcut_"+id
 		b.tooltip_text = str(spec[1])
 		b.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
@@ -352,12 +370,12 @@ func _build_v20_top_menu() -> void:
 		artwork.texture = UI.icon(id)
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		artwork.position = Vector2(14,3)
-		artwork.size = Vector2(28,28)
+		artwork.position = Vector2(11,2)
+		artwork.size = Vector2(36,36)
 		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(artwork)
-		var label := UI.label(str(spec[1]),11,UI.TEXT)
-		label.position = Vector2(0,34)
+		var label := UI.label(str(spec[1]),12,UI.TEXT)
+		label.position = Vector2(0,40)
 		label.size = Vector2(59,16)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		b.add_child(label)
@@ -367,12 +385,17 @@ func _build_v20_right_controls() -> void:
 	v20_self_button.name = "SelfMode"
 	v20_self_button.toggle_mode = true
 	v20_self_button.tooltip_text = "SELF OFF: 퀵슬롯 버프 자동 재사용 · ON: 수동 사용"
-	_place(v20_self_button,1078,449,1154,491)
+	_place(v20_self_button,1070.5,438,1138.5,494)
+	v20_self_button.add_theme_stylebox_override("normal",_round_button_style(.78,28,UI.BRONZE))
+	v20_self_button.add_theme_font_size_override("font_size",11)
 	v20_layer.add_child(v20_self_button)
-	var target := UI.button("대상",func() -> void: target_pressed.emit())
+	var target := UI.button("",func() -> void: target_pressed.emit())
 	target.name = "SelectTarget"
 	target.icon = UI.icon("target")
-	_place(target,1162,449,1268,491)
+	target.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_place(target,1183.5,437,1241.5,495)
+	target.add_theme_stylebox_override("normal",_round_button_style(.78,29,UI.BRONZE))
+	target.tooltip_text="대상 선택"
 	v20_layer.add_child(target)
 	v20_auto_button = UI.button("AUTO",func() -> void: auto_pressed.emit())
 	v20_auto_button.name = "AutoHunt"
@@ -396,8 +419,9 @@ func _build_v20_right_controls() -> void:
 	attack.add_theme_font_size_override("font_size",14)
 	attack.text = ""
 	attack.icon = UI.icon("attack")
+	attack.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	attack.expand_icon = true
-	attack.add_theme_constant_override("icon_max_width",66)
+	attack.add_theme_constant_override("icon_max_width",86)
 	_place(attack,1157,514,1268,625)
 	attack.add_theme_stylebox_override("normal",_round_button_style(.9,56,UI.GOLD))
 	attack.add_theme_stylebox_override("hover",_round_button_style(.98,56,UI.GOLD))
@@ -551,7 +575,7 @@ func _fit_hud() -> void:
 			control.set_meta("renewal_base_position",control.position)
 		var base: Vector2 = control.get_meta("renewal_base_position")
 		control.position = base
-		if base.y >= 449: control.position.y += extra_y
+		if base.y >= 449 or control.name in ["SelfMode","SelectTarget"]: control.position.y += extra_y
 		if base.x >= 943: control.position.x += extra_x
 		elif control.name == "Quickslots" or control == v20_target_panel:
 			control.position.x += extra_x*.5
@@ -721,11 +745,15 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
+	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
+	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
+	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
 	if active_section == "emblems": get_parent().growth.rerolls.clear()
 	if class_picker_initial:
 		return
 	catalog_icon_generation += 1
 	if workspace != null and workspace.visible:
+		if not switching_workspace: _presentation_transition()
 		navigation_memory.capture(active_section,workspace.content)
 	if not switching_workspace:
 		navigation_memory.clear_history()
@@ -757,6 +785,7 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	_presentation_transition()
 	if active_section=="emblems" and section!="emblems": get_parent().growth.rerolls.clear()
 	navigation_memory.enter(active_section,section)
 	switching_workspace = true
@@ -766,8 +795,22 @@ func _open_window(section: String,title: String,description: String) -> void:
 	workspace.clear()
 	workspace.open(section,title,description)
 	active_section = section
+	_sync_screen_focus()
 	workspace.set_back_available(navigation_memory.has_history())
 	call_deferred("_restore_navigation",section)
+
+func _sync_screen_focus() -> void:
+	if not is_instance_valid(screen_backdrop):return
+	var shown: bool=is_instance_valid(workspace) and workspace.visible
+	screen_backdrop.visible=shown
+	if not shown:return
+	var browsing: bool=workspace.current_section not in ["inventory","quickbind","character","stats","warehouse","sell","dialogue"]
+	screen_backdrop.color=Color(.015,.013,.01,.54 if browsing else .17)
+	screen_backdrop.mouse_filter=Control.MOUSE_FILTER_STOP if browsing else Control.MOUSE_FILTER_IGNORE
+
+func _presentation_transition() -> void:
+	var audio: Node = get_tree().get_first_node_in_group("presentation_audio")
+	if audio != null: audio.play_ui("transition")
 
 func _restore_navigation(section: String) -> void:
 	if workspace != null and workspace.visible and active_section == section:
@@ -775,6 +818,9 @@ func _restore_navigation(section: String) -> void:
 
 func _go_back() -> void:
 	if class_picker_initial: return
+	if is_instance_valid(companion_detail_view) and companion_detail_view.active and companion_detail_view.active_tab==1:
+		companion_detail_view.select_tab(0)
+		return
 	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and option_awakening_view.cancel_review():
 		return
 	var restore_card_details: bool = active_section == "option_awakening" and option_awakening_source_detail
@@ -837,6 +883,7 @@ func _navigate(section: String) -> void:
 			if not option_awakening_snapshot.is_empty():
 				option_awakening_open_requested.emit(str(option_awakening_snapshot.get("category", "")), str(option_awakening_snapshot.get("target_id", "")))
 		"equipment_collections": open_equipment_collections()
+		"card_collections": open_normal_card_collections(normal_card_collection_category,normal_card_collection_focus)
 		"emblems", "guardians": open_growth(section)
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
@@ -937,7 +984,9 @@ func show_companion_bag() -> void:
 func show_companion_equipment() -> void:
 	var window: PanelContainer = _companion("character","장비")
 	window.mount(lineage_side_ui.character_panel)
+	lineage_side_ui.bind_item_art(self)
 	lineage_side_ui.show_character(character_state)
+	lineage_side_ui.mount_window_header(window)
 
 func open_npc_dialogue(npc_id: String) -> void:
 	_open_window("dialogue","NPC 대화","레벨 · 직업 · 아이템 보유 조건")
@@ -1027,7 +1076,9 @@ func open_character() -> void:
 	panel.custom_minimum_size = Vector2.ZERO
 	workspace.mount(panel)
 	panel.show()
+	lineage_side_ui.bind_item_art(self)
 	lineage_side_ui.show_character(character_state)
+	lineage_side_ui.mount_window_header(workspace)
 
 func open_detailed_status() -> void:
 	if not is_instance_valid(detail_window):
@@ -1045,21 +1096,34 @@ func toggle_menu() -> void:
 	if active_section=="menu" and workspace.visible:
 		_close_workspace()
 		return
-	_open_window("menu","메뉴","")
-	var col: VBoxContainer = workspace.column()
-	var menu_scroll := ScrollContainer.new()
-	menu_scroll.name = "MenuContentScroll"
-	menu_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	menu_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	menu_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	menu_scroll.scroll_deadzone = 8
+	_open_window("menu","전체 메뉴","")
+	var col: VBoxContainer=workspace.column()
+	var categories:=OptionButton.new()
+	categories.name="MenuCategoryFilter"
+	categories.custom_minimum_size.y=32
+	col.add_child(categories)
+	var menu_scroll:=ScrollContainer.new()
+	menu_scroll.name="MenuContentScroll"
+	menu_scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	menu_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	menu_scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_AUTO
+	menu_scroll.scroll_deadzone=8
 	col.add_child(menu_scroll)
-	var grid := GridContainer.new()
-	grid.columns = 4
-	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	grid.mouse_filter = Control.MOUSE_FILTER_PASS
+	var grid:=GridContainer.new()
+	grid.name="MenuGrid"
+	grid.columns=4
+	grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	grid.add_theme_constant_override("h_separation",6)
+	grid.add_theme_constant_override("v_separation",6)
 	menu_scroll.add_child(grid)
 	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,4))
+	var tiles: Array[Control] = []
+	var category_names: Array[String] = ["전체","캐릭터·성장","사냥·모험","상점·생활"]
+	for category: String in category_names: categories.add_item(category)
+	categories.item_selected.connect(func(index: int) -> void:
+		var category: String = category_names[index]
+		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
+		menu_scroll.scroll_vertical = 0)
 	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
@@ -1070,6 +1134,7 @@ func toggle_menu() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians"] else ("사냥·모험" if section_id in ["inventory","skills","map","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
@@ -1081,12 +1146,15 @@ func toggle_menu() -> void:
 		artwork.size = Vector2(40,40)
 		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(artwork)
-		var caption := UI.label(str(pair[1]),11)
-		caption.position = Vector2(0,58)
-		caption.size = Vector2(92,20)
-		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		var caption:=UI.label(str(pair[1]),12,UI.TEXT)
+		caption.anchor_right=1
+		caption.offset_left=2;caption.offset_right=-2
+		caption.offset_top=58;caption.offset_bottom=78
+		caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		button.add_child(caption)
 		grid.add_child(button)
+		tiles.append(button)
+		tiles.append(button)
 		workspace.register_scroll_drag(menu_scroll,button)
 
 func _open_utility_panel(title: String) -> void:
@@ -1156,6 +1224,12 @@ func open_catalog(category: String) -> void:
 		catalog_search.text = str(saved.get("query",""))
 		_refresh_catalog_list(catalog_search.text)
 		catalog_page = clampi(int(saved.get("page",0)),0,maxi(0,_catalog_page_count()-1))
+		if CARD_RULES.CATEGORIES.has(category):
+			for index: int in range(catalog_filtered_results.size()):
+				var record: Dictionary=catalog_filtered_results[index]
+				if str(record.get("sourceId",record.get("name","")))==str(saved.get("id","")):
+					catalog_page=index/catalog_page_size
+					break
 		_apply_catalog_page()
 		for i: int in range(catalog_results.size()):
 			if str(catalog_results[i].get("sourceId",catalog_results[i].get("name",""))) == str(saved.get("id","")): _select_catalog_index(i)
@@ -1166,6 +1240,24 @@ func open_catalog(category: String) -> void:
 	if card_result_label != null:
 		card_result_label.text = "뽑기·합성 결과가 이곳에 표시됩니다"
 	_refresh_card_controls()
+	if category=="성물":
+		if not is_instance_valid(relic_reference_view):
+			relic_reference_view=preload("res://scripts/ui/relic_reference_view.gd").new()
+			catalog_panel.add_child(relic_reference_view)
+			relic_reference_view.configure(self)
+		relic_reference_view.activate()
+	if category in ["변신","마법인형"]:
+		if not is_instance_valid(companion_detail_view):
+			companion_detail_view=preload("res://scripts/ui/companion_detail_view.gd").new()
+			add_child(companion_detail_view)
+			companion_detail_view.configure(self)
+		companion_detail_view.activate(category)
+	if CARD_RULES.CATEGORIES.has(category):
+		if not is_instance_valid(catalog_card_chrome):
+			catalog_card_chrome=preload("res://scripts/ui/catalog_card_chrome.gd").new()
+			add_child(catalog_card_chrome)
+			catalog_card_chrome.configure(self)
+		catalog_card_chrome.activate()
 
 func _build_catalog_panel() -> void:
 	super._build_catalog_panel()
@@ -1278,12 +1370,16 @@ func _build_catalog_panel() -> void:
 	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	body.add_child(right_scroll)
+	ReferenceSurfaces.catalog(self)
 	var right := VBoxContainer.new()
 	right.custom_minimum_size = Vector2(500,0)
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_scroll.add_child(right)
 	var preview_row := HBoxContainer.new()
+	preview_row.name = "CatalogPreviewRow"
+	# Keep art and description visible while the action column scrolls on phones.
+	preview_row.custom_minimum_size.y = 190
 	preview_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right.add_child(preview_row)
 	catalog_preview.reparent(preview_row)
@@ -1334,6 +1430,7 @@ func _build_catalog_panel() -> void:
 	card_draw_button.name = "CardTopPackDraw"
 	card_controls.add_child(card_draw_button)
 	var reveal_preview := UI.button("5개 등급 연출 비교 · 보상 없음", _preview_card_reveal_grades, Vector2(0,42))
+	card_reveal_preview=reveal_preview
 	card_controls.add_child(reveal_preview)
 	card_fusion_grade_select = OptionButton.new()
 	card_fusion_grade_select.name = "CardFusionGrade"
@@ -1362,6 +1459,8 @@ func _build_catalog_panel() -> void:
 	catalog_test_tools.name = "CatalogTestTools"
 	right.add_child(catalog_test_tools)
 	catalog_test_tools.hide()
+	card_draw_button.reparent(catalog_test_tools)
+	reveal_preview.reparent(catalog_test_tools)
 	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled and playtest_tools_enabled())
 	catalog_test_tools.add_child(UI.label("개발 빌드 전용 지급 도구",11,UI.GOLD))
 	playtest_grant_button = UI.button("선택 아이템 1개 임시 지급",_request_playtest_catalog_grant,Vector2(0,42))
@@ -1387,7 +1486,12 @@ func _build_catalog_panel() -> void:
 
 func set_card_collection_state(value: Dictionary) -> void:
 	if card_collection_state == value: return
+	var previous_owned: Dictionary=card_collection_state.get("owned",{}).get(catalog_category,{})
+	var next_owned: Dictionary=value.get("owned",{}).get(catalog_category,{})
+	var reorder: bool=previous_owned!=next_owned
 	card_collection_state = value.duplicate(true)
+	if reorder and active_section==catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list!=null:
+		_refresh_catalog_owned_order()
 	_refresh_card_controls()
 	_refresh_option_awakening_markers()
 	if active_section == "card_fusion" and is_instance_valid(card_fusion_view) and not card_fusion_view.is_queued_for_deletion():
@@ -1415,6 +1519,8 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 	var same_target: bool = category == str(option_awakening_snapshot.get("category", "")) and target_id == str(option_awakening_snapshot.get("target_id", ""))
 	option_awakening_snapshot = snapshot.duplicate(true)
 	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and not option_awakening_view.is_queued_for_deletion() and same_target:
+		option_awakening_view.collection_catalog=catalog_data
+		option_awakening_view.collection_ownership=card_collection_state
 		option_awakening_view.set_snapshot(snapshot)
 		option_awakening_view.apply_settings(_option_awakening_settings())
 		return
@@ -1422,6 +1528,7 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 		option_awakening_source_detail = catalog_details_active
 	_open_window("option_awakening", category + " 옵션 각성", "")
 	var view: Control = OptionAwakeningView.new()
+	view.collection_catalog=catalog_data;view.collection_ownership=card_collection_state;view.collection_scroll_host=workspace
 	option_awakening_view = view
 	workspace.mount(view)
 	view.configure(snapshot, _option_awakening_settings())
@@ -1483,15 +1590,24 @@ func _refresh_option_awakening_markers() -> void:
 	if catalog_list == null or not CARD_RULES.CATEGORIES.has(catalog_category): return
 	var owned: Dictionary = (card_collection_state.get("owned", {}) as Dictionary).get(catalog_category, {}) as Dictionary
 	var spare: Dictionary = (card_collection_state.get("spare", {}) as Dictionary).get(catalog_category, {}) as Dictionary
+	var background_alpha: float=.17 if catalog_category=="성물" else .08
 	for index: int in range(mini(catalog_results.size(), catalog_list.item_count)):
 		var record: Dictionary = catalog_results[index]
 		var identity: String = CARD_RULES.card_id(record)
+		var acquired: bool=owned.has(identity)
+		catalog_list.set_item_metadata(index,identity)
+		catalog_list.set_item_icon(index,CardOwnership.icon_for(record,acquired))
+		catalog_list.set_item_icon_modulate(index,Color.WHITE if acquired else CardOwnership.UNOWNED_ICON_TINT)
+		catalog_list.set_item_custom_bg_color(index,Color(UI.grade(str(record.get("grade","일반"))),background_alpha) if acquired else Color(.2,.2,.2,.04))
 		var duplicates: int = maxi(0, int(spare.get(identity, 0)))
 		var copies: int = (1 if owned.has(identity) else 0) + duplicates
 		var awakened: bool = bool(_option_awakening_card_state(catalog_category, record).get("awakened", false))
 		var title: String = str(record.get("name", ""))
 		catalog_list.set_item_text(index, ("%s%s\n보유 %d장 · 중복 %d" % ["[각성] " if awakened else "", title, copies, duplicates]) if copies > 0 else title + "\n미보유")
 		catalog_list.set_item_tooltip(index, "%s · %s · 총 %d장 · 합성/각성 재료 %d장" % [str(record.get("grade", "")), title, copies, duplicates])
+	if is_instance_valid(companion_detail_view) and companion_detail_view.active:
+		companion_detail_view.decorate_roster(true)
+	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
 
 func _refresh_option_awakening_entry() -> void:
 	if not is_instance_valid(option_awakening_button):
@@ -1593,14 +1709,18 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)))
 
 func _refresh_card_controls() -> void:
+	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
+	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
+	ReferenceSurfaces.refresh_grade_counts(self)
 	_refresh_option_awakening_entry()
 	if card_controls == null or card_fusion_grade_select == null:
 		return
 	var category: String = catalog_category
 	card_controls.visible = CARD_RULES.CATEGORIES.has(category)
+	card_draw_button.visible=card_controls.visible and playtest_tools_enabled()
+	card_reveal_preview.visible=card_controls.visible and playtest_tools_enabled()
 	if not card_controls.visible:
 		return
-	card_draw_button.visible = playtest_tools_enabled()
 	var all_owned: Dictionary = card_collection_state.get("owned", {}) as Dictionary
 	var category_owned: Dictionary = all_owned.get(category, {}) as Dictionary
 	var all_spare: Dictionary = card_collection_state.get("spare", {}) as Dictionary
@@ -1738,6 +1858,9 @@ func _set_catalog_detail_view(show_details: bool) -> void:
 	_fit_catalog_browser_layout()
 
 func _fit_catalog_browser_layout() -> void:
+	if is_instance_valid(relic_reference_view) and relic_reference_view.active:
+		relic_reference_view.fit_layout()
+		return
 	if workspace == null or catalog_body_left == null or catalog_body_actions == null: return
 	var compact: bool = workspace.content.size.x < 1040
 	var short: bool = workspace.content.size.y < 430
@@ -1755,11 +1878,13 @@ func _fit_catalog_browser_layout() -> void:
 	catalog_list.custom_minimum_size.x = 0
 	catalog_list.max_columns = 4
 	catalog_list.fixed_column_width = 116
+	catalog_body_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
 	catalog_body_actions.custom_minimum_size.x = 0 if compact else 520
 	var actions_content: Control = catalog_body_actions.get_child(0)
 	actions_content.custom_minimum_size.x = 0 if compact else 500
 	catalog_list_tab.disabled = compact and not catalog_details_active
 	catalog_details_tab.disabled = compact and catalog_details_active
+	if is_instance_valid(companion_detail_view):companion_detail_view.fit_layout()
 
 func _select_catalog_group_index(index: int) -> void:
 	item_slot_filter = "all" if index == 0 else str(ITEM_SLOT_FILTERS[index - 1][0])
@@ -1778,6 +1903,12 @@ func _refresh_item_filter_controls() -> void:
 		rarity_filter.select(maxi(0,["전체","일반","고급","희귀","영웅","전설","신화","유일"].find(item_grade_filter)))
 
 func _refresh_catalog_list(filter_text: String) -> void:
+	_filter_catalog_results(filter_text)
+	catalog_page=0
+	_apply_catalog_page()
+
+func _filter_catalog_results(filter_text: String) -> void:
+	ReferenceSurfaces.refresh_grade_counts(self)
 	# The original paging, selection and native touch handler remain in use.
 	catalog_filtered_results.clear()
 	catalog_variant_counts.clear()
@@ -1794,15 +1925,32 @@ func _refresh_catalog_list(filter_text: String) -> void:
 		if catalog_grade_filter!="전체" and str(record.get("grade",""))!=catalog_grade_filter: continue
 		var searchable := "%s %s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("sourceId",""),record.get("desc","")]
 		if query!="" and not searchable.to_lower().contains(query): continue
+		if catalog_category=="성물" and is_instance_valid(relic_reference_view) and not relic_reference_view.matches_type(record):continue
 		catalog_filtered_results.append(record)
-	catalog_page=0
+	if CARD_RULES.CATEGORIES.has(catalog_category):
+		catalog_filtered_results.assign(CardOwnership.owned_first(catalog_filtered_results,card_collection_state.get("owned",{}).get(catalog_category,{})))
+
+func _refresh_catalog_owned_order() -> void:
+	var identity: String=CARD_RULES.card_id(selected_catalog_record)
+	var scroll: float=catalog_list.get_v_scroll_bar().value
+	var selected_index: int=-1
+	_filter_catalog_results(catalog_search.text)
+	for index: int in range(catalog_filtered_results.size()):
+		if CARD_RULES.card_id(catalog_filtered_results[index])==identity:
+			selected_index=index
+			catalog_page=index/catalog_page_size
+			break
 	_apply_catalog_page()
+	if selected_index>=0:_select_catalog_index(selected_index%catalog_page_size)
+	catalog_list.get_v_scroll_bar().set_deferred("value",scroll)
 
 func _apply_catalog_page() -> void:
 	UI.clear_item_visual(catalog_preview)
 	catalog_icon_generation += 1
 	var request_id: int = catalog_icon_generation
 	super._apply_catalog_page()
+	# A fresh relic page starts at its first row; open_catalog restores saved views afterwards.
+	if catalog_category=="성물":catalog_list.get_v_scroll_bar().value=0
 	for index: int in range(catalog_results.size()):
 		var record: Dictionary = catalog_results[index]
 		var grade_name := str(record.get("grade","일반"))
@@ -1824,6 +1972,9 @@ func _apply_catalog_page() -> void:
 		catalog_detail.text="검색 조건에 맞는 기록이 없습니다."
 		catalog_equip_button.disabled=true
 	(catalog_panel.find_child("ClearCatalog",true,false) as Button).visible=catalog_category!="아이템"
+	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state(true)
+	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
+	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 	# Render the original source-ID icons in small batches so all item names
 	# appear immediately instead of the browser blocking during 40 image effects.
 	if catalog_category == "아이템" and not catalog_results.is_empty():
@@ -1931,6 +2082,9 @@ func _on_catalog_item_selected(index: int) -> void:
 		catalog_detail.text += "\n카드 보유: %d장 · 합성/각성 재료: 중복 %d장" % [copies, duplicates]
 		if copies > 0: catalog_detail.text += "\n첫 획득 1장은 영구 보유하며 소모되지 않습니다."
 	_refresh_option_awakening_entry()
+	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
+	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
+	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty(): return
@@ -2113,6 +2267,19 @@ func _add_original_map_controls(regions: VBoxContainer) -> void:
 		populate.call()
 	regions.add_child(UI.label("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11,UI.MUTED))
 	regions.add_child(UI.label("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11,UI.MUTED))
+
+
+func open_normal_card_collections(category: String,identity: String="") -> void:
+	if not CARD_RULES.CATEGORIES.has(category):return
+	normal_card_collection_category=category;normal_card_collection_focus=identity
+	_open_window("card_collections",category+" 컬렉션","")
+	normal_card_collection_view=preload("res://scripts/cards/collection_view.gd").new()
+	workspace.mount(normal_card_collection_view)
+	normal_card_collection_view.configure(self,category,identity)
+
+func refresh_normal_card_collections() -> void:
+	if active_section=="card_collections" and is_instance_valid(normal_card_collection_view) and not normal_card_collection_view.is_queued_for_deletion():
+		normal_card_collection_view.refresh()
 
 
 func open_equipment_collections() -> void:

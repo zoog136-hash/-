@@ -202,7 +202,7 @@ func _emblem() -> void:
 		if float(effects[key])==0: continue
 		_copy(_effect_text({key:effects[key]}),effects_grid,13,Color("d6ead9")).size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		visible_effects+=1
-	if visible_effects==0: _copy("없음",effects_grid,13,Palette.MUTED)
+	if visible_effects==0: _copy("없음",effects_grid,13,Palette.MUTED).size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	_copy("다음 단계 · "+_effect_text(row.effects[mini(30,int(p.stage)+1)]),info,12,Palette.MUTED)
 	_label("미적용: "+", ".join(row.deferred_effects))
 	var actions: GridContainer=action_dock

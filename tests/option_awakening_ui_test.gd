@@ -153,7 +153,8 @@ func _run() -> void:
 	_check(not hud.option_awakening_view.snapshot.is_empty(), "world supplies authoritative snapshot")
 	_check(_control("AwakeningFeed").disabled and _control("AwakeningAttempt").disabled, "empty selection and incomplete XP cannot be consumed")
 	_check(_control("AwakeningPolicy").text.contains("TWILIGHT"), "local XP/cost/refund policy is disclosed")
-	_check(_control("AwakeningCollectionProgress").text.contains("지원 각성 컬렉션 · 4개"), "supported collection progress is visible without implying a complete original collection catalog")
+	var collection_panel: Node=_control("AwakeningCollectionProgress")
+	_check(collection_panel.rows==world.option_awakening.collections_view() and collection_panel.rows.size()==4 and collection_panel.find_child("SupportedCollectionScope",true,false).text.contains("확인된 4개만 표시"), "actual supported collection progress and limited scope remain visible in the card presentation")
 	var list: ItemList = _control("AwakeningMaterials") as ItemList
 	_check(list.item_count >= 10, "material list contains real duplicate IDs")
 	_check(list.get_v_scroll_bar().max_value > list.get_v_scroll_bar().page, "real material list overflows before scroll test")
@@ -254,7 +255,7 @@ func _run() -> void:
 	hud.set_option_awakening_state(awake_display)
 	_select_catalog("변신", target_id)
 	await _settle()
-	_check(hud.catalog_list.get_item_text(0).begins_with("[각성]"), "catalog list marks exact awakened card ID")
+	_check(hud.catalog_list.get_item_tooltip(0).begins_with("[각성]") and str(hud.catalog_list.get_item_metadata(0))==target_id and hud.catalog_card_chrome.quantities.is_visible_in_tree(), "portrait grid preserves the exact awakened card ID and its visible status layer")
 	_check(hud.option_awakening_catalog_border.visible, "catalog detail mounts the persistent awakened border")
 	hud.apply_option_awakening_settings({"reduced_motion": true, "impact_intensity": 0.0, "effect_detail": "low"})
 	_check(hud.option_awakening_catalog_border.visible and not hud.option_awakening_catalog_border.is_processing(), "reduced motion retains the static status border")

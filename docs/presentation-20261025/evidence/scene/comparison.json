@@ -1,0 +1,33 @@
+{
+  "before": {
+    "seconds": 32.0166666666661,
+    "strikes": 18,
+    "kills": 3,
+    "monster_hit_events": 6,
+    "player_hp_loss_events": 4
+  },
+  "after": {
+    "seconds": 32.0166666666661,
+    "strikes": 18,
+    "kills": 3,
+    "monster_hit_events": 6,
+    "player_hp_loss_events": 4
+  },
+  "failures": {
+    "before": [],
+    "after": []
+  },
+  "comparison": {
+    "seconds": true,
+    "strikes": true,
+    "kills": true,
+    "monster_hit_events": true,
+    "player_hp_loss_events": true
+  },
+  "limitations": [
+    "Background population is paused; this is not performance data.",
+    "Minor incoming-hit phase differences are retained in event logs.",
+    "Original map PNG clarity and PR122 actor art were not changed.",
+    "Dummy audio capture; no actual listening or Android device validation."
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "after": {
+    "frame_max_ms": 63.676,
+    "frame_median_ms": 23.986,
+    "frame_p95_ms": 35.918,
+    "frames": 120,
+    "renderer_cpu_us": 1827,
+    "visibility_refreshes": 0
+  },
+  "android": "NOT_RUN",
+  "before": {
+    "frame_max_ms": 655.772,
+    "frame_median_ms": 24.509,
+    "frame_p95_ms": 36.517,
+    "frames": 120,
+    "renderer_cpu_us": 4751,
+    "visibility_refreshes": 18
+  },
+  "checks": 15,
+  "display": "X11",
+  "engine": "4.7.2-stable (official)",
+  "failures": [
+    "viewport invalidates"
+  ],
+  "map": "escaros_world",
+  "population": 77,
+  "position": [
+    70338.0,
+    17598.0
+  ],
+  "workload": "same Main instance; stationary camera, all actor/process logic frozen in both phases; no combat, no input, render plus renderer stream pump"
+}

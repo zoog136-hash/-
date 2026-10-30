@@ -1,5 +1,7 @@
 extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const TransferSheet=preload("res://scripts/ui/transfer_detail_sheet.gd")
+var transfer_sheet: RefCounted
 const BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var hud: Node
 var world: Node
@@ -35,6 +37,7 @@ func configure(controller: Node) -> void:
 	category.item_selected.connect(func(_index: int) -> void: _refresh())
 	filters.add_child(category)
 	listing = ItemList.new()
+	listing.set_script(preload("res://scripts/ui/native_touch_list.gd"))
 	listing.name = "SellInventory"
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -50,15 +53,17 @@ func configure(controller: Node) -> void:
 	quantity.value = 1
 	quantity.value_changed.connect(func(_value: float) -> void: _quote())
 	row.add_child(quantity)
-	action = Button.new()
+	action = UI.button("판매",Callable())
 	action.name = "SellConfirm"
 	action.text = "판매"
+	UI.primary_button(action)
 	action.pressed.connect(_sell)
 	action.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(action)
 	details = Label.new()
 	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(details)
+	transfer_sheet=TransferSheet.new();transfer_sheet.bind(self,false)
 	_refresh()
 
 func _refresh() -> void:
@@ -102,6 +107,7 @@ func _refresh() -> void:
 	if not entries.is_empty():
 		listing.select(0)
 		_select(0)
+	transfer_sheet.refresh({},true)
 
 func _add_item(name: String, count: int, instance_id: String, suffix: String) -> void:
 	entries.append({"name":name,"count":count,"instance_id":instance_id})
@@ -132,6 +138,7 @@ func _quote() -> void:
 		"매입 총액 %d 아데나" % int(report["payment"]) if bool(report.get("ok",false)) else str(report.get("reason","매입 불가"))
 	]
 	action.disabled = not bool(report.get("ok",false))
+	transfer_sheet.refresh(report)
 
 func _sell() -> void:
 	if selected < 0 or selected >= entries.size():

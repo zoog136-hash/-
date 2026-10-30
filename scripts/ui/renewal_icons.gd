@@ -9,6 +9,12 @@ const PATHS = {
 	"quest":"M18 9h29v46H18z M18 14H11v36h7 M25 22h15 M25 31h15 M25 40h9",
 	"shop":"M23 7h18l-5 10 11 9 6 14-5 13H16l-5-13 6-14 11-9z M32 27v18 M37 30h-8l-3 5 12 4-3 5h-9",
 	"menu":"M12 17h40 M12 32h40 M12 47h40",
+	"warehouse":"M10 28l5-13h34l5 13v25H10z M10 28h44 M16 17v9 M48 17v9 M27 28v11h10V28 M14 47h36",
+	"crafting":"M9 35h24l6-8h14v12l-12 6H26l-5 9H12l6-13z M16 10l9-3 15 14-6 7z M28 23L15 36",
+	"sell":"M9 14h26l20 20-21 21L9 30z M19 22h1 M32 29l8 8 M28 33l8 8 M28 29l12 12",
+	"teleport":"M16 47V28a16 16 0 0 1 32 0v19 M11 53h42 M25 34h24 M41 26l8 8-8 8",
+	"equipment_collections":"M10 12h20l4 5 4-5h16v41H38l-4 4-4-4H10z M34 17v35 M17 23l6 3 6-3v12l-6 6-6-6z M41 25h7 M41 33h7",
+	"unknown":"M14 12h36v40H14z M25 24a7 7 0 0 1 14 0c0 5-7 5-7 11 M32 43h.1",
 	"settings":"M27 8h10l3 9 9 4 8 11-8 11-9 4-3 9H27l-3-9-9-4-8-11 8-11 9-4z M32 24a8 8 0 1 0 0 16a8 8 0 1 0 0-16",
 	"enhance":"M22 10l23 22-9 9-23-22z M31 37L11 57 M40 45l10 4 6 8H30l6-8z",
 	"auto":"M13 26a20 20 0 0 1 34-9l6 5 M53 10v12H41 M51 38a20 20 0 0 1-34 9l-6-5 M11 54V42h12",
@@ -29,9 +35,11 @@ static var cache: Dictionary={}
 
 static func texture(kind: String) -> Texture2D:
 	var key: String=str(ALIASES.get(kind,kind))
+	if not PATHS.has(key): key = "unknown"
 	if cache.has(key): return cache[key]
-	var shape: String=str(PATHS.get(key,PATHS.menu))
+	var shape: String=str(PATHS[key])
 	var svg: String='<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><defs><linearGradient id="gold" x2="0" y2="1"><stop stop-color="#f4e2b2"/><stop offset="1" stop-color="#ae8550"/></linearGradient></defs><path fill="none" stroke="url(#gold)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" d="'+shape+'"/></svg>'
+	svg=svg.replace('<path fill="none" stroke="url(#gold)"','<path fill="none" stroke="#000" stroke-opacity=".8" stroke-width="4" transform="translate(0 1)" d="'+shape+'"/><path fill="#b59a64" fill-opacity=".12" stroke="url(#gold)"')
 	var source:=Image.new()
 	if source.load_svg_from_string(svg) != OK: return null
 	var icon: ImageTexture=ImageTexture.create_from_image(source)
