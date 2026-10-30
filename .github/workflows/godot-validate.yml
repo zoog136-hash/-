@@ -269,6 +269,15 @@ jobs:
           fi
           grep -q "INVENTORY_DB_SMOKE_OK" godot-inventory-db-smoke.log
 
+      - name: Catalog item lookup index equivalence
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/catalog_item_lookup_test.gd 2>&1 | tee godot-catalog-lookup.log
+          grep -q 'CATALOG_ITEM_LOOKUP_RESULT {"failures":\[\]' godot-catalog-lookup.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/catalog_item_lookup_index_test.gd 2>&1 | tee godot-catalog-lookup-index.log
+          grep -q 'CATALOG_LOOKUP_INDEX_RESULT {"failures":\[\]' godot-catalog-lookup-index.log
+
       - name: Item buff description smoke test
         shell: bash
         run: |

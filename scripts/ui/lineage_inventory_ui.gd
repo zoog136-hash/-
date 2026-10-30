@@ -2,6 +2,7 @@ extends Control
 class_name TwilightInventoryUI
 
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
+const CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 
 signal item_activate_requested(item_name: String)
 signal quickslot_requested(item_name: String)
@@ -578,11 +579,11 @@ func _select_item(item_name: String) -> void:
 func _find_item_record(item_name: String) -> Dictionary:
 	item_name = _base_item_name(item_name)
 	var records: Array = catalog_data.get("아이템", []) as Array
-	for value: Variant in records:
-		if value is Dictionary:
-			var record := value as Dictionary
-			if str(record.get("name", "")) == item_name:
-				return record
+	# Same first match as the old linear scan; the bag redraw and grade sort call
+	# this per entry/comparison, which made sorting a large bag take seconds.
+	var record: Dictionary = CATALOG_LOOKUP.first_by_name(records, item_name)
+	if not record.is_empty():
+		return record
 	return {"name":item_name, "grade":"일반", "type":"기타", "slot":"other"}
 
 func _matches_category(record: Dictionary, item_name: String) -> bool:
