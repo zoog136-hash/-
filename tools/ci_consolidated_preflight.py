@@ -34,6 +34,7 @@ CHECKS = (
          "--plan", "data/maps/aden_faith_png_plan.json"]),
     ("Inventory icon source/grade contracts", ["tools/inven_inventory/build.py"]),
     ("Android animation export scope", ["tests/android_animation_export_scope_test.py"]),
+    ("Android unreachable revision exclusions", ["tests/android_runtime_reachability_test.py"]),
 )
 
 
