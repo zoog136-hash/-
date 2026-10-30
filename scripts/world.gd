@@ -224,6 +224,15 @@ var charge_skill: Dictionary = {}
 var charge_speed: float = 1150.0
 var save_timer: float = 0.0
 var general_save_pending: bool = false
+# Non-transactional changes (quickslots, locks, shops, equipment swaps, NPC travel,
+# warehouse) save after a quiet window rather than one synchronous disk write per
+# action. Transactions and the pause/quit notifications still save immediately.
+const DEFERRED_SAVE_GATE = preload("res://scripts/deferred_save_gate.gd")
+const DEFERRED_SAVE_SECONDS: float = 10.0
+const PERF_LOG_THRESHOLD_USEC: int = 30000
+var deferred_save: DEFERRED_SAVE_GATE = DEFERRED_SAVE_GATE.new(DEFERRED_SAVE_SECONDS)
+# Automated suites run headless and assert durable state right after each action.
+var deferred_save_enabled: bool = DisplayServer.get_name() != "headless"
 var hp_recovery_elapsed: float = 0.0
 var mp_recovery_elapsed: float = 0.0
 var equipment_effects_dirty: bool = true
@@ -449,6 +458,8 @@ func _process(delta: float) -> void:
 	if save_timer >= 30.0:
 		save_timer = 0.0
 		_request_general_save()
+	if deferred_save.tick(delta):
+		_save_game(true)
 	if player.auto_enabled and not player.is_stunned() and charge_skill.is_empty():
 		_run_auto_heal_quickslots()
 		_run_auto_hunt()
@@ -459,7 +470,9 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("open_inventory"):
 		_open_inventory()
 	if Input.is_action_just_pressed("open_menu"):
+		var menu_started_usec: int = Time.get_ticks_usec()
 		hud.toggle_menu()
+		_perf_log("메뉴 열기", menu_started_usec)
 	if Input.is_action_just_pressed("open_map"):
 		hud.toggle_map()
 	if Input.is_action_just_pressed("quick_potion"):
@@ -1277,6 +1290,7 @@ func _connect_signals() -> void:
 		hud.connect("playtest_aden_grant_requested",_grant_playtest_aden)
 
 func _set_map(map_id: String, keep_position: bool) -> void:
+	var map_started_usec: int = Time.get_ticks_usec()
 	map_id = NATIVE_PNG.canonical(map_id)
 	if not maps_by_id.has(map_id):
 		if SOURCE_MAP84.supports(map_id):_reject_map_pack("원본 지도 팩 누락: 현재 지역과 저장을 보존합니다")
@@ -1441,6 +1455,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_repath_timer = 0.0
 	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
+	_perf_log("맵 이동", map_started_usec)
 	if map_bootstrap_blocked:
 		map_bootstrap_blocked=false
 		process_mode=map_prior_process_mode
@@ -2607,9 +2622,43 @@ func _collect_ground_drop(drop: Button) -> bool:
 	if pending_ground_pickup == drop: pending_ground_pickup = null
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
-	_update_hud()
-	if bool(record.get("player_dropped",false)): _save_game(true)
+	var pickup_hud_started_usec: int = Time.get_ticks_usec()
+	_refresh_inventory_hud()
+	_perf_log("습득 HUD 갱신", pickup_hud_started_usec)
+	if bool(record.get("player_dropped",false)): _request_deferred_save()
 	return true
+
+## A pickup only changes item counts, physical IDs and carried weight. Rebuilding
+## the whole character sheet (all derived stats, card/awakening state, portrait,
+## a deep copy for the side panel) on every pickup stalled the frame; publish just
+## what changed. Equipment, stats and buffs still go through _update_hud.
+func _refresh_inventory_hud() -> void:
+	_sync_item_instances()
+	# Carried weight feeds the encumbrance movement multiplier.
+	_refresh_speed_modifiers()
+	var state: Variant = hud.get("character_state")
+	if state is Dictionary:
+		var weight: int = _inventory_total_weight()
+		var capacity: int = _carrying_capacity()
+		(state as Dictionary).merge({"inventory_weight":weight, "current_weight":weight, "carrying_capacity":capacity,
+			"max_weight":capacity, "encumbrance_multiplier":ITEM_OPTIONS.encumbrance_multiplier(weight, capacity),
+			"item_instances":item_instances}, true)
+	if hud.has_method("set_quick_items"):
+		hud.call("set_quick_items", inventory)
+	if hud.has_method("set_quickslot_state"):
+		# Re-renders quickslot counts and hands the bag its new inventory (the bag
+		# rebuilds its slots only while open).
+		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
+	elif hud.has_method("set_quickslot_entries"):
+		hud.call("set_quickslot_entries", quickslots)
+	if hud.inventory_panel.visible:
+		hud.refresh_inventory(inventory)
+	var bag: Variant = hud.get("lineage_inventory_ui")
+	if bag is Object and is_instance_valid(bag) and (bag as Object).has_method("_refresh_weight"):
+		(bag as Object).call("_refresh_weight")
+	# An open character sheet shows weight-derived values; refresh it fully once.
+	if str(hud.get("active_section")) == "character":
+		stat_hud_refresh_pending = true
 
 func _on_ground_drop_clicked(drop: Button) -> void:
 	loot_pickup.select(drop)
@@ -2942,7 +2991,7 @@ func _on_stat_increase_requested(stat_name: String) -> void:
 	hud.show_message("%s +1 · 남은 포인트 %d" % [stat_name, stat_points])
 	hud.append_log("스탯 투자 · %s +1" % stat_name)
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 
 func _check_level_up() -> void:
 	var gained_stat_points: bool = false
@@ -3496,8 +3545,8 @@ func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dic
 	if source_id != "":
 		var identified: Dictionary = _catalog_item_from_source_id(source_id)
 		return identified if str(identified.get("name", "")) == item_name else {}
-	return ITEM_CATALOG_LOOKUP.find_many(
-		[catalog_db.get("아이템", []), item_db], item_instances, [item_name]).get(item_name, {})
+	# Indexed, self-validating equivalent of the previous one-name find_many scan.
+	return ITEM_CATALOG_LOOKUP.find_one([catalog_db.get("아이템", []), item_db], item_instances, item_name)
 
 func _safe_enhancement_level(kind: String) -> int:
 	match kind:
@@ -3739,7 +3788,7 @@ func _on_ain_auto_changed(enabled: bool) -> void:
 	ain_service.auto_recharge = enabled
 	hud.show_message("축복 자동충전 %s" % ("ON" if enabled else "OFF"))
 	_update_ain_hud()
-	_save_game(true)
+	_request_deferred_save()
 
 func _update_ain_hud() -> void:
 	if hud.has_method("set_ain_state"):
@@ -3807,7 +3856,7 @@ func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> v
 		return
 	gold = int(transaction["wallet"])
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 	hud.refresh_inventory(inventory)
 	hud.append_log("아이템 매입 · %s ×%d (+%d 아데나)" % [item_name,quantity,int(transaction["payment"])])
 	hud.show_message("매입 완료 · %d 아데나" % int(transaction["payment"]))
@@ -3850,7 +3899,7 @@ func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 	hud.show_message("%s ×%d 구매 · %d 아데나" % [item_name, quantity, total])
 	hud.append_log("상점 구매 · %s ×%d (-%d)" % [item_name, quantity, total])
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 	if hud.has_method("refresh_shop"):
 		hud.call("refresh_shop")
 
@@ -3888,7 +3937,7 @@ func _buy_reviewed_shop_item(vendor_id: String, item_name: String, quantity: int
 	hud.show_message("%s ×%d 구매 · %d 아데나" % [item_name, quantity, total])
 	hud.append_log("원본 NPC 상점 구매 · %s ×%d (-%d)" % [item_name, quantity, total])
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 	if hud.has_method("refresh_shop"):
 		hud.call("refresh_shop")
 
@@ -3951,7 +4000,7 @@ func _npc_teleport_requested(map_id: String) -> void:
 		return
 	gold -= cost
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 	hud.show_message("텔레포트 완료 · %d 아데나" % cost)
 
 
@@ -3983,7 +4032,7 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	# are moved, not re-created. The original save schema is extended only
 	# with an optional warehouse field (legacy saves default to empty).
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 	hud.append_log("창고 %s · %s ×%d" % ["보관" if direction == "deposit" else "찾기",item_name,quantity])
 	hud.show_message("창고 이용 완료")
 	if hud.has_method("refresh_service"):
@@ -4049,8 +4098,10 @@ func _on_auto_toggled(enabled: bool) -> void:
 		player.clear_click_path()
 
 func _open_inventory() -> void:
+	var started_usec: int = Time.get_ticks_usec()
 	hud.refresh_inventory(inventory)
 	hud.toggle_inventory()
+	_perf_log("가방 열기", started_usec)
 
 func _on_map_selected(map_id: String) -> void:
 	hud.toggle_map()
@@ -4134,6 +4185,23 @@ func _commit_general_save() -> void:
 	if not general_save_pending:return
 	general_save_pending=false
 	_save_game(true)
+
+## Ask for a save after DEFERRED_SAVE_SECONDS of quiet. Use only for state that
+## is consistent if the last few seconds are lost; RNG outcomes and item/skill
+## transactions keep calling _save_game directly.
+func _request_deferred_save() -> void:
+	if not deferred_save_enabled:
+		_save_game(true)
+		return
+	deferred_save.request()
+
+## Debug builds (the Android test APK included) log any step slower than 30 ms to
+## the combat log so hitches can be read on-device without a profiler.
+func _perf_log(label: String, started_usec: int) -> void:
+	if not OS.is_debug_build() or not is_instance_valid(hud): return
+	var elapsed_usec: int = Time.get_ticks_usec() - started_usec
+	if elapsed_usec >= PERF_LOG_THRESHOLD_USEC:
+		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if not migration_pointer_error.is_empty():
@@ -4225,7 +4293,9 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		return ERR_UNAVAILABLE
 	data.merge(equipment_collections.extra_save_fields, false)
 	data.merge(collection_override, true)
+	var save_started_usec: int = Time.get_ticks_usec()
 	var result: Error = equipment_collections.write_save(save_path(), data)
+	_perf_log("저장", save_started_usec)
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
@@ -4236,6 +4306,10 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 			hud.append_log("이전 저장 선택 기록 실패 · 원본과 별도 저장 후보를 보존합니다")
 			return pointer_result
 		pending_map_save_record.clear()
+	# This save already holds every earlier change, so a queued one is redundant.
+	# A failed deferred write is not re-queued here; the 30 s general autosave in
+	# _process keeps retrying, and pause/quit still attempt a final save.
+	if collection_override.is_empty(): deferred_save.cancel()
 	if not quiet:
 		hud.show_message("저장 완료")
 	return OK
@@ -4920,7 +4994,7 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 			quickslots[slot_index]["skill_id"] = str(slotted.id)
 			quickslots[slot_index]["id"] = str(slotted.name)
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 
 func _on_quickslot_pressed(slot_index: int) -> void:
 	if slot_index < 0 or slot_index >= quickslots.size():
@@ -4978,7 +5052,7 @@ func _set_item_locked(reference: String, locked: bool) -> void:
 	if locked: ui_preferences.item_locks[reference] = true
 	else: ui_preferences.item_locks.erase(reference)
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 
 func _item_locked(item_name: String, instance_id: String = "") -> bool:
 	return bool(ui_preferences.get("item_locks",{}).get(item_name+("@@@"+instance_id if not instance_id.is_empty() else ""),false))
@@ -4996,7 +5070,7 @@ func _unequip_item_reference(reference: String) -> void:
 		_refresh_speed_modifiers()
 		_update_hud()
 		hud.refresh_inventory(inventory)
-		_save_game(true)
+		_request_deferred_save()
 		return
 
 func _quickslot_pages() -> Array:
@@ -5036,7 +5110,7 @@ func _on_quickslot_edit_requested(action: String, source_index: int, target: int
 			_: return
 		ui_preferences.edited_quickslots[job_class] = true
 	_update_hud()
-	_save_game(true)
+	_request_deferred_save()
 
 func get_consumable_auto_settings() -> Dictionary:
 	return CONSUMABLE_AUTO.normalize(ui_preferences.get("consumable_auto", {}))
@@ -5045,7 +5119,7 @@ func set_consumable_auto_settings(settings: Dictionary) -> void:
 	ui_preferences["consumable_auto"] = CONSUMABLE_AUTO.normalize(settings)
 	auto_item_clock = 0.0
 	_emit_consumable_auto_settings()
-	_save_game(true)
+	_request_deferred_save()
 
 func _emit_consumable_auto_settings() -> void:
 	if is_instance_valid(hud) and hud.has_signal("consumable_auto_settings_updated"):
@@ -6080,7 +6154,7 @@ func _equip_reference_in_slot(reference: String, target: String) -> void:
 	if str(physical.get("name","")) != parts[0] or int(inventory.get(parts[0],0)) < 1: return
 	var record: Dictionary = physical.get("record",_find_catalog_item_record(parts[0]))
 	_equip_or_acquire_item(record,false,parts[1],target)
-	_save_game(true)
+	_request_deferred_save()
 
 func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, requested_id: String = "", requested_slot: String = "") -> void:
 	# A physical item with a source ID outranks the legacy name-only lookup.
@@ -7552,6 +7626,7 @@ func apply_presentation_settings(settings: Dictionary) -> void:
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED] and is_instance_valid(player):
+		# Leaving the app flushes anything still waiting out its quiet window.
 		_save_game(true)
 
 func constrain_original_motion(actor: CharacterBody2D) -> void:

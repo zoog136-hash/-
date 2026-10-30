@@ -82,11 +82,6 @@ func _ready() -> void:
 	search_line.reparent(search_row)
 	search_line.custom_minimum_size = Vector2(130,32)
 	search_line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var sorter := OptionButton.new()
-	sorter.name = "InventorySort"
-	for title: String in ["사용자순","등급순","수량순","이름순"]: sorter.add_item(title)
-	sorter.item_selected.connect(func(index: int) -> void: sort_mode=index; _refresh_inventory_grid())
-	search_row.add_child(sorter)
 	search_row.hide()
 	header.hide()
 	for button: Button in tab_buttons.values():
@@ -122,6 +117,12 @@ func _ready() -> void:
 	var actions := HBoxContainer.new()
 	layout.add_child(actions)
 	actions.add_child(UI.button("검색",func() -> void: search_row.visible=not search_row.visible,Vector2(64,34)))
+	# The bag stacks items in acquisition order and never re-sorts on its own.
+	# This button sorts once (grade, then name) and keeps that as the new order.
+	var sort_button: Button = UI.button("정렬",sort_inventory_now,Vector2(56,34))
+	sort_button.name = "InventorySort"
+	sort_button.tooltip_text = "등급·이름순으로 한 번 정렬합니다. 이후 획득한 아이템은 뒤에 쌓입니다."
+	actions.add_child(sort_button)
 	expand_button = UI.button("확장",_toggle_expanded,Vector2(62,34))
 	expand_button.name = "ExpandInventory"
 	actions.add_child(expand_button)
@@ -324,34 +325,16 @@ func _refresh_inventory_grid() -> void:
 	var search: String = search_line.text.strip_edges().to_lower() if search_line != null else ""
 	sorted_references.clear()
 	var entries: Array[Dictionary] = _inventory_entries()
-	for entry: Dictionary in entries:
-		var reference: String = str(entry.reference)
-		var name: String = str(entry.name)
+	if sort_mode != 0:
+		# Older capture tests set sort_mode directly; apply it once as the stored order.
+		_store_sorted_order(entries, sort_mode)
+		sort_mode = 0
+	for reference: String in _acquisition_order(entries):
+		var name: String = _base_item_name(reference)
 		var record: Dictionary = _find_item_record(reference)
 		if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
 			sorted_references.append(reference)
 	capacity_label.text = "%d / %d" % [entries.size(),max_slots]
-	if sort_mode == 1:
-		sorted_references.sort_custom(func(a: String, b: String) -> bool:
-			var left_name: String = _base_item_name(a)
-			var right_name: String = _base_item_name(b)
-			var left_grade: int = UI.GRADES.keys().find(str(_find_item_record(a).get("grade", "일반")))
-			var right_grade: int = UI.GRADES.keys().find(str(_find_item_record(b).get("grade", "일반")))
-			return a < b if left_grade == right_grade else left_grade > right_grade)
-	elif sort_mode == 2:
-		sorted_references.sort_custom(func(a: String, b: String) -> bool:
-			var left_count: int = 1 if _ref_instance_id(a) != "" else int(inventory.get(_base_item_name(a), 0))
-			var right_count: int = 1 if _ref_instance_id(b) != "" else int(inventory.get(_base_item_name(b), 0))
-			return a < b if left_count == right_count else left_count > right_count)
-	else:
-		sorted_references.sort()
-		if controller != null and sort_mode == 0:
-			var order: Array = controller.get_parent().ui_preferences.get("inventory_order",[])
-			sorted_references.sort_custom(func(a: String,b: String) -> bool:
-				var ai: int = order.find(a)
-				var bi: int = order.find(b)
-				if ai == bi: return a < b
-				return (ai if ai >= 0 else 100000) < (bi if bi >= 0 else 100000))
 	visible_first_row = -1
 	_refresh_visible_window()
 	_refresh_weight()
@@ -478,15 +461,87 @@ func _refresh_visible_window() -> void:
 
 func reorder(source: String, target: String) -> void:
 	if source == target or not sorted_references.has(source) or not sorted_references.has(target): return
-	var order: Array = sorted_references.duplicate()
+	# Swap inside the full stored order, so a search/category filter does not
+	# drop the hidden items' positions.
+	var order: Array = _acquisition_order(_inventory_entries()).duplicate()
 	var a: int = order.find(source)
 	var b: int = order.find(target)
+	if a < 0 or b < 0: return
 	order[a] = target
 	order[b] = source
-	controller.get_parent().ui_preferences["inventory_order"] = order
-	sort_mode = 0
+	_order_store()["inventory_order"] = order
 	_refresh_inventory_grid()
-	controller.get_parent()._save_game(true)
+	_request_order_save()
+
+## Sort once by grade (highest first), then name, then physical ID, and keep it
+## as the stored order. Later pickups stack after it again.
+func sort_inventory_now() -> void:
+	_store_sorted_order(_inventory_entries(), 1)
+	_refresh_inventory_grid()
+	_request_order_save()
+
+var local_order_store: Dictionary = {}
+
+func _order_store() -> Dictionary:
+	var world: Node = controller.get_parent() if controller != null else null
+	if world != null and world.get("ui_preferences") is Dictionary: return world.get("ui_preferences")
+	return local_order_store
+
+func _request_order_save() -> void:
+	var world: Node = controller.get_parent() if controller != null else null
+	if world == null: return
+	# Display order is cosmetic; it rides along with the next deferred save.
+	if world.has_method("_request_deferred_save"): world.call("_request_deferred_save")
+	elif world.has_method("_save_game"): world.call("_save_game", true)
+
+## Stored order with vanished references removed and new ones stacked at the end
+## in acquisition order (inventory keeps item names in insertion order; a newer
+## physical item has a larger ID). Writes the result back only when it changed.
+func _acquisition_order(entries: Array[Dictionary]) -> Array[String]:
+	var present: Dictionary = {}
+	for entry: Dictionary in entries: present[str(entry.reference)] = true
+	var store: Dictionary = _order_store()
+	var stored: Array = store.get("inventory_order", []) if store.get("inventory_order", []) is Array else []
+	var ordered: Array[String] = []
+	var placed: Dictionary = {}
+	for raw: Variant in stored:
+		var reference: String = str(raw)
+		if present.has(reference) and not placed.has(reference):
+			ordered.append(reference)
+			placed[reference] = true
+	var name_rank: Dictionary = {}
+	for key: Variant in inventory.keys(): name_rank[str(key)] = name_rank.size()
+	var fresh: Array[String] = []
+	for entry: Dictionary in entries:
+		var reference: String = str(entry.reference)
+		if not placed.has(reference): fresh.append(reference)
+	fresh.sort_custom(func(a: String, b: String) -> bool:
+		var rank_a: int = int(name_rank.get(_base_item_name(a), 0))
+		var rank_b: int = int(name_rank.get(_base_item_name(b), 0))
+		if rank_a != rank_b: return rank_a < rank_b
+		return int(_ref_instance_id(a)) < int(_ref_instance_id(b)))
+	ordered.append_array(fresh)
+	if Array(ordered) != stored:
+		store["inventory_order"] = Array(ordered)
+	return ordered
+
+func _store_sorted_order(entries: Array[Dictionary], mode: int) -> void:
+	var references: Array[String] = []
+	var keys: Dictionary = {}
+	for entry: Dictionary in entries:
+		var reference: String = str(entry.reference)
+		references.append(reference)
+		match mode:
+			2: keys[reference] = 1 if _ref_instance_id(reference) != "" else int(inventory.get(_base_item_name(reference), 0))
+			3: keys[reference] = 0
+			_: keys[reference] = UI.GRADES.keys().find(str(_find_item_record(reference).get("grade", "일반")))
+	references.sort_custom(func(a: String, b: String) -> bool:
+		if int(keys[a]) != int(keys[b]): return int(keys[a]) > int(keys[b])
+		var name_a: String = _base_item_name(a)
+		var name_b: String = _base_item_name(b)
+		if name_a != name_b: return name_a < name_b
+		return int(_ref_instance_id(a)) < int(_ref_instance_id(b)))
+	_order_store()["inventory_order"] = Array(references)
 
 func _refresh_weight() -> void:
 	if weight_readout != null:

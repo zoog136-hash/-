@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' && github.event.pull_request.number != 157 && github.event.pull_request.number != 158 }}
 jobs:
   audit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 135
     strategy:
       fail-fast: false

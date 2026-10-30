@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 125
     steps:
       - name: Checkout
@@ -203,6 +203,17 @@ jobs:
           fi
           grep -q "QUICKSLOT_SMOKE_OK" godot-quickslot-smoke.log
 
+      - name: Deferred and coalesced save tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/deferred_save_gate_test.gd 2>&1 | tee godot-deferred-save.log
+          grep -q 'DEFERRED_SAVE_GATE_RESULT {"failures":\[\]' godot-deferred-save.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/general_save_reservation_test.gd 2>&1 | tee godot-general-save.log
+          grep -q 'GENERAL_SAVE_RESERVATION_RESULT {"failures":\[\]' godot-general-save.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/save_identical_payload_test.gd 2>&1 | tee godot-identical-save.log
+          grep -q 'SAVE_IDENTICAL_PAYLOAD_RESULT {"failures":\[\]' godot-identical-save.log
+
       - name: Speed option smoke test
         shell: bash
         run: |
@@ -268,6 +279,26 @@ jobs:
             exit 1
           fi
           grep -q "INVENTORY_DB_SMOKE_OK" godot-inventory-db-smoke.log
+
+      - name: Catalog item lookup index equivalence
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/catalog_item_lookup_test.gd 2>&1 | tee godot-catalog-lookup.log
+          grep -q 'CATALOG_ITEM_LOOKUP_RESULT {"failures":\[\]' godot-catalog-lookup.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/catalog_item_lookup_index_test.gd 2>&1 | tee godot-catalog-lookup-index.log
+          grep -q 'CATALOG_LOOKUP_INDEX_RESULT {"failures":\[\]' godot-catalog-lookup-index.log
+
+      - name: Bag acquisition order and minimap static layer
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/inventory_order_sort_button_test.gd 2>&1 | tee godot-inventory-order.log
+          grep -q 'INVENTORY_ORDER_RESULT {"failures":\[\]' godot-inventory-order.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/inventory_virtual_window_test.gd 2>&1 | tee godot-inventory-window.log
+          grep -q 'INVENTORY_VIRTUAL_WINDOW_RESULT {"created":[0-9]*,"failures":\[\]' godot-inventory-window.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/minimap_static_layer_test.gd 2>&1 | tee godot-minimap-layer.log
+          grep -q 'MINIMAP_STATIC_LAYER_RESULT {"failures":\[\]' godot-minimap-layer.log
 
       - name: Item buff description smoke test
         shell: bash

@@ -36,7 +36,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   presentation:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 85
     steps:
       - uses: actions/checkout@v4
@@ -134,7 +134,7 @@ jobs:
           if-no-files-found: error
   original-based:
     name: Original-based Main / ${{ matrix.group }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 85
     strategy:
       fail-fast: false
@@ -352,7 +352,7 @@ jobs:
             marker: PR100_TRANSFORM_BATCH_OK
             timeout: 1200
             render_timeout: 2400
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 80
     env:
       TWILIGHT_PR100_BATCH_ISOLATED: '1'

@@ -2,6 +2,7 @@ extends Control
 class_name TwilightInventoryUI
 
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
+const CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 
 signal item_activate_requested(item_name: String)
 signal quickslot_requested(item_name: String)
@@ -322,15 +323,20 @@ func _inventory_entries() -> Array[Dictionary]:
 	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
 	var names: Array = inventory.keys()
 	names.sort()
+	# Group physical IDs by name in one pass instead of rescanning every
+	# instance for every bag entry.
+	var ids_by_name: Dictionary = {}
+	for instance_key: Variant in instances.keys():
+		var physical: Variant = instances[instance_key]
+		if physical is Dictionary:
+			var owner_name: String = str((physical as Dictionary).get("name", ""))
+			if not ids_by_name.has(owner_name): ids_by_name[owner_name] = [] as Array[String]
+			(ids_by_name[owner_name] as Array[String]).append(str(instance_key))
 	for raw_name: Variant in names:
 		var item_name: String = str(raw_name)
 		if int(inventory.get(item_name, 0)) <= 0:
 			continue
-		var instance_ids: Array[String] = []
-		for instance_key: Variant in instances.keys():
-			var physical: Variant = instances[instance_key]
-			if physical is Dictionary and str((physical as Dictionary).get("name", "")) == item_name:
-				instance_ids.append(str(instance_key))
+		var instance_ids: Array[String] = ids_by_name.get(item_name, [] as Array[String])
 		instance_ids.sort_custom(func(a: String, b: String) -> bool: return int(a) < int(b))
 		if instance_ids.is_empty():
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
@@ -578,11 +584,11 @@ func _select_item(item_name: String) -> void:
 func _find_item_record(item_name: String) -> Dictionary:
 	item_name = _base_item_name(item_name)
 	var records: Array = catalog_data.get("아이템", []) as Array
-	for value: Variant in records:
-		if value is Dictionary:
-			var record := value as Dictionary
-			if str(record.get("name", "")) == item_name:
-				return record
+	# Same first match as the old linear scan; the bag redraw and grade sort call
+	# this per entry/comparison, which made sorting a large bag take seconds.
+	var record: Dictionary = CATALOG_LOOKUP.first_by_name(records, item_name)
+	if not record.is_empty():
+		return record
 	return {"name":item_name, "grade":"일반", "type":"기타", "slot":"other"}
 
 func _matches_category(record: Dictionary, item_name: String) -> bool:
