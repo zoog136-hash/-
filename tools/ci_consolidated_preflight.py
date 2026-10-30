@@ -19,6 +19,7 @@ CHECKS = (
     ("Resource integrity", ["tools/check_resource_integrity.py", "--root", "."]),
     ("Godot test-result parser contract", ["tools/test_project_runner_test.py"]),
     ("Godot test selection and sharding", ["tools/test_project_plan_test.py"]),
+    ("L1J PR-targeted check selection", ["tools/l1j/test_select_pr_checks.py"]),
     ("Regional map shard coverage", ["tools/test_world_region_shards.py"]),
     ("Animation expansion planning", ["tests/animation_expansion_plan_test.py"]),
     ("Eight-direction real-art audit contract", ["tests/eight_direction_coverage_audit_test.py"]),

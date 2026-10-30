@@ -393,40 +393,43 @@ jobs:
 
       # Only trusted main publishes imported PNG artifacts; the real Godot
       # import/validation still runs on every PR and main revision.
+      # Import outputs depend only on main's sources, so publish them once the
+      # clean import step has passed even if a later regression step failed;
+      # otherwise one red main run left every workflow without a current cache.
       - name: Stage PNG imports from validated main
         id: png-stage
-        if: ${{ success() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ !cancelled() && steps.import-metrics.outcome == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: python3 tools/ci_godot_png_cache.py stage --root . --github-output "$GITHUB_OUTPUT"
       - name: Save trusted-main PNG shard 0
-        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.png-stage.outputs.ready == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
           path: .ci-godot-cache/shard-0
           key: twilight-godot-png-4.7.2-main-s0-${{ github.sha }}
       - name: Save trusted-main PNG shard 1
-        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.png-stage.outputs.ready == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
           path: .ci-godot-cache/shard-1
           key: twilight-godot-png-4.7.2-main-s1-${{ github.sha }}
       - name: Save trusted-main PNG shard 2
-        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.png-stage.outputs.ready == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
           path: .ci-godot-cache/shard-2
           key: twilight-godot-png-4.7.2-main-s2-${{ github.sha }}
       - name: Save trusted-main PNG shard 3
-        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.png-stage.outputs.ready == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
           path: .ci-godot-cache/shard-3
           key: twilight-godot-png-4.7.2-main-s3-${{ github.sha }}
-      - name: Save fully validated Godot import cache on trusted main
-        if: ${{ success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.imported-cache.outputs.cache-hit != 'true' && steps.import-metrics.outputs.cacheable == 'true' }}
+      - name: Save cleanly imported Godot import cache on trusted main
+        if: ${{ !cancelled() && steps.import-metrics.outcome == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.imported-cache.outputs.cache-hit != 'true' && steps.import-metrics.outputs.cacheable == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
