@@ -373,5 +373,102 @@ class ZipUpdaterTest(unittest.TestCase):
             self.assertFalse(list(root.glob('.twilight_update_backup_*')))
 
 
+    def test_verified_download_cache_resumes_after_network_failure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'TWILIGHT_Play'
+            data = {
+                'project.godot': b'project',
+                'Main.tscn': b'scene',
+                'scripts/world.gd': b'code',
+            }
+            inventory = {name: record(blob) for name, blob in data.items()}
+            commit = 'a'*40
+            first_calls = []
+            def failing_download(sha, name, row, destination):
+                first_calls.append(name)
+                if name == 'Main.tscn':
+                    raise RuntimeError('network disconnected')
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data[name])
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=(commit, inventory)), mock.patch.object(
+                                       updater, 'download_verified',
+                                       side_effect=failing_download):
+                with self.assertRaisesRegex(RuntimeError, 'network disconnected'):
+                    updater.update(root, assume_yes=True, install_fresh=True,
+                                   workers=1)
+            stage = root / ('.twilight_update_stage_' + commit)
+            self.assertTrue(stage.is_dir())
+            self.assertTrue((stage / 'project.godot').is_file())
+            self.assertFalse((root / 'project.godot').exists())
+            second_calls = []
+            def resumed_download(sha, name, row, destination):
+                second_calls.append(name)
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data[name])
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=(commit, inventory)), mock.patch.object(
+                                       updater, 'download_verified',
+                                       side_effect=resumed_download):
+                updater.update(root, assume_yes=True, install_fresh=True,
+                               workers=1)
+            self.assertNotIn('project.godot', second_calls)
+            self.assertEqual(set(second_calls),
+                             {'Main.tscn', 'scripts/world.gd'})
+            self.assertFalse(stage.exists())
+            for name, value in data.items():
+                self.assertEqual((root / name).read_bytes(), value)
+
+    def test_changed_cached_content_must_be_redownloaded(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'TWILIGHT_Play'
+            root.mkdir()
+            commit = 'a'*40
+            stage = root / ('.twilight_update_stage_' + commit)
+            stage.mkdir()
+            (stage / 'project.godot').write_bytes(b'corrupted')
+            data = {'project.godot': b'expected', 'Main.tscn': b'scene'}
+            inventory = {name: record(blob) for name, blob in data.items()}
+            requested = []
+            def download(sha, name, row, destination):
+                requested.append(name)
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data[name])
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=(commit, inventory)), mock.patch.object(
+                                       updater, 'download_verified',
+                                       side_effect=download):
+                updater.update(root, assume_yes=True, install_fresh=True,
+                               workers=2)
+            self.assertIn('project.godot', requested)
+            self.assertEqual((root / 'project.godot').read_bytes(), b'expected')
+
+    def test_download_worker_count_and_parallel_dispatch(self):
+        import threading
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'TWILIGHT_Play'
+            data = {'project.godot': b'game', 'Main.tscn': b'scene',
+                    'scripts/world.gd': b'code'}
+            inventory = {name: record(blob) for name, blob in data.items()}
+            barrier = threading.Barrier(3, timeout=5)
+            seen = []
+            lock = threading.Lock()
+            def concurrent_download(sha, name, row, destination):
+                with lock:
+                    seen.append(name)
+                barrier.wait()
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data[name])
+            with mock.patch.object(updater, 'get_inventory',
+                                   return_value=('a'*40, inventory)), mock.patch.object(
+                                       updater, 'download_verified',
+                                       side_effect=concurrent_download):
+                updater.update(root, assume_yes=True, install_fresh=True,
+                               workers=3)
+            self.assertEqual(len(seen), 3)
+            for name, value in data.items():
+                self.assertEqual((root / name).read_bytes(), value)
+
+
 if __name__ == '__main__':
     unittest.main()

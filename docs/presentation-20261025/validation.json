@@ -1,0 +1,147 @@
+{
+  "scope": "latest per-check results across targeted runs, not one full-suite pass",
+  "unique_checks": 22,
+  "latest_pass": 22,
+  "checks": {
+    "boot": {
+      "status": "PASS",
+      "summary": "performance/spike-regression/summary.json"
+    },
+    "card_draw_fusion_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "card_special_policy_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "combat_timing_test": {
+      "status": "PASS",
+      "summary": "performance/spike-regression/summary.json"
+    },
+    "ground_drop_smoke_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "input_routing_test": {
+      "status": "PASS",
+      "summary": "evidence/raster-regression/summary.json"
+    },
+    "minimap_geography_cache_test": {
+      "status": "PASS",
+      "summary": "evidence/raster-regression/summary.json"
+    },
+    "original_skill_audio_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "presentation_audio_main_test": {
+      "status": "PASS",
+      "summary": "evidence/audio-guard/summary.json"
+    },
+    "presentation_audio_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "presentation_ui_material_test": {
+      "status": "PASS",
+      "summary": "ui-refinement/final-regression/summary.json"
+    },
+    "ui_fidelity_regression_test": {
+      "status": "PASS",
+      "summary": "ui-refinement/final-regression/summary.json"
+    },
+    "ui_renewal_integration_test": {
+      "status": "PASS",
+      "summary": "ui-refinement/final-regression/summary.json"
+    },
+    "warehouse_persistence_test": {
+      "status": "PASS",
+      "summary": "evidence/integration/summary.json"
+    },
+    "auto_selection_order_test": {
+      "status": "PASS",
+      "summary": "performance/spike-regression/summary.json"
+    },
+    "presentation_catalog_compact_test": {
+      "status": "PASS",
+      "summary": "ui-refinement/final-regression/summary.json"
+    },
+    "native_png_route_recovery_test": {
+      "status": "PASS",
+      "summary": "performance/spike-regression/summary.json"
+    },
+    "native_route_failure_cache_test": {
+      "status": "PASS",
+      "summary": "performance/spike-regression/summary.json"
+    },
+    "spawn_safe_memo_test": {
+      "status": "PASS",
+      "summary": "followup/regression/summary.json"
+    },
+    "shop_authority_test": {
+      "status": "PASS",
+      "summary": "evidence/detail-states/logs/runner/summary.json"
+    },
+    "presentation_detail_states_test": {
+      "status": "PASS",
+      "summary": "ui-refinement/final-regression/summary.json"
+    },
+    "native_line_sample_cache_test": {
+      "status": "PASS",
+      "summary": "performance/spike-regression/summary.json"
+    },
+    "field_spawn_registration_test": {
+      "status": "PASS",
+      "summary": "performance/spawn-registration/regression/summary.json",
+      "native_explicit_checks": 807
+    }
+  },
+  "full_ci": "HELD_BY_LATEST_USER_INSTRUCTION",
+  "android": "NOT_RUN",
+  "listening": "NOT_RUN",
+  "final_import_boot": {
+    "summary": "evidence/final-boot/summary.json",
+    "passed": 2,
+    "failed": []
+  },
+  "raster_followup": {
+    "targeted_summary": "evidence/raster-regression/summary.json",
+    "passed": 4,
+    "failed": [],
+    "same_instance_benchmark": "performance/minimap-raster.json",
+    "pixel_parity": "performance/raster-pixel-comparison.json",
+    "resource_integrity": "evidence/raster-resource-integrity.log"
+  },
+  "followup_scope": "5/5 final navigation/spawn/boot; UI detail final1/1 plus existing shop authority and UI integration; aggregated latest per-check results, not full CI",
+  "first_spike_followup": {
+    "focused_passed": 6,
+    "summary": "performance/spike-regression/summary.json",
+    "exact_replay": "performance/first-route-exact-baseline.json",
+    "complete_stall_resolved": false,
+    "next_measurement": "Cold route cost remains; native spawn-registration cost now reduced, see spawn-registration/comparison.json"
+  },
+  "spawn_registration_followup": {
+    "targeted_passed": 4,
+    "native_checks": 807,
+    "same_seed_roster_exact_entries": 133,
+    "summary": "performance/spawn-registration/regression/summary.json",
+    "comparison": "performance/spawn-registration/comparison.json",
+    "complete_stall_resolved": false,
+    "android": "NOT_RUN"
+  },
+  "ui_refinement": {
+    "focused_passed": 5,
+    "summary": "ui-refinement/final-regression/summary.json",
+    "capture_pairs": 16,
+    "capture_resolutions": [
+      "1280x720",
+      "854x480"
+    ],
+    "screenshots_edited": false,
+    "inventory_and_physical_ids_unchanged": true,
+    "detail_action_viewport_assertions_added": 6,
+    "full_ci": "HELD",
+    "android": "NOT_RUN"
+  }
+}

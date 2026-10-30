@@ -10,6 +10,9 @@ import hashlib
 import json
 import os
 import stat
+import re
+import shutil
+from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 import subprocess
 from pathlib import Path, PurePosixPath
 import sys
@@ -288,16 +291,25 @@ def load_old_state(root):
         raise RuntimeError('Invalid updater state; refusing to delete previous files') from ex
 
 
-def update(root, assume_yes=False, ref='main', install_fresh=False):
+def update(root, assume_yes=False, ref='main', install_fresh=False, workers=6):
     # Fresh installs may create ONLY an absent or empty destination. Never
     # overwrite a partly installed game, user files, or an existing Git checkout.
+    if not isinstance(workers, int) or not 1 <= workers <= 12:
+        raise ValueError('Concurrent downloads must be between 1 and 12.')
     candidate = root.expanduser()
     if install_fresh:
         if candidate.is_symlink():
             raise RuntimeError('Fresh install destination cannot be a symlink.')
         if candidate.exists():
-            if not candidate.is_dir() or any(candidate.iterdir()):
-                raise RuntimeError('Fresh install requires an EMPTY TWILIGHT_Play folder. '
+            # After an interrupted install, only our pinned-commit stage
+            # directory is allowed. A real user file or game file is protected.
+            def is_resume_stage(child):
+                return (child.is_dir() and not child.is_symlink() and
+                        re.fullmatch(r'\.twilight_update_stage_[0-9a-f]{40}', child.name))
+            if not candidate.is_dir() or any(
+                    not is_resume_stage(child) for child in candidate.iterdir()):
+                raise RuntimeError('Fresh install requires an EMPTY TWILIGHT_Play folder '
+                                   'or verified resumable download cache. '
                                    'Existing files were not modified.')
         else:
             if not candidate.parent.is_dir():
@@ -350,50 +362,124 @@ def update(root, assume_yes=False, ref='main', install_fresh=False):
     if not assume_yes and input('Proceed with verified update? Type YES: ').strip() != 'YES':
         print('Cancelled without changes.')
         return
-    with tempfile.TemporaryDirectory(prefix='.twilight_update_stage_', dir=root) as tmp:
-        stage = Path(tmp)
-        for idx, name in enumerate(changed, 1):
-            download_verified(commit_sha, name, inventory[name], stage / name)
-            if idx % 25 == 0 or idx == len(changed):
-                print('Downloaded and verified:', idx, '/', len(changed), flush=True)
-        stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-        backup = root / ('.twilight_update_backup_' + stamp)
-        if backup.exists():
-            raise RuntimeError('Backup folder already exists')
-        if not install_fresh:
-            backup.mkdir()
-        applied = []
-        try:
-            for name in changed + removed:
-                target = root / name
-                prior = backup / name
-                had_old = target.exists()
-                if had_old:
-                    prior.parent.mkdir(parents=True, exist_ok=True)
-                    os.replace(target, prior)
-                applied.append((name, had_old))
-                if name in inventory:
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    os.replace(stage / name, target)
-                    if inventory[name].get('mode') == '100755':
-                        target.chmod(target.stat().st_mode | 0o111)
-            state_tmp = root / (STATE_FILE + '.tmp')
-            state_tmp.write_text(json.dumps({'sha': commit_sha, 'tracked_files': sorted(inventory)}, ensure_ascii=False) + '\n', encoding='utf-8')
-            os.replace(state_tmp, root / STATE_FILE)
-        except BaseException:
-            for name, had_old in reversed(applied):
-                target = root / name
-                if target.exists():
-                    target.unlink()
-                prior = backup / name
-                if had_old and prior.exists():
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    os.replace(prior, target)
-            raise
-        print('INSTALL OK:' if install_fresh else 'UPDATE OK:', commit_sha[:12])
-        if not install_fresh:
-            print('Original changed files saved in:', backup)
-        print('Close Godot and re-import TWILIGHT_Play/project.godot.')
+    # Keep verified downloads across network failure, Ctrl+C or a lost session.
+    # The SHA in the directory name ties the cache to one immutable Git commit.
+    stage = root / ('.twilight_update_stage_' + commit_sha)
+    if stage.is_symlink() or (stage.exists() and not stage.is_dir()):
+        raise RuntimeError('Unsafe persisted download stage; no project files updated.')
+    stage.mkdir(exist_ok=True)
+    pending = []
+    reused = 0
+    reused_bytes = 0
+    total_bytes = sum(inventory[name]['size'] for name in changed)
+    for name in changed:
+        relative = safe_path(name)
+        ensure_not_symlink(stage, relative)
+        cached = stage / relative
+        if cached.exists():
+            if not cached.is_file() or cached.is_symlink():
+                raise RuntimeError('Unsafe cached download: ' + name)
+            row = inventory[name]
+            if (cached.stat().st_size == row['size'] and
+                    sha1_of_blob(cached, row['size']) == row['sha']):
+                reused += 1
+                reused_bytes += row['size']
+                continue
+            cached.unlink()  # Only an invalid copy inside our private stage.
+        pending.append(name)
+    if reused:
+        print('Resumed verified downloads:', reused, 'files,',
+              '%.1f MiB' % (reused_bytes / 1024**2), flush=True)
+    print('Downloading with', workers, 'parallel connections:',
+          len(pending), 'files, %.1f MiB' %
+          ((total_bytes - reused_bytes) / 1024**2), flush=True)
+    completed, completed_bytes = reused, reused_bytes
+    next_progress = 25
+    # Bound the futures to two batches so thousands of tiny images do not
+    # allocate thousands of Future objects on an Android device.
+    if pending:
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            iterator = iter(pending)
+            futures = {}
+            for _ in range(min(workers * 2, len(pending))):
+                name = next(iterator)
+                future = executor.submit(download_verified, commit_sha, name,
+                                         inventory[name], stage / name)
+                futures[future] = name
+            try:
+                while futures:
+                    done, _ = wait(tuple(futures), return_when=FIRST_COMPLETED)
+                    for future in done:
+                        name = futures.pop(future)
+                        future.result()  # Any failed verified download stops apply.
+                        completed += 1
+                        completed_bytes += inventory[name]['size']
+                        if completed >= next_progress or completed == len(changed):
+                            print('Verified:', completed, '/', len(changed),
+                                  'files; %.1f / %.1f MiB' %
+                                  (completed_bytes / 1024**2,
+                                   total_bytes / 1024**2), flush=True)
+                            next_progress = completed + 25
+                        next_name = next(iterator, None)
+                        if next_name is not None:
+                            new_future = executor.submit(
+                                download_verified, commit_sha, next_name,
+                                inventory[next_name], stage / next_name)
+                            futures[new_future] = next_name
+            except BaseException:
+                for future in futures:
+                    future.cancel()
+                print('Downloads paused. Verified files remain for next run.',
+                      flush=True)
+                raise
+    # No project file is modified until ALL staged downloads are verified.
+
+    stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+    backup = root / ('.twilight_update_backup_' + stamp)
+    if backup.exists():
+        raise RuntimeError('Backup folder already exists')
+    if not install_fresh:
+        backup.mkdir()
+    applied = []
+    try:
+        for name in changed + removed:
+            target = root / name
+            prior = backup / name
+            had_old = target.exists()
+            if had_old:
+                prior.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(target, prior)
+            applied.append((name, had_old))
+            if name in inventory:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(stage / name, target)
+                if inventory[name].get('mode') == '100755':
+                    target.chmod(target.stat().st_mode | 0o111)
+        state_tmp = root / (STATE_FILE + '.tmp')
+        state_tmp.write_text(json.dumps({'sha': commit_sha, 'tracked_files': sorted(inventory)}, ensure_ascii=False) + '\n', encoding='utf-8')
+        os.replace(state_tmp, root / STATE_FILE)
+    except BaseException:
+        for name, had_old in reversed(applied):
+            target = root / name
+            if target.exists():
+                target.unlink()
+            prior = backup / name
+            if had_old and prior.exists():
+                target.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(prior, target)
+        raise
+    # The stage was only our pinned verified downloads; after successful
+    # atomic application all gameplay files have moved to the destination.
+    try:
+        shutil.rmtree(stage)
+    except OSError as ex:
+        # The installation is already committed; only a stale cache remains.
+        print('WARNING: Finished game install, but cache removal failed:', ex,
+              flush=True)
+    print('INSTALL OK:' if install_fresh else 'UPDATE OK:', commit_sha[:12])
+    if not install_fresh:
+        print('Original changed files saved in:', backup)
+    print('Close Godot and re-import TWILIGHT_Play/project.godot.')
 
 
 
@@ -556,6 +642,8 @@ def main():
                          help='Preview and delete offline-only files only after typing DELETE UNUSED')
     cleanup.add_argument('--install-fresh', action='store_true',
                          help='Restore game files into a deleted or empty TWILIGHT_Play folder')
+    parser.add_argument('--workers', type=int, default=6, metavar='N',
+                        help='Parallel verified downloads (1-12; default 6)')
     args = parser.parse_args()
     if bool(args.source84_inputs) != bool(args.source84_linkage):
         parser.error('--source84-inputs and --source84-linkage must be supplied together')
@@ -563,7 +651,7 @@ def main():
         if args.cleanup_preview or args.cleanup_unused:
             cleanup_unused(args.project, delete=args.cleanup_unused)
         else:
-            update(args.project, args.yes, args.ref, install_fresh=args.install_fresh)
+            update(args.project, args.yes, args.ref, install_fresh=args.install_fresh, workers=args.workers)
             if args.source84_inputs:
                 subprocess.run([sys.executable, str(args.project / 'tools/source84_inputs.py'),
                                 'rebuild', '--inputs', str(args.source84_inputs.resolve()),

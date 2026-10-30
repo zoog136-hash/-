@@ -86,21 +86,23 @@ func _test_collections() -> void:
 	check(hud.active_section == "equipment_collections","native menu tap opens equipment collections")
 	if hud.active_section != "equipment_collections": return
 	var view: Control = hud.workspace.content.get_child(0)
-	var items: ItemList = view.list
+	var items: ScrollContainer = view.list
 	check(items.item_count > 2,"real collection definitions are listed")
 	if items.item_count <= 2: return
 	var second_id: String = str(view.filtered[1].id)
-	_tap(_item_point(items,1))
+	var second_row: Button=items.views[1]
+	check(int(second_row.get_meta("row_index",-1))==1,"virtual picture row is bound to the requested definition")
+	_tap(_point(second_row))
 	check(str(view.selected_id) == second_id,"native list tap selects the requested collection")
 	var before: String = str(view.selected_id)
-	var start: Vector2 = _item_point(items,2)
+	var start: Vector2 = _point(items.views[2])
 	_touch(start,true)
 	_drag(start,start+Vector2(0,-36))
 	_touch(start+Vector2(0,-36),false)
 	check(str(view.selected_id) == before,"collection swipe never selects another row")
 	items.get_v_scroll_bar().value = 0
 	await _frames()
-	start = _item_point(items,0)
+	start = _point(items.views[0])
 	_touch(start,true)
 	_touch(start,false,true)
 	check(str(view.selected_id) == before,"canceled collection touch preserves selection")
@@ -177,7 +179,7 @@ func _test_shop() -> void:
 	check(shop.listing.get_selected_items() == PackedInt32Array([2]),"purchase preserves selected row")
 	check(shop.search_field.text == "물약" and int(shop.purchase_quantity.value) == 2,"purchase preserves search and quantity")
 	check(is_equal_approx(bar.value,scroll_before),"purchase preserves shop scroll")
-	check(shop.wallet.text.contains(str(world.gold)),"purchase updates wallet without rebuilding rows")
+	check(shop.wallet.text=="보유 아데나  "+hud.lineage_inventory_ui._format_number(int(world.gold)),"purchase updates the exact grouped wallet without rebuilding rows")
 	check(shop.listing.get_item_text(2).contains("보유 %d" % int(world.inventory.get(selected_name,0))),"purchase updates stock count on the same row")
 
 func _test_skills() -> void:
@@ -207,7 +209,9 @@ func _test_skills() -> void:
 	view.cards.select(index)
 	view.select(index)
 	check(view.cards.get_item_icon_modulate(index).a < .8,"unlearned icon is visibly faded")
-	check(view.cards.get_item_text(index).begins_with("미습득"),"unlearned status remains readable")
+	var browser: Control=view.cards.get_parent().get_parent()
+	browser.detail_active=true;browser.reflow();await _frames()
+	check(view.cards.get_item_tooltip(index).begins_with("미습득") and view.selection_sheet.category.is_visible_in_tree() and view.selection_sheet.category.text.contains("미습득"),"unlearned status remains readable in the actual detail header")
 	var image := Image.create(4,4,false,Image.FORMAT_RGBA8)
 	image.fill(Color(1,.2,.1,.6))
 	var source := ImageTexture.create_from_image(image)
@@ -222,4 +226,4 @@ func _test_skills() -> void:
 	check(catalog.owned(target),"real learn action succeeds")
 	var chosen: int = view.cards.get_selected_items()[0]
 	check(view.cards.get_item_icon_modulate(chosen) == Color.WHITE,"successful learning restores full color immediately")
-	check(not view.cards.get_item_text(chosen).begins_with("미습득"),"successful learning clears faded status without reopening")
+	check(view.cards.get_item_tooltip(chosen).begins_with("습득") and view.selection_sheet.category.text.contains("습득 완료"),"successful learning clears faded status and refreshes the visible header without reopening")

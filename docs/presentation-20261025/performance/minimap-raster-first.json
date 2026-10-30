@@ -1,0 +1,243 @@
+{
+  "active": {
+    "cache_builds_end": 2,
+    "cache_builds_start": 1,
+    "incoming": 23,
+    "interpretation": "one continuous960frame16second combat;120frame blocks ABBA BAAB with first8frames discarded; unchanged0.12s minimap cadence; different combat moments not identical replay trajectories; original AI/node identities unchanged",
+    "population_end": 165,
+    "population_start": 133,
+    "position_start": [
+      3953.0,
+      5016.0
+    ],
+    "rng_final": "-139607085795971174",
+    "samples": [
+      {
+        "draw_calls": {
+          "max": 2637.0,
+          "median": 2554.0,
+          "p95": 2607.0,
+          "p99": 2626.0
+        },
+        "frame_ms": {
+          "max": 70.344,
+          "median": 38.002,
+          "p95": 54.696,
+          "p99": 64.663
+        },
+        "frames": 448,
+        "peak_sampled_rss_kib": 1570888,
+        "physics_monitor_ms": {
+          "max": 340.671,
+          "median": 10.805,
+          "p95": 27.906,
+          "p99": 340.671
+        },
+        "process_monitor_ms": {
+          "max": 240.258,
+          "median": 54.145,
+          "p95": 94.948,
+          "p99": 240.258
+        },
+        "raster_enabled": false,
+        "stalls_over100ms": 0,
+        "stalls_over50ms": 45
+      },
+      {
+        "draw_calls": {
+          "max": 446.0,
+          "median": 361.0,
+          "p95": 408.0,
+          "p99": 431.0
+        },
+        "frame_ms": {
+          "max": 42.061,
+          "median": 19.849,
+          "p95": 27.371,
+          "p99": 31.908
+        },
+        "frames": 448,
+        "peak_sampled_rss_kib": 1570888,
+        "physics_monitor_ms": {
+          "max": 24.734,
+          "median": 12.53,
+          "p95": 24.734,
+          "p99": 24.734
+        },
+        "process_monitor_ms": {
+          "max": 56.906,
+          "median": 25.941,
+          "p95": 56.906,
+          "p99": 56.906
+        },
+        "raster_enabled": true,
+        "stalls_over100ms": 0,
+        "stalls_over50ms": 0
+      }
+    ],
+    "strikes": 56
+  },
+  "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "android": "NOT_RUN",
+  "engine": "4.7.2-stable (official)",
+  "failures": [
+    "no cache rebuild/allocation during active alternation"
+  ],
+  "gpu_memory": "UNKNOWN",
+  "map": "escaros_world",
+  "population": 133,
+  "position": [
+    7433.0,
+    2904.0
+  ],
+  "samples": [
+    {
+      "draw_calls": {
+        "max": 2465.0,
+        "median": 2465.0,
+        "p95": 2465.0,
+        "p99": 2465.0
+      },
+      "frame_ms": {
+        "max": 45.901,
+        "median": 33.277,
+        "p95": 41.879,
+        "p99": 45.71
+      },
+      "frames": 180,
+      "peak_sampled_rss_kib": 1570648,
+      "phase": 0,
+      "physics_monitor_ms": {
+        "max": 0.081,
+        "median": 0.072,
+        "p95": 0.081,
+        "p99": 0.081
+      },
+      "process_monitor_ms": {
+        "max": 45.865,
+        "median": 43.198,
+        "p95": 45.865,
+        "p99": 45.865
+      },
+      "raster_enabled": false,
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 0,
+      "static_memory_bytes": 345361873.0
+    },
+    {
+      "draw_calls": {
+        "max": 268.0,
+        "median": 268.0,
+        "p95": 268.0,
+        "p99": 268.0
+      },
+      "frame_ms": {
+        "max": 21.617,
+        "median": 10.125,
+        "p95": 13.762,
+        "p99": 16.641
+      },
+      "frames": 180,
+      "peak_sampled_rss_kib": 1570656,
+      "phase": 1,
+      "physics_monitor_ms": {
+        "max": 0.139,
+        "median": 0.064,
+        "p95": 0.139,
+        "p99": 0.139
+      },
+      "process_monitor_ms": {
+        "max": 38.598,
+        "median": 33.501,
+        "p95": 38.598,
+        "p99": 38.598
+      },
+      "raster_enabled": true,
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 0,
+      "static_memory_bytes": 345120829.0
+    },
+    {
+      "draw_calls": {
+        "max": 2465.0,
+        "median": 2465.0,
+        "p95": 2465.0,
+        "p99": 2465.0
+      },
+      "frame_ms": {
+        "max": 90.471,
+        "median": 31.581,
+        "p95": 41.645,
+        "p99": 47.466
+      },
+      "frames": 180,
+      "peak_sampled_rss_kib": 1570656,
+      "phase": 2,
+      "physics_monitor_ms": {
+        "max": 0.15,
+        "median": 0.086,
+        "p95": 0.15,
+        "p99": 0.15
+      },
+      "process_monitor_ms": {
+        "max": 90.387,
+        "median": 44.296,
+        "p95": 90.387,
+        "p99": 90.387
+      },
+      "raster_enabled": false,
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 1,
+      "static_memory_bytes": 345369449.0
+    },
+    {
+      "draw_calls": {
+        "max": 268.0,
+        "median": 268.0,
+        "p95": 268.0,
+        "p99": 268.0
+      },
+      "frame_ms": {
+        "max": 27.42,
+        "median": 11.018,
+        "p95": 15.225,
+        "p99": 19.95
+      },
+      "frames": 180,
+      "peak_sampled_rss_kib": 1570656,
+      "phase": 3,
+      "physics_monitor_ms": {
+        "max": 0.12,
+        "median": 0.082,
+        "p95": 0.12,
+        "p99": 0.12
+      },
+      "process_monitor_ms": {
+        "max": 34.854,
+        "median": 27.342,
+        "p95": 34.854,
+        "p99": 34.854
+      },
+      "raster_enabled": true,
+      "stalls_over100ms": 0,
+      "stalls_over50ms": 0,
+      "static_memory_bytes": 345128349.0
+    }
+  ],
+  "scope": "same loaded Main; frozen180frame direct/cache/direct/cache; then continuous960activeframes alternating120frameblocks direct/cache; all cachednodes prebuilt; no screenshot readback during measurements; no AI phase normalization",
+  "visual": {
+    "builds": 1,
+    "byte_identical": false,
+    "cached": "raster-cached.png",
+    "direct": "raster-direct.png",
+    "raster_size": "(222, 191)",
+    "size": [
+      1280,
+      720
+    ]
+  },
+  "zoom": [
+    1.0,
+    1.0
+  ]
+}

@@ -1,0 +1,21 @@
+Fontconfig error: No writable cache directories
+ERROR: Could not create directory: '/home/agent/.local/share/godot'.
+   at: make_dir_recursive (core/io/dir_access.cpp:178)
+ERROR: Error attempting to create data dir: /home/agent/.local/share/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD.
+   at: ensure_user_data_dir (core/os/os.cpp:437)
+ERROR: Could not create directory: 'user://logs'.
+   at: make_dir_recursive (core/io/dir_access.cpp:178)
+
+================================================================
+handle_crash: Program crashed with signal 11
+Engine version: Godot Engine v4.6.3.stable.official (7d41c59c457bd5a245092b4e7eb2d833e3b3f8c3)
+Dumping the backtrace. Please include this when reporting the bug on: https://github.com/godotengine/godot/issues
+[1] /lib/x86_64-linux-gnu/libc.so.6(+0x3fd70) [0x7f4d85fead70] (??:0)
+[2] godot() [0x43f3acf] (??:0)
+[3] godot() [0x4c46eca] (??:0)
+[4] godot() [0x431ffa] (??:0)
+[5] /lib/x86_64-linux-gnu/libc.so.6(+0x29ca8) [0x7f4d85fd4ca8] (??:0)
+[6] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x85) [0x7f4d85fd4d65] (??:0)
+[7] godot() [0x48b13a] (??:0)
+-- END OF C++ BACKTRACE --
+================================================================

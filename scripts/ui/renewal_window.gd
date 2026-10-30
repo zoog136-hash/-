@@ -6,6 +6,8 @@ signal closed
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 const SafeArea = preload("res://scripts/ui/safe_area.gd")
+const Surface = preload("res://scripts/ui/renewal_surface.gd")
+const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 var heading: Label
 var subtitle: Label
 var footer: Label
@@ -27,19 +29,44 @@ var back_button: Button
 var header_crest: Label
 var scroll_gestures: Dictionary = {}
 var current_section: String = ""
+var section_icon: TextureRect
+var header_filters: Control
+var filters_home: Node
+var filters_home_index: int
+var filter_drag_handle: Label
 
 func _ready() -> void:
 	name = "RenewalWindow"
 	theme = UI.make_theme()
 	z_index = 150
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	add_theme_stylebox_override("panel",UI.chrome_panel(Color("201a17"),UI.BRONZE,8))
+	var frame: StyleBoxTexture=UI.screen_frame()
+	for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:frame.set_content_margin(side,8)
+	add_theme_stylebox_override("panel",frame)
+	var surface := Surface.new()
+	surface.name = "WindowMaterialSurface"
+	add_child(surface)
 	var layout := VBoxContainer.new()
 	layout.add_theme_constant_override("separation",5)
 	add_child(layout)
 	var title_row := HBoxContainer.new()
 	title_row.custom_minimum_size.y = 32
 	layout.add_child(title_row)
+	filter_drag_handle=UI.label("⋮",22,UI.MUTED)
+	filter_drag_handle.custom_minimum_size=Vector2(8,32)
+	filter_drag_handle.mouse_filter=Control.MOUSE_FILTER_STOP
+	filter_drag_handle.mouse_default_cursor_shape=Control.CURSOR_DRAG
+	filter_drag_handle.tooltip_text="창 이동"
+	filter_drag_handle.gui_input.connect(_on_title_drag_input)
+	filter_drag_handle.hide()
+	title_row.add_child(filter_drag_handle)
+	section_icon = TextureRect.new()
+	section_icon.custom_minimum_size = Vector2(24,24)
+	section_icon.hide()
+	section_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	section_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	section_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title_row.add_child(section_icon)
 	var titles := VBoxContainer.new()
 	titles.name = "WorkspaceTitleDragArea"
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -58,6 +85,7 @@ func _ready() -> void:
 	back_button.hide()
 	title_row.add_child(back_button)
 	compact_menu_button = UI.button("메뉴",func() -> void: navigate.emit("menu"),Vector2(54,32))
+	compact_menu_button.tooltip_text = "전체 메뉴"
 	compact_menu_button.name = "CompactMenuButton"
 	compact_menu_button.hide()
 	title_row.add_child(compact_menu_button)
@@ -179,7 +207,7 @@ func fit_viewport() -> void:
 	var viewport: Vector2 = available.size/scale
 	var shelf: bool = current_section in ["inventory","skills","menu","quickbind"]
 	var left: bool = current_section in ["character","stats","warehouse","sell"]
-	var fullscreen: bool = current_section in ["변신","마법인형","성물","shop","map","class_select","아이템","option_awakening","emblems","guardians"]
+	var fullscreen: bool = current_section in ["변신","마법인형","성물","card_collections","shop","map","class_select","아이템","option_awakening","emblems","guardians"]
 	var width: float = 378 if shelf or left else 840
 	var height: float = minf(508,viewport.y-150)
 	if current_section == "menu": width = 450
@@ -254,8 +282,17 @@ func _on_title_drag_input(event: InputEvent) -> void:
 
 func open(section: String, title: String, description: String) -> void:
 	current_section = section
+	var full_browser: bool=section in ["변신","마법인형","성물","아이템","shop","equipment_collections","card_collections"]
+	get_node("WindowMaterialSurface").visible=not full_browser
+	if full_browser:
+		add_theme_stylebox_override("panel",ReferenceSurfaces.inset(8))
+	else:
+		var frame: StyleBoxTexture=UI.screen_frame()
+		for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:frame.set_content_margin(side,8)
+		add_theme_stylebox_override("panel",frame)
 	title_dragged = false
 	heading.text = title
+	section_icon.texture = UI.icon({"stats":"character","npc_shop":"shop","detailed_status":"character","card_collections":"catalog"}.get(section,section))
 	subtitle.text = description
 	var can_navigate: bool = not navigate.get_connections().is_empty()
 	compact_menu_button.visible = can_navigate and section not in ["menu","class_select"]
@@ -270,6 +307,7 @@ func set_back_available(enabled: bool) -> void:
 		back_button.visible = enabled
 
 func clear() -> void:
+	_restore_header_filters()
 	active_scroll = null
 	active_scroll_touch = -1
 	active_scroll_mouse = false
@@ -287,6 +325,30 @@ func mount(control: Control) -> void:
 	else:
 		content.add_child(control)
 	control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if control.has_method("mount_window_header"):control.call("mount_window_header",self)
+
+func mount_header_filters(filters: Control) -> void:
+	if header_filters==filters:return
+	_restore_header_filters()
+	header_filters=filters
+	filters_home=filters.get_parent()
+	filters_home_index=filters.get_index()
+	filters.reparent(heading.get_parent())
+	filters.show()
+	heading.hide()
+	section_icon.hide()
+	compact_menu_button.hide()
+	filter_drag_handle.hide()
+
+func _restore_header_filters() -> void:
+	if is_instance_valid(header_filters) and is_instance_valid(filters_home):
+		header_filters.reparent(filters_home)
+		filters_home.move_child(header_filters,mini(filters_home_index,filters_home.get_child_count()-1))
+	header_filters=null
+	filters_home=null
+	if is_instance_valid(heading):heading.show()
+	if is_instance_valid(section_icon):section_icon.hide()
+	if is_instance_valid(filter_drag_handle):filter_drag_handle.hide()
 
 func column() -> VBoxContainer:
 	var v := VBoxContainer.new()

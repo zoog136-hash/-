@@ -98,6 +98,12 @@ func _source_at(point: Vector2) -> Dictionary:
 
 func _input(event: InputEvent) -> void:
 	if hud == null: return
+	# The reveal lives above HUD in another CanvasLayer; quickslot hit testing
+	# must yield without consuming native transport-button touches.
+	if hud.has_method("is_card_reveal_busy") and hud.is_card_reveal_busy():
+		cancel()
+		reset_tap_history()
+		return
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE and pointer != -2:
 		cancel()
 		get_viewport().set_input_as_handled()
@@ -150,14 +156,15 @@ func _input(event: InputEvent) -> void:
 		if mode == "pending" and distance.length() > (L.TOUCH_SCROLL_DISTANCE if pointer >= 0 else L.MOUSE_DRAG_DISTANCE):
 			if pointer >= 0 and elapsed < L.TOUCH_HOLD_SECONDS:
 				if source.from == "inventory":
-					# Crossing the grid edge into the bag header is still a scroll.
-					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(hud.lineage_inventory_ui.inventory_panel,position) else "drag"
+					# A fast vertical swipe stays owned by its starting inventory,
+					# even when a compact header lets the finger cross its boundary.
+					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(_inventory_gesture_frame(),origin) else "drag"
 				elif source.from != "quick": mode = "scroll"
 				elif absf(distance.x) > absf(distance.y)*1.5: mode = "page"
 				else: mode = "drag"
 			else: mode = "drag"
-		# Only leaving the bag itself converts a vertical swipe into a transfer.
-		if mode == "scroll" and source.from == "inventory" and not inside(hud.lineage_inventory_ui.inventory_panel,position): mode = "drag"
+		# Captured scrolling never turns into an item drop at the window edge.
+		# Deliberate hold/horizontal drags retain the existing transfer path.
 		if mode != "pending": reset_tap_history()
 		if mode == "scroll":
 			var bar: VScrollBar
@@ -319,3 +326,7 @@ func _finish_gesture() -> void:
 	if hud != null:
 		for button: Button in hud.v20_quickslot_buttons: button.modulate = Color.WHITE
 		for button: Button in hud.lineage_side_ui.equipment_buttons.values(): button.modulate = Color.WHITE
+
+func _inventory_gesture_frame() -> Control:
+	var bag: Control=hud.lineage_inventory_ui
+	return bag.gesture_bounds() if bag.has_method("gesture_bounds") else bag.inventory_panel

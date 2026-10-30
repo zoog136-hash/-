@@ -1,0 +1,93 @@
+{
+  "engine": "4.7.2-stable (official)",
+  "registry_source_sha256": "77361f5554420cacfc3076ad32dbc704eddf7a9725ee58e57c45900bf9915b38",
+  "samples": [
+    {
+      "cache_hit": false,
+      "cells": 1434265,
+      "detailed_calls": {
+        "inside_navigable_area": {
+          "count": 1441037,
+          "us": 444564
+        },
+        "inside_shape": {
+          "count": 5930,
+          "us": 2165
+        },
+        "is_safe": {
+          "count": 7363,
+          "us": 77891
+        },
+        "navigation_snapshot": {
+          "count": 1,
+          "us": 141849
+        },
+        "region_at": {
+          "count": 7363,
+          "us": 69873
+        },
+        "spawn_contains": {
+          "count": 6915,
+          "us": 255686
+        }
+      },
+      "load_field_us": 2529747,
+      "map": "aden_world",
+      "physics_shapes": 413,
+      "registry_before_after_configure_us": 291440,
+      "timings": {
+        "base_configure_us": 2172527,
+        "build_physics_us": 132822,
+        "configure_png_us": 2238307,
+        "reachability_us": [
+          7008,
+          7063
+        ]
+      }
+    },
+    {
+      "cache_hit": false,
+      "cells": 285915,
+      "detailed_calls": {
+        "inside_navigable_area": {
+          "count": 387180,
+          "us": 180075
+        },
+        "inside_shape": {
+          "count": 89364,
+          "us": 29068
+        },
+        "is_safe": {
+          "count": 138685,
+          "us": 2067297
+        },
+        "navigation_snapshot": {
+          "count": 1,
+          "us": 29643
+        },
+        "region_at": {
+          "count": 138685,
+          "us": 1919578
+        },
+        "spawn_contains": {
+          "count": 138685,
+          "us": 1017954
+        }
+      },
+      "load_field_us": 4303554,
+      "map": "escaros_world",
+      "physics_shapes": 929,
+      "registry_before_after_configure_us": 178390,
+      "timings": {
+        "base_configure_us": 3792134,
+        "build_physics_us": 32963,
+        "configure_png_us": 4125164,
+        "reachability_us": [
+          14948,
+          15001
+        ]
+      }
+    }
+  ],
+  "scope": "standalone native registry+field stages; no actor/sprite loading, no normal Main wall-frame claim; nested timings are inclusive"
+}

@@ -1,0 +1,63 @@
+{
+  "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "android": "NOT_RUN",
+  "combat": {
+    "draw_calls_max": 2622.0,
+    "draw_calls_median": 2551.0,
+    "fixed_simulation_seconds": 10.0,
+    "frame_max_ms": 355.795,
+    "frame_median_ms": 36.195,
+    "frame_p95_ms": 52.543,
+    "frame_p99_ms": 60.589,
+    "frames": 600,
+    "gpu_memory": "UNKNOWN",
+    "hp_after": 997499,
+    "incoming": 11,
+    "node_count_max": 3227.0,
+    "paths": 111,
+    "peak_sampled_rss_kib": 1591392,
+    "population_after": 165,
+    "position_after": [
+      3936.5,
+      5016.0
+    ],
+    "rng_state_after": "3011603241937415632",
+    "stalls_over100ms": 3,
+    "stalls_over50ms": 52,
+    "static_memory_bytes": 368954734.0,
+    "strikes": 35,
+    "target_hp_after": 1270
+  },
+  "conditions": "fixed-fps60;90 frozen render warmup;600 active simulation frames; original133 population, existing first legal normal target; test-only hp reserve999999; no capture readback; inventory separately frozen120frames",
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "inventory_idle": {
+    "draw_calls_max": 2678.0,
+    "draw_calls_median": 2678.0,
+    "fixed_simulation_seconds": 2.0,
+    "frame_max_ms": 60.296,
+    "frame_median_ms": 38.19,
+    "frame_p95_ms": 50.173,
+    "frame_p99_ms": 56.699,
+    "frames": 120,
+    "gpu_memory": "UNKNOWN",
+    "node_count_max": 3269.0,
+    "paths": 0,
+    "peak_sampled_rss_kib": 1591520,
+    "stalls_over100ms": 0,
+    "stalls_over50ms": 6,
+    "static_memory_bytes": 369385440.0
+  },
+  "map": "escaros_world",
+  "population_start": 133,
+  "position_start": [
+    3953.0,
+    5016.0
+  ],
+  "seed": 20261025,
+  "target": "톱니",
+  "target_start": [
+    3913.0,
+    5016.0
+  ]
+}
