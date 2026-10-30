@@ -80,7 +80,8 @@ func run() -> void:
 				tap(view.tabs[1]);await frames()
 				var fusion: Control=hud.card_fusion_view
 				check(hud.active_section=="card_fusion" and fusion.is_visible_in_tree() and not view.main_body.is_visible_in_tree() and not hud.card_controls.is_visible_in_tree(),"companion tab opens the current dedicated fusion screen")
-				fusion._grade_select.select(0);fusion._grade_select.item_selected.emit(0);await frames()
+				fusion._left.ensure_control_visible(fusion._grade_buttons["일반"]);await frames()
+				tap(fusion._grade_buttons["일반"]);await frames()
 				check(not fusion._fuse.disabled and fusion._cards.item_count>0,"actual duplicate fixture uses original eligibility")
 				tap(fusion._fuse);await frames()
 				check(modal()!=null,"original fusion confirmation connected")
