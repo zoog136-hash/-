@@ -14,7 +14,7 @@ func run():
  var payload:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/monsters/local_source_habitats.json"))
  var all:Array=CATALOG.expand(JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json"))["몬스터"])
  var records:Dictionary={};for record:Dictionary in all:records[str(record.name)]=record
- check(all.size()==431 and CATALOG.spawnable_records(all).size()==318,"retained catalog and random pool")
+ check(all.size()==438 and CATALOG.spawnable_records(all).size()==318,"retained catalog and random pool")
  check(payload.source_placement_sha256==FileAccess.get_sha256("res://data/monsters/source3_map_spawns.json"),"pins current source placements")
  var maps:Dictionary={};var names:Dictionary={};var protected:Array=["aden_world","albino_01","albino_02","escaros_world","faith_01","faith_02","faith_03","faith_04","albino_03","albino_04"]
  for row:Dictionary in payload.rows:

@@ -4,6 +4,8 @@ class_name TwilightMonsterCatalog
 const CATALOG_PATH = "res://data/monsters/monster_world_catalog.json"
 const SPAWN_PATH = "res://data/monsters/world_spawn_profiles.json"
 const REVIEWED_PATH = "res://data/monsters/reviewed_source_monsters.json"
+const ADDITIONS_PATH = "res://data/monsters/reviewed_source_additions.json"
+const VERIFIED_GAP_IDS = ["45082", "45131", "45143", "45191", "45379", "45405", "45464"]
 const LOCAL_NAMED_V2_IDS = ["45777", "45504", "45588", "45602", "45612", "45574", "45646", "45539", "45615", "45671", "45413", "45625", "45685", "45675", "45585", "45548", "45955", "45956", "45957", "45958", "45959", "45960", "45961", "45962", "45166", "45153", "45681", "45682", "45683", "45684", "46025", "46026", "46037", "81163", "97068", "45941", "45943"]
 const RELAYOUT = preload("res://scripts/monsters/renewed_map_spawns.gd")
 # These dedicated field encounters were added by the renewed placement layer.
@@ -25,7 +27,8 @@ static func reviewed_record_allowed(record: Dictionary) -> bool:
 	var status: String = str(record.get("identity_approval", ""))
 	var approved: bool = status in ["APPROVED_CURRENT318_FIRST_FOUR_REVIEW", "APPROVED_CURRENT318_NEXT_NINE_REVIEW", "APPROVED_CURRENT318_MONSTER_NEXT_THIRTEEN_REVIEW", "APPROVED_CURRENT318_MONSTER_LATE_TEN_REVIEW", "APPROVED_CURRENT318_MONSTER_EARLY_THIRTEEN_REVIEW", "APPROVED_CURRENT318_MONSTER_MIDDLE_TWELVE_REVIEW", "APPROVED_FOR_LATE_SECOND_SOURCE_CATALOG_BATCH_AT_CURRENT_318_SNAPSHOT", "APPROVED_CURRENT318_MONSTER_ELDER_STONEGOLEM_REVIEW", "APPROVED_FOR_MYTHIC_PAIR_SOURCE_CATALOG_BATCH_AT_CURRENT_318_SNAPSHOT"]
 	var local_named: bool = status in ["PROVISIONAL_OFFLINE_NAMED_IDENTITY_REVIEW_ONLY_CURRENT318_NO_EXTERNAL_APPLY_AUTHORITY", "PROVISIONAL_OFFLINE_IDENTITY_REVIEW_ONLY_CURRENT318_NO_EXTERNAL_APPLY_AUTHORITY", "OFFLINE_PROVISIONAL_NEW_NAMED_NPC_IDENTITY_SUPPORTED", "OFFLINE_SEMANTIC_IDENTITY_SUPPORTED_EXPLICIT_BASE_AND_ATTACHMENTS", "OFFLINE_PROVISIONAL_NEW_NAMED_IDENTITY_REVIEWED"] and str(record.get("source_npc_id", "")) in LOCAL_NAMED_V2_IDS and str(record.get("local_application_authorization", "")) == "USER_AUTHORIZED_LOCAL_NAMED_V2_CATALOG_ONLY"
-	return approved or local_named
+	var reviewed_gap:bool=status=="USER_REVIEWED_SQL_AND_EXISTING_BYTES_20261030" and str(record.get("source_npc_id","")) in VERIFIED_GAP_IDS
+	return approved or local_named or reviewed_gap
 
 static func spawnable_records(records: Array) -> Array:
 	# Catalog registration alone never opts a source identity into random maps.
@@ -61,7 +64,8 @@ static func expand(original: Array) -> Array:
 		for field: String in ["sourceId", "source_id", "source_npc_id"]:
 			if record.has(field): source_ids[str(record[field])] = true
 	var reviewed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(REVIEWED_PATH)) as Dictionary
-	for raw: Dictionary in reviewed.get("records", []):
+	var additions:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(ADDITIONS_PATH))
+	for raw: Dictionary in reviewed.get("records", [])+additions.get("records",[]):
 		if not reviewed_record_allowed(raw): continue
 		var duplicate: bool = by_name.has(str(raw.name))
 		for field: String in ["sourceId", "source_id", "source_npc_id"]:

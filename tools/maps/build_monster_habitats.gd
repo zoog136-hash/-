@@ -11,6 +11,10 @@ func _initialize():call_deferred("run")
 func target(record:Dictionary) -> String:
  var id:String=str(record.get("source_npc_id",""));var name:String=str(record.name)
  var named:Dictionary={"45648":"source_492","45651":"source_244","45676":"source_494","45677":"source_493","45680":"source_64","45678":"source_64","45588":"source_490","45602":"source_493","45612":"source_494","45574":"source_496","45615":"source_495","45585":"source_491","45752":"source_602","45625":"source_522","45685":"source_524","45675":"source_603","45671":"source_523","45681":"source_70","45682":"source_37","45683":"source_65","45684":"source_67","45548":"source_480","45413":"source_440","46037":"source_608","81163":"source_608","97068":"source_82","45941":"source_244","45943":"source_244","45088":"source_77","45322":"source_78","45215":"source_80","45557":"source_303","45734":"source_65","45745":"source_65","45726":"source_480","46048":"source_303","81368":"source_303"}
+ if id in ["45082","45143","45191"]:return "source_440"
+ if id=="45131":return "source_53"
+ if id in ["45379","45464"]:return "source_81"
+ if id=="45405":return "source_80"
  if name=="마계의 지배자":return "source_603"
  if name=="천상계의 지배자":return "source_variant_54_25"
  if name=="종말의 성역의 지배자":return "source_780"
@@ -52,7 +56,7 @@ func run():
   if not fields.has(mid):fields[mid]=RUN.load_field(mid);occupied[mid]=[]
   var field=fields[mid]
   if field==null:failures.append(record.name);continue
-  var named:bool=DROP.is_boss_record(record) or (int(record.get("hp",0))>=4000 and int(record.get("lv",1))>=40)
+  var named:bool=bool(record.get("local_named_encounter",false)) or DROP.is_boss_record(record) or (int(record.get("hp",0))>=4000 and int(record.get("lv",1))>=40)
   var rng:=RandomNumberGenerator.new();rng.seed=str(record.name).hash()
   var entry:=Vector2(field.data.spawn_position[0],field.data.spawn_position[1])
   var origin:Vector2i=field.world_to_cell(entry);var point:Vector2=Vector2.INF
