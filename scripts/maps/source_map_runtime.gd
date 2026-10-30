@@ -21,13 +21,13 @@ static func policy() -> Dictionary:
 	return ART.read_object(POLICY_PATH).get("maps",{})
 
 static func supports(mid: String) -> bool:
-	return policy().has(mid) and not LEGACY_LAYOUT.active("--legacy-map-layouts")
+	return policy().has(mid) and (mid=="aden_world" or not LEGACY_LAYOUT.active("--legacy-map-layouts"))
 
 static func catalog_entries() -> Array:
 	var result: Array=[]
-	if LEGACY_LAYOUT.active("--legacy-map-layouts"):return result
 	if not FileAccess.file_exists(root_path()+"/index.json"):return result
 	for mid: String in policy():
+		if not supports(mid):continue
 		result.append({"id":mid,"name":str(policy()[mid].name),"width":1,"height":1,"tile_size_world":32,"source_map84":true})
 	return result
 
@@ -70,7 +70,18 @@ static func load_field(mid: String) -> RemakePlayableField:
 	var rule:Dictionary=context.rule
 	var field=FIELD.new()
 	if not field.configure_runtime(record,rule,art):field.close();return null
-	if bool(rule.get("replacement_of_existing_id",false)):
+	if mid=="aden_world":
+		var path:String=str(rule.get("gameplay_snapshot",""))
+		if path.is_empty() or FileAccess.get_sha256(path)!=str(rule.get("gameplay_snapshot_sha256","")):field.close();return null
+		var frozen:Dictionary=ART.read_object(path)
+		if frozen.get("schema")!=1 or frozen.get("map_id")!=mid or frozen.get("grid_sha256")!=rule.grid_sha256 or int(frozen.get("layout_revision",-1))!=int(rule.layout_revision):field.close();return null
+		var snapshot:Dictionary=frozen.gameplay
+		for id:String in snapshot.region_cells:snapshot.region_cells[id]=PackedInt32Array(snapshot.region_cells[id])
+		var reserved:Array[Dictionary]=[]
+		for reservation:Dictionary in snapshot.reservations:reserved.append(reservation)
+		snapshot.reservations=reserved
+		field.restore_gameplay(snapshot)
+	elif bool(rule.get("replacement_of_existing_id",false)):
 		var cache_key: String=JSON.stringify(rule,"",true,true).sha256_text()
 		if gameplay_cache.has(cache_key):field.restore_gameplay(gameplay_cache[cache_key])
 		else:

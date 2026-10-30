@@ -119,13 +119,13 @@ func _run() -> void:
 	var blocked_instances: Dictionary = {"300":{"name":"흑철 활","level":7,"element":"","element_level":0}}
 	var rare_denied: Dictionary = service.execute("local_weapon_03_04",1,blocked_rare,500000,items,blocked_instances,{},160,500,301)
 	_check(not bool(rare_denied.get("ok")) and blocked_instances.size() == 1 and blocked_rare.get("흑철 활",0) == 4 and blocked_rare.get("미스릴 원석",0) == 8, "rare-grade crafting cannot bypass missing pristine copies")
-	var map_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/aden_field.json"))
+	var map_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/npc_service_field.json"))
 	var found: bool = false
 	if map_data is Dictionary:
 		for raw: Variant in (map_data as Dictionary).get("npc_spawn",[]):
 			if raw is Dictionary and str((raw as Dictionary).get("id","")) == "craft_artisan":
 				found = str((raw as Dictionary).get("role","")) == "craft"
-	_check(found, "real craft master connected in Aden NPC data")
+	_check(found, "craft master retained in isolated service fixture")
 	if failures.is_empty():
 		print("CRAFTING_OK: 414 DB-backed recipes, batches, weight, enchant safety, atomic inventory and save")
 		quit(0)

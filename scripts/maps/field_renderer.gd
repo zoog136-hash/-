@@ -4,7 +4,6 @@ class_name FieldRenderer
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const GROUND_SHADER = preload("res://assets/maps/aden/ground.gdshader")
 const WATER_SHADER = preload("res://assets/maps/aden/water.gdshader")
-const ADEN_RIVER_SHADER = preload("res://assets/maps/aden/river_depth.gdshader")
 const LANDMARK = preload("res://scripts/maps/field_landmark.gd")
 const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
 const VISUAL_STYLE = preload("res://scripts/maps/visual_style_policy.gd")
@@ -34,7 +33,6 @@ var player: Node2D
 var atlas: Texture2D
 var textures: Dictionary = {}
 var detail_textures: Dictionary = {}
-var aden_stone_cottage: Texture2D
 var landmark_textures: Dictionary = {}
 var landmark_cache: SubViewport
 var landmark_material: ShaderMaterial
@@ -76,8 +74,6 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		var expanded: Texture2D = load("res://assets/maps/reference_expansion_v2/props.png")
 		for kind: String in REFERENCE_VISUALS.PROP_CELLS:
 			textures[kind] = REFERENCE_VISUALS.cell(expanded,REFERENCE_VISUALS.prop_index(kind,str(reference_profile.family)))
-	if str(field.data.map_id) == "aden_world":
-		aden_stone_cottage = load("res://assets/maps/aden/stone_cottage_v1.png")
 	terrain_root = Node2D.new()
 	terrain_root.name = "Terrain"
 	terrain_root.z_index = -20
@@ -321,8 +317,6 @@ func _build_ground() -> void:
 		poly.polygon = points
 		var material := ShaderMaterial.new()
 		material.shader = WATER_SHADER
-		if str(field.data.map_id)=="aden_world":
-			_configure_aden_river(poly,material,points)
 		if water.has("deep_color"):
 			material.set_shader_parameter("deep_color",Color(str(water["deep_color"])))
 			material.set_shader_parameter("shallow_color",Color(str(water["shallow_color"])))
@@ -433,35 +427,6 @@ func _build_boundary_wall(shape: Dictionary) -> void:
 	cap.name = "BoundaryWallCap"
 	cap.modulate = Color("9b9d9e")
 
-func _configure_aden_river(poly: Polygon2D, material: ShaderMaterial, points: PackedVector2Array) -> void:
-	# Aden's existing three river polygons have paired bank samples. Use exact
-	# vertices and explicit strip triangles so depth never cuts across a bend.
-	var half: int = points.size()/2
-	if half<2 or points.size()%2!=0: return
-	var width: float = points[-1].x-points[0].x
-	if width<=0.0: return
-	for row: int in range(half):
-		var left: Vector2 = points[row]
-		var right: Vector2 = points[points.size()-1-row]
-		if absf(left.y-right.y)>.1 or absf(right.x-left.x-width)>.1: return
-	var uv := PackedVector2Array()
-	uv.resize(points.size())
-	var triangles: Array[PackedInt32Array] = []
-	for row: int in range(half):
-		var right: int = points.size()-1-row
-		var v: float = float(row)/float(half-1)*terrain.get_height()
-		uv[row] = Vector2(0,v)
-		uv[right] = Vector2(terrain.get_width(),v)
-		if row<half-1:
-			triangles.append(PackedInt32Array([row,row+1,right-1]))
-			triangles.append(PackedInt32Array([row,right-1,right]))
-	poly.texture = terrain
-	poly.uv = uv
-	poly.polygons = triangles
-	material.shader = ADEN_RIVER_SHADER
-	material.set_shader_parameter("terrain",terrain)
-	material.set_shader_parameter("river_width",width)
-
 func _style_material(material: ShaderMaterial) -> void:
 	var style: Dictionary = field.data.get("render_style",{})
 	material.set_shader_parameter("wild_ground",bool(style.get("wild_ground",true)))
@@ -563,8 +528,6 @@ func _prop_texture(record: Dictionary) -> Texture2D:
 	var kind: String = str(record.kind)
 	# Retain the existing cottage exception and each record's atlas choice in
 	# one place so culling and the rendered sprite cannot select different art.
-	if aden_stone_cottage != null and kind == "house" and (COORD.array_vector(record.position) == Vector2(1630,3610) or str(record.get("asset","")) == "aden_stone_cottage_v1"):
-		return aden_stone_cottage
 	return detail_textures[kind] if str(record.get("texture_style","reference")) == "aden_original" else textures[kind]
 
 func _prop_extent(record: Dictionary) -> Rect2:

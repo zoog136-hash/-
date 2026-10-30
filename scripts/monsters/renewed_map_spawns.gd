@@ -82,14 +82,14 @@ static func _sort_names(names: Array, records: Dictionary) -> void:
 static func _load_incoming_landings() -> void:
 	if landings_loaded: return
 	landings_loaded = true
-	var paths: Array = ["res://data/maps/aden_field.json"]
+	var paths: Array = ["res://data/maps/aden_source84_gameplay.json"]
 	var index: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json"))
 	if index is Array:
 		for entry: Dictionary in index: paths.append(str(entry.path))
 	for path: String in paths:
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 		if not parsed is Dictionary: continue
-		var definition: Dictionary = parsed
+		var definition: Dictionary = parsed.get("gameplay", parsed)
 		var exits: Array = definition.get("portal", []).duplicate()
 		exits.append_array(definition.get("teleport", []))
 		for portal: Dictionary in exits:

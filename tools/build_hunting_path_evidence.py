@@ -104,7 +104,7 @@ def main():
     assert not validation['failures'] and len(validation['maps'])==25
     metrics={m['map_id']:m for m in validation['maps']}
     index=json.loads((ROOT/'data/maps/field_index.json').read_text())
-    paths=[ROOT/'data/maps/aden_field.json']+[ROOT/e['path'].removeprefix('res://') for e in index]
+    paths=[ROOT/e['path'].removeprefix('res://') for e in index]
     preservation=[]
     for path in paths:
         d=json.loads(path.read_text())

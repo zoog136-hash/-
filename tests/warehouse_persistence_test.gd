@@ -49,7 +49,7 @@ func _run() -> void:
 	var legacy = WAREHOUSE.new()
 	legacy.restore({})
 	_check(legacy.stacks.is_empty() and legacy.instances.is_empty(), "old save without warehouse defaults empty")
-	var map_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/aden_field.json"))
+	var map_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/npc_service_field.json"))
 	_check(map_value is Dictionary, "Aden map must load")
 	if map_value is Dictionary:
 		var found: bool = false

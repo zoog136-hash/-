@@ -1,3 +1,0 @@
-# Source provenance
-
-`source/harbor.png`: newly generated image_gen RGBA atlas, 2026-10-24, output exec-f45a71c2-c0d8-4c44-9a26-ed63e1e43449.png. Preserved unmodified. Actual cell bounds inspected and recorded in layout.json. Existing generated source atlases are reused by path from aden_modular_pilot and aden_modular_district_01. All source hashes appear in compiled/manifest.json. No original Aden pixels or A3 topology are used as compilation inputs. Generated objects are downsampled only. Four large PNG exports avoid a giant runtime texture and individual files above Git hosting limits. Geographic simplification and production limits are explicitly recorded in docs/aden-city-region-20261024/README.md.

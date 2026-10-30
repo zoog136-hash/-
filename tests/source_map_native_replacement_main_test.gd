@@ -6,7 +6,7 @@ const QA=preload("res://tests/qa_class_selection.gd")
 var failures: Array[String]=[]
 var checks: int=0
 var world: TwilightWorld
-var mid: String="aden_world"
+var mid: String="oman_01"
 var boss_key: String=""
 func check(ok: bool,label: String) -> void:
 	checks+=1

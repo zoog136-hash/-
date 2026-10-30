@@ -10,7 +10,6 @@ const CATALOG_PATH: String = "res://data/catalog_v19.json"
 const CATALOG_IMAGE_INDEX_PATH: String = "res://data/catalog_image_index_v19.json"
 const DIRECTIONAL_PATH: String = "res://data/directional_art_v19.json"
 const MONSTER_SCENE: PackedScene = preload("res://scenes/Monster.tscn")
-const FIELD_PATH: String = "res://data/maps/aden_field.json"
 const FIELD_INDEX_PATH: String = "res://data/maps/field_index.json"
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
@@ -488,14 +487,6 @@ func _load_data() -> void:
 		maps = maps_value as Array
 	maps=maps.filter(func(record: Dictionary) -> bool:
 		return str(record.get("id","")) not in ["albino_03","albino_04"])
-	# Replace only the Aden entry; preserve every existing map ID and data path.
-	var field_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(FIELD_PATH))
-	if field_value is Dictionary:
-		var definition: Dictionary = field_value as Dictionary
-		for index: int in range(maps.size()):
-			if str(maps[index].get("id", "")) == str(definition["map_id"]):
-				maps[index] = {"id":definition["map_id"],"name":definition["map_name"],"field_definition":definition,
-					"width":int(definition["bounds"][2])/32,"height":int(definition["bounds"][3])/32,"tile_size_world":32}
 	# Only lightweight metadata is resident for other regions. Load their geometry
 	# when entering; do not retain 24 full worlds or their textures in the map menu.
 	if FileAccess.file_exists(FIELD_INDEX_PATH):

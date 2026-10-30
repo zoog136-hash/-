@@ -30,17 +30,17 @@ func _run() -> void:
 	_check(service.allowed_action("warden","welcome","shop",advanced),"explicit whitelisted shop dialogue action remains allowed")
 	_check(not bool(service.resolve("warden","not_real",advanced).get("ok")),"fabricated dialogue node rejected")
 	_check(not bool(service.resolve("unknown_npc","",advanced).get("ok")),"unknown NPC rejected")
-	var field_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/aden_field.json"))
-	_check(field_value is Dictionary,"live Aden field JSON parses")
+	var field_value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/npc_service_field.json"))
+	_check(field_value is Dictionary,"NPC service fixture JSON parses")
 	if field_value is Dictionary:
 		var known: Dictionary = {}
 		for raw: Variant in (field_value as Dictionary).get("npc_spawn",[]):
 			if raw is Dictionary:
 				known[str((raw as Dictionary).get("id",""))] = true
 		for npc_id: String in service.registry:
-			_check(known.has(npc_id),"dialogue NPC has a real positioned Aden field character: "+npc_id)
+			_check(known.has(npc_id),"dialogue NPC has a positioned service fixture: "+npc_id)
 	if errors.is_empty():
-		print("NPC_DIALOGUE_OK: live six NPCs, conditional level/class/item branches and action checks")
+		print("NPC_DIALOGUE_OK: service fixture NPCs, conditional level/class/item branches and action checks")
 		quit(0)
 	else:
 		print("NPC_DIALOGUE_FAILED: %d issues" % errors.size())

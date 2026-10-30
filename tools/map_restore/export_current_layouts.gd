@@ -3,7 +3,7 @@ extends SceneTree
 const CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 func _initialize() -> void:
 	var result: Dictionary = {}
-	var entries: Array = [{"path":"res://data/maps/aden_field.json"}]
+	var entries: Array = []
 	entries.append_array(JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json")))
 	for entry: Dictionary in entries:
 		var field: Dictionary = CATALOG.apply_map(JSON.parse_string(FileAccess.get_file_as_string(entry.path)))

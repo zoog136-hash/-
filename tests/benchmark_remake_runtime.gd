@@ -226,7 +226,7 @@ func run() -> void:
 			"engine_start_to_playable_draw_ms":float(playable_at)/1000.0,"navigation_cache_hit":world.field_map.navigation_cache_hit,
 			"geometry_signature":world.field_map.geometry_signature(),"memory":memory_snapshot()},"data_sha256":{}}
 	print("REMAKE_RUNTIME_PLAYABLE ",JSON.stringify(report.boot))
-	for path: String in ["res://data/maps/aden_field.json","res://data/maps/field_index.json","res://data/game_db_v17.json","res://data/monsters/monster_world_catalog.json","res://data/catalog_v19.json","res://data/visuals/runtime_manifest.json"]:
+	for path: String in ["res://data/maps/field_index.json","res://data/game_db_v17.json","res://data/monsters/monster_world_catalog.json","res://data/catalog_v19.json","res://data/visuals/runtime_manifest.json"]:
 		report.data_sha256[path] = FileAccess.get_sha256(path)
 	world.rng.seed = SEED
 	var transition_begin: int = Time.get_ticks_usec()
