@@ -79,7 +79,7 @@ func run() -> void:
 			hud.open_catalog(category);await frames()
 			var chrome: Node=hud.catalog_card_chrome
 			check(chrome.active and chrome.slots.is_visible_in_tree(),"native catalog chrome active "+category+str(extent))
-			check(not chrome.is_processing() and chrome.slots.get_child_count()==14,"bounded batched layers without per-frame CPU updates")
+			check(not chrome.is_processing() and chrome.slots.get_child_count()==15 and not chrome.quantities.is_processing() and chrome.quantities.mouse_filter==Control.MOUSE_FILTER_IGNORE,"fourteen batched art layers plus one passive quantity layer, without per-frame CPU updates or input capture")
 			for index: int in range(hud.catalog_list.item_count):
 				var native: Rect2=hud.catalog_list.get_item_rect(index,false)
 				native.position.y-=hud.catalog_list.get_v_scroll_bar().value

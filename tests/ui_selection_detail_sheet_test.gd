@@ -37,6 +37,11 @@ func run() -> void:
 		check(shop.selection_sheet.picture.texture==null and shop.selection_sheet.total.text=="—" and shop.purchase.disabled,"empty offer clears image and amount")
 		hud.open_skills();await frames()
 		var view: Control=hud.skills_view
+		tap(view.scope_buttons[1]);await frames()
+		check(view.type_filter.selected==4 and view.filtered.all(func(row: Dictionary) -> bool:return str(row.get("class","공용"))==str(world.job_class)),"native Technique tab uses actual class membership")
+		tap(view.scope_buttons[0]);await frames()
+		check(view.type_filter.selected==0 and view.filtered.any(func(row: Dictionary) -> bool:return str(row.get("class","공용"))=="공용"),"native All tab restores existing common/class records")
+		for row: int in range(view.filtered.size()):check(str(view.cards.get_item_metadata(row))==str(view.filtered[row].id) and view.cards.get_item_icon(row)!=null,"icon-only roster retains the exact skill ID and connected picture")
 		var index: int=-1
 		for i: int in range(view.filtered.size()):
 			if str(view.filtered[i].name)=="에너지 볼트":index=i;break

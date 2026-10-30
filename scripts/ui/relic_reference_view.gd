@@ -44,6 +44,7 @@ var selected_key: String=""
 var page_key: String=""
 var number_pattern: RegEx=RegEx.new()
 var card_frames: Control
+var hero: HBoxContainer
 
 func configure(controller: Node) -> void:
 	hud=controller
@@ -60,6 +61,7 @@ func configure(controller: Node) -> void:
 		var button: Button=UI.button(title,func() -> void:_select_tab(index),Vector2(76 if index<2 else 116,32))
 		button.name=["RelicListTab","RelicFusionTab","RelicCollectionTab"][index]
 		button.toggle_mode=true
+		Surfaces.card_tab(button)
 		header.add_child(button)
 		tab_buttons.append(button)
 	var spacer:=Control.new()
@@ -121,9 +123,9 @@ func configure(controller: Node) -> void:
 	right.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	right.add_theme_constant_override("separation",10)
 	right_scroll.add_child(right)
-	var hero:=HBoxContainer.new()
+	hero=HBoxContainer.new()
 	hero.name="RelicPreviewOptions"
-	hero.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	hero.size_flags_vertical=Control.SIZE_FILL
 	hero.custom_minimum_size.y=235
 	right.add_child(hero)
 	preview_stage=Control.new()
@@ -177,7 +179,7 @@ func configure(controller: Node) -> void:
 	sheet_column.add_child(option_note)
 	summon_row=HBoxContainer.new()
 	summon_row.name="RelicImmediateSummonRow"
-	right_pane.add_child(summon_row)
+	right.add_child(summon_row)
 	var scroll:=TextureRect.new()
 	scroll.name="RelicSummonScrollIcon"
 	scroll.texture=load("res://assets/ui/return.png")
@@ -188,7 +190,7 @@ func configure(controller: Node) -> void:
 	summon_row.add_child(scroll)
 	status=UI.label("",11,UI.MUTED)
 	status.name="RelicAppliedStatus"
-	right_pane.add_child(status)
+	right.add_child(status)
 	var footer:=HBoxContainer.new()
 	footer.name="RelicFooterActions"
 	right_pane.add_child(footer)
@@ -238,7 +240,7 @@ func activate() -> void:
 	window_separation=hud.workspace.content.get_parent().get_theme_constant("separation")
 	hud.workspace.add_theme_stylebox_override("panel",Surfaces.inset(2))
 	hud.workspace.content.get_parent().add_theme_constant_override("separation",2)
-	hud.catalog_panel.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,0),Color(0,0,0,0),0))
+	hud.catalog_panel.add_theme_stylebox_override("panel",Surfaces.card_surface())
 	var nodes: Array[Control]=[hud.catalog_grade_column,hud.catalog_body_left,hud.catalog_search,hud.catalog_preview,hud.catalog_equip_button,hud.catalog_clear_button,hud.card_controls]
 	for node: Control in nodes:
 		var props: Dictionary={}

@@ -40,6 +40,8 @@ var pending_layout: bool=false
 var layout_generation: int=-1
 var layout_size:=Vector2(-1,-1)
 var layout_icon_size:=Vector2i(-1,-1)
+var quantities: Control
+static var quantity_font: FontVariation
 
 static func texture_for(rank: int) -> AtlasTexture:
 	if textures.is_empty():
@@ -71,6 +73,9 @@ static func material_for(rank: int, aura: bool, detail: bool=false, reduced: boo
 	return materials[key]
 
 func configure(controller: Node) -> void:
+	if quantity_font==null:
+		quantity_font=FontVariation.new();quantity_font.base_font=UI.FONT
+		quantity_font.variation_opentype={2003265652:650.0}
 	hud=controller
 	name="CatalogCardChrome"
 	slots=_layer(hud.catalog_list,"CardBordersAndAuras")
@@ -91,6 +96,8 @@ func configure(controller: Node) -> void:
 	preview_frame=_layer(preview,"SelectedCardMetal")
 	preview_frame.draw.connect(_draw_preview_frame)
 	hud.catalog_list.resized.connect(refresh)
+	quantities=_layer(slots,"CompanionCardQuantities")
+	quantities.draw.connect(_draw_card_quantities)
 	hud.catalog_preview.resized.connect(refresh)
 	hud.catalog_list.get_v_scroll_bar().value_changed.connect(func(_value: float) -> void:refresh())
 	deactivate()
@@ -157,6 +164,8 @@ func _refresh_layout() -> void:
 		aura_layers[rank].visible=used
 		frame_layers[rank].queue_redraw()
 		aura_layers[rank].queue_redraw()
+	quantities.visible=hud.catalog_category in ["변신","마법인형"]
+	quantities.queue_redraw()
 	selected_rank=maxi(0,GRADES.find(str(hud.selected_catalog_record.get("grade","일반"))))
 	preview.visible=not hud.selected_catalog_record.is_empty()
 	preview_aura.visible=preview.visible
@@ -173,6 +182,22 @@ func _draw_rank(layer: Control, rank: int, aura: bool) -> void:
 		if card.rank!=rank:continue
 		if aura:layer.draw_rect(card.rect,Color.WHITE)
 		else:layer.draw_texture_rect(texture_for(rank),card.rect,false)
+
+func _draw_card_quantities() -> void:
+	if not active or not hud.catalog_category in ["변신","마법인형"]:return
+	var spare: Dictionary=hud.card_collection_state.get("spare",{}).get(hud.catalog_category,{})
+	for card: Dictionary in visible_cards:
+		var record: Dictionary=hud.catalog_results[card.index]
+		var rect: Rect2=card.rect
+		var duplicates: int=int(spare.get(Cards.card_id(record),0))
+		if duplicates>0:
+			var at:=Vector2(rect.position.x+4,rect.end.y-5)
+			quantities.draw_string_outline(quantity_font,at,str(duplicates),HORIZONTAL_ALIGNMENT_RIGHT,rect.size.x-9,13,2,Color.BLACK)
+			quantities.draw_string(quantity_font,at,str(duplicates),HORIZONTAL_ALIGNMENT_RIGHT,rect.size.x-9,13,UI.TEXT)
+		if bool(hud._option_awakening_card_state(hud.catalog_category,record).get("awakened",false)):
+			var at:=rect.position+Vector2(4,14)
+			quantities.draw_string_outline(UI.FONT,at,"각성",HORIZONTAL_ALIGNMENT_LEFT,rect.size.x-8,10,2,Color.BLACK)
+			quantities.draw_string(UI.FONT,at,"각성",HORIZONTAL_ALIGNMENT_LEFT,rect.size.x-8,10,UI.GOLD)
 
 func _preview_rect() -> Rect2:
 	var extent: Vector2=hud.catalog_preview.size

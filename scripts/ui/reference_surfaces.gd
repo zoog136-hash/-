@@ -2,6 +2,30 @@ extends RefCounted
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const CardRules=preload("res://scripts/card_draw_fusion.gd")
+const CARD_BACKDROP=preload("res://assets/ui/fusion_background_painted.png")
+
+# The inspected 2023 card menus use the same restrained blue/black material.
+# Reuse the existing original raster; this does not restyle other screens.
+static func card_surface(margin: int=0) -> StyleBoxTexture:
+	var style:=StyleBoxTexture.new()
+	style.texture=CARD_BACKDROP
+	style.modulate_color=Color(.24,.30,.36,1)
+	for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:style.set_content_margin(side,margin)
+	return style
+
+static func card_tab(button: Button) -> void:
+	for state: String in ["normal","hover","pressed","hover_pressed"]:
+		var chosen: bool=state in ["pressed","hover_pressed"]
+		var plate: StyleBoxFlat=UI.box(Color(.07,.10,.13,.72 if chosen else .22),Color("b2ac91") if chosen else Color("37424a"),5)
+		plate.shadow_size=0
+		plate.border_width_left=0;plate.border_width_top=0;plate.border_width_right=0
+		plate.border_width_bottom=2 if chosen else 1
+		button.add_theme_stylebox_override(state,plate)
+	button.add_theme_color_override("font_color",Color("dddeda"))
+	button.add_theme_color_override("font_pressed_color",Color("e5dac1"))
+	var disabled: StyleBoxFlat=UI.box(Color(.05,.08,.10,.18),Color("253039"),5)
+	disabled.set_border_width_all(0);disabled.border_width_bottom=1;disabled.shadow_size=0
+	button.add_theme_stylebox_override("disabled",disabled)
 
 # Surfaces for the inspected Korean LineageM guide screens. These are original
 # controls/materials, not extracted game textures or purported original colors.

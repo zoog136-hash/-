@@ -63,9 +63,12 @@ func run() -> void:
 				check(view.active and view.category==category and view.name_label.text==str(hud.selected_catalog_record.name),"actual category detail "+category+str(extent))
 				check(view.options.get_child_count()>0 and not hud.catalog_detail.visible and not hud.card_controls.is_visible_in_tree(),"options separated from existing fusion controls")
 				check(hud.catalog_list.fixed_icon_size==Vector2i(94,116) if extent.x==1280 else hud.catalog_list.fixed_icon_size==Vector2i(78,92),"approved native card sizes preserved")
+				check(hud.catalog_list.get_item_text(0)==" " and str(hud.catalog_list.get_item_metadata(0))==Cards.card_id(hud.catalog_results[0]),"portrait-only grid retains the exact selectable ID")
 				check(view.tabs[2].disabled,"unimplemented collection never impersonates equipment collection")
 				if hud.catalog_details_tab.is_visible_in_tree():tap(hud.catalog_details_tab);await frames()
 				check(view.sheet.is_visible_in_tree() and hud.catalog_card_chrome.preview_frame.is_visible_in_tree(),"detail and approved frame/aura remain reachable")
+				check(hud.catalog_preview.get_global_rect().end.x<=view.sheet.get_global_rect().position.x+1,"guide preview stays left of its option sheet")
+				check(hud.catalog_equip_button.get_global_rect().position.y>=hud.catalog_preview.get_global_rect().end.y-1,"instant apply stays below the preview")
 				if view.sheet.get_v_scroll_bar().max_value>view.sheet.get_v_scroll_bar().page:
 					swipe(view.sheet,-110);await frames()
 					check(view.sheet.scroll_vertical>0,"native option scrolling on long real values "+category+str(extent))

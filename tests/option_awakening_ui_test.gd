@@ -254,7 +254,7 @@ func _run() -> void:
 	hud.set_option_awakening_state(awake_display)
 	_select_catalog("변신", target_id)
 	await _settle()
-	_check(hud.catalog_list.get_item_text(0).begins_with("[각성]"), "catalog list marks exact awakened card ID")
+	_check(hud.catalog_list.get_item_tooltip(0).begins_with("[각성]") and str(hud.catalog_list.get_item_metadata(0))==target_id and hud.catalog_card_chrome.quantities.is_visible_in_tree(), "portrait grid preserves the exact awakened card ID and its visible status layer")
 	_check(hud.option_awakening_catalog_border.visible, "catalog detail mounts the persistent awakened border")
 	hud.apply_option_awakening_settings({"reduced_motion": true, "impact_intensity": 0.0, "effect_detail": "low"})
 	_check(hud.option_awakening_catalog_border.visible and not hud.option_awakening_catalog_border.is_processing(), "reduced motion retains the static status border")

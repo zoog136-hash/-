@@ -33,6 +33,14 @@ var detail_visible: bool
 var collection_visible: bool
 var selected_key: String=""
 var number_pattern:=RegEx.new()
+var art_column: VBoxContainer
+var apply_row: HBoxContainer
+var footer_actions: HBoxContainer
+var presentation_homes: Array[Dictionary]=[]
+var catalog_style: StyleBox
+var list_text_lines: int
+var list_font_size: int
+var roster_key: String=""
 
 func configure(controller: Node) -> void:
 	hud=controller
@@ -50,6 +58,7 @@ func configure(controller: Node) -> void:
 		var button: Button=UI.button(title,func() -> void:select_tab(index),Vector2(88 if index<2 else 132,32))
 		button.toggle_mode=true
 		button.name=["CompanionListTab","CompanionFusionTab","CompanionCollectionTab"][index]
+		Surfaces.card_tab(button)
 		header.add_child(button)
 		tabs.append(button)
 	tabs[2].disabled=true
@@ -103,6 +112,15 @@ func configure(controller: Node) -> void:
 	note=UI.label("",11,UI.MUTED)
 	note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	information.add_child(note)
+	# The guide has an option sheet below the name/grade, rather than a
+	# full-height opaque inspector around the whole preview row.
+	sheet.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	var plate:=PanelContainer.new();plate.name="CompanionOptionPlate"
+	plate.custom_minimum_size.y=188
+	plate.add_theme_stylebox_override("panel",Surfaces.inset(8))
+	information.add_child(plate)
+	var values:=VBoxContainer.new();values.add_theme_constant_override("separation",8);plate.add_child(values)
+	caption.reparent(values);options.reparent(values);note.reparent(values)
 	fusion=ScrollContainer.new()
 	fusion.name="CompanionExistingFusionPane"
 	fusion.size_flags_vertical=Control.SIZE_EXPAND_FILL
@@ -117,15 +135,57 @@ func configure(controller: Node) -> void:
 	fusion_column.add_child(title)
 	fusion_column.add_child(UI.label("보유 중복 카드를 재료로 사용합니다.",13,UI.MUTED))
 	number_pattern.compile("[+-]?[0-9]")
+	art_column=VBoxContainer.new()
+	art_column.name="CompanionPreviewColumn"
+	art_column.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	hud.catalog_preview.get_parent().add_child(art_column)
+	art_column.hide()
+	apply_row=HBoxContainer.new();apply_row.name="CompanionImmediateApplyRow"
+	art_column.add_child(apply_row)
+	ownership.reparent(art_column)
+	footer_actions=HBoxContainer.new();footer_actions.name="CompanionManagementActions"
+	hud.catalog_body_actions.get_child(0).add_child(footer_actions)
+	for spec: Array in [["컬렉션 보기","카드 컬렉션 서비스 미지원"],["변신 등록","카드 빠른등록 서비스 미지원"]]:
+		var button: Button=UI.button(str(spec[0]),Callable(),Vector2(0,44))
+		button.name="CompanionCollectionView" if spec[0]=="컬렉션 보기" else "CompanionQuickRegister"
+		button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		button.disabled=true;button.tooltip_text=str(spec[1]);UI.primary_button(button)
+		footer_actions.add_child(button)
+	footer_actions.hide()
 
 func activate(value: String) -> void:
 	category=value
 	active=true
 	selected_key=""
+	roster_key=""
+	catalog_style=hud.catalog_panel.get_theme_stylebox("panel")
+	hud.catalog_panel.add_theme_stylebox_override("panel",Surfaces.card_surface())
+	list_text_lines=hud.catalog_list.max_text_lines
+	list_font_size=hud.catalog_list.get_theme_font_size("font_size")
+	for control: Control in [hud.catalog_preview,hud.catalog_equip_button,hud.catalog_clear_button,hud.option_awakening_button]:
+		var props: Dictionary={}
+		for key: String in ["custom_minimum_size","size_flags_horizontal","size_flags_vertical","anchor_left","anchor_top","anchor_right","anchor_bottom","offset_left","offset_top","offset_right","offset_bottom"]:props[key]=control.get(key)
+		presentation_homes.append({"node":control,"parent":control.get_parent(),"index":control.get_index(),"properties":props})
+	hud.catalog_preview.reparent(art_column,false);art_column.move_child(hud.catalog_preview,0)
+	art_column.get_parent().move_child(art_column,0)
+	hud.catalog_equip_button.reparent(apply_row,false)
+	hud.catalog_equip_button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	hud.catalog_clear_button.reparent(apply_row,false)
+	hud.catalog_clear_button.custom_minimum_size=Vector2(60,44)
+	hud.catalog_clear_button.text="해제"
+	hud.option_awakening_button.reparent(footer_actions,false)
+	footer_actions.move_child(hud.option_awakening_button,0)
+	hud.option_awakening_button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	var right: Control=hud.catalog_body_actions.get_child(0)
+	right.move_child(footer_actions,1)
+	art_column.show();footer_actions.show()
+	(footer_actions.find_child("CompanionQuickRegister",true,false) as Button).text="변신 등록" if category=="변신" else "인형 등록"
 	detail_visible=hud.catalog_detail.visible
 	collection_visible=hud.equipment_collection_button.visible
 	hud.catalog_detail.hide()
-	hud.equipment_collection_button.hide()
+	# Preserve main's implemented, explicitly named equipment route. The
+	# separate card-collection tab/footer still stay disabled.
+	hud.equipment_collection_button.visible=collection_visible
 	sheet.show()
 	controls_home=hud.card_controls.get_parent()
 	controls_index=hud.card_controls.get_index()
@@ -143,6 +203,18 @@ func deactivate() -> void:
 	if not active:return
 	select_tab(0)
 	active=false
+	art_column.hide();footer_actions.hide()
+	footer_actions.get_parent().move_child(footer_actions,footer_actions.get_parent().get_child_count()-1)
+	for home: Dictionary in presentation_homes:
+		var control: Control=home.node
+		control.reparent(home.parent,false)
+		home.parent.move_child(control,mini(int(home.index),home.parent.get_child_count()-1))
+		for key: String in home.properties:control.set(key,home.properties[key])
+	presentation_homes.clear()
+	hud.catalog_panel.add_theme_stylebox_override("panel",catalog_style)
+	hud.catalog_list.max_text_lines=list_text_lines
+	hud.catalog_list.add_theme_font_size_override("font_size",list_font_size)
+	hud._refresh_option_awakening_markers()
 	sheet.hide()
 	header.hide()
 	fusion.hide()
@@ -181,10 +253,18 @@ func fit_layout() -> void:
 		hud.collection_status.hide()
 	else:hud.catalog_list_tab.text=category+" 목록"
 	var compact: bool=hud.workspace.content.size.x<1040
+	# Full-size guide view has one tab bar; the existing list/detail controls
+	# remain available on phones, without repeating fusion/awakening entries.
+	hud.catalog_view_tabs.visible=compact and active_tab==0
+	hud.card_fusion_tab.hide();hud.card_awakening_tab.hide()
+	art_column.custom_minimum_size.x=150 if compact else 180
+	hud.catalog_preview.custom_minimum_size.x=0
+	hud.catalog_preview.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	footer_actions.visible=active_tab==0
 	information.add_theme_constant_override("separation",2 if compact else 8)
 	options.add_theme_constant_override("v_separation",3 if compact else 7)
 	name_label.add_theme_font_size_override("font_size",16 if compact else 18)
-	applied.visible=not compact and not hud.selected_catalog_record.is_empty() and not hud.catalog_results.is_empty()
+	applied.hide()
 	for label: Label in options.get_children():
 		label.add_theme_font_size_override("font_size",12 if compact else 13)
 		if label.name.begins_with("CompanionOptionValue"):label.custom_minimum_size.x=54 if compact else 66
@@ -206,9 +286,31 @@ func refresh() -> void:
 	var selected: bool=not record.is_empty() and str(equipped.get("name",""))==str(record.get("name",""))
 	applied.text=("현재 변신 중" if category=="변신" else "현재 소환 중") if selected else "미적용"
 	applied.visible=not record.is_empty()
-	if hud.workspace.content.size.x<1040 and not record.is_empty():ownership.text+=" · "+applied.text
+	if not record.is_empty():ownership.text+=" · "+applied.text
 	hud.catalog_equip_button.text="카드 선택" if record.is_empty() else ("현재 "+("변신 중" if category=="변신" else "소환 중") if selected else ("즉시 변신" if category=="변신" else "즉시 소환"))
 	fit_layout()
+	decorate_roster()
+
+func decorate_roster(force: bool=false) -> void:
+	if not active:return
+	var signature: String=category+str(hud.catalog_icon_generation)+str(hash(hud.card_collection_state))+str(hash(hud.option_awakening_state))
+	if signature==roster_key and not force:return
+	roster_key=signature
+	var owned: Dictionary=hud.card_collection_state.get("owned",{}).get(category,{})
+	var spare: Dictionary=hud.card_collection_state.get("spare",{}).get(category,{})
+	hud.catalog_list.max_text_lines=1
+	hud.catalog_list.add_theme_font_size_override("font_size",1)
+	for index: int in range(hud.catalog_results.size()):
+		var record: Dictionary=hud.catalog_results[index]
+		var identity: String=Cards.card_id(record)
+		var duplicates: int=int(spare.get(identity,0))
+		var copies: int=(1 if owned.has(identity) else 0)+duplicates
+		var awakened: bool=bool(hud._option_awakening_card_state(category,record).get("awakened",false))
+		hud.catalog_list.set_item_text(index," ")
+		hud.catalog_list.set_item_metadata(index,identity)
+		hud.catalog_list.set_item_tooltip(index,("[각성] " if awakened else "")+str(record.name)+" · "+str(record.grade)+"\n보유 %d장 · 중복 %d장 · %s" % [copies,duplicates,identity])
+	hud.catalog_list.force_update_list_size()
+	if is_instance_valid(hud.catalog_card_chrome):hud.catalog_card_chrome.refresh()
 
 func fill_options(record: Dictionary) -> void:
 	for child: Node in options.get_children():options.remove_child(child);child.queue_free()

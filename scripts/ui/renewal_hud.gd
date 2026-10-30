@@ -1580,6 +1580,8 @@ func _refresh_option_awakening_markers() -> void:
 		var title: String = str(record.get("name", ""))
 		catalog_list.set_item_text(index, ("%s%s\n보유 %d장 · 중복 %d" % ["[각성] " if awakened else "", title, copies, duplicates]) if copies > 0 else title + "\n미보유")
 		catalog_list.set_item_tooltip(index, "%s · %s · 총 %d장 · 합성/각성 재료 %d장" % [str(record.get("grade", "")), title, copies, duplicates])
+	if is_instance_valid(companion_detail_view) and companion_detail_view.active:
+		companion_detail_view.decorate_roster(true)
 
 func _refresh_option_awakening_entry() -> void:
 	if not is_instance_valid(option_awakening_button):

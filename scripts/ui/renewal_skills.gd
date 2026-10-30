@@ -34,15 +34,31 @@ var touch_active: bool = false
 # Grayscale variants are created once per source texture while this view lives.
 # Do not re-read/decompress icons during the cooldown polling loop.
 var unlearned_icons: Dictionary = {}
+var class_only: bool = false
+var scope_buttons: Array[Button] = []
 
 func configure(controller: Node) -> void:
 	hud=controller
 	visibility_changed.connect(_sync_visibility)
 	records=hud.job_skills
+	# The inspected 2023 menu has direct All/Technique tabs above an icon grid.
+	# Names, costs and learning information remain in the existing inspector.
+	var scope:=HBoxContainer.new();scope.name="SkillReferenceTabs"
+	add_child(scope)
+	for current: int in range(2):
+		var selection: int=current
+		var button: Button=UI.button("전체" if current==0 else "기술",func() -> void:
+			class_only=selection==1
+			type_filter.select(4 if class_only else 0);class_filter.select(0);refresh(),Vector2(100,44))
+		button.name="SkillAllTab" if current==0 else "SkillTechniqueTab"
+		button.toggle_mode=true
+		scope.add_child(button);scope_buttons.append(button)
+	var spacer:=Control.new();spacer.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scope.add_child(spacer)
 	var toolbar := HFlowContainer.new()
-	var filters_button: Button=UI.button("검색 · 필터",func() -> void:toolbar.visible=not toolbar.visible,Vector2(0,32))
+	var filters_button: Button=UI.button("검색",func() -> void:toolbar.visible=not toolbar.visible,Vector2(64,44))
 	filters_button.name="SkillFiltersToggle"
-	add_child(filters_button)
+	filters_button.tooltip_text="이름 · 종류 · 직업 · 등급 검색"
+	scope.add_child(filters_button)
 	toolbar.hide()
 	add_child(toolbar)
 	search=LineEdit.new()
@@ -53,7 +69,7 @@ func configure(controller: Node) -> void:
 	search.text_changed.connect(func(_value: String) -> void: refresh())
 	toolbar.add_child(search)
 	type_filter=OptionButton.new()
-	for text: String in ["현재 직업 · 공용","액티브","패시브","전체 DB · 조회"]: type_filter.add_item(text)
+	for text: String in ["현재 직업 · 공용","액티브","패시브","전체 DB · 조회","직업 기술"]: type_filter.add_item(text)
 	type_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	toolbar.add_child(type_filter)
 	class_filter = OptionButton.new()
@@ -79,7 +95,7 @@ func configure(controller: Node) -> void:
 		refresh())
 	toolbar.add_child(school_filter)
 	var state: Dictionary = hud.character_state
-	add_child(UI.section("Lv.%d  %s  /  마법과 기술" % [state.get("level",1),state.get("job_class","기사")],14))
+	scope.tooltip_text="Lv.%d %s · 공용 마법 및 직업 기술" % [state.get("level",1),state.get("job_class","기사")]
 	var body := Browser.new()
 	body.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	add_child(body)
@@ -89,11 +105,11 @@ func configure(controller: Node) -> void:
 	cards.max_columns=4
 	cards.fixed_column_width=76
 	cards.fixed_icon_size=Vector2i(54,54)
-	cards.add_theme_font_size_override("font_size",11)
+	cards.add_theme_font_size_override("font_size",1)
 	cards.add_theme_constant_override("h_separation",6)
 	cards.add_theme_constant_override("v_separation",6)
 	cards.icon_mode=ItemList.ICON_MODE_TOP
-	cards.max_text_lines=2
+	cards.max_text_lines=1
 	cards.same_column_width=true
 	cards.item_selected.connect(select)
 	# Shared PointerTransfer handles native touch, scrolling and actual drops.
@@ -186,7 +202,7 @@ func configure(controller: Node) -> void:
 	body.move_child(body.tabs,body.get_child_count()-1)
 	(body.tabs.get_child(0) as Button).text="스킬 목록"
 	(body.tabs.get_child(1) as Button).text="상세보기"
-	cards.add_theme_stylebox_override("panel",ReferenceSurfaces.inset(4))
+	cards.add_theme_stylebox_override("panel",UI.MATERIAL.from_flat(UI.box(Color("211b14"),Color("675640"),4),true))
 	for button: Button in [learn_button,book_button,use_button,quick_button]:ReferenceSurfaces.action(button)
 	hud.workspace.register_scroll_drag(side_scroll,side_scroll)
 	refresh()
@@ -198,11 +214,14 @@ func refresh() -> void:
 	var job := str(hud.character_state.get("job_class","기사")) if class_filter.selected == 0 else class_filter.get_item_text(class_filter.selected)
 	var selected_id: String = str(selected.get("id",selected.get("name","")))
 	var query := search.text.to_lower().strip_edges()
+	class_only=type_filter.selected==4
+	for index: int in range(scope_buttons.size()):scope_buttons[index].button_pressed=(index==1)==class_only
 	for value: Variant in records:
 		if not value is Dictionary: continue
 		var record: Dictionary=value
 		var activation := str(record.get("activation","active"))
 		if type_filter.selected!=3 and str(record.get("class","공용")) not in [job,"공용"]: continue
+		if class_only and str(record.get("class","공용"))!=job:continue
 		if grade_filter.selected > 0 and str(record.get("grade", "")) != grade_filter.get_item_text(grade_filter.selected): continue
 		if type_filter.selected==1 and activation=="passive": continue
 		if type_filter.selected==2 and activation!="passive": continue
@@ -217,7 +236,9 @@ func refresh() -> void:
 		var passive := RULES.is_passive(record)
 		var learned: bool = hud.get_parent().original_skills.catalog.owned(record)
 		var icon: Texture2D = _icon_for_skill(record,learned)
-		cards.add_item(("" if learned else "미습득 ") + str(record.get("name",""))+"\n"+("패시브" if passive else "MP %d" % int(record.get("mp",0))),icon)
+		cards.add_item(" ",icon)
+		cards.set_item_metadata(index,str(record.get("id",record.get("name",""))))
+		cards.set_item_tooltip(index,("습득 · " if learned else "미습득 · ")+str(record.get("name",""))+" · "+("패시브" if passive else "MP %d" % int(record.get("mp",0))))
 		var color: Color=UI.grade(str(record.get("grade","일반"))) if learned else Color("aaa7a1")
 		cards.set_item_icon_modulate(index,Color.WHITE if learned else Color(.68,.68,.68,.62))
 		cards.set_item_custom_fg_color(index,color)

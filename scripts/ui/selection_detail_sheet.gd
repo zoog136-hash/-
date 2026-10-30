@@ -148,6 +148,8 @@ func _fit_skill_chrome() -> void:
 	var compact_detail: bool=is_visible_in_tree() and owner_view.size.x<660
 	var filters: Control=owner_view.find_child("SkillFiltersToggle",true,false)
 	filters.visible=not compact_detail or owner_view.search.get_parent().visible
+	var scope: Control=owner_view.find_child("SkillReferenceTabs",true,false)
+	if scope!=null:scope.visible=not compact_detail
 	for child: Node in owner_view.get_children():
 		if child is Label and child.text.begins_with("Lv."):child.visible=not compact_detail
 
@@ -175,6 +177,7 @@ func show_skill() -> void:
 		var world: Node=owner_view.hud.get_parent()
 		var skill: Dictionary=world.original_skills.catalog.resolve(selected)
 		learned=world.original_skills.catalog.owned(selected)
+		category.text+=" · "+("습득 완료" if learned else "미습득")
 		var rows: Array=[]
 		if not owner_view.RULES.is_passive(selected):
 			rows=[["소모 MP / HP","%d / %d" % [int(skill.get("mp",0)),int(skill.get("hp",0))]],["재사용","%.1f초" % (float(skill.get("cooldown",0))*world._skill_cooldown_factor())],["지속시간","%.1f초" % float(skill.get("duration",0))]]

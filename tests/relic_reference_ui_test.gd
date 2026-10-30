@@ -128,7 +128,7 @@ func run() -> void:
 		hud.open_catalog("변신");await frames()
 		check(not view.active and not view.card_frames.visible,"relic-only frames hidden after navigation")
 		var label: String=hud.catalog_list.get_item_text(0)
-		check(label==str(hud.catalog_results[0].name)+"\n미보유" and hud.catalog_list.get_theme_constant("h_separation")==8,"shared catalog restores actual card name, ownership marker and spacing")
+		check(label==" " and str(hud.catalog_list.get_item_metadata(0))==Cards.card_id(hud.catalog_results[0]) and hud.catalog_list.get_item_tooltip(0).contains(str(hud.catalog_results[0].name)) and hud.catalog_list.get_item_tooltip(0).contains("보유 0장") and hud.catalog_list.get_theme_constant("h_separation")==8,"shared portrait grid restores exact card ID, accessible name, ownership and spacing")
 		tap_item(hud.catalog_list,0);await frames()
 		check(Cards.card_id(hud.selected_catalog_record)==Cards.card_id(hud.catalog_results[0]) and hud.companion_detail_view.name_label.text==str(hud.catalog_results[0].name),"shared card label still selects the exact card ID and detail")
 		hud.open_catalog("성물");await frames()
