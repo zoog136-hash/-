@@ -22,13 +22,23 @@ ACTIVE = frozenset({
     "ci-consolidated-preflight.yml",
 })
 ARCHIVE = Path("docs/ci/workflow-archive-20261028")
+# Workflows added after the 84 -> 10 consolidation. Each must be listed here
+# explicitly (never silently) and must stay path-filtered so it does not run on
+# every pull request. pr122-approval-ledgers.yml: PR122 boss ledger guards.
+POST_CONSOLIDATION = frozenset({"pr122-approval-ledgers.yml"})
 
 
 def check(root: Path) -> dict[str, int]:
     paths = root / ".github/workflows"
     current = {p.name for p in paths.glob("*.yml")} | {p.name for p in paths.glob("*.yaml")}
-    if len(current) > 10 or current != ACTIVE:
-        raise ValueError(f"Unexpected active CI workflows; expected exactly 10: {sorted(current ^ ACTIVE)}")
+    allowed = ACTIVE | POST_CONSOLIDATION
+    if not ACTIVE <= current or not current <= allowed:
+        raise ValueError(f"Unexpected active CI workflows: {sorted(current ^ allowed)}")
+    for name in current & POST_CONSOLIDATION:
+        text = (paths / name).read_text(encoding="utf-8")
+        trigger = text.split("jobs:", 1)[0]
+        if "pull_request:" in trigger and "paths:" not in trigger:
+            raise ValueError(f"{name} must stay path-filtered, not run on every PR")
     archive = root / ARCHIVE
     historical = {p.name for p in archive.glob("*.yml")} | {p.name for p in archive.glob("*.yaml")}
     if len(historical) != 84:
@@ -42,7 +52,7 @@ def check(root: Path) -> dict[str, int]:
     if "workflow_dispatch:" not in header or "pull_request:" in header or "push:" in header:
         raise ValueError("Main Debug must be available manually, not duplicate every PR")
     return {"active_workflows": len(current), "archived_workflows": len(historical),
-            "new_consolidated_workflows": 1}
+            "new_consolidated_workflows": 1, "post_consolidation_workflows": len(current & POST_CONSOLIDATION)}
 
 
 def main() -> None:

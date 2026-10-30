@@ -132,137 +132,102 @@ jobs:
             ${{ runner.temp }}/aden-boss-special/**/aden-boss-special-results.json
             ${{ runner.temp }}/pr100-main-directions/
           if-no-files-found: error
+  # Each job imports the project once, then runs several original-based case
+  # groups. Previously every small group (2-5 cases, ~3-9 test minutes) was its
+  # own job that re-did checkout (~7-10 min) and a full import (~17-28 min).
+  # Every case line is unchanged; a failing case no longer hides later cases:
+  # all cases run, and the job fails at the end listing every failed label.
   original-based:
     name: Original-based Main / ${{ matrix.group }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 85
+    timeout-minutes: 150
     strategy:
       fail-fast: false
-      max-parallel: 8
       matrix:
         include:
-          - group: werewolf-ghost
-            cases: |
-              werewolf|original_based_monster_gameplay_test||poses
-              ghost|original_based_ghost_gameplay_test||poses
-              ghost-gludio|original_based_ghost_gameplay_test|글루디오 던전 유령|directions
-              ghost-hell|original_based_ghost_gameplay_test|지옥의 고스트|directions
-          - group: ogre-reaper
-            cases: |
-              ogre|original_based_ogre_gameplay_test||poses
-              reaper|original_based_reaper_gameplay_test||poses
-              ogre-giran|original_based_ogre_gameplay_test|기란 평원 오우거|directions
-              ogre-ancient|original_based_ogre_gameplay_test|잊혀진 섬 고대오우거|directions
-          - group: golems-cyclops
-            cases: |
-              lava-golem|original_based_lava_golem_gameplay_test||poses
-              ice-golem|original_based_ice_golem_gameplay_test||poses
-              lava-golem-nest|original_based_lava_golem_gameplay_test|화룡의 둥지 라바 골렘|directions
-              cyclops|original_based_cyclops_gameplay_test||poses
-          - group: cockatrice-spear
+          - group: monsters-1
+            # ~34 test minutes: cockatrice-spear, succubus-regional, horn-cerberus, raziel-watcher-boss, penguin-pan-transform, wolf-tiger-basilisk
             cases: |
               cockatrice|original_based_cockatrice_gameplay_test||poses
               cockatrice-giran|original_based_cockatrice_gameplay_test|기란 평원 코카트리스|directions
               cockatrice-ancient|original_based_cockatrice_gameplay_test|잊혀진 섬 고대코카트리스|directions
               cockatrice-distorted|original_based_cockatrice_gameplay_test|왜곡의 코카트리스|directions
               spear-captain|original_based_spear_captain_gameplay_test||poses
-          - group: harpy-lycanthrope
+              succubus-nest|original_based_succubus_gameplay_test|지룡의 둥지 지룡서큐버스|directions
+              succubus-disbelief|original_based_succubus_gameplay_test|불신의 서큐버스|directions
+              succubus-dark-queen|original_based_succubus_gameplay_test|암흑의 서큐버스 퀸|directions
+              succubus-arrogant-queen|original_based_succubus_gameplay_test|오만한 서큐버스 퀸|directions
+              horn-cerberus|original_based_horn_cerberus_gameplay_test||poses
+              horn-cerberus-cruel|original_based_horn_cerberus_gameplay_test|잔혹한 혼 켈베로스|directions
+              raziel-watcher|original_based_raziel_watcher_gameplay_test||poses|450
+              ancient-penguin|original_based_ancient_penguin_gameplay_test||poses
+              pan|original_based_pan_gameplay_test||poses
+              dire-wolf|original_based_dire_wolf_gameplay_test||poses
+              saber-tiger|original_based_saber_tiger_gameplay_test||poses
+              saber-tiger-cruel|original_based_saber_tiger_gameplay_test|잔혹한 샤벨타이거|directions
+              basilisk|original_based_basilisk_gameplay_test||poses
+          - group: monsters-2
+            # ~34 test minutes: werewolf-ghost, golems-cyclops, succubus-field, iron-golem-ghoul, lizard-regional, ice-man-scorpion
+            cases: |
+              werewolf|original_based_monster_gameplay_test||poses
+              ghost|original_based_ghost_gameplay_test||poses
+              ghost-gludio|original_based_ghost_gameplay_test|글루디오 던전 유령|directions
+              ghost-hell|original_based_ghost_gameplay_test|지옥의 고스트|directions
+              lava-golem|original_based_lava_golem_gameplay_test||poses
+              ice-golem|original_based_ice_golem_gameplay_test||poses
+              lava-golem-nest|original_based_lava_golem_gameplay_test|화룡의 둥지 라바 골렘|directions
+              cyclops|original_based_cyclops_gameplay_test||poses
+              succubus|original_based_succubus_gameplay_test||poses
+              succubus-earth-queen|original_based_succubus_gameplay_test|지룡의 서큐버스 퀸|directions
+              succubus-valley|original_based_succubus_gameplay_test|용의 계곡 서큐버스|directions
+              iron-golem|original_based_iron_golem_gameplay_test||poses
+              iron-golem-hell|original_based_iron_golem_gameplay_test|지옥의 아이언골렘|directions
+              ghoul-gludio|original_based_ghoul_gameplay_test||poses
+              ghoul-undying|original_based_ghoul_gameplay_test|불사의 구울|directions
+              lizard|original_based_lizard_gameplay_test||poses
+              lizard-albino|original_based_lizard_gameplay_test|알비노 도마뱀|directions
+              ice-man|original_based_ice_man_gameplay_test||poses
+              scorpion|original_based_scorpion_gameplay_test||poses
+          - group: monsters-3
+            # ~34 test minutes: harpy-lycanthrope, bugbear-sand-worm-reaper, frog-fire-egg, bone-dragons, king-bugbear-ettin, crab-kraken-transform
             cases: |
               harpy|original_based_harpy_gameplay_test||poses
               harpy-nest|original_based_harpy_gameplay_test|풍룡의 둥지 하피|directions
               lycanthrope|original_based_lycanthrope_gameplay_test||poses
               lycanthrope-cruel|original_based_lycanthrope_gameplay_test|잔혹한 라이칸스로프|directions
-          - group: succubus-field
-            cases: |
-              succubus|original_based_succubus_gameplay_test||poses
-              succubus-earth-queen|original_based_succubus_gameplay_test|지룡의 서큐버스 퀸|directions
-              succubus-valley|original_based_succubus_gameplay_test|용의 계곡 서큐버스|directions
-          - group: succubus-regional
-            cases: |
-              succubus-nest|original_based_succubus_gameplay_test|지룡의 둥지 지룡서큐버스|directions
-              succubus-disbelief|original_based_succubus_gameplay_test|불신의 서큐버스|directions
-              succubus-dark-queen|original_based_succubus_gameplay_test|암흑의 서큐버스 퀸|directions
-              succubus-arrogant-queen|original_based_succubus_gameplay_test|오만한 서큐버스 퀸|directions
-          - group: bugbear-sand-worm-reaper
-            cases: |
               bugbear|original_based_bugbear_gameplay_test||poses
               sand-worm|original_based_sand_worm_gameplay_test||poses
               reaper-male|original_based_reaper_male_gameplay_test||poses
-          - group: iron-golem-ghoul
-            cases: |
-              iron-golem|original_based_iron_golem_gameplay_test||poses
-              iron-golem-hell|original_based_iron_golem_gameplay_test|지옥의 아이언골렘|directions
-              ghoul-gludio|original_based_ghoul_gameplay_test||poses
-              ghoul-undying|original_based_ghoul_gameplay_test|불사의 구울|directions
-          - group: lizard-regional
-            cases: |
-              lizard|original_based_lizard_gameplay_test||poses
-              lizard-albino|original_based_lizard_gameplay_test|알비노 도마뱀|directions
-          - group: crabman-asitagio
-            cases: |
-              crabman|original_based_crabman_gameplay_test||poses
-              crabman-eva|original_based_crabman_gameplay_test|에바 왕국 크랩맨|directions
-              asitagio|original_based_asitagio_gameplay_test||poses
-              asitagio-arrogant|original_based_asitagio_gameplay_test|오만한 아시타지오|directions
-          - group: spear-guards
-            cases: |
-              spear-guard-green|original_based_spear_guard_green_gameplay_test||poses
-              spear-guard|original_based_spear_guard_gameplay_test||poses
-              spear-guard-red|original_based_spear_guard_red_gameplay_test||poses
-          - group: frog-fire-egg
-            cases: |
               albino-frog|original_based_albino_frog_gameplay_test||poses
               albino-horned-frog|original_based_albino_frog_gameplay_test|알비노 뿔 개구리|directions
               fire-egg|original_based_fire_egg_gameplay_test||poses
               fire-egg-fear|original_based_fire_egg_gameplay_test|공포의 파이어 에그|directions
-          - group: horn-cerberus
-            cases: |
-              horn-cerberus|original_based_horn_cerberus_gameplay_test||poses
-              horn-cerberus-cruel|original_based_horn_cerberus_gameplay_test|잔혹한 혼 켈베로스|directions
-          - group: mummy-seer-bosses
-            case_timeout: 450
-            cases: |
-              mummy-lord|original_based_mummy_lord_gameplay_test||poses
-              seer-boss|original_based_seer_boss_gameplay_test||poses
-          - group: raziel-watcher-boss
-            case_timeout: 450
-            cases: |
-              raziel-watcher|original_based_raziel_watcher_gameplay_test||poses
-          - group: salah-boss
-            case_timeout: 450
-            cases: |
-              salah|original_based_salah_gameplay_test||poses
-          - group: bone-dragons
-            cases: |
               bone-dragon|original_based_bone_dragon_gameplay_test||poses
               bone-dragon-immortal|original_based_bone_dragon_gameplay_test|불멸의 본 드래곤|directions
               bone-dragon-hell|original_based_bone_dragon_gameplay_test|지옥의 본 드래곤|directions
-          - group: king-bugbear-ettin
-            cases: |
               king-bugbear|original_based_king_bugbear_gameplay_test||poses
               ettin|original_based_ettin_gameplay_test||poses
-          - group: penguin-pan-transform
-            cases: |
-              ancient-penguin|original_based_ancient_penguin_gameplay_test||poses
-              pan|original_based_pan_gameplay_test||poses
-          - group: crab-kraken-transform
-            cases: |
               albino-giant-crab|original_based_albino_giant_crab_gameplay_test||poses
               kraken-transform|original_based_kraken_transform_gameplay_test||poses
-          - group: snowman-yeti
+          - group: monsters-4
+            # ~34 test minutes: ogre-reaper, crabman-asitagio, spear-guards, mummy-seer-bosses, salah-boss, snowman-yeti
             cases: |
+              ogre|original_based_ogre_gameplay_test||poses
+              reaper|original_based_reaper_gameplay_test||poses
+              ogre-giran|original_based_ogre_gameplay_test|기란 평원 오우거|directions
+              ogre-ancient|original_based_ogre_gameplay_test|잊혀진 섬 고대오우거|directions
+              crabman|original_based_crabman_gameplay_test||poses
+              crabman-eva|original_based_crabman_gameplay_test|에바 왕국 크랩맨|directions
+              asitagio|original_based_asitagio_gameplay_test||poses
+              asitagio-arrogant|original_based_asitagio_gameplay_test|오만한 아시타지오|directions
+              spear-guard-green|original_based_spear_guard_green_gameplay_test||poses
+              spear-guard|original_based_spear_guard_gameplay_test||poses
+              spear-guard-red|original_based_spear_guard_red_gameplay_test||poses
+              mummy-lord|original_based_mummy_lord_gameplay_test||poses|450
+              seer-boss|original_based_seer_boss_gameplay_test||poses|450
+              salah|original_based_salah_gameplay_test||poses|450
               snowman|original_based_snowman_gameplay_test||poses
               yeti|original_based_yeti_gameplay_test||poses
-          - group: ice-man-scorpion
-            cases: |
-              ice-man|original_based_ice_man_gameplay_test||poses
-              scorpion|original_based_scorpion_gameplay_test||poses
-          - group: wolf-tiger-basilisk
-            cases: |
-              dire-wolf|original_based_dire_wolf_gameplay_test||poses
-              saber-tiger|original_based_saber_tiger_gameplay_test||poses
-              saber-tiger-cruel|original_based_saber_tiger_gameplay_test|잔혹한 샤벨타이거|directions
-              basilisk|original_based_basilisk_gameplay_test||poses
     steps:
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
@@ -300,22 +265,35 @@ jobs:
         shell: bash
         env:
           ORIGINAL_CASES: ${{ matrix.cases }}
-          ORIGINAL_CASE_TIMEOUT: ${{ matrix.case_timeout || 300 }}
+          ORIGINAL_CASE_TIMEOUT: '300'
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
-          set -euo pipefail
+          set -uo pipefail
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
-          while IFS='|' read -r label script subject capture_mode; do
-            [ -n "$label" ] || continue
-            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-headless.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-headless-user" timeout "$ORIGINAL_CASE_TIMEOUT" "$ENGINE" --headless --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-headless.txt"
-            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-headless.txt"; then exit 1; fi
-            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-headless.txt"
-            pose_capture=0
+          failed=()
+          run_case() {
+            local label="$1" script="$2" subject="$3" capture_mode="$4" case_timeout="$5"
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-headless.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-headless-user" timeout "$case_timeout" "$ENGINE" --headless --path . --script "res://tests/${script}.gd" < /dev/null 2>&1 | tee "test-results/${label}-headless.txt" || return 1
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-headless.txt"; then return 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-headless.txt" || return 1
+            local pose_capture=0
             if [ "$capture_mode" = poses ]; then pose_capture=1; fi
-            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_ORIGINAL_POSE_CAPTURE="$pose_capture" TWILIGHT_PR100_CAPTURE_DIR="${PWD}/test-results/${label}-render" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-render-user" timeout "$ORIGINAL_CASE_TIMEOUT" xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-render.txt"
-            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-render.txt"; then exit 1; fi
-            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-render.txt"
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_ORIGINAL_POSE_CAPTURE="$pose_capture" TWILIGHT_PR100_CAPTURE_DIR="${PWD}/test-results/${label}-render" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-render-user" timeout "$case_timeout" xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${script}.gd" < /dev/null 2>&1 | tee "test-results/${label}-render.txt" || return 1
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-render.txt"; then return 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-render.txt" || return 1
+          }
+          ran=0
+          while IFS='|' read -r label script subject capture_mode case_timeout; do
+            [ -n "$label" ] || continue
+            ran=$((ran + 1))
+            if ! run_case "$label" "$script" "$subject" "$capture_mode" "${case_timeout:-$ORIGINAL_CASE_TIMEOUT}"; then
+              failed+=("$label")
+              echo "::error title=Original-based case failed::$label"
+            fi
           done <<< "$ORIGINAL_CASES"
+          echo "ORIGINAL_BASED_CASES_RUN=$ran FAILED=${#failed[@]}"
+          [ "$ran" -gt 0 ] || { echo "No cases were configured"; exit 1; }
+          if [ "${#failed[@]}" -gt 0 ]; then echo "FAILED_CASES: ${failed[*]}"; exit 1; fi
       - name: Preserve actual Main logs and captures
         if: always()
         uses: actions/upload-artifact@v4
@@ -323,44 +301,48 @@ jobs:
           name: original-based-${{ matrix.group }}-${{ github.sha }}
           path: test-results/
           if-no-files-found: error
+  # Same consolidation for the batch suites: one import per job, then each batch
+  # runs headless and OpenGL with its own config, script, marker, timeouts and
+  # isolated XDG data/cache/config directories, exactly as its own job did.
   original-batch:
-    name: Original-based batch${{ matrix.batch }} / shared engine per mode
+    name: Original-based ${{ matrix.group }} / shared engine per mode
     strategy:
       fail-fast: false
-      max-parallel: 8
       matrix:
-        batch: [15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30]
         include:
-          - batch: 27
-            script: run_original_based_boss_batch
-            timeout: 1200
-          - batch: 29
-            script: run_original_based_boss_batch
-            timeout: 1200
-          - batch: 31
-            config: res://tests/fixtures/pr100_transform_batch31.json
-            script: original_based_transform_temporal_main_test
-            marker: PR100_TRANSFORM_BATCH_OK
-          - batch: 21
-            config: res://tests/fixtures/pr100_batch21_accepted.json
-            script: run_original_based_transform_batch
-            marker: PR100_TRANSFORM_BATCH_OK
-            timeout: 1200
-          - batch: transform-regression
-            config: res://tests/fixtures/pr100_transform_regression.json
-            script: run_original_based_transform_batch
-            marker: PR100_TRANSFORM_BATCH_OK
-            timeout: 1200
-            render_timeout: 2400
+          - group: batches-1
+            # ~32 test minutes: batch 17, 30, transform-regression
+            batches: |
+              17|res://tests/fixtures/pr100_batch17.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              30|res://tests/fixtures/pr100_batch30.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              transform-regression|res://tests/fixtures/pr100_transform_regression.json|run_original_based_transform_batch|PR100_TRANSFORM_BATCH_OK|1200|2400
+          - group: batches-2
+            # ~31 test minutes: batch 21, 25, 27, 29
+            batches: |
+              21|res://tests/fixtures/pr100_batch21_accepted.json|run_original_based_transform_batch|PR100_TRANSFORM_BATCH_OK|1200|1200
+              25|res://tests/fixtures/pr100_batch25.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              27|res://tests/fixtures/pr100_batch27.json|run_original_based_boss_batch|PR100_ORIGINAL_BATCH_OK|1200|1200
+              29|res://tests/fixtures/pr100_batch29.json|run_original_based_boss_batch|PR100_ORIGINAL_BATCH_OK|1200|1200
+          - group: batches-3
+            # ~32 test minutes: batch 15, 16, 19, 23, 31
+            batches: |
+              15|res://tests/fixtures/pr100_batch15.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              16|res://tests/fixtures/pr100_batch16.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              19|res://tests/fixtures/pr100_batch19.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              23|res://tests/fixtures/pr100_batch23.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              31|res://tests/fixtures/pr100_transform_batch31.json|original_based_transform_temporal_main_test|PR100_TRANSFORM_BATCH_OK|600|600
+          - group: batches-4
+            # ~34 test minutes: batch 18, 20, 24, 26, 28
+            batches: |
+              18|res://tests/fixtures/pr100_batch18.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              20|res://tests/fixtures/pr100_batch20.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              24|res://tests/fixtures/pr100_batch24.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              26|res://tests/fixtures/pr100_batch26.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
+              28|res://tests/fixtures/pr100_batch28.json|run_original_based_batch|PR100_ORIGINAL_BATCH_OK|600|600
     runs-on: ubuntu-24.04
-    timeout-minutes: 80
+    timeout-minutes: 150
     env:
       TWILIGHT_PR100_BATCH_ISOLATED: '1'
-      TWILIGHT_PR100_BATCH_CONFIG: ${{ matrix.config || format('res://tests/fixtures/pr100_batch{0}.json', matrix.batch) }}
-      BATCH_SCRIPT: ${{ matrix.script || 'run_original_based_batch' }}
-      BATCH_OK_MARKER: ${{ matrix.marker || 'PR100_ORIGINAL_BATCH_OK' }}
-      BATCH_TIMEOUT: ${{ matrix.timeout || 600 }}
-      BATCH_RENDER_TIMEOUT: ${{ matrix.render_timeout || matrix.timeout || 600 }}
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
@@ -391,61 +373,75 @@ jobs:
       - name: Import actual TWILIGHT project once
         shell: bash
         env:
-          XDG_DATA_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-import/data
-          XDG_CACHE_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-import/cache
-          XDG_CONFIG_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-import/config
+          XDG_DATA_HOME: ${{ runner.temp }}/${{ matrix.group }}-import/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/${{ matrix.group }}-import/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/${{ matrix.group }}-import/config
         run: |
           set -euo pipefail
-          mkdir -p test-results/batch${{ matrix.batch }} "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 2400 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/batch${{ matrix.batch }}/import.txt
-          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/batch${{ matrix.batch }}/import.txt; then exit 1; fi
-      - name: Configured production Main cases in one headless engine
+          mkdir -p test-results "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+          timeout 2400 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/import.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
+      - name: Configured production Main batches, headless then OpenGL
         shell: bash
         env:
-          XDG_DATA_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data
-          XDG_CACHE_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-headless/cache
-          XDG_CONFIG_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-headless/config
-          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch${{ matrix.batch }}/headless.json
+          BATCHES: ${{ matrix.batches }}
         run: |
-          set -euo pipefail
-          mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout "$BATCH_TIMEOUT" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path . --script "res://tests/${BATCH_SCRIPT}.gd" > test-results/batch${{ matrix.batch }}/headless.txt 2>&1
-          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/headless.txt; then exit 1; fi
-          grep -q "$BATCH_OK_MARKER" test-results/batch${{ matrix.batch }}/headless.txt
-      - name: Configured production Main cases in one OpenGL engine
-        shell: bash
-        env:
-          XDG_DATA_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-render/data
-          XDG_CACHE_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-render/cache
-          XDG_CONFIG_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-render/config
-          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch${{ matrix.batch }}/render.json
-          TWILIGHT_PR100_BATCH_CAPTURE_DIR: ${{ github.workspace }}/test-results/batch${{ matrix.batch }}/render-captures
-        run: |
-          set -euo pipefail
-          mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout "$BATCH_RENDER_TIMEOUT" xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${BATCH_SCRIPT}.gd" > test-results/batch${{ matrix.batch }}/render.txt 2>&1
-          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/render.txt; then exit 1; fi
-          grep -q "$BATCH_OK_MARKER" test-results/batch${{ matrix.batch }}/render.txt
+          set -uo pipefail
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          failed=()
+          run_mode() {
+            local batch="$1" mode="$2" script="$3" marker="$4" limit="$5"
+            local out="test-results/batch${batch}"
+            local home="${RUNNER_TEMP}/batch${batch}-${mode}"
+            mkdir -p "$out" "$home/data" "$home/cache" "$home/config"
+            local -a command=("$ENGINE" --headless --audio-driver Dummy --path . --script "res://tests/${script}.gd")
+            local -a capture=()
+            if [ "$mode" = render ]; then
+              command=(xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${script}.gd")
+              capture=(env "TWILIGHT_PR100_BATCH_CAPTURE_DIR=${GITHUB_WORKSPACE}/${out}/render-captures")
+            fi
+            env XDG_DATA_HOME="$home/data" XDG_CACHE_HOME="$home/cache" XDG_CONFIG_HOME="$home/config" \
+              TWILIGHT_PR100_BATCH_REPORT="${GITHUB_WORKSPACE}/${out}/${mode}.json" \
+              "${capture[@]}" timeout "$limit" "${command[@]}" < /dev/null > "$out/${mode}.txt" 2>&1 || return 1
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "$out/${mode}.txt"; then return 1; fi
+            grep -q "$marker" "$out/${mode}.txt" || return 1
+          }
+          ran=0
+          while IFS='|' read -r batch config script marker limit render_limit; do
+            [ -n "$batch" ] || continue
+            ran=$((ran + 1))
+            export TWILIGHT_PR100_BATCH_CONFIG="$config"
+            if ! run_mode "$batch" headless "$script" "$marker" "$limit"; then
+              failed+=("batch${batch}-headless"); echo "::error title=Original-based batch failed::batch${batch} headless"
+            fi
+            if ! run_mode "$batch" render "$script" "$marker" "$render_limit"; then
+              failed+=("batch${batch}-render"); echo "::error title=Original-based batch failed::batch${batch} render"
+            fi
+          done <<< "$BATCHES"
+          echo "ORIGINAL_BATCHES_RUN=$ran FAILED=${#failed[@]}"
+          [ "$ran" -gt 0 ] || { echo "No batches were configured"; exit 1; }
+          if [ "${#failed[@]}" -gt 0 ]; then echo "FAILED_BATCHES: ${failed[*]}"; exit 1; fi
       - name: Preserve small batch diagnostics and generated saves
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: original-based-batch${{ matrix.batch }}-${{ github.sha }}-diagnostics
+          name: original-based-${{ matrix.group }}-${{ github.sha }}-diagnostics
           path: |
-            test-results/batch${{ matrix.batch }}/*.json
-            test-results/batch${{ matrix.batch }}/*.jsonl
-            test-results/batch${{ matrix.batch }}/*.txt
-            test-results/batch${{ matrix.batch }}/*.log
-            test-results/batch${{ matrix.batch }}/*-cases/*.json
-            ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data/**/pr100-batch-preserved/
-            ${{ runner.temp }}/batch${{ matrix.batch }}-render/data/**/pr100-batch-preserved/
-            ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data/**/pr100-transform-batch-preserved/
-            ${{ runner.temp }}/batch${{ matrix.batch }}-render/data/**/pr100-transform-batch-preserved/
+            test-results/import.txt
+            test-results/batch*/*.json
+            test-results/batch*/*.jsonl
+            test-results/batch*/*.txt
+            test-results/batch*/*.log
+            test-results/batch*/*-cases/*.json
+            ${{ runner.temp }}/batch*-headless/data/**/pr100-batch-preserved/
+            ${{ runner.temp }}/batch*-render/data/**/pr100-batch-preserved/
+            ${{ runner.temp }}/batch*-headless/data/**/pr100-transform-batch-preserved/
+            ${{ runner.temp }}/batch*-render/data/**/pr100-transform-batch-preserved/
           if-no-files-found: error
       - name: Preserve every batch PNG capture separately
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: original-based-batch${{ matrix.batch }}-${{ github.sha }}-captures
-          path: test-results/batch${{ matrix.batch }}/render-captures/
+          name: original-based-${{ matrix.group }}-${{ github.sha }}-captures
+          path: test-results/batch*/render-captures/
           if-no-files-found: ignore
