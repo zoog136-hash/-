@@ -2,6 +2,7 @@ extends RefCounted
 ## New independent temples can be entered in the ordinary game with a verified
 ## private pack. Replacing existing Albino/Escaros geometry remains explicit
 ## until their legacy gameplay coordinates have a supported correspondence.
+const LEGACY=preload("res://scripts/maps/legacy_layout_policy.gd")
 const PLAN_PATH := "res://data/maps/native_png_plan.json"
 const EXTRA_PLAN_PATH := "res://data/maps/aden_faith_png_plan.json"
 const ADEN_DISPLAY_REVIEW := "res://data/maps/aden_png_display_review.json"
@@ -20,7 +21,7 @@ static var extra_pack_seen: bool=false
 static var domination_pack_seen: bool=false
 
 static func enabled() -> bool:
-	return "--native-png-maps" in OS.get_cmdline_user_args() and not "--legacy-map-layouts" in OS.get_cmdline_user_args()
+	return "--native-png-maps" in OS.get_cmdline_user_args() and not LEGACY.active("--legacy-map-layouts")
 
 static func read_json(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path): return {}
@@ -203,7 +204,7 @@ static func bundled_enabled() -> bool:
 	# ordinary save namespace and 25 historical map IDs. Explicit diagnostics
 	# and legacy switches continue to opt out of runtime map replacement.
 	var args: PackedStringArray = OS.get_cmdline_user_args()
-	return installed() and not "--legacy-map-layouts" in args and not "--png-review" in args and not "--no-native-png-auto" in args
+	return not LEGACY.active("--legacy-map-layouts") and not "--png-review" in args and not LEGACY.active("--no-native-png-auto")
 
 static func map_for_art(mid: String) -> String:
 	if mid in ["escaros_01","escaros_02","escaros_03","escaros_04","escaros_05"]: return "escaros_world"
@@ -228,22 +229,22 @@ static func supports(mid: String) -> bool:
 	var art_id: String = map_for_art(canonical(mid))
 	if art_id=="domination_summit":
 		for flag: String in ["--legacy-map-layouts","--png-review","--no-native-png-auto"]:
-			if flag in OS.get_cmdline_user_args():return false
+			if LEGACY.active(flag):return false
 		if bool(read_json(DOMINATION_RECEIPT_PATH).get("bundled_required",false)):return true
 		return domination_installed() or domination_pack_seen or FileAccess.file_exists(domination_root()+"/index.json") or not OS.get_environment("TWILIGHT_DOMINATION_PNG_PACK").is_empty()
 	if extra_map(art_id):
 		var configured: bool=not OS.get_environment("TWILIGHT_ADEN_FAITH_PNG_PACK").is_empty()
 		var args: PackedStringArray=OS.get_cmdline_user_args()
-		var ordinary: bool=not "--legacy-map-layouts" in args and not "--legacy-aden-faith-layouts" in args and not "--png-review" in args and not "--no-native-png-auto" in args
+		var ordinary: bool=not LEGACY.active("--legacy-map-layouts") and not LEGACY.active("--legacy-aden-faith-layouts") and not "--png-review" in args and not LEGACY.active("--no-native-png-auto")
 		# Explicit missing/corrupt paths must fail before releasing live gameplay.
 		var verified: bool=extra_installed()
 		var present: bool=FileAccess.file_exists(extra_root()+"/index.json")
-		return (verified or present or extra_pack_seen or configured) and (enabled() or ordinary) and not "--legacy-aden-faith-layouts" in args
+		return (verified or present or extra_pack_seen or configured or bool(read_json(EXTRA_RECEIPT_PATH).get("private_art_in_public_git",false))) and (enabled() or ordinary) and not LEGACY.active("--legacy-aden-faith-layouts")
 	return base_plan().get("maps",{}).has(art_id) and (enabled() or bundled_enabled() or mid in ["yahee_temple","balrog_temple"])
 
 static func catalog_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
-	if not enabled() and not installed(): return entries
+	if not enabled() and not installed() and not bundled_enabled(): return entries
 	var specs: Dictionary = base_plan().get("maps",{})
 	for mid: String in ["escaros_world","yahee_temple","balrog_temple"]:
 		if mid=="escaros_world" and not enabled(): continue
