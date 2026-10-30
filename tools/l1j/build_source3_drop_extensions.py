@@ -2,7 +2,7 @@
 """Project verified SQL item/NPC tuples into existing successful rarity rolls.
 Source probabilities, stats, quest items, enchantments and stacks are not imported.
 """
-import argparse, hashlib, json
+import argparse, hashlib, json, re
 from pathlib import Path
 
 def sha(data): return hashlib.sha256(data).hexdigest()
@@ -28,11 +28,18 @@ def build(root, source, runtime):
         if item['slot'] in ['currency','consumable','material']:continue
         by_source[link['source_item_id']]=(link,item)
     monsters={r['source_npc_id']:r for filename in ['reviewed_source_monsters.json','reviewed_source_additions.json'] for r in json.loads((root/'data/monsters'/filename).read_text())['records'] if r['import_enabled'] and r.get('catalog_only')}
+    source_npcs={row['fields']['npcid']:row for row in map(json.loads,(source/'source_npcs.jsonl').read_text().splitlines())}
     grouped={};holds=[];snapshots={}
+
     for line in (source/'source_drops.jsonl').read_text().splitlines():
         row=json.loads(line);raw=row['fields'];npc=raw['mobId']
         if npc not in monsters or raw['itemId'] not in by_source or npc=='45962':continue
         if raw['min']!=raw['max'] or raw['min']!='1' or raw['enchantlvl']!='0' or int(raw['chance'])<=0:continue
+        cells=re.findall(r"'([0-9]+)'",row['raw_sql_row'])
+        assert len(cells)==6 and raw==dict(zip(['mobId','itemId','min','max','chance','enchantlvl'],cells))
+        source_npc=source_npcs[npc]
+        assert monsters[npc]['source_raw_fields']==source_npc['fields']
+        assert identity(monsters[npc])['npc_sql_sha256']==source_npc['provenance']['tuple_sha256']
         link,item=by_source[raw['itemId']];proof=row['provenance']
         path=source/'source_snapshots'/proof['path']
         if path not in snapshots:
