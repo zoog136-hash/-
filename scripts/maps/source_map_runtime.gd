@@ -15,8 +15,7 @@ static var door_states: Dictionary={}
 static var gameplay_cache: Dictionary={}
 
 static func root_path() -> String:
-	var configured: String=OS.get_environment("TWILIGHT_SOURCE_MAP_PACK")
-	return configured.trim_suffix("/") if not configured.is_empty() else "user://source_maps_v3"
+	return preload("res://scripts/maps/source_map_pack_location.gd").root_path()
 
 static func policy() -> Dictionary:
 	return ART.read_object(POLICY_PATH).get("maps",{})

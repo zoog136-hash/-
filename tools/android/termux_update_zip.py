@@ -84,9 +84,10 @@ RUNTIME_SUFFIXES = frozenset((
     '.ogg', '.wav', '.mp3', '.flac', '.glb',
 ))
 # Map source PNGs alone exceed half a gigabyte and are NOT loaded by gameplay.
-# These four directories hold the actual runtime map packs.
+# Only these directories hold runtime map packs; source84 is installed privately.
 RUNTIME_MAP_PACKS = frozenset((
     'native_png_v5', 'aden_faith_png_v1', 'domination_png_v1', 'oman_png_v1',
+    'source84_v3',
 ))
 # Match the already audited Android export exclusions for offline map drafting.
 OFFLINE_DIRS = (
@@ -137,6 +138,8 @@ def is_runtime_path(path):
         return True
     if path == 'external_map_packs/.gdignore':
         return True  # Keep Godot from importing the manually streamed map packs.
+    if path.startswith('external_map_packs/source84_v3/') and path.endswith('.u8.gz'):
+        return True
     if not is_runtime_tree(path) or path in OFFLINE_FILES:
         return False
     if relative.name.endswith(('.bak', '.tmp', '.backup')):
