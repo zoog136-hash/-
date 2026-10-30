@@ -1162,13 +1162,20 @@
     },
     "lmref_888f5081be0803ab": {
       "phases": {
-        "cast": "SPR-U-9ba5139bd0f9a14c0e00",
+        "cast": "SPR-U-0a304d2c700b9bd56d54",
         "impact": "SPR-U-9ba5139bd0f9a14c0e00",
         "learn": "SPR-U-9ba5139bd0f9a14c0e00",
         "summon": "SPR-U-9ba5139bd0f9a14c0e00"
       },
       "event_policy": "real_gameplay_cast_hit_proc_learn",
-      "motif": "official_reference"
+      "motif": "official_reference",
+      "source_review": {
+        "group_id": "SPR-U-0a304d2c700b9bd56d54",
+        "record_key": "source1:Sprite.pak:52666",
+        "raw_sha256": "6ac67ad59b33cc2e6de93c2250037d0ae7286c52e7f807aaa114e40eb7160ce8",
+        "basis": "Red-white buff burst; cast only, no passive or repeated status animation.",
+        "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+      }
     },
     "lmref_c094ab3cf2916b1c": {
       "phases": {
@@ -1181,9 +1188,21 @@
       "motif": "official_reference"
     },
     "lmref_caf0662f0a311237": {
-      "inherits_visual": "lm_e8236ca60328dd0a",
       "comparison": "TWILIGHT analogous element/shape choice; not verified original LineageM animation",
-      "official_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95"
+      "official_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+      "phases": {
+        "travel": "SPR-U-2deb7d3b63bc06b8a0c2",
+        "impact": "SPR-U-34effde343e4a9ec99a4",
+        "learn": "SPR-U-2deb7d3b63bc06b8a0c2"
+      },
+      "prior_visual_id": "lm_e8236ca60328dd0a",
+      "source_review": {
+        "group_id": "SPR-U-34effde343e4a9ec99a4",
+        "record_key": "source1:Sprite.pak:18355",
+        "raw_sha256": "7cd97fb4ac68e5fb9f3981836103b6c7c313b66706a2c0d85d8f71357267d4e5",
+        "basis": "Area cloud with expanding blue-white particles; reject source2 model6012 numeral glyph.",
+        "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+      }
     },
     "lmref_8ab6990d2c20cb23": {
       "inherits_visual": "lm_4e78c9f1a828730a",
@@ -1196,19 +1215,54 @@
       "official_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95"
     },
     "lmref_47288d971dc34c8f": {
-      "inherits_visual": "lm_f4de23ba3ed83d50",
       "comparison": "TWILIGHT analogous element/shape choice; not verified original LineageM animation",
-      "official_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95"
+      "official_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+      "phases": {
+        "cast": "SPR-U-ed24b35595b54cd9074d",
+        "impact": "SPR-U-771b78afd681262d18b6",
+        "learn": "SPR-U-ed24b35595b54cd9074d"
+      },
+      "prior_visual_id": "lm_f4de23ba3ed83d50",
+      "source_review": {
+        "group_id": "SPR-U-771b78afd681262d18b6",
+        "record_key": "source1:Sprite15.pak:1145",
+        "raw_sha256": "faef47d9ed96feb9773d0883c9d46899f0a9ff51546894ba3ea577ebff93aa40",
+        "basis": "Vertical blue-white healing streak; existing heal event anchor.",
+        "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+      }
     },
     "lmref_5a032c311f007af0": {
-      "inherits_visual": "lm_0f78dd70d9994d34",
       "comparison": "TWILIGHT analogous element/shape choice; not verified original LineageM animation",
-      "official_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95"
+      "official_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+      "phases": {
+        "travel": "SPR-U-d54776c109e62d2443fa",
+        "impact": "SPR-U-e6613541742f31053f1b",
+        "learn": "SPR-U-d54776c109e62d2443fa"
+      },
+      "prior_visual_id": "lm_0f78dd70d9994d34",
+      "source_review": {
+        "group_id": "SPR-U-e6613541742f31053f1b",
+        "record_key": "source1:Sprite02.pak:1303",
+        "raw_sha256": "813ffab0ace098269649be58bd7c4ada1526e0e6c5da22a8d0488d4117bb5567",
+        "basis": "Cyan descending lightning; reject violet alternative as unselected variant.",
+        "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+      }
     },
     "lmref_fc3984b0815fc3c8": {
-      "inherits_visual": "lm_8a8cc8a1b79e85f5",
       "comparison": "TWILIGHT analogous element/shape choice; not verified original LineageM animation",
-      "official_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95"
+      "official_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC%20%EB%A7%88%EB%B2%95",
+      "phases": {
+        "impact": "SPR-U-bad097ccf03c78358d20",
+        "learn": "SPR-U-2c79867de24798ae66a2"
+      },
+      "prior_visual_id": "lm_8a8cc8a1b79e85f5",
+      "source_review": {
+        "group_id": "SPR-U-bad097ccf03c78358d20",
+        "record_key": "source1:Sprite.pak:18387",
+        "raw_sha256": "b4a51d755a171dac119e56d957d231beeb2afe364a39d518a2a8d14200de6ce2",
+        "basis": "Circular gold-white flare expanding then dissipating at existing impact point.",
+        "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing."
+      }
     },
     "lmref_64f77fcd9c52a02b": {
       "phases": {

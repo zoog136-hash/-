@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "policy": "Existing five active skills only. Visual substitute reviewed from exact source bytes; no claim of LineageM pixel or timing equivalence. Original blend fields remain uninterpreted. Combat markers/costs/damage/passives unchanged.",
+  "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing.",
+  "cases": [
+    {
+      "name": "프로즌 클라우드",
+      "skill_id": "lmref_caf0662f0a311237",
+      "group_id": "SPR-U-34effde343e4a9ec99a4",
+      "record_key": "source1:Sprite.pak:18355",
+      "raw_sha256": "7cd97fb4ac68e5fb9f3981836103b6c7c313b66706a2c0d85d8f71357267d4e5",
+      "model_id": 1804,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Area cloud with expanding blue-white particles; reject source2 model6012 numeral glyph.",
+      "atlas": "reviewed201_cast_1804_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-acf3be57d4e42c0bb410"
+      }
+    },
+    {
+      "name": "그레이터 힐",
+      "skill_id": "lmref_47288d971dc34c8f",
+      "group_id": "SPR-U-771b78afd681262d18b6",
+      "record_key": "source1:Sprite15.pak:1145",
+      "raw_sha256": "faef47d9ed96feb9773d0883c9d46899f0a9ff51546894ba3ea577ebff93aa40",
+      "model_id": 11724,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Vertical blue-white healing streak; existing heal event anchor.",
+      "atlas": "reviewed201_cast_11724_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-ed24b35595b54cd9074d"
+      }
+    },
+    {
+      "name": "콜 라이트닝",
+      "skill_id": "lmref_5a032c311f007af0",
+      "group_id": "SPR-U-e6613541742f31053f1b",
+      "record_key": "source1:Sprite02.pak:1303",
+      "raw_sha256": "813ffab0ace098269649be58bd7c4ada1526e0e6c5da22a8d0488d4117bb5567",
+      "model_id": 11736,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Cyan descending lightning; reject violet alternative as unselected variant.",
+      "atlas": "reviewed201_cast_11736_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-9479ea4ba63ced88f4dd"
+      }
+    },
+    {
+      "name": "선 버스트",
+      "skill_id": "lmref_fc3984b0815fc3c8",
+      "group_id": "SPR-U-bad097ccf03c78358d20",
+      "record_key": "source1:Sprite.pak:18387",
+      "raw_sha256": "b4a51d755a171dac119e56d957d231beeb2afe364a39d518a2a8d14200de6ce2",
+      "model_id": 1811,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Circular gold-white flare expanding then dissipating at existing impact point.",
+      "atlas": "reviewed201_cast_1811_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-2c79867de24798ae66a2"
+      }
+    },
+    {
+      "name": "버서커스",
+      "skill_id": "lmref_888f5081be0803ab",
+      "group_id": "SPR-U-0a304d2c700b9bd56d54",
+      "record_key": "source1:Sprite.pak:52666",
+      "raw_sha256": "6ac67ad59b33cc2e6de93c2250037d0ae7286c52e7f807aaa114e40eb7160ce8",
+      "model_id": 3943,
+      "phases": [
+        "cast"
+      ],
+      "fps": 12,
+      "motif_review": "Red-white buff burst; cast only, no passive or repeated status animation.",
+      "atlas": "reviewed201_cast_3943_source1.png",
+      "previous_phases": {
+        "cast": "SPR-U-9ba5139bd0f9a14c0e00"
+      }
+    }
+  ]
+}
