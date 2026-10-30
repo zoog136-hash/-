@@ -11,6 +11,20 @@ const HOLY_WATER_EXP: int = 3864874
 # This is a TWILIGHT balance table, NOT a claimed official Lineage M XP table.
 # v2: about 3x faster than Lineage M in kills per level (blessing 4x).
 # Existing saved progress is migrated by fractional progress, not reset.
+# Hunting-ground EXP bonus by map family (user balance request, 2026-10-31).
+# Applies to the monster's EXP where it is killed; blessing use stays on base EXP.
+const MAP_EXP_MULTIPLIERS: Dictionary = {
+	"oman_": 5.0,       # 오만의 탑 1~10층
+	"domination": 20.0, # 지배의 탑
+	"escaros": 20.0,    # 에스카로스 (escaros_01~05, escaros_world)
+}
+
+static func map_exp_multiplier(map_id: String) -> float:
+	for prefix: String in MAP_EXP_MULTIPLIERS:
+		if map_id.begins_with(prefix):
+			return float(MAP_EXP_MULTIPLIERS[prefix])
+	return 1.0
+
 static func table_requirement(level: int) -> int:
 	if level < 1 or not FileAccess.file_exists(DATA_PATH):
 		return -1

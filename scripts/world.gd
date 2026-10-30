@@ -2571,7 +2571,8 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var exp_rate: float = ain_service.experience_rate()
 	var adena_rate: float = ain_service.adena_rate()
 	var item_adena_rate: float = 1.0 + clampf(_equipped_numeric_sum("adena_drop_pct"), 0.0, 500.0) / 100.0
-	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate)))
+	var map_rate: float = EXP_PROGRESSION.map_exp_multiplier(_kill_map_id())
+	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate * map_rate)))
 	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
 	gold += gained_adena
@@ -2597,6 +2598,13 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		_refresh_combat_hud()
 		_update_ain_hud()
 	call_deferred("_ensure_monster_count")
+
+func _kill_map_id() -> String:
+	if field_map != null:
+		var mid: String = str(field_map.data.get("map_id", ""))
+		if not mid.is_empty():
+			return mid
+	return active_map_id
 
 func recycle_monster(monster: TwilightMonster) -> bool:
 	return field_population!=null and field_population.recycle(monster)
