@@ -29,6 +29,7 @@ func _init() -> void:
 			"hp":spec.get("hp_cost",spec.get("hp")),"cooldown":spec.get("cooldown_seconds"),
 			"duration":spec.get("duration_seconds",spec.get("duration")),"book_cost":null,"book_name":null,
 			"historical_aliases":row.get("historical_aliases",[]),"official":spec.duplicate(true),"historical":row.historical.duplicate(true),
+			"visual_reference_name":row.get("visual_reference_name",""),"visual_matching_basis":row.get("visual_matching_basis",""),
 			"class_observations":row.get("class_observations",[]),"missing_runtime_fields":row.get("missing_runtime_fields",[]),"icon":str(visual.get("icons",{}).get(current_name,"")),"desc":str(spec.get("effect_summary",row.historical.get("effect_summary","")))}
 		var design: Dictionary = local_design.get("records",{}).get(id,{})
 		if not design.is_empty():
@@ -89,12 +90,14 @@ static func detail_text(row: Dictionary) -> String:
 	if spec.has("on_proc_materials"):
 		material_text += "\n발동 재료: "
 		for item: Dictionary in spec.on_proc_materials: material_text += str(item.name) + " " + str(item.count) + "개 "
+	var preview_note: String = ""
+	if not str(row.get("visual_reference_name","")).is_empty(): preview_note = "\n유사 효과 프리뷰: " + str(row.visual_reference_name) + " · 원작 외형/전투 동작 미검증"
 	var aliases: Array = row.historical_aliases
 	var duration: String = value_text(row.duration, "초") if row.duration is int or row.duration is float else value_text(row.duration)
 	var weapons: Variant = spec.get("weapon_requirements")
 	var weapon_text := "미확인" if weapons == null else " · ".join(weapons)
 	var prerequisite := str(spec.get("requires_skill", "미확인"))
-	return ("[font_size=20]%s[/font_size]\n%s · %s · %s\n2026 현재 공식 자료 · 실행 보류\n%s\n\n습득 레벨 %s\nMP %s / HP %s\n재료 %s\n지속 %s / 재사용 %s\n대상 %s\n이전 명칭 %s\n\n%s\n\n공식 출처: %s" % [str(row.name),str(row.get("display_class"," · ".join(row.get("classes",[row["class"]])))),str(row.grade) + (" (TWILIGHT)" if row.get("design_provenance",{}).get("grade",{}).get("status","") in ["local_design","existing_shared_policy"] else ""),mode_label(row),str(row.desc),value_text(row.minimum_level),value_text(row.mp),value_text(row.hp),material_text,duration,value_text(row.cooldown,"초"),str(spec.get("target","미확인"))," · ".join(aliases) if not aliases.is_empty() else "없음",blocked_reason(row),str(spec.get("source_url",""))]) + "\n사용 무기 " + weapon_text + "\n선행 스킬 " + prerequisite + class_facts
+	return ("[font_size=20]%s[/font_size]\n%s · %s · %s\n2026 현재 공식 자료 · 실행 보류\n%s\n\n습득 레벨 %s\nMP %s / HP %s\n재료 %s\n지속 %s / 재사용 %s\n대상 %s\n이전 명칭 %s\n\n%s\n\n공식 출처: %s" % [str(row.name),str(row.get("display_class"," · ".join(row.get("classes",[row["class"]])))),str(row.grade) + (" (TWILIGHT)" if row.get("design_provenance",{}).get("grade",{}).get("status","") in ["local_design","existing_shared_policy"] else ""),mode_label(row),str(row.desc),value_text(row.minimum_level),value_text(row.mp),value_text(row.hp),material_text,duration,value_text(row.cooldown,"초"),str(spec.get("target","미확인"))," · ".join(aliases) if not aliases.is_empty() else "없음",blocked_reason(row),str(spec.get("source_url",""))]) + "\n사용 무기 " + weapon_text + "\n선행 스킬 " + prerequisite + class_facts + preview_note
 
 static func runtime_text(row: Dictionary) -> String:
 	var source: Dictionary = row.official

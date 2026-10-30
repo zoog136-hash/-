@@ -9,6 +9,39 @@ def norm(value): return re.sub(r'\s+', '', value).replace('디스인티그레이
 SHARED_REVIEW = {(cls,name) for cls,names in {
     "요정":["블레스드 아머","턴 언데드","프로즌 클라우드","파이어 볼","콘 오브 콜드","그레이터 힐","콜 라이트닝","선 버스트"],
     "신성검사":["블레스드 아머","턴 언데드","프로즌 클라우드"]}.items() for name in names}
+# Explicit semantic review of the observed official descriptions. This grants
+# preview art only; no numeric, targeting, proc, or skill ownership inheritance.
+PREVIEW_REVIEW = {
+    '프라임 소드':('엑스칼리버','projected sword'),
+    '임페리얼 아머':('실드','self protection'),
+    '임페리얼 배리어':('앱솔루트 배리어','temporary protection'),
+    '블레이드 스턴':('쇼크 스턴','stun impact'),
+    '엘리멘탈 큐어':('힐','self recovery'),
+    '엘리멘탈 실드':('실드','damage protection'),
+    '엘리멘탈 스턴':('쇼크 스턴','stun impact'),
+    '버닝 웨폰':('파이어스톰','fire motif only; not the original weapon animation'),
+    '플레임 소드':('파이어스톰','fire motif only; not the original sword animation'),
+    '네이쳐스 블레싱':('힐','health recovery'),
+    '어스 실드':('아이언 스킨','self protection'),
+    '리무브 커스':('큐어 포이즌','cleansing motif; not identical debuff rules'),
+    '힐 올':('힐','health recovery; not a party-target implementation'),
+    '캔슬레이션':('큐어 포이즌','status removal motif only'),
+    '다크스타':('미티어 스트라이크','falling meteor motif; not the original dark-star art'),
+    '쉐도우 스턴':('다크 스턴','stun impact; movement not implemented'),
+    '이머전시 케어':('힐','self recovery'),
+    '브레스 스턴':('쇼크 스턴','stun impact; chain combo not implemented'),
+    '다크 미러':('카운터 배리어','reflection/protection motif'),
+    '매직 미러':('카운터 배리어','reflection/protection motif'),
+    '세인트 그레이스':('힐','self recovery'),
+    '파워 블러드':('블러드 러스트','blood motif only; life steal not implemented'),
+    '골든 플레이트':('실드','temporary armor motif; charge not implemented'),
+    '데스 스턴':('다크 스턴','stun impact; death-heal not implemented'),
+    '룬 스트라이크':('룬 스턴','rune stun motif'),
+    '샌드 스톰':('이럽션','ground burst motif only; not original sand art'),
+    '라이트닝 블로우':('썬더 볼트','lightning motif only'),
+    '썬더 플릭':('썬더 볼트','lightning motif only'),
+}
+
 def build(source):
     guides=json.loads(source.read_text())['guides']
     master=json.loads((ROOT/'data/skills/master.json').read_text())['records']
@@ -58,6 +91,23 @@ def build(source):
             'current_official':official,'historical':{'source_url':row['source_url'],'existence_verified':True},
             'classification':row['status'],'implementation_gate':'Reference only; do not synthesize combat effects or values.',
             'missing_runtime_fields':['피해·회복·확률·강화 계수와 발동 조건','공개되지 않은 재사용·습득 규칙']})
+    for reference in references:
+        review=PREVIEW_REVIEW.get(reference['name'])
+        if not review:continue
+        base=existing[norm(review[0])]
+        reference['visual_reference_id']=base['id']
+        reference['visual_reference_name']=base['name']
+        reference['visual_matching_basis']='Official description semantic review: '+review[1]+'. TWILIGHT similar preview only; original animation/behavior unverified.'
+        reference['visual_review_source']=reference['current_official']['source_url']
+    by_name={norm(row['name']):row for row in references}
+    for reference in references:
+        if reference['visual_reference_id'] or reference['classification']!='missing_enhancement':continue
+        base_key=norm(re.split(r'\(|Lv\d',reference['name'])[0])
+        base=by_name.get(base_key)
+        if base and base is not reference and base['visual_reference_id']:
+            reference['visual_reference_id']='lmref_'+hashlib.sha256((base['class']+':'+base['name']).encode()).hexdigest()[:16]
+            reference['visual_reference_name']=base['name']
+            reference['visual_matching_basis']='Reviewed base-skill preview only; enhancement art and behavior unverified.'
     output={'schema':1,'scope':'Observed official guide pages, not a claim of a complete live-service roster.',
         'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'class_count':len(guides),
         'observations':observations,'aliases':aliases,'references':references,'counts':dict(collections.Counter(r['status'] for r in observations))}
