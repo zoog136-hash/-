@@ -15,6 +15,9 @@ func invariant(world: Node) -> String:
 func refined_idle_contract(frames: SpriteFrames, key: String, played_tracks: Dictionary, played_poses: Dictionary) -> void:
 	var manifest_path: String=frames.resource_path.get_base_dir().get_base_dir().path_join("source-provenance.json")
 	var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
+	if str(manifest.get("revision",""))=="production_hit_boundary_r001":
+		refined_hit_boundary_contract(frames,key,manifest,played_tracks,played_poses)
+		return
 	check(manifest.actors.has(key),"Refined source provenance contains the actual actor "+key)
 	if not manifest.actors.has(key):return
 	var spec: Dictionary=manifest.actors[key]
@@ -72,6 +75,39 @@ func refined_idle_contract(frames: SpriteFrames, key: String, played_tracks: Dic
 		var south: Dictionary=frames.get_meta("twilight_new_S_death_source")
 		check(int(south.selected_picture_row)==2 and int(south.production_death_directions)==1 and int(south.selected_pose_slots)==6,"Only actual South death row selected; no eight-death completion claim")
 	report.cases.append({"id":key,"default_frames":frames.resource_path,"restored_idle_clips":existing.size(),"new_camera_idle_clips":new_sources.size(),"selected_native_idle_source_poses":restored_poses,"remaining_guard_alias_clips":guards.size(),"authored_source_poses":authored_poses,"runtime_timeline_references":runtime_refs})
+
+func refined_hit_boundary_contract(frames: SpriteFrames, key: String, proof: Dictionary, played_tracks: Dictionary, played_poses: Dictionary) -> void:
+	# The approved IDLE contract is inherited unchanged; only one documented
+	# non-IDLE Atlas boundary differs from that immutable reviewed revision.
+	check(key=="283" and frames.resource_path==str(proof.selected_resource) and FileAccess.get_sha256(frames.resource_path)==str(proof.selected_sha256),"Exact selected one-Atlas boundary revision and source pin")
+	var prior: SpriteFrames=load(str(proof.prior_resource))
+	check(prior!=null and FileAccess.get_sha256(str(proof.prior_resource))==str(proof.prior_sha256),"Immutable reviewed IDLE revision remains SHA-pinned")
+	if prior==null:return
+	check(str(proof.inherited_idle_provenance)==prior.resource_path.get_base_dir().get_base_dir().path_join("source-provenance.json"),"Explicit preserved IDLE provenance inheritance")
+	check(FileAccess.get_sha256(str(proof.source))==str(proof.source_sha256) and int(proof.source_images_modified_or_created)==0 and int(proof.new_authored_poses_or_clips)==0,"Original source bytes; no new pose or pixel edits")
+	check(frames.get_animation_names()==prior.get_animation_names() and frames.get_meta_list()==prior.get_meta_list(),"All original tracks and metadata keys retained")
+	for meta: StringName in prior.get_meta_list():
+		check(frames.get_meta(meta)==prior.get_meta(meta),"Original registration, approved IDLE source metadata and clocks retained "+str(meta))
+	var changed:=0
+	for clip: String in prior.get_animation_names():
+		check(frames.get_frame_count(clip)==prior.get_frame_count(clip) and frames.get_animation_speed(clip)==prior.get_animation_speed(clip) and frames.get_animation_loop(clip)==prior.get_animation_loop(clip),"Every existing count/FPS/loop unchanged "+clip)
+		for phase in range(prior.get_frame_count(clip)):
+			var current: AtlasTexture=frames.get_frame_texture(clip,phase) as AtlasTexture
+			var old: AtlasTexture=prior.get_frame_texture(clip,phase) as AtlasTexture
+			check(current!=null and old!=null and current.atlas.resource_path==old.atlas.resource_path and current.filter_clip==old.filter_clip and frames.get_frame_duration(clip,phase)==prior.get_frame_duration(clip,phase),"Every original source/filter/phase duration retained "+clip)
+			if clip=="hit_0" and phase==2:
+				changed+=1
+				check(old.region==Rect2(362,3,181,177) and old.margin==Rect2() and current.region==Rect2(374,19,194,160) and current.margin==Rect2(12,16,-13,17),"Only the exact positively-owned phase2 staff/body rectangle replaces the prior neighbor fragment")
+				check(current.get_size()==old.get_size() and current.get_size()==Vector2(181,177) and current.margin.position-current.region.position==old.margin.position-old.region.position,"Negative margin preserves exact virtual canvas and source-to-body/foot translation")
+			else:
+				check(current.region==old.region and current.margin==old.margin,"Every other Atlas, including all approved IDLE views, remains exact "+clip+"/"+str(phase))
+	check(changed==1,"Exactly one allowed Atlas boundary change")
+	# Keep every pre-existing approved IDLE source/count/clock assertion active.
+	refined_idle_contract(prior,key,played_tracks,played_poses)
+	if not report.cases.is_empty():
+		report.cases.back()["default_frames"]=frames.resource_path
+		report.cases.back()["inherited_idle_resource"]=prior.resource_path
+		report.cases.back()["changed_non_idle_atlases"]=changed
 
 func refined_run_layout_contract(frames: SpriteFrames, key: String, played_tracks: Dictionary, played_poses: Dictionary) -> void:
 	var metadata: Dictionary=frames.get_meta("twilight_run_source_layout_refinement")

@@ -1,0 +1,196 @@
+{
+  "revision": "production_hit_boundary_r001",
+  "actor_id": "283",
+  "selected_resource": "res://assets/actors/eight_direction/refined_production_20261030/production_hit_boundary_r001/mythic_283/SpriteFrames.tres",
+  "selected_sha256": "19a1976571d6e78f7c7d71bdf00c483654eb99e1c5e60fdc7bfc0b592986952a",
+  "prior_resource": "res://assets/actors/eight_direction/refined_production_20261030/production_r004/mythic_283/SpriteFrames.tres",
+  "prior_sha256": "e4625d480c36dc2924498604b0f5605d3e34e99839bf9ba1006d17561305e6de",
+  "source": "res://assets/actors/eight_direction/native_production/mythic_283/draft_sources_r164/hit-e4573852a261.png",
+  "source_sha256": "e4573852a2610f639303bb3c0efd7556e7c9a81da897692a35828a94e3fd30f4",
+  "clip": "hit_0",
+  "phase": 2,
+  "source_images_modified_or_created": 0,
+  "new_authored_poses_or_clips": 0,
+  "old_region": [
+    362,
+    3,
+    181,
+    177
+  ],
+  "old_margin": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "region": [
+    374,
+    19,
+    194,
+    160
+  ],
+  "margin": [
+    12,
+    16,
+    -13,
+    17
+  ],
+  "unchanged_virtual_size": [
+    181,
+    177
+  ],
+  "unchanged_source_to_canvas_translation": [
+    -362,
+    -3
+  ],
+  "ownership_evidence": {
+    "analysis_core_alpha": 32,
+    "analysis_positive_alpha": 1,
+    "own_core_component": 6,
+    "own_positive_alpha_component": 15,
+    "own_whole_positive_RGBA_bbox": [
+      374,
+      19,
+      568,
+      179
+    ],
+    "preserved_own_positive_RGBA_pixels": 17934,
+    "recovered_own_positive_RGBA_pixels": 1216,
+    "excluded_prior_phase1_core_component": 1,
+    "excluded_neighbor_core_pixels": 426,
+    "remaining_neighbor_halo_pixels": 52,
+    "remaining_neighbor_halo_max_alpha": 6,
+    "all_RGBA_neighbor_exclusion_claimed": false,
+    "neighbor_owner": "Prior phase1 staff connected through its grip/body in the whole unmodified source",
+    "own_owner": "Selected phase2 complete staff connected to its own grip/body; independent positive-alpha component"
+  },
+  "all_other_track_frames_and_metadata_byte_identical": true,
+  "all_animation_clocks_markers_unchanged": true,
+  "approved_IDLE8_byte_identical": true,
+  "registration_anchors_offsets_scales_unchanged": true,
+  "formal_art_approval": false,
+  "runtime_validation": {
+    "status": "PASS_SCOPED_ONE_ATLAS_BOUNDARY",
+    "actual_Main": {
+      "elapsed_seconds": 52.51,
+      "process_exit_code": 0,
+      "engine_errors": 0,
+      "HIT_original_phases": 6,
+      "unchanged_authority_attack_marker_controls": 1,
+      "old_source_C": [
+        452.5,
+        175
+      ],
+      "new_source_C": [
+        452.5,
+        175
+      ],
+      "unchanged_actual_scale": [
+        0.675,
+        0.75
+      ],
+      "unchanged_actual_offset": [
+        0,
+        -83.5
+      ],
+      "unchanged_sprite_position": [
+        0,
+        0
+      ],
+      "process": {
+        "local_QA_path": "/tmp/animation-refinement-qa/hit-boundary-283/main-run/process.json",
+        "sha256": "0f14ce5676a21b07ac3298eeac55a1c73a1e5b5e2cf92262204d0b6269098edb",
+        "bytes": 400,
+        "runtime_dependency": false
+      },
+      "observations": {
+        "local_QA_path": "/tmp/animation-refinement-qa/hit-boundary-283/main-run/report.json",
+        "sha256": "17840af45c1a8fc42669c337301335e1996167d4335f9c6549a6bd2de617bf3d",
+        "bytes": 5646,
+        "runtime_dependency": false
+      }
+    },
+    "native_selected_subset": {
+      "actors": 1,
+      "resources": 1,
+      "decoded_refs": 196,
+      "source_PNGs": 9,
+      "source_byte_edits": 0,
+      "source_import_caches_reused": 9,
+      "new_source_imports": 0,
+      "all_four_stage_exit_codes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_four_stage_engine_error_counts": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "empty_consumer_only_pack": true,
+      "raw_source_fallback": false,
+      "process": {
+        "local_QA_path": "/tmp/animation-refinement-qa/hit-boundary-283/native/process.json",
+        "sha256": "76c0ec905f6cfc5aa59ff0e903df9f0444db27e57fd6d25ece374f3714d7ac11",
+        "bytes": 418,
+        "runtime_dependency": false
+      },
+      "before": {
+        "local_QA_path": "/tmp/animation-refinement-qa/hit-boundary-283/native/native-before.json",
+        "sha256": "2f03f74fcd1a9f64ef3a29426667a00ef9bc80f2adb79f4c2ff00018707fc757",
+        "bytes": 4986,
+        "runtime_dependency": false
+      },
+      "packed": {
+        "local_QA_path": "/tmp/animation-refinement-qa/hit-boundary-283/native/native-packed.json",
+        "sha256": "2f03f74fcd1a9f64ef3a29426667a00ef9bc80f2adb79f4c2ff00018707fc757",
+        "bytes": 4986,
+        "runtime_dependency": false
+      },
+      "pack": {
+        "bytes": 16256808,
+        "sha256": "fbbb056dd5d73c73aa94bd3bab2ffa7f41be41f11acb3496c12c03edd7aa43d4",
+        "before_packed_results_exact": true,
+        "empty_consumer_no_source_fallback": true,
+        "native_texture_refs": 196,
+        "actors": 1,
+        "only_selected_resource_subset_not_app_export": true
+      }
+    },
+    "durable_contract": {
+      "script": "res://tests/pr158_mythic_default_batch.gd",
+      "script_sha256": "7f234c8cb63671ad66049ffdf2033feb9cb4b5b7a95bb65a18c4edd1a42584ce",
+      "headless_exit_code": 0,
+      "engine_errors": 0,
+      "existing_approved_IDLE_source_count_and_clock_assertions_preserved": true,
+      "current_refs": 196,
+      "local_log": {
+        "local_QA_path": "/tmp/animation-refinement-qa/hit-boundary-283/contract-run/godot.log",
+        "sha256": "64c164c5ae8554d40645578c20190035080a3de4a6ec7eb904f3af6fe25445a6",
+        "bytes": 4936,
+        "runtime_dependency": false
+      }
+    },
+    "visual_review": "Parent reviewed actual HIT6/ATK control and phase2 viewport; own body/staff/root preserved and prior floating staff removed. Other HIT phases are unchanged and do retain neighbor fragments.",
+    "formal_art_approval": false,
+    "whole_clip_clean_claimed": false,
+    "whole_app_or_APK_export_claimed": false
+  },
+  "inherited_idle_provenance": "res://assets/actors/eight_direction/refined_production_20261030/production_r004/source-provenance.json",
+  "unchanged_remaining_HIT_boundary_debt": {
+    "phases": [
+      3,
+      4,
+      5
+    ],
+    "action": "Preserved: minimum complete positive-alpha ownership rectangles still include other figure cores; no safe whole-owned rectangle with zero foreign core. No masking, threshold changes or ownership guesses.",
+    "minimum_rect_foreign_core_pixels": [
+      12,
+      228,
+      442
+    ]
+  }
+}
