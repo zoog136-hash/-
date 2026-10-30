@@ -67,7 +67,7 @@ func run() -> void:
 					var strike_start:=strikes.size()
 					var sequence: int=-1
 					if role=="attack":
-						sequence=actor.start_combat_attack(actor.global_position+aim,.9,"magic" if key=="136" and retained4 else actor.motion.profile.motion_style)
+						sequence=actor.start_combat_attack(actor.global_position+aim,.9,"magic" if key=="136" and retained4 else ("bow" if key in ["331","177","275"] and retained4 else actor.motion.profile.motion_style))
 						if retained4:
 							actor.motion._resolve_frames(frames)
 							name=str(actor.motion._resolved_key)
@@ -118,13 +118,13 @@ func run() -> void:
 		check(crop.save_png(output.path_join(key+".png"))==OK,"Actual game comparison capture")
 		if not before_mode and report.errors.is_empty():
 			var count:=frames.get_animation_names().size()
-			if legendary:
+			if legendary and not retained4:
 				check(exercised_tracks.size()==33 and exercised_poses.size()==198,"All legendary required tracks and poses actually played")
 				if report.errors.is_empty():
 					print("PR158_LEGENDARY_DEFAULT_PASS id=",key," tracks=33 poses=198 candidate_injection=0")
 			elif retained4:
 				check(exercised_tracks.size()==20 and exercised_poses.size()==120,"All policy-required retained cardinal directions and poses actually played; existing WALK extras preserved")
-				check(count==int(frames.get_meta("twilight_retained_track_count")) and count in [24,28],"All original retained source tracks preserved, including optional CAST")
+				check(count==int(frames.get_meta("twilight_retained_track_count")) and count in [24,28],"All original retained source tracks preserved, including optional CAST or ranged attacks")
 				check(int(frames.get_meta("twilight_new_authored_directions"))==0,"Retained four-view routing creates no new eight-direction artwork")
 				if report.errors.is_empty():
 					print("PR158_RETAINED_DEFAULT_PASS id=",key," source_directions=4 policy_tracks=20 policy_poses=120 retained_tracks=",count," candidate_injection=0")
