@@ -69,11 +69,16 @@ func configure(controller: Node, value: PlayableField) -> void:
 		if not bool(record.get("catalog_only", false)): records[str(record.name)] = record
 		elif preload("res://scripts/monsters/monster_catalog.gd").reviewed_record_allowed(record):reviewed[str(record.get("sourceId",""))]=record
 	# Catalog-only identities opt in through an exact verified source region.
+	var admitted: Array[Dictionary] = []
 	for region: Dictionary in field.data["monster_spawn"]:
 		if region.has("source_game_id"):
 			var source:Dictionary=reviewed.get(str(region.source_game_id),{})
 			if source.is_empty() or str(source.get("source_npc_id",""))!=str(region.source_npc_id) or region.monster_types!=[str(source.name)]:continue
 			records[str(source.name)]=source
+		admitted.append(region)
+	# Start background frame loads before the first (boss) spawns below.
+	_prefetch_region_frames()
+	for region: Dictionary in admitted:
 		for index: int in range(int(region["max_count"])):
 			var slot: Dictionary = {"region":region,"index":index,"slot_id":slots.size(),"monster":null,"remaining":0.0,"has_spawned":false}
 			slots.append(slot)
@@ -84,6 +89,26 @@ func configure(controller: Node, value: PlayableField) -> void:
 					pending_initial_spawns.append(slot)
 					pending_spawn_ids[int(slot.slot_id)]=true
 				else:_spawn_slot(slot)
+
+## Start background loads of this map's monster frames, nearest regions first,
+## so a first spawn (or a boss respawn) does not load its sheet on the frame.
+func _prefetch_region_frames() -> void:
+	var catalog = preload("res://scripts/animation/animation_catalog.gd")
+	catalog.reset_prefetch()
+	var regions: Array = (field.data["monster_spawn"] as Array).duplicate()
+	var origin: Vector2 = world.player.global_position
+	var center_distance := func(region: Dictionary) -> float:
+		var a: Array = region.rect
+		return Vector2(float(a[0])+float(a[2])*.5,float(a[1])+float(a[3])*.5).distance_squared_to(origin)
+	regions.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return center_distance.call(a) < center_distance.call(b))
+	var seen: Dictionary = {}
+	for region: Dictionary in regions:
+		for name_value: Variant in region.get("monster_types", []):
+			if seen.has(str(name_value)): continue
+			seen[str(name_value)] = true
+			var record: Dictionary = records.get(str(name_value), {})
+			if record.is_empty(): continue
+			catalog.prefetch(catalog.for_record("monster", record).frames_path)
 
 func _source_visible(point:Vector2) -> bool:
 	var camera:Camera2D=world.player.camera
@@ -389,6 +414,7 @@ func import_state(value: Variant) -> void:
 
 func _process(delta: float) -> void:
 	if field==null: return
+	preload("res://scripts/animation/animation_catalog.gd").poll_prefetch()
 	boss_director.tick(delta)
 	_drain_initial_spawns()
 	wake_clock -= delta
