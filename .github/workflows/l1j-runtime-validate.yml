@@ -236,6 +236,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Free runner disk space
+        uses: ./.github/actions/free-runner-disk
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -284,6 +286,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build
+          df -h . /tmp | sed 's/^/DISK_BEFORE_EXPORT /'
           engine/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug Android build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk > android-export.log 2>&1
           if grep -E 'SCRIPT ERROR:|ERROR:' android-export.log; then exit 1; fi
           python3 tools/l1j/inspect_apk.py --apk build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk --bindings data/l1j/live_visual_bindings.json | tee android-inspection.json
