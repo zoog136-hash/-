@@ -40,7 +40,44 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     steps:
+      - name: Free runner disk space
+        # The ~38 GB checkout, Godot import and PNG captures run close to the
+        # hosted runner's disk limit ("No space left on device" seen on
+        # batches-4). These jobs use no .NET, Android SDK, Haskell or CodeQL.
+        shell: bash
+        run: |
+          echo "::notice title=Disk before cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -)"
+          # Nothing below is used by these jobs (system python3, Godot binary).
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft \
+            /opt/google /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium /usr/local/lib/node_modules || true
+          sudo docker image prune --all --force >/dev/null 2>&1 || true
+          # The checkout (working tree + its pack) alone now nears the root
+          # disk. Hosted runners also mount a separate temporary disk at /mnt;
+          # put the workspace there when it has more room than /.
+          root_free=$(df --output=avail -B1G / | tail -n 1 | tr -d ' ')
+          mnt_free=$(df --output=avail -B1G /mnt 2>/dev/null | tail -n 1 | tr -d ' ' || echo 0)
+          if [ "${mnt_free:-0}" -gt "${root_free:-0}" ] && [ -z "$(ls -A "$GITHUB_WORKSPACE")" ]; then
+            sudo mkdir -p /mnt/twilight-workspace
+            sudo chown "$(id -u):$(id -g)" /mnt/twilight-workspace
+            cd /
+            rmdir "$GITHUB_WORKSPACE"
+            ln -s /mnt/twilight-workspace "$GITHUB_WORKSPACE"
+            echo "Workspace moved to /mnt (${mnt_free} GB free vs ${root_free} GB on /)"
+          fi
+          df -h / /mnt || true
+          echo "::notice title=Disk after cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -) workspace=$(readlink -f "$GITHUB_WORKSPACE")"
       - uses: actions/checkout@v4
+        with:
+          # docs/ is ~22 GB of review evidence; with its pack it overflows the
+          # runner disk. Check out everything else, then add referenced docs.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
+      - name: Add referenced docs files to the sparse checkout
+        run: python3 tools/ci_sparse_docs.py --root .
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
@@ -60,7 +97,8 @@ jobs:
         shell: bash
         # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
         # restores every *.import from an older main; put tracked ones back.
-        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
+        # Only entries present in the sparse checkout (ls-files -t "H").
+        run: git -c core.quotePath=false ls-files -t -- '*.import' | sed -n 's/^H //p' | tr '\n' '\0' | xargs -0 -r git checkout --
       - name: Verify existing resource ledger
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned Godot and software GL
@@ -77,16 +115,18 @@ jobs:
           export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
           mkdir -p test-results
+          # On failure, annotate the most recent test log (job logs are not always reachable).
+          trap 'status=$?; if [ "$status" -ne 0 ]; then last=$(ls -t test-results/*.txt 2>/dev/null | head -n 1); [ -n "$last" ] && bash tools/ci_failure_annotation.sh "Presentation failed" "$last"; fi' EXIT
           "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/presentation-import.txt
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt | head -n 10 | sed 's/^/::error title=Godot import::/'; exit 1; fi
           python3 tests/animation_expansion_plan_test.py 2>&1 | tee test-results/animation-expansion-plan.txt
-          python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
-          python3 tests/eight_direction_coverage_audit_test.py
-          python3 tests/original_based_motion_import_test.py
-          python3 tests/test_original_based_pose_files.py
-          python3 tests/test_original_based_direction_canvases.py
-          python3 tests/original_based_identity_link_test.py
-          python3 tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage
+          python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3' 2>&1 | tee test-results/pip-install.txt
+          # Each Python check keeps its own log so a failure can be annotated.
+          for check_script in tests/eight_direction_coverage_audit_test.py tests/original_based_motion_import_test.py \
+              tests/test_original_based_pose_files.py tests/test_original_based_direction_canvases.py tests/original_based_identity_link_test.py; do
+            python3 "$check_script" 2>&1 | tee "test-results/$(basename "$check_script" .py).txt"
+          done
+          python3 tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage 2>&1 | tee test-results/audit-eight-direction-coverage.txt
           for name in eight_direction_animation_test native_animation_expansion_test original_based_canvas_test; do
             "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "test-results/${name}.txt"; then exit 1; fi
@@ -111,6 +151,8 @@ jobs:
           set -euo pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
           export LIBGL_ALWAYS_SOFTWARE=1
+          # On failure, annotate the most recent test log (job logs are not always reachable).
+          trap 'status=$?; if [ "$status" -ne 0 ]; then last=$(ls -t test-results/*.txt 2>/dev/null | head -n 1); [ -n "$last" ] && bash tools/ci_failure_annotation.sh "Presentation failed" "$last"; fi' EXIT
           for name in capture_presentation_gallery capture_presentation_sequences capture_combat benchmark_presentation_battles; do
             args=()
             if [ "$name" = benchmark_presentation_battles ]; then args=(-- --legacy-aden-faith-layouts); fi
@@ -235,7 +277,44 @@ jobs:
               snowman|original_based_snowman_gameplay_test||poses
               yeti|original_based_yeti_gameplay_test||poses
     steps:
+      - name: Free runner disk space
+        # The ~38 GB checkout, Godot import and PNG captures run close to the
+        # hosted runner's disk limit ("No space left on device" seen on
+        # batches-4). These jobs use no .NET, Android SDK, Haskell or CodeQL.
+        shell: bash
+        run: |
+          echo "::notice title=Disk before cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -)"
+          # Nothing below is used by these jobs (system python3, Godot binary).
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft \
+            /opt/google /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium /usr/local/lib/node_modules || true
+          sudo docker image prune --all --force >/dev/null 2>&1 || true
+          # The checkout (working tree + its pack) alone now nears the root
+          # disk. Hosted runners also mount a separate temporary disk at /mnt;
+          # put the workspace there when it has more room than /.
+          root_free=$(df --output=avail -B1G / | tail -n 1 | tr -d ' ')
+          mnt_free=$(df --output=avail -B1G /mnt 2>/dev/null | tail -n 1 | tr -d ' ' || echo 0)
+          if [ "${mnt_free:-0}" -gt "${root_free:-0}" ] && [ -z "$(ls -A "$GITHUB_WORKSPACE")" ]; then
+            sudo mkdir -p /mnt/twilight-workspace
+            sudo chown "$(id -u):$(id -g)" /mnt/twilight-workspace
+            cd /
+            rmdir "$GITHUB_WORKSPACE"
+            ln -s /mnt/twilight-workspace "$GITHUB_WORKSPACE"
+            echo "Workspace moved to /mnt (${mnt_free} GB free vs ${root_free} GB on /)"
+          fi
+          df -h / /mnt || true
+          echo "::notice title=Disk after cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -) workspace=$(readlink -f "$GITHUB_WORKSPACE")"
       - uses: actions/checkout@v4
+        with:
+          # docs/ is ~22 GB of review evidence; with its pack it overflows the
+          # runner disk. Check out everything else, then add referenced docs.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
+      - name: Add referenced docs files to the sparse checkout
+        run: python3 tools/ci_sparse_docs.py --root .
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
@@ -255,7 +334,8 @@ jobs:
         shell: bash
         # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
         # restores every *.import from an older main; put tracked ones back.
-        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
+        # Only entries present in the sparse checkout (ls-files -t "H").
+        run: git -c core.quotePath=false ls-files -t -- '*.import' | sed -n 's/^H //p' | tr '\n' '\0' | xargs -0 -r git checkout --
       - name: Verify existing resource ledger
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned Godot and software GL
@@ -300,6 +380,7 @@ jobs:
             if ! run_case "$label" "$script" "$subject" "$capture_mode" "${case_timeout:-$ORIGINAL_CASE_TIMEOUT}"; then
               failed+=("$label")
               echo "::error title=Original-based case failed::$label"
+              bash tools/ci_failure_annotation.sh "Case $label" "test-results/${label}-headless.txt" "test-results/${label}-render.txt"
             fi
           done <<< "$ORIGINAL_CASES"
           echo "ORIGINAL_BASED_CASES_RUN=$ran FAILED=${#failed[@]}"
@@ -356,7 +437,44 @@ jobs:
       TWILIGHT_PR100_BATCH_ISOLATED: '1'
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
+      - name: Free runner disk space
+        # The ~38 GB checkout, Godot import and PNG captures run close to the
+        # hosted runner's disk limit ("No space left on device" seen on
+        # batches-4). These jobs use no .NET, Android SDK, Haskell or CodeQL.
+        shell: bash
+        run: |
+          echo "::notice title=Disk before cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -)"
+          # Nothing below is used by these jobs (system python3, Godot binary).
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft \
+            /opt/google /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium /usr/local/lib/node_modules || true
+          sudo docker image prune --all --force >/dev/null 2>&1 || true
+          # The checkout (working tree + its pack) alone now nears the root
+          # disk. Hosted runners also mount a separate temporary disk at /mnt;
+          # put the workspace there when it has more room than /.
+          root_free=$(df --output=avail -B1G / | tail -n 1 | tr -d ' ')
+          mnt_free=$(df --output=avail -B1G /mnt 2>/dev/null | tail -n 1 | tr -d ' ' || echo 0)
+          if [ "${mnt_free:-0}" -gt "${root_free:-0}" ] && [ -z "$(ls -A "$GITHUB_WORKSPACE")" ]; then
+            sudo mkdir -p /mnt/twilight-workspace
+            sudo chown "$(id -u):$(id -g)" /mnt/twilight-workspace
+            cd /
+            rmdir "$GITHUB_WORKSPACE"
+            ln -s /mnt/twilight-workspace "$GITHUB_WORKSPACE"
+            echo "Workspace moved to /mnt (${mnt_free} GB free vs ${root_free} GB on /)"
+          fi
+          df -h / /mnt || true
+          echo "::notice title=Disk after cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -) workspace=$(readlink -f "$GITHUB_WORKSPACE")"
       - uses: actions/checkout@v4
+        with:
+          # docs/ is ~22 GB of review evidence; with its pack it overflows the
+          # runner disk. Check out everything else, then add referenced docs.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
+      - name: Add referenced docs files to the sparse checkout
+        run: python3 tools/ci_sparse_docs.py --root .
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
@@ -376,7 +494,8 @@ jobs:
         shell: bash
         # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
         # restores every *.import from an older main; put tracked ones back.
-        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
+        # Only entries present in the sparse checkout (ls-files -t "H").
+        run: git -c core.quotePath=false ls-files -t -- '*.import' | sed -n 's/^H //p' | tr '\n' '\0' | xargs -0 -r git checkout --
       - name: Verify existing resource ledger
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned Godot and software GL
@@ -429,9 +548,11 @@ jobs:
             export TWILIGHT_PR100_BATCH_CONFIG="$config"
             if ! run_mode "$batch" headless "$script" "$marker" "$limit"; then
               failed+=("batch${batch}-headless"); echo "::error title=Original-based batch failed::batch${batch} headless"
+              bash tools/ci_failure_annotation.sh "Batch ${batch} headless" "test-results/batch${batch}/headless.txt"
             fi
             if ! run_mode "$batch" render "$script" "$marker" "$render_limit"; then
               failed+=("batch${batch}-render"); echo "::error title=Original-based batch failed::batch${batch} render"
+              bash tools/ci_failure_annotation.sh "Batch ${batch} render" "test-results/batch${batch}/render.txt"
             fi
           done <<< "$BATCHES"
           echo "ORIGINAL_BATCHES_RUN=$ran FAILED=${#failed[@]}"

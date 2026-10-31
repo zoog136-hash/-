@@ -17,6 +17,13 @@ static var frame_cache_bytes: int = 0
 static var failed_frames: Dictionary = {}
 ## Tests that deliberately build a broken set turn the engine error off.
 static var report_missing_frames: bool = true
+## Background SpriteFrames loads for the current map. A boss/monster sheet
+## loaded on first spawn blocks the main thread (hundreds of ms on Android);
+## requesting it on map entry moves that work to a loader thread.
+const MAX_PREFETCH = 24
+static var prefetch_pending: Dictionary = {}
+static var prefetch_wanted: Dictionary = {}
+static var prefetched: Dictionary = {}
 
 static func for_record(kind: String, record: Dictionary, resource: String = "") -> TwilightAnimationProfile:
 	if records.is_empty():
@@ -98,7 +105,8 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 			failed_frames[path] = true
 			if report_missing_frames:push_error("SpriteFrames %s references missing %s; using fallback visuals" % [path, missing])
 			return result
-		var authored: SpriteFrames = load(path) as SpriteFrames
+		var authored: SpriteFrames = _take_prefetched(path)
+		if authored == null: authored = load(path) as SpriteFrames
 		if authored != null:
 			_cache_frames(key, authored)
 			return authored
@@ -133,6 +141,54 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 	result.set_meta("twilight_generated_sheet", true)
 	_cache_frames(key, result)
 	return result
+
+## Queue a background load of an authored SpriteFrames set. Broken sets are
+## rejected with the same dependency check frames() uses, so they never load.
+static func prefetch(path: String) -> void:
+	if path.is_empty() or not (path.get_extension() in ["tres", "res"]): return
+	if prefetch_wanted.size() >= MAX_PREFETCH or prefetch_wanted.has(path): return
+	if failed_frames.has(path) or prefetched.has(path): return
+	for key: String in frame_cache:
+		if key.begins_with(path + ":"): return
+	if not ResourceLoader.exists(path) or ResourceLoader.has_cached(path): return
+	if not _missing_dependency(path).is_empty(): return
+	prefetch_wanted[path] = true
+	if prefetch_pending.has(path): return
+	if ResourceLoader.load_threaded_request(path, "SpriteFrames") == OK:
+		prefetch_pending[path] = true
+
+## Collect finished background loads without blocking. Results for a map the
+## player already left are dropped instead of being retained.
+static func poll_prefetch() -> void:
+	if prefetch_pending.is_empty(): return
+	for path: String in prefetch_pending.keys():
+		var status: ResourceLoader.ThreadLoadStatus = ResourceLoader.load_threaded_get_status(path)
+		if status == ResourceLoader.THREAD_LOAD_IN_PROGRESS: continue
+		prefetch_pending.erase(path)
+		if status != ResourceLoader.THREAD_LOAD_LOADED: continue
+		var loaded: SpriteFrames = ResourceLoader.load_threaded_get(path) as SpriteFrames
+		if loaded != null and prefetch_wanted.has(path): prefetched[path] = loaded
+
+static func _take_prefetched(path: String) -> SpriteFrames:
+	if prefetched.has(path):
+		var ready: SpriteFrames = prefetched[path]
+		prefetched.erase(path)
+		return ready
+	if prefetch_pending.has(path):
+		# Only take a finished load. load_threaded_get() on an unfinished one
+		# waits and flushes queued calls, which failed add_child() during scene
+		# setup (Main boot). The caller then uses its normal load().
+		if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_LOADED:
+			prefetch_pending.erase(path)
+			return ResourceLoader.load_threaded_get(path) as SpriteFrames
+		prefetch_wanted.erase(path)
+	return null
+
+## Forget the previous map's prefetch set (called on map change).
+static func reset_prefetch() -> void:
+	poll_prefetch()
+	prefetch_wanted.clear()
+	prefetched.clear()
 
 static func _missing_dependency(path: String) -> String:
 	for raw: String in ResourceLoader.get_dependencies(path):

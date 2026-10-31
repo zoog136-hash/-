@@ -318,7 +318,14 @@ func _physics_process(delta: float) -> void:
 		return
 	var previous: Vector2 = global_position
 	decision_elapsed += delta
-	if ai.is_empty() or decision_elapsed>=.032:
+	var on_screen: bool = get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin)
+	# Off-screen actors that are only roaming re-decide at 5 Hz; anything
+	# engaged, returning, casting, status-affected or a boss keeps 30 Hz.
+	var decision_interval: float = .032
+	if not on_screen and not is_boss and not motion.active and aggro_remaining <= 0.0 and not returning_home \
+			and not is_stunned() and not is_held() and not is_feared() and poison_remaining <= 0.0 and bleed_remaining <= 0.0:
+		decision_interval = .2
+	if ai.is_empty() or decision_elapsed>=decision_interval:
 		_tick_ai(decision_elapsed)
 		decision_elapsed = 0.
 	elif not motion.active and not is_stunned() and not is_held():
@@ -334,7 +341,7 @@ func _physics_process(delta: float) -> void:
 	# frame can persist across a live telegraph (notably NW). Ordinary remote
 	# mobs retain their previous offscreen animation budget.
 	var boss_telegraph: bool = is_boss and is_instance_valid(species_visual) and species_visual.warning_active
-	if boss_telegraph or get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
+	if boss_telegraph or on_screen or get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
 		motion.apply(sprite, animation_base_scale)
 		if is_instance_valid(species_visual): species_visual.update_pose()
 	animation_state = motion.state
