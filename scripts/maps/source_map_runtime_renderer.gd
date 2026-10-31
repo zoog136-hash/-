@@ -12,6 +12,8 @@ var texture_store: Node
 var held_keys: Dictionary={}
 var initial_view: bool=true
 var waiting_for_visible: bool=false
+# Visible chunk index -> store key whose texture is still being prepared.
+var pending_visible: Dictionary={}
 
 func configure(value: PlayableField, actor: Node2D) -> void:
 	field=value;source=value as OriginalPlayableField;player=actor
@@ -42,6 +44,7 @@ func refresh_visible() -> void:
 			remove_child(chunks[i]);chunks[i].queue_free();chunks.erase(i)
 	var next_keys: Dictionary={}
 	waiting_for_visible=false
+	pending_visible.clear()
 	for i: int in needed:
 		if i>=4096:failure="Map exceeds safe ground draw-order range";push_error(failure);return
 		var row: Dictionary=needed[i]
@@ -54,14 +57,9 @@ func refresh_visible() -> void:
 			failure=texture_store.problem(key)
 			if not failure.is_empty():push_error(failure);return
 			waiting_for_visible=true
+			pending_visible[i]=key
 			continue
-		var sprite:=Sprite2D.new()
-		sprite.centered=false;sprite.texture=texture;sprite.position=Vector2(row.position[0],row.position[1])
-		sprite.material=pixel_material
-		# Preserve the original chunk painter order, entirely below actor z=0.
-		# Starting at -30 hid the player on maps with high chunk IDs.
-		sprite.z_index=-4096+i
-		add_child(sprite);chunks[i]=sprite
+		_add_chunk_sprite(i,row,texture)
 	# These ring requests only enqueue preparation. The shared store admits
 	# bounded worker jobs and uploads their completed Images on the scene thread.
 	var prefetched: int=0
@@ -83,11 +81,37 @@ func refresh_visible() -> void:
 	_refresh_markers()
 	if source is RemakePlayableField and is_instance_valid(source.collision_stream):source.collision_stream.refresh()
 
+func _add_chunk_sprite(i: int,row: Dictionary,texture: Texture2D) -> void:
+	var sprite:=Sprite2D.new()
+	sprite.centered=false;sprite.texture=texture;sprite.position=Vector2(row.position[0],row.position[1])
+	sprite.material=pixel_material
+	# Preserve the original chunk painter order, entirely below actor z=0.
+	# Starting at -30 hid the player on maps with high chunk IDs.
+	sprite.z_index=-4096+i
+	add_child(sprite);chunks[i]=sprite
+
+## Attach visible chunks whose textures finished since the last refresh. Only
+## the pending entries are checked; the full view/marker/collision refresh
+## keeps its 0.25 s cadence instead of running every frame while one decodes.
+func _attach_ready_visible() -> void:
+	for i: int in pending_visible.keys():
+		var key: String=pending_visible[i]
+		var texture: Texture2D=texture_store.texture(key)
+		if texture==null:
+			failure=texture_store.problem(key)
+			if not failure.is_empty():push_error(failure);pending_visible.erase(i)
+			continue
+		pending_visible.erase(i)
+		if not chunks.has(i):_add_chunk_sprite(i,record.chunks[i],texture)
+	waiting_for_visible=not pending_visible.is_empty()
+
 func _process(delta: float) -> void:
 	stream_clock-=delta
-	if stream_clock<=0 or waiting_for_visible:
+	if stream_clock<=0:
 		stream_clock=0.25
 		refresh_visible()
+	elif waiting_for_visible:
+		_attach_ready_visible()
 
 func _exit_tree() -> void:
 	for sprite: Sprite2D in chunks.values():sprite.texture=null

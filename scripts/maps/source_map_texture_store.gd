@@ -20,6 +20,8 @@ var evictions: int=0
 var initial_uploads: int=0
 var largest_upload_usec: int=0
 var max_decode_jobs: int=0
+# path -> [sha256, byte length, mtime] of the last successful SHA-256 check.
+var verified_files: Dictionary={}
 
 func _init() -> void:
 	process_priority=-100
@@ -32,9 +34,16 @@ class DecodeJob extends RefCounted:
 	var elapsed: int=0
 	var decoded: bool=false
 	var task: int=-1
+	var stamp: Array=[]
+	func _stamp() -> Array:
+		var file: FileAccess=FileAccess.open(path,FileAccess.READ)
+		return [] if file==null else [file.get_length(),FileAccess.get_modified_time(path)]
 	func run() -> void:
 		var begun: int=Time.get_ticks_usec()
+		var before: Array=_stamp()
 		var bytes: PackedByteArray=FileAccess.get_file_as_bytes(path)
+		# Remember the size/mtime only if the file was stable around the read.
+		if not before.is_empty() and before==_stamp():stamp=before
 		var digest:=HashingContext.new()
 		digest.start(HashingContext.HASH_SHA256)
 		if not bytes.is_empty():digest.update(bytes)
@@ -77,7 +86,14 @@ func request(root_path: String,row: Dictionary,owner: Object,blocking: bool=fals
 		var current: Dictionary=entries[key]
 		# A new placement/map lease revalidates the requested file even if the
 		# texture is already resident. Live leases match the old one-load policy.
-		if not current.validated.has(lease) and FileAccess.get_sha256(path)!=str(row.sha256):return ""
+		# While walking, a chunk re-entering view hashed its whole multi-MB WebP
+		# on the scene thread. A streaming (non-blocking) lease reuses the last
+		# SHA-256 verification while the file's size and mtime are unchanged;
+		# blocking/map-entry requests still hash the bytes.
+		if not current.validated.has(lease):
+			if blocking or not _verified_unchanged(path,str(row.sha256)):
+				if FileAccess.get_sha256(path)!=str(row.sha256):return ""
+				_remember_verified(path,str(row.sha256))
 	else:
 		entries[key]={"path":path,"row":row.duplicate(true),"owners":{},"validated":{},"texture":null,"job":null,"bytes":0,"idle":0,"problem":""}
 	var entry: Dictionary=entries[key]
@@ -94,6 +110,20 @@ func request(root_path: String,row: Dictionary,owner: Object,blocking: bool=fals
 			_start(entry)
 		if _finish(key,entry):initial_uploads+=1
 	return key
+
+func _file_stamp(path: String) -> Array:
+	var file: FileAccess=FileAccess.open(path,FileAccess.READ)
+	if file==null:return []
+	return [file.get_length(),FileAccess.get_modified_time(path)]
+
+func _remember_verified(path: String,sha256: String) -> void:
+	var stamp: Array=_file_stamp(path)
+	if not stamp.is_empty():verified_files[path]=[sha256]+stamp
+
+func _verified_unchanged(path: String,sha256: String) -> bool:
+	var known: Array=verified_files.get(path,[])
+	if known.is_empty() or str(known[0])!=sha256:return false
+	return _file_stamp(path)==known.slice(1)
 
 func texture(key: String) -> Texture2D:
 	return entries.get(key,{}).get("texture") as Texture2D
@@ -138,6 +168,8 @@ func _finish(key: String,entry: Dictionary) -> bool:
 	if entry.owners.is_empty():entries.erase(key);return false
 	entry.problem=job.problem
 	if job.image==null:return false
+	# The worker hashed exactly these bytes, with a stable size/mtime.
+	if not job.stamp.is_empty():verified_files[entry.path]=[str(entry.row.sha256)]+job.stamp
 	var begun: int=Time.get_ticks_usec()
 	entry.bytes=job.image.get_data_size()
 	entry.texture=ImageTexture.create_from_image(job.image)
