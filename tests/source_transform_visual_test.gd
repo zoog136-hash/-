@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const SOURCE = preload("res://scripts/animation/source_transform_catalog.gd")
@@ -62,7 +63,7 @@ func _run() -> void:
 						var track: String = role + "_" + str(facing)
 						check(frames.get_frame_count(track) == source_frames.get_frame_count(track), key + " reused sequence " + track)
 						for index: int in range(frames.get_frame_count(track)):
-							check(frames.get_frame_texture(track,index).get_image().get_data() == source_frames.get_frame_texture(track,index).get_image().get_data(), key + " reused frame pixels " + track)
+							check(TexturePixels.image_of(frames.get_frame_texture(track,index)).get_data() == TexturePixels.image_of(source_frames.get_frame_texture(track,index)).get_data(), key + " reused frame pixels " + track)
 							check(frames.get_frame_duration(track,index) == source_frames.get_frame_duration(track,index), key + " reused frame timing " + track)
 	check(count == reviewed.size() and count >= 8, "all individually reviewed connections")
 	SOURCE.entries = reviewed

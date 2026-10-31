@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 
 # Read-only registry/load audit. It never adds the world to the tree, boots a
 # scene, writes a save, installs a source pack, or claims a visual playtest.
@@ -22,7 +23,7 @@ func _texture_info(texture: Texture2D) -> Dictionary:
 
 func _pixel_digest(texture: Texture2D) -> String:
 	if texture == null: return ""
-	var pixels: Image = texture.get_image()
+	var pixels: Image = TexturePixels.image_of(texture)
 	if pixels == null: return ""
 	pixels.convert(Image.FORMAT_RGBA8)
 	var hashing := HashingContext.new()

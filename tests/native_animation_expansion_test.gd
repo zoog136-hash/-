@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 
 ## Exercise the production resources and timeline, including mixed track lengths
 ## and live actors whose appearance is evicted from the lookup cache.
@@ -85,7 +86,7 @@ func run() -> void:
 					var texture: Texture2D = frames.get_frame_texture(track,index)
 					check(texture!=null and texture.get_size()==Vector2(256,256),"stable virtual canvas "+track)
 					if texture==null: continue
-					var pixels := texture.get_image()
+					var pixels := TexturePixels.image_of(texture)
 					check(not pixels.is_invisible(),"no empty playback frame "+path+track)
 					var hash := HashingContext.new()
 					hash.start(HashingContext.HASH_SHA256);hash.update(pixels.get_data())
@@ -112,7 +113,7 @@ func run() -> void:
 	check(CATALOG.frame_cache_bytes<=CATALOG.MAX_FRAME_CACHE_BYTES,"decoded lookup cache stays within budget")
 	if total_cost>CATALOG.MAX_FRAME_CACHE_BYTES:
 		check(not CATALOG.frame_cache.has(retained_key),"old lookup entry evicted after many appearances")
-	check(retained.sprite_frames!=null and not retained.sprite_frames.get_frame_texture("idle_0",0).get_image().is_invisible(),"eviction retains live actor artwork")
+	check(retained.sprite_frames!=null and not TexturePixels.image_of(retained.sprite_frames.get_frame_texture("idle_0",0)).is_invisible(),"eviction retains live actor artwork")
 	retained.free()
 	print("NATIVE_EXPANSION_RESULT "+JSON.stringify({"assertions":assertions,"failures":failures,"bindings":bindings,"profile_overrides":overrides,"shared_outfits":resources.size(),"distinct_rgba_frames_global":global_pixels.size(),"lookup_cache_bytes":CATALOG.frame_cache_bytes}))
 	quit(0 if failures.is_empty() else 1)

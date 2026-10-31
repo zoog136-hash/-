@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 
 const Profile = preload("res://scripts/animation/animation_profile.gd")
 const Motion = preload("res://scripts/animation/actor_motion.gd")
@@ -38,7 +39,7 @@ func _frame(texture: Texture2D, index: int, duration: float) -> Dictionary:
 	row["atlas_levels"] = levels
 	row["source_path"] = source.resource_path
 	if levels.size() > 1:
-		var image: Image = texture.get_image()
+		var image: Image = TexturePixels.image_of(texture)
 		row["nested_render_alpha_empty"] = image == null or image.is_invisible()
 	return row
 

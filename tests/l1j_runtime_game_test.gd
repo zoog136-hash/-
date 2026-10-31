@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 ## Real Main.tscn flow. Private bundle = original art; CI fixture = synthetic art.
 const ASSETS = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
 const THEME = preload("res://scripts/ui/renewal_theme.gd")
@@ -133,7 +134,7 @@ func _run() -> void:
 		var texture: Texture2D = world._monster_texture(monster_record)
 		if FileAccess.file_exists(str(binding.texture)):
 			check(texture.resource_path == str(binding.texture), "source monster image " + str(binding.game_name))
-			var pixels: Image = texture.get_image()
+			var pixels: Image = TexturePixels.image_of(texture)
 			if not bool(bindings.get("synthetic_fixture_only",false)):
 				check(pixels.get_pixel(0,0).a == 0.0, "portrait border is transparent in every spawn path")
 		var actor: TwilightMonster = world.MONSTER_SCENE.instantiate()
