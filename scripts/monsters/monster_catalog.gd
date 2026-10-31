@@ -5,7 +5,7 @@ const CATALOG_PATH = "res://data/monsters/monster_world_catalog.json"
 const SPAWN_PATH = "res://data/monsters/world_spawn_profiles.json"
 const REVIEWED_PATH = "res://data/monsters/reviewed_source_monsters.json"
 const ADDITIONS_PATH = "res://data/monsters/reviewed_source_additions.json"
-const VERIFIED_GAP_IDS = ["45082", "45131", "45143", "45191", "45379", "45405", "45464"]
+const VERIFIED_GAP_IDS = ["45082", "45131", "45143", "45191", "45379", "45405", "45464", "45130", "45309", "45171", "45649", "45604", "45256", "45360", "45577", "45607", "45608", "45963", "46013", "46014", "45995", "45032", "45898", "45899", "45165", "45035", "45402", "45403", "45487", "45724", "45732", "45733", "45890", "45920", "45922", "45924", "45925", "45933", "45934", "45938", "45939", "45485", "45945", "45948"]
 const LOCAL_NAMED_V2_IDS = ["45777", "45504", "45588", "45602", "45612", "45574", "45646", "45539", "45615", "45671", "45413", "45625", "45685", "45675", "45585", "45548", "45955", "45956", "45957", "45958", "45959", "45960", "45961", "45962", "45166", "45153", "45681", "45682", "45683", "45684", "46025", "46026", "46037", "81163", "97068", "45941", "45943"]
 const RELAYOUT = preload("res://scripts/monsters/renewed_map_spawns.gd")
 # These dedicated field encounters were added by the renewed placement layer.

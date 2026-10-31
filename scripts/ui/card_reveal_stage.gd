@@ -89,7 +89,7 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 		var card: Control = CARD.new()
 		card.extra_lightning_seconds=0.0 if fusion else CARD.DRAW_EXTRA_LIGHTNING_SECONDS
 		card.reduced_motion = reduced_motion
-		card.detail_scale = minf(detail_scale,.6) if not fusion and (OS.has_feature("mobile") or results.size()>5) else detail_scale
+		card.detail_scale = minf(detail_scale,.6) if (not fusion or results.size() > 1) and (OS.has_feature("mobile") or results.size()>5) else detail_scale
 		card.intensity_scale = intensity_scale
 		card.show_grade_heading = showcase
 		card.waiting_for_press = manual_reveal
@@ -98,7 +98,11 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 		card.open_at = 0.65 if showcase or fusion or results.size() == 1 else 0.45+i*0.16
 		card.reel_seconds = 3.0 if high else 0.65
 		board.add_child(card)
-		card.configure(results[i],candidate_textures,category)
+		# Each card spins its own order, so revealing all at once never shows
+		# the same candidate sequence on every card.
+		var own_candidates: Array[Texture2D] = candidate_textures.duplicate()
+		own_candidates.shuffle()
+		card.configure(results[i],own_candidates,category)
 		card.reveal_requested.connect(_reveal_card.bind(i))
 		cards.append(card)
 	duration = (6.8 if fusion else 8.0+CARD.DRAW_EXTRA_LIGHTNING_SECONDS)+CARD.CONFIRM_DELAY_SECONDS-CARD.LIGHTNING_EARLY_SECONDS
@@ -178,12 +182,16 @@ func _fit() -> void:
 func seek(value: float) -> void:
 	clock = clampf(value,0,duration)
 	for card: Control in cards:
-		card.seek(clock,fusion and upgrade)
+		card.seek(clock,fusion and _card_upgraded(card))
 	var complete: bool = _all_revealed()
 	if showcase:
 		result_note.text = "청색 · 적색 · 보라 · 금빛 · 에메랄드\n연출 비교 전용 · 카드 보상 없음"
 	elif complete:
 		result_note.text = "승급 성공" if fusion and upgrade else "합성 결과" if fusion else "카드를 획득했습니다"
+		if fusion and results.size() > 1:
+			var promoted: int = results.filter(func(entry: Dictionary) -> bool: return bool(entry.get("fusion_success", false)) and not bool(entry.get("pity_reward", false))).size()
+			var attempts: int = results.filter(func(entry: Dictionary) -> bool: return not bool(entry.get("pity_reward", false))).size()
+			result_note.text = "합성 %d회 · 승급 성공 %d회" % [attempts, promoted]
 		if results.size() > 1 and bool(results.back().get("pity_reward",false)):
 			result_note.text += " · 별도 카드: 누적 실패 보상"
 	else:
@@ -210,8 +218,9 @@ func _process(delta: float) -> void:
 					sound_played[i] = true
 					sound_player.stream = IMPACT
 					sound_player.play()
-			if fusion and upgrade and not cards.is_empty():
-				var promotion_at: float = cards[0].promotion_at()
+			var promoted_card: Control = _first_upgraded_card()
+			if fusion and promoted_card != null:
+				var promotion_at: float = promoted_card.promotion_at()
 				if previous < promotion_at and clock >= promotion_at and not sound_played.has("promotion"):
 					sound_played["promotion"] = true
 					sound_player.stream = UPGRADE
@@ -229,7 +238,7 @@ func _draw() -> void:
 				continue
 			var elapsed: float = clock-card.lightning_at()
 			var power: float = PROFILES.pulse(card.grade,elapsed,card.extra_lightning_seconds)
-			if fusion and upgrade:
+			if fusion and _card_upgraded(card):
 				power += PROFILES.pulse(card.grade,clock-card.promotion_at())
 			if power > 0.03:
 				draw_rect(Rect2(Vector2.ZERO,size),Color(PROFILES.color(card.grade),minf(0.055,power*0.023*intensity_scale)))
@@ -240,6 +249,19 @@ func _refresh_transport() -> void:
 	if pause_button != null:
 		pause_button.text = "일시정지" if playing else "재생"
 		pause_button.disabled = clock >= duration or cards.all(func(card: Control) -> bool: return card.waiting_for_press)
+
+# A batch fusion carries a per-card result; a single fusion uses `upgrade`.
+func _card_upgraded(card: Control) -> bool:
+	var value: Variant = card.get("record")
+	if value is Dictionary and (value as Dictionary).has("fusion_success"):
+		return bool((value as Dictionary).get("fusion_success", false))
+	return upgrade
+
+func _first_upgraded_card() -> Control:
+	for card: Control in cards:
+		if _card_upgraded(card):
+			return card
+	return null
 
 func _all_revealed() -> bool:
 	return not cards.is_empty() and cards.all(func(card: Control) -> bool: return not card.waiting_for_press and clock >= card.reveal_at())

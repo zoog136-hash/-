@@ -25,6 +25,13 @@ func _init() -> void:
 			for id: String in local_data.get("records",{}):
 				visual_inherits[id] = str(local_data.records[id].comparison.id)
 
+	var roster: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/official_roster.json"))
+	for row: Dictionary in roster.get("references",[]):
+		var source: String = str(row.get("visual_reference_id",""))
+		if source.is_empty(): continue
+		var id: String = "lmref_" + (str(row["class"])+":"+str(row.name)).sha256_text().substr(0,16)
+		visual_inherits[id] = source
+
 func profile_for(id: String) -> Dictionary:
 	var visited: Dictionary = {}
 	while (profiles.has(id) or preview_profiles.has(id) or visual_inherits.has(id)) and not visited.has(id):

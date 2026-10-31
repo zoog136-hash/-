@@ -1,0 +1,138 @@
+{
+  "scope": "Two boss visual profiles select immutable SpriteFrames copies with three retained legacy ExtResource declarations relocated outside docs export exclusion. Active repaired attack pose sources and all geometry/timing remain unchanged.",
+  "export_exclude_match": "docs/*",
+  "actors": {
+    "monster:그림 리퍼": {
+      "prior_selected_frames": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed_parts_r001/SpriteFrames.tres",
+      "prior_frames_sha256": "06d20c91a6f41c09369ed1384548e5f8f64b3a1a3fd55160f5437f7fc327484e",
+      "selected_frames": "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/grim_reaper/SpriteFrames.tres",
+      "selected_sha256": "80b0377ffa64a63e312fa82691facefc4eb4d4c691c25952389d74102e036727",
+      "ExtResource_path_replacements": [
+        [
+          "res://docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/grim_reaper-N-attack.png",
+          "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/sources/grim_reaper-N-attack.png"
+        ]
+      ],
+      "all_other_tres_bytes_exact": true,
+      "regions_margins_scale_durations_FPS_loop_markers_unchanged": true
+    },
+    "monster:교만의 왕자 데우스": {
+      "prior_selected_frames": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed_parts_r009/SpriteFrames.tres",
+      "prior_frames_sha256": "a0792b9991be583d4e718dc810894bc08c53eff4058e8eaec67a10fcf4587e3d",
+      "selected_frames": "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/prince_deus/SpriteFrames.tres",
+      "selected_sha256": "fc3dd8eff38157758f9da0f9ba41d32c44cb4225013e898bda00f8481ea81dad",
+      "ExtResource_path_replacements": [
+        [
+          "res://docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/prince_deus-N-attack.png",
+          "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/sources/prince_deus-N-attack.png"
+        ],
+        [
+          "res://docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/prince_deus-NW-attack.png",
+          "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/sources/prince_deus-NW-attack.png"
+        ]
+      ],
+      "all_other_tres_bytes_exact": true,
+      "regions_margins_scale_durations_FPS_loop_markers_unchanged": true
+    }
+  },
+  "source_images": [
+    {
+      "original": "res://docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/grim_reaper-N-attack.png",
+      "asset": "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/sources/grim_reaper-N-attack.png",
+      "sha256": "6906a5b3e01455549eea666fd503c32c4a1339e00cc6c46bef6f8cda2353ea96",
+      "bytes": 2156360,
+      "method": "byte_exact_copy_cross_filesystem",
+      "selected_source_pixels_edited": false
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/prince_deus-N-attack.png",
+      "asset": "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/sources/prince_deus-N-attack.png",
+      "sha256": "f8de93a8a933235f46c60c3077226515bbf0b26c235dd935b9109d23980db8fe",
+      "bytes": 2513829,
+      "method": "byte_exact_copy_cross_filesystem",
+      "selected_source_pixels_edited": false
+    },
+    {
+      "original": "res://docs/remake/evidence/pr122-final-approval-20261025/source-repair-batch/prince_deus-NW-attack.png",
+      "asset": "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/sources/prince_deus-NW-attack.png",
+      "sha256": "4752035e182b83a83a2c2d1c6d24d24bfc72c7e443213924a80d6938232fa781",
+      "bytes": 2030080,
+      "method": "byte_exact_copy_cross_filesystem",
+      "selected_source_pixels_edited": false
+    }
+  ],
+  "source_image_count": 3,
+  "pixels_modified": 0,
+  "runtime_default_profile_fields_changed": 2,
+  "source_parent_tres_and_docs_preserved": true,
+  "historical_runtime_connections_ledger_unchanged": true,
+  "formal_art_approval_changed": false,
+  "copied_retained_declared_source_images": 3,
+  "active_attack_pose_sources_replaced": 0,
+  "actual_Main_observations": {
+    "original_run_exit_code": 1,
+    "functional_attack_cases_observed": 3,
+    "actual_attack_phases_observed": 18,
+    "attack_markers": 3,
+    "incorrect_fixture_assertion_count": 3,
+    "incorrect_fixture_expectation": "Expected legacy retained declarations to replace the active repaired attack atlas. Actual repaired sources correctly remain unchanged.",
+    "original_logs_preserved": true,
+    "new_Main_exit0_claimed": false,
+    "observations": [
+      {
+        "id": "monster:그림 리퍼",
+        "direction": 6,
+        "selected_resource": "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/grim_reaper/SpriteFrames.tres",
+        "active_attack_source": {
+          "atlas": "res://assets/actors/eight_direction/boss_draft_first/grim_reaper/reviewed_parts_r001/N-attack.png",
+          "sha256": "41c4e7265b58dd7717db5a24dc62de32d7ec8182263f9e05df95ab0a35276a8c"
+        },
+        "actual_phases": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "actual_marker_pass": true
+      },
+      {
+        "id": "monster:교만의 왕자 데우스",
+        "direction": 6,
+        "selected_resource": "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/prince_deus/SpriteFrames.tres",
+        "active_attack_source": {
+          "atlas": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed_parts_r009/N-attack.png",
+          "sha256": "4269ef17476f8b9bd5c52736529c110b0f5e962e12dbcb686a8638d207eb59c6"
+        },
+        "actual_phases": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "actual_marker_pass": true
+      },
+      {
+        "id": "monster:교만의 왕자 데우스",
+        "direction": 5,
+        "selected_resource": "res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/prince_deus/SpriteFrames.tres",
+        "active_attack_source": {
+          "atlas": "res://assets/actors/eight_direction/boss_draft_first/prince_deus/reviewed_parts_r009/NW-attack.png",
+          "sha256": "b439fdd4af587b88479bebf1a8497fba33c7a741966678209c351133ad55c82c"
+        },
+        "actual_phases": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "actual_marker_pass": true
+      }
+    ]
+  }
+}

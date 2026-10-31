@@ -13,7 +13,7 @@ func run() -> void:
 		quit(1)
 		return
 	var catalog: Dictionary = bridge.resource_catalog()
-	check(catalog.size() == 91, "all supplied unique SPR resources registered")
+	check(catalog.size() == 100, "91 original plus nine reviewed cast resources registered")
 	check(bridge.cache.is_empty(), "catalog listing must not preload textures")
 	var checked_frames: int = 0
 	for key: String in catalog:

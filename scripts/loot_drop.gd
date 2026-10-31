@@ -268,6 +268,7 @@ static func _pick_equipment_entry(grade: String, monster_drops: Array[String], c
 	if candidates.is_empty():
 		var reviewed: Dictionary = SOURCE3_REVIEWED.candidate(grade, by_name, monster_identity)
 		if not reviewed.is_empty(): candidates.append(reviewed)
+		else: candidates.append_array(SOURCE3_REVIEWED.EXTENSIONS.candidates(grade, by_name, monster_identity))
 	if candidates.is_empty():
 		return _missing(monster_name, grade)
 	var total_weight: int = 0

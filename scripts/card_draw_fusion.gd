@@ -231,6 +231,55 @@ func fuse(category: String, grade: String) -> Dictionary:
 		"pity_progress": int(counter.get(grade, 0))
 	}
 
+const MAX_FUSION_BATCH: int = 10
+
+## How many fusions of `grade` the current duplicates can pay for (capped at 10).
+func fusion_batch_limit(category: String, grade: String) -> int:
+	if not CATEGORIES.has(category) or not FUSION_MATERIALS.has(grade):
+		return 0
+	var required: int = int(FUSION_MATERIALS[grade])
+	if required <= 0:
+		return 0
+	return mini(MAX_FUSION_BATCH, spare_count(category, grade) / required)
+
+## Runs up to `times` independent fusions (max 10), like a multi-card draw.
+## Every fusion uses the same validated single-fusion path. It stops early
+## when the duplicates run out; it fails only if not even one fusion ran.
+func fuse_many(category: String, grade: String, times: int) -> Dictionary:
+	var wanted: int = clampi(times, 1, MAX_FUSION_BATCH)
+	var results: Array = []
+	var successes: int = 0
+	var consumed: int = 0
+	var last: Dictionary = {}
+	for _attempt: int in range(wanted):
+		var single: Dictionary = fuse(category, grade)
+		if not bool(single.get("ok", false)):
+			if results.is_empty():
+				return single
+			break
+		last = single
+		consumed += int(single.get("consumed", 0))
+		var succeeded: bool = bool(single.get("success", false))
+		if succeeded:
+			successes += 1
+		var awarded: Dictionary = (single.get("result", {}) as Dictionary).duplicate(true)
+		awarded["fusion_success"] = succeeded
+		results.append(awarded)
+		var bonus: Dictionary = single.get("pity_reward", {}) as Dictionary
+		if not bonus.is_empty():
+			var extra: Dictionary = bonus.duplicate(true)
+			extra["pity_reward"] = true
+			extra["fusion_success"] = true
+			results.append(extra)
+	return {
+		"ok": true, "category": category, "from_grade": grade,
+		"to_grade": str(FUSION_NEXT.get(grade, grade)), "batch": true,
+		"attempts": results.filter(func(entry: Dictionary) -> bool: return not bool(entry.get("pity_reward", false))).size(),
+		"success": successes > 0, "success_count": successes, "consumed": consumed,
+		"results": results, "result": last.get("result", {}), "pity_reward": {},
+		"pity_progress": int(last.get("pity_progress", 0))
+	}
+
 func export_state() -> Dictionary:
 	return {
 		"version": 1,

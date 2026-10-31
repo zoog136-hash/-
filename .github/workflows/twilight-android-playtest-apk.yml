@@ -37,6 +37,8 @@ jobs:
     steps:
       - name: Checkout isolated validated playtest
         uses: actions/checkout@v4
+      - name: Free runner disk space
+        uses: ./.github/actions/free-runner-disk
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Prove archived drafts are detached from exported gameplay
@@ -129,7 +131,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build
+          df -h . /tmp | sed 's/^/DISK_BEFORE_EXPORT /'
           timeout 3600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
+          grep -Fq "SOURCE84_RAW_EXPORT files=2140 bytes=2015563672" /tmp/export-android.txt || { echo "::error::Verified raw Source84 pack was not added to APK"; exit 1; }
           test -s build/TWILIGHT_ANDROID_PLAYTEST.apk
           unzip -tqq build/TWILIGHT_ANDROID_PLAYTEST.apk
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging build/TWILIGHT_ANDROID_PLAYTEST.apk | head -n 16
@@ -138,6 +142,9 @@ jobs:
           python3 tools/verify_android_animation_export.py --apk build/TWILIGHT_ANDROID_PLAYTEST.apk --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --android-sdk "$ANDROID_HOME" --output build/android-validation
           echo "TWILIGHT_ANDROID_APK_BUILD_OK"
           ls -lh build/TWILIGHT_ANDROID_PLAYTEST.apk
+      - name: Annotate failure cause
+        if: failure()
+        run: python3 tools/ci_annotate_failure.py --title "Android APK" /tmp/import-android.txt /tmp/export-android.txt build/android-validation/*.txt build/android-validation/*.log
       - name: Upload signed Android debug APK
         if: success()
         uses: actions/upload-artifact@v4

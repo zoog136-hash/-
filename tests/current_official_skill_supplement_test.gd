@@ -11,7 +11,7 @@ func run() -> void:
 	if not QA.enter_game(world):quit(1);return
 	world.set_process(false);world.player.set_auto_enabled(false);world.level=90;world.gold=10000000;world.max_mp=1000;world.mp=1000
 	var catalog:=world.original_skills.catalog
-	check(catalog.records.size()==144,"144 usable runtime skills")
+	check(catalog.records.filter(func(r):return not r.get("runtime_blocked",false)).size()==147,"147 usable runtime skills")
 	var master: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/master.json"))
 	var balance: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/balance.json"))
 	check(master.records.size()==125,"base master unchanged")
@@ -20,14 +20,17 @@ func run() -> void:
 		for key: String in balance.skills[str(old.id)]:check(record[key]==balance.skills[str(old.id)][key].value,"base125 balance "+str(old.id)+" "+key)
 	check(catalog.record_for("엘리멘탈 애로우").id==catalog.record_for("엘리멘탈 웨폰").id,"one stable renamed skill")
 	for record: Dictionary in catalog.current_official.records:
+		if record.runtime_blocked:
+			check(not catalog.owned(record) and not world.original_skills.ready(record),"unconfirmed reference cannot execute")
+			continue
 		check(not record.runtime_blocked and record.local_design,"all registered supplements enabled local design")
-		check(record.official.get("cooldown_seconds")==null and record.design_provenance.cooldown.status=="local_design","official unknown and runtime design remain separate")
+		check(record.official.get("cooldown_seconds")==null and record.design_provenance.cooldown.status in ["local_design","existing_shared_policy"],"official unknown and runtime design remain separate")
 		if record.activation=="active":check(record.mp>0 and record.cooldown>0,"active casts have real costs and cooldowns")
 	world.job_class="기사";world.equipped_items={"weapon":{"name":"검증 양손검","type":"양손검","slot":"weapon"}}
 	world._update_hud();world.hud.open_skills()
 	for i: int in range(2):await process_frame
 	var view: Node=world.hud.skills_view;view.search.text="프라이드";view.refresh()
-	check(view.records.size()==144 and view.filtered.size()==1,"real UI contains exactly144")
+	check(view.records.size()==catalog.records.size() and view.filtered.size()==1,"real UI contains complete registered roster")
 	view.book_button.pressed.emit();check(not view.learn_button.disabled,"UI book purchase enables learning")
 	view.learn_button.pressed.emit();check(catalog.owned(view.selected),"UI actual learning")
 	world.inventory["명예 코인"]=8;world.skill_global_cooldown=0;world.skill_cooldowns.clear();view.select(0)
@@ -47,4 +50,4 @@ func run() -> void:
 	vfx.emit_skill(str(catalog.record_for("프라이드").id),"impact",world.player.global_position)
 	check(not vfx.live.is_empty() and vfx.live[0].get("layers")!=null,"new twelve retain committed authored visual fallback without private SPR pack")
 	world.queue_free();await process_frame
-	print("CURRENT_OFFICIAL_RUNTIME_UI_RESULT ",JSON.stringify({"checks":checks,"failures":errors,"usable":144}));quit(0 if errors.is_empty() else 1)
+	print("CURRENT_OFFICIAL_RUNTIME_UI_RESULT ",JSON.stringify({"checks":checks,"failures":errors,"usable":147}));quit(0 if errors.is_empty() else 1)

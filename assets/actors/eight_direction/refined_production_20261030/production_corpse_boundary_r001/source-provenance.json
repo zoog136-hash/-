@@ -1,0 +1,1103 @@
+{
+  "revision": "production_corpse_boundary_r001",
+  "scope": "South death phase5 plus upper-row owner exclusion in phases3/4 of242/189/139(shared138)/411 only",
+  "actors": 7,
+  "unique_resources": 6,
+  "source_images_created_or_modified": 0,
+  "geometry_rule": "Trim region top, increase margin.position.y and margin.size.y by exactly the trim. Virtual size and source-to-canvas translation unchanged.",
+  "formal_art_approval": false,
+  "all_low_alpha_halo_ownership_or_losslessness_claimed": false,
+  "runtime_validation": {
+    "initial_terminal_only_Main": {
+      "actors": 7,
+      "captured_panels": 49,
+      "report_errors": 0,
+      "engine_RESULT": 0,
+      "host_process_exit_receipt": "Unavailable after session replacement; no duplicate run performed"
+    },
+    "followup_phase3_4_Main": {
+      "actors": 5,
+      "captured_panels": 35,
+      "returncode": 0,
+      "engine_errors": 0,
+      "elapsed_seconds": 58.12,
+      "actual_default_South_death_six_phases_and_two_second_terminal_hold": true,
+      "attack_authority_marker_and_gameplay_invariants_unchanged": true
+    },
+    "native_empty_consumer": {
+      "initial_terminal_only_actors": 7,
+      "initial_decoded_actor_refs": 1386,
+      "followup_changed_resources": 4,
+      "followup_actors": 5,
+      "followup_decoded_actor_refs": 990,
+      "both_four_stage_results_zero_errors": true,
+      "all_final_six_resource_SHA_pinned_by_initial_unchanged_two_plus_followup_four": true,
+      "source_fallback": false,
+      "whole_app_or_APK_export_claimed": false
+    },
+    "root_visual_review": "All49 initial panels and35 follow-up panels reviewed; top foreign fragments removed and own body/weapon preserved. IDLE/whole-actor formal art approval not implied.",
+    "receipts": [
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/main-run/report.json",
+        "sha256": "b21db63789fd40d6e696641b24484ac5159cf1afb044f1348bb1236b3d81ab1e"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/main-run/godot.log",
+        "sha256": "f16ad070875dd4b2fd63285a1f597d18a7b5daa1f011abb34eabcd3edf96e897"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/followup-main-run/process.json",
+        "sha256": "cca6f34152177b890b40ed5576a8b6c0b6c0a5d4c13853b2de41787cbe3ff687"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/followup-main-run/report.json",
+        "sha256": "e59692753a717c7c71c3c677d6238bf97257170aaf0ef7bd04b29b3b4e6567ab"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/native/process.json",
+        "sha256": "e2d36e770dd7b9f64ca7a0b64dda22300850e427f57ecf24124ddd23be344757"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/native/native-before.json",
+        "sha256": "bf5c1d7de06b181b5463a9e27649ea43b61e70dcb6b817635770e4e31ca89fad"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/native/native-packed.json",
+        "sha256": "bf5c1d7de06b181b5463a9e27649ea43b61e70dcb6b817635770e4e31ca89fad"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/native/pack-receipt.json",
+        "sha256": "38331cd966e8c756b6080d8be3c3ac36e558ac70d0fa312496ce9ee32eefc5dc"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/native-follow4/process.json",
+        "sha256": "dbac7b3e9f0303d8b4cda3ba835b9d58eb6f94158ace12e0acc9aeaa991b5e3b"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/native-follow4/native-before.json",
+        "sha256": "062f39821d59ad8d545dab83df48ad81da46ce270512e9b9d857d79bc8585740"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/native-follow4/native-packed.json",
+        "sha256": "062f39821d59ad8d545dab83df48ad81da46ce270512e9b9d857d79bc8585740"
+      },
+      {
+        "local_QA_receipt": "/tmp/animation-refinement-qa/corpse-boundary/native-follow4/pack-receipt.json",
+        "sha256": "365a347c57fd58a55e162a8c74414f16536fc5d1a21b6b138f37e27be9a22542"
+      }
+    ]
+  },
+  "records": [
+    {
+      "source_actor_id": "242",
+      "catalog_actor_ids": [
+        "242"
+      ],
+      "previous_resource": "res://assets/actors/eight_direction/native_production/mythic_242/r161/SpriteFrames.tres",
+      "previous_resource_sha256": "b0b9e066de82f3d67906c73b1bb96ba89901538ecc5192649a2efaaf21fb9d82",
+      "resource": "res://assets/actors/eight_direction/refined_production_20261030/production_corpse_boundary_r001/mythic_242/SpriteFrames.tres",
+      "resource_sha256": "e7a01e065946cff72413c81585a21670dcae03bf5e459df6f7325186d3a7e076",
+      "source": "res://assets/actors/eight_direction/runtime_sources_r161/remake/evidence/pr122-mythic-detailed/batch03/transform_242-S-death-draft-v01.png",
+      "source_sha256": "b1eec811b72fa3351e06641bc444aee89813690215485071c21b35b26450b5f2",
+      "clip": "death_2",
+      "phase": 5,
+      "old_region": [
+        1024.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "old_margin": [
+        256.0,
+        128.0,
+        512.0,
+        512.0
+      ],
+      "region": [
+        1024.0,
+        600.0,
+        512.0,
+        424.0
+      ],
+      "margin": [
+        256.0,
+        216.0,
+        512.0,
+        600.0
+      ],
+      "virtual_size": [
+        1024.0,
+        1024.0
+      ],
+      "source_to_canvas_translation": [
+        -768.0,
+        -384.0
+      ],
+      "foreign_owner": {
+        "analysis_alpha_threshold": 32,
+        "component": 5,
+        "whole_source_bbox": [
+          1026,
+          203,
+          1508,
+          546
+        ],
+        "removed_foreign_core_pixels": 4893,
+        "owner": "upper phase2"
+      },
+      "separately_preserved_corpse_components": [
+        {
+          "component": 25,
+          "bbox": [
+            1019,
+            763,
+            1522,
+            963
+          ]
+        },
+        {
+          "component": 21,
+          "bbox": [
+            1323,
+            745,
+            1358,
+            777
+          ]
+        },
+        {
+          "component": 22,
+          "bbox": [
+            1386,
+            753,
+            1474,
+            773
+          ]
+        },
+        {
+          "component": 23,
+          "bbox": [
+            1189,
+            758,
+            1230,
+            767
+          ]
+        }
+      ],
+      "all_other_tracks_and_all_frame_clocks_unchanged": true,
+      "preserved_below_cut_RGBA_sha256": "1cc199cca51ee07cc29707f8c44feceb9d276c7fe74b23ad48700d14b718cdfb",
+      "low_alpha_halo_losslessness_claimed": false,
+      "initial_terminal_only_resource_sha256": "b1044214270ed232dad1b8a80ab4a25b3755b9401faf016751e4cf2dba0a95d8",
+      "additional_phases": [
+        {
+          "phase": 3,
+          "old_region": [
+            0.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "old_margin": [
+            256.0,
+            128.0,
+            512.0,
+            512.0
+          ],
+          "region": [
+            0.0,
+            600.0,
+            512.0,
+            424.0
+          ],
+          "margin": [
+            256.0,
+            216.0,
+            512.0,
+            600.0
+          ],
+          "virtual_size": [
+            1024.0,
+            1024.0
+          ],
+          "source_to_canvas_translation": [
+            256.0,
+            -384.0
+          ],
+          "foreign_upper_row_components": [
+            {
+              "component": 1,
+              "bbox": [
+                26,
+                29,
+                530,
+                536
+              ],
+              "removed_core_pixels": 699
+            }
+          ],
+          "separately_preserved_own_components": [
+            {
+              "component": 17,
+              "bbox": [
+                33,
+                666,
+                517,
+                972
+              ]
+            },
+            {
+              "component": 28,
+              "bbox": [
+                447,
+                810,
+                497,
+                846
+              ]
+            },
+            {
+              "component": 29,
+              "bbox": [
+                45,
+                813,
+                82,
+                850
+              ]
+            }
+          ],
+          "preserved_below_cut_RGBA_sha256": "d0bae125ea2bbe1c7daa4b833938fdb75e3ccdd0cdaeddde32cc301fb538acde"
+        },
+        {
+          "phase": 4,
+          "old_region": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "old_margin": [
+            256.0,
+            128.0,
+            512.0,
+            512.0
+          ],
+          "region": [
+            512.0,
+            600.0,
+            512.0,
+            424.0
+          ],
+          "margin": [
+            256.0,
+            216.0,
+            512.0,
+            600.0
+          ],
+          "virtual_size": [
+            1024.0,
+            1024.0
+          ],
+          "source_to_canvas_translation": [
+            -256.0,
+            -384.0
+          ],
+          "foreign_upper_row_components": [
+            {
+              "component": 2,
+              "bbox": [
+                529,
+                127,
+                1003,
+                536
+              ],
+              "removed_core_pixels": 592
+            }
+          ],
+          "separately_preserved_own_components": [
+            {
+              "component": 18,
+              "bbox": [
+                529,
+                678,
+                1010,
+                972
+              ]
+            },
+            {
+              "component": 19,
+              "bbox": [
+                626,
+                702,
+                692,
+                737
+              ]
+            },
+            {
+              "component": 20,
+              "bbox": [
+                889,
+                725,
+                955,
+                754
+              ]
+            },
+            {
+              "component": 24,
+              "bbox": [
+                963,
+                759,
+                989,
+                812
+              ]
+            },
+            {
+              "component": 33,
+              "bbox": [
+                736,
+                917,
+                776,
+                939
+              ]
+            }
+          ],
+          "preserved_below_cut_RGBA_sha256": "db0a9e5e3ade676848eb2ef8e9bbc30049dd0f989ef73a87c93ba108185fabf6"
+        }
+      ]
+    },
+    {
+      "source_actor_id": "189",
+      "catalog_actor_ids": [
+        "189"
+      ],
+      "previous_resource": "res://assets/actors/eight_direction/native_production/mythic_189/r161/SpriteFrames.tres",
+      "previous_resource_sha256": "5e201900ba8e213be70aa7192fb70917c217aa317a3632ddc6d265f8db764011",
+      "resource": "res://assets/actors/eight_direction/refined_production_20261030/production_corpse_boundary_r001/mythic_189/SpriteFrames.tres",
+      "resource_sha256": "7f91dec7c97bfd78f70b178a332f8315c5bbe8bd20818c75f37553c6ae9c3b0e",
+      "source": "res://assets/actors/eight_direction/runtime_sources_r161/remake/evidence/pr122-mythic-detailed/batch03/transform_189-S-death-draft-v01.png",
+      "source_sha256": "8a89c109c0a62e35697655dc55d11a93ba6f2ebe8c624e58fb7ce6a67eeacfd1",
+      "clip": "death_2",
+      "phase": 5,
+      "old_region": [
+        1024.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "old_margin": [
+        256.0,
+        147.0,
+        512.0,
+        512.0
+      ],
+      "region": [
+        1024.0,
+        600.0,
+        512.0,
+        424.0
+      ],
+      "margin": [
+        256.0,
+        235.0,
+        512.0,
+        600.0
+      ],
+      "virtual_size": [
+        1024.0,
+        1024.0
+      ],
+      "source_to_canvas_translation": [
+        -768.0,
+        -365.0
+      ],
+      "foreign_owner": {
+        "analysis_alpha_threshold": 32,
+        "component": 4,
+        "whole_source_bbox": [
+          1050,
+          252,
+          1525,
+          578
+        ],
+        "removed_foreign_core_pixels": 10579,
+        "owner": "upper phase2"
+      },
+      "separately_preserved_corpse_components": [
+        {
+          "component": 10,
+          "bbox": [
+            1035,
+            720,
+            1527,
+            922
+          ]
+        },
+        {
+          "component": 14,
+          "bbox": [
+            1094,
+            882,
+            1514,
+            969
+          ]
+        }
+      ],
+      "all_other_tracks_and_all_frame_clocks_unchanged": true,
+      "preserved_below_cut_RGBA_sha256": "d5116f6bf25265598bf2066cf9567783f82615f4eae32dd1880e0218ceb1ca1e",
+      "low_alpha_halo_losslessness_claimed": false,
+      "initial_terminal_only_resource_sha256": "7e93e1b126bb942afd78838f134007b5dee4ab9c5d0230dfef3e3d8ba6dfb256",
+      "additional_phases": [
+        {
+          "phase": 3,
+          "old_region": [
+            0.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "old_margin": [
+            256.0,
+            147.0,
+            512.0,
+            512.0
+          ],
+          "region": [
+            0.0,
+            600.0,
+            512.0,
+            424.0
+          ],
+          "margin": [
+            256.0,
+            235.0,
+            512.0,
+            600.0
+          ],
+          "virtual_size": [
+            1024.0,
+            1024.0
+          ],
+          "source_to_canvas_translation": [
+            256.0,
+            -365.0
+          ],
+          "foreign_upper_row_components": [
+            {
+              "component": 1,
+              "bbox": [
+                69,
+                82,
+                507,
+                535
+              ],
+              "removed_core_pixels": 1786
+            }
+          ],
+          "separately_preserved_own_components": [
+            {
+              "component": 8,
+              "bbox": [
+                8,
+                671,
+                497,
+                959
+              ]
+            }
+          ],
+          "preserved_below_cut_RGBA_sha256": "6783801b1bd2f75878116d2095c8d67238b474846c073891a2ff6641c72f56a7"
+        },
+        {
+          "phase": 4,
+          "old_region": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "old_margin": [
+            256.0,
+            147.0,
+            512.0,
+            512.0
+          ],
+          "region": [
+            512.0,
+            600.0,
+            512.0,
+            424.0
+          ],
+          "margin": [
+            256.0,
+            235.0,
+            512.0,
+            600.0
+          ],
+          "virtual_size": [
+            1024.0,
+            1024.0
+          ],
+          "source_to_canvas_translation": [
+            -256.0,
+            -365.0
+          ],
+          "foreign_upper_row_components": [
+            {
+              "component": 2,
+              "bbox": [
+                551,
+                132,
+                968,
+                536
+              ],
+              "removed_core_pixels": 1782
+            }
+          ],
+          "separately_preserved_own_components": [
+            {
+              "component": 9,
+              "bbox": [
+                539,
+                692,
+                1005,
+                968
+              ]
+            }
+          ],
+          "preserved_below_cut_RGBA_sha256": "a9713b1bc5c39ed0d0e82d46682618622c9d8d5ca8b9ed00fae817cc303ae846"
+        }
+      ]
+    },
+    {
+      "source_actor_id": "139",
+      "catalog_actor_ids": [
+        "139",
+        "138"
+      ],
+      "previous_resource": "res://assets/actors/eight_direction/native_production/mythic_139/r161/SpriteFrames.tres",
+      "previous_resource_sha256": "f7f7590d1bc28bf32e66ac577621f19df8bc5dcc91254b313b5bedaf94160260",
+      "resource": "res://assets/actors/eight_direction/refined_production_20261030/production_corpse_boundary_r001/mythic_139/SpriteFrames.tres",
+      "resource_sha256": "e28c2926e160138afb7fc30ad4728a93ddfcdd11c0cfa6e30d75e22ef7849081",
+      "source": "res://assets/actors/eight_direction/runtime_sources_r161/remake/evidence/pr122-mythic-detailed/batch03/transform_139-S-death-draft-v01.png",
+      "source_sha256": "5707fc87db666ad62f8971c305db1905b66dcc4bacd51e453f510b6e3a8ed5d8",
+      "clip": "death_2",
+      "phase": 5,
+      "old_region": [
+        1024.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "old_margin": [
+        256.0,
+        128.0,
+        512.0,
+        512.0
+      ],
+      "region": [
+        1024.0,
+        600.0,
+        512.0,
+        424.0
+      ],
+      "margin": [
+        256.0,
+        216.0,
+        512.0,
+        600.0
+      ],
+      "virtual_size": [
+        1024.0,
+        1024.0
+      ],
+      "source_to_canvas_translation": [
+        -768.0,
+        -384.0
+      ],
+      "foreign_owner": {
+        "analysis_alpha_threshold": 32,
+        "component": 3,
+        "whole_source_bbox": [
+          1037,
+          190,
+          1514,
+          549
+        ],
+        "removed_foreign_core_pixels": 5186,
+        "owner": "upper phase2"
+      },
+      "separately_preserved_corpse_components": [
+        {
+          "component": 7,
+          "bbox": [
+            1016,
+            772,
+            1512,
+            933
+          ]
+        }
+      ],
+      "all_other_tracks_and_all_frame_clocks_unchanged": true,
+      "preserved_below_cut_RGBA_sha256": "eacfedce95eaf318e8c6f720fe792da8d5fbffa5eaa747b2df463cfc837e02ef",
+      "low_alpha_halo_losslessness_claimed": false,
+      "initial_terminal_only_resource_sha256": "fa1e9fc8f80dcb738815709ff38edfc75bf9944663ec28a232f47c940948ab05",
+      "additional_phases": [
+        {
+          "phase": 3,
+          "old_region": [
+            0.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "old_margin": [
+            256.0,
+            128.0,
+            512.0,
+            512.0
+          ],
+          "region": [
+            0.0,
+            600.0,
+            512.0,
+            424.0
+          ],
+          "margin": [
+            256.0,
+            216.0,
+            512.0,
+            600.0
+          ],
+          "virtual_size": [
+            1024.0,
+            1024.0
+          ],
+          "source_to_canvas_translation": [
+            256.0,
+            -384.0
+          ],
+          "foreign_upper_row_components": [
+            {
+              "component": 1,
+              "bbox": [
+                44,
+                44,
+                433,
+                548
+              ],
+              "removed_core_pixels": 1486
+            }
+          ],
+          "separately_preserved_own_components": [
+            {
+              "component": 5,
+              "bbox": [
+                31,
+                676,
+                528,
+                951
+              ]
+            }
+          ],
+          "preserved_below_cut_RGBA_sha256": "836e51c4479e132dee543d7efd7b503d3eb4baa9cd5773fa6b3bb123d697a796"
+        },
+        {
+          "phase": 4,
+          "old_region": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "old_margin": [
+            256.0,
+            128.0,
+            512.0,
+            512.0
+          ],
+          "region": [
+            512.0,
+            600.0,
+            512.0,
+            424.0
+          ],
+          "margin": [
+            256.0,
+            216.0,
+            512.0,
+            600.0
+          ],
+          "virtual_size": [
+            1024.0,
+            1024.0
+          ],
+          "source_to_canvas_translation": [
+            -256.0,
+            -384.0
+          ],
+          "foreign_upper_row_components": [
+            {
+              "component": 2,
+              "bbox": [
+                541,
+                100,
+                948,
+                552
+              ],
+              "removed_core_pixels": 3145
+            }
+          ],
+          "separately_preserved_own_components": [
+            {
+              "component": 6,
+              "bbox": [
+                535,
+                737,
+                1011,
+                943
+              ]
+            }
+          ],
+          "preserved_below_cut_RGBA_sha256": "79c536f608e2aa84115ca59f572ad71b1dd55d2e6b9fa5189f2efd7ce6cd2f4e"
+        }
+      ]
+    },
+    {
+      "source_actor_id": "411",
+      "catalog_actor_ids": [
+        "411"
+      ],
+      "previous_resource": "res://assets/actors/eight_direction/native_production/mythic_411/r161/SpriteFrames.tres",
+      "previous_resource_sha256": "ec5b361fc59557973f59b0b9b4c6398efb40a5deac24e00b76ff992236faff54",
+      "resource": "res://assets/actors/eight_direction/refined_production_20261030/production_corpse_boundary_r001/mythic_411/SpriteFrames.tres",
+      "resource_sha256": "a2967bfe0ca1248c051d65860d53d91a02829ce54002fb66247b2a63e59a2133",
+      "source": "res://assets/actors/eight_direction/runtime_sources_r161/remake/evidence/pr122-mythic-detailed/batch03/transform_411-S-death-draft-v01.png",
+      "source_sha256": "5a557079dd622d2158f18d7ff8406ed936ae6b3448d1678b72ce5f90620184e1",
+      "clip": "death_2",
+      "phase": 5,
+      "old_region": [
+        1024.0,
+        512.0,
+        512.0,
+        512.0
+      ],
+      "old_margin": [
+        256.0,
+        128.0,
+        512.0,
+        512.0
+      ],
+      "region": [
+        1024.0,
+        600.0,
+        512.0,
+        424.0
+      ],
+      "margin": [
+        256.0,
+        216.0,
+        512.0,
+        600.0
+      ],
+      "virtual_size": [
+        1024.0,
+        1024.0
+      ],
+      "source_to_canvas_translation": [
+        -768.0,
+        -384.0
+      ],
+      "foreign_owner": {
+        "analysis_alpha_threshold": 32,
+        "component": 6,
+        "whole_source_bbox": [
+          1009,
+          233,
+          1470,
+          529
+        ],
+        "removed_foreign_core_pixels": 1943,
+        "owner": "upper phase2"
+      },
+      "separately_preserved_corpse_components": [],
+      "all_other_tracks_and_all_frame_clocks_unchanged": true,
+      "preserved_below_cut_RGBA_sha256": "f27d443b49c69daa7e3fa6a8bf14ba0cc979e29e30e33b7c4c253969687f5e04",
+      "low_alpha_halo_losslessness_claimed": false,
+      "initial_terminal_only_resource_sha256": "9acff4c140d23dd77c9d10793221af382f33fdaa3358ba7b3bf5f903ac04ab00",
+      "additional_phases": [
+        {
+          "phase": 3,
+          "old_region": [
+            0.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "old_margin": [
+            256.0,
+            128.0,
+            512.0,
+            512.0
+          ],
+          "region": [
+            0.0,
+            600.0,
+            512.0,
+            424.0
+          ],
+          "margin": [
+            256.0,
+            216.0,
+            512.0,
+            600.0
+          ],
+          "virtual_size": [
+            1024.0,
+            1024.0
+          ],
+          "source_to_canvas_translation": [
+            256.0,
+            -384.0
+          ],
+          "foreign_upper_row_components": [
+            {
+              "component": 1,
+              "bbox": [
+                60,
+                141,
+                450,
+                537
+              ],
+              "removed_core_pixels": 1709
+            }
+          ],
+          "separately_preserved_own_components": [
+            {
+              "component": 17,
+              "bbox": [
+                40,
+                735,
+                472,
+                938
+              ]
+            }
+          ],
+          "preserved_below_cut_RGBA_sha256": "64f5813400a6fd25a32db1835e66322c73aef28f3108a797c25f5b53535e954c"
+        },
+        {
+          "phase": 4,
+          "old_region": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "old_margin": [
+            256.0,
+            128.0,
+            512.0,
+            512.0
+          ],
+          "region": [
+            512.0,
+            600.0,
+            512.0,
+            424.0
+          ],
+          "margin": [
+            256.0,
+            216.0,
+            512.0,
+            600.0
+          ],
+          "virtual_size": [
+            1024.0,
+            1024.0
+          ],
+          "source_to_canvas_translation": [
+            -256.0,
+            -384.0
+          ],
+          "foreign_upper_row_components": [
+            {
+              "component": 4,
+              "bbox": [
+                539,
+                175,
+                942,
+                544
+              ],
+              "removed_core_pixels": 2345
+            },
+            {
+              "component": 6,
+              "bbox": [
+                1009,
+                233,
+                1470,
+                529
+              ],
+              "removed_core_pixels": 168
+            }
+          ],
+          "separately_preserved_own_components": [
+            {
+              "component": 18,
+              "bbox": [
+                511,
+                760,
+                998,
+                931
+              ]
+            }
+          ],
+          "preserved_below_cut_RGBA_sha256": "d60d87a102b66952fd98f093a00ab487c32104277b27efe36399a84a65652498"
+        }
+      ]
+    },
+    {
+      "source_actor_id": "136",
+      "catalog_actor_ids": [
+        "136"
+      ],
+      "previous_resource": "res://assets/actors/eight_direction/native_production/mythic_136/r165/SpriteFrames.tres",
+      "previous_resource_sha256": "e9359a2bf440c46c53b9e20b3ef8de680575c55f63d3935fa15ccc0543c4379e",
+      "resource": "res://assets/actors/eight_direction/refined_production_20261030/production_corpse_boundary_r001/mythic_136/SpriteFrames.tres",
+      "resource_sha256": "dcb14d4676fc692f21ffd5779c5ce52c15992351b00f933de3f3f3113a5379c3",
+      "source": "res://assets/actors/eight_direction/native_production/mythic_136/draft_sources_r164/death-de7ef6d76293.png",
+      "source_sha256": "de7ef6d76293c242bf859a7694d851e0a9edb82c6c5a8618abc7b046fb2796a4",
+      "clip": "death_2",
+      "phase": 5,
+      "old_region": [
+        905.0,
+        372.0,
+        181.0,
+        196.0
+      ],
+      "old_margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "region": [
+        905.0,
+        400.0,
+        181.0,
+        168.0
+      ],
+      "margin": [
+        0.0,
+        28.0,
+        0.0,
+        28.0
+      ],
+      "virtual_size": [
+        181.0,
+        196.0
+      ],
+      "source_to_canvas_translation": [
+        -905.0,
+        -372.0
+      ],
+      "foreign_owner": {
+        "analysis_alpha_threshold": 32,
+        "component": 12,
+        "whole_source_bbox": [
+          902,
+          299,
+          1080,
+          380
+        ],
+        "removed_foreign_core_pixels": 166,
+        "owner": "preceding-row terminal"
+      },
+      "separately_preserved_corpse_components": [
+        {
+          "component": 19,
+          "bbox": [
+            900,
+            480,
+            1072,
+            565
+          ]
+        }
+      ],
+      "all_other_tracks_and_all_frame_clocks_unchanged": true,
+      "preserved_below_cut_RGBA_sha256": "1913ffd341dbd8f0699085d2cda7d64456f08ef04880d1ce8b3a9dee41c2968b",
+      "low_alpha_halo_losslessness_claimed": false
+    },
+    {
+      "source_actor_id": "410",
+      "catalog_actor_ids": [
+        "410"
+      ],
+      "previous_resource": "res://assets/actors/eight_direction/refined_production_20261030/production_r004/mythic_410/SpriteFrames.tres",
+      "previous_resource_sha256": "d6c7ae89c0a5e9725aa3768f0c6ab90eec65611a06fe4b5c4bde3043f770f7b5",
+      "resource": "res://assets/actors/eight_direction/refined_production_20261030/production_corpse_boundary_r001/mythic_410/SpriteFrames.tres",
+      "resource_sha256": "307fed267ebc9a31985ed93bc321025d719e2a47e3b4693f6c1d85c97767d8a4",
+      "source": "res://assets/actors/eight_direction/native_production/mythic_410/draft_sources_r164/death-e020a31b9f85.png",
+      "source_sha256": "e020a31b9f85b7a1f779b667ae6b7aa828f992b9e8df4cd07451bab8f61a6ebe",
+      "clip": "death_2",
+      "phase": 5,
+      "old_region": [
+        905.0,
+        367.0,
+        181.0,
+        192.0
+      ],
+      "old_margin": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "region": [
+        905.0,
+        400.0,
+        181.0,
+        159.0
+      ],
+      "margin": [
+        0.0,
+        33.0,
+        0.0,
+        33.0
+      ],
+      "virtual_size": [
+        181.0,
+        192.0
+      ],
+      "source_to_canvas_translation": [
+        -905.0,
+        -367.0
+      ],
+      "foreign_owner": {
+        "analysis_alpha_threshold": 32,
+        "component": 12,
+        "whole_source_bbox": [
+          911,
+          306,
+          1081,
+          377
+        ],
+        "removed_foreign_core_pixels": 437,
+        "owner": "preceding-row terminal"
+      },
+      "separately_preserved_corpse_components": [
+        {
+          "component": 18,
+          "bbox": [
+            908,
+            489,
+            1081,
+            556
+          ]
+        }
+      ],
+      "all_other_tracks_and_all_frame_clocks_unchanged": true,
+      "preserved_below_cut_RGBA_sha256": "971d2885829284f1c3960780be8aa190beca05c25adddbfa9a0f6e8fe3c2475c",
+      "low_alpha_halo_losslessness_claimed": false
+    }
+  ],
+  "changed_unique_timeline_refs": 14,
+  "changed_actor_inclusive_timeline_refs": 17,
+  "remaining_scope": "Side-boundary remnants and unrelated134 joined source are preserved; no all-phase/full-art/low-alpha-halo approval.",
+  "top_boundary_source_ownership_and_scoped_visual_review_pass": true
+}

@@ -49,6 +49,26 @@ func configure(owner: Node) -> void:
 		by_id[str(record.id)] = record
 		by_name[str(record.name)] = str(record.id)
 		for alias: String in record.historical_aliases: by_name[alias] = str(record.id)
+	var roster: Dictionary = read_json("official_roster.json")
+	for alias: String in roster.get("aliases",{}):
+		var canonical: String = str(roster.aliases[alias])
+		if by_name.has(canonical): by_name[alias] = by_name[canonical]
+	# Explicit reviewed class extensions retain one shared learned/save identity.
+	for fact: Dictionary in roster.get("observations",[]):
+		if fact.get("status","")!="existing_shared_class": continue
+		var canonical: String=str(fact.runtime_name)
+		if not by_name.has(canonical): continue
+		var row: Dictionary=by_id[str(by_name[canonical])]
+		if bool(row.get("runtime_blocked",false)): continue
+		var job: String=str(fact["class"])
+		if not row.classes.has(job): row.classes.append(job)
+		if not row.has("class_learning_levels"): row["class_learning_levels"]={}
+		if not row.has("class_costs"): row["class_costs"]={}
+		if not row.has("class_references"): row["class_references"]={}
+		row.class_learning_levels[job]=int(fact.level_display)
+		row.class_costs[job]={"mp":int(fact.mp_display)}
+		if str(fact.hp_display).is_valid_int(): row.class_costs[job]["hp"]=int(fact.hp_display)
+		row.class_references[job]=fact.duplicate(true)
 	relations.merge(current_official.local_design.get("relations",{}))
 	seed_starters()
 
@@ -92,6 +112,12 @@ func seed_starters() -> void:
 func record_for(key: String) -> Dictionary:
 	return by_id.get(key, by_id.get(by_name.get(key, ""), current_official.record_for(key)))
 
+func minimum_level_for(record: Dictionary) -> int:
+	return int(record.get("class_learning_levels",{}).get(str(world.job_class),record.get("minimum_level",0)))
+
+func level_locked(record: Dictionary) -> bool:
+	return (bool(record.get("local_design",false)) or record.get("class_learning_levels",{}).has(str(world.job_class))) and int(world.level)<minimum_level_for(record)
+
 func permitted(record: Dictionary) -> bool:
 	return record.get("classes", [record.get("class")]).has(world.job_class)
 
@@ -102,7 +128,7 @@ func owned(record: Dictionary) -> bool:
 func enabled(record: Dictionary) -> bool:
 	if bool(record.get("runtime_blocked", false)): return false
 	if not owned(record): return false
-	if bool(record.get("local_design",false)) and int(world.level)<int(record.minimum_level):return false
+	if level_locked(record):return false
 	if str(record.get("class", "")) == "요정" and str(record.get("school", "")) in ["water","earth","wind","fire"]:
 		if str(record.school) != str(schools.get("요정", "water")): return false
 	var required: Array = record.get("weapons", [])
@@ -112,10 +138,10 @@ func reason(record: Dictionary, buying: bool = false) -> String:
 	if record.is_empty(): return "스킬 정보 없음"
 	if not permitted(record): return "현재 직업에서 습득 불가"
 	if bool(record.get("runtime_blocked", false)):
-		if int(world.level) < int(record.minimum_level): return "Lv.%d 필요" % int(record.minimum_level)
+		if int(world.level) < minimum_level_for(record): return "Lv.%d 필요" % minimum_level_for(record)
 		return CURRENT.blocked_reason(record)
 	if int(learned.get(str(record.id), 0)) > 0: return "이미 습득함"
-	if int(world.level) < int(record.minimum_level): return "Lv.%d 필요" % int(record.minimum_level)
+	if int(world.level) < minimum_level_for(record): return "Lv.%d 필요" % minimum_level_for(record)
 	var rel: Dictionary = relations.get(str(record.id), {})
 	for required: String in rel.get("requires_skill", []):
 		if int(learned.get(required, 0)) < int(rel.get("requires_skill_level", {}).get(required, 1)):
@@ -196,6 +222,19 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 			result["resolved_grade"] = augment.grade
 			changed = true
 		if not changed: break
+	var job: String=str(world.job_class)
+	if record.get("class_learning_levels",{}).has(job):
+		result["minimum_level"]=minimum_level_for(record)
+		result.merge(record.get("class_costs",{}).get(job,{}),true)
+		result["display_class"]=job
+		result["current_class_reference"]=record.class_references[job].duplicate(true)
+		if result.has("design_provenance"):
+			for field: String in ["minimum_level","mp"]:
+				result.design_provenance[field]={"value":result[field],"status":"official","basis":record.class_references[job].source_url}
+		if result.has("official"):
+			result.official["source_url"]=record.class_references[job].source_url
+			result.official["learning_level"]=result.minimum_level
+			result.official["mp_cost"]=result.mp
 	return result
 
 func _current_stat_signature() -> String:

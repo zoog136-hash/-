@@ -1,0 +1,24 @@
+name: Free runner disk space
+description: >-
+  Remove large preinstalled toolchains TWILIGHT never uses so a full Godot
+  import plus an Android export (APK written and signed in place) fits on the
+  hosted runner. Keeps the Android SDK build-tools/platforms, Java and Python.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -uo pipefail
+        echo "DISK_BEFORE"; df -h / "${GITHUB_WORKSPACE}" | sed 's/^/  /'
+        sudo rm -rf \
+          /usr/share/dotnet /usr/local/share/dotnet \
+          /opt/ghc /usr/local/.ghcup \
+          /opt/hostedtoolcache/CodeQL /opt/hostedtoolcache/go /opt/hostedtoolcache/Ruby /opt/hostedtoolcache/PyPy \
+          /usr/local/share/boost /usr/share/swift /usr/local/share/powershell \
+          /usr/local/share/chromium /usr/local/lib/node_modules /usr/local/julia* \
+          /opt/microsoft /opt/google /opt/az /usr/share/miniconda \
+          "${ANDROID_HOME:-/usr/local/lib/android/sdk}/ndk" \
+          "${ANDROID_HOME:-/usr/local/lib/android/sdk}/emulator" \
+          "${ANDROID_HOME:-/usr/local/lib/android/sdk}/system-images" || true
+        docker image prune -af >/dev/null 2>&1 || true
+        echo "DISK_AFTER"; df -h / "${GITHUB_WORKSPACE}" | sed 's/^/  /'

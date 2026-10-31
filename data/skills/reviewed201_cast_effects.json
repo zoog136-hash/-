@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "policy": "Existing nine active skills only. Visual substitute reviewed from exact source bytes; no claim of LineageM pixel or timing equivalence. Original blend fields remain uninterpreted. Combat markers/costs/damage/passives unchanged.",
+  "timing_policy": "TWILIGHT local 12fps presentation, not original client tick timing.",
+  "cases": [
+    {
+      "name": "프로즌 클라우드",
+      "skill_id": "lmref_caf0662f0a311237",
+      "group_id": "SPR-U-34effde343e4a9ec99a4",
+      "record_key": "source1:Sprite.pak:18355",
+      "raw_sha256": "7cd97fb4ac68e5fb9f3981836103b6c7c313b66706a2c0d85d8f71357267d4e5",
+      "model_id": 1804,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Area cloud with expanding blue-white particles; reject source2 model6012 numeral glyph.",
+      "atlas": "reviewed201_cast_1804_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-acf3be57d4e42c0bb410"
+      }
+    },
+    {
+      "name": "그레이터 힐",
+      "skill_id": "lmref_47288d971dc34c8f",
+      "group_id": "SPR-U-771b78afd681262d18b6",
+      "record_key": "source1:Sprite15.pak:1145",
+      "raw_sha256": "faef47d9ed96feb9773d0883c9d46899f0a9ff51546894ba3ea577ebff93aa40",
+      "model_id": 11724,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Vertical blue-white healing streak; existing heal event anchor.",
+      "atlas": "reviewed201_cast_11724_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-ed24b35595b54cd9074d"
+      }
+    },
+    {
+      "name": "콜 라이트닝",
+      "skill_id": "lmref_5a032c311f007af0",
+      "group_id": "SPR-U-e6613541742f31053f1b",
+      "record_key": "source1:Sprite02.pak:1303",
+      "raw_sha256": "813ffab0ace098269649be58bd7c4ada1526e0e6c5da22a8d0488d4117bb5567",
+      "model_id": 11736,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Cyan descending lightning; reject violet alternative as unselected variant.",
+      "atlas": "reviewed201_cast_11736_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-9479ea4ba63ced88f4dd"
+      }
+    },
+    {
+      "name": "선 버스트",
+      "skill_id": "lmref_fc3984b0815fc3c8",
+      "group_id": "SPR-U-bad097ccf03c78358d20",
+      "record_key": "source1:Sprite.pak:18387",
+      "raw_sha256": "b4a51d755a171dac119e56d957d231beeb2afe364a39d518a2a8d14200de6ce2",
+      "model_id": 1811,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Circular gold-white flare expanding then dissipating at existing impact point.",
+      "atlas": "reviewed201_cast_1811_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-2c79867de24798ae66a2"
+      }
+    },
+    {
+      "name": "버서커스",
+      "skill_id": "lmref_888f5081be0803ab",
+      "group_id": "SPR-U-0a304d2c700b9bd56d54",
+      "record_key": "source1:Sprite.pak:52666",
+      "raw_sha256": "6ac67ad59b33cc2e6de93c2250037d0ae7286c52e7f807aaa114e40eb7160ce8",
+      "model_id": 3943,
+      "phases": [
+        "cast"
+      ],
+      "fps": 12,
+      "motif_review": "Red-white buff burst; cast only, no passive or repeated status animation.",
+      "atlas": "reviewed201_cast_3943_source1.png",
+      "previous_phases": {
+        "cast": "SPR-U-9ba5139bd0f9a14c0e00"
+      }
+    },
+    {
+      "name": "힐",
+      "skill_id": "lm_f4de23ba3ed83d50",
+      "group_id": "SPR-U-a03b6d307a3a03ab4316",
+      "record_key": "source1:Sprite14.pak:1088",
+      "raw_sha256": "1534c34569664d816c2578cc692be3fd66ebb1a3489b9f7b8b11870a39a34cfa",
+      "model_id": 11723,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Visually reviewed blue-white healing light, no glyphs or creature silhouette. Similar substitute for existing heal impact; original blend semantics unverified.",
+      "atlas": "reviewed201_cast_11723_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-ed24b35595b54cd9074d"
+      }
+    },
+    {
+      "name": "풀 힐",
+      "skill_id": "lm_81c8985fec94cf55",
+      "group_id": "SPR-U-65995a45fd43c03b3aeb",
+      "record_key": "source1:Sprite00.pak:1222",
+      "raw_sha256": "72656534c480225926b4b721ec13c088a5ac8816a0e0fa164bac7994691816d4",
+      "model_id": 11725,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Visually reviewed blue-white healing light, no glyphs or creature silhouette. Similar substitute for existing heal impact; original blend semantics unverified.",
+      "atlas": "reviewed201_cast_11725_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-3c850206e4ece25f720b"
+      }
+    },
+    {
+      "name": "큐어 포이즌",
+      "skill_id": "lm_2b058c083f711c56",
+      "group_id": "SPR-U-3bc093ad24d391ac1d01",
+      "record_key": "source1:Sprite.pak:19697",
+      "raw_sha256": "7ab0d33dc2a2bef6c1d2afb0c030a297478b9956278e89294fea7b53c2134790",
+      "model_id": 192,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "Blue-white cleansing flash at the existing successful cleanse anchor.",
+      "atlas": "reviewed201_cast_192_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-ed24b35595b54cd9074d"
+      },
+      "previous_runtime_emission": false
+    },
+    {
+      "name": "디스인트그레이트",
+      "skill_id": "lm_b39dbcf394503410",
+      "group_id": "SPR-U-1ca0ed4e4413ca7ed32f",
+      "record_key": "source1:Sprite.pak:18399",
+      "raw_sha256": "7d1e5e362ab21889f77a19bd96ea6283292df15352c9d5da5629ebab0e9c3929",
+      "model_id": 1817,
+      "phases": [
+        "impact"
+      ],
+      "fps": 12,
+      "motif_review": "White disintegration streak and dissipation; explicitly source1 BASE, not red numbered-shard variant. Existing successful attack impact only.",
+      "atlas": "reviewed201_cast_1817_source1.png",
+      "previous_phases": {
+        "impact": "SPR-U-11208e25ff708da09fc3"
+      }
+    }
+  ]
+}

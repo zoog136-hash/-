@@ -15,7 +15,9 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 125
+    # A cold import alone measured 60-68 min; at 125 min the field tests were
+    # cancelled on main too, so main never saved the import cache for PRs.
+    timeout-minutes: 240
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -145,6 +147,8 @@ jobs:
             echo "Import cache skipped: empty or at least 1.5 GiB"
           fi
       - name: Validate actual Godot import of all 125 skill icon textures
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -166,6 +170,8 @@ jobs:
           fi
 
       - name: Ainhasad and Dragon Orb regression
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -177,6 +183,8 @@ jobs:
           grep -q "AINHASAD_SMOKE_OK" godot-ainhasad-smoke.log
 
       - name: Ainhasad consumption and level XP progression
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -188,6 +196,8 @@ jobs:
           grep -q "AIN_EXP_PROGRESSION_OK" godot-ain-exp-progression.log
 
       - name: Mythic job smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -199,6 +209,8 @@ jobs:
           grep -q "JOB_SMOKE_OK" godot-job-smoke.log
 
       - name: Quickslot SELF smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -210,6 +222,8 @@ jobs:
           grep -q "QUICKSLOT_SMOKE_OK" godot-quickslot-smoke.log
 
       - name: Deferred and coalesced save tests
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -221,6 +235,8 @@ jobs:
           grep -q 'SAVE_IDENTICAL_PAYLOAD_RESULT {"failures":\[\]' godot-identical-save.log
 
       - name: Speed option smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -232,6 +248,8 @@ jobs:
           grep -q "SPEED_OPTION_SMOKE_OK" godot-speed-option-smoke.log
 
       - name: Weapon rules smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -243,6 +261,8 @@ jobs:
           grep -q "WEAPON_RULE_SMOKE_OK" godot-weapon-rules-smoke.log
 
       - name: Shield compatibility smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -254,6 +274,8 @@ jobs:
           grep -q "SHIELD_RULE_SMOKE_OK" godot-shield-rules-smoke.log
 
       - name: Equipment slot smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -265,6 +287,8 @@ jobs:
           grep -q "EQUIPMENT_SLOT_SMOKE_OK" godot-equipment-slot-smoke.log
 
       - name: Item DB slot smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -276,6 +300,8 @@ jobs:
           grep -q "ITEM_DB_SLOT_SMOKE_OK" godot-item-db-slot-smoke.log
 
       - name: Inventory DB integration smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -287,6 +313,8 @@ jobs:
           grep -q "INVENTORY_DB_SMOKE_OK" godot-inventory-db-smoke.log
 
       - name: Catalog item lookup index equivalence
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -296,6 +324,8 @@ jobs:
           grep -q 'CATALOG_LOOKUP_INDEX_RESULT {"failures":\[\]' godot-catalog-lookup-index.log
 
       - name: Bag acquisition order and minimap static layer
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -307,6 +337,8 @@ jobs:
           grep -q 'MINIMAP_STATIC_LAYER_RESULT {"failures":\[\]' godot-minimap-layer.log
 
       - name: Item buff description smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -318,6 +350,8 @@ jobs:
           grep -q "ITEM_BUFF_SMOKE_OK" godot-item-buff-smoke.log
 
       - name: Passive skill smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -329,6 +363,8 @@ jobs:
           grep -q "PASSIVE_SKILL_SMOKE_OK" godot-passive-skill-smoke.log
 
       - name: Mobile scroll smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -340,6 +376,8 @@ jobs:
           grep -q "MOBILE_SCROLL_SMOKE_OK" godot-mobile-scroll-smoke.log
 
       - name: Loot balance smoke test
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -350,6 +388,8 @@ jobs:
           grep -q "LOOT_BALANCE_OK" godot-loot-balance.log
 
       - name: Viewport touch and mouse routing
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -361,6 +401,8 @@ jobs:
           grep -q "INPUT_ROUTING_OK" godot-input-routing.log
 
       - name: Playable field world tests
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -375,6 +417,8 @@ jobs:
         run: python3 tools/test_world_region_shards.py
 
       - name: Crowded-field arrival keeps physics local
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -394,6 +438,8 @@ jobs:
           grep -q "WORLD_REGIONS_OK" godot-world-regions.log
 
       - name: Region portal chain and camera limits
+        # Also in the full suite that Integration Validate runs on every PR.
+        if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -o pipefail
@@ -441,6 +487,9 @@ jobs:
       # Import outputs depend only on main's sources, so publish them once the
       # clean import step has passed even if a later regression step failed;
       # otherwise one red main run left every workflow without a current cache.
+      - name: Annotate failure cause
+        if: failure()
+        run: python3 tools/ci_annotate_failure.py --title "Godot Validate" godot-*.log world-region-shards/*.log
       - name: Stage PNG imports from validated main
         id: png-stage
         if: ${{ !cancelled() && steps.import-metrics.outcome == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}

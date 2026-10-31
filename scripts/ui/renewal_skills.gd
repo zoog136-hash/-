@@ -265,7 +265,7 @@ func refresh() -> void:
 		var subtitle: String = CURRENT.mode_label(record) if bool(record.get("runtime_blocked", false)) else "패시브" if passive else "MP %d" % int(record.get("mp",0))
 		cards.add_item(" ",icon)
 		cards.set_item_metadata(index,str(record.get("id",record.get("name",""))))
-		cards.set_item_tooltip(index,("실행 보류 · " if bool(record.get("runtime_blocked",false)) else "습득 · " if learned else "미습득 · ")+str(record.get("name",""))+" · "+subtitle)
+		cards.set_item_tooltip(index,("미구현 · " if bool(record.get("runtime_blocked",false)) else "습득 · " if learned else "미습득 · ")+str(record.get("name",""))+" · "+subtitle)
 		var color: Color=UI.grade(str(record.get("grade","일반"))) if learned else Color("aaa7a1")
 		cards.set_item_icon_modulate(index,Color.WHITE if learned else Color(.68,.68,.68,.62))
 		cards.set_item_custom_fg_color(index,color)
@@ -393,13 +393,17 @@ func select_original() -> void:
 	var base_cooldown: float = float(skill.get("cooldown",0))
 	var final_cooldown: float = base_cooldown*world._skill_cooldown_factor()
 	var weapons: String = "제한 없음" if skill.get("weapons",[]).is_empty() else " · ".join(skill.weapons)
-	detail.text = "[font_size=20][color=#%s]%s[/color][/font_size]\n%s · %s\n\n%s\n\nMP %d  /  HP %d\n기본 재사용 %.1f초\n보정 후 재사용 %.1f초\n지속시간 %.1f초\n사용 무기 %s\n\n%s" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name),str(selected.get("class","")),"패시브" if passive else "액티브",UI.safe(selected.desc),int(skill.get("mp",0)),int(skill.get("hp",0)),base_cooldown,final_cooldown,float(skill.get("duration",0)),weapons,"습득 완료" if learned else UI.safe(catalog.reason(selected))]
+	detail.text = "[font_size=20][color=#%s]%s[/color][/font_size]\n%s · %s\n\n%s\n\nMP %d  /  HP %d\n기본 재사용 %.1f초\n보정 후 재사용 %.1f초\n지속시간 %.1f초\n사용 무기 %s\n\n%s" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name),str(skill.get("display_class",selected.get("class",""))),"패시브" if passive else "액티브",UI.safe(selected.desc),int(skill.get("mp",0)),int(skill.get("hp",0)),base_cooldown,final_cooldown,float(skill.get("duration",0)),weapons,"습득 완료" if learned else UI.safe(catalog.reason(selected))]
 	var fields: Dictionary = selected.get("fields",{})
 	var basic: Dictionary = fields.get("basic",{})
 	var learning: Dictionary = fields.get("learning",{})
+	var level_field: Dictionary = {"status":"VERIFIED"} if skill.has("current_class_reference") else learning.get("minimum_level",{})
 	var acquisition: Dictionary = learning.get("book_acquisition",{})
 	var acquisition_text: String = "" if acquisition.get("value") == null else str(acquisition.value)
-	detail.text += "\n\n%s · %s\n습득 %s\n스킬북 가격 %s\n원작 입수처: %s\n사용 수치: TWILIGHT 설정" % [original_field_text(str(selected.grade),basic.get("grade",{})),original_field_text("패시브" if passive else "액티브",basic.get("activation",{})),original_field_text("Lv.%d" % int(selected.minimum_level),learning.get("minimum_level",{})),original_field_text("%d 아데나" % int(selected.book_cost),learning.get("adena_cost",{})),original_field_text(acquisition_text,acquisition)]
+	detail.text += "\n\n%s · %s\n습득 %s\n스킬북 가격 %s\n원작 입수처: %s\n사용 수치: TWILIGHT 설정" % [original_field_text(str(selected.grade),basic.get("grade",{})),original_field_text("패시브" if passive else "액티브",basic.get("activation",{})),original_field_text("Lv.%d" % catalog.minimum_level_for(selected),level_field),original_field_text("%d 아데나" % int(selected.book_cost),learning.get("adena_cost",{})),original_field_text(acquisition_text,acquisition)]
+	if skill.has("current_class_reference"):
+		var fact:Dictionary=skill.current_class_reference
+		detail.text += "\n\n공식 공통 마법: %s Lv.%s / MP %s\n기존 스킬 ID·TWILIGHT 동작 공유\n%s" % [str(fact["class"]),str(fact.level_display),str(fact.mp_display),str(fact.source_url)]
 	if catalog.current_official.mode_audit.has(str(selected.id)):
 		detail.text += "\n\n현재 공식 분류: 패시브 / 기존 게임 동작: 액티브\n기존 비용·행동·저장 호환을 위한 전환 검토 중"
 	if passive: detail.text = detail.text.replace("기본 재사용 %.1f초\n보정 후 재사용 %.1f초" % [base_cooldown,final_cooldown],"패시브 · 조건 충족 시 적용")
@@ -409,8 +413,8 @@ func select_original() -> void:
 	learn_button.tooltip_text = catalog.reason(selected)
 	book_button.disabled = not catalog.reason(selected,true).is_empty() or int(world.gold) < int(selected.book_cost)
 	book_button.tooltip_text = catalog.reason(selected,true) if not catalog.reason(selected,true).is_empty() else "%d 아데나" % int(selected.book_cost)
-	use_button.disabled = passive or not learned
-	use_button.tooltip_text = "패시브는 직접 사용할 수 없습니다" if passive else "미습득 스킬입니다" if not learned else ""
+	use_button.disabled = passive or not learned or catalog.level_locked(selected)
+	use_button.tooltip_text = "패시브는 직접 사용할 수 없습니다" if passive else "미습득 스킬입니다" if not learned else "Lv.%d 필요" % catalog.minimum_level_for(selected) if catalog.level_locked(selected) else ""
 	quick_button.disabled = passive or not learned
 	quick_button.tooltip_text = use_button.tooltip_text
 	clock = 0
@@ -488,7 +492,7 @@ func select_local() -> void:
 	var catalog: TwilightOriginalSkillCatalog = service.catalog
 	var owned: bool = catalog.owned(selected)
 	var passive: bool = RULES.is_passive(selected)
-	detail.text = CURRENT.runtime_text(selected)
+	detail.text = CURRENT.runtime_text(catalog.resolve(selected))
 	detail.text += "\n\n" + ("습득 완료" if owned else catalog.reason(selected))
 	learn_button.disabled = not catalog.reason(selected).is_empty()
 	learn_button.tooltip_text = catalog.reason(selected)

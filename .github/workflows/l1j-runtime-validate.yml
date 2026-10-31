@@ -3,28 +3,14 @@ name: L1J Runtime and Recovery Validation
 on:
   pull_request:
     branches: [main, feature/twilight-l1j-map-grid-adapter-20261010, feature/twilight-l1j-recovery-runtime-20261010]
+    # L1J-specific sources only. The checks this workflow targets on PRs are
+    # all part of the full suite Integration Validate already runs.
     paths:
       - 'addons/twilight_l1j/**'
-      - 'data/l1j/live_visual_bindings.json'
-      - 'data/l1j/reviewed_shop_bindings.json'
-      - 'scripts/shop/**'
-      - 'scripts/ui/renewal_shop.gd'
-      - 'scripts/ui/renewal_hud.gd'
-      - 'scripts/world.gd'
-      - 'scripts/loot/**'
-      - 'scripts/monsters/monster_art.gd'
-      - 'scripts/ui/renewal_theme.gd'
-      - 'scripts/ui/ground_alpha.gd'
-      - 'scripts/ui/item_visual_resolver.gd'
-      - 'data/ground_alpha.json'
-      - 'assets/ground_alpha/**'
-      - 'tests/ground_alpha_test.gd'
-      - 'tests/inventory_db_smoke_test.gd'
+      - 'data/l1j/**'
+      - 'tools/l1j/**'
       - 'tests/l1j_*'
       - 'tests/capture_l1j_runtime.gd'
-      - 'tools/l1j/**'
-      - 'tools/test_project.py'
-      - 'tools/l1j/select_pr_checks.py'
       - 'export_presets.cfg'
       - '.github/workflows/l1j-runtime-validate.yml'
   workflow_dispatch:
@@ -205,6 +191,9 @@ jobs:
               assert combined['passed'] == 218 and len(combined['skipped']) == 5
               pathlib.Path('l1j-test-results/combined-linux-summary.json').write_text(json.dumps(combined, indent=2) + '\n', encoding='utf-8')
               print('LINUX_COMBINED_COVERAGE', json.dumps(combined))
+      - name: Annotate regression failure cause
+        if: failure()
+        run: python3 tools/ci_annotate_failure.py --title "L1J regression" --summary l1j-test-results
       - name: Render the actual game with synthetic CI fixtures
         if: runner.os == 'Linux'
         env:
@@ -233,6 +222,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Free runner disk space
+        uses: ./.github/actions/free-runner-disk
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -281,10 +272,14 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build
+          df -h . /tmp | sed 's/^/DISK_BEFORE_EXPORT /'
           engine/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug Android build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk > android-export.log 2>&1
           if grep -E 'SCRIPT ERROR:|ERROR:' android-export.log; then exit 1; fi
           python3 tools/l1j/inspect_apk.py --apk build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk --bindings data/l1j/live_visual_bindings.json | tee android-inspection.json
           "$ANDROID_HOME/build-tools/35.0.1/apksigner" verify build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk
+      - name: Annotate Android export failure cause
+        if: failure()
+        run: python3 tools/ci_annotate_failure.py --title "L1J Android export" android-import.log android-export.log
       - name: Preserve Android export evidence (synthetic art; no device execution)
         if: always()
         uses: actions/upload-artifact@v4

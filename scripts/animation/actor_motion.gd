@@ -461,6 +461,20 @@ func _track(frames: SpriteFrames, key: String) -> Dictionary:
 		ends.append(ends[-1] + maxf(0.001, frames.get_frame_duration(key, index)))
 	var result: Dictionary = {"ends":ends, "count":ends.size() - 1,
 		"fps":maxf(0.001, frames.get_animation_speed(key)), "loop":frames.get_animation_loop(key)}
+	if key.begins_with("recovery_") or key.begins_with("corpse_"):
+		var declared: Variant = profile.get_meta("twilight_explicit_role_timeline_aliases", {})
+		var source_role: String = "recovery" if key.begins_with("recovery_") else "corpse"
+		var target_role: String = "attack" if source_role == "recovery" else "death"
+		if declared is Dictionary and str(declared.get(source_role, "")) == target_role:
+			var target_key: String = target_role + key.trim_prefix(source_role)
+			var same_timeline: bool = frames.has_animation(target_key) and frames.get_frame_count(target_key) == int(result.count) and frames.get_animation_speed(target_key) == frames.get_animation_speed(key) and frames.get_animation_loop(target_key) == frames.get_animation_loop(key)
+			if same_timeline:
+				for phase: int in range(int(result.count)):
+					if frames.get_frame_texture(key, phase) != frames.get_frame_texture(target_key, phase) or frames.get_frame_duration(key, phase) != frames.get_frame_duration(target_key, phase):
+						same_timeline = false
+						break
+			if same_timeline:
+				result["clock_role"] = target_role
 	_tracks[key] = result
 	return result
 
@@ -499,32 +513,35 @@ func apply_frames(sprite: Node2D) -> void:
 	var track: Dictionary = _track(frames, key)
 	var count: int = track.count
 	var frame_value: int = 0
+	var clock_role: String = str(track.get("clock_role", _resolved_role))
 	var source_timed: bool = frames.has_meta("twilight_source_tracks")
-	if source_timed and presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
+	if source_timed and presenting_attack and clock_role in ["attack", "ranged_attack", "cast", "special"]:
 		# Fit the whole source timeline to the existing combat interval, retaining
 		# every relative duration. The authoritative strike clock is untouched.
 		frame_value = _weighted_frame(track, attack_elapsed / maxf(.001, attack_duration))
-	elif presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
-		var marker_frame: int = clampi(profile.hit_frame_for(_resolved_role), 0, count - 1)
+	elif presenting_attack and clock_role in ["attack", "ranged_attack", "cast", "special"]:
+		var marker_frame: int = clampi(profile.hit_frame_for(clock_role), 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = _weighted_frame(track, visual_progress / attack_hit_ratio, 0, maxi(0, marker_frame - 1))
 		else:
 			frame_value = _weighted_frame(track, (visual_progress - attack_hit_ratio) / (1.0 - attack_hit_ratio), marker_frame)
-	elif presenting_attack and _resolved_role == "recovery":
+	elif presenting_attack and clock_role == "recovery":
 		var start: float = maxf(0.7, attack_hit_ratio)
 		frame_value = _weighted_frame(track, (attack_elapsed / attack_duration - start) / (1.0 - start))
-	elif dead and _resolved_role == "death":
+	elif dead and clock_role == "death":
 		frame_value = _weighted_frame(track, death_clock / maxf(.01, profile.death_duration))
-	elif _resolved_role == "hit":
+	elif clock_role == "hit":
 		var hit_progress: float = 1.0 - _native_hit_clock / _native_hit_duration if _native_hit_presenting() else 1.0 - hit_clock / hit_duration
 		frame_value = _weighted_frame(track, hit_progress)
-	elif move_ratio > 0.01 and not presenting_attack and _resolved_role in ["walk", "run", "legacy"]:
-		if source_timed:
+	elif move_ratio > 0.01 and not presenting_attack and clock_role in ["walk", "run", "legacy"]:
+		# Explicit variable-pose locomotion keeps its authored duration sum.
+		# This opt-in does not change attack, reaction or gameplay clocks.
+		if source_timed or bool(frames.get_meta("twilight_weighted_locomotion_durations", false)):
 			var ends: PackedFloat64Array = track.ends
 			frame_value = _weighted_frame(track, fposmod(gait, ends[-1]) / ends[-1])
 		else:
 			frame_value = _weighted_frame(track, fposmod(gait, float(count)) / float(count))
-	elif _resolved_role != "legacy":
+	elif clock_role != "legacy":
 		var ends: PackedFloat64Array = track.ends
 		var progress: float = state_clock * float(track.fps) / ends[-1]
 		frame_value = _weighted_frame(track, fposmod(progress, 1.0) if track.loop else minf(progress, 1.0))

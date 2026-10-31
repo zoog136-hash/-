@@ -208,7 +208,7 @@ func _run() -> void:
 		else:
 			check(mob.sprite.modulate.a < 1.0, "legacy monster death fades " + record.name)
 		report.monsters.append({"name":record.name,"boss":mob.is_boss,"body":mob.motion.profile.body_kind,
-			"native_frames":mob.motion.frame_source != null,"atlas_cell":record.visual,
+			"native_frames":mob.motion.frame_source != null,"atlas_cell":record.get("visual", {}),
 			"texture":mob.sprite.texture.resource_path,"texture_atlas":mob.sprite.texture.atlas.resource_path if mob.sprite.texture is AtlasTexture else "",
 			"source_binding":MANIFEST.monster_binding(record),
 			"special":record.get("ai", {}).get("special", {}),"errors":failures.slice(start_errors)})
