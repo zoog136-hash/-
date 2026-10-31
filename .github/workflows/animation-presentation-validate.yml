@@ -7,7 +7,8 @@ on:
       - 'scripts/monsters/**'
       - 'scripts/monster.gd'
       - 'scripts/player.gd'
-      - 'scripts/world.gd'
+      # scripts/world.gd is touched by most PRs; its animation tests also run in
+      # Integration Validate's full suite, so it no longer fans out 9 imports here.
       - 'data/animation_presentation.json'
       - 'data/combat_animation_profiles.json'
       - 'assets/actors/eight_direction/**'
