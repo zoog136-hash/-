@@ -174,6 +174,27 @@ func _run() -> void:
 	_check(int((corrupted.export_state()["pity"] as Dictionary)["변신"]["희귀"]) == 19, "corrupt pity clamped")
 	corrupted.import_state({})
 	_check(corrupted.spare_count("변신", "희귀") == 0, "old save defaults to empty card inventory")
+
+	# Full-playtest grant includes all seven grades of all three categories and
+	# enough duplicate materials for fusion without touching the permanent card.
+	var playtest = RULES.new()
+	playtest.configure(_fixture())
+	var playtest_counts: Dictionary = playtest.grant_full_collection_for_playtest(10)
+	for category: String in RULES.CATEGORIES:
+		var expected: int = (playtest.known_ids[category] as Dictionary).size()
+		_check(int(playtest_counts.get(category, 0)) == expected, "playtest catalog count " + category)
+		_check(int(playtest.category_totals(category).get("unique", -1)) == expected, "playtest all owned " + category)
+		_check(int(playtest.category_totals(category).get("spare", -1)) == expected * 10, "playtest duplicates " + category)
+		_check(playtest.spare_count(category, "신화") == 240, "playtest mythic fusion materials " + category)
+	var seeded_state: Dictionary = playtest.export_state()
+	playtest.grant_full_collection_for_playtest(10)
+	_check(playtest.export_state() == seeded_state, "playtest grant is idempotent")
+	var playtest_reload = RULES.new()
+	playtest_reload.configure(_fixture())
+	playtest_reload.import_state(seeded_state)
+	_check(playtest_reload.export_state() == seeded_state, "playtest cards use normal save schema")
+	_check(bool(playtest.fuse("변신", "고급").get("ok", false)), "playtest fusion can consume duplicates")
+	_check(int(playtest.category_totals("변신").get("unique", -1)) == (playtest.known_ids["변신"] as Dictionary).size(), "fusion does not lose unlocked cards")
 	_finish()
 
 func _finish() -> void:

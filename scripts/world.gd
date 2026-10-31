@@ -403,6 +403,14 @@ func _ready() -> void:
 	_set_map(active_map_id, false)
 	var creating_character: bool = not FileAccess.file_exists(save_path())
 	_load_game(true)
+	if _full_cards_playtest_active():
+		var playtest_totals: Dictionary = card_draw_fusion.grant_full_collection_for_playtest(10)
+		card_collections.restore_from_owned()
+		_invalidate_equipment_static()
+		hud.append_log("카드 테스트 · 변신 %d / 마법인형 %d / 성물 %d 전종 보유 · 중복 각 10장" % [
+			int(playtest_totals.get("변신", 0)),
+			int(playtest_totals.get("마법인형", 0)),
+			int(playtest_totals.get("성물", 0))])
 	if creating_character and growth.development: growth.seed_lab()
 	if growth.development:
 		var lab_badge := Label.new()
@@ -4196,8 +4204,17 @@ func _refresh_combat_hud() -> void:
 	hud.character_state["gold"] = gold
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
+# Android debug APKs receive the full catalog automatically. Desktop developers
+# can opt in using --playtest-full-cards; release builds never seed ownership.
+func _full_cards_playtest_active() -> bool:
+	if not OS.is_debug_build() or Engine.is_editor_hint(): return false
+	return OS.get_name() == "Android" or "--playtest-full-cards" in OS.get_cmdline_user_args()
+
 func base_save_path() -> String:
 	if growth.development: return "user://twilight_growth_lab_v1.json"
+	# Do not carry test grants or awakening/fusion consumption into normal saves.
+	if _full_cards_playtest_active():
+		return "user://twilight_native_png_full_cards_test_v1.json" if NATIVE_PNG.enabled() else "user://twilight_full_cards_test_v1.json"
 	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
 
 func save_path() -> String:
@@ -4600,6 +4617,7 @@ func _load_game(quiet: bool) -> void:
 	player.set_class_index(class_index)
 	player.clear_status_effects()
 	card_draw_fusion.import_state(data.get("card_draw_fusion", {}))
+	if _full_cards_playtest_active(): card_draw_fusion.grant_full_collection_for_playtest(10)
 	# Old version-1 ownership is already permanent. Derive silently before HP/MP
 	# clamping, with no card consumption, grant, or new mutable save field.
 	card_collections.restore_from_owned()
