@@ -1,4 +1,5 @@
 extends "res://tests/pr100_direction_gameplay_test.gd"
+const REVIEWED_VISUALS = preload("res://scripts/monsters/reviewed_existing_visuals.gd")
 
 # TWILIGHT_OPTIONAL_RENDER_CAPTURE
 # TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_PR100_CAPTURE_DIR
@@ -44,6 +45,10 @@ func verify_reference_binding(subject: String, proof: Dictionary) -> Dictionary:
 			if str(binding.get("game_name", "")) == subject and str(binding.get("texture", "")) == fixture:
 				expected = fixture
 				check(FileAccess.get_sha256(fixture) == str(binding.sha256), "explicit synthetic fixture digest matches")
+	# A reviewed existing-visual binding (data/monsters/reviewed_existing_visuals.json)
+	# deliberately replaces this species' portrait with its reviewed idle pose.
+	var reviewed_portrait: Texture2D = REVIEWED_VISUALS.portrait(record_for(subject))
+	if reviewed_portrait != null: expected = reviewed_portrait.resource_path
 	check(world._monster_texture(record_for(subject)).resource_path == expected, "production portrait lookup retains the declared original or explicit CI fixture")
 	return {"synthetic_fixture":synthetic, "original":original, "resolved_portrait":expected}
 
@@ -79,7 +84,10 @@ func run() -> void:
 	normal = db_actor(subject)
 	check(normal != null, "original-based target exists in production DB")
 	if normal == null: await finish(); return
-	check(normal.motion.profile.frames_path == "res://assets/actors/eight_direction/original_based/" + subject_folder() + "/SpriteFrames.tres", "production profile resolves original-based resource")
+	var accepted_frames: Array[String] = ["res://assets/actors/eight_direction/original_based/" + subject_folder() + "/SpriteFrames.tres"]
+	var reviewed_frames: String = str(REVIEWED_VISUALS.binding(record_for(subject)).get("frames_path", ""))
+	if not reviewed_frames.is_empty(): accepted_frames.append(reviewed_frames)
+	check(normal.motion.profile.frames_path in accepted_frames, "production profile resolves original-based resource")
 	check(normal.motion.frame_source != null, "production Sprite2D uses authored SpriteFrames")
 	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/actors/eight_direction/original_based/" + subject_folder() + "/provenance.json"))
 	check((proof.target_keys as Array).has("monster:" + subject), "subject is an explicitly reviewed original-image binding")
