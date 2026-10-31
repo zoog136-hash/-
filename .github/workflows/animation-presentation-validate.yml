@@ -48,7 +48,20 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
           sudo docker image prune --all --force >/dev/null 2>&1 || true
-          df -h /
+          # The checkout (working tree + its pack) alone now nears the root
+          # disk. Hosted runners also mount a separate temporary disk at /mnt;
+          # put the workspace there when it has more room than /.
+          root_free=$(df --output=avail -B1G / | tail -n 1 | tr -d ' ')
+          mnt_free=$(df --output=avail -B1G /mnt 2>/dev/null | tail -n 1 | tr -d ' ' || echo 0)
+          if [ "${mnt_free:-0}" -gt "${root_free:-0}" ] && [ -z "$(ls -A "$GITHUB_WORKSPACE")" ]; then
+            sudo mkdir -p /mnt/twilight-workspace
+            sudo chown "$(id -u):$(id -g)" /mnt/twilight-workspace
+            cd /
+            rmdir "$GITHUB_WORKSPACE"
+            ln -s /mnt/twilight-workspace "$GITHUB_WORKSPACE"
+            echo "Workspace moved to /mnt (${mnt_free} GB free vs ${root_free} GB on /)"
+          fi
+          df -h / /mnt || true
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
@@ -256,7 +269,20 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
           sudo docker image prune --all --force >/dev/null 2>&1 || true
-          df -h /
+          # The checkout (working tree + its pack) alone now nears the root
+          # disk. Hosted runners also mount a separate temporary disk at /mnt;
+          # put the workspace there when it has more room than /.
+          root_free=$(df --output=avail -B1G / | tail -n 1 | tr -d ' ')
+          mnt_free=$(df --output=avail -B1G /mnt 2>/dev/null | tail -n 1 | tr -d ' ' || echo 0)
+          if [ "${mnt_free:-0}" -gt "${root_free:-0}" ] && [ -z "$(ls -A "$GITHUB_WORKSPACE")" ]; then
+            sudo mkdir -p /mnt/twilight-workspace
+            sudo chown "$(id -u):$(id -g)" /mnt/twilight-workspace
+            cd /
+            rmdir "$GITHUB_WORKSPACE"
+            ln -s /mnt/twilight-workspace "$GITHUB_WORKSPACE"
+            echo "Workspace moved to /mnt (${mnt_free} GB free vs ${root_free} GB on /)"
+          fi
+          df -h / /mnt || true
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
@@ -387,7 +413,20 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
           sudo docker image prune --all --force >/dev/null 2>&1 || true
-          df -h /
+          # The checkout (working tree + its pack) alone now nears the root
+          # disk. Hosted runners also mount a separate temporary disk at /mnt;
+          # put the workspace there when it has more room than /.
+          root_free=$(df --output=avail -B1G / | tail -n 1 | tr -d ' ')
+          mnt_free=$(df --output=avail -B1G /mnt 2>/dev/null | tail -n 1 | tr -d ' ' || echo 0)
+          if [ "${mnt_free:-0}" -gt "${root_free:-0}" ] && [ -z "$(ls -A "$GITHUB_WORKSPACE")" ]; then
+            sudo mkdir -p /mnt/twilight-workspace
+            sudo chown "$(id -u):$(id -g)" /mnt/twilight-workspace
+            cd /
+            rmdir "$GITHUB_WORKSPACE"
+            ln -s /mnt/twilight-workspace "$GITHUB_WORKSPACE"
+            echo "Workspace moved to /mnt (${mnt_free} GB free vs ${root_free} GB on /)"
+          fi
+          df -h / /mnt || true
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
