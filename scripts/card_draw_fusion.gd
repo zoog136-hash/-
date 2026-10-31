@@ -73,6 +73,23 @@ func configure(catalog: Dictionary) -> void:
 		spare[category] = {}
 		pity[category] = {"희귀": 0, "영웅": 0}
 
+# Debug-playtest seeding: the canonical catalog is the source of truth, not
+# a hand-maintained list. Existing duplicates are never reduced or compounded.
+# The world only calls this in the isolated, explicitly gated playtest save.
+func grant_full_collection_for_playtest(minimum_spare: int = 10) -> Dictionary:
+	var guaranteed_spare: int = clampi(minimum_spare, 0, 1000000)
+	var category_counts: Dictionary = {}
+	for category: String in CATEGORIES:
+		var unlocked: Dictionary = owned[category] as Dictionary
+		var duplicates: Dictionary = spare[category] as Dictionary
+		var identities: Dictionary = known_ids[category] as Dictionary
+		for identity: String in identities:
+			unlocked[identity] = true
+			if guaranteed_spare > 0:
+				duplicates[identity] = maxi(guaranteed_spare, int(duplicates.get(identity, 0)))
+		category_counts[category] = identities.size()
+	return category_counts
+
 func can_draw(category: String) -> bool:
 	if not CATEGORIES.has(category):
 		return false
