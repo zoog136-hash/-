@@ -24,6 +24,17 @@ var summons: Array[Dictionary] = []
 var pending_initial_spawns: Array[Dictionary] = []
 var pending_spawn_ids: Dictionary = {}
 const INITIAL_SPAWNS_PER_FRAME: int = 3
+# A slot whose spawn search fails (full or unreachable region) retried every
+# 2 s. On aden_world 27 such slots each ran up to 64x96 floor probes in the
+# same frame: a ~150 ms stall every 2 s during play. Repeated failures now
+# back off (2, 4, 8 ... 60 s) with jitter so they never line up, a success
+# resets the delay, and one wake spends at most SPAWN_SEARCH_BUDGET_USEC on
+# normal respawn searches (the rest wait for the next wake). Bosses keep
+# their own cadence.
+const SPAWN_RETRY_MIN: float = 2.0
+const SPAWN_RETRY_MAX: float = 60.0
+const SPAWN_SEARCH_BUDGET_USEC: int = 6000
+var retry_jitter := RandomNumberGenerator.new()
 const INITIAL_SPAWN_BUDGET_USEC: int = 4000
 
 func _ready() -> void:
@@ -133,7 +144,9 @@ func _spawn_slot(slot: Dictionary) -> void:
 				return
 	if boss and not boss_director.can_spawn(str(field.data.map_id),region): return
 	var p: Vector2 = _spawn_point(region)
-	if not p.is_finite(): return
+	if not p.is_finite():
+		slot.search_failed = true
+		return
 	if bool(slot.get("has_spawned",false)) and region.has("respawn_on_screen") and not bool(region.respawn_on_screen) and _source_visible(p):
 		slot.remaining=3.0
 		return
@@ -388,6 +401,7 @@ func _process(delta: float) -> void:
 	var activity_view := Rect2()
 	var activity_radius: float = -1.0
 	var escaros_refresh: bool = refresh and field is NativePngField and str(field.data.map_id)=="escaros_world"
+	var search_spent: int = 0
 	for slot: Dictionary in slots:
 		if pending_spawn_ids.has(int(slot.slot_id)):continue
 		var monster: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
@@ -398,12 +412,24 @@ func _process(delta: float) -> void:
 					pending_initial_spawns.append(slot)
 					pending_spawn_ids[int(slot.slot_id)]=true
 					continue
+				var boss_slot: bool = str(slot.region.get("mode","normal"))=="boss"
+				if not boss_slot and search_spent>=SPAWN_SEARCH_BUDGET_USEC:continue
+				var search_started: int = Time.get_ticks_usec()
 				_spawn_slot(slot)
+				if not boss_slot:search_spent += Time.get_ticks_usec()-search_started
 				# Full/blocked regions can fail all 64–160 candidate probes. Do not
 				# repeat that costly search at every 0.4s wake until a later retry.
 				# Successful spawns and boss cooldown semantics remain unchanged.
 				if not is_instance_valid(slot.monster) and str(slot.region.get("mode","normal"))!="boss":
-					slot.remaining = 2.0
+					slot.remaining = _spawn_retry_delay(slot)
+				elif not is_instance_valid(slot.monster) and bool(slot.get("search_failed",false)):
+					# A boss the director allows but whose floor search found no
+					# point retried this full search every frame (~12 ms per frame on
+					# aden_world). Back off like normal slots; director cooldowns
+					# and refusals stay as they were.
+					slot.remaining = _spawn_retry_delay(slot)
+				elif is_instance_valid(slot.monster):slot.spawn_failures = 0
+				slot.search_failed = false
 		elif refresh:
 			if escaros_refresh and activity_radius < 0.0:
 				var camera: Camera2D = world.player.camera
@@ -411,6 +437,11 @@ func _process(delta: float) -> void:
 				activity_view = Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(240.0)
 				activity_radius = extent.length()*.5+320.0
 			_update_activity(monster, activity_view, activity_radius)
+
+func _spawn_retry_delay(slot: Dictionary) -> float:
+	var failures: int = int(slot.get("spawn_failures",0))+1
+	slot.spawn_failures = failures
+	return minf(SPAWN_RETRY_MAX,SPAWN_RETRY_MIN*pow(2.0,failures-1))*retry_jitter.randf_range(.8,1.2)
 
 func _drain_initial_spawns() -> void:
 	var spawn_start: int=Time.get_ticks_usec()
@@ -421,7 +452,8 @@ func _drain_initial_spawns() -> void:
 		pending_spawn_ids.erase(int(pending.slot_id))
 		if _zone_active(pending.region):
 			_spawn_slot(pending)
-			if not is_instance_valid(pending.monster):pending.remaining=maxf(2.0,float(pending.remaining))
+			if not is_instance_valid(pending.monster):pending.remaining=maxf(_spawn_retry_delay(pending),float(pending.remaining))
+			else:pending.spawn_failures=0
 		initial_count+=1
 
 func _update_activity(monster: TwilightMonster, view: Rect2 = Rect2(), view_radius: float = -1.0) -> void:

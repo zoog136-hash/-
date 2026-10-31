@@ -14,6 +14,9 @@ static var frame_weak: Dictionary = {}
 static var frame_order: Array[String] = []
 static var frame_costs: Dictionary = {}
 static var frame_cache_bytes: int = 0
+static var failed_frames: Dictionary = {}
+## Tests that deliberately build a broken set turn the engine error off.
+static var report_missing_frames: bool = true
 
 static func for_record(kind: String, record: Dictionary, resource: String = "") -> TwilightAnimationProfile:
 	if records.is_empty():
@@ -83,10 +86,24 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 	result.remove_animation("default")
 	if path.is_empty() or not ResourceLoader.exists(path): return result
 	if path.get_extension() in ["tres", "res"]:
+		# A frame set with a missing texture still loads every other texture
+		# before failing (~2.2 s for a boss sheet), and the old fallthrough then
+		# tried the same path again as a texture. That cost repeated on every
+		# spawn of the actor. Check dependencies first (~0.5 ms), report the
+		# broken reference once, and remember the failure; the actor gets the
+		# same empty/fallback frames it got before.
+		if failed_frames.has(path): return result
+		var missing: String = _missing_dependency(path)
+		if not missing.is_empty():
+			failed_frames[path] = true
+			if report_missing_frames:push_error("SpriteFrames %s references missing %s; using fallback visuals" % [path, missing])
+			return result
 		var authored: SpriteFrames = load(path) as SpriteFrames
 		if authored != null:
 			_cache_frames(key, authored)
 			return authored
+		failed_frames[path] = true
+		return result
 	var texture: Texture2D = load(path) as Texture2D
 	if texture == null: return result
 	var names: Array[String] = ["still"]
@@ -116,6 +133,14 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 	result.set_meta("twilight_generated_sheet", true)
 	_cache_frames(key, result)
 	return result
+
+static func _missing_dependency(path: String) -> String:
+	for raw: String in ResourceLoader.get_dependencies(path):
+		var dependency: String = raw
+		for part: String in raw.split("::"):
+			if part.begins_with("res://"):dependency = part
+		if dependency.begins_with("res://") and not ResourceLoader.exists(dependency):return dependency
+	return ""
 
 static func _cache_frames(key: String, result: SpriteFrames) -> void:
 	# This bounds only strong lookup references. Active actors and Godot's own
