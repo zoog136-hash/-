@@ -217,6 +217,11 @@ const WORLD_INTERACTIONS = preload("res://scripts/input/world_interactions.gd")
 const INVENTORY_GROUND_TRANSFER = preload("res://scripts/loot/inventory_ground_transfer.gd")
 var world_interactions: Node
 var ammo_notice_at: int = -10000
+# Arrows/bullets are worn in their own ammo slot (LineageM style). "" means none.
+# ammo_unequipped is true only after the player explicitly takes ammo off, so
+# older saves and new characters still auto-equip the ammo their weapon needs.
+var equipped_ammo: String = ""
+var ammo_unequipped: bool = false
 var selected_monster: TwilightMonster = null
 var auto_target: TwilightMonster = null
 var auto_attack_timer: float = 0.0
@@ -3227,6 +3232,9 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if record.is_empty():
 		hud.show_message("아이템 DB에서 정보를 찾을 수 없습니다")
 		return
+	if _is_ammo_record(record):
+		_toggle_ammo_equipped(item_name)
+		return
 	var equip_slot: String = _equipment_slot_base(record)
 	if equip_slot != "":
 		_equip_or_acquire_item(record, false, str(selected.get("id", "")))
@@ -3690,6 +3698,8 @@ func _enhancement_bonus_text(kind: String, target_level: int) -> String:
 	return ENCHANT.summary(kind, target_level)
 
 func _is_item_equipped(item_name: String) -> bool:
+	if not equipped_ammo.is_empty() and item_name == equipped_ammo:
+		return true
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var value: Variant = equipped_items.get(slot, {})
 		if value is Dictionary and str((value as Dictionary).get("name", "")) == item_name:
@@ -3771,8 +3781,12 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		hud.append_log("강화 실패(소실) · +%d %s" % [current_level, target_name])
 
 	hp = mini(hp, _effective_max_hp())
-	hud.refresh_inventory(inventory)
+	var phase_usec: int = Time.get_ticks_usec()
+	# _update_hud already redraws an open bag; a second full redraw is wasted.
+	if not hud.inventory_panel.visible:
+		hud.refresh_inventory(inventory)
 	_update_hud()
+	_perf_log("강화 HUD 갱신", phase_usec)
 	_save_game(true)
 	# Persist first. Presentation/skip/close must never commit or reroll a result.
 	if hud.has_method("show_enhancement_result"):
@@ -3780,11 +3794,13 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	else:
 		hud.show_message(result_message)
 
+	phase_usec = Time.get_ticks_usec()
 	if int(inventory.get(scroll_name, 0)) > 0:
 		var remaining_candidates: Array = _enhancement_candidates(kind, mode)
 		hud.call("open_enhancement", scroll_name, remaining_candidates)
 	else:
 		hud.call("open_enhancement", scroll_name, [])
+	_perf_log("강화 목록 갱신", phase_usec)
 
 func _destroy_enhancement_target(item_name: String, item_id: String = "") -> void:
 	if not item_id.is_empty():
@@ -4181,6 +4197,7 @@ func _update_hud() -> void:
 	character_state["defense"] = _effective_defense()
 	character_state["equipped"] = equipped_catalog
 	character_state["equipped_items"] = _equipped_items_snapshot()
+	character_state["equipped_ammo"] = equipped_ammo
 	character_state["enhancement_levels"] = enhancement_levels
 	character_state["item_instances"] = item_instances
 	character_state["gold"] = gold
@@ -4334,6 +4351,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"card_draw_fusion": card_draw_fusion.export_state(),
 		"card_option_awakening": option_awakening.export_state(),
 		"equipped_items": equipped_items,
+		"equipped_ammo": equipped_ammo,
+		"ammo_unequipped": ammo_unequipped,
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
 		"next_item_instance_id":next_item_instance_id
@@ -4635,6 +4654,10 @@ func _load_game(quiet: bool) -> void:
 	var equipped_items_value: Variant = data.get("equipped_items", equipped_items)
 	if equipped_items_value is Dictionary:
 		equipped_items = equipped_items_value as Dictionary
+	equipped_ammo = str(data.get("equipped_ammo", ""))
+	if equipped_ammo not in ["화살", "총알"]:
+		equipped_ammo = ""
+	ammo_unequipped = bool(data.get("ammo_unequipped", false))
 	var enhancement_value: Variant = data.get("enhancement_levels", enhancement_levels)
 	if enhancement_value is Dictionary:
 		enhancement_levels = enhancement_value as Dictionary
@@ -5124,6 +5147,9 @@ func _item_locked(item_name: String, instance_id: String = "") -> bool:
 func _unequip_item_reference(reference: String) -> void:
 	var parsed: Dictionary = _parse_enhancement_target(reference)
 	var id: String = str(parsed.get("id",""))
+	if id.is_empty() and str(parsed.get("name", reference)) == equipped_ammo and not equipped_ammo.is_empty():
+		_toggle_ammo_equipped(equipped_ammo)
+		return
 	if id.is_empty(): return
 	for slot: String in equipped_items.keys():
 		if str(equipped_items[slot].get("instance_id","")) != id: continue
@@ -5375,9 +5401,9 @@ func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 				hud.show_message("%s · 현재 무기로 사용할 수 없는 스킬입니다" % skill_name)
 			return false
 	var required_ammo: int = maxi(0, int(skill.get("ammo_per_hit", 0))) * maxi(1, int(skill.get("hits", 1)))
-	if required_ammo > 0 and int(inventory.get("화살", 0)) < required_ammo:
+	if required_ammo > 0 and (not _ammo_worn("화살", true) or int(inventory.get("화살", 0)) < required_ammo):
 		if announce:
-			hud.show_message("%s · 화살 %d개 필요" % [skill_name, required_ammo])
+			hud.show_message("%s · 화살 %d개 필요" % [skill_name, required_ammo] if _is_item_equipped("화살") else "%s · 화살을 착용하세요" % skill_name)
 		return false
 	if not charge_skill.is_empty() or player.is_stunned() or player.is_feared() or (player.is_silenced() and int(skill.get("mp", 0)) > 0):
 		if announce:
@@ -6112,24 +6138,35 @@ func _on_card_pack_draw_requested(category: String) -> void:
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.call("present_card_reveal", category, result, false)
 
-func _on_card_fusion_requested(category: String, grade: String) -> void:
+func _on_card_fusion_requested(category: String, grade: String, count: int = 1) -> void:
 	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
 	var cards_before: Dictionary = card_draw_fusion.export_state()
 	var roll_before: int = card_draw_fusion.rng.state
-	var result: Dictionary = card_draw_fusion.fuse(category, grade)
+	var batch: bool = count > 1
+	var result: Dictionary = card_draw_fusion.fuse_many(category, grade, count) if batch else card_draw_fusion.fuse(category, grade)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "합성 실패")))
 		return
-	var card: Dictionary = result.get("result", {}) as Dictionary
-	var outcome: String = "성공" if bool(result.get("success", false)) else "실패"
-	var message: String = "%s %s 합성 %s · %s(%s)" % [
-		category, grade, outcome, str(card.get("name", "")), str(card.get("grade", ""))
-	]
-	var pity_card: Dictionary = result.get("pity_reward", {}) as Dictionary
-	if not pity_card.is_empty():
-		message += " · 누적 실패 보상: %s" % str(pity_card.get("name", ""))
+	var message: String = ""
+	if batch:
+		message = "%s %s 합성 %d회 · 성공 %d / 실패 %d" % [
+			category, grade, int(result.get("attempts", 0)), int(result.get("success_count", 0)),
+			int(result.get("attempts", 0)) - int(result.get("success_count", 0))
+		]
+		var pity_count: int = (result.get("results", []) as Array).filter(func(entry: Variant) -> bool: return entry is Dictionary and bool((entry as Dictionary).get("pity_reward", false))).size()
+		if pity_count > 0:
+			message += " · 누적 실패 보상 %d장" % pity_count
+	else:
+		var card: Dictionary = result.get("result", {}) as Dictionary
+		var outcome: String = "성공" if bool(result.get("success", false)) else "실패"
+		message = "%s %s 합성 %s · %s(%s)" % [
+			category, grade, outcome, str(card.get("name", "")), str(card.get("grade", ""))
+		]
+		var pity_card: Dictionary = result.get("pity_reward", {}) as Dictionary
+		if not pity_card.is_empty():
+			message += " · 누적 실패 보상: %s" % str(pity_card.get("name", ""))
 	if _save_game(true) != OK:
 		card_draw_fusion.import_state(cards_before)
 		card_draw_fusion.rng.state = roll_before
@@ -6203,7 +6240,9 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		hp_recovery_elapsed = 0.0
 		mp_recovery_elapsed = 0.0
 	if category == "변신":
+		var transform_usec: int = Time.get_ticks_usec()
 		_apply_transform_visual(record)
+		_perf_log("변신 교체", transform_usec)
 	elif category == "마법인형":
 		_apply_doll_visual(record)
 	elif category == "성물":
@@ -6806,6 +6845,12 @@ func _ensure_inventory_ammo_defaults() -> void:
 func _consume_weapon_ammo() -> bool:
 	var ammo_name: String = _current_ammo_name()
 	if ammo_name == "": return true
+	if not _ammo_worn(ammo_name, true):
+		var now_worn: int = Time.get_ticks_msec()
+		if now_worn-ammo_notice_at >= 3000:
+			ammo_notice_at = now_worn
+			hud.show_message("%s 미착용 · 가방에서 %s을(를) 착용하세요" % [ammo_name, ammo_name])
+		return false
 	var count: int = int(inventory.get(ammo_name,0))
 	if count <= 0:
 		var now: int = Time.get_ticks_msec()
@@ -6814,8 +6859,56 @@ func _consume_weapon_ammo() -> bool:
 			hud.show_message("%s 부족 · 공격 대기 (AUTO 유지)" % ammo_name)
 		return false
 	inventory[ammo_name] = count-1
-	_update_hud()
+	# One arrow per shot used to rebuild the whole HUD (equipment, cards,
+	# collections, inventory) on every bow attack, which stuttered combat.
+	# Only the counters that show ammo need refreshing.
+	_refresh_ammo_counters()
 	return true
+
+func _refresh_ammo_counters() -> void:
+	if hud.has_method("set_quick_items"):
+		hud.call("set_quick_items", inventory)
+	if hud.inventory_panel.visible:
+		hud.refresh_inventory(inventory)
+
+func _is_ammo_record(record: Dictionary) -> bool:
+	# Name-based: the source catalog may type 화살 differently from the
+	# fallback "탄약" record, and only these two stacks feed weapons.
+	return str(record.get("name", "")) in ["화살", "총알"]
+
+## True when `ammo_name` is worn. Unless the player explicitly took ammo off,
+## the ammo the current weapon needs is worn automatically (old saves, new
+## characters, and bow <-> gun swaps; there is one arrow and one bullet type).
+func _ammo_worn(ammo_name: String, allow_auto: bool = false) -> bool:
+	if equipped_ammo == ammo_name:
+		return true
+	if allow_auto and not ammo_unequipped and int(inventory.get(ammo_name, 0)) > 0:
+		equipped_ammo = ammo_name
+		hud.append_log("%s 자동 착용" % ammo_name)
+		stat_hud_refresh_pending = true
+		_request_deferred_save()
+		return true
+	return false
+
+func _toggle_ammo_equipped(ammo_name: String) -> void:
+	if equipped_ammo == ammo_name:
+		equipped_ammo = ""
+		ammo_unequipped = true
+		hud.show_message("%s 착용 해제" % ammo_name)
+		hud.append_log("%s 착용 해제" % ammo_name)
+	else:
+		if int(inventory.get(ammo_name, 0)) <= 0:
+			hud.show_message("%s이(가) 없습니다" % ammo_name)
+			return
+		equipped_ammo = ammo_name
+		ammo_unequipped = false
+		var needed: String = _current_ammo_name()
+		var note: String = "" if needed.is_empty() or needed == ammo_name else " · 현재 무기는 %s 사용" % needed
+		hud.show_message("%s 착용%s" % [ammo_name, note])
+		hud.append_log("%s 착용" % ammo_name)
+	_update_hud()
+	hud.refresh_inventory(inventory)
+	_request_deferred_save()
 
 func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> float:
 	if target == null:
