@@ -175,10 +175,13 @@ static func _take_prefetched(path: String) -> SpriteFrames:
 		prefetched.erase(path)
 		return ready
 	if prefetch_pending.has(path):
-		# Still loading: waiting for the loader thread is never slower than
-		# starting the same synchronous load from scratch.
-		prefetch_pending.erase(path)
-		return ResourceLoader.load_threaded_get(path) as SpriteFrames
+		# Only take a finished load. load_threaded_get() on an unfinished one
+		# waits and flushes queued calls, which failed add_child() during scene
+		# setup (Main boot). The caller then uses its normal load().
+		if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_LOADED:
+			prefetch_pending.erase(path)
+			return ResourceLoader.load_threaded_get(path) as SpriteFrames
+		prefetch_wanted.erase(path)
 	return null
 
 ## Forget the previous map's prefetch set (called on map change).

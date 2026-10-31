@@ -76,8 +76,6 @@ func configure(controller: Node, value: PlayableField) -> void:
 			if source.is_empty() or str(source.get("source_npc_id",""))!=str(region.source_npc_id) or region.monster_types!=[str(source.name)]:continue
 			records[str(source.name)]=source
 		admitted.append(region)
-	# Start background frame loads before the first (boss) spawns below.
-	_prefetch_region_frames()
 	for region: Dictionary in admitted:
 		for index: int in range(int(region["max_count"])):
 			var slot: Dictionary = {"region":region,"index":index,"slot_id":slots.size(),"monster":null,"remaining":0.0,"has_spawned":false}
@@ -89,6 +87,9 @@ func configure(controller: Node, value: PlayableField) -> void:
 					pending_initial_spawns.append(slot)
 					pending_spawn_ids[int(slot.slot_id)]=true
 				else:_spawn_slot(slot)
+	# Species spawned synchronously above are already loaded (and skipped);
+	# the rest of this map's frames load in the background for later spawns.
+	_prefetch_region_frames()
 
 ## Start background loads of this map's monster frames, nearest regions first,
 ## so a first spawn (or a boss respawn) does not load its sheet on the frame.
