@@ -136,14 +136,45 @@ class LosslessPreparation(unittest.TestCase):
             self.assertTrue(report['all_chunk_sha256_verified'])
             self.assertFalse((root/'13474.png').exists())
 
+    def test_receipt_keeps_prior_plan_identity_only_when_both_pins_match(self):
+        from build_native_png_maps import digest
+        from verify_native_png_pack import verify
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root/'kept.png'
+            Image.new('RGBA', (70, 50), (20, 80, 140, 255)).save(source)
+            plan = root/'plan.json'
+            maps = {'kept': {'file': 'kept.png', 'collision_scope': 'CODE_FIXTURE'}}
+            spec = {'sha256': digest(source), 'bytes': source.stat().st_size, 'size': [70, 50]}
+            plan.write_text(json.dumps({'sources': {'kept.png': spec}, 'maps': maps}))
+            build(root, plan, root/'pack')
+            prior = digest(plan)
+            # Retire another entry: the plan document changes, the kept map's
+            # geometry/save identity (prior plan hash) does not.
+            plan.write_text(json.dumps({'sources': {'kept.png': spec}, 'maps': maps, 'retired': ['old']}))
+            receipt = root/'receipt.json'
+            pins = {'plan_sha256': prior, 'plan_document_sha256': digest(plan),
+                    'index_sha256': digest(root/'pack/index.json')}
+            receipt.write_text(json.dumps(pins))
+            self.assertEqual(verify(root/'pack', plan, receipt)['maps'], 1)
+            with self.assertRaises(ValueError):
+                verify(root/'pack', plan)
+            for key in ('plan_document_sha256', 'index_sha256', 'plan_sha256'):
+                receipt.write_text(json.dumps(dict(pins, **{key: '0'*64})))
+                with self.assertRaises(ValueError):
+                    verify(root/'pack', plan, receipt)
+
     def test_five_new_sources_reuse_persistent_ids_without_guessed_population(self):
         plan = json.loads((ROOT/'data/maps/aden_faith_png_plan.json').read_text())
-        expected = {'aden_world': 'Aden.png', 'faith_01': '13398.png',
-                    'faith_02': '13401.png', 'faith_03': '13417.png', 'faith_04': '13472.png'}
+        # aden_world (Aden.png) was retired from this plan when the source84
+        # Aden replaced it; the four Faith maps keep their persistent IDs.
+        expected = {'faith_01': '13398.png', 'faith_02': '13401.png',
+                    'faith_03': '13417.png', 'faith_04': '13472.png'}
         self.assertEqual({mid: row['file'] for mid, row in plan['maps'].items()}, expected)
+        self.assertNotIn('Aden.png', plan['sources'])
         historical = {row['id'] for row in json.loads((ROOT/'data/maps_v18.json').read_text())}
         self.assertTrue(set(expected) <= historical)
-        self.assertEqual(len({s['sha256'] for s in plan['sources'].values()}), 5)
+        self.assertEqual(len({s['sha256'] for s in plan['sources'].values()}), 4)
         for row in plan['sources'].values():
             self.assertIsNone(row['server_map_id'])
             self.assertIsNone(row['collision_data_id'])

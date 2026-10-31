@@ -126,7 +126,12 @@ func toggle_inventory() -> void:
 			lineage_inventory_ui.hide_inventory()
 
 func refresh_inventory(inventory_value: Dictionary) -> void:
-	super.refresh_inventory(inventory_value)
+	# The base list lives in the v1 InventoryPanel, which this HUD never shows
+	# (toggle_inventory below opens the lineage bag). Rebuilding it anyway
+	# created a row, buttons and an icon load per item on every bag open:
+	# ~100 ms with 250 items. Keep it current only if it is actually visible.
+	if inventory_panel.visible:
+		super.refresh_inventory(inventory_value)
 	if lineage_inventory_ui != null:
 		lineage_inventory_ui.set_inventory(inventory_value)
 

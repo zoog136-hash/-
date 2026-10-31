@@ -39,6 +39,13 @@ ACTOR_ROOT = "assets/actors/eight_direction"
 # Pattern kept from the earlier audited draft001 exclusion; it is not generated.
 DRAFT_EXPORT_PATTERN = ACTOR_ROOT + "/native_locomotion_staging/transform_*/draft001/*"
 GENERATED_PREFIX = ACTOR_ROOT + "/"
+# Audit-only records of where production clips came from. They name the
+# archived draft001 templates as history, nothing loads them, and they are
+# excluded from the APK by exact path. Hand-kept, never generated.
+OFFLINE_PROVENANCE_JSON = frozenset((
+    ACTOR_ROOT + "/native_production/mythic-export-paths-r161-provenance.json",
+    ACTOR_ROOT + "/native_production/mythic-r154-source-provenance.json",
+))
 RESOURCE_LITERAL = re.compile(r'res:(?://|\\/\\/)([^"\'\s\\\]\),;<>|]+)')
 SEED_SUFFIXES = {".gd", ".tscn", ".gdshader"}
 FOLLOW_SUFFIXES = {".tres", ".tscn", ".json", ".gd", ".cfg", ".gdshader"}
@@ -168,7 +175,8 @@ def preset_patterns(preset_text: str) -> list[str]:
 
 def generated_patterns(patterns: list[str]) -> list[str]:
     return [pattern for pattern in patterns
-            if pattern.startswith(GENERATED_PREFIX) and pattern != DRAFT_EXPORT_PATTERN]
+            if pattern.startswith(GENERATED_PREFIX) and pattern != DRAFT_EXPORT_PATTERN
+            and pattern not in OFFLINE_PROVENANCE_JSON]
 
 
 def check_generated(root: Path, patterns: list[str], files: list[str] | None = None) -> dict:

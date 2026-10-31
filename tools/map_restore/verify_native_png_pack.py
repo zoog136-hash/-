@@ -12,10 +12,28 @@ from PIL import Image
 from build_native_png_maps import ROOT, digest
 
 
-def verify(pack, plan_path):
+def plan_identity(pack, plan_path, receipt_path=None):
+    """Return the plan identity the pack must carry, mirroring native_png_registry.gd.
+
+    Normally that is the plan file's own hash. A receipt may instead keep an
+    earlier shared plan_sha256 as the maps' geometry/save identity (e.g. Faith
+    maps after Aden was retired) while plan_document_sha256 authenticates the
+    current plan document. Both pins are required; neither is relaxed.
+    """
+    if receipt_path is None:
+        return digest(plan_path)
+    receipt = json.loads(Path(receipt_path).read_text())
+    if receipt.get('index_sha256') != digest(pack/'index.json'):
+        raise ValueError('Receipt does not pin this private pack index')
+    if receipt.get('plan_document_sha256', digest(plan_path)) != digest(plan_path):
+        raise ValueError('Receipt does not authenticate this plan document')
+    return receipt.get('plan_sha256')
+
+
+def verify(pack, plan_path, receipt_path=None):
     plan = json.loads(plan_path.read_text())
     index = json.loads((pack/'index.json').read_text())
-    if index.get('plan_sha256') != digest(plan_path) or set(index['maps']) != set(plan['maps']):
+    if index.get('plan_sha256') != plan_identity(pack, plan_path, receipt_path) or set(index['maps']) != set(plan['maps']):
         raise ValueError('Private pack does not match this source/navigation plan')
     chunks = 0
     foregrounds = 0
@@ -67,5 +85,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--pack', type=Path, required=True)
     parser.add_argument('--plan', type=Path, default=ROOT/'data/maps/native_png_plan.json')
+    parser.add_argument('--receipt', type=Path, default=None,
+                        help='tracked pack receipt (data/maps/*_pack.json) pinning the index and plan document')
     args = parser.parse_args()
-    print(json.dumps(verify(args.pack, args.plan)))
+    print(json.dumps(verify(args.pack, args.plan, args.receipt)))

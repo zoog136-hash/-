@@ -187,7 +187,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	collision_mask = 3
 	set_physics_process(true)
 	home_position = global_position
-	name_label.show(); hp_bar.show()
+	# Overhead name/HP visibility is decided by distance at the end of setup.
 	if has_node("GroundShadow"): $GroundShadow.show()
 	monster_name = str(record.get("name", "몬스터"))
 	monster_type = str(record.get("type", record.get("race", "")))
@@ -279,6 +279,11 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	name_label.text = "Lv.%d %s" % [monster_level, monster_name]
 	hp_bar.max_value = max_hp
 	hp_bar.value = hp
+	# Start with the same distance rule the AI applies every decision tick.
+	# Showing every new actor's label until its first AI tick made the first
+	# frame on a crowded field (Aden: ~360 actors) stall for tens of seconds
+	# while hundreds of offscreen labels were laid out and drawn at once.
+	_refresh_overhead_ui()
 	navigation_agent.path_desired_distance = 8.0
 	navigation_agent.target_desired_distance = 42.0
 	_setup_animation(record)
@@ -357,8 +362,7 @@ func _tick_ai(delta: float) -> void:
 	if next_enraged and not enraged:
 		show_status_text("ENRAGE")
 	enraged = next_enraged
-	name_label.visible = distance<=520.
-	hp_bar.visible = distance<=520.
+	_refresh_overhead_ui(distance)
 	if is_stunned() or is_feared():
 		motion.cancel_attack()
 		if is_instance_valid(species_visual): species_visual.warning_active = false
@@ -452,6 +456,16 @@ func _tick_ai(delta: float) -> void:
 		velocity = Vector2.ZERO
 		return
 	_move_toward(target_player.global_position,delta)
+
+const OVERHEAD_UI_DISTANCE: float = 520.0
+
+## Name and HP bar are only shown for actors near the player.
+func _refresh_overhead_ui(distance: float = -1.0) -> void:
+	if distance < 0.0:
+		distance = global_position.distance_to(target_player.global_position) if is_instance_valid(target_player) else INF
+	var near: bool = distance <= OVERHEAD_UI_DISTANCE
+	if name_label.visible != near: name_label.visible = near
+	if hp_bar.visible != near: hp_bar.visible = near
 
 func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
 	if is_held(): velocity = Vector2.ZERO; return

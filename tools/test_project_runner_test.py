@@ -15,7 +15,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from test_project_support import classify_result, timeout_budget, native_fixture_environment, run_native_fixture_cases
+from test_project_support import classify_result, failure_annotation, timeout_budget, native_fixture_environment, run_native_fixture_cases
 
 
 PR122_REACTION = ('PR122_NATIVE_REACTION_PASS actors=2 hit_cases=48 fps=30,60,120 '
@@ -658,6 +658,21 @@ elif "--script" in sys.argv:
                     os.kill(int(path.read_text()), signal.SIGKILL)
                 except ProcessLookupError:
                     pass
+
+
+
+class FailureAnnotationTests(unittest.TestCase):
+    def test_annotation_names_check_and_first_causes_on_one_line(self):
+        line = failure_annotation('import', '[ 60% ] reimport a.png\nERROR: Missing 100%\nSCRIPT ERROR: Parse Error: x\nok\n')
+        self.assertTrue(line.startswith('::error title=TWILIGHT check failed: import::'))
+        self.assertIn('ERROR: Missing 100%25', line)
+        self.assertIn('SCRIPT ERROR: Parse Error: x', line)
+        self.assertNotIn('\n', line)
+        self.assertNotIn('reimport', line)
+
+    def test_annotation_falls_back_to_last_lines_and_is_bounded(self):
+        self.assertTrue(failure_annotation('boot', 'a\nb\nlast\n').endswith('::a | b | last'))
+        self.assertLessEqual(len(failure_annotation('x', 'ERROR: ' + 'y' * 5000)), 1000)
 
 
 if __name__ == '__main__':

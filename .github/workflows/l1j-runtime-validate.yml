@@ -24,6 +24,7 @@ on:
       - 'tests/capture_l1j_runtime.gd'
       - 'tools/l1j/**'
       - 'tools/test_project.py'
+      - 'tools/l1j/select_pr_checks.py'
       - 'export_presets.cfg'
       - '.github/workflows/l1j-runtime-validate.yml'
   workflow_dispatch:
@@ -48,8 +49,8 @@ jobs:
       matrix: >-
         ${{ fromJSON(
           (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.retry_scope == 'linux_remaining'))
-          && '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240}]}'
-          || '{"include":[{"os":"ubuntu-latest","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240},{"os":"windows-latest","artifact":"win64.exe","executable":"Godot_v4.7.2-stable_win64_console.exe","job_minutes":240}]}'
+          && '{"include":[{"os":"ubuntu-24.04","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240}]}'
+          || '{"include":[{"os":"ubuntu-24.04","artifact":"linux.x86_64","executable":"Godot_v4.7.2-stable_linux.x86_64","job_minutes":240},{"os":"windows-latest","artifact":"win64.exe","executable":"Godot_v4.7.2-stable_win64_console.exe","job_minutes":240}]}'
         ) }}
     runs-on: ${{ matrix.os }}
     # Both full suites retain every check and its individual deadline.
@@ -59,6 +60,10 @@ jobs:
     env:
       PYTHONUTF8: '1'
       TWILIGHT_CI_RETRY_SCOPE: ${{ github.event_name == 'workflow_dispatch' && inputs.retry_scope || 'full' }}
+      # PRs: TWILIGHT Integration Validate already runs the complete suite (with
+      # the synthetic L1J CI fixtures). Here PRs repeat only the L1J-sensitive
+      # checks with the live fixture installed; manual runs keep the full suite.
+      TWILIGHT_L1J_SUITE: ${{ github.event_name == 'pull_request' && 'pr_targeted' || 'full' }}
     steps:
       # Preserve all PR122 source evidence; Windows Git needs long paths before checkout.
       - name: Enable Git long paths for Windows checkout
@@ -145,7 +150,7 @@ jobs:
         shell: python
         run: |
           import gzip, hashlib, json, pathlib, re, subprocess
-          assert '${{ matrix.os }}' == 'ubuntu-latest'
+          assert '${{ matrix.os }}' == 'ubuntu-24.04'
           source = 'f1247a0d3bdfe66fa011ab7d540e34ae782f2fe5'
           evidence = pathlib.Path('docs/remake/evidence/pr122-remaining106/batch15/ci-followup')
           proof = json.loads((evidence / 'linux-resume.json').read_text(encoding='utf-8'))
@@ -174,15 +179,19 @@ jobs:
           logs.mkdir(exist_ok=True)
           (logs / 'authenticated-linux-prefix.json').write_text(json.dumps(proof, indent=2) + '\n', encoding='utf-8')
           print('LINUX_PREFIX_AUTHENTICATED', json.dumps({k: proof[k] for k in ['source_sha', 'run_id', 'job_id', 'passed', 'skipped', 'remaining', 'validated_current_sha']}))
-      - name: Import, boot and all regression checks with isolated saves
+      - name: Import, boot and regression checks with isolated saves (PR L1J-targeted, manual full)
         shell: python
         run: |
           import json, os, pathlib, subprocess, sys
-          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450', '--import-timeout', '2400']
+          command = [sys.executable, 'tools/test_project.py', '--godot', 'engine/${{ matrix.executable }}', '--logs', 'l1j-test-results', '--timeout', '450', '--import-timeout', '5400']
           resumed = os.environ['TWILIGHT_CI_RETRY_SCOPE'] == 'linux_remaining'
           if resumed:
               proof = json.loads(pathlib.Path('l1j-test-results/authenticated-linux-prefix.json').read_text(encoding='utf-8'))
               command += ['--only', ','.join(proof['fresh_checks'])]
+          elif os.environ['TWILIGHT_L1J_SUITE'] == 'pr_targeted':
+              selected = subprocess.check_output([sys.executable, 'tools/l1j/select_pr_checks.py', '--root', '.'], text=True).strip()
+              print('L1J_PR_TARGETED_CHECKS', len(selected.split(',')), selected, flush=True)
+              command += ['--only', selected]
           subprocess.run(command, check=True)
           if resumed:
               current = json.loads(pathlib.Path('l1j-test-results/summary.json').read_text(encoding='utf-8'))
@@ -213,7 +222,7 @@ jobs:
           if-no-files-found: warn
 
   android-export:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Cold full import took ~26 minutes; APK export then hit the old 40-minute job cap.
     # Keep the complete import, export, APK inspection and signing checks intact.
     timeout-minutes: 120

@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 125
     steps:
       - name: Checkout
@@ -104,6 +104,7 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --import --path . 2>&1 | tee godot-parse.log
           if grep -E "SCRIPT ERROR:|ERROR:" godot-parse.log; then
             echo "Godot import/parse reported an error."
+            grep -E "SCRIPT ERROR:|ERROR:" godot-parse.log | head -n 10 | sed 's/^/::error title=Godot import::/'
             exit 1
           fi
 
@@ -203,6 +204,17 @@ jobs:
           fi
           grep -q "QUICKSLOT_SMOKE_OK" godot-quickslot-smoke.log
 
+      - name: Deferred and coalesced save tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/deferred_save_gate_test.gd 2>&1 | tee godot-deferred-save.log
+          grep -q 'DEFERRED_SAVE_GATE_RESULT {"failures":\[\]' godot-deferred-save.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/general_save_reservation_test.gd 2>&1 | tee godot-general-save.log
+          grep -q 'GENERAL_SAVE_RESERVATION_RESULT {"failures":\[\]' godot-general-save.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/save_identical_payload_test.gd 2>&1 | tee godot-identical-save.log
+          grep -q 'SAVE_IDENTICAL_PAYLOAD_RESULT {"failures":\[\]' godot-identical-save.log
+
       - name: Speed option smoke test
         shell: bash
         run: |
@@ -268,6 +280,26 @@ jobs:
             exit 1
           fi
           grep -q "INVENTORY_DB_SMOKE_OK" godot-inventory-db-smoke.log
+
+      - name: Catalog item lookup index equivalence
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/catalog_item_lookup_test.gd 2>&1 | tee godot-catalog-lookup.log
+          grep -q 'CATALOG_ITEM_LOOKUP_RESULT {"failures":\[\]' godot-catalog-lookup.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/catalog_item_lookup_index_test.gd 2>&1 | tee godot-catalog-lookup-index.log
+          grep -q 'CATALOG_LOOKUP_INDEX_RESULT {"failures":\[\]' godot-catalog-lookup-index.log
+
+      - name: Bag acquisition order and minimap static layer
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/inventory_order_sort_button_test.gd 2>&1 | tee godot-inventory-order.log
+          grep -q 'INVENTORY_ORDER_RESULT {"failures":\[\]' godot-inventory-order.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/inventory_virtual_window_test.gd 2>&1 | tee godot-inventory-window.log
+          grep -q 'INVENTORY_VIRTUAL_WINDOW_RESULT {"created":[0-9]*,"failures":\[\]' godot-inventory-window.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/minimap_static_layer_test.gd 2>&1 | tee godot-minimap-layer.log
+          grep -q 'MINIMAP_STATIC_LAYER_RESULT {"failures":\[\]' godot-minimap-layer.log
 
       - name: Item buff description smoke test
         shell: bash
@@ -337,6 +369,14 @@ jobs:
       - name: Verify regional test shard coverage and failure handling
         run: python3 tools/test_world_region_shards.py
 
+      - name: Crowded-field arrival keeps physics local
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-spawn-sync"
+          timeout 600 ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/monster_spawn_physics_sync_test.gd -- --legacy-map-layouts 2>&1 | tee godot-spawn-sync.log
+          grep -q 'MONSTER_SPAWN_SYNC_RESULT {"actors":[0-9]*,"failures":\[\]' godot-spawn-sync.log
+
       - name: Existing layout regional contracts
         shell: bash
         run: |
@@ -393,40 +433,43 @@ jobs:
 
       # Only trusted main publishes imported PNG artifacts; the real Godot
       # import/validation still runs on every PR and main revision.
+      # Import outputs depend only on main's sources, so publish them once the
+      # clean import step has passed even if a later regression step failed;
+      # otherwise one red main run left every workflow without a current cache.
       - name: Stage PNG imports from validated main
         id: png-stage
-        if: ${{ success() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ !cancelled() && steps.import-metrics.outcome == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: python3 tools/ci_godot_png_cache.py stage --root . --github-output "$GITHUB_OUTPUT"
       - name: Save trusted-main PNG shard 0
-        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.png-stage.outputs.ready == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
           path: .ci-godot-cache/shard-0
           key: twilight-godot-png-4.7.2-main-s0-${{ github.sha }}
       - name: Save trusted-main PNG shard 1
-        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.png-stage.outputs.ready == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
           path: .ci-godot-cache/shard-1
           key: twilight-godot-png-4.7.2-main-s1-${{ github.sha }}
       - name: Save trusted-main PNG shard 2
-        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.png-stage.outputs.ready == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
           path: .ci-godot-cache/shard-2
           key: twilight-godot-png-4.7.2-main-s2-${{ github.sha }}
       - name: Save trusted-main PNG shard 3
-        if: ${{ steps.png-stage.outputs.ready == 'true' }}
+        if: ${{ !cancelled() && steps.png-stage.outputs.ready == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
           path: .ci-godot-cache/shard-3
           key: twilight-godot-png-4.7.2-main-s3-${{ github.sha }}
-      - name: Save fully validated Godot import cache on trusted main
-        if: ${{ success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.imported-cache.outputs.cache-hit != 'true' && steps.import-metrics.outputs.cacheable == 'true' }}
+      - name: Save cleanly imported Godot import cache on trusted main
+        if: ${{ !cancelled() && steps.import-metrics.outcome == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.imported-cache.outputs.cache-hit != 'true' && steps.import-metrics.outputs.cacheable == 'true' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:

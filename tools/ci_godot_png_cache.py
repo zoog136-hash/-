@@ -13,7 +13,7 @@ from pathlib import Path
 import shutil
 
 SHARDS = 4
-MAX_SHARD_BYTES = 1_500_000_000
+MAX_SHARD_BYTES = 2_000_000_000
 
 
 def eligible(path: Path) -> bool:

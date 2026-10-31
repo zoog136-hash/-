@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import re
 
-from android_runtime_reachability import check_generated, generated_patterns
+from android_runtime_reachability import OFFLINE_PROVENANCE_JSON, check_generated, generated_patterns
 
 DRAFT_EXPORT_PATTERN = "assets/actors/eight_direction/native_locomotion_staging/transform_*/draft001/*"
 DRAFT_ROOT = "assets/actors/eight_direction/native_locomotion_staging"
@@ -89,7 +89,7 @@ def audit_authoring_exclusions(root: Path) -> dict:
         raise ValueError("Android preset must explicitly exclude the authoring-only Aden preview renderer")
     archived_map_json = {name for name in ADEN_AUTHORING_JSON if (root / name).is_file()
                          and any(fnmatch.fnmatchcase(name, pat) for pat in excluded_patterns)}
-    offline_json = {name for name in OFFLINE_AUTHORING_JSON if (root / name).is_file()
+    offline_json = {name for name in OFFLINE_AUTHORING_JSON | OFFLINE_PROVENANCE_JSON if (root / name).is_file()
                     and any(fnmatch.fnmatchcase(name, pat) for pat in excluded_patterns)}
     excluded = []
     for folder in sorted((root / DRAFT_ROOT).glob("transform_*/draft001")):
@@ -129,6 +129,12 @@ def audit_authoring_exclusions(root: Path) -> dict:
         content = path.read_text(encoding="utf-8")
         json.loads(content)
         excluded_by_preset = any(fnmatch.fnmatchcase(relative, pattern) for pattern in excluded_patterns)
+        if relative in OFFLINE_PROVENANCE_JSON:
+            # History may name archived drafts only while the record itself
+            # stays out of the APK; exported files may not reference it.
+            if not excluded_by_preset:
+                raise ValueError("Offline provenance record must be excluded from Android export: " + relative)
+            continue
         if forbidden.search(content):
             raise ValueError("Runtime or selected staging manifest references excluded draft001: " + relative)
         if not excluded_by_preset and ADEN_PREVIEW_RENDERER in content:

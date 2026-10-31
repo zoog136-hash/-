@@ -53,7 +53,9 @@ func suspend() -> void:
 func cast(row: Dictionary) -> bool:
 	if can_disable(row):
 		turn_off(row)
-		world._update_hud(); world._save_game(true)
+		# A buff toggle may lose its last few seconds on a crash; it is not a
+		# transaction. A synchronous save here stalled every cast.
+		world._update_hud(); world._request_deferred_save()
 		return true
 	var kind := str(row.local_kind)
 	if kind not in ["pride","berserk","aqua_heal","guardian","shooting","dignity","bloody"]: return false
@@ -82,7 +84,7 @@ func cast(row: Dictionary) -> bool:
 			windows[str(row.id)] = float(row.duration)
 			service.apply_buff(row)
 	world.player.pulse_attack()
-	world._update_hud();world._save_game(true)
+	world._update_hud();world._request_deferred_save()
 	return true
 
 func stat(key: String) -> float:
