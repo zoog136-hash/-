@@ -84,7 +84,8 @@ func find_clearing() -> Vector2:
 	# Populate staged native-PNG monster slots through the same bounded production
 	# drain as runtime, before freezing AI for reproducible directional QA.
 	# Otherwise there is no skeleton to relocate and inherited tests crash on Nil.
-	if world.field_map is NativePngField:
+	# Source84 local-habitat regions (current Aden) are staged the same way.
+	if not world.field_population.pending_initial_spawns.is_empty():
 		while not world.field_population.pending_initial_spawns.is_empty():
 			world.field_population._drain_initial_spawns()
 		for spawned: Node in world.monsters_root.get_children():
@@ -202,7 +203,8 @@ func player_case(spec: Dictionary, transformed: bool) -> void:
 		var sprite := active_sprite()
 		check(moved.length() > 10. and moved.normalized().dot(screen_direction(direction)) > .995,prefix + " actual input movement")
 		check(world.player.facing8 == direction,prefix + " velocity-facing")
-		check(sprite.animation == "walk_" + str(direction),prefix + " native walk track")
+		# A transform that also authors RUN presents it at full movement speed.
+		check(sprite.animation in ["walk_" + str(direction), "run_" + str(direction)],prefix + " native walk track")
 		check(upright(sprite),prefix + " walk keeps upright original pixels")
 		release_inputs()
 		await tick(14)
@@ -415,7 +417,7 @@ func monster_case() -> void:
 				# Real A3 obstacles can steer a chasing actor onto a detour.
 				# The visible walk must follow the actual steered heading;
 				# net approach and attack facing are still checked below.
-				check(normal.motion._resolved_key == "walk_"+str(normal.motion.facing8),"existing skeleton pursuit " + COMPASS[direction])
+				check(normal.motion._resolved_key in ["walk_"+str(normal.motion.facing8),"run_"+str(normal.motion.facing8)],"existing skeleton pursuit " + COMPASS[direction])
 			if normal.motion.presenting_attack:
 				saw_attack = true
 				check(normal.motion.facing8 == direction and normal.motion._resolved_key == "attack_"+str(direction),"existing skeleton attack " + COMPASS[direction])

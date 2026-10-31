@@ -8,6 +8,21 @@ extends "res://tests/pr100_direction_gameplay_test.gd"
 func subject_path() -> String: return "res://assets/actors/eight_direction/original_based/reaper_female/SpriteFrames.tres"
 func subject_spec() -> Dictionary: return {"job":"사신", "appearance":3, "transform_id":"412", "name":"배틀 사이드", "type":"사이드", "style":"slash", "magic":false}
 
+## The catalog record may pin a newer reviewed SpriteFrames for this transform
+## (animation_profile.frames_path, e.g. a run-locomotion revision). Production
+## binding to either the original subject or that pinned revision is valid.
+func production_subject_paths(transform: Dictionary) -> Array[String]:
+	var paths: Array[String] = [subject_path()]
+	var pinned: String = str(transform.get("animation_profile", {}).get("frames_path", ""))
+	if not pinned.is_empty() and pinned not in paths: paths.append(pinned)
+	return paths
+
+## Production locomotion may present an authored RUN where a set has no WALK.
+func locomotion_track(frames: SpriteFrames, direction: int) -> String:
+	var walk: String = "walk_" + str(direction)
+	if frames.has_animation(walk) and frames.get_frame_count(walk) > 0: return walk
+	return "run_" + str(direction)
+
 func run() -> void:
 	var spec := subject_spec()
 	var profile_id := "transform:" + str(spec.transform_id)
@@ -49,7 +64,7 @@ func run() -> void:
 	check(not transform.is_empty(), "existing subject transformation")
 	world._equip_catalog("변신", transform)
 	await tick(14)
-	check(world.player.motion.profile.profile_id == profile_id and world.player.motion.profile.frames_path == subject_path(), "production transform binds own authored image")
+	check(world.player.motion.profile.profile_id == profile_id and world.player.motion.profile.frames_path in production_subject_paths(transform), "production transform binds own authored image")
 	report.scope = "original-based " + profile_id + ", actual Main/equipment/input/weapon/respawn"
 	report.setup = {"scene":"Main.tscn", "map":"aden_world", "transform":str(spec.transform_id), "weapon":spec.name,
 		"qa_positioning":true, "stats_overridden":false, "background_spawn_slots_paused":true,
@@ -75,7 +90,7 @@ func inspect_poses() -> void:
 	var base_scale: Vector2 = sprite.get_meta("base_scale", Vector2.ONE)
 	for direction: int in range(8):
 		for role: String in ["idle", "walk", "attack", "hit", "death"]:
-			var track: String = role + "_" + str(direction)
+			var track: String = locomotion_track(frames, direction) if role == "walk" else role + "_" + str(direction)
 			check(frames.has_animation(track), "authored role " + track)
 			for index: int in range(frames.get_frame_count(track)):
 				sprite.animation = track
