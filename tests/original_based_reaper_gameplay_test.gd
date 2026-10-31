@@ -23,6 +23,14 @@ func locomotion_track(frames: SpriteFrames, direction: int) -> String:
 	if frames.has_animation(walk) and frames.get_frame_count(walk) > 0: return walk
 	return "run_" + str(direction)
 
+## Some refined sets author one south death (death_2) that every facing reuses,
+## exactly as ActorMotion._available_death_key resolves it at runtime.
+func death_track(frames: SpriteFrames, direction: int) -> String:
+	var own: String = "death_" + str(direction)
+	if frames.has_animation(own) and frames.get_frame_count(own) > 0: return own
+	if frames.has_animation("death_2") and frames.get_frame_count("death_2") > 0: return "death_2"
+	return own
+
 func run() -> void:
 	var spec := subject_spec()
 	var profile_id := "transform:" + str(spec.transform_id)
@@ -90,7 +98,7 @@ func inspect_poses() -> void:
 	var base_scale: Vector2 = sprite.get_meta("base_scale", Vector2.ONE)
 	for direction: int in range(8):
 		for role: String in ["idle", "walk", "attack", "hit", "death"]:
-			var track: String = locomotion_track(frames, direction) if role == "walk" else role + "_" + str(direction)
+			var track: String = locomotion_track(frames, direction) if role == "walk" else (death_track(frames, direction) if role == "death" else role + "_" + str(direction))
 			check(frames.has_animation(track), "authored role " + track)
 			for index: int in range(frames.get_frame_count(track)):
 				sprite.animation = track
