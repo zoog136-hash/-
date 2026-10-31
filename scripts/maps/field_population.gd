@@ -144,7 +144,9 @@ func _spawn_slot(slot: Dictionary) -> void:
 				return
 	if boss and not boss_director.can_spawn(str(field.data.map_id),region): return
 	var p: Vector2 = _spawn_point(region)
-	if not p.is_finite(): return
+	if not p.is_finite():
+		slot.search_failed = true
+		return
 	if bool(slot.get("has_spawned",false)) and region.has("respawn_on_screen") and not bool(region.respawn_on_screen) and _source_visible(p):
 		slot.remaining=3.0
 		return
@@ -420,7 +422,14 @@ func _process(delta: float) -> void:
 				# Successful spawns and boss cooldown semantics remain unchanged.
 				if not is_instance_valid(slot.monster) and str(slot.region.get("mode","normal"))!="boss":
 					slot.remaining = _spawn_retry_delay(slot)
+				elif not is_instance_valid(slot.monster) and bool(slot.get("search_failed",false)):
+					# A boss the director allows but whose floor search found no
+					# point retried this full search every frame (~12 ms per frame on
+					# aden_world). Back off like normal slots; director cooldowns
+					# and refusals stay as they were.
+					slot.remaining = _spawn_retry_delay(slot)
 				elif is_instance_valid(slot.monster):slot.spawn_failures = 0
+				slot.search_failed = false
 		elif refresh:
 			if escaros_refresh and activity_radius < 0.0:
 				var camera: Camera2D = world.player.camera
