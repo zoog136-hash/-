@@ -96,6 +96,20 @@ class CoverageAuditTest(unittest.TestCase):
             self.assertEqual(result["actual_gameplay"], "not_run")
             self.assertEqual(result["compass_semantics"], "source_metadata_only")
 
+    def test_connected_set_without_provenance_is_reported_not_verified(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            folder, path, tracked = self.build_pack(root)
+            (folder / "provenance.json").unlink()
+            tracked.discard(str((folder / "provenance.json").relative_to(root)))
+            result = audit.audit_resource(root, path, tracked)
+            self.assertEqual(result["errors"], [])
+            self.assertEqual(result["pixel_integrity"], "connected_without_provenance")
+            self.assertIn("NOT RECORDED", result["source"])
+            # An untracked SpriteFrames still fails instead of being excused.
+            untracked = audit.audit_resource(root, path, tracked - {str((folder / "SpriteFrames.tres").relative_to(root))})
+            self.assertEqual(untracked["pixel_integrity"], "failed")
+
     def test_repeated_slots_cannot_count_as_motion(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
