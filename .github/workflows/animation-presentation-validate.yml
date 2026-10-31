@@ -46,7 +46,11 @@ jobs:
         # batches-4). These jobs use no .NET, Android SDK, Haskell or CodeQL.
         shell: bash
         run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
+          echo "::notice title=Disk before cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -)"
+          # Nothing below is used by these jobs (system python3, Godot binary).
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft \
+            /opt/google /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium /usr/local/lib/node_modules || true
           sudo docker image prune --all --force >/dev/null 2>&1 || true
           # The checkout (working tree + its pack) alone now nears the root
           # disk. Hosted runners also mount a separate temporary disk at /mnt;
@@ -62,6 +66,7 @@ jobs:
             echo "Workspace moved to /mnt (${mnt_free} GB free vs ${root_free} GB on /)"
           fi
           df -h / /mnt || true
+          echo "::notice title=Disk after cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -) workspace=$(readlink -f "$GITHUB_WORKSPACE")"
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
@@ -267,7 +272,11 @@ jobs:
         # batches-4). These jobs use no .NET, Android SDK, Haskell or CodeQL.
         shell: bash
         run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
+          echo "::notice title=Disk before cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -)"
+          # Nothing below is used by these jobs (system python3, Godot binary).
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft \
+            /opt/google /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium /usr/local/lib/node_modules || true
           sudo docker image prune --all --force >/dev/null 2>&1 || true
           # The checkout (working tree + its pack) alone now nears the root
           # disk. Hosted runners also mount a separate temporary disk at /mnt;
@@ -283,6 +292,7 @@ jobs:
             echo "Workspace moved to /mnt (${mnt_free} GB free vs ${root_free} GB on /)"
           fi
           df -h / /mnt || true
+          echo "::notice title=Disk after cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -) workspace=$(readlink -f "$GITHUB_WORKSPACE")"
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
@@ -411,7 +421,11 @@ jobs:
         # batches-4). These jobs use no .NET, Android SDK, Haskell or CodeQL.
         shell: bash
         run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
+          echo "::notice title=Disk before cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -)"
+          # Nothing below is used by these jobs (system python3, Godot binary).
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft \
+            /opt/google /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium /usr/local/lib/node_modules || true
           sudo docker image prune --all --force >/dev/null 2>&1 || true
           # The checkout (working tree + its pack) alone now nears the root
           # disk. Hosted runners also mount a separate temporary disk at /mnt;
@@ -427,6 +441,7 @@ jobs:
             echo "Workspace moved to /mnt (${mnt_free} GB free vs ${root_free} GB on /)"
           fi
           df -h / /mnt || true
+          echo "::notice title=Disk after cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -) workspace=$(readlink -f "$GITHUB_WORKSPACE")"
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
