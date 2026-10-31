@@ -7,6 +7,8 @@ const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const MONSTER_DB = preload("res://scripts/monsters/monster_catalog.gd")
 const PLAYER_SCRIPT = preload("res://scripts/player.gd")
+const SOURCE_TRANSFORMS = preload("res://scripts/animation/source_transform_catalog.gd")
+const REVIEWED_VISUALS = preload("res://scripts/monsters/reviewed_existing_visuals.gd")
 var assertions := 0
 var failures: Array[String] = []
 
@@ -24,6 +26,7 @@ func run() -> void:
 	var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json"))
 	for row: Dictionary in MONSTER_DB.expand(original["몬스터"]): monster_records[str(row.name)]=row
 	var resources: Dictionary = {}
+	var used_paths: Dictionary = {}
 	var global_pixels: Dictionary = {}
 	var bindings := {"transform":0,"monster":0,"class":0}
 	var overrides: Dictionary = {}
@@ -45,11 +48,18 @@ func run() -> void:
 		elif kind=="monster": record=monster_records.get(identity,record)
 		var profile: TwilightAnimationProfile = CATALOG.for_record(kind,record)
 		var path: String = profile.frames_path
+		used_paths[path] = true
 		if raw_path.begins_with("res://assets/actors/eight_direction/expanded/") and path!=raw_path:
 			# Production uses the full catalog record, whose explicit native
 			# override takes precedence over the preserved expansion fallback.
 			# Do not compare the new native canvas/poses with the old Flare proof.
-			check(str(record.get("animation_profile", {}).get("frames_path", ""))==path and ResourceLoader.exists(path) and profile.layout=="directional8", "explicit production override of preserved expansion " + key)
+			# Overrides come from the catalog record's animation_profile, a reviewed
+			# source appearance (source_transform_visuals.json) or a reviewed
+			# existing-visual binding (reviewed_existing_visuals.json).
+			var catalog_override: bool = str(record.get("animation_profile", {}).get("frames_path", ""))==path and profile.layout=="directional8"
+			var reviewed_source: bool = kind=="transform" and str(SOURCE_TRANSFORMS.entries.get(key, {}).get("frames_path", ""))==path
+			var reviewed_existing: bool = kind=="monster" and str(REVIEWED_VISUALS.binding(record).get("frames_path", ""))==path
+			check(ResourceLoader.exists(path) and (catalog_override or reviewed_source or reviewed_existing), "explicit production override of preserved expansion " + key)
 			overrides[key]={"preserved":raw_path,"production":path}
 			preserved_sources[raw_path]=true
 		if not path.begins_with("res://assets/actors/eight_direction/expanded/"): continue
@@ -102,7 +112,9 @@ func run() -> void:
 	# The wyvern expansion is still bound to real monsters after Halpas393
 	# receives its own native pack. Preserve its full atlas/pose/contact audit.
 	for path: String in preserved_sources:
-		check(resources.has(path),"preserved expansion still audited through its production binding "+path)
+		# A preserved set that no production profile resolves to any more is
+		# retired, not unaudited; one that is still bound must be audited.
+		check(resources.has(path) or not used_paths.has(path),"preserved expansion still audited through its production binding "+path)
 	# Make the eviction assertion independent of repeated shared-outfit bindings.
 	CATALOG.frames(retained_key.trim_suffix(":directional8"),"directional8")
 	for path: String in resources:
