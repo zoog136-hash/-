@@ -322,6 +322,15 @@ def audit_resource(root, path, tracked):
     try:
         resource_path = local_path(root, path)
         proof_path = resource_path.with_name("provenance.json")
+        if (not proof_path.exists() and resource_path.is_file()
+                and path.removeprefix("res://") in tracked):
+            # A tracked, production-connected set without a provenance receipt
+            # (e.g. reconciled boss connections) is reported honestly: it is
+            # never counted as verified native coverage, and no source claim
+            # is invented for it. Missing or untracked SpriteFrames still fail.
+            result["pixel_integrity"] = "connected_without_provenance"
+            result["source"] = "NOT RECORDED: provenance.json absent"
+            return result
         proof = load(proof_path)
         external, frames, animations = read_spriteframes(resource_path)
         if proof.get("verification_scope") == "published_boss_runtime_snapshot_v1":
@@ -421,6 +430,8 @@ def audit(root):
         if verified:
             count[record["group"] + ":native_connected"] += 1
         reason = recipes["unmatched"].get(record["key"], {}).get("reason", "Existing legacy art retained; no native sequential8 profile") if not native else ""
+        if native and resource.get("pixel_integrity") == "connected_without_provenance":
+            reason = "Connected native SpriteFrames has no provenance.json; not counted as verified"
         if native and resource.get("pixel_integrity") == "tracked_published_partial":
             reason = ("Current published boss PNG and SpriteFrames pinned to Git; "
                       "historical source and eight-direction walk/death proof absent")
