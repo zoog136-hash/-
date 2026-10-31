@@ -25,6 +25,8 @@ class_name TwilightAnimationProfile
 @export var projectile_origin: Vector2 = Vector2(14, -42)
 @export var hit_position: Vector2 = Vector2(0, -38)
 @export var shadow_size: Vector2 = Vector2(19, 6)
+## Explicit reviewed world-pixel visual offsets by facing8; never move physics.
+@export var directional_shadow_offsets: Dictionary = {}
 @export var floating: bool = false
 @export var dedicated_attack: bool = false
 ## Optional explicit scale for padded, foot-anchored native sprite frames.

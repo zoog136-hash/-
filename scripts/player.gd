@@ -199,6 +199,8 @@ func _update_visual(delta: float) -> void:
 	var show_spx: bool = not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
 	motion.profile = transform_profile if transform_active else (spx_profile if show_spx else class_profile)
 	$GroundShadow.visible = not motion.profile.embedded_shadow
+	var shadow_offset: Array = motion.profile.directional_shadow_offsets.get(str(motion.facing8), [0.0, 0.0])
+	$GroundShadow.position = Vector2(float(shadow_offset[0]), float(shadow_offset[1]))
 	motion.advance(delta, get_position_delta() / maxf(delta, 0.001))
 	facing = motion.facing4
 	attack_clock = maxf(0.0, motion.attack_duration - motion.attack_elapsed) if motion.active else 0.0

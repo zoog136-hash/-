@@ -32,6 +32,7 @@ func run() -> void:
 			if str(entry.sourceId)==ident:record=entry
 		var profile=Catalog.for_record("transform",record)
 		check(profile.stable_idle_pose,"Actual catalog opt-in "+ident)
+		check(profile.directional_shadow_offsets == ({"0": [16.0, -3.0]} if ident == "267" else {}),"Only reviewed Girtas E shadow offset")
 		for zoom in [1.0,2.0]:
 			parent.scale=Vector2.ONE*zoom
 			for d in range(8):
