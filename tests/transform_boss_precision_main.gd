@@ -126,12 +126,21 @@ func expected_boss_routes() -> Array:
  var ledger:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/pr122_monster_boss_runtime_connections.json"))
  var moved:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/actors/eight_direction/refined_production_20261030/production_boss_export_r001/source-provenance.json"))
  check(moved.actors.size()==2 and moved.actors.has("monster:그림 리퍼") and moved.actors.has("monster:교만의 왕자 데우스"),"Exactly two declared export-safe source paths")
+ var publication:Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/actors/eight_direction/refined_production_20261030/production_boss_publication_r001/source-provenance.json"))
+ check(publication.actors.size()==10,"Exactly ten descriptive publication markers reconciled without art approval")
  var rows=[]
  for original:Dictionary in ledger.connections:
   var row={"key":str(original.id),"frames":str(original.frames),"sha256":str(original.frames_sha256)}
+  var before_publication:Dictionary=row.duplicate(true)
+  if publication.actors.has(row.key):
+   var published:Dictionary=publication.actors[row.key]
+   check(row.frames==published.selected_frames and row.sha256==published.selected_sha256,"Current connection ledger matches the independently pinned publication-only revision")
+   check(FileAccess.get_sha256(published.prior_selected_frames)==published.prior_frames_sha256,"Immutable pre-publication boss selection remains byte-identical")
+   before_publication.frames=published.prior_selected_frames
+   before_publication.sha256=published.prior_frames_sha256
   if moved.actors.has(row.key):
    var move:Dictionary=moved.actors[row.key]
-   check(row.frames==move.selected_frames and row.sha256==move.selected_sha256,"Current connection ledger matches the independently pinned export revision")
+   check(before_publication.frames==move.selected_frames and before_publication.sha256==move.selected_sha256,"Current or preserved prior selection matches the independently pinned export revision")
    check(FileAccess.get_sha256(move.prior_selected_frames)==move.prior_frames_sha256,"Immutable prior boss selection remains byte-identical in export provenance")
   rows.append(row)
  return rows

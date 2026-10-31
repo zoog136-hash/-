@@ -44,6 +44,20 @@ class ReconciliationTest(unittest.TestCase):
         self.put(CONNECTIONS,j)
         with self.assertRaisesRegex(AssertionError,"Missing published tracks.*attack_6"):
             reconcile(self.root)
+    def test_unpublished_resource_rejected_even_with_matching_pin(self):
+        p=self.root/self.resource
+        p.write_text(p.read_text().replace('metadata/twilight_production_connected = true','metadata/twilight_production_connected = false'))
+        j=json.loads((self.root/CONNECTIONS).read_text())
+        j['connections'][0]['frames_sha256']=hashlib.sha256(p.read_bytes()).hexdigest()
+        self.put(CONNECTIONS,j)
+        with self.assertRaisesRegex(AssertionError,'Not published:'):reconcile(self.root)
+    def test_detailed_approval_marker_rejected_even_with_matching_pin(self):
+        p=self.root/self.resource
+        p.write_text(p.read_text().replace('metadata/twilight_detailed_completed = false','metadata/twilight_detailed_completed = true'))
+        j=json.loads((self.root/CONNECTIONS).read_text())
+        j['connections'][0]['frames_sha256']=hashlib.sha256(p.read_bytes()).hexdigest()
+        self.put(CONNECTIONS,j)
+        with self.assertRaisesRegex(AssertionError,'Unexpected approval marker:'):reconcile(self.root)
     def test_stale_catalog_rejected(self):
         self.put(CATALOG,dict(profiles={self.key:dict(frames_path='res://other.tres')}))
         with self.assertRaisesRegex(AssertionError,'Catalog binding mismatch'):reconcile(self.root)
