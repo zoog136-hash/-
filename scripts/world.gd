@@ -6868,12 +6868,13 @@ func _is_ammo_record(record: Dictionary) -> bool:
 	# fallback "탄약" record, and only these two stacks feed weapons.
 	return str(record.get("name", "")) in ["화살", "총알"]
 
-## True when `ammo_name` is worn. Old saves / new characters that never took
-## ammo off get it worn automatically the first time their weapon needs it.
+## True when `ammo_name` is worn. Unless the player explicitly took ammo off,
+## the ammo the current weapon needs is worn automatically (old saves, new
+## characters, and bow <-> gun swaps; there is one arrow and one bullet type).
 func _ammo_worn(ammo_name: String, allow_auto: bool = false) -> bool:
 	if equipped_ammo == ammo_name:
 		return true
-	if allow_auto and not ammo_unequipped and int(inventory.get(ammo_name, 0)) > 0 and (equipped_ammo.is_empty() or int(inventory.get(equipped_ammo, 0)) <= 0):
+	if allow_auto and not ammo_unequipped and int(inventory.get(ammo_name, 0)) > 0:
 		equipped_ammo = ammo_name
 		hud.append_log("%s 자동 착용" % ammo_name)
 		stat_hud_refresh_pending = true
