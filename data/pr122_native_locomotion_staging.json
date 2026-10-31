@@ -1,7 +1,7 @@
 {
   "schema": "pr122-native-locomotion-staging-v1",
   "approved_history_preserved": 405,
-  "detailed_complete": 1,
+  "detailed_complete": 0,
   "detailed_total": 31,
   "actors": {
     "transform:393": {
@@ -8683,10 +8683,10 @@
         "death": []
       },
       "production_connected": true,
-      "detailed_completed": true,
-      "completed_added": 1,
-      "status": "APPROVED_DETAILED_PRODUCTION",
-      "visual_review": "PASS",
+      "detailed_completed": false,
+      "completed_added": 0,
+      "status": "PRODUCTION_QUALITY_REGRESSION",
+      "visual_review": "FAIL",
       "timing_review": "PASS",
       "integration": "Real default catalog wired to immutable production candidate; approval pending actual default Main and independent full quality",
       "native_profile": "res://assets/actors/eight_direction/native_production/halpas_393/r001/NativeMotionProfile.tres",
@@ -8725,7 +8725,7 @@
       },
       "visual_quality_hold": {
         "key": "transform:393",
-        "status": "RESOLVED",
+        "status": "REOPENED_RUNTIME_REGRESSION",
         "scope": "selected_clips",
         "sources": [
           "docs/remake/evidence/pr122-mythic-detailed/batch01/halpas-SW-run-v01.png",
@@ -8775,7 +8775,7 @@
           "transform:393:S:attack",
           "transform:393:W:death"
         ],
-        "reason": "SW run and N/NE/NW attack heading defects; NW locomotion/front view and E/W versus SE/SW cardinal separation require correction",
+        "reason": "2026-10-31 actual Main idle/run re-review; fixed idle presentation is a partial repair, not full visual approval.",
         "private_review": "All48clips/288poses reviewed privately; text findings preserved; no chat images",
         "completion_change": 0,
         "corrections": [
@@ -9503,7 +9503,7 @@
             "actor_approvals_added": 0
           }
         ],
-        "resolution": "FULL48_INDEPENDENT_QUALITY_AND_ACTUAL_MAIN_DEFAULT_CATALOG_PASS",
+        "resolution": "REOPENED_PENDING_CONTINUOUS_GAMEPLAY_REVIEW",
         "closure": {
           "quality_evidence": {
             "path": "docs/remake/evidence/pr122-mythic-detailed/batch03/final-native-quality-20261019/halpas-production-r001-independent-quality-FINAL.json",

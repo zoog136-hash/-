@@ -36,6 +36,11 @@ class_name TwilightAnimationProfile
 ## Presentation amplitudes; never used by attack clocks or damage calculations.
 @export var body_kind: String = "humanoid"
 @export var idle_amplitude: float = 0.4
+## Opt-in for reviewed single-pose idle, independent of combat presentation.
+@export var stable_idle_pose: bool = false
+@export var restart_gait_on_move: bool = false
+@export var idle_breath_pixels: float = 0.5
+@export var idle_breath_period: float = 2.5
 @export var stride_bob: float = 2.0
 @export var stride_lean: float = 0.022
 @export var attack_recoil: float = 1.0

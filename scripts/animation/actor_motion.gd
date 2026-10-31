@@ -34,6 +34,7 @@ var hit_clock: float = 0.0
 var turn_clock: float = 0.0
 var gait: float = 0.0
 var idle_clock: float = 0.0
+var _idle_breath_weight: float = 0.0
 var visual_hold: float = 0.0
 var visual_progress: float = 0.0
 var move_ratio: float = 0.0
@@ -193,14 +194,22 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 		death_clock += delta
 		_set_state("death" if death_clock < profile.death_duration else "corpse", delta)
 		return
+	var was_moving: bool = move_ratio > 0.01
 	move_ratio = real_velocity.length() / maxf(1.0, profile.reference_speed)
+	var resting: bool = move_ratio <= 0.01 and not presenting_attack and hit_clock <= 0.0
+	_idle_breath_weight = move_toward(_idle_breath_weight, 1.0 if resting and profile.stable_idle_pose else 0.0, delta * 8.0)
 	locomotion_weight = move_toward(locomotion_weight, minf(move_ratio, 1.5) if not active else 0.0, delta * 12.0)
 	var cadence: float = profile.movement_fps
 	if not is_equal_approx(profile.movement_cadence_width_ratio, 1.0) and real_velocity.length_squared() > 0.001:
 		var movement_direction := real_velocity.normalized()
 		var stride_scale := Vector2(movement_direction.x * profile.movement_cadence_width_ratio, movement_direction.y).length()
 		cadence /= maxf(0.1, stride_scale)
-	gait += delta * cadence * move_ratio
+	# Resume from the existing contact pose instead of an arbitrary suspended
+	# phase. Real travelled distance still owns subsequent cadence.
+	if profile.restart_gait_on_move and not was_moving and move_ratio > 0.01 and not presenting_attack:
+		gait = 0.0
+	else:
+		gait += delta * cadence * move_ratio
 	if active:
 		var advancing_sequence: int = sequence
 		var struck_this_tick: bool = false
@@ -355,6 +364,12 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 		if pose != null and reference_canvas.x > 0. and reference_canvas.y > 0. and pose.get_width() > 0 and pose.get_height() > 0:
 			sprite.scale *= reference_canvas / pose.get_size()
 	FRAME_REGISTRATION.apply(sprite, source, _resolved_key, _resolved_frame_index, base_scale)
+	# Presentation translation only: keep actor, collider, shadow, scale and
+	# selected pixels intact. Fade the subpixel offset across locomotion changes.
+	if profile.stable_idle_pose and not dead and not presenting_attack and not reduced_motion:
+		var screen_scale: float = sprite.get_global_transform_with_canvas().y.length() / maxf(absf(sprite.scale.y), 0.000001)
+		var breath: float = sin(idle_clock * TAU / maxf(0.1, profile.idle_breath_period))
+		sprite.position.y += breath * clampf(profile.idle_breath_pixels, 0.0, 1.0) * _idle_breath_weight / maxf(screen_scale, 0.000001)
 	impact_pose_pending = false
 
 func _available_death_key(frames: SpriteFrames, requested: int) -> String:
@@ -541,6 +556,9 @@ func apply_frames(sprite: Node2D) -> void:
 			frame_value = _weighted_frame(track, fposmod(gait, ends[-1]) / ends[-1])
 		else:
 			frame_value = _weighted_frame(track, fposmod(gait, float(count)) / float(count))
+	elif clock_role == "idle" and profile.stable_idle_pose:
+		# Use the actual directional idle, never borrow an attack pose.
+		frame_value = 0
 	elif clock_role != "legacy":
 		var ends: PackedFloat64Array = track.ends
 		var progress: float = state_clock * float(track.fps) / ends[-1]
