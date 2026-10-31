@@ -551,6 +551,9 @@ func _slot_pressed_style(grade: String) -> StyleBoxFlat:
 func _is_item_equipped(item_reference: String) -> bool:
 	var item_name: String = _base_item_name(item_reference)
 	var instance_id: String = _ref_instance_id(item_reference)
+	# Worn arrows/bullets live in their own ammo slot, not equipped_items.
+	if instance_id == "" and item_name != "" and str(character_state.get("equipped_ammo", "")) == item_name:
+		return true
 	var equipped: Dictionary = character_state.get("equipped_items", {}) as Dictionary
 	for value: Variant in equipped.values():
 		if not (value is Dictionary):
@@ -669,13 +672,18 @@ func _refresh_detail(item_name: String) -> void:
 	detail_text.text = "\n".join(lines)
 
 	var is_consumable := slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	if is_consumable:
+	var is_ammo: bool = item_name in ["화살", "총알"]
+	if is_ammo:
+		detail_action.text = "해제" if equipped else "착용"
+	elif is_consumable:
 		detail_action.text = "사용"
 	elif equipped:
 		detail_action.text = "장착 중"
 	else:
 		detail_action.text = "장착 / 사용"
 	detail_action.disabled = amount <= 0 or (equipped and not is_consumable)
+	if is_ammo:
+		detail_action.disabled = amount <= 0 and not equipped
 	quick_button.disabled = amount <= 0 or not is_consumable
 
 func _activate_selected() -> void:

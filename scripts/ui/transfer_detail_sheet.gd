@@ -5,6 +5,7 @@ extends RefCounted
 # Single-item transactions, prices, capacity and physical IDs stay with the view/world.
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
+const NativeTouchButton=preload("res://scripts/ui/native_touch_button.gd")
 var view: Node
 var warehouse: bool=false
 var picture: TextureRect
@@ -52,12 +53,16 @@ func bind(owner_view: Node,is_warehouse: bool) -> void:
 		view.mode.hide()
 		var modes:=HBoxContainer.new();modes.name="WarehouseDirectionTabs"
 		view.add_child(modes);view.move_child(modes,1)
-		var group:=ButtonGroup.new()
+		# No ButtonGroup: a group ignores a tap on the tab it still thinks is
+		# pressed, and plain buttons inside the scrolling window could lose the
+		# touch on Android, so "찾기 → 보관하기" did not switch back. The native
+		# touch button always emits, and refresh() repaints both tab states.
 		for index: int in range(2):
 			var button: Button=UI.button("보관하기" if index==0 else "찾기",func() -> void:
-				view.mode.select(index);view.mode.item_selected.emit(index),Vector2(0,38))
+				_select_mode(index),Vector2(0,38))
+			button.set_script(NativeTouchButton)
 			button.name="WarehouseDepositTab" if index==0 else "WarehouseWithdrawTab"
-			button.toggle_mode=true;button.button_group=group
+			button.toggle_mode=true
 			button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 			modes.add_child(button);tabs.append(button)
 		view.quantity.value_changed.connect(func(_amount: float) -> void:refresh())
@@ -67,6 +72,14 @@ func bind(owner_view: Node,is_warehouse: bool) -> void:
 		view.details.add_theme_color_override("font_color",UI.GOLD)
 		view.resized.connect(_fit)
 		_fit()
+
+func _select_mode(index: int) -> void:
+	if not is_instance_valid(view):return
+	if view.mode.selected!=index:
+		view.mode.select(index)
+		view.mode.item_selected.emit(index)
+	else:
+		refresh()
 
 func _fit() -> void:
 	if not is_instance_valid(view):return

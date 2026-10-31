@@ -2,7 +2,7 @@ extends "res://scripts/hud_v20.gd"
 
 # Debug-build tools. Requests are also checked by the authoritative world.
 signal card_pack_draw_requested(category: String)
-signal card_fusion_requested(category: String, grade: String)
+signal card_fusion_requested(category: String, grade: String, count: int)
 signal blessing_target_requested(scroll_name: String, target_reference: String)
 signal option_awakening_open_requested(category: String, target_id: String)
 signal option_awakening_feed_requested(category: String, target_id: String, materials: Dictionary)
@@ -1708,15 +1708,27 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	var catalog: Array = catalog_data.get(category,[]) as Array
 	var by_id: Dictionary = {}
 	var candidates: Array[Texture2D] = []
+	var candidate_paths: Array[String] = []
 	for raw: Variant in catalog:
 		if not raw is Dictionary:
 			continue
 		var record: Dictionary = raw as Dictionary
 		by_id[CARD_RULES.card_id(record)] = record
 		var path: String = str(record.get("image_path",""))
-		if candidates.size() < 8 and not path.is_empty() and ResourceLoader.exists(path):
-			candidates.append(load(path) as Texture2D)
-	var raw_awards: Array = [awarded.get("result",{})] if is_fusion else awarded.get("results",[]) as Array
+		if not path.is_empty():
+			candidate_paths.append(path)
+	# The reel used to show the first 8 catalog cards every time, and every card
+	# shared the same order, so "모두 뒤집기" spun identical candidates in sync.
+	# Sample a random subset; each card shuffles its own copy in the stage.
+	candidate_paths.shuffle()
+	for path: String in candidate_paths:
+		if candidates.size() >= 16:
+			break
+		if ResourceLoader.exists(path):
+			var texture: Texture2D = load(path) as Texture2D
+			if texture != null:
+				candidates.append(texture)
+	var raw_awards: Array = (awarded.get("results",[]) as Array).duplicate() if (not is_fusion or bool(awarded.get("batch",false))) else [awarded.get("result",{})]
 	var bonus: Dictionary = awarded.get("pity_reward",{}) as Dictionary
 	if not bonus.is_empty():
 		raw_awards.append(bonus.merged({"pity_reward":true}))
@@ -1793,9 +1805,23 @@ func _request_card_fusion() -> void:
 func _confirm_card_fusion_request(category: String, grade_name: String) -> void:
 	if not CARD_RULES.CATEGORIES.has(category) or not CARD_RULES.FUSION_MATERIALS.has(grade_name) or is_card_reveal_busy(): return
 	var required: int = int(CARD_RULES.FUSION_MATERIALS[grade_name])
-	confirm_action("카드 합성", "%s %s 중복 카드 %d장을 소모하시겠습니까? 최초 획득 1장은 보존됩니다. 실패하면 같은 등급 카드 1장을 획득합니다." % [
+	# Like the 11-card draw, several fusions can run at once (up to 10).
+	var available: int = 0
+	var seen: Dictionary = {}
+	var category_spare: Dictionary = (card_collection_state.get("spare",{}) as Dictionary).get(category,{}) as Dictionary
+	for raw: Variant in catalog_data.get(category,[]) as Array:
+		if not raw is Dictionary or str((raw as Dictionary).get("grade","")) != grade_name: continue
+		var identity: String = CARD_RULES.card_id(raw as Dictionary)
+		if identity.is_empty() or seen.has(identity): continue
+		seen[identity] = true
+		available += maxi(0,int(category_spare.get(identity,0)))
+	var batch_limit: int = clampi(available / maxi(1,required),1,10)
+	var body: String = "%s %s 중복 카드 %d장을 소모하시겠습니까? 최초 획득 1장은 보존됩니다. 실패하면 같은 등급 카드 1장을 획득합니다." % [
 		category, grade_name, required
-	], "합성", func(_count: int) -> void: card_fusion_requested.emit(category, grade_name))
+	]
+	if batch_limit > 1:
+		body += "\n합성 횟수를 선택하세요 (최대 %d회 · 1회당 %d장)." % [batch_limit, required]
+	confirm_action("카드 합성", body, "합성", func(count: int) -> void: card_fusion_requested.emit(category, grade_name, clampi(count,1,10)), batch_limit if batch_limit > 1 else 0)
 
 func _reset_catalog_drag() -> void:
 	catalog_drag_touch = -1
@@ -2244,13 +2270,23 @@ func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 	workspace.mount(forge)
 	forge.configure_blessing(self, scroll_name, candidates)
 
+var enhancement_forge: Control
+
 func open_enhancement(scroll_name: String, candidates: Array) -> void:
+	# Same scroll, window still open (the usual "강화 → 결과 → 다시 강화"
+	# loop): update the rows in place instead of rebuilding the whole window.
+	if active_section == "enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_inside_tree() \
+			and str(enhancement_forge.get("mode")) == "target" and enhancement_scroll_name == scroll_name:
+		enhancement_candidates = candidates.duplicate(true)
+		enhancement_forge.call("refresh_targets", candidates)
+		return
 	enhancement_scroll_name = scroll_name
 	enhancement_candidates = candidates.duplicate(true)
 	_open_window("enhance","장비 강화",scroll_name+" · 실제 게임 강화 확률")
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_targets(self,scroll_name,candidates)
+	enhancement_forge = forge
 
 func _add_original_map_controls(regions: VBoxContainer) -> void:
 	var original: Array = get_parent().original_maps

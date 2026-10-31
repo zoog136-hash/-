@@ -187,6 +187,40 @@ func _build() -> void:
 	resized.connect(_reflow_stage)
 	_reflow_stage()
 
+## Refresh only the target rows after an enhancement. Rebuilding the whole
+## forge window (browser, panes, every icon) after each attempt froze Android
+## for a long time with a large equipment bag.
+func refresh_targets(candidates: Array) -> void:
+	if mode != "target" or not is_instance_valid(listing):
+		return
+	var keep: String = ""
+	if selected_index >= 0 and selected_index < values.size():
+		keep = str((values[selected_index] as Dictionary).get("target_id", ""))
+	values = candidates.duplicate(true)
+	listing.clear()
+	var reselect: int = 0 if not values.is_empty() else -1
+	for entry: Dictionary in values:
+		var reference: String=str(entry.get("target_id",entry.get("name","")))
+		var info: Dictionary=hud.lineage_inventory_ui._find_item_record(reference)
+		listing.add_item("%s  +%d%s" % [entry.get("name",""),int(entry.get("level",0)),"  [장착]" if bool(entry.get("equipped",false)) else ""],UI.item_icon(info,str(entry.get("name","")),hud.item_image_index.get("아이템",{})))
+		listing.set_item_metadata(listing.item_count-1,reference)
+		listing.set_item_custom_fg_color(listing.item_count-1,UI.grade(str(info.get("grade","일반"))))
+		listing.set_item_custom_bg_color(listing.item_count-1,Color(UI.grade(str(info.get("grade","일반"))),.08))
+		listing.set_item_tooltip(listing.item_count-1,str(entry.get("name",""))+" · 장비 ID "+str(entry.get("instance_id","")))
+		if reference == keep:
+			reselect = listing.item_count-1
+	if is_instance_valid(wallet):
+		wallet.text="아데나  "+UI.number_text(int(hud.character_state.get("gold",0)))
+	if reselect < 0:
+		selected_index = -1
+		selected_name.text="선택 가능한 아이템 없음"
+		detail.text="이 주문서로 강화 가능한 장비가 없습니다."
+		action.disabled=true
+		return
+	action.disabled=false
+	listing.select(reselect)
+	_select(reselect)
+
 func _select(index: int) -> void:
 	if index<0 or index>=values.size():return
 	selected_index=index

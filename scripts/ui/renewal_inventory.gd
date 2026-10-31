@@ -328,7 +328,7 @@ func set_inventory(value: Dictionary) -> void:
 	super.set_inventory(value)
 
 func set_character_state(value: Dictionary) -> void:
-	var fingerprint: int = hash([value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
+	var fingerprint: int = hash([value.get("equipped_items",{}),value.get("equipped_ammo",""),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
 	character_state = value
 	gold_label.text = "아데나  "+_format_number(int(value.get("gold",0)))
 	_refresh_weight()
@@ -434,6 +434,9 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 	(button.get_node("Level") as Label).text = "+%d" % level if level>0 else ""
 	var count: Label = button.get_node("Count") as Label
 	count.text = "E" if equipped else UI.number_text(amount) if amount>1 or _ref_instance_id(reference).is_empty() else ""
+	if equipped and item_name in ["화살", "총알"]:
+		# Worn ammo keeps showing how many are left (gold = worn).
+		count.text = "E " + UI.number_text(amount)
 	count.position=Vector2(24 if locked else 4,49)
 	count.size=Vector2(44 if locked else 64,20)
 	count.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
