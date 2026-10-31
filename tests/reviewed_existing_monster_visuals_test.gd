@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 const CATALOG=preload("res://scripts/monsters/monster_catalog.gd")
 const LINK=preload("res://scripts/monsters/reviewed_existing_visuals.gd")
 const ART=preload("res://scripts/monsters/monster_art.gd")
@@ -44,7 +45,7 @@ func run():
     actor.motion.state=role;actor.motion.facing8=facing;actor.motion.active=role in ["attack","cast"];actor.motion.dead=role=="death";actor.motion.state_clock=0.1;actor.motion.hit_clock=0.08 if role=="hit" else 0.0
     actor.motion.apply(actor.sprite,actor.animation_base_scale)
     check(actor.motion._resolved_key==role+"_"+str(facing) and not actor.sprite.flip_h,"real source role/view "+name)
-    check(actor.sprite.texture!=null and not actor.sprite.texture.get_image().is_empty(),"actual pose pixels "+name)
+    check(actor.sprite.texture!=null and not TexturePixels.image_of(actor.sprite.texture).is_empty(),"actual pose pixels "+name)
     if gpu:
      await process_frame;await RenderingServer.frame_post_draw
      var viewport:Image=root.get_texture().get_image()

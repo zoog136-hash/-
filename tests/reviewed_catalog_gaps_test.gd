@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 const CATALOG=preload("res://scripts/monsters/monster_catalog.gd")
 const SOURCE=preload("res://scripts/monsters/source_identity_catalog.gd")
 var checks:int=0
@@ -43,7 +44,7 @@ func run():
     check(frames.has_animation(name) and frames.get_frame_count(name)==refs.size(),"literal sequence length")
     check(frames.get_animation_speed(name)==8.0,"declared presentation speed; no source unit guess")
     for i:int in range(refs.size()):
-     var image:Image=frames.get_frame_texture(name,i).get_image();image.convert(Image.FORMAT_RGBA8)
+     var image:Image=TexturePixels.image_of(frames.get_frame_texture(name,i));image.convert(Image.FORMAT_RGBA8)
      var pixels:PackedByteArray=image.get_data()
      # Godot fix_alpha_border pads RGB under alpha=0; visible source pixels remain exact.
      for offset:int in range(3,pixels.size(),4):

@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 ## Run against an installed private resource bundle. It is separate from synthetic CI.
 var failures: Array[String] = []
 var frame_total: int = 0
@@ -41,7 +42,7 @@ func _run() -> void:
 			var texture: Texture2D = frames.get_frame_texture("default", index)
 			check(texture != null, "texture " + id)
 			if texture != null:
-				var pixels: Image = texture.get_image()
+				var pixels: Image = TexturePixels.image_of(texture)
 				check(pixels != null and pixels.get_size() == Vector2i(int(size[0]), int(size[1])), "PNG pixels " + id)
 			frame_total += 1
 		var actor := AnimatedSprite2D.new()
