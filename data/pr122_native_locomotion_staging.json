@@ -9523,8 +9523,8 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r003/SpriteFrames.tres",
-      "frames_sha256": "3141ca4c462e5f0cdeac1b79cea3a99bbcfc06468a84c7e0156df7f24e3c5e6c",
+      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r004/SpriteFrames.tres",
+      "frames_sha256": "8e9a50bfb5744beb16a7e1b10ed0956a4828d2a89f5487ceeddb43bbb07a864b",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -10199,9 +10199,9 @@
           "direction": "E",
           "role": "run",
           "animation": "run_0",
-          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-E-run-v03composite02.png",
-          "source_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
-          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r091/E-run.png",
+          "source": "assets/actors/eight_direction/native_production/girtas_267/r004/E-run.png",
+          "source_sha256": "88dd493d2a3bee88cfe9e241e5556e8e209f676571460e919a6d2212ca942cfc",
+          "texture": "assets/actors/eight_direction/native_production/girtas_267/r004/E-run.png",
           "geometry": {
             "image_size": [
               3072,
@@ -10357,29 +10357,29 @@
                 "row": 5,
                 "direction": "E",
                 "region": [
-                  1758,
-                  3399,
-                  1092,
-                  1039
+                  1536,
+                  3072,
+                  1286,
+                  1223
                 ],
                 "margin": [
-                  376,
-                  250,
-                  956,
-                  1009
+                  466,
+                  294,
+                  1146,
+                  1209
                 ],
                 "source_anchor": [
-                  2406,
-                  4429
+                  2286,
+                  4298
                 ],
-                "rgba_sha256": "2ba8427266cf5596bcf2b23ef9392d48d396dffe37c26cbc277f2f7a77b3af34",
+                "rgba_sha256": "1fafc9186822ff26dbe22c2db2265e2b51fad77a6695f26d5e8545512c41cde1",
                 "canvas_size": [
-                  2048,
-                  2048
+                  2432,
+                  2432
                 ],
                 "foot": [
-                  1024,
-                  1280
+                  1216,
+                  1520
                 ]
               }
             ],
@@ -10395,13 +10395,13 @@
             ]
           },
           "runtime_layout_proof": {
-            "status": "REGISTRATION_REPAIR_NOT_VISUAL_APPROVAL",
-            "source_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+            "status": "NOT_VISUAL_APPROVAL",
+            "source_sha256": "88dd493d2a3bee88cfe9e241e5556e8e209f676571460e919a6d2212ca942cfc",
             "direction": "E",
             "pose_count": 6,
-            "source_pixels_unchanged": true,
+            "source_pixels_unchanged": false,
             "resampled": false,
-            "newly_authored_poses": 0,
+            "newly_authored_poses": 1,
             "source_anchors": [
               [
                 865,
@@ -10424,8 +10424,8 @@
                 4371
               ],
               [
-                2406,
-                4429
+                2286,
+                4298
               ]
             ],
             "pose_canvas_sizes": [
@@ -10434,11 +10434,11 @@
               2560,
               2256,
               2256,
-              2048
+              2432
             ],
             "runtime_reference_canvas_size": 1024,
             "approval_granted": false,
-            "review_basis": "2026-10-31 source-pinned registration only: E contact sole anchors; NW1 and NE0/5 rigid upper-body horizontal continuity. No scale, original regions, pose order, timing or attack changes. See r003/registration_patch.json."
+            "review_basis": "Targeted authored E phase5 lower-body repair. Phases0-4 original RGBA unchanged; constant source-resolution calibration from preserved upper-body features, no bounding-box scale normalization. Remaining E3/4, N, NW and NE defects are unresolved."
           }
         },
         {
@@ -19689,8 +19689,8 @@
       "visual_review": "FAIL",
       "timing_review": "PASS",
       "integration": "Real default catalog wired to immutable production candidate; approval pending actual default Main and independent full quality",
-      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r003/NativeMotionProfile.tres",
-      "native_profile_sha256": "406c8833e9098da40accc1f10c0d687d100d2bfdf61edba6107c029bcd1c1aea",
+      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r004/NativeMotionProfile.tres",
+      "native_profile_sha256": "202f3121b45b2f2f9fea6110642373d0cec55085d6d7bbd9098d4636d3830f9c",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 502.04237288135596,
