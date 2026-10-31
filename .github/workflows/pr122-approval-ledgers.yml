@@ -35,6 +35,9 @@ jobs:
             /data/pr122_monster_boss_repair_staging.json
             /data/pr122_monster_boss_runtime_connections.json
             /assets/actors/eight_direction/monster_boss_repair/*/published-*/*.tres
+            # Runtime connections also point at reviewed boss and refined production frames.
+            /assets/actors/eight_direction/boss_draft_first/*/*/SpriteFrames.tres
+            /assets/actors/eight_direction/refined_production_20261030/*/*/SpriteFrames.tres
       - name: Install pixel-fixture dependency
         run: python3 -m pip install Pillow==12.3.0
       - name: Reject stale bindings, changed pins and empty art without granting approvals
