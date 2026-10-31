@@ -22,7 +22,7 @@ def reconcile(root):
         text=raw.decode()
         assert re.search(r'^metadata/twilight_production_connected = true$',text,re.M), f'Not published: {key}'
         assert re.search(r'^metadata/twilight_detailed_completed = false$',text,re.M), f'Unexpected approval marker: {key}'
-        tracks=set(re.findall(r'"name": &"([^"]+)"',text))
+        tracks=set(re.findall(r'"name":\s*&"([^"]+)"',text))
         required={f'{role}_{d}' for role in ('idle','run','attack','hit') for d in range(8)}|{'death_2'}
         assert required<=tracks, f'Missing published tracks: {key}: {sorted(required-tracks)}'
         assert row['required_clips']==len(required)

@@ -1,0 +1,129 @@
+{
+  "revision": "production_death_registration_r001",
+  "actor_id": "176",
+  "candidate_registration_review": "SELECTED_LOCAL_SOURCE_RESOLUTION_REGISTRATION_CORRECTION",
+  "formal_art_approval": false,
+  "previous_resource": "res://assets/actors/eight_direction/legendary_production/transform_176/r163/SpriteFrames.tres",
+  "previous_resource_sha256": "50163b70c88cbf7338023a3d27c1f7de4be13aed2fb1e70e6be270f86cea035f",
+  "resource": "res://assets/actors/eight_direction/refined_production_20261030/production_death_registration_r001/legendary_176/SpriteFrames.tres",
+  "resource_sha256": "b90b70145e0e42bae8e0f1eccf221046247e9ce6f6d3bde5aa7372bae01720d1",
+  "changed_registration_entries": [
+    {
+      "phase": 1,
+      "anchor": "457,651",
+      "prior_scale": [
+        1.06796116505,
+        1.06796116505
+      ],
+      "scale": [
+        0.397112,
+        0.397112
+      ],
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-death-source-v01.png",
+      "source_sha256": "b3d0854b5157fddc53e37d5e985d940adcb006c622d6faf723b11e77e622a5c7"
+    },
+    {
+      "phase": 2,
+      "anchor": "283,643",
+      "prior_scale": [
+        1.06796116505,
+        1.06796116505
+      ],
+      "scale": [
+        0.397112,
+        0.397112
+      ],
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-death-source-v01.png",
+      "source_sha256": "b3d0854b5157fddc53e37d5e985d940adcb006c622d6faf723b11e77e622a5c7"
+    },
+    {
+      "phase": 5,
+      "anchor": "346.5,651",
+      "prior_scale": [
+        1.06796116505,
+        1.06796116505
+      ],
+      "scale": [
+        0.397112,
+        0.397112
+      ],
+      "source": "res://assets/actors/eight_direction/legendary_parallel/transform_176/draft001/S-death-source-v01.png",
+      "source_sha256": "b3d0854b5157fddc53e37d5e985d940adcb006c622d6faf723b11e77e622a5c7"
+    }
+  ],
+  "source_images_created_or_modified": 0,
+  "calibration_basis": {
+    "historical_source_specific_proposal_sha256": "8c62f2f5cb33d6ff49f7197564e9874628f6e54d579b5bf3e43f570eb1602e7d",
+    "historical_local_QA_path": "/workspace/scratch/pr122-followup-audit/legendary-registration-review-v02/transform_176/proposals.json",
+    "historical_review_status": "PENDING_SEMANTIC_REVIEW; not treated as approved art",
+    "source_specific_uniform_scale": 0.397112,
+    "reason": "The same high-resolution source already had a separate constant registration scale; r163 applied legacy death0 scale110/103 to both source resolutions. Helmet/shoulder/purple halberd identity compared before creating this candidate."
+  },
+  "all_Atlas_regions_margins_source_frames_FPS_durations_loops_marker_and_anchors_exact": true,
+  "legacy_death_phases_0_3_4_and_all_other_clips_exact": true,
+  "common_code_changes": 0,
+  "runtime_validation": {
+    "actual_Main": {
+      "returncode": 0,
+      "engine_errors": 0,
+      "elapsed_seconds": 56.11,
+      "captured_panels": 8,
+      "death_phases_seen": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "terminal_hold_seconds": 2,
+      "original_South_attack_authority_marker": true,
+      "old_saved_profile_refresh_and_original_record_gameplay_invariants": true
+    },
+    "native_selected_resource_empty_consumer": {
+      "four_stages_exit_zero_errors_zero": true,
+      "decoded_frame_references": 198,
+      "PNG_sources": 41,
+      "raw_source_bytes": 38237825,
+      "new_PNG_imports": 0,
+      "pack": {
+        "bytes": 28237004,
+        "sha256": "ab5aabb5be2b968ca4bde478b10b121e624a7b32061b0eb4f89c8e4dcade1023",
+        "before_packed_results_exact": true,
+        "empty_consumer_no_source_fallback": true,
+        "native_texture_refs": 198,
+        "actors": 1,
+        "only_selected_resource_subset_not_app_export": true
+      },
+      "whole_app_or_APK_export_claimed": false
+    },
+    "root_visual_review": "Individual six-phase actual Main review: giant enlargement removed, complete body visible, existing per-source anchors retained. Low/high-resolution appearance-density differences remain; no whole-art approval.",
+    "local_QA_receipts": [
+      {
+        "path": "/tmp/animation-refinement-qa/176-death-registration/main-run/process.json",
+        "sha256": "cd61174b48def23dbbb51fa1be59434e734020324c58688c9737dd93cec96d2a"
+      },
+      {
+        "path": "/tmp/animation-refinement-qa/176-death-registration/main-run/report.json",
+        "sha256": "b43b1b32ec1ea6cb7fc76f1a8da420137c495bffae602a4e09acd84208b0e2c9"
+      },
+      {
+        "path": "/tmp/animation-refinement-qa/176-death-registration/native/process.json",
+        "sha256": "0c21dc9ce751fc239865749d7084f62cb2acd594b0dbf24b1bcbe55018801c1c"
+      },
+      {
+        "path": "/tmp/animation-refinement-qa/176-death-registration/native/native-before.json",
+        "sha256": "0bd0011ad35b5174b0fbe374af6cbde11fa707036df9d459ff2568a8d2161039"
+      },
+      {
+        "path": "/tmp/animation-refinement-qa/176-death-registration/native/native-packed.json",
+        "sha256": "0bd0011ad35b5174b0fbe374af6cbde11fa707036df9d459ff2568a8d2161039"
+      },
+      {
+        "path": "/tmp/animation-refinement-qa/176-death-registration/native/pack-receipt.json",
+        "sha256": "bf4a63de9c5c2155873003771577e97840cc1445783e477cc947a465ad306f91"
+      }
+    ]
+  },
+  "remaining_authoring_limitations": "Existing mixed low/high-resolution drawings and original pose sequence remain. No new death art, original source clipping repair, or whole-actor art approval is claimed."
+}

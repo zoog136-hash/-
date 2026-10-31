@@ -12,6 +12,7 @@ const EXTERNAL_SPX = preload("res://addons/twilight_l1j/twilight_external_spx_ac
 const VISUAL_CONFIG_PATH := "user://twilight_ui_settings.cfg"
 var motion: TwilightActorMotion = MOTION.new()
 var class_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
+var _class_fallback_combat_profile: TwilightAnimationProfile = null
 var transform_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
 var spx_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
 var spx_sprite: AnimatedSprite2D = null
@@ -234,6 +235,11 @@ func combat_hit_position() -> Vector2:
 	return global_position + motion.profile.hit_position
 
 func combat_projectile_origin() -> Vector2:
+	# A legacy class sheet changes presentation layout only. Keep the native
+	# class's original aim-space release origin while that fallback is visible.
+	if motion.profile == class_profile and _class_fallback_combat_profile != null:
+		_class_fallback_combat_profile.projectile_origin = class_profile.projectile_origin
+		return global_position + _class_fallback_combat_profile.projectile_offset(motion.direction)
 	return global_position + motion.profile.projectile_offset(motion.direction)
 
 func set_class_index(value: int) -> void:
@@ -250,9 +256,38 @@ func set_class_index(value: int) -> void:
 		class_sprite.visible = true
 
 func _build_class_frames(path: String) -> void:
-	class_sprite.sprite_frames = ANIMATION_CATALOG.frames_for_profile(class_profile, path)
+	var source: SpriteFrames = ANIMATION_CATALOG.frames_for_profile(class_profile, path)
+	_class_fallback_combat_profile = null
+	# These four original sheets have five columns and five rows. An optional
+	# native pack's directional8 layout must never be applied to their pixels.
+	if path in CLASS_SHEETS and class_profile.frames_path.get_extension() in ["tres", "res"] and not _usable_authored_class_frames(source, class_profile.frames_path):
+		_class_fallback_combat_profile = class_profile
+		class_profile = class_profile.duplicate(true) as TwilightAnimationProfile
+		class_profile.frames_path = ""
+		class_profile.animation_names.clear()
+		class_profile.layout = "class5"
+		class_profile.dedicated_attack = true
+		class_profile.sprite_offset = Vector2(0, -46)
+		source = ANIMATION_CATALOG.frames(path, "class5")
+		if not transform_active:
+			motion.profile = class_profile
+	class_sprite.sprite_frames = source
 	class_sprite.set_meta("base_scale", Vector2.ONE * (class_profile.pixel_scale if class_profile.pixel_scale > 0.0 else 1.0))
 	class_sprite.pause()
+
+func _usable_authored_class_frames(source: SpriteFrames, expected_path: String) -> bool:
+	if source == null or source.resource_path != expected_path:
+		return false
+	var found: bool = false
+	for animation: String in source.get_animation_names():
+		for phase: int in range(source.get_frame_count(animation)):
+			var texture: Texture2D = source.get_frame_texture(animation, phase)
+			while texture is AtlasTexture:
+				texture = (texture as AtlasTexture).atlas
+			if texture == null or texture.get_width() <= 0 or texture.get_height() <= 0:
+				return false
+			found = true
+	return found
 
 func set_transform_visual(path: String, _speed_multiplier: float, profile_value: TwilightAnimationProfile = null) -> void:
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
