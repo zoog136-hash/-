@@ -68,6 +68,16 @@ jobs:
           df -h / /mnt || true
           echo "::notice title=Disk after cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -) workspace=$(readlink -f "$GITHUB_WORKSPACE")"
       - uses: actions/checkout@v4
+        with:
+          # docs/ is ~22 GB of review evidence; with its pack it overflows the
+          # runner disk. Check out everything else, then add referenced docs.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
+      - name: Add referenced docs files to the sparse checkout
+        run: python3 tools/ci_sparse_docs.py --root .
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
@@ -87,7 +97,8 @@ jobs:
         shell: bash
         # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
         # restores every *.import from an older main; put tracked ones back.
-        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
+        # Only entries present in the sparse checkout (ls-files -t "H").
+        run: git -c core.quotePath=false ls-files -t -- '*.import' | sed -n 's/^H //p' | tr '\n' '\0' | xargs -0 -r git checkout --
       - name: Verify existing resource ledger
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned Godot and software GL
@@ -294,6 +305,16 @@ jobs:
           df -h / /mnt || true
           echo "::notice title=Disk after cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -) workspace=$(readlink -f "$GITHUB_WORKSPACE")"
       - uses: actions/checkout@v4
+        with:
+          # docs/ is ~22 GB of review evidence; with its pack it overflows the
+          # runner disk. Check out everything else, then add referenced docs.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
+      - name: Add referenced docs files to the sparse checkout
+        run: python3 tools/ci_sparse_docs.py --root .
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
@@ -313,7 +334,8 @@ jobs:
         shell: bash
         # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
         # restores every *.import from an older main; put tracked ones back.
-        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
+        # Only entries present in the sparse checkout (ls-files -t "H").
+        run: git -c core.quotePath=false ls-files -t -- '*.import' | sed -n 's/^H //p' | tr '\n' '\0' | xargs -0 -r git checkout --
       - name: Verify existing resource ledger
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned Godot and software GL
@@ -443,6 +465,16 @@ jobs:
           df -h / /mnt || true
           echo "::notice title=Disk after cleanup::$(df -h / /mnt 2>/dev/null | tail -n +2 | tr -s ' ' | paste -sd';' -) workspace=$(readlink -f "$GITHUB_WORKSPACE")"
       - uses: actions/checkout@v4
+        with:
+          # docs/ is ~22 GB of review evidence; with its pack it overflows the
+          # runner disk. Check out everything else, then add referenced docs.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
+      - name: Add referenced docs files to the sparse checkout
+        run: python3 tools/ci_sparse_docs.py --root .
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
@@ -462,7 +494,8 @@ jobs:
         shell: bash
         # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
         # restores every *.import from an older main; put tracked ones back.
-        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
+        # Only entries present in the sparse checkout (ls-files -t "H").
+        run: git -c core.quotePath=false ls-files -t -- '*.import' | sed -n 's/^H //p' | tr '\n' '\0' | xargs -0 -r git checkout --
       - name: Verify existing resource ledger
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned Godot and software GL
