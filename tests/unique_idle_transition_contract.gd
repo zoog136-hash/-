@@ -31,7 +31,7 @@ func run() -> void:
 		for entry: Dictionary in records["변신"]:
 			if str(entry.sourceId)==ident:record=entry
 		var profile=Catalog.for_record("transform",record)
-		check(profile.stable_idle_pose and profile.restart_gait_on_move,"Actual catalog opt-in "+ident)
+		check(profile.stable_idle_pose,"Actual catalog opt-in "+ident)
 		for zoom in [1.0,2.0]:
 			parent.scale=Vector2.ONE*zoom
 			for d in range(8):
@@ -41,14 +41,21 @@ func run() -> void:
 				for tick in range(90):
 					motion.advance(1.0/30.0,Vector2.ZERO);motion.apply(sprite,Vector2.ONE)
 					check(sprite.frame==0,"One actual idle pose")
-					check(absf(sprite.position.y-profile.sprite_offset.y)*zoom<=0.501,"Screen-pixel breathing bound")
+					check(sprite.position == profile.sprite_offset,"Rendered foot anchor stays fixed")
 					check(sprite.scale==Vector2.ONE and sprite.rotation==0.0 and sprite.position.x==profile.sprite_offset.x,"No idle stretch/rotation/lateral movement")
 				motion.gait=4.7
 				motion.advance(1.0/30.0,aim*210.0);motion.apply(sprite,Vector2.ONE)
-				check(sprite.frame==0,"Start at existing contact pose")
+				check(motion.gait>4.7,"Movement entry preserves gait phase")
 				for tick in range(8): motion.advance(1.0/30.0,aim*210.0)
 				motion.apply(sprite,Vector2.ONE)
-				check(sprite.frame>0,"Do not freeze or repeat locomotion frames")
+				check(motion.gait>4.7,"Locomotion continues to advance")
+				for tap in range(12):
+					var previous: float=motion.gait
+					motion.advance(1.0/30.0,Vector2.ZERO)
+					check(motion.gait==previous,"Stop preserves gait")
+					motion.face(-aim if tap%2 else aim)
+					motion.advance(1.0/30.0,(-aim if tap%2 else aim)*210.0)
+					check(motion.gait>previous,"Repeated taps and turns do not restart gait")
 				motion.advance(1.0/30.0,Vector2.ZERO);motion.apply(sprite,Vector2.ONE)
 				check(sprite.frame==0,"Return to selected idle")
 				var releases: Array=[]
