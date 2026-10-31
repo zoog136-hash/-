@@ -23,7 +23,7 @@ func run() -> void:
 	check(world.active_map_id==mid and bool(world.field_map.get_meta("source_map84",false)),"ordinary world enters actual source field")
 	check(world.field_renderer.get_script().resource_path=="res://scripts/maps/source_map_runtime_renderer.gd","ordinary world uses source WebP renderer")
 	var ground_below_actor: bool=true
-	for ground: Sprite2D in world.field_renderer.chunks.values():
+	for ground: Node2D in world.field_renderer.chunks.values():
 		if ground.z_index>=world.player.z_index:ground_below_actor=false
 	check(ground_below_actor,"all terrain stays behind the actual player even on maps with over thirty chunks")
 	check(world.field_map.data.monster_spawn.all(func(r):return r.has("source_key") or r.get("local_habitat",false)),"new source map uses explicit reviewed habitat rows")

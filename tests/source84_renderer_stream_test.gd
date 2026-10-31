@@ -1,6 +1,7 @@
 extends SceneTree
 const RUN=preload("res://scripts/maps/source_map_runtime.gd")
 const RENDERER=preload("res://scripts/maps/source_map_runtime_renderer.gd")
+const STORE=preload("res://scripts/maps/source_map_texture_store.gd")
 var failures: Array[String]=[]
 func check(ok: bool,label: String) -> void:
 	if not ok:failures.append(label);printerr("SOURCE84_RENDERER_FAIL ",label)
@@ -30,10 +31,21 @@ func run() -> void:
 	var initial_stats: Dictionary=renderer.texture_store.stats()
 	for index: int in renderer.chunks:
 		var row: Dictionary=field.runtime_record.chunks[index]
-		var sprite: Sprite2D=renderer.chunks[index]
-		check(sprite.position==Vector2(row.position[0],row.position[1]) and sprite.z_index==-4096+index and not sprite.centered,"placement and painter order "+str(index))
+		var holder: Node2D=renderer.chunks[index]
+		check(holder.position==Vector2(row.position[0],row.position[1]) and holder.z_index==-4096+index,"placement and painter order "+str(index))
+		# Reassemble the streamed tiles and require the exact original pixels.
 		var original: Texture2D=field.png_game_pack.load_texture(row)
-		check(original!=null and original.get_image().get_data()==sprite.texture.get_image().get_data(),"original pixels "+str(index))
+		var rebuilt:=Image.create(int(row.size[0]),int(row.size[1]),false,Image.FORMAT_RGBA8)
+		var covered: int=0
+		for tile: Node in holder.get_children():
+			var sprite:=tile as Sprite2D
+			check(sprite!=null and not sprite.centered and sprite.texture.get_width()<=STORE.TILE_SIZE and sprite.texture.get_height()<=STORE.TILE_SIZE,"bounded tile "+str(index))
+			var piece: Image=sprite.texture.get_image();piece.convert(Image.FORMAT_RGBA8)
+			rebuilt.blit_rect(piece,Rect2i(Vector2i.ZERO,piece.get_size()),Vector2i(sprite.position))
+			covered+=piece.get_width()*piece.get_height()
+		var expected: Image=original.get_image() if original!=null else null
+		if expected!=null:expected.convert(Image.FORMAT_RGBA8)
+		check(expected!=null and covered==int(row.size[0])*int(row.size[1]) and expected.get_data()==rebuilt.get_data(),"original pixels "+str(index))
 	await settle(renderer)
 	var first: Dictionary=field.runtime_record.chunks[0]
 	actor.position=Vector2(first.position[0],first.position[1])+Vector2(first.size[0],first.size[1])*0.5
@@ -44,7 +56,7 @@ func run() -> void:
 	camera.force_update_scroll();renderer.refresh_visible()
 	await settle(renderer)
 	var store: Node=renderer.texture_store
-	check(store.max_frame_uploads<=1,"scroll GPU upload admission bounded to one per frame")
+	check(store.max_frame_uploads<=1 and store.max_frame_tile_uploads<=STORE.TILE_UPLOADS_PER_FRAME,"scroll GPU upload admission bounded per frame")
 	var decoded: int=store.decodes
 	store.idle_budget=0;store.prune();renderer.refresh_visible()
 	check(store.decodes==decoded and not renderer.chunks.is_empty(),"active textures survived idle lookup eviction without reload")
@@ -90,8 +102,8 @@ func run() -> void:
 	var refresh_usec: int=Time.get_ticks_usec()-refresh_begun
 	check(scrolling.waiting_for_visible and store.uploads==before_scroll,"scroll refresh queues CPU work without synchronous upload")
 	var scroll_frames: int=await settle(scrolling)
-	check(store.uploads==before_scroll+3 and scrolling.chunks.has(1) and scrolling.chunks.has(2) and scrolling.chunks.has(3) and store.max_frame_uploads==1,"three actual WebPs spread over main-thread frames")
-	print("SOURCE84_RENDERER_STREAM_RESULT ",JSON.stringify({"failures":failures,"initial_visible":initial_count,"initial":initial_stats,"other_map":other_stats,"after_round_trip":returned_stats,"return_new_decodes":return_decodes,"scroll_uploads":store.uploads-before_scroll,"scroll_upload_usec":store.upload_usec-before_scroll_usec,"scroll_refresh_usec":refresh_usec,"scroll_frames":scroll_frames,"max_frame_uploads":store.max_frame_uploads,"renderer":RenderingServer.get_video_adapter_name()}))
+	check(store.uploads==before_scroll+3 and scrolling.chunks.has(1) and scrolling.chunks.has(2) and scrolling.chunks.has(3) and store.max_frame_tile_uploads<=STORE.TILE_UPLOADS_PER_FRAME and scroll_frames>3,"three actual WebPs spread over main-thread frames as bounded tiles")
+	print("SOURCE84_RENDERER_STREAM_RESULT ",JSON.stringify({"failures":failures,"initial_visible":initial_count,"initial":initial_stats,"other_map":other_stats,"after_round_trip":returned_stats,"return_new_decodes":return_decodes,"scroll_uploads":store.uploads-before_scroll,"scroll_upload_usec":store.upload_usec-before_scroll_usec,"scroll_refresh_usec":refresh_usec,"scroll_frames":scroll_frames,"max_frame_uploads":store.max_frame_uploads,"max_frame_tile_uploads":store.max_frame_tile_uploads,"tile_uploads":store.tile_uploads,"renderer":RenderingServer.get_video_adapter_name()}))
 	scrolling.free();stage.queue_free();field.close();field_b.close();fixture.close()
 	await process_frame
 	quit(0 if failures.is_empty() else 1)
