@@ -4881,7 +4881,7 @@ func _quickbar_job_skills() -> Array:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
-		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.catalog.owned(skill): continue
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill): continue
 		if _is_passive_skill(skill):
 			continue
 		var effect: String = str(skill.get("effect", ""))
@@ -4938,7 +4938,7 @@ func _sanitize_quickslots_for_current_job() -> bool:
 			continue
 		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		var skill: Dictionary = _skill_record(skill_name)
-		if skill.is_empty() or _is_passive_skill(skill) or (skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.catalog.owned(skill)):
+		if skill.is_empty() or _is_passive_skill(skill) or (skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill)):
 			quickslots[index] = {}
 			changed = true
 			continue
@@ -4946,7 +4946,7 @@ func _sanitize_quickslots_for_current_job() -> bool:
 		if skill_class != "공용" and skill_class != job_class:
 			quickslots[index] = {}
 			changed = true
-		elif skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and str(entry.get("id", "")) != str(skill.name):
+		elif skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and str(entry.get("id", "")) != str(skill.name):
 			entry["id"] = str(skill.name)
 			changed = true
 	return changed
@@ -5054,7 +5054,7 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 		if skill.is_empty():
 			hud.show_message("등록할 스킬을 찾을 수 없습니다")
 			return
-		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.catalog.owned(skill):
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill):
 			hud.show_message("미습득 스킬은 등록할 수 없습니다")
 			return
 		if _is_passive_skill(skill):
@@ -5077,7 +5077,7 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 	quickslots[slot_index] = {"kind":"skill" if is_auto_skill else entry_kind, "id":entry_id, "auto":is_auto_skill}
 	if str(quickslots[slot_index].kind) == "skill":
 		var slotted := _skill_record(entry_id)
-		if slotted.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:
+		if slotted.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
 			quickslots[slot_index]["skill_id"] = str(slotted.id)
 			quickslots[slot_index]["id"] = str(slotted.name)
 	_update_hud()
@@ -5127,7 +5127,7 @@ func _quickslot_registration_error(kind: String, id: String) -> String:
 	if _is_passive_skill(skill): return "패시브는 직접 사용할 수 없습니다"
 	if kind == "skill_auto" and not SKILL_RULES.can_auto_cast(skill): return "자동사용을 지원하지 않는 스킬입니다"
 	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.catalog.owned(skill): return "미습득 스킬입니다"
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill): return "미습득 스킬입니다"
 	return ""
 
 func _set_item_locked(reference: String, locked: bool) -> void:
@@ -5291,7 +5291,7 @@ func _is_passive_skill(skill: Dictionary) -> bool:
 	return SKILL_RULES.is_passive(skill)
 
 func _skill_owned_for_current_job(skill: Dictionary) -> bool:
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return original_skills.catalog.enabled(skill)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.catalog.enabled(skill)
 	var skill_class: String = str(skill.get("class", "공용"))
 	return skill_class == "공용" or skill_class == job_class
 
@@ -5331,7 +5331,7 @@ func _passive_skill_names() -> PackedStringArray:
 	return names
 
 func _is_buff_skill(skill: Dictionary) -> bool:
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return skill.get("mode", "") in ["buff", "counter", "stealth", "summon", "local_buff"]
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return skill.get("mode", "") in ["buff", "counter", "stealth", "summon", "local_buff"]
 	return not _is_passive_skill(skill) and SKILL_RULES.is_buff(SKILL_RULES.effect_kind(skill))
 
 func _run_auto_buff_quickslots(delta: float) -> void:
@@ -5357,7 +5357,7 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 			continue
 		skill_name = str(skill.name)
 		if active_skill_buffs.has(skill_name): continue
-		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not bool(entry.get("auto", false)):
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not bool(entry.get("auto", false)):
 			continue
 		if not _skill_ready(skill):
 			continue
@@ -5379,7 +5379,7 @@ func _tick_skill_cooldowns(delta: float) -> void:
 		skill_cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return original_skills.ready(skill, announce)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.ready(skill, announce)
 	if not pending_attack.is_empty(): return false
 	var skill_name: String = str(skill.get("name", ""))
 	if _is_passive_skill(skill):
@@ -5436,7 +5436,7 @@ func _run_auto_heal_quickslots() -> void:
 		var skill: Dictionary = _skill_record(str(entry.get("skill_id", entry.get("id", ""))))
 		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
 			continue
-		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
 			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name))
 			continue
 		if float(hp) / float(maxi(1, _effective_max_hp())) > SKILL_RULES.heal_threshold(skill):
@@ -5458,7 +5458,7 @@ func _run_auto_combat_quickslots() -> bool:
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or not SKILL_RULES.can_auto_cast(skill) or SKILL_RULES.effect_kind(skill) == "heal":
 			continue
-		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"] and not original_skills.auto_wants(skill, selected_monster): continue
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.auto_wants(skill, selected_monster): continue
 		if not _skill_ready(skill):
 			continue
 		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
@@ -5581,10 +5581,14 @@ func _rebuild_skill_record_index() -> void:
 	for value: Variant in skills_db:
 		if not value is Dictionary: continue
 		var record: Dictionary = value
-		if not record.get("origin","") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:non_original_skill_rows.append(record)
+		if not record.get("origin","") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:non_original_skill_rows.append(record)
 		for key: String in [str(record.get("name", "")), str(record.get("id", ""))]:
 			if not skill_record_index.has(key):
 				skill_record_index[key] = record
+	if original_skills != null:
+		for alias: String in original_skills.catalog.by_name:
+			var id: String = str(original_skills.catalog.by_name[alias])
+			if not skill_record_index.has(alias) and skill_record_index.has(id): skill_record_index[alias] = skill_record_index[id]
 	indexed_skills_db = skills_db
 	indexed_skills_count = skills_db.size()
 
@@ -5598,7 +5602,7 @@ func _skill_record(skill_name: String) -> Dictionary:
 
 func _cast_job_skill(skill_name: String) -> bool:
 	var skill: Dictionary = _skill_record(skill_name)
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return original_skills.cast(skill)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
 		return false

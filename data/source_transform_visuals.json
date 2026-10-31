@@ -13939,9 +13939,1145 @@
         -42.4918060302734
       ],
       "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions."
+    },
+    "transform:108": {
+      "binding_id": "M45677",
+      "body_model_prefix": 3744.0,
+      "canvas_original_grid": [
+        -72.0,
+        -120.0,
+        120.0,
+        60.0
+      ],
+      "composition_limits": "Existing reviewed body only; uncertain cloth not composited and common actor shadow retained.",
+      "files_sha256": {
+        "SpriteFrames.tres": "f4a68aca182a3e8e02aaecddcd77cc63eb46b277d3319c461306963d57559ba4"
+      },
+      "foot_in_canvas": [
+        96.0,
+        142.0
+      ],
+      "foot_original_grid": [
+        24.0,
+        22.0
+      ],
+      "foot_review": "Local cosmetic boot/robe ground projection visually reviewed. Fixed local robe-bottom ground projection at native grid (24,22), reviewed against south idle sequence; not a recovered anatomical/client anchor. All gameplay offsets remain unchanged.",
+      "frames_path": "res://assets/local_source_transforms/reused_monsters/npc_45677/SpriteFrames.tres",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "grade": "희귀",
+      "identity_basis": "Reviewed Laya title alias: source NPC 법령군왕 라이아 / original 蕾雅 and game 마령군왕 라이아. Both show the same silver-haired dark-robed ornate headdress and ringed staff silhouette. Named identity plus visual comparison, not numeric ID or modern pixel equality.",
+      "name": "마령군왕 라이아",
+      "pixel_scale": 0.847058823529412,
+      "required_layout": "still",
+      "reuse_without_png_copy": true,
+      "same_model_aliases": {
+        "activate": "idle",
+        "cast": "attack",
+        "corpse": "death",
+        "despawn": "death",
+        "energy": "idle",
+        "equip": "idle",
+        "float": "idle",
+        "ranged_attack": "attack",
+        "recovery": "attack",
+        "special": "attack",
+        "summon": "idle",
+        "turn": "idle",
+        "unequip": "idle"
+      },
+      "shared_files_sha256": {
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45677/atlas.png": "9be396fb28d922b8dda7b0037a5c6399b784f0b651bfdb04228d17c96409c0e4",
+        "res://assets/monsters/reviewed_source/l1j_tw380_npc_45677/portrait.png": "6e5a9c3265a25d764cb601152df9ee1c7140aa0d56af1b9936180471289e2f63"
+      },
+      "source": "source1",
+      "source_direction_limit": "All six source roles retain eight reviewed source headings; turn/cast and other unsupported game roles are documented same-body substitutions.",
+      "source_model": "reviewed-monster:45677",
+      "source_npc_id": "45677",
+      "sprite_offset": [
+        0.0,
+        -44.0470581054688
+      ],
+      "timing_policy": "Existing presentation 8fps; source raw durations remain in monster provenance. Original gameplay hit/cast/flight clocks unchanged. Cast/special are explicit same-body attack substitutions."
+    },
+    "transform:88": {
+      "name": "임프장로",
+      "grade": "일반",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_88_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 2.4,
+      "sprite_offset": [
+        0.0,
+        -38.4
+      ],
+      "source": "source1",
+      "source_model": 1158,
+      "source_npc_id": "45064",
+      "binding_id": "source201:definition:1158",
+      "body_model_prefix": 1158,
+      "identity_basis": "Named imp elder, small pale/tan long-limbed imp; classic source style, not modern card pixel equality. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48,
+        -48,
+        96,
+        48
+      ],
+      "foot_in_canvas": [
+        72,
+        64
+      ],
+      "foot_original_grid": [
+        24,
+        16
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "ee786c53a24edfa2596d32d1d4baa66b1353838742d40429fdc5dbcf7f674d5e",
+        "atlas_000.png": "e5517abf57ac8485fca756a39c4902d634c04719ff0addc48f8e1c8d3e163ba4",
+        "SpriteFrames.tres": "7dad7ef2e8cd3b2305bc4cb112d2998c18b704a6062cd256d5cb90bf5c4e521f"
+      },
+      "source201_selected_input": true
+    },
+    "transform:222": {
+      "name": "놀",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_222_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.469387755102041,
+      "sprite_offset": [
+        0.0,
+        -22.040816326530614
+      ],
+      "source": "source1",
+      "source_model": 1477,
+      "source_npc_id": "45079",
+      "binding_id": "source201:definition:1477",
+      "body_model_prefix": 1477,
+      "identity_basis": "Hyena-headed gnoll with spiked club and brown armor. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -96,
+        -72,
+        144,
+        84
+      ],
+      "foot_in_canvas": [
+        120,
+        93
+      ],
+      "foot_original_grid": [
+        24,
+        21
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 1
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "4ea3c3449ee9d350a34a29b63a7cab73f9ceabc4b2127a6c5f691256c468850b",
+        "atlas_000.png": "24d89c8454269fe209fd966be9d5263772703b1a20725fc80db378214c76c00c",
+        "SpriteFrames.tres": "35448705d708fcc0b44a51f5bbbcc73b96a17c8ab55c137c1bdea5da2c531dbc",
+        "atlas_001.png": "6f6b71246393e248c074af7e48b9c9a354679444467263746cdfdcaad499f96b"
+      },
+      "source201_selected_input": true
+    },
+    "transform:73": {
+      "name": "오크 스카우트",
+      "grade": "일반",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_73_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.3584905660377358,
+      "sprite_offset": [
+        0.0,
+        -38.0377358490566
+      ],
+      "source": "source1",
+      "source_model": 790,
+      "source_npc_id": "45138",
+      "binding_id": "source201:definition:790",
+      "body_model_prefix": 790,
+      "identity_basis": "Green orc with bow, hood and fur shoulder roll. Death alias 8=784 is opaque; never interpreted as another body. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48,
+        -72,
+        96,
+        48
+      ],
+      "foot_in_canvas": [
+        72,
+        88
+      ],
+      "foot_original_grid": [
+        24,
+        16
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 3,
+        "cast": 18
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "6aff30fc4d137a3b90257834fcd51195f70058956a742f8991bea2eea1604925",
+        "atlas_000.png": "28e259f4c5fa17b4368f75bea330611b936e145397d3f7462f306461090945a0",
+        "SpriteFrames.tres": "de03e3d6603fc76539f28b0d65cdd04e17dcdbaab5425909d510e6ca2b1c92cf"
+      },
+      "source201_selected_input": true
+    },
+    "transform:155": {
+      "name": "데스",
+      "grade": "영웅",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_155_source1/SpriteFrames.tres",
+      "required_layout": "directional8",
+      "pixel_scale": 1.0285714285714285,
+      "sprite_offset": [
+        0.0,
+        -38.05714285714285
+      ],
+      "source": "source1",
+      "source_model": 1576,
+      "source_npc_id": "45221",
+      "binding_id": "source201:definition:1576",
+      "body_model_prefix": 1576,
+      "identity_basis": "Olive/brown hooded Death with scythe; burgundy Kent variant4095 excluded. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -72,
+        -96,
+        120,
+        72
+      ],
+      "foot_in_canvas": [
+        96,
+        121
+      ],
+      "foot_original_grid": [
+        24,
+        25
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 1
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "198e87fd1c7f771bd1848ca3ca62c608a8a7211bd104783d4ce582aa7e4f7a11",
+        "atlas_000.png": "92788bdb23aac181033aeb2ef9a24a8e29b02a6a57f14de952ded25c1b0d1287",
+        "SpriteFrames.tres": "576d550d5f4b8ee8fc59d9cedb59ed9b7cfb98ac0e983314919de278db30d761",
+        "atlas_001.png": "8155f27aa637071dd4a89e38690d2666b125fc029a83b908b1330cee2fd8585c"
+      },
+      "source201_selected_input": true
+    },
+    "transform:30": {
+      "name": "하피",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_30_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.411764705882353,
+      "sprite_offset": [
+        45.741176470588236,
+        -160.94117647058823
+      ],
+      "source": "source1",
+      "source_model": 1024,
+      "source_npc_id": "45264",
+      "binding_id": "source201:definition:1024",
+      "body_model_prefix": 1024,
+      "identity_basis": "White-feathered harpy with human torso and talons. Fixed projected ground is below flying body, not wing/claw alignment. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48,
+        -252,
+        168,
+        60
+      ],
+      "foot_in_canvas": [
+        72,
+        270
+      ],
+      "foot_original_grid": [
+        24,
+        18
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "3e3aef162d921253489d89bd39d25365ee379bcdbda50c02f699be274867bf13",
+        "atlas_000.png": "8fc1f4d8f6f836b2a8f66d5fce973adadfdf049b30ce2388e2a375ad75f40afc",
+        "SpriteFrames.tres": "aa948e8d47b814b7d366b85ed074820e4b1a829a7bc059cdcbc01fb1d5e209f5",
+        "atlas_001.png": "a6d6398bd9c8ecb9e023065088799321fbc449a6e1faea287b208bc15c0649db",
+        "atlas_002.png": "2f3457f3eb8849d74c69063f8ea4ecf60635cdd82bc0e17bfd813725ba387d6f",
+        "atlas_003.png": "5af2fafc4972c4d704a5ac72606f9444839581f454ec3924656b2f5edec251c7"
+      },
+      "source201_selected_input": true
+    },
+    "transform:57": {
+      "name": "불타는 궁수",
+      "grade": "고급",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_57_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.2857142857142858,
+      "sprite_offset": [
+        0.0,
+        -47.57142857142858
+      ],
+      "source": "source1",
+      "source_model": 1832,
+      "source_npc_id": "45291",
+      "binding_id": "source201:definition:1832",
+      "body_model_prefix": 1832,
+      "identity_basis": "Burning humanoid archer carrying a bow. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48,
+        -84,
+        96,
+        48
+      ],
+      "foot_in_canvas": [
+        72,
+        103
+      ],
+      "foot_original_grid": [
+        24,
+        19
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "60818343c89df34ce07484442437ca5ac47ffcb8bb4414b144502723f77b84eb",
+        "atlas_000.png": "1607fb69e633aee9990c5c4cca390661bb9d503809c13d5affd22566ddcc12e4",
+        "SpriteFrames.tres": "6cd1e7faf190437bf4e55c77ca4a749d5a2f49324ded8b8e7ce418023de6ce09",
+        "atlas_001.png": "ddc960219d0f885befdf68553a86b64e528e2a5b36beab5a90f566d0da60620b"
+      },
+      "source201_selected_input": true,
+      "pending_attachment_models": [
+        1834
+      ]
+    },
+    "transform:272": {
+      "name": "무덤 가디언",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_272_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.2,
+      "sprite_offset": [
+        0.0,
+        -27.599999999999998
+      ],
+      "source": "source1",
+      "source_model": 4209,
+      "source_npc_id": "45498",
+      "binding_id": "source201:definition:4209",
+      "body_model_prefix": 4209,
+      "identity_basis": "Large plated tomb construct with round shoulder plates and purple core. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -96,
+        -84,
+        144,
+        72
+      ],
+      "foot_in_canvas": [
+        120,
+        101
+      ],
+      "foot_original_grid": [
+        24,
+        17
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 1
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "fd2b1370d23fd1f9bffc1a8283a4d53487983b6d8a99ca05c03db48eb0c59ea2",
+        "atlas_000.png": "5eb33ea24dd9124e50d8818705c6fa2509113a6cad677288487d99c60c65fcf6",
+        "SpriteFrames.tres": "a2dd08c60aae1b53dd5c93e8a9f161e6cfe7193a17332e7e5daaad099fee1579",
+        "atlas_001.png": "6fe91f181d680add651ff2d57de7fc72a9cd76f66af60c13d8b765c20a6c5510"
+      },
+      "source201_selected_input": true,
+      "pending_attachment_models": [
+        4211
+      ]
+    },
+    "transform:270": {
+      "name": "무덤 가디언 메이지",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_270_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 0.972972972972973,
+      "sprite_offset": [
+        0.0,
+        -29.18918918918919
+      ],
+      "source": "source1",
+      "source_model": 4051,
+      "source_npc_id": "45530",
+      "binding_id": "source201:definition:4051",
+      "body_model_prefix": 4051,
+      "identity_basis": "Dark plated tomb mage construct with clawed arms and purple core. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -96,
+        -96,
+        144,
+        84
+      ],
+      "foot_in_canvas": [
+        120,
+        120
+      ],
+      "foot_original_grid": [
+        24,
+        24
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "93293a5d48687163d0735311dbac7507864cd94412ceb0a21f7f9aa3e2f024d1",
+        "atlas_000.png": "2fca4f659cd5b76145f271bb52b82fec20ad4f1303195f208dbc9faeb1ee7496",
+        "SpriteFrames.tres": "8750a3420d95574fa49a068f6bde6dece52bc9df89c0c6f208f3e6cce37a0335",
+        "atlas_001.png": "c38aefb53e76dc933f225977e52865d833046e78c4f1228dbbf2511986ae07a2",
+        "atlas_002.png": "24ed66b54cbd9891eec9872e150698282cc12a1046bb56cba8fe3ae10afa1765"
+      },
+      "source201_selected_input": true,
+      "pending_attachment_models": [
+        4053,
+        4054
+      ]
+    },
+    "transform:165": {
+      "name": "팬텀 나이트",
+      "grade": "전설",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_165_source1/SpriteFrames.tres",
+      "required_layout": "directional8",
+      "pixel_scale": 0.9171974522292994,
+      "sprite_offset": [
+        0.0,
+        -30.26751592356688
+      ],
+      "source": "source1",
+      "source_model": 4664,
+      "source_npc_id": "45533",
+      "binding_id": "source201:definition:4664",
+      "body_model_prefix": 4664,
+      "identity_basis": "Classic dark armored phantom knight with spiked helm, cape and sword. Modern card red fire is not synthesized or claimed present. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -144,
+        -120,
+        192,
+        96
+      ],
+      "foot_in_canvas": [
+        168,
+        141
+      ],
+      "foot_original_grid": [
+        24,
+        21
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "f40a2e95fb6bcda3d03d5673a24e1edf192b789f3197f2c86bf843516b8f3c3d",
+        "atlas_000.png": "e5bca6e1c5441a002119578bd9ef7d2a629167087e136401a2638b32f77ba9d6",
+        "SpriteFrames.tres": "59bf1a4225f3cb557f6d41c3fa6d6a7543d36712141aac8fcd6e21b0a40052aa",
+        "atlas_001.png": "61a6879b83f7e9d454018457ef842a588947ab7ee11c2839b7691cde7be602f9",
+        "atlas_002.png": "4b0ab42eafb84206d222983667724f75a6dc4fcf69226535c522ba1ffdcb9146",
+        "atlas_003.png": "da8d36d7f8821ba5ffaf526bcc2a123df9ce736a8797c3834f9e782e7a081b71"
+      },
+      "source201_selected_input": true,
+      "pending_attachment_models": [
+        4666
+      ]
+    },
+    "transform:82": {
+      "name": "맘보토끼",
+      "grade": "일반",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_82_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.2203389830508475,
+      "sprite_offset": [
+        0.0,
+        -25.6271186440678
+      ],
+      "source": "source1",
+      "source_model": 4168,
+      "source_npc_id": "45534",
+      "binding_id": "source201:definition:4168",
+      "body_model_prefix": 4168,
+      "identity_basis": "White mambo rabbit in red/purple formal clothing. Carrot variant4171 excluded. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -96,
+        -84,
+        144,
+        96
+      ],
+      "foot_in_canvas": [
+        120,
+        111
+      ],
+      "foot_original_grid": [
+        24,
+        27
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 1
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "8d7745cbf677d151c854aa26cec6a7867593973dfca6d7c5b8d3a2e363d8a668",
+        "atlas_000.png": "211732d13f2c105c524cb5d235bae3115776afd66dc3c2570155a45447210ace",
+        "SpriteFrames.tres": "0131fb1b95bebd3c0261d97b45d665b46b7de5d2c8754606c06b921f47fe1ca1",
+        "atlas_001.png": "8d4853a4324c3085a72eeea005d643e9c5fafab00edae23882b39a52e9c9f02a",
+        "atlas_002.png": "2d4bfa870b3ce155f6f7c286973db949c5197c1ff1447d38a243366099333e3b"
+      },
+      "source201_selected_input": true
+    },
+    "transform:271": {
+      "name": "무덤 가디언 나이트",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_271_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.0909090909090908,
+      "sprite_offset": [
+        0.0,
+        -46.90909090909091
+      ],
+      "source": "source1",
+      "source_model": 4212,
+      "source_npc_id": "45537",
+      "binding_id": "source201:definition:4212",
+      "body_model_prefix": 4212,
+      "identity_basis": "Heavy hunched plated tomb knight with massive arms and pointed helm. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -72,
+        -96,
+        120,
+        60
+      ],
+      "foot_in_canvas": [
+        96,
+        121
+      ],
+      "foot_original_grid": [
+        24,
+        25
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 1
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "39486bff4cc57da73bc6bb2f1731d3f29762ef4449f48c581f9ea8f6662180c3",
+        "atlas_000.png": "ccb7f7627a9b912c9b6165aba8480d31adb6c22588a2e2c5792c60e1200181aa",
+        "SpriteFrames.tres": "b2a900b355b0cf4cd4bb39b0bcd2c54c5b7469f1908fb168e4e51670e804165b",
+        "atlas_001.png": "ce03b721118cae32f2c4704d9d783d3512c73d80e4a1b4898bec4c46036209b0"
+      },
+      "source201_selected_input": true,
+      "pending_attachment_models": [
+        4214
+      ]
+    },
+    "transform:104": {
+      "name": "진돗개",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_104_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.3333333333333333,
+      "sprite_offset": [
+        0.0,
+        -40.0
+      ],
+      "source": "source1",
+      "source_model": 4582,
+      "source_npc_id": "45712",
+      "binding_id": "source201:definition:4582",
+      "body_model_prefix": 4582,
+      "identity_basis": "White Jindo dog with erect ears and raised curled tail; transformation only, no pet subsystem. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -48,
+        -72,
+        96,
+        60
+      ],
+      "foot_in_canvas": [
+        72,
+        96
+      ],
+      "foot_original_grid": [
+        24,
+        24
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "e51f90a751b4c6e519430fee89b2a9ea365019e4e99b857dd7674829c29e8e3a",
+        "atlas_000.png": "f297e9cf6a3bb52ed0d58d3988042d800fe2f4eac7e911b119eeeef70e557aec",
+        "SpriteFrames.tres": "a6218bd78d0425b4db8272d1fc06f1d7153bb7bb637b14c6b1940c9dc1606f27"
+      },
+      "source201_selected_input": true
+    },
+    "transform:221": {
+      "name": "마이노",
+      "grade": "희귀",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_221_source1/SpriteFrames.tres",
+      "required_layout": "still",
+      "pixel_scale": 1.4545454545454546,
+      "sprite_offset": [
+        -15.70909090909091,
+        -32.0
+      ],
+      "source": "source1",
+      "source_model": 4942,
+      "source_npc_id": "45797",
+      "binding_id": "source201:definition:4942",
+      "body_model_prefix": 4942,
+      "identity_basis": "Horned armored minotaur with green/gold dress and a dark spiked mace verified in side views. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -96,
+        -72,
+        120,
+        72
+      ],
+      "foot_in_canvas": [
+        120,
+        94
+      ],
+      "foot_original_grid": [
+        24,
+        22
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 18
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "ebd3f51e8bfcfa502b614d8af9e60639f39652da15a68eab74e259d9e018e113",
+        "atlas_000.png": "a8a59fde8cea38c2bf1596408e7f8e0a9f9857ef45b59cdc1a7656b0975da190",
+        "SpriteFrames.tres": "e73589af12a779331dc134107fd6633aa0e64c98dc41f3b5b559abc2fa6d3d2a",
+        "atlas_001.png": "09ed10927acc3f3a38e5a1bc8ba5fae80867d4fd01550560b8b8fda4e32c0e5e"
+      },
+      "source201_selected_input": true
+    },
+    "transform:329": {
+      "name": "현상범 쿠작",
+      "grade": "영웅",
+      "frames_path": "res://assets/local_source_transforms/reviewed201_329_source1/SpriteFrames.tres",
+      "required_layout": "directional8",
+      "pixel_scale": 1.5157894736842106,
+      "sprite_offset": [
+        0.0,
+        -25.76842105263158
+      ],
+      "source": "source1",
+      "source_model": 5912,
+      "source_npc_id": "81175",
+      "binding_id": "source201:definition:5912",
+      "body_model_prefix": 5912,
+      "identity_basis": "Named red orc Kuzak with pale fur shoulder trim and dark armor/shield. Exact corroborated Korean NPC ID/gfx/nameid and source1 named definition; not numeric-ID-only identity.",
+      "game_to_source_heading": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2
+      ],
+      "canvas_original_grid": [
+        -72,
+        -72,
+        120,
+        72
+      ],
+      "foot_in_canvas": [
+        96,
+        89
+      ],
+      "foot_original_grid": [
+        24,
+        17
+      ],
+      "foot_review": "Fixed local cosmetic ground projection reviewed in source idle views. Flying harpy uses a projected ground point below the body. Original anatomical/client anchor remains unknown; collision/hit/projectile origins unchanged.",
+      "same_model_aliases": {
+        "turn": "idle",
+        "ranged_attack": "attack",
+        "special": "attack",
+        "corpse": "death",
+        "recovery": "attack",
+        "summon": "idle",
+        "despawn": "death",
+        "float": "idle",
+        "energy": "idle",
+        "equip": "idle",
+        "unequip": "idle",
+        "activate": "idle"
+      },
+      "role_action_codes": {
+        "idle": 3,
+        "walk": 0,
+        "run": 0,
+        "attack": 1,
+        "hit": 2,
+        "death": 8,
+        "cast": 1
+      },
+      "source_direction_limit": "All eight literal source headings retained. Missing native roles use explicit same-body idle/attack substitutions; opaque events/aliases are not interpreted.",
+      "timing_policy": "Raw relative frame durations retained; zero-time references remain event-only provenance without an invented visible hold. Local presentation averages eight positive poses/second; original tick units remain unverified and are not converted. Gameplay attack/cast/projectile clocks and marker ratios unchanged.",
+      "composition_limits": "Body only; source opaque shadow/cloth blend semantics not inferred. Existing common actor shadow retained; modern fire aura not guessed.",
+      "files_sha256": {
+        "provenance.json": "39c5267a8dbe51b368be325d98e90208fd70c65339c28fa14204e444c705541e",
+        "atlas_000.png": "0512bb3d8e99aa23fa3fddd9e678e6a91abed634b0579429e6eb4f5005581024",
+        "SpriteFrames.tres": "4a054f7736378fcdd38e869fc7c40ca4fcb0ea66e1ffb6d7066f09b2db7c4e58"
+      },
+      "source201_selected_input": true
     }
   },
-  "remaining_candidates": 324,
+  "remaining_candidates": 309,
   "definition_only": [
     "드래곤 슬레이어"
   ],
@@ -13968,7 +15104,7 @@
   "remaining_scope": "Unlinked current normal-through-legend game cards. This does not assert corresponding source art exists.",
   "comparison_scope": {
     "current_game_eligible_cards": 382,
-    "linked_cards": 58,
+    "linked_cards": 73,
     "source_sql_polymorph_definitions": 297,
     "source_name_and_selected_model_links": 19,
     "source_structural_candidates_not_confirmed": 74,

@@ -20,7 +20,7 @@ func run():
   actor.set_transform_visual(str(card.image_path),1.0,CATALOG.for_record("transform",card))
   check(actor.transform_active and actor.transform_profile.frames_path==manifest.entries[key].frames_path,"actual Player selects reviewed wrapper "+key)
   actors.append(actor)
- check(actors.size()==11,"all eleven linked shared-body identities")
+ check(actors.size()==12,"all twelve linked shared-body identities")
  root.size.y=maxi(600,ceili(float(actors.size())/5.0)*280+100)
  for facing:int in range(8):
   for role:String in ["idle","walk","attack","cast","hit","death"]:

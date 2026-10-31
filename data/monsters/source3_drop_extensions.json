@@ -1,0 +1,1489 @@
+{
+  "schema": 1,
+  "policy": "EXISTING_SUCCESSFUL_GRADE_EMPTY_POOL_ONLY",
+  "source_chance_policy": "Positive source chance proves membership only; never evaluate or convert it. Existing TWILIGHT grade roll and equal within-grade weights remain.",
+  "item_links_sha256": "3ea78b7fa767a669529c8886e6a0e9d8ca36a771a9adbe846d7d5476fead09a9",
+  "source_drop_input_sha256": "59b25c61cd33fd2e1d7c48efbbcf33675e639fb7292b3e4674016d5bd3e8cbac",
+  "entries": {
+    "45082": {
+      "identity": {
+        "name": "오크 전사",
+        "sourceId": "l1j_tw380_npc_45082",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45082",
+        "source_npc_id": "45082",
+        "source_name_original": "妖魔鬥士",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "3864",
+        "raw_npc_nameid": "$266",
+        "npc_sql_sha256": "f90edff333bf2b3fc6c2bc866c7cd15399a1af10edcff25268ee2ab80b320237"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20056",
+          "item_name": "마법 망토",
+          "game_source_id": "914",
+          "grade": "일반",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45082",
+            "itemId": "20056",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "d146223e8d78e7fbf6df5bcbc47153b3c1524e9fafd9c3a56dcb3e03340a90b0",
+            "line": 236,
+            "byte_offset": 16190,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45116": {
+      "identity": {
+        "name": "바쿡",
+        "sourceId": "l1j_tw380_npc_45116",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45116",
+        "source_npc_id": "45116",
+        "source_name_original": "蟑螂人",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "1595",
+        "raw_npc_nameid": "$1427",
+        "npc_sql_sha256": "dbc66a1ee84ab2b42a053a17eeea5c16430c8405b359ef54b5f8aff750eae67a"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20011",
+          "item_name": "마법 방어 투구",
+          "game_source_id": "256",
+          "grade": "일반",
+          "type": "투구",
+          "slot": "helmet",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45116",
+            "itemId": "20011",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "e7aac10558209882529472453b90291ff2a9c86ec54f3fd75fdb9dc9f8aa1f59",
+            "line": 416,
+            "byte_offset": 29777,
+            "byte_length": 42
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20056",
+          "item_name": "마법 망토",
+          "game_source_id": "914",
+          "grade": "일반",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45116",
+            "itemId": "20056",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "aa04ac95719495112101a0bf04bbc1fa0a671f430e190e36c066ffcd4b164deb",
+            "line": 417,
+            "byte_offset": 29852,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45130": {
+      "identity": {
+        "name": "해골 도끼병",
+        "sourceId": "l1j_tw380_npc_45130",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45130",
+        "source_npc_id": "45130",
+        "source_name_original": "骷髏斧手",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "1104",
+        "raw_npc_nameid": "$987",
+        "npc_sql_sha256": "2b2e3739b21791b4d353c9c33e401bcea5743e000ad45bb075d061dd71420ef9"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20056",
+          "item_name": "마법 망토",
+          "game_source_id": "914",
+          "grade": "일반",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45130",
+            "itemId": "20056",
+            "min": "1",
+            "max": "1",
+            "chance": "100000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "e1e7ba101af145abedaab7943da21dc167e1096e9699dd21f7cd55ae3236a170",
+            "line": 544,
+            "byte_offset": 39423,
+            "byte_length": 43
+          }
+        }
+      ]
+    },
+    "45131": {
+      "identity": {
+        "name": "해골 창병",
+        "sourceId": "l1j_tw380_npc_45131",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45131",
+        "source_npc_id": "45131",
+        "source_name_original": "骷髏槍兵",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "1106",
+        "raw_npc_nameid": "$988",
+        "npc_sql_sha256": "ed0b5af5cf603a13e2ea5ec096436b238d85eccc1c1e434b627c77d525f8e357"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20056",
+          "item_name": "마법 망토",
+          "game_source_id": "914",
+          "grade": "일반",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45131",
+            "itemId": "20056",
+            "min": "1",
+            "max": "1",
+            "chance": "50000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "848f7fb2ec62fa64ee37f3bd7693d0259865e1418e0e4e38fd54ba64bdd5b395",
+            "line": 554,
+            "byte_offset": 40177,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45143": {
+      "identity": {
+        "name": "두다-마라 오크",
+        "sourceId": "l1j_tw380_npc_45143",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45143",
+        "source_npc_id": "45143",
+        "source_name_original": "都達瑪拉妖魔",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "788",
+        "raw_npc_nameid": "$498",
+        "npc_sql_sha256": "35ed5623c0f1a38afddedea51d44f104f6105ef5963c6ac6e2b5021c5fb2ab62"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20011",
+          "item_name": "마법 방어 투구",
+          "game_source_id": "256",
+          "grade": "일반",
+          "type": "투구",
+          "slot": "helmet",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45143",
+            "itemId": "20011",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "f44c19e8e169fb5bf41ddcf9c99986bb4026b4c3b8d4f9c981e8c55fba5e2874",
+            "line": 665,
+            "byte_offset": 48540,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45165": {
+      "identity": {
+        "name": "흑기사",
+        "sourceId": "l1j_tw380_npc_45165",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45165",
+        "source_npc_id": "45165",
+        "source_name_original": "黑騎士",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "4003",
+        "raw_npc_nameid": "$272",
+        "npc_sql_sha256": "862434ac67e68e911f0915467e33de90f692d57072496eebad16c1d7982f446d"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20063",
+          "item_name": "보호 망토",
+          "game_source_id": "306",
+          "grade": "일반",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45165",
+            "itemId": "20063",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "832810bf68a52a317d354cc704fb1bd645da51756b0568191f349a35a0f0eefd",
+            "line": 864,
+            "byte_offset": 63578,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45215": {
+      "identity": {
+        "name": "장로",
+        "sourceId": "l1j_tw380_npc_45215",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45215",
+        "source_npc_id": "45215",
+        "source_name_original": "長者",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "32",
+        "raw_npc_nameid": "$19",
+        "npc_sql_sha256": "da6761625c4ae92f59aaa09124042b47917c0df090853883f4848c7b8df4202b"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20063",
+          "item_name": "보호 망토",
+          "game_source_id": "306",
+          "grade": "일반",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45215",
+            "itemId": "20063",
+            "min": "1",
+            "max": "1",
+            "chance": "50000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "8e018232908fc7e1409d90b2e08ed25a43ee84f5256550751b066d6cf49a6e30",
+            "line": 1210,
+            "byte_offset": 89681,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45464": {
+      "identity": {
+        "name": "세마",
+        "sourceId": "l1j_tw380_npc_45464",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45464",
+        "source_npc_id": "45464",
+        "source_name_original": "西瑪",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "183",
+        "raw_npc_nameid": "$338",
+        "npc_sql_sha256": "d5c3a1f5bd756aec8033061959a2cbf69e19c1af498d374bc4d67b4d472119b8"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20063",
+          "item_name": "보호 망토",
+          "game_source_id": "306",
+          "grade": "일반",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45464",
+            "itemId": "20063",
+            "min": "1",
+            "max": "1",
+            "chance": "50000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "de254670948a542317854bfa7cf6b6360aa68c9e5b52d138d25d7f1e9e043383",
+            "line": 3830,
+            "byte_offset": 286726,
+            "byte_length": 42
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20256",
+          "item_name": "민첩의 목걸이",
+          "game_source_id": "290",
+          "grade": "고급",
+          "type": "목걸이",
+          "slot": "necklace",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45464",
+            "itemId": "20256",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "0e0368fd2680131a409d895e750ca235eecb6758423bf7623ad509871b726456",
+            "line": 3832,
+            "byte_offset": 286876,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45487": {
+      "identity": {
+        "name": "지저 일렉카둠",
+        "sourceId": "l1j_tw380_npc_45487",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45487",
+        "source_npc_id": "45487",
+        "source_name_original": "地底伊萊克頓",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "1616",
+        "raw_npc_nameid": "$3274",
+        "npc_sql_sha256": "0b2e65088d89bbc703c0a311066aa4eb5849de9fa6906ed49f3b36650829785b"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:weapon:8",
+          "item_name": "미스릴 단검",
+          "game_source_id": "422",
+          "grade": "고급",
+          "type": "단검",
+          "slot": "weapon",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45487",
+            "itemId": "8",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "7d236204f67129bc31eeab774b0442a617bd5ff92016a071ab5c85d5b9f4ac42",
+            "line": 4102,
+            "byte_offset": 307130,
+            "byte_length": 37
+          }
+        }
+      ]
+    },
+    "45574": {
+      "identity": {
+        "name": "친위대장 카이트",
+        "sourceId": "l1j_tw380_npc_45574",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45574",
+        "source_npc_id": "45574",
+        "source_name_original": "親衛隊長．凱特",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "4701",
+        "raw_npc_nameid": "$3800",
+        "npc_sql_sha256": "d66259de976de4e6f4ab8afc25a3cd6b66935145697e08809191fe95a1d7b944"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20020",
+          "item_name": "무관의 투구",
+          "game_source_id": "556",
+          "grade": "희귀",
+          "type": "투구",
+          "slot": "helmet",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45574",
+            "itemId": "20020",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "517f1943aaaf7bf9fc149897ad56d7827f7f8a2443840bc12d87d156a9c37523",
+            "line": 5341,
+            "byte_offset": 399947,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20168",
+          "item_name": "무관의 장갑",
+          "game_source_id": "595",
+          "grade": "희귀",
+          "type": "장갑",
+          "slot": "gloves",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45574",
+            "itemId": "20168",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "87ee4285653cdbb1d3c7dd0351456cd3006f50fc13b0b06094d9f5fe3fb06329",
+            "line": 5342,
+            "byte_offset": 400021,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20201",
+          "item_name": "무관의 부츠",
+          "game_source_id": "576",
+          "grade": "희귀",
+          "type": "신발",
+          "slot": "boots",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45574",
+            "itemId": "20201",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "2fd1acba88149272f711fb8f9d5bcfdb269d454a35f53dfd1073c33c2ece9b73",
+            "line": 5343,
+            "byte_offset": 400095,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45577": {
+      "identity": {
+        "name": "여단장 다크펜서",
+        "sourceId": "l1j_tw380_npc_45577",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45577",
+        "source_npc_id": "45577",
+        "source_name_original": "突擊旅長．闇黑劍士",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "4625",
+        "raw_npc_nameid": "$3807",
+        "npc_sql_sha256": "293b7226699306e2dd4fbeb7a6ef6c59fcd7780718556fac439434271a6f1fc1"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20168",
+          "item_name": "무관의 장갑",
+          "game_source_id": "595",
+          "grade": "희귀",
+          "type": "장갑",
+          "slot": "gloves",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45577",
+            "itemId": "20168",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "18222bfdf2f88f16a5d3c7f3801d9e0c48eefd90645c3b41643f0d34eb2ebbc0",
+            "line": 5362,
+            "byte_offset": 401520,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20201",
+          "item_name": "무관의 부츠",
+          "game_source_id": "576",
+          "grade": "희귀",
+          "type": "신발",
+          "slot": "boots",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45577",
+            "itemId": "20201",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "7daf57eb611e29df002d675abcf6081a4b0c77d7b0f7b5ef0b7612bb56ca81bb",
+            "line": 5363,
+            "byte_offset": 401594,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45585": {
+      "identity": {
+        "name": "암살단장 블레이즈",
+        "sourceId": "l1j_tw380_npc_45585",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45585",
+        "source_npc_id": "45585",
+        "source_name_original": "暗殺團長．布雷哲",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "4618",
+        "raw_npc_nameid": "$3799",
+        "npc_sql_sha256": "86c4a98ca681c0abbfba9ab664d7618820ef68c1a94f104a8835459eac5b4fe5"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20020",
+          "item_name": "무관의 투구",
+          "game_source_id": "556",
+          "grade": "희귀",
+          "type": "투구",
+          "slot": "helmet",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45585",
+            "itemId": "20020",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "efb9ce364e4117b0e69d95a511dd6530b431ffed69aa60b44b81447106c3b708",
+            "line": 5539,
+            "byte_offset": 414824,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20168",
+          "item_name": "무관의 장갑",
+          "game_source_id": "595",
+          "grade": "희귀",
+          "type": "장갑",
+          "slot": "gloves",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45585",
+            "itemId": "20168",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "e86991828b0feeefcee2dab802b8de1f134d211842e05a46a75031886be32f51",
+            "line": 5540,
+            "byte_offset": 414898,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20201",
+          "item_name": "무관의 부츠",
+          "game_source_id": "576",
+          "grade": "희귀",
+          "type": "신발",
+          "slot": "boots",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45585",
+            "itemId": "20201",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "40bb17509eb5a57fa2faca6471f9679592da753f752ee9beb5bc262cea2aac6e",
+            "line": 5541,
+            "byte_offset": 414972,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45588": {
+      "identity": {
+        "name": "사단장 싱클레어",
+        "sourceId": "l1j_tw380_npc_45588",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45588",
+        "source_npc_id": "45588",
+        "source_name_original": "魔獸師長．辛克萊",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "4854",
+        "raw_npc_nameid": "$3806",
+        "npc_sql_sha256": "b1e61dfadbc49fd417b1c6b647a50b8b99a3539b696df8c24dbed398d22364c4"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20058",
+          "item_name": "무관의 망토",
+          "game_source_id": "566",
+          "grade": "희귀",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45588",
+            "itemId": "20058",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "ab856389dc980513a63b848d02bdc2626cd2b156885afe1ecb2d5b1bf9616414",
+            "line": 5569,
+            "byte_offset": 417064,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20168",
+          "item_name": "무관의 장갑",
+          "game_source_id": "595",
+          "grade": "희귀",
+          "type": "장갑",
+          "slot": "gloves",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45588",
+            "itemId": "20168",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "297e52ac539b1d451fa18fbc686b1d7a975540a16f2565d11366b95b2a132258",
+            "line": 5570,
+            "byte_offset": 417138,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20201",
+          "item_name": "무관의 부츠",
+          "game_source_id": "576",
+          "grade": "희귀",
+          "type": "신발",
+          "slot": "boots",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45588",
+            "itemId": "20201",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "c82c1ba53ba703dcbf9564c8181f9355287503033cf939c6c8081e28155b59da",
+            "line": 5571,
+            "byte_offset": 417212,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45607": {
+      "identity": {
+        "name": "마수단장 카이바르",
+        "sourceId": "l1j_tw380_npc_45607",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45607",
+        "source_npc_id": "45607",
+        "source_name_original": "魔獸團長．凱巴勒",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "4625",
+        "raw_npc_nameid": "$3805",
+        "npc_sql_sha256": "e95c4bc17538c41acbb3938d6dc3d4dbdefd7f753bb0c2c3af0bbc8dbf14ba4b"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20020",
+          "item_name": "무관의 투구",
+          "game_source_id": "556",
+          "grade": "희귀",
+          "type": "투구",
+          "slot": "helmet",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45607",
+            "itemId": "20020",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "a5982576ae5641d5ac6b29ecb61d682c9766b35a7cee92a35da5f0934a5cbb27",
+            "line": 5874,
+            "byte_offset": 439910,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20168",
+          "item_name": "무관의 장갑",
+          "game_source_id": "595",
+          "grade": "희귀",
+          "type": "장갑",
+          "slot": "gloves",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45607",
+            "itemId": "20168",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "d880669f3f963a00b269e0bed6bcb54578c0550edb407bb7dbe612e24e476f8e",
+            "line": 5875,
+            "byte_offset": 439984,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20201",
+          "item_name": "무관의 부츠",
+          "game_source_id": "576",
+          "grade": "희귀",
+          "type": "신발",
+          "slot": "boots",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45607",
+            "itemId": "20201",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "c7a590ed4b31dabdcd680510696d386a5184ab8232e8f99d99c9fb4bc1d89529",
+            "line": 5876,
+            "byte_offset": 440058,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45648": {
+      "identity": {
+        "name": "암살군왕 슬레이브",
+        "sourceId": "l1j_tw380_npc_45648",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45648",
+        "source_npc_id": "45648",
+        "source_name_original": "暗殺軍王．史雷佛",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "4527",
+        "raw_npc_nameid": "$3798",
+        "npc_sql_sha256": "6891ebbe30d117749dd87bb3ee09711acc4506a9d93105d3453845aeae9c5064"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20020",
+          "item_name": "무관의 투구",
+          "game_source_id": "556",
+          "grade": "희귀",
+          "type": "투구",
+          "slot": "helmet",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45648",
+            "itemId": "20020",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "c341449a1e953596fa62ce1db1f1decd25f09df8e69b6a868ded9fa127609ddd",
+            "line": 6414,
+            "byte_offset": 480562,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20168",
+          "item_name": "무관의 장갑",
+          "game_source_id": "595",
+          "grade": "희귀",
+          "type": "장갑",
+          "slot": "gloves",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45648",
+            "itemId": "20168",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "9fb04dbf33c37f9643379b8e2f0404142e31fd084db050649805d3666ada1ed2",
+            "line": 6415,
+            "byte_offset": 480636,
+            "byte_length": 41
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20201",
+          "item_name": "무관의 부츠",
+          "game_source_id": "576",
+          "grade": "희귀",
+          "type": "신발",
+          "slot": "boots",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45648",
+            "itemId": "20201",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "60dc07f4b0676b12e5f3f9ccd5891d3ce962f18de1a5033814812e464b91f323",
+            "line": 6417,
+            "byte_offset": 480784,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45649": {
+      "identity": {
+        "name": "데몬",
+        "sourceId": "l1j_tw380_npc_45649",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45649",
+        "source_npc_id": "45649",
+        "source_name_original": "惡魔",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "1180",
+        "raw_npc_nameid": "$1175",
+        "npc_sql_sha256": "79845f1793974bd50441a0d59e2f37b49de7de6a376db61a5736dbd8939f9a23"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20264",
+          "item_name": "완력의 목걸이",
+          "game_source_id": "394",
+          "grade": "고급",
+          "type": "목걸이",
+          "slot": "necklace",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45649",
+            "itemId": "20264",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "346e098a168d4c3b6a5bd844a51f1c9c2b819a8ff599a019de66ed6ffbee387a",
+            "line": 6440,
+            "byte_offset": 482480,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45651": {
+      "identity": {
+        "name": "마수군왕 바란카",
+        "sourceId": "l1j_tw380_npc_45651",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45651",
+        "source_npc_id": "45651",
+        "source_name_original": "魔獸軍王‧巴蘭卡",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "3664",
+        "raw_npc_nameid": "$3804",
+        "npc_sql_sha256": "58c5eea5a402d9c3e94b2ee6309c3098e16ec31ed1a62e22154fd9c12f777ee5"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20020",
+          "item_name": "무관의 투구",
+          "game_source_id": "556",
+          "grade": "희귀",
+          "type": "투구",
+          "slot": "helmet",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45651",
+            "itemId": "20020",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "637f8ff2f546bf444efb656b2c6ec24d81525239f6953ab25fa01280a9648047",
+            "line": 6516,
+            "byte_offset": 488224,
+            "byte_length": 42
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20113",
+          "item_name": "무관의 갑옷",
+          "game_source_id": "525",
+          "grade": "희귀",
+          "type": "갑옷",
+          "slot": "body",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45651",
+            "itemId": "20113",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "44d611cff121f9d069dd4ee75a99b9fde3bbbe773b88063b1d32d57360b845ba",
+            "line": 6518,
+            "byte_offset": 488372,
+            "byte_length": 42
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20168",
+          "item_name": "무관의 장갑",
+          "game_source_id": "595",
+          "grade": "희귀",
+          "type": "장갑",
+          "slot": "gloves",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45651",
+            "itemId": "20168",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "3f1e61c4240f7d062582b1d27238c343a481402dc164778e975dbe6886b807a3",
+            "line": 6520,
+            "byte_offset": 488520,
+            "byte_length": 42
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20201",
+          "item_name": "무관의 부츠",
+          "game_source_id": "576",
+          "grade": "희귀",
+          "type": "신발",
+          "slot": "boots",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45651",
+            "itemId": "20201",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "10e94add6c0b3e808220fb5b7204aef97bf002c2df20b27a778be1ce33eef393",
+            "line": 6523,
+            "byte_offset": 488741,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45678": {
+      "identity": {
+        "name": "케레니스",
+        "sourceId": "l1j_tw380_npc_45678",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45678",
+        "source_npc_id": "45678",
+        "source_name_original": "賽尼斯",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "2468",
+        "raw_npc_nameid": "$2118",
+        "npc_sql_sha256": "4ec49f9959d001e7780801110391dd97f4415e1036ec25282ed8562ea7797670"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20056",
+          "item_name": "마법 망토",
+          "game_source_id": "914",
+          "grade": "일반",
+          "type": "망토",
+          "slot": "cloak",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45678",
+            "itemId": "20056",
+            "min": "1",
+            "max": "1",
+            "chance": "300000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "281475ce2adc0914f61bc6ae3b8a7a4f23cd62cad84765b6e6fa2622634955b9",
+            "line": 6751,
+            "byte_offset": 505912,
+            "byte_length": 43
+          }
+        },
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20267",
+          "item_name": "지혜의 목걸이",
+          "game_source_id": "375",
+          "grade": "고급",
+          "type": "목걸이",
+          "slot": "necklace",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45678",
+            "itemId": "20267",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "95f7c5f1bafa9c2e0a88f936c2ed26ab9327fe5461cda3bcc83870d3dd3ed831",
+            "line": 6758,
+            "byte_offset": 506431,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45680": {
+      "identity": {
+        "name": "반왕 켄라우헬",
+        "sourceId": "l1j_tw380_npc_45680",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45680",
+        "source_npc_id": "45680",
+        "source_name_original": "反王肯恩",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "2419",
+        "raw_npc_nameid": "$2117",
+        "npc_sql_sha256": "ffbfb41d271cc39d4da2c3131fd7b514a985f6ac8f2f7684ecc8c157a69bd771"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20264",
+          "item_name": "완력의 목걸이",
+          "game_source_id": "394",
+          "grade": "고급",
+          "type": "목걸이",
+          "slot": "necklace",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45680",
+            "itemId": "20264",
+            "min": "1",
+            "max": "1",
+            "chance": "10000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "63f06958ca7c22dd80ffe6088e8834b7f9eaef1363bdb9a383e6be8767c24b83",
+            "line": 6782,
+            "byte_offset": 508229,
+            "byte_length": 42
+          }
+        }
+      ]
+    },
+    "45956": {
+      "identity": {
+        "name": "대법관 비아타스",
+        "sourceId": "l1j_tw380_npc_45956",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45956",
+        "source_npc_id": "45956",
+        "source_name_original": "長老．巴塔斯",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "5365",
+        "raw_npc_nameid": "$4302",
+        "npc_sql_sha256": "35ec111a6d4149cf941b00f028a318299aad483a60e0202b2d38796ab0cb3f92"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20201",
+          "item_name": "무관의 부츠",
+          "game_source_id": "576",
+          "grade": "희귀",
+          "type": "신발",
+          "slot": "boots",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45956",
+            "itemId": "20201",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "f5283094dc24ffbb491a06691f26b6dbf9cbba7b8763cff144a03cd95230dc39",
+            "line": 8547,
+            "byte_offset": 641402,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45958": {
+      "identity": {
+        "name": "대법관 엔디아스",
+        "sourceId": "l1j_tw380_npc_45958",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45958",
+        "source_npc_id": "45958",
+        "source_name_original": "長老．安迪斯",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "5293",
+        "raw_npc_nameid": "$4303",
+        "npc_sql_sha256": "47bb3fb258b45412748678a72adae1fb72c637e364689db2953c954a774c9356"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20168",
+          "item_name": "무관의 장갑",
+          "game_source_id": "595",
+          "grade": "희귀",
+          "type": "장갑",
+          "slot": "gloves",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45958",
+            "itemId": "20168",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "a6b76ede877b82fc9562effaff047df8f788431a0a71aac7f39b34271c63d0b9",
+            "line": 8577,
+            "byte_offset": 643631,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45960": {
+      "identity": {
+        "name": "대법관 티아메스",
+        "sourceId": "l1j_tw380_npc_45960",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45960",
+        "source_npc_id": "45960",
+        "source_name_original": "長老．泰瑪斯",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "5274",
+        "raw_npc_nameid": "$4301",
+        "npc_sql_sha256": "985dd2c584dbc53974435ef6c3f11dc39b819f2792bb9c25627f0a958a508a07"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20168",
+          "item_name": "무관의 장갑",
+          "game_source_id": "595",
+          "grade": "희귀",
+          "type": "장갑",
+          "slot": "gloves",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45960",
+            "itemId": "20168",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "f9042e23c936fb24ac03fbcaf4c7fb580b3e0e1e391d2ef9ef112c9f949daaa6",
+            "line": 8607,
+            "byte_offset": 645869,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45961": {
+      "identity": {
+        "name": "대법관 라미아스",
+        "sourceId": "l1j_tw380_npc_45961",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45961",
+        "source_npc_id": "45961",
+        "source_name_original": "長老．拉曼斯",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "5284",
+        "raw_npc_nameid": "$4298",
+        "npc_sql_sha256": "9dde815fb0ae96bf8bf2e04f2adc648594617ac89ded1df973acf48db28abdd8"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:armor:20020",
+          "item_name": "무관의 투구",
+          "game_source_id": "556",
+          "grade": "희귀",
+          "type": "투구",
+          "slot": "helmet",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45961",
+            "itemId": "20020",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "8cf7ad138c3cde08ebf0439a0d9ef9dccb3eca5252da2e586e301a58d37e0b56",
+            "line": 8622,
+            "byte_offset": 646980,
+            "byte_length": 41
+          }
+        }
+      ]
+    },
+    "45963": {
+      "identity": {
+        "name": "부제사장 카산드라",
+        "sourceId": "l1j_tw380_npc_45963",
+        "source_id": "source3:l1j-tw-99nets:L1J-TW_3.80c:Taiwan:npc:npcid:45963",
+        "source_npc_id": "45963",
+        "source_name_original": "副神官．卡山德拉",
+        "source_version": "3.80c",
+        "source_locale": "Taiwan",
+        "raw_npc_gfxid": "4701",
+        "raw_npc_nameid": "$4465",
+        "npc_sql_sha256": "6b2e6837688514eee1e90a3a221cc5b804fe1a61a0426094507d34a60f3af222"
+      },
+      "drops": [
+        {
+          "source_item_key": "source3:tw380:Taiwan:weapon:11",
+          "item_name": "수정 단검",
+          "game_source_id": "423",
+          "grade": "희귀",
+          "type": "단검",
+          "slot": "weapon",
+          "quantity": 1,
+          "source_enchant": 0,
+          "source_fields": {
+            "mobId": "45963",
+            "itemId": "11",
+            "min": "1",
+            "max": "1",
+            "chance": "5000",
+            "enchantlvl": "0"
+          },
+          "source_provenance": {
+            "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+            "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+            "tuple_sha256": "eac3b68941b18eacc3281abc9463ef386aa9d4510c3f971475902f970cf3e4a2",
+            "line": 8658,
+            "byte_offset": 649657,
+            "byte_length": 38
+          }
+        }
+      ]
+    }
+  },
+  "holds": [
+    {
+      "npc_id": "45651",
+      "source_item_key": "source3:tw380:Taiwan:weapon:163",
+      "item_name": "바란카의 크로우",
+      "game_source_id": "111902",
+      "grade": "전설",
+      "type": "크로우",
+      "slot": "weapon",
+      "quantity": 1,
+      "source_enchant": 0,
+      "source_fields": {
+        "mobId": "45651",
+        "itemId": "163",
+        "min": "1",
+        "max": "1",
+        "chance": "100",
+        "enchantlvl": "0"
+      },
+      "source_provenance": {
+        "path": "source_parts3/extracted/l1j-tw-99nets-master/L1J-TW_3.80c/db/Taiwan/droplist.sql",
+        "file_sha256": "6ce3fc7a29284934dfe866c6c29147549a2695d49de3922769929637da8dac7c",
+        "tuple_sha256": "20d0b08ffdb19a95d3d46762e0f018a6fb5e7a2b156cb432670fd4756fdd33ea",
+        "line": 6515,
+        "byte_offset": 488153,
+        "byte_length": 38
+      },
+      "reason": "No source boss classification imported; ordinary production rolls cannot reach this grade."
+    }
+  ]
+}

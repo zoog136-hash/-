@@ -1,13 +1,14 @@
 extends RefCounted
 # One explicit source identity, adapted only inside an empty successful grade.
 # No source chance evaluation, extra roll, item grant, stat or save mutation.
+const EXTENSIONS = preload("res://scripts/loot/source3_drop_extensions.gd")
 const PATH = "res://data/monsters/source3_reviewed_drops.json"
 const IDENTITIES = "res://data/l1j/source3_item_identities.json"
 const REVIEWED_SHA = "3fc97b125d7e67c271c6cea886c73b20544ae48a13180a7f2a728cb14aafdb92"
 const IDENTITY_SHA = "e6f446525e50ad785fac94739a6d819a105f6097ea550f2f79dbfc74674cb112"
 
 static func identity(record: Dictionary) -> Dictionary:
-	if str(record.get("sourceId", "")) != "l1j_tw380_npc_45962": return {}
+	if str(record.get("sourceId", "")) != "l1j_tw380_npc_45962": return EXTENSIONS.identity(record)
 	var result: Dictionary = {}
 	for key: String in ["name", "sourceId", "source_id", "source_npc_id", "source_name_original", "source_version", "source_locale", "import_enabled", "identity_approval", "local_application_authorization"]:
 		result[key] = record.get(key, "")
