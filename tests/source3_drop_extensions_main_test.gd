@@ -18,6 +18,9 @@ func run():
   for id:String in expected.collected:check(not world.ground_loot.records.has(id),"independent restart cannot restore collected ID")
   await finish(world);return
  check(world.loot_catalog.source3_by_key.size()==26,"actual Main exposes all existing runtime item identities")
+ var registry:Dictionary=EXTRA.registry()
+ check(registry.size()==24 and registry.has("45651"),"reviewed source drops pinned to current item identities")
+ if registry.size()!=24 or not registry.has("45651"):await finish(world);return
  var floor:Vector2=preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(30,0)])
  check(floor.is_finite(),"real admitted combat floor")
  if not floor.is_finite():await finish(world);return
@@ -27,7 +30,7 @@ func run():
  for record:Dictionary in world.monster_db:
   if record.has("source_npc_id"):by_id[str(record.source_npc_id)]=record
  var expected:Dictionary={"counts":{},"collected":[]};var visited:int=0
- for id:String in EXTRA.registry():
+ for id:String in registry:
   var actor:TwilightMonster=load("res://scenes/Monster.tscn").instantiate();world.monsters_root.add_child(actor)
   actor.setup(by_id[id],world.player,world,null);actor.global_position=floor+Vector2(30,0);actor.set_physics_process(false)
   actor.died.connect(world._on_monster_died)
@@ -67,7 +70,7 @@ func run():
    if picked:expected.counts[target]=before+1;expected.collected.append(ground_id)
   world.player.global_position=floor;world._clear_monsters();await process_frame;await process_frame
   visited+=1
- check(visited==17,"all seventeen reviewed source actors killed and picked")
+ check(visited==registry.size(),"all reviewed source actors killed and picked")
  world._open_inventory();await process_frame
  check(world.hud.workspace.visible,"production inventory UI opens with picked equipment")
  check(world._save_game(true)==OK,"save actual source drops after pickup")

@@ -133,6 +133,7 @@ jobs:
           mkdir -p build
           df -h . /tmp | sed 's/^/DISK_BEFORE_EXPORT /'
           timeout 3600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
+          grep -Fq "SOURCE84_RAW_EXPORT files=2140 bytes=2015563672" /tmp/export-android.txt || { echo "::error::Verified raw Source84 pack was not added to APK"; exit 1; }
           test -s build/TWILIGHT_ANDROID_PLAYTEST.apk
           unzip -tqq build/TWILIGHT_ANDROID_PLAYTEST.apk
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging build/TWILIGHT_ANDROID_PLAYTEST.apk | head -n 16

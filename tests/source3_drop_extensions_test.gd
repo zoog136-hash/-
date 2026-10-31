@@ -9,11 +9,16 @@ func check(ok:bool,label:String):
  if not ok:errors+=1;printerr("DROP_EXTENSION_FAIL ",label)
 func _initialize():
  var world=load("res://scripts/world.gd").new();world._load_data()
- var registry:Dictionary=EXTRA.registry();check(registry.size()==24,"exact reviewed new source identities")
+ var registry:Dictionary=EXTRA.registry();check(registry.size()==24 and registry.has("45651"),"exact reviewed new source identities and held grade")
+ if registry.size()!=24 or not registry.has("45651"):
+  printerr("DROP_EXTENSION_REGISTRY_INVALID: check pinned source3 item links and drop manifest")
+  world.free();quit(1);return
  var seen:int=0;var by_id:Dictionary={}
  for row:Dictionary in world.monster_db:
   if row.has("source_npc_id"):by_id[str(row.source_npc_id)]=row
  for id:String in registry:
+  check(by_id.has(id),"reviewed actor exists in runtime catalog "+id)
+  if not by_id.has(id):continue
   var row:Dictionary=by_id[id];var identity:Dictionary=REVIEW.identity(row)
   check(identity==registry[id].identity,"actual active source catalog identity "+id)
   for field:String in identity:

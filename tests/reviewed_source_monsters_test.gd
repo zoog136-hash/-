@@ -36,7 +36,7 @@ func _run() -> void:
 		if arg.begins_with("--preserve-script="):
 			var prior: Array = load(arg.trim_prefix("--preserve-script=")).expand(base)
 			check(prior.size() == 409 and all.slice(0, 409) == prior, "all original 318 and prior 91 records preserved")
-	check(all.size() == 456, "318 existing plus 113 retained source and twenty-five reviewed gaps; one appearance HOLD")
+	check(all.size() == 475, "318 existing plus 113 retained source and 44 reviewed gaps; one appearance HOLD")
 	check(CATALOG.spawnable_records(all) == all.slice(0, 318), "random spawn pool exactly preserves old 318 and order")
 	if not before.is_empty():
 		check(before.size() == 318, "baseline contains 318")
@@ -45,6 +45,10 @@ func _run() -> void:
 	check(payload.records.size() == 114, "all 114 bounded inputs retained")
 	var actual_ids: Array = payload.records.map(func(r: Dictionary) -> String: return str(r.source_npc_id))
 	check(actual_ids == EXPECTED_SOURCE_IDS, "exact approved identities/order; held gremlin excluded")
+	var additions: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CATALOG.ADDITIONS_PATH))
+	var gaps: Array = additions.get("records", [])
+	check(gaps.size() == 44, "all 44 reviewed gap source inputs retained")
+	check(gaps.map(func(r: Dictionary) -> String: return str(r.source_npc_id)) == CATALOG.VERIFIED_GAP_IDS, "reviewed gap IDs and source order pinned")
 	var held: Array = payload.records.filter(func(r: Dictionary) -> bool: return str(r.get("appearance_status", "")).begins_with("HOLD_"))
 	check(held.size() == 1 and str(held[0].source_npc_id) == "45153", "only the specifically permitted fairy appearance HOLD")
 	for excluded: String in ["45025", "97006", "97044", "97094", "81082"]:
@@ -78,10 +82,10 @@ func _run() -> void:
 	# Name/source links already present in an input catalog must take precedence.
 	var with_existing: Array = base.duplicate(true)
 	with_existing.append(payload.records[0].duplicate(true))
-	check(CATALOG.expand(with_existing).size() == 456, "repeated identity not duplicated")
+	check(CATALOG.expand(with_existing).size() == 475, "repeated identity not duplicated")
 	with_existing = base.duplicate(true)
 	with_existing.append({"name":"existing linked identity", "source_id":payload.records[0].source_id})
-	check(CATALOG.expand(with_existing).size() == 456, "full source identity prevents alias duplicate")
+	check(CATALOG.expand(with_existing).size() == 475, "full source identity prevents alias duplicate")
 	var arena := Arena.new()
 	root.add_child(arena)
 	arena.monster_db = all
