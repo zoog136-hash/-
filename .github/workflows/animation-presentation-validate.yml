@@ -77,6 +77,8 @@ jobs:
           export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
           mkdir -p test-results
+          # On failure, annotate the most recent test log (job logs are not always reachable).
+          trap 'status=$?; if [ "$status" -ne 0 ]; then last=$(ls -t test-results/*.txt 2>/dev/null | head -n 1); [ -n "$last" ] && bash tools/ci_failure_annotation.sh "Presentation failed" "$last"; fi' EXIT
           "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/presentation-import.txt
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt | head -n 10 | sed 's/^/::error title=Godot import::/'; exit 1; fi
           python3 tests/animation_expansion_plan_test.py 2>&1 | tee test-results/animation-expansion-plan.txt
@@ -111,6 +113,8 @@ jobs:
           set -euo pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
           export LIBGL_ALWAYS_SOFTWARE=1
+          # On failure, annotate the most recent test log (job logs are not always reachable).
+          trap 'status=$?; if [ "$status" -ne 0 ]; then last=$(ls -t test-results/*.txt 2>/dev/null | head -n 1); [ -n "$last" ] && bash tools/ci_failure_annotation.sh "Presentation failed" "$last"; fi' EXIT
           for name in capture_presentation_gallery capture_presentation_sequences capture_combat benchmark_presentation_battles; do
             args=()
             if [ "$name" = benchmark_presentation_battles ]; then args=(-- --legacy-aden-faith-layouts); fi
@@ -300,6 +304,7 @@ jobs:
             if ! run_case "$label" "$script" "$subject" "$capture_mode" "${case_timeout:-$ORIGINAL_CASE_TIMEOUT}"; then
               failed+=("$label")
               echo "::error title=Original-based case failed::$label"
+              bash tools/ci_failure_annotation.sh "Case $label" "test-results/${label}-headless.txt" "test-results/${label}-render.txt"
             fi
           done <<< "$ORIGINAL_CASES"
           echo "ORIGINAL_BASED_CASES_RUN=$ran FAILED=${#failed[@]}"
@@ -429,9 +434,11 @@ jobs:
             export TWILIGHT_PR100_BATCH_CONFIG="$config"
             if ! run_mode "$batch" headless "$script" "$marker" "$limit"; then
               failed+=("batch${batch}-headless"); echo "::error title=Original-based batch failed::batch${batch} headless"
+              bash tools/ci_failure_annotation.sh "Batch ${batch} headless" "test-results/batch${batch}/headless.txt"
             fi
             if ! run_mode "$batch" render "$script" "$marker" "$render_limit"; then
               failed+=("batch${batch}-render"); echo "::error title=Original-based batch failed::batch${batch} render"
+              bash tools/ci_failure_annotation.sh "Batch ${batch} render" "test-results/batch${batch}/render.txt"
             fi
           done <<< "$BATCHES"
           echo "ORIGINAL_BATCHES_RUN=$ran FAILED=${#failed[@]}"
