@@ -1,0 +1,223 @@
+{
+  "schema": "girtas-run-registration-patch-v1",
+  "base_frames": "res://assets/actors/eight_direction/native_production/girtas_267/r002/SpriteFrames.tres",
+  "base_sha256": "7434cfdc73bfeef0c52240c1509b36365e5105247cc8344b118a86cb0fc84fb8",
+  "visual_approval": false,
+  "basis": {
+    "E": "Actual source alpha>16 planted boot sole is y=1374 in phase0 and y=1329 in phase1. Old anchors lie 51/42 source pixels below the sole. Flight2/5 untouched.",
+    "NW": "Rigid helmet match in 3x actual-size render: phase1 center x85 versus adjacent centers105 and98. Translate +57 source pixels = +5.49 world pixels. Preserve projection depth and vertical anchor.",
+    "NE": "Rigid helmet centers in 3x actual-size render: phases0/1/4/5 =166/184.5/186.5/143.5. Translate phases0/5 +58/+130 source pixels to centers184.15/183.35. Adjacent reference phases1/4 unchanged. Vertical flight trajectory unchanged."
+  },
+  "patches": [
+    {
+      "direction": "E",
+      "phase": 0,
+      "subresource": "track_4_0",
+      "source": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r091/E-run.png",
+      "source_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+      "region": [
+        193,
+        158,
+        1149,
+        1276
+      ],
+      "rgba_sha256": "39cc45ef3d027d76aa1bfc151de747b2d02d8fef6c25e9ff4f78ea49b8d5b167",
+      "old_margin": [
+        660,
+        398,
+        1515,
+        1388
+      ],
+      "new_margin": [
+        660,
+        449,
+        1515,
+        1388
+      ],
+      "old_anchor": [
+        865,
+        1425
+      ],
+      "new_anchor": [
+        865,
+        1374
+      ],
+      "canvas": [
+        2664,
+        2664
+      ],
+      "source_pixel_translation": [
+        0,
+        51
+      ]
+    },
+    {
+      "direction": "E",
+      "phase": 1,
+      "subresource": "track_4_1",
+      "source": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r091/E-run.png",
+      "source_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
+      "region": [
+        1720,
+        203,
+        1167,
+        1177
+      ],
+      "rgba_sha256": "e0386cd6c17bc3b69a18ff25527edc221387358411541639708d2f952c66de72",
+      "old_margin": [
+        596,
+        432,
+        1393,
+        1383
+      ],
+      "new_margin": [
+        596,
+        474,
+        1393,
+        1383
+      ],
+      "old_anchor": [
+        2404,
+        1371
+      ],
+      "new_anchor": [
+        2404,
+        1329
+      ],
+      "canvas": [
+        2560,
+        2560
+      ],
+      "source_pixel_translation": [
+        0,
+        42
+      ]
+    },
+    {
+      "direction": "NE",
+      "phase": 0,
+      "subresource": "track_16_0",
+      "source": "assets/actors/eight_direction/native_production/girtas_267/r002/NE-run.png",
+      "source_sha256": "572295ab346a3c74d77d8d882c726420950a89962a7bc800809cde24de97a8d9",
+      "region": [
+        128,
+        128,
+        1190,
+        1006
+      ],
+      "rgba_sha256": "ca8f0b67e16e97a8a956783b0e79019a09e29e4cd052f4d562f691e8538fd75e",
+      "old_margin": [
+        295,
+        212,
+        746,
+        930
+      ],
+      "new_margin": [
+        353,
+        212,
+        746,
+        930
+      ],
+      "old_anchor": [
+        801,
+        1126
+      ],
+      "new_anchor": [
+        743,
+        1126
+      ],
+      "canvas": [
+        1936,
+        1936
+      ],
+      "source_pixel_translation": [
+        58,
+        0
+      ]
+    },
+    {
+      "direction": "NE",
+      "phase": 5,
+      "subresource": "track_16_5",
+      "source": "assets/actors/eight_direction/native_production/girtas_267/r002/NE-run.png",
+      "source_sha256": "572295ab346a3c74d77d8d882c726420950a89962a7bc800809cde24de97a8d9",
+      "region": [
+        2176,
+        4224,
+        1273,
+        1236
+      ],
+      "rgba_sha256": "926b01a2a6576e0f0dcc52095d2969233449fcd1e088fb839bd37a120e27944f",
+      "old_margin": [
+        198,
+        174,
+        703,
+        740
+      ],
+      "new_margin": [
+        328,
+        174,
+        703,
+        740
+      ],
+      "old_anchor": [
+        2966,
+        5285
+      ],
+      "new_anchor": [
+        2836,
+        5285
+      ],
+      "canvas": [
+        1976,
+        1976
+      ],
+      "source_pixel_translation": [
+        130,
+        0
+      ]
+    },
+    {
+      "direction": "NW",
+      "phase": 1,
+      "subresource": "track_22_1",
+      "source": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r098/NW-run.png",
+      "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
+      "region": [
+        1351,
+        109,
+        1138,
+        1062
+      ],
+      "rgba_sha256": "184ed69671cb604fb782e693fb239b349ecfa1f0dab5de50aad6bcddd04a6b1e",
+      "old_margin": [
+        600,
+        372,
+        958,
+        1034
+      ],
+      "new_margin": [
+        657,
+        372,
+        958,
+        1034
+      ],
+      "old_anchor": [
+        1799,
+        1047
+      ],
+      "new_anchor": [
+        1742,
+        1047
+      ],
+      "canvas": [
+        2096,
+        2096
+      ],
+      "source_pixel_translation": [
+        57,
+        0
+      ]
+    }
+  ]
+}

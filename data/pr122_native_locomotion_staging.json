@@ -9523,8 +9523,8 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r002/SpriteFrames.tres",
-      "frames_sha256": "7434cfdc73bfeef0c52240c1509b36365e5105247cc8344b118a86cb0fc84fb8",
+      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r003/SpriteFrames.tres",
+      "frames_sha256": "3141ca4c462e5f0cdeac1b79cea3a99bbcfc06468a84c7e0156df7f24e3c5e6c",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -10219,13 +10219,13 @@
                 ],
                 "margin": [
                   660,
-                  398,
+                  449,
                   1515,
                   1388
                 ],
                 "source_anchor": [
                   865,
-                  1425
+                  1374
                 ],
                 "rgba_sha256": "39cc45ef3d027d76aa1bfc151de747b2d02d8fef6c25e9ff4f78ea49b8d5b167",
                 "canvas_size": [
@@ -10248,13 +10248,13 @@
                 ],
                 "margin": [
                   596,
-                  432,
+                  474,
                   1393,
                   1383
                 ],
                 "source_anchor": [
                   2404,
-                  1371
+                  1329
                 ],
                 "rgba_sha256": "e0386cd6c17bc3b69a18ff25527edc221387358411541639708d2f952c66de72",
                 "canvas_size": [
@@ -10395,30 +10395,21 @@
             ]
           },
           "runtime_layout_proof": {
-            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "status": "REGISTRATION_REPAIR_NOT_VISUAL_APPROVAL",
             "source_sha256": "e7e35e5f4f8bb042421a1556a1bffc98fb9ebb63919b3971ed3b0e2403367ff5",
-            "base_geometry_sha256": "cc261793009c9dc330d67a981cc5a6862b3a3d0afb924759aa8a0b06af9c3109",
-            "derived_geometry_sha256": "e885bd51529d224c8a0ee7c85e4b325697f2971b8df05827ba4e7adf5af3f507",
-            "review_sha256": "15b68fd44567f675746ac05c976afb938f5d2fd925c6dd7c364afa66d9763c30",
-            "review_basis": "Fresh independent full-six source animation/rigid commonphysical/actual alternating support-load-flight/5to0 and source endpoints PASS: /workspace/scratch/girtas-E-run-independent-source-runtime-qc-20261019/E-run-six-rigid-and-authored-root-independent-candidate-review.json SHA 5c8f31a0528c0d20b1fa3b7fdffed4b0739e134c96269121fa2fef9173650049. Approved C/native roots unchanged. Current r089 worldscale updated numerically only; actual new Player resource/action/cadence/defaultcatalog and actor approval remain HOLD. Numeric proof /workspace/scratch/girtas-E-run-integration-package-v03composite02/authored-ground-root-current-profile-proof.json SHA 83555026e06d94fa112ecc1abd0b80256977e9418fdc767e387902d11351700b",
             "direction": "E",
             "pose_count": 6,
-            "canvas_size": [
-              2048,
-              2048
-            ],
-            "foot": [
-              1024,
-              1280
-            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "newly_authored_poses": 0,
             "source_anchors": [
               [
                 865,
-                1425
+                1374
               ],
               [
                 2404,
-                1371
+                1329
               ],
               [
                 859,
@@ -10437,14 +10428,6 @@
                 4429
               ]
             ],
-            "runtime_pixel_scale_ratio": [
-              1024,
-              2048
-            ],
-            "source_pixels_unchanged": true,
-            "resampled": false,
-            "approval_granted": false,
-            "source_region_review_sha256": "d852efefb4331b95e38fa6bb19905b2d79514c5219fdde94f5ce58c8b09167a6",
             "pose_canvas_sizes": [
               2664,
               2560,
@@ -10454,37 +10437,8 @@
               2048
             ],
             "runtime_reference_canvas_size": 1024,
-            "per_pose_runtime_pixel_scale_ratios": [
-              [
-                1024,
-                2664
-              ],
-              [
-                1024,
-                2560
-              ],
-              [
-                1024,
-                2560
-              ],
-              [
-                1024,
-                2256
-              ],
-              [
-                1024,
-                2256
-              ],
-              [
-                1024,
-                2048
-              ]
-            ],
-            "pose_canvas_size_allowed_range": [
-              256,
-              4096
-            ],
-            "newly_authored_poses": 0
+            "approval_granted": false,
+            "review_basis": "2026-10-31 source-pinned registration only: E contact sole anchors; NW1 and NE0/5 rigid upper-body horizontal continuity. No scale, original regions, pose order, timing or attack changes. See r003/registration_patch.json."
           }
         },
         {
@@ -12880,13 +12834,13 @@
                   1006
                 ],
                 "margin": [
-                  295,
+                  353,
                   212,
                   746,
                   930
                 ],
                 "source_anchor": [
-                  801,
+                  743,
                   1126
                 ],
                 "rgba_sha256": "ca8f0b67e16e97a8a956783b0e79019a09e29e4cd052f4d562f691e8538fd75e",
@@ -13025,13 +12979,13 @@
                   1236
                 ],
                 "margin": [
-                  198,
+                  328,
                   174,
                   703,
                   740
                 ],
                 "source_anchor": [
-                  2966,
+                  2836,
                   5285
                 ],
                 "rgba_sha256": "926b01a2a6576e0f0dcc52095d2969233449fcd1e088fb839bd37a120e27944f",
@@ -13057,24 +13011,16 @@
             ]
           },
           "runtime_layout_proof": {
-            "status": "LOCAL_DEFAULT_MAIN_REPAIR_VERIFIED_NOT_FULL_APPROVAL",
+            "status": "REGISTRATION_REPAIR_NOT_VISUAL_APPROVAL",
             "source_sha256": "572295ab346a3c74d77d8d882c726420950a89962a7bc800809cde24de97a8d9",
             "direction": "NE",
             "pose_count": 6,
-            "source_pixels_unchanged": false,
+            "source_pixels_unchanged": true,
             "resampled": false,
-            "newly_authored_poses": 2,
-            "preserved_original_phases": [
-              0,
-              1,
-              3,
-              4
-            ],
-            "original_source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-run-v03composite02.png",
-            "original_source_sha256": "3287d0e9a0becb0c071cea17a859926ba22b4238acdd85f5ccb95646332c31d2",
+            "newly_authored_poses": 0,
             "source_anchors": [
               [
-                801,
+                743,
                 1126
               ],
               [
@@ -13094,7 +13040,7 @@
                 5305
               ],
               [
-                2966,
+                2836,
                 5285
               ]
             ],
@@ -13108,8 +13054,7 @@
             ],
             "runtime_reference_canvas_size": 1024,
             "approval_granted": false,
-            "review_basis": "Separate image-tool corrections fold trailing calves on confirmed excessive-height AIR2/5; rigid upper-body scale retained by native canvas registration. Four normal phases remain RGBA-identical. Projected ground lies in preserved transparent room; no code bob, speed, attack, mirror, or collision changes.",
-            "runtime_review": "Actual Main default catalog r002: 8 RUN directions / 48 phases, no direction mirroring or body/collision changes. NE AIR5-to-contact0 compared visually before/after. Full-actor quality remains FAIL; other directions and load transitions require review."
+            "review_basis": "2026-10-31 source-pinned registration only: E contact sole anchors; NW1 and NE0/5 rigid upper-body horizontal continuity. No scale, original regions, pose order, timing or attack changes. See r003/registration_patch.json."
           }
         },
         {
@@ -14343,13 +14288,13 @@
                   1062
                 ],
                 "margin": [
-                  600,
+                  657,
                   372,
                   958,
                   1034
                 ],
                 "source_anchor": [
-                  1799,
+                  1742,
                   1047
                 ],
                 "rgba_sha256": "184ed69671cb604fb782e693fb239b349ecfa1f0dab5de50aad6bcddd04a6b1e",
@@ -14491,29 +14436,20 @@
             ]
           },
           "runtime_layout_proof": {
-            "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
+            "status": "REGISTRATION_REPAIR_NOT_VISUAL_APPROVAL",
             "source_sha256": "af0874e2dabee314aba4e77fac86640c68625446a4cc33e3a939efd34570c7a9",
-            "base_geometry_sha256": "e92473ef7607561dd09d790bdfb006137d95744425ba62a1f3b9c10b51bfb15b",
-            "derived_geometry_sha256": "8901be2d9ada92926328b932c581c36b6cbe73b652e768fda56357fcd66921bb",
-            "review_sha256": "03727ef10aacd3aabc739b15ae9275c64453f7b31c7cb0e5b30bb5bfbe7567e7",
-            "review_basis": "Candidate individuallymeasured NWrigidhelmet/skull/pauldron/waist size with explicitlyauthoredposteriorwaist/pelvis/ground smallRUNarc contact245/load225/flight310; actualnear/far/foreaftfootdepth retained. SOURCEwhole6PASS butindependentphysical/floor/AIRreviewpending. No hiddenbone/PNGfloor/bboxnormalization claim. Independent exactwhole6 source/camera/gear/gait and C/body/pelvis/sole/AIR candidate PASS now pinned. Actual compiledPlayer/actor approval remains HOLD.",
             "direction": "NW",
             "pose_count": 6,
-            "canvas_size": [
-              2048,
-              2048
-            ],
-            "foot": [
-              1024,
-              1280
-            ],
+            "source_pixels_unchanged": true,
+            "resampled": false,
+            "newly_authored_poses": 0,
             "source_anchors": [
               [
                 565,
                 811
               ],
               [
-                1799,
+                1742,
                 1047
               ],
               [
@@ -14533,14 +14469,6 @@
                 3410
               ]
             ],
-            "runtime_pixel_scale_ratio": [
-              1024,
-              2048
-            ],
-            "source_pixels_unchanged": true,
-            "resampled": false,
-            "approval_granted": false,
-            "source_region_review_sha256": "5e8292a29162e51fc8a66016e2e0f4afec928461e2f75ed07ef8ee97e76d6ed9",
             "pose_canvas_sizes": [
               848,
               2096,
@@ -14550,37 +14478,8 @@
               872
             ],
             "runtime_reference_canvas_size": 1024,
-            "per_pose_runtime_pixel_scale_ratios": [
-              [
-                1024,
-                848
-              ],
-              [
-                1024,
-                2096
-              ],
-              [
-                1024,
-                2392
-              ],
-              [
-                1024,
-                2376
-              ],
-              [
-                1024,
-                2280
-              ],
-              [
-                1024,
-                872
-              ]
-            ],
-            "pose_canvas_size_allowed_range": [
-              256,
-              4096
-            ],
-            "newly_authored_poses": 0
+            "approval_granted": false,
+            "review_basis": "2026-10-31 source-pinned registration only: E contact sole anchors; NW1 and NE0/5 rigid upper-body horizontal continuity. No scale, original regions, pose order, timing or attack changes. See r003/registration_patch.json."
           }
         },
         {
@@ -19790,8 +19689,8 @@
       "visual_review": "FAIL",
       "timing_review": "PASS",
       "integration": "Real default catalog wired to immutable production candidate; approval pending actual default Main and independent full quality",
-      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r002/NativeMotionProfile.tres",
-      "native_profile_sha256": "e7b19fb52bcd58e3f69d04d2f4457e7e9fd910739338a97b383699bb003fb9b1",
+      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r003/NativeMotionProfile.tres",
+      "native_profile_sha256": "406c8833e9098da40accc1f10c0d687d100d2bfdf61edba6107c029bcd1c1aea",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 502.04237288135596,
