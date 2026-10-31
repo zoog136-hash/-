@@ -51,6 +51,40 @@ RENEWED_SPAWN_SUMMARY = re.compile(
 # Bind the exact terminal contract to its own suite; an arbitrary PASS line,
 # zero-work summary, another actor's default-Main proof, or a partial prefix
 # must never turn an unfinished subprocess into a successful check.
+# Exact contracts for existing, non-JSON Godot test receipts. These are not
+# generic success markers: empty, malformed, truncated, or failed results fail.
+SCALAR_RESULT_CONTRACTS = {
+    'source_npc_live_placement_test': (
+        'SOURCE_NPC_LIVE_RESULT ',
+        re.compile(r'^SOURCE_NPC_LIVE_RESULT checks=(?P<checks>[1-9][0-9]*) failures=(?P<bad>[0-9]+) actual_placement=6/6$')),
+    'reviewed_existing_monster_visuals_test': (
+        'EXISTING_MONSTER_SOURCE_RESULT ',
+        re.compile(r'^EXISTING_MONSTER_SOURCE_RESULT checks=(?P<checks>[1-9][0-9]*) errors=(?P<bad>[0-9]+) replaced=2$')),
+    'source3_drop_extensions_main_test': (
+        'SOURCE3_DROP_EXTENSIONS_MAIN_RESULT ',
+        re.compile(r'^SOURCE3_DROP_EXTENSIONS_MAIN_RESULT checks=(?P<checks>[1-9][0-9]*) errors=(?P<bad>[0-9]+)$')),
+    'source3_drop_extensions_test': (
+        'SOURCE3_DROP_EXTENSIONS_RESULT ',
+        re.compile(r'^SOURCE3_DROP_EXTENSIONS_RESULT identities=24 rows=41 checks=(?P<checks>[1-9][0-9]*) errors=(?P<bad>[0-9]+)$')),
+    'source3_item_links_test': (
+        'SOURCE3_ITEM_LINK_RESULT ',
+        re.compile(r'^SOURCE3_ITEM_LINK_RESULT checks=(?P<checks>[1-9][0-9]*) errors=(?P<bad>[0-9]+) links=252 stats_imported=0$')),
+    'source3_reviewed_drop_main_test': (
+        'SOURCE3_DROP_MAIN_RESULT ',
+        re.compile(r'^SOURCE3_DROP_MAIN_RESULT phase=(?:write|read|empty) checks=(?P<checks>[1-9][0-9]*) failures=(?P<bad>[0-9]+)$')),
+}
+SCALAR_ONLY_CONTRACTS = {
+    'source_npc_six_test': ('SOURCE_NPC_SIX ',
+        re.compile(r'^SOURCE_NPC_SIX checks=[1-9][0-9]* failures=(?P<bad>[0-9]+) placement=checked_by_live_test$')),
+    'source_npc_six_render_test': ('SOURCE_NPC_RENDER ',
+        re.compile(r'^SOURCE_NPC_RENDER slots=8 actors=6 failures=(?P<bad>[0-9]+) placement=diagnostic_only$')),
+    'reviewed_source_monsters_test': ('REVIEWED_SOURCE_MONSTERS ',
+        re.compile(r'^REVIEWED_SOURCE_MONSTERS checks=[1-9][0-9]* failures=(?P<bad>[0-9]+)$')),
+    'source3_reviewed_drop_test': ('SOURCE3_DROP_TEST ',
+        re.compile(r'^SOURCE3_DROP_TEST phase=(?:write|read|empty|drift) failures=(?P<bad>[0-9]+)$')),
+}
+
+
 PR122_PASS_SUMMARIES = {
     'pr122_girtas_native_default_main_connection_test':
         r'PR122_NATIVE_DEFAULT_MAIN_PASS key=transform:267 tracks=48 poses=288 candidate_injection=0',
@@ -265,9 +299,17 @@ def classify_result(name: str, returncode: int, output: str, *,
         return False, False
     reports = []
     death_summaries = []
+    scalar_receipts = []
+    scalar_contract = SCALAR_RESULT_CONTRACTS.get(name)
     for line in output.splitlines():
         match = REPORT.search(line)
         if match:
+            if scalar_contract is not None and line.startswith(scalar_contract[0]):
+                parsed = scalar_contract[1].fullmatch(line)
+                if parsed is None or parsed.group('bad') != '0':
+                    return False, False
+                scalar_receipts.append(parsed)
+                continue
             if name == 'pr122_s_only_death_main_test' and line.startswith('PR122_S_ONLY_DEATH_MAIN_RESULT'):
                 if PR122_DEATH_SUMMARY.fullmatch(line) is None:
                     return False, False
@@ -312,6 +354,17 @@ def classify_result(name: str, returncode: int, output: str, *,
     # Import/boot/cache preparation must actually run; SKIP cannot authorize them.
     if SKIP.search(output):
         return (False, False) if name in ('import', 'boot', 'bake_navigation') else (True, True)
+    if scalar_contract is not None:
+        # A restart child emits only three checks; require the full live-game
+        # receipt as well, rather than counting that child as a complete test.
+        full_live = (name != 'source_npc_live_placement_test'
+                     or any(int(m.group('checks')) >= 100 for m in scalar_receipts))
+        return bool(scalar_receipts) and full_live, False
+    if name in SCALAR_ONLY_CONTRACTS:
+        prefix, pattern = SCALAR_ONLY_CONTRACTS[name]
+        receipts = [line for line in output.splitlines() if line.startswith(prefix)]
+        return (len(receipts) == 1 and (parsed := pattern.fullmatch(receipts[0])) is not None
+                and parsed.group('bad') == '0'), False
     return name in ('import', 'boot') or bool(reports) or bool(SUCCESS.search(output)), False
 
 

@@ -675,5 +675,50 @@ class FailureAnnotationTests(unittest.TestCase):
         self.assertLessEqual(len(failure_annotation('x', 'ERROR: ' + 'y' * 5000)), 1000)
 
 
+
+class SourceRuntimeCountedReceiptTests(unittest.TestCase):
+    """Retain strict failure detection for existing Godot scalar receipts."""
+
+    CASES = {
+        'source_npc_live_placement_test': 'SOURCE_NPC_LIVE_RESULT checks=124 failures=0 actual_placement=6/6',
+        'reviewed_existing_monster_visuals_test': 'EXISTING_MONSTER_SOURCE_RESULT checks=256 errors=0 replaced=2',
+        'source3_drop_extensions_main_test': 'SOURCE3_DROP_EXTENSIONS_MAIN_RESULT checks=115 errors=0',
+        'source3_drop_extensions_test': 'SOURCE3_DROP_EXTENSIONS_RESULT identities=24 rows=41 checks=200 errors=0',
+        'source3_item_links_test': 'SOURCE3_ITEM_LINK_RESULT checks=760 errors=0 links=252 stats_imported=0',
+        'source3_reviewed_drop_main_test': 'SOURCE3_DROP_MAIN_RESULT phase=write checks=30 failures=0',
+        'source_npc_six_test': 'SOURCE_NPC_SIX checks=112 failures=0 placement=checked_by_live_test',
+        'source_npc_six_render_test': 'SOURCE_NPC_RENDER slots=8 actors=6 failures=0 placement=diagnostic_only',
+        'reviewed_source_monsters_test': 'REVIEWED_SOURCE_MONSTERS checks=50259 failures=0',
+        'source3_reviewed_drop_test': 'SOURCE3_DROP_TEST phase=write failures=0',
+    }
+
+    def test_exact_positive_receipts_pass_only_their_own_suites(self):
+        for name, output in self.CASES.items():
+            with self.subTest(name=name):
+                self.assertEqual(classify_result(name, 0, output), (True, False))
+                self.assertEqual(classify_result('unrelated_test', 0, output), (False, False))
+                self.assertEqual(classify_result(name, 1, output), (False, False))
+                self.assertEqual(classify_result(name, 0, output + '\nSCRIPT ERROR: broken'), (False, False))
+                self.assertEqual(classify_result(name, 0, output + '\nCASE_SKIP: skipped'), (False, False))
+                self.assertEqual(classify_result(name, 0, output.replace('=0', '=1')), (False, False))
+                self.assertEqual(classify_result(name, 0, output.replace(' checks=', ' checks=0')), (False, False)
+                                 if ' checks=' in output else (True, False))
+
+    def test_only_one_render_or_npc_six_terminal_receipt(self):
+        for name in ('source_npc_six_test', 'source_npc_six_render_test',
+                     'reviewed_source_monsters_test', 'source3_reviewed_drop_test'):
+            with self.subTest(name=name):
+                value = self.CASES[name]
+                self.assertEqual(classify_result(name, 0, value + '\n' + value), (False, False))
+                self.assertEqual(classify_result(name, 0, 'CASE_OK'), (False, False))
+
+    def test_npc_child_restart_alone_cannot_authorize_live_placement(self):
+        name = 'source_npc_live_placement_test'
+        child = 'SOURCE_NPC_LIVE_RESULT checks=3 failures=0 actual_placement=6/6'
+        self.assertEqual(classify_result(name, 0, child), (False, False))
+        self.assertEqual(classify_result(name, 0, child + '\n' + self.CASES[name]), (True, False))
+        self.assertEqual(classify_result(name, 0, child + '\n' + self.CASES[name] +
+                                         '\nCASE_RESULT {"failures":["hidden problem"]}'), (False, False))
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
