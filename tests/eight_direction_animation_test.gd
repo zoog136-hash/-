@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
@@ -36,7 +37,7 @@ func run() -> void:
 					var texture: Texture2D = frames.get_frame_texture(key,f)
 					check(texture != null and texture.get_size() == Vector2(256,256), "fixed canvas " + key)
 					if texture != null:
-						var pixels := texture.get_image()
+						var pixels := TexturePixels.image_of(texture)
 						check(not pixels.is_invisible(), "nonempty " + key)
 						unique[pixels.get_data().hex_encode().sha256_text()] = true
 						if f == 0 and (profile.profile_id == "monster:해골 근위병" or role == "idle"):

@@ -55,6 +55,11 @@ jobs:
           key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
           restore-keys: |
             twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Keep tracked per-file import settings over the restored cache
+        shell: bash
+        # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
+        # restores every *.import from an older main; put tracked ones back.
+        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
       - name: Verify existing resource ledger
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned Godot and software GL
@@ -245,6 +250,11 @@ jobs:
           key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
           restore-keys: |
             twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Keep tracked per-file import settings over the restored cache
+        shell: bash
+        # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
+        # restores every *.import from an older main; put tracked ones back.
+        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
       - name: Verify existing resource ledger
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned Godot and software GL
@@ -361,6 +371,11 @@ jobs:
           key: twilight-godot-import-4.7.2-linux-compat-main-v2-${{ github.event.pull_request.base.sha || github.sha }}
           restore-keys: |
             twilight-godot-import-4.7.2-linux-compat-main-v2-
+      - name: Keep tracked per-file import settings over the restored cache
+        shell: bash
+        # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
+        # restores every *.import from an older main; put tracked ones back.
+        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
       - name: Verify existing resource ledger
         run: python3 tools/check_resource_integrity.py --root .
       - name: Install pinned Godot and software GL

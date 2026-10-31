@@ -1,4 +1,5 @@
 extends SceneTree
+const TexturePixels = preload("res://tests/texture_pixels.gd")
 
 const CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 const ANIMATIONS = preload("res://scripts/animation/animation_catalog.gd")
@@ -200,7 +201,7 @@ func _run() -> void:
 				var frame: Image = root.get_texture().get_image()
 				check(frame != null and frame.get_width() == root.size.x, "GPU viewport readback")
 				for actor: TwilightMonster in actors:
-					var source: Image = actor.sprite.texture.get_image()
+					var source: Image = TexturePixels.image_of(actor.sprite.texture)
 					if source.get_used_rect().size == Vector2i.ZERO:
 						var texture: AtlasTexture = actor.sprite.texture as AtlasTexture
 						var legacy_index: int = int(texture.region.position.y / texture.region.size.y) * 16 + int(texture.region.position.x / texture.region.size.x)
