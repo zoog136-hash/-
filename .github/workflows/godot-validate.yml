@@ -15,7 +15,9 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 125
+    # A cold import alone measured 60-68 min; at 125 min the field tests were
+    # cancelled on main too, so main never saved the import cache for PRs.
+    timeout-minutes: 240
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -441,6 +443,9 @@ jobs:
       # Import outputs depend only on main's sources, so publish them once the
       # clean import step has passed even if a later regression step failed;
       # otherwise one red main run left every workflow without a current cache.
+      - name: Annotate failure cause
+        if: failure()
+        run: python3 tools/ci_annotate_failure.py --title "Godot Validate" godot-*.log world-region-shards/*.log
       - name: Stage PNG imports from validated main
         id: png-stage
         if: ${{ !cancelled() && steps.import-metrics.outcome == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}

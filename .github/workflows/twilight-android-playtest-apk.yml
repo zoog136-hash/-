@@ -138,6 +138,9 @@ jobs:
           python3 tools/verify_android_animation_export.py --apk build/TWILIGHT_ANDROID_PLAYTEST.apk --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --android-sdk "$ANDROID_HOME" --output build/android-validation
           echo "TWILIGHT_ANDROID_APK_BUILD_OK"
           ls -lh build/TWILIGHT_ANDROID_PLAYTEST.apk
+      - name: Annotate failure cause
+        if: failure()
+        run: python3 tools/ci_annotate_failure.py --title "Android APK" /tmp/import-android.txt /tmp/export-android.txt build/android-validation/*.txt build/android-validation/*.log
       - name: Upload signed Android debug APK
         if: success()
         uses: actions/upload-artifact@v4

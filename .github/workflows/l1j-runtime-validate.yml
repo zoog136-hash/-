@@ -205,6 +205,9 @@ jobs:
               assert combined['passed'] == 218 and len(combined['skipped']) == 5
               pathlib.Path('l1j-test-results/combined-linux-summary.json').write_text(json.dumps(combined, indent=2) + '\n', encoding='utf-8')
               print('LINUX_COMBINED_COVERAGE', json.dumps(combined))
+      - name: Annotate regression failure cause
+        if: failure()
+        run: python3 tools/ci_annotate_failure.py --title "L1J regression" --summary l1j-test-results
       - name: Render the actual game with synthetic CI fixtures
         if: runner.os == 'Linux'
         env:
@@ -285,6 +288,9 @@ jobs:
           if grep -E 'SCRIPT ERROR:|ERROR:' android-export.log; then exit 1; fi
           python3 tools/l1j/inspect_apk.py --apk build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk --bindings data/l1j/live_visual_bindings.json | tee android-inspection.json
           "$ANDROID_HOME/build-tools/35.0.1/apksigner" verify build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk
+      - name: Annotate Android export failure cause
+        if: failure()
+        run: python3 tools/ci_annotate_failure.py --title "L1J Android export" android-import.log android-export.log
       - name: Preserve Android export evidence (synthetic art; no device execution)
         if: always()
         uses: actions/upload-artifact@v4
