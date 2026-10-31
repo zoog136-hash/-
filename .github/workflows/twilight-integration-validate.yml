@@ -25,6 +25,16 @@ jobs:
     steps:
       - name: Check out integration candidate
         uses: actions/checkout@v4
+        with:
+          # docs/ is ~22 GB of review evidence; with its pack it overflows the
+          # runner disk. Check out everything else, then add referenced docs.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
+      - name: Add referenced docs files to the sparse checkout
+        run: python3 tools/ci_sparse_docs.py --root .
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Restore pinned Godot engine cache
@@ -74,7 +84,7 @@ jobs:
         shell: bash
         # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
         # restores every *.import from an older main; put tracked ones back.
-        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
+        run: git -c core.quotePath=false ls-files -t -- '*.import' | sed -n 's/^H //p' | tr '\n' '\0' | xargs -0 -r git checkout --
       - name: Full project regression, import, boot and all smoke tests
         shell: bash
         run: |
