@@ -40,6 +40,15 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     steps:
+      - name: Free runner disk space
+        # The ~38 GB checkout, Godot import and PNG captures run close to the
+        # hosted runner's disk limit ("No space left on device" seen on
+        # batches-4). These jobs use no .NET, Android SDK, Haskell or CodeQL.
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
+          sudo docker image prune --all --force >/dev/null 2>&1 || true
+          df -h /
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
@@ -239,6 +248,15 @@ jobs:
               snowman|original_based_snowman_gameplay_test||poses
               yeti|original_based_yeti_gameplay_test||poses
     steps:
+      - name: Free runner disk space
+        # The ~38 GB checkout, Godot import and PNG captures run close to the
+        # hosted runner's disk limit ("No space left on device" seen on
+        # batches-4). These jobs use no .NET, Android SDK, Haskell or CodeQL.
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
+          sudo docker image prune --all --force >/dev/null 2>&1 || true
+          df -h /
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
@@ -361,6 +379,15 @@ jobs:
       TWILIGHT_PR100_BATCH_ISOLATED: '1'
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
+      - name: Free runner disk space
+        # The ~38 GB checkout, Godot import and PNG captures run close to the
+        # hosted runner's disk limit ("No space left on device" seen on
+        # batches-4). These jobs use no .NET, Android SDK, Haskell or CodeQL.
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
+          sudo docker image prune --all --force >/dev/null 2>&1 || true
+          df -h /
       - uses: actions/checkout@v4
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
