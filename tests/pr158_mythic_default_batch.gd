@@ -15,6 +15,9 @@ func invariant(world: Node) -> String:
 func refined_idle_contract(frames: SpriteFrames, key: String, played_tracks: Dictionary, played_poses: Dictionary) -> void:
 	var manifest_path: String=frames.resource_path.get_base_dir().get_base_dir().path_join("source-provenance.json")
 	var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
+	if str(manifest.get("revision",""))=="production_hit_source_repair_r001":
+		refined_official_hit_contract(frames,key,manifest,played_tracks,played_poses)
+		return
 	if str(manifest.get("revision",""))=="production_hit_boundary_r001":
 		refined_hit_boundary_contract(frames,key,manifest,played_tracks,played_poses)
 		return
@@ -108,6 +111,58 @@ func refined_hit_boundary_contract(frames: SpriteFrames, key: String, proof: Dic
 		report.cases.back()["default_frames"]=frames.resource_path
 		report.cases.back()["inherited_idle_resource"]=prior.resource_path
 		report.cases.back()["changed_non_idle_atlases"]=changed
+
+func refined_official_hit_contract(frames: SpriteFrames, key: String, proof: Dictionary, played_tracks: Dictionary, played_poses: Dictionary) -> void:
+	check(proof.actors.has(key) and key in ["283","345"],"Only the two explicit official source-edit actors")
+	if not proof.actors.has(key):return
+	var spec: Dictionary=proof.actors[key]
+	check(frames.resource_path==str(spec.selected_frames) and FileAccess.get_sha256(frames.resource_path)==str(spec.selected_sha256),"Exact selected source-edit revision pin")
+	var prior: SpriteFrames=load(str(spec.prior_selected_frames))
+	check(prior!=null and FileAccess.get_sha256(spec.prior_selected_frames)==str(spec.prior_sha256),"Immutable pre-edit resource preserved")
+	if prior==null:return
+	var registration: Dictionary=frames.get_meta("twilight_reviewed_frame_registration")
+	var old_registration: Dictionary=prior.get_meta("twilight_reviewed_frame_registration")
+	var expected_registration: Dictionary=old_registration.duplicate(true)
+	var changed: Dictionary={};var common_scale:=Vector2.ZERO
+	for edit: Dictionary in spec.changes:
+		var clip:=str(edit.clip);var phase:=int(edit.phase)
+		check((key=="283" and clip=="hit_0" and phase in [3,4,5]) or (key=="345" and clip=="hit_3" and phase==2),"Only the four explicitly selected HIT slots change")
+		expected_registration[clip].frames[phase]={"anchor":Vector2(edit.anchor[0],edit.anchor[1]),"scale":Vector2(edit.scale[0],edit.scale[1]),"target":Vector2(edit.target[0],edit.target[1])}
+		changed[clip+"/"+str(phase)]=edit
+		var scale: Vector2=expected_registration[clip].frames[phase].scale
+		if common_scale==Vector2.ZERO:common_scale=scale
+		check(scale==common_scale,"One common body-landmark scale across each edited camera; no per-frame FX/bbox sizing")
+	check(registration==expected_registration,"Complete registration dictionary matches exact target indices; identical neighboring entries never move")
+	check(frames.get_animation_names()==prior.get_animation_names() and frames.get_meta_list()==prior.get_meta_list(),"All required tracks and source metadata keys retained")
+	for meta: StringName in prior.get_meta_list():
+		if meta!=&"twilight_reviewed_frame_registration":check(frames.get_meta(meta)==prior.get_meta(meta),"All approved IDLE/source/count/clock metadata unchanged "+str(meta))
+	var observed_changes:=0
+	for clip: String in prior.get_animation_names():
+		check(frames.get_frame_count(clip)==prior.get_frame_count(clip) and frames.get_animation_speed(clip)==prior.get_animation_speed(clip) and frames.get_animation_loop(clip)==prior.get_animation_loop(clip),"Every original count/FPS/loop retained "+clip)
+		for phase in range(prior.get_frame_count(clip)):
+			var current: AtlasTexture=frames.get_frame_texture(clip,phase) as AtlasTexture
+			var old: AtlasTexture=prior.get_frame_texture(clip,phase) as AtlasTexture
+			check(current!=null and old!=null and current.filter_clip==old.filter_clip and frames.get_frame_duration(clip,phase)==prior.get_frame_duration(clip,phase),"Every source kind/filter/phase duration retained")
+			var token:=clip+"/"+str(phase)
+			if not changed.has(token):
+				check(current.atlas.resource_path==old.atlas.resource_path and current.region==old.region and current.margin==old.margin,"All other pixels/Atlas geometry, including approved IDLE and prior283p2 repair, remain exact "+token)
+				continue
+			observed_changes+=1
+			var edit: Dictionary=changed[token];var entry: Dictionary=registration[clip].frames[phase]
+			check(current.atlas.resource_path==str(edit.source) and FileAccess.get_sha256(edit.source)==str(edit.source_sha256),"Byte-exact official output source")
+			check(current.region==Rect2(edit.region[0],edit.region[1],edit.region[2],edit.region[3]) and current.margin==Rect2(edit.margin[0],edit.margin[1],edit.margin[2],edit.margin[3]),"Exact whole-owned source rectangle and canvas compensation")
+			var logical:=current.region.size+current.margin.size
+			check(current.get_size()==Vector2(floorf(logical.x),floorf(logical.y)),"Actual Texture2D integer canvas follows its precise floor API")
+			check((logical*entry.scale).is_equal_approx(old.get_size()*old_registration[clip].frames[phase].scale),"Original logical world canvas preserved; integer API quantization is separate")
+			check((current.region.position+entry.anchor-current.margin.position).is_equal_approx(Vector2(edit.source_C[0],edit.source_C[1])),"Pinned source C/sole registration; actual sprite centering cancels integer canvas half")
+	check(observed_changes==(3 if key=="283" else 1),"Exactly the selected four existing pose slots; no new clip")
+	# The complete pre-existing approved IDLE contract is still required,
+	# including the previous283p2 repair and all182 distinct IDLE sources.
+	refined_idle_contract(prior,key,played_tracks,played_poses)
+	if not report.cases.is_empty():
+		report.cases.back()["default_frames"]=frames.resource_path
+		report.cases.back()["source_edit_prior_resource"]=prior.resource_path
+		report.cases.back()["official_source_pose_slots_replaced"]=observed_changes
 
 func refined_run_layout_contract(frames: SpriteFrames, key: String, played_tracks: Dictionary, played_poses: Dictionary) -> void:
 	var metadata: Dictionary=frames.get_meta("twilight_run_source_layout_refinement")
