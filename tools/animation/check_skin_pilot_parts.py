@@ -16,6 +16,15 @@ for skin in manifest['skins'].values():
     for name, part in skin['parts'].items():
         path = root / part['texture'].removeprefix('res://')
         assert hashlib.sha256(path.read_bytes()).hexdigest() == part['sha256']
+        if 'derived_from' in part:
+            body = Image.open(root / skin['parts']['body']['texture'].removeprefix('res://')).convert('RGBA')
+            mask = Image.new('L', body.size)
+            ImageDraw.Draw(mask).rectangle(tuple(part['partition_rect']), fill=255)
+            body.putalpha(ImageChops.multiply(body.getchannel('A'), mask))
+            actual = Image.open(path).convert('RGBA')
+            assert body.tobytes() == actual.tobytes(), path
+            count += 1
+            continue
         mask = Image.new('L', original.size)
         ImageDraw.Draw(mask).polygon([tuple(p) for p in part['polygon']], fill=255)
         expected = original.copy()
@@ -40,6 +49,21 @@ for skin in manifest['skins'].values():
             ImageDraw.Draw(cape_mask).polygon([tuple(p) for p in cape['polygon']], fill=255)
             ImageDraw.Draw(cape_mask).rectangle((0, 0, original.width, cape['keep_y']), fill=0)
             expected.putalpha(ImageChops.subtract(expected.getchannel('A'), cape_mask))
+        if 'additional_cut' in part:
+            upper = Image.new('L', original.size)
+            ImageDraw.Draw(upper).polygon([tuple(p) for p in part['additional_cut']], fill=255)
+            expected.putalpha(ImageChops.subtract(expected.getchannel('A'), upper))
+            patch = Image.new('L', original.size)
+            ImageDraw.Draw(patch).polygon([tuple(p) for p in part['additional_underlay']], fill=255)
+            patch = ImageChops.multiply(patch, upper)
+            patch = ImageChops.multiply(patch, original.getchannel('A').point(lambda a: 255 if a >= 240 else 0))
+            fill = Image.new('RGBA', original.size, color)
+            fill.putalpha(patch)
+            expected = Image.alpha_composite(expected, fill)
+            if part['blade_cut']:
+                cut = Image.new('L', original.size)
+                ImageDraw.Draw(cut).polygon([tuple(p) for p in part['blade_cut']], fill=255)
+                expected.putalpha(ImageChops.subtract(expected.getchannel('A'), cut))
         actual = Image.open(path).convert('RGBA')
         assert actual.tobytes() == expected.tobytes(), path
         assert actual.getchannel('A').getbbox(), path

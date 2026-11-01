@@ -9,6 +9,8 @@ enum Family { GROUND, WINGED_FLOATING, RANGED }
 @export var swing_height: float = 8.0
 @export var arm_swing_radians: float = 0.16
 @export var cape_swing_radians: float = 0.08
+var idle_time := 0.0
+var attack_origin: Dictionary = {}
 var phase: float = 0.0
 var distance: float = 0.0
 var previous_pose: Dictionary = {}
@@ -17,25 +19,33 @@ var transition_time := 1.0
 var transition_feet: Array = []
 var transition_arm := 0.0
 var transition_cape := 0.0
+var transition_pose: Dictionary = {}
 
 func advance(delta: float, speed: float) -> Dictionary:
 	assert(family == Family.GROUND, "Only the observed ground pilot is implemented")
+	idle_time += delta
 	distance += speed * delta
 	phase = fposmod(distance / stride_distance, 1.0)
 	var moving := speed > 0.01
 	if moving != was_moving and not previous_pose.is_empty():
 		transition_time = 0.0
+		transition_pose = previous_pose.duplicate(true)
 		transition_feet = previous_pose.feet.duplicate()
 		transition_arm = previous_pose.arm_angle
 		transition_cape = previous_pose.cape_angle
 	was_moving = moving
 	var result := sample(phase, moving)
+	if not moving:
+		result.torso_y = 0.25 * sin(TAU * idle_time / 2.6)
 	transition_time += delta
 	if transition_time < 0.18 and transition_feet.size() == 2:
 		var blend := smoothstep(0.0, 0.18, transition_time)
+		for key in ["torso_angle", "torso_y", "upper_arm_angle", "forearm_angle", "weapon_angle"]:
+			result[key] = lerpf(transition_pose[key], result[key], blend)
 		result.arm_angle = lerpf(transition_arm, result.arm_angle, blend)
 		result.cape_angle = lerpf(transition_cape, result.cape_angle, blend)
 		for side in range(2):
+			result.foot_angle[side] = lerpf(transition_pose.foot_angle[side], result.foot_angle[side], blend)
 			result.feet[side] = transition_feet[side].lerp(result.feet[side], blend)
 			var hip: Vector2 = result.hip + Vector2(-1 if side == 0 else 1, 0)
 			result.knees[side] = _knee(hip, result.feet[side], 16.0, 16.0)
@@ -45,6 +55,11 @@ func advance(delta: float, speed: float) -> Dictionary:
 
 func sample(at_phase: float, moving: bool = true) -> Dictionary:
 	var pose := {"hip": Vector2(0, -32), "feet": [], "knees": [], "contact": [], "foot_angle": [], "cape_angle": cape_swing_radians * sin(TAU * at_phase + PI * 0.5) if moving else 0.0, "arm_angle": -arm_swing_radians * cos(TAU * at_phase) if moving else 0.0}
+	pose.torso_angle = 0.025 + 0.012 * sin(TAU * at_phase) if moving else 0.0
+	pose.torso_y = 0.0
+	pose.upper_arm_angle = -0.10 * cos(TAU * at_phase) if moving else 0.0
+	pose.forearm_angle = pose.arm_angle
+	pose.weapon_angle = 0.55 + pose.arm_angle * 0.6
 	for side in range(2):
 		var p := fposmod(at_phase + side * 0.5, 1.0)
 		var reach := stride_distance * stance_fraction * 0.5
@@ -74,3 +89,47 @@ static func _knee(hip: Vector2, ankle: Vector2, upper: float, lower: float) -> V
 	var perpendicular := sqrt(maxf(0.0, upper * upper - along * along))
 	var axis := offset.normalized()
 	return hip + axis * along + Vector2(axis.y, -axis.x) * perpendicular
+
+# Pure visual sampling of the existing ActorMotion attack clock. No hit events here.
+func capture_attack_origin() -> void:
+	attack_origin = previous_pose.duplicate(true)
+
+func sample_attack(progress: float, hit_ratio: float) -> Dictionary:
+	var p := clampf(progress, 0.0, 1.0)
+	var h := clampf(hit_ratio, 0.1, 0.85)
+	var times := [0.0, h * 0.55, h, h + (1.0 - h) * 0.22, 1.0]
+	var result := sample(0.0, false)
+	result.hip += Vector2(_curve(p, times, [0.0, -1.0, 3.0, 2.0, 0.0]), _curve(p, times, [0.0, 1.0, 1.5, 1.0, 0.0]))
+	result.torso_angle = _curve(p, times, [0.0, -0.10, 0.18, 0.12, 0.0])
+	result.upper_arm_angle = _curve(p, times, [0.0, -1.05, -0.70, -0.15, 0.0])
+	result.forearm_angle = _curve(p, times, [0.0, -1.55, -0.60, 0.15, 0.0])
+	result.weapon_angle = _curve(p, times, [0.55, -0.95, 0.02, 0.95, 0.55])
+	result.cape_angle = _curve(p, times, [0.0, 0.08, -0.10, -0.06, 0.0])
+	var spread := smoothstep(0.0, h * 0.55, p) * (1.0 - smoothstep(times[3], 1.0, p))
+	for side in range(2):
+		result.feet[side].x += (7.0 if side == 0 else -5.0) * spread
+		var lift := 0.0
+		if p < times[1]: lift = sin(PI * p / times[1]) * (3.0 if side == 0 else 1.5)
+		elif p > times[3]: lift = sin(PI * (p - times[3]) / (1.0 - times[3])) * 2.0
+		result.feet[side].y -= lift
+		result.contact[side] = lift < 0.01
+	if not attack_origin.is_empty() and p < h * 0.35:
+		var weight := smoothstep(0.0, h * 0.35, p)
+		result.hip = attack_origin.hip.lerp(result.hip, weight)
+		for key in ["torso_angle", "torso_y", "upper_arm_angle", "forearm_angle", "weapon_angle", "cape_angle"]:
+			result[key] = lerpf(attack_origin[key], result[key], weight)
+		for side in range(2):
+			result.feet[side] = attack_origin.feet[side].lerp(result.feet[side], weight)
+			result.foot_angle[side] = lerpf(attack_origin.foot_angle[side], 0.0, weight)
+			result.contact[side] = false
+	for side in range(2):
+		var hip: Vector2 = result.hip + Vector2(-1 if side == 0 else 1, 0)
+		result.knees[side] = _knee(hip, result.feet[side], 16.0, 16.0)
+	previous_pose = result
+	return result
+
+static func _curve(p: float, times: Array, values: Array) -> float:
+	for index in range(1, times.size()):
+		if p <= times[index]:
+			return lerpf(values[index - 1], values[index], smoothstep(times[index - 1], times[index], p))
+	return values[-1]

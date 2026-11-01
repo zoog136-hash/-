@@ -1,7 +1,7 @@
 {
-  "schema": 3,
+  "schema": 4,
   "direction": "E",
-  "scope": "two humanoid skins, locomotion-only cutout pilot; joints hand-authored from visible art; hidden anatomy not reconstructed",
+  "scope": "two humanoid skins, shared idle/run/attack pilot; authored visible-part rig, not source-game motion or recovered hidden anatomy",
   "skins": {
     "warrior": {
       "source": "assets/sprites/classes/warrior.png",
@@ -96,7 +96,7 @@
               43
             ]
           ],
-          "sha256": "cde3ac4ccd904e6ecd8e6764bec811dfadddc249b36f492cb83ab508cfbbb7ad",
+          "sha256": "803a0f4ba9721542e8bf1acf7c564af755c791fd124dec35fe6724f8f29ede70",
           "subtract_cape": {
             "polygon": [
               [
@@ -230,7 +230,68 @@
               54
             ],
             "method": "flat armor underpaint using median visible torso color, restricted to original opaque footprint; new authoring, not recovered anatomy"
-          }
+          },
+          "additional_cut": [
+            [
+              68,
+              39
+            ],
+            [
+              77,
+              40
+            ],
+            [
+              80,
+              46
+            ],
+            [
+              77,
+              53
+            ],
+            [
+              74,
+              58
+            ],
+            [
+              67,
+              57
+            ],
+            [
+              65,
+              51
+            ],
+            [
+              65,
+              45
+            ]
+          ],
+          "additional_underlay": [
+            [
+              67,
+              44
+            ],
+            [
+              77,
+              44
+            ],
+            [
+              79,
+              52
+            ],
+            [
+              77,
+              58
+            ],
+            [
+              68,
+              58
+            ],
+            [
+              65,
+              51
+            ]
+          ],
+          "blade_cut": []
         },
         "arm": {
           "sole_y": null,
@@ -347,6 +408,192 @@
             ]
           ],
           "sha256": "5ddabca60a33db28dab594d355985acab02017182f28e4f059d3a9cb2cd9ac83"
+        },
+        "upper_arm": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/upper_arm.png",
+          "pivot": [
+            72,
+            45
+          ],
+          "end": [
+            70,
+            55
+          ],
+          "polygon": [
+            [
+              68,
+              39
+            ],
+            [
+              77,
+              40
+            ],
+            [
+              80,
+              46
+            ],
+            [
+              77,
+              53
+            ],
+            [
+              74,
+              58
+            ],
+            [
+              67,
+              57
+            ],
+            [
+              65,
+              51
+            ],
+            [
+              65,
+              45
+            ]
+          ],
+          "sha256": "761467bf1bb37614e3074bca286c270274bc33bfd9bb062f2892934f63dcd4f5"
+        },
+        "forearm": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/forearm.png",
+          "pivot": [
+            70,
+            55
+          ],
+          "end": [
+            80,
+            62
+          ],
+          "polygon": [
+            [
+              66,
+              52
+            ],
+            [
+              72,
+              51
+            ],
+            [
+              77,
+              55
+            ],
+            [
+              80,
+              58
+            ],
+            [
+              79,
+              61
+            ],
+            [
+              74,
+              64
+            ],
+            [
+              70,
+              63
+            ],
+            [
+              65,
+              59
+            ]
+          ],
+          "sha256": "19c8fcf5d001809565bb616b7015b5b8ecaab5f5f88f5c265f3933ffa7a3535c"
+        },
+        "weapon_hand": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/weapon_hand.png",
+          "pivot": [
+            80,
+            62
+          ],
+          "end": [
+            119,
+            87
+          ],
+          "polygon": [
+            [
+              76,
+              57
+            ],
+            [
+              84,
+              57
+            ],
+            [
+              90,
+              63
+            ],
+            [
+              125,
+              82
+            ],
+            [
+              125,
+              93
+            ],
+            [
+              116,
+              93
+            ],
+            [
+              79,
+              70
+            ],
+            [
+              75,
+              65
+            ]
+          ],
+          "sha256": "42f8791c71a3142118c55a0abf94812fb3760ce0226db799634b4ee5b3ae15bf"
+        },
+        "head": {
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/head.png",
+          "pivot": [
+            75,
+            40
+          ],
+          "derived_from": "body",
+          "partition_rect": [
+            0,
+            0,
+            148,
+            43
+          ],
+          "sha256": "b721707335d511622600d26dd424933032c5f3175a3484103771386f3d01259a"
+        },
+        "torso": {
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/torso.png",
+          "pivot": [
+            72,
+            61
+          ],
+          "derived_from": "body",
+          "partition_rect": [
+            0,
+            38,
+            148,
+            68
+          ],
+          "sha256": "3ed247eaf0d93e4e9f65324b923d86966b491d87f7fc47c37e9838b3b5a57e76"
+        },
+        "pelvis": {
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/pelvis.png",
+          "pivot": [
+            72,
+            76
+          ],
+          "derived_from": "body",
+          "partition_rect": [
+            0,
+            63,
+            148,
+            116
+          ],
+          "sha256": "9396f01b1d4a40a43698da66b42a1fd351917f19523310127654b4d1b3e1cd35"
         },
         "thigh_0": {
           "sole_y": null,
@@ -588,6 +835,17 @@
           ],
           "sha256": "3bd1a7d39512365ae9baf3971933ab6b192e09453a608948f8cb0b5d9fa358b5"
         }
+      },
+      "rig": {
+        "waist": [
+          72,
+          61
+        ],
+        "neck": [
+          75,
+          40
+        ],
+        "weapon_hand_source": "visible attached hand and weapon; assassin blade rebound to near hand for this authored rig"
       }
     },
     "assassin": {
@@ -703,7 +961,7 @@
               48
             ]
           ],
-          "sha256": "b271001c987aa3ac75ab58710d3334667794447b174802da72f2cb775c66d88b",
+          "sha256": "8923461aba03d6355e185f2ad69c351cfdf6fff028fd373417433944937ef494",
           "subtract_cape": {
             "polygon": [
               [
@@ -825,7 +1083,93 @@
               68
             ],
             "method": "flat armor underpaint using median visible torso color, restricted to original opaque footprint; new authoring, not recovered anatomy"
-          }
+          },
+          "additional_cut": [
+            [
+              68,
+              50
+            ],
+            [
+              77,
+              51
+            ],
+            [
+              79,
+              56
+            ],
+            [
+              75,
+              63
+            ],
+            [
+              73,
+              69
+            ],
+            [
+              66,
+              69
+            ],
+            [
+              65,
+              64
+            ],
+            [
+              66,
+              56
+            ]
+          ],
+          "additional_underlay": [
+            [
+              68,
+              53
+            ],
+            [
+              77,
+              54
+            ],
+            [
+              78,
+              61
+            ],
+            [
+              75,
+              68
+            ],
+            [
+              67,
+              69
+            ],
+            [
+              66,
+              62
+            ]
+          ],
+          "blade_cut": [
+            [
+              39,
+              75
+            ],
+            [
+              42,
+              69
+            ],
+            [
+              57,
+              61
+            ],
+            [
+              60,
+              64
+            ],
+            [
+              54,
+              71
+            ],
+            [
+              44,
+              77
+            ]
+          ]
         },
         "arm": {
           "sole_y": null,
@@ -930,6 +1274,192 @@
             ]
           ],
           "sha256": "fe3fed1ea245cdb17aeb8f0948e8fda115888636b16c0a782309b906c3fb654a"
+        },
+        "upper_arm": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/upper_arm.png",
+          "pivot": [
+            73,
+            56
+          ],
+          "end": [
+            70,
+            69
+          ],
+          "polygon": [
+            [
+              68,
+              50
+            ],
+            [
+              77,
+              51
+            ],
+            [
+              79,
+              56
+            ],
+            [
+              75,
+              63
+            ],
+            [
+              73,
+              69
+            ],
+            [
+              66,
+              69
+            ],
+            [
+              65,
+              64
+            ],
+            [
+              66,
+              56
+            ]
+          ],
+          "sha256": "489161cc62ec05e0f0c1128c280cbaa1ea5d33b9422787ad65986e576cd30e81"
+        },
+        "forearm": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/forearm.png",
+          "pivot": [
+            70,
+            69
+          ],
+          "end": [
+            73,
+            79
+          ],
+          "polygon": [
+            [
+              66,
+              66
+            ],
+            [
+              72,
+              65
+            ],
+            [
+              74,
+              69
+            ],
+            [
+              75,
+              75
+            ],
+            [
+              75,
+              79
+            ],
+            [
+              71,
+              81
+            ],
+            [
+              67,
+              76
+            ],
+            [
+              65,
+              71
+            ]
+          ],
+          "sha256": "ffc26a7a1c695862250bb8042662eb8f10f9951db79f286e0d44b34e949eb8e9"
+        },
+        "weapon_hand": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/weapon_hand.png",
+          "pivot": [
+            60,
+            64
+          ],
+          "end": [
+            43,
+            73
+          ],
+          "polygon": [
+            [
+              59,
+              59
+            ],
+            [
+              65,
+              60
+            ],
+            [
+              66,
+              64
+            ],
+            [
+              60,
+              68
+            ],
+            [
+              44,
+              76
+            ],
+            [
+              39,
+              75
+            ],
+            [
+              42,
+              70
+            ],
+            [
+              55,
+              62
+            ]
+          ],
+          "sha256": "ffe09ed4a139787ecea66771214652bc83a9ef7aefbe33e866dc3e2401611c6b"
+        },
+        "head": {
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/head.png",
+          "pivot": [
+            77,
+            53
+          ],
+          "derived_from": "body",
+          "partition_rect": [
+            0,
+            0,
+            148,
+            56
+          ],
+          "sha256": "dd817fb0c00c56ea2c8fc8efcb31bf3f15da7367bb2160dcc549f03fe54c4a9c"
+        },
+        "torso": {
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/torso.png",
+          "pivot": [
+            75,
+            67
+          ],
+          "derived_from": "body",
+          "partition_rect": [
+            0,
+            51,
+            148,
+            74
+          ],
+          "sha256": "e680b3b73fb528d676dc0ba5d259c98b743a62ffbba1cff7901e50cf9d52a34f"
+        },
+        "pelvis": {
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/pelvis.png",
+          "pivot": [
+            75,
+            79
+          ],
+          "derived_from": "body",
+          "partition_rect": [
+            0,
+            69,
+            148,
+            116
+          ],
+          "sha256": "5d1b5ab403d5e1542a56a22da83d830a4b889a54b7112617813981f1d672a9ea"
         },
         "thigh_0": {
           "sole_y": null,
@@ -1167,6 +1697,17 @@
           ],
           "sha256": "cbec39c3821e9919499aae52afcd32dc8305cb880cec6931127a14d4794bfd81"
         }
+      },
+      "rig": {
+        "waist": [
+          75,
+          67
+        ],
+        "neck": [
+          77,
+          53
+        ],
+        "weapon_hand_source": "visible attached hand and weapon; assassin blade rebound to near hand for this authored rig"
       }
     }
   }

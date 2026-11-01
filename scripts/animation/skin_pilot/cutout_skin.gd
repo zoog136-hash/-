@@ -38,24 +38,35 @@ func draw_ellipse_shadow() -> void:
 	draw_circle(Vector2.ZERO, 15, Color(0, 0, 0, 0.25))
 	draw_set_transform(Vector2.ZERO)
 
+func _waist() -> Vector2:
+	return pose.hip + Vector2(0, -12 + pose.torso_y)
+
 func _draw_body() -> void:
-	var pivot := _v(skin.parts.body.pivot)
-	draw_set_transform(pose.hip, 0, Vector2.ONE * float(skin.body_scale))
-	draw_texture(parts.body, -pivot)
+	var size := float(skin.body_scale)
+	draw_set_transform(pose.hip, 0, Vector2.ONE * size)
+	draw_texture(parts.pelvis, -_v(skin.parts.pelvis.pivot))
+	draw_set_transform(_waist(), pose.torso_angle, Vector2.ONE * size)
+	draw_texture(parts.torso, -_v(skin.parts.torso.pivot))
+	var neck := (_v(skin.rig.neck) - _v(skin.rig.waist)) * size
+	draw_set_transform(_waist() + neck.rotated(pose.torso_angle), pose.torso_angle * 0.5, Vector2.ONE * size)
+	draw_texture(parts.head, -_v(skin.parts.head.pivot))
 
 func _draw_cape() -> void:
 	var pivot := _v(skin.parts.cape.pivot)
-	var bind := (pivot - _v(skin.parts.body.pivot)) * float(skin.body_scale)
-	# The upper cape overlaps the moving tail, hiding the cutout seam.
-	draw_set_transform(pose.hip + bind, pose.cape_angle, Vector2.ONE * float(skin.body_scale))
+	var bind := (pivot - _v(skin.rig.waist)) * float(skin.body_scale)
+	draw_set_transform(_waist() + bind.rotated(pose.torso_angle), pose.torso_angle + pose.cape_angle, Vector2.ONE * float(skin.body_scale))
 	draw_texture(parts.cape, -pivot)
 
 func _draw_arm() -> void:
-	var pivot := _v(skin.parts.arm.pivot)
-	var bind := (pivot - _v(skin.parts.body.pivot)) * float(skin.body_scale)
-	# Hand and forearm stay together; the warrior sword stays in that cutout too.
-	draw_set_transform(pose.hip + bind, pose.arm_angle, Vector2.ONE * float(skin.body_scale))
-	draw_texture(parts.arm, -pivot)
+	var shoulder := _waist() + Vector2(-1, -12).rotated(pose.torso_angle)
+	var elbow := shoulder + Vector2.from_angle(1.65 + pose.upper_arm_angle + pose.torso_angle) * 11.0
+	var wrist := elbow + Vector2.from_angle(0.65 + pose.forearm_angle + pose.torso_angle) * 11.0
+	_segment("upper_arm", shoulder, elbow)
+	_segment("forearm", elbow, wrist)
+	var weapon: Dictionary = skin.parts.weapon_hand
+	var bind_axis := _v(weapon.end) - _v(weapon.pivot)
+	draw_set_transform(wrist, pose.weapon_angle + pose.torso_angle - bind_axis.angle(), Vector2.ONE * float(skin.body_scale))
+	draw_texture(parts.weapon_hand, -_v(weapon.pivot))
 
 func _draw_leg(side: int) -> void:
 	var hip: Vector2 = pose.hip + Vector2(-1 if side == 0 else 1, 0)

@@ -11,7 +11,7 @@ skins={
 'assassin':{'row':2,'hip':[75,79],'body_scale':0.95,'body':[(69,32),(82,33),(88,38),(88,47),(83,53),(83,64),(87,73),(88,80),(81,84),(73,86),(67,83),(60,86),(52,90),(42,94),(38,99),(37,92),(42,82),(54,73),(43,75),(52,67),(61,59),(66,48)],'legs':[
  {'hip':[70,83],'knee':[65,92],'ankle':[60,101],'toe':[64,104], 'thigh':[(65,79),(74,82),(71,89),(67,96),(61,94),(60,89)],'shin':[(61,89),(68,93),(65,98),(63,103),(58,104),(56,100)],'foot':[(57,100),(64,100),(64,103),(68,105),(67,108),(60,107),(56,104)]},
  {'hip':[80,79],'knee':[89,84],'ankle':[88,96],'toe':[94,99], 'thigh':[(77,75),(84,76),(93,82),(94,87),(87,91),(82,86)],'shin':[(86,83),(93,84),(93,91),(91,98),(85,100),(84,94)],'foot':[(85,94),(91,94),(92,97),(97,98),(98,101),(90,102),(84,100)]}]}}
-# Only the visible forearm/hand (and warrior sword) is articulated. No hidden arm is invented.
+# Legacy forearm masks remain available; the shared rig below splits visible upper arm, forearm and hand/weapon.
 arms = {
  'warrior': {'pivot':[70,55], 'polygon':[(66,52),(72,51),(77,55),(81,57),(87,58),(90,63),(125,82),(125,93),(116,93),(79,70),(76,66),(70,63),(65,59)], 'underlay_polygon':[(65,54),(77,54),(80,58),(80,65),(72,66),(66,61)], 'underlay_source':[76,48,80,54]},
  'assassin': {'pivot':[70,69], 'polygon':[(66,66),(72,65),(74,69),(76,75),(78,80),(78,86),(72,88),(68,82),(67,76),(65,71)], 'underlay_polygon':[(67,68),(73,68),(76,75),(76,82),(71,84),(67,78)], 'underlay_source':[77,58,83,68]}
@@ -20,7 +20,20 @@ capes = {
  'warrior': {'pivot':[57,63], 'keep_y':67, 'polygon':[(52,61),(62,59),(61,68),(56,78),(52,84),(47,94),(42,94),(36,86),(36,73),(45,63)]},
  'assassin': {'pivot':[54,79], 'keep_y':82, 'polygon':[(48,76),(59,76),(62,79),(58,85),(51,90),(43,95),(38,99),(36,94),(39,85),(44,80)]}
 }
-manifest={'schema':3,'direction':'E','scope':'two humanoid skins, locomotion-only cutout pilot; joints hand-authored from visible art; hidden anatomy not reconstructed','skins':{}}
+rigs = {
+ 'warrior': {'waist':[72,61], 'neck':[75,40], 'shoulder':[72,45], 'elbow':[70,55], 'wrist':[80,62],
+ 'upper':[(68,39),(77,40),(80,46),(77,53),(74,58),(67,57),(65,51),(65,45)],
+ 'forearm':[(66,52),(72,51),(77,55),(80,58),(79,61),(74,64),(70,63),(65,59)],
+ 'weapon':[(76,57),(84,57),(90,63),(125,82),(125,93),(116,93),(79,70),(75,65)],'weapon_pivot':[80,62],'weapon_tip':[119,87],
+ 'upper_fill':[(67,44),(77,44),(79,52),(77,58),(68,58),(65,51)],'blade_cut':[]},
+ 'assassin': {'waist':[75,67], 'neck':[77,53], 'shoulder':[73,56], 'elbow':[70,69], 'wrist':[73,79],
+ 'upper':[(68,50),(77,51),(79,56),(75,63),(73,69),(66,69),(65,64),(66,56)],
+ 'forearm':[(66,66),(72,65),(74,69),(75,75),(75,79),(71,81),(67,76),(65,71)],
+ 'weapon':[(59,59),(65,60),(66,64),(60,68),(44,76),(39,75),(42,70),(55,62)],'weapon_pivot':[60,64],'weapon_tip':[43,73],
+ 'upper_fill':[(68,53),(77,54),(78,61),(75,68),(67,69),(66,62)],
+ 'blade_cut':[(39,75),(42,69),(57,61),(60,64),(54,71),(44,77)]}
+}
+manifest={'schema':4,'direction':'E','scope':'two humanoid skins, shared idle/run/attack pilot; authored visible-part rig, not source-game motion or recovered hidden anatomy','skins':{}}
 for name,s in skins.items():
  source=root/f'assets/sprites/classes/{name}.png';im=Image.open(source).convert('RGBA').crop((0,s['row']*116,148,(s['row']+1)*116));folder=out/name;folder.mkdir(exist_ok=True)
  entry={'source':str(source.relative_to(root)),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'source_cell':[0,s['row']*116,148,116],'hip':s['hip'],'body_scale':s['body_scale'],'parts':{}}
@@ -54,6 +67,29 @@ for name,s in skins.items():
  entry['parts']['body']['sha256']=hashlib.sha256(body_path.read_bytes()).hexdigest()
  entry['parts']['body']['subtract_polygon']=arm['polygon']
  entry['parts']['body']['authored_underlay']={'polygon':arm['underlay_polygon'],'source_rect':arm['underlay_source'],'method':'flat armor underpaint using median visible torso color, restricted to original opaque footprint; new authoring, not recovered anatomy'}
+ rig=rigs[name]
+ savepart('upper_arm',rig['upper'],rig['shoulder'],rig['elbow'])
+ savepart('forearm',rig['forearm'],rig['elbow'],rig['wrist'])
+ savepart('weapon_hand',rig['weapon'],rig['weapon_pivot'],rig['weapon_tip'])
+ upper_mask=Image.new('L',im.size);ImageDraw.Draw(upper_mask).polygon(rig['upper'],fill=255)
+ body.putalpha(ImageChops.subtract(body.getchannel('A'),upper_mask))
+ upper_fill=Image.new('L',im.size);ImageDraw.Draw(upper_fill).polygon(rig['upper_fill'],fill=255)
+ upper_fill=ImageChops.multiply(upper_fill,upper_mask)
+ upper_fill=ImageChops.multiply(upper_fill,im.getchannel('A').point(lambda a:255 if a>=240 else 0))
+ fill=Image.new('RGBA',im.size,color);fill.putalpha(upper_fill);body=Image.alpha_composite(body,fill)
+ if rig['blade_cut']:
+  cut=Image.new('L',im.size);ImageDraw.Draw(cut).polygon(rig['blade_cut'],fill=255)
+  body.putalpha(ImageChops.subtract(body.getchannel('A'),cut))
+ body.save(body_path)
+ entry['parts']['body']['additional_cut']=rig['upper']
+ entry['parts']['body']['additional_underlay']=rig['upper_fill']
+ entry['parts']['body']['blade_cut']=rig['blade_cut']
+ entry['parts']['body']['sha256']=hashlib.sha256(body_path.read_bytes()).hexdigest()
+ entry['rig']={'waist':rig['waist'],'neck':rig['neck'],'weapon_hand_source':'visible attached hand and weapon; assassin blade rebound to near hand for this authored rig'}
+ for key,rect,pivot in [('head',(0,0,148,rig['neck'][1]+3),rig['neck']),('torso',(0,rig['neck'][1]-2,148,rig['waist'][1]+7),rig['waist']),('pelvis',(0,rig['waist'][1]+2,148,116),s['hip'])]:
+  mask=Image.new('L',im.size);ImageDraw.Draw(mask).rectangle(rect,fill=255)
+  part=body.copy();part.putalpha(ImageChops.multiply(body.getchannel('A'),mask));path=folder/(key+'.png');part.save(path)
+  entry['parts'][key]={'texture':'res://'+str(path.relative_to(root)),'pivot':pivot,'derived_from':'body','partition_rect':list(rect),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
  for i,l in enumerate(s['legs']):
   savepart(f'thigh_{i}',l['thigh'],l['hip'],l['knee']);savepart(f'shin_{i}',l['shin'],l['knee'],l['ankle']);savepart(f'foot_{i}',l['foot'],l['ankle'])
  manifest['skins'][name]=entry

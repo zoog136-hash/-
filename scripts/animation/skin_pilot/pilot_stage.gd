@@ -1,10 +1,18 @@
 extends Node2D
+const AttackClock = preload("res://scripts/animation/actor_motion.gd")
 const Motion = preload("res://scripts/animation/skin_pilot/shared_ground_motion.gd")
 const Cutout = preload("res://scripts/animation/skin_pilot/cutout_skin.gd")
 var motion := Motion.new()
+var attack_clock := AttackClock.new()
+var attack_index := 0
+var strikes := 0
+var strike_flash := 0.0
 var actors: Array[Node2D] = []
 var elapsed := 0.0
 var frames := 0
+var wall_started_usec := 0
+# Same unbuffed normal-attack interval as world._normal_attack_interval().
+const BASE_ATTACK_SECONDS := 0.72
 var speed := 0.0
 var status: Label
 var close_label: Label
@@ -18,6 +26,10 @@ var manual_lift := 6.0
 
 func _ready() -> void:
 	Engine.max_fps = 30
+	attack_clock.strike.connect(func(_sequence: int):
+		strikes += 1
+		strike_flash = 0.14
+	)
 	position = (get_viewport_rect().size - Vector2(960, 640)) * 0.5
 	RenderingServer.set_default_clear_color(Color("19222b"))
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/shared_skin_pilot.json"))
@@ -37,7 +49,7 @@ func _ready() -> void:
 	_label("1x actual pixels", Vector2(40, 180), 15)
 	_label("2.6x same live pose", Vector2(40, 330), 15)
 	status = _label("", Vector2(40, 555), 20)
-	close_label = _label("E-view pilot only. Space: move/stop   L: shared lift   S: swap skins", Vector2(40, 600), 15)
+	close_label = _label("E-view pilot. Space: move/stop   A: attack   S: swap skins", Vector2(40, 600), 15)
 	if "--pilot-test" in OS.get_cmdline_user_args():
 		_tests()
 		return
@@ -45,24 +57,42 @@ func _ready() -> void:
 	await RenderingServer.frame_post_draw
 	print("SKIN_PILOT_READY")
 	await get_tree().create_timer(2.0).timeout
+	wall_started_usec = Time.get_ticks_usec()
 	active = true
 
 func _process(delta: float) -> void:
 	if not active: return
 	elapsed += delta
 	frames += 1
-	speed = (80.0 if manual_moving else 0.0) if manual else (80.0 if elapsed > 2.0 and elapsed < 14.0 else 0.0)
-	if not manual and elapsed >= 11.0 and not swapped: _swap_skins()
-	# One authoring parameter changes both skins and both views together.
-	motion.swing_height = manual_lift if manual else (6.0 if elapsed < 8.0 else 8.0)
+	strike_flash = maxf(0.0, strike_flash - delta)
+	speed = (80.0 if manual_moving else 0.0) if manual else (80.0 if (elapsed > 2.0 and elapsed < 6.0) or (elapsed > 13.0 and elapsed < 16.0) else 0.0)
+	var attack_times := [7.0, 8.4, 9.8, 14.0]
+	if not manual and attack_index < attack_times.size() and elapsed >= attack_times[attack_index]:
+		_begin_attack()
+		attack_index += 1
+	if not manual and elapsed >= 10.0 and not swapped: _swap_skins()
+	motion.swing_height = manual_lift if manual else 6.0
+	var was_attacking: bool = attack_clock.active
+	if was_attacking: speed = 0.0
+	attack_clock.advance(delta, Vector2(speed, 0))
 	var pose := motion.advance(delta, speed)
+	if was_attacking:
+		pose = motion.sample_attack(attack_clock.visual_progress, attack_clock.attack_hit_ratio)
 	for actor in actors: actor.apply_pose(pose)
-	status.text = "IDLE  /  shared stable pose" if speed == 0 else "RUN  /  ONE shared motion, foot lift %.0f px" % motion.swing_height
-	if swapped: status.text += "  /  skins swapped, phase preserved"
+	status.text = "IDLE / fixed feet, restrained chest breathing" if speed == 0 else "RUN / shared shoulder, elbow and distance-driven legs"
+	if was_attacking: status.text = "ATTACK / existing hit clock / prepare - strike - recover"
+	if strike_flash > 0.0: status.text = "STRIKE / authoritative event %d / both skins share this pose" % strikes
+	if swapped: status.text += " / swapped"
 	queue_redraw()
-	if elapsed > 16.0 and "--pilot-capture" in OS.get_cmdline_user_args():
+	if elapsed > 18.0 and "--pilot-capture" in OS.get_cmdline_user_args():
 		print("SKIN_PILOT_PLAYBACK frames=", frames, " seconds=", elapsed, " average_fps=", frames / elapsed)
+		var wall_seconds := float(Time.get_ticks_usec() - wall_started_usec) / 1000000.0
+		print("SKIN_PILOT_WALL seconds=", wall_seconds, " rendered_fps=", frames / wall_seconds, " strikes=", strikes)
 		get_tree().quit()
+
+func _begin_attack() -> void:
+	motion.capture_attack_origin()
+	attack_clock.begin_attack(BASE_ATTACK_SECONDS, Vector2.RIGHT, "slash", attack_clock.profile.marker_for("slash"))
 
 func _swap_skins() -> void:
 	swapped = not swapped
@@ -84,6 +114,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		manual = true
 		manual_lift = 8.0 if manual_lift == 6.0 else 6.0
 	elif event.keycode == KEY_S: _swap_skins()
+	elif event.keycode == KEY_A:
+		manual = true
+		manual_moving = false
+		_begin_attack()
 
 func _draw() -> void:
 	for row in range(2):
@@ -131,5 +165,37 @@ func _tests() -> void:
 	_swap_skins()
 	assert(motion.phase == old_phase)
 	for actor in actors: assert(is_same(actor.pose, pose))
-	print("SKIN_PILOT_CONTRACT_OK shared_pose=4 skins=2 stable_torso=true fixed_bone_lengths=true stance_max_drift=", max_drift)
+	# Attack poses consume the production clock; skins never emit or reschedule hits.
+	for step in [1.0 / 30.0, 1.0 / 60.0, 0.17]:
+		var clock := AttackClock.new()
+		var events := [0]
+		clock.strike.connect(func(_sequence: int): events[0] += 1)
+		clock.begin_attack(BASE_ATTACK_SECONDS, Vector2.RIGHT, "slash", clock.profile.marker_for("slash"))
+		motion.previous_pose = motion.sample(0.23)
+		motion.capture_attack_origin()
+		var origin := motion.sample_attack(0.0, clock.attack_hit_ratio)
+		assert(origin.feet[0].distance_to(motion.attack_origin.feet[0]) < 0.001)
+		var swap_elapsed := clock.attack_elapsed
+		_swap_skins()
+		assert(clock.attack_elapsed == swap_elapsed)
+		while clock.active:
+			clock.advance(step, Vector2.ZERO)
+			var old_elapsed := clock.attack_elapsed
+			var attack_pose := motion.sample_attack(clock.visual_progress, clock.attack_hit_ratio)
+			for actor in actors: actor.apply_pose(attack_pose)
+			for actor in actors: assert(is_same(actor.pose, attack_pose))
+			assert(clock.attack_elapsed == old_elapsed)
+			assert(absf(attack_pose.torso_angle) <= 0.181)
+			for side in range(2):
+				var joint: Vector2 = attack_pose.hip + Vector2(-1 if side == 0 else 1, 0)
+				assert(absf(joint.distance_to(attack_pose.knees[side]) - 16.0) < 0.001)
+				assert(absf(attack_pose.knees[side].distance_to(attack_pose.feet[side]) - 16.0) < 0.001)
+		assert(events[0] == 1)
+		var end := motion.sample_attack(1.0, clock.attack_hit_ratio)
+		assert(end.hip == motion.sample(0.0, false).hip)
+		assert(end.feet == motion.sample(0.0, false).feet)
+		var impact := motion.sample_attack(clock.attack_hit_ratio, clock.attack_hit_ratio)
+		assert(impact.contact[0] and impact.contact[1])
+	print("SKIN_PILOT_ATTACK_OK original_clock=true one_strike_per_attack=true swap_preserves_clock=true recovery_returns_idle=true")
+	print("SKIN_PILOT_CONTRACT_OK shared_pose=4 skins=2 bounded_torso=true fixed_bone_lengths=true stance_max_drift=", max_drift)
 	get_tree().quit()
