@@ -1,4 +1,6 @@
 extends RefCounted
+## Rejected v7 hand-target experiment, retained for diagnosis only.
+## Current E/S bindings do not use this path; do not reuse as the shared motion.
 ## Shoulder-relative 2D hand targets. The authoritative attack clock is supplied.
 ## No elapsed time, skin clock, frame duplication, or movement-speed changes.
 static func solve_elbow(shoulder: Vector2, hand: Vector2, upper: float, lower: float, bend: float = 1.0) -> Vector2:

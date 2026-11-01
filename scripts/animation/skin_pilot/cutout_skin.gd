@@ -1,6 +1,5 @@
 class_name SharedCutoutSkin
 extends Node2D
-const UpperTargets = preload("res://scripts/animation/skin_pilot/upper_body_targets.gd")
 ## Texture bindings only. All instances receive the same pose from one controller.
 var skin: Dictionary
 var pose: Dictionary
@@ -77,34 +76,33 @@ func _waist() -> Vector2:
 	return draw_pose.hip + offset.rotated(draw_pose.pelvis_angle) + Vector2(draw_pose.torso_x, draw_pose.torso_y)
 
 func _spine_active() -> bool:
-	return not spine.is_empty() and (attacking or draw_pose.locomotion_weight>0.001)
-func _abdomen_angle() -> float:
-	return draw_pose.torso_angle*0.25 if _spine_active() else draw_pose.torso_angle
-func _chest_angle() -> float:
-	return draw_pose.torso_angle+0.10*draw_pose.locomotion_weight if _spine_active() else draw_pose.torso_angle
-func _chest_origin() -> Vector2:
-	return _waist()+((_v(spine.joint)-_v(skin.rig.waist))*float(skin.body_scale)).rotated(_abdomen_angle())
-func _upper_point(bind: Vector2) -> Vector2:
-	if not _spine_active():return _waist()+bind.rotated(draw_pose.torso_angle)
-	var joint_bind := (_v(spine.joint)-_v(skin.rig.waist))*float(skin.body_scale)
-	return _chest_origin()+(bind-joint_bind).rotated(_chest_angle())
+	return not spine.is_empty() and draw_pose.locomotion_weight>0.001
+func _lean_angle() -> float:
+	return 0.16*draw_pose.locomotion_weight if _spine_active() else 0.0
+func _chest_anchor_source() -> Vector2:
+	return _v(spine.joint) if not spine.is_empty() else _v(skin.rig.waist)
+func _chest_anchor_world() -> Vector2:
+	return _waist()+((_chest_anchor_source()-_v(skin.rig.waist))*float(skin.body_scale)).rotated(draw_pose.torso_angle)
+func _upper_point(source_point: Vector2) -> Vector2:
+	return _chest_anchor_world()+((source_point-_chest_anchor_source())*float(skin.body_scale)).rotated(draw_pose.torso_angle+_lean_angle())
 func _draw_body() -> void:
 	var size := float(skin.body_scale)
-	draw_set_transform(draw_pose.hip, draw_pose.pelvis_angle, Vector2.ONE * size)
-	draw_texture(parts.pelvis, -_v(skin.parts.pelvis.pivot))
+	draw_set_transform(draw_pose.hip,draw_pose.pelvis_angle,Vector2.ONE*size)
+	draw_texture(parts.pelvis,-_v(skin.parts.pelvis.pivot))
 	var neck: Vector2
 	if _spine_active():
-		draw_set_transform(_waist(),_abdomen_angle(),Vector2.ONE*size)
+		# One chest parent carries the shoulder sockets, head and upper arms.
+		# Only the forearm folds at the elbow; no raised-hand target is used.
+		draw_set_transform(_waist(),draw_pose.torso_angle,Vector2.ONE*size)
 		draw_texture(spine_textures.abdomen,-_v(spine.abdomen.pivot))
-		draw_set_transform(_chest_origin(),_chest_angle(),Vector2.ONE*size)
-		var key := "chest_run" if draw_pose.locomotion_weight>0.001 else "chest_idle"
-		draw_texture(spine_textures[key],-_v(spine[key].pivot))
-		neck=_chest_origin()+((_v(skin.rig.neck)-_v(spine.joint))*size).rotated(_chest_angle())
+		draw_set_transform(_chest_anchor_world(),draw_pose.torso_angle+_lean_angle(),Vector2.ONE*size)
+		draw_texture(spine_textures.chest_run,-_chest_anchor_source())
+		neck=_upper_point(_v(skin.rig.neck))
 	else:
 		draw_set_transform(_waist(),draw_pose.torso_angle,Vector2.ONE*size)
 		draw_texture(_turn_texture("torso"),-_v(skin.parts.torso.pivot))
 		neck=_waist()+((_v(skin.rig.neck)-_v(skin.rig.waist))*size).rotated(draw_pose.torso_angle)
-	draw_set_transform(neck,_chest_angle()*0.5+draw_pose.head_counter,Vector2.ONE*size)
+	draw_set_transform(neck,draw_pose.torso_angle*0.5+draw_pose.head_counter+_lean_angle()*0.2,Vector2.ONE*size)
 	draw_texture(parts.head,-_v(skin.parts.head.pivot))
 
 func _draw_cape() -> void:
@@ -113,13 +111,11 @@ func _draw_cape() -> void:
 	draw_set_transform(_waist() + bind.rotated(draw_pose.torso_angle), draw_pose.torso_angle + draw_pose.cape_angle, Vector2.ONE * float(skin.body_scale))
 	draw_texture(parts.cape, -pivot)
 
-func _attack_mix() -> float:
-	return smoothstep(0.0,0.12,attack_progress)*(1.0-smoothstep(0.85,1.0,attack_progress)) if attacking else 0.0
 func _far_segment(key: String, start: Vector2, end: Vector2) -> void:
 	var part: Dictionary=spine.far_parts[key]
-	var original := _v(part.end)-_v(part.pivot)
+	var source := _v(part.end)-_v(part.pivot)
 	var target := end-start
-	var tr := Transform2D(target.angle(),Vector2.ZERO).scaled_local(Vector2(target.length()/original.length(),float(skin.body_scale)))*Transform2D(-original.angle(),Vector2.ZERO)
+	var tr := Transform2D(target.angle(),Vector2.ZERO).scaled_local(Vector2(target.length()/source.length(),float(skin.body_scale)))*Transform2D(-source.angle(),Vector2.ZERO)
 	tr.origin=start
 	draw_set_transform_matrix(tr)
 	draw_texture(spine_textures[key],-_v(part.pivot))
@@ -127,37 +123,33 @@ func _draw_far_arm() -> void:
 	var pivot := _v(skin.parts.far_arm.pivot)
 	var bind := (pivot-_v(skin.rig.waist))*float(skin.body_scale)
 	if not turn_frames.is_empty():bind=_v(turn_frames[turn_index].far_offset)
+	var shoulder := _waist()+bind.rotated(draw_pose.torso_angle)
 	if not _spine_active():
-		draw_set_transform(_waist()+bind.rotated(draw_pose.torso_angle),draw_pose.torso_angle+draw_pose.far_arm_angle,Vector2.ONE*float(skin.body_scale))
+		draw_set_transform(shoulder,draw_pose.torso_angle+draw_pose.far_arm_angle,Vector2.ONE*float(skin.body_scale))
 		draw_texture(parts.far_arm,-pivot)
 		return
-	var shoulder := _upper_point(bind)
-	var upper := (_v(spine.far_parts.far_upper.end)-_v(spine.far_parts.far_upper.pivot)).length()*float(skin.body_scale)
-	var lower := (_v(spine.far_parts.far_forearm.end)-_v(spine.far_parts.far_forearm.pivot)).length()*float(skin.body_scale)
-	var rest := (_v(spine.far_parts.far_hand.pivot)-pivot)*float(skin.body_scale)
-	var hand := rest.lerp(UpperTargets.run_hand(draw_pose.far_arm_angle,"E",0),draw_pose.locomotion_weight)
-	hand=hand.lerp(UpperTargets.attack_hand(attack_progress,attack_hit_ratio,rest,"E",false),_attack_mix())
-	var elbow := UpperTargets.solve_elbow(Vector2.ZERO,hand,upper,lower)
-	var wrist := shoulder+hand.rotated(_chest_angle())
-	elbow=shoulder+elbow.rotated(_chest_angle())
-	_far_segment("far_upper",shoulder,elbow)
-	_far_segment("far_forearm",elbow,wrist)
-	draw_set_transform(wrist,_chest_angle()+draw_pose.far_arm_angle*0.25,Vector2.ONE*float(skin.body_scale))
+	shoulder=_upper_point(_v(skin.rig.waist)+bind/float(skin.body_scale))
+	var weight: float=draw_pose.locomotion_weight
+	var parent_angle: float=draw_pose.torso_angle+_lean_angle()
+	var upper_bind := _v(spine.far_parts.far_upper.end)-_v(spine.far_parts.far_upper.pivot)
+	var lower_bind := _v(spine.far_parts.far_forearm.end)-_v(spine.far_parts.far_forearm.pivot)
+	var upper_angle: float=parent_angle+upper_bind.angle()+draw_pose.far_arm_angle*0.6
+	var lower_angle: float=parent_angle+lerpf(lower_bind.angle(),-0.15-draw_pose.far_arm_angle*0.5,weight)
+	var elbow := shoulder+Vector2.from_angle(upper_angle)*upper_bind.length()*float(skin.body_scale)
+	var wrist := elbow+Vector2.from_angle(lower_angle)*lower_bind.length()*float(skin.body_scale)
+	_far_segment("far_upper",shoulder,elbow);_far_segment("far_forearm",elbow,wrist)
+	draw_set_transform(wrist,parent_angle+draw_pose.far_arm_angle,Vector2.ONE*float(skin.body_scale))
 	draw_texture(spine_textures.far_hand,-_v(spine.far_parts.far_hand.pivot))
 
 func _draw_arm() -> void:
 	var bind := _v(skin.rig.get("shoulder_offset", [-1, -12]))
 	if not turn_frames.is_empty(): bind = _v(turn_frames[turn_index].near_offset)
 	var lengths: Array = skin.rig.get("arm_lengths", [11.0, 11.0])
-	var shoulder := _upper_point(bind)
-	var elbow := shoulder + Vector2.from_angle(1.65 + draw_pose.upper_arm_angle + draw_pose.torso_angle) * float(lengths[0])
-	var wrist := elbow + Vector2.from_angle(0.65 + draw_pose.forearm_angle + draw_pose.torso_angle) * float(lengths[1])
-	if _spine_active():
-		var neutral := Vector2.from_angle(1.65)*float(lengths[0])+Vector2.from_angle(0.65)*float(lengths[1])
-		var hand := neutral.lerp(UpperTargets.run_hand(draw_pose.upper_arm_angle,"E",1),draw_pose.locomotion_weight)
-		hand=hand.lerp(UpperTargets.attack_hand(attack_progress,attack_hit_ratio,neutral,"E",true),_attack_mix())
-		elbow=shoulder+UpperTargets.solve_elbow(Vector2.ZERO,hand,float(lengths[0]),float(lengths[1])).rotated(_chest_angle())
-		wrist=shoulder+hand.rotated(_chest_angle())
+	var parent_angle: float=draw_pose.torso_angle+_lean_angle()
+	var shoulder := _upper_point(_v(skin.rig.waist)+bind/float(skin.body_scale)) if _spine_active() else _waist()+bind.rotated(draw_pose.torso_angle)
+	var elbow := shoulder + Vector2.from_angle(1.65 + draw_pose.upper_arm_angle + parent_angle) * float(lengths[0])
+	var forearm_rest := lerpf(0.65,-0.30,draw_pose.locomotion_weight) if _spine_active() else 0.65
+	var wrist := elbow + Vector2.from_angle(forearm_rest + draw_pose.forearm_angle + parent_angle) * float(lengths[1])
 	_segment("upper_arm", shoulder, elbow)
 	_segment("forearm", elbow, wrist)
 	if parts.has("shoulder_armor") and skin.parts.has("shoulder_armor"):
@@ -167,12 +159,11 @@ func _draw_arm() -> void:
 		# This visible pauldron belongs to the shoulder, not the rigid chest texture.
 		# Only locomotion adds articulation; attacks use the existing shoulder/torso transform.
 		var follow: float = draw_pose.upper_arm_angle * draw_pose.locomotion_weight
-		draw_set_transform(shoulder, _chest_angle() + follow, Vector2.ONE * float(skin.body_scale))
+		draw_set_transform(shoulder, parent_angle + follow, Vector2.ONE * float(skin.body_scale))
 		draw_texture(_turn_texture("shoulder_armor"), -guard_pivot)
 	var weapon: Dictionary = skin.parts.weapon_hand
 	var bind_axis := _v(weapon.end) - _v(weapon.pivot)
-	var heading: float=lerpf(draw_pose.weapon_angle,0.75+draw_pose.arm_angle*0.2,draw_pose.locomotion_weight) if _spine_active() else draw_pose.weapon_angle
-	draw_set_transform(wrist, heading + _chest_angle() - bind_axis.angle(), Vector2.ONE * float(skin.body_scale))
+	draw_set_transform(wrist, draw_pose.weapon_angle + draw_pose.torso_angle - bind_axis.angle(), Vector2.ONE * float(skin.body_scale))
 	draw_texture(parts.weapon_hand, -_v(weapon.pivot))
 
 func _draw_leg(side: int) -> void:

@@ -162,7 +162,6 @@ func _label(text: String, pos: Vector2, size: int) -> Label:
 	return label
 
 func _tests() -> void:
-	if girtas_preview: _upper_binding_tests()
 	if front_preview:
 		var front = actors[1]
 		var a := motion.sample(0.2)
@@ -308,33 +307,3 @@ func _run_contact_tests() -> void:
 		# Measure displacement directly: dividing Vector2 float noise by epsilon is unstable.
 		assert(absf(drift) < 0.0001)
 	print("RUN_CONTACT_OK no_double_support=true brief_flight=true continuous_contact_velocity=true bounded_body_rise=true")
-
-# Joint reach is a structural regression check, not a visual quality approval.
-func _upper_binding_tests() -> void:
-	var targets = preload("res://scripts/animation/skin_pilot/upper_body_targets.gd")
-	var e: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_shared_skin.json")).skin
-	var s: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_front_skin.json"))
-	var spine: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_articulated_torso.json")).E
-	var bindings: Array = []
-	var e_neutral := Vector2.from_angle(1.65)*float(e.rig.arm_lengths[0])+Vector2.from_angle(0.65)*float(e.rig.arm_lengths[1])
-	bindings.append(["E",true,float(e.rig.arm_lengths[0]),float(e.rig.arm_lengths[1]),e_neutral,1.0])
-	var fp: Dictionary=spine.far_parts
-	bindings.append(["E",false,_pair_distance(fp.far_upper)*float(e.body_scale),_pair_distance(fp.far_forearm)*float(e.body_scale),(Vector2(fp.far_hand.pivot[0],fp.far_hand.pivot[1])-Vector2(351,195))*float(e.body_scale),1.0])
-	for side in range(2):
-		var shoulder := Vector2(363 if side==0 else 208,193)
-		var hand: Array=s.parts["hand_%d"%side].pivot
-		bindings.append(["S",side==1,_pair_distance(s.parts["upper_%d"%side])*float(s.body_scale),_pair_distance(s.parts["lower_%d"%side])*float(s.body_scale),(Vector2(hand[0],hand[1])-shoulder)*float(s.body_scale),-1.0 if side==0 else 1.0])
-	for b: Array in bindings:
-		for i in range(121):
-			var phase := float(i)/120.0
-			var arm := sin(phase*TAU)*0.32
-			var run: Vector2=targets.run_hand(arm,b[0],1 if b[1] else 0)
-			var attack: Vector2=targets.attack_hand(phase,attack_clock.attack_hit_ratio,b[4],b[0],b[1])
-			for hand: Vector2 in [b[4],run,attack]:
-				assert(hand.length()<float(b[2])+float(b[3]),"Arm target exceeds fixed limb reach")
-				var elbow: Vector2=targets.solve_elbow(Vector2.ZERO,hand,b[2],b[3],b[5])
-				assert(absf(elbow.length()-float(b[2]))<0.02)
-				assert(absf(elbow.distance_to(hand)-float(b[3]))<0.02)
-	print("UPPER_BINDING_OK E/S fixed arm reach; authored targets use existing attack clock; visual quality unapproved")
-func _pair_distance(part: Dictionary) -> float:
-	return Vector2(part.end[0]-part.pivot[0],part.end[1]-part.pivot[1]).length()

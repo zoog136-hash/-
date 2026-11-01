@@ -24,6 +24,15 @@ for direction,manifest,joint,core,cut in [('E','girtas_shared_skin.json',[304,21
  sources={'idle':idle,'run':run}
  for state,im in sources.items():
   chest=im.copy();chest.putalpha(ImageChops.subtract(chest.getchannel('A'),mask(chest.size,cut)));out['chest_'+state]=save(chest,direction+'_chest_'+state,joint)
+ if direction=='S':
+  # Frontal lean uses overlapping rigid chest planes while the outer
+  # shoulder sockets retain their original arm attachment coordinates.
+  core_poly=[(245,145),(335,145),(342,221),(325,248),(250,248),(237,215)]
+  hole_poly=[(258,162),(322,162),(330,217),(318,237),(258,237),(247,211)]
+  core_image=idle.copy();core_image.putalpha(ImageChops.multiply(idle.getchannel('A'),mask(idle.size,core_poly)))
+  outer_image=idle.copy();outer_image.putalpha(ImageChops.subtract(idle.getchannel('A'),mask(idle.size,hole_poly)))
+  out['front_core']=save(core_image,'S_front_core',s['parts']['torso']['pivot']);out['front_outer']=save(outer_image,'S_front_outer',s['parts']['torso']['pivot'])
+  out['front_core_polygon']=core_poly;out['front_outer_hole']=hole_poly
  if direction=='E':
   arm=read(s['parts']['far_arm']['texture']);pieces={}
   for key,poly,pivot,end in [('far_upper',[(338,183),(366,183),(376,217),(370,239),(346,239),(338,218)],[351,195],[362,232]),('far_forearm',[(344,226),(374,223),(385,249),(382,274),(359,278),(346,255)],[362,232],[370,267]),('far_hand',[(355,259),(382,253),(393,276),(381,291),(358,287)],[370,267],None)]:
