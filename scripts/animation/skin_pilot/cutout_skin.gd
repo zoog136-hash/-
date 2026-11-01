@@ -1,5 +1,6 @@
 class_name SharedCutoutSkin
 extends Node2D
+const GirtasUpper = preload("res://scripts/animation/skin_pilot/girtas_upper_body.gd")
 ## Texture bindings only. All instances receive the same pose from one controller.
 var skin: Dictionary
 var pose: Dictionary
@@ -24,7 +25,7 @@ func bind_skin(definition: Dictionary) -> void:
 	skin = definition
 	spine.clear()
 	spine_textures.clear()
-	if skin.get("articulated_direction","")=="E":
+	if skin.get("upper_body_profile","")=="girtas_267":
 		spine=JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_articulated_torso.json")).E
 		for key in ["abdomen","chest_idle","chest_run"]:spine_textures[key]=load(spine[key].texture)
 		for key in spine.far_parts:spine_textures[key]=load(spine.far_parts[key].texture)
@@ -76,9 +77,12 @@ func _waist() -> Vector2:
 	return draw_pose.hip + offset.rotated(draw_pose.pelvis_angle) + Vector2(draw_pose.torso_x, draw_pose.torso_y)
 
 func _spine_active() -> bool:
-	return not spine.is_empty() and draw_pose.locomotion_weight>0.001
+	return not spine.is_empty() and (draw_pose.locomotion_weight>0.001 or attacking)
 func _lean_angle() -> float:
-	return 0.16*draw_pose.locomotion_weight if _spine_active() else 0.0
+	if not _spine_active(): return 0.0
+	var run_lean: float=(0.26+0.065*(draw_pose.torso_x/1.2))*draw_pose.locomotion_weight
+	var attack_lean: float=GirtasUpper.curve(attack_progress,attack_hit_ratio,[0.0,-0.08,0.16,0.07,0.0]) if attacking else 0.0
+	return run_lean+attack_lean
 func _chest_anchor_source() -> Vector2:
 	return _v(spine.joint) if not spine.is_empty() else _v(skin.rig.waist)
 func _chest_anchor_world() -> Vector2:
@@ -96,7 +100,7 @@ func _draw_body() -> void:
 		draw_set_transform(_waist(),draw_pose.torso_angle,Vector2.ONE*size)
 		draw_texture(spine_textures.abdomen,-_v(spine.abdomen.pivot))
 		draw_set_transform(_chest_anchor_world(),draw_pose.torso_angle+_lean_angle(),Vector2.ONE*size)
-		draw_texture(spine_textures.chest_run,-_chest_anchor_source())
+		draw_texture(spine_textures.chest_run if draw_pose.locomotion_weight>0.001 else spine_textures.chest_idle,-_chest_anchor_source())
 		neck=_upper_point(_v(skin.rig.neck))
 	else:
 		draw_set_transform(_waist(),draw_pose.torso_angle,Vector2.ONE*size)
@@ -122,7 +126,7 @@ func _far_segment(key: String, start: Vector2, end: Vector2) -> void:
 func _draw_far_arm() -> void:
 	var pivot := _v(skin.parts.far_arm.pivot)
 	var bind := (pivot-_v(skin.rig.waist))*float(skin.body_scale)
-	if not turn_frames.is_empty():bind=_v(turn_frames[turn_index].far_offset)
+	if not turn_frames.is_empty():bind=_v(turn_frames[0 if not spine.is_empty() else turn_index].far_offset)
 	var shoulder := _waist()+bind.rotated(draw_pose.torso_angle)
 	if not _spine_active():
 		draw_set_transform(shoulder,draw_pose.torso_angle+draw_pose.far_arm_angle,Vector2.ONE*float(skin.body_scale))
@@ -135,6 +139,10 @@ func _draw_far_arm() -> void:
 	var lower_bind := _v(spine.far_parts.far_forearm.end)-_v(spine.far_parts.far_forearm.pivot)
 	var upper_angle: float=parent_angle+upper_bind.angle()+draw_pose.far_arm_angle*0.6
 	var lower_angle: float=parent_angle+lerpf(lower_bind.angle(),-0.15-draw_pose.far_arm_angle*0.5,weight)
+	if attacking:
+		var mix: float=GirtasUpper.blend(attack_progress)
+		upper_angle=lerpf(upper_angle,parent_angle+GirtasUpper.curve(attack_progress,attack_hit_ratio,[upper_bind.angle(),1.7,2.3,1.6,upper_bind.angle()]),mix)
+		lower_angle=lerpf(lower_angle,parent_angle+GirtasUpper.curve(attack_progress,attack_hit_ratio,[lower_bind.angle(),0.2,0.8,1.0,lower_bind.angle()]),mix)
 	var elbow := shoulder+Vector2.from_angle(upper_angle)*upper_bind.length()*float(skin.body_scale)
 	var wrist := elbow+Vector2.from_angle(lower_angle)*lower_bind.length()*float(skin.body_scale)
 	_far_segment("far_upper",shoulder,elbow);_far_segment("far_forearm",elbow,wrist)
@@ -143,13 +151,19 @@ func _draw_far_arm() -> void:
 
 func _draw_arm() -> void:
 	var bind := _v(skin.rig.get("shoulder_offset", [-1, -12]))
-	if not turn_frames.is_empty(): bind = _v(turn_frames[turn_index].near_offset)
+	if not turn_frames.is_empty(): bind = _v(turn_frames[0 if not spine.is_empty() else turn_index].near_offset)
 	var lengths: Array = skin.rig.get("arm_lengths", [11.0, 11.0])
 	var parent_angle: float=draw_pose.torso_angle+_lean_angle()
 	var shoulder := _upper_point(_v(skin.rig.waist)+bind/float(skin.body_scale)) if _spine_active() else _waist()+bind.rotated(draw_pose.torso_angle)
 	var elbow := shoulder + Vector2.from_angle(1.65 + draw_pose.upper_arm_angle + parent_angle) * float(lengths[0])
 	var forearm_rest := lerpf(0.65,-0.30,draw_pose.locomotion_weight) if _spine_active() else 0.65
 	var wrist := elbow + Vector2.from_angle(forearm_rest + draw_pose.forearm_angle + parent_angle) * float(lengths[1])
+	if not spine.is_empty() and attacking:
+		var mix: float=GirtasUpper.blend(attack_progress)
+		var upper_angle: float=lerpf(1.65+draw_pose.upper_arm_angle,GirtasUpper.curve(attack_progress,attack_hit_ratio,[1.65,2.4,0.1,0.9,1.65]),mix)+parent_angle
+		var lower_angle: float=lerpf(forearm_rest+draw_pose.forearm_angle,GirtasUpper.curve(attack_progress,attack_hit_ratio,[0.65,-1.35,0.15,0.75,0.65]),mix)+parent_angle
+		elbow=shoulder+Vector2.from_angle(upper_angle)*float(lengths[0])
+		wrist=elbow+Vector2.from_angle(lower_angle)*float(lengths[1])
 	_segment("upper_arm", shoulder, elbow)
 	_segment("forearm", elbow, wrist)
 	if parts.has("shoulder_armor") and skin.parts.has("shoulder_armor"):
@@ -158,7 +172,7 @@ func _draw_arm() -> void:
 		if not turn_frames.is_empty(): guard_pivot = _v(turn_frames[turn_index].guard_pivot)
 		# This visible pauldron belongs to the shoulder, not the rigid chest texture.
 		# Only locomotion adds articulation; attacks use the existing shoulder/torso transform.
-		var follow: float = draw_pose.upper_arm_angle * draw_pose.locomotion_weight
+		var follow: float = 0.0 if not spine.is_empty() else draw_pose.upper_arm_angle * draw_pose.locomotion_weight
 		draw_set_transform(shoulder, parent_angle + follow, Vector2.ONE * float(skin.body_scale))
 		draw_texture(_turn_texture("shoulder_armor"), -guard_pivot)
 	var weapon: Dictionary = skin.parts.weapon_hand
