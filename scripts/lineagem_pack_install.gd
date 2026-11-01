@@ -1,0 +1,199 @@
+extends Node
+## Offline, user-selected ZIP only. No network, save writes or old-pack deletion.
+signal progress(done: int, total: int)
+signal completed(result: Dictionary)
+const STORE = "user://lineagem_base508_versions"
+const LEGACY = "user://lineagem_base508"
+const MAX_FILES = 750000
+const MAX_BYTES = 6 * 1024 * 1024 * 1024
+const MAX_ENTRY = 64 * 1024 * 1024
+const REQUIRED = ["manifest.json", "source_effect_bindings.json", "registered_effect_layers.json"]
+static var _session_root: String = ""
+var cancelled: bool = false
+var busy: bool = false
+
+static func safe_relative(path: String) -> bool:
+	if path.is_empty() or path.length() > 240 or path.contains("\\") or path.contains(":") or path.begins_with("/"): return false
+	for part: String in path.split("/", true):
+		if part in ["", ".", ".."]: return false
+	return true
+
+static func active_root() -> String:
+	# Freeze the selected version for this process: installing cannot mix old/new textures.
+	if not _session_root.is_empty(): return _session_root
+	var best: int = 0
+	var directory := DirAccess.open(STORE)
+	if directory != null:
+		for name: String in directory.get_directories():
+			if not name.begins_with("pack-") or not safe_relative(name): continue
+			var root: String = STORE.path_join(name)
+			var marker: Variant = JSON.parse_string(FileAccess.get_file_as_string(root.path_join("installed.json"))) if FileAccess.file_exists(root.path_join("installed.json")) else null
+			if not marker is Dictionary or marker.get("source_snapshot", "") != "base508": continue
+			if int(marker.get("activated_usec", 0)) <= best: continue
+			if not FileAccess.file_exists(root.path_join("manifest.json")): continue
+			best = int(marker.activated_usec)
+			_session_root = root
+	if _session_root.is_empty(): _session_root = LEGACY
+	return _session_root
+
+static func sha(data: PackedByteArray) -> String:
+	var context := HashingContext.new()
+	context.start(HashingContext.HASH_SHA256)
+	if not data.is_empty(): context.update(data)
+	return context.finish().hex_encode()
+
+func install_zip(path: String) -> Dictionary:
+	if busy: return {"ok":false, "error":"설치가 이미 진행 중입니다."}
+	busy = true
+	cancelled = false
+	# Resolve and freeze current assets before any install work.
+	active_root()
+	var result: Dictionary = await _install(path)
+	busy = false
+	completed.emit(result)
+	return result
+
+# Bound central-directory sizes before ZIPReader allocates an entry. The supported
+# bundle has <4096 outer entries, no ZIP64/encryption/symlinks, <=64MiB per blob.
+# Source pixels remain individual files inside bounded inventory/data shards.
+static func validate_zip(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null: return {"ok":false}
+	var length: int = file.get_length()
+	if length < 22 or length > 3 * 1024 * 1024 * 1024: return {"ok":false}
+	var tail_size: int = mini(length, 65557)
+	file.seek(length - tail_size)
+	var tail: PackedByteArray = file.get_buffer(tail_size)
+	var end: int = -1
+	for at: int in range(tail.size() - 22, -1, -1):
+		if tail.decode_u32(at) == 0x06054b50 and at + 22 + tail.decode_u16(at + 20) == tail.size():
+			end = at
+			break
+	if end < 0 or tail.decode_u16(end + 4) != 0 or tail.decode_u16(end + 6) != 0: return {"ok":false}
+	var count: int = tail.decode_u16(end + 10)
+	var directory_size: int = tail.decode_u32(end + 12)
+	var directory_offset: int = tail.decode_u32(end + 16)
+	if count == 0 or count > 4096 or count != tail.decode_u16(end + 8) or directory_size > 2 * 1024 * 1024 or directory_offset + directory_size != length - tail_size + end: return {"ok":false}
+	file.seek(directory_offset)
+	var central: PackedByteArray = file.get_buffer(directory_size)
+	if central.size() != directory_size: return {"ok":false}
+	var offset: int = 0
+	var entries: Dictionary = {}
+	for index: int in range(count):
+		if offset + 46 > central.size() or central.decode_u32(offset) != 0x02014b50: return {"ok":false}
+		var flags: int = central.decode_u16(offset + 8)
+		var method: int = central.decode_u16(offset + 10)
+		var size: int = central.decode_u32(offset + 24)
+		var name_size: int = central.decode_u16(offset + 28)
+		var record_size: int = 46 + name_size + central.decode_u16(offset + 30) + central.decode_u16(offset + 32)
+		if offset + record_size > central.size() or flags & 1 or method not in [0, 8] or size > MAX_ENTRY or central.decode_u32(offset + 20) > MAX_ENTRY or central.decode_u32(offset + 42) >= directory_offset: return {"ok":false}
+		var name: String = central.slice(offset + 46, offset + 46 + name_size).get_string_from_utf8()
+		var mode: int = (central.decode_u32(offset + 38) >> 16) & 0xf000
+		if not safe_relative(name) or entries.has(name) or mode == 0xa000: return {"ok":false}
+		if name != "pack.json" and not name.begins_with("inventory/") and not name.begins_with("payload/"): return {"ok":false}
+		if name == "pack.json" and size > 1024 * 1024: return {"ok":false}
+		if name.begins_with("inventory/") and size > 2 * 1024 * 1024: return {"ok":false}
+		entries[name] = size
+		offset += record_size
+	return {"ok":offset == central.size() and entries.has("pack.json"), "entries":entries}
+
+func _install(path: String) -> Dictionary:
+	var checked: Dictionary = validate_zip(path)
+	if not checked.ok: return _failure("지원되는 안전한 설치 ZIP이 아니거나 파일이 손상됐습니다.")
+	var zip := ZIPReader.new()
+	if zip.open(path) != OK: return _failure("ZIP 파일을 열지 못했습니다.")
+	var header_bytes: PackedByteArray = zip.read_file("pack.json")
+	if header_bytes.size() > 1024 * 1024: return _failure("설치 목록이 너무 큽니다.")
+	var header: Variant = JSON.parse_string(header_bytes.get_string_from_utf8())
+	if not header is Dictionary or int(header.get("schema", 0)) != 2 or header.get("kind", "") != "twilight-lineagem-offline-runtime" or header.get("source_snapshot", "") != "base508": return _failure("지원되는 base508 설치 팩이 아닙니다.")
+	var total: int = int(header.get("files", 0))
+	var expected_bytes: int = int(header.get("bytes", 0))
+	var chunks: Variant = header.get("chunks", [])
+	if total <= 0 or total > MAX_FILES or expected_bytes <= 0 or expected_bytes > MAX_BYTES or not chunks is Array or chunks.is_empty() or chunks.size() > 2048: return _failure("설치 팩 크기 또는 목록이 유효하지 않습니다.")
+	if int(header.get("sprite_records", 0)) != 743 or int(header.get("card_definitions", 0)) != 701: return _failure("이 게임 버전의 701종 팩이 아닙니다.")
+	var storage := DirAccess.open("user://")
+	if storage == null or storage.get_space_left() < expected_bytes + total * 4096 + 64 * 1024 * 1024: return _failure("설치 공간이 부족합니다. 기존 팩과 별도로 새 팩 공간이 필요합니다.")
+	var stamp: int = int(Time.get_unix_time_from_system() * 1000000)
+	var versions := DirAccess.open(STORE)
+	if versions != null:
+		for name: String in versions.get_directories():
+			var marker_path: String = STORE.path_join(name).path_join("installed.json")
+			if not FileAccess.file_exists(marker_path): continue
+			var previous: Variant = JSON.parse_string(FileAccess.get_file_as_string(marker_path))
+			if previous is Dictionary: stamp = maxi(stamp, int(previous.get("activated_usec", 0)) + 1)
+	var id: String = str(stamp) + "-" + str(Time.get_ticks_usec())
+	var stage: String = STORE.path_join("staging-" + id)
+	if DirAccess.make_dir_recursive_absolute(stage) != OK: return _failure("임시 설치 폴더를 만들지 못했습니다.")
+	progress.emit(0, total)
+	await get_tree().process_frame
+	var done: int = 0
+	var written: int = 0
+	var last_yield: int = Time.get_ticks_msec()
+	var found: Dictionary = {}
+	for chunk: Variant in chunks:
+		if not chunk is Dictionary or not str(chunk.get("path", "")).begins_with("inventory/") or not safe_relative(str(chunk.get("path", ""))) or int(chunk.get("bytes", 0)) > 2 * 1024 * 1024: return _failure("검사 목록 경로가 유효하지 않습니다.")
+		if int(checked.entries.get(str(chunk.path), -1)) != int(chunk.get("bytes", -2)): return _failure("검사 목록 크기가 다릅니다.")
+		var chunk_bytes: PackedByteArray = zip.read_file(str(chunk.path))
+		if chunk_bytes.size() != int(chunk.get("bytes", -1)) or sha(chunk_bytes) != str(chunk.get("sha256", "")): return _failure("검사 목록이 손상됐습니다.")
+		var rows: Variant = JSON.parse_string(chunk_bytes.get_string_from_utf8())
+		if not rows is Array or rows.is_empty() or rows.size() > 1024 or rows.size() != int(chunk.get("count", -1)): return _failure("파일 목록이 유효하지 않습니다.")
+		var payload_path: String = str(chunk.get("payload", ""))
+		if not payload_path.begins_with("payload/") or not safe_relative(payload_path) or int(chunk.get("payload_bytes", 0)) > MAX_ENTRY: return _failure("데이터 묶음이 유효하지 않습니다.")
+		if int(checked.entries.get(payload_path, -1)) != int(chunk.get("payload_bytes", -2)): return _failure("데이터 묶음 크기가 다릅니다.")
+		var payload: PackedByteArray = zip.read_file(payload_path)
+		if payload.size() != int(chunk.get("payload_bytes", -1)) or sha(payload) != str(chunk.get("payload_sha256", "")): return _failure("데이터 묶음이 손상됐습니다.")
+		var offset: int = 0
+		for row: Variant in rows:
+			if cancelled: return _failure("설치를 중단했습니다. 기존 팩과 세이브는 유지됩니다.")
+			if not row is Dictionary: return _failure("잘못된 파일 기록입니다.")
+			var relative: String = str(row.get("path", ""))
+			var size: int = int(row.get("bytes", -1))
+			if not safe_relative(relative) or relative in ["installed.json", "installed.tmp"] or size < 0 or size > MAX_ENTRY: return _failure("안전하지 않은 파일 경로 또는 크기입니다.")
+			var target: String = stage.path_join(relative)
+			if FileAccess.file_exists(target): return _failure("중복 파일 경로입니다.")
+			if int(row.get("offset", -1)) != offset or offset + size > payload.size(): return _failure("데이터 위치가 유효하지 않습니다.")
+			var bytes: PackedByteArray = payload.slice(offset, offset + size)
+			offset += size
+			if bytes.size() != size or sha(bytes) != str(row.get("sha256", "")): return _failure("파일 검사 실패: " + relative)
+			if DirAccess.make_dir_recursive_absolute(target.get_base_dir()) != OK: return _failure("설치 폴더 생성 실패.")
+			var output := FileAccess.open(target, FileAccess.WRITE)
+			if output == null: return _failure("파일 저장 실패: " + relative)
+			output.store_buffer(bytes)
+			output.flush()
+			var error: Error = output.get_error()
+			output.close()
+			if error != OK: return _failure("저장 공간 또는 파일 쓰기 오류.")
+			done += 1
+			written += size
+			if done > total or written > expected_bytes: return _failure("파일 수 또는 용량이 선언과 다릅니다.")
+			if relative in REQUIRED: found[relative] = true
+			if Time.get_ticks_msec() - last_yield >= 40:
+				progress.emit(done, total)
+				await get_tree().process_frame
+				last_yield = Time.get_ticks_msec()
+		if offset != payload.size(): return _failure("데이터 묶음의 길이가 다릅니다.")
+	zip.close()
+	if done != total or written != expected_bytes or found.size() != REQUIRED.size(): return _failure("필수 파일 또는 전체 파일 수가 일치하지 않습니다.")
+	var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(stage.path_join("manifest.json")))
+	if not manifest is Dictionary or int(manifest.get("schema", 0)) != 1 or manifest.get("source_snapshot", "") != "base508" or not manifest.get("records", {}) is Dictionary: return _failure("런타임 선언이 유효하지 않습니다.")
+	var sprite_count: int = 0
+	for key: String in manifest.records:
+		if key.begins_with("sprite:"): sprite_count += 1
+	if sprite_count != 743 or manifest.get("card_bindings", {}).size() != 701: return _failure("카드 또는 외형 정의 수가 다릅니다.")
+	for record: Variant in manifest.records.values():
+		if not record is Dictionary or not safe_relative(str(record.get("manifest", ""))) or not FileAccess.file_exists(stage.path_join(str(record.manifest))): return _failure("캐릭터 선언이 누락됐습니다.")
+	var final_path: String = STORE.path_join("pack-" + id)
+	if DirAccess.rename_absolute(stage, final_path) != OK: return _failure("설치 폴더 전환 실패.")
+	var receipt: Dictionary = {"schema":1,"source_snapshot":"base508","release_id":str(header.get("release_id", "")),"activated_usec":stamp,"files":done,"bytes":written,"pack_header_sha256":sha(header_bytes)}
+	var marker := FileAccess.open(final_path.path_join("installed.tmp"), FileAccess.WRITE)
+	if marker == null: return _failure("설치 완료 기록 저장 실패.")
+	marker.store_string(JSON.stringify(receipt))
+	marker.flush()
+	var marker_error: Error = marker.get_error()
+	marker.close()
+	if marker_error != OK or DirAccess.rename_absolute(final_path.path_join("installed.tmp"), final_path.path_join("installed.json")) != OK: return _failure("설치 완료 기록 전환 실패.")
+	progress.emit(done, total)
+	return {"ok":true,"root":final_path,"files":done,"restart_required":true}
+
+func _failure(message: String) -> Dictionary:
+	return {"ok":false,"error":message,"previous_pack_preserved":true}

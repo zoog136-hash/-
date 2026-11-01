@@ -67,7 +67,7 @@ static func asset_path(source_path: String) -> String:
 	var physical: String = source_path
 	if source_path == "Image/UIImage/Illust_Legend_WorldTree_Helm_ON.png":
 		physical = "Image/UIImage/Illust_Legend_WorldTree_Helm_On.png"
-	var path: String = "user://lineagem_base508/ui/" + physical
+	var path: String = preload("res://scripts/lineagem_pack_install.gd").active_root().path_join("ui").path_join(physical)
 	if physical != source_path and FileAccess.file_exists(path):
 		if FileAccess.get_sha256(path) != "b23768894fa574911d9cf063cfb3b6ee621a67cb372a7e612fa8c7db66315e6c": return ""
 	return path

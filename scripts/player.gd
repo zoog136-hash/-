@@ -82,8 +82,9 @@ var attack_visual_duration: float = 0.42
 var physics_delta: float = 1.0 / 60.0
 
 func _ready() -> void:
-	if FileAccess.file_exists("user://lineagem_base508/manifest.json"):
-		original_source_manifest = "user://lineagem_base508/manifest.json"
+	var installed_manifest: String = preload("res://scripts/lineagem_pack_install.gd").active_root().path_join("manifest.json")
+	if FileAccess.file_exists(installed_manifest):
+		original_source_manifest = installed_manifest
 	original_source_preview.name = "OriginalSourceInspection"
 	add_child(original_source_preview)
 	for argument: String in OS.get_cmdline_user_args():
