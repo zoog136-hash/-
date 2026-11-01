@@ -1,5 +1,6 @@
 extends Node2D
 const AttackClock = preload("res://scripts/animation/actor_motion.gd")
+const GirtasMotion = preload("res://scripts/animation/skin_pilot/girtas_ground_motion.gd")
 const Motion = preload("res://scripts/animation/skin_pilot/shared_ground_motion.gd")
 const FrontCutout = preload("res://scripts/animation/skin_pilot/front_cutout_skin.gd")
 const Cutout = preload("res://scripts/animation/skin_pilot/cutout_skin.gd")
@@ -33,6 +34,7 @@ func _ready() -> void:
 	front_preview = "--girtas-front" in OS.get_cmdline_user_args()
 	girtas_preview = front_preview or "--girtas-skin" in OS.get_cmdline_user_args()
 	if girtas_preview:
+		motion = GirtasMotion.new()
 		motion.configure_run()
 		preview_speed = 210.0 # Player.move_speed and Girtas NativeMotionProfile.reference_speed.
 		manual_lift = 10.0

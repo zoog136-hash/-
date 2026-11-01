@@ -80,7 +80,7 @@ func _spine_active() -> bool:
 	return not spine.is_empty() and (draw_pose.locomotion_weight>0.001 or attacking)
 func _lean_angle() -> float:
 	if not _spine_active(): return 0.0
-	var run_lean: float=(0.30+0.065*(draw_pose.torso_x/1.2))*draw_pose.locomotion_weight
+	var run_lean: float=(0.325+0.065*(draw_pose.torso_x/1.2))*draw_pose.locomotion_weight
 	var attack_lean: float=GirtasUpper.curve(attack_progress,attack_hit_ratio,[0.0,-0.08,0.16,0.07,0.0]) if attacking else 0.0
 	return run_lean+attack_lean
 func _chest_anchor_source() -> Vector2:

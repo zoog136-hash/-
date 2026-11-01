@@ -83,7 +83,7 @@ func _draw() -> void:
 		draw_part("torso",waist,chest_angle)
 	var neck := waist+Vector2(0,-105*SIZE).rotated(chest_angle)
 	if run_key:
-		draw_set_transform(neck+Vector2(0,-10.0*(1.0-weight)),0.0,Vector2.ONE*SIZE)
+		draw_set_transform(neck+Vector2(0,1.0*weight-10.0*(1.0-weight)),0.0,Vector2.ONE*SIZE)
 		draw_texture(run_lean_textures.head,-v(run_lean.head.pivot))
 	else:
 		draw_part("head",neck+Vector2(0,6.0*lean_weight),0.0)
