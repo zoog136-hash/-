@@ -29,6 +29,10 @@ for skin in manifest['skins'].values():
         ImageDraw.Draw(mask).polygon([tuple(p) for p in part['polygon']], fill=255)
         expected = original.copy()
         expected.putalpha(ImageChops.multiply(original.getchannel('A'), mask))
+        if 'exclude_polygon' in part:
+            exclusion = Image.new('L', original.size)
+            ImageDraw.Draw(exclusion).polygon([tuple(p) for p in part['exclude_polygon']], fill=255)
+            expected.putalpha(ImageChops.subtract(expected.getchannel('A'), exclusion))
         if 'subtract_polygon' in part:
             arm_mask = Image.new('L', original.size)
             ImageDraw.Draw(arm_mask).polygon([tuple(p) for p in part['subtract_polygon']], fill=255)
@@ -64,6 +68,17 @@ for skin in manifest['skins'].values():
                 cut = Image.new('L', original.size)
                 ImageDraw.Draw(cut).polygon([tuple(p) for p in part['blade_cut']], fill=255)
                 expected.putalpha(ImageChops.subtract(expected.getchannel('A'), cut))
+        if 'far_arm_cut' in part:
+            far = Image.new('L', original.size)
+            ImageDraw.Draw(far).polygon([tuple(p) for p in part['far_arm_cut']], fill=255)
+            expected.putalpha(ImageChops.subtract(expected.getchannel('A'), far))
+            under = Image.new('L', original.size)
+            ImageDraw.Draw(under).polygon([tuple(p) for p in part['far_arm_underlay']], fill=255)
+            under = ImageChops.multiply(under, far)
+            under = ImageChops.multiply(under, original.getchannel('A').point(lambda a: 255 if a >= 240 else 0))
+            fill = Image.new('RGBA', original.size, color)
+            fill.putalpha(under)
+            expected = Image.alpha_composite(expected, fill)
         actual = Image.open(path).convert('RGBA')
         assert actual.tobytes() == expected.tobytes(), path
         assert actual.getchannel('A').getbbox(), path

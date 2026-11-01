@@ -33,7 +33,11 @@ rigs = {
  'upper_fill':[(68,53),(77,54),(78,61),(75,68),(67,69),(66,62)],
  'blade_cut':[(39,75),(42,69),(57,61),(60,64),(54,71),(44,77)]}
 }
-manifest={'schema':4,'direction':'E','scope':'two humanoid skins, shared idle/run/attack pilot; authored visible-part rig, not source-game motion or recovered hidden anatomy','skins':{}}
+far_arms = {
+ 'warrior': {'pivot':[82,45], 'polygon':[(79,42),(85,43),(87,49),(86,54),(89,58),(88,63),(84,67),(79,65),(78,59),(80,54),(78,48)], 'underlay':[(79,45),(83,45),(83,58),(81,63),(78,59)]},
+ 'assassin': {'pivot':[65,56], 'polygon':[(61,54),(68,55),(69,60),(66,64),(63,68),(57,69),(54,65),(58,61)], 'underlay':[(64,56),(68,57),(68,63),(64,66),(62,62)]}
+}
+manifest={'schema':5,'direction':'E','scope':'two humanoid skins, shared idle/run/attack pilot; authored visible-part rig, not source-game motion or recovered hidden anatomy','skins':{}}
 for name,s in skins.items():
  source=root/f'assets/sprites/classes/{name}.png';im=Image.open(source).convert('RGBA').crop((0,s['row']*116,148,(s['row']+1)*116));folder=out/name;folder.mkdir(exist_ok=True)
  entry={'source':str(source.relative_to(root)),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'source_cell':[0,s['row']*116,148,116],'hip':s['hip'],'body_scale':s['body_scale'],'parts':{}}
@@ -80,6 +84,24 @@ for name,s in skins.items():
  if rig['blade_cut']:
   cut=Image.new('L',im.size);ImageDraw.Draw(cut).polygon(rig['blade_cut'],fill=255)
   body.putalpha(ImageChops.subtract(body.getchannel('A'),cut))
+ far=far_arms[name]
+ savepart('far_arm',far['polygon'],far['pivot'])
+ # The assassin blade was rebound to the near hand. Remove its overlapping sliver here.
+ if name == 'assassin':
+  exclude=[(39,75),(42,69),(57,61),(59,64),(54,71),(44,77)]
+  exclusion=Image.new('L',im.size);ImageDraw.Draw(exclusion).polygon(exclude,fill=255)
+  far_path=folder/'far_arm.png';part=Image.open(far_path).convert('RGBA')
+  part.putalpha(ImageChops.subtract(part.getchannel('A'),exclusion));part.save(far_path)
+  entry['parts']['far_arm']['exclude_polygon']=exclude
+  entry['parts']['far_arm']['sha256']=hashlib.sha256(far_path.read_bytes()).hexdigest()
+ far_mask=Image.new('L',im.size);ImageDraw.Draw(far_mask).polygon(far['polygon'],fill=255)
+ body.putalpha(ImageChops.subtract(body.getchannel('A'),far_mask))
+ under=Image.new('L',im.size);ImageDraw.Draw(under).polygon(far['underlay'],fill=255)
+ under=ImageChops.multiply(under,far_mask)
+ under=ImageChops.multiply(under,im.getchannel('A').point(lambda a:255 if a>=240 else 0))
+ fill=Image.new('RGBA',im.size,color);fill.putalpha(under);body=Image.alpha_composite(body,fill)
+ entry['parts']['body']['far_arm_cut']=far['polygon']
+ entry['parts']['body']['far_arm_underlay']=far['underlay']
  body.save(body_path)
  entry['parts']['body']['additional_cut']=rig['upper']
  entry['parts']['body']['additional_underlay']=rig['upper_fill']

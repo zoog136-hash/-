@@ -40,7 +40,7 @@ func advance(delta: float, speed: float) -> Dictionary:
 	transition_time += delta
 	if transition_time < 0.18 and transition_feet.size() == 2:
 		var blend := smoothstep(0.0, 0.18, transition_time)
-		for key in ["torso_angle", "torso_y", "upper_arm_angle", "forearm_angle", "weapon_angle"]:
+		for key in ["torso_angle", "torso_y", "upper_arm_angle", "forearm_angle", "weapon_angle", "far_arm_angle"]:
 			result[key] = lerpf(transition_pose[key], result[key], blend)
 		result.arm_angle = lerpf(transition_arm, result.arm_angle, blend)
 		result.cape_angle = lerpf(transition_cape, result.cape_angle, blend)
@@ -59,6 +59,7 @@ func sample(at_phase: float, moving: bool = true) -> Dictionary:
 	pose.torso_y = 0.0
 	pose.upper_arm_angle = -0.10 * cos(TAU * at_phase) if moving else 0.0
 	pose.forearm_angle = pose.arm_angle
+	pose.far_arm_angle = 0.0
 	pose.weapon_angle = 0.55 + pose.arm_angle * 0.6
 	for side in range(2):
 		var p := fposmod(at_phase + side * 0.5, 1.0)
@@ -99,11 +100,12 @@ func sample_attack(progress: float, hit_ratio: float) -> Dictionary:
 	var h := clampf(hit_ratio, 0.1, 0.85)
 	var times := [0.0, h * 0.55, h, h + (1.0 - h) * 0.22, 1.0]
 	var result := sample(0.0, false)
-	result.hip += Vector2(_curve(p, times, [0.0, -1.0, 3.0, 2.0, 0.0]), _curve(p, times, [0.0, 1.0, 1.5, 1.0, 0.0]))
+	result.hip += Vector2(_curve(p, times, [0.0, -3.0, 7.0, 4.0, 0.0]), _curve(p, times, [0.0, 3.0, 3.0, 2.0, 0.0]))
 	result.torso_angle = _curve(p, times, [0.0, -0.10, 0.18, 0.12, 0.0])
 	result.upper_arm_angle = _curve(p, times, [0.0, -1.05, -0.70, -0.15, 0.0])
 	result.forearm_angle = _curve(p, times, [0.0, -1.55, -0.60, 0.15, 0.0])
 	result.weapon_angle = _curve(p, times, [0.55, -0.95, 0.02, 0.95, 0.55])
+	result.far_arm_angle = _curve(p, times, [0.0, -0.30, 0.65, 0.25, 0.0])
 	result.cape_angle = _curve(p, times, [0.0, 0.08, -0.10, -0.06, 0.0])
 	var spread := smoothstep(0.0, h * 0.55, p) * (1.0 - smoothstep(times[3], 1.0, p))
 	for side in range(2):
@@ -116,7 +118,7 @@ func sample_attack(progress: float, hit_ratio: float) -> Dictionary:
 	if not attack_origin.is_empty() and p < h * 0.35:
 		var weight := smoothstep(0.0, h * 0.35, p)
 		result.hip = attack_origin.hip.lerp(result.hip, weight)
-		for key in ["torso_angle", "torso_y", "upper_arm_angle", "forearm_angle", "weapon_angle", "cape_angle"]:
+		for key in ["torso_angle", "torso_y", "upper_arm_angle", "forearm_angle", "weapon_angle", "cape_angle", "far_arm_angle"]:
 			result[key] = lerpf(attack_origin[key], result[key], weight)
 		for side in range(2):
 			result.feet[side] = attack_origin.feet[side].lerp(result.feet[side], weight)

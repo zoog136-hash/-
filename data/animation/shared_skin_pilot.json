@@ -1,5 +1,5 @@
 {
-  "schema": 4,
+  "schema": 5,
   "direction": "E",
   "scope": "two humanoid skins, shared idle/run/attack pilot; authored visible-part rig, not source-game motion or recovered hidden anatomy",
   "skins": {
@@ -96,7 +96,7 @@
               43
             ]
           ],
-          "sha256": "803a0f4ba9721542e8bf1acf7c564af755c791fd124dec35fe6724f8f29ede70",
+          "sha256": "4c2188b5fec44b0c6009e6315ec0efc75e27dfef539fb6c1f6164f88455da137",
           "subtract_cape": {
             "polygon": [
               [
@@ -231,6 +231,74 @@
             ],
             "method": "flat armor underpaint using median visible torso color, restricted to original opaque footprint; new authoring, not recovered anatomy"
           },
+          "far_arm_cut": [
+            [
+              79,
+              42
+            ],
+            [
+              85,
+              43
+            ],
+            [
+              87,
+              49
+            ],
+            [
+              86,
+              54
+            ],
+            [
+              89,
+              58
+            ],
+            [
+              88,
+              63
+            ],
+            [
+              84,
+              67
+            ],
+            [
+              79,
+              65
+            ],
+            [
+              78,
+              59
+            ],
+            [
+              80,
+              54
+            ],
+            [
+              78,
+              48
+            ]
+          ],
+          "far_arm_underlay": [
+            [
+              79,
+              45
+            ],
+            [
+              83,
+              45
+            ],
+            [
+              83,
+              58
+            ],
+            [
+              81,
+              63
+            ],
+            [
+              78,
+              59
+            ]
+          ],
           "additional_cut": [
             [
               68,
@@ -550,6 +618,62 @@
           ],
           "sha256": "42f8791c71a3142118c55a0abf94812fb3760ce0226db799634b4ee5b3ae15bf"
         },
+        "far_arm": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/far_arm.png",
+          "pivot": [
+            82,
+            45
+          ],
+          "end": null,
+          "polygon": [
+            [
+              79,
+              42
+            ],
+            [
+              85,
+              43
+            ],
+            [
+              87,
+              49
+            ],
+            [
+              86,
+              54
+            ],
+            [
+              89,
+              58
+            ],
+            [
+              88,
+              63
+            ],
+            [
+              84,
+              67
+            ],
+            [
+              79,
+              65
+            ],
+            [
+              78,
+              59
+            ],
+            [
+              80,
+              54
+            ],
+            [
+              78,
+              48
+            ]
+          ],
+          "sha256": "f476ee9cbe0265ab628e5ca41b74af9d830d8def75cc844e09edf23439969329"
+        },
         "head": {
           "texture": "res://assets/actors/shared_skin_pilot/warrior/head.png",
           "pivot": [
@@ -563,7 +687,7 @@
             148,
             43
           ],
-          "sha256": "b721707335d511622600d26dd424933032c5f3175a3484103771386f3d01259a"
+          "sha256": "ce7ebb3158c4270f910afe7cd7477a54334b88f90fa0c2ba2bb9081b101b108b"
         },
         "torso": {
           "texture": "res://assets/actors/shared_skin_pilot/warrior/torso.png",
@@ -578,7 +702,7 @@
             148,
             68
           ],
-          "sha256": "3ed247eaf0d93e4e9f65324b923d86966b491d87f7fc47c37e9838b3b5a57e76"
+          "sha256": "1e8085c5e0c5d324a1b2af240afeba5d7024c345c216bb92d272e901e6d96346"
         },
         "pelvis": {
           "texture": "res://assets/actors/shared_skin_pilot/warrior/pelvis.png",
@@ -593,7 +717,7 @@
             148,
             116
           ],
-          "sha256": "9396f01b1d4a40a43698da66b42a1fd351917f19523310127654b4d1b3e1cd35"
+          "sha256": "c5a94110e55e5999a09e831c258dbd9e8d3ba0d9328896774030684f2e688dc2"
         },
         "thigh_0": {
           "sole_y": null,
@@ -961,7 +1085,7 @@
               48
             ]
           ],
-          "sha256": "8923461aba03d6355e185f2ad69c351cfdf6fff028fd373417433944937ef494",
+          "sha256": "8a7b1675c2e0b26a135f5b95a317de3ce0a7b8e97d833449ecf959a76bde5fe9",
           "subtract_cape": {
             "polygon": [
               [
@@ -1084,6 +1208,62 @@
             ],
             "method": "flat armor underpaint using median visible torso color, restricted to original opaque footprint; new authoring, not recovered anatomy"
           },
+          "far_arm_cut": [
+            [
+              61,
+              54
+            ],
+            [
+              68,
+              55
+            ],
+            [
+              69,
+              60
+            ],
+            [
+              66,
+              64
+            ],
+            [
+              63,
+              68
+            ],
+            [
+              57,
+              69
+            ],
+            [
+              54,
+              65
+            ],
+            [
+              58,
+              61
+            ]
+          ],
+          "far_arm_underlay": [
+            [
+              64,
+              56
+            ],
+            [
+              68,
+              57
+            ],
+            [
+              68,
+              63
+            ],
+            [
+              64,
+              66
+            ],
+            [
+              62,
+              62
+            ]
+          ],
           "additional_cut": [
             [
               68,
@@ -1416,6 +1596,76 @@
           ],
           "sha256": "ffe09ed4a139787ecea66771214652bc83a9ef7aefbe33e866dc3e2401611c6b"
         },
+        "far_arm": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/far_arm.png",
+          "pivot": [
+            65,
+            56
+          ],
+          "end": null,
+          "polygon": [
+            [
+              61,
+              54
+            ],
+            [
+              68,
+              55
+            ],
+            [
+              69,
+              60
+            ],
+            [
+              66,
+              64
+            ],
+            [
+              63,
+              68
+            ],
+            [
+              57,
+              69
+            ],
+            [
+              54,
+              65
+            ],
+            [
+              58,
+              61
+            ]
+          ],
+          "sha256": "047277dfd0504b2f94fb2e2ef2df84b878f0d0e51617b4dba2f49c64b837515d",
+          "exclude_polygon": [
+            [
+              39,
+              75
+            ],
+            [
+              42,
+              69
+            ],
+            [
+              57,
+              61
+            ],
+            [
+              59,
+              64
+            ],
+            [
+              54,
+              71
+            ],
+            [
+              44,
+              77
+            ]
+          ]
+        },
         "head": {
           "texture": "res://assets/actors/shared_skin_pilot/assassin/head.png",
           "pivot": [
@@ -1429,7 +1679,7 @@
             148,
             56
           ],
-          "sha256": "dd817fb0c00c56ea2c8fc8efcb31bf3f15da7367bb2160dcc549f03fe54c4a9c"
+          "sha256": "c0382ea3c647777f9b35b339bbbb5037668e26545fe5868f02149ad3db1a94d3"
         },
         "torso": {
           "texture": "res://assets/actors/shared_skin_pilot/assassin/torso.png",
@@ -1444,7 +1694,7 @@
             148,
             74
           ],
-          "sha256": "e680b3b73fb528d676dc0ba5d259c98b743a62ffbba1cff7901e50cf9d52a34f"
+          "sha256": "85802416659bb82ed47521c7bb727305f00f7259b08f8c373b43530884019db7"
         },
         "pelvis": {
           "texture": "res://assets/actors/shared_skin_pilot/assassin/pelvis.png",
@@ -1459,7 +1709,7 @@
             148,
             116
           ],
-          "sha256": "5d1b5ab403d5e1542a56a22da83d830a4b889a54b7112617813981f1d672a9ea"
+          "sha256": "c43d3ad000d406edfd8ab79036faeb5babc3f61410eee0e6bb7f91a02f66acfe"
         },
         "thigh_0": {
           "sole_y": null,

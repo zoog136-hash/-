@@ -196,6 +196,21 @@ func _tests() -> void:
 		assert(end.feet == motion.sample(0.0, false).feet)
 		var impact := motion.sample_attack(clock.attack_hit_ratio, clock.attack_hit_ratio)
 		assert(impact.contact[0] and impact.contact[1])
+	motion.attack_origin = {}
+	var marker := attack_clock.profile.marker_for("slash")
+	var loaded := motion.sample_attack(marker * 0.55, marker)
+	var struck := motion.sample_attack(marker, marker)
+	assert(loaded.feet == struck.feet)
+	assert(struck.hip.x - loaded.hip.x >= 9.0)
+	assert(struck.knees[0].distance_to(loaded.knees[0]) > 3.0)
+	assert(struck.far_arm_angle > loaded.far_arm_angle + 0.8)
+	for index in range(101):
+		var weighted := motion.sample_attack(float(index) / 100.0, marker)
+		for side in range(2):
+			var joint: Vector2 = weighted.hip + Vector2(-1 if side == 0 else 1, 0)
+			assert(absf(joint.distance_to(weighted.knees[side]) - 16.0) < 0.001)
+			assert(absf(weighted.knees[side].distance_to(weighted.feet[side]) - 16.0) < 0.001)
+	print("SKIN_PILOT_WEIGHT_OK planted_feet_unchanged=true hip_and_knees_shift=true far_arm_response=true")
 	print("SKIN_PILOT_ATTACK_OK original_clock=true one_strike_per_attack=true swap_preserves_clock=true recovery_returns_idle=true")
 	print("SKIN_PILOT_CONTRACT_OK shared_pose=4 skins=2 bounded_torso=true fixed_bone_lengths=true stance_max_drift=", max_drift)
 	get_tree().quit()

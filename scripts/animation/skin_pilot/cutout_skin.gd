@@ -24,6 +24,7 @@ func _draw() -> void:
 	# Far leg behind cape/torso; near leg in front. No per-skin motion logic.
 	_draw_leg(0)
 	_draw_cape()
+	_draw_far_arm()
 	_draw_body()
 	_draw_leg(1)
 	_draw_arm()
@@ -56,6 +57,13 @@ func _draw_cape() -> void:
 	var bind := (pivot - _v(skin.rig.waist)) * float(skin.body_scale)
 	draw_set_transform(_waist() + bind.rotated(pose.torso_angle), pose.torso_angle + pose.cape_angle, Vector2.ONE * float(skin.body_scale))
 	draw_texture(parts.cape, -pivot)
+
+func _draw_far_arm() -> void:
+	# Only the source's visible far-arm silhouette is rebound; hidden anatomy is not fabricated.
+	var pivot := _v(skin.parts.far_arm.pivot)
+	var bind := (pivot - _v(skin.rig.waist)) * float(skin.body_scale)
+	draw_set_transform(_waist() + bind.rotated(pose.torso_angle), pose.torso_angle + pose.far_arm_angle, Vector2.ONE * float(skin.body_scale))
+	draw_texture(parts.far_arm, -pivot)
 
 func _draw_arm() -> void:
 	var shoulder := _waist() + Vector2(-1, -12).rotated(pose.torso_angle)
