@@ -111,40 +111,41 @@ jobs:
       - name: Import and full identity / combat regressions
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
           mkdir -p test-results
-          # On failure, annotate the most recent test log (job logs are not always reachable).
-          trap 'status=$?; if [ "$status" -ne 0 ]; then last=$(ls -t test-results/*.txt 2>/dev/null | head -n 1); [ -n "$last" ] && bash tools/ci_failure_annotation.sh "Presentation failed" "$last"; fi' EXIT
           "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/presentation-import.txt
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt | head -n 10 | sed 's/^/::error title=Godot import::/'; exit 1; fi
-          python3 tests/animation_expansion_plan_test.py 2>&1 | tee test-results/animation-expansion-plan.txt
-          python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3' 2>&1 | tee test-results/pip-install.txt
-          # Each Python check keeps its own log so a failure can be annotated.
+          # Every check below runs even after an earlier one fails, so a single
+          # run reports all failures (each annotated with its own log).
+          failed=()
+          record() { failed+=("$1"); bash tools/ci_failure_annotation.sh "Presentation $1" "test-results/$1.txt"; }
+          python_check() { python3 "$2" "${@:3}" > "test-results/$1.txt" 2>&1 || record "$1"; }
+          godot_check() {  # name, error pattern, optional success marker, optional XDG dir
+            local name="$1" pattern="$2" marker="${3:-}" data="${4:-$XDG_DATA_HOME}"
+            XDG_DATA_HOME="$data" "$ENGINE" --headless --path . --script "res://tests/${name}.gd" > "test-results/${name}.txt" 2>&1
+            local status=$?
+            if [ "$status" -ne 0 ] || grep -qE "$pattern" "test-results/${name}.txt" || { [ -n "$marker" ] && ! grep -q "$marker" "test-results/${name}.txt"; }; then record "$name"; fi
+          }
+          python_check animation-expansion-plan tests/animation_expansion_plan_test.py
+          python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3' > test-results/pip-install.txt 2>&1 || { record pip-install; exit 1; }
           for check_script in tests/eight_direction_coverage_audit_test.py tests/original_based_motion_import_test.py \
               tests/test_original_based_pose_files.py tests/test_original_based_direction_canvases.py tests/original_based_identity_link_test.py; do
-            python3 "$check_script" 2>&1 | tee "test-results/$(basename "$check_script" .py).txt"
+            python_check "$(basename "$check_script" .py)" "$check_script"
           done
-          python3 tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage 2>&1 | tee test-results/audit-eight-direction-coverage.txt
+          python_check audit-eight-direction-coverage tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage
           for name in eight_direction_animation_test native_animation_expansion_test original_based_canvas_test; do
-            "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
-            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "test-results/${name}.txt"; then exit 1; fi
+            godot_check "$name" 'SCRIPT ERROR:|ERROR:|FAIL'
           done
-          XDG_DATA_HOME="${RUNNER_TEMP}/transform-batch-guards" "$ENGINE" --headless --path . --script res://tests/original_based_transform_batch_test.gd > test-results/transform-batch-guards.txt 2>&1
-          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/transform-batch-guards.txt; then exit 1; fi
-          grep -q 'PR100_TRANSFORM_BATCH_GUARD_OK' test-results/transform-batch-guards.txt
+          godot_check original_based_transform_batch_test 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' 'PR100_TRANSFORM_BATCH_GUARD_OK' "${RUNNER_TEMP}/transform-batch-guards"
           for name in actor_motion_test animation_presentation_test boss_presentation_test authored_state_motion_test animation_restore_test monster_attack_profiles_test combat_timing_test combat_resolution_equivalence_test volley_motion_test hit_feedback_test combat_vfx_test; do
-            "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
-            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' "test-results/${name}.txt"; then exit 1; fi
-            grep -q '_OK' "test-results/${name}.txt"
+            godot_check "$name" 'SCRIPT ERROR:|ERROR:|FAIL:' '_OK'
           done
-          XDG_DATA_HOME="${RUNNER_TEMP}/aden-boss-special" "$ENGINE" --headless --path . --script res://tests/aden_boss_special_test.gd 2>&1 | tee test-results/aden-boss-special.txt
-          if grep -E 'SCRIPT ERROR:|ERROR:|ADEN_BOSS_SPECIAL_FAIL' test-results/aden-boss-special.txt; then exit 1; fi
-          grep -q 'ADEN_BOSS_SPECIAL_OK' test-results/aden-boss-special.txt
-          "$ENGINE" --headless --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-direction-gameplay.txt
-          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-direction-gameplay.txt; then exit 1; fi
-          grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-direction-gameplay.txt
+          godot_check aden_boss_special_test 'SCRIPT ERROR:|ERROR:|ADEN_BOSS_SPECIAL_FAIL' 'ADEN_BOSS_SPECIAL_OK' "${RUNNER_TEMP}/aden-boss-special"
+          godot_check pr100_direction_gameplay_test 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' 'PR100_DIRECTION_GAMEPLAY_OK'
+          echo "PRESENTATION_CHECKS_FAILED=${#failed[@]} ${failed[*]:-}"
+          [ "${#failed[@]}" -eq 0 ]
       - name: All boss poses and real gameplay renders
         shell: bash
         run: |
