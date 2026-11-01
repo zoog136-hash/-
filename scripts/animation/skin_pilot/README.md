@@ -192,3 +192,11 @@ joint backing is authored and documented by the builder.
 The front view remains an initial cutout projection: rigid chest/cape and partial
 thigh coverage limit its depth. E/S are not the other six directions, Main
 integration, original-equivalence acceptance or phone performance validation.
+
+The initial S projection was rejected as walking with unreadable arm response.
+The follow-up uses bent-elbow running arcs and opposing shoulder articulation,
+while retaining the shared distance clock and foot paths. Its attack projection
+now applies the common torso/pelvis weight response and brings the weapon arm
+across the chest during preparation instead of extending it outward throughout.
+This is another authored pilot correction, not original-motion equivalence or
+final naturalness approval. E is unchanged by this S-only adjustment.
