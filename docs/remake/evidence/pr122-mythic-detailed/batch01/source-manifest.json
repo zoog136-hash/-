@@ -65979,6 +65979,107 @@
         "local_edit_mask": "assets/actors/eight_direction/native_production/girtas_267/r010/W-mid-mask.png",
         "not_original_lineagem_art": true
       }
+    },
+    {
+      "key": "transform:267",
+      "direction": "N",
+      "role": "run",
+      "source": "assets/actors/eight_direction/native_production/girtas_267/r011/N-run.png",
+      "sha256": "3494eb86269ba801b9e6d6fcd2bae39bbca2db00a60d6d8faa488fe3eb4a2b05",
+      "bytes": 9303887,
+      "requested_poses": 7,
+      "provenance": {
+        "base_frame": {
+          "row": 3,
+          "direction": "N",
+          "region": [
+            1536,
+            1536,
+            1166,
+            1349
+          ],
+          "margin": [
+            841,
+            344,
+            1490,
+            1307
+          ],
+          "source_anchor": [
+            2023.0,
+            2852.0
+          ],
+          "rgba_sha256": "38ea2495f1278d23eedf7896810a1c4dc059f6e379a3a366000fab62228653c7",
+          "canvas_size": [
+            2656,
+            2656
+          ],
+          "foot": [
+            1328.0,
+            1660.0
+          ]
+        },
+        "source_original_frame": {
+          "row": 3,
+          "direction": "N",
+          "region": [
+            2134,
+            2108,
+            339,
+            392
+          ],
+          "margin": [
+            249,
+            101,
+            445,
+            392
+          ],
+          "source_anchor": [
+            2277,
+            2497
+          ],
+          "rgba_sha256": "174f38a4e887289859ac827f08d51d7dfa4daff62d2a2a398d82d36d7a57c34e",
+          "canvas_size": [
+            784,
+            784
+          ],
+          "foot": [
+            392,
+            490
+          ]
+        },
+        "source_original_sheet": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r084/N-run.png",
+        "mask_polygon_registered1536": [
+          [
+            760,
+            750
+          ],
+          [
+            813,
+            745
+          ],
+          [
+            830,
+            840
+          ],
+          [
+            817,
+            975
+          ],
+          [
+            750,
+            975
+          ],
+          [
+            757,
+            880
+          ]
+        ],
+        "outside_mask_pixel_exact": true
+      },
+      "geometry": {
+        "status": "GEOMETRY_PASS",
+        "basis": "Six unchanged current poses plus masked preserved-leg intermediate; not visual approval."
+      }
     }
   ],
   "mythic_detail_total": 31,
@@ -66015,7 +66116,7 @@
     "transform:267:NW:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-walk-v03mix01.png",
     "transform:267:NW:run": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NW-run-v03composite03.png",
     "transform:267:N:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-N-walk-v03composite01.png",
-    "transform:267:N:run": "assets/actors/eight_direction/native_production/girtas_267/r008/N-run.png",
+    "transform:267:N:run": "assets/actors/eight_direction/native_production/girtas_267/r011/N-run.png",
     "transform:267:NE:walk": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-NE-walk-v03composite04.png",
     "transform:267:NE:run": "assets/actors/eight_direction/native_production/girtas_267/r002/NE-run.png",
     "transform:413:E:run": "assets/actors/eight_direction/native_production/thunder_female_413/reviewed_parts_r004/E-run.png",

@@ -9523,10 +9523,10 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r010/SpriteFrames.tres",
-      "frames_sha256": "a94f7cacf2e7483831938ed3b2072f2e6e78bc488a9d0a2b4a8481e119e35736",
+      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r011/SpriteFrames.tres",
+      "frames_sha256": "36f84e04c18c9fbb91a2170dc34cf4af2007cd9b7137dea65523fe74cdf4caca",
       "native_track_count": 48,
-      "native_pose_count": 290,
+      "native_pose_count": 291,
       "canvas_size": [
         1024,
         1024
@@ -11419,13 +11419,13 @@
           "direction": "N",
           "role": "run",
           "animation": "run_6",
-          "source": "assets/actors/eight_direction/native_production/girtas_267/r008/N-run.png",
-          "source_sha256": "c665ebe607bbe642b13c5ac2e993c11e6722b54dcbe170aa2c2fd4b581cfc426",
-          "texture": "assets/actors/eight_direction/native_production/girtas_267/r008/N-run.png",
+          "source": "assets/actors/eight_direction/native_production/girtas_267/r011/N-run.png",
+          "source_sha256": "3494eb86269ba801b9e6d6fcd2bae39bbca2db00a60d6d8faa488fe3eb4a2b05",
+          "texture": "assets/actors/eight_direction/native_production/girtas_267/r011/N-run.png",
           "geometry": {
             "image_size": [
               3072,
-              4608
+              6144
             ],
             "frames": [
               {
@@ -11455,7 +11455,8 @@
                 "foot": [
                   1260.0,
                   1575.0
-                ]
+                ],
+                "duration": 1.0
               },
               {
                 "row": 1,
@@ -11484,7 +11485,8 @@
                 "foot": [
                   1252.0,
                   1565.0
-                ]
+                ],
+                "duration": 1.0
               },
               {
                 "row": 2,
@@ -11513,7 +11515,8 @@
                 "foot": [
                   1120,
                   1400
-                ]
+                ],
+                "duration": 1.0
               },
               {
                 "row": 3,
@@ -11542,10 +11545,42 @@
                 "foot": [
                   1328.0,
                   1660.0
-                ]
+                ],
+                "duration": 0.5
               },
               {
                 "row": 4,
+                "direction": "N",
+                "region": [
+                  0,
+                  4608,
+                  1166,
+                  1349
+                ],
+                "margin": [
+                  841,
+                  344,
+                  1490,
+                  1307
+                ],
+                "source_anchor": [
+                  487.0,
+                  5924.0
+                ],
+                "rgba_sha256": "1ac958e5c921f3378d8c937b8a22aea0feec9b0889731fb57c0be24fed0ade98",
+                "canvas_size": [
+                  2656,
+                  2656
+                ],
+                "foot": [
+                  1328.0,
+                  1660.0
+                ],
+                "duration": 0.5,
+                "authored_phase": 3.5
+              },
+              {
+                "row": 5,
                 "direction": "N",
                 "region": [
                   0,
@@ -11571,10 +11606,11 @@
                 "foot": [
                   1320.0,
                   1650.0
-                ]
+                ],
+                "duration": 1.0
               },
               {
-                "row": 5,
+                "row": 6,
                 "direction": "N",
                 "region": [
                   1769,
@@ -11600,10 +11636,11 @@
                 "foot": [
                   1196,
                   1495
-                ]
+                ],
+                "duration": 1.0
               }
             ],
-            "distinct_pixel_frames": 6,
+            "distinct_pixel_frames": 7,
             "neutral_height": 757.5,
             "canvas_size": [
               2048,
@@ -11616,7 +11653,7 @@
           },
           "runtime_layout_proof": {
             "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
-            "source_sha256": "c665ebe607bbe642b13c5ac2e993c11e6722b54dcbe170aa2c2fd4b581cfc426",
+            "source_sha256": "3494eb86269ba801b9e6d6fcd2bae39bbca2db00a60d6d8faa488fe3eb4a2b05",
             "source_pixels_unchanged": false,
             "newly_authored_poses": 4,
             "source_anchors": [
@@ -11637,6 +11674,10 @@
                 2852.0
               ],
               [
+                487.0,
+                5924.0
+              ],
+              [
                 515.0,
                 4283.0
               ],
@@ -11650,12 +11691,46 @@
               2504,
               2240,
               2656,
+              2656,
               2640,
               2392
             ],
             "runtime_reference_canvas_size": 1024,
             "approval_granted": false,
-            "review_basis": "Authored visible support-leg contact trajectories in N0/1 and N3/4. Upper-body correspondences calibrate image resolution/registration, not silhouette bounds. N2/5 and all other directions unchanged. Text-local official image edits, no pixel mask. Not original source motion. No visual quality approval."
+            "review_basis": "Reuse the preserved pre-r008 N3 calf/boot as a distinct phase3.5 leg pose between current N3 and N4; explicit mask retains current N3 outside pixels exactly. No new generation, duplicate current frame, temporal blend, or gameplay clock change.",
+            "pose_count": 7,
+            "per_pose_runtime_pixel_scale_ratios": [
+              [
+                1024,
+                2520
+              ],
+              [
+                1024,
+                2504
+              ],
+              [
+                1024,
+                2240
+              ],
+              [
+                1024,
+                2656
+              ],
+              [
+                1024,
+                2656
+              ],
+              [
+                1024,
+                2640
+              ],
+              [
+                1024,
+                2392
+              ]
+            ],
+            "resampled": true,
+            "original_six_poses_resampled": false
           }
         },
         {
@@ -19762,8 +19837,8 @@
       "visual_review": "FAIL",
       "timing_review": "PASS",
       "integration": "Real default catalog wired to immutable production candidate; approval pending actual default Main and independent full quality",
-      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r010/NativeMotionProfile.tres",
-      "native_profile_sha256": "a816b6badbef2be89d05cb13a032fb26d9150a20098a36aeb062ec1f2f52579f",
+      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r011/NativeMotionProfile.tres",
+      "native_profile_sha256": "342af40d541078f7f4040aa89ddf5befc2e1fd5c7c8398b265982ea71ec7f06f",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 502.04237288135596,

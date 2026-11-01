@@ -93,6 +93,15 @@ func _initialize() -> void:
 	for cycle in range(4):
 		for sample in [[.02,0],[.06,1],[.12,2],[.20,3],[.28,4],[.36,5],[.44,6],[.4801,0]]:
 			check(phase_at(split_controller, split_sprite, cycle * .48 + float(sample[0])) == int(sample[1]), "Split support pose preserves original cycle and key phases")
+	# The opposite support halfcycle uses the same duration split at pose3.
+	split.set_frame("run_2", 0, split.get_frame_texture("run_2", 0), 1.0)
+	split.set_frame("run_2", 1, split.get_frame_texture("run_2", 1), 1.0)
+	split.set_frame("run_2", 3, split.get_frame_texture("run_2", 3), .5)
+	split.set_frame("run_2", 4, split.get_frame_texture("run_2", 4), .5)
+	var opposite_controller := motion(split)
+	for cycle in range(4):
+		for sample in [[.02,0],[.10,1],[.18,2],[.26,3],[.30,4],[.36,5],[.44,6],[.4801,0]]:
+			check(phase_at(opposite_controller, split_sprite, cycle * .48 + float(sample[0])) == int(sample[1]), "Opposite support intermediate preserves original cycle")
 	split_sprite.free()
 	# Uniform sources must produce exactly the same frame at every sampled time.
 	for count in [4, 5, 6]:
