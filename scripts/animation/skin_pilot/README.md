@@ -76,8 +76,8 @@ this does not implement a winged or floating motion family.
 All skins consume the common motion resource. A skin may provide fixed arm/leg
 lengths, shoulder/hip offsets, ankle height and a wrist range for a long blade.
 Retargeting preserves world-distance foot travel, contact timing and the shared
-attack clock. It does not scale each frame, use separate animation frames or
-change production movement speed. Girtas uses the production profile's fixed
+attack clock. It does not derive scale from frame bounds or change production movement speed.
+Pose-dependent attachment images may change appearance without owning a motion clock. Girtas uses the production profile's fixed
 0.219105 pixel scale for body parts; no silhouette bounds determine scale.
 The long-blade wrist range reduces downward follow-through without shortening
 or rescheduling the attack. Cape and hanging armor remain rigid cutout layers;
@@ -137,3 +137,30 @@ exposed joint. No source sheet is edited. The new locomotion-weight channel blen
 out before established attack poses; it has no clock or hit-event authority.
 This addresses one attachment error, not the remaining rigid upper-back/cape
 perspective limitations. It must not be treated as original-equivalence approval.
+
+## Authored Girtas upper-body turn attachments
+
+The E-view RUN binding now selects chest/pauldron appearance from the common
+`torso_turn` pose channel. It does not merely rotate the previous flat chest.
+One newly authored 2D key changes the plate perspective and shoulder overlap;
+the original source remains the other key. A recorded correspondence mesh
+creates intermediate attachments with one silhouette contour. Original back
+spikes retain their identity but foreshorten with the authored chest orientation.
+The generated key is masked to the torso; original head, arms, hand/weapon,
+pelvis and legs remain separate existing assets. Moving shoulder roots use the
+same registered landmarks, rather than leaving the arms on a static root.
+
+`build_girtas_torso_turns.py` records source hashes, landmarks and authoring method
+in `girtas_torso_turns.json`. It requires Pillow, numpy and OpenCV. The source
+key and derived attachment PNGs are preserved in `girtas_267/torso_turn/`.
+These are TWILIGHT-authored appearance poses, not frames recovered from
+Lineage M. Intermediate plate detail is morph-derived and can soften; it is
+not claimed to be a set of independently hand-drawn original poses.
+
+Idle and established attack poses select the exact existing attachments.
+RUN/stop/attack blends select attachments through the shared pose and its
+locomotion weight; there is no skin timer or independent FPS. Body scale,
+stride, speed, limb paths and hit timing are unchanged by this addition.
+The large cape remains a cutout, and this E-view prototype still requires
+visual acceptance. No 90% equivalence or production-ready claim follows
+from the structural or timing checks.

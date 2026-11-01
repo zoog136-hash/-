@@ -6,18 +6,31 @@ var pose: Dictionary
 var draw_pose: Dictionary
 var parts: Dictionary
 var show_joints := false
+var turn_frames: Array = []
+var turn_textures: Array = []
+var turn_index := 0
 
 func bind_skin(definition: Dictionary) -> void:
 	skin = definition
+	turn_frames.clear()
+	turn_textures.clear()
+	turn_index = 0
+	if skin.has("torso_turn_pack"):
+		turn_frames = JSON.parse_string(FileAccess.get_file_as_string(skin.torso_turn_pack)).frames
+		for frame: Dictionary in turn_frames:
+			turn_textures.append({"torso": load(frame.torso), "shoulder_armor": load(frame.shoulder_armor)})
 	for key: String in skin.parts:
 		parts[key] = load(skin.parts[key].texture)
 		assert(parts[key] != null, "Missing skin part: " + key)
-	if not pose.is_empty(): draw_pose = _retarget(pose)
+	if not pose.is_empty():
+		draw_pose = _retarget(pose)
+		_update_turn()
 	queue_redraw()
 
 func apply_pose(shared_pose: Dictionary) -> void:
 	pose = shared_pose
 	draw_pose = _retarget(shared_pose)
+	_update_turn()
 	queue_redraw()
 
 func _draw() -> void:
@@ -51,7 +64,7 @@ func _draw_body() -> void:
 	draw_set_transform(draw_pose.hip, draw_pose.pelvis_angle, Vector2.ONE * size)
 	draw_texture(parts.pelvis, -_v(skin.parts.pelvis.pivot))
 	draw_set_transform(_waist(), draw_pose.torso_angle, Vector2.ONE * size)
-	draw_texture(parts.torso, -_v(skin.parts.torso.pivot))
+	draw_texture(_turn_texture("torso"), -_v(skin.parts.torso.pivot))
 	var neck := (_v(skin.rig.neck) - _v(skin.rig.waist)) * size
 	draw_set_transform(_waist() + neck.rotated(draw_pose.torso_angle), draw_pose.torso_angle * 0.5 + draw_pose.head_counter, Vector2.ONE * size)
 	draw_texture(parts.head, -_v(skin.parts.head.pivot))
@@ -66,11 +79,13 @@ func _draw_far_arm() -> void:
 	# Only the source's visible far-arm silhouette is rebound; hidden anatomy is not fabricated.
 	var pivot := _v(skin.parts.far_arm.pivot)
 	var bind := (pivot - _v(skin.rig.waist)) * float(skin.body_scale)
+	if not turn_frames.is_empty(): bind = _v(turn_frames[turn_index].far_offset)
 	draw_set_transform(_waist() + bind.rotated(draw_pose.torso_angle), draw_pose.torso_angle + draw_pose.far_arm_angle, Vector2.ONE * float(skin.body_scale))
 	draw_texture(parts.far_arm, -pivot)
 
 func _draw_arm() -> void:
 	var bind := _v(skin.rig.get("shoulder_offset", [-1, -12]))
+	if not turn_frames.is_empty(): bind = _v(turn_frames[turn_index].near_offset)
 	var lengths: Array = skin.rig.get("arm_lengths", [11.0, 11.0])
 	var shoulder := _waist() + bind.rotated(draw_pose.torso_angle)
 	var elbow := shoulder + Vector2.from_angle(1.65 + draw_pose.upper_arm_angle + draw_pose.torso_angle) * float(lengths[0])
@@ -80,11 +95,12 @@ func _draw_arm() -> void:
 	if parts.has("shoulder_armor") and skin.parts.has("shoulder_armor"):
 		var guard: Dictionary = skin.parts.shoulder_armor
 		var guard_pivot := _v(guard.pivot)
+		if not turn_frames.is_empty(): guard_pivot = _v(turn_frames[turn_index].guard_pivot)
 		# This visible pauldron belongs to the shoulder, not the rigid chest texture.
 		# Only locomotion adds articulation; attacks use the existing shoulder/torso transform.
 		var follow: float = draw_pose.upper_arm_angle * draw_pose.locomotion_weight
 		draw_set_transform(shoulder, draw_pose.torso_angle + follow, Vector2.ONE * float(skin.body_scale))
-		draw_texture(parts.shoulder_armor, -guard_pivot)
+		draw_texture(_turn_texture("shoulder_armor"), -guard_pivot)
 	var weapon: Dictionary = skin.parts.weapon_hand
 	var bind_axis := _v(weapon.end) - _v(weapon.pivot)
 	draw_set_transform(wrist, draw_pose.weapon_angle + draw_pose.torso_angle - bind_axis.angle(), Vector2.ONE * float(skin.body_scale))
@@ -129,3 +145,13 @@ func _retarget(shared_pose: Dictionary) -> Dictionary:
 		var hip: Vector2 = result.hip + _v(bind.hip_offsets[side]).rotated(result.pelvis_angle)
 		result.knees[side] = SharedGroundMotion._knee(hip, result.feet[side], float(bind.lengths[side][0]), float(bind.lengths[side][1]))
 	return result
+
+func _update_turn() -> void:
+	if turn_frames.is_empty(): return
+	# Appearance is a function of the shared joint pose. No extra clock, frame timer or FPS.
+	var turn: float = clampf(draw_pose.torso_turn * draw_pose.locomotion_weight, 0.0, 1.0)
+	turn_index = roundi(turn * float(turn_frames.size() - 1))
+
+func _turn_texture(key: String) -> Texture2D:
+	if turn_textures.is_empty(): return parts[key]
+	return turn_textures[turn_index][key]

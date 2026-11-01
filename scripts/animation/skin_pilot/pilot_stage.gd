@@ -246,6 +246,17 @@ func _girtas_binding_tests() -> void:
 				assert(absf(fitted.knees[side].distance_to(fitted.feet[side]) - float(bind.lengths[side][1])) < 0.001)
 				assert(absf(fitted.feet[side].x - shared.feet[side].x - float(bind.foot_bias[side])) < 0.0001)
 				assert(fitted.contact[side] == shared.contact[side])
+	# Torso appearance follows the same pose, including the return to the exact idle art.
+	assert(actor.turn_frames.size() == 17)
+	actor.apply_pose(motion.sample(0.0))
+	assert(actor.turn_index == 16)
+	actor.apply_pose(motion.sample(0.5))
+	assert(actor.turn_index == 0)
+	actor.apply_pose(motion.sample(0.0, false))
+	assert(actor.turn_index == 0)
+	assert(actor.turn_frames[0].torso == definition.parts.torso.texture)
+	actor.apply_pose(motion.sample_attack(0.5, attack_clock.profile.marker_for("slash")))
+	assert(actor.turn_index == 0)
 	print("GIRTAS_BINDING_OK fixed_skin_lengths=true shared_contact_and_distance=true no_skin_clock=true")
 
 func _run_contact_tests() -> void:
