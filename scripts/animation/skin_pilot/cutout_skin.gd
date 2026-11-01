@@ -44,16 +44,16 @@ func draw_ellipse_shadow() -> void:
 
 func _waist() -> Vector2:
 	var offset := _v(skin.retarget.waist_offset) if skin.has("retarget") else Vector2(0, -12)
-	return draw_pose.hip + offset + Vector2(0, draw_pose.torso_y)
+	return draw_pose.hip + offset.rotated(draw_pose.pelvis_angle) + Vector2(draw_pose.torso_x, draw_pose.torso_y)
 
 func _draw_body() -> void:
 	var size := float(skin.body_scale)
-	draw_set_transform(draw_pose.hip, 0, Vector2.ONE * size)
+	draw_set_transform(draw_pose.hip, draw_pose.pelvis_angle, Vector2.ONE * size)
 	draw_texture(parts.pelvis, -_v(skin.parts.pelvis.pivot))
 	draw_set_transform(_waist(), draw_pose.torso_angle, Vector2.ONE * size)
 	draw_texture(parts.torso, -_v(skin.parts.torso.pivot))
 	var neck := (_v(skin.rig.neck) - _v(skin.rig.waist)) * size
-	draw_set_transform(_waist() + neck.rotated(draw_pose.torso_angle), draw_pose.torso_angle * 0.5, Vector2.ONE * size)
+	draw_set_transform(_waist() + neck.rotated(draw_pose.torso_angle), draw_pose.torso_angle * 0.5 + draw_pose.head_counter, Vector2.ONE * size)
 	draw_texture(parts.head, -_v(skin.parts.head.pivot))
 
 func _draw_cape() -> void:
@@ -83,7 +83,7 @@ func _draw_arm() -> void:
 	draw_texture(parts.weapon_hand, -_v(weapon.pivot))
 
 func _draw_leg(side: int) -> void:
-	var hip: Vector2 = draw_pose.hip + (_v(skin.retarget.hip_offsets[side]) if skin.has("retarget") else Vector2(-1 if side == 0 else 1, 0))
+	var hip: Vector2 = draw_pose.hip + (_v(skin.retarget.hip_offsets[side]) if skin.has("retarget") else Vector2(-1 if side == 0 else 1, 0)).rotated(draw_pose.pelvis_angle)
 	_segment("thigh_%d" % side, hip, draw_pose.knees[side])
 	_segment("shin_%d" % side, draw_pose.knees[side], draw_pose.feet[side])
 	var key := "foot_%d" % side
@@ -118,6 +118,6 @@ func _retarget(shared_pose: Dictionary) -> Dictionary:
 		result.weapon_angle = 0.55 + (result.weapon_angle - 0.55) * float(bind.get("weapon_downward_gain", 1.0))
 	for side in range(2):
 		result.feet[side] += Vector2(float(bind.foot_bias[side]), 3.0 - float(bind.ankle_height) + float(bind.ground_y[side]))
-		var hip: Vector2 = result.hip + _v(bind.hip_offsets[side])
+		var hip: Vector2 = result.hip + _v(bind.hip_offsets[side]).rotated(result.pelvis_angle)
 		result.knees[side] = SharedGroundMotion._knee(hip, result.feet[side], float(bind.lengths[side][0]), float(bind.lengths[side][1]))
 	return result

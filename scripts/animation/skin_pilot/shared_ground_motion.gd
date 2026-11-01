@@ -25,10 +25,10 @@ var transition_pose: Dictionary = {}
 func configure_run() -> void:
 	# Authored from observed heel recovery/support pattern; not source-game measurements.
 	run_gait = true
-	stride_distance = 96.0
-	stance_fraction = 0.38
-	swing_height = 16.0
-	arm_swing_radians = 0.30
+	stride_distance = 84.0
+	stance_fraction = 0.44
+	swing_height = 10.0
+	arm_swing_radians = 0.34
 
 func advance(delta: float, speed: float) -> Dictionary:
 	assert(family == Family.GROUND, "Only the observed ground pilot is implemented")
@@ -50,14 +50,14 @@ func advance(delta: float, speed: float) -> Dictionary:
 	if transition_time < 0.18 and transition_feet.size() == 2:
 		var blend := smoothstep(0.0, 0.18, transition_time)
 		result.hip = transition_pose.hip.lerp(result.hip, blend)
-		for key in ["torso_angle", "torso_y", "upper_arm_angle", "forearm_angle", "weapon_angle", "far_arm_angle"]:
+		for key in ["torso_angle", "torso_y", "torso_x", "pelvis_angle", "head_counter", "upper_arm_angle", "forearm_angle", "weapon_angle", "far_arm_angle"]:
 			result[key] = lerpf(transition_pose[key], result[key], blend)
 		result.arm_angle = lerpf(transition_arm, result.arm_angle, blend)
 		result.cape_angle = lerpf(transition_cape, result.cape_angle, blend)
 		for side in range(2):
 			result.foot_angle[side] = lerpf(transition_pose.foot_angle[side], result.foot_angle[side], blend)
 			result.feet[side] = transition_feet[side].lerp(result.feet[side], blend)
-			var hip: Vector2 = result.hip + Vector2(-1 if side == 0 else 1, 0)
+			var hip: Vector2 = result.hip + Vector2(-1 if side == 0 else 1, 0).rotated(result.pelvis_angle)
 			result.knees[side] = _knee(hip, result.feet[side], 16.0, 16.0)
 			result.contact[side] = false
 	previous_pose = result
@@ -71,12 +71,16 @@ func sample(at_phase: float, moving: bool = true) -> Dictionary:
 		var flight_rise := 0.0
 		if half_phase > stance_fraction:
 			flight_rise = 0.8 * sin(PI * (half_phase - stance_fraction) / (0.5 - stance_fraction))
-		pose.hip.y = -28.0 - flight_rise
-	pose.torso_angle = ((0.10 if run_gait else 0.025) + 0.012 * sin(TAU * at_phase)) if moving else 0.0
+		pose.hip.y = -27.5 - flight_rise
+		pose.hip.x = -0.5 * cos(TAU * at_phase)
+	pose.pelvis_angle = -0.035 * cos(TAU * at_phase) if moving and run_gait else 0.0
+	pose.torso_x = 1.2 * cos(TAU * at_phase) if moving and run_gait else 0.0
+	pose.head_counter = -0.022 * cos(TAU * at_phase) if moving and run_gait else 0.0
+	pose.torso_angle = ((0.12 + 0.055 * cos(TAU * at_phase)) if run_gait else (0.025 + 0.012 * sin(TAU * at_phase))) if moving else 0.0
 	pose.torso_y = 0.0
-	pose.upper_arm_angle = -(0.20 if run_gait else 0.10) * cos(TAU * at_phase) if moving else 0.0
+	pose.upper_arm_angle = -(0.32 if run_gait else 0.10) * cos(TAU * at_phase) if moving else 0.0
 	pose.forearm_angle = pose.arm_angle
-	pose.far_arm_angle = 0.22 * cos(TAU * at_phase) if moving and run_gait else 0.0
+	pose.far_arm_angle = 0.32 * cos(TAU * at_phase) if moving and run_gait else 0.0
 	pose.weapon_angle = 0.55 + pose.arm_angle * 0.6
 	for side in range(2):
 		var p := fposmod(at_phase + side * 0.5, 1.0)
@@ -99,7 +103,7 @@ func sample(at_phase: float, moving: bool = true) -> Dictionary:
 					foot.y = -3.0 - swing_height * pow(sin(PI * t), 0.8)
 				angle = -(0.55 if run_gait else 0.3) * sin(PI * t)
 				contact = false
-		var hip: Vector2 = pose.hip + Vector2(-1 if side == 0 else 1, 0)
+		var hip: Vector2 = pose.hip + Vector2(-1 if side == 0 else 1, 0).rotated(pose.pelvis_angle)
 		pose.feet.append(foot)
 		pose.knees.append(_knee(hip, foot, 16.0, 16.0))
 		pose.contact.append(contact)
@@ -141,14 +145,14 @@ func sample_attack(progress: float, hit_ratio: float) -> Dictionary:
 	if not attack_origin.is_empty() and p < h * 0.35:
 		var weight := smoothstep(0.0, h * 0.35, p)
 		result.hip = attack_origin.hip.lerp(result.hip, weight)
-		for key in ["torso_angle", "torso_y", "upper_arm_angle", "forearm_angle", "weapon_angle", "cape_angle", "far_arm_angle"]:
+		for key in ["torso_angle", "torso_y", "torso_x", "pelvis_angle", "head_counter", "upper_arm_angle", "forearm_angle", "weapon_angle", "cape_angle", "far_arm_angle"]:
 			result[key] = lerpf(attack_origin[key], result[key], weight)
 		for side in range(2):
 			result.feet[side] = attack_origin.feet[side].lerp(result.feet[side], weight)
 			result.foot_angle[side] = lerpf(attack_origin.foot_angle[side], 0.0, weight)
 			result.contact[side] = false
 	for side in range(2):
-		var hip: Vector2 = result.hip + Vector2(-1 if side == 0 else 1, 0)
+		var hip: Vector2 = result.hip + Vector2(-1 if side == 0 else 1, 0).rotated(result.pelvis_angle)
 		result.knees[side] = _knee(hip, result.feet[side], 16.0, 16.0)
 	previous_pose = result
 	return result

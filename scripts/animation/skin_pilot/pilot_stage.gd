@@ -32,7 +32,7 @@ func _ready() -> void:
 	if girtas_preview:
 		motion.configure_run()
 		preview_speed = 210.0 # Player.move_speed and Girtas NativeMotionProfile.reference_speed.
-		manual_lift = 16.0
+		manual_lift = 10.0
 	Engine.max_fps = 30
 	attack_clock.strike.connect(func(_sequence: int):
 		strikes += 1
@@ -82,7 +82,7 @@ func _process(delta: float) -> void:
 		_begin_attack()
 		attack_index += 1
 	if not manual and elapsed >= 10.0 and not swapped: _swap_skins()
-	motion.swing_height = manual_lift if manual else (16.0 if girtas_preview else 6.0)
+	motion.swing_height = manual_lift if manual else (10.0 if girtas_preview else 6.0)
 	var was_attacking: bool = attack_clock.active
 	if was_attacking: speed = 0.0
 	attack_clock.advance(delta, Vector2(speed, 0))
@@ -123,7 +123,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		manual_moving = not manual_moving
 	elif event.keycode == KEY_L:
 		manual = true
-		manual_lift = (20.0 if manual_lift == 16.0 else 16.0) if girtas_preview else (8.0 if manual_lift == 6.0 else 6.0)
+		manual_lift = (12.0 if manual_lift == 10.0 else 10.0) if girtas_preview else (8.0 if manual_lift == 6.0 else 6.0)
 	elif event.keycode == KEY_S: _swap_skins()
 	elif event.keycode == KEY_A:
 		manual = true
@@ -156,9 +156,9 @@ func _tests() -> void:
 		var p := float(sample_index) / 600.0
 		var a := motion.sample(p)
 		var b := motion.sample(p + 0.0001)
-		assert(a.hip == Vector2(0, -32) if not motion.run_gait else a.hip.y >= -28.801 and a.hip.y <= -28.0)
+		assert(a.hip == Vector2(0, -32) if not motion.run_gait else a.hip.y >= -28.301 and a.hip.y <= -27.5)
 		for side in range(2):
-			var hip: Vector2 = a.hip + Vector2(-1 if side == 0 else 1, 0)
+			var hip: Vector2 = a.hip + Vector2(-1 if side == 0 else 1, 0).rotated(a.pelvis_angle)
 			assert(absf(hip.distance_to(a.knees[side]) - 16.0) < 0.001)
 			assert(absf(a.knees[side].distance_to(a.feet[side]) - 16.0) < 0.001)
 			if a.contact[side] and b.contact[side]:
@@ -201,7 +201,7 @@ func _tests() -> void:
 			assert(clock.attack_elapsed == old_elapsed)
 			assert(absf(attack_pose.torso_angle) <= 0.181)
 			for side in range(2):
-				var joint: Vector2 = attack_pose.hip + Vector2(-1 if side == 0 else 1, 0)
+				var joint: Vector2 = attack_pose.hip + Vector2(-1 if side == 0 else 1, 0).rotated(attack_pose.pelvis_angle)
 				assert(absf(joint.distance_to(attack_pose.knees[side]) - 16.0) < 0.001)
 				assert(absf(attack_pose.knees[side].distance_to(attack_pose.feet[side]) - 16.0) < 0.001)
 		assert(events[0] == 1)
@@ -221,7 +221,7 @@ func _tests() -> void:
 	for index in range(101):
 		var weighted := motion.sample_attack(float(index) / 100.0, marker)
 		for side in range(2):
-			var joint: Vector2 = weighted.hip + Vector2(-1 if side == 0 else 1, 0)
+			var joint: Vector2 = weighted.hip + Vector2(-1 if side == 0 else 1, 0).rotated(weighted.pelvis_angle)
 			assert(absf(joint.distance_to(weighted.knees[side]) - 16.0) < 0.001)
 			assert(absf(weighted.knees[side].distance_to(weighted.feet[side]) - 16.0) < 0.001)
 	print("SKIN_PILOT_WEIGHT_OK planted_feet_unchanged=true hip_and_knees_shift=true far_arm_response=true")
@@ -240,7 +240,7 @@ func _girtas_binding_tests() -> void:
 			assert(is_same(actor.pose, shared))
 			var fitted: Dictionary = actor.draw_pose
 			for side in range(2):
-				var hip: Vector2 = fitted.hip + Cutout._v(bind.hip_offsets[side])
+				var hip: Vector2 = fitted.hip + Cutout._v(bind.hip_offsets[side]).rotated(fitted.pelvis_angle)
 				assert(absf(hip.distance_to(fitted.knees[side]) - float(bind.lengths[side][0])) < 0.001)
 				assert(absf(fitted.knees[side].distance_to(fitted.feet[side]) - float(bind.lengths[side][1])) < 0.001)
 				assert(absf(fitted.feet[side].x - shared.feet[side].x - float(bind.foot_bias[side])) < 0.0001)
@@ -248,14 +248,20 @@ func _girtas_binding_tests() -> void:
 	print("GIRTAS_BINDING_OK fixed_skin_lengths=true shared_contact_and_distance=true no_skin_clock=true")
 
 func _run_contact_tests() -> void:
+	var first := motion.sample(0.0)
+	var opposite := motion.sample(0.5)
+	assert(first.pelvis_angle * first.torso_x < 0.0)
+	assert(opposite.pelvis_angle * opposite.torso_x < 0.0)
+	assert(absf(first.torso_angle - opposite.torso_angle) > 0.10)
+	assert(first.upper_arm_angle * first.far_arm_angle < 0.0)
 	var flights := 0
 	for i in range(1000):
 		var phase_value := float(i) / 1000.0
 		var sampled := motion.sample(phase_value)
 		assert(not (sampled.contact[0] and sampled.contact[1]))
 		if not sampled.contact[0] and not sampled.contact[1]: flights += 1
-		assert(sampled.hip.y >= -28.801 and sampled.hip.y <= -28.0)
-	assert(flights > 200 and flights < 260)
+		assert(sampled.hip.y >= -28.301 and sampled.hip.y <= -27.5)
+	assert(flights > 100 and flights < 140)
 	# Toe-off and landing retain the same world-space stance velocity.
 	for boundary in [motion.stance_fraction, 1.0]:
 		var epsilon := 0.00001

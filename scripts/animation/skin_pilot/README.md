@@ -102,10 +102,10 @@ for Girtas. The development scene also ran at 80 px/s rather than the existing
 Player/Girtas reference speed of 210. Production movement code was never changed.
 
 `configure_run()` selects a shared RUN preset for both skins in the Girtas demo:
-96-pixel stride, 38% contact per foot, a short unsupported interval, curved heel
+84-pixel stride, 44% contact per foot, a short unsupported interval, curved heel
 recoil/recovery and forward extension, stronger opposite-arm response, and a
 restrained forward torso posture. A Hermite return joins the stance's horizontal
-velocity at toe-off/landing. The loaded pelvis is four pixels lower than idle;
+velocity at toe-off/landing. The loaded pelvis is 4.5 pixels lower than idle;
 its flight rise is bounded to 0.8 pixels. Run/stop blends include the pelvis so
 this posture change does not snap. Fixed bone lengths, actual displacement and
 attack timing remain unchanged. These are authored tuning values informed by
@@ -116,3 +116,15 @@ the same 210 px/s, 30 FPS and view scale. It does not accelerate the old uploade
 80 px/s video. The earlier v0 remains in Library history. The existing two-skin
 default demo and all source/art bindings are preserved; RUN is a shared preset,
 not a Girtas-specific set of replacement frame images.
+
+The rejected first RUN preset overemphasized leg recovery while retaining an
+almost fixed chest. The current pose has separate counter-rotating pelvis and
+chest channels, a small shoulder-girdle displacement, opposing arms and head
+counterbalance. Skin bindings apply the pelvis angle to hip roots and the waist,
+so the leg IK and upper body respond together while stance feet stay on their
+world-distance path. Recovery height is ten pixels and flight occupies a short
+part of the cycle; it is not used as a visual-quality pass criterion. New channels
+blend out into idle and the unchanged attack poses. The supplied male-elf clip
+is shown at normal playback speed beside the result, with differing direction
+and appearance labeled. Rigid armor/cape layers still limit the torso's depth
+and perspective change compared with redrawn animation.
