@@ -21,6 +21,7 @@ for direction,manifest,joint,core,cut in [('E','girtas_shared_skin.json',[304,21
   backing.putalpha(ImageChops.multiply(backing.getchannel('A'),mask(backing.size,armor_poly)))
   run=Image.new('RGBA',idle.size);run.alpha_composite(backing);run.alpha_composite(idle)
   out['run_backing_armor_polygon']=armor_poly
+  out['full_run']=save(run,'E_lean_torso',s['parts']['torso']['pivot'])
  sources={'idle':idle,'run':run}
  for state,im in sources.items():
   chest=im.copy();chest.putalpha(ImageChops.subtract(chest.getchannel('A'),mask(chest.size,cut)));out['chest_'+state]=save(chest,direction+'_chest_'+state,joint)

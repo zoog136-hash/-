@@ -27,7 +27,7 @@ func bind_skin(definition: Dictionary) -> void:
 	spine_textures.clear()
 	if skin.get("upper_body_profile","")=="girtas_267":
 		spine=JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_articulated_torso.json")).E
-		for key in ["abdomen","chest_idle","chest_run"]:spine_textures[key]=load(spine[key].texture)
+		for key in ["abdomen","chest_idle","chest_run","full_run"]:spine_textures[key]=load(spine[key].texture)
 		for key in spine.far_parts:spine_textures[key]=load(spine.far_parts[key].texture)
 	turn_frames.clear()
 	turn_textures.clear()
@@ -80,11 +80,11 @@ func _spine_active() -> bool:
 	return not spine.is_empty() and (draw_pose.locomotion_weight>0.001 or attacking)
 func _lean_angle() -> float:
 	if not _spine_active(): return 0.0
-	var run_lean: float=(0.26+0.065*(draw_pose.torso_x/1.2))*draw_pose.locomotion_weight
+	var run_lean: float=(0.30+0.065*(draw_pose.torso_x/1.2))*draw_pose.locomotion_weight
 	var attack_lean: float=GirtasUpper.curve(attack_progress,attack_hit_ratio,[0.0,-0.08,0.16,0.07,0.0]) if attacking else 0.0
 	return run_lean+attack_lean
 func _chest_anchor_source() -> Vector2:
-	return _v(spine.joint) if not spine.is_empty() else _v(skin.rig.waist)
+	return _v(skin.rig.waist)
 func _chest_anchor_world() -> Vector2:
 	return _waist()+((_chest_anchor_source()-_v(skin.rig.waist))*float(skin.body_scale)).rotated(draw_pose.torso_angle)
 func _upper_point(source_point: Vector2) -> Vector2:
@@ -97,16 +97,16 @@ func _draw_body() -> void:
 	if _spine_active():
 		# One chest parent carries the shoulder sockets, head and upper arms.
 		# Only the forearm folds at the elbow; no raised-hand target is used.
-		draw_set_transform(_waist(),draw_pose.torso_angle,Vector2.ONE*size)
-		draw_texture(spine_textures.abdomen,-_v(spine.abdomen.pivot))
+		# Hinge the complete upper torso above the preserved pelvis. A mid-chest
+		# pivot left the ribcage almost upright despite rotating its attachments.
 		draw_set_transform(_chest_anchor_world(),draw_pose.torso_angle+_lean_angle(),Vector2.ONE*size)
-		draw_texture(spine_textures.chest_run if draw_pose.locomotion_weight>0.001 else spine_textures.chest_idle,-_chest_anchor_source())
+		draw_texture(spine_textures.full_run if draw_pose.locomotion_weight>0.001 else parts.torso,-_chest_anchor_source())
 		neck=_upper_point(_v(skin.rig.neck))
 	else:
 		draw_set_transform(_waist(),draw_pose.torso_angle,Vector2.ONE*size)
 		draw_texture(_turn_texture("torso"),-_v(skin.parts.torso.pivot))
 		neck=_waist()+((_v(skin.rig.neck)-_v(skin.rig.waist))*size).rotated(draw_pose.torso_angle)
-	draw_set_transform(neck,draw_pose.torso_angle*0.5+draw_pose.head_counter+_lean_angle()*0.2,Vector2.ONE*size)
+	draw_set_transform(neck,draw_pose.torso_angle*0.5+draw_pose.head_counter+_lean_angle()*0.55,Vector2.ONE*size)
 	draw_texture(parts.head,-_v(skin.parts.head.pivot))
 
 func _draw_cape() -> void:

@@ -65,7 +65,7 @@ func _ready() -> void:
 	_label("1x actual pixels", Vector2(40, 180), 15)
 	_label("1.8x same live pose" if girtas_preview else "2.6x same live pose", Vector2(40, 330), 15)
 	status = _label("", Vector2(40, 555), 20)
-	close_label = _label("E/S cutout pilot / S uses actual front source / not eight-direction completion" if front_preview else "E-view pilot. Space: move/stop   A: attack   S: swap skins", Vector2(40, 600), 15)
+	close_label = _label("E/S pilot / original base + authored upper posture / not eight-direction completion" if front_preview else "E-view pilot. Space: move/stop   A: attack   S: swap skins", Vector2(40, 600), 15)
 	if "--pilot-test" in OS.get_cmdline_user_args():
 		_tests()
 		return
@@ -171,7 +171,7 @@ func _tests() -> void:
 		var second: Vector2 = front.front_foot(0)
 		assert(absf(second.x-first.x)<0.00001)
 		assert(absf(second.y-first.y+motion.stride_distance*0.0001*0.35)<0.00001)
-		print("FRONT_BINDING_OK actual_S_source=true shared_pose=true projected_stance_displacement=true")
+		print("FRONT_BINDING_OK actual_S_base=true authored_RUN_key=true shared_pose=true projected_stance_displacement=true")
 	if girtas_preview and not front_preview:
 		_girtas_binding_tests()
 		_run_contact_tests()

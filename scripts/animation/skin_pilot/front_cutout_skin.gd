@@ -8,6 +8,8 @@ var attacking := false
 var attack_progress := 0.0
 var attack_hit_ratio := 0.5
 var spine: Dictionary
+var run_lean: Dictionary
+var run_lean_textures: Dictionary
 var spine_textures: Dictionary
 func set_action(active: bool, progress: float, hit_ratio: float) -> void:
 	attacking=active
@@ -19,6 +21,8 @@ func bind_skin(definition: Dictionary) -> void:
 	assert(skin.get("upper_body_profile","")=="girtas_267","This front binding requires the Girtas profile")
 	spine=JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_articulated_torso.json")).S
 	for key in ["front_core","front_outer"]:spine_textures[key]=load(spine[key].texture)
+	run_lean=JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_front_lean.json"))
+	for key in ["head","torso"]:run_lean_textures[key]=load(run_lean[key].texture)
 	for key in skin.parts: parts[key] = load(skin.parts[key].texture)
 	queue_redraw()
 func apply_pose(shared: Dictionary) -> void:
@@ -64,17 +68,25 @@ func _draw() -> void:
 		draw_part("foot_%d"%side,ankle,pose.foot_angle[side]*0.12*sign_x)
 	draw_part("pelvis",hip,roll)
 	var lean_weight: float = maxf(weight,GirtasUpper.curve(attack_progress,attack_hit_ratio,[0.0,0.0,0.65,0.3,0.0]) if attacking else 0.0)
-	# Keep the shoulder sockets attached to the chest parent. The
-	# front projection tucks the head toward the chest, not a sprite roll.
-	if lean_weight>0.001:
+	# A painted bowed face/neck/chest key supplies actual frontal occlusion.
+	# Original crown, outer armor, arms and weapon remain source-bound.
+	var run_key := weight>0.5
+	if run_key:
+		draw_set_transform(waist,chest_angle,Vector2.ONE*SIZE)
+		draw_texture(run_lean_textures.torso,-v(run_lean.torso.pivot))
+	elif attacking and lean_weight>0.001:
 		draw_set_transform(waist,chest_angle,Vector2.ONE*SIZE)
 		draw_texture(spine_textures.front_outer,-v(spine.front_outer.pivot))
 		draw_set_transform(waist+Vector2(0,3.5*lean_weight),chest_angle,Vector2.ONE*SIZE)
 		draw_texture(spine_textures.front_core,-v(spine.front_core.pivot))
 	else:
 		draw_part("torso",waist,chest_angle)
-	var neck := waist+Vector2(0,-105*SIZE).rotated(chest_angle)+Vector2(0,6.0*lean_weight)
-	draw_part("head",neck,0.0)
+	var neck := waist+Vector2(0,-105*SIZE).rotated(chest_angle)
+	if run_key:
+		draw_set_transform(neck+Vector2(0,-10.0*(1.0-weight)),0.0,Vector2.ONE*SIZE)
+		draw_texture(run_lean_textures.head,-v(run_lean.head.pivot))
+	else:
+		draw_part("head",neck+Vector2(0,6.0*lean_weight),0.0)
 	for side in range(2):
 		var sign_x: float = 1.0 if side==0 else -1.0
 		var arm: float = pose.far_arm_angle if side==0 else pose.upper_arm_angle
