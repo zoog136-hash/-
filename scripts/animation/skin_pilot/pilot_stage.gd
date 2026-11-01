@@ -210,6 +210,7 @@ func _tests() -> void:
 		assert(end.feet == motion.sample(0.0, false).feet)
 		var impact := motion.sample_attack(clock.attack_hit_ratio, clock.attack_hit_ratio)
 		assert(impact.contact[0] and impact.contact[1])
+		assert(impact.locomotion_weight == 0.0)
 	motion.attack_origin = {}
 	var marker := attack_clock.profile.marker_for("slash")
 	var loaded := motion.sample_attack(marker * 0.55, marker)

@@ -53,6 +53,17 @@ underlays=[([202,176,233,190],[240,176,271,190]),([341,190,354,211],[327,190,340
 for dest,src in underlays:
  patch=im.crop(src);body.alpha_composite(patch,(dest[0],dest[1]))
 entry['authored_joint_caps']=underlays
+# Authored near pauldron grouping: visible shoulder armor and its lateral spikes.
+# Cut from the already separated body, so no arm or weapon pixels are duplicated.
+shoulder_poly=[(61,169),(180,153),(195,142),(214,134),(246,145),(247,163),(236,182),(221,193),(202,192),(184,214),(143,247),(164,216),(181,190),(85,232),(155,188),(65,191)]
+shoulder_mask=mask(shoulder_poly)
+shoulder=body.copy();shoulder.putalpha(ImageChops.multiply(body.getchannel('A'),shoulder_mask))
+shoulder_path=folder/'shoulder_armor.png';write_image(shoulder,shoulder_path)
+entry['parts']['shoulder_armor']={'texture':'res://'+str(shoulder_path.relative_to(ROOT)),'pivot':[226,178],'polygon':shoulder_poly,'derived_from':'separated body before torso partition','sha256':hashlib.sha256(shoulder_path.read_bytes()).hexdigest()}
+body.putalpha(ImageChops.subtract(body.getchannel('A'),shoulder_mask))
+# Small explicitly authored joint backing behind the movable pauldron.
+backing=im.crop((290,190,306,210));backing.putalpha(ImageChops.multiply(backing.getchannel('A'),shoulder_mask.crop((229,161,245,181))));body.alpha_composite(backing,(229,161))
+entry['shoulder_joint_backing']={'source_rect':[290,190,306,210],'destination':[229,161],'authorship':'copied visible armor backing, not recovered hidden anatomy'}
 for key,pivot,rect in [('torso',[304,235],(0,0,427,246)),('pelvis',[303,277],(0,239,427,495))]:
  m=Image.new('L',im.size);ImageDraw.Draw(m).rectangle(rect,fill=255)
  part=body.copy();part.putalpha(ImageChops.multiply(body.getchannel('A'),m));path=folder/(key+'.png');write_image(part,path)

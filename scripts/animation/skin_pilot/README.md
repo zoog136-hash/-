@@ -128,3 +128,12 @@ blend out into idle and the unchanged attack poses. The supplied male-elf clip
 is shown at normal playback speed beside the result, with differing direction
 and appearance labeled. Rigid armor/cape layers still limit the torso's depth
 and perspective change compared with redrawn animation.
+
+The visible near pauldron and its lateral armor spikes are now a separate skin
+part. They were previously baked into the chest, hiding the upper arm's motion
+behind a fixed shoulder silhouette. The pauldron follows the shared upper-arm
+response during RUN, with a small explicitly recorded chest-armor backing in the
+exposed joint. No source sheet is edited. The new locomotion-weight channel blends
+out before established attack poses; it has no clock or hit-event authority.
+This addresses one attachment error, not the remaining rigid upper-back/cape
+perspective limitations. It must not be treated as original-equivalence approval.

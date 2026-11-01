@@ -77,6 +77,14 @@ func _draw_arm() -> void:
 	var wrist := elbow + Vector2.from_angle(0.65 + draw_pose.forearm_angle + draw_pose.torso_angle) * float(lengths[1])
 	_segment("upper_arm", shoulder, elbow)
 	_segment("forearm", elbow, wrist)
+	if parts.has("shoulder_armor") and skin.parts.has("shoulder_armor"):
+		var guard: Dictionary = skin.parts.shoulder_armor
+		var guard_pivot := _v(guard.pivot)
+		# This visible pauldron belongs to the shoulder, not the rigid chest texture.
+		# Only locomotion adds articulation; attacks use the existing shoulder/torso transform.
+		var follow: float = draw_pose.upper_arm_angle * draw_pose.locomotion_weight
+		draw_set_transform(shoulder, draw_pose.torso_angle + follow, Vector2.ONE * float(skin.body_scale))
+		draw_texture(parts.shoulder_armor, -guard_pivot)
 	var weapon: Dictionary = skin.parts.weapon_hand
 	var bind_axis := _v(weapon.end) - _v(weapon.pivot)
 	draw_set_transform(wrist, draw_pose.weapon_angle + draw_pose.torso_angle - bind_axis.angle(), Vector2.ONE * float(skin.body_scale))

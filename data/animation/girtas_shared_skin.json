@@ -694,13 +694,88 @@
         ],
         "sha256": "4141dc86fb0583e347ac72416f1ce010a3fe6f782efe2494c8635eab3a5ff1a5"
       },
+      "shoulder_armor": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/shoulder_armor.png",
+        "pivot": [
+          226,
+          178
+        ],
+        "polygon": [
+          [
+            61,
+            169
+          ],
+          [
+            180,
+            153
+          ],
+          [
+            195,
+            142
+          ],
+          [
+            214,
+            134
+          ],
+          [
+            246,
+            145
+          ],
+          [
+            247,
+            163
+          ],
+          [
+            236,
+            182
+          ],
+          [
+            221,
+            193
+          ],
+          [
+            202,
+            192
+          ],
+          [
+            184,
+            214
+          ],
+          [
+            143,
+            247
+          ],
+          [
+            164,
+            216
+          ],
+          [
+            181,
+            190
+          ],
+          [
+            85,
+            232
+          ],
+          [
+            155,
+            188
+          ],
+          [
+            65,
+            191
+          ]
+        ],
+        "derived_from": "separated body before torso partition",
+        "sha256": "2d2ab54bdfc50301732e515ed73ec85038b6e611ea2ce59ffb0fe89083de8341"
+      },
       "torso": {
         "texture": "res://assets/actors/shared_skin_pilot/girtas_267/torso.png",
         "pivot": [
           304,
           235
         ],
-        "sha256": "df33cd401a345c1f30690850c0fb419d7112b9610340edc2aa7b58e7667af89e",
+        "sha256": "53089f60a6316bd6b04be0de280d38f9ba2f2b5b4379fa3ba1b90740c06c860d",
         "partition_rect": [
           0,
           0,
@@ -714,7 +789,7 @@
           303,
           277
         ],
-        "sha256": "d29f4cb714e3d0bc3b7f9d20ce185259fc4f9760abddebc5afedf421a6ef64b1",
+        "sha256": "8b44643482d94543c89003980d2abd7e00c0cab90b279dab1d7880e5184c9fc8",
         "partition_rect": [
           0,
           239,
@@ -784,6 +859,19 @@
           211
         ]
       ]
-    ]
+    ],
+    "shoulder_joint_backing": {
+      "source_rect": [
+        290,
+        190,
+        306,
+        210
+      ],
+      "destination": [
+        229,
+        161
+      ],
+      "authorship": "copied visible armor backing, not recovered hidden anatomy"
+    }
   }
 }

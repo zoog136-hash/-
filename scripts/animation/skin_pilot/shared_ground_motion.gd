@@ -50,7 +50,7 @@ func advance(delta: float, speed: float) -> Dictionary:
 	if transition_time < 0.18 and transition_feet.size() == 2:
 		var blend := smoothstep(0.0, 0.18, transition_time)
 		result.hip = transition_pose.hip.lerp(result.hip, blend)
-		for key in ["torso_angle", "torso_y", "torso_x", "pelvis_angle", "head_counter", "upper_arm_angle", "forearm_angle", "weapon_angle", "far_arm_angle"]:
+		for key in ["torso_angle", "torso_y", "torso_x", "pelvis_angle", "head_counter", "locomotion_weight", "upper_arm_angle", "forearm_angle", "weapon_angle", "far_arm_angle"]:
 			result[key] = lerpf(transition_pose[key], result[key], blend)
 		result.arm_angle = lerpf(transition_arm, result.arm_angle, blend)
 		result.cape_angle = lerpf(transition_cape, result.cape_angle, blend)
@@ -73,6 +73,7 @@ func sample(at_phase: float, moving: bool = true) -> Dictionary:
 			flight_rise = 0.8 * sin(PI * (half_phase - stance_fraction) / (0.5 - stance_fraction))
 		pose.hip.y = -27.5 - flight_rise
 		pose.hip.x = -0.5 * cos(TAU * at_phase)
+	pose.locomotion_weight = 1.0 if moving and run_gait else 0.0
 	pose.pelvis_angle = -0.035 * cos(TAU * at_phase) if moving and run_gait else 0.0
 	pose.torso_x = 1.2 * cos(TAU * at_phase) if moving and run_gait else 0.0
 	pose.head_counter = -0.022 * cos(TAU * at_phase) if moving and run_gait else 0.0
@@ -145,7 +146,7 @@ func sample_attack(progress: float, hit_ratio: float) -> Dictionary:
 	if not attack_origin.is_empty() and p < h * 0.35:
 		var weight := smoothstep(0.0, h * 0.35, p)
 		result.hip = attack_origin.hip.lerp(result.hip, weight)
-		for key in ["torso_angle", "torso_y", "torso_x", "pelvis_angle", "head_counter", "upper_arm_angle", "forearm_angle", "weapon_angle", "cape_angle", "far_arm_angle"]:
+		for key in ["torso_angle", "torso_y", "torso_x", "pelvis_angle", "head_counter", "locomotion_weight", "upper_arm_angle", "forearm_angle", "weapon_angle", "cape_angle", "far_arm_angle"]:
 			result[key] = lerpf(attack_origin[key], result[key], weight)
 		for side in range(2):
 			result.feet[side] = attack_origin.feet[side].lerp(result.feet[side], weight)
