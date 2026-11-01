@@ -21,7 +21,7 @@ def build(inputs,registry,pack,report):
   effects[r['sourceId']]={'source_card_id':r['source_card_id'],'source_sprite_ids':r['source_inworld_sprite_ids'],'npc_attack_rows':attacks,'spell_references':refs,'trigger_status':'native_fields_preserved_not_reinterpreted','rendering_status':'SPR_clothes_registered_blend_pending; spell_effect_playback_pending'}
   for field,asset in r['source_ui_assets'].items():
    if isinstance(asset,dict) and asset.get('path'):
-    key=asset['path'];ui[key]={'path':key,'asset':asset,'cards':ui.get(key,{}).get('cards',[])+[{'source_id':r['sourceId'],'field':field}],'local_present':(pack/'ui'/key).is_file()}
+    key=asset['path'];ui[key]={'path':key,'asset':asset,'cards':ui.get(key,{}).get('cards',[])+[{'source_id':r['sourceId'],'field':field}],'physical_path':('Image/UIImage/Illust_Legend_WorldTree_Helm_On.png' if key=='Image/UIImage/Illust_Legend_WorldTree_Helm_ON.png' else key),'local_present':(pack/'ui'/('Image/UIImage/Illust_Legend_WorldTree_Helm_On.png' if key=='Image/UIImage/Illust_Legend_WorldTree_Helm_ON.png' else key)).is_file()}
   sprite_states=[states[s] for s in r['source_inworld_sprite_ids'] if s in states];single=len(r['source_inworld_sprite_ids'])==1
   out.append({'source_id':r['sourceId'],'name':r['name'],'sprite_ids':r['source_inworld_sprite_ids'],'runtime_single_sprite_connected':single and bool(sprite_states) and sprite_states[0]['status']=='connected_literal_native_pixels','variant_context_required':len(r['source_inworld_sprite_ids'])>1,'sprite_status':sprite_states})
  (pack/'source_effect_bindings.json').write_text(json.dumps(effects,ensure_ascii=False,separators=(',',':'))+'\n')
