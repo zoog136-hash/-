@@ -1,0 +1,116 @@
+{
+  "base_frames": "assets/actors/eight_direction/native_production/girtas_267/r004/SpriteFrames.tres",
+  "base_sha256": "8e9a50bfb5744beb16a7e1b10ed0956a4828d2a89f5487ceeddb43bbb07a864b",
+  "original_sheet": "assets/actors/eight_direction/native_production/girtas_267/r004/E-run.png",
+  "original_sha256": "88dd493d2a3bee88cfe9e241e5556e8e209f676571460e919a6d2212ca942cfc",
+  "edited_sheet": "assets/actors/eight_direction/native_production/girtas_267/r006/E-run.png",
+  "edited_sha256": "d4766586d820db77273df97606dddcc18f2d7ea6e264ca86e9ef15bf23c772bd",
+  "old_phase1": {
+    "row": 1,
+    "direction": "E",
+    "region": [
+      1720,
+      203,
+      1167,
+      1177
+    ],
+    "margin": [
+      596,
+      474,
+      1393,
+      1383
+    ],
+    "source_anchor": [
+      2404,
+      1329
+    ],
+    "rgba_sha256": "e0386cd6c17bc3b69a18ff25527edc221387358411541639708d2f952c66de72",
+    "canvas_size": [
+      2560,
+      2560
+    ],
+    "foot": [
+      1280,
+      1600
+    ]
+  },
+  "new_phase1": {
+    "row": 1,
+    "direction": "E",
+    "region": [
+      1536,
+      0,
+      1246,
+      1262
+    ],
+    "margin": [
+      663,
+      506,
+      1514,
+      1498
+    ],
+    "source_anchor": [
+      2253,
+      1219
+    ],
+    "rgba_sha256": "35827d80ffcb919c88f318a0de56ef97b6fd27d17569627bb951136e1037c052",
+    "canvas_size": [
+      2760,
+      2760
+    ],
+    "foot": [
+      1380,
+      1725
+    ]
+  },
+  "calibration": {
+    "source": "/workspace/generated_images/exec-550d1fc9-c7ff-46be-9a0a-1d31409c64f0.png",
+    "size": [
+      1246,
+      1262
+    ],
+    "upper_body_match": {
+      "matrix": [
+        [
+          0.9280474078280896,
+          0.001801867458093165,
+          19.482355767296184
+        ],
+        [
+          -0.001801867458093165,
+          0.9280474078280896,
+          3.950001990768087
+        ]
+      ],
+      "inliers": 427
+    },
+    "boot_roi": [
+      800,
+      1100,
+      1120,
+      1262
+    ],
+    "sole": [
+      954.0,
+      1219
+    ],
+    "canvas": 2760,
+    "margin_xy": [
+      663,
+      506
+    ],
+    "foot_local_x": 17.339399050196594,
+    "desired_foot_local_x": 15.30066074589271,
+    "old_foot_local_x": 33.010361067576596,
+    "implied_upper_body_y_shift_original_pixels": -8.358013629754794
+  },
+  "target": {
+    "pose_distance": 16.8,
+    "old_E0_sole_world_x": 32.10066074589271,
+    "old_E1_sole_world_x": 33.010361067576596,
+    "desired_E1_sole_world_x": 15.30066074589271,
+    "new_E1_sole_world_x": 17.339399050196594
+  },
+  "method": "Official image editing with text-local scope, no pixel mask supported. Not recovered original art. Upper-body corresponding features used only to calibrate source resolution/registration; small upper-body repaint differences remain possible. No runtime foot-lock or gait speed change.",
+  "visual_approval": false
+}

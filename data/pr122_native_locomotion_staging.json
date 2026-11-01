@@ -9523,8 +9523,8 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r004/SpriteFrames.tres",
-      "frames_sha256": "8e9a50bfb5744beb16a7e1b10ed0956a4828d2a89f5487ceeddb43bbb07a864b",
+      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r006/SpriteFrames.tres",
+      "frames_sha256": "d2eb52f93ff49f2ce80d0d2fb45086e2eecbd85d15694a5cbd22c31f0dca0333",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -10199,9 +10199,9 @@
           "direction": "E",
           "role": "run",
           "animation": "run_0",
-          "source": "assets/actors/eight_direction/native_production/girtas_267/r004/E-run.png",
-          "source_sha256": "88dd493d2a3bee88cfe9e241e5556e8e209f676571460e919a6d2212ca942cfc",
-          "texture": "assets/actors/eight_direction/native_production/girtas_267/r004/E-run.png",
+          "source": "assets/actors/eight_direction/native_production/girtas_267/r006/E-run.png",
+          "source_sha256": "d4766586d820db77273df97606dddcc18f2d7ea6e264ca86e9ef15bf23c772bd",
+          "texture": "assets/actors/eight_direction/native_production/girtas_267/r006/E-run.png",
           "geometry": {
             "image_size": [
               3072,
@@ -10241,29 +10241,29 @@
                 "row": 1,
                 "direction": "E",
                 "region": [
-                  1720,
-                  203,
-                  1167,
-                  1177
+                  1536,
+                  0,
+                  1246,
+                  1262
                 ],
                 "margin": [
-                  596,
-                  474,
-                  1393,
-                  1383
+                  663,
+                  506,
+                  1514,
+                  1498
                 ],
                 "source_anchor": [
-                  2404,
-                  1329
+                  2253,
+                  1219
                 ],
-                "rgba_sha256": "e0386cd6c17bc3b69a18ff25527edc221387358411541639708d2f952c66de72",
+                "rgba_sha256": "35827d80ffcb919c88f318a0de56ef97b6fd27d17569627bb951136e1037c052",
                 "canvas_size": [
-                  2560,
-                  2560
+                  2760,
+                  2760
                 ],
                 "foot": [
-                  1280,
-                  1600
+                  1380,
+                  1725
                 ]
               },
               {
@@ -10396,20 +10396,20 @@
           },
           "runtime_layout_proof": {
             "status": "NOT_VISUAL_APPROVAL",
-            "source_sha256": "88dd493d2a3bee88cfe9e241e5556e8e209f676571460e919a6d2212ca942cfc",
+            "source_sha256": "d4766586d820db77273df97606dddcc18f2d7ea6e264ca86e9ef15bf23c772bd",
             "direction": "E",
             "pose_count": 6,
             "source_pixels_unchanged": false,
             "resampled": false,
-            "newly_authored_poses": 1,
+            "newly_authored_poses": 2,
             "source_anchors": [
               [
                 865,
                 1374
               ],
               [
-                2404,
-                1329
+                2253,
+                1219
               ],
               [
                 859,
@@ -10430,7 +10430,7 @@
             ],
             "pose_canvas_sizes": [
               2664,
-              2560,
+              2760,
               2560,
               2256,
               2256,
@@ -10438,7 +10438,7 @@
             ],
             "runtime_reference_canvas_size": 1024,
             "approval_granted": false,
-            "review_basis": "Targeted authored E phase5 lower-body repair. Phases0-4 original RGBA unchanged; constant source-resolution calibration from preserved upper-body features, no bounding-box scale normalization. Remaining E3/4, N, NW and NE defects are unresolved."
+            "review_basis": "E1 support boot moved backward through leg articulation at fixed stance ground; E5 accepted prior edit preserved pixel-exact. Body/attack/gameplay clocks unchanged. Target derives from16.8worldpixel pose advance, not source silhouette bounds. No visual approval from metadata."
           }
         },
         {
@@ -19689,8 +19689,8 @@
       "visual_review": "FAIL",
       "timing_review": "PASS",
       "integration": "Real default catalog wired to immutable production candidate; approval pending actual default Main and independent full quality",
-      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r004/NativeMotionProfile.tres",
-      "native_profile_sha256": "202f3121b45b2f2f9fea6110642373d0cec55085d6d7bbd9098d4636d3830f9c",
+      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r006/NativeMotionProfile.tres",
+      "native_profile_sha256": "da40a5f97434c5bb1ad3ad2658b8a3fe97d807471a902c9e68b3b2f816de5241",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 502.04237288135596,
