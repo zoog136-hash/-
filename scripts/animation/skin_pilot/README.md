@@ -164,3 +164,31 @@ stride, speed, limb paths and hit timing are unchanged by this addition.
 The large cape remains a cutout, and this E-view prototype still requires
 visual acceptance. No 90% equivalence or production-ready claim follows
 from the structural or timing checks.
+
+## E occlusion planes and actual S-view binding
+
+The rejected torso-width morph remains preserved but is no longer the selected
+E binding. `girtas_torso_occlusion.json` selects a new painted side-armor plane
+and forward shoulder face. They keep their texture dimensions: a moving opaque
+edge changes overlap, rather than scaling the chest or crossfading whole torsos.
+The original chest/back silhouette stays rigid; the near shoulder advances and
+the far shoulder recedes on the shared pose. This removes the specific width
+pulsation but does not establish fully natural torso rotation.
+
+`--girtas-front` shows E on the left and actual S on the right at the same phase.
+The S source is the first cell of preserved r053/S-idle.png, not a mirrored or
+rotated E sprite and not a recording of the existing Main actor. Both views
+consume the same motion resource. The S binding projects fore/aft stance travel
+onto screen Y at a fixed 0.35 ratio; lateral foot lanes stay narrow, with opposing
+shoulder/arm response. Screen-space limb foreshortening is a 2D direction binding,
+not a whole-character scale change. Head/body scale remains fixed.
+
+The existing attack clock also drives the new S visual projection, with an
+entry/recovery blend. This is a new pilot view of the common attack, not a claim
+to reproduce original S attack art; production attack visuals/timing are untouched.
+No source pixels outside recorded local part masks are rewritten. Visible-armor
+joint backing is authored and documented by the builder.
+
+The front view remains an initial cutout projection: rigid chest/cape and partial
+thigh coverage limit its depth. E/S are not the other six directions, Main
+integration, original-equivalence acceptance or phone performance validation.

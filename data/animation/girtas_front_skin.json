@@ -1,0 +1,711 @@
+{
+  "schema": 1,
+  "direction": "S",
+  "source": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r053/S-idle.png",
+  "source_cell": [
+    0,
+    0,
+    512,
+    512
+  ],
+  "source_sha256": "316af651aa200384be8a9d43c6bd4a36eb30b5ef29f8cfef241067afa5612641",
+  "body_scale": 0.219105011732,
+  "authored_joint_backing": [
+    {
+      "destination": [
+        198,
+        180
+      ],
+      "source_rect": [
+        252,
+        192,
+        274,
+        220
+      ]
+    },
+    {
+      "destination": [
+        350,
+        180
+      ],
+      "source_rect": [
+        302,
+        192,
+        324,
+        220
+      ]
+    }
+  ],
+  "parts": {
+    "head": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/head.png",
+      "pivot": [
+        288,
+        140
+      ],
+      "end": null,
+      "polygon": [
+        [
+          260,
+          0
+        ],
+        [
+          318,
+          0
+        ],
+        [
+          327,
+          73
+        ],
+        [
+          320,
+          94
+        ],
+        [
+          317,
+          121
+        ],
+        [
+          304,
+          140
+        ],
+        [
+          275,
+          140
+        ],
+        [
+          260,
+          121
+        ],
+        [
+          254,
+          93
+        ]
+      ],
+      "sha256": "74abb648eb0c267b1ef102f06f4bd6446c00c5a3292a12ac1f0dd4f30f73e33b"
+    },
+    "upper_0": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/upper_0.png",
+      "pivot": [
+        363,
+        193
+      ],
+      "end": [
+        369,
+        235
+      ],
+      "polygon": [
+        [
+          348,
+          186
+        ],
+        [
+          380,
+          186
+        ],
+        [
+          387,
+          212
+        ],
+        [
+          378,
+          240
+        ],
+        [
+          357,
+          241
+        ],
+        [
+          344,
+          220
+        ]
+      ],
+      "sha256": "b6ffbde0b556ab2f8c5612116cc106a5ad129d99bd7b256c615e87996cce0da8"
+    },
+    "lower_0": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/lower_0.png",
+      "pivot": [
+        369,
+        235
+      ],
+      "end": [
+        374,
+        275
+      ],
+      "polygon": [
+        [
+          355,
+          228
+        ],
+        [
+          381,
+          225
+        ],
+        [
+          390,
+          251
+        ],
+        [
+          383,
+          278
+        ],
+        [
+          366,
+          285
+        ],
+        [
+          353,
+          268
+        ]
+      ],
+      "sha256": "a4c354d44c37e69def34a403aa721c61e70e78a6ce1e074931bb23a52c948ee7"
+    },
+    "hand_0": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/hand_0.png",
+      "pivot": [
+        374,
+        275
+      ],
+      "end": null,
+      "polygon": [
+        [
+          358,
+          264
+        ],
+        [
+          383,
+          260
+        ],
+        [
+          395,
+          287
+        ],
+        [
+          381,
+          309
+        ],
+        [
+          364,
+          305
+        ],
+        [
+          351,
+          287
+        ]
+      ],
+      "sha256": "a00281a64d454a6c90d559613318d82ae3059fc6aa959f9f33a9354882928b55"
+    },
+    "upper_1": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/upper_1.png",
+      "pivot": [
+        208,
+        193
+      ],
+      "end": [
+        198,
+        235
+      ],
+      "polygon": [
+        [
+          188,
+          184
+        ],
+        [
+          221,
+          182
+        ],
+        [
+          229,
+          206
+        ],
+        [
+          218,
+          235
+        ],
+        [
+          192,
+          240
+        ],
+        [
+          179,
+          216
+        ]
+      ],
+      "sha256": "3d3c7a72ec2561b7b28271095f4c9fb7d2f58200452d2f218429dbcbc0586cec"
+    },
+    "lower_1": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/lower_1.png",
+      "pivot": [
+        198,
+        235
+      ],
+      "end": [
+        186,
+        276
+      ],
+      "polygon": [
+        [
+          181,
+          225
+        ],
+        [
+          211,
+          224
+        ],
+        [
+          219,
+          247
+        ],
+        [
+          208,
+          273
+        ],
+        [
+          192,
+          284
+        ],
+        [
+          172,
+          269
+        ]
+      ],
+      "sha256": "ca4cc399ca367bb2d96853ce80938ea5e42d71d6c6bb4e7601df0cf2d6000915"
+    },
+    "hand_1": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/hand_1.png",
+      "pivot": [
+        186,
+        276
+      ],
+      "end": null,
+      "polygon": [
+        [
+          171,
+          262
+        ],
+        [
+          201,
+          259
+        ],
+        [
+          213,
+          280
+        ],
+        [
+          198,
+          307
+        ],
+        [
+          188,
+          337
+        ],
+        [
+          173,
+          358
+        ],
+        [
+          137,
+          380
+        ],
+        [
+          116,
+          409
+        ],
+        [
+          91,
+          440
+        ],
+        [
+          54,
+          469
+        ],
+        [
+          8,
+          496
+        ],
+        [
+          0,
+          493
+        ],
+        [
+          25,
+          462
+        ],
+        [
+          58,
+          433
+        ],
+        [
+          79,
+          396
+        ],
+        [
+          108,
+          375
+        ],
+        [
+          142,
+          354
+        ],
+        [
+          149,
+          325
+        ],
+        [
+          159,
+          294
+        ]
+      ],
+      "sha256": "3e6ce29df1bc8619feea254162444a10f2640584a25c337ee14d4316c083c047"
+    },
+    "thigh_0": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/thigh_0.png",
+      "pivot": [
+        332,
+        291
+      ],
+      "end": [
+        346,
+        365
+      ],
+      "polygon": [
+        [
+          316,
+          283
+        ],
+        [
+          346,
+          281
+        ],
+        [
+          359,
+          319
+        ],
+        [
+          363,
+          352
+        ],
+        [
+          356,
+          377
+        ],
+        [
+          334,
+          379
+        ],
+        [
+          322,
+          341
+        ]
+      ],
+      "sha256": "8a65476c0125fceefc225652f300d77ff7e7b1b0c4a534379b022f8ffa97d12e"
+    },
+    "shin_0": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/shin_0.png",
+      "pivot": [
+        346,
+        365
+      ],
+      "end": [
+        357,
+        456
+      ],
+      "polygon": [
+        [
+          330,
+          358
+        ],
+        [
+          358,
+          354
+        ],
+        [
+          370,
+          397
+        ],
+        [
+          376,
+          440
+        ],
+        [
+          369,
+          465
+        ],
+        [
+          343,
+          468
+        ],
+        [
+          331,
+          422
+        ]
+      ],
+      "sha256": "85640b26a44f0e85a1c57a7481d5978d528dc8666c837e8c0329502c4bf0f7d9"
+    },
+    "foot_0": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/foot_0.png",
+      "pivot": [
+        357,
+        456
+      ],
+      "end": null,
+      "polygon": [
+        [
+          342,
+          447
+        ],
+        [
+          371,
+          447
+        ],
+        [
+          381,
+          465
+        ],
+        [
+          385,
+          488
+        ],
+        [
+          368,
+          497
+        ],
+        [
+          342,
+          480
+        ]
+      ],
+      "sha256": "74888679ef25befc10cfee5f2f72fe04b01cf320ed92612e9f4175b58b9c27e2"
+    },
+    "thigh_1": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/thigh_1.png",
+      "pivot": [
+        244,
+        291
+      ],
+      "end": [
+        222,
+        365
+      ],
+      "polygon": [
+        [
+          226,
+          281
+        ],
+        [
+          258,
+          285
+        ],
+        [
+          253,
+          324
+        ],
+        [
+          241,
+          362
+        ],
+        [
+          235,
+          380
+        ],
+        [
+          209,
+          378
+        ],
+        [
+          207,
+          345
+        ]
+      ],
+      "sha256": "406d8a6ca55eb4a21aed03f2c6b7b7291fc15f3b5c78f2387b3c513dca427b71"
+    },
+    "shin_1": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/shin_1.png",
+      "pivot": [
+        222,
+        365
+      ],
+      "end": [
+        207,
+        456
+      ],
+      "polygon": [
+        [
+          210,
+          354
+        ],
+        [
+          237,
+          359
+        ],
+        [
+          230,
+          399
+        ],
+        [
+          222,
+          441
+        ],
+        [
+          218,
+          467
+        ],
+        [
+          192,
+          467
+        ],
+        [
+          193,
+          424
+        ]
+      ],
+      "sha256": "2cfffbb5c13df46be49522de6fbffe8df8d5a5e8d00e2c8a603007e9256a977a"
+    },
+    "foot_1": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/foot_1.png",
+      "pivot": [
+        207,
+        456
+      ],
+      "end": null,
+      "polygon": [
+        [
+          192,
+          447
+        ],
+        [
+          218,
+          449
+        ],
+        [
+          229,
+          472
+        ],
+        [
+          221,
+          493
+        ],
+        [
+          199,
+          498
+        ],
+        [
+          183,
+          480
+        ]
+      ],
+      "sha256": "69e0657bc5f882ce858f1c1c8a8df54aedfc6f39f97879498908fa369a68d141"
+    },
+    "shoulder_0": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/shoulder_0.png",
+      "pivot": [
+        363,
+        193
+      ],
+      "end": null,
+      "polygon": [
+        [
+          325,
+          140
+        ],
+        [
+          344,
+          131
+        ],
+        [
+          367,
+          143
+        ],
+        [
+          377,
+          170
+        ],
+        [
+          377,
+          190
+        ],
+        [
+          365,
+          205
+        ],
+        [
+          343,
+          195
+        ],
+        [
+          327,
+          176
+        ]
+      ],
+      "sha256": "d2e7ff69c020126bc5b0a9c02ec8ad71a1b62d8e8da6a3c10d0d7b771c6c87bc"
+    },
+    "shoulder_1": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/shoulder_1.png",
+      "pivot": [
+        208,
+        193
+      ],
+      "end": null,
+      "polygon": [
+        [
+          211,
+          140
+        ],
+        [
+          234,
+          134
+        ],
+        [
+          251,
+          150
+        ],
+        [
+          246,
+          177
+        ],
+        [
+          228,
+          197
+        ],
+        [
+          209,
+          202
+        ],
+        [
+          191,
+          186
+        ],
+        [
+          196,
+          159
+        ]
+      ],
+      "sha256": "97e146849ec4a2f474c2307955a55227053b14b025f42bc57007ed6287c22f00"
+    },
+    "torso": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/torso.png",
+      "pivot": [
+        288,
+        245
+      ],
+      "sha256": "50ff25700f68c7cea4b77a8a4d9227e6a2862a9b482496e1bc56a5436539e75a"
+    },
+    "pelvis": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/pelvis.png",
+      "pivot": [
+        288,
+        280
+      ],
+      "sha256": "8e8a34be012c459d6a7b4b709c19592c8df43913e8f73a9669adef8bccef7a79"
+    },
+    "cape": {
+      "texture": "res://assets/actors/shared_skin_pilot/girtas_267/front/cape.png",
+      "pivot": [
+        288,
+        280
+      ],
+      "sha256": "4c669a0b38e40f98e183b8b11cd0646b45e52affbfb5b3e3ae30057e8086b708"
+    }
+  },
+  "authorship": "Actual front-view source cutouts, fixed bind and 2D depth projection of shared pose; local visible-armor joint backing is authored."
+}

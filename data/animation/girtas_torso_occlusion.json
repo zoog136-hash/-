@@ -1,0 +1,413 @@
+{
+  "schema": 1,
+  "direction": "E",
+  "method": "Rigid painted side/back armor and forward shoulder planes; moving opaque occlusion boundary; no torso mesh morph or crossfade",
+  "source_sha256": "ccf4d95857a83834eb96d4548c62dbcd8fa230039fe9eaefcc68d5678b773968",
+  "source_authorship": "New 2D pose, not original-game motion",
+  "cap_polygon": [
+    [
+      238,
+      131
+    ],
+    [
+      258,
+      116
+    ],
+    [
+      277,
+      119
+    ],
+    [
+      297,
+      132
+    ],
+    [
+      310,
+      151
+    ],
+    [
+      313,
+      172
+    ],
+    [
+      308,
+      192
+    ],
+    [
+      291,
+      202
+    ],
+    [
+      269,
+      195
+    ],
+    [
+      249,
+      179
+    ],
+    [
+      236,
+      157
+    ]
+  ],
+  "side_polygon": [
+    [
+      245,
+      155
+    ],
+    [
+      277,
+      158
+    ],
+    [
+      300,
+      180
+    ],
+    [
+      312,
+      215
+    ],
+    [
+      312,
+      246
+    ],
+    [
+      252,
+      246
+    ],
+    [
+      229,
+      216
+    ],
+    [
+      230,
+      186
+    ]
+  ],
+  "original_source_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+  "frames": [
+    {
+      "q": 0.0,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/shoulder_armor.png",
+      "guard_pivot": [
+        226,
+        178
+      ],
+      "near_offset": [
+        -17.1,
+        -12.5
+      ],
+      "far_offset": [
+        10.297935551404,
+        -8.76420046928
+      ],
+      "torso_sha256": "53089f60a6316bd6b04be0de280d38f9ba2f2b5b4379fa3ba1b90740c06c860d",
+      "shoulder_armor_sha256": "2d2ab54bdfc50301732e515ed73ec85038b6e611ea2ce59ffb0fe89083de8341"
+    },
+    {
+      "q": 0.0625,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_01.png",
+      "guard_pivot": [
+        228.5,
+        177.25
+      ],
+      "near_offset": [
+        -16.542428385766,
+        -12.653314427523
+      ],
+      "far_offset": [
+        10.133606792605,
+        -8.7368123428135
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "d7531c64e44d57f636b97141cb65d1c5369a4dc5b3eb850152ab307fe5880fee"
+    },
+    {
+      "q": 0.125,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_02.png",
+      "guard_pivot": [
+        231.0,
+        176.5
+      ],
+      "near_offset": [
+        -15.994665856436,
+        -12.817643186322
+      ],
+      "far_offset": [
+        9.969278033806,
+        -8.709424216347001
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "69355fa133c4eeae3cc5f43dd10e25cc2e585a0fa39698b9cf4dc2e59e9a2659"
+    },
+    {
+      "q": 0.1875,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_03.png",
+      "guard_pivot": [
+        233.5,
+        175.75
+      ],
+      "near_offset": [
+        -15.446903327106,
+        -12.981971945121
+      ],
+      "far_offset": [
+        9.804949275007,
+        -8.6820360898805
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "3b603b7f9e1c44f8de707f5ba2353d7f3b42565b2da99924551d5353e7d38690"
+    },
+    {
+      "q": 0.25,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_04.png",
+      "guard_pivot": [
+        236.0,
+        175.0
+      ],
+      "near_offset": [
+        -14.899140797776,
+        -13.14630070392
+      ],
+      "far_offset": [
+        9.640620516208001,
+        -8.654647963414
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "596f63adefef1bf5755d5cb938585b6a408ada8f4f82d8022bf4027b89b96eb0"
+    },
+    {
+      "q": 0.3125,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_05.png",
+      "guard_pivot": [
+        238.5,
+        174.25
+      ],
+      "near_offset": [
+        -14.351378268446,
+        -13.310629462719
+      ],
+      "far_offset": [
+        9.476291757409,
+        -8.6272598369475
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "e8a576e9a3ea1bac21dd95024049e913f1a254400357fe09e6f054931c93e075"
+    },
+    {
+      "q": 0.375,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_06.png",
+      "guard_pivot": [
+        241.0,
+        173.5
+      ],
+      "near_offset": [
+        -13.803615739116001,
+        -13.474958221518
+      ],
+      "far_offset": [
+        9.31196299861,
+        -8.599871710481
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "2b3eca28c4cf6246133fc74ebba8f8db8fdd1400beb0607603666ff026dd7e44"
+    },
+    {
+      "q": 0.4375,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_07.png",
+      "guard_pivot": [
+        243.5,
+        172.75
+      ],
+      "near_offset": [
+        -13.255853209786,
+        -13.639286980317001
+      ],
+      "far_offset": [
+        9.147634239811,
+        -8.5724835840145
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "f16248ea71ee25a4c48db99fc6467855b4ef979d33e5b0cd9a9a9491b9ffe23e"
+    },
+    {
+      "q": 0.5,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_08.png",
+      "guard_pivot": [
+        246.0,
+        172.0
+      ],
+      "near_offset": [
+        -12.708090680456,
+        -13.803615739116001
+      ],
+      "far_offset": [
+        8.983305481012,
+        -8.545095457548
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "b9fa6babd1c95e1d99a4b5cb24b653d20fedfbf743c1ae0bf3eaa0e8b9d752a7"
+    },
+    {
+      "q": 0.5625,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_09.png",
+      "guard_pivot": [
+        248.5,
+        171.25
+      ],
+      "near_offset": [
+        -12.160328151126,
+        -13.967944497915001
+      ],
+      "far_offset": [
+        8.818976722213,
+        -8.5177073310815
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "cf5433ffcc5957c16404437d2b9d0887c9334ed35a165e62524b93681a7837dc"
+    },
+    {
+      "q": 0.625,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_10.png",
+      "guard_pivot": [
+        251.0,
+        170.5
+      ],
+      "near_offset": [
+        -11.612565621796,
+        -14.132273256714
+      ],
+      "far_offset": [
+        8.654647963414,
+        -8.490319204615
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "9e00a40114d301628720bde1c1d0ee914ff586f97f7ec5dceb638d1e0f10174a"
+    },
+    {
+      "q": 0.6875,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_11.png",
+      "guard_pivot": [
+        253.5,
+        169.75
+      ],
+      "near_offset": [
+        -11.064803092466,
+        -14.296602015513
+      ],
+      "far_offset": [
+        8.490319204615,
+        -8.4629310781485
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "a9f94d6d82e5eed4c693f9a168885081ca1538808c15e759b3c13b2980a34e2a"
+    },
+    {
+      "q": 0.75,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_12.png",
+      "guard_pivot": [
+        256.0,
+        169.0
+      ],
+      "near_offset": [
+        -10.517040563136,
+        -14.460930774312
+      ],
+      "far_offset": [
+        8.325990445816,
+        -8.435542951682
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "c8acd95bec3e9d698b2f34a9f063eccffeafc16c3fa70008022a876f99474618"
+    },
+    {
+      "q": 0.8125,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_13.png",
+      "guard_pivot": [
+        258.5,
+        168.25
+      ],
+      "near_offset": [
+        -9.969278033806,
+        -14.625259533111
+      ],
+      "far_offset": [
+        8.161661687017,
+        -8.408154825215501
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "65daadc46de5765b8a2c33dfece3b46bfcb390bd2949544ecd92777c2a68aedb"
+    },
+    {
+      "q": 0.875,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_14.png",
+      "guard_pivot": [
+        261.0,
+        167.5
+      ],
+      "near_offset": [
+        -9.421515504476,
+        -14.78958829191
+      ],
+      "far_offset": [
+        7.997332928218,
+        -8.380766698749
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "91ae768d65cc3114fd934742cd155c4844035eedf5512f433e00c9089a80c7c9"
+    },
+    {
+      "q": 0.9375,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_15.png",
+      "guard_pivot": [
+        263.5,
+        166.75
+      ],
+      "near_offset": [
+        -8.873752975146001,
+        -14.953917050709
+      ],
+      "far_offset": [
+        7.8330041694190005,
+        -8.3533785722825
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "da15bf3ac19f8605977d3486d645fca6ca28500ee63ba61ea012a73b53b63ca6"
+    },
+    {
+      "q": 1.0,
+      "torso": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/torso_01.png",
+      "shoulder_armor": "res://assets/actors/shared_skin_pilot/girtas_267/torso_occlusion/pauldron_16.png",
+      "guard_pivot": [
+        266.0,
+        166.0
+      ],
+      "near_offset": [
+        -8.325990445816,
+        -15.118245809508
+      ],
+      "far_offset": [
+        7.668675410620001,
+        -8.325990445816
+      ],
+      "torso_sha256": "6f3733bebf57b8ca470131e582a2b5399fe5aeb9f47d879c33c38af992da26f7",
+      "shoulder_armor_sha256": "42c957e7475c8754d8a0420adbcde01c022fc965477776f7830d336e6a859682"
+    }
+  ]
+}

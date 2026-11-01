@@ -1,6 +1,7 @@
 extends Node2D
 const AttackClock = preload("res://scripts/animation/actor_motion.gd")
 const Motion = preload("res://scripts/animation/skin_pilot/shared_ground_motion.gd")
+const FrontCutout = preload("res://scripts/animation/skin_pilot/front_cutout_skin.gd")
 const Cutout = preload("res://scripts/animation/skin_pilot/cutout_skin.gd")
 var motion := Motion.new()
 var attack_clock := AttackClock.new()
@@ -20,6 +21,7 @@ var active := false
 var definitions: Dictionary
 var swapped := false
 var names: Array[Label] = []
+var front_preview := false
 var girtas_preview := false
 var secondary_skin := "assassin"
 var preview_speed := 80.0
@@ -28,7 +30,8 @@ var manual_moving := false
 var manual_lift := 6.0
 
 func _ready() -> void:
-	girtas_preview = "--girtas-skin" in OS.get_cmdline_user_args()
+	front_preview = "--girtas-front" in OS.get_cmdline_user_args()
+	girtas_preview = front_preview or "--girtas-skin" in OS.get_cmdline_user_args()
 	if girtas_preview:
 		motion.configure_run()
 		preview_speed = 210.0 # Player.move_speed and Girtas NativeMotionProfile.reference_speed.
@@ -42,25 +45,27 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color("19222b"))
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/shared_skin_pilot.json"))
 	_label("TWILIGHT  /  GIRTAS SHARED 2D SKIN" if girtas_preview else "TWILIGHT  /  SHARED 2D MOTION PILOT", Vector2(40, 24), 25)
-	_label("E view / shared RUN / 210 px/s / fixed 30 FPS render" if girtas_preview else "Two existing skins. One joint pose and one distance-driven timeline.", Vector2(40, 65), 17)
+	_label(("E side + S front / one shared RUN phase / 210 px/s" if front_preview else "E view / shared RUN / 210 px/s / fixed 30 FPS render") if girtas_preview else "Two existing skins. One joint pose and one distance-driven timeline.", Vector2(40, 65), 17)
 	if girtas_preview:
 		secondary_skin = "girtas_267"
 		data.skins[secondary_skin] = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_shared_skin.json")).skin
+	if front_preview:
+		data.skins["girtas_front"] = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_front_skin.json"))
 	definitions = data.skins
-	names.append(_label("WARRIOR", Vector2(200, 125), 18))
-	names.append(_label("GIRTAS" if girtas_preview else "ASSASSIN", Vector2(625, 125), 18))
+	names.append(_label("GIRTAS E SIDE" if front_preview else "WARRIOR", Vector2(200, 125), 18))
+	names.append(_label(("GIRTAS S FRONT" if front_preview else "GIRTAS") if girtas_preview else "ASSASSIN", Vector2(625, 125), 18))
 	for row in range(2):
 		for i in range(2):
-			var actor := Cutout.new()
+			var actor = FrontCutout.new() if front_preview and i==1 else Cutout.new()
 			add_child(actor)
-			actor.bind_skin(data.skins["warrior" if i == 0 else secondary_skin])
+			actor.bind_skin(data.skins[("girtas_267" if i==0 else "girtas_front") if front_preview else ("warrior" if i==0 else secondary_skin)])
 			actor.position = Vector2(255 + 425 * i, 270 if row == 0 else 530) if girtas_preview else Vector2(255 + 425 * i, 255 if row == 0 else 510)
 			actor.scale = Vector2.ONE * (1.0 if row == 0 else (1.8 if girtas_preview else 2.6))
 			actors.append(actor)
 	_label("1x actual pixels", Vector2(40, 180), 15)
 	_label("1.8x same live pose" if girtas_preview else "2.6x same live pose", Vector2(40, 330), 15)
 	status = _label("", Vector2(40, 555), 20)
-	close_label = _label("E-view pilot. Space: move/stop   A: attack   S: swap skins", Vector2(40, 600), 15)
+	close_label = _label("E/S cutout pilot / S uses actual front source / not eight-direction completion" if front_preview else "E-view pilot. Space: move/stop   A: attack   S: swap skins", Vector2(40, 600), 15)
 	if "--pilot-test" in OS.get_cmdline_user_args():
 		_tests()
 		return
@@ -89,7 +94,11 @@ func _process(delta: float) -> void:
 	var pose := motion.advance(delta, speed)
 	if was_attacking:
 		pose = motion.sample_attack(attack_clock.visual_progress, attack_clock.attack_hit_ratio)
-	for actor in actors: actor.apply_pose(pose)
+	for actor in actors:
+		if actor is FrontCutout:
+			actor.attacking = was_attacking
+			actor.attack_progress = attack_clock.visual_progress
+		actor.apply_pose(pose)
 	status.text = "IDLE / fixed feet, restrained chest breathing" if speed == 0 else "RUN / shared shoulder, elbow and distance-driven legs"
 	if was_attacking: status.text = "ATTACK / existing hit clock / prepare - strike - recover"
 	if strike_flash > 0.0: status.text = "STRIKE / authoritative event %d / both skins share this pose" % strikes
@@ -106,6 +115,7 @@ func _begin_attack() -> void:
 	attack_clock.begin_attack(BASE_ATTACK_SECONDS, Vector2.RIGHT, "slash", attack_clock.profile.marker_for("slash"))
 
 func _swap_skins() -> void:
+	if front_preview: return
 	swapped = not swapped
 	for i in range(actors.size()):
 		var warrior := (i % 2 == 0) != swapped
@@ -137,7 +147,12 @@ func _draw() -> void:
 		draw_line(Vector2(40, y), Vector2(920, y), Color("6c7a80"), 1)
 		for i in range(28):
 			var x := 40 + fposmod(i * 38.0 - motion.distance * zoom, 880.0)
-			draw_line(Vector2(x, y), Vector2(x - 8, y + 10), Color("43525b"), 1)
+			if not front_preview or x < 470.0:
+				draw_line(Vector2(x, y), Vector2(x - 8, y + 10), Color("43525b"), 1)
+		if front_preview:
+			for i in range(5):
+				var depth_y := y - 40.0 + fposmod(i*15.0 - motion.distance*0.35*zoom,75.0)
+				draw_line(Vector2(570,depth_y),Vector2(790,depth_y),Color("43525b"),1)
 
 func _label(text: String, pos: Vector2, size: int) -> Label:
 	var label := Label.new()
@@ -148,7 +163,17 @@ func _label(text: String, pos: Vector2, size: int) -> Label:
 	return label
 
 func _tests() -> void:
-	if girtas_preview:
+	if front_preview:
+		var front = actors[1]
+		var a := motion.sample(0.2)
+		front.apply_pose(a)
+		var first: Vector2 = front.front_foot(0)
+		front.apply_pose(motion.sample(0.2001))
+		var second: Vector2 = front.front_foot(0)
+		assert(absf(second.x-first.x)<0.00001)
+		assert(absf(second.y-first.y+motion.stride_distance*0.0001*0.35)<0.00001)
+		print("FRONT_BINDING_OK actual_S_source=true shared_pose=true projected_stance_displacement=true")
+	if girtas_preview and not front_preview:
 		_girtas_binding_tests()
 		_run_contact_tests()
 	var max_drift := 0.0
