@@ -11,7 +11,7 @@ static func data() -> Dictionary:
 	return _data
 static func mode(pack_root: String, override: String = "") -> String:
 	var result: String = str(data().get("default_mode", "strict"))
-	var config_path: String = pack_root.path_join("playback_settings.json")
+	var config_path: String = preload("res://scripts/lineagem_pack_install.gd").resolve_file(pack_root, "playback_settings.json")
 	if FileAccess.file_exists(config_path):
 		var local: Variant = JSON.parse_string(FileAccess.get_file_as_string(config_path))
 		if local is Dictionary: result = str(local.get("mode", result))

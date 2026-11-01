@@ -308,15 +308,22 @@ func _usable_authored_class_frames(source: SpriteFrames, expected_path: String) 
 	return found
 
 func set_transform_visual(path: String, _speed_multiplier: float, profile_value: TwilightAnimationProfile = null) -> void:
+	var previous_native_sprite: int = int(original_source_preview._record.get("source_sprite_id", -1))
+	var previous_native_key: String = transform_profile.profile_id if transform_profile != null else ""
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
 	transform_profile.resource_path_hint = path
-	# Explicit inspection only: native sc/mu composition and origin remain unverified.
-	if original_source_preview.configure(transform_profile.profile_id, original_source_manifest, source_visual_context):
+	# Reapplying the same native identity must not reset its pose/event timeline.
+	var selected: Dictionary = preload("res://scripts/lineagem_base508.gd").select_visual_key(transform_profile.profile_id, source_visual_context) if transform_profile.profile_id.begins_with("transform:m508:") else {}
+	var unchanged_native: bool = previous_native_key == transform_profile.profile_id and selected.get("status", "") == "selected" and int(selected.get("sprite_id", -2)) == previous_native_sprite and original_source_preview._manifest_path == original_source_manifest
+	# Native sc/mu composition and origin remain unverified.
+	if unchanged_native or original_source_preview.configure(transform_profile.profile_id, original_source_manifest, source_visual_context):
 		transform_active = true
 		motion.profile = transform_profile
 		class_sprite.hide()
 		transform_sprite.hide()
-		original_source_preview.advance_source(0.0, motion.state, motion.facing8, motion.sequence, motion.active)
+		if not unchanged_native: original_source_preview.advance_source(0.0, motion.state, motion.facing8, motion.sequence, motion.active)
+		if transform_profile.profile_id.begins_with("transform:m508:") and (previous_native_key != transform_profile.profile_id or previous_native_sprite != int(original_source_preview._record.get("source_sprite_id", -1))):
+			original_source_preview.notify_source_global_event("polymorph", motion.facing8)
 		return
 	# A verified identity with missing pixels/variant context never borrows legacy artwork.
 	if transform_profile.profile_id.begins_with("transform:m508:"):

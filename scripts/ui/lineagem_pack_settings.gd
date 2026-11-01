@@ -19,7 +19,7 @@ func _ready() -> void:
 	add_child(status)
 	choose = Button.new()
 	choose.name = "InstallLineageMOfflinePack"
-	choose.text = "원본 팩 ZIP 선택"
+	choose.text = "원본 팩 · 증분 ZIP 선택"
 	choose.pressed.connect(func() -> void: picker.popup_centered_ratio(0.8))
 	add_child(choose)
 	cancel = Button.new()
@@ -28,7 +28,7 @@ func _ready() -> void:
 	cancel.pressed.connect(func() -> void: installer.cancelled = true)
 	add_child(cancel)
 	picker = FileDialog.new()
-	picker.title = "받은 리니지M 설치 팩 선택"
+	picker.title = "받은 원본 전체팩 또는 증분 선택"
 	picker.access = FileDialog.ACCESS_FILESYSTEM
 	picker.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	picker.use_native_dialog = true

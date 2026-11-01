@@ -9,6 +9,7 @@ const MAX_BYTES = 6 * 1024 * 1024 * 1024
 const MAX_ENTRY = 64 * 1024 * 1024
 const REQUIRED = ["manifest.json", "source_effect_bindings.json", "registered_effect_layers.json"]
 static var _session_root: String = ""
+static var _base_roots: Dictionary = {}
 var cancelled: bool = false
 var busy: bool = false
 
@@ -35,6 +36,28 @@ static func active_root() -> String:
 			_session_root = root
 	if _session_root.is_empty(): _session_root = LEGACY
 	return _session_root
+
+static func trusted_root(path: String) -> bool:
+	if path == LEGACY: return true
+	if not path.begins_with(STORE + "/pack-"): return false
+	var name: String = path.trim_prefix(STORE + "/")
+	return safe_relative(name) and not name.contains("/")
+
+static func base_root(root: String) -> String:
+	if _base_roots.has(root): return str(_base_roots[root])
+	var marker_path: String = root.path_join("installed.json")
+	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(marker_path)) if FileAccess.file_exists(marker_path) else null
+	var base: String = str(value.get("base_root", "")) if value is Dictionary else ""
+	if not trusted_root(base) or base == root: base = ""
+	_base_roots[root] = base
+	return base
+
+static func resolve_file(root: String, relative: String, depth: int = 0) -> String:
+	if not safe_relative(relative) or depth > 4: return ""
+	var candidate: String = root.path_join(relative)
+	if FileAccess.file_exists(candidate): return candidate
+	var base: String = base_root(root)
+	return resolve_file(base, relative, depth + 1) if not base.is_empty() else candidate
 
 static func sha(data: PackedByteArray) -> String:
 	var context := HashingContext.new()
@@ -105,7 +128,15 @@ func _install(path: String) -> Dictionary:
 	var header_bytes: PackedByteArray = zip.read_file("pack.json")
 	if header_bytes.size() > 1024 * 1024: return _failure("설치 목록이 너무 큽니다.")
 	var header: Variant = JSON.parse_string(header_bytes.get_string_from_utf8())
-	if not header is Dictionary or int(header.get("schema", 0)) != 2 or header.get("kind", "") != "twilight-lineagem-offline-runtime" or header.get("source_snapshot", "") != "base508": return _failure("지원되는 base508 설치 팩이 아닙니다.")
+	if not header is Dictionary or int(header.get("schema", 0)) != 2 or header.get("kind", "") not in ["twilight-lineagem-offline-runtime", "twilight-lineagem-offline-runtime-addon"] or header.get("source_snapshot", "") != "base508": return _failure("지원되는 base508 설치 팩이 아닙니다.")
+	var is_addon: bool = header.kind == "twilight-lineagem-offline-runtime-addon"
+	var base: String = active_root() if is_addon else ""
+	if is_addon:
+		if not trusted_root(base) or not FileAccess.file_exists(base.path_join("manifest.json")) or FileAccess.get_sha256(base.path_join("manifest.json")) != str(header.get("base_manifest_sha256", "")):
+			return _failure("먼저 이 증분에 맞는 원본 v2 전체팩을 설치하고 게임을 다시 실행하세요.")
+		var ancestor: String = base
+		for depth: int in range(4): ancestor = base_root(ancestor) if not ancestor.is_empty() else ""
+		if not ancestor.is_empty(): return _failure("증분 연결이 너무 깊습니다. 전체팩 설치가 필요합니다.")
 	var total: int = int(header.get("files", 0))
 	var expected_bytes: int = int(header.get("bytes", 0))
 	var chunks: Variant = header.get("chunks", [])
@@ -181,10 +212,10 @@ func _install(path: String) -> Dictionary:
 		if key.begins_with("sprite:"): sprite_count += 1
 	if sprite_count != 743 or manifest.get("card_bindings", {}).size() != 701: return _failure("카드 또는 외형 정의 수가 다릅니다.")
 	for record: Variant in manifest.records.values():
-		if not record is Dictionary or not safe_relative(str(record.get("manifest", ""))) or not FileAccess.file_exists(stage.path_join(str(record.manifest))): return _failure("캐릭터 선언이 누락됐습니다.")
+		if not record is Dictionary or not safe_relative(str(record.get("manifest", ""))) or not (FileAccess.file_exists(stage.path_join(str(record.manifest))) or (is_addon and FileAccess.file_exists(resolve_file(base, str(record.manifest))))): return _failure("캐릭터 선언이 누락됐습니다.")
 	var final_path: String = STORE.path_join("pack-" + id)
 	if DirAccess.rename_absolute(stage, final_path) != OK: return _failure("설치 폴더 전환 실패.")
-	var receipt: Dictionary = {"schema":1,"source_snapshot":"base508","release_id":str(header.get("release_id", "")),"activated_usec":stamp,"files":done,"bytes":written,"pack_header_sha256":sha(header_bytes)}
+	var receipt: Dictionary = {"schema":1,"source_snapshot":"base508","release_id":str(header.get("release_id", "")),"activated_usec":stamp,"files":done,"bytes":written,"pack_header_sha256":sha(header_bytes),"base_root":base}
 	var marker := FileAccess.open(final_path.path_join("installed.tmp"), FileAccess.WRITE)
 	if marker == null: return _failure("설치 완료 기록 저장 실패.")
 	marker.store_string(JSON.stringify(receipt))

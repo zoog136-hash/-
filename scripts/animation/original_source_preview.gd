@@ -4,6 +4,7 @@ extends Node2D
 signal native_annotations(event: Dictionary)
 signal native_effect_frame(event: Dictionary)
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
+const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 var playback_mode_override: String = ""
 var source_selection_status: Dictionary = {}
 var _playback_tracks: Dictionary = {}
@@ -52,7 +53,7 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	if candidate.has("manifest"):
 		var actor_path: String = str(candidate.manifest)
 		if actor_path.is_absolute_path() or ".." in actor_path.split("/"): return false
-		var actor: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path.get_base_dir().path_join(actor_path)))
+		var actor: Variant = JSON.parse_string(FileAccess.get_file_as_string(INSTALL.resolve_file(manifest_path.get_base_dir(), actor_path)))
 		if not actor is Dictionary: return false
 		candidate = actor
 	var tracks: Dictionary
@@ -87,7 +88,7 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 						clear()
 						return false
 					if not _textures.has(path):
-						var image: Image = Image.load_from_file(_root.path_join(path))
+						var image: Image = Image.load_from_file(INSTALL.resolve_file(_root, path))
 						if image == null or image.is_empty():
 							clear()
 							return false
@@ -215,14 +216,14 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		var node: Sprite2D = _effect_nodes.get(int(effect.layer_id)) as Sprite2D
 		if node == null: continue
 		node.position = Vector2(float(effect.offset[0]), float(effect.offset[1]))
-		node.set_meta("source_pixel_path", _root.path_join(str(effect.path)))
+		node.set_meta("source_pixel_path", INSTALL.resolve_file(_root, str(effect.path)))
 		node.set_meta("source_frame", selected.source_frame)
 		# Explicit host compatibility, with original attr and strict-mode behavior retained.
 		var style: Dictionary = node.get_meta("compatibility_style", {})
 		if bool(style.get("enabled", false)):
 			var effect_path: String = str(effect.path)
 			if not _textures.has(effect_path):
-				var image: Image = Image.load_from_file(_root.path_join(effect_path))
+				var image: Image = Image.load_from_file(INSTALL.resolve_file(_root, effect_path))
 				if image != null and not image.is_empty(): _textures[effect_path] = ImageTexture.create_from_image(image)
 			if _textures.has(effect_path):
 				node.texture = _textures[effect_path]
@@ -308,6 +309,16 @@ func spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Ve
 	_overlay_nodes.append(overlay)
 	overlay.advance_source(0.0, "idle", facing, 0, false)
 	return true
+
+func notify_source_global_event(event_name: String, facing: int) -> bool:
+	# ConstantData identifies the resource. Local apply-event placement and an
+	# unspecified clock remain labelled compatibility, never recovered M semantics.
+	if _playback_mode != "compatible" or _manifest_path.is_empty(): return false
+	var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(_manifest_path))
+	if not index is Dictionary: return false
+	var definition: Dictionary = index.get("source_global_effects", {}).get(event_name, {})
+	if definition.get("source_table", "") != "ConstantData": return false
+	return spawn_source_overlay(int(definition.get("sprite_id", 0)), facing)
 
 func notify_source_spell_event(source_spell_id: int, stage: String, world_point: Vector2, facing: int, manifest_path: String = "") -> bool:
 	# Only an explicit base508 spell identity reaches this adapter; no old-ID/name match.
