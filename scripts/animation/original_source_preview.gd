@@ -8,6 +8,7 @@ var playback_mode_override: String = ""
 var _playback_tracks: Dictionary = {}
 var _playback_mode: String = "strict"
 var _manifest_path: String = ""
+var _manifest_records: Dictionary = {}
 var _annotation_clock: float = -0.000000001
 var _annotation_track_key: String = ""
 var _overlay_nodes: Array[Node2D] = []
@@ -34,6 +35,7 @@ func configure(key: String, manifest_path: String) -> bool:
 	if not parsed is Dictionary or int(parsed.get("schema", 0)) != 1: return false
 	if str(parsed.get("mode", "")) != "literal_body_shadow_inspection_only": return false
 	var records: Dictionary = parsed.get("records", {})
+	_manifest_records = records
 	if not records.has(key):
 		var binding: Dictionary = parsed.get("card_bindings", {}).get(key, {})
 		var sprites: Array = binding.get("sprite_ids", [])
@@ -125,6 +127,7 @@ func configure(key: String, manifest_path: String) -> bool:
 func clear() -> void:
 	_record = {}
 	_playback_tracks.clear()
+	_manifest_records.clear()
 	_annotation_clock = -0.000000001
 	_annotation_track_key = ""
 	_is_overlay = false
@@ -276,7 +279,7 @@ func _on_source_annotation(event: Dictionary) -> void:
 		spawn_source_overlay(int(match_value.get_string(1)), posmod(int(event.direction) - 3, 8))
 
 func spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Vector2.INF) -> bool:
-	if _playback_mode != "compatible": return false
+	if _playback_mode != "compatible" or not _manifest_records.has("overlay:" + str(sprite_id)): return false
 	var overlay = get_script().new()
 	overlay.playback_mode_override = _playback_mode
 	var parent: Node = get_parent() if get_parent() != null else self
@@ -312,6 +315,7 @@ func notify_source_spell_event(source_spell_id: int, stage: String, world_point:
 	var sprite: int = int(row.get(fields[stage], 0))
 	if sprite <= 0: return false
 	_manifest_path = path
+	_manifest_records = index.get("records", {})
 	_root = path.get_base_dir()
 	_playback_mode = POLICY.mode(_root, playback_mode_override)
 	return spawn_source_overlay(sprite, facing, world_point)
