@@ -151,7 +151,7 @@ func incoming_and_death() -> void:
 			if str(entry.kind) == "death": death = entry
 		check(not death.is_empty(), "production lethal poison emits corpse " + COMPASS[direction])
 		if death.is_empty(): continue
-		check(str(death.animation) == "death_" + str(direction), "corpse retains exact facing " + COMPASS[direction])
+		check(str(death.get("animation", "")) == death_track(frames, direction), "corpse retains exact facing " + COMPASS[direction])
 		check((death.point as Vector2).is_equal_approx(old_position), "corpse stays at actual death position")
 		check(world.hp == world._effective_max_hp() and world.player.transform_active, "production respawn restores HP and retains transform")
 		# Keep the death location in the real viewport while the live player is

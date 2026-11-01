@@ -2783,7 +2783,10 @@ func _respawn_player(message_text: String) -> void:
 	_clear_combat_actions()
 	if combat_vfx != null and death_texture != null:
 		var death_animation: String = ""
-		for candidate: String in ["death_" + str(player.facing8), "death" + ["_down", "_up", "_left", "_right"][player.facing], "death"]:
+		# S-only refined sets author one death_2 that every facing reuses, the
+		# same policy ActorMotion applies to monsters; without it the corpse
+		# showed a single static frame.
+		for candidate: String in ["death_" + str(player.facing8), "death" + ["_down", "_up", "_left", "_right"][player.facing], "death", "death_2"]:
 			if death_sprite.sprite_frames.has_animation(candidate):
 				death_animation = candidate
 				break
