@@ -209,7 +209,8 @@ func cast(record: Dictionary) -> bool:
 	world.skill_cooldowns[str(skill.name)] = maxf(0, cooldown)
 	world.skill_global_cooldown = float(skill.get("global_cooldown", .3))
 	world._break_invisibility()
-	vfx.begin_cast(presentation_id(skill), world.player, target)
+	if not _is_verified_source_skill(skill): vfx.begin_cast(presentation_id(skill), world.player, target)
+	_emit_verified_source_effect(skill, "cast", world.player.global_position)
 	match mode:
 		"attack", "status", "turn_undead":
 			if str(skill.get("shape", "single")) == "self_circle":
@@ -373,8 +374,11 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 	var critical: bool = world.rng.randf() < world._critical_chance(world._player_critical_rate(str(skill.get("attack_type", "melee"))), target.critical_resistance)
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
 	world._deal_successful_player_hit(target, maxi(1, amount), critical)
-	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), link_from,
-		{"direction":world.player.global_position.direction_to(target.global_position), "critical":critical, "ground_point":target.global_position})
+	_emit_verified_source_effect(skill, "impact", target.global_position)
+	if critical: _emit_verified_source_effect(skill, "critical", target.global_position)
+	if not _is_verified_source_skill(skill):
+		vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), link_from,
+			{"direction":world.player.global_position.direction_to(target.global_position), "critical":critical, "ground_point":target.global_position})
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
 
 func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:
@@ -651,3 +655,10 @@ func import_state(data: Dictionary) -> void:
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		vfx.maintain(str(skill.id), world.player, float(buff.get("remaining", 0)))
 	local_runtime.restore(data.get("local_design",{}))
+
+func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vector2) -> void:
+	if not _is_verified_source_skill(skill): return
+	world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest)
+
+func _is_verified_source_skill(skill: Dictionary) -> bool:
+	return skill.has("source_m_spell_id") and str(skill.get("source_m_snapshot", "")) == "base508"

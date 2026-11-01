@@ -59,7 +59,8 @@ def read(paths):
                 count = re.match(r'^\s*(-?\d+)\s+(\d+)\s*,', body)
                 errors = []
                 if count is None or int(count[2]) != len(tokens): errors.append('frame count mismatch')
-                if any(duration <= 0 for _, _, duration in tokens): errors.append('nonpositive frame duration')
+                if any(duration < 0 for _, _, duration in tokens): errors.append('negative frame duration')
+                if sum(t[2] for t in tokens) <= 0: errors.append('no positive playback duration')
                 if code in current.actions: errors.append('duplicate action')
                 current.actions[code] = {'code':code,'name':name,'fps':fps,'tokens':tokens,
                     'raw_body':body,'source_file':path.name,'source_line':line_number,

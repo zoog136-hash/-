@@ -12,7 +12,7 @@ def build(inputs,registry,pack,report):
  for attack in npc_attacks:by_npc[attack['NpcClassID']].append(attack)
  spells={r['ID']:r for r in read(content/'SpellClass.json')['rows']};effects={};ui={};out=[]
  inventory=json.load(gzip.open(inputs/'full_resource_inventory/inventory/id_to_archive.json.gz','rt'));local_paths=collections.defaultdict(list)
- for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2']:
+ for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2','base508-original-effect-attachments-*/Sprite/*.sp2']:
   for path in inputs.glob(pattern):local_paths[path.name].append(str(path))
  for r in rows:
   source=r['source_original'];npcs={link['npc_class_id'] for link in source['inworld_links'] if 'npc_class_id' in link}

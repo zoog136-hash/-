@@ -8,7 +8,7 @@ def build(inputs,registry,output,only=None):
  cards=read(registry/'cards.json');ds=original_spr.read((inputs/'lineagem-category-source-metadata/original-spr').glob('*.spr'))
  location=json.load(gzip.open(inputs/'full_resource_inventory/inventory/id_to_archive.json.gz','rt'))
  byname=collections.defaultdict(list)
- for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2','girtas_renewal_analysis/sp2/*.sp2','halphas_analysis/sp2/*.sp2']:
+ for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2','base508-original-effect-attachments-*/Sprite/*.sp2','girtas_renewal_analysis/sp2/*.sp2','halphas_analysis/sp2/*.sp2']:
   for p in inputs.glob(pattern):byname[p.name].append(p)
  selected={};categories=collections.defaultdict(set)
  for category,rows in cards['catalog'].items():

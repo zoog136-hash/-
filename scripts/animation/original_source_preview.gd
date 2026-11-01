@@ -3,6 +3,16 @@ extends Node2D
 ## No AnimationCatalog overrides, procedural transforms or gameplay hit clocks.
 signal native_annotations(event: Dictionary)
 signal native_effect_frame(event: Dictionary)
+const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
+var playback_mode_override: String = ""
+var _playback_tracks: Dictionary = {}
+var _playback_mode: String = "strict"
+var _manifest_path: String = ""
+var _annotation_clock: float = -0.000000001
+var _annotation_track_key: String = ""
+var _overlay_nodes: Array[Node2D] = []
+var _is_overlay: bool = false
+var _overlay_facing: int = 0
 var _effect_nodes: Dictionary = {}
 var _last_token: String = ""
 var _record: Dictionary = {}
@@ -17,6 +27,7 @@ var _attack_completed: bool = false
 var last_source_frame: int = -1
 
 func configure(key: String, manifest_path: String) -> bool:
+	var consumer_kind: String = key.get_slice(":", 0)
 	clear()
 	if manifest_path.is_empty() or not FileAccess.file_exists(manifest_path): return false
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
@@ -36,8 +47,10 @@ func configure(key: String, manifest_path: String) -> bool:
 		var actor: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path.get_base_dir().path_join(actor_path)))
 		if not actor is Dictionary: return false
 		candidate = actor
-	var tracks: Dictionary = candidate.get("tracks", {})
+	var tracks: Dictionary
 	_root = manifest_path.get_base_dir()
+	_playback_mode = POLICY.mode(_root, playback_mode_override)
+	tracks = POLICY.tracks(candidate, consumer_kind, _playback_mode)
 	if not tracks.has("idle"): return false
 	var layer_count: int = 0
 	for role: String in ["idle", "walk", "run", "attack"]:
@@ -52,7 +65,7 @@ func configure(key: String, manifest_path: String) -> bool:
 				clear()
 				return false
 			for frame: Dictionary in frames:
-				if not bool(track.get("static_pending_timing", false)) and float(frame.get("duration", 0.0)) <= 0.0:
+				if not bool(track.get("static_pending_timing", false)) and float(frame.get("duration", 0.0)) < 0.0:
 					clear()
 					return false
 				var frame_layers: Array = frame.get("layers", [])
@@ -81,6 +94,14 @@ func configure(key: String, manifest_path: String) -> bool:
 					var effect_node: Sprite2D = Sprite2D.new()
 					effect_node.name = "SourceAttachment" + str(id)
 					effect_node.centered = false
+					effect_node.z_index = 1
+					var style: Dictionary = POLICY.effect(effect.get("source_attributes", []), _playback_mode)
+					effect_node.set_meta("compatibility_style", style)
+					if bool(style.get("enabled", false)):
+						var material: CanvasItemMaterial = CanvasItemMaterial.new()
+						material.blend_mode = int(style.blend_mode)
+						effect_node.material = material
+						effect_node.modulate.a = float(style.alpha)
 					effect_node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 					effect_node.set_meta("source_layer_id", id)
 					effect_node.set_meta("source_attributes", effect.get("source_attributes", []))
@@ -89,6 +110,9 @@ func configure(key: String, manifest_path: String) -> bool:
 					add_child(effect_node)
 					_effect_nodes[id] = effect_node
 	_record = candidate
+	_playback_tracks = tracks
+	_manifest_path = manifest_path
+	_is_overlay = bool(candidate.get("one_shot_overlay", false))
 	for index: int in range(layer_count):
 		var sprite: Sprite2D = Sprite2D.new()
 		sprite.centered = false
@@ -100,6 +124,13 @@ func configure(key: String, manifest_path: String) -> bool:
 
 func clear() -> void:
 	_record = {}
+	_playback_tracks.clear()
+	_annotation_clock = -0.000000001
+	_annotation_track_key = ""
+	_is_overlay = false
+	for overlay: Node2D in _overlay_nodes:
+		if is_instance_valid(overlay): overlay.free()
+	_overlay_nodes.clear()
 	_last_token = ""
 	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.free()
 	_effect_nodes.clear()
@@ -129,7 +160,7 @@ func cancel_source_attack() -> void:
 
 func advance_source(delta: float, state: String, facing: int, sequence: int, gameplay_active: bool) -> void:
 	if not installed(): return
-	if sequence != _sequence and (gameplay_active or state in ["attack", "recovery"]) and _record.tracks.has("attack"):
+	if sequence != _sequence and (gameplay_active or state in ["attack", "recovery"]) and _playback_tracks.has("attack"):
 		_sequence = sequence
 		_source_attack = true
 		_attack_completed = false
@@ -140,16 +171,17 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		requested = "attack"
 	elif gameplay_active and _attack_completed:
 		requested = "attack"
-	if requested in ["walk", "run"] and not _record.tracks.has(requested) and _record.tracks.has("walk"):
+	if requested in ["walk", "run"] and not _playback_tracks.has(requested) and _playback_tracks.has("walk"):
 		requested = "walk" # The displayed native action remains WALK, never a fabricated RUN track.
-	if not _record.tracks.has(requested): requested = "idle"
+	if not _playback_tracks.has(requested): requested = "idle"
 	if requested != _role:
 		_role = requested
 		_clock = 0.0
+		_annotation_clock = -0.000000001
 	_clock += maxf(0.0, delta)
 	# Visual inspection maps front bit5 to game S2. Keep this explicit and unapproved.
 	var source_direction: int = posmod(facing + 3, 8)
-	var track: Dictionary = _record.tracks[_role]
+	var track: Dictionary = _playback_tracks[_role]
 	var frames: Array = track.directions[source_direction]
 	var static_track: bool = bool(track.get("static_pending_timing", false))
 	var total: float = 1.0
@@ -175,8 +207,9 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		node.position = Vector2(float(effect.offset[0]), float(effect.offset[1]))
 		node.set_meta("source_pixel_path", _root.path_join(str(effect.path)))
 		node.set_meta("source_frame", selected.source_frame)
-		# No additive/opacity shader is invented for attr8/128.
-		if bool(effect.get("render_enabled", false)):
+		# Explicit host compatibility, with original attr and strict-mode behavior retained.
+		var style: Dictionary = node.get_meta("compatibility_style", {})
+		if bool(style.get("enabled", false)):
 			var effect_path: String = str(effect.path)
 			if not _textures.has(effect_path):
 				var image: Image = Image.load_from_file(_root.path_join(effect_path))
@@ -188,10 +221,10 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		_last_token = token
 		var event: Dictionary = {"role":_role,"source_frame":selected.source_frame,"source_group":selected.source_group,"direction":source_direction,"effect_layers":selected.get("effect_layers", [])}
 		native_effect_frame.emit(event)
-		for annotation: Dictionary in selected.get("source_annotations", []):
-			var source_event: Dictionary = event.duplicate(false)
-			source_event["annotation"] = annotation
-			native_annotations.emit(source_event)
+
+	if not static_track: _dispatch_annotations(frames, track, total, source_direction)
+	if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
+		queue_free()
 	for index: int in range(_layers.size()):
 		_layers[index].visible = index < selected.layers.size()
 		if not _layers[index].visible: continue
@@ -200,4 +233,85 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		_layers[index].position = Vector2(float(layer.offset[0]), float(layer.offset[1]))
 
 func attachment_status() -> Dictionary:
-	return {"source_layer_nodes":_effect_nodes.size(),"blend":"pending_native_attribute_semantics","native_pixels":true}
+	var active: int = 0
+	for node: Sprite2D in _effect_nodes.values():
+		if bool(node.get_meta("compatibility_style", {}).get("enabled", false)): active += 1
+	var pending: int = 0
+	var origins: Dictionary = {}
+	for track: Dictionary in _playback_tracks.values():
+		if bool(track.static_pending_timing): pending += 1
+		origins[str(track.timing_origin)] = int(origins.get(str(track.timing_origin), 0)) + 1
+	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true}
+
+func _init() -> void:
+	native_annotations.connect(_on_source_annotation)
+
+func _process(delta: float) -> void:
+	if _is_overlay: advance_source(delta, "idle", _overlay_facing, 0, false)
+
+func _dispatch_annotations(frames: Array, track: Dictionary, total: float, direction: int) -> void:
+	var key: String = _role + (":" + str(_sequence) if _role == "attack" else "")
+	if key != _annotation_track_key:
+		_annotation_track_key = key
+		_annotation_clock = -0.000000001
+	var end: float = _clock if bool(track.loop) else minf(_clock, total)
+	if end < _annotation_clock: _annotation_clock = -0.000000001
+	var first_cycle: int = maxi(0, int(floor(maxf(0.0, _annotation_clock) / total))) if bool(track.loop) else 0
+	var last_cycle: int = int(floor(end / total)) if bool(track.loop) else 0
+	for cycle: int in range(first_cycle, last_cycle + 1):
+		var boundary: float = float(cycle) * total
+		for token_index: int in range(frames.size()):
+			var frame: Dictionary = frames[token_index]
+			if boundary > _annotation_clock and boundary <= end:
+				for annotation: Dictionary in frame.get("source_annotations", []):
+					native_annotations.emit({"role":_role,"token_index":token_index,"source_group":frame.source_group,"source_frame":frame.source_frame,"source_time":boundary,"direction":direction,"annotation":annotation,"playback_mode":_playback_mode})
+			boundary += float(frame.duration)
+	_annotation_clock = end
+
+func _on_source_annotation(event: Dictionary) -> void:
+	if _playback_mode != "compatible" or _is_overlay: return
+	var regex: RegEx = RegEx.new()
+	regex.compile("\\](\\d+)")
+	for match_value: RegExMatch in regex.search_all(str(event.annotation.get("raw", ""))):
+		spawn_source_overlay(int(match_value.get_string(1)), posmod(int(event.direction) - 3, 8))
+
+func spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Vector2.INF) -> bool:
+	if _playback_mode != "compatible": return false
+	var overlay = get_script().new()
+	overlay.playback_mode_override = _playback_mode
+	var parent: Node = get_parent() if get_parent() != null else self
+	parent.add_child(overlay)
+	overlay.global_position = global_position if not world_point.is_finite() else world_point
+	if not overlay.configure("overlay:" + str(sprite_id), _manifest_path):
+		overlay.free()
+		return false
+	overlay._overlay_facing = facing
+	overlay.z_index = 2
+	var style: Dictionary = POLICY.effect(overlay._record.get("source_attributes", []), _playback_mode)
+	for sprite: Sprite2D in overlay._layers:
+		if bool(style.get("enabled", false)):
+			var material: CanvasItemMaterial = CanvasItemMaterial.new()
+			material.blend_mode = int(style.blend_mode)
+			sprite.material = material
+			sprite.modulate.a = float(style.alpha)
+	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
+	_overlay_nodes.append(overlay)
+	overlay.advance_source(0.0, "idle", facing, 0, false)
+	return true
+
+func notify_source_spell_event(source_spell_id: int, stage: String, world_point: Vector2, facing: int, manifest_path: String = "") -> bool:
+	# Only an explicit base508 spell identity reaches this adapter; no old-ID/name match.
+	var path: String = _manifest_path if manifest_path.is_empty() else manifest_path
+	if path.is_empty() or not FileAccess.file_exists(path): return false
+	var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not index is Dictionary: return false
+	var row: Dictionary = index.get("source_spell_bindings", {}).get(str(source_spell_id), {})
+	if row.is_empty(): return false
+	var fields: Dictionary = {"cast":"CasterEffectSpriteID","impact":"EffectExplosionSpriteID","success":"SuccessEffectSpriteID","fail":"FailEffectSpriteID","critical":"CriticalEffectSpriteID","effect":"EffectSpriteID"}
+	if not fields.has(stage): return false
+	var sprite: int = int(row.get(fields[stage], 0))
+	if sprite <= 0: return false
+	_manifest_path = path
+	_root = path.get_base_dir()
+	_playback_mode = POLICY.mode(_root, playback_mode_override)
+	return spawn_source_overlay(sprite, facing, world_point)

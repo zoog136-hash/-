@@ -4,7 +4,7 @@ import original_spr
 
 def audit(inputs,registry,output):
  cards=json.loads((registry/'cards.json').read_text());ds=original_spr.read((inputs/'lineagem-category-source-metadata/original-spr').glob('*.spr'));inventory=json.load(gzip.open(inputs/'full_resource_inventory/inventory/id_to_archive.json.gz','rt'))
- physical={pathlib.Path(a['name']).name for row in inventory.values() for a in row.get('assets',[])};local={p.name for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2'] for p in inputs.glob(pattern)}
+ physical={pathlib.Path(a['name']).name for row in inventory.values() for a in row.get('assets',[])};local={p.name for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2','base508-original-effect-attachments-*/Sprite/*.sp2'] for p in inputs.glob(pattern)}
  selected={sid for category in cards['catalog'].values() for r in category for sid in r['source_inworld_sprite_ids']};run={r['WalkSpriteID']:r['RunSpriteID'] for r in cards['run_sprite_relationships']};needed=collections.defaultdict(list);errors=[]
  for sid in selected:
   try:owner,actions=original_spr.resolve(ds,sid)

@@ -7,7 +7,7 @@ def build(inputs,pack,only=None):
  ds=original_spr.read((inputs/'lineagem-category-source-metadata/original-spr').glob('*.spr'))
  import gzip
  inventory=json.load(gzip.open(inputs/'full_resource_inventory/inventory/id_to_archive.json.gz','rt'));byname=collections.defaultdict(list)
- for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2']:
+ for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2','base508-original-effect-attachments-*/Sprite/*.sp2']:
   for path in inputs.glob(pattern):byname[path.name].append(str(path))
  def layer_info(layer):
   physical=original_spr.resolve(ds,layer)[0] if layer in ds else layer

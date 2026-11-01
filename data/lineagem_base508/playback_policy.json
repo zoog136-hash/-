@@ -1,0 +1,1185 @@
+{
+  "schema": 1,
+  "default_mode": "compatible",
+  "status": "UNVERIFIED_COMPATIBILITY_NOT_ORIGINAL_CLIENT_EQUIVALENCE",
+  "pc_default_ticks_per_second": 24,
+  "attr128_compat_alpha": 0.5,
+  "m_player_actions": {
+    "0": {
+      "ID": 0,
+      "Name": "Walk",
+      "MotionType": 1,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "1": {
+      "ID": 1,
+      "Name": "Attack",
+      "MotionType": 2,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 17
+    },
+    "2": {
+      "ID": 2,
+      "Name": "Damage",
+      "MotionType": 3,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 11
+    },
+    "3": {
+      "ID": 3,
+      "Name": "Breath",
+      "MotionType": 4,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "4": {
+      "ID": 4,
+      "Name": "WalkSword",
+      "MotionType": 1,
+      "WeaponType": 1,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "5": {
+      "ID": 5,
+      "Name": "AttackSword",
+      "MotionType": 2,
+      "WeaponType": 1,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "6": {
+      "ID": 6,
+      "Name": "DamageSword",
+      "MotionType": 3,
+      "WeaponType": 1,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "7": {
+      "ID": 7,
+      "Name": "BreathSword",
+      "MotionType": 4,
+      "WeaponType": 1,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "8": {
+      "ID": 8,
+      "Name": "Death",
+      "MotionType": 5,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "9": {
+      "ID": 9,
+      "Name": "SpecialBreath",
+      "MotionType": 4,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "11": {
+      "ID": 11,
+      "Name": "WalkAxe",
+      "MotionType": 1,
+      "WeaponType": 2,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "12": {
+      "ID": 12,
+      "Name": "AttackAxe",
+      "MotionType": 2,
+      "WeaponType": 2,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "13": {
+      "ID": 13,
+      "Name": "DamageAxe",
+      "MotionType": 3,
+      "WeaponType": 2,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "14": {
+      "ID": 14,
+      "Name": "BreathAxe",
+      "MotionType": 4,
+      "WeaponType": 2,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "15": {
+      "ID": 15,
+      "Name": "Get",
+      "MotionType": 6,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "17": {
+      "ID": 17,
+      "Name": "ZapWand",
+      "MotionType": 8,
+      "WeaponType": 0,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "18": {
+      "ID": 18,
+      "Name": "SpellDir",
+      "MotionType": 9,
+      "WeaponType": 0,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 16
+    },
+    "19": {
+      "ID": 19,
+      "Name": "SpellNoDir",
+      "MotionType": 10,
+      "WeaponType": 0,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "20": {
+      "ID": 20,
+      "Name": "WalkBow",
+      "MotionType": 1,
+      "WeaponType": 3,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "21": {
+      "ID": 21,
+      "Name": "AttackBow",
+      "MotionType": 2,
+      "WeaponType": 3,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 22
+    },
+    "22": {
+      "ID": 22,
+      "Name": "DamageBow",
+      "MotionType": 3,
+      "WeaponType": 3,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "23": {
+      "ID": 23,
+      "Name": "BreathBow",
+      "MotionType": 4,
+      "WeaponType": 3,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "24": {
+      "ID": 24,
+      "Name": "WalkSpear",
+      "MotionType": 1,
+      "WeaponType": 4,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "25": {
+      "ID": 25,
+      "Name": "AttackSpear",
+      "MotionType": 2,
+      "WeaponType": 4,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 19
+    },
+    "26": {
+      "ID": 26,
+      "Name": "DamageSpear",
+      "MotionType": 3,
+      "WeaponType": 4,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "27": {
+      "ID": 27,
+      "Name": "BreathSpear",
+      "MotionType": 4,
+      "WeaponType": 4,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "30": {
+      "ID": 30,
+      "Name": "AltAttack",
+      "MotionType": 31,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "31": {
+      "ID": 31,
+      "Name": "AltSpellDir",
+      "MotionType": 41,
+      "WeaponType": 0,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "40": {
+      "ID": 40,
+      "Name": "WalkStaff",
+      "MotionType": 1,
+      "WeaponType": 5,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "41": {
+      "ID": 41,
+      "Name": "AttackStaff",
+      "MotionType": 2,
+      "WeaponType": 5,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "42": {
+      "ID": 42,
+      "Name": "DamageStaff",
+      "MotionType": 3,
+      "WeaponType": 5,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "43": {
+      "ID": 43,
+      "Name": "BreathStaff",
+      "MotionType": 4,
+      "WeaponType": 5,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "46": {
+      "ID": 46,
+      "Name": "WalkDagger",
+      "MotionType": 1,
+      "WeaponType": 6,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "47": {
+      "ID": 47,
+      "Name": "AttackDagger",
+      "MotionType": 2,
+      "WeaponType": 6,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 17
+    },
+    "48": {
+      "ID": 48,
+      "Name": "DamageDagger",
+      "MotionType": 3,
+      "WeaponType": 6,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "49": {
+      "ID": 49,
+      "Name": "BreathDagger",
+      "MotionType": 4,
+      "WeaponType": 6,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "50": {
+      "ID": 50,
+      "Name": "WalkLargeSword",
+      "MotionType": 1,
+      "WeaponType": 7,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "51": {
+      "ID": 51,
+      "Name": "AttackLargeSword",
+      "MotionType": 2,
+      "WeaponType": 7,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 21
+    },
+    "52": {
+      "ID": 52,
+      "Name": "DamageLargeSword",
+      "MotionType": 3,
+      "WeaponType": 7,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "53": {
+      "ID": 53,
+      "Name": "BreathLargeSword",
+      "MotionType": 4,
+      "WeaponType": 7,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "54": {
+      "ID": 54,
+      "Name": "WalkDoubleSword",
+      "MotionType": 1,
+      "WeaponType": 8,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "55": {
+      "ID": 55,
+      "Name": "AttackDoubleSword",
+      "MotionType": 2,
+      "WeaponType": 8,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "56": {
+      "ID": 56,
+      "Name": "DamageDoubleSword",
+      "MotionType": 3,
+      "WeaponType": 8,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "57": {
+      "ID": 57,
+      "Name": "BreathDoubleSword",
+      "MotionType": 4,
+      "WeaponType": 8,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "58": {
+      "ID": 58,
+      "Name": "WalkClaw",
+      "MotionType": 1,
+      "WeaponType": 9,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "59": {
+      "ID": 59,
+      "Name": "AttackClaw",
+      "MotionType": 2,
+      "WeaponType": 9,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "60": {
+      "ID": 60,
+      "Name": "DamageClaw",
+      "MotionType": 3,
+      "WeaponType": 9,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "61": {
+      "ID": 61,
+      "Name": "BreathClaw",
+      "MotionType": 4,
+      "WeaponType": 9,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "62": {
+      "ID": 62,
+      "Name": "WalkGauntlet",
+      "MotionType": 1,
+      "WeaponType": 10,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "63": {
+      "ID": 63,
+      "Name": "AttackGauntlet",
+      "MotionType": 2,
+      "WeaponType": 10,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 23
+    },
+    "64": {
+      "ID": 64,
+      "Name": "DamageGauntlet",
+      "MotionType": 3,
+      "WeaponType": 10,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "65": {
+      "ID": 65,
+      "Name": "BreathGauntlet",
+      "MotionType": 4,
+      "WeaponType": 10,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "72": {
+      "ID": 72,
+      "Name": "SpecialAttack",
+      "MotionType": 2,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 17
+    },
+    "73": {
+      "ID": 73,
+      "Name": "SpecialAttackSword",
+      "MotionType": 2,
+      "WeaponType": 1,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "74": {
+      "ID": 74,
+      "Name": "SpecialAttackAxe",
+      "MotionType": 2,
+      "WeaponType": 2,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "75": {
+      "ID": 75,
+      "Name": "SpecialAttackBow",
+      "MotionType": 2,
+      "WeaponType": 3,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 22
+    },
+    "76": {
+      "ID": 76,
+      "Name": "SpecialAttackSpear",
+      "MotionType": 2,
+      "WeaponType": 4,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 19
+    },
+    "77": {
+      "ID": 77,
+      "Name": "SpecialAttackStaff",
+      "MotionType": 2,
+      "WeaponType": 5,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "78": {
+      "ID": 78,
+      "Name": "SpecialAttackDagger",
+      "MotionType": 2,
+      "WeaponType": 6,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 17
+    },
+    "79": {
+      "ID": 79,
+      "Name": "SpecialAttackLargeSword",
+      "MotionType": 2,
+      "WeaponType": 7,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 21
+    },
+    "80": {
+      "ID": 80,
+      "Name": "SpecialAttackDoubleSword",
+      "MotionType": 2,
+      "WeaponType": 8,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "81": {
+      "ID": 81,
+      "Name": "SpecialAttackClaw",
+      "MotionType": 2,
+      "WeaponType": 9,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "82": {
+      "ID": 82,
+      "Name": "SpecialAttackGauntlet",
+      "MotionType": 2,
+      "WeaponType": 10,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 23
+    },
+    "83": {
+      "ID": 83,
+      "Name": "WalkChainSword",
+      "MotionType": 1,
+      "WeaponType": 11,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "84": {
+      "ID": 84,
+      "Name": "AttackChainSword",
+      "MotionType": 2,
+      "WeaponType": 11,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 19
+    },
+    "85": {
+      "ID": 85,
+      "Name": "DamageChainSword",
+      "MotionType": 3,
+      "WeaponType": 11,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "86": {
+      "ID": 86,
+      "Name": "BreathChainSword",
+      "MotionType": 4,
+      "WeaponType": 11,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "87": {
+      "ID": 87,
+      "Name": "SpecialAttackChainSword",
+      "MotionType": 2,
+      "WeaponType": 11,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 19
+    },
+    "88": {
+      "ID": 88,
+      "Name": "WalkDoubleAxe",
+      "MotionType": 1,
+      "WeaponType": 12,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "89": {
+      "ID": 89,
+      "Name": "AttackDoubleAxe",
+      "MotionType": 2,
+      "WeaponType": 12,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "90": {
+      "ID": 90,
+      "Name": "DamageDoubleAxe",
+      "MotionType": 3,
+      "WeaponType": 12,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "91": {
+      "ID": 91,
+      "Name": "BreathDoubleAxe",
+      "MotionType": 4,
+      "WeaponType": 12,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "92": {
+      "ID": 92,
+      "Name": "SpecialAttackDoubleAxe",
+      "MotionType": 2,
+      "WeaponType": 12,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "93": {
+      "ID": 93,
+      "Name": "ExtraAttackDoubleAxe",
+      "MotionType": 2,
+      "WeaponType": 12,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "94": {
+      "ID": 94,
+      "Name": "ExtraAttackAxe",
+      "MotionType": 2,
+      "WeaponType": 2,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "95": {
+      "ID": 95,
+      "Name": "Appear",
+      "MotionType": 11,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "96": {
+      "ID": 96,
+      "Name": "Disappear",
+      "MotionType": 12,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "119": {
+      "ID": 119,
+      "Name": "OneHandGunWalk",
+      "MotionType": 1,
+      "WeaponType": 34,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "120": {
+      "ID": 120,
+      "Name": "OneHandGunAttack",
+      "MotionType": 2,
+      "WeaponType": 34,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 22
+    },
+    "121": {
+      "ID": 121,
+      "Name": "OneHandGunDamage",
+      "MotionType": 3,
+      "WeaponType": 34,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "122": {
+      "ID": 122,
+      "Name": "OneHandGunBreath",
+      "MotionType": 4,
+      "WeaponType": 34,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "123": {
+      "ID": 123,
+      "Name": "OneHandGunRangeAttack",
+      "MotionType": 2,
+      "WeaponType": 34,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 23
+    },
+    "124": {
+      "ID": 124,
+      "Name": "RifleWalk",
+      "MotionType": 1,
+      "WeaponType": 54,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "125": {
+      "ID": 125,
+      "Name": "RifleAttack",
+      "MotionType": 2,
+      "WeaponType": 54,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 22
+    },
+    "126": {
+      "ID": 126,
+      "Name": "RifleDamage",
+      "MotionType": 3,
+      "WeaponType": 54,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "127": {
+      "ID": 127,
+      "Name": "RifleBreath",
+      "MotionType": 4,
+      "WeaponType": 54,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "128": {
+      "ID": 128,
+      "Name": "RifleRangeAttack",
+      "MotionType": 2,
+      "WeaponType": 54,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 24
+    },
+    "129": {
+      "ID": 129,
+      "Name": "BazookaWalk",
+      "MotionType": 1,
+      "WeaponType": 74,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "130": {
+      "ID": 130,
+      "Name": "BazookaAttack",
+      "MotionType": 2,
+      "WeaponType": 74,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "131": {
+      "ID": 131,
+      "Name": "BazookaDamage",
+      "MotionType": 3,
+      "WeaponType": 74,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "132": {
+      "ID": 132,
+      "Name": "BazookaBreath",
+      "MotionType": 4,
+      "WeaponType": 74,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "133": {
+      "ID": 133,
+      "Name": "BazookaRangeAttack",
+      "MotionType": 2,
+      "WeaponType": 74,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "134": {
+      "ID": 134,
+      "Name": "SpecialOneHandGunRangeAttack",
+      "MotionType": 2,
+      "WeaponType": 34,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 23
+    },
+    "135": {
+      "ID": 135,
+      "Name": "SpecialRifleRangeAttack",
+      "MotionType": 2,
+      "WeaponType": 54,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 24
+    },
+    "136": {
+      "ID": 136,
+      "Name": "SpecialBazookaRangeAttack",
+      "MotionType": 2,
+      "WeaponType": 74,
+      "WeaponAlterType": 1,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "137": {
+      "ID": 137,
+      "Name": "AxeWalkWithShield",
+      "MotionType": 1,
+      "WeaponType": 2,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "138": {
+      "ID": 138,
+      "Name": "AxeAttackWithShield",
+      "MotionType": 2,
+      "WeaponType": 2,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "139": {
+      "ID": 139,
+      "Name": "AxeSpecialAttackWithShield",
+      "MotionType": 2,
+      "WeaponType": 2,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "140": {
+      "ID": 140,
+      "Name": "AxeDamageWithShield",
+      "MotionType": 3,
+      "WeaponType": 2,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "141": {
+      "ID": 141,
+      "Name": "AxeBreathAttackWithShield",
+      "MotionType": 4,
+      "WeaponType": 2,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "142": {
+      "ID": 142,
+      "Name": "SpearWalkWithShield",
+      "MotionType": 1,
+      "WeaponType": 4,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "143": {
+      "ID": 143,
+      "Name": "SpearAttackWithShield",
+      "MotionType": 2,
+      "WeaponType": 4,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 19
+    },
+    "144": {
+      "ID": 144,
+      "Name": "SpearSpecialAttackWithShield",
+      "MotionType": 2,
+      "WeaponType": 4,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 19
+    },
+    "145": {
+      "ID": 145,
+      "Name": "SpearDamageWithShield",
+      "MotionType": 3,
+      "WeaponType": 4,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "146": {
+      "ID": 146,
+      "Name": "SpearBreathAttackWithShield",
+      "MotionType": 4,
+      "WeaponType": 4,
+      "WeaponAlterType": 11,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "147": {
+      "ID": 147,
+      "Name": "ScytheWalk",
+      "MotionType": 1,
+      "WeaponType": 84,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "148": {
+      "ID": 148,
+      "Name": "ScytheAttack",
+      "MotionType": 2,
+      "WeaponType": 84,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 21
+    },
+    "149": {
+      "ID": 149,
+      "Name": "ScytheSpecialAttack",
+      "MotionType": 2,
+      "WeaponType": 84,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 21
+    },
+    "150": {
+      "ID": 150,
+      "Name": "ScytheDamage",
+      "MotionType": 3,
+      "WeaponType": 84,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "151": {
+      "ID": 151,
+      "Name": "ScytheBreath",
+      "MotionType": 4,
+      "WeaponType": 84,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "152": {
+      "ID": 152,
+      "Name": "RuneSwordWalk",
+      "MotionType": 1,
+      "WeaponType": 102,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 36,
+      "PlayerDelay": 16
+    },
+    "153": {
+      "ID": 153,
+      "Name": "RuneSwordAttack",
+      "MotionType": 2,
+      "WeaponType": 102,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "154": {
+      "ID": 154,
+      "Name": "RuneSwordSpecialAttack",
+      "MotionType": 2,
+      "WeaponType": 102,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 18
+    },
+    "155": {
+      "ID": 155,
+      "Name": "RuneSwordDamage",
+      "MotionType": 3,
+      "WeaponType": 102,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 9
+    },
+    "156": {
+      "ID": 156,
+      "Name": "RuneSwordBreath",
+      "MotionType": 4,
+      "WeaponType": 102,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "162": {
+      "ID": 162,
+      "Name": "FishingRodCast",
+      "MotionType": 51,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "163": {
+      "ID": 163,
+      "Name": "FishingRodReeling",
+      "MotionType": 61,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "164": {
+      "ID": 164,
+      "Name": "FishingRodResist",
+      "MotionType": 71,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "165": {
+      "ID": 165,
+      "Name": "FishingRodFight",
+      "MotionType": 81,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "166": {
+      "ID": 166,
+      "Name": "FishingRodFightSkill",
+      "MotionType": 91,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "167": {
+      "ID": 167,
+      "Name": "FishingRodSuccess",
+      "MotionType": 101,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "168": {
+      "ID": 168,
+      "Name": "FishingRodFail",
+      "MotionType": 111,
+      "WeaponType": 0,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 0,
+      "PlayerDelay": 0
+    },
+    "169": {
+      "ID": 169,
+      "Name": "FireSpellAttack",
+      "MotionType": 121,
+      "WeaponType": 1,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 119
+    },
+    "170": {
+      "ID": 170,
+      "Name": "WaterSpellAttack",
+      "MotionType": 121,
+      "WeaponType": 2,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 119
+    },
+    "171": {
+      "ID": 171,
+      "Name": "EarthSpellAttack",
+      "MotionType": 121,
+      "WeaponType": 3,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 119
+    },
+    "172": {
+      "ID": 172,
+      "Name": "WindSpellAttack",
+      "MotionType": 121,
+      "WeaponType": 4,
+      "WeaponAlterType": 0,
+      "PlayerFrameRate": 24,
+      "PlayerDelay": 119
+    }
+  },
+  "alias_base_rate_candidates": {
+    "18899:run": {
+      "fps": 36,
+      "base_sprite_id": 18897,
+      "source_file": "list_18.spr",
+      "source_line": 12491,
+      "confidence": "source_value_exact_inheritance_application_unverified_for_M"
+    }
+  },
+  "sources": [
+    {
+      "kind": "M_base508_exact_data",
+      "path": "content/ListSprAction.json",
+      "scope": "PlayerFrameRate only; fallback application is compatibility, PlayerDelay not used to rewrite native ticks"
+    },
+    {
+      "kind": "PC_3_81_author_test_not_M",
+      "url": "https://morosedog.gitlab.io/private-lineage-20220524-private-lineage-119/",
+      "supports": "PC default24 and sequential110 sections"
+    },
+    {
+      "kind": "PC_3_81_author_test_not_M",
+      "url": "https://morosedog.gitlab.io/private-lineage-20220520-private-lineage-115/",
+      "supports": "attr8 glowing;attr128 black-edge translucency; no exact blend equation"
+    },
+    {
+      "kind": "public_SPR_parser_documentation_not_M_engine",
+      "url": "https://github.com/tony1223/PakViewer/blob/main/docs/LIST_SPR_FORMAT.md",
+      "supports": "zero duration native tokens and raw annotation symbols"
+    },
+    {
+      "kind": "Godot_compositor_API_not_Lineage_equivalence",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_canvasitemmaterial.html",
+      "supports": "standard additive and alpha-mix operations"
+    }
+  ],
+  "limits": [
+    "No source frames, ticks, FPS, attributes or offsets are overwritten.",
+    "Strict mode disables compatibility fallback and unresolved blending.",
+    "attr8 additive and attr128 alpha0.5 are declared host approximations, not recovered M equations.",
+    "No root/limb/frame interpolation or new effect artwork."
+  ]
+}
