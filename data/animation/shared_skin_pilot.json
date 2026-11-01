@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 3,
   "direction": "E",
   "scope": "two humanoid skins, locomotion-only cutout pilot; joints hand-authored from visible art; hidden anatomy not reconstructed",
   "skins": {
@@ -64,12 +64,16 @@
               78
             ],
             [
-              58,
-              85
+              60,
+              76
+            ],
+            [
+              54,
+              82
             ],
             [
               47,
-              96
+              94
             ],
             [
               42,
@@ -92,7 +96,257 @@
               43
             ]
           ],
-          "sha256": "16b832190f6fc97d7db355aa85a60a36be1ca23676d1fdc44cbc53304eadf2f5"
+          "sha256": "cde3ac4ccd904e6ecd8e6764bec811dfadddc249b36f492cb83ab508cfbbb7ad",
+          "subtract_cape": {
+            "polygon": [
+              [
+                52,
+                61
+              ],
+              [
+                62,
+                59
+              ],
+              [
+                61,
+                68
+              ],
+              [
+                56,
+                78
+              ],
+              [
+                52,
+                84
+              ],
+              [
+                47,
+                94
+              ],
+              [
+                42,
+                94
+              ],
+              [
+                36,
+                86
+              ],
+              [
+                36,
+                73
+              ],
+              [
+                45,
+                63
+              ]
+            ],
+            "keep_y": 67
+          },
+          "subtract_polygon": [
+            [
+              66,
+              52
+            ],
+            [
+              72,
+              51
+            ],
+            [
+              77,
+              55
+            ],
+            [
+              81,
+              57
+            ],
+            [
+              87,
+              58
+            ],
+            [
+              90,
+              63
+            ],
+            [
+              125,
+              82
+            ],
+            [
+              125,
+              93
+            ],
+            [
+              116,
+              93
+            ],
+            [
+              79,
+              70
+            ],
+            [
+              76,
+              66
+            ],
+            [
+              70,
+              63
+            ],
+            [
+              65,
+              59
+            ]
+          ],
+          "authored_underlay": {
+            "polygon": [
+              [
+                65,
+                54
+              ],
+              [
+                77,
+                54
+              ],
+              [
+                80,
+                58
+              ],
+              [
+                80,
+                65
+              ],
+              [
+                72,
+                66
+              ],
+              [
+                66,
+                61
+              ]
+            ],
+            "source_rect": [
+              76,
+              48,
+              80,
+              54
+            ],
+            "method": "flat armor underpaint using median visible torso color, restricted to original opaque footprint; new authoring, not recovered anatomy"
+          }
+        },
+        "arm": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/arm.png",
+          "pivot": [
+            70,
+            55
+          ],
+          "end": null,
+          "polygon": [
+            [
+              66,
+              52
+            ],
+            [
+              72,
+              51
+            ],
+            [
+              77,
+              55
+            ],
+            [
+              81,
+              57
+            ],
+            [
+              87,
+              58
+            ],
+            [
+              90,
+              63
+            ],
+            [
+              125,
+              82
+            ],
+            [
+              125,
+              93
+            ],
+            [
+              116,
+              93
+            ],
+            [
+              79,
+              70
+            ],
+            [
+              76,
+              66
+            ],
+            [
+              70,
+              63
+            ],
+            [
+              65,
+              59
+            ]
+          ],
+          "sha256": "42da0d2226f98052c7701f14d8f531e8d541120902519207ac7bfd92c5f65089"
+        },
+        "cape": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/cape.png",
+          "pivot": [
+            57,
+            63
+          ],
+          "end": null,
+          "polygon": [
+            [
+              52,
+              61
+            ],
+            [
+              62,
+              59
+            ],
+            [
+              61,
+              68
+            ],
+            [
+              56,
+              78
+            ],
+            [
+              52,
+              84
+            ],
+            [
+              47,
+              94
+            ],
+            [
+              42,
+              94
+            ],
+            [
+              36,
+              86
+            ],
+            [
+              36,
+              73
+            ],
+            [
+              45,
+              63
+            ]
+          ],
+          "sha256": "5ddabca60a33db28dab594d355985acab02017182f28e4f059d3a9cb2cd9ac83"
         },
         "thigh_0": {
           "sole_y": null,
@@ -449,7 +703,233 @@
               48
             ]
           ],
-          "sha256": "744d763d18c2c72aac263f89314331f21c5212dfee378d1edad8faafa2165795"
+          "sha256": "b271001c987aa3ac75ab58710d3334667794447b174802da72f2cb775c66d88b",
+          "subtract_cape": {
+            "polygon": [
+              [
+                48,
+                76
+              ],
+              [
+                59,
+                76
+              ],
+              [
+                62,
+                79
+              ],
+              [
+                58,
+                85
+              ],
+              [
+                51,
+                90
+              ],
+              [
+                43,
+                95
+              ],
+              [
+                38,
+                99
+              ],
+              [
+                36,
+                94
+              ],
+              [
+                39,
+                85
+              ],
+              [
+                44,
+                80
+              ]
+            ],
+            "keep_y": 82
+          },
+          "subtract_polygon": [
+            [
+              66,
+              66
+            ],
+            [
+              72,
+              65
+            ],
+            [
+              74,
+              69
+            ],
+            [
+              76,
+              75
+            ],
+            [
+              78,
+              80
+            ],
+            [
+              78,
+              86
+            ],
+            [
+              72,
+              88
+            ],
+            [
+              68,
+              82
+            ],
+            [
+              67,
+              76
+            ],
+            [
+              65,
+              71
+            ]
+          ],
+          "authored_underlay": {
+            "polygon": [
+              [
+                67,
+                68
+              ],
+              [
+                73,
+                68
+              ],
+              [
+                76,
+                75
+              ],
+              [
+                76,
+                82
+              ],
+              [
+                71,
+                84
+              ],
+              [
+                67,
+                78
+              ]
+            ],
+            "source_rect": [
+              77,
+              58,
+              83,
+              68
+            ],
+            "method": "flat armor underpaint using median visible torso color, restricted to original opaque footprint; new authoring, not recovered anatomy"
+          }
+        },
+        "arm": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/arm.png",
+          "pivot": [
+            70,
+            69
+          ],
+          "end": null,
+          "polygon": [
+            [
+              66,
+              66
+            ],
+            [
+              72,
+              65
+            ],
+            [
+              74,
+              69
+            ],
+            [
+              76,
+              75
+            ],
+            [
+              78,
+              80
+            ],
+            [
+              78,
+              86
+            ],
+            [
+              72,
+              88
+            ],
+            [
+              68,
+              82
+            ],
+            [
+              67,
+              76
+            ],
+            [
+              65,
+              71
+            ]
+          ],
+          "sha256": "b6c4e4e1f8feea3e9c45f43a3db1113fbc37049be299e05f4dc13e5eb1abede6"
+        },
+        "cape": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/cape.png",
+          "pivot": [
+            54,
+            79
+          ],
+          "end": null,
+          "polygon": [
+            [
+              48,
+              76
+            ],
+            [
+              59,
+              76
+            ],
+            [
+              62,
+              79
+            ],
+            [
+              58,
+              85
+            ],
+            [
+              51,
+              90
+            ],
+            [
+              43,
+              95
+            ],
+            [
+              38,
+              99
+            ],
+            [
+              36,
+              94
+            ],
+            [
+              39,
+              85
+            ],
+            [
+              44,
+              80
+            ]
+          ],
+          "sha256": "fe3fed1ea245cdb17aeb8f0948e8fda115888636b16c0a782309b906c3fb654a"
         },
         "thigh_0": {
           "sole_y": null,

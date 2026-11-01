@@ -23,8 +23,10 @@ func _draw() -> void:
 	draw_ellipse_shadow()
 	# Far leg behind cape/torso; near leg in front. No per-skin motion logic.
 	_draw_leg(0)
+	_draw_cape()
 	_draw_body()
 	_draw_leg(1)
+	_draw_arm()
 	if show_joints:
 		draw_set_transform(Vector2.ZERO)
 		for side in range(2):
@@ -40,6 +42,20 @@ func _draw_body() -> void:
 	var pivot := _v(skin.parts.body.pivot)
 	draw_set_transform(pose.hip, 0, Vector2.ONE * float(skin.body_scale))
 	draw_texture(parts.body, -pivot)
+
+func _draw_cape() -> void:
+	var pivot := _v(skin.parts.cape.pivot)
+	var bind := (pivot - _v(skin.parts.body.pivot)) * float(skin.body_scale)
+	# The upper cape overlaps the moving tail, hiding the cutout seam.
+	draw_set_transform(pose.hip + bind, pose.cape_angle, Vector2.ONE * float(skin.body_scale))
+	draw_texture(parts.cape, -pivot)
+
+func _draw_arm() -> void:
+	var pivot := _v(skin.parts.arm.pivot)
+	var bind := (pivot - _v(skin.parts.body.pivot)) * float(skin.body_scale)
+	# Hand and forearm stay together; the warrior sword stays in that cutout too.
+	draw_set_transform(pose.hip + bind, pose.arm_angle, Vector2.ONE * float(skin.body_scale))
+	draw_texture(parts.arm, -pivot)
 
 func _draw_leg(side: int) -> void:
 	var hip: Vector2 = pose.hip + Vector2(-1 if side == 0 else 1, 0)

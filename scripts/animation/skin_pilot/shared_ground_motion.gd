@@ -7,12 +7,16 @@ enum Family { GROUND, WINGED_FLOATING, RANGED }
 @export var stride_distance: float = 46.0
 @export var stance_fraction: float = 0.52
 @export var swing_height: float = 8.0
+@export var arm_swing_radians: float = 0.16
+@export var cape_swing_radians: float = 0.08
 var phase: float = 0.0
 var distance: float = 0.0
 var previous_pose: Dictionary = {}
 var was_moving := false
 var transition_time := 1.0
 var transition_feet: Array = []
+var transition_arm := 0.0
+var transition_cape := 0.0
 
 func advance(delta: float, speed: float) -> Dictionary:
 	assert(family == Family.GROUND, "Only the observed ground pilot is implemented")
@@ -22,11 +26,15 @@ func advance(delta: float, speed: float) -> Dictionary:
 	if moving != was_moving and not previous_pose.is_empty():
 		transition_time = 0.0
 		transition_feet = previous_pose.feet.duplicate()
+		transition_arm = previous_pose.arm_angle
+		transition_cape = previous_pose.cape_angle
 	was_moving = moving
 	var result := sample(phase, moving)
 	transition_time += delta
 	if transition_time < 0.18 and transition_feet.size() == 2:
 		var blend := smoothstep(0.0, 0.18, transition_time)
+		result.arm_angle = lerpf(transition_arm, result.arm_angle, blend)
+		result.cape_angle = lerpf(transition_cape, result.cape_angle, blend)
 		for side in range(2):
 			result.feet[side] = transition_feet[side].lerp(result.feet[side], blend)
 			var hip: Vector2 = result.hip + Vector2(-1 if side == 0 else 1, 0)
@@ -36,7 +44,7 @@ func advance(delta: float, speed: float) -> Dictionary:
 	return result
 
 func sample(at_phase: float, moving: bool = true) -> Dictionary:
-	var pose := {"hip": Vector2(0, -32), "feet": [], "knees": [], "contact": [], "foot_angle": []}
+	var pose := {"hip": Vector2(0, -32), "feet": [], "knees": [], "contact": [], "foot_angle": [], "cape_angle": cape_swing_radians * sin(TAU * at_phase + PI * 0.5) if moving else 0.0, "arm_angle": -arm_swing_radians * cos(TAU * at_phase) if moving else 0.0}
 	for side in range(2):
 		var p := fposmod(at_phase + side * 0.5, 1.0)
 		var reach := stride_distance * stance_fraction * 0.5

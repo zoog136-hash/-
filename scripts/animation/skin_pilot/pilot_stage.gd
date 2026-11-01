@@ -74,6 +74,9 @@ func _swap_skins() -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
+	if not manual and event.keycode in [KEY_SPACE, KEY_L]:
+		manual_moving = speed > 0.01
+		manual_lift = motion.swing_height
 	if event.keycode == KEY_SPACE:
 		manual = true
 		manual_moving = not manual_moving
@@ -122,6 +125,8 @@ func _tests() -> void:
 	motion.swing_height = 8
 	var high := motion.sample(0.77)
 	assert(high.feet[0].y < low.feet[0].y - 1.5)
+	assert(motion.sample(0.0).arm_angle < 0.0)
+	assert(motion.sample(0.5).arm_angle > 0.0)
 	var old_phase := motion.phase
 	_swap_skins()
 	assert(motion.phase == old_phase)
