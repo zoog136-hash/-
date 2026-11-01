@@ -4,6 +4,9 @@ class_name TwilightMonster
 const BASE508 = preload("res://scripts/lineagem_base508.gd")
 var source_m_original: Dictionary = {}
 var source_m_npc_id: int = -1
+const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
+const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
+var source_m_view: SOURCE_M_VIEW = null
 var mp: int = 0
 var max_mp: int = 0
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
@@ -128,6 +131,7 @@ func retire_for_pool() -> void:
 	# Death presentation is complete before this is called. Release all visual
 	# owners while keeping the lightweight body for the next life/region.
 	set_physics_process(false)
+	_clear_source_m_view()
 	input_pickable = false
 	collision_layer = 0
 	collision_mask = 0
@@ -163,6 +167,16 @@ func retire_for_pool() -> void:
 	drop_items.clear()
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
+	_clear_source_m_view()
+	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
+	if source_record.has("source_m_asset_manifest_path"):
+		var native_view := SOURCE_M_VIEW.new()
+		if native_view.configure(source_record, str(source_record.source_m_asset_manifest_path)):
+			record = source_record
+			source_m_view = native_view
+			add_child(source_m_view)
+		else:
+			native_view.free() # Retain the prior actor/stats if any original pixel fails verification.
 	# Only an exact namespaced source ID opts into native stats. No name/Sprite/legacy-ID guessing.
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
 	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
@@ -260,7 +274,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
 	exp_reward = int(record.xp) if not source_m_original.is_empty() else maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
-	gold_reward = maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
+	gold_reward = int(record.get("gold", 0)) if not source_m_original.is_empty() else maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
 	grade = str(record.get("grade", record.get("등급", "일반")))
 	is_boss = LOOT_DROP.is_boss_record(record)
 	drop_items.clear()
@@ -278,6 +292,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	world_controller = world_ref
 	if world_controller is TwilightWorld:
 		motion.reduced_motion = bool(world_controller.presentation_settings.get("reduced_motion", false))
+	sprite.show()
 	sprite.texture = texture
 	sprite.material = null
 	if texture != null:
@@ -313,6 +328,21 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 		species_visual.show()
 		species_visual.update_pose()
 	elif is_instance_valid(species_visual): species_visual.hide()
+	if is_instance_valid(source_m_view):
+		sprite.hide()
+		$GroundShadow.hide()
+		if is_instance_valid(species_visual): species_visual.hide()
+		motion.profile.death_duration = maxf(motion.profile.death_duration, source_m_view.duration("death"))
+
+func _clear_source_m_view() -> void:
+	if is_instance_valid(source_m_view):
+		source_m_view.hide()
+		source_m_view.queue_free()
+	source_m_view = null
+
+func _advance_source_m_view(delta: float) -> void:
+	if is_instance_valid(source_m_view):
+		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
 
 func _physics_process(delta: float) -> void:
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
@@ -322,6 +352,7 @@ func _physics_process(delta: float) -> void:
 		motion.advance(delta, Vector2.ZERO)
 		motion.apply(sprite, animation_base_scale)
 		animation_state = motion.state
+		_advance_source_m_view(delta)
 		if is_instance_valid(species_visual): species_visual.warning_active = false; species_visual.update_pose()
 		if motion.death_clock >= maxf(1.0, motion.profile.death_duration + .45):
 			if world_controller.has_method("recycle_monster") and world_controller.recycle_monster(self): return
@@ -351,6 +382,7 @@ func _physics_process(delta: float) -> void:
 	animation_state = motion.state
 	if not motion.active and velocity.length_squared() > 1.0:
 		animation_state = "patrol" if velocity.length() < move_speed * 0.7 else "chase"
+	_advance_source_m_view(delta)
 
 func _tick_ai(delta: float) -> void:
 	if dead or not is_instance_valid(target_player):
