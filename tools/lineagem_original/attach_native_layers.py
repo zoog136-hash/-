@@ -17,7 +17,8 @@ def build(inputs,pack,only=None):
   info={'sprite_id':layer,'physical_sprite_id':physical,'source_attributes':attrs,'blend_status':'unverified','assets':[{**a,'local_paths':byname[pathlib.Path(a['name']).name]} for a in assets],'relation':'SPR105.clothes','timeline':'parent_native_token_address','rendered':False}
   registry[str(layer)]=info
   return info
- for actor_file in sorted((pack/'actors').glob('*.json')):
+ # Native overlays can also declare105.clothes; do not silently drop their layers.
+ for actor_file in sorted(list((pack/'actors').glob('*.json'))+list((pack/'overlays').glob('*.json'))):
   if only is not None and int(actor_file.stem) not in only:continue
   actor=json.loads(actor_file.read_text());cache={};images={}
   for track in actor['tracks'].values():
