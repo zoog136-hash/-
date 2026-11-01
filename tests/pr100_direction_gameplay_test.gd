@@ -260,6 +260,11 @@ func player_case(spec: Dictionary, transformed: bool) -> void:
 		var attack_captured := false
 		var marker_pose_checked := false
 		var authored_track: String = ("cast_" if bool(spec.magic) else "ranged_attack_" if str(spec.type) == "활" else "attack_") + str(direction)
+		# Refined native sets (e.g. mythic 135 r161) author one attack_N used
+		# for bow shots too; ActorMotion falls back to it when ranged_attack_N
+		# is absent. Require the track production actually presents.
+		if not sprite.sprite_frames.has_animation(authored_track) and sprite.sprite_frames.has_animation("attack_" + str(direction)):
+			authored_track = "attack_" + str(direction)
 		check(sprite.sprite_frames.has_animation(authored_track),prefix + " existing real weapon-specific native track")
 		var saw_flight := false
 		var projectile_delta := Vector2.ZERO
