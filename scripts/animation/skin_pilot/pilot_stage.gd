@@ -22,12 +22,17 @@ var swapped := false
 var names: Array[Label] = []
 var girtas_preview := false
 var secondary_skin := "assassin"
+var preview_speed := 80.0
 var manual := false
 var manual_moving := false
 var manual_lift := 6.0
 
 func _ready() -> void:
 	girtas_preview = "--girtas-skin" in OS.get_cmdline_user_args()
+	if girtas_preview:
+		motion.configure_run()
+		preview_speed = 210.0 # Player.move_speed and Girtas NativeMotionProfile.reference_speed.
+		manual_lift = 16.0
 	Engine.max_fps = 30
 	attack_clock.strike.connect(func(_sequence: int):
 		strikes += 1
@@ -37,7 +42,7 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color("19222b"))
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/shared_skin_pilot.json"))
 	_label("TWILIGHT  /  GIRTAS SHARED 2D SKIN" if girtas_preview else "TWILIGHT  /  SHARED 2D MOTION PILOT", Vector2(40, 24), 25)
-	_label("E view / same ground motion as warrior / fixed 30 FPS render" if girtas_preview else "Two existing skins. One joint pose and one distance-driven timeline.", Vector2(40, 65), 17)
+	_label("E view / shared RUN / 210 px/s / fixed 30 FPS render" if girtas_preview else "Two existing skins. One joint pose and one distance-driven timeline.", Vector2(40, 65), 17)
 	if girtas_preview:
 		secondary_skin = "girtas_267"
 		data.skins[secondary_skin] = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_shared_skin.json")).skin
@@ -71,13 +76,13 @@ func _process(delta: float) -> void:
 	elapsed += delta
 	frames += 1
 	strike_flash = maxf(0.0, strike_flash - delta)
-	speed = (80.0 if manual_moving else 0.0) if manual else (80.0 if (elapsed > 2.0 and elapsed < 6.0) or (elapsed > 13.0 and elapsed < 16.0) else 0.0)
+	speed = (preview_speed if manual_moving else 0.0) if manual else (preview_speed if (elapsed > 2.0 and elapsed < 6.0) or (elapsed > 13.0 and elapsed < 16.0) else 0.0)
 	var attack_times := [7.0, 8.4, 9.8, 14.0]
 	if not manual and attack_index < attack_times.size() and elapsed >= attack_times[attack_index]:
 		_begin_attack()
 		attack_index += 1
 	if not manual and elapsed >= 10.0 and not swapped: _swap_skins()
-	motion.swing_height = manual_lift if manual else 6.0
+	motion.swing_height = manual_lift if manual else (16.0 if girtas_preview else 6.0)
 	var was_attacking: bool = attack_clock.active
 	if was_attacking: speed = 0.0
 	attack_clock.advance(delta, Vector2(speed, 0))
@@ -118,7 +123,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		manual_moving = not manual_moving
 	elif event.keycode == KEY_L:
 		manual = true
-		manual_lift = 8.0 if manual_lift == 6.0 else 6.0
+		manual_lift = (20.0 if manual_lift == 16.0 else 16.0) if girtas_preview else (8.0 if manual_lift == 6.0 else 6.0)
 	elif event.keycode == KEY_S: _swap_skins()
 	elif event.keycode == KEY_A:
 		manual = true
@@ -143,13 +148,15 @@ func _label(text: String, pos: Vector2, size: int) -> Label:
 	return label
 
 func _tests() -> void:
-	if girtas_preview: _girtas_binding_tests()
+	if girtas_preview:
+		_girtas_binding_tests()
+		_run_contact_tests()
 	var max_drift := 0.0
 	for sample_index in range(600):
 		var p := float(sample_index) / 600.0
 		var a := motion.sample(p)
 		var b := motion.sample(p + 0.0001)
-		assert(a.hip == Vector2(0, -32))
+		assert(a.hip == Vector2(0, -32) if not motion.run_gait else a.hip.y >= -28.801 and a.hip.y <= -28.0)
 		for side in range(2):
 			var hip: Vector2 = a.hip + Vector2(-1 if side == 0 else 1, 0)
 			assert(absf(hip.distance_to(a.knees[side]) - 16.0) < 0.001)
@@ -239,3 +246,22 @@ func _girtas_binding_tests() -> void:
 				assert(absf(fitted.feet[side].x - shared.feet[side].x - float(bind.foot_bias[side])) < 0.0001)
 				assert(fitted.contact[side] == shared.contact[side])
 	print("GIRTAS_BINDING_OK fixed_skin_lengths=true shared_contact_and_distance=true no_skin_clock=true")
+
+func _run_contact_tests() -> void:
+	var flights := 0
+	for i in range(1000):
+		var phase_value := float(i) / 1000.0
+		var sampled := motion.sample(phase_value)
+		assert(not (sampled.contact[0] and sampled.contact[1]))
+		if not sampled.contact[0] and not sampled.contact[1]: flights += 1
+		assert(sampled.hip.y >= -28.801 and sampled.hip.y <= -28.0)
+	assert(flights > 200 and flights < 260)
+	# Toe-off and landing retain the same world-space stance velocity.
+	for boundary in [motion.stance_fraction, 1.0]:
+		var epsilon := 0.00001
+		var a := motion.sample(boundary - epsilon)
+		var b := motion.sample(boundary + epsilon)
+		var drift: float = b.feet[0].x - a.feet[0].x + motion.stride_distance * 2.0 * epsilon
+		# Measure displacement directly: dividing Vector2 float noise by epsilon is unstable.
+		assert(absf(drift) < 0.0001)
+	print("RUN_CONTACT_OK no_double_support=true brief_flight=true continuous_contact_velocity=true bounded_body_rise=true")

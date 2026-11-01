@@ -9,6 +9,7 @@ enum Family { GROUND, WINGED_FLOATING, RANGED }
 @export var swing_height: float = 8.0
 @export var arm_swing_radians: float = 0.16
 @export var cape_swing_radians: float = 0.08
+var run_gait := false
 var idle_time := 0.0
 var attack_origin: Dictionary = {}
 var phase: float = 0.0
@@ -20,6 +21,14 @@ var transition_feet: Array = []
 var transition_arm := 0.0
 var transition_cape := 0.0
 var transition_pose: Dictionary = {}
+
+func configure_run() -> void:
+	# Authored from observed heel recovery/support pattern; not source-game measurements.
+	run_gait = true
+	stride_distance = 96.0
+	stance_fraction = 0.38
+	swing_height = 16.0
+	arm_swing_radians = 0.30
 
 func advance(delta: float, speed: float) -> Dictionary:
 	assert(family == Family.GROUND, "Only the observed ground pilot is implemented")
@@ -40,6 +49,7 @@ func advance(delta: float, speed: float) -> Dictionary:
 	transition_time += delta
 	if transition_time < 0.18 and transition_feet.size() == 2:
 		var blend := smoothstep(0.0, 0.18, transition_time)
+		result.hip = transition_pose.hip.lerp(result.hip, blend)
 		for key in ["torso_angle", "torso_y", "upper_arm_angle", "forearm_angle", "weapon_angle", "far_arm_angle"]:
 			result[key] = lerpf(transition_pose[key], result[key], blend)
 		result.arm_angle = lerpf(transition_arm, result.arm_angle, blend)
@@ -55,11 +65,18 @@ func advance(delta: float, speed: float) -> Dictionary:
 
 func sample(at_phase: float, moving: bool = true) -> Dictionary:
 	var pose := {"hip": Vector2(0, -32), "feet": [], "knees": [], "contact": [], "foot_angle": [], "cape_angle": cape_swing_radians * sin(TAU * at_phase + PI * 0.5) if moving else 0.0, "arm_angle": -arm_swing_radians * cos(TAU * at_phase) if moving else 0.0}
-	pose.torso_angle = 0.025 + 0.012 * sin(TAU * at_phase) if moving else 0.0
+	if moving and run_gait:
+		# Shallow loaded posture and less than one pixel of flight rise, not whole-body bobbing.
+		var half_phase := fposmod(at_phase, 0.5)
+		var flight_rise := 0.0
+		if half_phase > stance_fraction:
+			flight_rise = 0.8 * sin(PI * (half_phase - stance_fraction) / (0.5 - stance_fraction))
+		pose.hip.y = -28.0 - flight_rise
+	pose.torso_angle = ((0.10 if run_gait else 0.025) + 0.012 * sin(TAU * at_phase)) if moving else 0.0
 	pose.torso_y = 0.0
-	pose.upper_arm_angle = -0.10 * cos(TAU * at_phase) if moving else 0.0
+	pose.upper_arm_angle = -(0.20 if run_gait else 0.10) * cos(TAU * at_phase) if moving else 0.0
 	pose.forearm_angle = pose.arm_angle
-	pose.far_arm_angle = 0.0
+	pose.far_arm_angle = 0.22 * cos(TAU * at_phase) if moving and run_gait else 0.0
 	pose.weapon_angle = 0.55 + pose.arm_angle * 0.6
 	for side in range(2):
 		var p := fposmod(at_phase + side * 0.5, 1.0)
@@ -74,7 +91,13 @@ func sample(at_phase: float, moving: bool = true) -> Dictionary:
 				var t := (p - stance_fraction) / (1.0 - stance_fraction)
 				var ease := t * t * (3.0 - 2.0 * t)
 				foot = Vector2(lerpf(-reach, reach, ease), -3.0 - swing_height * sin(PI * t))
-				angle = -0.3 * sin(PI * t)
+				if run_gait:
+					# Match stance velocity at toe-off and landing; the curved return includes
+					# heel recoil behind the hip, folded recovery, then forward extension.
+					var tangent := -stride_distance * (1.0 - stance_fraction)
+					foot.x = -reach * (2*t*t*t - 3*t*t + 1) + reach * (-2*t*t*t + 3*t*t) + tangent * (2*t*t*t - 3*t*t + t)
+					foot.y = -3.0 - swing_height * pow(sin(PI * t), 0.8)
+				angle = -(0.55 if run_gait else 0.3) * sin(PI * t)
 				contact = false
 		var hip: Vector2 = pose.hip + Vector2(-1 if side == 0 else 1, 0)
 		pose.feet.append(foot)

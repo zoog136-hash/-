@@ -73,7 +73,7 @@ The old blade and boot silhouettes are excluded from the body so they do not
 remain behind the moving parts. Golden back ornaments are part of the armor;
 this does not implement a winged or floating motion family.
 
-The common motion resource is unchanged. A skin may provide fixed arm/leg
+All skins consume the common motion resource. A skin may provide fixed arm/leg
 lengths, shoulder/hip offsets, ankle height and a wrist range for a long blade.
 Retargeting preserves world-distance foot travel, contact timing and the shared
 attack clock. It does not scale each frame, use separate animation frames or
@@ -93,3 +93,26 @@ godot --path . scenes/dev/SharedSkinPilot.tscn -- --girtas-skin
 godot --headless --path . scenes/dev/SharedSkinPilot.tscn -- --girtas-skin --pilot-test
 python3 tools/animation/build_girtas_shared_skin.py --check
 ```
+
+## RUN correction after the first Girtas preview
+
+The first binding preview was rejected as walking: its contact interval exceeded
+half a cycle, its six-pixel recovery stayed low, and the 46-pixel stride was short
+for Girtas. The development scene also ran at 80 px/s rather than the existing
+Player/Girtas reference speed of 210. Production movement code was never changed.
+
+`configure_run()` selects a shared RUN preset for both skins in the Girtas demo:
+96-pixel stride, 38% contact per foot, a short unsupported interval, curved heel
+recoil/recovery and forward extension, stronger opposite-arm response, and a
+restrained forward torso posture. A Hermite return joins the stance's horizontal
+velocity at toe-off/landing. The loaded pelvis is four pixels lower than idle;
+its flight rise is bounded to 0.8 pixels. Run/stop blends include the pelvis so
+this posture change does not snap. Fixed bone lengths, actual displacement and
+attack timing remain unchanged. These are authored tuning values informed by
+the supplied ordinary RUN and male-elf clips, not claimed original measurements.
+
+The comparison re-renders the previous c630cdf gait and the corrected gait at
+the same 210 px/s, 30 FPS and view scale. It does not accelerate the old uploaded
+80 px/s video. The earlier v0 remains in Library history. The existing two-skin
+default demo and all source/art bindings are preserved; RUN is a shared preset,
+not a Girtas-specific set of replacement frame images.
