@@ -28,6 +28,18 @@ func run() -> void:
 		assert(overlay._effect_nodes.size() == (1 if sid in [20889,6082] else 3))
 		assert(overlay.attachment_status().active_compatibility_layers == overlay._effect_nodes.size())
 		print("SOURCE_EFFECT_ADDON_LOADED sprite=", sid, " original_clothes=", overlay._effect_nodes.size())
+	# One existing collectible body itself has104.attr8; it must not be dropped
+	# or incorrectly applied to the separate native shadow.
+	assert(actor.configure("sprite:15759", selected.path_join("manifest.json")))
+	actor.advance_source(0.0, "idle", 2, 0, false)
+	var body_flag_used: bool = false
+	for layer: Sprite2D in actor._layers:
+		if int(layer.get_meta("source_layer_id", -1)) == 15759:
+			assert(layer.material != null and layer.material.blend_mode == CanvasItemMaterial.BLEND_MODE_ADD)
+			body_flag_used = true
+		else: assert(layer.material == null)
+	assert(body_flag_used)
+	print("SOURCE_BODY_ATTR_RETAINED sprite=15759 attr8_compatibility_only=true shadow_unchanged=true")
 	var icon: bool = false
 	for row: Dictionary in SOURCE.cards().catalog["변신"]:
 		if SOURCE.icon(row) != null: icon = true; break

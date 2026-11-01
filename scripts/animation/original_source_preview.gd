@@ -22,6 +22,8 @@ var _record: Dictionary = {}
 var _root: String = ""
 var _textures: Dictionary = {}
 var _layers: Array[Sprite2D] = []
+var _source_body_style: Dictionary = {}
+var _source_body_material: CanvasItemMaterial
 var _role: String = "idle"
 var _clock: float = 0.0
 var _sequence: int = -1
@@ -119,6 +121,15 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 					add_child(effect_node)
 					_effect_nodes[id] = effect_node
 	_record = candidate
+	var root_attributes: Array = candidate.get("source_attributes", []).duplicate()
+	if root_attributes.is_empty():
+		for directive: Dictionary in candidate.get("source_all_declarations", {}).get("directives", []):
+			if int(directive.get("code", -1)) == 104: root_attributes.append(str(directive.body))
+	_source_body_style = POLICY.effect(root_attributes, _playback_mode) if not root_attributes.is_empty() else {}
+	_source_body_material = null
+	if bool(_source_body_style.get("enabled", false)):
+		_source_body_material = CanvasItemMaterial.new()
+		_source_body_material.blend_mode = int(_source_body_style.blend_mode)
 	_playback_tracks = tracks
 	_manifest_path = manifest_path
 	_is_overlay = bool(candidate.get("one_shot_overlay", false))
@@ -133,6 +144,8 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 
 func clear() -> void:
 	_record = {}
+	_source_body_style.clear()
+	_source_body_material = null
 	source_selection_status.clear()
 	_playback_tracks.clear()
 	_manifest_records.clear()
@@ -240,6 +253,10 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		_layers[index].visible = index < selected.layers.size()
 		if not _layers[index].visible: continue
 		var layer: Dictionary = selected.layers[index]
+		var is_body: bool = int(layer.get("layer_id", -1)) == int(_record.get("body_id", _record.get("source_sprite_id", -2)))
+		_layers[index].material = _source_body_material if is_body else null
+		_layers[index].modulate.a = float(_source_body_style.get("alpha", 1.0)) if is_body and _source_body_material != null else 1.0
+		_layers[index].set_meta("source_layer_id", int(layer.get("layer_id", -1)))
 		_layers[index].texture = _textures[str(layer.path)]
 		_layers[index].position = Vector2(float(layer.offset[0]), float(layer.offset[1]))
 
@@ -298,13 +315,6 @@ func spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Ve
 		return false
 	overlay._overlay_facing = facing
 	overlay.z_index = 2
-	var style: Dictionary = POLICY.effect(overlay._record.get("source_attributes", []), _playback_mode)
-	for sprite: Sprite2D in overlay._layers:
-		if bool(style.get("enabled", false)):
-			var material: CanvasItemMaterial = CanvasItemMaterial.new()
-			material.blend_mode = int(style.blend_mode)
-			sprite.material = material
-			sprite.modulate.a = float(style.alpha)
 	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
 	_overlay_nodes.append(overlay)
 	overlay.advance_source(0.0, "idle", facing, 0, false)
