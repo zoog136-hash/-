@@ -66,7 +66,7 @@ real-time capture. Run without Movie Maker for separate wall-clock FPS results.
 Pass `--girtas-skin` to compare the warrior and Girtas on the same pose and
 clock, including a mid-attack skin swap. The upper row is 1x; the lower row is
 1.8x. This E-view binding uses the preserved r049 E-idle source cell, separated
-into 14 visible parts by `build_girtas_shared_skin.py`. Its separate manifest
+into 15 visible parts by `build_girtas_shared_skin.py`. Its separate manifest
 records the original sheet hash, polygons and two small copied armor joint caps.
 These caps and the guard pose are newly authored, not recovered original anatomy.
 The old blade and boot silhouettes are excluded from the body so they do not
