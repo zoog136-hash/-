@@ -10437,8 +10437,8 @@
             "direction": "E",
             "pose_count": 7,
             "source_pixels_unchanged": false,
-            "resampled": false,
-            "newly_authored_poses": 2,
+            "resampled": true,
+            "newly_authored_poses": 3,
             "source_anchors": [
               [
                 865,
@@ -10480,7 +10480,39 @@
             ],
             "runtime_reference_canvas_size": 1024,
             "approval_granted": false,
-            "review_basis": "Masked support-leg intermediate at phase0.5, six original poses exact; duration0 split0.5+0.5. No visual quality approval."
+            "review_basis": "Masked support-leg intermediate at phase0.5, six original poses exact; duration0 split0.5+0.5. No visual quality approval.",
+            "original_six_poses_resampled": false,
+            "resampling_scope": "Generated local leg patch only, registered into original source crop; all six original poses and mask-exterior pixels unchanged.",
+            "per_pose_runtime_pixel_scale_ratios": [
+              [
+                1024,
+                2664
+              ],
+              [
+                1024,
+                2664
+              ],
+              [
+                1024,
+                2760
+              ],
+              [
+                1024,
+                2560
+              ],
+              [
+                1024,
+                2256
+              ],
+              [
+                1024,
+                2256
+              ],
+              [
+                1024,
+                2432
+              ]
+            ]
           }
         },
         {
@@ -19370,7 +19402,7 @@
               2048
             ],
             "source_pixels_unchanged": false,
-            "resampled": false,
+            "resampled": true,
             "approval_granted": false,
             "source_region_review_sha256": "653eef584fa4b4a7ae8010948f95be94f82696d69d8451c3be0b514f597cf263",
             "pose_canvas_sizes": [
@@ -19384,6 +19416,10 @@
             ],
             "runtime_reference_canvas_size": 1024,
             "per_pose_runtime_pixel_scale_ratios": [
+              [
+                1024,
+                2560
+              ],
               [
                 1024,
                 2560
@@ -19413,7 +19449,9 @@
               256,
               4096
             ],
-            "newly_authored_poses": 1
+            "newly_authored_poses": 2,
+            "original_six_poses_resampled": false,
+            "resampling_scope": "Generated local leg patch only, registered into original source crop; all six original poses and mask-exterior pixels unchanged."
           }
         },
         {
