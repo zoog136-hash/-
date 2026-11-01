@@ -1,0 +1,789 @@
+{
+  "schema": 1,
+  "direction": "E",
+  "skin": {
+    "source": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r049/E-idle.png",
+    "source_sha256": "91afd8461100df3dad42c7abda79abff1e8b7bc1b49578493d20f513d7c456ee",
+    "source_cell": [
+      46,
+      4,
+      427,
+      495
+    ],
+    "hip": [
+      303,
+      277
+    ],
+    "body_scale": 0.219105011732,
+    "rig": {
+      "waist": [
+        304,
+        235
+      ],
+      "neck": [
+        298,
+        120
+      ],
+      "shoulder_offset": [
+        -17.1,
+        -12.5
+      ],
+      "arm_lengths": [
+        10.5,
+        10.25
+      ]
+    },
+    "retarget": {
+      "hip_y": -46,
+      "waist_offset": [
+        0.219,
+        -9.203
+      ],
+      "hip_offsets": [
+        [
+          6.1,
+          -0.44
+        ],
+        [
+          -5.26,
+          0
+        ]
+      ],
+      "foot_bias": [
+        7,
+        -10
+      ],
+      "ground_y": [
+        -4,
+        0
+      ],
+      "ankle_height": 8,
+      "weapon_downward_gain": 0.45,
+      "lengths": [
+        [
+          18,
+          20
+        ],
+        [
+          19.5,
+          22.5
+        ]
+      ]
+    },
+    "parts": {
+      "upper_arm": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/upper_arm.png",
+        "pivot": [
+          226,
+          178
+        ],
+        "end": [
+          218,
+          225
+        ],
+        "polygon": [
+          [
+            203,
+            176
+          ],
+          [
+            235,
+            175
+          ],
+          [
+            245,
+            192
+          ],
+          [
+            235,
+            212
+          ],
+          [
+            226,
+            238
+          ],
+          [
+            204,
+            236
+          ],
+          [
+            193,
+            220
+          ],
+          [
+            194,
+            195
+          ]
+        ],
+        "sha256": "b9aa6a99f4f6da2b092f8f10f83e751ebf511e92614af45be7c39b746302c8b3"
+      },
+      "forearm": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/forearm.png",
+        "pivot": [
+          218,
+          225
+        ],
+        "end": [
+          207,
+          270
+        ],
+        "polygon": [
+          [
+            199,
+            220
+          ],
+          [
+            230,
+            220
+          ],
+          [
+            229,
+            240
+          ],
+          [
+            221,
+            260
+          ],
+          [
+            221,
+            282
+          ],
+          [
+            207,
+            291
+          ],
+          [
+            190,
+            278
+          ],
+          [
+            189,
+            254
+          ]
+        ],
+        "sha256": "a8aa32baeb2e85f733e5833c90509aa04714704d2a693c06d391e81202eaafc8"
+      },
+      "weapon_hand": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/weapon_hand.png",
+        "pivot": [
+          207,
+          270
+        ],
+        "end": [
+          12,
+          487
+        ],
+        "polygon": [
+          [
+            193,
+            245
+          ],
+          [
+            220,
+            248
+          ],
+          [
+            229,
+            266
+          ],
+          [
+            219,
+            288
+          ],
+          [
+            206,
+            306
+          ],
+          [
+            197,
+            345
+          ],
+          [
+            179,
+            365
+          ],
+          [
+            155,
+            381
+          ],
+          [
+            135,
+            405
+          ],
+          [
+            118,
+            430
+          ],
+          [
+            98,
+            450
+          ],
+          [
+            69,
+            471
+          ],
+          [
+            26,
+            491
+          ],
+          [
+            0,
+            495
+          ],
+          [
+            12,
+            481
+          ],
+          [
+            49,
+            451
+          ],
+          [
+            76,
+            414
+          ],
+          [
+            100,
+            390
+          ],
+          [
+            125,
+            366
+          ],
+          [
+            151,
+            342
+          ],
+          [
+            165,
+            313
+          ],
+          [
+            168,
+            292
+          ],
+          [
+            179,
+            276
+          ],
+          [
+            188,
+            262
+          ]
+        ],
+        "sha256": "5c0fb71ac4bc2d5ca97842b2c0f85e2909668d402ef8a4196c5eb533d8268ad0"
+      },
+      "far_arm": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/far_arm.png",
+        "pivot": [
+          351,
+          195
+        ],
+        "end": null,
+        "polygon": [
+          [
+            341,
+            187
+          ],
+          [
+            363,
+            187
+          ],
+          [
+            373,
+            218
+          ],
+          [
+            378,
+            245
+          ],
+          [
+            388,
+            273
+          ],
+          [
+            378,
+            286
+          ],
+          [
+            358,
+            282
+          ],
+          [
+            347,
+            261
+          ],
+          [
+            340,
+            231
+          ]
+        ],
+        "sha256": "fa19582987fff379004a7f635b7b18cd5116e1cb3bb2f4c6f3a869e3cf20f000"
+      },
+      "thigh_0": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/thigh_0.png",
+        "pivot": [
+          331,
+          275
+        ],
+        "end": [
+          349,
+          350
+        ],
+        "polygon": [
+          [
+            317,
+            268
+          ],
+          [
+            345,
+            269
+          ],
+          [
+            360,
+            303
+          ],
+          [
+            367,
+            342
+          ],
+          [
+            356,
+            369
+          ],
+          [
+            331,
+            362
+          ],
+          [
+            321,
+            321
+          ]
+        ],
+        "sha256": "39b38a18123c95c15fa570b36c45e74ec6d4cddafd099e3b6dd7d0fcec09dce5"
+      },
+      "shin_0": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/shin_0.png",
+        "pivot": [
+          349,
+          350
+        ],
+        "end": [
+          351,
+          430
+        ],
+        "polygon": [
+          [
+            335,
+            346
+          ],
+          [
+            360,
+            343
+          ],
+          [
+            365,
+            379
+          ],
+          [
+            369,
+            421
+          ],
+          [
+            360,
+            443
+          ],
+          [
+            337,
+            440
+          ],
+          [
+            331,
+            400
+          ]
+        ],
+        "sha256": "2cb0dc7e3ea4937639385895818bba0b8bf4c0c8c70013fce48bcead74a1052d"
+      },
+      "foot_0": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/foot_0.png",
+        "pivot": [
+          351,
+          430
+        ],
+        "end": null,
+        "polygon": [
+          [
+            338,
+            421
+          ],
+          [
+            361,
+            421
+          ],
+          [
+            374,
+            444
+          ],
+          [
+            393,
+            449
+          ],
+          [
+            396,
+            464
+          ],
+          [
+            381,
+            469
+          ],
+          [
+            342,
+            465
+          ],
+          [
+            333,
+            448
+          ]
+        ],
+        "sha256": "e36e87b7dcf78f2afaf986dad4437ed742de0da710628261ccffd235ba97e4b4",
+        "sole_y": 469
+      },
+      "thigh_1": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/thigh_1.png",
+        "pivot": [
+          279,
+          277
+        ],
+        "end": [
+          251,
+          355
+        ],
+        "polygon": [
+          [
+            266,
+            267
+          ],
+          [
+            299,
+            274
+          ],
+          [
+            287,
+            311
+          ],
+          [
+            281,
+            343
+          ],
+          [
+            263,
+            368
+          ],
+          [
+            237,
+            366
+          ],
+          [
+            227,
+            341
+          ],
+          [
+            241,
+            304
+          ]
+        ],
+        "sha256": "9c3ff6f75f71cb4222f6ff88808d1615ed0c8925bf5fd97169ca8197957f9eed"
+      },
+      "shin_1": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/shin_1.png",
+        "pivot": [
+          251,
+          355
+        ],
+        "end": [
+          229,
+          450
+        ],
+        "polygon": [
+          [
+            239,
+            347
+          ],
+          [
+            269,
+            350
+          ],
+          [
+            259,
+            384
+          ],
+          [
+            249,
+            419
+          ],
+          [
+            246,
+            453
+          ],
+          [
+            221,
+            461
+          ],
+          [
+            216,
+            435
+          ],
+          [
+            223,
+            393
+          ]
+        ],
+        "sha256": "de54eb233bea1f33717f800f23d227415493ef2aaf39ff407eade77649e0eb36"
+      },
+      "foot_1": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/foot_1.png",
+        "pivot": [
+          229,
+          450
+        ],
+        "end": null,
+        "polygon": [
+          [
+            219,
+            441
+          ],
+          [
+            243,
+            443
+          ],
+          [
+            251,
+            468
+          ],
+          [
+            247,
+            491
+          ],
+          [
+            222,
+            493
+          ],
+          [
+            206,
+            484
+          ],
+          [
+            208,
+            465
+          ]
+        ],
+        "sha256": "4f8d9eb1e398f74b5b22d6e054a3f10e6ae62889e2d45a5af21c9ef3469144f5",
+        "sole_y": 492
+      },
+      "cape": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/cape.png",
+        "pivot": [
+          250,
+          263
+        ],
+        "end": null,
+        "polygon": [
+          [
+            250,
+            263
+          ],
+          [
+            271,
+            275
+          ],
+          [
+            240,
+            311
+          ],
+          [
+            220,
+            348
+          ],
+          [
+            201,
+            385
+          ],
+          [
+            182,
+            414
+          ],
+          [
+            153,
+            426
+          ],
+          [
+            163,
+            396
+          ],
+          [
+            193,
+            350
+          ],
+          [
+            212,
+            310
+          ]
+        ],
+        "sha256": "4253a92758d6c933317846a341a80f050d00f807314cb34ec5605d5a17e1e62e"
+      },
+      "head": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/head.png",
+        "pivot": [
+          298,
+          120
+        ],
+        "end": null,
+        "polygon": [
+          [
+            269,
+            0
+          ],
+          [
+            330,
+            0
+          ],
+          [
+            337,
+            34
+          ],
+          [
+            335,
+            66
+          ],
+          [
+            326,
+            82
+          ],
+          [
+            327,
+            103
+          ],
+          [
+            321,
+            118
+          ],
+          [
+            303,
+            133
+          ],
+          [
+            278,
+            133
+          ],
+          [
+            268,
+            119
+          ],
+          [
+            265,
+            101
+          ],
+          [
+            275,
+            80
+          ],
+          [
+            268,
+            62
+          ]
+        ],
+        "sha256": "4141dc86fb0583e347ac72416f1ce010a3fe6f782efe2494c8635eab3a5ff1a5"
+      },
+      "torso": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/torso.png",
+        "pivot": [
+          304,
+          235
+        ],
+        "sha256": "df33cd401a345c1f30690850c0fb419d7112b9610340edc2aa7b58e7667af89e",
+        "partition_rect": [
+          0,
+          0,
+          427,
+          246
+        ]
+      },
+      "pelvis": {
+        "texture": "res://assets/actors/shared_skin_pilot/girtas_267/pelvis.png",
+        "pivot": [
+          303,
+          277
+        ],
+        "sha256": "d29f4cb714e3d0bc3b7f9d20ce185259fc4f9760abddebc5afedf421a6ef64b1",
+        "partition_rect": [
+          0,
+          239,
+          427,
+          495
+        ]
+      }
+    },
+    "authorship": "Visible source polygons rebound to shared motion. Fixed limb lengths and new guard pose are TWILIGHT authoring, not recovered original joints or original-game animation.",
+    "pelvis_keep": "belt above y277 and central hanging armor polygon; detached source boot remnants excluded",
+    "body_blade_exclusion": [
+      [
+        0,
+        290
+      ],
+      [
+        176,
+        290
+      ],
+      [
+        205,
+        325
+      ],
+      [
+        194,
+        373
+      ],
+      [
+        157,
+        428
+      ],
+      [
+        105,
+        472
+      ],
+      [
+        0,
+        495
+      ]
+    ],
+    "authored_joint_caps": [
+      [
+        [
+          202,
+          176,
+          233,
+          190
+        ],
+        [
+          240,
+          176,
+          271,
+          190
+        ]
+      ],
+      [
+        [
+          341,
+          190,
+          354,
+          211
+        ],
+        [
+          327,
+          190,
+          340,
+          211
+        ]
+      ]
+    ]
+  }
+}

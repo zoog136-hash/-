@@ -20,11 +20,14 @@ var active := false
 var definitions: Dictionary
 var swapped := false
 var names: Array[Label] = []
+var girtas_preview := false
+var secondary_skin := "assassin"
 var manual := false
 var manual_moving := false
 var manual_lift := 6.0
 
 func _ready() -> void:
+	girtas_preview = "--girtas-skin" in OS.get_cmdline_user_args()
 	Engine.max_fps = 30
 	attack_clock.strike.connect(func(_sequence: int):
 		strikes += 1
@@ -33,21 +36,24 @@ func _ready() -> void:
 	position = (get_viewport_rect().size - Vector2(960, 640)) * 0.5
 	RenderingServer.set_default_clear_color(Color("19222b"))
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/shared_skin_pilot.json"))
-	_label("TWILIGHT  /  SHARED 2D MOTION PILOT", Vector2(40, 24), 25)
-	_label("Two existing skins. One joint pose and one distance-driven timeline.", Vector2(40, 65), 17)
+	_label("TWILIGHT  /  GIRTAS SHARED 2D SKIN" if girtas_preview else "TWILIGHT  /  SHARED 2D MOTION PILOT", Vector2(40, 24), 25)
+	_label("E view / same ground motion as warrior / fixed 30 FPS render" if girtas_preview else "Two existing skins. One joint pose and one distance-driven timeline.", Vector2(40, 65), 17)
+	if girtas_preview:
+		secondary_skin = "girtas_267"
+		data.skins[secondary_skin] = JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_shared_skin.json")).skin
 	definitions = data.skins
 	names.append(_label("WARRIOR", Vector2(200, 125), 18))
-	names.append(_label("ASSASSIN", Vector2(625, 125), 18))
+	names.append(_label("GIRTAS" if girtas_preview else "ASSASSIN", Vector2(625, 125), 18))
 	for row in range(2):
 		for i in range(2):
 			var actor := Cutout.new()
 			add_child(actor)
-			actor.bind_skin(data.skins["warrior" if i == 0 else "assassin"])
-			actor.position = Vector2(255 + 425 * i, 255 if row == 0 else 510)
-			actor.scale = Vector2.ONE * (1.0 if row == 0 else 2.6)
+			actor.bind_skin(data.skins["warrior" if i == 0 else secondary_skin])
+			actor.position = Vector2(255 + 425 * i, 270 if row == 0 else 530) if girtas_preview else Vector2(255 + 425 * i, 255 if row == 0 else 510)
+			actor.scale = Vector2.ONE * (1.0 if row == 0 else (1.8 if girtas_preview else 2.6))
 			actors.append(actor)
 	_label("1x actual pixels", Vector2(40, 180), 15)
-	_label("2.6x same live pose", Vector2(40, 330), 15)
+	_label("1.8x same live pose" if girtas_preview else "2.6x same live pose", Vector2(40, 330), 15)
 	status = _label("", Vector2(40, 555), 20)
 	close_label = _label("E-view pilot. Space: move/stop   A: attack   S: swap skins", Vector2(40, 600), 15)
 	if "--pilot-test" in OS.get_cmdline_user_args():
@@ -98,9 +104,9 @@ func _swap_skins() -> void:
 	swapped = not swapped
 	for i in range(actors.size()):
 		var warrior := (i % 2 == 0) != swapped
-		actors[i].bind_skin(definitions["warrior" if warrior else "assassin"])
-	names[0].text = "ASSASSIN" if swapped else "WARRIOR"
-	names[1].text = "WARRIOR" if swapped else "ASSASSIN"
+		actors[i].bind_skin(definitions["warrior" if warrior else secondary_skin])
+	names[0].text = ("GIRTAS" if girtas_preview else "ASSASSIN") if swapped else "WARRIOR"
+	names[1].text = "WARRIOR" if swapped else ("GIRTAS" if girtas_preview else "ASSASSIN")
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
@@ -121,8 +127,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 func _draw() -> void:
 	for row in range(2):
-		var y := 255.0 if row == 0 else 510.0
-		var zoom := 1.0 if row == 0 else 2.6
+		var y := (270.0 if row == 0 else 530.0) if girtas_preview else (255.0 if row == 0 else 510.0)
+		var zoom := 1.0 if row == 0 else (1.8 if girtas_preview else 2.6)
 		draw_line(Vector2(40, y), Vector2(920, y), Color("6c7a80"), 1)
 		for i in range(28):
 			var x := 40 + fposmod(i * 38.0 - motion.distance * zoom, 880.0)
@@ -137,6 +143,7 @@ func _label(text: String, pos: Vector2, size: int) -> Label:
 	return label
 
 func _tests() -> void:
+	if girtas_preview: _girtas_binding_tests()
 	var max_drift := 0.0
 	for sample_index in range(600):
 		var p := float(sample_index) / 600.0
@@ -214,3 +221,21 @@ func _tests() -> void:
 	print("SKIN_PILOT_ATTACK_OK original_clock=true one_strike_per_attack=true swap_preserves_clock=true recovery_returns_idle=true")
 	print("SKIN_PILOT_CONTRACT_OK shared_pose=4 skins=2 bounded_torso=true fixed_bone_lengths=true stance_max_drift=", max_drift)
 	get_tree().quit()
+
+func _girtas_binding_tests() -> void:
+	var actor = actors[1]
+	var definition: Dictionary = actor.skin
+	var bind: Dictionary = definition.retarget
+	for index in range(601):
+		var phase_sample := float(index) / 600.0
+		for shared in [motion.sample(phase_sample), motion.sample_attack(phase_sample, attack_clock.profile.marker_for("slash"))]:
+			actor.apply_pose(shared)
+			assert(is_same(actor.pose, shared))
+			var fitted: Dictionary = actor.draw_pose
+			for side in range(2):
+				var hip: Vector2 = fitted.hip + Cutout._v(bind.hip_offsets[side])
+				assert(absf(hip.distance_to(fitted.knees[side]) - float(bind.lengths[side][0])) < 0.001)
+				assert(absf(fitted.knees[side].distance_to(fitted.feet[side]) - float(bind.lengths[side][1])) < 0.001)
+				assert(absf(fitted.feet[side].x - shared.feet[side].x - float(bind.foot_bias[side])) < 0.0001)
+				assert(fitted.contact[side] == shared.contact[side])
+	print("GIRTAS_BINDING_OK fixed_skin_lengths=true shared_contact_and_distance=true no_skin_clock=true")

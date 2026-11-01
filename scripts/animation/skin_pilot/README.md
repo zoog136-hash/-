@@ -22,7 +22,7 @@ the existing world's unbuffed normal attack interval. No combat or movement
 code in Main is changed. Skin replacement during an attack preserves its clock.
 
 The original warrior/assassin sheets remain untouched. The reproducible mask
-builder and manifest describe 30 source cutouts/derived layers, source SHA-256,
+builder and manifest describe 32 source cutouts/derived layers, source SHA-256,
 fixed joint bindings and explicitly authored armor underpaint behind exposed
 arms. The near arm has two fixed-length bones; skin widths are fixed bindings.
 Head/torso/pelvis overlap around joints instead of scaling the whole silhouette.
@@ -42,7 +42,7 @@ not a complete ordinary RUN cycle. Converted video frame rates do not establish
 original animation cadence. Reference video pixels are not copied into assets.
 
 This remains an **E-view ground pilot**, separate from the production actor
-renderer. It is not a completed Girtas skin, eight-direction set, all-tier
+renderer. It is not a production Girtas replacement, eight-direction set, all-tier
 migration, or Lineage M equivalence approval. Ground, winged floating and ranged
 are declared families; only ground is implemented. Additional views, occluded
 anatomy, other motion families and production integration remain outstanding.
@@ -60,3 +60,36 @@ and skin-swap clock preservation. They do not approve visual naturalness.
 `--pilot-capture` runs the complete 18-second idle/run/attack/swap/stop sequence
 after a two-second warm-up. Movie Maker produces a fixed 30 FPS render, not a
 real-time capture. Run without Movie Maker for separate wall-clock FPS results.
+
+## Girtas appearance
+
+Pass `--girtas-skin` to compare the warrior and Girtas on the same pose and
+clock, including a mid-attack skin swap. The upper row is 1x; the lower row is
+1.8x. This E-view binding uses the preserved r049 E-idle source cell, separated
+into 14 visible parts by `build_girtas_shared_skin.py`. Its separate manifest
+records the original sheet hash, polygons and two small copied armor joint caps.
+These caps and the guard pose are newly authored, not recovered original anatomy.
+The old blade and boot silhouettes are excluded from the body so they do not
+remain behind the moving parts. Golden back ornaments are part of the armor;
+this does not implement a winged or floating motion family.
+
+The common motion resource is unchanged. A skin may provide fixed arm/leg
+lengths, shoulder/hip offsets, ankle height and a wrist range for a long blade.
+Retargeting preserves world-distance foot travel, contact timing and the shared
+attack clock. It does not scale each frame, use separate animation frames or
+change production movement speed. Girtas uses the production profile's fixed
+0.219105 pixel scale for body parts; no silhouette bounds determine scale.
+The long-blade wrist range reduces downward follow-through without shortening
+or rescheduling the attack. Cape and hanging armor remain rigid cutout layers;
+this is a visible limitation compared with fully redrawn motion.
+
+The additional supplied general-running clip was inspected at 2.80–3.55s:
+heel recovery, knee advance, opposite-arm response and restrained torso motion
+are visible. It is a general movement reference, not an identified Girtas RUN
+or proof of 90% equivalence. No reference-video pixels are redistributed.
+
+```sh
+godot --path . scenes/dev/SharedSkinPilot.tscn -- --girtas-skin
+godot --headless --path . scenes/dev/SharedSkinPilot.tscn -- --girtas-skin --pilot-test
+python3 tools/animation/build_girtas_shared_skin.py --check
+```
