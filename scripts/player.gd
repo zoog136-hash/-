@@ -7,6 +7,9 @@ signal attack_cancelled(sequence: int)
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
+const ORIGINAL_SOURCE = preload("res://scripts/animation/original_source_preview.gd")
+var original_source_preview = ORIGINAL_SOURCE.new()
+var original_source_manifest: String = ""
 const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd")
 const EXTERNAL_SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
 const VISUAL_CONFIG_PATH := "user://twilight_ui_settings.cfg"
@@ -78,6 +81,11 @@ var attack_visual_duration: float = 0.42
 var physics_delta: float = 1.0 / 60.0
 
 func _ready() -> void:
+	original_source_preview.name = "OriginalSourceInspection"
+	add_child(original_source_preview)
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--lineagem-original-preview="):
+			original_source_manifest = argument.trim_prefix("--lineagem-original-preview=")
 	base_move_speed = move_speed
 	motion.strike.connect(func(id: int) -> void: attack_strike.emit(id))
 	motion.cancelled.connect(func(id: int) -> void: attack_cancelled.emit(id))
@@ -198,17 +206,22 @@ func _update_facing(motion_vector: Vector2) -> void:
 func _update_visual(delta: float) -> void:
 	var show_spx: bool = not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
 	motion.profile = transform_profile if transform_active else (spx_profile if show_spx else class_profile)
-	$GroundShadow.visible = not motion.profile.embedded_shadow
+	var show_original: bool = transform_active and original_source_preview.installed()
+	$GroundShadow.visible = not show_original and not motion.profile.embedded_shadow
+	$PlayerActionFX.visible = not show_original
 	motion.advance(delta, get_position_delta() / maxf(delta, 0.001))
 	facing = motion.facing4
 	attack_clock = maxf(0.0, motion.attack_duration - motion.attack_elapsed) if motion.active else 0.0
 	class_sprite.visible = not transform_active and not show_spx
-	transform_sprite.visible = transform_active
+	transform_sprite.visible = transform_active and not show_original
 	if spx_sprite != null: spx_sprite.visible = show_spx
 	if spx_effect_sprite != null:
 		spx_effect_sprite.visible = show_spx and spx_effect_sprite.sprite_frames != null
 	var active_sprite: AnimatedSprite2D = transform_sprite if transform_active else (spx_sprite if show_spx else class_sprite)
-	motion.apply(active_sprite, active_sprite.get_meta("base_scale", Vector2.ONE))
+	if show_original:
+		original_source_preview.advance_source(delta, motion.state, motion.facing8, motion.sequence, motion.active)
+	else:
+		motion.apply(active_sprite, active_sprite.get_meta("base_scale", Vector2.ONE))
 	if spx_effect_sprite != null and spx_effect_sprite.visible:
 		if spx_effect_sprite.sprite_frames.has_animation(spx_sprite.animation):
 			spx_effect_sprite.animation = spx_sprite.animation
@@ -228,6 +241,7 @@ func start_combat_attack(aim: Vector2, duration: float, style: String, marker: f
 	return motion.begin_attack(duration, aim - global_position, style, marker)
 
 func cancel_attack() -> void:
+	original_source_preview.cancel_source_attack()
 	motion.cancel_attack()
 	attack_clock = 0.0
 
@@ -292,6 +306,14 @@ func _usable_authored_class_frames(source: SpriteFrames, expected_path: String) 
 func set_transform_visual(path: String, _speed_multiplier: float, profile_value: TwilightAnimationProfile = null) -> void:
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
 	transform_profile.resource_path_hint = path
+	# Explicit inspection only: native sc/mu composition and origin remain unverified.
+	if original_source_preview.configure(transform_profile.profile_id, original_source_manifest):
+		transform_active = true
+		motion.profile = transform_profile
+		class_sprite.hide()
+		transform_sprite.hide()
+		original_source_preview.advance_source(0.0, motion.state, motion.facing8, motion.sequence, motion.active)
+		return
 	# PR122 local-only comparison, NOT a production transformation approval.
 	# Both forms preserve catalog timing, combat, physics and default art.
 	var candidate: String = EXTERNAL_SPX.review_transform_source(transform_profile.profile_id)
@@ -402,6 +424,7 @@ func _direction_animation_name(direction_value: int) -> String:
 		_: return "dir_down"
 
 func clear_transform_visual() -> void:
+	original_source_preview.clear()
 	transform_active = false
 	motion.profile = class_profile
 	transform_sprite.rotation = 0.0
