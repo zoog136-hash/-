@@ -58,3 +58,7 @@ python tests/generate_lineagem_install_fixtures.py /tmp/lineagem-install-fixture
 XDG_DATA_HOME=/tmp/lineagem-safety godot --headless --path . --script tests/lineagem_pack_install_smoke.gd -- --fixtures=/tmp/lineagem-install-fixtures
 XDG_DATA_HOME=/tmp/lineagem-real godot --headless --path . --script tests/lineagem_pack_install_local.gd -- --pack=/absolute/private/PRIVATE_INSTALL.zip
 ```
+
+## Corrected source clock parsing
+
+The `110.frame rate(...)` spelling is now recognized alongside `110.framerate(...)`. All49 formerly pending transformation tracks across13 identities recover explicit source clocks; no transformation clock remains unspecified.331 doll tracks across164 sprite IDs and eight compiled overlay clocks remain unspecified. Existing v2 install ZIPs do not need a1GB redownload: updated code uses the SHA-guarded source correction table automatically in both modes. A private metadata-only delta preserves corrected actor JSON for pack maintenance. This fixes cached interpretation, without editing source images, token order/ticks, offsets or blending.

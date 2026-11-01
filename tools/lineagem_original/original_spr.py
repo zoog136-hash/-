@@ -27,6 +27,7 @@ def read(paths):
     for path in sorted(map(Path, paths)):
         current = None
         fps = None
+        rate_source = None
         for line_number, line in enumerate(path.read_bytes().decode('cp949').splitlines(), 1):
             scan = line.lstrip()
             if scan.startswith('#'):
@@ -37,13 +38,17 @@ def read(paths):
                 current = Declaration(int(match[1]), int(match[3]) if match[3] else None, path.name, line_number)
                 declarations.setdefault(current.sprite_id, []).append(current)
                 fps = None  # A previous declaration's rate is not an implicit default.
+                rate_source = None
                 scan = scan[match.end():]
             if current is None:
                 continue
             for match in ACTION.finditer(scan):
                 code, name, body = int(match[1]), match[2].strip(), match[3]
-                if code == 110 and name.lower() == 'framerate':
+                # Source uses both 'framerate' and 'frame rate' (same code110).
+                # Preserve raw names/bodies; normalize whitespace only for dispatch.
+                if code == 110 and ''.join(name.lower().split()) == 'framerate':
                     fps = int(body)
+                    rate_source = {'source_file':path.name,'source_line':line_number,'raw_name':name,'raw_body':body}
                     if fps <= 0:
                         raise ValueError(f'{path}:{line_number}: invalid framerate')
                 if (code, name.lower()) in [(101, 'shadow'), (105, 'clothes')]:
@@ -64,6 +69,7 @@ def read(paths):
                 if code in current.actions: errors.append('duplicate action')
                 current.actions[code] = {'code':code,'name':name,'fps':fps,'tokens':tokens,
                     'raw_body':body,'source_file':path.name,'source_line':line_number,
+                    'fps_provenance':dict(rate_source) if rate_source else None,
                     'declared_flag':int(count[1]) if count else None, 'errors':errors,
                     'source_annotations':source_annotations(body)}
     return declarations

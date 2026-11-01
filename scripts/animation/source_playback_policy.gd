@@ -1,6 +1,8 @@
 extends RefCounted
 ## Explicit host compatibility, never presented as verified Lineage M client behavior.
 const POLICY_PATH = "res://data/lineagem_base508/playback_policy.json"
+const CORRECTIONS_PATH = "res://data/lineagem_base508/source_timing_corrections.json"
+static var _clock_corrections: Dictionary = {}
 static var _data: Dictionary = {}
 static func data() -> Dictionary:
 	if _data.is_empty():
@@ -18,12 +20,27 @@ static func mode(pack_root: String, override: String = "") -> String:
 		if argument == "--lineagem-source-strict": result = "strict"
 		elif argument == "--lineagem-source-compatible": result = "compatible"
 	return result if result in ["strict", "compatible"] else "strict"
+static func clock_corrections() -> Dictionary:
+	if _clock_corrections.is_empty() and FileAccess.file_exists(CORRECTIONS_PATH):
+		var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CORRECTIONS_PATH))
+		if value is Dictionary and value.get("source_snapshot", "") == "base508": _clock_corrections = value.get("corrections", {})
+	return _clock_corrections
 static func tracks(record: Dictionary, consumer_kind: String, selected_mode: String) -> Dictionary:
 	var result: Dictionary = record.get("tracks", {}).duplicate(true)
 	for role: String in result:
 		var track: Dictionary = result[role]
 		var fps: float = float(track.get("fps", 0.0)) if track.get("fps") != null else 0.0
 		var origin: String = "SPR_explicit_section"
+		# Already-delivered v2 metadata predates whitespace-normalized code110 parsing.
+		# Recover only the exact matching source action; no guessed global rate override.
+		var correction_key: String = str(int(track.get("source_sprite_id", 0))) + ":" + str(int(track.get("source_action_id", -1))) + ":" + role
+		var correction: Dictionary = clock_corrections().get(correction_key, {})
+		if fps <= 0.0 and not correction.is_empty() and int(track.get("source_body_id", record.get("body_id", 0))) == int(correction.get("source_body_id", -1)) and str(track.get("source_raw_body", "")).sha256_text() == str(correction.get("source_raw_body_sha256", "")):
+			fps = float(correction.fps)
+			track["fps"] = fps
+			track["source_timing_provenance"] = correction.source_rate_directive.duplicate(true)
+			track["source_clock_metadata_repair"] = "exact_SPR_code110_whitespace_fix"
+
 		if fps <= 0.0 and selected_mode == "compatible":
 			var key: String = str(int(track.get("source_sprite_id", record.get("source_sprite_id", 0)))) + ":" + role
 			var inherited: Dictionary = data().get("alias_base_rate_candidates", {}).get(key, {})

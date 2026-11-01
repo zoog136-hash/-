@@ -88,7 +88,7 @@ def build(inputs,registry,output,only=None):
      frames.append({'duration':ticks/action['fps'] if action['fps'] else None,'source_ticks':ticks,'source_group':source_group,'physical_group':group,'stored_direction_bit':stored_bit,'source_frame':frame,'layers':layers})
     directions.append(frames)
    if failed:continue
-   tracks[role]={'fps':action['fps'],'source_action':action['name'],'source_action_id':action['code'],'source_raw_body':action['raw_body'],'source_sprite_id':runmap[sid] if role=='run' else sid,'source_body_id':body,'static_pending_timing':static,'timing_issues':action['errors'],'directions':directions,'loop':role!='attack'}
+   tracks[role]={'fps':action['fps'],'source_timing_provenance':action.get('fps_provenance'),'source_action':action['name'],'source_action_id':action['code'],'source_raw_body':action['raw_body'],'source_sprite_id':runmap[sid] if role=='run' else sid,'source_body_id':body,'static_pending_timing':static,'timing_issues':action['errors'],'directions':directions,'loop':role!='attack'}
   if not tracks or 'idle' not in tracks:status.append({'sprite_id':sid,'status':'no_decodable_idle','failures':failures});continue
   actor={'source_sprite_id':sid,'body_id':owner,'run_sprite_id':runmap.get(sid),'shadow_ids':shadow,'tracks':tracks,'source_effect_layers':effects,'source_all_declarations':{'file':base.source_file,'line':base.source_line,'directives':base.directives,'references':references},'source_actions':acts,'failures':failures}
   relative=f'actors/{sid}.json';(output/relative).write_text(json.dumps(actor,ensure_ascii=False,separators=(',',':'))+'\n')
