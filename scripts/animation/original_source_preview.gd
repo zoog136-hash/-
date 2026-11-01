@@ -5,6 +5,7 @@ signal native_annotations(event: Dictionary)
 signal native_effect_frame(event: Dictionary)
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
 var playback_mode_override: String = ""
+var source_selection_status: Dictionary = {}
 var _playback_tracks: Dictionary = {}
 var _playback_mode: String = "strict"
 var _manifest_path: String = ""
@@ -27,7 +28,7 @@ var _source_attack: bool = false
 var _attack_completed: bool = false
 var last_source_frame: int = -1
 
-func configure(key: String, manifest_path: String) -> bool:
+func configure(key: String, manifest_path: String, context: Dictionary = {}) -> bool:
 	var consumer_kind: String = key.get_slice(":", 0)
 	clear()
 	if manifest_path.is_empty() or not FileAccess.file_exists(manifest_path): return false
@@ -36,6 +37,11 @@ func configure(key: String, manifest_path: String) -> bool:
 	if str(parsed.get("mode", "")) != "literal_body_shadow_inspection_only": return false
 	var records: Dictionary = parsed.get("records", {})
 	_manifest_records = records
+	var selection: Dictionary = preload("res://scripts/lineagem_base508.gd").select_visual_key(key, context)
+	if not selection.is_empty():
+		source_selection_status = selection
+		if selection.status != "selected": return false
+		key = "sprite:" + str(int(selection.sprite_id))
 	if not records.has(key):
 		var binding: Dictionary = parsed.get("card_bindings", {}).get(key, {})
 		var sprites: Array = binding.get("sprite_ids", [])
@@ -126,6 +132,7 @@ func configure(key: String, manifest_path: String) -> bool:
 
 func clear() -> void:
 	_record = {}
+	source_selection_status.clear()
 	_playback_tracks.clear()
 	_manifest_records.clear()
 	_annotation_clock = -0.000000001

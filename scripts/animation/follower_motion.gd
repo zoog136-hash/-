@@ -23,7 +23,7 @@ func configure(record: Dictionary, path: String, anchor: Node2D, sprite: Animate
 	native_enabled = false
 	if SOURCE.native(record):
 		if native_actor.get_parent() == null: anchor.add_child(native_actor)
-		native_enabled = native_actor.configure("doll:" + str(record.sourceId), player.original_source_manifest)
+		native_enabled = native_actor.configure("doll:" + str(record.sourceId), player.original_source_manifest, player.source_visual_context)
 		enabled = native_enabled
 		sprite.hide()
 		anchor.global_position = player.global_position + follow_offset

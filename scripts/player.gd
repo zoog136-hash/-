@@ -10,6 +10,7 @@ const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ORIGINAL_SOURCE = preload("res://scripts/animation/original_source_preview.gd")
 var original_source_preview = ORIGINAL_SOURCE.new()
 var original_source_manifest: String = ""
+var source_visual_context: Dictionary = {}
 const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd")
 const EXTERNAL_SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
 const VISUAL_CONFIG_PATH := "user://twilight_ui_settings.cfg"
@@ -309,7 +310,7 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
 	transform_profile.resource_path_hint = path
 	# Explicit inspection only: native sc/mu composition and origin remain unverified.
-	if original_source_preview.configure(transform_profile.profile_id, original_source_manifest):
+	if original_source_preview.configure(transform_profile.profile_id, original_source_manifest, source_visual_context):
 		transform_active = true
 		motion.profile = transform_profile
 		class_sprite.hide()

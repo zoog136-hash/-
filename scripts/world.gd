@@ -178,6 +178,8 @@ var indexed_skills_count: int = -1
 var non_original_skill_rows: Array[Dictionary] = []
 var job_classes: Array = []
 var job_class: String = "기사"
+var source_gender_id: int = 0 # Unknown until an explicit source gender is selected.
+var source_card_visual_options: Dictionary = {}
 var active_skill_buffs: Dictionary = {}
 var skill_cooldowns: Dictionary = {}
 var skill_global_cooldown: float = 0.0
@@ -4342,6 +4344,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"original_position": SOURCE_TRAVEL.snapshot(self),
 		"class_index": class_index,
 		"job_class": job_class,
+		"source_visual_context": {"snapshot":"base508","gender_id":source_gender_id,"active_card_options":source_card_visual_options.duplicate(true)},
 		"quickslots": quickslots,
 		"ui_preferences": ui_preferences,
 		"self_mode_enabled": self_mode_enabled,
@@ -4625,6 +4628,14 @@ func _load_game(quiet: bool) -> void:
 	job_class = str(data.get("job_class", job_class))
 	if not JOB_CLASS_ORDER.has(job_class):
 		job_class = "기사"
+	source_gender_id = 0
+	source_card_visual_options.clear()
+	var source_context: Variant = data.get("source_visual_context", {})
+	if source_context is Dictionary and source_context.get("snapshot", "") == "base508":
+		source_gender_id = int(source_context.get("gender_id", 0))
+		if source_gender_id not in [0,1,2]: source_gender_id = 0
+		var saved_options: Variant = source_context.get("active_card_options", {})
+		source_card_visual_options = saved_options.duplicate(true) if saved_options is Dictionary else {}
 	var saved_ui: Variant = data.get("ui_preferences", {})
 	ui_preferences = saved_ui.duplicate(true) if saved_ui is Dictionary else {}
 	ui_preferences["consumable_auto"] = CONSUMABLE_AUTO.normalize(ui_preferences.get("consumable_auto", {}))
@@ -4856,6 +4867,8 @@ func _on_job_class_selected(job_name: String) -> void:
 		equipped_catalog["변신"] = record.duplicate(true)
 		_invalidate_equipment_static()
 		_apply_transform_visual(record)
+	if BASE508.native(equipped_catalog.get("변신", {})):
+		_apply_transform_visual(equipped_catalog["변신"])
 	_enforce_weapon_class_compatibility(false)
 	_enforce_shield_weapon_compatibility(false)
 	_prune_active_skill_buffs_for_current_job()
@@ -6410,6 +6423,7 @@ func _current_transform_visual_record(saved: Dictionary) -> Dictionary:
 	return visual
 
 func _apply_transform_visual(record: Dictionary) -> void:
+	player.source_visual_context = _source_visual_context()
 	if record.is_empty():
 		player.clear_transform_visual()
 		_sync_option_awakening_aura("변신")
@@ -6418,9 +6432,15 @@ func _apply_transform_visual(record: Dictionary) -> void:
 	var path: String = _directional_image_path("transform", visual_record)
 	var speed_multiplier: float = float(record.get("speed", 1.0))
 	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", visual_record, path))
+	if BASE508.native(visual_record):
+		var selected: Dictionary = player.original_source_preview.source_selection_status
+		if selected.get("status", "") == "selection_pending":
+			hud.show_message("원본 변신 외형 선택 대기 · 캐릭터 직업과 성별을 확인하세요")
+			hud.append_log("원본 변신 외형 선택 대기 · 직업/성별 문맥 필요")
 	_sync_option_awakening_aura("변신")
 
 func _apply_doll_visual(record: Dictionary) -> void:
+	player.source_visual_context = _source_visual_context()
 	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)
 	_sync_option_awakening_aura("마법인형")
 
@@ -6451,6 +6471,7 @@ func _direction_animation_name(direction_value: int) -> String:
 		_: return "dir_down"
 
 func _apply_relic_visual(record: Dictionary) -> void:
+	player.source_visual_context = _source_visual_context()
 	relic_motion.configure(record, relic_sprite, player, _drop_grade_color(str(record.get("grade", "일반"))))
 	_sync_option_awakening_aura("성물")
 
@@ -7880,3 +7901,37 @@ func return_from_original_map() -> bool:
 
 func _drop_inventory_reference(reference: String, target: Vector2) -> bool:
 	return INVENTORY_GROUND_TRANSFER.drop(self,reference,target)
+
+func _source_visual_context() -> Dictionary:
+	var options: Dictionary = source_card_visual_options.duplicate(true)
+	for record: Dictionary in equipped_catalog.values():
+		if BASE508.native(record) and record.has("source_active_custom_option_id") and not options.has(str(record.sourceId)):
+			options[str(record.sourceId)] = int(record.source_active_custom_option_id)
+	return {"class_id":BASE508.source_class_id(job_class),"gender_id":source_gender_id,"active_card_options":options}
+
+func set_source_character_gender(gender_id: int) -> bool:
+	if gender_id not in [0,1,2]: return false
+	source_gender_id = gender_id
+	_restore_equipped_visuals()
+	_update_hud()
+	_save_game(true)
+	return true
+
+func set_source_card_visual_option(source_id: String, active_option_id: int) -> bool:
+	if active_option_id < 0: return false
+	var record: Dictionary = BASE508.canonical({"source":"lineagem_base508","sourceId":source_id})
+	if not record.has("source_card_id"): return false
+	var rule: Dictionary = BASE508.identity_rules().get(int(record.source_card_id), {})
+	if str(rule.get("selection_kind", "")) != "base_polymorph_or_declared_custom_sprite_option": return false
+	if active_option_id > 0:
+		var declared: bool = false
+		for option: Dictionary in rule.get("custom_options", []):
+			if int(option.native_option.ID) == active_option_id: declared = true
+		if not declared: return false
+		source_card_visual_options[source_id] = active_option_id
+	else:
+		source_card_visual_options[source_id] = 0 # Explicit source base, including over a saved active option.
+	_restore_equipped_visuals()
+	_update_hud()
+	_save_game(true)
+	return true

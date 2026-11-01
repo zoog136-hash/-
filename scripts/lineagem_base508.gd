@@ -87,3 +87,54 @@ static func icon(record: Dictionary) -> Texture2D:
 	if _icons.size() >= 96: _icons.erase(_icons.keys()[0])
 	_icons[path] = texture
 	return texture
+
+static var _identity_rules: Dictionary = {}
+static func identity_rules() -> Dictionary:
+	if _identity_rules.is_empty():
+		var value: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/lineagem_base508/identity_rules.json"))
+		if value is Dictionary:
+			for row: Dictionary in value.get("records", []): _identity_rules[int(row.card_id)] = row
+	return _identity_rules
+static func source_class_id(localized_class_name: String) -> int:
+	var matches: Array = []
+	for row: Dictionary in cards().get("classes", []):
+		if str(row.name) == localized_class_name: matches.append(int(row.source_original.ID))
+	return int(matches[0]) if matches.size() == 1 else 0
+static func select_visual(record: Dictionary, context: Dictionary = {}) -> Dictionary:
+	var canonical_record: Dictionary = canonical(record)
+	var card_id: int = int(canonical_record.get("source_card_id", -1))
+	var rule: Dictionary = identity_rules().get(card_id, {})
+	if rule.is_empty():
+		var ids: Array = canonical_record.get("source_inworld_sprite_ids", [])
+		return {"status":"selected","sprite_id":int(ids[0]),"origin":"verified_single_inworld_identity"} if ids.size() == 1 else {"status":"selection_pending","reason":"source_identity_context_required"}
+	var kind: String = str(rule.selection_kind)
+	if kind == "indirect_subslot_buff_summon":
+		# Appearance identity is independent of interpreting the original gameplay slot enum.
+		return {"status":"selected","sprite_id":int(rule.inworld_sprite_id),"origin":"verified_indirect_subslot_summon","native_application_condition":rule.native_application_condition.duplicate(true),"gameplay_condition":"preserved_uninterpreted; presentation_only"}
+	var entities: Array = []
+	if kind == "base_polymorph_or_declared_custom_sprite_option":
+		var options: Dictionary = context.get("active_card_options", {})
+		var option_id: int = int(options.get(str(canonical_record.sourceId), record.get("source_active_custom_option_id", canonical_record.get("source_active_custom_option_id", 0))))
+		if option_id > 0:
+			for option: Dictionary in rule.get("custom_options", []):
+				if int(option.native_option.ID) == option_id and int(option.native_option.BuffCardID) == card_id:
+					entities = option.polymorph.entities
+					if entities.size() == 1:
+						return {"status":"selected","sprite_id":int(entities[0].SpriteID),"origin":"explicit_active_native_option","native_option":option.native_option.duplicate(true),"eligibility":"StarEnchant preserved; no inferred equality/threshold/highest-unlocked selection"}
+			return {"status":"selection_pending","reason":"active_option_not_declared_for_card"}
+		for link: Dictionary in rule.base_links: entities.append_array(link.polymorph.entities)
+		return {"status":"selected","sprite_id":int(entities[0].SpriteID),"origin":"source_declared_base_without_active_custom_option"} if entities.size() == 1 else {"status":"selection_pending","reason":"source_base_not_unique"}
+	if kind == "polymorph_entity_class_gender_variants":
+		var class_id: int = int(context.get("class_id", 0))
+		var gender_id: int = int(context.get("gender_id", 0))
+		if class_id <= 0 or gender_id <= 0: return {"status":"selection_pending","reason":"character_class_and_gender_required"}
+		for link: Dictionary in rule.base_links:
+			for entity: Dictionary in link.polymorph.entities:
+				if int(entity.ClassID) == class_id and int(entity.GenderID) == gender_id: entities.append(entity)
+		return {"status":"selected","sprite_id":int(entities[0].SpriteID),"origin":"exact_native_class_gender_pair","native_entity":entities[0].duplicate(true)} if entities.size() == 1 else {"status":"selection_pending","reason":"native_class_gender_pair_not_unique_or_not_declared"}
+	return {"status":"selection_pending","reason":"unmapped_source_rule"}
+static func select_visual_key(key: String, context: Dictionary = {}) -> Dictionary:
+	cards()
+	var source_id: String = key.substr(key.find(":") + 1)
+	var record: Dictionary = _by_id.get(source_id, {})
+	return select_visual(record, context) if not record.is_empty() else {}

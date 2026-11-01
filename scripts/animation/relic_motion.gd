@@ -27,7 +27,7 @@ func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, gra
 	native_enabled = false
 	if SOURCE.native(record):
 		if native_actor.get_parent() == null: sprite.get_parent().add_child(native_actor)
-		native_enabled = native_actor.configure("relic:" + str(record.sourceId), player.original_source_manifest)
+		native_enabled = native_actor.configure("relic:" + str(record.sourceId), player.original_source_manifest, player.source_visual_context)
 		enabled = native_enabled
 		sprite.hide()
 		native_actor.global_position = player.global_position + follow_offset
