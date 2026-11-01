@@ -9523,10 +9523,10 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r008/SpriteFrames.tres",
-      "frames_sha256": "a8e402bd8d3d5e83e787aeffc434dccfc2dc0d013df7561ff88049dce52c64d6",
+      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r010/SpriteFrames.tres",
+      "frames_sha256": "a94f7cacf2e7483831938ed3b2072f2e6e78bc488a9d0a2b4a8481e119e35736",
       "native_track_count": 48,
-      "native_pose_count": 288,
+      "native_pose_count": 290,
       "canvas_size": [
         1024,
         1024
@@ -10199,13 +10199,13 @@
           "direction": "E",
           "role": "run",
           "animation": "run_0",
-          "source": "assets/actors/eight_direction/native_production/girtas_267/r006/E-run.png",
-          "source_sha256": "d4766586d820db77273df97606dddcc18f2d7ea6e264ca86e9ef15bf23c772bd",
-          "texture": "assets/actors/eight_direction/native_production/girtas_267/r006/E-run.png",
+          "source": "assets/actors/eight_direction/native_production/girtas_267/r010/E-run.png",
+          "source_sha256": "dfb27f5be96262cefc66549674412da4c52a90ae049beeb5de5d944ccc2f5e1c",
+          "texture": "assets/actors/eight_direction/native_production/girtas_267/r010/E-run.png",
           "geometry": {
             "image_size": [
               3072,
-              4608
+              6144
             ],
             "frames": [
               {
@@ -10235,10 +10235,42 @@
                 "foot": [
                   1332,
                   1665
-                ]
+                ],
+                "duration": 0.5
               },
               {
                 "row": 1,
+                "direction": "E",
+                "region": [
+                  0,
+                  4608,
+                  1149,
+                  1276
+                ],
+                "margin": [
+                  660,
+                  449,
+                  1515,
+                  1388
+                ],
+                "source_anchor": [
+                  672.0,
+                  5824.0
+                ],
+                "rgba_sha256": "3781aed978c70f2bba3f503b79aa78c7e5c67ac2a18c4fce3fc1a1897144a55d",
+                "canvas_size": [
+                  2664,
+                  2664
+                ],
+                "foot": [
+                  1332,
+                  1665
+                ],
+                "duration": 0.5,
+                "authored_phase": 0.5
+              },
+              {
+                "row": 2,
                 "direction": "E",
                 "region": [
                   1536,
@@ -10264,10 +10296,11 @@
                 "foot": [
                   1380,
                   1725
-                ]
+                ],
+                "duration": 1.0
               },
               {
-                "row": 2,
+                "row": 3,
                 "direction": "E",
                 "region": [
                   231,
@@ -10293,10 +10326,11 @@
                 "foot": [
                   1280,
                   1600
-                ]
+                ],
+                "duration": 1.0
               },
               {
-                "row": 3,
+                "row": 4,
                 "direction": "E",
                 "region": [
                   1688,
@@ -10322,10 +10356,11 @@
                 "foot": [
                   1128,
                   1410
-                ]
+                ],
+                "duration": 1.0
               },
               {
-                "row": 4,
+                "row": 5,
                 "direction": "E",
                 "region": [
                   143,
@@ -10351,10 +10386,11 @@
                 "foot": [
                   1128,
                   1410
-                ]
+                ],
+                "duration": 1.0
               },
               {
-                "row": 5,
+                "row": 6,
                 "direction": "E",
                 "region": [
                   1536,
@@ -10380,10 +10416,11 @@
                 "foot": [
                   1216,
                   1520
-                ]
+                ],
+                "duration": 1.0
               }
             ],
-            "distinct_pixel_frames": 6,
+            "distinct_pixel_frames": 7,
             "neutral_height": 1201.5,
             "canvas_size": [
               2048,
@@ -10396,9 +10433,9 @@
           },
           "runtime_layout_proof": {
             "status": "NOT_VISUAL_APPROVAL",
-            "source_sha256": "d4766586d820db77273df97606dddcc18f2d7ea6e264ca86e9ef15bf23c772bd",
+            "source_sha256": "dfb27f5be96262cefc66549674412da4c52a90ae049beeb5de5d944ccc2f5e1c",
             "direction": "E",
-            "pose_count": 6,
+            "pose_count": 7,
             "source_pixels_unchanged": false,
             "resampled": false,
             "newly_authored_poses": 2,
@@ -10406,6 +10443,10 @@
               [
                 865,
                 1374
+              ],
+              [
+                672.0,
+                5824.0
               ],
               [
                 2253,
@@ -10430,6 +10471,7 @@
             ],
             "pose_canvas_sizes": [
               2664,
+              2664,
               2760,
               2560,
               2256,
@@ -10438,7 +10480,7 @@
             ],
             "runtime_reference_canvas_size": 1024,
             "approval_granted": false,
-            "review_basis": "E1 support boot moved backward through leg articulation at fixed stance ground; E5 accepted prior edit preserved pixel-exact. Body/attack/gameplay clocks unchanged. Target derives from16.8worldpixel pose advance, not source silhouette bounds. No visual approval from metadata."
+            "review_basis": "Masked support-leg intermediate at phase0.5, six original poses exact; duration0 split0.5+0.5. No visual quality approval."
           }
         },
         {
@@ -19044,13 +19086,13 @@
           "direction": "W",
           "role": "run",
           "animation": "run_4",
-          "source": "assets/actors/eight_direction/native_production/girtas_267/r007/W-run.png",
-          "source_sha256": "e09505f35a44a8b42c9f2b8e21d8b98d334d2cb0f09a8d57f364a2c8612b56ec",
-          "texture": "assets/actors/eight_direction/native_production/girtas_267/r007/W-run.png",
+          "source": "assets/actors/eight_direction/native_production/girtas_267/r010/W-run.png",
+          "source_sha256": "8c0e4de9670d2244d4adaac53d9407378d076fe91b9128d1e864d44d84aec2d5",
+          "texture": "assets/actors/eight_direction/native_production/girtas_267/r010/W-run.png",
           "geometry": {
             "image_size": [
               3072,
-              4608
+              6144
             ],
             "frames": [
               {
@@ -19080,10 +19122,42 @@
                 "foot": [
                   1280,
                   1600
-                ]
+                ],
+                "duration": 0.5
               },
               {
                 "row": 1,
+                "direction": "W",
+                "region": [
+                  0,
+                  4608,
+                  1254,
+                  1254
+                ],
+                "margin": [
+                  630,
+                  464,
+                  1306,
+                  1306
+                ],
+                "source_anchor": [
+                  650.0,
+                  5744.0
+                ],
+                "rgba_sha256": "5ce8cb823e939b26bb6f3b76a71729b3d712489aa4f2e93569e3c9caa741c99e",
+                "canvas_size": [
+                  2560,
+                  2560
+                ],
+                "foot": [
+                  1280,
+                  1600
+                ],
+                "duration": 0.5,
+                "authored_phase": 0.5
+              },
+              {
+                "row": 2,
                 "direction": "W",
                 "region": [
                   1677,
@@ -19109,10 +19183,11 @@
                 "foot": [
                   1344,
                   1680
-                ]
+                ],
+                "duration": 1.0
               },
               {
-                "row": 2,
+                "row": 3,
                 "direction": "W",
                 "region": [
                   141,
@@ -19138,10 +19213,11 @@
                 "foot": [
                   1344,
                   1680
-                ]
+                ],
+                "duration": 1.0
               },
               {
-                "row": 3,
+                "row": 4,
                 "direction": "W",
                 "region": [
                   1677,
@@ -19167,10 +19243,11 @@
                 "foot": [
                   1408,
                   1760
-                ]
+                ],
+                "duration": 1.0
               },
               {
-                "row": 4,
+                "row": 5,
                 "direction": "W",
                 "region": [
                   141,
@@ -19196,10 +19273,11 @@
                 "foot": [
                   1344,
                   1680
-                ]
+                ],
+                "duration": 1.0
               },
               {
-                "row": 5,
+                "row": 6,
                 "direction": "W",
                 "region": [
                   1677,
@@ -19225,10 +19303,11 @@
                 "foot": [
                   1344,
                   1680
-                ]
+                ],
+                "duration": 1.0
               }
             ],
-            "distinct_pixel_frames": 6,
+            "distinct_pixel_frames": 7,
             "neutral_height": 1134.5,
             "canvas_size": [
               2048,
@@ -19241,13 +19320,13 @@
           },
           "runtime_layout_proof": {
             "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
-            "source_sha256": "e09505f35a44a8b42c9f2b8e21d8b98d334d2cb0f09a8d57f364a2c8612b56ec",
+            "source_sha256": "8c0e4de9670d2244d4adaac53d9407378d076fe91b9128d1e864d44d84aec2d5",
             "base_geometry_sha256": "dae5a589bb135e1dcc15cf5145d4338aa2ac10a010cdd3bb238a3f02fe7f9e85",
             "derived_geometry_sha256": "96eb34e2bfb1818f3ad5990e70738bc50e9472287a04be0b3ec3ee5e66bb7177",
             "review_sha256": "5c5b8daa390bf7dedab326690f0b6b356ab98dbe070687cffd06994deeef1650",
-            "review_basis": "Newly authored W1 support lower-leg trajectory; fixed logical canvas and boot ground height. Other five W poses and all E poses unchanged. Text-local official image edit, no pixel mask. Not original game art; no visual approval.",
+            "review_basis": "Masked support-leg intermediate at phase0.5, six original poses exact; duration0 split0.5+0.5. No visual quality approval.",
             "direction": "W",
-            "pose_count": 6,
+            "pose_count": 7,
             "canvas_size": [
               2048,
               2048
@@ -19260,6 +19339,10 @@
               [
                 791,
                 1277
+              ],
+              [
+                650.0,
+                5744.0
               ],
               [
                 2327,
@@ -19291,6 +19374,7 @@
             "approval_granted": false,
             "source_region_review_sha256": "653eef584fa4b4a7ae8010948f95be94f82696d69d8451c3be0b514f597cf263",
             "pose_canvas_sizes": [
+              2560,
               2560,
               2688,
               2688,
@@ -19640,8 +19724,8 @@
       "visual_review": "FAIL",
       "timing_review": "PASS",
       "integration": "Real default catalog wired to immutable production candidate; approval pending actual default Main and independent full quality",
-      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r008/NativeMotionProfile.tres",
-      "native_profile_sha256": "6e68d0b5d5fc6bc160a9cc6706653e87c04b17e91994aa446285d226edad3489",
+      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r010/NativeMotionProfile.tres",
+      "native_profile_sha256": "a816b6badbef2be89d05cb13a032fb26d9150a20098a36aeb062ec1f2f52579f",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 502.04237288135596,
