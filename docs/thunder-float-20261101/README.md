@@ -43,6 +43,12 @@ Main의 `transform:283`은 여전히 공용 `male_chain_chain_coif_longsword/Spr
 - 기존 283 시트 SHA-256: `c6e63b2fee699e67df3fb77af4378852f781ba35fe84bf01aff29828bbfeb235`.
 - 참조 영상 SHA-256: `9823d0236e537c94b5e661d059eca7c72469cd3493ae0a182ed75b26e46528c4`.
 - 결과 Library 항목은 버전 0과 같은 `libfile_b44f50429f208191ab1b1206e14dc0f4`를 유지한다.
-- 현재 결과: **version 1**, `MythThunder283_float_movement_DRAFT_30fps_v1.mp4`, 446536 bytes, 1280×720/30FPS/180프레임/6초.
-- 현재 결과 SHA-256: `41aab24576a4559aaf74d419c8c3f83ac2e78305416e3ddbec76947ce5325d21`.
-- [최신 결과 영상](https://chatgpt.com/api/library/files/libfile_b44f50429f208191ab1b1206e14dc0f4/download). 버전 0은 교체 이력에 보존된다.
+- 현재 결과: **version 2**, `MythThunder283_float_movement_DRAFT_30fps_v2.mp4`, 449098 bytes, 1280×720/30FPS/180프레임/6초.
+- 현재 결과 SHA-256: `8a106385e1bb5b290695fd05adea024ba213f7af5a8f1c1db644df8f34760ad0`.
+- [최신 결과 영상](https://chatgpt.com/api/library/files/libfile_b44f50429f208191ab1b1206e14dc0f4/download). 버전 0과 1은 교체 이력에 보존된다.
+
+## 버전 2: 마지막 마스크 정리
+
+포즈·접힘 각도·타이밍·이동 경로·상체/망토 움직임은 버전 1 그대로다. 원본에서 창이 허벅지 뒤에 가려지는 y=116 아래 구간을 창 마스크가 잘못 포함하여 수직으로 고정된 바지 조각이 남았다. 이 가려진 구간을 창 레이어에서 제외하고 창 끝의 직사각형 선택을 타원 영역으로 좁혔다. 다리 메시와 함께 접히던 앞쪽 망토 자락은 망토 레이어로 분리해 무릎 위에서 가리도록 했다. 변경 코드는 마스크 셰이더 한 파일뿐이다.
+
+Godot 4.7.2에서 30FPS 180프레임 전체 이동을 한 번 렌더하여 전체 구간 및 진입/종료 연속 프레임, 같은 시점의 1배 비교를 확인했다. 수직 잔여 조각은 정리됐고 포즈/시간 변화는 없다. 1배 차이는 작으며 확대에서는 금색 테두리와 접힌 무릎 경계가 약간 거칠게 남는다. 이를 없애기 위해 포즈를 다시 바꾸거나 전면 재제작하지 않았다. Main 연결/공용 검병 매핑/전체 공격 회귀의 미완료 상태는 이전과 같다.
