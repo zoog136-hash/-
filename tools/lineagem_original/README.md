@@ -1,43 +1,34 @@
-# Original Lineage M source inspection
+# Native base508 resource connections
 
-Status: **private body/shadow inspection, not production integration**. The existing collectible registry is unchanged. No new collectible identities, names, grades, stats, effects, or motion frames are invented.
+The active catalogs use701 verified source definitions:388 transformations,167 dolls and146 relics. Source names, grades and in-world identities are preserved separately from the former registry. Class/gender and explicit active-option rules select conditional appearances; Halpas has a declared base, and Taco's indirect summon identity preserves application type461/target11 without inventing its gameplay meaning. NPC values remain keyed by exact source NpcClass IDs.
 
-Based on main `0cab9b3d39e9330feb1c404d8c36b80d3e417b2d`, this path reads native declaration timing and pixels independently of the authored animation presentation. The first reviewed targets are `transform:267` (22262 → 22258) and `transform:393` (28443 → 28439). Alias action overrides remain intact. Native Walk and Run are separate tracks; idle starts with the declared frame11. Movement uses the explicit 36Hz sections; these two idle/basic attack tracks use their preceding explicit 24Hz sections and original per-frame durations.
+The common2D player/follower/relic path samples decoded source poses and offsets directly. It preserves native token order, zero-time events and separate Walk/Run declarations. The gameplay hit clock remains independent. No limb repair, interpolated frames, canvas resizing or procedural actor motion is added to native poses.
 
-`original_source_preview.gd` uses source pixel offsets directly, scale1, and no root wobble, normalized canvas, generated shadow, generated actor overlay, frame interpolation or speed-based FPS changes. Attack presentation has its own native clock; the existing `TwilightActorMotion` strike marker remains authoritative. Repeated manual movement cancellation preserves the locomotion clock.
+## Required private resources
 
-The source origin has not been established as a physical foot anchor. Direction bit5 is mapped to game down by visual inspection; this is recorded as inspection rather than native-world semantic approval. Native shadow pixels are rendered literally. **sc/mu attr8/128 are retained as unresolved layer IDs and are not rendered**. No original composite fidelity is claimed. The explicit `--lineagem-original-preview` switch is required; normal launches do not enable this incomplete compositor.
+This branch contains code and source metadata, **not the source pixel/UI pack**. A clean checkout or exported game cannot display the new native appearances until an authorized private pack is installed at `user://lineagem_base508/manifest.json`. No raw SP2, source-derived PNG, capture video or personal backup is committed here. Redistribution rights for the third-party art have not been established; the10GB original archive must not be published with this PR.
 
-## Build and run
+The private pack contains relative actor/pixel/UI paths and must be accompanied by its original input provenance. Library/local backup receipts are delivery records, not proof that public Git or an APK contains those files. Existing repository resource-integrity checks concern the previously tracked atlases; they do not approve this source pack.
 
-Use Python3.12 and the pinned `requirements.txt` in an isolated environment. Original inputs remain outside Git.
+## Build from authorized local inputs
 
-```sh
-python tools/lineagem_original/build_original_preview.py \
-  --inputs /absolute/local/original-inputs \
-  --output /absolute/local/private-preview
-
-godot --path . -- \
-  --lineagem-original-preview=/absolute/local/private-preview/manifest.json
-```
-
-Equip the existing reviewed transform normally. The preview manifest is a local inspection pack, not permission to redistribute the underlying art. No original SP2 or derived source art is committed by this change.
+Use the pinned `requirements.txt` in an isolated Python environment. Inputs are the validated base508 tables, original SPR declarations, and exact original SP2/UI files. Preserve original ZIPs and conflicting bytes; do not substitute nearby file suffixes.
 
 ```sh
-python -m unittest discover -s tools/lineagem_original -p 'test_original_*.py' -v
-godot --headless --path . \
-  --script res://tests/lineagem_original_player_validation.gd -- \
-  --lineagem-original-preview=/absolute/local/private-preview/manifest.json
+python tools/lineagem_original/build_verified_registry.py --inputs INPUTS --output data/lineagem_base508
+python tools/lineagem_original/build_native_pack.py --inputs INPUTS --registry data/lineagem_base508 --output PRIVATE_PACK
+python tools/lineagem_original/attach_native_layers.py --inputs INPUTS --pack PRIVATE_PACK
+python tools/lineagem_original/build_connection_report.py --inputs INPUTS --registry data/lineagem_base508 --pack PRIVATE_PACK --report PRIVATE_REPORTS
+python tools/lineagem_original/build_native_overlays.py --inputs INPUTS --pack PRIVATE_PACK
+python tools/lineagem_original/build_playback_policy.py --inputs INPUTS --pack PRIVATE_PACK --output data/lineagem_base508/playback_policy.json
 ```
 
-Use Godot4.7.2 and isolated `XDG_CONFIG_HOME`, `XDG_DATA_HOME`, and `XDG_CACHE_HOME`; do not use a player's save directory. The player validation requires the real private pack and is not part of the default synthetic/CI test collection. It checks both transforms, native idle order, damage marker preservation, cancellation, transform removal, and root invariants across eight directions. Those checks do not approve visual quality.
+Copy the authorized UI files into `PRIVATE_PACK/ui` with original relative paths. Install the complete pack into the game's user-data location, or use `--lineagem-original-preview=/absolute/path/manifest.json` for an isolated local inspection. The builders support targeted sprite refreshes so new inputs do not require converting the entire pack again.
 
-`lineagem_original_game_capture.gd` runs Main with an explicit authored albino validation map and `--legacy-map-layouts`. It selects a starter class in the isolated session, checks the actual source role, and captures front idle/walk/run/attack/idle transitions. Walk uses test speed90, then restores normal speed. This is Linux software-rendered inspection, **not normal Aden map validation or Android30FPS validation**.
+## Runtime policy and current limits
 
-## Full-source scope
+The default policy is **unverified compatibility playback**, not proven M-client equivalence. Explicit SPR rates take precedence. Missing clocks use separately identified candidates; attr8 additive and attr128 alpha0.5 are declared host approximations. `--lineagem-source-strict` preserves unresolved clocks as static and disables unverified blending. See [COMPATIBILITY.md](COMPATIBILITY.md) for evidence, scope and controls.
 
-`audit_supplied_manifest.py` verifies the parent-supplied corrected category manifest against local size/CRC. In this environment, all51 pixel ZIPs plus the metadata ZIP were downloaded through Library, SHA256/ZIP-CRC checked, and all32,314 explicit-scope SP2 files matched locally. Missing inputs:0. The full10GB source ZIP was not materialized here, and its historical MD5 is not re-verified here.
+At the latest local checkpoint743 sprite records serve701 card definitions.697 default appearances can be selected; four class/gender cards await an explicit declared pair when player gender is unknown.994 available attachment layers can be composited in compatibility mode;188 exact attachment addresses and seven frame-event source effects remain unavailable. Two body-track and two attachment-track address/frame exceptions are retained rather than filled with generated art. Source origin and eight-direction mapping still require visual review.
 
-`build_source_catalog.py` collects source-native body candidates across the full supplied scope, without cutting at the existing registry. It groups aliases by terminal body while retaining variant actions, excludes referenced layers and roots without the required actor actions, and leaves `gameplay_identity=unverified`, `registered_in_game=false`, `gameplay_grade=null`, and `production_replay_ready=false`. Its904 transformation,143 doll and144 relic body-candidate groups are **not counts of unique/new collectible entities**. Effects/items, duplicate declarations, unmatched identities and unknown native timing remain pending. Existing registry review:413 transforms,166 dolls,144 relics; two reviewed visual targets, six name-only candidates,715 unresolved.
-
-Protected content tables were not opened or decrypted. A source candidate is not automatically registered as a collectible. Missing/default FPS is not assigned a guessed value. Remaining work requires verified identity/tier correspondence, native timing where unspecified, and layer/origin semantics before production registration and full original composition.
+Godot4.7.2 headless import/loading checked the player route, strict/compatible separation, a source caster effect, a native frame-event overlay, and conditional identity selection. Android execution, per-character visual equivalence and full-game source-pack restoration remain unverified. Existing capture/validation helpers are isolated diagnostics, not evidence that all originals have been delivered.
