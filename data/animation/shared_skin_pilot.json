@@ -1,0 +1,693 @@
+{
+  "schema": 1,
+  "direction": "E",
+  "scope": "two humanoid skins, locomotion-only cutout pilot; joints hand-authored from visible art; hidden anatomy not reconstructed",
+  "skins": {
+    "warrior": {
+      "source": "assets/sprites/classes/warrior.png",
+      "source_sha256": "34581fb5a18541020dac069adb2538396f88a4186614fe1ed7225d78fbaddc6b",
+      "source_cell": [
+        0,
+        348,
+        148,
+        116
+      ],
+      "hip": [
+        72,
+        76
+      ],
+      "body_scale": 0.8,
+      "parts": {
+        "body": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/body.png",
+          "pivot": [
+            72,
+            76
+          ],
+          "end": null,
+          "polygon": [
+            [
+              64,
+              20
+            ],
+            [
+              85,
+              20
+            ],
+            [
+              86,
+              54
+            ],
+            [
+              89,
+              62
+            ],
+            [
+              121,
+              85
+            ],
+            [
+              119,
+              89
+            ],
+            [
+              81,
+              70
+            ],
+            [
+              78,
+              79
+            ],
+            [
+              65,
+              78
+            ],
+            [
+              58,
+              85
+            ],
+            [
+              47,
+              96
+            ],
+            [
+              42,
+              94
+            ],
+            [
+              36,
+              86
+            ],
+            [
+              36,
+              73
+            ],
+            [
+              46,
+              59
+            ],
+            [
+              58,
+              43
+            ]
+          ],
+          "sha256": "16b832190f6fc97d7db355aa85a60a36be1ca23676d1fdc44cbc53304eadf2f5"
+        },
+        "thigh_0": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/thigh_0.png",
+          "pivot": [
+            69,
+            75
+          ],
+          "end": [
+            59,
+            83
+          ],
+          "polygon": [
+            [
+              65,
+              69
+            ],
+            [
+              73,
+              73
+            ],
+            [
+              69,
+              82
+            ],
+            [
+              61,
+              88
+            ],
+            [
+              55,
+              86
+            ],
+            [
+              56,
+              79
+            ]
+          ],
+          "sha256": "2ec2f44181a0741b9233158dc0142c8c3320a0fbf38ba8ce9cfa6f9dce9b9250"
+        },
+        "shin_0": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/shin_0.png",
+          "pivot": [
+            59,
+            83
+          ],
+          "end": [
+            46,
+            97
+          ],
+          "polygon": [
+            [
+              56,
+              79
+            ],
+            [
+              63,
+              83
+            ],
+            [
+              58,
+              91
+            ],
+            [
+              50,
+              100
+            ],
+            [
+              43,
+              98
+            ],
+            [
+              43,
+              94
+            ]
+          ],
+          "sha256": "e81c1f16561f443fad01cd710e99611d520b1dffee789712da62483da8845705"
+        },
+        "foot_0": {
+          "sole_y": 104,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/foot_0.png",
+          "pivot": [
+            46,
+            97
+          ],
+          "end": null,
+          "polygon": [
+            [
+              43,
+              95
+            ],
+            [
+              50,
+              96
+            ],
+            [
+              51,
+              100
+            ],
+            [
+              54,
+              103
+            ],
+            [
+              52,
+              106
+            ],
+            [
+              45,
+              104
+            ],
+            [
+              42,
+              100
+            ]
+          ],
+          "sha256": "86aa5709c986a7a534225a0bfa9eb304b14c53b0f5496f8b623e4c97494ccce0"
+        },
+        "thigh_1": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/thigh_1.png",
+          "pivot": [
+            76,
+            75
+          ],
+          "end": [
+            81,
+            84
+          ],
+          "polygon": [
+            [
+              72,
+              71
+            ],
+            [
+              80,
+              72
+            ],
+            [
+              85,
+              79
+            ],
+            [
+              85,
+              86
+            ],
+            [
+              78,
+              89
+            ],
+            [
+              74,
+              83
+            ]
+          ],
+          "sha256": "ee616dc9e46c93f709695021b308accd8d4cc0da08800869c9b1b906d60625fd"
+        },
+        "shin_1": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/shin_1.png",
+          "pivot": [
+            81,
+            84
+          ],
+          "end": [
+            82,
+            98
+          ],
+          "polygon": [
+            [
+              77,
+              82
+            ],
+            [
+              85,
+              82
+            ],
+            [
+              86,
+              91
+            ],
+            [
+              86,
+              99
+            ],
+            [
+              79,
+              101
+            ],
+            [
+              77,
+              92
+            ]
+          ],
+          "sha256": "bbd5fd6522bf66a62815136935700b0fe74dc3baf9b54c48280d1bae869069ff"
+        },
+        "foot_1": {
+          "sole_y": 105,
+          "texture": "res://assets/actors/shared_skin_pilot/warrior/foot_1.png",
+          "pivot": [
+            82,
+            98
+          ],
+          "end": null,
+          "polygon": [
+            [
+              79,
+              96
+            ],
+            [
+              86,
+              96
+            ],
+            [
+              89,
+              99
+            ],
+            [
+              94,
+              99
+            ],
+            [
+              94,
+              102
+            ],
+            [
+              87,
+              105
+            ],
+            [
+              80,
+              105
+            ],
+            [
+              78,
+              102
+            ]
+          ],
+          "sha256": "3bd1a7d39512365ae9baf3971933ab6b192e09453a608948f8cb0b5d9fa358b5"
+        }
+      }
+    },
+    "assassin": {
+      "source": "assets/sprites/classes/assassin.png",
+      "source_sha256": "e5ea7107f95c54d25484a309357069d961e1ea38e461985132ab238616e8d862",
+      "source_cell": [
+        0,
+        232,
+        148,
+        116
+      ],
+      "hip": [
+        75,
+        79
+      ],
+      "body_scale": 0.95,
+      "parts": {
+        "body": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/body.png",
+          "pivot": [
+            75,
+            79
+          ],
+          "end": null,
+          "polygon": [
+            [
+              69,
+              32
+            ],
+            [
+              82,
+              33
+            ],
+            [
+              88,
+              38
+            ],
+            [
+              88,
+              47
+            ],
+            [
+              83,
+              53
+            ],
+            [
+              83,
+              64
+            ],
+            [
+              87,
+              73
+            ],
+            [
+              88,
+              80
+            ],
+            [
+              81,
+              84
+            ],
+            [
+              73,
+              86
+            ],
+            [
+              67,
+              83
+            ],
+            [
+              60,
+              86
+            ],
+            [
+              52,
+              90
+            ],
+            [
+              42,
+              94
+            ],
+            [
+              38,
+              99
+            ],
+            [
+              37,
+              92
+            ],
+            [
+              42,
+              82
+            ],
+            [
+              54,
+              73
+            ],
+            [
+              43,
+              75
+            ],
+            [
+              52,
+              67
+            ],
+            [
+              61,
+              59
+            ],
+            [
+              66,
+              48
+            ]
+          ],
+          "sha256": "744d763d18c2c72aac263f89314331f21c5212dfee378d1edad8faafa2165795"
+        },
+        "thigh_0": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/thigh_0.png",
+          "pivot": [
+            70,
+            83
+          ],
+          "end": [
+            65,
+            92
+          ],
+          "polygon": [
+            [
+              65,
+              79
+            ],
+            [
+              74,
+              82
+            ],
+            [
+              71,
+              89
+            ],
+            [
+              67,
+              96
+            ],
+            [
+              61,
+              94
+            ],
+            [
+              60,
+              89
+            ]
+          ],
+          "sha256": "62df15df9bd277ed131445c8d8797d23431724d65a47f0e3fcd28cad0029dc84"
+        },
+        "shin_0": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/shin_0.png",
+          "pivot": [
+            65,
+            92
+          ],
+          "end": [
+            60,
+            101
+          ],
+          "polygon": [
+            [
+              61,
+              89
+            ],
+            [
+              68,
+              93
+            ],
+            [
+              65,
+              98
+            ],
+            [
+              63,
+              103
+            ],
+            [
+              58,
+              104
+            ],
+            [
+              56,
+              100
+            ]
+          ],
+          "sha256": "7cb07883c638cad21e2607f58608b6f21e2662da9f5551c2a4ad0327cbe8dec9"
+        },
+        "foot_0": {
+          "sole_y": 106,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/foot_0.png",
+          "pivot": [
+            60,
+            101
+          ],
+          "end": null,
+          "polygon": [
+            [
+              57,
+              100
+            ],
+            [
+              64,
+              100
+            ],
+            [
+              64,
+              103
+            ],
+            [
+              68,
+              105
+            ],
+            [
+              67,
+              108
+            ],
+            [
+              60,
+              107
+            ],
+            [
+              56,
+              104
+            ]
+          ],
+          "sha256": "ef07ede92bf87c76260a305e7537c212d50957df86a52e9ef6afbab5cd0a6718"
+        },
+        "thigh_1": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/thigh_1.png",
+          "pivot": [
+            80,
+            79
+          ],
+          "end": [
+            89,
+            84
+          ],
+          "polygon": [
+            [
+              77,
+              75
+            ],
+            [
+              84,
+              76
+            ],
+            [
+              93,
+              82
+            ],
+            [
+              94,
+              87
+            ],
+            [
+              87,
+              91
+            ],
+            [
+              82,
+              86
+            ]
+          ],
+          "sha256": "9e0c231dc12e61f5506b7913312bd696c3a535bd1802c31f288eeedb0320b2e6"
+        },
+        "shin_1": {
+          "sole_y": null,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/shin_1.png",
+          "pivot": [
+            89,
+            84
+          ],
+          "end": [
+            88,
+            96
+          ],
+          "polygon": [
+            [
+              86,
+              83
+            ],
+            [
+              93,
+              84
+            ],
+            [
+              93,
+              91
+            ],
+            [
+              91,
+              98
+            ],
+            [
+              85,
+              100
+            ],
+            [
+              84,
+              94
+            ]
+          ],
+          "sha256": "f1b1c828da98fea3dc0cb1f0b79d7a0208123c623a06ab5c1f8f01faae4b93e6"
+        },
+        "foot_1": {
+          "sole_y": 101,
+          "texture": "res://assets/actors/shared_skin_pilot/assassin/foot_1.png",
+          "pivot": [
+            88,
+            96
+          ],
+          "end": null,
+          "polygon": [
+            [
+              85,
+              94
+            ],
+            [
+              91,
+              94
+            ],
+            [
+              92,
+              97
+            ],
+            [
+              97,
+              98
+            ],
+            [
+              98,
+              101
+            ],
+            [
+              90,
+              102
+            ],
+            [
+              84,
+              100
+            ]
+          ],
+          "sha256": "cbec39c3821e9919499aae52afcd32dc8305cb880cec6931127a14d4794bfd81"
+        }
+      }
+    }
+  }
+}
