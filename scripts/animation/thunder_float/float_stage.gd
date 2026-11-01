@@ -14,14 +14,14 @@ func _ready() -> void:
 	actor.scale = Vector2.ONE * 0.70
 	detail.scale = Vector2.ONE * 3.0
 	var title := Label.new()
-	title.text = "TRANSFORM 283 / MYTH THUNDER (MALE) / LEFT-FACING FLOAT / EXISTING 283 SHEET"
+	title.text = "TRANSFORM 413 / MYTH THUNDER (FEMALE) / LEFT-FACING FLOAT / EXISTING 413 FEMALE SHEET"
 	title.position = Vector2(32, 18)
 	add_child(title)
 	status = Label.new()
 	status.position = Vector2(32, 48)
 	add_child(status)
 	var notes := Label.new()
-	notes.text = "Top: ~84 px visible height (current game footprint), 210 px/s. Bottom: 3x inspection. 30 FPS, normal time.\nExisting 283 LEFT sheet cell; newly authored float motion. Not verified original animation.\nExisting source pose -> float -> source pose. Attack, idle animations and common RUN unchanged."
+	notes.text = "Top: ~84 px visible height (current game footprint), 210 px/s. Bottom: 3x inspection. 30 FPS, normal time.\nExisting 413 FEMALE LEFT sheet cell; newly authored float motion. Not verified original animation.\nExisting source pose -> float -> source pose. Attack, idle animations and common RUN unchanged."
 	notes.position = Vector2(32, 615)
 	add_child(notes)
 	_update()
