@@ -2011,8 +2011,8 @@ func _apply_catalog_page() -> void:
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
 		if catalog_category != "아이템":
 			var path := str(record.get("image_path", ""))
-			if path != "" and ResourceLoader.exists(path):
-				catalog_list.set_item_icon(index, load(path) as Texture2D)
+			var source_icon: Texture2D = preload("res://scripts/lineagem_base508.gd").icon(record)
+			if source_icon != null: catalog_list.set_item_icon(index, source_icon)
 		catalog_list.set_item_tooltip(index,"%s · %s · 원본 ID: %s" % [grade_name,record.get("name",""),record.get("sourceId","")])
 	_refresh_option_awakening_markers()
 	_refresh_option_awakening_entry()

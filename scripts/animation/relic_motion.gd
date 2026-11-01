@@ -1,6 +1,10 @@
 extends RefCounted
 class_name TwilightRelicMotion
 
+const ORIGINAL = preload("res://scripts/animation/original_source_preview.gd")
+const SOURCE = preload("res://scripts/lineagem_base508.gd")
+var native_actor = ORIGINAL.new()
+var native_enabled: bool = false
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const GLOW = preload("res://assets/effects/relic_glow.gdshader")
@@ -19,6 +23,17 @@ var appear_speed: float = 4.0
 var disappear_speed: float = 4.0
 
 func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, grade_color: Color) -> void:
+	native_actor.clear()
+	native_enabled = false
+	if SOURCE.native(record):
+		if native_actor.get_parent() == null: sprite.get_parent().add_child(native_actor)
+		native_enabled = native_actor.configure("relic:" + str(record.sourceId), player.original_source_manifest)
+		enabled = native_enabled
+		sprite.hide()
+		native_actor.global_position = player.global_position + follow_offset
+		native_actor.advance_source(0.0, "idle", player.motion.facing8, player.motion.sequence, false)
+		state = "source_native" if native_enabled else "source_asset_pending"
+		return
 	var path: String = str(record.get("image_path", ""))
 	if record.is_empty():
 		enabled = false
@@ -56,6 +71,12 @@ func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, gra
 	update(0.0, sprite, player)
 
 func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
+	if native_enabled:
+		var old: Vector2 = native_actor.global_position
+		var target: Vector2 = player.global_position + follow_offset
+		native_actor.global_position = target if old.distance_to(target)>900.0 else old.lerp(target,1.0-exp(-8.0*delta))
+		native_actor.advance_source(delta, "walk" if old.distance_to(native_actor.global_position)>0.1 else "idle", player.motion.facing8, player.motion.sequence, false)
+		return
 	if not enabled and not sprite.visible: return
 	opacity = move_toward(opacity, 1.0 if enabled else 0.0, delta * (appear_speed if enabled else disappear_speed))
 	if absf(opacity - (1.0 if enabled else 0.0)) < 0.00001:

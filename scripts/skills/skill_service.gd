@@ -361,7 +361,7 @@ func hit_chance(skill: Dictionary, target: TwilightMonster) -> float:
 func physical_hit_chance(accuracy: int, target: TwilightMonster) -> float:
 	# Normal attacks and physical skills read the same live, life-scoped defense.
 	# Keep the shared formula's AC normalization and nonnegative DG floor.
-	return world._physical_hit_chance(accuracy, target.armor_class + int(status.modifier(target, "ac")), int(status.modifier(target, "dg")))
+	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), int(status.modifier(target, "dg")))
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
 	if target.dead: return

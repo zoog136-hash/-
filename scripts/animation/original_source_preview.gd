@@ -19,8 +19,19 @@ func configure(key: String, manifest_path: String) -> bool:
 	if not parsed is Dictionary or int(parsed.get("schema", 0)) != 1: return false
 	if str(parsed.get("mode", "")) != "literal_body_shadow_inspection_only": return false
 	var records: Dictionary = parsed.get("records", {})
+	if not records.has(key):
+		var binding: Dictionary = parsed.get("card_bindings", {}).get(key, {})
+		var sprites: Array = binding.get("sprite_ids", [])
+		if sprites.size() != 1: return false
+		key = "sprite:" + str(int(sprites[0]))
 	if not records.has(key): return false
 	var candidate: Dictionary = records[key]
+	if candidate.has("manifest"):
+		var actor_path: String = str(candidate.manifest)
+		if actor_path.is_absolute_path() or ".." in actor_path.split("/"): return false
+		var actor: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path.get_base_dir().path_join(actor_path)))
+		if not actor is Dictionary: return false
+		candidate = actor
 	var tracks: Dictionary = candidate.get("tracks", {})
 	_root = manifest_path.get_base_dir()
 	if not tracks.has("idle"): return false
@@ -37,7 +48,7 @@ func configure(key: String, manifest_path: String) -> bool:
 				clear()
 				return false
 			for frame: Dictionary in frames:
-				if float(frame.get("duration", 0.0)) <= 0.0:
+				if not bool(track.get("static_pending_timing", false)) and float(frame.get("duration", 0.0)) <= 0.0:
 					clear()
 					return false
 				var frame_layers: Array = frame.get("layers", [])
@@ -105,6 +116,8 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		requested = "attack"
 	elif gameplay_active and _attack_completed:
 		requested = "attack"
+	if requested in ["walk", "run"] and not _record.tracks.has(requested) and _record.tracks.has("walk"):
+		requested = "walk" # The displayed native action remains WALK, never a fabricated RUN track.
 	if not _record.tracks.has(requested): requested = "idle"
 	if requested != _role:
 		_role = requested
@@ -114,16 +127,19 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 	var source_direction: int = posmod(facing + 3, 8)
 	var track: Dictionary = _record.tracks[_role]
 	var frames: Array = track.directions[source_direction]
-	var total: float = 0.0
-	for item: Dictionary in frames: total += float(item.duration)
+	var static_track: bool = bool(track.get("static_pending_timing", false))
+	var total: float = 1.0
+	if not static_track:
+		total = 0.0
+		for item: Dictionary in frames: total += float(item.duration)
 	var time: float = fmod(_clock, total) if bool(track.loop) else minf(_clock, total)
-	var selected: Dictionary = frames[-1]
-	for item: Dictionary in frames:
+	var selected: Dictionary = frames[0] if static_track else frames[-1]
+	for item: Dictionary in ([] if static_track else frames):
 		if time < float(item.duration):
 			selected = item
 			break
 		time -= float(item.duration)
-	if _role == "attack" and _clock >= total:
+	if _role == "attack" and (static_track or _clock >= total):
 		_source_attack = false
 		_attack_completed = true
 	last_source_frame = int(selected.source_frame)

@@ -81,6 +81,8 @@ var attack_visual_duration: float = 0.42
 var physics_delta: float = 1.0 / 60.0
 
 func _ready() -> void:
+	if FileAccess.file_exists("user://lineagem_base508/manifest.json"):
+		original_source_manifest = "user://lineagem_base508/manifest.json"
 	original_source_preview.name = "OriginalSourceInspection"
 	add_child(original_source_preview)
 	for argument: String in OS.get_cmdline_user_args():
@@ -313,6 +315,12 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 		class_sprite.hide()
 		transform_sprite.hide()
 		original_source_preview.advance_source(0.0, motion.state, motion.facing8, motion.sequence, motion.active)
+		return
+	# A verified identity with missing pixels/variant context never borrows legacy artwork.
+	if transform_profile.profile_id.begins_with("transform:m508:"):
+		transform_active = false
+		transform_sprite.hide()
+		class_sprite.show()
 		return
 	# PR122 local-only comparison, NOT a production transformation approval.
 	# Both forms preserve catalog timing, combat, physics and default art.

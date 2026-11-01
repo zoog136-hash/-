@@ -23,6 +23,8 @@ const PITY_GRADES: Array[String] = ["희귀", "영웅"]
 const PITY_LIMIT: int = 20
 const PACK_SIZE: int = 11
 
+var preserved_unmapped_collection: Dictionary = {}
+var source_merge_blocked: Dictionary = {}
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var pools: Dictionary = {} # category -> grade -> [{id, record}, ...]
 var known_ids: Dictionary = {} # category -> id -> grade
@@ -44,6 +46,8 @@ static func card_id(record: Dictionary) -> String:
 	return "fallback:" + str(record.get("grade", "")) + ":" + name_value + ":" + str(record.get("type", ""))
 
 func configure(catalog: Dictionary) -> void:
+	preserved_unmapped_collection.clear()
+	source_merge_blocked.clear()
 	pools.clear()
 	known_ids.clear()
 	owned.clear()
@@ -62,9 +66,12 @@ func configure(catalog: Dictionary) -> void:
 				var record: Dictionary = raw as Dictionary
 				var grade: String = str(record.get("grade", ""))
 				var identity: String = card_id(record)
-				if not GRADES.has(grade) or identity.is_empty() or identities.has(identity):
+				if identity.is_empty() or identities.has(identity):
 					continue
 				identities[identity] = grade
+				if bool(record.get("source_merge_out_disabled", false)): source_merge_blocked[category + ":" + identity] = true
+				# Source special/event definitions remain addressable without inventing fusion tiers.
+				if not GRADES.has(grade): continue
 				var grade_cards: Array = grade_pools[grade] as Array
 				grade_cards.append({"id": identity, "record": record})
 		pools[category] = grade_pools
@@ -177,7 +184,7 @@ func spare_count(category: String, grade: String) -> int:
 	var extras: Dictionary = spare[category] as Dictionary
 	var count: int = 0
 	for identity: String in identities:
-		if str(identities[identity]) == grade:
+		if str(identities[identity]) == grade and not source_merge_blocked.has(category + ":" + identity):
 			count += maxi(0, int(extras.get(identity, 0)))
 	return count
 
@@ -193,6 +200,7 @@ func fuse(category: String, grade: String) -> Dictionary:
 	var extras: Dictionary = spare[category] as Dictionary
 	for raw_card: Variant in grade_pools.get(grade, []) as Array:
 		var identity: String = str((raw_card as Dictionary).get("id", ""))
+		if source_merge_blocked.has(category + ":" + identity): continue
 		var available: int = maxi(0, int(extras.get(identity, 0)))
 		for _count: int in range(mini(available, required - material_ids.size())):
 			material_ids.append(identity)
@@ -285,7 +293,8 @@ func export_state() -> Dictionary:
 		"version": 1,
 		"owned": owned.duplicate(true),
 		"spare": spare.duplicate(true),
-		"pity": pity.duplicate(true)
+		"pity": pity.duplicate(true),
+		"preserved_unmapped_collection": preserved_unmapped_collection.duplicate(true)
 	}
 
 func import_state(input: Variant) -> void:
@@ -296,6 +305,7 @@ func import_state(input: Variant) -> void:
 	if not (input is Dictionary):
 		return
 	var state: Dictionary = input as Dictionary
+	preserved_unmapped_collection = state.get("preserved_unmapped_collection", {}).duplicate(true)
 	var raw_owned: Variant = state.get("owned", {})
 	var raw_spare: Variant = state.get("spare", {})
 	var raw_pity: Variant = state.get("pity", {})
@@ -308,6 +318,13 @@ func import_state(input: Variant) -> void:
 		var unlocked: Dictionary = owned[category] as Dictionary
 		var extras: Dictionary = spare[category] as Dictionary
 		var known: Dictionary = known_ids[category] as Dictionary
+		var preserved: Dictionary = preserved_unmapped_collection.get(category, {"owned":{},"spare":{}})
+		for field: String in ["owned", "spare"]:
+			var values: Variant = saved_owned if field == "owned" else saved_spare
+			if values is Dictionary:
+				for identity: String in values:
+					if not known.has(identity): preserved[field][identity] = values[identity]
+		if not preserved.owned.is_empty() or not preserved.spare.is_empty(): preserved_unmapped_collection[category] = preserved
 		if saved_owned is Dictionary:
 			for identity: String in known:
 				if (saved_owned as Dictionary).get(identity, false) == true:

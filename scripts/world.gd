@@ -7,6 +7,7 @@ const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
 const DB_PATH: String = "res://data/game_db_v17.json"
 const CATALOG_PATH: String = "res://data/catalog_v19.json"
+const BASE508 = preload("res://scripts/lineagem_base508.gd")
 const CATALOG_IMAGE_INDEX_PATH: String = "res://data/catalog_image_index_v19.json"
 const DIRECTIONAL_PATH: String = "res://data/directional_art_v19.json"
 const MONSTER_SCENE: PackedScene = preload("res://scenes/Monster.tscn")
@@ -589,6 +590,7 @@ func _load_data() -> void:
 	_normalize_option_policies()
 	_enrich_inven_catalog()
 	_index_item_weights()
+	catalog_db = BASE508.apply_catalog(catalog_db)
 	var image_index_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_IMAGE_INDEX_PATH))
 	if image_index_value is Dictionary:
 		catalog_image_index = image_index_value as Dictionary
@@ -607,6 +609,9 @@ func _load_data() -> void:
 		if not image_records.has(name):
 			image_records[name] = "res://assets/ui/rune.png"
 	catalog_image_index["아이템"] = image_records
+	# Source card UI assets are separate from legacy artwork, including equal names.
+	for source_category: String in ["변신", "마법인형", "성물"]:
+		catalog_image_index[source_category] = {}
 	_build_job_classes()
 	equipment_collections.configure(self)
 	growth.configure(self)
@@ -653,6 +658,7 @@ func _enrich_inven_catalog() -> void:
 		inven_record_index[category] = category_index
 
 func _source_catalog_record(category: String, saved: Dictionary) -> Dictionary:
+	if BASE508.native(saved): return BASE508.canonical(saved)
 	if str(saved.get("name", "")).is_empty():
 		return saved
 	# Exact source IDs are authoritative. Preserve explicitly typed, locally
@@ -752,6 +758,7 @@ func _normalize_option_policies() -> void:
 					entry["sourceOptions"] = normalized_options
 
 func _verified_catalog_record(category: String, source_record: Dictionary) -> Dictionary:
+	if BASE508.native(source_record): return BASE508.canonical(source_record)
 	source_record = _source_catalog_record(category, source_record)
 	var category_values: Dictionary = verified_catalog_options.get(category, {}) as Dictionary
 	var name_value: String = str(source_record.get("name", ""))
@@ -2245,7 +2252,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 func _melee_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return PHYSICAL_RESOLUTION.physical_hit_chance(_melee_accuracy_stat(),target.armor_class,0)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(_melee_accuracy_stat(),target.hit_armor_class(),0)
 
 func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
@@ -2577,7 +2584,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var adena_rate: float = ain_service.adena_rate()
 	var item_adena_rate: float = 1.0 + clampf(_equipped_numeric_sum("adena_drop_pct"), 0.0, 500.0) / 100.0
 	var map_rate: float = EXP_PROGRESSION.map_exp_multiplier(_kill_map_id())
-	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate * map_rate)))
+	var gained_experience: int = maxi(0 if not monster.source_m_original.is_empty() else 1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate * map_rate)))
 	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
 	gold += gained_adena
@@ -4723,6 +4730,12 @@ func _load_game(quiet: bool) -> void:
 
 func _build_job_classes() -> void:
 	job_classes.clear()
+	# Character classes are independent source definitions, not invented mythic cards.
+	if not BASE508.cards().is_empty():
+		for definition: Dictionary in BASE508.cards().get("classes", []):
+			var job_name: String = str(definition.name)
+			job_classes.append({"name":job_name,"transform_name":"","image_path":"","source_id":"","source_class":definition,"weapon":_job_weapon_text(job_name),"role":_job_role_from_skills(job_name),"primary_stat":str(JOB_PRIMARY_STAT.get(job_name,""))})
+		return
 	var transforms: Array = catalog_db.get("변신", []) as Array
 	for job_name: String in JOB_CLASS_ORDER:
 		var transform_record: Dictionary = {}
@@ -6448,7 +6461,7 @@ func _sync_option_awakening_auras() -> void:
 func _sync_option_awakening_aura(category: String) -> void:
 	var raw: Variant = equipped_catalog.get(category, {})
 	var record: Dictionary = raw if raw is Dictionary else {}
-	var awakened: bool = not record.is_empty() and option_awakening.is_awakened(category, record)
+	var awakened: bool = not BASE508.native(record) and not record.is_empty() and option_awakening.is_awakened(category, record)
 	var aura: Node2D = option_awakening_auras.get(category) as Node2D
 	if not awakened:
 		if is_instance_valid(aura): aura.call("set_awakened", false)
@@ -6920,7 +6933,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
 	if original_skills != null:
 		return original_skills.physical_hit_chance(accuracy, target)
-	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.armor_class,0)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.hit_armor_class(),0)
 
 func _catalog_damage_bonus(kind: String) -> int:
 	var total: int = _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")

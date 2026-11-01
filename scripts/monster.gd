@@ -1,6 +1,11 @@
 extends CharacterBody2D
 class_name TwilightMonster
 
+const BASE508 = preload("res://scripts/lineagem_base508.gd")
+var source_m_original: Dictionary = {}
+var source_m_npc_id: int = -1
+var mp: int = 0
+var max_mp: int = 0
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
@@ -158,6 +163,10 @@ func retire_for_pool() -> void:
 	drop_items.clear()
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
+	# Only an exact namespaced source ID opts into native stats. No name/Sprite/legacy-ID guessing.
+	source_m_npc_id = int(record.get("source_m_npc_id", -1))
+	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
+	source_m_original = record.get("source_m_original", {}).duplicate(true)
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
 	# Full reset is required when a corpse is reused by the bounded field pool.
@@ -199,9 +208,11 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	defense_value = maxi(0, int(record.get("def", record.get("defense", record.get("방어력", 0)))))
 	var default_ac: int = -(10 + monster_level + defense_value * 2)
 	armor_class = int(record.get("ac", record.get("AC", default_ac)))
-	if armor_class > 0:
+	if armor_class > 0 and source_m_original.is_empty():
 		armor_class = -armor_class
-	max_hp = maxi(30, int(record.get("hp", record.get("HP", 100))))
+	max_hp = int(record.hp) if not source_m_original.is_empty() else maxi(30, int(record.get("hp", record.get("HP", 100))))
+	max_mp = int(record.get("mp", 0)) if not source_m_original.is_empty() else 0
+	mp = max_mp
 	hp = max_hp
 	attack_power = maxi(3, int(record.get("atk", record.get("attack", record.get("공격력", 8)))))
 	var default_accuracy: int = monster_level + 10 + int(round(float(attack_power) * 0.25))
@@ -248,7 +259,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
-	exp_reward = maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
+	exp_reward = int(record.xp) if not source_m_original.is_empty() else maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
 	gold_reward = maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
 	grade = str(record.get("grade", record.get("등급", "일반")))
 	is_boss = LOOT_DROP.is_boss_record(record)
@@ -276,7 +287,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			var desired: float = 72.0 if largest > 100.0 else 56.0
 			var scale_value: float = desired / largest
 			sprite.scale = Vector2(scale_value, scale_value)
-	name_label.text = "Lv.%d %s" % [monster_level, monster_name]
+	name_label.text = monster_name if not source_m_original.is_empty() and str(record.get("source_m_level_origin", "")).begins_with("local_") else "Lv.%d %s" % [monster_level, monster_name]
 	hp_bar.max_value = max_hp
 	hp_bar.value = hp
 	# Start with the same distance rule the AI applies every decision tick.
@@ -992,3 +1003,7 @@ func _patrol_allows(point: Vector2) -> bool:
 	if not is_boss and (field==null or not bool(field.data.get("constrain_all_population_patrol",false))): return true
 	var population: Node = world_controller.field_population
 	return not is_instance_valid(population) or not population.has_method("destination_allowed") or population.destination_allowed(self,point)
+
+func hit_armor_class() -> int:
+	# Existing local formula expects nonpositive armor; preserve raw native AC for display/audit.
+	return mini(0, armor_class) if not source_m_original.is_empty() else armor_class
