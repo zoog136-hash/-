@@ -1,6 +1,10 @@
 extends Node2D
 ## Opt-in inspection of literal source pixels. This is NOT an approved compositor.
 ## No AnimationCatalog overrides, procedural transforms or gameplay hit clocks.
+signal native_annotations(event: Dictionary)
+signal native_effect_frame(event: Dictionary)
+var _effect_nodes: Dictionary = {}
+var _last_token: String = ""
 var _record: Dictionary = {}
 var _root: String = ""
 var _textures: Dictionary = {}
@@ -67,6 +71,23 @@ func configure(key: String, manifest_path: String) -> bool:
 							clear()
 							return false
 						_textures[path] = ImageTexture.create_from_image(image)
+	# Exact attachment nodes stay linked even while their source blend is unresolved.
+	for track: Dictionary in tracks.values():
+		for frames: Array in track.directions:
+			for frame: Dictionary in frames:
+				for effect: Dictionary in frame.get("effect_layers", []):
+					var id: int = int(effect.layer_id)
+					if _effect_nodes.has(id): continue
+					var effect_node: Sprite2D = Sprite2D.new()
+					effect_node.name = "SourceAttachment" + str(id)
+					effect_node.centered = false
+					effect_node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+					effect_node.set_meta("source_layer_id", id)
+					effect_node.set_meta("source_attributes", effect.get("source_attributes", []))
+					effect_node.set_meta("blend_status", effect.get("blend_status", "unverified"))
+					effect_node.hide()
+					add_child(effect_node)
+					_effect_nodes[id] = effect_node
 	_record = candidate
 	for index: int in range(layer_count):
 		var sprite: Sprite2D = Sprite2D.new()
@@ -79,6 +100,9 @@ func configure(key: String, manifest_path: String) -> bool:
 
 func clear() -> void:
 	_record = {}
+	_last_token = ""
+	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.free()
+	_effect_nodes.clear()
 	_textures.clear()
 	for sprite: Sprite2D in _layers:
 		sprite.free()
@@ -143,9 +167,37 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		_source_attack = false
 		_attack_completed = true
 	last_source_frame = int(selected.source_frame)
+	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
+	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
+	for effect: Dictionary in selected.get("effect_layers", []):
+		var node: Sprite2D = _effect_nodes.get(int(effect.layer_id)) as Sprite2D
+		if node == null: continue
+		node.position = Vector2(float(effect.offset[0]), float(effect.offset[1]))
+		node.set_meta("source_pixel_path", _root.path_join(str(effect.path)))
+		node.set_meta("source_frame", selected.source_frame)
+		# No additive/opacity shader is invented for attr8/128.
+		if bool(effect.get("render_enabled", false)):
+			var effect_path: String = str(effect.path)
+			if not _textures.has(effect_path):
+				var image: Image = Image.load_from_file(_root.path_join(effect_path))
+				if image != null and not image.is_empty(): _textures[effect_path] = ImageTexture.create_from_image(image)
+			if _textures.has(effect_path):
+				node.texture = _textures[effect_path]
+				node.show()
+	if token != _last_token:
+		_last_token = token
+		var event: Dictionary = {"role":_role,"source_frame":selected.source_frame,"source_group":selected.source_group,"direction":source_direction,"effect_layers":selected.get("effect_layers", [])}
+		native_effect_frame.emit(event)
+		for annotation: Dictionary in selected.get("source_annotations", []):
+			var source_event: Dictionary = event.duplicate(false)
+			source_event["annotation"] = annotation
+			native_annotations.emit(source_event)
 	for index: int in range(_layers.size()):
 		_layers[index].visible = index < selected.layers.size()
 		if not _layers[index].visible: continue
 		var layer: Dictionary = selected.layers[index]
 		_layers[index].texture = _textures[str(layer.path)]
 		_layers[index].position = Vector2(float(layer.offset[0]), float(layer.offset[1]))
+
+func attachment_status() -> Dictionary:
+	return {"source_layer_nodes":_effect_nodes.size(),"blend":"pending_native_attribute_semantics","native_pixels":true}

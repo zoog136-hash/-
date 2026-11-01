@@ -8,7 +8,7 @@ def build(inputs,registry,output):
  cards=read(registry/'cards.json');ds=original_spr.read((inputs/'lineagem-category-source-metadata/original-spr').glob('*.spr'))
  location=json.load(gzip.open(inputs/'full_resource_inventory/inventory/id_to_archive.json.gz','rt'))
  byname=collections.defaultdict(list)
- for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','girtas_renewal_analysis/sp2/*.sp2','halphas_analysis/sp2/*.sp2']:
+ for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2','girtas_renewal_analysis/sp2/*.sp2','halphas_analysis/sp2/*.sp2']:
   for p in inputs.glob(pattern):byname[p.name].append(p)
  selected={};categories=collections.defaultdict(set)
  for category,rows in cards['catalog'].items():
@@ -20,20 +20,23 @@ def build(inputs,registry,output):
  for n,(sid,binding) in enumerate(sorted(selected.items()),1):
   try:owner,acts=original_spr.resolve(ds,sid)
   except ValueError as e:status.append({'sprite_id':sid,'status':'missing_or_ambiguous_declaration','reason':str(e)});continue
-  base=ds[owner][0];shadow=[x for r in base.references if r['kind']=='shadow' for x in r['targets']];clothes=[x for r in base.references if r['kind']=='clothes' for x in r['targets']]
+  base=ds[owner][0];references=original_spr.resolve_references(ds,sid);shadow=[x for r in references.get('shadow',[]) for x in r['targets']];clothes=[x for r in references.get('clothes',[]) for x in r['targets']]
   tracks={};decoded={};pixelcache={};failures=[];effects=[]
   for layer in clothes:
    declarations=ds.get(layer,[]);attrs=[x['body'] for d in declarations for x in d.directives if x['code']==104]
    assets=location.get(str(layer),{}).get('assets',[])
    info={'sprite_id':layer,'source_attributes':attrs,'blend_status':'unverified','assets':[{**a,'local_paths':[str(p) for p in byname[pathlib.Path(a['name']).name]]} for a in assets],'relation':'SPR105.clothes','timeline':'parent_native_frame_group_index_ticks','rendered':False}
    effect_registry[str(layer)]=info;effects.append(info)
-  action_list=[('idle',owner,acts.get(3)),('walk',owner,acts.get(0)),('attack',owner,acts.get(1))]
+  action_list=[('idle',sid,owner,acts.get(3)),('walk',sid,owner,acts.get(0)),('attack',sid,owner,acts.get(1))]
   if sid in runmap:
-   try:r_owner,r_actions=original_spr.resolve(ds,runmap[sid]);action_list.append(('run',r_owner,r_actions.get(0)))
+   try:r_owner,r_actions=original_spr.resolve(ds,runmap[sid]);action_list.append(('run',runmap[sid],r_owner,r_actions.get(0)))
    except ValueError as e:failures.append({'role':'run','reason':str(e)})
-  for role,body,action in action_list:
+  for role,action_sprite,body,action in action_list:
    if action is None:continue
-   groups={t[0] for t in action['tokens']};layer_ids=(shadow if len(shadow)==1 else [])+[body]
+   track_refs=original_spr.resolve_references(ds,action_sprite);track_shadow=[x for r in track_refs.get('shadow',[]) for x in r['targets']]
+   try:groups={original_spr.frame_address(t[0],bit,action['declared_flag'])[0] for t in action['tokens'] for bit in range(8)}
+   except ValueError as e:failures.append({'role':role,'reason':str(e)});continue
+   layer_ids=(track_shadow if len(track_shadow)==1 else [])+[body]
    source_masks={}
    for group in groups:
     for layer in layer_ids:
@@ -50,7 +53,8 @@ def build(inputs,registry,output):
    static=action['fps'] is None or bool(action['errors'])
    for bit in range(8):
     frames=[]
-    for token_index,(group,frame,ticks) in enumerate(action['tokens']):
+    for token_index,(source_group,frame,ticks) in enumerate(action['tokens']):
+     group,stored_bit=original_spr.frame_address(source_group,bit,action['declared_flag'])
      layers=[]
      for layer in layer_ids:
       name=f'{layer}-{group}.sp2';parsed=decoded.get(name)
@@ -58,9 +62,9 @@ def build(inputs,registry,output):
        if layer==body:failed=True
        continue
       pal,mask,dirs,_=parsed;bits=[i for i in range(8) if mask&(1<<i)]
-      use_bit=bit if bit in bits else bits[0] if len(bits)==1 else None
+      use_bit=stored_bit if stored_bit in bits else None
       if use_bit is None:
-       failed=True;failures.append({'role':role,'file':name,'reason':'stored_direction_mapping_unverified','requested_bit':bit,'mask':mask});continue
+       failed=True;failures.append({'role':role,'file':name,'reason':'stored_direction_mapping_unverified','requested_bit':stored_bit,'mask':mask});continue
       stored=bits.index(use_bit);fs,blocks=dirs[stored]
       if frame>=len(fs):failed=True;failures.append({'role':role,'file':name,'frame':frame,'reason':'frame_out_of_range'});continue
       key=(layer,group,use_bit,frame)
@@ -69,12 +73,12 @@ def build(inputs,registry,output):
        if not dest.exists():image.save(dest)
        pixelcache[key]={'path':relative,'offset':list(offset),'layer_id':layer,'source_bounds':list(fs[frame][0]),'pixel_size':list(image.size),'source_direction_mask':mask}
       layers.append(pixelcache[key])
-     frames.append({'duration':ticks/action['fps'] if action['fps'] else None,'source_ticks':ticks,'source_group':group,'source_frame':frame,'layers':layers})
+     frames.append({'duration':ticks/action['fps'] if action['fps'] else None,'source_ticks':ticks,'source_group':source_group,'physical_group':group,'stored_direction_bit':stored_bit,'source_frame':frame,'layers':layers})
     directions.append(frames)
    if failed:continue
    tracks[role]={'fps':action['fps'],'source_action':action['name'],'source_action_id':action['code'],'source_raw_body':action['raw_body'],'source_sprite_id':runmap[sid] if role=='run' else sid,'source_body_id':body,'static_pending_timing':static,'timing_issues':action['errors'],'directions':directions,'loop':role!='attack'}
   if not tracks or 'idle' not in tracks:status.append({'sprite_id':sid,'status':'no_decodable_idle','failures':failures});continue
-  actor={'source_sprite_id':sid,'body_id':owner,'run_sprite_id':runmap.get(sid),'shadow_ids':shadow,'tracks':tracks,'source_effect_layers':effects,'source_all_declarations':{'file':base.source_file,'line':base.source_line,'directives':base.directives,'references':base.references},'source_actions':acts,'failures':failures}
+  actor={'source_sprite_id':sid,'body_id':owner,'run_sprite_id':runmap.get(sid),'shadow_ids':shadow,'tracks':tracks,'source_effect_layers':effects,'source_all_declarations':{'file':base.source_file,'line':base.source_line,'directives':base.directives,'references':references},'source_actions':acts,'failures':failures}
   relative=f'actors/{sid}.json';(output/relative).write_text(json.dumps(actor,ensure_ascii=False,separators=(',',':'))+'\n')
   index['records']['sprite:'+str(sid)]={'manifest':relative};status.append({'sprite_id':sid,'status':'connected_literal_native_pixels','tracks':list(tracks),'static_pending_timing':[k for k,v in tracks.items() if v['static_pending_timing']],'failures':failures})
   if n%25==0:print(json.dumps({'processed':n,'total':len(selected),'actor_records':len(index['records']),'seconds':round(time.time()-started,1)}),flush=True)

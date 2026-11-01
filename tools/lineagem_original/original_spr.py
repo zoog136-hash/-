@@ -63,7 +63,8 @@ def read(paths):
                 if code in current.actions: errors.append('duplicate action')
                 current.actions[code] = {'code':code,'name':name,'fps':fps,'tokens':tokens,
                     'raw_body':body,'source_file':path.name,'source_line':line_number,
-                    'declared_flag':int(count[1]) if count else None, 'errors':errors}
+                    'declared_flag':int(count[1]) if count else None, 'errors':errors,
+                    'source_annotations':source_annotations(body)}
     return declarations
 
 
@@ -95,3 +96,41 @@ def frame_at(action, elapsed, loop):
             return group, frame
         ticks -= duration
     return tokens[-1][:2]
+
+
+def resolve_references(declarations, sprite_id, seen=()):
+    """Alias 101/105 declarations replace inherited layers by reference kind."""
+    if sprite_id in seen:
+        raise ValueError(f'alias cycle: {seen + (sprite_id,)}')
+    matches = declarations.get(sprite_id, [])
+    if len(matches) != 1:
+        raise ValueError(f'{sprite_id}: expected one declaration, found {len(matches)}')
+    d = matches[0]
+    result = resolve_references(declarations, d.alias_target, seen + (sprite_id,)) if d.alias_target is not None else {}
+    own = {}
+    for ref in d.references:
+        own.setdefault(ref['kind'], []).append(ref)
+    result.update(own)
+    return result
+
+
+def frame_address(group, direction, directional_flag):
+    """SPR frame address selects one direction slot in an eight-slot SP2 chunk.
+
+    Flag0 is a fixed source address; flag1 adds the requested direction.
+    The physical chunk number and stored mask bit must both be retained.
+    """
+    if directional_flag not in (0, 1):
+        raise ValueError(f'unknown SPR directional flag {directional_flag}')
+    address = group + (direction if directional_flag else 0)
+    return address & ~7, address & 7
+
+
+def source_annotations(body):
+    """Retain annotations at their native token; symbols are not guessed as hit/effect/sound."""
+    matches=list(TOKEN.finditer(body));result=[]
+    for index,match in enumerate(matches):
+        text=body[match.end():matches[index+1].start() if index+1<len(matches) else len(body)].strip()
+        if text:
+            result.append({'token_index':index,'raw':text,'semantics':'unverified_native_annotation'})
+    return result

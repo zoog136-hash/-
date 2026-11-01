@@ -62,6 +62,15 @@ static func npc_record(source_id: int, local_context: Dictionary) -> Dictionary:
 	else:
 		result["source_m_level_origin"] = "local_compatibility_only_native_level_unknown"
 	return result
+static func asset_path(source_path: String) -> String:
+	# One exact source-table / physical-archive case mismatch, verified by source bytes.
+	var physical: String = source_path
+	if source_path == "Image/UIImage/Illust_Legend_WorldTree_Helm_ON.png":
+		physical = "Image/UIImage/Illust_Legend_WorldTree_Helm_On.png"
+	var path: String = "user://lineagem_base508/ui/" + physical
+	if physical != source_path and FileAccess.file_exists(path):
+		if FileAccess.get_sha256(path) != "b23768894fa574911d9cf063cfb3b6ee621a67cb372a7e612fa8c7db66315e6c": return ""
+	return path
 static var _icons: Dictionary = {}
 static func icon(record: Dictionary) -> Texture2D:
 	if not native(record):
@@ -69,7 +78,7 @@ static func icon(record: Dictionary) -> Texture2D:
 		return load(legacy) as Texture2D if not legacy.is_empty() and ResourceLoader.exists(legacy) else null
 	var asset: Variant = record.get("source_ui_assets", {}).get("DisplayBaseAssetID")
 	if not asset is Dictionary: return null
-	var path: String = "user://lineagem_base508/ui/" + str(asset.get("path", ""))
+	var path: String = asset_path(str(asset.get("path", "")))
 	if not FileAccess.file_exists(path): return null
 	if _icons.has(path): return _icons[path]
 	var image: Image = Image.load_from_file(path)
