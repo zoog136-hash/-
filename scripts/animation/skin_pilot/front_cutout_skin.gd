@@ -1,13 +1,23 @@
 extends Node2D
+const UpperTargets = preload("res://scripts/animation/skin_pilot/upper_body_targets.gd")
 ## S-view binding of the SAME pose. No skin timer and no side-view mirroring.
 var skin: Dictionary
 var pose: Dictionary
 var parts: Dictionary
 var attacking := false
 var attack_progress := 0.0
+var attack_hit_ratio := 0.5
+var spine: Dictionary
+var spine_textures: Dictionary
+func set_action(active: bool, progress: float, hit_ratio: float) -> void:
+	attacking=active
+	attack_progress=progress
+	attack_hit_ratio=hit_ratio
 const SIZE := 0.219105011732
 func bind_skin(definition: Dictionary) -> void:
 	skin = definition
+	spine=JSON.parse_string(FileAccess.get_file_as_string("res://data/animation/girtas_articulated_torso.json")).S
+	for key in ["abdomen","chest_idle","chest_run"]:spine_textures[key]=load(spine[key].texture)
 	for key in skin.parts: parts[key] = load(skin.parts[key].texture)
 	queue_redraw()
 func apply_pose(shared: Dictionary) -> void:
@@ -50,13 +60,25 @@ func _draw() -> void:
 		segment("thigh_%d"%side,root,knee);segment("shin_%d"%side,knee,ankle)
 		draw_part("foot_%d"%side,ankle,pose.foot_angle[side]*0.12*sign_x)
 	draw_part("pelvis",hip,roll)
-	draw_part("torso",waist,chest_angle)
-	var neck := waist+Vector2(0,-105*SIZE).rotated(chest_angle)
+	var articulated := attacking or weight>0.001
+	var chest_origin := waist+(v(spine.joint)-Vector2(288,245)).rotated(chest_angle*0.25)*SIZE+Vector2(0,1.8*weight)
+	var neck: Vector2
+	if articulated:
+		draw_set_transform(waist,chest_angle*0.25,Vector2.ONE*SIZE)
+		draw_texture(spine_textures.abdomen,-v(spine.abdomen.pivot))
+		draw_set_transform(chest_origin,chest_angle,Vector2.ONE*SIZE)
+		draw_texture(spine_textures.chest_run if weight>0.001 else spine_textures.chest_idle,-v(spine.joint))
+		# Front lean is a chest/head depth relationship, not whole-sprite roll or scale.
+		neck=chest_origin+(Vector2(288,140)-v(spine.joint)).rotated(chest_angle)*SIZE+Vector2(0,2.5*weight)
+	else:
+		draw_part("torso",waist,chest_angle)
+		neck=waist+Vector2(0,-105*SIZE).rotated(chest_angle)
 	draw_part("head",neck,0.0)
 	for side in range(2):
 		var sign_x: float = 1.0 if side==0 else -1.0
 		var arm: float = pose.far_arm_angle if side==0 else pose.upper_arm_angle
-		var shoulder := waist+(Vector2((363.0 if side==0 else 208.0)-288.0,-52)*SIZE).rotated(chest_angle)
+		var source_shoulder := Vector2(363.0 if side==0 else 208.0,193)
+		var shoulder := chest_origin+(source_shoulder-v(spine.joint)).rotated(chest_angle)*SIZE if articulated else waist+(source_shoulder-Vector2(288,245)).rotated(chest_angle)*SIZE
 		shoulder += Vector2(0.0,-arm*9.0*weight)
 		var elbow := shoulder+Vector2((6.0 if side==0 else -10.0)*SIZE,42*SIZE)
 		var wrist := elbow+Vector2((5.0 if side==0 else -12.0)*SIZE,40*SIZE)
@@ -72,6 +94,16 @@ func _draw() -> void:
 		wrist=wrist.lerp(run_wrist,weight)
 		elbow=elbow.lerp(attack_elbow,attack_mix)
 		wrist=wrist.lerp(attack_wrist,attack_mix)
+		if articulated:
+			var upper_part: Dictionary=skin.parts["upper_%d"%side]
+			var lower_part: Dictionary=skin.parts["lower_%d"%side]
+			var upper_length := (v(upper_part.end)-v(upper_part.pivot)).length()*SIZE
+			var lower_length := (v(lower_part.end)-v(lower_part.pivot)).length()*SIZE
+			var neutral := (v(skin.parts["hand_%d"%side].pivot)-source_shoulder)*SIZE
+			var hand := neutral.lerp(UpperTargets.run_hand(arm,"S",side),weight)
+			hand=hand.lerp(UpperTargets.attack_hand(attack_progress,attack_hit_ratio,neutral,"S",side==1),attack_mix)
+			elbow=shoulder+UpperTargets.solve_elbow(Vector2.ZERO,hand,upper_length,lower_length,-sign_x).rotated(chest_angle)
+			wrist=shoulder+hand.rotated(chest_angle)
 		segment("upper_%d"%side,shoulder,elbow);segment("lower_%d"%side,elbow,wrist)
 		draw_part("hand_%d"%side,wrist,lerpf((arm*0.5-0.15)*weight,-(pose.weapon_angle-0.55),attack_mix) if side==1 else arm*0.5*weight)
 		draw_part("shoulder_%d"%side,shoulder,chest_angle-arm*sign_x*0.55*weight)
