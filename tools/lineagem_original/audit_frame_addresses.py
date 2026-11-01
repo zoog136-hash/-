@@ -15,7 +15,7 @@ def audit(inputs,registry,output):
    except ValueError as e:errors.append({'sprite_id':sid,'reason':str(e)})
   for action_sprite,body,action in tracks:
    if action is None:continue
-   refs=original_spr.resolve_references(ds,action_sprite);shadows=[x for ref in refs.get('shadow',[]) for x in ref['targets']];layers=[body]+(shadows if len(shadows)==1 else [])
+   refs=original_spr.resolve_references(ds,action_sprite);shadows=[original_spr.resolve(ds,x)[0] if x in ds else x for ref in refs.get('shadow',[]) for x in ref['targets']];layers=[body]+(shadows if len(shadows)==1 else [])
    for group,frame,ticks in action['tokens']:
     for direction in range(8):
      try:chunk,bit=original_spr.frame_address(group,direction,action['declared_flag'])

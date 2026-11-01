@@ -1,6 +1,6 @@
 # Source timing, compositing, and visual review — pending new DB evidence
 
-This is a read-only investigation. No existing source1/source2/source3/M originals or code was deleted. No timing, scale, frame, shader, or blend correction was applied. New verified DB joins from the parent are pending receipt; identity/tier uncertainty is a temporary data dependency, not a permanent protected-data blocker.
+This records the earlier read-only timing/blend investigation. Verified base508 DB joins have since been received and701 source definitions registered. Original resources remain unchanged; source-specific playback adapters were subsequently added without invented timing or blending. Identity/tier tables are no longer a blocker. The later parser fixes preserve indented declarations, direction-slot addresses, and alias layer overrides.
 
 ## Literal timing evidence
 
@@ -48,3 +48,9 @@ Known omissions/unverified aspects:
 - NpcClass internalName is not the display identity; the parent reports DescId→DescData_Korean as the display-name join. Same display name orSprite may identify multiple region/purpose variants. Incoming exact row IDs must be retained; Level and MonsterBookLevel must not be treated as verified combat level.
 
 No NPC/card gameplay values were changed during this investigation. Once the validated package arrives, its exact joins and provenance supersede earlier name-only candidates while keeping unverified semantics explicit.
+
+## Subsequent declaration/address corrections
+
+SPR headers may be indented. Leading whitespace must be removed before recognizing a new declaration; otherwise the following actor contaminates the previous action map. The formerly missing16471/21850/29420 declarations are present in the supplied originals.21909 idle is10frames, not the12frames of its indented successor21910. Source DB evidence remains preserved while current parsed SPR evidence is recorded separately.
+
+An action flag0 retains a fixed source direction slot; flag1 adds the facing slot. Physical SP2 suffix is(slot & ~7), stored mask bit is(slot &7).24789 demonstrates this structurally: chunk0 bit0 holds12 idle frames, bits1–7 hold8 walk frames, and chunk8 bit0 holds the remaining8-frame walk direction. Shadow/clothes references, including9516→8135, must resolve recursively and respect alias-local declarations. Run references come from the run declaration, not the preceding walk declaration.

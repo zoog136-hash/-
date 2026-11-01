@@ -11,6 +11,9 @@ def build(inputs,registry,pack,report):
  npc_attacks=read(content/'NpcAttack.json')['rows'];by_npc=collections.defaultdict(list)
  for attack in npc_attacks:by_npc[attack['NpcClassID']].append(attack)
  spells={r['ID']:r for r in read(content/'SpellClass.json')['rows']};effects={};ui={};out=[]
+ inventory=json.load(gzip.open(inputs/'full_resource_inventory/inventory/id_to_archive.json.gz','rt'));local_paths=collections.defaultdict(list)
+ for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2']:
+  for path in inputs.glob(pattern):local_paths[path.name].append(str(path))
  for r in rows:
   source=r['source_original'];npcs={link['npc_class_id'] for link in source['inworld_links'] if 'npc_class_id' in link}
   attacks=[a for npc in npcs for a in by_npc[npc]];spell_ids={a['SpellID'] for a in attacks if a['SpellID']};card_spell=r['source_original_card'].get('SpellClassID',0)
@@ -18,6 +21,9 @@ def build(inputs,registry,pack,report):
   for detail in r['source_bonuses']:
    if detail['unit']['Name']=='SpellClassID' and detail['bonus']['Value']:spell_ids.add(detail['bonus']['Value'])
   refs=[{'spell_id':sid,'source':spells[sid]} for sid in sorted(spell_ids) if sid in spells]
+  for ref in refs:
+   ref['source_sprite_assets']=[{'source_field':field,'sprite_id':sprite,'assets':[{**asset,'local_paths':local_paths[pathlib.Path(asset['name']).name]} for asset in inventory.get(str(sprite),{}).get('assets',[])]} for field,sprite in ref['source'].items() if field.endswith('SpriteID') and sprite]
+   ref['effect_action_clock_status']='unverified; EffectSpriteActionNo not assumed to equal SPR action code'
   effects[r['sourceId']]={'source_card_id':r['source_card_id'],'source_sprite_ids':r['source_inworld_sprite_ids'],'npc_attack_rows':attacks,'spell_references':refs,'trigger_status':'native_fields_preserved_not_reinterpreted','rendering_status':'SPR_clothes_registered_blend_pending; spell_effect_playback_pending'}
   for field,asset in r['source_ui_assets'].items():
    if isinstance(asset,dict) and asset.get('path'):

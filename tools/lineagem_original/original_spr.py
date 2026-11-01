@@ -28,16 +28,16 @@ def read(paths):
         current = None
         fps = None
         for line_number, line in enumerate(path.read_bytes().decode('cp949').splitlines(), 1):
-            scan = line
-            if line.startswith('#'):
-                match = HEADER.match(line)
+            scan = line.lstrip()
+            if scan.startswith('#'):
+                match = HEADER.match(scan)
                 if not match:
                     current = None
                     continue
                 current = Declaration(int(match[1]), int(match[3]) if match[3] else None, path.name, line_number)
                 declarations.setdefault(current.sprite_id, []).append(current)
                 fps = None  # A previous declaration's rate is not an implicit default.
-                scan = line[match.end():]
+                scan = scan[match.end():]
             if current is None:
                 continue
             for match in ACTION.finditer(scan):

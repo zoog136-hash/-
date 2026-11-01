@@ -2,6 +2,7 @@
 No legacy numeric-ID matching, no guessed units, no inferred creature levels.
 """
 import argparse,collections,gzip,hashlib,json,pathlib
+import original_spr
 CATEGORIES={'transformation':'변신','magic_doll':'마법인형','holy_relic':'성물'}
 FLAT_FIELDS={'HPPlus':'hpFlat','MPPlus':'mpFlat','Strength':'strFlat','Dexterity':'dexFlat','Intelligence':'intFlat','Wisdom':'wisFlat','Constitution':'conFlat','Charisma':'chaFlat','MagicResist':'mr','DamageReduction':'damage_reduction'}
 def read(path):return json.loads(path.read_text(encoding='utf-8-sig'))
@@ -15,6 +16,7 @@ def unique(rows,key='ID'):
 def build(inputs,output):
  identity=inputs/'base508_identity_verified_tables';content=inputs/'base508_all_content_validated/content'
  definitions=read(identity/'identity_definitions.json')['rows']
+ declarations=original_spr.read((inputs/'lineagem-category-source-metadata/original-spr').glob('*.spr'))
  source_cards=unique(read(identity/'BuffCard_selected.json')['rows'])
  bonus=unique(read(identity/'Bonus_selected.json')['rows']);types=unique(read(content/'BonusType.json')['rows']);units=unique(read(content/'Unit.json')['rows'])
  descriptions=unique(read(content/'DescData_Korean.json')['rows'])
@@ -40,6 +42,7 @@ def build(inputs,output):
   record['desc']=' · '.join(options);record['sourceOptions']=options
   record['sourceOptionsRaw']=[{'type_id':x['bonus_type']['ID'],'value':x['bonus']['Value'],'unit_id':x['unit']['ID']} for x in record['source_bonuses']]
   record['source_sprite_bindings']=[{'sprite_id':sprite,'run_sprite_id':run.get(sprite,{}).get('RunSpriteID'),'walk_action_hint':separated.get(sprite,{}).get('WalkActionType')} for sprite in d['inworld_sprite_ids']]
+  record['source_active_spr_evidence']=[{'sprite_id':sprite,'file':declarations[sprite][0].source_file,'line':declarations[sprite][0].source_line,'alias_target':declarations[sprite][0].alias_target} for sprite in d['inworld_sprite_ids'] if len(declarations.get(sprite,[]))==1]
   if not d['inworld_links']:exceptions.append({'card_id':d['card_id'],'reason':'inworld_chain_unconfirmed','localized_name':d['localized_name']})
   if len(d['inworld_sprite_ids'])>1:record['source_variant_selection']='explicit_class_gender_context_required'
   categories[role].append(record)

@@ -3,7 +3,7 @@ import argparse,collections,gzip,hashlib,json,pathlib,re,time
 import original_spr,original_sp2
 
 def read(p):return json.loads(p.read_text(encoding='utf-8-sig'))
-def build(inputs,registry,output):
+def build(inputs,registry,output,only=None):
  output.mkdir(parents=True,exist_ok=True);(output/'actors').mkdir(exist_ok=True);(output/'pixels').mkdir(exist_ok=True)
  cards=read(registry/'cards.json');ds=original_spr.read((inputs/'lineagem-category-source-metadata/original-spr').glob('*.spr'))
  location=json.load(gzip.open(inputs/'full_resource_inventory/inventory/id_to_archive.json.gz','rt'))
@@ -16,12 +16,21 @@ def build(inputs,registry,output):
    for b in record['source_sprite_bindings']:selected[b['sprite_id']]=b;categories[b['sprite_id']].add(category)
  runmap={r['WalkSpriteID']:r['RunSpriteID'] for r in cards['run_sprite_relationships']}
  index={'schema':1,'mode':'literal_body_shadow_inspection_only','source_snapshot':'base508','production_ready':False,'records':{},'card_bindings':{},'limits':['Every known source attachment is registered; unverified blend/trigger semantics are not invented.','Unknown FPS tracks retain a static original first pose and exact raw timing metadata.','Not a visual quality approval.']}
+ all_selected=dict(selected)
  status=[];missing={};effect_registry={};started=time.time()
+ if only is not None:
+  previous=read(output/'connection-status.json');status=[x for x in previous['status'] if x['sprite_id'] not in only]
+  index=read(output/'manifest.json');effect_registry=read(output/'registered_effect_layers.json');selected={k:v for k,v in selected.items() if k in only}
+  for sid in only:index['records'].pop('sprite:'+str(sid),None)
  for n,(sid,binding) in enumerate(sorted(selected.items()),1):
   try:owner,acts=original_spr.resolve(ds,sid)
   except ValueError as e:status.append({'sprite_id':sid,'status':'missing_or_ambiguous_declaration','reason':str(e)});continue
   base=ds[owner][0];references=original_spr.resolve_references(ds,sid);shadow=[x for r in references.get('shadow',[]) for x in r['targets']];clothes=[x for r in references.get('clothes',[]) for x in r['targets']]
-  tracks={};decoded={};pixelcache={};failures=[];effects=[]
+  tracks={};decoded={};pixelcache={};failures=[];effects=[];prior_pixels={}
+  previous_actor=output/f'actors/{sid}.json'
+  if previous_actor.exists():
+   old=read(previous_actor)
+   prior_pixels={layer['path']:layer for track in old['tracks'].values() for frames in track['directions'] for frame in frames for layer in frame['layers']}
   for layer in clothes:
    declarations=ds.get(layer,[]);attrs=[x['body'] for d in declarations for x in d.directives if x['code']==104]
    assets=location.get(str(layer),{}).get('assets',[])
@@ -33,7 +42,7 @@ def build(inputs,registry,output):
    except ValueError as e:failures.append({'role':'run','reason':str(e)})
   for role,action_sprite,body,action in action_list:
    if action is None:continue
-   track_refs=original_spr.resolve_references(ds,action_sprite);track_shadow=[x for r in track_refs.get('shadow',[]) for x in r['targets']]
+   track_refs=original_spr.resolve_references(ds,action_sprite);track_shadow=[original_spr.resolve(ds,x)[0] if x in ds else x for r in track_refs.get('shadow',[]) for x in r['targets']]
    try:groups={original_spr.frame_address(t[0],bit,action['declared_flag'])[0] for t in action['tokens'] for bit in range(8)}
    except ValueError as e:failures.append({'role':role,'reason':str(e)});continue
    layer_ids=(track_shadow if len(track_shadow)==1 else [])+[body]
@@ -69,9 +78,12 @@ def build(inputs,registry,output):
       if frame>=len(fs):failed=True;failures.append({'role':role,'file':name,'frame':frame,'reason':'frame_out_of_range'});continue
       key=(layer,group,use_bit,frame)
       if key not in pixelcache:
-       image,offset=original_sp2.render(pal,fs,blocks,frame);relative=f'pixels/{layer}-{group}-{use_bit}-{frame}.png';dest=output/relative
-       if not dest.exists():image.save(dest)
-       pixelcache[key]={'path':relative,'offset':list(offset),'layer_id':layer,'source_bounds':list(fs[frame][0]),'pixel_size':list(image.size),'source_direction_mask':mask}
+       relative=f'pixels/{layer}-{group}-{use_bit}-{frame}.png';dest=output/relative
+       if relative in prior_pixels and dest.exists():pixelcache[key]=prior_pixels[relative]
+       else:
+        image,offset=original_sp2.render(pal,fs,blocks,frame)
+        if not dest.exists():image.save(dest)
+        pixelcache[key]={'path':relative,'offset':list(offset),'layer_id':layer,'source_bounds':list(fs[frame][0]),'pixel_size':list(image.size),'source_direction_mask':mask}
       layers.append(pixelcache[key])
      frames.append({'duration':ticks/action['fps'] if action['fps'] else None,'source_ticks':ticks,'source_group':source_group,'physical_group':group,'stored_direction_bit':stored_bit,'source_frame':frame,'layers':layers})
     directions.append(frames)
@@ -89,7 +101,13 @@ def build(inputs,registry,output):
   if 'sprite:'+str(sid) in index['records']:index['records'][key]=index['records']['sprite:'+str(sid)]
  (output/'manifest.json').write_text(json.dumps(index,ensure_ascii=False,separators=(',',':'))+'\n')
  (output/'registered_effect_layers.json').write_text(json.dumps(effect_registry,ensure_ascii=False,separators=(',',':'))+'\n')
- summary={'unique_requested_sprite_ids':len(selected),'connected_actor_records':sum(r['status']=='connected_literal_native_pixels' for r in status),'effect_layer_records':len(effect_registry),'card_definitions':701,'inworld_chains':700,'status':status,'missing_source_files':missing,'seconds':round(time.time()-started,1),'visual_validation':'DEFERRED_BY_USER','blend_validation':'UNVERIFIED_SOURCE_ATTRIBUTES_PRESERVED'}
+ # Recompute exact unresolved files across retained and refreshed actors.
+ missing={}
+ for item in status:
+  for failure in item.get('failures',[]):
+   if failure.get('reason')=='SP2_not_in_local_inputs':
+    name=failure['file'];layer=failure['layer'];missing[name]=[a for a in location.get(str(layer),{}).get('assets',[]) if pathlib.Path(a['name']).name==name]
+ summary={'unique_requested_sprite_ids':len(all_selected),'connected_actor_records':sum(r['status']=='connected_literal_native_pixels' for r in status),'effect_layer_records':len(effect_registry),'card_definitions':701,'inworld_chains':700,'status':status,'missing_source_files':missing,'seconds':round(time.time()-started,1),'visual_validation':'DEFERRED_BY_USER','blend_validation':'UNVERIFIED_SOURCE_ATTRIBUTES_PRESERVED'}
  (output/'connection-status.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n');print(json.dumps({k:v for k,v in summary.items() if k not in ['status','missing_source_files']},ensure_ascii=False))
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--inputs',type=pathlib.Path,required=True);p.add_argument('--registry',type=pathlib.Path,required=True);p.add_argument('--output',type=pathlib.Path,required=True);a=p.parse_args();build(a.inputs,a.registry,a.output)
+ p=argparse.ArgumentParser();p.add_argument('--inputs',type=pathlib.Path,required=True);p.add_argument('--registry',type=pathlib.Path,required=True);p.add_argument('--output',type=pathlib.Path,required=True);p.add_argument('--only-sprites',help='Refresh only these comma-separated source sprite IDs in an existing pack');a=p.parse_args();build(a.inputs,a.registry,a.output,set(map(int,a.only_sprites.split(','))) if a.only_sprites else None)
