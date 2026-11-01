@@ -15,11 +15,11 @@ func _ready() -> void:
 	add_child(title)
 	status = Label.new()
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	status.text = "설치됨" if FileAccess.file_exists(INSTALLER.active_root().path_join("manifest.json")) else "팩 미설치 · 받은 설치 ZIP을 선택하세요."
+	status.text = "변신·인형·성물: %s · 몬스터: %s" % ["설치됨" if FileAccess.file_exists(INSTALLER.active_root().path_join("manifest.json")) else "미설치", "설치됨" if FileAccess.file_exists(INSTALLER.monster_root().path_join("manifest.json")) else "미설치"]
 	add_child(status)
 	choose = Button.new()
 	choose.name = "InstallLineageMOfflinePack"
-	choose.text = "원본 팩 · 증분 ZIP 선택"
+	choose.text = "원본 팩 · 증분 · 몬스터 ZIP 선택"
 	choose.pressed.connect(func() -> void: picker.popup_centered_ratio(0.8))
 	add_child(choose)
 	cancel = Button.new()

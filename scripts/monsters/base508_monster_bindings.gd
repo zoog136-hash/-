@@ -12,9 +12,11 @@ static func data() -> Dictionary:
 static func pack_manifest() -> String:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--lineagem-monster-pack="): return argument.trim_prefix("--lineagem-monster-pack=")
-	var path: String = preload("res://scripts/lineagem_pack_install.gd").active_root().path_join("monsters/manifest.json")
-	if FileAccess.file_exists(path): return path
-	return "user://lineagem_base508_monsters/manifest.json"
+	var install = preload("res://scripts/lineagem_pack_install.gd")
+	var standalone: String = install.monster_root().path_join("manifest.json")
+	if FileAccess.file_exists(standalone): return standalone
+	var nested: String = install.resolve_file(install.active_root(), "monsters/manifest.json")
+	return nested if FileAccess.file_exists(nested) else standalone
 static func apply(record: Dictionary, map_id: String, explicit_manifest: String = "") -> Dictionary:
 	var manifest_path: String = explicit_manifest if not explicit_manifest.is_empty() else pack_manifest()
 	if not FileAccess.file_exists(manifest_path): return record

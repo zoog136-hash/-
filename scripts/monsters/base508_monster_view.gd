@@ -19,7 +19,9 @@ func configure(record: Dictionary, manifest_path: String) -> bool:
 	var actor: Dictionary = manifest.get("records", {}).get(str(int(record.get("source_m_npc_id", -1))), {})
 	for pair: Array in [["npc_id", "source_m_npc_id"], ["sprite_id", "source_m_sprite_id"], ["spawn_view_id", "source_m_spawn_view_id"], ["territory_link_id", "source_m_territory_link_id"]]:
 		if int(actor.get(pair[0], -1)) != int(record.get(pair[1], -2)): return false
-	_tracks = POLICY.tracks(actor, "monster", POLICY.mode(_root))
+	var install = preload("res://scripts/lineagem_pack_install.gd")
+	var settings_root: String = _root if FileAccess.file_exists(install.resolve_file(_root, "playback_settings.json")) else install.active_root()
+	_tracks = POLICY.tracks(actor, "monster", POLICY.mode(settings_root))
 	var layer_count: int = 0
 	for role: String in ["idle", "walk", "attack", "hit", "death"]:
 		var track: Dictionary = _tracks.get(role, {})

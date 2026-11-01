@@ -4,11 +4,14 @@ signal progress(done: int, total: int)
 signal completed(result: Dictionary)
 const STORE = "user://lineagem_base508_versions"
 const LEGACY = "user://lineagem_base508"
+const MONSTER_STORE = "user://lineagem_base508_monsters_versions"
+const MONSTER_LEGACY = "user://lineagem_base508_monsters"
 const MAX_FILES = 750000
 const MAX_BYTES = 6 * 1024 * 1024 * 1024
 const MAX_ENTRY = 64 * 1024 * 1024
 const REQUIRED = ["manifest.json", "source_effect_bindings.json", "registered_effect_layers.json"]
 static var _session_root: String = ""
+static var _monster_session_root: String = ""
 static var _base_roots: Dictionary = {}
 var cancelled: bool = false
 var busy: bool = false
@@ -20,22 +23,30 @@ static func safe_relative(path: String) -> bool:
 	return true
 
 static func active_root() -> String:
-	# Freeze the selected version for this process: installing cannot mix old/new textures.
-	if not _session_root.is_empty(): return _session_root
+	# Freeze each component separately: installing must not mix live asset versions.
+	if _session_root.is_empty(): _session_root = _latest_root(STORE, LEGACY, false)
+	return _session_root
+
+static func monster_root() -> String:
+	if _monster_session_root.is_empty(): _monster_session_root = _latest_root(MONSTER_STORE, MONSTER_LEGACY, true)
+	return _monster_session_root
+
+static func _latest_root(store: String, legacy: String, monsters: bool) -> String:
+	var result: String = legacy
 	var best: int = 0
-	var directory := DirAccess.open(STORE)
+	var directory := DirAccess.open(store)
 	if directory != null:
 		for name: String in directory.get_directories():
 			if not name.begins_with("pack-") or not safe_relative(name): continue
-			var root: String = STORE.path_join(name)
+			var root: String = store.path_join(name)
 			var marker: Variant = JSON.parse_string(FileAccess.get_file_as_string(root.path_join("installed.json"))) if FileAccess.file_exists(root.path_join("installed.json")) else null
 			if not marker is Dictionary or marker.get("source_snapshot", "") != "base508": continue
+			if monsters != (marker.get("component", "cards") == "monsters"): continue
 			if int(marker.get("activated_usec", 0)) <= best: continue
 			if not FileAccess.file_exists(root.path_join("manifest.json")): continue
 			best = int(marker.activated_usec)
-			_session_root = root
-	if _session_root.is_empty(): _session_root = LEGACY
-	return _session_root
+			result = root
+	return result
 
 static func trusted_root(path: String) -> bool:
 	if path == LEGACY: return true
@@ -71,6 +82,7 @@ func install_zip(path: String) -> Dictionary:
 	cancelled = false
 	# Resolve and freeze current assets before any install work.
 	active_root()
+	monster_root()
 	var result: Dictionary = await _install(path)
 	busy = false
 	completed.emit(result)
@@ -128,7 +140,10 @@ func _install(path: String) -> Dictionary:
 	var header_bytes: PackedByteArray = zip.read_file("pack.json")
 	if header_bytes.size() > 1024 * 1024: return _failure("설치 목록이 너무 큽니다.")
 	var header: Variant = JSON.parse_string(header_bytes.get_string_from_utf8())
-	if not header is Dictionary or int(header.get("schema", 0)) != 2 or header.get("kind", "") not in ["twilight-lineagem-offline-runtime", "twilight-lineagem-offline-runtime-addon"] or header.get("source_snapshot", "") != "base508": return _failure("지원되는 base508 설치 팩이 아닙니다.")
+	if not header is Dictionary or int(header.get("schema", 0)) != 2 or header.get("kind", "") not in ["twilight-lineagem-offline-runtime", "twilight-lineagem-offline-runtime-addon", "twilight-lineagem-offline-monsters"] or header.get("source_snapshot", "") != "base508": return _failure("지원되는 base508 설치 팩이 아닙니다.")
+	var is_monsters: bool = header.kind == "twilight-lineagem-offline-monsters"
+	var store: String = MONSTER_STORE if is_monsters else STORE
+	var required: Array = ["manifest.json"] if is_monsters else REQUIRED
 	var is_addon: bool = header.kind == "twilight-lineagem-offline-runtime-addon"
 	var base: String = active_root() if is_addon else ""
 	if is_addon:
@@ -141,19 +156,19 @@ func _install(path: String) -> Dictionary:
 	var expected_bytes: int = int(header.get("bytes", 0))
 	var chunks: Variant = header.get("chunks", [])
 	if total <= 0 or total > MAX_FILES or expected_bytes <= 0 or expected_bytes > MAX_BYTES or not chunks is Array or chunks.is_empty() or chunks.size() > 2048: return _failure("설치 팩 크기 또는 목록이 유효하지 않습니다.")
-	if int(header.get("sprite_records", 0)) != 743 or int(header.get("card_definitions", 0)) != 701: return _failure("이 게임 버전의 701종 팩이 아닙니다.")
+	if not is_monsters and (int(header.get("sprite_records", 0)) != 743 or int(header.get("card_definitions", 0)) != 701): return _failure("이 게임 버전의 701종 팩이 아닙니다.")
 	var storage := DirAccess.open("user://")
 	if storage == null or storage.get_space_left() < expected_bytes + total * 4096 + 64 * 1024 * 1024: return _failure("설치 공간이 부족합니다. 기존 팩과 별도로 새 팩 공간이 필요합니다.")
 	var stamp: int = int(Time.get_unix_time_from_system() * 1000000)
-	var versions := DirAccess.open(STORE)
+	var versions := DirAccess.open(store)
 	if versions != null:
 		for name: String in versions.get_directories():
-			var marker_path: String = STORE.path_join(name).path_join("installed.json")
+			var marker_path: String = store.path_join(name).path_join("installed.json")
 			if not FileAccess.file_exists(marker_path): continue
 			var previous: Variant = JSON.parse_string(FileAccess.get_file_as_string(marker_path))
 			if previous is Dictionary: stamp = maxi(stamp, int(previous.get("activated_usec", 0)) + 1)
 	var id: String = str(stamp) + "-" + str(Time.get_ticks_usec())
-	var stage: String = STORE.path_join("staging-" + id)
+	var stage: String = store.path_join("staging-" + id)
 	if DirAccess.make_dir_recursive_absolute(stage) != OK: return _failure("임시 설치 폴더를 만들지 못했습니다.")
 	progress.emit(0, total)
 	await get_tree().process_frame
@@ -197,25 +212,35 @@ func _install(path: String) -> Dictionary:
 			done += 1
 			written += size
 			if done > total or written > expected_bytes: return _failure("파일 수 또는 용량이 선언과 다릅니다.")
-			if relative in REQUIRED: found[relative] = true
+			if relative in required: found[relative] = true
 			if Time.get_ticks_msec() - last_yield >= 40:
 				progress.emit(done, total)
 				await get_tree().process_frame
 				last_yield = Time.get_ticks_msec()
 		if offset != payload.size(): return _failure("데이터 묶음의 길이가 다릅니다.")
 	zip.close()
-	if done != total or written != expected_bytes or found.size() != REQUIRED.size(): return _failure("필수 파일 또는 전체 파일 수가 일치하지 않습니다.")
+	if done != total or written != expected_bytes or found.size() != required.size(): return _failure("필수 파일 또는 전체 파일 수가 일치하지 않습니다.")
 	var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(stage.path_join("manifest.json")))
 	if not manifest is Dictionary or int(manifest.get("schema", 0)) != 1 or manifest.get("source_snapshot", "") != "base508" or not manifest.get("records", {}) is Dictionary: return _failure("런타임 선언이 유효하지 않습니다.")
-	var sprite_count: int = 0
-	for key: String in manifest.records:
-		if key.begins_with("sprite:"): sprite_count += 1
-	if sprite_count != 743 or manifest.get("card_bindings", {}).size() != 701: return _failure("카드 또는 외형 정의 수가 다릅니다.")
-	for record: Variant in manifest.records.values():
-		if not record is Dictionary or not safe_relative(str(record.get("manifest", ""))) or not (FileAccess.file_exists(stage.path_join(str(record.manifest))) or (is_addon and FileAccess.file_exists(resolve_file(base, str(record.manifest))))): return _failure("캐릭터 선언이 누락됐습니다.")
-	var final_path: String = STORE.path_join("pack-" + id)
+	if is_monsters:
+		var old_manifest_path: String = monster_root().path_join("manifest.json")
+		if FileAccess.file_exists(old_manifest_path):
+			var old: Variant = JSON.parse_string(FileAccess.get_file_as_string(old_manifest_path))
+			if old is Dictionary and old.get("source_snapshot", "") == "base508" and old.get("records") is Dictionary:
+				for old_id: String in old.records:
+					if not manifest.records.has(old_id): return _failure("새 몬스터 팩에 기존 개체가 누락되어 이전 팩을 유지합니다.")
+		var validation_error: String = validate_monster_payload(stage, manifest, header)
+		if not validation_error.is_empty(): return _failure(validation_error)
+	else:
+		var sprite_count: int = 0
+		for key: String in manifest.records:
+			if key.begins_with("sprite:"): sprite_count += 1
+		if sprite_count != 743 or manifest.get("card_bindings", {}).size() != 701: return _failure("카드 또는 외형 정의 수가 다릅니다.")
+		for record: Variant in manifest.records.values():
+			if not record is Dictionary or not safe_relative(str(record.get("manifest", ""))) or not (FileAccess.file_exists(stage.path_join(str(record.manifest))) or (is_addon and FileAccess.file_exists(resolve_file(base, str(record.manifest))))): return _failure("캐릭터 선언이 누락됐습니다.")
+	var final_path: String = store.path_join("pack-" + id)
 	if DirAccess.rename_absolute(stage, final_path) != OK: return _failure("설치 폴더 전환 실패.")
-	var receipt: Dictionary = {"schema":1,"source_snapshot":"base508","release_id":str(header.get("release_id", "")),"activated_usec":stamp,"files":done,"bytes":written,"pack_header_sha256":sha(header_bytes),"base_root":base}
+	var receipt: Dictionary = {"schema":1,"source_snapshot":"base508","release_id":str(header.get("release_id", "")),"activated_usec":stamp,"files":done,"bytes":written,"pack_header_sha256":sha(header_bytes),"base_root":base,"component":"monsters" if is_monsters else "cards"}
 	var marker := FileAccess.open(final_path.path_join("installed.tmp"), FileAccess.WRITE)
 	if marker == null: return _failure("설치 완료 기록 저장 실패.")
 	marker.store_string(JSON.stringify(receipt))
@@ -225,6 +250,56 @@ func _install(path: String) -> Dictionary:
 	if marker_error != OK or DirAccess.rename_absolute(final_path.path_join("installed.tmp"), final_path.path_join("installed.json")) != OK: return _failure("설치 완료 기록 전환 실패.")
 	progress.emit(done, total)
 	return {"ok":true,"root":final_path,"files":done,"restart_required":true}
+
+static func validate_monster_payload(root: String, manifest: Dictionary, header: Dictionary) -> String:
+	if manifest.get("kind", "") != "base508_monster_pack": return "지원되는 원본 몬스터 팩이 아닙니다."
+	var ids: Variant = header.get("npc_ids", [])
+	if not ids is Array or ids.is_empty() or ids.size() > 1000 or manifest.records.size() != ids.size(): return "몬스터 개체 목록이 유효하지 않습니다."
+	var local: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/lineagem_base508/monster_bindings.json"))
+	if not local is Dictionary or local.get("source_snapshot", "") != "base508": return "몬스터 연결 코드 업데이트가 필요합니다."
+	var seen_ids: Dictionary = {}
+	var pixels: Dictionary = {}
+	for value: Variant in ids:
+		var id: int = int(value)
+		if id <= 0 or seen_ids.has(id): return "몬스터 ID가 잘못되거나 중복됐습니다."
+		seen_ids[id] = true
+		var actor: Variant = manifest.records.get(str(id))
+		if not actor is Dictionary or int(actor.get("npc_id", -1)) != id: return "몬스터 원본 ID가 일치하지 않습니다."
+		var matched: bool = false
+		for binding: Dictionary in local.get("bindings", []):
+			if int(binding.npc_id) != id: continue
+			var same: bool = true
+			for field: String in ["sprite_id", "spawn_view_id", "territory_link_id", "land_id"]:
+				if int(actor.get(field, -1)) != int(binding.get(field, -2)): same = false
+			if same: matched = true
+		if not matched: return "이 몬스터 문맥에 맞는 게임 코드 업데이트가 필요합니다."
+		var tracks: Variant = actor.get("tracks")
+		if not tracks is Dictionary: return "몬스터 동작 목록이 유효하지 않습니다."
+		for role: String in ["idle", "walk", "attack", "hit", "death"]:
+			var track: Variant = tracks.get(role)
+			if not track is Dictionary or not track.get("directions") is Array or track.directions.size() != 8: return "몬스터 동작 또는8방향이 누락됐습니다."
+			for frames: Variant in track.directions:
+				if not frames is Array or frames.is_empty() or frames.size() > 4096: return "몬스터 프레임 목록이 유효하지 않습니다."
+				var ticks: float = 0.0
+				for frame: Variant in frames:
+					if not frame is Dictionary or float(frame.get("source_ticks", -1)) < 0.0 or not frame.get("layers") is Array or frame.layers.is_empty() or frame.layers.size() > 8: return "몬스터 원본 프레임이 유효하지 않습니다."
+					ticks += float(frame.source_ticks)
+					for layer: Variant in frame.layers:
+						if not layer is Dictionary: return "몬스터 픽셀 레이어가 유효하지 않습니다."
+						var offset: Variant = layer.get("offset")
+						if not offset is Array or offset.size() != 2: return "몬스터 원본 offset이 유효하지 않습니다."
+						for coordinate: Variant in offset:
+							if typeof(coordinate) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(coordinate)): return "몬스터 원본 offset이 유효하지 않습니다."
+						var relative: String = str(layer.get("path", ""))
+						if not safe_relative(relative) or not relative.begins_with("pixels/") or not relative.ends_with(".png"): return "몬스터 픽셀 경로가 유효하지 않습니다."
+						var hash: String = str(layer.get("sha256", ""))
+						if pixels.has(relative):
+							if pixels[relative] != hash: return "같은 몬스터 픽셀의 해시가 서로 다릅니다."
+						else:
+							if hash.length() != 64 or not FileAccess.file_exists(root.path_join(relative)) or FileAccess.get_sha256(root.path_join(relative)) != hash: return "몬스터 픽셀 검사 실패: " + relative
+							pixels[relative] = hash
+				if ticks <= 0.0: return "몬스터 원본 시간값이 유효하지 않습니다."
+	return ""
 
 func _failure(message: String) -> Dictionary:
 	return {"ok":false,"error":message,"previous_pack_preserved":true}
