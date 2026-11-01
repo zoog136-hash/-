@@ -9523,8 +9523,8 @@
     },
     "transform:267": {
       "grade": "유일",
-      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r006/SpriteFrames.tres",
-      "frames_sha256": "d2eb52f93ff49f2ce80d0d2fb45086e2eecbd85d15694a5cbd22c31f0dca0333",
+      "frames": "res://assets/actors/eight_direction/native_production/girtas_267/r007/SpriteFrames.tres",
+      "frames_sha256": "494bed57a30ef45b11a1398a7e6b722f79f865687f64ddcd0a659a8501daf40d",
       "native_track_count": 48,
       "native_pose_count": 288,
       "canvas_size": [
@@ -19093,9 +19093,9 @@
           "direction": "W",
           "role": "run",
           "animation": "run_4",
-          "source": "docs/remake/evidence/pr122-mythic-detailed/batch03/girtas-W-run-v02composite01.png",
-          "source_sha256": "015eceba797b0891696c3495ca051dcc6a5e3ff8b0a55b2dbdfc54884c3c3a81",
-          "texture": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r096/W-run.png",
+          "source": "assets/actors/eight_direction/native_production/girtas_267/r007/W-run.png",
+          "source_sha256": "e09505f35a44a8b42c9f2b8e21d8b98d334d2cb0f09a8d57f364a2c8612b56ec",
+          "texture": "assets/actors/eight_direction/native_production/girtas_267/r007/W-run.png",
           "geometry": {
             "image_size": [
               3072,
@@ -19142,15 +19142,15 @@
                 ],
                 "margin": [
                   694,
-                  562,
+                  558,
                   1434,
                   1434
                 ],
                 "source_anchor": [
                   2327,
-                  1259
+                  1263
                 ],
-                "rgba_sha256": "9c27f4c86164bbdfafcb5c18692ff454a181f62b5a6ff8e6d0f7d5b3994f97c6",
+                "rgba_sha256": "7db4e506a8e11576e3c43dbaef86df3173693ecbb70d3f1c40c863f2e443e319",
                 "canvas_size": [
                   2688,
                   2688
@@ -19290,11 +19290,11 @@
           },
           "runtime_layout_proof": {
             "status": "DERIVED_LAYOUT_PROPOSAL_NOT_APPROVED",
-            "source_sha256": "015eceba797b0891696c3495ca051dcc6a5e3ff8b0a55b2dbdfc54884c3c3a81",
+            "source_sha256": "e09505f35a44a8b42c9f2b8e21d8b98d334d2cb0f09a8d57f364a2c8612b56ec",
             "base_geometry_sha256": "dae5a589bb135e1dcc15cf5145d4338aa2ac10a010cdd3bb238a3f02fe7f9e85",
             "derived_geometry_sha256": "96eb34e2bfb1818f3ad5990e70738bc50e9472287a04be0b3ec3ee5e66bb7177",
             "review_sha256": "5c5b8daa390bf7dedab326690f0b6b356ab98dbe070687cffd06994deeef1650",
-            "review_basis": "Independent six source/model/equipment/rigid-C and authored projected-pelvis-root/full-cycle candidate PASS: /workspace/scratch/girtas-W-run-reviewed-composite-v01/independent-SE-author-commonphysical-v03-final-review.json SHA 65d537b60cd0f3e67dcf7dd94fa29eb8af58e98cad6bed52f209a091313c73e0. Rigid eye/ear/chin ratios0.985–1.034 to selected W idle, arm-rotated pauldrons consistent. Actual pelvis inference uncertainty20native; no ornamental belt-V/bbox fitting. AIR2/5 corrected hip floor and opposite contact3/load4 root corrections preserve coherent arc, no source pixel edits. Actual compiled Player and future profile worldscale need fresh QC.",
+            "review_basis": "Newly authored W1 support lower-leg trajectory; fixed logical canvas and boot ground height. Other five W poses and all E poses unchanged. Text-local official image edit, no pixel mask. Not original game art; no visual approval.",
             "direction": "W",
             "pose_count": 6,
             "canvas_size": [
@@ -19312,7 +19312,7 @@
               ],
               [
                 2327,
-                1259
+                1263
               ],
               [
                 791,
@@ -19335,7 +19335,7 @@
               1024,
               2048
             ],
-            "source_pixels_unchanged": true,
+            "source_pixels_unchanged": false,
             "resampled": false,
             "approval_granted": false,
             "source_region_review_sha256": "653eef584fa4b4a7ae8010948f95be94f82696d69d8451c3be0b514f597cf263",
@@ -19378,7 +19378,7 @@
               256,
               4096
             ],
-            "newly_authored_poses": 0
+            "newly_authored_poses": 1
           }
         },
         {
@@ -19689,8 +19689,8 @@
       "visual_review": "FAIL",
       "timing_review": "PASS",
       "integration": "Real default catalog wired to immutable production candidate; approval pending actual default Main and independent full quality",
-      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r006/NativeMotionProfile.tres",
-      "native_profile_sha256": "da40a5f97434c5bb1ad3ad2658b8a3fe97d807471a902c9e68b3b2f816de5241",
+      "native_profile": "res://assets/actors/eight_direction/native_production/girtas_267/r007/NativeMotionProfile.tres",
+      "native_profile_sha256": "80fa21177b00606b42cd1a257a905c10ce245d4c324c22f4deebef2b8be3b98a",
       "native_profile_basis": {
         "display_height": 110.0,
         "source_reference_height": 502.04237288135596,

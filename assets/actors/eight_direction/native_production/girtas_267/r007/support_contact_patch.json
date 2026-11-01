@@ -1,0 +1,112 @@
+{
+  "base_frames": "assets/actors/eight_direction/native_production/girtas_267/r006/SpriteFrames.tres",
+  "base_sha256": "d2eb52f93ff49f2ce80d0d2fb45086e2eecbd85d15694a5cbd22c31f0dca0333",
+  "original_sheet": "assets/actors/eight_direction/native_locomotion_staging/girtas_267/r096/W-run.png",
+  "original_sha256": "015eceba797b0891696c3495ca051dcc6a5e3ff8b0a55b2dbdfc54884c3c3a81",
+  "edited_sheet": "assets/actors/eight_direction/native_production/girtas_267/r007/W-run.png",
+  "edited_sha256": "e09505f35a44a8b42c9f2b8e21d8b98d334d2cb0f09a8d57f364a2c8612b56ec",
+  "old_phase1": {
+    "row": 1,
+    "direction": "W",
+    "region": [
+      1677,
+      141,
+      1254,
+      1254
+    ],
+    "margin": [
+      694,
+      562,
+      1434,
+      1434
+    ],
+    "source_anchor": [
+      2327,
+      1259
+    ],
+    "rgba_sha256": "9c27f4c86164bbdfafcb5c18692ff454a181f62b5a6ff8e6d0f7d5b3994f97c6",
+    "canvas_size": [
+      2688,
+      2688
+    ],
+    "foot": [
+      1344,
+      1680
+    ]
+  },
+  "new_phase1": {
+    "row": 1,
+    "direction": "W",
+    "region": [
+      1677,
+      141,
+      1254,
+      1254
+    ],
+    "margin": [
+      694,
+      558,
+      1434,
+      1434
+    ],
+    "source_anchor": [
+      2327,
+      1263
+    ],
+    "rgba_sha256": "7db4e506a8e11576e3c43dbaef86df3173693ecbb70d3f1c40c863f2e443e319",
+    "canvas_size": [
+      2688,
+      2688
+    ],
+    "foot": [
+      1344,
+      1680
+    ]
+  },
+  "calibration": {
+    "source": "/workspace/generated_images/exec-56ef31c3-6ea1-4b34-b3df-fd652c073ae8.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "upper_body_match": {
+      "matrix": [
+        [
+          0.998535135653954,
+          0.000497576219967867,
+          -0.3365838655588096
+        ],
+        [
+          -0.000497576219967867,
+          0.998535135653954,
+          0.8107208610337931
+        ]
+      ],
+      "inliers": 447
+    },
+    "boot_roi": [
+      450,
+      1000,
+      780,
+      1140
+    ],
+    "sole": [
+      592.5,
+      1112
+    ],
+    "canvas": 2688,
+    "margin_xy": [
+      695,
+      564
+    ],
+    "foot_local_x": -4.244377084412762,
+    "desired_foot_local_x": -3.1560844699999997,
+    "old_foot_local_x": -9.0146062
+  },
+  "applied_margin": [
+    694,
+    558
+  ],
+  "method": "Preserve original logical canvas and horizontal registration; four source-pixel vertical registration correction preserves existing boot ground. Text-local image editing cannot guarantee exact unchanged upper-body pixels. No gameplay or gait change.",
+  "visual_approval": false
+}
