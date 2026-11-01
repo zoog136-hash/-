@@ -22,7 +22,7 @@ def build(inputs,pack,only=None):
  constants=json.loads((inputs/'base508_all_content_validated/content/ConstantData.json').read_text(encoding='utf-8-sig'))['rows']
  polymorph=[row for row in constants if row['Name']=='PolymorphEffectSpriteID']
  if len(polymorph)!=1:raise ValueError('Expected one native polymorph effect identity')
- global_effects={'polymorph':{'source_table':'ConstantData','source_original':polymorph[0],'sprite_id':int(polymorph[0]['Value']),'trigger_status':'source_identity_exact; local_apply_trigger_not_yet_connected'}}
+ global_effects={'polymorph':{'source_table':'ConstantData','source_original':polymorph[0],'sprite_id':int(polymorph[0]['Value']),'trigger_status':'source_identity_exact; local_apply_trigger_compatibility; M_trigger_timing_unverified'}}
  for event,definition in global_effects.items():targets[definition['sprite_id']].append({'source_global_event':event,'source_constant':definition['source_original']})
  index['source_global_effects']=global_effects
  (pack/'overlays').mkdir(exist_ok=True);status=[];missing={};all_targets=dict(targets)
