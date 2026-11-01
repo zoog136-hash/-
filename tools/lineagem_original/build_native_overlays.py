@@ -2,7 +2,7 @@
 import argparse,collections,gzip,json,pathlib,re
 import original_spr,original_sp2
 
-def build(inputs,pack):
+def build(inputs,pack,only=None):
  ds=original_spr.read((inputs/'lineagem-category-source-metadata/original-spr').glob('*.spr'));inventory=json.load(gzip.open(inputs/'full_resource_inventory/inventory/id_to_archive.json.gz','rt'));index=json.loads((pack/'manifest.json').read_text());targets=collections.defaultdict(list);byname=collections.defaultdict(list)
  for p in (pack/'actors').glob('*.json'):
   actor=json.loads(p.read_text())
@@ -15,9 +15,11 @@ def build(inputs,pack):
    source=ref['source'];spell_bindings[str(source['ID'])]=source
    for field,sid in source.items():
     if field.endswith('SpriteID') and sid:targets[sid].append({'source_spell_id':source['ID'],'source_field':field,'EffectSpriteActionNo':source['EffectSpriteActionNo']})
- for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2','base508-original-effect-attachments-*/Sprite/*.sp2']:
+ for pattern in ['transformation-*/Sprite/*.sp2','magic_doll-*/Sprite/*.sp2','holy_relic-*/Sprite/*.sp2','base508-identity-extra-sp2-*/Sprite/*.sp2','base508-original-effect-attachments-*/Sprite/*.sp2','base508-original-frame-event-effects-*/Sprite/*.sp2']:
   for p in inputs.glob(pattern):byname[p.name].append(p)
- (pack/'overlays').mkdir(exist_ok=True);status=[];missing={}
+ (pack/'overlays').mkdir(exist_ok=True);status=[];missing={};all_targets=dict(targets)
+ if only is not None:
+  previous=json.loads((pack/'overlay-status.json').read_text());status=[x for x in previous['status'] if x['sprite_id'] not in only];owners={original_spr.resolve(ds,sid)[0] for sid in only};missing={n:a for n,a in previous['missing_exact_source_files'].items() if int(n.split('-')[0]) not in owners};targets={sid:usage for sid,usage in targets.items() if sid in only}
  for sid,usage in sorted(targets.items()):
   try:owner,actions=original_spr.resolve(ds,sid)
   except ValueError as e:status.append({'sprite_id':sid,'state':'unresolved_declaration','reason':str(e),'usage':usage});continue
@@ -51,6 +53,6 @@ def build(inputs,pack):
   record={'source_sprite_id':sid,'body_id':owner,'source_attributes':attrs,'one_shot_overlay':True,'source_usage':usage,'compatibility_semantics':'PC documented ]SpriteID overlay; single native action used; M client trigger placement/effect action meaning unverified','tracks':{'idle':{'fps':action['fps'],'source_action':action['name'],'source_action_id':code,'source_sprite_id':sid,'source_raw_body':action['raw_body'],'static_pending_timing':action['fps'] is None,'timing_issues':action['errors'],'directions':directions,'loop':False}}}
   relative=f'overlays/{sid}.json';(pack/relative).write_text(json.dumps(record,ensure_ascii=False,separators=(',',':'))+'\n');index['records']['overlay:'+str(sid)]={'manifest':relative};status.append({'sprite_id':sid,'state':'compiled_compat_overlay','usage':usage})
  index['source_spell_bindings']=spell_bindings;index['compatibility_policy']='res://data/lineagem_base508/playback_policy.json';(pack/'manifest.json').write_text(json.dumps(index,ensure_ascii=False,separators=(',',':'))+'\n')
- report={'targets':len(targets),'compiled':sum(x['state']=='compiled_compat_overlay' for x in status),'status':status,'missing_exact_source_files':missing,'M_client_equivalence_verified':False};(pack/'overlay-status.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k not in ['status','missing_exact_source_files']}))
+ report={'targets':len(all_targets),'compiled':sum(x['state']=='compiled_compat_overlay' for x in status),'status':status,'missing_exact_source_files':missing,'M_client_equivalence_verified':False};(pack/'overlay-status.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k not in ['status','missing_exact_source_files']}))
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--inputs',type=pathlib.Path,required=True);p.add_argument('--pack',type=pathlib.Path,required=True);a=p.parse_args();build(a.inputs,a.pack)
+ p=argparse.ArgumentParser();p.add_argument('--inputs',type=pathlib.Path,required=True);p.add_argument('--pack',type=pathlib.Path,required=True);p.add_argument('--only-sprites');a=p.parse_args();build(a.inputs,a.pack,set(map(int,a.only_sprites.split(','))) if a.only_sprites else None)
