@@ -115,6 +115,7 @@ func inspect_poses() -> void:
 	world.player.set_physics_process(true)
 
 func incoming_and_death() -> void:
+	ensure_normal()
 	report.incoming = []
 	for direction: int in range(8):
 		world.player.position = center

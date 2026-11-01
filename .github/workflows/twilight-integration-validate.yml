@@ -23,6 +23,14 @@ jobs:
     # PR #100: full regressions take ~70m; retain all tests and allow the later render stages.
     timeout-minutes: 240
     steps:
+      - name: Free runner disk space
+        # Godot import caches plus the checkout can exceed smaller runner disks.
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft /opt/google \
+            /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium || true
+          echo "::notice title=Disk after cleanup::$(df -h / | tail -n 1 | tr -s ' ')"
       - name: Check out integration candidate
         uses: actions/checkout@v4
         with:

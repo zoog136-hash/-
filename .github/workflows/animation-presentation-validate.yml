@@ -145,6 +145,7 @@ jobs:
           godot_check aden_boss_special_test 'SCRIPT ERROR:|ERROR:|ADEN_BOSS_SPECIAL_FAIL' 'ADEN_BOSS_SPECIAL_OK' "${RUNNER_TEMP}/aden-boss-special"
           godot_check pr100_direction_gameplay_test 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' 'PR100_DIRECTION_GAMEPLAY_OK'
           echo "PRESENTATION_CHECKS_FAILED=${#failed[@]} ${failed[*]:-}"
+          if [ "${#failed[@]}" -gt 0 ]; then echo "::error title=Presentation summary::${#failed[@]} failed: ${failed[*]}"; fi
           [ "${#failed[@]}" -eq 0 ]
       - name: All boss poses and real gameplay renders
         shell: bash

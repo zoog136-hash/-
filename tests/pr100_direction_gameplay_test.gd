@@ -391,7 +391,16 @@ func prepare_monster_direction(direction: int) -> bool:
 		return true
 	return false
 
+## Current source84 Aden has no 해골 근위병 habitat, so the reference melee
+## actor may not exist in the field. Create it from the production DB with the
+## same setup as db_actor() and record that it was not a population actor.
+func ensure_normal() -> void:
+	if is_instance_valid(normal) or world == null: return
+	normal = db_actor("해골 근위병")
+	if is_instance_valid(normal): report["normal_from_production_db"] = true
+
 func monster_case() -> void:
+	ensure_normal()
 	check(is_instance_valid(normal),"existing field skeleton actor")
 	if not is_instance_valid(normal): return
 	normal.player_hit.connect(func(actor: TwilightMonster, damage: int, kind: String) -> void:
