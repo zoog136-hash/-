@@ -299,7 +299,7 @@ func _run_contact_tests() -> void:
 		assert(not (sampled.contact[0] and sampled.contact[1]))
 		if not sampled.contact[0] and not sampled.contact[1]: flights += 1
 		assert(sampled.hip.y >= -28.301 and sampled.hip.y <= -27.5)
-	assert(flights > 100 and flights < 140)
+	assert(absf(float(flights)/1000.0-(1.0-2.0*motion.stance_fraction))<0.003)
 	# Toe-off and landing retain the same world-space stance velocity.
 	for boundary in [motion.stance_fraction, 1.0]:
 		var epsilon := 0.00001

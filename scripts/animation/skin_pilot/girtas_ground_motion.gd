@@ -1,6 +1,12 @@
 extends "res://scripts/animation/skin_pilot/shared_ground_motion.gd"
-## Girtas pilot profile only. Same distance clock, stride and planted-foot path.
-## Redistribute airborne recovery; never slow the shared phase or the game speed.
+## Girtas-only distance profile. Game speed and planted-foot velocity stay fixed.
+## A longer cycle gives the recovery and upper body time to travel together.
+func configure_run() -> void:
+	super.configure_run()
+	stride_distance = 105.0
+	# Keep the original 36.96px support travel; the extra time is airborne return.
+	stance_fraction = 36.96/stride_distance
+
 func sample(at_phase: float, moving: bool = true) -> Dictionary:
 	var pose := super.sample(at_phase, moving)
 	if not moving or not run_gait: return pose
@@ -12,7 +18,7 @@ func sample(at_phase: float, moving: bool = true) -> Dictionary:
 		var t := (p-stance_fraction)/(1.0-stance_fraction)
 		# Smooth acceleration into a broad return-speed plateau. The integral
 		# preserves travel and matches the planted-foot velocity at both ends.
-		var ramp := 0.22
+		var ramp := 0.10
 		var area := 1.0-ramp
 		var integral := t-ramp*0.5
 		if t < ramp:

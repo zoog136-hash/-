@@ -11,6 +11,7 @@ const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd"
 const EXTERNAL_SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
 const VISUAL_CONFIG_PATH := "user://twilight_ui_settings.cfg"
 var motion: TwilightActorMotion = MOTION.new()
+var girtas_skin_preview: Node2D = null
 var class_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
 var _class_fallback_combat_profile: TwilightAnimationProfile = null
 var transform_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
@@ -111,6 +112,13 @@ func _ready() -> void:
 	var visual_settings := ConfigFile.new()
 	if visual_settings.load(VISUAL_CONFIG_PATH) == OK:
 		select_external_spx_actor(str(visual_settings.get_value("visual","spx_actor","")))
+
+	# Development opt-in only; no ownership, save, combat or default art changes.
+	if "--girtas-shared-skin" in OS.get_cmdline_user_args():
+		girtas_skin_preview = load("res://scripts/animation/skin_pilot/girtas_player_preview.gd").new()
+		girtas_skin_preview.name = "GirtasSharedSkinPreview"
+		girtas_skin_preview.z_index = transform_sprite.z_index
+		add_child(girtas_skin_preview)
 
 func _physics_process(delta: float) -> void:
 	physics_delta = delta
@@ -216,6 +224,10 @@ func _update_visual(delta: float) -> void:
 			spx_effect_sprite.transform = spx_sprite.transform
 			spx_effect_sprite.flip_h = spx_sprite.flip_h
 			spx_effect_sprite.modulate = spx_sprite.modulate
+
+	if girtas_skin_preview != null:
+		if girtas_skin_preview.update_from_player(self,delta,active_sprite):
+			$GroundShadow.hide() # The cutout supplies its fixed foot shadow.
 
 func face_target(position_value: Vector2) -> void:
 	motion.face(position_value - global_position)
@@ -402,6 +414,7 @@ func _direction_animation_name(direction_value: int) -> String:
 		_: return "dir_down"
 
 func clear_transform_visual() -> void:
+	if girtas_skin_preview != null: girtas_skin_preview.hide()
 	transform_active = false
 	motion.profile = class_profile
 	transform_sprite.rotation = 0.0

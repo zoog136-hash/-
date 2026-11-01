@@ -46,9 +46,12 @@ func _draw() -> void:
 		return
 	if motion.move_ratio <= .10: return
 	# Preserve the existing movement dust and gait clock.
-	var stride: float = absf(sin(motion.stride_phase))
+	var visual_stride_phase: float = motion.stride_phase
+	if actor.girtas_skin_preview != null and actor.girtas_skin_preview.visible:
+		visual_stride_phase = actor.girtas_skin_preview.ground.phase * TAU
+	var stride: float = absf(sin(visual_stride_phase))
 	var motion_alpha: float = clampf(motion.move_ratio*.35,0.0,.48)*stride
-	var foot: Vector2 = Vector2(-7.0 if sin(motion.stride_phase)>0.0 else 7.0, 1.0)
+	var foot: Vector2 = Vector2(-7.0 if sin(visual_stride_phase)>0.0 else 7.0, 1.0)
 	for i: int in range(3):
 		var spread: float = float(i)*9.0
 		var drift: Vector2 = -motion.direction * (6.0+spread)
