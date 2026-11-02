@@ -60,6 +60,23 @@ func _run() -> void:
 	var full: Dictionary = core.derive({"owned":all_owned,"spare":{},"option_awakening":{"all":true}})
 	var again: Dictionary = core.derive({"owned":all_owned,"spare":{"변신":{"irrelevant":999999}}})
 	check(hash(all_owned) == owned_before, "derivation does not alter owned ledger")
+	var profile_row: Dictionary={}
+	for profile: Dictionary in data.source_server_limits:
+		if int(profile.ServerLimitSetID)==772:profile_row=profile;break
+	check(not profile_row.is_empty(),"original server profile 772 exists")
+	var context: Dictionary={"source_snapshot":"base508","ServiceRegionCode":profile_row.ServiceRegionCode,"WorldNo":profile_row.WorldNo}
+	var eligible: Dictionary=core.derive({"owned":all_owned,"source_server_context":context})
+	check(eligible.completed.size()>full.completed.size(),"actual source profile predicate enables eligible sets in an explicit context fixture")
+	check(core.derive({"owned":all_owned,"source_server_context":context}).totals==eligible.totals,"server evaluation is idempotent")
+	for row: Dictionary in eligible.rows:
+		if row.problems.has("native_awakening_required"):check(not row.completed,"eligible server never substitutes native awakening "+str(row.id))
+	var mismatch: Dictionary=core.derive({"owned":all_owned,"source_server_context":{"source_snapshot":"base508","ServiceRegionCode":"KR","WorldNo":999999}})
+	check(mismatch.completed==full.completed and mismatch.totals==full.totals,"nonmatching server removes all server-limited bonuses")
+	check(mismatch.rows.any(func(row: Dictionary) -> bool:return row.problems.has("native_server_ineligible")),"known ineligible server differs from missing context")
+	var wrong: Dictionary=core.derive({"owned":all_owned,"source_server_context":{"source_snapshot":"other","ServiceRegionCode":profile_row.ServiceRegionCode,"WorldNo":profile_row.WorldNo}})
+	check(wrong.completed==full.completed,"another snapshot cannot satisfy native server conditions")
+	check(core.conditions.evaluate(987654,context).status=="definition_missing","missing source profile distinguished from runtime context")
+
 	check(full.totals == again.totals and full.completed == again.completed, "idempotent rewards; duplicates/option awakening do not alter native completion")
 	var blocked: int = 0; var available: int = 0; var chosen: Dictionary = {}
 	for row: Dictionary in full.rows:

@@ -19,6 +19,18 @@ var _record: Dictionary={}
 var _dirty: bool=true
 var _has_cache: bool=false
 var _owned_hash: int=0
+var _source_server_context: Dictionary={}
+
+func set_source_server_context(context: Dictionary) -> bool:
+	# Caller must supply the actual native game profile. Nothing is inferred or
+	# written to a save. Invalid/missing input clears prior eligible context.
+	var valid: bool=preload("res://scripts/cards/source_collection_conditions.gd").valid_context(context)
+	var value: Dictionary=context.duplicate(true) if valid else {}
+	if value!=_source_server_context:
+		_source_server_context=value
+		invalidate()
+		if world!=null:world.set("equipment_records_dirty",true)
+	return valid
 
 func configure(host: Node) -> bool:
 	world=host
@@ -40,10 +52,10 @@ func _ensure() -> void:
 	if not _dirty or world==null or not problem.is_empty():return
 	_dirty=false
 	var owned: Dictionary=world.card_draw_fusion.owned
-	var signature: int=hash(owned)
+	var signature: int=hash([owned,_source_server_context]) if core is NativeRules else hash(owned)
 	if _has_cache and signature==_owned_hash:return
 	_owned_hash=signature;_has_cache=true
-	var derived: Dictionary=core.derive({"owned":owned})
+	var derived: Dictionary=core.derive({"owned":owned,"source_server_context":_source_server_context})
 	_views=derived.rows;totals=derived.totals;_completed=derived.completed
 	_record=ExistingStats.record(totals)
 	if core is NativeRules:_record.merge(NativeRules.stat_record_additions(totals),true)

@@ -77,3 +77,13 @@ requirement-derived schema fixture; only a supplied canonical cards.json run
 validates the independent 701-card join. The World-consumer integration test
 prints SKIPPED when the native runtime is absent instead of breaking a UI-only
 branch. The recorded 1356/17 checks used the actual canonical/native runtime.
+
+A follow-up server predicate evaluator now compares the exact original
+ServerLimit rows to an explicitly supplied base508 ServiceRegionCode/WorldNo.
+The runtime setter is memory-only, invalidates derived bonuses, and clears old
+eligibility on invalid input. No current native server provider exists in World;
+nothing is guessed from a map, language, Drive identity, or old save. Default
+support remains 909 definitions. Eligible/ineligible/missing context/missing
+source definition are distinct states. Native IsAwaken remains separate.
+Canonical core checks: 1574; World consumer/context checks: 22. Context fixtures
+exercise real source profile rows but are not the user's current game profile.

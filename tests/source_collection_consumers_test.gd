@@ -52,6 +52,18 @@ func run() -> void:
 	world._invalidate_equipment_static()
 	check(world.card_collections.stat_record()==record,"rebuild preserves exact record without double bonus")
 	check(hash(world.card_draw_fusion.export_state())==ledger_hash,"stat reads/rebuild do not modify ownership")
+	var source: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/cards/base508_collections.json"))
+	var profile: Dictionary={}
+	for row: Dictionary in source.source_server_limits:
+		if int(row.ServerLimitSetID)==772:profile=row;break
+	var context: Dictionary={"source_snapshot":"base508","ServiceRegionCode":profile.ServiceRegionCode,"WorldNo":profile.WorldNo}
+	var before_count: int=world.card_collections._completed.size()
+	check(world.card_collections.set_source_server_context(context),"explicit native context setter accepts source schema")
+	world.card_collections.stat_record()
+	check(world.card_collections._completed.size()>before_count,"native context change invalidates and recalculates conditional collections")
+	check(not world.card_collections.set_source_server_context({"map_id":"aden_world"}),"map identity is not silently used as native server identity")
+	check(world.card_collections.stat_record()==record,"clearing invalid context removes prior conditional bonuses")
+	check(hash(world.card_draw_fusion.export_state())==ledger_hash,"server evaluation never writes or grants ownership")
 	for category: String in Cards.CATEGORIES:world.card_draw_fusion.owned[category]={}
 	world._invalidate_equipment_static()
 	check(world.card_collections.stat_record().is_empty(),"source rewards removed when required owned cards removed")
