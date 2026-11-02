@@ -14,7 +14,7 @@ var visual_results: Dictionary={}
 func configure(value: RefCounted) -> void:runtime_ref=weakref(value)
 func active() -> Dictionary:
 	var out: Dictionary={}
-	if runtime==null or runtime.world==null or runtime.save_blocked or not runtime.problem.is_empty() or not runtime.core.native_mode:return out
+	if runtime==null or not is_instance_valid(runtime.world) or runtime.save_blocked or not runtime.problem.is_empty() or not runtime.core.native_mode:return out
 	runtime._sync_native_context()
 	for category: String in Cards.CATEGORIES:
 		var record: Dictionary=runtime.world.equipped_catalog.get(category,{})
@@ -29,7 +29,7 @@ func tick(_delta: float) -> void:
 		var target: Node=ref.get_ref()
 		if not is_instance_valid(target):continue
 		if target.has_method("prune_source_option_debuffs"):target.prune_source_option_debuffs(enabled)
-		if not bool(target.get("dead")):retained.append(ref)
+		if not bool(target.get("dead")) and not target.source_option_debuffs.is_empty():retained.append(ref)
 	targets=retained
 func effects(rows: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary]=[]
