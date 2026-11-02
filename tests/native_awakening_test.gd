@@ -17,6 +17,8 @@ class Host extends Node:
 	var card_draw_fusion=Cards.new()
 	var card_collections=Context.new()
 	var equipped_catalog: Dictionary={"변신":{},"마법인형":{},"성물":{}}
+	var inventory: Dictionary={}
+	var item_instances: Dictionary={}
 	var gold: int=100000000
 	var save_error: Error=OK
 	var equipment_records_dirty: bool=true
@@ -167,7 +169,7 @@ func run() -> void:
 	host.card_draw_fusion.owned["변신"][material]=true
 	var state_before: int=hash([skills.export_state(),host.card_draw_fusion.export_state(),host.gold,host.rng.state])
 	result=skills.request_operation(material,{material:99})
-	check(not result.ok and result.code=="source_cost_rules_unresolved" and hash([skills.export_state(),host.card_draw_fusion.export_state(),host.gold,host.rng.state])==state_before,"unconfirmed skill costs never debit or advance RNG")
+	check(not result.ok and result.code=="insufficient_book" and hash([skills.export_state(),host.card_draw_fusion.export_state(),host.gold,host.rng.state])==state_before,"missing physical skill book never debits or advances RNG")
 	var target:=Target.new();root.add_child(target)
 	for seed_value: int in range(1,10000):
 		probe.seed=seed_value

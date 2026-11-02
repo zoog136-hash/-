@@ -112,7 +112,7 @@ func view(state: Dictionary,owned: Dictionary,identity: String,preview_level: in
 	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 성장 유지","unknown_rules":DATA.data.unknown_rules}
 
 func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
-	return fail("source_cost_rules_unresolved","각성서 1장 정책 확정 · 수수료 미확정 · 재화 차감 없음")
+	return fail("runtime_transaction_required","실제 인벤토리·재화 거래는 스킬 각성 런타임에서 처리합니다")
 
 func book_requirement(identity: String) -> Dictionary:
 	var book: Dictionary=book_for(identity)
