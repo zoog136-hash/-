@@ -213,3 +213,11 @@ masking,unknown-bit clearing or collision transfer is performed by these audits.
 
 The Main queue checkpoint key includes Land,Asset,entry kind/ID and review scope,
 so distinct original entrances cannot be silently skipped as the same map run.
+
+Confirmed runtime occupancy can move through `relocate_source_occupant`.
+Registration validates the same original map/class/placement contract before
+changing either cell ownership or the existing physical polygon. Rejected
+updates retain the previous occupancy. It does not infer NPC positions from
+territory rectangles or create source populations. Main verification checks
+rejected and accepted relocation,old-cell release,new-cell blocking and a real
+Player collision against the relocated shape before restoring/removing it.

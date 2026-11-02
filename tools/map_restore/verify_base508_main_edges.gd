@@ -93,6 +93,15 @@ func run()->void:
   check(not field.register_source_occupant('review',candidate,nav.arrival,2),'nonboolean placement rejected')
   check(field.register_source_occupant('review',candidate,nav.arrival,true),'confirmed test instance')
   check(not field.walkable(start),'occupied source cell blocked')
+  var next_cell:Vector2i=Vector2i(nav.source(occupancy_neighbor).round())
+  check(not field.relocate_source_occupant('review',candidate,next_cell,2),'unconfirmed relocation rejected')
+  check(not field.walkable(start),'rejected relocation keeps old occupancy')
+  check(field.relocate_source_occupant('review',candidate,next_cell,true),'confirmed relocation')
+  check(field.walkable(start) and not field.walkable(occupancy_neighbor),'relocation updates source occupancy')
+  await physics_frame
+  world.player.position=start
+  check(world.player.move_and_collide(occupancy_neighbor-start)!=null,'relocated occupant physically blocks new cell')
+  check(field.relocate_source_occupant('review',candidate,nav.arrival,true),'restore original occupied cell')
   await physics_frame
   world.player.position=occupancy_neighbor
   check(world.player.move_and_collide(start-world.player.position)!=null,'occupied cell physically blocks')

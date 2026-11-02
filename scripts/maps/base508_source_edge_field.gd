@@ -58,3 +58,11 @@ func unregister_source_occupant(instance:String)->void:
  if occupancy_shapes.has(instance):
   var shape:Node=occupancy_shapes[instance]
   physics_body.remove_child(shape);shape.queue_free();occupancy_shapes.erase(instance)
+
+func relocate_source_occupant(instance:String,record:Dictionary,cell:Vector2i,placement_confirmed:Variant)->bool:
+ # Validate first: failed updates preserve both the old source cell and collider.
+ if not is_instance_valid(physics_body) or not occupancy_shapes.has(instance):return false
+ if not source_pack.register_source_npc_instance(instance,record,cell,placement_confirmed):return false
+ var center:Vector2=source_to_world(Vector2(cell))
+ occupancy_shapes[instance].polygon=PackedVector2Array([center+Vector2(-24,0),center+Vector2(0,-12),center+Vector2(24,0),center+Vector2(0,12)])
+ return true
