@@ -12,6 +12,8 @@ class Actor extends Node2D:
 class Host extends Fixture.Host:
 	var option_awakening
 	var presentation_settings: Dictionary={}
+	var level: int=95
+	var active_skill_buffs: Dictionary={}
 var errors: Array[String]=[]
 var checks: int=0
 func check(ok: bool,message: String) -> void:
@@ -42,6 +44,12 @@ func run() -> void:
 	check(int(rule.effect_row.ID)==61 and int(rule.effect_row.StatusEffectID)==1544 and int(rule.sprite_id)==22149,"existing renderer consumes exact Antaras source chain")
 	aura.configure("마법인형",record,service.source_visual_awakened("마법인형",record),actor,"user://missing-native-pack/manifest.json",{})
 	check(aura.status=="awakening_pack_not_installed" and not aura.visual.installed(),"missing private addon diagnosed without a generated aura")
+	check(not service.source_subslot_visual_awakened(record),"primary completion alone never grants extra-slot aura")
+	service.progress["native_doll_unlock"]=preload("res://scripts/cards/native_doll_unlock_item.gd").marker()
+	service.progress["native_subslot_identity"]=identity
+	for candidate: Dictionary in host.catalog_db["마법인형"]:
+		if int(candidate.source_grade_id)!=int(record.source_grade_id):host.equipped_catalog["마법인형"]=candidate;break
+	check(service.source_subslot_visual_awakened(record),"extra-slot aura requires unlock selection and its own source status group")
 	var secondary: Node2D=preload("res://scripts/cards/native_doll_subslot_visual.gd").new();root.add_child(secondary)
 	secondary.actor=actor;secondary.binding=identity
 	secondary.sync_existing_source_aura(host,record,"user://missing-native-pack/manifest.json")

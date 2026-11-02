@@ -309,3 +309,12 @@ func source_visual_awakened(category: String,record: Dictionary) -> bool:
 	if canonical.is_empty() or canonical.get("sourceId","")!=record.get("sourceId",""):return false
 	if not preload("res://scripts/cards/native_awakening_status.gd").binding(core.definition(category,identity)).ok:return false
 	return is_awakened(category,identity)
+
+func source_subslot_visual_awakened(record: Dictionary) -> bool:
+	if not source_visual_awakened("마법인형",record):return false
+	var identity: String=Cards.card_id(record)
+	if str(progress.get(Subslot.FIELD,""))!=identity:return false
+	var condition: Dictionary=Subslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
+	if not condition.ok:return false
+	var reference: Dictionary=preload("res://scripts/cards/native_awakening_status.gd").binding(core.definition("마법인형",identity))
+	return reference.ok and Subslot.status_available(self,identity,int(reference.status_effect_id))

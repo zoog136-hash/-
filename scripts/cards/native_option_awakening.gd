@@ -6,6 +6,7 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 	var result: Dictionary=legacy.duplicate(true)
 	result.native_mode=true
 	result.native_server_limits=DATA.data.source_server_limits
+	var source_aura_component: bool=ResourceLoader.exists("res://scripts/animation/source_awakening_aura.gd")
 	for original: Dictionary in DATA.data.definitions:
 		var row: Dictionary=original.duplicate(true)
 		for text: String in row.pending_options.duplicate():
@@ -16,6 +17,13 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 				if index>=0:row.bonus_options[index]=replacement
 				row.applied_options.append(replacement)
 		for effect: Dictionary in row.native_source.effects:
+			if source_aura_component and effect.type.Name=="StatusEffectID" and preload("res://scripts/cards/native_awakening_status.gd").binding(row).ok:
+				effect.runtime_supported=true;effect.runtime_consumer="PR217_source_awakening_aura"
+				var previous: String="StatusEffectID "+str(int(effect.bonus.Value))
+				var message: String="원본 각성 시각 효과 · 원본 팩 필요"
+				row.pending_options.erase(previous);row.applied_options.append(message)
+				var source_index: int=row.bonus_options.find(previous)
+				if source_index>=0:row.bonus_options[source_index]=message
 			if effect.type.Name=="InvokeOption" and int(effect.bonus.BonusApplicationTargetID) in [14463,17601,20344,20354]:
 				effect.runtime_supported=true
 				effect.runtime_consumer="native_option_combat_contextual_invoke"

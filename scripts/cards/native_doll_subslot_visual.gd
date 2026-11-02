@@ -40,7 +40,7 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 func sync_existing_source_aura(world: Node,record: Dictionary,manifest: String) -> void:
 	var path: String="res://scripts/animation/source_awakening_aura.gd"
 	if not ResourceLoader.exists(path):return
-	var awake: bool=world.option_awakening.source_visual_awakened("마법인형",record)
+	var awake: bool=world.option_awakening.source_subslot_visual_awakened(record)
 	var key: String=binding+":"+str(awake)+":"+str(hash(world.presentation_settings))
 	if key==aura_signature:return
 	aura_signature=key
