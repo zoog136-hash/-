@@ -2352,7 +2352,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
 	_deal_successful_player_hit(target, damage, critical)
-	_try_trigger_passives("on_hit", target)
+	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
 		target.monster_name, damage,
@@ -5562,8 +5562,8 @@ func _break_invisibility() -> void:
 	_refresh_skill_stealth_visual()
 	hud.append_log("공격으로 은신 해제")
 
-func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> void:
-	if trigger_name=="on_hit" and hp>0:option_awakening.combat.on_hit(target)
+func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack_kind: String="melee", main_target: bool=true, by_spell: bool=false) -> void:
+	if trigger_name=="on_hit" and hp>0:option_awakening.combat.on_hit(target,attack_kind,main_target,by_spell)
 	if trigger_name=="on_hit":skill_awakening.on_successful_hit(target)
 	if original_skills != null: original_skills.trigger(trigger_name, target)
 	for skill: Dictionary in _non_original_skill_rows():
@@ -5764,7 +5764,7 @@ func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_
 	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	_deal_successful_player_hit(target, damage)
-	_try_trigger_passives("on_hit", target)
+	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
 
 func _cast_job_turn_undead(skill: Dictionary) -> bool:
@@ -5999,7 +5999,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 				damage = _player_critical_damage(damage, style)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
 			_deal_successful_player_hit(victim, damage, critical)
-			_try_trigger_passives("on_hit", victim)
+			_try_trigger_passives("on_hit", victim,style,victim==target,true)
 			_try_extra_weapon_hit(victim, damage, style)
 			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):
 				match str(skill.get("on_hit_status", "")):
