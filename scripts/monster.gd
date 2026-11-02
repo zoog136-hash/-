@@ -307,9 +307,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	elif is_instance_valid(species_visual): species_visual.hide()
 
 func _physics_process(delta: float) -> void:
-	for origin: String in source_option_debuffs.keys():
-		source_option_debuffs[origin].remaining-=maxf(0,delta)
-		if dead or source_option_debuffs[origin].remaining<=0:source_option_debuffs.erase(origin)
+	advance_source_option_debuffs(delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
@@ -1016,3 +1014,8 @@ func source_option_healing(amount: int,potion: bool=false) -> int:
 	# Native Percentage uses 1,000,000 raw units for 100%. Keep raw values,
 	# clamp the resulting recovery at zero; never turn healing into damage.
 	return maxi(0,int(float(amount)*(1.0-clampf(float(maximum)/1000000.0,0,1))))
+
+func advance_source_option_debuffs(delta: float) -> void:
+	for origin: String in source_option_debuffs.keys():
+		source_option_debuffs[origin].remaining-=maxf(0,delta)
+		if dead or source_option_debuffs[origin].remaining<=0:source_option_debuffs.erase(origin)
