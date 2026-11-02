@@ -60,7 +60,9 @@ func configure(owner: Node, world: Node, record: Dictionary) -> bool:
 	var source: Dictionary = data(private_root).get("source_npcs", {}).get(str(nid), {})
 	var original: Dictionary = record.get("source_m_original", {})
 	if nid <= 0 or source.is_empty() or int(original.get("ID", -1)) != nid or int(original.get("Sprite", -1)) != int(source.sprite_id): return false
-	if not bool(owner.get("is_boss")) or bool(original.get("TestNPC",false)): return false
+	if bool(original.get("TestNPC",false)): return false
+	if not bool(owner.get("is_boss")):
+		if record.get("source_m_host_action_contract",{}).get("contract","") != "base508_exact_context_ordinary_host_action_v1" or HOST_ADOPTIONS.for_record(record,"",data()).is_empty(): return false
 	owner_ref = weakref(owner); world_ref = weakref(world)
 	source_npc_id = nid; source_life = int(owner.get("life_id"))
 	effect_generation = int(world.get("combat_generation"))
@@ -279,10 +281,14 @@ func _advance_presentation(delta: float) -> void:
 	var actor: Node = owner(); var view: Node = actor.get("source_m_view")
 	if not is_instance_valid(view) or int(actor.motion.sequence) != int(presentation.sequence):
 		_clear_presentation(); return
-	presentation.elapsed += delta
-	view.call("advance_source_action",int(presentation.action_id),delta,int(actor.motion.facing8),int(presentation.sequence))
 	var duration: float = float(presentation.duration)
-	if (duration > 0.0 and float(presentation.elapsed) >= duration) or (duration <= 0.0 and not actor.motion.active): _clear_presentation()
+	var frame_delta:float=minf(delta,maxf(0.0,duration-float(presentation.elapsed))) if duration>0.0 else delta
+	presentation.elapsed += delta
+	view.call("advance_source_action",int(presentation.action_id),frame_delta,int(actor.motion.facing8),int(presentation.sequence))
+	# A short source clip keeps its last authored frame through host recovery.
+	# Releasing ownership early lets the generic view hide action-only actors
+	# or restart a basic attack. The host clock is not a native FPS claim.
+	if (duration <= 0.0 or float(presentation.elapsed) >= duration) and not actor.motion.active: _clear_presentation()
 
 func _clear_presentation() -> void:
 	var actor: Node = owner()
