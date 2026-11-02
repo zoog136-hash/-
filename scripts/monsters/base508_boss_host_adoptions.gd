@@ -32,6 +32,7 @@ const ACTION_CONTEXTS = {
 	67033:{"sprite":20319,"spawn":300213,"territory":140843,"attack":244103}
 }
 static func actor_contract(npc_id:int,sprite_id:int,profile:Dictionary,tracks:Dictionary,catalog:Dictionary={}) -> Dictionary:
+	if npc_id==66603:return _alternate_actor_contract(sprite_id,profile,tracks,catalog)
 	if profile.get("source_behavior_family","")=="source_mobile_attack_actor" and not bool(profile.get("host_combat_ready",false)): return _core_actor_contract(npc_id,sprite_id,profile,tracks,catalog)
 	if SPELL_CONTEXTS.has(npc_id): return _spell_actor_contract(npc_id,sprite_id,profile,tracks,catalog)
 	if npc_id == 47744: return _stationary_actor_contract(sprite_id,profile,tracks,catalog)
@@ -148,6 +149,7 @@ static func _all_directions(track:Dictionary) -> bool:
 		if not direction is Array or direction.is_empty(): return false
 	return true
 static func _ordinary_actor_contract(nid:int,sprite_id:int,profile:Dictionary,tracks:Dictionary,catalog:Dictionary) -> Dictionary:
+	if nid==66603:return _alternate_actor_contract(sprite_id,profile,tracks,catalog)
 	if catalog.is_empty() or bool(profile.get("host_combat_ready",false)) or profile.get("contract","")!="base508_source_action_capabilities_v1":return {}
 	if profile.get("source_behavior_family","")!="source_motion_without_basic_attack" or profile.get("source_kind_preserved","") not in ["source_attackable_monster_actor","source_ui_boss_npc"]:return {}
 	if profile.get("source_category",{}).get("Name","")!="Npc" or not bool(profile.get("source_category",{}).get("IsAttackable",false)):return {}
@@ -349,3 +351,31 @@ static func _core_record(record:Dictionary,catalog:Dictionary,contract:Dictionar
 	if int(authority.get("sprite_id",-1))!=sprite or bool(authority.get("source_original",{}).get("TestNPC",true)):return {}
 	if not AUTHORITY.context_keys(nid).has(AUTHORITY.context_key(nid,int(record.get("source_m_spawn_view_id",-1)),int(record.get("source_m_territory_link_id",-1)))):return {}
 	return {"explicit_attack_id":int(checked.explicit_attack_id),"host_source_action_id":1,"selection_policy":"explicit_host_adoption_not_native_AI","adoption_contract":checked.adoption_contract}
+
+static func _alternate_actor_contract(sprite:int,profile:Dictionary,tracks:Dictionary,catalog:Dictionary) -> Dictionary:
+	# One exact alternate row, not a repair or fallback for missing basic layers.
+	if sprite!=20363 or catalog.is_empty() or int(catalog.get("source_npcs",{}).get("66603",{}).get("sprite_id",-1))!=20363:return {}
+	if profile.get("contract","")!="base508_source_action_capabilities_v1" or bool(profile.get("host_combat_ready",false)) or profile.get("source_behavior_family","")!="source_mobile_attack_actor" or profile.get("source_kind_preserved","")!="source_attackable_monster_actor":return {}
+	if profile.get("source_category",{}).get("Name","")!="Npc" or not bool(profile.get("source_category",{}).get("IsAttackable",false)) or not profile.get("unresolved_source_action_ids",[]).is_empty():return {}
+	for role:String in ["idle","walk"]:
+		var expected:int=3 if role=="idle" else 0
+		if not tracks.has(role) or int(tracks[role].get("source_action_id",-1))!=expected or int(profile.get("available_roles",{}).get(role,-1))!=expected or not _all_directions(tracks[role]):return {}
+	var available:Dictionary={}
+	for track:Dictionary in tracks.values():available[int(track.get("source_action_id",-1))]=track
+	if not available.has(30) or not _all_directions(available[30]) or not available.has(1) or available[1].get("source_omitted_attachment_slots",[]).is_empty():return {}
+	var selected:Dictionary={};var unadopted:Array=[]
+	for row:Dictionary in catalog.get("npc_attacks",{}).get("66603",[]):
+		if int(row.get("ID",-1))==242493 and _ordinary_source_row(row,66603) and int(row.get("MotionType",-1))==31 and int(row.get("WeaponType",-1))==0 and int(row.get("DiceBonus",-1))==21 and int(row.get("DiceCount",-1))==11 and int(row.get("DiceSpots",-1))==10:selected=row
+		else:unadopted.append(int(row.ID))
+	if selected.is_empty():return {}
+	var candidates:Array=[]
+	for action:Dictionary in catalog.get("source_actions",[]):
+		if int(action.get("MotionType",-1))==31 and int(action.get("WeaponType",-1))==0 and available.has(int(action.get("ID",-1))):candidates.append(int(action.ID))
+	if candidates!=[30]:return {}
+	var matched:bool=false
+	for route:Dictionary in profile.get("native_attack_routes",[]):
+		if int(route.get("npc_attack_id",-1))!=242493:continue
+		var declared:Array=route.get("candidate_action_ids",[])
+		matched=declared.size()==1 and declared[0]==30.0 and int(route.get("resolved_action_id",-1))==30 and route.get("source_attack",{})==selected
+	if not matched:return {}
+	return {"contract":"base508_exact_context_ordinary_host_action_v1","host_combat_ready":true,"host_stationary":false,"source_npc_id":66603,"source_sprite_id":20363,"explicit_attack_id":242493,"attack_action_id":30,"required_roles":["idle","walk"],"selection_policy":"explicit_host_adoption_not_native_AI","unadopted_attack_ids":unadopted,"unadopted_basic_action_id":1,"unadopted_basic_omitted_attachment_slots":available[1].source_omitted_attachment_slots.duplicate(true),"adoption_contract":"Exact66603 adopts original alternate242493/action30 with complete eight stored directions. Basic242473/action1 retains missing shadow slots; absolute242483 remains unadopted. No basic readiness repair, pixels, native probability/delay or geography is inferred."}
