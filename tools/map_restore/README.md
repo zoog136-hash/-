@@ -221,3 +221,12 @@ updates retain the previous occupancy. It does not infer NPC positions from
 territory rectangles or create source populations. Main verification checks
 rejected and accepted relocation,old-cell release,new-cell blocking and a real
 Player collision against the relocated shape before restoring/removing it.
+
+`verify_source_layer3_layout.py` cross-checks original S32 bytes independently:
+L3 offset32768+2+6*N2,8192 preserved16-bit words. Six representative original
+chunks(13398/30/1/12179/12146/13042) passed49152 words and49152 projected boundary
+segments. Current neighbor-midpoint edges agree with the pinned reference's
+attr1 left-to-top and attr2 top-to-right overlay. This validates byte layout
+and geometry,not native passability or zone/height interpretation. Reference:
+https://github.com/tony1223/L1MapViewer/blob/364fcff15ea019e5a9329170aaf7e245404ebba6/Rendering/OverlayRenderer.cs
+No65-to5 zone replacement or new open-edge policy is applied.
