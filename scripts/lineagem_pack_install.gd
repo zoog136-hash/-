@@ -302,6 +302,7 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 		if actor.has("tracks_ref") and checked_models.has(model_key): continue
 		var tracks: Variant = actor.get("tracks")
 		var capability_contract: int=0
+		var partial_direction_contract: int=0
 		if actor.has("tracks_ref"):
 			var model_path: String = str(actor.tracks_ref)
 			if not safe_relative(model_path) or not model_path.begins_with("actors/") or not model_path.ends_with(".json"): return "몬스터 동작 경로가 유효하지 않습니다."
@@ -310,7 +311,9 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 			if not model is Dictionary or int(model.get("source_sprite_id", -1)) != int(actor.get("sprite_id", -2)): return "몬스터 동작 외형이 일치하지 않습니다."
 			tracks = model.get("tracks")
 			capability_contract=int(model.get("source_capability_contract",0))
+			partial_direction_contract=int(model.get("source_partial_direction_contract",0))
 			if capability_contract not in [0,1]: return "지원되지 않는 원본 동작 계약입니다."
+			if partial_direction_contract not in [0,1] or (partial_direction_contract==1 and (capability_contract!=1 or bool(profile.get("host_combat_ready",false)))): return "단일 원본 방향을 일반 전투8방향으로 처리할 수 없습니다."
 		if not tracks is Dictionary: return "몬스터 동작 목록이 유효하지 않습니다."
 		if capability_contract==1 and bool(profile.get("host_combat_ready",false)):
 			for required_role: String in ["idle","walk","attack"]:
@@ -320,8 +323,13 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 		for role: String in roles:
 			var track: Variant = tracks.get(role)
 			if not track is Dictionary or not track.get("directions") is Array or track.directions.size() != 8: return "몬스터 동작 또는8방향이 누락됐습니다."
+			var has_source_direction: bool=false
 			for frames: Variant in track.directions:
-				if not frames is Array or frames.is_empty() or frames.size() > 4096: return "몬스터 프레임 목록이 유효하지 않습니다."
+				if not frames is Array or frames.size() > 4096: return "몬스터 프레임 목록이 유효하지 않습니다."
+				if frames.is_empty():
+					if partial_direction_contract==1: continue
+					return "몬스터 프레임 목록이 유효하지 않습니다."
+				has_source_direction=true
 				var ticks: float = 0.0
 				for frame: Variant in frames:
 					if not frame is Dictionary or float(frame.get("source_ticks", -1)) < 0.0 or not frame.get("layers") is Array or frame.layers.is_empty() or frame.layers.size() > 8: return "몬스터 원본 프레임이 유효하지 않습니다."
@@ -344,6 +352,7 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 							if hash.length() != 64 or not FileAccess.file_exists(root.path_join(relative)) or FileAccess.get_sha256(root.path_join(relative)) != hash: return "몬스터 픽셀 검사 실패: " + relative
 							pixels[relative] = hash
 				if ticks <= 0.0 and not (capability_contract==1 and bool(track.get("source_static_zero_duration",false)) and frames.size()==1): return "몬스터 원본 시간값이 유효하지 않습니다."
+			if not has_source_direction: return "실제 원본 방향 프레임이 없습니다."
 		checked_models[model_key] = true
 	return ""
 

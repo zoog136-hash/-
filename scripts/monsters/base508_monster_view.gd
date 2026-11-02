@@ -25,6 +25,8 @@ var _explicit_source_action: bool = false
 var _explicit_sequence: int = -1
 var _raw_source_tracks: Dictionary={}
 var _actor_source: Dictionary={}
+var _partial_source_directions: bool=false
+var _fixed_source_slot: int=-1
 
 func configure(record: Dictionary, manifest_path: String) -> bool:
 	_root = manifest_path.get_base_dir()
@@ -43,6 +45,14 @@ func configure(record: Dictionary, manifest_path: String) -> bool:
 	_mode = POLICY.mode(settings_root)
 	_raw_source_tracks=actor.get("tracks",{})
 	_actor_source=actor
+	_partial_source_directions=int(actor.get("source_partial_direction_contract",0))==1
+	_fixed_source_slot=-1
+	if _partial_source_directions and bool(record.get("source_m_visual_only",false)):
+		var fixed: int=int(record.get("source_m_fixed_source_slot",-1))
+		if fixed>=0 and fixed<8:
+			for raw: Dictionary in _raw_source_tracks.values():
+				if raw.get("directions",[]).size()!=8 or raw.directions[fixed].is_empty(): return false
+			_fixed_source_slot=fixed
 	_tracks = PACK_CACHE.prepared_tracks(manifest_path, int(record.source_m_npc_id), actor, _mode)
 	var layer_count: int = 0
 	var roles: Array = _tracks.keys() if int(actor.get("source_capability_contract",0))==1 else ["idle", "walk", "attack", "hit", "death"]
@@ -50,9 +60,13 @@ func configure(record: Dictionary, manifest_path: String) -> bool:
 	for role: String in roles:
 		var track: Dictionary = _tracks.get(role, {})
 		if track.get("directions", []).size() != 8: return false
+		var has_source_direction: bool=false
 		timing_status[role] = {"effective_fps":track.get("effective_fps"), "origin":track.get("timing_origin"), "source_fps":track.get("fps")}
 		for frames: Array in track.directions:
-			if frames.is_empty(): return false
+			if frames.is_empty():
+				if _partial_source_directions: continue
+				return false
+			has_source_direction=true
 			for frame: Dictionary in frames:
 				if frame.get("layers", []).is_empty(): return false
 				layer_count = maxi(layer_count, frame.layers.size())
@@ -63,6 +77,7 @@ func configure(record: Dictionary, manifest_path: String) -> bool:
 					if not PACK_CACHE.verify_pixel(full, str(layer.get("sha256", ""))): return false
 					if layer.get("relation", "") == "SPR105.clothes":
 						attachment_status[str(layer.layer_id)] = POLICY.effect(layer.get("source_attributes", []), _mode)
+		if not has_source_direction: return false
 	for index: int in range(layer_count):
 		var layer := Sprite2D.new()
 		layer.centered = false
@@ -104,7 +119,11 @@ func advance(delta: float, state: String, facing: int, sequence: int, attacking:
 func _render_track(facing: int) -> void:
 	source_state_status={"status":"authored_source_track","role":_role}
 	var track: Dictionary = _tracks[_role]
-	var frames: Array = track.directions[posmod(facing + 3, 8)]
+	var source_slot: int=_fixed_source_slot if _fixed_source_slot>=0 else posmod(facing + 3, 8)
+	var frames: Array = track.directions[source_slot]
+	if frames.is_empty():
+		_unavailable(_role,"source_direction_slot_unavailable; no_mirror_or_substitute")
+		return
 	var total: float = duration(_role)
 	var selected: Dictionary = frames[0]
 	if total > 0.0:
@@ -198,7 +217,7 @@ func advance_source_action(action_id: int, delta: float, facing: int, sequence: 
 	_role=selected
 	_clock+=maxf(delta,0.0)
 	_render_track(facing)
-	return true
+	return source_state_status.get("status","")=="authored_source_track"
 func clear_source_action() -> void:
 	_explicit_source_action=false
 	_explicit_sequence=-1
@@ -212,8 +231,12 @@ func _prepare_source_track(key: String) -> bool:
 	var raw: Dictionary=_raw_source_tracks.get(key,{})
 	if raw.is_empty() or raw.get("directions",[]).size()!=8: return false
 	var count: int=0
+	var has_source_direction: bool=false
 	for frames: Array in raw.directions:
-		if frames.is_empty(): return false
+		if frames.is_empty():
+			if _partial_source_directions: continue
+			return false
+		has_source_direction=true
 		for frame: Dictionary in frames:
 			if frame.get("layers",[]).is_empty(): return false
 			count=maxi(count,frame.layers.size())
@@ -221,6 +244,7 @@ func _prepare_source_track(key: String) -> bool:
 				var path: String=str(layer.get("path",""))
 				if path.is_absolute_path() or ".." in path.split("/") or not PACK_CACHE.verify_pixel(_root.path_join(path),str(layer.get("sha256",""))): return false
 				if layer.get("relation","")=="SPR105.clothes": attachment_status[str(layer.layer_id)]=POLICY.effect(layer.get("source_attributes",[]),_mode)
+	if not has_source_direction: return false
 	var payload: Dictionary=_actor_source.duplicate(false)
 	payload["tracks"]={key:raw}
 	_tracks[key]=POLICY.tracks(payload,"monster",_mode)[key]

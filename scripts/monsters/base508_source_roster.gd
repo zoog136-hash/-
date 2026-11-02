@@ -105,4 +105,10 @@ static func visual_record(source_key: String, manifest_path: String, allow_conte
 	if result.is_empty() or int(result.get("source_m_sprite_id",-1))!=int(actor.get("sprite_id",-2)): return {}
 	result["source_m_asset_manifest_path"]=manifest_path
 	result["source_m_actor_profile"]=actor.get("source_actor_profile",{}).duplicate(true)
+	# A literal single-slot source object may be displayed in its one authored
+	# direction. No mirrored/copied facing or ordinary combat actor is created.
+	if int(actor.get("source_partial_direction_contract",0))==1:
+		var slots: Array=actor.get("source_actor_profile",{}).get("source_common_direction_slots",[])
+		if slots.size()==1:
+			result["source_m_fixed_source_slot"]=int(slots[0])
 	return result

@@ -72,7 +72,7 @@ def build(a):
    layers=shadows+[body]+clothes;attrs={i:[d['body']for decl in ds.get(i,[])for d in decl.directives if d['code']==104]for i in layers}
    if len(shadows)>1 or [e for e in action['errors']if not(capability and e=='no positive playback duration'and len(action['tokens'])==1)]:raise ValueError(('Source reference/action unresolved',code,action['errors']))
    directions=[];omissions=[];instant=[]
-   for direction in range(8):
+   def source_direction(direction):
     frames=[]
     for token_index,(group,frame,ticks)in enumerate(action['tokens']):
      if capability and ticks==0 and len(action['tokens'])>1:
@@ -88,8 +88,16 @@ def build(a):
        omissions.append({'layer_id':i,'relation':relation,'source_group':address,'source_direction_bit':bit,'source_frame_index':frame,'source_token_index':token_index,'reason':str(error),'policy':'verified_attachment_has_no_slot; no substitute pixel; native sparse draw semantics unverified'})
      frames.append({'source_ticks':ticks,'source_frame':frame,'source_group':group,'layers':ls})
     if not frames:raise ValueError(('Empty source action',code))
-    directions.append(frames)
+    return frames
+   unavailable=[]
+   for direction in range(8):
+    try:directions.append(source_direction(direction))
+    except ValueError as error:
+     if not(getattr(a,'preserve_source_direction_slots',False) and 'Source direction absent' in str(error)):raise
+     directions.append([]);unavailable.append({'slot':direction,'reason':str(error),'policy':'Source SP2 mask has no slot; no mirror, duplicate frame or alternate bank'})
+   if not any(directions):raise ValueError(('No authored source direction available',code))
    result={'fps':action['fps'],'source_sprite_id':source_sid,'source_body_id':body,'source_action_id':code,'source_raw_body':action['raw_body'],'source_timing_provenance':action.get('fps_provenance'),'timing_issues':action['errors'],'loop':code in(0,3),'directions':directions}
+   if unavailable:result['source_unavailable_direction_slots']=unavailable
    if capability:result.update({'source_omitted_attachment_slots':omissions,'instant_source_tokens':instant,'source_static_zero_duration':len(action['tokens'])==1 and action['tokens'][0][2]==0})
    return result
   try:
@@ -105,6 +113,7 @@ def build(a):
     except (ValueError,KeyError,IndexError)as e:errors['run']=str(e)
    model={'source_sprite_id':int(sid),'body_id':body,'tracks':tracks,'source_action_issues':errors,'source_run_sprite_id':run,'source_separated_walk_type':m.get('source_separated_walk_type')}
    if capability:model.update({'source_declared_action_ids':sorted(actions),'source_capability_contract':1,'source_available_roles':[role for role in ROLES.values()if role in tracks],'source_entry_role':'idle'if 'idle'in tracks else None,'source_sparse_attachment_policy':'explicit_no_substitution; native draw semantics unverified'})
+   if any(not frames for tr in tracks.values() for frames in tr['directions']):model['source_partial_direction_contract']=1
    if literal_layers:model['source_literal_layer_references']={'ids':sorted(literal_layers),'basis':'Exact SPR101/105 numeric target and original indexed SP2 members; no independent layer action declaration required','original_reference_issues':m.get('reference_issues',[])}
    rel=f'actors/{sid}.json';b=(json.dumps(model,ensure_ascii=False,separators=(',',':'))+'\n').encode();(out/rel).write_bytes(b);models[sid]={'tracks_ref':rel,'tracks_sha256':hashlib.sha256(b).hexdigest()}
   except (ValueError,KeyError,IndexError)as e:failures[sid]=str(e)
@@ -146,6 +155,7 @@ def estimate_build_budget(a):
 
 def main(a):
  if a.shards<1 or not 0<=a.shard<a.shards:raise ValueError('Invalid shard range')
+ if getattr(a,'preserve_source_direction_slots',False) and not a.source_capabilities:raise ValueError('Partial source direction preservation requires source capabilities')
  if not math.isfinite(a.space_packet_factor) or a.space_packet_factor<1:raise ValueError('space-packet-factor must be finite and >=1')
  expected,plan=estimate_build_budget(a)
  with reserve_budget(a.output,expected,a.space_temporary_mib*1024**2,a.space_reserve_mib*1024**2) as lease:
@@ -160,6 +170,7 @@ if __name__=='__main__':
  p.add_argument('--content',type=Path,default=Path('/workspace/base508/content'))
  p.add_argument('--resume',action='store_true',help='Reuse only complete emitted model metadata and hash-verified packets')
  p.add_argument('--model-ids',help='Optional exact source model IDs; avoids rebuilding previously verified models')
+ p.add_argument('--preserve-source-direction-slots',action='store_true',help='Keep only physically authored SP2 directions; do not make absent directions')
  p.add_argument('--memory-limit-mib',type=int,default=3072)
  p.add_argument('--space-packet-factor',type=float,default=4.0,help='Conservative normalized-packet expansion estimate; actual output may differ')
  p.add_argument('--space-temporary-mib',type=int,default=128)
