@@ -11,6 +11,8 @@ class Context extends RefCounted:
 	var context: Dictionary={}
 	func source_server_context() -> Dictionary:return context.duplicate(true)
 class Host extends Node:
+	var hp: int=1000
+	var player: Node2D
 	var catalog_db: Dictionary={}
 	var card_draw_fusion=Cards.new()
 	var card_collections=Context.new()
@@ -30,11 +32,19 @@ class Host extends Node:
 			if previous is Dictionary:snapshot=previous
 		snapshot.merge(override,true)
 		return preload("res://scripts/skills/save_writer.gd").write(save_path(),snapshot)
-class Target extends Node:
+class Preview extends Node:
+	var events: Array[Dictionary]=[]
+	var installed: bool=true
+	func notify_source_spell_event(spell: int,stage: String,point: Vector2,facing: int,path: String) -> bool:
+		events.append({"spell":spell,"stage":stage,"point":point,"facing":facing,"manifest":path});return installed
+class Caster extends Node2D:
+	var original_source_preview: Node
+	var original_source_manifest: String="user://explicit-test-source-manifest.json"
+class Target extends Node2D:
 	var dead: bool=false
 	var hp: int=10000
 	var calls: int=0
-	func take_damage(amount: int,_critical: bool,_kind: String) -> void:hp-=amount;calls+=1
+	func take_damage(amount: int,_critical: bool,_kind: String) -> void:hp=maxi(0,hp-amount);calls+=1;dead=hp==0
 func _initialize() -> void:call_deferred("run")
 func check(ok: bool,message: String) -> void:
 	checks+=1
@@ -165,6 +175,35 @@ func run() -> void:
 	check(target.hp==9930 and target.calls==1 and skills.proc_counts.get(material,0)==1,"saved native skill invokes real fixed70 damage on hit")
 	var rng_after: int=host.rng.state;skills.on_successful_hit(target)
 	check(target.calls==1 and host.rng.state==rng_after and host.skill_cooldowns.values()[0]==3.0,"source cast delay prevents repeat proc and RNG roll")
+	var caster:=Caster.new();host.add_child(caster);host.player=caster
+	var preview:=Preview.new();caster.add_child(preview);caster.original_source_preview=preview
+	caster.position=Vector2(30,40);target.position=Vector2(110,120)
+	var visual: Dictionary=skills.source_vfx.emit_spell(host,core.DATA.data.spells["64224"].source_spell,target)
+	check(visual.status=="played" and preview.events.size()==2 and preview.events[0].spell==64224 and preview.events[0].stage=="effect" and preview.events[1].stage=="impact","exact source spell ID and declared stages reach existing compositor API")
+	check(preview.events[0].point==target.global_position and preview.events[1].point==target.global_position,"source impact placement is copied from current target")
+	preview.installed=false;visual=skills.source_vfx.emit_spell(host,core.DATA.data.spells["64224"].source_spell,target)
+	check(visual.status=="unavailable" and visual.played.is_empty(),"missing originals stay unavailable without generated VFX fallback")
+	preview.installed=true;host.skill_cooldowns.clear();target.hp=30
+	for seed_value: int in range(1,10000):
+		probe.seed=seed_value
+		if probe.randi_range(0,9999)<100:host.rng.seed=seed_value;break
+	skills.on_successful_hit(target)
+	check(target.dead and target.calls==2 and preview.events.size()==6,"proc can kill target once and emits only its exact source stages")
+	rng_after=host.rng.state;skills.on_successful_hit(target)
+	check(target.calls==2 and host.rng.state==rng_after and preview.events.size()==6,"dead targets produce no repeat damage/RNG/VFX")
+	target.dead=false;target.hp=100;target.position=Vector2(210,220)
+	skills.on_successful_hit(target)
+	check(target.hp==100 and preview.events.size()==6,"reused body retains per-card cooldown and no delayed effect follows new life")
+	host.skill_cooldowns.clear();host.hp=0;rng_after=host.rng.state;skills.on_successful_hit(target)
+	check(target.hp==100 and host.rng.state==rng_after and preview.events.size()==6,"dead player cannot proc or advance RNG")
+	host.hp=1000;host.equipped_catalog["변신"]={};skills.on_successful_hit(target)
+	check(target.hp==100 and preview.events.size()==6,"unequipped skill cannot emit source effects")
+	host.equipped_catalog["변신"]=options.core.catalog["변신"][material]
+	for seed_value: int in range(1,10000):
+		probe.seed=seed_value
+		if probe.randi_range(0,9999)<100:host.rng.seed=seed_value;break
+	skills.on_successful_hit(target)
+	check(target.hp==30 and preview.events.size()==8 and preview.events[6].point==Vector2(210,220),"new hit on reused target uses current-life point exactly once")
 	host.equipped_catalog["변신"]={}
 	check(skills.bonus_records().is_empty(),"unequip removes source HP")
 	var persisted: Dictionary={SkillRuntime.SAVE_KEY:skills.export_state()}

@@ -109,6 +109,32 @@ func run() -> void:
 	check(hud.option_awakening_view.snapshot.target_id==hero_id and hud.option_awakening_view._target_art.texture!=null,"native option target uses original private card image")
 	await capture("native-option-awakening")
 	check(hash([world.inventory,world.item_instances,world.equipped_catalog,world.card_draw_fusion.export_state(),world.gold,world.skill_awakening.export_state(),world.option_awakening.export_state(),world.rng.state])==before,"UI navigation consumes no resources or RNG and preserves both awakening ledgers")
+	# Real production Monster life/death/reset, isolated from field loot callbacks.
+	var victim: Node=load("res://scenes/Monster.tscn").instantiate();world.monsters_root.add_child(victim)
+	var record: Dictionary={"name":"QA lifecycle fixture","hp":30,"lv":1}
+	victim.setup(record,world.player,world,null);victim.set_physics_process(false)
+	world.equipped_catalog["변신"]=card
+	var cooldowns: Dictionary=world.skill_cooldowns.duplicate(true)
+	world.skill_cooldowns.clear()
+	var probe:=RandomNumberGenerator.new();var hit_seed: int=0
+	for seed_value: int in range(1,10000):
+		probe.seed=seed_value
+		if probe.randi_range(0,9999)<100:hit_seed=seed_value;break
+	world.rng.seed=hit_seed;world.skill_awakening.on_successful_hit(victim);victim.set_physics_process(false)
+	check(victim.dead and victim.hp==0 and victim.damage_hit_count==1,"real Monster receives exactly one lethal source skill hit")
+	var post_hit_rng: int=world.rng.state;var life: int=victim.life_id
+	world.skill_awakening.on_successful_hit(victim)
+	check(victim.damage_hit_count==1 and world.rng.state==post_hit_rng,"dead real Monster cannot consume another proc roll")
+	victim.retire_for_pool();record.hp=100;victim.setup(record,world.player,world,null);victim.set_physics_process(false)
+	check(victim.life_id==life+1 and not victim.dead and victim.hp==100 and victim.damage_hit_count==0,"production pool retirement/setup creates clean new Monster life")
+	world.skill_awakening.on_successful_hit(victim)
+	check(victim.hp==100 and world.rng.state==post_hit_rng,"pooled new life cannot bypass source per-card cooldown")
+	world.skill_cooldowns.clear();world.equipped_catalog["변신"]={};world.skill_awakening.on_successful_hit(victim)
+	check(victim.hp==100 and world.rng.state==post_hit_rng,"unequipped real World skill cannot damage reused Monster")
+	world.equipped_catalog["변신"]=card;world.rng.seed=hit_seed
+	world.skill_awakening.on_successful_hit(victim)
+	check(victim.hp==30 and victim.damage_hit_count==1,"new actual hit damages reused Monster once without stale life callback")
+	world.skill_cooldowns=cooldowns;victim.queue_free()
 	var file: FileAccess=FileAccess.open(folder+"/checks.json",FileAccess.WRITE);file.store_string(JSON.stringify({"checks":checks,"errors":errors,"state":"isolated XDG and in-memory native ownership/skill fixture; private map guard unchanged"}));file.close()
 	print("NATIVE_AWAKENING_UI_WORLD ",JSON.stringify({"checks":checks,"errors":errors}))
 	hud._close_workspace();await settle();world.queue_free();await process_frame;quit(0 if errors.is_empty() else 1)

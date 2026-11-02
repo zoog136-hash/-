@@ -2,6 +2,7 @@ extends RefCounted
 ## TWILIGHT-local save namespace, not an original RPC/key. No unpriced debit.
 const Core=preload("res://scripts/cards/skill_awakening_service.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
+const SourceVFX=preload("res://scripts/cards/skill_awakening_source_vfx.gd")
 const SAVE_KEY: String="card_skill_awakening"
 var core=Core.new()
 var world: Node
@@ -15,6 +16,7 @@ var _records: Array[Dictionary]=[]
 var _proc_busy: bool=false
 var _reroll_busy: bool=false
 var selection_rng=RandomNumberGenerator.new()
+var source_vfx=SourceVFX.new()
 
 func _init() -> void:selection_rng.randomize()
 
@@ -67,7 +69,7 @@ func bonus_records() -> Array[Dictionary]:
 func on_successful_hit(target: Node) -> void:
 	# Explicit local integration: existing successful-hit dispatcher. Source data
 	# supplies the selection/proc weights and damage, not a client event handler.
-	if _proc_busy or save_blocked or world==null or target==null or not is_instance_valid(target) or bool(target.get("dead")):return
+	if _proc_busy or save_blocked or world==null or target==null or not is_instance_valid(target) or bool(target.get("dead")) or int(SourceVFX.property(world,"hp",1))<=0:return
 	_context();_proc_busy=true
 	for category: String in Cards.CATEGORIES:
 		if bool(target.get("dead")):break
@@ -89,6 +91,7 @@ func on_successful_hit(target: Node) -> void:
 		if bool(target.get("dead")):break
 		# FixedMagicDamage is an explicit source boolean. Do not add SP, critical,
 		# lifesteal, equipment amplification or recursively trigger this proc.
+		source_vfx.emit_spell(world,spell,target)
 		target.take_damage(amount,false,"magic")
 		world.skill_cooldowns[key]=maxf(0,float(spell.CastDelay)-float(result.profile.invoke.CastDelayBonus))/1000.0
 		proc_counts[identity]=int(proc_counts.get(identity,0))+1
