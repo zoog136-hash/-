@@ -81,7 +81,7 @@ func run()->void:
  world.player.position=start
  var candidate:Dictionary={}
  for record:Dictionary in field.source_pack.npc_territory_records():
-  if field.source_pack.npc_flags.get(int(record.npc_class_id)) is bool and field.source_pack.npc_flags.get(int(record.npc_class_id)):
+  if not field.source_pack.is_explicit_spawn_disabled(record) and field.source_pack.npc_flags.get(int(record.npc_class_id)) is bool and field.source_pack.npc_flags.get(int(record.npc_class_id)):
    candidate=record;break
  if candidate.is_empty():print('MAIN_SOURCE_OCCUPANCY_UNAVAILABLE no original occupying class in this pack; no fabricated instance')
  if not candidate.is_empty():
@@ -110,6 +110,13 @@ func run()->void:
   await physics_frame
   world.player.position=occupancy_neighbor
   check(world.player.move_and_collide(start-world.player.position)==null,'removed occupancy physics restored')
+  var disabled:Dictionary=candidate.duplicate(true);disabled.is_spawn_raw=0
+  check(not field.register_source_occupant('disabled',disabled,nav.arrival,true),'explicit disabled spawn rejected')
+  for raw:Variant in [1,2,null]:
+   var contextual:Dictionary=candidate.duplicate(true);contextual.is_spawn_raw=raw
+   check(field.register_source_occupant('contextual',contextual,nav.arrival,true),'active conditional or unknown retained by zero-only policy')
+   check(not field.register_source_occupant('contextual',disabled,nav.arrival,true),'disabled update rejected')
+   check(not field.occupancy_shapes.has('contextual') and not field.source_pack.npc_instances.has('contextual') and field.walkable(start),'disabled instance occupancy and physics removed')
  for cell:Vector2i in nav.ids:
   check(Vector2(cell).distance_to(field.world_to_source(field.source_to_world(Vector2(cell))))<0.001,'coordinate round trip')
  print('MAIN_SOURCE_EDGE_COVERAGE ',JSON.stringify({'scope':'ENTRY_COMPONENT' if entry_component else 'WHOLE_GRAPH','review_cells':review_ids.size(),'routes':route_count,'physical_steps':sweep_steps,'blocked_edges':blocked,'coordinate_cells':nav.ids.size()}))

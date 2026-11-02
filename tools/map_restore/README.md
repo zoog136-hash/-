@@ -253,3 +253,11 @@ AllowInterTeleport=false remain intact. Selecting this point in isolated review
 mode does not authorize map teleport,spend currency/tickets or satisfy missing
 server prerequisites. This addition does not expand the34 ready-map count.
 The CN +32 offset observation is not used as a field-layout or activation rule.
+
+Original source NPC registration now rejects explicit numeric IsSpawn=0 before
+creating occupancy. A confirmed zero update removes the existing instance's
+occupancy and physical shape. IsSpawn1,conditional2 and missing/unknown values
+are not removed by this zero-only policy; other original identity,class,
+occupancy and confirmed-placement checks still apply. Raw source tables and
+backups are retained. Main validation covers zero creation rejection and
+existing-instance cleanup while preserving1/2/unknown under the zero-only gate.
