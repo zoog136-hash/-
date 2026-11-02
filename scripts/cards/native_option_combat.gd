@@ -21,7 +21,23 @@ func active() -> Dictionary:
 		if record.get("source","")!="lineagem_base508":continue
 		var identity: String=Cards.card_id(record)
 		if runtime.is_awakened(category,identity):out[identity]=runtime.core.definition(category,identity)
+	var main: Dictionary=runtime.world.equipped_catalog.get("마법인형",{})
+	if main.get("source","")=="lineagem_base508":
+		var identity: String=Cards.card_id(main)
+		if runtime.core.owned({"owned":runtime.world.card_draw_fusion.owned},"마법인형",identity) and runtime.core.native_material_available(main):_add_doll_invokes(out,identity,false)
+	var secondary: Dictionary=runtime.subslot_view(false)
+	if secondary.active:_add_doll_invokes(out,str(secondary.identity),true)
 	return out
+func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void:
+	var row: Dictionary=DATA.data.subslot_buffs.get(identity,{}) if secondary else DATA.data.primary_doll_buffs.get(identity,{})
+	if row.is_empty():return
+	var rows: Array=[]
+	for effect: Dictionary in row.effects:
+		if effect.type.Name=="InvokeOption":rows.append(effect)
+	if rows.is_empty():return
+	if not out.has(identity):out[identity]={"native_source":{"card":row.card,"effects":[]}}
+	else:out[identity]=out[identity].duplicate(true)
+	out[identity].native_source.effects.append_array(rows)
 func tick(_delta: float) -> void:
 	var enabled: Dictionary=active()
 	var retained: Array[WeakRef]=[]
@@ -35,7 +51,9 @@ func effects(rows: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary]=[]
 	for identity: String in rows:
 		for effect: Dictionary in rows[identity].native_source.effects:
-			if effect.type.Name!="InvokeOption" or int(effect.link.Level)!=1 or effect.unit.Name!="Percentage":continue
+			if effect.type.Name!="InvokeOption" or effect.unit.Name!="Percentage" or int(effect.bonus.BonusApplicationTypeID)!=10:continue
+			if effect.link.has("Level") and int(effect.link.Level)!=1:continue
+			if effect.link.has("CharacterLevel") and (int(effect.link.CharacterLevel)!=0 or int(effect.link.CharacterClass)!=0 or int(effect.link.MinSpellLevel)!=0):continue
 			for option: Dictionary in DATA.data.invoke_options:
 				if int(option.ID)==int(effect.bonus.BonusApplicationTargetID):result.append({"origin":identity,"option":option,"weight":int(effect.bonus.Value)})
 	return result
@@ -58,11 +76,13 @@ func incoming(attacker: Node,kind: String,amount: int) -> Dictionary:
 			var key: String="native_option|"+str(effect.origin)+"|"+str(int(option.Param1))
 			if float(cooldowns.get(key,0))>0:continue
 			var spell: Dictionary=DATA.data.invoke_spells.get(str(int(option.Param1)),{})
-			if spell.is_empty() or spell.effects.size()!=1:continue
-			var bonus: Dictionary=spell.effects[0]
-			if bonus.type.Name!="HPRestoration" or int(bonus.bonus.BonusApplicationTypeID)!=0 or int(bonus.bonus.BonusApplicationTargetID)!=0:continue
+			var healing: Dictionary=_spell_values(spell,["HPRestoration","HPRestorationDiceNumber","HPRestorationDiceSpotCount"])
+			if not _free_spell(spell,1) or not healing.has("HPRestoration"):continue
+			if int(healing.get("HPRestorationDiceNumber",0))>0 and int(healing.get("HPRestorationDiceSpotCount",0))<=0:continue
 			if roll(int(effect.weight)):
-				result.heal+=int(bonus.bonus.Value);cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));emit_spell(spell.source_spell,runtime.world.player)
+				var amount_healed: int=int(healing.HPRestoration)
+				for die: int in range(int(healing.get("HPRestorationDiceNumber",0))):amount_healed+=runtime.world.rng.randi_range(1,int(healing.HPRestorationDiceSpotCount))
+				result.heal+=amount_healed;cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));emit_spell(spell.source_spell,runtime.world.player)
 	busy=false
 	return result
 func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_spell: bool=false) -> void:
@@ -78,6 +98,14 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 		if float(cooldowns.get(key,0))>0:continue
 		var spell: Dictionary=DATA.data.invoke_spells.get(str(int(option.Param1)),{})
 		if spell.is_empty():continue
+		var fixed: Dictionary=_spell_values(spell,["SpellDamageBase","SpellDamageDiceNumber","SpellDamageDiceSpotCount","FixedMagicDamage","IgnoreMagicResistance","IgnoreDamageReductionCalculation"])
+		if _free_spell(spell,2) and fixed.size()==6 and int(fixed.FixedMagicDamage)==1 and int(fixed.IgnoreMagicResistance)==1 and int(fixed.IgnoreDamageReductionCalculation)==1:
+			if int(fixed.SpellDamageBase)<0 or int(fixed.SpellDamageDiceNumber)<0 or int(fixed.SpellDamageDiceSpotCount)<1:continue
+			if not roll(int(effect.weight)):continue
+			var damage: int=int(fixed.SpellDamageBase)
+			for die: int in range(int(fixed.SpellDamageDiceNumber)):damage+=runtime.world.rng.randi_range(1,int(fixed.SpellDamageDiceSpotCount))
+			emit_spell(spell.source_spell,target);target.take_damage(damage,false,"magic")
+			cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));continue
 		var buffs: Array=[];var low: int=0;var high: int=0
 		for bonus: Dictionary in spell.effects:
 			match str(bonus.type.Name):
@@ -94,8 +122,11 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 			if not found:targets.append(weakref(target))
 	busy=false
 func emit_spell(spell: Dictionary,target: Node2D) -> void:
+	var seen: Dictionary={}
 	for field: String in ["EffectSpriteID","SuccessEffectSpriteID"]:
-		emit_sprite(int(spell.get(field,0)),target)
+		var sprite: int=int(spell.get(field,0))
+		if seen.has(sprite):continue
+		seen[sprite]=true;emit_sprite(sprite,target)
 func emit_sprite(sprite: int,target: Node2D) -> void:
 	# Existing private source compositor only. Missing bindings remain absent.
 	if sprite<=0 or not is_instance_valid(target):return
@@ -111,3 +142,19 @@ func emit_sprite(sprite: int,target: Node2D) -> void:
 			if is_instance_valid(node):live.append(node)
 		preview._overlay_nodes=live
 		if preview.spawn_source_overlay(sprite,5,target.global_position):visual_results[str(sprite)]="played_original"
+
+func _free_spell(spell: Dictionary,target: int) -> bool:
+	if spell.is_empty():return false
+	var raw: Dictionary=spell.source_spell
+	if bool(raw.TestSpell) or int(raw.TargettingTypeID)!=target or int(raw.TargetAreaRadius)!=0 or int(raw.HPCost)!=0 or int(raw.MPCost)!=0 or int(raw.get("VPCost",0))!=0:return false
+	# The source's explicit None material type overrides an unused default amount.
+	for kind: Dictionary in DATA.data.spell_material_types:
+		if int(kind.ID)==int(raw.SpellMaterialTypeID):return kind.Name=="None"
+	return false
+func _spell_values(spell: Dictionary,allowed: Array) -> Dictionary:
+	var values: Dictionary={}
+	if spell.is_empty():return values
+	for effect: Dictionary in spell.effects:
+		if effect.type.Name not in allowed or (effect.unit.Name!="Value" and not (effect.type.Name in ["FixedMagicDamage","IgnoreMagicResistance"] and effect.unit.Name=="TrueFalse")) or int(effect.link.MinSpellLevel)!=0 or int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0 or values.has(effect.type.Name):return {}
+		values[effect.type.Name]=int(effect.bonus.Value)
+	return values
