@@ -47,4 +47,8 @@ def main():
     print('CORE_CURRENT_MAP_INPUTS',len(objects),total)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as error:
+        print('::error title=Current map input::'+str(error).replace('%','%25').replace('\r','%0D').replace('\n','%0A'), flush=True)
+        raise

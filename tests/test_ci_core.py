@@ -4,6 +4,10 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+import contextlib
+import io
+import os
+import sys
 
 SPEC = importlib.util.spec_from_file_location('ci_core', Path(__file__).parents[1]/'tools/ci_core.py')
 CORE = importlib.util.module_from_spec(SPEC)
@@ -54,5 +58,13 @@ class CoreStageTest(unittest.TestCase):
             existing=Path(temporary)/'existing';existing.mkdir();(existing/'save.json').write_text('keep')
             with self.assertRaises(ValueError):CORE.stage(root,existing)
             self.assertEqual((existing/'save.json').read_text(),'keep')
+
+    def test_zero_exit_without_completion_or_with_engine_error_fails(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            for output in ['ERROR: controlled negative fixture', 'exited without running the test']:
+                with self.subTest(output=output), contextlib.redirect_stdout(io.StringIO()):
+                    with self.assertRaises(RuntimeError):
+                        CORE.run([sys.executable,'-c','print('+repr(output)+')'],root,root/'log.txt',os.environ.copy(),5,'DONE')
 
 if __name__=='__main__':unittest.main()

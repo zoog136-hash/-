@@ -36,7 +36,9 @@ def ensure_objects(root: Path, objects: list[str]):
                  env={**os.environ, 'GIT_NO_LAZY_FETCH':'1'}).decode()
     missing = [line.split()[0] for line in result.splitlines() if line.endswith(' missing')]
     if missing:
-        subprocess.run(['git','-C',str(root),'fetch','origin','--no-tags','--no-write-fetch-head',
+        # Like Git's own promisor fetch, do not advertise shallow commits as
+        # complete "have" sets: their filtered blobs are precisely missing.
+        subprocess.run(['git','-c','fetch.negotiationAlgorithm=noop','-C',str(root),'fetch','origin','--no-tags','--no-write-fetch-head',
                         '--recurse-submodules=no','--filter=blob:none','--stdin'],
                        input='\n'.join(missing)+'\n', text=True, check=True,
                        stdout=subprocess.DEVNULL)
@@ -111,16 +113,17 @@ def stage(root: Path, destination: Path) -> dict:
     (destination / 'core-resource-paths.json').write_text(json.dumps(result, indent=2))
     return result
 
-def run(command: list[str], path: Path, log: Path, env: dict, timeout: int):
+def run(command: list[str], path: Path, log: Path, env: dict, timeout: int, marker: str = ''):
     with log.open('w') as stream:
         result = subprocess.run(command, cwd=path, env=env, stdout=stream,
                                 stderr=subprocess.STDOUT, timeout=timeout)
     lines = log.read_text(errors='replace').splitlines()
     errors = [x for x in lines if 'SCRIPT ERROR:' in x or 'ERROR:' in x or '_FAIL' in x]
-    if result.returncode or errors:
+    marker_ok = not marker or any(line.startswith(marker+' ') and json.loads(line[len(marker):].strip()).get('failures') == [] for line in lines)
+    if result.returncode or errors or not marker_ok:
         for line in (errors or lines[-12:])[:12]:
             print('::error title=Core runtime::' + line.replace('%','%25').replace('\r','%0D').replace('\n','%0A'), flush=True)
-        raise RuntimeError(f'{log.name}: exit={result.returncode}, errors={len(errors)}')
+        raise RuntimeError(f'{log.name}: exit={result.returncode}, errors={len(errors)}, completion={marker_ok}')
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -147,8 +150,15 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            run(command, target, logs/(name+'.txt'), env, 180)
+            marker = {'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
+                      'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
+                      'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT'}[name]
+            run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as error:
+        print('::error title=Core gate::'+str(error).replace('%','%25').replace('\r','%0D').replace('\n','%0A'), flush=True)
+        raise
