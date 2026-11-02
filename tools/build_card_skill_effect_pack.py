@@ -59,7 +59,10 @@ def build(args):
     files = {}
     for root in args.sp2_root:
         manifest = json.loads((root / 'input_manifest.json').read_text())
-        for asset in manifest['assets']:
+        assets = manifest.get('assets', manifest.get('included_exact_originals'))
+        if not isinstance(assets, list):
+            raise ValueError('Source manifest has no verified asset list: ' + str(root))
+        for asset in assets:
             name = asset.get('member', asset.get('original_inner_path', ''))
             path = root / name
             if not name.endswith('.sp2') or not path.is_file():
