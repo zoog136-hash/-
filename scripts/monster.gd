@@ -7,6 +7,8 @@ var source_m_npc_id: int = -1
 const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
 const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
 var source_m_view: SOURCE_M_VIEW = null
+const SOURCE_BOSS_COMBAT = preload("res://scripts/monsters/base508_boss_combat.gd")
+var source_boss_combat = SOURCE_BOSS_COMBAT.new()
 var mp: int = 0
 var max_mp: int = 0
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
@@ -128,6 +130,8 @@ var roaming_radius: float = 180.0
 var roam_clock: float = 0.0
 
 func retire_for_pool() -> void:
+	source_boss_combat.clear()
+	loot_source_identity.clear()
 	# Death presentation is complete before this is called. Release all visual
 	# owners while keeping the lightweight body for the next life/region.
 	set_physics_process(false)
@@ -167,6 +171,7 @@ func retire_for_pool() -> void:
 	drop_items.clear()
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
+	source_boss_combat.clear()
 	_clear_source_m_view()
 	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
 	if source_record.has("source_m_asset_manifest_path"):
@@ -182,7 +187,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
-	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
+	loot_source_identity = LOOT_DROP.BASE508_DROPS.identity(record)
+	if loot_source_identity.is_empty(): loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1
 	motion = MOTION.new()
@@ -290,6 +296,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	slow_multiplier = 1.0
 	target_player = player_ref
 	world_controller = world_ref
+	source_boss_combat.configure(self,world_controller,record)
 	if world_controller is TwilightWorld:
 		motion.reduced_motion = bool(world_controller.presentation_settings.get("reduced_motion", false))
 	sprite.show()
@@ -345,6 +352,7 @@ func _advance_source_m_view(delta: float) -> void:
 		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
 
 func _physics_process(delta: float) -> void:
+	source_boss_combat.tick(delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
@@ -467,6 +475,7 @@ func _tick_ai(delta: float) -> void:
 		sight_clock = .12+float(get_instance_id()%5)*.008
 		sight_cached = world_controller._has_line_of_sight_world(global_position,target_player.global_position) if distance<=maxf(attack_range,620. if is_boss else attack_range) else false
 	var sight: bool = sight_cached and distance<=maxf(attack_range,620. if is_boss else attack_range)
+	if source_boss_combat.try_begin(sight): return
 	if is_boss and ai.has("special") and special_cooldown<=0. and distance<=620. and sight and not is_silenced():
 		_begin_special()
 		return
@@ -969,6 +978,7 @@ func combat_hit_position() -> Vector2:
 	return global_position + motion.profile.hit_position
 
 func _cancel_attack(id: int) -> void:
+	source_boss_combat.cancel(id)
 	if id != special_sequence: return
 	special_attack.clear()
 	special_sequence = -1
@@ -979,6 +989,7 @@ func _cancel_attack(id: int) -> void:
 func _release_attack(id: int) -> void:
 	if dead or id != motion.sequence or id == released_sequence or not motion.active or not motion.released: return
 	released_sequence = id
+	if source_boss_combat.release(id): return
 	if not is_instance_valid(target_player): return
 	if is_stunned() or is_feared(): return
 	if id==special_sequence:

@@ -1,7 +1,7 @@
 extends RefCounted
 # Equipment rates are per independent equipment roll, not guaranteed drops.
-# Field monsters: 1 equipment roll, at most Hero. Bosses: 3 equipment rolls,
-# at most Unique. One separate potion roll per kill is preserved.
+# Field monsters: 1 equipment roll. Bosses: 3 equipment rolls.
+# Existing per-grade probability weights are kept; no separate grade eligibility cap. One separate potion roll per kill is preserved.
 # Each roll yields at most one equipment item; rolls may yield duplicate items.
 
 const EQUIPMENT_GRADES = ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]
@@ -15,6 +15,7 @@ const L1J_REGISTRY_PATH = "res://data/monsters/l1j_drop_overrides.json"
 const CRAFTING_DROPS_PATH: String = "res://data/monsters/twilight_crafting_drops.json"
 const MATERIAL_DROP_RATE: float = 0.28
 const BOSS_MATERIAL_DROP_RATE: float = 0.65
+const BASE508_DROPS=preload("res://scripts/loot/base508_monster_drops.gd")
 const SOURCE3_REVIEWED = preload("res://scripts/loot/source3_reviewed_drop.gd")
 
 static func is_boss_record(record: Dictionary) -> bool:
@@ -123,7 +124,7 @@ static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: D
 		if not by_name.has(item_name):
 			continue
 		var record: Dictionary = by_name[item_name] as Dictionary
-		if _is_potion(record) and str(record.get("grade", "")) != "유일":
+		if _is_potion(record):
 			configured.append(item_name)
 	# One existing potion roll (45% field / 90% boss). Extra catalog potions
 	# share that roll as rare weighted alternatives; never an extra drop roll.
@@ -147,8 +148,6 @@ static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: D
 			var item: Dictionary = by_name[name_value] as Dictionary
 			if not _is_potion(item):
 				continue
-			if str(item.get("grade", "")) == "유일" and not is_boss:
-				continue
 			var weight: int = clampi(int(row.get("weight", 0)), 0, 1000000)
 			if weight > 0:
 				choices.append({"item_name":name_value, "weight":weight})
@@ -169,7 +168,7 @@ static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: D
 	var potions: Array = catalog.get("potions", [])
 	for item_value: Variant in potions:
 		var name_value: String = str(item_value)
-		if str((by_name[name_value] as Dictionary).get("grade", "")) != "유일":
+		if _is_potion(by_name[name_value] as Dictionary):
 			return name_value
 	return ""
 
@@ -309,8 +308,23 @@ static func _pick_material(monster_name: String, is_boss: bool, catalog: Diction
 	return ""
 
 
-static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}) -> Array[Dictionary]:
+static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}, quest_eligibility: Dictionary = {}) -> Array[Dictionary]:
 	var earned: Array[Dictionary] = []
+	if BASE508_DROPS.native(monster_identity):
+		var source: Dictionary=BASE508_DROPS.candidates(monster_identity,catalog,quest_eligibility)
+		var potion_rate_native: float=BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
+		if rng.randf()<potion_rate_native:
+			var selected: Dictionary=BASE508_DROPS.pick(source,"potion","",rng)
+			if not selected.is_empty(): earned.append(selected)
+		for attempt: int in range(MAX_BOSS_EQUIPMENT_ROLLS if is_boss else 1):
+			var grade: String=_roll_equipment_grade(is_boss,rng)
+			if grade.is_empty(): continue
+			var selected: Dictionary=BASE508_DROPS.pick(source,"equipment",grade,rng)
+			if not selected.is_empty(): earned.append(selected)
+		if rng.randf()<(BOSS_MATERIAL_DROP_RATE if is_boss else MATERIAL_DROP_RATE):
+			var selected: Dictionary=BASE508_DROPS.pick(source,"material","",rng)
+			if not selected.is_empty(): earned.append(selected)
+		return earned
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
 		var potion: String = _pick_potion(monster_drops, is_boss, catalog, rng, monster_name)

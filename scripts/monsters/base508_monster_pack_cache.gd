@@ -20,7 +20,14 @@ static func prepared_tracks(path: String, actor_id: int, actor: Dictionary, mode
 	var key: String = path + ":" + signature + ":" + str(int(actor.get("sprite_id", actor_id))) + ":" + mode
 	if not _tracks.has(key):
 		if _tracks.size() >= 8: _tracks.erase(_tracks.keys()[0])
-		_tracks[key] = POLICY.tracks(actor, "monster", mode)
+		var payload: Dictionary=actor
+		if int(actor.get("source_capability_contract",0))==1:
+			payload=actor.duplicate(false)
+			var primary: Dictionary={}
+			for role: String in ["idle","walk","attack","hit","death","run"]:
+				if actor.get("tracks",{}).has(role): primary[role]=actor.tracks[role]
+			payload["tracks"]=primary
+		_tracks[key] = POLICY.tracks(payload, "monster", mode)
 	return _tracks[key]
 static func verify_pixel(path: String, expected_sha256: String) -> bool:
 	var key: String = path + ":" + expected_sha256
@@ -55,6 +62,7 @@ static func actor(path: String, npc_id: int) -> Dictionary:
 	var model: Dictionary = _models[key]
 	if int(model.get("source_sprite_id", -1)) != int(value.get("sprite_id", -2)): return {}
 	var result: Dictionary = value.duplicate(false)
-	for field: String in ["tracks", "body_id", "shadow_ids", "clothes_ids", "source_sprite_id"]:
+	for field: String in ["tracks", "body_id", "shadow_ids", "clothes_ids", "source_sprite_id", "source_capability_contract", "source_available_roles", "source_entry_role", "source_declared_action_ids"]:
+		if field in ["source_capability_contract", "source_available_roles", "source_entry_role", "source_declared_action_ids"] and not model.has(field): continue
 		result[field] = model.get(field)
 	return result

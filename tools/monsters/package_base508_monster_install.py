@@ -2,12 +2,21 @@
 import argparse,hashlib,json,zipfile
 from pathlib import Path
 def digest(b):return hashlib.sha256(b).hexdigest()
+def file_digest(path):
+ h=hashlib.sha256()
+ with path.open('rb')as f:
+  for b in iter(lambda:f.read(4*1024**2),b''):h.update(b)
+ return h.hexdigest()
 def encode(v):return json.dumps(v,ensure_ascii=False,separators=(',',':')).encode()
 def build(root,output,release):
  manifest=json.loads((root/'manifest.json').read_text());rows=[];payload=bytearray();chunks=[];count=0;size=0
  paths={'manifest.json'}
+ for name,sha in manifest.get('private_metadata',{}).items():
+  if name not in('boss_combat.bin','monster_drops.bin'):raise ValueError(('Unknown private metadata',name))
+  if file_digest(root/name)!=sha:raise ValueError(('Private metadata SHA mismatch',name))
+  paths.add(name)
  for record in list(manifest['records'].values())+list(manifest.get('models',{}).values()):paths.add(record['tracks_ref'])
- for model_path in list(paths-{'manifest.json'}):
+ for model_path in list(p for p in paths if p.startswith('actors/')and p.endswith('.json')):
   model=json.loads((root/model_path).read_text())
   for track in model['tracks'].values():
    for frames in track['directions']:
@@ -28,6 +37,6 @@ def build(root,output,release):
   flush(z)
   header={'schema':2,'kind':'twilight-lineagem-offline-monsters','source_snapshot':'base508','release_id':release,'files':count,'bytes':size,'npc_ids':sorted(map(int,manifest['records'])),'chunks':chunks,'limitations':'Source pixels/actions retained; unknown native timing and blend remain explicitly compatible or strict. No verified native geographic placements.'}
   z.writestr('pack.json',encode(header))
- print(json.dumps({'path':str(output),'zip_bytes':output.stat().st_size,'sha256':digest(output.read_bytes()),'files':count,'bytes':size,'npc_ids':len(header['npc_ids'])}))
+ print(json.dumps({'path':str(output),'zip_bytes':output.stat().st_size,'sha256':file_digest(output),'files':count,'bytes':size,'npc_ids':len(header['npc_ids'])}))
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--release',required=True);a=p.parse_args();build(a.root,a.output,a.release)

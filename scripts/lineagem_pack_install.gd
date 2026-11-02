@@ -285,7 +285,9 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 				if int(actor.get(field, -1)) != int(binding.get(field, -2)): same = false
 			if same: matched = true
 		var source_row: Dictionary = catalog.npc(id)
-		if not matched and (source_row.is_empty() or not catalog.enemy_eligible(id, true) or int(actor.get("sprite_id", -1)) != int(source_row.sprite_id)): return "이 몬스터 문맥에 맞는 게임 코드 업데이트가 필요합니다."
+		var profile: Dictionary=actor.get("source_actor_profile",{})
+		var visual_only: bool=profile.get("contract","")=="base508_source_action_capabilities_v1" and not bool(profile.get("host_combat_ready",true)) and not bool(source_row.get("source_TestNPC",true)) and profile.get("source_category",{})==source_row.get("source_category",{})
+		if not matched and (source_row.is_empty() or (not catalog.enemy_eligible(id, true) and not visual_only) or int(actor.get("sprite_id", -1)) != int(source_row.sprite_id)): return "이 몬스터 문맥에 맞는 게임 코드 업데이트가 필요합니다."
 		if actor.has("spawn_view_id"):
 			var primary_key: String = catalog.context_key(id, int(actor.get("spawn_view_id", -1)), int(actor.get("territory_link_id", -1)))
 			var primary: Dictionary = catalog.source_record(primary_key)
@@ -299,6 +301,7 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 		var model_key: String = str(int(actor.get("sprite_id", -1))) + ":" + str(actor.get("tracks_ref", "")) + ":" + str(actor.get("tracks_sha256", ""))
 		if actor.has("tracks_ref") and checked_models.has(model_key): continue
 		var tracks: Variant = actor.get("tracks")
+		var capability_contract: int=0
 		if actor.has("tracks_ref"):
 			var model_path: String = str(actor.tracks_ref)
 			if not safe_relative(model_path) or not model_path.begins_with("actors/") or not model_path.ends_with(".json"): return "몬스터 동작 경로가 유효하지 않습니다."
@@ -306,8 +309,15 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 			var model: Variant = JSON.parse_string(FileAccess.get_file_as_string(root.path_join(model_path)))
 			if not model is Dictionary or int(model.get("source_sprite_id", -1)) != int(actor.get("sprite_id", -2)): return "몬스터 동작 외형이 일치하지 않습니다."
 			tracks = model.get("tracks")
+			capability_contract=int(model.get("source_capability_contract",0))
+			if capability_contract not in [0,1]: return "지원되지 않는 원본 동작 계약입니다."
 		if not tracks is Dictionary: return "몬스터 동작 목록이 유효하지 않습니다."
-		for role: String in ["idle", "walk", "attack", "hit", "death"]:
+		if capability_contract==1 and bool(profile.get("host_combat_ready",false)):
+			for required_role: String in ["idle","walk","attack"]:
+				if not tracks.has(required_role): return "전투에 필요한 원본 동작이 없습니다."
+		var roles: Array=tracks.keys() if capability_contract==1 else ["idle", "walk", "attack", "hit", "death"]
+		if roles.is_empty(): return "원본에 연결 가능한 동작이 없습니다."
+		for role: String in roles:
 			var track: Variant = tracks.get(role)
 			if not track is Dictionary or not track.get("directions") is Array or track.directions.size() != 8: return "몬스터 동작 또는8방향이 누락됐습니다."
 			for frames: Variant in track.directions:
@@ -333,7 +343,7 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 						else:
 							if hash.length() != 64 or not FileAccess.file_exists(root.path_join(relative)) or FileAccess.get_sha256(root.path_join(relative)) != hash: return "몬스터 픽셀 검사 실패: " + relative
 							pixels[relative] = hash
-				if ticks <= 0.0: return "몬스터 원본 시간값이 유효하지 않습니다."
+				if ticks <= 0.0 and not (capability_contract==1 and bool(track.get("source_static_zero_duration",false)) and frames.size()==1): return "몬스터 원본 시간값이 유효하지 않습니다."
 		checked_models[model_key] = true
 	return ""
 

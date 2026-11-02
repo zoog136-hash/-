@@ -2663,8 +2663,8 @@ func _drop_grade_color(grade: String) -> Color:
 		_:
 			return Color("eeeeee")
 
-func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: int = 1, source_batch: String = "") -> Button:
-	var view: Button = ground_loot.spawn(item_name, world_position, quantity, source_batch)
+func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: int = 1, source_batch: String = "", metadata: Dictionary = {}) -> Button:
+	var view: Button = ground_loot.spawn(item_name, world_position, quantity, source_batch, metadata)
 	if is_instance_valid(view) and is_instance_valid(presentation_audio):
 		presentation_audio.play_world("drop", world_position)
 	return view
@@ -2743,7 +2743,9 @@ func _restore_ground_drops(saved: Variant) -> void:
 func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
-	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity)
+	var quest_eligibility: Variant=get_meta("base508_drop_quest_eligibility",{})
+	if not quest_eligibility is Dictionary: quest_eligibility={}
+	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity, quest_eligibility)
 	if earned.is_empty():
 		return
 	var batch_id: String = ground_loot.begin_hunt_batch()
@@ -2754,7 +2756,8 @@ func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = t
 			var drop_record: Dictionary = _find_catalog_item_record(item_name)
 			if _equipment_slot_base(drop_record) != "":
 				continue
-		_spawn_ground_drop(item_name, monster.global_position, quantity, batch_id)
+		var metadata: Dictionary=LOOT_DROP.BASE508_DROPS.ground_metadata(entry,not _enhancement_kind_for_record(entry.get("item_record",{})).is_empty())
+		_spawn_ground_drop(item_name, monster.global_position, quantity, batch_id, metadata)
 	hud.show_message("아이템이 바닥에 떨어졌습니다")
 
 
