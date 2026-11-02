@@ -49,6 +49,7 @@ func run() -> void:
 				view.advance(0.1, "attack", 7, 1, true, false)
 				view.advance(0.1, "death", 2, 1, false, true)
 				loaded += 1
+				print("BASE508_FACTORY_MODEL_OK ", int(actor.sprite_id))
 			view.free()
 			sampled[int(actor.sprite_id)] = true
 	print("BASE508_FULL_CATALOG ", JSON.stringify({"registered":ids.size(),"models":data.models.size(),"exact_contexts":contexts,"loaded_monster_models":loaded,"errors":errors}))
