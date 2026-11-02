@@ -19,7 +19,8 @@ class CoreStageTest(unittest.TestCase):
         files = {
             'project.godot':'config_version=5\n',
             'Main.tscn':'[ext_resource type="Texture2D" path="res://assets/live.png"]\n[ext_resource path="res://docs/runtime.txt"]\n',
-            'scripts/main.gd':'const DATA = "res://data/live.json"\nconst FLAGS = "res://data/pr122_transform_motion_scope.json"\n',
+            'scripts/main.gd':'const DATA = "res://data/live.json"\nconst FLAGS = "res://data/pr122_transform_motion_scope.json"\nconst SHADER = preload("res://shaders/live.gdshader")\n',
+            'shaders/live.gdshader':'shader_type canvas_item;\n',
             'data/live.json':'{"frames":"res://assets/live.tres"}',
             'data/unused-review.json':'{"review":"res://assets/review.png"}',
             'data/pr122_transform_motion_scope.json':'{"schema":"pr122-transform-motion-scope-v1","actor_kind":"transform","review":"res://data/unused-review.json"}',
@@ -46,6 +47,7 @@ class CoreStageTest(unittest.TestCase):
             self.assertTrue({'assets/live.png','assets/live.tres','assets/pose.png'}<=selected)
             self.assertIn('docs/runtime.txt',selected)
             self.assertIn('addons/production/plugin.gd',selected)
+            self.assertIn('shaders/live.gdshader',selected)
             self.assertNotIn('assets/review.png',selected)
             self.assertEqual((root/'data/pr122_transform_motion_scope.json').read_bytes(),(Path(temporary)/'stage/data/pr122_transform_motion_scope.json').read_bytes())
             self.assertEqual((root/'assets/pose.png').read_bytes(),(Path(temporary)/'stage/assets/pose.png').read_bytes())
@@ -92,6 +94,14 @@ class CoreStageTest(unittest.TestCase):
             root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
             (root/'Main.tscn').write_text('[ext_resource path="res://assets/not-committed.png"]')
             with self.assertRaises(FileNotFoundError):CORE.stage(root,Path(temporary)/'stage')
+            self.assertFalse((Path(temporary)/'stage').exists())
+
+    def test_missing_shader_preload_fails_before_engine_import(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
+            (root/'scripts/main.gd').write_text('const SHADER = preload("res://shaders/missing.gdshader")')
+            with self.assertRaisesRegex(FileNotFoundError,'shaders/missing.gdshader'):
+                CORE.stage(root,Path(temporary)/'stage')
             self.assertFalse((Path(temporary)/'stage').exists())
 
     def test_escape_and_existing_project_are_rejected(self):

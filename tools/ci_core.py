@@ -19,7 +19,7 @@ import subprocess
 import tempfile
 
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
-REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons)/[^"\'\n]+)["\']')
+REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
     ('core_runtime_save_test', []),
     ('save_identical_payload_test', []),
@@ -98,7 +98,7 @@ def stage(root: Path, destination: Path) -> dict:
             return p.read_bytes()
         return git(root, 'show', 'HEAD:' + path)
     selected = {'project.godot', 'Main.tscn'}
-    selected.update(str(p.relative_to(root)) for folder in ['scripts', 'data', 'scenes', 'addons']
+    selected.update(str(p.relative_to(root)) for folder in ['scripts', 'data', 'scenes', 'addons', 'shaders']
                     for p in (root / folder).rglob('*') if p.is_file())
     selected.update('tests/' + name + '.gd' for name, _ in CHECKS)
     selected.add('tests/qa_class_selection.gd')
