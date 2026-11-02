@@ -51,6 +51,13 @@ func run() -> void:
 	advance(combat,3);var before: int=combat.rolls
 	check(combat.incoming(attacker,"melee",9).heal==0 and combat.rolls==before,"below source damage10 never rolls")
 	host.equipped_catalog["변신"]={};host.equipped_catalog["성물"]=cards[r]
+	before=combat.rolls
+	combat.on_hit(attacker,"magic",true,true)
+	check(combat.fired.is_empty() and combat.rolls==before,"physical-only invoke never rolls on magic spells")
+	combat.on_hit(attacker,"melee",true,true)
+	check(combat.fired.is_empty() and combat.rolls==before,"physical skill is still a spell event")
+	combat.on_hit(attacker,"melee",false,false)
+	check(combat.fired.is_empty() and combat.rolls==before,"main-target-only invoke never rolls on secondary target")
 	combat.on_hit(attacker)
 	check(combat.fired==[17601] and attacker.source_option_debuffs.size()==1,"horn original timed buff dispatch")
 	check(attacker.source_option_healing(100)==0 and attacker.source_option_healing(100,true)==0,"source150percent heal and potion reduction clamp zero")

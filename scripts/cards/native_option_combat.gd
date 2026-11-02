@@ -65,13 +65,15 @@ func incoming(attacker: Node,kind: String,amount: int) -> Dictionary:
 				result.heal+=int(bonus.bonus.Value);cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));emit_spell(spell.source_spell,runtime.world.player)
 	busy=false
 	return result
-func on_hit(target: Node) -> void:
+func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_spell: bool=false) -> void:
 	fired.clear()
 	if busy or not is_instance_valid(target) or bool(target.get("dead")) or not target.has_method("apply_source_option_debuff"):return
 	busy=true
 	for effect: Dictionary in effects(active()):
 		var option: Dictionary=effect.option
 		if int(option.InvokeOptionTypeID)!=1 or int(option.MaterialAmount)!=0 or int(option.Param6)!=0:continue
+		if bool(option.BySpellAttack)!=(by_spell or attack_kind=="magic"):continue
+		if bool(option.Param4) and not main_target:continue
 		var key: String="native_option|"+str(effect.origin)+"|"+str(int(option.Param1))
 		if float(cooldowns.get(key,0))>0:continue
 		var spell: Dictionary=DATA.data.invoke_spells.get(str(int(option.Param1)),{})
