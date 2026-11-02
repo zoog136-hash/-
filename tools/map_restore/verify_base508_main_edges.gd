@@ -69,7 +69,7 @@ func run()->void:
  for record:Dictionary in field.source_pack.npc_territory_records():
   if field.source_pack.npc_flags.get(int(record.npc_class_id)) is bool and field.source_pack.npc_flags.get(int(record.npc_class_id)):
    candidate=record;break
- check(not candidate.is_empty(),'original occupancy class')
+ if candidate.is_empty():print('MAIN_SOURCE_OCCUPANCY_UNAVAILABLE no original occupying class in this pack; no fabricated instance')
  if not candidate.is_empty():
   check(not field.register_source_occupant('review',candidate,nav.arrival,2),'nonboolean placement rejected')
   check(field.register_source_occupant('review',candidate,nav.arrival,true),'confirmed test instance')
@@ -91,8 +91,10 @@ func run()->void:
   await RenderingServer.frame_post_draw
   root.get_texture().get_image().save_png(OS.get_environment('BASE508_MAIN_CAPTURE'))
  world.queue_free();await physics_frame
+ var saves_unchanged:bool=true
  for path:String in save_paths:
   var after:String=FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ''
+  saves_unchanged=saves_unchanged and after==save_hashes[path]
   check(after==save_hashes[path],'save unchanged after scene exit')
- print('MAIN_SOURCE_EDGE_EXIT ',JSON.stringify({'failures':failures,'save_files_unchanged':failures.is_empty()}))
+ print('MAIN_SOURCE_EDGE_EXIT ',JSON.stringify({'failures':failures,'save_files_unchanged':saves_unchanged}))
  quit(0 if failures.is_empty() else 1)

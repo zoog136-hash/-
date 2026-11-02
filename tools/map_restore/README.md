@@ -120,8 +120,17 @@ Source expansion: Land25/Asset25 (Suryun_dungeon_1) passes actual Main
 arrival, click, four extreme routes (4298 physical steps),64 blocked probes,
 4788 coordinate round trips, physical occupancy add/remove and exit save hashes.
 The arrival is read from Locations rather than a Faith-specific constant.
-Land75/Asset75 is deliberately not enabled: its original arrival(32790,32817)
-has pair[1,1] with no graph node under this candidate interpretation. This is a
-counterexample to generalizing Faith semantics to all0/1 maps; no nearest-cell
-fallback or forced opening was applied. Neither result establishes native M
-passability. Height, foreground and automatic portal triggers remain unresolved.
+Land75/Asset75 is now enabled only with explicit original portal-target evidence.
+The earlier apparent counterexample was an entry-selection error: Locations333
+is merchant Pagor at(32790,32817), not a map entrance. Portal341 targets the
+exact point(32763,32902) on Land75. Use
+`--base508-entry-portals=<Aden-pack>/portals.json --base508-entry-portal=341`.
+No coordinate offset or passability rule was changed. Actual Main passed four
+routes/3687 body steps,64 boundaries,5535 coordinate round trips and exit save
+hashes. The pack has no occupying NPC class evidence, so dynamic occupancy is
+explicitly unavailable there rather than populated with fabricated NPCs.
+Locations are now selected by reviewed exact IDs (Faith item chain; Suryun760
+is a test location), never by assuming the only row is an entrance. Explicit
+portal targets must match the Land and be points; region centers are rejected.
+These are opt-in review entries, not automatic portal triggers or server-condition
+recovery. Native M passability remains unconfirmed. Height, foreground and automatic portal triggers remain unresolved.

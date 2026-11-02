@@ -1,7 +1,7 @@
 extends RefCounted
 ## Reviewed source-edge compatibility policy, not recovered native M semantics.
 const SPACE=preload('res://scripts/maps/base508_contract.gd')
-const LAND_ASSETS={47914:'13398/',48274:'13401/',48774:'13472/',49324:'13504/',25:'25/'}
+const LAND_ASSETS={47914:'13398/',48274:'13401/',48774:'13472/',49324:'13504/',25:'25/',75:'75/'}
 const DIRS=[Vector2i.RIGHT,Vector2i.DOWN,Vector2i.LEFT,Vector2i.UP]
 var pack:RefCounted
 var words:Dictionary={}
@@ -32,13 +32,31 @@ func configure(value:RefCounted,tables:String)->bool:
  pack=value
  var land:int=int(pack.manifest.land.ID)
  if LAND_ASSETS.get(land,'')!=str(pack.manifest.land.AssetPath):error='Unreviewed source identity';return false
- var document:Variant=JSON.parse_string(FileAccess.get_file_as_string(tables+'/Locations.json'))
- if not document is Dictionary:return false
- for row:Dictionary in document.get('rows',[]):
-  if int(row.LandID)==land:
-   if not arrival_record.is_empty():error='Ambiguous source arrival';return false
-   arrival_record=row
- if arrival_record.is_empty():error='Missing original arrival';return false
+ var entry_file:String='';var entry_id:int=-1
+ for arg:String in OS.get_cmdline_user_args():
+  if arg.begins_with('--base508-entry-portals='):entry_file=arg.trim_prefix('--base508-entry-portals=')
+  if arg.begins_with('--base508-entry-portal='):entry_id=int(arg.trim_prefix('--base508-entry-portal='))
+ if not entry_file.is_empty() and entry_id>=0:
+  var portals:Variant=JSON.parse_string(FileAccess.get_file_as_string(entry_file))
+  if not portals is Array:error='Invalid original portal evidence';return false
+  for portal:Dictionary in portals:
+   if int(portal.ID)!=entry_id:continue
+   var target:Dictionary=portal.TargetTerritory
+   if int(target.LandID)!=land or int(target.StartX)!=int(target.EndX) or int(target.StartY)!=int(target.EndY):error='Portal target must be exact point on this Land';return false
+   if not arrival_record.is_empty():error='Ambiguous portal evidence';return false
+   arrival_record={'ID':entry_id,'X':target.StartX,'Y':target.StartY,'entry_kind':'ORIGINAL_PORTAL_TARGET','portal':portal}
+ else:
+  # Locations include merchants and test markers; row count never proves entry semantics.
+  var reviewed_locations:Dictionary={47914:43661,48274:43674,48774:43854,49324:44054,25:760}
+  if not reviewed_locations.has(land):error='Explicit original entry evidence required';return false
+  var document:Variant=JSON.parse_string(FileAccess.get_file_as_string(tables+'/Locations.json'))
+  if not document is Dictionary:return false
+  for row:Dictionary in document.get('rows',[]):
+   if int(row.ID)==int(reviewed_locations[land]) and int(row.LandID)==land:
+    if not arrival_record.is_empty():error='Ambiguous source arrival';return false
+    arrival_record=row.duplicate(true)
+    arrival_record['entry_kind']='REVIEW_TEST_LOCATION' if land==25 else 'REVIEWED_ITEM_LOCATION'
+ if arrival_record.is_empty():error='Missing original entry evidence';return false
  arrival=Vector2i(arrival_record.X,arrival_record.Y)
  var contract:Dictionary=pack.geographic_contract()
  source_origin=Vector2i(contract.source_cell_bounds[0],contract.source_cell_bounds[1])
