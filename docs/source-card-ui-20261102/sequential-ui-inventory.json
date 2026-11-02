@@ -94,8 +94,8 @@
           "inner_path": "UI/FloatingUi/Inventory_All.csb"
         }
       ],
-      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
-      "state": "queued",
+      "source_relationship": "9/9 requested inventory CSBs received; Common_Slot and Inventory_Slot_Set geometry verified",
+      "state": "source_slot_metrics_and_tooltip_implemented; isolated_render_20_checks_pass; original_skin_pending",
       "verify": [
         "original resource/atlas/node relationship",
         "correct source/physical instance identity",
@@ -104,7 +104,7 @@
         "owned counts/equipment/save unchanged",
         "30FPS cache/reload behavior"
       ],
-      "note": ""
+      "note": "76px background/pitch, 64px icon; pooled slots preserve physical reference tooltips and selection; original Atlas_Common skin pending"
     },
     {
       "phase": 2,
@@ -131,8 +131,8 @@
           "inner_path": "UI/ToolTip/ToolTip_CommonType_Compare.csb"
         }
       ],
-      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
-      "state": "queued",
+      "source_relationship": "Original tooltip CSBs received; ToolTip_Popup_Info.csb absent from registry; no substitute invented",
+      "state": "source_tooltip_chain_inspected; isolated_render_20_checks_pass; original_layout_and_skin_pending",
       "verify": [
         "original resource/atlas/node relationship",
         "correct source/physical instance identity",
@@ -141,7 +141,7 @@
         "owned counts/equipment/save unchanged",
         "30FPS cache/reload behavior"
       ],
-      "note": "Active renewal_inventory override already preserves an instance-pinned record; do not modify only the legacy base implementation"
+      "note": "Current detail keeps selected physical reference; native source options retain original PvP/damage/curse text; existing placeholder item icons remain visibly marked"
     },
     {
       "phase": 2,

@@ -32,7 +32,9 @@ var reusable_empty_slots: Array[Panel] = []
 var visible_first_row: int = -1
 var slot_nodes_created: int = 0
 var slot_visual_updates: int = 0
-const SLOT_PITCH: float = 80.0
+# base508 Common_Slot: Sp_SlotBg 76×76, Sp_IconSample 64×64.
+# Inventory_Slot_Set: adjacent normal slot centers are 76 pixels apart.
+const SLOT_PITCH: float = 76.0
 const WINDOW_OVERSCAN_ROWS: int = 2
 var gesture_index: int = -1
 var gesture_mouse: bool = false
@@ -77,8 +79,8 @@ func _ready() -> void:
 	capacity_label.add_theme_font_size_override("font_size",11)
 	grid_scroll.name = "InventoryGridScroll"
 	grid_scroll.add_theme_stylebox_override("panel",UI.box(Color("15120f"),Color("4b3d2e"),5))
-	item_grid.add_theme_constant_override("h_separation",8)
-	item_grid.add_theme_constant_override("v_separation",8)
+	item_grid.add_theme_constant_override("h_separation",0)
+	item_grid.add_theme_constant_override("v_separation",0)
 	item_grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	search_row = HBoxContainer.new()
 	layout.add_child(search_row)
@@ -369,7 +371,7 @@ func _refresh_inventory_grid() -> void:
 
 func _new_reusable_slot() -> Button:
 	var button := Button.new()
-	button.custom_minimum_size = Vector2(72,72)
+	button.custom_minimum_size = Vector2(76,76)
 	button.text = ""
 	button.tooltip_text = ""
 	button.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -378,8 +380,8 @@ func _new_reusable_slot() -> Button:
 	icon.name = "Icon"
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.position = Vector2(7,7)
-	icon.size = Vector2(58,58)
+	icon.position = Vector2(6,6)
+	icon.size = Vector2(64,64)
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	button.add_child(icon)
 	var badge := UI.label("",12,UI.GOLD)
@@ -423,6 +425,8 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 	slot_visual_updates += 1
 	button.set_meta("reference",reference)
 	button.set_meta("signature",signature)
+	button.tooltip_text = _enhanced_display_name(record,reference) + (" · 장착 중" if equipped else "") + _status_tooltip(record,reference)
+	button.set_meta("tooltip_reference",reference)
 	button.add_theme_stylebox_override("normal",_slot_style_for_grade(grade,reference==selected_item))
 	for state: String in ["hover","pressed"]:
 		var style: StyleBoxFlat=_slot_style_for_grade(grade,reference==selected_item)
@@ -437,8 +441,8 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 	if equipped and item_name in ["화살", "총알"]:
 		# Worn ammo keeps showing how many are left (gold = worn).
 		count.text = "E " + UI.number_text(amount)
-	count.position=Vector2(24 if locked else 4,49)
-	count.size=Vector2(44 if locked else 64,20)
+	count.position=Vector2(27 if locked else 7,50)
+	count.size=Vector2(42 if locked else 62,20)
 	count.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
 	count.tooltip_text="보유 "+UI.number_text(amount)+"개"
 	count.add_theme_color_override("font_outline_color",Color.BLACK)
@@ -479,7 +483,7 @@ func _refresh_visible_window() -> void:
 		else:
 			if used_empty >= reusable_empty_slots.size():
 				var empty := Panel.new()
-				empty.custom_minimum_size = Vector2(72,72)
+				empty.custom_minimum_size = Vector2(76,76)
 				empty.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				var style: StyleBoxFlat=UI.slot_frame()
 				style.bg_color.a=0
@@ -605,7 +609,7 @@ func _refresh_detail(item_reference: String) -> void:
 	var lines := PackedStringArray()
 	for raw: Variant in item.get("sourceOptions",[]):
 		var option: String = str(raw)
-		if option.contains("PVP") or option.contains("PvP") or option.contains("손상") or option.contains("저주"): continue
+		if item.get("source", "") != "lineagem_base508" and (option.contains("PVP") or option.contains("PvP") or option.contains("손상") or option.contains("저주")): continue
 		lines.append(UI.safe(option))
 	if lines.is_empty():
 		for spec: Array in [["atk","공격력"],["def","방어력"],["hit","명중"],["hpFlat","최대 HP"],["mpFlat","최대 MP"],["heal","HP 회복"]]:

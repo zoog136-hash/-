@@ -121,3 +121,21 @@ the view's saved scroll (zero for a fresh view) after container reflow. The fina
 doll screenshot shows the first owned row fully visible. Existing baseline exit
 warnings remain (2 CanvasItem RIDs / 1 resource); full Android / Godot4.7.2
 validation remains with the parent integration worker.
+
+Next independent unit: inventory and tooltip inspection. All 9 explicitly
+requested inventory CSBs are received. `Common_Slot.csb` declares a 76×76
+background, 64×64 icon and amount bounds [7,50,62,20] in background coordinates;
+`Inventory_Slot_Set.csb` places adjacent normal slots 76px apart. The renewal
+inventory uses those dimensions while retaining its existing four/eight-column
+virtual window and a larger 76px touch area. Native source detail options retain
+original PvP/damage/curse labels; legacy filtering is unchanged.
+
+Pooled inventory buttons now bind their tooltips to the exact physical reference
+and enhancement, preventing stale or empty tooltips after reuse. The virtual
+window regression covers 101 references and tooltip rebinding between same-name
++2 and +3 physical items. Actual starting inventory render checks pass 20/20 at
+1280×720 and 854×480, including detail selection, reopen, no redundant rebuild,
+and unchanged inventory/equipment/currency. No items were granted or consumed.
+Original inventory skin/full tooltip layout is still pending Atlas_Common and
+its declared image page. Existing missing item icon substitutes remain explicitly
+marked; they are not newly generated or represented as original art.

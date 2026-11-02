@@ -52,6 +52,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--inspection', type=Path, action='append', required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--scope', choices=('cards', 'inventory-slot'), default='cards')
     args = parser.parse_args()
     sources, evidence = {}, []
     for path in args.inspection:
@@ -62,16 +63,17 @@ def main():
             sources[key] = value
         evidence.append({'name': path.parent.name + '/' + path.name,
                          'sha256': hashlib.sha256(raw).hexdigest()})
-    missing = sorted(set(FILES) - sources.keys())
+    files = FILES if args.scope == 'cards' else ['UI/CommonUi/Common_Slot.csb', 'UI/FloatingUi/Inventory_Slot_Set.csb']
+    missing = sorted(set(files) - sources.keys())
     if missing:
         raise ValueError('Missing explicit CSB inspection: ' + ', '.join(missing))
     output = {'schema': 1, 'source': 'lineagem_base508', 'design_size': [1200, 675],
               'coordinate_system': 'Cocos y-up; bounds include ancestor anchors/scales',
               'evidence': evidence,
-              'screens': {key: normalize(sources[key]) for key in FILES}}
+              'screens': {key: normalize(sources[key]) for key in files}}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(output, ensure_ascii=False, indent=2) + '\n')
-    print('Normalized', len(FILES), 'original CSBs;',
+    print('Normalized', len(files), 'original CSBs;',
           sum(len(v) for v in output['screens'].values()), 'nodes')
 
 
