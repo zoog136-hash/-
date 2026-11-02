@@ -130,3 +130,43 @@ establish required missing draws or original-client visual equivalence.
 
 Diagnostic-only refresh, without recompiling actor pixels:
 `python tools/lineagem_original/source_sparse_scope.py --inputs INPUTS --pack PACK`
+
+## 24709 action3 presentation observation (2026-11-02)
+
+The authorized evidence `libfile_4dcf16bd35e08191987d3975843a6c14` v0, ZIP SHA256
+`d50c430805c13f7ec81efc6c22c3ee0743302300abc0690f2033045c3c2840a1`, was
+materialized and SHA/CRC checked. Its list24 SPR matches the local source SHA
+`93c51a333f2fa9bae6a52693a27d0e0e9406a093d7ee61f32a423e12b78a28ce` and all36
+original decoded PNG hashes match the installed private-pack inputs. The supplied
+analysis script was read before execution. Recomputing its supplied409x12 matrix
+reproduced0.336575 normal versus0.557477 boundary chroma correlation and33.30%
+feature-residual reduction. This consumer did not re-fetch the original SOOP MP4.
+The evidence preparer independently rebuilt the matrix from its original MP4.
+
+Compatible mode alone now presents source11 for an observed1/60s boundary and
+0..10 for their unchanged4/24s each: presentation period1.85s. The original
+SPR token11:4, source24Hz and every source frame.duration=4/24 remain intact,
+with original total2s. Overrides live in a separate presentation_duration field.
+The allowlist checks sprite/body24709, idle/action3, source-action SHA,24Hz,
+full11,0..10 sequence/ticks and physical chunk8/stored direction0 across all
+facing arrays. No other actor/action or global FPS is changed; strict ignores
+all presentation overrides. `--lineagem-24709-source-presentation` retains the
+unmodified source-duration presentation in compatible mode for comparison.
+
+The actual common Godot4.7.2 OpenGL/llvmpipe actor rendered205 frames using30FPS
+elapsed-time samples at the evidence's two fixed fitted phases. Its body and
+SC selected native pose IDs agreed in all205 renders. Evaluating that GPU-output
+pose sequence against the M chroma matrix gave0.332929 versus0.556317,33.49%
+feature-residual reduction. This is a pose/timing test, not full GPU RGB MAE,
+Android30FPS performance or exact blend proof. Existing ADD/MIX rendering still
+visibly differs in color from M and was not changed by this clock correction.
+
+At30FPS the short boundary is naturally skipped on some loops: in this evidence
+phase grid it appears only at6.133333s, while4.283333/7.983333s fall between
+sample times. It is never forced to1/30s, so the loop does not become1.8667s.
+A1ns floating-point boundary tolerance prevents numerical last-pose carryover;
+it is not a minimum display hold. Tests passed original2s preservation,18.5s
+of30FPS sampling without drift/forced holds, idle/walk transitions, repeated
+cancel-without-attack, strict/other-actor isolation and source-action hash guards.
+Run `tools/lineagem_original/check_24709_presentation.gd` with
+`--native-manifest=/authorized/private/pack/manifest.json` for that focused check.

@@ -230,14 +230,17 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 	var total: float = 1.0
 	if not static_track:
 		total = 0.0
-		for item: Dictionary in frames: total += float(item.duration)
+		for item: Dictionary in frames: total += preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
 	var time: float = fmod(_clock, total) if bool(track.loop) else minf(_clock, total)
+	# Floating boundary tolerance only; never hold a short pose for a render frame.
+	var boundary_epsilon: float = 0.000000001 if track.has("presentation_observation") else 0.0
+	if bool(track.loop) and total - time <= boundary_epsilon: time = 0.0
 	var selected: Dictionary = frames[0] if static_track else frames[-1]
 	for item: Dictionary in ([] if static_track else frames):
-		if time < float(item.duration):
+		if time + boundary_epsilon < preload("res://scripts/animation/source_presentation_policy.gd").duration(item):
 			selected = item
 			break
-		time -= float(item.duration)
+		time -= preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
 	if _role == "attack" and (static_track or _clock >= total):
 		_source_attack = false
 		_attack_completed = true
@@ -285,10 +288,12 @@ func attachment_status() -> Dictionary:
 		if bool(node.get_meta("compatibility_style", {}).get("enabled", false)): active += 1
 	var pending: int = 0
 	var origins: Dictionary = {}
+	var presentation_observations: Array = []
 	for track: Dictionary in _playback_tracks.values():
 		if bool(track.static_pending_timing): pending += 1
 		origins[str(track.timing_origin)] = int(origins.get(str(track.timing_origin), 0)) + 1
-	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true}
+		if track.has("presentation_observation"): presentation_observations.append(track.presentation_observation.duplicate(true))
+	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations}
 
 func _init() -> void:
 	native_annotations.connect(_on_source_annotation)
@@ -312,7 +317,7 @@ func _dispatch_annotations(frames: Array, track: Dictionary, total: float, direc
 			if boundary > _annotation_clock and boundary <= end:
 				for annotation: Dictionary in frame.get("source_annotations", []):
 					native_annotations.emit({"role":_role,"token_index":token_index,"source_group":frame.source_group,"source_frame":frame.source_frame,"source_time":boundary,"direction":direction,"annotation":annotation,"playback_mode":_playback_mode})
-			boundary += float(frame.duration)
+			boundary += preload("res://scripts/animation/source_presentation_policy.gd").duration(frame)
 	_annotation_clock = end
 
 func _on_source_annotation(event: Dictionary) -> void:
