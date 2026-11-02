@@ -21,7 +21,7 @@ class CoreStageTest(unittest.TestCase):
             'scripts/main.gd':'const DATA = "res://data/live.json"\n',
             'data/live.json':'{"frames":"res://assets/live.tres"}',
             'data/unused-review.json':'{"review":"res://assets/review.png"}',
-            'assets/live.tres':'[ext_resource type="Texture2D" path="res://assets/pose.png"]\n',
+            'assets/live.tres':'[gd_resource type="SpriteFrames" format=3]\n[ext_resource type="Texture2D" path="res://assets/pose.png"]\n[resource]\nmetadata/review="res://data/unused-review.json"\n',
             'assets/live.png':'opaque test byte fixture, never game art',
             'assets/pose.png':'second immutable test byte fixture',
             'assets/review.png':'unused review fixture',

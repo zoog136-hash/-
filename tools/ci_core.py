@@ -75,14 +75,21 @@ def stage(root: Path, destination: Path) -> dict:
         if path in scanned or PurePosixPath(path).suffix not in TEXT:
             continue
         scanned.add(path)
-        for match in REFERENCE.finditer(read(path).decode('utf-8', errors='strict')):
+        text = read(path).decode('utf-8', errors='strict')
+        sprite_frames = PurePosixPath(path).suffix == '.tres' and re.search(r'^\[gd_resource\b[^\n]*type="SpriteFrames"',text)
+        for match in REFERENCE.finditer(text):
+            # SpriteFrames' external resource declarations are engine inputs.
+            # Metadata also records old review/provenance paths; those strings
+            # do not load a resource and must not pull in its entire history.
+            if sprite_frames and not text[text.rfind('\n',0,match.start())+1:match.start()].lstrip().startswith('[ext_resource '):
+                continue
             child = match.group(1).removeprefix('res://')
             if '..' in PurePosixPath(child).parts:
                 raise ValueError('unsafe resource reference: ' + child)
             if not PurePosixPath(child).suffix or '%' in child:
                 continue  # dynamic directory/template; exercised by Main
             if not exists(child):
-                required = PurePosixPath(path).suffix in {'.tscn', '.tres'} or re.search(r'preload\s*\(\s*$', read(path).decode()[:match.start()])
+                required = PurePosixPath(path).suffix in {'.tscn', '.tres'} or re.search(r'preload\s*\(\s*$', text[:match.start()])
                 if required:
                     raise FileNotFoundError('required resource '+child+' referenced by '+path)
                 unresolved.add(child)  # optional guarded paths are not art proof
@@ -91,6 +98,7 @@ def stage(root: Path, destination: Path) -> dict:
             queue.append(child)
             if exists(child + '.import'):
                 selected.add(child + '.import')
+    print('CORE_RESOURCE_GRAPH',len(selected),'files; metadata',len(scanned), flush=True)
     ensure_objects(root, sorted({tree[p] for p in selected if p in tree and not (root/p).is_file()}))
     destination.mkdir(parents=True, exist_ok=True)
     receipts = []
