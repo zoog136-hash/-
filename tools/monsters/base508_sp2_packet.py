@@ -11,9 +11,40 @@ import brotli
 import original_sp2
 import base508_sp2_geometry
 
+def source_body(raw,max_decoded_bytes=256*1024**2):
+    """Cap FE input and accumulated Brotli output before normalization.
+
+    Bounded output requires the compiler's Brotli streaming API. An older
+    toolchain fails with a dependency message instead of an unbounded decode.
+    No pixel, palette, direction, delta reference or coordinate is rewritten.
+    """
+    if not raw:raise ValueError('Empty source SP2')
+    if max_decoded_bytes<1:raise ValueError('Invalid source SP2 decoded bound')
+    if raw[0]==254:
+        if len(raw)>max_decoded_bytes:raise ValueError('Source SP2 exceeds decoded bound')
+        return raw
+    decoder=brotli.Decompressor()
+    if not hasattr(decoder,'can_accept_more_data'):
+        raise ValueError('Compiler requires Brotli bounded streaming output API')
+    decoded=io.BytesIO();position=0
+    try:
+        while position<len(raw) or not decoder.is_finished():
+            if decoder.can_accept_more_data():
+                if decoder.is_finished():raise ValueError('Trailing bytes after source Brotli stream')
+                chunk=raw[position:position+64*1024];position+=len(chunk)
+            else:chunk=b''
+            part=decoder.process(chunk,output_buffer_limit=min(1024**2,max_decoded_bytes-decoded.tell()+1))
+            if len(part)>max_decoded_bytes-decoded.tell():raise ValueError('Source SP2 exceeds decoded bound')
+            decoded.write(part)
+            if not chunk and not part and not decoder.is_finished():raise ValueError('Incomplete source Brotli stream')
+    except brotli.error as error:raise ValueError('Invalid or truncated source Brotli stream')from error
+    if not decoder.is_finished():raise ValueError('Incomplete source Brotli stream')
+    body=decoded.getvalue()
+    if not body or body[0]!=254:raise ValueError('Decoded source is not FE SP2')
+    return body
+
 def normalize(raw,geometry_only=False):
-    body=raw if raw and raw[0]==254 else brotli.decompress(raw)
-    if len(body)>256*1024**2:raise ValueError('Source SP2 exceeds decoded bound')
+    body=source_body(raw)
     parsed=base508_sp2_geometry.parse(body)if geometry_only else original_sp2.parse(body)
     normalized=b'LMSP1'+struct.pack('<H',len(parsed[0]))+body
     out=io.BytesIO()
