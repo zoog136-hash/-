@@ -71,7 +71,7 @@ func _run() -> void:
 	for connection: Dictionary in connection_data.connections:
 		check(not native_connections.has(connection.id), "unique reviewed native connection " + str(connection.id))
 		native_connections[connection.id] = connection
-	check(native_connections.size() == 6, "six recorded native boss connections")
+	check(native_connections.size() == 19, "nineteen recorded native boss connections")
 	# Pin the six pre-merge approved bodies and their complete immutable packs.
 	# They remain FRAME_INSUFFICIENT; unapproved name/palette aliases cannot
 	# replace their prior approval or count as new production completions.

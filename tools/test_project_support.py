@@ -352,8 +352,13 @@ def classify_result(name: str, returncode: int, output: str, *,
             return False, False
         return True, False
     # Import/boot/cache preparation must actually run; SKIP cannot authorize them.
+    # Exact scalar receipt suites likewise fail closed: a SKIP marker must not
+    # turn a counted, positive receipt into a skipped pass.
     if SKIP.search(output):
-        return (False, False) if name in ('import', 'boot', 'bake_navigation') else (True, True)
+        if (name in ('import', 'boot', 'bake_navigation')
+                or scalar_contract is not None or name in SCALAR_ONLY_CONTRACTS):
+            return False, False
+        return True, True
     if scalar_contract is not None:
         # A restart child emits only three checks; require the full live-game
         # receipt as well, rather than counting that child as a complete test.

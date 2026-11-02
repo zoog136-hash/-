@@ -1,23 +1,8 @@
 name: Godot Import Cache Contract
-on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'tools/ci_godot_png_cache.py'
-      - 'tools/test_ci_godot_png_cache.py'
-      - 'tools/test_interactions.py'
-      - 'tools/test_project.py'
-      - '.github/actions/restore-godot-png-cache/**'
-      - '.github/workflows/godot-import-cache-contract.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'tools/ci_godot_png_cache.py'
-      - 'tools/test_ci_godot_png_cache.py'
-      - 'tools/test_interactions.py'
-      - 'tools/test_project.py'
-      - '.github/actions/restore-godot-png-cache/**'
+# Historical/source-specific audits remain available after integration.
+'on':
   workflow_dispatch:
+
 permissions:
   contents: read
 concurrency:
