@@ -1,0 +1,908 @@
+{
+  "base_main": "0cab9b3d39e9330feb1c404d8c36b80d3e417b2d",
+  "current_head": "64f2a68a5c827d1186fe72c5d497136f9d42980e",
+  "policy": "Complete one existing screen group at a time, preserve save/data policies, no Windows/APK CI restoration, public pixel upload or main merge",
+  "screen_groups": [
+    {
+      "phase": 1,
+      "id": "cards",
+      "label": "변신·인형·성물",
+      "entry": "HUD.open_catalog(category)",
+      "files": [
+        "scripts/ui/renewal_hud.gd",
+        "scripts/ui/companion_detail_view.gd",
+        "scripts/ui/relic_reference_view.gd",
+        "scripts/ui/source_card_presentation.gd"
+      ],
+      "variants": [
+        "변신",
+        "마법인형",
+        "성물"
+      ],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/ChangeDollScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "implementation_and_isolated_render_done; original_skin_pending",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 1,
+      "id": "card_collections",
+      "label": "카드 컬렉션",
+      "entry": "HUD.open_normal_card_collections(category, source_key)",
+      "files": [
+        "scripts/cards/collection_view.gd",
+        "scripts/cards/collection_runtime.gd",
+        "scripts/cards/native_collection_rules.gd"
+      ],
+      "variants": [
+        "변신",
+        "마법인형",
+        "성물"
+      ],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/ChangeBookScene.csb"
+        },
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/Change/Change_CollectionView.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "implementation_and_isolated_render_done; original_skin_pending",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": "1736 source sets; 909 supported definitions after verified capability expansion; no registration/consumption"
+    },
+    {
+      "phase": 2,
+      "id": "inventory",
+      "label": "인벤토리",
+      "entry": "HUD.toggle_inventory()",
+      "files": [
+        "scripts/ui/renewal_inventory.gd",
+        "scripts/ui/lineage_inventory_ui.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/FloatingUiScene.csb"
+        },
+        {
+          "container": "Client/Data/UI5.dat",
+          "inner_path": "UI/FloatingUi/Inventory_All.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 2,
+      "id": "item_detail",
+      "label": "아이템 상세·비교",
+      "entry": "Inventory._select_item(name@@@physicalID) -> _refresh_detail",
+      "files": [
+        "scripts/ui/renewal_inventory.gd",
+        "scripts/ui/item_visual.gd",
+        "scripts/ui/item_visual_resolver.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/ToolTipScene.csb"
+        },
+        {
+          "container": "Client/Data/UI31.dat",
+          "inner_path": "UI/ToolTip/ToolTip_CommonType.csb"
+        },
+        {
+          "container": "Client/Data/UI31.dat",
+          "inner_path": "UI/ToolTip/ToolTip_CommonType_Compare.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": "Active renewal_inventory override already preserves an instance-pinned record; do not modify only the legacy base implementation"
+    },
+    {
+      "phase": 2,
+      "id": "item_catalog",
+      "label": "아이템 도감",
+      "entry": "HUD.open_catalog(아이템)",
+      "files": [
+        "scripts/ui/renewal_hud.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/ItemBookScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": "Equipment collection registration and item encyclopedia are different routes"
+    },
+    {
+      "phase": 3,
+      "id": "skills",
+      "label": "스킬 목록·상세",
+      "entry": "HUD.open_skills()",
+      "files": [
+        "scripts/ui/renewal_skills.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI5.dat",
+          "inner_path": "UI/FloatingUi/Skill_All.csb"
+        },
+        {
+          "container": "Client/Data/UI31.dat",
+          "inner_path": "UI/ToolTip/ToolTip_HudType_Skill.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 3,
+      "id": "quickbind",
+      "label": "퀵슬롯 등록",
+      "entry": "HUD._open_quickslot_picker(entry_kind, entry_id, display_name)",
+      "files": [
+        "scripts/ui/renewal_hud.gd",
+        "scripts/ui/pointer_transfer.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/QuickSlotEditScene.csb"
+        },
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/QuickSlotScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 4,
+      "id": "character",
+      "label": "캐릭터·장비",
+      "entry": "HUD.open_character()",
+      "files": [
+        "scripts/ui/lineage_side_ui.gd",
+        "scripts/ui/renewal_character.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI5.dat",
+          "inner_path": "UI/FloatingUi/CharacterInfo_All.csb"
+        },
+        {
+          "container": "Client/Data/UI5.dat",
+          "inner_path": "UI/FloatingUi/CharacterInfo_EquipInfo.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 4,
+      "id": "status",
+      "label": "상세 스테이터스",
+      "entry": "HUD.open_detailed_status()",
+      "files": [
+        "scripts/ui/renewal_status.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI5.dat",
+          "inner_path": "UI/FloatingUi/CharacterInfo_StatInfo.csb"
+        },
+        {
+          "container": "Client/Data/UI5.dat",
+          "inner_path": "UI/FloatingUi/CharacterInfo_StatInfo_Detail.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 4,
+      "id": "class_select",
+      "label": "시작 직업 선택",
+      "entry": "HUD.open_class_selection(initial)",
+      "files": [
+        "scripts/ui/renewal_class_select.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/CharacterSelectScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": "First seen at startup; TWILIGHT local starter choice is not assumed equivalent to original account character selection"
+    },
+    {
+      "phase": 5,
+      "id": "enhance",
+      "label": "강화 대상·축복",
+      "entry": "HUD._open_enhance_chooser / open_enhancement / open_blessing_targets",
+      "files": [
+        "scripts/ui/renewal_forge.gd"
+      ],
+      "variants": [
+        "장비 강화",
+        "축복"
+      ],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/EnchantScene.csb"
+        },
+        {
+          "container": "Client/Data/UI5.dat",
+          "inner_path": "UI/FloatingUi/Enchant_Inventory.csb"
+        },
+        {
+          "container": "Client/Data/UI5.dat",
+          "inner_path": "UI/FloatingUi/Enchant_ToolTip_Bless.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": "Physical ID, enhancement and engraving policy unchanged"
+    },
+    {
+      "phase": 5,
+      "id": "enhance_result",
+      "label": "강화 결과",
+      "entry": "HUD.show_enhancement_result(result_type, item_name, from_level, to_level)",
+      "files": [
+        "scripts/ui/enhancement_reveal.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/EnchantScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 6,
+      "id": "shop",
+      "label": "상점",
+      "entry": "HUD.open_shop()",
+      "files": [
+        "scripts/ui/renewal_shop.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/ShopScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 6,
+      "id": "npc_shop",
+      "label": "NPC 상점",
+      "entry": "HUD.open_npc_shop()",
+      "files": [
+        "scripts/ui/renewal_shop.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/StoreScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 6,
+      "id": "sell",
+      "label": "판매",
+      "entry": "HUD.open_item_sell()",
+      "files": [
+        "scripts/ui/renewal_sell.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/StoreScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 6,
+      "id": "warehouse",
+      "label": "창고",
+      "entry": "HUD.open_warehouse()",
+      "files": [
+        "scripts/ui/renewal_warehouse.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/StorageScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 7,
+      "id": "draw",
+      "label": "뽑기 결과",
+      "entry": "HUD.present_card_reveal()",
+      "files": [
+        "scripts/ui/card_reveal_stage.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/MysteryCardScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 7,
+      "id": "fusion",
+      "label": "카드 합성",
+      "entry": "HUD.open_card_fusion(category)",
+      "files": [
+        "scripts/ui/card_fusion_view.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI51.dat",
+          "inner_path": "UI/Change/Change_List_CardMix.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 7,
+      "id": "awakening",
+      "label": "각성 대상·결과",
+      "entry": "HUD.set_option_awakening_view(snapshot) / present_option_awakening_result(record, result)",
+      "files": [
+        "scripts/ui/option_awakening_view.gd",
+        "scripts/ui/option_awakening_reveal.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI47.dat",
+          "inner_path": "UI/Change/Change_Upgrade_Skill_Awaken.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": "TWILIGHT option awakening is not native collection IsAwaken without a verified ledger mapping"
+    },
+    {
+      "phase": 8,
+      "id": "hud",
+      "label": "전투 HUD",
+      "entry": "HUD._ready",
+      "files": [
+        "scripts/ui/renewal_hud.gd",
+        "scripts/hud_v20.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/HUDScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "menu",
+      "label": "전체 메뉴",
+      "entry": "HUD.toggle_menu()",
+      "files": [
+        "scripts/ui/renewal_hud.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/MainFloatingScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "settings",
+      "label": "설정",
+      "entry": "HUD.open_settings_info()",
+      "files": [
+        "scripts/ui/renewal_settings.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/OptionScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "auto",
+      "label": "자동 사냥",
+      "entry": "HUD.open_macro_info()",
+      "files": [
+        "scripts/ui/renewal_hud.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "log",
+      "label": "전투 기록",
+      "entry": "HUD.open_combat_log()",
+      "files": [
+        "scripts/ui/renewal_hud.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "map",
+      "label": "월드맵",
+      "entry": "HUD.toggle_map()",
+      "files": [
+        "scripts/ui/renewal_map.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/MapScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "teleport",
+      "label": "이동 안내",
+      "entry": "HUD.open_npc_teleport()",
+      "files": [
+        "scripts/ui/renewal_teleport.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "dialogue",
+      "label": "NPC 대화",
+      "entry": "HUD.open_npc_dialogue(npc_id)",
+      "files": [
+        "scripts/ui/renewal_dialogue.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/NpcDialogueScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "crafting",
+      "label": "제작",
+      "entry": "HUD.open_crafting()",
+      "files": [
+        "scripts/ui/renewal_crafting.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/ProductionScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "equipment_collections",
+      "label": "장비 등록 컬렉션",
+      "entry": "HUD.open_equipment_collections()",
+      "files": [
+        "scripts/collections/equipment_collection_view.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/ItemBookScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "growth",
+      "label": "문양·수호성",
+      "entry": "HUD.open_growth(section)",
+      "files": [
+        "scripts/growth/growth_view.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/SymbolScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    },
+    {
+      "phase": 8,
+      "id": "confirmation",
+      "label": "공통 확인 창",
+      "entry": "HUD.confirm_action()",
+      "files": [
+        "scripts/ui/renewal_confirmation.gd",
+        "scripts/ui/renewal_dialog.gd"
+      ],
+      "variants": [],
+      "source_layout_candidates": [
+        {
+          "container": "Client/Data/UI1.dat",
+          "inner_path": "UI/ModalScene.csb"
+        }
+      ],
+      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
+      "state": "queued",
+      "verify": [
+        "original resource/atlas/node relationship",
+        "correct source/physical instance identity",
+        "touch/scroll/cancel",
+        "close/back/reopen",
+        "owned counts/equipment/save unchanged",
+        "30FPS cache/reload behavior"
+      ],
+      "note": ""
+    }
+  ],
+  "unresolved_code_paths": [],
+  "separate_development_only": [
+    "playtest item/card grants",
+    "grade reveal showcase",
+    "source-preview diagnostics",
+    "tests/capture_*.gd harnesses"
+  ],
+  "original_client_scenes_not_current_game": [
+    "UI/TestScene.csb",
+    "UI/ServerScene.csb",
+    "UI/UpdateScene.csb",
+    "UI/SecurityScene.csb",
+    "UI/PVPBookScene.csb"
+  ],
+  "common_validation": "private map pack absent here; UI-isolated HUD processing only, parent worker handles full-game integration"
+}
