@@ -22,12 +22,13 @@ def build(args):
     bonuses = {r['ID']: r for r in table('Bonus')}
     types = {r['ID']: r for r in table('BonusType')}
     units = {r['ID']: r for r in table('Unit')}
+    ui_units = {r['UnitID']: r for r in table('UIUnit')}
     links = collections.defaultdict(list)
     for row in table('BuffCardOptionAwakenLevelBonus'):
         bonus = bonuses[row['BonusID']]
         typ = types[bonus['BonusTypeID']]
         links[row['BuffCardOptionAwakenGroupID']].append({
-            'link': row, 'bonus': bonus, 'type': typ, 'unit': units[typ['UnitID']]})
+            'link': row, 'bonus': bonus, 'type': typ, 'unit': units[typ['UnitID']], 'ui_unit': ui_units.get(typ['UnitID'], {})})
     groups = []
     status_ids, invoke_ids = set(), set()
     for group in table('BuffCardOptionAwakenGroup'):
@@ -42,10 +43,26 @@ def build(args):
                 invoke_ids.add(effect['bonus']['BonusApplicationTargetID'])
         groups.append({'identity': f"source:m508:{card['BuffCardDeckID']}:{card['ID']}",
                        'card': card, 'group': group, 'effects': effects})
+    invoke_options = [r for r in table('InvokeOption') if r['ID'] in invoke_ids]
+    spell_ids = {r['Param1'] for r in invoke_options if r['InvokeOptionTypeID'] in (1, 2)}
+    def effect(link):
+        bonus = bonuses[link['BonusID']]
+        typ = types[bonus['BonusTypeID']]
+        return {'link': link, 'bonus': bonus, 'type': typ, 'unit': units[typ['UnitID']], 'ui_unit': ui_units.get(typ['UnitID'], {})}
+    spell_links = collections.defaultdict(list)
+    for row in table('SpellBonus'):
+        if row['SpellClassID'] in spell_ids:
+            spell_links[row['SpellClassID']].append(effect(row))
+    buff_ids = {e['bonus']['Value'] for effects in spell_links.values() for e in effects if e['type']['Name'] == 'BuffClassID'}
+    buff_links = collections.defaultdict(list)
+    for row in table('BuffBonus'):
+        if row['BuffClassID'] in buff_ids:
+            buff_links[str(row['BuffClassID'])].append(effect(row))
+    spells = {str(r['ID']): {'source_spell': r, 'effects': spell_links[r['ID']]} for r in table('SpellClass') if r['ID'] in spell_ids}
     output = {'schema': 1, 'source_snapshot': 'base508', 'economy': dict(economy),
               'option_groups': groups,
               'status_effect_attrs': [r for r in table('StatusEffectAttr') if r['StatusEffectID'] in status_ids],
-              'invoke_options': [r for r in table('InvokeOption') if r['ID'] in invoke_ids],
+              'invoke_options': invoke_options, 'invoke_spells': spells, 'invoke_buffs': dict(buff_links),
               'invoke_types': table('InvokeOptionType'), 'table_sha256': hashes}
     args.output.write_text(json.dumps(output, ensure_ascii=False, separators=(',', ':')) + '\n')
     print(json.dumps({'option_groups': len(groups), 'secondary_slot11': sum(r['group']['SlotIndex'] == 11 for r in groups),
