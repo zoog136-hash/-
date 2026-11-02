@@ -5,6 +5,8 @@ const DATA=preload("res://data/cards/base508_skill_awakening.json")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const Conditions=preload("res://scripts/cards/source_collection_conditions.gd")
 const MAX_EXPERIENCE: int=9999999999999
+const MAX_REVISION: int=9007199254740000
+const REROLL_POLICY: String="source_weighted_reroll_preserve_growth"
 var conditions=Conditions.new()
 var source_server_context: Dictionary={}
 var cards: Dictionary={}
@@ -30,7 +32,7 @@ func _init() -> void:
 		pools[key]=book
 
 static func _invoke_key(deck: int, grade: int, level: int) -> String:return str(deck)+":"+str(grade)+":"+str(level)
-static func fresh_state() -> Dictionary:return {"version":1,"source_snapshot":"base508","cards":{}}
+static func fresh_state() -> Dictionary:return {"version":1,"source_snapshot":"base508","cards":{},"revision":0,"rng_state":"","last_operation_id":""}
 static func integer(value: Variant) -> bool:return (value is int or value is float) and is_finite(float(value)) and float(value)==floorf(float(value))
 static func fail(code: String,message: String) -> Dictionary:return {"ok":false,"code":code,"error":message}
 
@@ -70,6 +72,10 @@ func spell_allowed(identity: String,spell_id: int) -> bool:
 
 func validate_state(value: Variant) -> String:
 	if not value is Dictionary or not integer(value.get("version")) or int(value.get("version",0))!=1 or value.get("source_snapshot","")!="base508" or not value.get("cards") is Dictionary:return "스킬 각성 저장 형식 오류"
+	if not integer(value.get("revision",0)) or int(value.get("revision",0))<0 or int(value.get("revision",0))>=MAX_REVISION:return "스킬 각성 저장 revision 오류"
+	var rng_text: Variant=value.get("rng_state","")
+	if not rng_text is String or (not rng_text.is_empty() and (not rng_text.is_valid_int() or str(int(rng_text))!=rng_text)):return "스킬 각성 난수 저장 오류"
+	if not value.get("last_operation_id","") is String:return "스킬 각성 거래 ID 오류"
 	for key: Variant in value.cards:
 		if not key is String or not key.begins_with("source:m508:"):return "스킬 각성 sourceID 오류"
 		var parts: PackedStringArray=key.split(":")
@@ -100,10 +106,10 @@ func view(state: Dictionary,owned: Dictionary,identity: String,preview_level: in
 	if card.is_empty():return fail("identity","원본 카드 ID 연결 없음")
 	var entry: Dictionary=state.cards.get(identity,{"spell_id":0,"level":0,"experience":"0"})
 	var available: Dictionary=eligibility(identity)
-	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"can_awaken":false,"can_feed":false,"blocked_reason":"각성서 소모 수량·수수료·실패/회수 규칙의 원본 정의 확인 중","unknown_rules":DATA.data.unknown_rules}
+	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"can_awaken":false,"can_feed":false,"blocked_reason":"각성서 소모 수량·수수료 원본 확인 중 · 재각성은 성장 유지","unknown_rules":DATA.data.unknown_rules}
 
 func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
-	return fail("source_cost_rules_unresolved","소모 수량·수수료·실패/경험치 회수 규칙 미확정 · 재화 차감 없음")
+	return fail("source_cost_rules_unresolved","각성서 소모 수량·수수료 미확정 · 재화 차감 없음")
 
 func fixed_damage_profile(spell_id: int) -> Dictionary:
 	var spell: Dictionary=DATA.data.spells.get(str(spell_id),{})
@@ -142,6 +148,39 @@ func select_candidate(identity: String,roll: int) -> Dictionary:
 func normalized_state(value: Dictionary) -> Dictionary:
 	var result: Dictionary=value.duplicate(true)
 	result.version=int(result.version)
+	result.revision=int(result.get("revision",0))
+	result.rng_state=str(result.get("rng_state",""))
+	result.last_operation_id=str(result.get("last_operation_id",""))
 	for identity: String in result.cards:
 		for field: String in ["spell_id","level"]:result.cards[identity][field]=int(result.cards[identity][field])
 	return result
+
+
+func prepare_reroll(state: Dictionary,owned: Dictionary,identity: String,roll: int,expected_revision: int,operation_id: String) -> Dictionary:
+	var error: String=validate_state(state)
+	if not error.is_empty():return fail("invalid_state",error)
+	if operation_id.is_empty():return fail("operation_id","재각성 거래 ID 누락")
+	if operation_id==str(state.get("last_operation_id","")):return fail("duplicate_operation","이미 처리된 재각성 거래")
+	if expected_revision!=int(state.get("revision",0)):return fail("stale_revision","각성 상태가 변경됐습니다")
+	var available: Dictionary=eligibility(identity)
+	if not available.ok:return available
+	var card: Dictionary=cards[identity]
+	if owned.get(card.category,{}).get(identity,false)!=true:return fail("not_owned","대상 카드 미보유")
+	var chosen: Dictionary=select_candidate(identity,roll)
+	if not chosen.ok:return chosen
+	var next: Dictionary=normalized_state(state)
+	var entry: Dictionary=next.cards.get(identity,{"spell_id":0,"level":1,"experience":"0"}).duplicate(true)
+	var previous: int=int(entry.spell_id)
+	# Actual source policy selected by the user: change the skill only. Preserve
+	# growth even if an old record temporarily has no assigned spell.
+	entry.spell_id=int(chosen.candidate.spell_id)
+	entry.level=maxi(1,int(entry.get("level",1)))
+	next.cards[identity]=entry
+	next.revision=int(next.revision)+1
+	next.last_operation_id=operation_id
+	next.reroll_policy=REROLL_POLICY
+	return {"ok":true,"state":next,"target_id":identity,"previous_spell_id":previous,"spell_id":int(entry.spell_id),"policy":REROLL_POLICY}
+
+
+func request_experience_feed(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
+	return fail("source_exp_rules_unresolved","경험치 재료별 획득량·소모·강화 처리 규칙 확인 필요 · 카드 차감 없음")

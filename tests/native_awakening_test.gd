@@ -24,7 +24,12 @@ class Host extends Node:
 	func save_path() -> String:return "user://native-awakening-transactions.json"
 	func _save_game(_quiet: bool,override: Dictionary={}) -> Error:
 		if save_error!=OK:return save_error
-		return preload("res://scripts/skills/save_writer.gd").write(save_path(),override)
+		var snapshot: Dictionary={}
+		if FileAccess.file_exists(save_path()):
+			var previous: Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
+			if previous is Dictionary:snapshot=previous
+		snapshot.merge(override,true)
+		return preload("res://scripts/skills/save_writer.gd").write(save_path(),snapshot)
 class Target extends Node:
 	var dead: bool=false
 	var hp: int=10000
@@ -141,6 +146,8 @@ func run() -> void:
 	check(not core.validate_state(invalid).is_empty(),"noncanonical decimal EXP blocked")
 	var invoke: Dictionary=core.invoke(material,state.cards[material],99)
 	check(invoke.ok and invoke.invoked and not core.invoke(material,state.cards[material],100).invoked,"source proc uses exact 100/10000 boundary")
+	var max_profile: Dictionary=core.profile(material,20)
+	check(max_profile.hp==970 and int(max_profile.invoke.CastSuccessProb)==700 and int(max_profile.invoke.CastDelayBonus)==100,"original level20 HP/chance/delay profile")
 	check(invoke.profile.hp==300 and invoke.damage.SpellDamageBase==69 and invoke.damage.SpellDamageDiceNumber==1 and invoke.damage.SpellDamageDiceSpotCount==1,"original level1 HP and fire bolt fixed damage")
 	host.equipped_catalog["변신"]=options.core.catalog["변신"][material]
 	check(skills.bonus_records().size()==1 and skills.bonus_records()[0].hpFlat==300,"source skill HP bonus equipped once")
@@ -164,5 +171,33 @@ func run() -> void:
 	check(preload("res://scripts/skills/save_writer.gd").write("user://skill-awakening-roundtrip.json",persisted)==OK,"existing atomic writer stores separate skill namespace")
 	var loaded: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("user://skill-awakening-roundtrip.json"))
 	check(skills.accept_load(loaded) and skills.export_state()==state,"skill save/restore EXP and spell are lossless")
+	var grown: Dictionary=state.duplicate(true)
+	grown.cards[material].level=20;grown.cards[material].experience="9999999999999"
+	check(skills.accept_load({SkillRuntime.SAVE_KEY:grown}),"grown source skill state accepted")
+	var prepared: Dictionary=core.prepare_reroll(skills.export_state(),host.card_draw_fusion.owned,material,66000,0,"policy-reroll-1")
+	check(prepared.ok and prepared.spell_id==64264 and prepared.state.cards[material].level==20 and prepared.state.cards[material].experience=="9999999999999","source weighted reroll changes only skill and preserves growth")
+	check(not prepared.has("success_chance") and not prepared.state.cards[material].has("pity"),"no invented awakening failure or pity mechanic")
+	for seed_value: int in range(1,10000):
+		probe.seed=seed_value
+		var roll: int=probe.randi_range(0,99999)
+		if roll>=66000 and roll<98000:skills.selection_rng.seed=seed_value;break
+	var before_commit: int=hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])
+	var disk_before: String=FileAccess.get_file_as_string(host.save_path())
+	host.save_error=ERR_FILE_CANT_WRITE
+	result=skills._commit_confirmed_reroll(material,0,"policy-reroll-1")
+	check(not result.ok and result.code=="save_failed" and FileAccess.get_file_as_string(host.save_path())==disk_before,"failed internal reroll persistence preserves disk")
+	check(hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])==before_commit,"failed reroll persistence rolls back growth/RNG and changes no resources")
+	host.save_error=OK;result=skills._commit_confirmed_reroll(material,0,"policy-reroll-1")
+	check(result.ok and skills.progress.cards[material].spell_id==64264 and skills.progress.cards[material].level==20 and skills.progress.cards[material].experience=="9999999999999","confirmed internal reroll commits source skill with preserved level/EXP")
+	var after_commit: int=hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])
+	result=skills._commit_confirmed_reroll(material,0,"policy-reroll-1")
+	check(not result.ok and result.code=="duplicate_operation" and hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])==after_commit,"repeated reroll operation cannot duplicate transaction or advance live RNG")
+	result=skills._commit_confirmed_reroll(material,0,"stale-reroll-2")
+	check(not result.ok and result.code=="stale_revision","stale revision cannot apply another reroll")
+	var saved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(host.save_path()))
+	check(saved.has("card_option_awakening") and saved.card_skill_awakening.cards[material].experience=="9999999999999","atomic writer retains option namespace with rerolled skill state")
+	check(skills.accept_load(saved) and str(skills.selection_rng.state)==str(saved.card_skill_awakening.rng_state),"saved reroll RNG/state restore together")
+	var guarded: int=hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])
+	check(not skills.request_operation(material).ok and hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])==guarded,"public paid operation remains gated despite internal policy implementation")
 	print("NATIVE_AWAKENING_RESULT ",JSON.stringify({"checks":checks,"errors":errors,"native_option_definitions":definitions,"default_eligible_options":eligible,"available_sets_with_native_option_binding":initial.rows.filter(func(row: Dictionary) -> bool:return bool(row.available)).size(),"skill_profiles":profiles}))
 	target.queue_free();host.queue_free();await process_frame;quit(0 if errors.is_empty() else 1)

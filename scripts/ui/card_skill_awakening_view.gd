@@ -46,7 +46,7 @@ func configure(service: RefCounted,target: String) -> void:
 	var reason: Label=UI.label(str(snapshot.blocked_reason),13,UI.MUTED);reason.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(reason)
 	if not snapshot.eligibility.ok:
 		var eligibility: Label=UI.label(str(snapshot.eligibility.error),13,UI.GOLD);add_child(eligibility)
-	action=UI.button("각성 · 원본 소모 규칙 확인 중",Callable(),Vector2(0,44));action.name="SkillAwakeningExecute";action.disabled=true;action.tooltip_text="미확정 수수료·각성서 수량·실패/회수 공식은 적용하지 않습니다";add_child(action)
+	action=UI.button("각성 · 원본 소모 규칙 확인 중",Callable(),Vector2(0,44));action.name="SkillAwakeningExecute";action.disabled=true;action.tooltip_text="미확정 수수료·각성서 수량은 적용하지 않습니다";add_child(action)
 	var note: Label=UI.label("옵션 각성·시각 aura와 별도 상태 · 원본 각성 화면 스킨 연결 대기",12,UI.MUTED);add_child(note)
 	_preview(0)
 	if candidates.item_count>0:candidates.select(0);_select(0)

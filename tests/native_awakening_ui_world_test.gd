@@ -13,6 +13,8 @@ func settle() -> void:
 func capture(name_value: String) -> void:
 	await settle();await RenderingServer.frame_post_draw
 	check(root.get_texture().get_image().save_png(folder+"/"+name_value+".png")==OK,"capture "+name_value)
+func touch(point: Vector2,index: int,pressed: bool) -> void:
+	var event:=InputEventScreenTouch.new();event.index=index;event.position=point;event.pressed=pressed;root.push_input(event,true)
 func run() -> void:
 	var private_root: String=""
 	for arg: String in OS.get_cmdline_user_args():
@@ -55,14 +57,25 @@ func run() -> void:
 		hud.open_catalog("변신");await settle()
 		for index: int in range(hud.catalog_results.size()):
 			if Cards.card_id(hud.catalog_results[index])==identity:hud._select_catalog_index(index);break
+		hud._set_catalog_detail_view(true);await settle()
 		var button: Button=hud.companion_detail_view.footer_actions.find_child("CompanionQuickRegister",true,false)
 		check(button.text=="스킬 각성" and not button.disabled,"existing card footer routes to skill awakening")
-		button.pressed.emit();await settle()
+		var point: Vector2=button.get_global_transform_with_canvas()*(button.size*.5)
+		touch(point,0,true);await process_frame;touch(point,0,false);await settle()
 		var view: Control=hud.workspace.content.find_child("CardSkillAwakeningView",true,false)
 		check(view!=null and view.identity==identity,"skill UI keeps exact sourceID")
 		if view==null:continue
 		check(view.candidates.item_count==5 and view.candidates.get_item_metadata(0)==64224,"source skill candidates retain IDs")
 		check(view.action.disabled and view.stats.text.contains("HP +300"),"unconfirmed cost button disabled with source HP profile")
+		var owner_scroll: ScrollContainer=view.get_parent()
+		var second: Vector2=view.candidates.get_global_transform_with_canvas()*view.candidates.get_item_rect(1).get_center()
+		if second.y>owner_scroll.get_global_rect().end.y-12:
+			owner_scroll.scroll_vertical+=ceili(second.y-owner_scroll.get_global_rect().end.y+20);await settle()
+			second=view.candidates.get_global_transform_with_canvas()*view.candidates.get_item_rect(1).get_center()
+		touch(second,1,true);await process_frame;touch(second,1,false);await settle()
+		check(view.candidates.get_selected_items()==PackedInt32Array([1]) and view.effect.text.contains(str(view.snapshot.candidates[1].name)),"native candidate touch selects source details")
+		check(view.current.text.contains("파이어 볼트"),"candidate browsing never changes saved selected skill")
+		owner_scroll.scroll_vertical=0;await settle()
 		await capture("skill-awakening-%dx%d" % [extent.x,extent.y])
 		var scroll: ScrollContainer=view.get_parent()
 		scroll.scroll_vertical=int(scroll.get_v_scroll_bar().max_value);await settle()
@@ -73,6 +86,25 @@ func run() -> void:
 		check(not denied.ok and denied.code=="source_cost_rules_unresolved","programmatic unpriced skill operation also blocked")
 		hud._close_workspace();hud.open_catalog("변신");await settle()
 		check(world.skill_awakening.export_state()==state,"reopen preserves source skill experience")
+	for category: String in ["마법인형","성물"]:
+		hud.open_catalog(category);await settle()
+		var chosen_index: int=-1
+		for index: int in range(hud.catalog_results.size()):
+			if world.skill_awakening.core.eligibility(Cards.card_id(hud.catalog_results[index])).ok:chosen_index=index;break
+		if chosen_index<0:
+			for record: Dictionary in world.catalog_db[category]:
+				if world.skill_awakening.core.eligibility(Cards.card_id(record)).ok:
+					hud.catalog_search.text=str(record.sourceId);hud._refresh_catalog_list(str(record.sourceId));await settle();chosen_index=0;break
+		check(chosen_index>=0,"source skill target exists "+category)
+		if chosen_index<0:continue
+		hud._select_catalog_index(chosen_index);await settle()
+		var target_id: String=Cards.card_id(hud.selected_catalog_record)
+		var button: Button=hud.companion_detail_view.footer_actions.find_child("CompanionQuickRegister",true,false) if category=="마법인형" else hud.relic_reference_view.find_child("RelicRegister",true,false)
+		check(button!=null and not button.disabled,"native skill entry enabled "+category)
+		button.pressed.emit();await settle()
+		var view: Control=hud.workspace.content.find_child("CardSkillAwakeningView",true,false)
+		check(view!=null and view.identity==target_id and view.action.disabled,"read-only native skill route "+category)
+		await capture("skill-awakening-"+category)
 	hud.set_option_awakening_view(world.option_awakening.view("변신",hero_id));await settle()
 	check(hud.option_awakening_view.snapshot.target_id==hero_id and hud.option_awakening_view._target_art.texture!=null,"native option target uses original private card image")
 	await capture("native-option-awakening")

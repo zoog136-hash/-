@@ -13,6 +13,10 @@ var _signature: int=0
 var _has_cache: bool=false
 var _records: Array[Dictionary]=[]
 var _proc_busy: bool=false
+var _reroll_busy: bool=false
+var selection_rng=RandomNumberGenerator.new()
+
+func _init() -> void:selection_rng.randomize()
 
 func configure(host: Node) -> bool:
 	world=host;problem=core.problem;return problem.is_empty()
@@ -23,6 +27,7 @@ func accept_load(data: Dictionary) -> bool:
 	var error: String=check_load(data)
 	if not error.is_empty():save_blocked=true;return false
 	progress=core.normalized_state(data.get(SAVE_KEY,Core.fresh_state()))
+	if not str(progress.get("rng_state","")).is_empty():selection_rng.state=int(progress.rng_state)
 	save_blocked=false;_has_cache=false
 	if world!=null:world.set("equipment_records_dirty",true)
 	return true
@@ -89,3 +94,24 @@ func on_successful_hit(target: Node) -> void:
 		proc_counts[identity]=int(proc_counts.get(identity,0))+1
 		if world.get("hud")!=null:world.hud.append_log(str(result.spell.name)+" · 카드 스킬 각성 · "+str(amount)+" 고정 마법 피해")
 	_proc_busy=false
+
+
+func _commit_confirmed_reroll(identity: String,expected_revision: int,operation_id: String) -> Dictionary:
+	# Internal result/persistence stage for a future verified cost transaction.
+	# Public request_operation remains blocked and never dispatches here while
+	# source book quantities/fees are unresolved. This stage invents no debit.
+	if _reroll_busy:return Core.fail("busy","이전 각성 거래 처리 중")
+	if save_blocked or not problem.is_empty():return Core.fail("save_blocked","각성 저장 보호 중")
+	_context();_reroll_busy=true
+	var staged:=RandomNumberGenerator.new();staged.state=selection_rng.state
+	var prepared: Dictionary=core.prepare_reroll(progress,world.card_draw_fusion.owned,identity,staged.randi_range(0,99999),expected_revision,operation_id)
+	if not prepared.ok:_reroll_busy=false;return prepared
+	prepared.state.rng_state=str(staged.state)
+	var error: Error=world._save_game(true,{SAVE_KEY:prepared.state})
+	if error!=OK:
+		_reroll_busy=false
+		return Core.fail("save_failed","저장 실패 · 기존 스킬·레벨·경험치·난수 보존")
+	progress=prepared.state.duplicate(true);selection_rng.state=staged.state
+	_has_cache=false;world.set("equipment_records_dirty",true);_reroll_busy=false
+	prepared.erase("state")
+	return prepared

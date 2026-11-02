@@ -146,6 +146,7 @@ func configure(controller: Node) -> void:
 	hud.catalog_body_actions.get_child(0).add_child(footer_actions)
 	for spec: Array in [["컬렉션 보기","카드 컬렉션 서비스 미지원"],["변신 등록","카드 빠른등록 서비스 미지원"]]:
 		var button: Button=UI.button(str(spec[0]),Callable(),Vector2(0,44))
+		if spec[0]!="컬렉션 보기":button.set_script(preload("res://scripts/ui/native_touch_button.gd"))
 		button.name="CompanionCollectionView" if spec[0]=="컬렉션 보기" else "CompanionQuickRegister"
 		button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		button.disabled=true;button.tooltip_text=str(spec[1]);UI.primary_button(button)
