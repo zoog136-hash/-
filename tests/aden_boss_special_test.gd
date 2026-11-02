@@ -51,16 +51,25 @@ func clearing(region: Dictionary) -> Vector2:
 				return point
 	return Vector2.INF
 
+## Source84 Aden names its regions png_aden_* and keeps the encounter
+## identity in boss_id; older layouts used the encounter id as region id.
+func encounter_key(region: Dictionary) -> String:
+	for value: Variant in [region.get("boss_id", ""), region.get("id", "")]:
+		if ENCOUNTERS.has(str(value)): return str(value)
+	return ""
+
 func encounter(slot: Dictionary) -> void:
 	var region: Dictionary = slot.region
-	var name_value: String = str(ENCOUNTERS[str(region.id)])
+	var name_value: String = str(ENCOUNTERS[encounter_key(region)])
 	check(region.get("map_id", "") == "aden_world", name_value + " current-map metadata")
 	var verification: Dictionary = region.get("verification_status", {})
 	# Both authored zones and the installed original-topology source pack
 	# explicitly declare local-only spawn coordinates and local respawns.
-	var locally_adapted: bool = str(verification.get("coordinates", "")) == "local_only" or (str(region.get("placement_status", "")) == "TWILIGHT_ADAPTED_NOT_ORIGINAL_SPAWNS" and str(region.get("coordinate_evidence", "")).begins_with("A3_STATIC_TOPOLOGY_WITH_PROVISIONAL_"))
+	var locally_adapted: bool = str(verification.get("coordinates", "")) == "local_only" or (str(region.get("placement_status", "")) == "TWILIGHT_ADAPTED_NOT_ORIGINAL_SPAWNS" and str(region.get("coordinate_evidence", "")).begins_with("A3_STATIC_TOPOLOGY_WITH_PROVISIONAL_")) \
+		or str(region.get("coordinate_evidence", "")).contains("local_unverified_original_positions")
 	check(str(verification.get("exact_spawn_area", "")) == "unverified" and locally_adapted, name_value + " honest coordinate provenance")
-	var local_respawn: bool = str(verification.get("respawn", "")) == "wall_clock_local_only" or str(region.get("placement_policy", "")) == "current_map_local_encounter"
+	var local_respawn: bool = str(verification.get("respawn", "")) == "wall_clock_local_only" or str(region.get("placement_policy", "")) == "current_map_local_encounter" \
+		or str(verification.get("schedule", "")) == "twilight_boss_policy"
 	check(region.get("respawn_policy", "") == "wall_clock" and int(region.respawn_time) == 28800 and local_respawn, name_value + " eight-hour wall-clock policy")
 	var boss: TwilightMonster = slot.monster as TwilightMonster
 	check(is_instance_valid(boss) and boss.monster_name == name_value and boss.is_boss, name_value + " actual generated encounter actor")
@@ -138,7 +147,7 @@ func run() -> void:
 	for actor: TwilightMonster in world.monsters_root.get_children(): actor.set_physics_process(false)
 	var found: int = 0
 	for slot: Dictionary in world.field_population.slots:
-		if ENCOUNTERS.has(str(slot.region.id)):
+		if not encounter_key(slot.region).is_empty():
 			encounter(slot)
 			found += 1
 	check(found == 2 and report.size() == 16, "both generated Aden bosses cover all eight directions")

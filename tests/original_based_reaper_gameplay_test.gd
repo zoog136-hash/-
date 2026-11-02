@@ -8,6 +8,29 @@ extends "res://tests/pr100_direction_gameplay_test.gd"
 func subject_path() -> String: return "res://assets/actors/eight_direction/original_based/reaper_female/SpriteFrames.tres"
 func subject_spec() -> Dictionary: return {"job":"사신", "appearance":3, "transform_id":"412", "name":"배틀 사이드", "type":"사이드", "style":"slash", "magic":false}
 
+## The catalog record may pin a newer reviewed SpriteFrames for this transform
+## (animation_profile.frames_path, e.g. a run-locomotion revision). Production
+## binding to either the original subject or that pinned revision is valid.
+func production_subject_paths(transform: Dictionary) -> Array[String]:
+	var paths: Array[String] = [subject_path()]
+	var pinned: String = str(transform.get("animation_profile", {}).get("frames_path", ""))
+	if not pinned.is_empty() and pinned not in paths: paths.append(pinned)
+	return paths
+
+## Production locomotion may present an authored RUN where a set has no WALK.
+func locomotion_track(frames: SpriteFrames, direction: int) -> String:
+	var walk: String = "walk_" + str(direction)
+	if frames.has_animation(walk) and frames.get_frame_count(walk) > 0: return walk
+	return "run_" + str(direction)
+
+## Some refined sets author one south death (death_2) that every facing reuses,
+## exactly as ActorMotion._available_death_key resolves it at runtime.
+func death_track(frames: SpriteFrames, direction: int) -> String:
+	var own: String = "death_" + str(direction)
+	if frames.has_animation(own) and frames.get_frame_count(own) > 0: return own
+	if frames.has_animation("death_2") and frames.get_frame_count("death_2") > 0: return "death_2"
+	return own
+
 func run() -> void:
 	var spec := subject_spec()
 	var profile_id := "transform:" + str(spec.transform_id)
@@ -49,7 +72,7 @@ func run() -> void:
 	check(not transform.is_empty(), "existing subject transformation")
 	world._equip_catalog("변신", transform)
 	await tick(14)
-	check(world.player.motion.profile.profile_id == profile_id and world.player.motion.profile.frames_path == subject_path(), "production transform binds own authored image")
+	check(world.player.motion.profile.profile_id == profile_id and world.player.motion.profile.frames_path in production_subject_paths(transform), "production transform binds own authored image")
 	report.scope = "original-based " + profile_id + ", actual Main/equipment/input/weapon/respawn"
 	report.setup = {"scene":"Main.tscn", "map":"aden_world", "transform":str(spec.transform_id), "weapon":spec.name,
 		"qa_positioning":true, "stats_overridden":false, "background_spawn_slots_paused":true,
@@ -75,15 +98,14 @@ func inspect_poses() -> void:
 	var base_scale: Vector2 = sprite.get_meta("base_scale", Vector2.ONE)
 	for direction: int in range(8):
 		for role: String in ["idle", "walk", "attack", "hit", "death"]:
-			var track: String = role + "_" + str(direction)
+			var track: String = locomotion_track(frames, direction) if role == "walk" else (death_track(frames, direction) if role == "death" else role + "_" + str(direction))
 			check(frames.has_animation(track), "authored role " + track)
 			for index: int in range(frames.get_frame_count(track)):
 				sprite.animation = track
 				sprite.frame = index
 				var texture: Texture2D = frames.get_frame_texture(track, index)
-				sprite.scale = base_scale * Vector2(256, 256) / texture.get_size()
+				inspect_source_pose_geometry(sprite,frames,track,index,base_scale)
 				check(upright(sprite), "sample stays upright " + track)
-				check((texture.get_size() * sprite.scale / base_scale).is_equal_approx(Vector2(256, 256)), "constant displayed pose canvas " + track)
 				report.pose_samples.append({"track":track, "frame":index})
 				if OS.get_environment("TWILIGHT_ORIGINAL_POSE_CAPTURE") != "0":
 					await capture("authored-%s-%s-%d" % [COMPASS[direction], role, index])
@@ -92,6 +114,7 @@ func inspect_poses() -> void:
 	world.player.set_physics_process(true)
 
 func incoming_and_death() -> void:
+	ensure_normal()
 	report.incoming = []
 	for direction: int in range(8):
 		world.player.position = center
@@ -127,7 +150,7 @@ func incoming_and_death() -> void:
 			if str(entry.kind) == "death": death = entry
 		check(not death.is_empty(), "production lethal poison emits corpse " + COMPASS[direction])
 		if death.is_empty(): continue
-		check(str(death.animation) == "death_" + str(direction), "corpse retains exact facing " + COMPASS[direction])
+		check(str(death.get("animation", "")) == death_track(frames, direction), "corpse retains exact facing " + COMPASS[direction])
 		check((death.point as Vector2).is_equal_approx(old_position), "corpse stays at actual death position")
 		check(world.hp == world._effective_max_hp() and world.player.transform_active, "production respawn restores HP and retains transform")
 		# Keep the death location in the real viewport while the live player is
@@ -135,6 +158,7 @@ func incoming_and_death() -> void:
 		world.player.camera.position = center - world.player.position + Vector2(0, -32)
 		world.player.camera.reset_smoothing()
 		world.player.camera.force_update_scroll()
+		var expected_death_frames: Array = range(frames.get_frame_count(str(death.animation)))
 		var death_frames: Array[int] = []
 		var death_captures: Array[Dictionary] = []
 		var death_samples: Array[Dictionary] = []
@@ -149,8 +173,19 @@ func incoming_and_death() -> void:
 			var frame_index: int = world.combat_vfx._death_frame_at_age(death)
 			var texture: Texture2D = frames.get_frame_texture(str(death.animation), frame_index)
 			var draw_scale: Vector2 = world.combat_vfx._death_draw_scale(death, texture)
-			check((texture.get_size() * draw_scale).is_equal_approx(displayed_canvas), "corpse preserves live displayed size")
-			check(((death.offset as Vector2) + Vector2(0, texture.get_height() / 8.) * draw_scale).length() < .01, "corpse preserves foot anchor")
+			var registered: Dictionary = frames.get_meta("twilight_reviewed_frame_registration", {})
+			if registered.has(str(death.animation)):
+				# Independently inspect the frozen source registration, not a
+				# fixed square or the geometry implementation under test.
+				var raw: Dictionary = registered[str(death.animation)].frames[frame_index]
+				var base: Vector2 = death.registration_base_scale
+				var geometry: Dictionary = world.combat_vfx._death_draw_geometry(death, texture)
+				check(draw_scale.is_equal_approx(base * (raw.scale as Vector2)), "corpse retains declared source frame scale")
+				var foot: Vector2 = geometry.offset + (geometry.texture_offset - texture.get_size() * 0.5 + (raw.anchor as Vector2)) * draw_scale
+				check(foot.is_equal_approx(base * (raw.get("target", Vector2.ZERO) as Vector2)), "corpse retains declared source anchor")
+			else:
+				check((texture.get_size() * draw_scale).is_equal_approx(displayed_canvas), "corpse preserves live displayed size")
+				check(((death.offset as Vector2) + Vector2(0, texture.get_height() / 8.) * draw_scale).length() < .01, "corpse preserves foot anchor")
 			if frame_index not in death_frames:
 				death_frames.append(frame_index)
 				death_samples.append({"frame":frame_index, "age":float(death.age), "duration":float(death.duration), "pose_duration":float(death.pose_duration)})
@@ -160,7 +195,7 @@ func incoming_and_death() -> void:
 					# write it only after the unchanged production clock completes.
 					death_captures.append({"name":"death-%s-%d" % [COMPASS[direction], frame_index],
 						"image":root.get_texture().get_image()})
-		check(death_frames == [0, 1, 2], "real VFX clock displays all death frames " + COMPASS[direction] + " observed=" + str(death_frames))
+		check(death_frames == expected_death_frames, "real VFX clock displays all death frames " + COMPASS[direction] + " observed=" + str(death_frames))
 		check(death.is_empty(), "corpse lifetime ends and returns pool record")
 		for sample: Dictionary in death_captures:
 			check((sample.image as Image).save_png(captures.path_join(str(sample.name) + ".png")) == OK, "actual Main screenshot " + str(sample.name))

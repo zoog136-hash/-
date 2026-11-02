@@ -17,9 +17,26 @@ jobs:
       matrix:
         shard: [0, 1, 2, 3]
     steps:
+      - name: Free runner disk space
+        # Godot import caches plus the checkout can exceed smaller runner disks.
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft /opt/google \
+            /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium || true
+          echo "::notice title=Disk after cleanup::$(df -h / | tail -n 1 | tr -s ' ')"
       - uses: actions/checkout@v4
         with:
+          # docs/ is ~22 GB of review evidence; with its pack it overflows the
+          # runner disk. Check out everything else, then add referenced docs.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
           persist-credentials: false
+      - name: Add referenced docs files to the sparse checkout
+        run: python3 tools/ci_sparse_docs.py --root .
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Restore trusted compact Godot import cache (read-only)
@@ -39,7 +56,7 @@ jobs:
         shell: bash
         # Large actor sheets commit their .import (VRAM/ETC2). The compact cache
         # restores every *.import from an older main; put tracked ones back.
-        run: git ls-files -z -- '*.import' | xargs -0 -r git checkout --
+        run: git -c core.quotePath=false ls-files -t -- '*.import' | sed -n 's/^H //p' | tr '\n' '\0' | xargs -0 -r git checkout --
       - name: Record exact source and resource preflight
         shell: bash
         run: |
