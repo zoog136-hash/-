@@ -7,6 +7,7 @@ const Conditions=preload("res://scripts/cards/source_collection_conditions.gd")
 const MAX_EXPERIENCE: int=9999999999999
 const MAX_REVISION: int=9007199254740000
 const BOOK_QUANTITY: int=1 # user policy, not recovered source consumption evidence
+const GRADE_NAMES: Dictionary={3:"희귀",4:"영웅",5:"전설",32:"신화",52:"유일"}
 const FEES: Dictionary={3:100000,4:500000,5:1000000,32:2000000,52:5000000}
 const REROLL_POLICY: String="source_weighted_reroll_preserve_growth"
 var conditions=Conditions.new()
@@ -121,7 +122,7 @@ func book_requirement(identity: String) -> Dictionary:
 func prepare_book_debit(identity: String,source_book_counts: Dictionary) -> Dictionary:
 	# Pure source-ID boundary. The caller must supply an explicitly verified
 	# physical inventory mapping, never an inferred name or equal numeric ID.
-	# This is a staged debit only; public transactions remain fee-blocked.
+	# Pure preparation only; the runtime owns the atomic paid transaction.
 	var requirement: Dictionary=book_requirement(identity)
 	if requirement.is_empty():return fail("identity","원본 각성서 연결 없음")
 	var key: String=str(requirement.item_class_id)
@@ -219,4 +220,4 @@ static func install_book_definitions(catalog: Dictionary) -> void:
 		for record: Dictionary in catalog["아이템"]:
 			if record.get("name","")==str(book.name):exists=true;break
 		if exists:continue # Never assign source ownership to a legacy name alias.
-		catalog["아이템"].append({"name":str(book.name),"source":"lineagem_base508","source_snapshot":"base508","source_item_class_id":id,"sourceId":"m508:item:"+str(id),"type":"재료","slot":"material","grade":str(book.group_row.GradeID),"stackable":true,"source_item":item.duplicate(true),"source_image_status":"original_icon_not_installed","desc":"카드 스킬 각성 재료 · 거래당 1장"})
+		catalog["아이템"].append({"name":str(book.name),"source":"lineagem_base508","source_snapshot":"base508","source_item_class_id":id,"sourceId":"m508:item:"+str(id),"type":"재료","slot":"material","grade":str(GRADE_NAMES.get(int(book.group_row.GradeID),"미확인")),"stackable":true,"source_item":item.duplicate(true),"source_image_status":"original_icon_not_installed","desc":"카드 스킬 각성 재료 · 거래당 1장"})

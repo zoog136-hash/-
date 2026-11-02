@@ -74,7 +74,7 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 	if ground:
 		var original: Dictionary = _describe_original(record, fallback_name, images, true)
 		# Preserve existing dedicated floor pairs and their provenance.
-		if original.route in ["reviewed_ground", "l1j_dedicated_ground_candidate"]:
+		if original.route in ["reviewed_ground", "l1j_dedicated_ground_candidate", "source_original_unavailable"]:
 			return original
 		var source: Dictionary = _source(record, str(original.name))
 		# A known publisher ID paired with the wrong name remains rejected.
@@ -185,6 +185,9 @@ static func _describe_original(record: Dictionary, fallback_name: String = "", i
 		result.route = "legacy_exact_name_index"
 		if indexed.begins_with("res://assets/ui/"): result.status = "bundled_ui_art"
 		return result
+	if preload("res://scripts/cards/source_awakening_items.gd").recognized(record):
+		result.route="source_original_unavailable";result.status="original_icon_not_installed"
+		return result
 	result.family = FALLBACK.family(record, name_value)
 	result.route = "twilight_family_symbol"
 	result.status = "self_authored_substitute"
@@ -194,6 +197,7 @@ static func _describe_original(record: Dictionary, fallback_name: String = "", i
 static func texture(record: Dictionary, name_value: String = "", images: Dictionary = {}, ground: bool = false) -> Texture2D:
 	var info: Dictionary = describe(record, name_value, images, ground)
 	var path: String = str(info.path)
+	if info.route=="source_original_unavailable":return null
 	# Keep the original loader's hash gate and returned ImageTexture. Reloading
 	# its path can fail in optional packs/PCKs even though it decoded correctly.
 	if info.route in ["reviewed_ground", "reviewed_l1j", "a2_candidate"]:

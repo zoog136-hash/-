@@ -68,7 +68,7 @@ func run() -> void:
 		check(view!=null and view.identity==identity,"skill UI keeps exact sourceID")
 		if view==null:continue
 		check(view.candidates.item_count==5 and view.candidates.get_item_metadata(0)==64224,"source skill candidates retain IDs")
-		check(view.action.disabled and view.stats.text.contains("HP +300"),"unconfirmed cost button disabled with source HP profile")
+		check(not view.action.disabled and view.stats.text.contains("HP +300") and view.snapshot.book_requirement.fee==100000,"owned source target enables explicit-policy fee action")
 		var source_target: Control=view.find_child("SkillAwakeningTargetArt",true,false)
 		check(source_target.layers.size()==3 and source_target.portrait!=null,"source CSB target ring/plus/book slot use installed exact atlas images")
 		check(view.action.get_meta("source_csb_node","")=="UI/Change/Change_Awaken_Skill.csb:Btn_Production" and view.action.custom_minimum_size.y>=44,"exact source awakening button retains adequate adaptive touch size")
@@ -84,12 +84,12 @@ func run() -> void:
 		await capture("skill-awakening-%dx%d" % [extent.x,extent.y])
 		var scroll: ScrollContainer=view.get_parent()
 		scroll.scroll_vertical=int(scroll.get_v_scroll_bar().max_value);await settle()
-		check(scroll.get_global_rect().grow(2).intersects(view.action.get_global_rect()),"blocked action remains reachable by scroll")
+		check(scroll.get_global_rect().grow(2).intersects(view.action.get_global_rect()),"paid action remains reachable by scroll")
 		await capture("source-skill-action-%dx%d" % [extent.x,extent.y])
 		view.level.select(19);view.level.item_selected.emit(19);await settle()
 		check(world.skill_awakening.export_state()==state and world._effective_max_hp()==base_hp+300,"level20 preview never changes saved level or live HP")
 		var denied: Dictionary=world.skill_awakening.request_operation(identity,{identity:100})
-		check(not denied.ok and denied.code=="source_cost_rules_unresolved","programmatic unpriced skill operation also blocked")
+		check(not denied.ok and denied.code in ["insufficient_gold","insufficient_book"],"unfunded operation rejects without debit")
 		hud._close_workspace();hud.open_catalog("변신");await settle()
 		check(world.skill_awakening.export_state()==state,"reopen preserves source skill experience")
 	for category: String in ["마법인형","성물"]:

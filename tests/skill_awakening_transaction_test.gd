@@ -9,6 +9,8 @@ class Host extends Node:
 	var item_instances: Dictionary={}
 	var equipment_records_dirty: bool=false
 	var card_collections=null
+	var locks: Dictionary={}
+	func _item_locked(item_name: String,id: String="") -> bool:return bool(locks.get(item_name+("@@@"+id if not id.is_empty() else ""),false))
 	var save_error: Error=OK
 	var saved: Dictionary={}
 	func _save_game(_quiet: bool,override: Dictionary) -> Error:
@@ -50,6 +52,9 @@ func _initialize() -> void:
 		host.item_instances.first.record.source_item_class_id=-1;host.item_instances.second.record.source_item_class_id=-1
 		check(runtime.request_operation(identity).code=="insufficient_book","wrong grade/source book "+key)
 		host.item_instances.first.record=record;host.item_instances.second.record=record
+		host.locks={"fixture book":true}
+		check(not runtime.request_operation(identity).ok and hash([runtime.progress,host.inventory,host.item_instances,host.gold,runtime.selection_rng.state])==before,"locked books preserved "+key)
+		host.locks={}
 		var result: Dictionary=runtime.request_operation(identity,{"operation_id":key})
 		check(result.ok and host.gold==10000000-int(req.fee) and host.inventory["fixture book"]==1 and host.item_instances.size()==1,"exact debit "+key)
 		check(host.saved.gold==host.gold and host.saved.item_instances==host.item_instances and host.saved.card_skill_awakening==runtime.progress,"single save snapshot "+key)

@@ -13,6 +13,18 @@ static func drop(world: Node, reference: String, requested_position: Vector2) ->
 		return false
 	var physical: Dictionary = {}
 	var item: Dictionary = world._find_catalog_item_record(item_name)
+	if id.is_empty() and preload("res://scripts/cards/source_awakening_items.gd").stackable_book(item):
+		# A stacked source book may have verified instances alongside legacy
+		# name-only copies. Transfer one verified instance without fabricating it.
+		var verified_count: int=0
+		for key: String in world.item_instances:
+			var candidate: Dictionary=world.item_instances[key]
+			if candidate.get("name","")==item_name and candidate.get("record") is Dictionary and preload("res://scripts/cards/source_awakening_items.gd").recognized(candidate.record) and candidate.record.get("sourceId","")==item.get("sourceId",""):
+				verified_count+=1
+				if id.is_empty() and not world._item_locked(item_name,key):id=key
+		if id.is_empty() and verified_count>=int(world.inventory.get(item_name,0)):
+			world.hud.show_message("잠긴 각성서는 내려놓을 수 없습니다")
+			return false
 	if not id.is_empty():
 		if not world.item_instances.has(id): return false
 		physical = (world.item_instances[id] as Dictionary).duplicate(true)

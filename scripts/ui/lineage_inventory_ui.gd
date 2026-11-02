@@ -338,7 +338,9 @@ func _inventory_entries() -> Array[Dictionary]:
 			continue
 		var instance_ids: Array[String] = ids_by_name.get(item_name, [] as Array[String])
 		instance_ids.sort_custom(func(a: String, b: String) -> bool: return int(a) < int(b))
-		if instance_ids.is_empty():
+		# Verified book instances keep provenance for transactions, while the
+		# inventory still presents their source 10,000-capacity stack as one row.
+		if instance_ids.is_empty() or preload("res://scripts/cards/source_awakening_items.gd").stackable_book(_find_item_record(item_name)):
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
 			for id: String in instance_ids:

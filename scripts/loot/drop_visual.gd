@@ -9,6 +9,7 @@ var rank: int = 0
 var texture: Texture2D
 var slot: String = ""
 var selected: bool = false
+var source_missing: bool=false
 var clock: float = 0.0
 var redraw_time: float = 0.0
 var source_icon: Sprite2D
@@ -88,6 +89,7 @@ func _draw() -> void:
 			if rank >= 4 and particle % 2 == 0:
 				draw_line(point - Vector2(3, 0), point + Vector2(3, 0), Color(color.lightened(0.6), alpha), 1, true)
 				draw_line(point - Vector2(0, 3), point + Vector2(0, 3), Color(color.lightened(0.6), alpha), 1, true)
+	if source_missing:return
 	if is_instance_valid(source_icon):
 		pass
 	elif texture != null:

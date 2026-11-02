@@ -589,6 +589,7 @@ func _load_data() -> void:
 		_enrich_weapon_records(catalog_items_value as Array)
 	preload("res://scripts/cards/native_doll_unlock_item.gd").install(catalog_db)
 	preload("res://scripts/cards/skill_awakening_service.gd").install_book_definitions(catalog_db)
+	preload("res://scripts/cards/source_awakening_items.gd").install_drop_definitions(catalog_db,loot_catalog)
 	_merge_local_consumables_into_catalog()
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	_index_catalog_item_sources()
@@ -2670,6 +2671,8 @@ func _collect_ground_drop(drop: Button) -> bool:
 	var item_name: String = str(record["item_name"])
 	var quantity: int = int(record["quantity"])
 	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
+	var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
+	item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
 	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null

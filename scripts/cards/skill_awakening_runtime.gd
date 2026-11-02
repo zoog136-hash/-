@@ -1,5 +1,5 @@
 extends RefCounted
-## TWILIGHT-local save namespace, not an original RPC/key. No unpriced debit.
+## Local save namespace; user-policy debit and source-weighted result save together.
 const Core=preload("res://scripts/cards/skill_awakening_service.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const SourceVFX=preload("res://scripts/cards/skill_awakening_source_vfx.gd")
@@ -62,6 +62,7 @@ func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 		if record.get("source","")!="lineagem_base508" or record.get("source_snapshot","")!="base508":continue
 		if record.get("source_item_class_id",0)!=int(requirement.item_class_id) or record.get("sourceId","")!="m508:item:"+str(int(requirement.item_class_id)):continue
 		if physical.get("name","")!=record.get("name","") or str(physical.get("name","")).is_empty():continue
+		if world.has_method("_item_locked") and (world._item_locked(str(physical.name)) or world._item_locked(str(physical.name),key)):continue
 		selected=key;item_name=str(physical.name);break
 	if selected.is_empty():return Core.fail("insufficient_book","해당 등급 원본 각성서 1장 필요")
 	var count: Variant=world.inventory.get(item_name,0)
@@ -90,6 +91,7 @@ func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 	_has_cache=false;world.set("equipment_records_dirty",true);_reroll_busy=false
 	prepared.erase("state");prepared.consumed_quantity=1;prepared.consumed_gold=int(requirement.fee)
 	prepared.fee_provenance="explicit_user_policy"
+	if world.has_method("_update_hud"):world.call_deferred("_update_hud")
 	return prepared
 func bonus_records() -> Array[Dictionary]:
 	_context()
@@ -143,9 +145,8 @@ func on_successful_hit(target: Node) -> void:
 
 
 func _commit_confirmed_reroll(identity: String,expected_revision: int,operation_id: String) -> Dictionary:
-	# Internal result/persistence stage for a future verified cost transaction.
-	# Public request_operation remains blocked and never dispatches here while
-	# source book quantities/fees are unresolved. This stage invents no debit.
+	# Internal persistence fixture retained for isolated regression tests.
+	# Public UI always enters request_operation with physical inventory debit.
 	if _reroll_busy:return Core.fail("busy","이전 각성 거래 처리 중")
 	if save_blocked or not problem.is_empty():return Core.fail("save_blocked","각성 저장 보호 중")
 	_context();_reroll_busy=true
