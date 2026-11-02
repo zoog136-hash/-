@@ -1,10 +1,7 @@
 name: TWILIGHT Integration Validate
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: ['main', 'integration/twilight-complete-20261009']
+# Historical/source-specific audits remain available after integration.
+'on':
   workflow_dispatch:
 
 permissions:

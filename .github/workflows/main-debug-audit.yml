@@ -1,8 +1,10 @@
 name: Main Debug Audit
 # A manual, 4-shard deep diagnostic. The normal PR runtime and real gameplay
 # validation is handled by TWILIGHT Integration Validate.
-on:
+# Historical/source-specific audits remain available after integration.
+'on':
   workflow_dispatch:
+
 permissions:
   contents: read
 concurrency:
