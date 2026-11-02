@@ -77,8 +77,9 @@ book slot, skill-list panel and awakening-button states. The target area retains
 original card/slot centers; adaptive controls retain44px touches. The remaining
 layout is adaptive, not a literal full-CSB screen reconstruction. The book slot
 stays empty because no verified book-icon/owned-count binding is installed; no
-item ownership is invented. A white mask panel whose source tint was not parsed
-is withheld after direct render review. Particle/timeline and full EXP screen
+item ownership is invented. The raw CSB widget color was then read with the existing bounded FlatBuffer
+reader and verified against each of487 node identities. Its mask-panel tint
+is black, and the ring also retains its exact source tint; these are now applied. Particle/timeline and full EXP screen
 controls are not claimed implemented merely because their sources are present.
 51 actual World/UI checks pass at1280x720/854x480, including material bindings
 and preserved states. Original pixel screenshots stay in the private handoff.
@@ -107,3 +108,33 @@ completion, resource release, sprite reuse/reset, fixed effect position across
 target movement, and refusal of missing1583 directions. These are actual source
 pixels, separate from the earlier mock event tests. No original flight/server
 timing or missing-direction behavior is claimed recovered.
+
+## Expanded source effects checkpoint
+
+All95 requested direct SP2 files are now materialized and size/SHA/CRC checked,
+including19 exact members from the three verified preexisting Library ZIPs.
+The compiler also reuses only SPR101/105 child members already available in those
+ZIPs; there is no new source acquisition.90 effects compile for all directions,
+plus1583 for its four stored directions.51 effects have all declared layers;
+39 of the90 full-direction bodies still miss declared child layers. Private
+readiness metadata preserves exact missing-member names; the public readiness
+manifest records only status/counts and requires the private pack.
+
+49 child member names remain:46 have exact original registry matches totaling
+3275720 compressed member bytes;3 have no matching row in the supplied structural
+registry. Sprite6 has no frame action;25942 has a literal inline#header at
+list_25.spr:16262 that the shared parser does not accept. These are precise
+parser/dependency holds, not a claim that the direct95 files were not supplied.
+Source-only body playback is labelled incomplete in diagnostics/combat feedback.
+
+Validation:305 compiled-effect consumer checks pass for90 full-direction and
+one sparse-direction clips, including124 exact body/shadow/clothes texture
+comparisons.16 original priority pixel/render/pool checks and61 service/atomic
+checks pass.52 real World/UI checks include a lethal actual Monster skill proc
+that emits both original1583/218 stages. All logs have no script/parse errors.
+The two old exit-time CanvasItem/resource warnings remain on World teardown.
+
+A local integration-stage ZIP is prepared (not a standalone installer and not
+a substitute for merging against the installed base manifest). External artifact
+delivery is pending specific authorization after automatic review rejected the
+private child-request metadata upload. Original pixels remain outside Git.

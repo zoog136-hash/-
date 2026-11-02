@@ -15,7 +15,7 @@ func emit_spell(world: Node,spell: Dictionary,target: Node) -> Dictionary:
 	var requested: Array[String]=[]
 	for stage: String in FIELDS:
 		if int(spell.get(FIELDS[stage],0))>0:requested.append(stage)
-	last_result={"spell_id":int(spell.get("ID",0)),"requested":requested,"played":[],"unavailable":[],"status":"unavailable"}
+	last_result={"spell_id":int(spell.get("ID",0)),"requested":requested,"played":[],"unavailable":[],"status":"unavailable","source_visual_complete":false,"incomplete_sources":[]}
 	var player: Node=property(world,"player")
 	var preview: Node=property(player,"original_source_preview")
 	if not player is Node2D or not target is Node2D or preview==null or not preview.has_method("notify_source_spell_event"):
@@ -27,6 +27,10 @@ func emit_spell(world: Node,spell: Dictionary,target: Node) -> Dictionary:
 	# Copy points before damage can kill/recycle the target. No delayed target reference.
 	var caster_point: Vector2=player.global_position
 	var impact_point: Vector2=target.global_position
+	var readiness: Dictionary={}
+	if FileAccess.file_exists(manifest):
+		var index: Variant=JSON.parse_string(FileAccess.get_file_as_string(manifest))
+		if index is Dictionary:readiness=index.get("card_skill_effect_readiness",{})
 	# PR217 keeps completed one-shots as freed Object handles until its next emit.
 	# Prune without a typed lambda: Godot cannot cast a freed handle to Node2D.
 	var overlays: Variant=property(preview,"_overlay_nodes")
@@ -46,5 +50,9 @@ func emit_spell(world: Node,spell: Dictionary,target: Node) -> Dictionary:
 				partial_effects.name="CardSkillPartialSourceEffects";world.add_child(partial_effects)
 			played=partial_effects.play_source(manifest,int(spell[FIELDS[stage]]),facing,point)
 		last_result["played" if played else "unavailable"].append(stage)
+		var declaration: Dictionary=readiness.get(str(int(spell[FIELDS[stage]])),{})
+		if not declaration.is_empty() and not bool(declaration.get("source_visual_complete",false)):
+			last_result.incomplete_sources.append({"stage":stage,"sprite_id":int(spell[FIELDS[stage]]),"status":str(declaration.status)})
 	last_result.status="played" if last_result.played.size()==requested.size() else "partial" if not last_result.played.is_empty() else "unavailable"
+	last_result.source_visual_complete=last_result.status=="played" and last_result.incomplete_sources.is_empty()
 	return last_result.duplicate(true)

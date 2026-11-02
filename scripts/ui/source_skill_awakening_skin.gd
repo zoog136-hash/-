@@ -5,6 +5,10 @@ const PROFILE=preload("res://data/ui/base508_skill_awakening_layout.json")
 const SCREEN="UI/Change/Change_Awaken_Skill.csb"
 static var styles: Dictionary={}
 
+static func color(entry: Dictionary) -> Color:
+	var raw: Array=entry.get("color_ARGB",[255,255,255,255])
+	return Color(float(raw[1])/255.0,float(raw[2])/255.0,float(raw[3])/255.0,float(raw[0])/255.0*float(entry.get("alpha",255))/255.0)
+
 static func node(name_value: String,resource: String="") -> Dictionary:
 	for entry: Dictionary in PROFILE.data.screens[SCREEN]:
 		if entry.name!=name_value:continue
@@ -21,9 +25,10 @@ static func texture(entry: Dictionary,field: String="fileNameData") -> Texture2D
 static func panel(name_value: String,resource: String) -> StyleBoxTexture:
 	var key: String=name_value+":"+resource
 	if styles.has(key):return styles[key]
-	var original: Texture2D=texture(node(name_value,resource))
+	var entry: Dictionary=node(name_value,resource)
+	var original: Texture2D=texture(entry)
 	if original==null:return null
-	var box:=StyleBoxTexture.new();box.texture=original;styles[key]=box;return box
+	var box:=StyleBoxTexture.new();box.texture=original;box.modulate_color=color(entry);styles[key]=box;return box
 
 static func button(control: Button,name_value: String) -> bool:
 	var entry: Dictionary=node(name_value);var applied: bool=false

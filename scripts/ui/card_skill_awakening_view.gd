@@ -46,6 +46,8 @@ func configure(service: RefCounted,target: String) -> void:
 	candidates.item_selected.connect(_select)
 	var skill_panel: StyleBoxTexture=SourceSkin.panel("Img_Bg","Textuer_Inventory.png")
 	if skill_panel!=null:candidates.add_theme_stylebox_override("panel",skill_panel)
+	var detail_panel: StyleBoxTexture=SourceSkin.panel("Img_Bg","Img_Bg_Radius3.png")
+	if detail_panel!=null:effect.add_theme_stylebox_override("normal",detail_panel)
 	var reason: Label=UI.label(str(snapshot.blocked_reason),13,UI.MUTED);reason.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(reason)
 	if not snapshot.eligibility.ok:
 		var eligibility: Label=UI.label(str(snapshot.eligibility.error),13,UI.GOLD);add_child(eligibility)

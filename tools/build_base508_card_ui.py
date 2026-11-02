@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+from l1j.inspect_csb_assets import Buffer
 
 PREFIX = 'UI/Change/'
 FILES = [PREFIX + 'Change_Card_A_' + grade + '.csb' for grade in
@@ -52,6 +53,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--inspection', type=Path, action='append', required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--original-root', type=Path,
+                        help='Read exact CSB widget colors and verify inspected node identities')
     parser.add_argument('--scope', choices=('cards', 'inventory-slot', 'skill-awakening'), default='cards')
     args = parser.parse_args()
     sources, evidence = {}, []
@@ -81,6 +84,21 @@ def main():
               'coordinate_system': 'Cocos y-up; bounds include ancestor anchors/scales',
               'evidence': evidence,
               'screens': {key: normalize(sources[key]) for key in files}}
+    if args.original_root:
+        for key, nodes in output['screens'].items():
+            raw = (args.original_root / key).read_bytes()
+            buffer = Buffer(raw)
+            evidence.append({'name': key, 'sha256': hashlib.sha256(raw).hexdigest()})
+            for node in nodes:
+                tree = node['table_offset']
+                if buffer.string(tree, 0) != node['classname']:
+                    raise ValueError('Original CSB class mismatch: ' + key)
+                options = buffer.table(buffer.table(tree, 2), 0)
+                widget = options if node['classname'] == 'Node' else buffer.table(options, 0)
+                if buffer.string(widget, 0) != node['name']:
+                    raise ValueError('Original CSB node mismatch: ' + key + ':' + node['name'])
+                color = buffer.field(widget, 10)
+                node['color_ARGB'] = buffer.read('BBBB', color) if color else [255] * 4
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(output, ensure_ascii=False, indent=2) + '\n')
     print('Normalized', len(files), 'original CSBs;',

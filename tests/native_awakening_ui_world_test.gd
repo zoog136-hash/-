@@ -17,9 +17,11 @@ func touch(point: Vector2,index: int,pressed: bool) -> void:
 	var event:=InputEventScreenTouch.new();event.index=index;event.position=point;event.pressed=pressed;root.push_input(event,true)
 func run() -> void:
 	var private_root: String=""
+	var effect_manifest: String=""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--private-ui-root="):private_root=arg.trim_prefix("--private-ui-root=")
 		if arg.begins_with("--capture-dir="):folder=arg.trim_prefix("--capture-dir=")
+		if arg.begins_with("--effect-manifest="):effect_manifest=arg.trim_prefix("--effect-manifest=")
 	if folder.is_empty() or private_root.is_empty():push_error("Explicit private UI root/capture dir required");quit(2);return
 	DirAccess.make_dir_recursive_absolute(folder)
 	var installer: Script=load("res://scripts/lineagem_pack_install.gd");installer._session_root=private_root
@@ -120,12 +122,15 @@ func run() -> void:
 	world.equipped_catalog["변신"]=card
 	var cooldowns: Dictionary=world.skill_cooldowns.duplicate(true)
 	world.skill_cooldowns.clear()
+	if not effect_manifest.is_empty():
+		world.player.original_source_manifest=effect_manifest;world.player.motion.facing8=5
 	var probe:=RandomNumberGenerator.new();var hit_seed: int=0
 	for seed_value: int in range(1,10000):
 		probe.seed=seed_value
 		if probe.randi_range(0,9999)<100:hit_seed=seed_value;break
 	world.rng.seed=hit_seed;world.skill_awakening.on_successful_hit(victim);victim.set_physics_process(false)
 	check(victim.dead and victim.hp==0 and victim.damage_hit_count==1,"real Monster receives exactly one lethal source skill hit")
+	if not effect_manifest.is_empty():check(world.skill_awakening.source_vfx.last_result.status=="played","actual equipped skill proc dispatches both original1583/218 pixel stages on lethal hit")
 	var post_hit_rng: int=world.rng.state;var life: int=victim.life_id
 	world.skill_awakening.on_successful_hit(victim)
 	check(victim.damage_hit_count==1 and world.rng.state==post_hit_rng,"dead real Monster cannot consume another proc roll")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Private source-pixel addon; reuse PR217 SPR/SP2 readers, never guess directions."""
-import argparse, hashlib, importlib, json, pathlib, sys, zlib
+import argparse, hashlib, importlib, json, pathlib, sys, zipfile, zlib
 
 
 def build(args):
@@ -25,6 +25,22 @@ def build(args):
             if pathlib.Path(name).name in files and files[pathlib.Path(name).name].read_bytes() != raw:
                 raise ValueError('Conflicting source member: ' + name)
             files[pathlib.Path(name).name] = path
+    cached = {}
+    if args.cached_zip:
+        contract = json.loads(args.input_index.read_text())
+        expected = {r['file_name']: r['sha256'] for r in contract['combat_existing_payload_ZIPs']}
+        for path in args.cached_zip:
+            if hashlib.sha256(path.read_bytes()).hexdigest() != expected[path.name]:
+                raise ValueError('Cached Library ZIP hash mismatch')
+            archive = zipfile.ZipFile(path)
+            for name in archive.namelist():
+                if name.startswith('Sprite/') and name.endswith('.sp2'):
+                    cached.setdefault(pathlib.Path(name).name, (archive, name))
+    def raw_member(name):
+        if name in files:
+            return files[name].read_bytes()
+        archive, member = cached[name]
+        return archive.read(member)  # ZIPReader verifies this exact member CRC.
     index = json.loads(args.base_manifest.read_text()) if args.base_manifest else {
         'schema': 1, 'mode': 'literal_body_shadow_inspection_only',
         'source_snapshot': 'base508', 'records': {}}
@@ -34,25 +50,63 @@ def build(args):
     (args.output / 'overlays').mkdir(exist_ok=True)
     results = []
     for sid in args.sprite_id:
-        owner, actions = spr.resolve(declarations, sid)
-        if len(actions) != 1 or spr.resolve_references(declarations, sid):
+        try:
+            owner, actions = spr.resolve(declarations, sid)
+        except ValueError as error:
+            results.append({'sprite_id': sid, 'status': 'source_declaration_pending', 'reason': str(error)})
+            continue
+        if len(actions) != 1:
             results.append({'sprite_id': sid, 'status': 'action_or_attachment_pending'})
+            continue
+        refs = spr.resolve_references(declarations, sid)
+        shadows = [target for ref in refs.get('shadow', []) for target in ref['targets']]
+        clothes = [target for ref in refs.get('clothes', []) for target in ref['targets']]
+        if len(shadows)>1 or any(not r.get('count_valid', True) for values in refs.values() for r in values):
+            results.append({'sprite_id': sid, 'status': 'ambiguous_source_attachment_pending', 'references': refs})
             continue
         action = next(iter(actions.values()))
         if action['errors']:
             raise ValueError(action['errors'])
-        decoded, pixels, directions, missing = {}, {}, [], []
+        decoded, pixels, directions, missing, missing_layers = {}, {}, [], [], []
+        def layer(original_id, chunk, bit, frame, relation):
+            physical = spr.resolve(declarations, original_id)[0] if original_id in declarations else original_id
+            name = f'{physical}-{chunk}.sp2'
+            if name not in files and name not in cached:
+                raise ValueError('member_not_installed:' + name)
+            if name not in decoded:
+                decoded[name] = sp2.parse(raw_member(name))
+            palette, mask, stored, _ = decoded[name]
+            bits = [b for b in range(8) if mask & (1 << b)]
+            if bit not in bits:
+                raise ValueError('stored_direction_absent_no_mirror_assumption:' + name)
+            frame_headers, blocks = stored[bits.index(bit)]
+            if frame >= len(frame_headers):
+                raise ValueError('source_frame_outside_stored_range:' + name)
+            key = (physical, chunk, bit, frame)
+            if key not in pixels:
+                image, offset = sp2.render(palette, frame_headers, blocks, frame)
+                relative = f'pixels/{physical}-{chunk}-{bit}-{frame}.png'
+                image.save(args.output / relative)
+                pixels[key] = {'path': relative, 'offset': list(offset), 'layer_id': original_id,
+                    'pixel_size': list(image.size), 'source_bounds': frame_headers[frame][0],
+                    'sha256': hashlib.sha256((args.output / relative).read_bytes()).hexdigest()}
+            value = dict(pixels[key])
+            value['layer_id'] = original_id
+            if relation == 'clothes':
+                value['source_attributes'] = [r['body'] for d in declarations.get(original_id, declarations.get(physical, [])) for r in d.directives if r['code'] == 104]
+                value['blend_status'] = 'existing_shared_compatibility_policy_not_verified_M'
+            return value
         for direction in range(8):
             frames = []
             for group, frame, ticks in action['tokens']:
                 chunk, bit = spr.frame_address(group, direction, action['declared_flag'])
                 name = f'{owner}-{chunk}.sp2'
-                if name not in files:
+                if name not in files and name not in cached:
                     missing.append({'direction': direction, 'member': name, 'reason': 'member_not_installed'})
                     frames = []
                     break
                 if name not in decoded:
-                    decoded[name] = sp2.parse(files[name].read_bytes())
+                    decoded[name] = sp2.parse(raw_member(name))
                 palette, mask, stored, _ = decoded[name]
                 bits = [b for b in range(8) if mask & (1 << b)]
                 if bit not in bits:
@@ -62,17 +116,21 @@ def build(args):
                 frame_headers, blocks = stored[bits.index(bit)]
                 if frame >= len(frame_headers):
                     raise ValueError('Source frame outside stored range')
-                key = (chunk, bit, frame)
-                if key not in pixels:
-                    image, offset = sp2.render(palette, frame_headers, blocks, frame)
-                    relative = f'pixels/{owner}-{chunk}-{bit}-{frame}.png'
-                    image.save(args.output / relative)
-                    pixels[key] = {'path': relative, 'offset': list(offset), 'layer_id': owner,
-                                   'pixel_size': list(image.size), 'source_bounds': frame_headers[frame][0],
-                                   'sha256': hashlib.sha256((args.output / relative).read_bytes()).hexdigest()}
+                body_layer = layer(owner, chunk, bit, frame, 'body')
+                frame_layers, effect_layers = [], []
+                for relation, targets in [('shadow', shadows), ('clothes', clothes)]:
+                    for target in targets:
+                        try:
+                            value = layer(target, chunk, bit, frame, relation)
+                            (effect_layers if relation == 'clothes' else frame_layers).append(value)
+                        except ValueError as error:
+                            missing_layers.append({'sprite_id': target, 'relation': relation, 'chunk': chunk,
+                                                   'bit': bit, 'frame': frame, 'reason': str(error)})
+                frame_layers.append(body_layer)
                 frames.append({'duration': ticks / action['fps'] if action['fps'] else None,
                                'source_ticks': ticks, 'source_group': group, 'physical_group': chunk,
-                               'stored_direction_bit': bit, 'source_frame': frame, 'layers': [pixels[key]]})
+                               'stored_direction_bit': bit, 'source_frame': frame, 'layers': frame_layers,
+                               'effect_layers': effect_layers})
             directions.append(frames)
         if not any(directions):
             results.append({'sprite_id': sid, 'status': 'source_address_pending', 'missing': missing})
@@ -81,8 +139,9 @@ def build(args):
         record = {'source_sprite_id': sid, 'body_id': owner, 'source_attributes': attributes,
                   'one_shot_overlay': True, 'card_skill_partial_overlay': bool(missing),
                   'source_available_directions': [i for i, d in enumerate(directions) if d],
-                  'source_missing_directions': missing, 'source_file_sha256': {
-                      name: hashlib.sha256(files[name].read_bytes()).hexdigest() for name in decoded},
+                  'source_missing_directions': missing, 'source_missing_attachments': missing_layers,
+                  'source_references': refs, 'source_file_sha256': {
+                      name: hashlib.sha256(raw_member(name)).hexdigest() for name in decoded},
                   'tracks': {'idle': {'fps': action['fps'], 'source_timing_provenance': action['fps_provenance'],
                       'source_action_id': action['code'], 'source_action': action['name'], 'source_sprite_id': sid,
                       'source_raw_body': action['raw_body'], 'source_annotations': action['source_annotations'],
@@ -93,7 +152,13 @@ def build(args):
         (args.output / relative).write_text(json.dumps(record, ensure_ascii=False, separators=(',', ':')))
         index['records'][f'overlay:{sid}'] = {'manifest': relative}
         results.append({'sprite_id': sid, 'status': 'partial_source_directions' if missing else 'source_overlay',
-                        'pixels': len(pixels), 'missing': missing})
+                        'pixels': len(pixels), 'missing': missing, 'missing_attachments': missing_layers,
+                        'source_visual_complete': not missing and not missing_layers})
+    (args.output / 'manifest.json').write_text(json.dumps(index, ensure_ascii=False, separators=(',', ':')))
+    index['card_skill_effect_readiness'] = {str(r['sprite_id']): {
+        'status': r['status'], 'source_visual_complete': r.get('source_visual_complete', False),
+        'missing_attachment_members': sorted({x['reason'].split(':', 1)[1] for x in r.get('missing_attachments', []) if x['reason'].startswith('member_not_installed:')})}
+        for r in results}
     (args.output / 'manifest.json').write_text(json.dumps(index, ensure_ascii=False, separators=(',', ':')))
     (args.output / 'card_skill_effect_status.json').write_text(json.dumps(results, indent=2))
     print(json.dumps(results))
@@ -107,5 +172,7 @@ if __name__ == '__main__':
     p.add_argument('--catalog', type=pathlib.Path, required=True)
     p.add_argument('--output', type=pathlib.Path, required=True)
     p.add_argument('--base-manifest', type=pathlib.Path)
+    p.add_argument('--cached-zip', type=pathlib.Path, action='append', default=[])
+    p.add_argument('--input-index', type=pathlib.Path)
     p.add_argument('--sprite-id', type=int, action='append', required=True)
     build(p.parse_args())

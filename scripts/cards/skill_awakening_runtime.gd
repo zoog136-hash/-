@@ -95,7 +95,7 @@ func on_successful_hit(target: Node) -> void:
 		target.take_damage(amount,false,"magic")
 		world.skill_cooldowns[key]=maxf(0,float(spell.CastDelay)-float(result.profile.invoke.CastDelayBonus))/1000.0
 		proc_counts[identity]=int(proc_counts.get(identity,0))+1
-		if world.get("hud")!=null:world.hud.append_log(str(result.spell.name)+" · 카드 스킬 각성 · "+str(amount)+" 고정 마법 피해")
+		if world.get("hud")!=null:world.hud.append_log(str(result.spell.name)+" · 카드 스킬 각성 · "+str(amount)+" 고정 마법 피해"+(" · 원본 효과 일부 연결" if not bool(source_vfx.last_result.get("source_visual_complete",false)) else ""))
 	_proc_busy=false
 
 

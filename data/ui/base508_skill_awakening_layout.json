@@ -10,6 +10,46 @@
     {
       "name": "skill-screen-originals/csb_inspection.json",
       "sha256": "0b0639f4488acf7f4495a9910d147d2982c5661c971ba68e805bd33f1adabf84"
+    },
+    {
+      "name": "UI/Change/Change_Awaken_Skill.csb",
+      "sha256": "aa50bea00b320c43f01112cca2c49aee65293a7fc40852a78b7c23b6c5f99fdd"
+    },
+    {
+      "name": "UI/Change/Change_Awaken_SkillExp.csb",
+      "sha256": "c1e7cdef5f9b8090f2741dcf27d724723606d2642092a4763eab45e09a70d821"
+    },
+    {
+      "name": "UI/Change/Change_MagicDoll_Upgrade_Skill.csb",
+      "sha256": "95698281e45ab5588af3570505b3b621a2f2b01dbcbcf1444cdfd8de1f072570"
+    },
+    {
+      "name": "UI/Change/Change_MagicDoll_Upgrade_Skill_List.csb",
+      "sha256": "1418231be3a73d283f6b1953fc169a2f58bff480b6412ccb8f67eeec718c9f9c"
+    },
+    {
+      "name": "UI/Change/Change_MagicDoll_Upgrade_Skill_Result.csb",
+      "sha256": "7e84402f5ed53b683322e4e2776e1ef9f5adc4fca850d05f623d8f6454bfc331"
+    },
+    {
+      "name": "UI/Change/Change_Upgrade_Skill.csb",
+      "sha256": "18e867a837dbf1252b6a26265cf6528a8e714f7699eeda07844d20d8ab2d9749"
+    },
+    {
+      "name": "UI/Change/Change_Upgrade_Skill_List.csb",
+      "sha256": "5d4ec01c18cce0322c90be337c3a8acb11693e46ddbd3dd699e5c78f464b646f"
+    },
+    {
+      "name": "UI/Change/Change_Upgrade_Skill_List_Text.csb",
+      "sha256": "931924837f856b239dce6721bba7a82244a0b95140ebda8a6f47185a8ea4937f"
+    },
+    {
+      "name": "UI/Change/Change_Upgrade_Skill_Result.csb",
+      "sha256": "5b529cfe0dc36a872e79dc0a7df8ba388d4bb4176eadb8b526285be38e57fdaf"
+    },
+    {
+      "name": "UI/Change/Change_Upgrade_Skill_Awaken.csb",
+      "sha256": "dcde58c860d2b63612d60dea5a364bdd44e5c94e17c1d3f76e24169c87f18a6b"
     }
   ],
   "screens": {
@@ -47,7 +87,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 4112,
@@ -82,7 +128,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 25768,
@@ -117,7 +169,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 29560,
@@ -159,6 +217,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -201,6 +265,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          231,
+          181,
+          157
         ]
       },
       {
@@ -243,6 +313,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          178,
+          111,
+          30
         ]
       },
       {
@@ -285,6 +361,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          184,
+          123,
+          49
         ]
       },
       {
@@ -327,6 +409,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          149,
+          96,
+          31
         ]
       },
       {
@@ -369,6 +457,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          159,
+          106,
+          43
         ]
       },
       {
@@ -411,6 +505,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          141,
+          0
         ]
       },
       {
@@ -453,6 +553,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          240,
+          157,
+          54
         ]
       },
       {
@@ -495,6 +601,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -530,7 +642,13 @@
           1400.0,
           521.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 25904,
@@ -572,6 +690,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -607,7 +731,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 25192,
@@ -649,6 +779,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -691,6 +827,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          240,
+          230,
+          203
         ]
       },
       {
@@ -733,6 +875,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          124,
+          104,
+          71
         ]
       },
       {
@@ -775,6 +923,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          124,
+          104,
+          71
         ]
       },
       {
@@ -810,7 +964,13 @@
           326.0,
           366.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 23400,
@@ -845,7 +1005,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 21268,
@@ -899,6 +1065,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -934,7 +1106,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 22008,
@@ -976,6 +1154,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1011,7 +1195,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 21372,
@@ -1053,6 +1243,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          77,
+          77
         ]
       },
       {
@@ -1107,6 +1303,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1142,7 +1344,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 20048,
@@ -1184,6 +1392,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1219,7 +1433,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 19456,
@@ -1261,6 +1481,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          77,
+          77
         ]
       },
       {
@@ -1303,6 +1529,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          224,
+          155,
+          65
         ]
       },
       {
@@ -1338,7 +1570,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 18220,
@@ -1380,6 +1618,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1422,6 +1666,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          253,
+          243,
+          222
         ]
       },
       {
@@ -1464,6 +1714,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1506,6 +1762,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          175,
+          173
         ]
       },
       {
@@ -1548,6 +1810,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1590,6 +1858,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1632,6 +1906,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          246,
+          225,
+          184
         ]
       },
       {
@@ -1674,6 +1954,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1716,6 +2002,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          100,
+          100,
+          100
         ]
       },
       {
@@ -1751,7 +2043,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 11928,
@@ -1805,6 +2103,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1840,7 +2144,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 13772,
@@ -1882,6 +2192,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -1917,7 +2233,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 13208,
@@ -1959,6 +2281,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          77,
+          77
         ]
       },
       {
@@ -2001,6 +2329,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -2043,6 +2377,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -2085,6 +2425,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          189,
+          46
         ]
       },
       {
@@ -2120,7 +2466,13 @@
           1600.0,
           480.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 11212,
@@ -2162,6 +2514,12 @@
             "plistFile": "UI_Resource/Atlas_Texture2.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          231,
+          181,
+          157
         ]
       },
       {
@@ -2197,7 +2555,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 10768,
@@ -2232,7 +2596,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 10428,
@@ -2274,6 +2644,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          240,
+          202
         ]
       },
       {
@@ -2316,6 +2692,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          228,
+          158
         ]
       },
       {
@@ -2351,7 +2733,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 9624,
@@ -2386,7 +2774,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 9280,
@@ -2428,6 +2822,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          240,
+          202
         ]
       },
       {
@@ -2470,6 +2870,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          228,
+          158
         ]
       },
       {
@@ -2512,6 +2918,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -2547,7 +2959,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 7968,
@@ -2589,6 +3007,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          252,
+          227,
+          174
         ]
       },
       {
@@ -2624,7 +3048,13 @@
           280.0,
           40.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 7276,
@@ -2666,6 +3096,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Aura_White.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          114,
+          58
         ]
       },
       {
@@ -2708,6 +3144,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          183,
+          37,
+          0
         ]
       },
       {
@@ -2762,6 +3204,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -2797,7 +3245,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 5540,
@@ -2839,6 +3293,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -2881,6 +3341,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -2916,7 +3382,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 4616,
@@ -2958,6 +3430,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          143,
+          143,
+          143
         ]
       },
       {
@@ -3000,6 +3478,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          127,
+          127,
+          127
         ]
       },
       {
@@ -3042,6 +3526,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -3077,7 +3567,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 3320,
@@ -3119,6 +3615,12 @@
             "plistFile": "UI_Resource/Atlas_Shop.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          44,
+          8
         ]
       },
       {
@@ -3161,6 +3663,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          249,
+          255,
+          193
         ]
       },
       {
@@ -3203,6 +3711,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          249,
+          255,
+          193
         ]
       },
       {
@@ -3245,6 +3759,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          174,
+          77
         ]
       },
       {
@@ -3287,6 +3807,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          174,
+          77
         ]
       },
       {
@@ -3329,6 +3855,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -3371,6 +3903,12 @@
             "plistFile": "UI_Resource/Atlas_Shop.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          236,
+          182
         ]
       },
       {
@@ -3413,6 +3951,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          194,
+          84
         ]
       },
       {
@@ -3455,6 +3999,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          220,
+          138
         ]
       }
     ],
@@ -3492,7 +4042,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 13300,
@@ -3527,7 +4083,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 38384,
@@ -3562,7 +4124,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 42980,
@@ -3604,6 +4172,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -3646,6 +4220,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          231,
+          181,
+          157
         ]
       },
       {
@@ -3688,6 +4268,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          178,
+          111,
+          30
         ]
       },
       {
@@ -3730,6 +4316,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          184,
+          123,
+          49
         ]
       },
       {
@@ -3772,6 +4364,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          149,
+          96,
+          31
         ]
       },
       {
@@ -3814,6 +4412,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          159,
+          106,
+          43
         ]
       },
       {
@@ -3856,6 +4460,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          141,
+          0
         ]
       },
       {
@@ -3898,6 +4508,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          240,
+          157,
+          54
         ]
       },
       {
@@ -3940,6 +4556,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -3975,7 +4597,13 @@
           1400.0,
           521.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 39336,
@@ -4017,6 +4645,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4059,6 +4693,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -4101,6 +4741,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -4136,7 +4782,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 37784,
@@ -4171,7 +4823,13 @@
           160.0,
           467.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 21024,
@@ -4206,7 +4864,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 37208,
@@ -4248,6 +4912,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4290,6 +4960,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4332,6 +5008,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          253,
+          243,
+          222
         ]
       },
       {
@@ -4374,6 +5056,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4416,6 +5104,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          191,
+          221,
+          255
         ]
       },
       {
@@ -4458,6 +5152,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4500,6 +5200,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4542,6 +5248,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4577,7 +5289,13 @@
           390.0,
           132.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 33624,
@@ -4612,7 +5330,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 33236,
@@ -4654,6 +5378,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4696,6 +5426,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          234,
+          152
         ]
       },
       {
@@ -4738,6 +5474,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          185,
+          47
         ]
       },
       {
@@ -4792,6 +5534,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4827,7 +5575,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 31208,
@@ -4869,6 +5623,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4911,6 +5671,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -4946,7 +5712,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 30236,
@@ -4988,6 +5760,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          143,
+          143,
+          143
         ]
       },
       {
@@ -5030,6 +5808,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          127,
+          127,
+          127
         ]
       },
       {
@@ -5065,7 +5849,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 29272,
@@ -5107,6 +5897,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          185,
+          47
         ]
       },
       {
@@ -5149,6 +5945,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          104,
+          104,
+          104
         ]
       },
       {
@@ -5184,7 +5986,13 @@
           100.0,
           30.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 28172,
@@ -5226,6 +6034,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          234,
+          176
         ]
       },
       {
@@ -5268,6 +6082,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          234,
+          176
         ]
       },
       {
@@ -5310,6 +6130,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          234,
+          176
         ]
       },
       {
@@ -5345,7 +6171,13 @@
           100.0,
           30.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 26348,
@@ -5387,6 +6219,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          42,
+          142,
+          255
         ]
       },
       {
@@ -5429,6 +6267,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          42,
+          142,
+          255
         ]
       },
       {
@@ -5471,6 +6315,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          42,
+          142,
+          255
         ]
       },
       {
@@ -5506,7 +6356,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 25228,
@@ -5541,7 +6397,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 25280,
@@ -5576,7 +6438,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 22224,
@@ -5630,6 +6498,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -5665,7 +6539,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 24036,
@@ -5707,6 +6587,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -5742,7 +6628,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 23460,
@@ -5784,6 +6676,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          77,
+          77
         ]
       },
       {
@@ -5826,6 +6724,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -5868,6 +6772,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -5910,6 +6820,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          189,
+          46
         ]
       },
       {
@@ -5945,7 +6861,13 @@
           280.0,
           40.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 21560,
@@ -5987,6 +6909,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Aura_White.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          114,
+          58
         ]
       },
       {
@@ -6029,6 +6957,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          183,
+          37,
+          0
         ]
       },
       {
@@ -6064,7 +6998,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 20196,
@@ -6118,6 +7058,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -6172,6 +7118,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -6214,6 +7166,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          245,
+          224
         ]
       },
       {
@@ -6274,6 +7232,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -6334,6 +7298,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -6369,7 +7339,13 @@
           320.0000047683716,
           360.00000536441803
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 16852,
@@ -6404,7 +7380,13 @@
           320.0000047683716,
           120.00000178813934
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 16428,
@@ -6439,7 +7421,13 @@
           320.0000047683716,
           120.00000178813934
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 16012,
@@ -6474,7 +7462,13 @@
           320.0000047683716,
           120.00000178813934
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 15392,
@@ -6509,7 +7503,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 15444,
@@ -6551,6 +7551,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          191,
+          191,
+          191
         ]
       },
       {
@@ -6593,6 +7599,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          253,
+          243,
+          222
         ]
       },
       {
@@ -6635,6 +7647,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -6670,7 +7688,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 14052,
@@ -6712,6 +7736,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -6754,6 +7784,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          224,
+          155,
+          65
         ]
       },
       {
@@ -6789,7 +7825,13 @@
           393.0,
           138.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 12644,
@@ -6831,6 +7873,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -6873,6 +7921,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -6915,6 +7969,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -6957,6 +8017,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          130,
+          188,
+          255
         ]
       },
       {
@@ -6999,6 +8065,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          147,
+          158,
+          255
         ]
       },
       {
@@ -7041,6 +8113,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          147,
+          158,
+          255
         ]
       },
       {
@@ -7076,7 +8154,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 10192,
@@ -7118,6 +8202,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Aura_White.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          144,
+          165,
+          255
         ]
       },
       {
@@ -7160,6 +8250,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          102,
+          133,
+          255
         ]
       },
       {
@@ -7202,6 +8298,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          134,
+          208,
+          255
         ]
       },
       {
@@ -7244,6 +8346,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -7286,6 +8394,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          117,
+          142,
+          255
         ]
       },
       {
@@ -7328,6 +8442,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          117,
+          142,
+          255
         ]
       },
       {
@@ -7370,6 +8490,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Enchant.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -7412,6 +8538,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Enchant.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -7454,6 +8586,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Blow.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          65,
+          255
         ]
       },
       {
@@ -7496,6 +8634,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -7531,7 +8675,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 6536,
@@ -7573,6 +8723,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -7615,6 +8771,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          100,
+          165,
+          255
         ]
       },
       {
@@ -7657,6 +8819,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          150,
+          156,
+          255
         ]
       },
       {
@@ -7699,6 +8867,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -7741,6 +8915,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Exp.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          246,
+          193
         ]
       },
       {
@@ -7776,7 +8956,13 @@
           110.32559668960573,
           133.05199534702297
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 4560,
@@ -7818,6 +9004,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          218,
+          162
         ]
       },
       {
@@ -7853,7 +9045,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 3944,
@@ -7895,6 +9093,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -7937,6 +9141,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -7979,6 +9189,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          117,
+          142,
+          255
         ]
       },
       {
@@ -8021,6 +9237,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          117,
+          142,
+          255
         ]
       },
       {
@@ -8063,6 +9285,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          117,
+          142,
+          255
         ]
       },
       {
@@ -8105,6 +9333,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -8147,6 +9381,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          134,
+          208,
+          255
         ]
       },
       {
@@ -8189,6 +9429,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -8231,6 +9477,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          194,
+          84
         ]
       },
       {
@@ -8273,6 +9525,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          220,
+          138
         ]
       }
     ],
@@ -8310,7 +9568,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 376,
@@ -8345,7 +9609,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 15972,
@@ -8380,7 +9650,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 20180,
@@ -8422,6 +9698,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -8464,6 +9746,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          231,
+          181,
+          157
         ]
       },
       {
@@ -8506,6 +9794,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          178,
+          111,
+          30
         ]
       },
       {
@@ -8548,6 +9842,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          184,
+          123,
+          49
         ]
       },
       {
@@ -8590,6 +9890,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          149,
+          96,
+          31
         ]
       },
       {
@@ -8632,6 +9938,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          159,
+          106,
+          43
         ]
       },
       {
@@ -8674,6 +9986,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          141,
+          0
         ]
       },
       {
@@ -8716,6 +10034,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          240,
+          157,
+          54
         ]
       },
       {
@@ -8758,6 +10082,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -8793,7 +10123,13 @@
           1400.0,
           521.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 16524,
@@ -8835,6 +10171,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -8877,6 +10219,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          227,
+          175
         ]
       },
       {
@@ -8912,7 +10260,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 15396,
@@ -8954,6 +10308,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -8996,6 +10356,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          240,
+          230,
+          203
         ]
       },
       {
@@ -9038,6 +10404,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          124,
+          104,
+          71
         ]
       },
       {
@@ -9080,6 +10452,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          124,
+          104,
+          71
         ]
       },
       {
@@ -9134,6 +10512,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -9169,7 +10553,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 13008,
@@ -9211,6 +10601,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -9253,6 +10649,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -9288,7 +10690,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 12052,
@@ -9330,6 +10738,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          77,
+          77
         ]
       },
       {
@@ -9372,6 +10786,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          127,
+          127,
+          127
         ]
       },
       {
@@ -9407,7 +10827,13 @@
           326.0,
           366.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 11024,
@@ -9442,7 +10868,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 1604,
@@ -9477,7 +10909,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 10360,
@@ -9519,6 +10957,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -9561,6 +11005,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          0,
+          0
         ]
       },
       {
@@ -9603,6 +11053,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -9645,6 +11101,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          175,
+          173
         ]
       },
       {
@@ -9687,6 +11149,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -9729,6 +11197,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -9771,6 +11245,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          246,
+          225,
+          184
         ]
       },
       {
@@ -9813,6 +11293,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -9855,6 +11341,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          100,
+          100,
+          100
         ]
       },
       {
@@ -9890,7 +11382,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 6584,
@@ -9925,7 +11423,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 6636,
@@ -9960,7 +11464,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 6128,
@@ -9995,7 +11505,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 6180,
@@ -10030,7 +11546,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 5852,
@@ -10065,7 +11587,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 2808,
@@ -10119,6 +11647,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -10154,7 +11688,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 4672,
@@ -10196,6 +11736,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -10231,7 +11777,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 4108,
@@ -10273,6 +11825,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          77,
+          77
         ]
       },
       {
@@ -10315,6 +11873,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -10357,6 +11921,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -10399,6 +11969,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          189,
+          46
         ]
       },
       {
@@ -10434,7 +12010,13 @@
           280.0,
           40.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 2120,
@@ -10476,6 +12058,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Aura_White.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          114,
+          58
         ]
       },
       {
@@ -10518,6 +12106,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          183,
+          37,
+          0
         ]
       },
       {
@@ -10572,6 +12166,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -10614,6 +12214,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          224,
+          155,
+          65
         ]
       }
     ],
@@ -10651,7 +12257,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 136,
@@ -10686,7 +12298,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 1784,
@@ -10721,7 +12339,13 @@
           360.0,
           150.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 3320,
@@ -10763,6 +12387,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          104,
+          104
         ]
       },
       {
@@ -10805,6 +12435,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          104,
+          104
         ]
       },
       {
@@ -10847,6 +12483,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          104,
+          104
         ]
       },
       {
@@ -10889,6 +12531,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          104,
+          104
         ]
       },
       {
@@ -10931,6 +12579,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          104,
+          104
         ]
       },
       {
@@ -10966,7 +12620,13 @@
           360.0,
           240.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 972,
@@ -11008,6 +12668,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          236,
+          236,
+          157
         ]
       },
       {
@@ -11050,6 +12716,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -11092,6 +12764,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          252,
+          219,
+          157
         ]
       }
     ],
@@ -11129,7 +12807,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 152,
@@ -11164,7 +12848,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 1844,
@@ -11199,7 +12889,13 @@
           1600.0,
           480.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 3924,
@@ -11241,6 +12937,12 @@
             "plistFile": "UI_Resource/Atlas_Texture2.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          231,
+          181,
+          157
         ]
       },
       {
@@ -11283,6 +12985,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          242,
+          192,
+          47
         ]
       },
       {
@@ -11325,6 +13033,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          213,
+          141,
+          39
         ]
       },
       {
@@ -11367,6 +13081,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          242,
+          192,
+          47
         ]
       },
       {
@@ -11409,6 +13129,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          213,
+          141,
+          39
         ]
       },
       {
@@ -11451,6 +13177,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          133,
+          0
         ]
       },
       {
@@ -11486,7 +13218,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 1420,
@@ -11521,7 +13259,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 1024,
@@ -11563,6 +13307,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          97,
+          97
         ]
       },
       {
@@ -11623,6 +13373,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       }
     ],
@@ -11660,7 +13416,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 4124,
@@ -11695,7 +13457,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 26504,
@@ -11730,7 +13498,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 30712,
@@ -11772,6 +13546,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -11814,6 +13594,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          231,
+          181,
+          157
         ]
       },
       {
@@ -11856,6 +13642,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          178,
+          111,
+          30
         ]
       },
       {
@@ -11898,6 +13690,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          184,
+          123,
+          49
         ]
       },
       {
@@ -11940,6 +13738,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          149,
+          96,
+          31
         ]
       },
       {
@@ -11982,6 +13786,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          159,
+          106,
+          43
         ]
       },
       {
@@ -12024,6 +13834,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          141,
+          0
         ]
       },
       {
@@ -12066,6 +13882,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          240,
+          157,
+          54
         ]
       },
       {
@@ -12108,6 +13930,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -12143,7 +13971,13 @@
           1400.0,
           521.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 27056,
@@ -12185,6 +14019,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -12227,6 +14067,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          227,
+          175
         ]
       },
       {
@@ -12262,7 +14108,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 25928,
@@ -12304,6 +14156,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -12346,6 +14204,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          240,
+          230,
+          203
         ]
       },
       {
@@ -12388,6 +14252,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          124,
+          104,
+          71
         ]
       },
       {
@@ -12430,6 +14300,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          124,
+          104,
+          71
         ]
       },
       {
@@ -12465,7 +14341,13 @@
           326.0,
           366.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 24224,
@@ -12500,7 +14382,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 22092,
@@ -12554,6 +14442,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -12589,7 +14483,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 22832,
@@ -12631,6 +14531,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -12666,7 +14572,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 22196,
@@ -12708,6 +14620,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          77,
+          77
         ]
       },
       {
@@ -12762,6 +14680,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -12797,7 +14721,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 20872,
@@ -12839,6 +14769,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -12874,7 +14810,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 20280,
@@ -12916,6 +14858,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          77,
+          77
         ]
       },
       {
@@ -12970,6 +14918,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -13012,6 +14966,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          224,
+          155,
+          65
         ]
       },
       {
@@ -13047,7 +15007,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 18276,
@@ -13089,6 +15055,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -13131,6 +15103,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          253,
+          243,
+          222
         ]
       },
       {
@@ -13173,6 +15151,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -13215,6 +15199,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          175,
+          173
         ]
       },
       {
@@ -13257,6 +15247,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -13299,6 +15295,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -13341,6 +15343,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          246,
+          225,
+          184
         ]
       },
       {
@@ -13383,6 +15391,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -13425,6 +15439,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          100,
+          100,
+          100
         ]
       },
       {
@@ -13460,7 +15480,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 11984,
@@ -13514,6 +15540,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -13549,7 +15581,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 13828,
@@ -13591,6 +15629,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -13626,7 +15670,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 13264,
@@ -13668,6 +15718,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          77,
+          77
         ]
       },
       {
@@ -13710,6 +15766,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -13752,6 +15814,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -13794,6 +15862,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          189,
+          46
         ]
       },
       {
@@ -13829,7 +15903,13 @@
           1600.0,
           480.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 11224,
@@ -13871,6 +15951,12 @@
             "plistFile": "UI_Resource/Atlas_Texture2.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          231,
+          181,
+          157
         ]
       },
       {
@@ -13906,7 +15992,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 10780,
@@ -13941,7 +16033,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 10440,
@@ -13983,6 +16081,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          240,
+          202
         ]
       },
       {
@@ -14025,6 +16129,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          228,
+          158
         ]
       },
       {
@@ -14060,7 +16170,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 9636,
@@ -14095,7 +16211,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 9292,
@@ -14137,6 +16259,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          240,
+          202
         ]
       },
       {
@@ -14179,6 +16307,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          228,
+          158
         ]
       },
       {
@@ -14221,6 +16355,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -14256,7 +16396,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 7980,
@@ -14298,6 +16444,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          252,
+          227,
+          174
         ]
       },
       {
@@ -14333,7 +16485,13 @@
           280.0,
           40.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 7292,
@@ -14375,6 +16533,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Aura_White.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          114,
+          58
         ]
       },
       {
@@ -14417,6 +16581,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          183,
+          37,
+          0
         ]
       },
       {
@@ -14471,6 +16641,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -14506,7 +16682,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 5556,
@@ -14548,6 +16730,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -14590,6 +16778,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -14625,7 +16819,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 4632,
@@ -14667,6 +16867,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          143,
+          143,
+          143
         ]
       },
       {
@@ -14709,6 +16915,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          127,
+          127,
+          127
         ]
       },
       {
@@ -14751,6 +16963,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -14786,7 +17004,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 3332,
@@ -14828,6 +17052,12 @@
             "plistFile": "UI_Resource/Atlas_Shop.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          44,
+          8
         ]
       },
       {
@@ -14870,6 +17100,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          249,
+          255,
+          193
         ]
       },
       {
@@ -14912,6 +17148,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          249,
+          255,
+          193
         ]
       },
       {
@@ -14954,6 +17196,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          174,
+          77
         ]
       },
       {
@@ -14996,6 +17244,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          174,
+          77
         ]
       },
       {
@@ -15038,6 +17292,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -15080,6 +17340,12 @@
             "plistFile": "UI_Resource/Atlas_Shop.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          236,
+          182
         ]
       },
       {
@@ -15122,6 +17388,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          194,
+          84
         ]
       },
       {
@@ -15164,6 +17436,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          220,
+          138
         ]
       }
     ],
@@ -15201,7 +17479,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 136,
@@ -15236,7 +17520,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 1784,
@@ -15271,7 +17561,13 @@
           360.0,
           150.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 192,
@@ -15306,7 +17602,13 @@
           360.0,
           240.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 972,
@@ -15348,6 +17650,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          236,
+          236,
+          157
         ]
       },
       {
@@ -15390,6 +17698,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -15432,6 +17746,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          252,
+          219,
+          157
         ]
       }
     ],
@@ -15469,7 +17789,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 120,
@@ -15504,7 +17830,13 @@
           360.0,
           25.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 180,
@@ -15546,6 +17878,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          104,
+          104
         ]
       }
     ],
@@ -15583,7 +17921,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 248,
@@ -15618,7 +17962,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 3772,
@@ -15653,7 +18003,13 @@
           1600.0,
           480.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 6180,
@@ -15695,6 +18051,12 @@
             "plistFile": "UI_Resource/Atlas_Texture2.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          231,
+          181,
+          157
         ]
       },
       {
@@ -15737,6 +18099,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -15779,6 +18147,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          242,
+          192,
+          47
         ]
       },
       {
@@ -15821,6 +18195,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          213,
+          141,
+          39
         ]
       },
       {
@@ -15863,6 +18243,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          242,
+          192,
+          47
         ]
       },
       {
@@ -15905,6 +18291,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          213,
+          141,
+          39
         ]
       },
       {
@@ -15947,6 +18339,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          133,
+          0
         ]
       },
       {
@@ -15982,7 +18380,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 3348,
@@ -16017,7 +18421,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 2952,
@@ -16059,6 +18469,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          97,
+          97
         ]
       },
       {
@@ -16119,6 +18535,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -16161,6 +18583,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          240,
+          202
         ]
       },
       {
@@ -16203,6 +18631,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          228,
+          158
         ]
       },
       {
@@ -16245,6 +18679,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Exp.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          246,
+          193
         ]
       },
       {
@@ -16287,6 +18727,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          210,
+          131,
+          34
         ]
       },
       {
@@ -16329,6 +18775,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          220,
+          138
         ]
       }
     ],
@@ -16366,7 +18818,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 29820,
@@ -16408,6 +18866,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -16450,6 +18914,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          0,
+          0,
+          0
         ]
       },
       {
@@ -16485,7 +18955,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 25180,
@@ -16520,7 +18996,13 @@
           1600.0,
           480.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 28324,
@@ -16562,6 +19044,12 @@
             "plistFile": "UI_Resource/Atlas_Texture2.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          231,
+          181,
+          157
         ]
       },
       {
@@ -16604,6 +19092,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          77,
+          0,
+          0
         ]
       },
       {
@@ -16646,6 +19140,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -16688,6 +19188,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          242,
+          192,
+          47
         ]
       },
       {
@@ -16730,6 +19236,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          213,
+          141,
+          39
         ]
       },
       {
@@ -16772,6 +19284,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          242,
+          192,
+          47
         ]
       },
       {
@@ -16814,6 +19332,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          213,
+          141,
+          39
         ]
       },
       {
@@ -16856,6 +19380,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          133,
+          0
         ]
       },
       {
@@ -16898,6 +19428,12 @@
             "plistFile": "UI_Resource/Atlas_Texture.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -16940,6 +19476,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -16982,6 +19524,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -17017,7 +19565,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 23872,
@@ -17059,6 +19613,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Aura_White.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          82,
+          26,
+          118
         ]
       },
       {
@@ -17101,6 +19661,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -17143,6 +19709,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -17178,7 +19750,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 22624,
@@ -17220,6 +19798,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          97,
+          97
         ]
       },
       {
@@ -17262,6 +19846,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          240,
+          202
         ]
       },
       {
@@ -17304,6 +19894,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          228,
+          158
         ]
       },
       {
@@ -17346,6 +19942,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Exp.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          246,
+          193
         ]
       },
       {
@@ -17388,6 +19990,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -17430,6 +20038,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          220,
+          138
         ]
       },
       {
@@ -17465,7 +20079,13 @@
           170.0,
           130.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 19776,
@@ -17507,6 +20127,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          185,
+          47
         ]
       },
       {
@@ -17542,7 +20168,13 @@
           1600.0,
           480.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 19024,
@@ -17584,6 +20216,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          136,
+          38,
+          22
         ]
       },
       {
@@ -17626,6 +20264,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          238,
+          194
         ]
       },
       {
@@ -17680,6 +20324,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -17715,7 +20365,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 17320,
@@ -17757,6 +20413,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          234,
+          172
         ]
       },
       {
@@ -17799,6 +20461,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -17841,6 +20509,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          217,
+          169
         ]
       },
       {
@@ -17883,6 +20557,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          224,
+          151
         ]
       },
       {
@@ -17925,6 +20605,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          239,
+          204
         ]
       },
       {
@@ -17967,6 +20653,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          215,
+          167
         ]
       },
       {
@@ -18009,6 +20701,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          215,
+          167
         ]
       },
       {
@@ -18051,6 +20749,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Exp.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -18093,6 +20797,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Exp.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -18135,6 +20845,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          239,
+          204
         ]
       },
       {
@@ -18177,6 +20893,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          75,
+          0,
+          87
         ]
       },
       {
@@ -18219,6 +20941,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          70,
+          14,
+          140
         ]
       },
       {
@@ -18261,6 +20989,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          130,
+          0,
+          255
         ]
       },
       {
@@ -18303,6 +21037,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          177,
+          0,
+          255
         ]
       },
       {
@@ -18338,7 +21078,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 12268,
@@ -18380,6 +21126,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -18422,6 +21174,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          45,
+          0,
+          45
         ]
       },
       {
@@ -18464,6 +21222,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          45,
+          0,
+          45
         ]
       },
       {
@@ -18506,6 +21270,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          45,
+          0,
+          45
         ]
       },
       {
@@ -18548,6 +21318,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          45,
+          0,
+          45
         ]
       },
       {
@@ -18590,6 +21366,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          45,
+          0,
+          45
         ]
       },
       {
@@ -18632,6 +21414,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          45,
+          0,
+          45
         ]
       },
       {
@@ -18667,7 +21455,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 9728,
@@ -18709,6 +21503,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -18751,6 +21551,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -18793,6 +21599,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -18835,6 +21647,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -18877,6 +21695,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -18912,7 +21736,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 7864,
@@ -18954,6 +21784,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          140,
+          0
         ]
       },
       {
@@ -18996,6 +21832,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          174,
+          62
         ]
       },
       {
@@ -19038,6 +21880,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -19080,6 +21928,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          174,
+          77
         ]
       },
       {
@@ -19122,6 +21976,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          174,
+          77
         ]
       },
       {
@@ -19164,6 +22024,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -19206,6 +22072,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Exp.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          246,
+          193
         ]
       },
       {
@@ -19241,7 +22113,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 5336,
@@ -19283,6 +22161,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          206,
+          113
         ]
       },
       {
@@ -19325,6 +22209,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -19367,6 +22257,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          188,
+          94
         ]
       },
       {
@@ -19409,6 +22305,12 @@
             "plistFile": "UI_Resource/Atlas_Z_Fx_Seet_Aura_White.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          219,
+          0,
+          187
         ]
       },
       {
@@ -19451,6 +22353,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          241,
+          223
         ]
       },
       {
@@ -19493,6 +22401,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          236,
+          177
         ]
       },
       {
@@ -19528,7 +22442,13 @@
           0.0,
           0.0
         ],
-        "resources": []
+        "resources": [],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
+        ]
       },
       {
         "table_offset": 2956,
@@ -19570,6 +22490,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          134,
+          208,
+          255
         ]
       },
       {
@@ -19612,6 +22538,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -19654,6 +22586,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          180,
+          122,
+          251
         ]
       },
       {
@@ -19696,6 +22634,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          238,
+          194
         ]
       },
       {
@@ -19738,6 +22682,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          151,
+          92,
+          197
         ]
       },
       {
@@ -19780,6 +22730,12 @@
             "plistFile": "",
             "resourceType": 0
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       },
       {
@@ -19822,6 +22778,12 @@
             "plistFile": "UI_Resource/Atlas_Common.plist",
             "resourceType": 1
           }
+        ],
+        "color_ARGB": [
+          255,
+          255,
+          255,
+          255
         ]
       }
     ]
