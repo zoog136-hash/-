@@ -14,6 +14,25 @@ static func registered_native_ground(renderer: Node, sprite: Sprite2D) -> bool:
 	# Split foreground uses suffixed keys and must never qualify as the base tile.
 	return not source.is_empty() and native.chunks.get(source) == sprite
 
+static func registered_source_ground(renderer: Node, sprite: Sprite2D) -> bool:
+	if renderer.get_script() != preload("res://scripts/maps/source_map_runtime_renderer.gd"): return false
+	if sprite.get_parent() != renderer or sprite.centered: return false
+	var source = renderer
+	for key: Variant in source.chunks:
+		if source.chunks[key] != sprite: continue
+		var index: int = int(key)
+		if index < 0 or index >= source.record.chunks.size() or index >= 4096: return false
+		if sprite.z_index != -4096 + index: return false
+		var effective_z: int = sprite.z_index
+		var current: CanvasItem = sprite
+		while current.z_as_relative and current.get_parent() is CanvasItem:
+			current = current.get_parent() as CanvasItem
+			effective_z += current.z_index
+		if effective_z >= 0: return false
+		var row: Dictionary = source.record.chunks[index]
+		return sprite.position == Vector2(row.position[0],row.position[1])
+	return false
+
 static func clear_bounds(renderer: Node, world_bounds: Rect2) -> bool:
 	if not is_instance_valid(renderer): return false
 	var pending: Array[Node] = [renderer]
@@ -23,7 +42,7 @@ static func clear_bounds(renderer: Node, world_bounds: Rect2) -> bool:
 		if not node is Sprite2D: continue
 		var sprite := node as Sprite2D
 		if not sprite.is_visible_in_tree() or sprite.texture == null: continue
-		if registered_native_ground(renderer, sprite): continue
+		if registered_native_ground(renderer, sprite) or registered_source_ground(renderer,sprite): continue
 		var local: Rect2 = sprite.get_rect()
 		if sprite.texture is AtlasTexture:
 			var atlas := sprite.texture as AtlasTexture

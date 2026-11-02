@@ -1,8 +1,10 @@
 name: Main Debug Audit
 # A manual, 4-shard deep diagnostic. The normal PR runtime and real gameplay
 # validation is handled by TWILIGHT Integration Validate.
-on:
+# Historical/source-specific audits remain available after integration.
+'on':
   workflow_dispatch:
+
 permissions:
   contents: read
 concurrency:
@@ -17,6 +19,14 @@ jobs:
       matrix:
         shard: [0, 1, 2, 3]
     steps:
+      - name: Free runner disk space
+        # Godot import caches plus the checkout can exceed smaller runner disks.
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft /opt/google \
+            /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium || true
+          echo "::notice title=Disk after cleanup::$(df -h / | tail -n 1 | tr -s ' ')"
       - uses: actions/checkout@v4
         with:
           # docs/ is ~22 GB of review evidence; with its pack it overflows the

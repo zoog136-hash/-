@@ -112,10 +112,10 @@ func run() -> void:
 			check(frames.has_animation(track), "authored role " + track)
 			for index: int in range(frames.get_frame_count(track)):
 				normal.sprite.texture = frames.get_frame_texture(track, index)
-				if frames.has_meta("twilight_canvas_size"):
-					normal.sprite.scale = normal.animation_base_scale * Vector2(256, 256) / normal.sprite.texture.get_size()
+				var source_binding: Dictionary = REVIEWED_VISUALS.binding(record_for(subject))
+				var source_canvas: Array = source_binding.get("canvas_size", [256,256])
+				inspect_source_pose_geometry(normal.sprite,frames,track,index,normal.animation_base_scale,Vector2(source_canvas[0],source_canvas[1]))
 				check(upright(normal.sprite), "sample stays upright " + track)
-				check((normal.sprite.texture.get_size() * normal.sprite.scale / normal.animation_base_scale).is_equal_approx(Vector2(256, 256)), "constant displayed pose canvas " + track)
 				report.pose_samples.append({"track":track, "frame":index})
 				if OS.get_environment("TWILIGHT_ORIGINAL_POSE_CAPTURE") != "0":
 					await capture("authored-%s-%s-%d" % [COMPASS[direction], role, index])
