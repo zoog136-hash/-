@@ -6963,7 +6963,9 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.armor_class,0)
 
 func _catalog_damage_bonus(kind: String) -> int:
-	var total: int = _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
+	# Scoped source subslot damage has no generic atk field to count again.
+	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
+	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():

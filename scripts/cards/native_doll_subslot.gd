@@ -3,7 +3,7 @@ extends RefCounted
 const DATA=preload("res://data/cards/base508_option_extensions.json")
 const FIELD: String="native_subslot_identity"
 static var _secondary_groups: Dictionary={}
-const MAP={"HPPlus":"hpFlat","HPPlusPercent":"hpPct","Strength":"strFlat","Dexterity":"dexFlat","Intelligence":"intFlat","CarryPlus":"weightBonus","ArmorClass":"def","ArmorClassBonus":"def","AttackSpeedBonus":"attackSpeed","MoveSpeedBonus":"moveSpeedPct","PierceDamageReduction":"damage_reduction_ignore","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","SpellPower":"sp"}
+const MAP={"HPPlus":"hpFlat","HPPlusPercent":"hpPct","Strength":"strFlat","Dexterity":"dexFlat","Intelligence":"intFlat","CarryPlus":"weightBonus","ArmorClass":"def","ArmorClassBonus":"def","AttackSpeedBonus":"attackSpeed","MoveSpeedBonus":"moveSpeedPct","PierceDamageReduction":"damage_reduction_ignore","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","SpellPower":"sp","Constitution":"conFlat","MPPlus":"mpFlat","DamageReduction":"damageReduction","MagicResist":"mr","MeleeEvasion":"dg","RangeEvasion":"er","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeCritical":"meleeCrit","RangeCritical":"rangedCrit","HPPotionIncreaseStatic":"potionHealFlat","HPPotionIncreasePercent":"potionHealPct","PVEDamageReduction":"pve_damage_reduction","PVEMeleeAdditionDamage":"pve_melee_damage","PVERangeAdditionDamage":"pve_ranged_damage","PVEMagicAdditionDamage":"pve_magic_damage"}
 static func validate(value: Dictionary) -> String:
 	var unlock_error: String=preload("res://scripts/cards/native_doll_unlock_item.gd").validate(value)
 	if not unlock_error.is_empty():return unlock_error
