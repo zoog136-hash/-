@@ -74,3 +74,44 @@ entry prerequisites and original-client successful/blocked-step observations
 remain unverified. Do not promote this experiment to the default game or claim
 that original collision is complete. The earlier small-hall routes cannot serve
 as whole-map acceptance evidence.
+
+### Main source-edge compatibility review (Faith 1–4)
+
+On PR217's actual Main runtime, opt in with `--base508-source-test
+--base508-source-edge-review --base508-pack=<private-pack>
+--base508-tables=<base508-content-tables>`. Exact Land/Asset pairs are
+47914/13398, 48274/13401, 48774/13472 and 49324/13504. No old PNG
+navigation is reused. Original arrival cells are required without a nearest-cell
+fallback. Missing chunks and unreviewed attribute values reject navigation.
+The default game and save routing remain unchanged; source-test saves are disabled.
+
+`verify_base508_main_edges.gd` runs actual Main/class selection, a real Player
+click movement, four full-map extreme routes using the Player's radius-4 body,
+64 closed-boundary probes, coordinate round trips, strict occupancy registration
+and removal, and save-file hash preservation. Run in an isolated XDG data root:
+
+```sh
+godot --headless --path <PR217-consumer> \
+  --script res://tools/map_restore/verify_base508_main_edges.gd -- \
+  --base508-source-test --base508-source-edge-review \
+  --base508-pack=<private-pack> --base508-tables=<base508-content-tables>
+```
+
+Local four-floor Main validation reached 16/16 routes through 29,180 body-sweep
+steps and blocked 256/256 sampled boundaries. 85,764 source-cell coordinate
+round trips passed. Dynamic occupancy uses an explicit confirmed runtime test
+instance of an original occupying class; territory rectangles are not NPC
+placements. Actual source NPC populations and automatic item/portal activation
+are not implemented here. These checks prove our compatibility policy agrees
+with its physics, not that M's unknown terrain bits, heights or native foot
+anchor have been recovered. Flat original chunks still do not supply actor
+foreground occlusion. Runtime 30 FPS on target hardware remains unverified.
+The consumer lacks knight base animation sheets and one HUD icon, producing
+existing fallback warnings; they are not counted as source actor delivery.
+
+The newly supplied reference ZIP (SHA256
+`5d31500922f6e8b5e60b3dee72c341f7beb38163ee0bf664abb2370cf2d18ebc`)
+was checked against the current renderer: all 8192 half-tile placements agree
+under the same chunk origin. MTil is identical to the previously reviewed
+reference. No decoder replacement, original pixel change or map regeneration
+was justified; the visual mask remains separate from passability.

@@ -19,6 +19,13 @@ static func prepare() -> PlayableField:
 	var pack_script=load("res://scripts/maps/base508_pack.gd")
 	var pack=pack_script.new()
 	if not pack.load_pack(argument("--base508-pack=")):problem=pack.error;return null
+	if "--base508-source-edge-review" in OS.get_cmdline_user_args():
+		var edge_script=load("res://scripts/maps/base508_source_edge_field.gd")
+		var edge_candidate=edge_script.new()
+		if not edge_candidate.configure_edges(pack,argument("--base508-tables=")):
+			problem="Original source identity, arrival or edge profile rejected";return null
+		prepared=edge_candidate
+		return prepared
 	var field_script=load(FIELD_PATH)
 	var candidate=field_script.new()
 	var mid:String=argument("--base508-legacy-map=")
