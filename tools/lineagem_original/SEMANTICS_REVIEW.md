@@ -97,3 +97,36 @@ an Android execution or a complete Main-scene validation. No exact M compositor
 or global equivalence claimed. Minimal mode checks passed: the pair/order is
 active only in compatible mode; strict keeps attachments disabled; Halphas
 still uses the old policy; clear/reconfigure releases both backbuffer nodes.
+
+## Sparse attachment diagnostics (2026-11-02)
+
+A missing parent-token lookup is not proof of a required image missing on screen.
+The compiler now records `present_pixels`, `explicit_empty` and separate indexed
+lookup-gap categories. `source_sparse_attachments.json` pins19 source-action
+usages by actor/role/source-ID/action-ID/raw-action SHA256 to12 distinct missing
+layer/chunk pairs across seven layer IDs. Only those observations are classified
+`source_sparse_observed`. The absence is not fabricated into an empty PNG and
+all issue rows/file addresses remain visible. Existing actual effect chunks and
+runtime draw/timing behavior are unchanged.
+
+Source observations:14327 pixels only48 (spell18/19);6262 only304 (fishing71),
+other41 indexed chunks explicitly empty;7907 only16 (attack), other5 empty;
+13920/13921 only48 (breath-two9), other9 each empty;13698 retains actual nonempty
+chunks8/16/24/40/56/64 and observed empty0/32/48/72;9891 pixels16/24/32.
+The seven physical prefixes have86 indexed files. Local complete structure checks
+cover82; four9891 files use the delegated independent raw audit, explicitly marked
+as such in the metadata. Header numbers are not strict limits (22260/22261
+counterexample), and an action-less declaration does not imply pixel-free state
+(28441/28442 versus28516/28517 counterexample).
+
+Applied to the existing latest attachment report without pixel conversion:
+12 distinct lookup gaps become source-sparse observations;176 remain entire-prefix
+not-located.196 total issue rows (including separate existing frame exceptions)
+are retained. Seven missing event targets remain a separate report. The12 sparse
+addresses concern8 source cards;3 also have entirely unlocated layers in other
+options. Five cards therefore have only observed sparse gaps in this inventory,
+while43 have other unresolved attachment/event references. None of these counts
+establish required missing draws or original-client visual equivalence.
+
+Diagnostic-only refresh, without recompiling actor pixels:
+`python tools/lineagem_original/source_sparse_scope.py --inputs INPUTS --pack PACK`
