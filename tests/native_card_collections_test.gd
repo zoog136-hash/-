@@ -11,9 +11,22 @@ func _run() -> void:
 	var path: String = "res://data/lineagem_base508/cards.json"
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--native-cards="): path = argument.trim_prefix("--native-cards=")
-	if not FileAccess.file_exists(path): push_error("Required canonical native card catalog missing: " + path); quit(2); return
-	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path)).catalog
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/cards/base508_collections.json"))
+	var catalog: Dictionary = {}
+	var catalog_mode: String = "canonical_source_catalog"
+	if FileAccess.file_exists(path):
+		catalog=JSON.parse_string(FileAccess.get_file_as_string(path)).catalog
+	else:
+		# The UI branch can precede PR217. This is an explicit schema/state fixture,
+		# not evidence that the independent canonical 701-card join was checked.
+		catalog_mode="requirement_derived_schema_fixture; canonical701_join_not_checked"
+		var seen: Dictionary={}
+		for category: String in Cards.CATEGORIES:catalog[category]=[]
+		for row: Dictionary in data.collections:
+			for requirement: Dictionary in row.requirements:
+				if seen.has(requirement.id):continue
+				seen[requirement.id]=true
+				catalog[row.category].append({"source":"lineagem_base508","sourceId":str(requirement.id).trim_prefix("source:"),"source_card_id":requirement.source_original.BuffCardID,"name":requirement.name,"grade":requirement.grade})
 	var core = Native.new()
 	check(core.configure(data, catalog), "all native rows configure: " + core.error)
 	check(core.definitions.all(func(row: Dictionary) -> bool:return row.time_policy==Native.TIME_POLICY and row.time_label=="상시"), "time limits overridden without deleting any source set")
@@ -47,6 +60,23 @@ func _run() -> void:
 	var full: Dictionary = core.derive({"owned":all_owned,"spare":{},"option_awakening":{"all":true}})
 	var again: Dictionary = core.derive({"owned":all_owned,"spare":{"변신":{"irrelevant":999999}}})
 	check(hash(all_owned) == owned_before, "derivation does not alter owned ledger")
+	var profile_row: Dictionary={}
+	for profile: Dictionary in data.source_server_limits:
+		if int(profile.ServerLimitSetID)==772:profile_row=profile;break
+	check(not profile_row.is_empty(),"original server profile 772 exists")
+	var context: Dictionary={"source_snapshot":"base508","ServiceRegionCode":profile_row.ServiceRegionCode,"WorldNo":profile_row.WorldNo}
+	var eligible: Dictionary=core.derive({"owned":all_owned,"source_server_context":context})
+	check(eligible.completed.size()>full.completed.size(),"actual source profile predicate enables eligible sets in an explicit context fixture")
+	check(core.derive({"owned":all_owned,"source_server_context":context}).totals==eligible.totals,"server evaluation is idempotent")
+	for row: Dictionary in eligible.rows:
+		if row.problems.has("native_awakening_required"):check(not row.completed,"eligible server never substitutes native awakening "+str(row.id))
+	var mismatch: Dictionary=core.derive({"owned":all_owned,"source_server_context":{"source_snapshot":"base508","ServiceRegionCode":"KR","WorldNo":999999}})
+	check(mismatch.completed==full.completed and mismatch.totals==full.totals,"nonmatching server removes all server-limited bonuses")
+	check(mismatch.rows.any(func(row: Dictionary) -> bool:return row.problems.has("native_server_ineligible")),"known ineligible server differs from missing context")
+	var wrong: Dictionary=core.derive({"owned":all_owned,"source_server_context":{"source_snapshot":"other","ServiceRegionCode":profile_row.ServiceRegionCode,"WorldNo":profile_row.WorldNo}})
+	check(wrong.completed==full.completed,"another snapshot cannot satisfy native server conditions")
+	check(core.conditions.evaluate(987654,context).status=="definition_missing","missing source profile distinguished from runtime context")
+
 	check(full.totals == again.totals and full.completed == again.completed, "idempotent rewards; duplicates/option awakening do not alter native completion")
 	var blocked: int = 0; var available: int = 0; var chosen: Dictionary = {}
 	for row: Dictionary in full.rows:
@@ -69,5 +99,5 @@ func _run() -> void:
 	check(removed.completed.is_empty() and removed.totals.is_empty(), "missing required member removes derived reward")
 	one_data.collections[0].requirements[0].source_original.BuffCardID = -77
 	check(not Native.new().configure(one_data,catalog), "corrupt BuffCardID join fails closed")
-	print(JSON.stringify({"checks":checks,"failures":failures,"native_sets":1736,"available_supported_sets":available,"blocked_sets":blocked,"all_owned_derived_totals":full.totals}))
+	print(JSON.stringify({"catalog_mode":catalog_mode,"checks":checks,"failures":failures,"native_sets":1736,"available_supported_sets":available,"blocked_sets":blocked,"all_owned_derived_totals":full.totals}))
 	quit(0 if failures.is_empty() else 1)

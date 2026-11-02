@@ -52,6 +52,13 @@ func run() -> void:
 	if bag.slot_visual_updates>visual_updates+2:failures.append("selection repainted unrelated slots")
 	if bag.selected_item!=reference:failures.append("selection lost after refresh")
 	if bag.sorted_references.size()!=101:failures.append("refresh lost records")
+	var sample: Button = bag._new_reusable_slot()
+	bag._bind_reusable_slot(sample,"검 050@@@17")
+	if sample.custom_minimum_size!=Vector2(76,76) or sample.get_node("Icon").size!=Vector2(64,64):failures.append("original Common_Slot metrics not applied")
+	if not sample.tooltip_text.contains("+2") or sample.get_meta("tooltip_reference")!="검 050@@@17":failures.append("first physical tooltip lost enhancement/reference")
+	bag._bind_reusable_slot(sample,"검 050@@@18")
+	if not sample.tooltip_text.contains("+3") or sample.get_meta("tooltip_reference")!="검 050@@@18":failures.append("reused tooltip retained another physical item")
+	sample.free()
 	print("INVENTORY_VIRTUAL_WINDOW_RESULT ",JSON.stringify({"failures":failures,"created":bag.slot_nodes_created,"total":bag.sorted_references.size()}))
 	a.queue_free()
 	await process_frame

@@ -289,6 +289,9 @@ func activate() -> void:
 
 func deactivate() -> void:
 	if not active:return
+	preload("res://scripts/ui/source_card_skin.gd").restore_surface(hud)
+	preload("res://scripts/ui/source_card_skin.gd").restore(hud.catalog_equip_button)
+	for button: Button in tab_buttons: preload("res://scripts/ui/source_card_skin.gd").restore(button)
 	active=false
 	hud.workspace.add_theme_stylebox_override("panel",window_style)
 	hud.catalog_panel.add_theme_stylebox_override("panel",catalog_style)
@@ -391,6 +394,10 @@ func _fit_grid() -> void:
 	var selected: StyleBoxFlat=UI.box(Color("142633"),UI.GOLD,4)
 	hud.catalog_list.add_theme_stylebox_override("selected",selected)
 	hud.catalog_list.add_theme_stylebox_override("selected_focus",selected)
+
+	preload("res://scripts/ui/source_card_metrics.gd").apply(hud)
+	if preload("res://scripts/ui/source_card_presentation.gd").native(hud.selected_catalog_record):
+		preload("res://scripts/ui/source_card_skin.gd").tabs(tab_buttons)
 
 func refresh_state(force_cards: bool=false) -> void:
 	if not active:return

@@ -54,9 +54,14 @@ static func run(suite: Variant, ref0: String, ref1: String) -> void:
 	await suite.frames(2)
 	suite.check(Time.get_ticks_msec() >= final_deadline and not hint.visible,"name disappears after five seconds without mouse exit")
 	suite.check(bag.selected_item == ref1 and not bag.detail_active,"name expiry preserves selection and never opens details")
-	var selected_style: StyleBoxFlat = bag.slot_buttons[ref1].get_theme_stylebox("normal") as StyleBoxFlat
-	var other_style: StyleBoxFlat = bag.slot_buttons[ref0].get_theme_stylebox("normal") as StyleBoxFlat
-	suite.check(selected_style.border_color != other_style.border_color and selected_style.border_width_top == 2,"selected border remains visibly highlighted after name expiry")
+	if bag.slot_buttons[ref1].has_meta("original_inventory_slot"):
+		var selected_style: StyleBoxTexture=bag.slot_buttons[ref1].get_theme_stylebox("normal") as StyleBoxTexture
+		var other_style: StyleBoxTexture=bag.slot_buttons[ref0].get_theme_stylebox("normal") as StyleBoxTexture
+		suite.check(selected_style!=null and other_style!=null and selected_style.texture!=other_style.texture,"original selected slot remains highlighted after name expiry")
+	else:
+		var selected_style: StyleBoxFlat = bag.slot_buttons[ref1].get_theme_stylebox("normal") as StyleBoxFlat
+		var other_style: StyleBoxFlat = bag.slot_buttons[ref0].get_theme_stylebox("normal") as StyleBoxFlat
+		suite.check(selected_style.border_color != other_style.border_color and selected_style.border_width_top == 2,"selected border remains visibly highlighted after name expiry")
 	await suite.tap(suite.point(details),true)
 	suite.check(bag.detail_active and bag.selected_item == ref1,"details can still open after the name has expired")
 	await suite.tap(suite.point(close),true)

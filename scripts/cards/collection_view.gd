@@ -217,7 +217,8 @@ func _card(parent: Node,requirement: Dictionary,width: float) -> void:
 		art.texture=Ownership.icon_for(record,acquired);art.modulate=Color.WHITE if acquired else Ownership.UNOWNED_ICON_TINT
 		button.add_child(art);art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		if native:
-			button.tooltip_text+=" · 원본 프레임 미설치"
+			var frame_status: String=preload("res://scripts/ui/source_card_skin.gd").frame_status(record)
+			if frame_status!="original":button.tooltip_text+=" · 원본 프레임 미지정" if frame_status=="undeclared" else " · 원본 프레임 미설치"
 			if art.texture==null:button.text="원본 이미지\n미설치"
 		if acquired and not native:
 			var aura:=ColorRect.new();aura.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -265,6 +266,6 @@ func _reasons(problems: Array) -> String:
 	var out: Array[String]=[]
 	for raw: Variant in problems:
 		var code: String=str(raw)
-		var label: String="원본 서버 조건 미해석" if code=="native_server_context_required" else "원본 각성 조건 별도" if code=="native_awakening_required" else "원본 보상 연결 없음" if code=="native_reward_missing" else "카드 매칭 누락" if code.begins_with("card_unmapped:") else "각성 조건 별도" if code=="awakening_collection_separate" else "현재 전투 효과 미지원" if code.begins_with("effect_unsupported:") else "출처 버전 확인 필요"
+		var label: String="현재 서버 조건 불일치" if code=="native_server_ineligible" else "원본 서버 정의 없음" if code=="native_server_definition_missing" else "원본 적용 대상 정의 없음" if code.begins_with("native_source_target_missing:") else "원본 HP 구간 효과 미연결" if code=="native_interval_runtime_required" else "현재 서버 문맥 미설정" if code=="native_server_context_required" else "원본 각성 조건 별도" if code=="native_awakening_required" else "원본 보상 연결 없음" if code=="native_reward_missing" else "카드 매칭 누락" if code.begins_with("card_unmapped:") else "각성 조건 별도" if code=="awakening_collection_separate" else "현재 전투 효과 미지원" if code.begins_with("effect_unsupported:") else "출처 버전 확인 필요"
 		if not out.has(label):out.append(label)
 	return " · ".join(out)
