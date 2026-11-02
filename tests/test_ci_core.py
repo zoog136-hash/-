@@ -17,7 +17,7 @@ class CoreStageTest(unittest.TestCase):
     def fixture(self, root):
         files = {
             'project.godot':'config_version=5\n',
-            'Main.tscn':'[ext_resource type="Texture2D" path="res://assets/live.png"]\n',
+            'Main.tscn':'[ext_resource type="Texture2D" path="res://assets/live.png"]\n[ext_resource path="res://docs/runtime.txt"]\n',
             'scripts/main.gd':'const DATA = "res://data/live.json"\n',
             'data/live.json':'{"frames":"res://assets/live.tres"}',
             'data/unused-review.json':'{"review":"res://assets/review.png"}',
@@ -25,6 +25,7 @@ class CoreStageTest(unittest.TestCase):
             'assets/live.png':'opaque test byte fixture, never game art',
             'assets/pose.png':'second immutable test byte fixture',
             'assets/review.png':'unused review fixture',
+            'docs/runtime.txt':'runtime-linked document fixture',
             'tests/qa_class_selection.gd':'extends RefCounted\n',
         }
         files.update({'tests/'+name+'.gd':'extends SceneTree\n' for name,_ in CORE.CHECKS})
@@ -40,6 +41,7 @@ class CoreStageTest(unittest.TestCase):
             result=CORE.stage(root,Path(temporary)/'stage')
             selected={r['path'] for r in result['files']}
             self.assertTrue({'assets/live.png','assets/live.tres','assets/pose.png'}<=selected)
+            self.assertIn('docs/runtime.txt',selected)
             self.assertNotIn('assets/review.png',selected)
             self.assertEqual((root/'assets/pose.png').read_bytes(),(Path(temporary)/'stage/assets/pose.png').read_bytes())
 

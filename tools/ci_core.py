@@ -19,7 +19,7 @@ import subprocess
 import tempfile
 
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
-REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests)/[^"\'\n]+)["\']')
+REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs)/[^"\'\n]+)["\']')
 CHECKS = [
     ('core_runtime_save_test', []),
     ('save_identical_payload_test', []),
