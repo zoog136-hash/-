@@ -134,3 +134,29 @@ is a test location), never by assuming the only row is an entrance. Explicit
 portal targets must match the Land and be points; region centers are rejected.
 These are opt-in review entries, not automatic portal triggers or server-condition
 recovery. Native M passability remains unconfirmed. Height, foreground and automatic portal triggers remain unresolved.
+
+### Explicit-entry review queue
+
+`build_source_entry_queue.py` consumes original BonusType/Bonus/Locations and
+original enriched portal tables, plus the independently scanned attribute
+inventory. Locations are eligible only through an explicit TeleportToLocation
+bonus; other location rows are not entries. Only point portal destinations are
+eligible. Source identities and the exact map.json SHA256 bind each queue row.
+No output is production movement approval and entry prerequisites are not
+consumed or inferred.
+
+Select an entry explicitly with `--base508-entry-catalog=<private-queue.json>
+--base508-review-entry=PORTAL_POINT_TARGET:<original-portal-id>` (or
+`TELEPORT_TO_LOCATION:<original-bonus-id>`), together with the existing source
+review flags. The same shared loader/navigation/physical field supports these
+entries without adding hand-authored map colliders. The queue rejects other
+attribute profiles; missing explicit entries remain separate blockers.
+
+The current612 referenced pack inventory yields34 graph-review candidates,
+23 zero/one-profile packs without explicit entries, and555 unreviewed attribute
+profiles. All34 candidates pass four routes within their arrival component;
+three (13372/30/31) contain additional disconnected components, which are not
+claimed reachable. The full graph and component sizes remain separate.
+`verify_source_entry_queue.gd` records failures per original entry and never
+moves an entry to a nearby cell. Runtime Main validation remains a separate
+stage; graph approval alone does not constitute physical walking approval.

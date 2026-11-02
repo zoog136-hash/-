@@ -24,7 +24,12 @@ func run()->void:
  check(world.player.get_node('CollisionShape2D').shape is CircleShape2D and world.player.get_node('CollisionShape2D').shape.radius==4,'real Player foot')
  check(world._save_game(true)==ERR_UNAVAILABLE,'save disabled')
  var before:Vector2=world.player.global_position
- var target:Vector2=field.source_to_world(Vector2(field.source_navigation.arrival+Vector2i(2,0)))
+ var target:Vector2=Vector2.INF
+ for offset:Vector2i in [Vector2i(2,0),Vector2i(-2,0),Vector2i(0,2),Vector2i(0,-2)]:
+  var candidate_target:Vector2=field.source_to_world(Vector2(field.source_navigation.arrival+offset))
+  if not world.find_world_path(before,candidate_target).is_empty():target=candidate_target;break
+ check(target.is_finite(),'nearby source click destination')
+ if not target.is_finite():world.queue_free();quit(1);return
  check(not world.find_world_path(before,target).is_empty(),'Main path')
  world._set_click_destination(target)
  for i:int in range(180):
@@ -71,16 +76,21 @@ func run()->void:
    candidate=record;break
  if candidate.is_empty():print('MAIN_SOURCE_OCCUPANCY_UNAVAILABLE no original occupying class in this pack; no fabricated instance')
  if not candidate.is_empty():
+  var occupancy_neighbor:Vector2=start
+  for direction:Vector2i in nav.DIRS:
+   if nav.edge(nav.arrival,nav.arrival+direction) and nav.safe(nav.point(nav.arrival+direction)):
+    occupancy_neighbor=nav.point(nav.arrival+direction);break
+  check(occupancy_neighbor!=start,'occupancy approach edge')
   check(not field.register_source_occupant('review',candidate,nav.arrival,2),'nonboolean placement rejected')
   check(field.register_source_occupant('review',candidate,nav.arrival,true),'confirmed test instance')
   check(not field.walkable(start),'occupied source cell blocked')
   await physics_frame
-  world.player.position=nav.point(nav.arrival+Vector2i.RIGHT)
+  world.player.position=occupancy_neighbor
   check(world.player.move_and_collide(start-world.player.position)!=null,'occupied cell physically blocks')
   field.unregister_source_occupant('review')
   check(field.walkable(start),'removed occupancy restored')
   await physics_frame
-  world.player.position=nav.point(nav.arrival+Vector2i.RIGHT)
+  world.player.position=occupancy_neighbor
   check(world.player.move_and_collide(start-world.player.position)==null,'removed occupancy physics restored')
  for cell:Vector2i in nav.ids:
   check(Vector2(cell).distance_to(field.world_to_source(field.source_to_world(Vector2(cell))))<0.001,'coordinate round trip')

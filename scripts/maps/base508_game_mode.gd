@@ -22,7 +22,19 @@ static func prepare() -> PlayableField:
 	if "--base508-source-edge-review" in OS.get_cmdline_user_args():
 		var edge_script=load("res://scripts/maps/base508_source_edge_field.gd")
 		var edge_candidate=edge_script.new()
-		if not edge_candidate.configure_edges(pack,argument("--base508-tables=")):
+		var review_entry:Dictionary={}
+		var catalog_path:String=argument("--base508-entry-catalog=")
+		if not catalog_path.is_empty():
+			var catalog:Variant=JSON.parse_string(FileAccess.get_file_as_string(catalog_path))
+			if not catalog is Dictionary:problem="Invalid source entry catalog";return null
+			for row:Dictionary in catalog.get("maps",[]):
+				if int(row.land)!=int(pack.manifest.land.ID) or row.status!="READY_FOR_GRAPH_REVIEW":continue
+				for entry:Dictionary in row.entries:
+					if str(entry.kind)+":"+str(int(entry.id))==argument("--base508-review-entry="):
+						if not review_entry.is_empty():problem="Ambiguous source entry";return null
+						review_entry=row.duplicate(true);review_entry.selected=entry
+			if review_entry.is_empty():problem="Explicit source entry not found";return null
+		if not edge_candidate.configure_edges(pack,argument("--base508-tables="),review_entry):
 			problem="Original source identity, arrival or edge profile rejected";return null
 		prepared=edge_candidate
 		return prepared

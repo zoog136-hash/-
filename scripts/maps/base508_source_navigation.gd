@@ -28,15 +28,21 @@ func edge(a:Vector2i,b:Vector2i)->bool:
  if d==Vector2i.LEFT:return words[b][1]==0
  if d==Vector2i.UP:return words[a][0]==0
  return false
-func configure(value:RefCounted,tables:String)->bool:
+func configure(value:RefCounted,tables:String,review_entry:Dictionary={})->bool:
  pack=value
  var land:int=int(pack.manifest.land.ID)
- if LAND_ASSETS.get(land,'')!=str(pack.manifest.land.AssetPath):error='Unreviewed source identity';return false
+ if review_entry.is_empty() and LAND_ASSETS.get(land,'')!=str(pack.manifest.land.AssetPath):error='Unreviewed source identity';return false
  var entry_file:String='';var entry_id:int=-1
  for arg:String in OS.get_cmdline_user_args():
   if arg.begins_with('--base508-entry-portals='):entry_file=arg.trim_prefix('--base508-entry-portals=')
   if arg.begins_with('--base508-entry-portal='):entry_id=int(arg.trim_prefix('--base508-entry-portal='))
- if not entry_file.is_empty() and entry_id>=0:
+ if not review_entry.is_empty():
+  if int(review_entry.get('land',-1))!=land or str(review_entry.get('asset',''))+'/'!=str(pack.manifest.land.AssetPath):error='Entry identity mismatch';return false
+  if str(review_entry.get('map_sha256',''))!=FileAccess.get_sha256(pack.root+'/map.json'):error='Entry pack hash mismatch';return false
+  var selected:Dictionary=review_entry.get('selected',{})
+  if selected.get('kind','') not in ['PORTAL_POINT_TARGET','TELEPORT_TO_LOCATION']:error='Unreviewed entry kind';return false
+  arrival_record={'X':selected.x,'Y':selected.y,'entry_kind':selected.kind,'evidence':selected}
+ elif not entry_file.is_empty() and entry_id>=0:
   var portals:Variant=JSON.parse_string(FileAccess.get_file_as_string(entry_file))
   if not portals is Array:error='Invalid original portal evidence';return false
   for portal:Dictionary in portals:

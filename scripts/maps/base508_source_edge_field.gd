@@ -5,9 +5,9 @@ var source_navigation:RefCounted
 var source_pack:RefCounted
 var physics_body:StaticBody2D
 var occupancy_shapes:Dictionary={}
-func configure_edges(pack:RefCounted,tables:String)->bool:
+func configure_edges(pack:RefCounted,tables:String,review_entry:Dictionary={})->bool:
  source_navigation=EDGE_NAV.new();source_pack=pack
- if not source_navigation.configure(pack,tables):return false
+ if not source_navigation.configure(pack,tables,review_entry):return false
  var art:Dictionary=pack.manifest.art
  bounds=Rect2(0,0,art.size[0],art.size[1]);cell_size=1;clearance=4
  var contract:Dictionary=pack.geographic_contract();width=int(contract.source_cell_bounds[2])-source_navigation.source_origin.x+1;height=int(contract.source_cell_bounds[3])-source_navigation.source_origin.y+1
