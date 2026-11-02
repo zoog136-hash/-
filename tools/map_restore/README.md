@@ -44,3 +44,33 @@ provides manual point-destination inspection, not automatic portal activation.
 private runtime ZIP without duplicating separately retained raw original files.
 A local ZIP is not delivered until its private transfer succeeds. Full game,
 original collision/height/portal semantics, and Android validation remain separate.
+
+## Faith Tower source-edge experiment
+
+`review_base508_source_edges.gd` is an explicitly gated experiment on the new
+base508 maps (13398/13401/13472/13504). It does not modify production movement
+or reuse the old PNG polygons. Set `TWILIGHT_BASE508_UNIVERSE` to the restored
+universe directory, `TWILIGHT_BASE508_TABLES` to validated original content
+JSON tables, `TWILIGHT_EDGE_ASSET` to one of those AssetPaths and
+`TWILIGHT_EDGE_OUTPUT` to a private result path. Run Godot with
+`--script res://tools/map_restore/review_base508_source_edges.gd -- --source-edge-experiment`.
+
+The experiment requires the exact Land and Locations identities and verifies
+UIMapQuickTeleportOman → ItemBonus → BonusType.TeleportToLocation → Locations.
+It starts at that original arrival, without nearest-cell correction. Both raw
+halfwords are retained: the candidate zero/open, one/closed edge interpretation
+is spatially reciprocal. Unknown values abort; diagonals require both orthogonal
+routes. An actual radius-4 CharacterBody sweeps four whole-map routes and samples
+closed-edge physics, using the same source-coordinate projection as the art.
+
+Add `--interactive` for WASD and click-path movement with bounded source chunks,
+or `--interactive --interactive-smoke` for the short renderer/body check.
+`TWILIGHT_EDGE_CAPTURE` optionally selects a private PNG prefix for route captures.
+All outputs stay outside Git. No original item is consumed and no save is read.
+
+Passing these checks proves candidate graph/physics consistency, **not original
+M movement equivalence**. Original height, actor foot/depth, dynamic occupancy,
+entry prerequisites and original-client successful/blocked-step observations
+remain unverified. Do not promote this experiment to the default game or claim
+that original collision is complete. The earlier small-hall routes cannot serve
+as whole-map acceptance evidence.
