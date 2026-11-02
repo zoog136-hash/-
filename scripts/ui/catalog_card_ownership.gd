@@ -22,6 +22,7 @@ static func icon_for(record: Dictionary, acquired: bool) -> Texture2D:
 	var source: Texture2D
 	if preload("res://scripts/ui/source_card_presentation.gd").native(record):
 		source=preload("res://scripts/ui/source_card_presentation.gd").detail(record,true,false).get("texture")
+		source=preload("res://scripts/ui/source_card_skin.gd").icon(record,source)
 	else:
 		if path.is_empty() or not ResourceLoader.exists(path):return null
 		source=load(path) as Texture2D

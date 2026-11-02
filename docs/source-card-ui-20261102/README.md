@@ -14,10 +14,11 @@ doll 484 / 1378 / 556; relic 438 / 1003 / 496. All 1736 definitions and 4906
 requirements join exact canonical deck/card IDs. Test deck 12 stays separate;
 the 12 cards with no source collection receive no invented set.
 
-892 definitions have currently supported unconditional rewards. 844 are blocked
+909 definitions now have supported unconditional rewards (892 at the first handoff).
+827 are blocked
 by at least one source server, native awakening, or unsupported effect condition.
-The overlapping reasons cover 498 server-limited, 211 awakening, and 488
-unsupported-reward sets. Completion and bonuses are derived from permanent owned
+The overlapping reasons cover 498 server-limited, 211 awakening, 443 unimplemented-effect, 2 HP-interval-runtime, and 1
+unresolved-source-target sets. These reason counts overlap. Completion and bonuses are derived from permanent owned
 keys, not spare counts, equipped names, UI selections, or option awakening.
 
 The requested time policy is `permanent_user_requested_time_override`: every
@@ -41,7 +42,7 @@ records; no original grade frame has been claimed installed. Quantities include
 the retained first card; unowned art is dimmed/grayscale. Tabs/actions have at
 least 44 logical-pixel targets. Original synthesis/awakening callbacks remain.
 
-Validation: source images 1267 SHA matches; native collection test 1347 checks;
+Validation: source images 1267 SHA matches; native collection test 1356 checks; 17 actual World stat-consumer checks;
 Godot 4.6.3 import and isolated OpenGL/Mesa UI capture/input checks (44 checks,
 1280x720 and 854x480). Three catalogs, details and collection views were rendered.
 The fixture uses isolated XDG data and in-memory ownership only. HUD processing
@@ -57,3 +58,119 @@ UI/Change/Change_MagicDoll_Info_Swap.csb,
 UI/Change/Change_Card_Swap_Button.csb. Read their exact texture references before
 installing original frame/tab/background/button resources. No original pixels or
 large render evidence are committed. No public push, PR, main change or merge.
+
+Follow-up capability expansion: source MeleeEvasion -> existing DG, MagicCritical
+-> magic_crit, scoped Fear hit/resistance -> their existing fear readers, and
+PvE percentage reduction -> its existing PvE-only channel. 43 source reward rows
+are newly representable; 17 previously blocked sets become supported without
+removing server or awakening requirements. Equipment collection policy and World
+combat implementation are unchanged. Unknown source target is collection 12573 /
+DamageDampOption 13; HP interval collections are 14813 and 16521.
+
+PvE reduction percentage uses the existing `catalog_bonus` route, not the
+equipped-record stat route. A temporary cache-only test fixture verifies damage
+calculation and restoration without bypassing source server eligibility or
+changing ownership. The actual derived source ownership still honors all gates.
+
+On a pre-PR217 branch, the pure collection test explicitly labels its
+requirement-derived schema fixture; only a supplied canonical cards.json run
+validates the independent 701-card join. The World-consumer integration test
+prints SKIPPED when the native runtime is absent instead of breaking a UI-only
+branch. The recorded 1356/17 checks used the actual canonical/native runtime.
+
+A follow-up server predicate evaluator now compares the exact original
+ServerLimit rows to an explicitly supplied base508 ServiceRegionCode/WorldNo.
+The runtime setter is memory-only, invalidates derived bonuses, and clears old
+eligibility on invalid input. No current native server provider exists in World;
+nothing is guessed from a map, language, Drive identity, or old save. Default
+support remains 909 definitions. Eligible/ineligible/missing context/missing
+source definition are distinct states. Native IsAwaken remains separate.
+Canonical core checks: 1574; World consumer/context checks: 22. Context fixtures
+exercise real source profile rows but are not the user's current game profile.
+
+Original CSB geometry now has a bounded reproducible adapter:
+`tools/build_base508_card_ui.py` consumes the three supplied inspection JSONs and
+retains 11 explicit card-related CSBs / 414 nodes, exact resource references,
+ancestor anchors/scales and source hashes in `data/ui/base508_card_layout.json`.
+No original raster pixels or binary CSBs are committed. Shared native list metrics
+read the declared 124×142 slot and 110×134 portrait directly, preserving portrait
+aspect ratio across all three categories and retaining scroll state on reflow.
+This is geometry integration, not a claim that original screen skins are complete.
+Original runtime toggles, animation/blend, scale-nine behavior and full screen
+placement still need their specific adapters and available texture dependencies.
+
+Bundles 001–005 are received and CRC/SHA checked locally. Bundle004 is a recovery
+card atlas, not the missing main card atlas. First card skin dependencies remain
+Atlas_Common (56 explicitly referenced frames), Atlas_Common2 (5), Atlas_Texture
+(3), Atlas_Icon (1), Atlas_Hud (1), Atlas_Shop (1), plus two optional FX atlas
+references. Bundle005 includes the original white border FX atlas; the common
+frame/background/tab atlases remain absent. Native source options also retain
+original PvP labels instead of inheriting the legacy PvE text conversion. Exact frame names are in the local handoff dependency JSON. No
+substitute frame is generated or presented as original.
+
+Commit `9d8a782` adds exact source server predicate evaluation with an explicitly
+provided base508 service region and WorldNo; it never invents a server context.
+Source-condition regression: 1574 checks passed; actual World consumer regression:
+22 checks passed. No live World server-context provider or native IsAwaken ledger
+has been found, so the default supported/blocked definition counts remain 909/827.
+
+Latest rendered UI regression: 50 checks passed, including original portrait
+metrics in each category, at 1280×720 and 854×480. A first-open scroll bug after
+switching from another category was reproduced visually and fixed by restoring
+the view's saved scroll (zero for a fresh view) after container reflow. The final
+doll screenshot shows the first owned row fully visible. Existing baseline exit
+warnings remain (2 CanvasItem RIDs / 1 resource); full Android / Godot4.7.2
+validation remains with the parent integration worker.
+
+Next independent unit: inventory and tooltip inspection. All 9 explicitly
+requested inventory CSBs are received. `Common_Slot.csb` declares a 76×76
+background, 64×64 icon and amount bounds [7,50,62,20] in background coordinates;
+`Inventory_Slot_Set.csb` places adjacent normal slots 76px apart. The renewal
+inventory uses those dimensions while retaining its existing four/eight-column
+virtual window and a larger 76px touch area. Native source detail options retain
+original PvP/damage/curse labels; legacy filtering is unchanged.
+
+Pooled inventory buttons now bind their tooltips to the exact physical reference
+and enhancement, preventing stale or empty tooltips after reuse. The virtual
+window regression covers 101 references and tooltip rebinding between same-name
++2 and +3 physical items. Actual starting inventory render checks pass 20/20 at
+1280×720 and 854×480, including detail selection, reopen, no redundant rebuild,
+and unchanged inventory/equipment/currency. No items were granted or consumed.
+Original inventory skin/full tooltip layout is still pending Atlas_Common and
+its declared image page. Existing missing item icon substitutes remain explicitly
+marked; they are not newly generated or represented as original art.
+
+Original card skin increment (bundles006/007/008): exact Common/Icon/Hud and
+Texture/Shop/Common2 plists plus their declared PNG pages are installed privately.
+`build_base508_ui_atlas.py` joins CSB resource keys to plist frames and the
+metadata-declared PNG path, retaining page/plist SHA256 and original Grade ->
+ColorTable evidence. No raster pixels enter Git. Grade families use explicit
+presentation bindings, including Grade6/Myth and Grade7/Sole, rather than numeric
+asset guesses. Sole is connected through its exact Common2 frame.
+
+`source_ui_atlas.gd` verifies each page hash and restores rotated/trimmed sprites
+into their declared original canvas. Independent Pillow decoding matches all 69
+frame pixel hashes across eight pages (25 rotated frames overall).
+One decoded image is cached per page; textures/styles are cached, and card icons
+retain the existing 96-entry bound. Original portraits are 108×132, centered
+without scaling on their 110×134 source grade frame. Unowned cards retain the
+existing grayscale/dim policy. Collections reuse these same original icons.
+
+Original action textures and transparent tab surfaces are read from declared
+CSB nodes. The two original WinTotal background layers use their source bounds
+and alpha at the adapted content viewport. Local controls/layout and accessibility
+sizes remain; this is not an assertion of full original CSB runtime parity.
+Original styles/background visibility are restored on close and legacy views.
+No new FX timing/blending, badges, acquisition, or save behavior is inferred.
+All seven source grade families are available. Full source screen placement and
+remaining source controls still need completion; optional FX remain disabled until their runtime contract is known.
+
+
+Final source UI regression: 61 checks pass, including an actual 110×134 framed
+list texture in all three categories, close/background/style restoration and
+legacy item panel theme restoration in the same mounted workspace. Source atlas
+regression: 69 exact pixel hashes / 8 decoded pages / 690 canonical regular-grade
+cards have frames. Nine native Grade71/Event cards have no declared corresponding
+prefab, and two Grade0/None cards remain unframed. These are explicit source
+states, not replaced with another grade. Full source control placement remains
+separate from the original skin binding implemented here.

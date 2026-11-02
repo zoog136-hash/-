@@ -44,10 +44,25 @@ func run() -> void:
 	# isolation while leaving the production map/bootstrap guard unchanged.
 	hud.process_mode=Node.PROCESS_MODE_ALWAYS
 	var state_before: int=hash(world.card_draw_fusion.export_state())
+	# Compare styles in the same mounted workspace theme, not the parked root.
+	hud.open_catalog("아이템")
+	for frame: int in range(12): await process_frame
+	var panel_style_before: StyleBox=hud.catalog_panel.get_theme_stylebox("panel")
+	hud._close_workspace()
 	for category: String in ["변신","마법인형","성물"]:
 		hud.open_catalog(category)
 		await capture(category+"-list")
 		check(hud.catalog_results.size()>2,"list populated "+category)
+		if ResourceLoader.exists("res://scripts/ui/source_card_skin.gd"):
+			var framed: bool=false
+			for index: int in range(hud.catalog_results.size()):
+				var icon: Texture2D=hud.catalog_list.get_item_icon(index)
+				if int(hud.catalog_results[index].get("source_grade_id",0))!=0 and icon!=null and icon.get_size()==Vector2(110,134): framed=true; break
+			check(framed,"original grade frame reaches actual list texture "+category)
+		if ResourceLoader.exists("res://scripts/ui/source_card_metrics.gd"):
+			var metric: Dictionary = hud.catalog_list.get_meta("source_card_geometry", {})
+			check(metric.get("portrait", Vector2.ZERO)==Vector2(110,134), "original CSB portrait bounds "+category)
+			check(absf(float(hud.catalog_list.fixed_icon_size.x)/maxi(1,hud.catalog_list.fixed_icon_size.y)-110.0/134.0)<.02, "uniform original portrait ratio "+category)
 		check(hud.catalog_list.get_item_metadata(0)==world.card_draw_fusion.card_id(hud.catalog_results[0]),"stable source selection metadata "+category)
 		if ResourceLoader.exists("res://scripts/ui/source_card_presentation.gd"):
 			var listing: ItemList=hud.catalog_list
@@ -73,7 +88,12 @@ func run() -> void:
 		hud._select_catalog_index(0);hud._set_catalog_detail_view(true)
 		await capture(category+"-detail")
 		hud._set_catalog_detail_view(false);hud.catalog_list.get_v_scroll_bar().value=100
-		hud._close_workspace();hud.open_catalog(category)
+		hud._close_workspace()
+		if ResourceLoader.exists("res://scripts/ui/source_card_skin.gd"):
+			check(not hud.catalog_equip_button.has_meta("original_ui_node"),"original button style restored on close "+category)
+			var background: Control=hud.catalog_panel.get_node_or_null("OriginalCardBackground")
+			check(background==null or not background.visible,"original background hidden on close "+category)
+		hud.open_catalog(category)
 		check(hud.workspace.visible,"reopen "+category)
 		if hud.has_method("open_normal_card_collections"):
 			hud.open_normal_card_collections(category)
@@ -87,9 +107,16 @@ func run() -> void:
 		hud._set_catalog_detail_view(true)
 		await capture(category+"-compact-detail")
 		check(hud.catalog_equip_button.size.y>=40,"compact apply touch target "+category)
+	if ResourceLoader.exists("res://scripts/ui/source_card_skin.gd"):
+		hud.open_catalog("아이템")
+		for frame: int in range(4): await process_frame
+		check(is_same(hud.catalog_panel.get_theme_stylebox("panel"),panel_style_before),"legacy item panel style restored after native cards")
+		check(not hud.catalog_equip_button.has_meta("original_ui_node"),"legacy item action retains own style")
 	check(hash(world.card_draw_fusion.export_state())==state_before,"UI navigation preserves ownership/spare ledger")
-	var file=FileAccess.open(folder+"/checks.json",FileAccess.WRITE);file.store_string(JSON.stringify({"checks":checks,"errors":errors,"engine":Engine.get_version_info(),"test_state":"UI-only HUD PROCESS_MODE_ALWAYS; in-memory ownership fixture; isolated XDG data; no user-save writes", "source_map_test":world.field_map != null and bool(world.field_map.get_meta("base508_source_test", false))},"\t"));file.close()
+	var file=FileAccess.open(folder+"/checks.json",FileAccess.WRITE);file.store_string(JSON.stringify({"checks":checks,"errors":errors,"engine":Engine.get_version_info(),"test_state":"UI-only HUD PROCESS_MODE_ALWAYS; private map pack absent; in-memory ownership fixture; isolated XDG data; no user-save writes"},"\t"));file.close()
 	print("SOURCE_CARD_UI_CAPTURE "+str(checks)+" errors "+str(errors))
+	hud._close_workspace()
+	for frame: int in range(3):await process_frame
 	world.queue_free()
 	for frame: int in range(3):await process_frame
 	quit(0 if errors.is_empty() else 1)
