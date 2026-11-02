@@ -62,6 +62,8 @@ func run() -> void:
 	check(QA.enter_game(world), "actual class selection after install")
 	world.player.set_physics_process(false)
 	check(world.active_map_id == "aden_world" and world.field_map != null, "actual current map connected")
+	for frame: int in range(16): await process_frame
+	check(world.monsters_root.get_child_count() > 0, "actual population runs beyond initial Main frame")
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Visual.PATH))
 	for kind: String in ["transform", "doll", "relic"]:
 		var tested := false

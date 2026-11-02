@@ -96,6 +96,27 @@ class CoreStageTest(unittest.TestCase):
             with self.assertRaises(FileNotFoundError):CORE.stage(root,Path(temporary)/'stage')
             self.assertFalse((Path(temporary)/'stage').exists())
 
+    def test_appended_current_source_spawn_keeps_its_reviewed_portrait(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
+            portrait='assets/monsters/reviewed_source/source-scout/portrait.png'
+            records={
+                'data/maps/source_map_runtime.json':{'maps':{'aden_world':{'gameplay_snapshot':'res://data/maps/current.json'}}},
+                'data/maps/current.json':{'gameplay':{'monster_spawn':[]}},
+                'data/game_db_v17.json':{'몬스터':[]},
+                'data/combat_animation_profiles.json':{'profiles':{}},
+                'data/monsters/source3_map_spawns.json':{'rows':[{'map_id':'aden_world','name':'Source Scout'},{'map_id':'other','name':'Inactive'}]},
+                'data/monsters/reviewed_source_monsters.json':{'records':[{'name':'Source Scout','source_portrait':'res://'+portrait}]},
+            }
+            for name,value in records.items():
+                p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(value))
+            p=root/portrait;p.parent.mkdir(parents=True);p.write_bytes(b'existing reviewed source fixture')
+            (root/'scripts/main.gd').write_text('const SOURCE="res://data/monsters/reviewed_source_monsters.json"')
+            result=CORE.stage(root,Path(temporary)/'stage')
+            self.assertEqual(result['current_actor_scope']['monster_names'],['Source Scout'])
+            self.assertIn(portrait,{row['path'] for row in result['files']})
+            self.assertEqual(p.read_bytes(),(Path(temporary)/'stage'/portrait).read_bytes())
+
     def test_default_startup_scene_is_required_and_staged(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary)/'repo';root.mkdir();self.fixture(root)

@@ -51,10 +51,25 @@ def current_actor_scope(read, exists):
         raise ValueError('unsafe current gameplay snapshot')
     gameplay = json.loads(read(snapshot))['gameplay']
     names = {name for region in gameplay['monster_spawn'] for name in region['monster_types']}
+    # Production appends source-coordinate spawns after restoring the authored
+    # snapshot. Their portraits/frames are live inputs too, even when the actor
+    # is absent from game_db_v17 and has not spawned on the first Main frame.
+    source_spawns = 'data/monsters/source3_map_spawns.json'
+    if exists(source_spawns):
+        names.update(row['name'] for row in json.loads(read(source_spawns)).get('rows', [])
+                     if row.get('map_id') == 'aden_world')
     profiles = json.loads(read('data/combat_animation_profiles.json'))['profiles']
     keys = {key for key in profiles if key.startswith('class:') or key in {'monster:'+n for n in names}}
     records = [profiles[key] for key in sorted(keys)]
     records += [row for row in json.loads(read('data/game_db_v17.json'))['몬스터'] if row['name'] in names]
+    for path in ['data/monsters/reviewed_source_monsters.json', 'data/monsters/reviewed_source_additions.json']:
+        if exists(path):
+            records += [row for row in json.loads(read(path)).get('records', []) if row.get('name') in names]
+    world_catalog = 'data/monsters/monster_world_catalog.json'
+    if exists(world_catalog):
+        expanded = json.loads(read(world_catalog))
+        records += [row for name, row in expanded.get('overlays', {}).items() if name in names]
+        records += [row for row in expanded.get('additions', []) if row.get('name') in names]
     for path, field in [('data/monsters/reviewed_existing_visuals.json','bindings'),
                         ('data/visuals/runtime_manifest.json','monsters')]:
         if exists(path):
