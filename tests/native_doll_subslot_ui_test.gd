@@ -60,6 +60,12 @@ func run() -> void:
 			check(visual.actor._layers[i].texture.get_image().get_data()==image.get_data(),"source wood body/shadow exact pixels "+str(i))
 		var node_id: int=visual.actor.get_instance_id()
 		world._update_companion(.1);check(visual.actor.get_instance_id()==node_id,"frame update reuses existing actor and textures")
+		check(visual.actor._playback_tracks.idle.timing_origin=="compat_user_approved_doll_shared_24_not_verified_M_default","reuses existing user-approved common doll clock")
+		var cached: int=visual.actor._textures.size();var seen: Dictionary={}
+		for step: int in range(4):world._update_companion(.2);seen[visual.actor.last_source_frame]=true
+		check(seen.size()>1,"actual source actor advances multiple original poses")
+		check(visual.actor._textures.size()==cached and visual.actor.get_instance_id()==node_id,"animation clock creates no new bulk textures or actor nodes")
+
 		var stage:=CanvasLayer.new();stage.layer=1000;root.add_child(stage)
 		visual.reparent(stage,false);visual.position=Vector2(427,270)
 		await RenderingServer.frame_post_draw
