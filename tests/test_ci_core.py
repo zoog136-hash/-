@@ -96,6 +96,16 @@ class CoreStageTest(unittest.TestCase):
             with self.assertRaises(FileNotFoundError):CORE.stage(root,Path(temporary)/'stage')
             self.assertFalse((Path(temporary)/'stage').exists())
 
+    def test_default_startup_scene_is_required_and_staged(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
+            (root/'project.godot').write_text('config_version=5\n[application]\nrun/main_scene="res://Setup.tscn"\n')
+            with self.assertRaisesRegex(FileNotFoundError,'required startup scene'):
+                CORE.stage(root,Path(temporary)/'missing')
+            (root/'Setup.tscn').write_text('[ext_resource path="res://assets/live.png"]\n')
+            result=CORE.stage(root,Path(temporary)/'stage')
+            self.assertIn('Setup.tscn',{row['path'] for row in result['files']})
+
     def test_missing_shader_preload_fails_before_engine_import(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
