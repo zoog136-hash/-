@@ -107,8 +107,24 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 					effect_node.centered = false
 					effect_node.z_index = 1
 					var style: Dictionary = POLICY.effect(effect.get("source_attributes", []), _playback_mode)
+					# Identity-scoped observation candidate; never generalizes attr8/128.
+					var observed_girtas: bool = _playback_mode == "compatible" and int(candidate.get("body_id", 0)) == 22258 and id in [22260, 22261] and not "--lineagem-girtas-legacy-blend" in OS.get_cmdline_user_args()
+					if observed_girtas:
+						style = {"enabled":true,"alpha":1.0,"origin":"Girtas_only_five_M_GIF_pose_observations_exact_equation_unverified"}
+
 					effect_node.set_meta("compatibility_style", style)
-					if bool(style.get("enabled", false)):
+					if observed_girtas:
+						var copy: BackBufferCopy = BackBufferCopy.new()
+						copy.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT
+						copy.z_index = 1 if id == 22261 else 2
+						add_child(copy)
+						effect_node.z_index = copy.z_index
+						effect_node.set_meta("observed_backbuffer", copy)
+						var shader_material: ShaderMaterial = ShaderMaterial.new()
+						shader_material.shader = preload("res://shaders/source_girtas_observed_blend.gdshader")
+						shader_material.set_shader_parameter("screen_operation", id == 22260)
+						effect_node.material = shader_material
+					elif bool(style.get("enabled", false)):
 						var material: CanvasItemMaterial = CanvasItemMaterial.new()
 						material.blend_mode = int(style.blend_mode)
 						effect_node.material = material
@@ -156,7 +172,10 @@ func clear() -> void:
 		if is_instance_valid(overlay): overlay.free()
 	_overlay_nodes.clear()
 	_last_token = ""
-	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.free()
+	for effect_node: Sprite2D in _effect_nodes.values():
+		var copy: BackBufferCopy = effect_node.get_meta("observed_backbuffer", null) as BackBufferCopy
+		if copy != null: copy.free()
+		effect_node.free()
 	_effect_nodes.clear()
 	_textures.clear()
 	for sprite: Sprite2D in _layers:

@@ -54,3 +54,22 @@ No NPC/card gameplay values were changed during this investigation. Once the val
 SPR headers may be indented. Leading whitespace must be removed before recognizing a new declaration; otherwise the following actor contaminates the previous action map. The formerly missing16471/21850/29420 declarations are present in the supplied originals.21909 idle is10frames, not the12frames of its indented successor21910. Source DB evidence remains preserved while current parsed SPR evidence is recorded separately.
 
 An action flag0 retains a fixed source direction slot; flag1 adds the facing slot. Physical SP2 suffix is(slot & ~7), stored mask bit is(slot &7).24789 demonstrates this structurally: chunk0 bit0 holds12 idle frames, bits1–7 hold8 walk frames, and chunk8 bit0 holds the remaining8-frame walk direction. Shadow/clothes references, including9516→8135, must resolve recursively and respect alias-local declarations. Run references come from the run declaration, not the preceding walk declaration.
+
+## Girtas identity-scoped observed candidate (2026-11-02)
+
+Compatibility mode now limits a screen/multiply candidate to body22258's
+attachment22260(sc) and22261(mu). It does not redefine source104.attr8/128.
+Mu is drawn first at z1, sc next at z2. Each pass copies the current framebuffer:
+`multiply(dst,src)=dst*src`; `screen(dst,src)=1-(1-dst)*(1-src)`;
+RGB output is `mix(dst, operation(dst,src), source_alpha)` at opacity1.
+Source RGBA bytes, offsets and timing stay unchanged. BackBufferCopy is required
+between passes so the second samples the first result. This adds two framebuffer
+copies for this appearance; Android cost is unmeasured. Strict mode still hides
+these unverified attachments. `--lineagem-girtas-legacy-blend` selects the prior
+ADD/MIX(alpha0.5) candidate for repeatable comparison.
+
+Parent research reports five pose-matched M GIF samples at0/240/480/710/920ms:
+screen/multiply body-interior MAE8=16.9–18.1 versus30.2–43.1 for ADD/MIX0.5.
+This is observational support for these two sprites only. The evidence ZIP is
+not yet received in this execution environment, so independent reference-image
+comparison remains pending; no exact M compositor or global equivalence claimed.
