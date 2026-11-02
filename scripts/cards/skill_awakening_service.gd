@@ -1,11 +1,12 @@
 extends RefCounted
 ## Native card skill awakening, independent of option awakening and aura.
-## Prices/material quantities/refund mechanics are intentionally not invented.
+## One book per operation is explicit user policy; the source fee remains unresolved.
 const DATA=preload("res://data/cards/base508_skill_awakening.json")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const Conditions=preload("res://scripts/cards/source_collection_conditions.gd")
 const MAX_EXPERIENCE: int=9999999999999
 const MAX_REVISION: int=9007199254740000
+const BOOK_QUANTITY: int=1 # user policy, not recovered source consumption evidence
 const REROLL_POLICY: String="source_weighted_reroll_preserve_growth"
 var conditions=Conditions.new()
 var source_server_context: Dictionary={}
@@ -106,10 +107,30 @@ func view(state: Dictionary,owned: Dictionary,identity: String,preview_level: in
 	if card.is_empty():return fail("identity","원본 카드 ID 연결 없음")
 	var entry: Dictionary=state.cards.get(identity,{"spell_id":0,"level":0,"experience":"0"})
 	var available: Dictionary=eligibility(identity)
-	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"can_awaken":false,"can_feed":false,"blocked_reason":"각성서 소모 수량·수수료 원본 확인 중 · 재각성은 성장 유지","unknown_rules":DATA.data.unknown_rules}
+	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":false,"can_feed":false,"blocked_reason":"각성서 1장 소모 · 수수료 원본 확인 중 · 재각성은 성장 유지","unknown_rules":DATA.data.unknown_rules}
 
 func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
-	return fail("source_cost_rules_unresolved","각성서 소모 수량·수수료 미확정 · 재화 차감 없음")
+	return fail("source_cost_rules_unresolved","각성서 1장 정책 확정 · 수수료 미확정 · 재화 차감 없음")
+
+func book_requirement(identity: String) -> Dictionary:
+	var book: Dictionary=book_for(identity)
+	if book.is_empty():return {}
+	return {"source_snapshot":"base508","item_class_id":int(book.item_row.ID),"quantity":BOOK_QUANTITY,"quantity_provenance":"explicit_user_policy","fee_verified":false}
+
+func prepare_book_debit(identity: String,source_book_counts: Dictionary) -> Dictionary:
+	# Pure source-ID boundary. The caller must supply an explicitly verified
+	# physical inventory mapping, never an inferred name or equal numeric ID.
+	# This is a staged debit only; public transactions remain fee-blocked.
+	var requirement: Dictionary=book_requirement(identity)
+	if requirement.is_empty():return fail("identity","원본 각성서 연결 없음")
+	var key: String=str(requirement.item_class_id)
+	var count: Variant=source_book_counts.get(key,0)
+	if not integer(count) or int(count)<0 or int(count)>1000000000:return fail("book_quantity","각성서 소유 수량 오류")
+	if int(count)<BOOK_QUANTITY:return fail("insufficient_book","해당 등급 각성서 1장 필요")
+	var next: Dictionary=source_book_counts.duplicate(true)
+	if int(count)==BOOK_QUANTITY:next.erase(key)
+	else:next[key]=int(count)-BOOK_QUANTITY
+	return {"ok":true,"source_book_counts":next,"consumed_book":requirement,"committed":false,"fee_verified":false}
 
 func fixed_damage_profile(spell_id: int) -> Dictionary:
 	var spell: Dictionary=DATA.data.spells.get(str(spell_id),{})
