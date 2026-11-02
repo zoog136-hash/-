@@ -1174,5 +1174,19 @@
     "Strict mode disables compatibility fallback and unresolved blending.",
     "attr8 additive and attr128 alpha0.5 are declared host approximations, not recovered M equations.",
     "No root/limb/frame interpolation or new effect artwork."
-  ]
+  ],
+  "doll_shared_compatibility": {
+    "authorization": "user_approved_shared_doll_playback_2026-11-02",
+    "status": "USER_APPROVED_COMPATIBILITY_NOT_VERIFIED_M_DEFAULT",
+    "ticks_per_second_by_role": {
+      "idle": 24,
+      "walk": 24,
+      "run": 24,
+      "attack": 24,
+      "default": 24
+    },
+    "preserve_explicit_source_fps": true,
+    "preserve_scoped_observations": true,
+    "extend_boundary_rule_by_shape_alone": false
+  }
 }

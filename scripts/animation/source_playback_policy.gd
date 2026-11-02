@@ -47,6 +47,10 @@ static func tracks(record: Dictionary, consumer_kind: String, selected_mode: Str
 			if not inherited.is_empty():
 				fps = float(inherited.fps)
 				origin = "compat_alias_base_explicit_rate_M_inheritance_unverified"
+			elif consumer_kind == "doll":
+				var shared: Dictionary = data().get("doll_shared_compatibility", {}).get("ticks_per_second_by_role", {})
+				fps = float(shared.get(role, shared.get("default", 24)))
+				if fps > 0.0: origin = "compat_user_approved_doll_shared_24_not_verified_M_default"
 			elif consumer_kind == "transform":
 				var row: Dictionary = data().get("m_player_actions", {}).get(str(int(track.get("source_action_id", -1))), {})
 				fps = float(row.get("PlayerFrameRate", 0.0))

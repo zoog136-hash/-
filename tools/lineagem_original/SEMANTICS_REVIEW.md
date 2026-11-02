@@ -202,3 +202,25 @@ verification or Android performance. The short boundary is sampled only at
 one-render-frame hold or loop extension was introduced. The focused20663 check
 passed rawFPSnull/tick preservation, d5-only scope,30FPS loop/transition behavior,
 strict isolation and refusing reuse if an explicit sourceFPS is later supplied.
+
+## Approved common doll playback (2026-11-02)
+
+Dolls no longer wait for individual M-video clock research. Compatible mode has
+an explicit shared policy: idle/walk/run/attack fallback24 ticks per second for
+missing source rates. Existing positive SPR rates, alias candidates, native
+ticks/order/pixels and exact scoped presentation overrides keep priority.
+Strict behavior and the common stable ADD/MIX material policy are unchanged.
+Matching loop shape alone does not add a new boundary rule or delete a pose.
+The status is user-approved compatibility, not a recovered global M default.
+
+Actual headless common-view configuration and initial sampling passed all167
+source cards/166 unique appearances.164 appearances use331 shared fallback
+tracks;4 unique tracks retain explicit original FPS. Source tokens were checked
+unchanged.164 cards have no original attack track; none is fabricated. The
+existing20663 d5-only override remains active and isolated, and strict still
+retains unknown sourceFPSnull/pending instead of silently applying the fallback.
+This is a minimal load/sampling check, not per-doll visual/Android equivalence.
+
+Original attachment/event lookup issues affecting43 other-reference candidate
+cards are separate from common clock readiness. No source pixel is synthesized,
+no missing effect is declared found, and no main merge is implied.
