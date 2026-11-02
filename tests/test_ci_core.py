@@ -8,6 +8,7 @@ import contextlib
 import io
 import os
 import sys
+import json
 
 SPEC = importlib.util.spec_from_file_location('ci_core', Path(__file__).parents[1]/'tools/ci_core.py')
 CORE = importlib.util.module_from_spec(SPEC)
@@ -58,6 +59,33 @@ class CoreStageTest(unittest.TestCase):
             self.assertEqual((root/'project.godot').read_text(),original)
             self.assertIn('import_etc2_astc=false',(Path(temporary)/'stage/project.godot').read_text())
             self.assertEqual(len(result['validation_overrides']),1)
+
+    def test_current_map_roster_and_classes_import_without_inactive_actor_banks(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
+            live='assets/actors/eight_direction/current/SpriteFrames.tres'
+            inactive='assets/actors/eight_direction/inactive/SpriteFrames.tres'
+            records={
+                'data/maps/source_map_runtime.json':{'maps':{'aden_world':{'gameplay_snapshot':'res://data/maps/current.json'}}},
+                'data/maps/current.json':{'gameplay':{'monster_spawn':[{'monster_types':['Scout']}]}},
+                'data/game_db_v17.json':{'몬스터':[{'name':'Scout'}]},
+                'data/combat_animation_profiles.json':{'profiles':{'class:0':{'frames_path':'res://'+live},'monster:Scout':{'frames_path':'res://'+live},'monster:Inactive':{'frames_path':'res://'+inactive}}},
+            }
+            for name,value in records.items():
+                p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(value))
+            (root/'scripts/main.gd').write_text('const DATA="res://data/combat_animation_profiles.json"')
+            for path in [live,inactive]:
+                p=root/path;p.parent.mkdir(parents=True,exist_ok=True)
+                image=str(p.parent.relative_to(root))+'/idle.png'
+                p.write_text('[gd_resource type="SpriteFrames" format=3]\n[ext_resource type="Texture2D" path="res://'+image+'"]\n')
+                (root/image).write_bytes(b'unchanged fixture pixels')
+            result=CORE.stage(root,Path(temporary)/'stage')
+            selected={row['path'] for row in result['files']}
+            self.assertTrue({live,live.replace('SpriteFrames.tres','idle.png')} <= selected)
+            self.assertNotIn(inactive,selected)
+            self.assertEqual(result['current_actor_scope']['monster_names'],['Scout'])
+            self.assertIn(inactive,{row['path'] for row in result['deferred_actor_imports']})
+            self.assertEqual((root/'data/combat_animation_profiles.json').read_bytes(),(Path(temporary)/'stage/data/combat_animation_profiles.json').read_bytes())
 
     def test_missing_scene_dependency_fails_before_staging(self):
         with tempfile.TemporaryDirectory() as temporary:

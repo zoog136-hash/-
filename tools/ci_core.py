@@ -32,6 +32,36 @@ DATA_ONLY_POLICIES = {
     'data/pr122_transform_motion_scope.json':'pr122-transform-motion-scope-v1',
     'data/pr122_monster_production_scope.json':'pr122-monster-motion-scope-v1',
 }
+ACTOR_PREFIXES = ('assets/actors/eight_direction/', 'assets/monsters/reviewed_source/',
+                  'assets/local_source_transforms/')
+
+def current_actor_scope(read, exists):
+    """Import every current-map actor, not every inactive historical appearance.
+
+    Catalog bytes stay unchanged. The complete graph still checks resource
+    references; only engine import of inactive actor art is deferred to the
+    retained manual animation audits. Never substitute fallback images.
+    """
+    policy_path = 'data/maps/source_map_runtime.json'
+    if not exists(policy_path):
+        return None  # small standalone staging fixtures / pre-source-map trees
+    policy = json.loads(read(policy_path))
+    snapshot = policy['maps']['aden_world']['gameplay_snapshot'].removeprefix('res://')
+    if '..' in PurePosixPath(snapshot).parts or not snapshot.startswith('data/'):
+        raise ValueError('unsafe current gameplay snapshot')
+    gameplay = json.loads(read(snapshot))['gameplay']
+    names = {name for region in gameplay['monster_spawn'] for name in region['monster_types']}
+    profiles = json.loads(read('data/combat_animation_profiles.json'))['profiles']
+    keys = {key for key in profiles if key.startswith('class:') or key in {'monster:'+n for n in names}}
+    records = [profiles[key] for key in sorted(keys)]
+    records += [row for row in json.loads(read('data/game_db_v17.json'))['몬스터'] if row['name'] in names]
+    for path, field in [('data/monsters/reviewed_existing_visuals.json','bindings'),
+                        ('data/visuals/runtime_manifest.json','monsters')]:
+        if exists(path):
+            records += [value for key,value in json.loads(read(path))[field].items() if key in names]
+    paths = {m.group(1).removeprefix('res://') for m in REFERENCE.finditer(json.dumps(records, ensure_ascii=False))}
+    return {'map_id':'aden_world', 'monster_names':sorted(names), 'profile_keys':sorted(keys),
+            'paths':paths, 'basis':snapshot}
 
 def git(root: Path, *args: str, **kw):
     return subprocess.check_output(['git', '-C', str(root), *args], **kw)
@@ -109,7 +139,37 @@ def stage(root: Path, destination: Path) -> dict:
             queue.append(child)
             if exists(child + '.import'):
                 selected.add(child + '.import')
-    print('CORE_RESOURCE_GRAPH',len(selected),'files; metadata',len(scanned), flush=True)
+    # A complete catalog includes thousands of historical per-pose PNGs.
+    # Importing them exhausted the 30-minute importer budget before Main ran.
+    # Preserve full structural path checking above, but import the complete
+    # current-map roster, all class banks and all direct code/scene references.
+    scope = current_actor_scope(read, exists)
+    deferred = []
+    if scope is not None:
+        actor_queue = list(scope['paths'])
+        for path in scanned:
+            if PurePosixPath(path).suffix in {'.gd','.tscn'}:
+                actor_queue += [m.group(1).removeprefix('res://') for m in REFERENCE.finditer(read(path).decode())]
+        live = set()
+        while actor_queue:
+            path = actor_queue.pop()
+            if path in live or not path.startswith(ACTOR_PREFIXES) or not PurePosixPath(path).suffix or '%' in path:
+                continue
+            if not exists(path):
+                raise FileNotFoundError('current actor resource '+path)
+            live.add(path)
+            if PurePosixPath(path).suffix in {'.tres','.res'}:
+                text = read(path).decode()
+                actor_queue += re.findall(r'^\[ext_resource\b[^\n]*path="res://([^"\n]+)"', text, re.M)
+        for path in sorted(selected):
+            base = path.removesuffix('.import')
+            if base.startswith(ACTOR_PREFIXES) and PurePosixPath(base).suffix in {'.png','.webp','.tres','.res'} and base not in live:
+                selected.remove(path)
+                deferred.append({'path':path, 'git_blob':tree.get(path),
+                                 'reason':'inactive actor; full animation audit remains manual'})
+        scope['paths'] = sorted(live)
+    print('CORE_RESOURCE_GRAPH',len(selected),'files; metadata',len(scanned),
+          'inactive actor imports deferred',len(deferred), flush=True)
     ensure_objects(root, sorted({tree[p] for p in selected if p in tree and not (root/p).is_file()}))
     destination.mkdir(parents=True, exist_ok=True)
     receipts = []
@@ -142,7 +202,8 @@ def stage(root: Path, destination: Path) -> dict:
         entry = next(r for r in receipts if r['path']=='project.godot')
         entry['source_sha256'] = entry['sha256']
         entry['stage_sha256'] = hashlib.sha256(project.read_bytes()).hexdigest()
-    result = {'revision':git(root,'rev-parse','HEAD').decode().strip(), 'files':receipts, 'validation_overrides':overrides, 'guarded_or_dynamic_literals':sorted(unresolved),
+    result = {'revision':git(root,'rev-parse','HEAD').decode().strip(), 'files':receipts, 'validation_overrides':overrides, 'current_actor_scope':scope,
+              'deferred_actor_imports':deferred, 'guarded_or_dynamic_literals':sorted(unresolved),
               'scope':'production Main core; not full art/gameplay acceptance'}
     (destination / 'core-resource-paths.json').write_text(json.dumps(result, indent=2))
     return result
