@@ -1,5 +1,6 @@
 extends "res://scripts/cards/collection_rules.gd"
 ## Source-only definitions. Old numeric keys are never reinterpreted as BuffCard IDs.
+const TIME_POLICY: String = "permanent_user_requested_time_override"
 ## Special/unknown conditions and unsupported rewards remain visible and blocked.
 
 static func accepts_catalog(catalog: Dictionary) -> bool:
@@ -28,6 +29,10 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		seen[identity] = true
 		if row.get("source", {}).get("snapshot", "") != "base508" or not row.get("source_original") is Dictionary: return _fail("원본 컬렉션 출처 누락")
 		if not row.get("requirements") is Array or row.requirements.is_empty() or not row.get("effects") is Array: return _fail("원본 컬렉션 조건/보상 누락")
+		# User explicitly removed time limits. Preserve every original date row
+		# and retain server/awakening restrictions; no save mutation is involved.
+		row["time_policy"] = TIME_POLICY
+		row["time_label"] = "상시"
 		var problems: Array[String] = []
 		if int(row.source_original.get("ServerLimitSetID", 0)) != 0: problems.append("native_server_context_required")
 		var members: Dictionary = {}
