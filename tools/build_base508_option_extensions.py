@@ -88,6 +88,8 @@ def build(args):
         display = row['card']['DisplaySpriteID']
         assert sprite_id == display or sprite_id in primary_sprites, 'Unverified source doll sprite relation'
         npc_bindings[identity] = {'npc_class_id': npc_id, 'sprite_id': sprite_id, 'display_sprite_id': display, 'primary_sprite_ids': sorted(primary_sprites), 'same_source_sprite_verified': sprite_id in primary_sprites, 'display_sprite_verified': sprite_id == display}
+    expiry_ids = {e['bonus']['BonusApplicationTargetID'] for r in subslot_refs.values() for e in r['effects'] if e['type']['Name'] == 'DeleteTime' and e['bonus']['BonusApplicationTypeID'] == 298}
+    expiry_dates = {name: [r for r in table(name) if r['ID'] in expiry_ids] for name in ['DateTimes', 'DateTimes_Korean', 'DateTimes_Chinese', 'DateTimes_Japanese', 'DateTimes_Taiwanese']}
     item = next(r for r in table('ItemClass') if r['ID'] == 346901)
     category = next(r for r in table('ItemCategory') if r['ID'] == item['CategoryID'])
     description = next(r['Description'] for r in table('DescData_Korean') if r['ID'] == item['DescID'])
@@ -106,7 +108,7 @@ def build(args):
             status_chain_checks += 1
     output = {'schema': 1, 'source_snapshot': 'base508', 'economy': dict(economy),
               'option_groups': groups, 'subslot_buffs': subslot_refs, 'primary_doll_buffs': primary_refs, 'subslot_npc_bindings': npc_bindings,
-              'spell_material_types': table('SpellMaterialType'),
+              'spell_material_types': table('SpellMaterialType'), 'buff_delete_datetimes': expiry_dates,
               'awaken_effects': awaken_effects, 'status_chain_verified_count': status_chain_checks,
               'subslot_unlock_item': {'item': item, 'category': category, 'grade': grade, 'name': description, 'effects': unlock_links, 'buff_effects': unlock_buffs},
               'status_effect_attrs': [r for r in table('StatusEffectAttr') if r['StatusEffectID'] in status_ids],
