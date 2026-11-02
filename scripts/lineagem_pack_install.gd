@@ -290,7 +290,7 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 				if not context is Dictionary: return "몬스터 출현 문맥이 유효하지 않습니다."
 				var context_key: String = "lineagem_base508:npc:%d:spawn:%d:territory:%d" % [id, int(context.get("spawn_view_id", -1)), int(context.get("territory_link_id", -1))]
 				if catalog.source_record(context_key).is_empty(): return "등록되지 않은 몬스터 출현 문맥입니다."
-		var model_key: String = str(actor.get("tracks_ref", "")) + ":" + str(actor.get("tracks_sha256", ""))
+		var model_key: String = str(int(actor.get("sprite_id", -1))) + ":" + str(actor.get("tracks_ref", "")) + ":" + str(actor.get("tracks_sha256", ""))
 		if actor.has("tracks_ref") and checked_models.has(model_key): continue
 		var tracks: Variant = actor.get("tracks")
 		if actor.has("tracks_ref"):
