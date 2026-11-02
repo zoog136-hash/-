@@ -20,11 +20,11 @@ func run()->void:
  check(field!=null and field.get_script().resource_path.ends_with('base508_source_edge_field.gd'),'actual Main source field')
  if field==null:quit(1);return
  check(world.active_map_id==field.source_pack.source_map_key()+'_edge_review','source map identity')
- check(world.player.global_position.distance_to(field.source_to_world(Vector2(32728,32863)))<1,'exact source arrival')
+ check(world.player.global_position.distance_to(field.source_to_world(Vector2(field.source_navigation.arrival)))<1,'exact source arrival')
  check(world.player.get_node('CollisionShape2D').shape is CircleShape2D and world.player.get_node('CollisionShape2D').shape.radius==4,'real Player foot')
  check(world._save_game(true)==ERR_UNAVAILABLE,'save disabled')
  var before:Vector2=world.player.global_position
- var target:Vector2=field.source_to_world(Vector2(32730,32863))
+ var target:Vector2=field.source_to_world(Vector2(field.source_navigation.arrival+Vector2i(2,0)))
  check(not world.find_world_path(before,target).is_empty(),'Main path')
  world._set_click_destination(target)
  for i:int in range(180):

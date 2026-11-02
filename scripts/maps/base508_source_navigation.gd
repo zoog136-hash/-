@@ -1,7 +1,7 @@
 extends RefCounted
 ## Reviewed source-edge compatibility policy, not recovered native M semantics.
 const SPACE=preload('res://scripts/maps/base508_contract.gd')
-const LAND_ASSETS={47914:'13398/',48274:'13401/',48774:'13472/',49324:'13504/'}
+const LAND_ASSETS={47914:'13398/',48274:'13401/',48774:'13472/',49324:'13504/',25:'25/'}
 const DIRS=[Vector2i.RIGHT,Vector2i.DOWN,Vector2i.LEFT,Vector2i.UP]
 var pack:RefCounted
 var words:Dictionary={}

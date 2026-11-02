@@ -115,3 +115,13 @@ was checked against the current renderer: all 8192 half-tile placements agree
 under the same chunk origin. MTil is identical to the previously reviewed
 reference. No decoder replacement, original pixel change or map regeneration
 was justified; the visual mask remains separate from passability.
+
+Source expansion: Land25/Asset25 (Suryun_dungeon_1) passes actual Main
+arrival, click, four extreme routes (4298 physical steps),64 blocked probes,
+4788 coordinate round trips, physical occupancy add/remove and exit save hashes.
+The arrival is read from Locations rather than a Faith-specific constant.
+Land75/Asset75 is deliberately not enabled: its original arrival(32790,32817)
+has pair[1,1] with no graph node under this candidate interpretation. This is a
+counterexample to generalizing Faith semantics to all0/1 maps; no nearest-cell
+fallback or forced opening was applied. Neither result establishes native M
+passability. Height, foreground and automatic portal triggers remain unresolved.
