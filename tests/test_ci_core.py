@@ -26,6 +26,7 @@ class CoreStageTest(unittest.TestCase):
             'assets/pose.png':'second immutable test byte fixture',
             'assets/review.png':'unused review fixture',
             'docs/runtime.txt':'runtime-linked document fixture',
+            'addons/production/plugin.gd':'extends EditorPlugin\n',
             'tests/qa_class_selection.gd':'extends RefCounted\n',
         }
         files.update({'tests/'+name+'.gd':'extends SceneTree\n' for name,_ in CORE.CHECKS})
@@ -42,8 +43,19 @@ class CoreStageTest(unittest.TestCase):
             selected={r['path'] for r in result['files']}
             self.assertTrue({'assets/live.png','assets/live.tres','assets/pose.png'}<=selected)
             self.assertIn('docs/runtime.txt',selected)
+            self.assertIn('addons/production/plugin.gd',selected)
             self.assertNotIn('assets/review.png',selected)
             self.assertEqual((root/'assets/pose.png').read_bytes(),(Path(temporary)/'stage/assets/pose.png').read_bytes())
+
+    def test_linux_import_profile_never_edits_production_settings(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
+            original='config_version=5\n[rendering]\ntextures/vram_compression/import_etc2_astc=true\n'
+            (root/'project.godot').write_text(original)
+            result=CORE.stage(root,Path(temporary)/'stage')
+            self.assertEqual((root/'project.godot').read_text(),original)
+            self.assertIn('import_etc2_astc=false',(Path(temporary)/'stage/project.godot').read_text())
+            self.assertEqual(len(result['validation_overrides']),1)
 
     def test_missing_scene_dependency_fails_before_staging(self):
         with tempfile.TemporaryDirectory() as temporary:

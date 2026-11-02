@@ -15,6 +15,10 @@ imports a production resource graph rather than all staging/evidence images.
 The actual committed current Aden pack is required: missing input is a failure,
 not a skip. Parsing, execution and resource errors remain failures even if the
 engine exits zero. Source packs, saves and historical definitions are preserved.
+The disposable Linux/headless stage disables Android-only ETC2/ASTC import;
+production project settings and source image bytes stay unchanged. Its receipt
+records that platform-specific validation override. Android codec/render testing
+remains separate and is not claimed by this gate.
 
 The existing presentation, full integration, source-contract, legacy map,
 recovery and cache audits retain their commands and assertions under manual

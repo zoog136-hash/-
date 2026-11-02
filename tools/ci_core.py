@@ -19,7 +19,7 @@ import subprocess
 import tempfile
 
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
-REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs)/[^"\'\n]+)["\']')
+REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons)/[^"\'\n]+)["\']')
 CHECKS = [
     ('core_runtime_save_test', []),
     ('save_identical_payload_test', []),
@@ -61,7 +61,7 @@ def stage(root: Path, destination: Path) -> dict:
             return p.read_bytes()
         return git(root, 'show', 'HEAD:' + path)
     selected = {'project.godot', 'Main.tscn'}
-    selected.update(str(p.relative_to(root)) for folder in ['scripts', 'data', 'scenes']
+    selected.update(str(p.relative_to(root)) for folder in ['scripts', 'data', 'scenes', 'addons']
                     for p in (root / folder).rglob('*') if p.is_file())
     selected.update('tests/' + name + '.gd' for name, _ in CHECKS)
     selected.add('tests/qa_class_selection.gd')
@@ -108,7 +108,22 @@ def stage(root: Path, destination: Path) -> dict:
         receipts.append({'path':path, 'bytes':len(data), 'sha256':hashlib.sha256(data).hexdigest()})
     # Assets are immutable input. Imported textures stay inside this disposable
     # stage. Original packs are read through an explicit external environment.
-    result = {'revision':git(root,'rev-parse','HEAD').decode().strip(), 'files':receipts, 'guarded_or_dynamic_literals':sorted(unresolved),
+    # This gate executes Linux/headless, not Android. Avoid producing Android
+    # ETC2/ASTC derivatives during import; production settings and image bytes
+    # are unchanged. Record this validation-only platform choice explicitly.
+    project = destination/'project.godot'
+    source_project = project.read_text()
+    linux_project = re.sub(r'(?m)^textures/vram_compression/import_etc2_astc=true$',
+                           'textures/vram_compression/import_etc2_astc=false', source_project)
+    overrides = []
+    if linux_project != source_project:
+        project.write_text(linux_project)
+        overrides.append({'key':'rendering/textures/vram_compression/import_etc2_astc',
+                          'value':False,'scope':'disposable Linux/headless stage only'})
+        entry = next(r for r in receipts if r['path']=='project.godot')
+        entry['source_sha256'] = entry['sha256']
+        entry['stage_sha256'] = hashlib.sha256(project.read_bytes()).hexdigest()
+    result = {'revision':git(root,'rev-parse','HEAD').decode().strip(), 'files':receipts, 'validation_overrides':overrides, 'guarded_or_dynamic_literals':sorted(unresolved),
               'scope':'production Main core; not full art/gameplay acceptance'}
     (destination / 'core-resource-paths.json').write_text(json.dumps(result, indent=2))
     return result
