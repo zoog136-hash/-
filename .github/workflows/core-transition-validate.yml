@@ -43,7 +43,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/core-project/.godot
-          key: core-import-4.7.2-linux-v2-${{ hashFiles('project.godot', 'scripts/**/*.gd', 'addons/**', 'data/**/*.json', 'scenes/**/*.tscn', 'tests/core_runtime_save_test.gd') }}
+          key: core-import-4.7.2-linux-v2-${{ hashFiles('project.godot', 'tools/ci_core.py', 'scripts/**/*.gd', 'addons/**', 'data/**/*.json', 'scenes/**/*.tscn', 'tests/core_runtime_save_test.gd') }}
           restore-keys: core-import-4.7.2-linux-v2-
       - name: Actual Main startup, current map, atomic save and migration
         env:
