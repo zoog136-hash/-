@@ -2,6 +2,8 @@ extends RefCounted
 ## Derived state only: the existing card_draw_fusion.owned save remains the
 ## sole acquisition ledger. Loading old owned cards is silent and idempotent.
 const Rules=preload("res://scripts/cards/collection_rules.gd")
+const NativeRules=preload("res://scripts/cards/native_collection_rules.gd")
+const NATIVE_PATH: String="res://data/cards/base508_collections.json"
 const ExistingStats=preload("res://scripts/collections/equipment_collection_stats.gd")
 const PATH: String="res://data/cards/normal_collections.json"
 var world: Node
@@ -20,7 +22,10 @@ var _owned_hash: int=0
 
 func configure(host: Node) -> bool:
 	world=host
-	var data: Variant=JSON.parse_string(FileAccess.get_file_as_string(PATH)) if FileAccess.file_exists(PATH) else null
+	var native: bool=NativeRules.accepts_catalog(world.catalog_db)
+	core=NativeRules.new() if native else Rules.new()
+	var path: String=NATIVE_PATH if native else PATH
+	var data: Variant=JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
 	if not data is Dictionary:
 		problem="일반 카드 컬렉션 데이터 누락/손상";return false
 	if not core.configure(data,world.catalog_db):problem=core.error;return false
