@@ -14,10 +14,11 @@ doll 484 / 1378 / 556; relic 438 / 1003 / 496. All 1736 definitions and 4906
 requirements join exact canonical deck/card IDs. Test deck 12 stays separate;
 the 12 cards with no source collection receive no invented set.
 
-892 definitions have currently supported unconditional rewards. 844 are blocked
+909 definitions now have supported unconditional rewards (892 at the first handoff).
+827 are blocked
 by at least one source server, native awakening, or unsupported effect condition.
-The overlapping reasons cover 498 server-limited, 211 awakening, and 488
-unsupported-reward sets. Completion and bonuses are derived from permanent owned
+The overlapping reasons cover 498 server-limited, 211 awakening, 443 unimplemented-effect, 2 HP-interval-runtime, and 1
+unresolved-source-target sets. These reason counts overlap. Completion and bonuses are derived from permanent owned
 keys, not spare counts, equipped names, UI selections, or option awakening.
 
 The requested time policy is `permanent_user_requested_time_override`: every
@@ -41,7 +42,7 @@ records; no original grade frame has been claimed installed. Quantities include
 the retained first card; unowned art is dimmed/grayscale. Tabs/actions have at
 least 44 logical-pixel targets. Original synthesis/awakening callbacks remain.
 
-Validation: source images 1267 SHA matches; native collection test 1347 checks;
+Validation: source images 1267 SHA matches; native collection test 1356 checks; 14 actual World stat-consumer checks;
 Godot 4.6.3 import and isolated OpenGL/Mesa UI capture/input checks (44 checks,
 1280x720 and 854x480). Three catalogs, details and collection views were rendered.
 The fixture uses isolated XDG data and in-memory ownership only. HUD processing
@@ -57,3 +58,11 @@ UI/Change/Change_MagicDoll_Info_Swap.csb,
 UI/Change/Change_Card_Swap_Button.csb. Read their exact texture references before
 installing original frame/tab/background/button resources. No original pixels or
 large render evidence are committed. No public push, PR, main change or merge.
+
+Follow-up capability expansion: source MeleeEvasion -> existing DG, MagicCritical
+-> magic_crit, scoped Fear hit/resistance -> their existing fear readers, and
+PvE percentage reduction -> its existing PvE-only channel. 43 source reward rows
+are newly representable; 17 previously blocked sets become supported without
+removing server or awakening requirements. Equipment collection policy and World
+combat implementation are unchanged. Unknown source target is collection 12573 /
+DamageDampOption 13; HP interval collections are 14813 and 16521.

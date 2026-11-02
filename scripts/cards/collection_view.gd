@@ -265,6 +265,6 @@ func _reasons(problems: Array) -> String:
 	var out: Array[String]=[]
 	for raw: Variant in problems:
 		var code: String=str(raw)
-		var label: String="원본 서버 조건 미해석" if code=="native_server_context_required" else "원본 각성 조건 별도" if code=="native_awakening_required" else "원본 보상 연결 없음" if code=="native_reward_missing" else "카드 매칭 누락" if code.begins_with("card_unmapped:") else "각성 조건 별도" if code=="awakening_collection_separate" else "현재 전투 효과 미지원" if code.begins_with("effect_unsupported:") else "출처 버전 확인 필요"
+		var label: String="원본 적용 대상 정의 없음" if code.begins_with("native_source_target_missing:") else "원본 HP 구간 효과 미연결" if code=="native_interval_runtime_required" else "현재 서버 문맥 미설정" if code=="native_server_context_required" else "원본 각성 조건 별도" if code=="native_awakening_required" else "원본 보상 연결 없음" if code=="native_reward_missing" else "카드 매칭 누락" if code.begins_with("card_unmapped:") else "각성 조건 별도" if code=="awakening_collection_separate" else "현재 전투 효과 미지원" if code.begins_with("effect_unsupported:") else "출처 버전 확인 필요"
 		if not out.has(label):out.append(label)
 	return " · ".join(out)

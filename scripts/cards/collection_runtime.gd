@@ -46,6 +46,7 @@ func _ensure() -> void:
 	var derived: Dictionary=core.derive({"owned":owned})
 	_views=derived.rows;totals=derived.totals;_completed=derived.completed
 	_record=ExistingStats.record(totals)
+	if core is NativeRules:_record.merge(NativeRules.stat_record_additions(totals),true)
 	if not _record.is_empty():
 		_record.erase("_equipment_collection_bonus")
 		_record["_card_collection_bonus"]=true

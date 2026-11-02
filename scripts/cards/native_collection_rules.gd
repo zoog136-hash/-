@@ -1,5 +1,21 @@
 extends "res://scripts/cards/collection_rules.gd"
 ## Source-only definitions. Old numeric keys are never reinterpreted as BuffCard IDs.
+const NATIVE_RECORD_FIELDS: Dictionary = {
+	"melee_evasion:flat":"dg",
+	"magic_critical_rate:percent":"magic_crit",
+	"fear_hit:percent":"fear_accuracy",
+	"fear_resistance:percent":"fear_resistance",
+	"hold_hit:percent":"hold_accuracy",
+	"pve_damage_reduction:percent":"pve_damage_reduction_pct"
+}
+# Existing World readers consume these exact record fields. They are kept
+# separate from equipment-collection policy and never flattened across scopes.
+static func stat_record_additions(totals: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	for code: String in NATIVE_RECORD_FIELDS:
+		if totals.has(code):result[NATIVE_RECORD_FIELDS[code]]=totals[code]
+	return result
+
 const TIME_POLICY: String = "permanent_user_requested_time_override"
 ## Special/unknown conditions and unsupported rewards remain visible and blocked.
 
@@ -49,8 +65,14 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		if row.effects.is_empty(): problems.append("native_reward_missing")
 		for effect: Dictionary in row.effects:
 			var code: String = effect_code(effect)
-			if not bool(effect.get("native_supported", false)) or (not ExistingStats.SUPPORTED.has(code) and not EXTRA_EFFECTS.has(code)):
-				problems.append("effect_unsupported:" + code)
+			if not bool(effect.get("native_supported", false)) or (not ExistingStats.SUPPORTED.has(code) and not EXTRA_EFFECTS.has(code) and not NATIVE_RECORD_FIELDS.has(code)):
+				var native: Dictionary = effect.get("source_original",{})
+				var target: Dictionary = native.get("application_target",{})
+				if target.get("resolved",true)==false:
+					problems.append("native_source_target_missing:"+str(target.get("target_table",""))+":"+str(target.get("target_id","")))
+				elif not (native.get("nested_intervals",[]) as Array).is_empty():
+					problems.append("native_interval_runtime_required")
+				else:problems.append("effect_unsupported:" + code)
 			var amount: Variant = effect.get("value")
 			if not (amount is int or amount is float) or not is_finite(float(amount)): return _fail("원본 보상 수치 오류")
 		availability[identity] = problems
