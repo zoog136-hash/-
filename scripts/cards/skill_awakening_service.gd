@@ -1,12 +1,13 @@
 extends RefCounted
 ## Native card skill awakening, independent of option awakening and aura.
-## One book per operation is explicit user policy; the source fee remains unresolved.
+## Book quantity and fees are explicit user game policy, separate from source pools.
 const DATA=preload("res://data/cards/base508_skill_awakening.json")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const Conditions=preload("res://scripts/cards/source_collection_conditions.gd")
 const MAX_EXPERIENCE: int=9999999999999
 const MAX_REVISION: int=9007199254740000
 const BOOK_QUANTITY: int=1 # user policy, not recovered source consumption evidence
+const FEES: Dictionary={3:100000,4:500000,5:1000000,32:2000000,52:5000000}
 const REROLL_POLICY: String="source_weighted_reroll_preserve_growth"
 var conditions=Conditions.new()
 var source_server_context: Dictionary={}
@@ -107,7 +108,7 @@ func view(state: Dictionary,owned: Dictionary,identity: String,preview_level: in
 	if card.is_empty():return fail("identity","원본 카드 ID 연결 없음")
 	var entry: Dictionary=state.cards.get(identity,{"spell_id":0,"level":0,"experience":"0"})
 	var available: Dictionary=eligibility(identity)
-	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":false,"can_feed":false,"blocked_reason":"각성서 1장 소모 · 수수료 원본 확인 중 · 재각성은 성장 유지","unknown_rules":DATA.data.unknown_rules}
+	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 성장 유지","unknown_rules":DATA.data.unknown_rules}
 
 func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
 	return fail("source_cost_rules_unresolved","각성서 1장 정책 확정 · 수수료 미확정 · 재화 차감 없음")
@@ -115,7 +116,7 @@ func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_
 func book_requirement(identity: String) -> Dictionary:
 	var book: Dictionary=book_for(identity)
 	if book.is_empty():return {}
-	return {"source_snapshot":"base508","item_class_id":int(book.item_row.ID),"quantity":BOOK_QUANTITY,"quantity_provenance":"explicit_user_policy","fee_verified":false}
+	return {"source_snapshot":"base508","item_class_id":int(book.item_row.ID),"quantity":BOOK_QUANTITY,"quantity_provenance":"explicit_user_policy","fee_verified":false,"fee":int(FEES.get(int(cards[identity].source_card.GradeID),0)),"fee_provenance":"explicit_user_policy"}
 
 func prepare_book_debit(identity: String,source_book_counts: Dictionary) -> Dictionary:
 	# Pure source-ID boundary. The caller must supply an explicitly verified
@@ -205,3 +206,17 @@ func prepare_reroll(state: Dictionary,owned: Dictionary,identity: String,roll: i
 
 func request_experience_feed(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
 	return fail("source_exp_rules_unresolved","경험치 재료별 획득량·소모·강화 처리 규칙 확인 필요 · 카드 차감 없음")
+
+static func install_book_definitions(catalog: Dictionary) -> void:
+	if not catalog.has("아이템"):catalog["아이템"]=[]
+	var seen: Dictionary={}
+	for book: Dictionary in DATA.data.books:
+		var item: Dictionary=book.item_row
+		var id: int=int(item.ID)
+		if seen.has(id):continue
+		seen[id]=true
+		var exists: bool=false
+		for record: Dictionary in catalog["아이템"]:
+			if record.get("name","")==str(book.name):exists=true;break
+		if exists:continue # Never assign source ownership to a legacy name alias.
+		catalog["아이템"].append({"name":str(book.name),"source":"lineagem_base508","source_snapshot":"base508","source_item_class_id":id,"sourceId":"m508:item:"+str(id),"type":"재료","slot":"material","grade":str(book.group_row.GradeID),"stackable":true,"source_item":item.duplicate(true),"source_image_status":"original_icon_not_installed","desc":"카드 스킬 각성 재료 · 거래당 1장"})

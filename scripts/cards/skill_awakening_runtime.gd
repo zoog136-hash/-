@@ -46,8 +46,51 @@ func view(identity: String,preview_level: int=1) -> Dictionary:
 		snapshot.save_blocked=save_blocked
 	return snapshot
 func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
-	# Deliberately does not touch inventory, gold, RNG, progress or the save writer.
-	return core.request_operation(progress,world.card_draw_fusion.owned,identity,materials)
+	if _reroll_busy:return Core.fail("busy","이전 각성 거래 처리 중")
+	if save_blocked or not problem.is_empty():return Core.fail("save_blocked","각성 저장 보호 중")
+	_context()
+	var revision: int=int(materials.get("expected_revision",progress.revision))
+	var operation: String=str(materials.get("operation_id",str(Time.get_ticks_usec())+":"+str(revision)))
+	var requirement: Dictionary=core.book_requirement(identity)
+	if requirement.is_empty() or int(requirement.fee)<=0:return Core.fail("identity","각성 수수료 정책 연결 없음")
+	if int(world.gold)<int(requirement.fee):return Core.fail("insufficient_gold","아데나 부족")
+	var selected: String="";var item_name: String=""
+	for key: String in world.item_instances:
+		var physical: Variant=world.item_instances[key]
+		if not physical is Dictionary or not physical.get("record") is Dictionary:continue
+		var record: Dictionary=physical.record
+		if record.get("source","")!="lineagem_base508" or record.get("source_snapshot","")!="base508":continue
+		if record.get("source_item_class_id",0)!=int(requirement.item_class_id) or record.get("sourceId","")!="m508:item:"+str(int(requirement.item_class_id)):continue
+		if physical.get("name","")!=record.get("name","") or str(physical.get("name","")).is_empty():continue
+		selected=key;item_name=str(physical.name);break
+	if selected.is_empty():return Core.fail("insufficient_book","해당 등급 원본 각성서 1장 필요")
+	var count: Variant=world.inventory.get(item_name,0)
+	if not Core.integer(count) or int(count)<1:return Core.fail("book_quantity","각성서 보유 수량 오류")
+	var physical_count: int=0
+	for physical: Variant in world.item_instances.values():
+		if physical is Dictionary and physical.get("name","")==item_name:physical_count+=1
+	if physical_count>int(count):return Core.fail("book_quantity","각성서 물리 보유 정보 불일치")
+	_reroll_busy=true
+	var staged:=RandomNumberGenerator.new();staged.state=selection_rng.state
+	var prepared: Dictionary=core.prepare_reroll(progress,world.card_draw_fusion.owned,identity,staged.randi_range(0,99999),revision,operation)
+	if not prepared.ok:_reroll_busy=false;return prepared
+	var bag: Dictionary=world.inventory.duplicate(true)
+	var physicals: Dictionary=world.item_instances.duplicate(true)
+	if int(count)==1:bag.erase(item_name)
+	else:bag[item_name]=int(count)-1
+	physicals.erase(selected)
+	var remaining: int=int(world.gold)-int(requirement.fee)
+	prepared.state.rng_state=str(staged.state)
+	var error: Error=world._save_game(true,{SAVE_KEY:prepared.state,"inventory":bag,"item_instances":physicals,"gold":remaining})
+	if error!=OK:
+		_reroll_busy=false
+		return Core.fail("save_failed","저장 실패 · 재화·각성서·스킬·난수 보존")
+	progress=prepared.state.duplicate(true);selection_rng.state=staged.state
+	world.inventory=bag;world.item_instances=physicals;world.gold=remaining
+	_has_cache=false;world.set("equipment_records_dirty",true);_reroll_busy=false
+	prepared.erase("state");prepared.consumed_quantity=1;prepared.consumed_gold=int(requirement.fee)
+	prepared.fee_provenance="explicit_user_policy"
+	return prepared
 func bonus_records() -> Array[Dictionary]:
 	_context()
 	if world==null or save_blocked or not problem.is_empty():return []

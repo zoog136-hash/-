@@ -1,5 +1,5 @@
 extends VBoxContainer
-## Read-only source catalog and saved effects. No guessed price or free unlock.
+## Source candidates and explicit user-policy atomic awakening transaction.
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Ownership=preload("res://scripts/ui/catalog_card_ownership.gd")
 const SourceSkin=preload("res://scripts/ui/source_skill_awakening_skin.gd")
@@ -51,7 +51,7 @@ func configure(service: RefCounted,target: String) -> void:
 	var reason: Label=UI.label(str(snapshot.blocked_reason),13,UI.MUTED);reason.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(reason)
 	if not snapshot.eligibility.ok:
 		var eligibility: Label=UI.label(str(snapshot.eligibility.error),13,UI.GOLD);add_child(eligibility)
-	action=UI.button("각성 · 수수료 확인 중",Callable(),Vector2(0,44));action.name="SkillAwakeningExecute";action.disabled=true;action.tooltip_text="각성서 1장 정책 · 수수료 미확정으로 거래 대기";add_child(action)
+	action=UI.button("재각성" if int(snapshot.entry.spell_id)>0 else "각성",_execute,Vector2(0,44));action.name="SkillAwakeningExecute";action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false));action.tooltip_text=str(snapshot.blocked_reason);add_child(action)
 	var original_action: bool=SourceSkin.button(action,"Btn_Production")
 	var note: Label=UI.label("옵션 각성과 별도 상태 · 원본 각성 재질 적용 / 반응형 배치" if original_action else "원본 각성 화면 재질 미설치",12,UI.MUTED);add_child(note)
 	_preview(0)
@@ -73,3 +73,12 @@ func _select(index: int) -> void:
 	lines.append("기본 발동 간격 "+str(float(row.source_spell.CastDelay)/1000.0)+"초")
 	lines.append("발동 시 HP "+str(int(row.source_spell.HPCost))+" / MP "+str(int(row.source_spell.MPCost))+" 소모")
 	effect.text="\n".join(lines)
+
+func _execute() -> void:
+	action.disabled=true
+	var result: Dictionary=runtime.request_operation(identity,{"expected_revision":int(runtime.progress.revision)})
+	if result.ok:
+		snapshot=runtime.view(identity)
+		current.text=str(runtime.core.DATA.data.spells[str(int(snapshot.entry.spell_id))].name)+" · Lv."+str(int(snapshot.entry.level))
+	else:current.text=str(result.error)
+	action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false))
