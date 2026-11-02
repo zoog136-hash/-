@@ -7541,7 +7541,7 @@ func _experience_multiplier() -> float:
 func _update_companion(delta: float) -> void:
 	doll_motion.update(delta, $Companion, companion_sprite, player)
 	relic_motion.update(delta, relic_sprite, player)
-	var state: Dictionary=option_awakening.subslot_view()
+	var state: Dictionary=option_awakening.subslot_view(false)
 	if not state.get("active",false):
 		if is_instance_valid(secondary_doll_visual):secondary_doll_visual.clear()
 		return

@@ -37,6 +37,7 @@ func run() -> void:
 	var before: int=hash([service.export_state(),host.gold,host.card_draw_fusion.export_state()]);host.save_error=ERR_FILE_CANT_WRITE
 	check(not service.select_subslot(chosen).ok and hash([service.export_state(),host.gold,host.card_draw_fusion.export_state()])==before,"atomic save failure no ownership or state mutation")
 	host.save_error=OK;check(service.select_subslot(chosen).ok and service.subslot_view().active,"select source secondary doll")
+	check(service.subslot_view(false).active and service.subslot_view(false).effects.is_empty(),"per-frame actor and UI reads skip source bonus materialization")
 	var plain: Dictionary=service.subslot_view().effects
 	check(not plain.stats.has("xp") and not plain.stats.has("weightBonus") and not plain.stats.has("blessing_consumption_reduction_pct"),"exact source secondary buff excludes primary XP weight blessing")
 	service.progress.cards["마법인형"][chosen]={"experience":0,"awakened":true,"attempts":1,"failures":0};service.progress.revision+=1

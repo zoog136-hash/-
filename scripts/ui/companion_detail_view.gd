@@ -165,7 +165,7 @@ func configure(controller: Node) -> void:
 	secondary_button.pressed.connect(func() -> void:
 		var world: Node=hud.get_parent()
 		if world==null or not world.has_method("_on_secondary_doll_requested"):return
-		var state: Dictionary=world.option_awakening.subslot_view()
+		var state: Dictionary=world.option_awakening.subslot_view(false)
 		var chosen: String=Cards.card_id(hud.selected_catalog_record)
 		hud.secondary_doll_requested.emit("" if state.identity==chosen else chosen))
 	footer_actions.hide()
@@ -382,7 +382,7 @@ func _refresh_secondary(record: Dictionary) -> void:
 	var world: Node=hud.get_parent()
 	if world==null or not world.has_method("_on_secondary_doll_requested"):secondary_button.disabled=true;return
 	var runtime: RefCounted=world.option_awakening
-	var state: Dictionary=runtime.subslot_view()
+	var state: Dictionary=runtime.subslot_view(false)
 	var chosen: String=Cards.card_id(record)
 	var release: bool=state.identity==chosen
 	var available: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").eligibility(runtime,"" if release else chosen,int(world.level),world.active_skill_buffs)
