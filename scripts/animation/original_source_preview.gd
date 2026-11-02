@@ -233,7 +233,7 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		for item: Dictionary in frames: total += preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
 	var time: float = fmod(_clock, total) if bool(track.loop) else minf(_clock, total)
 	# Floating boundary tolerance only; never hold a short pose for a render frame.
-	var boundary_epsilon: float = 0.000000001 if track.has("presentation_observation") else 0.0
+	var boundary_epsilon: float = 0.000000001 if frames[0].has("presentation_duration") else 0.0
 	if bool(track.loop) and total - time <= boundary_epsilon: time = 0.0
 	var selected: Dictionary = frames[0] if static_track else frames[-1]
 	for item: Dictionary in ([] if static_track else frames):

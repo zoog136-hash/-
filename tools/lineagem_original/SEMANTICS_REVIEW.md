@@ -170,3 +170,35 @@ of30FPS sampling without drift/forced holds, idle/walk transitions, repeated
 cancel-without-attack, strict/other-actor isolation and source-action hash guards.
 Run `tools/lineagem_original/check_24709_presentation.gd` with
 `--native-manifest=/authorized/private/pack/manifest.json` for that focused check.
+
+## 20663 action3/d5 weaker presentation support (2026-11-02)
+
+Separate evidence `libfile_26b6f4c659048191bd3cfb65ba2adca8` v0 ZIP SHA256
+`06aeaf131ce106fa351b71a5e346888446029779274900e0e44f871c5171b58f` passed
+SHA/CRC; list20 and all33 original d5 body/sc/mu PNG hashes match local inputs.
+Its read-only analysis script was reviewed, then supplied379-sample source-body
+edge matrix scores reproduced:0.297251 normal11 poses at compatible24 versus
+0.377621 boundary10 once then0..9,11.44% feature-residual reduction. Evidence
+is weaker than24709:78.6% free-pose agreement and neighboring0/1 ambiguity.
+It supports only the stationary2.6..8.9s region/three boundaries, not the later
+moving/direction-changing event or an exact9→10→0 sequence claim.
+
+The additional rule is restricted to20663/idle3/chunk8/physical direction5,
+exact raw action SHA,11 original4-tick tokens, source FPSnull and the existing
+unverified compatible24 clock. Only that facing array receives separate1/60s
+boundary presentation, giving1.683333s; other facings/walk/actors retain prior
+behavior. Source110 remains absent, source ticks/order/FPSnull are untouched,
+strict remains static/pending, and the PC24 clock-origin label is not promoted
+to an M default. `--lineagem-20663-source-presentation` opts back to prior
+compatible-duration sampling for comparison. This does not resolve the331
+unknown-source doll tracks or infer a universal boundary-token rule.
+
+Actual common actor OpenGL/llvmpipe rendered190 frames at30FPS sampling of the
+two fixed fitted phases. Selected body/SC native frames agreed on all190 outputs;
+that output sequence scores0.297012 versus0.377420 against the supplied M
+body-edge matrix (11.44% feature-residual reduction). This is not RGB blend
+verification or Android performance. The short boundary is sampled only at
+5.866667s on this grid; the other two events fall between30FPS samples. No
+one-render-frame hold or loop extension was introduced. The focused20663 check
+passed rawFPSnull/tick preservation, d5-only scope,30FPS loop/transition behavior,
+strict isolation and refusing reuse if an explicit sourceFPS is later supplied.
