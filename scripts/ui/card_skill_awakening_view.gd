@@ -2,6 +2,7 @@ extends VBoxContainer
 ## Read-only source catalog and saved effects. No guessed price or free unlock.
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Ownership=preload("res://scripts/ui/catalog_card_ownership.gd")
+const SourceSkin=preload("res://scripts/ui/source_skill_awakening_skin.gd")
 var runtime: RefCounted
 var identity: String
 var level: OptionButton
@@ -19,9 +20,9 @@ func configure(service: RefCounted,target: String) -> void:
 	snapshot=runtime.view(identity)
 	if not snapshot.ok:add_child(UI.label(str(snapshot.error),16));return
 	var header:=HBoxContainer.new();add_child(header)
-	var portrait:=TextureRect.new();portrait.name="SkillAwakeningTargetArt"
-	portrait.custom_minimum_size=Vector2(80,96);portrait.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;portrait.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.texture=Ownership.icon_for(snapshot.get("target_record",{}),bool(snapshot.owned));header.add_child(portrait)
+	var portrait:=preload("res://scripts/ui/source_skill_awakening_target.gd").new();portrait.name="SkillAwakeningTargetArt"
+	portrait.custom_minimum_size=Vector2(240,102)
+	portrait.portrait=Ownership.icon_for(snapshot.get("target_record",{}),bool(snapshot.owned));header.add_child(portrait)
 	var info:=VBoxContainer.new();info.size_flags_horizontal=Control.SIZE_EXPAND_FILL;header.add_child(info)
 	info.add_child(UI.label(str(snapshot.card.name)+" · 스킬 각성",18,UI.GOLD))
 	current=UI.label("",14);current.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(current)
@@ -43,11 +44,14 @@ func configure(service: RefCounted,target: String) -> void:
 		var index: int=candidates.add_item(str(row.name)+" · 후보 선택 "+str(float(row.selection_weight)/1000.0)+"%")
 		candidates.set_item_metadata(index,int(row.spell_id))
 	candidates.item_selected.connect(_select)
+	var skill_panel: StyleBoxTexture=SourceSkin.panel("Img_Bg","Textuer_Inventory.png")
+	if skill_panel!=null:candidates.add_theme_stylebox_override("panel",skill_panel)
 	var reason: Label=UI.label(str(snapshot.blocked_reason),13,UI.MUTED);reason.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(reason)
 	if not snapshot.eligibility.ok:
 		var eligibility: Label=UI.label(str(snapshot.eligibility.error),13,UI.GOLD);add_child(eligibility)
 	action=UI.button("각성 · 원본 소모 규칙 확인 중",Callable(),Vector2(0,44));action.name="SkillAwakeningExecute";action.disabled=true;action.tooltip_text="미확정 수수료·각성서 수량은 적용하지 않습니다";add_child(action)
-	var note: Label=UI.label("옵션 각성·시각 aura와 별도 상태 · 원본 각성 화면 스킨 연결 대기",12,UI.MUTED);add_child(note)
+	var original_action: bool=SourceSkin.button(action,"Btn_Production")
+	var note: Label=UI.label("옵션 각성과 별도 상태 · 원본 각성 재질 적용 / 반응형 배치" if original_action else "원본 각성 화면 재질 미설치",12,UI.MUTED);add_child(note)
 	_preview(0)
 	if candidates.item_count>0:candidates.select(0);_select(0)
 func _preview(index: int) -> void:

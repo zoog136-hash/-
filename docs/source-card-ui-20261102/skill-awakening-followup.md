@@ -59,3 +59,26 @@ verify a new hit on the reused body. Source-event unit checks use a clearly
 labelled mock compositor; they do not prove original pixel playback. Installed
 original skill art and screen CSBs remain pending. Existing exit-time resource
 warnings remain; no script/parse errors. Android/Godot4.7.2 unverified.
+
+## Source UI material checkpoint
+
+Original UI batches001/002/003 were materialized with Library identity, ZIP CRC
+and supplied SHA verified. The final contract is
+`libfile_0cf358c0d4e881919dbdee4a3e2d3700` v0, SHA
+`74c804540c498821cbe9a563a3d0ffa6b36edf599245eae9a7fea660c90111b6`.
+All10CSBs/487nodes are normalized. Combined card/inventory/skill metadata now
+resolves12 atlas pages/138 unique requested frame keys, with no missing plist.
+Independent Pillow and Godot pixels match for all138 keys, including rotation
+and trim restoration. Original producer count594 includes repeated bindings;
+it is not the number of unique cropped frames.
+
+The skill screen uses original CSB references for the target magic ring, plus,
+book slot, skill-list panel and awakening-button states. The target area retains
+original card/slot centers; adaptive controls retain44px touches. The remaining
+layout is adaptive, not a literal full-CSB screen reconstruction. The book slot
+stays empty because no verified book-icon/owned-count binding is installed; no
+item ownership is invented. A white mask panel whose source tint was not parsed
+is withheld after direct render review. Particle/timeline and full EXP screen
+controls are not claimed implemented merely because their sources are present.
+51 actual World/UI checks pass at1280x720/854x480, including material bindings
+and preserved states. Original pixel screenshots stay in the private handoff.

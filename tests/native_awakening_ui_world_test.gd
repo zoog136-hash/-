@@ -67,6 +67,9 @@ func run() -> void:
 		if view==null:continue
 		check(view.candidates.item_count==5 and view.candidates.get_item_metadata(0)==64224,"source skill candidates retain IDs")
 		check(view.action.disabled and view.stats.text.contains("HP +300"),"unconfirmed cost button disabled with source HP profile")
+		var source_target: Control=view.find_child("SkillAwakeningTargetArt",true,false)
+		check(source_target.layers.size()==3 and source_target.portrait!=null,"source CSB target ring/plus/book slot use installed exact atlas images")
+		check(view.action.get_meta("source_csb_node","")=="UI/Change/Change_Awaken_Skill.csb:Btn_Production" and view.action.custom_minimum_size.y>=44,"exact source awakening button retains adequate adaptive touch size")
 		var owner_scroll: ScrollContainer=view.get_parent()
 		var second: Vector2=view.candidates.get_global_transform_with_canvas()*view.candidates.get_item_rect(1).get_center()
 		if second.y>owner_scroll.get_global_rect().end.y-12:
@@ -80,6 +83,7 @@ func run() -> void:
 		var scroll: ScrollContainer=view.get_parent()
 		scroll.scroll_vertical=int(scroll.get_v_scroll_bar().max_value);await settle()
 		check(scroll.get_global_rect().grow(2).intersects(view.action.get_global_rect()),"blocked action remains reachable by scroll")
+		await capture("source-skill-action-%dx%d" % [extent.x,extent.y])
 		view.level.select(19);view.level.item_selected.emit(19);await settle()
 		check(world.skill_awakening.export_state()==state and world._effective_max_hp()==base_hp+300,"level20 preview never changes saved level or live HP")
 		var denied: Dictionary=world.skill_awakening.request_operation(identity,{identity:100})
