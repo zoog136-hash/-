@@ -251,13 +251,13 @@ func _world_property(name_value: String,fallback: Variant) -> Variant:
 	for property: Dictionary in world.get_property_list():
 		if property.name==name_value:return world.get(name_value)
 	return fallback
-func subslot_view() -> Dictionary:
+func subslot_view(include_effects: bool=true) -> Dictionary:
 	if world==null or not core.native_mode:return {"active":false,"identity":""}
 	_sync_native_context()
 	var identity: String=str(progress.get(Subslot.FIELD,""))
 	var state: Dictionary=Subslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
 	var active: bool=not identity.is_empty() and bool(state.ok) and problem.is_empty()
-	return {"identity":identity,"active":active,"eligibility":state,"effects":Subslot.effects(self,identity) if active else {},"unlocked":Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress)}
+	return {"identity":identity,"active":active,"eligibility":state,"effects":Subslot.effects(self,identity) if active and include_effects else {},"unlocked":Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress)}
 func select_subslot(identity: String) -> Dictionary:
 	_sync_native_context()
 	if _busy:return Core.fail("busy","이전 거래 처리 중")
