@@ -208,13 +208,14 @@ func try_begin(line_of_sight: bool, explicit_id: int = -1) -> bool:
 	actor.attack_cooldown = maxf(float(actor.attack_cooldown),cooldown)
 	if cooldown > 0.0 or not pending.is_empty() or not line_of_sight: return false
 	if float(actor.attack_cooldown) > 0.0: return false
-	if actor.is_stunned() or actor.is_feared() or actor.is_silenced() or not actor._target_attackable() or actor.motion.active: return false
+	if actor.is_stunned() or actor.is_feared() or not actor._target_attackable() or actor.motion.active: return false
 	var selected_id: int = explicit_id if explicit_id > 0 else int(options.get("explicit_attack_id",-1))
 	if bool(options.get("host_action_contract_locked",false)):
 		if explicit_id > 0 and explicit_id != int(options.explicit_attack_id): return false
 		selected_id = int(options.explicit_attack_id)
 	var row: Dictionary = choose_attack(selected_id)
 	if row.is_empty(): return false
+	if actor.is_silenced() and (bool(row.IsSpell) or str(actor.current_attack_type()) == "magic"): return false
 	var spell: Dictionary = spell_for(row)
 	var distance: float = actor.global_position.distance_to(scene.player.global_position)
 	var reach: float = _host_range(row,spell)
@@ -315,9 +316,10 @@ func release(sequence: int) -> bool:
 	if not valid_life(): return true
 	var actor: Node = owner(); var scene: Node = world()
 	if int(action.motion_instance_id) != actor.motion.get_instance_id() or int(action.owner_instance_id) != actor.get_instance_id() or int(action.owner_life) != int(actor.life_id) or int(action.world_generation) != int(scene.get("combat_generation")) or int(action.target_id) != scene.player.get_instance_id(): return true
-	if actor.is_stunned() or actor.is_feared() or actor.is_silenced() or not actor._target_attackable(): return true
-	if actor.global_position.distance_to(scene.player.global_position) > float(action.reach) or not scene._has_line_of_sight_world(actor.global_position,scene.player.global_position): return true
 	var row: Dictionary = action.attack; var spell: Dictionary = action.spell
+	if actor.is_stunned() or actor.is_feared() or not actor._target_attackable(): return true
+	if actor.is_silenced() and (bool(row.IsSpell) or str(actor.current_attack_type()) == "magic"): return true
+	if actor.global_position.distance_to(scene.player.global_position) > float(action.reach) or not scene._has_line_of_sight_world(actor.global_position,scene.player.global_position): return true
 	var raw: int = roll_damage(row,spell,scene.rng)
 	var status: Dictionary = status_packet(spell)
 	var channel: String = "magic" if bool(row.IsSpell) else str(actor.current_attack_type())

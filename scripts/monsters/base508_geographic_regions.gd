@@ -3,12 +3,29 @@ extends RefCounted
 const PATH = "res://data/lineagem_base508/maps/base508_land_48962_npc_regions.json"
 const ROSTER = preload("res://scripts/monsters/base508_source_roster.gd")
 const VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
+const CONTEXT = preload("res://scripts/monsters/base508_monster_context.gd")
+const AUTHORITY = preload("res://scripts/monsters/base508_authoritative_catalog.gd")
 static var _data: Dictionary = {}
 static func data() -> Dictionary:
 	if _data.is_empty():
 		var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
-		if value is Dictionary and value.get("source_snapshot", "") == "base508": _data = value
+		if value is Dictionary and value.get("source_snapshot", "") == "base508":
+			_data = value
+			var raw: Array=value.get("rows",[])
+			_data["rows"]=applied_rows(raw)
+			_data["runtime_inactive_rows_excluded"]=raw.size()-_data.rows.size()
 	return _data
+static func applied_rows(rows: Array) -> Array:
+	var result: Array=[]
+	for row: Variant in rows:
+		# Only the explicit numeric zero is inactive. Server conditions,
+		# variants and unknown flags remain metadata, not guessed deletions.
+		if row is Dictionary and integer(row.get("is_spawn_raw")) and float(row.is_spawn_raw)==0.0: continue
+		result.append(row)
+	return result
+static func explicitly_inactive_key(source_key: String) -> bool:
+	var ids: Dictionary=AUTHORITY.parse_key(source_key)
+	return not ids.is_empty() and CONTEXT.explicitly_inactive(int(ids.npc_id),int(ids.view_id),int(ids.link_id))
 static func integer(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floorf(float(value))
 static func identity(record: Dictionary) -> bool:
@@ -73,6 +90,7 @@ static func display_position(cell: Vector2i, policy: String) -> Vector2:
 	var point := Vector2(t.translation[0],t.translation[1])+Vector2(t.basis_x[0],t.basis_x[1])*d.x+Vector2(t.basis_y[0],t.basis_y[1])*d.y
 	return point+Vector2(24,12) if policy == "visual_cell_center" else point
 static func create_confirmed_visual(map_pack: Object, source_key: String, instance_id: String, source_cell: Vector2i, placement_confirmed: Variant, display_policy: String, manifest_path: String = "", allow_contextual: bool = false) -> Dictionary:
+	if explicitly_inactive_key(source_key): return {"ok":false,"reason":"source_spawn_inactive"}
 	if not placement_confirmed is bool or not placement_confirmed or instance_id.is_empty(): return {"ok":false,"reason":"explicit_actual_instance_confirmation_required"}
 	var selected: Dictionary = {}
 	for row: Dictionary in regions_for_map(map_pack):
@@ -95,3 +113,12 @@ static func remove_visual(map_pack: Object, instance: Dictionary) -> void:
 	var node: Variant = instance.get("view")
 	if is_instance_valid(node): node.free()
 	instance.clear()
+static func prune_inactive_visuals(map_pack: Object, instances: Array) -> int:
+	var removed: int=0
+	for index: int in range(instances.size()-1,-1,-1):
+		var instance: Variant=instances[index]
+		if instance is Dictionary and explicitly_inactive_key(str(instance.get("source_key",""))):
+			remove_visual(map_pack,instance)
+			instances.remove_at(index)
+			removed+=1
+	return removed

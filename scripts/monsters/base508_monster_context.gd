@@ -42,6 +42,17 @@ static func _row(table_name: String, id: int) -> Dictionary:
 
 static func _failure(reason: String) -> Dictionary:
 	return {"ok": false, "reason": reason}
+static func activation_flag(value: Variant) -> String:
+	if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)): return "unsupported"
+	if float(value)==0.0: return "inactive"
+	if float(value)==1.0: return "active"
+	return "unsupported"
+
+static func explicitly_inactive(npc_id: int, spawn_view_id: int, territory_link_id: int) -> bool:
+	var spawn: Dictionary=_row("NpcSpawnPackNpcClassView",spawn_view_id)
+	var link: Dictionary=_row("NpcSpawnPackTerritory",territory_link_id)
+	var flag: Variant=spawn.get("IsSpawn")
+	return not spawn.is_empty() and not link.is_empty() and int(spawn.get("NpcClassID",-1))==npc_id and activation_flag(flag)=="inactive" and int(link.get("NpcSpawnPackID",-1))==int(spawn.get("NpcSpawnPackID",-2))
 
 static func context(npc_id: int, spawn_view_id: int, territory_link_id: int, allowed_limit_sets: Array = [0]) -> Dictionary:
 	var npc: Dictionary = BASE.npc(npc_id)
@@ -49,7 +60,9 @@ static func context(npc_id: int, spawn_view_id: int, territory_link_id: int, all
 	var spawn: Dictionary = _row("NpcSpawnPackNpcClassView", spawn_view_id)
 	if spawn.is_empty(): return _failure("spawn_view_id_missing")
 	if int(spawn.NpcClassID) != npc_id: return _failure("spawn_view_npc_mismatch")
-	if int(spawn.IsSpawn) != 1: return _failure("source_spawn_inactive")
+	var activation: String=activation_flag(spawn.get("IsSpawn"))
+	if activation=="inactive": return _failure("source_spawn_inactive")
+	if activation!="active": return _failure("source_spawn_flag_unsupported")
 	if not allowed_limit_sets.has(int(spawn.ServerLimitSetID)): return _failure("server_limit_set_context_required")
 	if int(spawn.NpcLevel) <= 0: return _failure("source_spawn_level_not_positive")
 	if bool(npc.get("TestNPC", false)): return _failure("source_test_npc")
