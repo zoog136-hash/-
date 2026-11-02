@@ -80,6 +80,8 @@ func bonus(code: String) -> float:
 
 func catalog_bonus(key: String) -> int:
 	_ensure()
+	if core is NativeRules and NativeRules.NATIVE_CATALOG_FIELDS.has(key):
+		return int(totals.get(NativeRules.NATIVE_CATALOG_FIELDS[key],0))
 	var extra: Dictionary={"potionHealFlat":"potion_heal:flat","potionHealPct":"potion_heal:percent"}
 	return int(totals.get(extra[key],0)) if extra.has(key) else ExistingStats.catalog_bonus(totals,key)
 

@@ -32,6 +32,17 @@ func run() -> void:
 	check(world._player_critical_rate("magic")>=before_magic+int(totals.get("magic_critical_rate:percent",0)),"source magic crit reaches actual player stat")
 	check(world._fear_accuracy_stat()>=before_fear_hit+int(totals.get("fear_hit:percent",0)),"source fear hit reaches actual player stat")
 	check(world._fear_resistance_stat()>=before_fear_resist+int(totals.get("fear_resistance:percent",0)),"source fear resistance reaches actual player stat")
+	# Channel-only fixture: source PvE-percent sets remain server gated in the
+	# genuine ownership derivation. Inject a cache value only to verify the
+	# existing damage consumer, then restore it without touching ownership.
+	var pve_before: int=world._pve_damage_after_item_buffs(100)
+	var original_totals: Dictionary=world.card_collections.totals
+	world.card_collections.totals=original_totals.duplicate(true)
+	world.card_collections.totals["pve_damage_reduction:percent"]=2
+	check(world.card_collections.catalog_bonus("pve_damage_reduction_pct")==2,"native PvE percent uses actual catalog consumer route")
+	check(world._pve_damage_after_item_buffs(100)==maxi(1,int(round(float(pve_before)*.98))),"source PvE percentage reaches actual incoming-damage consumer")
+	world.card_collections.totals=original_totals
+	check(world._pve_damage_after_item_buffs(100)==pve_before,"channel-only fixture restores original damage state")
 	var ledger_hash: int=hash(world.card_draw_fusion.export_state())
 	var count: int=0
 	for equipped: Dictionary in world._all_equipped_records():

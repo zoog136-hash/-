@@ -5,9 +5,12 @@ const NATIVE_RECORD_FIELDS: Dictionary = {
 	"magic_critical_rate:percent":"magic_crit",
 	"fear_hit:percent":"fear_accuracy",
 	"fear_resistance:percent":"fear_resistance",
-	"hold_hit:percent":"hold_accuracy",
-	"pve_damage_reduction:percent":"pve_damage_reduction_pct"
+	"hold_hit:percent":"hold_accuracy"
 }
+const NATIVE_CATALOG_FIELDS: Dictionary={"pve_damage_reduction_pct":"pve_damage_reduction:percent"}
+static func supports_extra_code(code: String) -> bool:
+	return NATIVE_RECORD_FIELDS.has(code) or NATIVE_CATALOG_FIELDS.values().has(code)
+
 # Existing World readers consume these exact record fields. They are kept
 # separate from equipment-collection policy and never flattened across scopes.
 static func stat_record_additions(totals: Dictionary) -> Dictionary:
@@ -65,7 +68,7 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		if row.effects.is_empty(): problems.append("native_reward_missing")
 		for effect: Dictionary in row.effects:
 			var code: String = effect_code(effect)
-			if not bool(effect.get("native_supported", false)) or (not ExistingStats.SUPPORTED.has(code) and not EXTRA_EFFECTS.has(code) and not NATIVE_RECORD_FIELDS.has(code)):
+			if not bool(effect.get("native_supported", false)) or (not ExistingStats.SUPPORTED.has(code) and not EXTRA_EFFECTS.has(code) and not supports_extra_code(code)):
 				var native: Dictionary = effect.get("source_original",{})
 				var target: Dictionary = native.get("application_target",{})
 				if target.get("resolved",true)==false:

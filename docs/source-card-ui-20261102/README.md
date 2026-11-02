@@ -42,7 +42,7 @@ records; no original grade frame has been claimed installed. Quantities include
 the retained first card; unowned art is dimmed/grayscale. Tabs/actions have at
 least 44 logical-pixel targets. Original synthesis/awakening callbacks remain.
 
-Validation: source images 1267 SHA matches; native collection test 1356 checks; 14 actual World stat-consumer checks;
+Validation: source images 1267 SHA matches; native collection test 1356 checks; 17 actual World stat-consumer checks;
 Godot 4.6.3 import and isolated OpenGL/Mesa UI capture/input checks (44 checks,
 1280x720 and 854x480). Three catalogs, details and collection views were rendered.
 The fixture uses isolated XDG data and in-memory ownership only. HUD processing
@@ -66,3 +66,8 @@ are newly representable; 17 previously blocked sets become supported without
 removing server or awakening requirements. Equipment collection policy and World
 combat implementation are unchanged. Unknown source target is collection 12573 /
 DamageDampOption 13; HP interval collections are 14813 and 16521.
+
+PvE reduction percentage uses the existing `catalog_bonus` route, not the
+equipped-record stat route. A temporary cache-only test fixture verifies damage
+calculation and restoration without bypassing source server eligibility or
+changing ownership. The actual derived source ownership still honors all gates.
