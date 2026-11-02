@@ -69,7 +69,7 @@ static func tracks(record: Dictionary, consumer_kind: String, selected_mode: Str
 		track["effective_fps"] = fps
 		track["timing_origin"] = origin if valid else "strict_unresolved"
 		track["static_pending_timing"] = not valid
-	preload("res://scripts/animation/source_presentation_policy.gd").apply(record, result, selected_mode)
+	preload("res://scripts/animation/source_presentation_policy.gd").apply(record, result, selected_mode, consumer_kind)
 	return result
 static func effect(attributes: Array, selected_mode: String) -> Dictionary:
 	if selected_mode != "compatible": return {"enabled":false,"reason":"strict_unverified_blend"}

@@ -7,7 +7,7 @@ static func rules() -> Array:
 		var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 		if value is Dictionary and value.get("schema", 0) == 1 and value.get("source_snapshot", "") == "base508": _rules = value.get("rules", [])
 	return _rules
-static func apply(record: Dictionary, tracks: Dictionary, mode: String) -> void:
+static func apply(record: Dictionary, tracks: Dictionary, mode: String, consumer_kind: String) -> void:
 	# Pack metadata cannot enable a presentation override, especially in strict mode.
 	for track: Dictionary in tracks.values():
 		track.erase("presentation_observation")
@@ -15,7 +15,7 @@ static func apply(record: Dictionary, tracks: Dictionary, mode: String) -> void:
 			for frame: Dictionary in frames: frame.erase("presentation_duration")
 	if mode != "compatible": return
 	for rule: Dictionary in rules():
-		if rule.get("reference_evidence_status", "") != "verified_scoped_observation": continue
+		if rule.get("reference_evidence_status", "") != "verified_scoped_observation" or not rule.get("consumer_kinds", []).has(consumer_kind): continue
 		if "--lineagem-%d-source-presentation" % int(rule.source_sprite_id) in OS.get_cmdline_user_args(): continue
 		if int(record.get("source_sprite_id", 0)) != int(rule.source_sprite_id) or int(record.get("body_id", 0)) != int(rule.source_body_id): continue
 		var track: Dictionary = tracks.get(str(rule.role), {})
