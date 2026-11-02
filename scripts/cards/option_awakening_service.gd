@@ -164,6 +164,8 @@ func validate_state(value: Variant, card_state: Variant = null) -> String:
 	if not state.get("rng_state", "") is String: return "각성 난수 저장 형식 오류"
 	var rng_text: String = str(state.get("rng_state", ""))
 	if not rng_text.is_empty() and (not rng_text.is_valid_int() or str(int(rng_text)) != rng_text): return "각성 난수 저장 값 오류"
+	var subslot_error: String=preload("res://scripts/cards/native_doll_subslot.gd").validate(state)
+	if not subslot_error.is_empty():return subslot_error
 	if not state.get("cards") is Dictionary: return "각성 카드 저장 형식 오류"
 	for category: String in CATEGORIES:
 		if not state.cards.get(category) is Dictionary: return "각성 분류 저장 누락"

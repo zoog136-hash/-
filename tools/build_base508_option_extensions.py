@@ -59,8 +59,17 @@ def build(args):
         if row['BuffClassID'] in buff_ids:
             buff_links[str(row['BuffClassID'])].append(effect(row))
     spells = {str(r['ID']): {'source_spell': r, 'effects': spell_links[r['ID']]} for r in table('SpellClass') if r['ID'] in spell_ids}
+    subslot_refs = {}
+    card_buffs = {r['BuffClassID']: r for r in cards.values() if r['BuffCardDeckID'] == 2}
+    buff_rows = table('BuffBonus')
+    for row in buff_rows:
+        if row['BuffClassID'] in card_buffs and types[bonuses[row['BonusID']]['BonusTypeID']]['Name'] == 'SubSlotBuffClassID':
+            card = card_buffs[row['BuffClassID']]
+            target = bonuses[row['BonusID']]['Value']
+            identity = f"source:m508:2:{card['ID']}"
+            subslot_refs[identity] = {'card': card, 'link': effect(row), 'effects': [effect(x) for x in buff_rows if x['BuffClassID'] == target]}
     output = {'schema': 1, 'source_snapshot': 'base508', 'economy': dict(economy),
-              'option_groups': groups,
+              'option_groups': groups, 'subslot_buffs': subslot_refs,
               'status_effect_attrs': [r for r in table('StatusEffectAttr') if r['StatusEffectID'] in status_ids],
               'invoke_options': invoke_options, 'invoke_spells': spells, 'invoke_buffs': dict(buff_links),
               'invoke_types': table('InvokeOptionType'), 'table_sha256': hashes}

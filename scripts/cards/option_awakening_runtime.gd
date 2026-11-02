@@ -1,6 +1,7 @@
 extends RefCounted
 ## Whole-save transaction adapter for the offline game. Consumables and RNG
 ## become live only after World's existing atomic save writer returns OK.
+const Subslot=preload("res://scripts/cards/native_doll_subslot.gd")
 const Core = preload("res://scripts/cards/option_awakening_service.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
 const DATA_PATH: String = "res://data/cards/option_awakening_cards.json"
@@ -179,7 +180,7 @@ func _ensure_bonus_cache() -> void:
 		_totals.clear()
 		_bonus_signature = ""
 		return
-	var key: String = str(progress.get("revision", 0))+":"+str(hash(core.source_server_context))+":"+str(hash(world.card_draw_fusion.owned))
+	var key: String = str(hash([progress.get(Subslot.FIELD,""),_world_property("level",0),Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}))]))+":"+str(progress.get("revision", 0))+":"+str(hash(core.source_server_context))+":"+str(hash(world.card_draw_fusion.owned))
 	for category: String in Core.CATEGORIES:
 		var record: Variant = world.equipped_catalog.get(category, {})
 		key += "|" + category + ":" + (Cards.card_id(record) if record is Dictionary else "")
@@ -199,6 +200,8 @@ func _ensure_bonus_cache() -> void:
 		var identity: String = Cards.card_id(record)
 		if core.awakened(progress, category, identity) and core.owned(ownership,category,identity):
 			_add_bonus(core.definition(category, identity).stats, category + ":" + identity)
+	var subslot: Dictionary=subslot_view()
+	if bool(subslot.get("active",false)):_add_bonus(subslot.effects.stats,"subslot11:"+str(subslot.identity))
 	for collection: Dictionary in core.collection_views(progress, ownership):
 		if bool(collection.completed): _add_bonus(collection.stats, "collection:" + str(collection.id))
 
@@ -240,3 +243,31 @@ func native_collection_state() -> Dictionary:
 			result.bindings[identity]={"group_id":int(row.native_source.group.ID),"card_id":int(row.native_source.card.ID),"eligible":bool(available.ok),"reason":available.get("code","")}
 			if bool(core.card_progress(progress,category,identity).awakened) and core.owned({"owned":world.card_draw_fusion.owned},category,identity):result.earned[category][identity]=true
 	return result
+
+func _world_property(name_value: String,fallback: Variant) -> Variant:
+	if world==null:return fallback
+	for property: Dictionary in world.get_property_list():
+		if property.name==name_value:return world.get(name_value)
+	return fallback
+func subslot_view() -> Dictionary:
+	if world==null or not core.native_mode:return {"active":false,"identity":""}
+	_sync_native_context()
+	var identity: String=str(progress.get(Subslot.FIELD,""))
+	var state: Dictionary=Subslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
+	var active: bool=not identity.is_empty() and bool(state.ok) and not save_blocked and problem.is_empty()
+	return {"identity":identity,"active":active,"eligibility":state,"effects":Subslot.effects(self,identity) if active else {},"unlocked":Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}))}
+func select_subslot(identity: String) -> Dictionary:
+	_sync_native_context()
+	if _busy:return Core.fail("busy","이전 거래 처리 중")
+	if save_blocked or not problem.is_empty() or not core.native_mode:return Core.fail("save_blocked","추가 인형 저장 보호 중")
+	var available: Dictionary=Subslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
+	if not available.ok:return available
+	if str(progress.get(Subslot.FIELD,""))==identity:return {"ok":true,"unchanged":true}
+	_busy=true
+	var next: Dictionary=export_state();next[Subslot.FIELD]=identity;next.revision=int(next.revision)+1
+	if not core.validate_state(next,{"owned":world.card_draw_fusion.owned}).is_empty():_busy=false;return Core.fail("invalid_state","추가 인형 저장 검증 실패")
+	var error: Error=world._save_game(true,{SAVE_KEY:next})
+	if error!=OK:_busy=false;return Core.fail("save_failed","저장 실패 · 기존 추가 인형 보존")
+	progress=next;_bonus_signature="";world.set("equipment_records_dirty",true)
+	_busy=false
+	return {"ok":true,"snapshot":subslot_view()}
