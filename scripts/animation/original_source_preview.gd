@@ -3,6 +3,8 @@ extends Node2D
 ## No AnimationCatalog overrides, procedural transforms or gameplay hit clocks.
 signal native_annotations(event: Dictionary)
 signal native_effect_frame(event: Dictionary)
+const WEAPON_BANKS=preload("res://scripts/animation/source_weapon_banks.gd")
+var source_weapon_status:Dictionary={}
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
 const REFERENCE_EXCLUSIONS = preload("res://scripts/animation/source_reference_exclusions.gd")
 var reference_exclusion_status: Dictionary = {}
@@ -65,6 +67,9 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	var tracks: Dictionary
 	_root = manifest_path.get_base_dir()
 	_playback_mode = POLICY.mode(_root, playback_mode_override)
+	var weapon_selection:Dictionary=WEAPON_BANKS.select(candidate,_root,context,consumer_kind)
+	candidate=weapon_selection.record
+	source_weapon_status=weapon_selection.status
 	tracks = POLICY.tracks(candidate, consumer_kind, _playback_mode)
 	reference_exclusion_status = REFERENCE_EXCLUSIONS.apply(candidate, tracks, source_request_key, parsed)
 	if not tracks.has("idle"): return false
@@ -165,6 +170,7 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 
 func clear() -> void:
 	reference_exclusion_status.clear()
+	source_weapon_status.clear()
 	_record = {}
 	_source_body_style.clear()
 	_source_body_material = null
@@ -306,7 +312,7 @@ func attachment_status() -> Dictionary:
 		if bool(track.static_pending_timing): pending += 1
 		origins[str(track.timing_origin)] = int(origins.get(str(track.timing_origin), 0)) + 1
 		if track.has("presentation_observation"): presentation_observations.append(track.presentation_observation.duplicate(true))
-	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true)}
+	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true),"source_weapon_selection":source_weapon_status.duplicate(true)}
 
 func _init() -> void:
 	native_annotations.connect(_on_source_annotation)

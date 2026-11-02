@@ -7941,7 +7941,7 @@ func _source_visual_context() -> Dictionary:
 	for record: Dictionary in equipped_catalog.values():
 		if BASE508.native(record) and record.has("source_active_custom_option_id") and not options.has(str(record.sourceId)):
 			options[str(record.sourceId)] = int(record.source_active_custom_option_id)
-	return {"class_id":BASE508.source_class_id(job_class),"gender_id":source_gender_id,"active_card_options":options}
+	return {"class_id":BASE508.source_class_id(job_class),"gender_id":source_gender_id,"active_card_options":options,"local_weapon_type":_current_weapon_type(),"source_weapon_type":preload("res://scripts/animation/source_weapon_banks.gd").local_type(_current_weapon_type())}
 
 func set_source_character_gender(gender_id: int) -> bool:
 	if gender_id not in [0,1,2]: return false

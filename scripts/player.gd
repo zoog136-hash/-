@@ -314,7 +314,7 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 	transform_profile.resource_path_hint = path
 	# Reapplying the same native identity must not reset its pose/event timeline.
 	var selected: Dictionary = preload("res://scripts/lineagem_base508.gd").select_visual_key(transform_profile.profile_id, source_visual_context) if transform_profile.profile_id.begins_with("transform:m508:") else {}
-	var unchanged_native: bool = previous_native_key == transform_profile.profile_id and selected.get("status", "") == "selected" and int(selected.get("sprite_id", -2)) == previous_native_sprite and original_source_preview._manifest_path == original_source_manifest
+	var unchanged_native: bool = previous_native_key == transform_profile.profile_id and selected.get("status", "") == "selected" and int(selected.get("sprite_id", -2)) == previous_native_sprite and original_source_preview._manifest_path == original_source_manifest and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0)) == int(source_visual_context.get("source_weapon_type",0))
 	# Native sc/mu composition and origin remain unverified.
 	if unchanged_native or original_source_preview.configure(transform_profile.profile_id, original_source_manifest, source_visual_context):
 		transform_active = true
@@ -410,6 +410,12 @@ func select_external_spx_actor(id: String) -> bool:
 
 func set_source_weapon_visual(weapon: String) -> void:
 	source_weapon_type = weapon
+	var native_weapon:int=preload("res://scripts/animation/source_weapon_banks.gd").local_type(weapon)
+	source_visual_context["source_weapon_type"]=native_weapon
+	source_visual_context["local_weapon_type"]=weapon
+	if original_source_preview.installed() and transform_profile != null and transform_profile.profile_id.begins_with("transform:m508:") and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0))!=native_weapon:
+		if original_source_preview.configure(transform_profile.profile_id,original_source_manifest,source_visual_context):
+			original_source_preview.advance_source(0.0,motion.state,motion.facing8,motion.sequence,motion.active)
 	if spx_sprite == null or spx_actor_id.is_empty(): return
 	var group: String = ""
 	if weapon.is_empty(): group = "unarmed"
