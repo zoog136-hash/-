@@ -207,6 +207,7 @@ func _card(parent: Node,requirement: Dictionary,width: float) -> void:
 	var button: Button=_button("");button.set_script(ScrollButton);button.scroll_host=hud.workspace;button.scroll_area=list
 	button.name="NormalCollectionCard";button.custom_minimum_size=Vector2(width,112);button.set_meta("card_id",key);button.set_meta("permanent_owned",acquired)
 	button.tooltip_text=str(requirement.name)+" · "+("보유" if acquired else "각성 조건 확인 필요" if requirement.awakened else "미보유")
+	if native and bool(requirement.awakened):button.tooltip_text+=" · 옵션 각성 완료" if bool(requirement.get("met",false)) else " · 옵션 각성 필요"
 	column.add_child(button)
 	if record.is_empty():
 		button.text="카드\n매칭 필요";button.disabled=true
@@ -266,6 +267,6 @@ func _reasons(problems: Array) -> String:
 	var out: Array[String]=[]
 	for raw: Variant in problems:
 		var code: String=str(raw)
-		var label: String="현재 서버 조건 불일치" if code=="native_server_ineligible" else "원본 서버 정의 없음" if code=="native_server_definition_missing" else "원본 적용 대상 정의 없음" if code.begins_with("native_source_target_missing:") else "원본 HP 구간 효과 미연결" if code=="native_interval_runtime_required" else "현재 서버 문맥 미설정" if code=="native_server_context_required" else "원본 각성 조건 별도" if code=="native_awakening_required" else "원본 보상 연결 없음" if code=="native_reward_missing" else "카드 매칭 누락" if code.begins_with("card_unmapped:") else "각성 조건 별도" if code=="awakening_collection_separate" else "현재 전투 효과 미지원" if code.begins_with("effect_unsupported:") else "출처 버전 확인 필요"
+		var label: String="현재 서버 조건 불일치" if code=="native_server_ineligible" else "원본 서버 정의 없음" if code=="native_server_definition_missing" else "원본 적용 대상 정의 없음" if code.begins_with("native_source_target_missing:") else "원본 HP 구간 효과 미연결" if code=="native_interval_runtime_required" else "현재 서버 문맥 미설정" if code=="native_server_context_required" else "옵션 각성 원본 조건 확인 필요" if code=="native_option_condition_required" else "원본 각성 조건 별도" if code=="native_awakening_required" else "원본 보상 연결 없음" if code=="native_reward_missing" else "카드 매칭 누락" if code.begins_with("card_unmapped:") else "각성 조건 별도" if code=="awakening_collection_separate" else "현재 전투 효과 미지원" if code.begins_with("effect_unsupported:") else "출처 버전 확인 필요"
 		if not out.has(label):out.append(label)
 	return " · ".join(out)

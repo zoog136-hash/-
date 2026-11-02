@@ -19,6 +19,9 @@ var catalog: Dictionary = {}
 var probabilities: Dictionary = {}
 var collections: Array = []
 var unavailable: Array = []
+var native_mode: bool=false
+var source_server_context: Dictionary={}
+var native_conditions=preload("res://scripts/cards/source_collection_conditions.gd").new()
 
 static func fresh_state() -> Dictionary:
 	return {"version": 1, "revision": 0, "rng_state": "", "cards": {"변신": {}, "마법인형": {}, "성물": {}}}
@@ -38,6 +41,8 @@ func _configuration_error(message: String) -> bool:
 
 func configure(data: Dictionary, settings: Dictionary, source_catalog: Dictionary) -> bool:
 	problem = ""
+	native_mode=bool(data.get("native_mode",false))
+	native_conditions.configure(data.get("native_server_limits",[]))
 	definitions.clear()
 	catalog.clear()
 	probabilities.clear()
@@ -111,6 +116,8 @@ func configure(data: Dictionary, settings: Dictionary, source_catalog: Dictionar
 		if current.is_empty() or str(current.get("name", "")) != str(row.get("expected_name", "")) or str(current.get("grade", "")) != grade:
 			unavailable.append({"category": category, "id": identity, "reason": "카탈로그 ID·이름·등급 확인 불가"})
 			continue
+		if row.has("native_source") and int(row.native_source.group.AwakenProbability)!=int(probabilities[category][grade])*100:
+			unavailable.append({"category":category,"id":identity,"reason":"원본 확률과 기존 정책 불일치"});continue
 		definitions[category][identity] = row.duplicate(true)
 	for raw: Variant in data.get("collections", []):
 		if not raw is Dictionary or not raw.get("requirements") is Array or raw.requirements.is_empty() or not _valid_stats(raw.get("stats")):
@@ -146,7 +153,7 @@ func owned(card_state: Dictionary, category: String, identity: String) -> bool:
 	return card_state.get("owned", {}).get(category, {}).get(identity, false) == true
 
 func awakened(state: Dictionary, category: String, identity: String) -> bool:
-	return definitions.get(category, {}).has(identity) and bool(card_progress(state, category, identity).awakened)
+	return definitions.get(category, {}).has(identity) and bool(card_progress(state, category, identity).awakened) and native_eligibility(category,identity).get("ok",false)
 
 func validate_state(value: Variant, card_state: Variant = null) -> String:
 	if not value is Dictionary: return "각성 저장 형식 오류"
@@ -193,6 +200,7 @@ func view(state: Dictionary, card_state: Dictionary, gold: int, category: String
 	var row: Dictionary = definition(category, identity)
 	if row.is_empty(): return fail("unavailable", "이 카드는 현재 옵션 각성을 지원하지 않습니다")
 	var entry: Dictionary = card_progress(state, category, identity)
+	var availability: Dictionary=native_eligibility(category,identity)
 	var rule: Dictionary = policy.grades[row.grade]
 	var is_owned: bool = owned(card_state, category, identity)
 	var material_rows: Array = []
@@ -201,7 +209,7 @@ func view(state: Dictionary, card_state: Dictionary, gold: int, category: String
 		var record: Dictionary = catalog[category][material_id]
 		var grade: String = str(record.get("grade", ""))
 		var count: int = int(spares.get(material_id, 0))
-		if not rule.material_experience.has(grade) or count <= 0 or not owned(card_state, category, material_id): continue
+		if not rule.material_experience.has(grade) or count <= 0 or not owned(card_state, category, material_id) or not native_material_available(record): continue
 		material_rows.append({"id": material_id, "record": record.duplicate(true), "spare": count, "experience_per_card": int(rule.material_experience[grade])})
 	var required: int = int(policy.experience_required)
 	var attempt_cost: int = int(rule.attempt_cost)
@@ -211,10 +219,11 @@ func view(state: Dictionary, card_state: Dictionary, gold: int, category: String
 		"experience": int(entry.experience), "required_experience": required, "materials": material_rows,
 		"material_experience": rule.material_experience.duplicate(true), "success_chance_pct": float(probabilities[category][row.grade]) / 100.0,
 		"attempt_cost": attempt_cost, "gold": gold, "failure_refund_experience": int(rule.failure_refund_experience),
-		"can_feed": is_owned and not bool(entry.awakened) and int(entry.experience) < required and not material_rows.is_empty(),
-		"can_awaken": is_owned and not bool(entry.awakened) and int(entry.experience) == required and gold >= attempt_cost,
+		"blocked_reason": availability.get("error",""),
+		"can_feed": bool(availability.ok) and is_owned and not bool(entry.awakened) and int(entry.experience) < required and not material_rows.is_empty(),
+		"can_awaken": bool(availability.ok) and is_owned and not bool(entry.awakened) and int(entry.experience) == required and gold >= attempt_cost,
 		"bonus_options": row.bonus_options.duplicate(), "applied_options": row.applied_options.duplicate(), "pending_options": row.pending_options.duplicate(),
-		"policy_note": "TWILIGHT 설정: 재료 경험치·시도 비용·실패 환급. 성공 확률과 추가 능력치는 공식 공시 기준.",
+		"policy_note": "원본 BuffCardID·옵션 Bonus 연결 · 비용·경험치: 기존 TWILIGHT 정책" if row.has("native_source") else "TWILIGHT 설정: 재료 경험치·시도 비용·실패 환급. 성공 확률과 추가 능력치는 공식 공시 기준.",
 		"attempts": int(entry.attempts), "failures": int(entry.failures), "pity_enabled": false,
 		"collections": collection_views(state, card_state)
 	}
@@ -224,6 +233,8 @@ func _can_prepare(state: Dictionary, card_state: Dictionary, gold: int, category
 	var error: String = validate_state(state, card_state)
 	if not error.is_empty(): return fail("invalid_state", error)
 	if definition(category, identity).is_empty(): return fail("unavailable", "이 카드는 현재 옵션 각성을 지원하지 않습니다")
+	var availability: Dictionary=native_eligibility(category,identity)
+	if not availability.ok:return availability
 	if not owned(card_state, category, identity): return fail("not_owned", "먼저 대상 카드를 획득해야 합니다")
 	if awakened(state, category, identity): return fail("already_awakened", "이미 각성한 카드입니다")
 	if gold < 0: return fail("invalid_gold", "아데나 저장 값 오류")
@@ -248,6 +259,7 @@ func prepare_feed(state: Dictionary, card_state: Dictionary, gold: int, category
 		var record: Dictionary = catalog[category].get(material_id, {})
 		var grade: String = str(record.get("grade", ""))
 		if record.is_empty() or not rule.material_experience.has(grade): return fail("invalid_material", "같은 종류의 허용 등급 카드만 주입할 수 있습니다")
+		if not native_material_available(record):return fail("source_material_condition","원본 재료 카드 서버·기간 조건 확인 필요")
 		if not owned(card_state, category, material_id) or not integer(extras.get(material_id, 0)) or int(extras.get(material_id, 0)) < int(count):
 			return fail("insufficient_materials", "선택한 중복 카드가 부족합니다")
 		consumed += int(count)
@@ -299,3 +311,22 @@ func collection_views(state: Dictionary, card_state: Dictionary) -> Array:
 		result["completed"] = complete
 		out.append(result)
 	return out
+
+
+func native_eligibility(category: String, identity: String) -> Dictionary:
+	var row: Dictionary=definitions.get(category,{}).get(identity,{})
+	if not row.has("native_source"):return {"ok":true}
+	var raw: Dictionary=row.native_source.card
+	if int(raw.StartDateTimeID)!=0 or int(raw.EndDateTimeID)!=0:return fail("source_time_condition","원본 카드 기간 조건 확인 필요")
+	for limit: Variant in row.native_source.limits:
+		var state: Dictionary=native_conditions.evaluate(int(limit),source_server_context)
+		if state.status not in ["unrestricted","eligible"]:return fail("source_server_condition","원본 서버 조건 확인 필요 · "+str(state.status))
+	return {"ok":true}
+
+
+func native_material_available(record: Dictionary) -> bool:
+	if not native_mode:return true
+	var raw: Dictionary=record.get("source_original",{})
+	if raw.get("source_snapshot","")!="base508" or not raw.has("server_limit_set_id"):return false
+	if int(raw.get("start_datetime_id",0))!=0 or int(raw.get("end_datetime_id",0))!=0:return false
+	return native_conditions.evaluate(int(raw.server_limit_set_id),source_server_context).status in ["unrestricted","eligible"]

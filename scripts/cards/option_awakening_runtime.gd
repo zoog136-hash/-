@@ -25,7 +25,7 @@ func _init() -> void:
 
 func configure(host: Node) -> bool:
 	world = host
-	var data: Dictionary = _json(DATA_PATH)
+	var data: Dictionary = preload("res://scripts/cards/native_option_awakening.gd").adapt(_json(DATA_PATH),world.catalog_db)
 	var settings: Dictionary = _json(POLICY_PATH)
 	if data.is_empty() or settings.is_empty() or not core.configure(data, settings, world.catalog_db):
 		problem = core.problem if not core.problem.is_empty() else "옵션 각성 데이터 파일 누락 또는 손상"
@@ -93,8 +93,19 @@ func accept_load(data: Dictionary) -> bool:
 	return true
 
 func view(category: String, target_id: String) -> Dictionary:
+	_sync_native_context()
 	if not problem.is_empty(): return Core.fail("configuration", problem)
 	var out: Dictionary = core.view(progress, world.card_draw_fusion.export_state(), int(world.gold), category, target_id)
+	if core.native_mode and out.get("ok",false):
+		var collections: Variant=world.get("card_collections")
+		if collections!=null and collections.has_method("snapshot"):
+			out.collections=[]
+			for row: Dictionary in collections.snapshot(category,target_id):
+				if not row.requirements.any(func(req: Dictionary) -> bool:return bool(req.get("awakened",false))):continue
+				row.bonus_options=[]
+				for effect: Dictionary in row.effects:row.bonus_options.append(str(effect.get("label","")))
+				out.collections.append(row)
+			out.native_collection_rows=true
 	if save_blocked and bool(out.get("ok", false)):
 		out.can_feed = false
 		out.can_awaken = false
@@ -108,6 +119,7 @@ func awaken(category: String, target_id: String) -> Dictionary:
 	return _transact(category, target_id, {}, true)
 
 func _transact(category: String, target_id: String, materials: Dictionary, is_attempt: bool) -> Dictionary:
+	_sync_native_context()
 	if _busy:
 		return {"ok": false, "code": "busy", "error": "이전 각성 처리 중", "snapshot": view(category, target_id)}
 	if save_blocked or not problem.is_empty():
@@ -150,19 +162,22 @@ func _transact(category: String, target_id: String, materials: Dictionary, is_at
 	return result
 
 func is_awakened(category: String, record_or_id: Variant) -> bool:
+	_sync_native_context()
 	var identity: String = Cards.card_id(record_or_id) if record_or_id is Dictionary else str(record_or_id)
+	if core.native_mode and not core.owned({"owned":world.card_draw_fusion.owned},category,identity):return false
 	return core.awakened(progress, category, identity)
 
 func collections_view() -> Array:
 	return core.collection_views(progress, world.card_draw_fusion.export_state()) if world != null else []
 
 func _ensure_bonus_cache() -> void:
+	_sync_native_context()
 	if world == null or not problem.is_empty():
 		_bonus_records.clear()
 		_totals.clear()
 		_bonus_signature = ""
 		return
-	var key: String = str(progress.get("revision", 0))
+	var key: String = str(progress.get("revision", 0))+":"+str(hash(core.source_server_context))+":"+str(hash(world.card_draw_fusion.owned))
 	for category: String in Core.CATEGORIES:
 		var record: Variant = world.equipped_catalog.get(category, {})
 		key += "|" + category + ":" + (Cards.card_id(record) if record is Dictionary else "")
@@ -180,7 +195,7 @@ func _ensure_bonus_cache() -> void:
 		var record: Variant = world.equipped_catalog.get(category, {})
 		if not record is Dictionary: continue
 		var identity: String = Cards.card_id(record)
-		if core.awakened(progress, category, identity):
+		if core.awakened(progress, category, identity) and core.owned(ownership,category,identity):
 			_add_bonus(core.definition(category, identity).stats, category + ":" + identity)
 	for collection: Dictionary in core.collection_views(progress, ownership):
 		if bool(collection.completed): _add_bonus(collection.stats, "collection:" + str(collection.id))
@@ -203,3 +218,23 @@ func catalog_bonus(key: String) -> int:
 
 func accuracy_bonus(style: String) -> int:
 	return catalog_bonus({"melee": "meleeHit", "ranged": "rangedHit", "magic": "magicHit"}.get(style, ""))
+
+
+func _sync_native_context() -> void:
+	if not core.native_mode or world==null:return
+	var runtime: Variant=world.get("card_collections")
+	core.source_server_context=runtime.source_server_context() if runtime!=null and runtime.has_method("source_server_context") else {}
+
+func native_collection_state() -> Dictionary:
+	_sync_native_context()
+	if not core.native_mode:return {}
+	var result: Dictionary={"source_snapshot":"base508","kind":"BuffCardOptionAwakenGroup.SlotIndex1","bindings":{},"earned":{}}
+	for category: String in Core.CATEGORIES:
+		result.earned[category]={}
+		for identity: String in core.definitions.get(category,{}):
+			var row: Dictionary=core.definitions[category][identity]
+			if not row.has("native_source"):continue
+			var available: Dictionary=core.native_eligibility(category,identity)
+			result.bindings[identity]={"group_id":int(row.native_source.group.ID),"card_id":int(row.native_source.card.ID),"eligible":bool(available.ok),"reason":available.get("code","")}
+			if bool(core.card_progress(progress,category,identity).awakened) and core.owned({"owned":world.card_draw_fusion.owned},category,identity):result.earned[category][identity]=true
+	return result

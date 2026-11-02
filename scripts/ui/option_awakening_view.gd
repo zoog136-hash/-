@@ -351,6 +351,7 @@ func _render() -> void:
 	_target_art.texture = _texture(record)
 	_target_art.tooltip_text = str(record.get("name", ""))
 	_border.configure(grade_name, awakened, _settings)
+	_border.visible=not preload("res://scripts/ui/source_card_presentation.gd").native(record)
 	var lines := PackedStringArray()
 	lines.append("[b]%s 등급 · 옵션 각성[/b]" % UI.safe(grade_name))
 	lines.append("성공 확률 %s%% · 시도 비용 %s 아데나" % [_percent(float(snapshot.get("success_chance_pct", 0.0))), _number(int(snapshot.get("attempt_cost", 0)))])
@@ -633,6 +634,10 @@ func _remaining_experience() -> int:
 	return maxi(0, _required_experience() - int(snapshot.get("experience", 0)))
 
 func _texture(record: Dictionary) -> Texture2D:
+	if preload("res://scripts/ui/source_card_presentation.gd").native(record):
+		var identity: String=preload("res://scripts/card_draw_fusion.gd").card_id(record)
+		var acquired: bool=bool(snapshot.get("owned",false)) if identity==str(snapshot.get("target_id","")) else true
+		return preload("res://scripts/ui/catalog_card_ownership.gd").icon_for(record,acquired)
 	var path: String = str(record.get("image_path", ""))
 	return load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
 

@@ -22,6 +22,9 @@ static func stat_record_additions(totals: Dictionary) -> Dictionary:
 		if totals.has(code):result[NATIVE_RECORD_FIELDS[code]]=totals[code]
 	return result
 
+const NativeOptionData=preload("res://data/cards/base508_option_awakening.json")
+var native_option_bindings: Dictionary={}
+
 const TIME_POLICY: String = "permanent_user_requested_time_override"
 ## Special/unknown conditions and unsupported rewards remain visible and blocked.
 
@@ -35,6 +38,9 @@ static func accepts_catalog(catalog: Dictionary) -> bool:
 
 func configure(data: Dictionary, catalog: Dictionary) -> bool:
 	definitions.clear(); availability.clear(); error = ""
+	native_option_bindings.clear()
+	for entry: Dictionary in NativeOptionData.data.definitions:
+		native_option_bindings[entry.id]={"group_id":int(entry.native_source.group.ID),"card_id":int(entry.native_source.card.ID),"limits":entry.native_source.limits}
 	conditions.configure(data.get("source_server_limits",[]))
 	if data.get("source_snapshot", "") != "base508" or not accepts_catalog(catalog):
 		return _fail("원본 카드 컬렉션과 카드 정체성이 일치하지 않습니다")
@@ -89,8 +95,10 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 func derive(card_state: Dictionary) -> Dictionary:
 	var result: Dictionary = super.derive(card_state)
 	var context: Dictionary=card_state.get("source_server_context",{})
-	# Re-evaluate only source server predicates. Generic option-awakening flags
-	# never become a native IsAwaken ledger, even with an eligible server.
+	# Only exact original SlotIndex1 option bindings can satisfy IsAwaken.
+	# Numeric legacy flags, card skill awakening and aura never enter this ledger.
+	var option: Dictionary=card_state.get("source_option_awakening",{})
+	var bound: bool=option.get("source_snapshot","")=="base508" and option.get("kind","")=="BuffCardOptionAwakenGroup.SlotIndex1"
 	for row: Dictionary in result.rows:
 		if row.problems.has("native_server_context_required"):
 			row.problems.erase("native_server_context_required")
@@ -107,12 +115,26 @@ func derive(card_state: Dictionary) -> Dictionary:
 				var code: String={"context_missing":"native_server_context_required","definition_missing":"native_server_definition_missing","ineligible":"native_server_ineligible"}.get(str(evaluation.status),"")
 				if not code.is_empty() and not row.problems.has(code):row.problems.append(code)
 		if row.problems.has("native_awakening_required"):
-			var met: int = 0
+			var met: int=0
+			var all_bound: bool=bound
 			for requirement: Dictionary in row.requirements:
-				if bool(requirement.get("awakened", false)): requirement["met"] = false
-				if bool(requirement.met): met += 1
-			row["met_count"] = met
-			row["conditions_met"] = met == row.requirements.size()
+				if bool(requirement.get("awakened",false)):
+					var key: String=str(requirement.id)
+					var expected: Dictionary=native_option_bindings.get(key,{})
+					var binding: Dictionary=option.get("bindings",{}).get(key,{})
+					var matched: bool=bound and not expected.is_empty() and int(binding.get("group_id",-1))==int(expected.group_id) and int(binding.get("card_id",-1))==int(requirement.source_original.BuffCardID)
+					all_bound=all_bound and matched
+					var permanent: bool=card_state.get("owned",{}).get(requirement.category,{}).get(key,false)==true
+					requirement["met"]=matched and permanent and option.get("earned",{}).get(requirement.category,{}).get(key,false)==true
+					requirement["awakening_source"]="BuffCardOptionAwakenGroup.SlotIndex1" if matched else "unconnected"
+					var allowed: bool=bool(binding.get("eligible",false))
+					for raw_limit: Variant in expected.get("limits",[]):
+						if conditions.evaluate(int(raw_limit),context).status not in ["unrestricted","eligible"]:allowed=false
+					if matched and not allowed and not row.problems.has("native_option_condition_required"):row.problems.append("native_option_condition_required")
+				if bool(requirement.met):met+=1
+			if all_bound:row.problems.erase("native_awakening_required")
+			row["met_count"]=met
+			row["conditions_met"]=met==row.requirements.size()
 		row["available"]=row.problems.is_empty()
 		row["completed"]=row.available and row.conditions_met
 	# One collection contributes each source reward once. A server change must
