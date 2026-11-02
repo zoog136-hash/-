@@ -50,10 +50,13 @@ static func apply(hud: Node) -> void:
 	var badge: Label = preview.get_node_or_null("OriginalCardAssetStatus")
 	var record: Dictionary = hud.selected_catalog_record
 	if not native(record):
+		preload("res://scripts/ui/source_card_skin.gd").restore(hud.catalog_equip_button)
 		if badge != null: badge.hide()
 		preview.self_modulate = Color.WHITE
 		return
 	preload("res://scripts/ui/source_card_metrics.gd").apply(hud)
+	var original_background: bool = preload("res://scripts/ui/source_card_skin.gd").surface(hud)
+	preload("res://scripts/ui/source_card_skin.gd").style(hud.catalog_equip_button,"UI/Change/Change_DetailView.csb","Btn_Change_On")
 	if badge == null:
 		badge = Label.new()
 		badge.name = "OriginalCardAssetStatus"
@@ -70,7 +73,10 @@ static func apply(hud: Node) -> void:
 	var result: Dictionary = detail(record, acquired)
 	preview.texture = result.get("texture")
 	preview.self_modulate = Color.WHITE if acquired else Color(.68,.68,.68,.62)
-	badge.text = "원본 카드 연결 미설치" if result.status == "runtime_missing" else "원본 이미지 미설치" if result.status in ["missing", "unreadable"] else "원본 이미지 미지정" if result.status == "undeclared" else "원본 프레임 미설치"
+	badge.text = "원본 카드 연결 미설치" if result.status == "runtime_missing" else "원본 이미지 미설치" if result.status in ["missing", "unreadable"] else "원본 이미지 미지정" if result.status == "undeclared" else "" if original_background else "원본 화면 배경 연결 대기"
+	var frame_status: String = preload("res://scripts/ui/source_card_skin.gd").frame_status(record)
+	if badge.text.is_empty() and frame_status!="original":
+		badge.text="원본 목록 프레임 미지정" if frame_status=="undeclared" else "원본 목록 프레임 미설치"
 	badge.visible = not badge.text.is_empty()
 	badge.tooltip_text = str(result.get("path", ""))
 	preview.set_meta("original_card_asset", result)

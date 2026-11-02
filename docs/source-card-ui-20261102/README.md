@@ -139,3 +139,38 @@ and unchanged inventory/equipment/currency. No items were granted or consumed.
 Original inventory skin/full tooltip layout is still pending Atlas_Common and
 its declared image page. Existing missing item icon substitutes remain explicitly
 marked; they are not newly generated or represented as original art.
+
+Original card skin increment (bundles006/007/008): exact Common/Icon/Hud and
+Texture/Shop/Common2 plists plus their declared PNG pages are installed privately.
+`build_base508_ui_atlas.py` joins CSB resource keys to plist frames and the
+metadata-declared PNG path, retaining page/plist SHA256 and original Grade ->
+ColorTable evidence. No raster pixels enter Git. Grade families use explicit
+presentation bindings, including Grade6/Myth and Grade7/Sole, rather than numeric
+asset guesses. Sole is connected through its exact Common2 frame.
+
+`source_ui_atlas.gd` verifies each page hash and restores rotated/trimmed sprites
+into their declared original canvas. Independent Pillow decoding matches all 69
+frame pixel hashes across eight pages (25 rotated frames overall).
+One decoded image is cached per page; textures/styles are cached, and card icons
+retain the existing 96-entry bound. Original portraits are 108×132, centered
+without scaling on their 110×134 source grade frame. Unowned cards retain the
+existing grayscale/dim policy. Collections reuse these same original icons.
+
+Original action textures and transparent tab surfaces are read from declared
+CSB nodes. The two original WinTotal background layers use their source bounds
+and alpha at the adapted content viewport. Local controls/layout and accessibility
+sizes remain; this is not an assertion of full original CSB runtime parity.
+Original styles/background visibility are restored on close and legacy views.
+No new FX timing/blending, badges, acquisition, or save behavior is inferred.
+All seven source grade families are available. Full source screen placement and
+remaining source controls still need completion; optional FX remain disabled until their runtime contract is known.
+
+
+Final source UI regression: 61 checks pass, including an actual 110×134 framed
+list texture in all three categories, close/background/style restoration and
+legacy item panel theme restoration in the same mounted workspace. Source atlas
+regression: 69 exact pixel hashes / 8 decoded pages / 690 canonical regular-grade
+cards have frames. Nine native Grade71/Event cards have no declared corresponding
+prefab, and two Grade0/None cards remain unframed. These are explicit source
+states, not replaced with another grade. Full source control placement remains
+separate from the original skin binding implemented here.

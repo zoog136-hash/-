@@ -1,6 +1,5 @@
 {
   "base_main": "0cab9b3d39e9330feb1c404d8c36b80d3e417b2d",
-  "current_head": "64f2a68a5c827d1186fe72c5d497136f9d42980e",
   "policy": "Complete one existing screen group at a time, preserve save/data policies, no Windows/APK CI restoration, public pixel upload or main merge",
   "screen_groups": [
     {
@@ -25,8 +24,8 @@
           "inner_path": "UI/ChangeDollScene.csb"
         }
       ],
-      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
-      "state": "implementation_and_isolated_render_done; original_skin_pending",
+      "source_relationship": "Original CSB resource -> exact plist frame -> metadata-declared PNG; eight private pages and 69 pixel-verified frame keys",
+      "state": "all_seven_original_grade_frames_background_and_action_textures_implemented; full_source_layout_pending",
       "verify": [
         "original resource/atlas/node relationship",
         "correct source/physical instance identity",
@@ -35,7 +34,7 @@
         "owned counts/equipment/save unchanged",
         "30FPS cache/reload behavior"
       ],
-      "note": ""
+      "note": "; Original pixels remain in private install pack; no new aura/timing inferred; 690 regular-grade cards framed, 9 Event and 2 None explicitly unbound; 61 UI checks pass"
     },
     {
       "phase": 1,
@@ -62,8 +61,8 @@
           "inner_path": "UI/Change/Change_CollectionView.csb"
         }
       ],
-      "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
-      "state": "implementation_and_isolated_render_done; original_skin_pending",
+      "source_relationship": "Original CSB resource -> exact plist frame -> metadata-declared PNG; eight private pages and 69 pixel-verified frame keys",
+      "state": "all_seven_original_grade_frames_background_and_action_textures_implemented; full_source_layout_pending",
       "verify": [
         "original resource/atlas/node relationship",
         "correct source/physical instance identity",
@@ -72,7 +71,7 @@
         "owned counts/equipment/save unchanged",
         "30FPS cache/reload behavior"
       ],
-      "note": "1736 source sets; 909 supported definitions after verified capability expansion; no registration/consumption"
+      "note": "1736 source sets; 909 supported definitions after verified capability expansion; no registration/consumption; Original pixels remain in private install pack; no new aura/timing inferred; 690 regular-grade cards framed, 9 Event and 2 None explicitly unbound; 61 UI checks pass"
     },
     {
       "phase": 2,
@@ -904,5 +903,6 @@
     "UI/SecurityScene.csb",
     "UI/PVPBookScene.csb"
   ],
-  "common_validation": "private map pack absent here; UI-isolated HUD processing only, parent worker handles full-game integration"
+  "common_validation": "private map pack absent here; UI-isolated HUD processing only, parent worker handles full-game integration",
+  "implementation_base": "e2711f851f1a3dc4f4f60dba496e6c05b3d216f0"
 }

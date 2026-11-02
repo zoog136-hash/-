@@ -217,7 +217,8 @@ func _card(parent: Node,requirement: Dictionary,width: float) -> void:
 		art.texture=Ownership.icon_for(record,acquired);art.modulate=Color.WHITE if acquired else Ownership.UNOWNED_ICON_TINT
 		button.add_child(art);art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		if native:
-			button.tooltip_text+=" · 원본 프레임 미설치"
+			var frame_status: String=preload("res://scripts/ui/source_card_skin.gd").frame_status(record)
+			if frame_status!="original":button.tooltip_text+=" · 원본 프레임 미지정" if frame_status=="undeclared" else " · 원본 프레임 미설치"
 			if art.texture==null:button.text="원본 이미지\n미설치"
 		if acquired and not native:
 			var aura:=ColorRect.new();aura.mouse_filter=Control.MOUSE_FILTER_IGNORE

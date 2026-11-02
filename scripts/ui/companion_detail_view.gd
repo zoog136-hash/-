@@ -203,6 +203,9 @@ func activate(value: String) -> void:
 func deactivate() -> void:
 	if not active:return
 	select_tab(0)
+	preload("res://scripts/ui/source_card_skin.gd").restore_surface(hud)
+	preload("res://scripts/ui/source_card_skin.gd").restore(hud.catalog_equip_button)
+	for button: Button in tabs: preload("res://scripts/ui/source_card_skin.gd").restore(button)
 	active=false
 	art_column.hide();footer_actions.hide()
 	footer_actions.get_parent().move_child(footer_actions,footer_actions.get_parent().get_child_count()-1)
@@ -273,6 +276,8 @@ func fit_layout() -> void:
 		if label.name.begins_with("CompanionOptionValue"):label.custom_minimum_size.x=54 if compact else 66
 
 	preload("res://scripts/ui/source_card_metrics.gd").apply(hud)
+	if preload("res://scripts/ui/source_card_presentation.gd").native(hud.selected_catalog_record):
+		preload("res://scripts/ui/source_card_skin.gd").tabs(tabs)
 
 func refresh() -> void:
 	if not active:return
