@@ -71,6 +71,7 @@ const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.g
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
 var option_awakening = OPTION_AWAKENING.new()
 var option_awakening_auras: Dictionary = {}
+var source_awakening_auras: Dictionary = {}
 var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
@@ -6461,9 +6462,13 @@ func _sync_option_awakening_auras() -> void:
 func _sync_option_awakening_aura(category: String) -> void:
 	var raw: Variant = equipped_catalog.get(category, {})
 	var record: Dictionary = raw if raw is Dictionary else {}
-	# Authored lightning belongs to legacy cards only. Native StatusEffectAttr
-	# type meanings are not defined in the supplied source; do not impersonate
-	# those originals with the authored aura while their binding is unresolved.
+	if record.get("source","")=="lineagem_base508":
+		var old: Node2D=option_awakening_auras.get(category) as Node2D
+		if is_instance_valid(old):old.call("set_awakened",false)
+		_sync_existing_source_awakening_aura(category,record)
+		return
+	var prior: Node2D=source_awakening_auras.get(category) as Node2D
+	if is_instance_valid(prior):prior.deactivate()
 	var awakened: bool = not record.is_empty() and record.get("source","")!="lineagem_base508" and option_awakening.is_awakened(category, record)
 	var aura: Node2D = option_awakening_auras.get(category) as Node2D
 	if not awakened:
@@ -7810,6 +7815,8 @@ func apply_presentation_settings(settings: Dictionary) -> void:
 		combat_vfx.detail_limit = 6 if presentation_settings.effect_detail == "low" else COMBAT_VFX.VISUALS.DETAIL_LIMIT
 	if is_instance_valid(combat_flights):
 		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" else 64
+	for raw: Variant in source_awakening_auras.values():
+		if is_instance_valid(raw):raw.call("apply_settings",presentation_settings)
 	for raw: Variant in option_awakening_auras.values():
 		if is_instance_valid(raw): raw.call("apply_settings", presentation_settings)
 	if is_instance_valid(hud) and hud.has_method("apply_option_awakening_settings"):
@@ -7900,3 +7907,21 @@ func _on_secondary_doll_requested(identity: String) -> void:
 	_update_companion(0)
 	_update_hud()
 	hud.show_message("추가 인형 소환 해제" if identity.is_empty() else "추가 인형 선택 완료"+(" · 인형 원본 리소스 설치 필요" if not is_instance_valid(secondary_doll_visual) or secondary_doll_visual.status!="source_native" else ""))
+
+func _sync_existing_source_awakening_aura(category: String,record: Dictionary) -> void:
+	# Reuse PR217's renderer when that source component is installed. This branch
+	# never replaces it or invents a generic StatusEffectAttr renderer.
+	var path: String="res://scripts/animation/source_awakening_aura.gd"
+	if not ResourceLoader.exists(path):return
+	var owner: Variant=player if category=="변신" else (doll_motion if category=="마법인형" else relic_motion)
+	var property_name: String="original_source_preview" if category=="변신" else "native_actor"
+	var target: Node2D=null
+	for property: Dictionary in owner.get_property_list():
+		if property.name==property_name:target=owner.get(property.name);break
+	if target==null:return
+	var manifest: String=""
+	for property: Dictionary in player.get_property_list():
+		if property.name=="original_source_manifest":manifest=str(player.get(property.name));break
+	var aura: Node2D=source_awakening_auras.get(category) as Node2D
+	if not is_instance_valid(aura):aura=load(path).new();add_child(aura);source_awakening_auras[category]=aura
+	aura.configure(category,record,option_awakening.source_visual_awakened(category,record),target,manifest,presentation_settings)
