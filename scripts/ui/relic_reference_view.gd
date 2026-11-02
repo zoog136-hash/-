@@ -196,6 +196,7 @@ func configure(controller: Node) -> void:
 	right_pane.add_child(footer)
 	for spec: Array in [["컬렉션 보기","성물 컬렉션 서비스 미지원"],["성물 등록","성물 빠른등록 서비스 미지원"]]:
 		var button: Button=UI.button(str(spec[0]),Callable(),Vector2(0,38))
+		if spec[0]!="컬렉션 보기":button.set_script(preload("res://scripts/ui/native_touch_button.gd"))
 		button.name="RelicCollectionView" if spec[0]=="컬렉션 보기" else "RelicRegister"
 		button.disabled=true
 		button.tooltip_text=str(spec[1])
@@ -205,6 +206,9 @@ func configure(controller: Node) -> void:
 		if spec[0]=="컬렉션 보기":
 			button.disabled=false;button.tooltip_text="선택 성물이 포함된 컬렉션"
 			button.pressed.connect(func() -> void:hud.open_normal_card_collections("성물",CardRules.card_id(hud.selected_catalog_record)))
+		else:
+			button.text="스킬 각성"
+			button.pressed.connect(func() -> void:hud.open_card_skill_awakening("성물",CardRules.card_id(hud.selected_catalog_record)))
 	tab_buttons[2].tooltip_text="최초 획득 시 자동 적용되는 성물 컬렉션"
 	fusion_scroll=ScrollContainer.new()
 	fusion_scroll.name="RelicExistingFusionPane"
@@ -401,6 +405,10 @@ func _fit_grid() -> void:
 
 func refresh_state(force_cards: bool=false) -> void:
 	if not active:return
+	var skill_button: Button=find_child("RelicRegister",true,false)
+	if skill_button!=null:
+		skill_button.disabled=not preload("res://scripts/ui/source_card_presentation.gd").native(hud.selected_catalog_record)
+		skill_button.tooltip_text="원본 카드 스킬 각성 · 비용 미확정 실행은 차단"
 	var owned: Dictionary=hud.card_collection_state.get("owned",{}).get("성물",{})
 	var spare: Dictionary=hud.card_collection_state.get("spare",{}).get("성물",{})
 	var signature: String=str(hud.catalog_icon_generation)+":"+str(hash(owned))+":"+str(hash(spare))

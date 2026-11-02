@@ -72,6 +72,8 @@ const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
 const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.gd")
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
 var option_awakening = OPTION_AWAKENING.new()
+const SKILL_AWAKENING=preload("res://scripts/cards/skill_awakening_runtime.gd")
+var skill_awakening=SKILL_AWAKENING.new()
 var option_awakening_auras: Dictionary = {}
 var source_awakening_auras: Dictionary = {}
 const SOURCE_AWAKENING_AURA = preload("res://scripts/animation/source_awakening_aura.gd")
@@ -394,6 +396,7 @@ func _ready() -> void:
 	card_draw_fusion.configure(catalog_db)
 	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
+	if not skill_awakening.configure(self):push_error(skill_awakening.problem)
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
@@ -597,6 +600,8 @@ func _load_data() -> void:
 	if catalog_items_value is Array:
 		_enrich_weapon_records(catalog_items_value as Array)
 	preload("res://scripts/cards/native_doll_unlock_item.gd").install(catalog_db)
+	preload("res://scripts/cards/skill_awakening_service.gd").install_book_definitions(catalog_db)
+	preload("res://scripts/cards/source_awakening_items.gd").install_drop_definitions(catalog_db,loot_catalog)
 	_merge_local_consumables_into_catalog()
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	_index_catalog_item_sources()
@@ -2686,6 +2691,8 @@ func _collect_ground_drop(drop: Button) -> bool:
 	var item_name: String = str(record["item_name"])
 	var quantity: int = int(record["quantity"])
 	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
+	var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
+	item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
 	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null
@@ -4315,9 +4322,13 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
 		return ERR_FILE_CORRUPT
+	if skill_awakening.save_blocked or not skill_awakening.problem.is_empty():
+		if not quiet:hud.show_message("스킬 각성 저장 보호 중 · 원본 저장 보존")
+		return ERR_UNAVAILABLE
 	if option_awakening.save_blocked or not option_awakening.problem.is_empty():
 		if not quiet: hud.show_message("각성 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
@@ -4325,7 +4336,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4385,6 +4396,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"equipped_catalog": equipped_catalog,
 		"card_draw_fusion": card_draw_fusion.export_state(),
 		"card_option_awakening": option_awakening.export_state(),
+		"card_skill_awakening": skill_awakening.export_state(),
 		"equipped_items": equipped_items,
 		"equipped_ammo": equipped_ammo,
 		"ammo_unequipped": ammo_unequipped,
@@ -4483,6 +4495,11 @@ func _load_game(quiet: bool) -> void:
 	if not collection_error.is_empty():
 		equipment_collections.save_blocked = true
 		hud.show_message(collection_error)
+		return
+	var skill_awakening_error: String=skill_awakening.check_load(data)
+	if not skill_awakening_error.is_empty():
+		skill_awakening.save_blocked=true
+		hud.show_message(skill_awakening_error)
 		return
 	var awakening_error: String = option_awakening.check_load(data)
 	if not awakening_error.is_empty():
@@ -4603,6 +4620,9 @@ func _load_game(quiet: bool) -> void:
 		return
 	if not option_awakening.accept_load(data):
 		equipment_collections.save_blocked = true
+		migrated_save_path=prior_save_path
+		return
+	if not skill_awakening.accept_load(data):
 		migrated_save_path=prior_save_path
 		return
 	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
@@ -5587,6 +5607,7 @@ func _break_invisibility() -> void:
 
 func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack_kind: String="melee", main_target: bool=true, by_spell: bool=false) -> void:
 	if trigger_name=="on_hit" and hp>0:option_awakening.combat.on_hit(target,attack_kind,main_target,by_spell)
+	if trigger_name=="on_hit":skill_awakening.on_successful_hit(target)
 	if original_skills != null: original_skills.trigger(trigger_name, target)
 	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
@@ -6590,6 +6611,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
+	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
 	equipment_records_cache=records
 	return equipment_records_cache
 

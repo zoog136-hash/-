@@ -27,6 +27,10 @@ func configure(record: Dictionary, icon: Texture2D, slot: String) -> void:
 	visual = VISUAL.new()
 	visual.position = Vector2(28, 36)
 	visual.configure(str(record["grade"]), icon, slot)
+	visual.source_missing=icon==null and record.get("item_record") is Dictionary and preload("res://scripts/cards/source_awakening_items.gd").recognized(record.item_record)
+	if visual.source_missing:
+		var missing:=Label.new();missing.text="원본 미설치";missing.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		missing.position=Vector2(-8,10);missing.add_theme_font_size_override("font_size",10);add_child(missing)
 	add_child(visual)
 
 func set_selected(value: bool) -> void:

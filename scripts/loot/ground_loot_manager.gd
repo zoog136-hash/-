@@ -86,6 +86,9 @@ func spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: String 
 	# Whitelist transferable payload; never allow callers to override ownership IDs.
 	for key: String in ["physical_item","item_record","player_dropped"]:
 		if metadata.has(key): record[key] = metadata[key]
+	# Snapshot only explicitly identified awakening materials at spawn time.
+	# Old name-only floor saves never acquire provenance during reload.
+	if preload("res://scripts/cards/source_awakening_items.gd").recognized(item):record["item_record"]=item.duplicate(true)
 	records[record["id"]] = record
 	_index_record(record)
 	revision += 1
