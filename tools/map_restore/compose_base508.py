@@ -14,6 +14,7 @@ import shutil
 import struct
 import zlib
 from PIL import Image
+from base508_original_store import retain_original
 
 from base508_ti2 import read_ti2, render
 
@@ -60,7 +61,7 @@ def compose(chunks, source, tile_inventory, out, tile_cache=None):
         tiles[tile_id] = tile
         target = out / 'source' / spec['member']
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(file, target)
+        retain_original(file, target)
         provenance.append({'tile_id': tile_id, 'source': 'source/'+spec['member'], 'bytes': len(payload), 'sha256': hashlib.sha256(payload).hexdigest(), 'crc32': spec['crc32'], 'header': tile['header'], 'block_count': len(tile['blocks']), 'flags': dict(Counter(b['flags'] for b in tile['blocks']))})
     frames = {}
     for ref in used:
@@ -78,7 +79,17 @@ def compose(chunks, source, tile_inventory, out, tile_cache=None):
     for layer, x, y, ref in rows:
         image.alpha_composite(frames[ref], (x-left, y-top))
     empty = sum(used[ref] for ref, frame in frames.items() if frame.getchannel('A').getbbox() is None)
-    statistics = {'s32_composed_chunks': len(chunks), 'ti2_decoded_files': len(tiles), 'decoded_used_tile_pairs': len(frames), 'floor_half_tiles_composed': sum(r[0] == -2 for r in rows), 'cover_tiles_composed': sum(r[0] == -1 for r in rows), 'object_parts_composed': sum(r[0] >= 0 for r in rows), 'decoded_source_tile_placements': len(rows), 'visual_s32_tiles_restored': len(rows)-empty, 'empty_source_tile_placements': empty, 'missing_tile_pairs': 0, 'fallback_tiles': 0}
+    statistics = {'s32_composed_chunks':sum(c.get('source_format','S32')=='S32' for c in chunks),'seg_composed_chunks':sum(c.get('source_format')=='SEG' for c in chunks), 'ti2_decoded_files': len(tiles), 'decoded_used_tile_pairs': len(frames), 'floor_half_tiles_composed': sum(r[0] == -2 for r in rows), 'cover_tiles_composed': sum(r[0] == -1 for r in rows), 'object_parts_composed': sum(r[0] >= 0 for r in rows), 'decoded_source_tile_placements': len(rows), 'visual_s32_tiles_restored': len(rows)-empty, 'empty_source_tile_placements': empty, 'missing_tile_pairs': 0, 'fallback_tiles': 0}
+    statistics['visual_source_tiles_restored'] = len(rows)-empty
+    if any(c.get('source_format')=='SEG' for c in chunks):
+        by_format = {'S32':Counter(), 'SEG':Counter()}
+        for chunk in chunks:
+            refs = list(struct.unpack('<8192I',base64.b64decode(chunk['floor_u32le'])))
+            refs.extend(c[2] for c in chunk['covers'])
+            refs.extend(p[3] for g in chunk['objects'] for p in g['parts'])
+            by_format[chunk.get('source_format','S32')].update(refs)
+        for kind, counts in by_format.items():
+            statistics['visual_'+kind.lower()+'_tiles_restored'] = sum(n for ref,n in counts.items() if frames[ref].getchannel('A').getbbox() is not None)
     metadata = {'schema': 1, 'source_origin': origin, 'pixel_translation': [-left, -top], 'half_tile_pixels': [24, 24], 'source_cell_basis_x': [24, -12], 'source_cell_basis_y': [24, 12], 'statistics': statistics, 'tile_provenance': provenance, 'display_alpha': 'Reviewed TI2 type bit2 half alpha and bit4/5 brightness alpha; original RGB565 colors retained; M engine equivalence unverified', 'depth_status': 'Original layer bytes applied; engine opacity/effect tail semantics unverified', 'terrain_collision': 'UNKNOWN'}
     (out/'composition.json').write_text(json.dumps(metadata, separators=(',', ':'))+'\n')
     return image, metadata

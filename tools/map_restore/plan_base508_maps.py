@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import zlib
 from base508 import read_s32, write_s32
+from base508_variants import split_variants
 
 
 def plan(analysis, structure, source_roots, land_ids):
@@ -39,7 +40,7 @@ def plan(analysis, structure, source_roots, land_ids):
     for land_id in land_ids:
         land = lands[land_id]
         group = land['AssetPath'].strip('/')
-        specs = maps[group]
+        specs, variants = split_variants(maps[group])
         missing_s32, unsupported, bad, tile_ids = [], [], [], set()
         for spec in specs:
             if not spec['member'].endswith('.s32'):
