@@ -74,8 +74,19 @@ def build(args):
     grade = next(r for r in table('Grade') if r['ID'] == item['GradeID'])
     unlock_links = [effect(r) for r in table('ItemBonus') if r['ItemClassID'] == item['ID']]
     unlock_buffs = [effect(r) for r in buff_rows if r['BuffClassID'] == 91531]
+    awaken_effects = table('BuffCardAwakenEffect')
+    by_effect = {(r['BuffCardDeckID'], r['GradeID']): r for r in awaken_effects}
+    status_chain_checks = 0
+    for group in groups:
+        for ref in group['effects']:
+            if ref['type']['Name'] != 'StatusEffectID':
+                continue
+            key = (group['card']['BuffCardDeckID'], group['card']['GradeID'])
+            assert by_effect[key]['StatusEffectID'] == ref['bonus']['Value'], 'Mismatched scoped awakening status'
+            status_chain_checks += 1
     output = {'schema': 1, 'source_snapshot': 'base508', 'economy': dict(economy),
               'option_groups': groups, 'subslot_buffs': subslot_refs,
+              'awaken_effects': awaken_effects, 'status_chain_verified_count': status_chain_checks,
               'subslot_unlock_item': {'item': item, 'category': category, 'grade': grade, 'name': description, 'effects': unlock_links, 'buff_effects': unlock_buffs},
               'status_effect_attrs': [r for r in table('StatusEffectAttr') if r['StatusEffectID'] in status_ids],
               'invoke_options': invoke_options, 'invoke_spells': spells, 'invoke_buffs': dict(buff_links),

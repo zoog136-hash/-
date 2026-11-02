@@ -101,6 +101,7 @@ func view(category: String, target_id: String) -> Dictionary:
 	if not problem.is_empty(): return Core.fail("configuration", problem)
 	var out: Dictionary = core.view(progress, world.card_draw_fusion.export_state(), int(world.gold), category, target_id)
 	if core.native_mode and out.get("ok",false):
+		out.source_status_reference=preload("res://scripts/cards/native_awakening_status.gd").binding(core.definition(category,target_id))
 		var collections: Variant=world.get("card_collections")
 		if collections!=null and collections.has_method("snapshot"):
 			out.collections=[]
@@ -288,4 +289,13 @@ func use_native_unlock_item(item_name: String) -> Dictionary:
 	world.inventory=result.inventory;world.item_instances=result.item_instances;progress=result.state
 	_bonus_signature="";world.set("equipment_records_dirty",true);_busy=false
 	result.erase("state");result.erase("inventory");result.erase("item_instances")
+	return result
+
+func active_source_status_references() -> Dictionary:
+	var result: Dictionary={}
+	var active: Dictionary=combat.active()
+	for identity: String in active:
+		var row: Dictionary=active[identity]
+		var reference: Dictionary=preload("res://scripts/cards/native_awakening_status.gd").binding(row)
+		if reference.ok:result[identity]=reference
 	return result
