@@ -6,6 +6,7 @@ const CATALOG_SHA256 = "37e34cffc7cff15bd59d69d4f34a63583ddae39ea261a6eb5750d2d3
 const LITERAL_VFX = preload("res://scripts/monsters/base508_boss_vfx.gd")
 const PLAYBACK_POLICY = preload("res://scripts/animation/source_playback_policy.gd")
 const HOST_ADOPTIONS = preload("res://scripts/monsters/base508_boss_host_adoptions.gd")
+const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 const SOURCE_PREVIEW = preload("res://scripts/animation/original_source_preview.gd")
 const ELEMENTS = {"None":"physical","Fire":"fire","Water":"water","Air":"wind","Earth":"earth","Light":"holy","Dark":"dark"}
 static var _catalog: Dictionary = {}
@@ -105,6 +106,7 @@ static func world_contract(scene: Node) -> bool:
 static func actor_contract(actor: Node) -> bool:
 	if not is_instance_valid(actor) or typeof(actor.get("life_id")) != TYPE_INT or typeof(actor.get("dead")) != TYPE_BOOL: return false
 	if typeof(actor.get("is_boss")) != TYPE_BOOL or typeof(actor.get("attack_interval")) not in [TYPE_INT,TYPE_FLOAT]: return false
+	if typeof(actor.get("attack_cooldown")) not in [TYPE_INT,TYPE_FLOAT] or typeof(actor.get("enraged")) != TYPE_BOOL: return false
 	var pose: Variant = actor.get("motion")
 	if not pose is Object or not is_instance_valid(pose) or not pose.has_method("begin_attack"): return false
 	for method: String in ["is_stunned","is_feared","is_silenced","_target_attackable","current_attack_range","current_attack_type"]:
@@ -191,8 +193,13 @@ func _host_range(row: Dictionary, spell: Dictionary) -> float:
 	return float(owner().call("current_attack_range"))
 
 func try_begin(line_of_sight: bool, explicit_id: int = -1) -> bool:
-	if not active() or cooldown > 0.0 or not pending.is_empty() or not line_of_sight: return false
+	if not active(): return false
 	var actor: Node = owner(); var scene: Node = world()
+	# Service ticks and AI decisions can use different delta batches. Preserve
+	# the later deadline before the generic AI checks this shared clock.
+	actor.attack_cooldown = maxf(float(actor.attack_cooldown),cooldown)
+	if cooldown > 0.0 or not pending.is_empty() or not line_of_sight: return false
+	if float(actor.attack_cooldown) > 0.0: return false
 	if actor.is_stunned() or actor.is_feared() or actor.is_silenced() or not actor._target_attackable() or actor.motion.active: return false
 	var selected_id: int = explicit_id if explicit_id > 0 else int(options.get("explicit_attack_id",-1))
 	var row: Dictionary = choose_attack(selected_id)
@@ -211,7 +218,10 @@ func try_begin(line_of_sight: bool, explicit_id: int = -1) -> bool:
 	queued_attack_id = -1
 	_begin_presentation()
 	actor.velocity = Vector2.ZERO
-	cooldown = maxf(0.0,float(actor.attack_interval))
+	cooldown = maxf(0.0,AI_POLICY.attack_interval(float(actor.attack_interval),bool(actor.enraged)))
+	# Share the generic AI clock: recovery ending must not permit a second
+	# generic attack between native casts. No source delay unit is inferred.
+	actor.attack_cooldown = cooldown
 	diagnostics["last_source_fixed_delay_raw"] = int(row.get("FixedDelayTime",0))
 	diagnostics["last_source_cast_delay_raw"] = int(spell.get("source_spell",{}).get("CastDelay",0))
 	_emit_vfx(spell,"cast",actor.global_position)
