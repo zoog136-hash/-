@@ -41,9 +41,18 @@ func run()->void:
  var sweep_steps:int=0
  var start:Vector2=nav.point(nav.arrival)
  world.player.set_physics_process(false)
+ var review_ids:Array=[]
+ var entry_component:bool='--base508-component-review' in OS.get_cmdline_user_args()
+ if entry_component:
+  var visited:Dictionary={nav.ids[nav.arrival]:true};review_ids=[nav.ids[nav.arrival]]
+  for id:int in review_ids:
+   for neighbor:int in nav.graph.get_point_connections(id):
+    if not visited.has(neighbor):visited[neighbor]=true;review_ids.append(neighbor)
+ else:
+  for id:int in nav.graph.get_point_ids():review_ids.append(id)
  for direction:Vector2 in [Vector2.LEFT,Vector2.RIGHT,Vector2.UP,Vector2.DOWN]:
   var target_id:int=-1;var best:float=-INF
-  for id:int in nav.graph.get_point_ids():
+  for id:int in review_ids:
    var score:float=nav.graph.get_point_position(id).dot(direction)
    if score>best:best=score;target_id=id
   var route:PackedVector2Array=field.path(start,nav.graph.get_point_position(target_id))
@@ -94,7 +103,7 @@ func run()->void:
   check(world.player.move_and_collide(start-world.player.position)==null,'removed occupancy physics restored')
  for cell:Vector2i in nav.ids:
   check(Vector2(cell).distance_to(field.world_to_source(field.source_to_world(Vector2(cell))))<0.001,'coordinate round trip')
- print('MAIN_SOURCE_EDGE_COVERAGE ',JSON.stringify({'routes':route_count,'physical_steps':sweep_steps,'blocked_edges':blocked,'coordinate_cells':nav.ids.size()}))
+ print('MAIN_SOURCE_EDGE_COVERAGE ',JSON.stringify({'scope':'ENTRY_COMPONENT' if entry_component else 'WHOLE_GRAPH','review_cells':review_ids.size(),'routes':route_count,'physical_steps':sweep_steps,'blocked_edges':blocked,'coordinate_cells':nav.ids.size()}))
  print('MAIN_SOURCE_EDGE_RESULT ',JSON.stringify({'failures':failures,'start':[before.x,before.y],'end':[world.player.global_position.x,world.player.global_position.y],'map':world.active_map_id,'save_disabled':true}))
  if DisplayServer.get_name()!='headless' and not OS.get_environment('BASE508_MAIN_CAPTURE').is_empty():
   for i:int in range(30):await process_frame

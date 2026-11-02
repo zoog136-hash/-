@@ -184,3 +184,32 @@ supports the same explicit original entry catalog. Reusing the completed
 34-result checkpoint executed zero duplicate Godot jobs. Actual target-device
 performance, native height/foreground depth and automatic trigger semantics
 remain unverified.
+
+### Component and attribute counterexamples
+
+`audit_source_components.py` checks the existing zero/one graph against every
+explicit original entry. Asset30 has four components(1403/1097/1242/1239 cells)
+and each has original portal destinations; Asset31 has two(2312/2422),both with
+portal destinations. Requiring a single entrance to reach all components was
+an invalid acceptance target for these two maps. With `--base508-component-review`,
+the actual Main test selects the component of the exact original entry and labels
+its coverage accordingly. Six original entries collectively cover these six
+components:24 body routes,24535 physical steps and384 blocked boundary samples
+passed with unchanged saves. No collision,entry coordinate or graph edge changed.
+Asset13372's separate8695-cell component has no explicit entry in this catalog;
+its whole-map reachability remains unresolved. The original31 whole-graph passes
+remain distinct from these per-entry component passes.
+
+`audit_source_attribute_twins.py` compares source chunk origin,floor,covers,
+objects and opacity byte-derived data. It found156 identical visual-geometry
+pairs with different attributes,including75 pairs differing only in bit0x04,
+36 only in bit0x01 and2 only in bit0x40. Other pairs combine these differences.
+Thus identical original pixels/layers cannot independently validate passability.
+0x04/0x40 changes do not require a visual-layer change in these examples; this
+is not proof that they encode zone types or native height. The supplied PC
+reference assigns safe/combat zone labels but leaves bit6 unnamed and contains
+an exceptional65-to5 conversion; that rule is not adopted for M. No attribute
+masking,unknown-bit clearing or collision transfer is performed by these audits.
+
+The Main queue checkpoint key includes Land,Asset,entry kind/ID and review scope,
+so distinct original entrances cannot be silently skipped as the same map run.
