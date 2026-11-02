@@ -5,6 +5,8 @@ const PATH = "res://data/lineagem_base508/monster_batch02/runtime_registry.json"
 const CONTEXT = preload("res://scripts/monsters/base508_monster_context.gd")
 const BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
 const PACK = preload("res://scripts/monsters/base508_monster_pack_cache.gd")
+const BOSS_COMBAT = preload("res://scripts/monsters/base508_boss_combat.gd")
+const HOST_ACTIONS = preload("res://scripts/monsters/base508_boss_host_adoptions.gd")
 static var _data: Dictionary = {}
 static var _by_npc: Dictionary = {}
 static func data() -> Dictionary:
@@ -62,9 +64,17 @@ static func _full_record(source_key: String, manifest_path: String, compatibilit
 	var actor: Dictionary = PACK.actor(path, int(ids.npc_id))
 	if actor.is_empty(): return {}
 	var profile: Dictionary=actor.get("source_actor_profile",{})
+	var action_contract: Dictionary={}
 	if not profile.is_empty():
-		if not bool(profile.get("host_combat_ready",false)): return {}
-		for role: String in ["idle","walk","attack"]:
+		if not bool(profile.get("host_combat_ready",false)):
+			if not bool(compatibility.get("source_m_allow_contextual",false)): return {}
+			# These actors retain their authored action18, never a fabricated
+			# basic-attack clip. A pinned combat table and explicit adoption must
+			# agree before the ordinary combat factory can expose the record.
+			action_contract=HOST_ACTIONS.actor_contract(int(ids.npc_id),int(actor.get("sprite_id",-1)),profile,actor.get("tracks",{}),BOSS_COMBAT.data(path.get_base_dir()))
+			if action_contract.is_empty(): return {}
+		var required: Array=action_contract.get("required_roles",["idle","walk","attack"])
+		for role: String in required:
 			if not actor.get("tracks",{}).has(role): return {}
 		if not bool(profile.get("source_category",{}).get("IsAttackable",false)) or profile.get("source_category",{}).get("Name","")=="Citizen": return {}
 	var host: Dictionary = {"atk":8,"speed":70.0,"attack_interval":1.25,"attack_range":58.0,"collision_radius":19.0,"grade":"일반"}
@@ -74,6 +84,9 @@ static func _full_record(source_key: String, manifest_path: String, compatibilit
 	if result.is_empty() or int(result.get("source_m_sprite_id", -1)) != int(actor.get("sprite_id", -2)): return {}
 	result["source_m_asset_manifest_path"] = path
 	result["source_m_actor_profile"]=profile.duplicate(true)
+	if not action_contract.is_empty():
+		result["source_m_host_action_contract"]=action_contract.duplicate(true)
+		result["source_m_host_combat_ready"]=true
 	result["source_m_host_placement"] = "Explicit host region source-key port; native geography unverified"
 	return result
 

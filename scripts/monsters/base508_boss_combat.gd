@@ -73,6 +73,12 @@ func configure(owner: Node, world: Node, record: Dictionary) -> bool:
 	options = record.get("source_m_boss_combat_options", {}).duplicate(true)
 	if int(options.get("explicit_attack_id",-1)) <= 0 and str(options.get("selection_policy","")).is_empty():
 		options.merge(HOST_ADOPTIONS.for_record(record,str(world.get("active_map_id")) if world.get("active_map_id") is String else "",data()),true)
+	if record.has("source_m_host_action_contract"):
+		var adoption: Dictionary = HOST_ADOPTIONS.for_record(record,"",data())
+		if adoption.is_empty():
+			clear(); return false
+		options.merge(adoption,true)
+		options["host_action_contract_locked"] = true
 	diagnostics = {"identity":"exact_base508_npc_id","selection":"explicit_attack_id_or_unique_supported_attack","clock":"existing_host_attack_windup_and_cooldown; native_FixedDelayTime_unit_pending","range":"existing_host_pixel_range; native_source_cells_pending","status_chance":"existing_host_status_accuracy_and_resistance; native_spell_probability_unverified","source_vfx":"exact_spell_sprite_id; installed_overlay_only"}
 	if options.get("selection_policy","") == "explicit_host_adoption_not_native_AI": diagnostics["host_adoption"] = options.get("adoption_contract")
 	return true
@@ -202,6 +208,9 @@ func try_begin(line_of_sight: bool, explicit_id: int = -1) -> bool:
 	if float(actor.attack_cooldown) > 0.0: return false
 	if actor.is_stunned() or actor.is_feared() or actor.is_silenced() or not actor._target_attackable() or actor.motion.active: return false
 	var selected_id: int = explicit_id if explicit_id > 0 else int(options.get("explicit_attack_id",-1))
+	if bool(options.get("host_action_contract_locked",false)):
+		if explicit_id > 0 and explicit_id != int(options.explicit_attack_id): return false
+		selected_id = int(options.explicit_attack_id)
 	var row: Dictionary = choose_attack(selected_id)
 	if row.is_empty(): return false
 	var spell: Dictionary = spell_for(row)

@@ -9,6 +9,7 @@ const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindin
 var source_m_view: SOURCE_M_VIEW = null
 const SOURCE_BOSS_COMBAT = preload("res://scripts/monsters/base508_boss_combat.gd")
 var source_boss_combat = SOURCE_BOSS_COMBAT.new()
+var source_action_contract_required: bool = false
 var mp: int = 0
 var max_mp: int = 0
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
@@ -131,6 +132,7 @@ var roam_clock: float = 0.0
 
 func retire_for_pool() -> void:
 	source_boss_combat.clear()
+	source_action_contract_required = false
 	loot_source_identity.clear()
 	# Death presentation is complete before this is called. Release all visual
 	# owners while keeping the lightweight body for the next life/region.
@@ -186,6 +188,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
 	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
+	source_action_contract_required = not record.get("source_m_host_action_contract", {}).is_empty()
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.BASE508_DROPS.identity(record)
 	if loot_source_identity.is_empty(): loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
@@ -399,6 +402,12 @@ func _tick_ai(delta: float) -> void:
 	_tick_stun(delta); _tick_silence(delta); _tick_hold(delta); _tick_fear(delta)
 	_tick_poison(delta); _tick_bleed(delta); _tick_slow(delta)
 	if dead: velocity = Vector2.ZERO; return
+	if source_action_contract_required and (not source_boss_combat.active() or not is_instance_valid(source_m_view)):
+		# An explicit native action actor must never fall back to a host basic
+		# attack if its private combat table/view is absent or rejected.
+		velocity = Vector2.ZERO
+		motion.cancel_attack()
+		return
 	attack_cooldown = maxf(0.,attack_cooldown-delta)
 	repath_cooldown = maxf(0.,repath_cooldown-delta)
 	aggro_remaining = maxf(0.,aggro_remaining-delta)
@@ -476,6 +485,14 @@ func _tick_ai(delta: float) -> void:
 		sight_cached = world_controller._has_line_of_sight_world(global_position,target_player.global_position) if distance<=maxf(attack_range,620. if is_boss else attack_range) else false
 	var sight: bool = sight_cached and distance<=maxf(attack_range,620. if is_boss else attack_range)
 	if source_boss_combat.try_begin(sight): return
+	if source_action_contract_required:
+		# All strikes for this adoption belong to the native action controller.
+		# Preserve the existing host pursuit/hold range, without a second
+		# legacy special/basic-attack path during its cooldown or rejection.
+		velocity = Vector2.ZERO
+		if not is_held() and distance > attack_range and distance <= float(ai.get("aggro_radius",760.))*1.7:
+			_move_toward(target_player.global_position,delta)
+		return
 	if is_boss and ai.has("special") and special_cooldown<=0. and distance<=620. and sight and not is_silenced():
 		_begin_special()
 		return
@@ -990,6 +1007,7 @@ func _release_attack(id: int) -> void:
 	if dead or id != motion.sequence or id == released_sequence or not motion.active or not motion.released: return
 	released_sequence = id
 	if source_boss_combat.release(id): return
+	if source_action_contract_required: return
 	if not is_instance_valid(target_player): return
 	if is_stunned() or is_feared(): return
 	if id==special_sequence:
