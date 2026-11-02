@@ -192,3 +192,52 @@ that bridge); this is not player ownership/completion. Rebuild/removal/group
 mismatch tests verify no duplicate or stale reward. The existing four legacy
 awakening collections remain for the legacy catalog; native UI shows relevant
 original sets instead. No existing save keys or ownership are renamed.
+
+Card skill awakening is a separate source system. The new catalog joins 701
+canonical card IDs, 15 live book/pool chains and 72 non-None spells; 523 cards
+have complete level1..20 stat/invoke profiles. Undefined group0, the empty test
+group, None stat profiles and server/time predicates are not treated as unlocks.
+A TWILIGHT-local `card_skill_awakening` namespace stores explicit saved spell,
+level and decimal-string EXP, preserving unknown metadata. It is not an original
+server key/RPC. Invalid state protects the save. Source CumExp remains exact;
+no EXP-material/failure formula or automatic level grant is invented.
+
+Owned/equipped/eligible saved skills contribute source HP once and use the
+existing successful-hit dispatcher/cooldown store for fixed-magic procs. The
+source spell's base/dice and level's proc numerator/denominator/cast-delay bonus
+are retained. Local integration uses successful hits, per-card/spell cooldowns,
+and millisecond delay reduction; this is not recovered original server code.
+No SP/critical/equipment amplification or recursive proc is added. Original
+spell effect sprite/audio references are retained; full original VFX is not
+claimed. The read-only UI shows candidate-selection weights separately from
+proc chance and offers level-profile previews without modifying live state.
+
+Awaken/reawaken requests are intentionally blocked on unresolved book quantity
+and operation fee. Source awakening/reroll is a weighted skill draw, without a
+separate failure roll. EXP-feed remains separately blocked on its unresolved
+material/outcome rules and nine ValueType enum meanings. Neither the static UI price45,000,000 nor option-awakening
+costs are reused. Blocked requests change no resources, RNG or save. Existing
+option awakening and visual aura are not skill-awakening progress. Private UI
+render tests use isolated XDG paths and explicit in-memory progress fixtures;
+full Android/Godot4.7.2/original-client equivalence is still unverified.
+
+
+Latest user decision confirms original reawakening behavior: reroll only the
+skill and preserve saved level/EXP. No destructive reset was applied. Pure
+weighted preparation plus an internal confirmed-result commit stage now retain
+growth, stage their own selection RNG, save before live mutation, reject duplicate
+operation IDs/stale revisions, and roll back disk/state/RNG on failure. The
+public paid-operation request remains cost-gated and does not dispatch to that
+internal stage. No separate awakening failure, consolation reward or pity is
+introduced. Rerolling the same skill is a valid source-pool outcome.
+
+Current unresolved decisions are book quantities and Adena fee by grade/operation;
+EXP-material gain/consumption/outcome rules remain a separate operation. Raw
+ValueType1 has15rows: all three decks repeat100000/300000/500000/1000000/3000000
+for grades3/4/5/32/52. This matches an old rare/hero fee clue but its defining enum
+and current semantics are absent; it is diagnostic evidence, not an activated
+price. The 83 option targets gated by source server predicates split into
+73with set772 and10with set1294. All289 definitions exist; these are not missing
+cards/images. Source skill spells reference95unique combat sprite IDs; byte
+extraction/installation/playback of those effects is not verified by this UI
+worker, so original-source absence is not asserted.

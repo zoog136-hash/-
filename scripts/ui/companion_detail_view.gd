@@ -147,6 +147,7 @@ func configure(controller: Node) -> void:
 	hud.catalog_body_actions.get_child(0).add_child(footer_actions)
 	for spec: Array in [["컬렉션 보기","카드 컬렉션 서비스 미지원"],["변신 등록","카드 빠른등록 서비스 미지원"]]:
 		var button: Button=UI.button(str(spec[0]),Callable(),Vector2(0,44))
+		if spec[0]!="컬렉션 보기":button.set_script(preload("res://scripts/ui/native_touch_button.gd"))
 		button.name="CompanionCollectionView" if spec[0]=="컬렉션 보기" else "CompanionQuickRegister"
 		button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		button.disabled=true;button.tooltip_text=str(spec[1]);UI.primary_button(button)
@@ -154,6 +155,8 @@ func configure(controller: Node) -> void:
 		if spec[0]=="컬렉션 보기":
 			button.disabled=false;button.tooltip_text="선택 카드가 포함된 컬렉션"
 			button.pressed.connect(func() -> void:hud.open_normal_card_collections(category,Cards.card_id(hud.selected_catalog_record)))
+		else:
+			button.pressed.connect(func() -> void:hud.open_card_skill_awakening(category,Cards.card_id(hud.selected_catalog_record)))
 	secondary_button=UI.button("추가 소환",Callable(),Vector2(0,44))
 	secondary_button.name="CompanionSecondarySummon"
 	secondary_button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
@@ -193,7 +196,7 @@ func activate(value: String) -> void:
 	var right: Control=hud.catalog_body_actions.get_child(0)
 	right.move_child(footer_actions,1)
 	art_column.show();footer_actions.show()
-	(footer_actions.find_child("CompanionQuickRegister",true,false) as Button).text="변신 등록" if category=="변신" else "인형 등록"
+	(footer_actions.find_child("CompanionQuickRegister",true,false) as Button).text="스킬 각성"
 	detail_visible=hud.catalog_detail.visible
 	collection_visible=hud.equipment_collection_button.visible
 	hud.catalog_detail.hide()
@@ -297,6 +300,9 @@ func refresh() -> void:
 	_refresh_secondary(record)
 	if hud.catalog_results.is_empty():record={}
 	var identity: String=Cards.card_id(record)
+	var skill_button: Button=footer_actions.find_child("CompanionQuickRegister",true,false)
+	skill_button.disabled=not preload("res://scripts/ui/source_card_presentation.gd").native(record)
+	skill_button.tooltip_text="원본 카드 스킬 각성 · 비용 미확정 실행은 차단"
 	var key: String=category+identity+str(hash(record.get("sourceOptions",[])))
 	if key!=selected_key:
 		selected_key=key

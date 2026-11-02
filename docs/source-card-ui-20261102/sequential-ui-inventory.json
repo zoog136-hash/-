@@ -62,7 +62,7 @@
         }
       ],
       "source_relationship": "Original CSB resource -> exact plist frame -> metadata-declared PNG; eight private pages and 69 pixel-verified frame keys",
-      "state": "all_seven_original_grade_frames_background_and_action_textures_implemented; full_source_layout_pending",
+      "state": "native_1736_sets_and_exact_option_IsAwaken_bridge_264_rows; default_capability1034_not_player_completion",
       "verify": [
         "original resource/atlas/node relationship",
         "correct source/physical instance identity",
@@ -94,7 +94,7 @@
         }
       ],
       "source_relationship": "9/9 requested inventory CSBs received; Common_Slot and Inventory_Slot_Set geometry verified",
-      "state": "source_slot_metrics_and_tooltip_implemented; isolated_render_20_checks_pass; original_skin_pending",
+      "state": "original_slot_metrics_frame_selection_and_tooltip_rendered_22_checks; full_window_layout_pending",
       "verify": [
         "original resource/atlas/node relationship",
         "correct source/physical instance identity",
@@ -566,7 +566,7 @@
         }
       ],
       "source_relationship": "CSB paths exist in original registry; node/texture correspondence pending extraction",
-      "state": "queued",
+      "state": "native_option289_and_skill701_catalog_state_effects_readonly_UI_implemented; skill_paid_operations_cost_gated",
       "verify": [
         "original resource/atlas/node relationship",
         "correct source/physical instance identity",
@@ -575,7 +575,7 @@
         "owned counts/equipment/save unchanged",
         "30FPS cache/reload behavior"
       ],
-      "note": "TWILIGHT option awakening is not native collection IsAwaken without a verified ledger mapping"
+      "note": "Option first-slot source ID bindings; skill pool15/spells72/profiles523; preserve growth on reroll; no invented awakening failure; source skill UI skin/VFX incomplete"
     },
     {
       "phase": 8,
@@ -904,5 +904,10 @@
     "UI/PVPBookScene.csb"
   ],
   "common_validation": "private map pack absent here; UI-isolated HUD processing only, parent worker handles full-game integration",
-  "implementation_base": "e2711f851f1a3dc4f4f60dba496e6c05b3d216f0"
+  "implementation_base": "e2711f851f1a3dc4f4f60dba496e6c05b3d216f0",
+  "published_checkpoints": {
+    "UI_PR219": "b2af6a576c21af63430e05ed32d9c097634d8e02",
+    "option_PR220": "aa1ba77308db97b24c3b149b8d7d50f5eb4a246a",
+    "skill_PR221_initial": "868bf2f9f98428045cfab848b66ee5c1dd71fd89"
+  }
 }
