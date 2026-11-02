@@ -135,7 +135,7 @@ jobs:
             python_check "$(basename "$check_script" .py)" "$check_script"
           done
           python_check audit-eight-direction-coverage tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage
-          for name in eight_direction_animation_test native_animation_expansion_test original_based_canvas_test; do
+          for name in eight_direction_animation_test native_animation_expansion_test original_based_canvas_test pr211_registered_death_geometry_test; do
             godot_check "$name" 'SCRIPT ERROR:|ERROR:|FAIL'
           done
           godot_check original_based_transform_batch_test 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' 'PR100_TRANSFORM_BATCH_GUARD_OK' "${RUNNER_TEMP}/transform-batch-guards"

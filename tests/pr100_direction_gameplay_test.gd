@@ -61,6 +61,24 @@ func screen_direction(direction: int) -> Vector2:
 func attack_track(key: String, direction: int) -> bool:
 	return key.ends_with("_"+str(direction)) and (key.begins_with("attack") or key.begins_with("cast") or key.begins_with("ranged_attack") or key.begins_with("special"))
 
+func inspect_source_pose_geometry(sprite: Node2D, frames: SpriteFrames, track: String, phase: int, base_scale: Vector2, declared_canvas: Vector2 = Vector2(256,256)) -> void:
+	# Explicit source-pose inspection, separate from the AI/combat samples.
+	# A reviewed source registration replaces the former square-canvas contract.
+	var registration = preload("res://scripts/animation/reviewed_frame_registration.gd")
+	registration.restore_offset(sprite)
+	var texture: Texture2D = frames.get_frame_texture(track, phase)
+	sprite.scale = base_scale
+	if frames.has_meta("twilight_canvas_size"):
+		declared_canvas = frames.get_meta("twilight_canvas_size")
+		sprite.scale *= declared_canvas / texture.get_size()
+	if registration.apply(sprite, frames, track, phase, base_scale):
+		var raw: Dictionary = frames.get_meta("twilight_reviewed_frame_registration")[track].frames[phase]
+		check(sprite.scale.is_equal_approx(base_scale * (raw.scale as Vector2)), "declared source scale " + track)
+		var anchor: Vector2 = sprite.position + ((sprite.get("offset") as Vector2) - texture.get_size() * 0.5 + (raw.anchor as Vector2)) * sprite.scale
+		check(anchor.is_equal_approx(base_scale * (raw.get("target",Vector2.ZERO) as Vector2)), "declared source anchor " + track)
+	else:
+		check((texture.get_size() * sprite.scale / base_scale).is_equal_approx(declared_canvas), "declared source pose canvas " + track)
+
 func route_clear(point: Vector2, radius: float) -> bool:
 	# Fail closed if the source pack was unavailable on this platform.
 	# Do not dereference a null field thousands of times on Windows.
@@ -434,7 +452,7 @@ func monster_case() -> void:
 				check(normal.motion._resolved_key in ["walk_"+str(normal.motion.facing8),"run_"+str(normal.motion.facing8)],"existing skeleton pursuit " + COMPASS[direction])
 			if normal.motion.presenting_attack:
 				saw_attack = true
-				check(normal.motion.facing8 == direction and normal.motion._resolved_key == "attack_"+str(direction),"existing skeleton attack " + COMPASS[direction])
+				check(normal.motion.facing8 == direction and attack_track(normal.motion._resolved_key, direction) and normal.motion.frame_source.has_animation(normal.motion._resolved_key),"existing skeleton attack " + COMPASS[direction])
 			if monster_strikes.size() > count_before: break
 		normal.set_physics_process(false)
 		check(saw_walk and saw_attack,"actual AI pursuit and windup " + COMPASS[direction])
