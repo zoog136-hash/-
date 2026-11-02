@@ -88,7 +88,7 @@ func run() -> void:
 		await capture(category+"-compact-detail")
 		check(hud.catalog_equip_button.size.y>=40,"compact apply touch target "+category)
 	check(hash(world.card_draw_fusion.export_state())==state_before,"UI navigation preserves ownership/spare ledger")
-	var file=FileAccess.open(folder+"/checks.json",FileAccess.WRITE);file.store_string(JSON.stringify({"checks":checks,"errors":errors,"engine":Engine.get_version_info(),"test_state":"UI-only HUD PROCESS_MODE_ALWAYS; private map pack absent; in-memory ownership fixture; isolated XDG data; no user-save writes"},"\t"));file.close()
+	var file=FileAccess.open(folder+"/checks.json",FileAccess.WRITE);file.store_string(JSON.stringify({"checks":checks,"errors":errors,"engine":Engine.get_version_info(),"test_state":"UI-only HUD PROCESS_MODE_ALWAYS; in-memory ownership fixture; isolated XDG data; no user-save writes", "source_map_test":world.field_map != null and bool(world.field_map.get_meta("base508_source_test", false))},"\t"));file.close()
 	print("SOURCE_CARD_UI_CAPTURE "+str(checks)+" errors "+str(errors))
 	world.queue_free()
 	for frame: int in range(3):await process_frame
