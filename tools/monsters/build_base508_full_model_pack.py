@@ -6,6 +6,20 @@ import original_spr
 from base508_actor_capabilities import profile,source_tables
 from base508_build_space import reserve_budget,BuildSpaceError
 ROLES={0:'walk',1:'attack',2:'hit',3:'idle',8:'death'}
+def literal_reference_ids(model,declarations):
+ # A referenced layer can be a literal SP2 bank without its own SPR actions.
+ # This is not an alias guess: retain the exact 101/105 target and only allow
+ # members already listed for that same numeric identity in the source graph.
+ refs=original_spr.resolve_references(declarations,int(model['source_sprite_id']))
+ members=model.get('original_members',[])
+ return {target for rows in refs.values() for row in rows for target in row['targets']
+         if not declarations.get(target) and any(name.startswith(f'Sprite/{target}-') and name.endswith('.sp2') for name in members)}
+def supported_reference_issues(model,declarations):
+ issues=model.get('reference_issues',[])
+ if not issues:return True
+ try:literal=literal_reference_ids(model,declarations)
+ except (ValueError,KeyError):return False
+ return all(issue.get('issue')=='missing_or_duplicate_declaration' and issue.get('count')==0 and issue.get('sprite_id') in literal for issue in issues)
 def build(a):
  c=json.load(gzip.open(a.catalog)); req=json.load(gzip.open(a.requests)); files={r['name']:r for r in req['files']}; ds=original_spr.read(a.spr_root.glob('*.spr'))
  out=a.output;out.mkdir(parents=True,exist_ok=True);(out/'actors').mkdir(exist_ok=True);(out/'sp2').mkdir(exist_ok=True)
@@ -23,7 +37,7 @@ def build(a):
  for model_index,(sid,m) in enumerate(c['models'].items()):
   if wanted is not None and int(sid)not in wanted:continue
   if model_index % a.shards != a.shard:continue
-  if not m.get('original_members') or m.get('reference_issues') or (m.get('missing_standard_roles')and not capability) or any('available_library_package'not in files[n] or not (a.packages/files[n]['available_library_package']['file_name']).exists() for n in m['original_members']):continue
+  if not m.get('original_members') or (m.get('reference_issues') and not(capability and supported_reference_issues(m,ds))) or (m.get('missing_standard_roles')and not capability) or any('available_library_package'not in files[n] or not (a.packages/files[n]['available_library_package']['file_name']).exists() for n in m['original_members']):continue
   cached_path=out/'actors'/f'{sid}.json'
   if a.resume and cached_path.exists():
    try:
@@ -39,7 +53,9 @@ def build(a):
     models[sid]={'tracks_ref':f'actors/{sid}.json','tracks_sha256':hashlib.sha256(cached_path.read_bytes()).hexdigest()};print(json.dumps({'model_resumed':sid}),flush=True);continue
    except(ValueError,KeyError,AssertionError):pass
   print(json.dumps({'model_start':sid}),flush=True)
-  decoded={};bounds={}
+  decoded={};bounds={};literal_layers=literal_reference_ids(m,ds) if capability else set()
+  def layer_id(target):
+   return target if target in literal_layers else original_spr.resolve(ds,target)[0]
   def layer_frame(layer,group,bit,frame,relation,attrs):
    name=f'Sprite/{layer}-{group}.sp2'
    if name not in decoded:
@@ -51,7 +67,7 @@ def build(a):
    return {**packets[name],**extent,'codec':'base508_sp2_v1','source_direction_bit':bit,'source_frame_index':frame,'layer_id':layer,'relation':relation,'source_attributes':attrs}
   def track(source_sid,code,action):
    body,_=original_spr.resolve(ds,source_sid);refs=original_spr.resolve_references(ds,source_sid)
-   shadows=[original_spr.resolve(ds,x)[0]for r in refs.get('shadow',[])for x in r['targets']];clothes=[original_spr.resolve(ds,x)[0]for r in refs.get('clothes',[])for x in r['targets']]
+   shadows=[layer_id(x)for r in refs.get('shadow',[])for x in r['targets']];clothes=[layer_id(x)for r in refs.get('clothes',[])for x in r['targets']]
    if capability:shadows=list(dict.fromkeys(shadows));clothes=list(dict.fromkeys(clothes))
    layers=shadows+[body]+clothes;attrs={i:[d['body']for decl in ds.get(i,[])for d in decl.directives if d['code']==104]for i in layers}
    if len(shadows)>1 or [e for e in action['errors']if not(capability and e=='no positive playback duration'and len(action['tokens'])==1)]:raise ValueError(('Source reference/action unresolved',code,action['errors']))
@@ -89,6 +105,7 @@ def build(a):
     except (ValueError,KeyError,IndexError)as e:errors['run']=str(e)
    model={'source_sprite_id':int(sid),'body_id':body,'tracks':tracks,'source_action_issues':errors,'source_run_sprite_id':run,'source_separated_walk_type':m.get('source_separated_walk_type')}
    if capability:model.update({'source_declared_action_ids':sorted(actions),'source_capability_contract':1,'source_available_roles':[role for role in ROLES.values()if role in tracks],'source_entry_role':'idle'if 'idle'in tracks else None,'source_sparse_attachment_policy':'explicit_no_substitution; native draw semantics unverified'})
+   if literal_layers:model['source_literal_layer_references']={'ids':sorted(literal_layers),'basis':'Exact SPR101/105 numeric target and original indexed SP2 members; no independent layer action declaration required','original_reference_issues':m.get('reference_issues',[])}
    rel=f'actors/{sid}.json';b=(json.dumps(model,ensure_ascii=False,separators=(',',':'))+'\n').encode();(out/rel).write_bytes(b);models[sid]={'tracks_ref':rel,'tracks_sha256':hashlib.sha256(b).hexdigest()}
   except (ValueError,KeyError,IndexError)as e:failures[sid]=str(e)
   except MemoryError:
@@ -109,15 +126,15 @@ def estimate_build_budget(a):
  catalog=json.load(gzip.open(a.catalog)); requests=json.load(gzip.open(a.requests))
  files={r['name']:r for r in requests['files']}
  wanted={int(v) for v in a.model_ids.split(',')} if a.model_ids else None
- selected=[]; members=set()
+ selected=[]; members=set();declarations=original_spr.read(a.spr_root.glob('*.spr'))
  for index,(sid,model) in enumerate(catalog['models'].items()):
   if wanted is not None and int(sid) not in wanted:continue
   if index % a.shards != a.shard:continue
-  if not model.get('original_members') or model.get('reference_issues'):continue
+  if not model.get('original_members') or (model.get('reference_issues') and not(a.source_capabilities and supported_reference_issues(model,declarations))):continue
   if model.get('missing_standard_roles') and not a.source_capabilities:continue
   if any(name not in files or 'available_library_package' not in files[name] or not (a.packages/files[name]['available_library_package']['file_name']).exists() for name in model['original_members']):continue
   selected.append(int(sid));members.update(model['original_members'])
- declarations=original_spr.read(a.spr_root.glob('*.spr')); layer_slots=0
+ layer_slots=0
  for sid in selected:
   _,actions=original_spr.resolve(declarations,sid)
   refs=original_spr.resolve_references(declarations,sid)

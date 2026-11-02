@@ -7,7 +7,7 @@ func run() -> void:
  var path: String=""
  for arg: String in OS.get_cmdline_user_args():
   if arg.begins_with("--lineagem-monster-pack="): path=arg.trim_prefix("--lineagem-monster-pack=")
- var allowed: Array[int]=[55,6563,14082,1828,2001,28623,18772,28759,26486,27536,1597,20330]
+ var allowed: Array[int]=[55,6563,14082,1828,2001,28623,18772,28759,26486,27536,1597,20330,28909]
  if path.is_empty() or not FileAccess.file_exists(path):
   print("BASE508_PRIVATE_PACK_TEST_SKIPPED: explicit private manifest required; no source load claim")
   quit(0);return
