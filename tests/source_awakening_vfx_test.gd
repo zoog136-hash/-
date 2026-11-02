@@ -45,7 +45,7 @@ func run() -> void:
 	var forged: Dictionary = card.duplicate(true)
 	forged.source_grade_id = 52
 	check(int(AURA.rule("성물", forged).get("sprite_id", 0)) == 24748, "canonical grade prevents forged binding")
-	for sid: int in [22149, 24747, 24713, 24748, 26711]:
+	for sid: int in [20542,20540,20459,24763,22147,22148,22149,25908,24747,24713,24748,26711]:
 		var probe := VIEW.new()
 		root.add_child(probe)
 		probe.playback_mode_override = "compatible"
@@ -53,9 +53,8 @@ func run() -> void:
 		for facing: int in range(8):
 			probe.advance_source(1.0 / 30.0, "idle", facing, 0, false)
 			check(probe.last_source_frame >= 0, "idle source frame %d/%d" % [sid, facing])
-			if sid != 22149:
-				probe.advance_source(1.0 / 30.0, "walk", facing, 0, false)
-				check(probe.source_role() == "walk" and probe.last_source_frame >= 0, "source walk loaded")
+			probe.advance_source(1.0 / 30.0, "walk", facing, 0, false)
+			check(probe.source_role() == "walk" and probe.last_source_frame >= 0, "source walk loaded")
 		check(float(probe._playback_tracks.idle.fps) == 24.0, "explicit source idle FPS")
 		probe.free()
 	var target := VIEW.new()
