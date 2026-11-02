@@ -1,11 +1,12 @@
 """Build source-ID model pack from verified original ZIP members; no artwork synthesis."""
-import argparse,collections,gzip,hashlib,json,zipfile,zlib,gc,resource
+import argparse,collections,gzip,hashlib,json,zipfile,zlib,gc,resource,math
 from pathlib import Path
 from base508_sp2_packet import normalize,geometry
 import original_spr
 from base508_actor_capabilities import profile,source_tables
+from base508_build_space import reserve_budget,BuildSpaceError
 ROLES={0:'walk',1:'attack',2:'hit',3:'idle',8:'death'}
-def main(a):
+def build(a):
  c=json.load(gzip.open(a.catalog)); req=json.load(gzip.open(a.requests)); files={r['name']:r for r in req['files']}; ds=original_spr.read(a.spr_root.glob('*.spr'))
  out=a.output;out.mkdir(parents=True,exist_ok=True);(out/'actors').mkdir(exist_ok=True);(out/'sp2').mkdir(exist_ok=True)
  zips={};indices={};packets={};models={};failures={}
@@ -102,6 +103,38 @@ def main(a):
    actor=json.loads((out/models[sid]['tracks_ref']).read_text());records[nid]['source_actor_profile']=profile(row,source_npcs[row['npc_id']],actor,source_attacks,source_actions)
  manifest={'schema':1,'kind':'base508_monster_pack','source_snapshot':'base508','records':records,'models':models,'source_files':packets,'counts':{'npc_records':len(records),'unique_sprite_models':len(models),'original_sp2_files_used':len(packets)},'model_failures':failures,'placement_contract':'Source catalog and exact spawn-view contexts; host map ports are explicit, native geographic placements zero.'}
  (out/('manifest.json'if a.shards==1 else f'manifest-{a.shard}.json')).write_text(json.dumps(manifest,ensure_ascii=False,separators=(',',':'))+'\n');print(json.dumps(manifest['counts']),flush=True)
+def estimate_build_budget(a):
+ # Conservative estimates, not a guarantee or a reason to delete existing output.
+ # Select only this requested shard; existing original packages are read in place.
+ catalog=json.load(gzip.open(a.catalog)); requests=json.load(gzip.open(a.requests))
+ files={r['name']:r for r in requests['files']}
+ wanted={int(v) for v in a.model_ids.split(',')} if a.model_ids else None
+ selected=[]; members=set()
+ for index,(sid,model) in enumerate(catalog['models'].items()):
+  if wanted is not None and int(sid) not in wanted:continue
+  if index % a.shards != a.shard:continue
+  if not model.get('original_members') or model.get('reference_issues'):continue
+  if model.get('missing_standard_roles') and not a.source_capabilities:continue
+  if any(name not in files or 'available_library_package' not in files[name] or not (a.packages/files[name]['available_library_package']['file_name']).exists() for name in model['original_members']):continue
+  selected.append(int(sid));members.update(model['original_members'])
+ declarations=original_spr.read(a.spr_root.glob('*.spr')); layer_slots=0
+ for sid in selected:
+  _,actions=original_spr.resolve(declarations,sid)
+  refs=original_spr.resolve_references(declarations,sid)
+  layers=1+sum(len(row['targets']) for rows in refs.values() for row in rows)
+  layer_slots+=sum(len(action['tokens']) for action in actions.values())*8*layers
+ original_bytes=sum(files[name]['size'] for name in members)
+ expected=math.ceil(original_bytes*a.space_packet_factor)+layer_slots*1024+len(selected)*65536
+ return expected,{'selected_models':len(selected),'unique_original_members':len(members),'original_member_bytes':original_bytes,'estimated_layer_slots':layer_slots,'packet_expansion_factor':a.space_packet_factor,'resume_output_is_preserved':True}
+
+def main(a):
+ if a.shards<1 or not 0<=a.shard<a.shards:raise ValueError('Invalid shard range')
+ if not math.isfinite(a.space_packet_factor) or a.space_packet_factor<1:raise ValueError('space-packet-factor must be finite and >=1')
+ expected,plan=estimate_build_budget(a)
+ with reserve_budget(a.output,expected,a.space_temporary_mib*1024**2,a.space_reserve_mib*1024**2) as lease:
+  print(json.dumps({**lease.as_dict(),'estimate_plan':plan}),flush=True)
+  build(a)
+
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__)
  for name in('catalog','requests','spr-root','packages','output'):p.add_argument('--'+name,type=Path,required=True)
@@ -111,6 +144,11 @@ if __name__=='__main__':
  p.add_argument('--resume',action='store_true',help='Reuse only complete emitted model metadata and hash-verified packets')
  p.add_argument('--model-ids',help='Optional exact source model IDs; avoids rebuilding previously verified models')
  p.add_argument('--memory-limit-mib',type=int,default=3072)
+ p.add_argument('--space-packet-factor',type=float,default=4.0,help='Conservative normalized-packet expansion estimate; actual output may differ')
+ p.add_argument('--space-temporary-mib',type=int,default=128)
+ p.add_argument('--space-reserve-mib',type=int,default=512)
  args=p.parse_args()
  if args.memory_limit_mib:resource.setrlimit(resource.RLIMIT_AS,(args.memory_limit_mib*1024**2,args.memory_limit_mib*1024**2))
- main(args)
+ try:main(args)
+ except BuildSpaceError as error:
+  print(json.dumps(error.details),flush=True);raise SystemExit(error.exit_code)
