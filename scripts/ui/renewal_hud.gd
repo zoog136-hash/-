@@ -1281,6 +1281,17 @@ func open_catalog(category: String) -> void:
 			add_child(catalog_card_chrome)
 			catalog_card_chrome.configure(self)
 		catalog_card_chrome.activate()
+	if not catalog_results.is_empty() and SourceCardPresentation.native(catalog_results[0]):
+		_restore_native_catalog_scroll(category, float(saved.get("scroll", 0)), catalog_icon_generation)
+
+func _restore_native_catalog_scroll(category: String, scroll: float, generation: int) -> void:
+	# Container reparenting and icon-size changes settle after the first frame.
+	# Restore the category view after that reflow, including zero for a new view.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if catalog_category != category or catalog_icon_generation != generation or not catalog_panel.is_visible_in_tree(): return
+	catalog_list.force_update_list_size()
+	catalog_list.get_v_scroll_bar().value = scroll
 
 func _build_catalog_panel() -> void:
 	super._build_catalog_panel()

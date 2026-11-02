@@ -53,6 +53,7 @@ static func apply(hud: Node) -> void:
 		if badge != null: badge.hide()
 		preview.self_modulate = Color.WHITE
 		return
+	preload("res://scripts/ui/source_card_metrics.gd").apply(hud)
 	if badge == null:
 		badge = Label.new()
 		badge.name = "OriginalCardAssetStatus"

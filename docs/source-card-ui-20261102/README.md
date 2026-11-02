@@ -87,3 +87,37 @@ support remains 909 definitions. Eligible/ineligible/missing context/missing
 source definition are distinct states. Native IsAwaken remains separate.
 Canonical core checks: 1574; World consumer/context checks: 22. Context fixtures
 exercise real source profile rows but are not the user's current game profile.
+
+Original CSB geometry now has a bounded reproducible adapter:
+`tools/build_base508_card_ui.py` consumes the three supplied inspection JSONs and
+retains 11 explicit card-related CSBs / 414 nodes, exact resource references,
+ancestor anchors/scales and source hashes in `data/ui/base508_card_layout.json`.
+No original raster pixels or binary CSBs are committed. Shared native list metrics
+read the declared 124×142 slot and 110×134 portrait directly, preserving portrait
+aspect ratio across all three categories and retaining scroll state on reflow.
+This is geometry integration, not a claim that original screen skins are complete.
+Original runtime toggles, animation/blend, scale-nine behavior and full screen
+placement still need their specific adapters and available texture dependencies.
+
+Bundles 001–005 are received and CRC/SHA checked locally. Bundle004 is a recovery
+card atlas, not the missing main card atlas. First card skin dependencies remain
+Atlas_Common (56 explicitly referenced frames), Atlas_Common2 (5), Atlas_Texture
+(3), Atlas_Icon (1), Atlas_Hud (1), Atlas_Shop (1), plus two optional FX atlas
+references. Bundle005 includes the original white border FX atlas; the common
+frame/background/tab atlases remain absent. Native source options also retain
+original PvP labels instead of inheriting the legacy PvE text conversion. Exact frame names are in the local handoff dependency JSON. No
+substitute frame is generated or presented as original.
+
+Commit `9d8a782` adds exact source server predicate evaluation with an explicitly
+provided base508 service region and WorldNo; it never invents a server context.
+Source-condition regression: 1574 checks passed; actual World consumer regression:
+22 checks passed. No live World server-context provider or native IsAwaken ledger
+has been found, so the default supported/blocked definition counts remain 909/827.
+
+Latest rendered UI regression: 50 checks passed, including original portrait
+metrics in each category, at 1280×720 and 854×480. A first-open scroll bug after
+switching from another category was reproduced visually and fixed by restoring
+the view's saved scroll (zero for a fresh view) after container reflow. The final
+doll screenshot shows the first owned row fully visible. Existing baseline exit
+warnings remain (2 CanvasItem RIDs / 1 resource); full Android / Godot4.7.2
+validation remains with the parent integration worker.

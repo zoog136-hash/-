@@ -392,6 +392,8 @@ func _fit_grid() -> void:
 	hud.catalog_list.add_theme_stylebox_override("selected",selected)
 	hud.catalog_list.add_theme_stylebox_override("selected_focus",selected)
 
+	preload("res://scripts/ui/source_card_metrics.gd").apply(hud)
+
 func refresh_state(force_cards: bool=false) -> void:
 	if not active:return
 	var owned: Dictionary=hud.card_collection_state.get("owned",{}).get("성물",{})

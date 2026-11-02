@@ -272,6 +272,8 @@ func fit_layout() -> void:
 		label.add_theme_font_size_override("font_size",12 if compact else 13)
 		if label.name.begins_with("CompanionOptionValue"):label.custom_minimum_size.x=54 if compact else 66
 
+	preload("res://scripts/ui/source_card_metrics.gd").apply(hud)
+
 func refresh() -> void:
 	if not active:return
 	var record: Dictionary=hud.selected_catalog_record
@@ -326,7 +328,9 @@ func fill_options(record: Dictionary) -> void:
 	grade_label.add_theme_color_override("font_color",UI.grade(grade))
 	var unsupported: bool=false
 	for raw: Variant in record.get("sourceOptions",[]):
-		var option: String=str(raw).replace("PVP","PVE").replace("PvP","PvE")
+		var option: String=str(raw)
+		if not preload("res://scripts/ui/source_card_presentation.gd").native(record):
+			option=option.replace("PVP","PVE").replace("PvP","PvE")
 		if option.contains("손상") or option.contains("저주"):continue
 		var result: RegExMatch=number_pattern.search(option)
 		var split: int=result.get_start() if result!=null else option.length()

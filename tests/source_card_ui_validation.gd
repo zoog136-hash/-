@@ -48,6 +48,10 @@ func run() -> void:
 		hud.open_catalog(category)
 		await capture(category+"-list")
 		check(hud.catalog_results.size()>2,"list populated "+category)
+		if ResourceLoader.exists("res://scripts/ui/source_card_metrics.gd"):
+			var metric: Dictionary = hud.catalog_list.get_meta("source_card_geometry", {})
+			check(metric.get("portrait", Vector2.ZERO)==Vector2(110,134), "original CSB portrait bounds "+category)
+			check(absf(float(hud.catalog_list.fixed_icon_size.x)/maxi(1,hud.catalog_list.fixed_icon_size.y)-110.0/134.0)<.02, "uniform original portrait ratio "+category)
 		check(hud.catalog_list.get_item_metadata(0)==world.card_draw_fusion.card_id(hud.catalog_results[0]),"stable source selection metadata "+category)
 		if ResourceLoader.exists("res://scripts/ui/source_card_presentation.gd"):
 			var listing: ItemList=hud.catalog_list
