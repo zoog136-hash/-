@@ -1,6 +1,7 @@
 extends RefCounted
 ## Whole-save transaction adapter for the offline game. Consumables and RNG
 ## become live only after World's existing atomic save writer returns OK.
+const UnlockItem=preload("res://scripts/cards/native_doll_unlock_item.gd")
 const Subslot=preload("res://scripts/cards/native_doll_subslot.gd")
 const Core = preload("res://scripts/cards/option_awakening_service.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
@@ -180,7 +181,7 @@ func _ensure_bonus_cache() -> void:
 		_totals.clear()
 		_bonus_signature = ""
 		return
-	var key: String = str(hash([progress.get(Subslot.FIELD,""),_world_property("level",0),Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}))]))+":"+str(progress.get("revision", 0))+":"+str(hash(core.source_server_context))+":"+str(hash(world.card_draw_fusion.owned))
+	var key: String = str(hash([progress.get(Subslot.FIELD,""),_world_property("level",0),Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress)]))+":"+str(progress.get("revision", 0))+":"+str(hash(core.source_server_context))+":"+str(hash(world.card_draw_fusion.owned))
 	for category: String in Core.CATEGORIES:
 		var record: Variant = world.equipped_catalog.get(category, {})
 		key += "|" + category + ":" + (Cards.card_id(record) if record is Dictionary else "")
@@ -255,7 +256,7 @@ func subslot_view() -> Dictionary:
 	var identity: String=str(progress.get(Subslot.FIELD,""))
 	var state: Dictionary=Subslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
 	var active: bool=not identity.is_empty() and bool(state.ok) and problem.is_empty()
-	return {"identity":identity,"active":active,"eligibility":state,"effects":Subslot.effects(self,identity) if active else {},"unlocked":Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}))}
+	return {"identity":identity,"active":active,"eligibility":state,"effects":Subslot.effects(self,identity) if active else {},"unlocked":Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress)}
 func select_subslot(identity: String) -> Dictionary:
 	_sync_native_context()
 	if _busy:return Core.fail("busy","이전 거래 처리 중")
@@ -271,3 +272,20 @@ func select_subslot(identity: String) -> Dictionary:
 	progress=next;_bonus_signature="";world.set("equipment_records_dirty",true)
 	_busy=false
 	return {"ok":true,"snapshot":subslot_view()}
+
+func use_native_unlock_item(item_name: String) -> Dictionary:
+	if item_name!=str(UnlockItem.record().name):return {"handled":false}
+	if _busy:return {"handled":true,"ok":false,"code":"busy","error":"이전 아이템 사용 처리 중"}
+	if save_blocked or not problem.is_empty() or not core.native_mode:return {"handled":true,"ok":false,"code":"save_blocked","error":"해금 저장 보호 중"}
+	_busy=true
+	var result: Dictionary=UnlockItem.prepare(export_state(),world.inventory,world.item_instances,int(_world_property("level",0)))
+	result.handled=true
+	if not result.ok:_busy=false;return result
+	var error: String=core.validate_state(result.state,{"owned":world.card_draw_fusion.owned})
+	if not error.is_empty():_busy=false;return {"handled":true,"ok":false,"code":"invalid_state","error":error}
+	var saved: Error=world._save_game(true,{SAVE_KEY:result.state,"inventory":result.inventory,"item_instances":result.item_instances})
+	if saved!=OK:_busy=false;return {"handled":true,"ok":false,"code":"save_failed","error":"저장 실패 · 해금 아이템·기존 해금 상태 보존"}
+	world.inventory=result.inventory;world.item_instances=result.item_instances;progress=result.state
+	_bonus_signature="";world.set("equipment_records_dirty",true);_busy=false
+	result.erase("state");result.erase("inventory");result.erase("item_instances")
+	return result
