@@ -8,13 +8,19 @@ func check(ok: bool,message: String) -> void:
 func _initialize() -> void:call_deferred("run")
 func run() -> void:
 	var manifest: String=""
+	var capture_dir: String=""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--effect-manifest="):manifest=arg.trim_prefix("--effect-manifest=")
+		if arg.begins_with("--capture-dir="):capture_dir=arg.trim_prefix("--capture-dir=")
 	if manifest.is_empty() or not ResourceLoader.exists("res://scripts/animation/original_source_preview.gd"):
 		push_error("Explicit original effect addon staging root and PR217 compositor required");quit(2);return
 	var index: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(manifest))
 	var host:=Node2D.new();root.add_child(host)
+	if not capture_dir.is_empty():
+		DirAccess.make_dir_recursive_absolute(capture_dir)
+		root.size=Vector2i(960,720);DisplayServer.window_set_size(root.size)
 	var original: Node2D=load("res://scripts/animation/original_source_preview.gd").new();host.add_child(original)
+	original.position=Vector2(float(root.size.x)*.5,float(root.size.y)*.8)
 	var partial: Node2D=preload("res://scripts/cards/skill_awakening_partial_effects.gd").new();host.add_child(partial)
 	var complete: int=0;var sparse: int=0;var layer_checks: int=0
 	for key: String in index.records:
@@ -39,6 +45,9 @@ func run() -> void:
 		for layer: Dictionary in frame.get("effect_layers",[]):
 			var expected: Image=Image.load_from_file(manifest.get_base_dir().path_join(str(layer.path)))
 			check(original._effect_nodes[int(layer.layer_id)].texture.get_image().get_data()==expected.get_data(),"exact original clothes texture "+key+":"+str(int(layer.layer_id)));layer_checks+=1
+		if not capture_dir.is_empty():
+			await process_frame;await RenderingServer.frame_post_draw
+			check(root.get_texture().get_image().save_png(capture_dir.path_join("source-"+str(sid)+".png"))==OK,"capture actual source compositor "+key)
 		original.clear();complete+=1
 	print("CARD_SKILL_EFFECT_PACK ",JSON.stringify({"checks":checks,"errors":errors,"full_direction_clips":complete,"sparse_direction_clips":sparse,"body_shadow_clothes_texture_checks":layer_checks,"not_claimed":"All original attachments, all direction semantics, FPS or M visual equivalence"}))
 	host.queue_free();await process_frame;quit(0 if errors.is_empty() else 1)

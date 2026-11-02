@@ -1,13 +1,60 @@
 #!/usr/bin/env python3
 """Private source-pixel addon; reuse PR217 SPR/SP2 readers, never guess directions."""
-import argparse, hashlib, importlib, json, pathlib, sys, zipfile, zlib
+import argparse, hashlib, importlib, json, pathlib, re, sys, tempfile, zipfile, zlib
+
+
+def read_declarations(spr, root, required):
+    """Recover only exact requested headers joined after a literal '?' delimiter.
+
+    The shared reader expects line starts. Slice original bytes without changing
+    them; retain original offsets, source hashes and line numbers for auditing.
+    """
+    paths = sorted(root.glob('*.spr'))
+    declarations = spr.read(paths)
+    recovered = {}
+    for sid in sorted(set(required) - declarations.keys()):
+        pattern = re.compile(rb'\?#' + str(sid).encode() + rb'\s+\d+(?:=\d+)?(?=[ \t\r\n])')
+        matches = []
+        for path in paths:
+            raw = path.read_bytes()
+            for match in pattern.finditer(raw):
+                start = match.start() + 1
+                following = re.search(rb'#\d+\s+\d+(?:=\d+)?(?=[ \t\r\n])', raw[start + 1:])
+                end = start + 1 + following.start() if following else len(raw)
+                matches.append((path, raw, start, end))
+        if len(matches) != 1:
+            continue
+        path, raw, start, end = matches[0]
+        payload = raw[start:end]
+        original_line = raw[:start].count(b'\n') + 1
+        with tempfile.TemporaryDirectory(prefix='twilight-spr-source-slice-') as folder:
+            sliced = pathlib.Path(folder) / path.name
+            sliced.write_bytes(payload)
+            parsed = spr.read([sliced])
+        if set(parsed) != {sid} or len(parsed[sid]) != 1:
+            raise ValueError('Ambiguous inline source declaration slice')
+        declaration = parsed[sid][0]
+        declaration.source_line += original_line - 1
+        for action in declaration.actions.values():
+            action['source_line'] += original_line - 1
+            if action.get('fps_provenance'):
+                action['fps_provenance']['source_line'] += original_line - 1
+        for directive in declaration.directives:
+            directive['line'] += original_line - 1
+        declarations[sid] = [declaration]
+        recovered[sid] = {'source_file': path.name, 'source_line': original_line,
+            'byte_start': start, 'byte_end': end,
+            'source_file_sha256': hashlib.sha256(raw).hexdigest(),
+            'exact_slice_sha256': hashlib.sha256(payload).hexdigest(),
+            'method': 'literal_requested_header_after_questionmark; original_bytes_unchanged'}
+    return declarations, recovered
 
 
 def build(args):
     sys.path.insert(0, str(args.source_tools))
     spr = importlib.import_module('original_spr')
     sp2 = importlib.import_module('original_sp2')
-    declarations = spr.read(args.spr_root.glob('*.spr'))
+    declarations, recovered = read_declarations(spr, args.spr_root, args.sprite_id)
     source = json.loads(args.catalog.read_text())
     files = {}
     for root in args.sp2_root:
@@ -137,6 +184,7 @@ def build(args):
             continue
         attributes = [r['body'] for d in declarations[owner] for r in d.directives if r['code'] == 104]
         record = {'source_sprite_id': sid, 'body_id': owner, 'source_attributes': attributes,
+                  'source_declaration_recovery': recovered.get(sid, {}),
                   'one_shot_overlay': True, 'card_skill_partial_overlay': bool(missing),
                   'source_available_directions': [i for i, d in enumerate(directions) if d],
                   'source_missing_directions': missing, 'source_missing_attachments': missing_layers,
