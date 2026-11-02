@@ -53,15 +53,16 @@ func run() -> void:
 	check(not options.core.definitions["변신"].has("source:85"),"legacy numeric identity not treated as native")
 	host.card_draw_fusion.owned["변신"][hero]=true;host.card_draw_fusion.owned["변신"][material]=true
 	var required: int=int(options.core.policy.experience_required)
-	var per: int=int(options.core.policy.grades["영웅"].material_experience["희귀"])
-	var amount: int=ceili(float(required)/per);host.card_draw_fusion.spare["변신"][material]=amount+3
+	var source_view: Dictionary=options.view("변신",hero)
+	var per: int=int(source_view.material_experience["희귀"])
+	var amount: int=ceili(float(source_view.required_experience)/per);host.card_draw_fusion.spare["변신"][material]=amount+3
 	var before: int=hash([host.card_draw_fusion.export_state(),host.gold,options.export_state()]);var rng_before: String=str(options.rng.state)
 	host.save_error=ERR_FILE_CANT_WRITE
 	var result: Dictionary=options.feed("변신",hero,{material:amount})
 	check(not result.ok and result.code=="save_failed","native feed uses existing atomic failure path")
 	check(hash([host.card_draw_fusion.export_state(),host.gold,options.export_state()])==before and str(options.rng.state)==rng_before,"failed native persistence changes no material/gold/progress/RNG")
 	host.save_error=OK;result=options.feed("변신",hero,{material:amount})
-	check(result.ok and int(options.progress.cards["변신"][hero].experience)==required,"native ID feed reaches unchanged policy requirement")
+	check(result.ok and int(options.progress.cards["변신"][hero].experience)==required,"native source pool fills while compatible save percent remains100")
 	check(host.card_draw_fusion.owned["변신"][hero] and host.card_draw_fusion.spare["변신"][material]==3,"only exact native duplicates consumed")
 	var probe:=RandomNumberGenerator.new()
 	for seed_value: int in range(1,10000):

@@ -2,6 +2,7 @@ extends RefCounted
 ## Pure option-awakening rules. Preparation never changes the caller's cards,
 ## money, progression or RNG. The runtime commits one complete game save first.
 const Cards = preload("res://scripts/card_draw_fusion.gd")
+const NativeEconomy=preload("res://scripts/cards/native_option_economy.gd")
 const CATEGORIES: Array[String] = ["변신", "마법인형", "성물"]
 const GRADES: Array[String] = ["영웅", "전설", "신화", "유일"]
 const MAX_COUNT: int = 1000000
@@ -176,6 +177,10 @@ func validate_state(value: Variant, card_state: Variant = null) -> String:
 				if not integer(entry.get(field)) or int(entry[field]) < 0 or int(entry[field]) > MAX_COUNT: return "각성 진행 수치 오류"
 			if int(entry.experience) > int(policy.experience_required) or int(entry.failures) > int(entry.attempts): return "각성 경험치·시도 횟수 범위 오류"
 			if bool(entry.awakened) and int(entry.experience) != 0: return "완료된 각성 카드의 경험치 저장 오류"
+			var source_row: Dictionary=definitions.get(category,{}).get(identity,{})
+			if source_row.has("native_source"):
+				var source_error: String=NativeEconomy.validate(entry,source_row)
+				if not source_error.is_empty():return source_error
 			# Unknown IDs/fields survive same-version round trips but never confer a
 			# bonus. Known progress must remain attached to a permanent base unlock.
 			if card_state != null and definitions.get(category, {}).has(identity):
@@ -193,12 +198,14 @@ func normalized_state(value: Dictionary) -> Dictionary:
 		for identity: String in out.cards[category]:
 			for field: String in ["experience", "attempts", "failures"]:
 				out.cards[category][identity][field] = int(out.cards[category][identity][field])
+			if definitions.get(category,{}).get(identity,{}).has("native_source") and out.cards[category][identity].has(NativeEconomy.FIELD):out.cards[category][identity][NativeEconomy.FIELD]=int(out.cards[category][identity][NativeEconomy.FIELD])
 	return out
 
 func view(state: Dictionary, card_state: Dictionary, gold: int, category: String, identity: String) -> Dictionary:
 	if not problem.is_empty(): return fail("configuration", problem)
 	var row: Dictionary = definition(category, identity)
 	if row.is_empty(): return fail("unavailable", "이 카드는 현재 옵션 각성을 지원하지 않습니다")
+	if row.has("native_source"):return NativeEconomy.view(self,state,card_state,gold,category,identity)
 	var entry: Dictionary = card_progress(state, category, identity)
 	var availability: Dictionary=native_eligibility(category,identity)
 	var rule: Dictionary = policy.grades[row.grade]
@@ -243,6 +250,7 @@ func _can_prepare(state: Dictionary, card_state: Dictionary, gold: int, category
 func prepare_feed(state: Dictionary, card_state: Dictionary, gold: int, category: String, identity: String, materials: Dictionary) -> Dictionary:
 	var guard: Dictionary = _can_prepare(state, card_state, gold, category, identity)
 	if not bool(guard.ok): return guard
+	if definition(category,identity).has("native_source"):return NativeEconomy.feed(self,state,card_state,gold,category,identity,materials)
 	var entry: Dictionary = card_progress(state, category, identity)
 	var required: int = int(policy.experience_required)
 	if int(entry.experience) >= required: return fail("full", "각성 경험치가 이미 가득 찼습니다")
@@ -280,6 +288,7 @@ func prepare_feed(state: Dictionary, card_state: Dictionary, gold: int, category
 func prepare_awaken(state: Dictionary, card_state: Dictionary, gold: int, category: String, identity: String, roll: int) -> Dictionary:
 	var guard: Dictionary = _can_prepare(state, card_state, gold, category, identity)
 	if not bool(guard.ok): return guard
+	if definition(category,identity).has("native_source"):return NativeEconomy.awaken(self,state,card_state,gold,category,identity,roll)
 	var entry: Dictionary = card_progress(state, category, identity)
 	if int(entry.experience) != int(policy.experience_required): return fail("experience_needed", "경험치 100%를 채운 뒤 각성할 수 있습니다")
 	var row: Dictionary = definitions[category][identity]

@@ -6203,6 +6203,9 @@ func _on_option_awakening_feed_requested(category: String, target_id: String, ma
 		return
 	_update_hud()
 	var message: String = "옵션 각성 경험치 %d / %d · 중복 카드 재료 적용 완료" % [int(snapshot.get("experience", 0)), int(snapshot.get("required_experience", 100))]
+	if int(snapshot.get("source_exp_scale",1))==100:
+		var formatter: Script=preload("res://scripts/cards/native_option_economy.gd")
+		message="옵션 각성 경험치 %s / %s · 소모 %d 아데나" % [formatter.format_units(int(snapshot.experience)),formatter.format_units(int(snapshot.required_experience)),int(result.get("consumed_gold",0))]
 	hud.show_message(message)
 	hud.append_log(message)
 
@@ -6223,7 +6226,8 @@ func _on_option_awakening_attempt_requested(category: String, target_id: String)
 	var success: bool = bool(result.get("success", false))
 	var message: String = "%s 옵션 각성 %s" % [str(card.get("name", "")), "성공" if success else "실패"]
 	if not success:
-		message += " · 경험치 %d 환급" % int(result.get("refunded_experience", 0))
+		if int(result.get("source_exp_scale",1))==100:message+=" · 원본 경험치 "+preload("res://scripts/cards/native_option_economy.gd").format_units(int(result.source_refunded_experience))+" 유지"
+		else:message += " · 경험치 %d 환급" % int(result.get("refunded_experience", 0))
 	hud.append_log(message)
 	var presentation: Dictionary = result.duplicate(true)
 	presentation["category"] = category
