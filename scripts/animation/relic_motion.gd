@@ -118,3 +118,9 @@ func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
 	sprite.modulate.a = opacity
 	if material != null: material.set_shader_parameter("strength", 0.18 + sin(clock * 2.1) * 0.035 + reaction)
 	state = "despawn" if not enabled else ("summon" if opacity < 1.0 else ("combat_reaction" if reaction > 0.0 else "float"))
+
+func _notification(what: int) -> void:
+	# Source views are constructed before equipment selection. If never attached,
+	# the motion owner must release them; attached nodes belong to the scene tree.
+	if what == NOTIFICATION_PREDELETE and is_instance_valid(native_actor) and native_actor.get_parent() == null:
+		native_actor.free()

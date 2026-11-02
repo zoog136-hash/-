@@ -111,3 +111,9 @@ func update(delta: float, anchor: Node2D, sprite: AnimatedSprite2D, player: Twil
 	elif combat_reaction > 0.0: state = "combat_reaction"
 	elif actual_velocity.length() > 1.0: state = "follow"
 	else: state = "idle"
+
+func _notification(what: int) -> void:
+	# Source views are constructed before equipment selection. If never attached,
+	# the motion owner must release them; attached nodes belong to the scene tree.
+	if what == NOTIFICATION_PREDELETE and is_instance_valid(native_actor) and native_actor.get_parent() == null:
+		native_actor.free()

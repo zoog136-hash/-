@@ -31,6 +31,7 @@ var pending_map_save_record: Dictionary={}
 var map_bootstrap_blocked: bool=false
 var loading_source_door_state: bool=false
 var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
+const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
 # Do not preload this heavy optional renderer while parsing the main game class.
@@ -382,6 +383,13 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	if BASE508_TEST.enabled():
+		var test_map:String=BASE508_TEST.register_test_map(maps,maps_by_id)
+		if test_map.is_empty():
+			push_error("base508 test pack rejected: "+BASE508_TEST.problem)
+			process_mode=Node.PROCESS_MODE_DISABLED
+			return
+		active_map_id=test_map
 	card_draw_fusion.configure(catalog_db)
 	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
@@ -1337,8 +1345,8 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if SOURCE_MAP84.supports(map_id):_reject_map_pack("원본 지도 팩 누락: 현재 지역과 저장을 보존합니다")
 		return
 	if field_map!=null and not loading_source_door_state:SOURCE_MAP84.saved_doors(field_map)
-	var requested_native: PlayableField = null
-	if NATIVE_PNG.supports(map_id) and not SOURCE_MAP84.supports(map_id):
+	var requested_native: PlayableField = BASE508_TEST.field_for(map_id)
+	if requested_native == null and NATIVE_PNG.supports(map_id) and not SOURCE_MAP84.supports(map_id):
 		requested_native = NATIVE_PNG.load_field(map_id)
 		if requested_native == null:
 			_reject_map_pack("PNG 원본 팩 누락·손상: 현재 지역과 저장을 보존합니다")
@@ -1467,7 +1475,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		if field_map is NativePngField:
+		if bool(field_map.get_meta("base508_source_test",false)):
+			field_renderer=load(BASE508_TEST.RENDERER_PATH).new() as FieldRenderer
+		elif field_map is NativePngField:
 			# Instantiate only when an actual native-PNG field is active.
 			var native_renderer_script: Variant = load(NATIVE_PNG_RENDERER_PATH)
 			if native_renderer_script == null:
@@ -4247,6 +4257,7 @@ func _full_cards_playtest_active() -> bool:
 	return OS.get_name() == "Android" or "--playtest-full-cards" in OS.get_cmdline_user_args()
 
 func base_save_path() -> String:
+	if BASE508_TEST.enabled():return "user://base508_source_test_never_written.json"
 	if growth.development: return "user://twilight_growth_lab_v1.json"
 	# Do not carry test grants or awakening/fusion consumption into normal saves.
 	if _full_cards_playtest_active():
@@ -4292,6 +4303,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
 		return ERR_FILE_CORRUPT
@@ -4406,6 +4418,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	return OK
 
 func _load_game(quiet: bool) -> void:
+	if BASE508_TEST.enabled():return
 	if not migration_pointer_error.is_empty():migration_path_checked=false
 	save_path()
 	if not migration_pointer_error.is_empty():
