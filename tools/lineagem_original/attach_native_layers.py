@@ -44,9 +44,9 @@ def build(inputs,pack,only=None):
        if key not in images:
         image,offset=original_sp2.render(pal,fs,blocks,source_frame);rel=f'pixels/{layer}-{chunk}-{bit}-{source_frame}.png';dest=pack/rel
         if not dest.exists():image.save(dest)
-        images[key]={'path':rel,'offset':list(offset),'layer_id':source_layer,'physical_layer_id':layer,'source_attributes':effect['source_attributes'],'blend_status':'unverified','render_enabled':False,'pixel_size':list(image.size),'source_bounds':list(fs[source_frame][0]),'source_pixel_state':'present_pixels' if fs[source_frame][1] else 'explicit_empty'}
+        images[key]={'path':rel,'offset':list(offset),'layer_id':source_layer,'physical_layer_id':layer,'source_attributes':effect['source_attributes'],'blend_status':'unverified','render_enabled':False,'pixel_size':list(image.size),'source_bounds':list(fs[source_frame][0]),'source_pixel_state':'present_pixels' if image.getbbox() is not None else 'explicit_empty'}
        frame['effect_layers'].append(images[key]);counts['attached_frame_samples']+=1
-       counts['present_pixel_frame_samples' if fs[source_frame][1] else 'explicit_empty_frame_samples']+=1
+       counts['present_pixel_frame_samples' if images[key]['source_pixel_state']=='present_pixels' else 'explicit_empty_frame_samples']+=1
       except Exception as e:issues.append({'actor':actor['source_sprite_id'],'layer':layer,'file':name,'reason':str(e)})
   actor_file.write_text(json.dumps(actor,ensure_ascii=False,separators=(',',':'))+'\n');counts['actor_records']+=1
   if counts['actor_records']%50==0:print(json.dumps(dict(counts),ensure_ascii=False),flush=True)
