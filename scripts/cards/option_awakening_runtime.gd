@@ -7,6 +7,7 @@ const DATA_PATH: String = "res://data/cards/option_awakening_cards.json"
 const POLICY_PATH: String = "res://data/cards/option_awakening_policy.json"
 const SAVE_KEY: String = "card_option_awakening"
 var world
+var combat=preload("res://scripts/cards/native_option_combat.gd").new()
 var core = Core.new()
 var progress: Dictionary = Core.fresh_state()
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
@@ -25,6 +26,7 @@ func _init() -> void:
 
 func configure(host: Node) -> bool:
 	world = host
+	combat.configure(self)
 	var data: Dictionary = preload("res://scripts/cards/native_option_awakening.gd").adapt(_json(DATA_PATH),world.catalog_db)
 	var settings: Dictionary = _json(POLICY_PATH)
 	if data.is_empty() or settings.is_empty() or not core.configure(data, settings, world.catalog_db):
@@ -172,7 +174,7 @@ func collections_view() -> Array:
 
 func _ensure_bonus_cache() -> void:
 	_sync_native_context()
-	if world == null or not problem.is_empty():
+	if world == null or save_blocked or not problem.is_empty():
 		_bonus_records.clear()
 		_totals.clear()
 		_bonus_signature = ""

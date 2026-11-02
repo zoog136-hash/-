@@ -9,6 +9,12 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 	for original: Dictionary in DATA.data.definitions:
 		var row: Dictionary=original.duplicate(true)
 		for effect: Dictionary in row.native_source.effects:
+			if effect.type.Name=="InvokeOption" and int(effect.bonus.BonusApplicationTargetID) in [14463,17601,20344,20354]:
+				effect.runtime_supported=true
+				effect.runtime_consumer="native_option_combat_contextual_invoke"
+				var probability: String="발동: "+str(float(effect.bonus.Value)/10000.0).trim_suffix(".0")+"%"
+				row.pending_options.erase(probability)
+				row.applied_options.append(probability+" · 조건부 발동 연결")
 			if effect.type.Name!="ArmorClassBonus" or int(effect.link.Level)!=1 or int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0 or effect.unit.Name!="Value":continue
 			var value: int=int(effect.bonus.Value)
 			row.stats["def"]=int(row.stats.get("def",0))+value

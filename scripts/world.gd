@@ -471,6 +471,7 @@ func _process(delta: float) -> void:
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
 	if original_skills != null: original_skills.tick(delta)
+	option_awakening.combat.tick(delta)
 	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
 	ain_refresh_clock -= delta
@@ -2871,7 +2872,10 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			player.show_miss()
 			_refresh_combat_hud()
 			return
+	var option_result: Dictionary=option_awakening.combat.incoming(attacker,normalized_type,reduced)
+	reduced=int(option_result.damage)
 	hp = maxi(0, hp - reduced)
+	if hp>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal))
 	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
@@ -5534,6 +5538,7 @@ func _break_invisibility() -> void:
 	hud.append_log("공격으로 은신 해제")
 
 func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> void:
+	if trigger_name=="on_hit" and hp>0:option_awakening.combat.on_hit(target)
 	if original_skills != null: original_skills.trigger(trigger_name, target)
 	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
