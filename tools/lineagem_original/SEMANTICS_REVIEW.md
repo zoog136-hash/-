@@ -70,6 +70,31 @@ ADD/MIX(alpha0.5) candidate for repeatable comparison.
 
 Parent research reports five pose-matched M GIF samples at0/240/480/710/920ms:
 screen/multiply body-interior MAE8=16.9–18.1 versus30.2–43.1 for ADD/MIX0.5.
-This is observational support for these two sprites only. The evidence ZIP is
-not yet received in this execution environment, so independent reference-image
-comparison remains pending; no exact M compositor or global equivalence claimed.
+This is observational support for these two sprites only. Evidence ZIP
+`libfile_c503d611641081918a0288ed03899163` v0 was materialized and its SHA256
+`f799c17847fc35a3e790ee8b1040e94d354de0830c837f6281d1b7c6d11f2ce4` and
+ZIP CRC verified. Its analysis script was read; no unknown executable ran.
+
+Actual Godot4.7.2 Compatibility OpenGL/llvmpipe captures used source direction4,
+the same source poses1/2/4/5/6, native scale1, unchanged source timing and pixels.
+For comparison only, body crops were resized1.7x to the evidence registration;
+this is not runtime motion scaling or an inferred tick rate. Against original
+M GIF samples0/240/480/710/920ms, eroded opaque-body RGB MAE8 changed:
+
+| GIF time(ms) | Source pose | Previous ADD/MIX0.5 | Scoped multiply/screen |
+| --- | --- | --- | --- |
+|0|1|79.27|15.98|
+|240|2|68.79|15.52|
+|480|4|49.50|14.99|
+|710|5|49.16|14.39|
+|920|6|43.20|15.14|
+
+All five improve; prior body overexposure is visibly reduced. Remaining
+uncertainty includes source/display resampling, the M white target outline,
+background compositing, other source poses/directions and Android performance.
+This is the real common actor renderer in an isolated capture fixture, not
+an Android execution or a complete Main-scene validation. No exact M compositor
+or global equivalence claimed. Minimal mode checks passed: the pair/order is
+active only in compatible mode; strict keeps attachments disabled; Halphas
+still uses the old policy; clear/reconfigure releases both backbuffer nodes.
+
