@@ -19,6 +19,19 @@ def build(universe, tables, inventory):
         location = locations.get(int(bonus['Value']))
         if location:
             entries.setdefault(int(location['LandID']), []).append(dict(kind='TELEPORT_TO_LOCATION', id=int(bonus['ID']), location_id=int(location['ID']), x=int(location['X']), y=int(location['Y'])))
+    territories = {int(r['ID']): r for r in read(tables / 'Territories.json')['rows']}
+    teleports = {int(r['ID']): r for r in read(tables / 'LandTeleport.json')['rows']}
+    requirements = {}
+    for r in read(tables / 'LandTeleportPrerequisite.json')['rows']:
+        requirements.setdefault(int(r['LandTeleportID']), []).append(r)
+    for relation in read(tables / 'LandTeleportTerritories.json')['rows']:
+        target = territories.get(int(relation['TerritoryID']))
+        teleport = teleports.get(int(relation['LandTeleportID']))
+        if not target or not teleport or target['StartX'] != target['EndX'] or target['StartY'] != target['EndY']:
+            continue
+        entries.setdefault(int(target['LandID']), []).append(dict(kind='LAND_TELEPORT_POINT_TARGET', id=int(relation['ID']),
+            territory_id=int(target['ID']), land_teleport=teleport, prerequisites=requirements.get(int(teleport['ID']), []),
+            activation_status='NOT_EVALUATED_NOT_CONSUMED', x=int(target['StartX']), y=int(target['StartY'])))
     seen = set()
     for file in sorted(universe.glob('base508_asset_*/portals.json')):
         context_file = file.parent / 'land_contexts.json'

@@ -242,3 +242,14 @@ predicate. The result explicitly marks these missing native rules and automatic
 activation unsupported; it is a coordinate handshake for Main integration,
 not an automatic map travel implementation. Original height and foreground
 ordering are not encoded by this service.
+
+LandTeleport entry evidence now joins original LandTeleportTerritories to
+Territories by explicit table IDs,then preserves the LandTeleport cost,currency,
+allow flags and LandTeleportPrerequisite rows. Point destinations alone may be
+review entries; region centers are not invented. The normal1055-context catalog
+contains12 such point relations,with one in the reviewed attribute profile
+(Giran1,relation3484,LandTeleport12484). Its AllowMapTeleport=false and
+AllowInterTeleport=false remain intact. Selecting this point in isolated review
+mode does not authorize map teleport,spend currency/tickets or satisfy missing
+server prerequisites. This addition does not expand the34 ready-map count.
+The CN +32 offset observation is not used as a field-layout or activation rule.

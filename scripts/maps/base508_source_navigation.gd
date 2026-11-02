@@ -40,7 +40,7 @@ func configure(value:RefCounted,tables:String,review_entry:Dictionary={})->bool:
   if int(review_entry.get('land',-1))!=land or str(review_entry.get('asset',''))+'/'!=str(pack.manifest.land.AssetPath):error='Entry identity mismatch';return false
   if str(review_entry.get('map_sha256',''))!=FileAccess.get_sha256(pack.root+'/map.json'):error='Entry pack hash mismatch';return false
   var selected:Dictionary=review_entry.get('selected',{})
-  if selected.get('kind','') not in ['PORTAL_POINT_TARGET','TELEPORT_TO_LOCATION']:error='Unreviewed entry kind';return false
+  if selected.get('kind','') not in ['PORTAL_POINT_TARGET','TELEPORT_TO_LOCATION','LAND_TELEPORT_POINT_TARGET']:error='Unreviewed entry kind';return false
   arrival_record={'X':selected.x,'Y':selected.y,'entry_kind':selected.kind,'evidence':selected}
  elif not entry_file.is_empty() and entry_id>=0:
   var portals:Variant=JSON.parse_string(FileAccess.get_file_as_string(entry_file))
