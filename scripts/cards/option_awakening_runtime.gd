@@ -299,3 +299,13 @@ func active_source_status_references() -> Dictionary:
 		var reference: Dictionary=preload("res://scripts/cards/native_awakening_status.gd").binding(row)
 		if reference.ok:result[identity]=reference
 	return result
+
+func source_visual_awakened(category: String,record: Dictionary) -> bool:
+	# Preserve PR217's native aura API using this source-aware accepted ledger.
+	# The canonical core guards source identity, ownership and server conditions.
+	if world==null or record.get("source","")!="lineagem_base508":return false
+	var identity: String=Cards.card_id(record)
+	var canonical: Dictionary=core.catalog.get(category,{}).get(identity,{})
+	if canonical.is_empty() or canonical.get("sourceId","")!=record.get("sourceId",""):return false
+	if not preload("res://scripts/cards/native_awakening_status.gd").binding(core.definition(category,identity)).ok:return false
+	return is_awakened(category,identity)
