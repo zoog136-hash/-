@@ -1,13 +1,9 @@
 name: Godot Validate
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+# Historical/source-specific audits remain available after integration.
+'on':
   workflow_dispatch:
 
-# Manual audits stay independent; newer automatic revisions release old runners.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
   cancel-in-progress: true
@@ -19,6 +15,14 @@ jobs:
     # cancelled on main too, so main never saved the import cache for PRs.
     timeout-minutes: 240
     steps:
+      - name: Free runner disk space
+        # Godot import caches plus the checkout can exceed smaller runner disks.
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL \
+            /usr/local/share/boost /usr/lib/jvm /usr/share/swift /usr/local/share/powershell /opt/microsoft /opt/google \
+            /usr/local/julia* /usr/share/miniconda /opt/az /usr/local/share/chromium || true
+          echo "::notice title=Disk after cleanup::$(df -h / | tail -n 1 | tr -s ' ')"
       - name: Checkout
         uses: actions/checkout@v4
         with:

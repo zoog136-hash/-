@@ -104,9 +104,8 @@ func inspect_poses() -> void:
 				sprite.animation = track
 				sprite.frame = index
 				var texture: Texture2D = frames.get_frame_texture(track, index)
-				sprite.scale = base_scale * Vector2(256, 256) / texture.get_size()
+				inspect_source_pose_geometry(sprite,frames,track,index,base_scale)
 				check(upright(sprite), "sample stays upright " + track)
-				check((texture.get_size() * sprite.scale / base_scale).is_equal_approx(Vector2(256, 256)), "constant displayed pose canvas " + track)
 				report.pose_samples.append({"track":track, "frame":index})
 				if OS.get_environment("TWILIGHT_ORIGINAL_POSE_CAPTURE") != "0":
 					await capture("authored-%s-%s-%d" % [COMPASS[direction], role, index])
@@ -115,6 +114,7 @@ func inspect_poses() -> void:
 	world.player.set_physics_process(true)
 
 func incoming_and_death() -> void:
+	ensure_normal()
 	report.incoming = []
 	for direction: int in range(8):
 		world.player.position = center
@@ -150,7 +150,7 @@ func incoming_and_death() -> void:
 			if str(entry.kind) == "death": death = entry
 		check(not death.is_empty(), "production lethal poison emits corpse " + COMPASS[direction])
 		if death.is_empty(): continue
-		check(str(death.animation) == "death_" + str(direction), "corpse retains exact facing " + COMPASS[direction])
+		check(str(death.get("animation", "")) == death_track(frames, direction), "corpse retains exact facing " + COMPASS[direction])
 		check((death.point as Vector2).is_equal_approx(old_position), "corpse stays at actual death position")
 		check(world.hp == world._effective_max_hp() and world.player.transform_active, "production respawn restores HP and retains transform")
 		# Keep the death location in the real viewport while the live player is
@@ -158,6 +158,7 @@ func incoming_and_death() -> void:
 		world.player.camera.position = center - world.player.position + Vector2(0, -32)
 		world.player.camera.reset_smoothing()
 		world.player.camera.force_update_scroll()
+		var expected_death_frames: Array = range(frames.get_frame_count(str(death.animation)))
 		var death_frames: Array[int] = []
 		var death_captures: Array[Dictionary] = []
 		var death_samples: Array[Dictionary] = []
@@ -172,8 +173,19 @@ func incoming_and_death() -> void:
 			var frame_index: int = world.combat_vfx._death_frame_at_age(death)
 			var texture: Texture2D = frames.get_frame_texture(str(death.animation), frame_index)
 			var draw_scale: Vector2 = world.combat_vfx._death_draw_scale(death, texture)
-			check((texture.get_size() * draw_scale).is_equal_approx(displayed_canvas), "corpse preserves live displayed size")
-			check(((death.offset as Vector2) + Vector2(0, texture.get_height() / 8.) * draw_scale).length() < .01, "corpse preserves foot anchor")
+			var registered: Dictionary = frames.get_meta("twilight_reviewed_frame_registration", {})
+			if registered.has(str(death.animation)):
+				# Independently inspect the frozen source registration, not a
+				# fixed square or the geometry implementation under test.
+				var raw: Dictionary = registered[str(death.animation)].frames[frame_index]
+				var base: Vector2 = death.registration_base_scale
+				var geometry: Dictionary = world.combat_vfx._death_draw_geometry(death, texture)
+				check(draw_scale.is_equal_approx(base * (raw.scale as Vector2)), "corpse retains declared source frame scale")
+				var foot: Vector2 = geometry.offset + (geometry.texture_offset - texture.get_size() * 0.5 + (raw.anchor as Vector2)) * draw_scale
+				check(foot.is_equal_approx(base * (raw.get("target", Vector2.ZERO) as Vector2)), "corpse retains declared source anchor")
+			else:
+				check((texture.get_size() * draw_scale).is_equal_approx(displayed_canvas), "corpse preserves live displayed size")
+				check(((death.offset as Vector2) + Vector2(0, texture.get_height() / 8.) * draw_scale).length() < .01, "corpse preserves foot anchor")
 			if frame_index not in death_frames:
 				death_frames.append(frame_index)
 				death_samples.append({"frame":frame_index, "age":float(death.age), "duration":float(death.duration), "pose_duration":float(death.pose_duration)})
@@ -183,7 +195,7 @@ func incoming_and_death() -> void:
 					# write it only after the unchanged production clock completes.
 					death_captures.append({"name":"death-%s-%d" % [COMPASS[direction], frame_index],
 						"image":root.get_texture().get_image()})
-		check(death_frames == [0, 1, 2], "real VFX clock displays all death frames " + COMPASS[direction] + " observed=" + str(death_frames))
+		check(death_frames == expected_death_frames, "real VFX clock displays all death frames " + COMPASS[direction] + " observed=" + str(death_frames))
 		check(death.is_empty(), "corpse lifetime ends and returns pool record")
 		for sample: Dictionary in death_captures:
 			check((sample.image as Image).save_png(captures.path_join(str(sample.name) + ".png")) == OK, "actual Main screenshot " + str(sample.name))
