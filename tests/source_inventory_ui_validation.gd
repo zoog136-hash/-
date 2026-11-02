@@ -38,6 +38,13 @@ func run() -> void:
 		root.size=extent; DisplayServer.window_set_size(extent)
 		hud._close_workspace(); hud.toggle_inventory(); await settle()
 		check(not bag.slot_buttons.is_empty(),"actual starting inventory")
+		var sort_button: Button=bag.find_child("InventorySort",true,false)
+		check(sort_button.size.y>=44,"inventory sort touch target at least44 pixels")
+		var at: Vector2=sort_button.get_global_transform_with_canvas()*(sort_button.size*.5)
+		for pressed: bool in [true,false]:
+			var tap:=InputEventScreenTouch.new();tap.index=880;tap.position=at;tap.pressed=pressed;root.push_input(tap,true)
+		await settle()
+		check(bag.sorted_references.size()==bag._inventory_entries().size(),"actual sort touch preserves all physical references")
 		await capture("inventory-%dx%d" % [extent.x,extent.y])
 		if bag.slot_buttons.is_empty(): continue
 		var reference: String=bag.slot_buttons.keys()[0]
@@ -48,6 +55,7 @@ func run() -> void:
 		check(slot.get_meta("tooltip_reference","")==reference and not slot.tooltip_text.is_empty(),"tooltip physical reference")
 		bag._select_item(reference); bag.open_detail(); await settle()
 		check(bag.selected_item==reference and bag.detail_active,"detail exact selection")
+		check((bag.find_child("InventoryDetailClose",true,false) as Button).size.y>=44 and bag.lock_button.size.y>=44,"detail close and lock touch targets at least44 pixels")
 		await capture("inventory-detail-%dx%d" % [extent.x,extent.y])
 		var rebuilds: int=bag.inventory_list_rebuilds
 		world._update_hud(); await settle()

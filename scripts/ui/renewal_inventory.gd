@@ -112,14 +112,14 @@ func _ready() -> void:
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	close_row.add_child(spacer)
-	var detail_close: Button = UI.button("닫기",func() -> void: detail_active=false; _reflow(),Vector2(52,30))
+	var detail_close: Button = UI.button("닫기",func() -> void: detail_active=false; _reflow(),Vector2(52,44))
 	detail_close.set_script(NATIVE_BUTTON)
 	detail_close.name = "InventoryDetailClose"
 	close_row.add_child(detail_close)
 	detail_stack.add_child(close_row)
 	detail_stack.move_child(close_row,0)
 	UI.primary_button(detail_action)
-	lock_button = UI.button("잠금",_toggle_lock,Vector2(0,32))
+	lock_button = UI.button("잠금",_toggle_lock,Vector2(0,44))
 	lock_button.name = "InventoryLock"
 	detail_stack.add_child(lock_button)
 	weight_readout = UI.label("",11,UI.MUTED)
@@ -132,22 +132,22 @@ func _ready() -> void:
 	layout.add_child(weight_gauge)
 	var actions := HBoxContainer.new()
 	layout.add_child(actions)
-	actions.add_child(UI.button("검색",func() -> void: search_row.visible=not search_row.visible,Vector2(64,34)))
+	actions.add_child(UI.button("검색",func() -> void: search_row.visible=not search_row.visible,Vector2(64,44)))
 	# The bag stacks items in acquisition order and never re-sorts on its own.
 	# This button sorts once (grade, then name) and keeps that as the new order.
-	var sort_button: Button = UI.button("정렬",sort_inventory_now,Vector2(56,34))
+	var sort_button: Button = UI.button("정렬",sort_inventory_now,Vector2(56,44))
 	sort_button.name = "InventorySort"
 	sort_button.tooltip_text = "등급·이름순으로 한 번 정렬합니다. 이후 획득한 아이템은 뒤에 쌓입니다."
 	actions.add_child(sort_button)
-	expand_button = UI.button("확장",_toggle_expanded,Vector2(62,34))
+	expand_button = UI.button("확장",_toggle_expanded,Vector2(62,44))
 	expand_button.name = "ExpandInventory"
 	actions.add_child(expand_button)
-	var detail_button: Button = UI.button("상세정보",open_detail,Vector2(86,34))
+	var detail_button: Button = UI.button("상세정보",open_detail,Vector2(86,44))
 	UI.primary_button(detail_button)
 	detail_button.set_script(NATIVE_BUTTON)
 	detail_button.name = "InventoryDetail"
 	actions.add_child(detail_button)
-	actions.add_child(UI.button("장비",func() -> void: controller.show_companion_equipment(),Vector2(64,34)))
+	actions.add_child(UI.button("장비",func() -> void: controller.show_companion_equipment(),Vector2(64,44)))
 	compact_tabs = HBoxContainer.new()
 	compact_tabs.hide()
 	layout.add_child(compact_tabs)

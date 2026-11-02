@@ -54,7 +54,7 @@ func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 	var requirement: Dictionary=core.book_requirement(identity)
 	if requirement.is_empty() or int(requirement.fee)<=0:return Core.fail("identity","각성 수수료 정책 연결 없음")
 	if int(world.gold)<int(requirement.fee):return Core.fail("insufficient_gold","아데나 부족")
-	var selected: String="";var item_name: String=""
+	var selected: String="";var item_name: String="";var locked_book: bool=false
 	for key: String in world.item_instances:
 		var physical: Variant=world.item_instances[key]
 		if not physical is Dictionary or not physical.get("record") is Dictionary:continue
@@ -62,9 +62,10 @@ func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 		if record.get("source","")!="lineagem_base508" or record.get("source_snapshot","")!="base508":continue
 		if record.get("source_item_class_id",0)!=int(requirement.item_class_id) or record.get("sourceId","")!="m508:item:"+str(int(requirement.item_class_id)):continue
 		if physical.get("name","")!=record.get("name","") or str(physical.get("name","")).is_empty():continue
-		if world.has_method("_item_locked") and (world._item_locked(str(physical.name)) or world._item_locked(str(physical.name),key)):continue
+		if world.has_method("_item_locked") and (world._item_locked(str(physical.name)) or world._item_locked(str(physical.name),key)):
+			locked_book=true;continue
 		selected=key;item_name=str(physical.name);break
-	if selected.is_empty():return Core.fail("insufficient_book","해당 등급 원본 각성서 1장 필요")
+	if selected.is_empty():return Core.fail("book_locked" if locked_book else "insufficient_book","잠긴 각성서는 사용할 수 없습니다" if locked_book else "해당 등급 원본 각성서 1장 필요")
 	var count: Variant=world.inventory.get(item_name,0)
 	if not Core.integer(count) or int(count)<1:return Core.fail("book_quantity","각성서 보유 수량 오류")
 	var physical_count: int=0
