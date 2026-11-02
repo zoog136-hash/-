@@ -280,6 +280,10 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 			if same: matched = true
 		var source_row: Dictionary = catalog.npc(id)
 		if not matched and (source_row.is_empty() or not catalog.enemy_eligible(id, true) or int(actor.get("sprite_id", -1)) != int(source_row.sprite_id)): return "이 몬스터 문맥에 맞는 게임 코드 업데이트가 필요합니다."
+		if actor.has("spawn_view_id"):
+			var primary_key: String = catalog.context_key(id, int(actor.get("spawn_view_id", -1)), int(actor.get("territory_link_id", -1)))
+			var primary: Dictionary = catalog.source_record(primary_key)
+			if primary.is_empty() or int(primary.source_m_context.land.ID) != int(actor.get("land_id", -1)): return "몬스터 기본 출현 문맥이 일치하지 않습니다."
 		if actor.has("source_contexts"):
 			if not actor.source_contexts is Array or actor.source_contexts.is_empty(): return "몬스터 출현 문맥 목록이 유효하지 않습니다."
 			for context: Variant in actor.source_contexts:

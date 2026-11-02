@@ -1,13 +1,27 @@
 # base508 source monster roster handoff
 
-Base: bc1ae0c5d96e75e1a19b2c3d16286c09874e4bf6. Preserve its managed monster install precedence and card strict-setting inheritance. No old asset deletion, public original pixels, main push or merge.
+Base: bc1ae0c5d96e75e1a19b2c3d16286c09874e4bf6; first handoff commit 7be4331621577fcfae83dfd4c65a1be40860ec39. Managed monster install precedence and card strict-setting inheritance are preserved. No original pixels go in Git, no main push/merge, no old asset removal.
 
-Verified batch: 34 source NPC classes, 778 exact class/view/territory contexts, 30 source sprite models, 14,253 literal decoded PNG frames and 284 original SP2 members. The private 34-record install ZIP includes all original four records. Component loading and bounded ZIP installation pass. Four initial plus ten additional full-signature host ports retain existing host positions/counts/respawns. These are explicit authored ports, not cross-game identity equality or native geographic placement. Native geographic placements remain zero. Native HP/MP/AC/MR/Exp and exact source spawn-view level are applied. Other combat parameters remain labeled host compatibility; no native loot probability/quantity is invented.
+## Registration and runtime
 
-The common source-ID catalog registers all 9,470 classes / 2,596 models, with tests, noncombat, contextual variants and UI bosses retained as separate classifications. Its exact world-context index has 56,482 pairs and does not automatically spawn any entry. Source keys can opt into authored host regions via `source_m_key` and an exact single-key `monster_types` array. Unavailable, noncombat/test or ambiguous records fail closed; unchanged legacy encounters retain their existing fallback.
+The complete catalog registers 9,470 original NPC identities and 2,596 source model declarations, retaining test flags, source categories, UI-boss links and contextual variants. The exact source world-context index contains 56,482 class/view/territory pairs. Classification does not automatically enable a world enemy.
 
-The larger model build is ongoing in four disjoint shards. Its lossless SP2 packet decoder matches original reference RGBA/offsets on 40 real samples; packet-backed full-model install/runtime validation follows after the build. Do not report its prospective 693 classes as already installed by this handoff.
+The full private pack contains **671 monster classes / 344 unique monster models / 13,740 exact source-context pairs**. It also preserves other supplied source models for a total of **604 models / 15,432 action tracks / 14,383 lossless source SP2 packets**. All previous 34 source classes are retained. Of the 671 classes, 110 carry literal contextual evidence and require explicit `source_m_allow_contextual=true`; tests and noncombat actors remain excluded from enemy factories. Source keys address exact class/view/territory identities rather than legacy name joins.
 
-Full extraction request: Library libfile_e8693ec0b3288191aaf23f20cbc132cd v1; 18,287 missing monster-scope SP2 members / 2,980,993,887 bytes across 441 DAT archives, including SpriteRun dependencies. Machine rows include exact archive/member/size/CRC. Registration is separate from source pixel readiness and map placement.
+Four original plus ten additional guarded host ports apply native HP/MP/AC/MR/Exp and exact spawn-view level, retaining existing host positions/counts/respawns. This is an authored migration, not cross-game identity equality. Other combat parameters remain labeled host compatibility. No source loot probability, quantity or gold is invented. Explicit host regions can use one exact `source_m_key` and matching single-key `monster_types`; available records fail closed when assets or identity/context checks fail. **Native geographic placements: zero.** Do not report the 671 registrations as 671 automatically placed world encounters.
 
-Old assets remain required by UI, shared atlases, other maps and fallback encounters. No path is declared safe to delete in this commit.
+The renderer samples unchanged source packet pixels lazily, keeping exact original offsets and separate body/shadow/clothes layers. All known action codes are preserved; only source-mapped standard actions and explicit SpriteRun are selected by gameplay. Native timing stays null when unproven. Compatible mode labels PC24/inherited rates as compatibility; strict mode retains pending timing. Existing card playback settings are inherited.
+
+## Validation
+
+Full metadata audit: 14,987 file hashes, 3,682,528 layer addresses, 15,432 source action tracks, 13,740 exact context pairs. Forty real source RGBA/offset samples match the independent original Python decoder. Godot loads twelve representative models from the full pack and validates contextual opt-in. Actual Monster scene creation, native stats/body replacement and pool reset pass for fourteen guarded ports. The small 34-class PNG pack also passes bounded installation and wrong-context/sprite rejection. Full packet-pack installation has its own log in the final handoff. Device and per-item visual equivalence checks remain deferred.
+
+Some pre-existing shaders/awakening PNG/audio imports were absent in this sparse checkout. They were restored from the base commit only in a local worktree overlay for actual scene testing; they are not code changes in this handoff.
+
+## Remaining source inputs and unresolved interpretation
+
+Library libfile_e8693ec0b3288191aaf23f20cbc132cd v1 contains the full known extraction queue: **18,287 monster-scope SP2 members / 2,980,993,887 bytes / 441 DAT archives**, including SpriteRun dependencies. Exact DAT/member/size/CRC are recorded.
+
+Forty available model candidates lack a valid core action/reference interpretation; four installed models have optional-action issues. `model_build_issues.json` records those issues, including 196 SPR-referenced member names absent from the inventory. No archive, CRC or existence is invented for these 196 names. They need original provenance/interpretation work rather than blind extraction assumptions. Source-coordinate to host-map transforms, native timing/blend equations, remaining combat semantics, and unavailable pixels are not marked complete.
+
+Old assets remain required by shared UI/atlases, other maps and fallback encounters. Even the replaced werewolf, lycanthrope, skeleton and bugbear profiles remain referenced outside these guarded ports. No old path is declared safe to delete.

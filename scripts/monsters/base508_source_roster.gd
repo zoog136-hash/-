@@ -38,11 +38,11 @@ static func record(source_key: String, manifest_path: String = "", compatibility
 	result["source_m_source_ui_boss"] = bool(row.get("source_ui_boss", false))
 	result["source_m_host_placement"] = row.host_placement_contract
 	return result
-static func for_spawn(source_key: String, host_map_id: String, manifest_path: String = "") -> Dictionary:
+static func for_spawn(source_key: String, host_map_id: String, manifest_path: String = "", allow_contextual: bool = false) -> Dictionary:
 	data()
 	var context: Dictionary = _data.get("contexts", {}).get(source_key, {})
 	if context.is_empty():
-		var full_record: Dictionary = _full_record(source_key, manifest_path, {})
+		var full_record: Dictionary = _full_record(source_key, manifest_path, {"source_m_allow_contextual":allow_contextual})
 		if not full_record.is_empty(): full_record["catalog_only"] = false
 		return full_record
 	var row: Dictionary = _by_npc.get(int(context.npc_id), {})
@@ -57,7 +57,7 @@ static func primary_keys() -> Array:
 
 static func _full_record(source_key: String, manifest_path: String, compatibility: Dictionary) -> Dictionary:
 	var ids: Dictionary = FULL.parse_key(source_key)
-	if ids.is_empty() or not FULL.enemy_eligible(int(ids.npc_id)): return {}
+	if ids.is_empty() or not FULL.enemy_eligible(int(ids.npc_id), bool(compatibility.get("source_m_allow_contextual", false))): return {}
 	var path: String = manifest_path if not manifest_path.is_empty() else BINDINGS.pack_manifest()
 	var actor: Dictionary = PACK.actor(path, int(ids.npc_id))
 	if actor.is_empty(): return {}

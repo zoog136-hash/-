@@ -22,11 +22,21 @@ func run() -> void:
 	var manifest: String = ""
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--lineagem-monster-pack="): manifest = argument.trim_prefix("--lineagem-monster-pack=")
+	var all_models: bool = "--all-source-models" in OS.get_cmdline_user_args()
 	var loaded: int = 0
 	if not manifest.is_empty():
 		var pack: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(manifest))
 		var sampled: Dictionary = {}
+		for row: Dictionary in data.rows:
+			if row.literal_context_evidence.is_empty() or not pack.records.has(str(int(row.npc_id))): continue
+			var variant: Dictionary = pack.records[str(int(row.npc_id))]
+			var pair: Dictionary = variant.source_contexts[0]
+			var variant_key: String = CATALOG.context_key(int(row.npc_id), int(pair.spawn_view_id), int(pair.territory_link_id))
+			if not ROSTER.record(variant_key, manifest).is_empty(): errors.append("Contextual actor enabled without explicit opt-in")
+			if ROSTER.record(variant_key, manifest, {"source_m_allow_contextual":true}).is_empty(): errors.append("Explicit contextual source record unavailable")
+			break
 		for key: String in pack.records:
+			if not all_models and loaded >= 12: break
 			var actor: Dictionary = pack.records[key]
 			if not CATALOG.enemy_eligible(int(key)) or sampled.has(int(actor.sprite_id)): continue
 			var pair: Dictionary = actor.source_contexts[0]

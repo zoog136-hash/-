@@ -74,7 +74,7 @@ func configure(controller: Node, value: PlayableField) -> void:
 	for region: Dictionary in field.data["monster_spawn"]:
 		if region.has("source_m_key"):
 			var source_key: String = str(region.source_m_key)
-			var native_record: Dictionary = SOURCE_M_ROSTER.for_spawn(source_key, next_map)
+			var native_record: Dictionary = SOURCE_M_ROSTER.for_spawn(source_key, next_map, "", bool(region.get("source_m_allow_contextual", false)))
 			if native_record.is_empty() or region.monster_types != [source_key]: continue
 			records[source_key] = native_record
 		if region.has("source_game_id"):

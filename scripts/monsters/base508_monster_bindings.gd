@@ -21,6 +21,7 @@ static func pack_manifest() -> String:
 	var nested: String = install.resolve_file(install.active_root(), "monsters/manifest.json")
 	return nested if FileAccess.file_exists(nested) else standalone
 static func apply(record: Dictionary, map_id: String, explicit_manifest: String = "") -> Dictionary:
+	if record.get("source", "") == "lineagem_base508": return record
 	var manifest_path: String = explicit_manifest if not explicit_manifest.is_empty() else pack_manifest()
 	if not FileAccess.file_exists(manifest_path): return record
 	var pack: Dictionary = PACK_CACHE.manifest(manifest_path)
