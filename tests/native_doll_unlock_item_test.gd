@@ -8,6 +8,14 @@ class Host extends Fixture.Host:
 	var item_instances: Dictionary={}
 	var level: int=95
 	var active_skill_buffs: Dictionary={}
+	var option_awakening
+	var hud_updates: int=0
+	func _update_hud() -> void:hud_updates+=1
+class Messages extends Node:
+	var message: String=""
+	var refreshes: int=0
+	func show_message(value: String) -> void:message=value
+	func refresh_inventory(_inventory: Dictionary) -> void:refreshes+=1
 var checks: int=0
 var errors: Array[String]=[]
 func check(value: bool,message: String) -> void:
@@ -53,5 +61,13 @@ func run() -> void:
 	var corrupt: Dictionary=service.export_state();corrupt[Item.FIELD].source_item_class_id=1
 	check(not service.core.validate_state(corrupt).is_empty(),"invalid unlock source chain rejected on load")
 	check(not service.use_native_unlock_item("unrelated potion").handled,"other consumable routing unchanged")
-	host.queue_free();await process_frame
+	var route=Host.new();root.add_child(route);route.catalog_db=host.catalog_db;route.card_draw_fusion.configure(route.catalog_db)
+	route.option_awakening=Runtime.new();route.option_awakening.configure(route)
+	route.hud=Messages.new();route.add_child(route.hud)
+	route.inventory[name_value]=1;route.item_instances["route"]={"name":name_value,"record":Item.record()}
+	var consumer=preload("res://scripts/consumable_service.gd").new();route.add_child(consumer);consumer.setup(route)
+	check(consumer.try_use(name_value) and Item.unlocked(route.option_awakening.progress) and route.inventory.is_empty(),"production consumable entry uses native atomic transaction")
+	check(route.hud_updates==1 and route.hud.refreshes==1 and route.hud.message.contains("해금"),"successful source use publishes committed result once")
+	check(not consumer.try_use("unrelated unknown item"),"unrelated consumable lookup unchanged")
+	route.queue_free();host.queue_free();await process_frame
 	print("NATIVE_DOLL_UNLOCK_ITEM ",JSON.stringify({"checks":checks,"errors":errors}));quit(0 if errors.is_empty() else 1)
