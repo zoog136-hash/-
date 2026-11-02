@@ -2,6 +2,7 @@ extends RefCounted
 ## Extra summon slot, never another awakening purchase/level or a main-slot sum.
 const DATA=preload("res://data/cards/base508_option_extensions.json")
 const FIELD: String="native_subslot_identity"
+static var _secondary_groups: Dictionary={}
 const MAP={"HPPlus":"hpFlat","HPPlusPercent":"hpPct","Strength":"strFlat","Dexterity":"dexFlat","Intelligence":"intFlat","CarryPlus":"weightBonus","ArmorClass":"def","ArmorClassBonus":"def","AttackSpeedBonus":"attackSpeed","MoveSpeedBonus":"moveSpeedPct","PierceDamageReduction":"damage_reduction_ignore","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","SpellPower":"sp"}
 static func validate(value: Dictionary) -> String:
 	var unlock_error: String=preload("res://scripts/cards/native_doll_unlock_item.gd").validate(value)
@@ -36,8 +37,7 @@ static func effects(runtime: RefCounted,identity: String) -> Dictionary:
 	var source: Array=row.effects.duplicate(true)
 	# Same permanent awakening ledger; slot11 uses only its contextual group.
 	if runtime.core.awakened(runtime.progress,"마법인형",identity):
-		for group: Dictionary in DATA.data.option_groups:
-			if group.identity!=identity or int(group.group.SlotIndex)!=11:continue
+		for group: Dictionary in secondary_groups(identity):
 			var condition: Dictionary=runtime.core.native_conditions.evaluate(int(group.group.ServerLimitsetID),runtime.core.source_server_context)
 			if condition.status in ["unrestricted","eligible"]:source.append_array(group.effects)
 	for effect: Dictionary in source:
@@ -54,3 +54,18 @@ static func effects(runtime: RefCounted,identity: String) -> Dictionary:
 		elif effect.unit.Name!="Value":out.pending.append(effect.duplicate(true));continue
 		var key: String=MAP[name_value];out.stats[key]=float(out.stats.get(key,0))+amount
 	return out
+
+static func secondary_groups(identity: String) -> Array:
+	if _secondary_groups.is_empty():
+		for group: Dictionary in DATA.data.option_groups:
+			if int(group.group.SlotIndex)!=11:continue
+			if not _secondary_groups.has(group.identity):_secondary_groups[group.identity]=[]
+			_secondary_groups[group.identity].append(group)
+	return _secondary_groups.get(identity,[])
+static func status_available(runtime: RefCounted,identity: String,status_id: int) -> bool:
+	for group: Dictionary in secondary_groups(identity):
+		var condition: Dictionary=runtime.core.native_conditions.evaluate(int(group.group.ServerLimitsetID),runtime.core.source_server_context)
+		if condition.status not in ["unrestricted","eligible"]:continue
+		for effect: Dictionary in group.effects:
+			if effect.type.Name=="StatusEffectID" and int(effect.link.Level)==1 and int(effect.bonus.Value)==status_id and int(effect.bonus.BonusApplicationTypeID)==0 and int(effect.bonus.BonusApplicationTargetID)==0:return true
+	return false
