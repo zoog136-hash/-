@@ -2,8 +2,11 @@ extends RefCounted
 ## Author-selected source replacements for exact legacy slots. This is an explicit
 ## host placement adaptation, not an assertion that old PC/M NPC IDs are identical.
 const CONTEXT = preload("res://scripts/monsters/base508_monster_context.gd")
+const PACK_CACHE = preload("res://scripts/monsters/base508_monster_pack_cache.gd")
 const PATH = "res://data/lineagem_base508/monster_bindings.json"
 static var _data: Dictionary = {}
+static var _extensions: Array = []
+static var _extensions_loaded: bool = false
 static func data() -> Dictionary:
 	if _data.is_empty():
 		var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
@@ -20,9 +23,9 @@ static func pack_manifest() -> String:
 static func apply(record: Dictionary, map_id: String, explicit_manifest: String = "") -> Dictionary:
 	var manifest_path: String = explicit_manifest if not explicit_manifest.is_empty() else pack_manifest()
 	if not FileAccess.file_exists(manifest_path): return record
-	var pack: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
+	var pack: Dictionary = PACK_CACHE.manifest(manifest_path)
 	if not pack is Dictionary or pack.get("kind", "") != "base508_monster_pack" or pack.get("source_snapshot", "") != "base508": return record
-	for binding: Dictionary in data().get("bindings", []):
+	for binding: Dictionary in data().get("bindings", []) + extension_bindings():
 		if str(binding.host_map_id) != map_id: continue
 		# Full declared slot signature + exact source context; never a display-name join.
 		var matches: bool = true
@@ -41,3 +44,12 @@ static func apply(record: Dictionary, map_id: String, explicit_manifest: String 
 		replacement["source_m_bound_legacy_slot"] = int(binding.legacy_game_db_index)
 		return replacement
 	return record
+
+static func extension_bindings() -> Array:
+	if not _extensions_loaded:
+		_extensions_loaded = true
+		var path: String = "res://data/lineagem_base508/monster_batch02/runtime_registry.json"
+		if FileAccess.file_exists(path):
+			var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+			if value is Dictionary and value.get("source_snapshot", "") == "base508": _extensions = value.get("port_bindings", [])
+	return _extensions

@@ -8,6 +8,8 @@ const MAX_POOL: int = 64
 const IDLE_POOL_TARGET: int = 16
 const MAP_CHANGE_POOL_TARGET: int = 8
 const IDLE_POOL_AGE_MS: int = 30000
+const SOURCE_M_PORT = preload("res://scripts/monsters/base508_monster_spawn_port.gd")
+const SOURCE_M_ROSTER = preload("res://scripts/monsters/base508_source_roster.gd")
 const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 var world: Node
 var field: PlayableField
@@ -70,6 +72,11 @@ func configure(controller: Node, value: PlayableField) -> void:
 		elif preload("res://scripts/monsters/monster_catalog.gd").reviewed_record_allowed(record):reviewed[str(record.get("sourceId",""))]=record
 	# Catalog-only identities opt in through an exact verified source region.
 	for region: Dictionary in field.data["monster_spawn"]:
+		if region.has("source_m_key"):
+			var source_key: String = str(region.source_m_key)
+			var native_record: Dictionary = SOURCE_M_ROSTER.for_spawn(source_key, next_map)
+			if native_record.is_empty() or region.monster_types != [source_key]: continue
+			records[source_key] = native_record
 		if region.has("source_game_id"):
 			var source:Dictionary=reviewed.get(str(region.source_game_id),{})
 			if source.is_empty() or str(source.get("source_npc_id",""))!=str(region.source_npc_id) or region.monster_types!=[str(source.name)]:continue
@@ -160,7 +167,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 		for i: int in range(names.size()):
 			choice -= maxf(0.,float(weights[i]))
 			if choice <= 0.: name_value = str(names[i]); break
-	var record: Dictionary = records.get(name_value,{})
+	var record: Dictionary = SOURCE_M_PORT.apply(records.get(name_value,{}), str(field.data.map_id))
 	if record.is_empty():
 		push_error("Unknown field monster: "+name_value)
 		return
@@ -168,7 +175,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 		record=record.duplicate(true)
 		record["ai"]={"aggressive":str(record.get("source_raw_fields",{}).get("agro","0"))=="1"}
 	var variant: Dictionary = region.get("variants",{}).get(name_value,{})
-	if not variant.is_empty():
+	if not SOURCE_M_PORT.native(record) and not variant.is_empty():
 		record = record.duplicate(true)
 		var ratio: float = clampf(float(variant.get("level",record.get("lv",1)))/maxf(1.,float(record.get("lv",1))),.6,2.2)
 		record["lv"] = int(variant.get("level",record.get("lv",1)))
@@ -180,7 +187,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 	# Renewed rosters retain catalog levels; their historical broad range
 	# is not an implicit species override. Explicit variants and legacy
 	# layouts still enforce the authored regional range on a copy.
-	if level_range.size() == 2 and (variant.has("level") or not field.data.has("spawn_layout_revision")):
+	if not SOURCE_M_PORT.native(record) and level_range.size() == 2 and (variant.has("level") or not field.data.has("spawn_layout_revision")):
 		var local_level: int = clampi(int(record.get("lv", 1)), int(level_range[0]), int(level_range[1]))
 		if local_level != int(record.get("lv", 1)):
 			record = record.duplicate(true)
@@ -207,7 +214,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 	# A pooled actor may carry the last map's source override. Restore that
 	# before setup writes this life/record's normal animation collision shape.
 	preload("res://scripts/maps/source_body_profile.gd").apply(monster,false)
-	monster.setup(record,world.player,world,world._monster_texture(record))
+	monster.setup(record,world.player,world,null if SOURCE_M_PORT.native(record) else world._monster_texture(record))
 	# setup/_setup_animation writes collision_radius and collision_offset.
 	# Apply the source foot LAST so monsters and the player really use 4px.
 	preload("res://scripts/maps/source_body_profile.gd").apply(monster,field is RemakePlayableField or field is NativePngField)
@@ -215,7 +222,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if not monster.died.is_connected(world._on_monster_died): monster.died.connect(world._on_monster_died)
 	if not monster.player_hit.is_connected(world._on_player_hit): monster.player_hit.connect(world._on_player_hit)
 	if not monster.selected.is_connected(world._select_monster): monster.selected.connect(world._select_monster)
-	if variant.has("name"):
+	if not SOURCE_M_PORT.native(record) and variant.has("name"):
 		monster.monster_name = str(variant.name)
 		monster.name_label.text = "Lv.%d %s" % [monster.monster_level,monster.monster_name]
 	monster.name_label.add_theme_font_size_override("font_size",17)

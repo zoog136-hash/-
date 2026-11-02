@@ -254,11 +254,17 @@ func _install(path: String) -> Dictionary:
 static func validate_monster_payload(root: String, manifest: Dictionary, header: Dictionary) -> String:
 	if manifest.get("kind", "") != "base508_monster_pack": return "지원되는 원본 몬스터 팩이 아닙니다."
 	var ids: Variant = header.get("npc_ids", [])
-	if not ids is Array or ids.is_empty() or ids.size() > 1000 or manifest.records.size() != ids.size(): return "몬스터 개체 목록이 유효하지 않습니다."
+	if not ids is Array or ids.is_empty() or ids.size() > 9470 or manifest.records.size() != ids.size(): return "몬스터 개체 목록이 유효하지 않습니다."
 	var local: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/lineagem_base508/monster_bindings.json"))
 	if not local is Dictionary or local.get("source_snapshot", "") != "base508": return "몬스터 연결 코드 업데이트가 필요합니다."
+	var extra: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/lineagem_base508/monster_batch02/runtime_registry.json")) if FileAccess.file_exists("res://data/lineagem_base508/monster_batch02/runtime_registry.json") else {}
+	var definitions: Array = local.get("bindings", []).duplicate(true)
+	if extra is Dictionary and extra.get("source_snapshot", "") == "base508":
+		definitions.append_array(extra.get("source_id_records", []))
+	var catalog = preload("res://scripts/monsters/base508_authoritative_catalog.gd")
 	var seen_ids: Dictionary = {}
 	var pixels: Dictionary = {}
+	var checked_models: Dictionary = {}
 	for value: Variant in ids:
 		var id: int = int(value)
 		if id <= 0 or seen_ids.has(id): return "몬스터 ID가 잘못되거나 중복됐습니다."
@@ -266,14 +272,30 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 		var actor: Variant = manifest.records.get(str(id))
 		if not actor is Dictionary or int(actor.get("npc_id", -1)) != id: return "몬스터 원본 ID가 일치하지 않습니다."
 		var matched: bool = false
-		for binding: Dictionary in local.get("bindings", []):
+		for binding: Dictionary in definitions:
 			if int(binding.npc_id) != id: continue
 			var same: bool = true
 			for field: String in ["sprite_id", "spawn_view_id", "territory_link_id", "land_id"]:
 				if int(actor.get(field, -1)) != int(binding.get(field, -2)): same = false
 			if same: matched = true
-		if not matched: return "이 몬스터 문맥에 맞는 게임 코드 업데이트가 필요합니다."
+		var source_row: Dictionary = catalog.npc(id)
+		if not matched and (source_row.is_empty() or not catalog.enemy_eligible(id, true) or int(actor.get("sprite_id", -1)) != int(source_row.sprite_id)): return "이 몬스터 문맥에 맞는 게임 코드 업데이트가 필요합니다."
+		if actor.has("source_contexts"):
+			if not actor.source_contexts is Array or actor.source_contexts.is_empty(): return "몬스터 출현 문맥 목록이 유효하지 않습니다."
+			for context: Variant in actor.source_contexts:
+				if not context is Dictionary: return "몬스터 출현 문맥이 유효하지 않습니다."
+				var context_key: String = "lineagem_base508:npc:%d:spawn:%d:territory:%d" % [id, int(context.get("spawn_view_id", -1)), int(context.get("territory_link_id", -1))]
+				if catalog.source_record(context_key).is_empty(): return "등록되지 않은 몬스터 출현 문맥입니다."
+		var model_key: String = str(actor.get("tracks_ref", "")) + ":" + str(actor.get("tracks_sha256", ""))
+		if actor.has("tracks_ref") and checked_models.has(model_key): continue
 		var tracks: Variant = actor.get("tracks")
+		if actor.has("tracks_ref"):
+			var model_path: String = str(actor.tracks_ref)
+			if not safe_relative(model_path) or not model_path.begins_with("actors/") or not model_path.ends_with(".json"): return "몬스터 동작 경로가 유효하지 않습니다."
+			if FileAccess.get_sha256(root.path_join(model_path)) != str(actor.get("tracks_sha256", "")): return "몬스터 동작 파일 검사 실패"
+			var model: Variant = JSON.parse_string(FileAccess.get_file_as_string(root.path_join(model_path)))
+			if not model is Dictionary or int(model.get("source_sprite_id", -1)) != int(actor.get("sprite_id", -2)): return "몬스터 동작 외형이 일치하지 않습니다."
+			tracks = model.get("tracks")
 		if not tracks is Dictionary: return "몬스터 동작 목록이 유효하지 않습니다."
 		for role: String in ["idle", "walk", "attack", "hit", "death"]:
 			var track: Variant = tracks.get(role)
@@ -291,7 +313,10 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 						for coordinate: Variant in offset:
 							if typeof(coordinate) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(coordinate)): return "몬스터 원본 offset이 유효하지 않습니다."
 						var relative: String = str(layer.get("path", ""))
-						if not safe_relative(relative) or not relative.begins_with("pixels/") or not relative.ends_with(".png"): return "몬스터 픽셀 경로가 유효하지 않습니다."
+						var packet: bool = layer.get("codec", "") == "base508_sp2_v1"
+						var valid_path: bool = (relative.begins_with("sp2/") and relative.ends_with(".bin")) if packet else (relative.begins_with("pixels/") and relative.ends_with(".png"))
+						if not safe_relative(relative) or not valid_path: return "몬스터 픽셀 경로가 유효하지 않습니다."
+						if packet and (int(layer.get("source_direction_bit", -1)) not in range(8) or int(layer.get("source_frame_index", -1)) not in range(256)): return "몬스터 원본 프레임 주소가 유효하지 않습니다."
 						var hash: String = str(layer.get("sha256", ""))
 						if pixels.has(relative):
 							if pixels[relative] != hash: return "같은 몬스터 픽셀의 해시가 서로 다릅니다."
@@ -299,6 +324,7 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 							if hash.length() != 64 or not FileAccess.file_exists(root.path_join(relative)) or FileAccess.get_sha256(root.path_join(relative)) != hash: return "몬스터 픽셀 검사 실패: " + relative
 							pixels[relative] = hash
 				if ticks <= 0.0: return "몬스터 원본 시간값이 유효하지 않습니다."
+		checked_models[model_key] = true
 	return ""
 
 func _failure(message: String) -> Dictionary:
