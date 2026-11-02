@@ -49,7 +49,8 @@ func run()->void:
   var value:Dictionary=ROSTER.record(key,"",{"source_m_allow_contextual":true})
   if value.is_empty():blocked.append(id)
   else:ready.append(id)
- check(ready==[51731,41852,46813]and blocked==[726],"complete caster effects required; missing impact blocks factory")
+ var complete_726:bool=str(args.get("expect-caster726-ready","false"))=="true"
+ check(ready==([51731,41852,46813,726]if complete_726 else[51731,41852,46813])and blocked==([]if complete_726 else[726]),"complete caster effects required; missing impact blocks factory")
  var bad:Dictionary=await installer.install_zip(args.corrupt)
  check(not bool(bad.get("ok",false)),"corrupt update rejected")
  check(INSTALL.monster_root()==active,"failed update preserves active root")

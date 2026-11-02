@@ -32,6 +32,7 @@ const ACTION_CONTEXTS = {
 	67033:{"sprite":20319,"spawn":300213,"territory":140843,"attack":244103}
 }
 static func actor_contract(npc_id:int,sprite_id:int,profile:Dictionary,tracks:Dictionary,catalog:Dictionary={}) -> Dictionary:
+	if profile.get("source_behavior_family","")=="source_mobile_attack_actor" and not bool(profile.get("host_combat_ready",false)): return _core_actor_contract(npc_id,sprite_id,profile,tracks,catalog)
 	if SPELL_CONTEXTS.has(npc_id): return _spell_actor_contract(npc_id,sprite_id,profile,tracks,catalog)
 	if npc_id == 47744: return _stationary_actor_contract(sprite_id,profile,tracks,catalog)
 	if not ACTION_CONTEXTS.has(npc_id): return _ordinary_actor_contract(npc_id,sprite_id,profile,tracks,catalog)
@@ -75,6 +76,7 @@ static func _ordinary_row(row:Dictionary,npc_id:int,attack_id:int) -> bool:
 	return int(row.get("ID",-1))==attack_id and int(row.get("NpcClassID",-1))==npc_id and not bool(row.get("IsSpell",true)) and int(row.get("SpellID",-1))==0 and int(row.get("MotionType",-1))==9 and int(row.get("WeaponType",-1))==0 and not bool(row.get("IsAbsoluteAtk",true)) and int(row.get("DiceCount",-1))==5 and int(row.get("DiceSpots",-1))==5 and int(row.get("DiceBonus",-1))==0
 static func _single_action_record(record:Dictionary,catalog:Dictionary,contract:Dictionary) -> Dictionary:
 	var nid:int=int(record.get("source_m_npc_id",-1))
+	if contract.get("contract","")=="base508_exact_context_core_ready_optional_gaps_v1": return _core_record(record,catalog,contract)
 	if contract.get("contract","")=="base508_exact_context_single_spell_host_action_v1": return _spell_record(record,catalog,contract)
 	if nid == 47744: return _stationary_record(record,catalog,contract)
 	if contract.get("contract","")=="base508_exact_context_ordinary_host_action_v1": return _ordinary_record(record,catalog,contract)
@@ -134,6 +136,11 @@ static func _stationary_record(record:Dictionary,catalog:Dictionary,contract:Dic
 
 static func _ordinary_source_row(row:Dictionary,nid:int) -> bool:
 	return int(row.get("NpcClassID",-1))==nid and int(row.get("ID",0))>0 and not bool(row.get("IsSpell",true)) and int(row.get("SpellID",-1))==0 and not bool(row.get("IsAbsoluteAtk",true)) and int(row.get("NextAttack",-1))==0 and int(row.get("DiceCount",0))>0 and int(row.get("DiceCount",0))<=1000 and int(row.get("DiceSpots",0))>0 and int(row.get("DiceSpots",0))<=1000000 and int(row.get("DiceBonus",-1))>=0
+static func _ordinary_action_allowed(row:Dictionary,action_id:int) -> bool:
+	if action_id in [18,30]:return true
+	# Exact NpcAttack46582 explicitly routes mermaid Breath to action3.
+	# Its existing idle role label is not evidence for arbitrary idle attacks.
+	return action_id==3 and int(row.get("NpcClassID",-1))==721 and int(row.get("ID",-1))==46582 and int(row.get("MotionType",-1))==4 and int(row.get("WeaponType",-1))==0
 static func _all_directions(track:Dictionary) -> bool:
 	var directions:Array=track.get("directions",[])
 	if directions.size()!=8 or not track.get("source_omitted_attachment_slots",[]).is_empty(): return false
@@ -161,7 +168,7 @@ static func _ordinary_actor_contract(nid:int,sprite_id:int,profile:Dictionary,tr
 			for action:Dictionary in catalog.get("source_actions",[]):
 				var id:int=int(action.get("ID",-1))
 				if int(action.get("MotionType",-1))==int(row.MotionType) and int(action.get("WeaponType",-1))==int(row.WeaponType) and by_action.has(id):candidates.append(id)
-			if candidates.size()==1 and int(candidates[0]) in [18,30] and _all_directions(by_action[int(candidates[0])]):
+			if candidates.size()==1 and _ordinary_action_allowed(row,int(candidates[0])) and _all_directions(by_action[int(candidates[0])]):
 				var matched:bool=false
 				for route:Dictionary in profile.get("native_attack_routes",[]):
 					if int(route.get("npc_attack_id",-1))!=int(row.ID):continue
@@ -185,9 +192,9 @@ static func _ordinary_record(record:Dictionary,catalog:Dictionary,contract:Dicti
 	var key:String=AUTHORITY.context_key(nid,int(record.get("source_m_spawn_view_id",-1)),int(record.get("source_m_territory_link_id",-1)))
 	if not AUTHORITY.context_keys(nid).has(key):return {}
 	var aid:int=int(contract.get("explicit_attack_id",-1));var selected:int=int(contract.get("attack_action_id",-1))
-	if selected not in [18,30]:return {}
+	if selected not in [3,18,30]:return {}
 	for row:Dictionary in catalog.get("npc_attacks",{}).get(str(nid),[]):
-		if int(row.get("ID",-1))!=aid or not _ordinary_source_row(row,nid):continue
+		if int(row.get("ID",-1))!=aid or not _ordinary_source_row(row,nid) or not _ordinary_action_allowed(row,selected):continue
 		for action:Dictionary in catalog.get("source_actions",[]):
 			if int(action.get("ID",-1))==selected and int(action.get("MotionType",-1))==int(row.MotionType) and int(action.get("WeaponType",-1))==int(row.WeaponType):
 				return {"explicit_attack_id":aid,"host_source_action_id":selected,"selection_policy":"explicit_host_adoption_not_native_AI","adoption_contract":contract.get("adoption_contract","")}
@@ -299,3 +306,46 @@ static func _spell_record(record:Dictionary,catalog:Dictionary,contract:Dictiona
 	if not AUTHORITY.context_keys(nid).has(AUTHORITY.context_key(nid,int(record.get("source_m_spawn_view_id",-1)),int(record.get("source_m_territory_link_id",-1)))):return {}
 	if not _installed_spell_effects(path,spec.effects):return {}
 	return {"explicit_attack_id":int(spec.attack),"host_source_action_id":18,"selection_policy":"explicit_host_adoption_not_native_AI","adoption_contract":checked.adoption_contract}
+
+static func _core_actor_contract(nid:int,sprite:int,profile:Dictionary,tracks:Dictionary,catalog:Dictionary) -> Dictionary:
+	if catalog.is_empty() or profile.get("contract","")!="base508_source_action_capabilities_v1" or bool(profile.get("host_combat_ready",false)) or profile.get("source_behavior_family","")!="source_mobile_attack_actor":return {}
+	if profile.get("source_kind_preserved","") not in ["source_attackable_monster_actor","source_ui_boss_npc"] or profile.get("source_category",{}).get("Name","")!="Npc" or not bool(profile.get("source_category",{}).get("IsAttackable",false)):return {}
+	if int(catalog.get("source_npcs",{}).get(str(nid),{}).get("sprite_id",-1))!=sprite:return {}
+	for issue:Variant in profile.get("unresolved_source_action_ids",[]):
+		if int(issue) in [0,1,3]:return {}
+	for role:String in ["idle","walk","attack"]:
+		var expected:int={"idle":3,"walk":0,"attack":1}[role]
+		if not tracks.has(role) or int(tracks[role].get("source_action_id",-1))!=expected or int(profile.get("available_roles",{}).get(role,-1))!=expected or not _all_directions(tracks[role]):return {}
+	var available:Dictionary={};var optional_sparse:Dictionary={}
+	for key:String in tracks:
+		var track:Dictionary=tracks[key];available[int(track.get("source_action_id",-1))]=track
+		if key not in ["idle","walk","attack"] and not track.get("source_omitted_attachment_slots",[]).is_empty():optional_sparse[key]=track.source_omitted_attachment_slots.duplicate(true)
+	var selected:Dictionary={};var unadopted:Array=[]
+	for row:Dictionary in catalog.get("npc_attacks",{}).get(str(nid),[]):
+		if selected.is_empty() and _ordinary_source_row(row,nid):
+			var candidates:Array=[]
+			for action:Dictionary in catalog.get("source_actions",[]):
+				if int(action.get("MotionType",-1))==int(row.MotionType) and int(action.get("WeaponType",-1))==int(row.WeaponType) and available.has(int(action.get("ID",-1))):candidates.append(int(action.ID))
+			if candidates==[1]:
+				for route:Dictionary in profile.get("native_attack_routes",[]):
+					if int(route.get("npc_attack_id",-1))!=int(row.ID):continue
+					var declared:Array=route.get("candidate_action_ids",[])
+					if declared.size()==1 and declared[0]==1.0 and int(route.get("resolved_action_id",-1))==1 and route.get("source_attack",{})==row:selected=row
+				if not selected.is_empty():continue
+		unadopted.append(int(row.ID))
+	if selected.is_empty():return {}
+	return {"contract":"base508_exact_context_core_ready_optional_gaps_v1","host_combat_ready":true,"host_stationary":false,"source_npc_id":nid,"source_sprite_id":sprite,"explicit_attack_id":int(selected.ID),"attack_action_id":1,"required_roles":["idle","walk","attack"],"selection_policy":"explicit_host_adoption_not_native_AI","unadopted_attack_ids":unadopted,"optional_unresolved_source_action_ids":profile.get("unresolved_source_action_ids",[]).duplicate(),"optional_sparse_attachment_slots":optional_sparse,"adoption_contract":"Exact clean idle/walk/basic attack and first supported ordinary source attack. Optional missing death/hit/appearance and sparse attachment slots remain unresolved metadata, without replacement frames. Host clock/range/selection compatibility is not native AI probability/delay/geography proof."}
+static func _core_record(record:Dictionary,catalog:Dictionary,contract:Dictionary) -> Dictionary:
+	var nid:int=int(record.get("source_m_npc_id",-1));var sprite:int=int(record.get("source_m_sprite_id",-1))
+	if not bool(contract.get("host_combat_ready",false)) or bool(contract.get("host_stationary",true)):return {}
+	var actor:Dictionary=ACTOR_PACK.actor(str(record.get("source_m_asset_manifest_path","")),nid)
+	var checked:Dictionary=_core_actor_contract(nid,sprite,actor.get("source_actor_profile",{}),actor.get("tracks",{}),catalog)
+	if checked.is_empty():return {}
+	for field:String in ["source_npc_id","source_sprite_id","explicit_attack_id","attack_action_id"]:
+		if int(checked.get(field,-1))!=int(contract.get(field,-2)):return {}
+	var original:Dictionary=record.get("source_m_original",{})
+	if int(original.get("ID",-1))!=nid or int(original.get("Sprite",-1))!=sprite or bool(original.get("TestNPC",true)) or not AUTHORITY.enemy_eligible(nid,true):return {}
+	var authority:Dictionary=AUTHORITY.npc(nid)
+	if int(authority.get("sprite_id",-1))!=sprite or bool(authority.get("source_original",{}).get("TestNPC",true)):return {}
+	if not AUTHORITY.context_keys(nid).has(AUTHORITY.context_key(nid,int(record.get("source_m_spawn_view_id",-1)),int(record.get("source_m_territory_link_id",-1)))):return {}
+	return {"explicit_attack_id":int(checked.explicit_attack_id),"host_source_action_id":1,"selection_policy":"explicit_host_adoption_not_native_AI","adoption_contract":checked.adoption_contract}

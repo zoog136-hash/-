@@ -62,7 +62,7 @@ func configure(owner: Node, world: Node, record: Dictionary) -> bool:
 	if nid <= 0 or source.is_empty() or int(original.get("ID", -1)) != nid or int(original.get("Sprite", -1)) != int(source.sprite_id): return false
 	if bool(original.get("TestNPC",false)): return false
 	if not bool(owner.get("is_boss")):
-		if record.get("source_m_host_action_contract",{}).get("contract","") not in ["base508_exact_context_ordinary_host_action_v1","base508_exact_context_single_spell_host_action_v1"] or HOST_ADOPTIONS.for_record(record,"",data()).is_empty(): return false
+		if record.get("source_m_host_action_contract",{}).get("contract","") not in ["base508_exact_context_ordinary_host_action_v1","base508_exact_context_single_spell_host_action_v1","base508_exact_context_core_ready_optional_gaps_v1"] or HOST_ADOPTIONS.for_record(record,"",data()).is_empty(): return false
 	owner_ref = weakref(owner); world_ref = weakref(world)
 	source_npc_id = nid; source_life = int(owner.get("life_id"))
 	effect_generation = int(world.get("combat_generation"))
@@ -283,7 +283,10 @@ func _advance_presentation(delta: float) -> void:
 	if not is_instance_valid(view) or int(actor.motion.sequence) != int(presentation.sequence):
 		_clear_presentation(); return
 	var duration: float = float(presentation.duration)
-	var frame_delta:float=minf(delta,maxf(0.0,duration-float(presentation.elapsed))) if duration>0.0 else delta
+	# End-exclusive sampling also holds the last frame when an exact source
+	# attack route shares a looped role track (mermaid's authored Breath3).
+	var sample_end:float=maxf(0.0,duration-minf(0.000001,duration*0.5))
+	var frame_delta:float=minf(delta,maxf(0.0,sample_end-float(presentation.elapsed))) if duration>0.0 else delta
 	presentation.elapsed += delta
 	view.call("advance_source_action",int(presentation.action_id),frame_delta,int(actor.motion.facing8),int(presentation.sequence))
 	# A short source clip keeps its last authored frame through host recovery.
