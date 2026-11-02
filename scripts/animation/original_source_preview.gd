@@ -173,7 +173,7 @@ func clear() -> void:
 	_overlay_nodes.clear()
 	_last_token = ""
 	for effect_node: Sprite2D in _effect_nodes.values():
-		var copy: BackBufferCopy = effect_node.get_meta("observed_backbuffer", null) as BackBufferCopy
+		var copy: BackBufferCopy = effect_node.get_meta("observed_backbuffer") as BackBufferCopy if effect_node.has_meta("observed_backbuffer") else null
 		if copy != null: copy.free()
 		effect_node.free()
 	_effect_nodes.clear()

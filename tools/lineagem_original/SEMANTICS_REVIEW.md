@@ -97,4 +97,3 @@ an Android execution or a complete Main-scene validation. No exact M compositor
 or global equivalence claimed. Minimal mode checks passed: the pair/order is
 active only in compatible mode; strict keeps attachments disabled; Halphas
 still uses the old policy; clear/reconfigure releases both backbuffer nodes.
-
