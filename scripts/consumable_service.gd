@@ -131,6 +131,14 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String) -> bool:
+	if item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
+		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
+		if bool(source_result.get("handled",false)):
+			if bool(source_result.get("ok",false)):
+				world._update_hud();world.hud.refresh_inventory(world.inventory)
+				_message("에바의 부름 습득 · 추가 인형 소환 해금")
+			else:_message(str(source_result.get("error","해금 아이템 사용 실패")))
+			return true
 	var spec: Dictionary = RULES.definition(item_name)
 	if spec.is_empty():
 		return false
