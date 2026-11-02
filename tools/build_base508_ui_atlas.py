@@ -11,10 +11,14 @@ def numbers(value):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--root',type=Path,required=True)
-    p.add_argument('--layout',type=Path,required=True)
+    p.add_argument('--layout',type=Path,action='append',required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--tables',type=Path,required=True)
-    a=p.parse_args(); layout=json.loads(a.layout.read_text()); refs={}
+    a=p.parse_args(); layout={"screens":{}};refs={}
+    for source in a.layout:
+        for key,nodes in json.loads(source.read_text())["screens"].items():
+            if key in layout["screens"] and layout["screens"][key]!=nodes:raise ValueError("Conflicting CSB inspection "+key)
+            layout["screens"][key]=nodes
     for nodes in layout['screens'].values():
         for node in nodes:
             for ref in node['resources']:

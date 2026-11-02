@@ -449,6 +449,7 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 	count.add_theme_constant_override("outline_size",2)
 	count.add_theme_color_override("font_color",UI.GOLD if equipped else UI.TEXT)
 	(button.get_node("InventoryLocked") as TextureRect).visible = locked
+	preload("res://scripts/ui/source_inventory_skin.gd").apply(button,reference==selected_item)
 
 func _refresh_visible_window() -> void:
 	if grid_scroll == null or grid_stack == null or not inventory_panel.is_visible_in_tree():return
@@ -488,6 +489,8 @@ func _refresh_visible_window() -> void:
 				var style: StyleBoxFlat=UI.slot_frame()
 				style.bg_color.a=0
 				empty.add_theme_stylebox_override("panel",style)
+				var original: StyleBoxTexture=preload("res://scripts/ui/source_inventory_skin.gd").style()
+				if original!=null:empty.add_theme_stylebox_override("panel",original)
 				reusable_empty_slots.append(empty)
 			node = reusable_empty_slots[used_empty]
 			used_empty += 1
@@ -677,6 +680,7 @@ func _settle_detail_layout() -> void:
 		_reflow()
 
 func _draw_slot_recesses() -> void:
+	if preload("res://scripts/ui/source_inventory_skin.gd").style()!=null:return
 	var style: StyleBoxTexture = UI.slot_recess()
 	for child: Node in item_grid.get_children():
 		if child is Control and child.visible:
@@ -698,4 +702,5 @@ func _refresh_slot_states(references: Array = []) -> void:
 				style.bg_color = style.bg_color.darkened(.08)
 				style.bg_color.a = .22
 			button.add_theme_stylebox_override(state,style)
+		preload("res://scripts/ui/source_inventory_skin.gd").apply(button,selected)
 	item_grid.queue_redraw()

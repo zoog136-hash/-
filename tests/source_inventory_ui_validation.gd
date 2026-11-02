@@ -14,9 +14,13 @@ func capture(name_value: String) -> void:
 	await RenderingServer.frame_post_draw
 	check(root.get_texture().get_image().save_png(folder+"/"+name_value+".png")==OK,"capture "+name_value)
 func run() -> void:
+	var private_root: String=""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--capture-dir="): folder=arg.trim_prefix("--capture-dir=")
+		if arg.begins_with("--private-ui-root="):private_root=arg.trim_prefix("--private-ui-root=")
 	if folder.is_empty(): push_error("Explicit --capture-dir required"); quit(2); return
+	if not private_root.is_empty() and ResourceLoader.exists("res://scripts/lineagem_pack_install.gd"):
+		var installer: Script=load("res://scripts/lineagem_pack_install.gd");installer._session_root=private_root
 	DirAccess.make_dir_recursive_absolute(folder)
 	root.size=Vector2i(1280,720); DisplayServer.window_set_size(root.size)
 	var world: Node=load("res://Main.tscn").instantiate(); root.add_child(world)
@@ -38,6 +42,7 @@ func run() -> void:
 		if bag.slot_buttons.is_empty(): continue
 		var reference: String=bag.slot_buttons.keys()[0]
 		var slot: Button=bag.slot_buttons[reference]
+		if not private_root.is_empty():check(slot.has_meta("original_inventory_slot"),"original Common_Slot frame reaches inventory button")
 		check(slot.custom_minimum_size==Vector2(76,76),"original background bounds")
 		check(slot.get_node("Icon").size==Vector2(64,64),"original icon bounds")
 		check(slot.get_meta("tooltip_reference","")==reference and not slot.tooltip_text.is_empty(),"tooltip physical reference")
