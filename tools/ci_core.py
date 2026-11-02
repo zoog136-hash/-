@@ -25,6 +25,13 @@ CHECKS = [
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
 ]
+# transformation_movement_scope.gd consumes only flags, grades and actor IDs
+# from these versioned policy records. Their citations/staging ledgers are
+# authoring evidence, not ResourceLoader inputs. Copy the policies unchanged.
+DATA_ONLY_POLICIES = {
+    'data/pr122_transform_motion_scope.json':'pr122-transform-motion-scope-v1',
+    'data/pr122_monster_production_scope.json':'pr122-monster-motion-scope-v1',
+}
 
 def git(root: Path, *args: str, **kw):
     return subprocess.check_output(['git', '-C', str(root), *args], **kw)
@@ -76,6 +83,10 @@ def stage(root: Path, destination: Path) -> dict:
             continue
         scanned.add(path)
         text = read(path).decode('utf-8', errors='strict')
+        if path in DATA_ONLY_POLICIES:
+            policy = json.loads(text)
+            if isinstance(policy, dict) and policy.get('schema') == DATA_ONLY_POLICIES[path]:
+                continue
         sprite_frames = PurePosixPath(path).suffix == '.tres' and re.search(r'^\[gd_resource\b[^\n]*type="SpriteFrames"',text)
         for match in REFERENCE.finditer(text):
             # SpriteFrames' external resource declarations are engine inputs.

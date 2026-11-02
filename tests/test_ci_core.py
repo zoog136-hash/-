@@ -18,9 +18,10 @@ class CoreStageTest(unittest.TestCase):
         files = {
             'project.godot':'config_version=5\n',
             'Main.tscn':'[ext_resource type="Texture2D" path="res://assets/live.png"]\n[ext_resource path="res://docs/runtime.txt"]\n',
-            'scripts/main.gd':'const DATA = "res://data/live.json"\n',
+            'scripts/main.gd':'const DATA = "res://data/live.json"\nconst FLAGS = "res://data/pr122_transform_motion_scope.json"\n',
             'data/live.json':'{"frames":"res://assets/live.tres"}',
             'data/unused-review.json':'{"review":"res://assets/review.png"}',
+            'data/pr122_transform_motion_scope.json':'{"schema":"pr122-transform-motion-scope-v1","actor_kind":"transform","review":"res://data/unused-review.json"}',
             'assets/live.tres':'[gd_resource type="SpriteFrames" format=3]\n[ext_resource type="Texture2D" path="res://assets/pose.png"]\n[resource]\nmetadata/review="res://data/unused-review.json"\n',
             'assets/live.png':'opaque test byte fixture, never game art',
             'assets/pose.png':'second immutable test byte fixture',
@@ -45,6 +46,7 @@ class CoreStageTest(unittest.TestCase):
             self.assertIn('docs/runtime.txt',selected)
             self.assertIn('addons/production/plugin.gd',selected)
             self.assertNotIn('assets/review.png',selected)
+            self.assertEqual((root/'data/pr122_transform_motion_scope.json').read_bytes(),(Path(temporary)/'stage/data/pr122_transform_motion_scope.json').read_bytes())
             self.assertEqual((root/'assets/pose.png').read_bytes(),(Path(temporary)/'stage/assets/pose.png').read_bytes())
 
     def test_linux_import_profile_never_edits_production_settings(self):
