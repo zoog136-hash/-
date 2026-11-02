@@ -55,5 +55,8 @@ func run()->void:
  check(not bool(bad.get("ok",false)),"corrupt update rejected")
  check(INSTALL.monster_root()==active,"failed update preserves active root")
  check(FileAccess.file_exists(active.path_join("installed.json")),"failed update preserves receipt")
+ var missing:Dictionary=await installer.install_zip(args.baseline)
+ check(not bool(missing.get("ok",false)),"valid archive missing old NPCs rejected")
+ check(INSTALL.monster_root()==active,"missing-NPC update preserves active root")
  print("BASE508_REPRESENTATIVE_INSTALL ",JSON.stringify({"records":manifest.records.size(),"ready_casters":ready,"blocked_casters":blocked,"errors":errors,"full_pack_install_tested":false}))
  installer.free();quit(0 if errors.is_empty()else 1)
