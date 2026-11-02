@@ -25,3 +25,31 @@ Library libfile_e8693ec0b3288191aaf23f20cbc132cd v1 contains the full known extr
 Forty available model candidates lack a valid core action/reference interpretation; four installed models have optional-action issues. `model_build_issues.json` records those issues, including 196 SPR-referenced member names absent from the inventory. No archive, CRC or existence is invented for these 196 names. They need original provenance/interpretation work rather than blind extraction assumptions. Source-coordinate to host-map transforms, native timing/blend equations, remaining combat semantics, and unavailable pixels are not marked complete.
 
 Old assets remain required by shared UI/atlases, other maps and fallback encounters. Even the replaced werewolf, lycanthrope, skeleton and bugbear profiles remain referenced outside these guarded ports. No old path is declared safe to delete.
+
+## PR217 consumer integration (2026-11-02)
+
+The exact handoff commits7be4331621577fcfae83dfd4c65a1be40860ec39 and
+0cfccb8498f63fa8957db435640c291faa9d2253 were cherry-picked onto the current
+card branch. Managed installation, card strict-setting inheritance, Girtas blend,
+sparse diagnostics and companion presentation observations remain preserved.
+Companion observations are gated away from monster consumer clocks.
+
+All40 private Drive parts were independently fetched and SHA-verified, yielding
+1339066288 bytes/SHA25688b3f4470664571f1f6b2894602fa7a6895cc0443a9ac2f5c914f206ba2b876e.
+The common installer accepted14988 files/2441258451 bytes into a new managed
+version; source-context/sprite rejections passed. Fresh Godot4.7.2 processes
+loaded12 representative models and all14 actual Monster scenes passed native
+replacement/stats/context/pool-reset/fallback checks. Card strict inheritance
+and both companion presentation checks passed after integration. No pack rebuild,
+public pixels, Android execution, full CI rerun or671-character visual approval.
+
+A negative test reproduced an installer cache defect: valid NPC249/Sprite1108
+could reuse NPC248/Sprite1110's already-checked model path/hash and skip the
+expected-sprite test. Runtime already rejected it; installation must reject it
+before activation. The cache key now includes expected sprite ID. The same
+focused test accepts the valid pair and rejects the cross-sprite reference.
+
+The next431-input compilation and diagnostic commitd24c66f are outside this671
+checkpoint. Unknown clocks/blends,40 failed candidates, remaining source inputs
+and native geographic placement (still0) are not marked complete. Old resources,
+packs and saves remain preserved.
