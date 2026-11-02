@@ -3,11 +3,15 @@ func _initialize():call_deferred('run')
 func run():
  var catalog:Dictionary=JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment('BASE508_ENTRY_CATALOG')))
  var results:Array=[]
+ var output_path:String=OS.get_environment('BASE508_ENTRY_RESULTS')
+ if FileAccess.file_exists(output_path):results=JSON.parse_string(FileAccess.get_file_as_string(output_path))
+ var seen:Dictionary={}
+ for prior:Dictionary in results:seen[str(prior.land)+':'+str(prior.asset)]=true
  for row:Dictionary in catalog.maps:
-  if row.status!='READY_FOR_GRAPH_REVIEW':continue
+  if row.status!='READY_FOR_GRAPH_REVIEW' or seen.has(str(row.land)+':'+str(row.asset)):continue
   var pack=load('res://scripts/maps/base508_pack.gd').new()
   var result:Dictionary={'land':row.land,'asset':row.asset,'status':'NO_COMPATIBLE_ENTRY','attempts':[]}
-  if not pack.load_pack(OS.get_environment('BASE508_ASSETS')+'/base508_asset_'+str(row.asset)):
+  if not pack.load_pack(OS.get_environment('BASE508_ASSETS')+'/base508_asset_'+str(row.asset),int(row.land)):
    result.status='PACK_REJECTED';results.append(result);continue
   for entry:Dictionary in row.entries:
    var evidence:Dictionary=row.duplicate(true);evidence.selected=entry

@@ -160,3 +160,27 @@ claimed reachable. The full graph and component sizes remain separate.
 `verify_source_entry_queue.gd` records failures per original entry and never
 moves an entry to a nearby cell. Runtime Main validation remains a separate
 stage; graph approval alone does not constitute physical walking approval.
+
+The queue now enumerates every retained Land context, sharing AssetPath pixels:
+1055 normal contexts =34 explicit-entry candidates +26 missing-entry contexts
++995 unreviewed attribute contexts. Four partial Land contexts remain outside
+normal pack loading. `--base508-land=<original-LandID>` selects the hash-checked
+pack context; it never infers LandID from the AssetPath number.
+
+The completed actual-Main batch passed31 of34 candidates:124 full-map extreme
+routes,167724 radius-4 physical sweep steps,1984 blocked boundaries and235840
+coordinate round trips. Saves were unchanged at every scene exit. Three maps
+(13372/30/31) fail whole-map reachability due to separate graph components;
+their local arrival-component routes are not full-map approval. NPC occupancy
+is explicitly untested where no original occupying class is supplied (75/76/77).
+The prior source test location on Land25 remains separately reviewed, not
+silently converted into a genuine portal entry.
+
+`run_source_main_queue.py` resumes saved per-Land/Asset results in a single
+process with an exclusive lock and atomic checkpoints. It uses an explicit
+isolated XDG root and timeout, rejects missing completion receipts, retains
+failed results without automatically retrying or changing collision, and
+supports the same explicit original entry catalog. Reusing the completed
+34-result checkpoint executed zero duplicate Godot jobs. Actual target-device
+performance, native height/foreground depth and automatic trigger semantics
+remain unverified.

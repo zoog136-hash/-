@@ -18,7 +18,8 @@ static func prepare() -> PlayableField:
 	if prepared!=null:return prepared
 	var pack_script=load("res://scripts/maps/base508_pack.gd")
 	var pack=pack_script.new()
-	if not pack.load_pack(argument("--base508-pack=")):problem=pack.error;return null
+	var requested_land:int=int(argument("--base508-land=")) if not argument("--base508-land=").is_empty() else -1
+	if not pack.load_pack(argument("--base508-pack="),requested_land):problem=pack.error;return null
 	if "--base508-source-edge-review" in OS.get_cmdline_user_args():
 		var edge_script=load("res://scripts/maps/base508_source_edge_field.gd")
 		var edge_candidate=edge_script.new()

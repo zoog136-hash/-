@@ -21,7 +21,11 @@ def build(universe, tables, inventory):
             entries.setdefault(int(location['LandID']), []).append(dict(kind='TELEPORT_TO_LOCATION', id=int(bonus['ID']), location_id=int(location['ID']), x=int(location['X']), y=int(location['Y'])))
     seen = set()
     for file in sorted(universe.glob('base508_asset_*/portals.json')):
-        for portal in read(file):
+        context_file = file.parent / 'land_contexts.json'
+        portals = read(file)
+        if context_file.exists():
+            portals += [p for context in read(context_file) for p in context['portals']]
+        for portal in portals:
             pid = int(portal['ID'])
             if pid in seen:
                 continue
@@ -34,9 +38,13 @@ def build(universe, tables, inventory):
     for source in inventory:
         asset = source['asset']
         manifest = universe / ('base508_asset_' + asset) / 'map.json'
-        choices = sorted(entries.get(source['land'], []), key=lambda e: (e['kind'], e['id']))
-        status = 'READY_FOR_GRAPH_REVIEW' if source['candidate_01_only'] and choices else ('NO_EXPLICIT_ENTRY' if source['candidate_01_only'] else 'UNREVIEWED_ATTRIBUTE_PROFILE')
-        result.append(dict(asset=asset, land=source['land'], name=source['name'], status=status, entries=choices, map_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest()))
+        contexts_file = manifest.parent / 'land_contexts.json'
+        contexts = read(contexts_file) if contexts_file.exists() else [dict(land=read(manifest)['land'])]
+        for context in contexts:
+            land = context['land']
+            choices = sorted(entries.get(int(land['ID']), []), key=lambda e: (e['kind'], e['id']))
+            status = 'READY_FOR_GRAPH_REVIEW' if source['candidate_01_only'] and choices else ('NO_EXPLICIT_ENTRY' if source['candidate_01_only'] else 'UNREVIEWED_ATTRIBUTE_PROFILE')
+            result.append(dict(asset=asset, land=int(land['ID']), name=land['Name'], status=status, entries=choices, map_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest()))
     return dict(schema=1, edition='LineageM_base508', scope='REVIEW_ONLY_NOT_NATIVE_M_APPROVAL', maps=result)
 
 
