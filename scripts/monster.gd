@@ -15,6 +15,7 @@ const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
 const VISUAL = preload("res://scripts/monsters/monster_visual.gd")
 const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 const BOSS_GEOMETRY = preload("res://scripts/monsters/boss_geometry.gd")
+var source_option_debuffs: Dictionary={}
 var ai: Dictionary = {}
 var aggro_remaining: float = 0.0
 var life_id: int = 0
@@ -140,6 +141,7 @@ func retire_for_pool() -> void:
 	path_index = 0
 	damage_hit_count = 0
 	special_attack.clear()
+	source_option_debuffs.clear()
 	if is_instance_valid(world_controller):
 		var died_callback:=Callable(world_controller,"_on_monster_died")
 		var hit_callback:=Callable(world_controller,"_on_player_hit")
@@ -167,6 +169,7 @@ func retire_for_pool() -> void:
 	drop_items.clear()
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
+	source_option_debuffs.clear()
 	_clear_source_m_view()
 	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
 	if source_record.has("source_m_asset_manifest_path"):
@@ -345,6 +348,7 @@ func _advance_source_m_view(delta: float) -> void:
 		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
 
 func _physics_process(delta: float) -> void:
+	advance_source_option_debuffs(delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
@@ -605,7 +609,7 @@ func _resolve_special() -> void:
 	if hit and world_controller._has_line_of_sight_world(center,target_player.global_position):
 		var resolving_life: int = life_id
 		player_hit.emit(self,int(attack_power*float(skill.get("multiplier",1.6))),"magic" if kind not in ["charge","cone"] else "melee")
-		if kind=="drain" and not dead and life_id == resolving_life: hp = mini(max_hp,hp+attack_power*2); hp_bar.value = hp
+		if kind=="drain" and not dead and life_id == resolving_life: hp = mini(max_hp,hp+source_option_healing(attack_power*2)); hp_bar.value = hp
 
 func _stop_chasing_concealed_player() -> void:
 	velocity = Vector2.ZERO
@@ -1042,6 +1046,29 @@ func _patrol_allows(point: Vector2) -> bool:
 	if not is_boss and (field==null or not bool(field.data.get("constrain_all_population_patrol",false))): return true
 	var population: Node = world_controller.field_population
 	return not is_instance_valid(population) or not population.has_method("destination_allowed") or population.destination_allowed(self,point)
+
+func apply_source_option_debuff(origin: String,duration: float,effects: Array) -> bool:
+	if dead or duration<=0:return false
+	for effect: Dictionary in effects:
+		if effect.type.Name not in ["HPHealDecreasePercent","HPPotionDecreasePercent"] or effect.unit.Name!="Percentage" or int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0:return false
+	source_option_debuffs[origin]={"remaining":duration,"effects":effects.duplicate(true)}
+	return true
+func prune_source_option_debuffs(enabled: Dictionary) -> void:
+	for origin: String in source_option_debuffs.keys():
+		if dead or not enabled.has(origin):source_option_debuffs.erase(origin)
+func source_option_healing(amount: int,potion: bool=false) -> int:
+	var maximum: int=0
+	for entry: Dictionary in source_option_debuffs.values():
+		for effect: Dictionary in entry.effects:
+			if effect.type.Name==("HPPotionDecreasePercent" if potion else "HPHealDecreasePercent"):maximum=maxi(maximum,int(effect.bonus.Value))
+	# Native Percentage uses 1,000,000 raw units for 100%. Keep raw values,
+	# clamp the resulting recovery at zero; never turn healing into damage.
+	return maxi(0,int(float(amount)*(1.0-clampf(float(maximum)/1000000.0,0,1))))
+
+func advance_source_option_debuffs(delta: float) -> void:
+	for origin: String in source_option_debuffs.keys():
+		source_option_debuffs[origin].remaining-=maxf(0,delta)
+		if dead or source_option_debuffs[origin].remaining<=0:source_option_debuffs.erase(origin)
 
 func hit_armor_class() -> int:
 	# Existing local formula expects nonpositive armor; preserve raw native AC for display/audit.

@@ -1,6 +1,6 @@
 extends VBoxContainer
-## Read-only display of the four collection definitions already supported by
-## option_awakening_runtime. It invents no ordinary card collections or rewards.
+## Read-only legacy collections or exact native source sets supplied by runtime.
+## This presentation never calculates rewards or changes card ownership.
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const Chrome=preload("res://scripts/ui/catalog_card_chrome.gd")
@@ -42,6 +42,9 @@ func set_rows(values: Array,catalog: Dictionary,state: Dictionary,effect_setting
 	var signature: String=str(hash(values))+str(hash(state))+str(hash(effect_settings))
 	if signature==_signature:return
 	_signature=signature;rows=values.duplicate(true);ownership=state;settings=effect_settings
+	var native: bool=not rows.is_empty() and rows[0].get("source",{}).get("snapshot","")=="base508"
+	var scope: Label=get_node("SupportedCollectionScope")
+	scope.text="원본 관련 각성 컬렉션 %d개 · 조건·효과 지원 범위 내 자동 적용 · 카드 소모 없음" % rows.size() if native else "확인된 4개만 표시 · 조건 달성 시 자동 적용 · 카드 소모 없음"
 	if selected_id.is_empty() and not rows.is_empty():selected_id=str(rows[0].id)
 	_render()
 
@@ -74,6 +77,7 @@ func _render() -> void:
 		header.pressed.connect(func() -> void:selected_id=cid;_render())
 		body.add_child(header)
 		var reward: Label=UI.label(" · ".join(row.get("bonus_options",[])),12,UI.GOLD if complete else UI.MUTED)
+		if row.get("source",{}).get("snapshot","")=="base508" and not bool(row.get("available",false)):reward.text+=" · 원본 조건/효과 확인 필요"
 		reward.name="CollectionReward";reward.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;body.add_child(reward)
 		if cid!=selected_id:continue
 		var grid:=GridContainer.new();grid.columns=4;grid.name="SelectedCollectionCards";body.add_child(grid)
@@ -90,7 +94,7 @@ func _button() -> Button:
 func _add_card(grid: GridContainer,requirement: Dictionary) -> void:
 	var category: String=str(requirement.category)
 	var identity: String=str(requirement.id)
-	var acquired: bool=(ownership.get("owned",{}).get(category,{}) as Dictionary).has(identity)
+	var acquired: bool=(ownership.get("owned",{}).get(category,{}) as Dictionary).get(identity,false)==true
 	var met: bool=bool(requirement.get("met",false))
 	var record: Dictionary=card_index.get(category+":"+identity,{})
 	var column:=VBoxContainer.new();column.custom_minimum_size.x=90;grid.add_child(column)
@@ -102,16 +106,19 @@ func _add_card(grid: GridContainer,requirement: Dictionary) -> void:
 	art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.texture=Ownership.icon_for(record,acquired);art.modulate=Color.WHITE if acquired else Ownership.UNOWNED_ICON_TINT
 	card.add_child(art);art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	if acquired:
+	var native: bool=preload("res://scripts/ui/source_card_presentation.gd").native(record)
+	if acquired and not native:
 		var aura:=ColorRect.new();aura.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		aura.material=Chrome.material_for(rank,true,false,bool(settings.get("reduced_motion",false)),str(settings.get("effect_detail","full"))=="low")
 		card.add_child(aura);aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var metal:=TextureRect.new();metal.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	metal.texture=Chrome.texture_for(rank);metal.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	metal.material=Chrome.material_for(rank,false,false,bool(settings.get("reduced_motion",false)))
-	metal.modulate=Color.WHITE if acquired else Ownership.UNOWNED_FRAME_TINT
-	card.add_child(metal);metal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if not native:
+		var metal:=TextureRect.new();metal.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		metal.texture=Chrome.texture_for(rank);metal.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		metal.material=Chrome.material_for(rank,false,false,bool(settings.get("reduced_motion",false)))
+		metal.modulate=Color.WHITE if acquired else Ownership.UNOWNED_FRAME_TINT
+		card.add_child(metal);metal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var duplicates: int=int(ownership.get("spare",{}).get(category,{}).get(identity,0))
+	if native and acquired:duplicates+=1
 	if duplicates>0:
 		var amount: Label=UI.label(str(duplicates),11)
 		card.add_child(amount);amount.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

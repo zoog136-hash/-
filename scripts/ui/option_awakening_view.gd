@@ -344,18 +344,19 @@ func _render() -> void:
 	var awakened: bool = bool(snapshot.get("awakened", false))
 	_heading.text = "%s · %s%s" % [str(snapshot.get("category", "")), str(record.get("name", "옵션 각성")), "  [각성]" if awakened else ""]
 	_heading.add_theme_color_override("font_color", UI.grade(grade_name))
-	_compact_target.text = "%s · %s · %s" % [str(record.get("name", "")), grade_name, "각성 완료" if awakened else "경험치 %d / %d" % [int(snapshot.get("experience", 0)), _required_experience()]]
+	_compact_target.text = "%s · %s · %s" % [str(record.get("name", "")), grade_name, "각성 완료" if awakened else "경험치 %s / %s" % [_xp(int(snapshot.get("experience", 0))), _xp(_required_experience())]]
 	_progress.max_value = _required_experience()
 	_progress.value = _required_experience() if awakened else int(snapshot.get("experience", 0))
-	_progress_text.text = "각성 완료" if awakened else "각성 경험치 %d / %d · 100%% 충전 후 각성 시도" % [int(snapshot.get("experience", 0)), _required_experience()]
+	_progress_text.text = "각성 완료" if awakened else "각성 경험치 %s / %s · 100%% 충전 후 각성 시도" % [_xp(int(snapshot.get("experience", 0))), _xp(_required_experience())]
 	_target_art.texture = _texture(record)
 	_target_art.tooltip_text = str(record.get("name", ""))
 	_border.configure(grade_name, awakened, _settings)
+	_border.visible=not preload("res://scripts/ui/source_card_presentation.gd").native(record)
 	var lines := PackedStringArray()
 	lines.append("[b]%s 등급 · 옵션 각성[/b]" % UI.safe(grade_name))
 	lines.append("성공 확률 %s%% · 시도 비용 %s 아데나" % [_percent(float(snapshot.get("success_chance_pct", 0.0))), _number(int(snapshot.get("attempt_cost", 0)))])
 	lines.append("보유 아데나 %s" % _number(int(snapshot.get("gold", 0))))
-	lines.append("실패 시 경험치 %d / %d 환급\n" % [int(snapshot.get("failure_refund_experience", 0)), _required_experience()])
+	lines.append("실패 시 경험치 %s / %s %s\n" % [_xp(int(snapshot.get("failure_refund_experience", 0))), _xp(_required_experience()), "유지" if int(snapshot.get("source_exp_scale",1))>1 else "환급"])
 	var bonuses: Array = snapshot.get("bonus_options", []) as Array
 	var applied: Array = snapshot.get("applied_options", []) as Array
 	var pending: Array = snapshot.get("pending_options", []) as Array
@@ -393,7 +394,7 @@ func _render_controls() -> void:
 	_increase.disabled = locked or not may_feed or entry.is_empty() or selected >= spare or _selected_experience() >= _remaining_experience()
 	_fill.disabled = _increase.disabled
 	_clear.disabled = locked or selected_materials.is_empty()
-	_feed.disabled = locked or not may_feed or selected_materials.is_empty()
+	_feed.disabled = locked or not may_feed or selected_materials.is_empty() or _selected_gold_cost()>int(snapshot.get("gold",0))
 	_attempt.disabled = locked or not bool(snapshot.get("can_awaken", false))
 	_materials_list.mouse_filter = Control.MOUSE_FILTER_IGNORE if locked else Control.MOUSE_FILTER_STOP
 	_materials_list.focus_mode = Control.FOCUS_NONE if locked else Control.FOCUS_ALL
@@ -406,14 +407,15 @@ func _render_controls() -> void:
 		count += int(raw)
 	var xp: int = _selected_experience()
 	var gained: int = mini(xp, _remaining_experience())
-	_selection_summary.text = "선택 %d장 · 경험치 +%d → %d / %d" % [count, gained, int(snapshot.get("experience", 0)) + gained, _required_experience()]
+	_selection_summary.text = "선택 %d장 · 경험치 +%s → %s / %s" % [count, _xp(gained), _xp(int(snapshot.get("experience", 0)) + gained), _xp(_required_experience())]
+	if int(snapshot.get("source_exp_scale",1))>1:_selection_summary.text+=" · 비용 "+_number(_selected_gold_cost())+" 아데나"
 	if xp > gained:
-		_selection_summary.text += " · 초과 %d 소멸" % (xp - gained)
+		_selection_summary.text += " · 초과 %s 소멸" % _xp(xp - gained)
 	if entry.is_empty():
 		_quantity_caption.text = "재료를 선택해 주세요."
 	else:
 		var record: Dictionary = entry.get("record", {}) as Dictionary
-		_quantity_caption.text = "%s · 선택 %d / 중복 %d장 · 1장당 +%d XP" % [str(record.get("name", "")), selected, spare, int(entry.get("experience_per_card", 0))]
+		_quantity_caption.text = "%s · 선택 %d / 중복 %d장 · 1장당 +%s XP" % [str(record.get("name", "")), selected, spare, _xp(int(entry.get("experience_per_card", 0)))]
 	_refresh_material_rows()
 
 func _refresh_material_rows() -> void:
@@ -422,7 +424,7 @@ func _refresh_material_rows() -> void:
 		var entry: Dictionary = _material_rows.get(id, {}) as Dictionary
 		var record: Dictionary = entry.get("record", {}) as Dictionary
 		var count: int = int(selected_materials.get(id, 0))
-		_materials_list.set_item_text(index, "%s · %s · 중복 %d장 · +%d XP%s" % [str(record.get("name", "")), str(record.get("grade", "")), int(entry.get("spare", 0)), int(entry.get("experience_per_card", 0)), " · 선택 %d장" % count if count > 0 else ""])
+		_materials_list.set_item_text(index, "%s · %s · 중복 %d장 · +%s XP%s" % [str(record.get("name", "")), str(record.get("grade", "")), int(entry.get("spare", 0)), _xp(int(entry.get("experience_per_card", 0))), " · 선택 %d장" % count if count > 0 else ""])
 		_materials_list.set_item_tooltip(index, "%s\n중복 카드만 소모됩니다." % str(record.get("name", "")))
 
 func _select_material(index: int) -> void:
@@ -489,9 +491,10 @@ func _open_review(action: String) -> void:
 			lines.append("• %s (%s) × %d장" % [UI.safe(str(material.get("name", ""))), UI.safe(str(material.get("grade", ""))), int(_review_materials[id])])
 		var xp: int = _selected_experience()
 		var gained: int = mini(xp, _remaining_experience())
-		lines.append("\n각성 경험치: %d → %d / %d" % [int(snapshot.get("experience", 0)), int(snapshot.get("experience", 0)) + gained, _required_experience()])
+		lines.append("\n각성 경험치: %s → %s / %s" % [_xp(int(snapshot.get("experience", 0))), _xp(int(snapshot.get("experience", 0)) + gained), _xp(_required_experience())])
+		if int(snapshot.get("source_exp_scale",1))>1:lines.append("소모 비용: [b]"+_number(_selected_gold_cost())+" 아데나[/b]")
 		if xp > gained:
-			lines.append("[color=#e97772]초과 경험치 %d는 소멸합니다.[/color]" % (xp - gained))
+			lines.append("[color=#e97772]초과 경험치 %s는 소멸합니다.[/color]" % _xp(xp - gained))
 		lines.append("\n확인하면 위 중복 카드가 즉시 소모됩니다.\n최초 획득 카드는 보존되며, 각성 시도는 경험치 주입 후 별도로 진행합니다.")
 		_review_confirm.text = "재료 소모 · 경험치 주입"
 	else:
@@ -499,7 +502,8 @@ func _open_review(action: String) -> void:
 		lines.append("성공 확률: [b]%s%%[/b]" % _percent(float(snapshot.get("success_chance_pct", 0.0))))
 		lines.append("소모 비용: [b]%s 아데나[/b]" % _number(int(snapshot.get("attempt_cost", 0))))
 		lines.append("보유 아데나: %s" % _number(int(snapshot.get("gold", 0))))
-		lines.append("\n각성에 실패해도 시도 비용은 소모됩니다.\n실패 시 경험치 %d / %d가 환급됩니다.\n이미 주입한 재료는 다시 소모하지 않습니다." % [int(snapshot.get("failure_refund_experience", 0)), _required_experience()])
+		lines.append("\n각성에 실패해도 시도 비용은 소모됩니다.\n실패 시 경험치 %s / %s가 유지됩니다.\n이미 주입한 재료는 다시 소모하지 않습니다." % [_xp(int(snapshot.get("failure_refund_experience", 0))), _xp(_required_experience())])
+
 		lines.append("\n" + UI.safe(str(snapshot.get("policy_note", "경험치·비용·실패 환급은 TWILIGHT 설정값입니다."))))
 		_review_confirm.text = "아데나 소모 · 각성 시도"
 	_review_text.text = "\n".join(lines)
@@ -510,6 +514,16 @@ func _open_review(action: String) -> void:
 	_footer.hide()
 	_review.show()
 	_render_controls()
+
+func _selected_gold_cost() -> int:
+	var cost: int=0
+	for identity: String in selected_materials:cost+=int(selected_materials[identity])*int(_material_rows.get(identity,{}).get("cost_per_card",0))
+	return cost
+
+func _xp(value: int) -> String:
+	var scale: int=int(snapshot.get("source_exp_scale",1))
+	if scale!=100:return str(value)
+	return preload("res://scripts/cards/native_option_economy.gd").format_units(value)
 
 func _confirm_review() -> void:
 	if pending_request or not is_review_open():
@@ -633,6 +647,10 @@ func _remaining_experience() -> int:
 	return maxi(0, _required_experience() - int(snapshot.get("experience", 0)))
 
 func _texture(record: Dictionary) -> Texture2D:
+	if preload("res://scripts/ui/source_card_presentation.gd").native(record):
+		var identity: String=preload("res://scripts/card_draw_fusion.gd").card_id(record)
+		var acquired: bool=bool(snapshot.get("owned",false)) if identity==str(snapshot.get("target_id","")) else true
+		return preload("res://scripts/ui/catalog_card_ownership.gd").icon_for(record,acquired)
 	var path: String = str(record.get("image_path", ""))
 	return load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
 

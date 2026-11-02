@@ -88,6 +88,7 @@ const RELIC_MOTION = preload("res://scripts/animation/relic_motion.gd")
 var relic_motion: TwilightRelicMotion = RELIC_MOTION.new()
 const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
 var doll_motion: TwilightFollowerMotion = FOLLOWER_MOTION.new()
+var secondary_doll_visual: Node2D
 const COMBAT_VFX = preload("res://scripts/animation/combat_vfx.gd")
 var combat_vfx: TwilightCombatVFX = null
 var feedback_kind: String = "melee"
@@ -484,6 +485,7 @@ func _process(delta: float) -> void:
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
 	if original_skills != null: original_skills.tick(delta)
+	option_awakening.combat.tick(delta)
 	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
 	ain_refresh_clock -= delta
@@ -594,6 +596,7 @@ func _load_data() -> void:
 	var catalog_items_value: Variant = catalog_db.get("아이템", [])
 	if catalog_items_value is Array:
 		_enrich_weapon_records(catalog_items_value as Array)
+	preload("res://scripts/cards/native_doll_unlock_item.gd").install(catalog_db)
 	_merge_local_consumables_into_catalog()
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	_index_catalog_item_sources()
@@ -1293,6 +1296,8 @@ func _connect_signals() -> void:
 		hud.connect("card_pack_draw_requested", _on_card_pack_draw_requested)
 	if hud.has_signal("card_fusion_requested"):
 		hud.connect("card_fusion_requested", _on_card_fusion_requested)
+	if hud.has_signal("secondary_doll_requested"):
+		hud.connect("secondary_doll_requested",_on_secondary_doll_requested)
 	if hud.has_signal("option_awakening_open_requested"):
 		hud.connect("option_awakening_open_requested", _on_option_awakening_open_requested)
 		hud.connect("option_awakening_feed_requested", _on_option_awakening_feed_requested)
@@ -2362,7 +2367,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
 	_deal_successful_player_hit(target, damage, critical)
-	_try_trigger_passives("on_hit", target)
+	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
 		target.monster_name, damage,
@@ -2895,7 +2900,10 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			player.show_miss()
 			_refresh_combat_hud()
 			return
+	var option_result: Dictionary=option_awakening.combat.incoming(attacker,normalized_type,reduced)
+	reduced=int(option_result.damage)
 	hp = maxi(0, hp - reduced)
+	if hp>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal))
 	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
@@ -5577,7 +5585,8 @@ func _break_invisibility() -> void:
 	_refresh_skill_stealth_visual()
 	hud.append_log("공격으로 은신 해제")
 
-func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> void:
+func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack_kind: String="melee", main_target: bool=true, by_spell: bool=false) -> void:
+	if trigger_name=="on_hit" and hp>0:option_awakening.combat.on_hit(target,attack_kind,main_target,by_spell)
 	if original_skills != null: original_skills.trigger(trigger_name, target)
 	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
@@ -5777,7 +5786,7 @@ func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_
 	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	_deal_successful_player_hit(target, damage)
-	_try_trigger_passives("on_hit", target)
+	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
 
 func _cast_job_turn_undead(skill: Dictionary) -> bool:
@@ -6012,7 +6021,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 				damage = _player_critical_damage(damage, style)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
 			_deal_successful_player_hit(victim, damage, critical)
-			_try_trigger_passives("on_hit", victim)
+			_try_trigger_passives("on_hit", victim,style,victim==target,true)
 			_try_extra_weapon_hit(victim, damage, style)
 			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):
 				match str(skill.get("on_hit_status", "")):
@@ -6247,6 +6256,9 @@ func _on_option_awakening_feed_requested(category: String, target_id: String, ma
 		return
 	_update_hud()
 	var message: String = "옵션 각성 경험치 %d / %d · 중복 카드 재료 적용 완료" % [int(snapshot.get("experience", 0)), int(snapshot.get("required_experience", 100))]
+	if int(snapshot.get("source_exp_scale",1))==100:
+		var formatter: Script=preload("res://scripts/cards/native_option_economy.gd")
+		message="옵션 각성 경험치 %s / %s · 소모 %d 아데나" % [formatter.format_units(int(snapshot.experience)),formatter.format_units(int(snapshot.required_experience)),int(result.get("consumed_gold",0))]
 	hud.show_message(message)
 	hud.append_log(message)
 
@@ -6267,7 +6279,8 @@ func _on_option_awakening_attempt_requested(category: String, target_id: String)
 	var success: bool = bool(result.get("success", false))
 	var message: String = "%s 옵션 각성 %s" % [str(card.get("name", "")), "성공" if success else "실패"]
 	if not success:
-		message += " · 경험치 %d 환급" % int(result.get("refunded_experience", 0))
+		if int(result.get("source_exp_scale",1))==100:message+=" · 원본 경험치 "+preload("res://scripts/cards/native_option_economy.gd").format_units(int(result.source_refunded_experience))+" 유지"
+		else:message += " · 경험치 %d 환급" % int(result.get("refunded_experience", 0))
 	hud.append_log(message)
 	var presentation: Dictionary = result.duplicate(true)
 	presentation["category"] = category
@@ -6992,7 +7005,9 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.hit_armor_class(),0)
 
 func _catalog_damage_bonus(kind: String) -> int:
-	var total: int = _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
+	# Native secondary doll effects are counted once, separately from general attack.
+	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
+	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7576,6 +7591,15 @@ func _experience_multiplier() -> float:
 func _update_companion(delta: float) -> void:
 	doll_motion.update(delta, $Companion, companion_sprite, player)
 	relic_motion.update(delta, relic_sprite, player)
+	var state: Dictionary=option_awakening.subslot_view(false)
+	if not state.get("active",false):
+		if is_instance_valid(secondary_doll_visual):secondary_doll_visual.clear()
+		return
+	if not is_instance_valid(secondary_doll_visual):
+		secondary_doll_visual=preload("res://scripts/cards/native_doll_subslot_visual.gd").new()
+		secondary_doll_visual.name="SecondarySourceDoll";add_child(secondary_doll_visual)
+	var record: Dictionary=option_awakening.core.catalog["마법인형"].get(state.identity,{})
+	secondary_doll_visual.update_source(delta,self,record)
 
 # Playable-field services: renderer, physics, population and HUD remain separate.
 func _setup_field_services() -> void:
@@ -7938,6 +7962,14 @@ func return_from_original_map() -> bool:
 
 func _drop_inventory_reference(reference: String, target: Vector2) -> bool:
 	return INVENTORY_GROUND_TRANSFER.drop(self,reference,target)
+
+func _on_secondary_doll_requested(identity: String) -> void:
+	if _option_awakening_busy():return
+	var result: Dictionary=option_awakening.select_subslot(identity)
+	if not result.ok:hud.show_message(str(result.error));return
+	_update_companion(0)
+	_update_hud()
+	hud.show_message("추가 인형 소환 해제" if identity.is_empty() else "추가 인형 선택 완료"+(" · 인형 원본 리소스 설치 필요" if not is_instance_valid(secondary_doll_visual) or secondary_doll_visual.status!="source_native" else ""))
 
 func _source_visual_context() -> Dictionary:
 	var options: Dictionary = source_card_visual_options.duplicate(true)

@@ -174,3 +174,21 @@ cards have frames. Nine native Grade71/Event cards have no declared correspondin
 prefab, and two Grade0/None cards remain unframed. These are explicit source
 states, not replaced with another grade. Full source control placement remains
 separate from the original skin binding implemented here.
+
+Native option awakening reconnect (separate from card skill awakening): the
+original BuffCardOptionAwakenGroup.BuffCardID joins 289 native cards / 369 groups
+without any name-based alias. The existing service, material/gold transaction,
+probabilities and RNG/save rollback remain in use. Only the first source slot is
+activated; 80 additional SlotIndex11 groups remain raw and visibly pending.
+Existing per-grade success thresholds match all native first-slot probabilities.
+In an unset server context, 206 native targets are eligible and 83 stay gated.
+Source material-card server/time predicates are enforced before consumption.
+
+All 264 collection IsAwaken requirement rows have exact first-slot option
+bindings. The native runtime supplies only that verified ledger; legacy numeric
+IDs, skill-awakening state and visual aura cannot satisfy it. Default supported
+collection capability is 1034/1736 with the native option bridge (909 without
+that bridge); this is not player ownership/completion. Rebuild/removal/group
+mismatch tests verify no duplicate or stale reward. The existing four legacy
+awakening collections remain for the legacy catalog; native UI shows relevant
+original sets instead. No existing save keys or ownership are renamed.
