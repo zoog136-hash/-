@@ -123,10 +123,24 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 	busy=false
 func emit_spell(spell: Dictionary,target: Node2D) -> void:
 	var seen: Dictionary={}
-	for field: String in ["EffectSpriteID","SuccessEffectSpriteID"]:
+	var player: Node=runtime.world.player
+	var preview: Node=null;var manifest: String="";var facing: int=5
+	for property: Dictionary in player.get_property_list():
+		if property.name=="original_source_preview":preview=player.get(property.name)
+		if property.name=="original_source_manifest":manifest=str(player.get(property.name))
+		if property.name=="motion" and player.get(property.name)!=null:facing=int(player.get(property.name).facing8)
+	for stage: String in {"effect":"EffectSpriteID","success":"SuccessEffectSpriteID"}:
+		var field: String="EffectSpriteID" if stage=="effect" else "SuccessEffectSpriteID"
 		var sprite: int=int(spell.get(field,0))
-		if seen.has(sprite):continue
-		seen[sprite]=true;emit_sprite(sprite,target)
+		if sprite<=0 or seen.has(sprite):continue
+		seen[sprite]=true
+		if preview!=null and preview.has_method("notify_source_spell_event") and not manifest.is_empty():
+			var live: Array[Node2D]=[]
+			for node: Variant in preview._overlay_nodes:
+				if is_instance_valid(node):live.append(node)
+			preview._overlay_nodes=live
+			if preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):visual_results[str(sprite)]="played_original";continue
+		emit_sprite(sprite,target)
 func emit_sprite(sprite: int,target: Node2D) -> void:
 	# Existing private source compositor only. Missing bindings remain absent.
 	if sprite<=0 or not is_instance_valid(target):return
@@ -137,7 +151,7 @@ func emit_sprite(sprite: int,target: Node2D) -> void:
 		if property.name=="original_source_preview":preview=player.get(property.name);break
 	if preview!=null and preview.has_method("spawn_source_overlay"):
 		# Shared compositor cleanup must accept freed handles before its typed filter.
-		var live: Array=[]
+		var live: Array[Node2D]=[]
 		for node: Variant in preview._overlay_nodes:
 			if is_instance_valid(node):live.append(node)
 		preview._overlay_nodes=live
