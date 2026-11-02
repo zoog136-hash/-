@@ -147,7 +147,13 @@ func _install(path: String) -> Dictionary:
 	var is_addon: bool = header.kind == "twilight-lineagem-offline-runtime-addon"
 	var base: String = active_root() if is_addon else ""
 	if is_addon:
-		if not trusted_root(base) or not FileAccess.file_exists(base.path_join("manifest.json")) or FileAccess.get_sha256(base.path_join("manifest.json")) != str(header.get("base_manifest_sha256", "")):
+		var accepted_bases: Array = [str(header.get("base_manifest_sha256", ""))]
+		var alternatives: Variant = header.get("compatible_base_manifest_sha256", [])
+		if not alternatives is Array or alternatives.size() > 4: return _failure("증분 기반 목록 오류")
+		for fingerprint: Variant in alternatives:
+			if not fingerprint is String or fingerprint.length() != 64 or not fingerprint.is_valid_hex_number(false): return _failure("증분 기반 해시 오류")
+			accepted_bases.append(fingerprint)
+		if not trusted_root(base) or not FileAccess.file_exists(base.path_join("manifest.json")) or not FileAccess.get_sha256(base.path_join("manifest.json")) in accepted_bases:
 			return _failure("먼저 이 증분에 맞는 원본 v2 전체팩을 설치하고 게임을 다시 실행하세요.")
 		var ancestor: String = base
 		for depth: int in range(4): ancestor = base_root(ancestor) if not ancestor.is_empty() else ""

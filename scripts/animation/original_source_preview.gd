@@ -25,6 +25,7 @@ var _layers: Array[Sprite2D] = []
 var _source_body_style: Dictionary = {}
 var _source_body_material: CanvasItemMaterial
 var _role: String = "idle"
+var source_facing: int = 0
 var _clock: float = 0.0
 var _sequence: int = -1
 var _source_attack: bool = false
@@ -189,6 +190,12 @@ func clear() -> void:
 	last_source_frame = -1
 	hide()
 
+func source_role() -> String:
+	return _role
+
+func source_playback_mode() -> String:
+	return _playback_mode
+
 func installed() -> bool:
 	return not _record.is_empty()
 
@@ -203,6 +210,7 @@ func cancel_source_attack() -> void:
 
 func advance_source(delta: float, state: String, facing: int, sequence: int, gameplay_active: bool) -> void:
 	if not installed(): return
+	source_facing = facing
 	if sequence != _sequence and (gameplay_active or state in ["attack", "recovery"]) and _playback_tracks.has("attack"):
 		_sequence = sequence
 		_source_attack = true

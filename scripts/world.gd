@@ -72,6 +72,8 @@ const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.g
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
 var option_awakening = OPTION_AWAKENING.new()
 var option_awakening_auras: Dictionary = {}
+var source_awakening_auras: Dictionary = {}
+const SOURCE_AWAKENING_AURA = preload("res://scripts/animation/source_awakening_aura.gd")
 var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
@@ -6482,6 +6484,23 @@ func _sync_option_awakening_auras() -> void:
 func _sync_option_awakening_aura(category: String) -> void:
 	var raw: Variant = equipped_catalog.get(category, {})
 	var record: Dictionary = raw if raw is Dictionary else {}
+	if BASE508.native(record):
+		var old: Node2D = option_awakening_auras.get(category) as Node2D
+		if is_instance_valid(old): old.call("set_awakened", false)
+		var native_target: Node2D
+		match category:
+			"변신": native_target = player.original_source_preview
+			"마법인형": native_target = doll_motion.native_actor
+			"성물": native_target = relic_motion.native_actor
+		var source_aura: Node2D = source_awakening_auras.get(category) as Node2D
+		if not is_instance_valid(source_aura):
+			source_aura = SOURCE_AWAKENING_AURA.new()
+			add_child(source_aura)
+			source_awakening_auras[category] = source_aura
+		source_aura.configure(category, record, option_awakening.source_visual_awakened(category, record), native_target, player.original_source_manifest, presentation_settings)
+		return
+	var previous_source: Node2D = source_awakening_auras.get(category) as Node2D
+	if is_instance_valid(previous_source): previous_source.deactivate()
 	var awakened: bool = not BASE508.native(record) and not record.is_empty() and option_awakening.is_awakened(category, record)
 	var aura: Node2D = option_awakening_auras.get(category) as Node2D
 	if not awakened:
@@ -7819,6 +7838,8 @@ func apply_presentation_settings(settings: Dictionary) -> void:
 		combat_vfx.detail_limit = 6 if presentation_settings.effect_detail == "low" else COMBAT_VFX.VISUALS.DETAIL_LIMIT
 	if is_instance_valid(combat_flights):
 		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" else 64
+	for raw: Variant in source_awakening_auras.values():
+		if is_instance_valid(raw): raw.call("apply_settings", presentation_settings)
 	for raw: Variant in option_awakening_auras.values():
 		if is_instance_valid(raw): raw.call("apply_settings", presentation_settings)
 	if is_instance_valid(hud) and hud.has_method("apply_option_awakening_settings"):
