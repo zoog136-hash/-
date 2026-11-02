@@ -70,6 +70,8 @@ const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
 const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.gd")
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
 var option_awakening = OPTION_AWAKENING.new()
+const SKILL_AWAKENING=preload("res://scripts/cards/skill_awakening_runtime.gd")
+var skill_awakening=SKILL_AWAKENING.new()
 var option_awakening_auras: Dictionary = {}
 var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
@@ -380,6 +382,7 @@ func _ready() -> void:
 	card_draw_fusion.configure(catalog_db)
 	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
+	if not skill_awakening.configure(self):push_error(skill_awakening.problem)
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
@@ -4284,6 +4287,9 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
 		return ERR_FILE_CORRUPT
+	if skill_awakening.save_blocked or not skill_awakening.problem.is_empty():
+		if not quiet:hud.show_message("스킬 각성 저장 보호 중 · 원본 저장 보존")
+		return ERR_UNAVAILABLE
 	if option_awakening.save_blocked or not option_awakening.problem.is_empty():
 		if not quiet: hud.show_message("각성 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
@@ -4350,6 +4356,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"equipped_catalog": equipped_catalog,
 		"card_draw_fusion": card_draw_fusion.export_state(),
 		"card_option_awakening": option_awakening.export_state(),
+		"card_skill_awakening": skill_awakening.export_state(),
 		"equipped_items": equipped_items,
 		"equipped_ammo": equipped_ammo,
 		"ammo_unequipped": ammo_unequipped,
@@ -4447,6 +4454,11 @@ func _load_game(quiet: bool) -> void:
 	if not collection_error.is_empty():
 		equipment_collections.save_blocked = true
 		hud.show_message(collection_error)
+		return
+	var skill_awakening_error: String=skill_awakening.check_load(data)
+	if not skill_awakening_error.is_empty():
+		skill_awakening.save_blocked=true
+		hud.show_message(skill_awakening_error)
 		return
 	var awakening_error: String = option_awakening.check_load(data)
 	if not awakening_error.is_empty():
@@ -4567,6 +4579,9 @@ func _load_game(quiet: bool) -> void:
 		return
 	if not option_awakening.accept_load(data):
 		equipment_collections.save_blocked = true
+		migrated_save_path=prior_save_path
+		return
+	if not skill_awakening.accept_load(data):
 		migrated_save_path=prior_save_path
 		return
 	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
@@ -5534,6 +5549,7 @@ func _break_invisibility() -> void:
 	hud.append_log("공격으로 은신 해제")
 
 func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> void:
+	if trigger_name=="on_hit":skill_awakening.on_successful_hit(target)
 	if original_skills != null: original_skills.trigger(trigger_name, target)
 	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
@@ -6508,6 +6524,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
+	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
 	equipment_records_cache=records
 	return equipment_records_cache
 

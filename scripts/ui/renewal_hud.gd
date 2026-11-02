@@ -2367,3 +2367,16 @@ func open_growth(section: String) -> void:
 	var screen := preload("res://scripts/growth/growth_view.gd").new()
 	workspace.mount(screen)
 	screen.configure(self,section)
+
+func open_card_skill_awakening(category: String, identity: String) -> void:
+	var runtime: Variant=get_parent().get("skill_awakening")
+	if runtime==null:show_message("스킬 각성 런타임 연결 없음");return
+	_open_window("card_skill_awakening",category+" 스킬 각성","")
+	var scroll:=ScrollContainer.new()
+	scroll.name="CardSkillAwakeningScroll"
+	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var view: Control=preload("res://scripts/ui/card_skill_awakening_view.gd").new()
+	scroll.add_child(view)
+	view.configure(runtime,identity)
+	workspace.register_scroll_drag(scroll,view)

@@ -1,0 +1,147 @@
+extends RefCounted
+## Native card skill awakening, independent of option awakening and aura.
+## Prices/material quantities/refund mechanics are intentionally not invented.
+const DATA=preload("res://data/cards/base508_skill_awakening.json")
+const Cards=preload("res://scripts/card_draw_fusion.gd")
+const Conditions=preload("res://scripts/cards/source_collection_conditions.gd")
+const MAX_EXPERIENCE: int=9999999999999
+var conditions=Conditions.new()
+var source_server_context: Dictionary={}
+var cards: Dictionary={}
+var pools: Dictionary={}
+var stats: Dictionary={}
+var invokes: Dictionary={}
+var experiences: Dictionary={}
+var problem: String=""
+
+func _init() -> void:
+	cards=DATA.data.cards
+	conditions.configure(DATA.data.source_server_limits)
+	for row: Dictionary in DATA.data.tables.BuffCardSkillAwakenStatPerLevel:
+		stats[str(int(row.MagicDollAwakenStatID))+":"+str(int(row.Level))]=row
+	for row: Dictionary in DATA.data.tables.BuffCardSkillAwakenSkillInvokeProb:
+		invokes[_invoke_key(int(row.BuffCardDeckID),int(row.GradeID),int(row.Level))]=row
+	for row: Dictionary in DATA.data.tables.BuffCardSkillAwakenExp:
+		experiences[str(int(row.BuffCardDeckID))+":"+str(int(row.Level))]=row
+	for book: Dictionary in DATA.data.books:
+		var key: String=str(int(book.target_deck_from_named_bonus_type))+":"+str(int(book.group_row.GradeID))
+		if pools.has(key) or int(book.group_row.ID)==0 or int(book.pool_weight_sum)!=100000:
+			problem="원본 스킬 각성 pool 연결 오류";continue
+		pools[key]=book
+
+static func _invoke_key(deck: int, grade: int, level: int) -> String:return str(deck)+":"+str(grade)+":"+str(level)
+static func fresh_state() -> Dictionary:return {"version":1,"source_snapshot":"base508","cards":{}}
+static func integer(value: Variant) -> bool:return (value is int or value is float) and is_finite(float(value)) and float(value)==floorf(float(value))
+static func fail(code: String,message: String) -> Dictionary:return {"ok":false,"code":code,"error":message}
+
+func book_for(identity: String) -> Dictionary:
+	var card: Dictionary=cards.get(identity,{})
+	if card.is_empty():return {}
+	var raw: Dictionary=card.source_card
+	return pools.get(str(int(raw.BuffCardDeckID))+":"+str(int(raw.GradeID)),{})
+
+func profile(identity: String,level: int) -> Dictionary:
+	var card: Dictionary=cards.get(identity,{})
+	if card.is_empty() or level<1 or level>20:return {}
+	var raw: Dictionary=card.source_card
+	var hp_row: Dictionary=stats.get(str(int(raw.MagicDollAwakenStatID))+":"+str(level),{})
+	var invoke: Dictionary=invokes.get(_invoke_key(int(raw.BuffCardDeckID),int(raw.GradeID),level),{})
+	var exp: Dictionary=experiences.get(str(int(raw.BuffCardDeckID))+":"+str(level),{})
+	if hp_row.is_empty() or invoke.is_empty() or exp.is_empty() or book_for(identity).is_empty():return {}
+	return {"hp":int(hp_row.HP),"invoke":invoke.duplicate(true),"experience_row":exp.duplicate(true),"hp_row":hp_row.duplicate(true),"level":level}
+
+func eligibility(identity: String) -> Dictionary:
+	var card: Dictionary=cards.get(identity,{})
+	if card.is_empty():return fail("identity","원본 카드 ID 연결 없음")
+	if profile(identity,1).is_empty():return fail("profile","원본 스킬 각성 레벨 프로필 없음")
+	var raw: Dictionary=card.source_card
+	if int(raw.StartDateTimeID)!=0 or int(raw.EndDateTimeID)!=0:return fail("time_condition","원본 카드 기간 조건 확인 필요")
+	var server: Dictionary=conditions.evaluate(int(raw.ServerLimitSetID),source_server_context)
+	if server.status not in ["unrestricted","eligible"]:return fail("server_condition","원본 서버 조건 확인 필요 · "+str(server.status))
+	return {"ok":true}
+
+func spell_allowed(identity: String,spell_id: int) -> bool:
+	if spell_id==0:return false
+	var book: Dictionary=book_for(identity)
+	if book.is_empty() or not DATA.data.spells.has(str(spell_id)):return false
+	for row: Dictionary in book.pool_rows:
+		if int(row.SpellClassID)==spell_id:return true
+	return false
+
+func validate_state(value: Variant) -> String:
+	if not value is Dictionary or not integer(value.get("version")) or int(value.get("version",0))!=1 or value.get("source_snapshot","")!="base508" or not value.get("cards") is Dictionary:return "스킬 각성 저장 형식 오류"
+	for key: Variant in value.cards:
+		if not key is String or not key.begins_with("source:m508:"):return "스킬 각성 sourceID 오류"
+		var parts: PackedStringArray=key.split(":")
+		if parts.size()!=4 or not parts[2].is_valid_int() or not parts[3].is_valid_int() or str(int(parts[2]))!=parts[2] or str(int(parts[3]))!=parts[3] or int(parts[2])<1 or int(parts[3])<1:return "스킬 각성 sourceID 정규형 오류"
+		var entry: Variant=value.cards[key]
+		if not entry is Dictionary:return "스킬 각성 카드 저장 오류"
+		for field: String in ["spell_id","level"]:
+			if not integer(entry.get(field)):return "스킬 각성 정수 필드 오류"
+		if int(entry.spell_id)<0 or int(entry.level)<0 or int(entry.level)>20:return "스킬 각성 범위 오류"
+		var xp: Variant=entry.get("experience")
+		if not xp is String or not xp.is_valid_int() or str(int(xp))!=xp or int(xp)<0 or int(xp)>MAX_EXPERIENCE:return "스킬 각성 경험치 저장 오류"
+		if int(entry.spell_id)>0 and int(entry.level)<1:return "스킬 각성 레벨 누락"
+		# Preserve unknown future source IDs as inert same-version records.
+		if cards.has(key) and int(entry.spell_id)>0:
+			if not spell_allowed(key,int(entry.spell_id)) or profile(key,int(entry.level)).is_empty():return "스킬 각성 카드·스킬·레벨 조인 오류"
+	return ""
+
+func candidates(identity: String) -> Array[Dictionary]:
+	var result: Array[Dictionary]=[]
+	for row: Dictionary in book_for(identity).get("pool_rows",[]):
+		var spell: Dictionary=DATA.data.spells.get(str(int(row.SpellClassID)),{})
+		if spell.is_empty():continue
+		result.append({"spell_id":int(row.SpellClassID),"name":spell.name,"selection_weight":int(row.Prob),"selection_total":100000,"source_spell":spell.source_spell.duplicate(true),"effects":spell.effects.duplicate(true)})
+	return result
+
+func view(state: Dictionary,owned: Dictionary,identity: String,preview_level: int=1) -> Dictionary:
+	var card: Dictionary=cards.get(identity,{})
+	if card.is_empty():return fail("identity","원본 카드 ID 연결 없음")
+	var entry: Dictionary=state.cards.get(identity,{"spell_id":0,"level":0,"experience":"0"})
+	var available: Dictionary=eligibility(identity)
+	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"can_awaken":false,"can_feed":false,"blocked_reason":"각성서 소모 수량·수수료·실패/회수 규칙의 원본 정의 확인 중","unknown_rules":DATA.data.unknown_rules}
+
+func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
+	return fail("source_cost_rules_unresolved","소모 수량·수수료·실패/경험치 회수 규칙 미확정 · 재화 차감 없음")
+
+func fixed_damage_profile(spell_id: int) -> Dictionary:
+	var spell: Dictionary=DATA.data.spells.get(str(spell_id),{})
+	if spell.is_empty() or bool(spell.source_spell.TestSpell):return {}
+	var values: Dictionary={}
+	for effect: Dictionary in spell.effects:
+		if int(effect.link.MinSpellLevel)!=0 or int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0:return {}
+		values[effect.type.Name]=int(effect.bonus.Value)
+	if values.size()!=4 or int(values.get("FixedMagicDamage",0))!=1:return {}
+	for key: String in ["SpellDamageBase","SpellDamageDiceNumber","SpellDamageDiceSpotCount"]:
+		if not values.has(key) or int(values[key])<0:return {}
+	return values
+
+func invoke(identity: String,entry: Dictionary,roll: int) -> Dictionary:
+	var eligible: Dictionary=eligibility(identity)
+	if not eligible.ok:return eligible
+	if roll<0 or roll>=10000:return fail("roll","발동 난수 범위 오류")
+	if not spell_allowed(identity,int(entry.get("spell_id",0))):return fail("spell","원본 각성 스킬 연결 없음")
+	var level: Dictionary=profile(identity,int(entry.get("level",0)))
+	if level.is_empty():return fail("level","스킬 각성 레벨 오류")
+	var spell_id: int=int(entry.spell_id)
+	var damage: Dictionary=fixed_damage_profile(spell_id)
+	if damage.is_empty():return fail("effect","원본 스킬 효과 런타임 미지원")
+	return {"ok":true,"invoked":roll<int(level.invoke.CastSuccessProb),"profile":level,"spell":DATA.data.spells[str(spell_id)].duplicate(true),"damage":damage}
+
+
+func select_candidate(identity: String,roll: int) -> Dictionary:
+	if roll<0 or roll>=100000:return fail("selection_roll","후보 선택 난수 범위 오류")
+	var total: int=0
+	for row: Dictionary in candidates(identity):
+		total+=int(row.selection_weight)
+		if roll<total:return {"ok":true,"candidate":row}
+	return fail("pool","원본 후보 pool 연결 없음")
+
+
+func normalized_state(value: Dictionary) -> Dictionary:
+	var result: Dictionary=value.duplicate(true)
+	result.version=int(result.version)
+	for identity: String in result.cards:
+		for field: String in ["spell_id","level"]:result.cards[identity][field]=int(result.cards[identity][field])
+	return result

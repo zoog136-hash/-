@@ -192,3 +192,30 @@ that bridge); this is not player ownership/completion. Rebuild/removal/group
 mismatch tests verify no duplicate or stale reward. The existing four legacy
 awakening collections remain for the legacy catalog; native UI shows relevant
 original sets instead. No existing save keys or ownership are renamed.
+
+Card skill awakening is a separate source system. The new catalog joins 701
+canonical card IDs, 15 live book/pool chains and 72 non-None spells; 523 cards
+have complete level1..20 stat/invoke profiles. Undefined group0, the empty test
+group, None stat profiles and server/time predicates are not treated as unlocks.
+A TWILIGHT-local `card_skill_awakening` namespace stores explicit saved spell,
+level and decimal-string EXP, preserving unknown metadata. It is not an original
+server key/RPC. Invalid state protects the save. Source CumExp remains exact;
+no EXP-material/failure formula or automatic level grant is invented.
+
+Owned/equipped/eligible saved skills contribute source HP once and use the
+existing successful-hit dispatcher/cooldown store for fixed-magic procs. The
+source spell's base/dice and level's proc numerator/denominator/cast-delay bonus
+are retained. Local integration uses successful hits, per-card/spell cooldowns,
+and millisecond delay reduction; this is not recovered original server code.
+No SP/critical/equipment amplification or recursive proc is added. Original
+spell effect sprite/audio references are retained; full original VFX is not
+claimed. The read-only UI shows candidate-selection weights separately from
+proc chance and offers level-profile previews without modifying live state.
+
+Awaken/reawaken/EXP-feed requests are intentionally blocked: book quantity,
+operation fee, success/failure/refund mechanics and nine ValueType enum meanings
+remain unresolved. Neither the static UI price45,000,000 nor option-awakening
+costs are reused. Blocked requests change no resources, RNG or save. Existing
+option awakening and visual aura are not skill-awakening progress. Private UI
+render tests use isolated XDG paths and explicit in-memory progress fixtures;
+full Android/Godot4.7.2/original-client equivalence is still unverified.
