@@ -4,6 +4,8 @@ extends Node2D
 signal native_annotations(event: Dictionary)
 signal native_effect_frame(event: Dictionary)
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
+const REFERENCE_EXCLUSIONS = preload("res://scripts/animation/source_reference_exclusions.gd")
+var reference_exclusion_status: Dictionary = {}
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 var playback_mode_override: String = ""
 var source_selection_status: Dictionary = {}
@@ -33,6 +35,7 @@ var _attack_completed: bool = false
 var last_source_frame: int = -1
 
 func configure(key: String, manifest_path: String, context: Dictionary = {}) -> bool:
+	var source_request_key: String = key
 	var consumer_kind: String = key.get_slice(":", 0)
 	clear()
 	if manifest_path.is_empty() or not FileAccess.file_exists(manifest_path): return false
@@ -63,6 +66,7 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	_root = manifest_path.get_base_dir()
 	_playback_mode = POLICY.mode(_root, playback_mode_override)
 	tracks = POLICY.tracks(candidate, consumer_kind, _playback_mode)
+	reference_exclusion_status = REFERENCE_EXCLUSIONS.apply(candidate, tracks, source_request_key, parsed)
 	if not tracks.has("idle"): return false
 	var layer_count: int = 0
 	for role: String in ["idle", "walk", "run", "attack"]:
@@ -160,6 +164,7 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	return true
 
 func clear() -> void:
+	reference_exclusion_status.clear()
 	_record = {}
 	_source_body_style.clear()
 	_source_body_material = null
@@ -301,7 +306,7 @@ func attachment_status() -> Dictionary:
 		if bool(track.static_pending_timing): pending += 1
 		origins[str(track.timing_origin)] = int(origins.get(str(track.timing_origin), 0)) + 1
 		if track.has("presentation_observation"): presentation_observations.append(track.presentation_observation.duplicate(true))
-	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations}
+	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true)}
 
 func _init() -> void:
 	native_annotations.connect(_on_source_annotation)
@@ -333,7 +338,9 @@ func _on_source_annotation(event: Dictionary) -> void:
 	var regex: RegEx = RegEx.new()
 	regex.compile("\\](\\d+)")
 	for match_value: RegExMatch in regex.search_all(str(event.annotation.get("raw", ""))):
-		spawn_source_overlay(int(match_value.get_string(1)), posmod(int(event.direction) - 3, 8))
+		var target_id: int = int(match_value.get_string(1))
+		if REFERENCE_EXCLUSIONS.event_excluded(reference_exclusion_status, event, target_id): continue
+		spawn_source_overlay(target_id, posmod(int(event.direction) - 3, 8))
 
 func spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Vector2.INF) -> bool:
 	if _playback_mode != "compatible" or not _manifest_records.has("overlay:" + str(sprite_id)): return false
