@@ -8,6 +8,13 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 	result.native_server_limits=DATA.data.source_server_limits
 	for original: Dictionary in DATA.data.definitions:
 		var row: Dictionary=original.duplicate(true)
+		for text: String in row.pending_options.duplicate():
+			if text.begins_with("원본 추가 옵션 슬롯 "):
+				row.pending_options.erase(text)
+				var replacement: String="추가 인형 소환 슬롯 11 · 같은 각성 장부 · 주 슬롯에 합산하지 않음"
+				var index: int=row.bonus_options.find(text)
+				if index>=0:row.bonus_options[index]=replacement
+				row.applied_options.append(replacement)
 		for effect: Dictionary in row.native_source.effects:
 			if effect.type.Name=="InvokeOption" and int(effect.bonus.BonusApplicationTargetID) in [14463,17601,20344,20354]:
 				effect.runtime_supported=true
