@@ -175,7 +175,7 @@ func collections_view() -> Array:
 
 func _ensure_bonus_cache() -> void:
 	_sync_native_context()
-	if world == null or save_blocked or not problem.is_empty():
+	if world == null or not problem.is_empty():
 		_bonus_records.clear()
 		_totals.clear()
 		_bonus_signature = ""
@@ -254,7 +254,7 @@ func subslot_view() -> Dictionary:
 	_sync_native_context()
 	var identity: String=str(progress.get(Subslot.FIELD,""))
 	var state: Dictionary=Subslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
-	var active: bool=not identity.is_empty() and bool(state.ok) and not save_blocked and problem.is_empty()
+	var active: bool=not identity.is_empty() and bool(state.ok) and problem.is_empty()
 	return {"identity":identity,"active":active,"eligibility":state,"effects":Subslot.effects(self,identity) if active else {},"unlocked":Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}))}
 func select_subslot(identity: String) -> Dictionary:
 	_sync_native_context()
