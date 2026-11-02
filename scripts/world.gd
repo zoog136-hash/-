@@ -7899,4 +7899,4 @@ func _on_secondary_doll_requested(identity: String) -> void:
 	if not result.ok:hud.show_message(str(result.error));return
 	_update_companion(0)
 	_update_hud()
-	hud.show_message("추가 인형 소환 해제" if identity.is_empty() else "추가 인형 선택 완료"+(" · 원본 배우 팩 확인 필요" if not is_instance_valid(secondary_doll_visual) or secondary_doll_visual.status!="source_native" else ""))
+	hud.show_message("추가 인형 소환 해제" if identity.is_empty() else "추가 인형 선택 완료"+(" · 인형 원본 리소스 설치 필요" if not is_instance_valid(secondary_doll_visual) or secondary_doll_visual.status!="source_native" else ""))
