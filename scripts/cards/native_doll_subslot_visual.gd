@@ -13,6 +13,9 @@ func clear() -> void:
 	binding="";status="inactive";hide()
 func update_source(delta: float,world: Node,record: Dictionary) -> void:
 	if record.is_empty() or int(world.hp)<=0:clear();return
+	var source_binding: Dictionary=preload("res://data/cards/base508_option_extensions.json").data.subslot_npc_bindings.get(Cards.card_id(record),{})
+	if not bool(source_binding.get("display_sprite_verified",false)) or int(source_binding.get("sprite_id",0))!=int(record.get("source_display_sprite_id",0)):
+		clear();status="source_npc_binding_unverified";return
 	var path: String="res://scripts/animation/original_source_preview.gd"
 	if not ResourceLoader.exists(path):status="source_engine_unavailable";hide();return
 	var player: Node2D=world.player

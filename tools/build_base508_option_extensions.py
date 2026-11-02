@@ -43,6 +43,15 @@ def build(args):
                 invoke_ids.add(effect['bonus']['BonusApplicationTargetID'])
         groups.append({'identity': f"source:m508:{card['BuffCardDeckID']}:{card['ID']}",
                        'card': card, 'group': group, 'effects': effects})
+    buff_rows = table('BuffBonus')
+    by_buff = collections.defaultdict(list)
+    for row in buff_rows:
+        by_buff[row['BuffClassID']].append(row)
+    subslot_targets = {bonuses[r['BonusID']]['Value'] for card in cards.values() if card['BuffCardDeckID'] == 2 for r in by_buff[card['BuffClassID']] if types[bonuses[r['BonusID']]['BonusTypeID']]['Name'] == 'SubSlotBuffClassID'}
+    primary_buffs = {r['BuffClassID'] for r in cards.values() if r['BuffCardDeckID'] == 2}
+    for row in buff_rows:
+        if row['BuffClassID'] in subslot_targets | primary_buffs and types[bonuses[row['BonusID']]['BonusTypeID']]['Name'] == 'InvokeOption':
+            invoke_ids.add(bonuses[row['BonusID']]['BonusApplicationTargetID'])
     invoke_options = [r for r in table('InvokeOption') if r['ID'] in invoke_ids]
     spell_ids = {r['Param1'] for r in invoke_options if r['InvokeOptionTypeID'] in (1, 2)}
     def effect(link):
@@ -61,13 +70,24 @@ def build(args):
     spells = {str(r['ID']): {'source_spell': r, 'effects': spell_links[r['ID']]} for r in table('SpellClass') if r['ID'] in spell_ids}
     subslot_refs = {}
     card_buffs = {r['BuffClassID']: r for r in cards.values() if r['BuffCardDeckID'] == 2}
-    buff_rows = table('BuffBonus')
     for row in buff_rows:
         if row['BuffClassID'] in card_buffs and types[bonuses[row['BonusID']]['BonusTypeID']]['Name'] == 'SubSlotBuffClassID':
             card = card_buffs[row['BuffClassID']]
             target = bonuses[row['BonusID']]['Value']
             identity = f"source:m508:2:{card['ID']}"
             subslot_refs[identity] = {'card': card, 'link': effect(row), 'effects': [effect(x) for x in buff_rows if x['BuffClassID'] == target]}
+    primary_refs = {f"source:m508:2:{card['ID']}": {'card': card, 'effects': [effect(r) for r in by_buff[card['BuffClassID']]]} for card in cards.values() if card['BuffCardDeckID'] == 2}
+    npcs = {r['ID']: r for r in table('NpcClass')}
+    npc_bindings = {}
+    for identity, row in subslot_refs.items():
+        primary_sprites = {npcs[bonuses[r['BonusID']]['Value']]['Sprite'] for r in by_buff[row['card']['BuffClassID']] if types[bonuses[r['BonusID']]['BonusTypeID']]['Name'] == 'BuffCardSummonNPCClassID'}
+        extra = [r for r in row['effects'] if r['type']['Name'] == 'BuffCardSummonNPCClassID']
+        assert len(extra) == 1
+        npc_id = extra[0]['bonus']['Value']
+        sprite_id = npcs[npc_id]['Sprite']
+        display = row['card']['DisplaySpriteID']
+        assert sprite_id == display or sprite_id in primary_sprites, 'Unverified source doll sprite relation'
+        npc_bindings[identity] = {'npc_class_id': npc_id, 'sprite_id': sprite_id, 'display_sprite_id': display, 'primary_sprite_ids': sorted(primary_sprites), 'same_source_sprite_verified': sprite_id in primary_sprites, 'display_sprite_verified': sprite_id == display}
     item = next(r for r in table('ItemClass') if r['ID'] == 346901)
     category = next(r for r in table('ItemCategory') if r['ID'] == item['CategoryID'])
     description = next(r['Description'] for r in table('DescData_Korean') if r['ID'] == item['DescID'])
@@ -85,7 +105,8 @@ def build(args):
             assert by_effect[key]['StatusEffectID'] == ref['bonus']['Value'], 'Mismatched scoped awakening status'
             status_chain_checks += 1
     output = {'schema': 1, 'source_snapshot': 'base508', 'economy': dict(economy),
-              'option_groups': groups, 'subslot_buffs': subslot_refs,
+              'option_groups': groups, 'subslot_buffs': subslot_refs, 'primary_doll_buffs': primary_refs, 'subslot_npc_bindings': npc_bindings,
+              'spell_material_types': table('SpellMaterialType'),
               'awaken_effects': awaken_effects, 'status_chain_verified_count': status_chain_checks,
               'subslot_unlock_item': {'item': item, 'category': category, 'grade': grade, 'name': description, 'effects': unlock_links, 'buff_effects': unlock_buffs},
               'status_effect_attrs': [r for r in table('StatusEffectAttr') if r['StatusEffectID'] in status_ids],

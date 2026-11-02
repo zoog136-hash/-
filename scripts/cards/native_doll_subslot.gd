@@ -31,7 +31,7 @@ static func eligibility(runtime: RefCounted,identity: String,level: int,buffs: D
 	if int(main.get("source_card_id",0))==int(row.card.ID) or int(main.get("source_grade_id",0))==int(row.card.GradeID):return {"ok":false,"code":"same_card_grade","error":"주 인형과 다른 카드·등급 필요"}
 	return {"ok":true}
 static func effects(runtime: RefCounted,identity: String) -> Dictionary:
-	var out: Dictionary={"stats":{},"pending":[],"status_effect_ids":[],"slot_index":11}
+	var out: Dictionary={"stats":{},"pending":[],"status_effect_ids":[],"slot_index":11,"summon_binding":{}}
 	var row: Dictionary=DATA.data.subslot_buffs.get(identity,{})
 	if row.is_empty():return out
 	var source: Array=row.effects.duplicate(true)
@@ -43,6 +43,10 @@ static func effects(runtime: RefCounted,identity: String) -> Dictionary:
 	for effect: Dictionary in source:
 		if effect.link.has("Level") and int(effect.link.Level)!=1:continue
 		var name_value: String=effect.type.Name
+		if name_value=="BuffCardSummonNPCClassID":
+			var binding: Dictionary=DATA.data.subslot_npc_bindings.get(identity,{})
+			if int(effect.bonus.BonusApplicationTypeID)==461 and int(effect.bonus.BonusApplicationTargetID)==11 and int(binding.get("npc_class_id",0))==int(effect.bonus.Value) and bool(binding.get("display_sprite_verified",false)):
+				out.summon_binding=binding.duplicate(true);continue
 		if name_value=="StatusEffectID":out.status_effect_ids.append(int(effect.bonus.Value));continue
 		if int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0 or not MAP.has(name_value):out.pending.append(effect.duplicate(true));continue
 		if effect.link.has("CharacterLevel") and (int(effect.link.CharacterLevel)!=0 or int(effect.link.CharacterClass)!=0 or int(effect.link.MinSpellLevel)!=0):out.pending.append(effect.duplicate(true));continue
