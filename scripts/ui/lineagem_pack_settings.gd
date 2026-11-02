@@ -1,0 +1,48 @@
+extends VBoxContainer
+const INSTALLER = preload("res://scripts/lineagem_pack_install.gd")
+var installer: Node
+var picker: FileDialog
+var choose: Button
+var cancel: Button
+var status: Label
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	installer = INSTALLER.new()
+	add_child(installer)
+	var title := Label.new()
+	title.text = "리니지M 원본 팩"
+	add_child(title)
+	status = Label.new()
+	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	status.text = "변신·인형·성물: %s · 몬스터: %s" % ["설치됨" if FileAccess.file_exists(INSTALLER.active_root().path_join("manifest.json")) else "미설치", "설치됨" if FileAccess.file_exists(INSTALLER.monster_root().path_join("manifest.json")) else "미설치"]
+	add_child(status)
+	choose = Button.new()
+	choose.name = "InstallLineageMOfflinePack"
+	choose.text = "원본 팩 · 증분 · 몬스터 ZIP 선택"
+	choose.pressed.connect(func() -> void: picker.popup_centered_ratio(0.8))
+	add_child(choose)
+	cancel = Button.new()
+	cancel.text = "설치 중단"
+	cancel.visible = false
+	cancel.pressed.connect(func() -> void: installer.cancelled = true)
+	add_child(cancel)
+	picker = FileDialog.new()
+	picker.title = "받은 원본 전체팩 또는 증분 선택"
+	picker.access = FileDialog.ACCESS_FILESYSTEM
+	picker.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	picker.use_native_dialog = true
+	picker.filters = PackedStringArray(["*.zip;TWILIGHT 원본 설치 팩;application/zip"])
+	picker.file_selected.connect(_selected)
+	add_child(picker)
+	installer.progress.connect(func(done: int, total: int) -> void:
+		status.text = "설치 검사 중 %d / %d · 기존 팩 유지" % [done, total])
+
+func _selected(path: String) -> void:
+	choose.disabled = true
+	cancel.visible = true
+	status.text = "설치 파일 확인 중…"
+	var result: Dictionary = await installer.install_zip(path)
+	choose.disabled = false
+	cancel.visible = false
+	status.text = "설치 완료 · 게임을 완전히 종료한 뒤 다시 실행하세요." if result.ok else str(result.error)

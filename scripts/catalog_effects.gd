@@ -3,6 +3,7 @@ class_name TwilightCatalogEffects
 
 # Readable catalog data is retained; exact numeric descriptions are supported.
 # Do not synthesize numbers for phrases such as "대미지 리덕션 계열".
+const BASE508 = preload("res://scripts/lineagem_base508.gd")
 const ATTACK_STYLES: Array[String] = ["melee", "ranged", "magic"]
 
 static func numeric_description_option(record: Dictionary, label: String) -> float:
@@ -30,6 +31,8 @@ static func attack_speed_percent(record: Dictionary) -> float:
 	return numeric_description_option(record, "공격 속도")
 
 static func damage_by_style(record: Dictionary, kind: String) -> int:
+	if BASE508.native(record):
+		return BASE508.flat_bonus(record, {"melee": "MeleeDamage", "ranged": "RangeDamage", "magic": "MagicDamage"}.get(kind, ""))
 	if not ATTACK_STYLES.has(kind):
 		return 0
 	var melee: int = int(numeric_description_option(record, "근거리 대미지"))
@@ -51,6 +54,8 @@ static func damage_by_style(record: Dictionary, kind: String) -> int:
 		_: return attack_value
 
 static func accuracy_by_style(record: Dictionary, kind: String) -> int:
+	if BASE508.native(record):
+		return BASE508.flat_bonus(record, {"melee": "MeleeHit", "ranged": "RangeHit", "magic": "MagicHit"}.get(kind, ""))
 	match kind:
 		"melee":
 			return int(numeric_description_option(record, "근거리 명중"))

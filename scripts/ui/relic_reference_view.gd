@@ -271,7 +271,7 @@ func activate() -> void:
 	hud.catalog_preview.offset_left=6;hud.catalog_preview.offset_right=-6
 	hud.catalog_preview.offset_top=18;hud.catalog_preview.offset_bottom=-18
 	hud.catalog_equip_button.reparent(summon_row,false)
-	hud.catalog_equip_button.custom_minimum_size=Vector2(128,38)
+	hud.catalog_equip_button.custom_minimum_size=Vector2(128,44)
 	hud.catalog_clear_button.reparent(summon_row,false)
 	hud.catalog_clear_button.text="해제"
 	hud.catalog_clear_button.custom_minimum_size=Vector2(62,38)
@@ -414,6 +414,7 @@ func refresh_state(force_cards: bool=false) -> void:
 		_fill_options(record)
 	hud.catalog_equip_button.text="현재 소환 중" if hud.catalog_equip_button.disabled and not record.is_empty() else "즉시 소환"
 	status.text="현재 적용: "+str(hud.character_state.get("equipped",{}).get("성물",{}).get("name","없음"))
+	preload("res://scripts/ui/source_card_presentation.gd").apply(hud)
 
 func _fill_options(record: Dictionary) -> void:
 	for child: Node in option_rows.get_children():option_rows.remove_child(child);child.queue_free()

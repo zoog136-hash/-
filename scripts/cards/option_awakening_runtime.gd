@@ -153,6 +153,21 @@ func is_awakened(category: String, record_or_id: Variant) -> bool:
 	var identity: String = Cards.card_id(record_or_id) if record_or_id is Dictionary else str(record_or_id)
 	return core.awakened(progress, category, identity)
 
+func source_visual_awakened(category: String, record: Dictionary) -> bool:
+	# Read the existing accepted save state only; this grants no progression,
+	# costs, bonuses or awakening. Legacy IDs never migrate into source IDs.
+	const Source = preload("res://scripts/lineagem_base508.gd")
+	if world == null or not Source.native(record): return false
+	var identity: String = Cards.card_id(record)
+	var known: bool = false
+	for candidate: Dictionary in Source.cards().get("catalog", {}).get(category, []):
+		if Cards.card_id(candidate) == identity: known = true; break
+	if not known: return false
+	var owned: Dictionary = world.card_draw_fusion.export_state().get("owned", {}).get(category, {})
+	if owned.get(identity, false) != true: return false
+	var state: Variant = progress.get("cards", {}).get(category, {}).get(identity, {})
+	return state is Dictionary and state.get("awakened", false) is bool and state.get("awakened", false) == true
+
 func collections_view() -> Array:
 	return core.collection_views(progress, world.card_draw_fusion.export_state()) if world != null else []
 

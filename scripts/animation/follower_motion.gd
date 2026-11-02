@@ -1,6 +1,10 @@
 extends RefCounted
 class_name TwilightFollowerMotion
 
+const ORIGINAL = preload("res://scripts/animation/original_source_preview.gd")
+const SOURCE = preload("res://scripts/lineagem_base508.gd")
+var native_actor = ORIGINAL.new()
+var native_enabled: bool = false
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 var motion: TwilightActorMotion = MOTION.new()
@@ -15,6 +19,17 @@ var appear_speed: float = 5.0
 var disappear_speed: float = 5.0
 
 func configure(record: Dictionary, path: String, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
+	native_actor.clear()
+	native_enabled = false
+	if SOURCE.native(record):
+		if native_actor.get_parent() == null: anchor.add_child(native_actor)
+		native_enabled = native_actor.configure("doll:" + str(record.sourceId), player.original_source_manifest, player.source_visual_context)
+		enabled = native_enabled
+		sprite.hide()
+		anchor.global_position = player.global_position + follow_offset
+		native_actor.advance_source(0.0, "idle", player.motion.facing8, player.motion.sequence, false)
+		state = "source_native" if native_enabled else "source_asset_pending"
+		return
 	if not record.is_empty():
 		motion = MOTION.new()
 		motion.profile = CATALOG.for_record("doll", record, path)
@@ -43,6 +58,12 @@ func configure(record: Dictionary, path: String, anchor: Node2D, sprite: Animate
 	previous_sequence = player.motion.sequence
 
 func update(delta: float, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
+	if native_enabled:
+		var old: Vector2 = anchor.global_position
+		var target: Vector2 = player.global_position + follow_offset
+		anchor.global_position = target if old.distance_to(target) > 900.0 else old.move_toward(target, minf(maxf(300.0, player.velocity.length()*1.35),old.distance_to(target)*7.0)*delta)
+		native_actor.advance_source(delta, "walk" if old.distance_to(anchor.global_position)>0.1 else "idle", player.motion.facing8, player.motion.sequence, false)
+		return
 	if not sprite.visible and not enabled: return
 	opacity = move_toward(opacity, 1.0 if enabled else 0.0, delta * (appear_speed if enabled else disappear_speed))
 	# Repeated frame deltas can leave a tiny remainder after the final authored
@@ -90,3 +111,9 @@ func update(delta: float, anchor: Node2D, sprite: AnimatedSprite2D, player: Twil
 	elif combat_reaction > 0.0: state = "combat_reaction"
 	elif actual_velocity.length() > 1.0: state = "follow"
 	else: state = "idle"
+
+func _notification(what: int) -> void:
+	# Source views are constructed before equipment selection. If never attached,
+	# the motion owner must release them; attached nodes belong to the scene tree.
+	if what == NOTIFICATION_PREDELETE and is_instance_valid(native_actor) and native_actor.get_parent() == null:
+		native_actor.free()

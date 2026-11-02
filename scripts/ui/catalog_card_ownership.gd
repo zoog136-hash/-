@@ -19,10 +19,14 @@ static func owned_first(records: Array, permanent: Dictionary) -> Array[Dictiona
 
 static func icon_for(record: Dictionary, acquired: bool) -> Texture2D:
 	var path: String=str(record.get("image_path",""))
-	if path.is_empty() or not ResourceLoader.exists(path):return null
-	var source: Texture2D=load(path) as Texture2D
+	var source: Texture2D
+	if preload("res://scripts/ui/source_card_presentation.gd").native(record):
+		source=preload("res://scripts/ui/source_card_presentation.gd").detail(record,true,false).get("texture")
+	else:
+		if path.is_empty() or not ResourceLoader.exists(path):return null
+		source=load(path) as Texture2D
 	if source==null or acquired:return source
-	var key: String=path
+	var key: String=str(record.get("sourceId",path))
 	if unowned_icons.has(key):return unowned_icons[key] as Texture2D
 	var original: Image=source.get_image()
 	if original==null or original.is_empty():return source

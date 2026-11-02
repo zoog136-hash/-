@@ -1,29 +1,9 @@
 name: L1J Runtime and Recovery Validation
 
-on:
-  pull_request:
-    branches: [main, feature/twilight-l1j-map-grid-adapter-20261010, feature/twilight-l1j-recovery-runtime-20261010]
-    # L1J-specific sources only. The checks this workflow targets on PRs are
-    # all part of the full suite Integration Validate already runs.
-    paths:
-      - 'addons/twilight_l1j/**'
-      - 'data/l1j/**'
-      - 'tools/l1j/**'
-      - 'tests/l1j_*'
-      - 'tests/capture_l1j_runtime.gd'
-      - 'export_presets.cfg'
-      - '.github/workflows/l1j-runtime-validate.yml'
+# Historical/source-specific audits remain available after integration.
+'on':
   workflow_dispatch:
-    inputs:
-      retry_scope:
-        description: Full validation, or the authenticated PR122 Linux remainder
-        type: choice
-        default: full
-        options:
-          - full
-          - linux_remaining
 
-# Manual audits stay independent; newer automatic revisions release old runners.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.ref }}
   cancel-in-progress: true

@@ -1,0 +1,226 @@
+# Source timing, compositing, and visual review — pending new DB evidence
+
+This records the earlier read-only timing/blend investigation. Verified base508 DB joins have since been received and701 source definitions registered. Original resources remain unchanged; source-specific playback adapters were subsequently added without invented timing or blending. Identity/tier tables are no longer a blocker. The later parser fixes preserve indented declarations, direction-slot addresses, and alias layer overrides.
+
+## Literal timing evidence
+
+All30 supplied base508 SPR files were read as strict CP949. They contain explicit110.framerate values including24 (3,072 occurrences),36 (2,815),48 (83),45 (52),38 (48), and other rates. No matching source comment explains a default FPS or cross-header scope.
+
+- list_22.spr:5051 #22258 has36 at5052, then24 at5072; alias22262 starts5168 and repeats36 at5169,24 at5189.
+- list_28.spr:7692 #28439 has36 at7693,24 at7714; alias28443 starts7812 and repeats36 at7813,24 at7834.
+- list_29.spr:2969 #29187 has no own110 directive; preceding file directive is24 at2806.
+- list_22.spr:18689 #22869 has no own110; preceding file directive is24 at18592.
+- list_25.spr:11068 alias25759 has no own110; preceding file directive is24 at10954.
+
+These positions support the current nominal interpretation of explicit sections in the two reviewed transforms. They do **not** prove a default24, file-global state, reset-on-header behavior, alias rate inheritance, or the native client's speed modifiers. `original_spr.read` resetting its rate toNone at a header is a conservative no-guess policy, not an established native engine reset rule. An alias overriding an action without an explicit rate remains unresolved even if a base action has a rate.
+
+The earlier A3 paths cannot establish M defaults: tools/l1j/build_spx_source_pack.py:196 sets tick_rate_verified=false and its CLI default24 is at319. tools/run_pr122_native_tick_preview.py:77 likewise records native_client_tick_rate_verified=false. Those provisional24Hz values must not become M evidence. Existing authored animation profile FPS is also not native evidence.
+
+## Literal compositing evidence
+
+Across the supplied source,104.attr(8) occurs8,405 times and attr(128)4,348 times; values1/5/12/256 also occur. Names such as_sc/_mu and integer attributes are literal facts, not definitions of blend equations or draw order.
+
+Known source declarations:22260 and28441 have attr8;22261 and28442 have attr128. Existing scripts/animation/source_spx_player.gd:140 explicitly leaves attr8/128 unguessed; its verified blend enum accepts an externally verified mapping and does not provide one. The supplied RESULTS.txt and CATEGORY_RESULTS.txt also explicitly leave final blending/depth/anchor semantics unverified. No obtained document supplies an authoritative mapping to additive/multiply or an alpha factor.
+
+The16 selected sc/mu files for the reviewed idle/walk/run/basic-attack tracks were decoded read-only. Among1,200 direction/frame samples,1,168 are nonempty. In particular, all selected Halpas sc/mu samples contain pixels. Girtas mu has32 legitimately empty samples, spread across run/idle/attack; empty source layers must not be reconstructed. Current preview omits these layers, so it is demonstrably an incomplete composition, even though the body animates. See omitted-layer-review.json for exact files, native frame IDs, offsets, sizes, and counts. No composite shader was tried.
+
+## Current game-image limitations
+
+The10 captured Main screenshots and observations cover the two fronts through idle/walk/run/attack/idle. They show source bodies without an obvious entire-body disappearance or added procedural root deformation. This is a limited still-image observation, not eight-direction/all-frame quality approval.
+
+Known omissions/unverified aspects:
+
+1. Visible source sc/mu pixels are omitted; the current appearance cannot be called the final native composition.
+2. Native shadow pixels are rendered literally. Native opacity/draw semantics and its relation to a physical foot anchor remain unverified; an invented shadow alpha/anchor correction was not applied.
+3. Source direction bit5 → game down is based on the inspected poses. Full native-world cardinal semantics and all eight game-view transitions remain unapproved.
+4. Texture extents change with the original poses while the root remains scale1/rotation0/native offsets. Different pose bounds must not be normalized or called erroneous size wobble without an original-client comparison.
+5. The software-rendered captures report roughly10–24FPS. Intermediate native poses can be skipped by a low render rate while the source timeline advances. Android30FPS, temporal smoothness, and loop-boundary visual approval remain untested.
+6. Normal Aden boot was blocked by a separate map pack missing from this sparse checkout. The successful screenshots use the explicitly selected authored albino validation fixture; they do not validate the normal Aden world.
+
+## Verified compatibility hazards before the incoming NPC data is applied
+
+- scripts/monster.gd:202 flips positiveAC to negative, then physical_resolution.gd uses abs(target_ac). A raw signed sourceAC must be retained and its adapter reviewed; copying it blindly would lose sign meaning.
+- monster.gd:204 forces HP to at least30. This would overwrite a verified lower sourceHP.
+- monster.gd:251 forces EXP to at least10, and world.gd:2580 forces final gainedEXP to at least1, with blessing/equipment/map multipliers. A source0 is not currently preserved.
+- Monster has noMP/maxMP storage or native monster MP-consumption model. Storing sourceMP and enabling new skill-cost behavior are separate changes.
+- experience_progression.gd explicitly uses a TWILIGHT balance curve; sourceExp units and nativeExp→local reward policy require traceable handling, not an unexplained numeric overwrite.
+- Current source_npc_id fields include previous source namespaces. M NpcClass numeric IDs and Sprite IDs must not be equated with those IDs or each other.
+- NpcClass internalName is not the display identity; the parent reports DescId→DescData_Korean as the display-name join. Same display name orSprite may identify multiple region/purpose variants. Incoming exact row IDs must be retained; Level and MonsterBookLevel must not be treated as verified combat level.
+
+No NPC/card gameplay values were changed during this investigation. Once the validated package arrives, its exact joins and provenance supersede earlier name-only candidates while keeping unverified semantics explicit.
+
+## Subsequent declaration/address corrections
+
+SPR headers may be indented. Leading whitespace must be removed before recognizing a new declaration; otherwise the following actor contaminates the previous action map. The formerly missing16471/21850/29420 declarations are present in the supplied originals.21909 idle is10frames, not the12frames of its indented successor21910. Source DB evidence remains preserved while current parsed SPR evidence is recorded separately.
+
+An action flag0 retains a fixed source direction slot; flag1 adds the facing slot. Physical SP2 suffix is(slot & ~7), stored mask bit is(slot &7).24789 demonstrates this structurally: chunk0 bit0 holds12 idle frames, bits1–7 hold8 walk frames, and chunk8 bit0 holds the remaining8-frame walk direction. Shadow/clothes references, including9516→8135, must resolve recursively and respect alias-local declarations. Run references come from the run declaration, not the preceding walk declaration.
+
+## Girtas identity-scoped observed candidate (2026-11-02)
+
+Compatibility mode now limits a screen/multiply candidate to body22258's
+attachment22260(sc) and22261(mu). It does not redefine source104.attr8/128.
+Mu is drawn first at z1, sc next at z2. Each pass copies the current framebuffer:
+`multiply(dst,src)=dst*src`; `screen(dst,src)=1-(1-dst)*(1-src)`;
+RGB output is `mix(dst, operation(dst,src), source_alpha)` at opacity1.
+Source RGBA bytes, offsets and timing stay unchanged. BackBufferCopy is required
+between passes so the second samples the first result. This adds two framebuffer
+copies for this appearance; Android cost is unmeasured. Strict mode still hides
+these unverified attachments. `--lineagem-girtas-legacy-blend` selects the prior
+ADD/MIX(alpha0.5) candidate for repeatable comparison.
+
+Parent research reports five pose-matched M GIF samples at0/240/480/710/920ms:
+screen/multiply body-interior MAE8=16.9–18.1 versus30.2–43.1 for ADD/MIX0.5.
+This is observational support for these two sprites only. Evidence ZIP
+`libfile_c503d611641081918a0288ed03899163` v0 was materialized and its SHA256
+`f799c17847fc35a3e790ee8b1040e94d354de0830c837f6281d1b7c6d11f2ce4` and
+ZIP CRC verified. Its analysis script was read; no unknown executable ran.
+
+Actual Godot4.7.2 Compatibility OpenGL/llvmpipe captures used source direction4,
+the same source poses1/2/4/5/6, native scale1, unchanged source timing and pixels.
+For comparison only, body crops were resized1.7x to the evidence registration;
+this is not runtime motion scaling or an inferred tick rate. Against original
+M GIF samples0/240/480/710/920ms, eroded opaque-body RGB MAE8 changed:
+
+| GIF time(ms) | Source pose | Previous ADD/MIX0.5 | Scoped multiply/screen |
+| --- | --- | --- | --- |
+|0|1|79.27|15.98|
+|240|2|68.79|15.52|
+|480|4|49.50|14.99|
+|710|5|49.16|14.39|
+|920|6|43.20|15.14|
+
+All five improve; prior body overexposure is visibly reduced. Remaining
+uncertainty includes source/display resampling, the M white target outline,
+background compositing, other source poses/directions and Android performance.
+This is the real common actor renderer in an isolated capture fixture, not
+an Android execution or a complete Main-scene validation. No exact M compositor
+or global equivalence claimed. Minimal mode checks passed: the pair/order is
+active only in compatible mode; strict keeps attachments disabled; Halphas
+still uses the old policy; clear/reconfigure releases both backbuffer nodes.
+
+## Sparse attachment diagnostics (2026-11-02)
+
+A missing parent-token lookup is not proof of a required image missing on screen.
+The compiler now records `present_pixels`, `explicit_empty` and separate indexed
+lookup-gap categories. `source_sparse_attachments.json` pins19 source-action
+usages by actor/role/source-ID/action-ID/raw-action SHA256 to12 distinct missing
+layer/chunk pairs across seven layer IDs. Only those observations are classified
+`source_sparse_observed`. The absence is not fabricated into an empty PNG and
+all issue rows/file addresses remain visible. Existing actual effect chunks and
+runtime draw/timing behavior are unchanged.
+
+Source observations:14327 pixels only48 (spell18/19);6262 only304 (fishing71),
+other41 indexed chunks explicitly empty;7907 only16 (attack), other5 empty;
+13920/13921 only48 (breath-two9), other9 each empty;13698 retains actual nonempty
+chunks8/16/24/40/56/64 and observed empty0/32/48/72;9891 pixels16/24/32.
+The seven physical prefixes have86 indexed files. Local complete structure checks
+cover82; four9891 files use the delegated independent raw audit, explicitly marked
+as such in the metadata. Header numbers are not strict limits (22260/22261
+counterexample), and an action-less declaration does not imply pixel-free state
+(28441/28442 versus28516/28517 counterexample).
+
+Applied to the existing latest attachment report without pixel conversion:
+12 distinct lookup gaps become source-sparse observations;176 remain entire-prefix
+not-located.196 total issue rows (including separate existing frame exceptions)
+are retained. Seven missing event targets remain a separate report. The12 sparse
+addresses concern8 source cards;3 also have entirely unlocated layers in other
+options. Five cards therefore have only observed sparse gaps in this inventory,
+while43 have other unresolved attachment/event references. None of these counts
+establish required missing draws or original-client visual equivalence.
+
+Diagnostic-only refresh, without recompiling actor pixels:
+`python tools/lineagem_original/source_sparse_scope.py --inputs INPUTS --pack PACK`
+
+## 24709 action3 presentation observation (2026-11-02)
+
+The authorized evidence `libfile_4dcf16bd35e08191987d3975843a6c14` v0, ZIP SHA256
+`d50c430805c13f7ec81efc6c22c3ee0743302300abc0690f2033045c3c2840a1`, was
+materialized and SHA/CRC checked. Its list24 SPR matches the local source SHA
+`93c51a333f2fa9bae6a52693a27d0e0e9406a093d7ee61f32a423e12b78a28ce` and all36
+original decoded PNG hashes match the installed private-pack inputs. The supplied
+analysis script was read before execution. Recomputing its supplied409x12 matrix
+reproduced0.336575 normal versus0.557477 boundary chroma correlation and33.30%
+feature-residual reduction. This consumer did not re-fetch the original SOOP MP4.
+The evidence preparer independently rebuilt the matrix from its original MP4.
+
+Compatible mode alone now presents source11 for an observed1/60s boundary and
+0..10 for their unchanged4/24s each: presentation period1.85s. The original
+SPR token11:4, source24Hz and every source frame.duration=4/24 remain intact,
+with original total2s. Overrides live in a separate presentation_duration field.
+The allowlist checks sprite/body24709, idle/action3, source-action SHA,24Hz,
+full11,0..10 sequence/ticks and physical chunk8/stored direction0 across all
+facing arrays. No other actor/action or global FPS is changed; strict ignores
+all presentation overrides. `--lineagem-24709-source-presentation` retains the
+unmodified source-duration presentation in compatible mode for comparison.
+
+The actual common Godot4.7.2 OpenGL/llvmpipe actor rendered205 frames using30FPS
+elapsed-time samples at the evidence's two fixed fitted phases. Its body and
+SC selected native pose IDs agreed in all205 renders. Evaluating that GPU-output
+pose sequence against the M chroma matrix gave0.332929 versus0.556317,33.49%
+feature-residual reduction. This is a pose/timing test, not full GPU RGB MAE,
+Android30FPS performance or exact blend proof. Existing ADD/MIX rendering still
+visibly differs in color from M and was not changed by this clock correction.
+
+At30FPS the short boundary is naturally skipped on some loops: in this evidence
+phase grid it appears only at6.133333s, while4.283333/7.983333s fall between
+sample times. It is never forced to1/30s, so the loop does not become1.8667s.
+A1ns floating-point boundary tolerance prevents numerical last-pose carryover;
+it is not a minimum display hold. Tests passed original2s preservation,18.5s
+of30FPS sampling without drift/forced holds, idle/walk transitions, repeated
+cancel-without-attack, strict/other-actor isolation and source-action hash guards.
+Run `tools/lineagem_original/check_24709_presentation.gd` with
+`--native-manifest=/authorized/private/pack/manifest.json` for that focused check.
+
+## 20663 action3/d5 weaker presentation support (2026-11-02)
+
+Separate evidence `libfile_26b6f4c659048191bd3cfb65ba2adca8` v0 ZIP SHA256
+`06aeaf131ce106fa351b71a5e346888446029779274900e0e44f871c5171b58f` passed
+SHA/CRC; list20 and all33 original d5 body/sc/mu PNG hashes match local inputs.
+Its read-only analysis script was reviewed, then supplied379-sample source-body
+edge matrix scores reproduced:0.297251 normal11 poses at compatible24 versus
+0.377621 boundary10 once then0..9,11.44% feature-residual reduction. Evidence
+is weaker than24709:78.6% free-pose agreement and neighboring0/1 ambiguity.
+It supports only the stationary2.6..8.9s region/three boundaries, not the later
+moving/direction-changing event or an exact9→10→0 sequence claim.
+
+The additional rule is restricted to20663/idle3/chunk8/physical direction5,
+exact raw action SHA,11 original4-tick tokens, source FPSnull and the existing
+unverified compatible24 clock. Only that facing array receives separate1/60s
+boundary presentation, giving1.683333s; other facings/walk/actors retain prior
+behavior. Source110 remains absent, source ticks/order/FPSnull are untouched,
+strict remains static/pending, and the PC24 clock-origin label is not promoted
+to an M default. `--lineagem-20663-source-presentation` opts back to prior
+compatible-duration sampling for comparison. This does not resolve the331
+unknown-source doll tracks or infer a universal boundary-token rule.
+
+Actual common actor OpenGL/llvmpipe rendered190 frames at30FPS sampling of the
+two fixed fitted phases. Selected body/SC native frames agreed on all190 outputs;
+that output sequence scores0.297012 versus0.377420 against the supplied M
+body-edge matrix (11.44% feature-residual reduction). This is not RGB blend
+verification or Android performance. The short boundary is sampled only at
+5.866667s on this grid; the other two events fall between30FPS samples. No
+one-render-frame hold or loop extension was introduced. The focused20663 check
+passed rawFPSnull/tick preservation, d5-only scope,30FPS loop/transition behavior,
+strict isolation and refusing reuse if an explicit sourceFPS is later supplied.
+
+## Approved common doll playback (2026-11-02)
+
+Dolls no longer wait for individual M-video clock research. Compatible mode has
+an explicit shared policy: idle/walk/run/attack fallback24 ticks per second for
+missing source rates. Existing positive SPR rates, alias candidates, native
+ticks/order/pixels and exact scoped presentation overrides keep priority.
+Strict behavior and the common stable ADD/MIX material policy are unchanged.
+Matching loop shape alone does not add a new boundary rule or delete a pose.
+The status is user-approved compatibility, not a recovered global M default.
+
+Actual headless common-view configuration and initial sampling passed all167
+source cards/166 unique appearances.164 appearances use331 shared fallback
+tracks;4 unique tracks retain explicit original FPS. Source tokens were checked
+unchanged.164 cards have no original attack track; none is fabricated. The
+existing20663 d5-only override remains active and isolated, and strict still
+retains unknown sourceFPSnull/pending instead of silently applying the fallback.
+This is a minimal load/sampling check, not per-doll visual/Android equivalence.
+
+Original attachment/event lookup issues affecting43 other-reference candidate
+cards are separate from common clock readiness. No source pixel is synthesized,
+no missing effect is declared found, and no main merge is implied.

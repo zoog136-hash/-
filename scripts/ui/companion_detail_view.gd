@@ -287,12 +287,14 @@ func refresh() -> void:
 	ownership.text="보유 %d장 · 중복 %d장" % [(1 if owned else 0)+duplicates,duplicates] if not record.is_empty() else "검색 조건에 맞는 카드가 없습니다"
 	var equipped: Dictionary=hud.character_state.get("equipped",{}).get(category,{})
 	var selected: bool=not record.is_empty() and str(equipped.get("name",""))==str(record.get("name",""))
+	if preload("res://scripts/ui/source_card_presentation.gd").native(record):selected=Cards.card_id(equipped)==identity
 	applied.text=("현재 변신 중" if category=="변신" else "현재 소환 중") if selected else "미적용"
 	applied.visible=not record.is_empty()
 	if not record.is_empty():ownership.text+=" · "+applied.text
 	hud.catalog_equip_button.text="카드 선택" if record.is_empty() else ("현재 "+("변신 중" if category=="변신" else "소환 중") if selected else ("즉시 변신" if category=="변신" else "즉시 소환"))
 	fit_layout()
 	decorate_roster()
+	preload("res://scripts/ui/source_card_presentation.gd").apply(hud)
 
 func decorate_roster(force: bool=false) -> void:
 	if not active:return

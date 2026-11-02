@@ -1,9 +1,6 @@
 name: TWILIGHT Consolidated Specialized Preflight
-on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
+# Historical/source-specific audits remain available after integration.
+'on':
   workflow_dispatch:
 
 permissions:
