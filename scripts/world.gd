@@ -7,6 +7,7 @@ const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
 const DB_PATH: String = "res://data/game_db_v17.json"
 const CATALOG_PATH: String = "res://data/catalog_v19.json"
+const BASE508 = preload("res://scripts/lineagem_base508.gd")
 const CATALOG_IMAGE_INDEX_PATH: String = "res://data/catalog_image_index_v19.json"
 const DIRECTIONAL_PATH: String = "res://data/directional_art_v19.json"
 const MONSTER_SCENE: PackedScene = preload("res://scenes/Monster.tscn")
@@ -30,6 +31,7 @@ var pending_map_save_record: Dictionary={}
 var map_bootstrap_blocked: bool=false
 var loading_source_door_state: bool=false
 var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
+const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
 # Do not preload this heavy optional renderer while parsing the main game class.
@@ -71,6 +73,8 @@ const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.g
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
 var option_awakening = OPTION_AWAKENING.new()
 var option_awakening_auras: Dictionary = {}
+var source_awakening_auras: Dictionary = {}
+const SOURCE_AWAKENING_AURA = preload("res://scripts/animation/source_awakening_aura.gd")
 var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
@@ -177,6 +181,8 @@ var indexed_skills_count: int = -1
 var non_original_skill_rows: Array[Dictionary] = []
 var job_classes: Array = []
 var job_class: String = "기사"
+var source_gender_id: int = 0 # Unknown until an explicit source gender is selected.
+var source_card_visual_options: Dictionary = {}
 var active_skill_buffs: Dictionary = {}
 var skill_cooldowns: Dictionary = {}
 var skill_global_cooldown: float = 0.0
@@ -377,6 +383,13 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	if BASE508_TEST.enabled():
+		var test_map:String=BASE508_TEST.register_test_map(maps,maps_by_id)
+		if test_map.is_empty():
+			push_error("base508 test pack rejected: "+BASE508_TEST.problem)
+			process_mode=Node.PROCESS_MODE_DISABLED
+			return
+		active_map_id=test_map
 	card_draw_fusion.configure(catalog_db)
 	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
@@ -589,6 +602,7 @@ func _load_data() -> void:
 	_normalize_option_policies()
 	_enrich_inven_catalog()
 	_index_item_weights()
+	catalog_db = BASE508.apply_catalog(catalog_db)
 	var image_index_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_IMAGE_INDEX_PATH))
 	if image_index_value is Dictionary:
 		catalog_image_index = image_index_value as Dictionary
@@ -607,6 +621,9 @@ func _load_data() -> void:
 		if not image_records.has(name):
 			image_records[name] = "res://assets/ui/rune.png"
 	catalog_image_index["아이템"] = image_records
+	# Source card UI assets are separate from legacy artwork, including equal names.
+	for source_category: String in ["변신", "마법인형", "성물"]:
+		catalog_image_index[source_category] = {}
 	_build_job_classes()
 	equipment_collections.configure(self)
 	growth.configure(self)
@@ -653,6 +670,7 @@ func _enrich_inven_catalog() -> void:
 		inven_record_index[category] = category_index
 
 func _source_catalog_record(category: String, saved: Dictionary) -> Dictionary:
+	if BASE508.native(saved): return BASE508.canonical(saved)
 	if str(saved.get("name", "")).is_empty():
 		return saved
 	# Exact source IDs are authoritative. Preserve explicitly typed, locally
@@ -752,6 +770,7 @@ func _normalize_option_policies() -> void:
 					entry["sourceOptions"] = normalized_options
 
 func _verified_catalog_record(category: String, source_record: Dictionary) -> Dictionary:
+	if BASE508.native(source_record): return BASE508.canonical(source_record)
 	source_record = _source_catalog_record(category, source_record)
 	var category_values: Dictionary = verified_catalog_options.get(category, {}) as Dictionary
 	var name_value: String = str(source_record.get("name", ""))
@@ -1326,8 +1345,8 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if SOURCE_MAP84.supports(map_id):_reject_map_pack("원본 지도 팩 누락: 현재 지역과 저장을 보존합니다")
 		return
 	if field_map!=null and not loading_source_door_state:SOURCE_MAP84.saved_doors(field_map)
-	var requested_native: PlayableField = null
-	if NATIVE_PNG.supports(map_id) and not SOURCE_MAP84.supports(map_id):
+	var requested_native: PlayableField = BASE508_TEST.field_for(map_id)
+	if requested_native == null and NATIVE_PNG.supports(map_id) and not SOURCE_MAP84.supports(map_id):
 		requested_native = NATIVE_PNG.load_field(map_id)
 		if requested_native == null:
 			_reject_map_pack("PNG 원본 팩 누락·손상: 현재 지역과 저장을 보존합니다")
@@ -1456,7 +1475,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		if field_map is NativePngField:
+		if bool(field_map.get_meta("base508_source_test",false)):
+			field_renderer=load(BASE508_TEST.RENDERER_PATH).new() as FieldRenderer
+		elif field_map is NativePngField:
 			# Instantiate only when an actual native-PNG field is active.
 			var native_renderer_script: Variant = load(NATIVE_PNG_RENDERER_PATH)
 			if native_renderer_script == null:
@@ -2245,7 +2266,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 func _melee_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return PHYSICAL_RESOLUTION.physical_hit_chance(_melee_accuracy_stat(),target.armor_class,0)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(_melee_accuracy_stat(),target.hit_armor_class(),0)
 
 func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
@@ -2577,7 +2598,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var adena_rate: float = ain_service.adena_rate()
 	var item_adena_rate: float = 1.0 + clampf(_equipped_numeric_sum("adena_drop_pct"), 0.0, 500.0) / 100.0
 	var map_rate: float = EXP_PROGRESSION.map_exp_multiplier(_kill_map_id())
-	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate * map_rate)))
+	var gained_experience: int = maxi(0 if not monster.source_m_original.is_empty() else 1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate * map_rate)))
 	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
 	gold += gained_adena
@@ -4239,6 +4260,7 @@ func _full_cards_playtest_active() -> bool:
 	return OS.get_name() == "Android" or "--playtest-full-cards" in OS.get_cmdline_user_args()
 
 func base_save_path() -> String:
+	if BASE508_TEST.enabled():return "user://base508_source_test_never_written.json"
 	if growth.development: return "user://twilight_growth_lab_v1.json"
 	# Do not carry test grants or awakening/fusion consumption into normal saves.
 	if _full_cards_playtest_active():
@@ -4284,6 +4306,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
 		return ERR_FILE_CORRUPT
@@ -4338,6 +4361,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"original_position": SOURCE_TRAVEL.snapshot(self),
 		"class_index": class_index,
 		"job_class": job_class,
+		"source_visual_context": {"snapshot":"base508","gender_id":source_gender_id,"active_card_options":source_card_visual_options.duplicate(true)},
 		"quickslots": quickslots,
 		"ui_preferences": ui_preferences,
 		"self_mode_enabled": self_mode_enabled,
@@ -4397,6 +4421,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	return OK
 
 func _load_game(quiet: bool) -> void:
+	if BASE508_TEST.enabled():return
 	if not migration_pointer_error.is_empty():migration_path_checked=false
 	save_path()
 	if not migration_pointer_error.is_empty():
@@ -4621,6 +4646,14 @@ func _load_game(quiet: bool) -> void:
 	job_class = str(data.get("job_class", job_class))
 	if not JOB_CLASS_ORDER.has(job_class):
 		job_class = "기사"
+	source_gender_id = 0
+	source_card_visual_options.clear()
+	var source_context: Variant = data.get("source_visual_context", {})
+	if source_context is Dictionary and source_context.get("snapshot", "") == "base508":
+		source_gender_id = int(source_context.get("gender_id", 0))
+		if source_gender_id not in [0,1,2]: source_gender_id = 0
+		var saved_options: Variant = source_context.get("active_card_options", {})
+		source_card_visual_options = saved_options.duplicate(true) if saved_options is Dictionary else {}
 	var saved_ui: Variant = data.get("ui_preferences", {})
 	ui_preferences = saved_ui.duplicate(true) if saved_ui is Dictionary else {}
 	ui_preferences["consumable_auto"] = CONSUMABLE_AUTO.normalize(ui_preferences.get("consumable_auto", {}))
@@ -4726,6 +4759,12 @@ func _load_game(quiet: bool) -> void:
 
 func _build_job_classes() -> void:
 	job_classes.clear()
+	# Character classes are independent source definitions, not invented mythic cards.
+	if not BASE508.cards().is_empty():
+		for definition: Dictionary in BASE508.cards().get("classes", []):
+			var job_name: String = str(definition.name)
+			job_classes.append({"name":job_name,"transform_name":"","image_path":"","source_id":"","source_class":definition,"weapon":_job_weapon_text(job_name),"role":_job_role_from_skills(job_name),"primary_stat":str(JOB_PRIMARY_STAT.get(job_name,""))})
+		return
 	var transforms: Array = catalog_db.get("변신", []) as Array
 	for job_name: String in JOB_CLASS_ORDER:
 		var transform_record: Dictionary = {}
@@ -4846,6 +4885,8 @@ func _on_job_class_selected(job_name: String) -> void:
 		equipped_catalog["변신"] = record.duplicate(true)
 		_invalidate_equipment_static()
 		_apply_transform_visual(record)
+	if BASE508.native(equipped_catalog.get("변신", {})):
+		_apply_transform_visual(equipped_catalog["변신"])
 	_enforce_weapon_class_compatibility(false)
 	_enforce_shield_weapon_compatibility(false)
 	_prune_active_skill_buffs_for_current_job()
@@ -6400,6 +6441,7 @@ func _current_transform_visual_record(saved: Dictionary) -> Dictionary:
 	return visual
 
 func _apply_transform_visual(record: Dictionary) -> void:
+	player.source_visual_context = _source_visual_context()
 	if record.is_empty():
 		player.clear_transform_visual()
 		_sync_option_awakening_aura("변신")
@@ -6408,9 +6450,15 @@ func _apply_transform_visual(record: Dictionary) -> void:
 	var path: String = _directional_image_path("transform", visual_record)
 	var speed_multiplier: float = float(record.get("speed", 1.0))
 	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", visual_record, path))
+	if BASE508.native(visual_record):
+		var selected: Dictionary = player.original_source_preview.source_selection_status
+		if selected.get("status", "") == "selection_pending":
+			hud.show_message("원본 변신 외형 선택 대기 · 캐릭터 직업과 성별을 확인하세요")
+			hud.append_log("원본 변신 외형 선택 대기 · 직업/성별 문맥 필요")
 	_sync_option_awakening_aura("변신")
 
 func _apply_doll_visual(record: Dictionary) -> void:
+	player.source_visual_context = _source_visual_context()
 	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)
 	_sync_option_awakening_aura("마법인형")
 
@@ -6441,6 +6489,7 @@ func _direction_animation_name(direction_value: int) -> String:
 		_: return "dir_down"
 
 func _apply_relic_visual(record: Dictionary) -> void:
+	player.source_visual_context = _source_visual_context()
 	relic_motion.configure(record, relic_sprite, player, _drop_grade_color(str(record.get("grade", "일반"))))
 	_sync_option_awakening_aura("성물")
 
@@ -6451,7 +6500,24 @@ func _sync_option_awakening_auras() -> void:
 func _sync_option_awakening_aura(category: String) -> void:
 	var raw: Variant = equipped_catalog.get(category, {})
 	var record: Dictionary = raw if raw is Dictionary else {}
-	var awakened: bool = not record.is_empty() and option_awakening.is_awakened(category, record)
+	if BASE508.native(record):
+		var old: Node2D = option_awakening_auras.get(category) as Node2D
+		if is_instance_valid(old): old.call("set_awakened", false)
+		var native_target: Node2D
+		match category:
+			"변신": native_target = player.original_source_preview
+			"마법인형": native_target = doll_motion.native_actor
+			"성물": native_target = relic_motion.native_actor
+		var source_aura: Node2D = source_awakening_auras.get(category) as Node2D
+		if not is_instance_valid(source_aura):
+			source_aura = SOURCE_AWAKENING_AURA.new()
+			add_child(source_aura)
+			source_awakening_auras[category] = source_aura
+		source_aura.configure(category, record, option_awakening.source_visual_awakened(category, record), native_target, player.original_source_manifest, presentation_settings)
+		return
+	var previous_source: Node2D = source_awakening_auras.get(category) as Node2D
+	if is_instance_valid(previous_source): previous_source.deactivate()
+	var awakened: bool = not BASE508.native(record) and not record.is_empty() and option_awakening.is_awakened(category, record)
 	var aura: Node2D = option_awakening_auras.get(category) as Node2D
 	if not awakened:
 		if is_instance_valid(aura): aura.call("set_awakened", false)
@@ -6923,7 +6989,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
 	if original_skills != null:
 		return original_skills.physical_hit_chance(accuracy, target)
-	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.armor_class,0)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.hit_armor_class(),0)
 
 func _catalog_damage_bonus(kind: String) -> int:
 	var total: int = _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
@@ -7788,6 +7854,8 @@ func apply_presentation_settings(settings: Dictionary) -> void:
 		combat_vfx.detail_limit = 6 if presentation_settings.effect_detail == "low" else COMBAT_VFX.VISUALS.DETAIL_LIMIT
 	if is_instance_valid(combat_flights):
 		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" else 64
+	for raw: Variant in source_awakening_auras.values():
+		if is_instance_valid(raw): raw.call("apply_settings", presentation_settings)
 	for raw: Variant in option_awakening_auras.values():
 		if is_instance_valid(raw): raw.call("apply_settings", presentation_settings)
 	if is_instance_valid(hud) and hud.has_method("apply_option_awakening_settings"):
@@ -7870,3 +7938,37 @@ func return_from_original_map() -> bool:
 
 func _drop_inventory_reference(reference: String, target: Vector2) -> bool:
 	return INVENTORY_GROUND_TRANSFER.drop(self,reference,target)
+
+func _source_visual_context() -> Dictionary:
+	var options: Dictionary = source_card_visual_options.duplicate(true)
+	for record: Dictionary in equipped_catalog.values():
+		if BASE508.native(record) and record.has("source_active_custom_option_id") and not options.has(str(record.sourceId)):
+			options[str(record.sourceId)] = int(record.source_active_custom_option_id)
+	return {"class_id":BASE508.source_class_id(job_class),"gender_id":source_gender_id,"active_card_options":options,"local_weapon_type":_current_weapon_type(),"source_weapon_type":preload("res://scripts/animation/source_weapon_banks.gd").local_type(_current_weapon_type())}
+
+func set_source_character_gender(gender_id: int) -> bool:
+	if gender_id not in [0,1,2]: return false
+	source_gender_id = gender_id
+	_restore_equipped_visuals()
+	_update_hud()
+	_save_game(true)
+	return true
+
+func set_source_card_visual_option(source_id: String, active_option_id: int) -> bool:
+	if active_option_id < 0: return false
+	var record: Dictionary = BASE508.canonical({"source":"lineagem_base508","sourceId":source_id})
+	if not record.has("source_card_id"): return false
+	var rule: Dictionary = BASE508.identity_rules().get(int(record.source_card_id), {})
+	if str(rule.get("selection_kind", "")) != "base_polymorph_or_declared_custom_sprite_option": return false
+	if active_option_id > 0:
+		var declared: bool = false
+		for option: Dictionary in rule.get("custom_options", []):
+			if int(option.native_option.ID) == active_option_id: declared = true
+		if not declared: return false
+		source_card_visual_options[source_id] = active_option_id
+	else:
+		source_card_visual_options[source_id] = 0 # Explicit source base, including over a saved active option.
+	_restore_equipped_visuals()
+	_update_hud()
+	_save_game(true)
+	return true

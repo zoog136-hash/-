@@ -854,7 +854,7 @@ func _on_catalog_item_selected(index: int) -> void:
 		return
 	selected_catalog_record = catalog_results[index] as Dictionary
 	var path: String = str(selected_catalog_record.get("image_path", ""))
-	catalog_preview.texture = load(path) as Texture2D if path != "" and ResourceLoader.exists(path) else null
+	catalog_preview.texture = preload("res://scripts/lineagem_base508.gd").icon(selected_catalog_record)
 	var title: String = str(selected_catalog_record.get("name", ""))
 	var grade: String = str(selected_catalog_record.get("grade", ""))
 	var type_name: String = str(selected_catalog_record.get("type", ""))

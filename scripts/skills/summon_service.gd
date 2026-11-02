@@ -184,7 +184,7 @@ func release_hit() -> void:
 	if actor.global_position.distance_to(enemy.global_position) > float(skill.summon_attack_range) or not world._has_line_of_sight_world(actor.global_position,enemy.global_position): return
 	actor.finish_strike(float(skill.summon_recovery_time))
 	var accuracy := int(skill.summon_accuracy)+int(world.level)
-	var chance: float = world._physical_hit_chance(accuracy,enemy.armor_class,0)
+	var chance: float = world._physical_hit_chance(accuracy,enemy.hit_armor_class(),0)
 	if world.rng.randf() >= chance:
 		enemy.show_miss();return
 	if bool(skill.get("elemental_guardian",false)):

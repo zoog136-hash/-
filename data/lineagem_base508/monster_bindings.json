@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "source_snapshot": "base508",
+  "activation": "Exact legacy slot signature, map, source context and verified private pixels required; otherwise keep existing record.",
+  "bindings": [
+    {
+      "npc_id": 248,
+      "sprite_id": 1110,
+      "spawn_view_id": 766,
+      "territory_link_id": 558,
+      "land_id": 4,
+      "land_asset_path": "Aden/",
+      "host_map_id": "aden_world",
+      "legacy_game_db_index": 4,
+      "legacy_signature": {
+        "name": "늑대인간",
+        "type": "야수형",
+        "grade": "일반",
+        "lv": 10,
+        "hp": 170
+      },
+      "placement_contract": "Explicit source-variant replacement in the existing host Aden encounters; host positions/counts/respawn and other combat parameters retained as compatibility. Not verified base508 geographic placement or server spawn rate."
+    },
+    {
+      "npc_id": 249,
+      "sprite_id": 1108,
+      "spawn_view_id": 904,
+      "territory_link_id": 579,
+      "land_id": 4,
+      "land_asset_path": "Aden/",
+      "host_map_id": "aden_world",
+      "legacy_game_db_index": 31,
+      "legacy_signature": {
+        "name": "라이칸스로프",
+        "type": "야수형",
+        "grade": "일반",
+        "lv": 35,
+        "hp": 710
+      },
+      "placement_contract": "Explicit source-variant replacement in the existing host Aden encounters; host positions/counts/respawn and other combat parameters retained as compatibility. Not verified base508 geographic placement or server spawn rate."
+    },
+    {
+      "npc_id": 281,
+      "sprite_id": 145,
+      "spawn_view_id": 847,
+      "territory_link_id": 569,
+      "land_id": 4,
+      "land_asset_path": "Aden/",
+      "host_map_id": "aden_world",
+      "legacy_game_db_index": 2,
+      "legacy_signature": {
+        "name": "스파토이",
+        "type": "언데드",
+        "grade": "일반",
+        "lv": 5,
+        "hp": 90
+      },
+      "placement_contract": "Explicit source-variant replacement in the existing host Aden encounters; host positions/counts/respawn and other combat parameters retained as compatibility. Not verified base508 geographic placement or server spawn rate."
+    },
+    {
+      "npc_id": 286,
+      "sprite_id": 152,
+      "spawn_view_id": 866,
+      "territory_link_id": 571,
+      "land_id": 4,
+      "land_asset_path": "Aden/",
+      "host_map_id": "aden_world",
+      "legacy_game_db_index": 1,
+      "legacy_signature": {
+        "name": "버그베어",
+        "type": "야수형",
+        "grade": "일반",
+        "lv": 3,
+        "hp": 65
+      },
+      "placement_contract": "Explicit source-variant replacement in the existing host Aden encounters; host positions/counts/respawn and other combat parameters retained as compatibility. Not verified base508 geographic placement or server spawn rate."
+    }
+  ]
+}

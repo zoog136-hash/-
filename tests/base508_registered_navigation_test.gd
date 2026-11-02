@@ -1,0 +1,22 @@
+extends SceneTree
+const PACK=preload("res://scripts/maps/base508_pack.gd")
+const NAV=preload("res://scripts/maps/base508_registered_navigation.gd")
+func _initialize() -> void:
+ var pack=PACK.new()
+ assert(pack.load_pack(OS.get_environment("TWILIGHT_BASE508_PACK")))
+ var nav=NAV.new()
+ assert(not nav.configure(pack,"/tmp/absent-registration",OS.get_environment("TWILIGHT_LEGACY_ART_ROOT"),"albino_01"))
+ assert(nav.configure(pack,OS.get_environment("TWILIGHT_BASE508_REGISTRATION"),OS.get_environment("TWILIGHT_LEGACY_ART_ROOT"),"albino_01"),nav.error)
+ var projected:Vector2=pack.COORDINATE_CONTRACT.grid_anchor(pack.manifest,Vector2(32653,32909))
+ assert(pack.COORDINATE_CONTRACT.source_from_grid_anchor(pack.manifest,projected).is_equal_approx(Vector2(32653,32909)))
+ var start:Vector2=nav.spawn()
+ assert(nav.safe_point(start))
+ assert(nav.move(start,start+Vector2(8,0))==start+Vector2(8,0))
+ for point in [[3700,4350],[3700,3800],[4600,4900],[3920,4330]]:
+  var blocked:=Vector2(point[0],point[1])
+  assert(not nav.safe_point(blocked))
+  assert(nav.move(start,blocked)==start)
+ assert(not pack.can_enter(Vector2i(32653,32909)))
+ assert(not NAV.new().configure(pack,OS.get_environment("TWILIGHT_BASE508_REGISTRATION"),OS.get_environment("TWILIGHT_LEGACY_ART_ROOT"),"albino_03"))
+ print("BASE508_REGISTERED_NAV_TEST_OK: original evaluator, blocked probes, no M terrain enablement")
+ quit()

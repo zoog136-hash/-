@@ -98,7 +98,7 @@ func configure(owner_hud: Node,value: String,identity: String="") -> void:
 	refresh();call_deferred("_fit")
 
 func _button(label: String) -> Button:
-	var button: Button=UI.button(label,Callable(),Vector2(0,40));button.set_script(TouchButton);return button
+	var button: Button=UI.button(label,Callable(),Vector2(0,44));button.set_script(TouchButton);return button
 
 func refresh() -> void:
 	if runtime==null:return
@@ -187,6 +187,7 @@ func _fill(panel: PanelContainer,index: int) -> void:
 	var heading:=HBoxContainer.new();plate.add_child(heading)
 	var header: Label=UI.label("%s  (%d/%d)  %s" % [row.name,row.met_count,row.requirements.size(),"완성" if row.completed else "적용 보류" if not row.available else "미완성"],13,Color("82becb") if row.completed else UI.TEXT)
 	header.name="NormalCollectionTitle";header.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;header.max_lines_visible=2;header.size_flags_horizontal=Control.SIZE_EXPAND_FILL;heading.add_child(header)
+	if str(row.get("time_label",""))!="":header.text+=" · "+str(row.time_label)
 	var effects: Label=UI.label(str(row.raw_effects).replace("\n"," · "),11,UI.GOLD if row.available else UI.MUTED)
 	effects.name="NormalCollectionReward";effects.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;effects.max_lines_visible=2
 	effects.custom_minimum_size.x=clampf(panel.size.x*.30,130,240);effects.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;heading.add_child(effects)
@@ -200,6 +201,8 @@ func _fill(panel: PanelContainer,index: int) -> void:
 func _card(parent: Node,requirement: Dictionary,width: float) -> void:
 	var key: String=str(requirement.id);var record: Dictionary=cards.get(key,{})
 	var acquired: bool=bool(requirement.met)
+	var native: bool=preload("res://scripts/ui/source_card_presentation.gd").native(record)
+	if native:acquired=hud.card_collection_state.get("owned",{}).get(category,{}).get(key,false)==true
 	var column:=VBoxContainer.new();column.custom_minimum_size.x=width;column.mouse_filter=Control.MOUSE_FILTER_PASS;parent.add_child(column)
 	var button: Button=_button("");button.set_script(ScrollButton);button.scroll_host=hud.workspace;button.scroll_area=list
 	button.name="NormalCollectionCard";button.custom_minimum_size=Vector2(width,112);button.set_meta("card_id",key);button.set_meta("permanent_owned",acquired)
@@ -213,16 +216,20 @@ func _card(parent: Node,requirement: Dictionary,width: float) -> void:
 		art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		art.texture=Ownership.icon_for(record,acquired);art.modulate=Color.WHITE if acquired else Ownership.UNOWNED_ICON_TINT
 		button.add_child(art);art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		if acquired:
+		if native:
+			button.tooltip_text+=" · 원본 프레임 미설치"
+			if art.texture==null:button.text="원본 이미지\n미설치"
+		if acquired and not native:
 			var aura:=ColorRect.new();aura.mouse_filter=Control.MOUSE_FILTER_IGNORE
 			aura.material=Chrome.material_for(rank,true,false,bool(hud.get_parent().presentation_settings.get("reduced_motion",false)),str(hud.get_parent().presentation_settings.get("effect_detail","full"))=="low")
 			button.add_child(aura);aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		var metal:=TextureRect.new();metal.mouse_filter=Control.MOUSE_FILTER_IGNORE;metal.texture=Chrome.texture_for(rank)
-		metal.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;metal.material=Chrome.material_for(rank,false,false,bool(hud.get_parent().presentation_settings.get("reduced_motion",false)))
-		metal.modulate=Color.WHITE if acquired else Ownership.UNOWNED_FRAME_TINT
-		button.add_child(metal);metal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		if not native:
+			var metal:=TextureRect.new();metal.mouse_filter=Control.MOUSE_FILTER_IGNORE;metal.texture=Chrome.texture_for(rank)
+			metal.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;metal.material=Chrome.material_for(rank,false,false,bool(hud.get_parent().presentation_settings.get("reduced_motion",false)))
+			metal.modulate=Color.WHITE if acquired else Ownership.UNOWNED_FRAME_TINT
+			button.add_child(metal);metal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		var copies: int=(1 if acquired else 0)+int(hud.card_collection_state.get("spare",{}).get(category,{}).get(key,0))
-		if copies>1:
+		if copies>1 or (native and copies>0):
 			var amount: Label=UI.label(str(copies),11)
 			amount.name="NormalCollectionCardCopies";amount.mouse_filter=Control.MOUSE_FILTER_IGNORE
 			amount.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;amount.vertical_alignment=VERTICAL_ALIGNMENT_BOTTOM
@@ -258,6 +265,6 @@ func _reasons(problems: Array) -> String:
 	var out: Array[String]=[]
 	for raw: Variant in problems:
 		var code: String=str(raw)
-		var label: String="카드 매칭 누락" if code.begins_with("card_unmapped:") else "각성 조건 별도" if code=="awakening_collection_separate" else "현재 전투 효과 미지원" if code.begins_with("effect_unsupported:") else "출처 버전 확인 필요"
+		var label: String="원본 서버 조건 미해석" if code=="native_server_context_required" else "원본 각성 조건 별도" if code=="native_awakening_required" else "원본 보상 연결 없음" if code=="native_reward_missing" else "카드 매칭 누락" if code.begins_with("card_unmapped:") else "각성 조건 별도" if code=="awakening_collection_separate" else "현재 전투 효과 미지원" if code.begins_with("effect_unsupported:") else "출처 버전 확인 필요"
 		if not out.has(label):out.append(label)
 	return " · ".join(out)
