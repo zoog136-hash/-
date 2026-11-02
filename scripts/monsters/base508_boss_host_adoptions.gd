@@ -32,6 +32,7 @@ const ACTION_CONTEXTS = {
 	67033:{"sprite":20319,"spawn":300213,"territory":140843,"attack":244103}
 }
 static func actor_contract(npc_id:int,sprite_id:int,profile:Dictionary,tracks:Dictionary,catalog:Dictionary={}) -> Dictionary:
+	if SPELL_CONTEXTS.has(npc_id): return _spell_actor_contract(npc_id,sprite_id,profile,tracks,catalog)
 	if npc_id == 47744: return _stationary_actor_contract(sprite_id,profile,tracks,catalog)
 	if not ACTION_CONTEXTS.has(npc_id): return _ordinary_actor_contract(npc_id,sprite_id,profile,tracks,catalog)
 	if not ACTION_CONTEXTS.has(npc_id) or int(ACTION_CONTEXTS[npc_id].sprite)!=sprite_id or catalog.is_empty(): return {}
@@ -74,6 +75,7 @@ static func _ordinary_row(row:Dictionary,npc_id:int,attack_id:int) -> bool:
 	return int(row.get("ID",-1))==attack_id and int(row.get("NpcClassID",-1))==npc_id and not bool(row.get("IsSpell",true)) and int(row.get("SpellID",-1))==0 and int(row.get("MotionType",-1))==9 and int(row.get("WeaponType",-1))==0 and not bool(row.get("IsAbsoluteAtk",true)) and int(row.get("DiceCount",-1))==5 and int(row.get("DiceSpots",-1))==5 and int(row.get("DiceBonus",-1))==0
 static func _single_action_record(record:Dictionary,catalog:Dictionary,contract:Dictionary) -> Dictionary:
 	var nid:int=int(record.get("source_m_npc_id",-1))
+	if contract.get("contract","")=="base508_exact_context_single_spell_host_action_v1": return _spell_record(record,catalog,contract)
 	if nid == 47744: return _stationary_record(record,catalog,contract)
 	if contract.get("contract","")=="base508_exact_context_ordinary_host_action_v1": return _ordinary_record(record,catalog,contract)
 	if not ACTION_CONTEXTS.has(nid) or contract.get("contract","")!="base508_exact_context_single_action18_v1": return {}
@@ -190,3 +192,110 @@ static func _ordinary_record(record:Dictionary,catalog:Dictionary,contract:Dicti
 			if int(action.get("ID",-1))==selected and int(action.get("MotionType",-1))==int(row.MotionType) and int(action.get("WeaponType",-1))==int(row.WeaponType):
 				return {"explicit_attack_id":aid,"host_source_action_id":selected,"selection_policy":"explicit_host_adoption_not_native_AI","adoption_contract":contract.get("adoption_contract","")}
 	return {}
+
+const SPELL_CONTEXTS={
+	51731:{"sprite":2747,"attack":169201,"spell":35831,"effect":2748,"dice":[80,20,10],"effects":[2748]},
+	41852:{"sprite":5567,"attack":133292,"spell":30392,"effect":5570,"dice":[100,15,3],"effects":[5570]},
+	46813:{"sprite":4104,"attack":153503,"spell":119362,"effect":11769,"dice":[585,5,5],"effects":[11769]},
+	726:{"sprite":1603,"attack":66563,"spell":421,"effect":1606,"dice":[20,3,3],"effects":[1606,1607]}
+}
+static func _spell_row(row:Dictionary,nid:int,catalog:Dictionary) -> bool:
+	if not SPELL_CONTEXTS.has(nid):return false
+	var spec:Dictionary=SPELL_CONTEXTS[nid]
+	if int(row.get("ID",-1))!=int(spec.attack) or int(row.get("NpcClassID",-1))!=nid or not bool(row.get("IsSpell",false)) or int(row.get("SpellID",-1))!=int(spec.spell) or int(row.get("MotionType",-1))!=9 or int(row.get("WeaponType",-1))!=0 or int(row.get("NextAttack",-1))!=0 or bool(row.get("IsAbsoluteAtk",true)):return false
+	var spell:Dictionary=catalog.get("spells",{}).get(str(int(spec.spell)),{});var raw:Dictionary=spell.get("source_spell",{});var dice:Dictionary=spell.get("damage_dice",{})
+	if int(raw.get("ID",-1))!=int(spec.spell) or bool(raw.get("TestSpell",true)) or int(raw.get("SpellTypeID",-1))!=1 or int(raw.get("EffectSpriteID",-1))!=int(spec.effect) or int(raw.get("EffectSpriteActionNo",-1))!=0:return false
+	for field:String in ["CasterEffectSpriteID","CriticalEffectSpriteID","FailEffectSpriteID","SuccessEffectSpriteID","HostileEffectSpriteID","AdditionalEffectSpriteGroupID","CasterEffectSpriteGroupID","TargetScreenEffectID","ScreenEffectAssetId","CastingScreenEffectId"]:
+		if int(raw.get(field,0))!=0:return false
+	if int(raw.get("EffectExplosionSpriteID",0)) != (1607 if nid==726 else 0):return false
+	if spell.get("target_kind",{}).get("Name","")!="Enemy" or spell.get("targetting_type",{}).get("Name","")!="SingleObject" or not spell.get("buffs",[]).is_empty():return false
+	return int(dice.get("base",-1))==int(spec.dice[0]) and int(dice.get("dice_count",-1))==int(spec.dice[1]) and int(dice.get("dice_spots",-1))==int(spec.dice[2])
+static func _spell_actor_contract(nid:int,sprite:int,profile:Dictionary,tracks:Dictionary,catalog:Dictionary) -> Dictionary:
+	var spec:Dictionary=SPELL_CONTEXTS[nid]
+	if sprite!=int(spec.sprite) or catalog.is_empty() or int(catalog.get("source_npcs",{}).get(str(nid),{}).get("sprite_id",-1))!=sprite:return {}
+	if profile.get("contract","")!="base508_source_action_capabilities_v1" or bool(profile.get("host_combat_ready",false)) or profile.get("source_behavior_family","")!="source_motion_without_basic_attack":return {}
+	if profile.get("source_kind_preserved","") not in ["source_attackable_monster_actor","source_ui_boss_npc"] or profile.get("source_category",{}).get("Name","")!="Npc" or not bool(profile.get("source_category",{}).get("IsAttackable",false)):return {}
+	if int(profile.get("source_sparse_attachment_slot_count",-1))!=0 or not profile.get("unresolved_source_action_ids",[]).is_empty():return {}
+	for role:String in ["idle","walk"]:
+		var expected:int=3 if role=="idle" else 0
+		if not tracks.has(role) or int(tracks[role].get("source_action_id",-1))!=expected or int(profile.get("available_roles",{}).get(role,-1))!=expected or not _all_directions(tracks[role]):return {}
+	var available:Dictionary={}
+	for track:Dictionary in tracks.values():
+		if not track.get("source_omitted_attachment_slots",[]).is_empty():return {}
+		available[int(track.get("source_action_id",-1))]=track
+	if not available.has(18) or not _all_directions(available[18]):return {}
+	var actions:Array=[]
+	for action:Dictionary in catalog.get("source_actions",[]):
+		if int(action.get("MotionType",-1))==9 and int(action.get("WeaponType",-1))==0 and available.has(int(action.get("ID",-1))):actions.append(int(action.ID))
+	if actions!=[18]:return {}
+	var selected:Dictionary={};var unadopted:Array=[]
+	for row:Dictionary in catalog.get("npc_attacks",{}).get(str(nid),[]):
+		if _spell_row(row,nid,catalog):selected=row
+		else:unadopted.append(int(row.ID))
+	if selected.is_empty():return {}
+	var matched:bool=false
+	for route:Dictionary in profile.get("native_attack_routes",[]):
+		if int(route.get("npc_attack_id",-1))!=int(spec.attack):continue
+		var candidates:Array=route.get("candidate_action_ids",[])
+		matched=candidates.size()==1 and candidates[0]==18.0 and int(route.get("resolved_action_id",-1))==18 and route.get("source_attack",{})==selected
+	if not matched:return {}
+	var raw:Dictionary=catalog.spells[str(int(spec.spell))].source_spell
+	return {"contract":"base508_exact_context_single_spell_host_action_v1","host_combat_ready":true,"host_stationary":false,"source_npc_id":nid,"source_sprite_id":sprite,"explicit_attack_id":int(spec.attack),"attack_action_id":18,"source_spell_id":int(spec.spell),"source_effect_sprite_id":int(spec.effect),"required_source_effect_sprite_ids":spec.effects.duplicate(),"source_spell_effect_type_id":raw.get("SpellEffectTypeID"),"required_roles":["idle","walk"],"selection_policy":"explicit_host_adoption_not_native_AI","unadopted_attack_ids":unadopted,"adoption_contract":"Explicit single-spell host encounter with exact typed source damage and installed complete original effect references. Host clock/range/point damage are compatibility; raw EffectType retained, not native projectile/speed/impact timing proof."}
+static func _effect_path(relative:String,prefix:String) -> bool:
+	if not relative.begins_with(prefix) or relative.contains(":") or relative.contains("\\") or relative.begins_with("/"):return false
+	for part:String in relative.split("/",true):
+		if part in ["",".",".."]:return false
+	return true
+static func _effect_file(root:String,relative:String,sha:Variant,prefix:String) -> bool:
+	if not _effect_path(relative,prefix) or not sha is String or sha.length()!=64:return false
+	for index:int in range(sha.length()):
+		if not sha.substr(index,1) in "0123456789abcdef":return false
+	var path:String=root.path_join(relative)
+	return FileAccess.file_exists(path) and ACTOR_PACK.verify_pixel(path,sha)
+static func _installed_spell_effects(manifest_path:String,effect_ids:Array) -> bool:
+	var manifest:Dictionary=ACTOR_PACK.manifest(manifest_path);var ref:Variant=manifest.get("boss_vfx")
+	if not ref is Dictionary or ref.get("path","")!="boss_vfx/boss_vfx.json":return false
+	var root:String=manifest_path.get_base_dir()
+	if not _effect_file(root,ref.path,ref.get("sha256"),"boss_vfx/"):return false
+	var fx:Variant=JSON.parse_string(FileAccess.get_file_as_string(root.path_join(ref.path)))
+	if not fx is Dictionary or fx.get("source_snapshot","")!="base508" or fx.get("kind","")!="base508_boss_literal_sp2_effects":return false
+	var listed:Variant=fx.get("source_files")
+	if not listed is Dictionary:return false
+	var packets:Dictionary={}
+	for entry:Variant in listed.values():
+		if not entry is Dictionary or not entry.get("path") is String:return false
+		if packets.has(entry.path) and packets[entry.path]!=entry.get("sha256"):return false
+		packets[entry.path]=entry.get("sha256")
+	for effect_id:Variant in effect_ids:
+		var model_ref:Variant=fx.get("models",{}).get(str(int(effect_id)))
+		if not model_ref is Dictionary or not bool(model_ref.get("source_pixels_complete",false)) or not model_ref.get("path") is String:return false
+		if not _effect_file(root,"boss_vfx/"+model_ref.path,model_ref.get("sha256"),"boss_vfx/effects/"):return false
+		var model:Variant=JSON.parse_string(FileAccess.get_file_as_string(root.path_join("boss_vfx/"+model_ref.path)))
+		if not model is Dictionary or model.get("source_snapshot","")!="base508" or model.get("source_sprite_id",-1)!=float(effect_id) or not bool(model.get("source_pixels_complete",false)) or not model.get("source_gaps",[]).is_empty():return false
+		var track:Variant=model.get("tracks",{}).get("effect")
+		if not track is Dictionary or track.get("source_sprite_id",-1)!=float(effect_id) or int(track.get("source_action_id",-1))!=0 or not _all_directions(track):return false
+		for frames:Array in track.directions:
+			for frame:Variant in frames:
+				if not frame is Dictionary or not frame.get("layers") is Array or frame.layers.is_empty() or frame.layers.size()>8:return false
+				for layer:Variant in frame.layers:
+					if not layer is Dictionary:return false
+					var path:Variant=layer.get("path")
+					if not path is String or not packets.has(path) or packets[path]!=layer.get("sha256") or layer.get("codec","")!="base508_sp2_v1" or not _effect_file(root,"boss_vfx/"+path,layer.get("sha256"),"boss_vfx/sp2/"):return false
+	return true
+static func _spell_record(record:Dictionary,catalog:Dictionary,contract:Dictionary) -> Dictionary:
+	var nid:int=int(record.get("source_m_npc_id",-1))
+	if not SPELL_CONTEXTS.has(nid):return {}
+	if not bool(contract.get("host_combat_ready",false)) or bool(contract.get("host_stationary",true)):return {}
+	var spec:Dictionary=SPELL_CONTEXTS[nid];var path:String=str(record.get("source_m_asset_manifest_path",""))
+	var actor:Dictionary=ACTOR_PACK.actor(path,nid)
+	var checked:Dictionary=_spell_actor_contract(nid,int(record.get("source_m_sprite_id",-1)),actor.get("source_actor_profile",{}),actor.get("tracks",{}),catalog)
+	if checked.is_empty():return {}
+	for field:String in ["source_npc_id","source_sprite_id","explicit_attack_id","attack_action_id","source_spell_id","source_effect_sprite_id"]:
+		if int(checked.get(field,-1))!=int(contract.get(field,-2)):return {}
+	var original:Dictionary=record.get("source_m_original",{})
+	if int(original.get("ID",-1))!=nid or int(original.get("Sprite",-1))!=int(spec.sprite) or bool(original.get("TestNPC",true)) or not AUTHORITY.enemy_eligible(nid,true):return {}
+	var authority:Dictionary=AUTHORITY.npc(nid)
+	if int(authority.get("sprite_id",-1))!=int(spec.sprite) or bool(authority.get("source_original",{}).get("TestNPC",true)):return {}
+	if not AUTHORITY.context_keys(nid).has(AUTHORITY.context_key(nid,int(record.get("source_m_spawn_view_id",-1)),int(record.get("source_m_territory_link_id",-1)))):return {}
+	if not _installed_spell_effects(path,spec.effects):return {}
+	return {"explicit_attack_id":int(spec.attack),"host_source_action_id":18,"selection_policy":"explicit_host_adoption_not_native_AI","adoption_contract":checked.adoption_contract}

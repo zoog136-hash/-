@@ -62,7 +62,7 @@ func configure(owner: Node, world: Node, record: Dictionary) -> bool:
 	if nid <= 0 or source.is_empty() or int(original.get("ID", -1)) != nid or int(original.get("Sprite", -1)) != int(source.sprite_id): return false
 	if bool(original.get("TestNPC",false)): return false
 	if not bool(owner.get("is_boss")):
-		if record.get("source_m_host_action_contract",{}).get("contract","") != "base508_exact_context_ordinary_host_action_v1" or HOST_ADOPTIONS.for_record(record,"",data()).is_empty(): return false
+		if record.get("source_m_host_action_contract",{}).get("contract","") not in ["base508_exact_context_ordinary_host_action_v1","base508_exact_context_single_spell_host_action_v1"] or HOST_ADOPTIONS.for_record(record,"",data()).is_empty(): return false
 	owner_ref = weakref(owner); world_ref = weakref(world)
 	source_npc_id = nid; source_life = int(owner.get("life_id"))
 	effect_generation = int(world.get("combat_generation"))

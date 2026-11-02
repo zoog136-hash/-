@@ -259,6 +259,8 @@ func _install(path: String) -> Dictionary:
 
 static func validate_monster_payload(root: String, manifest: Dictionary, header: Dictionary) -> String:
 	if manifest.get("kind", "") != "base508_monster_pack": return "지원되는 원본 몬스터 팩이 아닙니다."
+	var boss_vfx_error:String=validate_boss_vfx_payload(root,manifest)
+	if not boss_vfx_error.is_empty(): return boss_vfx_error
 	var ids: Variant = header.get("npc_ids", [])
 	if not ids is Array or ids.is_empty() or ids.size() > 9470 or manifest.records.size() != ids.size(): return "몬스터 개체 목록이 유효하지 않습니다."
 	var local: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/lineagem_base508/monster_bindings.json"))
@@ -356,5 +358,56 @@ static func validate_monster_payload(root: String, manifest: Dictionary, header:
 		checked_models[model_key] = true
 	return ""
 
+static func _boss_vfx_hash(root:String,relative:String,hash_value:Variant,prefix:String) -> bool:
+	if not safe_relative(relative) or not relative.begins_with(prefix) or not hash_value is String or hash_value.length()!=64:return false
+	for index:int in range(hash_value.length()):
+		if not hash_value.substr(index,1) in "0123456789abcdef":return false
+	return FileAccess.file_exists(root.path_join(relative)) and FileAccess.get_sha256(root.path_join(relative))==hash_value
+
+static func validate_boss_vfx_payload(root:String,manifest:Dictionary) -> String:
+	# Optional private effects. Incomplete declared source compositions are
+	# retained, while every included file and frame reference must be intact.
+	if not manifest.has("boss_vfx"):return ""
+	var reference:Variant=manifest.boss_vfx
+	if not reference is Dictionary or reference.get("path","")!="boss_vfx/boss_vfx.json":return "보스 효과 목록 경로가 유효하지 않습니다."
+	if not _boss_vfx_hash(root,reference.path,reference.get("sha256"),"boss_vfx/"):return "보스 효과 목록 해시 검사 실패"
+	var data:Variant=JSON.parse_string(FileAccess.get_file_as_string(root.path_join(reference.path)))
+	if not data is Dictionary or data.get("kind","")!="base508_boss_literal_sp2_effects" or data.get("source_snapshot","")!="base508":return "지원되는 원본 보스 효과가 아닙니다."
+	var models:Variant=data.get("models");var sources:Variant=data.get("source_files")
+	if not models is Dictionary or models.is_empty() or models.size()>9470 or not sources is Dictionary or sources.is_empty() or sources.size()>50000:return "보스 효과 파일 목록이 유효하지 않습니다."
+	var packets:Dictionary={}
+	for source:Variant in sources.values():
+		if not source is Dictionary or not source.get("path") is String:return "보스 효과 픽셀 참조가 유효하지 않습니다."
+		var relative:String=source.path;var hash_value:Variant=source.get("sha256")
+		if not relative.ends_with(".bin") or not _boss_vfx_hash(root,"boss_vfx/"+relative,hash_value,"boss_vfx/sp2/"):return "보스 효과 픽셀 검사 실패: "+relative
+		if packets.has(relative) and packets[relative]!=hash_value:return "보스 효과 픽셀 해시가 서로 다릅니다."
+		packets[relative]=hash_value
+	for key:Variant in models:
+		if not key is String or not key.is_valid_int() or int(key)<=0 or str(int(key))!=key:return "보스 효과 원본 ID가 유효하지 않습니다."
+		var model_reference:Variant=models[key]
+		if not model_reference is Dictionary or not model_reference.get("path") is String:return "보스 효과 동작 참조가 유효하지 않습니다."
+		var relative:String=model_reference.path
+		if not relative.ends_with(".json") or not _boss_vfx_hash(root,"boss_vfx/"+relative,model_reference.get("sha256"),"boss_vfx/effects/"):return "보스 효과 동작 검사 실패"
+		var model:Variant=JSON.parse_string(FileAccess.get_file_as_string(root.path_join("boss_vfx/"+relative)))
+		if not model is Dictionary or model.get("source_snapshot","")!="base508" or model.get("source_sprite_id",-1)!=float(int(key)):return "보스 효과 원본 외형이 일치하지 않습니다."
+		var tracks:Variant=model.get("tracks")
+		if not tracks is Dictionary or tracks.is_empty():return "보스 효과 동작 목록이 유효하지 않습니다."
+		for track:Variant in tracks.values():
+			if not track is Dictionary or track.get("source_sprite_id",-1)!=float(int(key)) or track.get("source_action_id",-1)!=0.0:return "보스 효과 원본 동작이 일치하지 않습니다."
+			var directions:Variant=track.get("directions")
+			if not directions is Array or directions.size()!=8:return "보스 효과 방향 목록이 유효하지 않습니다."
+			var has_frame:bool=false
+			for frames:Variant in directions:
+				if not frames is Array or frames.size()>4096:return "보스 효과 프레임 목록이 유효하지 않습니다."
+				for frame:Variant in frames:
+					has_frame=true
+					if not frame is Dictionary or not frame.get("layers") is Array or frame.layers.is_empty() or frame.layers.size()>8:return "보스 효과 레이어가 유효하지 않습니다."
+					for layer:Variant in frame.layers:
+						if not layer is Dictionary or not layer.get("path") is String or layer.get("codec","")!="base508_sp2_v1":return "보스 효과 원본 픽셀 참조가 유효하지 않습니다."
+						if not packets.has(layer.path) or packets[layer.path]!=layer.get("sha256"):return "목록에 없는 보스 효과 픽셀입니다."
+			if not has_frame:return "보스 효과 원본 프레임이 없습니다."
+	return ""
+
 func _failure(message: String) -> Dictionary:
 	return {"ok":false,"error":message,"previous_pack_preserved":true}
+

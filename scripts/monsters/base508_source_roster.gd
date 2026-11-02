@@ -90,6 +90,7 @@ static func _full_record(source_key: String, manifest_path: String, compatibilit
 	if not action_contract.is_empty():
 		result["source_m_host_action_contract"]=action_contract.duplicate(true)
 		result["source_m_host_combat_ready"]=true
+		if HOST_ACTIONS.for_record(result,"",BOSS_COMBAT.data(path.get_base_dir())).is_empty(): return {}
 	result["source_m_host_placement"] = "Explicit host region source-key port; native geography unverified"
 	return result
 
