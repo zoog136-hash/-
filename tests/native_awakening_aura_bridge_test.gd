@@ -5,6 +5,7 @@ const Fixture=preload("res://tests/native_option_awakening_test.gd")
 class Actor extends Node2D:
 	var source_facing: int=5
 	var mode: String="compatible"
+	func clear() -> void:pass
 	func installed() -> bool:return true
 	func source_playback_mode() -> String:return mode
 	func source_role() -> String:return "idle"
