@@ -30,6 +30,7 @@ const ACTION_CONTEXTS = {
 	67033:{"sprite":20319,"spawn":300213,"territory":140843,"attack":244103}
 }
 static func actor_contract(npc_id:int,sprite_id:int,profile:Dictionary,tracks:Dictionary,catalog:Dictionary={}) -> Dictionary:
+	if npc_id == 47744: return _stationary_actor_contract(sprite_id,profile,tracks,catalog)
 	if not ACTION_CONTEXTS.has(npc_id) or int(ACTION_CONTEXTS[npc_id].sprite)!=sprite_id or catalog.is_empty(): return {}
 	if profile.get("contract","")!="base508_source_action_capabilities_v1": return {}
 	if not bool(profile.get("source_category",{}).get("IsAttackable",false)) or profile.get("source_category",{}).get("Name","")=="Citizen": return {}
@@ -70,6 +71,7 @@ static func _ordinary_row(row:Dictionary,npc_id:int,attack_id:int) -> bool:
 	return int(row.get("ID",-1))==attack_id and int(row.get("NpcClassID",-1))==npc_id and not bool(row.get("IsSpell",true)) and int(row.get("SpellID",-1))==0 and int(row.get("MotionType",-1))==9 and int(row.get("WeaponType",-1))==0 and not bool(row.get("IsAbsoluteAtk",true)) and int(row.get("DiceCount",-1))==5 and int(row.get("DiceSpots",-1))==5 and int(row.get("DiceBonus",-1))==0
 static func _single_action_record(record:Dictionary,catalog:Dictionary,contract:Dictionary) -> Dictionary:
 	var nid:int=int(record.get("source_m_npc_id",-1))
+	if nid == 47744: return _stationary_record(record,catalog,contract)
 	if not ACTION_CONTEXTS.has(nid) or contract.get("contract","")!="base508_exact_context_single_action18_v1": return {}
 	var context:Dictionary=ACTION_CONTEXTS[nid]
 	if int(record.get("source_m_sprite_id",-1))!=int(context.sprite) or int(record.get("source_m_spawn_view_id",-1))!=int(context.spawn) or int(record.get("source_m_territory_link_id",-1))!=int(context.territory): return {}
@@ -81,4 +83,45 @@ static func _single_action_record(record:Dictionary,catalog:Dictionary,contract:
 	for row:Dictionary in catalog.get("npc_attacks",{}).get(str(nid),[]):
 		if _ordinary_row(row,nid,int(context.attack)):
 			return {"explicit_attack_id":int(context.attack),"selection_policy":"explicit_host_adoption_not_native_AI","adoption_contract":contract.get("adoption_contract","")}
+	return {}
+
+static func _stationary_row(row:Dictionary,catalog:Dictionary) -> bool:
+	if int(row.get("ID",-1))!=236472 or int(row.get("NpcClassID",-1))!=47744 or int(row.get("MotionType",-1))!=2 or int(row.get("WeaponType",-1))!=0 or not bool(row.get("IsSpell",false)) or int(row.get("SpellID",-1))!=54132: return false
+	var spell:Dictionary=catalog.get("spells",{}).get("54132",{})
+	var dice:Dictionary=spell.get("damage_dice",{})
+	return int(spell.get("source_spell",{}).get("ID",-1))==54132 and spell.get("target_kind",{}).get("Name","")=="Enemy" and spell.get("targetting_type",{}).get("Name","")=="SingleObject" and int(dice.get("base",-1))==2300 and int(dice.get("dice_count",-1))==110 and int(dice.get("dice_spots",-1))==100
+static func _stationary_actor_contract(sprite_id:int,profile:Dictionary,tracks:Dictionary,catalog:Dictionary) -> Dictionary:
+	if sprite_id!=7236 or catalog.is_empty() or profile.get("contract","")!="base508_source_action_capabilities_v1": return {}
+	var source:Dictionary=catalog.get("source_npcs",{}).get("47744",{})
+	if int(source.get("sprite_id",-1))!=7236 or not bool(source.get("source_ui_boss",false)): return {}
+	if not bool(profile.get("source_category",{}).get("IsAttackable",false)) or profile.get("source_category",{}).get("Name","")=="Citizen": return {}
+	if int(profile.get("source_sparse_attachment_slot_count",-1))!=0 or not profile.get("unresolved_source_action_ids",[]).is_empty(): return {}
+	for role:String in ["idle","attack"]:
+		var expected:int=3 if role=="idle" else 1
+		if not tracks.has(role) or int(tracks[role].get("source_action_id",-1))!=expected or int(profile.get("available_roles",{}).get(role,-1))!=expected: return {}
+	for track:Dictionary in tracks.values():
+		if not track.get("source_omitted_attachment_slots",[]).is_empty(): return {}
+	var selected:Dictionary={};var unadopted:Array=[]
+	for row:Dictionary in catalog.get("npc_attacks",{}).get("47744",[]):
+		if int(row.get("ID",-1))==236472:selected=row
+		else:unadopted.append(int(row.ID))
+	if not _stationary_row(selected,catalog): return {}
+	var matched:bool=false
+	for route:Dictionary in profile.get("native_attack_routes",[]):
+		if int(route.get("npc_attack_id",-1))!=236472: continue
+		var candidates:Array=route.get("candidate_action_ids",[])
+		if candidates.size()!=1 or candidates[0]!=1.0 or int(route.get("resolved_action_id",-1))!=1 or route.get("source_attack",{})!=selected: return {}
+		matched=true
+	if not matched:return {}
+	return {"contract":"base508_exact_context_stationary_action1_v1","host_combat_ready":true,"host_stationary":true,"source_npc_id":47744,"source_sprite_id":7236,"explicit_attack_id":236472,"attack_action_id":1,"required_roles":["idle","attack"],"selection_policy":"explicit_host_adoption_not_native_AI","unadopted_attack_ids":unadopted,"adoption_contract":"Exact contextual female Zeb adopts source Spell54132 and available authored action1, without manufacturing walk. Stationary host clock/range/selection policy is compatibility; source probability/delay/native AI and geography remain unverified."}
+static func _stationary_record(record:Dictionary,catalog:Dictionary,contract:Dictionary) -> Dictionary:
+	if contract.get("contract","")!="base508_exact_context_stationary_action1_v1" or not bool(contract.get("host_stationary",false)) or not bool(contract.get("host_combat_ready",false)): return {}
+	if not bool(record.get("source_m_host_stationary",false)) or typeof(record.get("speed")) not in [TYPE_INT,TYPE_FLOAT] or float(record.speed)!=0.0: return {}
+	if int(record.get("source_m_sprite_id",-1))!=7236 or int(record.get("source_m_spawn_view_id",-1))!=277472 or int(record.get("source_m_territory_link_id",-1))!=136572: return {}
+	var original:Dictionary=record.get("source_m_original",{})
+	if int(original.get("ID",-1))!=47744 or int(original.get("Sprite",-1))!=7236: return {}
+	if int(contract.get("source_npc_id",-1))!=47744 or int(contract.get("source_sprite_id",-1))!=7236 or int(contract.get("explicit_attack_id",-1))!=236472 or int(contract.get("attack_action_id",-1))!=1: return {}
+	if int(catalog.get("source_npcs",{}).get("47744",{}).get("sprite_id",-1))!=7236:return {}
+	for row:Dictionary in catalog.get("npc_attacks",{}).get("47744",[]):
+		if _stationary_row(row,catalog):return {"explicit_attack_id":236472,"host_source_action_id":1,"selection_policy":"explicit_host_adoption_not_native_AI","adoption_contract":contract.get("adoption_contract","")}
 	return {}

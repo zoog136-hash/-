@@ -80,6 +80,9 @@ static func _full_record(source_key: String, manifest_path: String, compatibilit
 	var host: Dictionary = {"atk":8,"speed":70.0,"attack_interval":1.25,"attack_range":58.0,"collision_radius":19.0,"grade":"일반"}
 	host["is_boss"] = bool(FULL.npc(int(ids.npc_id)).get("source_ui_boss", false))
 	host.merge(compatibility, true)
+	if bool(action_contract.get("host_stationary",false)):
+		host["speed"]=0.0
+		host["source_m_host_stationary"]=true
 	var result: Dictionary = FULL.source_record(source_key, host)
 	if result.is_empty() or int(result.get("source_m_sprite_id", -1)) != int(actor.get("sprite_id", -2)): return {}
 	result["source_m_asset_manifest_path"] = path

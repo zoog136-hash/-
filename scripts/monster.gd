@@ -10,6 +10,7 @@ var source_m_view: SOURCE_M_VIEW = null
 const SOURCE_BOSS_COMBAT = preload("res://scripts/monsters/base508_boss_combat.gd")
 var source_boss_combat = SOURCE_BOSS_COMBAT.new()
 var source_action_contract_required: bool = false
+var source_host_stationary: bool = false
 var mp: int = 0
 var max_mp: int = 0
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
@@ -133,6 +134,7 @@ var roam_clock: float = 0.0
 func retire_for_pool() -> void:
 	source_boss_combat.clear()
 	source_action_contract_required = false
+	source_host_stationary = false
 	loot_source_identity.clear()
 	# Death presentation is complete before this is called. Release all visual
 	# owners while keeping the lightweight body for the next life/region.
@@ -189,6 +191,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
 	source_action_contract_required = not record.get("source_m_host_action_contract", {}).is_empty()
+	source_host_stationary = source_action_contract_required and bool(record.get("source_m_host_stationary",false)) and bool(record.get("source_m_host_action_contract",{}).get("host_stationary",false))
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.BASE508_DROPS.identity(record)
 	if loot_source_identity.is_empty(): loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
@@ -490,7 +493,7 @@ func _tick_ai(delta: float) -> void:
 		# Preserve the existing host pursuit/hold range, without a second
 		# legacy special/basic-attack path during its cooldown or rejection.
 		velocity = Vector2.ZERO
-		if not is_held() and distance > attack_range and distance <= float(ai.get("aggro_radius",760.))*1.7:
+		if not source_host_stationary and not is_held() and distance > attack_range and distance <= float(ai.get("aggro_radius",760.))*1.7:
 			_move_toward(target_player.global_position,delta)
 		return
 	if is_boss and ai.has("special") and special_cooldown<=0. and distance<=620. and sight and not is_silenced():
@@ -537,6 +540,10 @@ func _refresh_overhead_ui(distance: float = -1.0) -> void:
 	if hp_bar.visible != near: hp_bar.visible = near
 
 func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
+	if source_host_stationary:
+		velocity = Vector2.ZERO
+		path = PackedVector2Array(); path_index = 0
+		return
 	if is_held(): velocity = Vector2.ZERO; return
 	if repath_cooldown<=0.:
 		repath_cooldown = .65+float(get_instance_id()%7)*.015
@@ -1050,6 +1057,9 @@ func _resolve_attack(id: int, kind: String, born: int = -1, ratio: float = 1.) -
 	player_hit.emit(self,maxi(1,int(attack_power*ratio)),kind)
 
 func _move_on_map() -> void:
+	if source_host_stationary:
+		velocity = Vector2.ZERO
+		return
 	var controller: Node = world_controller
 	if not _patrol_allows(global_position+velocity*get_physics_process_delta_time()): velocity = Vector2.ZERO
 	if is_instance_valid(controller) and controller.has_method("constrain_original_motion"):

@@ -297,6 +297,9 @@ func pending_source_action() -> Dictionary:
 	var result: Array = []
 	for source: Dictionary in data().get("source_actions", []):
 		if int(source.MotionType) == int(row.MotionType) and int(source.WeaponType) == int(row.WeaponType): result.append(int(source.ID))
+	if bool(options.get("host_action_contract_locked",false)) and int(options.get("host_source_action_id",-1)) > 0:
+		var adopted:int=int(options.host_source_action_id)
+		if result.has(adopted): return {"source_attack_id":row.ID,"candidate_source_action_ids":result,"source_motion_type":row.MotionType,"source_weapon_type":row.WeaponType,"selected_source_action_id":adopted,"selection_origin":"exact_context_available_action_host_contract"}
 	return {"source_attack_id":row.ID,"candidate_source_action_ids":result,"source_motion_type":row.MotionType,"source_weapon_type":row.WeaponType,"selected_source_action_id":result[0] if result.size()==1 else -1}
 
 func release(sequence: int) -> bool:
