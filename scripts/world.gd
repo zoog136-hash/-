@@ -84,6 +84,7 @@ const RELIC_MOTION = preload("res://scripts/animation/relic_motion.gd")
 var relic_motion: TwilightRelicMotion = RELIC_MOTION.new()
 const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
 var doll_motion: TwilightFollowerMotion = FOLLOWER_MOTION.new()
+var secondary_doll_visual: Node2D
 const COMBAT_VFX = preload("res://scripts/animation/combat_vfx.gd")
 var combat_vfx: TwilightCombatVFX = null
 var feedback_kind: String = "melee"
@@ -1275,6 +1276,8 @@ func _connect_signals() -> void:
 		hud.connect("card_pack_draw_requested", _on_card_pack_draw_requested)
 	if hud.has_signal("card_fusion_requested"):
 		hud.connect("card_fusion_requested", _on_card_fusion_requested)
+	if hud.has_signal("secondary_doll_requested"):
+		hud.connect("secondary_doll_requested",_on_secondary_doll_requested)
 	if hud.has_signal("option_awakening_open_requested"):
 		hud.connect("option_awakening_open_requested", _on_option_awakening_open_requested)
 		hud.connect("option_awakening_feed_requested", _on_option_awakening_feed_requested)
@@ -6457,7 +6460,10 @@ func _sync_option_awakening_auras() -> void:
 func _sync_option_awakening_aura(category: String) -> void:
 	var raw: Variant = equipped_catalog.get(category, {})
 	var record: Dictionary = raw if raw is Dictionary else {}
-	var awakened: bool = not record.is_empty() and option_awakening.is_awakened(category, record)
+	# Authored lightning belongs to legacy cards only. Native StatusEffectAttr
+	# type meanings are not defined in the supplied source; do not impersonate
+	# those originals with the authored aura while their binding is unresolved.
+	var awakened: bool = not record.is_empty() and record.get("source","")!="lineagem_base508" and option_awakening.is_awakened(category, record)
 	var aura: Node2D = option_awakening_auras.get(category) as Node2D
 	if not awakened:
 		if is_instance_valid(aura): aura.call("set_awakened", false)
@@ -7516,6 +7522,15 @@ func _experience_multiplier() -> float:
 func _update_companion(delta: float) -> void:
 	doll_motion.update(delta, $Companion, companion_sprite, player)
 	relic_motion.update(delta, relic_sprite, player)
+	var state: Dictionary=option_awakening.subslot_view()
+	if not state.get("active",false):
+		if is_instance_valid(secondary_doll_visual):secondary_doll_visual.clear()
+		return
+	if not is_instance_valid(secondary_doll_visual):
+		secondary_doll_visual=preload("res://scripts/cards/native_doll_subslot_visual.gd").new()
+		secondary_doll_visual.name="SecondarySourceDoll";add_child(secondary_doll_visual)
+	var record: Dictionary=option_awakening.core.catalog["마법인형"].get(state.identity,{})
+	secondary_doll_visual.update_source(delta,self,record)
 
 # Playable-field services: renderer, physics, population and HUD remain separate.
 func _setup_field_services() -> void:
@@ -7876,3 +7891,11 @@ func return_from_original_map() -> bool:
 
 func _drop_inventory_reference(reference: String, target: Vector2) -> bool:
 	return INVENTORY_GROUND_TRANSFER.drop(self,reference,target)
+
+func _on_secondary_doll_requested(identity: String) -> void:
+	if _option_awakening_busy():return
+	var result: Dictionary=option_awakening.select_subslot(identity)
+	if not result.ok:hud.show_message(str(result.error));return
+	_update_companion(0)
+	_update_hud()
+	hud.show_message("추가 인형 소환 해제" if identity.is_empty() else "추가 인형 선택 완료"+(" · 원본 배우 팩 확인 필요" if not is_instance_valid(secondary_doll_visual) or secondary_doll_visual.status!="source_native" else ""))

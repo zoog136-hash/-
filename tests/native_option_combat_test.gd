@@ -64,6 +64,10 @@ func run() -> void:
 	check(attacker.source_option_debuffs.is_empty(),"death prunes attached status")
 	attacker.dead=false;advance(combat,20);combat.on_hit(attacker);attacker.retire_for_pool()
 	check(attacker.source_option_debuffs.is_empty(),"pool retirement clears all source debuffs")
+	advance(combat,20);combat.on_hit(attacker)
+	attacker.advance_source_option_debuffs(9.9);check(not attacker.source_option_debuffs.is_empty(),"source10second buff remains before deadline")
+	attacker.advance_source_option_debuffs(.11);combat.tick(0)
+	check(attacker.source_option_debuffs.is_empty() and combat.targets.is_empty(),"deadline expires effect and releases target handle")
 	service.save_blocked=true;before=combat.rolls;combat.incoming(attacker,"melee",200);combat.on_hit(attacker)
 	check(combat.rolls==before,"protected saves have no proc or RNG")
 	attacker.queue_free();host.queue_free();await process_frame

@@ -35,6 +35,7 @@ var selected_key: String=""
 var number_pattern:=RegEx.new()
 var art_column: VBoxContainer
 var apply_row: HBoxContainer
+var secondary_button: Button
 var footer_actions: HBoxContainer
 var presentation_homes: Array[Dictionary]=[]
 var catalog_style: StyleBox
@@ -153,6 +154,17 @@ func configure(controller: Node) -> void:
 		if spec[0]=="컬렉션 보기":
 			button.disabled=false;button.tooltip_text="선택 카드가 포함된 컬렉션"
 			button.pressed.connect(func() -> void:hud.open_normal_card_collections(category,Cards.card_id(hud.selected_catalog_record)))
+	secondary_button=UI.button("추가 소환",Callable(),Vector2(0,44))
+	secondary_button.name="CompanionSecondarySummon"
+	secondary_button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	footer_actions.add_child(secondary_button)
+	preload("res://scripts/ui/source_card_skin.gd").style(secondary_button,"UI/Change/Change_DetailView.csb","Btn_Change_On")
+	secondary_button.pressed.connect(func() -> void:
+		var world: Node=hud.get_parent()
+		if world==null or not world.has_method("_on_secondary_doll_requested"):return
+		var state: Dictionary=world.option_awakening.subslot_view()
+		var chosen: String=Cards.card_id(hud.selected_catalog_record)
+		hud.secondary_doll_requested.emit("" if state.identity==chosen else chosen))
 	footer_actions.hide()
 
 func activate(value: String) -> void:
@@ -282,6 +294,7 @@ func fit_layout() -> void:
 func refresh() -> void:
 	if not active:return
 	var record: Dictionary=hud.selected_catalog_record
+	_refresh_secondary(record)
 	if hud.catalog_results.is_empty():record={}
 	var identity: String=Cards.card_id(record)
 	var key: String=category+identity+str(hash(record.get("sourceOptions",[])))
@@ -355,3 +368,18 @@ func fill_options(record: Dictionary) -> void:
 		hud.workspace.register_scroll_drag(sheet,value)
 	note.text="* 미지원 특수효과" if unsupported else ""
 	note.visible=unsupported
+
+func _refresh_secondary(record: Dictionary) -> void:
+	if secondary_button==null:return
+	secondary_button.visible=category=="마법인형" and record.get("source","")=="lineagem_base508"
+	if not secondary_button.visible:return
+	var world: Node=hud.get_parent()
+	if world==null or not world.has_method("_on_secondary_doll_requested"):secondary_button.disabled=true;return
+	var runtime: RefCounted=world.option_awakening
+	var state: Dictionary=runtime.subslot_view()
+	var chosen: String=Cards.card_id(record)
+	var release: bool=state.identity==chosen
+	var available: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").eligibility(runtime,"" if release else chosen,int(world.level),world.active_skill_buffs)
+	secondary_button.text="추가 소환 해제" if release else "추가 소환"
+	secondary_button.disabled=not bool(available.ok) or runtime.save_blocked
+	secondary_button.tooltip_text=available.get("error","주 인형과 다른 카드·등급 · 별도 각성 소비 없음")

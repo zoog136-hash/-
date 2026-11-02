@@ -4,6 +4,7 @@ extends "res://scripts/hud_v20.gd"
 signal card_pack_draw_requested(category: String)
 signal card_fusion_requested(category: String, grade: String, count: int)
 signal blessing_target_requested(scroll_name: String, target_reference: String)
+signal secondary_doll_requested(identity: String)
 signal option_awakening_open_requested(category: String, target_id: String)
 signal option_awakening_feed_requested(category: String, target_id: String, materials: Dictionary)
 signal option_awakening_attempt_requested(category: String, target_id: String)
