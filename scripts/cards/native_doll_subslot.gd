@@ -20,7 +20,7 @@ static func unlocked(level: int,buffs: Dictionary,progress: Dictionary={}) -> bo
 	return false
 static func eligibility(runtime: RefCounted,identity: String,level: int,buffs: Dictionary) -> Dictionary:
 	if identity.is_empty():return {"ok":true}
-	if not unlocked(level,buffs,runtime.progress):return {"ok":false,"code":"subslot_locked","error":"95레벨 및 원본 에바의 부름(BuffClass91531) 습득 확인 필요"}
+	if not unlocked(level,buffs,runtime.progress):return {"ok":false,"code":"subslot_locked","error":"95레벨 및 에바의 부름 습득이 필요합니다"}
 	var row: Dictionary=DATA.data.subslot_buffs.get(identity,{})
 	if row.is_empty():return {"ok":false,"code":"source_identity","error":"원본 추가 인형 ID 연결 없음"}
 	var record: Dictionary=runtime.core.catalog["마법인형"].get(identity,{})

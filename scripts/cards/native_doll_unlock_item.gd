@@ -49,13 +49,13 @@ static func prepare(state: Dictionary,inventory: Dictionary,instances: Dictionar
 		var physical: Variant=instances[key]
 		if not physical is Dictionary or physical.get("name","")!=name_value or not physical.get("record") is Dictionary:continue
 		if exact(physical.record):selected=key;break
-	if selected.is_empty():return {"ok":false,"code":"source_ownership","error":"원본 ItemClass346901의 물리 소유권 확인 필요 · 이름만으로 소모하지 않습니다"}
+	if selected.is_empty():return {"ok":false,"code":"source_ownership","error":"아이템의 원본 연결을 확인할 수 없습니다 · 아이템 보존"}
 	var count: Variant=inventory.get(name_value,0)
 	if not (count is int or count is float) or not is_finite(float(count)) or float(count)!=floorf(float(count)) or int(count)<1:return {"ok":false,"code":"quantity","error":"해금 아이템 보유 수량 오류"}
 	var physical_count: int=0
 	for entry: Variant in instances.values():
 		if entry is Dictionary and entry.get("name","")==name_value:physical_count+=1
-	if physical_count>int(count):return {"ok":false,"code":"source_ownership_count","error":"아이템 수량과 물리 소유권 수 불일치 · 기존 아이템 보존"}
+	if physical_count>int(count):return {"ok":false,"code":"source_ownership_count","error":"아이템 보유 정보가 일치하지 않습니다 · 아이템 보존"}
 	var next: Dictionary=state.duplicate(true);next[FIELD]=marker();next.revision=int(next.revision)+1
 	var bag: Dictionary=inventory.duplicate(true);var physical: Dictionary=instances.duplicate(true)
 	if int(count)==1:bag.erase(name_value)
