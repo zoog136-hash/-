@@ -230,3 +230,15 @@ attr1 left-to-top and attr2 top-to-right overlay. This validates byte layout
 and geometry,not native passability or zone/height interpretation. Reference:
 https://github.com/tony1223/L1MapViewer/blob/364fcff15ea019e5a9329170aaf7e245404ebba6/Rendering/OverlayRenderer.cs
 No65-to5 zone replacement or new open-edge policy is applied.
+
+`base508_portal_contract.gd` resolves exact source-point/target-point links
+between loaded source fields,requires matching original Land IDs and reviewed
+foot clearance,and preserves the entire original portal row. Region destinations
+are rejected without an original arrival policy. `verify_source_portal_contract.gd`
+passed both original point links between Giran castle dungeon1/2. Source fields
+now expose their actual original portals as renderer inspection markers.
+No automatic trigger is inferred: Portal lacks trigger geometry and activation
+predicate. The result explicitly marks these missing native rules and automatic
+activation unsupported; it is a coordinate handshake for Main integration,
+not an automatic map travel implementation. Original height and foreground
+ordering are not encoded by this service.

@@ -46,7 +46,12 @@ func overview_texture()->Texture2D:
  var art:Dictionary=source_pack.manifest.art;var file:String=source_pack.safe_file(art.overview)
  if FileAccess.get_sha256(file)!=art.overview_sha256:return null
  return ImageTexture.create_from_image(Image.load_from_file(file))
-func portal_evidence()->Array:return [] # Faith uses item→Location entries, not invented floor portals.
+func portal_evidence()->Array:
+ var result:Array=[]
+ for portal:Dictionary in source_pack.portals:
+  if int(portal.SourceLandID)!=int(source_pack.manifest.land.ID):continue
+  result.append({'portal':portal.duplicate(true),'automatic_activation_supported':false,'missing_native_rules':['trigger_geometry','activation_predicate']})
+ return result # Original markers only; Faith has no fabricated floor portals.
 func register_source_occupant(instance:String,record:Dictionary,cell:Vector2i,placement_confirmed:Variant)->bool:
  if not is_instance_valid(physics_body) or occupancy_shapes.has(instance):return false
  if not source_pack.register_source_npc_instance(instance,record,cell,placement_confirmed):return false
