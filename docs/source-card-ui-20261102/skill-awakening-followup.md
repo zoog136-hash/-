@@ -82,3 +82,28 @@ is withheld after direct render review. Particle/timeline and full EXP screen
 controls are not claimed implemented merely because their sources are present.
 51 actual World/UI checks pass at1280x720/854x480, including material bindings
 and preserved states. Original pixel screenshots stay in the private handoff.
+
+## Real priority spell pixels
+
+The existing Library transfer manifest resolved the missing SPR source metadata
+without a new extraction: `libfile_44951912853c8191936fbe5da3abd2e9` v0, SHA
+`eb01668a69a6c0a8531147be4c05e4f9b559f0440fbbff92375ef99e8377b778`.
+Original1583 action0 declares source frames3,0,1,2 with ticks3,2,3,2; original218
+declares9,0,0,1..8 with ticks1,4,1,1..1. Both FPS fields are absent. Existing
+compatible PC24 clock/blend policy is retained and explicitly unverified for M.
+
+The private builder reuses PR217 SPR/SP2 readers, verifies raw member SHA/CRC,
+retains exact offsets/RGB565 pixels, and records missing direction addresses.
+1583 has16 actual direction/frame PNGs (source bits0–3); bits4–7 are absent.
+Its sparse adapter refuses those directions instead of inventing reflections.
+218 has10 stored frames and its fixed SPR source direction supports all host
+facings through the existing compositor. No shared PR217 source file is replaced.
+The bounded partial-only adapter caches96 textures and pools at most32 sprites.
+A freed-overlay typed-filter error in PR217 was exposed by real repeat playback;
+the card adapter prunes invalid handles before calling that existing API.
+
+16 real compositor/pixel checks pass: original first/next frames and pixels,
+completion, resource release, sprite reuse/reset, fixed effect position across
+target movement, and refusal of missing1583 directions. These are actual source
+pixels, separate from the earlier mock event tests. No original flight/server
+timing or missing-direction behavior is claimed recovered.
