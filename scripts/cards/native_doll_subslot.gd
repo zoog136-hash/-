@@ -28,6 +28,8 @@ static func eligibility(runtime: RefCounted,identity: String,level: int,buffs: D
 	if not runtime.core.owned({"owned":runtime.world.card_draw_fusion.owned},"마법인형",identity) or not runtime.core.native_material_available(record):return {"ok":false,"code":"ownership_condition","error":"인형 보유·원본 서버 조건 확인 필요"}
 	var main: Dictionary=runtime.world.equipped_catalog.get("마법인형",{})
 	if main.is_empty() or main.get("source","")!="lineagem_base508":return {"ok":false,"code":"main_required","error":"주 인형 소환 필요"}
+	var main_id: String=preload("res://scripts/card_draw_fusion.gd").card_id(main)
+	if not runtime.core.owned({"owned":runtime.world.card_draw_fusion.owned},"마법인형",main_id) or not runtime.core.native_material_available(main):return {"ok":false,"code":"main_ownership_condition","error":"주 인형 보유·원본 서버 조건 확인 필요"}
 	if int(main.get("source_card_id",0))==int(row.card.ID) or int(main.get("source_grade_id",0))==int(row.card.GradeID):return {"ok":false,"code":"same_card_grade","error":"주 인형과 다른 카드·등급 필요"}
 	return {"ok":true}
 static func effects(runtime: RefCounted,identity: String) -> Dictionary:

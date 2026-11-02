@@ -31,6 +31,9 @@ func run() -> void:
 	check(not service.select_subslot(chosen).ok,"name does not prove source unlock")
 	host.active_skill_buffs={"verified":{"source_snapshot":"base508","source_buff_class_id":91531}}
 	host.level=94;check(not service.select_subslot(chosen).ok,"minimum95")
+	host.level=95;host.card_draw_fusion.owned["마법인형"].erase(main)
+	check(not service.select_subslot(chosen).ok,"unowned main cannot authorize extra summon")
+	host.card_draw_fusion.owned["마법인형"][main]=true
 	host.level=95;host.equipped_catalog["마법인형"]=cards[chosen]
 	check(not service.select_subslot(chosen).ok,"same card and grade rejected")
 	host.equipped_catalog["마법인형"]=cards[main]
