@@ -71,3 +71,9 @@ PvE reduction percentage uses the existing `catalog_bonus` route, not the
 equipped-record stat route. A temporary cache-only test fixture verifies damage
 calculation and restoration without bypassing source server eligibility or
 changing ownership. The actual derived source ownership still honors all gates.
+
+On a pre-PR217 branch, the pure collection test explicitly labels its
+requirement-derived schema fixture; only a supplied canonical cards.json run
+validates the independent 701-card join. The World-consumer integration test
+prints SKIPPED when the native runtime is absent instead of breaking a UI-only
+branch. The recorded 1356/17 checks used the actual canonical/native runtime.

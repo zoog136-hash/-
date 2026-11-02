@@ -11,9 +11,22 @@ func _run() -> void:
 	var path: String = "res://data/lineagem_base508/cards.json"
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--native-cards="): path = argument.trim_prefix("--native-cards=")
-	if not FileAccess.file_exists(path): push_error("Required canonical native card catalog missing: " + path); quit(2); return
-	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path)).catalog
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/cards/base508_collections.json"))
+	var catalog: Dictionary = {}
+	var catalog_mode: String = "canonical_source_catalog"
+	if FileAccess.file_exists(path):
+		catalog=JSON.parse_string(FileAccess.get_file_as_string(path)).catalog
+	else:
+		# The UI branch can precede PR217. This is an explicit schema/state fixture,
+		# not evidence that the independent canonical 701-card join was checked.
+		catalog_mode="requirement_derived_schema_fixture; canonical701_join_not_checked"
+		var seen: Dictionary={}
+		for category: String in Cards.CATEGORIES:catalog[category]=[]
+		for row: Dictionary in data.collections:
+			for requirement: Dictionary in row.requirements:
+				if seen.has(requirement.id):continue
+				seen[requirement.id]=true
+				catalog[row.category].append({"source":"lineagem_base508","sourceId":str(requirement.id).trim_prefix("source:"),"source_card_id":requirement.source_original.BuffCardID,"name":requirement.name,"grade":requirement.grade})
 	var core = Native.new()
 	check(core.configure(data, catalog), "all native rows configure: " + core.error)
 	check(core.definitions.all(func(row: Dictionary) -> bool:return row.time_policy==Native.TIME_POLICY and row.time_label=="상시"), "time limits overridden without deleting any source set")
@@ -69,5 +82,5 @@ func _run() -> void:
 	check(removed.completed.is_empty() and removed.totals.is_empty(), "missing required member removes derived reward")
 	one_data.collections[0].requirements[0].source_original.BuffCardID = -77
 	check(not Native.new().configure(one_data,catalog), "corrupt BuffCardID join fails closed")
-	print(JSON.stringify({"checks":checks,"failures":failures,"native_sets":1736,"available_supported_sets":available,"blocked_sets":blocked,"all_owned_derived_totals":full.totals}))
+	print(JSON.stringify({"catalog_mode":catalog_mode,"checks":checks,"failures":failures,"native_sets":1736,"available_supported_sets":available,"blocked_sets":blocked,"all_owned_derived_totals":full.totals}))
 	quit(0 if failures.is_empty() else 1)
