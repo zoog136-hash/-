@@ -16,6 +16,7 @@ func _run() -> void:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/cards/base508_collections.json"))
 	var core = Native.new()
 	check(core.configure(data, catalog), "all native rows configure: " + core.error)
+	check(core.definitions.all(func(row: Dictionary) -> bool:return row.time_policy==Native.TIME_POLICY and row.time_label=="상시"), "time limits overridden without deleting any source set")
 	check(core.definitions.size() == 1736, "1736 source sets retained")
 	var counts: Dictionary = {}; var member_count: int = 0; var effect_count: int = 0
 	var all_owned: Dictionary = {}; var old_numeric: Dictionary = {}

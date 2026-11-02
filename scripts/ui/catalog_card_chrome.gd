@@ -159,17 +159,17 @@ func _refresh_layout() -> void:
 		var rect: Rect2=cell.grow(-1)
 		# Native names/quantity remain outside the illustrated rim and aura.
 		if hud.catalog_category!="성물":rect.size.y=minf(rect.size.y,float(listing.fixed_icon_size.y)+8.0)
-		visible_cards.append({"index":index,"rect":rect,"rank":rank,"owned":owned.has(Cards.card_id(record))})
+		visible_cards.append({"index":index,"rect":rect,"rank":rank,"owned":owned.has(Cards.card_id(record)),"native":preload("res://scripts/ui/source_card_presentation.gd").native(record)})
 	for rank: int in range(GRADES.size()):
-		var used: bool=visible_cards.any(func(card: Dictionary) -> bool:return card.rank==rank)
+		var used: bool=visible_cards.any(func(card: Dictionary) -> bool:return card.rank==rank and not card.native)
 		frame_layers[rank].visible=used
 		aura_layers[rank].visible=used
 		frame_layers[rank].queue_redraw()
 		aura_layers[rank].queue_redraw()
-	quantities.visible=hud.catalog_category in ["변신","마법인형"]
+	quantities.visible=hud.catalog_category in ["변신","마법인형"] or visible_cards.any(func(card: Dictionary) -> bool:return card.native)
 	quantities.queue_redraw()
 	selected_rank=maxi(0,GRADES.find(str(hud.selected_catalog_record.get("grade","일반"))))
-	preview.visible=not hud.selected_catalog_record.is_empty()
+	preview.visible=not hud.selected_catalog_record.is_empty() and not preload("res://scripts/ui/source_card_presentation.gd").native(hud.selected_catalog_record)
 	preview_aura.visible=preview.visible
 	preview_frame.material=material_for(selected_rank,false,true,reduced,low)
 	preview_aura.material=material_for(selected_rank,true,true,reduced,low)
@@ -181,18 +181,22 @@ func _refresh_layout() -> void:
 
 func _draw_rank(layer: Control, rank: int, aura: bool) -> void:
 	for card: Dictionary in visible_cards:
-		if card.rank!=rank:continue
+		if card.rank!=rank or card.native:continue
 		if aura:
 			if card.owned:layer.draw_rect(card.rect,Color.WHITE)
 		else:layer.draw_texture_rect(texture_for(rank),card.rect,false,Color.WHITE if card.owned else Ownership.UNOWNED_FRAME_TINT)
 
 func _draw_card_quantities() -> void:
-	if not active or not hud.catalog_category in ["변신","마법인형"]:return
+	if not active:return
 	var spare: Dictionary=hud.card_collection_state.get("spare",{}).get(hud.catalog_category,{})
 	for card: Dictionary in visible_cards:
 		var record: Dictionary=hud.catalog_results[card.index]
 		var rect: Rect2=card.rect
+		if card.native and hud.catalog_list.get_item_icon(card.index)==null:
+			quantities.draw_multiline_string(UI.FONT,rect.position+Vector2(4,rect.size.y*.45),"원본 이미지\n미설치",HORIZONTAL_ALIGNMENT_CENTER,maxf(1,rect.size.x-8),12,-1,UI.MUTED)
+		if hud.catalog_category=="성물":continue
 		var duplicates: int=int(spare.get(Cards.card_id(record),0))
+		if card.native and card.owned:duplicates+=1
 		if duplicates>0:
 			var at:=Vector2(rect.position.x+4,rect.end.y-5)
 			quantities.draw_string_outline(quantity_font,at,str(duplicates),HORIZONTAL_ALIGNMENT_RIGHT,rect.size.x-9,13,2,Color.BLACK)

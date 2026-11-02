@@ -14,6 +14,7 @@ static func card_surface(margin: int=0) -> StyleBoxTexture:
 	return style
 
 static func card_tab(button: Button) -> void:
+	button.custom_minimum_size.y=maxf(44,button.custom_minimum_size.y)
 	for state: String in ["normal","hover","pressed","hover_pressed"]:
 		var chosen: bool=state in ["pressed","hover_pressed"]
 		var plate: StyleBoxFlat=UI.box(Color(.07,.10,.13,.72 if chosen else .22),Color("b2ac91") if chosen else Color("37424a"),5)

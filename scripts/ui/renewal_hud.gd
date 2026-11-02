@@ -38,6 +38,7 @@ var screen_backdrop: ColorRect
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
+const SourceCardPresentation = preload("res://scripts/ui/source_card_presentation.gd")
 const CardOwnership = preload("res://scripts/ui/catalog_card_ownership.gd")
 const CARD_REVEAL = preload("res://scripts/ui/card_reveal_stage.gd")
 const CardFusionView = preload("res://scripts/ui/card_fusion_view.gd")
@@ -1858,6 +1859,8 @@ func _continue_catalog_drag(point: Vector2) -> void:
 		var art: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
 		if catalog_category == "아이템":
 			art = UI.item_icon(record, str(record.get("name", "")), item_image_index.get("아이템", {}))
+		if SourceCardPresentation.native(record):
+			art=CardOwnership.icon_for(record,card_collection_state.get("owned",{}).get(catalog_category,{}).get(CARD_RULES.card_id(record),false)==true)
 		catalog_drag_icon.texture = art
 		catalog_drag_icon.show()
 	if catalog_drag_ready:
@@ -2023,6 +2026,7 @@ func _apply_catalog_page() -> void:
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state(true)
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
+	SourceCardPresentation.apply(self)
 	# Render the original source-ID icons in small batches so all item names
 	# appear immediately instead of the browser blocking during 40 image effects.
 	if catalog_category == "아이템" and not catalog_results.is_empty():
@@ -2133,6 +2137,7 @@ func _on_catalog_item_selected(index: int) -> void:
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
+	SourceCardPresentation.apply(self)
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty(): return

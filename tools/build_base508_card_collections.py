@@ -44,7 +44,7 @@ def build(source, canonical, evidence):
             native_card = idx['BuffCard'][member['BuffCardID']]
             cat, card = cards[(native_card['BuffCardDeckID'],native_card['ID'])]
             assert cat == category
-            requirements.append({'category':cat,'id':'source:'+card['sourceId'],'name':card['name'],'catalog_name':card['name'],'grade':card['grade'],'awakened':member['IsAwaken'],'source_original':member})
+            requirements.append({'category':cat,'id':'source:'+card['sourceId'],'name':card['name'],'catalog_name':card['name'],'grade':card['grade'],'awakened':member['IsAwaken'],'source_original':member,'source_card_availability':{k:native_card[k] for k in ['ServerLimitSetID','StartDateTimeID','EndDateTimeID']}})
         effects = []
         for link in rewards[row['ID']]:
             bonus = idx['Bonus'][link['BonusID']]
@@ -82,11 +82,18 @@ def build(source, canonical, evidence):
             if (local_unit=='flat' or key=='potion_heal' and local_unit=='percent') and int(amount)!=amount: supported=False
             if isinstance(amount,float) and amount.is_integer():amount=int(amount)
             desc=idx['DescData_Korean'].get(typ['DescID'],{}).get('Description',type_name)
-            label=f'{desc or type_name} {amount:+g}'+('%' if local_unit=='percent' else '')
+            display_amount=amount
+            display_unit=local_unit
+            if not supported and unit.get('Name') in ['Percentage','ValuePercent','Weight'] and ui.get('Denominator',0)>0:
+                display_amount=bonus['Value']/ui['Denominator'];display_unit='percent' if unit['Name'] in ['Percentage','ValuePercent'] else 'flat'
+            target_row=target.get('target_row') or {}
+            target_desc=idx['DescData_Korean'].get(target_row.get('DescID'),{}).get('Description') or target_row.get('Name','')
+            label=((target_desc+' · ') if target_desc else '')+f'{desc or type_name} {display_amount:+g}'+('%' if display_unit=='percent' else '')
+            if unit.get('Name')=='IntervalBonusCategoryID':label=(desc or type_name)+' · 원본 구간 조건: '+idx['IntervalBonusCategory'].get(bonus['Value'],{}).get('Name',str(bonus['Value']))
             effects.append({'key':key,'unit':local_unit,'value':amount,'label':label,'native_supported':supported,'source_original':{'link':link,'bonus':bonus,'bonus_type':typ,'application_type':idx['BonusApplicationType'].get(bonus['BonusApplicationTypeID'],{}),'unit':unit,'ui_unit':ui,'application_target':target,'nested_intervals':[dict(r,bonus=idx['Bonus'].get(r['BonusID'],{})) for r in tables['IntervalBonus'] if unit.get('Name')=='IntervalBonusCategoryID' and r['IntervalBonusCategory']==bonus['Value']]}})
         name=idx['DescData_Korean'].get(row['DescID'],{}).get('Description') or row['Name']
         result.append({'id':'base508:collection:'+str(row['ID']),'name':name,'category':category,'grade':idx['DescData_Korean'].get(idx['Grade'][row['GradeID']]['DescID'],{}).get('Description',idx['Grade'][row['GradeID']]['Name']),'source_grade':idx['Grade'][row['GradeID']],'requirements':requirements,'effects':effects,'raw_effects':'\n'.join(e['label'] for e in effects),'server_note':'원본 서버 조건 '+str(row['ServerLimitSetID']) if row['ServerLimitSetID'] else '', 'source':{'snapshot':'base508','url':'base508/BuffCardCollection:'+str(row['ID']),'table_sha256':hashes['BuffCardCollection']},'source_original':row,'source_deck':idx['BuffCardDeck'][deck]})
-    return {'schema_version':1,'source_snapshot':'base508','ownership_policy':'permanent_acquisition_exact_native_ID; no_registration_or_consumption','source_table_sha256':hashes,'canonical_evidence_source':evidence['source'],'collections':result,'excluded_test_deck_collections':[r for r in tables['BuffCardCollection'] if r['BuffCardDeckID'] not in CATEGORIES],'source_server_limits':tables['ServerLimit']}
+    return {'schema_version':1,'source_snapshot':'base508','ownership_policy':'permanent_acquisition_exact_native_ID; no_registration_or_consumption','source_table_sha256':hashes,'canonical_evidence_source':evidence['source'],'collections':result,'excluded_test_deck_collections':[r for r in tables['BuffCardCollection'] if r['BuffCardDeckID'] not in CATEGORIES],'source_server_limits':tables['ServerLimit'],'source_card_date_rows':evidence['card_date_rows']}
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--source',required=True);parser.add_argument('--canonical',required=True);parser.add_argument('--evidence',required=True);parser.add_argument('--output',required=True);args=parser.parse_args()
