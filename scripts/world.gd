@@ -583,6 +583,7 @@ func _load_data() -> void:
 	var catalog_items_value: Variant = catalog_db.get("아이템", [])
 	if catalog_items_value is Array:
 		_enrich_weapon_records(catalog_items_value as Array)
+	preload("res://scripts/cards/native_doll_unlock_item.gd").install(catalog_db)
 	_merge_local_consumables_into_catalog()
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	_index_catalog_item_sources()

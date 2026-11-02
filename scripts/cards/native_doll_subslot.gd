@@ -4,20 +4,23 @@ const DATA=preload("res://data/cards/base508_option_extensions.json")
 const FIELD: String="native_subslot_identity"
 const MAP={"HPPlus":"hpFlat","HPPlusPercent":"hpPct","Strength":"strFlat","Dexterity":"dexFlat","Intelligence":"intFlat","CarryPlus":"weightBonus","ArmorClass":"def","ArmorClassBonus":"def","AttackSpeedBonus":"attackSpeed","MoveSpeedBonus":"moveSpeedPct","PierceDamageReduction":"damage_reduction_ignore","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","SpellPower":"sp"}
 static func validate(value: Dictionary) -> String:
+	var unlock_error: String=preload("res://scripts/cards/native_doll_unlock_item.gd").validate(value)
+	if not unlock_error.is_empty():return unlock_error
 	if not value.has(FIELD):return ""
 	var id: Variant=value[FIELD]
 	if not id is String:return "추가 인형 저장 ID 형식 오류"
 	if not id.is_empty() and not DATA.data.subslot_buffs.has(id):return "원본 추가 인형 연결 없음"
 	return ""
-static func unlocked(level: int,buffs: Dictionary) -> bool:
+static func unlocked(level: int,buffs: Dictionary,progress: Dictionary={}) -> bool:
 	if level<95:return false
+	if preload("res://scripts/cards/native_doll_unlock_item.gd").unlocked(progress):return true
 	# Exact source marker only. Names/level alone never grant Eva's Call.
 	for buff: Variant in buffs.values():
 		if buff is Dictionary and buff.get("source_snapshot","")=="base508" and int(buff.get("source_buff_class_id",0))==91531:return true
 	return false
 static func eligibility(runtime: RefCounted,identity: String,level: int,buffs: Dictionary) -> Dictionary:
 	if identity.is_empty():return {"ok":true}
-	if not unlocked(level,buffs):return {"ok":false,"code":"subslot_locked","error":"95레벨 및 원본 에바의 부름(BuffClass91531) 습득 확인 필요"}
+	if not unlocked(level,buffs,runtime.progress):return {"ok":false,"code":"subslot_locked","error":"95레벨 및 원본 에바의 부름(BuffClass91531) 습득 확인 필요"}
 	var row: Dictionary=DATA.data.subslot_buffs.get(identity,{})
 	if row.is_empty():return {"ok":false,"code":"source_identity","error":"원본 추가 인형 ID 연결 없음"}
 	var record: Dictionary=runtime.core.catalog["마법인형"].get(identity,{})
