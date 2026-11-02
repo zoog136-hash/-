@@ -40,6 +40,8 @@ func run() -> void:
 	host.item_instances["unverified"]={"name":name_value,"record":{"sourceId":"346901"}}
 	check(service.use_native_unlock_item(name_value).code=="source_ownership","numeric physical ID not accepted")
 	host.item_instances["verified"]={"name":name_value,"record":Item.record()}
+	check(service.use_native_unlock_item(name_value).code=="source_ownership_count","inconsistent bag and physical counts rejected")
+	host.inventory[name_value]=2
 	host.level=94;check(service.use_native_unlock_item(name_value).code=="level","no early unlock")
 	host.level=95;host.save_error=ERR_FILE_CANT_WRITE
 	var before: int=hash([service.export_state(),host.inventory,host.item_instances,host.gold,str(service.rng.state),str(host.rng.state)])
@@ -48,11 +50,11 @@ func run() -> void:
 	host.save_error=OK;var money: int=host.gold;var rng_text: String=str(service.rng.state)
 	var result: Dictionary=service.use_native_unlock_item(name_value)
 	check(result.ok and result.consumed_quantity==1 and result.consumed_instance_id=="verified","use consumes one exact owned physical item")
-	check(host.inventory.is_empty() and not host.item_instances.has("verified") and host.item_instances.has("unverified"),"unrelated physical source variant never consumed")
+	check(host.inventory[name_value]==1 and not host.item_instances.has("verified") and host.item_instances.has("unverified"),"unrelated physical source variant never consumed")
 	check(Item.unlocked(service.export_state()) and Subslot.unlocked(95,{},service.export_state()),"permanent source unlock activates without expiring buff")
 	check(host.gold==money and str(service.rng.state)==rng_text,"no invented fee or RNG change")
 	var stored: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(host.save_path()))
-	check(stored.inventory.is_empty() and Item.unlocked(stored.card_option_awakening),"durable save includes debit and unlock together")
+	check(stored.inventory[name_value]==1 and Item.unlocked(stored.card_option_awakening),"durable save includes debit and unlock together")
 	var restored=Runtime.new();check(restored.configure(host) and restored.accept_load(stored) and restored.subslot_view().unlocked,"reconnect restores source unlock")
 	host.inventory[name_value]=1;host.item_instances["second"]={"name":name_value,"record":Item.record()}
 	before=hash([host.inventory,host.item_instances,service.export_state()]);result=service.use_native_unlock_item(name_value)
