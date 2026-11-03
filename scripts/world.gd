@@ -80,6 +80,8 @@ const SOURCE_AWAKENING_AURA = preload("res://scripts/animation/source_awakening_
 var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+const QUEST_SERVICE = preload("res://scripts/quests/quest_service.gd")
+var quest_service = QUEST_SERVICE.new()
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
 var ground_loot: TwilightGroundLootManager = GROUND_LOOT_MANAGER.new()
@@ -386,6 +388,8 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	if not quest_service.configure(item_db, monster_db):
+		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
 		var test_map:String=BASE508_TEST.register_test_map(maps,maps_by_id)
 		if test_map.is_empty():
@@ -1297,6 +1301,8 @@ func _connect_signals() -> void:
 	hud.save_pressed.connect(func() -> void: _save_game(false))
 	hud.load_pressed.connect(func() -> void: _load_game(false))
 	hud.catalog_equip_requested.connect(_equip_catalog)
+	if hud.has_signal("quest_complete_requested"):
+		hud.connect("quest_complete_requested", _claim_quest)
 	if hud.has_signal("card_pack_draw_requested"):
 		hud.connect("card_pack_draw_requested", _on_card_pack_draw_requested)
 	if hud.has_signal("card_fusion_requested"):
@@ -2598,6 +2604,9 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
+	quest_service.record_kill(monster.monster_name, monster.is_boss)
+	if hud.has_method("refresh_quests"):
+		hud.call("refresh_quests")
 	_try_trigger_passives("on_kill", monster)
 	if field_map != null:
 		field_population.release(monster)
@@ -2694,6 +2703,9 @@ func _collect_ground_drop(drop: Button) -> bool:
 	var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
 	item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	quest_service.record_pickup(item_name, quantity)
+	if hud.has_method("refresh_quests"):
+		hud.call("refresh_quests")
 	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
@@ -2751,6 +2763,68 @@ func _ground_drops_snapshot() -> Array:
 func _restore_ground_drops(saved: Variant) -> void:
 	loot_pickup.map_changed()
 	ground_loot.restore(saved)
+
+func _claim_quest(quest_id: String) -> void:
+	# The UI never decides completion, payouts or quest ownership.
+	# Claiming a newly offered quest immediately completes it by request.
+	# A failed save restores BOTH quest ownership and wallet/inventory.
+	var before_quests: Dictionary = quest_service.export_state()
+	var result: Dictionary = quest_service.complete_instantly(quest_id, level)
+	if not bool(result.get("ok", false)):
+		hud.show_message(str(result.get("error", "퀘스트를 완료할 수 없습니다")))
+		return
+	var rewards: Dictionary = result.get("rewards", {})
+	var additions: Dictionary = {}
+	var catalog: Dictionary = loot_catalog.get("by_name", {})
+	for raw: Variant in rewards.get("items", []):
+		if not (raw is Dictionary):
+			quest_service.import_state(before_quests)
+			hud.show_message("퀘스트 보상 데이터가 손상되었습니다")
+			return
+		var reward: Dictionary = raw as Dictionary
+		var name_value: String = str(reward.get("name", ""))
+		var amount: int = int(reward.get("quantity", 0))
+		if not catalog.has(name_value) or amount <= 0 or amount > 10000:
+			quest_service.import_state(before_quests)
+			hud.show_message("검증되지 않은 퀘스트 보상입니다")
+			return
+		# A quest reward cannot fabricate enhanced physical equipment or card
+		# ownership using only a display name.
+		var record: Dictionary = catalog[name_value] as Dictionary
+		if str(record.get("slot", "")) not in ["consumable", "currency"]:
+			quest_service.import_state(before_quests)
+			hud.show_message("장비 보상은 고유 ID 검증 후 지급할 수 있습니다")
+			return
+		additions[name_value] = int(additions.get(name_value, 0)) + amount
+	var gold_before: int = gold
+	var experience_before: int = experience
+	var items_before: Dictionary = inventory.duplicate(true)
+	gold += int(rewards.get("adena", 0))
+	experience += int(rewards.get("exp", 0))
+	for name_value: String in additions:
+		inventory[name_value] = int(inventory.get(name_value, 0)) + int(additions[name_value])
+	var saved: Error = _save_game(true)
+	if saved != OK:
+		gold = gold_before
+		experience = experience_before
+		inventory = items_before
+		quest_service.import_state(before_quests)
+		if hud.has_method("refresh_quests"):
+			hud.call("refresh_quests")
+		hud.show_message("퀘스트 보상 저장 실패 · 재화/완료 상태 복구")
+		return
+	var level_before: int = level
+	_check_level_up()
+	if level != level_before:
+		_request_deferred_save()
+	_update_hud()
+	hud.refresh_inventory(inventory)
+	if hud.has_method("refresh_quests"):
+		hud.call("refresh_quests")
+	hud.append_log("퀘스트 즉시 완료 · %s (+%d 아데나 / +%d EXP)" % [
+		str(result.get("title", "")), int(rewards.get("adena", 0)), int(rewards.get("exp", 0))])
+	hud.show_message(str(result.get("title", "")) + " · 보상 수령 완료")
+
 
 func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
 	if monster == null or not is_instance_valid(monster):
@@ -4370,6 +4444,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"stat_points": stat_points,
 		"gold": gold,
 		"inventory": inventory,
+		"quest_state": quest_service.export_state(),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
@@ -4629,6 +4704,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
+	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
 	source_save_blocked = false

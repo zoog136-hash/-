@@ -22,6 +22,7 @@ signal npc_teleport_requested(map_id: String)
 signal craft_requested(recipe_id: String, batch: int)
 signal shop_sell_requested(item_name: String, quantity: int, instance_id: String)
 signal npc_dialogue_action_requested(npc_id: String, node_id: String, action: String)
+signal quest_complete_requested(quest_id: String)
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const Layout = preload("res://scripts/ui/reference_layout.gd")
@@ -67,6 +68,7 @@ const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
+const QuestUI = preload("res://scripts/ui/renewal_quests.gd")
 const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
@@ -82,6 +84,8 @@ var enhancement_reveal: Control
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
+var quest_view: Control
+var quest_refresh_pending: bool = false
 var workspace: PanelContainer
 var menu_page: VBoxContainer
 var menu_scroll_view: ScrollContainer
@@ -897,6 +901,7 @@ func _navigate(section: String) -> void:
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
 		"skills": open_skills()
+		"quests": open_quests()
 		"shop": open_shop()
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
@@ -919,6 +924,40 @@ func confirm_action(title: String, body: String, action: String, callback: Calla
 	$Root.add_child(dialog)
 	dialog.configure(title,body,action,callback,maximum)
 	return dialog
+
+func _on_lineage_side_action(action_id: String) -> void:
+	if action_id == "quests":
+		if is_instance_valid(lineage_side_ui):
+			lineage_side_ui.hide_all()
+		open_quests()
+		return
+	super._on_lineage_side_action(action_id)
+
+
+func open_quests() -> void:
+	_open_window("quests", "퀘스트", "메인 · 일일 · 업적 · 즉시 완료")
+	var view := QuestUI.new()
+	workspace.mount(view)
+	view.configure(get_parent())
+	view.claim_requested.connect(func(quest_id: String) -> void:
+		quest_complete_requested.emit(quest_id))
+	quest_view = view
+
+func refresh_quests() -> void:
+	# Cheap on kills/pickups. Rebuild only the currently open quest page,
+	# at most once per frame regardless of the number of events.
+	if active_section != "quests" or not is_instance_valid(quest_view) or quest_view.is_queued_for_deletion():
+		return
+	if quest_refresh_pending:
+		return
+	quest_refresh_pending = true
+	call_deferred("_refresh_quests_deferred")
+
+func _refresh_quests_deferred() -> void:
+	quest_refresh_pending = false
+	if active_section == "quests" and is_instance_valid(quest_view) and not quest_view.is_queued_for_deletion():
+		quest_view.call("refresh")
+
 
 func open_shop() -> void:
 	_open_window("shop","상점","")
@@ -1149,7 +1188,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -1159,12 +1198,12 @@ func _build_menu_page() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians"] else ("사냥·모험" if section_id in ["inventory","skills","map","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians"] else ("사냥·모험" if section_id in ["inventory","skills","map","quests","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		artwork.texture = UI.icon("inventory" if section_id == "equipment_collections" else section_id)
+		artwork.texture = UI.icon("quest" if section_id == "quests" else ("inventory" if section_id == "equipment_collections" else section_id))
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		artwork.position = Vector2(26,8)
