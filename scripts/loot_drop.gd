@@ -16,6 +16,7 @@ const CRAFTING_DROPS_PATH: String = "res://data/monsters/twilight_crafting_drops
 const MATERIAL_DROP_RATE: float = 0.28
 const BOSS_MATERIAL_DROP_RATE: float = 0.65
 const SOURCE3_REVIEWED = preload("res://scripts/loot/source3_reviewed_drop.gd")
+const CURRENCY_DROPS = preload("res://scripts/loot/currency_drops.gd")
 
 static func is_boss_record(record: Dictionary) -> bool:
 	if record.has("is_boss"):
@@ -309,7 +310,7 @@ static func _pick_material(monster_name: String, is_boss: bool, catalog: Diction
 	return ""
 
 
-static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}) -> Array[Dictionary]:
+static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}, map_id: String = "") -> Array[Dictionary]:
 	var earned: Array[Dictionary] = []
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
@@ -328,6 +329,9 @@ static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: 
 	var material_name: String = _pick_material(monster_name, is_boss, catalog, rng)
 	if not material_name.is_empty():
 		earned.append({"item_name":material_name, "quantity":1})
+	# Reuse the existing material chance, with no change to old gear/potion rolls.
+	var currency_rate: float = BOSS_MATERIAL_DROP_RATE if is_boss else MATERIAL_DROP_RATE
+	earned.append_array(CURRENCY_DROPS.roll(monster_drops, monster_name, map_id, catalog, rng, currency_rate))
 	return earned
 
 static func roll(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "") -> Array[String]:
