@@ -2654,6 +2654,7 @@ func _complete_quest_event(kind: String, target: String, quantity: int = 1) -> v
 		hud.append_log("퀘스트 즉시 완료 · %s · 아데나 %d · EXP %d" % [row.title,int(reward.get("gold",0)),int(reward.get("experience",0))])
 		hud.show_message("퀘스트 완료 · %s" % str(row.title))
 	_publish_quests()
+	_check_level_up()
 	_request_deferred_save()
 
 func _kill_map_id() -> String:
