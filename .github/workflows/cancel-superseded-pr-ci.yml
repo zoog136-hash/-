@@ -2,6 +2,10 @@ name: Cancel superseded PR CI
 'on':
   pull_request_target:
     types: [synchronize]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cancel-superseded-pr-ci.yml'
   schedule:
     - cron: '21 3 * * 1'
   workflow_dispatch:
@@ -87,7 +91,7 @@ jobs:
               '; current HEAD=' + head + ' preserved. Manual/main runs untouched.');
 
   prune_old_ci_artifacts:
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
