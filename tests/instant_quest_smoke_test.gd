@@ -23,6 +23,9 @@ func _run() -> void:
 	var at: int = 1793670000
 	var original_count: int = service.entries(1, {}, at).size()
 	check(original_count >= 10, "main, daily and achievement quest definitions loaded")
+	check(not bool(service.complete_instantly("invalid:quest:id", 1, at).get("ok", false)), "unknown quest never pays")
+	check(not bool(service.complete_instantly("twilight:main:001", 0, at).get("ok", false)), "quest minimum level remains enforced")
+	check(service.claimed.is_empty(), "invalid attempts cannot modify quest ownership")
 	var first: Dictionary = service.complete_instantly("twilight:main:001", 1, at)
 	check(bool(first.get("ok", false)), "fresh quest may be instantly completed without prior kill")
 	check(int(first.get("rewards", {}).get("adena", -1)) == 2500, "original quest's explicit reward row returned")
