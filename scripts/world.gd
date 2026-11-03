@@ -80,6 +80,7 @@ const SOURCE_AWAKENING_AURA = preload("res://scripts/animation/source_awakening_
 var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+const CURRENCY_DROP = preload("res://scripts/loot/currency_drops.gd")
 const QUEST_SERVICE = preload("res://scripts/quests/quest_service.gd")
 var quest_service = QUEST_SERVICE.new()
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
@@ -596,12 +597,14 @@ func _load_data() -> void:
 	_rebuild_skill_record_index()
 	_ensure_ammo_items()
 	_enrich_weapon_records(item_db)
+	CURRENCY_DROP.ensure_items(item_db)
 	loot_catalog = LOOT_DROP.build_catalog(item_db)
 	var catalog_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_PATH))
 	if catalog_value is Dictionary:
 		catalog_db = catalog_value as Dictionary
 	var catalog_items_value: Variant = catalog_db.get("아이템", [])
 	if catalog_items_value is Array:
+		CURRENCY_DROP.ensure_items(catalog_items_value as Array)
 		_enrich_weapon_records(catalog_items_value as Array)
 	preload("res://scripts/cards/native_doll_unlock_item.gd").install(catalog_db)
 	preload("res://scripts/cards/skill_awakening_service.gd").install_book_definitions(catalog_db)
@@ -2829,7 +2832,7 @@ func _claim_quest(quest_id: String) -> void:
 func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
-	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity)
+	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity, _kill_map_id())
 	if earned.is_empty():
 		return
 	var batch_id: String = ground_loot.begin_hunt_batch()

@@ -95,6 +95,7 @@ var active_section: String = ""
 var buff_row: HBoxContainer
 var exp_readout: Label
 var currency_readout: Label
+var currency_balances: Dictionary = {}
 var coordinates_readout: Label
 var quickslot_cooldown_labels: Array[Label] = []
 var quickslot_icons: Array[TextureRect] = []
@@ -650,11 +651,26 @@ func update_player(level: int,hp: int,max_hp: int,mp: int,max_mp: int,experience
 		lineage_inventory_ui.gold_label.text = "아데나  "+lineage_inventory_ui._format_number(gold)
 	if exp_readout != null:
 		exp_readout.text = "Lv.%d  ·  EXP %.2f%%" % [level,float(experience_value)*100/maxi(1,exp_need)]
-	if currency_readout != null:
-		currency_readout.text = "아데나  "+lineage_inventory_ui._format_number(gold)
+	_refresh_currency_readout()
+
+func update_currency_balances(items: Dictionary) -> void:
+	for currency_name: String in ["다이아", "명예 코인", "변신 제작 코인", "마법인형 제작 코인", "성물 제작 코인"]:
+		currency_balances[currency_name] = maxi(0, int(items.get(currency_name, 0)))
+	_refresh_currency_readout()
+
+func _refresh_currency_readout() -> void:
+	if currency_readout == null or not is_instance_valid(lineage_inventory_ui):
+		return
+	var funds: String = lineage_inventory_ui._format_number(int(character_state.get("gold", 0)))
+	var diamonds: String = lineage_inventory_ui._format_number(int(currency_balances.get("다이아", 0)))
+	currency_readout.text = "아데나 %s · 다이아 %s" % [funds, diamonds]
+	currency_readout.tooltip_text = "재화 보유량"
+	for currency_name: String in ["명예 코인", "변신 제작 코인", "마법인형 제작 코인", "성물 제작 코인"]:
+		currency_readout.tooltip_text += "\n%s  %s" % [currency_name, lineage_inventory_ui._format_number(int(currency_balances.get(currency_name, 0)))]
 
 func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,self_enabled: bool) -> void:
 	super.set_quickslot_state(entries,inventory,buffs,self_enabled)
+	update_currency_balances(inventory)
 	# Main supplies its inventory here even on a fresh game without a save file.
 	lineage_inventory_ui.set_inventory(inventory)
 	var presentation: Dictionary={}
