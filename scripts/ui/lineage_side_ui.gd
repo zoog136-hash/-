@@ -52,6 +52,7 @@ const MENU_ITEMS: Array = [
 	["relic", "성물", "✧"],
 	["itemdb", "아이템", "▤"],
 	["map", "월드맵", "⌖"],
+	["quests", "퀘스트", "▤"],
 	["craft", "제작", "⚒"],
 	["macro", "자동사냥", "◎"],
 	["save", "저장", "▰"],
