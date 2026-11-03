@@ -49,6 +49,21 @@ func _run() -> void:
 			check(int(earned[0].quantity) >= 2 and int(earned[0].quantity) <= 4, "source quantity retained")
 	check(CURRENCY.roll(["명예 코인"],"test","faith_01",catalog,rng,0.0).is_empty(), "zero resource rate never drops")
 	check(LOOT.MATERIAL_DROP_RATE > 0 and LOOT.BOSS_MATERIAL_DROP_RATE > LOOT.MATERIAL_DROP_RATE, "current material rate controls additional roll")
+	# Verify the actual LOOT_DROP integration, not just the isolated policy.
+	# The existing equipment and potion rolls still run before currency.
+	var full_catalog: Dictionary = LOOT.build_catalog(items)
+	var aden_diamonds: int = 0
+	var other_diamonds: int = 0
+	for trial: int in range(200):
+		for entry: Dictionary in LOOT.roll_detailed([], false, full_catalog, rng, "test", {}, "aden_world"):
+			if str(entry.get("item_name", "")) == "다이아":
+				aden_diamonds += 1
+		for entry: Dictionary in LOOT.roll_detailed([], false, full_catalog, rng, "test", {}, "faith_01"):
+			if str(entry.get("item_name", "")) == "다이아":
+				other_diamonds += 1
+				check(int(entry.get("quantity", 0)) in range(1, 11), "integrated diamond stack range")
+	check(aden_diamonds == 0, "real loot pipeline never grants diamonds in Aden")
+	check(other_diamonds > 0, "real loot pipeline grants non-Aden diamonds")
 	var catalog_items: Array = [{"name":"명예 코인","slot":"currency","sourceId":"source-owned"}]
 	CURRENCY.ensure_items(catalog_items)
 	check(catalog_items.size() == 5 and str((catalog_items[0] as Dictionary).get("sourceId","")) == "source-owned", "source item record never overridden")
