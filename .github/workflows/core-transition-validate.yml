@@ -56,3 +56,4 @@ jobs:
           name: core-transition-${{ github.sha }}
           path: core-results
           if-no-files-found: warn
+          retention-days: 7
