@@ -138,3 +138,4 @@ jobs:
             ${{ runner.temp }}/twilight-integration-regions/**/world-regions-review/
             ${{ runner.temp }}/twilight-integration-crowd/**/combat-crowd-review/
           if-no-files-found: warn
+          retention-days: 14

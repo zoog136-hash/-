@@ -67,6 +67,7 @@ jobs:
             tools
             docs
           if-no-files-found: error
+          retention-days: 14
           compression-level: 6
 
       - name: Restore pinned Godot engine cache
@@ -495,6 +496,7 @@ jobs:
             world-region-shards/*.log
             world-region-shards/summary.json
           if-no-files-found: error
+          retention-days: 14
 
       # Only trusted main publishes imported PNG artifacts; the real Godot
       # import/validation still runs on every PR and main revision.

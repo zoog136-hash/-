@@ -32,3 +32,4 @@ jobs:
           name: twilight-ci-consolidated-${{ github.sha }}
           path: ci-consolidated-preflight.log
           if-no-files-found: warn
+          retention-days: 7

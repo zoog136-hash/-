@@ -39,3 +39,4 @@ jobs:
           name: pr122-connection-check-${{ github.sha }}
           path: connection-check.json
           if-no-files-found: warn
+          retention-days: 14

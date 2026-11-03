@@ -2,6 +2,19 @@ name: Cancel superseded PR CI
 'on':
   pull_request_target:
     types: [synchronize]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cancel-superseded-pr-ci.yml'
+  schedule:
+    - cron: '21 3 * * 1'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Preview eligible artifact cleanup without deleting'
+        type: boolean
+        default: true
+        required: false
 permissions:
   actions: write
   pull-requests: read
@@ -11,7 +24,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   cleanup:
-    if: ${{ github.event.pull_request.number != 157 && github.event.pull_request.number != 158 && github.event.pull_request.head.repo.full_name == github.repository }}
+    if: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.number != 157 && github.event.pull_request.number != 158 && github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -76,3 +89,58 @@ jobs:
             core.notice('PR ' + number + ': stale candidates=' + stale.size +
               ', cancellation requests=' + requested + ', skipped=' + skipped +
               '; current HEAD=' + head + ' preserved. Manual/main runs untouched.');
+
+  prune_old_ci_artifacts:
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Prune only allowlisted expired diagnostics (keep latest two per family)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // This trusted default-branch workflow never checks out PR code.
+            // Only reproducible CI diagnostics are eligible. Never delete
+            // packaged project, APK, private source packs or release artifacts.
+            const { owner, repo } = context.repo;
+            const dryRun = context.eventName === 'workflow_dispatch' &&
+              String(context.payload.inputs?.dry_run ?? 'true') !== 'false';
+            const allowed = /^(animation-presentation-|original-based-|twilight-world-review-|twilight-integration-check-|twilight-ci-consolidated-|core-transition-|l1j-runtime-|main-debug-|pr122-connection-check-)/;
+            const excluded = /(apk|release|private-pack|twilight-godot-main|source-runtime-install)/i;
+            const day = 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            let artifacts = [];
+            for (let page = 1; page <= 30; page++) {
+              const response = await github.rest.actions.listArtifactsForRepo({owner, repo, per_page: 100, page});
+              const group = response.data.artifacts || [];
+              artifacts.push(...group);
+              if (group.length < 100) break;
+            }
+            artifacts.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+            const seen = new Map();
+            const candidates = [];
+            for (const artifact of artifacts) {
+              const name = artifact.name || '';
+              if (!allowed.test(name) || excluded.test(name) || artifact.expired) continue;
+              const family = name.replace(/-[0-9a-f]{40}/i, '-SHA');
+              const count = seen.get(family) || 0;
+              seen.set(family, count + 1);
+              if (count < 2) continue;
+              const age = now - Date.parse(artifact.created_at);
+              const minDays = /captures|presentation|world-review/.test(name) ? 30 : 14;
+              if (!Number.isFinite(age) || age < minDays * day) continue;
+              candidates.push(artifact);
+            }
+            const limited = candidates.slice(0, 200);
+            let deleted = 0, skipped = 0, bytes = 0;
+            for (const artifact of limited) {
+              if (dryRun) { skipped++; continue; }
+              try {
+                await github.rest.actions.deleteArtifact({owner, repo, artifact_id: artifact.id});
+                deleted++; bytes += artifact.size_in_bytes || 0;
+              } catch (error) {
+                if (error.status === 404 || error.status === 410) {skipped++; continue;}
+                throw error;
+              }
+            }
+            core.notice(`CI artifact cleanup dry_run=${dryRun}; scanned=${artifacts.length}; eligible=${candidates.length}; deleted=${deleted}; skipped=${skipped}; reclaimed_bytes=${bytes}; max_per_run=200; latest_two_per_family_preserved=true`);

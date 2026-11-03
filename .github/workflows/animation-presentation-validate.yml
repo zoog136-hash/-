@@ -155,6 +155,7 @@ jobs:
             ${{ runner.temp }}/aden-boss-special/**/aden-boss-special-results.json
             ${{ runner.temp }}/pr100-main-directions/
           if-no-files-found: error
+          retention-days: 14
   # Each job imports the project once, then runs several original-based case
   # groups. Previously every small group (2-5 cases, ~3-9 test minutes) was its
   # own job that re-did checkout (~7-10 min) and a full import (~17-28 min).
@@ -368,6 +369,7 @@ jobs:
           name: original-based-${{ matrix.group }}-${{ github.sha }}
           path: test-results/
           if-no-files-found: error
+          retention-days: 14
   # Same consolidation for the batch suites: one import per job, then each batch
   # runs headless and OpenGL with its own config, script, marker, timeouts and
   # isolated XDG data/cache/config directories, exactly as its own job did.
@@ -550,6 +552,7 @@ jobs:
             ${{ runner.temp }}/batch*-headless/data/**/pr100-transform-batch-preserved/
             ${{ runner.temp }}/batch*-render/data/**/pr100-transform-batch-preserved/
           if-no-files-found: error
+          retention-days: 14
       - name: Preserve every batch PNG capture separately
         if: always()
         uses: actions/upload-artifact@v4
@@ -557,3 +560,4 @@ jobs:
           name: original-based-${{ matrix.group }}-${{ github.sha }}-captures
           path: test-results/batch*/render-captures/
           if-no-files-found: ignore
+          retention-days: 14
