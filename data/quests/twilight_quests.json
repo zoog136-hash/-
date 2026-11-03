@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "provenance": "TWILIGHT_LOCAL_QUEST_EXAMPLES_NOT_OFFICIAL_LINEAGEM",
+  "completion_policy": "IMMEDIATE_ON_ACQUISITION_OR_KILL_NO_NPC_RETURN",
+  "quests": [
+    {
+      "id": "story_001",
+      "category": "메인",
+      "title": "첫 사냥",
+      "kind": "kill",
+      "target": "고스트",
+      "required": 1,
+      "reward": {
+        "gold": 1000,
+        "experience": 150
+      }
+    },
+    {
+      "id": "story_002",
+      "category": "메인",
+      "title": "숲의 위협",
+      "kind": "kill",
+      "target": "버그베어",
+      "required": 3,
+      "reward": {
+        "gold": 2500,
+        "experience": 400
+      },
+      "requires": "story_001"
+    },
+    {
+      "id": "story_003",
+      "category": "메인",
+      "title": "회복 물자",
+      "kind": "acquire",
+      "target": "HP 물약",
+      "required": 1,
+      "reward": {
+        "gold": 1500,
+        "experience": 200
+      },
+      "requires": "story_002"
+    },
+    {
+      "id": "mission_001",
+      "category": "미션",
+      "title": "언데드 토벌",
+      "kind": "kill",
+      "target": "스파토이",
+      "required": 5,
+      "reward": {
+        "gold": 3000,
+        "experience": 600
+      }
+    },
+    {
+      "id": "mission_002",
+      "category": "미션",
+      "title": "전리품 확보",
+      "kind": "acquire",
+      "target": "수정 단검",
+      "required": 1,
+      "reward": {
+        "gold": 5000,
+        "experience": 1000
+      }
+    },
+    {
+      "id": "mission_003",
+      "category": "미션",
+      "title": "코인 수집",
+      "kind": "acquire",
+      "target": "명예 코인",
+      "required": 1,
+      "reward": {
+        "gold": 2000,
+        "experience": 350
+      }
+    }
+  ]
+}

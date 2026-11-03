@@ -99,6 +99,7 @@ var quickslot_auto_badges: Array[Label] = []
 var refresh_clock: float = 0
 var active_buffs_view: Dictionary = {}
 var log_history: Array[String] = []
+var quest_rows: Array[Dictionary] = []
 var map_records: Array = []
 var catalog_grade_filter: String = "전체"
 var rarity_filter: OptionButton
@@ -901,6 +902,7 @@ func _navigate(section: String) -> void:
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
 		"map": toggle_map()
+		"quests": open_quests()
 		"menu": toggle_menu()
 		"settings": open_settings_info()
 		"auto": open_macro_info()
@@ -1056,6 +1058,37 @@ func open_macro_info() -> void:
 		routes.add_child(route)
 		workspace.register_scroll_drag(scroll,route)
 
+func set_quest_state(rows: Array[Dictionary]) -> void:
+	quest_rows = rows.duplicate(true)
+	if active_section == "quests" and is_instance_valid(workspace) and workspace.visible:
+		open_quests()
+
+func open_quests() -> void:
+	_open_window("quests","퀘스트","메인 · 미션 · 완료 즉시 보상 / NPC 복귀 불필요")
+	var scroller := ScrollContainer.new()
+	scroller.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroller.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation",10)
+	scroller.add_child(column)
+	workspace.mount(scroller)
+	for category: String in ["메인","미션"]:
+		column.add_child(UI.section(category,20))
+		for row: Dictionary in quest_rows:
+			if str(row.get("category","")) != category: continue
+			var complete: bool = bool(row.get("completed",false))
+			var available: bool = bool(row.get("available",false))
+			var panel := PanelContainer.new()
+			panel.add_theme_stylebox_override("panel",UI.box(Color("171b21"),UI.BRONZE,7))
+			var contents := VBoxContainer.new()
+			panel.add_child(contents)
+			var status: String = "완료" if complete else ("진행 중" if available else "잠김")
+			contents.add_child(UI.label("%s · %s" % [str(row.get("title","")),status],16,UI.GOLD if complete else UI.TEXT))
+			contents.add_child(UI.label("%s  %d/%d" % [str(row.get("target","")),int(row.get("progress",0)),int(row.get("required",1))],12,UI.MUTED))
+			var reward: Dictionary = row.get("reward",{})
+			contents.add_child(UI.label("보상  아데나 %d · EXP %d" % [int(reward.get("gold",0)),int(reward.get("experience",0))],12,UI.TEXT))
+			column.add_child(panel)
+
 func open_combat_log() -> void:
 	_open_window("log","전투 기록","오프라인 시스템 · 최근 120건")
 	var col: VBoxContainer = workspace.column()
@@ -1149,7 +1182,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -1159,7 +1192,7 @@ func _build_menu_page() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians"] else ("사냥·모험" if section_id in ["inventory","skills","map","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians"] else ("사냥·모험" if section_id in ["inventory","skills","map","quests","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))

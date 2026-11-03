@@ -80,6 +80,8 @@ const SOURCE_AWAKENING_AURA = preload("res://scripts/animation/source_awakening_
 var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+const QUEST_RUNTIME = preload("res://scripts/quests/quest_runtime.gd")
+var quests = QUEST_RUNTIME.new()
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
 var ground_loot: TwilightGroundLootManager = GROUND_LOOT_MANAGER.new()
@@ -386,6 +388,7 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	quests.configure()
 	if BASE508_TEST.enabled():
 		var test_map:String=BASE508_TEST.register_test_map(maps,maps_by_id)
 		if test_map.is_empty():
@@ -416,6 +419,7 @@ func _ready() -> void:
 	hud.refresh_maps(NATIVE_PNG.menu_entries(maps))
 	hud.set_catalog_data(catalog_db, catalog_image_index)
 	hud.set_job_data(job_classes, skills_db)
+	_publish_quests()
 	var requested_png_map: String = ""
 	if "--png-review" in OS.get_cmdline_user_args():
 		for argument: String in OS.get_cmdline_user_args():
@@ -2612,6 +2616,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
 	gold += gained_adena
+	_complete_quest_event("kill",monster.monster_name)
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	_roll_drop(monster, can_drop_equipment)
 	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
@@ -2634,6 +2639,22 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		_refresh_combat_hud()
 		_update_ain_hud()
 	call_deferred("_ensure_monster_count")
+
+func _publish_quests() -> void:
+	if is_instance_valid(hud) and hud.has_method("set_quest_state"):
+		hud.call("set_quest_state",quests.snapshot())
+
+func _complete_quest_event(kind: String, target: String, quantity: int = 1) -> void:
+	var rewards: Array[Dictionary] = quests.apply_event(kind,target,quantity)
+	if rewards.is_empty(): return
+	for row: Dictionary in rewards:
+		var reward: Dictionary = row.reward
+		gold += maxi(0,int(reward.get("gold",0)))
+		experience += maxi(0,int(reward.get("experience",0)))
+		hud.append_log("퀘스트 즉시 완료 · %s · 아데나 %d · EXP %d" % [row.title,int(reward.get("gold",0)),int(reward.get("experience",0))])
+		hud.show_message("퀘스트 완료 · %s" % str(row.title))
+	_publish_quests()
+	_request_deferred_save()
 
 func _kill_map_id() -> String:
 	if field_map != null:
@@ -2694,6 +2715,7 @@ func _collect_ground_drop(drop: Button) -> bool:
 	var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
 	item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	_complete_quest_event("acquire",item_name,quantity)
 	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
@@ -4244,6 +4266,7 @@ func _update_hud() -> void:
 	character_state["card_collection_bonuses"] = card_collections.totals.duplicate(true)
 	character_state["item_locks"] = ui_preferences.get("item_locks",{})
 	hud.set_character_state(character_state)
+	_publish_quests()
 	if hud.has_method("set_card_collection_state"):
 		hud.call("set_card_collection_state", card_draw_fusion.export_state())
 	if hud.has_method("set_option_awakening_state"):
@@ -4370,6 +4393,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"stat_points": stat_points,
 		"gold": gold,
 		"inventory": inventory,
+		"quests": quests.export_state(),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
@@ -4505,6 +4529,13 @@ func _load_game(quiet: bool) -> void:
 	if not awakening_error.is_empty():
 		equipment_collections.save_blocked = true
 		hud.show_message(awakening_error)
+		return
+	# Validate quest payload before mutating live save state.
+	var staged_quests = QUEST_RUNTIME.new()
+	staged_quests.configure()
+	if data.has("quests") and not staged_quests.import_state(data["quests"]):
+		source_save_blocked = true
+		hud.show_message("퀘스트 저장 데이터 손상 · 원본 저장 보존")
 		return
 	var saved_map_id: String = str(data.get("map_id", ""))
 	if saved_map_id in ["albino_03","albino_04"]:
@@ -4665,6 +4696,8 @@ func _load_game(quiet: bool) -> void:
 	cha_stat = int(data.get("cha", cha_stat))
 	stat_points = maxi(0, int(data.get("stat_points", stat_points)))
 	gold = maxi(0, int(data.get("gold", gold)))
+	quests = staged_quests
+	_publish_quests()
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
 		inventory = inventory_value as Dictionary
