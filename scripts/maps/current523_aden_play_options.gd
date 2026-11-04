@@ -30,6 +30,9 @@ static func validate(value: Dictionary) -> Dictionary:
 		result[key] = path.strip_edges()
 	if result.enabled and (profile not in [LEGACY,SOURCE,GENERIC] or result.raw_root.is_empty() or result.tile_root.is_empty()): return {}
 	if profile in [SOURCE,GENERIC]:
+		var search_limit: Variant=value.get("path_search_limit",8192)
+		if not (search_limit is int or search_limit is float) or not is_finite(float(search_limit)) or float(search_limit)!=floorf(float(search_limit)) or search_limit<1 or search_limit>65536: return {}
+		result.path_search_limit=int(search_limit)
 		var words: Variant = value.get("allowed_raw_words", SOURCE_WORDS.duplicate())
 		if not words is Array or words.is_empty() or words.size()>256: return {}
 		result.allowed_raw_words = []
@@ -61,8 +64,8 @@ static func read() -> Dictionary:
 	var value: Dictionary = defaults()
 	for key: String in value: value[key] = config.get_value("play", key, value[key])
 	if value.navigation_profile in [SOURCE,GENERIC]:
-		for key: String in ["allowed_raw_words","source_position","portal_contract"]:
-			value[key] = config.get_value("play",key,SOURCE_WORDS.duplicate() if key=="allowed_raw_words" else ([] if key=="source_position" else ""))
+		for key: String in ["allowed_raw_words","source_position","portal_contract","path_search_limit"]:
+			value[key] = config.get_value("play",key,8192 if key=="path_search_limit" else (SOURCE_WORDS.duplicate() if key=="allowed_raw_words" else ([] if key=="source_position" else "")))
 	if value.navigation_profile == GENERIC:
 		for key: String in ["source_manifest_sha256","tile_manifest_sha256","native_land_id"]:
 			value[key]=config.get_value("play",key,-1 if key=="native_land_id" else "")

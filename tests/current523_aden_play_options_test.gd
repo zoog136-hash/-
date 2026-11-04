@@ -45,6 +45,8 @@ func _initialize() -> void:
 	check(FileAccess.get_sha256("user://play-options-save-sentinel.bin") == sha, "play preferences never write game saves")
 	var source: Dictionary = valid.duplicate(true)
 	source.merge({"enabled":true,"navigation_profile":OPTIONS.SOURCE,"allowed_raw_words":[0,4,8,12,32],"source_position":[33342.5,33168.5],"portal_contract":"/private/source-portals.json"},true)
+	check(OPTIONS.validate(source).path_search_limit==8192,"old source preferences retain the original default search budget")
+	source.path_search_limit=8192
 	check(OPTIONS.validate(source)==source,"source profile preserves separate exact-word policy and fractional source cursor")
 	for changes: Dictionary in [{"allowed_raw_words":[]},{"allowed_raw_words":[65535]},{"allowed_raw_words":[true]},{"allowed_raw_words":[4.5]},{"source_position":[INF,1]},{"source_position":[1]},{"source_position":[-1,1]},{"portal_contract":12}]:
 		var bad: Dictionary = source.duplicate(true); bad.merge(changes,true)
@@ -61,6 +63,11 @@ func _initialize() -> void:
 		var bad: Dictionary=generic.duplicate(true); bad.merge(changes,true)
 		check(OPTIONS.validate(bad).is_empty(),"generic identity or resource pin rejects invalid input")
 	check(OPTIONS.write(generic)==OK and OPTIONS.read()==generic,"generic logical identity pins and cursor survive preference restart")
+	for limit: Variant in [0,65537,-1,1.5,true,"65536",INF,NAN]:
+		var bad: Dictionary=generic.duplicate(true);bad.path_search_limit=limit
+		check(OPTIONS.validate(bad).is_empty(),"unsafe or unbounded search budget rejects")
+	generic.path_search_limit=65536
+	check(OPTIONS.write(generic)==OK and OPTIONS.read()==generic,"explicit bounded own search budget survives preference restart")
 	check(FileAccess.get_sha256("user://play-options-save-sentinel.bin")==sha,"generic preferences preserve actual game save sentinel")
 	# Core checks share an isolated profile; remove only this guard's own fixture.
 	DirAccess.remove_absolute(OPTIONS.PATH)

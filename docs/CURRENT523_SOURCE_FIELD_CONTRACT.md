@@ -195,3 +195,15 @@ before changing movement. Tickets are ephemeral; do not persist or reuse them
 after movement, field teardown or definition rebinding. They are not native
 admission credentials. The existing Settings button consumes the same contract;
 arrival does not activate a portal or use the separate manual transition API.
+
+## Own path-search budget
+
+The separate play options accept `path_search_limit`, an integer1..65536 for
+SOURCE/GENERIC mode, default8192 for existing preferences. This configures the
+existing bounded search, not allowed cells, native admission or trigger geometry.
+A live change is refused; use a new validated entry. The same value is passed
+to a prepared target field, so a source transition retains the exact own policy.
+The Settings control, atomic preference readback and new-process restoration
+consume that same value. No pack/manifest rebuild or game-save migration is
+needed. Search failure does not establish native collision or grant permission
+to substitute a partial path/nearby destination.

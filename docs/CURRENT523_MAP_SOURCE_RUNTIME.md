@@ -301,6 +301,62 @@ The default-off Main/save gate also passes35 checks in72.65s on this continuatio
 (`current523-portalwalk-core-save-receipt.json`). Focused walk log SHA256 is
 `c2bca6eb8b610036093fe67fe4b939d59697a7ac2a07574f3746571efaff662c`.
 
+## Bounded long-route search
+
+The existing source field already bounds A* storage to8,192 cells by default
+and at most65,536. That is an own algorithm budget, not a terrain collision bit.
+The default is unchanged. Settings now exposes **자체 경로 검색 한도**, stored as
+`path_search_limit` in the separate play preferences (integer1..65536). Old
+preferences read as8192. Choose the budget before source entry; a live change is
+rejected without altering the accepted field/preferences. Reentry validates the
+same original geometry. The selected budget follows genuine source-field manual
+transitions and survives a new process. Failed route queries display their
+selected budget; no route is replaced by a partial path or guessed passage.
+
+A new reproducible case uses native Portal1431's Land4 source `(32939,32283)`
+and Portal1481's source `(33139,33358)`. Their independently verified original
+endpoints are:
+
+| Endpoint | Original member | SHA256 | Attribute pair offset/raw | Floor pair offset/raw |
+| --- | --- | --- | --- | --- |
+|1431|`Map/Aden/80027ff8.s32`|`c5e5a847380e9c356f21d6c61cad7fd5ca147634c716a7db8dcd57f7a3aa0c2d`|42254 / `[0,0]`|14168 / `[1003567,1003568]`|
+|1481|`Map/Aden/80058009.s32`|`d473699610ae9bb94bb77bc782565b1ecb43f4f40b06873ed9b547e0cb825ece`|36558 / `[0,0]`|7576 / `[137,140]`|
+
+An independent raw-cell four-neighbor analysis places those points in the same
+1,823,897-cell component under the existing own exact-word rule. Actual Godot
+field queries return no path with8192 storage, then1,077 points in3.687s with
+65536; every returned segment passes the same field's collision predicate.
+The native filename projection and raw-word interpretation remain labelled own
+hypotheses. This analysis does not prove native collision or authorize a portal.
+Other long connected pairs can still exceed the finite cap; failure remains
+explicit and safe, rather than being called proof of an original wall.
+
+`current523_long_source_route_main_test.gd` uses the actual Settings UI and
+player physics to walk the **entire**1,077-point route:174.579s,1,129 visited cells
+and28 original S32 members, with no denied cell entered. Main41 checks pass,
+including original endpoint bytes, default-budget refusal, stale old-field
+requests, rejected live-policy edits, actual blocked-edge physics, unchanged
+progress/save bytes and no automatic portal activation on arrival. A separate
+new process passes16 checks for exact restored arrival, saved budget, genuine
+manual1101 Land1→0 policy propagation and host return. The preference guard
+passes58 checks, including old defaults, bounded validation and exact readback.
+The required default-off Main/save gate passes35 checks in61.55s.
+
+This continuation changes no S32/TI2 bytes, cell passability, coordinates,
+renderer or save schema. The original577-root/12,558-check evidence is preserved;
+focused tests cover this selected budget and route instead of rerunning that
+full suite. The17-part application bundle is unchanged. Logs/frames remain local
+under `display/long-source-route-long02/`. Original endpoint proof SHA256 is
+`4000d53e60a48cfd7a87dd6895ba6ea5f2d5b5b3d097ad10a5bced731e469e40`;
+raw connectivity/search analysis SHA256 is
+`fc4e23a378b7e41fdad36da98fe295c4a9eb33a1cb114aef9f499a2ac10533dd`.
+The compact complete-route receipt is `current523-complete-long-route-final-evidence.json`,
+SHA256`9bac026cfc8b7bd4fe2fc98098c082e4f730a82be7b38a4070b39845312f96e4`.
+The first Main run compared raw integers to unnormalized JSON numbers; its two
+fixture comparison failures are retained, and it was stopped before physical
+route execution. The corrected complete run passes. No source value or collision
+check was relaxed to resolve those fixture comparisons.
+
 ## Remaining native evidence reviewed
 
 The nine-character original is still the only non-eight-character S32 name in
@@ -322,6 +378,20 @@ variant selection, actor-foot, collision or automatic-portal authority.
 The existing typed movement, obstacle, interaction-cell and portal reports were
 reviewed; their separate terrain/occupancy/actor-state namespaces and explicit
 counterexamples remain intact.
+
+The held1,150 original Portal rows expose only `AssetID`, `ID`, `SourceLandID`,
+`SourceX`, `SourceY`, `TargetTerritoryID`. The source ledger identifies
+`content/Portal.json` as198,209 bytes, SHA256
+`af434065337cfd2b8c3fab9887ce5d3569ce6651d122a05288769d487df78a45`.
+Those fields provide no trigger extent, activation clock or Portal fee contract;
+separate LandTeleport definitions do not fill that gap automatically. A fresh
+all-table typed-FK review cannot be claimed from this environment:the ledger's
+full Content archive path under `/workspace/scratch/b20f9af62341/` is absent.
+The expected file is `lineagem_patch523_all_content_validated_and_508_520_deltas.zip`,
+SHA256`d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832`.
+The verified compiled26-table definition context, original map bytes and prior
+reports remain available. No replacement rule/fee is invented from the absent
+archive, field names or empty conditions; no new transmission was attempted.
 
 Precisely missing are a trusted origin/variant selector for the literal member,
 a native movement truth table separating static terrain from occupancy and actor

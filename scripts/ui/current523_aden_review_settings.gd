@@ -33,6 +33,7 @@ var tile_manifest: LineEdit
 var native_land_choice: OptionButton
 var native_scope_status: Label
 var source_words: LineEdit
+var source_search_limit: SpinBox
 var source_portal_path: LineEdit
 var source_portal_choice: OptionButton
 var source_portal_button: Button
@@ -164,6 +165,10 @@ func _build_play_options() -> void:
 	source_words.placeholder_text = "허용할 원문 값 · 쉼표로 구분"
 	add_child(UI.label("S32 자체 해석 허용값 · 두 반쪽이 모두 해당하고 바닥 원문이 있어야 이동합니다. 나머지는 거부합니다.",12,UI.MUTED))
 	add_child(source_words)
+	add_child(UI.label("자체 경로 검색 한도 · 큰 값은 긴 길을 더 탐색하지만 시간이 늘어납니다. 통행 허용값은 바뀌지 않습니다.",12,UI.MUTED))
+	source_search_limit=SpinBox.new();source_search_limit.name="Current523SourcePathSearchLimit"
+	source_search_limit.min_value=1;source_search_limit.max_value=65536;source_search_limit.step=1;source_search_limit.value=8192
+	add_child(source_search_limit)
 	var entry := HBoxContainer.new()
 	source_entry_enabled = CheckBox.new(); source_entry_enabled.text = "원문 좌표로 입장"
 	entry.add_child(source_entry_enabled)
@@ -231,6 +236,7 @@ func _load_play_options() -> void:
 		for word: int in options.allowed_raw_words: words.append(str(word))
 		source_words.text = ",".join(words)
 		source_portal_path.text = options.portal_contract
+		source_search_limit.value=options.get("path_search_limit",8192)
 	if options.navigation_profile==PLAY_OPTIONS.GENERIC:
 		source_manifest.text=options.source_manifest_sha256
 		tile_manifest.text=options.tile_manifest_sha256
@@ -249,6 +255,7 @@ func _load_play_options() -> void:
 func _play_values() -> Dictionary:
 	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.GENERIC if play_profile.selected==3 else PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
 	if play_profile.selected in [2,3]:
+		value.path_search_limit=int(source_search_limit.value)
 		value.allowed_raw_words = []
 		for part: String in source_words.text.split(",",false):
 			if not part.strip_edges().is_valid_int(): value.allowed_raw_words = []; break
@@ -400,6 +407,7 @@ func _update_open_button() -> void:
 		play_offset_x.editable = not busy
 		play_offset_y.editable = not busy
 		source_words.editable = not busy and not playing
+		source_search_limit.editable = not busy and not playing
 		source_portal_path.editable = not busy and not playing
 		source_entry_enabled.disabled = busy or playing
 		source_entry_x.editable = not busy and not playing
