@@ -89,6 +89,77 @@ class AdmissionTest(unittest.TestCase):
         self.tables['BonusType'][1]['UnitID']=3
         self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
 
+    def test_exact_source_calendar_is_a_live_window_not_removed_restriction(self):
+        self.tables['ItemCraftView'][0].update(EffectiveFrom=10,EffectiveTo=11)
+        self.tables['DateTimes_Korean']=[dict(ID=10,Year=2020,Month=1,Day=1,Hour=0,Minute=0),dict(ID=11,Year=2030,Month=1,Day=1,Hour=0,Minute=0)]
+        compiled=self.compile()
+        condition=compiled['recipes']['patch523:17']['craft_conditions']['active_window']
+        self.assertEqual(condition['source_start'],self.tables['DateTimes_Korean'][0])
+        self.assertEqual(condition['source_end'],self.tables['DateTimes_Korean'][1])
+        self.assertEqual(condition['utc_offset_minutes'],540)
+        self.assertEqual(condition['boundary'],'start_inclusive_end_exclusive')
+        self.assertLess(condition['start_unix'],condition['end_unix'])
+        self.tables['DateTimes_Korean'][0]['Month']=13
+        self.assertNotIn('patch523:17',self.compile()['recipes'])
+        self.tables['DateTimes_Korean'][0]['Month']=1
+        self.tables['ItemCraftView'][0]['ServerLimitSetID']=772
+        self.assertNotIn('patch523:17',self.compile()['recipes'])
+
+    def test_fixed_description_stays_spell_scoped_evidence_not_global_seconds(self):
+        self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=6582,Name='FixedDesc',UnitID=41)]
+        self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=6582,Value=1111192,BonusApplicationTypeID=72,BonusApplicationTargetID=1111182)]
+        self.tables['ItemBonus']=[dict(ID=1,ItemClassID=101,BonusID=11)]
+        self.tables['ItemEnchantBonus']=[dict(ID=7,EnchantLevel=8,ItemEnchantBonusGroupID=3,BonusID=12,BlessCode=0)]
+        self.tables['DescData_Korean'] += [dict(ID=1111182,Description='스턴 시간 감소'),dict(ID=1111192,Description='1초')]
+        self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
+        self.assertNotIn('source_stun_duration_reduction_seconds',self.compile()['equipment_runtime']['101']['extra_options']['1']['8'])
+        self.tables['DescData_Korean'][-1]['Description']='2초'
+        self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
+
+    def test_stun_magic_damage_does_not_accept_fear_or_wrong_units(self):
+        self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=4,Name='MagicDamage',UnitID=1)]
+        self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=4,Value=5,BonusApplicationTypeID=2,BonusApplicationTargetID=6)]
+        self.tables['SpecialResistanceType']=[dict(ID=6,Name='Stun'),dict(ID=8,Name='Fear')]
+        self.tables['ItemBonus']=[dict(ID=1,ItemClassID=101,BonusID=11)]
+        self.tables['ItemEnchantBonus']=[dict(ID=7,EnchantLevel=7,ItemEnchantBonusGroupID=3,BonusID=12,BlessCode=0)]
+        self.assertEqual(self.compile()['equipment_runtime']['101']['extra_options']['1']['7'],{'source_stun_magic_damage':5})
+        self.tables['Bonus'][1]['BonusApplicationTargetID']=8
+        self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
+        self.tables['Bonus'][1]['BonusApplicationTargetID']=6
+        self.tables['BonusType'][1]['UnitID']=3
+        self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
+
+    def test_nonactivating_source_material_keeps_unresolved_use_class_reference(self):
+        self.tables['ItemClass'][0]['ID']=188384
+        self.tables['ItemClass'][0]['CategoryID']=2
+        self.tables['ItemCategory'].append(dict(ID=2,IsStackable=True,IsActivatable=False))
+        self.tables['ItemClassLimit']=[dict(ID=1,ItemClassID=188384,ClassID=0)]
+        self.tables['ItemCraftInput'][0].update(ItemClassID=188384,Enchant=0,ItemBlessCodeID=1)
+        self.catalog['아이템'][0].update(sourceId='188384',slot='material')
+        value=self.compile()
+        self.assertIn('patch523:17',value['recipes'])
+        self.assertEqual(value['items']['188384']['use_conditions']['class_ids'],[0])
+        self.assertEqual(value['items']['188384']['craft_material_only_class_references']['scope'],'source_input_only')
+        self.tables['ItemCategory'][-1]['IsActivatable']=True
+        self.assertNotIn('patch523:17',self.compile()['recipes'])
+
+    def test_final_blow_source_unit_and_independent_probability_amplification(self):
+        self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=6121,Name='FinalBlowProbability',UnitID=3),dict(ID=6111,Name='FinalBlowAdditionalScale',UnitID=3)]
+        self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=6121,Value=100000,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=13,BonusTypeID=6111,Value=300000,BonusApplicationTypeID=0,BonusApplicationTargetID=0)]
+        self.tables['ItemBonus']=[dict(ID=1,ItemClassID=101,BonusID=11)]
+        self.tables['ItemEnchantBonus']=[dict(ID=7,EnchantLevel=7,ItemEnchantBonusGroupID=3,BonusID=12,BlessCode=0),dict(ID=8,EnchantLevel=7,ItemEnchantBonusGroupID=3,BonusID=13,BlessCode=0)]
+        runtime=self.compile()['equipment_runtime']['101']
+        self.assertEqual(runtime['extra_options']['1']['7'],{'source_final_blow_chance_pct':10,'source_final_blow_amp_pct':30})
+        self.tables['BonusType'][1]['UnitID']=1
+        self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
+        self.tables['BonusType'][1]['UnitID']=3
+        self.tables['Bonus'][1]['BonusApplicationTypeID']=2
+        self.tables['Bonus'][1]['BonusApplicationTargetID']=6
+        self.tables['SpecialResistanceType']=[dict(ID=6,Name='Stun')]
+        self.assertEqual(self.compile()['equipment_runtime']['101']['extra_options']['1']['7']['source_final_blow_stun_chance_pct'],10)
+        self.tables['Bonus'][1]['BonusApplicationTargetID']=8
+        self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
+
     def test_damage_percent_units_and_adena_exact_item_qualifier(self):
         self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=4073,Name='PierceDamageReductionPercent',UnitID=3),dict(ID=6322,Name='IncreaseNpcItemDropAmount',UnitID=211)]
         self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=4073,Value=25000,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=13,BonusTypeID=6322,Value=7,BonusApplicationTypeID=5,BonusApplicationTargetID=26)]
@@ -260,6 +331,41 @@ class AdmissionTest(unittest.TestCase):
         self.catalog['아이템'].append(dict(name='fixture_old',source='inven',sourceId='900',slot='earring'))
         self.rejected()
 
+    def test_native_non_equipment_preserves_nonstackable_flag_without_gear_instances(self):
+        self.tables['ItemCraftInput'][0].update(Enchant=0,ItemBlessCodeID=1)
+        self.tables['ItemCraftOutputView'][0]['Enchant']=0
+        self.tables['ItemCraftView'][0]['Enchant']=0
+        records=[]
+        for item in self.tables['ItemClass']:
+            key=str(item['ID']); label='fixture_old' if key=='101' else 'fixture_new'
+            records.append(dict(name=label+' · 원본#'+key,source_display_name=label,source='lineagem_patch523',source_snapshot='patch523',sourceId='m523:item:'+key,source_item_class_id=item['ID'],source_m_native_item=True,source_test_item=False,source_is_stackable=False,source_level_limit_min=0,source_level_limit_max=0,source_class_ids=[],source_equip_slot_ids=[],source_equipment_status='no_source_equip_slot',slot='material'))
+        def compiled(): return BUILDER.compile_rules(self.tables,{},'{"아이템":[]}'.encode(),json.dumps({'아이템':records}).encode())
+        value=compiled()
+        self.assertFalse(value['recipes']['patch523:17']['materials'][0]['physical'])
+        self.assertFalse(value['recipes']['patch523:17']['result']['physical'])
+        self.assertFalse(value['items']['102']['catalog_record']['source_is_stackable'])
+        self.tables['ItemCraftInput'][0]['Enchant']=1
+        self.assertNotIn('patch523:17',compiled()['recipes'])
+        self.tables['ItemCraftInput'][0]['Enchant']=0
+        self.tables['ItemEquipSlot']=[dict(ItemClassID=101,EquipSlotID=23)]
+        records[0]['source_equip_slot_ids']=[23]
+        self.assertNotIn('patch523:17',compiled()['recipes'])
+
+    def test_partial_source_success_keeps_raw_rows_and_labels_derived_failure(self):
+        for table in ['ItemCraftInput','ItemCraftOutputView','ItemCraftView']:
+            for row in self.tables[table]:row['ItemCraftID']=38494
+        self.tables['ItemCraftView'][0]['AlwaysSuccess']=0
+        self.tables['ItemCraftOutputView'][0]['Probability']=600000
+        value=self.compile();recipe=value['recipes']['patch523:38494']
+        self.assertEqual(len(value['raw_recipes']['outputs']['38494']),1)
+        self.assertEqual(value['raw_recipes']['outputs']['38494'][0]['Probability'],600000)
+        self.assertEqual([r['probability'] for r in recipe['outcomes']],[600000,400000])
+        self.assertTrue(recipe['outcomes'][1]['empty_result'])
+        self.assertTrue(recipe['outcomes'][1]['twilight_missing_failure'])
+        self.assertIn('TWILIGHT',recipe['probability_origin'])
+        self.tables['ItemCraftOutputView'][0]['Probability']=599999
+        self.assertNotIn('patch523:38494',self.compile()['recipes'])
+
     def test_registered_native_binding_requires_exact_metadata_and_keeps_base_sha(self):
         records=[]
         for item in self.tables['ItemClass']:
@@ -362,9 +468,12 @@ class AdmissionTest(unittest.TestCase):
         tables,evidence=BUILDER.read_source(directory)
         catalog=(Path(__file__).resolve().parents[1]/'data/catalog_v19.json').read_bytes()
         result=BUILDER.compile_rules(tables,evidence,catalog)
-        self.assertEqual(len(result['recipes']),352)
+        self.assertEqual(len(result['recipes']),398)
+        self.assertEqual(sum('active_window' in r.get('craft_conditions',{}) for r in result['recipes'].values()),44)
+        self.assertEqual({k for k,r in result['recipes'].items() if 'missing_failure_policy' in r},{'patch523:216232'})
         self.assertEqual({k for k,r in result['recipes'].items() if any(o.get('empty_result') for o in r.get('outcomes',[]))},
-                         {'patch523:150468','patch523:150478','patch523:150488','patch523:150498','patch523:172613'})
+                         {'patch523:150468','patch523:150478','patch523:150488','patch523:150498','patch523:172613',
+                          'patch523:207754','patch523:207764','patch523:207774','patch523:216232'})
         self.assertEqual(set(result['guaranteed_boxes']),{'30701','130611'})
         self.assertEqual(len(result['source_files']),38)
         descriptions={r['ID']:r['Description'] for r in tables['DescData_Korean']}

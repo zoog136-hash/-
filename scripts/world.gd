@@ -142,7 +142,13 @@ const PATCH523_CRAFT_CATALOG=preload("res://scripts/crafting/patch523_craft_cata
 var patch523_craft_catalog_status: Dictionary={}
 var patch523_craft_item_cache: Dictionary={}
 # Installed/configured only by the protection feature owner (PR256).
+var expedition_catalog: RefCounted
+var expedition_local: RefCounted
 var protection523: RefCounted
+var quest_auto: RefCounted
+var quest_item_provider: RefCounted
+var patch523_owner_state_problem: String=""
+var patch523_final_blow_fired: bool=false
 var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
@@ -491,6 +497,7 @@ func _process(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
+	if quest_auto!=null:quest_auto.call("tick",self)
 	if stat_hud_refresh_pending:
 		_update_hud()
 	_advance_native_route_preparation()
@@ -905,6 +912,7 @@ func _invalidate_equipment_static() -> void:
 func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String="", main_target: bool=true, by_spell: bool=false, context: Dictionary={}) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
+	normal_damage+=preload("res://scripts/crafting/patch523_final_blow.gd").conditional_magic_damage(self,target,by_spell)
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
 	var stolen: int = 0
 	if _has_hp_absorption():
@@ -930,6 +938,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	_refresh_equipment_effects()
 	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
+	adjusted_damage=preload("res://scripts/crafting/patch523_final_blow.gd").damage(self,adjusted_damage,by_spell,target)
 	adjusted_damage+=_source_elemental_flat_damage(target,by_spell)
 	if target.is_undead() and (not by_spell or settings.get("source_undead_scope","")=="all_successful_hits"):
 		var maximum: int=maxi(0,int(_equipment_inven_sum("source_undead_damage_max")))
@@ -3217,7 +3226,7 @@ func _on_stat_increase_requested(stat_name: String) -> void:
 	_update_hud()
 	_request_deferred_save()
 
-func _check_level_up() -> void:
+func _check_level_up(quiet: bool=false) -> void:
 	var gained_stat_points: bool = false
 	while experience >= exp_need:
 		experience -= exp_need
@@ -3233,11 +3242,11 @@ func _check_level_up() -> void:
 		stat_points += awarded_points
 		if awarded_points > 0:
 			gained_stat_points = true
-			hud.show_message("레벨 업! Lv.%d · 스탯 포인트 +%d" % [level, awarded_points])
-			hud.append_log("Lv.%d 달성 · 스탯 포인트 +%d" % [level, awarded_points])
-		else:
+			if not quiet:hud.show_message("레벨 업! Lv.%d · 스탯 포인트 +%d" % [level, awarded_points])
+			if not quiet:hud.append_log("Lv.%d 달성 · 스탯 포인트 +%d" % [level, awarded_points])
+		elif not quiet:
 			hud.show_message("레벨 업! Lv.%d" % level)
-	if gained_stat_points:
+	if gained_stat_points and not quiet:
 		_update_hud()
 		hud.call_deferred("open_character")
 
@@ -3263,6 +3272,11 @@ func _scroll_kind(scroll_name: String) -> String:
 	return ""
 
 func _scroll_mode(scroll_name: String) -> String:
+	var issued: Dictionary=_patch523_expedition_scroll(scroll_name)
+	if issued.get("ok",false):return {1:"normal",2:"blessed",3:"cursed"}[int(issued.bless_code)]
+	var source: Dictionary=_find_catalog_item_record(scroll_name)
+	if PATCH523_ENHANCE.item_id(source) in ["137","138","6401","6411"] and source.get("source_bless_raw")==3:return "cursed"
+	if scroll_name.find("저주받은")>=0:return "cursed"
 	if scroll_name.find("축복받은 오림") >= 0:
 		return "blessed_orim"
 	if scroll_name.find("오림") >= 0:
@@ -3395,6 +3409,10 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
+		return
+	var issued_scroll: Dictionary=patch523_open_expedition_enhancement(item_name)
+	if issued_scroll.get("handled",false):
+		if not issued_scroll.get("ok",false):hud.show_message(str(issued_scroll.error))
 		return
 	if not patch523_equipment.data.is_empty():
 		for source_id: String in ["30701","130611"]:
@@ -3746,11 +3764,11 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 		if source_rule.is_empty() and not _enhancement_level_allowed(kind, mode, level_value, record):
 			continue
 		var chance: Dictionary = source_rule if not source_rule.is_empty() else _enhancement_chance(kind, level_value, mode, record)
-		if float(chance.get("success", 0.0)) <= 0.0:
+		if float(chance.get("success",0.0))+float(chance.get("decrease",0.0))<=0.0:
 			continue
 		var max_gain: int = 3 if mode == "blessed" and level_value <= 2 else (2 if mode == "blessed" and level_value <= 5 else 1)
 		if not source_rule.is_empty():
-			max_gain=1
+			max_gain=-int(source_rule.side_effect_level_loss) if source_rule.get("forced_decrease",false) else 1
 			for leap: Dictionary in source_rule.get("leaps",[]): max_gain=maxi(max_gain,int(leap.gain))
 		record=PATCH523_ENHANCE.prepare(patch523_equipment,record,patch523_equipment.bless_code(item_instances[instance_id]))
 		result.append({
@@ -3770,16 +3788,39 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 		})
 	return result
 
+func patch523_open_expedition_enhancement(key: String) -> Dictionary:
+	# Other source suppliers call this before a generic targetless activation.
+	# Opening selection never debits, grants, rolls or acknowledges a receipt.
+	var proof: Dictionary=_patch523_expedition_scroll(key)
+	if not proof.get("issued",false):return {"handled":false}
+	if not proof.get("ok",false):return {"handled":true,"ok":false,"error":proof.get("error","탐험 주문서 증명 확인 필요"),"committed":false}
+	var candidates: Array=_enhancement_candidates("source",_scroll_mode(key),key)
+	hud.open_enhancement(key,candidates)
+	return {"handled":true,"ok":true,"stage":"target_selection","candidate_count":candidates.size(),"committed":false}
+
+func _patch523_expedition_scroll(key: String) -> Dictionary:
+	var record: Dictionary=_find_catalog_item_record(key)
+	var source: String=str(record.get("sourceId",""))
+	var tuple: String=str(record.get("expedition_key",""))
+	# A saved issued key can outlive its provider/catalog installation. The
+	# tag is only a refusal marker, never evidence permitting consumption.
+	var tagged: bool=key.contains(" (탐험 137:") or key.contains(" (탐험 138:")
+	if not tagged and not source.begins_with("m523:expedition:137:") and not source.begins_with("m523:expedition:138:") and not tuple.begins_with("137:") and not tuple.begins_with("138:"):return {}
+	var result: Dictionary=preload("res://scripts/crafting/patch523_expedition_materials.gd").scroll(patch523_equipment,key,inventory,item_instances,ui_preferences.get("item_locks",{}),_patch523_craft_context())
+	return result if result.get("issued",false) else {"issued":true,"ok":false,"error":"탐험 주문서 소유자/정체 미설치 · 기존 소지 보존"}
+
 func _source_enhancement_rule(record: Dictionary, current_level: int, mode: String, scroll_name: String = "", physical: Dictionary = {}) -> Dictionary:
 	if not physical.is_empty() and physical.has("sourceId") and str(physical.sourceId)!=str(record.get("sourceId","")):
 		return {"source_rule":true,"success":0.0,"reason":"물리 장비의 원본 정체가 일치하지 않습니다"}
 	var kind: String=_enhancement_kind_for_record(record)
 	var scroll: Dictionary=_find_catalog_item_record(scroll_name) if not scroll_name.is_empty() else {}
-	var source_id: String=PATCH523_ENHANCE.item_id(scroll)
+	var issued: Dictionary=_patch523_expedition_scroll(scroll_name)
+	if issued.get("issued",false) and not issued.get("ok",false):return {"source_rule":true,"success":0.0,"reason":issued.error}
+	var source_id: String=str(issued.source_id) if issued.get("ok",false) else PATCH523_ENHANCE.item_id(scroll)
 	# Exact host scroll aliases preserve existing inventory keys; these map only
 	# the original permanent normal/engraved scroll families, never item names.
 	if source_id.is_empty():
-		var aliases: Dictionary={"무기 마법 주문서":"137","무기 마법 주문서 (각인)":"6401","갑옷 마법 주문서":"138","갑옷 마법 주문서 (각인)":"6411","장신구 마법 주문서":"139","장신구 마법 주문서 (각인)":"139",
+		var aliases: Dictionary={"저주받은 무기 마법 주문서":"137","저주받은 무기 마법 주문서 (각인)":"6401","저주받은 갑옷 마법 주문서":"138","저주받은 갑옷 마법 주문서 (각인)":"6411","무기 마법 주문서":"137","무기 마법 주문서 (각인)":"6401","갑옷 마법 주문서":"138","갑옷 마법 주문서 (각인)":"6411","장신구 마법 주문서":"139","장신구 마법 주문서 (각인)":"139",
 			"장인의 무기 마법 주문서 (각인)":"1184","장인의 무기 마법 주문서":"134862","장인의 갑옷 마법 주문서":"270654","장인의 갑옷 마법 주문서 (각인)":"271248","오림의 장신구 마법 주문서":"227002","오림의 장신구 마법 주문서 (각인)":"227002","축복받은 오림의 장신구 마법 주문서":"227002","축복받은 오림의 장신구 마법 주문서 (각인)":"227002","축복받은 무기 마법 주문서":"137","축복받은 무기 마법 주문서 (각인)":"6401","축복받은 갑옷 마법 주문서":"138","축복받은 갑옷 마법 주문서 (각인)":"6411"}
 		source_id=str(aliases.get(scroll_name,""))
 	if source_id.is_empty() and scroll_name.is_empty() and mode in ["normal","blessed"]:
@@ -3788,7 +3829,8 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 	if source_id.is_empty() and scroll_name.is_empty() and mode in ["orim","blessed_orim"] and kind=="accessory": source_id="227002"
 	if source_id.is_empty(): return {}
 	var bless: int=patch523_equipment.bless_code(physical) if not physical.is_empty() else (2 if EQUIPMENT_BLESSING.is_blessed({},record) else 1)
-	var scroll_bless: int=int(scroll.get("source_bless_raw",2 if mode in ["blessed","blessed_orim"] else 1))
+	var scroll_bless: int=int(issued.bless_code) if issued.get("ok",false) else int(scroll.get("source_bless_raw",3 if mode=="cursed" else 2 if mode in ["blessed","blessed_orim"] else 1))
+	if scroll_bless==3:return PATCH523_ENHANCE.cursed_rule(patch523_equipment,record,source_id,current_level,bless)
 	return PATCH523_ENHANCE.rule(patch523_equipment,record,source_id,current_level,bless,scroll_bless)
 
 func _enhancement_level_allowed(kind: String, mode: String, current_level: int, record: Dictionary = {}) -> bool:
@@ -3831,6 +3873,9 @@ func _roll_enhancement_gain(mode: String, current_level: int) -> int:
 	return 1
 
 func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dictionary:
+	if source_id.is_empty() and quest_auto!=null and quest_auto.has_method("held_record"):
+		var held: Variant=quest_auto.call("held_record",item_name,item_instances)
+		if held is Dictionary and not held.is_empty():return held
 	if source_id != "":
 		var identified: Dictionary = _catalog_item_from_source_id(source_id)
 		return identified if str(identified.get("name", "")) == item_name else {}
@@ -3958,7 +4003,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	_sync_item_instances()
 	if item_id.is_empty():
 		item_id = _chosen_instance(target_name)
-	if _item_locked(target_name,item_id):
+	if _item_locked(target_name,item_id) or _item_locked(scroll_name):
 		hud.show_message("강화하려면 아이템 잠금을 해제하세요")
 		return
 	if not item_instances.has(item_id) or str((item_instances[item_id] as Dictionary).get("name", "")) != target_name:
@@ -3991,7 +4036,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	var success_chance: float = float(chance.get("success", 0.0))
 	var no_change_chance: float = float(chance.get("no_change", 0.0))
 	var decrease_chance: float = float(chance.get("decrease", 0.0))
-	if success_chance <= 0.0:
+	if success_chance+decrease_chance<=0.0:
 		hud.show_message(str(chance.get("reason","더 이상 강화할 수 없습니다")))
 		return
 	var scroll_count: int=int(chance.get("count",1))
@@ -4011,7 +4056,9 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	var result_type: String = "maintain"
 	var result_level: int = current_level
 	var result_message: String = "강화 실패 · 장비 변화 없음"
-	var roll: float = rng.randf_range(0.0, 100.0)
+	# randf_range may include100; keep the same draw/state but never let a
+	# confirmed100% success/decrease fall into item destruction at the endpoint.
+	var roll: float = minf(rng.randf_range(0.0,100.0),99.999999)
 	if roll < success_chance:
 		var gain: int=1
 		if source_rule.is_empty(): gain=_roll_enhancement_gain(mode,current_level)
@@ -4386,10 +4433,28 @@ func _patch523_protection_recipe_item(recipe_id: String) -> int:
 		if int(row.get("ItemCraftID",0))==int(key) and int(row.get("ItemCraftOutputTypeID",0))==1 and int(row.get("Amount",0))==1 and int(row.get("Enchant",-1))==0 and int(row.get("ItemBlessCodeID",0))==1 and int(row.get("Probability",0))==1000000 and int(row.get("ItemClassID",0)) in [200723,245718,297828,328254,346911,371108,75764,123373]:return int(row.ItemClassID)
 	return 0
 
+func open_patch523_protection_owner() -> void:
+	var binding: Dictionary=preload("res://scripts/crafting/patch523_protection_bindings.gd").prepare(self)
+	if not binding.get("ok",false):hud.show_message(str(binding.get("error","가호 제작 소유자 확인 필요")));return
+	var path: String="res://scripts/protection/protection523_panel.gd"
+	if not ResourceLoader.exists(path):hud.show_message("가호 전용 화면이 설치되지 않았습니다");return
+	hud.call("_open_window","protection523","불멸·파멸의 가호","보유 · 원본 재료 제작 · 영구 호칭")
+	var scroll:=ScrollContainer.new()
+	scroll.name="ProtectionFullScroll"
+	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	hud.workspace.mount(scroll)
+	var panel: Control=load(path).new()
+	scroll.add_child(panel)
+	panel.call("configure",hud)
+
 func patch523_delegate_protection(recipe_id: int, batches: int=1) -> Dictionary:
 	var item_id: int=_patch523_protection_recipe_item("patch523:"+str(recipe_id))
 	if item_id==0 or batches!=1:return {"ok":false,"error":"원본 가호 제작식과 단일 소유자 거래를 확인하세요"}
 	if protection523==null or not protection523.has_method("craft_recipe"):return {"ok":false,"error":"가호 제작 소유자 미설치 · 재료와 장부를 보존합니다"}
+	if item_id not in [75764,123373]:
+		if not patch523_equipment.CONDITIONS.valid_usage(patch523_crafting_usage):return {"ok":false,"error":"기존 제작 제한 장부 보존 · 중복 가호 확인 필요"}
+		var usage: Dictionary=patch523_crafting_usage.get("recipes",{})
+		if usage.has(str(recipe_id)) or usage.has("patch523:"+str(recipe_id)):return {"ok":false,"error":"기존 일반 제작 제한 이력 보존 · 중복 가호 거부"}
 	var has_source: bool=false
 	for property: Dictionary in protection523.get_property_list():
 		if property.get("name")=="source":has_source=true;break
@@ -4400,6 +4465,8 @@ func patch523_delegate_protection(recipe_id: int, batches: int=1) -> Dictionary:
 	var recipe: Variant=definition.get("recipe") if definition is Dictionary else null
 	var original_id: Variant=recipe.get("ItemCraftID") if recipe is Dictionary else null
 	if typeof(original_id) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(original_id)) or float(original_id)!=float(recipe_id):return {"ok":false,"error":"가호 소유자의 원본 제작식 불일치 · 재료 보존"}
+	var binding: Dictionary=preload("res://scripts/crafting/patch523_protection_bindings.gd").prepare(self)
+	if not binding.get("ok",false):return binding
 	# This exact public owner alone commits input/body/Appellation/ledger/save.
 	# No generic execute(), grant(), second debit, log or outer save follows.
 	var result: Variant=protection523.call("craft_recipe",recipe_id)
@@ -4534,8 +4601,11 @@ func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 		equipped_items, _inventory_total_weight(), _carrying_capacity()
 	)
 
+func get_expedition_catalog() -> RefCounted:
+	return expedition_catalog
+
 func _patch523_craft_context() -> Dictionary:
-	return {"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system())}
+	return {"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local}
 
 func patch523_craft_condition_summary(recipe: Dictionary) -> String:
 	return patch523_equipment.CONDITIONS.summary(recipe,_patch523_craft_context())
@@ -4699,6 +4769,7 @@ func _on_map_selected(map_id: String) -> void:
 	_set_map(map_id, false)
 
 func _update_hud() -> void:
+	if protection523!=null and not protection523.get("source").is_empty():preload("res://scripts/crafting/patch523_protection_bindings.gd").prepare(self)
 	stat_hud_refresh_pending = false
 	# Every equipment, enhancement, card, collection, growth, awakening,
 	# passive-learning and load transaction publishes through this entry point.
@@ -4811,6 +4882,15 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if not patch523_owner_state_problem.is_empty():return ERR_UNAVAILABLE
+	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
+	if protection523!=null and protection523.get("save_blocked")==true:return ERR_UNAVAILABLE
+	if expedition_local!=null and expedition_local.get("save_blocked")==true:return ERR_UNAVAILABLE
+	if quest_auto!=null and quest_service.get("save_blocked")==true:return ERR_UNAVAILABLE
+	var owner_error: String=owner_boundary.override_error(self,collection_override)
+	if not owner_error.is_empty():
+		if not quiet:hud.show_message(owner_error)
+		return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4826,7 +4906,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","next_item_instance_id","crafting_log","patch523_crafting_usage"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","next_item_instance_id","crafting_log","patch523_crafting_usage","protection523","expedition523_local","quest_state","level","experience","exp_need","max_hp","max_mp","hp","mp","attack","defense","stat_points"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4909,15 +4989,33 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if not source_map_error.is_empty():
 		if not quiet:hud.show_message(source_map_error)
 		return ERR_UNAVAILABLE
+	data["patch523_transaction_rng"]={"schema":1,"seed":str(rng.seed),"state":str(rng.state)}
+	if expedition_local!=null:
+		var expedition_state: Dictionary=expedition_local.call("export_state")
+		if not owner_boundary.expedition_error(self,expedition_state).is_empty():return ERR_INVALID_DATA
+		data["expedition523_local"]=expedition_state
+	if protection523!=null and protection523.has_method("snapshot"):
+		var protection_state: Variant=protection523.call("snapshot")
+		if not owner_boundary.protection_error(self,protection_state).is_empty():return ERR_INVALID_DATA
+		data["protection523"]=protection_state
 	data.merge(equipment_collections.extra_save_fields, false)
 	data.merge(collection_override, true)
 	var save_started_usec: int = Time.get_ticks_usec()
+	var prior_owner_hash: String=FileAccess.get_sha256(save_path()) if FileAccess.file_exists(save_path()) else ""
 	var result: Error = equipment_collections.write_save(save_path(), data)
+	if result!=OK and not equipment_collections.save_blocked and equipment_collections.problem.is_empty():
+		if owner_boundary.committed(self,save_path(),data):
+			result=OK
+			hud.append_log("원본 거래 · 저장 응답 오류 뒤 전체 영수증/상태 일치 확인")
+		elif FileAccess.file_exists(save_path()) and FileAccess.get_sha256(save_path())!=prior_owner_hash:
+			patch523_owner_state_problem="원본 거래 저장 결과 확인 필요 · 다시 불러오기 전 소모/지급 중지"
 	_perf_log("저장", save_started_usec)
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
 		return result
+	for key: String in ["protection523","expedition523_local","patch523_transaction_rng"]:
+		if data.has(key):equipment_collections.extra_save_fields[key]=data[key].duplicate(true)
 	if not pending_map_save_record.is_empty():
 		var pointer_result: Error=MAP_SAVE_MIGRATION.activate(base_save_path(),pending_map_save_record)
 		if pointer_result!=OK:
@@ -4965,6 +5063,15 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
+	var owner_error: String=owner_boundary.quest_error(self,data.get("quest_state",{}))
+	if owner_error.is_empty() and data.has("patch523_transaction_rng"):owner_error=owner_boundary.rng_error(data.patch523_transaction_rng)
+	if owner_error.is_empty() and expedition_local!=null and data.has("expedition523_local"):owner_error=owner_boundary.expedition_error(self,data.expedition523_local)
+	if owner_error.is_empty() and protection523!=null and data.has("protection523"):owner_error=owner_boundary.protection_error(self,data.protection523)
+	if not owner_error.is_empty():
+		patch523_owner_state_problem=owner_error
+		hud.show_message(owner_error)
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -5121,7 +5228,12 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
+	if expedition_local!=null:expedition_local.call("restore",data)
 	quest_service.import_state(data.get("quest_state", {}))
+	if protection523!=null and protection523.has_method("load_state") and not protection523.call("load_state",data):
+		patch523_owner_state_problem="가호 소유자 저장 복원 실패 · 기존 상태 보존"
+		return
+	patch523_owner_state_problem=""
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
 	source_save_blocked = false
@@ -5277,6 +5389,11 @@ func _load_game(quiet: bool) -> void:
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
 	_update_hud()
 	_emit_consumable_auto_settings()
+	# Scene/map restoration may use random landing/actor cooldowns. Resume the
+	# committed transaction stream after that setup, before normal play.
+	if data.has("patch523_transaction_rng"):
+		rng.seed=int(data.patch523_transaction_rng.seed)
+		rng.state=int(data.patch523_transaction_rng.state)
 	if not quiet:
 		hud.show_message("불러오기 완료")
 
@@ -8036,12 +8153,18 @@ func _record_damage_reduction(record: Dictionary) -> int:
 		return maxi(0, int(record.get("리덕션", 0)))
 	return CATALOG_EFFECTS.flat_reduction(record)
 
+func _patch523_protection_effects() -> Dictionary:
+	if protection523==null or not protection523.has_method("effects"):return {}
+	var value: Variant=protection523.call("effects")
+	return value if value is Dictionary else {}
+
 func _damage_reduction_stat() -> int:
 	var total: int = 0
 	for record: Dictionary in _all_equipped_records():
 		total += _record_damage_reduction(record)
 	total += _active_item_buff_total("damage_reduction")
 	total += _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "reduction")
+	total += int(_patch523_protection_effects().get("title_flat",0))
 	return maxi(0, total)
 
 func _source_dot_damage(raw_damage: int,kind: String) -> int:
@@ -8050,10 +8173,14 @@ func _source_dot_damage(raw_damage: int,kind: String) -> int:
 	return maxi(1,int(round(float(raw_damage)*(1.0-percent/100.0))))
 
 func _pve_damage_after_item_buffs(raw_damage: int,attack_type: String="") -> int:
-	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
-	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct") + _catalog_stat_sum("pve_damage_reduction_pct") + int(_equipment_inven_sum("pve_damage_reduction_pct")), 0, 90)
+	var protection: Dictionary=_patch523_protection_effects()
+	var projection: bool=protection523!=null and bool(protection523.get("state").get("policy",{}).get("project_pvp_to_pve",false))
+	var protection_flat: int=int(protection.get("possession_flat",0))+int(protection.get("active_flat",0)) if projection else 0
+	var protection_percent: float=float(protection.get("possession_percent_raw",0))/10000.0 if projection else 0.0
+	var reduced: int = maxi(1, raw_damage - protection_flat - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
+	var percent: float = clampf(protection_percent+float(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct") + _catalog_stat_sum("pve_damage_reduction_pct") + int(_equipment_inven_sum("pve_damage_reduction_pct"))), 0, 90)
 	if attack_type in ["melee","ranged","magic"]:
-		percent=clampi(percent+int(_equipment_inven_sum(attack_type+"_damage_reduction_pct")),0,90)
+		percent=clampf(percent+int(_equipment_inven_sum(attack_type+"_damage_reduction_pct")),0,90)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
 	return reduced

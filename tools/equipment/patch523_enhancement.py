@@ -57,6 +57,10 @@ EXTRA = {
     'AttackDrainHP':('source_attack_drain_hp',1),
     'AttackDrainMP':('source_attack_drain_mp',1),
     'UndeadAdditionalMaxDamage':('source_undead_damage_max',1),
+    'FinalBlowProbability':('source_final_blow_chance_pct',10000),
+    'FinalBlowAdditionalScale':('source_final_blow_amp_pct',10000),
+    '_final_blow_stun':('source_final_blow_stun_chance_pct',10000),
+    '_stun_magic':('source_stun_magic_damage',1),
 }
 for _channel in ['fire','water','wind','earth']:
     EXTRA['_elemental_'+_channel]=('source_elemental_flat_'+_channel,1)
@@ -72,6 +76,10 @@ def qualified_name(bonus, name, resistance_types, elemental_targets=None):
         # These types require an explicit target; never turn an unknown
         # resistance or drop target into a generic bonus.
         return None if name in ['HitSpecialResistance','SpecialResistance','IncreaseNpcItemDropAmount'] else name
+    if name=='MagicDamage' and application==2 and resistance_types.get(target,'').lower()=='stun':
+        return '_stun_magic'
+    if name=='FinalBlowProbability' and application==2 and resistance_types.get(target,'').lower()=='stun':
+        return '_final_blow_stun'
     if name in ['HitSpecialResistance','SpecialResistance'] and application==2:
         status = resistance_types.get(target,'').lower()
         if status in ['stun','hold','fear','poison','silence']:
@@ -126,7 +134,12 @@ def compile_equipment(tables, bound_items, bonuses):
                             live_invokes.append({'row_id':row['ID'],'probability':b['Value'],'option':option,
                                                  'kind':'attack_fixed_damage' if kind==3 else 'defence_flat_reduction'})
                             continue
-                    name = qualified_name(b,name,resistance_types,elemental_targets)
+                    if name in ['FinalBlowProbability','FinalBlowAdditionalScale'] and types[b['BonusTypeID']]['UnitID']!=3:
+                        skipped.add(row['ID']); continue
+                    if name=='MagicDamage' and b['BonusApplicationTypeID']==2 and types[b['BonusTypeID']]['UnitID']!=1:
+                        name=None
+                    else:
+                        name = qualified_name(b,name,resistance_types,elemental_targets)
                     if name is None:
                         skipped.add(row['ID']); continue
                     spec = FIELDS.get(name)

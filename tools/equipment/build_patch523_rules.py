@@ -13,6 +13,7 @@ from pathlib import Path
 import tempfile
 import os
 import sys
+import datetime
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from patch523_enhancement import compile_equipment
 
@@ -81,6 +82,28 @@ def group(rows, key):
     for row in rows:
         result[str(row[key])].append(row)
     return dict(result)
+
+
+def source_calendar_window(view, dates, policy):
+    if (view['EffectiveFrom'],view['EffectiveTo'])==(1,3):
+        return {}
+    clock=policy.get('source_calendar_clock',{})
+    offset=clock.get('utc_offset_minutes')
+    if view['CraftTimeTypeID']!=1 or type(offset) is not int or not -840<=offset<=840 or clock.get('boundary')!='start_inclusive_end_exclusive':
+        return None
+    first,last=dates.get(view['EffectiveFrom']),dates.get(view['EffectiveTo'])
+    if not first or not last:
+        return None
+    def epoch(row):
+        return int(datetime.datetime(row['Year'],row['Month'],row['Day'],row['Hour'],row['Minute'],tzinfo=datetime.timezone(datetime.timedelta(minutes=offset))).timestamp())
+    try:
+        begin,end=epoch(first),epoch(last)
+    except (ValueError,OverflowError,TypeError,KeyError):
+        return None
+    if not 0<=begin<end<=4102444800:
+        return None
+    return {'start_unix':begin,'end_unix':end,'source_start':first,'source_end':last,
+            'utc_offset_minutes':offset,'boundary':clock['boundary'],'clock_origin':clock['origin']}
 
 
 def empty_output(row):
@@ -186,6 +209,8 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
     views = group(tables['ItemCraftView'], 'ItemCraftID')
     restrictions = group(tables['ItemCraftRestriction'], 'ItemCraftID')
     currency_record = {'name':'아데나','source':'lineagem_patch523','sourceId':'26','slot':'currency','weight':0}
+    dates={r['ID']:r for r in tables.get('DateTimes_Korean',[])}
+    item_bonus_rows = group(tables['ItemBonus'], 'ItemClassID')
     policy = json.loads((Path(__file__).resolve().parents[2]/'data/crafting/patch523_crafting_policy.json').read_text())
     wallet_records = json.loads(binding_catalog_bytes)['아이템'] if binding_catalog_bytes is not None else catalog
     wallet_names = {r['name'] for r in wallet_records if r.get('slot') == 'currency'}
@@ -197,6 +222,19 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
             and matches[0].get('source_display_name') in binding['source_names']
             and binding['inventory_key'] in wallet_names):
             currency_keys[key] = binding['inventory_key']
+    def native_non_equipment_entry(key):
+        records=by_id.get(key,[])
+        if not policy.get('native_non_equipment_holding',{}).get('enabled') or len(records)!=1:
+            return False
+        entry=records[0]
+        return (entry.get('source')=='lineagem_patch523' and entry.get('source_m_native_item') is True
+            and entry.get('slot') in ['material','consumable','currency','']
+            and entry.get('source_equipment_status')=='no_source_equip_slot'
+            and entry.get('source_equip_slot_ids')==[] and not equip_links.get(key,[]))
+
+    def physical_item(key):
+        return not categories[items[key]['CategoryID']]['IsStackable'] and not native_non_equipment_entry(key)
+
     random_ids = set(map(str,policy['verified_source_craft_ids']))
     host_materials={}
     for key, binding in policy.get('host_material_bindings',{}).items():
@@ -217,10 +255,19 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
         reason = ''
         ins, outs = inputs.get(craft_id, []), outputs.get(craft_id, [])
         v = view_rows[0]
+        calendar_window=source_calendar_window(v,dates,policy)
         complete_source_outcomes = (policy.get('allow_complete_source_outcome_contracts',False)
             and len(outs)>1 and all(row['ItemCraftOutputTypeID'] in [0,1,2] and 0<row['Probability']<=1000000 for row in outs)
             and sum(row['Probability'] for row in outs)==1000000)
-        probabilistic = craft_id in random_ids or complete_source_outcomes
+        missing_failure=policy.get('missing_failure_contracts',{}).get(craft_id,{})
+        partial_failure=(missing_failure.get('enabled') is True and len(outs)==1 and len(view_rows)==1
+            and v['AlwaysSuccess']==0 and outs[0]['ItemCraftOutputTypeID']==1
+            and 0<outs[0]['Probability']<1000000 and outs[0]['Probability']==missing_failure.get('source_success_weight')
+            and type(missing_failure.get('consume_materials_on_failure')) is bool and type(missing_failure.get('consume_fee_on_failure')) is bool)
+        execution_outs=outs
+        if partial_failure:
+            execution_outs=outs+[{'ItemCraftOutputTypeID':0,'ItemClassID':0,'Amount':0,'Enchant':0,'ItemBlessCodeID':1,'Probability':1000000-outs[0]['Probability'],'twilight_missing_failure':True}]
+        probabilistic = craft_id in random_ids or complete_source_outcomes or partial_failure
         constraint = policy.get('verified_craft_constraints', {}).get(craft_id, {})
         quota = constraint.get('quota', {})
         expected_restriction = constraint.get('source_restriction')
@@ -237,7 +284,7 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                 and view_identities=={tuple(r[k] for k in identity_fields) for r in success_rows}
                 and all({k:x for k,x in row.items() if k not in display_fields}=={k:x for k,x in v.items() if k not in display_fields} for row in view_rows))
         primary = next((row for row in outs if row['ItemCraftOutputTypeID']==1 and all(v[k]==row[k] for k in ['ItemClassID','Amount','Enchant','ItemBlessCodeID'])),None)
-        if probabilistic and (not view_contract or primary is None or not outs or any(row['ItemCraftOutputTypeID'] not in [0,1,2] or not 0<row['Probability']<=1000000 for row in outs) or sum(row['Probability'] for row in outs)!=1000000):
+        if probabilistic and (not view_contract or primary is None or not outs or any(row['ItemCraftOutputTypeID'] not in [0,1,2] or not 0<row['Probability']<=1000000 for row in outs) or (sum(row['Probability'] for row in outs)!=1000000 and not partial_failure)):
             reason = 'unverified_random_result_contract'
         elif not probabilistic and (len(view_rows) != 1 or v['AlwaysSuccess'] != 1 or len(outs) != 1):
             reason = 'non_single_guaranteed_result'
@@ -245,8 +292,10 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
             reason = 'unresolved_probability_or_output_type'
         elif (restrictions.get(craft_id) and not known_restriction) or v['ServerLimitSetID'] or v['IsCoalitionItem'] or v['NoRepeat'] or v['IsBelowLevelLimit'] or not 0 <= v['LevelLimitValue'] <= 1000:
             reason = 'unresolved_player_or_server_condition'
-        elif (v['EffectiveFrom'], v['EffectiveTo'], v['CraftTimeTypeID']) != (1, 3, 1):
+        elif v['CraftTimeTypeID']!=1 or calendar_window is None:
             reason = 'limited_calendar_or_time_type'
+        elif int(craft_id) in policy.get('delegated_protection_recipe_ids',[]):
+            reason = 'delegated_protection_owner'
         elif not ins:
             reason = 'candidate_selection_required'
         elif not probabilistic and any(v[k] != outs[0][k] for k in ['ItemClassID', 'Amount', 'Enchant', 'ItemBlessCodeID']):
@@ -264,7 +313,12 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                 if (not item or item['TestItem'] or item['ServiceRegionCode']
                     or not 0 <= item['LevelLimitMin'] <= 1000 or not 0 <= item['LevelLimitMax'] <= 1000
                     or (item['LevelLimitMax'] and item['LevelLimitMax'] < item['LevelLimitMin'])
-                    or any(r['ClassID'] not in classes or r['ClassID']<=0 for r in limits.get(key,[]))):
+                    or (any(r['ClassID'] not in classes or r['ClassID']<=0 for r in limits.get(key,[]))
+                        and not (row in ins and categories[item['CategoryID']].get('IsStackable') is True
+                            and categories[item['CategoryID']].get('IsActivatable') is False
+                            and not item_bonus_rows.get(key,[])
+                            and policy.get('nonactivating_material_class_references',{}).get(key,{}).get('scope')=='source_input_only'
+                            and sorted({r['ClassID'] for r in limits.get(key,[])})==policy['nonactivating_material_class_references'][key]['class_ids']))):
                     reason = 'unresolved_item_condition'; break
                 if key == '26':
                     if row['Enchant'] != 0 or row['ItemBlessCodeID'] != 1 or descriptions.get(item['DescID']) != '아데나':
@@ -275,7 +329,9 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                     reason = 'missing_or_ambiguous_catalog_identity'; break
                 if matches[0].get('source') == 'inven' and matches[0]['name'] not in [descriptions.get(item['DescID']), descriptions.get(item['IdentifiedDescID'])]:
                     reason = 'source_identity_name_disagreement'; break
-                stack = categories[item['CategoryID']]['IsStackable']
+                if native_non_equipment_entry(key) and not categories[item['CategoryID']]['IsStackable'] and (row['Enchant']!=0 or row['ItemBlessCodeID']!=1):
+                    reason='non_equipment_state_unrepresented';break
+                stack = not physical_item(key)
                 if stack and (row['Enchant'] != 0 or not row_record(row)):
                     reason = 'stack_state_cannot_be_represented'; break
                 slot = matches[0].get('slot', '')
@@ -295,7 +351,7 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                         candidates.append({'item': record['name'], 'quantity': row['Amount'], 'source_id': key,
                                            'level': row['Enchant'], 'bless_code': row['ItemBlessCodeID'],
                                            'row_id': row['ID'], 'slot_index': int(slot),
-                                           'physical':False if key=='26' else not categories[items[key]['CategoryID']]['IsStackable'],
+                                           'physical':False if key=='26' else physical_item(key),
                                            'wallet':key=='26',
                                            **({'inventory_key':currency_keys[key]} if key in currency_keys else {})})
                     if reason: break
@@ -309,34 +365,39 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                         'source_snapshot': 'patch523', 'source_craft_id': int(craft_id),
                         'result': {'item': result['name'], 'quantity': out['Amount'], 'level': out['Enchant'],
                                    'bless_code': out['ItemBlessCodeID'], 'source_id': str(out['ItemClassID']),
-                                   'physical': False if out['ItemClassID']==26 else not categories[items[str(out['ItemClassID'])]['CategoryID']]['IsStackable'],
+                                   'physical': False if out['ItemClassID']==26 else physical_item(str(out['ItemClassID'])),
                                    'wallet_currency':out['ItemClassID']==26,
                                    **({'inventory_key':currency_keys[str(out['ItemClassID'])]} if str(out['ItemClassID']) in currency_keys else {})},
                         'adena': adena, 'materials': material_rows, 'material_slots':material_slots,
                         'requires_material_selection':any(len(slot['candidates']) > 1 for slot in material_slots),
                         'popup_text_id': v['PopupText']}
-                    if v['LevelLimitValue'] or known_restriction:
+                    if v['LevelLimitValue'] or known_restriction or calendar_window:
                         recipes['patch523:'+craft_id]['craft_conditions'] = {
                             'schema':'patch523-craft-conditions-v1', 'min_level':v['LevelLimitValue'],
                             'max_level':0, 'source_level_fields':{k:v[k] for k in ['IsBelowLevelLimit','LevelLimitValue']}}
+                        if calendar_window:
+                            recipes['patch523:'+craft_id]['craft_conditions']['active_window']=calendar_window
                         if known_restriction:
-                            if quota.get('limit') != expected_restriction['Value'] or quota.get('period_seconds') != 604800 or not expected_restriction['isMultiCount']:
-                                raise ValueError('quota policy changed original count: '+craft_id)
+                            weekly=(quota.get('period_seconds')==604800 and expected_restriction['RefreshUnitID']==71 and expected_restriction['isMultiCount'] is True)
+                            bounded=(quota.get('mode')=='bounded_lifetime' and quota.get('period_seconds')==0
+                                and expected_restriction['ServiceTypeID']==13 and expected_restriction['RefreshUnitID']==111 and expected_restriction['isMultiCount'] is False)
+                            if quota.get('limit') != expected_restriction['Value'] or not (weekly or bounded):
+                                raise ValueError('quota policy changed original count or reference: '+craft_id)
                             recipes['patch523:'+craft_id]['craft_conditions'].update(
                                 quota={**quota, 'source_restriction':expected_restriction}, origin=constraint['origin'])
                     recipes['patch523:'+craft_id]['host_material_bindings']=[host_materials[str(row['ItemClassID'])] for row in ins if str(row['ItemClassID']) in host_materials]
                     if probabilistic:
                         outcomes=[]
-                        for row in outs:
+                        for row in execution_outs:
                             if empty_output(row):
                                 outcomes.append({'item':'지급 없음','source_id':'0','quantity':0,'level':0,
                                     'bless_code':1,'physical':False,'empty_result':True,
-                                    'probability':row['Probability'],'label':policy['output_type_labels']['0']})
+                                    'probability':row['Probability'],'label':policy['output_type_labels']['0'],**({'twilight_missing_failure':True} if row.get('twilight_missing_failure') else {})})
                                 continue
                             item=row_record(row)
                             outcomes.append({'item':item['name'],'source_id':str(row['ItemClassID']),
                                 'quantity':row['Amount'],'level':row['Enchant'],'bless_code':row['ItemBlessCodeID'],
-                                'physical':not categories[items[str(row['ItemClassID'])]['CategoryID']]['IsStackable'],
+                                'physical':physical_item(str(row['ItemClassID'])),
                                 'probability':row['Probability'],'label':policy['output_type_labels'][str(row['ItemCraftOutputTypeID'])],
                                 **({'inventory_key':currency_keys[str(row['ItemClassID'])]} if str(row['ItemClassID']) in currency_keys else {})})
                         recipes['patch523:'+craft_id]['outcomes']=outcomes
@@ -344,6 +405,9 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                             recipes['patch523:'+craft_id]['source_success_view_count']=len(view_rows)
                             recipes['patch523:'+craft_id]['name']='원본523 · '+result['name']+' 확률 제작'
                         recipes['patch523:'+craft_id]['probability_origin']=('원본 확률 · NC 공식 재료/결과 대조' if craft_id in random_ids else '원본523 완전 결과표 · 개별 공개 표 미대조')
+                        if partial_failure:
+                            recipes['patch523:'+craft_id]['missing_failure_policy']=missing_failure
+                            recipes['patch523:'+craft_id]['probability_origin']=missing_failure['origin']
                         recipes['patch523:'+craft_id]['preserve_refund_instance']=bool(policy['preserve_matching_refund_instance'])
                         recipes['patch523:'+craft_id]['host_material_bindings']=[host_materials[str(row['ItemClassID'])] for row in ins if str(row['ItemClassID']) in host_materials]
                     continue
@@ -353,7 +417,6 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
         if reason in ['missing_or_ambiguous_catalog_identity','unresolved_item_condition','unmapped_physical_slot','unresolved_item_state','source_identity_name_disagreement','stack_state_cannot_be_represented']:
             admission[craft_id]['first_blocking_item_class_id'] = row['ItemClassID']
     bonuses = {str(r['ID']): r for r in tables['Bonus']}
-    item_bonus_rows = group(tables['ItemBonus'], 'ItemClassID')
     enchant = group(tables['ItemEnchantBonus'], 'ItemEnchantBonusGroupID')
     bound_items, used_bonuses = {}, set()
     inspectable = dict(by_id)
@@ -409,6 +472,9 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                   'ItemEnchantProbabilityView','ItemBlessEnchantProbability','ItemBlessCode','EquipSlotConfig','ItemEquipSlot']}}
     if binding_catalog_bytes is not None:
         result['binding_catalog_sha256'] = digest(binding_catalog_bytes)
+    for key, allowance in policy.get('nonactivating_material_class_references',{}).items():
+        if key in bound_items and categories[bound_items[key]['item_class']['CategoryID']].get('IsActivatable') is False and not bound_items[key]['item_bonuses']:
+            bound_items[key]['craft_material_only_class_references']=allowance
     result['equipment_runtime'] = compile_equipment(tables, bound_items, bonuses)
     result['enchantment'].update({n:tables.get(n,[]) for n in ['ItemBlessBonus','Material','Unit','UIUnit','InvokeOption','InvokeOptionType','BonusApplicationType','AttackType','SpecialResistanceType']})
     return result

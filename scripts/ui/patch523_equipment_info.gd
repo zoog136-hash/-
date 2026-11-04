@@ -61,6 +61,10 @@ func configure(controller: Node) -> void:
 	catalog_status.name="Patch523CraftCatalogStatus"
 	if world.patch523_craft_catalog_status.get("ok",false):catalog_status.text="공통 제작 아이템 %d개 등록됨 · 검증된 설치 자료" % int(world.patch523_craft_catalog_status.get("registered_count",0))
 	add_child(catalog_status)
+	if world.protection523!=null and not world.protection523.get("source").is_empty():
+		var protection_button: Button=UI.button("불멸·파멸의 가호 제작",func() -> void:world.open_patch523_protection_owner())
+		protection_button.name="Patch523OpenProtectionOwner"
+		add_child(protection_button)
 	equipment = OptionButton.new()
 	equipment.name = "Patch523EquipmentChoice"
 	equipment.custom_minimum_size.y = 42
@@ -154,6 +158,9 @@ func _refresh() -> void:
 		text += "\n[b]원본 인장 강화 실행[/b]\n공식 확률 %.4f%% · 현재 +%d → +%d · 실패 %s\n주문서 %d개 · %d 아데나\n%s\n" % [float(quote.success),level_value,level_value+1,"유지" if bool(quote.protected) else "소실",int(quote.count),int(quote.cost),UI.safe(quote.economy_label)]
 	else:
 		text += "\n원본 인장 강화: %s\n" % UI.safe(str(quote.get("reason","실행 조건을 확인하세요")))
+	var final_base: Dictionary=preload("res://scripts/crafting/patch523_final_blow.gd").base(book,physical.get("record",{}),blessing)
+	if not final_base.is_empty():text+="\n원본 기본 결정타 %.2f%% · 증폭 %.2f%% · 적용 범위/계산 순서는 TWILIGHT 설정\n" % [float(final_base.get("source_final_blow_chance_pct",0)),float(final_base.get("source_final_blow_amp_pct",0))]
+	text+="\n스턴 조건 주체: %s · 원본 상태6/단위/수치 보존, 주체와 계산 범위는 TWILIGHT 설정\n" % UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_stun_condition_subject","disabled")))
 	var effect_text: String = ""
 	var effects: Array = book.effect_evidence(source_id, level_value, 2 if blessing == 2 else 0)
 	if not effects.is_empty():
@@ -166,7 +173,7 @@ func _refresh() -> void:
 		labels.merge({"PierceDamageReductionPercent":"대미지 증가","PVEPierceDamageReductionPercent":"PVE 대미지 증가","DamageReductionPercent":"대미지 감소","IncreaseNpcItemDropAmount":"아데나 드롭량"})
 		labels.merge({"HPHealIncreasePercent":"회복 마법량","CastSpeedBonus":"시전 속도","MeleeCriticalResist":"근거리 치명타 저항","RangeCriticalResist":"원거리 치명타 저항","MeleeDamageReductionPercent":"근거리 대미지 감소","RangeDamageReductionPercent":"원거리 대미지 감소","MagicDamageReductionPercent":"마법 대미지 감소","PoisonDamageReductionPercent":"지속 대미지 감소"})
 		labels.merge({"StrengthScale":"STR 비율","DexterityScale":"DEX 비율","IntelligenceScale":"INT 비율"})
-		labels.merge({"ElementalDamage":"속성별 고정 추가 피해 · 개별 저항 적용(TWILIGHT 설정)","AttackDrainHP":"공격 HP 흡수 강화량","AttackDrainMP":"공격 MP 흡수 강화량","UndeadAdditionalMaxDamage":"언데드 추가 피해 최댓값"})
+		labels.merge({"FinalBlowProbability":"결정타 확률","FinalBlowAdditionalScale":"결정타 증폭","ElementalDamage":"속성별 고정 추가 피해 · 개별 저항 적용(TWILIGHT 설정)","AttackDrainHP":"공격 HP 흡수 강화량","AttackDrainMP":"공격 MP 흡수 강화량","UndeadAdditionalMaxDamage":"언데드 추가 피해 최댓값"})
 		for effect: Dictionary in effects:
 			var kind: String = str(effect.bonus_type.get("Name", ""))
 			var value: String = str(int(effect.bonus.Value))
@@ -176,6 +183,8 @@ func _refresh() -> void:
 			elif int(effect.bonus_type.get("UnitID",0))==44:value="%.2f" % (float(effect.bonus.Value)/100.0)
 			var label: String = str(labels.get(kind, kind))
 			if kind=="InvokeOption":label="발동 확률"
+			if kind=="FixedDesc" and int(effect.bonus.BonusApplicationTypeID)==72 and int(effect.bonus.BonusApplicationTargetID)==1111182 and int(effect.bonus.Value)==1111192:
+				label="스턴 시간 감소(원문 설명)";value="1초 · 원본 지정 주문별 실행 계약 미연결"
 			if kind == "SpecialResistance" and int(effect.bonus.BonusApplicationTypeID) == 2 and int(effect.bonus.BonusApplicationTargetID) == 6:
 				label = "스턴 내성"
 			if kind in ["SpecialResistance","HitSpecialResistance"] and int(effect.bonus.BonusApplicationTypeID)==2:

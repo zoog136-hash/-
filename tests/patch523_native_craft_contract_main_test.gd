@@ -111,6 +111,19 @@ func run() -> void:
 	check(world._save_game(true)==OK,"native output and equipment save")
 	world._load_game(true)
 	check(world.item_instances.has("23002") and world.item_instances["23002"].sourceId=="m523:item:600002" and world.gold==95,"native namespace and cost survive actual Main reload")
+	# Explicit invalid-future fixture verifies refusal before ownership changes.
+	var original_save: String=FileAccess.get_file_as_string(world.save_path())
+	var future: Dictionary=JSON.parse_string(original_save)
+	future.quest_state={"schema_version":999,"claimed":{"m523:legacy-sentinel":true},"progress":{},"unlocked":{}}
+	var writer=preload("res://scripts/skills/save_writer.gd")
+	check(writer.write_text(world.save_path(),JSON.stringify(future,"",true,true))==OK,"QA unsupported quest fixture written without live mutation")
+	var future_sha: String=FileAccess.get_sha256(world.save_path());var before_future: String=snapshot(world)
+	world._load_game(true)
+	check(not world.patch523_owner_state_problem.is_empty() and snapshot(world)==before_future and FileAccess.get_sha256(world.save_path())==future_sha,"unknown quest schema preserves exact source ownership and original future save bytes")
+	check(world._save_game(true)!=OK and FileAccess.get_sha256(world.save_path())==future_sha,"unsupported quest state cannot be silently overwritten by old consumer")
+	check(writer.write_text(world.save_path(),original_save)==OK,"restore only the controlled QA baseline bytes")
+	world._load_game(true)
+	check(world.patch523_owner_state_problem.is_empty() and world.gold==95,"compatible original save can resume after safe refusal")
 	world.queue_free(); await process_frame
 	print("PATCH523_NATIVE_CRAFT_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"synthetic_contract":true,"pr238_pack_bytes_verified":false}))
 	quit(0 if failures.is_empty() else 1)

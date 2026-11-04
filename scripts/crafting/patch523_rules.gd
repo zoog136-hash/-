@@ -4,6 +4,7 @@ const BLESS = preload("res://scripts/equipment_blessing.gd")
 const OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
 const CONDITIONS = preload("res://scripts/crafting/patch523_craft_conditions.gd")
+const EXPEDITION_MATERIALS=preload("res://scripts/crafting/patch523_expedition_materials.gd")
 const ENHANCEMENT = preload("res://scripts/crafting/patch523_enhancement.gd")
 const SCHEMA: String = "twilight-patch523-equipment-v1"
 const MAX_BYTES: int = 128 * 1024 * 1024
@@ -125,13 +126,13 @@ static func identity(physical: Dictionary) -> String:
 	if pinned.get("source")=="lineagem_patch523" and pinned.get("source_snapshot")=="patch523" and pinned.get("source_m_native_item",false) and source_id=="m523:item:"+str(int(pinned.get("source_item_class_id",0))) and int(pinned.get("source_item_class_id",0))>0: return str(int(pinned.source_item_class_id))
 	return ""
 
-static func _source_ids_match(left: Variant, right: Variant) -> bool:
+static func _source_ids_match(left: Variant, right: Variant, allow_zero: bool=false) -> bool:
 	if not left is Array or not right is Array or left.size()!=right.size(): return false
 	var a: Array[int]=[]
 	var b: Array[int]=[]
 	for pair: Array in [[left,a],[right,b]]:
 		for value: Variant in pair[0]:
-			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or float(value)!=float(int(value)) or int(value)<1: return false
+			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or float(value)!=float(int(value)) or int(value)<(0 if allow_zero else 1): return false
 			pair[1].append(int(value))
 	a.sort(); b.sort()
 	return a==b
@@ -144,7 +145,10 @@ func catalog_identity_matches(item: Dictionary, source_id: String, stack_bless: 
 	for key: String in ["source_snapshot","source_item_class_id","source_display_name","source_is_stackable","source_test_item","source_level_limit_min","source_level_limit_max","slot"]:
 		if item.get(key)!=canonical.get(key): return false
 	for key: String in ["source_class_ids","source_equip_slot_ids"]:
-		if not _source_ids_match(item.get(key),canonical.get(key)): return false
+		var entry: Dictionary=data.get("items",{}).get(source_id,{})
+		var allowed: Dictionary=entry.get("craft_material_only_class_references",{})
+		var allow_zero: bool=key=="source_class_ids" and canonical.get("slot")=="material" and allowed.get("scope")=="source_input_only" and allowed.get("class_ids")==canonical.get(key) and entry.get("item_bonuses",[]).is_empty()
+		if not _source_ids_match(item.get(key),canonical.get(key),allow_zero): return false
 	if stack_bless!=1:return canonical.get("source_is_stackable",false) and int(item.get("source_bless_raw",0))==stack_bless and str(item.sourceId)=="m523:item:"+source_id+":bless:"+str(stack_bless)
 	return identity({"record":item})==source_id
 
@@ -238,7 +242,7 @@ static func _stack_has_owned_entities(material: Dictionary, physical: Dictionary
 		if instance is Dictionary and str(instance.get("name","")) in [owned_key,str(material.item)]:return true
 	return false
 
-func available_material(material: Dictionary, inventory: Dictionary, items: Dictionary, physical: Dictionary, equipped: Dictionary, locks: Dictionary, allow_smelt_loss: bool, gold: int = -1) -> int:
+func available_material(material: Dictionary, inventory: Dictionary, items: Dictionary, physical: Dictionary, equipped: Dictionary, locks: Dictionary, allow_smelt_loss: bool, gold: int = -1, context: Dictionary = {}) -> int:
 	var item_name: String = str(material.item)
 	if bool(material.get("wallet",false)) and str(material.source_id)=="26": return maxi(0,gold)
 	if bool(locks.get(item_name, false)):
@@ -246,7 +250,9 @@ func available_material(material: Dictionary, inventory: Dictionary, items: Dict
 	var owned: int = maxi(0, int(inventory.get(ownership_key(material), 0)))
 	if not bool(material.physical):
 		var item: Dictionary = items.get(item_name, {})
-		return owned if not _stack_has_owned_entities(material,physical,ownership_key(material)) and _stack_identity_matches(item,material) else 0
+		var total: int=owned if not _stack_has_owned_entities(material,physical,ownership_key(material)) and _stack_identity_matches(item,material) else 0
+		for value: Dictionary in EXPEDITION_MATERIALS.owned(self,material,inventory,physical,locks,context).values():total+=int(value.amount)
+		return total
 	var eligible: int = 0
 	for id: Variant in physical:
 		var instance: Variant = physical[id]
@@ -312,8 +318,11 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	var current_output: Dictionary = result_record if wallet_output else items.get(str(output.item), {})
 	if not wallet_output and not catalog_identity_matches(current_output,str(output.source_id),1 if output.physical else int(output.bless_code)):
 		return denied("현재 게임에서 원본 결과 아이템을 사용할 수 없습니다")
+	if not output.physical and not wallet_output and _stack_has_owned_entities(output,physical,ownership_key(output)):return denied("결과 아이템의 기존 개체/영수증 소유자 확인 필요 · 재료 보존")
 	var costs: Dictionary = {}
 	var selections: Array[String] = []
+	var provenance: Dictionary={}
+	var material_rows: Array=[]
 	var net_weight: int = current_weight
 	var cost: int = recipe_cost(recipe,count)
 	if gold < cost:
@@ -326,6 +335,26 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 		var item: Dictionary = items.get(item_name, {})
 		if required < 1 or owned_key.is_empty() or bool(locks.get(item_name, false)) or bool(locks.get(owned_key,false)):
 			return denied("잠긴 재료 또는 중복 재료는 사용할 수 없습니다")
+		if not bool(material.physical):
+			var pools: Dictionary={}
+			if not _stack_has_owned_entities(material,physical,owned_key) and _stack_identity_matches(item,material):pools[owned_key]={"amount":maxi(0,int(inventory.get(owned_key,0))),"record":item}
+			pools.merge(EXPEDITION_MATERIALS.owned(self,material,inventory,physical,locks,context))
+			var need: int=required
+			var keys: Array=pools.keys();keys.sort()
+			# Keep exact native ownership first; the remaining typed key is
+			# independently proven, never renamed or promoted into native stock.
+			if owned_key in keys:keys.erase(owned_key);keys.push_front(owned_key)
+			for key: String in keys:
+				var take: int=mini(need,maxi(0,int(pools[key].amount)-int(costs.get(key,0))))
+				if take<=0:continue
+				costs[key]=int(costs.get(key,0))+take
+				provenance[key]={"source_id":str(material.source_id),"bless_code":int(material.bless_code),"level":int(material.level),"record":pools[key].record,"expedition":pools[key].has("tuple")}
+				material_rows.append({"key":key,"quantity":take,"source_id":str(material.source_id)})
+				net_weight-=maxi(0,int(pools[key].record.get("weight",3)))*take
+				need-=take
+				if need==0:break
+			if need>0:return denied(item_name+" 재료가 부족하거나 원본 소지/발급 증명이 일치하지 않습니다")
+			continue
 		if int(inventory.get(owned_key, 0)) < required + int(costs.get(owned_key, 0)):
 			return denied(item_name + " 재료가 부족합니다")
 		if bool(material.physical):
@@ -355,6 +384,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	for outcome: Dictionary in recipe.get("outcomes",[]):
 		if outcome.get("empty_result",false):continue
 		if ownership_key(outcome).is_empty(): return denied("확률 결과 재화의 정확한 보유 키가 필요합니다")
+		if not outcome.physical and _stack_has_owned_entities(outcome,physical,ownership_key(outcome)):return denied("확률 결과의 기존 개체 소유자 확인 필요 · 재료 보존")
 		var candidate: Dictionary=items.get(str(outcome.item),{})
 		if not catalog_identity_matches(candidate,str(outcome.source_id),1 if outcome.physical else int(outcome.bless_code)) or record(str(outcome.source_id),1 if outcome.physical else int(outcome.bless_code)).get("name","")!=outcome.item:
 			return denied("모든 확률 결과의 정확한 아이템 ID 연결이 필요합니다")
@@ -363,7 +393,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	if net_weight < 0 or net_weight > capacity:
 		return denied("제작 결과를 보관할 무게가 부족합니다")
 	qualification.merge({"ok": true, "result_name": str(output.item), "result_quantity": produced, "cost": cost,
-		"materials": costs, "consumed_ids": selections, "new_weight": net_weight},true)
+		"materials": costs, "material_provenance":provenance, "material_rows":material_rows, "consumed_ids": selections, "new_weight": net_weight},true)
 	return qualification
 
 func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, next_id: int, locks: Dictionary = {}, choices: Dictionary = {}, roll: int = -1, context: Dictionary = {}) -> Dictionary:
@@ -382,19 +412,44 @@ func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, it
 		approval.result_name=output.item
 		approval.result_quantity=int(output.quantity)
 		approval["outcome_label"]=str(output.label)
+	var consume_materials: bool=true
+	if output.get("twilight_missing_failure",false):
+		var policy: Variant=recipes[recipe_id].get("missing_failure_policy")
+		if not policy is Dictionary or not policy.get("consume_materials_on_failure") is bool or not policy.get("consume_fee_on_failure") is bool:return denied("누락 실패의 TWILIGHT 소비 정책 확인 필요")
+		consume_materials=policy.consume_materials_on_failure
+		# Gold used as an ItemCraftInput is material, while recipe.adena is
+		# the fee. Independent failure toggles must preserve that distinction.
+		var fee: int=int(recipes[recipe_id].adena)*count
+		var wallet_materials: int=int(approval.cost)-fee
+		approval.cost=(wallet_materials if consume_materials else 0)+(fee if policy.consume_fee_on_failure else 0)
+		if not consume_materials:
+			approval["quoted_materials"]=approval.materials.duplicate(true)
+			approval.materials={}
+			approval.consumed_ids=[]
 	var staged_inventory: Dictionary = inventory.duplicate(true)
 	var staged_physical: Dictionary = physical.duplicate(true)
-	for item_name: String in approval.materials:
+	for item_name: String in (approval.materials if consume_materials else {}):
 		staged_inventory[item_name] = int(staged_inventory.get(item_name, 0)) - int(approval.materials[item_name])
 		if int(staged_inventory[item_name]) == 0:
 			staged_inventory.erase(item_name)
-	for id: String in approval.consumed_ids:
+	for id: String in (approval.consumed_ids if consume_materials else []):
 		staged_physical.erase(id)
 	var output_record: Dictionary = record(str(output.source_id),1 if output.physical else int(output.bless_code))
 	var output_name: String = str(output.item)
 	var wallet_reward: int = int(approval.result_quantity) if bool(output.get("wallet_currency",false)) and str(output.source_id)=="26" else 0
 	var output_key: String=ownership_key(output)
-	if wallet_reward==0 and not output.get("empty_result",false): staged_inventory[output_key] = int(staged_inventory.get(output_key, 0)) + int(approval.result_quantity)
+	var produced: int=int(approval.result_quantity)
+	if str(output.get("label",""))=="실패" and not bool(output.physical):
+		# A source failure return of a consumed material keeps the exact issued
+		# key and its restriction/provenance record; it is not a new native grant.
+		for key: String in approval.materials:
+			var proof: Dictionary=approval.material_provenance.get(key,{})
+			if not proof.get("expedition",false) or proof.get("source_id")!=str(output.source_id) or proof.get("bless_code")!=int(output.bless_code) or proof.get("level")!=int(output.level):continue
+			var returned: int=mini(produced,int(approval.materials[key]))
+			staged_inventory[key]=int(staged_inventory.get(key,0))+returned
+			produced-=returned
+			if produced==0:break
+	if wallet_reward==0 and not output.get("empty_result",false) and produced>0: staged_inventory[output_key] = int(staged_inventory.get(output_key, 0)) + produced
 	var counter: int = maxi(1, next_id)
 	if bool(output.physical):
 		for _i: int in range(int(approval.result_quantity)):

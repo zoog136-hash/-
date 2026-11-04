@@ -82,6 +82,7 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 	labels.merge({"strFlat":"STR","dexFlat":"DEX","intFlat":"INT","er":"ER","dg":"DG",
 		"strPercent":"STR(%)","dexPercent":"DEX(%)","intPercent":"INT(%)",
 		"source_elemental_flat_fire":"불 속성 추가 피해","source_elemental_flat_water":"물 속성 추가 피해","source_elemental_flat_wind":"바람 속성 추가 피해","source_elemental_flat_earth":"땅 속성 추가 피해",
+		"source_stun_magic_damage":"스턴 조건 마법 피해","source_final_blow_stun_chance_pct":"스턴 조건 결정타(%)","source_final_blow_chance_pct":"결정타(%)","source_final_blow_amp_pct":"결정타 증폭(%)",
 		"source_attack_drain_hp":"공격 HP 흡수 강화량","source_attack_drain_mp":"공격 MP 흡수 강화량","source_undead_damage_max":"언데드 추가 피해 최댓값",
 		"stun_accuracy":"스턴 적중(%)","fear_accuracy":"공포 적중(%)","hold_accuracy":"홀드 적중(%)","poison_accuracy":"독 적중(%)","silence_accuracy":"침묵 적중(%)",
 		"hold_resistance":"홀드 내성(%)","fear_resistance":"공포 내성(%)","poison_resistance":"독 내성(%)","silence_resistance":"침묵 내성(%)",
@@ -105,7 +106,7 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 		else:
 			result.append("%s %+.2f" % [label, float(bonus[key])])
 	var text: String=" · ".join(result) if not result.is_empty() else "추가 강화 옵션 없음"
-	for key: String in ["healing_magic_pct","castSpeed","dot_damage_reduction_pct","strPercent","dexPercent","intPercent","source_attack_drain_hp","source_attack_drain_mp","source_undead_damage_max","source_elemental_flat_fire","source_elemental_flat_water","source_elemental_flat_wind","source_elemental_flat_earth"]:
+	for key: String in ["healing_magic_pct","castSpeed","dot_damage_reduction_pct","strPercent","dexPercent","intPercent","source_attack_drain_hp","source_attack_drain_mp","source_undead_damage_max","source_elemental_flat_fire","source_elemental_flat_water","source_elemental_flat_wind","source_elemental_flat_earth","source_final_blow_chance_pct","source_final_blow_stun_chance_pct","source_final_blow_amp_pct","source_stun_magic_damage"]:
 		if extras.has(key):text+=" · 회복·시전·흡수·추가 피해·능력치% 처리: TWILIGHT 설정";break
 	if level==21 and record.get("patch523_effect_basis",{}).get("local_level21_extrapolation",false): text+=" · +21 효과: TWILIGHT 추정 설정"
 	var invoke_text: String=preload("res://scripts/crafting/patch523_equipment_combat.gd").summary(record,level)

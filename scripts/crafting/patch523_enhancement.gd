@@ -70,6 +70,20 @@ static func prepare(book: Object, record: Dictionary, blessing: int) -> Dictiona
 	output["patch523_effect_basis"]={"sha256":book.digest,"policy_sha256":_policy_digest,"bless_code":blessing,"selection":"source_exact_level","local_level21_extrapolation":local_last_rank,"unconnected_effect_row_ids":runtime.get("unconnected_effect_row_ids",[]).duplicate()}
 	return output
 
+static func cursed_rule(book: RefCounted,record: Dictionary,scroll_id: String,level: int,blessing: int) -> Dictionary:
+	var settings: Dictionary=policy()
+	if scroll_id not in ["137","138","6401","6411"] or not settings.get("source_cursed_scroll_enabled",false):return {"source_rule":true,"success":0.0,"reason":"저주 주문서의 정확한 원본 계열/설정 확인 필요"}
+	# Reuse only the exact target/scroll group, cost and quantity. A cursed
+	# scroll never inherits the normal scroll's success/destruction outcomes.
+	var original: Dictionary=rule(book,record,scroll_id,level,blessing,1)
+	if not original.get("source_rule",false) or not original.has("group"):return original
+	var loss: int=int(settings.get("source_cursed_level_loss",1))
+	var minimum: int=int(settings.get("source_cursed_min_level",0))
+	if loss<1 or minimum<0 or level-loss<minimum:return {"source_rule":true,"success":0.0,"reason":"저주 주문서 하락 최저 단계 · TWILIGHT 설정에 따라 재료 보존"}
+	original.merge({"success":0.0,"no_change":0.0,"destroy":0.0,"decrease":100.0,"side_effect_level_loss":loss,"forced_decrease":true,"leaps":[],"gain_text":"-%d" % loss,
+		"basis":str(original.basis)+" · 공식 각인 저주 안내 -1 / 현재 하락 -%d·최저 단계·계열 공통 적용: TWILIGHT 설정" % loss},true)
+	return original
+
 static func selected(rows: Array, group: int, level: int, blessing: int, settings: Dictionary) -> Dictionary:
 	var exact: Array=[]
 	var defaults: Array=[]

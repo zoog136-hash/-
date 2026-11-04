@@ -63,5 +63,20 @@
   "source_elemental_resistance_max": 85,
   "source_elemental_rounding": "nearest",
   "source_elemental_basis": "Source ElementalDamage Unit1 and target1/2/3/4 values are exact. Channel mapping follows source earring identities and official Paa/Eva/Saiha/Maphr element names; no missing ElementalResistanceType foreign table is invented. Normal-hit scope, separate flat components after existing amplification, existing NPC elemental resistance range and rounding are configurable TWILIGHT rules.",
-  "source_elemental_public_basis": "https://lineagem.plaync.com/board/update/view?articleId=63865db9bd89877d499055cf"
+  "source_elemental_public_basis": "https://lineagem.plaync.com/board/update/view?articleId=63865db9bd89877d499055cf",
+  "source_final_blow_scope": "normal_only",
+  "source_final_blow_rounding": "nearest",
+  "source_final_blow_origin": "Exact Unit3 source chance and amplification; integer1M draw, normal-hit scope, independent roll after existing amplification/critical and before separate elemental/undead/drain additions are explicit TWILIGHT estimates. Confirmed source values are not changed. No extra hit or recursive on-hit event.",
+  "source_final_blow_public_basis": [
+    "https://lineagem.plaync.com/board/notice/view?articleId=629fa738e6e3de0617cdc8ed",
+    "https://lineagem.plaync.com/guidebook/view?title=악세서리+아이템"
+  ],
+  "source_cursed_scroll_enabled": true,
+  "source_cursed_level_loss": 1,
+  "source_cursed_min_level": 0,
+  "source_cursed_origin": "Official2021-04-07 patch indexed description confirms cursed engraved weapon/armor scroll -1. Applying the same decrease to exact non-engraved137/138, normal group cost/quantity and minimum0 are explicit configurable TWILIGHT compatibility policy; normal success/destruction probabilities are not reused.",
+  "source_cursed_public_basis": "https://lineagem.plaync.com/board/update/view?articleId=606c9a065d8fed00017777ad",
+  "source_conditional_magic_scope": "spell_hits_only",
+  "source_conditional_effect_origin": "Exact SpecialResistanceType6 Stun and MagicDamage Unit1 +5 / FinalBlow Unit3 conditional values are preserved. Affected subject (target_status/self_status/disabled) and spell-only placement follow configurable TWILIGHT interpretation: the source SpecialResistanceType reference alone does not prove actor direction. FixedDesc references remain display evidence beside94 spell-scoped Defence_DebuffTimeDecrease contracts; no unconditional stun-duration reduction is applied.",
+  "source_stun_condition_subject": "target_status"
 }

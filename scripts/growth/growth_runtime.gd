@@ -3,6 +3,8 @@ extends RefCounted
 const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
 const DATA = "res://data/growth/lineage_growth.json"
 var world
+# Nullable published source-material capability; no substitute consumer.
+var source523: RefCounted
 var development: bool = OS.is_debug_build() and "--growth-lab" in OS.get_cmdline_user_args()
 var lab: Dictionary = {}
 var config: Dictionary = {}
