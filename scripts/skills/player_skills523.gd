@@ -4,6 +4,9 @@ extends RefCounted
 const BINDINGS_PATH := "res://data/skills/player_skills523_bindings.json"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const MAX_BYTES := 16 * 1024 * 1024
+# Explicitly reviewed self conversions. Host learned=1 means ownership, never
+# native SpellLevel=1; only the unconditional MinSpellLevel=0 value is applied.
+const BASE_MP_CONVERSIONS := [349, 18304]
 # Explicit existing inventory spellings, reviewed against the current catalog.
 # These are host compatibility aliases, never a native/Inven numeric ID join.
 const HOST_MATERIAL_ALIASES := {
@@ -130,6 +133,12 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	var native_material: Dictionary = bindings.material_inventory_keys.get(str(int(row.SpellMaterialTypeID)), {})
 	if int(row.SpellMaterialItemAmount) > 0:
 		record.source523["material_text"] = (str(native_material.inventory_key) if not native_material.is_empty() else "분류 확인 필요") + " " + str(int(row.SpellMaterialItemAmount)) + "개"
+	var pending_note: String = {
+		54703:"복합 효과 보류: 홀드 해제·회복·PvP 전용 보너스의 별도 연결 필요",
+		69601:"복합 효과 보류: 회복량 정의표 없음 · 상태 해제·충돌 무시 미연결",
+		95662:"복합 효과 보류: 회복량 정의표 없음 · 자신/파티 회복·보호막·해제 미연결"
+	}.get(int(row.ID), "")
+	if not pending_note.is_empty(): record.source523["pending_note"] = pending_note
 	# Passive/effect/upgrade execution and learning/ownership stay with the host.
 	# Current-reference/local-design rows gain evidence only. A client row never
 	# grants a book or activates a previously blocked/new spell implementation.
@@ -139,7 +148,9 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	var reason := ""
 	if int(row.SpellTypeID) == 3: reason = "523 원본은 패시브 · 기존 액티브 연결 확인 필요"
 	elif upgraded: reason = "523 상위 스킬 효과 연결 확인 필요"
-	elif int(row.SpellCompositionNode) != 0 or int(row.SpellCategoryID) in [172,184,371]: reason = "523 복합 스킬 연결 확인 필요"
+	elif int(row.SpellCompositionNode) != 0: reason = "523 조건 노드 %d · 노드·조건 유형 정의가 없어 시전 보류" % int(row.SpellCompositionNode)
+	elif int(row.SpellCategoryID) == 184: reason = "523 복합 효과 · 하위 주문의 회복·해제·보너스 연결 미완료"
+	elif int(row.SpellCategoryID) in [172,371]: reason = "523 조건별 하위 주문 · 분기·실행 순서 연결 미완료"
 	elif not profile.costs.is_empty(): reason = "523 대상별 비용 조건 연결 확인 필요"
 	elif int(row.MPCostUnit) != 1 or int(row.VPCost) != 0: reason = "523 비용 단위 연결 확인 필요"
 	elif int(row.SpellMaterialTypeID) == 0 and int(row.SpellMaterialItemAmount) != 0: reason = "523 재료 정의 확인 필요"
@@ -191,6 +202,17 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	if status_confirmed(profile, str(record.get("status", ""))) and low.size() == 1 and high.size() == 1 and float(low[0]) > 0 and float(high[0]) >= float(low[0]):
 		record["duration_bounds"] = [float(low[0]), float(high[0])]
 		record.source523.applied.append("duration_bounds")
+	if mode == "convert" and int(row.ID) in BASE_MP_CONVERSIONS and targeting == 1 and target_kind in [1,2] and float(row.TargetAreaRadius) == 0:
+		var mana := scalar_values(profile, "MPRestoration", "Value")
+		if mana.size() != 1 or float(mana[0]) <= 0 or float(mana[0]) != floor(float(mana[0])):
+			record["source523_block_reason"] = "523 기본 단계 MP 회복량을 확정할 수 없음"
+			return record
+		record["mana"] = int(mana[0])
+		record.source523.applied.append("mana")
+	for entry: Dictionary in profile.bonuses:
+		if str(entry.type.Name) == "NextSpellClassID":
+			record.source523["pending_chain"] = true
+			break
 	return record
 
 static func target_allowed(skill: Dictionary, target: TwilightMonster) -> bool:
@@ -221,6 +243,7 @@ static func detail_text(skill: Dictionary) -> String:
 	if not skill.has("source523"): return ""
 	var source: Dictionary = skill.source523
 	var text := "\n\n523 원본 대상: " + target_text(source)
+	if source.has("pending_note"): text += "\n" + str(source.pending_note)
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return text + "\n" + str(skill.source523_block_reason)
 	if source.applied.is_empty():
 		text += "\n523 원문 HP / MP 값: %d / %d" % [int(source.hp_cost_raw),int(source.mp_cost_raw)]
@@ -231,6 +254,9 @@ static func detail_text(skill: Dictionary) -> String:
 	text += "\n시전 재료: " + material_text(skill)
 	if source.applied.has("duration_bounds"):
 		text += "\n상태 지속: %.1f~%.1f초 (보스 보정은 게임 설정)" % [float(skill.duration_bounds[0]), float(skill.duration_bounds[1])]
+	if source.applied.has("mana"):
+		text += "\nMP 회복: %d (원본 기본 단계 · 최대 MP까지)" % int(skill.mana)
+	if bool(source.get("pending_chain", false)): text += "\n추가 연계 효과: 발동 조건 확인 전 적용 보류"
 	text += "\n523 원본 비용·대상 제한 적용\n거리·시전 시간·전투 수식은 기존 게임 설정"
 	return text
 

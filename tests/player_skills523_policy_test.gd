@@ -86,6 +86,24 @@ func run() -> void:
 	adapter.profiles.synthetic=profile()
 	adapter.profiles.synthetic.buffs[0].bonuses=[]
 	check(not adapter.apply_to(base.duplicate(true),"기사",false).has("duration_bounds"),"duration cannot create a status without source flag")
+	adapter.profiles.synthetic=profile()
+	adapter.profiles.synthetic.row.merge({"ID":349,"SpellCategoryID":4,"TargettingTypeID":1,"TargetKindID":2},true)
+	adapter.profiles.synthetic.bonuses=[bonus("MPRestoration","Value",96),bonus("MPRestoration","Value",97,1),bonus("MPRestoration","Value",100,4)]
+	var conversion := skill()
+	conversion.mode="convert"
+	conversion["mana"]=30
+	projected=adapter.apply_to(conversion.duplicate(true),"기사",false)
+	check(projected.mana==96 and projected.source523.applied.has("mana"),"base restoration excludes native enhanced levels even when host owns level1")
+	check(SOURCE.detail_text(projected).contains("MP 회복: 96"),"UI describes applied base restoration")
+	adapter.profiles.synthetic.row.ID=18304
+	adapter.profiles.synthetic.bonuses=[bonus("MPRestoration","Value",80)]
+	check(adapter.apply_to(conversion.duplicate(true),"기사",false).mana==80,"second reviewed self conversion uses typed flat restoration")
+	adapter.profiles.synthetic.bonuses.append(bonus("MPRestoration","Value",81))
+	check(not adapter.apply_to(conversion.duplicate(true),"기사",false).get("source523_block_reason","").is_empty(),"ambiguous duplicate restoration cannot fall back to invented amount")
+	adapter.profiles.synthetic.bonuses=[bonus("MPRestoration","Percentage",80)]
+	check(not adapter.apply_to(conversion.duplicate(true),"기사",false).get("source523_block_reason","").is_empty(),"percentage restoration cannot be treated as flat MP")
+	adapter.profiles.synthetic=profile()
+	projected=adapter.apply_to(base.duplicate(true),"기사",false)
 	var before: Dictionary = adapter.profiles.duplicate(true)
 	var revision: int = adapter.revision
 	check(not adapter.load_pack("user://missing-skills523.json","0".repeat(64)),"missing pack rejected")

@@ -77,7 +77,7 @@ func run() -> void:
 	var service := world.original_skills
 	var catalog := service.catalog
 	var adapter = catalog.source523
-	check(adapter.profiles.size()==440 and not adapter.active_sha256.is_empty(),"actual private523 pack consumed in Main")
+	check(adapter.profiles.size()==441 and not adapter.active_sha256.is_empty(),"actual private523 pack consumed in Main")
 	if adapter.profiles.is_empty():
 		world.queue_free(); quit(2); return
 	var original_state := catalog.export_state()
@@ -89,7 +89,7 @@ func run() -> void:
 	var saved_sha: String=FileAccess.get_sha256(path)
 	var revision: int=adapter.revision
 	check(not adapter.load_pack("user://missing523.json","0".repeat(64)),"missing replacement rejected")
-	check(adapter.revision==revision and adapter.profiles.size()==440,"failed load preserves active pack")
+	check(adapter.revision==revision and adapter.profiles.size()==441,"failed load preserves active pack")
 	check(FileAccess.get_sha256(path)==saved_sha and catalog.export_state()==original_state and world.inventory==original_inventory and world.equipped_items==original_equipment and world.equipment_collections.export_state()==original_collections,"pack replacement cannot mutate save/progression/equipment/collections")
 	var arena: Vector2=POSITIONS.combat(world,[Vector2(24,0)])
 	check(arena.is_finite(),"combat lane on actual current source map")
@@ -171,6 +171,61 @@ func run() -> void:
 	check(world._cast_job_skill(weight_id),"real self buff uses source HP/MP cost")
 	check(world.hp==hp_before-50 and world.mp==989,"source HP and MP charged once")
 	check(is_equal_approx(float(world.active_skill_buffs.get("디크리즈 웨이트",{}).get("remaining",0)),1800.0),"source seconds reach live buff timer")
+	# Change class via the existing confirmation UI. Host ownership level1 is
+	# deliberately not interpreted as native enhancement level1 (97/81 MP).
+	check(QA.enter_game(world,"요정"),"actual elf class confirmation")
+	world.level=90
+	reset_cast()
+	var blood_id := "lm_0fa8b37f33c7f9d6"
+	catalog.learned[blood_id]=1
+	world.inventory["정령옥"]=2
+	world.mp=0
+	var blood_hp: int=world.hp
+	world._update_hud()
+	view=await select_skill(blood_id)
+	check(view.detail.text.contains("MP 회복: 96") and view.selection_sheet.info_text.contains("96"),"real skill and compact detail show native base MP recovery")
+	check(not view.use_button.disabled,"actual conversion use control enabled")
+	await capture("blood-to-soul-ready",Vector2i(1280,720))
+	view.use_button.pressed.emit()
+	check(world.mp==96 and world.hp==blood_hp-90 and int(world.inventory["정령옥"])==1,"actual UI converts native HP90 plus one orb to MP96 exactly once")
+	await capture("blood-to-soul-result",Vector2i(1280,720))
+	check(QA.enter_game(world,"총사"),"actual gunner class confirmation")
+	world.level=90
+	reset_cast()
+	var change_id := "lm_9f4be293cf774c31"
+	catalog.learned[change_id]=1
+	world.inventory["정제석"]=39
+	world.inventory["정제석 (각인)"]=0
+	world.mp=0
+	var change_hp: int=world.hp
+	check(not world._cast_job_skill(change_id) and world.mp==0 and world.hp==change_hp and int(world.inventory["정제석"])==39,"native forty-material conversion shortfall is atomic")
+	world.inventory["정제석 (각인)"]=2
+	view=await select_skill(change_id)
+	check(view.detail.text.contains("MP 회복: 80") and view.detail.text.contains("정제석 40개"),"actual gunner UI shares native recovery and material amount")
+	view.use_button.pressed.emit()
+	check(world.mp==80 and world.hp==change_hp and int(world.inventory["정제석"])==0 and int(world.inventory["정제석 (각인)"])==1,"actual gunner UI restores MP80 and consumes forty split materials exactly once")
+	reset_cast()
+	world.mp=world._effective_max_mp()-10
+	world.inventory["정제석"]=80
+	world.inventory["정제석 (각인)"]=0
+	check(world._cast_job_skill(change_id) and world.mp==world._effective_max_mp() and int(world.inventory["정제석"])==40,"source restoration caps at actual maximum MP")
+	world.skill_cooldowns.clear()
+	world.skill_global_cooldown=0
+	var full_rng: int=world.rng.state
+	view=await select_skill(change_id)
+	check(view.use_button.disabled and view.use_button.tooltip_text.contains("MP가 이미 가득"),"actual UI prevents native conversion when MP is full")
+	check(not world._cast_job_skill(change_id) and int(world.inventory["정제석"])==40 and world.rng.state==full_rng and world.skill_cooldowns.is_empty(),"full MP conversion does not waste materials RNG or cooldown")
+	check(QA.enter_game(world,"마검사"),"actual spellblade class confirmation")
+	world.level=90
+	reset_cast()
+	var life_id := "lm_1fb2fb45ca7bb6e5"
+	catalog.learned[life_id]=1
+	view=await select_skill(life_id)
+	check(view.selection_sheet.info_text.contains("회복량 정의표 없음") and view.detail.text.contains("자신/파티"),"existing LifeStream screen explains exact missing native restoration definition")
+	check(view.use_button.disabled and view.quick_button.disabled,"incomplete native composite cannot retain old generic heal execution")
+	var life_inventory: Dictionary=world.inventory.duplicate(true)
+	var life_rng: int=world.rng.state
+	check(not world._cast_job_skill(life_id) and world.mp==999 and world.inventory==life_inventory and world.rng.state==life_rng and world.skill_cooldowns.is_empty(),"unresolved composite fails before resource RNG or cooldown changes")
 	var state_before:=catalog.export_state()
 	check(world._save_game(true)==OK,"source-enabled skills save via existing atomic writer")
 	var payload: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))

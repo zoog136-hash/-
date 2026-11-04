@@ -160,6 +160,7 @@ func cost_reason(skill: Dictionary) -> String:
 	if bool(skill.get("runtime_blocked", false)): return Catalog.CURRENT.blocked_reason(skill)
 	if world.mp < int(skill.get("mp", 0)): return "MP 부족"
 	if world.hp <= int(skill.get("hp", 0)): return "HP 부족"
+	if skill.get("source523", {}).get("applied", []).has("mana") and world.mp >= world._effective_max_mp(): return "MP가 이미 가득 참"
 	return str(material_plan(skill).reason)
 
 func spend(skill: Dictionary) -> bool:
@@ -244,7 +245,10 @@ func cast(record: Dictionary) -> bool:
 			Status.cleanse(world.player, skill.get("statuses", []))
 			vfx.emit_skill(presentation_id(skill), "impact", world.player.global_position)
 		"convert":
+			var before_mp: int = world.mp
 			world.mp = mini(world._effective_max_mp(), world.mp + int(skill.get("mana", 0)))
+			if skill.get("source523", {}).get("applied", []).has("mana"):
+				world.hud.show_message("%s · MP %d 회복" % [str(skill.name), world.mp - before_mp])
 			vfx.emit_skill(id, "impact", world.player.global_position)
 		"teleport":
 			world._clear_combat_actions()
