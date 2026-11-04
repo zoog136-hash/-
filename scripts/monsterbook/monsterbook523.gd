@@ -6,9 +6,11 @@ signal changed
 const SCHEMA := "twilight.monsterbook523.v1"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const TABLES := ["MonsterBook", "MonsterBookLevel", "MonsterBookLevelBonus", "MonsterBookLevelReward", "NpcClassForNpcGroup", "Bonus", "BonusType", "Reward", "RewardType", "Currency", "DateTimes_Korean", "Unit", "ItemClass", "DescData_Korean"]
-const OPTIONAL_TABLES := ["ItemCategory", "Grade", "ItemBonus", "UIUnit"]
+const OPTIONAL_TABLES := ["ItemCategory", "Grade", "ItemBonus", "UIUnit", "BonusApplicationType", "SpecialResistanceType", "SelectReward", "SelectRewardEntity", "MarketPurchase_Korean", "MarketPurchaseProduct", "MarketProduct", "MarketProductAdditional", "MarketBonusForPurchase", "GotChaEntityView", "BuffCard", "IntangibleItemClass"]
 var _tables: Dictionary = {}
 var _indexes: Dictionary = {}
+var _level_ids: Dictionary = {}
+var _link_ids: Dictionary = {}
 var _state: Dictionary = {"schema": 1, "books": {}}
 var pack_sha: String = ""
 var last_error: String = ""
@@ -57,6 +59,19 @@ func load_pack(path: String, expected_sha: String) -> bool:
 		return _fail("catalog_relationships")
 	_tables = tables.duplicate(true)
 	_indexes = indexes.duplicate(true)
+	_level_ids.clear()
+	_link_ids.clear()
+	for level: Dictionary in _tables.MonsterBookLevel:
+		var book_id: int = int(level.MonsterBookID)
+		if not _level_ids.has(book_id): _level_ids[book_id] = []
+		_level_ids[book_id].append(int(level.ID))
+	for pair: Array in [["MonsterBookLevelBonus","BonusID"],["MonsterBookLevelReward","RewardID"]]:
+		var links: Dictionary = {}
+		for link: Dictionary in _tables[pair[0]]:
+			var level_id: int = int(link.MonsterBookLevelID)
+			if not links.has(level_id): links[level_id] = []
+			links[level_id].append(int(link[pair[1]]))
+		_link_ids[pair[0]] = links
 	pack_sha = expected_sha
 	last_error = ""
 	changed.emit()
@@ -118,19 +133,16 @@ func target_books(npc_class_id: int) -> Array:
 
 func levels(book_id: int) -> Array:
 	var result: Array = []
-	for level: Dictionary in _tables.get("MonsterBookLevel", []):
-		if int(level.MonsterBookID) == book_id:
-			var view := level.duplicate(true)
-			view["bonuses"] = _linked("MonsterBookLevelBonus", int(level.ID), "BonusID", "Bonus")
-			view["rewards"] = _linked("MonsterBookLevelReward", int(level.ID), "RewardID", "Reward")
-			result.append(view)
+	for id: int in _level_ids.get(book_id,[]):
+		var view := row("MonsterBookLevel",id)
+		view["bonuses"] = _linked("MonsterBookLevelBonus",id,"BonusID","Bonus")
+		view["rewards"] = _linked("MonsterBookLevelReward",id,"RewardID","Reward")
+		result.append(view)
 	return result
 
-func _linked(table: String, level_id: int, field: String, target: String) -> Array:
+func _linked(table: String, level_id: int, _field: String, target: String) -> Array:
 	var result: Array = []
-	for link: Dictionary in _tables.get(table, []):
-		if int(link.MonsterBookLevelID) == level_id:
-			result.append(row(target, int(link[field])))
+	for id: int in _link_ids.get(table,{}).get(level_id,[]): result.append(row(target,id))
 	return result
 
 func raw_period(book_id: int) -> Dictionary:
@@ -143,6 +155,9 @@ func raw_period(book_id: int) -> Dictionary:
 func export_state() -> Dictionary:
 	return _state.duplicate(true)
 
+func source_items() -> Dictionary:
+	return _state.get("source_items",{}).duplicate(true)
+
 ## Validate independently of pack availability; preserve historical/unknown IDs,
 ## epochs and extension fields. Never erase state because an optional pack is absent.
 func import_state(value: Variant) -> bool:
@@ -153,6 +168,14 @@ func import_state(value: Variant) -> bool:
 	# fields so registered/claimed IDs still match integer UI/receipt IDs after
 	# a real save round trip; preserve all unknown extension fields untouched.
 	_state.schema = 1
+	if _state.has("item_actions"):
+		for id: Variant in _state.item_actions.get("used",{}): _state.item_actions.used[id] = int(_state.item_actions.used[id])
+		for field: String in ["schema","sequence","last_source_item"]:
+			if _state.item_actions.has(field): _state.item_actions[field] = int(_state.item_actions[field])
+		for result: Dictionary in _state.item_actions.get("last_results",[]):
+			for field: String in ["card_id","amount"]:
+				if result.has(field): result[field] = int(result[field])
+	for record: Dictionary in _state.get("expired_items",{}).values(): record.quantity = int(record.quantity)
 	if _state.has("local_economy"):
 		for field: String in ["schema","gems","acquired","spent"]: _state.local_economy[field] = int(_state.local_economy[field])
 	for record: Dictionary in _state.get("source_items",{}).values():
@@ -178,6 +201,25 @@ func import_state(value: Variant) -> bool:
 static func valid_state(value: Variant) -> bool:
 	if not value is Dictionary or value.get("schema") != 1 or not value.get("books") is Dictionary:
 		return false
+	if value.has("item_actions"):
+		var ledger: Variant = value.item_actions
+		if not ledger is Dictionary or ledger.get("schema") != 1 or not _integer(ledger.get("sequence")) or not ledger.get("last_results") is Array or ledger.last_results.size() > 100: return false
+		if ledger.has("rng_state") and (not ledger.rng_state is String or not ledger.rng_state.is_valid_int()): return false
+		if ledger.has("last_source_item") and not _integer(ledger.last_source_item): return false
+		if ledger.has("last_clock") and (not ledger.last_clock is String or not valid_clock(ledger.last_clock)): return false
+		if ledger.has("used"):
+			if not ledger.used is Dictionary: return false
+			for id: Variant in ledger.used:
+				if not str(id).is_valid_int() or int(str(id)) <= 0 or not _integer(ledger.used[id]): return false
+		for result: Variant in ledger.last_results:
+			if not result is Dictionary: return false
+			for field: String in ["card_id","amount"]:
+				if result.has(field) and not _integer(result[field]): return false
+	if value.has("expired_items"):
+		if not value.expired_items is Dictionary: return false
+		for name: Variant in value.expired_items:
+			var archived: Variant = value.expired_items[name]
+			if not name is String or not archived is Dictionary or not _integer(archived.get("quantity")) or not archived.get("sourceId") is String or not archived.get("delete_clock") is String or not valid_clock(archived.delete_clock): return false
 	if value.has("local_economy"):
 		var wallet: Variant = value.local_economy
 		if not wallet is Dictionary or wallet.get("schema") != 1 or wallet.get("provenance") != "twilight_custom_internal_gems_v1": return false
@@ -208,6 +250,8 @@ static func valid_state(value: Variant) -> bool:
 					return false
 			for optional: String in ["kill_count", "first_stage_kill_count"]:
 				if progress.has(optional) and not _integer(progress[optional]): return false
+			if progress.has("counter_policy") and progress.counter_policy not in ["manual","per_stage","cumulative"]: return false
+			if progress.has("bonus_policy") and progress.bonus_policy not in ["manual","cumulative","latest"]: return false
 			if progress.has("reward_conversions"):
 				if not progress.reward_conversions is Dictionary: return false
 				for id: Variant in progress.reward_conversions:
@@ -240,15 +284,7 @@ func _clock(date: Dictionary) -> String:
 	return "%04d%02d%02d%02d%02d" % [date.Year, date.Month, date.Day, date.Hour, date.Minute]
 
 static func valid_clock(clock: String) -> bool:
-	if clock.length() != 12 or not clock.is_valid_int(): return false
-	var year := int(clock.substr(0,4))
-	var month := int(clock.substr(4,2))
-	var day := int(clock.substr(6,2))
-	var hour := int(clock.substr(8,2))
-	var minute := int(clock.substr(10,2))
-	if year <= 0 or month < 1 or month > 12 or hour > 23 or minute > 59: return false
-	var days: Array = [31,29 if year % 400 == 0 or (year % 4 == 0 and year % 100 != 0) else 28,31,30,31,30,31,31,30,31,30,31]
-	return day >= 1 and day <= int(days[month-1])
+	return preload("res://scripts/monsterbook/monsterbook523_clock.gd").valid(clock)
 
 func _within(book_id: int, clock: String, end_key: String) -> bool:
 	if not valid_clock(clock):
@@ -306,27 +342,39 @@ func apply_confirmed(receipt: Dictionary, commit: Callable) -> bool:
 				matches = matches or int(candidate.ID) == book_id
 			if not matches or not receipt.get("level_ids") is Array or (receipt.level_ids.is_empty() and receipt.get("track_only") != true):
 				return _fail("count_target_or_stages")
-			stage["kill_count"] = int(stage.get("kill_count", 0)) + 1
-			var seen: Dictionary = {}
+			var supplied: Dictionary = {}
 			for id: Variant in receipt.level_ids:
-				if not _level_belongs(id, book_id) or seen.has(int(id)):
-					return _fail("count_stage_identity")
-				seen[int(id)] = true
-				var key := str(int(id))
-				stage.counts[key] = int(stage.counts.get(key, 0)) + 1
-			# Existing host credited deaths can complete the unambiguous first stage.
-			# The original CurrencyCost is preserved; no Gem payment is inferred.
-			var achieved: int = int(receipt.get("achieve_level_id", 0))
-			if achieved > 0 and _level_belongs(achieved, book_id) and int(row("MonsterBookLevel", achieved).get("Level", 0)) == 1 and int(stage.counts.get(str(achieved), 0)) >= int(row("MonsterBookLevel", achieved).Amount) and not stage.registered.has(achieved):
-				stage.registered.append(achieved)
-				if stage.effective_levels.is_empty(): stage.effective_levels = [achieved]
-				stage["first_stage_kill_count"] = int(stage.kill_count)
-				quote["auto_achieved"] = achieved
+				if not _level_belongs(id,book_id) or supplied.has(int(id)): return _fail("count_stage_identity")
+				supplied[int(id)] = true
+			stage["kill_count"] = int(stage.get("kill_count", 0)) + 1
+			if receipt.get("progression_policy") in ["per_stage","cumulative"]:
+				_apply_progression(stage,book_id,receipt)
+				quote["progression_policy"] = stage.counter_policy
+			else:
+				var seen: Dictionary = {}
+				for id: Variant in receipt.level_ids:
+					if not _level_belongs(id, book_id) or seen.has(int(id)):
+						return _fail("count_stage_identity")
+					seen[int(id)] = true
+					var key := str(int(id))
+					stage.counts[key] = int(stage.counts.get(key, 0)) + 1
+				# Existing host credited deaths can complete the unambiguous first stage.
+				# The original CurrencyCost is preserved; no Gem payment is inferred.
+				var achieved: int = int(receipt.get("achieve_level_id", 0))
+				if achieved > 0 and _level_belongs(achieved, book_id) and int(row("MonsterBookLevel", achieved).get("Level", 0)) == 1 and int(stage.counts.get(str(achieved), 0)) >= int(row("MonsterBookLevel", achieved).Amount) and not stage.registered.has(achieved):
+					stage.registered.append(achieved)
+					if stage.effective_levels.is_empty(): stage.effective_levels = [achieved]
+					stage["first_stage_kill_count"] = int(stage.kill_count)
+					quote["auto_achieved"] = achieved
 		"achieve":
 			var level_id: Variant = receipt.get("level_id")
-			if not _level_belongs(level_id, book_id) or int(row("MonsterBookLevel", int(level_id)).get("Level", 0)) != 1 or not _within(book_id, clock, "CountingEndDateTimeID") or int(stage.counts.get(str(int(level_id)), 0)) < int(row("MonsterBookLevel", int(level_id)).Amount) or stage.registered.has(level_id): return _fail("achievement_not_eligible")
+			if not _level_belongs(level_id, book_id) or not _within(book_id, clock, "CountingEndDateTimeID") or int(stage.counts.get(str(int(level_id)), 0)) < int(row("MonsterBookLevel", int(level_id)).Amount) or stage.registered.has(level_id): return _fail("achievement_not_eligible")
+			if int(row("MonsterBookLevel",int(level_id)).Level) > 1 and receipt.get("progression_policy") not in ["per_stage","cumulative"]: return _fail("progression_policy_required")
+			for prior: Dictionary in levels(book_id):
+				if int(prior.Level) < int(row("MonsterBookLevel",int(level_id)).Level) and not stage.registered.has(int(prior.ID)): return _fail("prior_stage_required")
 			stage.registered.append(int(level_id))
 			if stage.effective_levels.is_empty(): stage.effective_levels = [int(level_id)]
+			_apply_bonus_policy(stage,book_id,receipt)
 		"instant_complete":
 			var level_id: Variant = receipt.get("level_id")
 			if not _level_belongs(level_id,book_id) or stage.registered.has(level_id) or not _within(book_id,clock,"CountingEndDateTimeID"): return _fail("instant_not_eligible")
@@ -342,6 +390,7 @@ func apply_confirmed(receipt: Dictionary, commit: Callable) -> bool:
 			stage.registered.append(int(level_id))
 			quote["level"] = level
 			quote["currency"] = row("Currency",int(level.CurrencyID))
+			_apply_bonus_policy(stage,book_id,receipt)
 		"claim_rewards":
 			var level_id: Variant = receipt.get("level_id")
 			if not _level_belongs(level_id, book_id) or not stage.registered.has(level_id) or stage.claimed.has(level_id) or receipt.get("claim_window_approved") != true or not receipt.get("reward_ids") is Array or receipt.reward_ids.is_empty(): return _fail("claim_not_eligible")
@@ -411,6 +460,7 @@ func apply_confirmed(receipt: Dictionary, commit: Callable) -> bool:
 					return _fail("effect_not_registered")
 				selected.append(int(id))
 			stage.effective_levels = selected
+			if receipt.get("bonus_policy") in ["manual","cumulative","latest"]: stage["bonus_policy"] = receipt.bonus_policy
 		_: return _fail("unknown_transition")
 	if receipt.get("protect_clock", false): saved["max_clock"] = clock
 	saved.sequence = int(receipt.sequence)
@@ -426,6 +476,46 @@ func apply_confirmed(receipt: Dictionary, commit: Callable) -> bool:
 	last_error = ""
 	changed.emit()
 	return true
+
+func _apply_progression(stage: Dictionary, book_id: int, receipt: Dictionary) -> void:
+	# Explicit configurable TWILIGHT compatibility policy, never a source enum.
+	var mode: String = str(stage.get("counter_policy",receipt.progression_policy))
+	stage["counter_policy"] = mode
+	var ordered := levels(book_id)
+	ordered.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return int(a.Level) < int(b.Level))
+	var assigned: int = 0
+	for level: Dictionary in ordered: assigned += mini(int(level.Amount),int(stage.counts.get(str(int(level.ID)),0)))
+	var available: int = maxi(0,int(stage.kill_count)-assigned)
+	for level: Dictionary in ordered:
+		var id: int = int(level.ID)
+		if mode == "manual" and int(level.Level) > 1: break
+		if stage.registered.has(id): continue
+		var key := str(id)
+		var count: int = int(stage.counts.get(key,0))
+		if mode == "cumulative": count = maxi(count,int(stage.kill_count))
+		else:
+			var credited: int = mini(available,maxi(0,int(level.Amount)-count))
+			count += credited
+			available -= credited
+		stage.counts[key] = count
+		if count < int(level.Amount): break
+		stage.registered.append(id)
+		if int(level.Level) == 1 and not stage.has("first_stage_kill_count"): stage["first_stage_kill_count"] = int(stage.kill_count)
+	_apply_bonus_policy(stage,book_id,receipt)
+
+func _apply_bonus_policy(stage: Dictionary, book_id: int, receipt: Dictionary) -> void:
+	var mode: String = str(stage.get("bonus_policy",receipt.get("bonus_policy","manual")))
+	if mode not in ["manual","cumulative","latest"]: return
+	stage["bonus_policy"] = mode
+	if mode == "manual": return
+	var selected: Array = []
+	var ordered := levels(book_id)
+	ordered.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return int(a.Level) < int(b.Level))
+	for level: Dictionary in ordered:
+		if stage.registered.has(int(level.ID)):
+			if mode == "latest": selected.clear()
+			selected.append(int(level.ID))
+	stage.effective_levels = selected
 
 func _level_belongs(id: Variant, book_id: int) -> bool:
 	return _integer(id) and int(row("MonsterBookLevel", int(id)).get("MonsterBookID", -1)) == book_id

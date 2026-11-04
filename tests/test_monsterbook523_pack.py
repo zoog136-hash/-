@@ -59,7 +59,15 @@ class SourcePackTest(unittest.TestCase):
                 self.assertEqual(hashlib.sha256(data).hexdigest(), evidence['sha256'])
                 self.assertEqual(len(data), evidence['bytes'])
         self.assertEqual({r['BonusID'] for r in self.pack['tables']['MonsterBookLevelBonus']} | {r['BonusID'] for r in self.pack['tables']['ItemBonus']}, {r['ID'] for r in self.pack['tables']['Bonus']})
-        self.assertEqual({r['RewardID'] for r in self.pack['tables']['MonsterBookLevelReward']}, {r['ID'] for r in self.pack['tables']['Reward']})
+        tables = self.pack['tables']
+        bonus = {r['ID']: r for r in tables['Bonus']}
+        kind = {r['ID']: r['Name'] for r in tables['BonusType']}
+        parent_rewards = {bonus[r['BonusID']]['Value'] for r in tables['ItemBonus'] if kind[bonus[r['BonusID']]['BonusTypeID']] == 'SelectRewardClassID'}
+        # Only current reward item actions are expanded; historical parents need
+        # not enter an executable pack. Every included extra reward is reachable.
+        selected_parents = parent_rewards & {r['ID'] for r in tables['Reward']}
+        expected = {r['RewardID'] for r in tables['MonsterBookLevelReward']} | {r['RewardID'] for r in tables['SelectRewardEntity']} | selected_parents
+        self.assertEqual(expected, {r['ID'] for r in tables['Reward']})
 
     def test_wrong_snapshot_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -33,7 +33,7 @@ func epoch(book_id: int) -> String:
 func receipt(action: String, book_id: int) -> Dictionary:
 	var state: Dictionary = runtime.catalog.export_state()
 	var saved: Dictionary = state.books.get(str(book_id), {})
-	return {"action":action,"book_id":book_id,"sequence":int(saved.get("sequence",0))+1,"epoch":epoch(book_id),"authority":"twilight_existing_credited_death_and_korean_playtest_calendar","approved":true,"server_allowed":true,"clock_locale":"Korean","source_clock":source_clock(),"protect_clock":true}
+	return {"action":action,"book_id":book_id,"sequence":int(saved.get("sequence",0))+1,"epoch":epoch(book_id),"authority":"twilight_existing_credited_death_and_korean_playtest_calendar","approved":true,"server_allowed":true,"clock_locale":"Korean","source_clock":source_clock(),"protect_clock":true,"progression_policy":runtime.economy.settings.get("natural_counter_mode","per_stage"),"bonus_policy":runtime.economy.settings.get("bonus_mode","cumulative")}
 
 func window_problem(book_id: int) -> String:
 	var book: Dictionary = runtime.catalog.row("MonsterBook", book_id)
@@ -79,10 +79,11 @@ func credit(npc_id: int, life_id: int, actor_id: int, state: Dictionary) -> Dict
 
 func status(action: String, book_id: int, level_id: int) -> String:
 	var saved: Dictionary = runtime.catalog.progress(book_id)
-	if action == "effects":
+	if action in ["effects","auto_effects"]:
 		var phase: String = runtime.catalog.current_period(book_id,source_clock())
 		if phase not in ["counting","options_only"]: return "옵션 적용 기간 아님"
 		if not saved.get("registered",[]).has(level_id): return "단계 달성 필요"
+		if action == "auto_effects": return "" if runtime.economy.settings.get("bonus_mode") in ["cumulative","latest"] else "자동 옵션 설정 필요"
 		if saved.get("effective_levels",[]) == [level_id]: return "선택 적용 중"
 		var supported: bool = false
 		for level: Dictionary in runtime.catalog.levels(book_id):
@@ -108,7 +109,7 @@ func status(action: String, book_id: int, level_id: int) -> String:
 	if book_save.get("current_epoch", "") != epoch(book_id): return "이번 기간의 인정 처치가 필요합니다"
 	if action == "register":
 		var level: Dictionary = runtime.catalog.row("MonsterBookLevel", level_id)
-		if int(level.get("Level",0)) != 1: return "후속 단계 누적·초기화 규칙 확인 필요 · 총처치는 보존됩니다"
+		if int(level.get("Level",0)) != 1 and runtime.economy.settings.get("natural_counter_mode") == "manual": return "후속 단계 누적·초기화 규칙 확인 필요 · 총처치는 보존됩니다"
 		if int(saved.get("counts", {}).get(str(level_id),0)) < int(level.Amount): return "필요 처치 수 미달"
 		return ""
 	if not saved.get("registered", []).has(level_id): return "단계 달성 필요"
@@ -123,9 +124,19 @@ func status(action: String, book_id: int, level_id: int) -> String:
 
 func action_receipt(action: String, book_id: int, level_id: int, _state: Dictionary) -> Dictionary:
 	if not status(action,book_id,level_id).is_empty(): return {}
-	var out := receipt("effects" if action == "effects" else ("instant_complete" if action == "instant" else ("achieve" if action == "register" else "claim_rewards")),book_id)
+	var out := receipt("effects" if action in ["effects","auto_effects"] else ("instant_complete" if action == "instant" else ("achieve" if action == "register" else "claim_rewards")),book_id)
 	out["level_id"] = level_id
-	if action == "effects": out["effective_levels"] = [level_id]
+	if action == "effects":
+		out["effective_levels"] = [level_id]
+		out["bonus_policy"] = "manual"
+	if action == "auto_effects":
+		out["effective_levels"] = []
+		var ordered: Array = runtime.catalog.levels(book_id)
+		ordered.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return int(a.Level) < int(b.Level))
+		for level: Dictionary in ordered:
+			if runtime.catalog.progress(book_id).get("registered",[]).has(int(level.ID)):
+				if out.bonus_policy == "latest": out.effective_levels.clear()
+				out.effective_levels.append(int(level.ID))
 	if action == "instant":
 		out["reset_approved"] = true
 		out["start_epoch"] = runtime.catalog.export_state().books.get(str(book_id),{}).get("current_epoch","") != out.epoch

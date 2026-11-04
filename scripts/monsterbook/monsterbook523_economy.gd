@@ -1,6 +1,7 @@
 extends RefCounted
 ## Explicit configurable TWILIGHT fallback, separate from exact source costs.
 const BALANCE = preload("res://data/monsterbook523_balance.json")
+var settings: Dictionary = BALANCE.data.duplicate(true)
 var _runtime: WeakRef
 var runtime: RefCounted:
 	get: return _runtime.get_ref() if _runtime != null else null
@@ -22,6 +23,13 @@ func gems() -> int:
 	return int(wallet(runtime.catalog.export_state()).gems)
 
 func exchange(amount: int) -> Dictionary:
+	if runtime.transaction_busy or runtime.catalog._busy: return {"ok":false,"message":"도감 거래 처리 중"}
+	runtime.transaction_busy = true
+	var result := _exchange(amount)
+	runtime.transaction_busy = false
+	return result
+
+func _exchange(amount: int) -> Dictionary:
 	if not configured() or amount <= 0 or amount > 10000 or runtime.save_blocked or not runtime.catalog.loaded(): return {"ok":false,"message":"도감 다이아 교환 조건 확인 필요"}
 	# Do not sell an internal currency for an already closed event.
 	if runtime.catalog.books().all(func(book: Dictionary) -> bool: return not runtime.local.window_problem(int(book.ID)).is_empty()): return {"ok":false,"message":"현재 진행 가능한 도감 기간이 없습니다"}

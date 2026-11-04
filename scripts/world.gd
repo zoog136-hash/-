@@ -872,7 +872,7 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String = "") -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
@@ -886,7 +886,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		hp = mini(_effective_max_hp(), hp + stolen)
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
 	_refresh_equipment_effects()
-	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
+	if attack_kind.is_empty(): attack_kind = _weapon_attack_kind_from_type(_current_weapon_type())
+	var amplification: float = clampf(float(equipment_effects.damage_amp_pct) + monsterbook523_runtime.outgoing_percent(attack_kind), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
 	target.take_damage(adjusted_damage + stolen, critical)
@@ -983,7 +984,7 @@ func _index_item_weights() -> void:
 			if name_value.is_empty():
 				continue
 			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
-			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐":
+			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
 				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
 			item_weight_index[name_value] = maxi(0, raw_weight)
 
@@ -1946,7 +1947,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "melee")
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -2216,7 +2217,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "melee")
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -2279,7 +2280,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "magic")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "magic")
 	hud.append_log("%s 적중%s · %s에게 %d 마법 피해 · 명중 %.1f%% · 치명타 %.1f%%" % [
 		skill_name, " CRITICAL" if critical else "", target.monster_name, damage,
 		hit_chance * 100.0, critical_chance * 100.0
@@ -2386,7 +2387,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, attack_kind)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
@@ -2984,6 +2985,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
+	reduced = monsterbook523_runtime.incoming_damage(reduced,normalized_type)
 	reduced = growth.incoming_damage(reduced)
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
@@ -3330,7 +3332,9 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 func _on_inventory_item_activated(item_name: String) -> void:
 	var source_reward: Dictionary = _find_catalog_item_record(_parse_enhancement_target(item_name).name)
 	if source_reward.get("monsterbook_source_item",false):
-		hud.show_message("원본 도감 보상 보유 중 · 사용 규칙은 별도 연결됩니다")
+		hud.open_monsterbook523()
+		var panel: Control = hud.find_child("MonsterBook523Panel",true,false)
+		if panel != null: panel.focus_owned_item(str(source_reward.name))
 		return
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
@@ -4028,6 +4032,9 @@ func _buy_shop_item(item_name: String, _ui_price: int) -> void:
 	_buy_shop_bulk(item_name, 1)
 
 func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> void:
+	if _find_catalog_item_record(item_name).get("monsterbook_source_item",false):
+		hud.show_message("원본 도감 보상의 매입 가격이 정의되지 않았습니다")
+		return
 	if _item_locked(item_name,instance_id):
 		hud.show_message("잠긴 아이템은 판매할 수 없습니다")
 		return
@@ -4429,7 +4436,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","monsterbook523","experience","exp_need","level","max_hp","max_mp","hp","mp","attack","defense","stat_points"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","monsterbook523","experience","exp_need","level","max_hp","max_mp","hp","mp","attack","defense","stat_points","ground_drops"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -5909,7 +5916,7 @@ func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_
 		return
 	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
-	_deal_successful_player_hit(target, damage)
+	_deal_successful_player_hit(target, damage, false, attack_kind)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
 
@@ -6144,7 +6151,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if critical:
 				damage = _player_critical_damage(damage, style)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
-			_deal_successful_player_hit(victim, damage, critical)
+			_deal_successful_player_hit(victim, damage, critical, style)
 			_try_trigger_passives("on_hit", victim,style,victim==target,true)
 			_try_extra_weapon_hit(victim, damage, style)
 			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):

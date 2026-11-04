@@ -5,6 +5,10 @@ var failed: int = 0
 var committed: Dictionary = {}
 var last_quote: Dictionary = {}
 var service = Book.new()
+class CardHost extends Node:
+	var level: int = 99
+	var catalog_db: Dictionary = {}
+	var card_draw_fusion = preload("res://scripts/card_draw_fusion.gd").new()
 
 func check(value: bool, message: String) -> void:
 	checks += 1
@@ -146,12 +150,67 @@ func _initialize() -> void:
 	var target_epoch: String = runtime.local.epoch(5903)
 	local_state.books['5903'] = {"sequence":1,"current_epoch":target_epoch,"epochs":{target_epoch:{"counts":{},"registered":[target_id],"claimed":[],"effective_levels":[]}}}
 	check(service.import_state(local_state),"registered unsupported stage fixture preserves exact source")
-	check(runtime.local.status("effects",5903,target_id) == "전투에 연결 가능한 옵션 없음","unsupported-only stage cannot falsely report combat application")
+	check(runtime.local.status("effects",5903,target_id).is_empty(),"source typed reduction now has a real compatibility consumer")
 	var broken_wallet := service.export_state()
 	broken_wallet.local_economy = {"schema":1,"gems":10,"acquired":9,"spent":0,"provenance":"twilight_custom_internal_gems_v1"}
 	check(not service.import_state(broken_wallet) and service.export_state() == local_state,"inconsistent internal currency ledger rejected atomically")
 	var broken_conversion := service.export_state()
 	broken_conversion.books['5903'].epochs[target_epoch].reward_conversions = {"1":{"source_amount":1,"local_exp":-1,"numerator":1,"denominator":1,"provenance":"test"}}
 	check(not service.import_state(broken_conversion) and service.export_state() == local_state,"malformed EXP settlement record rejected before replacing save")
+	var completed_stages: int = 0
+	for book: Dictionary in service.books():
+		var ordered := service.levels(int(book.ID))
+		ordered.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return int(a.Level) < int(b.Level))
+		var registered: Array = []
+		var counts_by_stage: Dictionary = {}
+		var total: int = 0
+		var npc_id: int = 0
+		for member: Dictionary in service.table_rows("NpcClassForNpcGroup"):
+			if int(member.NpcGroupID) == int(book.NpcGroupID): npc_id = int(member.NpcClassID); break
+		for stage_row: Dictionary in ordered:
+			var current := service.export_state()
+			counts_by_stage[str(int(stage_row.ID))] = int(stage_row.Amount)-1
+			total += int(stage_row.Amount)-1
+			current.books[str(int(book.ID))] = {"sequence":1,"current_epoch":"explicit-policy-test","epochs":{"explicit-policy-test":{"counts":counts_by_stage.duplicate(),"kill_count":total,"registered":registered.duplicate(),"claimed":[],"effective_levels":registered.duplicate(),"counter_policy":"per_stage","bonus_policy":"cumulative"}}}
+			check(service.import_state(current),"restored original near-threshold policy fixture")
+			var actual := receipt("count",2,int(book.ID),"explicit-policy-test")
+			actual.npc_class_id = npc_id
+			actual.level_ids = [int(stage_row.ID)]
+			actual.progression_policy = "per_stage"
+			actual.bonus_policy = "cumulative"
+			check(service.apply_confirmed(actual,sink),"every current natural stage has a runnable compatibility transition")
+			registered.append(int(stage_row.ID)); total += 1
+			counts_by_stage[str(int(stage_row.ID))] = int(stage_row.Amount)
+			check(service.progress(int(book.ID)).registered == registered and service.progress(int(book.ID)).effective_levels == registered,"natural stage thresholds and cumulative effects remain separate from paid shortcuts")
+			completed_stages += 1
+	check(completed_stages == 97,"all 97 current stages covered without Gem debit")
+	var policy_state: Dictionary = service.export_state()
+	for field: String in ["counter_policy","bonus_policy"]:
+		var invalid: Dictionary = policy_state.duplicate(true)
+		invalid.books['5903'].epochs['explicit-policy-test'][field] = "unknown-policy"
+		check(not service.import_state(invalid) and service.export_state() == policy_state,"unknown persisted progression policy cannot replace current state")
+	var invalid_clock: Dictionary = policy_state.duplicate(true)
+	invalid_clock.item_actions = {"schema":1,"sequence":1,"last_results":[],"last_clock":"202602300500"}
+	check(not service.import_state(invalid_clock) and service.export_state() == policy_state,"invalid item transaction clock cannot replace current state")
+	var card_host := CardHost.new()
+	card_host.catalog_db = JSON.parse_string(FileAccess.get_file_as_string("res://data/lineagem_base508/cards.json")).catalog
+	card_host.card_draw_fusion.configure(card_host.catalog_db)
+	runtime.items.configure(runtime,card_host)
+	runtime.item_use.configure(runtime,card_host)
+	var item_ids: Dictionary = {}
+	for book: Dictionary in service.books():
+		for stage_row: Dictionary in service.levels(int(book.ID)):
+			for reward: Dictionary in stage_row.rewards:
+				if int(reward.RewardTypeID) != 2: continue
+				var record: Dictionary = runtime.items.definition(reward)
+				if not record.has("source_delete_clock") or item_ids.has(int(record.source_item_class_id)): continue
+				item_ids[int(record.source_item_class_id)] = true
+				check(not runtime.item_use.spec(record).has("error"),"all 18 dated item actions join actual existing card model and original rule tables")
+				if runtime.item_use.spec(record).get("kind") == "mystery":
+					runtime.economy.settings.mystery_pool_policy = "invalid-pool"
+					check(runtime.item_use.spec(record).has("error"),"changed mystery policy invalidates an already cached successful specification")
+					runtime.economy.settings.mystery_pool_policy = "current_unrestricted_pack_cards"
+	check(item_ids.size() == 18,"every current dated item action has a specification")
+	card_host.free()
 	print("MONSTERBOOK523_TEST checks=%d failed=%d" % [checks, failed])
 	quit(1 if failed else 0)

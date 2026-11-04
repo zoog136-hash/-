@@ -50,6 +50,9 @@ func run() -> void:
 	world.save_timer = -100000.0
 	check(QA.enter_game(world),"real Main entry")
 	var runtime: RefCounted = world.monsterbook523_runtime
+	# Retain the original manual policy as a supported regression setting.
+	runtime.economy.settings.natural_counter_mode = "manual"
+	runtime.economy.settings.bonus_mode = "manual"
 	check(runtime.catalog.loaded(),"actual v2 source pack")
 	if not runtime.catalog.loaded(): world.queue_free();quit(1);return
 	check(runtime.local.window_problem(6013) == "도감 기간 종료","current system clock does not resurrect source season22")
@@ -208,7 +211,7 @@ func run() -> void:
 	world.hud._close_workspace()
 	world._open_inventory()
 	check(world.hud.lineage_inventory_ui.catalog_data["아이템"].any(func(r: Variant) -> bool: return r is Dictionary and r.get("sourceId") == coin.sourceId),"existing inventory UI receives exact source item definition")
-	print("MONSTERBOOK523_LOCAL_GAME_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"scope":"ACTUAL_MONSTER_DEATH_DEFAULT_HOST_ADAPTER_UI_ITEM_AND_CONFIGURABLE_EXP_PAYOUT_AND_SAVE"}))
+	print("MONSTERBOOK523_LOCAL_GAME_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"scope":"ACTUAL_MONSTER_DEATH_MANUAL_COMPAT_REGRESSION_UI_ECONOMY_AND_SAVE"}))
 	world.queue_free()
 	await process_frame
 	quit(0 if failures.is_empty() else 1)

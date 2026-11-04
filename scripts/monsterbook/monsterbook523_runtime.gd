@@ -6,11 +6,18 @@ var host: Node
 var local = preload("res://scripts/monsterbook/monsterbook523_local.gd").new()
 var items = preload("res://scripts/monsterbook/monsterbook523_items.gd").new()
 var economy = preload("res://scripts/monsterbook/monsterbook523_economy.gd").new()
+var item_use = preload("res://scripts/monsterbook/monsterbook523_item_use.gd").new()
 var pending_deaths: Array = []
 var next_retry_ms: int = 0
 var next_effect_check_ms: int = 0
 var last_effect_hash: int = 0
 var save_blocked: bool = false
+var transaction_busy: bool = false
+var revision: int = 0
+var extra_cache_stamp: String = ""
+var extra_cache: Dictionary = {}
+var flat_cache_stamp: String = ""
+var flat_cache: Dictionary = {}
 var action_authority: Callable
 var credit_authority: Callable
 ## Current Korean source clock (YYYYMMDDHHMM), using the existing game calendar
@@ -26,6 +33,7 @@ func configure(world: Node) -> void:
 	local.configure(self,world)
 	items.configure(self,world)
 	economy.configure(self,world)
+	item_use.configure(self,world)
 	action_authority = Callable(local,"action_receipt")
 	credit_authority = Callable(local,"credit")
 	clock_authority = Callable(local,"source_clock")
@@ -51,7 +59,7 @@ func commit(before: Dictionary, proposed: Dictionary, quote: Dictionary) -> bool
 	return persist(proposed)
 
 func apply_confirmed(receipt: Dictionary) -> bool:
-	if save_blocked: return false
+	if save_blocked or transaction_busy: return false
 	var checked := receipt.duplicate(true)
 	if checked.get("action") == "claim_rewards" and settlement == Callable(items,"settle"):
 		var records: Dictionary = {}
@@ -87,15 +95,16 @@ func action_status(action: String, book_id: int, level_id: int) -> String:
 	return ""
 
 func request_action(action: String, book_id: int, level_id: int) -> Dictionary:
-	if action not in ["register", "claim", "instant", "effects"]: return {"ok": false, "message": "지원하지 않는 도감 동작입니다."}
+	if action not in ["register", "claim", "instant", "effects", "auto_effects"]: return {"ok": false, "message": "지원하지 않는 도감 동작입니다."}
 	var blocked := action_status(action, book_id, level_id)
 	if not blocked.is_empty(): return {"ok": false, "message": blocked}
 	var receipt: Variant = action_authority.call(action, book_id, level_id, catalog.export_state())
-	var allowed: Array = ["effects"] if action == "effects" else (["instant_complete"] if action == "instant" else (["register","achieve"] if action == "register" else ["claim","claim_rewards"]))
+	var allowed: Array = ["effects"] if action in ["effects","auto_effects"] else (["instant_complete"] if action == "instant" else (["register","achieve"] if action == "register" else ["claim","claim_rewards"]))
 	if not receipt is Dictionary or receipt.get("action") not in allowed or int(receipt.get("book_id", -1)) != book_id or int(receipt.get("level_id", -1)) != level_id:
 		return {"ok": false, "message": "도감 판정을 확인하지 못했습니다."}
 	var ok := apply_confirmed(receipt)
 	if action == "effects": return {"ok":ok,"message":"지원 옵션 적용 완료 · 한 단계 선택 방식" if ok else "옵션 적용 실패 · 이전 상태 유지"}
+	if action == "auto_effects": return {"ok":ok,"message":"자체 설정에 따른 자동 옵션 적용" if ok else "옵션 적용 실패 · 이전 상태 유지"}
 	return {"ok": ok, "message": ("즉시 완료 · 원본 다이아 비용 차감" if action == "instant" else ("등록 완료" if action == "register" else ("보상 수령 완료" if catalog.progress(book_id).get("claimed",[]).has(level_id) else "보상 일부 수령 완료 · 남은 보상은 별도 표시"))) if ok else "처리 실패 · 이전 기록과 보상을 유지합니다."}
 
 func on_death(monster: Node) -> void:
@@ -131,6 +140,7 @@ func reset_pending() -> void:
 	local.credited_lives.clear()
 
 func _catalog_changed() -> void:
+	revision += 1
 	items.install(catalog.export_state().get("source_items",{}))
 	_refresh_effect_fingerprint()
 
@@ -142,6 +152,9 @@ func flat_bonus(type_name: String) -> int:
 	if type_name not in ["MeleeDamage", "RangeDamage", "MagicDamage", "MeleeHit", "RangeHit", "MagicHit", "MagicResist", "DamageReduction"]: return 0
 	var clock: Variant = clock_authority.call()
 	if not clock is String: return 0
+	var stamp: String = str(revision)+":"+catalog.pack_sha+":"+clock
+	if stamp != flat_cache_stamp: flat_cache_stamp = stamp; flat_cache.clear()
+	if flat_cache.has(type_name): return int(flat_cache[type_name])
 	var total: int = 0
 	for book: Dictionary in catalog.books():
 		for bonus: Dictionary in catalog.effective_bonuses(int(book.ID), clock):
@@ -149,12 +162,16 @@ func flat_bonus(type_name: String) -> int:
 			var unit: Dictionary = catalog.row("Unit", int(type.get("UnitID", 0)))
 			if type.get("Name") == type_name and unit.get("Name") == "Value" and int(bonus.BonusApplicationTypeID) == 0 and int(bonus.BonusApplicationTargetID) == 0:
 				total += int(bonus.Value)
+	flat_cache[type_name] = total
 	return total
 
 func tick() -> void:
 	retry_pending()
-	if not catalog.loaded() or Time.get_ticks_msec() < next_effect_check_ms: return
+	if Time.get_ticks_msec() < next_effect_check_ms: return
 	next_effect_check_ms = Time.get_ticks_msec() + 1000
+	items.expire_owned()
+	item_use.reconcile_owned()
+	if not catalog.loaded(): return
 	_refresh_effect_fingerprint()
 
 func _refresh_effect_fingerprint() -> void:
@@ -164,7 +181,7 @@ func _refresh_effect_fingerprint() -> void:
 	var effects: Array = []
 	for book: Dictionary in catalog.books():
 		for bonus: Dictionary in catalog.effective_bonuses(int(book.ID),clock): effects.append(int(bonus.ID))
-	var fingerprint: int = hash(effects)
+	var fingerprint: int = hash([catalog.pack_sha,economy.settings,effects])
 	if fingerprint != last_effect_hash:
 		last_effect_hash = fingerprint
 		if is_instance_valid(host):
@@ -173,23 +190,38 @@ func _refresh_effect_fingerprint() -> void:
 
 # Typed consumers already used by native doll options and existing world stats.
 # Percentage/Weight scaling comes from exact source UIUnit.Denominator, not guesswork.
-const EXTRA_MAP := {"ArmorClass":"def","CarryPlus":"weightBonus","MeleeCritical":"meleeCrit","RangeCritical":"rangedCrit","MagicCritical":"magicCrit","AttackSpeedBonus":"attackSpeed","MoveSpeedBonus":"moveSpeedPct","ExperienceAdditionPercent":"xpPct","RangeEvasion":"er","CriticalMeleeDamage":"melee_critical_damage","CriticalRangeDamage":"ranged_critical_damage","CriticalMagicDamage":"magic_critical_damage","PVEDamageReduction":"pve_damage_reduction","PVEDamageReductionPercent":"pve_damage_reduction_pct","DamageReductionPercent":"damage_reduction_pct","RegenMP":"mp_regeneration","PierceMeleeEvasion":"melee_evasion_ignore","PierceRangeEvasion":"ranged_evasion_ignore"}
+const EXTRA_MAP := {"ArmorClass":"def","CarryPlus":"weightBonus","MeleeCritical":"meleeCrit","RangeCritical":"rangedCrit","MagicCritical":"magicCrit","AttackSpeedBonus":"attackSpeed","MoveSpeedBonus":"moveSpeedPct","ExperienceAdditionPercent":"xpPct","RangeEvasion":"er","CriticalMeleeDamage":"melee_critical_damage","CriticalRangeDamage":"ranged_critical_damage","CriticalMagicDamage":"magic_critical_damage","PVEDamageReduction":"pve_damage_reduction","PVEDamageReductionPercent":"pve_damage_reduction_pct","DamageReductionPercent":"damage_reduction_pct","RegenMP":"mp_regeneration","PierceMeleeEvasion":"melee_evasion_ignore","PierceRangeEvasion":"ranged_evasion_ignore","MeleeDamageReduction":"melee_damage_reduction","RangeDamageReduction":"ranged_damage_reduction","MagicDamageReduction":"magic_damage_reduction","MeleeDamageReductionPercent":"melee_damage_reduction_pct","RangeDamageReductionPercent":"ranged_damage_reduction_pct","MagicDamageReductionPercent":"magic_damage_reduction_pct","IgnoreDamageReductionPercent":"damage_amp_pct","PVEPierceDamageReductionPercent":"damage_amp_pct","IgnoreMeleeDamageReductionPercent":"melee_damage_amp_pct","IgnoreRangeDamageReductionPercent":"ranged_damage_amp_pct","IgnoreMagicDamageReductionPercent":"magic_damage_amp_pct"}
 
 func bonus_status(bonus: Dictionary) -> String:
 	var type: Dictionary = catalog.row("BonusType",int(bonus.BonusTypeID))
+	if not _typed_stat_key(bonus,type).is_empty(): return ""
 	if int(bonus.BonusApplicationTypeID) != 0 or int(bonus.BonusApplicationTargetID) != 0: return "조건 판정 연결 필요 · 원문 보존"
-	if EXTRA_MAP.has(str(type.get("Name",""))) or type.get("Name") in ["MeleeDamage","RangeDamage","MagicDamage","MeleeHit","RangeHit","MagicHit","MagicResist","DamageReduction"]: return ""
+	if type.get("Name") in ["MeleeDamage","RangeDamage","MagicDamage","MeleeHit","RangeHit","MagicHit","MagicResist","DamageReduction"]: return ""
+	if EXTRA_MAP.has(str(type.get("Name",""))): return "자체 전투 호환 설정 사용 안 함"
 	return "전투 소비자 연결 필요 · 원문 보존"
+
+func _typed_stat_key(bonus: Dictionary, type: Dictionary) -> String:
+	if str(type.get("Name","")).begins_with("Ignore") or type.get("Name") == "PVEPierceDamageReductionPercent":
+		if economy.settings.get("ignore_percent_policy") != "existing_single_player_amplification": return ""
+	if type.get("Name") in ["MeleeDamageReduction","RangeDamageReduction","MagicDamageReduction","MeleeDamageReductionPercent","RangeDamageReductionPercent","MagicDamageReductionPercent"] and economy.settings.get("typed_damage_policy") != "existing_flat_then_percent": return ""
+	if int(bonus.BonusApplicationTypeID) == 0 and int(bonus.BonusApplicationTargetID) == 0: return str(EXTRA_MAP.get(str(type.get("Name","")),""))
+	if type.get("Name") not in ["SpecialResistance","HitSpecialResistance"]: return ""
+	if catalog.row("BonusApplicationType",int(bonus.BonusApplicationTypeID)).get("Name") != "SpecialResistanceType": return ""
+	var special: Dictionary = catalog.row("SpecialResistanceType",int(bonus.BonusApplicationTargetID))
+	var prefix: String = {"Stun":"stun","Fear":"fear"}.get(str(special.get("Name","")),"")
+	return prefix + ("_resistance" if type.Name == "SpecialResistance" else "_accuracy") if not prefix.is_empty() else ""
 func extra_stats() -> Dictionary:
 	var stats: Dictionary = {}
 	if not catalog.loaded() or not clock_authority.is_valid() or save_blocked: return stats
 	var clock: Variant = clock_authority.call()
 	if not clock is String: return stats
+	var stamp: String = str(revision)+":"+catalog.pack_sha+":"+clock+":"+str(hash(economy.settings))
+	if stamp == extra_cache_stamp: return extra_cache.duplicate()
 	for book: Dictionary in catalog.books():
 		for bonus: Dictionary in catalog.effective_bonuses(int(book.ID),clock):
-			if int(bonus.BonusApplicationTypeID) != 0 or int(bonus.BonusApplicationTargetID) != 0: continue
 			var type: Dictionary = catalog.row("BonusType",int(bonus.BonusTypeID))
-			if not EXTRA_MAP.has(str(type.get("Name",""))): continue
+			var key: String = _typed_stat_key(bonus,type)
+			if key.is_empty(): continue
 			var unit: Dictionary = catalog.row("Unit",int(type.UnitID))
 			var amount: float = float(bonus.Value)
 			if unit.get("Name") in ["Percentage","ValuePercent","Weight"]:
@@ -199,8 +231,9 @@ func extra_stats() -> Dictionary:
 				if denominator <= 0: continue
 				amount /= denominator
 			elif unit.get("Name") != "Value": continue
-			var key: String = EXTRA_MAP[type.Name]
 			stats[key] = float(stats.get(key,0)) + amount
+	extra_cache_stamp = stamp
+	extra_cache = stats.duplicate()
 	return stats
 
 func stat_record() -> Dictionary:
@@ -215,3 +248,15 @@ func catalog_bonus(key: String) -> int:
 	var stats := extra_stats()
 	if key == "pve_damage_reduction_pct": return int(stats.get(key,0)) + int(stats.get("damage_reduction_pct",0))
 	return int(stats.get(key,0)) if key in ["weightBonus","pve_damage_reduction"] else 0
+
+func incoming_damage(amount: int, kind: String) -> int:
+	if economy.settings.get("typed_damage_policy") != "existing_flat_then_percent": return amount
+	if kind not in ["melee","ranged","magic"] or amount <= 0: return amount
+	var stats := extra_stats()
+	var flat: int = int(stats.get(kind+"_damage_reduction",0))
+	var percent: float = clampf(float(stats.get(kind+"_damage_reduction_pct",0)),0,90)
+	return maxi(1,int(round(float(maxi(1,amount-flat))*(1.0-percent/100.0))))
+
+func outgoing_percent(kind: String) -> float:
+	if economy.settings.get("ignore_percent_policy") != "existing_single_player_amplification": return 0
+	return float(extra_stats().get(kind+"_damage_amp_pct",0))

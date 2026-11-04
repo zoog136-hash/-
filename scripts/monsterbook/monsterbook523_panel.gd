@@ -13,6 +13,8 @@ var status: Label
 var stage_scroll: ScrollContainer
 var scroll_host: Node
 var result: Label
+var choice_item: String = ""
+var owned_controls: Dictionary = {}
 
 func configure(host: Node) -> void:
 	world = host
@@ -87,6 +89,7 @@ func refresh() -> void:
 	show_selected()
 
 func _clear_detail() -> void:
+	owned_controls.clear()
 	for child: Node in detail.get_children():
 		detail.remove_child(child)
 		child.queue_free()
@@ -129,6 +132,9 @@ func show_selected() -> void:
 		_text("게임 다이아: %d · 도감 즉시 완료용" % live.economy.gems())
 		var rate: int = int(live.economy.BALANCE.data.adena_per_internal_gem)
 		_text("자체 설정: 1 다이아 = %d 아데나 · EXP는 기존 성수 균형 비율로 환산" % rate,UI.MUTED)
+		var count_policy: String = str(progress.get("counter_policy",live.economy.settings.get("natural_counter_mode","per_stage")))
+		var bonus_policy: String = str(progress.get("bonus_policy",live.economy.settings.get("bonus_mode","cumulative")))
+		_text("TWILIGHT 호환 규칙 · 처치: %s / 옵션: %s" % [{"per_stage":"단계별 목표","cumulative":"총처치 누적","manual":"첫 단계·확정 판정"}.get(count_policy,count_policy),{"cumulative":"달성 단계 누적","latest":"최고 단계","manual":"수동 선택"}.get(bonus_policy,bonus_policy)],UI.MUTED)
 		var exchange := UI.button("다이아 10개 교환 · %d 아데나" % (10*rate),_exchange,Vector2(240,36))
 		exchange.name = "MonsterBookExchange"
 		exchange.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
@@ -136,6 +142,12 @@ func show_selected() -> void:
 		exchange.scroll_area = stage_scroll
 		exchange.disabled = not live.local.window_problem(selected_id).is_empty() or world.gold < 10*rate
 		detail.add_child(exchange)
+	_owned_items(live)
+	if progress.get("bonus_policy","") == "manual" and not progress.get("registered",[]).is_empty() and live.economy.settings.get("bonus_mode") in ["cumulative","latest"]:
+		var first_id: int = int(progress.registered[0])
+		var auto_button := _owned_button("설정대로 자동 옵션 적용",_request.bind("auto_effects",first_id))
+		auto_button.name = "MonsterBookAutoEffects"
+		auto_button.disabled = not world.monsterbook_action_status("auto_effects",selected_id,first_id).is_empty()
 	for stage: Dictionary in book_service.levels(selected_id):
 		var level_id := int(stage.ID)
 		var registered: bool = progress.get("registered", []).has(level_id)
@@ -150,7 +162,7 @@ func show_selected() -> void:
 			_text("옵션: %s · %s %s (원문 단위)" % [_description("BonusType", int(bonus.BonusTypeID)), str(bonus.Value), str(unit.get("Name", ""))])
 			var pending_bonus: String = live.bonus_status(bonus)
 			if not pending_bonus.is_empty(): _text(pending_bonus,UI.MUTED)
-		if not stage.bonuses.is_empty(): _text("선택 적용 중" if progress.get("effective_levels",[]).has(level_id) else "이 단계 옵션을 선택해 적용할 수 있습니다 · 단계 합산은 자동 추정하지 않습니다",UI.MUTED)
+		if not stage.bonuses.is_empty(): _text("옵션 적용 중" if progress.get("effective_levels",[]).has(level_id) else "직접 선택하면 이 단계만 적용하는 수동 모드로 전환합니다",UI.MUTED)
 		for reward: Dictionary in stage.rewards:
 			var title := _description("RewardType", int(reward.RewardTypeID))
 			if int(reward.RewardTypeID) == 2:
@@ -189,6 +201,71 @@ func _exchange() -> void:
 	var outcome: Dictionary = world.monsterbook523_runtime.economy.exchange(10)
 	result.text = str(outcome.message)
 	show_selected()
+
+func _owned_button(text: String, callback: Callable) -> Button:
+	var button := UI.button(text,callback,Vector2(180,36))
+	button.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
+	button.scroll_host = scroll_host
+	button.scroll_area = stage_scroll
+	detail.add_child(button)
+	return button
+
+func _owned_items(live: RefCounted) -> void:
+	var saved: Dictionary = book_service.export_state()
+	for name: String in saved.get("source_items",{}):
+		var record: Dictionary = saved.source_items[name]
+		var quantity: int = int(world.inventory.get(name,0))
+		var expired: int = int(saved.get("expired_items",{}).get(name,{}).get("quantity",0))
+		if quantity <= 0 and expired <= 0: continue
+		_text("보상 보유: %s × %d" % [name,quantity],UI.GOLD)
+		if record.has("source_delete_clock"): _text("원본 아이템 삭제: " + str(record.source_delete_clock),UI.MUTED)
+		if expired > 0: _text("삭제 처리된 수량 %d · 수령·사용·소유 이력 보존" % expired,UI.MUTED)
+		if quantity <= 0: continue
+		var action: Dictionary = live.item_use.spec(record)
+		if action.has("error"):
+			_text(str(action.error),UI.MUTED)
+			continue
+		var label: String = "구성품 선택" if action.kind == "select" else "1개 사용 · " + str(action.label)
+		var callback: Callable = _choose_owned.bind(name) if action.kind == "select" else _use_owned.bind(name,0)
+		var button := _owned_button(label,callback)
+		button.name = "MonsterBookUse_%d" % int(record.source_item_class_id)
+		owned_controls[name] = button
+		if choice_item == name and action.kind == "select":
+			for reward: Dictionary in action.choices:
+				var title: String = _description("ItemClass",int(reward.RewardClassID))
+				var choice := _owned_button("%s ×%d 선택" % [title,int(reward.Amount)],_use_owned.bind(name,int(reward.ID)))
+				choice.name = "MonsterBookChoice_%d" % int(reward.ID)
+	var latest: Array = saved.get("item_actions",{}).get("last_results",[])
+	if not latest.is_empty():
+		_text("최근 아이템 사용 결과 · " + str(saved.item_actions.get("last_policy","")),UI.GOLD)
+		for entry: Dictionary in latest:
+			if entry.kind == "card": _text("%s · %s%s" % [str(entry.name),str(entry.get("grade",""))," · 카드 정의 연결 대기(소유 기록 보존)" if not world.card_draw_fusion.known_ids.get(str(entry.get("category","")),{}).has(str(entry.get("identity",""))) else ""])
+			elif entry.kind == "points": _text("축복 포인트 +%d" % int(entry.amount))
+			else: _text("%s ×%d" % [str(entry.name),int(entry.amount)])
+
+func _choose_owned(name: String) -> void:
+	if scroll_host.was_scroll_dragged(stage_scroll): return
+	choice_item = name
+	show_selected()
+	call_deferred("_scroll_owned",name)
+
+func _use_owned(name: String, choice: int) -> void:
+	if scroll_host.was_scroll_dragged(stage_scroll): return
+	var outcome: Dictionary = world.monsterbook523_runtime.item_use.use(name,choice)
+	result.text = str(outcome.message)
+	if outcome.ok: choice_item = ""
+	show_selected()
+	call_deferred("_scroll_owned",name)
+
+func focus_owned_item(name: String) -> void:
+	show_selected()
+	call_deferred("_scroll_owned",name)
+
+func _scroll_owned(name: String) -> void:
+	# Rebuilt controls must complete layout before ScrollContainer can find them.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if is_instance_valid(owned_controls.get(name)): stage_scroll.ensure_control_visible(owned_controls[name])
 
 func _request(action: String, level_id: int) -> void:
 	if scroll_host.was_scroll_dragged(stage_scroll): return
