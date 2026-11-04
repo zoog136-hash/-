@@ -6,8 +6,11 @@ const GRANTS = preload("res://scripts/loot/patch523_item_inventory.gd")
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
 const HELD_USE = preload("res://scripts/quests/quest_held_use238.gd")
 const HP233 = preload("res://scripts/loot/quest_hp233_use.gd")
+const CHOICE = preload("res://scripts/quests/quest_choice523.gd")
 const PIN = "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
-const REVIEWED_IDS: Array[int] = [859,1281,239,233]
+const SKILL_BOOKS=preload("res://scripts/quests/quest_skillbooks523.gd")
+const REVIEWED_IDS: Array[int] = [859,1281,239,233,368202,369002,177192,177202,177212,177222,177232,177252,177332,177452]
+var skill_books=SKILL_BOOKS.new()
 var definitions: Dictionary = {}
 var owner: WeakRef
 var ready: bool = false
@@ -22,6 +25,7 @@ class Candidate extends Node:
 func configure(world: Node) -> void:
 	owner=weakref(world)
 	definitions.clear();ready=false
+	skill_books.configure_arguments()
 	if world.quest_service.source.quests.is_empty() or D.pack_identity().get("sha256")!=PIN: return
 	for id: int in REVIEWED_IDS:
 		var definition: Dictionary = D.definition_id(str(id))
@@ -30,7 +34,12 @@ func configure(world: Node) -> void:
 			if not world.consumable_service.has_method("use_owned_native_return"):continue
 		elif id==233:
 			if not HP233.metadata(D.variant_item(definition.get("native_record",{}),1)).get("ok",false):continue
-		elif spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","guaranteed_bag"]: continue
+		elif id in SKILL_BOOKS.IDS:
+			var identity: Dictionary=skill_books.identity(D.variant_item(definition.get("native_record",{}),1))
+			if identity.is_empty():continue
+			var skill: Dictionary=world.original_skills.catalog.record_for(str(identity.local_skill_id))
+			if skill.get("id")!=identity.local_skill_id or bool(skill.get("runtime_blocked",false)):continue
+		elif spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","guaranteed_bag","source_selectable_reward"]: continue
 		definitions[id]=definition
 		_register(world,definition.native_record,1)
 		for reward: Dictionary in spec.get("rewards",[]):
@@ -100,6 +109,8 @@ func try_use(world: Node, record: Dictionary) -> bool:
 	if int(record.get("source_item_class_id",0))==239:
 		var result: Dictionary=world.consumable_service.use_owned_native_return(str(record.name))
 		world.hud.show_message(str(result.get("message",result.get("reason","귀환 결과 확인 필요"))))
+	elif int(record.get("source_item_class_id",0)) in SKILL_BOOKS.IDS:skill_books.use(world,record)
+	elif int(record.get("source_item_class_id",0))==369002:handled=CHOICE.open(world,record)
 	elif int(record.get("source_item_class_id",0))==233:handled=HP233.use(world,record)
 	else:handled=USE.try_use(world,record)
 	if FileAccess.get_sha256(world.save_path())!=before:
@@ -141,6 +152,12 @@ func try_use_held(world: Node, id: String) -> bool:
 	var owned: Dictionary=held_binding(world,id)
 	if owned.is_empty():return false
 	if not world._patch523_item_allowed():return true
+	if int(owned.item_class_id) in SKILL_BOOKS.IDS:
+		var canonical: Dictionary=D.variant_item(definitions[int(owned.item_class_id)].native_record,int(owned.bless_code_id))
+		skill_books.use(world,canonical,id);return true
+	if int(owned.item_class_id)==369002:
+		var record: Dictionary=D.variant_item(definitions[369002].native_record,int(owned.bless_code_id))
+		return CHOICE.open(world,record,id)
 	if int(owned.item_class_id)==239:
 		var outcome: Dictionary=world.consumable_service.use_owned_quest_return(id)
 		world.hud.show_message(str(outcome.get("message",outcome.get("reason","귀환 결과 확인 필요"))))

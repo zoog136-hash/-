@@ -12,6 +12,7 @@ const ELIXIR_LIMIT: int = 10
 const STAT_CAP: int = 45
 
 var world: Variant = null
+var source_skill_book_receipts: Array = []
 var elemental_enchants: Dictionary = {}
 var elixirs_used: int = 0
 var half_elixirs_used: int = 0
@@ -95,14 +96,18 @@ func setup(world_node: Node) -> void:
 	world = world_node
 
 func export_state() -> Dictionary:
-	return {
+	var state: Dictionary={
 		"elemental_enchants": elemental_enchants.duplicate(true),
 		"elixirs_used": elixirs_used,
 		"half_elixirs_used": half_elixirs_used,
 		"permanent_damage_bonuses": permanent_damage_bonuses.duplicate(true)
 	}
 
+	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
+	return state
+
 func import_state(input: Variant) -> void:
+	source_skill_book_receipts.clear()
 	elemental_enchants.clear()
 	elixirs_used = 0
 	half_elixirs_used = 0
@@ -110,6 +115,7 @@ func import_state(input: Variant) -> void:
 	if not (input is Dictionary):
 		return
 	var data: Dictionary = input as Dictionary
+	if data.get("source_skill_book_receipts") is Array:source_skill_book_receipts=data.source_skill_book_receipts.duplicate(true)
 	elixirs_used = clampi(int(data.get("elixirs_used", 0)), 0, ELIXIR_LIMIT)
 	half_elixirs_used = clampi(int(data.get("half_elixirs_used", 0)), 0, ELIXIR_LIMIT)
 	var raw_bonuses: Variant = data.get("permanent_damage_bonuses", {})

@@ -23,6 +23,7 @@ class View extends Node:
 	var initial_instances: Dictionary
 	var committed: bool=false
 	var uncertain: bool=false
+	var selection_entity_id: int=0
 	func _get(key: StringName) -> Variant: return host.get(key) if is_instance_valid(host) else null
 	func is_player_concealed() -> bool:return host.is_player_concealed()
 	func _option_awakening_busy() -> bool:return host._option_awakening_busy()
@@ -45,8 +46,35 @@ class View extends Node:
 		if not proposed is Dictionary:return ERR_INVALID_DATA
 		var virtual_key: String=str(canonical.name)
 		if int(proposed.get(virtual_key,0))!=int(owned.quantity)-1 or proposed.get(owned.inventory_key)!=initial_inventory.get(owned.inventory_key):return ERR_INVALID_DATA
-		if overrides.get("item_instances",initial_instances)!=initial_instances or int(overrides.get("gold",gold))!=host.gold:return ERR_INVALID_DATA
+		if int(overrides.get("gold",gold))!=host.gold:return ERR_INVALID_DATA
+		var proposed_instances: Variant=overrides.get("item_instances",initial_instances)
+		if not proposed_instances is Dictionary:return ERR_INVALID_DATA
+		var added: Dictionary={}
+		if proposed_instances!=initial_instances:
+			if int(canonical.get("source_item_class_id",0))!=369002 or selection_entity_id<=0:return ERR_INVALID_DATA
+			var choices: Array=[]
+			for row: Dictionary in canonical.get("source_use_spec",{}).get("rewards",[]):
+				if int(row.source_entity_id)==selection_entity_id:choices.append(row)
+			if choices.size()!=1:return ERR_INVALID_DATA
+			var choice: Dictionary=choices[0]
+			var definition: Dictionary=D.data().item_definitions.get(str(int(choice.item_class_id)),{}).get("native_record",{})
+			var expected: Dictionary=D.variant_item(definition,int(choice.bless_raw))
+			for id: String in initial_instances:
+				if proposed_instances.get(id)!=initial_instances[id]:return ERR_INVALID_DATA
+			for id: String in proposed_instances:
+				if initial_instances.has(id):continue
+				var item: Variant=proposed_instances[id]
+				if not item is Dictionary or host.item_instances.has(id):return ERR_INVALID_DATA
+				var proof: Dictionary=item.get("source_m_reward_proof",{})
+				if proof.get("source_snapshot")!="patch523" or int(proof.get("item_class_id",0))!=369002 or int(proof.get("source_item_class_id",0))!=int(choice.item_class_id) or int(proof.get("entity_id",0))!=selection_entity_id or int(proof.get("bless",0))!=int(choice.bless_raw):return ERR_INVALID_DATA
+				var enchant: int=0 if choice.get("enchant")==null else int(choice.enchant)
+				if int(item.get("level",-1))!=enchant or int(proof.get("enchant",-1))!=enchant or not D.matches(item.get("record",{}),expected) or item.get("name")!=expected.get("name"):return ERR_INVALID_DATA
+				added[id]=item.duplicate(true)
+				added[id]["quest_source_input_receipt"]=host.item_instances[str(prepared.physical_id)].quest_reward_receipt.duplicate(true)
+				added[id]["quest_source_input_physical_id"]=str(prepared.physical_id)
+			if added.size()!=int(choice.amount):return ERR_INVALID_DATA
 		var payload: Dictionary=prepared.override.duplicate(true)
+		for id: String in added:payload.item_instances[id]=added[id]
 		var keys: Dictionary={}
 		for key: String in initial_inventory:keys[key]=true
 		for key: String in proposed:keys[key]=true
@@ -89,8 +117,7 @@ class View extends Node:
 		committed=true
 		return OK
 
-static func perform(world: Node, prepared: Dictionary, canonical: Dictionary) -> Dictionary:
-	if not OWN.current(world,prepared):return {"handled":true,"committed":false,"uncertain":false}
+static func make_view(world: Node, prepared: Dictionary, canonical: Dictionary) -> Node:
 	var view:=View.new()
 	view.host=world;view.prepared=prepared;view.owned=prepared.ownership;view.canonical=canonical
 	view.inventory=world.inventory.duplicate(true);view.item_instances=world.item_instances.duplicate(true)
@@ -98,6 +125,11 @@ static func perform(world: Node, prepared: Dictionary, canonical: Dictionary) ->
 	view.initial_inventory=view.inventory.duplicate(true);view.initial_instances=view.item_instances.duplicate(true)
 	view.active_item_buffs=world.active_item_buffs.duplicate(true);view.item_use_cooldowns=world.item_use_cooldowns.duplicate(true)
 	view.gold=world.gold;view.hp=world.hp;view.mp=world.mp
+	return view
+
+static func perform(world: Node, prepared: Dictionary, canonical: Dictionary) -> Dictionary:
+	if not OWN.current(world,prepared):return {"handled":true,"committed":false,"uncertain":false}
+	var view: Node=make_view(world,prepared,canonical)
 	var handled: bool=HP233.use(view,canonical) if int(canonical.get("source_item_class_id",0))==233 else USE.try_use(view,canonical)
 	var result: Dictionary={"handled":handled,"committed":view.committed,"uncertain":view.uncertain}
 	view.free()

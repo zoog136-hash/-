@@ -4570,7 +4570,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory", "item_instances", "equipment_collections", "gold", "card_draw_fusion", "card_option_awakening", "card_skill_awakening", "growth", "source_dungeon523", "ainhasad_state", "experience", "source_dungeon_play", "hp", "mp", "warehouse", "inventory_automation", "quest_state", "next_item_instance_id", "level", "exp_need", "max_hp", "max_mp", "attack", "defense", "stat_points","active_item_buffs","item_use_cooldowns"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory", "item_instances", "equipment_collections", "gold", "card_draw_fusion", "card_option_awakening", "card_skill_awakening", "growth", "source_dungeon523", "ainhasad_state", "experience", "source_dungeon_play", "hp", "mp", "warehouse", "inventory_automation", "quest_state", "next_item_instance_id", "level", "exp_need", "max_hp", "max_mp", "attack", "defense", "stat_points","active_item_buffs","item_use_cooldowns","original_skill_state","consumable_state"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
