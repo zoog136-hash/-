@@ -24,6 +24,8 @@ CHECKS = [
     ('core_runtime_save_test', []),
     ('current523_aden_pack_test', []),
     ('current523_aden_review_unit_test', []),
+    ('current523_aden_preferences_test', []),
+    ('current523_aden_install_test', []),
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
 ]
@@ -53,10 +55,27 @@ def current_actor_scope(read, exists):
         raise ValueError('unsafe current gameplay snapshot')
     gameplay = json.loads(read(snapshot))['gameplay']
     names = {name for region in gameplay['monster_spawn'] for name in region['monster_types']}
+    # The live field appends exact source identities after the frozen roster.
+    # Include those pinned rows too: a long UI operation can finish spawning
+    # actors which a short startup test has not reached yet.
+    source_ids = set()
+    spawn_path = 'data/monsters/source3_map_spawns.json'
+    map_policy = policy['maps']['aden_world']
+    if exists(spawn_path) and map_policy.get('grid_sha256') and map_policy.get('layout_revision'):
+        for row in json.loads(read(spawn_path))['rows']:
+            if (row.get('map_id') == 'aden_world'
+                    and row.get('grid_sha256') == map_policy['grid_sha256']
+                    and row.get('layout_revision') == map_policy['layout_revision']):
+                names.add(row['name'])
+                source_ids.add(row['game_source_id'])
     profiles = json.loads(read('data/combat_animation_profiles.json'))['profiles']
     keys = {key for key in profiles if key.startswith('class:') or key in {'monster:'+n for n in names}}
     records = [profiles[key] for key in sorted(keys)]
     records += [row for row in json.loads(read('data/game_db_v17.json'))['몬스터'] if row['name'] in names]
+    for path in ['data/monsters/reviewed_source_monsters.json', 'data/monsters/reviewed_source_additions.json']:
+        if exists(path):
+            records += [row for row in json.loads(read(path))['records']
+                        if row.get('name') in names or row.get('sourceId') in source_ids]
     for path, field in [('data/monsters/reviewed_existing_visuals.json','bindings'),
                         ('data/visuals/runtime_manifest.json','monsters')]:
         if exists(path):
@@ -250,6 +269,8 @@ def main():
             marker = {'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'current523_aden_pack_test':'CURRENT523_ADEN_PACK_RESULT',
                       'current523_aden_review_unit_test':'CURRENT523_ADEN_REVIEW_UNIT_RESULT',
+                      'current523_aden_preferences_test':'CURRENT523_ADEN_PREFERENCES_RESULT',
+                      'current523_aden_install_test':'CURRENT523_INSTALL_FOCUSED_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)

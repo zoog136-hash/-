@@ -4,6 +4,9 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const CONFIG_PATH: String = "user://current523_aden_review_paths.cfg"
 const RAW_ENV: String = "TWILIGHT_CURRENT523_ADEN_PACK"
 const TILE_ENV: String = "TWILIGHT_CURRENT523_ADEN_TILES"
+const INSTALL = preload("res://scripts/maps/current523_aden_install.gd")
+const PREFERENCES = preload("res://scripts/maps/current523_aden_preferences.gd")
+const INSTALL_STAGES = {"archive_sha256":"원본 확인", "manifest_validation":"팩 정보 확인", "inventory":"설치 파일 확인", "extract":"파일 저장", "verify":"저장 결과 확인", "reuse_verify":"기존 설치 확인", "cleanup":"임시 파일 정리"}
 
 var raw_path_edit: LineEdit
 var tile_path_edit: LineEdit
@@ -12,6 +15,11 @@ var tile_browse_button: Button
 var open_button: Button
 var status_label: Label
 var folder_dialog: FileDialog
+var zip_dialog: FileDialog
+var install_button: Button
+var cancel_button: Button
+var rollback_button: Button
+var installer: Node
 var _world_ref: WeakRef
 var _built: bool = false
 var _folder_target: String = ""
@@ -38,6 +46,18 @@ func _build() -> void:
 	var note: Label = UI.label("좌표와 표시 방식은 검토 중입니다. 캐릭터 보행은 아직 구현되지 않았습니다.", 13, UI.MUTED)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(note)
+	var install_row := HBoxContainer.new()
+	add_child(install_row)
+	install_button = UI.button("원본 ZIP 설치", _browse_zip, Vector2(0, 40))
+	install_button.name = "InstallAdenZipButton"
+	install_row.add_child(install_button)
+	cancel_button = UI.button("설치 취소", _cancel_install, Vector2(0, 40))
+	cancel_button.name = "CancelAdenInstallButton"
+	cancel_button.disabled = true
+	install_row.add_child(cancel_button)
+	rollback_button = UI.button("이전 팩 사용", _rollback, Vector2(0, 40))
+	rollback_button.name = "RollbackAdenPackButton"
+	install_row.add_child(rollback_button)
 	add_child(UI.label("아덴 원문 팩 폴더", 13))
 	var raw_row := HBoxContainer.new()
 	add_child(raw_row)
@@ -70,6 +90,20 @@ func _build() -> void:
 	folder_dialog.dir_selected.connect(_folder_selected)
 	folder_dialog.canceled.connect(_folder_cancelled)
 	add_child(folder_dialog)
+	zip_dialog = FileDialog.new()
+	zip_dialog.name = "AdenResourceZipDialog"
+	zip_dialog.title = "최신523 아덴 원본 ZIP 선택"
+	zip_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	zip_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	zip_dialog.use_native_dialog = false
+	zip_dialog.filters = PackedStringArray(["*.zip ; ZIP 리소스 팩"])
+	zip_dialog.file_selected.connect(_install_zip)
+	add_child(zip_dialog)
+	installer = INSTALL.new()
+	installer.name = "AdenResourceInstaller"
+	installer.progress.connect(_install_progress)
+	installer.finished.connect(_install_finished)
+	add_child(installer)
 	visibility_changed.connect(_visibility_changed)
 
 
@@ -123,7 +157,66 @@ func _update_open_button() -> void:
 	if not is_instance_valid(open_button):
 		return
 	var current: Node = _world()
-	open_button.disabled = current == null or not current.has_method("open_current523_aden_review_ui") or raw_path_edit.text.strip_edges().is_empty() or tile_path_edit.text.strip_edges().is_empty()
+	var busy: bool = is_instance_valid(installer) and installer.busy
+	open_button.disabled = busy or current == null or not current.has_method("open_current523_aden_review_ui") or raw_path_edit.text.strip_edges().is_empty() or tile_path_edit.text.strip_edges().is_empty()
+	if is_instance_valid(install_button):
+		install_button.disabled = busy
+		cancel_button.disabled = not busy
+		rollback_button.disabled = busy or PREFERENCES.selection(true).raw.is_empty()
+		raw_path_edit.editable = not busy
+		tile_path_edit.editable = not busy
+		raw_browse_button.disabled = busy
+		tile_browse_button.disabled = busy
+
+
+func _browse_zip() -> void:
+	zip_dialog.popup_centered_ratio(0.8)
+
+
+func _install_zip(path: String) -> void:
+	if installer.busy: return
+	folder_dialog.hide()
+	_folder_target = ""
+	if not installer.start(path):
+		status_label.text = "설치를 시작하지 못했습니다: " + str(installer.problem)
+	_update_open_button()
+
+
+func _cancel_install() -> void:
+	installer.cancel()
+
+
+func _install_progress(stage: String, done: int, total: int) -> void:
+	var percent: int = int(100.0 * done / maxi(1, total))
+	status_label.text = "원본 팩 설치: %s (%d%%)" % [str(INSTALL_STAGES.get(stage, "확인 중")), percent]
+
+
+func _install_finished(result: Dictionary) -> void:
+	if result.get("ok", false):
+		var saved: Dictionary = PREFERENCES.activate(str(result.raw_root), str(result.tile_root))
+		if saved.ok:
+			raw_path_edit.text = result.raw_root
+			tile_path_edit.text = result.tile_root
+			status_label.text = "원본 팩 설치와 경로 설정이 완료되었습니다. '아덴 원문 보기'로 열어 주세요."
+		else:
+			status_label.text = "파일 설치는 완료되었습니다. " + str(saved.problem)
+	else:
+		status_label.text = "설치를 취소했습니다. 기존 팩을 계속 사용합니다." if result.get("cancelled", false) else "설치하지 못했습니다: " + str(result.get("problem", "알 수 없는 오류"))
+	if result.has("cleanup_pending"):
+		status_label.text += " 임시 설치 파일 정리가 필요합니다: " + str(result.cleanup_pending)
+	_update_open_button()
+
+
+func _rollback() -> void:
+	if installer.busy: return
+	var result: Dictionary = PREFERENCES.rollback()
+	if result.ok:
+		raw_path_edit.text = result.raw
+		tile_path_edit.text = result.tiles
+		status_label.text = "이전 팩 경로로 돌아왔습니다. '아덴 원문 보기'로 열어 주세요."
+	else:
+		status_label.text = str(result.problem)
+	_update_open_button()
 
 
 func _browse(target: String) -> void:
@@ -151,6 +244,7 @@ func _folder_cancelled() -> void:
 
 
 func _open_review() -> void:
+	if is_instance_valid(installer) and installer.busy: return
 	var current: Node = _world()
 	if current == null or not current.has_method("open_current523_aden_review_ui"):
 		status_label.text = "현재 게임에서 원문 검토를 열 수 없습니다."
@@ -165,12 +259,9 @@ func _open_review() -> void:
 	open_button.disabled = true
 	var opened: bool = bool(current.call("open_current523_aden_review_ui", raw, tiles))
 	if opened:
-		var preferences := ConfigFile.new()
-		preferences.set_value("paths", "raw", raw)
-		preferences.set_value("paths", "tiles", tiles)
-		var saved: Error = preferences.save(CONFIG_PATH)
+		var saved: Dictionary = PREFERENCES.activate(raw, tiles)
 		if is_instance_valid(status_label) and not is_queued_for_deletion():
-			status_label.text = "아덴 원문 검토를 열었습니다." if saved == OK else "아덴 원문 검토를 열었습니다. 폴더 경로는 기억하지 못했습니다."
+			status_label.text = "아덴 원문 검토를 열었습니다." if saved.ok else "아덴 원문 검토를 열었습니다. " + str(saved.problem)
 	else:
 		var detail: Variant = current.get("current523_aden_problem")
 		if is_instance_valid(status_label) and not is_queued_for_deletion():
@@ -189,6 +280,10 @@ func _visibility_changed() -> void:
 	if not is_visible_in_tree() and is_instance_valid(folder_dialog):
 		folder_dialog.hide()
 		_folder_target = ""
+	if not is_visible_in_tree() and is_instance_valid(zip_dialog):
+		zip_dialog.hide()
+		if is_instance_valid(installer) and installer.busy:
+			installer.cancel()
 	_update_open_button()
 
 
@@ -198,3 +293,5 @@ func _exit_tree() -> void:
 	_folder_target = ""
 	if is_instance_valid(folder_dialog):
 		folder_dialog.hide()
+	if is_instance_valid(zip_dialog):
+		zip_dialog.hide()

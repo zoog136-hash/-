@@ -9,10 +9,16 @@ unverified.
 
 ## Open it from the game
 
-1. Extract the separately supplied review resources.
+1. Obtain the separately supplied review resource ZIP. The private Drive handoff
+   contains five ordered parts, a SHA256 receipt, and
+   `reassemble_current523_review.py`. Download them into one folder and run
+   `python3 reassemble_current523_review.py`; it verifies every part and the
+   complete ZIP, and refuses to overwrite an existing output.
 2. Open **메뉴 → 설정 → 아덴 원문 검토**.
-3. Choose the `aden523-raw` folder containing `aden523.json`, and the
-   `aden523-tiles` folder containing `tiles523.json`.
+3. Press **원본 ZIP 설치** and select the reconstructed ZIP. After verification,
+   installation activates the two resource paths. Alternatively extract it
+   yourself and choose the `aden523-raw` folder containing `aden523.json`, and
+   the `aden523-tiles` folder containing `tiles523.json`.
 4. Press **아덴 원문 보기**. Select a source from the dropdown; use WASD or drag
    for the inspection camera and the wheel to zoom. The object checkbox is a
    separate, explicitly hypothetical layer display.
@@ -22,8 +28,32 @@ The review suspends the current game, hides its presentation and blocks saves
 and loads. Closing restores the original process modes, visibility, field,
 renderer and source registry; it does not reposition the actor or migrate a
 save. Only the two folder preferences are remembered in a separate settings
-file. Invalid folders are reported in the settings panel, without replacing the
+file, together with the previous selection. Invalid folders are reported in the settings panel, without replacing the
 live map. The game-save schema and original delivery ledger are unchanged.
+
+The dedicated current523 installer accepts only the fixed399316785-byte ZIP
+and its complete SHA256, before opening it. It checks both pinned manifests,
+the exact6412-member inventory, and every payload size/hash. Extraction goes
+into a unique private staging directory; every saved file is read and hashed
+again before one directory rename publishes the version. Existing versions are
+never overwritten or removed; selecting the same version verifies the existing
+directory and all its files before reusing it. Unexpected files, links, changed
+or incomplete versions are rejected. Free space is checked before extraction.
+
+Hashing, extraction, verification and staging cleanup run in a background file
+worker, independent of scene rendering FPS. The main thread exchanges progress,
+cancellation and results through a mutex; only the main thread emits UI signals
+and updates scene state. Closing joins the worker after cancellation and cleanup.
+This follows Godot's [thread handoff guidance](https://docs.godotengine.org/en/stable/tutorials/performance/using_multiple_threads.html)
+and [scene-tree thread restrictions](https://docs.godotengine.org/en/stable/tutorials/performance/thread_safe_apis.html).
+**설치 취소**, closing Settings, or freeing the panel cancels its work and cleans
+only that installer's staging files. A cleanup failure reports the retained
+staging path. **이전 팩 사용** validates the previous manifests and restores the
+prior pair of resource paths. This is selection rollback; it does not migrate
+game saves or delete either resource version. Paths publish together through a
+separate atomic preferences write. A preferences failure leaves the installed
+files available and reports that activation failed. The old base508 installer
+and its4096-entry/schema restrictions are unchanged.
 
 A separate review-only startup also works before the old map/data bootstrap:
 
@@ -50,6 +80,18 @@ No suffix is removed. The half-storage projection is an explicitly named viewer
 hypothesis, checked for its own cross-chunk continuity but not approved as M
 engine coordinates. Raw effect u16 values never determine chunk dimensions.
 No village, portal destination or passability is inferred from these formulas.
+
+The user-authorized private Drive coordinate packet was independently consumed
+and SHA256-verified (`b406f8265b4710d3d75b937f716eab6aece16f3bbfbd5f3e8308d70174530f91`).
+Its native M Land/Portal/Territories tables declare93 Land4 portals and4223
+Land4 territory rows. Consumer validation rebuilt root-pair joins before
+coordinates, checked14 Aden tail records at their original byte offsets in9
+hash-matched M files, and reproduced10 exact Portal.SourceX/Y matches plus4
+counterexamples. Portal332's matching source does not make its packed target
+correct: the candidate target differs from the declared territory by3 cells.
+These partial matches do not establish M projection, actor feet, odd-x rules,
+collision or executable travel. No portal from this evidence is activated as
+an inferred movement rule, and no original record is repaired.
 
 Current original TI2 selection:2866files,97365118bytes. Source inventory:
 `b80c592b894b84a265e6f72739af77a78b96b26d6e3ee7ca0a441e0a41c79fab`.
@@ -101,6 +143,30 @@ clipping or duplicate writes.
 
 ## Verification and delivery
 
+Run direct guards with Godot4.7.2 and an isolated user profile:
+
+```sh
+godot --headless --path . --script res://tests/current523_aden_install_test.gd
+godot --headless --path . --script res://tests/current523_aden_preferences_test.gd
+```
+
+The installer guard optionally accepts `-- --archive=/private/review-resources.zip`
+to exercise real-source hashing, partial extraction cancellation, panel/node
+exit, invalid same-size SHA rejection, and preservation of an incomplete prior
+version. This focused guard deliberately never installs the full pack. The
+separate actual Main test performs installation, cancellation from Settings,
+selection rollback, original-tile rendering and return with real save bytes:
+
+```sh
+godot --path . --script res://tests/current523_aden_review_ui_test.gd -- \
+  --aden523-pack=/private/aden523-raw \
+  --aden523-tiles=/private/aden523-tiles \
+  --aden523-install-zip=/private/review-resources.zip
+```
+
+The ordinary Main route also requires its existing source-map pack. This is a
+baseline game dependency, distinct from the optional current523 source review.
+
 - Raw sources: Python17real-source tests and all677 exact roundtrips; final
   guard suite19tests with18passed and the separate real rerun skipped.
 - TI2: all2866 strict streams and raw roundtrips;733696 raw records and coverage
@@ -122,6 +188,37 @@ clipping or duplicate writes.
   in private session evidence.
   The UI stage restores one additional existing portrait from exact HEAD bytes
   because the small core stage intentionally deferred that resource.
+- The longer resource installation path exposed additional current source-spawn
+  actors appended after the frozen gameplay roster. The core staging selection
+  now includes their exact grid/layout-pinned source rows and portrait/animation
+  dependencies. The validation stage restored50 existing committed files,
+  8968851bytes, without changing production art or spawn behavior. Eight staging
+  regression tests and five resource reconstruction guards pass.
+- Installer guards:48 fast checks and73 real-archive partial/cancellation checks
+  passed. The real guard writes at most2 files before cancellation, checks exit
+  join/cleanup, same-size wrong-SHA rejection, intermediate and dangling links,
+  reentrant lifecycle callbacks, and preservation of a damaged prior version.
+  These are distinct from the complete installation test. Atomic resource path
+  preferences passed12 isolated checks, including rollback failure preservation.
+- Actual Main installation UI:45 checks passed in153.27s within the unchanged
+  180s test limit. It installed all6412files/452418162bytes, verified saved bytes,
+  activated resource paths, exercised cancel and Settings-hide cancellation,
+  restored the previous pack and returned to the installed selection, opened
+  the changed523 source, then returned to the same live map/actor/save bytes.
+  The installed view drew31523commands with zero unresolved references or budget
+  exclusions. Phase timings:archive SHA2.90s, extraction69.41s, disk rehash5.30s.
+  Earlier frame-bound16-step,256-step and initial threaded implementations each
+  exceeded180s; their failure logs and owned-stage cleanup receipts are retained.
+  The final implementation removes repeated parent-prefix link walks while
+  retaining the full stage-ancestor check and a full target check immediately
+  before opening each file. Guards and final disk hashing were not relaxed.
+- Final direct core checks passed35/20/17/12/48 plus identical-payload and
+  deferred-save regressions, without engine/resource/parser errors; actual Main
+  took61.18s within its original180s limit. A separate installed-store check
+  passed10checks: all6412 existing files were verified and reused with zero
+  payload writes, a same-sized modified README was rejected and preserved, and
+  saves/preferences stayed byte-identical. That isolated test restored only
+  its own README to the original digest afterward.
 - Committed resource integrity:723atlases,41442frames,233420026bytes. No source
   original, generated atlas, screenshot or resource ZIP is added by this PR.
 
@@ -131,14 +228,22 @@ the tile manifest SHA256 is
 `bcef2835c28acf1ec61af8ba9ef29753b693952e695beedcb1bce4f4c9ec3989`.
 The separate local resource ZIP is399316785bytes,6412entries, full CRC pass,
 SHA256`f926e1513c552b60ed5deb6c9b1fddf18a6e59ab4e916575b9dc88206b05f952`.
-Its Library upload failed at tools/list HTTP401 before upload preparation.
-Durable delivery is not established; the generated packs remain private local
-outputs. The existing Library original archives remain reconstruction inputs.
+The Library upload failed at tools/list HTTP401 before upload preparation and
+was not bypassed. Following the user's explicit private Drive instruction, the
+unchanged ZIP was uploaded as five sub100MiB parts into the private handoff
+folder. All five were fetched through normal Drive authentication and their
+download streams rehashed; concatenation reproduces the complete ZIP hash and
+size above. Permission metadata showed owner-only access for every part.
+The handoff also includes a reconstruction script, part/hash receipt and Korean
+instructions. This establishes delivery of this specific private review pack;
+it does not change the historical all-originals delivery ledger or assert
+native M gameplay. The existing Library originals remain reconstruction inputs.
 
 The historical source-dir ledger still requires absent `a1.zip`; that is not a
 pass for the old six-archive ledger. The actual supplied523 ZIPs passed separate
-SHA256 and full CRC checks. Extra coordinate evidence also hit HTTP401 on its
-transfer route; no bypass or native-coordinate assertion follows from it.
+SHA256 and full CRC checks. The coordinate packet's old transfer route also
+hit HTTP401; the later copy was explicitly supplied by the user through private
+Drive and consumed with normal Drive authentication.
 Additional989SP2 originals were materialized and CRC-verified, but not activated
 by this tile review; their RLE/alpha/action semantics remain separate work.
 
