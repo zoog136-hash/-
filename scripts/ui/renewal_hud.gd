@@ -76,6 +76,7 @@ const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
+const AutoHuntingDestinationsUI = preload("res://scripts/ui/auto_hunting_destinations.gd")
 const SourceDungeonUI = preload("res://scripts/dungeons/source_dungeon_view.gd")
 var dungeon_progress_refresh_pending: bool = false
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
@@ -1117,6 +1118,9 @@ func open_macro_info() -> void:
 	toggle.name = "AutoSettingToggle"
 	col.add_child(toggle)
 	workspace.register_scroll_drag(scroll,toggle)
+	var destinations := AutoHuntingDestinationsUI.new()
+	col.add_child(destinations)
+	destinations.configure(get_parent())
 	for pair: Array in [["목표 탐색","주변 몬스터 탐색 및 이동"],["전투","현재 장비와 스킬 · 등록된 자동 사용"],["습득","바닥 드랍을 통한 자동 아이템 습득"]]:
 		col.add_child(HSeparator.new())
 		col.add_child(UI.section(str(pair[0]),14))
@@ -2507,4 +2511,5 @@ func open_halphas_star_enchant(category: String, identity: String) -> void:
 	scroll.add_child(view)
 	view.configure(get_parent(), category, identity)
 	workspace.register_scroll_drag(scroll, view)
+
 
