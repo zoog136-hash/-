@@ -130,7 +130,15 @@ func prune_removed() -> void:
 		if RULES.is_removed_item(str(item_key)):
 			buffs.erase(item_key)
 
-func try_use(item_name: String) -> bool:
+func try_use(item_name: String,selected_instance: String="") -> bool:
+	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_relic_unlock_item.gd").record().get("name","")):
+		var result: Dictionary=world.option_awakening.use_relic_unlock_item(item_name,selected_instance)
+		if bool(result.get("handled",false)):
+			if bool(result.get("ok",false)):
+				world._update_hud();world.hud.refresh_inventory(world.inventory)
+				_message("에바의 계시 습득 · 추가 성물 소환 해금")
+			else:_message(str(result.get("error","성물 해금 아이템 사용 실패")))
+			return true
 	if item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
 		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
 		if bool(source_result.get("handled",false)):

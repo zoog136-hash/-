@@ -17,6 +17,14 @@ static func cards() -> Dictionary:
 				value["catalog"] = current.catalog
 				value["content_snapshot"] = "patch523"
 				value["current_source_table_sha256"] = current.source_table_sha256
+				# Supplements enrich an existing stable identity, never append cards.
+				var support: Dictionary=preload("res://scripts/cards/patch523_slot_data.gd").new_cards
+				for category: String in support.catalog:
+					for supplement: Dictionary in support.catalog[category]:
+						for index: int in range(value.catalog[category].size()):
+							if value.catalog[category][index].sourceId==supplement.sourceId:
+								value.catalog[category][index]=merge_metadata(value.catalog[category][index],supplement)
+								break
 			_cards = value
 			_index_cards(value)
 	return _cards
@@ -31,12 +39,28 @@ static func _index_cards(value: Dictionary) -> void:
 			var identity: String=str(record.sourceId)
 			if positions.has(identity):
 				var merged: Dictionary=(rows[int(positions[identity])] as Dictionary).duplicate(true)
-				merged.merge(record,true)
+				merged=merge_metadata(merged,record)
 				record=merged
 				rows[int(positions[identity])]=record
 			else:positions[identity]=rows.size();rows.append(record)
 			_by_id[identity]=record
 		value.catalog[category]=rows
+
+static func merge_metadata(base: Dictionary, supplement: Dictionary) -> Dictionary:
+	var merged: Dictionary=base.duplicate(true)
+	for key: Variant in supplement:
+		var next: Variant=supplement[key]
+		if next is Dictionary and merged.get(key) is Dictionary:
+			merged[key]=merge_metadata(merged[key],next)
+		elif key=="sourceOptions":merged[key]=next.duplicate(true)
+		elif next is Array and merged.get(key) is Array:
+			# A repeated source row is one declaration, not another stat award.
+			var rows: Array=merged[key].duplicate(true)
+			for entry: Variant in next:
+				if not entry in rows:rows.append(entry.duplicate(true) if entry is Dictionary or entry is Array else entry)
+			merged[key]=rows
+		else:merged[key]=next.duplicate(true) if next is Dictionary or next is Array else next
+	return merged
 
 static func native(record: Dictionary) -> bool:
 	return record.get("source", "") in ["lineagem_base508","lineagem_patch523"]

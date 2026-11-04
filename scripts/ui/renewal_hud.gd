@@ -5,6 +5,7 @@ signal card_pack_draw_requested(category: String)
 signal card_fusion_requested(category: String, grade: String, count: int)
 signal blessing_target_requested(scroll_name: String, target_reference: String)
 signal secondary_doll_requested(identity: String)
+signal secondary_relic_requested(identity: String)
 signal option_awakening_open_requested(category: String, target_id: String)
 signal option_awakening_feed_requested(category: String, target_id: String, materials: Dictionary)
 signal option_awakening_attempt_requested(category: String, target_id: String)
@@ -309,6 +310,7 @@ func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
 	if is_instance_valid(status_view): status_view.refresh(value)
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
+	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 
 func blocks_keyboard_input() -> bool:
 	if is_enhancement_presenting() or is_option_awakening_busy(): return true
@@ -2227,8 +2229,10 @@ func _equip_selected_catalog() -> void:
 		confirm_action({"변신":"변신 확인","마법인형":"소환 확인","성물":"성물 적용"}.get(category,"적용 확인"),str(record.get("name",""))+"을(를) 적용하시겠습니까?","적용",func(_count: int) -> void:
 			catalog_equip_requested.emit(category,record)
 			if catalog_category == category and selected_catalog_record == record:
-				catalog_equip_button.text="현재 적용 중"
-				catalog_equip_button.disabled=true)
+				if SourceCardPresentation.native(record):SourceCardPresentation.apply(self)
+				else:
+					catalog_equip_button.text="현재 적용 중"
+					catalog_equip_button.disabled=true)
 
 func toggle_map() -> void:
 	if active_section=="map" and workspace.visible:

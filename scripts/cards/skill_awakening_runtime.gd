@@ -45,6 +45,15 @@ func view(identity: String,preview_level: int=1) -> Dictionary:
 			if Cards.card_id(record)==identity:snapshot.target_record=record.duplicate(true);break
 		snapshot.save_blocked=save_blocked
 	return snapshot
+func _save_staged_state(next: Dictionary,override: Dictionary={}) -> Error:
+	var staged: Dictionary=override.duplicate(true);staged[SAVE_KEY]=next
+	if world.has_method("_skill_awakening_vitals_for_state"):staged.merge(world._skill_awakening_vitals_for_state(next))
+	var error: Error=world._save_game(true,staged)
+	if error==OK:
+		for key: String in ["hp","mp"]:
+			if staged.has(key):world.set(key,staged[key])
+	return error
+
 func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 	if _reroll_busy:return Core.fail("busy","이전 각성 거래 처리 중")
 	if save_blocked or not problem.is_empty():return Core.fail("save_blocked","각성 저장 보호 중")
@@ -59,7 +68,7 @@ func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 		var physical: Variant=world.item_instances[key]
 		if not physical is Dictionary or not physical.get("record") is Dictionary:continue
 		var record: Dictionary=physical.record
-		if record.get("source","")!="lineagem_base508" or record.get("source_snapshot","")!="base508":continue
+		if not preload("res://scripts/lineagem_base508.gd").native(record) or record.get("source_snapshot","")!="base508":continue
 		if record.get("source_item_class_id",0)!=int(requirement.item_class_id) or record.get("sourceId","")!="m508:item:"+str(int(requirement.item_class_id)):continue
 		if physical.get("name","")!=record.get("name","") or str(physical.get("name","")).is_empty():continue
 		if world.has_method("_item_locked") and (world._item_locked(str(physical.name)) or world._item_locked(str(physical.name),key)):
@@ -83,7 +92,7 @@ func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 	physicals.erase(selected)
 	var remaining: int=int(world.gold)-int(requirement.fee)
 	prepared.state.rng_state=str(staged.state)
-	var error: Error=world._save_game(true,{SAVE_KEY:prepared.state,"inventory":bag,"item_instances":physicals,"gold":remaining})
+	var error: Error=_save_staged_state(prepared.state,{"inventory":bag,"item_instances":physicals,"gold":remaining})
 	if error!=OK:
 		_reroll_busy=false
 		return Core.fail("save_failed","저장 실패 · 재화·각성서·스킬·난수 보존")
@@ -102,7 +111,7 @@ func bonus_records() -> Array[Dictionary]:
 	_signature=signature;_has_cache=true;_records.clear()
 	for category: String in Cards.CATEGORIES:
 		var record: Dictionary=world.equipped_catalog.get(category,{})
-		if record.get("source","")!="lineagem_base508":continue
+		if not preload("res://scripts/lineagem_base508.gd").native(record):continue
 		var identity: String=Cards.card_id(record)
 		if world.card_draw_fusion.owned.get(category,{}).get(identity,false)!=true or not core.eligibility(identity).ok:continue
 		var entry: Dictionary=progress.cards.get(identity,{})
@@ -120,7 +129,7 @@ func on_successful_hit(target: Node) -> void:
 	for category: String in Cards.CATEGORIES:
 		if bool(target.get("dead")):break
 		var record: Dictionary=world.equipped_catalog.get(category,{})
-		if record.get("source","")!="lineagem_base508":continue
+		if not preload("res://scripts/lineagem_base508.gd").native(record):continue
 		var identity: String=Cards.card_id(record)
 		if world.card_draw_fusion.owned.get(category,{}).get(identity,false)!=true:continue
 		var entry: Dictionary=progress.cards.get(identity,{})
@@ -155,7 +164,7 @@ func _commit_confirmed_reroll(identity: String,expected_revision: int,operation_
 	var prepared: Dictionary=core.prepare_reroll(progress,world.card_draw_fusion.owned,identity,staged.randi_range(0,99999),expected_revision,operation_id)
 	if not prepared.ok:_reroll_busy=false;return prepared
 	prepared.state.rng_state=str(staged.state)
-	var error: Error=world._save_game(true,{SAVE_KEY:prepared.state})
+	var error: Error=_save_staged_state(prepared.state)
 	if error!=OK:
 		_reroll_busy=false
 		return Core.fail("save_failed","저장 실패 · 기존 스킬·레벨·경험치·난수 보존")

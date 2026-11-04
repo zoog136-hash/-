@@ -3,6 +3,8 @@ extends RefCounted
 ## become live only after World's existing atomic save writer returns OK.
 const UnlockItem=preload("res://scripts/cards/native_doll_unlock_item.gd")
 const Subslot=preload("res://scripts/cards/native_doll_subslot.gd")
+const RelicSubslot=preload("res://scripts/cards/native_relic_subslot.gd")
+const RelicUnlock=preload("res://scripts/cards/native_relic_unlock_item.gd")
 const Core = preload("res://scripts/cards/option_awakening_service.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
 const DATA_PATH: String = "res://data/cards/option_awakening_cards.json"
@@ -100,6 +102,8 @@ func view(category: String, target_id: String) -> Dictionary:
 	_sync_native_context()
 	if not problem.is_empty(): return Core.fail("configuration", problem)
 	var out: Dictionary = core.view(progress, world.card_draw_fusion.export_state(), int(world.gold), category, target_id)
+	if core.native_mode and bool(out.get("ok",false)):
+		out.slot_definitions=preload("res://scripts/cards/option_slot_definitions.gd").view(target_id)
 	if core.native_mode and out.get("ok",false):
 		out.source_status_reference=preload("res://scripts/cards/native_awakening_status.gd").binding(core.definition(category,target_id))
 		var collections: Variant=world.get("card_collections")
@@ -182,7 +186,7 @@ func _ensure_bonus_cache() -> void:
 		_totals.clear()
 		_bonus_signature = ""
 		return
-	var key: String = str(hash([progress.get(Subslot.FIELD,""),_world_property("level",0),Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress)]))+":"+str(progress.get("revision", 0))+":"+str(hash(core.source_server_context))+":"+str(hash(world.card_draw_fusion.owned))
+	var key: String = str(hash([progress.get(Subslot.FIELD,""),_world_property("level",0),Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress),RelicSubslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress)]))+":"+str(progress.get("revision", 0))+":"+str(hash(core.source_server_context))+":"+str(hash(world.card_draw_fusion.owned))
 	for category: String in Core.CATEGORIES:
 		var record: Variant = world.equipped_catalog.get(category, {})
 		key += "|" + category + ":" + (Cards.card_id(record) if record is Dictionary else "")
@@ -204,6 +208,8 @@ func _ensure_bonus_cache() -> void:
 			_add_bonus(core.definition(category, identity).stats, category + ":" + identity)
 	var subslot: Dictionary=subslot_view()
 	if bool(subslot.get("active",false)):_add_bonus(subslot.effects.stats,"subslot11:"+str(subslot.identity))
+	var relic: Dictionary=relic_subslot_view()
+	if bool(relic.get("active",false)):_add_bonus(relic.effects.stats,"relic_subslot11:"+str(relic.identity))
 	for collection: Dictionary in core.collection_views(progress, ownership):
 		if bool(collection.completed): _add_bonus(collection.stats, "collection:" + str(collection.id))
 
@@ -212,6 +218,7 @@ func _add_bonus(stats: Dictionary, origin: String) -> void:
 	for key: String in stats:
 		_totals[key] = float(_totals.get(key, 0.0)) + float(stats[key])
 		if key == "moveSpeedPct": record["speedBonusPct"] = stats[key]
+		elif core.native_mode and key in ["xp","hpPct"]:record[key]=float(stats[key])/100.0
 		else: record[key] = stats[key]
 	_bonus_records.append(record)
 
@@ -300,6 +307,58 @@ func active_source_status_references() -> Dictionary:
 		if reference.ok:result[identity]=reference
 	return result
 
+func relic_subslot_view(include_effects: bool=true) -> Dictionary:
+	if world==null or not core.native_mode:return {"active":false,"identity":"","unlocked":false}
+	_sync_native_context()
+	var identity: String=str(progress.get(RelicSubslot.FIELD,""))
+	var state: Dictionary=RelicSubslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
+	var active: bool=not identity.is_empty() and bool(state.ok) and problem.is_empty() and not save_blocked
+	return {"identity":identity,"active":active,"eligibility":state,"effects":RelicSubslot.effects(self,identity) if active and include_effects else {},"unlocked":RelicSubslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress)}
+
+func select_relic_subslot(identity: String) -> Dictionary:
+	_sync_native_context()
+	if _busy:return Core.fail("busy","이전 거래 처리 중")
+	if save_blocked or not problem.is_empty() or not core.native_mode:return Core.fail("save_blocked","추가 성물 저장 보호 중")
+	var available: Dictionary=RelicSubslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
+	if not available.ok:return available
+	if str(progress.get(RelicSubslot.FIELD,""))==identity:return {"ok":true,"unchanged":true}
+	_busy=true
+	var next: Dictionary=export_state();next[RelicSubslot.FIELD]=identity;next.revision=int(next.revision)+1
+	if not core.validate_state(next,{"owned":world.card_draw_fusion.owned}).is_empty():_busy=false;return Core.fail("invalid_state","추가 성물 저장 검증 실패")
+	var staged: Dictionary={SAVE_KEY:next}
+	if world.has_method("_option_awakening_vitals_for_state"):staged.merge(world._option_awakening_vitals_for_state(next))
+	var error: Error=world._save_game(true,staged)
+	if error!=OK:_busy=false;return Core.fail("save_failed","저장 실패 · 기존 추가 성물 보존")
+	progress=next;_bonus_signature="";world.set("equipment_records_dirty",true);_busy=false
+	for key: String in ["hp","mp"]:
+		if staged.has(key):world.set(key,staged[key])
+	return {"ok":true,"snapshot":relic_subslot_view()}
+
+func use_relic_unlock_item(item_name: String,selected_instance: String="") -> Dictionary:
+	if item_name.is_empty() or item_name!=str(RelicUnlock.record().get("name","")):return {"handled":false}
+	if _busy:return {"handled":true,"ok":false,"code":"busy","error":"이전 아이템 사용 처리 중"}
+	if save_blocked or not problem.is_empty() or not core.native_mode:return {"handled":true,"ok":false,"code":"save_blocked","error":"해금 저장 보호 중"}
+	if world.has_method("_item_locked") and world._item_locked(item_name):return {"handled":true,"ok":false,"code":"locked","error":"잠긴 해금 아이템은 사용할 수 없습니다"}
+	var locks: Dictionary={}
+	if world.has_method("_item_locked"):
+		for key: String in world.item_instances:
+			if world._item_locked(item_name,key):locks[key]=true
+	if not selected_instance.is_empty():
+		for key: String in world.item_instances:
+			if key!=selected_instance:locks[key]=true
+	_busy=true
+	var result: Dictionary=RelicUnlock.prepare(export_state(),world.inventory,world.item_instances,int(_world_property("level",0)),locks)
+	result.handled=true
+	if not result.ok:_busy=false;return result
+	var error: String=core.validate_state(result.state,{"owned":world.card_draw_fusion.owned})
+	if not error.is_empty():_busy=false;return {"handled":true,"ok":false,"code":"invalid_state","error":error}
+	var saved: Error=world._save_game(true,{SAVE_KEY:result.state,"inventory":result.inventory,"item_instances":result.item_instances})
+	if saved!=OK:_busy=false;return {"handled":true,"ok":false,"code":"save_failed","error":"저장 실패 · 해금 아이템·기존 성물 해금 상태 보존"}
+	world.inventory=result.inventory;world.item_instances=result.item_instances;progress=result.state
+	_bonus_signature="";world.set("equipment_records_dirty",true);_busy=false
+	result.erase("state");result.erase("inventory");result.erase("item_instances")
+	return result
+
 func source_visual_awakened(category: String,record: Dictionary) -> bool:
 	# Preserve PR217's native aura API using this source-aware accepted ledger.
 	# The canonical core guards source identity, ownership and server conditions.
@@ -318,3 +377,11 @@ func source_subslot_visual_awakened(record: Dictionary) -> bool:
 	if not condition.ok:return false
 	var reference: Dictionary=preload("res://scripts/cards/native_awakening_status.gd").binding(core.definition("마법인형",identity))
 	return reference.ok and Subslot.status_available(self,identity,int(reference.status_effect_id))
+
+func source_relic_subslot_visual_awakened(record: Dictionary) -> bool:
+	if not source_visual_awakened("성물",record):return false
+	var identity: String=Cards.card_id(record)
+	if str(progress.get(RelicSubslot.FIELD,""))!=identity:return false
+	if not RelicSubslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{})).ok:return false
+	var reference: Dictionary=preload("res://scripts/cards/native_awakening_status.gd").binding(core.definition("성물",identity))
+	return reference.ok and RelicSubslot.status_available(self,identity,int(reference.status_effect_id))

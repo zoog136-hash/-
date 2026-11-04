@@ -20,7 +20,7 @@ static func rule(row: Dictionary) -> Dictionary:
 	if required==null or cost==null or minimum==null or maximum==null:return {}
 	return {"deck":deck,"required":int(required),"attempt_cost":int(cost),"min_grade":int(minimum),"max_grade":int(maximum),"decrease":raw(deck,grade,"EnchantFailDecreaseExp")}
 static func material(record: Dictionary,r: Dictionary) -> Dictionary:
-	if record.get("source","")!="lineagem_base508" or int(record.get("source_deck_id",-1))!=int(r.deck):return {}
+	if not preload("res://scripts/lineagem_base508.gd").native(record) or int(record.get("source_deck_id",-1))!=int(r.deck):return {}
 	var grade: int=int(record.get("source_grade_id",-1))
 	if grade<int(r.min_grade) or grade>int(r.max_grade):return {}
 	var exp: Variant=raw(int(r.deck),grade,"EnchantExp");var fee: Variant=raw(int(r.deck),grade,"EnchantCost")
