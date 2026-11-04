@@ -85,18 +85,8 @@ func configure(controller: Node) -> void:
 	for grade: String in ["모든 등급","일반","고급","희귀","영웅","전설","신화","유일","미확인"]: grade_filter.add_item(grade)
 	grade_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	toolbar.add_child(grade_filter)
-	school_filter = OptionButton.new()
-	for school: String in ["물 계열","땅 계열","바람 계열","불 계열"]: school_filter.add_item(school)
-	school_filter.visible = str(hud.character_state.get("job_class", "")) == "요정"
-	var schools: Array[String] = ["water","earth","wind","fire"]
-	school_filter.select(maxi(0,schools.find(str(hud.get_parent().original_skills.catalog.schools.get("요정","water")))))
-	school_filter.item_selected.connect(func(index: int) -> void:
-		var world: Node = hud.get_parent()
-		world.original_skills.catalog.schools["요정"] = schools[index]
-		world._update_hud()
-		world._request_deferred_save()
-		refresh())
-	toolbar.add_child(school_filter)
+	var group_button:Button=UI.button("스킬 계열 전환",func()->void:hud._navigate("spell_groups"))
+	group_button.name="OpenSpellGroupConversion";toolbar.add_child(group_button)
 	var state: Dictionary = hud.character_state
 	scope.tooltip_text="Lv.%d %s / 등록 %d · 신규 %d" % [state.get("level",1),state.get("job_class","기사"),records.size(),hud.get_parent().original_skills.catalog.current_official.records.size()]
 	var body := Browser.new()

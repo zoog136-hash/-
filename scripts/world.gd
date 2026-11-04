@@ -234,6 +234,7 @@ var equipped_items: Dictionary = {
 var enhancement_levels: Dictionary = {} # legacy name-level lookup; migration only
 var item_instances: Dictionary = {} # physical ID -> {name, level}
 var next_item_instance_id: int = 1
+var spell_group_conversion=preload("res://scripts/skills/spell_group_conversion.gd").new()
 var class_index: int = 0
 var companion_velocity: Vector2 = Vector2.ZERO
 var active_map: Dictionary = {}
@@ -610,6 +611,7 @@ func _load_data() -> void:
 	if original_skills == null:
 		original_skills = ORIGINAL_SKILLS.new()
 		original_skills.configure(self)
+	spell_group_conversion.configure(self)
 	skills_db = original_skills.catalog.records.duplicate(true)
 	_rebuild_skill_record_index()
 	_ensure_ammo_items()
@@ -4458,6 +4460,10 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if spell_group_conversion.save_blocked:
+		if not quiet:hud.show_message("계열 전환 저장 손상 · 기존 파일을 보존합니다. 정상 백업을 불러오세요.")
+		return ERR_FILE_CORRUPT
+	if collection_override.has("spell_group_conversion") and not spell_group_conversion.validate(collection_override.spell_group_conversion).is_empty():return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4472,7 +4478,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","spell_group_conversion","original_skill_state"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4524,6 +4530,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"active_skill_buffs": active_skill_buffs,
 		"skill_cooldowns": skill_cooldowns,
 		"skill_global_cooldown": skill_global_cooldown,
+		"spell_group_conversion": spell_group_conversion.export_state(),
 		"original_skill_state": original_skills.catalog.export_state() if original_skills != null else {},
 		"original_combat_state": original_skills.export_state() if original_skills != null else {},
 		"active_item_buffs": active_item_buffs,
@@ -4610,6 +4617,9 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var group_error:String=spell_group_conversion.validate(data.get("spell_group_conversion", {"schema":1,"source_snapshot":"patch523","classes":{}}))
+	if not group_error.is_empty():
+		spell_group_conversion.save_blocked=true;hud.show_message(group_error);return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4765,6 +4775,7 @@ func _load_game(quiet: bool) -> void:
 	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
+	spell_group_conversion.restore(data.get("spell_group_conversion", {"schema":1,"source_snapshot":"patch523","classes":{}}))
 	growth.restore(data.get("growth",growth.empty_state()))
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
