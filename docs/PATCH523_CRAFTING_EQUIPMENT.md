@@ -1,5 +1,7 @@
 # 원본523 제작·장비 가공 연결
 
+**LOCAL_ONLY 후속 작업:** 마지막36행 절은 공개 체크포인트 `1f99135ac7b50482add176b7bff9e64078a87af0` 이후의 미게시 변경이다. 공개 PR·원격/로컬 refs·Drive/Library v12를 갱신하지 않았다.
+
 **최신 후속 상태는 문서 마지막의 `전체 소지 증명·공개 소유자 거래·1045 제작 후보` 절이다.** 앞 절의732/912 제작·미연결4208 수치는 각 당시 팩/커밋의 기록이다. 영구 전달/관리 설치팩은 v12로 유지되며 새1045 제작 후보는 LOCAL_ONLY다.
 
 브랜치 기준 main: `7d550a78a8fd1a95a50ebb18b38c3134380c3fa6`. 2026-11-04 후속 main `1d8bd5e0fde9ea0d74bd39b036184b49cab21d12`는 PR224 카드/저장 회귀 검사 병합임을 읽기 전용으로 확인했으며 이 브랜치에 병합하지 않았다. 별도 환경 `/workspace/equipment523`, 브랜치 `feature/patch523-crafting-equipment-20261104`, draft PR [239](https://github.com/zoog136-hash/-/pull/239). 시작 시 관련 열린 PR을 대조했고 다른 PR을 병합하지 않았다. main 및 이전 커밋·원본·사용자 세이브를 보존한다.
@@ -479,3 +481,32 @@ godot --path /private/current-game
 탐험 전수 최종 검사는 **828검사, 실패0**이다. 실제 공개957b8853 소유자의44종 발급/원문/축복·잠금·발급 장부 거부를 전부 확인했다. 41중35종과 추가3증표,원생4재료,188384까지43개 재료 경로의 실제 제작 UI·정확한 키 차감·전체 durable readback을 확인했고 주요9개 소지 namespace의 실제 재접속도 이 최종 실행에 포함했다. 남은6종은 위 원본 서버/뷰 의존으로 보존했다. 이828은 통제된 보관 재료를 실제 공개 withdraw로 발급한 검사이며 자연8시간 탐험 보상 획득의 완료가 아니다. 이전9개 재접속의122검사는 별도 중간 기록이며828에 더해 전수 품목 수로 계산하지 않는다.
 
 최종 자체 기능 브랜치의 기존 퀘스트 서비스를 복원한 상태에서 실제 Main/current source map·세이브 보존 **32검사**, 합성 native 소유/없는 가호 소유자 거부 및 미지원 퀘스트 schema의 바이트/라이브 보존 **39검사**, 기존 v12의6계열 실제 소비기·UI·저장/재로드 **59검사**도 통과했다.59는175상태 수치 행렬을 재실행하지 않은 회귀이며 앞선 전체 장비 행렬로 세지 않는다. 선택한 최종13개 로그에서 SCRIPT ERROR/ERROR/실패 표식이 없다. 필수723시트/41442프레임/233420026bytes Git/SHA 검사도 통과했다. 원격 전체/수동 CI는 실행하지 않았다.
+
+
+## LOCAL_ONLY: 무기 기본 피해 배율15행·유형별 리덕션 무시21행
+
+이번 후속은 명시적으로 로컬 분석·코드·좁은 QA만 허용된 작업이다. `1f99135ac7b50482add176b7bff9e64078a87af0` 이후 추가 공개 게시가 앞선 위임에서 실행 전 거절된 상태이며 새 게시 승인은 없다. GitHub tree/commit/ref/PR 메타데이터 변경·파일 업로드·다른 경로의263 전달은 수행하지 않았다. 아래 변경은 미커밋 LOCAL_ONLY이며 공개 소비자는 여전히1f99135a를 고정해야 한다.
+
+원본 InvokeOptionType6 `Attack_WeaponDamageScale`은 Param1을 백만분율 배율로 정의한다. 원본681의2,000,000과 그룹473의15행(현재+1..+15,1..15% 발동)을 포효의 이도류498/30773의 실제 일반 공격 **무기 크기별 추첨 부분**에 연결했다. 스탯·강화·추가 피해 전체를2배로 바꾸지 않고, 추가 공격/재귀 주문을 생성하지 않는다. 현재 정상 적중의 무기 추첨 뒤·치명타/속성 앞 순서, 같은 옵션 중복/성공 배율 선택, 반올림은 명시적인 TWILIGHT 설정이다. BySpellAttack=true, 재료/추가 수식·학습 스킬·장비/방패·대상/연쇄 조건이 필요한 형태는 이 경로로 컴파일하지 않는다. 원문 배율이1배 미만인 다른 의미도 임의 해석하지 않는다. 비활성 설정과 무기 피해0은 새 발동 RNG를 소비하지 않는다.
+
+원본 `PierceMeleeDamageReduction`/`PierceRangeDamageReduction`/`PierceMagicDamageReduction`21행은 힘/민첩/지식의 룬882/883/885에 각각 Unit1 원래 수치를 유지한다. 현재 TWILIGHT의 기존 유형별 ‘리덕션 무시를 추가 피해로 소비’하는 해석을 설정형 투영으로 재사용한다. **NPC AC를 원본 리덕션으로 간주하거나 원작 DR 공식을 복원했다고 하지 않는다.** 설정을 끄면 원본 수치는 보존하고 이 추가 피해 투영만 중단한다. 실제 source 파생값·원본 정체/축복/현재 강화·물리 instance가 일치해야 하며 같은 물리 ID는 한 번만 읽는다. 같은 이름의 불투명 base/save 필드·sourceID 불일치를 승격/재작성하지 않는다. UI는 원본 값·현재 투영/무기 배율 활성 범위와 TWILIGHT 해석을 표시한다.
+
+후보 `candidate-enhancement-weapon-flat-local.json`은 `/workspace/source523/`의 **LOCAL_ONLY** 파일이다.124798476bytes/SHA256 `d9a5da79e5e4871cf0e1aa6a6b6ac25960a992c74f39515d0f61bf615b9b407e`. 기존 bcafb3e2 후보의 바인딩5개만 다시 계산하고 모든 제작1045개·원문 제작 행·원본 파일 SHA를 보존했다. 원문 ZIP·bcafb3e2 후보·기존b8e2af 후보·v12는 유지한다. 첫 pretty 직렬화197516885B/0318c60c...는128MiB 로더 한도를 넘겨 `candidate-enhancement-weapon-flat-pretty-REJECTED-LOCAL.json`으로 따로 보존했으며 실행/설치 성공으로 세지 않는다. 로더 상한을 늘리는 대신 같은 의미의 compact 후보를 사용했다. 관리 설치 포인터/Drive/Library는 변경하지 않았다.
+
+장비 런타임15314행의 현재 로컬 분류는 수치11054·숫자 발동146·미연결4114다. 기존15408 bound/94비런타임/1150바인딩 밖/전체16558 분모와2954정의는 유지한다. 추가36행은 수치21+발동15이며 전체 장비2954개의 실행 완료 수가 아니다.
+
+검증은 새36행 전수/102개 물리 상태·원본 확률/실패/비활성·실제 일반 공격 무기 부분 배율·5정체 UI/저장/재접속 **657검사**와, 변경된 source-only 수치 읽기의42개 상태·근/원/마법 실제 대상 HP·불투명 필드/동일 물리 ID 중복/sourceID 불일치 보호 **107검사**, 발동 인터페이스·비활성 UI **9검사**, 새 컴파일/단위·조건과 기존3/5 발동 회귀 Python **4검사**다. 최종 로그의 오류 유무를 별도로 확인한다. 처음657단언은 실패0이어도 검사 코드가 기존 스킬 객체를 비운 상태에서 runtime 오류를 냈으므로 성공으로 세지 않았다. 객체/catalog를 유지하고 관련 proc_depth만 검사 중 억제한 재실행이 최종657이다. 슬롯/레벨/장비·NPC HP는 통제한 QA 상태이며 자연 획득/원작 픽셀/VFX·Windows/Android 성공을 뜻하지 않는다. 기존 핵심32/리소스723 검사는 해당1f99135a의 완료 기록을 재사용했으며 전체/수동 CI를 반복하지 않았다.
+
+### 발동 주문의 정확한 실행 소유자 대조
+
+현재 미연결 InvokeOption은3933행이다. 이전3948행을 전수 대조하면 Attack_Spell3357,Defence_Spell166,Aura_Spell73,Defence_DebuffTimeDecrease282,Attack_WeaponDamageScale15,Defence_DamageReduction16,Defence_FixedDamageCounterBarrier32,Gain_Experience7이다. 이번15무기 행만 이 집합에서 실행으로 이동한다. 따라서 **166은 공격 발동 SpellClassID 집합**이며 모든 방어/오라/피격 참조를 합친 수가 아니다. 직접 실행 주문은199개, 모든 ParamUnit12 주문 참조는294개다. 이 집합은 겹치므로 합산하지 않는다.
+
+공격166개 모두 실제 SpellClass에 존재한다.165개는 TestSpell=false이고104632는 TestSpell=true이므로 정상 발동으로 활성화하지 않는다. TargettingType1/2/111,TargetKind/RootTargetKindNode,MinCastRange/CastRange,원본 시전 비용과 proc 재료 역할은 별도로 보존한다. 원본 SpellClass11144행 및 관련5표는 기존 ZIP index의 바이트/SHA와 다시 대조했다. 이것은 주문 실행 완료가 아니다.
+
+읽기 전용으로 확인한 [PR245 공개655355575705f42036c6169341047dd288247819의441바인딩](https://github.com/zoog136-hash/-/blob/655355575705f42036c6169341047dd288247819/data/skills/player_skills523_bindings.json)과 공격166개의 교집합은0이다. 기존 `player_skills523.evidence_for(curated_id)`/`apply_to(record,job,upgraded)`와 `skill_service.impact(curated_skill,primary,expected_life)`/`deal_damage(curated_skill,target,link_from)`는 현재 학습 스킬 바인딩·검토된 dict를 소비하며 장비 native SpellClassID 호출 API가 아니다. 이름/학습 비용/기본 대미지를 억지로 연결하지 않았다. 보유 카드 옵션6개 주문 및 카드 스킬 각성73개 주문과도 공격166의 교집합은0이며, 카드 소유/각성 게이트를 우회해 장비에 권한을 주지 않는다. 원래701카드는 변경하지 않았다.
+
+남은 정확한 필요 계약은 native SpellClassID/InvokeOption과 실제 물리 장비·선택 타깃/life_id·AttackType/BySpell/main-target/miss·재료/학습/무기/방패·TargetKind/SiegeTargetKind를 받는 **별도 native 장비 발동 디스패치**다. 원래 Spell의 HP/MP 비용을 proc 비용으로 자동 복사하지 않아야 한다. 피격 주문의94개 duration 감소 옵션에는 incoming source SpellClassID와 원래 지속시간/대상 상태 계약이 필요하다. 현재3인자 피격 신호는 SpellRange62와 일반 ranged를 구별하거나 이 ID를 제공하지 않는다.32개 반격과7개 EXP 발동은 각각 evade/BySpell/반사 대상 및 원자 EXP 정산 소유권이 필요하다. `FixedDesc`3개를 전역 스턴 감소로, StatusEffectID30개를 피해 값으로, 속성 치명타 저항48개를 일반 마법 치명타 저항으로 바꾸지 않는다. [NC의 속성 제련 안내](https://lounge.plaync.com/feed/73057?country=KR&locale=ko-KR)도 속성 치명타/저항을 별도 항목으로 다루며 현재 NPC의 한 종류 critical roll을 원작 속성 치명타라고 주장할 근거는 아니다.
+
+단일 숫자 형태에 가까운69301/Invoke10771도 확인했다. 원본상 base80+1d1·FixedMagic/IgnoreMR/IgnoreDR의6필드가 있지만, 현재 카드의6고정 프로필에 설치되지 않은 다른 주문이고 TargetKind11(AllButMe)/root41 및 기간제 표기 팔찌221081/230152의 실제 소유/제약을 별도 대조해야 한다. 숫자 모양만으로 기존 카드 active() 권한이나 generic cast를 우회하지 않았다. 전체294참조·372옵션·3948원문 행/원본 타깃·시전 필드 및 필요한 소유자 계약은 `/workspace/equipment523-logs/proc-owner-contracts-3948_LOCAL_ONLY.json`에 남긴다. 새 자료가 없는 범위를 출처 불명 수치로 채워 ‘구현 완료’로 세지 않는다.
+
+새 이웃 PR243 df76940f/PR262 f6dac673의 공개/로컬 상태는 부모의 최신 인계를 따르며, 이번 효과 작업에서 그 브랜치·미게시 후보·자료를 변경/복제하지 않았다. 과거243 게시 거절 기록은 역사적 상태이고 현재 공개된8파일을 다시 게시하는 작업을 한 것은 아니다. 새 코드/규칙의 공개 게시에는 별도 구체적 승인이 필요하다.

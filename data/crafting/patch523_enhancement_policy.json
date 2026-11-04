@@ -78,5 +78,11 @@
   "source_cursed_public_basis": "https://lineagem.plaync.com/board/update/view?articleId=606c9a065d8fed00017777ad",
   "source_conditional_magic_scope": "spell_hits_only",
   "source_conditional_effect_origin": "Exact SpecialResistanceType6 Stun and MagicDamage Unit1 +5 / FinalBlow Unit3 conditional values are preserved. Affected subject (target_status/self_status/disabled) and spell-only placement follow configurable TWILIGHT interpretation: the source SpecialResistanceType reference alone does not prove actor direction. FixedDesc references remain display evidence beside94 spell-scoped Defence_DebuffTimeDecrease contracts; no unconditional stun-duration reduction is applied.",
-  "source_stun_condition_subject": "target_status"
+  "source_stun_condition_subject": "target_status",
+  "source_weapon_scale_scope": "normal_weapon_roll_only",
+  "source_weapon_scale_stack": "strongest_success_multiplier",
+  "source_weapon_scale_rounding": "nearest",
+  "source_weapon_scale_origin": "Exact InvokeOptionType6/Param1 per million and source probability; only rolled size-specific weapon base is scaled. Normal successful hit placement before critical/element, strongest successful multiplier, rounding are TWILIGHT policy. No scale of stats, spells, drains or recursive procs.",
+  "source_typed_flat_ignore_consumer": "existing_typed_flat_damage_projection",
+  "source_typed_flat_ignore_origin": "Exact Unit1 melee/range/magic PierceDamageReduction source amounts. Reuse existing TWILIGHT typed reduction-ignore-as-flat-damage interpretation. NPC AC is not asserted to be damage reduction; no original NPC DR formula is claimed. Set consumer=disabled to retain source values without this projection."
 }

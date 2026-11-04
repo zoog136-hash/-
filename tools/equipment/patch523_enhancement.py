@@ -33,6 +33,9 @@ EXTRA = {
     'PVEDamageReductionPercent':('pve_damage_reduction_pct',10000),
     'MeleeCritical':('melee_crit',1), 'RangeCritical':('ranged_crit',1), 'MagicCritical':('magic_crit',1),
     'PierceDamageReduction':('damage_reduction_ignore',1),
+    'PierceMeleeDamageReduction':('source_melee_flat_reduction_ignore',1),
+    'PierceRangeDamageReduction':('source_ranged_flat_reduction_ignore',1),
+    'PierceMagicDamageReduction':('source_magic_flat_reduction_ignore',1),
     'PVPMeleeAdditionDamage':('pve_melee_damage',1), 'PVEMeleeAdditionDamage':('pve_melee_damage',1),
     'PVPRangeAdditionDamage':('pve_ranged_damage',1), 'PVERangeAdditionDamage':('pve_ranged_damage',1),
     'PVPMagicAdditionDamage':('pve_magic_damage',1), 'PVEMagicAdditionDamage':('pve_magic_damage',1),
@@ -128,12 +131,15 @@ def compile_equipment(tables, bound_items, bonuses):
                         # Fully numeric source contracts only. Spell/formula,
                         # material, weapon/shield and chained hooks stay typed
                         # evidence until their authoritative execution contract.
-                        if (kind in [3,5] and types[b['BonusTypeID']]['UnitID']==3 and 0<=b['Value']<=1000000
+                        if (kind in [3,5,6] and types[b['BonusTypeID']]['UnitID']==3 and 0<=b['Value']<=1000000
+                            and (kind!=6 or (option.get('BySpellAttack') is False and option.get('AttackTypeID') in [0,1,2] and option.get('Param1',0)>=1000000))
                             and all(option.get(k,0)==0 for k in ['Param2','Param3','Param4','Param5','Param6','MaterialTypeID','MaterialAmount','IsAmmoAttack','WeaponGroupID','ShieldTypeID','SuccessedInvokeOptionID','TargetKind','SiegeTargetKind'])
                             and option.get('AttackTypeID') in [0,1,2,3] and option.get('Param1',-1)>=0):
                             live_invokes.append({'row_id':row['ID'],'probability':b['Value'],'option':option,
-                                                 'kind':'attack_fixed_damage' if kind==3 else 'defence_flat_reduction'})
+                                                 'kind':{3:'attack_fixed_damage',5:'defence_flat_reduction',6:'attack_weapon_scale'}[kind]})
                             continue
+                    if name in ['PierceMeleeDamageReduction','PierceRangeDamageReduction','PierceMagicDamageReduction'] and types[b['BonusTypeID']]['UnitID']!=1:
+                        skipped.add(row['ID']); continue
                     if name in ['FinalBlowProbability','FinalBlowAdditionalScale'] and types[b['BonusTypeID']]['UnitID']!=3:
                         skipped.add(row['ID']); continue
                     if name=='MagicDamage' and b['BonusApplicationTypeID']==2 and types[b['BonusTypeID']]['UnitID']!=1:

@@ -161,6 +161,7 @@ func _refresh() -> void:
 	var final_base: Dictionary=preload("res://scripts/crafting/patch523_final_blow.gd").base(book,physical.get("record",{}),blessing)
 	if not final_base.is_empty():text+="\n원본 기본 결정타 %.2f%% · 증폭 %.2f%% · 적용 범위/계산 순서는 TWILIGHT 설정\n" % [float(final_base.get("source_final_blow_chance_pct",0)),float(final_base.get("source_final_blow_amp_pct",0))]
 	text+="\n스턴 조건 주체: %s · 원본 상태6/단위/수치 보존, 주체와 계산 범위는 TWILIGHT 설정\n" % UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_stun_condition_subject","disabled")))
+	text+="\n유형별 리덕션 무시 처리: %s\n원본 수치 보존 · NPC AC/리덕션 공식 복원이 아닌 TWILIGHT 기존 추가 피해 해석\n" % UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_typed_flat_ignore_consumer","disabled")))
 	var effect_text: String = ""
 	var effects: Array = book.effect_evidence(source_id, level_value, 2 if blessing == 2 else 0)
 	if not effects.is_empty():

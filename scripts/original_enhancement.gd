@@ -92,6 +92,7 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 		"damage_amp_pct":"대미지 증가(%)","adena_drop_pct":"아데나 드롭량(%)",
 		"mpRecoveryTick":"MP 회복","magicDamage":"마법 대미지","attackSpeed":"공격 속도(%)",
 		"speedBonusPct":"이동 속도(%)","pve_damage_reduction":"PVE 리덕션","pve_damage_reduction_pct":"PVE 리덕션(%)",
+		"source_melee_flat_reduction_ignore":"근거리 리덕션 무시(게임 추가 피해 해석)","source_ranged_flat_reduction_ignore":"원거리 리덕션 무시(게임 추가 피해 해석)","source_magic_flat_reduction_ignore":"마법 리덕션 무시(게임 추가 피해 해석)",
 		"damage_reduction_ignore":"리덕션 무시","pve_melee_damage":"PVE 근거리 대미지","pve_ranged_damage":"PVE 원거리 대미지",
 		"pve_magic_damage":"PVE 마법 대미지","melee_crit":"근거리 치명타(%)","ranged_crit":"원거리 치명타(%)","magic_crit":"마법 치명타(%)"})
 	var result: PackedStringArray = []

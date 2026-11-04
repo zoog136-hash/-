@@ -51,6 +51,29 @@ class AdmissionTest(unittest.TestCase):
         self.tables['InvokeOption']=[option]
         return option
 
+    def test_weapon_scale_preserves_source_multiplier_and_chance(self):
+        option=self.invoke_fixture()
+        option.update(InvokeOptionTypeID=6,Param1=2000000)
+        effect=self.compile()['equipment_runtime']['101']['invokes']['1']['4'][0]
+        self.assertEqual((effect['kind'],effect['probability'],effect['option']['Param1']),('attack_weapon_scale',12345,2000000))
+        for key,value in [('BySpellAttack',True),('MaterialAmount',1),('WeaponGroupID',3),('Param2',44),('AttackTypeID',62),('Param1',500000)]:
+            with self.subTest(key=key):
+                self.tables['InvokeOption']=[{**option,key:value}]
+                runtime=self.compile()['equipment_runtime']['101']
+                self.assertEqual(runtime['invokes']['1']['4'],[])
+                self.assertIn(7,runtime['unconnected_effect_row_ids'])
+
+    def test_typed_flat_reduction_ignore_keeps_units_and_channels(self):
+        for kind,key in [('PierceMeleeDamageReduction','melee'),('PierceRangeDamageReduction','ranged'),('PierceMagicDamageReduction','magic')]:
+            self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=123,Name=kind,UnitID=1)]
+            self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=123,Value=4,BonusApplicationTypeID=0,BonusApplicationTargetID=0)]
+            self.tables['ItemBonus']=[dict(ID=1,ItemClassID=101,BonusID=11)]
+            self.tables['ItemEnchantBonus']=[dict(ID=7,EnchantLevel=4,ItemEnchantBonusGroupID=3,BonusID=12,BlessCode=0)]
+            runtime=self.compile()['equipment_runtime']['101']
+            self.assertEqual(runtime['extra_options']['1']['4'],{'source_'+key+'_flat_reduction_ignore':4})
+            self.tables['BonusType'][1]['UnitID']=3
+            self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
+
     def test_numeric_invoke_keeps_probability_and_exact_bless_family(self):
         self.invoke_fixture()
         normal=self.compile()['equipment_runtime']['101']['invokes']['1']['4']
