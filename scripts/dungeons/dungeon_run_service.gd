@@ -23,6 +23,9 @@ func configure(owner: Node, definitions: RefCounted) -> void:
 func validate(value: Variant) -> String:
 	if not value is Dictionary: return "던전 저장 형식이 손상되었습니다."
 	if not whole(value.get("schema"),1,1) or value.get("source_sha256","") != SOURCE_SHA: return "알 수 없는 던전 저장 버전입니다."
+	if not whole(value.get("local_day",0)): return "현재 지역 도전의 일일 기록이 손상되었습니다."
+	var local: Variant = value.get("local_settings",{"enabled":false,"time_scale":1})
+	if not local is Dictionary or not local.get("enabled") is bool or not whole(local.get("time_scale"),1,10): return "현재 지역 도전 설정이 손상되었습니다."
 	for key: String in ["revision","next_run"]:
 		if not whole(value.get(key),1 if key == "next_run" else 0): return "던전 저장 번호가 손상되었습니다."
 	for key: String in ["active","clears","settled","cycles"]:
@@ -32,6 +35,7 @@ func validate(value: Variant) -> String:
 		for key: String in ["id","map_id","clock_contract","status"]:
 			if not run.get(key) is String or run[key].is_empty() or run[key].length() > 256: return "던전 실행 식별자가 손상되었습니다."
 		if run.status not in ["active","cleared","failed"] or not whole(run.get("stage_id"),1) or not whole(run.get("cycle")): return "던전 실행 상태가 손상되었습니다."
+		if run.get("host_kind","") == "twilight_local" and (run.clock_contract != "twilight-local-kst05-v1" or not whole(run.get("local_deadline"),1,9000000000000000)): return "현재 지역 도전의 시간 기록이 손상되었습니다."
 		var parts: PackedStringArray = str(run.id).split(":")
 		if parts.size() != 3 or parts[0] != "tower" or parts[1] != str(int(run.stage_id)) or not parts[2].is_valid_int() or int(parts[2]) < 1 or int(parts[2]) >= int(value.next_run): return "던전 실행 번호가 올바르지 않습니다."
 		if not run.get("grantable_ids") is Array: return "던전 지급 자격 기록이 손상되었습니다."
@@ -97,6 +101,7 @@ func check(stage_id: int, immediate: bool = false) -> Dictionary:
 	if stage.is_empty(): return {"ok":false,"reasons":["시련의 탑 원본 자료가 없습니다."]}
 	if save_blocked: reasons.append(problem)
 	if busy: reasons.append("던전 저장을 처리 중입니다.")
+	if world.has_method("source_dungeon_additional_busy") and world.source_dungeon_additional_busy():reasons.append("다른 던전 실행과 보상을 먼저 처리하세요.")
 	if int(world.level) < int(stage.stage.MinLevel): reasons.append("%d레벨부터 입장할 수 있습니다." % int(stage.stage.MinLevel))
 	var host := context(stage_id)
 	if host.is_empty(): reasons.append("원본 Land %d의 전투·착지점·입장 자격·일일 시계 연결이 필요합니다." % int(stage.place.land.ID))
@@ -127,8 +132,18 @@ func begin(stage_id: int) -> Dictionary:
 	var counts: Dictionary = {}
 	for goal: Dictionary in stage.goals: counts[str(int(goal.row.ID))] = 0
 	next.active = {"id":"tower:%d:%d" % [stage_id,int(next.next_run)],"stage_id":stage_id,"hard":bool(stage.stage.IsHard),"map_id":str(checked.host.map_id),"clock_contract":str(checked.host.clock_contract),"cycle":int(checked.host.cycle),"status":"active","counts":counts,"events":{},"grantable_ids":[]}
+	if checked.host.get("host_kind","") == "twilight_local":
+		next.active.host_kind = "twilight_local"
+		next.active.local_deadline = int(checked.host.local_deadline)
 	next.next_run = int(next.next_run) + 1
 	return _commit(next,checked.payment)
+
+func configure_local(enabled: bool, time_scale: int) -> Dictionary:
+	if time_scale < 1 or time_scale > 10: return {"ok":false,"reason":"시간 배율은 1~10입니다."}
+	if not state.active.is_empty() and state.active.status in ["active","cleared"]: return {"ok":false,"reason":"현재 도전과 보상을 먼저 처리해 주세요."}
+	var next := state.duplicate(true)
+	next.local_settings = {"enabled":enabled,"time_scale":time_scale}
+	return _commit(next,{})
 
 func buy_attempt(stage_id: int) -> Dictionary:
 	var stage: Dictionary = rules.stage("tower",stage_id)
@@ -202,6 +217,7 @@ func _settle(stage_id: int, key: String, immediate_mode: bool, payment: Dictiona
 	if not bool(prepared.get("ok",false)): return prepared
 	var next := state.duplicate(true)
 	next.settled[key] = {"stage_id":stage_id,"immediate":immediate_mode,"reward_rows":_reward_identity(rewards)}
+	if (host if immediate_mode else state.active).get("host_kind","") == "twilight_local": next.settled[key].host_kind = "twilight_local"
 	if immediate_mode:
 		var stage: Dictionary = rules.stage("tower",stage_id)
 		var cycle_key := _cycle_key(stage,host)
@@ -213,6 +229,7 @@ func _settle(stage_id: int, key: String, immediate_mode: bool, payment: Dictiona
 
 func _commit(next: Dictionary, changes: Dictionary) -> Dictionary:
 	if busy or save_blocked: return {"ok":false,"reason":"던전 저장을 확인해 주세요."}
+	if world.has_method("source_dungeon_local_cycle"): next.local_day = world.source_dungeon_local_cycle()
 	next.revision = int(state.revision) + 1
 	var error := validate(next)
 	if not error.is_empty(): return {"ok":false,"reason":error}

@@ -13,6 +13,38 @@ var special_by_id: Dictionary = {}
 var time_by_id: Dictionary = {}
 var time_by_land: Dictionary = {}
 var recharge_by_item: Dictionary = {}
+const EXECUTION_SHA := "f61176042e92c2ba77c50b987f3f4932acaf7cb38b341050155ba7d2510ccc6e"
+const PREVIOUS_EXECUTION_SHA := "ad0fb91d91c8301c66f383e9d7a63aeca5b7260fed2319b733971b50e9f559d3"
+var orim_actor_types: Dictionary = {}
+var orim_groups: Dictionary = {}
+var orim_item_effects: Dictionary = {}
+var orim_actor_defs: Dictionary = {}
+
+func _load_execution(directory: String) -> void:
+	orim_actor_types.clear(); orim_groups.clear();orim_item_effects.clear();orim_actor_defs.clear()
+	var path := directory.path_join("orim_execution.json")
+	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) not in [EXECUTION_SHA,PREVIOUS_EXECUTION_SHA]: return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary or parsed.get("source_sha256","") != SOURCE_SHA256: return
+	var types: Dictionary = {}
+	for row: Dictionary in parsed.tables.OrimsTrailNpcType: types[int(row.ID)] = str(row.Name)
+	for row: Dictionary in parsed.tables.OrimsTrailNpc: orim_actor_types[int(row.NpcClassID)] = types[int(row.OrimsTrailNpcTypeID)]
+	for row: Dictionary in parsed.tables.NpcClassForNpcGroup:
+		var group := int(row.NpcGroupID)
+		if not orim_groups.has(group): orim_groups[group] = []
+		orim_groups[group].append(int(row.NpcClassID))
+	var bonuses: Dictionary={};var names: Dictionary={}
+	for row: Dictionary in parsed.tables.BonusType:names[int(row.ID)]=str(row.Name)
+	for row: Dictionary in parsed.tables.Bonus:bonuses[int(row.ID)]=row
+	for link: Dictionary in parsed.tables.ItemBonus:
+		var item_id:=int(link.ItemClassID);var bonus: Dictionary=bonuses[int(link.BonusID)]
+		if not orim_item_effects.has(item_id):orim_item_effects[item_id]=[]
+		orim_item_effects[item_id].append({"type":names[int(bonus.BonusTypeID)],"row":bonus.duplicate(true)})
+	var npc_names: Dictionary={}
+	for row: Dictionary in parsed.tables.get("DescData_Korean",[]):npc_names[int(row.ID)]=str(row.Description)
+	for row: Dictionary in parsed.tables.get("NpcClass",[]):orim_actor_defs[int(row.ID)]={"row":row.duplicate(true),"name":npc_names.get(int(row.DescId),str(row.Name)),"attacks":[]}
+	for row: Dictionary in parsed.tables.get("NpcAttack",[]):
+		if orim_actor_defs.has(int(row.NpcClassID)):orim_actor_defs[int(row.NpcClassID)].attacks.append(row.duplicate(true))
 
 func _read_manifest(path: String) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -35,6 +67,8 @@ func _read_manifest(path: String) -> Dictionary:
 		or int(manifest.get("bytes",0)) != PAYLOAD_BYTES:
 		return {"ok":false,"reason":"지원하는 최신 523 던전 자료와 일치하지 않습니다."}
 	var payload_path := path.get_base_dir().path_join("dungeons.json")
+	var optional_execution := path.get_base_dir().path_join("orim_execution.json")
+	if FileAccess.file_exists(optional_execution) and FileAccess.get_sha256(optional_execution) not in [EXECUTION_SHA,PREVIOUS_EXECUTION_SHA]:return {"ok":false,"reason":"오림 실행 부속 자료가 변경되었습니다. 기존 자료를 유지합니다."}
 	file = FileAccess.open(payload_path,FileAccess.READ)
 	if file == null or file.get_length() != PAYLOAD_BYTES or FileAccess.get_sha256(payload_path) != PAYLOAD_SHA256:
 		return {"ok":false,"reason":"던전 자료가 누락되었거나 변경되었습니다."}
@@ -56,6 +90,7 @@ func load_pack(path: String = DEFAULT_MANIFEST) -> Dictionary:
 		last_error = str(checked.reason)
 		return {"ok":false,"reason":last_error}
 	_activate(checked.data)
+	_load_execution(path.get_base_dir())
 	return {"ok":true,"tower":200,"orim":20,"special":22}
 
 func install_pack(path: String) -> Dictionary:
@@ -89,7 +124,23 @@ func install_pack(path: String) -> Dictionary:
 			DirAccess.remove_absolute(staging.path_join("manifest.json"))
 			DirAccess.remove_absolute(staging)
 			return {"ok":false,"reason":"던전 자료 설치를 완료하지 못했습니다."}
+	var sidecar := path.get_base_dir().path_join("orim_execution.json")
+	if FileAccess.file_exists(sidecar) and FileAccess.get_sha256(sidecar) in [EXECUTION_SHA,PREVIOUS_EXECUTION_SHA]:
+		var target := directory.path_join("orim_execution.json")
+		var old_sha := FileAccess.get_sha256(target) if FileAccess.file_exists(target) else ""
+		if not old_sha.is_empty() and old_sha not in [EXECUTION_SHA,PREVIOUS_EXECUTION_SHA]: return {"ok":false,"reason":"기존 오림 실행 자료를 보존했습니다. 손상 자료를 별도 확인해 주세요."}
+		if old_sha.is_empty() or (old_sha==PREVIOUS_EXECUTION_SHA and FileAccess.get_sha256(sidecar)==EXECUTION_SHA):
+			if not old_sha.is_empty():
+				var backup := target+".backup."+old_sha
+				if not FileAccess.file_exists(backup) and DirAccess.copy_absolute(target,backup)!=OK:return {"ok":false,"reason":"이전 오림 실행 자료 백업 실패"}
+				if FileAccess.get_sha256(backup)!=old_sha:return {"ok":false,"reason":"이전 오림 실행 자료 백업 불일치"}
+			var temp := target+".pending"
+			var file := FileAccess.open(temp,FileAccess.WRITE)
+			if file == null: return {"ok":false,"reason":"오림 실행 자료 저장 실패"}
+			file.store_buffer(FileAccess.get_file_as_bytes(sidecar)); file.close()
+			if DirAccess.rename_absolute(temp,target) != OK: return {"ok":false,"reason":"오림 실행 자료 활성화 실패"}
 	_activate(checked.data)
+	_load_execution(directory)
 	return {"ok":true,"tower":200,"orim":20,"special":22}
 
 func _activate(candidate: Dictionary) -> void:
