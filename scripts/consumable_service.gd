@@ -132,6 +132,7 @@ func prune_removed() -> void:
 
 func try_use(item_name: String) -> bool:
 	if item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
+		if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
 		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
 		if bool(source_result.get("handled",false)):
 			if bool(source_result.get("ok",false)):
@@ -142,6 +143,7 @@ func try_use(item_name: String) -> bool:
 	var spec: Dictionary = RULES.definition(item_name)
 	if spec.is_empty():
 		return false
+	if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
 	var inv: Dictionary = world.get("inventory") as Dictionary
 	if int(inv.get(item_name, 0)) <= 0:
 		_message("아이템이 없습니다: %s" % item_name)
@@ -409,6 +411,7 @@ func _use_bless_scroll(scroll_name: String) -> void:
 # The physical instance ID is mandatory: two copies of the same weapon can
 # have different blessings, enchants, pinned catalog variants and equip state.
 func apply_bless_scroll(scroll_name: String, target_reference: String, forced_roll: float = -1.0) -> bool:
+	if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return false
 	if str(RULES.definition(scroll_name).get("kind", "")) != "equipment_bless":
 		return false
 	var selected: Dictionary = world.call("_parse_enhancement_target", target_reference)

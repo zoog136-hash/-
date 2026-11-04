@@ -55,6 +55,7 @@ var path_index: int = 0
 var auto_enabled: bool = false
 var manual_navigation: bool = false
 var movement_locked: bool = false
+var source_523_movement_blocked: bool = false
 var class_index: int = 0
 var facing: int = 0 # 0 down, 1 up, 2 left, 3 right
 var attack_clock: float = 0.0
@@ -147,7 +148,7 @@ func _physics_process(delta: float) -> void:
 	if not ui_blocks and Input.is_action_just_pressed("toggle_auto"):
 		set_auto_enabled(not auto_enabled)
 
-	if is_held():
+	if is_held() or source_523_movement_blocked:
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
 		clear_click_path()

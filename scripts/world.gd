@@ -1,6 +1,8 @@
 extends Node2D
 class_name TwilightWorld
 
+var patch523_npc_spells = preload("res://scripts/monsters/patch523_npc_combat.gd").new()
+
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
@@ -377,6 +379,10 @@ var inventory: Dictionary = {
 }
 
 func _ready() -> void:
+	if patch523_npc_spells.configure(self):
+		var source_panel = preload("res://scripts/ui/patch523_npc_panel.gd").new()
+		source_panel.service = patch523_npc_spells
+		add_child(source_panel)
 	# Apply after resource import. A project-level custom_font is loaded before
 	# first import on clean checkouts and would report a missing font loader.
 	var korean_font := FontVariation.new()
@@ -472,6 +478,7 @@ func _ready() -> void:
 		hud.call("open_class_selection",true)
 
 func _process(delta: float) -> void:
+	patch523_npc_spells.tick(delta)
 	# No auto-save, auto-hunt or keyboard commands until the new class is
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
@@ -3263,6 +3270,7 @@ func _grant_playtest_aden() -> void:
 	_save_game(true)
 
 func _use_card_pack_item(item_name: String) -> void:
+	if not _patch523_item_allowed(): return
 	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
@@ -3463,6 +3471,7 @@ func _format_seconds_short(seconds: float) -> String:
 	return "%d초" % whole
 
 func _use_timed_item_buff(record: Dictionary) -> bool:
+	if not _patch523_item_allowed(): return false
 	var item_name: String = str(record.get("name", ""))
 	var buff: Dictionary = _timed_item_buff_from_record(record)
 	if item_name == "" or buff.is_empty():
@@ -3823,6 +3832,7 @@ func _is_item_equipped(item_name: String) -> bool:
 	return false
 
 func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
+	if not _patch523_item_allowed(): return
 	if hud.has_method("is_enhancement_presenting") and bool(hud.call("is_enhancement_presenting")):
 		return
 	var selected: Dictionary = _parse_enhancement_target(target_name)
@@ -3975,6 +3985,7 @@ func _update_ain_hud() -> void:
 		hud.call("set_ain_state", state, inventory)
 
 func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
+	if not _patch523_item_allowed(): return false
 	var kind: String = str(spec.get("kind", ""))
 	var base_name: String = CONSUMABLE_RULES.normalize_name(item_name)
 	if kind == "ain_orb":
@@ -4220,6 +4231,7 @@ func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
+	if not _patch523_item_allowed(): return
 	if bool(consumable_service.call("try_use", item_name)):
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -4235,6 +4247,7 @@ func _use_quick_item(item_name: String) -> void:
 	hud.show_message("사용할 수 없는 퀵 아이템입니다")
 
 func _use_healing_item(item_name: String, heal_amount: int) -> void:
+	if not _patch523_item_allowed(): return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("%s이(가) 없습니다" % item_name)
 		return
@@ -7206,7 +7219,7 @@ func _melee_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("meleeDamage") if original_skills != null else 0) + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage") + int(consumable_service.call("permanent_damage_bonus", "melee_damage"))
 
 func _melee_accuracy_stat() -> int:
-	return int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
+	return int(patch523_npc_spells.modifier("MeleeHit")) + int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("rangedDamage") if original_skills != null else 0) + _catalog_damage_adjustment("ranged") + _catalog_stat_sum("pve_ranged_damage") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
@@ -7503,7 +7516,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
-	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat"))
+	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat")) - int(patch523_npc_spells.modifier("ArmorClassBonus"))
 
 func _record_dg(record: Dictionary) -> int:
 	if record.has("dg"):
@@ -7945,6 +7958,7 @@ func _impact_player_attack(action: Dictionary) -> void:
 	resolving_combat_action = false
 
 func _clear_combat_actions() -> void:
+	patch523_npc_spells.clear()
 	if is_instance_valid(presentation_audio): presentation_audio.clear()
 	if original_skills != null: original_skills.clear()
 	combat_generation += 1
@@ -8105,3 +8119,31 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+
+func _patch523_item_allowed() -> bool:
+	if not patch523_npc_spells.blocks("CannotUseItem"): return true
+	if is_instance_valid(hud): hud.show_message("현재 상태에서는 아이템을 사용할 수 없습니다")
+	return false
+
+func resolve_patch523_npc_hit(actor: TwilightMonster, raw: int, spell: Dictionary) -> bool:
+	# Keep one authoritative hit/crit/counter/resistance/death call. Suppress
+	# unrelated legacy status fields for this exact source spell only.
+	if not is_instance_valid(actor): return false
+	var life: int = actor.life_id
+	var before_hp: int = hp
+	var old: Dictionary = {}
+	for kind: String in ["stun","silence","hold","fear","poison","bleed"]:
+		for suffix: String in ["_duration","_accuracy"]:
+			var property: String = kind + suffix
+			old[property] = actor.get(property)
+			actor.set(property,0)
+	var old_element: String = actor.attack_element
+	var element: Dictionary = patch523_npc_spells.catalog.row("ElementalType",int(spell.get("ElementalTypeID",0)))
+	var channels: Dictionary = {"None":"physical","Fire":"fire","Water":"water","Air":"wind","Earth":"earth","Light":"holy","Dark":"dark"}
+	if channels.has(element.get("Name","")): actor.attack_element = channels[element.Name]
+	_on_player_hit(actor,raw,"magic")
+	if is_instance_valid(actor) and actor.life_id == life:
+		for property: String in old: actor.set(property,old[property])
+		actor.attack_element = old_element
+	return hp < before_hp # Final host HP outcome, not a fabricated native success.

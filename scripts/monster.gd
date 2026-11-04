@@ -129,6 +129,8 @@ var roaming_radius: float = 180.0
 var roam_clock: float = 0.0
 
 func retire_for_pool() -> void:
+	var source523 = _patch523_service()
+	if source523 != null: source523.forget(self)
 	# Death presentation is complete before this is called. Release all visual
 	# owners while keeping the lightweight body for the next life/region.
 	set_physics_process(false)
@@ -169,6 +171,8 @@ func retire_for_pool() -> void:
 	drop_items.clear()
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
+	var source523 = _patch523_service()
+	if source523 != null: source523.forget(self)
 	source_option_debuffs.clear()
 	_clear_source_m_view()
 	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
@@ -478,6 +482,14 @@ func _tick_ai(delta: float) -> void:
 		sight_clock = .12+float(get_instance_id()%5)*.008
 		sight_cached = world_controller._has_line_of_sight_world(global_position,target_player.global_position) if distance<=maxf(attack_range,620. if is_boss else attack_range) else false
 	var sight: bool = sight_cached and distance<=maxf(attack_range,620. if is_boss else attack_range)
+	var source523 = _patch523_service()
+	if source523 != null and source523.owns_actor(self):
+		if source523.try_begin(self,sight): return
+		# Never turn an unhandled heal/summon/plate into the generic damage or
+		# authored special attack. Existing movement/safe/leash logic remains.
+		if distance > attack_range and not is_held(): _move_toward(target_player.global_position,delta)
+		else: velocity = Vector2.ZERO
+		return
 	if is_boss and ai.has("special") and special_cooldown<=0. and distance<=620. and sight and not is_silenced():
 		_begin_special()
 		return
@@ -980,6 +992,8 @@ func combat_hit_position() -> Vector2:
 	return global_position + motion.profile.hit_position
 
 func _cancel_attack(id: int) -> void:
+	var source523 = _patch523_service()
+	if source523 != null: source523.cancel(self,id)
 	if id != special_sequence: return
 	special_attack.clear()
 	special_sequence = -1
@@ -990,6 +1004,8 @@ func _cancel_attack(id: int) -> void:
 func _release_attack(id: int) -> void:
 	if dead or id != motion.sequence or id == released_sequence or not motion.active or not motion.released: return
 	released_sequence = id
+	var source523 = _patch523_service()
+	if source523 != null and source523.release(self,id): return
 	if not is_instance_valid(target_player): return
 	if is_stunned() or is_feared(): return
 	if id==special_sequence:
@@ -1073,3 +1089,6 @@ func advance_source_option_debuffs(delta: float) -> void:
 func hit_armor_class() -> int:
 	# Existing local formula expects nonpositive armor; preserve raw native AC for display/audit.
 	return mini(0, armor_class) if not source_m_original.is_empty() else armor_class
+
+func _patch523_service() -> RefCounted:
+	return world_controller.get("patch523_npc_spells") if is_instance_valid(world_controller) else null
