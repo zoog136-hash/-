@@ -3336,6 +3336,12 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
 		return
+	# Typed expedition items must not fall through name-based legacy scroll rules.
+	for source_key: String in expedition_local.state.get("issued", {}):
+		if expedition_local.state.issued[source_key] != item_name: continue
+		var outcome: Dictionary = expedition_local.open_box(source_key, -1, item_name)
+		hud.show_message(str(outcome.get("message", outcome.get("error", "탐험 재료의 사용 규칙은 아직 연결되지 않았습니다."))))
+		return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
@@ -4407,6 +4413,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if expedition_local.save_blocked or not expedition_local.validate(collection_override.get(EXPEDITION_LOCAL.KEY, expedition_local.export_state())).is_empty():return ERR_INVALID_DATA
+	if not expedition_local.before_save(): return ERR_CANT_CREATE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -6410,6 +6417,9 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		return
 	if not equipped_catalog.has(category):
 		return
+	if expedition_local.reserved(CARD_DRAW_FUSION.card_id(record)):
+		hud.show_message("탐험·정산 대기 기록에 사용 중인 카드는 소환할 수 없습니다.")
+		return
 	var old_max_hp: int = _effective_max_hp()
 	equipped_catalog[category] = record.duplicate(true)
 	_invalidate_equipment_static()
@@ -8082,6 +8092,9 @@ func _drop_inventory_reference(reference: String, target: Vector2) -> bool:
 
 func _on_secondary_doll_requested(identity: String) -> void:
 	if _option_awakening_busy():return
+	if expedition_local.reserved(identity):
+		hud.show_message("탐험·정산 대기 기록에 사용 중인 카드는 추가 소환할 수 없습니다.")
+		return
 	var result: Dictionary=option_awakening.select_subslot(identity)
 	if not result.ok:hud.show_message(str(result.error));return
 	_update_companion(0)

@@ -46,6 +46,20 @@ func run() -> void:
 		if argument.begins_with("--expedition523-capture="): capture = argument.trim_prefix("--expedition523-capture=")
 	var catalog: RefCounted = world.get_expedition_catalog()
 	check(catalog.ready() == expected_source, "explicit private pack presence")
+	if expected_source:
+		var original_equipped: Dictionary = world.equipped_catalog.duplicate(true)
+		for candidate: Dictionary in world.catalog_db.get("마법인형", []):
+			if world.CARD_DRAW_FUSION.card_id(candidate) == identity:
+				world.equipped_catalog["마법인형"] = candidate.duplicate(true)
+		check(not world.expedition_local.prepare(1, [identity]).ok, "source help rejects currently summoned primary card")
+		world.equipped_catalog = original_equipped
+		var secondary_field := "native_subslot_identity"
+		var had_secondary: bool = world.option_awakening.progress.has(secondary_field)
+		var old_secondary: Variant = world.option_awakening.progress.get(secondary_field)
+		world.option_awakening.progress[secondary_field] = identity
+		check(not world.expedition_local.prepare(1, [identity]).ok, "current additional summon also prevents departure")
+		if had_secondary: world.option_awakening.progress[secondary_field] = old_secondary
+		else: world.option_awakening.progress.erase(secondary_field)
 	world.hud.toggle_menu()
 	var tile: Button = world.hud.workspace.find_child("MenuTile_expedition", true, false)
 	check(tile != null and tile.is_visible_in_tree(), "actual menu contains expedition tile")
@@ -105,6 +119,13 @@ func run() -> void:
 		if confirmation != null:
 			(confirmation.find_child("ConfirmTransaction", true, false) as Button).pressed.emit()
 		check(world.gold == 190000 and world.expedition_local.state.jobs.size() == 1, "UI departure debits exact source10000 and persists one job")
+		var equip_before: String = JSON.stringify(world.equipped_catalog)
+		for candidate: Dictionary in world.catalog_db.get("마법인형", []):
+			if world.CARD_DRAW_FUSION.card_id(candidate) == identity: world._equip_catalog("마법인형", candidate)
+		check(JSON.stringify(world.equipped_catalog) == equip_before, "reserved expedition card cannot be summoned again")
+		var subslot_before: String = JSON.stringify(world.option_awakening.progress)
+		world._on_secondary_doll_requested(identity)
+		check(JSON.stringify(world.option_awakening.progress) == subslot_before, "reserved expedition card cannot enter additional slot")
 		check(FileAccess.get_sha256(path+".pre-expedition523-"+baseline) == baseline, "first departure preserves original bytes in SHA backup")
 		var saved: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
 		check(saved.gold == 190000 and saved.expedition523_local.jobs[0].remaining == 28800, "cost and source8hour state saved atomically")
@@ -114,6 +135,9 @@ func run() -> void:
 			await RenderingServer.frame_post_draw
 			root.get_texture().get_image().save_png(capture+"-started.png")
 		check(not world.request_expedition_start(1, [identity]).ok and world.gold == 190000, "duplicate departure cannot debit twice")
+		# Deterministic test policy exercises completion; production defaults stay intact.
+		for event_type in world.expedition_local.state.jobs[0].sim.policy.normal_event_weights:
+			world.expedition_local.state.jobs[0].sim.policy.normal_event_weights[event_type] = 1 if event_type == "71" else 0
 		var loot_before: String = JSON.stringify([world.inventory, world.item_instances, world.rng.state])
 		world.expedition_local.advance(120)
 		check(world.expedition_local.state.jobs[0].remaining == 28680, "local connected-time counter advances")
@@ -126,14 +150,28 @@ func run() -> void:
 		# inventory/RNG effects from that unrelated production load path.
 		loot_before = JSON.stringify([world.inventory, world.item_instances, world.rng.state])
 		world.expedition_local.advance(28800)
-		check(world.expedition_local.state.jobs[0].status == "awaiting_outcome" and world.expedition_local.state.jobs[0].remaining == 0, "timer expiry awaits outcome rather than inventing success")
-		check(JSON.stringify([world.inventory, world.item_instances, world.rng.state]) == loot_before, "no invented event RNG failure or box payout")
+		check(world.expedition_local.state.jobs[0].status == "completed" and world.expedition_local.state.jobs[0].remaining == 0, "surviving local estimate reaches actual completion")
+		check(JSON.stringify([world.inventory, world.item_instances, world.rng.state]) == loot_before, "completion alone does not grant items or change combat RNG")
 		check(world._save_game(true) == OK, "pending settlement persists")
+		var settlement_before: String = JSON.stringify([world.expedition_local.export_state(), world.inventory, world.item_instances, world.gold, world.rng.state])
+		var settlement_hash: String = FileAccess.get_sha256(path)
+		var job_id: int = int(world.expedition_local.state.jobs[0].id)
+		var contract: Dictionary = world.expedition_local.settlement_view(job_id)
+		check(contract.ok and contract.claimable and int(contract.reward.ID) == 136194 and int(contract.item.ID) == 166594, "completed job binds its exact original completion box")
+		var original_reward: Variant = world.expedition_local.state.jobs[0].completion_reward_id
+		world.expedition_local.state.jobs[0].completion_reward_id = int(original_reward)+1
+		check(not world.expedition_local.settlement_view(job_id).ok, "forged completion reference rejected")
+		world.expedition_local.state.jobs[0].completion_reward_id = original_reward
+		view._refresh_jobs()
+		(view.find_child("ExpeditionSettlementInspect", true, false) as Button).pressed.emit()
+		check(view.details.text.contains("탐험 기록") and view.details.text.contains("개봉") and view.details.text.contains("AbleMultiple"), "actual UI shows pending settlement route and opening boundary")
+		world.expedition_local.settlement_view(job_id)
+		check(JSON.stringify([world.expedition_local.export_state(), world.inventory, world.item_instances, world.gold, world.rng.state]) == settlement_before and FileAccess.get_sha256(path) == settlement_hash, "repeated settlement inspection cannot duplicate rewards or advance RNG/save")
 		if not capture.is_empty():
-			view._render()
+			view._show_settlement()
 			await process_frame
 			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_png(capture+"-pending.png")
+			root.get_texture().get_image().save_png(capture+"-completed.png")
 		var good_bytes := FileAccess.get_file_as_bytes(path)
 		var corrupt: Dictionary = JSON.parse_string(good_bytes.get_string_from_utf8())
 		corrupt.expedition523_local.jobs[0].remaining = -1

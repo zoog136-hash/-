@@ -38,6 +38,8 @@ func _initialize() -> void:
 	fixture.jobs = [job]
 	fixture.attempts = {"2": 1}
 	check(local.validate(fixture).is_empty(), "bounded local checkpoint shape")
+	local.state = fixture.duplicate(true)
+	check(local.reserved("source:m508:2:1") and not local.reserved("source:m508:2:2"), "paid job reserves only its exact source card")
 	check(local.validate(JSON.parse_string(JSON.stringify(fixture))).is_empty(), "JSON numeric checkpoint roundtrip")
 	for mutation in [{"remaining": -1}, {"remaining": 0}, {"duration": 1}, {"identity": "source:m508:2:01"}, {"id": 2}]:
 		var corrupt := fixture.duplicate(true)
@@ -83,6 +85,15 @@ func _initialize() -> void:
 			coin_amounts.sort()
 			check(coin_amounts == [100, 1000], "same item retains distinct quantity candidates")
 			check(catalog.synergy_evidence().size() == 7, "all synergies retained including unresolved server274")
+			var first_group_by_spot := {}
+			for view: Dictionary in catalog.rows("MagicDollExpeditionCompleteRewardView"):
+				var spot_id := int(view.MagicDollExpeditionSpotID)
+				if first_group_by_spot.has(spot_id): continue
+				first_group_by_spot[spot_id] = true
+				var contract: Dictionary = catalog.completion_contract(spot_id, int(view.MagicDollExpeditionGroupID), int(view.RewardID))
+				check(contract.ok and not contract.executable and contract.boxes.size() == 1 and contract.boxes[0].candidates.size() in [6, 7] and int(contract.boxes[0].raw_weight_sum) == 10000000 and contract.boxes[0].bag.AbleMultiple == true, "exact pending completion contract for spot "+str(spot_id))
+			check(first_group_by_spot.size() == 29, "all29 completion-box contracts checked")
+			check(not catalog.completion_contract(1, 242, 136284).ok, "another group's completion RewardID cannot settle this job")
 			var before: String = JSON.stringify(catalog.rows("MagicDollExpeditionSpot"))
 			var copy: Array = catalog.spots()
 			copy[0].ExpeditionCost = 0

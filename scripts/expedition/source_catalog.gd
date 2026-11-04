@@ -175,6 +175,30 @@ func completion_box_candidates(item_id: int) -> Array:
 					result.append(candidate)
 	return result
 
+func completion_contract(spot_id: int, group_id: int, expected_reward_id: int) -> Dictionary:
+	var detail := group_detail(spot_id, group_id)
+	if detail.completion.size() != 1:
+		return {"ok": false, "error": "장소·출발 그룹의 완료 보상 연결이 없습니다."}
+	var completion: Dictionary = detail.completion[0]
+	var reward: Dictionary = completion.reward
+	if int(reward.get("ID", 0)) != expected_reward_id or int(reward.get("RewardTypeID", 0)) != 2:
+		return {"ok": false, "error": "출발 시 저장한 완료 RewardID와 원본 연결이 다릅니다."}
+	var boxes: Array = []
+	for link: Dictionary in rows("ItemBonus"):
+		if int(link.ItemClassID) != int(reward.RewardClassID): continue
+		var bonus := record("Bonus", int(link.BonusID))
+		var kind := record("BonusType", int(bonus.get("BonusTypeID", 0)))
+		if kind.get("Name") != "LuckyBagClassID" or int(kind.get("UnitID", 0)) != 29: continue
+		var bag := record("LuckyBagClass", int(bonus.Value))
+		var candidates: Array = []
+		var raw_sum := 0
+		for candidate: Dictionary in completion.box_candidates:
+			if int(candidate.LuckyBagClassID) == int(bag.get("ID", -1)):
+				candidates.append(candidate.duplicate(true))
+				raw_sum += int(candidate.Probability)
+		boxes.append({"item_bonus": link, "bonus": bonus, "bonus_type": kind, "bag": bag, "candidates": candidates, "raw_weight_sum": raw_sum})
+	return {"ok": true, "completion_view": completion.view, "reward": reward, "item": completion.item, "boxes": boxes, "executable": false, "boundary": "완주 성공·지급 횟수·상자 개봉 실행 조건은 원본 정적 참조만으로 확정되지 않습니다."}
+
 func synergy_evidence() -> Array:
 	var result: Array = []
 	for synergy: Dictionary in rows("BuffCardExpeditionSynergy"):

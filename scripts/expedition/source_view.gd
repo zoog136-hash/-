@@ -14,6 +14,16 @@ var hud: Node
 var job_label: Label
 var result_message: String = ""
 var refresh_time: float = 0.0
+var job_toolbar: HBoxContainer
+var job_picker: OptionButton
+var claim_button: Button
+var revive_button: Button
+var abort_button: Button
+var storage_picker: OptionButton
+var storage_rows: Array = []
+var storage_title: Label
+var open_button: Button
+var withdraw_button: Button
 
 func configure(source: RefCounted, cards: Array, local_runtime: RefCounted = null, host_hud: Node = null) -> void:
 	catalogue = source
@@ -39,7 +49,7 @@ func configure(source: RefCounted, cards: Array, local_runtime: RefCounted = nul
 	results.add_theme_constant_override("separation", 8)
 	add_child(results)
 	var intro := Label.new()
-	intro.text = "탐험·파견·성령 수집 · 원본 장소와 소유 카드 조건 확인"
+	intro.text = "탐험 · 원본 수치 우선 / 부족한 규칙은 TWILIGHT 추정 설정"
 	intro.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	choices.add_child(intro)
 	if not catalogue.ready():
@@ -67,13 +77,32 @@ func configure(source: RefCounted, cards: Array, local_runtime: RefCounted = nul
 	group_picker = OptionButton.new()
 	group_picker.name = "ExpeditionRewardGroupPicker"
 	choices.add_child(group_picker)
+	var rules_button := Button.new()
+	rules_button.name = "ExpeditionRules"
+	rules_button.text = "원본·추정 규칙 안내"
+	rules_button.pressed.connect(_show_rules)
+	choices.add_child(rules_button)
+	choices.add_child(HSeparator.new())
+	storage_title = Label.new()
+	choices.add_child(storage_title)
+	storage_picker = OptionButton.new()
+	storage_picker.name = "ExpeditionStoragePicker"
+	choices.add_child(storage_picker)
+	storage_picker.item_selected.connect(func(_i: int) -> void: _refresh_storage_buttons())
+	var storage_actions := HBoxContainer.new()
+	choices.add_child(storage_actions)
+	open_button = Button.new(); open_button.text = "상자1개 열기"; open_button.name = "ExpeditionOpenBox"
+	withdraw_button = Button.new(); withdraw_button.text = "인벤토리로"; withdraw_button.name = "ExpeditionWithdraw"
+	storage_actions.add_child(open_button); storage_actions.add_child(withdraw_button)
+	open_button.pressed.connect(func() -> void: _storage_action(true))
+	withdraw_button.pressed.connect(func() -> void: _storage_action(false))
 	state_label = Label.new()
 	state_label.name = "ExpeditionEligibility"
 	state_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	results.add_child(state_label)
 	start_button = Button.new()
 	start_button.name = "ExpeditionStartBlocked"
-	start_button.text = "로컬 출발 · 이벤트·정산 미연결"
+	start_button.text = "탐험 출발 · 추정 규칙 적용"
 	start_button.disabled = true
 	results.add_child(start_button)
 	start_button.pressed.connect(_confirm_start)
@@ -81,6 +110,31 @@ func configure(source: RefCounted, cards: Array, local_runtime: RefCounted = nul
 	job_label.name = "ExpeditionJobStatus"
 	job_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	results.add_child(job_label)
+	job_toolbar = HBoxContainer.new()
+	job_toolbar.name = "ExpeditionSettlementToolbar"
+	results.add_child(job_toolbar)
+	job_picker = OptionButton.new()
+	job_picker.name = "ExpeditionJobPicker"
+	job_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	job_toolbar.add_child(job_picker)
+	job_picker.item_selected.connect(func(_index: int) -> void:
+		_refresh_jobs()
+		_show_settlement())
+	var inspect_button := Button.new()
+	inspect_button.name = "ExpeditionSettlementInspect"
+	inspect_button.text = "정산 내역"
+	inspect_button.pressed.connect(_show_settlement)
+	job_toolbar.add_child(inspect_button)
+	job_toolbar.hide()
+	var actions := HBoxContainer.new()
+	results.add_child(actions)
+	claim_button = Button.new(); claim_button.text = "보상 받기"; claim_button.name = "ExpeditionClaim"
+	revive_button = Button.new(); revive_button.text = "부활"; revive_button.name = "ExpeditionResurrect"
+	abort_button = Button.new(); abort_button.text = "중단·일부 수령"; abort_button.name = "ExpeditionAbort"
+	for button: Button in [claim_button, revive_button, abort_button]: actions.add_child(button)
+	claim_button.pressed.connect(func() -> void: _job_action("claim"))
+	revive_button.pressed.connect(func() -> void: _job_action("revive"))
+	abort_button.pressed.connect(func() -> void: _job_action("abort"))
 	details = RichTextLabel.new()
 	details.name = "ExpeditionSourceDetails"
 	details.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -136,9 +190,93 @@ func _process(delta: float) -> void:
 func _refresh_jobs() -> void:
 	if runtime == null: return
 	job_label.text = result_message
+	var selected_job := 0
+	if job_picker.selected >= 0:
+		selected_job = int(job_picker.get_item_metadata(job_picker.selected))
+	job_picker.clear()
+	var selected_status := ""
+	var selected_record: Dictionary = {}
 	for job: Dictionary in runtime.jobs_view():
 		var spot: Dictionary = catalogue.record("MagicDollExpeditionSpot", int(job.spot_id))
-		job_label.text += "\n%s · %s" % [spot.get("Name", str(job.spot_id)), ("남은 접속 시간 %d초" % int(job.remaining)) if job.status == "running" else "시간 종료 · 성공·실패 판정 및 보상 정산 대기"]
+		var index := job_picker.item_count
+		if index == 0 or int(job.id) == selected_job:
+			selected_record = job
+			selected_status = "%s · %s · HP %d/%d · 남은 %d초" % [spot.get("Name", str(job.spot_id)), {"running":"진행", "dead":"사망", "completed":"완주"}.get(job.status, job.status), int(job.get("sim", {}).get("hp", 0)), int(job.get("sim", {}).get("max_hp", 0)), int(job.remaining)]
+		job_picker.add_item(str(spot.get("Name", job.spot_id)))
+		job_picker.set_item_metadata(index, int(job.id))
+		if int(job.id) == selected_job: job_picker.select(index)
+	if not selected_status.is_empty(): job_label.text += "\n"+selected_status
+	job_toolbar.visible = job_picker.item_count > 0
+	claim_button.disabled = selected_record.get("status") != "completed"
+	revive_button.disabled = selected_record.get("status") != "dead" or int(selected_record.get("sim", {}).get("resurrections", 3)) >= 3
+	abort_button.disabled = selected_record.is_empty() or selected_record.get("status") == "completed"
+	_refresh_storage()
+
+func _refresh_storage() -> void:
+	if runtime == null or not is_instance_valid(storage_picker): return
+	var selected := ""
+	if storage_picker.selected >= 0: selected = str(storage_picker.get_item_metadata(storage_picker.selected))
+	storage_rows = runtime.storage_view()
+	storage_title.text = "탐험 보상 보관함 · %d/75칸" % storage_rows.size()
+	storage_picker.clear()
+	for row: Dictionary in storage_rows:
+		var index := storage_picker.item_count
+		storage_picker.add_item("%s ×%d" % [row.item.get("Name", row.key), int(row.amount)])
+		storage_picker.set_item_metadata(index, str(row.key))
+		if row.key == selected: storage_picker.select(index)
+	_refresh_storage_buttons()
+
+func _refresh_storage_buttons() -> void:
+	var has_item := storage_picker.selected >= 0 and storage_picker.selected < storage_rows.size()
+	withdraw_button.disabled = not has_item
+	open_button.disabled = not bool(storage_rows[storage_picker.selected].box) if has_item else true
+
+func _storage_action(open: bool) -> void:
+	if runtime == null or hud == null or storage_picker.selected < 0: return
+	var row: Dictionary = storage_rows[storage_picker.selected].duplicate(true)
+	var contents_before: Dictionary = runtime.state.storage.duplicate(true)
+	hud.confirm_action("탐험 보상", "상자1개를 소모해 원본 가중치로%d회 추첨합니다. 개봉 횟수는 TWILIGHT 자체 규칙입니다." % int(runtime.rules_view().completion_box_draws) if open else "선택한 보상 %d개를 원본 ID를 보존해 인벤토리로 옮깁니다." % int(row.amount), "상자 열기" if open else "수령", func(_count: int = 1) -> void:
+		# Timer progress alone must not invalidate a box confirmation.
+		if runtime.state.storage != contents_before:
+			result_message = "보관함 상태가 변경되었습니다. 다시 선택하세요."
+			_render()
+			return
+		var result: Dictionary = runtime.open_box(str(row.key)) if open else runtime.withdraw(str(row.key), int(row.amount))
+		result_message = str(result.get("message", result.get("error", "")))
+		_render())
+
+func _job_action(action: String) -> void:
+	if runtime == null or hud == null or job_picker.selected < 0: return
+	var id := int(job_picker.get_item_metadata(job_picker.selected))
+	var view: Dictionary = runtime.settlement_view(id)
+	if not view.ok: return
+	var body := "완주 보상과 카드 경험치를1회 수령합니다."
+	if action == "revive": body = "아데나 %d 소모 · HP50%%로 부활합니다. 비용은 TWILIGHT 추정 설정입니다." % (int(view.job.cost)*int(view.job.sim.policy.resurrection_cost_multiplier_permyriad)/10000)
+	if action == "abort": body = "탐험을 중단하고 발견한 아이템·경험치의%.1f%%를 수령합니다. 회수율은 추정 설정이며 완료 상자는 없습니다." % (float(view.job.sim.policy.abort_recovery_permyriad)/100.0)
+	hud.confirm_action("탐험 처리", body, {"claim":"보상 받기", "revive":"부활", "abort":"중단"}.get(action, action), func(_count: int = 1) -> void:
+		var result: Dictionary = runtime.resurrect(id) if action == "revive" else runtime.claim(id, action == "abort")
+		result_message = str(result.get("message", result.get("error", "")))
+		_render())
+
+func _show_rules() -> void:
+	var p: Dictionary = runtime.rules_view()
+	details.text = "원본 유지: 장소·카드 조건·입장비·8시간·HP·경험치·보상 후보와 가중치·부활 상한3회·부활HP50%%.\n\nTWILIGHT 추정 설정:\n%d초마다 일반 이벤트를 선택합니다.\n상대 비중: 발견%d / 없음%d / 경험치%d / 몬스터%d / 넘어짐%d / 휴식%d\n몬스터 Lv.5 기본 승률%.1f%%, 이후 레벨당+%.1f%%p, 상한%.1f%%. 패배 피해는 원본 일반 몬스터 HPDecrease 중앙값입니다.\n부활 비용=입장비×%.2f. 중단 회수율%.1f%%.\n생존해8시간을 채우면 원본 완료 상자를 받습니다. 상자1개는 원본 후보 가중치로%d회 개봉합니다.\n오프라인 진행:%s · 초기화:UTC %.1f 기준05시\n공식 서버 수식이 아니며 별도 설정 파일에서 조정할 수 있습니다.\n서버·기간 제한이나4장 파견의 미확정 활성 조건을 추정으로 해제하지 않습니다." % [int(p.event_interval_seconds), int(p.normal_event_weights["61"]), int(p.normal_event_weights["71"]), int(p.normal_event_weights["81"]), int(p.normal_event_weights["91"]), int(p.normal_event_weights["101"]), int(p.normal_event_weights["111"]), float(p.monster_win_permyriad)/100.0, float(p.win_bonus_per_level)/100.0, float(p.maximum_win_permyriad)/100.0, float(p.resurrection_cost_multiplier_permyriad)/10000.0, float(p.abort_recovery_permyriad)/100.0, int(p.completion_box_draws), "사용" if p.offline_progress else "미사용", float(p.daily_reset_utc_offset_minutes)/60.0]
+
+func _show_settlement() -> void:
+	if runtime == null or job_picker.selected < 0: return
+	var contract: Dictionary = runtime.settlement_view(int(job_picker.get_item_metadata(job_picker.selected)))
+	if not contract.ok:
+		details.text = str(contract.error)
+		return
+	var text := "탐험 기록의 완료 보상 연결\n%s\n" % str(contract.reason)
+	text += "%s ×%d · Reward %d\n출발 시 기록한 그룹 %d와 연결된 보상이며, 다른 그룹의 보상으로 교체하지 않습니다.\n" % [contract.item.get("Name", str(contract.reward.RewardClassID)), int(contract.reward.Amount), int(contract.reward.ID), int(contract.job.group_id)]
+	for box: Dictionary in contract.boxes:
+		text += "\n상자 후보 원가중치 합 %d · 후보 %d행\n원본 AbleMultiple=%s · TWILIGHT 개봉 규칙:1개당%d회\n" % [int(box.raw_weight_sum), box.candidates.size(), str(box.bag.get("AbleMultiple", false)), int(runtime.rules_view().completion_box_draws)]
+		for candidate: Dictionary in box.candidates:
+			var item: Dictionary = catalogue.record("ItemClass", int(candidate.ItemClassID))
+			text += "%s ×%d · 원가중치 %d · 후보행 %d\n" % [item.get("Name", str(candidate.ItemClassID)), int(candidate.ItemAmount), int(candidate.Probability), int(candidate.ID)]
+	text += "\n상자 획득과 상자 개봉은 별도 단계입니다. 연결구매/카드 후보가 있어도 즉시 카드를 지급하지 않습니다.\n조회는 아이템·보유 카드·아데나·난수·세이브를 변경하지 않습니다."
+	details.text = text
 
 func _confirm_start() -> void:
 	if runtime == null or hud == null: return
@@ -149,12 +287,21 @@ func _confirm_start() -> void:
 		result_message = str(prepared.error)
 		_refresh_jobs()
 		return
-	hud.confirm_action("탐험 로컬 출발", "아데나 %d 소모 · 접속 중 8시간 진행\n이벤트 추첨·성공/실패·보상 정산은 미연결입니다. 시간이 끝나도 상자는 지급되지 않고 판정 대기로 남습니다. 오프라인 시간과 일일 초기화는 적용하지 않습니다." % int(prepared.cost), "출발", func(_count: int = 1) -> void:
+	hud.confirm_action("탐험 출발", "아데나 %d 소모 ·8시간\n원본 수치를 우선하며, 부족한 전투·이벤트 규칙은 TWILIGHT 추정 설정으로 진행합니다.\n사망 시 부활하거나 중단할 수 있고, 생존 완주하면 완료 상자를 받습니다.\n상세 수치는 '원본·추정 규칙 안내'에서 확인하세요." % int(prepared.cost), "출발", func(_count: int = 1) -> void:
 		var result: Dictionary = runtime.start(spot_id, ids)
 		result_message = str(result.get("message", result.get("error", "")))
 		_render())
 
 func _render() -> void:
+	if runtime != null and runtime.world != null:
+		owned_cards = runtime.world.expedition_owned_cards()
+		for index in range(card_picker.item_count):
+			var previous: Dictionary = card_picker.get_item_metadata(index)
+			for current: Dictionary in owned_cards:
+				if current.identity != previous.identity: continue
+				card_picker.set_item_metadata(index, current)
+				var source_card: Dictionary = catalogue.record("BuffCard", int(current.source_id))
+				card_picker.set_item_text(index, "%s · 스킬각성 Lv.%d" % [source_card.get("Name", current.source_id), int(current.skill_awaken_level)])
 	var inspection: Dictionary = catalogue.inspect(current_spot, selected_cards())
 	var spot: Dictionary = inspection.spot
 	var currency: Dictionary = catalogue.record("Currency", int(spot.ExpeditionCostCurrencyID))
@@ -162,12 +309,10 @@ func _render() -> void:
 	state_label.text = "카드 선택의 정적 조건: " + ("충족" if inspection.static_conditions_met else "미충족")
 	for reason in inspection.reasons:
 		state_label.text += "\n" + str(reason)
-	for boundary in inspection.unknown:
-		state_label.text += "\n" + str(boundary)
 	if runtime != null:
 		var availability: Dictionary = runtime.prepare(current_spot, selected_identities())
 		start_button.disabled = not availability.ok
-		state_label.text += "\n" + ("로컬 출발 가능 · 이벤트·정산은 대기" if availability.ok else str(availability.error))
+		state_label.text += "\n" + ("출발 가능 · 원본 수치 + TWILIGHT 추정 규칙" if availability.ok else str(availability.error))
 	_refresh_jobs()
 	var currency_name := "아데나" if currency.get("Name") == "Adena" else str(currency.get("Name", spot.ExpeditionCostCurrencyID))
 	var text := "%s\n시간 %d시간 (%d초) · 비용 %s %d · 필요 카드 %d장\n최소 등급 %s (원본 ID %d, 순위 %d)\n위치 원값 (%d, %d) · 서버 제한 %d · 부활 한도 %d\n" % [spot.Name, int(spot.TimeLimitSecond) / 3600, int(spot.TimeLimitSecond), currency_name, int(spot.ExpeditionCost), int(spot.CardCount), _grade_name(int(spot.MinGrade)), int(spot.MinGrade), int(min_grade.get("GradeValue", -1)), int(spot.CoordinateX), int(spot.CoordinateY), int(spot.ServerLimitsetID), int(spot.ResurrectionLimit)]
@@ -177,18 +322,18 @@ func _render() -> void:
 	text += "\n완주 상자 (이벤트 보상과 별도):\n"
 	for entry: Dictionary in evidence.completion:
 		text += "%s ×%d · Reward %d\n" % [entry.item.get("Name", str(entry.reward.get("RewardClassID", 0))), int(entry.reward.get("Amount", 0)), int(entry.reward.get("ID", 0))]
-		text += "상자 후보 원가중치 (원합 10,000,000; 실제 추첨은 미연결):\n"
+		text += "상자 후보 원가중치 (원합 10,000,000; 개봉은 별도 TWILIGHT 규칙):\n"
 		for candidate: Dictionary in entry.box_candidates:
 			var item: Dictionary = catalogue.record("ItemClass", int(candidate.ItemClassID))
 			text += "  %s ×%d · %d · 후보행 %d\n" % [item.get("Name", str(candidate.ItemClassID)), int(candidate.ItemAmount), int(candidate.Probability), int(candidate.ID)]
-	text += "\n이벤트 보상 후보 원가중치 (특수 여부·타입을 유지, 실제 확률 미확정):\n"
+	text += "\n이벤트 보상 후보 원가중치 (특수 여부·타입을 유지, 원본 가중치 적용 / 발생 규칙은 추정):\n"
 	if evidence.event_rewards.is_empty():
 		text += "이 장소·그룹의 이벤트 보상 풀이 없습니다.\n"
 	for reward_row: Dictionary in evidence.event_rewards:
 		var reward: Dictionary = catalogue.record("Reward", int(reward_row.RewardID))
 		var item: Dictionary = catalogue.record("ItemClass", int(reward.get("RewardClassID", 0)))
 		text += "%s ×%d · 원가중치 %d · 특수 %s · 타입 %d\n" % [item.get("Name", "Reward %d" % int(reward_row.RewardID)), int(reward.get("Amount", 0)), int(reward_row.Probability), str(reward_row.IsSpecial), int(reward_row.MagicDollExpeditionSpotRewardTypeID)]
-	text += "\n장소 이벤트 제한 (발생률 미확정):\n"
+	text += "\n장소 이벤트 제한 (로컬 발생 비중은 추정 설정):\n"
 	for event_entry: Dictionary in evidence.events:
 		var event: Dictionary = event_entry.event
 		text += "이벤트 %d · 최소 등급 ID %d · 스킬각성 Lv.%d · 보너스타입 %d · 원값 %d\n" % [int(event.ID), int(event.MinGradeID), int(event.MinLevel), int(event_entry.bonus.get("MagicDollExpeditionBonusTypeID", 0)), int(event_entry.bonus.get("Value", 0))]
@@ -200,7 +345,7 @@ func _render() -> void:
 				text += "  카드 %d · 서버 제한 %d\n" % [int(member.BuffCardID), int(member.ServerLimitsetID)]
 			for effect: Dictionary in synergy.effects:
 				text += "  효과타입 %d · 원값 %d\n" % [int(effect.effect.get("MagicDollExpeditionBonusTypeID", 0)), int(effect.effect.get("Value", 0))]
-	text += "\n횟수·주기 상수 원값 (일일 초기화 시간대·오프라인 진행 미확정):\n"
+	text += "\n횟수·주기 상수 원값 (시간대·오프라인 정책은 로컬 설정):\n"
 	for constant: Dictionary in catalogue.rows("ConstantData"):
 		text += "%s = %s\n" % [constant.Name, str(constant.Value)]
 	details.text = text

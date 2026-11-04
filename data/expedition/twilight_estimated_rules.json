@@ -1,0 +1,40 @@
+{
+  "policy_id": "twilight_expedition_estimate_v1",
+  "provenance": "user_authorized_estimates_20261104; source costs/time/weights unchanged",
+  "event_interval_seconds": 540,
+  "normal_event_weights": {
+    "61": 1,
+    "71": 1,
+    "81": 1,
+    "91": 1,
+    "101": 1,
+    "111": 1
+  },
+  "monster_win_permyriad": 7000,
+  "win_bonus_per_level": 100,
+  "maximum_win_permyriad": 9500,
+  "monster_damage": "median_normal_source_HPDecrease",
+  "resurrection_cost": "same_as_departure",
+  "resurrection_hp_permyriad": 5000,
+  "abort_recovery_permyriad": 5000,
+  "completion_box_draws": 1,
+  "daily_reset_hour_utc": 5,
+  "offline_progress": true,
+  "resurrection_cost_multiplier_permyriad": 10000,
+  "daily_reset_utc_offset_minutes": 0,
+  "field_sources": {
+    "event_interval_seconds": "custom: adopt 9min cadence mentioned in official dispatch update; exact doll/relic formula unavailable",
+    "normal_event_weights": "custom: equal weights among eligible source event types",
+    "monster_win_permyriad": "custom: 70% at level5; source has no win formula",
+    "win_bonus_per_level": "custom: +1 percentage point per level after5",
+    "maximum_win_permyriad": "custom: cap95%",
+    "monster_damage": "custom: choose median of source normal-monster HPDecrease; no geographic assignment claimed",
+    "resurrection_cost_multiplier_permyriad": "custom: one source departure fee per resurrection",
+    "resurrection_hp_permyriad": "source: expedition help PANEL5, HP50%",
+    "abort_recovery_permyriad": "custom: floor50% of discovered items and experience",
+    "completion_box_draws": "custom: one weighted source row per consumed box; AbleMultiple alone does not prove count",
+    "daily_reset_hour_utc": "source: CHANGE_EXPLOREVIEW ND_EXPLORE TEXT_NOTICE_2 says05:00; timezone is separate custom field",
+    "daily_reset_utc_offset_minutes": "custom: local standalone UTC default; configurable offset",
+    "offline_progress": "custom: deterministic wall-time replay with persisted per-job RNG"
+  }
+}

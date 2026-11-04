@@ -25,6 +25,7 @@ CHECKS = [
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
     ('expedition523_catalog_test', []),
+    ('expedition523_estimate_model_test', []),
     ('expedition523_main_ui_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
@@ -251,6 +252,7 @@ def main():
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT',
                       'expedition523_catalog_test':'EXPEDITION523_CATALOG_RESULT',
+                      'expedition523_estimate_model_test':'EXPEDITION523_ESTIMATE_MODEL_RESULT',
                       'expedition523_main_ui_test':'EXPEDITION523_MAIN_UI_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
