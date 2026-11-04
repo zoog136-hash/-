@@ -2,7 +2,7 @@ extends RefCounted
 ## User preferences only. Source territory conditions are not inferred here.
 const REGION_KEYS: Array[String] = ["effect_detail", "limit_effect_count", "hide_doll"]
 const DEFAULTS: Dictionary = {"impact_intensity":0.85, "reduced_motion":false,
-	"effect_detail":"full", "limit_effect_count":false, "hide_doll":false}
+	"effect_detail":"full", "limit_effect_count":false, "hide_doll":false, "source_region_optimization":false}
 
 static func normalized(value: Dictionary, base: Dictionary = DEFAULTS) -> Dictionary:
 	var result: Dictionary = base.duplicate(true)

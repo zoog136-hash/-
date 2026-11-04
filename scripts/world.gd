@@ -106,6 +106,11 @@ var combat_generation: int = 0
 var resolving_combat_action: bool = false
 var stat_hud_refresh_pending: bool = false
 const PRESENTATION = preload("res://scripts/animation/presentation_preferences.gd")
+const SOURCE_OPTIMIZATION = preload("res://scripts/animation/source_optimization.gd")
+var source_optimization = SOURCE_OPTIMIZATION.new()
+var source_optimization_result: Dictionary = {"status":"source_not_loaded","settings":{}}
+var source_region_settings: Dictionary = {}
+var source_optimization_signature: String = ""
 var presentation_global_settings: Dictionary = PRESENTATION.DEFAULTS.duplicate(true)
 var presentation_region_settings: Dictionary = {}
 var presentation_settings: Dictionary = PRESENTATION.DEFAULTS.duplicate(true)
@@ -475,6 +480,7 @@ func _ready() -> void:
 		hud.call("open_class_selection",true)
 
 func _process(delta: float) -> void:
+	_update_source_optimization()
 	# No auto-save, auto-hunt or keyboard commands until the new class is
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
@@ -1288,6 +1294,10 @@ func _connect_signals() -> void:
 			for map_key: String in saved_presentation.get_section_keys("visual_regions"):
 				var local: Variant = saved_presentation.get_value("visual_regions", map_key)
 				if local is Dictionary: presentation_region_settings[map_key] = PRESENTATION.region(local)
+		var source_directory: String = str(saved_presentation.get_value("source_optimization","path",saved_presentation.get_value("source_optimization","directory","")))
+		if not source_directory.is_empty():
+			if source_directory.get_extension().to_lower()=="zip": source_optimization.load_zip(source_directory)
+			else: source_optimization.load_directory(source_directory)
 	apply_presentation_settings(PRESENTATION.normalized(presentation_global_settings))
 	player.attack_strike.connect(_release_player_attack)
 	player.attack_cancelled.connect(_cancel_player_attack)
@@ -1440,6 +1450,8 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_target_next_search_ms = 0
 	auto_target_failed_search_actor_count = -1
 	active_map_id = map_id
+	source_region_settings.clear()
+	source_optimization_signature = ""
 	active_map = maps_by_id[map_id] as Dictionary
 	if requested_native != null:
 		active_map = active_map.duplicate()
@@ -1532,6 +1544,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_repath_timer = 0.0
 	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
+	_update_source_optimization()
 	_refresh_presentation_settings()
 	_perf_log("맵 이동", map_started_usec)
 	if map_bootstrap_blocked:
@@ -7982,6 +7995,7 @@ func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kin
 func apply_presentation_settings(settings: Dictionary) -> void:
 	presentation_global_settings = PRESENTATION.normalized(settings, presentation_global_settings)
 	_refresh_presentation_settings()
+	_update_source_optimization()
 
 func set_region_presentation_settings(map_id: String, settings: Dictionary, enabled: bool = true) -> void:
 	if map_id.is_empty(): return
@@ -7989,8 +8003,39 @@ func set_region_presentation_settings(map_id: String, settings: Dictionary, enab
 	else: presentation_region_settings.erase(map_id)
 	_refresh_presentation_settings()
 
+func load_source_optimization(path: String) -> Dictionary:
+	var result: Dictionary = source_optimization.load_zip(path) if path.get_extension().to_lower()=="zip" else source_optimization.load_directory(path)
+	if bool(result.ok):
+		source_optimization_result = {"status":"manual_source_ready","settings":{}}
+		source_optimization_signature = ""
+		_update_source_optimization()
+	return result
+
+func select_source_presentation_effect(sprite_id: int, records: Dictionary) -> int:
+	return source_optimization.simplified_sprite(sprite_id, str(presentation_settings.effect_detail)=="low", records)
+
+func _update_source_optimization() -> void:
+	if not bool(presentation_global_settings.get("source_region_optimization",false)):
+		if not source_region_settings.is_empty():
+			source_region_settings.clear()
+			_refresh_presentation_settings()
+		return
+	var context: Dictionary = {}
+	if field_map != null and field_map.has_method("lineagem_m_presentation_context") and is_instance_valid(player):
+		var value: Variant = field_map.call("lineagem_m_presentation_context",player.global_position)
+		if value is Dictionary: context = value
+	var result: Dictionary = source_optimization.at_source_point(context)
+	var signature: String = JSON.stringify(result)
+	if signature == source_optimization_signature: return
+	source_optimization_signature = signature
+	source_optimization_result = result
+	source_region_settings = result.settings
+	_refresh_presentation_settings()
+
 func _refresh_presentation_settings() -> void:
-	presentation_settings = PRESENTATION.effective(presentation_global_settings, presentation_region_settings, active_map_id)
+	var source_defaults: Dictionary = presentation_global_settings.duplicate(true)
+	if bool(source_defaults.get("source_region_optimization",false)): source_defaults.merge(source_region_settings,true)
+	presentation_settings = PRESENTATION.effective(source_defaults, presentation_region_settings, active_map_id)
 	if is_instance_valid(companion_sprite) and is_instance_valid(player):
 		doll_motion.set_presentation_hidden(bool(presentation_settings.hide_doll), $Companion, companion_sprite, player)
 	if is_instance_valid(secondary_doll_visual):
