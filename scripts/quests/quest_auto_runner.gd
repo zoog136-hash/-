@@ -35,6 +35,8 @@ func refresh_context(world: Node) -> void:
 	# Bind the existing production consumer directly: no speculative foreign
 	# provider and no Callable(self) cycle retaining this runner after restart.
 	context = {"level":world.level,"max_level":world.level,"class_id":service.source.class_ids.get(str(world.job_class),-1),"source_items":source_items,"source_item_consumer":Callable(world.growth.source523,"material"),"currency_items":world.loot_catalog.get("by_name",{})}
+	context["quest_item_provider"]=Callable(world.quest_item_provider,"resolve")
+	context["held_native_rewards"]=world.quest_item_provider.supported_held(world)
 	service.source_context = context
 
 func tick(world: Node) -> void:
@@ -79,6 +81,8 @@ func complete(world: Node, ids: Array[String]) -> bool:
 	var adena: int = 0
 	var experience: int = 0
 	var completed: Array[String] = []
+	var native_grants: Array = []
+	var native_receipts: Array = []
 	for id: String in ids:
 		var quest: Dictionary = service.index.get(id,{})
 		if quest.is_empty() or staged_state.claimed.has(id) or not service.source.gate(quest,context,staged_state.claimed,int(Time.get_unix_time_from_system())).is_empty(): continue
@@ -90,6 +94,15 @@ func complete(world: Node, ids: Array[String]) -> bool:
 			var record: Dictionary = item.record
 			var name_value: String = str(record.name)
 			var amount: int = int(item.quantity)
+			if item.get("native_supplier",false):
+				if not staged_state.has("item_grants"): staged_state["item_grants"]={}
+				if not staged_state.item_grants.has(id): staged_state.item_grants[id]=[]
+				var receipt: Dictionary = {"schema":1,"reward_id":int(item.source_reward_id),"item_class_id":int(record.source_item_class_id),"quantity":amount,"bless_raw":int(item.source_bless_code_id),"inventory_key":name_value,"pack_sha256":str(item.pack_sha256)}
+				staged_state.item_grants[id].append(receipt)
+				var supplier_receipt: Dictionary = receipt.duplicate(true);supplier_receipt["quest_id"]=id
+				native_receipts.append(supplier_receipt)
+				native_grants.append({"item_class_id":int(record.source_item_class_id),"amount":amount,"bless_raw":int(item.source_bless_code_id),"enchant":0})
+				continue
 			# Every native item is pinned to its exact record and physical ID,
 			# including non-equipment materials that have source-specific use.
 			if amount < 1 or (amount > 10000 and not bool(item.get("stack_only",false))):
@@ -115,6 +128,16 @@ func complete(world: Node, ids: Array[String]) -> bool:
 		completed.append(id)
 	if completed.is_empty(): return false
 	var staged: Dictionary = {"quest_state":staged_state,"inventory":staged_inventory,"item_instances":staged_instances,"next_item_instance_id":next_id,"gold":world.gold+adena,"experience":world.experience+experience}
+	if not native_grants.is_empty():
+		# The shared supplier returns COMPLETE candidate values. Its base must
+		# already include this batch's held rewards and gold; never overwrite
+		# prior reward/debit candidates by staging against the live world.
+		var supplied: Dictionary = world.quest_item_provider.stage(world,staged,native_grants,native_receipts)
+		if not supplied.get("ok",false):
+			for id: String in completed: failures[id]=str(supplied.get("error","원본 공급 준비 실패"))
+			return false
+		staged_inventory=supplied.overrides.inventory;staged_instances=supplied.overrides.item_instances
+		staged.merge(supplied.overrides,true)
 	# Run the existing level curve without UI effects, snapshot the result, and
 	# restore live fields before writing. EXP overflow can never be lost through
 	# load-time migration if the app stops immediately after the atomic save.

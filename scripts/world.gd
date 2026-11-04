@@ -97,6 +97,7 @@ const CURRENCY_DROP = preload("res://scripts/loot/currency_drops.gd")
 const QUEST_SERVICE = preload("res://scripts/quests/quest_service.gd")
 var quest_service = QUEST_SERVICE.new()
 var quest_auto = preload("res://scripts/quests/quest_auto_runner.gd").new()
+var quest_item_provider = preload("res://scripts/quests/quest_item_provider238.gd").new()
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
 var ground_loot: TwilightGroundLootManager = GROUND_LOOT_MANAGER.new()
@@ -437,6 +438,7 @@ func _ready() -> void:
 	inventory_automation.refresh_catalog()
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
+	quest_item_provider.configure(self)
 	if BASE508_TEST.enabled():
 		var test_map:String=BASE508_TEST.register_test_map(maps,maps_by_id)
 		if test_map.is_empty():
@@ -2951,6 +2953,7 @@ func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee")
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
 func _respawn_player(message_text: String) -> void:
+	preload("res://scripts/loot/patch523_item_use.gd").clear_on_death(self)
 	if not dungeon_play.state.active.is_empty() and dungeon_play.state.active.status=="active": dungeon_play.stop()
 	if source_dungeon_runs.state.active.get("host_kind","") == "twilight_local" and source_dungeon_runs.state.active.get("status","") == "active":
 		local_dungeon_failure_pending = true
@@ -3417,8 +3420,10 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
 	if item_name.begins_with("[원본 보상] "):
+		if quest_item_provider.try_use_held(self,str(selected.get("id",""))): return
 		hud.show_message("원본 보상 보관 중 · 사용 기능 연결 대기")
 		return
+	if quest_item_provider.try_use_inventory(self,item_name): return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
 		hud.show_message("원본 사용 효과 미연결 · 보관/판매 가능 · 아이템 보존")
 		return
@@ -4551,7 +4556,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory", "item_instances", "equipment_collections", "gold", "card_draw_fusion", "card_option_awakening", "card_skill_awakening", "growth", "source_dungeon523", "ainhasad_state", "experience", "source_dungeon_play", "hp", "mp", "warehouse", "inventory_automation", "quest_state", "next_item_instance_id", "level", "exp_need", "max_hp", "max_mp", "attack", "defense", "stat_points"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory", "item_instances", "equipment_collections", "gold", "card_draw_fusion", "card_option_awakening", "card_skill_awakening", "growth", "source_dungeon523", "ainhasad_state", "experience", "source_dungeon_play", "hp", "mp", "warehouse", "inventory_automation", "quest_state", "next_item_instance_id", "level", "exp_need", "max_hp", "max_mp", "attack", "defense", "stat_points","active_item_buffs","item_use_cooldowns"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE

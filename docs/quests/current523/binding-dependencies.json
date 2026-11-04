@@ -15,12 +15,15 @@
     "checks": 18,
     "scope": "Exact record acceptance and production recharge-definition lookup, without waiving the original quest period or prerequisite",
     "original_quest_gate_bypassed": false,
-    "new_actual_item_use_from_quest_verified": false
+    "new_actual_item_use_from_quest_verified": true,
+    "actual_main_ownership_use_save_reload_checks": 27,
+    "actual_source_quest_id": 101242,
+    "actual_source_reward_id": 421582
   },
   "read_only_provider_contracts": [
     {
       "pr": 238,
-      "head": "6634d3acf3eb75e513125f3fa535170e83ab70dd",
+      "head": "f078a4651d53a2e0681e339ee4c4e81151e34e55",
       "methods": [
         "patch523_monster_drops.data",
         "variant_item",
@@ -28,8 +31,8 @@
         "patch523_item_use.canonical",
         "try_use"
       ],
-      "current_game_consumer_present": false,
-      "scope": "Native item use, fixed cards and bags remain in producer PR; supplier-only catalog does not prove this consumer exists"
+      "current_game_consumer_present": "Two reviewed exact consumers859/1281 via unchanged shared modules; other effects remain separate",
+      "scope": "Pinned verified pack, batch supplier and source receipt; no catalog-only completion claim"
     },
     {
       "pr": 239,
@@ -95,5 +98,6 @@
       "total": 104
     },
     "historical_save_policy": "Keep existing822 claims/items and never grant them again; counts reduced by level eligibility, not by completing item-use adapters"
-  }
+  },
+  "provider238_contract": "provider238-contract.json"
 }

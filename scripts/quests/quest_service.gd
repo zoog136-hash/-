@@ -12,6 +12,7 @@ var source = SOURCE.new()
 var source_context: Dictionary = {}
 var unlocked: Dictionary = {}
 var ui_requests: Dictionary = {}
+var item_grants: Dictionary = {} # Receipts for shared native supplier transactions.
 var save_blocked: bool = false
 const OBJECTIVES = ["kill", "collect", "level"]
 const MAX_REWARD_ITEM: int = 10000
@@ -38,6 +39,7 @@ func configure(items: Array, monsters: Array) -> bool:
 	save_blocked = false
 	unlocked.clear()
 	ui_requests.clear()
+	item_grants.clear()
 	source = SOURCE.new()
 	var item_names: Dictionary = {}
 	var monster_names: Dictionary = {}
@@ -166,6 +168,13 @@ func entries(level: int, inventory: Dictionary, now: int = -1) -> Array[Dictiona
 		if quest.has("source_id"):
 			var context: Dictionary = source_context.duplicate()
 			context["level"] = level
+			if row.completed:
+				var received: Dictionary = {}
+				for receipt: Dictionary in item_grants.get(quest_id,[]): received[str(int(receipt.reward_id))]=true
+				for reward_id: String in context.get("held_native_rewards",{}).get(quest_id,{}):received[reward_id]=true
+				# Installing a consumer must not relabel old held rewards as
+				# received native stacks or silently migrate an old save.
+				context["received_native_rewards"]=received
 			var gate: String = source.gate(quest,context,claimed,now if now>=0 else int(Time.get_unix_time_from_system()))
 			var plan: Dictionary = source.reward_plan(quest,context)
 			row["status_reason"] = gate if not gate.is_empty() else str(plan.get("error","획득 즉시 자동 완료 대기"))
@@ -229,6 +238,24 @@ static func validate_saved_state(saved: Variant) -> String:
 			elif not values[id] is bool: return "퀘스트 완료/획득 상태 오류"
 	var day: Variant = saved.get("day_key",0)
 	if not (day is int or day is float) or not is_finite(float(day)) or float(day)!=floorf(float(day)) or float(day)<-1 or float(day)>10000000: return "퀘스트 날짜 오류"
+	var grants: Variant = saved.get("item_grants",{})
+	if not grants is Dictionary or grants.size()>20000: return "원본 아이템 지급 영수증 목록 오류"
+	for id: Variant in grants:
+		if not id is String or not id.begins_with("m523:quest:") or saved.get("claimed",{}).get(id)!=true or not grants[id] is Array or grants[id].size()>128: return "원본 아이템 지급 영수증 관계 오류"
+		var seen: Dictionary = {}
+		for receipt: Variant in grants[id]:
+			if not receipt is Dictionary or receipt.get("schema")!=1 or not receipt.get("inventory_key") is String or str(receipt.inventory_key).is_empty(): return "원본 아이템 지급 영수증 형식 오류"
+			var digest: Variant = receipt.get("pack_sha256")
+			if not digest is String or digest.length()!=64 or not digest.is_valid_hex_number(false): return "원본 아이템 소비 팩 영수증 오류"
+			for key: String in ["reward_id","item_class_id","quantity","bless_raw"]:
+				var value: Variant = receipt.get(key)
+				if not (value is int or value is float) or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<1 or value>9007199254740991: return "원본 아이템 지급 영수증 값 오류"
+			if int(receipt.bless_raw) not in [1,2,3] or seen.has(int(receipt.reward_id)): return "원본 아이템 축복/중복 영수증 오류"
+			if receipt.has("origin"):
+				if receipt.origin!="held_use" or receipt.get("source_sha256")!=SOURCE.SOURCE_SHA or not str(receipt.inventory_key).begins_with("[원본 보상] "):return "원본 보관 사용 영수증 출처 오류"
+				var used: Variant=receipt.get("used_quantity")
+				if not (used is int or used is float) or not is_finite(float(used)) or float(used)!=floorf(float(used)) or used<1 or used>receipt.quantity:return "원본 보관 사용 수량 오류"
+			seen[int(receipt.reward_id)]=true
 	var requests: Variant = saved.get("ui_requests",{})
 	if not requests is Dictionary or requests.size()>20000: return "퀘스트 UI 기록 오류"
 	for id: Variant in requests:
@@ -242,7 +269,9 @@ static func validate_saved_state(saved: Variant) -> String:
 
 func export_state() -> Dictionary:
 	_advance_day(int(Time.get_unix_time_from_system()))
-	return {"schema_version":2, "claimed":claimed.duplicate(true), "progress":progress.duplicate(true), "day_key":day_key,"unlocked":unlocked.duplicate(true),"ui_requests":ui_requests.duplicate(true)}
+	var result: Dictionary = {"schema_version":2, "claimed":claimed.duplicate(true), "progress":progress.duplicate(true), "day_key":day_key,"unlocked":unlocked.duplicate(true),"ui_requests":ui_requests.duplicate(true)}
+	if not item_grants.is_empty(): result["item_grants"]=item_grants.duplicate(true)
+	return result
 
 func import_state(saved: Variant, now: int = -1) -> bool:
 	var error: String = validate_saved_state(saved)
@@ -254,6 +283,7 @@ func import_state(saved: Variant, now: int = -1) -> bool:
 	progress.clear()
 	unlocked.clear()
 	ui_requests = saved.get("ui_requests",{}).duplicate(true)
+	item_grants = saved.get("item_grants",{}).duplicate(true)
 	save_blocked = false
 	var at: int = now if now >= 0 else int(Time.get_unix_time_from_system())
 	day_key = korean_daily_key(at)

@@ -171,6 +171,12 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 						continue
 					var binding: Dictionary = ITEM_BINDINGS.resolve(reward,context.get("source_items",{}),context.get("source_item_consumer",Callable()))
 					var record: Dictionary = binding.record
+					var provider: Callable = context.get("quest_item_provider",Callable())
+					if record.is_empty() and provider.is_valid() and (not context.has("received_native_rewards") or context.received_native_rewards.has(str(int(reward.ID)))):
+						var native: Dictionary = provider.call(reward)
+						if not native.is_empty():
+							result.items.append({"record":native.record,"quantity":amount,"source_reward_id":int(reward.ID),"source_bless_code_id":int(reward.ItemBlessCodeID),"native_supplier":true,"pack_sha256":native.pack_sha256})
+							continue
 					if record.is_empty():
 						# Keep an exact native item in the real inventory with its
 						# pinned identity. It cannot masquerade as usable legacy

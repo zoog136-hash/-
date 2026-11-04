@@ -26,6 +26,16 @@ func run() -> void:
 	world.set_process(false)
 	world.player.set_physics_process(false)
 	check(QA.enter_game(world),"actual class-selected Main")
+	world.quest_auto.refresh_context(world)
+	if world.quest_item_provider.ready:
+		var pending: int=0
+		for row: Dictionary in world.quest_service.entries(world.level,world.inventory):
+			if row.get("source_id")!=null and row.completed and not row.rewards.get("pending_use",[]).is_empty():pending+=1
+		var source_claims: int=0
+		for id: String in world.quest_service.claimed:
+			if id.begins_with("m523:quest:"):source_claims+=1
+		check(source_claims==822 and pending==537 and world.quest_service.item_grants.is_empty(),"historical822 unreceipted save stays537 pending with installed consumer; no silent conversion")
+		check(world.quest_item_provider.supported_held(world).is_empty(),"historical held items do not obtain fabricated receipt proof")
 	check(world.quest_service.source.quests.size()==3621 and world.quest_service.source.loaded_path==SOURCE.USER_PATH,"Main consumes the installed complete user pack")
 	var save_path: String = world.save_path()
 	var save_sha: String = FileAccess.get_sha256(save_path)
