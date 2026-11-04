@@ -67,6 +67,26 @@ class ActualSourceTests(unittest.TestCase):
                     self.assertEqual(entry["type"]["ID"], entry["bonus"]["BonusTypeID"])
                     self.assertEqual(entry["unit"]["ID"], entry["type"]["UnitID"])
 
+    def test_recovery_components_preserve_direct_source_edges_and_rows(self):
+        with zipfile.ZipFile(self.source) as archive:
+            spells = builder.unique(json.loads(archive.read("content/SpellClass.json"))["rows"], "SpellClass")
+            count = 0
+            for profile in self.pack["profiles"].values():
+                if profile["row"]["ID"] not in builder.RECOVERY_ROOTS:
+                    continue
+                count += 1
+                expected = list(dict.fromkeys(e["bonus"]["Value"] for e in profile["bonuses"]
+                    if e["type"]["Name"] == "SpellClassID" and e["unit"]["Name"] == "SpellClassID"
+                    and e["link"]["MinSpellLevel"] == 0 and e["bonus"]["BonusApplicationTypeID"] == 0
+                    and e["bonus"]["BonusApplicationTargetID"] == 0))
+                self.assertEqual([c["row"]["ID"] for c in profile["components"]], expected)
+                for child in profile["components"]:
+                    self.assertEqual(child["row"], spells[child["row"]["ID"]])
+                    self.assertEqual(child["row_json"], builder.canonical(child["row"]).decode())
+            self.assertEqual(count, 4)
+        self.assertEqual(next(r for r in self.pack["ui_units"] if r["ID"] == 3)["Denominator"], 10000)
+        self.assertEqual(next(r for r in self.pack["special_resistance_types"] if r["ID"] == 6)["Name"], "Stun")
+
     def test_edited_binding_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             binding = copy.deepcopy(self.bindings)

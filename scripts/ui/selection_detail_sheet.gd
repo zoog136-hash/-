@@ -190,7 +190,8 @@ func show_skill() -> void:
 			rows.append(["523 대상",SOURCE523.target_text(skill.source523)])
 			if not skill.source523.applied.is_empty(): rows.append(["시전 재료",SOURCE523.material_text(skill)])
 			if skill.source523.applied.has("mana"): rows.append(["MP 회복","%d · 기본 단계" % int(skill.mana)])
-		info_text=_table(rows)+"\n\n[b]효과[/b]\n"+UI.safe(selected.get("desc",""))+"\n\n"+("습득 완료" if learned else UI.safe(world.original_skills.catalog.reason(selected)))
+		info_text=_table(rows)+"\n\n[b]효과[/b]\n"+UI.safe(skill.get("runtime_desc",selected.get("desc","")))+"\n\n"+("습득 완료" if learned else UI.safe(world.original_skills.catalog.reason(selected)))
+		if skill.has("recovery523"):category.text="원본 + TWILIGHT 설정 · "+category.text
 		if bool(selected.get("local_design",false)) and not selected.has("estimated523"):info_text=raw_skill_text
 		else: info_text+=SOURCE523.detail_text(skill)
 		if not str(skill.get("source523_block_reason", "")).is_empty():

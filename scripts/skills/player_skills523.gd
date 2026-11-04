@@ -19,6 +19,12 @@ var revision: int = 0
 var last_error: String = ""
 var active_sha256: String = ""
 var estimated_rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/estimated_nodes523.json")).get("records", {})
+var recovery_rules = preload("res://scripts/skills/recovery_rules523.gd").new()
+
+func set_recovery_setting(id: String, key: String, value: float) -> bool:
+	if not recovery_rules.update_setting(id,key,value): return false
+	revision += 1
+	return true
 
 func estimated_rule(id: String) -> Dictionary:
 	var rule: Dictionary = estimated_rules.get(id, {})
@@ -95,12 +101,29 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 			if not buff is Dictionary or not buff.get("row") is Dictionary or not buff.get("bonuses") is Array: return reject("invalid buff")
 			for entry: Variant in buff.bonuses:
 				if not valid_bonus(entry): return reject("invalid buff bonus")
+		if profile.has("components"):
+			if not profile.components is Array: return reject("invalid components")
+			var child_ids: Dictionary={}
+			for child: Variant in scalar_values(profile,"SpellClassID","SpellClassID"):child_ids[int(child)]=true
+			var seen: Dictionary={}
+			if child_ids.size()!=profile.components.size():return reject("incomplete component graph")
+			for component: Variant in profile.components:
+				if not valid_component(component):return reject("invalid component profile")
+				var child_id:=int(component.row.ID)
+				if not child_ids.has(child_id) or seen.has(child_id):return reject("unexpected component identity")
+				seen[child_id]=true
 		if not profile.get("target_kind") is Dictionary or int(profile.target_kind.get("ID", -1)) != int(row.TargetKindID):
 			return reject("target kind mismatch")
 		if not profile.get("targeting_type") is Dictionary or int(profile.targeting_type.get("ID", -1)) != int(row.TargettingTypeID):
 			return reject("targeting type mismatch")
+	for key: String in ["ui_units","buff_groups","bonus_application_types","special_resistance_types"]:
+		if pack.has(key):
+			if not pack[key] is Array:return reject("invalid recovery metadata")
+			for row: Variant in pack[key]:
+				if not row is Dictionary:return reject("invalid recovery metadata row")
 	profiles = candidate.duplicate(true)
 	bindings = local.duplicate(true)
+	recovery_rules.configure_pack(pack)
 	active_sha256 = expected_sha256
 	revision += 1
 	last_error = ""
@@ -111,6 +134,19 @@ static func valid_bonus(value: Variant) -> bool:
 	for key: String in ["link", "bonus", "type", "unit"]:
 		if not value.get(key) is Dictionary: return false
 	return value.type.get("Name") is String and value.unit.get("Name") is String and value.bonus.has("Value") and value.bonus.has("BonusApplicationTypeID") and value.bonus.has("BonusApplicationTargetID")
+
+static func valid_component(profile: Variant) -> bool:
+	if not profile is Dictionary or not profile.get("row") is Dictionary or not profile.get("row_json") is String:return false
+	if JSON.parse_string(profile.row_json)!=profile.row or bool(profile.row.get("TestSpell",true)):return false
+	for key: String in ["bonuses","buffs","costs"]:
+		if not profile.get(key) is Array:return false
+	for entry: Variant in profile.bonuses:
+		if not valid_bonus(entry):return false
+	for buff: Variant in profile.buffs:
+		if not buff is Dictionary or not buff.get("row") is Dictionary or not buff.get("bonuses") is Array:return false
+		for entry: Variant in buff.bonuses:
+			if not valid_bonus(entry):return false
+	return true
 
 func evidence_for(id: String) -> Dictionary:
 	return profiles.get(id, {}).duplicate(true)
@@ -144,6 +180,10 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	var profile: Dictionary = profiles[id]
 	var row: Dictionary = profile.row
 	var estimate := estimated_rule(id) if record.has("estimated523") else {}
+	var recovery: Dictionary = recovery_rules.spec_for(id,profile)
+	if not recovery.is_empty():
+		record.merge(recovery.runtime.duplicate(true),true)
+		record["recovery523"]=recovery.meta.duplicate(true)
 	record["source523"] = {"spell_id":row.ID, "target_kind":profile.target_kind.Name,
 		"targeting_type":profile.targeting_type.Name, "cast_range_raw":row.CastRange,
 		"min_cast_range_raw":row.MinCastRange, "area_radius_raw":row.TargetAreaRadius,
@@ -164,7 +204,8 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		69601:"복합 효과 보류: 회복량 정의표 없음 · 상태 해제·충돌 무시 미연결",
 		95662:"복합 효과 보류: 회복량 정의표 없음 · 자신/파티 회복·보호막·해제 미연결"
 	}.get(int(row.ID), "")
-	if not pending_note.is_empty(): record.source523["pending_note"] = pending_note
+	if not pending_note.is_empty() and recovery.is_empty(): record.source523["pending_note"] = pending_note
+	if not recovery.is_empty():record.source523["recovery"]=recovery.meta.duplicate(true)
 	if not estimate.is_empty():
 		record.source523["estimated"] = record.estimated523.duplicate(true)
 		record.source523["distance_policy"] = "TWILIGHT_ESTIMATE"
@@ -177,11 +218,11 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	if str(record.get("activation", "")) != "active" or bool(record.get("runtime_blocked", false)): return record
 	var reason := ""
 	if int(row.SpellTypeID) == 3: reason = "523 원본은 패시브 · 기존 액티브 연결 확인 필요"
-	elif upgraded: reason = "523 상위 스킬 효과 연결 확인 필요"
+	elif upgraded and recovery.is_empty(): reason = "523 상위 스킬 효과 연결 확인 필요"
 	elif int(row.SpellCompositionNode) != 0 and estimate.is_empty(): reason = "523 조건 노드 %d · 노드·조건 유형 정의가 없어 시전 보류" % int(row.SpellCompositionNode)
-	elif int(row.SpellCategoryID) == 184: reason = "523 복합 효과 · 하위 주문의 회복·해제·보너스 연결 미완료"
+	elif int(row.SpellCategoryID) == 184 and recovery.is_empty(): reason = "523 복합 효과 · 하위 주문의 회복·해제·보너스 연결 미완료"
 	elif int(row.SpellCategoryID) in [172,371] and estimate.is_empty(): reason = "523 조건별 하위 주문 · 분기·실행 순서 연결 미완료"
-	elif not profile.costs.is_empty(): reason = "523 대상별 비용 조건 연결 확인 필요"
+	elif not profile.costs.is_empty() and recovery.get("self_cost",{}).is_empty(): reason = "523 대상별 비용 조건 연결 확인 필요"
 	elif int(row.MPCostUnit) != 1 or int(row.VPCost) != 0: reason = "523 비용 단위 연결 확인 필요"
 	elif int(row.SpellMaterialTypeID) == 0 and int(row.SpellMaterialItemAmount) != 0: reason = "523 재료 정의 확인 필요"
 	var native_class := int(bindings.class_ids.get(job, -1))
@@ -193,8 +234,8 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	var target_kind := int(row.TargetKindID)
 	var mode := str(record.get("mode", ""))
 	if not estimate.is_empty() and str(estimate.kind) == "asura": record.source523["estimated_self_only"] = true
-	var estimated_self := not estimate.is_empty() and (str(estimate.kind) == "asura" or str(estimate.kind) == "detection")
-	if targeting not in [1,2] or (target_kind not in [1,2,3,7,10,11,422] and not estimated_self): reason = "523 대상 유형은 현재 PvE 연결 미지원"
+	var self_branch_allowed := (not estimate.is_empty() and (str(estimate.kind) == "asura" or str(estimate.kind) == "detection")) or bool(recovery.get("meta",{}).get("self_branch",false))
+	if targeting not in [1,2] or (target_kind not in [1,2,3,7,10,11,422] and not self_branch_allowed): reason = "523 대상 유형은 현재 PvE 연결 미지원"
 	elif mode in ["attack","status","turn_undead"]:
 		if int(row.SpellCategoryID) not in [1,8,11] and estimate.is_empty(): reason = "523 공격·상태 실행 방식 연결 확인 필요"
 		if target_kind == 1: reason = "523 자기 대상 효과는 적에게 적용할 수 없음"
@@ -203,28 +244,36 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 			record["targets"] = 1
 		elif (targeting == 1 and str(record.get("shape", "")) != "self_circle") or (targeting == 2 and str(record.get("shape", "")) not in ["circle", "target_circle"]):
 			reason = "523 범위 형태 연결 확인 필요"
-	elif targeting != 1:
+	elif targeting != 1 and recovery.is_empty():
 		reason = "523 외부 대상 선택 연결 확인 필요"
 	if not reason.is_empty():
 		record["source523_block_reason"] = reason
 		return record
-	record["mp"] = int(row.MPCost)
-	record["hp"] = int(row.HPCost)
+	var self_cost: Dictionary=recovery.get("self_cost",{})
+	record["mp"] = int(self_cost.get("MPCost",row.MPCost))
+	record["hp"] = int(self_cost.get("HPCost",row.HPCost))
 	var items: Dictionary = {}
 	# Physical ammunition is a separate existing host rule, not a material
 	# that can be erased because SpellClass.SpellMaterialTypeID happens to be 0.
 	for retained: String in bindings.retained_host_items:
 		if record.get("items", {}).has(retained): items[retained] = record.items[retained]
-	var material := str(int(row.SpellMaterialTypeID))
-	if int(row.SpellMaterialItemAmount) > 0:
+	var material_costs: Array=[{"type":int(row.SpellMaterialTypeID),"amount":int(row.SpellMaterialItemAmount)}]
+	if not self_cost.is_empty():
+		record.source523["cost_row_id"]=int(self_cost.ID)
+		material_costs.clear()
+		for index: int in range(1,4):material_costs.append({"type":int(self_cost.get("SpellMaterialTypeID"+str(index),0)),"amount":int(self_cost.get("SpellMaterialItemAmount"+str(index),0))})
+	for cost: Dictionary in material_costs:
+		if int(cost.amount)<=0:continue
+		var material := str(int(cost.type))
 		var bridge: Dictionary = bindings.material_inventory_keys.get(material, {})
 		if bridge.is_empty():
 			record["source523_block_reason"] = "523 재료 인벤토리 연결 확인 필요"
 			return record
-		items[str(bridge.inventory_key)] = int(items.get(str(bridge.inventory_key), 0)) + int(row.SpellMaterialItemAmount)
+		items[str(bridge.inventory_key)] = int(items.get(str(bridge.inventory_key), 0)) + int(cost.amount)
 	record["items"] = items
 	record.source523.applied = ["hp", "mp", "materials", "target_filter"]
 	if not estimate.is_empty(): record.source523.applied.append("estimated_effect")
+	if not recovery.is_empty():record.source523.applied.append("self_recovery")
 	if int(row.TargetLimitCount) > 0: record["targets"] = int(row.TargetLimitCount)
 	var duration := scalar_values(profile, "SpellBuffDuration", "Seconds")
 	if mode in ["buff", "counter", "stealth"] and duration.size() == 1 and float(duration[0]) > 0:
@@ -258,6 +307,7 @@ static func target_allowed(skill: Dictionary, target: TwilightMonster) -> bool:
 	return kind in ["All", "AllButMe", "Enemy", "TargetNEnemy", "AttackableNPC"]
 
 static func target_text(source: Dictionary) -> String:
+	if bool(source.get("recovery",{}).get("self_branch",false)):return "자신 (원본 허용 대상 중 자기 분기)"
 	if bool(source.get("estimated_self_only", false)): return "자신 강화 (추정 분기)"
 	if str(source.target_kind) == "InvisibleAndMeButCompany": return "자신과 주변 은신 대상 (아군 제외)"
 	var target: String = {"Me":"자신", "All":"모두", "AllButMe":"자신 제외", "Enemy":"적", "TargetNEnemy":"선택 대상과 적", "AttackableNPC":"공격 가능한 NPC", "Undead":"언데드", "PCButMe":"다른 플레이어", "PCButCompany":"아군 제외 플레이어"}.get(str(source.target_kind), "확인 필요")
@@ -279,6 +329,9 @@ static func detail_text(skill: Dictionary) -> String:
 	if not skill.has("source523"): return ""
 	var source: Dictionary = skill.source523
 	var text := "\n\n523 원본 대상: " + target_text(source)
+	if source.has("recovery"):
+		text+="\n원본 + TWILIGHT 설정 · 자기 기본 단계\n"+str(source.recovery.summary)
+		if str(skill.id)=="lm_1fb2fb45ca7bb6e5":text+="\n파티 회복·미구현 계약 상태는 현재 싱글플레이 범위 밖"
 	if source.has("estimated"):
 		text += "\nTWILIGHT 추정 적용 · 원본 노드 복원 아님\n" + str(source.estimated.summary)
 		if str(skill.get("activation", "")) == "passive": return text + "\n누적523 원문은 패시브 · 습득 후 자동 적용 · 직접 시전/재료 소비 없음"
@@ -301,6 +354,7 @@ static func detail_text(skill: Dictionary) -> String:
 	return text
 
 static func duration_text(skill: Dictionary) -> String:
+	if skill.has("recovery523") and float(skill.get("duration",0))<=0:return "즉시"
 	if skill.get("source523", {}).get("applied", []).has("duration_bounds") or (skill.has("estimated523") and str(skill.get("mode", "")) == "status"):
 		var bounds: Array = skill.get("duration_bounds", [])
 		if bounds.size() == 2: return "%.1f~%.1f초" % [float(bounds[0]), float(bounds[1])]

@@ -2694,6 +2694,9 @@ func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: in
 
 func _collect_ground_drop(drop: Button) -> bool:
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
+	if original_skills!=null and original_skills.stat("cannotLoot")>0:
+		hud.show_message("번개화 유지 중에는 아이템을 주울 수 없습니다")
+		return false
 	if not ground_loot.valid_view(drop): return false
 	var pending: Dictionary = ground_loot.records[str(drop.get_meta("id"))]
 	if not INVENTORY_GROUND_TRANSFER.can_collect(self,pending):
@@ -7861,6 +7864,7 @@ func _queue_player_attack(target: TwilightMonster, kind: String, callback: Calla
 	var marker: float = player.motion.profile.marker_for(style)
 	var id: int = player.start_combat_attack(target.global_position, duration, style, marker)
 	if id < 0: return false
+	if original_skills!=null:original_skills.break_attack_buffs()
 	player.motion.weapon_variant = _current_weapon_type()
 	pending_attack = {"id":id, "target":weakref(target), "callback":callback, "kind":kind,
 		"style":style, "normal":normal, "range":max_range, "start":player.global_position, "generation":combat_generation,
@@ -7877,6 +7881,7 @@ func _queue_player_area_attack(skill: Dictionary) -> bool:
 	var id: int = player.start_combat_attack(player.global_position + player.motion.direction,
 		float(skill.get("cast_time", 0.42)), style, player.motion.profile.marker_for(style))
 	if id < 0: return false
+	if original_skills!=null:original_skills.break_attack_buffs()
 	pending_attack = {"id":id, "kind":kind, "style":style, "area_skill":skill.duplicate(true),
 		"start":player.global_position, "generation":combat_generation}
 	return true

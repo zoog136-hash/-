@@ -17,7 +17,8 @@ SOURCE_SHA256 = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f483
 TABLES = ("SpellClass", "SpellLearnLimit", "Class", "SpellCost", "SpellBonus",
           "Bonus", "BonusType", "Unit", "BuffClass", "BuffBonus", "TargetKind",
           "TargettingType", "SpellMaterialType", "ItemClass", "ItemBonus",
-          "SpellChangeCastGroup")
+          "SpellChangeCastGroup", "UIUnit", "BuffGroup", "BonusApplicationType", "SpecialResistanceType")
+RECOVERY_ROOTS = {54703, 35443, 69601, 95662}
 
 
 def canonical(value):
@@ -66,26 +67,35 @@ def compile_pack(source: Path, bindings_path: Path):
         return {"link": link, "bonus": bonus, "type": kind,
                 "unit": indexed["Unit"][kind["UnitID"]]}
 
-    profiles = {}
-    for host_id, binding in bindings["skills"].items():
-        spell = indexed["SpellClass"][binding["spell_id"]]
-        if digest(canonical(spell)) != binding["row_sha256"] or spell["TestSpell"]:
-            raise ValueError(f"unreviewed source row: {host_id}")
-        limits = [r for r in tables["SpellLearnLimit"] if r["SpellClassID"] == spell["ID"]]
-        if not limits or all(r["IsTutorialSpell"] for r in limits):
-            raise ValueError(f"not a learnable ordinary player source: {host_id}")
+    def profile_for(spell):
         bonuses = [evidence(r) for r in tables["SpellBonus"] if r["SpellClassID"] == spell["ID"]]
         buff_ids = {e["bonus"]["Value"] for e in bonuses
                     if e["type"]["Name"] in ("BuffClassID", "SideEffectBuffClassID")}
         buffs = [{"row": indexed["BuffClass"][buff_id],
                   "bonuses": [evidence(r) for r in tables["BuffBonus"] if r["BuffClassID"] == buff_id]}
                  for buff_id in sorted(buff_ids)]
-        profiles[host_id] = {"row": spell, "row_json": canonical(spell).decode(),
-            "learn_limits": limits, "bonuses": bonuses, "buffs": buffs,
+        return {"row": spell, "row_json": canonical(spell).decode(),
+            "learn_limits": [r for r in tables["SpellLearnLimit"] if r["SpellClassID"] == spell["ID"]], "bonuses": bonuses, "buffs": buffs,
             "costs": [r for r in tables["SpellCost"] if r["SpellClassID"] == spell["ID"]],
             "cast_groups": [r for r in tables["SpellChangeCastGroup"] if r["SpellClassID"] == spell["ID"]],
             "target_kind": indexed["TargetKind"][spell["TargetKindID"]],
             "targeting_type": indexed["TargettingType"][spell["TargettingTypeID"]]}
+
+    profiles = {}
+    for host_id, binding in bindings["skills"].items():
+        spell = indexed["SpellClass"][binding["spell_id"]]
+        if digest(canonical(spell)) != binding["row_sha256"] or spell["TestSpell"]:
+            raise ValueError(f"unreviewed source row: {host_id}")
+        profile = profile_for(spell)
+        if not profile["learn_limits"] or all(r["IsTutorialSpell"] for r in profile["learn_limits"]):
+            raise ValueError(f"not a learnable ordinary player source: {host_id}")
+        if spell["ID"] in RECOVERY_ROOTS:
+            child_ids = list(dict.fromkeys(e["bonus"]["Value"] for e in profile["bonuses"]
+                if e["type"]["Name"] == "SpellClassID" and e["unit"]["Name"] == "SpellClassID"
+                and e["link"]["MinSpellLevel"] == 0 and e["bonus"]["BonusApplicationTypeID"] == 0
+                and e["bonus"]["BonusApplicationTargetID"] == 0))
+            profile["components"] = [profile_for(indexed["SpellClass"][i]) for i in child_ids]
+        profiles[host_id] = profile
     materials = {}
     for link in tables["ItemBonus"]:
         bonus = indexed["Bonus"][link["BonusID"]]
@@ -100,7 +110,10 @@ def compile_pack(source: Path, bindings_path: Path):
             raise ValueError(f"unverified material bridge {material}")
     return {"schema_version": 1, "patch": 523, "source_zip_sha256": SOURCE_SHA256,
             "bindings_sha256": digest(binding_bytes), "tables": provenance,
-            "classes": tables["Class"], "materials": materials, "profiles": profiles}
+            "classes": tables["Class"], "materials": materials, "profiles": profiles,
+            "ui_units": tables["UIUnit"], "buff_groups": tables["BuffGroup"],
+            "bonus_application_types": tables["BonusApplicationType"], "special_resistance_types": tables["SpecialResistanceType"],
+            "features": ["self_recovery_components_v1"]}
 
 
 def main():

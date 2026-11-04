@@ -402,7 +402,7 @@ func select_original() -> void:
 	var base_cooldown: float = float(skill.get("cooldown",0))
 	var final_cooldown: float = base_cooldown*world._skill_cooldown_factor()
 	var weapons: String = "제한 없음" if skill.get("weapons",[]).is_empty() else " · ".join(skill.weapons)
-	detail.text = "[font_size=20][color=#%s]%s[/color][/font_size]\n%s · %s\n\n%s\n\nMP %d  /  HP %d\n기본 재사용 %.1f초\n보정 후 재사용 %.1f초\n지속시간 %s\n사용 무기 %s\n\n%s" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name),str(skill.get("display_class",selected.get("class",""))),"패시브" if passive else "액티브",UI.safe(selected.desc),int(skill.get("mp",0)),int(skill.get("hp",0)),base_cooldown,final_cooldown,SOURCE523.duration_text(skill),weapons,"습득 완료" if learned else UI.safe(catalog.reason(selected))]
+	detail.text = "[font_size=20][color=#%s]%s[/color][/font_size]\n%s · %s\n\n%s\n\nMP %d  /  HP %d\n기본 재사용 %.1f초\n보정 후 재사용 %.1f초\n지속시간 %s\n사용 무기 %s\n\n%s" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name),str(skill.get("display_class",selected.get("class",""))),"패시브" if passive else "액티브",UI.safe(skill.get("runtime_desc",selected.desc)),int(skill.get("mp",0)),int(skill.get("hp",0)),base_cooldown,final_cooldown,SOURCE523.duration_text(skill),weapons,"습득 완료" if learned else UI.safe(catalog.reason(selected))]
 	var fields: Dictionary = selected.get("fields",{})
 	var basic: Dictionary = fields.get("basic",{})
 	var learning: Dictionary = fields.get("learning",{})

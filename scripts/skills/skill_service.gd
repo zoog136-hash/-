@@ -182,6 +182,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 		if announce: world.hud.show_message(Catalog.CURRENT.blocked_reason(skill))
 		return false
 	if local_runtime.can_disable(skill): return true
+	skill = catalog.resolve(skill)
 	var reason := ""
 	if not catalog.owned(skill): reason = "미습득 또는 직업 제한"
 	elif str(skill.activation) == "passive": reason = "패시브 기술"
@@ -192,7 +193,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	elif world.hp <= 0 or world.player.motion.dead: reason = "사망 상태"
 	elif not bool(skill.get("cast_while_disabled", false)) and (world.player.is_stunned() or world.player.is_feared() or world.player.is_silenced()): reason = "상태이상으로 사용 불가"
 	elif world.skill_global_cooldown > 0 or float(world.skill_cooldowns.get(str(skill.name), 0)) > 0: reason = "재사용 대기 중"
-	else: reason = cost_reason(catalog.resolve(skill))
+	else: reason = cost_reason(skill)
 	if not reason.is_empty() and announce: world.hud.show_message(reason)
 	return reason.is_empty()
 
@@ -257,7 +258,14 @@ func cast(record: Dictionary) -> bool:
 		"heal":
 			Status.cleanse(world.player, skill.get("statuses", []))
 			var amount := int(skill.get("heal", 0)) + int(world._effective_max_hp() * float(skill.get("heal_percent", 0)))
+			if skill.has("heal_dice"):
+				var dice: Dictionary=skill.heal_dice
+				var sp_scale: float=float(dice.sp_scale) if int(catalog.source523.bindings.class_ids.get(str(world.job_class),-1))==int(dice.sp_class_id) else 0.0
+				amount=int(dice.base)+int(world._spell_power_stat()*sp_scale)
+				for _die: int in range(clampi(int(dice.number),0,100)):
+					amount+=int((int(dice.sides)+1)/2.0) if bool(dice.average) else world.rng.randi_range(1,maxi(1,int(dice.sides)))
 			heal(skill, amount)
+			if bool(skill.get("show_recovery_buff",false)) and skill.get("stats",{}).is_empty():apply_buff(skill)
 			if bool(skill.get("stealth_after", false)): apply_buff(skill, true)
 		"cleanse":
 			Status.cleanse(world.player, skill.get("statuses", []))
@@ -420,7 +428,7 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 
 func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:
 	var stats: Dictionary = skill.get("stats", {})
-	var buff: Dictionary = {"remaining":float(skill.duration),"skill_id":str(skill.id),"skill_stats":stats.duplicate(true),"stealth":force_stealth or skill.mode == "stealth","break_on_damage":bool(skill.get("break_on_damage", false)),"drain_mp_percent":float(skill.get("drain_mp_percent", 0)),"speed":float(stats.get("speed", 1))}
+	var buff: Dictionary = {"remaining":float(skill.duration),"skill_id":str(skill.id),"skill_stats":stats.duplicate(true),"stealth":force_stealth or skill.mode == "stealth","break_on_damage":bool(skill.get("break_on_damage", false)),"break_on_attack":bool(skill.get("break_on_attack",false)),"drain_mp_percent":float(skill.get("drain_mp_percent", 0)),"speed":float(stats.get("speed", 1))}
 	world.active_skill_buffs[str(skill.name)] = buff
 	vfx.maintain(str(skill.id), world.player, float(skill.duration))
 	world._refresh_skill_stealth_visual()
@@ -432,9 +440,14 @@ func heal(skill: Dictionary, amount: int) -> void:
 	var effective := maxi(0, amount + int(stat("lfe") * float(skill.get("lfe_scale", 0))))
 	world.hp = mini(maximum, before + effective)
 	if bool(skill.get("overflow_shield", false)) and before + effective > maximum:
-		shields[str(skill.id)] = {"amount":mini(maximum, before + effective - maximum),"remaining":float(skill.get("duration", 12))}
+		var cap := int(maximum * float(skill.get("shield_cap_percent",100)) / 100.0)
+		shields[str(skill.id)] = {"amount":mini(cap, before + effective - maximum),"remaining":float(skill.get("shield_duration",skill.get("duration", 12)))}
 	if str(skill.get("mode", "")) == "heal" and not skill.get("stats", {}).is_empty(): apply_buff(skill)
 	vfx.emit_skill(str(skill.id), "impact", world.player.global_position)
+
+func break_attack_buffs() -> void:
+	for name: String in world.active_skill_buffs.keys():
+		if bool(world.active_skill_buffs[name].get("break_on_attack",false)):world.active_skill_buffs.erase(name)
 
 func stack(id: String, stats: Dictionary, limit: int, duration: float) -> void:
 	var count := mini(limit, int(stacks.get(id, {}).get("count", 0)) + 1)
@@ -649,6 +662,11 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 
 func remove_guardian_shield_buff(id: String) -> void:
 	var record := catalog.record_for(id)
+	var resolved := catalog.resolve(record) if not record.is_empty() else {}
+	if resolved.has("recovery523") and bool(resolved.get("overflow_shield",false)):
+		world.active_skill_buffs.erase(str(record.name))
+		vfx.remove_persistent(id)
+		return
 	if estimated_nodes.kind(record) == "protection":
 		world.active_skill_buffs.erase(str(record.name))
 		vfx.remove_persistent(id)
