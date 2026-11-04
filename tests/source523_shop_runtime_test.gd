@@ -225,6 +225,10 @@ func _run() -> void:
 	check(not runtime.buy_merchant(1001).ok,"changed policy cannot reset a saved allowance")
 	var bad_policy: Dictionary=runtime.export_state();bad_policy.policy_sha256=42
 	check(not Runtime.validate(bad_policy).is_empty(),"malformed persisted policy hash rejected")
+	bad_policy=runtime.export_state();bad_policy.npc_rule_hashes={"13":true}
+	check(not Runtime.validate(bad_policy).is_empty(),"malformed per-NPC policy identity rejected before save load")
+	bad_policy=runtime.export_state();bad_policy.orders[merchant_buy.order_id].npc_pack_sha256=42
+	check(not Runtime.validate(bad_policy).is_empty(),"malformed paid NPC source identity rejected")
 	runtime.problem="fixture invalid policy"
 	runtime.accept_load({Runtime.SAVE_KEY:runtime.export_state()})
 	check(not runtime.quote(1001).ok and runtime.problem=="fixture invalid policy","save reload cannot clear a rejected launch policy")

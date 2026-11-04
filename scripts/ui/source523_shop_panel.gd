@@ -143,7 +143,8 @@ func _build_entries() -> void:
 			if not all_definitions.button_pressed and not displayed.has(id): continue
 			title = catalog.label(int(row.get("DescID", 0)))
 		elif mode.selected == 1:
-			title = _item_name(int(row.ItemClassID)) + " · NPC %d" % int(row.MerchantsID)
+			var seller: String=runtime.npc_label(int(row.MerchantsID)) if runtime!=null else ""
+			title = _item_name(int(row.ItemClassID)) + " · " + (seller if not seller.is_empty() else "NPC %d" % int(row.MerchantsID))
 		elif mode.selected == 2:
 			var translated: String = catalog.label(int(row.get("DescID", 0)))
 			if not translated.is_empty(): title = translated
@@ -235,7 +236,10 @@ func _refresh_action() -> void:
 			var quote: Dictionary=runtime.quote_merchant(selected_id,int(quantity.value))
 			purchase.disabled=not quote.ok
 			purchase.text="%d회 구매 · 보관함 지급" % int(quantity.value) if quote.ok else "구매 불가"
-			availability_label.text=str(quote.price_origin) if quote.ok else str(quote.reason)
+			if quote.ok:
+				var provenance: String="TWILIGHT 자체 가격 · 오프라인 가정" if quote.has("rule_origin") else ("TWILIGHT 자체 가격" if str(quote.price_origin).contains("TWILIGHT") else "가격 출처: 상세 내용")
+				availability_label.text="%d회 · %d %s\n%s" % [int(quantity.value),int(quote.payment.amount),_value_name(int(quote.payment.unit_id),int(quote.payment.class_id)),provenance]
+			else:availability_label.text=str(quote.reason)
 		2: purchase.text = "재화 원천 안내"
 		3:
 			var view: Dictionary = runtime.cumulative_quote(selected_id, reward_step.selected)
@@ -259,6 +263,7 @@ func _act() -> void:
 		if not quote.ok: _refresh_action(); return
 		body = "%s ×%d회\n차감: %s ×%d\n\n%s" % [str(quote.name),count,_value_name(int(quote.payment.unit_id),int(quote.payment.class_id)),int(quote.payment.amount),body]
 		if quote.has("price_origin"):body+="\n"+str(quote.price_origin)
+		if quote.has("rule_origin"):body+="\n"+str(quote.npc_label)+"\n"+str(quote.rule_origin)
 	hud.confirm_action("원본 상점 · " + action, body, action, func(_unused: int) -> void:
 		var result: Dictionary
 		match current_mode:
@@ -286,6 +291,7 @@ func _order_detail(id: String) -> Array[String]:
 	var lines: Array[String] = ["보관함 주문 #" + id, "결제 완료 · 미수령", ""]
 	for token: Dictionary in order.goods:
 		lines.append("%s ×%d" % [_value_name(int(token.unit_id),int(token.class_id)),int(token.amount)])
+	if order.has("rule_origin"):lines.append("\n"+str(order.rule_origin))
 	lines.append("\n수령 시 구매 재화가 다시 차감되지 않습니다.")
 	return lines
 
@@ -343,6 +349,7 @@ func _merchant_detail(id: int) -> Array[String]:
 			if not str(price.get("reference_url","")).is_empty():result.append("기본가 참고: "+str(price.reference_url))
 		else:result.append(str(price.reason))
 		var quote: Dictionary=runtime.quote_merchant(id,int(quantity.value))
+		if quote.has("rule_origin"):result.insert(5,str(quote.npc_label)+"\n"+str(quote.rule_origin)+"\n")
 		result.append("\n"+("구매 가능 · 보관함 지급" if quote.ok else str(quote.reason)))
 	return result
 

@@ -1,0 +1,101 @@
+extends RefCounted
+## Source facts and explicitly local availability stay separate from paid orders.
+const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
+const RULES_PATH: String="res://data/shop/source523_npc_local_rules.json"
+var records: Dictionary={}
+var loaded_sha256: String=""
+var problem: String=""
+var rules: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(RULES_PATH))
+
+func configure(source) -> void:
+	var path: String=""
+	var expected: String=""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--source523-npc-pack="):path=arg.trim_prefix("--source523-npc-pack=")
+		if arg.begins_with("--source523-npc-sha256="):expected=arg.trim_prefix("--source523-npc-sha256=")
+	if not path.is_empty():load_pack(path,expected,source.loaded_sha256)
+
+func load_pack(path: String, expected: String, shop_sha256: String) -> bool:
+	if expected.length()!=64 or not expected.is_valid_hex_number(false) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected.to_lower():return _fail("NPC 원본 팩 해시 확인 실패")
+	var file:=FileAccess.open(path,FileAccess.READ)
+	if file==null or file.get_length()>8*1024*1024:return _fail("NPC 원본 팩 접근·크기 오류")
+	var parser:=JSON.new()
+	if parser.parse(file.get_as_text())!=OK or not parser.data is Dictionary:return _fail("NPC 원본 팩 JSON 오류")
+	var pack: Dictionary=parser.data
+	if pack.get("schema")!="twilight.source523.npc-definitions.v1" or pack.get("patch")!=523 or pack.get("source_zip_sha256")!=Catalog.SOURCE_SHA256 or pack.get("shop_pack_sha256")!=shop_sha256 or not pack.get("merchants") is Array:return _fail("NPC 팩과 기존 상점 팩의 원본 불일치")
+	var next: Dictionary={}
+	for row: Variant in pack.merchants:
+		if not row is Dictionary or not Catalog._integer(row.get("merchant_id")) or not row.get("goods_ids") is Array or not row.get("object_links") is Array or next.has(str(int(row.merchant_id))):return _fail("NPC 원본 연결 형식 오류")
+		var goods_index: Dictionary={}
+		for id: Variant in row.goods_ids:
+			if not Catalog._integer(id) or int(id)<1 or goods_index.has(str(int(id))):return _fail("NPC 원본 상품 ID 오류")
+			goods_index[str(int(id))]=true
+		for obj: Variant in row.object_links:
+			if not obj is Dictionary or not Catalog._integer(obj.get("earth_object_id")) or not obj.get("currency_ids") is Array or not obj.get("sell_action_row_ids") is Array or not obj.get("spawns") is Array or not obj.get("attributes") is Array:return _fail("NPC 객체 연결 형식 오류")
+			if not obj.get("object_defined") is bool or not obj.get("currency_defined_and_unique") is bool:return _fail("NPC 객체 정의 여부 오류")
+			for id: Variant in obj.currency_ids+obj.sell_action_row_ids:
+				if not Catalog._integer(id) or int(id)<1:return _fail("NPC 재화·동작 ID 오류")
+			for spawn: Variant in obj.spawns:
+				if not spawn is Dictionary or not Catalog._integer(spawn.get("ID")) or not Catalog._integer(spawn.get("ServerLimitSetID")) or not spawn.get("SpawnManually") is bool:return _fail("NPC 스폰 조건 형식 오류")
+		next[str(int(row.merchant_id))]=row.duplicate(true)
+		next[str(int(row.merchant_id))]["goods_index"]=goods_index
+	records=next
+	loaded_sha256=expected.to_lower()
+	problem=""
+	return true
+
+func _fail(message: String) -> bool:
+	problem=message
+	return false
+
+static func validate_rules(value: Variant) -> String:
+	if not value is Dictionary or value.get("schema")!="twilight.source523.npc-local-rules.v1":return "NPC 자체 규칙 형식 오류"
+	for key: String in ["enabled","zero_hours_are_open","zero_dates_are_open","remote_catalog"]:
+		if not value.get(key) is bool:return "NPC 자체 규칙 값 오류"
+	if not value.get("merchants") is Array or value.merchants.size()>192:return "NPC 자체 대상 오류"
+	var ids: Dictionary={}
+	for row: Variant in value.merchants:
+		if not row is Dictionary or not row.get("label") is String or row.label.is_empty():return "NPC 자체 대상 이름 오류"
+		for key: String in ["merchant_id","earth_object_id","spawn_id"]:
+			if not Catalog._integer(row.get(key)) or int(row[key])<1:return "NPC 자체 대상 연결 오류"
+		if ids.has(int(row.merchant_id)):return "중복 NPC 자체 대상"
+		ids[int(row.merchant_id)]=true
+	return ""
+
+func rule_hash(merchant_id: int = 0) -> String:
+	var effective: Dictionary=rules.duplicate(true)
+	if merchant_id>0:effective.merchants=[rule_for(merchant_id)]
+	return JSON.stringify(effective,"",true,true).sha256_text()
+
+func rule_for(merchant_id: int) -> Dictionary:
+	if not validate_rules(rules).is_empty() or not rules.enabled:return {}
+	for row: Dictionary in rules.merchants:
+		if int(row.merchant_id)==merchant_id:return row
+	return {}
+
+func currency_for(merchant_id: int) -> int:
+	var row: Dictionary=records.get(str(merchant_id),{})
+	var ids: Dictionary={}
+	for obj: Dictionary in row.get("object_links",[]):
+		if not obj.get("object_defined",false) or not obj.get("currency_defined_and_unique",false) or obj.currency_ids.size()!=1:return 0
+		if not Catalog._integer(obj.currency_ids[0]):return 0
+		ids[int(obj.currency_ids[0])]=true
+	return int(ids.keys()[0]) if ids.size()==1 else 0
+
+func context(merchant_id: int, goods_id: int) -> Dictionary:
+	if not problem.is_empty():return {"ok":false,"reason":problem}
+	if loaded_sha256.is_empty():return {"ok":false,"reason":"검증된 NPC 원본 팩이 필요합니다"}
+	var rule: Dictionary=rule_for(merchant_id)
+	if rule.is_empty() or not rules.remote_catalog:return {"ok":false,"reason":"NPC별 TWILIGHT 오프라인 규칙이 설정되지 않았습니다"}
+	var row: Dictionary=records.get(str(merchant_id),{})
+	if not row.get("goods_index",{}).has(str(goods_id)):return {"ok":false,"reason":"NPC 원본 상품 연결 불일치"}
+	for obj: Dictionary in row.get("object_links",[]):
+		if int(obj.earth_object_id)!=int(rule.earth_object_id):continue
+		if not obj.get("object_defined",false) or obj.sell_action_row_ids.is_empty() or not obj.attributes.is_empty():return {"ok":false,"reason":"NPC 객체의 동작·별도 권한 조건 확인 필요"}
+		for spawn: Dictionary in obj.spawns:
+			if int(spawn.ID)!=int(rule.spawn_id):continue
+			if spawn.SpawnManually or int(spawn.ServerLimitSetID)!=0:return {"ok":false,"reason":"NPC 수동·서버 스폰 조건 확인 필요"}
+			var currency: int=currency_for(merchant_id)
+			if currency<1:return {"ok":false,"reason":"NPC 원본 재화 연결이 유일하지 않습니다"}
+			return {"ok":true,"currency_id":currency,"label":str(rule.label),"origin":"TWILIGHT 오프라인 가정 · 0시간/0날짜 상시 · 원격 목록 거래","rules_sha256":rule_hash(merchant_id),"npc_pack_sha256":loaded_sha256}
+	return {"ok":false,"reason":"설정된 NPC 객체·스폰을 원본에서 확인할 수 없습니다"}

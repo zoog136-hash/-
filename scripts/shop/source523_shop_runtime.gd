@@ -2,6 +2,7 @@ extends RefCounted
 ## Durable local transactions for source offers. No UI price or grant payload is trusted.
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
 const Economy = preload("res://scripts/shop/source523_shop_economy.gd")
+const NpcDefinitions = preload("res://scripts/shop/source523_npc_definitions.gd")
 const SAVE_KEY: String = "source_shop"
 const LIMIT: int = 9007199254740991
 const ITEM_BINDINGS: Dictionary = {549:"드래곤의 다이아몬드",859:"전투 강화의 주문서 (각인)",2501:"마녀의 마력 회복제",6411:"갑옷 마법 주문서 (각인)",65291:"축복 부여 주문서 (각인)",3581:"축복 부여 주문서"}
@@ -22,6 +23,7 @@ var daily_purchase_ids: Array[int] = []
 var merchant_prices: Dictionary = {}
 var merchant_economy: Dictionary = Economy.defaults()
 var policy_sha256: String = ""
+var npc_definitions = NpcDefinitions.new()
 ## Regression-only clock, like the existing test save writer; never supplied by UI.
 var test_clock: Callable
 
@@ -34,6 +36,11 @@ static func integer(value: Variant) -> bool:
 static func validate(value: Variant) -> String:
 	if not value is Dictionary or value.get("version") != 1: return "상점 저장 버전 오류"
 	if value.has("policy_sha256") and (not value.policy_sha256 is String or (not value.policy_sha256.is_empty() and (value.policy_sha256.length()!=64 or not value.policy_sha256.is_valid_hex_number(false)))):return "상점 저장 정책 해시 오류"
+	if value.has("npc_rule_hashes"):
+		if not value.npc_rule_hashes is Dictionary:return "NPC 자체 규칙 저장 형식 오류"
+		for id: Variant in value.npc_rule_hashes:
+			var hash_value: Variant=value.npc_rule_hashes[id]
+			if not id is String or not id.is_valid_int() or int(id)<1 or str(int(id))!=id or not hash_value is String or hash_value.length()!=64 or not hash_value.is_valid_hex_number(false):return "NPC 자체 규칙 저장 해시 오류"
 	for key: String in ["revision","next_order","clock_highwater"]:
 		if not integer(value.get(key)): return "상점 저장 정수 오류: " + key
 	if int(value.next_order) < 1: return "상점 주문 번호 오류"
@@ -48,6 +55,8 @@ static func validate(value: Variant) -> String:
 		for key: String in ["offer_id","quantity","paid_at","claimed_at"]:
 			if not integer(order.get(key)): return "상점 주문 수치 오류"
 		if int(order.quantity) < 1 or int(order.quantity) > 1000 or order.get("kind") not in ["market","merchant"]: return "상점 주문 종류 오류"
+		for key: String in ["npc_rules_sha256","npc_pack_sha256"]:
+			if order.has(key) and (not order[key] is String or order[key].length()!=64 or not order[key].is_valid_hex_number(false)):return "NPC 주문 출처 해시 오류"
 		if not order.get("pack_sha256") is String or order.pack_sha256.length() != 64 or not order.pack_sha256.is_valid_hex_number(false): return "상점 주문 원본 해시 오류"
 		if not order.get("goods") is Array or order.goods.is_empty() or not order.get("payment") is Dictionary: return "상점 주문 지급·결제 오류"
 		for grant: Variant in order.goods + [order.payment]:
@@ -106,6 +115,7 @@ func bind_source(source) -> void:
 		var name: String = INTANGIBLE_BINDINGS[id]
 		_bindings["34:%d" % id] = {"name":name,"record":world._find_catalog_item_record(name).duplicate(true)}
 	_bindings["4:26"] = {"gold":true,"name":"아데나"}
+	npc_definitions.configure(catalog)
 	for arg: String in OS.get_cmdline_user_args():
 		if not arg.begins_with("--source523-shop-policy="): continue
 		var expected: String = ""
@@ -132,6 +142,9 @@ func load_policy(path: String, expected_sha: String) -> Dictionary:
 	if not economy is Dictionary:return fail("자체 NPC 가격 정책 형식 오류")
 	var economic_error: String=Economy.validate(economy)
 	if not economic_error.is_empty():return fail(economic_error)
+	var npc_rules: Variant=policy.get("npc_local_rules",npc_definitions.rules)
+	var npc_rule_error: String=NpcDefinitions.validate_rules(npc_rules)
+	if not npc_rule_error.is_empty():return fail(npc_rule_error)
 	for id: Variant in policy.get("merchant_prices",{}):
 		var profile: Variant=policy.merchant_prices[id]
 		if not id is String or not id.is_valid_int() or catalog.merchant_offer(int(id)).is_empty() or not profile is Dictionary or profile.get("goods_sha256")!=merchant_signature(int(id)):return fail("NPC 정책의 원본 판매행 불일치")
@@ -151,6 +164,7 @@ func load_policy(path: String, expected_sha: String) -> Dictionary:
 	for id: Variant in policy.get("daily_purchase_ids",[]):daily_purchase_ids.append(int(id))
 	merchant_prices=policy.get("merchant_prices",{}).duplicate(true)
 	merchant_economy=economy.duplicate(true)
+	npc_definitions.rules=npc_rules.duplicate(true)
 	policy_sha256=expected_sha.to_lower()
 	problem=""
 	return {"ok":true}
@@ -390,6 +404,12 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String) -> Dicti
 	var order_id: String = str(int(next.next_order))
 	next.next_order = int(next.next_order) + 1
 	next.orders[order_id] = {"kind":kind,"display_name":str(prepared.name),"offer_id":id,"quantity":quantity,"status":"pending","paid_at":_now(),"claimed_at":0,"payment":prepared.payment.duplicate(true),"goods":prepared.goods.duplicate(true),"pack_sha256":catalog.loaded_sha256}
+	if prepared.has("npc_rules_sha256"):
+		if not next.has("npc_rule_hashes"):next["npc_rule_hashes"]={}
+		next.npc_rule_hashes[str(int(prepared.npc_merchant_id))]=str(prepared.npc_rules_sha256)
+		next.orders[order_id]["npc_rules_sha256"]=str(prepared.npc_rules_sha256)
+		next.orders[order_id]["npc_pack_sha256"]=str(prepared.npc_pack_sha256)
+		next.orders[order_id]["rule_origin"]=str(prepared.rule_origin)
 	if not next.purchases.has(counter_key): next.purchases[counter_key] = []
 	next.purchases[counter_key].append({"at":_now(),"quantity":quantity})
 	var result: Dictionary = _commit(next, inventory, gold, world.item_instances.duplicate(true), int(world.next_item_instance_id))
@@ -411,7 +431,17 @@ func merchant_price(id: int) -> Dictionary:
 			if not integer(profile.get(key)) or int(profile.amount)<1:return fail("NPC 명시 가격 정책 오류")
 		if not profile.get("origin") is String or profile.origin.is_empty():return fail("NPC 명시 가격의 출처 필요")
 		return {"ok":true,"unit_id":int(profile.unit_id),"class_id":int(profile.class_id),"amount":int(profile.amount),"origin":str(profile.origin),"reference_url":str(profile.get("reference_url",""))}
-	return Economy.price(offer.item,offer.goods,merchant_economy)
+	var price: Dictionary=Economy.price(offer.item,offer.goods,merchant_economy)
+	var source_currency: int=npc_definitions.currency_for(int(offer.goods.MerchantsID))
+	if price.ok and source_currency>0 and not catalog.record("Currency",source_currency).is_empty():
+		price.unit_id=201
+		price.class_id=source_currency
+		price.origin=str(price.origin)+" · 원본 NPC 재화"
+	return price
+
+func npc_label(merchant_id: int) -> String:
+	if npc_definitions.loaded_sha256.is_empty():return ""
+	return str(npc_definitions.rule_for(merchant_id).get("label",""))
 
 func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dictionary:
 	var ready: Dictionary=_ready_for_action(internal)
@@ -425,7 +455,14 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	for key: String in ["ClanLevelMin","LimitMinClanLevel","DaysAfterClanJoin","LimitDaysAfterClanJoin","LimitServerCount","LimitBuffCardID","LimitRepeatedBuyCardID","Enchant","ElementalEnchant"]:
 		if int(row.get(key,0))!=0:return fail("NPC의 혈맹·서버·카드·장비 조건 미해석")
 	if row.get("LimitClanMemberRank",false) or row.get("AvailableSiegeTime")!=true or row.get("LimitNotInSiegeTime")!=false:return fail("NPC 공성·혈맹 권한 조건 미해석")
-	if int(row.get("DialogActionTypeID",0))!=1 or profile.get("time_unrestricted")!=true:return fail("NPC 판매 동작·시간 정책 미확정")
+	if int(row.get("DialogActionTypeID",0))!=1:return fail("NPC 원본 판매 동작 조건 미충족")
+	var local_context: Dictionary={}
+	if profile.get("time_unrestricted")!=true:
+		local_context=npc_definitions.context(int(row.MerchantsID),id)
+		if not local_context.ok:return fail(str(local_context.reason))
+		if not npc_definitions.rules.zero_hours_are_open or not npc_definitions.rules.zero_dates_are_open:return fail("NPC 0시간·0날짜 자체 동작이 비활성입니다")
+		var saved_rule: String=str(state.get("npc_rule_hashes",{}).get(str(int(row.MerchantsID)),""))
+		if not saved_rule.is_empty() and saved_rule!=str(local_context.rules_sha256):return fail("NPC 자체 규칙 변경 감지 · 기존 규칙으로 확인 필요")
 	for key: String in ["LimitStartTime","LimitEndTime","LimitStartHour","LimitEndHour"]:
 		if int(row.get(key,0))!=0:return fail("NPC 원본 시간 조건 해석 필요")
 	if int(world.level)<int(row.LimitMinLevel) or (int(row.LimitMaxLevel)>0 and int(world.level)>int(row.LimitMaxLevel)):return fail("NPC 구매 레벨 조건 미충족")
@@ -450,7 +487,9 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	if not world._enhancement_kind_for_record(target.binding.get("record",{})).is_empty():return fail("NPC 장비 축복·강화 지급 조건 미확정")
 	var original_name: String=str(offer.item.get("Name",""))
 	if offer.item.get("TestItem",false) or original_name.contains("기간") or original_name.contains("삭제") or original_name.contains("이벤트"):return fail("NPC 기간제·테스트 상품 조건 미확정")
-	return {"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":str(target.binding.name),"payment":payment,"payment_binding":binding,"goods":[token],"price_origin":str(price.origin)}
+	var quoted: Dictionary={"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":str(target.binding.name),"payment":payment,"payment_binding":binding,"goods":[token],"price_origin":str(price.origin)}
+	if not local_context.is_empty():quoted.merge({"npc_label":local_context.label,"rule_origin":local_context.origin,"npc_merchant_id":int(row.MerchantsID),"npc_rules_sha256":local_context.rules_sha256,"npc_pack_sha256":local_context.npc_pack_sha256})
+	return quoted
 
 func buy_merchant(id: int, quantity: int = 1) -> Dictionary:
 	var prepared: Dictionary=quote_merchant(id,quantity)
