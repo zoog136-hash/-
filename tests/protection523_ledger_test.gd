@@ -7,6 +7,9 @@ func check(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label)
 func _initialize() -> void:
+	if "--visual-contract-only" in OS.get_cmdline_user_args():
+		call_deferred("run_visual_contract")
+		return
 	if "--material-contract-only" in OS.get_cmdline_user_args():
 		call_deferred("run_material_contract")
 		return
@@ -15,7 +18,9 @@ func _initialize() -> void:
 class MaterialQuest extends RefCounted:
 	var claimed: Dictionary = {}
 	var save_blocked := false
-class MaterialPlayer extends Node:
+class MaterialPlayer extends Node2D:
+	var facing := 2
+	var original_source_preview: Node
 	func is_stunned() -> bool: return false
 	func is_feared() -> bool: return false
 	func show_status_text(_text: String) -> void: pass
@@ -25,6 +30,7 @@ class MaterialHud extends Node:
 class MaterialHost extends Node:
 	var catalog_db: Dictionary = {"아이템":[]}
 	var inventory: Dictionary = {}
+	var active_item_buffs: Dictionary = {}
 	var item_instances: Dictionary = {}
 	var ui_preferences: Dictionary = {}
 	var quest_service = MaterialQuest.new()
@@ -45,6 +51,82 @@ class MaterialHost extends Node:
 	func _save_game(_quiet: bool, staged: Dictionary) -> Error:
 		if fail_save: return ERR_CANT_CREATE
 		return Runtime.Source.write_text("user://material-contract.json",JSON.stringify(staged))
+
+class MaterialRenderer extends Node:
+	var _overlay_nodes: Array[Node2D] = []
+	var calls: Array[Dictionary] = []
+	var host: Node
+	var accepted := false
+	func spawn_source_overlay(sprite_id: int, facing: int, point: Vector2) -> bool:
+		var disk: Variant = JSON.parse_string(FileAccess.get_file_as_string("user://material-contract.json"))
+		calls.append({"sprite_id":sprite_id,"facing":facing,"point":point,"inventory":host.inventory.duplicate(true),"saved":disk})
+		return accepted
+
+func run_visual_contract() -> void:
+	var path := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--protection523-source-zip="): path = arg.trim_prefix("--protection523-source-zip=")
+	var result: Dictionary = Runtime.Source.extract(path)
+	check(bool(result.get("ok",false)),"real pinned523 source extracts for visual contract")
+	if not bool(result.get("ok",false)): printerr(result);quit(1);return
+	var host := MaterialHost.new()
+	var service = Runtime.new()
+	service.world = host
+	service.source = result
+	service.register_missing()
+	host.catalog_db["아이템"].append({"name":"명예 코인","source":"inven","sourceId":"3631"})
+	service.binding_catalog_size = -1
+	var renderer := MaterialRenderer.new()
+	renderer.host = host
+	host.player.original_source_preview = renderer
+	host.player.position = Vector2(21,34)
+	var ids := [22514,25084,26810,28052,28915,29723]
+	for index: int in range(Runtime.Source.IDS.size()):
+		var id: int = Runtime.Source.IDS[index]
+		var key: String = str(service.records_for(id)[0].name)
+		check(int(service.source.definitions[str(id)].consume_sprite_id) == int(ids[index]),"all source BonusType107 identities retained %d" % id)
+		service.state = Runtime.fresh()
+		service.reset_clock()
+		host.inventory = {key:1,"명예 코인":100}
+		host.player.facing = index
+		renderer.calls.clear()
+		host.ui_preferences = {"item_locks":{key:true}}
+		check(not service.use(key).ok and renderer.calls.is_empty(),"locked body emits no visual %d" % id)
+		host.ui_preferences.clear()
+		host.fail_save = true
+		check(not service.use(key).ok and renderer.calls.is_empty() and host.inventory["명예 코인"] == 100,"failed commit emits no visual or coin loss %d" % id)
+		host.fail_save = false
+		renderer.accepted = index % 2 == 0
+		var used: Dictionary = service.use(key)
+		check(used.ok and renderer.calls.size() == 1,"successful atomic use invokes compositor exactly once %d" % id)
+		if renderer.calls.size() == 1:
+			var call: Dictionary = renderer.calls[0]
+			check(int(call.sprite_id) == int(ids[index]) and int(call.facing) == index and call.point == Vector2(21,34),"exact sprite/facing/player origin forwarded without substitution %d" % id)
+			check(call.inventory["명예 코인"] == 90 and call.saved.inventory["명예 코인"] == 90 and call.saved.protection523.active.item_id == id,"visual sees completed memory and durable transaction %d" % id)
+		check(used.visual.status == ("source_overlay_started" if renderer.accepted else "original_binding_unavailable"),"missing visual is independent from gameplay success %d" % id)
+		check(not used.visual.M_visual_equivalence_verified and used.visual.trigger == "TWILIGHT_after_successful_atomic_use_commit","host event timing never claims nativeM semantics")
+		var disk: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("user://material-contract.json"))
+		check(not disk.has("last_use_visual") and not disk.protection523.has("visual"),"visual delivery does not enter persistent gameplay state")
+		check(service.load_state(disk) and not service.use(key).ok and renderer.calls.size() == 1,"reload/cooldown cannot replay or spend again %d" % id)
+		check(host.inventory[key] == 1 and host.inventory["명예 코인"] == 90,"missing/success visual keeps body and exact cost %d" % id)
+	var last_id: int = Runtime.Source.IDS[-1]
+	var key: String = str(service.records_for(last_id)[0].name)
+	service.state = Runtime.fresh();service.reset_clock()
+	host.inventory = {key:1,"명예 코인":100}
+	host.player.original_source_preview = null
+	check(service.use(key).ok and service.last_use_visual.status == "source_renderer_unavailable" and host.inventory["명예 코인"] == 90,"absent renderer still commits once and preserves gameplay")
+	service.state = Runtime.fresh();service.reset_clock()
+	host.inventory = {key:1,"명예 코인":100}
+	host.player.original_source_preview = renderer
+	var live := Node2D.new()
+	var stale := Node2D.new()
+	renderer._overlay_nodes = [live,stale]
+	stale.free()
+	check(service.use(key).ok and renderer._overlay_nodes == [live],"freed handle cleanup preserves live shared renderer overlays")
+	live.free()
+	host.player.free();host.hud.free();renderer.free();host.free()
+	print("PROTECTION523_VISUAL_CONTRACT_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"scope":"real523 sprite IDs; compositor-call fixture; source pixels/offsets/layers absent; not native visual proof"}))
+	quit(0 if failures.is_empty() else 1)
 
 func material_record(service: RefCounted, reward: Dictionary) -> Dictionary:
 	var item: Dictionary = service.source.items[str(int(reward.RewardClassID))]

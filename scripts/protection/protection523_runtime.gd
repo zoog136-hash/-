@@ -337,7 +337,42 @@ func use(key: String) -> Dictionary:
 	if int(inventory[quote.coin_key]) == 0: inventory.erase(quote.coin_key)
 	next.active = {"item_id":int(d.id),"until":now()+int(d.duration)}
 	next.cooldowns[str(int(d.id))] = now()+int(d.cooldown)
-	return commit({"inventory":inventory,SAVE_KEY:next},"명예 코인 10개 사용 · %s %d분 · 가호 본체 보존" % [d.name,int(d.duration)/60])
+	var result := commit({"inventory":inventory,SAVE_KEY:next},"명예 코인 10개 사용 · %s %d분 · 가호 본체 보존" % [d.name,int(d.duration)/60])
+	# Presentation starts only after the durable transaction. Its failure cannot
+	# refund/re-spend coins or change the already committed gameplay state.
+	if bool(result.ok): result.visual = play_use_visual(int(d.id))
+	return result
+
+var last_use_visual: Dictionary = {}
+
+func play_use_visual(item_id: int) -> Dictionary:
+	var d: Dictionary = source.get("definitions",{}).get(str(item_id),{})
+	var sprite_id := int(d.get("consume_sprite_id",0))
+	last_use_visual = {"item_id":item_id,"sprite_id":sprite_id,"status":"original_binding_unavailable",
+		"source":"ItemBonus/BonusType107 ItemConsumeEffectSpriteID","source_sha256":Source.SOURCE_SHA,
+		"trigger":"TWILIGHT_after_successful_atomic_use_commit","M_visual_equivalence_verified":false}
+	if item_id not in Source.IDS or sprite_id <= 0: return last_use_visual.duplicate(true)
+	var player: Node = world.player
+	if not player is Node2D or not integer(player.get("facing"),0,7):
+		last_use_visual.status = "source_target_unavailable"
+		return last_use_visual.duplicate(true)
+	var preview: Variant = player.get("original_source_preview")
+	if not is_instance_valid(preview) or not preview.has_method("spawn_source_overlay"):
+		last_use_visual.status = "source_renderer_unavailable"
+		return last_use_visual.duplicate(true)
+	# The established public compositor owns frames, offsets, layers, facing
+	# conversion and source clocks. No SP2 decoder or guessed substitute here.
+	# Retain live overlays; remove only freed references before its typed filter,
+	# as required by the existing native-option consumer of the same public API.
+	var handles: Variant = preview.get("_overlay_nodes")
+	if handles is Array:
+		var live: Array[Node2D] = []
+		for node: Variant in handles:
+			if is_instance_valid(node) and node is Node2D: live.append(node)
+		preview.set("_overlay_nodes",live)
+	var shown: Variant = preview.call("spawn_source_overlay",sprite_id,int(player.get("facing")),(player as Node2D).global_position)
+	if shown is bool and shown: last_use_visual.status = "source_overlay_started"
+	return last_use_visual.duplicate(true)
 
 func quote_craft(item_id: int) -> Dictionary:
 	var ready := ready_action()

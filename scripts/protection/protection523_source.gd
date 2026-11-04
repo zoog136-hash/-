@@ -166,9 +166,10 @@ static func compile(capsule: Dictionary) -> Dictionary:
 			"item":items[key],"possession_flat":int(possession.get("301",0)),"possession_percent_raw":int(possession.get("7818",0)),
 			"buff_flat":buff_flat,"buff":buff,"duration":int(use.get("109",0)),"cooldown":int(use.get("1022",0)),
 			"material_id":int(use.get("2312",0)),"material_amount":int(use.get("2322",0)),
+			"consume_sprite_id":int(use.get("107",0)),
 			"title":title,"title_buff":title_buff,"title_flat":title_flat,
 			"recipe":recipe,"inputs":inputs,"restriction":limits[0],"output":outputs[0]}
-		if definitions[key].name.is_empty() or int(use.get("2312",0)) != 3631 or int(use.get("2322",0)) != 10: return denied("가호 이름·명예 코인 계약 불일치")
+		if definitions[key].name.is_empty() or int(use.get("2312",0)) != 3631 or int(use.get("2322",0)) != 10 or int(use.get("107",0)) <= 0: return denied("가호 이름·명예 코인·사용 연출 계약 불일치")
 	var material_rewards := index(raw.get("MaterialReward",[]))
 	var material_quests: Dictionary = {}
 	for link: Dictionary in raw.get("MaterialQuestReward",[]):

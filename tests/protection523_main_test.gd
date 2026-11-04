@@ -379,6 +379,8 @@ func run_supply_ui() -> void:
 		world.hud.inventory_item_activated.emit(key)
 		await accept()
 		check(int(service.effects().active_id) == id and int(world.inventory.get(key,0)) == 1,"actual inventory activation retains body %d" % id)
+		check(int(service.last_use_visual.get("sprite_id",0)) == int(service.source.definitions[str(id)].consume_sprite_id),"actual Main routes exact original use effect ID %d" % id)
+		check(service.last_use_visual.get("status","") == "original_binding_unavailable","missing original FX binding does not substitute or block committed use %d" % id)
 	check(service.state.crafted.size() == 6 and service.state.titles.size() == 6 and int(service.effects().title_flat) == 7,"six independent permanent title receipts applied")
 	check(int(world.inventory.get("명예 코인",0)) == 40,"actual six activations consume sixty coins")
 	check(norm(world.quest_service.export_state()) == old_quests and norm(world.item_instances) == old_instances,"unrelated quests and physical ownership preserved")
