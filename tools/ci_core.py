@@ -25,6 +25,12 @@ CHECKS = [
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
     ('presentation_settings_test', []),
+    ('symbol_source523_test', []),
+    ('symbol_source523_main_ui_test', []),
+    ('symbol_absolute_followup_test', []),
+    ('symbol_travel_test', []),
+    ('symbol_offline_combat_test', []),
+    ('symbol_history_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -166,6 +172,12 @@ def stage(root: Path, destination: Path) -> dict:
             if PurePosixPath(path).suffix in {'.gd','.tscn'}:
                 actor_queue += [m.group(1).removeprefix('res://') for m in REFERENCE.finditer(read(path).decode())]
         live = set()
+        # Source monster expansion can replace a current roster record after
+        # the static name join. Its bound portrait is also used while the UI
+        # is open and initial spawns drain. Keep these small portraits without
+        # importing every inactive animation bank.
+        live.update(p for p in selected if p.startswith('assets/monsters/reviewed_source/')
+                    and p.endswith('/portrait.png'))
         while actor_queue:
             path = actor_queue.pop()
             if path in live or not path.startswith(ACTOR_PREFIXES) or not PurePosixPath(path).suffix or '%' in path:
@@ -263,7 +275,13 @@ def main():
             marker = {'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT',
-                      'presentation_settings_test':'PRESENTATION_SETTINGS_RESULT'}[name]
+                      'presentation_settings_test':'PRESENTATION_SETTINGS_RESULT',
+                      'symbol_source523_test':'SYMBOL523_TEST',
+                      'symbol_source523_main_ui_test':'SYMBOL523_MAIN_RESULT',
+                      'symbol_absolute_followup_test':'SYMBOL_ABSOLUTE_RESULT',
+                      'symbol_travel_test':'SYMBOL_TRAVEL_RESULT',
+                      'symbol_offline_combat_test':'SYMBOL_OFFLINE_RESULT',
+                      'symbol_history_test':'SYMBOL_HISTORY_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

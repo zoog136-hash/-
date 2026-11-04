@@ -22,6 +22,7 @@ var life_id: int = 0
 var species_visual: TwilightMonsterVisual
 var special_sequence: int = -1
 var special_attack: Dictionary = {} # authoritative warning geometry for this action
+var symbol_hit_context: Dictionary = {} # Scoped to one emitted impact, never actor-global history.
 var released_sequence: int = -1
 var committed_attack_type: String = "melee"
 var special_cooldown: float = 3.0
@@ -595,7 +596,7 @@ func _resolve_special() -> void:
 		hit = false
 	if kind=="volley" and world_controller.combat_flights!=null:
 		for i: int in range(3):
-			_launch_projectile(special_sequence,"ranged",float(i)*.14,.55)
+			_launch_projectile(special_sequence,"ranged",float(i)*.14,.55,{"boss_kind":"volley"})
 		hit = false
 	if is_instance_valid(species_visual):
 		# Both the warning and release renderer consume the same combat snapshot.
@@ -608,7 +609,7 @@ func _resolve_special() -> void:
 		world_controller.combat_vfx.ring(center,minf(radius,150.),Color(1,.34,.15))
 	if hit and world_controller._has_line_of_sight_world(center,target_player.global_position):
 		var resolving_life: int = life_id
-		player_hit.emit(self,int(attack_power*float(skill.get("multiplier",1.6))),"magic" if kind not in ["charge","cone"] else "melee")
+		_emit_symbol_hit(int(attack_power*float(skill.get("multiplier",1.6))),"magic" if kind not in ["charge","cone"] else "melee",{"boss_kind":kind})
 		if kind=="drain" and not dead and life_id == resolving_life: hp = mini(max_hp,hp+source_option_healing(attack_power*2)); hp_bar.value = hp
 
 func _stop_chasing_concealed_player() -> void:
@@ -1011,11 +1012,11 @@ func _target_attackable() -> bool:
 	if world_controller.is_player_concealed(): return false
 	return world_controller.field_map==null or not world_controller.field_map.is_safe(target_player.global_position)
 
-func _launch_projectile(id: int, kind: String, delay: float = 0., ratio: float = 1.) -> void:
+func _launch_projectile(id: int, kind: String, delay: float = 0., ratio: float = 1., context: Dictionary = {}) -> void:
 	var aim: Vector2 = target_player.combat_hit_position()
 	var origin: Vector2 = combat_hit_position()+motion.direction*visual_height*.18
 	var color: Color = {"fire":Color(1,.35,.10),"water":Color(.2,.7,1),"wind":Color(.5,1,.75),"earth":Color(.8,.65,.35),"dark":Color(.75,.4,1)}.get(attack_element,Color(1,.87,.5))
-	world_controller.combat_flights.launch(origin,target_player,kind,_resolve_attack.bind(id,kind,life_id,ratio),800. if kind=="magic" else 1100.,delay,
+	world_controller.combat_flights.launch(origin,target_player,kind,_resolve_attack.bind(id,kind,life_id,ratio,context.duplicate(true)),800. if kind=="magic" else 1100.,delay,
 		{"aim":aim,"hit_radius":30.,"obstruction":_projectile_clear,"color":color})
 
 func _projectile_clear(from: Vector2, to: Vector2) -> bool:
@@ -1025,11 +1026,17 @@ func _projectile_clear(from: Vector2, to: Vector2) -> bool:
 	var offset: Vector2 = motion.profile.hit_position
 	return world_controller._has_line_of_sight_world(from-offset,to-offset)
 
-func _resolve_attack(id: int, kind: String, born: int = -1, ratio: float = 1.) -> void:
+func _resolve_attack(id: int, kind: String, born: int = -1, ratio: float = 1., context: Dictionary = {}) -> void:
 	if dead or (born!=-1 and born!=life_id) or not _target_attackable(): return
 	if kind=="melee" and (id!=motion.sequence or global_position.distance_to(target_player.global_position)>current_attack_range()): return
 	if not world_controller._has_line_of_sight_world(global_position,target_player.global_position): return
-	player_hit.emit(self,maxi(1,int(attack_power*ratio)),kind)
+	_emit_symbol_hit(maxi(1,int(attack_power*ratio)),kind,context)
+
+func _emit_symbol_hit(amount: int, kind: String, context: Dictionary) -> void:
+	var previous: Dictionary=symbol_hit_context
+	symbol_hit_context=context.duplicate(true)
+	player_hit.emit(self,amount,kind)
+	symbol_hit_context=previous
 
 func _move_on_map() -> void:
 	var controller: Node = world_controller
