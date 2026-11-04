@@ -64,6 +64,8 @@ func run() -> void:
 	var unowned: Dictionary = Rules.snapshot("변신", record, {}, 0)
 	check(unowned.ok and not unowned.owned and unowned.problems.has("not_owned"), "unowned inspection")
 	var definition: Dictionary = Rules.DATA.data
+	check(int(definition.content_control.ID) == 1154 and definition.content_control.Enable == false, "source feature control explicitly false")
+	check(int(definition.content_control.ServerLimitSetID) == int(definition.group.ServerLimitsetID), "feature and group share unresolved server scope")
 	check(definition.unresolved_server_limit_sets.size() == 1 and int(definition.unresolved_server_limit_sets[0]) == 274, "source group server definition is unresolved")
 	check(definition.bonuses.size() == 43 and definition.sprite_options.size() == 3, "all source bonus and cosmetic references retained")
 	for i: int in range(3):
@@ -82,6 +84,9 @@ func run() -> void:
 	var owned: Dictionary = Rules.from_world(world, "변신", identity)
 	check(owned.owned and not owned.can_attempt and owned.problems.has("server_definition_missing"), "owned wealthy card still respects missing group gate")
 	check(owned.server_evaluations[0].status == "eligible", "card server membership resolved independently")
+	check(owned.problems.has("source_feature_disabled"), "card server membership does not override feature control")
+	owned.feature_control.Enable = true
+	check(Rules.DATA.data.content_control.Enable == false, "caller cannot mutate authoritative source feature flag")
 	check(owned.earned_stage == null, "selected stage3 cosmetic never implies earned level")
 	check(world._save_game(true) == OK, "real save before request")
 	var save_path: String = world.save_path()
@@ -92,7 +97,7 @@ func run() -> void:
 	var before_bosses: Dictionary = world.legacy_population.export_state().duplicate(true)
 	for unused: int in range(3):
 		var result: Dictionary = Rules.from_world(world, "변신", identity, true)
-		check(not result.ok and result.code == "source_contract_unresolved", "direct request safely rejects")
+		check(not result.ok and result.code == "source_feature_disabled", "direct request safely rejects explicit source false")
 	var hud: Node = world.hud
 	world._update_hud()
 	for extent: Vector2i in [Vector2i(1280,720), Vector2i(960,540)]:

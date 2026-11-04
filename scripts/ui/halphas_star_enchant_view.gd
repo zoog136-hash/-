@@ -41,7 +41,7 @@ func configure(host: Node, category_value: String, identity_value: String) -> vo
 	check_button.name = "HalphasStarEnchantCheck"
 	check_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	actions.add_child(check_button)
-	attempt_button = UI.button("성급 강화 · 조건 확인 중", _attempt, Vector2(0, 48))
+	attempt_button = UI.button("성급 강화 · 원본 비활성" if state.problems.has("source_feature_disabled") else "성급 강화 · 조건 확인 중", _attempt, Vector2(0, 48))
 	attempt_button.name = "HalphasStarEnchantAttempt"
 	attempt_button.disabled = not bool(state.can_attempt)
 	attempt_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL

@@ -9,7 +9,7 @@ import zipfile
 ARCHIVE_SHA256 = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 TABLES = ("BuffCard", "BuffCardStarEnchantGroup", "BuffCardStarEnchantRule",
           "BuffCardStarEnchantBonus", "BuffCardSpriteCustomizingOption", "Grade",
-          "Currency", "ServerLimit", "ConstantData")
+          "Currency", "ServerLimit", "ConstantData", "ContentsControl")
 
 
 def build(archive: Path) -> dict:
@@ -32,6 +32,9 @@ def build(archive: Path) -> dict:
     if card["BuffCardDeckID"] != 1:
         raise ValueError("Halphas source deck changed")
     group = one("BuffCardStarEnchantGroup", BuffCardID=card["ID"])
+    control = one("ContentsControl", Name="BuffCardStarEnchantPolymorph")
+    if control["ServerLimitSetID"] != group["ServerLimitsetID"]:
+        raise ValueError("Review changed source feature/group server scope")
     # Other groups must be reviewed separately even if a future source adds them.
     if len(tables["BuffCardStarEnchantGroup"]) != 1:
         raise ValueError("Review newly introduced source groups separately")
@@ -51,6 +54,7 @@ def build(archive: Path) -> dict:
     return {
         "schema": 1, "source_snapshot": "patch523", "archive_sha256": ARCHIVE_SHA256,
         "source_tables": evidence, "card": card, "group": group, "rules": rules,
+        "content_control": control,
         "bonuses": [r for r in tables["BuffCardStarEnchantBonus"] if r["GroupID"] == group["ID"]],
         "sprite_options": [r for r in tables["BuffCardSpriteCustomizingOption"] if r["BuffCardID"] == card["ID"]],
         "grades": [one("Grade", ID=i) for i in sorted({r["SourceGradeID"] for r in rules})],

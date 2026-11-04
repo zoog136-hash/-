@@ -20,6 +20,8 @@ static func snapshot(category: String, record: Dictionary, cards: Dictionary, go
 	conditions.configure(definition.server_limits)
 	var evaluations: Array[Dictionary] = []
 	var problems: Array[String] = []
+	var control: Dictionary = definition.content_control
+	if control.get("Enable") != true: problems.append("source_feature_disabled")
 	var owned: bool = cards.get("owned", {}).get(category, {}).get(identity, false) == true
 	if not owned: problems.append("not_owned")
 	# Preserve card and group restrictions separately. An empty set is unknown,
@@ -47,8 +49,8 @@ static func snapshot(category: String, record: Dictionary, cards: Dictionary, go
 	return {"ok": true, "category": category, "identity": identity, "card_id": CARD_ID,
 		"owned": owned, "stages": stages, "max_stage": int(definition.max_level.Value),
 		"earned_stage": null, "stage_status": "no_authoritative_progression_ledger",
-		"server_evaluations": evaluations, "problems": problems,
-		"can_attempt": false, "blocked_reason": "강화 조건을 확인 중입니다. 카드와 아데나는 소모되지 않습니다.",
+		"server_evaluations": evaluations, "problems": problems, "feature_control": control.duplicate(true),
+		"can_attempt": false, "blocked_reason": "원본 설정에서 성급 강화가 비활성으로 기록돼 있습니다. 카드와 아데나는 소모되지 않습니다." if problems.has("source_feature_disabled") else "강화 조건을 확인 중입니다. 카드와 아데나는 소모되지 않습니다.",
 		"source_snapshot": "patch523"}
 
 static func attempt(category: String, record: Dictionary, cards: Dictionary, gold: int, context: Dictionary = {}) -> Dictionary:
@@ -56,7 +58,7 @@ static func attempt(category: String, record: Dictionary, cards: Dictionary, gol
 	if not view.ok: return view
 	# Do not roll, spend, advance, apply bonuses, or save with unresolved rules.
 	# In particular, source_visual_context.active_card_options is not a ledger.
-	return {"ok": false, "code": "source_contract_unresolved", "error": view.blocked_reason, "snapshot": view}
+	return {"ok": false, "code": "source_feature_disabled" if view.problems.has("source_feature_disabled") else "source_contract_unresolved", "error": view.blocked_reason, "snapshot": view}
 
 static func from_world(world: Node, category: String, identity: String, is_attempt: bool = false) -> Dictionary:
 	if world == null or category != CATEGORY:
