@@ -1,0 +1,121 @@
+{
+  "base_commit": "cd2faccfc6749532453012f785387e962a2463ff",
+  "read_only_main": "fd3ef6bad12bd030cb40946bf9b96a5a35bf8d94",
+  "policy_authority": "Existing single-player numeric PvP-to-PvE compatibility, explicitly local rather than an original server formula",
+  "read_only_main_function_sha256": {
+    "_normalize_option_policies": "3ba3d34c2b53697f68a0458912e66e0ebe23c16189662f3e45c54a56ab035bfe",
+    "_pve_damage_after_item_buffs": "6a7a7f7ae2091b16b52431c120c6b89f24f363c41cdf86462c49045b9931548a",
+    "_equipment_additional_damage": "e3fc598c45d8490289810eddc3c71d739f1fd6d6ece86beee1d56210ee84ebf4",
+    "_catalog_damage_bonus": "c27d31e592b85d61bfb43a8d6d0d6978e2751bef1acace53a3021379e102423a"
+  },
+  "exact_source_rewards": {
+    "2192": [
+      2392
+    ],
+    "2742": [
+      3152,
+      3162
+    ],
+    "2752": [
+      3172
+    ],
+    "3202": [
+      4492,
+      4502
+    ],
+    "3382": [
+      4762
+    ]
+  },
+  "all_source_magnitudes": 1,
+  "local_policy_config": "combat.pvp_numeric_to_pve in data/growth/guardian_local_rules.json; enabled=true, pierce_mode=flat_addition; optional disable / bounded_restoration",
+  "validated_file_sha256": {
+    "data/growth/guardian_local_rules.json": "212e710d47fd47a3a321ed8c8058cf93cd1476417c71cf2c0083ebc9c46a2776",
+    "scripts/growth/guardian_combat.gd": "3eecb954e7fc37084d3c7ab76849e6550a48f010d2364761591fe36a45275f03",
+    "scripts/growth/guardian_source.gd": "9c39b2af4ee4e954d4210522e5fb50275ca5dbdb0c1a70bcc8f797370c9ef77a",
+    "scripts/growth/growth_view.gd": "57a29c029c7f04e0cbd0577a271bca28eb21931395136ea0ab6f80345bba61e2",
+    "tests/guardian_followup_test.gd": "a01bc46c851f0b2c9a508b1503d973c95bf51da29ae7862dd3891974fcb43341",
+    "tests/guardian_pve_numeric_test.gd": "e25cc08424000a58cf12aaa435ee3eb11fb64fa95ce1ab4e9c14555f5f82894e",
+    "tests/capture_guardian_pve_numeric.gd": "5b5ae2361ebeb66bcdcb2436710c354d3249e5566574ef924e72ee1eae5ce0a7"
+  },
+  "unchanged_file_sha256": {
+    "data/growth/guardian_source523.json": "765e953e12b117a8897fabe1525e6930de377ab53532f6db0c7fb1ac4c369b37",
+    "scripts/growth/growth_runtime.gd": "609110d864ef04fcda80373bb6dc4dc2c74b9bb32c688b13447eac0745ff9b5c",
+    "scripts/growth/guardian_media.gd": "d69597778c8950dea6982cfad22573249eab8863eb811651e5fe9da23ec432ee",
+    "scripts/growth/guardian_original_glow.gd": "da10b8f81c8b09ed8107397a5ff1162ad32c1aa47bb858f356a846a80b49f892",
+    "scripts/growth/guardian_authored_presentation.gd": "0b02b33a0b9794038836b2fd8e92aa98ddef6d20eab3600efaee1f5396e89ba1",
+    "scripts/world.gd": "a028c92dcc287340c62d1055951c65d2864aed2b56bbce5d4b8fe55f4fe7a593"
+  },
+  "results": {
+    "exact_row_and_policy_checks": 28,
+    "actual_main_native_ui_and_combat": 151,
+    "source_transactions": 39,
+    "combat_economy": 60,
+    "core_main_save": 32,
+    "additional_save_gates": 2,
+    "tracked_atlases": 723,
+    "tracked_frames": 41442
+  },
+  "actual_main_scope": [
+    "Five source nodes acquired via native card confirmation, exact costs, explicit prerequisite ownership fixtures and fixed winning-card QA outcome",
+    "Failed paid unlock: state/stone/source reward rollback and save bytes unchanged",
+    "Existing spawned 말하는 섬 들개 in real aden_world; no is_player_combatant metadata, no synthetic PvP contexts",
+    "Production successful-hit endpoint and real NPC player_hit signal: asserted enabled-vs-disabled damage deltas melee+4/ranged+4/magic+2/incoming reduction1 before and after reconnect",
+    "Original PvP names and local PvE compatibility displayed in actual node details",
+    "All sixty server-gated node quotes remain locked; additional unit coverage rejects their rewards even if IDs are present in state"
+  ],
+  "logs": {
+    "unit.txt": {
+      "sha256": "7f1f561b17e83ab1e85845ccfae5f99e1d5814fe7dfb8af4a8bbc98302f88ec7"
+    },
+    "actual-main-ui.txt": {
+      "sha256": "3da14cd5c8abc3f6d0b015034c7967e220dcca570798e80773f281eef933ccd1"
+    },
+    "deferred-save.txt": {
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    },
+    "guardian-source.txt": {
+      "sha256": "e6b1750b48f47fb30f8305611069c0c2ef563443cb8d079ec373e59f158ed390"
+    },
+    "guardian-followup.txt": {
+      "sha256": "8d2f6aa68ac24e25fdc4f80cea7395a0546c39052d3d86724ea724d8d1965f59"
+    },
+    "resource-integrity.txt": {
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    "core-runtime-save.txt": {
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "save-identical.txt": {
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    }
+  },
+  "local_only_captures": {
+    "guardian-pve-numeric-actual-monster-combat.png": {
+      "path": "/workspace/guardian-validation/pve-ui-captures/guardian-pve-numeric-actual-monster-combat.png",
+      "bytes": 2027448,
+      "sha256": "33071ac05b2bb911d3c29901a6def0818631a9dcd772f6973457cd8638647d54"
+    },
+    "guardian-pve-numeric-source-and-compatibility.png": {
+      "path": "/workspace/guardian-validation/pve-ui-captures/guardian-pve-numeric-source-and-compatibility.png",
+      "bytes": 530592,
+      "sha256": "8f2938e02bd41c2a4d50b7db9fbdd32d2de595739065107622712bad51382787"
+    }
+  },
+  "initial_probes": [
+    {
+      "path": "/workspace/guardian-validation/pve-unit.txt",
+      "status": "failed: JSON float IDs were not recognized by int Array membership; fixed explicit numeric identity normalization"
+    },
+    {
+      "path": "/workspace/guardian-validation/pve-unit-final.txt",
+      "status": "failed: unsupported Godot %g numeric formatting; fixed local compatibility and existing conditional detail formatting; final clean unit and actual UI supersede both"
+    }
+  ],
+  "limits": [
+    "Linux Godot4.7.2 Compatibility/llvmpipe; no Android/device validation",
+    "No PvP/arena/network/training feature, no server lock changes, no original data rewrite or save schema migration",
+    "Original full card atlas and six UI OGG payloads remain unavailable; existing labeled authored fallback stays complete",
+    "No new Drive/Space transfer or exported game build, no other PR/main merge or manual CI run"
+  ]
+}

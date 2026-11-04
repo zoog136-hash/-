@@ -17,6 +17,15 @@
     "status": "debug_build_only_manual_grant; separate from ordinary inventory diamonds and unusable in release"
   },
   "combat": {
+    "pvp_numeric_to_pve": {
+      "enabled": true,
+      "reward_ids": [2392, 3152, 3162, 3172, 4492, 4502, 4762],
+      "authority": "TWILIGHT existing single-player numeric option compatibility; not original server PvP semantics",
+      "basis": "world._normalize_option_policies; world._pve_damage_after_item_buffs; world._equipment_additional_damage; world._catalog_damage_bonus; docs/PVE_ONLY_SCOPE_20261012.md",
+      "pierce_mode": "flat_addition",
+      "pierce_policy": "PvE compatibility follows existing single-player numeric ignore-as-addition policy. Optional bounded_restoration mode caps restoration at actual reduction. Original PvP path stays bounded.",
+      "scope": "Only these seven source reward rows. No player-targeted skills, server unlocks or PvP subsystem."
+    },
     "status_resolution": "existing_TWILIGHT_status_service",
     "poison_tick_interval_seconds": 1.0,
     "unknown_original_level_formula": "existing_local_status_policy; retain original coefficients for audit",

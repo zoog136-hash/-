@@ -152,6 +152,9 @@ func run() -> void:
  rt._rebuild()
  expect(rt.bonus("weight_bonus:flat")==200,"Weight44 source denominator100 yields200 available carry capacity")
  var combat=rt.combat
+ # Preserve the original scoped branch checks with compatibility disabled.
+ # The default enabled policy has separate exact-row and real-Main coverage.
+ rt.guardian_local_rules.combat.pvp_numeric_to_pve.enabled=false
  var plain: int=combat.outgoing(target,100,false,"melee")
  var pvp: int=combat.outgoing(target,100,false,"melee",{"pvp":true})
  expect(plain==100 and pvp==100+int(combat.value("PVPMeleeAdditionDamage")),"PvP addition not flattened into PvE")

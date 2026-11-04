@@ -367,6 +367,8 @@ func _node_detail(row: Dictionary) -> void:
 		_label("능력치: "+_effect_text(runtime.guardian_source.effects(id,level)))
 		var detail: String = runtime.guardian_source.detail(id,level)
 		if not detail.is_empty(): _label(detail)
+		var compatibility: String=runtime.combat.pve_numeric_detail(id)
+		if not compatibility.is_empty():_label(compatibility).name="GuardianPveNumericCompatibility"
 		if int(row.max_level)>level:
 			_label("다음 강화: "+runtime.guardian_source.detail(id,level+1))
 	else:

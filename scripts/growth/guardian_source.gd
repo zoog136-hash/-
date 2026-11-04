@@ -62,7 +62,8 @@ func detail(id: String, level: int) -> String:
 			if int(spell.SpellMaterialTypeID) == 41: text += " · 명예 코인 %d" % int(spell.SpellMaterialItemAmount)
 			text += " · 사용 가능"
 		else:
-			text += " · 조건부 %+g" % float(reward.get("value",reward.bonus.Value))
+			var amount: float=float(reward.get("value",reward.bonus.Value))
+			text += " · 조건부 "+("+" if amount>=0 else "")+str(amount)
 		parts.append(text)
 	return "\n".join(parts)
 

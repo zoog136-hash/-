@@ -33,6 +33,33 @@ func roll(percent: float) -> bool:
 	if percent<=0:return false
 	if percent>=100:return true
 	return world.rng.randi_range(0,999999)<int(percent*10000)
+func pve_numeric_policy() -> Dictionary:
+	return runtime.guardian_local_rules.get("combat",{}).get("pvp_numeric_to_pve",{})
+func pve_numeric_row(id: int) -> bool:
+	# JSON numbers load as floats; normalize source identity before membership.
+	for configured: Variant in pve_numeric_policy().get("reward_ids",[]):
+		if int(configured)==id:return true
+	return false
+func pvp_numeric_value(name: String,context: Dictionary) -> float:
+	if bool(context.get("pvp",false)):return value(name)
+	var policy: Dictionary=pve_numeric_policy()
+	if not bool(policy.get("enabled",false)):return 0.0
+	var total: float=0
+	for reward: Dictionary in enabled_rows():
+		if pve_numeric_row(int(reward.row.ID)) and str(reward.bonus_type.Name)==name:
+			total+=float(reward.get("value",reward.bonus.Value))
+	return total
+func pve_numeric_detail(id: String) -> String:
+	var policy: Dictionary=pve_numeric_policy()
+	var labels: Dictionary={"PiercePVPDamageReduction":"PvE 리덕션 무시","PVPMeleeAdditionDamage":"PvE 근거리 추가 대미지","PVPRangeAdditionDamage":"PvE 원거리 추가 대미지","PVPDamageReduction":"PvE 대미지 리덕션"}
+	var parts: Array[String]=[]
+	for reward: Dictionary in runtime.guardian_rewards(id):
+		if pve_numeric_row(int(reward.row.ID)):
+			parts.append(str(labels.get(str(reward.bonus_type.Name),reward.label))+" %+d" % int(reward.get("value",reward.bonus.Value)))
+	if parts.is_empty():return ""
+	if not bool(policy.get("enabled",false)):return "단독 플레이 수치 호환 꺼짐 · 원본 PvP 조건 유지"
+	var pierce: String="리덕션 무시는 PvE 추가 피해로 적용 (기존 단독 정책)" if str(policy.get("pierce_mode","bounded_restoration"))=="flat_addition" else "리덕션 무시는 실제 감소량까지만 복원"
+	return "TWILIGHT 단독 플레이 호환 · "+" / ".join(parts)+"\n활성화한 노드에 적용 · 원본 PvP 명칭/값 보존 · "+pierce
 func status_hit(kind: String) -> float:
 	return value("HitSpecialResistance",6 if kind=="stun" else 8) if kind in ["stun","fear"] else 0.0
 func status_resistance(kind: String) -> float:
@@ -48,7 +75,7 @@ func incoming(attacker: Node,kind: String,amount: int,critical: bool=false,conte
 	if kind!="magic" and roll(value("WeaponBlock")):
 		out.damage=0;out.blocked=true;return out
 	var reduction: float=value("CriticalDamageReduction") if critical else 0.0
-	if bool(context.get("pvp",false)):reduction+=value("PVPDamageReduction")
+	reduction+=pvp_numeric_value("PVPDamageReduction",context)
 	if float(world.player.get("stun_remaining"))>0:reduction+=value("DamageReductionForSpecialDebuff",6)
 	for tag: Variant in context.get("spell_tags",[]):reduction+=value("DamageReductionForSpellAttackWeapon",int(tag))
 	var percent: float=value("DamageReductionPercent")+value("RangeDamageReductionPercent" if kind=="ranged" else "MeleeDamageReductionPercent" if kind=="melee" else "")
@@ -72,13 +99,16 @@ func incoming(attacker: Node,kind: String,amount: int,critical: bool=false,conte
 func outgoing(target: Node,amount: int,critical: bool,kind: String,context: Dictionary={}) -> int:
 	var result: float=amount
 	var pvp: bool=bool(context.get("pvp",false))
+	result+=pvp_numeric_value("PVPMeleeAdditionDamage" if kind=="melee" else "PVPRangeAdditionDamage" if kind=="ranged" else "",context)
 	if pvp:
-		result+=value("PVPMeleeAdditionDamage" if kind=="melee" else "PVPRangeAdditionDamage" if kind=="ranged" else "")
 		if world.original_skills!=null:result-=world.original_skills.status.modifier(target,"pvp_reduction")
-	# Pierce acts only against a real reduction budget. It is never free damage.
+	# Original scoped pierce stays bounded. The exact PvE compatibility rows
+	# can use the existing game's ignore-as-addition policy, explicitly local.
 	var budget: float=maxf(0,float(context.get("flat_reduction",0)))
 	var pierce: float=value("PierceDamageReduction")+value("PierceMeleeDamageReduction" if kind=="melee" else "PierceRangeDamageReduction" if kind=="ranged" else "")
-	if pvp:pierce+=value("PiercePVPDamageReduction")
+	var numeric_pierce: float=pvp_numeric_value("PiercePVPDamageReduction",context)
+	if not pvp and str(pve_numeric_policy().get("pierce_mode","bounded_restoration"))=="flat_addition":result+=numeric_pierce
+	else:pierce+=numeric_pierce
 	result+=minf(budget,maxf(0,pierce))
 	var percentage_budget: float=maxf(0,float(context.get("percent_reduction",0)))
 	var ignore: float=value("IgnoreDamageReductionPercent")+value("IgnoreMeleeDamageReductionPercent" if kind=="melee" else "IgnoreRangeDamageReductionPercent" if kind=="ranged" else "IgnoreMagicDamageReductionPercent")
