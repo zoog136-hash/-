@@ -1,0 +1,258 @@
+{
+  "schema": 1,
+  "parent_code_checkpoint": "c11d7fccfcabc8c461c7701bf6de5d954745c9fc",
+  "godot": "4.7.2",
+  "required_resource_audit": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "status": "passed; original art delivery remains separate"
+  },
+  "checks": 1075,
+  "tests": [
+    {
+      "case": "old811_actual_physical_receipt",
+      "log_sha256": "0e294a5d9a85acd4d31936b1414ad509e28bb3fce0c8620e5ce425fd6c400a26",
+      "result": {
+        "all_four_execution_holds_persist": true,
+        "already_known_or_duplicate_books_preserved": true,
+        "checks": 100,
+        "failures": [],
+        "final_save_sha256": "66f560148ecc757783ea3d644d56d9bae1b1594a5d808e7e837dfc6de82f22d9",
+        "input_seed_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+        "learned_source_spell_ids": [
+          347,
+          358,
+          1133,
+          70
+        ],
+        "mode": "real_held_reference_books",
+        "native_spell_execution_completed": false,
+        "some_use_pending": 354,
+        "source_completions": 811
+      }
+    },
+    {
+      "case": "new_auto_issued_inventory_ui",
+      "log_sha256": "f5f80bf9117e05c3acad1709c5e553b6f25639ae6d46f7b9dbab75ce82cc6e28",
+      "result": {
+        "all_four_execution_holds_persist": true,
+        "already_known_or_duplicate_books_preserved": true,
+        "checks": 109,
+        "failures": [],
+        "final_save_sha256": "5896101220077f210f8578ac1c548fd25b0ee05c53b04c53878b4352883e8f6f",
+        "input_seed_sha256": "",
+        "learned_source_spell_ids": [
+          347,
+          358,
+          1133,
+          70
+        ],
+        "mode": "real_native_reference_books",
+        "native_spell_execution_completed": false,
+        "some_use_pending": 354,
+        "source_completions": 811
+      }
+    },
+    {
+      "case": "cold_without_optional_packs",
+      "log_sha256": "4a0a1c2aa737ce80d1eb2f4fce3591750bd19c1591ede1ec5eb72bca3ba31b72",
+      "result": {
+        "checks": 25,
+        "failures": [],
+        "knowledge_held": 4,
+        "native_execution_completed": false,
+        "source_save_sha256": "66f560148ecc757783ea3d644d56d9bae1b1594a5d808e7e837dfc6de82f22d9",
+        "unspent_raw_duplicates": 2
+      }
+    },
+    {
+      "case": "existing_eight_book_regression",
+      "log_sha256": "49373969923b9fdfca58c504f59e74b386b237014e9b5c78d1bb3ced9be2de3d",
+      "result": {
+        "checks": 43,
+        "failures": [],
+        "final_save_sha256": "b0ca6520034116aa0314ebc2758f224bb70fd6dee77965a4564511d4eed23981",
+        "initial_pending_use_completed": 351,
+        "initial_source_completions": 811,
+        "learned_source_spell_ids": [
+          74,
+          73,
+          1113,
+          81
+        ],
+        "mode": "real_native_quest_books",
+        "original_seed_sha256": "",
+        "reference_targets_not_consumed_in_this_legacy_regression": [
+          347,
+          358,
+          1133,
+          70
+        ],
+        "scope": "genuine quest issue/ownership to existing skill learning, one atomic save and reconnect; no new spell/cast execution/reference activation",
+        "skill_pack_sha256": "256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a",
+        "starter_already_known_preserved": [
+          2,
+          65,
+          1,
+          80
+        ]
+      }
+    },
+    {
+      "case": "actual_main_core_save",
+      "log_sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    },
+    {
+      "case": "historical822_ui_preservation",
+      "log_sha256": "4e17f6bee776067c2a55f4ac226bd7633dec52d1e4be34e44f22b67efac2e410",
+      "result": {
+        "checks": 754,
+        "failures": [],
+        "installed_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
+        "inventory_source_stacks": 732,
+        "source_quests": 3621
+      }
+    }
+  ],
+  "code_sha256": {
+    "scripts/quests/quest_reference_learning.gd": "f287f33e226578fb733d3453c701ffb7da9c23a091ebff8ed41d5318cb4d516c",
+    "scripts/quests/quest_skillbooks523.gd": "aa076ed8f00bad8fbe43ac07b72b6d4d2090f59633b2717f483d2df9f122e093",
+    "scripts/quests/quest_item_provider238.gd": "9881ef06f863c1919d1c04102f6f843a5412965a692d8555d870b62b2e2df14a",
+    "scripts/skills/skill_catalog.gd": "bb10b2948741e5ba5babae57dd28abc8c6851db66e62eff48e5995eca8d4e4b3",
+    "scripts/skills/skill_service.gd": "c35f63ac63bf822d1597c1d29c6abc55ed1a1d3988ce332486b43491696f5778",
+    "scripts/ui/renewal_skills.gd": "9a98f00a1c0e59139c5ac2a0504f7f8a1970e9692f2bb117b99968cd7540ccbc",
+    "scripts/ui/lineage_inventory_ui.gd": "0026494e12860e60f7d6252aebf91303dfefa907a04c030de4229d4f6176a935",
+    "scripts/world.gd": "7ff637d606f87e0a7faa0891b452b37f4593f0ab31b56c47db59c207ff29ae44",
+    "tests/quest_reference_learning_test.gd": "2177b30978bb9d99b695be6642dadc7dcefd8d35aa7998e8213ade70ec49fc44",
+    "tests/quest_reference_missing_input_test.gd": "9e000c9687c44fa957948de224e797e2e8245eaebf85a7912bffa06d4f861a8b",
+    "tests/quest_skillbook523_flow_test.gd": "55728b76ed3e097f6dc157dd4075aa5d177ac6336c65b1b85417cb2193ddaa7c"
+  },
+  "counts": {
+    "definitions": 3621,
+    "new_source_completions": 811,
+    "default_ten_consumer_knight_pending": 359,
+    "exact_v3_with_twelve_books_knight_pending": 351,
+    "exact_v3_after_normal_mage_selection_pending": 354,
+    "pending_counts_are_quests_with_some_unconnected_reward": true,
+    "baseline_distinct_pending_item_classes": 146,
+    "reviewed_adapters": 22,
+    "remaining_unreviewed_item_classes": 124,
+    "native_spell_execution_pending_despite_learning": 4
+  },
+  "eligibility_scope": "Actual source quest production and preserved source-issued saves; controlled ordinary class selection and fault injection. Not natural all-map/class probability proof.",
+  "source_inputs_unchanged": {
+    "quest_v1_zip_sha256": "77866c180d4224eff6d7e578759ec0820d6e50515e5c6bd8a67dc92421c20063",
+    "item_pack_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+    "local_only_skill_v3_sha256": "256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a",
+    "original811_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+    "historical822_save_sha256": "13e6d609f5fabf8cc7f1fd4a49c9432c379ad2e94b966978f547206b15a39ade"
+  },
+  "failed_first_ui_run_retained": {
+    "checks": 99,
+    "assertion_failures": 0,
+    "resource_errors": 21,
+    "passing": false,
+    "log_sha256": "90ac9ca1b05ac0be510d4d4c7822cb905057a7120be338380c75f00ac36f5ca8",
+    "correction": "Restore exact already-committed SVG bytes and decode existing raw SVG only when editor import metadata is absent; not original icon delivery."
+  },
+  "storage": {
+    "workspace_available_bytes": 0,
+    "retained_reproducible_generated_cache_bytes": 268542925,
+    "generated_files": 115,
+    "original_paths_retained_via_private_links": true,
+    "original_inputs_packs_saves_valid_git_objects_unchanged": true,
+    "candidate_location": "same environment /tmp; public entries regular100644, never temporary symlinks"
+  },
+  "native_spell_effect_completion": false,
+  "game_drive_auto_download": false,
+  "new_pack_upload": false,
+  "main_or_other_pr_merge": false,
+  "same_owned_save_read_only_class_preview_audit": {
+    "context_changes": [
+      {
+        "job": "기사",
+        "pending_items": [
+          {
+            "item": 427,
+            "reward": 3032
+          }
+        ],
+        "quest": "m523:quest:14811"
+      },
+      {
+        "job": "기사",
+        "pending_items": [
+          {
+            "item": 2772,
+            "reward": 3072
+          }
+        ],
+        "quest": "m523:quest:14991"
+      },
+      {
+        "job": "마법사",
+        "pending_items": [
+          {
+            "item": 427,
+            "reward": 2922
+          }
+        ],
+        "quest": "m523:quest:6001"
+      },
+      {
+        "job": "마법사",
+        "pending_items": [
+          {
+            "item": 177452,
+            "reward": 5452
+          }
+        ],
+        "quest": "m523:quest:6041"
+      },
+      {
+        "job": "마법사",
+        "pending_items": [
+          {
+            "item": 177292,
+            "reward": 5462
+          }
+        ],
+        "quest": "m523:quest:6051"
+      },
+      {
+        "job": "마법사",
+        "pending_items": [
+          {
+            "item": 257,
+            "reward": 2942
+          }
+        ],
+        "quest": "m523:quest:6091"
+      },
+      {
+        "job": "마법사",
+        "pending_items": [
+          {
+            "item": 693,
+            "reward": 2962
+          }
+        ],
+        "quest": "m523:quest:6181"
+      }
+    ],
+    "knight_completed": 811,
+    "knight_pending": 351,
+    "mage_completed": 811,
+    "mage_pending": 354,
+    "save_unchanged": true,
+    "scope": "read-only preview in existing QA save; no class save, ownership conversion or spell-execution claim"
+  },
+  "same_owned_save_read_only_class_preview_log_sha256": "48706813a3399a2485fa75c3229af47910b6fc8a39974595f4d2b31d0d46296f",
+  "pending_preview_semantics": "Current-class reward-plan preview of completed quests. Changing class can expose different original CharacterClassID reward rows whose reward receipt was never issued for the old class; this is not a physical pending-stack count or new grant."
+}

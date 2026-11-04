@@ -1,0 +1,1134 @@
+{
+  "total": 70,
+  "test_items": 5,
+  "stage_supplier_available": true,
+  "supplier_contract": "world.stage_source_item_grants(grants:Array,supplier:Dictionary)->Dictionary; returns full inventory/item_instances/gold candidates, not a completed effect or saved transaction",
+  "current_equipment_mutators": [
+    "world._equip_or_acquire_item(record:Dictionary,add_to_inventory:bool=true,requested_id:String=\"\",requested_slot:String=\"\")->void",
+    "world._equip_reference_in_slot(reference:String,target:String)->void"
+  ],
+  "equipment_contract_gap": "Current raw source_pending_use guard blocks equip, and these legacy mutators do not return an atomic selected receipt/debit/equipment-state result. Pack equipment effects are explicitly partial; no full native equipment/effect completion asserted. Coordinate exact public owner rather than copy gear/craft/ticket engines here.",
+  "rows": [
+    {
+      "id": 240,
+      "test": false,
+      "slot": "helmet",
+      "type": "투구",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 248,
+      "test": false,
+      "slot": "weapon",
+      "type": "한손검",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 249,
+      "test": false,
+      "slot": "weapon",
+      "type": "단검",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 305,
+      "test": false,
+      "slot": "cloak",
+      "type": "망토",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 313,
+      "test": false,
+      "slot": "consumable",
+      "type": "텔레포트 주문서",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 349,
+      "test": false,
+      "slot": "boots",
+      "type": "신발",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 366,
+      "test": false,
+      "slot": "material",
+      "type": "일반 재료",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 383,
+      "test": false,
+      "slot": "helmet",
+      "type": "투구",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 421,
+      "test": false,
+      "slot": "consumable",
+      "type": "주문서",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 427,
+      "test": false,
+      "slot": "weapon",
+      "type": "한손검",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 587,
+      "test": false,
+      "slot": "gloves",
+      "type": "장갑",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 691,
+      "test": false,
+      "slot": "offhand",
+      "type": "방패",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 829,
+      "test": false,
+      "slot": "cloak",
+      "type": "망토",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 844,
+      "test": false,
+      "slot": "consumable",
+      "type": "주문서",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 845,
+      "test": false,
+      "slot": "consumable",
+      "type": "숫돌",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 917,
+      "test": false,
+      "slot": "tshirt",
+      "type": "티셔츠",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 926,
+      "test": false,
+      "slot": "belt",
+      "type": "벨트",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 929,
+      "test": false,
+      "slot": "weapon",
+      "type": "한손검",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 1129,
+      "test": false,
+      "slot": "body",
+      "type": "갑옷",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 1197,
+      "test": false,
+      "slot": "necklace",
+      "type": "목걸이",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 1991,
+      "test": true,
+      "slot": "consumable",
+      "type": "사용 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 2001,
+      "test": true,
+      "slot": "consumable",
+      "type": "사용 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 2011,
+      "test": true,
+      "slot": "consumable",
+      "type": "사용 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 2772,
+      "test": false,
+      "slot": "body",
+      "type": "갑옷",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 2802,
+      "test": false,
+      "slot": "gloves",
+      "type": "장갑",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 2832,
+      "test": false,
+      "slot": "necklace",
+      "type": "목걸이",
+      "source_grade_id": 2,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 2862,
+      "test": false,
+      "slot": "ring",
+      "type": "반지",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 2872,
+      "test": false,
+      "slot": "cloak",
+      "type": "망토",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 3042,
+      "test": false,
+      "slot": "gaiters",
+      "type": "각반",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 3242,
+      "test": false,
+      "slot": "currency",
+      "type": "화폐",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 3252,
+      "test": false,
+      "slot": "currency",
+      "type": "화폐",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 3272,
+      "test": true,
+      "slot": "consumable",
+      "type": "텔레포트 주문서",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 4141,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 4851,
+      "test": false,
+      "slot": "offhand",
+      "type": "방패",
+      "source_grade_id": 3,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 4871,
+      "test": false,
+      "slot": "body",
+      "type": "갑옷",
+      "source_grade_id": 3,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 4921,
+      "test": false,
+      "slot": "helmet",
+      "type": "투구",
+      "source_grade_id": 3,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 4951,
+      "test": false,
+      "slot": "cloak",
+      "type": "망토",
+      "source_grade_id": 3,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 4971,
+      "test": false,
+      "slot": "boots",
+      "type": "신발",
+      "source_grade_id": 3,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 5021,
+      "test": false,
+      "slot": "gloves",
+      "type": "장갑",
+      "source_grade_id": 3,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 6171,
+      "test": true,
+      "slot": "currency",
+      "type": "화폐",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 6401,
+      "test": false,
+      "slot": "consumable",
+      "type": "강화 주문서",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 6411,
+      "test": false,
+      "slot": "consumable",
+      "type": "강화 주문서",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 9091,
+      "test": false,
+      "slot": "offhand",
+      "type": "방패",
+      "source_grade_id": 4,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 19332,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 3,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 30213,
+      "test": false,
+      "slot": "gaiters",
+      "type": "각반",
+      "source_grade_id": 4,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 85643,
+      "test": false,
+      "slot": "gloves",
+      "type": "장갑",
+      "source_grade_id": 4,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 95954,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 147672,
+      "test": false,
+      "slot": "currency",
+      "type": "화폐",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 203402,
+      "test": false,
+      "slot": "consumable",
+      "type": "텔레포트 주문서",
+      "source_grade_id": 52,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 282783,
+      "test": false,
+      "slot": "consumable",
+      "type": "텔레포트 주문서",
+      "source_grade_id": 52,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 295494,
+      "test": false,
+      "slot": "consumable",
+      "type": "텔레포트 주문서",
+      "source_grade_id": 32,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 295514,
+      "test": false,
+      "slot": "consumable",
+      "type": "텔레포트 주문서",
+      "source_grade_id": 32,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 302471,
+      "test": false,
+      "slot": "consumable",
+      "type": "주문서",
+      "source_grade_id": 52,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 303031,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 306431,
+      "test": false,
+      "slot": "material",
+      "type": "엠블럼",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 339714,
+      "test": false,
+      "slot": "material",
+      "type": "엠블럼",
+      "source_grade_id": 52,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355441,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355451,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355461,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355471,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355481,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355491,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355501,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355511,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355521,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355531,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355541,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 355551,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 359751,
+      "test": false,
+      "slot": "material",
+      "type": "재료 아이템",
+      "source_grade_id": 1,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "represented_source_fields",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    },
+    {
+      "id": 367932,
+      "test": false,
+      "slot": "consumable",
+      "type": "퀘스트 프리패스 아이템",
+      "source_grade_id": 42,
+      "record_keys": [
+        "source_unresolved_class_ids",
+        "source_effect_status",
+        "source_effect_scope"
+      ],
+      "activation": null,
+      "source_effect_status": "partial",
+      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
+      "source_unresolved_class_ids": []
+    }
+  ],
+  "prior_auxiliary_row_error_corrected": "previous audit accidentally retained reviewed239 while total70 described unreviewed items; current rows exactly match matrix unreviewed none70; no source/save changes"
+}

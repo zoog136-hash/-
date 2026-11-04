@@ -1,0 +1,2052 @@
+{
+  "source_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+  "counts_are_distinct_item_classes_not_quests_or_item_quantities": true,
+  "baseline_pending_item_classes": 146,
+  "reviewed": 49,
+  "remaining": 97,
+  "original_constraints_waived": false,
+  "contracts": {
+    "contract_1": "Requires exact installed effect/equipment/currency owner and quest receipt contract; never bind by name",
+    "contract_2": "Shared consumer explicitly blocks source effects/requirements; keep original blockers",
+    "contract_4": "Reviewed actual quest grant and selected held-instance receipt adapter; see consumer-validation.json",
+    "contract_5": "Remaining27 actual source TestItem=true fixed-card classes stay blocked. Four normal native NoMerge/NoSwap identities are verified through the current staged owner and existing consuming boundaries; see FIXED_CARDS.md.",
+    "contract_6": "Four exact reference books now have native SpellLearnLimit checks, actual selected-owned-unit debit + source knowledge + input/use receipt in one confirmed save. Native spell execution remains blocked by a persistent new-source-learning-only hold. No generic cast activation or old-knowledge conversion. See REFERENCE_LEARNING.md.",
+    "contract_7": "368202 box input consumption and exact class-owned output implemented/verified for genuine old and new quest issues; thirteen child skill-ticket effect owners remain separate and unimplemented here.",
+    "contract_8": "369002 actual existing selection UI and confirm-time selected ownership plus output gear/input receipt atomic transaction verified. Output ownership only; rune wear/effects remain equipment-owner scope.",
+    "return239_verified": "Narrow PR247 bc0ce721 common movement/result consumer plus exact quest receipt bridge implemented; same verified aden_world only. See RETURN239.md and return239-validation.json.",
+    "hp233_verified": "Exact source20+2d6 and six joined source bonuses including AutoUseRegistrable=TrueFalse/1; current host heal/NPC modifiers/shared cooldown/receipt-selected debit and new native6940 gift ownership verified; see HP233.md.",
+    "skillbooks_existing_verified": "Exact public245 v3 input and existing executable skill owner required. Genuine book debits/learning/immutable origin/consumable receipt/failure/reconnect verified. No lmref activation; starter-known and source class/level restrictions preserve books. Four additional exact books record learning only; see reference_learning_only.",
+    "fixed_normal_cards_verified": "Four normal exact m508 stable cards, all30 actual quest-issued units, staged public243 owner+selected-item+receipt save verified. Native global NoMerge/UI enforce existing flags. Swap/exchange action absent; not equip. Separate explicit new-quest-spare option-feed host hold preserves old free copies/cost/EXP; not inferred native rule.",
+    "reference_learning_only": "Exact private v3 and source book identity required; source learning only, clear before-consumption UI, persistent cast/auto/quickslot hold. All four underlying native spell effects remain pending.",
+    "normal_plus0_equipment": "Actual selected receipt debit -> one physical UUID -> equip, or authenticated existing369002/59062/226318 selection UUID -> equip/unequip; one confirmed save. Normal blessing/+0 known baseAC/HP/MP/MR/STR, exact weapon bounds/hit and compiled rank0XP only; see QUEST_EQUIPMENT.md. Source crafting/material/enhancement owners remain separate.",
+    "source_regen_host_cadence": "Pinned source amount/duration, source conditions/receipt; existing host recovery engine with labelled30second cadence. Potion cadence configurable in ui_preferences.quest523_mp_regen_interval_seconds; invalid/zero holds. Gear uses existing clock with opt-out quest523_source_gear_regen_enabled=false. No native-cycle equivalence."
+  },
+  "prior_public_checkpoint": "2f778b877b3dabbee5d9aa696ba8ec16f7bf378e",
+  "reviewed_item_classes": [
+    233,
+    239,
+    240,
+    248,
+    249,
+    305,
+    349,
+    376,
+    383,
+    385,
+    427,
+    587,
+    691,
+    829,
+    859,
+    917,
+    926,
+    1197,
+    1281,
+    2772,
+    2832,
+    2862,
+    2872,
+    3042,
+    4851,
+    4871,
+    4921,
+    4951,
+    4971,
+    5021,
+    85643,
+    177192,
+    177202,
+    177212,
+    177222,
+    177232,
+    177252,
+    177292,
+    177322,
+    177332,
+    177342,
+    177432,
+    177452,
+    306611,
+    306621,
+    306631,
+    306641,
+    368202,
+    369002
+  ],
+  "latest_runtime_evidence": "equipment-validation.json",
+  "rows": [
+    {
+      "item_class_id": 233,
+      "physical_stacks": 72,
+      "quantity": 6940,
+      "source_use_kind": "source_hp_dice",
+      "source_activation": "six_source_joins_verified",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "hp233_verified"
+    },
+    {
+      "item_class_id": 235,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_item_bonus:ConsumeTerritoryClassID",
+        "unsupported_buff_effect:MoveSpeedBonus",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "conditional_buff_effect:RunSpritePoint",
+        "unsupported_buff_effect:CastSpeedBonus",
+        "no_supported_buff_effects",
+        "unsupported_buff_priority_or_spell_level_rule"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 239,
+      "physical_stacks": 57,
+      "quantity": 212,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "return239_verified"
+    },
+    {
+      "item_class_id": 240,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 248,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "source_erosion_flag_preserved": true,
+      "host_durability_disabled_not_native_erosion_engine": true,
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 249,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 305,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 310,
+      "physical_stacks": 6,
+      "quantity": 18,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "missing_or_ambiguous_positive_duration",
+        "no_supported_buff_effects",
+        "unsupported_buff_priority_or_spell_level_rule"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 313,
+      "physical_stacks": 48,
+      "quantity": 695,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 317,
+      "physical_stacks": 1,
+      "quantity": 5,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_item_bonus:ConsumeTerritoryClassID",
+        "unsupported_buff_effect:MoveSpeedBonus",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "conditional_buff_effect:RunSpritePoint",
+        "unsupported_buff_effect:CastSpeedBonus",
+        "no_supported_buff_effects"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 321,
+      "physical_stacks": 1,
+      "quantity": 5,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_item_bonus:SpellMaterialTypeID",
+        "unsupported_item_bonus:ConsumeTerritoryClassID",
+        "unsupported_buff_effect:MoveSpeedBonus",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "conditional_buff_effect:RunSpritePoint",
+        "unsupported_buff_effect:CastSpeedBonus",
+        "no_supported_buff_effects"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 335,
+      "physical_stacks": 7,
+      "quantity": 40,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_item_bonus:ConsumeTerritoryClassID",
+        "unsupported_buff_effect:MoveSpeedBonus",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "conditional_buff_effect:RunSpritePoint",
+        "unsupported_buff_effect:CastSpeedBonus",
+        "no_supported_buff_effects"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 349,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 366,
+      "physical_stacks": 1,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 376,
+      "physical_stacks": 1,
+      "quantity": 5,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_buff_effect:RegenMP"
+      ],
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
+    },
+    {
+      "item_class_id": 380,
+      "physical_stacks": 62,
+      "quantity": 320,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_item_bonus:ConsumeTerritoryClassID",
+        "unsupported_buff_effect:MoveSpeedBonus",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "unsupported_buff_effect:CastSpeedBonus",
+        "conditional_buff_effect:RunSpritePoint",
+        "no_supported_buff_effects"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 383,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 385,
+      "physical_stacks": 36,
+      "quantity": 144,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_buff_effect:RegenMP",
+        "no_supported_buff_effects"
+      ],
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
+    },
+    {
+      "item_class_id": 398,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_test_item",
+        "missing_or_ambiguous_consume_delay",
+        "unsupported_buff_effect:PolymorphSetID",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "unsupported_buff_effect:MaxAttackRange"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 421,
+      "physical_stacks": 20,
+      "quantity": 49,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 427,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 587,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 691,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 797,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_test_item",
+        "missing_or_ambiguous_consume_delay",
+        "unsupported_buff_effect:CastSpeedBonus",
+        "unsupported_buff_effect:MoveSpeedBonus",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "unsupported_buff_effect:PolymorphSetID",
+        "no_supported_buff_effects"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 822,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_test_item",
+        "missing_or_ambiguous_consume_delay",
+        "unsupported_buff_effect:PolymorphSetID",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "unsupported_buff_effect:MaxAttackRange",
+        "no_supported_buff_effects"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 829,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 844,
+      "physical_stacks": 2,
+      "quantity": 10,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 845,
+      "physical_stacks": 1,
+      "quantity": 10,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 859,
+      "physical_stacks": 42,
+      "quantity": 66,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "contract_4"
+    },
+    {
+      "item_class_id": 887,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_item_bonus:ConsumeTerritoryClassID",
+        "unsupported_buff_effect:MoveSpeedBonus",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "conditional_buff_effect:RunSpritePoint",
+        "unsupported_buff_effect:CastSpeedBonus",
+        "no_supported_buff_effects",
+        "unsupported_buff_priority_or_spell_level_rule"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 890,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_test_item",
+        "missing_or_ambiguous_consume_delay",
+        "unsupported_buff_effect:PolymorphSetID",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "unsupported_buff_effect:MaxAttackRange"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 917,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 926,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 929,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 969,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 970,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 992,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 993,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 994,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 996,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 997,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 998,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 999,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1001,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1003,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1004,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1005,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1007,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1009,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1010,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1012,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1013,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1016,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1025,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1030,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1055,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1063,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1067,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": true,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1076,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": false,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 1128,
+      "physical_stacks": 1,
+      "quantity": 5,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "no_supported_buff_effects",
+        "unsupported_buff_priority_or_spell_level_rule"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 1129,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 1186,
+      "physical_stacks": 17,
+      "quantity": 17,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_buff_effect:ExperienceAdditionPercent",
+        "no_supported_buff_effects"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 1197,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 1214,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_test_item",
+        "missing_or_ambiguous_consume_delay",
+        "source_buff_timer_semantics_unresolved"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 1281,
+      "physical_stacks": 23,
+      "quantity": 23,
+      "source_use_kind": "guaranteed_bag",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "contract_4"
+    },
+    {
+      "item_class_id": 1991,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 2001,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 2011,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 2772,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 2802,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 2832,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 2862,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 2872,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 3042,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 3242,
+      "physical_stacks": 2,
+      "quantity": 2000,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 3252,
+      "physical_stacks": 2,
+      "quantity": 2000,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 3272,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 4141,
+      "physical_stacks": 15,
+      "quantity": 230,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 4851,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
+    },
+    {
+      "item_class_id": 4871,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
+    },
+    {
+      "item_class_id": 4921,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
+    },
+    {
+      "item_class_id": 4951,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
+    },
+    {
+      "item_class_id": 4971,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 5021,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
+    },
+    {
+      "item_class_id": 6171,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 6401,
+      "physical_stacks": 4,
+      "quantity": 4,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 6411,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 9091,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 19332,
+      "physical_stacks": 4,
+      "quantity": 4,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 30213,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 35101,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": true,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 35111,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_5",
+      "public243_receive_contract_available": true,
+      "original_item_test": true,
+      "original_card_no_swap_out": true,
+      "original_card_no_merge_out": false,
+      "actual_constraint_status": "source_test_item_blocked"
+    },
+    {
+      "item_class_id": 85643,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
+    },
+    {
+      "item_class_id": 95954,
+      "physical_stacks": 5,
+      "quantity": 11,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 96114,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "guaranteed_bag",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_test_reward_item"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 96314,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_weighted_bag",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_test_item"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 96324,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_weighted_bag",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_test_item"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 147672,
+      "physical_stacks": 1,
+      "quantity": 3,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 177192,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "skillbooks_existing_verified",
+      "requires_optional_player_skills523_v3": true
+    },
+    {
+      "item_class_id": 177202,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "skillbooks_existing_verified",
+      "requires_optional_player_skills523_v3": true
+    },
+    {
+      "item_class_id": 177212,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "skillbooks_existing_verified",
+      "requires_optional_player_skills523_v3": true
+    },
+    {
+      "item_class_id": 177222,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "skillbooks_existing_verified",
+      "requires_optional_player_skills523_v3": true
+    },
+    {
+      "item_class_id": 177232,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "skillbooks_existing_verified",
+      "requires_optional_player_skills523_v3": true
+    },
+    {
+      "item_class_id": 177252,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "skillbooks_existing_verified",
+      "requires_optional_player_skills523_v3": true
+    },
+    {
+      "item_class_id": 177292,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "reference_learning_only",
+      "learning_connected": true,
+      "native_spell_execution_completed": false
+    },
+    {
+      "item_class_id": 177322,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "reference_learning_only",
+      "learning_connected": true,
+      "native_spell_execution_completed": false
+    },
+    {
+      "item_class_id": 177332,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "skillbooks_existing_verified",
+      "requires_optional_player_skills523_v3": true
+    },
+    {
+      "item_class_id": 177342,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "reference_learning_only",
+      "learning_connected": true,
+      "native_spell_execution_completed": false
+    },
+    {
+      "item_class_id": 177432,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "reference_learning_only",
+      "learning_connected": true,
+      "native_spell_execution_completed": false
+    },
+    {
+      "item_class_id": 177452,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_skill_book",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "skillbooks_existing_verified",
+      "requires_optional_player_skills523_v3": true
+    },
+    {
+      "item_class_id": 203402,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 203422,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_mp_dice",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_item_bonus:ClassUsageInterval",
+        "source_infinite_amount_not_supported"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 282783,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 282793,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_infinite_amount_not_supported",
+        "unsupported_buff_effect:RegenMP",
+        "unsupported_buff_effect:RegenHP"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 295494,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 295504,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_mp_dice",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_item_bonus:ClassUsageInterval",
+        "source_infinite_amount_not_supported"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 295514,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 295524,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_infinite_amount_not_supported",
+        "unsupported_buff_effect:RegenMP",
+        "unsupported_buff_effect:RegenHP"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 295534,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "unsupported_item_bonus:ConsumeTerritoryClassID",
+        "source_infinite_amount_not_supported",
+        "unsupported_buff_effect:MoveSpeedBonus",
+        "unsupported_buff_effect:AttackSpeedBonus",
+        "conditional_buff_effect:RunSpritePoint",
+        "unsupported_buff_effect:CastSpeedBonus",
+        "no_supported_buff_effects",
+        "unsupported_buff_priority_or_spell_level_rule"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 295544,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_infinite_amount_not_supported"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 302461,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "source_infinite_amount_not_supported"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 302471,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 303031,
+      "physical_stacks": 50,
+      "quantity": 8440,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 306431,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 306611,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "fixed_normal_cards_verified",
+      "public243_receive_contract_available": true,
+      "original_item_test": false,
+      "original_card_no_swap_out": true,
+      "original_card_no_merge_out": true,
+      "actual_constraint_status": "global_native_merge_enforced; consuming_swap_absent; explicit_host_option_hold_new_spares_only"
+    },
+    {
+      "item_class_id": 306621,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "fixed_normal_cards_verified",
+      "public243_receive_contract_available": true,
+      "original_item_test": false,
+      "original_card_no_swap_out": true,
+      "original_card_no_merge_out": true,
+      "actual_constraint_status": "global_native_merge_enforced; consuming_swap_absent; explicit_host_option_hold_new_spares_only"
+    },
+    {
+      "item_class_id": 306631,
+      "physical_stacks": 10,
+      "quantity": 10,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "fixed_normal_cards_verified",
+      "public243_receive_contract_available": true,
+      "original_item_test": false,
+      "original_card_no_swap_out": true,
+      "original_card_no_merge_out": true,
+      "actual_constraint_status": "global_native_merge_enforced; consuming_swap_absent; explicit_host_option_hold_new_spares_only"
+    },
+    {
+      "item_class_id": 306641,
+      "physical_stacks": 10,
+      "quantity": 10,
+      "source_use_kind": "fixed_card",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "fixed_normal_cards_verified",
+      "public243_receive_contract_available": true,
+      "original_item_test": false,
+      "original_card_no_swap_out": true,
+      "original_card_no_merge_out": true,
+      "actual_constraint_status": "global_native_merge_enforced; consuming_swap_absent; explicit_host_option_hold_new_spares_only"
+    },
+    {
+      "item_class_id": 339714,
+      "physical_stacks": 2,
+      "quantity": 2,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355441,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355451,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355461,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355471,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355481,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355491,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355501,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355511,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355521,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355531,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355541,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 355551,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 359751,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 367932,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "none",
+      "source_activation": "none",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": false,
+      "contract": "contract_1"
+    },
+    {
+      "item_class_id": 368202,
+      "physical_stacks": 5,
+      "quantity": 5,
+      "source_use_kind": "guaranteed_bag",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "contract_7"
+    },
+    {
+      "item_class_id": 368342,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_timed_buff",
+      "source_activation": "blocked",
+      "blocked_reasons": [
+        "conditional_or_possession_item_bonus:DeleteTime",
+        "unsupported_item_bonus:IgnoreUseItemDuringBuff",
+        "unsupported_buff_effect:AbsoluteExperienceAdditionPercent",
+        "unsupported_buff_effect:EraseBuffOnExperience",
+        "conditional_buff_effect:DeleteTime",
+        "no_supported_buff_effects",
+        "unsupported_buff_state_rule:EraseOnLevel",
+        "unsupported_buff_state_rule:IsAbsoluteTimeBuff"
+      ],
+      "quest_binding_reviewed": false,
+      "contract": "contract_2"
+    },
+    {
+      "item_class_id": 369002,
+      "physical_stacks": 1,
+      "quantity": 1,
+      "source_use_kind": "source_selectable_reward",
+      "source_activation": "unrestricted",
+      "blocked_reasons": [],
+      "quest_binding_reviewed": true,
+      "contract": "contract_8"
+    }
+  ],
+  "default_item_pack_reviewed_classes": 10,
+  "optional_exact_private245v3_reviewed_classes": 8,
+  "counts_require_optional_input_to_be_installed": true,
+  "reviewed_is_adapter_connection_not_all_effect_completion": true,
+  "learning_only_native_spell_execution_still_pending": 4,
+  "prior_3626600_counts": {
+    "reviewed": 36,
+    "remaining": 110
+  },
+  "prior_counts": {
+    "reviewed": 48,
+    "remaining": 98
+  },
+  "reviewed_means_one_or_more_exact_bounded_consumers_not_all_native_states": true,
+  "new_plus0_normal_gear_ids": [
+    240,
+    249,
+    305,
+    349,
+    383,
+    427,
+    587,
+    691,
+    829,
+    917,
+    926,
+    1197,
+    2772,
+    2832,
+    2862,
+    2872,
+    3042,
+    4971,
+    5021
+  ],
+  "counts_do_not_erase_other_native_effects_or_states": "Four learned spell effects, source gear enhancement/other blessings/proc effects and child skill-ticket effects remain separate.",
+  "host_cadence_policy_classes": [
+    376,
+    385,
+    4851,
+    4871,
+    4921,
+    4951,
+    85643
+  ],
+  "host_cadence_not_original_verified_interval": true
+}

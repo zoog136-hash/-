@@ -1,0 +1,271 @@
+{
+  "schema": 1,
+  "baseline_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "prior_PR236_head": "37f32ceaaf15f8d9fb4028314dbbcbc4bcbcdfa5",
+  "status": "LOCAL_IMPLEMENTED_AND_VERIFIED_PRIVATE_DRIVE_DELIVERED_REMOTE_PUBLICATION_RECORDED_SEPARATELY",
+  "Godot": "4.7.2.stable.official.ed1daf0bf",
+  "pack": {
+    "actors": 26,
+    "cards": 26,
+    "manifest_bytes": 2899411,
+    "manifest_sha256": "e03944ee863b429f702154453fa0f6e873044b20aa5be1c93bc7f80ead91873f",
+    "provenance_sha256": "fefd8307de17b497fd1a4676f32e7de0c19e39f35cd961afa2a7c99ce009a5c7",
+    "raw_bytes": 16572954,
+    "raw_members": 328,
+    "schema": 1,
+    "status": "PRIVATE_DRIVE_STORED_RECOVERED_INSTALLED_AND_CONSUMED",
+    "verified_run_roles": 15,
+    "verified_weapon_profiles": 304,
+    "verified_weapon_run_roles": 183,
+    "zip": "TWILIGHT-current523-identity-pack.zip",
+    "zip_bytes": 22415929,
+    "zip_sha256": "77ac05a4e0e3b6af81f6ae94d30d6bdf2f18324223e52f47f03e794be69617b5"
+  },
+  "proof": {
+    "current_DAT_containers": 69,
+    "original_SP2_TOC_members": 10338,
+    "byte_verified_current_SPR_files": 26,
+    "missing_current_SPR_files": [
+      19,
+      22,
+      25,
+      27
+    ],
+    "typed_roots_audited": 1204,
+    "complete_declaration_graphs": 930,
+    "unresolved_declaration_graphs": 274,
+    "runtime_transform_cards": 26,
+    "runtime_actors": 26,
+    "generic_run_roles": 15,
+    "weapon_profiles": 304,
+    "weapon_run_roles": 183,
+    "SP2_members": 328,
+    "SP2_raw_bytes": 16572954,
+    "identity": "exact latest typed joins, complete original card equality, current SPR aliases/layers, actual DAT bytes+CRC/SHA and frame addresses",
+    "pixels": "estimated, not M visual equivalence",
+    "compact_track_parity": {
+      "builder_sha256": "3e4fe80bb13befe60e85586f95293c632982dca8b6f6ca399af4938beee2069a",
+      "compact_expansion_parity": "all304profiles/all1095tracks exact source addresses and ticks across8directions",
+      "counts": {
+        "compact_tracks": 1095,
+        "expanded_layer_addresses": 238424
+      },
+      "generic_roles_unchanged": true,
+      "native_alternate_mode_intent": "unverified; only existing TWILIGHT explicit primary policy",
+      "per_weapon_profiles": {
+        "1": 26,
+        "102": 26,
+        "11": 26,
+        "2": 26,
+        "34": 9,
+        "4": 26,
+        "5": 26,
+        "54": 9,
+        "6": 26,
+        "7": 26,
+        "8": 26,
+        "84": 26,
+        "9": 26
+      },
+      "per_weapon_run_roles": {
+        "1": 15,
+        "102": 15,
+        "11": 15,
+        "2": 15,
+        "34": 9,
+        "4": 15,
+        "5": 15,
+        "54": 9,
+        "6": 15,
+        "7": 15,
+        "8": 15,
+        "84": 15,
+        "9": 15
+      },
+      "raw_manifest_members_consumed": 328
+    },
+    "builder_negative_cases": 25,
+    "deterministic_rebuild": "byte-identical ZIP/manifest/provenance"
+  },
+  "executions": {
+    "actual_Main_OpenGL": {
+      "log": "current523-identity-final-main.log",
+      "sha256": "532a46a39fc28cdac8c98a567948a6e9798f6e764e9c5df8cc19a08344c1d364",
+      "result": {
+        "checks": 1579,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_UI_EXACT26_IDENTITY_ESTIMATED_PIXELS; BASELINE_CLASS_FALLBACK_WITHOUT_OLD_FULL_PACK"
+      },
+      "engine_errors": false
+    },
+    "new_process_Main_OpenGL": {
+      "log": "current523-identity-final-restart.log",
+      "sha256": "5af340851bb295675bc6220b5b23edfae33a21a2805a7ea1f04e6287f5beb424",
+      "result": {
+        "checks": 11,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_UI_EXACT26_IDENTITY_ESTIMATED_PIXELS; BASELINE_CLASS_FALLBACK_WITHOUT_OLD_FULL_PACK"
+      },
+      "engine_errors": false
+    },
+    "fresh_Drive_consumer": {
+      "log": "current523-identity-drive-consumer.log",
+      "sha256": "3b66218833f4acfabb9cd2effac8fcc97eee951f7f9b4bb384b82a74312b44b4",
+      "result": {
+        "checks": 11820,
+        "failures": [],
+        "scope": "REAL328_RAW_FILES_STRUCTURAL_PARSE_FIRST_LAST_RENDER_AND304_WEAPON_PROFILES; NOT_ALL_FRAME_VISUAL_EQUIVALENCE"
+      },
+      "engine_errors": false
+    }
+  },
+  "focused_core_tests": [
+    {
+      "test": "core_runtime_save_test",
+      "exit_code": 0,
+      "engine_errors": false
+    },
+    {
+      "test": "save_identical_payload_test",
+      "exit_code": 0,
+      "engine_errors": false
+    },
+    {
+      "test": "deferred_save_gate_test",
+      "exit_code": 0,
+      "engine_errors": false
+    },
+    {
+      "test": "lineagem_pack_resolution_test",
+      "exit_code": 0,
+      "engine_errors": false
+    },
+    {
+      "test": "lineagem_pack_settings_main_test",
+      "exit_code": 0,
+      "engine_errors": false
+    }
+  ],
+  "existing_resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "status": "PASS"
+  },
+  "Drive": {
+    "actual_use": "Private existing PR236_01_실제적용팩; newly uploaded derivative v2",
+    "backup": "Private existing PR236_02_원본백업; identical derived-pack preservation copy; raw checkpoint backups remain separate",
+    "permissions": "not_shared metadata confirmed, unchanged",
+    "actual_copy_recovered": true,
+    "download_sha256": "77ac05a4e0e3b6af81f6ae94d30d6bdf2f18324223e52f47f03e794be69617b5",
+    "download_zip_CRC": "PASS330entries",
+    "fresh_consumer_installed": true,
+    "fresh_consumer_root": "user://current523_identity_versions/pack-*",
+    "source_and_save_bytes_preserved": true,
+    "owner_only_links": "private handoff only; no native art/report/capture publication in Git"
+  },
+  "boundaries": {
+    "old_full_base508_runtime_pack": "Unavailable here. Actual class fallback verified; partial genuine old poses preserved but not a complete previous-native-pack rollback claim.",
+    "unsupported_weapon_profiles": "Bow3/Gauntlet10 unresolved native AlterType1; Rifle34/HandCannon54 missing complete roles for17actors each; exact exclusions remain in private pack provenance.",
+    "run_gaps": "10 exact declared generic runs lack required files;16172 has no SpriteRun row; host WALK policy labelled.",
+    "automatic_other_consumers": "No new NPC/monster/companion/class binding or unrelated effect; other PRs retain ownership.",
+    "M_engine_APK_XAPK": "cancelled by user, not used or required",
+    "remote_CI": "not manually run; commit uses skip ci; final required CI not claimed",
+    "save": "existing schema/currency/equipment/collection/card IDs preserved",
+    "platforms": "Linux software OpenGL only; no Android/device/export claim"
+  },
+  "reviewed_UI_captures": [
+    "current523-identity-final-field.png",
+    "current523-identity-final-settings.png",
+    "current523-identity-reentry-restart-field.png"
+  ],
+  "PR217_reuse_correction": {
+    "PR217_701_reused": true,
+    "existing_transform_roots": 434,
+    "latest_transform_roots": 450,
+    "additional_roots": [
+      27349,
+      27521,
+      29212,
+      29244,
+      29311,
+      29317,
+      29562,
+      29565,
+      29568,
+      29625,
+      29690,
+      29695,
+      29701,
+      29706,
+      29711,
+      29716
+    ],
+    "old26_overlap": 26,
+    "new523_only_actors_connected": 0,
+    "new_cards_by_deck": {
+      "transform": 14,
+      "doll": 4,
+      "relic": 1
+    },
+    "changed_existing_visual_cards": [
+      {
+        "card_id": 11152,
+        "added_sprite_ids": [
+          29568
+        ]
+      },
+      {
+        "card_id": 24241,
+        "added_sprite_ids": [
+          29625
+        ]
+      },
+      {
+        "card_id": 24842,
+        "added_sprite_ids": [
+          29625
+        ]
+      },
+      {
+        "card_id": 24852,
+        "added_sprite_ids": [
+          29625
+        ]
+      }
+    ],
+    "guard_regression_checks": 11,
+    "guard_regression_scope": "Only native-priority control-flow fixture; no701 art repeat",
+    "remaining": "Separate new doll/relic SPR/SP2 input gaps only. The16 additional transformation roots are cancelled by the user, not pending source acquisition or implementation. Existing PR217 installed pack remains reusable.",
+    "user_cancelled_transformation_delta": {
+      "status": "excluded_by_user",
+      "root_sprite_ids": [
+        27349,
+        27521,
+        29212,
+        29244,
+        29311,
+        29317,
+        29562,
+        29565,
+        29568,
+        29625,
+        29690,
+        29695,
+        29701,
+        29706,
+        29711,
+        29716
+      ],
+      "runtime_catalog_roots_registered": 0,
+      "new523_actors_connected_before_cancellation": 0,
+      "existing_701_cards_preserved": true,
+      "existing_434_transformation_roots_preserved": true,
+      "existing_card_variants_preserved": true,
+      "source_and_save_deletion": false,
+      "further_source_search_or_pack_build": false,
+      "new_dolls_and_relics_cancelled": false,
+      "source_delta_fields_above": "Historical source metadata; the16 listed additional roots are no longer implementation targets."
+    }
+  }
+}

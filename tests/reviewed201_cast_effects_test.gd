@@ -58,7 +58,7 @@ class WorldFixture extends Node2D:
  func _player_critical_rate(_kind:String):return 0
  func _critical_chance(_rate:int,_resistance:int):return 0.0
  func _player_critical_damage(amount:int,_kind:String):return amount
- func _deal_successful_player_hit(monster:TwilightMonster,amount:int,critical:bool):monster.take_damage(amount,critical,"fixture")
+ func _deal_successful_player_hit(monster:TwilightMonster,amount:int,critical:bool,_damage_kind:String=""):monster.take_damage(amount,critical,"fixture")
  func _queue_player_attack(_target:TwilightMonster,_kind:String,callback:Callable,duration:float,_normal:bool=false,_range:float=0.0):
   queued=callback;queued_duration=duration;pending_attack={};return true
 class Anchor extends Node2D:

@@ -1,0 +1,210 @@
+{
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "branch": "feature/regional-return-quickslot-523-20261104",
+  "source": {
+    "groups": 3,
+    "changes": 9,
+    "lands": [
+      44544,
+      44614,
+      47722
+    ],
+    "archive_bytes": 25031173,
+    "archive_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "zip_crc": "passed",
+    "reproducible_projection_byte_compare": "passed"
+  },
+  "scope": {
+    "exact_source_rules_implemented": 9,
+    "actual_host_maps_tested": [
+      "source_70"
+    ],
+    "host_mapping_estimated": true,
+    "native_M_maps_playtested": 0,
+    "native_labs_playtested": 0,
+    "new_acquisition_or_shop_routes": false,
+    "new_original_art_delivered": 0,
+    "default_enabled": false
+  },
+  "checks": {
+    "actual_main_regional_return": {
+      "checks": 38,
+      "failures": []
+    },
+    "existing_core_runtime_save": {
+      "checks": 32,
+      "failures": []
+    },
+    "save_identical_payload": "passed",
+    "deferred_save_gate": "passed",
+    "explicit_isolated_profile_guard": "passed with exit 2 before world creation",
+    "resource_integrity": {
+      "atlases": 723,
+      "frames": 41442,
+      "bytes": 233420026,
+      "passed": true
+    },
+    "final_import_and_parser_engine_errors": 0,
+    "rendered_ui_engine_errors": 0,
+    "remote_CI": "not manually dispatched; skip ci commit; not claimed passed"
+  },
+  "validation_environment": {
+    "stage": "/workspace/regional-core",
+    "profiles": "isolated XDG directories only",
+    "map_pack": "/workspace/regional-map-pack",
+    "core_stage_file_count": 7449,
+    "core_stage_input_bytes": 1560011376,
+    "core_stage_receipt_sha256": "3674ade2521a63b0010619a959b789ddce8ef0ef38a57fabb9ac7ba1dd8e468c",
+    "extra_existing_live_actor_inputs": {
+      "count": 66,
+      "bytes": 30344321,
+      "receipt_sha256": "e9878a8f315f4dcdc5fd58301b219159c9bede61bd2c7c80bd7d21e010ddc9ca"
+    },
+    "rendering": "Linux Xvfb OpenGL llvmpipe; Dummy audio; no hardware/FPS/audio approval",
+    "import_cache": "existing imported cache was copied where absent; Godot editor reimport completed with no errors; not a cold-start benchmark",
+    "earlier_attempts": "Initial full-asset fetches were replaced by a sparse checkout. Initial parse before import finished and graphical runs before supplemental live-actor restoration had resource errors; final verified runs were clean."
+  },
+  "code_sha256": {
+    "scripts/world.gd": "587c409dba64a1ca7b9a5a1f73b951e686d7e2c6650bf73e7db7637f1db798a9",
+    "scripts/consumable_service.gd": "848cd8821d9bfea831edc4722787a5be9afaeef4d53e1cc654c6b22c68c8908a",
+    "scripts/quickslots/regional_return.gd": "73eac62609aa6d9f925abefd823a70450b701ef7284e765aa0db869a99481a1a",
+    "scripts/ui/renewal_settings.gd": "550c861481184ebd850cc8caa9a67873d366fbf933842f89eb10f8a4777a9896",
+    "scripts/ui/regional_return_settings.gd": "3bc9b4ac5fc9f3c2404e9c0648535378c6048a1ae643fa2d5a2da2ce678b95d3",
+    "data/quickslots/regional_return_523.json": "69f196d4e79a74cf92c754483c0b5c32620aae63ebe50ba9e26e00eba2941d3a",
+    "tests/regional_return_main_test.gd": "5fa324333b77a7b7b8de79412fc64e759319cf932308d34f2bdfd0231ef0b8a7",
+    "tests/capture_regional_return.gd": "a2a7dd6a2f62d1183db42e88f6956e0368968110632af604002a5e7dea44826f",
+    "tools/build_regional_return523.py": "589aa9a5e8337f1a7dc16b07acc417bdc00aab1eed15807cffdfd917d8048d0c",
+    "tests/regional_return_supply_test.gd": "115960d4d9158c881acfad07c942f62199be3d6b8364bcce5154de77bb59c491",
+    "tests/regional_return_supply_restart_test.gd": "09ab67269693b16da51aa275ee50ce8cfd491bd1a81e8e416f6b5cc333585815",
+    "tests/regional_return_supply_world_fixture.gd": "a1de89ef0f9f1aea51d3679f09169aa3ed92f00a07479df2a2f58289333f44c7"
+  },
+  "evidence": [
+    {
+      "path": "docs/quickslots/evidence/capture.txt",
+      "bytes": 593,
+      "sha256": "e687a27c2208681d853b7c75e2b20a0ed802b751cf16e6201fd8c8c9b86189b3"
+    },
+    {
+      "path": "docs/quickslots/evidence/core_runtime_save_test.txt",
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    {
+      "path": "docs/quickslots/evidence/deferred_save_gate_test.txt",
+      "bytes": 126,
+      "sha256": "edaaa07fce75c096c27a3a7ca57494d6ef7a9849a8cd05f6644bb85ab535ee9d"
+    },
+    {
+      "path": "docs/quickslots/evidence/island-return-used-854x480.png",
+      "bytes": 784847,
+      "sha256": "5f32ba181aa0999f29c1c677e60b585fa34bf7467de8d0b01b6870b9581a2938",
+      "dimensions": [
+        853,
+        480
+      ]
+    },
+    {
+      "path": "docs/quickslots/evidence/regional-return-main.txt",
+      "bytes": 172,
+      "sha256": "bbf602872d237bdf633fa43989dd3c6981062f2737d8a5835d575ce3d7c03710"
+    },
+    {
+      "path": "docs/quickslots/evidence/resource-integrity.txt",
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    {
+      "path": "docs/quickslots/evidence/save_identical_payload_test.txt",
+      "bytes": 140,
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    },
+    {
+      "path": "docs/quickslots/evidence/settings-1280x720.png",
+      "bytes": 713044,
+      "sha256": "7cceaf86ffd8452f9608be0656c8246223f2f5e7f201d57c7e4ecf79a3868879",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "docs/quickslots/evidence/settings-854x480.png",
+      "bytes": 193780,
+      "sha256": "de357670f57e39139f2a094945de9852d861de189fb0a5bab744cd7b14c71326",
+      "dimensions": [
+        853,
+        480
+      ]
+    },
+    {
+      "path": "docs/quickslots/evidence/test-profile-guard.txt",
+      "bytes": 124,
+      "sha256": "a88fee206602f555b88d234013131829b34abd8c89afece74162b315978fd510"
+    },
+    {
+      "path": "docs/quickslots/evidence/regional-supply-restart.txt",
+      "bytes": 218,
+      "sha256": "6cf9c4510247566317dffb68a8985bca0103ad29945568e12955feae559cb293"
+    },
+    {
+      "path": "docs/quickslots/evidence/regional-supply.txt",
+      "bytes": 257,
+      "sha256": "04578614870918d487d4f60ade5febc8b66a533a39dcee7c8c2b7a217a57dfcc"
+    }
+  ],
+  "remaining": [
+    "M Land44544/44614/47722 native terrain/coordinates/arrival and native village return were not installed in this PR",
+    "Two laboratory maps have no current main runtime entry; automatic native travel is not claimed",
+    "Dedicated126424 ordinary-play supply is incomplete: Merchant514 row16884 exists but PR247 runtime binding/consumer registration missing; no new route added",
+    "Native icon delivery, Windows/Android target devices, full long-running gameplay and performance not tested"
+  ],
+  "follow_up_supply": {
+    "previous_feature_commit": "0b3584b47988dd582d99a6cd5cb138167c7ba6a2",
+    "observed_main_read_only": "9e86fdfcb85842754c158cb21c56ed04a16af601",
+    "provider_refs_read_only": {
+      "PR238": "6634d3acf3eb75e513125f3fa535170e83ab70dd",
+      "PR247": "1ed31c2701ef2463041490e33ee3001c5eb227bf",
+      "PR243": "46f27957c02fd994e188ff19b57c07f3eb9c07a8"
+    },
+    "verified_supplier_pack": {
+      "version": "Drive phase3; phase4 not received or executed",
+      "zip_bytes": 1770358,
+      "zip_sha256": "91de04c0f3ed613b76a69fea992347d82bdab79b6ef316049d3f77e90a3484d7",
+      "zip_crc": "passed",
+      "bin_bytes": 1806317,
+      "bin_sha256": "bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3"
+    },
+    "consumer_test": {
+      "checks": 24,
+      "failures": [],
+      "input": "exact supplier catalogue record; controlled floor spawn, target inventory fixture",
+      "pickup_gate": "unchanged monotonic 850ms, distance, visibility checks",
+      "supplier_execution": false,
+      "ordinary_target_acquisition_complete": false
+    },
+    "separate_process_restart": {
+      "failures": [],
+      "source_key_preserved": true,
+      "target_projection_and_consumption": true,
+      "supplier_catalogue_registration": "test fixture before actual Main bootstrap"
+    },
+    "existing_regional_main_rerun": {
+      "checks": 38,
+      "failures": []
+    },
+    "existing_core_save_rerun": {
+      "checks": 32,
+      "failures": []
+    },
+    "identical_payload_rerun": "passed",
+    "target_126424_gap": "PR247 Merchant514 buy row16884 exists (Bless1, Enchant0, Amount1); runtime item binding and consumable registration missing. No price/drop/free grant invented.",
+    "map_inputs": "Land44544/44614/47722 exist; Locations for44544 and Portal19352/19362/19372 for47722 exist. Native geometry/entry/verified return integration is incomplete, not blanket source absence.",
+    "rendered_images": "existing evidence captured at0b3584b4; no new graphical capture in supply follow-up",
+    "earlier_attempt": "first controlled floor test waited SceneTreeTimer0.9 but monotonic age787ms was below production850ms; fixed test wait only, production pickup gate unchanged",
+    "other_pr_code_merged_or_copied_into_app": false,
+    "new_production_suppliers": false,
+    "manual_remote_ci": false,
+    "deferred_save_gate_rerun": "passed; writes5"
+  }
+}

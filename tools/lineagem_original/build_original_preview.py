@@ -45,7 +45,7 @@ def run(inputs, output):
                 directions.append(frames)
             tracks[role]={'fps':a['fps'],'source_action':a['name'],'directions':directions,'loop':role!='attack'}
         records[key]={'alias_id':sid,'body_id':body,'shadow_id':shadow,'unresolved_layers':unresolved,'tracks':tracks}
-    manifest={'schema':1,'mode':'literal_body_shadow_inspection_only','production_ready':False,'limits':['sc/mu attr8/128 NOT interpreted or rendered','Original coordinate offsets used directly; no foot-anchor correction','8 direction bit order mapped by visual inspection; native-world cardinal semantics unverified','Independent source time; combat damage clocks unchanged'],'source_sha256':sources,'records':records}
+    manifest={'schema':1,'mode':'literal_body_shadow_inspection_only','source_snapshot':'base508','production_ready':False,'limits':['sc/mu attr8/128 NOT interpreted or rendered','Original coordinate offsets used directly; no foot-anchor correction','8 direction bit order mapped by visual inspection; native-world cardinal semantics unverified','Independent source time; combat damage clocks unchanged'],'source_sha256':sources,'records':records}
     (output/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,separators=(',',':'))+'\n')
     print(json.dumps({'path':str(output/'manifest.json'),'png_files':len(images),'source_files':len(sources),'production_ready':False}))
 if __name__=='__main__':

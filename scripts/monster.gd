@@ -3,6 +3,8 @@ class_name TwilightMonster
 
 const BASE508 = preload("res://scripts/lineagem_base508.gd")
 var source_m_original: Dictionary = {}
+var source_targeting: Dictionary = {}
+var collection_combat_context: Dictionary={}
 var source_m_npc_id: int = -1
 const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
 const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
@@ -16,9 +18,25 @@ const VISUAL = preload("res://scripts/monsters/monster_visual.gd")
 const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 const BOSS_GEOMETRY = preload("res://scripts/monsters/boss_geometry.gd")
 var source_option_debuffs: Dictionary={}
+var source_option_sequence := 0
 var ai: Dictionary = {}
 var aggro_remaining: float = 0.0
 var life_id: int = 0
+var concealed523: bool = false
+var reveal_lock523: float = 0.0
+
+func set_concealed523(value: bool) -> bool:
+	if value and reveal_lock523 > 0: return false
+	concealed523 = value
+	modulate.a = .15 if value else 1.0
+	return true
+
+func reveal523(seconds: float) -> void:
+	set_concealed523(false)
+	reveal_lock523 = maxf(reveal_lock523, seconds)
+
+func tick_reveal523(delta: float) -> void:
+	reveal_lock523 = maxf(0, reveal_lock523 - delta)
 var species_visual: TwilightMonsterVisual
 var special_sequence: int = -1
 var special_attack: Dictionary = {} # authoritative warning geometry for this action
@@ -94,6 +112,12 @@ var ranged_critical_rate: int = 5
 var magic_critical_rate: int = 5
 var critical_resistance: int = 0
 var stun_accuracy: int = 0
+var dark_resistance: int=0
+var ice_resistance: int=0
+var dark_accuracy: int=0
+var ice_accuracy: int=0
+var dark_duration: float=0.0
+var ice_duration: float=0.0
 var stun_resistance: int = 0
 var stun_duration: float = 0.0
 var stun_remaining: float = 0.0
@@ -125,6 +149,7 @@ var bleed_tick_damage: int = 0
 var bleed_tick_interval: float = 0.75
 var bleed_remaining: float = 0.0
 var bleed_tick_clock: float = 0.0
+var patch523_weapon_bleed: Dictionary = {}
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var base_move_speed: float = 90.0
@@ -153,10 +178,12 @@ var roam_clock: float = 0.0
 func retire_for_pool() -> void:
 	var source523 = _patch523_service()
 	if source523 != null: source523.forget(self)
+	source_targeting.clear()
 	# Death presentation is complete before this is called. Release all visual
 	# owners while keeping the lightweight body for the next life/region.
 	set_physics_process(false)
 	_clear_source_m_view()
+	loot_source_identity = {}
 	input_pickable = false
 	collision_layer = 0
 	collision_mask = 0
@@ -166,6 +193,7 @@ func retire_for_pool() -> void:
 	damage_hit_count = 0
 	special_attack.clear()
 	source_option_debuffs.clear()
+	patch523_weapon_bleed.clear()
 	if is_instance_valid(world_controller):
 		var died_callback:=Callable(world_controller,"_on_monster_died")
 		var hit_callback:=Callable(world_controller,"_on_player_hit")
@@ -192,12 +220,20 @@ func retire_for_pool() -> void:
 	element_resistance.clear()
 	drop_items.clear()
 
-func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
+func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> bool:
 	var source523 = _patch523_service()
 	if source523 != null: source523.forget(self)
+	source_targeting.clear()
 	source_option_debuffs.clear()
 	_clear_source_m_view()
+	var incoming: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
+	if not incoming.ok: return _reject_patch523_spawn(str(incoming.reason))
 	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
+	var admission: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(source_record, str(world_ref.get("active_map_id")) if world_ref != null else "")
+	if not admission.ok:
+		return _reject_patch523_spawn(str(admission.reason))
+	source_record = admission.record
+	remove_meta("patch523_spawn_hold")
 	if source_record.has("source_m_asset_manifest_path"):
 		var native_view := SOURCE_M_VIEW.new()
 		if native_view.configure(source_record, str(source_record.source_m_asset_manifest_path)):
@@ -206,14 +242,31 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			add_child(source_m_view)
 		else:
 			native_view.free() # Retain the prior actor/stats if any original pixel fails verification.
+			if admission.applied: return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+	elif admission.applied:
+		return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+	set_meta("patch523_spawn_admission", record.get("source_m_patch523_admission", {}).duplicate(true))
 	# Only an exact namespaced source ID opts into native stats. No name/Sprite/legacy-ID guessing.
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
 	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
+	if source_m_npc_id >= 0:
+		source_targeting = record.get("source_m_targeting", {}).duplicate(true)
+		if source_targeting.is_empty():
+			var category: Dictionary = record.get("source_m_context", {}).get("category", {})
+			source_targeting = {"snapshot":"base508", "category_id":category.get("ID", -1)}
+			for flag: String in ["IsAutoSelectable", "IsSelectable"]:
+				if category.get(flag) is bool: source_targeting[flag] = category[flag]
+	var context: Variant=record.get("collection_combat_context",{})
+	collection_combat_context=context.duplicate(true) if context is Dictionary else {}
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
+	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record)
+	if not patch523_identity.is_empty(): loot_source_identity = patch523_identity
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1
+	reveal_lock523 = 0
+	set_concealed523(bool(record.get("estimated_concealed", false)))
 	motion = MOTION.new()
 	motion_connected = false
 	dead = false
@@ -225,7 +278,12 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	path_index = 0
 	velocity = Vector2.ZERO
 	stun_remaining = 0.; silence_remaining = 0.; hold_remaining = 0.; fear_remaining = 0.
+	for kind: String in ["dark","ice"]:
+		set(kind+"_resistance",clampi(int(record.get(kind+"_resistance",0)),0,100))
+		set(kind+"_accuracy",clampi(int(record.get(kind+"_accuracy",0)),0,100))
+		set(kind+"_duration",clampf(float(record.get(kind+"_duration",0)),0,30))
 	poison_remaining = 0.; poison_tick_clock = 0.; bleed_remaining = 0.; bleed_tick_clock = 0.
+	patch523_weapon_bleed.clear()
 	aggro_remaining = 0.; returning_home = false
 	enraged = false; social_alert_cooldown = 0.0
 	decision_elapsed = 0.; sight_clock = 0.; sight_cached = false
@@ -364,6 +422,21 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 		$GroundShadow.hide()
 		if is_instance_valid(species_visual): species_visual.hide()
 		motion.profile.death_duration = maxf(motion.profile.death_duration, source_m_view.duration("death"))
+	return true
+
+func _reject_patch523_spawn(reason: String) -> bool:
+	source_targeting.clear()
+	retire_for_pool()
+	dead = true
+	hp = 0
+	source_m_npc_id = -1
+	source_m_original = {}
+	loot_source_identity = {}
+	set_meta("patch523_spawn_hold", reason)
+	set_meta("patch523_spawn_admission", {})
+	hide()
+	queue_free()
+	return false
 
 func _clear_source_m_view() -> void:
 	if is_instance_valid(source_m_view):
@@ -371,9 +444,15 @@ func _clear_source_m_view() -> void:
 		source_m_view.queue_free()
 	source_m_view = null
 
+func permits_auto_selection() -> bool:
+	return source_targeting.is_empty() or (source_targeting.get("IsAutoSelectable") is bool and source_targeting.IsAutoSelectable)
+
 func _advance_source_m_view(delta: float) -> void:
 	if is_instance_valid(source_m_view):
 		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
+
+func custom_frozen() -> bool:
+	return is_instance_valid(world_controller) and world_controller.get("halphas_star")!=null and world_controller.halphas_star.combat.frozen(self)
 
 func _physics_process(delta: float) -> void:
 	var source523 = _patch523_service()
@@ -383,7 +462,9 @@ func _physics_process(delta: float) -> void:
 		if hp_bar.max_value!=effective_hp:
 			hp=mini(hp,effective_hp)
 			hp_bar.max_value=effective_hp;hp_bar.value=hp
+	tick_reveal523(delta)
 	advance_source_option_debuffs(delta)
+	preload("res://scripts/loot/patch523_weapon_bleed.gd").tick(self,delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
@@ -409,11 +490,11 @@ func _physics_process(delta: float) -> void:
 	if ai.is_empty() or decision_elapsed>=decision_interval:
 		_tick_ai(decision_elapsed)
 		decision_elapsed = 0.
-	elif not motion.active and not is_stunned() and not is_held():
+	elif not motion.active and not is_stunned() and not is_held() and not custom_frozen():
 		# Decisions/status clocks run at 30 Hz. Movement, facing, animation and
 		# strike markers still advance every physics frame at the engine cadence.
 		_move_on_map()
-	if is_stunned() or is_feared(): motion.cancel_attack()
+	if is_stunned() or is_feared() or custom_frozen(): motion.cancel_attack()
 	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
 	if is_instance_valid(species_visual) and species_visual.warning_active:
 		species_visual.warning_progress = clampf(motion.attack_elapsed / maxf(.01, motion.attack_duration * motion.attack_hit_ratio), 0.0, 1.0)
@@ -452,15 +533,17 @@ func _tick_ai(delta: float) -> void:
 		show_status_text("ENRAGE")
 	enraged = next_enraged
 	_refresh_overhead_ui(distance)
-	if is_stunned() or is_feared():
+	if is_stunned() or is_feared() or custom_frozen():
 		motion.cancel_attack()
 		if is_instance_valid(species_visual): species_visual.warning_active = false
-		velocity = _fear_velocity() if is_feared() and not is_held() else Vector2.ZERO
+		velocity = _fear_velocity() if is_feared() and not is_held() and not custom_frozen() else Vector2.ZERO
 		path = PackedVector2Array(); path_index = 0
 		_move_on_map()
 		return
 	var field_active: bool = world_controller.field_map!=null
-	var concealed: bool = world_controller.has_method("is_player_concealed") and world_controller.is_player_concealed()
+	# CannotSee is an observer-local visibility flag. Reuse the host's existing
+	# concealed-target policy; no invented source sight radius or stun duration.
+	var concealed: bool = source_option_cannot_see() or (world_controller.has_method("is_player_concealed") and world_controller.is_player_concealed())
 	var safe: bool = field_active and world_controller.field_map.is_safe(target_player.global_position)
 	var leash: float = float(ai.get("leash_distance",1050.))
 	var home_distance: float = global_position.distance_to(home_position)
@@ -698,7 +781,11 @@ func _tick_poison(delta: float) -> void:
 			poison_tick_damage = 0
 
 func is_poisoned() -> bool:
-	return poison_remaining > 0.0 and poison_tick_damage > 0 and not dead
+	if dead:return false
+	if poison_remaining > 0.0 and poison_tick_damage > 0:return true
+	for entry: Dictionary in source_option_debuffs.values():
+		if float(entry.remaining) > 0 and entry.has("venom"):return true
+	return false
 
 func apply_poison(duration: float, damage: int, interval: float = 1.0) -> void:
 	if dead:
@@ -719,6 +806,7 @@ func clear_poison() -> void:
 	poison_remaining = 0.0
 	poison_tick_clock = 0.0
 	poison_tick_damage = 0
+	for entry: Dictionary in source_option_debuffs.values():entry.erase("venom")
 
 func _tick_bleed(delta: float) -> void:
 	if dead or bleed_remaining <= 0.0 or bleed_tick_damage <= 0:
@@ -735,7 +823,10 @@ func _tick_bleed(delta: float) -> void:
 			bleed_tick_damage = 0
 
 func is_bleeding() -> bool:
-	return bleed_remaining > 0.0 and bleed_tick_damage > 0 and not dead
+	return (bleed_remaining > 0.0 and bleed_tick_damage > 0 or not patch523_weapon_bleed.is_empty()) and not dead
+
+func apply_patch523_weapon_bleed(effect: Dictionary, interval: float, rule: String) -> void:
+	preload("res://scripts/loot/patch523_weapon_bleed.gd").apply(self,effect,interval,rule)
 
 func apply_bleed(duration: float, damage: int, interval: float = 0.75) -> void:
 	if dead:
@@ -1041,8 +1132,8 @@ func _release_attack(id: int) -> void:
 	released_sequence = id
 	var source523 = _patch523_service()
 	if source523 != null and source523.release(self,id): return
-	if not is_instance_valid(target_player): return
-	if is_stunned() or is_feared(): return
+	if not _target_attackable(): return
+	if is_stunned() or is_feared() or custom_frozen(): return
 	if id==special_sequence:
 		_resolve_special()
 		return
@@ -1058,7 +1149,7 @@ func _release_attack(id: int) -> void:
 		_resolve_attack(id, kind)
 
 func _target_attackable() -> bool:
-	if not is_instance_valid(target_player) or world_controller.hp<=0: return false
+	if source_option_cannot_see() or not is_instance_valid(target_player) or world_controller.hp<=0: return false
 	if world_controller.is_player_concealed(): return false
 	return world_controller.field_map==null or not world_controller.field_map.is_safe(target_player.global_position)
 
@@ -1107,11 +1198,40 @@ func _patrol_allows(point: Vector2) -> bool:
 func apply_source_option_debuff(origin: String,duration: float,effects: Array) -> bool:
 	if dead or duration<=0:return false
 	for effect: Dictionary in effects:
-		if effect.type.Name not in ["HPHealDecreasePercent","HPPotionDecreasePercent"] or effect.unit.Name!="Percentage" or int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0:return false
-	source_option_debuffs[origin]={"remaining":duration,"effects":effects.duplicate(true)}
+		if int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0:return false
+		if effect.type.Name == "CannotSee":
+			if effect.unit.Name != "TrueFalse" or int(effect.bonus.Value) != 1:return false
+		elif effect.type.Name not in ["HPHealDecreasePercent","HPPotionDecreasePercent"] or effect.unit.Name!="Percentage":return false
+	source_option_sequence += 1
+	source_option_debuffs[origin]={"remaining":duration,"effects":effects.duplicate(true),"sequence":source_option_sequence}
+	if source_option_cannot_see():
+		motion.cancel_attack()
+		_stop_chasing_concealed_player()
+		sight_cached = false
+		sight_clock = 0
+		if is_inside_tree():show_status_text("시야 차단")
 	return true
-func prune_source_option_debuffs(enabled: Dictionary) -> void:
+
+func source_option_cannot_see() -> bool:
+	if dead:return false
+	for entry: Dictionary in source_option_debuffs.values():
+		if float(entry.remaining) <= 0:continue
+		for effect: Dictionary in entry.effects:
+			if effect.type.Name == "CannotSee" and int(effect.bonus.Value) == 1:return true
+	return false
+
+func configure_totem_venom(origin: String, interval: float, raw_percent: int, minimum: int, maximum: int, policy_id: String) -> bool:
+	# Explicit host adapter: source rate/min/max, local tick and clamp procedure.
+	if dead or status_immunities.has("poison") or origin != "totem:17524" or not source_option_debuffs.has(origin):return false
+	if not is_finite(interval) or interval < 0.25 or interval > 10 or raw_percent < 0 or raw_percent > 1000000 or minimum <= 0 or maximum < minimum:return false
+	var damage := clampi(int(floor(float(max_hp)*float(raw_percent)/1000000.0)),minimum,maximum)
+	source_option_debuffs[origin]["venom"] = {"clock":interval,"interval":interval,"damage":damage,"policy":policy_id}
+	if is_inside_tree():show_status_text("중독 [자체 주기]")
+	return true
+func prune_source_option_debuffs(enabled: Dictionary, origin_prefix: String = "") -> void:
 	for origin: String in source_option_debuffs.keys():
+		if origin_prefix.is_empty() and origin.begins_with("totem:"): continue
+		if not origin_prefix.is_empty() and not origin.begins_with(origin_prefix): continue
 		if dead or not enabled.has(origin):source_option_debuffs.erase(origin)
 func source_option_healing(amount: int,potion: bool=false) -> int:
 	var maximum: int=0
@@ -1124,8 +1244,19 @@ func source_option_healing(amount: int,potion: bool=false) -> int:
 
 func advance_source_option_debuffs(delta: float) -> void:
 	for origin: String in source_option_debuffs.keys():
-		source_option_debuffs[origin].remaining-=maxf(0,delta)
-		if dead or source_option_debuffs[origin].remaining<=0:source_option_debuffs.erase(origin)
+		if not source_option_debuffs.has(origin):continue
+		var entry: Dictionary = source_option_debuffs[origin]
+		var active_delta := minf(maxf(0,delta),maxf(0,float(entry.remaining)))
+		entry.remaining -= maxf(0,delta)
+		var born := life_id
+		var sequence := int(entry.get("sequence",-1))
+		if entry.has("venom"):
+			entry.venom.clock -= active_delta
+			while float(entry.venom.clock) <= 0.000001 and not dead:
+				if life_id != born or int(source_option_debuffs.get(origin,{}).get("sequence",-2)) != sequence:break
+				entry.venom.clock += float(entry.venom.interval)
+				take_damage(int(entry.venom.damage),false,"poison")
+		if life_id == born and int(source_option_debuffs.get(origin,{}).get("sequence",-2)) == sequence and (dead or float(entry.remaining) <= 0):source_option_debuffs.erase(origin)
 
 func hit_armor_class() -> int:
 	# Existing local formula expects nonpositive armor; preserve raw native AC for display/audit.
@@ -1143,3 +1274,5 @@ func source_523_speed_factor() -> float:
 func effective_source_attribute(attribute: String) -> float:
 	if is_instance_valid(world_controller) and world_controller.get("growth")!=null:return float(world_controller.growth.guardian_combat.attribute(self,attribute).after)
 	return float(source_m_original.get(attribute.capitalize(),0))
+
+

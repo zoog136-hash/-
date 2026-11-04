@@ -1,0 +1,70 @@
+{
+  "scope": "PR234 weapon-mastery rule/data pack only; not a complete art/client bundle",
+  "project_folder": {
+    "url": "https://drive.google.com/drive/folders/14ZuTyzs4BQxISG0ZMuu4kkpGupSrtVzl",
+    "shared": false,
+    "verified_permissions": "owner user only; no anyone/group/domain grants; no sharing changes"
+  },
+  "application_pack": {
+    "file_name": "mastery523.operations.private.v1.json",
+    "logical_version": "operations.v1; schema twilight.mastery523.v1",
+    "drive_revision": "not exposed by normalized metadata; version is grounded by filename/schema and exact SHA",
+    "bytes": 235676,
+    "sha256": "671fd9b307182e0ed8b8789124ea5710aa766d3de20c74df381455abf2bd9d6b",
+    "drive_file_id": "1bEKoW1Mn0EkSWebc51XTlyl_UCZpy6F5",
+    "drive_url": "https://drive.google.com/file/d/1bEKoW1Mn0EkSWebc51XTlyl_UCZpy6F5/view?usp=drivesdk",
+    "drive_folder_url": "https://drive.google.com/drive/folders/1Kyz1MdusaL6Iz37dD1WhbHscbQD2TWns",
+    "shared": false,
+    "status": "UPLOAD_AND_METADATA_READBACK_CONFIRMED; fresh authenticated raw fetch received and hashed",
+    "local_consumer_path": "/workspace/mastery-drive-consumer/application/mastery523.operations.private.v1.json",
+    "json_schema_check": "PASS",
+    "zip_crc": "NOT_APPLICABLE_JSON_FILE",
+    "code_changes_require_pack_update": false,
+    "reason": "Latest combat/partial-state/UI behavior uses the same original tables already present in this exact235676-byte pack."
+  },
+  "original_backup": {
+    "file_name": "lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+    "version": "cumulative original523 with508/520 deltas",
+    "bytes": 25031173,
+    "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "drive_file_id": "1EJGI2VV4u4P2yNlrMAlp0H2U28jjUH6K",
+    "drive_url": "https://drive.google.com/file/d/1EJGI2VV4u4P2yNlrMAlp0H2U28jjUH6K/view?usp=drivesdk",
+    "drive_folder_url": "https://drive.google.com/drive/folders/1BlB4_BIrvXJBMwngLbq0ZdFkeETYcC2V",
+    "shared": false,
+    "status": "REUSED_EXISTING_DRIVE_COPY; not newly uploaded or duplicated",
+    "local_consumer_path": "/workspace/mastery-drive-consumer/backup/lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+    "fresh_download_sha": "PASS",
+    "zip_crc": "PASS",
+    "zip_members": 1075,
+    "game_consumes_directly": false
+  },
+  "auxiliary_library_archive": {
+    "application_file_id": "libfile_944097ef82488191a07a44e05d4873fd",
+    "application_version": 1,
+    "status": "PREVIOUSLY_CONFIRMED; same235676-byte SHA. Current delivery verification is the fresh Drive download, not an old archive claim. No new duplicate Library upload."
+  },
+  "installation": {
+    "method": "Download the application JSON through the authorized Drive connector into a private local directory, then pass both arguments to Godot4.7.2. Drive backup is not automatically mounted or activated.",
+    "arguments": [
+      "--mastery523-pack=/workspace/mastery-drive-consumer/application/mastery523.operations.private.v1.json",
+      "--mastery523-sha=671fd9b307182e0ed8b8789124ea5710aa766d3de20c74df381455abf2bd9d6b"
+    ],
+    "fresh_consumer_folder": true,
+    "actual_main_cli_load_menu_save_reload": {
+      "checks": 8,
+      "failures": [],
+      "log_sha256": "2fadbf3dd44f62c2fdaada7a8cf644074a1a44b47291011ef4e66cb399151fe2"
+    },
+    "limits": "Mastery data pack verified in a fresh consumer folder/profile within this environment. Existing real Git-resource staging and current source-map pack reused. Not a new machine restore, whole-game pack installation or Android validation."
+  },
+  "external_upload_scope": "Only the actual235676-byte mastery game data JSON was uploaded. Existing original ZIP reused. No new reports, audit packages, captures, engine/APK/XAPK uploads or permission expansion.",
+  "local_only_evidence": "Godot logs, staged test project and captures remain LOCAL_ONLY; code and metadata documentation are delivered through Git/PR.",
+  "rebuild_from_downloaded_backup": {
+    "status": "PASS",
+    "bytes": 235676,
+    "sha256": "671fd9b307182e0ed8b8789124ea5710aa766d3de20c74df381455abf2bd9d6b",
+    "matches_downloaded_application_pack": true,
+    "output_status": "LOCAL_ONLY; verification copy, not another uploaded pack",
+    "log_sha256": "fb86c441f64527f2d774bfc264ddd8a56a507611b2913c5a987f56d6119e45d9"
+  }
+}

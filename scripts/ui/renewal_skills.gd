@@ -7,6 +7,7 @@ var selection_sheet: Control
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
 const RULES = preload("res://scripts/skill_rules.gd")
+const SOURCE523 = preload("res://scripts/skills/player_skills523.gd")
 var hud: Node
 var records: Array = []
 var filtered: Array = []
@@ -37,6 +38,7 @@ var touch_active: bool = false
 # Grayscale variants are created once per source texture while this view lives.
 # Do not re-read/decompress icons during the cooldown polling loop.
 var unlearned_icons: Dictionary = {}
+var decoded_skill_icons: Dictionary = {}
 var class_only: bool = false
 var scope_buttons: Array[Button] = []
 var guardian_scope_button: Button
@@ -51,6 +53,12 @@ func configure(controller: Node) -> void:
 	hud=controller
 	visibility_changed.connect(_sync_visibility)
 	records=hud.job_skills.duplicate(true)
+	var source = hud.get_parent().original_skills.catalog.source523
+	if not source.profiles.is_empty() or not source.last_error.is_empty():
+		var source_label: Label = UI.label("523 원본 규칙 · 확인된 비용과 대상 제한 적용" if not source.profiles.is_empty() else "523 자료를 읽지 못했습니다 · 기존 게임 규칙 사용",12,UI.MUTED)
+		source_label.name = "PlayerSkills523Status"
+		source_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		add_child(source_label)
 	# The inspected 2023 menu has direct All/Technique tabs above an icon grid.
 	# Names, costs and learning information remain in the existing inspector.
 	var scope:=HBoxContainer.new();scope.name="SkillReferenceTabs"
@@ -97,18 +105,8 @@ func configure(controller: Node) -> void:
 	for grade: String in ["모든 등급","일반","고급","희귀","영웅","전설","신화","유일","미확인"]: grade_filter.add_item(grade)
 	grade_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	toolbar.add_child(grade_filter)
-	school_filter = OptionButton.new()
-	for school: String in ["물 계열","땅 계열","바람 계열","불 계열"]: school_filter.add_item(school)
-	school_filter.visible = str(hud.character_state.get("job_class", "")) == "요정"
-	var schools: Array[String] = ["water","earth","wind","fire"]
-	school_filter.select(maxi(0,schools.find(str(hud.get_parent().original_skills.catalog.schools.get("요정","water")))))
-	school_filter.item_selected.connect(func(index: int) -> void:
-		var world: Node = hud.get_parent()
-		world.original_skills.catalog.schools["요정"] = schools[index]
-		world._update_hud()
-		world._request_deferred_save()
-		refresh())
-	toolbar.add_child(school_filter)
+	var group_button:Button=UI.button("스킬 계열 전환",func()->void:hud._navigate("spell_groups"))
+	group_button.name="OpenSpellGroupConversion";toolbar.add_child(group_button)
 	var state: Dictionary = hud.character_state
 	scope.tooltip_text="Lv.%d %s / 등록 %d · 신규 %d" % [state.get("level",1),state.get("job_class","기사"),records.size(),hud.get_parent().original_skills.catalog.current_official.records.size()]
 	var body := Browser.new()
@@ -252,15 +250,18 @@ func refresh() -> void:
 	for value: Variant in records:
 		if not value is Dictionary: continue
 		var record: Dictionary=value
-		var activation := str(record.get("activation","active"))
-		if bool(record.get("toggle_classified", false)) and str(record.name) == "슈팅 스타": activation = "passive"
+		var source_status: Dictionary=hud.get_parent().original_skills.catalog.source_learning_status(record)
+		var source_for_job: bool=not source_status.is_empty() and int(source_status.learned_class_id)==hud.get_parent().BASE508.source_class_id(job)
 		if type_filter.selected != 3:
 			var allowed: Array = record.get("classes", [record.get("class", "공용")])
 			if job == "공용":
 				if str(record.get("class", "")) != "공용": continue
-			elif not allowed.has(job): continue
+			elif not allowed.has(job) and not source_for_job: continue
 		if class_only and str(record.get("class","공용"))=="공용":continue
 		if grade_filter.selected > 0 and str(record.get("grade", "")) != grade_filter.get_item_text(grade_filter.selected): continue
+		var projected: Dictionary=hud.get_parent().original_skills.catalog.resolve(record)
+		var activation := str(projected.get("activation","active"))
+		if bool(record.get("toggle_classified", false)) and str(record.name) == "슈팅 스타": activation = "passive"
 		if type_filter.selected==1 and activation=="passive": continue
 		if type_filter.selected==2 and activation!="passive": continue
 		if query!="" and not (str(record.get("name",""))+str(record.get("desc",""))+str(record.get("historical_aliases",[]))).to_lower().contains(query): continue
@@ -271,13 +272,15 @@ func refresh() -> void:
 		return str(a.get("name",""))<str(b.get("name","")) if ga==gb else ga<gb)
 	for index: int in range(filtered.size()):
 		var record: Dictionary=filtered[index]
-		var passive := RULES.is_passive(record)
-		var learned: bool = hud.get_parent().original_skills.catalog.owned(record)
+		var passive := RULES.is_passive(hud.get_parent().original_skills.catalog.resolve(record))
+		var source_known: bool=not hud.get_parent().original_skills.catalog.source_learning_status(record).is_empty()
+		var learned: bool = hud.get_parent().original_skills.catalog.owned(record) or source_known
 		var icon: Texture2D = _icon_for_skill(record,learned)
-		var subtitle: String = CURRENT.mode_label(record) if bool(record.get("runtime_blocked", false)) else "패시브" if passive else "MP %d" % int(record.get("mp",0))
+		var effective: Dictionary = hud.get_parent().original_skills.catalog.resolve(record)
+		var subtitle: String = CURRENT.mode_label(record) if bool(record.get("runtime_blocked", false)) else "패시브" if passive else "MP %d" % int(effective.get("mp",0))
 		cards.add_item(" ",icon)
 		cards.set_item_metadata(index,str(record.get("id",record.get("name",""))))
-		cards.set_item_tooltip(index,("미구현 · " if bool(record.get("runtime_blocked",false)) else "습득 · " if learned else "미습득 · ")+str(record.get("name",""))+" · "+subtitle)
+		cards.set_item_tooltip(index,("원본 학습 · 실행 대기 · " if source_known else "미구현 · " if bool(record.get("runtime_blocked",false)) else "습득 · " if learned else "미습득 · ")+str(record.get("name",""))+" · "+subtitle)
 		var color: Color=UI.grade(str(record.get("grade","일반"))) if learned else Color("aaa7a1")
 		cards.set_item_icon_modulate(index,Color.WHITE if learned else Color(.68,.68,.68,.62))
 		cards.set_item_custom_fg_color(index,color)
@@ -296,7 +299,16 @@ func _icon_for_skill(record: Dictionary, learned: bool) -> Texture2D:
 	var path: String = str(record.get("icon",""))
 	if not learned and not path.is_empty() and unlearned_icons.has(path):
 		return unlearned_icons[path] as Texture2D
-	var source: Texture2D = load(path) as Texture2D if not path.is_empty() else hud._skill_icon(str(record.get("effect","")),str(record.get("type","")))
+	var source: Texture2D
+	if path.get_extension()=="svg" and FileAccess.file_exists(path) and not FileAccess.file_exists(path+".import"):
+		# Decode the unchanged committed SVG in runtime-only consumers where
+		# editor import metadata is absent; never synthesize replacement art.
+		if not decoded_skill_icons.has(path):
+			var image:=Image.new()
+			if image.load_svg_from_string(FileAccess.get_file_as_string(path))==OK:decoded_skill_icons[path]=ImageTexture.create_from_image(image)
+			else:push_error("Committed skill SVG cannot be decoded: "+path)
+		source=decoded_skill_icons.get(path)
+	else:source=load(path) as Texture2D if not path.is_empty() else hud._skill_icon(str(record.get("effect","")),str(record.get("type","")))
 	return source if learned else _unlearned_icon(source)
 
 func _unlearned_icon(source: Texture2D) -> Texture2D:
@@ -336,8 +348,10 @@ func select(index: int) -> void:
 	official_toggle_preview.visible = bool(selected.get("toggle_classified", false)) and bool(selected.get("runtime_blocked",false))
 	reagent_button.visible = false
 	preview_button.disabled = false
+	if _show_source_learning():return
 	if bool(selected.get("runtime_blocked", false)):
 		detail.text = CURRENT.detail_text(selected)
+		detail.text += SOURCE523.detail_text(hud.get_parent().original_skills.catalog.resolve(selected))
 		learn_button.disabled = true
 		book_button.disabled = true
 		use_button.disabled = true
@@ -401,11 +415,11 @@ func select_original() -> void:
 	preview_button.disabled=skill.is_empty()
 	preview_button.tooltip_text="선택한 스킬의 기존 이펙트 미리보기" if not preview_button.disabled else "미리보기를 지원하지 않는 스킬입니다."
 	var learned: bool = catalog.owned(selected)
-	var passive: bool = RULES.is_passive(selected)
+	var passive: bool = RULES.is_passive(skill)
 	var base_cooldown: float = float(skill.get("cooldown",0))
 	var final_cooldown: float = base_cooldown*world._skill_cooldown_factor()
 	var weapons: String = "제한 없음" if skill.get("weapons",[]).is_empty() else " · ".join(skill.weapons)
-	detail.text = "[font_size=20][color=#%s]%s[/color][/font_size]\n%s · %s\n\n%s\n\nMP %d  /  HP %d\n기본 재사용 %.1f초\n보정 후 재사용 %.1f초\n지속시간 %.1f초\n사용 무기 %s\n\n%s" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name),str(skill.get("display_class",selected.get("class",""))),"패시브" if passive else "액티브",UI.safe(selected.desc),int(skill.get("mp",0)),int(skill.get("hp",0)),base_cooldown,final_cooldown,float(skill.get("duration",0)),weapons,"습득 완료" if learned else UI.safe(catalog.reason(selected))]
+	detail.text = "[font_size=20][color=#%s]%s[/color][/font_size]\n%s · %s\n\n%s\n\nMP %d  /  HP %d\n기본 재사용 %.1f초\n보정 후 재사용 %.1f초\n지속시간 %s\n사용 무기 %s\n\n%s" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name),str(skill.get("display_class",selected.get("class",""))),"패시브" if passive else "액티브",UI.safe(skill.get("runtime_desc",selected.desc)),int(skill.get("mp",0)),int(skill.get("hp",0)),base_cooldown,final_cooldown,SOURCE523.duration_text(skill),weapons,"습득 완료" if learned else UI.safe(catalog.reason(selected))]
 	var fields: Dictionary = selected.get("fields",{})
 	var basic: Dictionary = fields.get("basic",{})
 	var learning: Dictionary = fields.get("learning",{})
@@ -418,6 +432,7 @@ func select_original() -> void:
 		detail.text += "\n\n공식 공통 마법: %s Lv.%s / MP %s\n기존 스킬 ID·TWILIGHT 동작 공유\n%s" % [str(fact["class"]),str(fact.level_display),str(fact.mp_display),str(fact.source_url)]
 	if catalog.current_official.mode_audit.has(str(selected.id)):
 		detail.text += "\n\n현재 공식 분류: 패시브 / 기존 게임 동작: 액티브\n기존 비용·행동·저장 호환을 위한 전환 검토 중"
+	detail.text += SOURCE523.detail_text(skill)
 	if passive: detail.text = detail.text.replace("기본 재사용 %.1f초\n보정 후 재사용 %.1f초" % [base_cooldown,final_cooldown],"패시브 · 조건 충족 시 적용")
 	if passive: detail.text = detail.text.replace("지속시간 %.1f초" % float(skill.get("duration",0)),"상시 / 조건부 적용")
 	summon_controls.visible = str(selected.mode) == "summon" and learned
@@ -427,12 +442,19 @@ func select_original() -> void:
 	book_button.tooltip_text = catalog.reason(selected,true) if not catalog.reason(selected,true).is_empty() else "%d 아데나" % int(selected.book_cost)
 	use_button.disabled = passive or not learned or catalog.level_locked(selected)
 	use_button.tooltip_text = "패시브는 직접 사용할 수 없습니다" if passive else "미습득 스킬입니다" if not learned else "Lv.%d 필요" % catalog.minimum_level_for(selected) if catalog.level_locked(selected) else ""
+	if not str(skill.get("source523_block_reason", "")).is_empty():
+		use_button.disabled = true
+		use_button.tooltip_text = str(skill.source523_block_reason)
 	quick_button.disabled = passive or not learned
 	quick_button.tooltip_text = use_button.tooltip_text
+	if not str(skill.get("source523_block_reason", "")).is_empty(): quick_button.disabled = true
 	clock = 0
 	selection_sheet.show_skill()
 
 func _process(delta: float) -> void:
+	if hud!=null and not selected.is_empty() and not hud.get_parent().original_skills.catalog.source_learning_status(selected).is_empty():
+		use_button.disabled=true;quick_button.disabled=true;cooldown.text="원본 학습 기록 보관 · 실행 대기"
+		return
 	if is_instance_valid(guardian_special) and guardian_special.is_visible_in_tree():
 		guardian_special_clock-=delta
 		if guardian_special_clock>0:return
@@ -452,10 +474,15 @@ func _process(delta: float) -> void:
 		if bool(selected.get("local_design",false)) and selected.mode=="local_toggle":
 			use_button.text = "OFF · 범위 해제" if world.original_skills.local_runtime.is_on(selected) else "ON · 활성화"
 		var registration_error: String = world._quickslot_registration_error("skill",str(selected.id))
+		var effective: Dictionary = world.original_skills.catalog.resolve(selected)
+		if effective.has("progression523"):
+			use_button.text="패시브 · 자동 적용" if str(effective.activation)=="passive" else ("OFF · 비활성화" if world.original_skills.progression.is_on(selected) else "ON · 활성화") if str(effective.mode)=="source_toggle" else "스킬 사용"
+		if not str(effective.get("source523_block_reason", "")).is_empty(): registration_error = str(effective.source523_block_reason)
+		if effective.has("source523"): use_button.tooltip_text = world.original_skills.cost_reason(effective)
 		quick_button.disabled = not registration_error.is_empty()
 		quick_button.tooltip_text = registration_error
 		var original_remain: float = float(world.skill_cooldowns.get(str(selected.name), 0))
-		cooldown.text = "패시브 적용" if RULES.is_passive(selected) and world.original_skills.catalog.owned(selected) else "재사용 %.1f초" % original_remain if original_remain > 0 else "준비됨" if world.original_skills.catalog.owned(selected) else "미습득"
+		cooldown.text = "패시브 적용" if RULES.is_passive(effective) and world.original_skills.catalog.owned(selected) else "재사용 %.1f초" % original_remain if original_remain > 0 else "준비됨" if world.original_skills.catalog.owned(selected) else "미습득"
 		if str(selected.mode) == "summon" and world.original_skills.summons.active(str(selected.id)): cooldown.text += " · 소환 %.0f초" % world.original_skills.summons.remaining
 		return
 	var remain := float(world.skill_cooldowns.get(str(selected.get("name","")),0))
@@ -514,6 +541,7 @@ func select_local() -> void:
 	var owned: bool = catalog.owned(selected)
 	var passive: bool = RULES.is_passive(selected)
 	detail.text = CURRENT.runtime_text(catalog.resolve(selected))
+	detail.text += SOURCE523.detail_text(catalog.resolve(selected))
 	detail.text += "\n\n" + ("습득 완료" if owned else catalog.reason(selected))
 	learn_button.disabled = not catalog.reason(selected).is_empty()
 	learn_button.tooltip_text = catalog.reason(selected)
@@ -580,3 +608,17 @@ func _guardian_special_button(text: String,callback: Callable,extent: Vector2=Ve
 	button.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
 	button.scroll_host=hud.workspace;button.scroll_area=guardian_special_scroll
 	return button
+
+func _show_source_learning()->bool:
+	var source_status: Dictionary=hud.get_parent().original_skills.catalog.source_learning_status(selected)
+	if source_status.is_empty():return false
+	preview_vfx.clear();preview_container.hide();summon_controls.hide()
+	learn_button.disabled=true;book_button.disabled=true;use_button.disabled=true;quick_button.disabled=true;preview_button.disabled=true
+	use_button.text="실행 대기"
+	learn_button.tooltip_text="원본 학습 기록이 저장되어 있습니다."
+	book_button.tooltip_text=learn_button.tooltip_text
+	use_button.tooltip_text=str(source_status.message);quick_button.tooltip_text=str(source_status.message)
+	detail.text="[font_size=20]"+str(selected.name)+"[/font_size]\n원본 학습 완료 · 주문 #"+str(int(source_status.spell_class_id))+"\n\n"+str(source_status.message)+"\n학습 기록과 사용한 책의 출처는 저장됩니다. 실행·자동 사용·퀵슬롯 등록은 연결 확인 전까지 보류됩니다."
+	cooldown.text="원본 학습 기록 보관 · 실행 대기"
+	selection_sheet.show_skill()
+	return true
