@@ -1,3 +1,7 @@
+## Current source-regeneration follow-up
+
+[SOURCE_REGEN.md](SOURCE_REGEN.md) records two real quest potion consumers and five exact source gear regeneration connections. Amounts/duration come from source; the30second cadence is labelled TWILIGHT policy.48 of146 classes now have at least one bounded path,98 have none. Actual normal+0 gear use totals26 units/24 classes with7 raw stacks retained. New-source completions remain811; current Knight preview without skillv3 has326 some-use-pending quests. Earlier pending counts below are historical. 4318 focused assertions passed; all-effect/native-cycle/full-game completion is not claimed. Existing original saves and resource packs are unchanged.
+
 ## Current selected-equipment follow-up
 
 [QUEST_EQUIPMENT.md](QUEST_EQUIPMENT.md) records actual21 units/19 original equipment classes individually materialized and worn;12 raw stacks remain. Genuine rune226318 retains its UUID and both proofs. AC/HP/MP/MR/STR, two weapons' damage/hit inputs, rank0XP, UI/equip/unequip, confirmed atomic save/failure/reconnect are bounded verified paths.41 of146 classes now have at least one verified consumer;105 have none. Other states/effects and four learned spell effects remain separate. 11425 incremental focused assertions include repeated unchanged-physical checks, not unique features. Private rules/view stay LOCAL_ONLY; prior packs and original811/822 saves are unchanged. Earlier checkpoints below are historical.

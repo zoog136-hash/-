@@ -17,7 +17,7 @@ static func canonical(record: Dictionary) -> Dictionary:
 	return expected if DROPS.matches(record, expected) else {}
 
 static func action_record(world: Node, saved: Dictionary) -> Dictionary:
-	var record: Dictionary = canonical(saved)
+	var record: Dictionary = preload("res://scripts/quests/quest_regen523.gd").action(world,canonical(saved))
 	var spec: Dictionary = record.get("source_use_spec",{})
 	if spec.get("activation_status") != "blocked" or not world.ui_preferences.get("patch523_item_presentation_flags_policy",true): return record
 	var presentation: Dictionary = {}
@@ -62,6 +62,7 @@ static func try_use(world: Node, saved: Dictionary) -> bool:
 	var record: Dictionary = action_record(world,saved)
 	if not saved.get("source_m_native_item", false) and record.is_empty(): return false
 	var problem: String = eligibility(world, record)
+	if int(record.get("source_item_class_id",0)) in [376,385] and world.hp<=0:problem="사망 상태 · 원본 재생 물약 보존"
 	if not problem.is_empty():
 		world.hud.show_message(problem)
 		return true

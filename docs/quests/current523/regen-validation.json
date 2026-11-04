@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "parent_public_code": "1b71941839c9cf49258efbdaa5b101929419a8d5",
+  "tests": [
+    {
+      "case": "normal-pass",
+      "result": {
+        "actual_item_classes": [
+          376,
+          385
+        ],
+        "cadence_policy": "TWILIGHT configurable30s; source interval not verified",
+        "checks": 729,
+        "controlled_class_and_tick_contexts_not_natural_probabilities": true,
+        "failures": [],
+        "knight_some_use_pending_before_actions_without_skillv3": 326,
+        "mode": "normal",
+        "save_sha256": "0bce003569f807a0e3d17320d36fc983ed443b041e426a4ee92474017e0d696c",
+        "source_completions": 811
+      },
+      "log_sha256": "1ee0c58b7812378984ffd8d8c102d1ab42a25831caa3fe46e747386eec5aa828"
+    },
+    {
+      "case": "uncertain",
+      "result": {
+        "actual_item_classes": [],
+        "cadence_policy": "TWILIGHT configurable30s; source interval not verified",
+        "checks": 6,
+        "controlled_class_and_tick_contexts_not_natural_probabilities": true,
+        "failures": [],
+        "knight_some_use_pending_before_actions_without_skillv3": 326,
+        "mode": "uncertain",
+        "save_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+        "source_completions": 811
+      },
+      "log_sha256": "b7ce1b766a1e36f019f3559d99a7ad57168e1e5509d0e3cba2123e0755086542"
+    },
+    {
+      "case": "gear",
+      "result": {
+        "actual_item_classes": [
+          4851,
+          4871,
+          4921,
+          4951,
+          85643
+        ],
+        "checks": 3523,
+        "failures": [],
+        "host_policy": "existing30second gear clock; source amounts4/5/1/3HP and1MP; original interval unverified",
+        "natural_probability_or_native_cycle_equivalence": false,
+        "save_sha256": "91eda6a4494415239ced24415bcaca15cbb01bc32ce3268fbd3e97bb0669c8c7",
+        "selected_units": 5
+      },
+      "log_sha256": "ad4991e7846a8c417d0b939b8f06ab5c448cd4cadc9d92d3f8ed9b957e9a8ff9"
+    },
+    {
+      "case": "metadata",
+      "result": {
+        "checks": 16,
+        "failures": [],
+        "scope": "read-only metadata and policy refusals; not producer/use proof"
+      },
+      "log_sha256": "eeca8056cc5d471e40694f0c36b76475f2814e30e7bea7b1d7dbccef0b69e905"
+    },
+    {
+      "case": "core",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      },
+      "log_sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5"
+    }
+  ],
+  "focused_assertions": 4318,
+  "assertions_include_repeated_unchanged_physical_checks_not_unique_features": true,
+  "new_item_classes": [
+    376,
+    385,
+    4851,
+    4871,
+    4921,
+    4951,
+    85643
+  ],
+  "class_matrix": {
+    "one_or_more_bounded_paths": 48,
+    "remaining_without_a_verified_path": 98,
+    "remaining_partition": {
+      "source_Test_fixed_cards": 27,
+      "shared_source_conditions_or_effect_adapters": 25,
+      "equipment_material_consumable_currency": 46
+    },
+    "new_connections_with_explicit_host_cadence_policy": 7
+  },
+  "actual_current_gear_producer_save": {
+    "materialized_units": 26,
+    "distinct_normal_plus0_classes": 24,
+    "remaining_source_gear_stacks": 7
+  },
+  "source_potions": {
+    "376": {
+      "buff_class": 39,
+      "mp_regen": 2,
+      "sp": 2,
+      "duration": 300,
+      "class": "Mage"
+    },
+    "385": {
+      "buff_class": 82,
+      "mp_regen": 3,
+      "duration": 300,
+      "class": "source unrestricted"
+    }
+  },
+  "source_equipment": {
+    "4851": {
+      "hp_regen": 4
+    },
+    "4871": {
+      "hp_regen": 5
+    },
+    "4921": {
+      "hp_regen": 1
+    },
+    "4951": {
+      "hp_regen": 3
+    },
+    "85643": {
+      "mp_regen": 1
+    }
+  },
+  "interval": "Source rows establish amounts and durations but no verified server cadence. Existing host potion and gear clocks use30seconds; source cadence is unverified. No natural idle/movement/combat/weight recovery-cycle equivalence claim.",
+  "potion_policy": "ui_preferences.quest523_mp_regen_interval_seconds: default30, finite numeric1..3600; zero/invalid blocks new use. Each saved buff retains its chosen interval and timer.",
+  "gear_policy": "existing UNIQUE_RECOVERY_INTERVAL30; ui_preferences.quest523_source_gear_regen_enabled=false disables only new source gear contribution. Legacy fixed5 and existing card/growth amounts remain unchanged. Existing gear recovery remainder-reset-on-restart policy is preserved; no offline tick simulation.",
+  "gear_context_scope": "Existing host catalogue recovery engine only; no claim of all native NPC/status/movement/weight-context formulas. Other positive source effects remain blocked.",
+  "source_constraints": "No Test/infinite/unknown positive/context effect promotion. Mage class, source bless/receipt/immutable and remaining quantity, source SHA, locks/life/cooldown and exact original conditions remain enforced.",
+  "transactions": "Selected held OWN debit plus existing238 isolated candidate effect and source-use receipt save; no transient live grant, key rename, origin fabrication, double debit, old-save conversion or regrant. Equipment reuses the existing sealed selected-UUID owner.",
+  "cancel_and_death": "Exact new item buffs preserve original class/group/immunity; NPC cancellation hook handles only these two policy-tagged original buffs. Source numeric group IDs compare int/float values safely. Existing death hook is reused.",
+  "qa_contexts": "Original811 copy, existing in-game Mage class-change UI and explicitly controlled tick deltas. Existing new-Main RNG randomization is separate from consuming an item. Each consumer preserves its current RNG and50bindings; normal class UI may add canonical skill IDs. No natural probability or all-class encounter claim.",
+  "code_sha256": {
+    "scripts/quests/quest_regen523.gd": "7c27e6edce4edaa1cfb2552c7451dcf367221675e7476f93f03fa23aec1cae77",
+    "scripts/quests/quest_item_provider238.gd": "b9c8d8aa91f1f17869741694c0d2eb589bbb8ff69c2408c9403f2373e2b7ebff",
+    "scripts/loot/patch523_item_use.gd": "ac3a6c10ca85645d827c9fb48064bc03f4e995819370fadf0186d3f9100d84d6",
+    "scripts/monsters/patch523_npc_extensions.gd": "35b921dd3daec638d8f61f3744b9103b11cebdc29a5f7b233546616c3f5d43dd",
+    "scripts/ui/lineage_inventory_ui.gd": "bd3617878b59b2cd2a655d3c12234a6cba4422c9ec3e2c424675d1de34bbb105",
+    "scripts/quests/quest_held_use238.gd": "8f0e37c5b10b2634dd2274cf985dc1ab4d49f743987f42335bc4f2f04613ac3d",
+    "scripts/ui/renewal_inventory.gd": "ec0bd0417d956b8a3dea6dce8b645dc521993b09e3e69b28b4927127a5c80fb9",
+    "scripts/world.gd": "6692768c7c1852843f877671aab5399db475de980f59e982a4835037b28f86fc",
+    "scripts/quests/quest_equipment523.gd": "04f1f6e2463a6878aa66cf4ffe700e14d2c85dba66f595e6e6e8978c887f9463",
+    "tests/quest_regen523_test.gd": "933b2ce2a6c24aa93894b858ec51529ff8c2d97ad9c4e561ac657584244380d8",
+    "tests/quest_gear_regen523_test.gd": "29920769584d63302e4cd2844593e38baf3eccbd5fd99f334823fe2ac933c41a",
+    "tests/quest_regen523_metadata_test.gd": "25a95c2574169c626474b15c38ad10615faaa00f1e434b60b2eaa67dbb8afa3e"
+  },
+  "protected_saves": {
+    "original811": {
+      "bytes": 1390877,
+      "sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+      "unchanged": true
+    },
+    "historical822": {
+      "bytes": 1261506,
+      "sha256": "13e6d609f5fabf8cc7f1fd4a49c9432c379ad2e94b966978f547206b15a39ade",
+      "unchanged": true
+    }
+  },
+  "source_completions": 811,
+  "definitions": 3621,
+  "current_existing811_save_knight_preview_without_skillv3_or_gear_view": 326,
+  "previous_knight359_and_skillv3_351_are_historical_not_current": true,
+  "skillv3_new_preview_not_measured": true,
+  "all_four_learned_spell_effect_holds_preserved": true,
+  "newly_issued_native_provider_path": "Provider registration is installed; this follow-up validates genuine existing quest-held rewards. A fresh new native issue-to-use run is separate, not inferred from held QA.",
+  "inputs": "Existing questv1/item38ee/skillv3/rules5e/view7b02 bytes unchanged; no rebuild/download/pack upload. Private view remains LOCAL_ONLY.",
+  "public_primary_check": {
+    "url": "https://lineagem.plaync.com/guidebook/view?title=%EC%9D%BC%EB%B0%98+%EC%95%84%EC%9D%B4%ED%85%9C",
+    "search_excerpt_scope": "300seconds/Mage-only wisdom matches source; no verified cadence obtained; community posts not used as runtime proof"
+  },
+  "failed_logs_preserved_not_counted": [
+    "normal.log",
+    "normal-fixed.log",
+    "normal-final.log",
+    "normal-verified.log"
+  ],
+  "full_or_manual_ci": false,
+  "new_external_data_transfer": false
+}

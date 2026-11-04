@@ -906,15 +906,18 @@ func _refresh_equipment_effects() -> void:
 	if not equipment_effects_dirty:return
 	equipment_effects_dirty=false
 	equipment_effect_rebuilds+=1
+	var source_hp: int=0;var source_mp: int=0
 	var flags: Dictionary={"hpAbsoluteRecovery":false,"hpRecoveryTick":false,"mpRecoveryTick":false,"hp_absorption":false,"damage_amp_pct":0.0}
 	for record: Dictionary in _all_equipped_records():
+		var original: Dictionary=quest_item_provider.equipment_owner.recovery_for_worn(self,record)
+		source_hp+=int(original.get("hp",0));source_mp+=int(original.get("mp",0))
 		for key: String in ["hpAbsoluteRecovery","hpRecoveryTick","mpRecoveryTick"]:
 			if int(record.get(key,0))>0:flags[key]=true
 		if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"):
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
-	flags.hp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))
-	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
+	flags.hp_tick_amount=source_hp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))
+	flags.mp_tick_amount=source_mp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
 	equipment_effects=flags
 
 func _invalidate_equipment_static() -> void:

@@ -2,8 +2,8 @@
   "source_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
   "counts_are_distinct_item_classes_not_quests_or_item_quantities": true,
   "baseline_pending_item_classes": 146,
-  "reviewed": 41,
-  "remaining": 105,
+  "reviewed": 48,
+  "remaining": 98,
   "original_constraints_waived": false,
   "contracts": {
     "contract_1": "Requires exact installed effect/equipment/currency owner and quest receipt contract; never bind by name",
@@ -18,9 +18,10 @@
     "skillbooks_existing_verified": "Exact public245 v3 input and existing executable skill owner required. Genuine book debits/learning/immutable origin/consumable receipt/failure/reconnect verified. No lmref activation; starter-known and source class/level restrictions preserve books. Four additional exact books record learning only; see reference_learning_only.",
     "fixed_normal_cards_verified": "Four normal exact m508 stable cards, all30 actual quest-issued units, staged public243 owner+selected-item+receipt save verified. Native global NoMerge/UI enforce existing flags. Swap/exchange action absent; not equip. Separate explicit new-quest-spare option-feed host hold preserves old free copies/cost/EXP; not inferred native rule.",
     "reference_learning_only": "Exact private v3 and source book identity required; source learning only, clear before-consumption UI, persistent cast/auto/quickslot hold. All four underlying native spell effects remain pending.",
-    "normal_plus0_equipment": "Actual selected receipt debit -> one physical UUID -> equip, or authenticated existing369002/59062/226318 selection UUID -> equip/unequip; one confirmed save. Normal blessing/+0 known baseAC/HP/MP/MR/STR, exact weapon bounds/hit and compiled rank0XP only; see QUEST_EQUIPMENT.md. Source crafting/material/enhancement owners remain separate."
+    "normal_plus0_equipment": "Actual selected receipt debit -> one physical UUID -> equip, or authenticated existing369002/59062/226318 selection UUID -> equip/unequip; one confirmed save. Normal blessing/+0 known baseAC/HP/MP/MR/STR, exact weapon bounds/hit and compiled rank0XP only; see QUEST_EQUIPMENT.md. Source crafting/material/enhancement owners remain separate.",
+    "source_regen_host_cadence": "Pinned source amount/duration, source conditions/receipt; existing host recovery engine with labelled30second cadence. Potion cadence configurable in ui_preferences.quest523_mp_regen_interval_seconds; invalid/zero holds. Gear uses existing clock with opt-out quest523_source_gear_regen_enabled=false. No native-cycle equivalence."
   },
-  "prior_public_checkpoint": "3626600e1f608e8fa2cc454b98693f10921bdceb",
+  "prior_public_checkpoint": "1b71941839c9cf49258efbdaa5b101929419a8d5",
   "reviewed_item_classes": [
     233,
     239,
@@ -28,7 +29,9 @@
     249,
     305,
     349,
+    376,
     383,
+    385,
     427,
     587,
     691,
@@ -43,8 +46,13 @@
     2862,
     2872,
     3042,
+    4851,
+    4871,
+    4921,
+    4951,
     4971,
     5021,
+    85643,
     177192,
     177202,
     177212,
@@ -277,8 +285,11 @@
       "blocked_reasons": [
         "unsupported_buff_effect:RegenMP"
       ],
-      "quest_binding_reviewed": false,
-      "contract": "contract_2"
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
     },
     {
       "item_class_id": 380,
@@ -324,8 +335,11 @@
         "unsupported_buff_effect:RegenMP",
         "no_supported_buff_effects"
       ],
-      "quest_binding_reviewed": false,
-      "contract": "contract_2"
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
     },
     {
       "item_class_id": 398,
@@ -1188,8 +1202,11 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
     },
     {
       "item_class_id": 4871,
@@ -1198,8 +1215,11 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
     },
     {
       "item_class_id": 4921,
@@ -1208,8 +1228,11 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
     },
     {
       "item_class_id": 4951,
@@ -1218,8 +1241,11 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
     },
     {
       "item_class_id": 4971,
@@ -1352,8 +1378,11 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "source_regen_host_cadence",
+      "native_all_states_or_contexts_completed": false,
+      "source_amount_verified": true,
+      "source_interval_verified": false
     },
     {
       "item_class_id": 95954,
@@ -1974,8 +2003,8 @@
     "remaining": 110
   },
   "prior_counts": {
-    "reviewed": 22,
-    "remaining": 124
+    "reviewed": 41,
+    "remaining": 105
   },
   "reviewed_means_one_or_more_exact_bounded_consumers_not_all_native_states": true,
   "new_plus0_normal_gear_ids": [
@@ -1999,5 +2028,15 @@
     4971,
     5021
   ],
-  "counts_do_not_erase_other_native_effects_or_states": "Four learned spell effects, source gear enhancement/other blessings/proc effects and child skill-ticket effects remain separate."
+  "counts_do_not_erase_other_native_effects_or_states": "Four learned spell effects, source gear enhancement/other blessings/proc effects and child skill-ticket effects remain separate.",
+  "host_cadence_policy_classes": [
+    376,
+    385,
+    4851,
+    4871,
+    4921,
+    4951,
+    85643
+  ],
+  "host_cadence_not_original_verified_interval": true
 }

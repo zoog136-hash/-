@@ -98,7 +98,8 @@ class View extends Node:
 		var prior: String=FileAccess.get_sha256(path)
 		var error: Error=host._save_game(true,payload)
 		if error!=OK:
-			var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(path))
+			var parser:=JSON.new();var parse_error: Error=parser.parse(FileAccess.get_file_as_string(path))
+			var durable: Variant=parser.data if parse_error==OK else null
 			var expected: Dictionary=JSON.parse_string(JSON.stringify(payload))
 			var confirmed: bool=durable is Dictionary
 			if confirmed:

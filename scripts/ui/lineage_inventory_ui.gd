@@ -691,12 +691,16 @@ func _refresh_detail(item_name: String) -> void:
 	quick_button.disabled = amount <= 0 or not is_consumable
 	var source_record: Dictionary=record
 	if selected_id!="":source_record=character_state.get("item_instances",{}).get(selected_id,{}).get("record",record)
+	if int(source_record.get("source_item_class_id",0)) in [376,385]:
+		detail_text.text+="\n\n원본 MP 회복량·300초 유지 / 회복 주기: TWILIGHT 설정(기본 30초)"
+		detail_action.tooltip_text="원본 직업·사용 조건 유지. 회복 주기는 게임 설정이며 원작 확정값이 아닙니다."
 	if SOURCE_LEARNING.MAP.has(int(source_record.get("source_item_class_id",0))):
 		detail_action.text="학습 기록"
 		detail_action.tooltip_text="책을 사용해 원본 학습을 기록합니다. 시전 조건·효과 연결 전까지 실행은 보류됩니다."
 		quick_button.disabled=true
 		detail_text.text+="\n\n원본 학습 기록용 · 실행 연결 대기"
 	elif QUEST_GEAR.IDS.has(int(source_record.get("source_item_class_id",0))) or selected_id!="" and character_state.get("item_instances",{}).get(selected_id,{}).has("quest_source_input_receipt"):
+		if QUEST_GEAR.REGEN_GEAR.has(int(source_record.get("source_item_class_id",0))):detail_text.text+="\n\n원본 재생량 / TWILIGHT 장비 회복 주기 30초 (원본 주기 미확인)"
 		detail_action.text="선택 개체 장착"
 		detail_action.tooltip_text="선택한 실제 보상 한 개의 검증된 +0 능력·경험치를 연결합니다. 미지원 효과는 보존합니다."
 		quick_button.disabled=true

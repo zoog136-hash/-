@@ -622,6 +622,10 @@ func _refresh_detail(item_reference: String) -> void:
 		if not description.is_empty(): lines.append(UI.safe(description))
 	if not selected_id.is_empty(): lines.append("강화  +%d" % _enhance_level(item_reference))
 	detail_text.text = "\n".join(lines) if not lines.is_empty() else "표시할 추가 효과가 없습니다."
+	if QUEST_GEAR.REGEN_GEAR.has(int(item.get("source_item_class_id",0))):detail_text.text+="\n\n원본 재생량 / TWILIGHT 장비 회복 주기 30초 (원본 주기 미확인)"
+	if int(item.get("source_item_class_id",0)) in [376,385]:
+		var cadence: float=preload("res://scripts/quests/quest_regen523.gd").interval(controller.get_parent()) if controller!=null else 30.0
+		detail_text.text+="\n\n원본 MP 회복량·300초 유지 / TWILIGHT 회복 주기 %s초 (원본 주기 미확인)" % str(cadence)
 	if controller != null:
 		var reason: String = controller.get_parent()._quickslot_registration_error("item",item_name)
 		quick_button.disabled = not reason.is_empty()

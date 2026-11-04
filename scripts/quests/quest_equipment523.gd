@@ -10,6 +10,7 @@ const PIN="38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
 const RULE_SHA="5e6ffac68fab01ba6de84226c1407f3076320aa8681fb83573116a2f822cb8d6"
 const VIEW_SHA="7b023b445056cfdd79861f4327bbe6ef1a61884956682c46cefe93ac662aba30"
 const IDS=[240,248,249,305,349,383,427,587,691,829,917,926,929,1129,1197,2772,2802,2832,2862,2872,3042,4851,4871,4921,4951,4971,5021,9091,30213,85643]
+const REGEN_GEAR=[4851,4871,4921,4951,85643]
 const EFFECTS={"ArmorClass":"def","HPPlus":"hpFlat","MagicResist":"mr","MPPlus":"mpFlat","Strength":"strFlat","WeaponSmallDamage":"small_damage","WeaponLargeDamage":"large_damage","WeaponHitBonus":"hit"}
 static var cached: Dictionary={}
 var data: Dictionary={}
@@ -53,6 +54,9 @@ func profile(id: int,bless: int)->Dictionary:
   var name: String=str(row.bonus_type.Name)
   if row.get("IsPossession",false) or int(row.bonus.BonusApplicationTypeID)!=0 or int(row.bonus.BonusApplicationTargetID)!=0:return {}
   if name in ["EnchantEquipGroupID","EnchantBonusGroupID"]:continue
+  if name in ["RegenHP","RegenMP"]:
+   if id not in REGEN_GEAR or row.unit.Name!="Value" or int(row.bonus.Value)<1:return {}
+   continue
   if name=="WeaponType":
    if row.unit.Name!="WeaponTypeID" or int(row.bonus.Value) not in [1,6] or int(record.get("source_weapon_type_id",0))!=int(row.bonus.Value):return {}
    continue
@@ -72,6 +76,8 @@ func effect_record(record: Dictionary)->Dictionary:
  var option: Variant=data.get("equipment_runtime",{}).get(str(int(record.source_item_class_id)),{}).get("options",{}).get("1",{}).get("0",{}).get("xp_pct",null)
  if option!=null:
   result["xp"]=float(option.get("total",0))/100.0 if option is Dictionary else float(record.get("xp",0))+float(option)/100.0
+ var recovery: Dictionary=source_regeneration(record)
+ if not recovery.is_empty():result["quest_source_regeneration"]={"amounts":recovery,"cadence":"TWILIGHT_existing_gear_recovery30s","source_interval_verified":false}
  result["quest_equipment_effect_basis"]={"rules_sha256":RULE_SHA,"item_pack_sha256":PIN,"level":0,"scope":"source_unconditional_AC_HP_MP_MR_STR_weapon_bounds_hit_and_rank0_XP_only"}
  return result
 static func fail(reason: String)->Dictionary:return {"ok":false,"saved":false,"consumed":0,"reason":reason}
@@ -292,3 +298,18 @@ func activate(world: Node,id: String,target: String="",remove: bool=false)->bool
  var result: Dictionary=commit(world,quote(world,id,target,remove))
  world.hud.show_message("원본 +0 장비 "+("해제" if remove else "장착")+" 저장 완료" if result.get("ok",false) else str(result.get("reason",problem)))
  return true
+
+func source_regeneration(record: Dictionary)->Dictionary:
+ var item: int=int(record.get("source_item_class_id",0));var result: Dictionary={}
+ if item not in REGEN_GEAR:return result
+ for row: Dictionary in D.definition_id(str(item)).get("item_bonus",[]):
+  if row.bonus_type.Name in ["RegenHP","RegenMP"]:
+   result["hp" if row.bonus_type.Name=="RegenHP" else "mp"]=int(row.bonus.Value)
+ return result
+func recovery_for_worn(world: Node,record: Dictionary)->Dictionary:
+ if not world.ui_preferences.get("quest523_source_gear_regen_enabled",true):return {}
+ var iid: int=int(record.get("source_item_class_id",0));var uid: String=str(record.get("instance_id",""))
+ if iid not in REGEN_GEAR or uid.is_empty() or not world._is_instance_equipped(uid):return {}
+ var owned: Dictionary=_state_matches(world,uid)
+ if not owned.get("ok",false) or owned.record.get("sourceId")!=record.get("sourceId"):return {}
+ return source_regeneration(owned.record)
