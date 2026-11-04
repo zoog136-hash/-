@@ -5,6 +5,7 @@ const DEV_PATH = "res://data/quests/private_current523.json"
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const PAYLOAD_SHA = "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a"
 const MAX_BYTES = 16 * 1024 * 1024
+const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
 var document: Dictionary = {}
 var problem: String = "최신523 퀘스트 팩 미설치"
 var quests: Array[Dictionary] = []
@@ -130,6 +131,16 @@ func gate(row: Dictionary, context: Dictionary, claimed: Dictionary, now: int) -
 				# A live local character satisfies source CreateCharacter=1.
 				if amount != 1: return "캐릭터 생성 조건 확인 필요"
 			_: return "선행 조건 미연결: "+str(condition.type_name)
+	# Level achievements encode their level in Goal rather than Prerequisite.
+	# The user's automatic-completion rule skips performance objectives, while
+	# preserving level/class eligibility. Never award level96 rewards at86.
+	for goal: Dictionary in row.goals:
+		if goal.type_name != "Level": continue
+		var character: int = int(goal.CharacterClassID)
+		if character != 0 and int(context.get("class_id",-1)) < 0: return "직업별 레벨 조건 확인 필요"
+		if character != 0 and character != int(context.get("class_id",-1)): continue
+		if int(goal.relation.get("GoalPredicateTypeID",0)) != 1 or int(goal.Amount) < 1: return "원본 레벨 목표 조건 해석 보류"
+		if int(context.get("level",1)) < int(goal.Amount): return "레벨 %d부터 이용" % int(goal.Amount)
 	return ""
 
 func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
@@ -158,8 +169,8 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 					if _currency_id(int(reward.RewardClassID)) > 0 and coins.has(coin_name) and str(coins[coin_name].get("slot","")) == "currency":
 						result.items.append({"record":coins[coin_name].duplicate(true),"quantity":amount,"stack_only":true,"source_reward_id":int(reward.ID)})
 						continue
-					var record: Dictionary = context.get("source_items",{}).get(str(int(reward.RewardClassID)),{})
-					if bool(reward.UseImmediately) or int(reward.ItemBlessCodeID)!=1: record={}
+					var binding: Dictionary = ITEM_BINDINGS.resolve(reward,context.get("source_items",{}),context.get("source_item_consumer",Callable()))
+					var record: Dictionary = binding.record
 					if record.is_empty():
 						# Keep an exact native item in the real inventory with its
 						# pinned identity. It cannot masquerade as usable legacy
@@ -172,7 +183,8 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 						record["source_bless_code_id"] = int(reward.ItemBlessCodeID)
 						record["source_use_immediately"] = bool(reward.UseImmediately)
 						record["source_reward_id"] = int(reward.ID)
-					result.items.append({"record":record.duplicate(true),"quantity":amount,"source_reward_id":int(reward.ID)})
+						record["source_binding_problem"] = str(binding.reason)
+					result.items.append({"record":record.duplicate(true),"quantity":amount,"source_reward_id":int(reward.ID),"source_bless_code_id":int(reward.ItemBlessCodeID)})
 			"NoReward": pass
 			"QuickSlotReg":
 				# Tutorial registration is a UI default, not an item quantity.

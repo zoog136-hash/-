@@ -102,6 +102,15 @@ func run() -> void:
 			var name_value: String = str(physical.name)
 			held_totals[name_value]=int(held_totals.get(name_value,0))+int(physical.get("source_reward_quantity",1))
 	for name_value: String in held_totals: check(held_totals[name_value]==world.inventory[name_value],"native reward stack quantity survives physical identity projection")
+	var receipt_count: int = 0
+	var receipts_match: bool = true
+	for physical_id: String in world.item_instances:
+		if prior_instances.has(physical_id): continue
+		var physical: Dictionary = world.item_instances[physical_id]
+		var receipt: Dictionary = physical.get("quest_reward_receipt",{})
+		receipt_count += 1
+		receipts_match = receipts_match and int(receipt.get("schema",0))==1 and world.quest_service.claimed.has(str(receipt.get("quest_id",""))) and receipt.get("source_sha256")==SOURCE.SOURCE_SHA and int(receipt.get("item_class_id",0))==int(physical.record.source_item_class_id) and int(receipt.get("quantity",0))==int(physical.get("source_reward_quantity",1))
+	check(receipt_count>0 and receipts_match,"every actual new physical reward stores its source and committed quest receipt")
 	check(not held_totals.is_empty(),"real source reward exists for merged inventory protection check")
 	if not held_totals.is_empty():
 		var held_name: String = str(held_totals.keys()[0])
@@ -133,8 +142,10 @@ func run() -> void:
 	check(not world.quest_service.save_blocked,"valid reload recovers saving")
 	var claimed: Dictionary = world.quest_service.claimed.duplicate(true)
 	var inventory: Dictionary = world.inventory.duplicate(true)
+	var previous_runner: WeakRef = weakref(world.quest_auto)
 	world.queue_free()
 	await process_frame
+	check(previous_runner.get_ref()==null,"production item-consumer binding releases the quest runner on restart")
 	var restarted: TwilightWorld = (load("res://Main.tscn") as PackedScene).instantiate() as TwilightWorld
 	root.add_child(restarted)
 	restarted.set_process(false)

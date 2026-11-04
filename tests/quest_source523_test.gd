@@ -33,11 +33,20 @@ func run() -> void:
 	var held_items: int = 0
 	var gate_reasons: Dictionary = {}
 	var reward_reasons: Dictionary = {}
+	var level_goals: int = 0
+	var open_level_goals: int = 0
 	for row: Dictionary in service.source.quests:
 		check(row.id=="m523:quest:"+str(int(row.definition.ID)),"native quest identity")
 		check(row.blockers.is_empty(),"all original goal/reward/prerequisite links resolve")
 		var reason: String = service.source.gate(row,context,all_claimed,at)
 		gate_reasons[reason] = int(gate_reasons.get(reason,0))+1
+		for goal: Dictionary in row.goals:
+			if goal.type_name != "Level": continue
+			level_goals += 1
+			if not reason.is_empty(): continue # Period/exclusion/other source guards remain authoritative.
+			open_level_goals += 1
+			var below: Dictionary = context.duplicate();below.level=int(goal.Amount)-1;below.max_level=int(goal.Amount)-1
+			check(not service.source.gate(row,below,all_claimed,at).is_empty(),"every currently open original level goal rejects an under-level character")
 		var plan: Dictionary = service.source.reward_plan(row,context)
 		if plan.ok:
 			plans += 1
@@ -48,6 +57,11 @@ func run() -> void:
 			var issue: String = str(plan.error)
 			reward_reasons[issue]=int(reward_reasons.get(issue,0))+1
 	var first: Dictionary = service.index["m523:quest:236"]
+	var level96: Dictionary = service.index["m523:quest:96201"]
+	check(service.source.gate(level96,{"level":86,"class_id":1},all_claimed,at)=="레벨 96부터 이용","original level goal is preserved despite automatic objective completion")
+	check(service.source.gate(level96,{"level":95,"class_id":1},all_claimed,at)=="레벨 96부터 이용","level95 cannot receive the original level96 reward")
+	check(service.source.gate(level96,{"level":96,"class_id":1},all_claimed,at).is_empty(),"level96 can acquire the original reward after prerequisites")
+	check(not service.source.gate(level96,{"level":96,"class_id":1},{},at).is_empty(),"meeting a level goal never waives source prerequisites")
 	check(service.source.gate(first,{"level":1,"class_id":1},{},at).is_empty(),"original starting quest acquired without goal or NPC")
 	var child: Dictionary = service.index["m523:quest:237"]
 	check(not service.source.gate(child,{"level":1,"class_id":1},{},at).is_empty(),"source prerequisite enforced")
@@ -64,6 +78,7 @@ func run() -> void:
 	check(not SERVICE.validate_saved_state({"progress":{"bad":-1}}).is_empty(),"negative progress rejected")
 	check(not SOURCE.install_zip("res://project.godot").ok,"non-ZIP cannot replace installed data")
 	var stats: Dictionary = {"checks":checks,"failures":failures,"source_quests":3621,"reward_storage_supported":plans,"quests_with_items_held_for_use_link":held_items,"gate_reasons_with_all_predecessors":gate_reasons,"unsupported_reward_reasons":reward_reasons}
+	stats["original_level_goals"]={"total":level_goals,"currently_open_underlevel_checks":open_level_goals,"blocked_by_other_original_conditions":level_goals-open_level_goals}
 	print("QUEST523_RESULT "+JSON.stringify(stats))
 	var output := FileAccess.open("user://quest523-coverage.json",FileAccess.WRITE)
 	output.store_string(JSON.stringify(stats,"\t"))

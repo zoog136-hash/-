@@ -9,6 +9,7 @@ var next_scan: float = 0.0
 var held_index: Dictionary = {}
 var indexed_instances: Dictionary = {}
 var indexed_size: int = -1
+const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
 
 func held_record(name_value: String, instances: Dictionary) -> Dictionary:
 	# These names deliberately have no legacy catalog row. Index the physical
@@ -30,12 +31,10 @@ func held_record(name_value: String, instances: Dictionary) -> Dictionary:
 
 func refresh_context(world: Node) -> void:
 	var service: Variant = world.quest_service
-	var source_items: Dictionary = {}
-	for records: Array in [world.item_db,world.catalog_db.get("아이템",[])]:
-		for record: Dictionary in records:
-			if record.get("source_snapshot") == "patch523" and str(record.get("sourceId","")) == "m523:item:"+str(int(record.get("source_item_class_id",0))):
-				source_items[str(int(record.source_item_class_id))] = record
-	context = {"level":world.level,"max_level":world.level,"class_id":service.source.class_ids.get(str(world.job_class),-1),"source_items":source_items,"currency_items":world.loot_catalog.get("by_name",{})}
+	var source_items: Dictionary = ITEM_BINDINGS.index([world.item_db,world.catalog_db.get("아이템",[])])
+	# Bind the existing production consumer directly: no speculative foreign
+	# provider and no Callable(self) cycle retaining this runner after restart.
+	context = {"level":world.level,"max_level":world.level,"class_id":service.source.class_ids.get(str(world.job_class),-1),"source_items":source_items,"source_item_consumer":Callable(world.growth.source523,"material"),"currency_items":world.loot_catalog.get("by_name",{})}
 	service.source_context = context
 
 func tick(world: Node) -> void:
@@ -105,6 +104,7 @@ func complete(world: Node, ids: Array[String]) -> bool:
 			for count: int in range(1 if held else amount):
 				while staged_instances.has(str(next_id)): next_id += 1
 				staged_instances[str(next_id)] = {"name":name_value,"level":0,"record":record.duplicate(true)}
+				staged_instances[str(next_id)]["quest_reward_receipt"] = {"schema":1,"quest_id":id,"reward_id":int(item.source_reward_id),"item_class_id":int(record.source_item_class_id),"bless_code_id":int(item.get("source_bless_code_id",1)),"source_sha256":service.source.SOURCE_SHA,"quantity":amount if held else 1}
 				if held: staged_instances[str(next_id)]["source_reward_quantity"] = amount
 				next_id += 1
 		adena += int(plan.adena)
