@@ -56,7 +56,7 @@ godot --path . -- \
 
 `--patch523-effect-manifest=/private/manifest.json --patch523-effect-manifest-sha256=<64자리 SHA>`를 주면 크기와 SHA를 먼저 확인하고 기존 원본 overlay 렌더러에 **523의 정확한 Sprite 필드**를 전달한다. 숫자가 같은 508 주문의 효과 매핑을 대신 사용하지 않는다. nonzero EffectSpriteActionNo, 미설치 효과, 예산 초과는 보류하며 아이콘·링·합성 이펙트로 대체하지 않는다. 설치 가능한 외부 overlay의 설정 성공도 원본523 픽셀·색상·알파·FPS·시전 동작 동등성 승인을 뜻하지 않는다. 각 필드의 미설치/동작 미해석/핀 실패 상태를 진단 API에 남긴다.
 
-추가 Drive [SP2 989개 ZIP](https://drive.google.com/file/d/1hAunwy9n96sb5yH9Gxfk4arQihp7-GSQ/view)은 실제 원본 75,664,378B와 서로 다른 filename ID 973개를 포함한다. 현재 그래프의 Spell/Invoke 효과 Sprite 참조 70종과 직접 ID 교집합은 0이며, 보스 보고서가 구체적으로 선언한 물리 SP2 멤버 11개도 이 ZIP에 없다. NPC 몸체 Sprite와 직접 ID 교집합도 없다. 이는 이 전달본의 직접 파일명·선언 멤버 대조 결과이며, 전체 클라이언트 부재나 완전한 SPR alias 전개 결과로 확대하지 않는다.
+정식 인증으로 전달받은 추가 비공개 SP2 989개 ZIP은 실제 원본 75,664,378B와 서로 다른 filename ID 973개를 포함한다. 현재 그래프의 Spell/Invoke 효과 Sprite 참조 70종과 직접 ID 교집합은 0이며, 보스 보고서가 구체적으로 선언한 물리 SP2 멤버 11개도 이 ZIP에 없다. NPC 몸체 Sprite와 직접 ID 교집합도 없다. 이는 이 전달본의 직접 파일명·선언 멤버 대조 결과이며, 전체 클라이언트 부재나 완전한 SPR alias 전개 결과로 확대하지 않는다.
 
 검증된 표준 PNG 2개는 `normal_cloud.png`와 `Map_Icon_Forge.png`이며 보스 효과가 아니다. 포함된 bbox/EOF 후보 디코더 결과도 픽셀 순서·색상·알파·FPS·액션 승인으로 승격하지 않았다. 따라서 이번 산출물의 원본 보스 VFX 픽셀/정확한 시전 동작/전체 boss 아트 상태는 **미전달**이다. 감사 도구는 아래와 같이 원본을 실행하지 않고 registry/SHA/CRC와 참조를 대조한다.
 
