@@ -61,7 +61,12 @@ var monster_level: int = 1
 var defense_value: int = 0
 var armor_class: int = -10
 var hp: int = 100
-var max_hp: int = 100
+var source_523_base_max_hp: int = 100
+var max_hp: int = 100:
+	get:
+		var source523 = _patch523_service()
+		return source523.extensions.remaining.maximum_hp(self,source_523_base_max_hp) if source523 != null else source_523_base_max_hp
+	set(value): source_523_base_max_hp = value
 var attack_power: int = 8
 var melee_accuracy: int = 12
 var ranged_accuracy: int = 12
@@ -280,8 +285,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
-	exp_reward = int(record.xp) if not source_m_original.is_empty() else maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
-	gold_reward = int(record.get("gold", 0)) if not source_m_original.is_empty() else maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
+	exp_reward = int(record.xp) if not source_m_original.is_empty() else maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(source_523_base_max_hp) / 4.0))))))
+	gold_reward = int(record.get("gold", 0)) if not source_m_original.is_empty() else maxi(10, int(record.get("gold", record.get("아데나", int(float(source_523_base_max_hp) / 3.0)))))
 	grade = str(record.get("grade", record.get("등급", "일반")))
 	is_boss = LOOT_DROP.is_boss_record(record)
 	drop_items.clear()
@@ -291,12 +296,14 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			var item_name: String = str(item_value)
 			if not item_name.is_empty():
 				drop_items.append(item_name)
-	move_speed = float(record.get("speed", 70.0 + float(mini(70, int(float(max_hp) / 10.0)))))
+	move_speed = float(record.get("speed", 70.0 + float(mini(70, int(float(source_523_base_max_hp) / 10.0)))))
 	base_move_speed = move_speed
 	slow_remaining = 0.0
 	slow_multiplier = 1.0
 	target_player = player_ref
 	world_controller = world_ref
+	hp = max_hp # Initial life starts at its effective cap; boundary entry never heals.
+	set_meta("patch523_hp_was_enabled",max_hp != source_523_base_max_hp)
 	if world_controller is TwilightWorld:
 		motion.reduced_motion = bool(world_controller.presentation_settings.get("reduced_motion", false))
 	sprite.show()
@@ -352,6 +359,8 @@ func _advance_source_m_view(delta: float) -> void:
 		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
 
 func _physics_process(delta: float) -> void:
+	var source523 = _patch523_service()
+	if source523 != null and not dead: source523.extensions.remaining.sync_actor(self)
 	advance_source_option_debuffs(delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
@@ -551,7 +560,7 @@ func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
 		return
 	var point: Vector2 = path[path_index]
 	var before_move: Vector2 = global_position
-	var tactical_speed: float = move_speed * speed_ratio * AI_POLICY.chase_speed_factor(enraged and not returning_home)
+	var tactical_speed: float = move_speed * source_523_speed_factor() * speed_ratio * AI_POLICY.chase_speed_factor(enraged and not returning_home)
 	velocity = global_position.direction_to(point)*minf(tactical_speed,global_position.distance_to(point)/maxf(.001,delta))
 	_move_on_map()
 	path_stuck_elapsed = AI_POLICY.next_stuck_elapsed(path_stuck_elapsed,
@@ -647,7 +656,7 @@ func _roam_field(delta: float) -> void:
 		velocity = Vector2.ZERO
 		return
 	var direction: Vector2 = global_position.direction_to(path[path_index])
-	velocity = direction * minf(move_speed*.48,global_position.distance_to(path[path_index])/maxf(delta,.001))
+	velocity = direction * minf(move_speed*source_523_speed_factor()*.48,global_position.distance_to(path[path_index])/maxf(delta,.001))
 	_move_on_map()
 	if absf(velocity.x)>1:
 		sprite.flip_h = velocity.x<0
@@ -747,7 +756,7 @@ func _fear_velocity() -> Vector2:
 	var away: Vector2 = global_position - fear_source_position
 	if away.length_squared() < 0.01:
 		away = Vector2.RIGHT
-	return away.normalized() * move_speed * fear_move_multiplier
+	return away.normalized() * move_speed * source_523_speed_factor() * fear_move_multiplier
 
 func _tick_hold(delta: float) -> void:
 	hold_remaining = maxf(0.0, hold_remaining - delta)
@@ -855,6 +864,7 @@ func take_damage(amount: int, critical: bool = false, damage_kind: String = "") 
 	var source523 = _patch523_service()
 	if source523 != null: amount = source523.extensions.before_damage(self,amount,damage_kind)
 	if amount <= 0: return
+	if source523 != null and amount >= hp: source523.extensions.remaining.capture_rewards(self)
 	damage_hit_count += 1
 	aggro_remaining = 10.
 	if social_alert_cooldown <= 0.0 and is_instance_valid(world_controller) and world_controller.get("field_population")!=null:
@@ -1097,3 +1107,7 @@ func hit_armor_class() -> int:
 
 func _patch523_service() -> RefCounted:
 	return world_controller.get("patch523_npc_spells") if is_instance_valid(world_controller) else null
+
+func source_523_speed_factor() -> float:
+	var source523 = _patch523_service()
+	return source523.extensions.remaining.speed(self) if source523 != null else 1.0

@@ -241,7 +241,6 @@ func _spawn_slot(slot: Dictionary) -> void:
 	slot.remaining = 0.
 	if boss:
 		var state: Dictionary = boss_director.state_for(str(field.data.map_id),region)
-		if int(state.hp)>0: monster.hp = mini(monster.max_hp,int(state.hp)); monster.hp_bar.value = monster.hp
 		var position: Array = state.position
 		var home: Array = state.get("home",[])
 		if home.size()==2:
@@ -253,6 +252,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 			var saved := Vector2(float(position[0]),float(position[1]))
 			if destination_allowed(monster,saved) and field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(monster.home_position)<float(monster.ai.get("leash_distance",820.)):
 				monster.global_position = saved
+		restore_boss_hp(monster,state)
 		boss_director.capture(str(field.data.map_id),region,monster)
 	_update_activity(monster)
 	# Spread the first AI decision across the existing 30 Hz cadence.
@@ -346,6 +346,12 @@ func alert_social(source: TwilightMonster) -> void:
 		var ally: TwilightMonster = candidates[index]
 		ally.aggro_remaining = maxf(ally.aggro_remaining,8.0)
 		ally.repath_cooldown = 0.0
+
+func restore_boss_hp(monster: TwilightMonster, state: Dictionary) -> void:
+	# Resolve regional maximum at the final validated restored position.
+	if int(state.get("hp",-1)) > 0:
+		monster.hp = mini(monster.max_hp,int(state.hp))
+		monster.hp_bar.max_value = monster.max_hp; monster.hp_bar.value = monster.hp
 
 func summon_for(owner: TwilightMonster, requested: int = 2) -> Array[TwilightMonster]:
 	var spawned: Array[TwilightMonster] = []

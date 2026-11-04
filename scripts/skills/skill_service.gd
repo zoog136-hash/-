@@ -390,6 +390,19 @@ func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:
 	world._refresh_skill_stealth_visual()
 	world._refresh_speed_modifiers()
 
+func dispel_active_buff(name: String) -> bool:
+	if not world.active_skill_buffs.has(name): return false
+	var buff: Dictionary = world.active_skill_buffs[name]
+	var id: String = str(buff.get("skill_id",""))
+	var row: Dictionary = catalog.record_for(id)
+	if bool(row.get("local_design",false)): local_runtime.turn_off(row)
+	if str(buff.get("summon_stage","")) == "shield": remove_guardian_shield_buff(id)
+	world.active_skill_buffs.erase(name)
+	if not id.is_empty():
+		toggles.erase(id); shields.erase(id); vfx.remove_persistent(id)
+	refresh_buff_visuals()
+	return true
+
 func heal(skill: Dictionary, amount: int) -> void:
 	var maximum: int = world._effective_max_hp()
 	var before: int = world.hp

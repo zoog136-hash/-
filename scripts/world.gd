@@ -2621,11 +2621,13 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	if int(monster.get_meta("rewarded_life_id", -1)) == monster.life_id: return
 	monster.set_meta("rewarded_life_id", monster.life_id)
 	if bool(monster.get_meta("summoned",false)):
+		patch523_npc_spells.extensions.remaining.forget(monster)
 		# Bounded boss helpers cannot become an unlimited XP/equipment farm.
 		if monster==selected_monster: selected_monster = null
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
+	var source_reward: Dictionary = patch523_npc_spells.extensions.remaining.take_reward(monster)
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -2639,12 +2641,13 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var adena_rate: float = ain_service.adena_rate()
 	var item_adena_rate: float = 1.0 + clampf(_equipped_numeric_sum("adena_drop_pct"), 0.0, 500.0) / 100.0
 	var map_rate: float = EXP_PROGRESSION.map_exp_multiplier(_kill_map_id())
-	var gained_experience: int = maxi(0 if not monster.source_m_original.is_empty() else 1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate * map_rate)))
+	var source_experience: int = maxi(0,monster.exp_reward+int(source_reward.get("experience",0)))
+	var gained_experience: int = maxi(0 if not monster.source_m_original.is_empty() else 1, int(round(source_experience * _experience_multiplier() * exp_rate * map_rate)))
 	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
 	gold += gained_adena
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
-	_roll_drop(monster, can_drop_equipment)
+	_roll_drop(monster, can_drop_equipment,source_reward.get("weights",{}))
 	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
 	var level_before: int = level
 	_check_level_up()
@@ -2849,10 +2852,10 @@ func _claim_quest(quest_id: String) -> void:
 	hud.show_message(str(result.get("title", "")) + " · 보상 수령 완료")
 
 
-func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
+func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true, source_weights: Dictionary = {}) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
-	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity, _kill_map_id())
+	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity, _kill_map_id(),source_weights)
 	if earned.is_empty():
 		return
 	var batch_id: String = ground_loot.begin_hunt_batch()
@@ -2880,9 +2883,9 @@ func _monster_accuracy_for_attack_type(attacker: TwilightMonster, attack_type: S
 		"magic":
 			return attacker.magic_accuracy
 		"ranged":
-			return attacker.ranged_accuracy
+			return attacker.ranged_accuracy+patch523_npc_spells.extensions.remaining.accuracy(attacker,"ranged")
 		_:
-			return attacker.melee_accuracy
+			return attacker.melee_accuracy+patch523_npc_spells.extensions.remaining.accuracy(attacker,"melee")
 
 func _monster_hit_chance(attacker: TwilightMonster, attack_type: String = "melee") -> float:
 	if attacker == null:

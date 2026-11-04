@@ -18,6 +18,9 @@ var effect_action: OptionButton
 var effect_choice_ids: Array[int] = [0]
 var compat_status: Label
 var extension_status: Label
+var remaining_buff_ids: Array[int] = []
+var remaining_buff_choice: OptionButton
+var remaining_status: Label
 
 func _ready() -> void:
 	layer = 120
@@ -172,6 +175,7 @@ func _ready() -> void:
 	dismiss.pressed.connect(func() -> void:
 		extension_status.text = "해제됨 · 영역 이탈 후 재진입하면 다시 부여" if service.extensions.dismiss(service.world.selected_monster) else "해제 가능한 현재 NPC 버프 없음")
 	extension_status = Label.new(); extension_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; extra.add_child(extension_status)
+	build_remaining_controls(column)
 	attacks = ItemList.new(); attacks.name = "AttackList"; attacks.custom_minimum_size.y = 170; column.add_child(attacks)
 	attacks.item_selected.connect(show_attack)
 	detail = RichTextLabel.new(); detail.name = "SkillDetails"; detail.bbcode_enabled = false
@@ -257,7 +261,7 @@ func show_attack(index: int) -> void:
 		for bonus: Dictionary in attack.buff.bonuses:
 			if bonus.type.get("Name") != "InvokeOption": environment_lines.append("%s: %s (%s)" % [str(bonus.type.get("Name","미확인")),str(bonus.bonus.get("Value",0)),str(bonus.unit.get("Name","단위 미확인"))])
 		environment_lines.append("실제 Land/원문 영역 일치 또는 별도 선택한 자체 문맥에서만 소비합니다. 원문 %d · 자체 필드 %s / 반경 %.0fpx" % [int(attack.attribute.ID),service.extensions.own_map,service.extensions.own_radius])
-		environment_lines.append("소비: 근접/원거리/마법 피해·AC·MR·피해감소·조건부 카운터. HP/STR/DEX/EXP/속도 값은 아직 소비하지 않습니다.")
+		environment_lines.append("기존 피해/AC/MR/카운터 소비. HP/STR/DEX/EXP/속도·개별 아이템 가중치와 특수 반응 분류는 별도 자체 설정에서 선택합니다.")
 		detail.text = "\n".join(environment_lines)
 		return
 	var lines: PackedStringArray = [service.support_reason(attack)]
@@ -296,6 +300,76 @@ func update_extension(property: String, value: Variant) -> bool:
 	extension_status.text = "자체 설정 저장됨 · 기존 세이브와 별도" if result == OK else "저장 실패 · 기존 설정으로 원복"
 	if selector != null: refresh_npc()
 	return result == OK
+
+func build_remaining_controls(column: VBoxContainer) -> void:
+	var open := Button.new(); open.name = "BossRemainingOpen"; open.text = "추가 능력치·드랍·전체 해제 자체 정책"; column.add_child(open)
+	var box := VBoxContainer.new(); box.hide(); column.add_child(box)
+	open.pressed.connect(func() -> void: box.visible = not box.visible)
+	var note := Label.new(); note.text = "확인한 NPC/영역 또는 선택한 자체 문맥에서만 소비합니다. HP 진입은 최대치만 늘리고 회복하지 않으며 이탈 시 현재 HP를 상한에 맞춥니다. STR/DEX 환산·드랍 가중치 단위·미대응 버프 해제는 자체 정책입니다. 드랍 횟수·등급 확률·수량은 유지합니다."; note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; box.add_child(note)
+	for spec: Array in [["지역 HP·STR·DEX·EXP·속도 소비","stats_enabled"],["기존 성공 등급의 대상 아이템 선택 가중치","drops_enabled"]]:
+		var toggle := CheckButton.new(); toggle.name = "BossRemaining_"+str(spec[1]); toggle.text = spec[0]; toggle.button_pressed = service.extensions.remaining.get(spec[1]); box.add_child(toggle)
+		var key: String = spec[1]
+		toggle.toggled.connect(func(value: bool) -> void:
+			if not update_remaining(key,value): toggle.set_pressed_no_signal(not value))
+	for spec: Array in [["자체 STR→근접 피해","strength_damage",0,10,1],["자체 STR→근접 명중","strength_accuracy",0,10,1],["자체 DEX→원거리 피해","dexterity_damage",0,10,1],["자체 DEX→원거리 명중","dexterity_accuracy",0,10,1],["자체 드랍 가중치 단위(raw/값)","drop_divisor",1,1000000,1]]:
+		var row := HBoxContainer.new(); box.add_child(row)
+		var label := Label.new(); label.text = spec[0]; label.size_flags_horizontal = Control.SIZE_EXPAND_FILL; label.clip_text = true; row.add_child(label)
+		var spin := SpinBox.new(); spin.name = "BossRemaining_"+str(spec[1]); spin.min_value = spec[2]; spin.max_value = spec[3]; spin.step = spec[4]; spin.value = service.extensions.remaining.get(spec[1]); row.add_child(spin)
+		var key: String = spec[1]
+		spin.value_changed.connect(func(value: float) -> void:
+			if not update_remaining(key,value): spin.set_value_no_signal(service.extensions.remaining.get(key)))
+	remaining_buff_choice = OptionButton.new(); remaining_buff_choice.name = "BossRemainingBuff"; remaining_buff_choice.fit_to_longest_item = false; remaining_buff_choice.clip_text = true; box.add_child(remaining_buff_choice)
+	var environment_ids: Dictionary = {}
+	for source: Dictionary in service.catalog.content.tables.get("LandAttribute",{}).values(): environment_ids[int(source.row.Value)] = true
+	for entry: Dictionary in service.catalog.content.tables.get("BuffClass",{}).values():
+		var profile: String = "전체 환경 보너스" if environment_ids.has(int(entry.row.ID)) else "개별 드랍 보너스만"
+		var drop_profile: bool = false
+		for bonus: Dictionary in service.catalog.buff_details(int(entry.row.ID)).bonuses:
+			if bonus.type.get("Name") == "NpcSingleItemDropProbabilityMultiple": drop_profile = true
+		if not environment_ids.has(int(entry.row.ID)) and not drop_profile: continue
+		remaining_buff_ids.append(int(entry.row.ID)); remaining_buff_choice.add_item("%s %d · %s" % [profile,int(entry.row.ID),str(entry.row.Name)])
+	var bind := Button.new(); bind.name = "BossRemainingBind"; bind.text = "이 원문 버프를 현재 필드/내 위치에 자체 연결"; box.add_child(bind)
+	bind.pressed.connect(func() -> void:
+		var p = service.extensions.remaining; var old: Array = [p.own_buff,p.own_map,p.own_center]
+		if remaining_buff_choice.selected < 0 or not p.bind_current(remaining_buff_ids[remaining_buff_choice.selected]): return
+		if service.extensions.save_settings() != OK: p.own_buff = old[0]; p.own_map = old[1]; p.own_center = old[2]; remaining_status.text = "저장 실패 · 문맥 원복"
+		else: remaining_status.text = "자체 버프 %d · %s · 반경 %.0fpx" % [p.own_buff,p.own_map,service.extensions.own_radius])
+	var clear := Button.new(); clear.text = "추가 자체 버프 문맥 해제"; clear.name = "BossRemainingUnbind"; box.add_child(clear); clear.pressed.connect(func() -> void: update_remaining("own_buff",0))
+	var special := OptionButton.new(); special.name = "BossRemainingSpecial"; special.fit_to_longest_item = false; special.clip_text = true
+	special.add_item("반응 분류: 기존 채널"); special.add_item("자체 반응 태그42 Dark · 피해식 유지"); special.add_item("자체 반응 태그72 MeleeMagic · 피해식 유지"); special.select([0,42,72].find(service.extensions.remaining.special_type)); box.add_child(special)
+	special.item_selected.connect(func(index: int) -> void:
+		if not update_remaining("special_type",[0,42,72][index]): special.select([0,42,72].find(service.extensions.remaining.special_type)))
+	var cancel := OptionButton.new(); cancel.name = "BossRemainingCancel"; cancel.fit_to_longest_item = false; cancel.clip_text = true
+	cancel.add_item("캔슬: 원문 대응 버프만"); cancel.add_item("자체 캔슬: 지정 호스트 버프"); cancel.add_item("자체 캔슬: 모든 적격 호스트 버프"); cancel.select(service.extensions.remaining.host_cancel_mode); box.add_child(cancel)
+	cancel.item_selected.connect(func(index: int) -> void:
+		if not update_remaining("host_cancel_mode",index): cancel.select(service.extensions.remaining.host_cancel_mode))
+	for spec: Array in [["캔슬 지정 버프 이름(쉼표)","selected_host_buffs"],["자체 취소 면역 버프 이름(쉼표)","protected_host_buffs"]]:
+		var input := LineEdit.new(); input.name = "BossRemaining_"+str(spec[1]); input.placeholder_text = spec[0]; input.text = ",".join(service.extensions.remaining.get(spec[1])); box.add_child(input)
+		var key: String = spec[1]
+		input.text_submitted.connect(func(value: String) -> void:
+			var names: Array = []
+			for name: String in value.split(",",false):
+				if not name.strip_edges().is_empty(): names.append(name.strip_edges())
+			if not update_remaining(key,names): input.text = ",".join(service.extensions.remaining.get(key)))
+	var target := OptionButton.new(); target.name = "BossRemainingItemID"; box.add_child(target)
+	var targets: Array[int] = []
+	for entry: Dictionary in service.catalog.content.tables.get("BuffClass",{}).values():
+		for bonus: Dictionary in service.catalog.buff_details(int(entry.row.ID)).bonuses:
+			if bonus.type.get("Name") == "NpcSingleItemDropProbabilityMultiple" and not targets.has(int(bonus.bonus.BonusApplicationTargetID)): targets.append(int(bonus.bonus.BonusApplicationTargetID)); target.add_item("원문 ItemClass %d" % int(bonus.bonus.BonusApplicationTargetID))
+	var item := LineEdit.new(); item.name = "BossRemainingItemName"; item.placeholder_text = "명시 연결할 현재 게임 아이템의 정확한 이름"; box.add_child(item)
+	var map_item := Button.new(); map_item.name = "BossRemainingMapItem"; map_item.text = "선택 원문 아이템과 현재 카탈로그를 자체 연결"; box.add_child(map_item)
+	map_item.pressed.connect(func() -> void:
+		if target.selected < 0 or not service.world.loot_catalog.get("by_name",{}).has(item.text): remaining_status.text = "현재 카탈로그의 정확한 아이템 이름이 필요합니다"; return
+		var bindings: Dictionary = service.extensions.remaining.item_bindings.duplicate(true); bindings[str(targets[target.selected])] = item.text; update_remaining("item_bindings",bindings))
+	remaining_status = Label.new(); remaining_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; box.add_child(remaining_status)
+
+func update_remaining(key: String, value: Variant) -> bool:
+	var p = service.extensions.remaining; var old: Variant = p.get(key)
+	p.set(key,value)
+	var error: Error = service.extensions.save_settings()
+	if error != OK: p.set(key,old)
+	remaining_status.text = "자체 설정 저장됨 · 원본/등급 확률/드랍 횟수 유지" if error == OK else "저장 실패 · 실행 값 원복"
+	return error == OK
 
 func bind_environment() -> void:
 	if not environment_mode or rows.is_empty(): extension_status.text = "지역 NPC 상태에서 원문 한 행을 선택하세요"; return

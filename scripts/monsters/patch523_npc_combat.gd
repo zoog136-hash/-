@@ -84,6 +84,7 @@ func tick(delta: float) -> void:
 	extensions.tick_environment(delta)
 
 func forget(actor: Node) -> void:
+	extensions.remaining.forget(actor)
 	compatibility.forget(actor)
 	var action: Dictionary = pending.get(actor.get_instance_id(),{})
 	pending.erase(actor.get_instance_id()); cursor.erase(actor.get_instance_id()); followups.erase(actor.get_instance_id())

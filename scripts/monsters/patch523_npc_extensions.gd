@@ -23,11 +23,14 @@ var reaction_depth: int = 0
 var suppressed: Dictionary = {}
 var actor_buffs: Dictionary = {}
 var environment_clock: float = 0
+var remaining = preload("res://scripts/monsters/patch523_npc_remaining.gd").new()
 
 func configure(owner: RefCounted) -> void:
 	_owner = weakref(owner)
 	var cfg := ConfigFile.new()
-	if cfg.load(settings_path) != OK or int(cfg.get_value("rules","schema",0)) != 1: return
+	var loaded: bool = cfg.load(settings_path) == OK and int(cfg.get_value("rules","schema",0)) == 1
+	remaining.configure(self,cfg)
+	if not loaded: return
 	for key: String in ["enabled","reverse_healing","environment_enabled","native_regions","reaction_enabled"]: set(key,bool(cfg.get_value("rules",key,get(key))))
 	poison_interval = service.compatibility.bounded(cfg.get_value("rules","poison_interval",1),.1,10,1)
 	heal_target = int(service.compatibility.bounded(cfg.get_value("rules","heal_target",0),0,2,0))
@@ -40,6 +43,7 @@ func configure(owner: RefCounted) -> void:
 func save_settings() -> Error:
 	var cfg := ConfigFile.new(); cfg.set_value("rules","schema",1)
 	for key: String in ["enabled","reverse_healing","poison_interval","heal_target","environment_enabled","native_regions","own_attribute","own_map","own_center","own_radius","reaction_enabled","reaction_scale"]: cfg.set_value("rules",key,get(key))
+	remaining.save_into(cfg)
 	var temporary: String = settings_path+".tmp"
 	var result: Error = cfg.save(temporary)
 	if result != OK: return result
@@ -48,6 +52,7 @@ func save_settings() -> Error:
 	return result
 
 func clear() -> void:
+	remaining.clear()
 	active.clear(); incoming.clear(); last_event.clear(); suppressed.clear(); actor_buffs.clear(); environment_clock = 0
 
 func heal_spec(spell: Dictionary) -> Dictionary:
@@ -103,6 +108,7 @@ func release(actor: Node, spell: Dictionary, already_paid: bool = false) -> bool
 		var source: Dictionary = service.catalog.row("BuffClass",buff_id)
 		if bool(source.get("IsImmuneToCancellation",false)): continue
 		if (not groups.is_empty() and groups.has(source.get("BuffGroupID"))) or (groups.is_empty() and bool(source.get("IsGood",false))): service.player_buffs.erase(buff_id); removed += 1
+	removed += remaining.cancel_host(groups)
 	var duration: Vector2 = service.catalog.duration(id)
 	if duration.x > 0:
 		for value: Variant in service.catalog.values("SpellBonus",id,"BuffClassID","BuffClassID"):
@@ -190,6 +196,12 @@ func bindings(actor: Node) -> Array:
 				for old: Dictionary in result:
 					if int(old.attribute.ID) == own_attribute: duplicate = true
 				if not duplicate: result.append({"attribute":entry.row,"buff":service.catalog.buff_details(int(entry.row.Value)),"host_context":true})
+	var own_extra: Dictionary = remaining.own_binding(actor)
+	if not own_extra.is_empty():
+		var exists: bool = false
+		for prior: Dictionary in result:
+			if int(prior.attribute.Value) == int(own_extra.attribute.Value): exists = true
+		if not exists: result.append(own_extra)
 	var suppression: Dictionary = suppressed.get(actor.get_instance_id(),{})
 	var excluded: Dictionary = suppression.get("ids",{}) if int(suppression.get("life",-1)) == int(actor.life_id) and int(suppression.get("generation",-1)) == int(service.world.combat_generation) else {}
 	return result.filter(func(binding: Dictionary) -> bool: return not excluded.has(int(binding.attribute.ID)))
@@ -206,15 +218,17 @@ func dismiss(actor: Node) -> bool:
 func actor_values(actor: Node) -> Dictionary:
 	var values: Dictionary = {}
 	for binding: Dictionary in bindings(actor):
-		for name: String in ["MeleeDamage","RangeDamage","MagicDamage","ArmorClass","MagicResist","DamageReduction"]:
+		if bool(binding.get("drop_profile",false)): continue
+		for name: String in ["MeleeDamage","RangeDamage","MagicDamage","ArmorClass","MagicResist","DamageReduction","HPPlus","Strength","Dexterity","AddtionalExperience"]:
 			values[name] = float(values.get(name,0))+service.catalog.scalar("BuffBonus",int(binding.attribute.Value),name,"Value")
+		values["MoveSpeedBonus"] = float(values.get("MoveSpeedBonus",0))+service.catalog.scalar("BuffBonus",int(binding.attribute.Value),"MoveSpeedBonus","Percentage")
 	return values
 
 func outgoing(actor: Node, amount: int, channel: String) -> int:
-	return amount+int(actor_values(actor).get({"melee":"MeleeDamage","ranged":"RangeDamage","magic":"MagicDamage"}.get(channel,"MeleeDamage"),0))
+	return amount+int(actor_values(actor).get({"melee":"MeleeDamage","ranged":"RangeDamage","magic":"MagicDamage"}.get(channel,"MeleeDamage"),0))+remaining.attribute_damage(actor,channel)
 
 func begin_incoming(actor: Node, amount: int, channel: String, by_spell: bool) -> Dictionary:
-	var packet: Dictionary = {"actor":weakref(actor),"channel":channel,"by_spell":by_spell,"amount":amount}
+	var packet: Dictionary = {"actor":weakref(actor),"channel":channel,"by_spell":by_spell,"amount":amount,"source_attack_type":remaining.classify(channel,by_spell)}
 	incoming[actor.get_instance_id()] = packet
 	return packet
 
@@ -227,10 +241,11 @@ func before_damage(actor: Node, amount: int, kind: String) -> int:
 	var reduced: int = maxi(0,amount-int(actor_values(actor).get("DamageReduction",0)))
 	if not reaction_enabled or packet.is_empty() or reaction_depth > 0 or amount <= 0: return reduced
 	for binding: Dictionary in matching:
+		if bool(binding.get("drop_profile",false)): continue
 		for invoke: Dictionary in binding.buff.invokes:
 			var r: Dictionary = invoke.source
 			var attack_type: String = str(service.catalog.row("AttackType",int(r.get("AttackTypeID",0))).get("Name",""))
-			if attack_type != {"melee":"Melee","ranged":"Range","magic":"Magic"}.get(packet.channel,"") or bool(r.get("BySpellAttack",false)) != bool(packet.by_spell) or int(r.get("InvokeOptionTypeID",0)) != 11: continue
+			if int(r.get("AttackTypeID",0)) != int(packet.get("source_attack_type",0)) or bool(r.get("BySpellAttack",false)) != bool(packet.by_spell) or int(r.get("InvokeOptionTypeID",0)) != 11: continue
 			if int(r.get("MaterialAmount",0)) != 0 or int(r.get("SuccessedInvokeOptionID",0)) != 0: continue
 			var chance: float = clampf(float(invoke.edge.bonus.Value)/1000000.0,0,1)
 			if service.world.rng.randf() >= chance: continue
