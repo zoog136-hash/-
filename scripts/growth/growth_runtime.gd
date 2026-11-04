@@ -2,6 +2,12 @@ extends RefCounted
 ## Local single-save progression. Unknown source values fail closed, never become zero costs.
 const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
 const DATA = "res://data/growth/lineage_growth.json"
+const GuardianSource = preload("res://scripts/growth/guardian_source.gd")
+var guardian_source = GuardianSource.new()
+var legacy_guardians: Array = []
+const GuardianCombat=preload("res://scripts/growth/guardian_combat.gd")
+var guardian_combat=GuardianCombat.new()
+var guardian_local_rules: Dictionary={}
 const Source523 = preload("res://scripts/growth/symbol_source523.gd")
 const Travel = preload("res://scripts/growth/symbol_travel.gd")
 const Combat = preload("res://scripts/growth/symbol_combat.gd")
@@ -24,6 +30,7 @@ static func fresh() -> Dictionary:
 	return {"schema":1,"revision":0,"points":0,"emblems":{},"nodes":[],"representative":"","pending":{},"searches":{}}
 
 func _init() -> void:
+	guardian_local_rules=JSON.parse_string(FileAccess.get_file_as_string("res://data/growth/guardian_local_rules.json"))
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(DATA))
 	if parsed is Dictionary: config = parsed
 	if not development: source523.apply(config)
@@ -40,6 +47,10 @@ func _init() -> void:
 				row.card_rule = "single_winner_without_replacement"
 				row.effects = {"max_hp:flat":int(lab.node_bonus_hp)}
 				previous = row.id
+	else:
+		legacy_guardians = config.get("guardians",[]).duplicate(true)
+		config.guardians = guardian_source.data.get("guardians",[])
+	guardian_combat.configure(self)
 	rng.randomize()
 
 func empty_state() -> Dictionary:
@@ -75,6 +86,10 @@ func emblem(id: String) -> Dictionary:
 
 func node(id: String) -> Dictionary:
 	for group: Dictionary in config.get("guardians",[]):
+		for row: Dictionary in group.nodes:
+			if row.id == id: return row
+	# Preserve pre-523 save IDs without guessing a correspondence to source slots.
+	for group: Dictionary in legacy_guardians:
 		for row: Dictionary in group.nodes:
 			if row.id == id: return row
 	return {}
@@ -136,6 +151,33 @@ func validate(value: Variant) -> String:
 		for card: Variant in search.failed:
 			if not integer(card,0,int(search.cards)-1) or card == search.winner or seen.has(card): return "수호성 실패 카드 오류"
 			seen.append(card)
+	var levels: Variant = value.get("guardian_levels",{})
+	if not levels is Dictionary: return "수호성 강화 저장 오류"
+	for id: Variant in levels:
+		if not id is String or not guardian_source.has_node(id) or not value.nodes.has(id) or not integer(levels[id],0,int(node(id).max_level)): return "수호성 강화 단계 오류"
+	var representatives: Variant = value.get("guardian_representatives",{})
+	if not representatives is Dictionary: return "수호성 대표 저장 오류"
+	for category: Variant in representatives:
+		var id: Variant = representatives[category]
+		if not category is String or not id is String or not guardian_source.has_node(id) or not value.nodes.has(id) or node(id).kind != "invoke" or category != str(int(node(id).category_id)): return "수호성 분류별 대표 오류"
+	for id: String in value.nodes:
+		if not guardian_source.has_node(id): continue
+		for prerequisite: String in node(id).prerequisites:
+			if not value.nodes.has(prerequisite): return "수호성 선행 저장 오류"
+	for id: String in value.searches:
+		if not guardian_source.has_node(id): continue
+		var search: Dictionary = value.searches[id]
+		if int(search.cards) != int(node(id).cards) or int(search.attempts) != search.failed.size() + (1 if value.nodes.has(id) else 0): return "수호성 원본 카드 이력 오류"
+	for field: String in ["guardian_spent","guardian_wallet","guardian_enchant_attempts","guardian_switch_until","guardian_cast_until","guardian_legacy_refund_uncertain"]:
+		if not value.get(field,{}) is Dictionary:return "수호성 거래 원장 오류"
+		for key: Variant in value.get(field,{}):
+			if not key is String:return "수호성 거래 식별자 오류"
+			var amount: Variant=value[field][key]
+			if field=="guardian_legacy_refund_uncertain":
+				if not amount is bool:return "수호성 이전 원장 오류"
+			elif field.ends_with("_until"):
+				if not (amount is int or amount is float) or not is_finite(float(amount)) or amount<0 or amount>100000000000:return "수호성 대기시간 오류"
+			elif not integer(amount):return "수호성 거래 금액 오류"
 	var pending: Dictionary = value.pending
 	if not pending.is_empty():
 		if not pending.get("node") is String or node(pending.node).is_empty() or value.nodes.has(pending.node) or not integer(pending.get("cards"),2,100) or not value.searches.has(pending.node) or pending.cards != value.searches[pending.node].cards: return "수호성 선택 저장 오류"
@@ -156,6 +198,10 @@ func restore(value: Dictionary) -> void:
 		if p.has("absolute_grades"): p.absolute_grades = grades
 	rerolls.clear()
 	_rebuild()
+	# Restored growth records must invalidate the host's cached stat records.
+	if world != null:
+		world._invalidate_equipment_static()
+		if world.get("skill_cooldowns") is Dictionary:sync_guardian_cooldowns()
 
 func _rebuild() -> void:
 	totals.clear()
@@ -163,7 +209,14 @@ func _rebuild() -> void:
 		_add_effects(emblem(id).get("effects",[])[int(progress(id).stage)])
 		if development: totals["max_hp:flat"] = float(totals.get("max_hp:flat",0))+5*int(progress(id).get("absolute",0))
 		else: _add_effects(source523.absolute_effects(id,progress(id).get("absolute_grades",[])))
-	# Official guide: only the representative guardian's option effects apply.
+	# 523 SKILLTREE_TOOLTIP PANEL_2: stats are always active; invoked skills
+	# require a separate selection per category. Do not gate stats on that selection.
+	if not development:
+		for id: String in state.nodes:
+			if guardian_source.has_node(id) and guardian_source.availability(node(id)).is_empty():
+				_add_effects(guardian_source.effects(id,guardian_level(id)))
+		return
+	# Preserve the isolated development profile's existing behavior.
 	var representative: String = str(state.representative)
 	if not representative.is_empty():
 		for group: Dictionary in config.get("guardians",[]):
@@ -183,6 +236,45 @@ func _add_effects(effects: Dictionary) -> void:
 			totals[key] = float(totals.get(key,0))+float(effects[key])
 		elif key in ["veil_proc:percent","melee_reduction_ignore:flat","ranged_reduction_ignore:flat","magic_reduction_ignore:flat","pve_reduction_ignore:flat","melee_evasion_ignore:flat","ranged_evasion_ignore:flat"]:
 			totals[key] = float(totals.get(key,0))+float(effects[key])
+
+func guardian_group(id: String) -> Dictionary:
+	for group: Dictionary in config.guardians:
+		if group.id==id:return group
+	return {}
+
+func guardian_spent(category: int) -> int:
+	var key: String=str(category)
+	if state.get("guardian_spent",{}).has(key):return int(state.guardian_spent[key])
+	var amount: int=0
+	for id: String in guardian_source.nodes:
+		var row: Dictionary=node(id)
+		if int(row.category_id)!=category:continue
+		amount+=int(state.searches.get(id,{}).get("attempts",0))*int(row.cost)
+		for level: int in range(1,guardian_level(id)+1):amount+=int(guardian_source.upgrade(id,level).get("CurrencyCost",0))
+	return amount # A lower bound; never invent unrecorded failed enchants.
+
+func account_guardian(next: Dictionary,id: String,amount: int) -> void:
+	var key: String=str(int(node(id).category_id))
+	if not next.has("guardian_spent"):next.guardian_spent={}
+	if not next.guardian_spent.has(key):
+		if not next.has("guardian_legacy_refund_uncertain"):next.guardian_legacy_refund_uncertain={}
+		var prior: bool=false
+		for opened: String in state.nodes:
+			if guardian_source.has_node(opened) and int(node(opened).category_id)==int(node(id).category_id):prior=true
+		next.guardian_legacy_refund_uncertain[key]=prior
+	next.guardian_spent[key]=guardian_spent(int(node(id).category_id))+amount
+
+func guardian_refund(category: int) -> int:
+	return int(floor(guardian_spent(category)*clampf(float(guardian_local_rules.get("reset",{}).get("refund_rate",1.0)),0,1)))
+
+func guardian_level(id: String) -> int:
+	return int(state.get("guardian_levels",{}).get(id,0))
+
+func guardian_rewards(id: String) -> Array:
+	return guardian_source.rewards(id,guardian_level(id)) if guardian_source.has_node(id) else []
+
+func guardian_representative(category: int) -> String:
+	return str(state.get("guardian_representatives",{}).get(str(category),""))
 
 func bonus(key: String) -> float:
 	return float(totals.get(key,0))
@@ -214,6 +306,8 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	if world == null: return fail("월드 연결 없음")
 	var costs: Dictionary = {}
 	var points: int = 0
+	var gold_cost: int=0
+	var debug_gem_cost: int=0
 	var text: String = ""
 	var consume_instance: String = ""
 	var transaction_day: int = -1
@@ -301,25 +395,96 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			if not row.get("prerequisites") is Array or not integer(row.get("cost"),1) or not integer(row.get("cards"),2,100) or row.get("card_rule") != "single_winner_without_replacement" or not row.get("effects") is Dictionary: return fail("선행 슬롯·비용·카드 수·선택 규칙·효과 미확인 · 활성화 보류")
 			for prerequisite: String in row.prerequisites:
 				if not state.nodes.has(prerequisite): return fail("선행 슬롯 미개방: "+prerequisite)
-			costs["수호석"] = int(row.cost)
+			if guardian_source.has_node(id):
+				var blocked: String = guardian_source.availability(row)
+				if not blocked.is_empty(): return fail(blocked)
+			else: costs["수호석"] = int(row.cost)
 			var failed: Array = state.searches.get(id,{}).get("failed",[])
-			text = "수호석 %d개 · 남은 카드 %d장\n실패 카드는 제거되며 매 시도 재료를 소모합니다." % [int(row.cost),int(row.cards)-failed.size()]
+			text = ("수호석 %d개 · 남은 카드 %d장\n카드 선택 시 매 시도 재료를 소모합니다." if guardian_source.has_node(id) else "수호석 %d개 · 남은 카드 %d장\n실패 카드는 제거되며 매 시도 재료를 소모합니다.") % [int(row.cost),int(row.cards)-failed.size()]
+			# Quote affordability now; actual source payment occurs on choose.
+			if world != null and guardian_source.has_node(id) and int(world.inventory.get("수호석",0)) < int(row.cost): return fail("수호석 부족 · 필요 %d" % int(row.cost))
 		"choose":
 			if state.pending.is_empty() or count < 0 or count >= int(state.pending.cards): return fail("유효하지 않은 카드 선택")
 			if state.searches[state.pending.node].failed.has(count): return fail("이미 실패한 카드입니다")
-			text = "선택한 카드 결과 확인"
+			var pending_id: String = str(state.pending.node)
+			if guardian_source.has_node(pending_id):
+				var blocked: String = guardian_source.availability(node(pending_id))
+				if not blocked.is_empty(): return fail(blocked)
+				costs["수호석"] = int(node(pending_id).cost)
+			text = "수호석 %d개 소모 · 선택한 카드 결과 확인" % int(costs["수호석"]) if costs.has("수호석") else "선택한 카드 결과 확인"
+		"guardian_enchant":
+			if not guardian_source.has_node(id) or not state.nodes.has(id): return fail("개방된 원본 슬롯이 필요합니다")
+			if not state.pending.is_empty(): return fail("진행 중인 카드 선택을 먼저 완료하세요")
+			var row: Dictionary = node(id)
+			var blocked: String = guardian_source.availability(row)
+			if not blocked.is_empty(): return fail(blocked)
+			var upgrade: Dictionary = guardian_source.upgrade(id,guardian_level(id)+1)
+			if upgrade.is_empty(): return fail("강화할 수 없는 슬롯 또는 최대 단계")
+			if int(upgrade.CurrencyID) != 822 or not integer(upgrade.CurrencyCost,1) or not integer(upgrade.Probability,0,1000000): return fail("강화 통화·확률 확인 필요")
+			costs["수호석"] = int(upgrade.CurrencyCost)
+			text = "수호성 Lv.%d → %d · 수호석 %d개 · 성공률 %.2f%%\n실패 시 재료만 소모하며 단계는 유지됩니다. 강화 단계의 효과로 교체됩니다." % [guardian_level(id),guardian_level(id)+1,int(upgrade.CurrencyCost),float(upgrade.Probability)/10000.0]
+		"guardian_cast":
+			if not guardian_source.has_node(id) or not state.nodes.has(id) or node(id).kind!="active":return fail("개방된 사용 스킬이 필요합니다")
+			var blocked: String=guardian_source.availability(node(id))
+			if not blocked.is_empty():return fail(blocked)
+			if world==null or world.hp<=0:return fail("살아 있을 때 사용할 수 있습니다")
+			var reward: Dictionary=guardian_rewards(id)[0]
+			var spell: Dictionary=guardian_combat.profile(int(reward.spell.ID))
+			if not guardian_combat.spell_allowed(int(reward.spell.ID),guardian_combat.current_groups()):return fail("현재 지역에서 사용할 수 없는 스킬")
+			var remaining: float=float(state.get("guardian_cast_until",{}).get(str(int(reward.spell.CastGroupID)),0))-Time.get_unix_time_from_system()
+			if remaining>0:return fail("재사용까지 %d초" % ceili(remaining))
+			if world.hp>=world._effective_max_hp() and world.mp>=world._effective_max_mp():return fail("HP/MP가 가득 찼습니다")
+			costs["명예 코인"]=int(reward.spell.SpellMaterialItemAmount)
+			text="%s · 명예 코인 %d개 · HP %d / MP %d 회복" % [str(node(id).name),int(costs["명예 코인"]),int(spell.values.get("HPRestoration",0)),int(spell.values.get("MPRestoration",0))]
+		"guardian_buy_coins":
+			if world==null:return fail("월드 연결 없음")
+			var prices: Dictionary=world.original_skills.catalog.current_official.local_design.get("reagent_prices",{})
+			var price: int=int(prices.get("명예 코인",0))
+			if price<=0:return fail("현재 게임의 재료 상점 가격을 확인할 수 없습니다")
+			gold_cost=10*price
+			if world.gold<gold_cost:return fail("아데나 부족 · 필요 %d" % gold_cost)
+			text="명예 코인 10개 · %d 아데나 (TWILIGHT 재료 상점 가격)" % gold_cost
+		"guardian_debug_gems":
+			if not OS.is_debug_build():return fail("개발 빌드 전용 검증 재화")
+			text="검증용 다이아 %d 추가 · 개발 편의 기능" % int(guardian_local_rules.development.gem_grant)
+		"guardian_reset":
+			var group: Dictionary=guardian_group(id)
+			if group.is_empty():return fail("알 수 없는 수호성 분류")
+			if not state.pending.is_empty():return fail("카드 선택을 먼저 완료하세요")
+			if not guardian_source.availability(group).is_empty():return fail("서버별 제공 조건 확인 중")
+			if guardian_spent(int(group.category_id))==0:return fail("초기화할 비용 기록이 없습니다")
+			var price: int=int(guardian_source.constant("InitializeCost"))
+			if price<=0:return fail("원본 초기화 비용 오류")
+			var earned: int=maxi(0,int(world.inventory.get("다이아",0)))
+			debug_gem_cost=maxi(0,price-earned)
+			var debug_balance: int=int(state.get("guardian_wallet",{}).get("4",0)) if OS.is_debug_build() else 0
+			if debug_gem_cost>debug_balance:return fail("다이아 부족 · 필요 %d / 게임 보유 %d" % [price,earned])
+			if price>debug_gem_cost:costs["다이아"]=price-debug_gem_cost
+			text="%s 분류 초기화 · 다이아 %d · 기록으로 확인되는 수호석 %d개 환급\n이 분류의 개방/강화를 초기화합니다. 재사용 대기시간 유지 · 분류/환급 범위는 TWILIGHT 자체 설정입니다." % [str(group.name),price,guardian_refund(int(group.category_id))]
+			if debug_gem_cost>0:text+="\n개발 검증 다이아 %d 사용 · 출시 재화와 별도" % debug_gem_cost
+			if not state.get("guardian_spent",{}).has(str(int(group.category_id))) or bool(state.get("guardian_legacy_refund_uncertain",{}).get(str(int(group.category_id)),false)):text+="\n이전 버전의 실패 강화 비용은 기록이 없어 환급액에 포함할 수 없습니다."
 		"representative":
 			if not state.nodes.has(id) or node(id).get("kind") == "stat": return fail("개방된 스킬 슬롯을 선택하세요")
-			if state.representative == id: return fail("이미 대표로 설정됨")
-			# Unknown official cooldown must not be silently turned into free repeated switching.
-			if not state.representative.is_empty() and config.get("guardian_switch_seconds") == null: return fail("대표 변경 대기시간 미확인 · 변경 보류")
-			text = "대표 수호성 설정 · 미확인 스킬 피해/회복량은 발동하지 않습니다."
+			if guardian_source.has_node(id):
+				if node(id).kind != "invoke": return fail("발동 스킬 슬롯을 선택하세요 · 능력치는 상시 적용됩니다")
+				var blocked: String = guardian_source.availability(node(id))
+				if not blocked.is_empty(): return fail(blocked)
+				var current: String = guardian_representative(int(node(id).category_id))
+				if current == id: return fail("이미 분류 대표로 설정됨")
+				var remaining: float=float(state.get("guardian_switch_until",{}).get(str(int(node(id).category_id)),0))-Time.get_unix_time_from_system()
+				if remaining>0:return fail("분류 대표 변경까지 %d초" % ceili(remaining))
+				text = "분류별 발동 스킬 지정 · 변경 대기 %d초" % int(guardian_source.constant("CoolTimeSec"))
+			else:
+				if state.representative == id: return fail("이미 대표로 설정됨")
+				# Unknown official cooldown must not be silently turned into free repeated switching.
+				if not state.representative.is_empty() and config.get("guardian_switch_seconds") == null: return fail("대표 변경 대기시간 미확인 · 변경 보류")
+				text = "대표 수호성 설정 · 미확인 스킬 피해/회복량은 발동하지 않습니다."
 		_: return fail("지원하지 않는 요청")
 	if world == null: return fail("월드 연결 없음")
 	if points > int(state.points): return fail("축복 포인트 부족 · 필요 %d / 보유 %d" % [points,int(state.points)])
 	for item: String in costs:
 		if int(world.inventory.get(item,0)) < int(costs[item]): return fail("%s 부족 · 필요 %d / 보유 %d" % [item,int(costs[item]),int(world.inventory.get(item,0))])
-	return {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision,"consume_instance":consume_instance,"day":transaction_day}
+	return {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision,"gold_cost":gold_cost,"debug_gem_cost":debug_gem_cost,"consume_instance":consume_instance,"day":transaction_day}
 
 func execute(action: String, id: String, count: int, revision: int, quote_day: int = -1) -> Dictionary:
 	if busy or revision != int(state.revision): return fail("중복 또는 오래된 요청 · 다시 확인하세요")
@@ -332,6 +497,7 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	var instances: Dictionary = world.item_instances.duplicate(true) if not str(offer.consume_instance).is_empty() else {}
 	for item: String in offer.costs:
 		inventory[item] = int(inventory.get(item,0))-int(offer.costs[item])
+	var vital: Dictionary={}
 	var message: String = "완료"
 	var rolled: Array = []
 	match action:
@@ -418,29 +584,81 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 			var row: Dictionary = node(id)
 			if not next.searches.has(id):
 				next.searches[id] = {"cards":int(row.cards),"winner":rng.randi_range(0,int(row.cards)-1),"failed":[],"attempts":0}
-			next.searches[id].attempts += 1
+			if not guardian_source.has_node(id): next.searches[id].attempts += 1
 			next.pending = {"node":id,"cards":int(row.cards)}
 			message = "카드를 선택하세요 · 선택 대기 상태 저장됨"
 		"choose":
 			var search: Dictionary = next.searches[next.pending.node]
+			if guardian_source.has_node(str(next.pending.node)):
+				account_guardian(next,str(next.pending.node),int(node(str(next.pending.node)).cost))
+				search.attempts += 1
 			var won: bool = count == int(search.winner)
 			if won: next.nodes.append(str(next.pending.node))
 			else: search.failed.append(count)
 			message = "수호성 찾기 성공 · 슬롯 개방" if won else "수호성 찾기 실패 · 다시 도전할 수 있습니다"
 			next.pending = {}
-		"representative": next.representative = id
+		"guardian_enchant":
+			var upgrade: Dictionary = guardian_source.upgrade(id,guardian_level(id)+1)
+			account_guardian(next,id,int(upgrade.CurrencyCost))
+			if not next.has("guardian_enchant_attempts"):next.guardian_enchant_attempts={}
+			next.guardian_enchant_attempts[id]=int(next.guardian_enchant_attempts.get(id,0))+1
+			var success: bool = rng.randi_range(0,999999) < int(upgrade.Probability)
+			if success:
+				if not next.has("guardian_levels"): next.guardian_levels = {}
+				next.guardian_levels[id] = guardian_level(id)+1
+			message = "수호성 강화 성공 · Lv.%d" % (guardian_level(id)+1) if success else "수호성 강화 실패 · 단계 유지"
+		"guardian_cast":
+			var reward: Dictionary=guardian_rewards(id)[0]
+			var spell: Dictionary=guardian_combat.profile(int(reward.spell.ID))
+			if not next.has("guardian_cast_until"):next.guardian_cast_until={}
+			next.guardian_cast_until[str(int(reward.spell.CastGroupID))]=Time.get_unix_time_from_system()+float(reward.spell.CastDelay)/1000
+			vital={"hp":mini(world._effective_max_hp(),world.hp+int(spell.values.get("HPRestoration",0))),"mp":mini(world._effective_max_mp(),world.mp+int(spell.values.get("MPRestoration",0)))}
+			message="%s · HP +%d / MP +%d" % [str(node(id).name),int(vital.hp)-world.hp,int(vital.mp)-world.mp]
+		"guardian_buy_coins":
+			inventory["명예 코인"]=int(inventory.get("명예 코인",0))+10
+		"guardian_debug_gems":
+			if not next.has("guardian_wallet"):next.guardian_wallet={}
+			next.guardian_wallet["4"]=int(next.guardian_wallet.get("4",0))+int(guardian_local_rules.development.gem_grant)
+		"guardian_reset":
+			var group: Dictionary=guardian_group(id)
+			var category: int=int(group.category_id)
+			var key: String=str(category)
+			inventory["수호석"]=int(inventory.get("수호석",0))+guardian_refund(category)
+			if int(offer.debug_gem_cost)>0:next.guardian_wallet["4"]-=int(offer.debug_gem_cost)
+			for row: Dictionary in group.nodes:
+				next.nodes.erase(row.id);next.searches.erase(row.id)
+				for field: String in ["guardian_levels","guardian_enchant_attempts"]:
+					if next.has(field):next[field].erase(row.id)
+			for field: String in ["guardian_spent","guardian_representatives","guardian_switch_until","guardian_legacy_refund_uncertain"]:
+				if next.has(field):next[field].erase(key)
+			message="수호성 분류 초기화 · 기록된 수호석 환급 완료"
+		"representative":
+			if guardian_source.has_node(id):
+				if not next.has("guardian_representatives"): next.guardian_representatives = {}
+				next.guardian_representatives[str(int(node(id).category_id))] = id
+				if not next.has("guardian_switch_until"):next.guardian_switch_until={}
+				next.guardian_switch_until[str(int(node(id).category_id))]=Time.get_unix_time_from_system()+float(guardian_source.constant("CoolTimeSec"))
+			else: next.representative = id
 	next.revision += 1
 	if not validate(next).is_empty():
 		busy = false
 		return fail("성장 상태 검증 실패")
-	var overrides: Dictionary = {"inventory":inventory,"growth":next}
-	if not str(offer.consume_instance).is_empty(): overrides["item_instances"] = instances
-	var error: Error = world._save_game(true,overrides)
+	var payload: Dictionary={"inventory":inventory,"growth":next}
+	payload.merge(vital,true)
+	if int(offer.get("gold_cost",0))>0:payload.gold=world.gold-int(offer.gold_cost)
+	if not str(offer.consume_instance).is_empty():payload["item_instances"]=instances
+	var error: Error = world._save_game(true,payload)
 	if error != OK:
 		busy = false
 		return fail("저장 실패 · 재료와 성장 상태를 변경하지 않았습니다 (%d)" % error)
 	state = next
+	if world.get("skill_cooldowns") is Dictionary:sync_guardian_cooldowns()
 	world.inventory = inventory
+	if payload.has("gold"):world.gold=int(payload.gold)
+	if vital.has("hp"):
+		world.hp=int(vital.hp);world.mp=int(vital.mp)
+		guardian_combat.visuals.emit_spell(guardian_rewards(id)[0].spell,world.player)
+		world.player.show_status_text(message)
 	if not str(offer.consume_instance).is_empty(): world.item_instances = instances
 	if action == "reroll": rerolls[id] = rolled
 	elif action in ["enhance","reset","restore_emblem"]: rerolls.erase(id)
@@ -468,3 +686,20 @@ func incoming_damage(damage: int, critical: bool = false, stunned: bool = false,
 	if maximum_hp>0 and hp_before>=0 and hp_before*100<=maximum_hp*30:
 		percent += bonus("low_hp_reduction:percent")
 	return combat.incoming(damage,flat,percent,context)
+
+func guardian_skill_record(key: String) -> Dictionary:
+	if not key.begins_with("guardian:"):return {}
+	var id: String=key.trim_prefix("guardian:")
+	if not guardian_source.has_node(id) or not state.nodes.has(id) or node(id).kind!="active":return {}
+	var reward: Dictionary=guardian_rewards(id)[0]
+	var spell: Dictionary=guardian_combat.profile(int(reward.spell.ID))
+	return {"id":key,"name":str(node(id).name),"class":"공용","origin":"TWILIGHT_GUARDIAN523","effect":"heal","activation":"active","mp":0,"cooldown":float(reward.spell.CastDelay)/1000,"heal":int(spell.values.get("HPRestoration",0)),"items":{"명예 코인":int(reward.spell.SpellMaterialItemAmount)}}
+
+func sync_guardian_cooldowns() -> void:
+	if world==null:return
+	for id: String in state.nodes:
+		var row: Dictionary=guardian_skill_record("guardian:"+id)
+		if row.is_empty():continue
+		var reward: Dictionary=guardian_rewards(id)[0]
+		var left: float=maxf(0,float(state.get("guardian_cast_until",{}).get(str(int(reward.spell.CastGroupID)),0))-Time.get_unix_time_from_system())
+		world.skill_cooldowns[str(row.id)]=left;world.skill_cooldowns[str(row.name)]=left

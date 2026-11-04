@@ -906,7 +906,7 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String = "") -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String="", main_target: bool=true, by_spell: bool=false, context: Dictionary={}) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
@@ -926,9 +926,21 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	if attack_kind not in ["melee","ranged","magic"]:attack_kind=feedback_kind if resolving_combat_action else _current_attack_kind()
 	adjusted_damage=growth.combat.outgoing(adjusted_damage,attack_kind)
+	var before_reduction: int=adjusted_damage
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
+	var kind: String=_current_attack_kind() if attack_kind.is_empty() else attack_kind
+	var hit_context: Dictionary=context.duplicate(true)
+	hit_context.flat_reduction=maxi(0,before_reduction-adjusted_damage)
+	hit_context.pvp=bool(target.get_meta("is_player_combatant",false))
+	if not hit_context.has("final_blow"):hit_context.final_blow=growth.guardian_combat.roll(growth.guardian_combat.final_blow_chance())
+	if not hit_context.has("percent_reduction"):hit_context.percent_reduction=float(target.get_meta("source_received_reduction_percent",0))
+	adjusted_damage=growth.guardian_combat.outgoing(target,adjusted_damage,critical,kind,hit_context)
+	var available_hp: int=maxi(0,target.hp-stolen)
+	var available_mp: int=target.mp
+	var prior_hp: int=hp;var prior_mp: int=mp
 	target.take_damage(adjusted_damage + stolen, critical)
-	if stolen > 0:
+	growth.guardian_combat.after_hit(target,critical,kind,main_target,by_spell,available_hp,available_mp)
+	if stolen > 0 or hp!=prior_hp or mp!=prior_mp:
 		_refresh_combat_hud()
 
 func _tick_catalog_recovery(delta: float) -> void:
@@ -1070,7 +1082,7 @@ func _equipment_attribute_bonus(stat: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.attribute(_source_catalog_record("아이템", entry as Dictionary), stat)
-	return result + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat"))
+	return result + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat") + growth.bonus(stat.to_lower()+":flat"))
 
 func _effective_attribute(stat: String) -> int:
 	var base: int = 0
@@ -2451,7 +2463,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical,attack_kind,true,false)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
@@ -2934,11 +2946,11 @@ func _monster_accuracy_for_attack_type(attacker: TwilightMonster, attack_type: S
 		return 0
 	match attack_type:
 		"magic":
-			return attacker.magic_accuracy
+			return attacker.magic_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"magic")
 		"ranged":
-			return attacker.ranged_accuracy
+			return attacker.ranged_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"ranged")
 		_:
-			return attacker.melee_accuracy
+			return attacker.melee_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"melee")
 
 func _monster_hit_chance(attacker: TwilightMonster, attack_type: String = "melee") -> float:
 	if attacker == null:
@@ -2995,7 +3007,7 @@ func _respawn_player(message_text: String) -> void:
 func _on_player_poison_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
 		return
-	var poison_damage: int = maxi(1, damage_value)
+	var poison_damage: int = growth.guardian_combat.poison_damage(maxi(1, damage_value))
 	hp = maxi(0, hp - poison_damage)
 	player.show_poison_damage(poison_damage)
 	hud.append_log("독 피해 %d" % poison_damage)
@@ -3049,9 +3061,10 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			])
 		return
 	var attacker_critical_rate: int = attacker.critical_rate_for_type(normalized_type)
-	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat())
+	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat(normalized_type))
 	var critical: bool = rng.randf() < critical_chance
-	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
+	var contextual_damage: int=maxi(1,damage_value+growth.guardian_combat.npc_damage_delta(attacker,normalized_type))
+	var incoming_damage: int = _critical_damage(contextual_damage) if critical else contextual_damage
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
 	var attack_element: String = ELEMENT_RULES.channel(attacker.attack_element)
 	if attack_element != "physical":
@@ -3068,10 +3081,15 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			player.show_miss()
 			_refresh_combat_hud()
 			return
+	var guardian_context: Dictionary={"pvp":bool(attacker.get_meta("is_player_combatant",false)),"spell_tags":attacker.get_meta("source_spell_tags",[])}
+	var guardian_result: Dictionary=growth.guardian_combat.incoming(attacker,normalized_type,reduced,critical,guardian_context)
+	if guardian_result.blocked:
+		player.show_miss();_refresh_combat_hud();return
+	reduced=int(guardian_result.damage)
 	var option_result: Dictionary=option_awakening.combat.incoming(attacker,normalized_type,reduced)
 	reduced=int(option_result.damage)
 	hp = maxi(0, hp - reduced)
-	if hp>0 and int(option_result.heal)>0: hp=mini(_effective_max_hp(),hp+int(option_result.heal))
+	if hp>0 and int(option_result.heal)+int(guardian_result.heal)>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal)+int(guardian_result.heal))
 	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
@@ -5643,6 +5661,7 @@ func _tick_skill_cooldowns(delta: float) -> void:
 		skill_cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
+	if skill.get("origin","")=="TWILIGHT_GUARDIAN523":return bool(growth.quote("guardian_cast",str(skill.id).trim_prefix("guardian:")).ok)
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.ready(skill, announce)
 	if not pending_attack.is_empty(): return false
 	var skill_name: String = str(skill.get("name", ""))
@@ -5863,10 +5882,14 @@ func _ensure_skill_record_index() -> void:
 		_rebuild_skill_record_index()
 
 func _skill_record(skill_name: String) -> Dictionary:
+	if skill_name.begins_with("guardian:"):return growth.guardian_skill_record(skill_name)
 	_ensure_skill_record_index()
 	return skill_record_index.get(skill_name, {})
 
 func _cast_job_skill(skill_name: String) -> bool:
+	if skill_name.begins_with("guardian:"):
+		var response: Dictionary=growth.execute("guardian_cast",skill_name.trim_prefix("guardian:"),1,int(growth.state.revision))
+		hud.show_message(str(response.message));return bool(response.ok)
 	var skill: Dictionary = _skill_record(skill_name)
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill)
 	if skill.is_empty():
@@ -6233,7 +6256,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if critical:
 				damage = _player_critical_damage(damage, style)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
-			_deal_successful_player_hit(victim, damage, critical)
+			_deal_successful_player_hit(victim, damage, critical,style,victim==target,true)
 			_try_trigger_passives("on_hit", victim,style,victim==target,true)
 			_try_extra_weapon_hit(victim, damage, style)
 			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):
@@ -7227,7 +7250,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 		return 0.05
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
 	if original_skills != null:
-		return original_skills.physical_hit_chance(accuracy, target)
+		return original_skills.physical_hit_chance(accuracy, target,attack_kind)
 	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.hit_armor_class(),0)
 
 func _catalog_damage_bonus(kind: String) -> int:
@@ -7408,6 +7431,7 @@ func _stun_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_accuracy(record)
+	total+=int(growth.guardian_combat.status_hit("stun"))
 	return clampi(total, 0, 100)
 
 func _stun_resistance_stat() -> int:
@@ -7415,6 +7439,7 @@ func _stun_resistance_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
 	total += _active_item_buff_total("stun_resistance")
+	total+=int(growth.guardian_combat.status_resistance("stun"))
 	return int(original_skills.stat("stunResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _record_silence_accuracy(record: Dictionary) -> int:
@@ -7501,12 +7526,14 @@ func _fear_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_accuracy(record)
+	total+=int(growth.guardian_combat.status_hit("fear"))
 	return clampi(total, 0, 100)
 
 func _fear_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_resistance(record)
+	total+=int(growth.guardian_combat.status_resistance("fear"))
 	return int(original_skills.stat("fearResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_fear_chance(target: TwilightMonster) -> float:
@@ -7602,11 +7629,11 @@ func _player_stun_chance(target: TwilightMonster) -> float:
 		target.monster_level
 	)
 
-func _critical_resistance_stat() -> int:
+func _critical_resistance_stat(kind: String="melee") -> int:
 	var total: int = 0
 	for record: Dictionary in _all_equipped_records():
 		total += _record_critical_resistance(record)
-	return clampi(total, 0, 50)
+	return clampi(total+int(growth.guardian_combat.critical_resistance(kind)), 0, 50)
 
 func _critical_chance(attacker_critical_rate: int, defender_critical_resistance: int) -> float:
 	return clampf(float(attacker_critical_rate - defender_critical_resistance) / 100.0, 0.0, 0.50)
@@ -8483,4 +8510,5 @@ func _retry_dungeon_events() -> Dictionary:
 func _refresh_source_dungeon_panel() -> void:
 	if is_instance_valid(hud) and hud.has_method("refresh_source_dungeon_progress"):
 		hud.call("refresh_source_dungeon_progress")
+
 
