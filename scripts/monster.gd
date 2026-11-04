@@ -168,10 +168,17 @@ func retire_for_pool() -> void:
 	element_resistance.clear()
 	drop_items.clear()
 
-func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
+func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> bool:
 	source_option_debuffs.clear()
 	_clear_source_m_view()
+	var incoming: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
+	if not incoming.ok: return _reject_patch523_spawn(str(incoming.reason))
 	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
+	var admission: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(source_record, str(world_ref.get("active_map_id")) if world_ref != null else "")
+	if not admission.ok:
+		return _reject_patch523_spawn(str(admission.reason))
+	source_record = admission.record
+	remove_meta("patch523_spawn_hold")
 	if source_record.has("source_m_asset_manifest_path"):
 		var native_view := SOURCE_M_VIEW.new()
 		if native_view.configure(source_record, str(source_record.source_m_asset_manifest_path)):
@@ -180,6 +187,10 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			add_child(source_m_view)
 		else:
 			native_view.free() # Retain the prior actor/stats if any original pixel fails verification.
+			if admission.applied: return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+	elif admission.applied:
+		return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+	set_meta("patch523_spawn_admission", record.get("source_m_patch523_admission", {}).duplicate(true))
 	# Only an exact namespaced source ID opts into native stats. No name/Sprite/legacy-ID guessing.
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
 	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
@@ -336,6 +347,20 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 		$GroundShadow.hide()
 		if is_instance_valid(species_visual): species_visual.hide()
 		motion.profile.death_duration = maxf(motion.profile.death_duration, source_m_view.duration("death"))
+	return true
+
+func _reject_patch523_spawn(reason: String) -> bool:
+	retire_for_pool()
+	dead = true
+	hp = 0
+	source_m_npc_id = -1
+	source_m_original = {}
+	loot_source_identity = {}
+	set_meta("patch523_spawn_hold", reason)
+	set_meta("patch523_spawn_admission", {})
+	hide()
+	queue_free()
+	return false
 
 func _clear_source_m_view() -> void:
 	if is_instance_valid(source_m_view):

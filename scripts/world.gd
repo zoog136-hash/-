@@ -1815,7 +1815,7 @@ func _spawn_monsters(count: int) -> void:
 		monster.position = monsters_root.to_local(_random_walkable_position(player.global_position, 360.0, 1200.0))
 		monsters_root.add_child(monster)
 		var texture: Texture2D = _monster_texture(record)
-		monster.setup(record, player, self, texture)
+		if not monster.setup(record, player, self, texture): continue
 		monster.set_meta("size_class", _monster_size_class(record))
 		monster.died.connect(_on_monster_died)
 		monster.player_hit.connect(_on_player_hit)

@@ -6,6 +6,7 @@ var problem: String = ""
 var loaded: bool = false
 var root: String = ""
 var manifest: Dictionary = {}
+var manifest_sha256: String = ""
 var land: Dictionary = {}
 var shard: Dictionary = {}
 var contexts: Dictionary = {}
@@ -44,6 +45,7 @@ static func _integer(value: Variant) -> bool:
 
 func load_land(path: String, land_id: int, asset_path: String, expected_manifest_sha256: String) -> bool:
 	loaded = false
+	manifest_sha256 = ""
 	shard = {}; contexts = {}; land = {}; territories = {}; npcs = {}; views_by_pack = {}
 	root = path
 	var manifest_path: String = root.path_join("manifest.json")
@@ -94,6 +96,7 @@ func load_land(path: String, land_id: int, asset_path: String, expected_manifest
 	npcs = selected_npcs
 	views_by_pack = selected_views
 	loaded = true
+	manifest_sha256 = expected_manifest_sha256
 	problem = ""
 	return true
 
