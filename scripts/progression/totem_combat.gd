@@ -61,23 +61,38 @@ func on_hit(target: Node, kind: String, by_spell: bool) -> void:
 		var spell: Dictionary = world.totems.row("SpellClass",int(option.Param1))
 		var values := spell_values(int(option.Param1))
 		if spell.is_empty() or not roll(int(effect.raw_proc_chance)): continue
+		var applied := false
 		if values.get("SpellAttackType") == 1 and values.has("SpellDamageBase"):
 			var damage := int(values.SpellDamageBase)
 			for die in range(int(values.get("SpellDamageDiceNumber",0))): damage += world.rng.randi_range(1,maxi(1,int(values.get("SpellDamageDiceSpotCount",1))))
 			world._deal_successful_player_hit(target,damage,false)
 			world.hud.append_log("토템 · 오시리스 추가 물리 피해")
-		elif values.has("BuffClassID"):
+			applied = true
+		if values.has("BuffClassID") and not target.dead:
 			var supported: Array = []
 			for bonus: Dictionary in buff_effects(int(values.BuffClassID)):
-				if bonus.type.Name == "HPPotionDecreasePercent": supported.append(bonus)
-			if supported.is_empty(): continue
-			var duration: float = world.rng.randf_range(float(values.get("SpellDebuffMinDuration",0)),float(values.get("SpellDebuffMaxDuration",0)))
-			if not target.apply_source_option_debuff("totem:"+str(int(option.ID)),duration,supported): continue
-			targets.append(weakref(target))
-			world.hud.append_log("토템 · 제브레퀴 물약 회복 감소")
-		else: continue
-		commit_proc(option,spell,target)
+				if bonus.type.Name in ["HPPotionDecreasePercent","CannotSee"]: supported.append(bonus)
+			if not supported.is_empty():
+				var duration: float = world.rng.randf_range(float(values.get("SpellDebuffMinDuration",0)),float(values.get("SpellDebuffMaxDuration",0)))
+				if target.apply_source_option_debuff("totem:"+str(int(option.ID)),duration,supported):
+					targets.append(weakref(target))
+					applied = true
+					world.hud.append_log("토템 · 오시리스 시야 차단" if int(option.ID) == 17504 else "토템 · 제브레퀴 물약 회복 감소")
+		if applied: commit_proc(option,spell,target)
 	busy = false
+
+func active_status(totem_id: int) -> String:
+	var lines: PackedStringArray = []
+	var origin := "totem:"+str({4:17504,14:17524,24:17514}.get(totem_id,0))
+	for ref: WeakRef in targets:
+		var target: Node = ref.get_ref()
+		if not is_instance_valid(target) or target.dead:continue
+		var entry: Dictionary = target.source_option_debuffs.get(origin,{})
+		if entry.is_empty() or float(entry.remaining) <= 0:continue
+		var line := "%s · %s %.1f초" % [target.monster_name,"시야 차단" if totem_id == 4 else "물약 회복 감소",float(entry.remaining)]
+		if not lines.has(line):lines.append(line)
+	if totem_id == 24 and barrier_remaining > 0:lines.append("리덕션 +%d · %.1f초" % [barrier_flat(),barrier_remaining])
+	return "현재 발동 효과 없음" if lines.is_empty() else "\n".join(lines)
 
 func barrier_flat() -> int:
 	if barrier_remaining <= 0: return 0

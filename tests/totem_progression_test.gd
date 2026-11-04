@@ -140,6 +140,23 @@ func run() -> void:
 	check(is_equal_approx(world._experience_multiplier(),baseline_xp),"invalid field asset clears regional bonus immediately")
 	world.field_map = actual_field
 	check(is_equal_approx(world._experience_multiplier(),baseline_xp),"current Aden does not stack three regional buffs")
+	var blocked_regions: Array = []
+	var map_before := world.active_map_id
+	var position_before := world.player.global_position
+	var entry_save_sha := FileAccess.get_sha256(world.save_path())
+	for lands: Array in world.totems.map_contexts.values():
+		for land: Dictionary in lands:
+			# Exact canonical native Land key, not its asset number or a PC alias.
+			var key := "base508_land_%d" % int(land.ID)
+			var registered := false
+			for mid: String in world.maps_by_id:
+				if mid == key or mid.begins_with(key+"_"):registered = true
+			if not registered:
+				world._set_map(key,false)
+				check(world.active_map_id == map_before and world.field_map == actual_field and world.player.global_position == position_before,"unregistered native Land rejected without inventing entry %d" % int(land.ID))
+				blocked_regions.append({"land_id":int(land.ID),"asset_path":str(land.AssetPath),"status":"NO_REGISTERED_NATIVE_FIELD_OR_VERIFIED_ENTRY; NOT_ENTERED"})
+	check(FileAccess.get_sha256(world.save_path()) == entry_save_sha,"unavailable region checks preserve current save bytes")
+	print("TOTEM_REGION_ENTRY_AUDIT ",JSON.stringify(blocked_regions))
 	var monster: TwilightMonster = world.monsters_root.get_child(0)
 	monster.max_hp = 100000
 	monster.hp = 100000
@@ -153,6 +170,28 @@ func run() -> void:
 	var hp_before: int = monster.hp
 	world.totem_combat.on_hit(monster,"melee",false)
 	check(world.totem_combat.fired.has(17504) and monster.hp < hp_before and not world.totem_combat.fired.has(17514),"Osiris physical damage uses actual Monster, defence proc never fires on attack")
+	check(monster.source_option_cannot_see() and not monster._target_attackable(),"Osiris blindness reaches actual target perception and release guards")
+	var blind_duration := float(monster.source_option_debuffs.get("totem:17504",{}).get("remaining",0))
+	check(blind_duration >= 2 and blind_duration <= 3,"blindness uses original two-to-three-second duration")
+	world.hud.totem_view._process(0.11)
+	var live_status: Label = world.hud.totem_view.find_child("TotemCombatStatus",true,false)
+	check(live_status != null and live_status.text.contains("시야 차단") and "\n".join(world.hud.log_history).contains("오시리스 시야 차단"),"actual Totem screen and combat log show live blindness")
+	var reset_state := world.totems.export_state()
+	var reset_inventory := world.inventory.duplicate(true)
+	var reset_sha := FileAccess.get_sha256(world.save_path())
+	world.source_save_blocked = true
+	var reset_failed := world.totem_actions.execute("reset",4,301694,world.totems.revision)
+	check(not reset_failed.ok and monster.source_option_cannot_see() and world.totems.export_state() == reset_state and world.inventory == reset_inventory and FileAccess.get_sha256(world.save_path()) == reset_sha,"failed reset preserves live blindness, inventory, progression and bytes")
+	world.source_save_blocked = false
+	if DisplayServer.get_name() != "headless":
+		await process_frame
+		var effect_scroll := world.hud.totem_view.content.get_parent() as ScrollContainer
+		effect_scroll.ensure_control_visible(live_status)
+		await process_frame
+		await RenderingServer.frame_post_draw
+		check(root.get_texture().get_image().save_png("user://totem-blind-active.png") == OK,"actual active-blindness UI capture")
+	monster.advance_source_option_debuffs(3.01)
+	check(not monster.source_option_cannot_see() and not world.totem_combat.active_status(4).contains("시야 차단"),"expiry removes actual visibility flag and live display")
 	world.rng.seed = seed_for_proc([true])
 	world.totem_combat.on_hit(monster,"magic",true)
 	check(world.totem_combat.fired.is_empty(),"BySpellAttack false does not proc from magic spell hits")
@@ -187,19 +226,29 @@ func run() -> void:
 	var reset: Button = world.hud.totem_view.find_child("TotemReset_4",true,false)
 	check(reset != null and not reset.disabled,"reset available on actual screen")
 	var reset_before := int(world.inventory[reset_name])
+	var blind_effects: Array = []
+	for effect: Dictionary in world.totem_combat.buff_effects(80994):
+		if effect.type.Name == "CannotSee":blind_effects.append(effect)
+	monster.apply_source_option_debuff("totem:17504",2.5,blind_effects)
+	world.totem_combat.targets.append(weakref(monster))
 	reset.pressed.emit()
 	var confirm: Button = world.hud.find_child("ConfirmTransaction",true,false)
 	check(confirm != null,"reset confirmation appears")
 	if confirm != null: confirm.pressed.emit()
 	check(world.totems.progress(4).level == 0 and world.totems.progress(4).active and world.totems.progress(4).kills == 3000 and world.inventory[reset_name] == reset_before-1,"reset consumes one scroll and preserves activation and kills")
 	check(world.hud.message_label.text.contains("Lv.0 초기화"),"reset result displayed")
+	check(not monster.source_option_cannot_see(),"successful reset clears only the retired Totem's visibility effect")
 	check(world._effective_ac() == baseline_ac and world.totems.progress(4).selected.is_empty() and is_equal_approx(world.totem_reduction_pierce(),0.02),"reset removes only selected Totem effects and recalculates resonance")
 	var saved: Dictionary = world.totems.export_state()
 	var hash_before := FileAccess.get_sha256(world.save_path())
+	# Transient effects are intentionally not persisted or resurrected by load.
+	monster.apply_source_option_debuff("totem:17504",2.5,blind_effects)
+	world.totem_combat.targets.append(weakref(monster))
 	world._load_game(true)
 	var restored: Dictionary = JSON.parse_string(JSON.stringify(world.totems.export_state()))
 	var expected: Dictionary = JSON.parse_string(JSON.stringify(saved))
 	check(restored == expected and FileAccess.get_sha256(world.save_path()) == hash_before,"load keeps exact rolled options and revision without rerolling or rewriting")
+	check(not monster.source_option_cannot_see() and world.totem_combat.targets.is_empty(),"accepted load clears transient blindness without persisting it")
 	world.hud.open_totems()
 	await process_frame
 	if DisplayServer.get_name() != "headless":

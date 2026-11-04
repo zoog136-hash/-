@@ -5,6 +5,15 @@ var hud: Node
 var selected_id := 0
 var selected_level := 1
 var content: VBoxContainer
+var combat_status: Label
+var status_clock := 0.0
+
+func _process(delta: float) -> void:
+	if not is_visible_in_tree() or not is_instance_valid(combat_status):return
+	status_clock -= delta
+	if status_clock > 0:return
+	status_clock = 0.1
+	combat_status.text = hud.get_parent().totem_combat.active_status(selected_id)
 
 func configure(owner_hud: Node) -> void:
 	hud = owner_hud
@@ -110,7 +119,14 @@ func _refresh() -> void:
 	reset.tooltip_text = str(reset_quote.get("reason","다이아 결제는 지원하지 않습니다"))
 	content.add_child(reset)
 	content.add_child(UI.label("TWILIGHT 성장 규칙 · 선택 재료 1종 사용 · 단계별 옵션 보존",12,UI.MUTED))
-	content.add_child(UI.label("Lv.10 일부 효과 적용 · 시야 감소·독 주기·보호막 흡수량은 미지원",12,UI.MUTED))
+	var effect_info: Dictionary = {4:"오시리스 추가 물리 피해 · 시야 차단 2~3초",14:"제브레퀴 물약 회복률 -15% · 2~3초",24:"포세이돈 리덕션 +5 · 5초"}
+	content.add_child(UI.label("Lv.10 · "+str(effect_info.get(selected_id,"")),12,UI.MUTED))
+	content.add_child(UI.label("독 피해 주기·보호막 흡수량은 미확인",12,UI.MUTED))
+	combat_status = UI.label(hud.get_parent().totem_combat.active_status(selected_id),12)
+	combat_status.name = "TotemCombatStatus"
+	combat_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	combat_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_child(combat_status)
 	content.add_child(UI.label("강화석 제작 정보",14))
 	var stone_ids: Array = []
 	for material: Dictionary in preview.materials: stone_ids.append(int(material.ItemClassID))

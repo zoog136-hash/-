@@ -425,7 +425,9 @@ func _tick_ai(delta: float) -> void:
 		_move_on_map()
 		return
 	var field_active: bool = world_controller.field_map!=null
-	var concealed: bool = world_controller.has_method("is_player_concealed") and world_controller.is_player_concealed()
+	# CannotSee is an observer-local visibility flag. Reuse the host's existing
+	# concealed-target policy; no invented source sight radius or stun duration.
+	var concealed: bool = source_option_cannot_see() or (world_controller.has_method("is_player_concealed") and world_controller.is_player_concealed())
 	var safe: bool = field_active and world_controller.field_map.is_safe(target_player.global_position)
 	var leash: float = float(ai.get("leash_distance",1050.))
 	var home_distance: float = global_position.distance_to(home_position)
@@ -990,7 +992,7 @@ func _cancel_attack(id: int) -> void:
 func _release_attack(id: int) -> void:
 	if dead or id != motion.sequence or id == released_sequence or not motion.active or not motion.released: return
 	released_sequence = id
-	if not is_instance_valid(target_player): return
+	if not _target_attackable(): return
 	if is_stunned() or is_feared(): return
 	if id==special_sequence:
 		_resolve_special()
@@ -1007,7 +1009,7 @@ func _release_attack(id: int) -> void:
 		_resolve_attack(id, kind)
 
 func _target_attackable() -> bool:
-	if not is_instance_valid(target_player) or world_controller.hp<=0: return false
+	if source_option_cannot_see() or not is_instance_valid(target_player) or world_controller.hp<=0: return false
 	if world_controller.is_player_concealed(): return false
 	return world_controller.field_map==null or not world_controller.field_map.is_safe(target_player.global_position)
 
@@ -1050,9 +1052,26 @@ func _patrol_allows(point: Vector2) -> bool:
 func apply_source_option_debuff(origin: String,duration: float,effects: Array) -> bool:
 	if dead or duration<=0:return false
 	for effect: Dictionary in effects:
-		if effect.type.Name not in ["HPHealDecreasePercent","HPPotionDecreasePercent"] or effect.unit.Name!="Percentage" or int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0:return false
+		if int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0:return false
+		if effect.type.Name == "CannotSee":
+			if effect.unit.Name != "TrueFalse" or int(effect.bonus.Value) != 1:return false
+		elif effect.type.Name not in ["HPHealDecreasePercent","HPPotionDecreasePercent"] or effect.unit.Name!="Percentage":return false
 	source_option_debuffs[origin]={"remaining":duration,"effects":effects.duplicate(true)}
+	if source_option_cannot_see():
+		motion.cancel_attack()
+		_stop_chasing_concealed_player()
+		sight_cached = false
+		sight_clock = 0
+		if is_inside_tree():show_status_text("시야 차단")
 	return true
+
+func source_option_cannot_see() -> bool:
+	if dead:return false
+	for entry: Dictionary in source_option_debuffs.values():
+		if float(entry.remaining) <= 0:continue
+		for effect: Dictionary in entry.effects:
+			if effect.type.Name == "CannotSee" and int(effect.bonus.Value) == 1:return true
+	return false
 func prune_source_option_debuffs(enabled: Dictionary, origin_prefix: String = "") -> void:
 	for origin: String in source_option_debuffs.keys():
 		if origin_prefix.is_empty() and origin.begins_with("totem:"): continue
