@@ -6,7 +6,7 @@ static func canonical(record: Dictionary) -> Dictionary:
 	if not record.get("source_m_native_item", false):
 		var existing: Dictionary = DROPS.item_definition(record)
 		var converted: Dictionary = existing.get("native_record", {}).duplicate(true)
-		if converted.get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] or converted.get("source_use_spec", {}).get("activation_status") != "unrestricted": return {}
+		if converted.get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]: return {}
 		for key: String in ["name", "source", "sourceId", "sourceUrl", "slot", "type", "grade"]: converted[key] = record.get(key, "")
 		return converted
 	var definition: Dictionary = DROPS.data().get("item_definitions", {}).get(str(int(record.get("source_item_class_id", -1))), {})
@@ -69,6 +69,8 @@ static func try_use(world: Node, saved: Dictionary) -> bool:
 		"fixed_card": _fixed_card(world, record, spec)
 		"source_timed_buff": _flat_buff(world, record, spec)
 		"source_mp_dice": _mp_potion(world, record, spec)
+		"source_selectable_reward": _open_selection(world, record)
+		"source_skill_book": preload("res://scripts/loot/patch523_skill_book.gd").use(world, record, spec)
 		"guaranteed_bag": _guaranteed_bag(world, record, spec)
 		"source_weighted_bag", "mixed_rewards_bag":
 			if world.ui_preferences.get("patch523_source_reward_bags_enabled",true): _guaranteed_bag(world,record,spec)
@@ -184,10 +186,6 @@ static func _mp_potion(world: Node, record: Dictionary, spec: Dictionary) -> voi
 	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player)
 
 static func _guaranteed_bag(world: Node, record: Dictionary, spec: Dictionary) -> void:
-	var inventory: Dictionary = debit(world, str(record.name))
-	var instances: Dictionary = world.item_instances.duplicate(true)
-	var gold: int = world.gold
-	var rewards: PackedStringArray = []
 	var class_id: int = world.BASE508.source_class_id(world.job_class)
 	# Validate every eligible award before advancing the random stream.
 	for reward: Dictionary in spec.get("rewards", []):
@@ -203,20 +201,33 @@ static func _guaranteed_bag(world: Node, record: Dictionary, spec: Dictionary) -
 		world.rng.state = rng_before
 		world.hud.show_message("원본 보상 직업·확률 검증 실패 · 상자 보존")
 		return
-	for reward: Dictionary in chosen.rewards:
+	_commit_rewards(world, record, spec, chosen.rewards, rng_before)
+
+static func _commit_rewards(world: Node, record: Dictionary, spec: Dictionary, selected: Array, rng_before: int) -> bool:
+	var inventory: Dictionary = debit(world, str(record.name))
+	var instances: Dictionary = world.item_instances.duplicate(true)
+	var gold: int = world.gold
+	var rewards: PackedStringArray = []
+	var class_id: int = world.BASE508.source_class_id(world.job_class)
+	for reward: Dictionary in selected:
 		var classes: Array = reward.get("class_ids", [])
 		if not class_matches(classes,class_id): continue
 		var definition: Dictionary = DROPS.data().get("item_definitions", {}).get(str(int(reward.item_class_id)), {})
 		var base: Dictionary = definition.get("native_record", {})
-		if base.is_empty() or base.get("source_test_item", true) or int(reward.amount) < 1 or int(reward.get("enchant", -1)) < 0 or (int(reward.get("enchant",0)) > 0 and not DROPS.equipment(base)) or int(reward.bless_raw) not in [1,2,3]:
+		var enchant: int = int(reward.get("enchant", 0)) if reward.get("enchant") != null else 0
+		var local_initial: bool = reward.get("enchant") == null and DROPS.equipment(base)
+		if local_initial and (spec.get("kind") != "source_selectable_reward" or not world.ui_preferences.get("patch523_select_reward_initial_zero_enabled",true)):
+			world.hud.show_message("선택 장비 초기 +0 자체 규칙 사용 안함 · 상자 보존")
+			return false
+		if base.is_empty() or base.get("source_test_item", true) or int(reward.amount) < 1 or enchant < 0 or (enchant > 0 and not DROPS.equipment(base)) or int(reward.bless_raw) not in [1,2,3]:
 			world.rng.state = rng_before
 			world.hud.show_message("원본 보상 아이템·상태 확인 실패 · 상자 보존")
-			return
+			return false
 		var item: Dictionary = DROPS.variant_item(base, int(reward.bless_raw))
 		if not DROPS.matches(world._find_catalog_item_record(str(item.name)), item):
 			world.rng.state = rng_before
 			world.hud.show_message("원본 보상 아이템 등록 미확인 · 상자 보존")
-			return
+			return false
 		var wallet: String = DROPS.currency_identity_name(item)
 		var name_value: String = wallet if not wallet.is_empty() else str(item.name)
 		if wallet == "아데나": gold += int(reward.amount)
@@ -227,26 +238,30 @@ static func _guaranteed_bag(world: Node, record: Dictionary, spec: Dictionary) -
 			for index: int in range(int(reward.amount)):
 				var identity: String = Crypto.new().generate_random_bytes(16).hex_encode()
 				while instances.has(identity): identity = Crypto.new().generate_random_bytes(16).hex_encode()
-				instances[identity] = {"name":str(item.name),"level":int(reward.enchant),"element":"","element_level":0,"record":item.duplicate(true),"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(record.source_item_class_id),"lucky_bag_class_id":int(spec.lucky_bag_class_id),"entity_id":int(reward.source_entity_id),"bless":int(reward.bless_raw),"enchant":int(reward.enchant)}}
+				instances[identity] = {"name":str(item.name),"level":enchant,"element":"","element_level":0,"record":item.duplicate(true),"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(record.source_item_class_id),"lucky_bag_class_id":int(spec.get("lucky_bag_class_id",0)),"select_reward_id":int(spec.get("select_reward_id",0)),"entity_id":int(reward.source_entity_id),"bless":int(reward.bless_raw),"enchant":enchant,"initial_enchant_origin":"twilight_configured_default_zero" if local_initial else str(reward.get("enchant_origin","source_bag_initial_enchant")),"original_initial_enchant":reward.get("enchant")}}
 		rewards.append("%s ×%d" % [str(base.source_display_name),int(reward.amount)])
 	if rewards.is_empty():
 		world.rng.state = rng_before
 		world.hud.show_message("현재 직업에 해당하는 원본 보상이 없습니다 · 상자 보존")
-		return
+		return false
 	var cooldowns: Dictionary = next_cooldowns(world, record, spec)
 	if world._save_game(true, {"inventory":inventory,"item_instances":instances,"gold":gold,"item_use_cooldowns":cooldowns}) != OK:
 		world.rng.state = rng_before
 		world.hud.show_message("상자 보상 저장 실패 · 상자·추첨 상태·기존 보유 상태 보존")
-		return
+		return false
 	world.inventory = inventory
 	world.item_instances = instances
 	world.gold = gold
 	world.item_use_cooldowns = cooldowns
 	world.hud.refresh_inventory(world.inventory)
 	world._update_hud()
-	var message: String = ("원본 확정 보상 · " if spec.kind == "guaranteed_bag" else "원본 확률·수량 보상 · 선택 횟수는 TWILIGHT 설정 · ") + ", ".join(rewards)
+	var prefix: String = "원본 확정 보상 · " if spec.kind == "guaranteed_bag" else "원본 확률·수량 보상 · 선택 횟수는 TWILIGHT 설정 · "
+	if spec.kind == "source_selectable_reward": prefix = "원본 선택 보상 · 장비 초기 +0은 TWILIGHT 설정 · "
+	var message: String = prefix + ", ".join(rewards)
 	world.hud.show_message(message)
 	world.hud.append_log(message)
+
+	return true
 
 static func select_rewards(spec: Dictionary, class_id: int, rng: RandomNumberGenerator, draws: int = 1) -> Dictionary:
 	var given: Array[Dictionary] = []
@@ -283,3 +298,33 @@ static func clear_on_death(world: Node) -> void:
 	for key: String in world.active_item_buffs.keys():
 		var buff: Dictionary = world.active_item_buffs[key]
 		if buff.has("source_buff_class") and not buff.source_buff_class.get("IsImmuneToDead", false): world.active_item_buffs.erase(key)
+
+static func _open_selection(world: Node, record: Dictionary) -> void:
+	var existing: Variant = world.hud.get_meta("patch523_reward_choice") if world.hud.has_meta("patch523_reward_choice") else null
+	if is_instance_valid(existing):
+		world.hud.show_message("열려 있는 원본 선택 보상을 먼저 확인하세요")
+		return
+	var dialog: Control = preload("res://scripts/ui/patch523_reward_choice.gd").new()
+	dialog.configure(world, record)
+	world.hud.set_meta("patch523_reward_choice", dialog)
+	world.hud.add_child(dialog)
+
+static func claim_selection(world: Node, saved: Dictionary, entity_id: int) -> bool:
+	# Re-read the pinned pack and ownership at confirmation, never trust the UI row.
+	var record: Dictionary = canonical(saved)
+	var problem: String = eligibility(world, record)
+	if not problem.is_empty():
+		world.hud.show_message(problem)
+		return false
+	var spec: Dictionary = record.get("source_use_spec", {})
+	if spec.get("kind") != "source_selectable_reward" or spec.get("activation_status") != "unrestricted" or int(spec.get("select_max_count",0)) != 1: return false
+	if int(world.inventory.get(str(record.name),0)) < 1: return false
+	var requirements: Dictionary = spec.get("item_requirements", {})
+	if int(requirements.get("targetting_type_id",-1)) != 1 or not str(requirements.get("service_region_code","")).is_empty(): return false
+	if world.is_player_concealed() and not requirements.get("can_use_when_invisible",false): return false
+	if float(world.item_use_cooldowns.get("m523:item:"+str(int(record.source_item_class_id)),0.0)) > 0.0: return false
+	var choices: Array[Dictionary] = []
+	for reward: Dictionary in spec.get("rewards",[]):
+		if int(reward.source_entity_id) == entity_id and class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)): choices.append(reward)
+	if choices.size() != 1: return false
+	return _commit_rewards(world,record,spec,choices,world.rng.state)

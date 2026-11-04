@@ -76,7 +76,7 @@ def compile_pack(source: Path, catalog: Path):
         del unresolved[item_id]
     reward_ids = {str(reward['item_class_id']) for definition in item_definitions.values()
                   for spec in [definition['native_record'].get('source_use_spec', {})]
-                  if spec.get('kind') in ('guaranteed_bag', 'source_weighted_bag', 'mixed_rewards_bag') and spec.get('activation_status') == 'unrestricted'
+                  if spec.get('kind') in ('guaranteed_bag', 'source_weighted_bag', 'mixed_rewards_bag', 'source_selectable_reward') and spec.get('activation_status') == 'unrestricted'
                   for reward in spec['rewards']}
     use_counts = collections.Counter(
         definition['native_record']['source_use_spec']['kind']

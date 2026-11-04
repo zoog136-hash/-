@@ -1,7 +1,8 @@
 extends RefCounted
 ## 523 membership selects candidates; loot_drop.gd owns all chances and counts.
 const KIND = "patch523_monster_drop_membership"
-const DATA_SHA = "bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3"
+const DATA_SHA = "45e21a871a09f4ccf2898896adc8cfb1b766890646911d20b5a5b3c12f33fa45"
+const PHASE3_DATA_SHA = "bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3"
 const PREVIOUS_DATA_SHA = "1d0756f1adc4de14e003af99fa487789f27d954a98e7c7e6ed7152d147164b6f"
 const LEGACY_DATA_SHA = "4455cbbd2e6dc5392ccb2f142d99124ad2b5966e2dbca6d5fd3bb1f7b0cde0a3"
 const FILE_NAME = "monster_drops.bin"
@@ -19,7 +20,7 @@ static func installed_path(fingerprint: String = DATA_SHA) -> String:
 
 static func decode(packed: PackedByteArray) -> Dictionary:
 	if packed.size() > MAX_PACKED or packed.is_empty(): return {}
-	if preload("res://scripts/lineagem_pack_install.gd").sha(packed) not in [DATA_SHA, PREVIOUS_DATA_SHA, LEGACY_DATA_SHA]: return {}
+	if preload("res://scripts/lineagem_pack_install.gd").sha(packed) not in [DATA_SHA, PHASE3_DATA_SHA, PREVIOUS_DATA_SHA, LEGACY_DATA_SHA]: return {}
 	var raw: PackedByteArray = packed.decompress_dynamic(MAX_RAW, FileAccess.COMPRESSION_GZIP)
 	if raw.is_empty(): return {}
 	var value: Variant = JSON.parse_string(raw.get_string_from_utf8())
@@ -35,10 +36,11 @@ static func data() -> Dictionary:
 	var explicit_count: int = paths.size()
 	paths.append(installed_path())
 	paths.append(RESOURCE_PATH)
+	paths.append(installed_path(PHASE3_DATA_SHA))
 	paths.append(installed_path(PREVIOUS_DATA_SHA))
 	if LEGACY_DATA_SHA != DATA_SHA: paths.append(installed_path(LEGACY_DATA_SHA))
 	var best_rank: int = 99
-	var versions: Array[String] = [DATA_SHA,PREVIOUS_DATA_SHA,LEGACY_DATA_SHA]
+	var versions: Array[String] = [DATA_SHA,PHASE3_DATA_SHA,PREVIOUS_DATA_SHA,LEGACY_DATA_SHA]
 	for index: int in range(paths.size()):
 		var path: String = paths[index]
 		if not FileAccess.file_exists(path): continue
@@ -135,7 +137,7 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 			needed_states[key][int(row.Bless)] = true
 	for definition: Dictionary in document.get("item_definitions", {}).values():
 		var spec: Dictionary = definition.get("native_record", {}).get("source_use_spec", {})
-		if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] or spec.get("activation_status") != "unrestricted": continue
+		if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward"] or spec.get("activation_status") != "unrestricted": continue
 		for reward: Dictionary in spec.get("rewards", []):
 			var key: String = str(int(reward.item_class_id))
 			if not needed_states.has(key): needed_states[key] = {}
@@ -382,7 +384,7 @@ static func source_text(item: Dictionary) -> String:
 static func item_details(item: Dictionary) -> String:
 	if not item.get("source_m_native_item", false):
 		var original: Dictionary = item_definition(item).get("native_record", {})
-		if original.get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] or original.get("source_use_spec", {}).get("activation_status") != "unrestricted": return invoke_details(item)
+		if original.get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]: return invoke_details(item)
 		item = original
 	var lines: PackedStringArray = ["원본 아이템 #%d · %s" % [int(item.get("source_item_class_id", 0)), str(item.get("source_display_name", ""))]]
 	var labels: Dictionary = {"small_damage":"작은 대상 무기 대미지", "large_damage":"큰 대상 무기 대미지", "hit":"무기 명중", "additionalDamage":"추가 대미지", "def":"방어", "strFlat":"STR", "dexFlat":"DEX", "conFlat":"CON", "intFlat":"INT", "wisFlat":"WIS", "chaFlat":"CHA", "hpFlat":"HP", "mpFlat":"MP", "mr":"MR", "damage_reduction":"리덕션", "sp":"SP", "meleeDamage":"근거리 대미지", "rangedDamage":"원거리 대미지", "magicDamage":"마법 대미지", "meleeHit":"근거리 명중", "rangedHit":"원거리 명중", "magicHit":"마법 명중"}
@@ -402,6 +404,12 @@ static func item_details(item: Dictionary) -> String:
 			match str(spec.get("kind", "")):
 				"fixed_card": lines.append("사용: 원본 지정 %s 카드 %s (#%d) 1장 · 확률 추첨 없음" % [str(spec.get("card_kind", "")),str(spec.get("original_card", {}).get("Name", "")),int(spec.get("card_id", 0))])
 				"source_mp_dice": lines.append("사용: MP 회복 %d + %dD%d" % [int(spec.get("base",0)),int(spec.get("dice_number",0)),int(spec.get("dice_spot_count",0))])
+				"source_selectable_reward":
+					lines.append("사용: 원본 선택 보상 %d개 중 1개 · 확인 후 인벤토리 수령" % spec.get("rewards",[]).size())
+					if spec.has("local_rule_required"): lines.append("장비 초기 강화값: 원본 없음 · TWILIGHT +0 자체 설정 · 설정에서 해제 가능")
+				"source_skill_book":
+					lines.append("스킬서: 원본 카드 #%d → 주문 #%d · PR245의 동일 ID·정의 SHA 연결 필요" % [int(spec.get("card_id",0)),int(spec.get("spell_class_id",0))])
+					lines.append("원본 직업·레벨·선행 조건 검증 · 연결 전 스킬서 보존")
 				"source_timed_buff":
 					lines.append("사용: 원본 지속 버프 %d초" % int(spec.get("duration_seconds", 0)))
 					var effect_labels: Dictionary = {"def":"방어","strFlat":"STR","dexFlat":"DEX","intFlat":"INT","wisFlat":"WIS","conFlat":"CON","chaFlat":"CHA","hp_flat":"HP","mp_flat":"MP","mr":"MR","sp":"SP","melee_damage":"근거리 대미지","ranged_damage":"원거리 대미지","magic_damage":"마법 대미지","melee_accuracy":"근거리 명중","ranged_accuracy":"원거리 명중","magic_accuracy":"마법 명중","damage_reduction":"리덕션"}
@@ -449,7 +457,7 @@ static func install_zip(path: String) -> Dictionary:
 	var header: Variant = JSON.parse_string(zip.read_file("pack.json").get_string_from_utf8())
 	var packed: PackedByteArray = zip.read_file("payload/monster_drops.bin")
 	zip.close()
-	if not header is Dictionary or header.get("kind") != KIND or header.get("sha256") not in [DATA_SHA, PREVIOUS_DATA_SHA, LEGACY_DATA_SHA] or preload("res://scripts/lineagem_pack_install.gd").sha(packed) != header.get("sha256") or int(header.get("bytes", -1)) != packed.size() or decode(packed).is_empty():
+	if not header is Dictionary or header.get("kind") != KIND or header.get("sha256") not in [DATA_SHA, PHASE3_DATA_SHA, PREVIOUS_DATA_SHA, LEGACY_DATA_SHA] or preload("res://scripts/lineagem_pack_install.gd").sha(packed) != header.get("sha256") or int(header.get("bytes", -1)) != packed.size() or decode(packed).is_empty():
 		return {"ok":false, "error":"드랍 자료 버전 또는 무결성 검사 실패 · 기존 자료 유지"}
 	var fingerprint: String = str(header.sha256)
 	var target: String = installed_path(fingerprint)

@@ -27,7 +27,7 @@ func run() -> void:
 	var settings: Node=world.hud.find_child("Patch523DropSettings",true,false)
 	check(settings!=null,"live source installer UI")
 	settings._selected(new_zip)
-	check(D.data().has("item_use_counts") and D.data().counts.item_definitions==2568,"current full definitions loaded after UI install")
+	check(D.data().has("item_use_counts") and D.data().counts.item_definitions>=2624,"current full definitions loaded after UI install")
 	check(world._catalog_item_from_source_id("m523:item:323353").get("slot")=="domination_stone","live existing source catalog row upgraded by exact identity")
 	check(world._find_catalog_item_record(blessed).get("source_legacy_stack_variant",false),"previous blessing key upgraded without renaming inventory")
 	check(int(world.inventory.get(normal,0))==1 and int(world.inventory.get(blessed,0))==2,"normal and blessed quantities survive live upgrade")
@@ -48,6 +48,10 @@ func run() -> void:
 	check(int(world.inventory[normal])==1 and int(world.inventory[blessed])==2 and world.item_instances.has(id),"upgraded identities and quantities survive reentry")
 	check(D.install_zip(old_zip).get("ok",false) and D.data().has("item_use_counts"),"older reinstall cannot downgrade current source data")
 	check(FileAccess.file_exists(D.installed_path(D.PREVIOUS_DATA_SHA)),"previous installed data preserved")
+	var phase3: String=OS.get_environment("TWILIGHT_PATCH523_PHASE3_ZIP")
+	if not phase3.is_empty():
+		check(D.install_zip(phase3).get("ok",false) and int(D.data().counts.item_definitions)>=2624,"phase3 reinstall cannot downgrade selectable/book pack")
+		check(FileAccess.get_sha256(D.installed_path(D.PHASE3_DATA_SHA))==D.PHASE3_DATA_SHA,"phase3 payload retained in separate immutable version folder")
 	world.queue_free();await process_frame
 	print("PATCH523_PACK_UPGRADE_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

@@ -37,8 +37,10 @@ class NativeItemDefinitionTests(unittest.TestCase):
                      dict(ID=7, Name='Seconds'), dict(ID=8, Name='MilliSeconds'),
                      dict(ID=9, Name='SpriteID'), dict(ID=10, Name='Time'),
                      dict(ID=11, Name='LuckyBagClassID'), dict(ID=12, Name='SpellClassID'),
-                     dict(ID=13, Name='SpecialResistanceTypeID'), dict(ID=14, Name='StatusEffectID')],
-            'Class': [dict(ID=1, Name='knight', DescID=401, CanCreateClient=True),
+                     dict(ID=13, Name='SpecialResistanceTypeID'), dict(ID=14, Name='StatusEffectID'),
+                     dict(ID=15, Name='RewardID')],
+            'Class': [dict(ID=0, Name='None', DescID=0, CanCreateClient=False),
+                      dict(ID=1, Name='knight', DescID=401, CanCreateClient=True),
                       dict(ID=2, Name='elf', DescID=402, CanCreateClient=True)],
             'WeaponType': [dict(ID=1, Name='OneHandSword', DescID=501)],
             'BuffCardDeck': [dict(ID=1, Name='PolymorphCardDeck', CharacterBased=False),
@@ -65,6 +67,7 @@ class NativeItemDefinitionTests(unittest.TestCase):
             'TargettingType': [dict(ID=2, Name='SingleObject')],
             'TargetKind': [dict(ID=2, Name='All', RootTargetKindNodeID=11)],
             'SpellCategory': [dict(ID=8, Name='SpellDebuff')],
+            'RewardType': [dict(ID=2, Name='Item'), dict(ID=111, Name='SelectReward')],
         })
         self.descriptions = {
             101: '무기', 102: '방어구', 103: '물약', 104: '마법서', 105: '화폐', 106: '재료', 107: '카드', 108: '상자',
@@ -140,6 +143,32 @@ class NativeItemDefinitionTests(unittest.TestCase):
                    ItemBlessCodeID=1, ItemEnchant=0, LimitClass=10000)
         self.tables['LuckyBagEntityView'].append(row)
         return row
+
+    def selectable_reward(self):
+        self.usable_item(21)
+        self.item(22, category=6, equip=None, TestItem=False)
+        self.bonus('SelectRewardClassID', 500, item=21, unit=15)
+        common = dict(RewardGetTimeTypeID=1, CharacterClassID=0, UseImmediately=False,
+                      ClanOnly=False, RewardEnhancementTypeID=1, ItemBlessCodeID=1,
+                      RewardIconID=0, DescID=0, Ranking=0)
+        root = dict(ID=500, RewardTypeID=111, RewardClassID=7, Amount=0, **common)
+        output = dict(ID=501, RewardTypeID=2, RewardClassID=22, Amount=3, **common)
+        self.tables['Reward'].extend([root, output])
+        self.tables['SelectReward'].append(dict(ID=7, Name='Exact selection', SelectMaxCount=1))
+        self.tables['SelectRewardEntity'].append(dict(ID=101, SelectRewardID=7, RewardID=501))
+        return root, output
+
+    def skill_book(self):
+        self.item(21, category=7, equip=None, TestItem=False, TargettingTypeID=1,
+                  CanUseWhenInvisible=True, ServiceRegionCode='')
+        self.tables['BuffCard'][0].update(BuffCardDeckID=41, SpellClassID=83, BuffClassID=0)
+        self.tables['SpellClass'].append(dict(ID=83, Name='원본 마법', TestSpell=False, MPCost=12))
+        self.tables['SpellLearnLimit'].append(dict(
+            ClassID=1, SpellClassID=83, CharacterMinLevel=40,
+            CharacterPolymorphGradeID=0, LimitBuffCardID=0, IsTutorialSpell=False))
+        self.bonus('BuffCardID', 122, item=21, unit=4)
+        self.bonus('ItemConsumeEffectSpriteID', 226, item=21, unit=9)
+        return self.tables['SpellLearnLimit'][0]
 
     def bleed_invoke(self):
         self.bonus('InvokeOption', 5000, unit=2, application=10, target=611)
@@ -391,7 +420,7 @@ class NativeItemDefinitionTests(unittest.TestCase):
             self.compile()
 
     def test_empty_source_class_label_is_preserved_without_inventing_a_class(self):
-        self.tables['Class'].append(dict(ID=0, Name='None', DescID=999))
+        self.tables['Class'][0]['DescID'] = 999
         self.tables['ItemClassLimit'].append(dict(ItemClassID=20, ClassID=0))
         record = self.compile()['20']['native_record']
         self.assertEqual(record['source_class_ids'], [0])
@@ -445,6 +474,7 @@ class NativeItemDefinitionTests(unittest.TestCase):
         original = deepcopy(self.tables['BuffCard'][0])
         self.tables['BuffCard'][0]['BuffCardDeckID'] = 41
         self.tables['BuffCard'][0]['SpellClassID'] = 83
+        self.tables['BuffCardDeck'][3]['Name'] = 'UnverifiedSpellDeck'
         self.assertNotIn('source_use_spec', self.compile({21})['21']['native_record'])
         self.tables['BuffCard'][0] = original
         self.tables['BuffCardDeck'][0]['Name'] = 'OtherDeck'
@@ -872,6 +902,165 @@ class NativeItemDefinitionTests(unittest.TestCase):
             spec = definitions['21']['native_record']['source_use_spec']
             self.assertEqual(spec['activation_status'], 'blocked')
             self.assertEqual(spec['rewards'][0]['enchant'], level)
+
+    def test_selectable_reward_uses_final_quantity_and_preserves_exact_chain(self):
+        root, output = self.selectable_reward()
+        definitions = self.compile({21})
+        self.assertEqual(set(definitions), {'21', '22'})
+        spec = definitions['21']['native_record']['source_use_spec']
+        self.assertEqual(spec['kind'], 'source_selectable_reward')
+        self.assertEqual(spec['activation_status'], 'unrestricted')
+        self.assertEqual(spec['select_max_count'], 1)
+        self.assertEqual(spec['original_reward']['Amount'], 0)
+        self.assertEqual(spec['original_reward']['reward_type']['Name'], 'SelectReward')
+        self.assertEqual(spec['source_entities'][0]['reward']['ID'], output['ID'])
+        self.assertEqual(spec['source_entities'][0]['reward']['character_class']['Name'], 'None')
+        reward = spec['rewards'][0]
+        self.assertEqual(reward['amount'], 3)
+        self.assertEqual(reward['bless_raw'], 1)
+        self.assertIsNone(reward['enchant'])
+        self.assertEqual(spec['selection_model'], 'explicit_source_entity_choice')
+        self.assertNotIn('probability_raw', reward)
+        root['Amount'] = 1
+        self.assertEqual(self.compile({21})['21']['native_record']['source_use_spec']['rewards'][0]['amount'], 3)
+
+    def test_selectable_reward_preserves_option_ids_multiplicity_and_class_eligibility(self):
+        self.selectable_reward()
+        self.tables['SelectRewardEntity'].append(dict(ID=102, SelectRewardID=7, RewardID=501))
+        self.tables['Reward'][1]['CharacterClassID'] = 1
+        self.tables['ItemClassLimit'].append(dict(ItemClassID=21, ClassID=1))
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertEqual(spec['activation_status'], 'unrestricted')
+        self.assertEqual([row['source_entity_id'] for row in spec['rewards']], [101, 102])
+        self.assertEqual(spec['rewards'][0]['class_ids'], [1])
+        self.assertEqual(spec['class_eligible_option_counts'], {'1': 2})
+        self.tables['ItemClassLimit'].clear()
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('no_eligible_select_reward_for_source_class', spec['blocked_reasons'])
+
+    def test_selectable_reward_gear_requires_explicit_local_rule_without_source_enchant(self):
+        self.selectable_reward()
+        self.tables['ItemEquipSlot'].append(dict(ItemClassID=22, EquipSlotID=8))
+        definitions = self.compile({21})
+        self.assertEqual(set(definitions), {'21', '22'})
+        spec = definitions['21']['native_record']['source_use_spec']
+        self.assertEqual(spec['activation_status'], 'unrestricted')
+        self.assertEqual(spec['local_rule_required'], 'select_reward_initial_enchant')
+        self.assertEqual(spec['initial_enchant_configuration_key'], 'patch523_select_reward_initial_enchant')
+        self.assertIsNone(spec['source_initial_enchant'])
+        self.assertIsNone(spec['rewards'][0]['enchant'])
+        self.assertTrue(spec['rewards'][0]['requires_local_initial_enchant_rule'])
+
+    def test_selectable_reward_lifetime_test_output_and_attributes_fail_closed(self):
+        self.selectable_reward()
+        self.bonus('DeleteTime', 2021022405, item=21, unit=10)
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('source_item_lifetime_unresolved', spec['blocked_reasons'])
+        self.tables['ItemBonus'].pop()
+        self.tables['ItemClass'][2]['TestItem'] = True
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('source_test_reward_item', spec['blocked_reasons'])
+        self.tables['ItemClass'][2]['TestItem'] = False
+        self.tables['RewardAttribute'].append(dict(ID=1, RewardID=501, RewardAttributeTypeID=99, Value=7))
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('unsupported_select_reward_attributes', spec['blocked_reasons'])
+        self.assertEqual(spec['source_entities'][0]['reward']['attributes'][0]['Value'], 7)
+
+    def test_selectable_reward_requires_exact_unit_type_count_and_receipt_rules(self):
+        self.selectable_reward()
+        for field, value, reason in [
+                ('RewardTypeID', 111, 'unsupported_select_reward_output_type'),
+                ('UseImmediately', True, 'unsupported_select_reward_rule:UseImmediately'),
+                ('RewardEnhancementTypeID', 11, 'unsupported_select_reward_rule:RewardEnhancementTypeID'),
+                ('Amount', 0, 'unsupported_select_reward_amount_or_variant')]:
+            previous = self.tables['Reward'][1][field]
+            self.tables['Reward'][1][field] = value
+            definitions = self.compile({21})
+            self.assertEqual(set(definitions), {'21'})
+            self.assertIn(reason, definitions['21']['native_record']['source_use_spec']['blocked_reasons'])
+            self.tables['Reward'][1][field] = previous
+        self.tables['SelectReward'][0]['SelectMaxCount'] = 3
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertEqual(spec['select_max_count'], 3)
+        self.assertIn('unsupported_select_reward_max_count', spec['blocked_reasons'])
+        self.tables['SelectReward'][0]['SelectMaxCount'] = 1
+        self.tables['BonusType'][0]['UnitID'] = 1
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('unsupported_item_bonus_unit_or_value:SelectRewardClassID', spec['blocked_reasons'])
+
+    def test_skill_book_exact_source_id_canonical_hash_and_learning_limits(self):
+        import hashlib
+        import json
+        limit = self.skill_book()
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertEqual(spec['kind'], 'source_skill_book')
+        self.assertEqual(spec['activation_status'], 'unrestricted')
+        self.assertEqual(spec['spell_class_id'], 83)
+        self.assertEqual(spec['card_id'], 122)
+        canonical = json.dumps(self.tables['SpellClass'][0], ensure_ascii=False,
+                               sort_keys=True, separators=(',', ':'))
+        self.assertEqual(spec['source_spell_row_json'], canonical)
+        self.assertEqual(spec['source_spell_row_sha256'], hashlib.sha256(canonical.encode()).hexdigest())
+        self.assertEqual(spec['source_learn_limits'][0]['CharacterMinLevel'], limit['CharacterMinLevel'])
+        self.assertEqual(spec['source_learn_limits'][0]['class']['ID'], 1)
+        self.assertTrue(spec['runtime_binding_required'])
+        self.assertEqual(spec['host_binding_policy'], 'exact_SpellClassID_and_canonical_source_row_SHA256')
+        self.assertNotIn('local_skill_id', spec)
+        self.tables['SpellClass'][0]['MPCost'] = 13
+        changed = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertNotEqual(changed['source_spell_row_sha256'], spec['source_spell_row_sha256'])
+
+    def test_skill_book_preserves_idless_limits_and_excludes_tutorial_learning(self):
+        limit = self.skill_book()
+        self.tables['SpellLearnLimit'].extend([deepcopy(limit), {**limit, 'IsTutorialSpell': True}])
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertEqual(len(spec['source_learn_limits']), 2)
+        self.assertEqual(len(spec['source_tutorial_learn_limits']), 1)
+        self.tables['SpellLearnLimit'] = [{**limit, 'IsTutorialSpell': True}]
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('missing_non_tutorial_source_skill_learn_limit', spec['blocked_reasons'])
+
+    def test_skill_book_blocks_unavailable_class_and_complex_card_requirements(self):
+        limit = self.skill_book()
+        self.tables['Class'][1]['CanCreateClient'] = False
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('unsupported_source_skill_class', spec['blocked_reasons'])
+        self.tables['Class'][1]['CanCreateClient'] = True
+        limit.update(CharacterPolymorphGradeID=42, LimitBuffCardID=122)
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('source_skill_polymorph_grade_requirement_unresolved', spec['blocked_reasons'])
+        self.assertIn('source_skill_limit_card_requirement_unresolved', spec['blocked_reasons'])
+        self.assertEqual(spec['source_learn_limits'][0]['limit_buff_card']['ID'], 122)
+        self.assertEqual(spec['source_learn_limits'][0]['CharacterPolymorphGradeID'], 42)
+        self.assertNotIn('polymorph_grade', spec['source_learn_limits'][0])
+
+    def test_skill_book_preserves_no_swap_duplicate_learning_flags_and_server_dates(self):
+        self.skill_book()
+        self.bonus('BuffCardCannotSwap', 1, item=21, unit=5)
+        self.bonus('CannotStackCard', 1, item=21, unit=5)
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertTrue(spec['buff_card_cannot_swap'])
+        self.assertTrue(spec['cannot_stack_card'])
+        self.assertEqual(spec['activation_status'], 'unrestricted')
+        self.tables['BuffCard'][0].update(ServerLimitSetID=772, StartDateTimeID=99)
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertEqual(spec['server_limit_set_id'], 772)
+        self.assertEqual(spec['start_datetime_id'], 99)
+        self.assertIn('server_definition_missing', spec['blocked_reasons'])
+        self.assertIn('source_date_window_unresolved', spec['blocked_reasons'])
+
+    def test_skill_book_rejects_conditional_reference_extra_effect_and_invalid_boolean_flag(self):
+        self.skill_book()
+        self.tables['Bonus'][0]['BonusApplicationTargetID'] = 1
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('conditional_or_possession_item_bonus:BuffCardID', spec['blocked_reasons'])
+        self.tables['Bonus'][0]['BonusApplicationTargetID'] = 0
+        self.bonus('CannotStackCard', 0.5, item=21, unit=5)
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('unsupported_source_skill_card_flag:CannotStackCard', spec['blocked_reasons'])
+        self.bonus('UnimplementedUseEffect', 1, item=21)
+        spec = self.compile({21})['21']['native_record']['source_use_spec']
+        self.assertIn('unsupported_item_bonus:UnimplementedUseEffect', spec['blocked_reasons'])
 
     def test_all_mapped_slot_names_are_explicit(self):
         self.assertEqual(compiler.SLOT_MAP, {

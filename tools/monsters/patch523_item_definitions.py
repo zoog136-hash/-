@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 from copy import deepcopy
+import hashlib
+import json
 
 
 ITEM_TABLES = (
@@ -20,6 +22,8 @@ ITEM_TABLES = (
     'LuckyBagEntityClassLimit',
     'SpellClass', 'SpellBonus', 'SpellMaterialType', 'SpecialResistanceType',
     'TargettingType', 'TargetKind', 'SpellCategory',
+    'Reward', 'RewardType', 'SelectReward', 'SelectRewardEntity', 'RewardAttribute',
+    'SpellLearnLimit',
 )
 
 SLOT_MAP = {
@@ -255,6 +259,94 @@ def _activation_metadata(rows: list[dict], original: dict, category: dict,
         'consume_effect_sprite_id': values.get('ItemConsumeEffectSpriteID', [0])[0],
     }
     return metadata, reasons
+
+
+def _source_skill_book_spec(rows: list[dict], original: dict, category: dict,
+                            indexes: dict, server_limits: dict, learn_limits: dict,
+                            item_id: int) -> tuple[dict, set[int]]:
+    references = [row for row in rows if row['bonus_type']['Name'] == 'BuffCardID']
+    if len(references) != 1 or type(references[0]['bonus'].get('Value')) is not int:
+        return {}, set()
+    reference = references[0]
+    card = _lookup(indexes, 'BuffCard', reference['bonus']['Value'], item_id)
+    deck = _lookup(indexes, 'BuffCardDeck', card['BuffCardDeckID'], item_id)
+    if (deck['ID'], deck['Name']) != (41, 'Spell'):
+        return {}, set()
+    metadata, reasons = _activation_metadata(rows, original, category, {
+        'BuffCardID': 'BuffCardID', 'ItemConsumeEffectSpriteID': 'SpriteID',
+        'BuffCardCannotSwap': 'TrueFalse', 'CannotStackCard': 'TrueFalse',
+    }, require_delay=False)
+    if metadata['consume_delay_ms'] is None:
+        del metadata['consume_delay_ms']
+    if category['Name'] != 'BuffCardDrawer' or deck.get('CharacterBased') is not True:
+        reasons.append('unsupported_source_skill_card_category_or_deck')
+    if type(card.get('BuffClassID')) is not int or card['BuffClassID'] != 0:
+        reasons.append('source_skill_card_has_additional_buff')
+    spell_id = card.get('SpellClassID')
+    spell = {}
+    if type(spell_id) is not int or spell_id <= 0:
+        reasons.append('invalid_source_skill_card_spell_id')
+    else:
+        spell = _lookup(indexes, 'SpellClass', spell_id, item_id)
+        if spell.get('TestSpell') is not False:
+            reasons.append('source_test_spell')
+    flags = {}
+    for name, field in [('BuffCardCannotSwap', 'buff_card_cannot_swap'),
+                        ('CannotStackCard', 'cannot_stack_card')]:
+        values = [row['bonus']['Value'] for row in rows if row['bonus_type']['Name'] == name]
+        if len(values) > 1 or any(type(value) is not int or value not in (0, 1) for value in values):
+            reasons.append('unsupported_source_skill_card_flag:' + name)
+        flags[field] = bool(values and values[0] == 1)
+    limit_id = card.get('ServerLimitSetID', 0)
+    limits = server_limits.get(limit_id, []) if limit_id else []
+    if limit_id:
+        reasons.append('server_context_required' if limits else 'server_definition_missing')
+    if card.get('StartDateTimeID', 0) or card.get('EndDateTimeID', 0):
+        reasons.append('source_date_window_unresolved')
+    source_limits, tutorial_limits = [], []
+    for row in learn_limits.get(spell_id, []):
+        linked = {**deepcopy(row), 'class': deepcopy(_lookup(indexes, 'Class', row['ClassID'], item_id))}
+        if row.get('LimitBuffCardID'):
+            linked['limit_buff_card'] = deepcopy(_lookup(indexes, 'BuffCard', row['LimitBuffCardID'], item_id))
+        if row.get('IsTutorialSpell') is True:
+            tutorial_limits.append(linked)
+            continue
+        source_limits.append(linked)
+        if row.get('IsTutorialSpell') is not False:
+            reasons.append('unsupported_source_skill_tutorial_rule')
+        if type(row.get('CharacterMinLevel')) is not int or row['CharacterMinLevel'] < 0:
+            reasons.append('unsupported_source_skill_min_level')
+        if (type(row.get('ClassID')) is not int or linked['class'].get('CanCreateClient') is not True
+                or row['ClassID'] <= 0):
+            reasons.append('unsupported_source_skill_class')
+        if type(row.get('CharacterPolymorphGradeID')) is not int or row['CharacterPolymorphGradeID'] != 0:
+            reasons.append('source_skill_polymorph_grade_requirement_unresolved')
+        if type(row.get('LimitBuffCardID')) is not int or row['LimitBuffCardID'] != 0:
+            reasons.append('source_skill_limit_card_requirement_unresolved')
+    if not source_limits:
+        reasons.append('missing_non_tutorial_source_skill_learn_limit')
+    row_json = json.dumps(spell, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+    reasons = list(dict.fromkeys(reasons))
+    return {
+        'kind': 'source_skill_book', 'source_snapshot': 'patch523',
+        'source_item_class_id': item_id, **metadata, **flags,
+        'card_id': card['ID'], 'deck_id': deck['ID'],
+        'original_card': deepcopy(card), 'original_deck': deepcopy(deck),
+        'spell_class_id': spell_id, 'source_spell_class': deepcopy(spell),
+        'source_spell_row_json': row_json,
+        'source_spell_row_sha256': hashlib.sha256(row_json.encode('utf-8')).hexdigest(),
+        'source_spell_group_mastery_required': spell.get('IsRequireSpellGroupMastery'),
+        'source_learn_limits': source_limits, 'source_tutorial_learn_limits': tutorial_limits,
+        'server_limit_set_id': limit_id, 'server_limits': deepcopy(limits),
+        'start_datetime_id': card.get('StartDateTimeID', 0),
+        'end_datetime_id': card.get('EndDateTimeID', 0),
+        'runtime_dependency': 'source523_skill_catalog',
+        'host_binding_policy': 'exact_SpellClassID_and_canonical_source_row_SHA256',
+        'runtime_binding_required': True,
+        'source_item_bonus_ids': [row['ID'] for row in rows],
+        'activation_status': 'blocked' if reasons else 'unrestricted',
+        'blocked_reasons': reasons,
+    }, set(range(len(rows))) if not reasons else set()
 
 
 def _timed_buff_spec(rows: list[dict], original: dict, category: dict,
@@ -686,6 +778,125 @@ def _source_reward_bag_spec(rows: list[dict], original: dict, category: dict,
     return spec, set(range(len(rows))) if not reasons else set()
 
 
+def _source_selectable_reward_spec(rows: list[dict], original: dict, category: dict,
+                                   indexes: dict, entities: dict, attributes: dict,
+                                   root_classes: list[dict], item_id: int) -> tuple[dict, set[int]]:
+    references = [row for row in rows if row['bonus_type']['Name'] == 'SelectRewardClassID']
+    if len(references) != 1:
+        return {}, set()
+    reference = references[0]
+    if type(reference['bonus'].get('Value')) is not int:
+        return {}, set()
+    root = _lookup(indexes, 'Reward', reference['bonus']['Value'], item_id)
+    root_type = _lookup(indexes, 'RewardType', root['RewardTypeID'], item_id)
+    metadata, reasons = _activation_metadata(
+        rows, original, category, {'SelectRewardClassID': 'RewardID'}, require_delay=False)
+    if metadata['consume_delay_ms'] is None:
+        del metadata['consume_delay_ms']
+    active_classes = {key: row for key, row in indexes['Class'].items()
+                      if key > 0 and row.get('CanCreateClient') is True}
+    root_class_ids = [row['ClassID'] for row in root_classes]
+    domain = sorted(set(root_class_ids)) if root_class_ids else sorted(active_classes)
+    if not domain or any(class_id not in active_classes for class_id in domain):
+        reasons.append('unsupported_select_reward_root_class')
+
+    def joined_reward(row: dict) -> dict:
+        return {**deepcopy(row), 'reward_type': deepcopy(_lookup(
+                    indexes, 'RewardType', row['RewardTypeID'], item_id)),
+                'character_class': deepcopy(_lookup(
+                    indexes, 'Class', row['CharacterClassID'], item_id)),
+                'attributes': deepcopy(attributes.get(row['ID'], []))}
+
+    def reward_rules(row: dict) -> None:
+        # These exact source flags describe the simple item-receipt subset.
+        # RewardEnhancementTypeID is not an initial equipment enchant level.
+        for field, value in [('RewardGetTimeTypeID', 1), ('RewardEnhancementTypeID', 1),
+                             ('UseImmediately', False), ('ClanOnly', False), ('Ranking', 0)]:
+            if type(row.get(field)) is not type(value) or row[field] != value:
+                reasons.append('unsupported_select_reward_rule:' + field)
+        if attributes.get(row['ID']):
+            reasons.append('unsupported_select_reward_attributes')
+        class_id = row.get('CharacterClassID')
+        if type(class_id) is not int or (class_id != 0 and class_id not in active_classes):
+            reasons.append('unsupported_select_reward_class')
+        elif class_id:
+            row_class = _lookup(indexes, 'Class', class_id, item_id)
+            if row_class.get('CanCreateClient') is not True:
+                reasons.append('unsupported_select_reward_class')
+
+    reward_rules(root)
+    selection, linked_entities, rewards = {}, [], []
+    needs_initial_enchant_rule = False
+    if root_type['ID'] != 111 or root_type['Name'] != 'SelectReward':
+        reasons.append('unsupported_select_reward_root_type')
+    else:
+        selection = _lookup(indexes, 'SelectReward', root['RewardClassID'], item_id)
+        # The currently verified item consumer chooses one distinct entity.
+        # Keep larger source maxima visible without inferring selection rules.
+        if type(selection.get('SelectMaxCount')) is not int or selection['SelectMaxCount'] != 1:
+            reasons.append('unsupported_select_reward_max_count')
+        source_entities = entities.get(selection['ID'], [])
+        if not source_entities:
+            reasons.append('empty_select_reward')
+        for entity in source_entities:
+            reward = _lookup(indexes, 'Reward', entity['RewardID'], item_id)
+            linked = joined_reward(reward)
+            linked_entities.append({**deepcopy(entity), 'reward': linked})
+            reward_rules(reward)
+            if linked['reward_type']['ID'] != 2 or linked['reward_type']['Name'] != 'Item':
+                reasons.append('unsupported_select_reward_output_type')
+                continue
+            output = _lookup(indexes, 'ItemClass', reward['RewardClassID'], item_id)
+            class_id = reward.get('CharacterClassID')
+            class_ids = [class_id] if type(class_id) is int and class_id else []
+            root_class = root.get('CharacterClassID')
+            eligible = [key for key in domain
+                        if (not class_ids or key in class_ids)
+                        and (root_class == 0 or key == root_class)]
+            if eligible and output.get('TestItem') is not False:
+                reasons.append('source_test_reward_item')
+            if (type(reward.get('Amount')) is not int or reward['Amount'] <= 0
+                    or type(reward.get('ItemBlessCodeID')) is not int
+                    or reward['ItemBlessCodeID'] not in (1, 2, 3)):
+                reasons.append('unsupported_select_reward_amount_or_variant')
+            # Reward has no initial enchant field. Gear uses a separately
+            # enabled, labeled host policy; this is never a source +0 claim.
+            needs_initial_enchant = bool(indexes['_item_equip_rows'].get(output['ID']))
+            needs_initial_enchant_rule |= needs_initial_enchant
+            rewards.append({
+                'source_entity_id': entity['ID'], 'reward_id': reward['ID'],
+                'item_class_id': output['ID'], 'amount': reward.get('Amount'),
+                'bless_raw': reward.get('ItemBlessCodeID'), 'class_ids': class_ids,
+                'enchant': None, 'enchant_origin': 'source_reward_has_no_initial_enchant_field',
+                'requires_local_initial_enchant_rule': needs_initial_enchant,
+            })
+    counts = {str(key): sum(not reward['class_ids'] or key in reward['class_ids']
+                           for reward in rewards)
+              if root.get('CharacterClassID') in (0, key) else 0 for key in domain}
+    if any(count == 0 for count in counts.values()):
+        reasons.append('no_eligible_select_reward_for_source_class')
+    reasons = list(dict.fromkeys(reasons))
+    spec = {
+        'kind': 'source_selectable_reward', 'source_snapshot': 'patch523',
+        'source_item_class_id': item_id, **metadata,
+        'reward_id': root['ID'], 'original_reward': joined_reward(root),
+        'select_reward_id': selection.get('ID'),
+        'original_select_reward': deepcopy(selection),
+        'select_max_count': selection.get('SelectMaxCount'),
+        'source_entities': linked_entities, 'rewards': rewards,
+        'source_class_domain': domain, 'class_eligible_option_counts': counts,
+        'source_item_bonus_ids': [row['ID'] for row in rows],
+        'selection_model': 'explicit_source_entity_choice',
+        'activation_status': 'blocked' if reasons else 'unrestricted',
+        'blocked_reasons': reasons,
+    }
+    if needs_initial_enchant_rule:
+        spec.update({'local_rule_required': 'select_reward_initial_enchant',
+                     'source_initial_enchant': None,
+                     'initial_enchant_configuration_key': 'patch523_select_reward_initial_enchant'})
+    return spec, set(range(len(rows))) if not reasons else set()
+
+
 def compile_items(tables: dict, descriptions: dict, wanted: set[int],
                   existing_bindings: dict) -> dict:
     """Return source definitions keyed by decimal source ItemClass ID.
@@ -699,10 +910,13 @@ def compile_items(tables: dict, descriptions: dict, wanted: set[int],
             raise ValueError('missing source table: ' + name)
     indexes = {name: _index(tables[name], name) for name in ITEM_TABLES
                if name not in ('ItemBonus', 'ItemEquipSlot', 'ItemClassLimit',
-                               'LuckyBagEntityClassLimit')}
+                               'LuckyBagEntityClassLimit', 'SpellLearnLimit')}
     server_limits = defaultdict(list)
     for row in tables['ServerLimit']:
         server_limits[row['ServerLimitSetID']].append(row)
+    learn_limits = defaultdict(list)
+    for row in tables['SpellLearnLimit']:
+        learn_limits[row['SpellClassID']].append(row)
     buff_bonuses = defaultdict(list)
     for row in tables['BuffBonus']:
         buff_bonuses[row['BuffClassID']].append(row)
@@ -712,6 +926,11 @@ def compile_items(tables: dict, descriptions: dict, wanted: set[int],
     bag_class_limits = defaultdict(list)
     for row in tables['LuckyBagEntityClassLimit']:
         bag_class_limits[row['LuckyBagEntityID']].append(row)
+    select_entities, reward_attributes = defaultdict(list), defaultdict(list)
+    for row in tables['SelectRewardEntity']:
+        select_entities[row['SelectRewardID']].append(row)
+    for row in tables['RewardAttribute']:
+        reward_attributes[row['RewardID']].append(row)
     indexes['_item_equip_rows'] = defaultdict(list)
     for row in tables['ItemEquipSlot']:
         indexes['_item_equip_rows'][row['ItemClassID']].append(row)
@@ -867,6 +1086,9 @@ def compile_items(tables: dict, descriptions: dict, wanted: set[int],
         use_spec, use_handled = _fixed_card_spec(
             bonuses, category, indexes, server_limits, item_id)
         if not use_spec:
+            use_spec, use_handled = _source_skill_book_spec(
+                bonuses, original, category, indexes, server_limits, learn_limits, item_id)
+        if not use_spec:
             use_spec, use_handled = _timed_buff_spec(
                 bonuses, original, category, indexes, buff_bonuses, item_id)
         if not use_spec:
@@ -874,6 +1096,9 @@ def compile_items(tables: dict, descriptions: dict, wanted: set[int],
         if not use_spec:
             use_spec, use_handled = _source_reward_bag_spec(
                 bonuses, original, category, indexes, bag_entities, bag_class_limits, classes, item_id)
+        if not use_spec:
+            use_spec, use_handled = _source_selectable_reward_spec(
+                bonuses, original, category, indexes, select_entities, reward_attributes, classes, item_id)
         if use_spec:
             use_spec['item_requirements'] = {
                 'test_item': original.get('TestItem', False),
@@ -903,7 +1128,7 @@ def compile_items(tables: dict, descriptions: dict, wanted: set[int],
             bool(equips) and not equipment) or bool(unresolved_classes) or (
             bool(use_spec) and use_spec['activation_status'] != 'unrestricted')
         record['source_effect_status'] = 'partial' if partial else 'represented_source_fields'
-        record['source_effect_scope'] = 'unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_reward_bags'
+        record['source_effect_scope'] = 'unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards'
         record['desc'] = ('523 원본 아이템 · 일부 효과 미지원' if partial
                           else '523 원본 아이템 · 지원되는 원본 필드 적용')
         definitions[str(item_id)] = {
@@ -915,10 +1140,11 @@ def compile_items(tables: dict, descriptions: dict, wanted: set[int],
             'existing_binding': deepcopy(existing_bindings.get(
                 str(item_id), existing_bindings.get(item_id, {}))),
         }
-    # Only ready reward bags expand definitions; drop membership never widens.
+    # Only ready reward receipts expand definitions; drop membership never widens.
     outputs = {reward['item_class_id'] for definition in definitions.values()
                for spec in [definition['native_record'].get('source_use_spec', {})]
-               if spec.get('kind') in ('guaranteed_bag', 'source_weighted_bag', 'mixed_rewards_bag')
+               if spec.get('kind') in ('guaranteed_bag', 'source_weighted_bag', 'mixed_rewards_bag',
+                                      'source_selectable_reward')
                and spec.get('activation_status') == 'unrestricted'
                for reward in spec['rewards']}
     if outputs - wanted:

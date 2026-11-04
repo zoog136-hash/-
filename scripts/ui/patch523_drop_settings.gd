@@ -7,6 +7,7 @@ var bleed_rule: OptionButton
 var bleed_interval: SpinBox
 var reward_draw_count: SpinBox
 var reward_bags: CheckButton
+var select_initial: CheckButton
 const SCOPES: Array[String] = ["base_flat_enchant","base_only","disabled"]
 const BLEED_RULES: Array[String] = ["total_damage_cap","no_cap","disabled"]
 
@@ -85,6 +86,12 @@ func _ready() -> void:
 	add_child(reward_draw_count)
 	reward_bags.toggled.connect(_reward_rule_changed)
 	reward_draw_count.value_changed.connect(_reward_rule_changed)
+	select_initial = CheckButton.new()
+	select_initial.name = "Patch523SelectInitialZero"
+	select_initial.text = "선택 장비 초기 +0 자체 규칙 사용 (원본 강화값 없음)"
+	select_initial.button_pressed = bool(world.ui_preferences.get("patch523_select_reward_initial_zero_enabled",true)) if world != null else true
+	add_child(select_initial)
+	select_initial.toggled.connect(_select_initial_changed)
 
 func _world() -> Node:
 	var node: Node = get_parent()
@@ -99,6 +106,7 @@ func _status_text(document: Dictionary) -> String:
 	if document.has("item_use_counts"):
 		var counts: Dictionary = document.item_use_counts
 		line += "\n지정 카드 %d종 · 지속 버프 %d종 · 확정/확률/혼합 상자 %d/%d/%d종" % [int(counts.get("fixed_card",0)),int(counts.get("source_timed_buff",0)),int(counts.get("guaranteed_bag",0)),int(counts.get("source_weighted_bag",0)),int(counts.get("mixed_rewards_bag",0))]
+		line += "\n선택 상자 %d종 · 스킬서 원본 정의 %d종 (PR245 연결 검증 필요)" % [int(counts.get("source_selectable_reward",0)),int(counts.get("source_skill_book",0))]
 	else: line += "\n이전 자료 버전 · 사용 효과 확장 ZIP 설치 가능"
 	return line
 
@@ -149,3 +157,14 @@ func _selected(path: String) -> void:
 				break
 			ancestor = ancestor.get_parent()
 	status.text = "드랍 자료 설치 완료 · "+_status_text(DROPS.data()) if result.ok else str(result.error)
+
+func _select_initial_changed(enabled: bool) -> void:
+	var world: Node = _world()
+	if world == null: return
+	var before: Dictionary = world.ui_preferences.duplicate(true)
+	world.ui_preferences["patch523_select_reward_initial_zero_enabled"] = enabled
+	if world._save_game(true) != OK:
+		world.ui_preferences = before
+		select_initial.set_pressed_no_signal(bool(before.get("patch523_select_reward_initial_zero_enabled",true)))
+		status.text = "선택 장비 자체 규칙 저장 실패 · 이전 설정 유지"
+	else: status.text = "선택 장비 초기 +0 자체 규칙 저장 완료" if enabled else "선택 장비 초기 강화 미확인 · 장비 선택 시 상자 보존"
