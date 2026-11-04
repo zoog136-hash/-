@@ -172,6 +172,12 @@ func run() -> void:
 	check(catalog.RELIC_LEVELS.EFFECTS.detail_text(improved_status).contains("게임 적용 설정"), "probability UI identifies configurable host integration")
 	world._update_hud()
 	view.search.text = "엑스칼리버"; view.search.text_changed.emit(view.search.text); await frames(3)
+	# The browser also finds reference skills whose descriptions mention this
+	# name. Select the exact existing execution ID through the ordinary row.
+	for index: int in range(view.filtered.size()):
+		if str(view.filtered[index].get("id", "")) == str(excalibur.id):
+			view.cards.select(index); view.cards.item_selected.emit(index); break
+	await frames(3)
 	check(view.detail.text.contains("상태 성공률 +3.00%p") and view.detail.text.contains("게임 적용 설정"), "actual skill inspector distinguishes source increment and host probability policy")
 	if not captures.is_empty() and DisplayServer.get_name() != "headless":
 		view.selection_sheet.scroll.scroll_vertical = int(view.selection_sheet.scroll.get_v_scroll_bar().max_value)
