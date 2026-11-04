@@ -44,6 +44,7 @@ func run() -> void:
 	world._on_inventory_item_activated(blessed+"@@@"+id)
 	check(str(world.equipped_items.domination_stone.get("instance_id",""))==id,"upgraded original blessed item actually equips")
 	check(world._save_game(true)==OK,"upgraded physical items saved")
+	if D.data().get("full_item_catalog",false):check(FileAccess.get_sha256(world.save_path()+".pre-itemclass523-"+old_hash)==old_hash,"live ItemClass upgrade creates immutable byte-exact backup before first write")
 	world._load_game(true);world.field_population.set_process(false);world._clear_monsters()
 	check(int(world.inventory[normal])==1 and int(world.inventory[blessed])==2 and world.item_instances.has(id),"upgraded identities and quantities survive reentry")
 	check(D.install_zip(old_zip).get("ok",false) and D.data().has("item_use_counts"),"older reinstall cannot downgrade current source data")

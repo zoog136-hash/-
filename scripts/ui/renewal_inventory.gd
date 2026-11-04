@@ -605,6 +605,7 @@ func _refresh_weight() -> void:
 
 func _refresh_detail(item_reference: String) -> void:
 	super._refresh_detail(item_reference)
+	var verified_source_text: String = detail_text.text
 	var item_name: String = _base_item_name(item_reference)
 	var selected_id: String = _ref_instance_id(item_reference)
 	var item: Dictionary = _find_item_record(item_reference)
@@ -621,7 +622,7 @@ func _refresh_detail(item_reference: String) -> void:
 		var description: String = str(item.get("desc",item.get("description","")))
 		if not description.is_empty(): lines.append(UI.safe(description))
 	if not selected_id.is_empty(): lines.append("강화  +%d" % _enhance_level(item_reference))
-	detail_text.text = "\n".join(lines) if not lines.is_empty() else "표시할 추가 효과가 없습니다."
+	detail_text.text = verified_source_text if item.get("source_m_native_item",false) else "\n".join(lines) if not lines.is_empty() else "표시할 추가 효과가 없습니다."
 	if controller != null:
 		var reason: String = controller.get_parent()._quickslot_registration_error("item",item_name)
 		quick_button.disabled = not reason.is_empty()

@@ -1072,6 +1072,7 @@ class NativeItemDefinitionTests(unittest.TestCase):
             'Spaulder': 'shoulder', 'Bangle_normal': 'bracelet', 'Bangle_BM': 'bracelet',
             'Crest': 'crystal', 'Catalyst': 'catalyst',
             'DominationStone': 'domination_stone',
+            'Relic': 'relic_item', 'FishingRod': 'fishing_rod',
         })
 
 

@@ -4,6 +4,19 @@ class_name TwilightInventoryUI
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 
+static func instance_id_less(a: String,b: String) -> bool:
+	# IDs are opaque ownership keys. Compare decimal legacy IDs without an
+	# integer cast, then opaque IDs lexically; UUIDs and long digits stay intact.
+	var numeric_a: bool = a.is_valid_int() and not a.begins_with("-") and not a.begins_with("+")
+	var numeric_b: bool = b.is_valid_int() and not b.begins_with("-") and not b.begins_with("+")
+	if numeric_a != numeric_b: return numeric_a
+	if numeric_a:
+		var digits_a: String = a.lstrip("0")
+		var digits_b: String = b.lstrip("0")
+		if digits_a.length() != digits_b.length(): return digits_a.length() < digits_b.length()
+		if digits_a != digits_b: return digits_a < digits_b
+	return a < b
+
 signal item_activate_requested(item_name: String)
 signal quickslot_requested(item_name: String)
 
@@ -337,7 +350,7 @@ func _inventory_entries() -> Array[Dictionary]:
 		if int(inventory.get(item_name, 0)) <= 0:
 			continue
 		var instance_ids: Array[String] = ids_by_name.get(item_name, [] as Array[String])
-		instance_ids.sort_custom(func(a: String, b: String) -> bool: return int(a) < int(b))
+		instance_ids.sort_custom(instance_id_less)
 		# Verified book instances keep provenance for transactions, while the
 		# inventory still presents their source 10,000-capacity stack as one row.
 		if instance_ids.is_empty() or preload("res://scripts/cards/source_awakening_items.gd").stackable_book(_find_item_record(item_name)):
@@ -602,10 +615,10 @@ func _matches_category(record: Dictionary, item_name: String) -> bool:
 	var slot := str(record.get("slot", "")).to_lower()
 	var item_type := str(record.get("type", ""))
 	if category_filter == "장비":
-		return slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","necklace","armor"]
+		return slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor"]
 	if category_filter == "소모품":
 		return slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	return not (slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","necklace","armor","consumable"])
+	return not (slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor","consumable"])
 
 func _refresh_detail(item_name: String) -> void:
 	var selected_reference: String = item_name
@@ -669,12 +682,16 @@ func _refresh_detail(item_name: String) -> void:
 	if record.has("weight"):
 		lines.append("")
 		lines.append("무게    %d" % int(record.get("weight", 0)))
+	var source_details: String = preload("res://scripts/loot/patch523_monster_drops.gd").item_details(record)
+	if not source_details.is_empty():
+		lines.append("")
+		lines.append(source_details)
 	if lines.is_empty():
 		lines.append("등록된 상세 옵션이 없습니다.")
 	detail_text.text = "\n".join(lines)
 
 	var is_consumable := slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	var is_ammo: bool = item_name in ["화살", "총알"]
+	var is_ammo: bool = item_name in ["화살", "총알"] or not preload("res://scripts/loot/patch523_ammo.gd").profile(record).is_empty()
 	if is_ammo:
 		detail_action.text = "해제" if equipped else "착용"
 	elif is_consumable:

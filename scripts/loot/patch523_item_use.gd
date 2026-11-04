@@ -1,6 +1,7 @@
 extends RefCounted
 ## Execute verified source joins; never infer an item's use from its name.
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const PRESENTATION_FLAGS: Dictionary = {"UIShowFilter":"Value","NoAnnounce":"TrueFalse"}
 
 static func canonical(record: Dictionary) -> Dictionary:
 	if not record.get("source_m_native_item", false):
@@ -9,15 +10,42 @@ static func canonical(record: Dictionary) -> Dictionary:
 		if converted.get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]: return {}
 		for key: String in ["name", "source", "sourceId", "sourceUrl", "slot", "type", "grade"]: converted[key] = record.get(key, "")
 		return converted
-	var definition: Dictionary = DROPS.data().get("item_definitions", {}).get(str(int(record.get("source_item_class_id", -1))), {})
+	var definition: Dictionary = DROPS.definition_id(str(int(record.get("source_item_class_id", -1))))
 	var original: Dictionary = definition.get("native_record", {})
 	if original.is_empty(): return {}
 	var expected: Dictionary = DROPS.expected_variant(original,record)
 	return expected if DROPS.matches(record, expected) else {}
 
+static func action_record(world: Node, saved: Dictionary) -> Dictionary:
+	var record: Dictionary = canonical(saved)
+	var spec: Dictionary = record.get("source_use_spec",{})
+	if spec.get("activation_status") != "blocked" or not world.ui_preferences.get("patch523_item_presentation_flags_policy",true): return record
+	var presentation: Dictionary = {}
+	for row: Dictionary in DROPS.item_definition(saved).get("item_bonus",[]):
+		var kind: String = str(row.bonus_type.Name)
+		if not PRESENTATION_FLAGS.has(kind): continue
+		if row.get("IsPossession") != false or int(row.bonus.BonusApplicationTypeID) != 0 or int(row.bonus.BonusApplicationTargetID) != 0 or row.unit.Name != PRESENTATION_FLAGS[kind] or int(row.bonus.Value) not in [0,1]: return record
+		presentation["unsupported_item_bonus:"+kind] = true
+	if presentation.is_empty(): return record
+	var reasons: Array = spec.get("blocked_reasons",[])
+	if reasons.is_empty(): return record
+	for reason: String in reasons:
+		if presentation.has(reason): continue
+		if reason in ["source_item_lifetime_unresolved","conditional_or_possession_item_bonus:DeleteTime"] and record.has("source_delete_time_raw") and not record.get("source_delete_time_unresolved",false): continue
+		return record
+	# Source definitions remain blocked in the private pack. This reducer is an
+	# explicit, reversible host interpretation, never new source probability.
+	spec = spec.duplicate(true)
+	spec["activation_status"] = "unrestricted"
+	spec["local_presentation_flags_policy"] = "TWILIGHT_display_metadata_not_use_gate_estimate"
+	record["source_use_spec"] = spec
+	return record
+
 static func eligibility(world: Node, record: Dictionary) -> String:
 	if record.is_empty(): return "원본 아이템 자료를 확인할 수 없습니다"
 	if record.get("source_test_item", false): return "원본 테스트 아이템은 사용할 수 없습니다"
+	var deadline: String = DROPS.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
+	if not deadline.is_empty(): return deadline
 	if int(record.get("source_bless_raw", 1)) not in [1, 2, 3]: return "원본 축복 상태 미지원"
 	if not record.get("source_unresolved_class_ids", []).is_empty(): return "원본 사용 직업 조건 미확인"
 	var classes: Array = record.get("source_class_names", [])
@@ -31,16 +59,17 @@ static func eligibility(world: Node, record: Dictionary) -> String:
 	return ""
 
 static func try_use(world: Node, saved: Dictionary) -> bool:
-	var record: Dictionary = canonical(saved)
+	var record: Dictionary = action_record(world,saved)
 	if not saved.get("source_m_native_item", false) and record.is_empty(): return false
 	var problem: String = eligibility(world, record)
 	if not problem.is_empty():
 		world.hud.show_message(problem)
 		return true
 	if DROPS.equipment(record): return false
+	if not preload("res://scripts/loot/patch523_ammo.gd").profile(record).is_empty(): return false
 	# Source HP potions retain the existing shared HP-potion rules.
 	if not record.get("heal_spec", {}).is_empty():
-		var hp_problem: String = DROPS.hp_use_problem(record,world.is_player_concealed())
+		var hp_problem: String = DROPS.hp_use_problem(record,world.is_player_concealed(),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 		if not hp_problem.is_empty():
 			world.hud.show_message(hp_problem)
 			return true
@@ -89,7 +118,7 @@ static func _fixed_card(world: Node, record: Dictionary, spec: Dictionary) -> vo
 	var category: String = str(spec.get("card_kind", ""))
 	var candidates: Array[Dictionary] = []
 	for card: Dictionary in world.catalog_db.get(category, []):
-		if card.get("source") == "lineagem_base508" and int(card.get("source_card_id", -1)) == int(spec.get("card_id", -2)) and card.get("source_original_card", {}) == spec.get("original_card", {}): candidates.append(card)
+		if card.get("source") in ["lineagem_base508","lineagem_patch523"] and int(card.get("source_card_id", -1)) == int(spec.get("card_id", -2)) and card.get("source_original_card", {}) == spec.get("original_card", {}): candidates.append(card)
 	if candidates.size() != 1:
 		world.hud.show_message("원본 카드 ID·정의 일치 확인 실패 · 아이템 보존")
 		return
@@ -238,7 +267,7 @@ static func _commit_rewards(world: Node, record: Dictionary, spec: Dictionary, s
 			for index: int in range(int(reward.amount)):
 				var identity: String = Crypto.new().generate_random_bytes(16).hex_encode()
 				while instances.has(identity): identity = Crypto.new().generate_random_bytes(16).hex_encode()
-				instances[identity] = {"name":str(item.name),"level":enchant,"element":"","element_level":0,"record":item.duplicate(true),"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(record.source_item_class_id),"lucky_bag_class_id":int(spec.get("lucky_bag_class_id",0)),"select_reward_id":int(spec.get("select_reward_id",0)),"entity_id":int(reward.source_entity_id),"bless":int(reward.bless_raw),"enchant":enchant,"initial_enchant_origin":"twilight_configured_default_zero" if local_initial else str(reward.get("enchant_origin","source_bag_initial_enchant")),"original_initial_enchant":reward.get("enchant")}}
+				instances[identity] = {"name":str(item.name),"level":enchant,"element":"","element_level":0,"record":item.duplicate(true),"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(record.source_item_class_id),"source_item_class_id":int(reward.item_class_id),"lucky_bag_class_id":int(spec.get("lucky_bag_class_id",0)),"select_reward_id":int(spec.get("select_reward_id",0)),"entity_id":int(reward.source_entity_id),"bless":int(reward.bless_raw),"enchant":enchant,"initial_enchant_origin":"twilight_configured_default_zero" if local_initial else str(reward.get("enchant_origin","source_bag_initial_enchant")),"original_initial_enchant":reward.get("enchant")}}
 		rewards.append("%s ×%d" % [str(base.source_display_name),int(reward.amount)])
 	if rewards.is_empty():
 		world.rng.state = rng_before
@@ -311,7 +340,7 @@ static func _open_selection(world: Node, record: Dictionary) -> void:
 
 static func claim_selection(world: Node, saved: Dictionary, entity_id: int) -> bool:
 	# Re-read the pinned pack and ownership at confirmation, never trust the UI row.
-	var record: Dictionary = canonical(saved)
+	var record: Dictionary = action_record(world,saved)
 	var problem: String = eligibility(world, record)
 	if not problem.is_empty():
 		world.hud.show_message(problem)

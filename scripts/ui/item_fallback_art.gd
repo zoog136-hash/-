@@ -46,7 +46,7 @@ static func family(record: Dictionary, item_name: String) -> String:
 	var slot: String = str(record.get("slot", ""))
 	var weapons: Dictionary = {"단검":"dagger","양손검":"greatsword","그레이트소드":"greatsword","활":"bow","창":"spear","도끼":"axe","사이드":"scythe","이도류":"dual","크로우":"claw","지팡이":"staff","라이플":"rifle","핸드캐넌":"cannon","핸드 캐넌":"cannon","체인소드":"chain","체인 소드":"chain"}
 	if slot == "weapon": return str(weapons.get(type, "sword"))
-	var slots: Dictionary = {"helmet":"helmet","body":"armor","tshirt":"armor","cloak":"cloak","gloves":"gloves","boots":"boots","pants":"pants","gaiters":"pants","offhand":"shield","shoulder":"shoulder","necklace":"necklace","belt":"belt","bracelet":"bracelet","badge":"badge","crystal":"gem","catalyst":"gem","rune":"rune","domination_stone":"gem"}
+	var slots: Dictionary = {"helmet":"helmet","body":"armor","tshirt":"armor","cloak":"cloak","gloves":"gloves","boots":"boots","pants":"pants","gaiters":"pants","offhand":"shield","shoulder":"shoulder","necklace":"necklace","belt":"belt","bracelet":"bracelet","badge":"badge","crystal":"gem","catalyst":"gem","rune":"rune","domination_stone":"gem","relic_item":"gem","fishing_rod":"rune"}
 	if slots.has(slot): return slots[slot]
 	if slot.begins_with("ring"): return "ring"
 	if slot.begins_with("earring"): return "earring"

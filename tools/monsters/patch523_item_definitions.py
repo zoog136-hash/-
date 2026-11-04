@@ -35,7 +35,7 @@ SLOT_MAP = {
     'Badge': 'seal', 'Insignia': 'badge', 'Spaulder': 'shoulder',
     'Bangle_normal': 'bracelet', 'Bangle_BM': 'bracelet',
     'Crest': 'crystal', 'Catalyst': 'catalyst',
-    'DominationStone': 'domination_stone',
+    'DominationStone': 'domination_stone', 'Relic': 'relic_item', 'FishingRod': 'fishing_rod',
 }
 
 # Source ArmorClass is a positive defense amount. The host uses positive def
@@ -51,6 +51,20 @@ FLAT_EQUIPMENT_BONUSES = {
     'MeleeDamage': 'meleeDamage', 'RangeDamage': 'rangedDamage',
     'MagicDamage': 'magicDamage', 'MeleeHit': 'meleeHit',
     'RangeHit': 'rangedHit', 'MagicHit': 'magicHit',
+    'PVEDamageReduction': 'pve_damage_reduction',
+    'PVPDamageReduction': 'pvp_damage_reduction',
+    'PVPMeleeAdditionDamage': 'pvp_melee_damage',
+    'PVPRangeAdditionDamage': 'pvp_ranged_damage',
+    'PVPMagicAdditionDamage': 'pvp_magic_damage',
+    'PVEMeleeAdditionDamage': 'pve_melee_damage',
+    'PVERangeAdditionDamage': 'pve_ranged_damage',
+    'PVEMagicAdditionDamage': 'pve_magic_damage',
+    'PierceMeleeEvasion': 'melee_evasion_ignore',
+    'PierceRangeEvasion': 'ranged_evasion_ignore',
+    'PierceMeleeDamageReduction': 'melee_reduction_ignore',
+    'PierceRangeDamageReduction': 'ranged_reduction_ignore',
+    'PierceMagicDamageReduction': 'magic_reduction_ignore',
+    'HPPotionIncreaseStatic': 'potionHealFlat',
 }
 HP_BONUSES = (
     'HPRestoration', 'HPRestorationDiceNumber', 'HPRestorationDiceSpotCount',
@@ -898,7 +912,7 @@ def _source_selectable_reward_spec(rows: list[dict], original: dict, category: d
 
 
 def compile_items(tables: dict, descriptions: dict, wanted: set[int],
-                  existing_bindings: dict) -> dict:
+                  existing_bindings: dict, preserve_unresolved: bool = False) -> dict:
     """Return source definitions keyed by decimal source ItemClass ID.
 
     ``tables`` contains validated source row lists. ID-less relationship tables
@@ -943,203 +957,260 @@ def compile_items(tables: dict, descriptions: dict, wanted: set[int],
 
     definitions = {}
     for item_id in sorted(wanted):
-        original = _lookup(indexes, 'ItemClass', item_id, item_id)
-        category = _lookup(indexes, 'ItemCategory', original['CategoryID'], item_id)
-        grade = _lookup(indexes, 'Grade', original['GradeID'], item_id)
-        label = (_description(descriptions, original['IdentifiedDescID'])
-                 or _description(descriptions, original['DescID']))
-        grade_label = _description(descriptions, grade['DescID'])
-        if not label or not grade_label:
-            raise ValueError(f'missing localized item/grade descriptor: item #{item_id}')
+        record, bonuses, equips, classes = {}, [], [], []
+        try:
+            original = _lookup(indexes, 'ItemClass', item_id, item_id)
+            category = _lookup(indexes, 'ItemCategory', original['CategoryID'], item_id)
+            grade = _lookup(indexes, 'Grade', original['GradeID'], item_id)
+            label = (_description(descriptions, original['IdentifiedDescID'])
+                     or _description(descriptions, original['DescID']))
+            grade_label = _description(descriptions, grade['DescID'])
+            missing_label = not label or not grade_label
+            if missing_label and not preserve_unresolved:
+                raise ValueError(f'missing localized item/grade descriptor: item #{item_id}')
+            label = label or f'원본 아이템 #{item_id} (표시명 없음)'
+            grade_label = grade_label or f'원본 등급 #{grade["ID"]}'
 
-        bonuses = []
-        for row in grouped['ItemBonus'][item_id]:
-            bonus = _lookup(indexes, 'Bonus', row['BonusID'], item_id)
-            kind = _lookup(indexes, 'BonusType', bonus['BonusTypeID'], item_id)
-            unit = _lookup(indexes, 'Unit', kind['UnitID'], item_id)
-            linked = {**deepcopy(row), 'bonus': deepcopy(bonus),
-                      'bonus_type': deepcopy(kind), 'unit': deepcopy(unit)}
-            if kind['Name'] == 'WeaponType' and unit['Name'] == 'WeaponTypeID':
-                linked['weapon_type'] = deepcopy(_lookup(
-                    indexes, 'WeaponType', bonus['Value'], item_id))
-            bonuses.append(linked)
-        equips = [{**deepcopy(row), 'equip_slot': deepcopy(_lookup(
-            indexes, 'EquipSlot', row['EquipSlotID'], item_id))}
-            for row in grouped['ItemEquipSlot'][item_id]]
-        classes = [{**deepcopy(row), 'class': deepcopy(_lookup(
-            indexes, 'Class', row['ClassID'], item_id))}
-            for row in grouped['ItemClassLimit'][item_id]]
-        slot_names = [row['equip_slot']['Name'] for row in equips]
-        resolved_slots = [_host_slot(row) for row in equips]
-        mapped_slots = {slot for slot in resolved_slots if slot is not None}
-        # Unknown or conflicting source slots cannot become fictitious wearables.
-        equipment = bool(slot_names) and len(mapped_slots) == 1 and all(
-            slot is not None for slot in resolved_slots)
-        slot = next(iter(mapped_slots)) if equipment else 'material'
-        if not equipment and not equips:
-            if category['Name'] == 'Currency':
-                slot = 'currency'
-            elif category['Name'] == 'Potion' or category.get('IsConsumable') is True:
-                slot = 'consumable'
-        equipment_status = ('mapped' if equipment else 'unsupported_source_slot'
-                            if any(slot is None for slot in resolved_slots)
-                            else 'ambiguous_source_equip_slots' if equips
-                            else 'no_source_equip_slot')
-        class_labels = [_description(descriptions, row['class']['DescID'])
-                        for row in classes]
-        unresolved_classes = [row['ClassID'] for row, name in zip(classes, class_labels)
-                              if not name]
-        source_id = f'm523:item:{item_id}'
-        record = {
-            'name': f'{label} · 원본#{item_id}', 'source_display_name': label,
-            'source': 'lineagem_patch523', 'source_snapshot': 'patch523',
-            'source_item_class_id': item_id, 'sourceId': source_id,
-            'sourceUrl': '', 'source_m_native_item': True,
-            'grade': grade_label, 'source_grade_id': grade['ID'],
-            'slot': slot, 'type': _description(descriptions, category['DescID'])
-                or category['Name'],
-            'source_category_id': category['ID'],
-            'source_category_name': category['Name'],
-            'source_test_item': original.get('TestItem', False),
-            'source_is_stackable': category.get('IsStackable', False),
-            'source_is_consumable': category.get('IsConsumable', False),
-            'source_weight': original.get('Weight', 0),
-            'source_weight_unit': 'unverified_source_units',
-            'source_equip_slots': slot_names,
-            'source_equip_slot_ids': [row['EquipSlotID'] for row in equips],
-            'source_equipment_status': equipment_status,
-            'source_class_ids': [row['ClassID'] for row in classes],
-            'source_class_names': class_labels,
-            'source_unresolved_class_ids': unresolved_classes,
-            'source_level_limit_min': original.get('LevelLimitMin', 0),
-            'source_level_limit_max': original.get('LevelLimitMax', 0),
-            'source_max_level_limit_min': original.get('MaxLevelLimitMin', 0),
-            'source_max_level_limit_max': original.get('MaxLevelLimitMax', 0),
-        }
-        for key in ('Tradable', 'Storable', 'Droppable', 'Deletable'):
-            value = original.get('Is' + key, False)
-            record[key.lower()] = value
-            record['source_is_' + key.lower()] = value
-        if equipment:
-            record['type'] = _description(descriptions, equips[0]['equip_slot']['DescID']) or record['type']
-
-        handled = set()
-        mapped = []
-        for number, row in enumerate(bonuses):
-            name = row['bonus_type']['Name']
-            if not _unconditional(row):
-                continue
-            if equipment and _flat_value(row) and name in FLAT_EQUIPMENT_BONUSES:
-                field = FLAT_EQUIPMENT_BONUSES[name]
-                record[field] = record.get(field, 0) + row['bonus']['Value']
-                handled.add(number)
-                mapped.append({'item_bonus_id': row['ID'], 'bonus_id': row['BonusID'],
-                               'field': field, 'value': row['bonus']['Value']})
-            elif (equipment and slot == 'domination_stone'
-                  and name == 'ExperienceAdditionPercent'
-                  and row['unit']['Name'] == 'Percentage'
-                  and type(row['bonus'].get('Value')) is int):
-                ui_units = [unit for unit in indexes['UIUnit'].values()
-                            if unit.get('UnitID') == row['unit']['ID']]
-                if len(ui_units) == 1 and ui_units[0].get('Denominator') == 10000:
-                    value = row['bonus']['Value'] / 1000000
-                    record['xp'] = record.get('xp', 0.0) + value
-                    handled.add(number)
-                    mapped.append({'item_bonus_id': row['ID'], 'bonus_id': row['BonusID'],
-                                   'field': 'xp', 'value': value,
-                                   'source_value': row['bonus']['Value'],
-                                   'source_denominator': 1000000})
-        for name, field in (('IsTwoHanded', 'source_is_two_handed'),
-                            ('CanEquipWithTwoHanded', 'source_can_equip_with_two_handed')):
-            flags = [(number, row) for number, row in enumerate(bonuses)
-                     if equipment and row['bonus_type']['Name'] == name
-                     and _unconditional(row) and row['unit']['Name'] == 'TrueFalse'
-                     and type(row['bonus'].get('Value')) is int
-                     and row['bonus']['Value'] in (0, 1)]
-            if flags and len({row['bonus']['Value'] for _, row in flags}) == 1:
-                record[field] = bool(flags[0][1]['bonus']['Value'])
-                for number, row in flags:
-                    handled.add(number)
-                    mapped.append({'item_bonus_id': row['ID'], 'bonus_id': row['BonusID'],
-                                   'field': field, 'value': record[field]})
-        weapon_rows = [row for row in bonuses if _unconditional(row)
-                       and 'weapon_type' in row]
-        weapon_types = {row['weapon_type']['ID'] for row in weapon_rows}
-        if equipment and slot == 'weapon' and len(weapon_types) == 1:
-            weapon = weapon_rows[0]['weapon_type']
-            weapon_label = _description(descriptions, weapon['DescID'])
-            if weapon_label:
-                record['type'] = weapon_label
-                record['source_weapon_type_id'] = weapon['ID']
-                record['source_weapon_type_name'] = weapon['Name']
-                for number, row in enumerate(bonuses):
-                    if row in weapon_rows:
-                        handled.add(number)
-
-        heal_spec, hp_handled = _hp_spec(bonuses, category)
-        if slot == 'consumable' and heal_spec:
-            record['heal_spec'] = heal_spec
-            # Existing host routing tests only heal > 0. Exact use must read
-            # heal_spec; this indicator is never the dice's expected value.
-            record['heal'] = max(1, heal_spec.get('HPRestoration', 0))
-            handled.update(hp_handled)
-        use_spec, use_handled = _fixed_card_spec(
-            bonuses, category, indexes, server_limits, item_id)
-        if not use_spec:
-            use_spec, use_handled = _source_skill_book_spec(
-                bonuses, original, category, indexes, server_limits, learn_limits, item_id)
-        if not use_spec:
-            use_spec, use_handled = _timed_buff_spec(
-                bonuses, original, category, indexes, buff_bonuses, item_id)
-        if not use_spec:
-            use_spec, use_handled = _mp_spec(bonuses, original, category, item_id)
-        if not use_spec:
-            use_spec, use_handled = _source_reward_bag_spec(
-                bonuses, original, category, indexes, bag_entities, bag_class_limits, classes, item_id)
-        if not use_spec:
-            use_spec, use_handled = _source_selectable_reward_spec(
-                bonuses, original, category, indexes, select_entities, reward_attributes, classes, item_id)
-        if use_spec:
-            use_spec['item_requirements'] = {
-                'test_item': original.get('TestItem', False),
-                'level_min': original.get('LevelLimitMin', 0),
-                'level_max': original.get('LevelLimitMax', 0),
-                'max_level_min': original.get('MaxLevelLimitMin', 0),
-                'max_level_max': original.get('MaxLevelLimitMax', 0),
-                'class_ids': record['source_class_ids'].copy(),
-                'unresolved_class_ids': unresolved_classes.copy(),
-                'service_region_code': original.get('ServiceRegionCode', ''),
-                'targetting_type_id': original.get('TargettingTypeID'),
-                'can_use_when_invisible': original.get('CanUseWhenInvisible'),
+            bonuses = []
+            for row in grouped['ItemBonus'][item_id]:
+                bonus = _lookup(indexes, 'Bonus', row['BonusID'], item_id)
+                kind = _lookup(indexes, 'BonusType', bonus['BonusTypeID'], item_id)
+                unit = _lookup(indexes, 'Unit', kind['UnitID'], item_id)
+                linked = {**deepcopy(row), 'bonus': deepcopy(bonus),
+                          'bonus_type': deepcopy(kind), 'unit': deepcopy(unit)}
+                if kind['Name'] == 'WeaponType' and unit['Name'] == 'WeaponTypeID':
+                    linked['weapon_type'] = deepcopy(_lookup(
+                        indexes, 'WeaponType', bonus['Value'], item_id))
+                bonuses.append(linked)
+            equips = [{**deepcopy(row), 'equip_slot': deepcopy(_lookup(
+                indexes, 'EquipSlot', row['EquipSlotID'], item_id))}
+                for row in grouped['ItemEquipSlot'][item_id]]
+            classes = [{**deepcopy(row), 'class': deepcopy(_lookup(
+                indexes, 'Class', row['ClassID'], item_id))}
+                for row in grouped['ItemClassLimit'][item_id]]
+            slot_names = [row['equip_slot']['Name'] for row in equips]
+            resolved_slots = [_host_slot(row) for row in equips]
+            mapped_slots = {slot for slot in resolved_slots if slot is not None}
+            # Unknown or conflicting source slots cannot become fictitious wearables.
+            equipment = bool(slot_names) and len(mapped_slots) == 1 and all(
+                slot is not None for slot in resolved_slots)
+            slot = next(iter(mapped_slots)) if equipment else 'material'
+            if not equipment and not equips:
+                if category['Name'] == 'Currency':
+                    slot = 'currency'
+                elif category['Name'] == 'Potion' or category.get('IsConsumable') is True:
+                    slot = 'consumable'
+            equipment_status = ('mapped' if equipment else 'unsupported_source_slot'
+                                if any(slot is None for slot in resolved_slots)
+                                else 'ambiguous_source_equip_slots' if equips
+                                else 'no_source_equip_slot')
+            class_labels = [_description(descriptions, row['class']['DescID'])
+                            for row in classes]
+            unresolved_classes = [row['ClassID'] for row, name in zip(classes, class_labels)
+                                  if not name]
+            source_id = f'm523:item:{item_id}'
+            record = {
+                'name': f'{label} · 원본#{item_id}', 'source_display_name': label,
+                'source': 'lineagem_patch523', 'source_snapshot': 'patch523',
+                'source_item_class_id': item_id, 'sourceId': source_id,
+                'sourceUrl': '', 'source_m_native_item': True,
+                'grade': grade_label, 'source_grade_id': grade['ID'],
+                'slot': slot, 'type': _description(descriptions, category['DescID'])
+                    or category['Name'],
+                'source_category_id': category['ID'],
+                'source_category_name': category['Name'],
+                'source_test_item': original.get('TestItem', False),
+                'source_is_trash': original.get('IsTrash', False),
+                'source_label_status': 'source_descriptor_missing' if missing_label else 'source_descriptor',
+                'source_category_is_activatable': category.get('IsActivatable', False),
+                'source_is_stackable': category.get('IsStackable', False),
+                'source_is_consumable': category.get('IsConsumable', False),
+                'source_weight': original.get('Weight', 0),
+                'source_weight_unit': 'unverified_source_units',
+                'source_equip_slots': slot_names,
+                'source_equip_slot_ids': [row['EquipSlotID'] for row in equips],
+                'source_equipment_status': equipment_status,
+                'source_class_ids': [row['ClassID'] for row in classes],
+                'source_class_names': class_labels,
+                'source_unresolved_class_ids': unresolved_classes,
+                'source_level_limit_min': original.get('LevelLimitMin', 0),
+                'source_level_limit_max': original.get('LevelLimitMax', 0),
+                'source_max_level_limit_min': original.get('MaxLevelLimitMin', 0),
+                'source_max_level_limit_max': original.get('MaxLevelLimitMax', 0),
             }
-            record['source_use_spec'] = use_spec
-            handled.update(use_handled)
-        unhandled = [
-            {'item_bonus_id': row['ID'], 'bonus_id': row['BonusID'],
-             'bonus_type': row['bonus_type']['Name'],
-             'reason': _unsupported_reason(row, equipment)}
-            for number, row in enumerate(bonuses) if number not in handled
-        ]
-        record['source_mapped_bonuses'] = mapped
-        record['source_unhandled_bonuses'] = unhandled
-        record['source_unhandled_bonus_ids'] = [row['bonus_id'] for row in unhandled]
-        # Empty metadata does not certify an unsupported consumable's use system.
-        partial = bool(unhandled) or (slot == 'consumable' and not (heal_spec or use_spec)) or (
-            bool(equips) and not equipment) or bool(unresolved_classes) or (
-            bool(use_spec) and use_spec['activation_status'] != 'unrestricted')
-        record['source_effect_status'] = 'partial' if partial else 'represented_source_fields'
-        record['source_effect_scope'] = 'unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards'
-        record['desc'] = ('523 원본 아이템 · 일부 효과 미지원' if partial
-                          else '523 원본 아이템 · 지원되는 원본 필드 적용')
-        definitions[str(item_id)] = {
-            'original_item': deepcopy(original), 'category': deepcopy(category),
-            'grade': deepcopy(grade), 'item_bonus': bonuses, 'equip_rows': equips,
-            'class_rows': classes, 'native_record': record,
-            'source_invoke_options': _invoke_options(
-                bonuses, indexes, equipment, slot, item_id),
-            'existing_binding': deepcopy(existing_bindings.get(
-                str(item_id), existing_bindings.get(item_id, {}))),
-        }
+            for key in ('Tradable', 'Storable', 'Droppable', 'Deletable'):
+                value = original.get('Is' + key, False)
+                record[key.lower()] = value
+                record['source_is_' + key.lower()] = value
+            if equipment:
+                record['type'] = _description(descriptions, equips[0]['equip_slot']['DescID']) or record['type']
+
+            handled = set()
+            mapped = []
+            for number, row in enumerate(bonuses):
+                name = row['bonus_type']['Name']
+                if not _unconditional(row):
+                    continue
+                if equipment and _flat_value(row) and name in FLAT_EQUIPMENT_BONUSES:
+                    field = FLAT_EQUIPMENT_BONUSES[name]
+                    record[field] = record.get(field, 0) + row['bonus']['Value']
+                    handled.add(number)
+                    mapped.append({'item_bonus_id': row['ID'], 'bonus_id': row['BonusID'],
+                                   'field': field, 'value': row['bonus']['Value']})
+                elif (equipment and name == 'ExperienceAdditionPercent'
+                      and row['unit']['Name'] == 'Percentage'
+                      and type(row['bonus'].get('Value')) is int):
+                    ui_units = [unit for unit in indexes['UIUnit'].values()
+                                if unit.get('UnitID') == row['unit']['ID']]
+                    if len(ui_units) == 1 and ui_units[0].get('Denominator') == 10000:
+                        value = row['bonus']['Value'] / 1000000
+                        record['xp'] = record.get('xp', 0.0) + value
+                        handled.add(number)
+                        mapped.append({'item_bonus_id': row['ID'], 'bonus_id': row['BonusID'],
+                                       'field': 'xp', 'value': value,
+                                       'source_value': row['bonus']['Value'],
+                                       'source_denominator': 1000000})
+            for number, row in enumerate(bonuses):
+                name = row['bonus_type']['Name']
+                if (not equipment or not _unconditional(row) or row['unit']['Name'] != 'Percentage'
+                        or type(row['bonus'].get('Value')) is not int):
+                    continue
+                fields = {'MoveSpeedBonus': ('speed', 1.0, 1000000),
+                          'AttackSpeedBonus': ('attackSpeed', 0.0, 10000),
+                          'HPPotionIncreasePercent': ('potionHealPct', 0.0, 10000)}
+                if name in fields:
+                    field, initial, denominator = fields[name]
+                    record[field] = record.get(field, initial) + row['bonus']['Value']/denominator
+                    handled.add(number)
+                    mapped.append({'item_bonus_id': row['ID'], 'bonus_id': row['BonusID'],
+                                   'field': field, 'value': row['bonus']['Value']/denominator,
+                                   'source_denominator': denominator})
+            for name, field in (('IsTwoHanded', 'source_is_two_handed'),
+                                ('CanEquipWithTwoHanded', 'source_can_equip_with_two_handed')):
+                flags = [(number, row) for number, row in enumerate(bonuses)
+                         if equipment and row['bonus_type']['Name'] == name
+                         and _unconditional(row) and row['unit']['Name'] == 'TrueFalse'
+                         and type(row['bonus'].get('Value')) is int
+                         and row['bonus']['Value'] in (0, 1)]
+                if flags and len({row['bonus']['Value'] for _, row in flags}) == 1:
+                    record[field] = bool(flags[0][1]['bonus']['Value'])
+                    for number, row in flags:
+                        handled.add(number)
+                        mapped.append({'item_bonus_id': row['ID'], 'bonus_id': row['BonusID'],
+                                       'field': field, 'value': record[field]})
+            weapon_rows = [row for row in bonuses if _unconditional(row)
+                           and 'weapon_type' in row]
+            weapon_types = {row['weapon_type']['ID'] for row in weapon_rows}
+            if equipment and slot == 'weapon' and len(weapon_types) == 1:
+                weapon = weapon_rows[0]['weapon_type']
+                weapon_label = _description(descriptions, weapon['DescID'])
+                if weapon_label:
+                    record['type'] = weapon_label
+                    record['source_weapon_type_id'] = weapon['ID']
+                    record['source_weapon_type_name'] = weapon['Name']
+                    for number, row in enumerate(bonuses):
+                        if row in weapon_rows:
+                            handled.add(number)
+
+            heal_spec, hp_handled = _hp_spec(bonuses, category)
+            if slot == 'consumable' and heal_spec:
+                record['heal_spec'] = heal_spec
+                # Existing host routing tests only heal > 0. Exact use must read
+                # heal_spec; this indicator is never the dice's expected value.
+                record['heal'] = max(1, heal_spec.get('HPRestoration', 0))
+                handled.update(hp_handled)
+            use_spec, use_handled = _fixed_card_spec(
+                bonuses, category, indexes, server_limits, item_id)
+            if not use_spec:
+                use_spec, use_handled = _source_skill_book_spec(
+                    bonuses, original, category, indexes, server_limits, learn_limits, item_id)
+            if not use_spec:
+                use_spec, use_handled = _timed_buff_spec(
+                    bonuses, original, category, indexes, buff_bonuses, item_id)
+            if not use_spec:
+                use_spec, use_handled = _mp_spec(bonuses, original, category, item_id)
+            if not use_spec:
+                use_spec, use_handled = _source_reward_bag_spec(
+                    bonuses, original, category, indexes, bag_entities, bag_class_limits, classes, item_id)
+            if not use_spec:
+                use_spec, use_handled = _source_selectable_reward_spec(
+                    bonuses, original, category, indexes, select_entities, reward_attributes, classes, item_id)
+            if use_spec:
+                use_spec['item_requirements'] = {
+                    'test_item': original.get('TestItem', False),
+                    'level_min': original.get('LevelLimitMin', 0),
+                    'level_max': original.get('LevelLimitMax', 0),
+                    'max_level_min': original.get('MaxLevelLimitMin', 0),
+                    'max_level_max': original.get('MaxLevelLimitMax', 0),
+                    'class_ids': record['source_class_ids'].copy(),
+                    'unresolved_class_ids': unresolved_classes.copy(),
+                    'service_region_code': original.get('ServiceRegionCode', ''),
+                    'targetting_type_id': original.get('TargettingTypeID'),
+                    'can_use_when_invisible': original.get('CanUseWhenInvisible'),
+                }
+                record['source_use_spec'] = use_spec
+                handled.update(use_handled)
+            unhandled = [
+                {'item_bonus_id': row['ID'], 'bonus_id': row['BonusID'],
+                 'bonus_type': row['bonus_type']['Name'],
+                 'reason': _unsupported_reason(row, equipment)}
+                for number, row in enumerate(bonuses) if number not in handled
+            ]
+            record['source_mapped_bonuses'] = mapped
+            record['source_unhandled_bonuses'] = unhandled
+            record['source_unhandled_bonus_ids'] = [row['bonus_id'] for row in unhandled]
+            # Empty metadata does not certify an unsupported consumable's use system.
+            partial = bool(unhandled) or (slot == 'consumable' and not (heal_spec or use_spec)) or (
+                bool(equips) and not equipment) or bool(unresolved_classes) or (
+                bool(use_spec) and use_spec['activation_status'] != 'unrestricted')
+            record['source_effect_status'] = 'partial' if partial else 'represented_source_fields'
+            record['source_effect_scope'] = 'unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards'
+            record['desc'] = ('523 원본 아이템 · 일부 효과 미지원' if partial
+                              else '523 원본 아이템 · 지원되는 원본 필드 적용')
+            definitions[str(item_id)] = {
+                'original_item': deepcopy(original), 'category': deepcopy(category),
+                'grade': deepcopy(grade), 'item_bonus': bonuses, 'equip_rows': equips,
+                'class_rows': classes, 'native_record': record,
+                'source_invoke_options': _invoke_options(
+                    bonuses, indexes, equipment, slot, item_id),
+                'existing_binding': deepcopy(existing_bindings.get(
+                    str(item_id), existing_bindings.get(item_id, {}))),
+            }
+        except ValueError as error:
+            if not preserve_unresolved:
+                raise
+            original = deepcopy(indexes['ItemClass'][item_id])
+            category = deepcopy(indexes['ItemCategory'].get(original['CategoryID'], {}))
+            grade = deepcopy(indexes['Grade'].get(original['GradeID'], {}))
+            label = (_description(descriptions, original['IdentifiedDescID'])
+                     or _description(descriptions, original['DescID'])
+                     or f'원본 아이템 #{item_id} (표시명 없음)')
+            if not record:
+                record = {'name': f'{label} · 원본#{item_id}', 'source_display_name': label,
+                          'source': 'lineagem_patch523', 'source_snapshot': 'patch523',
+                          'source_item_class_id': item_id, 'sourceId': f'm523:item:{item_id}',
+                          'sourceUrl': '', 'source_m_native_item': True,
+                          'slot': 'material', 'type': category.get('Name', 'Unknown'),
+                          'grade': _description(descriptions, grade.get('DescID', 0)),
+                          'source_category_name': category.get('Name', 'Unknown'),
+                          'source_category_id': original['CategoryID'],
+                          'source_test_item': original.get('TestItem', False),
+                          'source_is_trash': original.get('IsTrash', False)}
+            record['source_effect_status'] = 'partial'
+            record['source_definition_problem'] = str(error)
+            record['source_use_spec'] = {'kind': 'unresolved_source_reference',
+                                         'activation_status': 'blocked',
+                                         'blocked_reasons': [str(error)]}
+            record['desc'] = '523 원본 참조 미해결 · 원본과 기존 소유를 보존'
+            definitions[str(item_id)] = {
+                'original_item': original, 'category': category, 'grade': grade,
+                'item_bonus': bonuses, 'equip_rows': equips, 'class_rows': classes,
+                'raw_item_bonus': deepcopy(grouped['ItemBonus'][item_id]),
+                'native_record': record, 'source_invoke_options': [],
+                'existing_binding': deepcopy(existing_bindings.get(
+                    str(item_id), existing_bindings.get(item_id, {}))),
+                'unresolved_source_reference': str(error),
+            }
     # Only ready reward receipts expand definitions; drop membership never widens.
     outputs = {reward['item_class_id'] for definition in definitions.values()
                for spec in [definition['native_record'].get('source_use_spec', {})]
@@ -1148,5 +1219,5 @@ def compile_items(tables: dict, descriptions: dict, wanted: set[int],
                and spec.get('activation_status') == 'unrestricted'
                for reward in spec['rewards']}
     if outputs - wanted:
-        return compile_items(tables, descriptions, wanted | outputs, existing_bindings)
+        return compile_items(tables, descriptions, wanted | outputs, existing_bindings, preserve_unresolved)
     return definitions

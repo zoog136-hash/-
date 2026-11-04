@@ -307,6 +307,10 @@ func _build_lineage_side_ui() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
+	if is_instance_valid(lineage_inventory_ui): lineage_inventory_ui.set_character_state(value)
+	if is_instance_valid(lineage_side_ui):
+		if lineage_side_ui.character_panel.is_visible_in_tree(): lineage_side_ui.set_character_state(value)
+		else: lineage_side_ui.character_state = value
 	if is_instance_valid(status_view): status_view.refresh(value)
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 
@@ -2039,6 +2043,7 @@ func _filter_catalog_results(filter_text: String) -> void:
 	for value: Variant in catalog_data.get(catalog_category,[]):
 		if not value is Dictionary: continue
 		var record: Dictionary = value
+		if catalog_category=="아이템" and record.get("source_preserved_legacy_catalog",false): continue
 		if catalog_category=="아이템" and item_slot_filter!="all" and _item_filter_group(record)!=item_slot_filter: continue
 		if catalog_grade_filter!="전체" and str(record.get("grade",""))!=catalog_grade_filter: continue
 		var searchable := "%s %s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("sourceId",""),record.get("desc","")]

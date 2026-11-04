@@ -36,6 +36,14 @@ static func stats(kind: String, level: int, record: Dictionary = {}) -> Dictiona
 		var entry_value: Variant = custom.get(str(clampi(rank, 0, 21)), {})
 		if entry_value is Dictionary:
 			return (entry_value as Dictionary).duplicate(true)
+	if record.get("source_m_native_item",false):
+		var source: Dictionary = preload("res://scripts/loot/patch523_monster_drops.gd").native_enchant_stats(record,rank)
+		var fallback: Dictionary = record.duplicate(true)
+		fallback.erase("source_m_native_item")
+		fallback["name"] = str(record.get("source_display_name",record.get("name","")))
+		var result: Dictionary = stats(kind,rank,fallback)
+		result.merge(source,true)
+		return result
 	var name_value: String = str(record.get("name", ""))
 	match kind:
 		"weapon":

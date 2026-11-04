@@ -11,7 +11,7 @@ var paperdoll: TextureRect
 var gear_icons: Dictionary = {}
 var gear_badges: Dictionary = {}
 var equipment_caption: Label
-const EXTRA_SLOTS = [["pants","하의"],["shoulder","견갑"],["earring1","귀걸이 I"],["earring2","귀걸이 II"],["seal1","인장 I"],["seal2","인장 II"],["gaiters","각반"],["bracelet","팔찌"],["badge","휘장"],["crystal","수정"],["catalyst","카탈리스트"],["rune","룬"],["domination_stone","지배석"]]
+const EXTRA_SLOTS = [["pants","하의"],["shoulder","견갑"],["earring1","귀걸이 I"],["earring2","귀걸이 II"],["seal1","인장 I"],["seal2","인장 II"],["gaiters","각반"],["bracelet","팔찌"],["badge","휘장"],["crystal","수정"],["catalyst","카탈리스트"],["rune","룬"],["domination_stone","지배석"],["relic_item","유물"],["fishing_rod","낚싯대"]]
 var equipment_page_index: int = 0
 var character_tabs: Control
 var empty_slot_art: Dictionary={}
@@ -216,14 +216,14 @@ func _layout_equipment() -> void:
 	paperdoll.size=Vector2(maxf(0,extent.x-2*(edge+14)),maxf(0,extent.y-8))
 	for key: String in equipment_buttons:
 		var second: bool=EXTRA_SLOTS.any(func(spec: Array) -> bool:return spec[0]==key)
-		equipment_buttons[key].visible=(equipment_page_index==2 if key=="domination_stone" else second==(equipment_page_index==1) and equipment_page_index!=2)
+		equipment_buttons[key].visible=(equipment_page_index==2 if key in ["domination_stone","relic_item","fishing_rod"] else second==(equipment_page_index==1) and equipment_page_index!=2)
 	var sides: Array=[
 		["helmet","weapon","body","necklace","boots","tshirt"],
 		["cloak","gloves","belt","ring1","ring2","offhand"]
 	] if equipment_page_index==0 else [
 		["shoulder","pants","gaiters","bracelet","badge","crystal"],
 		["earring1","earring2","seal1","seal2","catalyst","rune"]
-	] if equipment_page_index==1 else [["domination_stone"],[]]
+	] if equipment_page_index==1 else [["domination_stone","relic_item"],["fishing_rod"]]
 	for side: int in range(2):
 		for index: int in range(sides[side].size()):
 			var key: String=sides[side][index]

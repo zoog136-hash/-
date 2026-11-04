@@ -2,7 +2,7 @@ extends RefCounted
 ## Presentation categories only. Never change the target's name, sourceId or grade.
 const MANIFEST: String = "res://data/ground_item_icons.json"
 const WEAPONS: Dictionary = {"한손검":"sword","양손검":"greatsword","그레이트소드":"greatsword","단검":"dagger","활":"bow","창":"spear","도끼":"axe","사이드":"scythe","이도류":"dual","크로우":"claw","지팡이":"staff","라이플":"rifle","핸드캐넌":"cannon","체인소드":"chain","마검":"runesword","룬소드":"runesword","건틀렛":"gauntlet"}
-const SLOTS: Dictionary = {"helmet":"helmet","body":"armor","tshirt":"tshirt","cloak":"cloak","gloves":"gloves","boots":"boots","pants":"pants","gaiters":"pants","offhand":"shield","shoulder":"shoulder","necklace":"necklace","belt":"belt","bracelet":"bracelet","badge":"badge","crystal":"crystal","catalyst":"catalyst","rune":"rune","domination_stone":"crystal"}
+const SLOTS: Dictionary = {"helmet":"helmet","body":"armor","tshirt":"tshirt","cloak":"cloak","gloves":"gloves","boots":"boots","pants":"pants","gaiters":"pants","offhand":"shield","shoulder":"shoulder","necklace":"necklace","belt":"belt","bracelet":"bracelet","badge":"badge","crystal":"crystal","catalyst":"catalyst","rune":"rune","domination_stone":"crystal","relic_item":"crystal","fishing_rod":"rune"}
 const TYPES: Dictionary = {"투구":"helmet","갑옷":"armor","티셔츠":"tshirt","망토":"cloak","각반":"pants","장갑":"gloves","신발":"boots","방패":"shield","방패/가더":"shield","가더":"shield","견갑":"shoulder","목걸이":"necklace","반지":"ring","귀걸이":"earring","팔찌":"bracelet","벨트":"belt","휘장":"badge","인장":"seal","수정":"crystal","카탈리스트":"catalyst","룬":"rune"}
 static var _loaded: bool = false
 static var _entries: Dictionary = {}
