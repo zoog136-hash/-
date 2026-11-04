@@ -1023,6 +1023,13 @@ func open_item_sell() -> void:
 	transaction_view = screen
 	show_companion_bag()
 
+func open_inventory_automation_settings(mode: String) -> void:
+	_open_window("inventory_automation","원본 자동 대상·로컬 정비","원본/자체 매입값 · 기존 이동진 이용 전 한 번 정비")
+	var screen := preload("res://scripts/ui/inventory_automation_settings.gd").new()
+	workspace.mount(screen)
+	screen.configure(self,mode)
+	transaction_view = screen
+
 func _companion(section: String,title: String) -> PanelContainer:
 	if not is_instance_valid(companion_window):
 		companion_window = RenewalWindowScript.new()

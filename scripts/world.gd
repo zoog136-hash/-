@@ -475,6 +475,7 @@ func _ready() -> void:
 		hud.call("open_class_selection",true)
 
 func _process(delta: float) -> void:
+	inventory_automation.maintenance.tick()
 	# No auto-save, auto-hunt or keyboard commands until the new class is
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
@@ -4026,18 +4027,23 @@ func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> v
 	# Validate the current inventory, bound flags and exact instance ID at
 	# commit time. The UI never submits the price or enhancement bonus.
 	_sync_item_instances()
-	var records: Dictionary = loot_catalog.get("by_name", {})
-	var quote: Dictionary = LOCAL_BUYBACK.quote(item_name,quantity,instance_id,inventory,records,item_instances,equipped_items,gold)
+	var quote: Dictionary = inventory_automation.sale_quote(item_name,quantity,instance_id,inventory,item_instances,gold,false)
 	if not bool(quote.get("ok",false)):
 		hud.show_message(str(quote.get("reason","매입할 수 없습니다")))
 		return
-	var transaction: Dictionary = LOCAL_BUYBACK.apply(quote,inventory,item_instances,gold)
+	var staged_inventory: Dictionary = inventory.duplicate(true)
+	var staged_instances: Dictionary = item_instances.duplicate(true)
+	var transaction: Dictionary = LOCAL_BUYBACK.apply(quote,staged_inventory,staged_instances,gold)
 	if not bool(transaction.get("ok",false)):
 		hud.show_message(str(transaction.get("reason","거래에 실패했습니다")))
 		return
+	if _save_game(true,{"inventory":staged_inventory,"item_instances":staged_instances,"gold":int(transaction.wallet)}) != OK:
+		hud.show_message("판매 저장 실패 · 아이템·아데나 보존")
+		return
+	inventory = staged_inventory
+	item_instances = staged_instances
 	gold = int(transaction["wallet"])
 	_update_hud()
-	_request_deferred_save()
 	hud.refresh_inventory(inventory)
 	hud.append_log("아이템 매입 · %s ×%d (+%d 아데나)" % [item_name,quantity,int(transaction["payment"])])
 	hud.show_message("매입 완료 · %d 아데나" % int(transaction["payment"]))
@@ -7762,6 +7768,10 @@ func use_field_portal(portal_id: String) -> bool:
 	for portal: Dictionary in field_map.data["portal"]:
 		if str(portal["id"]) != portal_id:
 			continue
+		var maintenance_result: Dictionary = inventory_automation.maintenance.before_portal(portal_id)
+		if not maintenance_result.get("ok",false):
+			hud.show_message(str(maintenance_result.get("reason","정비를 확인해 주세요")))
+			return false
 		if portal.has("target_source"):
 			if level < int(portal.get("min_level",0)) or (int(portal.get("max_level",0)) > 0 and level > int(portal.max_level)): return false
 			return SOURCE_TRAVEL.enter(self,str(portal.target_map),COORD.array_vector(portal.target_source))

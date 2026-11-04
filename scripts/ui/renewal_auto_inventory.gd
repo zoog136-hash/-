@@ -61,11 +61,8 @@ func configure(screen: Control, operation: String) -> void:
 	actions.add_child(fill)
 	var clear: Button = _button()
 	clear.name = "AutoClear"
-	clear.text = "설정 비우기"
-	clear.pressed.connect(func() -> void:
-		_report(world.inventory_automation.clear(mode))
-		selection_reference = ""
-		refresh())
+	clear.text = "원본·정비"
+	clear.pressed.connect(func() -> void: hud.open_inventory_automation_settings(mode))
 	actions.add_child(clear)
 	summary = Label.new()
 	summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -125,12 +122,12 @@ func _fill() -> void:
 		return
 	var lines: Array[String] = []
 	for entry: Dictionary in plan.cart:
-		lines.append("%s%s ×%d%s" % [str(entry.name)," ["+str(entry.id)+"]" if str(entry.id) != "" else "",int(entry.quantity)," · %d 아데나" % int(entry.payment) if mode == "sell" else ""])
+		lines.append("%s%s ×%d%s" % [str(entry.name)," ["+str(entry.id)+"]" if str(entry.id) != "" else "",int(entry.quantity)," · %d 아데나 · %s" % [int(entry.payment),str(entry.get("price_basis",""))] if mode == "sell" else ""])
 	for message: String in plan.skipped: lines.append("제외 · "+message)
 	if plan.cart.is_empty():
 		hud.show_message("처리할 아이템이 없습니다"+(" · "+" / ".join(plan.skipped) if not plan.skipped.is_empty() else ""))
 		return
-	if mode == "sell": lines.append("합계 %d 아데나 · TWILIGHT 기존 매입가" % int(plan.payment))
+	if mode == "sell": lines.append("합계 %d 아데나 · 각 항목의 가격 근거 확인" % int(plan.payment))
 	var stamp: String = plan.stamp
 	_confirm("자동 %s 내역" % ("보관" if mode == "deposit" else "판매"),"\n".join(lines),"모두 맡기기" if mode == "deposit" else "모두 팔기",func(_amount: int) -> void:
 		var result: Dictionary = world.inventory_automation.execute(mode,stamp)

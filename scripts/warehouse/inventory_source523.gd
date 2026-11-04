@@ -1,0 +1,142 @@
+extends RefCounted
+## Immutable private rule pack. Identity joins never grant or rename items.
+const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+const PACK_SHA = "a6f06d657bc34a86d91ccbcaf9f2c836312df6e57d15d38e890aa74061b12bc5"
+const PACK_BYTES: int = 49818
+const ZIP_SHA = "df1836767b85abd2e5f67ac023f005c80dc6df9cf8fa5022518887354eb9126d"
+const ZIP_BYTES: int = 8872
+const BUYBACK = preload("res://scripts/shop/local_buyback.gd")
+const SHOP = preload("res://scripts/shop/shop_catalog.gd")
+const FIELDS = ["name","source","sourceId","sourceUrl","slot","type","grade"]
+var document: Dictionary = {}
+var problem: String = "523 원본 규칙을 설치해 주세요"
+
+static func configured_file() -> String:
+	var configured: String = OS.get_environment("TWILIGHT_AUTO_INVENTORY523_FILE")
+	return configured if configured != "" else "user://inventory523/inventory_rules523.json"
+
+func fingerprint() -> String:
+	return PACK_SHA if not document.is_empty() else ""
+
+func parse(raw: PackedByteArray) -> Dictionary:
+	if raw.size() != PACK_BYTES: return {}
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(raw)
+	if hash.finish().hex_encode() != PACK_SHA: return {}
+	var parser := JSON.new()
+	if parser.parse(raw.get_string_from_utf8()) != OK or not parser.data is Dictionary: return {}
+	var data: Dictionary = parser.data
+	if data.get("schema") != "twilight-inventory523-v1" or data.get("source_sha256") != SOURCE_SHA: return {}
+	if data.get("items",{}).size() != 80 or data.get("storage_rows",[]).size() != 84 or data.get("sell_rows",[]).size() != 25: return {}
+	return data
+
+func load_file(path: String) -> bool:
+	var file := FileAccess.open(path,FileAccess.READ)
+	if file == null or file.get_length() != PACK_BYTES:
+		problem = "523 원본 규칙 파일을 확인해주세요"
+		return false
+	var next: Dictionary = parse(file.get_buffer(PACK_BYTES))
+	if next.is_empty():
+		problem = "523 원본 규칙의 버전·무결성을 확인할 수 없습니다"
+		return false
+	document = next
+	problem = ""
+	return true
+
+func install_zip(path: String) -> Dictionary:
+	var input := FileAccess.open(path,FileAccess.READ)
+	if input == null or input.get_length() != ZIP_BYTES or FileAccess.get_sha256(path) != ZIP_SHA: return {"ok":false,"reason":"지원하는 원본 규칙 ZIP의 크기·버전이 아닙니다"}
+	var archive := ZIPReader.new()
+	if archive.open(path) != OK: return {"ok":false,"reason":"규칙 ZIP을 열 수 없습니다"}
+	var raw: PackedByteArray = archive.read_file("inventory_rules523.json") if archive.file_exists("inventory_rules523.json") else PackedByteArray()
+	archive.close()
+	var next: Dictionary = parse(raw)
+	if next.is_empty(): return {"ok":false,"reason":"지원하는 523 원본 규칙 ZIP이 아닙니다"}
+	var destination: String = "user://inventory523/inventory_rules523.json"
+	var absolute: String = ProjectSettings.globalize_path(destination)
+	if DirAccess.make_dir_recursive_absolute(absolute.get_base_dir()) != OK: return {"ok":false,"reason":"규칙 저장 폴더를 만들 수 없습니다"}
+	if FileAccess.file_exists(destination) and FileAccess.get_sha256(destination) == PACK_SHA:
+		document = next
+		problem = ""
+		return {"ok":true}
+	var temp: String = absolute+".tmp"
+	var stream := FileAccess.open(temp,FileAccess.WRITE)
+	if stream == null: return {"ok":false,"reason":"규칙 파일 저장 실패 · 이전 규칙 보존"}
+	stream.store_buffer(raw)
+	stream.flush()
+	var error: Error = stream.get_error()
+	stream.close()
+	if error != OK or FileAccess.get_sha256(temp) != PACK_SHA:
+		DirAccess.remove_absolute(temp)
+		return {"ok":false,"reason":"규칙 쓰기 검증 실패 · 이전 규칙 보존"}
+	if FileAccess.file_exists(absolute):
+		var previous_sha: String = FileAccess.get_sha256(absolute)
+		var backup: String = absolute+".previous-"+previous_sha
+		if (not FileAccess.file_exists(backup) and DirAccess.copy_absolute(absolute,backup) != OK) or FileAccess.get_sha256(backup) != previous_sha:
+			DirAccess.remove_absolute(temp)
+			return {"ok":false,"reason":"이전 규칙 백업 실패 · 교체 중지"}
+	if DirAccess.rename_absolute(temp,absolute) != OK:
+		DirAccess.remove_absolute(temp)
+		return {"ok":false,"reason":"규칙 교체 실패 · 이전 규칙 보존"}
+	document = next
+	problem = ""
+	return {"ok":true}
+
+func definition(id: String) -> Dictionary:
+	return document.get("items",{}).get(id,{})
+
+func resolve(record: Dictionary, physical: Dictionary = {}) -> Dictionary:
+	if document.is_empty() or record.is_empty(): return {}
+	var id: String = str(record.get("sourceId",""))
+	var bless: int = 1
+	if record.get("source") == "inven":
+		var row: Dictionary = definition(id)
+		var binding: Dictionary = row.get("binding",{})
+		if binding.is_empty(): return {}
+		for field: String in FIELDS:
+			if record.get(field,"") != binding.get(field,""): return {}
+		# The exact unique Inven normal stack has no alternate bless key. Do not
+		# reinterpret a blessed/unknown physical state as that normal stack.
+		if not physical.is_empty() or record.get("blessed",false) or str(record.get("bless_state","")) not in ["","normal"]: return {}
+		if record.has("source_bless_raw") and int(record.source_bless_raw) != 1: return {}
+		return {"item":row,"bless":1,"identity":"inven_exact_id_url_descriptor_normal_stack"}
+	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("source_m_native_item") != true: return {}
+	var raw_id: Variant = record.get("source_item_class_id",0)
+	if not _integer(raw_id) or int(raw_id) <= 0: return {}
+	id = str(int(raw_id))
+	var row: Dictionary = definition(id)
+	if row.is_empty() or record.get("source_display_name") != row.label: return {}
+	if record.get("grade") != row.grade: return {}
+	var raw_bless: Variant = physical.get("source_bless_raw",record.get("source_bless_raw",0))
+	if not _integer(raw_bless) or int(raw_bless) not in [1,2,3]: return {}
+	bless = int(raw_bless)
+	var suffix: String = "" if bless == 1 else ":bless:"+str(bless)
+	var caption: String = "" if bless == 1 else " · "+("축복" if bless == 2 else "저주")
+	if str(record.get("sourceId","")) != "m523:item:"+id+suffix or str(record.get("name","")) != str(row.label)+" · 원본#"+id+caption: return {}
+	return {"item":row,"bless":bless,"identity":"m523_explicit_class_and_bless"}
+
+static func _integer(value: Variant) -> bool:
+	return (value is int or value is float) and is_finite(float(value)) and float(value) == floorf(float(value))
+
+func eligible(resolved: Dictionary, mode: String) -> bool:
+	if resolved.is_empty(): return false
+	var row: Dictionary = resolved.item
+	if row.virtual or row.test_item or row.currency or row.equipment or not row.stackable: return false
+	if mode == "deposit": return row.is_storable and row.storage_bless.has(resolved.bless)
+	return mode == "sell" and row.merchant_auto and int(resolved.bless) == 1
+
+func quote(record: Dictionary, name: String, quantity: int, id: String, inventory: Dictionary, physical: Dictionary, equipped: Dictionary, wallet: int, overrides: Dictionary) -> Dictionary:
+	var resolved: Dictionary = resolve(record,physical.get(id,{}) if id != "" else {})
+	if not eligible(resolved,"sell"): return {"ok":false,"reason":"원본 매입 대상·축복 상태를 확인할 수 없습니다"}
+	if id != "" or quantity < 1 or quantity > BUYBACK.MAX_STACK_SALE or int(inventory.get(name,0)) < quantity or wallet < 0: return {"ok":false,"reason":"매입 수량 또는 소지품이 유효하지 않습니다"}
+	if bool(record.get("bound",false)) or record.get("tradeable",true) == false or bool(record.get("quest_item",false)): return {"ok":false,"reason":"귀속·퀘스트·명시적 거래 보호 아이템입니다"}
+	var row: Dictionary = resolved.item
+	var policy: Dictionary = row.price
+	var unit: int = int(policy.adena) if not policy.is_empty() else int(overrides.get(str(int(row.id)),BUYBACK.GRADE_BUYBACK.get(str(row.grade),0)))
+	var basis: String = "523 원본·공개 확인 매입가" if not policy.is_empty() else "자체 매입값 · 기존 등급 기준" if not overrides.has(str(int(row.id))) else "자체 매입값 · 사용자 설정"
+	if policy.is_empty():
+		var purchase: int = SHOP.price_for(name)
+		if purchase > 0: unit = mini(unit,purchase)
+	if unit <= 0 or unit > 1000000000 or wallet > BUYBACK.MAX_WALLET-unit*quantity: return {"ok":false,"reason":"매입가 미설정 또는 지갑 한도 초과"}
+	return {"ok":true,"item_name":name,"quantity":quantity,"instance_id":"","enhancement":0,"payment":unit*quantity,"unit_price":unit,"price_basis":basis,"source_item_class_id":int(row.id)}
