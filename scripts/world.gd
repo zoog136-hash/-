@@ -2360,9 +2360,9 @@ func _attack() -> void:
 	selected_monster = target
 	auto_attack_timer = _normal_attack_interval()
 	_break_invisibility()
-	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind), auto_attack_timer, true)
+	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind, _mastery_actual_weapon_type()), auto_attack_timer, true)
 
-func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> void:
+func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack_weapon_type: int = -1) -> void:
 	if not is_instance_valid(target) or target.dead: return
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
 	if rng.randf() >= hit_chance:
@@ -2375,6 +2375,8 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		])
 		_update_target_hud()
 		return
+	var actual_weapon: int = _mastery_actual_weapon_type()
+	if attack_weapon_type == -1 or attack_weapon_type == actual_weapon: weapon_mastery.normal_hit(actual_weapon)
 	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
 	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
 	var damage: int = maxi(1, damage_stat + _roll_weapon_damage(target))

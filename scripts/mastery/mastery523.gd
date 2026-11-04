@@ -1,6 +1,6 @@
 extends RefCounted
 ## Source-backed state machine. Plans are immutable until the host saves them.
-## Native four-color/Slot1/2 coupling and server point conversion remain unknown.
+## Official guide: option1 name/value, option2 name/value are four lockable fields.
 const SAVE_KEY := "weapon_mastery523"
 const MAX_POINT_TEXT := "9223372036854775807"
 var tables: Dictionary = {}
@@ -98,6 +98,7 @@ func _configure(pack: Dictionary) -> bool:
 	for row: Dictionary in tables.Bonus: bonuses[int(row.ID)] = row
 	for row: Dictionary in tables.BonusType: types[int(row.ID)] = row
 	var sums: Dictionary = {}
+	var bucket_types: Dictionary = {}
 	var signatures: Dictionary = {}
 	for row: Dictionary in tables.MasteryBonusView:
 		for key: String in ["MasteryWeaponLevelID","BonusID","Slot","ClassChangeMasteryBonusGroupID","Probability"]:
@@ -121,6 +122,9 @@ func _configure(pack: Dictionary) -> bool:
 			problem = "숙련 전환 대응 불일치"; return false
 		signatures[group] = signature
 		var bucket := "%d:%d:%d" % [weapon,int(level_row.Level),int(row.Slot)]
+		if int(row.Slot) not in [1,2] or int(row.Probability) <= 0: problem = "숙련 슬롯/확률 오류"; return false
+		if bucket_types.has(bucket) and bucket_types[bucket] != int(bonus.BonusTypeID): problem = "숙련 종류 슬롯 변동 오류"; return false
+		bucket_types[bucket] = int(bonus.BonusTypeID)
 		sums[bucket] = int(sums.get(bucket,0)) + int(row.Probability)
 	if levels.size() != 15 or tables.MasteryWeaponLevelView.size() != 120 or options.size() != 36 or sums.size() != 240:
 		problem = "숙련 원본 범위 오류"; return false
@@ -128,6 +132,11 @@ func _configure(pack: Dictionary) -> bool:
 		if options[group].size() != levels.size(): problem = "숙련 무기 대응 누락"; return false
 	for total: int in sums.values():
 		if total != 1000000: problem = "숙련 옵션 확률 합계 오류"; return false
+	var color_total: int = 0
+	for grade: Dictionary in tables.MasteryGradeView:
+		if int(grade.get("Probability",0)) <= 0: problem = "숙련 색상 확률 오류"; return false
+		color_total += int(grade.Probability)
+	if color_total != 1000000: problem = "숙련 색상 확률 합계 오류"; return false
 	return true
 
 func find_row(table: String, id: int) -> Dictionary:
@@ -161,7 +170,11 @@ func validate_state(state: Variant) -> String:
 		if state.receipts[receipt].get("kind") == "point_purchase": purchases += 1
 	var count: Variant = state.get("purchase_count",purchases)
 	if purchases > 0 and not state.has("purchase_count"): return "숙련 구매 횟수 누락"
-	if (not count is int and not count is float) or count != int(count) or count < 0 or count > 5 or int(count) != purchases: return "숙련 구매 이력 오류"
+	if (not count is int and not count is float) or count != int(count) or count < 0 or int(count) != purchases: return "숙련 구매 이력 오류"
+	for field: String in ["purchase_epoch","legacy_purchase_period"]:
+		if state.has(field) and (not (state[field] is int or state[field] is float) or state[field] != int(state[field]) or state[field] < 0 or state[field] > 10000000): return "숙련 구매 주기 오류"
+	for past: Dictionary in state.receipts.values():
+		if past.get("kind") == "point_purchase" and past.has("period") and (not (past.period is int or past.period is float) or past.period != int(past.period) or past.period < 0 or past.period > 10000000): return "숙련 구매 영수증 주기 오류"
 	if state.has("rng_state") and not (point_text(state.rng_state) or (state.rng_state is String and state.rng_state.begins_with("-") and (point_text(state.rng_state.substr(1)) or state.rng_state == "-9223372036854775808"))): return "숙련 난수 저장 오류"
 	for key: Variant in state.weapons:
 		if not key is String or not key.is_valid_int() or str(int(key)) != key or not levels.has(int(key)):
@@ -179,8 +192,7 @@ func validate_state(state: Variant) -> String:
 			var slot := "%d:%d" % [int(row.level),int(row.Slot)]
 			if seen.has(slot): return "숙련 옵션 슬롯 중복"
 			seen[slot] = true
-		# Colors and locks are independent original four-slot information. No
-		# unproven relationship to BonusView Slot1/2 is manufactured.
+		# Preserve partial legacy records; actions validate complete ownership.
 		for section: String in ["colors","locks"]:
 			for level_key: Variant in entry[section]:
 				if not level_key is String or str(int(level_key)) != level_key or int(level_key) < 1 or int(level_key) > 8: return "숙련 색상 레벨 오류"
@@ -210,7 +222,7 @@ func active_options(state: Dictionary, weapon: int) -> Array:
 	return out
 
 func matching_bonus(weapon: int, grade_id: int) -> Dictionary:
-	# Lookup only: the native four-color matching activation rule is unknown.
+	# Four equal colors are confirmed; multi-level stacking is not. Lookup only.
 	for step: Dictionary in tables.MasteryWeaponStep:
 		if int(step.WeaponTypeID) != weapon: continue
 		for row: Dictionary in tables.MasteryGradeMatchingBonus:
@@ -257,8 +269,8 @@ func plan_points(state: Dictionary, weapon: int, amount: String, receipt: String
 
 func plan_reset(state: Dictionary, weapon: int, confirmed: Dictionary, receipt: String) -> Dictionary:
 	if not validate_state(state).is_empty() or not levels.has(weapon): return fail("invalid_state")
-	# The caller supplies a confirmed outcome. Independent color and option
-	# probability tables do not establish which reroll consumes each lock.
+	# Legacy externally supplied outcomes lack field-level draw provenance.
+	# Locked gameplay resets use plan_reroll, with the verified field mapping.
 	var old: Dictionary = record(state,weapon)
 	for values: Array in old.locks.values():
 		if true in values: return fail("locked_reset_mapping_unconfirmed")
@@ -339,20 +351,35 @@ func plan_server_import(destination: Dictionary, departure: Dictionary, comparis
 		plan["requires_two_sided_commit"] = true
 	return plan
 
-func plan_purchase(state: Dictionary, weapon: int, receipt: String) -> Dictionary:
+func purchase_usage(state: Dictionary, period: int) -> Dictionary:
+	var epoch: int = maxi(period,int(state.get("purchase_epoch",period)))
+	for past: Dictionary in state.receipts.values():
+		if past.get("kind") == "point_purchase" and past.has("period"): epoch = maxi(epoch,int(past.period))
+	var legacy: int = int(state.get("legacy_purchase_period",epoch))
+	var count: int = 0
+	for past: Dictionary in state.receipts.values():
+		if past.get("kind") == "point_purchase" and int(past.get("period",legacy)) == epoch: count += 1
+	return {"period":epoch,"count":count,"legacy_period":legacy}
+
+func plan_purchase(state: Dictionary, weapon: int, receipt: String, period: int = -1) -> Dictionary:
 	if not validate_state(state).is_empty(): return fail("invalid_state")
 	if not operations.get("point_purchase") is Dictionary: return fail("operation_source_missing")
-	var count: int = int(state.get("purchase_count",0))
+	var usage: Dictionary = purchase_usage(state,period) if period >= 0 else {"count":int(state.get("purchase_count",0))}
+	var count: int = int(usage.count)
 	var payment: Dictionary = {}
 	for row: Dictionary in tables.MasteryPointPayment:
 		if int(row.Count) == count+1: payment = row
-	if payment.is_empty(): return fail("purchase_reset_boundary_unverified")
+	if payment.is_empty(): return fail("daily_purchase_limit" if period >= 0 else "purchase_reset_boundary_unverified")
 	if tables.MasteryPointPurchaseView.size() != 1: return fail("point_amount_ambiguous")
 	var plan: Dictionary = plan_points(state,weapon,str(int(tables.MasteryPointPurchaseView[0].PointAmount)),receipt)
 	if not plan.ok: return plan
 	plan.kind = "point_purchase"
 	plan.after.receipts[receipt] = {"kind":"point_purchase","payment_id":int(payment.ID)}
-	plan.after.purchase_count = count+1
+	plan.after.purchase_count = int(state.get("purchase_count",0))+1
+	if period >= 0:
+		plan.after.receipts[receipt].period = usage.period
+		plan.after.purchase_epoch = usage.period
+		plan.after.legacy_purchase_period = usage.legacy_period
 	plan.charge = payment.duplicate(true)
 	return plan
 
@@ -397,15 +424,18 @@ func plan_local_change(state: Dictionary, source: int, target: int, class_id: in
 	if not validate_state(state).is_empty(): return fail("invalid_state")
 	var service: Dictionary = operations.get("mastery_change",{})
 	if service.is_empty(): return fail("operation_source_missing")
+	if int(service.purchase.get("ID",0)) != 95441: return fail("unsupported_mastery_service")
 	if not bool(service.purchase.OnSale) or year <= int(service.from.Year) or year >= int(service.to.Year): return fail("service_sale_boundary_unverified")
-	# The unresolved generic MarketPurchaseRestriction is not ignored: only
-	# the first local use is enabled until repeated-use conditions are known.
-	for past: Dictionary in state.get("receipts",{}).values():
-		if past.get("kind") == "local_mastery_change": return fail("repeat_service_restriction_unverified")
+	# Official 2024-12-04 product notice explicitly permits unlimited purchases.
+	# Generic restriction12 remains raw evidence, not a decoded daily cap.
 	if not point_text(record(state,source).points) or not point_text(record(state,target).points): return fail("invalid_points")
 	var source_points: int = int(record(state,source).points)
 	var target_points: int = int(record(state,target).points)
 	if source_points > int(MAX_POINT_TEXT)-target_points: return fail("point_overflow")
+	if prefix > 0:
+		var owned: Dictionary = record(state,source)
+		for level: int in range(1,prefix+1):
+			if _owned_slots(owned,source,level).size() != 2 or not owned.colors.has(str(level)): return fail("option_prefix_not_acquired")
 	# TWILIGHT stores the source raw cumulative integer, so the documented sum
 	# is exact. No level copy, scaling, rounding or invented cap is applied.
 	var plan: Dictionary = plan_class_change(state,source,target,class_id,prefix,str(source_points+target_points),receipt)
@@ -422,3 +452,88 @@ func plan_local_change(state: Dictionary, source: int, target: int, class_id: in
 	plan.service_confirmation_required = false
 	plan.charge = {"CurrencyID":currency,"Cost":int(service.payment.Amount)+additional,"BaseCost":int(service.payment.Amount),"AdditionalCost":additional,"MarketPurchaseID":int(service.purchase.ID)}
 	return plan
+
+func _owned_slots(entry: Dictionary, weapon: int, level: int) -> Dictionary:
+	var slots: Dictionary = {}
+	for index: int in entry.options.size():
+		var row: Dictionary = options[int(entry.options[index].group_id)][weapon]
+		if int(row.level) == level: slots[int(row.Slot)] = index
+	return slots
+
+func acquire_availability(state: Dictionary, weapon: int, level: int, charge: Dictionary) -> Dictionary:
+	if not validate_state(state).is_empty() or not levels.has(weapon): return fail("invalid_state")
+	var entry: Dictionary = record(state,weapon)
+	if level < 1 or level > achieved_level(weapon,entry.points): return fail("level_not_reached")
+	if not _owned_slots(entry,weapon,level).is_empty() or entry.colors.has(str(level)) or entry.locks.has(str(level)): return fail("level_already_or_partly_owned")
+	return {"ok":true,"charge":charge.duplicate(true)}
+
+func reroll_availability(state: Dictionary, weapon: int) -> Dictionary:
+	if not validate_state(state).is_empty() or not levels.has(weapon): return fail("invalid_state")
+	var entry: Dictionary = record(state,weapon)
+	if entry.options.is_empty() or entry.colors.is_empty(): return fail("owned_options_required")
+	var unlocked: bool = false
+	for key: String in entry.colors:
+		if _owned_slots(entry,weapon,int(key)).size() != 2: return fail("partial_owned_level")
+		for lock: bool in entry.locks.get(key,[false,false,false,false]):
+			if not lock: unlocked = true
+	for option: Dictionary in entry.options:
+		if not entry.colors.has(str(options[int(option.group_id)][weapon].level)): return fail("partial_owned_level")
+	for key: String in entry.locks:
+		if not entry.colors.has(key): return fail("partial_owned_level")
+	if not unlocked: return fail("all_fields_locked")
+	var charge: Dictionary = reset_quote(state,weapon)
+	if charge.is_empty() or int(charge.CurrencyID) not in [1,4]: return fail("reset_currency_unverified")
+	return {"ok":true,"charge":charge}
+
+func _draw_grade(rng: RandomNumberGenerator) -> int:
+	var roll: int = rng.randi_range(0,999999)
+	for grade: Dictionary in tables.MasteryGradeView:
+		roll -= int(grade.Probability)
+		if roll < 0: return int(grade.GradeID)
+	return -1
+
+func _draw_group(weapon: int, level: int, slot: int, rng: RandomNumberGenerator) -> int:
+	var roll: int = rng.randi_range(0,999999)
+	for group: int in options:
+		var row: Dictionary = options[group][weapon]
+		if int(row.level) != level or int(row.Slot) != slot: continue
+		roll -= int(row.Probability)
+		if roll < 0: return group
+	return -1
+
+func plan_acquire(state: Dictionary, weapon: int, level: int, rng: RandomNumberGenerator, receipt: String, charge: Dictionary, color_mode: String = "independent_fields") -> Dictionary:
+	if color_mode not in ["independent_fields","shared_level"]: return fail("unknown_color_draw_policy")
+	var available: Dictionary = acquire_availability(state,weapon,level,charge)
+	if not available.ok: return available
+	var entry: Dictionary = record(state,weapon)
+	for slot: int in [1,2]: entry.options.append({"group_id":_draw_group(weapon,level,slot,rng)})
+	entry.colors[str(level)] = []
+	var shared_grade: int = _draw_grade(rng) if color_mode == "shared_level" else -1
+	for field: int in 4: entry.colors[str(level)].append(shared_grade if color_mode == "shared_level" else _draw_grade(rng))
+	entry.locks[str(level)] = [false,false,false,false]
+	var after: Dictionary = state.duplicate(true)
+	after.weapons[str(weapon)] = entry
+	after.rng_state = str(rng.state)
+	return _plan(state,after,receipt,"level_option_acquire",available.charge)
+
+func plan_reroll(state: Dictionary, weapon: int, rng: RandomNumberGenerator, receipt: String, color_mode: String = "independent_fields") -> Dictionary:
+	if color_mode not in ["independent_fields","shared_level"]: return fail("unknown_color_draw_policy")
+	var available: Dictionary = reroll_availability(state,weapon)
+	if not available.ok: return available
+	var entry: Dictionary = record(state,weapon)
+	for key: String in entry.colors:
+		var slots: Dictionary = _owned_slots(entry,weapon,int(key))
+		var locks: Array = entry.locks.get(key,[false,false,false,false])
+		var shared_grade: int = _draw_grade(rng) if color_mode == "shared_level" and false in locks else -1
+		# Fixed BonusType in all240 buckets: name fields reroll only color;
+		# numerical fields reroll their original Slot1/2 value and own color.
+		for field: int in 4:
+			if locks[field]: continue
+			if field % 2 == 1:
+				var slot: int = 1 if field == 1 else 2
+				entry.options[int(slots[slot])] = {"group_id":_draw_group(weapon,int(key),slot,rng)}
+			entry.colors[key][field] = shared_grade if color_mode == "shared_level" else _draw_grade(rng)
+	var after: Dictionary = state.duplicate(true)
+	after.weapons[str(weapon)] = entry
+	after.rng_state = str(rng.state)
+	return _plan(state,after,receipt,"option_field_reset",available.charge)

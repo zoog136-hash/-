@@ -11,9 +11,29 @@ var view: Control
 var action_sequence: int = 0
 var reset_rng := RandomNumberGenerator.new()
 var transaction_blocked: bool = false
+var balance_config: Dictionary = {}
+var balance_error: String = ""
 
 func _init() -> void:
 	reset_rng.randomize()
+	var parser := JSON.new()
+	if parser.parse(FileAccess.get_file_as_string("res://data/config/mastery523_balance.json")) != OK or not parser.data is Dictionary:
+		balance_error = "숙련 자체 설정을 읽을 수 없습니다"; return
+	balance_config = parser.data
+	if balance_config.get("schema") != "twilight.mastery523.balance.v1": balance_error = "숙련 자체 설정 버전 오류"; return
+	for field: String in ["normal_hit_points","purchase_day_utc_offset_hours","purchase_day_reset_hour","acquire_currency_id","acquire_cost"]:
+		var value: Variant = balance_config.get(field)
+		if not (value is int or value is float) or not is_finite(float(value)) or float(value) != floorf(float(value)) or absf(float(value)) > 100000000:
+			balance_error = "숙련 자체 설정 수치 오류"; return
+	if int(balance_config.normal_hit_points) < 0 or int(balance_config.acquire_cost) < 0 or int(balance_config.acquire_currency_id) not in [1,4] or absi(int(balance_config.purchase_day_utc_offset_hours)) > 14 or int(balance_config.purchase_day_reset_hour) not in range(24): balance_error = "숙련 자체 설정 범위 오류"
+	if balance_config.get("color_draw_mode") not in ["independent_fields","shared_level"]: balance_error = "숙련 색상 자체 설정 오류"
+
+func purchase_period(unix_time: float = -1) -> int:
+	var moment: float = Time.get_unix_time_from_system() if unix_time < 0 else unix_time
+	return floori((moment+int(balance_config.get("purchase_day_utc_offset_hours",9))*3600-int(balance_config.get("purchase_day_reset_hour",5))*3600)/86400.0)
+
+func acquisition_charge() -> Dictionary:
+	return {"CurrencyID":int(balance_config.acquire_currency_id),"Cost":int(balance_config.acquire_cost),"provenance":"CUSTOM_BALANCE"}
 
 func configure(host: Node) -> void:
 	world = host
@@ -36,6 +56,12 @@ func check_load(data: Dictionary) -> String:
 func accept_load(data: Dictionary) -> void:
 	state = data.get(Core.SAVE_KEY,Core.fresh()).duplicate(true) if data.get(Core.SAVE_KEY,Core.fresh()) is Dictionary else Core.fresh()
 	if enabled and state.has("rng_state"): reset_rng.state = int(state.rng_state)
+	if enabled and not balance_error.is_empty(): problem = balance_error
+	# Anchor old first-period receipts at migration, including a used-up quota.
+	# Merely opening a quote never silently refills legacy purchases.
+	if enabled and int(state.get("purchase_count",0)) > 0 and not state.has("legacy_purchase_period"):
+		state.legacy_purchase_period = purchase_period()
+		state.purchase_epoch = purchase_period()
 	transaction_blocked = false
 
 func save_fields() -> Dictionary:
@@ -48,8 +74,8 @@ func commit_plan(plan: Dictionary, settlement: Dictionary = {}) -> Dictionary:
 	if bool(plan.get("service_confirmation_required",false)) and settlement.get("service_receipt_id") != plan.get("receipt_id"): return Core.fail("service_settlement_unconfirmed")
 	if plan.get("before") != state or not core.validate_state(plan.get("after")).is_empty(): return Core.fail("stale_or_invalid_plan")
 	var charge: Dictionary = plan.get("charge",{})
-	# No local Gem alias or currency for unresolved additional service fees is
-	# invented. Paid service outcomes need a separately confirmed settlement.
+	# This adapter accepts an externally settled outcome. Local HUD purchases
+	# use execute(), which stages the real inventory debit in the same save.
 	if not charge.is_empty() and settlement.get("confirmed_charge") != charge: return Core.fail("payment_unconfirmed")
 	if not charge.is_empty() and str(settlement.get("receipt_id","")) != str(plan.get("receipt_id","")): return Core.fail("payment_receipt_mismatch")
 	return _commit(plan,{})
@@ -130,12 +156,15 @@ func _wallet(charge: Dictionary) -> Dictionary:
 func quote(action: String, weapon: int, target: int = 0, prefix: int = 0) -> Dictionary:
 	if not enabled or busy: return Core.fail("pack_unavailable_or_busy")
 	if transaction_blocked: return Core.fail("saved_but_activation_failed")
+	if not balance_error.is_empty(): return Core.fail(balance_error)
 	if world.equipment_collections.save_blocked or world.source_save_blocked: return Core.fail("save_protected")
 	var plan: Dictionary
 	if action == "purchase":
-		plan = core.plan_purchase(state,weapon,_receipt("quote"))
+		plan = core.plan_purchase(state,weapon,_receipt("quote"),purchase_period())
 	elif action == "reset":
-		plan = core.fixed_reset_availability(state,weapon)
+		plan = core.reroll_availability(state,weapon)
+	elif action == "acquire":
+		plan = core.acquire_availability(state,weapon,prefix,acquisition_charge())
 	elif action == "change":
 		if world.field_map != null and bool(world.field_map.data.get("world_dungeon",false)): return Core.fail("world_dungeon")
 		if bool(state.get("pending_server_selection",false)): return Core.fail("pending_server_selection")
@@ -147,17 +176,17 @@ func quote(action: String, weapon: int, target: int = 0, prefix: int = 0) -> Dic
 	return {"ok":true,"charge":plan.charge.duplicate(true),"before":state.duplicate(true)}
 
 func execute(action: String, weapon: int, target: int, prefix: int, expected: Dictionary) -> Dictionary:
-	if expected != state: return Core.fail("stale_or_invalid_plan")
+	if not _confirmation_matches(expected): return Core.fail("stale_or_invalid_plan")
 	var quoted: Dictionary = quote(action,weapon,target,prefix)
 	if not quoted.ok: return quoted
 	if world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy(): return Core.fail("pending_card_confirmation")
 	var receipt: String = _receipt(action)
 	var plan: Dictionary
-	if action == "purchase": plan = core.plan_purchase(state,weapon,receipt)
-	elif action == "reset":
+	if action == "purchase": plan = core.plan_purchase(state,weapon,receipt,purchase_period())
+	elif action in ["reset","acquire"]:
 		var staged_rng := RandomNumberGenerator.new()
 		staged_rng.state = reset_rng.state
-		plan = core.plan_fixed_reset(state,weapon,staged_rng,receipt)
+		plan = core.plan_reroll(state,weapon,staged_rng,receipt,str(balance_config.color_draw_mode)) if action == "reset" else core.plan_acquire(state,weapon,prefix,staged_rng,receipt,acquisition_charge(),str(balance_config.color_draw_mode))
 	else: plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,receipt,int(Time.get_datetime_dict_from_system(true).year))
 	if not plan.ok: return plan
 	var wallet: Dictionary = _wallet(plan.charge)
@@ -165,7 +194,39 @@ func execute(action: String, weapon: int, target: int, prefix: int, expected: Di
 	plan.after.receipts[receipt]["charge"] = plan.charge.duplicate(true)
 	return _commit(plan,{"inventory":wallet.inventory,"gold":wallet.gold})
 
+func _confirmation_matches(expected: Dictionary) -> bool:
+	# Ordinary hits may add points while a modal is open. Rebuild the plan from
+	# current points; any spending, locks, owned options or receipt change is stale.
+	if not core.validate_state(expected).is_empty(): return false
+	for key: String in expected.weapons:
+		if int(core.record(state,int(key)).points) < int(expected.weapons[key].points): return false
+	var snapshots: Array = [expected.duplicate(true),state.duplicate(true)]
+	for snapshot: Dictionary in snapshots:
+		for key: String in snapshot.weapons.keys():
+			var entry: Dictionary = snapshot.weapons[key]
+			entry.erase("points")
+			if entry == {"options":[],"colors":{},"locks":{}}: snapshot.weapons.erase(key)
+	return snapshots[0] == snapshots[1]
+
+func normal_hit(actual_weapon: int) -> bool:
+	if not enabled or busy or transaction_blocked or not balance_error.is_empty() or world == null: return false
+	if world.equipment_collections.save_blocked or world.source_save_blocked: return false
+	var weapon: int = core.normalize_weapon(actual_weapon)
+	var amount: int = int(balance_config.normal_hit_points)
+	if weapon == 0 or amount <= 0: return false
+	var entry: Dictionary = core.record(state,weapon)
+	if not Core.point_text(entry.points) or int(entry.points) > int(Core.MAX_POINT_TEXT)-amount: return false
+	entry.points = str(int(entry.points)+amount)
+	state.weapons[str(weapon)] = entry
+	# Same quiet-window persistence as other ordinary combat progress; no
+	# per-hit financial receipts or full-save requirement on the attack path.
+	world._request_deferred_save()
+	if is_instance_valid(view) and view.visible: view.update_progress()
+	return true
+
 func reason_text(reason: String) -> String:
+	var resolved: Dictionary = {"daily_purchase_limit":"오늘 숙련치 구매 5회 완료","level_not_reached":"숙련 레벨을 먼저 달성하세요","level_already_or_partly_owned":"이미 보유했거나 일부만 있는 레벨입니다","partial_owned_level":"일부만 남은 보유 옵션은 원래 저장을 보존하며 재설정을 보류합니다","all_fields_locked":"변경할 슬롯을 하나 이상 잠금 해제하세요"}
+	if resolved.has(reason): return resolved[reason]
 	return str({"saved_but_activation_failed":"거래 결과는 저장되었습니다. 저장 데이터를 다시 불러온 뒤 계속하세요","save_protected":"저장 보호 중 · 저장 데이터를 확인하세요","insufficient_gold":"아데나 부족","insufficient_material":"재료 또는 다이아 부족","material_locked":"재료가 잠겨 있습니다","purchase_reset_boundary_unverified":"첫 구매 주기 5회 완료 · 초기화 시각 확인 대기","repeat_service_restriction_unverified":"첫 교체 완료 · 반복 구매 조건 확인 대기","variable_value_mapping_unverified":"변동 옵션은 네 슬롯 값 대응 확인 필요","locked_value_mapping_unverified":"잠금 옵션은 네 슬롯 값 대응 확인 필요","owned_options_required":"보유한 옵션과 색상이 필요합니다","operation_source_missing":"실행 정보가 포함된 새 숙련 팩 필요","color_draw_source_missing":"색상 재결정 정보가 포함된 새 팩 필요","target_option_policy_unconfirmed":"옵션 미선택 교체 시 목표 기존 옵션 처리 확인 필요","invalid_transfer":"서로 다른 숙련도를 선택하세요","option_prefix_not_acquired":"획득한 숙련도 범위를 선택하세요","stale_or_invalid_plan":"상태가 바뀌었습니다. 다시 선택하세요","backup_failed":"이전 저장 백업 실패","pending_card_confirmation":"카드 결과 확인을 먼저 완료하세요"}.get(reason,reason))
 
 func balance(currency: int) -> int:
@@ -187,7 +248,14 @@ func catalog_bonus(key: String, actual_weapon: int) -> int:
 	var mapping: Dictionary = {"HPPlus":"hpFlat","MPPlus":"mpFlat","MagicResist":"mr","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeHit":"meleeHit","RangeHit":"rangedHit","AttackSpeedBonus":"attackSpeed","MeleeCritical":"meleeCritical","RangeCritical":"rangedCritical","MagicCritical":"magicCritical"}
 	var total: int = 0
 	for bonus: Dictionary in core.active_options(state,base):
-		if str(mapping.get(str(bonus.type_name),"")) == key: total += int(bonus.Value)
+		if str(mapping.get(str(bonus.type_name),"")) != key: continue
+		var value: float = float(bonus.Value)
+		var type: Dictionary = core.types[int(bonus.BonusTypeID)]
+		for unit: Dictionary in core.tables.UIUnit:
+			if int(unit.UnitID) == int(type.UnitID) and int(unit.Denominator) > 0:
+				value /= float(unit.Denominator)
+				break
+		total += int(value)
 	return total
 
 func set_color_lock(weapon: int, level: int, slot: int, locked: bool) -> Dictionary:
@@ -207,6 +275,10 @@ func weapon_name(base: int) -> String:
 func currency_name(id: int) -> String:
 	var name: String = str(core.find_row("Currency",id).get("Name","확인되지 않은 재화"))
 	return str({"Adena":"아데나","Gem":"다이아"}.get(name,name))
+
+func grade_name(id: int) -> String:
+	# Grade2..5 colors verified against source Color->ColorTable and NC chart.
+	return str({2:"그린",3:"블루",4:"레드",5:"퍼플"}.get(id,str(id)))
 
 func bonus_text(bonus: Dictionary) -> String:
 	var type: Dictionary = core.types[int(bonus.BonusTypeID)]

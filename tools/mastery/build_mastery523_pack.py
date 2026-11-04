@@ -86,7 +86,7 @@ def compile_pack(source):
                           if r.get("TextDesc", "") in {
                               "MASTERY_POPUP_HELP\\ND_MASTERY_HELP01\\ND_STEP_3\\ND_TEXT\\TEXT_HELP",
                               "MASTERY_POPUP_HELP\\ND_MASTERY_HELP02\\ND_STEP_7\\ND_TEXT\\TEXT_HELP"}]}
-        groups, probability = {}, {}
+        groups, probability, bucket_types = {}, {}, {}
         for row in tables["MasteryBonusView"]:
             level = levels[row["MasteryWeaponLevelID"]]
             weapon = level["WeaponTypeID"]
@@ -96,8 +96,13 @@ def compile_pack(source):
             group[weapon] = (level["Level"], row["Slot"], bonuses[row["BonusID"]]["Value"], row["Probability"])
             key = (weapon, level["Level"], row["Slot"])
             probability[key] = probability.get(key, 0) + row["Probability"]
+            bucket_types.setdefault(key, set()).add(bonuses[row["BonusID"]]["BonusTypeID"])
+            if row["Slot"] not in (1, 2) or row["Probability"] <= 0:
+                raise ValueError("invalid original slot or weight")
         if len(groups) != 36 or any(set(g) != weapons or len(set(g.values())) != 1 for g in groups.values()):
             raise ValueError("incomplete 36 by 15 correspondence")
+        if any(len(types) != 1 for types in bucket_types.values()):
+            raise ValueError("option name changes within a numerical-value bucket")
         if len(probability) != 240 or set(probability.values()) != {1000000}:
             raise ValueError("invalid option probability buckets")
         if sum(r["Probability"] for r in tables["MasteryGradeView"]) != 1000000:

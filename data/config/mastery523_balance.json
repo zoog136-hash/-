@@ -1,0 +1,15 @@
+{
+  "schema": "twilight.mastery523.balance.v1",
+  "normal_hit_points": 10000,
+  "purchase_day_utc_offset_hours": 9,
+  "purchase_day_reset_hour": 5,
+  "acquire_currency_id": 1,
+  "acquire_cost": 0,
+  "color_draw_mode": "independent_fields",
+  "provenance": {
+    "normal_hit_points": "CUSTOM_BALANCE: native per-hit conversion not found; 10000 raw points gives approximately 1056 confirmed hits to the first one-handed-sword level. Only ordinary hits with an equipped mapped weapon count.",
+    "purchase_day": "CUSTOM_BALANCE: native Daily schedule and shared five-use cap are confirmed; exact native reset hour is unknown. This local game uses 05:00 at fixed UTC+09:00. Clock rollback never grants a new period.",
+    "acquire_cost": "CUSTOM_BALANCE: level-up option acquisition is confirmed; an explicit initial acquisition price was not found. Local default is zero Adena. Reroll fees remain the original source amounts.",
+    "color_draw_mode": "CUSTOM_BALANCE: original grade weights and four name/value fields are confirmed; native statistical independence is not. Default independent_fields draws once per unlocked field; optional shared_level uses one grade draw for all unlocked fields of that level. Both use original grade weights. Neither is claimed native-equivalent."
+  }
+}

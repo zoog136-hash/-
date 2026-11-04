@@ -1,8 +1,89 @@
 {
   "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
-  "previous_checkpoint": "14cf81d4746417ecf5f9404ea45598191e543a92",
+  "previous_checkpoint": "cf7e50c7d606e255b07373e8e1db5db5c50ba041",
   "godot": "4.7.2.stable.official.ed1daf0bf",
   "results": {
+    "source_engine": {
+      "result": {
+        "checks": 8157,
+        "failures": 0,
+        "source": "actual523"
+      },
+      "log_name": "mastery-verified-source-unit.log",
+      "log_sha256": "e637f7953b0064f9ba68c1b18098e434725876d8aba7dd09d4ad915be19f9ef1"
+    },
+    "synthetic_engine": {
+      "result": {
+        "checks": 8153,
+        "failures": 0,
+        "source": "synthetic"
+      },
+      "log_name": "mastery-verified-synthetic-unit.log",
+      "log_sha256": "a4443671ee14d2eae88f1e0d1e8d2c2e22ad972d33ee2b99f57b94607867aa29"
+    },
+    "source_progression": {
+      "result": {
+        "checks": 110,
+        "failures": [],
+        "source": "actual523"
+      },
+      "log_name": "mastery-verified-source-progression.log",
+      "log_sha256": "5e174a1c94592250989089ef84dc641f3f129038696ddc41644c767791e9c223"
+    },
+    "synthetic_progression": {
+      "result": {
+        "checks": 110,
+        "failures": [],
+        "source": "synthetic"
+      },
+      "log_name": "mastery-verified-synthetic-progression.log",
+      "log_sha256": "23a84112dc354597ac2e8f112563cbe17f27de0c68ae3899d60f2ab6dddc5062"
+    },
+    "actual_main_opengl": {
+      "result": {
+        "checks": 76,
+        "failures": [],
+        "source": "actual523"
+      },
+      "log_name": "mastery-continue-verified-opengl.log",
+      "log_sha256": "4e6fab9d38b813d3c8d214ab195c0b2803492c099013878b017b4ea64f0c1047"
+    },
+    "generic_main_preservation": {
+      "result": {
+        "checks": 25,
+        "failures": [],
+        "source": "synthetic"
+      },
+      "log_name": "mastery-continue-generic-main.log",
+      "log_sha256": "974682854774a5b2cd8b701bd1c18a1e656cff72e2ef024fe55959df22010a06"
+    },
+    "core_main_current_map_save": {
+      "result": {
+        "checks": 32,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      },
+      "log_name": "mastery-continue-core-main.log",
+      "log_sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "identical_save": {
+      "result": {
+        "failures": [],
+        "skips": 1,
+        "writes": 2
+      },
+      "log_name": "mastery-continue-identical-save.log",
+      "log_sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    },
+    "deferred_save_gate": {
+      "result": {
+        "failures": []
+      },
+      "log_name": "mastery-continue-deferred-save.log",
+      "log_sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    }
+  },
+  "previous_checkpoint_results": {
     "core_after_operations": {
       "result": {
         "checks": 32,
@@ -48,49 +129,66 @@
   },
   "python_core_staging": {
     "tests": 7,
-    "failures": 0
+    "failures": 0,
+    "log_sha256": "45ac010275cc27408a97f3ba245c5c6d1740bdc63745f2420e3f1431be335d3d"
   },
-  "opengl": "Mesa llvmpipe; actual Main + confirmations + purchase/reset/change + reload",
+  "opengl": "Mesa llvmpipe; actual Main + confirmations + purchase/acquisition/locked and unlocked reset/repeated change + ordinary hit/miss/skill/duplicate impact + reload",
   "captures": [
     {
+      "name": "acquire.png",
+      "sha256": "760ec22c13526544aaaf697daf9ca94612186857705f7af47e81e3d6b7e46b22",
+      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
+    },
+    {
       "name": "change.png",
-      "sha256": "170012a54d61d84970bb61161c4430b199ece4707605bc1bdb07b53b6841b97d",
-      "status": "LOCAL_EVIDENCE_ONLY"
+      "sha256": "b3d37facdf93c63f574fe75f3a0f9d33ab5fc1b07081b457072dd3f2f21fac01",
+      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
     },
     {
       "name": "purchase.png",
-      "sha256": "4ab3a79c6c61828da666c22e7188aafe53bfc6aa93720961bb1feb5312a8817a",
-      "status": "LOCAL_EVIDENCE_ONLY"
+      "sha256": "731d530fb1484cd314a4911f2312c24db3f3e8f848af2800c8f7558f45992514",
+      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
     },
     {
       "name": "reset.png",
-      "sha256": "07b4f6b384426f1bc5704439a3401d21572db09c34f3f401f5c1203e94dfdb6d",
-      "status": "LOCAL_EVIDENCE_ONLY"
+      "sha256": "0f0b1adf2f8bb3bea4a2aee5d051c2feeb3f0fea5b99c84e20eff76b01182d7e",
+      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
     }
   ],
   "committed_resource_integrity": {
     "atlases": 723,
     "frames": 41442,
     "bytes": 233420026,
-    "status": "PASS"
+    "status": "PASS",
+    "log_sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
   },
   "private_pack": {
     "bytes": 235676,
     "sha256": "671fd9b307182e0ed8b8789124ea5710aa766d3de20c74df381455abf2bd9d6b",
     "library_version": 1,
-    "delivery": "LIBRARY_REPLACE_CONFIRMED; same identity; original rows not in public Git"
+    "delivery": "LIBRARY_REPLACE_CONFIRMED; same identity; original rows not in public Git",
+    "compiler_recheck": "PASS; newly rebuilt bytes identical; no new Library version needed"
   },
   "historical_source_dir": {
     "status": "FAIL",
     "reason": "a1.zip absent; both current523 ZIPs separately hash/CRC verified"
   },
+  "official_probability_version": "20261103210002",
+  "custom_balance": {
+    "config": "data/config/mastery523_balance.json",
+    "sha256": "954a607ce27dde86246b4b655ebf8bb5709db247e850fa5cbfdfe9ad77775e00",
+    "normal_hit_points": 10000,
+    "daily_boundary": "fixed UTC+09 05:00; native hour unknown",
+    "initial_option_cost": "0 Adena; native acquisition price unknown",
+    "color_joint_distribution": "independent_fields default; native independence not confirmed; shared_level configurable; original weights retained"
+  },
   "remaining_blocks": [
-    "Automatic daily purchase reset after first five purchases: native offset unknown",
-    "Variable-value or locked-slot reroll and initial four-value acquisition mapping",
-    "Repeated market service after first local change: restriction12 unknown",
-    "Point-only change onto an existing-option destination: handling unknown",
-    "Native server conversion/caps and two-server atomic execution",
-    "Matching-bonus stacking and original UI/Android equivalence"
+    "Multi-level matching-bonus stacking and unsupported PvP/reduction consumers",
+    "Point-only change onto an existing-option destination: handling not established",
+    "Two-server atomic execution, independently confirmed comparison/conversion rules",
+    "Shared state across separate local save files/accounts",
+    "Partial legacy owned-level repair; original partial records preserved",
+    "Android, long-session gameplay, native UI and server equivalence"
   ],
-  "remote_ci": "NOT_REQUESTED; commits use [skip ci]"
+  "remote_ci": "NOT_REQUESTED; [skip ci]; no workflow/protection changes or merges"
 }

@@ -1,10 +1,21 @@
 extends PanelContainer
-## Native art and the four-color/Slot1/2 placement are not reconstructed here.
+## Original field placement confirmed by the official guide; native art stays private.
 var runtime
 var body: VBoxContainer
 var selected_weapon: int = 0
 var target_weapon: int = 0
 var prefix_level: int = 0
+var progress_label: Label
+var displayed_level: int = -1
+
+func update_progress() -> void:
+	if not is_instance_valid(progress_label) or not runtime.core.levels.has(selected_weapon): return
+	var entry: Dictionary = runtime.core.record(runtime.state,selected_weapon)
+	var level: int = runtime.core.achieved_level(selected_weapon,entry.points)
+	progress_label.text = "%s · Lv.%d · 숙련치 %s" % [runtime.weapon_name(selected_weapon),level,entry.points]
+	if level != displayed_level:
+		displayed_level = level
+		call_deferred("refresh")
 
 func _ready() -> void:
 	name = "WeaponMastery523"
@@ -52,9 +63,10 @@ func operation_button(id: String, title: String, action: String, weapon: int, ta
 		if action == "change": line("기본 %d + 옵션 추가 %d" % [int(charge.BaseCost),int(charge.AdditionalCost)])
 		button.pressed.connect(func() -> void:
 			var warning: String = ""
-			if action == "change": warning = "\n출발 숙련치와 미선택 옵션은 사라집니다. 선택한 범위의 옵션은 목표 옵션을 대체하며 잠금은 초기화됩니다.\n원시 누적 숙련치 합산으로 처리합니다. 이전 저장은 별도로 보존합니다.\n반복 구매 조건 확인 전 이 저장에서 첫 교체만 허용합니다."
-			elif action == "reset": warning = "\n확률100%인 기존 값은 유지하고 잠금 없는 네 색상을 재결정합니다."
-			else: warning = "\n구매 주기 초기화 시각이 확인되기 전까지 이 저장의 첫 5회만 구매할 수 있습니다."
+			if action == "change": warning = "\n출발 숙련치와 미선택 옵션은 사라집니다. 선택한 범위의 옵션은 목표 옵션을 대체하며 잠금은 초기화됩니다.\n원시 누적 숙련치를 합산합니다. 이전 저장은 별도로 보존합니다."
+			elif action == "reset": warning = "\n잠기지 않은 종류·수치 슬롯의 색상과 수치를 원본 확률로 재결정합니다. 수치 슬롯을 잠그면 해당 옵션 수치도 보존합니다."
+			elif action == "acquire": warning = "\n두 옵션 수치와 네 색상을 추첨합니다. 최초 획득 비용은 자체 설정입니다."
+			else: warning = "\n무기 통합 하루 5회. 로컬 초기화 시각은 자체 설정입니다."
 			runtime.world.hud.confirm_action(title,price+warning,"실행",func(_count: int) -> void:
 				var result: Dictionary = runtime.execute(action,weapon,target,prefix,quote.before)
 				runtime.world.hud.show_message(title+" 완료" if result.ok else runtime.reason_text(str(result.get("reason","실패"))))))
@@ -72,6 +84,9 @@ func refresh() -> void:
 	if not runtime.enabled:
 		line(runtime.problem)
 		return
+	if not runtime.balance_error.is_empty():
+		line(runtime.balance_error)
+		return
 	var selector := OptionButton.new()
 	selector.name = "MasteryWeaponSelect"
 	var selected_index: int = 0
@@ -86,9 +101,13 @@ func refresh() -> void:
 	for weapon: int in [selected_weapon]:
 		var entry: Dictionary = runtime.core.record(runtime.state,weapon)
 		var level: int = runtime.core.achieved_level(weapon,entry.points)
-		line("%s · Lv.%d · 숙련치 %s" % [runtime.weapon_name(weapon),level,entry.points])
+		progress_label = line("%s · Lv.%d · 숙련치 %s" % [runtime.weapon_name(weapon),level,entry.points])
+		displayed_level = level
 		if level < 8:
 			line("다음 레벨 누적 숙련치 %d" % int(runtime.core.levels[weapon][level].CumulativePoint))
+		for claim_level: int in range(1,level+1):
+			if runtime.core._owned_slots(entry,weapon,claim_level).is_empty() and not entry.colors.has(str(claim_level)):
+				operation_button("MasteryAcquire_%d" % claim_level,"Lv.%d 옵션 획득" % claim_level,"acquire",weapon,0,claim_level)
 		for option: Dictionary in entry.options:
 			var row: Dictionary = runtime.core.options[int(option.group_id)][weapon]
 			var bonus: Dictionary = runtime.core.bonuses[int(row.BonusID)]
@@ -99,24 +118,29 @@ func refresh() -> void:
 			line("Lv.%d · %s · %s" % [int(row.level),runtime.bonus_text(bonus),status])
 		for level_key: String in entry.colors:
 			line("Lv.%s 색상" % level_key)
+			var colors: Array = entry.colors[level_key]
+			if colors[0] == colors[1] and colors[0] == colors[2] and colors[0] == colors[3]: line("%s 매칭 · 매칭 보너스 적용 준비 중" % runtime.grade_name(int(colors[0])))
 			var locks: Array = entry.locks.get(level_key,[false,false,false,false])
 			for slot: int in 4:
 				var toggle := CheckButton.new()
 				toggle.name = "MasteryLock_%s_%d" % [level_key,slot]
-				toggle.text = "색상 %d · %d번 잠금" % [int(entry.colors[level_key][slot]),slot+1]
+				toggle.text = "%s · %s · 잠금" % [["옵션1 종류","옵션1 수치","옵션2 종류","옵션2 수치"][slot],runtime.grade_name(int(entry.colors[level_key][slot]))]
+				toggle.add_theme_color_override("font_color",{2:Color.LIME_GREEN,3:Color.DEEP_SKY_BLUE,4:Color.TOMATO,5:Color.MEDIUM_ORCHID}.get(int(entry.colors[level_key][slot]),Color.WHITE))
 				toggle.button_pressed = locks[slot]
 				toggle.toggled.connect(func(locked: bool) -> void: runtime.set_color_lock(weapon,int(level_key),slot,locked))
 				body.add_child(toggle)
 		var quote: Dictionary = runtime.core.reset_quote(runtime.state,weapon)
 		if not entry.options.is_empty():
 			line("재설정 비용: %s %d · 티켓 수 %d" % [runtime.currency_name(int(quote.get("CurrencyID",0))),int(quote.get("Cost",0)),int(quote.get("TicketAmount",0))])
-		operation_button("MasteryReset","고정 옵션 색상 재설정","reset",weapon)
+		operation_button("MasteryReset","숙련 옵션 재설정","reset",weapon)
 	line("목표 무기 옵션 미리보기")
 	for purchase: Dictionary in runtime.core.tables.MasteryPointPurchaseView:
 		line("원본 숙련치 구매량 %d" % int(purchase.PointAmount))
 	for payment: Dictionary in runtime.core.tables.MasteryPointPayment:
 		line("구매 %d회: %s %d" % [int(payment.Count),runtime.currency_name(int(payment.CurrencyID)),int(payment.Cost)])
-	line("확인된 구매 횟수 %d/5 · 초기화 시각 확인 전 자동 초기화 없음" % int(runtime.state.get("purchase_count",0)))
+	var usage: Dictionary = runtime.core.purchase_usage(runtime.state,runtime.purchase_period())
+	line("오늘 구매 %d/5 · 총 구매 %d회" % [int(usage.count),int(runtime.state.get("purchase_count",0))])
+	line("자체 설정: 일반 명중당 %d점 · 일일 기준 UTC%+d %02d시 · 최초 옵션 비용 %d" % [int(runtime.balance_config.get("normal_hit_points",0)),int(runtime.balance_config.get("purchase_day_utc_offset_hours",9)),int(runtime.balance_config.get("purchase_day_reset_hour",5)),int(runtime.balance_config.get("acquire_cost",0))])
 	operation_button("MasteryPointPurchase","숙련치 구매","purchase",selected_weapon)
 	var target := OptionButton.new()
 	target.name = "MasteryTransferTarget"
@@ -136,6 +160,10 @@ func refresh() -> void:
 		prefix.name = "MasteryTransferPrefix"
 		prefix.add_item("옵션 제외 · 숙련치만 합산",0)
 		var available: int = runtime.core.achieved_level(selected_weapon,owned.points)
+		for level: int in range(1,available+1):
+			if runtime.core._owned_slots(owned,selected_weapon,level).size() != 2 or not owned.colors.has(str(level)):
+				available = level-1
+				break
 		prefix_level = mini(prefix_level,available)
 		for level: int in range(1,available+1): prefix.add_item("1~%d레벨 옵션 포함" % level,level)
 		prefix.select(prefix_level)
@@ -150,4 +178,4 @@ func refresh() -> void:
 		line("현재 클래스의 숙련 교체 대상이 없습니다")
 	line("교체 후 색상·수치 유지 / 잠금 초기화. 교체에 쓰는 원래 숙련치·옵션은 초기화됩니다.")
 	operation_button("MasteryTransfer","로컬 숙련 교체","change",selected_weapon,target_weapon,prefix_level)
-	line("숙련 교체는 원시 누적 숙련치를 그대로 합산합니다. 반복 구매 조건 확인 전 이 저장에서 첫 교체만 허용합니다. 변동 값·잠금 재설정은 네 슬롯 값 대응 확인이 필요합니다.")
+	line("구매·수치·색상 가중치·재설정·교체 비용은 원본을 사용합니다. 색상 추첨 방식은 자체 설정이며 원작과의 동일성은 미확인입니다.")

@@ -21,6 +21,13 @@ func confirm(world: Node, button_name: String) -> void:
 	check(dialog != null,"actual confirmation dialog: "+button_name)
 	if dialog != null: dialog.confirm_button.pressed.emit()
 
+func seed_for(chance: float, hit: bool) -> int:
+	var probe := RandomNumberGenerator.new()
+	for candidate: int in 10000:
+		probe.seed = candidate
+		if (probe.randf() < chance) == hit: return candidate
+	return -1
+
 func _initialize() -> void:
 	call_deferred("run")
 
@@ -82,25 +89,29 @@ func run() -> void:
 	world.equipment_collections.test_save_writer = Callable()
 	for i: int in 4: check(runtime.execute("purchase",1,0,0,runtime.state.duplicate(true)).ok,"remaining first-period purchase")
 	check(int(runtime.state.purchase_count) == 5 and int(world.inventory[powder]) == unit_cost*2,"all five costs are paid exactly")
-	check(not runtime.quote("purchase",1).ok,"sixth purchase waits for verified reset boundary")
+	check(not runtime.quote("purchase",1).ok,"sixth purchase is blocked by the shared local-day limit")
 	var threshold: int = int(runtime.core.levels[1][0].CumulativePoint)
 	check(runtime.credit_confirmed_points(1,str(threshold-point_amount*5),"confirmed-operation-fixture-award").ok,"confirmed growth uses ordinary save")
-	# Imported owned fixed options are a test fixture, never a free gameplay grant.
-	var options: Array = []
-	for id: int in runtime.core.options:
-		if int(runtime.core.options[id][1].level) == 1: options.append({"group_id":id})
-	var grade: int = int(runtime.core.tables.MasteryGradeView[0].GradeID)
-	runtime.state.weapons["1"].options = options
-	runtime.state.weapons["1"].colors = {"1":[grade,grade,grade,grade]}
-	runtime.state.weapons["1"].locks = {}
-	check(world._save_game(true) == OK,"owned-option fixture persisted without changing source values")
+	# Claim through the actual HUD; no imported/free owned-option fixture.
+	runtime.view.refresh()
+	before = runtime.state.duplicate(true)
+	var claim_rng: int = runtime.reset_rng.state
+	world.equipment_collections.test_save_writer = func(_p: String,_d: Dictionary) -> Error: return ERR_CANT_CREATE
+	check(not runtime.execute("acquire",1,0,1,before).ok,"option claim write failure rejected")
+	check(runtime.state == before and runtime.reset_rng.state == claim_rng,"failed claim preserves ownership and RNG")
+	world.equipment_collections.test_save_writer = Callable()
+	await capture(world,"acquire",1)
+	confirm(world,"MasteryAcquire_1")
+	var options: Array = runtime.core.record(runtime.state,1).options.duplicate(true)
+	check(options.size() == 2 and runtime.core.record(runtime.state,1).colors["1"].size() == 4,"UI level acquisition grants exact two-value four-color structure")
+	check(not runtime.quote("acquire",1,0,1).ok,"UI cannot claim the same level twice")
 	for item: Dictionary in world.catalog_db.get("아이템",[]):
 		if item.get("type") == "한손검" and item.get("slot") == "weapon": world._equip_or_acquire_item(item); break
 	var native_speed: float = world._effective_attack_speed_bonus_percent()
 	runtime.enabled = false
 	var baseline_speed: float = world._effective_attack_speed_bonus_percent()
 	runtime.enabled = true
-	check(native_speed-baseline_speed == runtime.catalog_bonus("attackSpeed",1) and native_speed > baseline_speed,"native percentage reaches actual equipped-weapon attack-speed consumer")
+	check(native_speed-baseline_speed == 1 and runtime.catalog_bonus("attackSpeed",1) == 1,"native raw10000 reaches actual attack speed as exactly one percentage point")
 	runtime.view.refresh()
 	before = runtime.state.duplicate(true)
 	var rng_before: int = runtime.reset_rng.state
@@ -126,8 +137,58 @@ func run() -> void:
 	world._load_game(true)
 	check(not runtime.transaction_blocked and not world.equipment_collections.save_blocked,"accepted reload reconciles the durable transaction and writer lease")
 	await capture(world,"reset",1)
-	check(runtime.set_color_lock(1,1,0,true).ok and not runtime.quote("reset",1).ok,"locked coupling blocks only that reset path")
+	check(runtime.set_color_lock(1,1,0,true).ok and runtime.quote("reset",1).ok,"official field mapping enables locked reroll")
+	var locked_color: int = int(runtime.core.record(runtime.state,1).colors["1"][0])
+	var diamonds_before: int = int(world.inventory[world.CURRENCY_DROP.DIAMOND])
+	var locked_fee: Dictionary = runtime.quote("reset",1).charge
+	confirm(world,"MasteryReset")
+	check(int(world.inventory[world.CURRENCY_DROP.DIAMOND]) == diamonds_before-int(locked_fee.Cost) and int(runtime.core.record(runtime.state,1).colors["1"][0]) == locked_color,"UI locked reroll pays original Gem fee and preserves locked name color")
 	check(runtime.set_color_lock(1,1,0,false).ok,"unlock restores executable reset path")
+	# Actual hit/miss/skill/impact resolution, isolated from background combat.
+	for actor: Node in world.monsters_root.get_children(): actor.set_physics_process(false)
+	var mob = load("res://scenes/Monster.tscn").instantiate()
+	world.monsters_root.add_child(mob)
+	mob.setup({"name":"숙련 명중 검증","hp":99999999,"ac":0},world.player,world,null)
+	mob.set_physics_process(false)
+	mob.position = world.player.position
+	world.deferred_save_enabled = true
+	check(world._save_game(true) == OK,"baseline save before normal-hit progression")
+	var before_hits: int = int(runtime.core.record(runtime.state,1).points)
+	var writes_before: int = world.equipment_collections.save_writes
+	var chance: float = world._normal_attack_hit_chance(mob,"melee")
+	var hit_seed: int = seed_for(chance,true)
+	var miss_seed: int = seed_for(chance,false)
+	world.rng.seed = miss_seed
+	world._resolve_normal_attack(mob,"melee",1)
+	check(int(runtime.core.record(runtime.state,1).points) == before_hits,"actual ordinary attack MISS gives no mastery")
+	world.rng.seed = hit_seed
+	world._resolve_normal_attack(mob,"melee",1)
+	var hit_amount: int = int(runtime.balance_config.normal_hit_points)
+	check(int(runtime.core.record(runtime.state,1).points) == before_hits+hit_amount,"actual normal HIT awards configured local points to equipped weapon")
+	check(world.equipment_collections.save_writes == writes_before and world.deferred_save.pending(),"ordinary mastery uses bounded deferred save, no synchronous hit save")
+	world.rng.seed = hit_seed
+	world._resolve_normal_attack(mob,"melee",3)
+	check(int(runtime.core.record(runtime.state,1).points) == before_hits+hit_amount,"weapon swap after launch cannot credit the wrong mastery")
+	world.resolving_combat_action = true
+	world._cast_magic_attack(mob,10,0,"숙련 검증 마법")
+	world.resolving_combat_action = false
+	check(int(runtime.core.record(runtime.state,1).points) == before_hits+hit_amount,"actual magic skill path gives no ordinary-hit mastery")
+	var empty_snapshot: Dictionary = runtime.state.duplicate(true)
+	check(not runtime.normal_hit(0) and not runtime.normal_hit(-1) and runtime.state == empty_snapshot,"unarmed and unmapped weapon types give no mastery")
+	var action: Dictionary = {"target":weakref(mob),"generation":world.combat_generation,"target_life_id":mob.life_id,"kind":"melee","callback":world._resolve_normal_attack.bind(mob,"melee",1),"impact_resolved":false}
+	world.rng.seed = hit_seed
+	world._impact_player_attack(action)
+	world._impact_player_attack(action)
+	check(int(runtime.core.record(runtime.state,1).points) == before_hits+hit_amount*2,"duplicate actual impact event cannot double-credit mastery")
+	var modal_quote: Dictionary = runtime.quote("reset",1)
+	world.rng.seed = hit_seed
+	world._resolve_normal_attack(mob,"melee",1)
+	check(runtime.execute("reset",1,0,0,modal_quote.before).ok,"ordinary progress during modal keeps a valid financial confirmation")
+	check(int(runtime.core.record(runtime.state,1).points) == before_hits+hit_amount*3,"paid reset rebuilds from latest points and never loses concurrent hits")
+	threshold = before_hits+hit_amount*3
+	var on_disk: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
+	check(int(on_disk[Core.SAVE_KEY].weapons["1"].points) == threshold,"financial save atomically includes pending ordinary mastery progress")
+	mob.queue_free()
 	check(QA.enter_game(world,"요정"),"actual class UI selects an allowed bow target")
 	world.player.set_physics_process(false)
 	world.field_population.set_process(false)
@@ -154,8 +215,17 @@ func run() -> void:
 	var first: Dictionary = runtime.core.options[int(options[0].group_id)][3]
 	check(runtime.core.types[int(runtime.core.bonuses[int(first.BonusID)].BonusTypeID)].Name == "RangeHit","source hit group resolves target ranged type")
 	check(FileAccess.get_sha256(save_path+".pre-mastery-change-"+saved_sha) == saved_sha,"independent before-change backup preserves exact source bytes")
-	check(not runtime.quote("change",3,1,0).ok,"unresolved repeated service restricted after first paid use")
+	check(runtime.quote("change",3,1,0).ok,"official product has no purchase-count limit after first paid use")
 	await capture(world,"change",3)
+	runtime.view.selected_weapon = 3
+	runtime.view.target_weapon = 1
+	runtime.view.prefix_level = 0
+	runtime.view.refresh()
+	var repeat_fee: Dictionary = runtime.quote("change",3,1,0)
+	var repeat_gems: int = int(world.inventory[world.CURRENCY_DROP.DIAMOND])
+	confirm(world,"MasteryTransfer")
+	check(runtime.core.record(runtime.state,3).points == "0" and runtime.core.record(runtime.state,1).points == str(threshold),"actual second UI transfer runs with exact raw sum")
+	check(int(world.inventory[world.CURRENCY_DROP.DIAMOND]) == repeat_gems-int(repeat_fee.charge.Cost),"second UI transfer debits its own original service fee once")
 	var committed: Dictionary = runtime.state.duplicate(true)
 	var rng_committed: int = runtime.reset_rng.state
 	runtime.state = Core.fresh()
