@@ -1,0 +1,152 @@
+{
+  "archives": [
+    {
+      "name": "lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+      "bytes": 25031173,
+      "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+      "zip_crc": "pass"
+    },
+    {
+      "name": "TWILIGHT_523_symbol_guardian_crosslinks_20261104.zip",
+      "bytes": 149581,
+      "sha256": "60fa306d6310cddd4b5eb042bbf59720e6dc732d92b3438cf54044815f76811f",
+      "zip_crc": "pass"
+    }
+  ],
+  "tables": {
+    "Bonus": {
+      "sha256": "1189d53da7897c13ca83d559fef06410695404e1157cc2bbf8a9e48ce7f45d59",
+      "bytes": 34575811,
+      "verified": true
+    },
+    "BonusType": {
+      "sha256": "00cedfba3cd259dfd26fbd1471dd0fb5305023da8f85ca0b262af8f9fd0c1cf1",
+      "bytes": 317249,
+      "verified": true
+    },
+    "Unit": {
+      "sha256": "5b212633235459928eb03f836ac3964d988a9851f2e7f786a04f5edbba7cba22",
+      "bytes": 11310,
+      "verified": true
+    },
+    "DescData_Korean": {
+      "sha256": "af6a4bb11358bfeb2adeed63f27ec7f353770a07f36474481cec87ce0a2bfb9c",
+      "bytes": 55498936,
+      "verified": true
+    },
+    "SymbolBonus": {
+      "sha256": "54a0a6637714b1d10825ffca94448185581c27000ab22050054ee5fb616dc698",
+      "bytes": 64073,
+      "verified": true
+    },
+    "SymbolAbsoluteBonusView": {
+      "sha256": "862f4d30e23bf5889e6fc1971e833c39d13f9ba2f2c45aca7e14566b3de95124",
+      "bytes": 15545,
+      "verified": true
+    },
+    "SymbolEnchantCost": {
+      "sha256": "b01701d1c85f1c084c8d64c5b5cb82a94969d23e98c298fb3d3147f10ad05a65",
+      "bytes": 15025,
+      "verified": true
+    },
+    "SymbolType": {
+      "sha256": "d6db4b881e39576373d3fd1238b1f6711b21024341f581915e3612d0c817e3a7",
+      "bytes": 1513,
+      "verified": true
+    },
+    "SpecialResistanceType": {
+      "sha256": "31ede31d0d027ee99107a9bbcc1e0d9f602d7814cc8ebd1bf6d34ebb54ada2c2",
+      "bytes": 982,
+      "verified": true
+    },
+    "IntervalBonus": {
+      "sha256": "c1e342201fd93fba0c51dbbe187f38ff03764d405a7424d2a6074a386d6d375c",
+      "bytes": 19821,
+      "verified": true
+    },
+    "IntervalBonusCategory": {
+      "sha256": "014a4115ea16ebb83cd3776335c34d728f7689b0fa3269a7b99d0131969e50e0",
+      "bytes": 4637,
+      "verified": true
+    },
+    "InvokeOption": {
+      "sha256": "ea1e6e99f7a501312d7e5a9d114c7edbefc18f72de1d7816abd25085a6e9939f",
+      "bytes": 1607119,
+      "verified": true
+    },
+    "InvokeOptionType": {
+      "sha256": "ac0d5094e7e1e63968d3215ced14f327a24c4e06e5380a4b7d0f769f92e3069a",
+      "bytes": 37533,
+      "verified": true
+    },
+    "ItemClass": {
+      "sha256": "adaf246e6a70c2e24f144a5147bebaff27e9168bc5a74da8bcf871ca1287a165",
+      "bytes": 44095017,
+      "verified": true
+    },
+    "Grade": {
+      "sha256": "7ccc62ce1c95ff02cb833e09a68469a1f66ff739db0ada613e4fd498226984da",
+      "bytes": 1999,
+      "verified": true
+    },
+    "ItemBonus": {
+      "sha256": "2bdc0f98cd68c1b6f10c572cbba5f1ab22b6f20588e54a279133beecf9dfc815",
+      "bytes": 10881472,
+      "verified": true
+    },
+    "BonusApplicationType": {
+      "sha256": "f66a6b5f7a537f618daef95e8d990894546356359d774aa49bd53d483cc7dcbb",
+      "bytes": 4366,
+      "verified": true
+    },
+    "DateTimes_Korean": {
+      "sha256": "5867945da984e08459eb43649e3b4dff75424abab11e459f00a1832440d560a5",
+      "bytes": 4607029,
+      "verified": true
+    },
+    "SymbolConstant": {
+      "sha256": "07bd7e88f7110eda8e93735eee364c2a38069b0afffbafe75efea52d78d82a82",
+      "bytes": 1338,
+      "verified": true
+    },
+    "SymbolEnchantProbability": {
+      "sha256": "c37d1c8616068c4bb7f3db17a45f2b6943b5c80237f02bf2d9a10b23fda21c40",
+      "bytes": 15737,
+      "verified": true
+    },
+    "SymbolPayment": {
+      "sha256": "e4d5e14e090107ecdb2b895d3ca1b2883de563a2a1b0f4ec8403770e438e2a44",
+      "bytes": 336,
+      "verified": true
+    },
+    "SymbolEnchant": {
+      "sha256": "5c88a0686c216ac767c6a90470edea37be1d3420e127790f635f20af8251617f",
+      "bytes": 2654,
+      "verified": true
+    }
+  },
+  "raw_joins": {
+    "normal": 485,
+    "absolute_rows": 46,
+    "costs": 140,
+    "veil_invoke15333_type5": "exact raw rows"
+  },
+  "classification": {
+    "absolute_groups": 35,
+    "source_or_existing_consumers": 26,
+    "estimated_groups": [
+      "paagrio:5",
+      "grankain:2",
+      "grankain:3",
+      "grankain:4",
+      "grankain:5",
+      "einhasad:2",
+      "shilen:1",
+      "shilen:2",
+      "shilen:4"
+    ],
+    "normal_rows": 485,
+    "source_or_existing_normal": 470,
+    "estimated_normal": 15
+  }
+}

@@ -11,12 +11,20 @@ var time: float = 0.0
 var pulse: float = 0.0
 func configure(rt, rows: Array, hud: Node, scroll: ScrollContainer, chosen: String, on_select: Callable) -> void:
 	runtime=rt; nodes=rows; selected=chosen
-	custom_minimum_size.y=ceilf(float(nodes.size())/4)*108+24
+	if not nodes.is_empty() and nodes[0].has("source_slot_id"):
+		var max_x: int = 1
+		var max_y: int = 1
+		for row: Dictionary in nodes:
+			max_x = maxi(max_x,int(row.ui_x))
+			max_y = maxi(max_y,int(row.ui_y))
+		custom_minimum_size=Vector2(max_x*112+24,max_y*108+24)
+	else: custom_minimum_size.y=ceilf(float(nodes.size())/4)*108+24
 	for row: Dictionary in nodes:
 		var id: String = str(row.id)
 		var button := preload("res://scripts/growth/growth_touch_button.gd").new()
 		button.name="GuardianNode_"+id
 		button.scroll_host=hud.workspace; button.scroll_area=scroll
+		if row.has("source_slot_id"): button.horizontal_area=get_parent() as ScrollContainer
 		button.size=Vector2(76,76)
 		# Dim only the socket, so unopened node names remain readable.
 		button.self_modulate=Color.WHITE if runtime.state.nodes.has(id) else Color(.58,.58,.67)
@@ -43,6 +51,7 @@ func _layout() -> void:
 		var row_index: int = i/4
 		var col: int = i%4 if row_index%2==0 else 3-i%4
 		var center := Vector2((float(col)+.5)*size.x/4,55+row_index*108)
+		if nodes[i].has("source_slot_id"): center=Vector2(68+(int(nodes[i].ui_x)-1)*112,55+(int(nodes[i].ui_y)-1)*108)
 		centers[nodes[i].id]=center
 		buttons[nodes[i].id].position=center-Vector2(38,38)
 	queue_redraw()
@@ -79,3 +88,10 @@ func _draw() -> void:
 				var spark: Vector2=start.lerp(end,fmod(time*.35,1.0))
 				draw_circle(spark,4,Color("b9dce6" ,.12))
 				draw_circle(spark,1.6,Color("f4e7c2"))
+
+func play_original_enchant(id: String) -> void:
+	if not buttons.has(id) or not preload("res://scripts/growth/guardian_media.gd").installed():return
+	var glow=preload("res://scripts/growth/guardian_original_glow.gd").new()
+	glow.name="GuardianOriginalGlow"
+	buttons[id].add_child(glow)
+	glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

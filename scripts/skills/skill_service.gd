@@ -54,7 +54,7 @@ func clear() -> void:
 	if is_instance_valid(vfx): vfx.clear()
 
 func tick(delta: float) -> void:
-	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")))
+	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")), bool(world.presentation_settings.get("limit_effect_count", false)))
 	local_runtime.tick(delta)
 	status.tick(delta)
 	summons.tick(delta)
@@ -130,6 +130,7 @@ func refresh_buffs_after_learning(learned_id: String) -> void:
 
 func stat(key: String) -> float:
 	var result: float = catalog.stat(key) + local_runtime.stat(key)
+	if key=="lfe" and world.get("growth")!=null: result += world.growth.bonus("life:flat")
 	for buff: Dictionary in world.active_skill_buffs.values():
 		if buff.has("skill_id"): result += float(buff.get("skill_stats", {}).get(key, 0))
 	for entry: Dictionary in stacks.values(): result += float(entry.get("stats", {}).get(key, 0)) * float(entry.get("count", 0))
@@ -186,6 +187,9 @@ func cast(record: Dictionary) -> bool:
 	# they must not also accelerate the contact/presentation timeline.
 	skill["cast_time"] = float(skill.get("cast_time", .42))
 	var mode := str(skill.mode)
+	if mode=="teleport" and world.get("growth")!=null and world.growth.travel.enabled():
+		world.growth.travel.open({"kind":"original","id":str(record.id)})
+		return false # Selection has not cast or spent anything yet.
 	var target: TwilightMonster = null
 	if mode in ["attack", "status", "turn_undead"] and str(skill.get("shape", "single")) != "self_circle":
 		target = world._skill_target(float(skill.get("range", 240)))
@@ -358,23 +362,32 @@ func hit_chance(skill: Dictionary, target: TwilightMonster) -> float:
 	if str(skill.get("attack_type", "")) == "magic":
 		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), maxi(0, target.magic_resistance + int(status.modifier(target, "mr"))))
 	var accuracy: int = world._ranged_accuracy_stat() if str(skill.get("attack_type", "")) == "ranged" else world._melee_accuracy_stat()
-	return physical_hit_chance(accuracy, target)
+	return physical_hit_chance(accuracy, target,str(skill.get("attack_type","melee")))
 
-func physical_hit_chance(accuracy: int, target: TwilightMonster) -> float:
+func physical_hit_chance(accuracy: int, target: TwilightMonster,attack_kind: String="melee") -> float:
 	# Normal attacks and physical skills read the same live, life-scoped defense.
 	# Keep the shared formula's AC normalization and nonnegative DG floor.
-	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), int(status.modifier(target, "dg")))
+	var avoidance: float=status.modifier(target,"er" if attack_kind=="ranged" else "dg")
+	if bool(target.get_meta("is_player_combatant",false)):avoidance-=world.growth.guardian_combat.value("PVPPierceRangeEvasion" if attack_kind=="ranged" else "PVPPierceMeleeEvasion")
+	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), int(avoidance))
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
 	if target.dead: return
 	var amount := int(skill.get("power", 20)) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
+	var source_kind: String=str(skill.get("attack_type","melee"))
+	if world.get("growth")!=null:
+		amount+=int(world.growth.bonus("pve_"+source_kind+"_damage:flat"))
+		amount+=int(world.growth.bonus(source_kind+"_reduction_ignore:flat"))
+		amount+=world.growth.catalog_bonus("damage_reduction_ignore")
 	amount = int(amount * (1 + equipment_modifier(skill, "damage_percent") / 100.0))
 	amount = int(amount * (1 + equipment_modifier(skill, "level_bonus") * float(runtime_defaults.get("equipment_level_damage_percent", {}).get("value", 2)) / 100.0))
 	amount = int(amount * (1 + status.modifier(target, "taken") + (status.modifier(target,"magic_taken") if str(skill.get("attack_type", "")) == "magic" else 0)))
 	amount = world._elemental_damage_to_monster(maxi(1, amount), str(skill.get("element", "physical")), target)
 	var critical: bool = world.rng.randf() < world._critical_chance(world._player_critical_rate(str(skill.get("attack_type", "melee"))), target.critical_resistance)
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
-	world._deal_successful_player_hit(target, maxi(1, amount), critical,str(skill.get("attack_type","magic")),true)
+	if world.get("growth")!=null:
+		world._deal_successful_player_hit(target, maxi(1, amount), critical,str(skill.get("attack_type","magic")),str(skill.get("shape","single"))!="area" or target==world.selected_monster,true)
+	else:world._deal_successful_player_hit(target, maxi(1, amount), critical)
 	_emit_verified_source_effect(skill, "impact", target.global_position)
 	if critical: _emit_verified_source_effect(skill, "critical", target.global_position)
 	if not _is_verified_source_skill(skill):
@@ -407,9 +420,11 @@ func heal(skill: Dictionary, amount: int) -> void:
 	var maximum: int = world._effective_max_hp()
 	var before: int = world.hp
 	var effective := maxi(0, amount + int(stat("lfe") * float(skill.get("lfe_scale", 0))))
+	if str(skill.get("mode",""))=="heal" and world.get("growth")!=null: effective = world.growth.magic_healing(effective)
+	var source_heal_input: int = effective
 	effective = world.patch523_npc_spells.extensions.healing(effective,false)
 	var generation: int = int(world.combat_generation)
-	world.apply_patch523_healing(maxi(0,amount + int(stat("lfe") * float(skill.get("lfe_scale",0)))),false)
+	world.apply_patch523_healing(source_heal_input,false)
 	if generation != int(world.combat_generation): return
 	if bool(skill.get("overflow_shield", false)) and before + effective > maximum:
 		shields[str(skill.id)] = {"amount":mini(maximum, before + effective - maximum),"remaining":float(skill.get("duration", 12))}
@@ -679,3 +694,4 @@ func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vecto
 
 func _is_verified_source_skill(skill: Dictionary) -> bool:
 	return skill.has("source_m_spell_id") and str(skill.get("source_m_snapshot", "")) == "base508"
+

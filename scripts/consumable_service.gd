@@ -293,6 +293,9 @@ func _use_random_teleport(item_name: String) -> void:
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 순간이동할 수 없습니다")
 		return
+	if world.growth.travel.enabled():
+		world.growth.travel.open({"kind":"scroll","name":item_name})
+		return
 	var destination: Vector2 = _random_destination()
 	if destination == Vector2.INF:
 		_message("이동 가능한 위치가 없습니다")
