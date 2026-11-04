@@ -4,7 +4,9 @@ const KEY: String = "inventory_automation"
 const BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 const STORAGE = preload("res://scripts/warehouse/local_warehouse.gd")
 const SOURCE_RULES = preload("res://scripts/warehouse/inventory_source523.gd")
+const EQUIPMENT_CATEGORIES = preload("res://scripts/warehouse/equipment_category_selection.gd")
 const MAINTENANCE = preload("res://scripts/warehouse/inventory_maintenance.gd")
+var equipment_categories = EQUIPMENT_CATEGORIES.new()
 var source_rules = SOURCE_RULES.new()
 var maintenance = MAINTENANCE.new()
 var world: Node
@@ -12,6 +14,7 @@ var state: Dictionary = {"version":1,"deposit":[],"sell":[]}
 var busy: bool = false
 
 func _init() -> void:
+	equipment_categories.configure(self)
 	maintenance.configure(self)
 
 func configure(host: Node) -> void:
@@ -29,6 +32,7 @@ static func valid(raw: Variant) -> bool:
 		if not id is String or not id.is_valid_int() or int(id) <= 0: return false
 		if not SOURCE_RULES._integer(prices[id]) or prices[id] < 0 or prices[id] > 1000000000: return false
 	if not MAINTENANCE.valid(raw.get("maintenance",{})): return false
+	if not EQUIPMENT_CATEGORIES.valid(raw.get("equipment_category",{})): return false
 	for mode: String in ["deposit", "sell"]:
 		var rules: Variant = raw.get(mode, [])
 		if not rules is Array or rules.size() > 256: return false
@@ -121,6 +125,7 @@ func set_target(mode: String, name: String, id: String, selected: bool, keep: in
 
 func save_settings(next: Dictionary, preserve_maintenance: bool = false) -> Dictionary:
 	if busy or not valid(next): return {"ok":false,"reason":"자동 처리 설정이 유효하지 않습니다"}
+	sync_category_targets(next)
 	if not preserve_maintenance and next.has("maintenance"): next.maintenance["armed"] = false
 	busy = true
 	var error: Error = world._save_game(true, {KEY:next})
@@ -168,8 +173,10 @@ func _stamp(mode: String) -> String:
 	for rule: Dictionary in rules: identities.append(_identity(str(rule.name), str(rule.get("id", ""))))
 	return JSON.stringify([mode,state,world.inventory,world.item_instances,world.equipped_items,world.ui_preferences.get("item_locks",{}),world.warehouse.snapshot(),world.gold,identities,source_rules.fingerprint()]).sha256_text()
 
-func preview(mode: String, base: Dictionary = {}) -> Dictionary:
+func preview(mode: String, base: Dictionary = {}, configuration: Dictionary = {}) -> Dictionary:
 	if busy or mode not in ["deposit", "sell"]: return {"ok":false,"reason":"자동 처리 요청이 유효하지 않습니다"}
+	var working: Dictionary = state if configuration.is_empty() else configuration
+	if not valid(working): return {"ok":false,"reason":"자동 처리 설정이 유효하지 않습니다"}
 	var inventory: Dictionary = base.get("inventory",world.inventory).duplicate(true)
 	var physical: Dictionary = base.get("item_instances",world.item_instances).duplicate(true)
 	var storage = STORAGE.new()
@@ -180,7 +187,7 @@ func preview(mode: String, base: Dictionary = {}) -> Dictionary:
 	var cart: Array[Dictionary] = []
 	var skipped: Array[String] = []
 	var remaining: Array = []
-	for rule: Dictionary in state.get(mode, []):
+	for rule: Dictionary in working.get(mode, []):
 		var name: String = rule.name
 		var id: String = rule.get("id", "")
 		var available: int = int(inventory.get(name, 0))
@@ -192,7 +199,7 @@ func preview(mode: String, base: Dictionary = {}) -> Dictionary:
 		if _protected(name,id,mode) or _identity(name,id) != str(rule.identity):
 			skipped.append(name + " · 보호 중 또는 아이템 정보 변경")
 			continue
-		if state.get("source_only",false) and not source_rules.eligible(source_rules.resolve(world._find_catalog_item_record(name),physical.get(id,{}) if id != "" else {}),mode):
+		if working.get("source_only",false) and not source_rules.eligible(source_rules.resolve(world._find_catalog_item_record(name),physical.get(id,{}) if id != "" else {}),mode):
 			skipped.append(name+" · 원본 대상·축복 상태 불일치")
 			continue
 		var count: int = 1 if id != "" else maxi(0,available-int(rule.get("keep",0)))
@@ -206,7 +213,7 @@ func preview(mode: String, base: Dictionary = {}) -> Dictionary:
 			var amount: int = mini(left,99 if mode == "sell" else STORAGE.MAX_TRANSFER)
 			var result: Dictionary
 			if mode == "sell":
-				var quote: Dictionary = sale_quote(name,amount,id,inventory,physical,wallet)
+				var quote: Dictionary = sale_quote(name,amount,id,inventory,physical,wallet,false)
 				if not quote.get("ok",false): return {"ok":false,"reason":name+" · "+str(quote.get("reason","매입 불가"))}
 				price_basis = str(quote.get("price_basis",""))
 				result = BUYBACK.apply(quote,inventory,physical,wallet)
@@ -218,9 +225,20 @@ func preview(mode: String, base: Dictionary = {}) -> Dictionary:
 			left -= amount
 		cart.append({"name":name,"id":id,"quantity":count,"payment":wallet-before,"price_basis":price_basis,"mode":mode})
 		if id != "": remaining.pop_back()
-	var next: Dictionary = base.get(KEY,state).duplicate(true)
+	var next: Dictionary = base.get(KEY,working).duplicate(true)
 	next[mode] = remaining
+	if mode == "sell": sync_category_targets(next)
 	return {"ok":true,"mode":mode,"stamp":_stamp(mode),"cart":cart,"skipped":skipped,"payment":wallet-int(base.get("gold",world.gold)),"override":{"inventory":inventory,"item_instances":physical,"warehouse":storage.snapshot(),"gold":wallet,KEY:next}}
+
+static func sync_category_targets(next: Dictionary) -> void:
+	if not next.has("equipment_category"): return
+	var active: Dictionary = {}
+	for rule: Dictionary in next.get("sell",[]):
+		if rule.get("category_owner","") == EQUIPMENT_CATEGORIES.MARKER: active[str(rule.get("id",""))] = true
+	var retained: Array = []
+	for target: Dictionary in next.equipment_category.get("targets",[]):
+		if active.has(str(target.id)): retained.append(target)
+	next.equipment_category["targets"] = retained
 
 func execute(mode: String, stamp: String) -> Dictionary:
 	if busy or mode not in ["deposit", "sell"] or stamp.is_empty() or stamp != _stamp(mode):

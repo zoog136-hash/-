@@ -28,6 +28,10 @@ Library 원본 `libfile_f3e9e5b322cc8191ae441565bbd24c27`:25,031,173bytes, SHA25
 
 `data/automation/inventory523_prices.json`에는 원본 Cost와 공개 NPC 매입 설명이 함께 일치하는 값11개 및 각 URL을 기록했다.767/744/9011은 NC 공식 커뮤니티의 이용자 보고와 원본의 일치이며, 나머지8개는 공식 가이드/업데이트 근거다. 커뮤니티 글을 공식 패치 수치로 표현하지 않는다.
 
+## 현재 소지 장비의 자체 범주 선택
+
+네 가상 표시에서 **TWILIGHT 자체 범주**로 들어가 등급·정확한 슬롯·강화 상한·표기 조건과 현재 소지 ID를 직접 선택한다. 기본 비활성이며 새 장비를 자동으로 포함하지 않는다. 미리보기와 최종 확인으로 대상 설정만 저장하거나 전체 판매한다. 원본 ID 전용 모드 해제는 별도 동의가 필요하다. 기존 별도 대상·남길 수량·잠금/장착/귀속 보호를 유지한다. 원본 native 필터의 재현으로 주장하지 않는다. 상세 원본 근거·사용·검증은 [자체 범주 문서](auto_inventory523/EQUIPMENT_CATEGORIES.md)를 따른다.
+
 ## 저장 계약
 
 기존 단일 캐릭터 세이브 `inventory_automation` version1에 대상·남길 수량·가격 자체값·원본 모드·정비 토큰을 저장한다. 구버전은 빈 설정으로 읽으며 알 수 없는 확장 필드는 보존한다. 잘못된 타입·중복·음수·비정수·지원하지 않는 버전·소진된 실행 토큰을 가진 활성 예약은 로드를 거절하고 이전 파일을 보호한다.
@@ -38,11 +42,11 @@ Library 원본 `libfile_f3e9e5b322cc8191ae441565bbd24c27`:25,031,173bytes, SHA25
 
 현재 맵의 실제 좌표·충돌·경로와 기존 가방/창고 메뉴 서비스를 사용한다. 원본 M의 미확인 창고 NPC 위치·이동 비용·스케줄 활성 조건을 원본 동작으로 주장하지 않는다. 현재 Aden snapshot에는 배치된 창고/매입 NPC가 없고, PR235도 검증된 native M 도착 좌표가0개다. 그 작업을 병합하거나 자동사냥 이동/지역 퀵슬롯을 수정하지 않았다. 원본 M 스케줄러가 호출할 수 있는 `maintenance.preview/arm/before_portal/cancel` 거래 경계를 제공하되 실제 native M 예약 연결은 해당 좌표·활성 계약이 들어와야 한다. 사용자가 실행할 수 있는 위 자체 로컬 정비는 독립적으로 제공한다.
 
-가상 범주4개의 장비 분류 선택 의미, 원본 전체 인벤토리 반입, 원본 전체 아트 동등성, Android/Windows 실기기와 실제 오디오는 완료 범위가 아니다.
+가상 범주4개의 원본 native 필터 의미, 원본 전체 인벤토리 반입, 원본 전체 아트 동등성, Android/Windows 실기기와 실제 오디오는 완료 범위가 아니다.
 
 ## 검증과 전달
 
-Godot4.7.2 official ed1daf0bf, 격리된 XDG 저장, 실제 Main/현재 source-map으로 검사한다. 기존 core save32, 자동 거래37, 기존 창고/매입/가격 권한·동일 payload·지연/일반 저장 검사를 보존한다. 추가 원본 규칙650, 정비32, 실제 개인 원본을 이용한 Python compiler8검사(결정성·손상·가격 불일치·잘못된 URL·유사/중복 이름)를 실행한다. 최종 UI/회귀 결과와 증거 SHA는 `docs/auto_inventory523/followup_validation.json`에 기록한다.
+Godot4.7.2 official ed1daf0bf, 격리된 XDG 저장, 실제 Main/현재 source-map으로 검사한다. 기존 core save32, 자동 거래37, 기존 창고/매입/가격 권한·동일 payload·지연/일반 저장 검사를 보존한다. 추가 원본 규칙650, 정비32, 실제 개인 원본을 이용한 Python compiler8검사(결정성·손상·가격 불일치·잘못된 URL·유사/중복 이름)를 실행한다. 원본/정비 후속14201ea7의 UI/회귀 결과와 증거 SHA는 `docs/auto_inventory523/followup_validation.json`에 기록한다.
 
 OpenGL UI는 X11/Mesa llvmpipe, Dummy audio를 사용한다. 실제 file picker를 열고 selected-file 소비 경로를 검사하되 OS 파일 선택 제스처 자동화로 주장하지 않는다. 실제 pointer/touch 거래와 작은 화면, 재시작, 실제 물리 이동·포털 트리거를 별도 검사한다. 원본 M 좌표 고증 검사로 집계하지 않는다.
 
@@ -54,7 +58,7 @@ OpenGL UI는 X11/Mesa llvmpipe, Dummy audio를 사용한다. 실제 file picker�
 
 적용 ZIP8,872bytes SHA256 `df1836767b85abd2e5f67ac023f005c80dc6df9cf8fa5022518887354eb9126d`; 펼친 JSON49,818bytes SHA256 `a6f06d657bc34a86d91ccbcaf9f2c836312df6e57d15d38e890aa74061b12bc5`. 새 `/workspace/inventory523-drive-consumer`에서 정식 Drive 응답으로 다운로드하고 크기·SHA·전체 ZIP CRC와 새 Godot 소비자의 실제 설치·읽기650검사 및 같은 Drive 다운로드본을 설치한 실제 Main/OpenGL UI39검사를 확인했다. 원본 백업25,031,173bytes도 새 Drive 객체를 한 번 재다운로드해 위 원본 SHA·CRC와 일치함을 확인했다. 백업은 설치 입력이 아니다. Drive 보관은 자동 적용이 아니며, 사용자가 규칙 ZIP을 고르면 `user://inventory523/inventory_rules523.json`에 설치한다. 규칙은 맵 팩을 대체하지 않는다.
 
-후속 실제 UI39·기존 UI24검사, 원본650·정비32·compiler8·staging7검사가 통과했다. 손가락으로 체크박스에서 스크롤할 때 설정이 잘못 토글되지 않는 것도 확인했다. 최신 캡처8장과 후속 감사 로그는 **LOCAL_ONLY**이며 새 외부 업로드를 하지 않았다. 기존 초기 증거와 후속 검증을 혼동하지 않는다.
+후속 실제 UI39·기존 UI24검사, 원본650·정비32·compiler8·staging7검사가 통과했다. 손가락으로 체크박스에서 스크롤할 때 설정이 잘못 토글되지 않는 것도 확인했다. 원본/정비 후속 캡처8장과 해당 감사 로그는 **LOCAL_ONLY**이며 새 외부 업로드를 하지 않았다. 기존 초기 증거와 후속 검증을 혼동하지 않는다.
 
 초기 PR251 증거: [개인 검증 ZIP](https://chatgpt.com/api/library/files/libfile_2ace049706348191868c546d06b31db7/download),3,348,596bytes, SHA256 `24b0ea122179d7dea241285b410e54a6b852dbd90b4256965dcbe1cc0bc01ad4`. 초기와 후속 검증을 구분해 보존한다.
 

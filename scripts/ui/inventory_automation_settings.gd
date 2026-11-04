@@ -11,6 +11,7 @@ var list: ItemList
 var details: Label
 var register: Button
 var fallback: SpinBox
+var category_action: Button
 var price_action: Button
 var keep: SpinBox
 var store: CheckBox
@@ -74,6 +75,11 @@ func configure(controller: Node, operation: String) -> void:
 	list.custom_minimum_size.y = 150
 	list.item_selected.connect(_select)
 	add_child(list)
+	category_action = _button("TWILIGHT 자체 범주 · 현재 장비 ID 직접 선택",func() -> void:
+		if selected >= 0: hud.open_equipment_category_settings(int(source_rows[selected].ItemClassID)))
+	category_action.name = "InventoryEquipmentCategory"
+	category_action.hide()
+	add_child(category_action)
 	details = _label("")
 	var row := HBoxContainer.new()
 	add_child(row)
@@ -200,6 +206,7 @@ func _select(index: int) -> void:
 	fallback.editable = mode == "sell" and item.merchant_auto and not item.virtual and policy.is_empty()
 	price_action.disabled = not fallback.editable
 	register.disabled = held.is_empty()
+	category_action.visible = mode == "sell" and bool(item.virtual)
 	details.text = "#%s %s\n%s" % [id,str(item.label),"범주 선택자 · 실제 아이템 등록 안 함" if item.virtual else "원본 TestItem · 자동 처리 보류" if item.test_item else ("소지: "+str(held.name) if not held.is_empty() else "일치하는 소지품 없음 · 이름 추정 연결 안 함")]
 	if mode == "sell" and not item.virtual: details.text += "\n매입 %d 아데나 · %s" % [unit,"원본·공개 확인값" if not policy.is_empty() else "자체값(수정 가능)"]
 

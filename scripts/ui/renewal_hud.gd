@@ -1030,6 +1030,13 @@ func open_inventory_automation_settings(mode: String) -> void:
 	screen.configure(self,mode)
 	transaction_view = screen
 
+func open_equipment_category_settings(selector_id: int = 45011) -> void:
+	_open_window("equipment_category","TWILIGHT 자체 범주 장비 선택","현재 소지한 정확한 ID만 · 미리보기 후 확인")
+	var screen := preload("res://scripts/ui/equipment_category_settings.gd").new()
+	workspace.mount(screen)
+	screen.configure(self,selector_id)
+	transaction_view = screen
+
 func _companion(section: String,title: String) -> PanelContainer:
 	if not is_instance_valid(companion_window):
 		companion_window = RenewalWindowScript.new()
