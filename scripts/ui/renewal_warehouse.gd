@@ -1,6 +1,8 @@
 extends VBoxContainer
 # Shop-style local UI. World owns transaction validation and persistence.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const AutoInventory = preload("res://scripts/ui/renewal_auto_inventory.gd")
+var auto_controls
 const TransferSheet=preload("res://scripts/ui/transfer_detail_sheet.gd")
 var transfer_sheet: RefCounted
 var hud: Node
@@ -57,6 +59,9 @@ func configure(controller: Node) -> void:
 	add_child(summary)
 	transfer_sheet=TransferSheet.new();transfer_sheet.bind(self,true)
 	_refresh()
+	auto_controls = AutoInventory.new()
+	add_child(auto_controls)
+	auto_controls.configure(self,"deposit")
 
 func _is_equipment(item_name: String) -> bool:
 	var record: Dictionary = world.call("_find_catalog_item_record", item_name)
@@ -112,6 +117,7 @@ func _refresh() -> void:
 		listing.select(0)
 		_selected(0)
 	transfer_sheet.refresh({},true)
+	if auto_controls != null: auto_controls.refresh()
 
 func _selected(index: int) -> void:
 	if index < 0 or index >= entries.size():
@@ -122,6 +128,7 @@ func _selected(index: int) -> void:
 	quantity.max_value = 1 if is_physical else mini(99,int(entry.get("count",1)))
 	quantity.value = 1
 	transfer_sheet.refresh()
+	if auto_controls != null: auto_controls.refresh()
 
 func _transfer() -> void:
 	if selected_index < 0 or selected_index >= entries.size():

@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "authority": "TWILIGHT local fallback; source523 and confirmed public values take priority",
+  "reset": {
+    "scope": "selected_category",
+    "refund_rate": 1.0,
+    "refund_basis": "recorded_actual_stone_spending",
+    "unknown_legacy_costs": "refund_only_provable_minimum",
+    "status": "local_fallback_after_source_and_public_research",
+    "fixed_invariants": [
+      "Refund actual recorded failed-enchant spending as well as successes",
+      "Preserve active shared spell cooldown across resets"
+    ]
+  },
+  "development": {
+    "gem_grant": 1200,
+    "status": "debug_build_only_manual_grant; separate from ordinary inventory diamonds and unusable in release"
+  },
+  "combat": {
+    "pvp_numeric_to_pve": {
+      "enabled": true,
+      "reward_ids": [2392, 3152, 3162, 3172, 4492, 4502, 4762],
+      "authority": "TWILIGHT existing single-player numeric option compatibility; not original server PvP semantics",
+      "basis": "world._normalize_option_policies; world._pve_damage_after_item_buffs; world._equipment_additional_damage; world._catalog_damage_bonus; docs/PVE_ONLY_SCOPE_20261012.md",
+      "pierce_mode": "flat_addition",
+      "pierce_policy": "PvE compatibility follows existing single-player numeric ignore-as-addition policy. Optional bounded_restoration mode caps restoration at actual reduction. Original PvP path stays bounded.",
+      "scope": "Only these seven source reward rows. No player-targeted skills, server unlocks or PvP subsystem."
+    },
+    "status_resolution": "existing_TWILIGHT_status_service",
+    "poison_tick_interval_seconds": 1.0,
+    "unknown_original_level_formula": "existing_local_status_policy; retain original coefficients for audit",
+    "status": "current_game_adapter_not_original_server_formula"
+  },
+  "confirmed_public": [
+    {
+      "field": "representative_switch_seconds",
+      "value": 3,
+      "url": "https://lineagem.plaync.com/board/update/view?articleId=50196375",
+      "source_date": "2022-07-20",
+      "agreement": "SkillTreeConstant.CoolTimeSec=3 in cumulative523"
+    }
+  ],
+  "research_limits": [
+    "No authoritative current per-category stone reset/refund scope found; the reset scope and recorded-cost refund are explicitly local.",
+    "No original probability or cost is replaced by a local zero/default."
+  ],
+  "existing_game_currency": {
+    "name": "다이아",
+    "source": "scripts/loot/currency_drops.gd and loot_drop.gd; existing inventory/ground pickup",
+    "policy": "Use existing earned inventory balance first. Existing non-Aden-world1..10 material-rate drops remain unchanged. No new grant or conversion."
+  }
+}

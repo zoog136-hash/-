@@ -4,11 +4,17 @@ const SOURCE = preload("res://scripts/skills/player_skills523.gd")
 var checks := 0
 var failures: Array[String] = []
 class ReadyPlayer extends RefCounted:
+	var silence_remaining: float = 0.0
+	var source_523_spell_blocked: bool = false
 	var motion: Dictionary = {"dead":false}
 	func is_stunned() -> bool: return false
 	func is_feared() -> bool: return false
 	func is_silenced() -> bool: return false
+class Patch523Spells extends RefCounted:
+	var blocked: bool = false
+	func blocks(_kind: String) -> bool: return blocked
 class CostHost extends Node:
+	var patch523_npc_spells = Patch523Spells.new()
 	var hp: int = 99
 	var mp: int = 99
 	var inventory: Dictionary = {}
@@ -156,6 +162,13 @@ func run() -> void:
 	service.catalog.records=[self_buff]
 	service.catalog.by_id={"synthetic_self":self_buff}
 	service.catalog.learned={"synthetic_self":1}
+	check(service.ready(self_buff),"test host implements current boss-state readiness contract")
+	cost_host.patch523_npc_spells.blocked = true
+	check(not service.ready(self_buff),"boss CannotCastSkill still blocks test host")
+	cost_host.patch523_npc_spells.blocked = false
+	cost_host.player.source_523_spell_blocked = true
+	check(not service.ready(self_buff),"boss spell-only block remains effective for magic")
+	cost_host.player.source_523_spell_blocked = false
 	var selected_enemy := TwilightMonster.new()
 	check(service.auto_wants(self_buff,selected_enemy),"an unrelated selected enemy cannot block an automatic self buff")
 	selected_enemy.free()
@@ -186,3 +199,4 @@ func run() -> void:
 	cost_host.free()
 	print("SKILLS523_POLICY_RESULT ", JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
+
