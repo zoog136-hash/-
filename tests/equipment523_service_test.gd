@@ -152,7 +152,7 @@ func check_quest_receipts(service, world: World) -> void:
 	changed.name = "주문서"
 	check(service._source(changed) == 0,"dictionary source evidence cannot bypass its exact reward identity through a registered alias")
 	for invalid_quantity: Variant in [2.5,"3",true]:
-		var malformed: Dictionary = {"record":ticket,"source_reward_quantity":invalid_quantity}
+		var malformed: Dictionary = {"record":held,"source_reward_quantity":invalid_quantity}
 		check(service._quantity(malformed) == -1,"malformed physical quantities are preserved without rounding or coercion")
 	var sword: Dictionary = {"name":"검","sourceId":"91","slot":"weapon"}
 	world.inventory = {"검":1,held.name:3}
