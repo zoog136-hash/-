@@ -64,6 +64,8 @@ const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const EQUIPMENT_COLLECTION_RUNTIME = preload("res://scripts/collections/equipment_collection_runtime.gd")
 var equipment_collections = EQUIPMENT_COLLECTION_RUNTIME.new()
+const MASTERY523_RUNTIME = preload("res://scripts/mastery/mastery_runtime.gd")
+var weapon_mastery = MASTERY523_RUNTIME.new()
 const CARD_COLLECTION_RUNTIME = preload("res://scripts/cards/collection_runtime.gd")
 var card_collections = CARD_COLLECTION_RUNTIME.new()
 const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
@@ -642,6 +644,7 @@ func _load_data() -> void:
 	_build_job_classes()
 	equipment_collections.configure(self)
 	growth.configure(self)
+	weapon_mastery.configure(self)
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -929,7 +932,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + weapon_mastery.catalog_bonus(key, _mastery_actual_weapon_type())
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -1299,6 +1302,7 @@ func _connect_signals() -> void:
 	hud.return_pressed.connect(_return_to_spawn)
 	hud.inventory_pressed.connect(_open_inventory)
 	hud.menu_pressed.connect(hud.toggle_menu)
+	hud.weapon_mastery_requested.connect(weapon_mastery.show_panel)
 	hud.map_pressed.connect(hud.toggle_map)
 	hud.map_selected.connect(_on_map_selected)
 	hud.save_pressed.connect(func() -> void: _save_game(false))
@@ -4495,6 +4499,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if not source_map_error.is_empty():
 		if not quiet:hud.show_message(source_map_error)
 		return ERR_UNAVAILABLE
+	data.merge(weapon_mastery.save_fields(),true)
 	data.merge(equipment_collections.extra_save_fields, false)
 	data.merge(collection_override, true)
 	var save_started_usec: int = Time.get_ticks_usec()
@@ -4551,6 +4556,11 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var mastery_error: String = weapon_mastery.check_load(data)
+	if not mastery_error.is_empty():
+		equipment_collections.save_blocked = true
+		hud.show_message(mastery_error)
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4707,6 +4717,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
+	weapon_mastery.accept_load(data)
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -7107,7 +7118,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 
 func _catalog_damage_bonus(kind: String) -> int:
 	# Native secondary doll effects are counted once, separately from general attack.
-	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
+	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,"")) + weapon_mastery.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""), _mastery_actual_weapon_type())
 	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
@@ -7129,7 +7140,7 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
-	var total: int = option_awakening.accuracy_bonus(kind)
+	var total: int = option_awakening.accuracy_bonus(kind) + weapon_mastery.catalog_bonus({"melee":"meleeHit","ranged":"rangedHit"}.get(kind,""), _mastery_actual_weapon_type())
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7545,7 +7556,7 @@ func _record_mr(record: Dictionary) -> int:
 	return maxi(0, int(CATALOG_EFFECTS.numeric_description_option(record, "마법 방어력(MR)")) + int(CATALOG_EFFECTS.numeric_description_option(record, "마법 방어력")) )
 
 func _effective_mr() -> int:
-	var total: int = 10 + level + _effective_attribute("WIS") * 2
+	var total: int = 10 + level + _effective_attribute("WIS") * 2 + weapon_mastery.catalog_bonus("mr", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_mr(record)
 	total += _active_skill_buff_total("mrFlat")
@@ -7664,7 +7675,7 @@ func _effective_defense() -> int:
 	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
 
 func _effective_max_hp() -> int:
-	var flat_bonus: float = 0.0
+	var flat_bonus: float = float(weapon_mastery.catalog_bonus("hpFlat", _mastery_actual_weapon_type()))
 	var percent_bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		flat_bonus += float(record.get("hpFlat", 0.0))
@@ -8105,3 +8116,6 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+func _mastery_actual_weapon_type() -> int:
+	return preload("res://scripts/animation/source_weapon_banks.gd").local_type(_current_weapon_type())

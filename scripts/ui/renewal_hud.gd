@@ -1,6 +1,7 @@
 extends "res://scripts/hud_v20.gd"
 
 # Debug-build tools. Requests are also checked by the authoritative world.
+signal weapon_mastery_requested
 signal card_pack_draw_requested(category: String)
 signal card_fusion_requested(category: String, grade: String, count: int)
 signal blessing_target_requested(scroll_name: String, target_reference: String)
@@ -910,6 +911,7 @@ func _navigate(section: String) -> void:
 		"option_awakening":
 			if not option_awakening_snapshot.is_empty():
 				option_awakening_open_requested.emit(str(option_awakening_snapshot.get("category", "")), str(option_awakening_snapshot.get("target_id", "")))
+		"weapon_mastery": weapon_mastery_requested.emit()
 		"equipment_collections": open_equipment_collections()
 		"card_collections": open_normal_card_collections(normal_card_collection_category,normal_card_collection_focus)
 		"emblems", "guardians": open_growth(section)
@@ -1204,7 +1206,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["weapon_mastery","무기 숙련"],["map","월드맵"],["quests","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
