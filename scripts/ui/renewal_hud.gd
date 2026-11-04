@@ -913,6 +913,7 @@ func _navigate(section: String) -> void:
 		"equipment_collections": open_equipment_collections()
 		"card_collections": open_normal_card_collections(normal_card_collection_category,normal_card_collection_focus)
 		"emblems", "guardians": open_growth(section)
+		"titles": open_titles523()
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
@@ -1204,17 +1205,17 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["titles","작위"],["map","월드맵"],["quests","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
 				_navigate(section_id),Vector2(92,88))
-		if section_id in ["emblems","guardians"]:
+		if section_id in ["emblems","guardians","titles"]:
 			button.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians"] else ("사냥·모험" if section_id in ["inventory","skills","map","quests","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians","titles"] else ("사냥·모험" if section_id in ["inventory","skills","map","quests","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
@@ -2439,3 +2440,9 @@ func open_card_skill_awakening(category: String, identity: String) -> void:
 	scroll.add_child(view)
 	view.configure(runtime,identity)
 	workspace.register_scroll_drag(scroll,view)
+
+func open_titles523() -> void:
+	_open_window("titles","작위 심사","")
+	var screen := preload("res://scripts/titles/title_view523.gd").new()
+	workspace.mount(screen)
+	screen.configure(self)

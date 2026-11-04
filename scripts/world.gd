@@ -68,6 +68,9 @@ const CARD_COLLECTION_RUNTIME = preload("res://scripts/cards/collection_runtime.
 var card_collections = CARD_COLLECTION_RUNTIME.new()
 const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
 var growth = GROWTH.new()
+const TITLE523 = preload("res://scripts/titles/title_runtime523.gd")
+var titles = TITLE523.new()
+var title_badge: Label
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
 const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.gd")
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
@@ -405,6 +408,17 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	titles.configure(self)
+	title_badge=Label.new()
+	title_badge.name="AchievedTitle523"
+	title_badge.position=Vector2(-100,-104)
+	title_badge.size=Vector2(200,24)
+	title_badge.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	title_badge.add_theme_font_size_override("font_size",16)
+	title_badge.add_theme_color_override("font_color",Color("efd792"))
+	title_badge.add_theme_color_override("font_outline_color",Color.BLACK)
+	title_badge.add_theme_constant_override("outline_size",5)
+	player.add_child(title_badge)
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -904,7 +918,10 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	if attack_kind not in ["melee","ranged","magic"]:attack_kind=feedback_kind if resolving_combat_action else _current_attack_kind()
 	adjusted_damage=growth.combat.outgoing(adjusted_damage,attack_kind)
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
+	if titles.bonus("FinalBlowProbability")>0: adjusted_damage=titles.outgoing(adjusted_damage,rng.randf())
+	target.set_meta("title523_direct_life",target.life_id)
 	target.take_damage(adjusted_damage + stolen, critical)
+	if not target.dead: target.set_meta("title523_direct_life",-1)
 	if stolen > 0:
 		_refresh_combat_hud()
 
@@ -1068,7 +1085,7 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.accuracy(_source_catalog_record("아이템", entry as Dictionary), kind)
-	return result + int(growth.bonus(kind+"_hit:flat") + equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat") + card_collections.bonus(kind+"_hit:flat") + card_collections.bonus("pve_"+kind+"_hit:flat"))
+	return result + int(titles.bonus({"melee":"MeleeHit","ranged":"RangeHit","magic":"MagicHit"}.get(kind,""))) + int(growth.bonus(kind+"_hit:flat") + equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat") + card_collections.bonus(kind+"_hit:flat") + card_collections.bonus("pve_"+kind+"_hit:flat"))
 
 func _equipment_potion_heal_stat(label: String) -> int:
 	var sum: int = 0
@@ -1097,7 +1114,7 @@ func _equipment_additional_damage(kind: String) -> int:
 					var segment: String = fragment.strip_edges()
 					if segment.begins_with("대미지 리덕션 무시"):
 						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
-	return result + int(growth.bonus(kind+"_damage:flat") + growth.bonus("pve_"+kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat"))
+	return result + titles.pve_pierce() + int(titles.bonus({"melee":"MeleeDamage","ranged":"RangeDamage","magic":"MagicDamage"}.get(kind,""))) + int(growth.bonus(kind+"_damage:flat") + growth.bonus("pve_"+kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	# Kept for older source audit callers; not used in the live damage path.
@@ -2651,6 +2668,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
+	titles.record_last_hit(monster.source_m_npc_id,"%s:%d"%[str(monster.get_instance_id()),monster.life_id],int(monster.get_meta("title523_direct_life",-1))==monster.life_id,monster.source_m_original)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
 	_try_trigger_passives("on_kill", monster)
@@ -2738,6 +2756,9 @@ func _collect_ground_drop(drop: Button) -> bool:
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
 	if not ground_loot.valid_view(drop): return false
 	var pending: Dictionary = ground_loot.records[str(drop.get_meta("id"))]
+	if not titles.can_pickup(pending):
+		hud.show_message("상급 축복의 가루 원본 확인·최대 수량을 확인해 주세요.")
+		return false
 	if not INVENTORY_GROUND_TRANSFER.can_collect(self,pending):
 		hud.show_message("장비 고유 ID 충돌: 바닥 아이템을 보존했습니다")
 		return false
@@ -2878,6 +2899,14 @@ func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = t
 	if monster == null or not is_instance_valid(monster):
 		return
 	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity, _kill_map_id())
+	# Source membership is exact; chance and one-item quantity are host policy.
+	# A provider already producing this exact key owns that reward instead.
+	var already_powder:=false
+	for entry: Dictionary in earned:
+		if entry.get("item_name")==titles.source.powder_record.get("name",""): already_powder=true
+	if not already_powder and titles.source.powder_npcs.has(monster.source_m_npc_id):
+		var powder: Dictionary=titles.powder_drop(monster.source_m_npc_id,monster.source_m_original,rng.randf())
+		if not powder.is_empty(): earned.append(powder)
 	if earned.is_empty():
 		return
 	var batch_id: String = ground_loot.begin_hunt_batch()
@@ -3017,6 +3046,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat())
 	var critical: bool = rng.randf() < critical_chance
 	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
+	if titles.bonus("WeaponBlock")>0: incoming_damage=titles.incoming(incoming_damage,normalized_type,rng.randf())
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
 	var attack_element: String = ELEMENT_RULES.channel(attacker.attack_element)
 	if attack_element != "physical":
@@ -4242,6 +4272,13 @@ func _npc_teleport_requested(map_id: String) -> void:
 
 
 func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
+	if item_name==titles.source.powder_record.get("name",""):
+		if direction=="deposit" and not bool(titles.source.powder_record.get("storable",false)):
+			hud.show_message("상급 축복의 가루는 원본에서 창고 보관 불가입니다.")
+			return
+		if direction=="withdraw" and not titles.can_pickup({"item_name":item_name,"quantity":quantity}):
+			hud.show_message("상급 축복의 가루 최대 소지 수량을 초과합니다.")
+			return
 	if item_name == "아데나" or item_name.is_empty():
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
@@ -4345,6 +4382,10 @@ func _on_map_selected(map_id: String) -> void:
 	_set_map(map_id, false)
 
 func _update_hud() -> void:
+	if is_instance_valid(title_badge):
+		title_badge.text=titles.display_name()
+		title_badge.add_theme_color_override("font_color",titles.personal.display_color())
+		title_badge.visible=not title_badge.text.is_empty()
 	stat_hud_refresh_pending = false
 	# Every equipment, enhancement, card, collection, growth, awakening,
 	# passive-learning and load transaction publishes through this entry point.
@@ -4457,6 +4498,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if titles.blocked or not titles.validate(collection_override.get("title523",titles.state)).is_empty(): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4472,7 +4514,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","title523"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4534,6 +4576,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"card_draw_fusion": card_draw_fusion.export_state(),
 		"card_option_awakening": option_awakening.export_state(),
 		"card_skill_awakening": skill_awakening.export_state(),
+		"title523": titles.state.duplicate(true),
 		"equipped_items": equipped_items,
 		"equipped_ammo": equipped_ammo,
 		"ammo_unequipped": ammo_unequipped,
@@ -4610,6 +4653,11 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var title_error: String=titles.check_load(data)
+	if not title_error.is_empty():
+		titles.blocked=true
+		hud.show_message(title_error)
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4766,6 +4814,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
+	titles.restore(data)
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -5888,7 +5937,9 @@ func _try_active_counterattack(attacker: TwilightMonster, attack_kind: String, r
 		return false
 	var reflected: int = maxi(1, int(round(float(maxi(1, received_damage)) * multiplier)))
 	hud.append_log("%s 반격 발동 · %s에게 %d 피해" % [counter_name, attacker.monster_name, reflected])
+	attacker.set_meta("title523_direct_life",attacker.life_id)
 	attacker.take_damage(reflected)
+	if not attacker.dead: attacker.set_meta("title523_direct_life",-1)
 	return true
 
 
@@ -7349,13 +7400,13 @@ func _record_stun_resistance(record: Dictionary) -> int:
 	)))
 
 func _stun_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0) + int(titles.bonus("HitSpecialResistance"))
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _stun_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0) + int(titles.bonus("SpecialResistance"))
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
 	total += _active_item_buff_total("stun_resistance")
@@ -7574,7 +7625,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
-	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat"))
+	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat")) + int(titles.bonus("ArmorClass"))
 
 func _record_dg(record: Dictionary) -> int:
 	if record.has("dg"):
@@ -7623,6 +7674,7 @@ func _effective_mr() -> int:
 	total += _active_item_buff_total("mr")
 	total += _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "mr")
 	total += _equipped_bless_bonus("mr")
+	total += int(titles.bonus("MagicResist"))
 	return maxi(0, total + int(original_skills.stat("mr") if original_skills != null else 0))
 
 func _record_damage_reduction(record: Dictionary) -> int:
@@ -7645,7 +7697,7 @@ func _damage_reduction_stat() -> int:
 	return maxi(0, total)
 
 func _pve_damage_after_item_buffs(raw_damage: int) -> int:
-	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
+	var reduced: int = maxi(1, raw_damage - titles.pve_reduction() - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
 	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct") + _catalog_stat_sum("pve_damage_reduction_pct") + int(_equipment_inven_sum("pve_damage_reduction_pct")), 0, 90)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
