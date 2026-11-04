@@ -4,6 +4,8 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const LINKS = preload("res://scripts/maps/patch523_world_links.gd")
 const POLICY = preload("res://scripts/monsters/patch523_spawn_policy.gd")
 const HOST_PORTALS = preload("res://scripts/maps/host_portal_navigation.gd")
+const PORTAL_SOURCE = preload("res://scripts/maps/patch523_portal_source_evidence.gd")
+var portal_source = PORTAL_SOURCE.new()
 var world: Node
 var links: RefCounted
 var summary: Label
@@ -74,6 +76,8 @@ func configure(controller: Node) -> void:
 	links = LINKS.new()
 	var options: Dictionary = POLICY.settings()
 	if options.enabled: links.load_land(str(options.root), 4, "Aden/", str(options.sha))
+	var evidence_path: String = PORTAL_SOURCE.configured_path()
+	if not evidence_path.is_empty(): portal_source.load_archive(evidence_path, links)
 	mode.set_item_disabled(1, not links.loaded)
 	mode.set_item_disabled(2, not links.loaded)
 	refresh()
@@ -98,6 +102,8 @@ func refresh() -> void:
 	summary.text = "현재 플레이 지역: %s\n" % active
 	if links.loaded:
 		summary.text += "아덴 본토 자료 · 포탈 %d · 출현 영역 연결 %d · 구성 확인 중 %d팩" % [links.shard.portals.size(), links.shard.spawn_relations.size(), links.shard.unresolved_class_view_packs.size()]
+		if portal_source.loaded: summary.text += "\n원문 대조 50건 · 아덴 출발 %d건 · 이동 활성 근거 아님" % portal_source.aden_count()
+		elif not portal_source.problem.is_empty(): summary.text += "\n원문 대조 자료 연결 보류: " + portal_source.problem
 	else:
 		summary.text += "원본 출현 자료를 사용할 수 없습니다. 자료 연결을 확인한 뒤 다시 실행하세요."
 	if mode.selected == 0:
@@ -182,6 +188,7 @@ func show_entry(index: int) -> void:
 		lines.append("도착 지역: %s [지역 %d] · 영역 %d" % [str(data.target_land.get("Name", "지역")), int(data.target_land.ID), int(target.ID)])
 		lines.append("원본 출발: (%d, %d)" % [int(data.portal.SourceX), int(data.portal.SourceY)])
 		lines.append("원본 도착 영역: (%d, %d) ~ (%d, %d)" % [int(target.StartX), int(target.StartY), int(target.EndX), int(target.EndY)])
+		lines.append_array(PORTAL_SOURCE.display_lines(portal_source.for_portal(int(data.portal.ID))))
 		if data.arrival_selection == "EXACT_POINT": lines.append("원본 도착점은 확인됐지만, 포탈의 트리거·활성 조건이 미확인이라 이동을 보류합니다.")
 		else: lines.append("도착 영역의 선택 규칙과 포탈의 트리거·활성 조건이 미확인이라 이동을 보류합니다.")
 		lines.append("기존 게임의 이동석과 같은 경로라고 추정하지 않습니다.")
