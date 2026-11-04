@@ -71,6 +71,9 @@ static func labels(group: Dictionary) -> Array[String]:
 		var name_value: String=str(effect.type.Name)
 		if name_value=="StatusEffectID":
 			result.append("각성 시각 효과");continue
+		if name_value=="ArmorClassBonus" and effect.unit.Name=="Value" and int(effect.bonus.Value)>=0:
+			# The existing def consumer displays an AC reduction for this bonus.
+			result.append("AC -"+str(int(effect.bonus.Value)));continue
 		result.append(source_label(effect))
 	return result
 

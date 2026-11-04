@@ -53,6 +53,7 @@ func _initialize() -> void:
 			check(applied.stats.xp==7 and applied.stats.weightBonus==500 and applied.stats.blessing_consumption_reduction_pct==3,"Mariela primary reviewed Level1 economy")
 			check(not Doll.MAP.has("ExperienceAdditionPercent") and not Doll.MAP.has("EinasadSavingPercent"),"additional doll does not inherit primary economy")
 	check(Slots.group_for("source:m508:1:12243",1).effects.all(func(effect: Dictionary) -> bool:return effect.type.Name!="StatusEffectID"),"Doppelganger has no invented status effect")
+	check(Slots.labels(Slots.group_for("source:m508:2:25002",11)).has("AC -1"),"additional slot AC label matches existing negative AC consumer")
 	for bad: String in ["source:m508:02:85","source:m508:2:-1","source:patch523:2:85","85",""]:
 		check(Slots.view(bad).is_empty() and Slots.group_for(bad,11).is_empty(),"malformed identity inert "+bad)
 	print("OPTION_SLOT_DEFINITIONS ",JSON.stringify({"checks":checks,"errors":errors}));quit(0 if errors.is_empty() else 1)
