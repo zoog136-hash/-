@@ -154,4 +154,7 @@ func _process(delta: float) -> void:
 	var actor: Node = get_tree().root.find_child("Current523IdentityActor",true,false)
 	if actor != null and actor.has_method("status_details"):
 		var details: Dictionary = actor.status_details()
+		if bool(details.get("native_pack_preferred",false)):
+			actor_status.text = "기존 원본 팩 재생 유지 · 비교 표시보다 우선"
+			return
 		actor_status.text = "sprite %d · %s · %s" % [int(details.get("source_sprite_id",-1)),str(details.get("role","")),str(details.get("error",""))] if bool(details.get("active",false)) else str(details.get("error","정체 표시 대기"))

@@ -15,6 +15,7 @@ var _integrity_clock: float = 0.0
 var _sequence: int = -1
 var _last_frame_token: String = ""
 var _overriding_host: bool = false
+var _native_preferred: bool = false
 var _state: String = "idle"
 var _host_facing: int = 2
 var _run_policy: bool = false
@@ -84,7 +85,7 @@ func status_details() -> Dictionary:
 		"fps":float(source_fps) if source_fps != null else float(_options.get("fps",12.0)),
 		"fps_policy":"source_explicit" if source_fps != null else "configurable_host_fps",
 		"run_policy":"host_RUN_uses_actual_source_WALK" if _run_policy else "",
-		"manual_override":_manual_override_active(),"cached_textures":_textures.size(),
+		"manual_override":_manual_override_active(),"native_pack_preferred":_existing_source_active(),"cached_textures":_textures.size(),
 		"estimated":true,"pixel_composition_policy":"523 정체확인 · 픽셀/합성 추정"}
 
 func _reset_actor() -> void:
@@ -97,6 +98,7 @@ func _reset_actor() -> void:
 	source_facing = -1
 	frame_index = -1
 	_last_frame_token = ""
+	_native_preferred = false
 	for sprite: Sprite2D in _layers: sprite.texture = null
 	_suspend()
 
@@ -110,6 +112,9 @@ func _revalidate() -> void:
 	_revision = PACK.revision
 	problem = ""
 	if _request_key.is_empty() or not bool(_options.get("enabled",false)): return
+	if _existing_source_active():
+		_native_preferred = true
+		return
 	var loaded: Dictionary = PACK.load_actor(_request_key,_context)
 	if not bool(loaded.get("ok",false)):
 		_fail(str(loaded.get("error","523 정체를 확인하지 못했습니다.")))
@@ -158,6 +163,14 @@ func _revalidate() -> void:
 	# Activate during our process tick, after the caller finishes its native setup.
 
 func _process(delta: float) -> void:
+	# PR217 already owns the installed original actor. Do not replace or revalidate it.
+	if _existing_source_active():
+		_native_preferred = true
+		_suspend()
+		return
+	if _native_preferred:
+		_native_preferred = false
+		_revalidate()
 	if _revision != PACK.revision: _revalidate()
 	if _actor.is_empty():
 		_suspend()
@@ -181,6 +194,10 @@ func _advance_host(delta: float) -> void:
 	advance_motion(delta,str(host_motion.state),int(host_motion.facing8),int(host_motion.sequence),bool(host_motion.active))
 
 func advance_motion(delta: float, state: String, facing: int, sequence: int, gameplay_active: bool) -> void:
+	if _existing_source_active():
+		_native_preferred = true
+		_suspend()
+		return
 	if _actor.is_empty(): return
 	_state = state
 	_host_facing = facing
@@ -275,6 +292,12 @@ func _manual_override_active() -> bool:
 	var host: Node = get_parent()
 	var sample: Node = host.get_node_or_null("Current523EstimatedWorldPreview") if host != null else null
 	return sample != null and sample.is_player_override_active()
+
+func _existing_source_active() -> bool:
+	var host: Node = get_parent()
+	if host == null or not bool(host.get("transform_active")): return false
+	var original: Variant = host.get("original_source_preview")
+	return is_instance_valid(original) and original.has_method("installed") and original.installed()
 
 func _suspend() -> void:
 	var was_overriding: bool = _overriding_host

@@ -178,5 +178,64 @@
     "current523-identity-final-field.png",
     "current523-identity-final-settings.png",
     "current523-identity-reentry-restart-field.png"
-  ]
+  ],
+  "PR217_reuse_correction": {
+    "PR217_701_reused": true,
+    "existing_transform_roots": 434,
+    "latest_transform_roots": 450,
+    "additional_roots": [
+      27349,
+      27521,
+      29212,
+      29244,
+      29311,
+      29317,
+      29562,
+      29565,
+      29568,
+      29625,
+      29690,
+      29695,
+      29701,
+      29706,
+      29711,
+      29716
+    ],
+    "old26_overlap": 26,
+    "new523_only_actors_connected": 0,
+    "new_cards_by_deck": {
+      "transform": 14,
+      "doll": 4,
+      "relic": 1
+    },
+    "changed_existing_visual_cards": [
+      {
+        "card_id": 11152,
+        "added_sprite_ids": [
+          29568
+        ]
+      },
+      {
+        "card_id": 24241,
+        "added_sprite_ids": [
+          29625
+        ]
+      },
+      {
+        "card_id": 24842,
+        "added_sprite_ids": [
+          29625
+        ]
+      },
+      {
+        "card_id": 24852,
+        "added_sprite_ids": [
+          29625
+        ]
+      }
+    ],
+    "guard_regression_checks": 11,
+    "guard_regression_scope": "Only native-priority control-flow fixture; no701 art repeat",
+    "remaining": "Specific current delta SPR/SP2 files; exact owner handoff records. Existing PR217 installed pack remains reusable."
+  }
 }

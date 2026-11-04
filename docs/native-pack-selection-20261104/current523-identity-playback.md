@@ -1,5 +1,42 @@
 # Exact transformation identity, estimated pixels
 
+## PR217 reuse and current523 delta scope
+
+PR217 already delivered the701-card base508 connection (388 transformations,
+167 dolls,146 relics). Its catalog and conditional identity files are byte-identical
+in this branch, and its weapon selector is unchanged. Reuse the existing installed
+`TWILIGHT_base508_runtime_install_v2.zip` and approved incremental addons through
+`user://lineagem_base508_versions/pack-*/manifest.json`, with the legacy
+`user://lineagem_base508/manifest.json` fallback. No full-pack rebuild, redownload
+or repeat701-character visual audit is required. The runtime manifest remains
+schema1/base508; the install ZIP header is schema2/base508.
+
+The26 actors described below all belong to those existing434 transformation roots;
+they are an optional raw-SP2 comparison path, **not26 newly added523 identities**.
+An active installed original actor now takes precedence over this comparison,
+including direct presentation calls. Its pose clock, sequence, weapon handling,
+visibility and existing pack files remain owned by the PR217 consumer.
+
+The actual transformation delta is434→450 roots, with no removed old roots:
+27349,27521,29212,29244,29311,29317,29562,29565,29568,29625,29690,29695,
+29701,29706,29711,29716. Fourteen belong to new transformation cards;29568 is a
+new variant for card11152, and29625 is the added variant shared by cards24241,
+24842,24852. The total card delta is19 (14 transformations,4 dolls,1 relic);
+catalog/stat/collection definitions belong to PR249 and are not recreated here.
+
+No new523-only actor is claimed connected by the26 comparison pack. The existing
+full-source audit reports141 missing generic body/shadow/clothing SP2 files across
+the14 new roots whose current declarations are available;27349 and27521 require
+the current list27 declarations before exact physical files can be named. The
+three new doll/relic roots with declarations lack their idle/walk files too;
+22590 needs current list22 and27547 has no current declaration here. These are
+specific delta-input gaps in this environment, not missing PR217701-card work.
+Earlier331 pending clocks and source attachment exclusions are not treated as
+unfinished transformation integration or reopened by this audit.
+
+The focused11-check precedence regression is a control-flow fixture only, not
+another701-art validation. Existing data, private packs and saves were not changed.
+
 PR236 adds an opt-in current523 actor consumer for **26 existing transformation
 cards**, using the same stable `m508:1:*` save identities. It follows the latest
 typed BuffCard → BuffClass/BuffBonus/Bonus → PolymorphSet/Entity joins, verifies
