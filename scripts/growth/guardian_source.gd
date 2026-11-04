@@ -55,13 +55,25 @@ func detail(id: String, level: int) -> String:
 			else:
 				text += " · 치명타 공격" if kind == 27 else " · 공격"
 				if invoke.Param4: text += " · 주 대상"
-			text += " · 전투 발동 준비 중"
+			text += " · 발동 스킬"
 		elif reward.has("spell"):
 			var spell: Dictionary = reward.spell
 			text += " · 사용 스킬"
 			if int(spell.SpellMaterialTypeID) == 41: text += " · 명예 코인 %d" % int(spell.SpellMaterialItemAmount)
-			text += " · 시전 준비 중"
+			text += " · 사용 가능"
 		else:
-			text += " · 적용 준비 중"
+			text += " · 조건부 %+g" % float(reward.get("value",reward.bonus.Value))
 		parts.append(text)
 	return "\n".join(parts)
+
+func constant(name: String) -> float:
+	for row: Dictionary in data.source_tables.get("SkillTreeConstant",[]):
+		if row.Name==name:return float(row.Value)
+	return 0
+
+func spell_name(id: int) -> String:
+	for row: Dictionary in data.source_tables.get("SpellClass",[]):
+		if int(row.ID)!=id:continue
+		for text: Dictionary in data.source_tables.get("DescData_Korean",[]):
+			if int(text.ID)==int(row.DescID):return str(text.Description)
+	return "수호성"

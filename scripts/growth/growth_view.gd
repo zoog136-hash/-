@@ -21,6 +21,8 @@ var action_dock: GridContainer
 var chart: Control
 var card_faces: Dictionary = {}
 var diagram: Control
+var guardian_controls: Array=[]
+var guardian_clock: float=0
 
 func configure(owner_hud: Node, section: String) -> void:
 	hud = owner_hud
@@ -117,6 +119,7 @@ func _refresh() -> void:
 	for child: Node in body.get_children(): body.remove_child(child); child.queue_free()
 	for child: Node in action_dock.get_children(): action_dock.remove_child(child); child.queue_free()
 	card_faces.clear()
+	guardian_controls.clear()
 	diagram=null; chart=null
 	_balance()
 	var tabs := GridContainer.new()
@@ -144,7 +147,7 @@ func _refresh() -> void:
 		_button("축복의 성수(중) 사용",func() -> void: _prepare("holy_water","",1)).name = "GrowthHolyWater"
 		_button("수호석 제작 · 일반 주문서",func() -> void: _prepare("craft_stone","",1))
 		_button("수호석 제작 · 각인 주문서",func() -> void: _prepare("craft_stone_engraved","",1))
-		_label("출처: 누적523 수호성 테이블·원본 도움말 / 문양 공식 가이드\n능력치는 상시 적용 · 발동/사용 스킬 전투 처리는 준비 중" if mode=="guardians" and not runtime.development else "출처: NC 공식 문양/수호성 가이드 및 확률 안내 (2026-10-24 확인)\n미확인 전투 효과는 미완료입니다.")
+		_label("출처: 누적523 수호성 테이블·원본 도움말 / 문양 공식 가이드\n능력치는 상시 적용 · 발동 스킬은 분류별 지정 / 사용 스킬은 스킬 특수 탭" if mode=="guardians" and not runtime.development else "출처: NC 공식 문양/수호성 가이드 및 확률 안내 (2026-10-24 확인)\n미확인 전투 효과는 미완료입니다.")
 	call_deferred("_layout_density")
 
 func _select(id: String) -> void:
@@ -260,6 +263,11 @@ func _guardian() -> void:
 		chart.configure(runtime,group.nodes,hud,scroll,selected_node,_show_node)
 		if runtime.development: _label("개발용 연결도 · 1회 수호석 1개 / 카드 3장 / 노드당 HP 5 · 원작값 아님")
 		if not selected_node.is_empty(): _node_detail(runtime.node(selected_node))
+		if not runtime.development:
+			_label("이 분류의 기록된 수호석 지출 %d · 다이아 잔액 %d" % [runtime.guardian_spent(int(group.category_id)),int(runtime.state.get("guardian_wallet",{}).get("4",0))])
+			_guardian_action("guardian_reset",str(group.id),"이 분류 초기화 · 기록된 수호석 환급")
+			_guardian_action("guardian_buy_coins","","명예 코인 재료 상점 · 10개")
+			if OS.is_debug_build():_guardian_action("guardian_debug_gems","","개발 검증용 다이아 +%d" % int(runtime.guardian_local_rules.development.gem_grant))
 
 func _card_selection() -> void:
 	var pending: bool=not runtime.state.pending.is_empty()
@@ -353,13 +361,15 @@ func _node_detail(row: Dictionary) -> void:
 		_label("발동 확률: "+("미확인" if chance == null else str(chance)+"%")+" · 피해/회복 수치 미확인")
 	var actions: Array[String] = ["activate","representative"]
 	if source and int(row.max_level)>0: actions.append("guardian_enchant")
+	if source and row.kind=="active":actions.append("guardian_cast")
 	for action: String in actions:
 		var offer: Dictionary = runtime.quote(action,id)
-		var title: String = "활성화" if action == "activate" else "수호성 강화" if action == "guardian_enchant" else "분류 발동 스킬 지정" if source else "대표 설정"
+		var title: String = "활성화" if action == "activate" else "수호성 강화" if action == "guardian_enchant" else "사용 스킬 시전" if action=="guardian_cast" else "분류 발동 스킬 지정" if source else "대표 설정"
 		var b := _button(title,func() -> void: _prepare(action,id,1))
 		b.name = "GuardianAction_"+action
 		b.disabled = not bool(offer.ok)
-		_label(str(offer.message))
+		var hint: Label=_label(str(offer.message))
+		guardian_controls.append({"button":weakref(b),"hint":weakref(hint),"action":action,"id":id})
 
 func _prepare(action: String, id: String, count: int) -> void:
 	if submitting: return
@@ -405,6 +415,12 @@ func _confirm() -> void:
 	_refresh()
 	result.visible = current.action!="choose"
 	result.text = str(response.message)
+	if response.ok and current.action=="activate":
+		for face: Control in card_faces.values():preload("res://scripts/growth/guardian_timeline.gd").play(face,"open")
+	elif response.ok and current.action=="choose" and card_faces.has(int(current.count)):
+		preload("res://scripts/growth/guardian_timeline.gd").play(card_faces[int(current.count)],"success" if last_reveal.won else "failure")
+	elif response.ok and current.action=="guardian_enchant":
+		preload("res://scripts/growth/guardian_timeline.gd").play(result,"success" if str(response.message).contains("강화 성공") else "failure")
 	if response.ok and current.action in ["enhance","absolute"] and is_instance_valid(diagram): diagram.reveal(previous_stage)
 	if response.ok and current.action in ["choose","representative"] and is_instance_valid(chart): chart.reveal()
 	# A second release in this frame cannot create another transaction.
@@ -424,3 +440,23 @@ func _draw() -> void:
 	for layer: int in range(8):
 		var radius: float=minf(size.x*.4,size.y*.65)-layer*12
 		if radius>0: draw_circle(size*Vector2(.38,.46),radius,Color(tint,.012))
+
+func _guardian_action(action: String,id: String,title: String) -> void:
+	var button: Button=_button(title,func() -> void:_prepare(action,id,1))
+	button.name="GuardianAction_"+action
+	var quote: Dictionary=runtime.quote(action,id)
+	button.disabled=not quote.ok
+	var hint: Label=_label(str(quote.message))
+	guardian_controls.append({"button":weakref(button),"hint":weakref(hint),"action":action,"id":id})
+
+func _process(delta: float) -> void:
+	guardian_clock-=delta
+	if guardian_clock>0 or runtime==null:return
+	guardian_clock=.25
+	for entry: Dictionary in guardian_controls:
+		var button: Button=entry.button.get_ref()
+		var hint: Label=entry.hint.get_ref()
+		if not is_instance_valid(button) or not is_instance_valid(hint):continue
+		var quote: Dictionary=runtime.quote(entry.action,entry.id)
+		button.disabled=not quote.ok or submitting
+		hint.text=str(quote.message)

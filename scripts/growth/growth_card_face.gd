@@ -1,5 +1,5 @@
 extends Control
-## Static card state. No inferred flip animation or automatic outcome.
+## Existing TWILIGHT card art; UI551 property timelines are applied by the view.
 const Art = preload("res://scripts/growth/growth_art.gd")
 var failed: bool = false
 var selected: bool = false

@@ -41,6 +41,7 @@ def build(source):
     bonus_index=index('Bonus'); invoke_index=index('InvokeOption'); type_index=index('BonusType')
     rewards=rows('SkillTreeSlotReward'); prerequisites=rows('SkillTreeSlotPrerequisite')
     slots=rows('SkillTreeSlot'); enchants=rows('SkillTreeSlotEnchant')
+    ui_units={r["UnitID"]:r for r in rows("UIUnit")}
     groups=[]
     for category in rows('SkillTreeCategory'):
         cid=category['ID']; gid,name=GROUPS[cid];keep('SkillTreeCategory',category)
@@ -57,7 +58,20 @@ def build(source):
                     key=STATS[bonus['BonusTypeID']];value=bonus['Value']*(-1 if bonus['BonusTypeID']==21 else 1)
                     entry.update({'effect_key':key,'effect_value':value,'status':'applied'})
                     if reward['Level']==0:effects[key]=effects.get(key,0)+value
+                if reward['RewardTypeID']==14:
+                    unit=get('Unit',bt['UnitID']);ui=keep('UIUnit',ui_units[bt['UnitID']])
+                    divisor=ui['Denominator'] if unit['Name'] in ['Percentage','ValuePercent','Weight'] else 1
+                    assert divisor>0
+                    entry['value']=bonus['Value']/divisor
+                    entry['unit']=unit
+                    if bt['Name']=='CarryPlus':
+                        entry.update({'effect_key':'weight_bonus:flat','effect_value':entry['value'],'status':'applied'})
+                        if reward['Level']==0:effects['weight_bonus:flat']=effects.get('weight_bonus:flat',0)+entry['value']
+                    elif entry['status']=='deferred':entry['status']='conditional'
+                    if bonus['BonusApplicationTypeID']==2:entry['scope']=get('SpecialResistanceType',bonus['BonusApplicationTargetID'])
+                    if bonus['BonusApplicationTypeID']==221:entry['scope']=get('SpellTag',bonus['BonusApplicationTargetID'])
                 if reward['RewardTypeID']==24:
+                    entry['status']='invoke'
                     invoke=keep('InvokeOption',invoke_index[bonus['BonusApplicationTargetID']]);it=get('InvokeOptionType',invoke['InvokeOptionTypeID'])
                     entry.update({'invoke':invoke,'invoke_type':it})
                     # Param2 of Type5 is NOT a declared spell FK. Keep it only as
@@ -70,6 +84,7 @@ def build(source):
                         spell=get('SpellClass',spell_id);entry['spell']=spell
                         entry['label']=description(spell['DescID'])
                 elif reward['RewardTypeID']==34:
+                    entry['status']='active'
                     spell=get('SpellClass',bonus['BonusApplicationTargetID']);entry['spell']=spell;entry['label']=description(spell['DescID'])
                     get('SpellMaterialType',spell['SpellMaterialTypeID'])
                 if reward['Level']==0 and reward['RewardTypeID'] in [24,34]:labels.append(entry['label'])
@@ -85,7 +100,25 @@ def build(source):
             label=next((s for s in labels if s),' / '.join(dict.fromkeys(r['label'] for r in node_rewards if r['row']['Level']==0 and r['label'])) or name+' 능력치')
             group['nodes'].append({'id':'source523_'+str(sid),'name':label,'kind':kind,'source_slot_id':sid,'category_id':cid,'server_limit_set_id':category['ServerLimitSetID'],'ui_x':slot['UIPosX'],'ui_y':slot['UIPosY'],'prerequisites':parents,'cost':slot['ActiveCost'],'currency_id':slot['ActiveCurrencyID'],'cards':slot['ActiveCardCount'],'max_level':slot['MaxLevel'],'card_rule':'single_winner_without_replacement','effects':effects,'rewards':node_rewards,'upgrades':upgrades})
         groups.append(group)
+    # Spell/temporary-buff execution uses the complete original bonus closure.
+    def effect(link, table):
+        keep(table,link);bonus=get('Bonus',link['BonusID']);typ=get('BonusType',bonus['BonusTypeID']);unit=get('Unit',typ['UnitID']);ui=ui_units.get(typ['UnitID'],{})
+        if ui:keep('UIUnit',ui)
+        divisor=ui.get('Denominator',0) if unit['Name'] in ['Percentage','ValuePercent','Weight'] else 1
+        assert divisor>0
+        return {'link':link,'bonus':bonus,'type':typ,'unit':unit,'ui_unit':ui,'value':bonus['Value']/divisor}
+    spells={};buff_ids=set()
+    for sid in list(selected['SpellClass']):
+        if sid not in {e['spell']['ID'] for g in groups for n in g['nodes'] for e in n['rewards'] if 'spell' in e}:continue
+        spell=get('SpellClass',sid);effects=[effect(link,'SpellBonus') for link in rows('SpellBonus') if link['SpellClassID']==sid]
+        spells[str(sid)]={'source':spell,'effects':effects,'values':{e['type']['Name']:e['value'] for e in effects}}
+        buff_ids.update(int(e['bonus']['Value']) for e in effects if e['type']['Name']=='BuffClassID')
+        get('TargettingType',spell['TargettingTypeID']);get('TargetKind',spell['TargetKindID'])
+    buffs={str(bid):{'source':get('BuffClass',bid),'effects':[effect(link,'BuffBonus') for link in rows('BuffBonus') if link['BuffClassID']==bid]} for bid in sorted(buff_ids)}
     for row in rows('SkillTreeConstant'):keep('SkillTreeConstant',row)
+    get('Currency',4);get('IntangibleItemClass',2)
+    for row in rows('CurrencyUnitClass'):
+        if row['CurrencyID']==4:keep('CurrencyUnitClass',row)
     for row in rows('UIStaticTextData_Korean'):
         if row['TextDesc'].startswith('SKILLTREE_TOOLTIP'):keep('UIStaticTextData_Korean',row)
     for row in rows('ServerLimit'):
@@ -108,12 +141,14 @@ def build(source):
     for row in rows('CurrencyUnitClass'):
         if row['CurrencyID'] in [822,21]:
             keep('CurrencyUnitClass',row);get('ItemClass',row['ClassID'])
-    result={'schema':1,'source_version':523,'source_library_file_id':'libfile_f3e9e5b322cc8191ae441565bbd24c27','guardians':groups,
+    result={'schema':1,'source_version':523,'source_library_file_id':'libfile_f3e9e5b322cc8191ae441565bbd24c27','guardians':groups,'spells':spells,'buffs':buffs,
             'source_tables':{n:list(r.values()) for n,r in sorted(selected.items())},
             'table_provenance':{n:provenance[n] for n in sorted(selected)},
             'local_policy':{'fixed_card_deck':'Existing local save model retained; server reshuffle/reconnect rules are unverified.',
                             'server_limits':'0 preserves no nonzero list reference; 1294 remains unavailable without verified region/world semantics.',
-                            'combat':'Only explicitly mapped unconditional stat bonuses execute; procs and active spells remain typed, visible, deferred.'}}
+                            'combat':'Source SpellBonus/BuffBonus and UIUnit values execute through TWILIGHT combat; no claim of original server formula equivalence.',
+                            'time':'Existing TWILIGHT source-spell CastDelay convention: milliseconds. Source duration unit Seconds stays seconds.',
+                            'reset':'Per-category reset costs source Currency4/1200 and refunds recorded stone spending only. Missing historical failed-enchant receipts are never fabricated.'}}
     nodes=[n for g in groups for n in g['nodes']];by_id={n['id']:n for n in nodes}
     assert len(groups)==6 and len(nodes)==172 and len(by_id)==172
     assert {g['category_id']:g['server_limit_set_id'] for g in groups}=={222:0,232:0,244:0,262:0,273:1294,288:1294}

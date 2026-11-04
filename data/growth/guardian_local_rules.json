@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "authority": "TWILIGHT local fallback; source523 and confirmed public values take priority",
+  "reset": {
+    "scope": "selected_category",
+    "refund_rate": 1.0,
+    "refund_basis": "recorded_actual_stone_spending",
+    "unknown_legacy_costs": "refund_only_provable_minimum",
+    "status": "local_fallback_after_source_and_public_research",
+    "fixed_invariants": [
+      "Refund actual recorded failed-enchant spending as well as successes",
+      "Preserve active shared spell cooldown across resets"
+    ]
+  },
+  "development": {
+    "gem_grant": 1200,
+    "status": "debug_build_only_manual_grant"
+  },
+  "combat": {
+    "status_resolution": "existing_TWILIGHT_status_service",
+    "poison_tick_interval_seconds": 1.0,
+    "unknown_original_level_formula": "existing_local_status_policy; retain original coefficients for audit",
+    "status": "current_game_adapter_not_original_server_formula"
+  },
+  "confirmed_public": [
+    {
+      "field": "representative_switch_seconds",
+      "value": 3,
+      "url": "https://lineagem.plaync.com/board/update/view?articleId=50196375",
+      "source_date": "2022-07-20",
+      "agreement": "SkillTreeConstant.CoolTimeSec=3 in cumulative523"
+    }
+  ],
+  "research_limits": [
+    "No authoritative current per-category stone reset/refund scope found; the reset scope and recorded-cost refund are explicitly local.",
+    "No original probability or cost is replaced by a local zero/default."
+  ]
+}

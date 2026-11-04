@@ -39,6 +39,13 @@ var touch_active: bool = false
 var unlearned_icons: Dictionary = {}
 var class_only: bool = false
 var scope_buttons: Array[Button] = []
+var guardian_scope_button: Button
+var guardian_special: VBoxContainer
+var guardian_result: Label
+var guardian_cast_buttons: Dictionary={}
+var guardian_special_scroll: ScrollContainer
+var guardian_hidden_state: Dictionary={}
+var guardian_special_clock: float=0
 
 func configure(controller: Node) -> void:
 	hud=controller
@@ -51,14 +58,19 @@ func configure(controller: Node) -> void:
 	for current: int in range(2):
 		var selection: int=current
 		var button: Button=UI.button("전체" if current==0 else "기술",func() -> void:
+			_hide_guardian_special()
 			class_only=selection==1
-			type_filter.select(4 if class_only else 0);class_filter.select(0);refresh(),Vector2(100,44))
+			type_filter.select(4 if class_only else 0);class_filter.select(0);refresh(),Vector2(76,44))
 		button.name="SkillAllTab" if current==0 else "SkillTechniqueTab"
 		button.toggle_mode=true
 		scope.add_child(button);scope_buttons.append(button)
+	var special_button: Button=UI.button("특수 · 수호성",_show_guardian_special,Vector2(105,44))
+	special_button.name="SkillGuardianSpecialTab"
+	special_button.toggle_mode=true;guardian_scope_button=special_button
+	scope.add_child(special_button)
 	var spacer:=Control.new();spacer.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scope.add_child(spacer)
 	var toolbar := HFlowContainer.new()
-	var filters_button: Button=UI.button("검색",func() -> void:toolbar.visible=not toolbar.visible,Vector2(64,44))
+	var filters_button: Button=UI.button("검색",func() -> void:_hide_guardian_special();toolbar.visible=not toolbar.visible,Vector2(64,44))
 	filters_button.name="SkillFiltersToggle"
 	filters_button.tooltip_text="이름 · 종류 · 직업 · 등급 검색"
 	scope.add_child(filters_button)
@@ -421,6 +433,15 @@ func select_original() -> void:
 	selection_sheet.show_skill()
 
 func _process(delta: float) -> void:
+	if is_instance_valid(guardian_special) and guardian_special.is_visible_in_tree():
+		guardian_special_clock-=delta
+		if guardian_special_clock>0:return
+		guardian_special_clock=.25
+		for id: String in guardian_cast_buttons:
+			var quote: Dictionary=hud.get_parent().growth.quote("guardian_cast",id)
+			var button: Button=guardian_cast_buttons[id]
+			button.disabled=not quote.ok;button.tooltip_text=str(quote.message)
+		return
 	if bool(selected.get("runtime_blocked", false)): return
 	clock-=delta
 	if clock>0 or hud==null or selected.is_empty(): return
@@ -508,3 +529,54 @@ func select_local() -> void:
 	cooldown.text = "패시브 적용" if passive and owned else "미습득" if not owned else "ON" if service.local_runtime.is_on(selected) else "준비 / 재사용 확인"
 	clock = 0
 	selection_sheet.show_skill()
+
+func _hide_guardian_special() -> void:
+	if is_instance_valid(guardian_scope_button):guardian_scope_button.button_pressed=false
+	for index: int in range(scope_buttons.size()):scope_buttons[index].button_pressed=(index==1)==class_only
+	for child: Node in get_children():
+		if guardian_hidden_state.has(child.get_instance_id()):child.visible=bool(guardian_hidden_state[child.get_instance_id()])
+	if is_instance_valid(guardian_special):guardian_special.hide()
+	if is_instance_valid(guardian_special_scroll):guardian_special_scroll.hide()
+
+func _show_guardian_special() -> void:
+	guardian_scope_button.button_pressed=true
+	for button: Button in scope_buttons:button.button_pressed=false
+	if not is_instance_valid(guardian_special_scroll) or not guardian_special_scroll.visible:
+		guardian_hidden_state.clear()
+		for child: Node in get_children():guardian_hidden_state[child.get_instance_id()]=child.visible
+	if not is_instance_valid(guardian_special):
+		guardian_special_scroll=ScrollContainer.new();guardian_special_scroll.name="GuardianSpecialScroll"
+		guardian_special_scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL
+		guardian_special_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+		add_child(guardian_special_scroll)
+		guardian_special=VBoxContainer.new();guardian_special.name="GuardianSpecialSkills"
+		guardian_special.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		guardian_special_scroll.add_child(guardian_special)
+	for child: Node in get_children():child.visible=child.name=="SkillReferenceTabs" or child==guardian_special_scroll
+	guardian_special.show()
+	for child: Node in guardian_special.get_children():guardian_special.remove_child(child);child.queue_free()
+	guardian_cast_buttons.clear()
+	guardian_result=UI.label("수호성 사용 스킬 · 명예 코인 소모 / 질리언 스킬 재사용 시간 공유",14)
+	guardian_result.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	guardian_special.add_child(guardian_result)
+	var rt=hud.get_parent().growth
+	for id: String in rt.state.nodes:
+		if not rt.guardian_source.has_node(id) or rt.node(id).kind!="active":continue
+		var button: Button=_guardian_special_button(str(rt.node(id).name)+" · 명예 코인 10개",func() -> void:
+			var response: Dictionary=rt.execute("guardian_cast",id,1,int(rt.state.revision))
+			guardian_result.text=str(response.message),Vector2(220,48))
+		button.name="GuardianSpecial_"+id
+		guardian_cast_buttons[id]=button;guardian_special.add_child(button)
+		var quick: Button=_guardian_special_button(str(rt.node(id).name)+" · 퀵슬롯 등록",func() -> void:hud._open_quickslot_picker("skill","guardian:"+id,str(rt.node(id).name)),Vector2(220,44))
+		quick.name="GuardianQuick_"+id;guardian_special.add_child(quick)
+	if guardian_cast_buttons.is_empty():guardian_special.add_child(UI.label("질리언의 사용 스킬을 개방하면 여기에 표시됩니다.",14))
+	guardian_special.add_child(_guardian_special_button("명예 코인 10개 구입 · TWILIGHT 재료 상점",func() -> void:
+		var response: Dictionary=rt.execute("guardian_buy_coins","",1,int(rt.state.revision));guardian_result.text=str(response.message),Vector2(220,48)))
+	guardian_special.add_child(_guardian_special_button("수호성 열기",func() -> void:hud.open_growth("guardians"),Vector2(220,48)))
+
+func _guardian_special_button(text: String,callback: Callable,extent: Vector2=Vector2(220,44)) -> Button:
+	var button: Button=UI.button(text,callback,extent)
+	button.clip_text=true;button.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS;button.tooltip_text=text
+	button.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
+	button.scroll_host=hud.workspace;button.scroll_area=guardian_special_scroll
+	return button

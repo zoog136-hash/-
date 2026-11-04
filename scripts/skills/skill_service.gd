@@ -357,12 +357,14 @@ func hit_chance(skill: Dictionary, target: TwilightMonster) -> float:
 	if str(skill.get("attack_type", "")) == "magic":
 		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), maxi(0, target.magic_resistance + int(status.modifier(target, "mr"))))
 	var accuracy: int = world._ranged_accuracy_stat() if str(skill.get("attack_type", "")) == "ranged" else world._melee_accuracy_stat()
-	return physical_hit_chance(accuracy, target)
+	return physical_hit_chance(accuracy, target,str(skill.get("attack_type","melee")))
 
-func physical_hit_chance(accuracy: int, target: TwilightMonster) -> float:
+func physical_hit_chance(accuracy: int, target: TwilightMonster,attack_kind: String="melee") -> float:
 	# Normal attacks and physical skills read the same live, life-scoped defense.
 	# Keep the shared formula's AC normalization and nonnegative DG floor.
-	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), int(status.modifier(target, "dg")))
+	var avoidance: float=status.modifier(target,"er" if attack_kind=="ranged" else "dg")
+	if bool(target.get_meta("is_player_combatant",false)):avoidance-=world.growth.combat.value("PVPPierceRangeEvasion" if attack_kind=="ranged" else "PVPPierceMeleeEvasion")
+	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), int(avoidance))
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
 	if target.dead: return
@@ -373,7 +375,7 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 	amount = world._elemental_damage_to_monster(maxi(1, amount), str(skill.get("element", "physical")), target)
 	var critical: bool = world.rng.randf() < world._critical_chance(world._player_critical_rate(str(skill.get("attack_type", "melee"))), target.critical_resistance)
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
-	world._deal_successful_player_hit(target, maxi(1, amount), critical)
+	world._deal_successful_player_hit(target, maxi(1, amount), critical,str(skill.get("attack_type","magic")),str(skill.get("shape","single"))!="area" or target==world.selected_monster,true)
 	_emit_verified_source_effect(skill, "impact", target.global_position)
 	if critical: _emit_verified_source_effect(skill, "critical", target.global_position)
 	if not _is_verified_source_skill(skill):

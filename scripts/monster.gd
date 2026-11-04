@@ -59,14 +59,29 @@ var attack_element: String = "physical"
 var damage_hit_count: int = 0
 var monster_level: int = 1
 var defense_value: int = 0
-var armor_class: int = -10
+var _guardian_base_armor_class: int = -10
+var armor_class: int:
+	get:
+		if is_instance_valid(world_controller) and world_controller.get("growth")!=null:return _guardian_base_armor_class+world_controller.growth.combat.npc_ac_delta(self)
+		return _guardian_base_armor_class
+	set(value):_guardian_base_armor_class=value
 var hp: int = 100
-var max_hp: int = 100
+var _guardian_base_max_hp: int = 100
+var max_hp: int:
+	get:
+		if is_instance_valid(world_controller) and world_controller.get("growth")!=null:return maxi(1,_guardian_base_max_hp+world_controller.growth.combat.npc_max_hp_delta(self))
+		return _guardian_base_max_hp
+	set(value):_guardian_base_max_hp=value
 var attack_power: int = 8
 var melee_accuracy: int = 12
 var ranged_accuracy: int = 12
 var magic_accuracy: int = 12
-var magic_resistance: int = 10
+var _guardian_base_magic_resistance: int = 10
+var magic_resistance: int:
+	get:
+		if is_instance_valid(world_controller) and world_controller.get("growth")!=null:return _guardian_base_magic_resistance+world_controller.growth.combat.npc_mr_delta(self)
+		return _guardian_base_magic_resistance
+	set(value):_guardian_base_magic_resistance=value
 var melee_critical_rate: int = 5
 var ranged_critical_rate: int = 5
 var magic_critical_rate: int = 5
@@ -348,6 +363,11 @@ func _advance_source_m_view(delta: float) -> void:
 		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
 
 func _physics_process(delta: float) -> void:
+	if not dead:
+		var effective_hp: int=max_hp
+		if hp_bar.max_value!=effective_hp:
+			hp=mini(hp,effective_hp)
+			hp_bar.max_value=effective_hp;hp_bar.value=hp
 	advance_source_option_debuffs(delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
@@ -1073,3 +1093,7 @@ func advance_source_option_debuffs(delta: float) -> void:
 func hit_armor_class() -> int:
 	# Existing local formula expects nonpositive armor; preserve raw native AC for display/audit.
 	return mini(0, armor_class) if not source_m_original.is_empty() else armor_class
+
+func effective_source_attribute(attribute: String) -> float:
+	if is_instance_valid(world_controller) and world_controller.get("growth")!=null:return float(world_controller.growth.combat.attribute(self,attribute).after)
+	return float(source_m_original.get(attribute.capitalize(),0))
