@@ -80,8 +80,63 @@ func run() -> void:
 	var shared_colors: Array = shared_claim.after.weapons["1"].colors["1"]
 	check(shared_claim.ok and shared_colors[0] == shared_colors[1] and shared_colors[0] == shared_colors[2] and shared_colors[0] == shared_colors[3],"alternative local color coupling is configurable and distinct from native confirmation")
 	check(not core.plan_acquire(shared,1,1,rng,"unknown-mode",charge,"unknown").ok,"unknown local color mode cannot silently change probability behavior")
+	# Matched bonuses are per level, not deduplicated by shared BonusID.
+	var matched: Dictionary = Core.fresh()
+	matched.weapons["1"] = {"points":str(int(core.levels[1][7].CumulativePoint)),"options":[],"colors":{},"locks":{}}
+	for level: int in range(1,9):
+		matched = core.plan_acquire(matched,1,level,rng,"matching-claim-"+str(level),charge).after
+		matched.weapons["1"].colors[str(level)] = [2,2,2,2]
+	var bonuses: Array = core.active_matching_bonuses(matched,1)
+	runtime.core = core
+	runtime.enabled = true
+	runtime.state = matched.duplicate(true)
+	var flat: int = int(core.matching_bonus(1,2).Value)
+	check(bonuses.size() == 8 and runtime.catalog_bonus("hpFlat",1) == flat*8,"eight achieved full matching levels each grant one original flat HP bonus")
+	check(runtime.catalog_bonus("hpFlat",3) == 0,"matching bonuses never leak to a different weapon")
+	runtime.state.weapons["1"].points = str(int(core.levels[1][0].CumulativePoint))
+	check(core.active_matching_bonuses(runtime.state,1).size() == 1 and runtime.catalog_bonus("hpFlat",1) == flat,"above-level matched ownership retained but effect gated")
+	runtime.state = matched.duplicate(true)
+	runtime.state.weapons["1"].options.remove_at(0)
+	check(core.active_matching_bonuses(runtime.state,1).size() == 7 and runtime.catalog_bonus("hpFlat",1) == flat*7,"partial legacy option ownership cannot grant a matching bonus")
+	if core.tables.MasteryGradeView.size() > 1:
+		runtime.state = matched.duplicate(true)
+		runtime.state.weapons["1"].colors["1"][0] = int(core.tables.MasteryGradeView[1].GradeID)
+		check(core.active_matching_bonuses(runtime.state,1).size() == 7 and runtime.catalog_bonus("hpFlat",1) == flat*7,"one changed color removes only that level's matching bonus")
+	if core.tables.MasteryGradeView.size() == 4:
+		for weapon: int in core.levels:
+			var purple: Dictionary = matched.weapons["1"].duplicate(true)
+			purple.points = str(int(core.levels[weapon][7].CumulativePoint))
+			for key: String in purple.colors: purple.colors[key] = [5,5,5,5]
+			runtime.state = Core.fresh()
+			runtime.state.weapons[str(weapon)] = purple
+			var matching_bonus: Dictionary = core.matching_bonus(weapon,5)
+			var kind: String = str(core.types[int(matching_bonus.BonusTypeID)].Name)
+			var consumer: String = {"MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage"}.get(kind,"")
+			var with_matching: int = runtime.catalog_bonus(consumer,weapon)
+			runtime.state.weapons[str(weapon)].colors = {}
+			check(not consumer.is_empty() and with_matching-runtime.catalog_bonus(consumer,weapon) == int(matching_bonus.Value)*8,"purple matching resolves destination-specific flat damage once per level for weapon"+str(weapon))
+	var policy_state: Dictionary = matched.duplicate(true)
+	policy_state.weapons["3"] = {"points":"1","options":[],"colors":{},"locks":{},"user_note":"source preserved"}
+	policy_state.weapons["1"].locks["1"] = [true,false,false,false]
+	policy_state.weapons["1"]["user_note"] = "retained"
+	var destination_class: int = 0
+	for row: Dictionary in core.tables.ClassChangeMasteryWeaponType:
+		if int(row.ToWeaponType) == 1: destination_class = int(row.ToCharacterClass); break
+	check(not core.plan_local_change(policy_state,3,1,destination_class,0,"strict-policy",2026).ok,"strict default adapter keeps native unknown-target guard")
+	var preserved: Dictionary = core.plan_local_change(policy_state,3,1,destination_class,0,"preserve-policy",2026,"preserve_existing")
+	var expected_target: Dictionary = policy_state.weapons["1"].duplicate(true)
+	expected_target.points = str(int(expected_target.points)+1)
+	check(preserved.ok and preserved.after.weapons["1"] == expected_target and int(preserved.charge.AdditionalCost) == 0,"configured point-only plan preserves target metadata groups colors locks and native no-extra-fee rule")
+	check(preserved.after.weapons["3"].user_note == "source preserved","retired source retains opaque user metadata")
+	check(preserved.after.receipts["preserve-policy"].custom_point_only_target_policy == "preserve_existing" and not core.plan_local_change(preserved.after,3,1,destination_class,0,"preserve-policy",2026,"preserve_existing").ok,"policy receipt and emptied source prevent duplicate point transfer")
+	var cleared: Dictionary = core.plan_local_change(policy_state,3,1,destination_class,0,"clear-policy",2026,"clear_existing")
+	check(cleared.ok and cleared.after.weapons["1"].options.is_empty() and cleared.after.weapons["1"].colors.is_empty() and cleared.after.weapons["1"].locks.is_empty() and cleared.after.weapons["1"].user_note == "retained","alternative explicit clear policy resets only known destination option fields")
+	check(not core.plan_local_change(policy_state,3,1,destination_class,0,"unknown-policy",2026,"unknown").ok,"unknown destination policy cannot silently consume existing target options")
 	var bad: Dictionary = {"schema":"twilight.mastery523.v1","tables":core.tables.duplicate(true),"operations":core.operations.duplicate(true)}
 	bad.tables.MasteryGradeView[0].Probability += 1
 	check(not core.configure(bad),"malformed replacement color probabilities cannot damage live registry")
+	bad = {"schema":"twilight.mastery523.v1","tables":core.tables.duplicate(true),"operations":core.operations.duplicate(true)}
+	bad.tables.MasteryGradeMatchingBonus[0].BonusID = -1
+	check(not core.configure(bad),"missing matching bonus reference is rejected before any live consumer")
 	print("MASTERY_PROGRESSION_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"source":"synthetic" if path.is_empty() else "actual523"}))
 	quit(0 if failures.is_empty() else 1)

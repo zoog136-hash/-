@@ -56,9 +56,42 @@
         "pending server-mastery selection blocks purchase"
       ],
       "does_not_decode": "generic MarketRestrictionType12; class-change and server-transfer policies stay distinct"
+    },
+    {
+      "url": "https://lineagem.plaync.com/board/update/view?articleId=60ad14655e566a0001de0b84",
+      "publisher": "NC",
+      "published_at": "2021-05-26",
+      "facts": [
+        "matching is granted per mastery level",
+        "each listed level independently grants HP20, MP20, MR2 or weapon damage1 according to matched grade"
+      ],
+      "scope": "The original notice lists levels1-5. The 2024 extension adds6-8; original523 maps all8 levels of each weapon to the same WeaponStepID and its60 grade-bonus rows. Existing flat-stat consumers sum each achieved owned level once; no multiplicative formula or BonusID deduplication."
+    },
+    {
+      "url": "https://lineagem.plaync.com/board/update/view?articleId=674f5c38a429a917f01d0cf6",
+      "publisher": "NC",
+      "published_at": "2024-12-03",
+      "facts": [
+        "mastery levels6-8 added",
+        "no-option transfer sums points and resets the used source mastery/options, without option fee"
+      ],
+      "does_not_prove": [
+        "an existing destination retains or clears options/colors/locks when no levels are selected"
+      ],
+      "local_fallback": "CUSTOM_BEHAVIOR preserve_existing by default, clear_existing/block_unverified configurable; confirmation and receipt identify policy; original source reset and fees retained"
+    },
+    {
+      "url": "https://lounge.plaync.com/feed/83171?country=KR&locale=ko-KR",
+      "publisher": "NC",
+      "published_at": "2026-10-06",
+      "facts": [
+        "world transfer retains higher mastery per weapon, departure wins ties",
+        "world transfer retains the smaller purchase-attempt count"
+      ],
+      "host_limit": "TWILIGHT has a local character save and intentionally separate lab/full-card/test profiles, with no account/server identity or two-server service. No automatic cross-profile sharing, server selection UI or fabricated online completion added."
     }
   ],
-  "local_economy": "data/config/mastery523_balance.json: CUSTOM_BALANCE; confirmed original table amounts/weights take precedence",
+  "local_economy": "data/config/mastery523_balance.json: CUSTOM_BALANCE and CUSTOM_BEHAVIOR; original amounts/weights and explicit user rules take precedence",
   "access": "Anonymous public HTML, published client APIs and guide images; no credentials or access-control bypass. Full original rows, API payloads and images remain private/local.",
   "local_evidence_sha256": {
     "probability-api.json": "52fc96f4f0cfa0ac9a919254292fe66659ce07690a7cea594f31f71dff22d146",
@@ -66,6 +99,9 @@
     "probability-versions.json": "4c8b9b057bd39b1609724d788157c20ee82b3ea18f93df6d5e07ce543aa7ffe7",
     "guide-api.json": "bc6c4a5cf08942d94d8ea76775ef037c27d86bcc819d7afcf9a786397982989e",
     "guide-slots-0.png": "63483d23c2e92b199919b55d2cd97e970b402577ebf757dfd56abc542403a95a",
-    "guide-slots-1.png": "65cb80d8234e80709cdac448fc0afbca90525b6dceedb97af3becc5e53a422e3"
+    "guide-slots-1.png": "65cb80d8234e80709cdac448fc0afbca90525b6dceedb97af3becc5e53a422e3",
+    "mastery-notice-api.json": "96d3329825d8c923806b9a102d631bb0c989b9f467c9fe69215a98b9337bf295",
+    "mastery-20210526-api.json": "75b8d2a4492c9f8c94d385d3ee1a1ad142d365d0fa822ea8b9d38d230b1e733c",
+    "mastery-20241204-api.json": "5a2f159e14926b32cc69d699660a3333f9ecebb490ea72c2f5beb8c52f3b66b2"
   }
 }

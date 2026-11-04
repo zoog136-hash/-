@@ -14,7 +14,7 @@ static func fixture() -> Dictionary:
 	# Synthetic schema fixture, never presented as original 523 content.
 	var tables: Dictionary = {}
 	for name: String in ["MasteryWeaponType","MasteryWeaponStep","MasteryWeaponLevelView","MasteryBonusView","MasteryGradeView","MasteryGradeMatchingBonus","MasteryPointPayment","MasteryPointPurchaseView","MasteryResetCost","ClassChangeMasteryLevelCost","ClassChangeMasteryWeaponType","MasteryChangeLevelCost","Bonus","BonusType","UIUnit","Class","WeaponType","Currency","CurrencyUnitClass"]: tables[name] = []
-	tables.BonusType = [{"ID":1,"Name":"MeleeDamage","UnitID":1},{"ID":2,"Name":"RangeDamage","UnitID":1}]
+	tables.BonusType = [{"ID":1,"Name":"MeleeDamage","UnitID":1},{"ID":2,"Name":"RangeDamage","UnitID":1},{"ID":3,"Name":"HPPlus","UnitID":1}]
 	tables.Class = [{"ID":123}]
 	tables.MasteryGradeView = [{"ID":1,"GradeID":2,"Probability":1000000}]
 	tables.MasteryResetCost = [{"ID":1,"Step":1,"LockSlotCount":0,"CurrencyID":1,"Cost":7,"TicketAmount":0}]
@@ -27,6 +27,8 @@ static func fixture() -> Dictionary:
 		tables.WeaponType.append({"ID":weapon,"Name":"fixture_"+str(weapon)})
 		tables.MasteryWeaponType.append({"ID":weapon,"BaseType":weapon,"ActualType":weapon})
 		tables.MasteryWeaponStep.append({"ID":weapon,"WeaponTypeID":weapon,"Step":1})
+		tables.MasteryGradeMatchingBonus.append({"ID":weapon,"WeaponStepID":weapon,"GradeID":2,"BonusID":100000+weapon})
+		tables.Bonus.append({"ID":100000+weapon,"BonusTypeID":3,"Value":20})
 		tables.ClassChangeMasteryWeaponType.append({"ID":weapon,"ToCharacterClass":123,"ToWeaponType":weapon})
 		var group: int = 0
 		for level: int in range(1,9):

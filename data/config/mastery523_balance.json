@@ -6,10 +6,12 @@
   "acquire_currency_id": 1,
   "acquire_cost": 0,
   "color_draw_mode": "independent_fields",
+  "point_only_target_options": "preserve_existing",
   "provenance": {
     "normal_hit_points": "CUSTOM_BALANCE: native per-hit conversion not found; 10000 raw points gives approximately 1056 confirmed hits to the first one-handed-sword level. Only ordinary hits with an equipped mapped weapon count.",
     "purchase_day": "CUSTOM_BALANCE: native Daily schedule and shared five-use cap are confirmed; exact native reset hour is unknown. This local game uses 05:00 at fixed UTC+09:00. Clock rollback never grants a new period.",
     "acquire_cost": "CUSTOM_BALANCE: level-up option acquisition is confirmed; an explicit initial acquisition price was not found. Local default is zero Adena. Reroll fees remain the original source amounts.",
-    "color_draw_mode": "CUSTOM_BALANCE: original grade weights and four name/value fields are confirmed; native statistical independence is not. Default independent_fields draws once per unlocked field; optional shared_level uses one grade draw for all unlocked fields of that level. Both use original grade weights. Neither is claimed native-equivalent."
+    "color_draw_mode": "CUSTOM_BALANCE: original grade weights and four name/value fields are confirmed; native statistical independence is not. Default independent_fields draws once per unlocked field; optional shared_level uses one grade draw for all unlocked fields of that level. Both use original grade weights. Neither is claimed native-equivalent.",
+    "point_only_target_options": "CUSTOM_BEHAVIOR: original notices establish point summation, source reset and no extra option fee, but do not explicitly define an existing destination's options when no levels are selected. Default preserve_existing retains destination groups, colors and locks. clear_existing explicitly clears them; block_unverified keeps the conservative guard. Selected policy is shown before confirmation and recorded in the receipt. Source fields and confirmed costs are unchanged."
   }
 }

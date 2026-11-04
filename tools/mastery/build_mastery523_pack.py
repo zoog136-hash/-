@@ -107,6 +107,16 @@ def compile_pack(source):
             raise ValueError("invalid option probability buckets")
         if sum(r["Probability"] for r in tables["MasteryGradeView"]) != 1000000:
             raise ValueError("invalid color probabilities")
+        steps = {r["ID"]: r for r in tables["MasteryWeaponStep"]}
+        grades = {r["GradeID"] for r in tables["MasteryGradeView"]}
+        matching_keys = set()
+        for row in tables["MasteryGradeMatchingBonus"]:
+            key = (row["WeaponStepID"], row["GradeID"])
+            if key in matching_keys or row["WeaponStepID"] not in steps or row["GradeID"] not in grades or row["BonusID"] not in bonuses:
+                raise ValueError("invalid matching bonus reference or duplicate")
+            matching_keys.add(key)
+        if len(matching_keys) != len(steps)*len(grades):
+            raise ValueError("missing matching bonus scope")
         classes = {r["ID"] for r in tables["Class"]}
         if len(tables["ClassChangeMasteryWeaponType"]) != 29 or any(r["ToCharacterClass"] not in classes or r["ToWeaponType"] not in weapons for r in tables["ClassChangeMasteryWeaponType"]):
             raise ValueError("unresolved class destination")

@@ -67,10 +67,18 @@ func operation_button(id: String, title: String, action: String, weapon: int, ta
 			elif action == "reset": warning = "\n잠기지 않은 종류·수치 슬롯의 색상과 수치를 원본 확률로 재결정합니다. 수치 슬롯을 잠그면 해당 옵션 수치도 보존합니다."
 			elif action == "acquire": warning = "\n두 옵션 수치와 네 색상을 추첨합니다. 최초 획득 비용은 자체 설정입니다."
 			else: warning = "\n무기 통합 하루 5회. 로컬 초기화 시각은 자체 설정입니다."
+			if action == "change" and prefix == 0:
+				warning = "\n출발 숙련치와 옵션을 초기화하고 누적 숙련치를 합산합니다. 옵션 추가 비용은 없습니다. 이전 저장은 별도로 보존합니다.\n"+point_only_policy_text()
 			runtime.world.hud.confirm_action(title,price+warning,"실행",func(_count: int) -> void:
 				var result: Dictionary = runtime.execute(action,weapon,target,prefix,quote.before)
 				runtime.world.hud.show_message(title+" 완료" if result.ok else runtime.reason_text(str(result.get("reason","실패"))))))
 	body.add_child(button)
+
+func point_only_policy_text() -> String:
+	match str(runtime.balance_config.point_only_target_options):
+		"preserve_existing": return "자체 동작: 목표의 기존 옵션·색상·잠금을 보존합니다. 원작의 목표 처리와 동일한지는 미확인입니다."
+		"clear_existing": return "자체 동작: 목표의 기존 옵션·색상·잠금을 초기화합니다. 원작의 목표 처리와 동일한지는 미확인입니다."
+	return "목표 옵션 처리 미확인으로 기존 옵션이 있는 목표의 점수 전용 교체를 차단하도록 설정했습니다."
 
 func refresh() -> void:
 	if body == null: return
@@ -119,7 +127,10 @@ func refresh() -> void:
 		for level_key: String in entry.colors:
 			line("Lv.%s 색상" % level_key)
 			var colors: Array = entry.colors[level_key]
-			if colors[0] == colors[1] and colors[0] == colors[2] and colors[0] == colors[3]: line("%s 매칭 · 매칭 보너스 적용 준비 중" % runtime.grade_name(int(colors[0])))
+			if colors[0] == colors[1] and colors[0] == colors[2] and colors[0] == colors[3]:
+				var matching: Dictionary = runtime.core.matching_bonus(weapon,int(colors[0]))
+				var status: String = "옵션 일부만 보유" if runtime.core._owned_slots(entry,weapon,int(level_key)).size() != 2 else ("레벨 미달" if int(level_key) > level else ("적용" if runtime.core.normalize_weapon(runtime.world._mastery_actual_weapon_type()) == weapon else "무기 장착 시 적용"))
+				if not matching.is_empty(): line("%s 매칭 · %s · %s" % [runtime.grade_name(int(colors[0])),runtime.bonus_text(matching),status]).set_meta("mastery_matching_level",int(level_key))
 			var locks: Array = entry.locks.get(level_key,[false,false,false,false])
 			for slot: int in 4:
 				var toggle := CheckButton.new()
@@ -169,6 +180,14 @@ func refresh() -> void:
 		prefix.select(prefix_level)
 		prefix.item_selected.connect(func(index: int) -> void: prefix_level = prefix.get_item_id(index); refresh())
 		body.add_child(prefix)
+		var existing: Dictionary = runtime.core.record(runtime.state,target_weapon)
+		if not existing.options.is_empty() or not existing.colors.is_empty() or not existing.locks.is_empty():
+			var lock_count: int = 0
+			for locks: Array in existing.locks.values():
+				for locked: bool in locks:
+					if locked: lock_count += 1
+			line("목표 기존 상태: %s · 옵션 %d개 · 잠금 %d칸" % [runtime.weapon_name(target_weapon),existing.options.size(),lock_count]).set_meta("mastery_existing_target",target_weapon)
+			if prefix_level == 0: line(point_only_policy_text())
 		for option: Dictionary in owned.options:
 			var row: Dictionary = runtime.core.options[int(option.group_id)][target_weapon]
 			var bonus: Dictionary = runtime.core.bonuses[int(row.BonusID)]
@@ -176,6 +195,6 @@ func refresh() -> void:
 	else:
 		target.free()
 		line("현재 클래스의 숙련 교체 대상이 없습니다")
-	line("교체 후 색상·수치 유지 / 잠금 초기화. 교체에 쓰는 원래 숙련치·옵션은 초기화됩니다.")
+	line("옵션 포함 교체: 선택한 색상·수치 유지 / 잠금 초기화. 출발 숙련치·옵션은 초기화됩니다.")
 	operation_button("MasteryTransfer","로컬 숙련 교체","change",selected_weapon,target_weapon,prefix_level)
 	line("구매·수치·색상 가중치·재설정·교체 비용은 원본을 사용합니다. 색상 추첨 방식은 자체 설정이며 원작과의 동일성은 미확인입니다.")

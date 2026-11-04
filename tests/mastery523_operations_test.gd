@@ -28,6 +28,16 @@ func seed_for(chance: float, hit: bool) -> int:
 		if (probe.randf() < chance) == hit: return candidate
 	return -1
 
+func matching_seed(runtime, grades: Array) -> int:
+	var probe := RandomNumberGenerator.new()
+	for candidate: int in 100000:
+		probe.seed = candidate
+		var plan: Dictionary = runtime.core.plan_reroll(runtime.state,1,probe,"matching-seed-probe")
+		if not plan.ok: return -1
+		var colors: Dictionary = plan.after.weapons["1"].colors
+		if colors["1"] == [grades[0],grades[0],grades[0],grades[0]] and colors["2"] == [grades[1],grades[1],grades[1],grades[1]]: return candidate
+	return -1
+
 func _initialize() -> void:
 	call_deferred("run")
 
@@ -226,11 +236,98 @@ func run() -> void:
 	confirm(world,"MasteryTransfer")
 	check(runtime.core.record(runtime.state,3).points == "0" and runtime.core.record(runtime.state,1).points == str(threshold),"actual second UI transfer runs with exact raw sum")
 	check(int(world.inventory[world.CURRENCY_DROP.DIAMOND]) == repeat_gems-int(repeat_fee.charge.Cost),"second UI transfer debits its own original service fee once")
+	# Produce rare matching outcomes through the real paid reroll, using a
+	# deterministic test seed. No owned options or colors are injected.
+	for item: Dictionary in world.catalog_db.get("아이템",[]):
+		if item.get("type") == "한손검" and item.get("slot") == "weapon": world._equip_or_acquire_item(item); break
+	runtime.view.selected_weapon = 1
+	runtime.view.refresh()
+	confirm(world,"MasteryAcquire_1")
+	var next_threshold: int = int(runtime.core.levels[1][1].CumulativePoint)
+	check(runtime.credit_confirmed_points(1,str(next_threshold-int(runtime.core.record(runtime.state,1).points)),"matching-test-growth").ok,"confirmed test growth reaches second source level")
+	confirm(world,"MasteryAcquire_2")
+	var selected_seed: int = matching_seed(runtime,[2,2])
+	check(selected_seed >= 0,"deterministic original-weight two-green-match seed exists")
+	runtime.reset_rng.seed = selected_seed
+	runtime.state.rng_state = str(runtime.reset_rng.state)
+	check(world._save_game(true) == OK,"test seed persisted before actual paid matching reroll")
+	runtime.view.refresh()
+	confirm(world,"MasteryReset")
+	check(runtime.core.active_matching_bonuses(runtime.state,1).size() == 2 and runtime.catalog_bonus("hpFlat",1) == 40,"two actual green matched levels grant forty HP")
+	runtime.enabled = false
+	var base_hp: int = world._effective_max_hp()
+	var base_mp: int = world._effective_max_mp()
+	runtime.enabled = true
+	check(world._effective_max_hp()-base_hp == 40 and world._effective_max_mp() == base_mp,"actual Main maximum HP consumer adds both flat matched grants once")
+	var matching_labels: int = 0
+	for label: Node in runtime.view.body.get_children():
+		if label.has_meta("mastery_matching_level"): matching_labels += 1
+	check(matching_labels == 2,"actual UI renders each matched level with its effect and activation status")
+	await capture(world,"matching",1)
+	selected_seed = matching_seed(runtime,[2,3])
+	check(selected_seed >= 0,"deterministic mixed green/blue match seed exists")
+	runtime.reset_rng.seed = selected_seed
+	runtime.state.rng_state = str(runtime.reset_rng.state)
+	check(world._save_game(true) == OK,"second deterministic test seed persisted")
+	runtime.view.refresh()
+	before = runtime.state.duplicate(true)
+	gold_before = world.gold
+	rng_before = runtime.reset_rng.state
+	world.equipment_collections.test_save_writer = func(_p: String,_d: Dictionary) -> Error: return ERR_CANT_CREATE
+	check(not runtime.execute("reset",1,0,0,before).ok and runtime.state == before and world.gold == gold_before and runtime.reset_rng.state == rng_before and world._effective_max_hp()-base_hp == 40,"failed matching reroll preserves live HP bonus money state and RNG")
+	world.equipment_collections.test_save_writer = Callable()
+	confirm(world,"MasteryReset")
+	check(world._effective_max_hp()-base_hp == 20 and world._effective_max_mp()-base_mp == 20,"actual reroll replaces only changed level's HP matching grant with MP matching grant")
+	check(runtime.credit_confirmed_points(3,"1","existing-target-policy-probe").ok,"isolated source point prepares guarded existing-target quote")
+	runtime.balance_config.point_only_target_options = "block_unverified"
+	var guard_state: Dictionary = runtime.state.duplicate(true)
+	var guard_bag: Dictionary = world.inventory.duplicate(true)
+	var guarded: Dictionary = runtime.quote("change",3,1,0)
+	check(not guarded.ok and guarded.reason == "target_option_policy_unconfirmed","ambiguous existing-option point-only transfer remains explicitly blocked")
+	runtime.view.selected_weapon = 3
+	runtime.view.target_weapon = 1
+	runtime.view.prefix_level = 0
+	runtime.view.refresh()
+	var blocked_button: Button = runtime.view.find_child("MasteryTransfer",true,false)
+	check(blocked_button != null and blocked_button.disabled,"actual UI cannot charge for unresolved target-option policy")
+	var existing_preview: bool = false
+	for label: Node in runtime.view.body.get_children():
+		if label.has_meta("mastery_existing_target") and int(label.get_meta("mastery_existing_target")) == 1: existing_preview = true
+	check(existing_preview and runtime.state == guard_state and world.inventory == guard_bag,"existing-target UI previews owned options without changing state or paying")
+	runtime.balance_config.point_only_target_options = "preserve_existing"
+	runtime.view.refresh()
+	var target_before: Dictionary = runtime.core.record(runtime.state,1)
+	check(runtime.set_color_lock(1,1,0,true).ok,"target lock set before point-only preservation")
+	target_before = runtime.core.record(runtime.state,1)
+	var only_points: Dictionary = runtime.quote("change",3,1,0)
+	check(only_points.ok and int(only_points.charge.Cost) == int(only_points.charge.BaseCost) and int(only_points.charge.AdditionalCost) == 0,"custom point-only path uses original base fee with no option fee")
+	var point_only_gems: int = int(world.inventory[world.CURRENCY_DROP.DIAMOND])
+	var point_only_rng: int = runtime.reset_rng.state
+	var point_button: Button = runtime.view.find_child("MasteryTransfer",true,false)
+	check(point_button != null and not point_button.disabled,"actual point-only UI action enabled")
+	point_button.pressed.emit()
+	var point_dialog = world.hud.get_node_or_null("Root/TwilightConfirmation")
+	check(point_dialog != null,"actual point-only confirmation exists")
+	var custom_warning: bool = false
+	if point_dialog != null:
+		for label: Node in point_dialog.find_children("*","Label",true,false):
+			if label.text.contains("자체 동작") and label.text.contains("보존"): custom_warning = true
+	check(custom_warning,"actual confirmation explicitly labels the custom destination-preservation behavior")
+	await capture(world,"point-only",3)
+	if point_dialog != null: point_dialog.confirm_button.pressed.emit()
+	target_before.points = str(int(target_before.points)+1)
+	check(normalized(runtime.core.record(runtime.state,1)) == normalized(target_before) and runtime.core.record(runtime.state,3).points == "0","actual UI point-only transfer preserves all target values colors locks and exact point sum")
+	check(int(world.inventory[world.CURRENCY_DROP.DIAMOND]) == point_only_gems-int(only_points.charge.Cost) and runtime.reset_rng.state == point_only_rng,"point-only execution pays once and never rerolls target")
+	var custom_receipt: bool = false
+	for receipt: Dictionary in runtime.state.receipts.values():
+		if receipt.get("custom_point_only_target_policy") == "preserve_existing": custom_receipt = true
+	check(custom_receipt,"custom destination policy recorded durably in transaction receipt")
 	var committed: Dictionary = runtime.state.duplicate(true)
 	var rng_committed: int = runtime.reset_rng.state
 	runtime.state = Core.fresh()
 	world._load_game(true)
 	check(normalized(runtime.state) == normalized(committed) and runtime.reset_rng.state == rng_committed,"actual reload restores paid state counters and RNG")
+	check(world._effective_max_hp()-base_hp == 20 and world._effective_max_mp()-base_mp == 20,"actual reload derives matching effects without persisting or double-counting calculated grants")
 	print("MASTERY_OPERATIONS_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"source":"actual523"}))
 	world.queue_free()
 	await process_frame

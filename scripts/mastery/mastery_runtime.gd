@@ -27,6 +27,8 @@ func _init() -> void:
 			balance_error = "숙련 자체 설정 수치 오류"; return
 	if int(balance_config.normal_hit_points) < 0 or int(balance_config.acquire_cost) < 0 or int(balance_config.acquire_currency_id) not in [1,4] or absi(int(balance_config.purchase_day_utc_offset_hours)) > 14 or int(balance_config.purchase_day_reset_hour) not in range(24): balance_error = "숙련 자체 설정 범위 오류"
 	if balance_config.get("color_draw_mode") not in ["independent_fields","shared_level"]: balance_error = "숙련 색상 자체 설정 오류"
+	if not balance_config.has("point_only_target_options"): balance_config.point_only_target_options = "preserve_existing"
+	if balance_config.point_only_target_options not in ["preserve_existing","clear_existing","block_unverified"]: balance_error = "숙련 점수 전용 교체 자체 설정 오류"
 
 func purchase_period(unix_time: float = -1) -> int:
 	var moment: float = Time.get_unix_time_from_system() if unix_time < 0 else unix_time
@@ -168,7 +170,7 @@ func quote(action: String, weapon: int, target: int = 0, prefix: int = 0) -> Dic
 	elif action == "change":
 		if world.field_map != null and bool(world.field_map.data.get("world_dungeon",false)): return Core.fail("world_dungeon")
 		if bool(state.get("pending_server_selection",false)): return Core.fail("pending_server_selection")
-		plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,_receipt("quote"),int(Time.get_datetime_dict_from_system(true).year))
+		plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,_receipt("quote"),int(Time.get_datetime_dict_from_system(true).year),str(balance_config.point_only_target_options))
 	else: return Core.fail("unknown_action")
 	if not plan.ok: return plan
 	var wallet: Dictionary = _wallet(plan.charge)
@@ -187,7 +189,7 @@ func execute(action: String, weapon: int, target: int, prefix: int, expected: Di
 		var staged_rng := RandomNumberGenerator.new()
 		staged_rng.state = reset_rng.state
 		plan = core.plan_reroll(state,weapon,staged_rng,receipt,str(balance_config.color_draw_mode)) if action == "reset" else core.plan_acquire(state,weapon,prefix,staged_rng,receipt,acquisition_charge(),str(balance_config.color_draw_mode))
-	else: plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,receipt,int(Time.get_datetime_dict_from_system(true).year))
+	else: plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,receipt,int(Time.get_datetime_dict_from_system(true).year),str(balance_config.point_only_target_options))
 	if not plan.ok: return plan
 	var wallet: Dictionary = _wallet(plan.charge)
 	if not wallet.ok: return wallet
@@ -247,7 +249,10 @@ func catalog_bonus(key: String, actual_weapon: int) -> int:
 	# never converted to PvE. Unknown percentage/reduction semantics remain raw.
 	var mapping: Dictionary = {"HPPlus":"hpFlat","MPPlus":"mpFlat","MagicResist":"mr","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeHit":"meleeHit","RangeHit":"rangedHit","AttackSpeedBonus":"attackSpeed","MeleeCritical":"meleeCritical","RangeCritical":"rangedCritical","MagicCritical":"magicCritical"}
 	var total: int = 0
-	for bonus: Dictionary in core.active_options(state,base):
+	# One flat grant per achieved matched level, as in the official level table.
+	# Sum those grants in the existing consumers; never deduplicate BonusID
+	# across levels or compound a percentage for a flat matching bonus.
+	for bonus: Dictionary in core.active_options(state,base)+core.active_matching_bonuses(state,base):
 		if str(mapping.get(str(bonus.type_name),"")) != key: continue
 		var value: float = float(bonus.Value)
 		var type: Dictionary = core.types[int(bonus.BonusTypeID)]

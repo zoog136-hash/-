@@ -137,6 +137,18 @@ func _configure(pack: Dictionary) -> bool:
 		if int(grade.get("Probability",0)) <= 0: problem = "숙련 색상 확률 오류"; return false
 		color_total += int(grade.Probability)
 	if color_total != 1000000: problem = "숙련 색상 확률 합계 오류"; return false
+	var matching_keys: Dictionary = {}
+	for matching: Dictionary in tables.MasteryGradeMatchingBonus:
+		var step: Dictionary = find_row("MasteryWeaponStep",int(matching.get("WeaponStepID",-1)))
+		var known_grade: bool = false
+		for grade: Dictionary in tables.MasteryGradeView:
+			if int(grade.GradeID) == int(matching.get("GradeID",-1)): known_grade = true
+		var key := "%d:%d" % [int(matching.get("WeaponStepID",-1)),int(matching.get("GradeID",-1))]
+		if step.is_empty() or not levels.has(int(step.get("WeaponTypeID",-1))) or not known_grade or not bonuses.has(int(matching.get("BonusID",-1))) or matching_keys.has(key): problem = "숙련 매칭 참조/중복 오류"; return false
+		var bonus: Dictionary = bonuses[int(matching.BonusID)]
+		if not bonus.has("Value") or not types.has(int(bonus.get("BonusTypeID",-1))): problem = "숙련 매칭 보너스 오류"; return false
+		matching_keys[key] = true
+	if matching_keys.size() != tables.MasteryWeaponStep.size()*tables.MasteryGradeView.size(): problem = "숙련 매칭 범위 누락"; return false
 	return true
 
 func find_row(table: String, id: int) -> Dictionary:
@@ -222,13 +234,30 @@ func active_options(state: Dictionary, weapon: int) -> Array:
 	return out
 
 func matching_bonus(weapon: int, grade_id: int) -> Dictionary:
-	# Four equal colors are confirmed; multi-level stacking is not. Lookup only.
+	# NC's 2021-05-26 table grants the flat bonus at each matched level.
 	for step: Dictionary in tables.MasteryWeaponStep:
 		if int(step.WeaponTypeID) != weapon: continue
 		for row: Dictionary in tables.MasteryGradeMatchingBonus:
 			if int(row.WeaponStepID) == int(step.ID) and int(row.GradeID) == grade_id:
 				return bonuses.get(int(row.BonusID),{}).duplicate(true)
 	return {}
+
+func active_matching_bonuses(state: Dictionary, weapon: int) -> Array:
+	var entry: Dictionary = record(state,weapon)
+	var achieved: int = achieved_level(weapon,entry.points)
+	var out: Array = []
+	for key: String in entry.colors:
+		var level: int = int(key)
+		if level > achieved or _owned_slots(entry,weapon,level).size() != 2: continue
+		var colors: Array = entry.colors[key]
+		if colors[0] != colors[1] or colors[0] != colors[2] or colors[0] != colors[3]: continue
+		var bonus: Dictionary = matching_bonus(weapon,int(colors[0]))
+		if bonus.is_empty(): continue
+		bonus["type_name"] = str(types[int(bonus.BonusTypeID)].Name)
+		bonus["mastery_level"] = level
+		bonus["grade_id"] = int(colors[0])
+		out.append(bonus)
+	return out
 
 func reset_quote(state: Dictionary, weapon: int) -> Dictionary:
 	if not levels.has(weapon): return {}
@@ -293,7 +322,7 @@ func plan_lock(state: Dictionary, weapon: int, level: int, slot: int, locked: bo
 	after.weapons[str(weapon)] = entry
 	return _plan(state,after,receipt,"color_lock")
 
-func plan_class_change(state: Dictionary, from_weapon: int, to_weapon: int, to_class: int, prefix_level: int, confirmed_points: String, receipt: String) -> Dictionary:
+func plan_class_change(state: Dictionary, from_weapon: int, to_weapon: int, to_class: int, prefix_level: int, confirmed_points: String, receipt: String, target_policy: String = "block_unverified") -> Dictionary:
 	if not validate_state(state).is_empty() or from_weapon == to_weapon or not levels.has(from_weapon) or not levels.has(to_weapon): return fail("invalid_transfer")
 	var allowed: bool = false
 	for target: Dictionary in tables.ClassChangeMasteryWeaponType:
@@ -303,7 +332,10 @@ func plan_class_change(state: Dictionary, from_weapon: int, to_weapon: int, to_c
 	var source: Dictionary = record(state,from_weapon)
 	var target: Dictionary = record(state,to_weapon)
 	if prefix_level < 0 or prefix_level > achieved_level(from_weapon,source.points) or source.points == "0": return fail("option_prefix_not_acquired")
-	if prefix_level == 0 and (not target.options.is_empty() or not target.colors.is_empty() or not target.locks.is_empty()): return fail("target_option_policy_unconfirmed")
+	if target_policy not in ["block_unverified","preserve_existing","clear_existing"]: return fail("unknown_target_option_policy")
+	if prefix_level == 0 and (not target.options.is_empty() or not target.colors.is_empty() or not target.locks.is_empty()):
+		if target_policy == "block_unverified": return fail("target_option_policy_unconfirmed")
+		if target_policy == "clear_existing": target.options = []; target.colors = {}; target.locks = {}
 	if prefix_level > 0:
 		target.options = []
 		for option: Dictionary in source.options:
@@ -315,10 +347,13 @@ func plan_class_change(state: Dictionary, from_weapon: int, to_weapon: int, to_c
 		for level_key: String in source.colors:
 			if int(level_key) <= prefix_level: target.colors[level_key] = source.colors[level_key].duplicate()
 	target.points = confirmed_points
-	target.locks = {}
+	if prefix_level > 0 or target_policy != "preserve_existing": target.locks = {}
 	var after: Dictionary = state.duplicate(true)
 	after.weapons[str(to_weapon)] = target
-	after.weapons[str(from_weapon)] = {"points":"0","options":[],"colors":{},"locks":{}}
+	# Retire known source progress without dropping opaque future/user fields.
+	source.points = "0"
+	source.options = []; source.colors = {}; source.locks = {}
+	after.weapons[str(from_weapon)] = source
 	var plan: Dictionary = _plan(state,after,receipt,"class_change",transfer_cost(prefix_level,"class_change") if prefix_level > 0 else {})
 	if plan.ok: plan["service_confirmation_required"] = true
 	return plan
@@ -420,7 +455,7 @@ func plan_fixed_reset(state: Dictionary, weapon: int, rng: RandomNumberGenerator
 	# Values remain the same without guessing four-color/Slot1/2 coupling.
 	return _plan(state,after,receipt,"fixed_value_color_reset",availability.charge)
 
-func plan_local_change(state: Dictionary, source: int, target: int, class_id: int, prefix: int, receipt: String, year: int) -> Dictionary:
+func plan_local_change(state: Dictionary, source: int, target: int, class_id: int, prefix: int, receipt: String, year: int, target_policy: String = "block_unverified") -> Dictionary:
 	if not validate_state(state).is_empty(): return fail("invalid_state")
 	var service: Dictionary = operations.get("mastery_change",{})
 	if service.is_empty(): return fail("operation_source_missing")
@@ -438,7 +473,7 @@ func plan_local_change(state: Dictionary, source: int, target: int, class_id: in
 			if _owned_slots(owned,source,level).size() != 2 or not owned.colors.has(str(level)): return fail("option_prefix_not_acquired")
 	# TWILIGHT stores the source raw cumulative integer, so the documented sum
 	# is exact. No level copy, scaling, rounding or invented cap is applied.
-	var plan: Dictionary = plan_class_change(state,source,target,class_id,prefix,str(source_points+target_points),receipt)
+	var plan: Dictionary = plan_class_change(state,source,target,class_id,prefix,str(source_points+target_points),receipt,target_policy)
 	if not plan.ok: return plan
 	var additional: int = 0
 	if prefix > 0:
@@ -449,6 +484,8 @@ func plan_local_change(state: Dictionary, source: int, target: int, class_id: in
 	if int(service.payment.UnitID) != 201 or currency != int(service.purchase.AdditionalCurrencyID): return fail("additional_currency_unresolved")
 	plan.kind = "local_mastery_change"
 	plan.after.receipts[receipt] = {"kind":"local_mastery_change","purchase_id":int(service.purchase.ID),"point_policy":"raw_cumulative_integer_sum"}
+	if prefix == 0:
+		plan.after.receipts[receipt]["custom_point_only_target_policy"] = target_policy
 	plan.service_confirmation_required = false
 	plan.charge = {"CurrencyID":currency,"Cost":int(service.payment.Amount)+additional,"BaseCost":int(service.payment.Amount),"AdditionalCost":additional,"MarketPurchaseID":int(service.purchase.ID)}
 	return plan
