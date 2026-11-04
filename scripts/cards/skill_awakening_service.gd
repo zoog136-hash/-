@@ -80,7 +80,7 @@ func validate_state(value: Variant) -> String:
 	if not rng_text is String or (not rng_text.is_empty() and (not rng_text.is_valid_int() or str(int(rng_text))!=rng_text)):return "스킬 각성 난수 저장 오류"
 	if not value.get("last_operation_id","") is String:return "스킬 각성 거래 ID 오류"
 	for key: Variant in value.cards:
-		if not key is String or not key.begins_with("source:m508:"):return "스킬 각성 sourceID 오류"
+		if not key is String or (not key.begins_with("source:m508:") and not key.begins_with("source:m523:")):return "스킬 각성 sourceID 오류"
 		var parts: PackedStringArray=key.split(":")
 		if parts.size()!=4 or not parts[2].is_valid_int() or not parts[3].is_valid_int() or str(int(parts[2]))!=parts[2] or str(int(parts[3]))!=parts[3] or int(parts[2])<1 or int(parts[3])<1:return "스킬 각성 sourceID 정규형 오류"
 		var entry: Variant=value.cards[key]

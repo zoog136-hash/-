@@ -1,5 +1,6 @@
 extends "res://scripts/expedition/legacy_runtime.gd"
 
+const REWARD_CARDS=preload("res://scripts/expedition/reward_cards.gd")
 const DISPATCH=preload("res://scripts/expedition/dispatch_rules.gd")
 const MODEL = preload("res://scripts/expedition/estimated_simulation.gd")
 var random = RandomNumberGenerator.new()
@@ -57,7 +58,7 @@ func validate(v: Variant) -> String:
 		for f in ["id", "spot_id", "group_id", "deck_id", "cost", "duration", "remaining", "completion_reward_id"]:
 			if not integer(job.get(f)) or job[f] < 0 or job[f] >= MAX_INTEGER: return "탐험 기록 정수 오류"
 		if job.id < 1 or job.id > v.revision or job.spot_id < 1 or job.group_id < 1 or int(job.deck_id) not in [1, 2, 98] or int(job.duration) != 28800 or job.remaining > job.duration or job.completion_reward_id < 1 or job.cost < 1: return "탐험 기록 범위 오류"
-		if not job.get("identity") is String or not job.identity.begins_with("source:m508:%d:" % int(job.deck_id)): return "탐험 카드 ID 오류"
+		if not job.get("identity") is String or not REWARD_CARDS.identity_shape(job.identity,int(job.deck_id)): return "탐험 카드 ID 오류"
 		var parts: PackedStringArray = job.identity.split(":")
 		if parts.size() != 4 or not parts[3].is_valid_int() or str(int(parts[3])) != parts[3] or int(parts[3]) < 1: return "탐험 카드 정규형 오류"
 		if ids.has(str(int(job.id))) or spots.has(str(int(job.spot_id))) or v.receipts.has(str(int(job.id))): return "탐험 중복/기수령 기록 오류"
@@ -65,7 +66,7 @@ func validate(v: Variant) -> String:
 		var members:Variant=job.get("member_ids",[job.identity])
 		if not members is Array or members.size()!=(4 if int(job.deck_id)==1 else 1) or job.identity not in members:return "탐험 파견 카드 수 오류"
 		for member in members:
-			if not member is String or not member.begins_with("source:m508:%d:"%int(job.deck_id)) or identities.has(member):return "탐험 파견 카드 중복·계열 오류"
+			if not member is String or not REWARD_CARDS.identity_shape(member,int(job.deck_id)) or identities.has(member):return "탐험 파견 카드 중복·계열 오류"
 			var fields:PackedStringArray=member.split(":")
 			if fields.size()!=4 or not fields[3].is_valid_int() or str(int(fields[3]))!=fields[3] or int(fields[3])<1:return "탐험 파견 카드 정규형 오류"
 			identities[member]=true
@@ -484,6 +485,37 @@ func _inventory_handoff(key:String,item_name:String) -> Dictionary:
 	world.call_deferred("_update_hud")
 	return {"ok":true,"message":"원본 ID·축복을 확인해 기존 아이템 기능으로 연결했습니다: "+destination,"native_handoff":true}
 
+func receive_card(key:String,item_name:String)->Dictionary:
+	if world==null or not _valid_loot({key:1}) or state.get("issued",{}).get(key)!=item_name:return _fail("탐험 지급 정체 오류")
+	if world._item_locked(item_name,"") or int(world.inventory.get(item_name,0))<1:return _fail("소지/잠금 상태 확인 필요")
+	var source:RefCounted=world.get_expedition_catalog()
+	var parts:PackedStringArray=key.split(":")
+	if int(parts[1]) not in [1,2,3] or int(parts[2])!=0:return _fail("지원하는 원본 축복·강화 정체 확인 필요")
+	var item_id:int=int(parts[0])
+	var error:String=REWARD_CARDS.item_conditions(source,item_id)
+	if not error.is_empty():return _fail(error)
+	var item:Dictionary=source.record("ItemClass",item_id)
+	if not bool(item.get("CanUseWhenInvisible",false)):return _fail("원본 은신 사용 제한 소비자 확인 필요")
+	var raw:Dictionary=REWARD_CARDS.fixed_target(source,item_id)
+	var record:Dictionary=REWARD_CARDS.registered(world.catalog_db,raw)
+	if record.is_empty():return _fail("정확한 원본 카드 등록 필요 · 보상 보존")
+	var staged=CARDS.new();staged.configure(world.catalog_db);staged.import_state(world.card_draw_fusion.export_state())
+	var no_swap:bool=bool(raw.IsNoSwapOut)
+	for link:Dictionary in source.rows("ItemBonus"):
+		if int(link.ItemClassID)!=item_id:continue
+		var bonus:Dictionary=source.record("Bonus",int(link.BonusID))
+		if source.record("BonusType",int(bonus.BonusTypeID)).get("Name")=="BuffCardCannotSwap" and int(bonus.Value)!=0:no_swap=true
+	var result:Dictionary=staged.receive_source_card(REWARD_CARDS.CATEGORIES[int(raw.BuffCardDeckID)],record,{"card_id":int(raw.ID),"item_class_id":item_id,"bless":int(parts[1]),"enchant":0,"cannot_swap":no_swap,"cannot_merge":bool(raw.IsNoMergeOut),"expedition_item":key,"source_snapshot":"patch523"})
+	if not result.ok:return result
+	var bag:Dictionary=world.inventory.duplicate(true)
+	bag[item_name]=int(bag[item_name])-1
+	if bag[item_name]==0:bag.erase(item_name)
+	var next:Dictionary=state.duplicate(true);next.revision=int(next.revision)+1
+	if not _commit(next,{"inventory":bag,"card_draw_fusion":staged.export_state()}):return _fail(last_error)
+	world.inventory=bag;world.card_draw_fusion.import_state(staged.export_state())
+	world.call_deferred("_update_hud")
+	return {"ok":true,"message":"원본 지정 카드 수령: "+str(record.name),"identity":CARDS.card_id(record)}
+
 func inventory_activation(item_name:String) -> Dictionary:
 	var belongs:bool=state.get("native_handoffs",{}).has(item_name) or state.get("issued",{}).values().has(item_name)
 	if not belongs:return {"handled":false}
@@ -501,6 +533,7 @@ func inventory_activation(item_name:String) -> Dictionary:
 		var result:Dictionary
 		if not world.get_expedition_catalog().completion_box_candidates(int(key.split(":")[0])).is_empty():result=open_box(key,-1,item_name)
 		elif not compatible_skill_book(key).is_empty():result={"ok":false,"error":"카드 상세의 스킬 각성에서 사용할 수 있는 각성서입니다."}
+		elif not REWARD_CARDS.fixed_target(world.get_expedition_catalog(),int(key.split(":")[0])).is_empty():result=receive_card(key,item_name)
 		else:result=_inventory_handoff(key,item_name)
 		result.handled=true
 		return result

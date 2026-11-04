@@ -390,25 +390,25 @@ func run() -> void:
 	check(not world.expedition_local.state.storage.has(book_key),"consumed reward book not regenerated from expedition storage")
 	# Existing completion/book routes remain local. Other item effects belong to
 	# PR238/239/247/251; test the exact source-ID handoff without copying them.
-	var gift_key:String="113912:1:0"
+	var gift_key:String="859:1:0"
 	world.expedition_local.state.storage[gift_key]=2
 	check(world.expedition_local.withdraw(gift_key,2).ok,"source gift inventory receipt before shared consumer installation")
 	var gift_name:String=world.expedition_local.state.issued[gift_key]
 	var gift_record:Dictionary=world._find_catalog_item_record(gift_name)
-	check(gift_record.has("IsStorable") and gift_record.IsStorable==catalog.record("ItemClass",113912).IsStorable and gift_record.tradeable==catalog.record("ItemClass",113912).IsTradable,"native storage/trade restrictions propagate to actual inventory record")
+	check(gift_record.has("IsStorable") and gift_record.IsStorable==catalog.record("ItemClass",859).IsStorable and gift_record.tradeable==catalog.record("ItemClass",859).IsTradable,"native storage/trade restrictions propagate to actual inventory record")
 	unchanged=snapshot();disk=FileAccess.get_sha256(path)
 	world._on_inventory_item_activated(gift_name)
 	check(snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"missing shared consumer preserves gift instead of attempting completion box")
 	var ordinary:Dictionary=world.expedition_local.inventory_activation("체력 회복제")
 	check(not ordinary.handled,"unrelated ordinary inventory route unchanged")
 	var provider:=NativeConsumerContract.new()
-	var native:Dictionary={"name":"원본 소비자 계약 검사용 카드","source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":113912,"sourceId":"m523:item:113912","sourceUrl":"","slot":"material","type":"카드","grade":"희귀","source_m_native_item":true,"source_bless_raw":1,"source_use_spec":{"kind":"fixed_card","activation_status":"unrestricted"}}
-	provider.document.item_definitions["113912"]={"original_item":catalog.record("ItemClass",113912).duplicate(true),"native_record":native.duplicate(true)}
+	var native:Dictionary={"name":"원본 소비자 계약 검사용 버프","source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":859,"sourceId":"m523:item:859","sourceUrl":"","slot":"material","type":"카드","grade":"희귀","source_m_native_item":true,"source_bless_raw":1,"source_use_spec":{"kind":"source_timed_buff","activation_status":"unrestricted"}}
+	provider.document.item_definitions["859"]={"original_item":catalog.record("ItemClass",859).duplicate(true),"native_record":native.duplicate(true)}
 	world.catalog_db["아이템"].append(native.duplicate(true));world._index_catalog_item_sources()
 	world.expedition_local.reward_item_provider=provider
-	provider.document.item_definitions["113912"].original_item.Cost+=1
+	provider.document.item_definitions["859"].original_item.Cost+=1
 	check(not world.expedition_local.inventory_activation(gift_name).ok and snapshot()==unchanged,"mismatched full original definition cannot become native consumer item")
-	provider.document.item_definitions["113912"].original_item=catalog.record("ItemClass",113912).duplicate(true)
+	provider.document.item_definitions["859"].original_item=catalog.record("ItemClass",859).duplicate(true)
 	world.ui_preferences.item_locks[gift_name]=true;unchanged=snapshot()
 	check(not world.expedition_local.inventory_activation(gift_name).ok and snapshot()==unchanged,"locked reward cannot bypass item lock through native handoff")
 	world.ui_preferences.item_locks.erase(gift_name)
@@ -441,9 +441,121 @@ func run() -> void:
 	unchanged=snapshot();world._on_inventory_item_activated(coin_name)
 	check(snapshot()==unchanged,"repeated source currency activation cannot duplicate wallet credit")
 	world.expedition_local.reward_item_provider=null
-	var invalid_handoff:Dictionary=world.expedition_local.export_state();invalid_handoff.native_handoffs[native.name]="113912:01:0"
+	var invalid_handoff:Dictionary=world.expedition_local.export_state();invalid_handoff.native_handoffs[native.name]="859:01:0"
 	check(not world.expedition_local.validate(invalid_handoff).is_empty(),"noncanonical handoff save rejected")
+	# Actual source-defined fixed-card path. No synthetic reward provider.
+	var reward_cards=preload("res://scripts/expedition/reward_cards.gd")
+	var new_identity:String="source:m523:1:25242"
+	var new_doll:String="source:m523:2:25172"
+	var rng_before:int=world.card_draw_fusion.rng.state
+	check(world.card_draw_fusion.known_ids["변신"].has(new_identity) and world.card_draw_fusion.known_ids["마법인형"].has(new_doll),"only missing source targets registered with PR249 stable m523 identities")
+	check(not world.card_draw_fusion.owned["변신"].has(new_identity) and not world.card_draw_fusion.owned["마법인형"].has(new_doll),"source card registration never auto-grants ownership")
+	var seen_fixed:int=0
+	for item:Dictionary in catalog.rows("ItemClass"):
+		var target:Dictionary=reward_cards.fixed_target(catalog,int(item.ID))
+		if target.is_empty():continue
+		seen_fixed+=1
+		check(not reward_cards.registered(world.catalog_db,target).is_empty(),"fixed reward exact identity registered "+str(item.ID))
+	check(seen_fixed==28,"all28 fixed-card reward items checked against166 item scope")
+	check(world.card_draw_fusion.pools["변신"]["희귀"].all(func(e:Dictionary)->bool:return e.id!=new_identity),"new card registration preserves existing draw/fusion pool")
+	await completed_source_reward(332,"변신",365392,2)
+	check(world.expedition_local.withdraw("365392:1:0",2).ok,"new transform source reward enters actual inventory from shared storage")
+	var transform_item:String=world.expedition_local.state.issued["365392:1:0"]
+	unchanged=snapshot();disk=FileAccess.get_sha256(path);var cards_before:String=JSON.stringify(world.card_draw_fusion.export_state())
+	world.equipment_collections.save_blocked=true
+	check(not world.expedition_local.inventory_activation(transform_item).ok and snapshot()==unchanged and JSON.stringify(world.card_draw_fusion.export_state())==cards_before and FileAccess.get_sha256(path)==disk,"failed new-card receipt preserves inventory ownership duplicates and disk")
+	world.equipment_collections.save_blocked=false
+	world._on_inventory_item_activated(transform_item)
+	check(world.card_draw_fusion.total_count("변신",new_identity)==1 and int(world.inventory.get(transform_item,0))==1,"actual inventory grants exact new transform once and consumes one source item")
+	world._on_inventory_item_activated(transform_item)
+	check(world.card_draw_fusion.total_count("변신",new_identity)==2 and not world.inventory.has(transform_item),"second real source copy becomes exact duplicate")
+	cards_before=JSON.stringify(world.card_draw_fusion.export_state());world._on_inventory_item_activated(transform_item)
+	check(JSON.stringify(world.card_draw_fusion.export_state())==cards_before,"empty source stack cannot replay new-card reward")
+	world.expedition_local.state.storage["365592:1:0"]=1
+	check(world.expedition_local.withdraw("365592:1:0").ok,"new doll receipt preserves source item")
+	world._on_inventory_item_activated(world.expedition_local.state.issued["365592:1:0"])
+	check(world.card_draw_fusion.total_count("마법인형",new_doll)==0 and int(world.inventory.get(world.expedition_local.state.issued["365592:1:0"],0))==1 and world.card_draw_fusion.known_ids["마법인형"][new_doll]=="고급","source TestItem365592 preserves item and does not grant or upgrade registered high-grade25172")
+	check(world.card_draw_fusion.source_card_receipts.any(func(r:Dictionary)->bool:return r.identity==new_identity and r.cannot_swap and r.cannot_merge),"native no-swap/no-merge provenance saved")
+	check(world.expedition_owned_cards().any(func(c:Dictionary)->bool:return c.identity==new_identity and c.skill_awaken_level==0),"new owned transform appears with locked unawakened eligibility")
+	var new_req:Dictionary=world.skill_awakening.core.book_requirement(new_identity)
+	check(not new_req.is_empty() and int(new_req.fee)==100000,"new rare card reuses source grade book and user fee unchanged")
+	var new_book:String=Model.key(int(new_req.item_class_id));world.expedition_local.state.storage[new_book]=1
+	check(world.expedition_local.withdraw(new_book).ok,"existing awakening book received for new source card")
+	world.gold=2000000;check(world._save_game(true)==OK,"new card awakening test balance saved")
+	world.hud.open_card_skill_awakening("변신",new_identity)
+	var new_awaken_view:Control=world.hud.workspace.find_child("CardSkillAwakeningView",true,false)
+	check(new_awaken_view!=null and not new_awaken_view.action.disabled,"actual existing awakening UI accepts new rare source card")
+	if new_awaken_view!=null:new_awaken_view.action.pressed.emit()
+	check(int(world.skill_awakening.progress.cards.get(new_identity,{}).get("level",0))==1,"actual paid new-card awakening starts at source level1 without free level5")
+	# Controlled existing progression fixture: never grant level5 in production.
+	world.skill_awakening.progress.cards[new_identity].level=5
+	var new_party:Array=[new_identity]
+	for card:Dictionary in world.catalog_db["변신"]:
+		var id:String=world.CARD_DRAW_FUSION.card_id(card)
+		if id==new_identity or card.get("grade")!="희귀":continue
+		var candidates:Array=world.skill_awakening.core.candidates(id)
+		if candidates.is_empty():continue
+		world.card_draw_fusion.owned["변신"][id]=true
+		world.skill_awakening.progress.cards[id]={"spell_id":int(candidates[0].spell_id),"level":5,"experience":"0"}
+		new_party.append(id)
+		if new_party.size()==4:break
+	check(world._save_game(true)==OK,"controlled progression fixture saved")
+	# Finish the earlier test job before reserving this independent party.
+	for active:Dictionary in world.expedition_local.jobs_view():world.expedition_local.claim(int(active.id),true)
+	world.hud.open_expedition()
+	view=world.hud.workspace.find_child("ExpeditionSourceView",true,false)
+	for i in range(view.spot_picker.item_count):
+		if view.spot_picker.get_item_id(i)==274:view.spot_picker.select(i);view.spot_picker.item_selected.emit(i);break
+	for i in range(view.card_picker.item_count):
+		if view.card_picker.get_item_metadata(i).identity in new_party:view.card_picker.select(i,false)
+	check(view.card_picker.item_count>0 and view.card_picker.get_item_text(0)!="","actual expedition card selector renders new source definitions")
+	view._render();view.start_button.pressed.emit();confirm()
+	check(world.expedition_local.reserved(new_identity),"actual UI starts and reserves new m523 card in four-card dispatch")
+	for i in range(view.card_picker.item_count):
+		if view.card_picker.get_item_metadata(i).identity==new_identity:
+			check(view.card_picker.get_item_text(i).contains("원본 이미지 미설치"),"new-card UI explicitly marks missing source pixels")
+			view.card_picker.select(i,false);view.card_picker.ensure_current_is_visible()
+	await capture_state("newcard-dispatch")
+	disk=FileAccess.get_sha256(path);world._load_game(true)
+	check(FileAccess.get_sha256(path)==disk and world.expedition_local.reserved(new_identity) and world.card_draw_fusion.total_count("변신",new_identity)==2,"new stable ownership awakening and reservation survive byte-preserving reconnect")
+	var new_job:int=int(world.expedition_local.state.jobs.back().id)
+	check(world.expedition_local.claim(new_job,true).ok and not world.expedition_local.reserved(new_identity),"new card reservation releases after actual abort settlement")
+	check(world.card_draw_fusion.rng.state==rng_before,"fixed source card grants do not consume draw RNG")
 	finish(true)
+
+func completed_source_reward(spot_id:int,category:String,item_id:int,amount:int)->void:
+	# Controlled original-eligible discovery fixture, not an RNG/probability assertion.
+	for active:Dictionary in world.expedition_local.jobs_view():world.expedition_local.claim(int(active.id),true)
+	var ids:Array=[]
+	for record:Dictionary in world.catalog_db[category]:
+		if record.get("grade")!="전설":continue
+		var identity:String=world.CARD_DRAW_FUSION.card_id(record)
+		if not world.skill_awakening.core.eligibility(identity).ok:continue
+		if world.equipped_catalog.values().any(func(r:Dictionary)->bool:return world.CARD_DRAW_FUSION.card_id(r)==identity):continue
+		var spells:Array=world.skill_awakening.core.candidates(identity)
+		if spells.is_empty():continue
+		world.card_draw_fusion.owned[category][identity]=true
+		world.skill_awakening.progress.cards[identity]={"spell_id":int(spells[0].spell_id),"level":20,"experience":"0"}
+		ids.append(identity)
+		if ids.size()==(4 if category=="변신" else 1):break
+	world.gold=20000000
+	check(world._save_game(true)==OK,"source-eligible reward fixture baseline")
+	var started:Dictionary=world.request_expedition_start(spot_id,ids)
+	check(started.ok,"actual original-eligible expedition for new-card discovery")
+	if not started.ok:return
+	var job:Dictionary=world.expedition_local.state.jobs.back()
+	var linked:bool=false
+	for row:Dictionary in world.get_expedition_catalog().rows("MagicDollExpeditionSpotReward"):
+		if int(row.MagicDollExpeditionSpotID)==spot_id and int(row.MagicDollExpeditionGroupID)==int(job.group_id) and int(world.get_expedition_catalog().record("Reward",int(row.RewardID)).RewardClassID)==item_id:linked=true
+	check(linked,"controlled discovery belongs to exact original spot/group reward pool")
+	job.sim.loot[Model.key(item_id)]=amount
+	policy_only(71);world.expedition_local.advance(28800)
+	world.hud.open_expedition();view=world.hud.workspace.find_child("ExpeditionSourceView",true,false)
+	view._refresh_jobs();view.claim_button.pressed.emit();confirm()
+	await process_frame
+	check(int(world.expedition_local.state.storage.get(Model.key(item_id),0))==amount,"actual completion UI transfers discovered new-card reward to storage")
+	var before:String=snapshot()
+	check(not world.expedition_local.claim(int(job.id)).ok and snapshot()==before,"completed new-card discovery cannot be claimed twice")
 
 func finish(source: bool) -> void:
 	print("EXPEDITION523_COMPLETION_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"source_installed":source,"capture_requested":not capture.is_empty()}))

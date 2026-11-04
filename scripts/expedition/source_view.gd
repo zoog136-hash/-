@@ -170,6 +170,10 @@ func _deck_name(deck: int) -> String:
 func _grade_name(grade: int) -> String:
 	return {0: "제한 없음", 1: "일반", 2: "고급", 3: "희귀", 4: "영웅", 5: "전설", 32: "신화", 52: "유일"}.get(grade, "원본 등급 %d" % grade)
 
+func _card_label(card:Dictionary)->String:
+	var source:Dictionary=catalogue.record("BuffCard",int(card.source_id))
+	return "%s · 스킬각성 Lv.%d"%[source.get("Name",str(card.source_id)),int(card.skill_awaken_level)]+(" · 원본 이미지 미설치" if card.get("visual_pending",false) else "")
+
 func _select_spot() -> void:
 	if runtime != null and runtime.world != null: owned_cards = runtime.world.expedition_owned_cards()
 	current_spot = spot_picker.get_selected_id()
@@ -191,7 +195,7 @@ func _select_spot() -> void:
 		var source: Dictionary = catalogue.record("BuffCard", int(card.source_id))
 		if int(source.get("BuffCardDeckID", 0)) != int(spot.BuffCardDeckID):
 			continue
-		var index := card_picker.add_item("%s · 스킬각성 Lv.%d" % [source.get("Name", str(card.source_id)), int(card.skill_awaken_level)])
+		var index := card_picker.add_item(_card_label(card))
 		card_picker.set_item_metadata(index, card)
 	group_picker.clear()
 	for group: Dictionary in catalogue.rows("MagicDollExpeditionGroup"):
@@ -340,8 +344,7 @@ func _render() -> void:
 			for current: Dictionary in owned_cards:
 				if current.identity != previous.identity: continue
 				card_picker.set_item_metadata(index, current)
-				var source_card: Dictionary = catalogue.record("BuffCard", int(current.source_id))
-				card_picker.set_item_text(index, "%s · 스킬각성 Lv.%d" % [source_card.get("Name", current.source_id), int(current.skill_awaken_level)])
+				card_picker.set_item_text(index,_card_label(current))
 	var inspection: Dictionary = catalogue.inspect(current_spot, selected_cards())
 	var spot: Dictionary = inspection.spot
 	var currency: Dictionary = catalogue.record("Currency", int(spot.ExpeditionCostCurrencyID))

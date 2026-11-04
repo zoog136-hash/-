@@ -403,10 +403,12 @@ func _ready() -> void:
 			process_mode=Node.PROCESS_MODE_DISABLED
 			return
 		active_map_id=test_map
+	preload("res://scripts/expedition/reward_cards.gd").supplement(catalog_db,get_expedition_catalog())
 	card_draw_fusion.configure(catalog_db)
 	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
 	if not skill_awakening.configure(self):push_error(skill_awakening.problem)
+	preload("res://scripts/expedition/reward_cards.gd").register_profiles(self,get_expedition_catalog())
 	expedition_local.world = self
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
@@ -8138,7 +8140,8 @@ func expedition_owned_cards() -> Array:
 		for card: Dictionary in catalog_db.get(category, []):
 			var identity := CARD_DRAW_FUSION.card_id(card)
 			var source_id := int(card.get("source_card_id", 0))
-			if card.get("source") != "lineagem_base508" or str(card.get("sourceId", "")) != "m508:%d:%d" % [deck, source_id]:
+			var card_namespace:String="m523" if card.get("source")=="lineagem_patch523" else "m508"
+			if card.get("source") not in ["lineagem_base508","lineagem_patch523"] or str(card.get("sourceId",""))!="%s:%d:%d"%[card_namespace,deck,source_id] or int(card.get("source_deck_id",0))!=deck:
 				continue
 			if card_draw_fusion.owned.get(category, {}).get(identity, false) != true:
 				continue
@@ -8147,7 +8150,7 @@ func expedition_owned_cards() -> Array:
 			var level := 0 if skill_awakening.save_blocked or not skill_awakening.problem.is_empty() else int(entry.get("level", 0))
 			if not skill_awakening.core.spell_allowed(identity, int(entry.get("spell_id", 0))) or skill_awakening.core.profile(identity, level).is_empty():
 				level = 0
-			result.append({"source_id": source_id, "owned": true, "skill_awaken_level": level, "identity": identity})
+			result.append({"source_id": source_id, "owned": true, "skill_awaken_level": level, "identity": identity,"visual_pending":bool(card.get("source_expedition_definition_only",false))})
 	return result
 
 func inspect_expedition(spot_id: int, identities: Array) -> Dictionary:
