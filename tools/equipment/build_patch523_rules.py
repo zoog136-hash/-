@@ -91,9 +91,15 @@ def empty_output(row):
 
 def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
     catalog = json.loads(catalog_bytes)['아이템']
+    full_native_mode = False
     if binding_catalog_bytes is not None:
         # Export of an actually registered shared catalog, never invented rows.
-        supplement = json.loads(binding_catalog_bytes)['아이템']
+        snapshot = json.loads(binding_catalog_bytes)
+        supplement = snapshot['아이템']
+        contract = snapshot.get('patch523_crafting_catalog_contract',{})
+        full_native_mode = (contract.get('mode')=='full_native_supplement'
+            and contract.get('source_bin_sha256')=='38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27'
+            and contract.get('normal_ids')==30398)
         live_identities = {(r.get('source'),str(r.get('sourceId')),r['name']) for r in supplement}
         # When the producer replaces a legacy catalog entry, do not resurrect
         # it from the old Git file. Read-only ownership aliases stay separate.
@@ -133,7 +139,7 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
         # Exact legacy identities win. Ambiguous legacy names must remain
         # separate from PR238's explicitly registered ownership key.
         previous = by_id.get(key, [])
-        if len(previous) == 1 and len(by_name[previous[0]['name']]) == 1:
+        if not full_native_mode and len(previous) == 1 and len(by_name[previous[0]['name']]) == 1:
             continue
         if len(by_name[record['name']]) == 1:
             by_id[key] = [record]

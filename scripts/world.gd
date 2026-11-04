@@ -141,6 +141,8 @@ var patch523_crafting_usage: Dictionary = {}
 const PATCH523_CRAFT_CATALOG=preload("res://scripts/crafting/patch523_craft_catalog.gd")
 var patch523_craft_catalog_status: Dictionary={}
 var patch523_craft_item_cache: Dictionary={}
+# Installed/configured only by the protection feature owner (PR256).
+var protection523: RefCounted
 var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
@@ -4376,7 +4378,39 @@ func _refresh_patch523_equipment_options() -> void:
 					equipped["patch523_effect_basis"] = container[id].record.patch523_effect_basis.duplicate(true)
 	_invalidate_equipment_static()
 
+func _patch523_protection_recipe_item(recipe_id: String) -> int:
+	if not recipe_id.begins_with("patch523:"):return 0
+	var key: String=recipe_id.trim_prefix("patch523:")
+	if not key.is_valid_int() or int(key)<=0:return 0
+	for row: Dictionary in patch523_equipment.data.get("raw_recipes",{}).get("outputs",{}).get(key,[]):
+		if int(row.get("ItemCraftID",0))==int(key) and int(row.get("ItemCraftOutputTypeID",0))==1 and int(row.get("Amount",0))==1 and int(row.get("Enchant",-1))==0 and int(row.get("ItemBlessCodeID",0))==1 and int(row.get("Probability",0))==1000000 and int(row.get("ItemClassID",0)) in [200723,245718,297828,328254,346911,371108,75764,123373]:return int(row.ItemClassID)
+	return 0
+
+func patch523_delegate_protection(recipe_id: int, batches: int=1) -> Dictionary:
+	var item_id: int=_patch523_protection_recipe_item("patch523:"+str(recipe_id))
+	if item_id==0 or batches!=1:return {"ok":false,"error":"원본 가호 제작식과 단일 소유자 거래를 확인하세요"}
+	if protection523==null or not protection523.has_method("craft_recipe"):return {"ok":false,"error":"가호 제작 소유자 미설치 · 재료와 장부를 보존합니다"}
+	var has_source: bool=false
+	for property: Dictionary in protection523.get_property_list():
+		if property.get("name")=="source":has_source=true;break
+	var source: Variant=protection523.get("source") if has_source else null
+	if not source is Dictionary:return {"ok":false,"error":"가호 원본 정의 미설치 · 재료 보존"}
+	var definitions: Variant=source.get("supply_recipes",{}) if item_id in [75764,123373] else source.get("definitions",{})
+	var definition: Variant=definitions.get(str(item_id)) if definitions is Dictionary else null
+	var recipe: Variant=definition.get("recipe") if definition is Dictionary else null
+	var original_id: Variant=recipe.get("ItemCraftID") if recipe is Dictionary else null
+	if typeof(original_id) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(original_id)) or float(original_id)!=float(recipe_id):return {"ok":false,"error":"가호 소유자의 원본 제작식 불일치 · 재료 보존"}
+	# This exact public owner alone commits input/body/Appellation/ledger/save.
+	# No generic execute(), grant(), second debit, log or outer save follows.
+	var result: Variant=protection523.call("craft_recipe",recipe_id)
+	if not result is Dictionary or not result.get("ok") is bool:return {"ok":false,"error":"가호 소유자 결과 확인 필요 · 저장 확인 전 재시도하지 마세요","outcome_uncertain":true}
+	return result
+
 func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
+	if _patch523_protection_recipe_item(recipe_id)>0:
+		var delegated: Dictionary=patch523_delegate_protection(int(recipe_id.trim_prefix("patch523:")),batches)
+		if not delegated.get("ok",false):hud.show_message(str(delegated.get("error","가호 소유자 결과 확인 필요")))
+		return
 	_sync_item_instances()
 	var previous_rng: int=rng.state
 	var outcome_roll: int=-1

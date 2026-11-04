@@ -59,6 +59,12 @@ func run() -> void:
 		check(total==30398,"all normal source IDs actually indexed")
 		check(world._catalog_item_from_source_id("m523:item:137:bless:2").get("source_bless_raw")==2,"actual blessed scroll gets distinct source ownership key")
 		check(not world._catalog_item_from_source_id("m523:item:185094").is_empty(),"previous missing half-elixir really indexed")
+	if full_catalog and world.patch523_equipment.recipes.has("patch523:13"):
+		var preserved: Array=[world.inventory,world.item_instances,world.gold]
+		var recipe: Dictionary=world.patch523_equipment.recipes["patch523:13"]
+		world.inventory={str(recipe.materials[0].item):int(recipe.materials[0].quantity)};world.item_instances={};world.gold=10000
+		check(world._craft_quote("patch523:13",1).get("ok",false),"delivered v12 source recipe remains usable beside full native supplement")
+		world.inventory=preserved[0];world.item_instances=preserved[1];world.gold=preserved[2]
 	var count: int=world.catalog_db["아이템"].size()
 	check(world.install_patch523_craft_catalog_zip(archive) and world.catalog_db["아이템"].size()==count,"same verified data installation does not duplicate registered identities")
 	check(not world.install_patch523_craft_catalog_zip(archive+".missing") and world.catalog_db["아이템"].size()==count,"bad replacement leaves actual registered catalog intact")

@@ -76,6 +76,16 @@ func run() -> void:
 	var stack_material: Dictionary={"item":stack.name,"source_id":"600003","quantity":1,"level":0,"bless_code":1,"physical":false}
 	check(world.patch523_equipment.available_material(stack_material,{str(stack.name):3},{str(stack.name):stack},{},{},{},false)==3,"ordinary exact stack remains consumable without owned reward entities")
 	check(world.patch523_equipment.available_material(stack_material,{str(stack.name):3},{str(stack.name):stack},{"fixture-receipt":{"name":stack.name,"source_pending_use":true,"source_reward_quantity":3}},{},{},false)==0,"synthetic pending-quantity stack is protected until its receipt owner can debit it atomically")
+	var protection_recipe: int=0
+	for source_recipe: String in world.patch523_equipment.data.raw_recipes.outputs:
+		if world._patch523_protection_recipe_item("patch523:"+source_recipe)==200723:protection_recipe=int(source_recipe);break
+	check(protection_recipe>0,"real source permanent-Appellation body recipe identified by original ItemCraftID")
+	var protected_before: String=snapshot(world);var protected_sha: String=FileAccess.get_sha256(world.save_path())
+	var missing_owner: Dictionary=world.patch523_delegate_protection(protection_recipe)
+	check(not missing_owner.get("ok",false) and missing_owner.get("error","").contains("미설치"),"absent actual protection owner blocks source delegation")
+	world._craft_requested("patch523:"+str(protection_recipe),1)
+	check(snapshot(world)==protected_before and FileAccess.get_sha256(world.save_path())==protected_sha,"normal craft entry never debits, grants or saves outside missing protection owner")
+	check(not world.patch523_delegate_protection(protection_recipe,2).get("ok",false),"single owner-call contract never invents batch transactions")
 	var before: String=snapshot(world)
 	var sha: String=FileAccess.get_sha256(world.save_path())
 	world.source_save_blocked=true; world._craft_requested(recipe.id,1)

@@ -45,7 +45,15 @@ static func register(catalog: Dictionary, document: Dictionary) -> Dictionary:
 	if document.get("full_item_catalog",false):
 		var candidate: Dictionary=catalog.duplicate(true)
 		var registered: Dictionary=FULL.register(document,candidate)
-		catalog["아이템"]=candidate["아이템"]
+		# This crafting consumer supplements exact m523 identities. Legacy
+		# alias replacement belongs to PR238; preserve the currently installed
+		# aliases so the delivered v12 rules remain usable during migration.
+		var previous: Array=catalog.get("아이템",[])
+		var records: Array=candidate["아이템"]
+		for index: int in range(previous.size()):
+			if not str(previous[index].get("sourceId","")).begins_with("m523:item:"):records[index]=previous[index]
+		catalog["아이템"]=records
+		catalog["patch523_crafting_catalog_contract"]={"mode":"full_native_supplement","source_bin_sha256":FULL_BIN_SHA,"normal_ids":registered.native_definition_count}
 		return {"ok":true,"added":registered.added,"updated":registered.updated,"registered_count":registered.native_definition_count,"source_bin_sha256":FULL_BIN_SHA}
 	var ids: Dictionary={}
 	for key: Variant in document.get("native_item_ids",[])+document.get("native_reward_item_ids",[]): ids[str(key)]=true
