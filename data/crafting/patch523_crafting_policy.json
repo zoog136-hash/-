@@ -73,5 +73,25 @@
     }
   },
   "preserve_matching_refund_instance": true,
-  "refund_identity_origin": "TWILIGHT 설정: 원본 실패 보상과 ID·강화·축복이 같은 소비 장비의 개체 ID와 기록 보존"
+  "refund_identity_origin": "TWILIGHT 설정: 원본 실패 보상과 ID·강화·축복이 같은 소비 장비의 개체 ID와 기록 보존",
+  "verified_craft_constraints": {
+    "142364": {
+      "source_restriction": {
+        "ID": 79134,
+        "ItemCraftID": 142364,
+        "ServiceTypeID": 13,
+        "Value": 10,
+        "RefreshUnitID": 71,
+        "isMultiCount": true
+      },
+      "origin": "원본 제한 및 NC 2022-08-31 안내: 캐릭터당 매주10회 · 정기점검 초기화",
+      "official_url": "https://lineagem.plaync.com/board/update/view?articleId=630e6538b1db6b2aa56ca1ff&size=18&viewMode=compact",
+      "quota": {
+        "limit": 10,
+        "period_seconds": 604800,
+        "anchor_unix": 504000,
+        "clock_origin": "TWILIGHT 일정 설정: 서버 정기점검 대신 매주 수요일05:00 KST를 로컬 캐릭터 세이브에 적용. 원본 점검 실제 시각 복원이 아님"
+      }
+    }
+  }
 }

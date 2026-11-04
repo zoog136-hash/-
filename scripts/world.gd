@@ -135,6 +135,7 @@ const PATCH523_STORE = preload("res://scripts/crafting/patch523_pack_store.gd")
 var patch523_material_choices: Dictionary = {}
 const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
+var patch523_crafting_usage: Dictionary = {}
 var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
@@ -4183,6 +4184,11 @@ func _patch523_craft_item_index() -> Dictionary:
 		if source_id=="26":
 			result["아데나"]=patch523_equipment.record("26")
 			continue
+		if binding.get("source_m_native_item",false):
+			var native_entry: Dictionary=_catalog_item_from_source_id(str(binding.sourceId))
+			if int(catalog_item_variant_count.get(str(binding.name),0))==1 and patch523_equipment.catalog_identity_matches(native_entry,source_id):
+				result[str(binding.name)]=native_entry
+			continue
 		var entry: Dictionary = _catalog_item_from_source_id(source_id)
 		var item_name: String = str(entry.get("name", ""))
 		if entry.get("source", "") != "inven" or int(catalog_item_variant_count.get(item_name, 0)) != 1: continue
@@ -4245,7 +4251,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 		outcome_roll=rng.randi_range(0,999999)
 	var transaction: Dictionary = patch523_equipment.execute(recipe_id, batches, inventory, gold,
 		_patch523_craft_item_index(), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
-		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll)
+		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll, _patch523_craft_context())
 	if not bool(transaction.get("ok", false)):
 		rng.state=previous_rng
 		hud.show_message(str(transaction.get("reason", "원본 제작에 실패했습니다")))
@@ -4257,7 +4263,8 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	if staged_log.size() > 200:
 		staged_log.pop_front()
 	var staged: Dictionary = {"inventory": transaction.inventory, "item_instances": transaction.item_instances,
-		"gold": int(transaction.gold_after), "next_item_instance_id": int(transaction.next_instance_id), "crafting_log": staged_log}
+		"gold": int(transaction.gold_after), "next_item_instance_id": int(transaction.next_instance_id), "crafting_log": staged_log,
+		"patch523_crafting_usage":transaction.get("usage_after",patch523_crafting_usage).duplicate(true)}
 	# No state is consumed on disk-write failure, unavailable map or save guards.
 	if _save_game(true, staged) != OK:
 		rng.state=previous_rng
@@ -4268,6 +4275,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	gold = int(staged.gold)
 	next_item_instance_id = int(staged.next_item_instance_id)
 	crafting_log = staged_log
+	patch523_crafting_usage=staged.patch523_crafting_usage
 	hud.refresh_inventory(inventory)
 	_update_hud()
 	hud.show_message("원본 제작 %s · %s ×%d" % [str(transaction.get("outcome_label","완료")), str(transaction.result_name), int(transaction.result_quantity)])
@@ -4349,11 +4357,17 @@ func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()
 	if recipe_id.begins_with("patch523:"):
 		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _patch523_craft_item_index(), item_instances,
-			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}))
+			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), _patch523_craft_context())
 	return crafting.quote(
 		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
 		equipped_items, _inventory_total_weight(), _carrying_capacity()
 	)
+
+func _patch523_craft_context() -> Dictionary:
+	return {"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system())}
+
+func patch523_craft_condition_summary(recipe: Dictionary) -> String:
+	return patch523_equipment.CONDITIONS.summary(recipe,_patch523_craft_context())
 
 func _craft_requested(recipe_id: String, batches: int) -> void:
 	if recipe_id.begins_with("patch523:"):
@@ -4641,7 +4655,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","next_item_instance_id","crafting_log"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","next_item_instance_id","crafting_log","patch523_crafting_usage"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4681,6 +4695,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"crafting_log": crafting_log,
+		"patch523_crafting_usage":patch523_crafting_usage,
 		"monster_world": legacy_population.export_state(),
 		"original_monster_world": original_population.export_state(),
 		"original_position": SOURCE_TRAVEL.snapshot(self),
@@ -4942,6 +4957,7 @@ func _load_game(quiet: bool) -> void:
 	_clear_combat_actions()
 	warehouse.restore(data.get("warehouse", {}))
 	crafting_log.clear()
+	patch523_crafting_usage=patch523_equipment.CONDITIONS.restore(data.get("patch523_crafting_usage",{}))
 	var old_log: Variant = data.get("crafting_log", [])
 	if old_log is Array:
 		for raw_log: Variant in old_log:
@@ -7195,8 +7211,9 @@ func _patch523_use_record(reference: String) -> Dictionary:
 	var id: String = str(selected.get("id",""))
 	if not id.is_empty() and item_instances.has(id): record=item_instances[id].get("record",record)
 	if record.has("patch523_item_use"): return record
-	if record.get("source","")!="inven": return record
-	var canonical: Dictionary = patch523_equipment.record(str(record.get("sourceId","")))
+	var source_id: String=patch523_equipment.identity({"record":record})
+	if source_id.is_empty(): return record
+	var canonical: Dictionary = patch523_equipment.record(source_id)
 	if canonical.get("name")!=record.get("name") or not canonical.has("patch523_item_use"): return record
 	var result: Dictionary=record.duplicate(true)
 	result["patch523_item_use"]=canonical.patch523_item_use.duplicate(true)

@@ -12,7 +12,7 @@ var source_action: Button
 var pack_sha: LineEdit
 var pack_dialog: FileDialog
 var pack_status: Label
-const DEFAULT_SHA: String = "d2af6eb5cf84314616e60f249539754ddbebbdf36fd759897c8d43b4dd3ea7f5"
+const DEFAULT_SHA: String = "4b19ea09453b6244ea1b6f308e17e097edba7e83b36cab89ffcc1c5c4a079ee8"
 
 func configure(controller: Node) -> void:
 	hud = controller

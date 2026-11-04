@@ -67,10 +67,32 @@ class AdmissionTest(unittest.TestCase):
 
     def test_server_calendar_and_time_guards(self):
         original = copy.deepcopy(self.tables)
-        for key,value in [('ServerLimitSetID',772),('EffectiveFrom',123),('CraftTimeTypeID',2),('NoRepeat',True),('LevelLimitValue',80)]:
+        for key,value in [('ServerLimitSetID',772),('EffectiveFrom',123),('CraftTimeTypeID',2),('NoRepeat',True),('IsBelowLevelLimit',True)]:
             with self.subTest(key=key):
                 self.tables = copy.deepcopy(original)
                 self.tables['ItemCraftView'][0][key] = value
+                self.rejected()
+
+    def test_source_craft_level_is_preserved_for_runtime_enforcement(self):
+        self.tables['ItemCraftView'][0]['LevelLimitValue']=68
+        recipe=self.compile()['recipes']['patch523:17']
+        self.assertEqual(recipe['craft_conditions']['min_level'],68)
+        self.assertEqual(recipe['craft_conditions']['source_level_fields'],dict(IsBelowLevelLimit=False,LevelLimitValue=68))
+        self.tables['ItemCraftView'][0]['ServerLimitSetID']=772
+        self.rejected()
+
+    def test_verified_weekly_limit_does_not_admit_other_restrictions(self):
+        policy=json.loads((Path(__file__).resolve().parents[1]/'data/crafting/patch523_crafting_policy.json').read_text())
+        restriction=policy['verified_craft_constraints']['142364']['source_restriction']
+        for name in ['ItemCraftInput','ItemCraftOutputView','ItemCraftView']:
+            self.tables[name][0]['ItemCraftID']=142364
+        self.tables['ItemCraftRestriction']=[copy.deepcopy(restriction)]
+        recipe=self.compile()['recipes']['patch523:142364']
+        self.assertEqual(recipe['craft_conditions']['quota']['limit'],10)
+        self.assertEqual(recipe['craft_conditions']['quota']['source_restriction'],restriction)
+        for key,value in [('Value',11),('ServiceTypeID',23),('RefreshUnitID',111),('isMultiCount',False)]:
+            with self.subTest(key=key):
+                self.tables['ItemCraftRestriction']=[{**restriction,key:value}]
                 self.rejected()
 
     def test_full_probability_and_view_output_agreement(self):
@@ -87,6 +109,29 @@ class AdmissionTest(unittest.TestCase):
     def test_ambiguous_inventory_name_rejected(self):
         self.catalog['아이템'].append(dict(name='fixture_old',source='inven',sourceId='900',slot='earring'))
         self.rejected()
+
+    def test_registered_native_binding_requires_exact_metadata_and_keeps_base_sha(self):
+        records=[]
+        for item in self.tables['ItemClass']:
+            key=str(item['ID']); label='fixture_old' if key=='101' else 'fixture_new'
+            records.append(dict(name=label+' · 원본#'+key,source_display_name=label,source='lineagem_patch523',
+                source_snapshot='patch523',sourceId='m523:item:'+key,source_item_class_id=item['ID'],
+                source_m_native_item=True,source_test_item=False,source_is_stackable=False,
+                source_level_limit_min=0,source_level_limit_max=0,source_class_ids=[],source_equip_slot_ids=[],slot='earring'))
+        original=json.dumps({'아이템':[]}).encode()
+        bindings=json.dumps({'아이템':records}).encode()
+        r=BUILDER.compile_rules(self.tables,{},original,bindings)
+        self.assertIn('patch523:17',r['recipes'])
+        self.assertEqual(r['catalog_sha256'],hashlib.sha256(original).hexdigest())
+        self.assertEqual(r['binding_catalog_sha256'],hashlib.sha256(bindings).hexdigest())
+        self.assertEqual(r['recipes']['patch523:17']['materials'][0]['item'],'fixture_old · 원본#101')
+        for key,value in [('sourceId','m523:item:999'),('source_snapshot','base508'),('source_display_name','wrong'),('source_is_stackable',True),('source_class_ids',[9]),('source_equip_slot_ids',[293]),('source_bless_raw',2)]:
+            with self.subTest(key=key):
+                damaged=copy.deepcopy(records);damaged[0][key]=value
+                self.assertFalse(BUILDER.compile_rules(self.tables,{},original,json.dumps({'아이템':damaged}).encode())['recipes'])
+        # Supplementing a catalog must not replace an existing unique Inven identity.
+        r=BUILDER.compile_rules(self.tables,{},json.dumps(self.catalog).encode(),bindings)
+        self.assertEqual(r['items']['101']['catalog_record']['source'],'inven')
 
     def test_unknown_item_state_and_tests_rejected(self):
         self.tables['ItemClass'][0]['TestItem'] = True
@@ -140,7 +185,7 @@ class AdmissionTest(unittest.TestCase):
         tables,evidence=BUILDER.read_source(directory)
         catalog=(Path(__file__).resolve().parents[1]/'data/catalog_v19.json').read_bytes()
         result=BUILDER.compile_rules(tables,evidence,catalog)
-        self.assertEqual(len(result['recipes']),345)
+        self.assertEqual(len(result['recipes']),347)
         self.assertEqual(set(result['guaranteed_boxes']),{'30701','130611'})
         self.assertEqual(len(result['source_files']),29)
         for table,key in [('ItemCraftInput','inputs'),('ItemCraftOutputView','outputs'),('ItemCraftView','views'),('ItemCraftRestriction','restrictions')]:

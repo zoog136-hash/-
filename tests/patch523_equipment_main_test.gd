@@ -51,7 +51,7 @@ func run() -> void:
 			"result":{"item":"수호의 인장","quantity":1,"source_id":"30671","level":3,"bless_code":2,"physical":true}}}
 		world.crafting.recipes.merge(world.patch523_equipment.recipes)
 	else:
-		check(world.patch523_equipment.recipes.size()==345, "private current523 rules installed during Main startup")
+		check(world.patch523_equipment.recipes.size()==347, "private current523 rules installed during Main startup")
 	world.inventory["수호의 인장"] = 3
 	world.gold = 7654321
 	for id: Variant in world.item_instances.keys():
@@ -161,14 +161,14 @@ func continuation(world: TwilightWorld) -> void:
 		check(info.pack_dialog.visible,"native rules file chooser opens")
 		info.pack_dialog.file_selected.emit(source_path)
 		await process_frame
-		check(world.patch523_equipment.recipes.size()==345,"GUI pack installation activates all admitted recipes")
+		check(world.patch523_equipment.recipes.size()==347,"GUI pack installation activates all admitted recipes")
 		var saved: Dictionary = world.PATCH523_STORE.active()
 		check(saved.get("sha256","")==expected and FileAccess.get_sha256(str(saved.get("path","")))==expected,"GUI installation persists verified private bytes")
 		OS.set_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES","")
 		world.patch523_equipment = world.PATCH523_EQUIPMENT.new()
 		world.crafting.load_recipes()
 		world._load_patch523_equipment()
-		check(world.patch523_equipment.recipes.size()==345,"normal startup restores installed pack without environment path")
+		check(world.patch523_equipment.recipes.size()==347,"normal startup restores installed pack without environment path")
 		OS.set_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES",source_path)
 	# Current host probability is unchanged; only exact physical record lookup
 	# and durable commit semantics are extended to source-crafted equipment.

@@ -71,8 +71,13 @@ def group(rows, key):
     return dict(result)
 
 
-def compile_rules(tables, evidence, catalog_bytes):
+def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
     catalog = json.loads(catalog_bytes)['아이템']
+    if binding_catalog_bytes is not None:
+        # Export of an actually registered shared catalog, never invented rows.
+        supplement = json.loads(binding_catalog_bytes)['아이템']
+        identities = {(r.get('source'), str(r.get('sourceId')), r['name']) for r in catalog}
+        catalog += [r for r in supplement if (r.get('source'), str(r.get('sourceId')), r['name']) not in identities]
     by_id, by_name = defaultdict(list), defaultdict(list)
     for record in catalog:
         by_name[record['name']].append(record)
@@ -83,6 +88,29 @@ def compile_rules(tables, evidence, catalog_bytes):
     categories = {r['ID']: r for r in tables['ItemCategory']}
     limits = group(tables['ItemClassLimit'], 'ItemClassID')
     classes = {r['ID']:r for r in tables['Class']}
+    equip_links = group(tables['ItemEquipSlot'], 'ItemClassID')
+    for record in catalog:
+        key = str(record.get('source_item_class_id', ''))
+        native = items.get(key, {})
+        if (not native or record.get('source') != 'lineagem_patch523' or record.get('source_snapshot') != 'patch523'
+            or record.get('source_m_native_item') is not True or record.get('sourceId') != 'm523:item:'+key
+            or record.get('source_bless_raw', 1) != 1
+            or record.get('source_display_name') != descriptions.get(native['DescID'])
+            or record.get('name') != record['source_display_name']+' · 원본#'+key
+            or record.get('source_test_item') != native['TestItem']
+            or record.get('source_is_stackable') != categories[native['CategoryID']]['IsStackable']
+            or record.get('source_level_limit_min') != native['LevelLimitMin']
+            or record.get('source_level_limit_max') != native['LevelLimitMax']
+            or sorted(record.get('source_class_ids', [])) != sorted({r['ClassID'] for r in limits.get(key, [])})
+            or sorted(record.get('source_equip_slot_ids', [])) != sorted(r['EquipSlotID'] for r in equip_links.get(key, []))):
+            continue
+        # Exact legacy identities win. Ambiguous legacy names must remain
+        # separate from PR238's explicitly registered ownership key.
+        previous = by_id.get(key, [])
+        if len(previous) == 1 and len(by_name[previous[0]['name']]) == 1:
+            continue
+        if len(by_name[record['name']]) == 1:
+            by_id[key] = [record]
     use_conditions = {}
     for key, item in items.items():
         ids = sorted({r['ClassID'] for r in limits.get(key,[])})
@@ -110,12 +138,16 @@ def compile_rules(tables, evidence, catalog_bytes):
                 'host_kind':binding['kind'],'host_amount':binding['amount'],'binding_origin':binding['origin']}
         by_id[key]=[record];by_name[binding['item']]=[record];host_materials[key]=record
 
-    recipes, rejected = {}, defaultdict(int)
+    recipes, rejected, admission = {}, defaultdict(int), {}
     for craft_id, view_rows in views.items():
         reason = ''
         ins, outs = inputs.get(craft_id, []), outputs.get(craft_id, [])
         v = view_rows[0]
         probabilistic = craft_id in random_ids
+        constraint = policy.get('verified_craft_constraints', {}).get(craft_id, {})
+        quota = constraint.get('quota', {})
+        expected_restriction = constraint.get('source_restriction')
+        known_restriction = bool(expected_restriction and restrictions.get(craft_id) == [expected_restriction])
         primary = next((row for row in outs if row['ItemCraftOutputTypeID']==1 and all(v[k]==row[k] for k in ['ItemClassID','Amount','Enchant','ItemBlessCodeID'])),None)
         if probabilistic and (len(view_rows)!=1 or primary is None or not outs or any(row['ItemCraftOutputTypeID'] not in [0,1,2] or not 0<row['Probability']<=1000000 for row in outs) or sum(row['Probability'] for row in outs)!=1000000):
             reason = 'unverified_random_result_contract'
@@ -123,7 +155,7 @@ def compile_rules(tables, evidence, catalog_bytes):
             reason = 'non_single_guaranteed_result'
         elif not probabilistic and (outs[0]['Probability'] != 1000000 or outs[0]['ItemCraftOutputTypeID'] != 1):
             reason = 'unresolved_probability_or_output_type'
-        elif restrictions.get(craft_id) or v['ServerLimitSetID'] or v['IsCoalitionItem'] or v['NoRepeat'] or v['IsBelowLevelLimit'] or v['LevelLimitValue']:
+        elif (restrictions.get(craft_id) and not known_restriction) or v['ServerLimitSetID'] or v['IsCoalitionItem'] or v['NoRepeat'] or v['IsBelowLevelLimit'] or not 0 <= v['LevelLimitValue'] <= 1000:
             reason = 'unresolved_player_or_server_condition'
         elif (v['EffectiveFrom'], v['EffectiveTo'], v['CraftTimeTypeID']) != (1, 3, 1):
             reason = 'limited_calendar_or_time_type'
@@ -151,7 +183,7 @@ def compile_rules(tables, evidence, catalog_bytes):
                 matches = by_id.get(key, [])
                 if len(matches) != 1 or len(by_name[matches[0]['name']]) != 1:
                     reason = 'missing_or_ambiguous_catalog_identity'; break
-                if matches[0]['name'] not in [descriptions.get(item['DescID']), descriptions.get(item['IdentifiedDescID'])]:
+                if matches[0].get('source') == 'inven' and matches[0]['name'] not in [descriptions.get(item['DescID']), descriptions.get(item['IdentifiedDescID'])]:
                     reason = 'source_identity_name_disagreement'; break
                 stack = categories[item['CategoryID']]['IsStackable']
                 if stack and (row['Enchant'] != 0 or row['ItemBlessCodeID'] != 1):
@@ -191,6 +223,15 @@ def compile_rules(tables, evidence, catalog_bytes):
                         'adena': adena, 'materials': material_rows, 'material_slots':material_slots,
                         'requires_material_selection':any(len(slot['candidates']) > 1 for slot in material_slots),
                         'popup_text_id': v['PopupText']}
+                    if v['LevelLimitValue'] or known_restriction:
+                        recipes['patch523:'+craft_id]['craft_conditions'] = {
+                            'schema':'patch523-craft-conditions-v1', 'min_level':v['LevelLimitValue'],
+                            'max_level':0, 'source_level_fields':{k:v[k] for k in ['IsBelowLevelLimit','LevelLimitValue']}}
+                        if known_restriction:
+                            if quota.get('limit') != expected_restriction['Value'] or quota.get('period_seconds') != 604800 or not expected_restriction['isMultiCount']:
+                                raise ValueError('quota policy changed original count: '+craft_id)
+                            recipes['patch523:'+craft_id]['craft_conditions'].update(
+                                quota={**quota, 'source_restriction':expected_restriction}, origin=constraint['origin'])
                     recipes['patch523:'+craft_id]['host_material_bindings']=[host_materials[str(row['ItemClassID'])] for row in ins if str(row['ItemClassID']) in host_materials]
                     if probabilistic:
                         outcomes=[]
@@ -207,6 +248,9 @@ def compile_rules(tables, evidence, catalog_bytes):
                     continue
                 if not reason: reason = 'currency_only_input'
         rejected[reason] += 1
+        admission[craft_id] = {'reason':reason}
+        if reason in ['missing_or_ambiguous_catalog_identity','unresolved_item_condition','unmapped_physical_slot','unresolved_item_state','source_identity_name_disagreement','stack_state_cannot_be_represented']:
+            admission[craft_id]['first_blocking_item_class_id'] = row['ItemClassID']
     bonuses = {str(r['ID']): r for r in tables['Bonus']}
     item_bonus_rows = group(tables['ItemBonus'], 'ItemClassID')
     enchant = group(tables['ItemEnchantBonus'], 'ItemEnchantBonusGroupID')
@@ -233,7 +277,7 @@ def compile_rules(tables, evidence, catalog_bytes):
         used_bonuses.update(str(r['BonusID']) for r in effect_rows)
         bound_items[key] = {'catalog_record': records[0], 'item_class': items[key], 'item_bonuses': links,
                             'enchant_effects': effect_rows,
-                            'use_conditions':use_conditions.get(key,{}) if records[0].get('source')=='inven' and records[0]['name'] in [descriptions.get(items[key]['DescID']),descriptions.get(items[key]['IdentifiedDescID'])] else {}}
+                            'use_conditions':use_conditions.get(key,{}) if ((records[0].get('source')=='inven' and records[0]['name'] in [descriptions.get(items[key]['DescID']),descriptions.get(items[key]['IdentifiedDescID'])]) or records[0].get('source_m_native_item',False)) else {}}
     # Only these permanent guaranteed boxes have a fully checked contract.
     boxes = {}
     bag_types = {r['ID']:r for r in tables['LuckyBagEntityType']}
@@ -253,12 +297,15 @@ def compile_rules(tables, evidence, catalog_bytes):
     result = {'schema': 'twilight-patch523-equipment-v1', 'snapshot': 'patch523',
               'catalog_sha256': digest(catalog_bytes), 'source_files': evidence,
               'recipes': recipes, 'recipe_summary': {'active':len(recipes), 'rejected':dict(rejected)},
+              'recipe_admission':admission,
               'raw_recipes': {'inputs':inputs, 'outputs':outputs, 'views':views, 'restrictions':restrictions},
               'guaranteed_boxes':boxes, 'items':bound_items, 'bonuses':{k:bonuses[k] for k in sorted(used_bonuses)},
               'bonus_types': {str(r['ID']):r for r in tables['BonusType']},
               'enchantment': {n:tables[n] for n in ['ItemEnchantProbabilityGroup','ItemEnchantEquipGroupMapping',
                   'ItemEnchantScrollGroup','ItemEnchantScrollGroupMapping','BmItemEnchantProView','ItemEnchantCostView',
                   'ItemEnchantProbabilityView','ItemBlessEnchantProbability','ItemBlessCode','EquipSlotConfig','ItemEquipSlot']}}
+    if binding_catalog_bytes is not None:
+        result['binding_catalog_sha256'] = digest(binding_catalog_bytes)
     return result
 
 
@@ -266,13 +313,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--content', type=Path, required=True)
     parser.add_argument('--catalog', type=Path, required=True)
+    parser.add_argument('--binding-catalog', type=Path, help='Optional actual registered PR238 catalog export; never registers these items itself')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     if args.output.resolve().is_relative_to(root):
         raise ValueError('private rules must be outside the public repository')
     tables, evidence = read_source(args.content)
-    result = compile_rules(tables, evidence, args.catalog.read_bytes())
+    result = compile_rules(tables, evidence, args.catalog.read_bytes(), args.binding_catalog.read_bytes() if args.binding_catalog else None)
     data = json.dumps(result, ensure_ascii=False, separators=(',', ':')).encode()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=args.output.parent, delete=False) as handle:

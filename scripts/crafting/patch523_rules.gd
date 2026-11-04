@@ -3,6 +3,7 @@ extends RefCounted
 const BLESS = preload("res://scripts/equipment_blessing.gd")
 const OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
+const CONDITIONS = preload("res://scripts/crafting/patch523_craft_conditions.gd")
 const SCHEMA: String = "twilight-patch523-equipment-v1"
 const MAX_BYTES: int = 64000000
 const MAX_BATCH: int = 20
@@ -63,6 +64,8 @@ func load_file(path: String, expected_sha256: String) -> bool:
 				total+=int(outcome.probability)
 			if total!=1000000:
 				problem="원본 제작 확률 합계 오류"; return false
+		if value.has("craft_conditions") and not CONDITIONS.valid(value.craft_conditions):
+			problem="원본 제작 자격 구조 오류"; return false
 		if value.has("material_slots"):
 			if not value.material_slots is Array:
 				problem = "원본523 후보 슬롯 구조 오류"
@@ -107,16 +110,41 @@ func craftsman_weapon_rule(pinned: Dictionary) -> Dictionary:
 
 static func identity(physical: Dictionary) -> String:
 	var pinned: Variant = physical.get("record", {})
-	if not pinned is Dictionary or pinned.get("source", "") != "inven":
+	if not pinned is Dictionary:
 		return ""
 	var source_id: String = str(pinned.get("sourceId", ""))
 	if physical.has("sourceId") and str(physical.sourceId) != source_id:
 		return ""
-	return source_id
+	if pinned.get("source")=="inven": return source_id
+	if pinned.get("source")=="lineagem_patch523" and pinned.get("source_snapshot")=="patch523" and pinned.get("source_m_native_item",false) and source_id=="m523:item:"+str(int(pinned.get("source_item_class_id",0))) and int(pinned.get("source_item_class_id",0))>0: return str(int(pinned.source_item_class_id))
+	return ""
+
+static func _source_ids_match(left: Variant, right: Variant) -> bool:
+	if not left is Array or not right is Array or left.size()!=right.size(): return false
+	var a: Array[int]=[]
+	var b: Array[int]=[]
+	for pair: Array in [[left,a],[right,b]]:
+		for value: Variant in pair[0]:
+			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or float(value)!=float(int(value)) or int(value)<1: return false
+			pair[1].append(int(value))
+	a.sort(); b.sort()
+	return a==b
+
+func catalog_identity_matches(item: Dictionary, source_id: String) -> bool:
+	var canonical: Dictionary=record(source_id)
+	if canonical.is_empty() or item.get("name")!=canonical.get("name") or item.get("source")!=canonical.get("source") or item.get("sourceId")!=canonical.get("sourceId"): return false
+	if canonical.get("source")=="inven": return str(item.sourceId)==source_id
+	if canonical.get("source")!="lineagem_patch523" or not canonical.get("source_m_native_item",false): return false
+	for key: String in ["source_snapshot","source_item_class_id","source_display_name","source_is_stackable","source_test_item","source_level_limit_min","source_level_limit_max","slot"]:
+		if item.get(key)!=canonical.get(key): return false
+	for key: String in ["source_class_ids","source_equip_slot_ids"]:
+		if not _source_ids_match(item.get(key),canonical.get(key)): return false
+	return identity({"record":item})==source_id
 
 static func bless_code(physical: Dictionary) -> int:
 	var pinned: Dictionary = physical.get("record", {})
 	var result: int = 2 if BLESS.is_blessed(physical, pinned) else 1
+	if pinned.get("source_m_native_item",false) and int(pinned.get("source_bless_raw",result))!=result: return -1
 	return result if int(physical.get("source_bless_code", result)) == result else -1
 
 static func _worn(equipped: Dictionary, id: String) -> bool:
@@ -124,6 +152,13 @@ static func _worn(equipped: Dictionary, id: String) -> bool:
 		if value is Dictionary and str(value.get("instance_id", "")) == id:
 			return true
 	return false
+
+static func _drop_proof_matches(proof: Variant, source_id: String, source_bless: int) -> bool:
+	if not proof is Dictionary or proof.get("source_snapshot")!="patch523" or int(proof.get("source_item_class_id",0))!=int(source_id) or int(proof.get("bless_raw",0))!=source_bless or int(proof.get("required_quest_id",-1))!=0 or int(proof.get("source_npc_id",0))<1: return false
+	if proof.get("selection_policy")!="host_uniform_distinct_items_then_distinct_variants" or proof.get("quantity_policy")!="host_one" or not proof.get("source_rows") is Array or proof.source_rows.is_empty(): return false
+	for row: Variant in proof.source_rows:
+		if not row is Dictionary or int(row.get("ItemClassID",0))!=int(source_id) or int(row.get("NpcClassID",0))!=int(proof.source_npc_id) or int(row.get("Bless",0))!=source_bless or int(row.get("RequiredQuestID",-1))!=0: return false
+	return true
 
 func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss: bool) -> bool:
 	if identity(physical) != str(material.source_id) or int(physical.get("level", -1)) != int(material.level) or bless_code(physical) != int(material.bless_code):
@@ -135,6 +170,10 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 		return false
 	var annotated: Dictionary = OPTIONS.annotate(canonical)
 	var pinned: Dictionary = physical.get("record", {})
+	if not catalog_identity_matches(pinned,str(material.source_id)): return false
+	if canonical.get("source_m_native_item",false):
+		for key: Variant in canonical:
+			if key not in ["bless_state","blessed","source_bless_raw","patch523_item_use","source_class_ids","source_equip_slot_ids"] and pinned.get(key)!=canonical[key]: return false
 	for key: Variant in pinned:
 		if key == "originalSourceOptions":
 			if pinned[key] != canonical.get("sourceOptions", []):
@@ -144,6 +183,10 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 				return false
 		elif key == "patch523_item_use":
 			if pinned[key]!=canonical.get(key,{}): return false
+		elif key == "source_m_drop_proof":
+			if not _drop_proof_matches(pinned[key],str(material.source_id),int(material.bless_code)): return false
+		elif key == "source_m_item_id":
+			if int(pinned[key])!=int(material.source_id): return false
 		elif key in ["bless_state", "blessed", "grade_original", "grade_evidence", "patch523_effect_basis", "weaponTypeKey", "attackKind", "attackRangeCells", "ammo", "weaponAttackSpeed"]:
 			continue
 		elif key == "weight" and not canonical.has(key):
@@ -158,6 +201,9 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 	# only by a recipe whose original popup explicitly warns about that loss.
 	for key: Variant in physical:
 		if key not in ["name", "level", "element", "element_level", "record", "sourceId", "source_snapshot", "source_bless_code", "bless_state", "blessed"]:
+			if key=="source_m_drop_proof":
+				if physical[key]!=pinned.get(key) or not _drop_proof_matches(physical[key],str(material.source_id),int(material.bless_code)): return false
+				continue
 			if key != "source_smelt" or not allow_smelt_loss:
 				return false
 	return true
@@ -179,8 +225,8 @@ func available_material(material: Dictionary, inventory: Dictionary, items: Dict
 	return mini(owned, eligible)
 
 func _stack_identity_matches(item: Dictionary, material: Dictionary) -> bool:
+	if item.get("source","") in ["inven","lineagem_patch523"]: return catalog_identity_matches(item,str(material.source_id))
 	if str(item.get("sourceId",""))!=str(material.source_id): return false
-	if item.get("source","")=="inven": return true
 	var canonical: Dictionary=record(str(material.source_id))
 	return item.get("source","")=="twilight_host_binding" and canonical.get("source","")=="twilight_host_binding" and item.get("name")==canonical.get("name") and item.get("host_kind")==canonical.get("host_kind") and item.get("host_amount")==canonical.get("host_amount")
 
@@ -212,12 +258,14 @@ func material_selection(recipe_id: String, choices: Dictionary = {}) -> Dictiona
 	recipe["materials"] = selected
 	return {"ok":not missing,"recipe":recipe,"reason":"각 재료 슬롯의 후보를 직접 선택하세요" if missing else ""}
 
-func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, locks: Dictionary = {}, choices: Dictionary = {}) -> Dictionary:
+func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, locks: Dictionary = {}, choices: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
 	if not recipes.has(recipe_id) or count < 1 or count > MAX_BATCH or gold < 0 or current_weight < 0 or capacity < 0:
 		return denied("원본 제작법·횟수·보관 상태가 유효하지 않습니다")
 	var selection: Dictionary = material_selection(recipe_id, choices)
 	if not bool(selection.get("ok", false)): return selection
 	var recipe: Dictionary = selection.recipe
+	var qualification: Dictionary=CONDITIONS.stage(recipe,count,context)
+	if not bool(qualification.get("ok",false)): return qualification
 	if recipe.has("outcomes") and count!=1: return denied("확률 제작은 결과를 확인하며 1회씩 진행합니다")
 	var output: Dictionary = recipe.result
 	var result_record: Dictionary = record(str(output.source_id))
@@ -225,7 +273,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 		return denied("원본 결과 아이템의 정확한 ID 연결이 필요합니다")
 	var wallet_output: bool = bool(output.get("wallet_currency",false)) and str(output.source_id)=="26" and str(result_record.get("source",""))=="lineagem_patch523" and str(output.item)=="아데나" and not bool(output.physical)
 	var current_output: Dictionary = result_record if wallet_output else items.get(str(output.item), {})
-	if not wallet_output and (current_output.get("source", "") != "inven" or str(current_output.get("sourceId", "")) != str(output.source_id)):
+	if not wallet_output and not catalog_identity_matches(current_output,str(output.source_id)):
 		return denied("현재 게임에서 원본 결과 아이템을 사용할 수 없습니다")
 	var costs: Dictionary = {}
 	var selections: Array[String] = []
@@ -266,17 +314,18 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	var output_weight: int=maxi(0,int(current_output.get("weight",3)))*produced
 	for outcome: Dictionary in recipe.get("outcomes",[]):
 		var candidate: Dictionary=items.get(str(outcome.item),{})
-		if candidate.get("source","")!="inven" or str(candidate.get("sourceId",""))!=str(outcome.source_id) or record(str(outcome.source_id)).get("name","")!=outcome.item:
+		if not catalog_identity_matches(candidate,str(outcome.source_id)) or record(str(outcome.source_id)).get("name","")!=outcome.item:
 			return denied("모든 확률 결과의 정확한 아이템 ID 연결이 필요합니다")
 		output_weight=maxi(output_weight,maxi(0,int(candidate.get("weight",3)))*int(outcome.quantity))
 	net_weight += output_weight
 	if net_weight < 0 or net_weight > capacity:
 		return denied("제작 결과를 보관할 무게가 부족합니다")
-	return {"ok": true, "result_name": str(output.item), "result_quantity": produced, "cost": cost,
-		"materials": costs, "consumed_ids": selections, "new_weight": net_weight}
+	qualification.merge({"ok": true, "result_name": str(output.item), "result_quantity": produced, "cost": cost,
+		"materials": costs, "consumed_ids": selections, "new_weight": net_weight},true)
+	return qualification
 
-func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, next_id: int, locks: Dictionary = {}, choices: Dictionary = {}, roll: int = -1) -> Dictionary:
-	var approval: Dictionary = quote(recipe_id, count, inventory, gold, items, physical, equipped, current_weight, capacity, locks, choices)
+func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, next_id: int, locks: Dictionary = {}, choices: Dictionary = {}, roll: int = -1, context: Dictionary = {}) -> Dictionary:
+	var approval: Dictionary = quote(recipe_id, count, inventory, gold, items, physical, equipped, current_weight, capacity, locks, choices,context)
 	if not bool(approval.get("ok", false)):
 		return approval
 	var output: Dictionary = recipes[recipe_id].result
@@ -319,12 +368,13 @@ func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, it
 				counter += 1
 			var pinned: Dictionary = output_record.duplicate(true)
 			pinned["bless_state"] = "blessed" if int(output.bless_code) == 2 else "normal"
+			if pinned.get("source_m_native_item",false): pinned["source_bless_raw"]=int(output.bless_code)
 			var seal_options: Dictionary = supported_seal_options(str(output.source_id), int(output.bless_code))
 			if not seal_options.is_empty():
 				pinned["enhancement_options"] = seal_options
 				pinned["patch523_effect_basis"] = {"sha256":digest, "bless_code":2, "selection":"exact_level_only"}
 			staged_physical[str(counter)] = {"name": output_name, "level": int(output.level),
-				"element": "", "element_level": 0, "sourceId": str(output.source_id),
+				"element": "", "element_level": 0, "sourceId": str(pinned.get("sourceId",output.source_id)),
 				"source_snapshot": "patch523", "source_bless_code": int(output.bless_code),
 				"bless_state": pinned.bless_state, "record": pinned}
 			counter += 1

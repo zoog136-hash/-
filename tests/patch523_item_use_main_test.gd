@@ -31,8 +31,8 @@ func run() -> void:
 	check(QA.enter_game(world),"actual class-selection Main entered")
 	world.player.set_physics_process(false)
 	world.field_population.set_process(false)
-	check(world.patch523_equipment.recipes.size()==345,"next original recipes installed")
-	if world.patch523_equipment.recipes.size()!=345:
+	check(world.patch523_equipment.recipes.size()==347,"next original recipes installed")
+	if world.patch523_equipment.recipes.size()!=347:
 		world.queue_free(); await process_frame; quit(1); return
 	world.inventory.clear()
 	world.item_instances.clear()

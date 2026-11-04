@@ -64,8 +64,8 @@ func _initialize() -> void:
 	if not pack.is_empty():
 		var expected: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_SHA256")
 		check(rules.load_file(pack, expected),"actual Library-materialized 523 rules load")
-		check(rules.recipes.size()==345,"345 conservative source recipes mapped into current catalog")
-		check(not rules.load_file(pack, "0".repeat(64)) and rules.recipes.size()==345,"wrong SHA replacement retains real registry")
+		check(rules.recipes.size()==347,"347 conservative source recipes mapped into current catalog")
+		check(not rules.load_file(pack, "0".repeat(64)) and rules.recipes.size()==347,"wrong SHA replacement retains real registry")
 		var chain: Dictionary = rules.recipe_evidence(258618)
 		check(chain.inputs.size()==8 and chain.outputs.size()==1,"all elemental earring candidates preserved")
 		check(rules.recipes.has("patch523:258618") and not bool(rules.material_selection("patch523:258618").get("ok",false)),"elemental earring candidates require explicit row selection")

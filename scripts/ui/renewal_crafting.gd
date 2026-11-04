@@ -276,10 +276,13 @@ func _refresh_quote() -> void:
 		_build_materials(recipe,items)
 		UI.apply_item_visual(product,output,output_name,hud.item_image_index.get("아이템",{}),"detail")
 	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
-	probability_summary.visible=recipe.has("outcomes")
+	probability_summary.visible=recipe.has("outcomes") or recipe.has("craft_conditions")
 	var chances: PackedStringArray=[]
 	for outcome: Dictionary in recipe.get("outcomes",[]): chances.append("%s %.2f%%" % [str(outcome.label),float(outcome.probability)/10000.0])
-	probability_summary.text="원본 결과 확률 · " + " / ".join(chances)
+	probability_summary.text=("원본 결과 확률 · " + " / ".join(chances)) if recipe.has("outcomes") else ""
+	if recipe.has("craft_conditions"):
+		probability_summary.text+=world.patch523_equipment.CONDITIONS.brief(recipe,world._patch523_craft_context())
+	probability_summary.tooltip_text=world.patch523_craft_condition_summary(recipe) if source_recipe else ""
 	if not recipe.get("host_material_bindings",[]).is_empty(): probability_summary.text+=" · 게임 재료 연결 적용"
 
 	var state_label: String = (" +%d · %s" % [int(result.get("level", 0)), "축복" if int(result.get("bless_code", 1)) == 2 else "일반"]) if source_recipe and not bool(result.get("wallet_currency",false)) else ""
@@ -302,6 +305,8 @@ func _refresh_quote() -> void:
 	var source_use: String = world.PATCH523_ITEM_USE.summary(world.patch523_equipment.record(str(result.get("source_id","")))) if source_recipe else ""
 	if not source_use.is_empty(): detail.text += "\n" + UI.safe(source_use)
 	if source_recipe:
+		var condition_text: String=world.patch523_craft_condition_summary(recipe)
+		if not condition_text.is_empty(): detail.text+="\n"+UI.safe(condition_text)
 		detail.text += "\n원본523 %s · 표시된 강화·축복 상태의 재료만 사용합니다." % ("확률 제작" if recipe.has("outcomes") else "확정 제작")
 		for binding: Dictionary in recipe.get("host_material_bindings",[]):
 			detail.text += "\n" + UI.safe(str(binding.binding_origin))
@@ -410,6 +415,7 @@ func _craft() -> void:
 		var recipe: Dictionary = world.crafting.recipes.get(id, {})
 		var warning: String = "\n재료 장비의 속성 제련 효과는 계승되지 않습니다." if int(recipe.get("popup_text_id", 0)) != 0 else ""
 		if id.begins_with("patch523:"): warning += "\n아데나 소모: %s" % UI.number_text(int(report.cost))
+		if recipe.has("craft_conditions"): warning+="\n"+world.patch523_craft_condition_summary(recipe)
 		for outcome: Dictionary in recipe.get("outcomes",[]):
 			warning += "\n%s %.4f%% → %s +%d ×%d" % [str(outcome.label),float(outcome.probability)/10000.0,str(outcome.item),int(outcome.level),int(outcome.quantity)]
 		if not recipe.get("host_material_bindings",[]).is_empty(): warning += "\n게임 설정: 원본549 재료를 기존 드래곤 다이아몬드 스택에 연결합니다."
