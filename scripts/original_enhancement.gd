@@ -80,6 +80,11 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 	for key: String in extras:
 		bonus[key]=extras[key]
 	labels.merge({"strFlat":"STR","dexFlat":"DEX","intFlat":"INT","er":"ER","dg":"DG",
+		"stun_accuracy":"스턴 적중(%)","fear_accuracy":"공포 적중(%)","hold_accuracy":"홀드 적중(%)","poison_accuracy":"독 적중(%)","silence_accuracy":"침묵 적중(%)",
+		"hold_resistance":"홀드 내성(%)","fear_resistance":"공포 내성(%)","poison_resistance":"독 내성(%)","silence_resistance":"침묵 내성(%)",
+		"healing_magic_pct":"회복 마법량(%)","castSpeed":"시전 속도(%)","dot_damage_reduction_pct":"지속 대미지 감소(%)",
+		"melee_critical_resistance":"근거리 치명타 저항(%)","ranged_critical_resistance":"원거리 치명타 저항(%)",
+		"melee_damage_reduction_pct":"근거리 대미지 감소(%)","ranged_damage_reduction_pct":"원거리 대미지 감소(%)","magic_damage_reduction_pct":"마법 대미지 감소(%)",
 		"damage_amp_pct":"대미지 증가(%)","adena_drop_pct":"아데나 드롭량(%)",
 		"mpRecoveryTick":"MP 회복","magicDamage":"마법 대미지","attackSpeed":"공격 속도(%)",
 		"speedBonusPct":"이동 속도(%)","pve_damage_reduction":"PVE 리덕션","pve_damage_reduction_pct":"PVE 리덕션(%)",
@@ -97,6 +102,8 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 		else:
 			result.append("%s %+.2f" % [label, float(bonus[key])])
 	var text: String=" · ".join(result) if not result.is_empty() else "추가 강화 옵션 없음"
+	for key: String in ["healing_magic_pct","castSpeed","dot_damage_reduction_pct"]:
+		if extras.has(key):text+=" · 회복·시전·지속 피해 처리: TWILIGHT 설정";break
 	if level==21 and record.get("patch523_effect_basis",{}).get("local_level21_extrapolation",false): text+=" · +21 효과: TWILIGHT 추정 설정"
 	var invoke_text: String=preload("res://scripts/crafting/patch523_equipment_combat.gd").summary(record,level)
 	if not invoke_text.is_empty():text+="\n"+invoke_text

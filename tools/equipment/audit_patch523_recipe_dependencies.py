@@ -80,7 +80,37 @@ def audit(tables, rules, catalog, drops, binding_catalog=None):
                 'not proved by drop membership; may be reward dependency; actual shared catalog required',
             'consumers': consumers,
         }
-    return {
+    dates = {r['ID']:r for r in tables.get('DateTimes_Korean',[])}
+    rejected_detail = {}
+    # Every rejected recipe is classified, including ones whose first error
+    # precedes a separate catalog/server/date prerequisite. Flags overlap.
+    for craft_id, admission in rules['recipe_admission'].items():
+        view = constraints[int(craft_id)]
+        required_ids = {str(r['ItemClassID']) for direction in ('inputs','outputs')
+                        for r in rules['raw_recipes'][direction].get(craft_id,[]) if r['ItemClassID']>0}
+        flags = {}
+        missing_source = sorted(required_ids-source_items.keys(),key=int)
+        tests = sorted((i for i in required_ids if source_items.get(i,{}).get('TestItem')),key=int)
+        if missing_source: flags['missing_source_item_class_ids'] = missing_source
+        if tests: flags['source_test_item_ids'] = tests
+        if view['ServerLimitSetID']: flags['source_server_limit_set_id'] = view['ServerLimitSetID']
+        for field in ('IsCoalitionItem','NoRepeat','IsBelowLevelLimit'):
+            if view.get(field): flags[field] = view[field]
+        if view.get('LevelLimitValue'): flags['source_level_limit_value'] = view['LevelLimitValue']
+        restrictions = rules['raw_recipes']['restrictions'].get(craft_id,[])
+        if restrictions: flags['source_restriction_contracts'] = restrictions
+        if (view['EffectiveFrom'],view['EffectiveTo'],view['CraftTimeTypeID']) != (1,3,1):
+            flags['source_calendar'] = {'from_id':view['EffectiveFrom'],'to_id':view['EffectiveTo'],
+                'craft_time_type_id':view['CraftTimeTypeID'],
+                'from_row':dates.get(view['EffectiveFrom']), 'to_row':dates.get(view['EffectiveTo']),
+                'timezone_in_source':False, 'server_reset_inferred':False}
+        titles = sorted((i for i in required_ids if source_items.get(i,{}).get('CategoryID')==10204),key=int)
+        if titles: flags['requires_source_title_acquisition_and_ownership_contract'] = titles
+        rejected_detail[craft_id] = {'current_admission':admission,'source_flags':flags,
+            'missing_catalog_ids':recipes.get(craft_id,{}).get('required_item_ids',[]),
+            'input_output_source_ids':sorted(required_ids,key=int),
+            'executable_not_claimed':True}
+    result = {
         'schema': 'patch523-recipe-dependencies-v1',
         'pr238_contract_sha': '58b07798753d56f87e08cd0cc95febffe694af37',
         'pr238_pack_bytes_verified_by_this_audit': False,
@@ -94,7 +124,13 @@ def audit(tables, rules, catalog, drops, binding_catalog=None):
             'item_ids_proved_in_pr238_drop_membership': sum(x['pr238_source_drop_membership'] for x in dependencies.values()),
         },
         'recipes': recipes, 'item_dependencies': dependencies,
+        'all_rejected_recipes': rejected_detail,
     }
+    result['summary'].update(all_rejected_recipes_classified=len(rejected_detail),
+        rejection_first_reason_counts=dict(Counter(r['current_admission']['reason'] for r in rejected_detail.values())),
+        overlapping_source_flag_counts=dict(Counter(k for r in rejected_detail.values() for k in r['source_flags'])),
+        source_calendar_rows_present=sum(bool(r['source_flags'].get('source_calendar',{}).get('from_row')) and bool(r['source_flags'].get('source_calendar',{}).get('to_row')) for r in rejected_detail.values()))
+    return result
 
 
 def main():

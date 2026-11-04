@@ -24,5 +24,19 @@
   "duplicate_invoke_policy": "strongest_probability_per_option",
   "invoke_order": "after_existing_damage_resolution",
   "defence_invoke_spell_scope": "attack_type_only",
-  "invoke_basis": "Exact source fixed amount and probability. Duplicate option stacking, post-resolution ordering and defence BySpellAttack interaction are TWILIGHT interpretations; raw AttackType0=All retained."
+  "invoke_basis": "Exact source fixed amount and probability. Duplicate option stacking, post-resolution ordering and defence BySpellAttack interaction are TWILIGHT interpretations; raw AttackType0=All retained.",
+  "cast_speed_consumer": "existing_skill_cooldown_factor",
+  "healing_magic_modes": [
+    "heal",
+    "local_heal"
+  ],
+  "source_dot_channels": [
+    "poison",
+    "bleed"
+  ],
+  "typed_numeric_basis": "Source amounts and status/attack targets are exact. Existing cooldown factor, healing after LFE, additive typed/general reduction capped90 and supported poison/bleed DOT channels are configurable TWILIGHT interpretation; no original full formula claim.",
+  "public_scalar_basis": [
+    "https://lineagem.plaync.com/guidebook/view?title=마법사+마법",
+    "https://lineagem.plaync.com/board/update/view?articleId=63865db9bd89877d499055cf"
+  ]
 }

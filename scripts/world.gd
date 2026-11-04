@@ -972,6 +972,7 @@ func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 
 func _skill_cooldown_factor() -> float:
 	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
+	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")
 	return clampf(1.0 - (float(_catalog_stat_sum("skillCooldownPct")) + cast_bonus) / 100.0, 0.1, 1.0)
 
 func _effective_max_mp() -> int:
@@ -2948,7 +2949,7 @@ func _respawn_player(message_text: String) -> void:
 func _on_player_poison_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
 		return
-	var poison_damage: int = maxi(1, damage_value)
+	var poison_damage: int = _source_dot_damage(damage_value,"poison")
 	hp = maxi(0, hp - poison_damage)
 	player.show_poison_damage(poison_damage)
 	hud.append_log("독 피해 %d" % poison_damage)
@@ -2961,7 +2962,7 @@ func _on_player_poison_tick(damage_value: int) -> void:
 func _on_player_bleed_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
 		return
-	var bleed_damage: int = maxi(1, damage_value)
+	var bleed_damage: int = _source_dot_damage(damage_value,"bleed")
 	hp = maxi(0, hp - bleed_damage)
 	player.show_bleed_damage(bleed_damage)
 	hud.append_log("출혈 피해 %d" % bleed_damage)
@@ -3002,14 +3003,14 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			])
 		return
 	var attacker_critical_rate: int = attacker.critical_rate_for_type(normalized_type)
-	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat())
+	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat(normalized_type))
 	var critical: bool = rng.randf() < critical_chance
 	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
 	var attack_element: String = ELEMENT_RULES.channel(attacker.attack_element)
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
-	reduced = _pve_damage_after_item_buffs(reduced)
+	reduced = _pve_damage_after_item_buffs(reduced,normalized_type)
 	reduced = growth.incoming_damage(reduced)
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
@@ -7860,10 +7861,11 @@ func _player_stun_chance(target: TwilightMonster) -> float:
 		target.monster_level
 	)
 
-func _critical_resistance_stat() -> int:
+func _critical_resistance_stat(attack_type: String="") -> int:
 	var total: int = 0
 	for record: Dictionary in _all_equipped_records():
 		total += _record_critical_resistance(record)
+	if attack_type in ["melee","ranged"]:total+=int(_equipment_inven_sum(attack_type+"_critical_resistance"))
 	return clampi(total, 0, 50)
 
 func _critical_chance(attacker_critical_rate: int, defender_critical_resistance: int) -> float:
@@ -7958,9 +7960,16 @@ func _damage_reduction_stat() -> int:
 	total += _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "reduction")
 	return maxi(0, total)
 
-func _pve_damage_after_item_buffs(raw_damage: int) -> int:
+func _source_dot_damage(raw_damage: int,kind: String) -> int:
+	var percent: float=0.0
+	if kind in PATCH523_ENHANCE.policy().get("source_dot_channels",[]):percent=clampf(_equipment_inven_sum("dot_damage_reduction_pct"),0,90)
+	return maxi(1,int(round(float(raw_damage)*(1.0-percent/100.0))))
+
+func _pve_damage_after_item_buffs(raw_damage: int,attack_type: String="") -> int:
 	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
 	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct") + _catalog_stat_sum("pve_damage_reduction_pct") + int(_equipment_inven_sum("pve_damage_reduction_pct")), 0, 90)
+	if attack_type in ["melee","ranged","magic"]:
+		percent=clampi(percent+int(_equipment_inven_sum(attack_type+"_damage_reduction_pct")),0,90)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
 	return reduced

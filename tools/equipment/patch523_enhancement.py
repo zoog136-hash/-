@@ -20,6 +20,7 @@ FIELDS = {
     'ExperienceAdditionPercent':('xp_pct','xp',10000),
     'EinasadSavingPercent':('ain_saving_pct','blessing_consumption_reduction_pct',10000),
     'PotionConsumeDelayDecreasePercent':('potion_cooldown_pct','potionCooldownPct',10000),
+    '_stun':('stun_resistance','stun_resistance',10000),
 }
 EXTRA = {
     'Strength':('strFlat',1), 'Dexterity':('dexFlat',1), 'Intelligence':('intFlat',1),
@@ -41,12 +42,39 @@ EXTRA = {
     'DamageReductionPercent':('pve_damage_reduction_pct',10000),
     # Unit211 ValuePercent already stores percentage points (divisor1).
     '_adena_drop':('adena_drop_pct',1),
+    'HPHealIncreasePercent':('healing_magic_pct',10000),
+    'CastSpeedBonus':('castSpeed',10000),
+    'MeleeCriticalResist':('melee_critical_resistance',10000),
+    'RangeCriticalResist':('ranged_critical_resistance',10000),
+    'MeleeDamageReductionPercent':('melee_damage_reduction_pct',10000),
+    'RangeDamageReductionPercent':('ranged_damage_reduction_pct',10000),
+    'MagicDamageReductionPercent':('magic_damage_reduction_pct',10000),
+    'PoisonDamageReductionPercent':('dot_damage_reduction_pct',10000),
 }
+for _status in ['stun','hold','fear','poison','silence']:
+    EXTRA['_hit_'+_status]=(_status+'_accuracy',10000)
+    if _status!='stun': EXTRA['_resist_'+_status]=(_status+'_resistance',10000)
+
+
+def qualified_name(bonus, name, resistance_types):
+    application, target = bonus['BonusApplicationTypeID'], bonus['BonusApplicationTargetID']
+    if not application and not target:
+        # These types require an explicit target; never turn an unknown
+        # resistance or drop target into a generic bonus.
+        return None if name in ['HitSpecialResistance','SpecialResistance','IncreaseNpcItemDropAmount'] else name
+    if name in ['HitSpecialResistance','SpecialResistance'] and application==2:
+        status = resistance_types.get(target,'').lower()
+        if status in ['stun','hold','fear','poison','silence']:
+            return '_hit_'+status if name=='HitSpecialResistance' else '_stun' if status=='stun' else '_resist_'+status
+    if name=='IncreaseNpcItemDropAmount' and application==5 and target==26:
+        return '_adena_drop'
+    return None
 
 
 def compile_equipment(tables, bound_items, bonuses):
     types = {r['ID']:r for r in tables['BonusType']}
     invoke_options = {r['ID']:r for r in tables.get('InvokeOption',[])}
+    resistance_types = {r['ID']:r['Name'] for r in tables.get('SpecialResistanceType',[])}
     result = {}
     for iid, item in bound_items.items():
         raw, canonical = item['item_class'], item['catalog_record']
@@ -83,16 +111,10 @@ def compile_equipment(tables, bound_items, bonuses):
                             live_invokes.append({'row_id':row['ID'],'probability':b['Value'],'option':option,
                                                  'kind':'attack_fixed_damage' if kind==3 else 'defence_flat_reduction'})
                             continue
-                    if b['BonusApplicationTypeID'] or b['BonusApplicationTargetID']:
-                        if name == 'SpecialResistance' and b['BonusApplicationTypeID']==2 and b['BonusApplicationTargetID']==6:
-                            name = '_stun'
-                        elif name == 'IncreaseNpcItemDropAmount' and b['BonusApplicationTypeID']==5 and b['BonusApplicationTargetID']==26:
-                            # Original ItemClass26 is Adena, not every item.
-                            name = '_adena_drop'
-                        else:
-                            skipped.add(row['ID']); continue
+                    name = qualified_name(b,name,resistance_types)
+                    if name is None:
+                        skipped.add(row['ID']); continue
                     spec = FIELDS.get(name)
-                    if name == '_stun': spec = ('stun_resistance','stun_resistance',10000)
                     if spec:
                         key, _, divisor = spec
                         totals[key] = totals.get(key,0)+b['Value']/divisor
@@ -106,7 +128,8 @@ def compile_equipment(tables, bound_items, bonuses):
                 zero_keys = set()
                 for row in selected:
                     if row['EnchantLevel']==0:
-                        n=types[bonuses[str(row['BonusID'])]['BonusTypeID']]['Name']
+                        b=bonuses[str(row['BonusID'])]
+                        n=qualified_name(b,types[b['BonusTypeID']]['Name'],resistance_types)
                         if n in FIELDS: zero_keys.add(n)
                 for name in zero_keys:
                     key, host, _ = FIELDS[name]
@@ -117,10 +140,9 @@ def compile_equipment(tables, bound_items, bonuses):
                         totals[key] = {'total':totals[key],'base_key':host,'scale':100 if host=='xp' else 1}
                 for row in selected:
                     if row['EnchantLevel']!=0: continue
-                    b=bonuses[str(row['BonusID'])]; name=types[b['BonusTypeID']]['Name']
-                    adena = name=='IncreaseNpcItemDropAmount' and b['BonusApplicationTypeID']==5 and b['BonusApplicationTargetID']==26
-                    if adena: name='_adena_drop'
-                    if name in EXTRA and (adena or (b['BonusApplicationTypeID']==0 and b['BonusApplicationTargetID']==0)):
+                    b=bonuses[str(row['BonusID'])]
+                    name=qualified_name(b,types[b['BonusTypeID']]['Name'],resistance_types)
+                    if name in EXTRA:
                         key,_=EXTRA[name]
                         if key in extra and not isinstance(extra[key],dict): extra[key]={'total':extra[key],'base_key':key,'scale':1}
                 by_rank[str(level)] = totals

@@ -14,7 +14,7 @@ var pack_dialog: FileDialog
 var pack_status: Label
 var catalog_dialog: FileDialog
 var catalog_status: Label
-const DEFAULT_SHA: String = "1ea677afe73929b04d745826034c7750cdbc0a20c441d6000756f0ee3eab67fc"
+const DEFAULT_SHA: String = "568a840bcf85a00fae740287433b8223c2ea150db7423bff34c77a6e8349d337"
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -164,6 +164,7 @@ func _refresh() -> void:
 		var actual_options: Dictionary = physical.get("record", {}).get("enhancement_options", {}).get(str(level_value), {})
 		labels.merge({"ArmorClass":"물리 방어력(AC)","WeaponDamageBonus":"추가 대미지","WeaponHitBonus":"무기 명중","HPPlus":"최대 HP","MPPlus":"최대 MP","CarryPlus":"무게 보너스","MagicResist":"MR","SpellPower":"SP","MeleeCritical":"근거리 치명타","RangeCritical":"원거리 치명타","MagicCritical":"마법 치명타","AttackSpeedBonus":"공격 속도","MoveSpeedBonus":"이동 속도","RegenMP":"MP 회복","PVEDamageReduction":"PVE 리덕션","PVPDamageReduction":"PVE 리덕션","PVEDamageReductionPercent":"PVE 리덕션 비율"})
 		labels.merge({"PierceDamageReductionPercent":"대미지 증가","PVEPierceDamageReductionPercent":"PVE 대미지 증가","DamageReductionPercent":"대미지 감소","IncreaseNpcItemDropAmount":"아데나 드롭량"})
+		labels.merge({"HPHealIncreasePercent":"회복 마법량","CastSpeedBonus":"시전 속도","MeleeCriticalResist":"근거리 치명타 저항","RangeCriticalResist":"원거리 치명타 저항","MeleeDamageReductionPercent":"근거리 대미지 감소","RangeDamageReductionPercent":"원거리 대미지 감소","MagicDamageReductionPercent":"마법 대미지 감소","PoisonDamageReductionPercent":"지속 대미지 감소"})
 		for effect: Dictionary in effects:
 			var kind: String = str(effect.bonus_type.get("Name", ""))
 			var value: String = str(int(effect.bonus.Value))
@@ -175,6 +176,11 @@ func _refresh() -> void:
 			if kind=="InvokeOption":label="발동 확률"
 			if kind == "SpecialResistance" and int(effect.bonus.BonusApplicationTypeID) == 2 and int(effect.bonus.BonusApplicationTargetID) == 6:
 				label = "스턴 내성"
+			if kind in ["SpecialResistance","HitSpecialResistance"] and int(effect.bonus.BonusApplicationTypeID)==2:
+				var status_name: String="원본#%d" % int(effect.bonus.BonusApplicationTargetID)
+				for status: Dictionary in book.data.enchantment.get("SpecialResistanceType",[]):
+					if int(status.ID)==int(effect.bonus.BonusApplicationTargetID):status_name=str({"Stun":"스턴","Hold":"홀드","Fear":"공포","Poison":"독","Silence":"침묵"}.get(status.Name,status.Name));break
+				label=status_name+(" 적중" if kind=="HitSpecialResistance" else " 내성")
 			var applied: bool = blessing == 2 and supported.has(kind) and expected_options.has(supported[kind]) and actual_options.get(supported[kind]) == expected_options[supported[kind]]
 			if prepared.get("patch523_effect_basis",{}).get("selection")=="source_exact_level":
 				applied=int(effect.row.ID) not in prepared.patch523_effect_basis.get("unconnected_effect_row_ids",[])

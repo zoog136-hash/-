@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from patch523_enhancement import compile_equipment
 
 SOURCE_SHA256 = {
+    "SpecialResistanceType": "31ede31d0d027ee99107a9bbcc1e0d9f602d7814cc8ebd1bf6d34ebb54ada2c2",
     "InvokeOption": "ea1e6e99f7a501312d7e5a9d114c7edbefc18f72de1d7816abd25085a6e9939f",
     "InvokeOptionType": "ac0d5094e7e1e63968d3215ced14f327a24c4e06e5380a4b7d0f769f92e3069a",
     "BonusApplicationType": "f66a6b5f7a537f618daef95e8d990894546356359d774aa49bd53d483cc7dcbb",
@@ -361,7 +362,7 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
     if binding_catalog_bytes is not None:
         result['binding_catalog_sha256'] = digest(binding_catalog_bytes)
     result['equipment_runtime'] = compile_equipment(tables, bound_items, bonuses)
-    result['enchantment'].update({n:tables.get(n,[]) for n in ['ItemBlessBonus','Material','Unit','UIUnit','InvokeOption','InvokeOptionType','BonusApplicationType','AttackType']})
+    result['enchantment'].update({n:tables.get(n,[]) for n in ['ItemBlessBonus','Material','Unit','UIUnit','InvokeOption','InvokeOptionType','BonusApplicationType','AttackType','SpecialResistanceType']})
     return result
 
 

@@ -393,6 +393,8 @@ func heal(skill: Dictionary, amount: int) -> void:
 	var maximum: int = world._effective_max_hp()
 	var before: int = world.hp
 	var effective := maxi(0, amount + int(stat("lfe") * float(skill.get("lfe_scale", 0))))
+	if str(skill.get("mode","")) in world.PATCH523_ENHANCE.policy().get("healing_magic_modes",[]):
+		effective=maxi(0,int(round(float(effective)*(1.0+maxf(0.0,world._equipment_inven_sum("healing_magic_pct"))/100.0))))
 	world.hp = mini(maximum, before + effective)
 	if bool(skill.get("overflow_shield", false)) and before + effective > maximum:
 		shields[str(skill.id)] = {"amount":mini(maximum, before + effective - maximum),"remaining":float(skill.get("duration", 12))}
