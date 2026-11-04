@@ -67,3 +67,5 @@ python3 tools/import_symbol523.py \
 ```
 
 커밋에는 `[skip ci]`를 사용한다. 원격 CI 수동 실행·재실행·병합은 하지 않는다. 로컬 통과를 원격 required checks 통과로 표시하지 않는다.
+
+최신 문양 데이터 적용팩·원본 표 백업의 보관 위치/해시/새 소비 폴더 설치·실행은 [보관 영수증](RESOURCE_STORAGE.md)과 `RESOURCE_STORAGE.json`에 구분한다.
