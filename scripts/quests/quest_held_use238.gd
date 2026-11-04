@@ -54,23 +54,10 @@ class View extends Node:
 			if overrides.has(key):payload[key]=overrides[key].duplicate(true)
 		# Persist the proven binding/use without converting or regranting the
 		# held inventory. Original grant quantity and receipt remain immutable.
-		var state: Dictionary=host.quest_service.export_state()
-		if not state.has("item_grants"):state["item_grants"]={}
-		if not state.item_grants.has(owned.quest_id):state.item_grants[owned.quest_id]=[]
-		var rows: Array=state.item_grants[owned.quest_id]
-		var used: int=int(owned.original_quantity)-int(owned.quantity)
-		var existing: Dictionary={}
-		for receipt: Dictionary in rows:
-			if int(receipt.reward_id)==int(owned.reward_id):existing=receipt
-		if not existing.is_empty():
-			if existing.get("origin")!="held_use" or int(existing.get("used_quantity",0))!=used or int(existing.quantity)!=int(owned.original_quantity) or existing.inventory_key!=owned.inventory_key:return ERR_INVALID_DATA
-		elif used!=0:return ERR_INVALID_DATA
-		else:
-			existing={"schema":1,"origin":"held_use","source_sha256":owned.source_sha256,"reward_id":int(owned.reward_id),"item_class_id":int(owned.item_class_id),"quantity":int(owned.original_quantity),"bless_raw":int(owned.bless_code_id),"inventory_key":str(owned.inventory_key),"pack_sha256":D.DATA_SHA}
-			rows.append(existing)
-		existing["used_quantity"]=used+1
+		var receipt: Dictionary=OWN.use_state(host,prepared,D.DATA_SHA)
+		if not receipt.ok:return ERR_INVALID_DATA
+		var state: Dictionary=receipt.state
 		payload["quest_state"]=state
-		if not host.quest_service.validate_saved_state(state).is_empty():return ERR_INVALID_DATA
 		var path: String=host.save_path()
 		var prior: String=FileAccess.get_sha256(path)
 		var error: Error=host._save_game(true,payload)

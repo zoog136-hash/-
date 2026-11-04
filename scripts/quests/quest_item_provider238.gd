@@ -6,7 +6,7 @@ const GRANTS = preload("res://scripts/loot/patch523_item_inventory.gd")
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
 const HELD_USE = preload("res://scripts/quests/quest_held_use238.gd")
 const PIN = "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
-const REVIEWED_IDS: Array[int] = [859,1281]
+const REVIEWED_IDS: Array[int] = [859,1281,239]
 var definitions: Dictionary = {}
 var owner: WeakRef
 var ready: bool = false
@@ -25,7 +25,9 @@ func configure(world: Node) -> void:
 	for id: int in REVIEWED_IDS:
 		var definition: Dictionary = D.definition_id(str(id))
 		var spec: Dictionary = definition.get("native_record",{}).get("source_use_spec",{})
-		if spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","guaranteed_bag"]: continue
+		if id==239:
+			if not world.consumable_service.has_method("use_owned_native_return"):continue
+		elif spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","guaranteed_bag"]: continue
 		definitions[id]=definition
 		_register(world,definition.native_record,1)
 		for reward: Dictionary in spec.get("rewards",[]):
@@ -53,6 +55,7 @@ func resolve(reward: Dictionary) -> Dictionary:
 	if definition.is_empty() or definition.original_item!=reward.get("source_item",{}): return {}
 	var bless: int = int(reward.ItemBlessCodeID)
 	if bless not in [1,2,3] or definition.original_item.get("TestItem",true): return {}
+	if id==239 and bless!=1:return {}
 	var record: Dictionary = D.variant_item(definition.native_record,bless)
 	if not D.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))).is_empty(): return {}
 	_register(world,definition.native_record,bless)
@@ -73,11 +76,16 @@ func try_use_inventory(world: Node, item_key: String) -> bool:
 
 func try_use(world: Node, record: Dictionary) -> bool:
 	if not handles(record): return false
+	if not world._patch523_item_allowed():return true
 	if world._item_locked(str(record.name),""):
 		world.hud.show_message("잠긴 원본 아이템은 소비하지 않습니다")
 		return true
 	var before: String=FileAccess.get_sha256(world.save_path())
-	var handled: bool=USE.try_use(world,record)
+	var handled: bool=true
+	if int(record.get("source_item_class_id",0))==239:
+		var result: Dictionary=world.consumable_service.use_owned_native_return(str(record.name))
+		world.hud.show_message(str(result.get("message",result.get("reason","귀환 결과 확인 필요"))))
+	else:handled=USE.try_use(world,record)
 	if FileAccess.get_sha256(world.save_path())!=before:
 		var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 		var aligned: bool=durable is Dictionary
@@ -98,6 +106,7 @@ func held_binding(world: Node, id: String) -> Dictionary:
 	if not owned.ok or owned.source_use_immediately or not definitions.has(int(owned.item_class_id)): return {}
 	var definition: Dictionary=definitions[int(owned.item_class_id)]
 	if owned.source_item!=definition.original_item or int(owned.bless_code_id) not in [1,2,3]: return {}
+	if int(owned.item_class_id)==239 and int(owned.bless_code_id)!=1:return {}
 	return owned
 
 func supported_held(world: Node) -> Dictionary:
@@ -115,6 +124,12 @@ func supported_held(world: Node) -> Dictionary:
 func try_use_held(world: Node, id: String) -> bool:
 	var owned: Dictionary=held_binding(world,id)
 	if owned.is_empty():return false
+	if not world._patch523_item_allowed():return true
+	if int(owned.item_class_id)==239:
+		var outcome: Dictionary=world.consumable_service.use_owned_quest_return(id)
+		world.hud.show_message(str(outcome.get("message",outcome.get("reason","귀환 결과 확인 필요"))))
+		if outcome.get("ok",false) and outcome.get("saved",false) and int(outcome.get("consumed",0))==1:world.quest_auto.refresh_context(world)
+		return bool(outcome.get("handled",false))
 	var prepared: Dictionary=OWN.prepare_debit(world,id,1)
 	if not prepared.ok:
 		world.hud.show_message(str(prepared.reason));return true

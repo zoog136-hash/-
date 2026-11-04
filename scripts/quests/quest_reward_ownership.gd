@@ -50,7 +50,7 @@ static func proof(world: Node, physical_id: String) -> Dictionary:
 
 static func stamp(world: Node) -> String:
 	# Key ordering changes may conservatively stale a quote, never authorize it.
-	return JSON.stringify([world.quest_service.claimed,world.inventory,world.item_instances]).sha256_text()
+	return JSON.stringify([world.quest_service.claimed,world.quest_service.item_grants,world.inventory,world.item_instances]).sha256_text()
 
 static func prepare_debit(world: Node, physical_id: String, quantity: int) -> Dictionary:
 	var owned: Dictionary = proof(world,physical_id)
@@ -73,3 +73,24 @@ static func current(world: Node, prepared: Dictionary) -> bool:
 	if quantity<=0: return false
 	var fresh: Dictionary = prepare_debit(world,str(prepared.get("physical_id","")),quantity)
 	return fresh.get("ok",false) and fresh.ownership==prepared.get("ownership") and fresh.override==prepared.get("override")
+
+static func use_state(world: Node, prepared: Dictionary, pack_sha: String) -> Dictionary:
+	if not current(world,prepared):return denied("원본 보상 사용 후보가 변경되었습니다")
+	var owned: Dictionary=prepared.ownership
+	var state: Dictionary=world.quest_service.export_state()
+	if not state.has("item_grants"):state["item_grants"]={}
+	if not state.item_grants.has(owned.quest_id):state.item_grants[owned.quest_id]=[]
+	var rows: Array=state.item_grants[owned.quest_id]
+	var used: int=int(owned.original_quantity)-int(owned.quantity)
+	var existing: Dictionary={}
+	for receipt: Dictionary in rows:
+		if int(receipt.reward_id)==int(owned.reward_id):existing=receipt
+	if not existing.is_empty():
+		if existing.get("origin")!="held_use" or int(existing.get("used_quantity",0))!=used or int(existing.quantity)!=int(owned.original_quantity) or existing.inventory_key!=owned.inventory_key or existing.get("source_sha256")!=owned.source_sha256 or existing.get("pack_sha256")!=pack_sha:return denied("원본 보상 사용 영수증 불일치")
+	elif used!=0:return denied("원본 보상 잔여 수량의 이전 사용 영수증 없음")
+	else:
+		existing={"schema":1,"origin":"held_use","source_sha256":owned.source_sha256,"reward_id":int(owned.reward_id),"item_class_id":int(owned.item_class_id),"quantity":int(owned.original_quantity),"bless_raw":int(owned.bless_code_id),"inventory_key":str(owned.inventory_key),"pack_sha256":pack_sha}
+		rows.append(existing)
+	existing["used_quantity"]=used+int(prepared.quantity)
+	if not world.quest_service.validate_saved_state(state).is_empty():return denied("원본 보상 사용 영수증 형식 오류")
+	return {"ok":true,"state":state}

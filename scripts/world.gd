@@ -438,7 +438,6 @@ func _ready() -> void:
 	inventory_automation.refresh_catalog()
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
-	quest_item_provider.configure(self)
 	if BASE508_TEST.enabled():
 		var test_map:String=BASE508_TEST.register_test_map(maps,maps_by_id)
 		if test_map.is_empty():
@@ -453,6 +452,7 @@ func _ready() -> void:
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
+	quest_item_provider.configure(self)
 	ground_loot.configure(self)
 	loot_pickup.configure(self, ground_loot)
 	presentation_audio = PRESENTATION_AUDIO.new()

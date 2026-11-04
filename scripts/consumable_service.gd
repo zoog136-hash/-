@@ -5,6 +5,8 @@ class_name TwilightConsumableService
 const RULES = preload("res://scripts/consumable_rules.gd")
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
+const REGIONAL_RETURN = preload("res://scripts/quickslots/regional_return.gd")
+const QUEST_RETURN239 = preload("res://scripts/quests/quest_return239.gd")
 const BLESSING = preload("res://scripts/equipment_blessing.gd")
 const ELIXIR_LIMIT: int = 10
 const STAT_CAP: int = 45
@@ -16,6 +18,78 @@ var half_elixirs_used: int = 0
 var permanent_damage_bonuses: Dictionary = {
 	"melee_damage": 0, "ranged_damage": 0, "magic_damage": 0
 }
+
+## Compatible PR247 bc0ce721 result interface. The same movement consumer is
+## shared with the exact quest-receipt input, without a transient native grant.
+func use_owned_native_return(item_name: String) -> Dictionary:
+	return _commit_return239(item_name)
+
+func use_owned_quest_return(physical_id: String) -> Dictionary:
+	var input: Dictionary=QUEST_RETURN239.prepare(world,physical_id)
+	if not input.ok:return {"ok":false,"saved":false,"handled":true,"consumed":0,"reason":str(input.reason),"source_item_id":239}
+	return _commit_return239(str(input.inventory_key),input)
+
+func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Dictionary:
+	var is_quest: bool=not quest_input.is_empty()
+	var record: Dictionary=quest_input.get("record",{}) if is_quest else world._find_catalog_item_record(item_name)
+	var stack: Dictionary=REGIONAL_RETURN.stack_identity(str(record.get("name","")) if is_quest else item_name,record)
+	var result: Dictionary={"ok":false,"saved":false,"handled":is_quest or REGIONAL_RETURN.claims_identity(item_name,record),"consumed":0,"inventory_key":item_name,"source_item_id":239}
+	if world.quest_service.save_blocked:
+		result["reason"]="저장 보호 중 · 정상 저장 불러오기 필요";return result
+	if stack.is_empty() or stack.get("origin")!="patch523_native_normal" or int(stack.get("item_class_id",0))!=239:
+		result["reason"]="정확한 원본239 Normal 소지 키가 필요합니다 · 주문서 보존";return result
+	if is_quest and not QUEST_RETURN239.current(world,quest_input):
+		result["reason"]="원본 퀘스트 소지 영수증 변경 · 주문서 보존";return result
+	if not world._patch523_item_allowed() or world.patch523_npc_spells.blocks("CannotTeleport"):
+		result["reason"]="현재 원본 아이템 사용·이동 제한 · 주문서 보존";return result
+	var physical_id: String=str(quest_input.get("physical_id",""))
+	if int(world.inventory.get(item_name,0))<1 or world._item_locked(item_name,physical_id) or world._item_locked(item_name,"") or int(world.hp)<=0 or _player_busy_for_travel():
+		result["reason"]="소지량·잠금·생존·이동 상태 조건 미충족 · 주문서 보존";return result
+	var problem: String=preload("res://scripts/loot/patch523_item_use.gd").eligibility(world,record)
+	if not problem.is_empty():result["reason"]=problem;return result
+	if str(world.active_map_id)!="aden_world" or world.field_map==null:
+		result["reason"]="이 지역의 원자 귀환 목적지 연결이 필요합니다 · 주문서 보존";return result
+	var destination: Vector2=_safe_region_position()
+	if destination==Vector2.INF:destination=world._spawn_position()
+	if not destination.is_finite() or not world.field_map.walkable(destination) or not world.field_map.point_clear(destination):
+		result["reason"]="검증된 기존 아덴 귀환 위치 없음 · 주문서 보존";return result
+	var overrides: Dictionary=quest_input.get("override",{}).duplicate(true)
+	if not is_quest:
+		var inventory: Dictionary=world.inventory.duplicate(true)
+		inventory[item_name]=int(inventory[item_name])-1
+		if int(inventory[item_name])==0:inventory.erase(item_name)
+		overrides["inventory"]=inventory
+	var old_position: Vector2=world.player.global_position
+	var path: String=world.save_path()
+	var prior_sha: String=FileAccess.get_sha256(path)
+	_teleport_player(destination)
+	var save_error: Error=world._save_game(true,overrides)
+	if save_error!=OK:
+		# Confirm the complete debit/receipt AND movement candidate. An error
+		# after the atomic write must not expose stale ownership for a retry.
+		var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(path))
+		var expected: Dictionary=JSON.parse_string(JSON.stringify(overrides))
+		var confirmed: bool=durable is Dictionary
+		if confirmed:
+			for key: String in expected:
+				if durable.get(key)!=expected[key]:confirmed=false;break
+		if confirmed:confirmed=durable.get("map_id")=="aden_world" and durable.get("position")==[destination.x,destination.y]
+		if confirmed:confirmed=world.equipment_collections.accept_load(durable)
+		if not confirmed:
+			_teleport_player(old_position)
+			if FileAccess.get_sha256(path)!=prior_sha:world.quest_service.save_blocked=true;result["uncertain"]=true
+			world._update_hud()
+			result["save_error"]=save_error
+			result["reason"]="저장 결과 미확정 · 재사용 중지, 정상 저장 불러오기 필요" if result.get("uncertain",false) else "귀환 저장 실패 · 위치와 정확한 원본 주문서 보존"
+			return result
+	world.inventory=overrides.inventory
+	if overrides.has("item_instances"):world.item_instances=overrides.item_instances
+	if overrides.has("quest_state"):world.quest_service.import_state(overrides.quest_state)
+	world.deferred_save.cancel()
+	world.hud.refresh_inventory(world.inventory);world._update_hud()
+	result.merge({"ok":true,"saved":true,"handled":true,"consumed":1,"map_id":str(world.active_map_id),"position":[destination.x,destination.y],"message":"아덴 마을로 귀환했습니다 · TWILIGHT 기존 목적지"},true)
+	if is_quest:result["physical_id"]=physical_id;result["ownership_origin"]="quest523_receipt"
+	return result
 
 func setup(world_node: Node) -> void:
 	world = world_node
