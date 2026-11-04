@@ -132,6 +132,7 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String) -> bool:
+	if try_use_regional_return(item_name): return true
 	if item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
 		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
 		if bool(source_result.get("handled",false)):
@@ -179,8 +180,7 @@ func _message(value: String) -> void:
 
 func _consume(item_name: String) -> void:
 	var inv: Dictionary = world.get("inventory") as Dictionary
-	var source_id: int = REGIONAL_RETURN.item_id(item_name)
-	var infinite: bool = source_id != 0 and bool(REGIONAL_RETURN.DATA.data.items[str(source_id)].infinite)
+	var infinite: bool = bool(world.regional_return_stack(item_name).get("infinite", false))
 	inv[item_name] = maxi(0, int(inv.get(item_name, 0)) - (0 if infinite else 1))
 	if int(inv.get(item_name, 0)) == 0:
 		inv.erase(item_name)
@@ -239,7 +239,7 @@ func _safe_region_position() -> Vector2:
 	return result
 
 func _use_return(item_name: String) -> void:
-	if REGIONAL_RETURN.item_id(item_name) == 126424:
+	if int(world.regional_return_stack(item_name).get("item_class_id", 0)) == 126424:
 		_use_regional_return(item_name)
 		return
 	if _player_busy_for_travel():
@@ -263,7 +263,7 @@ func _use_return(item_name: String) -> void:
 	else:
 		_teleport_player(world.call("_spawn_position"))
 	_consume(item_name)
-	_message("아덴 마을로 귀환했습니다")
+	_message("아덴 마을로 귀환했습니다" + (" · TWILIGHT 귀환 효과" if world.regional_return_stack(item_name).get("origin") == "patch523_native_normal" else ""))
 
 func _random_destination() -> Vector2:
 	var field: Variant = world.get("field_map")
@@ -685,3 +685,16 @@ func _use_regional_return(item_name: String) -> void:
 	world.hud.refresh_inventory(world.inventory)
 	world._update_hud()
 	_message("잊혀진 섬 시작 지점으로 귀환 · TWILIGHT 대응 지도")
+
+func try_use_regional_return(item_name: String) -> bool:
+	var record: Dictionary = world._find_catalog_item_record(item_name)
+	if not REGIONAL_RETURN.claims_identity(item_name, record): return false
+	var stack: Dictionary = REGIONAL_RETURN.stack_identity(item_name, record)
+	if stack.is_empty():
+		_message("귀환 주문서의 원본 ID·이름·Normal 스택 확인 실패 · 아이템 보존")
+		return true
+	if int(world.inventory.get(item_name, 0)) <= 0:
+		_message("아이템이 없습니다: "+item_name)
+		return true
+	_use_return(item_name)
+	return true

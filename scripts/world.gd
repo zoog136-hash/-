@@ -2758,6 +2758,7 @@ func _refresh_inventory_hud() -> void:
 	# An open character sheet shows weight-derived values; refresh it fully once.
 	if str(hud.get("active_section")) == "character":
 		stat_hud_refresh_pending = true
+	regional_return_settings_updated.emit()
 
 func _on_ground_drop_clicked(drop: Button) -> void:
 	loot_pickup.select(drop)
@@ -3337,6 +3338,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
 		return
+	if consumable_service.try_use_regional_return(item_name): return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
@@ -5255,7 +5257,7 @@ func _on_quickslot_pressed(slot_index: int) -> void:
 	var value: Variant = quickslots[slot_index]
 	if not (value is Dictionary):
 		return
-	var entry: Dictionary = REGIONAL_RETURN.effective(value, _regional_return_land(), get_regional_return_enabled(), inventory)
+	var entry: Dictionary = REGIONAL_RETURN.effective(value, _regional_return_land(), get_regional_return_enabled(), inventory, _find_catalog_item_record)
 	if entry.is_empty():
 		hud.show_message("빈 퀵슬롯입니다")
 		return
@@ -5278,7 +5280,8 @@ func _use_quickslot_item(item_name: String) -> void:
 
 func _quickslot_item_supported(item_name: String) -> bool:
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
-	if REGIONAL_RETURN.supported(item_name): return true
+	var return_record: Dictionary = _find_catalog_item_record(item_name)
+	if REGIONAL_RETURN.claims_identity(item_name, return_record): return REGIONAL_RETURN.supported(item_name, return_record)
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	return not record.is_empty() and (_is_timed_buff_item(record) or int(record.get("heal",0)) > 0)
@@ -8142,7 +8145,7 @@ func effective_quickslots() -> Array:
 	var result: Array = []
 	var land: int = _regional_return_land()
 	for value: Variant in quickslots:
-		result.append(REGIONAL_RETURN.effective(value, land, get_regional_return_enabled(), inventory) if value is Dictionary else {})
+		result.append(REGIONAL_RETURN.effective(value, land, get_regional_return_enabled(), inventory, _find_catalog_item_record) if value is Dictionary else {})
 	return result
 
 func _refresh_regional_return_slots() -> void:
@@ -8155,4 +8158,8 @@ func regional_return_status() -> String:
 	var land: int = _regional_return_land()
 	if not REGIONAL_RETURN.DATA.data.lands.has(str(land)): return "현재 지역: 변경 대상 아님"
 	var suffix: String = " · TWILIGHT 대응 지도" if REGIONAL_RETURN.DATA.data.host_bindings.has(active_map_id) else ""
-	return "잊혀진 귀환 주문서 적용 · 보유 %d개%s" % [int(inventory.get("잊혀진 귀환 주문서 (각인)", 0)), suffix]
+	var key: String = REGIONAL_RETURN.target_key(126424, inventory, _find_catalog_item_record)
+	return "잊혀진 귀환 주문서 적용 · 보유 %d개%s" % [int(inventory.get(key, 0)), suffix]
+
+func regional_return_stack(item_name: String) -> Dictionary:
+	return REGIONAL_RETURN.stack_identity(item_name, _find_catalog_item_record(item_name))
