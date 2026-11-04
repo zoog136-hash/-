@@ -1,14 +1,14 @@
 {
   "godot": "4.7.2.stable.official.ed1daf0bf",
-  "base_main": "17f5c1e5e3922664eb89211e1510ba2f34cb225e",
+  "base_main": "f4cc0138613a6c98898c57d479b5247a849b96ab",
   "production_file_sha256": {
-    "scripts/world.gd": "4d0491351e14b6ec0129c11b497439b1ec45800c9cbfcc8a5d8f51d0aa5312d1",
+    "scripts/world.gd": "d13a797d1d20d49f51db480c9b95c003376db09e08d72427e5db1f9932997e1e",
     "scripts/quests/quest_service.gd": "dab789ca7674fd2e6685677741c6202bf952dd7c2562d786ca9d6f0b77b4ceb2",
     "scripts/quests/source_quest523.gd": "9388c874bbf5773d51d0d5097ea78dc7131daedaaee0f918febdb4567d8ac813",
     "scripts/quests/quest_auto_runner.gd": "94e342959e9f8e33ad69141c75974d82245fb5e691291b14c0241bc99cb88764",
     "scripts/ui/renewal_quests.gd": "e6e8942df7b85d402091b115ee6bbf0950051487db6dfecdef5c83bd5509669b",
     "scripts/ui/lineage_inventory_ui.gd": "7a2d32b929a0ccfe06054e3b7079383be7e6a2dc55dc31f227a8e1cdbfaa60d8",
-    "scripts/ui/renewal_hud.gd": "55ea4be128698fe92858da89bd2230408416d2259bceeae5103dfb3a3c942321",
+    "scripts/ui/renewal_hud.gd": "d78a06f684f01834be2f8c48e17d157866b60a5e7b71f7c1e603a7737d511b58",
     "scripts/ui/renewal_window.gd": "c315118c082c7af117f6674c3226d5c57ce70d7148ee853176a913a961ecb7eb"
   },
   "source_all_definitions": {
@@ -40,7 +40,7 @@
   },
   "actual_main_received_pack": {
     "batches": 26,
-    "checks": 3009,
+    "checks": 3012,
     "counts": {
       "completed": 822,
       "excluded": 160,
@@ -75,14 +75,18 @@
       "제외 시스템 목표: ClanDonate": 128,
       "제외 시스템 목표: ClanEnter": 1,
       "직업 조건 미충족": 10
-    }
+    },
+    "received_pack_consumer_profile": "/workspace/quest-current-main-data",
+    "merged_inventory_guards": "Use, quick-item, auto-deposit and auto-sell preserve source-held rewards and saved bytes"
   },
   "actual_opengl_ui": {
     "checks": 752,
     "failures": [],
     "installed_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
     "inventory_source_stacks": 732,
-    "source_quests": 3621
+    "source_quests": 3621,
+    "profile": "/workspace/quest-current-main-data",
+    "save_unchanged": true
   },
   "existing_core_runtime_save": {
     "checks": 44,
@@ -92,11 +96,20 @@
   "legacy_history_regression": "INSTANT_QUEST_PASS",
   "committed_resource_integrity": "723 atlases / 41442 frames / 233420026 bytes; exact SHA verified",
   "reproducible_pack_sha256": "77866c180d4224eff6d7e578759ec0820d6e50515e5c6bd8a67dc92421c20063",
-  "ui_capture_local_only": "/workspace/quest-drive-final-data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/quest523-ui",
+  "ui_capture_local_only": "/workspace/quest-current-main-data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/quest523-ui",
   "scope": "Full source projection; actual reachable fixed point for Knight; source-item use and unsupported content remain incomplete; no full CI/Android device claim",
   "resolved_diagnostics": [
     "Typed JSON comparison after a committed write originally caused false rollback; fixed and recovery retested.",
     "Small-screen card area originally collapsed; corrected and a retained >=100px layout assertion passes.",
-    "Host has no audio device; final graphics check uses Dummy audio and actual OpenGL."
-  ]
+    "Host has no audio device; final graphics check uses Dummy audio and actual OpenGL.",
+    "PR262 rebase preserves latest main inventory/quick-item guards and unions inventory-automation and quest transaction save keys.",
+    "Post-rebase UI first used a blank isolated profile: two saved-history/item-stack checks failed. UI rerun consumes the actual Main-verified save, not a fixture or a fabricated inventory."
+  ],
+  "post_rebase_log_paths": {
+    "source": "/workspace/scratch/quest-current-source.log",
+    "actual_main": "/workspace/scratch/quest-current-main.log",
+    "core": "/workspace/scratch/quest-current-core.log",
+    "ui": "/workspace/scratch/quest-current-ui-verified.log",
+    "legacy": "/workspace/scratch/quest-current-legacy.log"
+  }
 }
