@@ -1,0 +1,188 @@
+{
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "tested_code_commit": "582861981a816782711e8da7da234572e5f3ee05",
+  "branch": "feature/device-local-time-20261104",
+  "validated_at_utc": "2026-11-04T08:18:04.631028+00:00",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "core_import": {
+    "status": "PASS",
+    "errors": 0,
+    "full_local_log_sha256": "eb195d60ea47dcc8badee9ceca93f2f7f0fde10d0c3e97f8b3703de9919400ef"
+  },
+  "core_checks": [
+    {
+      "test": "core_runtime_save_test",
+      "result": {
+        "checks": 32,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    },
+    {
+      "test": "save_identical_payload_test",
+      "result": {
+        "failures": [],
+        "skips": 1,
+        "writes": 2
+      }
+    },
+    {
+      "test": "deferred_save_gate_test",
+      "result": {
+        "failures": []
+      }
+    },
+    {
+      "test": "quest_local_time_test",
+      "result": {
+        "checks": 68,
+        "failures": [],
+        "timezone": {
+          "bias": 0,
+          "name": "UTC"
+        }
+      }
+    }
+  ],
+  "timezone_processes": 8,
+  "timezone_assertions": 560,
+  "focused_quest_smoke": "PASS",
+  "ainhasad_main_smoke": {
+    "status": "PASS",
+    "assertions": 26,
+    "initial_extra_attempt": "RESOURCE_ERROR: one historical actor portrait omitted by the current-map core stage",
+    "resolution": "Exact same-commit tracked resource materialized; focused test rerun with no resource errors",
+    "receipt": "evidence/ain-extra-resource-receipt.json"
+  },
+  "python_staging_tests": {
+    "passed": 7,
+    "command": "python3 tests/test_ci_core.py"
+  },
+  "resource_gate": {
+    "status": "PASS",
+    "atlases": 723,
+    "frames": 41442,
+    "atlas_bytes": 233420026,
+    "original_art_delivery_claimed": false
+  },
+  "core_resource_graph": {
+    "files": 7447,
+    "bytes": 1560008274,
+    "deferred_inactive_actor_imports": 6320,
+    "validation_overrides": [
+      {
+        "key": "rendering/textures/vram_compression/import_etc2_astc",
+        "value": false,
+        "scope": "disposable Linux/headless stage only"
+      }
+    ],
+    "receipt_source_revision": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+    "explanation": "Prepared from base plus working changes; every tested changed code file was compared byte-for-byte against tested_code_commit. Full visual acceptance is not claimed."
+  },
+  "tested_files": [
+    {
+      "path": "scripts/ainhasad_service.gd",
+      "sha256": "f184b7591d08173caddaf00f24bbd08be16bea8987bb81a4741a2d4d477b50c5",
+      "core_stage_byte_match": true
+    },
+    {
+      "path": "scripts/quests/quest_service.gd",
+      "sha256": "d515352641e792de772ccc97b55e30ae49fe61d4d838ad8cc784a7ae04d28f8f",
+      "core_stage_byte_match": true
+    },
+    {
+      "path": "scripts/ui/renewal_quests.gd",
+      "sha256": "d1f862ede25089d52a8f7634ed827c48a7e5102e93cc5f6c8b86546197c39c74",
+      "core_stage_byte_match": true
+    },
+    {
+      "path": "tests/instant_quest_smoke_test.gd",
+      "sha256": "667ba009b59d96581e2eec28a4c4cc6c1521df2e5310a3215e945464ef1e4919",
+      "core_stage_byte_match": true
+    },
+    {
+      "path": "tests/quest_local_time_test.gd",
+      "sha256": "cb296eb44e1101ace95b0b8336acaa588c76b79933ad35b70550cc7945e9a0fb",
+      "core_stage_byte_match": true
+    },
+    {
+      "path": "tools/ci_core.py",
+      "sha256": "6baf0eba323fff00f7334268c0a670b964a1cd203c8702bf289c49c55b171487",
+      "core_stage_byte_match": false
+    }
+  ],
+  "evidence": [
+    {
+      "path": "evidence/ain-extra-resource-receipt.json",
+      "bytes": 366,
+      "sha256": "8ad8220e0ad894b506f3dd130d86ac0e0819529ade217551fead82ef10c5e637"
+    },
+    {
+      "path": "evidence/ain-historical-missing-portrait.txt",
+      "bytes": 11824,
+      "sha256": "eea08f01aa70f1e316899f8455a61da832daf8296ee10db591df52113e01d48a"
+    },
+    {
+      "path": "evidence/ainhasad_smoke_test.txt",
+      "bytes": 106,
+      "sha256": "bfe6116174b23b1803695e23d71d1732defb79cfc9429ac84473c35c8597a0eb"
+    },
+    {
+      "path": "evidence/core-run.txt",
+      "bytes": 272,
+      "sha256": "696c15f316b16d89cf7d84a508ebd4e41587c17fb7ef84c87ff0dd70423055ee"
+    },
+    {
+      "path": "evidence/core_runtime_save_test.txt",
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    {
+      "path": "evidence/current-map-inputs.txt",
+      "bytes": 38,
+      "sha256": "3f95bc37743df134949d8437001bf7e30a6480f3af4f863f18a47a7f7ab32aa7"
+    },
+    {
+      "path": "evidence/deferred_save_gate_test.txt",
+      "bytes": 115,
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    },
+    {
+      "path": "evidence/instant_quest_smoke_test.txt",
+      "bytes": 92,
+      "sha256": "aace7a7606a9f60388a5bc1369db893ffc12df28ad30dc19c89757686d25823e"
+    },
+    {
+      "path": "evidence/quest_local_time_test.txt",
+      "bytes": 155,
+      "sha256": "0e306406bb2cf67021ce6fec9c9e6100e41fa0dec481486015d18179119ab210"
+    },
+    {
+      "path": "evidence/resource-integrity.txt",
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    {
+      "path": "evidence/save_identical_payload_test.txt",
+      "bytes": 140,
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    },
+    {
+      "path": "evidence/zone-results.json",
+      "bytes": 1881,
+      "sha256": "b1ef70824e438940c5413aad887a1e103e6b6fd216cc3985f0eb3d210d9df14e"
+    }
+  ],
+  "limits": [
+    "Original cumulative523 season-pass and weekly-spawn definitions are not active schedule evaluators in this base main; no missing activation semantics were invented.",
+    "OS timezone results are fresh-process Linux checks; in-process date/timezone jumps use a controlled local-calendar provider.",
+    "Windows and Android hardware timezone changes, full visual gameplay CI and original-art equivalence are untested.",
+    "Schema1 migration retains daily claims and progress until the next local reset because old saves contain no claim instant or local timezone.",
+    "New saves use quest-state schema2. Downgrading to a schema1-only executable is not tested."
+  ],
+  "remote_state_at_validation": {
+    "branch_pushed": true,
+    "pull_request_created": false,
+    "main_merged": false
+  }
+}
