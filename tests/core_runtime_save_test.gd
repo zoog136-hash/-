@@ -32,6 +32,12 @@ func run() -> void:
 	world.set_process(false)
 	world.save_timer = -100000.0
 	check(QA.enter_game(world), "actual class confirmation and Main startup")
+	# Regression guard for PR219 (cards), PR220 (option awakening), and PR221 (skill awakening).
+	check(world.card_collections != null and world.card_collections.problem.is_empty(), "merged source card collections configure")
+	check(world.option_awakening != null and world.option_awakening.problem.is_empty(), "merged option awakening configure")
+	check(world.skill_awakening != null and world.skill_awakening.problem.is_empty(), "merged skill awakening configure")
+	check(world.skill_awakening.core.cards.size() > 0, "source card skill awakening definitions loaded")
+	check(world.hud != null and world.hud.has_method("open_card_skill_awakening"), "skill awakening UI entry available")
 	world.player.set_physics_process(false)
 	var frames: SpriteFrames = world.player.class_sprite.sprite_frames
 	check(frames != null and not frames.get_animation_names().is_empty(), "actual player animation resource loads")
@@ -52,6 +58,12 @@ func run() -> void:
 	check(world._save_game(true) == OK, "real atomic initial save")
 	var original_path: String = world.save_path()
 	var baseline: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(original_path))
+	check(baseline.has("card_option_awakening"), "option awakening save namespace present")
+	check(baseline.has("card_skill_awakening"), "skill awakening save namespace present")
+	check(world.skill_awakening.check_load(baseline).is_empty(), "new skill awakening save validates")
+	var invalid_skill_save: Dictionary = baseline.duplicate(true)
+	invalid_skill_save["card_skill_awakening"] = {"version": -1}
+	check(not world.skill_awakening.check_load(invalid_skill_save).is_empty(), "corrupt skill awakening state rejected before mutation")
 	check(not baseline.is_empty() and not baseline.item_instances.is_empty(), "nonempty real equipment save")
 	var fixture: Dictionary = baseline.duplicate(true)
 	fixture.erase("source_map84_layouts")
@@ -86,11 +98,14 @@ func run() -> void:
 	for key: String in ["inventory","item_instances","equipped_items","equipped_catalog","enhancement_levels"]:
 		check(normalized(world.get(key)) == fixture[key], "preserve " + key)
 	check(normalized(world.equipment_collections.export_state()) == normalized(fixture.equipment_collections), "collection progress survives")
+	check(normalized(world.option_awakening.export_state()) == normalized(fixture.card_option_awakening), "option awakening state survives historical migration")
+	check(normalized(world.skill_awakening.export_state()) == normalized(fixture.card_skill_awakening), "skill awakening state survives historical migration")
 	check(world._save_game(true) == OK, "migrated save commits and activates safely")
 	var migrated_path: String = world.save_path()
 	var migrated: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(migrated_path))
 	check(FileAccess.get_sha256(original_path) == sha, "successful commit preserves original bytes")
 	check(migrated.get("source_map84_layouts", {}).has("aden_world"), "save records actual current source identity")
+	check(migrated.has("card_option_awakening") and migrated.has("card_skill_awakening"), "migrated save preserves both awakening namespaces")
 	var boss: Dictionary = migrated.get("monster_world", {}).get("bosses", {}).get("aden_world:드레이크", {})
 	check(not boss.is_empty() and boss.phase == "cooldown" and boss.hp == -1 and float(boss.ready_at) == deadline, "exact boss phase HP deadline survive")
 	world.gold = 1

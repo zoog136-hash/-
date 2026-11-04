@@ -1,0 +1,59 @@
+{
+  "source_archive_sha256": "60fa306d6310cddd4b5eb042bbf59720e6dc732d92b3438cf54044815f76811f",
+  "input_files": {
+    "REPORT_KO.md": {
+      "bytes": 18320,
+      "sha256": "dd4cdcdedea149c6ca058990d6ac792f240c9dbf774d4a8b58986f9eb70253d3"
+    },
+    "relevant_ui_source.json": {
+      "bytes": 25430,
+      "sha256": "ce3e967a3c9567b369b3b680c73aa28677391d3521cdf9d2bdf398930265f2c3"
+    },
+    "currency_backing_and_legacy_items.json": {
+      "bytes": 2972,
+      "sha256": "735c7925c733229e0926ced31ecb9eda3abeee664db4f9781bf9ea2c9f44c3a0"
+    }
+  },
+  "source_constraints": [
+    {
+      "TextDesc": "SYMBOL_POPUP_HELP\\ND_POPUP_HELP\\ND_TEXT\\LABEL_10",
+      "Text": "10. 문양을 30단계까지 완성하면 '강화 초기화' 기능을 사용할 수 없습니다."
+    },
+    {
+      "TextDesc": "SYMBOL_POPUP_HELP\\ND_POPUP_HELP\\ND_TEXT\\LABEL_11",
+      "Text": "11. 문양 정보 저장 후 복구할 수 있습니다. 강화 정보가 있을 때만\r\n     저장, 복구 가능하며 최대 강화 상태에서는 저장 및 복구를 할 수 없습니다.\r\n"
+    },
+    {
+      "TextDesc": "SYMBOL_POPUP_HELP\\ND_POPUP_HELP\\ND_TEXT\\LABEL_7",
+      "Text": "7. 초기화 시 강화에 사용한 축복 포인트는 모두 돌려받습니다."
+    },
+    {
+      "TextDesc": "SYMBOL_POPUP_HELP\\ND_POPUP_HELP\\ND_TEXT\\LABEL_7_1",
+      "Text": "   ※ 확률 변경에 사용한 축복 포인트 제외"
+    },
+    {
+      "ID": 48412,
+      "Description": "현재 문양 정보를 저장하시겠습니까?"
+    },
+    {
+      "ID": 48572,
+      "Description": "더 이상 문양 포인트를 사용하면 추후 복구 시도 시 \r\n필요 포인트 부족으로 강화 단계 복구 진행이 \r\n어려울 수 있습니다. 그래도 강화하시겠습니까?"
+    },
+    {
+      "ID": 56445,
+      "Description": "일일 문양 초기화 횟수가 초과되었습니다."
+    }
+  ],
+  "reports_checked": [
+    "docs/growth/RESEARCH.md",
+    "docs/growth/symbol523/README.md",
+    "docs/growth/symbol523/OFFLINE_COMPLETION.md",
+    "REPORT_KO.md section7"
+  ],
+  "public_search": {
+    "primary_historical_addition_notice": "https://lineagem.plaync.com/board/update/view?articleId=60107abf31e27200012bc72b",
+    "current_guide": "https://lineagem.plaync.com/guidebook/view?title=%EB%AC%B8%EC%96%91+%EC%8B%9C%EC%8A%A4%ED%85%9C",
+    "current_price_daily_cap": "NOT_VERIFIED; publicly searchable historical feature notice and unrelated event daily quotas do not establish current symbol restore price or daily numerical cap"
+  },
+  "local_policy": "source constraints retained; current source-ID reset scroll remains; no expired/test restore material consumed; configurable save0 restorefee100 per-emblem reset1 restore shares quota; existing game-day API only"
+}

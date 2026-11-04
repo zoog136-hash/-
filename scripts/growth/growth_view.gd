@@ -141,10 +141,20 @@ func _refresh() -> void:
 	body.add_child(confirmation)
 	if mode!="guardians" or (runtime.state.pending.is_empty() and last_reveal.is_empty()):
 		_button("축복 포인트 상점 · 열쇠 1개",func() -> void: _prepare("buy_key","",1))
-		_button("축복의 성수(중) 사용",func() -> void: _prepare("holy_water","",1)).name = "GrowthHolyWater"
+		if runtime.development:
+			_button("축복의 성수(중) 사용",func() -> void: _prepare("holy_water","",1)).name = "GrowthHolyWater"
+		else:
+			var usable_recharges: int = 0
+			for instance_id: String in runtime.world.item_instances:
+				var recharge: Dictionary = runtime.source523.recharge(runtime.world.item_instances[instance_id])
+				if recharge.is_empty(): continue
+				var owned_id: String = instance_id
+				_button("%s 사용 · 축복 포인트 +%d" % [str(recharge.name),int(recharge.amount)],func() -> void: _prepare("recharge",owned_id,1)).name = "GrowthRecharge_"+owned_id
+				usable_recharges += 1
+			if usable_recharges == 0: _label("사용 가능한 축복 포인트 충전 재료가 없습니다.")
 		_button("수호석 제작 · 일반 주문서",func() -> void: _prepare("craft_stone","",1))
 		_button("수호석 제작 · 각인 주문서",func() -> void: _prepare("craft_stone_engraved","",1))
-		_label("출처: NC 공식 문양/수호성 가이드 및 확률 안내 (2026-10-24 확인)\n전체 노드 복원·특화 옵션·미확인 전투 효과는 미완료입니다.")
+		_label("문양: 누적 523 원본 단계·비용·옵션 연결\n조건부 효과·서버별 가용성·저장/복구와 일일 초기화 제한은 미확정입니다." if not runtime.development else "개발용 근사 설정 · 일반 저장과 분리")
 	call_deferred("_layout_density")
 
 func _select(id: String) -> void:
@@ -157,6 +167,11 @@ func _select(id: String) -> void:
 func _emblem() -> void:
 	var row: Dictionary = runtime.emblem(selected)
 	var p: Dictionary = runtime.progress(selected)
+	var policy: Dictionary=runtime.Combat.policy
+	_label("자체 전투 근사 %s · 죽음 1당 피해 %.1f / 감소무시 배율 %.1f / 연속피격 %dms" % ["켜짐" if runtime.Combat.estimates() else "꺼짐",float(policy.death_damage_per_point),float(policy.ignore_percent_damage_scale),int(policy.damage_damp_window_ms)]).name="GrowthLocalCombatPolicy"
+	_label("자체 근사: 보스 연사 방어 · 돌진을 아머 브레이크로 처리 · 광역의 피해감소 무시 %.1f%%" % float(policy.npc_ignore_percent_by_boss_kind.get("nova",0)))
+	if selected=="eva":
+		_button("기억 장소 · 순간이동 조종",func() -> void: runtime.travel.open()).name="GrowthRememberedLocations"
 	var overview := HBoxContainer.new()
 	body.add_child(overview)
 	diagram = Diagram.new()
@@ -185,10 +200,10 @@ func _emblem() -> void:
 		column.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		odds_row.add_child(column)
 		_copy("+%d 단계" % (index+1),column,12)
-		_copy("%.2f%%" % float(odds[index]),column,17,[Color("ded8cc"),Color("68bce8"),Color("e27989")][index])
+		_copy("완료" if int(p.stage)>=30 else "%.2f%%" % float(odds[index]),column,17,[Color("ded8cc"),Color("68bce8"),Color("e27989")][index])
 		var bar:=ProgressBar.new()
 		bar.custom_minimum_size=Vector2(40,5)
-		bar.show_percentage=false; bar.value=float(odds[index])
+		bar.show_percentage=false; bar.value=0.0 if int(p.stage)>=30 else float(odds[index])
 		bar.add_theme_stylebox_override("background",UI.box(Color("24202c"),Color.TRANSPARENT,0))
 		bar.add_theme_stylebox_override("fill",UI.box([Color("d9d5d5"),Color("42adf5"),Color("d95469")][index],Color.TRANSPARENT,0))
 		column.add_child(bar)
@@ -196,15 +211,25 @@ func _emblem() -> void:
 	var effects_grid:=GridContainer.new()
 	effects_grid.columns=2
 	info.add_child(effects_grid)
-	var effects: Dictionary=row.effects[int(p.stage)]
+	var effects: Dictionary=row.effects[int(p.stage)].duplicate(true)
+	if not runtime.development:
+		var absolute_effects: Dictionary = runtime.source523.absolute_effects(selected,p.get("absolute_grades",[]))
+		for key: String in absolute_effects: effects[key] = float(effects.get(key,0))+float(absolute_effects[key])
+		var grade_names: Array[String] = []
+		var deferred_grades: Array[String] = []
+		for grade: Variant in p.get("absolute_grades",[]):
+			if runtime.source523.absolute_block(selected,int(grade)).is_empty(): grade_names.append(["I","II","III","IV","V"][int(grade)-1])
+			else: deferred_grades.append(["I","II","III","IV","V"][int(grade)-1])
+		if not grade_names.is_empty(): _copy("절대 옵션 "+", ".join(grade_names)+" 적용",info,13,Color("d6ead9")).name = "GrowthAbsoluteStatus"
+		if not deferred_grades.is_empty(): _copy("절대 옵션 "+", ".join(deferred_grades)+" 보유 · 효과 연결 보류",info,13,Palette.MUTED)
 	var visible_effects: int=0
 	for key: String in effects:
 		if float(effects[key])==0: continue
 		_copy(_effect_text({key:effects[key]}),effects_grid,13,Color("d6ead9")).size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		visible_effects+=1
 	if visible_effects==0: _copy("없음",effects_grid,13,Palette.MUTED).size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	_copy("다음 단계 · "+_effect_text(row.effects[mini(30,int(p.stage)+1)]),info,12,Palette.MUTED)
-	_label("미적용: "+", ".join(row.deferred_effects))
+	_copy("최대 단계 달성 · 일반 강화 완료" if int(p.stage)>=30 else "다음 단계 · "+_effect_text(row.effects[int(p.stage)+1]),info,12,Palette.MUTED)
+	_label("미적용: "+", ".join(row.deferred_effects) if not row.deferred_effects.is_empty() else "일반 옵션: 연결 가능한 효과 적용")
 	var actions: GridContainer=action_dock
 	for pair: Array in [["enhance","문양 강화 1회",1],["enhance","문양 강화 5회",5],["reroll","확률 변경",1],["reset","강화 초기화",1]]:
 		var action: String = str(pair[0])
@@ -222,17 +247,48 @@ func _emblem() -> void:
 		b.tooltip_text = str(offer.message)
 		b.disabled = not bool(offer.ok)
 		_label(str(pair[1])+": "+str(offer.message))
-	_label("절대 옵션 I~V · 2026-03-18 확정 강화 추가")
-	_label("확정 강화 열쇠 비용: "+str(row.absolute_key_costs)+" · 열쇠 1개 = 1,000 축복 포인트")
-	var absolute := _button("열쇠 · 절대 옵션 확정 강화",func() -> void: _prepare("absolute",selected,1))
-	absolute.disabled = not runtime.quote("absolute",selected).ok
-	_label("절대 옵션 %d / 5 · %s" % [int(p.get("absolute",0)),str(runtime.quote("absolute",selected).message)])
-	_label("30단계 필요 · 확률 강화 성공률 10% 확인 · 전체 효과/환급 규칙 미확인으로 일반 플레이 잠금 / 개발 모드 확정 강화 지원")
+	if not runtime.development:
+		_label(runtime.history.status(selected))
+		for action: String in ["save_emblem","restore_emblem"]:
+			var offer: Dictionary=runtime.quote(action,selected)
+			var history_button:=_button("강화 정보 보관 · 자체 정책" if action=="save_emblem" else "보관 기록 복구 · 자체 정책",func() -> void: _prepare(action,selected,1))
+			history_button.name="GrowthHistory_"+action
+			history_button.disabled=not offer.ok
+			history_button.tooltip_text=str(offer.message)
+			_label(str(offer.message))
+	_label("절대 옵션 I~V · 30단계 완성 후 강화")
+	if runtime.development:
+		var absolute := _button("열쇠 · 절대 옵션 확정 강화",func() -> void: _prepare("absolute",selected,1))
+		absolute.disabled = not runtime.quote("absolute",selected).ok
+		_label("개발용 절대 옵션 %d / 5 · HP +5" % int(p.get("absolute",0)))
+	else:
+		var native_grades: Array = p.get("absolute_grades",[])
+		var absolute_grid := GridContainer.new()
+		absolute_grid.columns = 2
+		body.add_child(absolute_grid)
+		for grade: int in range(1,6):
+			var native_grade: int = grade
+			var payment: Dictionary = runtime.source523.absolute(selected,grade).payment
+			for action: String in ["absolute_chance","absolute"]:
+				var native_action: String = action
+				var offer: Dictionary = runtime.quote(action,selected,grade)
+				var caption: String = "절대 %d · %d 포인트 (%.1f%%)" % [grade,int(payment.OpenCost),float(payment.OpenProbability)/10000.0] if action=="absolute_chance" else "절대 %d · 열쇠 %d개 확정" % [grade,int(payment.ForceOpenCost)]
+				var button: Button = _button(caption,func() -> void: _prepare(native_action,selected,native_grade),absolute_grid)
+				button.disabled = not bool(offer.ok)
+				button.tooltip_text = str(offer.message)
+				button.name = "GrowthAbsolute_"+action+str(grade)
+		for line: String in runtime.source523.options_text(selected,int(p.stage),native_grades): _label(line)
+		_label("절대 옵션은 I부터 순서대로 개방합니다. 미연결 효과가 있는 등급은 보류합니다.")
 
 func _effect_text(effects: Dictionary) -> String:
 	var mapping: Dictionary = {"max_hp:flat":"HP","max_mp:flat":"MP","ac:flat":"AC","mr:flat":"MR","sp:flat":"SP","weight_bonus:flat":"무게","experience_bonus:percent":"경험치 %","potion_flat:flat":"물약 회복량","potion_percent:percent":"물약 회복률 %","damage_reduction:flat":"리덕션","potion_cooldown:percent":"물약 쿨타임 감소 %","blessing_consumption:percent":"축복 소모 감소 %","incoming_reduction:percent":"피해 감소 %","mp_regeneration:flat":"MP 회복","blessing_charge:percent":"축복 충전 %"}
+	mapping.merge({"magic_heal:percent":"회복 마법량 %","hp_drain:flat":"HP 흡수","life:flat":"생명","critical_reduction:flat":"치명타 리덕션","stunned_reduction:flat":"스턴 상태 리덕션","low_hp_reduction:percent":"HP 30% 이하 피해 감소 %","stun_hit:percent":"스턴 적중 %","stun_resistance:percent":"스턴 내성 %","fear_resistance:percent":"공포 내성 %","melee_critical_damage:flat":"근거리 치명타 대미지","ranged_critical_damage:flat":"원거리 치명타 대미지","magic_critical_damage:flat":"마법 치명타 대미지"})
+	mapping["teleport_control:flag"]="순간이동 조종"
+	mapping.merge({"pve_damage_reduction:flat":"PVE 리덕션","pve_damage_reduction:percent":"PVE 피해 감소 %","pve_melee_damage:flat":"PVE 근거리 대미지","pve_ranged_damage:flat":"PVE 원거리 대미지","pve_magic_damage:flat":"PVE 마법 대미지"})
+	mapping.merge({"veil_proc:percent":"실렌 장막 발동 %","melee_reduction_ignore:flat":"단독 근거리 리덕션 무시","ranged_reduction_ignore:flat":"단독 원거리 리덕션 무시","magic_reduction_ignore:flat":"단독 마법 리덕션 무시","pve_reduction_ignore:flat":"PVE 리덕션 무시","melee_evasion_ignore:flat":"단독 근거리 회피 무시","ranged_evasion_ignore:flat":"단독 원거리 회피 무시","local_death:flat":"자체 죽음","local_damage_damp:percent":"자체 연속피격 감소 %","local_ignore:percent":"자체 감소 무시 %","local_melee_ignore:percent":"자체 근거리 감소 무시 %","local_ranged_ignore:percent":"자체 원거리 감소 무시 %","local_magic_ignore:percent":"자체 마법 감소 무시 %","local_rapid_reduction:flat":"자체 보스 연사 리덕션","local_armorbreak_melee:percent":"자체 돌진 피해 감소 %","local_armorbreak_dark:percent":"자체 암흑 피해 감소 %","local_armorbreak_magic:percent":"자체 마법 피해 감소 %","local_reduction_efficiency:percent":"자체 감소 효율 %"})
 	var parts: Array[String] = []
 	for key: String in effects:
+		if key.begins_with("local_") and not runtime.Combat.estimates():continue
 		if float(effects[key]) != 0: parts.append("%s %+d" % [str(mapping.get(key,key)),int(effects[key])])
 	return "없음" if parts.is_empty() else " · ".join(parts)
 
@@ -341,7 +397,7 @@ func _prepare(action: String, id: String, count: int) -> void:
 				card.modulate=Color.WHITE if index==count else Color(.6,.6,.7)
 				card_faces[index].selected=index==count
 				card_faces[index].queue_redraw()
-	request = {"action":action,"id":id,"count":count,"revision":int(offer.revision)}
+	request = {"action":action,"id":id,"count":count,"revision":int(offer.revision),"day":int(offer.get("day",-1))}
 	for child: Node in confirmation.get_children(): confirmation.remove_child(child); child.queue_free()
 	_label(str(offer.message)+"\n진행하시겠습니까?",confirmation)
 	_button("확인",_confirm,confirmation).name = "GrowthConfirm"
@@ -359,7 +415,7 @@ func _confirm() -> void:
 	request = {}
 	var previous_stage: int=int(runtime.progress(selected).stage) if mode=="emblems" else 0
 	var pending_node: String = str(runtime.state.pending.get("node",""))
-	var response: Dictionary = runtime.execute(current.action,current.id,int(current.count),int(current.revision))
+	var response: Dictionary = runtime.execute(current.action,current.id,int(current.count),int(current.revision),int(current.get("day",-1)))
 	if response.ok and current.action=="choose":
 		last_reveal={"node":pending_node,"index":int(current.count),"won":runtime.state.nodes.has(pending_node)}
 	elif response.ok and current.action=="activate": last_reveal={}

@@ -10,6 +10,10 @@ func check(ok: bool, message: String) -> void:
 	if not ok: failures.append(message); print("GROWTH_FAIL: "+message)
 func act(action: String, id: String = "", count: int = 1) -> Dictionary:
 	return world.growth.execute(action,id,count,int(world.growth.state.revision))
+func recharge_instance() -> String:
+	for id: String in world.item_instances:
+		if not world.growth.source523.recharge(world.item_instances[id]).is_empty(): return id
+	return ""
 func tap(button: Control) -> void:
 	var position: Vector2 = button.get_global_transform_with_canvas()*(button.size/2)
 	for pressed: bool in [true,false]:
@@ -33,18 +37,19 @@ func _run() -> void:
 	check(rt.config.probabilities_by_target_stage.size()==30,"30 official probability rows")
 	for row: Array in rt.config.probabilities_by_target_stage:
 		check(absf(float(row[0])+float(row[1])+float(row[2])-100.0)<0.00001,"probability sum")
-	check(not rt.quote("enhance","eva").ok,"unknown first cost blocks")
+	check(rt.cost_for("eva",0)==20 and not rt.quote("enhance","eva").ok,"verified first cost still requires actual points")
 	check(not rt.quote("activate","joe_0").ok,"unknown official node blocks")
-	check(not act("holy_water").ok,"insufficient inventory rejects")
-	world.inventory["축복의 성수(중)"] = 3
+	check(not act("recharge","missing").ok,"insufficient inventory rejects")
+	world._grant_playtest_catalog_variant("m523:item:117294",3)
 	check(world._save_game(true)==OK,"baseline durable save")
 	var revision: int = int(rt.state.revision)
-	check(act("holy_water").ok and rt.state.points==100,"real inventory conversion")
-	check(not rt.execute("holy_water","",1,revision).ok,"duplicate stale request rejects")
+	var first_material: String = recharge_instance()
+	check(act("recharge",first_material).ok and rt.state.points==100,"real source inventory conversion")
+	check(not rt.execute("recharge",first_material,1,revision).ok,"duplicate stale request rejects")
 	check(world.inventory["축복의 성수(중)"]==2,"duplicate does not consume")
 	var before: Dictionary = rt.state.duplicate(true)
 	world.equipment_collections.test_save_writer = func(_p: String,_d: Dictionary) -> Error: return ERR_CANT_CREATE
-	check(not act("holy_water").ok,"save failure rejects")
+	check(not act("recharge",recharge_instance()).ok,"save failure rejects")
 	check(rt.state==before and world.inventory["축복의 성수(중)"]==2,"save failure rolls back state/material")
 	world.equipment_collections.test_save_writer = Callable()
 	world._load_game(true)
@@ -60,7 +65,7 @@ func _run() -> void:
 	var points: int = int(rt.state.points)
 	check(act("reroll","eva").ok,"reroll costs independently")
 	check(rt.state.points==points-1 and rt.progress("eva").spent==spent,"reroll excluded from refund ledger")
-	world.inventory["문양 초기화 두루마리"] = 1
+	world._grant_playtest_catalog_variant("m523:item:231772",1)
 	check(act("reset","eva").ok,"reset consumes scroll")
 	check(rt.state.points==points-1+spent and world._effective_max_hp()==hp_before,"reset refund/stat removal")
 	check(rt.progress("eva").stage==0 and rt.progress("eva").attempts==0,"reset stage/count")
@@ -116,13 +121,13 @@ func _run() -> void:
 	world.hp=1
 	world._use_healing_item("체력 회복제",10)
 	check(is_equal_approx(float(world.item_use_cooldowns[world.HP_POTION_COOLDOWN_KEY]),world.HP_POTION_COOLDOWN_SECONDS*.9),"Eva reduces actual potion cooldown")
-	check(rt.incoming_damage(100)==90,"Grankain percentage reduction")
+	check(rt.incoming_damage(100)==87,"source Grankain10 plus sourceEinhasad3 follow the existing local percentage adapter")
 	var dev_save: Dictionary=rt.state.duplicate(true)
 	dev_save.profile="development"
 	check(not rt.validate(dev_save).is_empty(),"normal mode rejects development save")
 	rt.restore(saved_state)
 	var limit_fixture: Dictionary = saved_state.duplicate(true)
-	limit_fixture.emblems.eva = {"stage":30,"attempts":20,"spent":20,"guaranteed":false}
+	limit_fixture.emblems["eva"] = {"stage":30,"attempts":20,"spent":20,"guaranteed":false}
 	rt.restore(limit_fixture)
 	check(not rt.quote("enhance","eva").ok,"max stage/attempt cap enforced")
 	rt.restore(saved_state)
