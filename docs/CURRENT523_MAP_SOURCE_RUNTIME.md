@@ -54,7 +54,7 @@ payload is now durably stored as the latest private Drive application bundle:
 
 - `TWILIGHT_Current523_AllMaps_application_20261104.zip`:565,562,974 bytes,
   SHA256 `1fadd8a079012b4449da5ad08cda5403ec7b486a1f22c51e40316f72477347dc`.
--17 ordered parts:16×33,554,432 bytes and a final28,692,062 bytes.
+- 17 ordered parts:16×33,554,432 bytes and a final28,692,062 bytes.
   Each uploaded part was downloaded and checked against its exact SHA256;
   owner-only permissions and the application-folder parent were read back.
 - The [delivery manifest](https://drive.google.com/file/d/1j3fb_H18eH-iWsxELmukF2-vHvT9orMN/view?usp=drivesdk)
@@ -177,9 +177,27 @@ not a recovered native M passability bit. Existing A3 navigation grids, old map
 geometry, NPCs and monster positions do not supply the new field's geography.
 Raw chunk caches are bounded to48 and persistent tile atlases to32.
 
+Original object/cover records may extend beyond a packet's64×64 floor chunks.
+Generic source rendering now retains those decorations at their projected source
+coordinates instead of inheriting the old host-overlay intersection clip. This
+adds no floor or navigation cells; original storage coordinates and collision
+policy are unchanged. Legacy overlay clipping is retained. Frame metrics expose
+`off_floor_decoration_records` separately.
+
 Black and white stored pixels are preserved. Candidate RGB565/24x24 coverage
 atlases distinguish stored and unstored pixels; native layer blend/alpha and
 actor-foot alignment remain unverified.
+
+The literal `Map/Aden/800f7ff3e.s32` remains unplaced:147,158 bytes, SHA256
+`bc79ea23c3ba0443f57f45bff55cce72390d9011c3db50b79c8c21359e143e11`.
+Its two-byte tail declares zero portal records, so it supplies no tail-coordinate
+anchor. No exact whole-file duplicate or matching nontrivial section identity was
+found among the other676 Aden originals. The similarly named eight-character
+`800f7ff3.s32` has a different original hash and all8,192 floor references differ;
+it is not substituted or overwritten. Existing reports and public search did not
+establish a source-backed origin. Neither truncating its name nor interpreting
+effect fields as dimensions is accepted. The blocker is unresolved placement,
+not missing received bytes or an access denial.
 
 ## Native portal definition boundary
 
@@ -193,19 +211,43 @@ world.bind_current523_source_portal_provider(provider, verified_manifest_sha256)
 
 The expected existing definition pack SHA256 is
 `2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90`.
-The trusted PR230 caller must verify that pack before binding. Passing that string
-does not authenticate an arbitrary provider. Required adapter methods are:
+The lower-level caller-owned provider API still requires external authentication;
+passing the expected hash string does not authenticate an arbitrary provider.
+Required methods return copied full original rows:
 
 ```gdscript
 portal_evidence_for_land(native_land_id, exact_asset_path) # raw Portal rows
 portal_context_for_land(native_land_id, exact_asset_path, portal_id)
-# copied full rows: Portal, SourceLand, TargetTerritory, TargetLand
+# Portal, SourceLand, TargetTerritory, TargetLand
 ```
 
-The generic portal list/action remains unavailable without this genuine runtime binding. The
-existing same-Aden portal contract remains separate. Definition presence is not
-endpoint readiness or native activation proof. The explicit generic button is
-labelled **TWILIGHT 자체 수동 이동 · 원작 활성 조건 미확정**.
+The production path now uses `world.bind_current523_source_definition_pack()`
+and the owner's existing `--patch523-world-links` /
+`--patch523-world-links-sha256` arguments. PR230's loader is reused unchanged
+from commit`5d1b1bdb0b00b855ffd87036a2e5f6b274ffa3eb` / Git blob
+`0fcb00cba1d6ca7e5f2ea2e12aee187d622551e0`; no second compiler or source catalog
+is introduced. The adapter verifies the pinned manifest and delegates original
+Land shard and condition-table verification to that owner. An invalid requested
+pack blocks optional source entry; a rejected update preserves the valid binding.
+
+The existing private [PR230 contract15 resource bundle](https://drive.google.com/file/d/1B5IpjTvxvElDxxnGCsgGD3M4PILcDW7Z/view?usp=drivesdk)
+was read through authenticated Drive:13,600,935 bytes, whole SHA256
+`9a4eccc9c1bb99d5edea7663f8594e6657aeed601cafa9905369ebf9cc596421`.
+Only its `world-links/` payload was extracted:1,067 files /22,859,928 bytes,
+all CRCs and1,066 payload hashes checked, with the exact manifest pin above.
+Other resource payloads in that bundle were not installed. The local definition
+consumer is `/workspace/aden-validation/pr230-production-definitions`.
+No resources were uploaded again or included in public Git.
+
+The adapter preserves the owner's full native contract and a bounded4-Land
+cache. Original Land attributes, unresolved time/weekly/competition conditions,
+unknown rule scopes/types and region arrival policy hold the own manual action.
+The existing Settings list displays **원문 조건 보류** for such routes. Raw separate
+LandTeleport cost/prerequisite rows are preserved without applying them to a
+Portal merely because they share a destination. The native owner still reports
+`activation_known=false`, `portal_cost_known=false`, `travel_enabled=false`.
+The explicit generic button remains **TWILIGHT 자체 수동 이동 · 원작 활성 조건 미확정**;
+it does not prove native automatic activation/admission.
 
 The pure planner checks exact joins, complete native Land rows, both fields'
 manifest/per-asset inventories, actual endpoint member/SHA/attributes/floors,
@@ -231,6 +273,30 @@ are preserved rather than changed to force travel.
 
 Latest complete-input checks use the source and tile pins above:
 
+- Final actual Main run on the already authenticated Drive fresh-consumer
+  installation:all577 distinct ordinary physical roots pass12,558 checks in
+  1,436.192 Godot seconds (1,450.89s outer runtime). The visited AssetPath set
+  exactly equals the577-root normal catalog; those fields contain all6,557 placed
+  S32 packets. These are representative probes per physical root, not997 distinct
+  logical-Land gameplay visits or every-cell/every-portal/native admission tests.
+- Every root checks actual entry/GL frame/HUD/minimap, player-physics walking,
+  blocked-cell physical refusal, outside-field path denial, original host return,
+  actual game save, field teardown and the real source-restore entry method.
+  All577 retain the exact runtime world position and source cell on restoration;
+  computed world-position error is0 pixels, without an epsilon comparison.
+  This bulk restore runs in one OS process; separate new-process tests are listed
+  below. The bulk GL resolution is640×360, software OpenGL/Godot4.7.2.
+- 482 roots physically cross an original chunk edge;5 exercise a closed edge with
+  physical refusal;36 have both sampled edge cells denied by the own policy;
+  54 have no adjacent original chunks and retain outside-path denial.139 QA
+  entries use an exact native Portal.Source coordinate,438 explicitly use an own
+  first-clear-cardinal-edge position. Neither is original admission proof.
+- The final run covers the off-floor artwork fix in161 roots. There are no
+  unresolved visible tile references, budget skips or safe-return failures in
+  the recorded probes. Source and tile catalogs each parse once, with a32-atlas
+  persistent cache. Existing source/metadata bytes and private Drive packs are
+  unchanged; this test reuses the verified fresh installation, without another
+  download, upload or independent physical-copy claim.
 - All997 ordinary logical fields /577 physical roots:55,747 Godot assertions,
   with every available original's SHA and independent raw word/floor probes.
   All6,558 originals are registered;6,557 are placed and one remains unplaced.
@@ -256,10 +322,35 @@ Latest complete-input checks use the source and tile pins above:
   PR230 production binding or native automatic activation. Two previously
   uninitialized ready host bosses reconstructed as exactly one healthy actor each;
   cooldown/progress/rewards and stored save bytes stayed unchanged.
-- Default-off actual Main/core save preservation:35 checks. Tracked resource
+- Genuine PR230 production binding:27 actual Main/UI checks in122.13s;
+  new-process source restoration, definition rebind/status, stale-route refusal,
+  initial-host return and exact progress/save preservation:14 checks in70.90s.
+  This uses the unchanged production owner and authenticated definition pack,
+  not the earlier TEST provider. Portal330's clear physical endpoints remain
+  held by original target MinLevel70 and LandTimeLimit; the UI reports the hold.
+  Explicit own manual1101 crosses Land1 to the exact native Land0 point.
+  Native automatic activation/admission is still not verified.
+- Focused regressions:input-cache10 checks; provider18 checks (authored scoped
+  condition guards plus actual owner-pack declarations); travel69 checks;
+  renderer105 authored display/guard checks. Authored cases are not original-M
+  behavior evidence. All original native Portal350 coordinates remain unchanged.
+- Default-off actual Main/core save preservation:35 checks, rerun on the final
+  code in66.06s (`current523-followup-core-save-receipt.json`). Tracked resource
   integrity:723 atlases /41,442 frames /233,420,026 bytes, unchanged.
 - Python source builder11, TI2 builder21 and core harness8 focused tests pass.
   Source-pack snapshot isolation and matching external-pin checks also pass.
+
+The actual play controller now shares one verified source catalog and one tile
+catalog too, across entry/restore/hops. It rehashes current manifest bytes before
+reuse, retains the last valid cache after a rejected candidate, and keeps
+independent per-field registries and original-byte checks. Atlas LRU remains32.
+The31-region exact-pose recheck parsed source/tile catalogs once each.
+
+The earlier31 cursor mismatches were ConfigFile decimal f64 representations,
+not changed game positions. Requiring exact decoded runtime Vector2 and the same
+source cell passes all31 targeted checks (672 assertions), then the final full
+577-root run. No save schema, source value or movement coordinate was changed to
+make the checks pass. Failed/diagnostic logs are preserved.
 
 The full logical-field audit shares a verified immutable catalog snapshot rather
 than reparsing the same17MB JSON997 times. Every selected field owns separate
@@ -298,11 +389,20 @@ Local logs/screenshots and receipts live under `/workspace/aden-validation/`.
 runtime claims. Latest compact receipts are
 `current523-all997-fields-verified-snapshot-v5-receipt.json`,
 `current523-all7557-runtime-ti2-validation-receipt.json`,
-`current523-all6558-own-cell-audit.json` and the `generic-fullpack-v5/` Main logs.
-The original acquisition and normal-map TI2 closure are complete. Genuine PR230
-provider binding, additional native portal execution, native collision/activation,
-unplaced Aden geometry, SEG decoding and every-region actual player coverage
-remain separate limits. SEG alternatives do not represent12 missing regions.
+`current523-all6558-own-cell-audit.json`,
+`current523-all577-actual-main-final-evidence.json` and the Main logs under
+`display/all577-final-fresh02/` and `display/production-portal-production02/`.
+The final compact evidence receipt SHA256 is
+`fbbf76b958363d1bd20ec995230433187d2d4399919365ea175521325d600f6c`;
+577 per-root JSONL SHA256 is
+`82ee7504349e97c4cebd3643531164f828d14a09def4826a12a19590361c3d35`;
+actual Main log SHA256 is
+`859b51c4618abfe796724872e603a2eb8f2c042f09b44d565fe85cae7fd321e2`.
+These logs/frames/receipts remain local, not newly uploaded reports or captures.
+The original acquisition and normal-map TI2 closure are complete. Native
+collision/activation/admission, unplaced Aden geometry, SEG decoding and
+every-cell/every-portal play coverage remain separate limits. SEG alternatives
+do not represent12 missing regions.
 
 The deferred seven-region harness completed43974 before its two-region180s run
 timed out; it is not a passed seven-region suite. The local harness/log/capture
@@ -314,3 +414,40 @@ Code goes to the same draft PR232 with `[skip ci]`; no other branch/main merge,
 manual CI dispatch, M engine/APK/XAPK work, or excluded arena/ziggurat/guild/siege
 content was introduced. Latest-main overlap and integration conflicts are reported
 separately; this continuation does not merge those changes silently.
+
+## Reproduce the independent physical-region probes
+
+The code-only `tools/map_restore/make_current523_gameplay_cases.py` reads the
+pinned private source pack and existing1,150-Portal handoff, verifies original
+stored/raw SHA identities, and derives clear/blocked/seam probes independently
+from raw bytes. It requires NumPy and refuses to replace existing output. Its
+output contains original evidence and stays in private storage, outside Git.
+Reproduction from the received whole input is byte-identical:2,890,183 bytes,
+SHA256`8ec55062637bd48eb122e18cfe81d1993b914b8921ef71e4a0a02aad5f50e5b6`.
+
+```sh
+python3 tools/map_restore/make_current523_gameplay_cases.py \
+  --source-root /private/source523 \
+  --source-sha256 6b71f4adb533b7acae6a7327e83af1b1322001a0f67c417bb3fae1bec35d96ca \
+  --portal-rows /private/all1150_portal_source_target_rows_with_scope.json \
+  --portal-sha256 ba3619ad35f72cf49c271605b32c7a0e516fddeb5fc2c17d33da2c16d05eacea \
+  --output /private/all577-gameplay-cases.json
+```
+
+`tests/current523_all_regions_main_test.gd` takes `--source-root`, `--source-sha`,
+`--tile-root`, `--tile-sha`, `--cases`, `--cases-sha` and a private `--progress`
+JSONL path. Optional `--start`, `--limit` or unique bounded `--indices` select a
+subset without changing the exact original cases. Run on the warmed Main project
+with the existing verified host source pack, isolated XDG profile, Godot4.7.2,
+X11/software OpenGL and Dummy audio. It has an explicit30-minute budget,
+per-region progress flush and bounded local frame contact sheet. It never
+instantiates the inherited TEST provider. The production portal Main test is
+separate and requires the actual pinned PR230 pack and independent held-route
+proof; neither source QA positioning nor fixture assertions count as admission.
+
+The initial genuine-provider new-process helper wrote its comparison JSON with
+rounded default precision for large boss wall-clock values. The real saved bytes
+and SHA were unchanged. Recording that expected state with the same full-precision
+JSON as the real writer fixed the helper; the subsequent27+14 actual checks pass
+with exact state/save comparisons intact. Failed helper logs are retained and
+are not reported as passing runs.

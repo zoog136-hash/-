@@ -8150,6 +8150,7 @@ signal current523_aden_review_closed
 var current523_aden_play_active: bool = false
 var current523_aden_play_problem: String = ""
 var _current523_aden_play_controller: RefCounted
+var _current523_source_definition_provider: RefCounted
 signal current523_aden_play_changed(active: bool, detail: String)
 
 func _aden_play_controller() -> RefCounted:
@@ -8164,6 +8165,9 @@ func open_current523_aden_play(raw_root: String, tile_root: String, options: Dic
 	requested.raw_root = raw_root
 	requested.tile_root = tile_root
 	var controller: RefCounted = _aden_play_controller()
+	if options.get("navigation_profile")==CURRENT523_ADEN_PLAY_OPTIONS.GENERIC and not bool(controller.get("active")) and not _prepare_current523_source_definitions_from_launch():
+		current523_aden_play_changed.emit(current523_aden_play_active,current523_aden_play_problem)
+		return false
 	var opened: bool = bool(controller.call("open", requested))
 	current523_aden_play_active = bool(controller.get("active"))
 	current523_aden_play_problem = str(controller.get("problem"))
@@ -8214,8 +8218,35 @@ func current523_source_geographic_contract() -> Dictionary:
 
 func bind_current523_source_portal_provider(provider: RefCounted, verified_manifest_sha256: String) -> bool:
 	var bound: bool=_aden_play_controller().call("bind_source_portal_provider",provider,verified_manifest_sha256)
-	if bound: current523_aden_play_changed.emit(current523_aden_play_active,"원문 포탈 정의 연결을 갱신했습니다.")
+	if bound:
+		# A caller-owned replacement must not inherit the previous verified-pack
+		# status or make the launch path skip its genuine production binding.
+		if provider!=_current523_source_definition_provider: _current523_source_definition_provider=null
+		current523_aden_play_changed.emit(current523_aden_play_active,"원문 포탈 정의 연결을 갱신했습니다.")
 	return bound
+
+func bind_current523_source_definition_pack(directory: String, expected_manifest_sha256: String) -> bool:
+	var script: Script=load("res://scripts/maps/current523_source_portal_provider.gd")
+	var candidate: RefCounted=script.new()
+	if not candidate.load_pack(directory,expected_manifest_sha256):
+		current523_aden_play_problem=str(candidate.problem); return false
+	if not bind_current523_source_portal_provider(candidate,expected_manifest_sha256):
+		current523_aden_play_problem="원문 정의 소비자를 연결하지 못했습니다."; return false
+	_current523_source_definition_provider=candidate
+	return true
+
+func _prepare_current523_source_definitions_from_launch() -> bool:
+	var directory: String=""
+	var pin: String=""
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--patch523-world-links="): directory=argument.trim_prefix("--patch523-world-links=")
+		if argument.begins_with("--patch523-world-links-sha256="): pin=argument.trim_prefix("--patch523-world-links-sha256=")
+	if directory.is_empty() and pin.is_empty(): return true
+	if _current523_source_definition_provider!=null and _current523_source_definition_provider.matches_manifest(directory,pin): return true
+	return bind_current523_source_definition_pack(directory,pin)
+
+func current523_source_definition_status() -> Dictionary:
+	return _current523_source_definition_provider.cache_metrics() if _current523_source_definition_provider!=null else {}
 
 func current523_aden_source_portals() -> Array:
 	return _aden_play_controller().call("portal_evidence")

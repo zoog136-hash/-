@@ -96,6 +96,16 @@ func run() -> void:
 	check(lanes[-2].size() == 6, "blocked synthetic navigation does not erase artwork")
 	renderer._append(lanes, PLAY.GRID_ORIGIN, 128, 0, 0, -2)
 	check(lanes[-2].size() == 6, "painting outside shared supplied coverage is excluded")
+	var decorations: Dictionary={}
+	renderer._append(decorations,PLAY.GRID_ORIGIN,128,0,123,0)
+	check(decorations.is_empty(),"legacy overlay retains its original intersection limit")
+	field.set_meta("current523_generic_field",true)
+	renderer._append(decorations,PLAY.GRID_ORIGIN,128,0,123,0)
+	renderer._append(decorations,PLAY.GRID_ORIGIN,128,0,456,-1)
+	renderer._append(decorations,PLAY.GRID_ORIGIN,128,0,789,-2)
+	check(decorations[0][2]==123 and decorations[-1][2]==456 and not decorations.has(-2),"source packet decorations span absent floor chunks without inventing floor")
+	check(field.raw_grid.bytes.count(0)==field.raw_grid.bytes.size(),"off-floor artwork never changes navigation bytes")
+	field.remove_meta("current523_generic_field")
 	var tiles := FakeTiles.new()
 	renderer._tile_pack = tiles
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}

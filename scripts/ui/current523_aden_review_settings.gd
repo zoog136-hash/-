@@ -270,7 +270,7 @@ func _refresh_source_portals() -> void:
 	var current: Node = _world()
 	if current == null or not current.has_method("current523_aden_source_portals"): return
 	for row: Dictionary in current.call("current523_aden_source_portals"):
-		var note: String = "자체 수동 · 사용 시 양끝 검사" if play_profile.selected==3 else ("원문 양끝 대조" if row.get("activation_candidate",false) else "보류")
+		var note: String = ("원문 조건 보류" if not str(row.get("definition_hold","")).is_empty() else "자체 수동 · 사용 시 양끝 검사") if play_profile.selected==3 else ("원문 양끝 대조" if row.get("activation_candidate",false) else "보류")
 		source_portal_choice.add_item("%d · %s → %s · %s" % [int(row.id),str(row.source_position),("Land%d · " % int(row.target_land_id) if row.has("target_land_id") else "")+str(row.get("landing_position")),note],int(row.id))
 		if int(row.id)==selected: source_portal_choice.select(source_portal_choice.item_count-1)
 

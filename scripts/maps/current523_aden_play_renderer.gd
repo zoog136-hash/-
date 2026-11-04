@@ -1,6 +1,6 @@
 extends "res://scripts/maps/source_map_runtime_renderer.gd"
-## Experimental M display over the unchanged TWILIGHT source360 Aden field.
-## Raw M attributes never supply collision, zone, movement or actor footprints.
+## Stored-pixel display for source fields and the retained legacy overlay.
+## The selected field owns movement; rendering never infers native collision.
 signal safe_return_requested(reason: String)
 
 const RAW = preload("res://scripts/maps/current523_aden_pack.gd")
@@ -42,6 +42,7 @@ var _metrics: Dictionary = {}
 var _last_actor_cell := Vector2i(-2147483648, -2147483648)
 var _refresh_clock: float = 0.0
 var _scope_clipped_records: int = 0
+var _off_floor_decoration_records: int = 0
 
 
 static func valid_delta(value: Vector2) -> bool:
@@ -80,7 +81,7 @@ func _ready() -> void:
 	set_process(false)
 
 
-func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_root: String, visual_delta: Vector2, tile_manifest_sha256: String = "") -> bool:
+func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_root: String, visual_delta: Vector2, tile_manifest_sha256: String = "", verified_catalog: RefCounted = null, verified_tiles: RefCounted = null) -> bool:
 	if _configured:
 		return false
 	problem = ""
@@ -95,10 +96,19 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	var originals: RefCounted
 	var tiles: RefCounted
 	if generic:
-		originals=GENERIC_RAW.new()
-		if not originals.load_pack(raw_root,str(value.get("catalog_sha256")),str(value.get("source_asset"))): return _fail(originals.problem)
-		tiles=GENERIC_TILES.new()
-		if not tiles.load_pack(tile_root,tile_manifest_sha256): return _fail(tiles.problem)
+		if verified_catalog!=null:
+			if verified_catalog.get_script()!=GENERIC_RAW or verified_catalog.catalog_directory()!=raw_root or verified_catalog.catalog_identity().get("manifest_sha256")!=str(value.get("catalog_sha256")): return _fail("표시 카탈로그의 원문 identity가 다릅니다.")
+			originals=verified_catalog.fork_catalog()
+			if not originals.select_asset(str(value.get("source_asset"))): return _fail(originals.problem)
+		else:
+			originals=GENERIC_RAW.new()
+			if not originals.load_pack(raw_root,str(value.get("catalog_sha256")),str(value.get("source_asset"))): return _fail(originals.problem)
+		if verified_tiles!=null:
+			if verified_tiles.get_script()!=GENERIC_TILES or verified_tiles.verified_identity()!={"root":tile_root,"manifest_sha256":tile_manifest_sha256}: return _fail("표시 타일팩의 원문 identity가 다릅니다.")
+			tiles=verified_tiles
+		else:
+			tiles=GENERIC_TILES.new()
+			if not tiles.load_pack(tile_root,tile_manifest_sha256): return _fail(tiles.problem)
 	else:
 		originals=RAW.new()
 		if not originals.load_pack(raw_root): return _fail(originals.problem)
@@ -119,6 +129,7 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
 	_raw_chunks.clear(); _raw_recent.clear(); _frame_commands.clear(); _frame_atlases.clear()
 	_scope_clipped_records = 0
+	_off_floor_decoration_records = 0
 	for row: Variant in record.chunks:
 		var bounds: Variant = row.get("world_bounds") if row is Dictionary else null
 		if not bounds is Array or bounds.size() != 4:
@@ -262,8 +273,13 @@ func _append(layers: Dictionary, origin: Vector2i, half_x: int, row_y: int, raw_
 	var source_point := Vector2i(origin.x + floori(float(half_x) / 2.0), origin.y + row_y)
 	var coverage := Vector2i(floori(float(source_point.x) / 64.0) * 64, floori(float(source_point.y) / 64.0) * 64)
 	if not _overlap.has(coverage):
-		_scope_clipped_records += 1
-		return
+		# A source packet's decorations can extend beyond its floor chunks.
+		# Keep that original art at its own projected coordinate. It adds no
+		# walkable floor. The old host-overlay intersection remains unchanged.
+		if layer==-2 or not bool(field.get_meta("current523_generic_field",false)):
+			_scope_clipped_records += 1
+			return
+		_off_floor_decoration_records += 1
 	var point: Vector2 = project_storage(field.coordinates, origin, half_x, row_y)
 	if not layers.has(layer): layers[layer] = []
 	var lane: Array = layers[layer]
@@ -319,6 +335,7 @@ func _build_frame() -> bool:
 		"uninterpreted_ffffffff_words": raw_ff, "unresolved_refs": 0, "budget_skips": 0, "skipped_chunks": 0,
 		"visual_delta": [_visual_delta.x, _visual_delta.y], "M_attributes_used": source_owned,
 		"scope_clipped_records": _scope_clipped_records,
+		"off_floor_decoration_records":_off_floor_decoration_records,
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
 	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()

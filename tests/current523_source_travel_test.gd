@@ -91,6 +91,11 @@ func _fixtures() -> void:
 	check(not result.native_m_rules_verified and result.native_trigger_rules=="UNKNOWN"
 		and result.activation_mode==TRAVEL.ACTIVATION_MODE,"own manual readiness never claims native activation")
 	check(not result.has("cost") and not result.has("radius") and not result.has("reverse_portal"),"planner supplies no inferred fee, radius or reverse edge")
+	var held: Dictionary=fixture()
+	held.context.source_travel_hold="native_definition_conditions_require_policy"
+	check(run_plan(held).reason.begins_with("definition_conditions_hold") and held.source.queries.is_empty() and held.target.queries.is_empty(),"definition holds reject before touching endpoint fields or publishing travel")
+	held.context.source_travel_hold=[]
+	check(run_plan(held).reason=="definition_hold_invalid","malformed definition hold cannot become permission")
 	result.context.Portal.SourceX=0; result.source_info.raw_pair[0]=32
 	check(f.context.Portal.SourceX==32778 and f.source.infos[f.cell].raw_pair==[0,0],"returned context and endpoint evidence are deep copies")
 	f.context.SourceLand.Name="changed after plan"

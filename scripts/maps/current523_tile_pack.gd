@@ -13,6 +13,7 @@ var problem: String = ""
 var loaded: bool = false
 var atlas_loads: int = 0
 var _root: String = ""
+var _manifest_sha256: String = ""
 var _atlas_storage: String = "png"
 var _tiles: Dictionary = {}
 var _cache: Dictionary = {}
@@ -25,6 +26,7 @@ func _fail(message: String) -> bool:
 func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	loaded = false
 	_root = ""
+	_manifest_sha256 = ""
 	_atlas_storage = "png"
 	_tiles.clear()
 	_cache.clear()
@@ -79,8 +81,18 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_root = directory
 	_atlas_storage = storage
 	_tiles = candidate
+	_manifest_sha256 = expected_manifest_sha256
 	loaded = true
 	return true
+
+func verified_identity() -> Dictionary:
+	return {"root":_root,"manifest_sha256":_manifest_sha256} if loaded else {}
+
+func matches_manifest(directory: String, expected_sha256: String) -> bool:
+	if not loaded or directory!=_root or expected_sha256!=_manifest_sha256: return false
+	var file:=FileAccess.open(directory.path_join(MANIFEST_NAME),FileAccess.READ)
+	if file==null or file.get_length()<2 or file.get_length()>MAX_METADATA_BYTES: return false
+	return _hash(file.get_buffer(file.get_length()))==expected_sha256
 
 func has_tile(tile_id: int) -> bool:
 	return loaded and _tiles.has(tile_id)

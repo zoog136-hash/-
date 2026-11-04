@@ -281,6 +281,15 @@ func fork_catalog() -> RefCounted:
 func catalog_directory() -> String:
 	return _root if catalog_loaded else ""
 
+func matches_manifest(directory: String, expected_sha256: String) -> bool:
+	if not catalog_loaded or directory!=_root or expected_sha256!=_manifest_sha256: return false
+	var path: String=directory.path_join(MANIFEST_NAME)
+	if not _no_links(path): return false
+	var file:=FileAccess.open(path,FileAccess.READ)
+	if file==null or file.get_length()<1 or file.get_length()>MAX_METADATA_BYTES: return false
+	# Recheck bytes without reparsing the immutable catalog for every new field.
+	return _hash(file.get_buffer(file.get_length()))==expected_sha256
+
 func format_root() -> String:
 	return str(_asset.get("source_root","")) if loaded else ""
 

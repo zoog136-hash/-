@@ -93,6 +93,9 @@ static func plan(context: Dictionary, catalog: RefCounted, source_field: RefCoun
 			return _result("land_scope_blocked")
 	if context.SourceLand!=source_record.declaration or context.TargetLand!=target_record.declaration:
 		return _result("context_land_mismatch")
+	var definition_hold: Variant=context.get("source_travel_hold","")
+	if not definition_hold is String: return _result("definition_hold_invalid")
+	if not definition_hold.is_empty(): return _result("definition_conditions_hold: "+definition_hold)
 	if territory.StartX>territory.EndX or territory.StartY>territory.EndY:
 		return _result("target_territory_inverted")
 	if territory.StartX!=territory.EndX or territory.StartY!=territory.EndY:

@@ -6,7 +6,11 @@ loader into PR237 or substitute `source_70`/PC geography.
 
 All seven requested Lands are included in the same ordinary997-Land scope.
 Their154 original S32 packets are received, original-byte-SHA checked and included
-in the common source pack. The full normal input is6,570 originals:6,558 S32 and
+in the common source pack. The final whole-map actual Main run covers all577
+ordinary physical roots (12,558 checks), including each of these seven source
+regions. It checks representative physics/blocked cells/boundaries/return/save
+and the real restore method after field teardown. It is not native admission,
+Totem EXP/growth integration or a new OS process for every region. The full normal input is6,570 originals:6,558 S32 and
 12 retained SEG alternatives. Every SEG has a same-stem S32; SEG is preserved
 without being parsed as S32. One nine-character Aden filename remains unplaced.
 
@@ -20,7 +24,8 @@ without being parsed as S32. One nine-character Aden filename remains unplaced.
 |48171|`13426/`|36/36|
 |48181|`13427/`|4/4|
 
-The current complete source pack is LOCAL_ONLY:
+The current complete source-pack build directory is local; its exact payload is
+in the verified17-part private Drive application bundle linked below:
 `/workspace/aden-validation/current523-normal-source-pack-all6570-v5/`.
 `source523.json`:17,260,837 bytes, SHA256
 `6b71f4adb533b7acae6a7327e83af1b1322001a0f67c417bb3fae1bec35d96ca`.
@@ -135,3 +140,45 @@ The official M guides describe the [Atlantis gatekeepers](https://lineagem.playn
 and [Thebes dungeon-menu entry](https://lineagem.plaync.com/guidebook/view?title=%ED%85%8C%EB%B2%A0%EB%9D%BC%EC%8A%A4+%EC%82%AC%EB%A7%89).
 These consulted pages do not supply an exact internal landing-cell contract.
 Their live schedules/fees are not copied over the pinned523 rows.
+
+## Shared immutable inputs and PR230 definitions
+
+The play controller reuses one successfully verified source catalog and one tile
+catalog per current input identity. Each entry rehashes the bounded manifest
+before reuse; a changed file or wrong pin is refused without clearing the last
+valid cache. Field registries remain independent; original packet bytes are
+verified on read and decoded tile atlases remain bounded to32. This avoids
+reparsing the17MB catalog for every region/restore.
+
+PR232 reuses PR230's unchanged `patch523_world_links.gd` at owner commit
+`5d1b1bdb0b00b855ffd87036a2e5f6b274ffa3eb`, Git blob
+`0fcb00cba1d6ca7e5f2ea2e12aee187d622551e0`. It does not copy a second compiler or
+original catalog. `current523_source_portal_provider.gd` adapts that owner's
+verified Land shards into the existing geographic provider methods.
+
+Use `world.bind_current523_source_definition_pack(directory, expected_sha256)`
+or the owner's existing launch arguments:
+
+```text
+--patch523-world-links=/private/world-links
+--patch523-world-links-sha256=2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90
+```
+
+Requested missing/corrupt definitions block optional source entry. Failed binding
+updates preserve the previous valid binding. A caller-owned replacement/unbind
+clears the previous genuine-pack status, so launch preparation cannot silently
+reuse that stale status. This verifies the actual pack;
+passing a pin to the lower-level caller-owned provider API alone is not proof.
+The adapter retains up to4 verified Land instances and returns copied complete
+original Portal/SourceLand/TargetTerritory/TargetLand rows and the unchanged
+native definition contract. Exact Land.ID and AssetPath remain separate.
+
+Native Land restrictions and unresolved time/weekly/competition conditions hold
+the own manual action and appear as `원문 조건 보류` in the existing Settings UI.
+Territory-scoped rules are evaluated only within their declared scope; unknown
+scope/type stays held. Native activation, cost and region arrival semantics are
+not invented. Separate LandTeleport costs/prerequisites remain separate raw
+contracts; a shared target does not assign their fee to a Portal. The provider
+never changes native `activation_known=false` or `travel_enabled=false` into
+true. The optional button remains an explicitly labelled TWILIGHT own manual
+geographic action; this is not automatic original-M portal admission.

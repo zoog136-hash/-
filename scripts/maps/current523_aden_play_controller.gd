@@ -25,6 +25,29 @@ const DEFINITION_PACK_SHA256="2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291
 const SOURCE_TRAVEL=preload("res://scripts/maps/current523_source_travel.gd")
 var _source_portal_provider: RefCounted
 var _source_travel_busy: bool=false
+const GENERIC_CATALOG=preload("res://scripts/maps/current523_source_pack.gd")
+const GENERIC_TILES=preload("res://scripts/maps/current523_tile_pack.gd")
+var _cached_catalog: RefCounted
+var _cached_tiles: RefCounted
+var _catalog_loads: int=0
+var _tile_metadata_loads: int=0
+
+func _catalog_for(options: Dictionary) -> RefCounted:
+	if _cached_catalog!=null and _cached_catalog.matches_manifest(options.raw_root,options.source_manifest_sha256): return _cached_catalog
+	var candidate:=GENERIC_CATALOG.new()
+	if not candidate.load_catalog(options.raw_root,options.source_manifest_sha256): problem=candidate.problem; return null
+	_cached_catalog=candidate; _catalog_loads+=1
+	return candidate
+
+func _tiles_for(options: Dictionary) -> RefCounted:
+	if _cached_tiles!=null and _cached_tiles.matches_manifest(options.tile_root,options.tile_manifest_sha256): return _cached_tiles
+	var candidate:=GENERIC_TILES.new()
+	if not candidate.load_pack(options.tile_root,options.tile_manifest_sha256): problem=candidate.problem; return null
+	_cached_tiles=candidate; _tile_metadata_loads+=1
+	return candidate
+
+func input_cache_metrics() -> Dictionary:
+	return {"source_catalog_loads":_catalog_loads,"tile_catalog_loads":_tile_metadata_loads,"tile_cache_size":_cached_tiles.cache_size() if _cached_tiles!=null else 0}
 
 func configure(world: Node) -> void:
 	_world_ref = weakref(world)
@@ -165,9 +188,11 @@ func _open_source(value: Dictionary) -> bool:
 	if not prior_field is OriginalPlayableField or not is_instance_valid(prior_renderer) or not is_instance_valid(world.get("player")):
 		problem = "복귀할 지도와 캐릭터를 확인하지 못했습니다."; return false
 	var generic: bool=options.navigation_profile==OPTIONS.GENERIC
+	var catalog: RefCounted=_catalog_for(options) if generic else null
+	if generic and catalog==null: return false
 	var script: Script = load("res://scripts/maps/current523_source_field.gd" if generic else "res://scripts/maps/current523_aden_source_field.gd")
 	var proposed: OriginalPlayableField = script.new()
-	var configured: bool=proposed.call("configure_catalog",options.raw_root,options.source_manifest_sha256,options.native_land_id,{"allowed_raw_words":options.allowed_raw_words}) if generic else proposed.call("configure_current523",options.raw_root,{"allowed_raw_words":options.allowed_raw_words})
+	var configured: bool=proposed.call("configure_verified_catalog",catalog,options.source_manifest_sha256,options.native_land_id,{"allowed_raw_words":options.allowed_raw_words}) if generic else proposed.call("configure_current523",options.raw_root,{"allowed_raw_words":options.allowed_raw_words})
 	if not configured:
 		problem = str(proposed.get("problem")); proposed.close(); return false
 	var source_position: Array = options.source_position
@@ -178,6 +203,8 @@ func _open_source(value: Dictionary) -> bool:
 	if not proposed.point_clear(position,4):
 		problem = "선택한 원문 위치는 자체 통행에서 거부됩니다. 원본 좌표를 임의로 바꾸지 않았습니다."; proposed.close(); return false
 	proposed.data.spawn_position = [position.x,position.y]
+	var tiles: RefCounted=_tiles_for(options) if generic else null
+	if generic and tiles==null: proposed.close(); return false
 	var actor_position: Vector2 = world.player.global_position
 	var camera: Camera2D = world.player.camera
 	var old_camera: Dictionary = {"left":camera.limit_left,"top":camera.limit_top,"right":camera.limit_right,"bottom":camera.limit_bottom}
@@ -190,7 +217,7 @@ func _open_source(value: Dictionary) -> bool:
 	candidate.name = "Current523AdenSourceRenderer"
 	candidate.process_mode = Node.PROCESS_MODE_DISABLED; candidate.hide()
 	world.add_child(candidate)
-	var valid: bool = candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.get("tile_manifest_sha256","")))
+	var valid: bool = candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.get("tile_manifest_sha256","")),catalog,tiles)
 	world.player.global_position = actor_position
 	camera.limit_left = old_camera.left; camera.limit_top = old_camera.top; camera.limit_right = old_camera.right; camera.limit_bottom = old_camera.bottom
 	camera.reset_smoothing(); camera.force_update_scroll()
@@ -330,7 +357,7 @@ func portal_evidence() -> Array:
 			if int(portal.get("ID",-1))!=id or int(portal.get("SourceLandID",-1))!=int(settings.native_land_id): continue
 			var point: Variant=null
 			if territory.get("StartX")==territory.get("EndX") and territory.get("StartY")==territory.get("EndY"): point=[territory.StartX,territory.StartY]
-			result.append({"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","native_m_rules_verified":false})
+			result.append({"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","definition_hold":context.get("source_travel_hold",""),"definition_owner":context.get("definition_owner","CALLER_SUPPLIED"),"native_m_rules_verified":false})
 		return result
 	return _portals.call("portal_evidence") if source_owned and _portals != null else []
 
@@ -400,7 +427,9 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 	var proposed: OriginalPlayableField=script.new()
 	var options: Dictionary=settings.duplicate(true)
 	var target_id: int=int(context.TargetLand.get("ID",-1))
-	if not proposed.configure_catalog(options.raw_root,options.source_manifest_sha256,target_id,{"allowed_raw_words":options.allowed_raw_words}):
+	var catalog: RefCounted=_catalog_for(options)
+	if catalog==null: proposed.close(); return false
+	if not proposed.configure_verified_catalog(catalog,options.source_manifest_sha256,target_id,{"allowed_raw_words":options.allowed_raw_words}):
 		problem="대상 원문 필드 보류: "+str(proposed.problem); proposed.close(); return false
 	var source_cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
 	var plan: Dictionary=SOURCE_TRAVEL.plan(context,_source_field.get("_raw"),_source_field,proposed,source_cell,str(options.source_manifest_sha256))
@@ -409,6 +438,8 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 	var destination: Vector2i=plan.target_position
 	var position: Vector2=proposed.coordinates.to_world(Vector2(destination))
 	proposed.data.spawn_position=[position.x,position.y]
+	var tiles: RefCounted=_tiles_for(options)
+	if tiles==null: proposed.close(); return false
 	var previous_position: Vector2=world.player.global_position
 	var camera: Camera2D=world.player.camera
 	var previous_camera: Dictionary={"left":camera.limit_left,"top":camera.limit_top,"right":camera.limit_right,"bottom":camera.limit_bottom}
@@ -419,7 +450,7 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 	var candidate=RENDERER.new()
 	candidate.name="Current523GenericTravelRenderer"
 	candidate.process_mode=Node.PROCESS_MODE_DISABLED; candidate.hide(); world.add_child(candidate)
-	var valid: bool=candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.tile_manifest_sha256))
+	var valid: bool=candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.tile_manifest_sha256),catalog,tiles)
 	world.player.global_position=previous_position
 	camera.limit_left=previous_camera.left; camera.limit_top=previous_camera.top; camera.limit_right=previous_camera.right; camera.limit_bottom=previous_camera.bottom
 	camera.reset_smoothing(); camera.force_update_scroll()
