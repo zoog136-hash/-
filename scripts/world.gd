@@ -32,6 +32,7 @@ var map_bootstrap_blocked: bool=false
 var loading_source_door_state: bool=false
 var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
+const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
 # Do not preload this heavy optional renderer while parsing the main game class.
@@ -8105,3 +8106,33 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+
+## Register exact current523 M originals separately from the live map field.
+## Rendering and walking need independently validated M spatial semantics.
+var _current523_aden_sources: RefCounted = null
+var current523_aden_problem: String = ""
+
+func open_current523_aden_sources(pack_root: String) -> bool:
+	var candidate = CURRENT523_ADEN_PACK.new()
+	if not candidate.load_pack(pack_root):
+		current523_aden_problem = candidate.problem
+		return false
+	_current523_aden_sources = candidate
+	current523_aden_problem = ""
+	return true
+
+func current523_aden_source_members() -> Array:
+	return [] if _current523_aden_sources == null else _current523_aden_sources.call("source_members")
+
+func read_current523_aden_source(member: String) -> Dictionary:
+	if _current523_aden_sources == null:
+		current523_aden_problem = "No current523 Aden source pack registered"
+		return {}
+	var result: Dictionary = _current523_aden_sources.call("read_member", member)
+	current523_aden_problem = str(_current523_aden_sources.get("problem"))
+	return result
+
+func close_current523_aden_sources() -> void:
+	_current523_aden_sources = null
+	current523_aden_problem = ""

@@ -22,6 +22,7 @@ TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
     ('core_runtime_save_test', []),
+    ('current523_aden_pack_test', []),
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
 ]
@@ -246,6 +247,7 @@ def main():
             if user_args:
                 command += ['--', *user_args]
             marker = {'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
+                      'current523_aden_pack_test':'CURRENT523_ADEN_PACK_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
