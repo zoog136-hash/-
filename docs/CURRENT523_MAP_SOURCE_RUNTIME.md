@@ -49,11 +49,58 @@ only the exact named normal-resource DATs and checked against current container
 and member hashes. No engine/APK was read. Archive selection is per container;
 523 does not imply every container changed after508.
 
-These immutable packs are currently **LOCAL_ONLY**. The earlier Aden-only Drive
-application pack and separate original backups remain intact. Their successful
-download does not certify this new whole-map pack. Game consumption uses explicit
-private folders and manifest pins; Drive storage is not automatic installation.
-Original resources and derived atlases never enter the public Git repository.
+The primary build folders remain local immutable outputs. Their complete runtime
+payload is now durably stored as the latest private Drive application bundle:
+
+- `TWILIGHT_Current523_AllMaps_application_20261104.zip`:565,562,974 bytes,
+  SHA256 `1fadd8a079012b4449da5ad08cda5403ec7b486a1f22c51e40316f72477347dc`.
+-17 ordered parts:16×33,554,432 bytes and a final28,692,062 bytes.
+  Each uploaded part was downloaded and checked against its exact SHA256;
+  owner-only permissions and the application-folder parent were read back.
+- The [delivery manifest](https://drive.google.com/file/d/1j3fb_H18eH-iWsxELmukF2-vHvT9orMN/view?usp=drivesdk)
+  lists every part's exact order/name/size/SHA/file link. It is7,527 bytes,
+  SHA256 `9360e40160af7d0bc10c44cc3d9694125edd96c802d2461a7df4231ee300dc05`.
+- Destination: the existing private
+  [actual application-pack folder](https://drive.google.com/drive/folders/13CrR_W4xStDNSW0KZ9Z91OgGkSX7-zmO).
+  Existing files and sharing were preserved.
+
+A fresh authenticated consumer downloaded all17 parts, logically reassembled the
+ZIP in memory and verified the whole archive SHA, every ZIP CRC and all14,131
+payload identities. The fresh installation contains597,200,350 bytes at
+`/workspace/aden-validation/fresh-Drive-wholemap-consumer-v1/`.
+Only after each downloaded member matched did installation link the identical
+private immutable payload into the new consumer folder. This is a fresh verified
+install with physical deduplication, not an independent physical copy or a single
+ZIP persisted to disk. Actual Main loaded this new folder and passed34 entry,
+walking, blocked motion, return and save checks in109.29s; a new process then
+restored the same installed source folder/cursor with8 checks in68.97s.
+
+Installation is manual ordered-part concatenation / SHA+CRC verification / ZIP
+extraction / folder selection. Select `source523` and `tiles523` and enter their
+manifest pins above in the whole-map controls. There is no automatic Drive
+downloader. The old Aden-only ZIP install button is incompatible with this bundle.
+Use PR232 code `464dae43145b821e735f628a386ec4c8845b9dfd` or its continuation;
+the new generic readers are not present in the older Aden-only revision or merged
+main. Embedded manifests retain their conservative creation-time
+`PRIVATE_LOCAL_ONLY` field; separate authenticated transfer/install receipts
+establish the subsequent delivery stage without rewriting immutable pins.
+
+The preceding Aden application ZIP remains intact:399,316,785 bytes, SHA256
+`f926e1513c552b60ed5deb6c9b1fddf18a6e59ab4e916575b9dc88206b05f952`.
+Its five-part download/Main success is separate evidence for that older scope.
+Separate original backups in the existing private
+[original-preservation folder](https://drive.google.com/drive/folders/1SFucZ3Lt2OxZUTv8K-0MDIP6Rsz7tHjk)
+remain:
+
+| Backup | Bytes | SHA256 |
+| --- | ---: | --- |
+|[Aden S32 originals v1](https://drive.google.com/file/d/1byeN61WZskhpdzrcASK15ol4xSD94isv/view?usp=drivesdk)|31,385,092|`fde68ad6caa92ede3eeb1c4dd8cca39b304abae310ac7ef535ba17f082e5007b`|
+|[Aden TI2 originals v1](https://drive.google.com/file/d/1EOvXo3DBfN9HkxWnWkkjf-OO6sQIJkby/view?usp=drivesdk)|97,836,926|`cf94af7173e7b1d915d9960c61502d2b7f6b17f7c3295004302acd590e7bd28a`|
+
+These separate backups cover Aden, not the new entire-map scope. The new complete
+application bundle itself preserves all current original map/TI2 identities.
+No additional standalone raw-source backup, investigation report or screenshot
+was uploaded. Original resources and derived atlases never enter public Git.
 
 ## Build and use
 
@@ -202,6 +249,13 @@ Latest complete-input checks use the source and tile pins above:
   A new process restores the same source cursor with8 checks in66.75s.
   The copied geographic contract and explicit safe-region landing policy are
   exercised separately from native arrival/admission semantics.
+- Complete-input manual portal adapter:54 actual Main checks in118.22s for
+  clear1101 Land1→Land0, blocked523, missing arrival textures and checkpoint-write
+  failure rollback. New-process target restoration and initial-host return:31
+  checks in81.85s. The provider is an explicitly pinned TEST adapter, not genuine
+  PR230 production binding or native automatic activation. Two previously
+  uninitialized ready host bosses reconstructed as exactly one healthy actor each;
+  cooldown/progress/rewards and stored save bytes stayed unchanged.
 - Default-off actual Main/core save preservation:35 checks. Tracked resource
   integrity:723 atlases /41,442 frames /233,420,026 bytes, unchanged.
 - Python source builder11, TI2 builder21 and core harness8 focused tests pass.

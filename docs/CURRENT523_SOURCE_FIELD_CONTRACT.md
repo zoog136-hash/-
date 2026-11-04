@@ -1,6 +1,6 @@
 # PR232 common source-field contract for PR237
 
-Status: the whole-map APIs below are part of this PR232 continuation.
+Status: the whole-map APIs below are published in PR232 commit `464dae43` and its continuation.
 Earlier `f8cf6c2a` is the preceding Aden-only implementation. Do not copy the
 loader into PR237 or substitute `source_70`/PC geography.
 
@@ -35,7 +35,9 @@ actual original S32 floor/cover/object reference. All7,557 are included in
 `/workspace/aden-validation/current523-all7557-ti2-runtime-pack-v2/`.
 `tilepack523.json`:21,156,382 bytes, SHA256
 `8a954372eed28e360dc3c7c77f361fba1e0fcc7ee1daa7ffa204f6a679e28482`.
-The full pack is LOCAL_ONLY pending separate application-pack delivery. Its
+The immutable build directory is local; the same payload is included in the
+[verified17-part Drive application bundle](https://drive.google.com/file/d/1j3fb_H18eH-iWsxELmukF2-vHvT9orMN/view?usp=drivesdk).
+Its
 originals are bounded-decoded on demand; no missing physical frame is padded into
 an available frame. Whole-pack checks are15,235 passing Godot assertions across
 all7,557 actual originals, including independent Python coverage hashes.
