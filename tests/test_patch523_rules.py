@@ -76,6 +76,21 @@ class AdmissionTest(unittest.TestCase):
         effect=self.compile()['equipment_runtime']['101']['invokes']['1']['4'][0]
         self.assertEqual((effect['kind'],effect['option']['AttackTypeID']),('defence_flat_reduction',2))
 
+    def test_damage_percent_units_and_adena_exact_item_qualifier(self):
+        self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=4073,Name='PierceDamageReductionPercent',UnitID=3),dict(ID=6322,Name='IncreaseNpcItemDropAmount',UnitID=211)]
+        self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=4073,Value=25000,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=13,BonusTypeID=6322,Value=7,BonusApplicationTypeID=5,BonusApplicationTargetID=26)]
+        self.tables['ItemBonus']=[dict(ID=1,ItemClassID=101,BonusID=11)]
+        self.tables['ItemEnchantBonus']=[dict(ID=7,EnchantLevel=4,ItemEnchantBonusGroupID=3,BonusID=12,BlessCode=0),dict(ID=8,EnchantLevel=4,ItemEnchantBonusGroupID=3,BonusID=13,BlessCode=0)]
+        runtime=self.compile()['equipment_runtime']['101']
+        self.assertEqual(runtime['extra_options']['1']['4'],{'damage_amp_pct':2.5,'adena_drop_pct':7})
+        adena_bonus=self.tables['Bonus'][-1].copy()
+        for key,value in [('BonusApplicationTypeID',0),('BonusApplicationTargetID',999)]:
+            with self.subTest(key=key):
+                self.tables['Bonus'][-1]={**adena_bonus,key:value}
+                guarded=self.compile()['equipment_runtime']['101']
+                self.assertNotIn('adena_drop_pct',guarded['extra_options']['1']['4'])
+                self.assertIn(8,guarded['unconnected_effect_row_ids'])
+
     def rejected(self):
         self.assertEqual(self.compile()['recipes'], {})
 
@@ -257,6 +272,13 @@ class AdmissionTest(unittest.TestCase):
                          {'patch523:150468','patch523:150478','patch523:150488','patch523:150498','patch523:172613'})
         self.assertEqual(set(result['guaranteed_boxes']),{'30701','130611'})
         self.assertEqual(len(result['source_files']),37)
+        descriptions={r['ID']:r['Description'] for r in tables['DescData_Korean']}
+        types={r['ID']:r for r in tables['BonusType']}
+        for tid,unit,label in [(4073,3,'대미지 증가'),(11124,3,'PVE 대미지 증가'),(231,3,'대미지 감소'),(6322,211,'아데나 드롭량')]:
+            self.assertEqual(types[tid]['UnitID'],unit)
+            self.assertEqual(descriptions[types[tid]['DescID']],label)
+        adena=next(r for r in tables['ItemClass'] if r['ID']==26)
+        self.assertEqual(descriptions[adena['DescID']],'아데나')
         for name in ['ItemBlessBonus','Material','Unit','UIUnit','ItemEnchantEquipGroupMapping','ItemEnchantScrollGroupMapping','BmItemEnchantProView','ItemEnchantCostView','ItemEnchantProbabilityView','ItemBlessEnchantProbability','InvokeOption','InvokeOptionType','BonusApplicationType','AttackType']:
             self.assertEqual(result['enchantment'][name],tables[name])
         # Every enchant row of every bound item remains available verbatim;

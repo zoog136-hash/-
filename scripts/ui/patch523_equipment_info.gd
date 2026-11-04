@@ -14,7 +14,7 @@ var pack_dialog: FileDialog
 var pack_status: Label
 var catalog_dialog: FileDialog
 var catalog_status: Label
-const DEFAULT_SHA: String = "5ecbc0537fce85e1605d998b493464d375aa263f59abe977e8484df22f569e8e"
+const DEFAULT_SHA: String = "1ea677afe73929b04d745826034c7750cdbc0a20c441d6000756f0ee3eab67fc"
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -163,6 +163,7 @@ func _refresh() -> void:
 		var expected_options: Dictionary = book.supported_seal_options(str(source_id),2).get(str(level_value), {})
 		var actual_options: Dictionary = physical.get("record", {}).get("enhancement_options", {}).get(str(level_value), {})
 		labels.merge({"ArmorClass":"물리 방어력(AC)","WeaponDamageBonus":"추가 대미지","WeaponHitBonus":"무기 명중","HPPlus":"최대 HP","MPPlus":"최대 MP","CarryPlus":"무게 보너스","MagicResist":"MR","SpellPower":"SP","MeleeCritical":"근거리 치명타","RangeCritical":"원거리 치명타","MagicCritical":"마법 치명타","AttackSpeedBonus":"공격 속도","MoveSpeedBonus":"이동 속도","RegenMP":"MP 회복","PVEDamageReduction":"PVE 리덕션","PVPDamageReduction":"PVE 리덕션","PVEDamageReductionPercent":"PVE 리덕션 비율"})
+		labels.merge({"PierceDamageReductionPercent":"대미지 증가","PVEPierceDamageReductionPercent":"PVE 대미지 증가","DamageReductionPercent":"대미지 감소","IncreaseNpcItemDropAmount":"아데나 드롭량"})
 		for effect: Dictionary in effects:
 			var kind: String = str(effect.bonus_type.get("Name", ""))
 			var value: String = str(int(effect.bonus.Value))

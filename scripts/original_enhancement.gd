@@ -80,6 +80,7 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 	for key: String in extras:
 		bonus[key]=extras[key]
 	labels.merge({"strFlat":"STR","dexFlat":"DEX","intFlat":"INT","er":"ER","dg":"DG",
+		"damage_amp_pct":"대미지 증가(%)","adena_drop_pct":"아데나 드롭량(%)",
 		"mpRecoveryTick":"MP 회복","magicDamage":"마법 대미지","attackSpeed":"공격 속도(%)",
 		"speedBonusPct":"이동 속도(%)","pve_damage_reduction":"PVE 리덕션","pve_damage_reduction_pct":"PVE 리덕션(%)",
 		"damage_reduction_ignore":"리덕션 무시","pve_melee_damage":"PVE 근거리 대미지","pve_ranged_damage":"PVE 원거리 대미지",

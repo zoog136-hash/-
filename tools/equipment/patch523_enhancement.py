@@ -34,6 +34,13 @@ EXTRA = {
     'PVPRangeAdditionDamage':('pve_ranged_damage',1), 'PVERangeAdditionDamage':('pve_ranged_damage',1),
     'PVPMagicAdditionDamage':('pve_magic_damage',1), 'PVEMagicAdditionDamage':('pve_magic_damage',1),
     'PierceMeleeEvasion':('melee_evasion_ignore',1), 'PierceRangeEvasion':('ranged_evasion_ignore',1),
+    # DescData_Korean calls these 대미지 증가 / PVE 대미지 증가,
+    # not a new NPC defensive stat. Use the existing damage amplifier.
+    'PierceDamageReductionPercent':('damage_amp_pct',10000),
+    'PVEPierceDamageReductionPercent':('damage_amp_pct',10000),
+    'DamageReductionPercent':('pve_damage_reduction_pct',10000),
+    # Unit211 ValuePercent already stores percentage points (divisor1).
+    '_adena_drop':('adena_drop_pct',1),
 }
 
 
@@ -79,6 +86,9 @@ def compile_equipment(tables, bound_items, bonuses):
                     if b['BonusApplicationTypeID'] or b['BonusApplicationTargetID']:
                         if name == 'SpecialResistance' and b['BonusApplicationTypeID']==2 and b['BonusApplicationTargetID']==6:
                             name = '_stun'
+                        elif name == 'IncreaseNpcItemDropAmount' and b['BonusApplicationTypeID']==5 and b['BonusApplicationTargetID']==26:
+                            # Original ItemClass26 is Adena, not every item.
+                            name = '_adena_drop'
                         else:
                             skipped.add(row['ID']); continue
                     spec = FIELDS.get(name)
@@ -108,7 +118,9 @@ def compile_equipment(tables, bound_items, bonuses):
                 for row in selected:
                     if row['EnchantLevel']!=0: continue
                     b=bonuses[str(row['BonusID'])]; name=types[b['BonusTypeID']]['Name']
-                    if name in EXTRA and b['BonusApplicationTypeID']==0 and b['BonusApplicationTargetID']==0:
+                    adena = name=='IncreaseNpcItemDropAmount' and b['BonusApplicationTypeID']==5 and b['BonusApplicationTargetID']==26
+                    if adena: name='_adena_drop'
+                    if name in EXTRA and (adena or (b['BonusApplicationTypeID']==0 and b['BonusApplicationTargetID']==0)):
                         key,_=EXTRA[name]
                         if key in extra and not isinstance(extra[key],dict): extra[key]={'total':extra[key],'base_key':key,'scale':1}
                 by_rank[str(level)] = totals
