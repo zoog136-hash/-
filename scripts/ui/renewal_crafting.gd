@@ -20,6 +20,7 @@ var layout: Control
 var product: TextureRect
 var product_name: Label
 var product_grade: Label
+var candidate_box: VBoxContainer
 var material_grid: GridContainer
 var material_scroll: ScrollContainer
 var material_rows: Array[Dictionary]=[]
@@ -41,10 +42,9 @@ func configure(controller: Node) -> void:
 	# https://www.lineagem.com.tw/make/make-shields
 	filters = HBoxContainer.new()
 	add_child(filters)
-	if not world.patch523_equipment.data.is_empty():
-		var source_info: Button = UI.button("원본 강화 정보", func() -> void: hud.open_patch523_equipment_info())
-		source_info.name = "Patch523EquipmentInfoButton"
-		filters.add_child(source_info)
+	var source_info: Button = UI.button("원본 강화 정보", func() -> void: hud.open_patch523_equipment_info())
+	source_info.name = "Patch523EquipmentInfoButton"
+	filters.add_child(source_info)
 	category_filter = OptionButton.new()
 	category_filter.name = "CraftCategoryFilter"
 	category_filter.custom_minimum_size.y=40
@@ -139,6 +139,9 @@ func configure(controller: Node) -> void:
 	amount.value_changed.connect(func(_value: float) -> void:_refresh_quote())
 	quantity.add_child(amount)
 	information.add_child(UI.label("재료 · 사용 가능 / 필요",13,UI.GOLD))
+	candidate_box=VBoxContainer.new()
+	candidate_box.name="Patch523MaterialCandidates"
+	information.add_child(candidate_box)
 	material_grid=GridContainer.new()
 	material_grid.columns=2
 	material_grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
@@ -253,17 +256,20 @@ func _refresh_quote() -> void:
 		return
 	var service: Object = world.get("crafting")
 	var recipe: Dictionary = (service.get("recipes") as Dictionary).get(current_id,{})
+	if current_id.begins_with("patch523:"):
+		var selection: Dictionary = world.patch523_equipment.material_selection(current_id, world.patch523_material_choices.get(current_id, {}))
+		if selection.get("recipe") is Dictionary: recipe = selection.recipe
 	var count: int = int(amount.value)
 	var quote: Dictionary = world.call("_craft_quote",current_id,count)
 	var result: Dictionary=recipe.get("result",{})
 	var output_name: String=str(result.get("item",""))
-	var items: Dictionary=world._craft_item_index()
+	var items: Dictionary=world._patch523_craft_item_index() if current_id.begins_with("patch523:") else world._craft_item_index()
 	var output: Dictionary=items.get(output_name,{})
 	if material_recipe!=current_id:
 		_build_materials(recipe,items)
 		UI.apply_item_visual(product,output,output_name,hud.item_image_index.get("아이템",{}),"detail")
 	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
-	var state_label: String = (" +%d · %s" % [int(result.get("level", 0)), "축복" if int(result.get("bless_code", 1)) == 2 else "일반"]) if source_recipe else ""
+	var state_label: String = (" +%d · %s" % [int(result.get("level", 0)), "축복" if int(result.get("bless_code", 1)) == 2 else "일반"]) if source_recipe and not bool(result.get("wallet_currency",false)) else ""
 	product_name.text=output_name+state_label+" ×"+str(int(result.get("quantity",0))*count)
 	product_name.add_theme_color_override("font_color",UI.grade(str(output.get("grade","일반"))))
 	product_grade.text=str(output.get("grade","일반"))+" · "+str(recipe.get("category",""))
@@ -278,10 +284,12 @@ func _refresh_quote() -> void:
 	cost.text=UI.number_text(int(recipe.get("adena",0))*count)+" 아데나"
 	wallet.text="보유 아데나  "+UI.number_text(int(world.gold))
 	detail.text="[color=#79bf83]제작 가능[/color]" if bool(quote.get("ok",false)) else "[color=#ec8075]"+UI.safe(quote.get("reason","제작 불가"))+"[/color]"
+	if bool(result.get("wallet_currency",false)):
+		detail.text += "\n제작 결과 아데나는 지갑에 지급합니다."
 	if source_recipe:
 		detail.text += "\n원본523 확정 제작 · 표시된 강화·축복 상태의 재료만 사용합니다."
 		if str(result.get("source_id", "")) in ["30671", "130551"] and int(result.get("bless_code", 1)) == 2:
-			detail.text += "\n축복 인장 명중·대미지·리덕션·물약 능력을 연결합니다. 경험치·아인하사드·스턴 내성·쿨타임 효과는 조회만 지원합니다."
+			detail.text += "\n축복 인장의 해당 단계 명중·대미지·리덕션·물약·경험치·아인하사드·스턴 내성·쿨타임 효과를 적용합니다."
 		for material: Dictionary in recipe.get("materials", []):
 			if bool(material.get("physical", false)):
 				detail.text += "\n%s +%d · %s" % [UI.safe(material.item), int(material.level), "축복" if int(material.bless_code) == 2 else "일반"]
@@ -294,11 +302,34 @@ func _clear_materials() -> void:
 	material_rows.clear()
 	material_recipe=""
 	for child: Node in material_grid.get_children():child.free()
+	for child: Node in candidate_box.get_children():
+		candidate_box.remove_child(child)
+		child.queue_free()
 
 func _build_materials(recipe: Dictionary,items: Dictionary) -> void:
 	_clear_materials()
 	material_recipe=current_id
 	material_scroll.scroll_vertical=0
+	for source_slot: Dictionary in recipe.get("material_slots", []):
+		var candidates: Array = source_slot.candidates
+		if candidates.size() < 2: continue
+		var slot_key: String = str(int(source_slot.slot_index))
+		candidate_box.add_child(UI.label("재료 슬롯 %s · 후보 1종을 선택" % slot_key, 12, UI.GOLD))
+		var chooser := OptionButton.new()
+		chooser.name = "Patch523Candidate_" + slot_key
+		chooser.custom_minimum_size.y = 40
+		chooser.add_item("재료 후보 선택…")
+		for material: Dictionary in candidates:
+			chooser.add_item("%s +%d · %s ×%d" % [str(material.item),int(material.level),"축복" if int(material.bless_code)==2 else "일반",int(material.quantity)])
+			if int(world.patch523_material_choices.get(current_id, {}).get(slot_key, -1)) == int(material.row_id): chooser.select(chooser.item_count-1)
+		chooser.item_selected.connect(func(index: int) -> void:
+			var chosen: Dictionary = world.patch523_material_choices.get(current_id, {}).duplicate(true)
+			if index == 0: chosen.erase(slot_key)
+			else: chosen[slot_key] = int(candidates[index-1].row_id)
+			world.patch523_material_choices[current_id] = chosen
+			material_recipe = ""
+			_refresh_quote())
+		candidate_box.add_child(chooser)
 	for raw: Variant in recipe.get("materials",[]):
 		if not raw is Dictionary:continue
 		var material: Dictionary=raw

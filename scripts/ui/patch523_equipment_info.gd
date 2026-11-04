@@ -8,6 +8,11 @@ var scroll: OptionButton
 var detail: RichTextLabel
 var ids: Array[String] = []
 var scroll_ids: Array[String] = []
+var source_action: Button
+var pack_sha: LineEdit
+var pack_dialog: FileDialog
+var pack_status: Label
+const DEFAULT_SHA: String = "88afcae4886e8286b6074fcebec74ba6cbd9e9a5dfe0621c31a80f3dd4337f37"
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -15,7 +20,28 @@ func configure(controller: Node) -> void:
 	name = "Patch523EquipmentInfo"
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(UI.label("원본523 장비 강화 정보", 20, UI.GOLD))
-	add_child(UI.label("원본 표의 확률·재료를 확인합니다. 실제 강화는 기존 TWILIGHT 규칙을 사용합니다.", 12, UI.MUTED))
+	add_child(UI.label("원본·공식 표를 대조한 인장 강화와 장비 정보를 확인합니다.", 12, UI.MUTED))
+	var installation := HBoxContainer.new()
+	add_child(installation)
+	pack_sha = LineEdit.new()
+	pack_sha.name = "Patch523PackSHA"
+	pack_sha.placeholder_text = "규칙 팩 SHA256"
+	pack_sha.text = DEFAULT_SHA
+	pack_sha.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	installation.add_child(pack_sha)
+	var install_button: Button = UI.button("규칙 팩 설치·교체", func() -> void: pack_dialog.popup_centered_ratio(.75))
+	install_button.name = "Patch523InstallPack"
+	installation.add_child(install_button)
+	pack_dialog = FileDialog.new()
+	pack_dialog.name = "Patch523PackFileDialog"
+	pack_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	pack_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	pack_dialog.filters = PackedStringArray(["*.json ; 원본523 장비·제작 규칙 팩"])
+	pack_dialog.file_selected.connect(_install_selected)
+	add_child(pack_dialog)
+	pack_status = UI.label("설치된 규칙은 사용자 폴더에 보관하고 다음 실행에 자동 복원합니다.", 11, UI.MUTED)
+	pack_status.name = "Patch523PackInstallStatus"
+	add_child(pack_status)
 	equipment = OptionButton.new()
 	equipment.name = "Patch523EquipmentChoice"
 	equipment.custom_minimum_size.y = 42
@@ -30,6 +56,9 @@ func configure(controller: Node) -> void:
 	detail.scroll_active = true
 	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(detail)
+	source_action = UI.button("원본 인장 강화", _confirm_source)
+	source_action.name = "Patch523SealEnhance"
+	add_child(source_action)
 	var actions := HBoxContainer.new()
 	add_child(actions)
 	actions.add_child(UI.button("제작·축복 전환", func() -> void: hud.open_crafting()))
@@ -58,6 +87,7 @@ func configure(controller: Node) -> void:
 	_refresh()
 
 func _refresh() -> void:
+	source_action.disabled = true
 	if ids.is_empty() or scroll_ids.is_empty():
 		detail.text = "원본523 규칙 팩과 정확한 원본 ID를 가진 보유 장비가 필요합니다. 기존 장비·세이브는 유지됩니다."
 		return
@@ -73,12 +103,20 @@ func _refresh() -> void:
 	# Name-only stack storage cannot prove the scroll's blessing state. Display
 	# both explicit branches rather than selecting one on the player's behalf.
 	var text: String = "[b]%s +%d[/b]\n" % [UI.safe(physical.name), level_value]
+	var quote: Dictionary = world.patch523_seal_quote(ids[equipment.selected],str(scroll_id))
+	if bool(quote.get("ok",false)):
+		source_action.disabled = false
+		text += "\n[b]원본 인장 강화 실행[/b]\n공식 확률 %.4f%% · 현재 +%d → +%d · 실패 %s\n주문서 %d개 · %d 아데나\n%s\n" % [float(quote.success),level_value,level_value+1,"유지" if bool(quote.protected) else "소실",int(quote.count),int(quote.cost),UI.safe(quote.economy_label)]
+	else:
+		text += "\n원본 인장 강화: %s\n" % UI.safe(str(quote.get("reason","실행 조건을 확인하세요")))
 	var effect_text: String = ""
 	var effects: Array = book.effect_evidence(source_id, level_value, 2 if blessing == 2 else 0)
 	if not effects.is_empty():
 		effect_text += "\n[b]해당 단계 원본 효과[/b]" + ("\n" if blessing == 2 else " · 기본계열 매칭 미확정\n")
 		var labels: Dictionary = {"MeleeHit":"근거리 명중", "RangeHit":"원거리 명중", "MeleeDamage":"근거리 대미지", "RangeDamage":"원거리 대미지", "DamageReduction":"대미지 리덕션", "HPPotionIncreaseStatic":"물약 회복량", "HPPotionIncreasePercent":"물약 회복률", "ExperienceAdditionPercent":"경험치 증가율", "EinasadSavingPercent":"아인하사드 절약", "PotionConsumeDelayDecreasePercent":"물약 쿨타임 감소", "SpecialResistance":"특수 내성"}
-		var supported: Array = ["MeleeHit","RangeHit","MeleeDamage","RangeDamage","DamageReduction","HPPotionIncreaseStatic","HPPotionIncreasePercent"]
+		var supported: Dictionary = {"MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","DamageReduction":"reduction","HPPotionIncreaseStatic":"potion_heal_flat","HPPotionIncreasePercent":"potion_heal_pct","ExperienceAdditionPercent":"xp_pct","EinasadSavingPercent":"ain_saving_pct","PotionConsumeDelayDecreasePercent":"potion_cooldown_pct","SpecialResistance":"stun_resistance"}
+		var expected_options: Dictionary = book.supported_seal_options(str(source_id),2).get(str(level_value), {})
+		var actual_options: Dictionary = physical.get("record", {}).get("enhancement_options", {}).get(str(level_value), {})
 		for effect: Dictionary in effects:
 			var kind: String = str(effect.bonus_type.get("Name", ""))
 			var value: String = str(int(effect.bonus.Value))
@@ -87,7 +125,7 @@ func _refresh() -> void:
 			var label: String = str(labels.get(kind, kind))
 			if kind == "SpecialResistance" and int(effect.bonus.BonusApplicationTypeID) == 2 and int(effect.bonus.BonusApplicationTargetID) == 6:
 				label = "스턴 내성"
-			var applied: bool = physical.get("record", {}).has("patch523_effect_basis") and kind in supported and blessing == 2
+			var applied: bool = blessing == 2 and supported.has(kind) and expected_options.has(supported[kind]) and actual_options.get(supported[kind]) == expected_options[supported[kind]]
 			effect_text += "%s +%s · %s\n" % [UI.safe(label), value, "적용 연결" if applied else "참고·적용 미연결"]
 	var displayed: Dictionary = {}
 	var blessing_branches: Array = [1]
@@ -113,5 +151,23 @@ func _refresh() -> void:
 	if displayed.is_empty():
 		text += "\n선택한 장비·주문서·단계에 표시 가능한 원본 확률 행이 없습니다. 안전 강화나 확률을 추정하지 않습니다.\n"
 	text += effect_text
-	text += "\n[color=#b9a67e]원본 단계의 현재/결과 의미, 축복코드0 매칭, 비용 통화와 수량0의 소비 의미는 미확정입니다. 이 화면은 강화 실행 확률을 변경하지 않습니다.[/color]"
+	text += "\n[color=#b9a67e]인장 전용 실행은 공식 표의 확인된 대상만 사용합니다. 비용값은 원본이며 통화와 일반 주문서 수량0은 별도 게임 설정입니다. 기존 강화 실행은 기존 TWILIGHT 규칙을 유지합니다.[/color]"
 	detail.text = text
+
+func _install_selected(path: String) -> void:
+	if not world.install_patch523_equipment_file(path, pack_sha.text.strip_edges().to_lower()):
+		pack_status.text = world.patch523_equipment.problem + " · 기존 설치·세이브 보존"
+		return
+	hud.show_message("원본523 규칙 팩 설치 완료")
+	hud.open_patch523_equipment_info()
+
+func _confirm_source() -> void:
+	if ids.is_empty() or scroll_ids.is_empty(): return
+	var item_id: String = ids[equipment.selected]
+	var scroll_id: String = scroll_ids[scroll.selected]
+	var quote: Dictionary = world.patch523_seal_quote(item_id,scroll_id)
+	if not bool(quote.get("ok",false)):
+		hud.show_message(str(quote.get("reason","실행 조건을 확인하세요")))
+		_refresh()
+		return
+	hud.confirm_action("원본 인장 강화 확인", "%s +%d → +%d\n성공 %.4f%% · 실패 %s\n%s %d개 + %d 아데나\n%s" % [str(quote.item),int(quote.level),int(quote.level)+1,float(quote.success),"유지" if bool(quote.protected) else "장비 소실",str(quote.scroll_name),int(quote.count),int(quote.cost),str(quote.economy_label)],"강화",func(_count: int) -> void: world._patch523_attempt_seal(item_id,scroll_id))

@@ -74,7 +74,8 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 		"ranged_damage":"원거리 대미지", "melee_accuracy":"근거리 명중",
 		"ranged_accuracy":"원거리 명중", "magic_accuracy":"마법 명중",
 		"potion_heal_flat":"물약 회복량", "potion_heal_pct":"물약 회복률",
-		"mp_recovery":"MP 회복 옵션"}
+		"mp_recovery":"MP 회복 옵션", "xp_pct":"경험치 획득량", "ain_saving_pct":"아인하사드 축복 소모량 감소",
+		"potion_cooldown_pct":"물약 재사용 대기 감소", "stun_resistance":"스턴 내성"}
 	var result: PackedStringArray = []
 	for key: Variant in bonus.keys():
 		if int(bonus[key]) == 0:
@@ -82,7 +83,7 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 		var label: String = str(labels.get(key, str(key)))
 		if key == "defense":
 			result.append("AC -%d" % int(bonus[key]))
-		elif key == "potion_heal_pct":
+		elif key in ["potion_heal_pct", "xp_pct", "ain_saving_pct", "potion_cooldown_pct", "stun_resistance"]:
 			result.append("%s +%d%%" % [label, int(bonus[key])])
 		else:
 			result.append("%s +%d" % [label, int(bonus[key])])

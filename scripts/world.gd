@@ -129,6 +129,9 @@ const EXPANDED_CRAFTING = preload("res://scripts/crafting/expanded_crafting.gd")
 var crafting = EXPANDED_CRAFTING.new()
 const PATCH523_EQUIPMENT = preload("res://scripts/crafting/patch523_rules.gd")
 var patch523_equipment = PATCH523_EQUIPMENT.new()
+const PATCH523_SEAL_ACTIONS = preload("res://scripts/crafting/patch523_seal_actions.gd")
+const PATCH523_STORE = preload("res://scripts/crafting/patch523_pack_store.gd")
+var patch523_material_choices: Dictionary = {}
 const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
 var warehouse = LOCAL_WAREHOUSE.new()
@@ -3332,6 +3335,15 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
 		return
+	if not patch523_equipment.data.is_empty():
+		for source_id: String in ["30701","130611"]:
+			if patch523_equipment.record(source_id).get("name","")==item_name and patch523_equipment.data.get("guaranteed_boxes",{}).has(source_id):
+				hud.confirm_action("인장 상자 개봉", "상자 1개를 소비하여 일반 +0 인장 1개와 빛나는 장비 강화 주문서 8개를 확정 지급합니다.", "개봉", func(_count: int) -> void: _patch523_open_box(source_id))
+				return
+		for source_id: String in ["320802","166044"]:
+			if patch523_equipment.record(source_id).get("name","")==item_name:
+				hud.open_patch523_equipment_info()
+				return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
@@ -3658,9 +3670,9 @@ func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 		if record.is_empty() or _enhancement_kind_for_record(record) != kind:
 			continue
 		var level_value: int = _item_instance_level(instance_id, item_name)
-		if not _enhancement_level_allowed(kind, mode, level_value):
+		if not _enhancement_level_allowed(kind, mode, level_value, record):
 			continue
-		var chance: Dictionary = _enhancement_chance(kind, level_value, mode)
+		var chance: Dictionary = _enhancement_chance(kind, level_value, mode, record)
 		if float(chance.get("success", 0.0)) <= 0.0:
 			continue
 		var max_gain: int = 3 if mode == "blessed" and level_value <= 2 else (2 if mode == "blessed" and level_value <= 5 else 1)
@@ -3680,7 +3692,10 @@ func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 		})
 	return result
 
-func _enhancement_level_allowed(kind: String, mode: String, current_level: int) -> bool:
+func _enhancement_level_allowed(kind: String, mode: String, current_level: int, record: Dictionary = {}) -> bool:
+	if mode == "craftsman" and kind == "weapon":
+		var original: Dictionary = patch523_equipment.craftsman_weapon_rule(record)
+		if not original.is_empty(): return current_level in original.levels
 	if mode == "craftsman":
 		if kind == "weapon":
 			return current_level == 9
@@ -3730,7 +3745,11 @@ func _safe_enhancement_level(kind: String) -> int:
 		_:
 			return 0
 
-func _enhancement_chance(kind: String, current_level: int, mode: String = "normal") -> Dictionary:
+func _enhancement_chance(kind: String, current_level: int, mode: String = "normal", record: Dictionary = {}) -> Dictionary:
+	if mode == "craftsman" and kind == "weapon":
+		var original: Dictionary = patch523_equipment.craftsman_weapon_rule(record)
+		if not original.is_empty():
+			return original if current_level in original.levels else {"success":0.0,"no_change":0.0,"destroy":0.0,"decrease":0.0}
 	if mode == "craftsman":
 		if kind == "weapon" and current_level == 9:
 			return {"success": 0.6, "no_change": 99.4, "destroy": 0.0, "decrease": 0.0}
@@ -3852,16 +3871,17 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		hud.show_message("강화할 장비가 없습니다")
 		return
 
-	var target_record: Dictionary = _find_catalog_item_record(target_name)
+	var target_record: Dictionary = (item_instances[item_id] as Dictionary).get("record", {})
+	if target_record.is_empty(): target_record = _find_catalog_item_record(target_name)
 	if target_record.is_empty() or _enhancement_kind_for_record(target_record) != kind:
 		hud.show_message("이 주문서로 강화할 수 없는 장비입니다")
 		return
 
 	var current_level: int = _item_instance_level(item_id, target_name)
-	if not _enhancement_level_allowed(kind, mode, current_level):
+	if not _enhancement_level_allowed(kind, mode, current_level, target_record):
 		hud.show_message("현재 강화 단계에는 이 주문서를 사용할 수 없습니다")
 		return
-	var chance: Dictionary = _enhancement_chance(kind, current_level, mode)
+	var chance: Dictionary = _enhancement_chance(kind, current_level, mode, target_record)
 	var success_chance: float = float(chance.get("success", 0.0))
 	var no_change_chance: float = float(chance.get("no_change", 0.0))
 	var decrease_chance: float = float(chance.get("decrease", 0.0))
@@ -3869,6 +3889,9 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		hud.show_message("더 이상 강화할 수 없습니다")
 		return
 
+	var before: Dictionary = {"inventory":inventory.duplicate(true), "instances":item_instances.duplicate(true),
+		"equipped":equipped_items.duplicate(true), "rng":rng.state, "hp":hp, "mp":mp, "next_id":next_item_instance_id}
+	var result_log: String = ""
 	inventory[scroll_name] = int(inventory.get(scroll_name, 0)) - 1
 	if int(inventory.get(scroll_name, 0)) <= 0:
 		inventory.erase(scroll_name)
@@ -3883,30 +3906,43 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		item_instances[item_id]["level"] = result_level
 		result_type = "success"
 		result_message = "강화 성공! +%d %s" % [result_level, target_name]
-		hud.append_log("강화 성공 · +%d %s" % [result_level, target_name])
+		result_log = "강화 성공 · +%d %s" % [result_level, target_name]
 	elif roll < success_chance + no_change_chance:
-		hud.append_log("강화 실패(유지) · +%d %s" % [current_level, target_name])
+		result_log = "강화 실패(유지) · +%d %s" % [current_level, target_name]
 	elif roll < success_chance + no_change_chance + decrease_chance:
 		result_level = maxi(0, current_level - 1)
 		item_instances[item_id]["level"] = result_level
 		result_type = "decrease"
 		result_message = "강화 실패 · +%d → +%d 하락" % [current_level, result_level]
-		hud.append_log("강화 실패(하락) · %s +%d → +%d" % [target_name, current_level, result_level])
+		result_log = "강화 실패(하락) · %s +%d → +%d" % [target_name, current_level, result_level]
 	else:
 		_destroy_enhancement_target(target_name, item_id)
 		result_type = "destroy"
 		result_level = 0
 		result_message = "강화 실패 · %s 소실" % target_name
-		hud.append_log("강화 실패(소실) · +%d %s" % [current_level, target_name])
+		result_log = "강화 실패(소실) · +%d %s" % [current_level, target_name]
 
+	_invalidate_equipment_static()
 	hp = mini(hp, _effective_max_hp())
+	if _save_game(true) != OK:
+		inventory = before.inventory
+		item_instances = before.instances
+		equipped_items = before.equipped
+		rng.state = int(before.rng)
+		hp = int(before.hp)
+		mp = int(before.mp)
+		next_item_instance_id = int(before.next_id)
+		_invalidate_equipment_static()
+		_update_hud()
+		hud.show_message("강화 저장 실패 · 주문서·장비·난수 상태를 보존했습니다")
+		return
+	hud.append_log(result_log)
 	var phase_usec: int = Time.get_ticks_usec()
 	# _update_hud already redraws an open bag; a second full redraw is wasted.
 	if not hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	_update_hud()
 	_perf_log("강화 HUD 갱신", phase_usec)
-	_save_game(true)
 	# Persist first. Presentation/skip/close must never commit or reroll a result.
 	if hud.has_method("show_enhancement_result"):
 		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
@@ -4126,29 +4162,69 @@ func _buy_reviewed_shop_item(vendor_id: String, item_name: String, quantity: int
 func _craft_item_index() -> Dictionary:
 	return loot_catalog.get("by_name", {}) as Dictionary
 
+func _patch523_craft_item_index() -> Dictionary:
+	var result: Dictionary = _craft_item_index().duplicate()
+	# The current non-equipment inventory is name-keyed. Bind only its unique
+	# catalog identity to the compiler-verified ItemClass ID; never merge aliases.
+	for source_id: String in patch523_equipment.data.get("items", {}):
+		if source_id=="26":
+			result["아데나"]=patch523_equipment.record("26")
+			continue
+		var entry: Dictionary = _catalog_item_from_source_id(source_id)
+		var item_name: String = str(entry.get("name", ""))
+		if entry.get("source", "") != "inven" or int(catalog_item_variant_count.get(item_name, 0)) != 1: continue
+		var bound: Dictionary = entry.duplicate(true)
+		bound["weight"] = maxi(0, int(item_weight_index.get(item_name, 3)))
+		result[item_name] = bound
+	return result
+
 func _load_patch523_equipment() -> void:
 	var path: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES")
 	var expected: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_SHA256")
 	if path.is_empty():
-		return
+		var saved: Dictionary = PATCH523_STORE.active()
+		path = str(saved.get("path", ""))
+		expected = str(saved.get("sha256", ""))
+	if path.is_empty(): return
 	if not _install_patch523_equipment(path, expected):
 		push_warning(patch523_equipment.problem)
+
+func install_patch523_equipment_file(path: String, expected: String) -> bool:
+	var installed: Dictionary = PATCH523_STORE.install(path, expected)
+	if installed.is_empty():
+		patch523_equipment.problem = PATCH523_STORE.problem
+		return false
+	return _install_patch523_equipment(str(installed.path), str(installed.sha256))
 
 func _install_patch523_equipment(path: String, expected: String) -> bool:
 	if not patch523_equipment.load_file(path, expected):
 		return false
+	patch523_material_choices.clear()
 	# Keep existing recipes, IDs and economy unchanged.
 	for key: Variant in crafting.recipes.keys():
 		if str(key).begins_with("patch523:"):
 			crafting.recipes.erase(key)
 	crafting.recipes.merge(patch523_equipment.recipes.duplicate(true))
+	_refresh_patch523_equipment_options()
 	return true
+
+func _refresh_patch523_equipment_options() -> void:
+	if patch523_equipment.data.is_empty(): return
+	for container: Dictionary in [item_instances, warehouse.instances]:
+		for id: Variant in container:
+			if not container[id] is Dictionary or not patch523_equipment.refresh_derived_options(container[id]): continue
+			for slot: String in equipped_items:
+				var equipped: Dictionary = equipped_items[slot]
+				if str(equipped.get("instance_id", "")) == str(id) and is_same(container, item_instances):
+					equipped["enhancement_options"] = container[id].record.enhancement_options.duplicate(true)
+					equipped["patch523_effect_basis"] = container[id].record.patch523_effect_basis.duplicate(true)
+	_invalidate_equipment_static()
 
 func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	_sync_item_instances()
 	var transaction: Dictionary = patch523_equipment.execute(recipe_id, batches, inventory, gold,
-		_craft_item_index(), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
-		next_item_instance_id, ui_preferences.get("item_locks", {}))
+		_patch523_craft_item_index(), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
+		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}))
 	if not bool(transaction.get("ok", false)):
 		hud.show_message(str(transaction.get("reason", "원본 제작에 실패했습니다")))
 		return
@@ -4176,6 +4252,72 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	if hud.has_method("open_crafting"):
 		hud.call("open_crafting")
 
+func _patch523_open_box(source_id: String) -> void:
+	_sync_item_instances()
+	var box_name: String = str(patch523_equipment.record(source_id).get("name",""))
+	var transaction: Dictionary = PATCH523_SEAL_ACTIONS.open_box(patch523_equipment, source_id, inventory, item_instances,
+		next_item_instance_id, _inventory_total_weight(), _carrying_capacity(), _patch523_craft_item_index(), _item_locked(box_name))
+	if not bool(transaction.get("ok",false)):
+		hud.show_message(str(transaction.get("reason","상자를 열 수 없습니다")))
+		return
+	var staged: Dictionary = {"inventory":transaction.inventory,"item_instances":transaction.item_instances,"next_item_instance_id":transaction.next_item_instance_id}
+	if _save_game(true,staged)!=OK:
+		hud.show_message("저장 실패 · 상자와 보상을 보존했습니다")
+		return
+	inventory=staged.inventory
+	item_instances=staged.item_instances
+	next_item_instance_id=int(staged.next_item_instance_id)
+	_update_hud()
+	hud.show_message("상자 개봉 완료 · 일반 +0 인장과 강화 주문서 8개")
+
+func patch523_seal_quote(item_id: String, scroll_id: String) -> Dictionary:
+	if not item_instances.has(item_id): return PATCH523_EQUIPMENT.denied("선택한 장비가 없습니다")
+	var physical: Dictionary = item_instances[item_id]
+	if int(inventory.get(str(physical.get("name","")),0))<1: return PATCH523_EQUIPMENT.denied("보유 장비가 없습니다")
+	var scroll_name: String = str(patch523_equipment.record(scroll_id).get("name",""))
+	return PATCH523_SEAL_ACTIONS.quote(patch523_equipment, physical, scroll_id, inventory, gold,
+		_item_locked(str(physical.name),item_id) or _item_locked(scroll_name))
+
+func _patch523_attempt_seal(item_id: String, scroll_id: String) -> void:
+	if hud.has_method("is_enhancement_presenting") and bool(hud.call("is_enhancement_presenting")): return
+	var quote: Dictionary = patch523_seal_quote(item_id,scroll_id)
+	if not bool(quote.get("ok",false)):
+		hud.show_message(str(quote.get("reason","원본 강화를 실행할 수 없습니다")))
+		return
+	var before: Dictionary = {"inventory":inventory.duplicate(true),"instances":item_instances.duplicate(true),
+		"equipped":equipped_items.duplicate(true),"gold":gold,"rng":rng.state,"hp":hp,"mp":mp,"next_id":next_item_instance_id}
+	gold-=int(quote.cost)
+	inventory[str(quote.scroll_name)] = int(inventory[str(quote.scroll_name)])-int(quote.count)
+	if int(inventory[str(quote.scroll_name)])==0: inventory.erase(str(quote.scroll_name))
+	var result_type: String = "maintain" if bool(quote.protected) else "destroy"
+	var result_level: int = int(quote.level)
+	if rng.randf_range(0.0,100.0)<float(quote.success):
+		result_type="success"
+		result_level+=1
+		item_instances[item_id]["level"]=result_level
+	elif result_type=="destroy":
+		_destroy_enhancement_target(str(quote.item),item_id)
+		result_level=0
+	_invalidate_equipment_static()
+	hp=mini(hp,_effective_max_hp())
+	if _save_game(true)!=OK:
+		inventory=before.inventory
+		item_instances=before.instances
+		equipped_items=before.equipped
+		gold=int(before.gold)
+		next_item_instance_id=int(before.next_id)
+		rng.state=int(before.rng)
+		hp=int(before.hp)
+		mp=int(before.mp)
+		_invalidate_equipment_static()
+		_update_hud()
+		hud.show_message("저장 실패 · 주문서·아데나·장비·난수 상태 보존")
+		return
+	_update_hud()
+	hud.open_patch523_equipment_info()
+	hud.append_log("원본 인장 강화 · %s +%d · %s" % [str(quote.item),int(quote.level),result_type])
+	hud.show_enhancement_result(result_type,str(quote.item),int(quote.level),result_level)
+
 # Inspection API: exact original branches, not a replacement economy/rate table.
 func patch523_enhancement_evidence(item_id: int, scroll_id: int, level_value: int, target_bless: int, scroll_bless: int) -> Dictionary:
 	return patch523_equipment.enhancement_evidence(item_id, scroll_id, level_value, target_bless, scroll_bless)
@@ -4183,8 +4325,8 @@ func patch523_enhancement_evidence(item_id: int, scroll_id: int, level_value: in
 func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()
 	if recipe_id.begins_with("patch523:"):
-		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
-			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}))
+		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _patch523_craft_item_index(), item_instances,
+			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}))
 	return crafting.quote(
 		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
 		equipped_items, _inventory_total_weight(), _carrying_capacity()
@@ -4310,7 +4452,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 		hud.show_message("HP 물약 재사용 대기 %s" % _format_seconds_short(cooldown_left))
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
-	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)
+	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_cooldown_pct"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
 	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
@@ -4879,6 +5021,7 @@ func _load_game(quiet: bool) -> void:
 	_sync_item_instances()
 	_normalize_equipment_slots()
 	_attach_missing_equipment_instance_ids()
+	_refresh_patch523_equipment_options()
 	consumable_service.call("migrate_legacy_elemental")
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
@@ -7350,7 +7493,7 @@ func _stun_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
-	total += _active_item_buff_total("stun_resistance")
+	total += _active_item_buff_total("stun_resistance") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "stun_resistance")
 	return int(original_skills.stat("stunResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _record_silence_accuracy(record: Dictionary) -> int:
@@ -7744,12 +7887,14 @@ func _blessing_consumption_reduction_percent() -> float:
 	var reduction: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		reduction += AIN_OPTION_RULES.reduction_percent(record)
+	reduction += _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ain_saving_pct")
 	return clampf(reduction, 0.0, 100.0)
 
 func _experience_multiplier() -> float:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("xp", 0.0))
+	bonus += float(_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "xp_pct")) / 100.0
 	return maxf(1.0, 1.0 + bonus + float(_active_item_buff_total("xp")) / 100.0)
 
 func _update_companion(delta: float) -> void:

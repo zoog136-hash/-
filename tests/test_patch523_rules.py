@@ -49,10 +49,11 @@ class AdmissionTest(unittest.TestCase):
         self.assertEqual((r['materials'][0]['level'],r['materials'][0]['bless_code']), (8,2))
         self.assertEqual((r['result']['level'],r['result']['bless_code']), (7,1))
 
-    def test_candidates_remain_raw_and_do_not_execute(self):
+    def test_candidates_preserved_and_require_explicit_choice(self):
         self.tables['ItemCraftInput'].append({**self.tables['ItemCraftInput'][0], 'ID':3, 'ItemBlessCodeID':1})
         result = self.compile()
-        self.assertFalse(result['recipes'])
+        self.assertTrue(result['recipes']['patch523:17']['requires_material_selection'])
+        self.assertEqual(len(result['recipes']['patch523:17']['material_slots'][0]['candidates']),2)
         self.assertEqual(len(result['raw_recipes']['inputs']['17']), 2)
 
     def test_viewless_output_not_exposed(self):
@@ -112,11 +113,13 @@ class AdmissionTest(unittest.TestCase):
         tables,evidence=BUILDER.read_source(directory)
         catalog=(Path(__file__).resolve().parents[1]/'data/catalog_v19.json').read_bytes()
         result=BUILDER.compile_rules(tables,evidence,catalog)
-        self.assertEqual(len(result['recipes']),159)
+        self.assertEqual(len(result['recipes']),244)
+        self.assertEqual(set(result['guaranteed_boxes']),{'30701','130611'})
+        self.assertEqual(len(result['source_files']),28)
         for table,key in [('ItemCraftInput','inputs'),('ItemCraftOutputView','outputs'),('ItemCraftView','views'),('ItemCraftRestriction','restrictions')]:
             restored=[row for rows in result['raw_recipes'][key].values() for row in rows]
             self.assertEqual(sorted(restored,key=lambda r:json.dumps(r,sort_keys=True)), sorted(tables[table],key=lambda r:json.dumps(r,sort_keys=True)))
-        self.assertNotIn('patch523:258618',result['recipes'])
+        self.assertTrue(result['recipes']['patch523:258618']['requires_material_selection'])
         self.assertNotIn('patch523:261764',result['recipes'])
         self.assertEqual(result['recipes']['patch523:77552']['result']['bless_code'],2)
 

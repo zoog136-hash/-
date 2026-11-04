@@ -43,6 +43,18 @@ func _initialize() -> void:
 		check(not bool(rules.quote("patch523:17",count,inventory,100,items,physical,{},3,100).get("ok",false)),"invalid batch rejected")
 	check(rules.available_material(material,inventory,items,physical,{}, {},false)==1,"UI count agrees for exact source state")
 	check(rules.available_material(material,inventory,items,physical,{}, {"fixture_old@@@7":true},false)==0,"UI excludes locked physical ID")
+	var alternative: Dictionary = material.duplicate(true)
+	alternative["row_id"] = 10
+	var second: Dictionary = alternative.duplicate(true)
+	second["row_id"] = 20
+	second["level"] = 7
+	second["bless_code"] = 1
+	rules.recipes["patch523:choice"] = rules.recipes["patch523:17"].duplicate(true)
+	rules.recipes["patch523:choice"]["material_slots"] = [{"slot_index":1,"candidates":[alternative,second]}]
+	check(not bool(rules.quote("patch523:choice",1,inventory,100,items,physical,{},3,100).get("ok",false)),"candidate material is never silently selected")
+	check(not bool(rules.quote("patch523:choice",1,inventory,100,items,physical,{},3,100,{}, {"1":999}).get("ok",false)),"forged candidate row is rejected")
+	check(not bool(rules.quote("patch523:choice",1,inventory,100,items,physical,{},3,100,{}, {"1":20}).get("ok",false)),"selected candidate still requires its exact physical state")
+	check(bool(rules.execute("patch523:choice",1,inventory,100,items,physical,{},3,100,8,{}, {"1":10}).get("ok",false)),"explicit valid candidate produces staged transaction")
 	var indexed: Dictionary = physical.duplicate(true)
 	indexed["7"].record["originalSourceOptions"] = []
 	check(bool(rules.quote("patch523:17",1,inventory,100,items,indexed,{},3,100).get("ok",false)),"Main's immutable original-option metadata remains eligible")
@@ -52,11 +64,11 @@ func _initialize() -> void:
 	if not pack.is_empty():
 		var expected: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_SHA256")
 		check(rules.load_file(pack, expected),"actual Library-materialized 523 rules load")
-		check(rules.recipes.size()==159,"159 conservative source recipes mapped into current catalog")
-		check(not rules.load_file(pack, "0".repeat(64)) and rules.recipes.size()==159,"wrong SHA replacement retains real registry")
+		check(rules.recipes.size()==244,"244 conservative source recipes mapped into current catalog")
+		check(not rules.load_file(pack, "0".repeat(64)) and rules.recipes.size()==244,"wrong SHA replacement retains real registry")
 		var chain: Dictionary = rules.recipe_evidence(258618)
 		check(chain.inputs.size()==8 and chain.outputs.size()==1,"all elemental earring candidates preserved")
-		check(not rules.recipes.has("patch523:258618"),"candidate-slot selection is not silently inferred")
+		check(rules.recipes.has("patch523:258618") and not bool(rules.material_selection("patch523:258618").get("ok",false)),"elemental earring candidates require explicit row selection")
 		check(not rules.recipes.has("patch523:261764"),"viewless limited seal recipe not exposed as guaranteed upgrade")
 		check(rules.recipes.has("patch523:77552") and int(rules.recipes["patch523:77552"].result.bless_code)==2,"same-level seal blessing conversion linked")
 		var effects: int = 0
@@ -77,5 +89,45 @@ func _initialize() -> void:
 		var recovery: Dictionary = rules.supported_seal_options("130551",2)
 		check(not recovery.has("0") and int(recovery["8"].potion_heal_pct)==18 and int(recovery["8"].potion_heal_flat)==18 and int(recovery["8"].reduction)==7,"exact recovery +8 adapters preserve ratio, flat and reduction")
 		check(rules.supported_seal_options("30671",1).is_empty(),"unresolved raw0 matching never changes Normal1 stats")
+		check(int(seal["8"].xp_pct)==12 and int(seal["8"].ain_saving_pct)==11 and int(seal["8"].stun_resistance)==8,"guard source XP/saving/targeted stun values remain distinct")
+		check(int(recovery["8"].potion_cooldown_pct)==6 and int(recovery["8"].stun_resistance)==8,"recovery source cooldown and targeted stun supported")
+		var old_record: Dictionary = rules.record("30671")
+		old_record["bless_state"] = "blessed"
+		old_record["enhancement_options"] = {"8":{"melee_accuracy":12}}
+		old_record["patch523_effect_basis"] = {"selection":"exact_level_only"}
+		var old_physical: Dictionary = {"record":old_record,"bless_state":"blessed","level":8}
+		check(rules.refresh_derived_options(old_physical) and int(old_physical.record.enhancement_options["8"].xp_pct)==12,"older matching derived cache safely gains newly connected source effects")
+		old_physical.record.enhancement_options["8"].melee_accuracy = 999
+		check(not rules.refresh_derived_options(old_physical) and int(old_physical.record.enhancement_options["8"].melee_accuracy)==999,"custom derived record is never overwritten by source cache refresh")
+		check(rules.craftsman_weapon_rule(rules.record("322")).get("levels",[])==[9],"original Hero craftsman weapon is +9 only")
+		check(rules.craftsman_weapon_rule(rules.record("176582")).get("levels",[])==[9,10],"original Legendary craftsman weapon is +9/+10")
+		check(rules.craftsman_weapon_rule(rules.record("425")).get("levels",[])==[9,10,11],"original Mythic craftsman weapon is +9/+10/+11")
+		check(rules.craftsman_weapon_rule(rules.record("362391")).get("levels",[9]).is_empty(),"Unique weapon does not borrow standard craftsman qualification")
+		check(rules.craftsman_weapon_rule({"name":"fixture","source":"local","slot":"weapon","grade":"영웅"}).is_empty(),"unidentified/local custom weapon never inherits official source override")
+		var actions = preload("res://scripts/crafting/patch523_seal_actions.gd")
+		for source_id: String in ["30671","130551"]:
+			for level_value: int in range(8):
+				var target: Dictionary = {"name":rules.record(source_id).name,"record":rules.record(source_id),"level":level_value,"bless_state":"normal"}
+				var quote: Dictionary = actions.quote(rules,target,"320802",{"빛나는 장비 강화 주문서":100},1000000,false)
+				check(bool(quote.get("ok",false)) and int(quote.count)==1,"normal seal exact source/official current-level branch "+source_id+":"+str(level_value))
+			for blessing: int in [1,2]:
+				for level_value: int in range(4,8):
+					var target: Dictionary = {"name":rules.record(source_id).name,"record":rules.record(source_id),"level":level_value,"bless_state":"blessed" if blessing==2 else "normal"}
+					var quote: Dictionary = actions.quote(rules,target,"166044",{"빛나는 장비 보호 주문서":100},1000000,false)
+					check(bool(quote.get("ok",false)) and quote.protected and int(quote.count)==[3,10,20,50][level_value-4],"protected seal exact state/consumption "+source_id+":"+str(blessing)+":"+str(level_value))
+		var target: Dictionary = {"name":rules.record("30671").name,"record":rules.record("30671"),"level":4,"bless_state":"normal"}
+		for inventory_case: Dictionary in [{},{"빛나는 장비 보호 주문서":2}]:
+			check(not bool(actions.quote(rules,target,"166044",inventory_case,1000000,false).get("ok",false)),"insufficient protected scrolls rejected")
+		check(not bool(actions.quote(rules,target,"166044",{"빛나는 장비 보호 주문서":100},10999,false).get("ok",false)),"insufficient native fee rejected")
+		check(not bool(actions.quote(rules,target,"166044",{"빛나는 장비 보호 주문서":100},1000000,true).get("ok",false)),"locked native target/scroll rejected")
+		var source_box: Dictionary = actions.open_box(rules,"30701",{"수호의 인장 상자":1},{},1,0,1000,{"수호의 인장 상자":rules.record("30701")},false)
+		check(bool(source_box.get("ok",false)) and int(source_box.inventory["빛나는 장비 강화 주문서"])==8 and source_box.item_instances.size()==1,"box source rows are both guaranteed, not weighted alternatives")
+		check(not bool(actions.open_box(rules,"30701",{"수호의 인장 상자":1},{},1,1000,1000,{"수호의 인장 상자":rules.record("30701")},false).get("ok",false)),"box weight guard preserves input")
+		var store = preload("res://scripts/crafting/patch523_pack_store.gd")
+		var installed: Dictionary = store.install(pack,expected)
+		check(not installed.is_empty() and FileAccess.get_sha256(str(installed.get("path","")))==expected,"private pack copied to durable user directory")
+		var index_sha: String = FileAccess.get_sha256(store.INDEX)
+		check(store.install(pack,"0".repeat(64)).is_empty() and FileAccess.get_sha256(store.INDEX)==index_sha,"rejected installation preserves active configuration")
+		check(str(store.active().get("sha256",""))==expected,"installed pack selection can be restored without environment variables")
 	print("PATCH523_EQUIPMENT_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"actual_source":not pack.is_empty()}))
 	quit(0 if failures.is_empty() else 1)

@@ -14,6 +14,10 @@ import tempfile
 import os
 
 SOURCE_SHA256 = {
+    "LuckyBagClass": "2d9b90b07c0e7d0c29c3ab90f7131b3e5ae7b42b483684a030e391fc08650ed4",
+    "LuckyBagEntityView": "fb054980ed017431b66194d4e36cf5f6565b1e533651039e1fe5f14616d51cad",
+    "LuckyBagEntityType": "153c68f41d95ec55208101c3bb0f71550b3ea5b6a3e1da3a19f3ddb909f62762",
+    "LuckyBagEntityClassLimit": "a904727499fdf781a1932a52b0c2c4da585ee162eefff7a76d1034058742ed4f",
     "DescData_Korean": "af6a4bb11358bfeb2adeed63f27ec7f353770a07f36474481cec87ce0a2bfb9c",
     "ItemCraftInput": "69fc628bd295d87c0e6e0355f1b96b4ea5f2e6fc1a2c05106ab8c14209a77243",
     "ItemCraftOutputView": "675a6eb871fe56735eafc21e25d62dea8dc95c197b84a0235d57e3099e6132ae",
@@ -81,6 +85,7 @@ def compile_rules(tables, evidence, catalog_bytes):
     outputs = group(tables['ItemCraftOutputView'], 'ItemCraftID')
     views = group(tables['ItemCraftView'], 'ItemCraftID')
     restrictions = group(tables['ItemCraftRestriction'], 'ItemCraftID')
+    currency_record = {'name':'아데나','source':'lineagem_patch523','sourceId':'26','slot':'currency','weight':0}
     recipes, rejected = {}, defaultdict(int)
     for craft_id, view_rows in views.items():
         reason = ''
@@ -94,7 +99,7 @@ def compile_rules(tables, evidence, catalog_bytes):
             reason = 'unresolved_player_or_server_condition'
         elif (v['EffectiveFrom'], v['EffectiveTo'], v['CraftTimeTypeID']) != (1, 3, 1):
             reason = 'limited_calendar_or_time_type'
-        elif not ins or len({r['SlotIndex'] for r in ins}) != len(ins):
+        elif not ins:
             reason = 'candidate_selection_required'
         elif any(v[k] != outs[0][k] for k in ['ItemClassID', 'Amount', 'Enchant', 'ItemBlessCodeID']):
             reason = 'view_output_disagreement'
@@ -109,7 +114,7 @@ def compile_rules(tables, evidence, catalog_bytes):
                 if not item or item['TestItem'] or item['ServiceRegionCode'] or item['LevelLimitMin'] or item['LevelLimitMax'] or limits.get(key):
                     reason = 'unresolved_item_condition'; break
                 if key == '26':
-                    if row in outs or row['Enchant'] != 0 or row['ItemBlessCodeID'] != 1:
+                    if row['Enchant'] != 0 or row['ItemBlessCodeID'] != 1 or descriptions.get(item['DescID']) != '아데나':
                         reason = 'unsupported_currency_state'; break
                     continue
                 matches = by_id.get(key, [])
@@ -125,20 +130,25 @@ def compile_rules(tables, evidence, catalog_bytes):
                     reason = 'unmapped_physical_slot'; break
             if not reason:
                 out = outs[0]
-                result = by_id[str(out['ItemClassID'])][0]
-                material_rows, adena = [], 0
-                seen_names = set()
-                for row in ins:
-                    key = str(row['ItemClassID'])
-                    if key == '26':
-                        adena += row['Amount']; continue
-                    record = by_id[key][0]
-                    if record['name'] in seen_names:
-                        reason = 'repeated_material_name'; break
-                    seen_names.add(record['name'])
-                    material_rows.append({'item': record['name'], 'quantity': row['Amount'], 'source_id': key,
-                                          'level': row['Enchant'], 'bless_code': row['ItemBlessCodeID'],
-                                          'physical': not categories[items[key]['CategoryID']]['IsStackable']})
+                result = currency_record if out['ItemClassID']==26 else by_id[str(out['ItemClassID'])][0]
+                material_rows, material_slots, adena = [], [], 0
+                for slot, slot_rows in group(ins, 'SlotIndex').items():
+                    candidates = []
+                    for row in slot_rows:
+                        key = str(row['ItemClassID'])
+                        if key == '26':
+                            if len(slot_rows) != 1:
+                                reason = 'currency_candidate_unresolved'; break
+                            adena += row['Amount']; continue
+                        record = by_id[key][0]
+                        candidates.append({'item': record['name'], 'quantity': row['Amount'], 'source_id': key,
+                                           'level': row['Enchant'], 'bless_code': row['ItemBlessCodeID'],
+                                           'row_id': row['ID'], 'slot_index': int(slot),
+                                           'physical': not categories[items[key]['CategoryID']]['IsStackable']})
+                    if reason: break
+                    if candidates:
+                        material_slots.append({'slot_index':int(slot), 'candidates':candidates})
+                        material_rows.append(candidates[0])
                 if not reason and material_rows:
                     recipes['patch523:' + craft_id] = {
                         'id': 'patch523:' + craft_id, 'name': '원본523 · ' + result['name'] + ' +'+str(out['Enchant']),
@@ -146,8 +156,11 @@ def compile_rules(tables, evidence, catalog_bytes):
                         'source_snapshot': 'patch523', 'source_craft_id': int(craft_id),
                         'result': {'item': result['name'], 'quantity': out['Amount'], 'level': out['Enchant'],
                                    'bless_code': out['ItemBlessCodeID'], 'source_id': str(out['ItemClassID']),
-                                   'physical': not categories[items[str(out['ItemClassID'])]['CategoryID']]['IsStackable']},
-                        'adena': adena, 'materials': material_rows, 'popup_text_id': v['PopupText']}
+                                   'physical': False if out['ItemClassID']==26 else not categories[items[str(out['ItemClassID'])]['CategoryID']]['IsStackable'],
+                                   'wallet_currency':out['ItemClassID']==26},
+                        'adena': adena, 'materials': material_rows, 'material_slots':material_slots,
+                        'requires_material_selection':any(len(slot['candidates']) > 1 for slot in material_slots),
+                        'popup_text_id': v['PopupText']}
                     continue
                 if not reason: reason = 'currency_only_input'
         rejected[reason] += 1
@@ -156,6 +169,8 @@ def compile_rules(tables, evidence, catalog_bytes):
     enchant = group(tables['ItemEnchantBonus'], 'ItemEnchantBonusGroupID')
     bound_items, used_bonuses = {}, set()
     inspectable = dict(by_id)
+    if '26' in items and descriptions.get(items['26']['DescID'])=='아데나':
+        inspectable['26']=[currency_record]
     for key, links in item_bonus_rows.items():
         if key in inspectable or key not in items:
             continue
@@ -175,11 +190,27 @@ def compile_rules(tables, evidence, catalog_bytes):
         used_bonuses.update(str(r['BonusID']) for r in effect_rows)
         bound_items[key] = {'catalog_record': records[0], 'item_class': items[key], 'item_bonuses': links,
                             'enchant_effects': effect_rows}
+    # Only these permanent guaranteed boxes have a fully checked contract.
+    boxes = {}
+    bag_types = {r['ID']:r for r in tables['LuckyBagEntityType']}
+    bag_classes = {r['ID']:r for r in tables['LuckyBagClass']}
+    limited_entities = {r['LuckyBagEntityID'] for r in tables['LuckyBagEntityClassLimit']}
+    for item_id, bag_id, target_id in [(30701,12741,30671),(130611,22871,130551)]:
+        rewards = [r for r in tables['LuckyBagEntityView'] if r['LuckyBagClassID']==bag_id]
+        if not rewards: continue
+        expected = {(target_id,1),(320802,8)}
+        if (bag_types.get(1,{}).get('Name')!='IsGiven' or bag_id not in bag_classes
+            or {(r['ItemClassID'],r['ItemAmount']) for r in rewards} != expected or len(rewards)!=2
+            or any(r['LuckyBagEntityTypeID']!=1 or r['Probability']!=10000000
+                   or r['ItemBlessCodeID']!=1 or r['ItemEnchant']!=0
+                   or r['LimitClass']!=10000 or r['ID'] in limited_entities for r in rewards)):
+            raise ValueError('guaranteed box source contract changed')
+        boxes[str(item_id)] = {'bag_class':bag_classes[bag_id], 'rewards':rewards}
     result = {'schema': 'twilight-patch523-equipment-v1', 'snapshot': 'patch523',
               'catalog_sha256': digest(catalog_bytes), 'source_files': evidence,
               'recipes': recipes, 'recipe_summary': {'active':len(recipes), 'rejected':dict(rejected)},
               'raw_recipes': {'inputs':inputs, 'outputs':outputs, 'views':views, 'restrictions':restrictions},
-              'items':bound_items, 'bonuses':{k:bonuses[k] for k in sorted(used_bonuses)},
+              'guaranteed_boxes':boxes, 'items':bound_items, 'bonuses':{k:bonuses[k] for k in sorted(used_bonuses)},
               'bonus_types': {str(r['ID']):r for r in tables['BonusType']},
               'enchantment': {n:tables[n] for n in ['ItemEnchantProbabilityGroup','ItemEnchantEquipGroupMapping',
                   'ItemEnchantScrollGroup','ItemEnchantScrollGroupMapping','BmItemEnchantProView','ItemEnchantCostView',
