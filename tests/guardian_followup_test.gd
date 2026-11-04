@@ -59,7 +59,7 @@ func grant(rt,id: String) -> void:
 func _initialize() -> void:call_deferred("run")
 func run() -> void:
  var host=Host.new();root.add_child(host);host.add_child(host.player);host.add_child(host.monsters_root)
- var rt=Runtime.new();rt.configure(host);rt.combat.visuals=Art.new()
+ var rt=Runtime.new();rt.configure(host);rt.guardian_combat.visuals=Art.new()
  grant(rt,"source523_3001")
  var offer: Dictionary=rt.quote("guardian_cast","source523_3001")
  expect(offer.ok and offer.costs["명예 코인"]==10,"active quote uses source ten coins")
@@ -110,40 +110,40 @@ func run() -> void:
  rt.restore(Runtime.fresh());rt.state.searches={"source523_2022":{"cards":3,"winner":0,"attempts":2,"failed":[1]}};grant(rt,"source523_2022")
  expect(rt.guardian_spent(222)==2,"legacy refund uses provable search receipts only")
  var target=Actor.new();host.monsters_root.add_child(target)
- expect(rt.combat.cast_spell(rt.combat.profile(45332),target) and target.received==71,"source damage70 plus one die consumed")
+ expect(rt.guardian_combat.cast_spell(rt.guardian_combat.profile(45332),target) and target.received==71,"source damage70 plus one die consumed")
  target.position=Vector2(16*32,0)
- expect(not rt.combat.cast_spell(rt.combat.profile(45332),target),"source cell range enforced")
+ expect(not rt.guardian_combat.cast_spell(rt.guardian_combat.profile(45332),target),"source cell range enforced")
  target.position=Vector2.ZERO;var other=Actor.new();host.monsters_root.add_child(other);other.position=Vector2(32,0)
  var far=Actor.new();host.monsters_root.add_child(far);far.position=Vector2(64,0)
- rt.combat.cast_spell(rt.combat.profile(45362),target)
+ rt.guardian_combat.cast_spell(rt.guardian_combat.profile(45362),target)
  expect(other.received==36 and far.received==0,"source area uses one-cell radius")
- rt.combat.apply_buff(rt.combat.profile(45422),target)
+ rt.guardian_combat.apply_buff(rt.guardian_combat.profile(45422),target)
  expect(host.original_skills.status.modifier(target,"mr")==-3 and host.original_skills.status.modifier(target,"ac")==3 and host.original_skills.status.modifier(target,"status_resistance_6")==-3,"source debuff signs units target scopes")
- rt.combat.apply_buff(rt.combat.profile(66973),target)
- expect(rt.combat.attribute(target,"str").after==19 and rt.combat.attribute(target,"cha").after==19,"all six source attributes connected")
- expect(rt.combat.npc_max_hp_delta(target)==-10 and rt.combat.npc_mr_delta(target)==-2,"existing local CON WIS derivation responds")
+ rt.guardian_combat.apply_buff(rt.guardian_combat.profile(66973),target)
+ expect(rt.guardian_combat.attribute(target,"str").after==19 and rt.guardian_combat.attribute(target,"cha").after==19,"all six source attributes connected")
+ expect(rt.guardian_combat.npc_max_hp_delta(target)==-10 and rt.guardian_combat.npc_mr_delta(target)==-2,"existing local CON WIS derivation responds")
  target.life_id+=1
- expect(rt.combat.attribute(target,"str").after==20,"pooled new life does not inherit debuff")
- expect(not rt.combat.spell_allowed(57601,[241]) and rt.combat.spell_allowed(57601,[]),"source region ban only applies in matching group")
- expect(not rt.combat.roll(0) and rt.combat.roll(100),"zero and certain chance boundaries")
+ expect(rt.guardian_combat.attribute(target,"str").after==20,"pooled new life does not inherit debuff")
+ expect(not rt.guardian_combat.spell_allowed(57601,[241]) and rt.guardian_combat.spell_allowed(57601,[]),"source region ban only applies in matching group")
+ expect(not rt.guardian_combat.roll(0) and rt.guardian_combat.roll(100),"zero and certain chance boundaries")
  # Force only test-owned original chance fields; production JSON remains untouched.
  rt.restore(Runtime.fresh());grant(rt,"source523_2022");rt.state.guardian_representatives={"222":"source523_2022"}
  var reward: Dictionary=rt.guardian_rewards("source523_2022")[0];var chance: float=reward.bonus.Value;reward.bonus.Value=1000000
  var initial: int=target.received
- rt.combat.after_hit(target,false,"melee",false)
+ rt.guardian_combat.after_hit(target,false,"melee",false)
  expect(target.received==initial,"main-target guard prevents splash proc")
- rt.combat.after_hit(target,false,"melee",true,true)
+ rt.guardian_combat.after_hit(target,false,"melee",true,true)
  expect(target.received==initial,"physical-only source proc excludes spell attacks")
- rt.combat.after_hit(target,false,"melee",true,false)
+ rt.guardian_combat.after_hit(target,false,"melee",true,false)
  expect(target.received==initial+71,"selected representative proc applies source profile")
  reward.bonus.Value=chance
  rt.restore(Runtime.fresh());grant(rt,"source523_2592");rt.state.guardian_representatives={"232":"source523_2592"}
  reward=rt.guardian_rewards("source523_2592")[0];chance=reward.bonus.Value;reward.bonus.Value=1000000
- var result: Dictionary=rt.combat.incoming(target,"melee",20)
- expect(result.damage==15 and rt.combat.fired==[6092],"Type5 is reduction5 never spell5")
+ var result: Dictionary=rt.guardian_combat.incoming(target,"melee",20)
+ expect(result.damage==15 and rt.guardian_combat.fired==[6092],"Type5 is reduction5 never spell5")
  reward.bonus.Value=chance
  rt.restore(Runtime.fresh())
- expect(rt.combat.outgoing(target,100,false,"melee")==100,"no owned bonuses leaves damage unchanged")
+ expect(rt.guardian_combat.outgoing(target,100,false,"melee")==100,"no owned bonuses leaves damage unchanged")
  # Own every available stat path; branch guards use exact source magnitudes.
  for group: Dictionary in rt.config.guardians:
   if int(group.server_limit_set_id)!=0:continue
@@ -151,7 +151,7 @@ func run() -> void:
    if row.kind=="stat":grant(rt,str(row.id))
  rt._rebuild()
  expect(rt.bonus("weight_bonus:flat")==200,"Weight44 source denominator100 yields200 available carry capacity")
- var combat=rt.combat
+ var combat=rt.guardian_combat
  # Preserve the original scoped branch checks with compatibility disabled.
  # The default enabled policy has separate exact-row and real-Main coverage.
  rt.guardian_local_rules.combat.pvp_numeric_to_pve.enabled=false

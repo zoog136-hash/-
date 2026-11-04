@@ -62,6 +62,25 @@ class CoreStageTest(unittest.TestCase):
             self.assertIn('import_etc2_astc=false',(Path(temporary)/'stage/project.godot').read_text())
             self.assertEqual(len(result['validation_overrides']),1)
 
+    def test_current_map_appended_source_ids_include_real_art(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
+            inputs={
+                'data/maps/source_map_runtime.json': {'maps':{'aden_world':{'gameplay_snapshot':'res://data/maps/current.json'}}},
+                'data/maps/current.json': {'gameplay':{'monster_spawn':[]}},
+                'data/game_db_v17.json': {'몬스터':[]},
+                'data/combat_animation_profiles.json': {'profiles':{}},
+                'data/monsters/source3_map_spawns.json': {'rows':[{'map_id':'aden_world','game_source_id':'source:1'},{'map_id':'another','game_source_id':'source:2'}]},
+                'data/monsters/reviewed_source_monsters.json': {'records':[{'sourceId':'source:1','source_portrait':'res://assets/monsters/reviewed_source/current/portrait.png','animation_profile':{'frames_path':'res://assets/monsters/reviewed_source/current/frames.tres'}},{'sourceId':'source:2','source_portrait':'res://assets/unused.png'}]},
+            }
+            for path,value in inputs.items():
+                p=root/path;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(value))
+            scope=CORE.current_actor_scope(lambda p:(root/p).read_bytes(),lambda p:(root/p).is_file())
+            self.assertEqual(scope['source_spawn_ids'],['source:1'])
+            self.assertIn('assets/monsters/reviewed_source/current/portrait.png',scope['paths'])
+            self.assertIn('assets/monsters/reviewed_source/current/frames.tres',scope['paths'])
+            self.assertNotIn('assets/unused.png',scope['paths'])
+
     def test_current_map_roster_and_classes_import_without_inactive_actor_banks(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary)/'repo';root.mkdir();self.fixture(root)

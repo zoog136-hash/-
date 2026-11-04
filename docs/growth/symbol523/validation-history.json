@@ -1,0 +1,99 @@
+{
+  "date": "2026-11-04",
+  "previous_commit": "ced431d48ee078acca7485b6e7c079974fdd7b81",
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "branch": "feature/twilight-symbol-523-20261104",
+  "scope": "Complete only remaining symbol real checkpoint restoration and configurable daily reset policy; no new environment/other game features",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "checks": {
+    "history_unit": 39,
+    "actual_main_X11_native_UI": 39,
+    "existing_source_units": 753,
+    "absolute_offline_regression": 104,
+    "python_staging": 7,
+    "resource_atlases": 723,
+    "resource_frames": 41442,
+    "failures": []
+  },
+  "inputs": {
+    "scripts/growth/growth_runtime.gd": {
+      "bytes": 26708,
+      "sha256": "3587deb9d8d819b5a8abd34bf51919581e3e7b17f81a81c4a36faed39348abf7"
+    },
+    "scripts/growth/growth_view.gd": {
+      "bytes": 25583,
+      "sha256": "1b3961fc5afb5e490cdccb8fd2cfcb1e9cf2ba03719f16a0a7bb9b5f72a19e88"
+    },
+    "scripts/growth/symbol_history.gd": {
+      "bytes": 8342,
+      "sha256": "7b3c7e271c3f08c3115823ac3253607d525b9f4f6aa08c93b1efff068e34ce59"
+    },
+    "data/growth/symbol_history_policy.json": {
+      "bytes": 1311,
+      "sha256": "cf5762557b143170f4736faf855103dd719d998e5bde2132fc6d006a89ee5dfb"
+    },
+    "tests/symbol_history_test.gd": {
+      "bytes": 6629,
+      "sha256": "0484caf2befe47a9425f9d6fd58c82e32636291a3ac7d57e3f48b03022244394"
+    },
+    "tests/symbol_history_main_ui_test.gd": {
+      "bytes": 10495,
+      "sha256": "619a912d5999718104220d6653e8c1b4185d3f4aa0a579d60baa105d1c7717f0"
+    },
+    "tools/ci_core.py": {
+      "bytes": 15959,
+      "sha256": "cf9a9d67bcdc921a35fec5500f070fb15d8a00dc76a67bff2c5618e7d1c3ba56"
+    }
+  },
+  "logs": {
+    "docs/growth/symbol523/evidence/history/history-ui.txt": {
+      "bytes": 437,
+      "sha256": "7b749336532793c3b393372e4dde6fbc6695797e9b5e447b46f8feec01f9a2cd"
+    },
+    "docs/growth/symbol523/evidence/history/history-unit.txt": {
+      "bytes": 123,
+      "sha256": "a0ef22d8f8c5e5d1c83714a6c3ae8e44d1b895a64dfb08a86f9f8a83dda7d503"
+    },
+    "docs/growth/symbol523/evidence/history/offline-regression.txt": {
+      "bytes": 145,
+      "sha256": "a3e866ca30b303665b5161b28377109aae4807bb73b4593703a41eba963fbdee"
+    },
+    "docs/growth/symbol523/evidence/history/python-core.txt": {
+      "bytes": 333,
+      "sha256": "a0cf8f45f1bbe51d54788e180c4ed968003351536d650b7da8ad5c6b00b8c8fd"
+    },
+    "docs/growth/symbol523/evidence/history/resource-integrity.txt": {
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    "docs/growth/symbol523/evidence/history/source-research.json": {
+      "bytes": 2790,
+      "sha256": "8a3954ca44be79a43b3a1dd391e546ca51ff1e67a9c0aad1ce5c6539a5de582d"
+    },
+    "docs/growth/symbol523/evidence/history/source-unit.txt": {
+      "bytes": 117,
+      "sha256": "7d79c382306a43cc9a0aae200c9bab39edc8b6f66351c961070a5aff6713f48d"
+    }
+  },
+  "screenshots": {
+    "status": "LOCAL_ONLY",
+    "path": "/workspace/symbol-validation/history/screenshots",
+    "files": {
+      "symbol523-history-restore-confirm-1280x720.png": {
+        "bytes": 842941,
+        "sha256": "993b557a91d3e0588a248cbbe15e0463fd62fa8120b65c87d91703315c8b6384"
+      },
+      "symbol523-history-restore-result-1280x720.png": {
+        "bytes": 655266,
+        "sha256": "cdf1658187d3bf417bef94001f571836607226f7337c8e7baa3cb4fdd1c8d733"
+      }
+    }
+  },
+  "limits": [
+    "Local configurable rules, not proof of current original-server restore product/price/numerical daily cap",
+    "Existing game-day API reused; no global clock/timezone change; test service time input only",
+    "Linux llvmpipe/Dummy audio with VSync warning retained; no Windows/Android/whole visual approval",
+    "Initial editor config-save path error excluded from pass results; final runtime logs free of script/resource errors",
+    "No manual remote CI; no main/other PR merge; no original art/report/capture Drive upload"
+  ]
+}

@@ -61,7 +61,7 @@ func apply_settings(value: Dictionary) -> void:
 	settings = value.duplicate(true)
 
 func _process(delta: float) -> void:
-	if not is_instance_valid(host) or not host.installed() or not visual.installed(): hide(); return
+	if not is_instance_valid(host) or not host.installed() or not visual.installed() or not host.is_visible_in_tree(): hide(); return
 	var role: String = "walk" if host.source_role() in ["walk", "run"] else "idle"
 	# Missing walk pixels are not replaced with an invented idle/movement action.
 	var available: bool = visual._playback_tracks.has(role)

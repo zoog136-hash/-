@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "estimates_enabled": true,
+  "death_damage_per_point": 1.0,
+  "ignore_percent_damage_scale": 1.0,
+  "outgoing_percent_cap": 100.0,
+  "damage_damp_window_ms": 1000,
+  "rapid_fire_boss_kinds": ["volley"],
+  "armor_break_boss_kinds": ["charge"],
+  "npc_ignore_percent_by_boss_kind": {"nova": 10.0},
+  "provenance": {
+    "source_first": "patch523 values/units/conditions are preserved. InvokeOption15333/type5 proves defensive flat300; raw proc weights are preserved.",
+    "existing_policy": "main world._normalize_option_policies; flat reduction-ignore as extra damage and evasion-ignore as accuracy are existing offline consumers",
+    "estimates": "Death adds1 damage per point. Unmodeled percent-ignore becomes outgoing damage percent. Consecutive hits within1s use DamageDampOption. Existing boss volley/charge/nova supply estimated rapid-fire/armorbreak/ignore contexts. These are configurable TWILIGHT models, not original server formulas.",
+    "authorization": "User: search source/reports/public data, then apply estimates when missing; label and configure estimates separately."
+  }
+}

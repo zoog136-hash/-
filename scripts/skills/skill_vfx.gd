@@ -40,9 +40,9 @@ func _ready() -> void:
 	spx_material.shader = SPX_SHADER
 	set_process(false)
 
-func set_detail(value: String) -> void:
+func set_detail(value: String, limit_count: bool = false) -> void:
 	low_detail = value == "low"
-	detail_limit = 64 if low_detail else MAX_EFFECTS
+	detail_limit = 64 if low_detail or limit_count else MAX_EFFECTS
 
 func color_for(id: String) -> Color:
 	return Color(str(library.profile_for(id).get("color", "#86c6ec")))

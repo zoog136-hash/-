@@ -16,7 +16,7 @@ func run() -> void:
 	var host=Fixture.Host.new();root.add_child(host);host.add_child(host.player);host.add_child(host.monsters_root)
 	var rt=Runtime.new();rt.configure(host)
 	var target=Fixture.Actor.new();host.monsters_root.add_child(target)
-	var combat=rt.combat
+	var combat=rt.guardian_combat
 	expect(combat.outgoing(target,100,false,"melee")==100,"no owned source rewards means no compatibility bonus")
 	for id: String in IDS:grant(rt,id)
 	var seen: Array[int]=[]

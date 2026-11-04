@@ -15,7 +15,7 @@ func verify_combat(label: String) -> void:
 	check(monster!=null,"existing population monster for "+label)
 	if monster==null:return
 	check(not monster.get_meta("is_player_combatant",false),"actual monster never marked PvP")
-	var policy: Dictionary=world.growth.combat.pve_numeric_policy()
+	var policy: Dictionary=world.growth.guardian_combat.pve_numeric_policy()
 	for kind: String in ["melee","ranged","magic"]:
 		var hp: int=monster.hp
 		policy.enabled=false
@@ -74,7 +74,7 @@ func run() -> void:
 			world.source_save_blocked=true
 			await press("GuardianCard_0");await press("GrowthConfirm")
 			check(rt.state==state and world.inventory["수호석"]==stones and not rt.state.nodes.has(id),"failed paid unlock rolls ownership/cost back")
-			check(rt.combat.pvp_numeric_value("PiercePVPDamageReduction",{})==0 and FileAccess.get_sha256(world.save_path())==hash,"failed unlock has no combat reward and preserves save bytes")
+			check(rt.guardian_combat.pvp_numeric_value("PiercePVPDamageReduction",{})==0 and FileAccess.get_sha256(world.save_path())==hash,"failed unlock has no combat reward and preserves save bytes")
 			world.source_save_blocked=false
 		await press("GuardianCard_0");await press("GrowthConfirm")
 		check(rt.state.nodes.has(id) and world.inventory["수호석"]==stones-int(rt.node(id).cost),"actual paid source card unlock "+id)

@@ -24,6 +24,13 @@ CHECKS = [
     ('core_runtime_save_test', []),
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
+    ('presentation_settings_test', []),
+    ('symbol_source523_test', []),
+    ('symbol_source523_main_ui_test', []),
+    ('symbol_absolute_followup_test', []),
+    ('symbol_travel_test', []),
+    ('symbol_offline_combat_test', []),
+    ('symbol_history_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -55,13 +62,27 @@ def current_actor_scope(read, exists):
     keys = {key for key in profiles if key.startswith('class:') or key in {'monster:'+n for n in names}}
     records = [profiles[key] for key in sorted(keys)]
     records += [row for row in json.loads(read('data/game_db_v17.json'))['몬스터'] if row['name'] in names]
+    # Source-map startup appends these exact-ID spawns after the gameplay
+    # snapshot. Rendered UI tests yield frames, allowing their spawn queue to
+    # drain; their real portraits/tracks must not be classified as inactive.
+    source_ids = set()
+    spawn_path = 'data/monsters/source3_map_spawns.json'
+    reviewed_path = 'data/monsters/reviewed_source_monsters.json'
+    if exists(spawn_path) and exists(reviewed_path):
+        source_ids = {row['game_source_id'] for row in json.loads(read(spawn_path))['rows']
+                      if row['map_id'] == 'aden_world'}
+        records += [{'source_portrait': row.get('source_portrait', ''),
+                     'animation_profile': row.get('animation_profile', {})}
+                    for row in json.loads(read(reviewed_path))['records']
+                    if row.get('sourceId') in source_ids]
+
     for path, field in [('data/monsters/reviewed_existing_visuals.json','bindings'),
                         ('data/visuals/runtime_manifest.json','monsters')]:
         if exists(path):
             records += [value for key,value in json.loads(read(path))[field].items() if key in names]
     paths = {m.group(1).removeprefix('res://') for m in REFERENCE.finditer(json.dumps(records, ensure_ascii=False))}
     return {'map_id':'aden_world', 'monster_names':sorted(names), 'profile_keys':sorted(keys),
-            'paths':paths, 'basis':snapshot}
+            'paths':paths, 'basis':snapshot, 'source_spawn_ids':sorted(source_ids)}
 
 def git(root: Path, *args: str, **kw):
     return subprocess.check_output(['git', '-C', str(root), *args], **kw)
@@ -151,6 +172,12 @@ def stage(root: Path, destination: Path) -> dict:
             if PurePosixPath(path).suffix in {'.gd','.tscn'}:
                 actor_queue += [m.group(1).removeprefix('res://') for m in REFERENCE.finditer(read(path).decode())]
         live = set()
+        # Source monster expansion can replace a current roster record after
+        # the static name join. Its bound portrait is also used while the UI
+        # is open and initial spawns drain. Keep these small portraits without
+        # importing every inactive animation bank.
+        live.update(p for p in selected if p.startswith('assets/monsters/reviewed_source/')
+                    and p.endswith('/portrait.png'))
         while actor_queue:
             path = actor_queue.pop()
             if path in live or not path.startswith(ACTOR_PREFIXES) or not PurePosixPath(path).suffix or '%' in path:
@@ -247,7 +274,14 @@ def main():
                 command += ['--', *user_args]
             marker = {'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
-                      'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT'}[name]
+                      'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT',
+                      'presentation_settings_test':'PRESENTATION_SETTINGS_RESULT',
+                      'symbol_source523_test':'SYMBOL523_TEST',
+                      'symbol_source523_main_ui_test':'SYMBOL523_MAIN_RESULT',
+                      'symbol_absolute_followup_test':'SYMBOL_ABSOLUTE_RESULT',
+                      'symbol_travel_test':'SYMBOL_TRAVEL_RESULT',
+                      'symbol_offline_combat_test':'SYMBOL_OFFLINE_RESULT',
+                      'symbol_history_test':'SYMBOL_HISTORY_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
