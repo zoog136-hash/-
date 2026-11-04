@@ -12,8 +12,15 @@ import json
 from pathlib import Path
 import tempfile
 import os
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from patch523_enhancement import compile_equipment
 
 SOURCE_SHA256 = {
+    "ItemBlessBonus": "a60ee74e006d79263156a015d863d4ea28a0c3deab58afe953340ff637c3b60c",
+    "Material": "693d22855f6a0fc31b774201c0b61d73feb733997b39338f94cabd1e089f00c3",
+    "Unit": "5b212633235459928eb03f836ac3964d988a9851f2e7f786a04f5edbba7cba22",
+    "UIUnit": "897a028a9585815972325a25fca67dbe2d51fd9d63da9f190329d537f421a62b",
     "Class": "3760aaf5d51b118947bfc272ca55d60e8ee72e89c4ba38b736eeec05c7c4d5a8",
     "LuckyBagClass": "2d9b90b07c0e7d0c29c3ab90f7131b3e5ae7b42b483684a030e391fc08650ed4",
     "LuckyBagEntityView": "fb054980ed017431b66194d4e36cf5f6565b1e533651039e1fe5f14616d51cad",
@@ -349,6 +356,8 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                   'ItemEnchantProbabilityView','ItemBlessEnchantProbability','ItemBlessCode','EquipSlotConfig','ItemEquipSlot']}}
     if binding_catalog_bytes is not None:
         result['binding_catalog_sha256'] = digest(binding_catalog_bytes)
+    result['equipment_runtime'] = compile_equipment(tables, bound_items, bonuses)
+    result['enchantment'].update({n:tables.get(n,[]) for n in ['ItemBlessBonus','Material','Unit','UIUnit']})
     return result
 
 

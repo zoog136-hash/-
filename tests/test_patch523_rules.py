@@ -221,7 +221,15 @@ class AdmissionTest(unittest.TestCase):
         self.assertEqual({k for k,r in result['recipes'].items() if any(o.get('empty_result') for o in r.get('outcomes',[]))},
                          {'patch523:150468','patch523:150478','patch523:150488','patch523:150498','patch523:172613'})
         self.assertEqual(set(result['guaranteed_boxes']),{'30701','130611'})
-        self.assertEqual(len(result['source_files']),29)
+        self.assertEqual(len(result['source_files']),33)
+        for name in ['ItemBlessBonus','Material','Unit','UIUnit','ItemEnchantEquipGroupMapping','ItemEnchantScrollGroupMapping','BmItemEnchantProView','ItemEnchantCostView','ItemEnchantProbabilityView','ItemBlessEnchantProbability']:
+            self.assertEqual(result['enchantment'][name],tables[name])
+        # Every enchant row of every bound item remains available verbatim;
+        # unsupported conditions/procs must never become a flat numeric stat.
+        bonuses={str(row['ID']):row for row in tables['Bonus']}
+        for iid,item in result['items'].items():
+            groups={bonuses[str(link['BonusID'])]['Value'] for link in item['item_bonuses'] if bonuses[str(link['BonusID'])]['BonusTypeID']==71}
+            self.assertEqual(sorted(item['enchant_effects'],key=lambda r:r['ID']),sorted([r for r in tables['ItemEnchantBonus'] if r['ItemEnchantBonusGroupID'] in groups],key=lambda r:r['ID']))
         for table,key in [('ItemCraftInput','inputs'),('ItemCraftOutputView','outputs'),('ItemCraftView','views'),('ItemCraftRestriction','restrictions')]:
             restored=[row for rows in result['raw_recipes'][key].values() for row in rows]
             self.assertEqual(sorted(restored,key=lambda r:json.dumps(r,sort_keys=True)), sorted(tables[table],key=lambda r:json.dumps(r,sort_keys=True)))

@@ -76,15 +76,25 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 		"potion_heal_flat":"물약 회복량", "potion_heal_pct":"물약 회복률",
 		"mp_recovery":"MP 회복 옵션", "xp_pct":"경험치 획득량", "ain_saving_pct":"아인하사드 축복 소모량 감소",
 		"potion_cooldown_pct":"물약 재사용 대기 감소", "stun_resistance":"스턴 내성"}
+	var extras: Dictionary=record.get("enhancement_extra_options",{}).get(str(clampi(level,0,21)),{})
+	for key: String in extras:
+		bonus[key]=extras[key]
+	labels.merge({"strFlat":"STR","dexFlat":"DEX","intFlat":"INT","er":"ER","dg":"DG",
+		"mpRecoveryTick":"MP 회복","magicDamage":"마법 대미지","attackSpeed":"공격 속도(%)",
+		"speedBonusPct":"이동 속도(%)","pve_damage_reduction":"PVE 리덕션","pve_damage_reduction_pct":"PVE 리덕션(%)",
+		"damage_reduction_ignore":"리덕션 무시","pve_melee_damage":"PVE 근거리 대미지","pve_ranged_damage":"PVE 원거리 대미지",
+		"pve_magic_damage":"PVE 마법 대미지","melee_crit":"근거리 치명타(%)","ranged_crit":"원거리 치명타(%)","magic_crit":"마법 치명타(%)"})
 	var result: PackedStringArray = []
 	for key: Variant in bonus.keys():
-		if int(bonus[key]) == 0:
+		if is_zero_approx(float(bonus[key])):
 			continue
 		var label: String = str(labels.get(key, str(key)))
 		if key == "defense":
 			result.append("AC -%d" % int(bonus[key]))
 		elif key in ["potion_heal_pct", "xp_pct", "ain_saving_pct", "potion_cooldown_pct", "stun_resistance"]:
-			result.append("%s +%d%%" % [label, int(bonus[key])])
+			result.append("%s +%.2f%%" % [label, float(bonus[key])])
 		else:
-			result.append("%s +%d" % [label, int(bonus[key])])
-	return " · ".join(result) if not result.is_empty() else "추가 강화 옵션 없음"
+			result.append("%s %+.2f" % [label, float(bonus[key])])
+	var text: String=" · ".join(result) if not result.is_empty() else "추가 강화 옵션 없음"
+	if level==21 and record.get("patch523_effect_basis",{}).get("local_level21_extrapolation",false): text+=" · +21 효과: TWILIGHT 추정 설정"
+	return text

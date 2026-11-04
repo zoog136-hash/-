@@ -34,8 +34,7 @@ func configure_scrolls(controller: Node) -> void:
 	values.clear()
 	for name: String in hud.lineage_inventory_ui.inventory:
 		if int(hud.lineage_inventory_ui.inventory[name]) <= 0: continue
-		if not name.contains("주문서"): continue
-		if not (name.contains("무기") or name.contains("갑옷") or name.contains("장신구") or name.contains("축복 부여")): continue
+		if str(hud.get_parent()._scroll_kind(name)).is_empty() and not name.contains("축복 부여"): continue
 		values.append({"name":name,"count":int(hud.lineage_inventory_ui.inventory[name])})
 	values.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return str(a["name"]) < str(b["name"]))
 	_build()
@@ -157,6 +156,9 @@ func _build() -> void:
 	detail.scroll_active=false
 	detail.add_theme_font_size_override("normal_font_size",13)
 	information.add_child(detail)
+	# Show the decision fields first in short windows. Item art remains in the
+	# same scroll area below the rates, cost, and current/source effect details.
+	if mode in ["target","blessing"]: information.move_child(stage,information.get_child_count()-1)
 	hud.workspace.register_scroll_drag(info_scroll,detail)
 	action=UI.button("선택",_execute,Vector2(0,54))
 	action.name="EnhanceAction"
@@ -247,9 +249,9 @@ func _select(index: int) -> void:
 		var content: String="[table=2]"
 		for row: Array in [["성공",float(entry.get("success_chance",0.0))],["유지",float(entry.get("no_change_chance",0.0))],["하락",float(entry.get("decrease_chance",0.0))],["소실",float(entry.get("destroy_chance",0.0))]]:
 			content+="[cell expand=1]%s[/cell][cell expand=1][right]%.1f%%[/right][/cell]" % [row[0],row[1]]
-		content+="[/table]\n성공 강화폭  %s\n%s\n\n강화 시 주문서 1장 소모" % [UI.safe(entry.get("gain_text","+1")),UI.safe(entry.get("bonus_text","능력치 상승"))]
+		content+="[/table]\n성공 강화폭  %s\n%s\n\n강화 시 주문서 %d장 · %d 아데나\n%s" % [UI.safe(entry.get("gain_text","+1")),UI.safe(entry.get("bonus_text","능력치 상승")),int(entry.get("count",1)),int(entry.get("cost",0)),UI.safe(entry.get("basis","TWILIGHT 기존 강화 규칙"))]
 		detail.text=content
-		action.text="강화 시작 · 주문서 1장"
+		action.text="강화 · %d장 + %d 아데나" % [int(entry.get("count",1)),int(entry.get("cost",0))]
 	if mode=="blessing":
 		selected_state.text=("장착 중" if bool(entry.get("equipped",false)) else "인벤토리 보관")+" · 축복 부여"
 		detail.text="축복 성공률: %.1f%% (TWILIGHT 임시값)\n축복 옵션: %s\n\n성공/실패 모두 주문서 1장 소모 · 장비 유지" % [float(entry.get("success_chance",0.0)),UI.safe(entry.get("bonus_text",""))]
@@ -277,7 +279,7 @@ func _execute() -> void:
 		var target := str(entry.get("target_id", entry.get("name","")))
 		if target != "":
 			var scroll: String = scroll_name
-			hud.confirm_action("강화 확인","%s +%d\n%s 1장 소모\n성공 %.1f%% · 하락 %.1f%% · 소실 %.1f%%" % [str(entry.get("name","")),int(entry.get("level",0)),scroll,float(entry.get("success_chance",0)),float(entry.get("decrease_chance",0)),float(entry.get("destroy_chance",0))],"강화",func(_count: int) -> void:
+			hud.confirm_action("강화 확인","%s +%d\n%s %d장 · %d 아데나\n성공 %.1f%% · 하락 %.1f%% · 소실 %.1f%%\n%s" % [str(entry.get("name","")),int(entry.get("level",0)),scroll,int(entry.get("count",1)),int(entry.get("cost",0)),float(entry.get("success_chance",0)),float(entry.get("decrease_chance",0)),float(entry.get("destroy_chance",0)),str(entry.get("basis","TWILIGHT 기존 강화 규칙"))],"강화",func(_count: int) -> void:
 				hud.enhancement_requested.emit(scroll,target))
 func _slot(parent: VBoxContainer, title: String, extent: Vector2) -> TextureRect:
 	var caption: Label=UI.label(title,12,UI.MUTED)

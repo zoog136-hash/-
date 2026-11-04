@@ -379,15 +379,16 @@ func _use_bless_scroll(scroll_name: String) -> void:
 		var record: Dictionary = world.call("_find_catalog_item_record", item_name)
 		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
 			record = physical["record"] as Dictionary
+		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 		var kind: String = str(world.call("_enhancement_kind_for_record", record))
-		if kind not in ["weapon", "armor"]:
+		if kind not in ["weapon", "armor", "accessory"]:
 			continue
-		if BLESSING.bonus_for(str(record.get("grade", "")), kind).is_empty() or BLESSING.is_blessed(physical, record):
+		if BLESSING.bonus_for(str(record.get("grade", "")), kind, record).is_empty() or BLESSING.is_blessed(physical, record):
 			continue
 		candidates.append(item_name + "@@@" + id)
 	candidates.sort()
 	if candidates.is_empty():
-		_message("축복 부여가 가능한 미축복 무기·방어구가 없습니다")
+		_message("축복 부여가 가능한 미축복 장비가 없습니다")
 		return
 	# Use the game's native touch-friendly equipment chooser, not a floating
 	# ConfirmationDialog which can be unreachable in Android editor/play mode.
@@ -400,10 +401,11 @@ func _use_bless_scroll(scroll_name: String) -> void:
 		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
 			record = physical["record"] as Dictionary
 		var grade: String = str(record.get("grade", "일반"))
+		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 		var kind: String = str(world.call("_enhancement_kind_for_record", record))
 		views.append({"name": parts[0], "target_id": reference, "instance_id": parts[1],
 			"level": int(physical.get("level", 0)), "success_chance": BLESSING.success_chance(grade),
-			"bonus_text": BLESSING.effect_text(grade, kind), "equipped": false})
+			"bonus_text": BLESSING.effect_text(grade, kind, record), "equipped": false})
 	world.hud.call("open_blessing_targets", scroll_name, views)
 
 # The physical instance ID is mandatory: two copies of the same weapon can
@@ -432,28 +434,55 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 	var record: Dictionary = world.call("_find_catalog_item_record", item_name)
 	if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
 		record = physical["record"] as Dictionary
+	record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 	var kind: String = str(world.call("_enhancement_kind_for_record", record))
 	var grade: String = str(record.get("grade", ""))
-	var effect: Dictionary = BLESSING.bonus_for(grade, kind)
+	var effect: Dictionary = BLESSING.bonus_for(grade, kind, record)
 	if effect.is_empty():
-		_message("무기와 방어구에만 축복을 부여할 수 있습니다")
+		_message("이 장비에는 확인된 축복 옵션이 없습니다")
 		return false
 	if BLESSING.is_blessed(physical, record):
 		_message("이미 축복받은 장비입니다")
 		return false
+	if bool(world.call("_item_locked",item_name,item_id)):
+		_message("축복하려면 장비 잠금을 해제하세요")
+		return false
 	var rng: RandomNumberGenerator = world.get("rng") as RandomNumberGenerator
+	var before: Dictionary={"inventory":inv.duplicate(true),"instances":instances.duplicate(true),"rng":rng.state,
+		"equipped":world.equipped_items.duplicate(true),"hp":world.hp,"mp":world.mp}
 	var roll: float = forced_roll if forced_roll >= 0.0 else rng.randf_range(0.0, 100.0)
 	var success: bool = BLESSING.roll_succeeds(grade, roll)
 	if success:
 		physical["bless_state"] = "blessed"
 		physical["blessed"] = true
+		physical["source_bless_code"]=2
+		record["bless_state"]="blessed"
+		record["blessed"]=true
+		if record.get("source_m_native_item",false): record["source_bless_raw"]=2
+		physical["record"]=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,2)
 		instances[item_id] = physical
+	inv[scroll_name]=int(inv[scroll_name])-1
+	if int(inv[scroll_name])<=0: inv.erase(scroll_name)
+	world.call("_invalidate_equipment_static")
+	world.hp=mini(world.hp,int(world.call("_effective_max_hp")))
+	world.mp=mini(world.mp,int(world.call("_effective_max_mp")))
+	if int(world.call("_save_game",true))!=OK:
+		inv.clear();inv.merge(before.inventory)
+		instances.clear();instances.merge(before.instances)
+		world.equipped_items=before.equipped
+		rng.state=int(before.rng)
+		world.hp=int(before.hp);world.mp=int(before.mp)
+		world.call("_invalidate_equipment_static")
+		world.call("_update_hud")
+		_message("축복 저장 실패 · 주문서·장비·난수 상태를 보존했습니다")
+		return false
 	_message("축복 부여 %s · %s [ID %s] · %s" % [
 		"성공!" if success else "실패(장비 유지)",
-		item_name, item_id, BLESSING.effect_text(grade, kind) if success else "주문서만 소모"
+		item_name, item_id, BLESSING.effect_text(grade, kind, record) if success else "주문서만 소모"
 	])
 	world.hud.append_log("축복 부여 %s · %s [ID %s]" % ["성공" if success else "실패", item_name, item_id])
-	_consume(scroll_name)
+	world.hud.refresh_inventory(inv)
+	world.call("_update_hud")
 	return success
 
 func _use_elemental_scroll(item_name: String, spec: Dictionary) -> void:
@@ -542,10 +571,11 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 				if entry.get("record", {}) is Dictionary and not (entry.get("record", {}) as Dictionary).is_empty():
 					record = entry["record"] as Dictionary
 				var grade: String = str(record.get("grade", "일반"))
+				record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 				var kind: String = str(world.call("_enhancement_kind_for_record", record))
 				display_name = "%s %s [ID %s] · %s · 축복 %0.1f%% (임시)" % [
 					grade_text, parts[0], instance_id,
-					BLESSING.effect_text(grade, kind), BLESSING.success_chance(grade)
+					BLESSING.effect_text(grade, kind, record), BLESSING.success_chance(grade)
 				]
 			var element_level: int = int(entry.get("element_level", 0))
 			var element_name: String = str(RULES.ELEMENT_NAMES.get(str(entry.get("element", "")), ""))

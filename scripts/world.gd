@@ -114,6 +114,7 @@ const HP_POTION_COOLDOWN_SECONDS: float = 1.0
 const HP_POTION_COOLDOWN_KEY: String = "__hp_potion_shared__"
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
+const PATCH523_ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
 const AIN_OPTION_RULES = preload("res://scripts/ainhasad_option_rules.gd")
@@ -712,12 +713,24 @@ func _source_catalog_record(category: String, saved: Dictionary) -> Dictionary:
 	if not (candidate is Dictionary) or (candidate as Dictionary).is_empty():
 		candidate = catalog_index.get(str(saved.get("name", "")), {})
 	if not (candidate is Dictionary) or (candidate as Dictionary).is_empty():
-		return saved
+		return _source_enhancement_extra_record(saved,saved) if category=="아이템" else saved
 	var original: Dictionary = (candidate as Dictionary).duplicate(true)
 	for state_key: String in ["instance_id", "enhance_level", "is_engraved", "bless_state"]:
 		if saved.has(state_key):
 			original[state_key] = saved[state_key]
-	return original
+	return _source_enhancement_extra_record(original,saved) if category=="아이템" else original
+
+func _source_enhancement_extra_record(base: Dictionary,saved: Dictionary) -> Dictionary:
+	if base.get("_patch523_effective_extras",false): return base
+	var enhanced: Dictionary=_physical_enhancement_record(saved)
+	var instance_id: String=str(saved.get("instance_id",""))
+	var rank: int=_item_instance_level(instance_id,str(saved.get("name","")))
+	var extras: Dictionary=enhanced.get("enhancement_extra_options",{}).get(str(rank),{})
+	if extras.is_empty() or enhanced.get("patch523_effect_basis",{}).get("selection","")!="source_exact_level": return base
+	var output: Dictionary=base.duplicate(true)
+	for key: String in extras: output[key]=float(output.get(key,0))+float(extras[key])
+	output["_patch523_effective_extras"]=true
+	return output
 
 func _equipment_inven_sum(key: String) -> float:
 	var total: float = 0.0
@@ -862,14 +875,21 @@ func _refresh_equipment_effects() -> void:
 	equipment_effects_dirty=false
 	equipment_effect_rebuilds+=1
 	var flags: Dictionary={"hpAbsoluteRecovery":false,"hpRecoveryTick":false,"mpRecoveryTick":false,"hp_absorption":false,"damage_amp_pct":0.0}
+	var source_mp_regeneration: int=0
 	for record: Dictionary in _all_equipped_records():
+		var source_id: String=PATCH523_ENHANCE.item_id(record)
+		var source_mp: bool=patch523_equipment.data.get("equipment_runtime",{}).has(source_id) and patch523_equipment.catalog_identity_matches(record,source_id)
 		for key: String in ["hpAbsoluteRecovery","hpRecoveryTick","mpRecoveryTick"]:
-			if int(record.get(key,0))>0:flags[key]=true
+			var base_value: int=int(record.get(key,0))
+			if key=="mpRecoveryTick" and source_mp:
+				source_mp_regeneration+=base_value
+				continue
+			if base_value>0:flags[key]=true
 		if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"):
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
 	flags.hp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))
-	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
+	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) else 0)+source_mp_regeneration+_enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER,"mp_recovery")+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
 	equipment_effects=flags
 
 func _invalidate_equipment_static() -> void:
@@ -964,7 +984,7 @@ func _effective_max_mp() -> int:
 				var segment: String = fragment.strip_edges()
 				if typed_mp == 0 and (segment.begins_with("MP ") or segment.begins_with("Max MP ")):
 					added += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr(3 if segment.begins_with("MP ") else 7)))
-	var flat: int = max_mp + added + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp") + int(original_skills.stat("mp") if original_skills != null else 0)
+	var flat: int = max_mp + added + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "mp") + int(original_skills.stat("mp") if original_skills != null else 0)
 	return maxi(1, int(round(float(flat) * (1.0 + _equipped_numeric_sum("mpPct")))))
 
 func _index_item_weights() -> void:
@@ -1000,7 +1020,7 @@ func _inventory_total_weight() -> int:
 
 func _carrying_capacity() -> int:
 	var skill_capacity := int(original_skills.stat("weight")) if original_skills != null else 0
-	return skill_capacity + ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "capacity") + _equipped_bless_bonus("capacity")
+	return skill_capacity + ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "capacity") + _equipped_bless_bonus("capacity")
 
 func _inventory_encumbrance_multiplier() -> float:
 	return ITEM_OPTIONS.encumbrance_multiplier(_inventory_total_weight(), _carrying_capacity())
@@ -1027,7 +1047,8 @@ func _equipped_bless_bonus(stat: String) -> int:
 		if not EQUIPMENT_BLESSING.is_blessed(physical, record):
 			continue
 		var kind: String = _enhancement_kind_for_record(record)
-		var bonus: Dictionary = EQUIPMENT_BLESSING.bonus_for(str(record.get("grade", "")), kind)
+		record=PATCH523_ENHANCE.prepare(patch523_equipment,record,2)
+		var bonus: Dictionary = EQUIPMENT_BLESSING.bonus_for(str(record.get("grade", "")), kind,record)
 		total += int(bonus.get(stat, 0))
 	return total
 
@@ -1072,7 +1093,7 @@ func _equipment_potion_heal_stat(label: String) -> int:
 	return sum
 
 func _equipment_additional_damage(kind: String) -> int:
-	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore"))
+	var result: int = _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore"))
 	if kind in ["melee", "ranged"]:
 		result += _equipped_bless_bonus("damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
@@ -3204,6 +3225,9 @@ func _scroll_kind(scroll_name: String) -> String:
 		return "armor"
 	if scroll_name.find("장신구 마법 주문서") >= 0:
 		return "accessory"
+	var source_id: String=PATCH523_ENHANCE.item_id(_find_catalog_item_record(scroll_name))
+	for link: Dictionary in patch523_equipment.data.get("items",{}).get(source_id,{}).get("item_bonuses",[]):
+		if int(patch523_equipment.data.bonuses.get(str(int(link.BonusID)),{}).get("BonusTypeID",0)) in [2022,8352]: return "source"
 	return ""
 
 func _scroll_mode(scroll_name: String) -> String:
@@ -3361,7 +3385,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	var kind: String = _scroll_kind(item_name)
 	if kind != "":
-		var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name))
+		var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name),item_name)
 		hud.call("open_enhancement", item_name, candidates)
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -3627,6 +3651,12 @@ func _sync_item_instances() -> void:
 		var name_value: String = str((item_instances[raw_id] as Dictionary).get("name", ""))
 		if int(inventory.get(name_value, 0)) <= 0 and not _is_instance_equipped(instance_id):
 			item_instances.erase(raw_id)
+			continue
+		if not patch523_equipment.data.get("equipment_runtime",{}).is_empty():
+			var physical: Dictionary=item_instances[raw_id]
+			var pinned: Dictionary=physical.get("record",_find_catalog_item_record(name_value))
+			var prepared: Dictionary=PATCH523_ENHANCE.prepare(patch523_equipment,pinned,patch523_equipment.bless_code(physical))
+			if prepared!=pinned: physical["record"]=prepared
 
 func _chosen_instance(name_value: String, only_free: bool = false) -> String:
 	_sync_item_instances()
@@ -3663,7 +3693,7 @@ func _enhancement_kind_for_record(record: Dictionary) -> String:
 		return "accessory"
 	return ""
 
-func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
+func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name: String = "") -> Array:
 	_sync_item_instances()
 	var result: Array = []
 	var names: Array = item_instances.keys()
@@ -3677,32 +3707,61 @@ func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 		var pinned: Variant = (item_instances[instance_id] as Dictionary).get("record", {})
 		if pinned is Dictionary and not (pinned as Dictionary).is_empty():
 			record = pinned as Dictionary
-		if record.is_empty() or _enhancement_kind_for_record(record) != kind:
+		if record.is_empty() or (kind!="source" and _enhancement_kind_for_record(record) != kind):
 			continue
 		var level_value: int = _item_instance_level(instance_id, item_name)
-		if not _enhancement_level_allowed(kind, mode, level_value, record):
+		var source_rule: Dictionary=_source_enhancement_rule(record,level_value,mode,scroll_name,item_instances[instance_id])
+		if source_rule.is_empty() and not _enhancement_level_allowed(kind, mode, level_value, record):
 			continue
-		var chance: Dictionary = _enhancement_chance(kind, level_value, mode, record)
+		var chance: Dictionary = source_rule if not source_rule.is_empty() else _enhancement_chance(kind, level_value, mode, record)
 		if float(chance.get("success", 0.0)) <= 0.0:
 			continue
 		var max_gain: int = 3 if mode == "blessed" and level_value <= 2 else (2 if mode == "blessed" and level_value <= 5 else 1)
+		if not source_rule.is_empty():
+			max_gain=1
+			for leap: Dictionary in source_rule.get("leaps",[]): max_gain=maxi(max_gain,int(leap.gain))
+		record=PATCH523_ENHANCE.prepare(patch523_equipment,record,patch523_equipment.bless_code(item_instances[instance_id]))
 		result.append({
 			"name": item_name,
 			"instance_id":instance_id,
 			"target_id":item_name + "@@@" + instance_id,
 			"level": level_value,
-			"safe_level": _safe_enhancement_level(kind),
+			"safe_level": int(chance.get("safe_level",_safe_enhancement_level(kind))),
 			"success_chance": float(chance.get("success", 0.0)),
 			"no_change_chance": float(chance.get("no_change", 0.0)),
 			"destroy_chance": float(chance.get("destroy", 0.0)),
 			"decrease_chance": float(chance.get("decrease", 0.0)),
-			"gain_text": _enhancement_gain_text(mode, level_value),
-			"bonus_text": ENCHANT.summary(kind, level_value + max_gain, record),
+			"gain_text": str(chance.get("gain_text",_enhancement_gain_text(mode, level_value))),
+			"bonus_text": ENCHANT.summary(_enhancement_kind_for_record(record), level_value + max_gain, record),
+			"cost":int(chance.get("cost",0)),"count":int(chance.get("count",1)),"basis":str(chance.get("basis","TWILIGHT 기존 강화 규칙")),
 			"equipped": _is_instance_equipped(instance_id)
 		})
 	return result
 
+func _source_enhancement_rule(record: Dictionary, current_level: int, mode: String, scroll_name: String = "", physical: Dictionary = {}) -> Dictionary:
+	if not physical.is_empty() and physical.has("sourceId") and str(physical.sourceId)!=str(record.get("sourceId","")):
+		return {"source_rule":true,"success":0.0,"reason":"물리 장비의 원본 정체가 일치하지 않습니다"}
+	var kind: String=_enhancement_kind_for_record(record)
+	var scroll: Dictionary=_find_catalog_item_record(scroll_name) if not scroll_name.is_empty() else {}
+	var source_id: String=PATCH523_ENHANCE.item_id(scroll)
+	# Exact host scroll aliases preserve existing inventory keys; these map only
+	# the original permanent normal/engraved scroll families, never item names.
+	if source_id.is_empty():
+		var aliases: Dictionary={"무기 마법 주문서":"137","무기 마법 주문서 (각인)":"6401","갑옷 마법 주문서":"138","갑옷 마법 주문서 (각인)":"6411","장신구 마법 주문서":"139","장신구 마법 주문서 (각인)":"139",
+			"장인의 무기 마법 주문서 (각인)":"1184","장인의 무기 마법 주문서":"134862","장인의 갑옷 마법 주문서":"270654","장인의 갑옷 마법 주문서 (각인)":"271248","오림의 장신구 마법 주문서":"227002","오림의 장신구 마법 주문서 (각인)":"227002","축복받은 오림의 장신구 마법 주문서":"227002","축복받은 오림의 장신구 마법 주문서 (각인)":"227002","축복받은 무기 마법 주문서":"137","축복받은 무기 마법 주문서 (각인)":"6401","축복받은 갑옷 마법 주문서":"138","축복받은 갑옷 마법 주문서 (각인)":"6411"}
+		source_id=str(aliases.get(scroll_name,""))
+	if source_id.is_empty() and scroll_name.is_empty() and mode in ["normal","blessed"]:
+		source_id=str({"weapon":"137","armor":"138","accessory":"139"}.get(kind,""))
+	if source_id.is_empty() and scroll_name.is_empty() and mode=="craftsman": source_id="1184" if kind=="weapon" else ("271248" if kind=="armor" else "")
+	if source_id.is_empty() and scroll_name.is_empty() and mode in ["orim","blessed_orim"] and kind=="accessory": source_id="227002"
+	if source_id.is_empty(): return {}
+	var bless: int=patch523_equipment.bless_code(physical) if not physical.is_empty() else (2 if EQUIPMENT_BLESSING.is_blessed({},record) else 1)
+	var scroll_bless: int=int(scroll.get("source_bless_raw",2 if mode in ["blessed","blessed_orim"] else 1))
+	return PATCH523_ENHANCE.rule(patch523_equipment,record,source_id,current_level,bless,scroll_bless)
+
 func _enhancement_level_allowed(kind: String, mode: String, current_level: int, record: Dictionary = {}) -> bool:
+	var source_rule: Dictionary=_source_enhancement_rule(record,current_level,mode)
+	if not source_rule.is_empty(): return float(source_rule.get("success",0))>0
 	if mode == "craftsman" and kind == "weapon":
 		var original: Dictionary = patch523_equipment.craftsman_weapon_rule(record)
 		if not original.is_empty(): return current_level in original.levels
@@ -3746,7 +3805,9 @@ func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dic
 	# Indexed, self-validating equivalent of the previous one-name find_many scan.
 	return ITEM_CATALOG_LOOKUP.find_one([catalog_db.get("아이템", []), item_db], item_instances, item_name)
 
-func _safe_enhancement_level(kind: String) -> int:
+func _safe_enhancement_level(kind: String, record: Dictionary = {}) -> int:
+	var source_rule: Dictionary=_source_enhancement_rule(record,0,"normal")
+	if not source_rule.is_empty(): return int(source_rule.get("safe_level",0))
 	match kind:
 		"weapon":
 			return 6
@@ -3756,6 +3817,8 @@ func _safe_enhancement_level(kind: String) -> int:
 			return 0
 
 func _enhancement_chance(kind: String, current_level: int, mode: String = "normal", record: Dictionary = {}) -> Dictionary:
+	var source_rule: Dictionary=_source_enhancement_rule(record,current_level,mode)
+	if not source_rule.is_empty(): return source_rule
 	if mode == "craftsman" and kind == "weapon":
 		var original: Dictionary = patch523_equipment.craftsman_weapon_rule(record)
 		if not original.is_empty():
@@ -3883,26 +3946,33 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 
 	var target_record: Dictionary = (item_instances[item_id] as Dictionary).get("record", {})
 	if target_record.is_empty(): target_record = _find_catalog_item_record(target_name)
-	if target_record.is_empty() or _enhancement_kind_for_record(target_record) != kind:
+	if target_record.is_empty() or (kind!="source" and _enhancement_kind_for_record(target_record) != kind):
 		hud.show_message("이 주문서로 강화할 수 없는 장비입니다")
 		return
 
 	var current_level: int = _item_instance_level(item_id, target_name)
-	if not _enhancement_level_allowed(kind, mode, current_level, target_record):
+	var source_rule: Dictionary=_source_enhancement_rule(target_record,current_level,mode,scroll_name,item_instances[item_id])
+	if source_rule.is_empty() and not _enhancement_level_allowed(kind, mode, current_level, target_record):
 		hud.show_message("현재 강화 단계에는 이 주문서를 사용할 수 없습니다")
 		return
-	var chance: Dictionary = _enhancement_chance(kind, current_level, mode, target_record)
+	var chance: Dictionary = source_rule if not source_rule.is_empty() else _enhancement_chance(kind, current_level, mode, target_record)
 	var success_chance: float = float(chance.get("success", 0.0))
 	var no_change_chance: float = float(chance.get("no_change", 0.0))
 	var decrease_chance: float = float(chance.get("decrease", 0.0))
 	if success_chance <= 0.0:
-		hud.show_message("더 이상 강화할 수 없습니다")
+		hud.show_message(str(chance.get("reason","더 이상 강화할 수 없습니다")))
+		return
+	var scroll_count: int=int(chance.get("count",1))
+	var cost: int=int(chance.get("cost",0))
+	if int(inventory.get(scroll_name,0))<scroll_count or gold<cost:
+		hud.show_message("강화 주문서 또는 아데나가 부족합니다")
 		return
 
 	var before: Dictionary = {"inventory":inventory.duplicate(true), "instances":item_instances.duplicate(true),
-		"equipped":equipped_items.duplicate(true), "rng":rng.state, "hp":hp, "mp":mp, "next_id":next_item_instance_id}
+		"equipped":equipped_items.duplicate(true), "rng":rng.state, "hp":hp, "mp":mp, "next_id":next_item_instance_id,"gold":gold}
 	var result_log: String = ""
-	inventory[scroll_name] = int(inventory.get(scroll_name, 0)) - 1
+	inventory[scroll_name] = int(inventory.get(scroll_name, 0)) - scroll_count
+	gold-=cost
 	if int(inventory.get(scroll_name, 0)) <= 0:
 		inventory.erase(scroll_name)
 
@@ -3911,7 +3981,15 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	var result_message: String = "강화 실패 · 장비 변화 없음"
 	var roll: float = rng.randf_range(0.0, 100.0)
 	if roll < success_chance:
-		var gain: int = _roll_enhancement_gain(mode, current_level)
+		var gain: int=1
+		if source_rule.is_empty(): gain=_roll_enhancement_gain(mode,current_level)
+		else:
+			var leap_roll: int=rng.randi_range(0,999999)
+			var threshold: int=0
+			for leap: Dictionary in source_rule.leaps:
+				threshold+=int(leap.probability)
+				if leap_roll<threshold:
+					gain=int(leap.gain); break
 		result_level = mini(21, current_level + gain)
 		item_instances[item_id]["level"] = result_level
 		result_type = "success"
@@ -3920,7 +3998,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	elif roll < success_chance + no_change_chance:
 		result_log = "강화 실패(유지) · +%d %s" % [current_level, target_name]
 	elif roll < success_chance + no_change_chance + decrease_chance:
-		result_level = maxi(0, current_level - 1)
+		result_level = maxi(0, current_level - int(chance.get("side_effect_level_loss",1)))
 		item_instances[item_id]["level"] = result_level
 		result_type = "decrease"
 		result_message = "강화 실패 · +%d → +%d 하락" % [current_level, result_level]
@@ -3942,6 +4020,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		hp = int(before.hp)
 		mp = int(before.mp)
 		next_item_instance_id = int(before.next_id)
+		gold=int(before.gold)
 		_invalidate_equipment_static()
 		_update_hud()
 		hud.show_message("강화 저장 실패 · 주문서·장비·난수 상태를 보존했습니다")
@@ -3961,7 +4040,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 
 	phase_usec = Time.get_ticks_usec()
 	if int(inventory.get(scroll_name, 0)) > 0:
-		var remaining_candidates: Array = _enhancement_candidates(kind, mode)
+		var remaining_candidates: Array = _enhancement_candidates(kind, mode,scroll_name)
 		hud.call("open_enhancement", scroll_name, remaining_candidates)
 	else:
 		hud.call("open_enhancement", scroll_name, [])
@@ -4507,9 +4586,9 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 		hud.show_message("HP 물약 재사용 대기 %s" % _format_seconds_short(cooldown_left))
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
-	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_cooldown_pct"),0.0,90.0)/100.0)
-	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
-	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
+	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_cooldown_pct"),0.0,90.0)/100.0)
+	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
+	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_pct") + _equipped_bless_bonus("potion_heal_pct")) / 100.0))
 	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
@@ -7142,16 +7221,25 @@ func _enhancement_weapon_stat(stat: String) -> int:
 	var record_value: Variant = equipped_items.get("weapon", {})
 	if not (record_value is Dictionary) or (record_value as Dictionary).is_empty():
 		return 0
-	return int(ENCHANT.stats("weapon", _equipment_enhancement_level("weapon"), record_value as Dictionary).get(stat, 0))
+	return int(ENCHANT.stats("weapon", _equipment_enhancement_level("weapon"), _physical_enhancement_record(record_value as Dictionary)).get(stat, 0))
+
+func _physical_enhancement_record(worn: Dictionary) -> Dictionary:
+	var physical: Dictionary=item_instances.get(str(worn.get("instance_id","")),{})
+	var record: Dictionary=physical.get("record",worn)
+	var blessing: int=patch523_equipment.bless_code(physical) if not physical.is_empty() else (2 if EQUIPMENT_BLESSING.is_blessed({},record) else 1)
+	return PATCH523_ENHANCE.prepare(patch523_equipment,record,blessing)
 
 func _enhancement_stat_for_slots(slots: Array[String], stat: String) -> int:
-	var result: int = 0
+	return int(_enhancement_float_for_slots(slots,stat))
+
+func _enhancement_float_for_slots(slots: Array[String], stat: String) -> float:
+	var result: float = 0.0
 	for slot: String in slots:
 		var record_value: Variant = equipped_items.get(slot, {})
 		if not (record_value is Dictionary) or (record_value as Dictionary).is_empty():
 			continue
 		var kind: String = "weapon" if slot == "weapon" else ("armor" if ARMOR_EQUIPMENT_SLOTS.has(slot) else "accessory")
-		result += int(ENCHANT.stats(kind, _equipment_enhancement_level(slot), record_value as Dictionary).get(stat, 0))
+		result += float(ENCHANT.stats(kind, _equipment_enhancement_level(slot), _physical_enhancement_record(record_value as Dictionary)).get(stat, 0))
 	return result
 
 func _equipment_enhancement_max(slots: Array[String]) -> int:
@@ -7500,26 +7588,26 @@ func _melee_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("meleeDamage") if original_skills != null else 0) + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage") + int(consumable_service.call("permanent_damage_bonus", "melee_damage"))
 
 func _melee_accuracy_stat() -> int:
-	return int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
+	return int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("rangedDamage") if original_skills != null else 0) + _catalog_damage_adjustment("ranged") + _catalog_stat_sum("pve_ranged_damage") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
 
 func _ranged_accuracy_stat() -> int:
-	return int(original_skills.stat("rangedHit") if original_skills != null else 0) + level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
+	return int(original_skills.stat("rangedHit") if original_skills != null else 0) + level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("pve_magic_damage") + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
+	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("pve_magic_damage") + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
 
 func _magic_accuracy_stat() -> int:
-	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
+	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
 
 func _spell_power_stat() -> int:
 	var defaults: Dictionary = original_skills.runtime_defaults if original_skills != null else {}
 	var base := int(defaults.get("sp_base",{}).get("value",1))
 	var threshold := int(defaults.get("sp_int_baseline",{}).get("value",12))
 	var divisor := maxf(1,float(defaults.get("sp_int_divisor",{}).get("value",3)))
-	return maxi(0,base + _stat_step_bonus(_effective_attribute("INT"),threshold,divisor) + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS,"sp") + _active_item_buff_total("sp") + int(original_skills.stat("sp") if original_skills != null else 0))
+	return maxi(0,base + _stat_step_bonus(_effective_attribute("INT"),threshold,divisor) + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER,"sp") + _active_item_buff_total("sp") + int(original_skills.stat("sp") if original_skills != null else 0))
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0
@@ -7581,7 +7669,7 @@ func _stun_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
-	total += _active_item_buff_total("stun_resistance") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "stun_resistance")
+	total += _active_item_buff_total("stun_resistance") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "stun_resistance")
 	return int(original_skills.stat("stunResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _record_silence_accuracy(record: Dictionary) -> int:
@@ -7844,7 +7932,7 @@ func _effective_mr() -> int:
 		total += _record_mr(record)
 	total += _active_skill_buff_total("mrFlat")
 	total += _active_item_buff_total("mr")
-	total += _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "mr")
+	total += _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "mr")
 	total += _equipped_bless_bonus("mr")
 	return maxi(0, total + int(original_skills.stat("mr") if original_skills != null else 0))
 
@@ -7864,7 +7952,7 @@ func _damage_reduction_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_damage_reduction(record)
 	total += _active_item_buff_total("damage_reduction")
-	total += _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "reduction")
+	total += _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "reduction")
 	return maxi(0, total)
 
 func _pve_damage_after_item_buffs(raw_damage: int) -> int:
@@ -7963,7 +8051,7 @@ func _effective_max_hp() -> int:
 	for record: Dictionary in _all_equipped_records():
 		flat_bonus += float(record.get("hpFlat", 0.0))
 		percent_bonus += float(record.get("hpPct", 0.0))
-	flat_bonus += float(_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "hp"))
+	flat_bonus += float(_enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "hp"))
 	flat_bonus += float(_equipment_attribute_bonus("CON") * 10)
 	flat_bonus += float(_active_skill_buff_total("hp"))
 	flat_bonus += float(_passive_skill_total("hpFlat"))
@@ -7975,14 +8063,14 @@ func _blessing_consumption_reduction_percent() -> float:
 	var reduction: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		reduction += AIN_OPTION_RULES.reduction_percent(record)
-	reduction += _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ain_saving_pct")
+	reduction += _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "ain_saving_pct")
 	return clampf(reduction, 0.0, 100.0)
 
 func _experience_multiplier() -> float:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("xp", 0.0))
-	bonus += float(_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "xp_pct")) / 100.0
+	bonus += float(_enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "xp_pct")) / 100.0
 	return maxf(1.0, 1.0 + bonus + float(_active_item_buff_total("xp")) / 100.0)
 
 func _update_companion(delta: float) -> void:

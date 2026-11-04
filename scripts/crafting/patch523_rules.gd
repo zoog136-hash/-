@@ -4,6 +4,7 @@ const BLESS = preload("res://scripts/equipment_blessing.gd")
 const OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
 const CONDITIONS = preload("res://scripts/crafting/patch523_craft_conditions.gd")
+const ENHANCEMENT = preload("res://scripts/crafting/patch523_enhancement.gd")
 const SCHEMA: String = "twilight-patch523-equipment-v1"
 const MAX_BYTES: int = 64000000
 const MAX_BATCH: int = 20
@@ -184,8 +185,10 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 			if pinned[key] != canonical.get("sourceOptions", []):
 				return false
 		elif key == "enhancement_options":
-			if pinned[key] != canonical.get(key, {}) and pinned[key] != supported_seal_options(str(material.source_id), int(material.bless_code)):
+			if pinned[key] != canonical.get(key, {}) and pinned[key] != supported_seal_options(str(material.source_id), int(material.bless_code)) and pinned[key] != ENHANCEMENT.prepare(self,canonical,int(material.bless_code)).get(key,{}):
 				return false
+		elif key in ["enhancement_extra_options","patch523_blessing_bonus"]:
+			if pinned[key]!=ENHANCEMENT.prepare(self,canonical,int(material.bless_code)).get(key,{}): return false
 		elif key == "patch523_item_use":
 			if pinned[key]!=canonical.get(key,{}): return false
 		elif key == "source_m_drop_proof":
@@ -389,6 +392,7 @@ func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, it
 			if not seal_options.is_empty():
 				pinned["enhancement_options"] = seal_options
 				pinned["patch523_effect_basis"] = {"sha256":digest, "bless_code":2, "selection":"exact_level_only"}
+			pinned=ENHANCEMENT.prepare(self,pinned,int(output.bless_code))
 			staged_physical[str(counter)] = {"name": output_name, "level": int(output.level),
 				"element": "", "element_level": 0, "sourceId": str(pinned.get("sourceId",output.source_id)),
 				"source_snapshot": "patch523", "source_bless_code": int(output.bless_code),
@@ -446,6 +450,11 @@ func supported_seal_options(source_id: String, source_bless: int) -> Dictionary:
 
 func refresh_derived_options(physical: Dictionary) -> bool:
 	var source_id: String = identity(physical)
+	var current_record: Dictionary=physical.get("record",{})
+	var prepared: Dictionary=ENHANCEMENT.prepare(self,current_record,bless_code(physical))
+	if prepared!=current_record:
+		physical["record"]=prepared
+		return true
 	if source_id.is_empty() or bless_code(physical) != 2: return false
 	var pinned: Dictionary = physical.get("record", {})
 	if pinned.get("patch523_effect_basis", {}).get("selection", "") != "exact_level_only": return false

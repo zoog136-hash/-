@@ -2352,6 +2352,7 @@ func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_blessing(self, scroll_name, candidates)
+	enhancement_forge=forge
 
 var enhancement_forge: Control
 

@@ -1,0 +1,23 @@
+{
+  "basis": "TWILIGHT runtime interpretation; raw523 numbers take precedence",
+  "cost_currency": "adena",
+  "zero_consume_scrolls": 1,
+  "default_zero_target_selector": true,
+  "side_effect_level_loss": 1,
+  "official_blessing_options": "https://probability.plaync.com/lineagem/view?probCategoryId=6656e1b796b3cf5ad823b7bb",
+  "notes": "Cost currency, ConsumeAmount=0 minimum single scroll, TargetItemBlessCode=0 default selector and SideEffect level loss are configurable game interpretations. Raw probabilities/cost/count and confirmed qualifiers are preserved. No material-name safe level rule.",
+  "blessing_success_pct": {
+    "일반": 60,
+    "고급": 45,
+    "희귀": 25,
+    "영웅": 12,
+    "전설": 6,
+    "신화": 2,
+    "유일": 1
+  },
+  "blessing_probability_basis": "TWILIGHT existing balance; no verified numeric blessing-success table found; failure preserves item",
+  "missing_level21_effect": "continue_last_delta",
+  "missing_level21_basis": "TWILIGHT approximation only for missing +21 numeric effects; source +0..+20 always win",
+  "leap_disabled_bonus_presence": true,
+  "leap_disabled_basis": "TWILIGHT interpretation of BonusType8402 Value0 marker, not a source boolean assertion"
+}

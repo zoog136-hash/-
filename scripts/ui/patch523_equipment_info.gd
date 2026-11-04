@@ -14,7 +14,7 @@ var pack_dialog: FileDialog
 var pack_status: Label
 var catalog_dialog: FileDialog
 var catalog_status: Label
-const DEFAULT_SHA: String = "55742a65350649f5efc044fa06e7ab4d8f762a106c7b040366e75c0b4e2824dd"
+const DEFAULT_SHA: String = "b6b2589c15853b1998ecfc6484438a1fe0ef8e8e125d7d1d558e49c116f879ce"
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -22,7 +22,7 @@ func configure(controller: Node) -> void:
 	name = "Patch523EquipmentInfo"
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(UI.label("원본523 장비 강화 정보", 20, UI.GOLD))
-	add_child(UI.label("원본·공식 표를 대조한 인장 강화와 장비 정보를 확인합니다.", 12, UI.MUTED))
+	add_child(UI.label("아이템·주문서 그룹별 원본 강화 확률과 적용 효과를 확인합니다.", 12, UI.MUTED))
 	var installation := HBoxContainer.new()
 	add_child(installation)
 	pack_sha = LineEdit.new()
@@ -138,6 +138,15 @@ func _refresh() -> void:
 	# Name-only stack storage cannot prove the scroll's blessing state. Display
 	# both explicit branches rather than selecting one on the player's behalf.
 	var text: String = "[b]%s +%d[/b]\n" % [UI.safe(physical.name), level_value]
+	var record: Dictionary=physical.get("record",book.record(str(source_id)))
+	var prepared: Dictionary=world.PATCH523_ENHANCE.prepare(book,record,blessing)
+	var source_rule: Dictionary=world.PATCH523_ENHANCE.rule(book,record,str(scroll_id),level_value,blessing,1)
+	if source_rule.get("source_rule",false) and float(source_rule.get("success",0))>0:
+		text+="\n[b]선택한 원본 정의의 규칙[/b]\n안전 강화 +%d · 성공 %.4f%% · 유지 %.4f%% · 하락 %.4f%% · 소실 %.4f%%\n성공 %s · 주문서 %d개 · %d 아데나\n%s\n실행 시에는 보유 주문서의 실제 정체를 다시 확인합니다.\n" % [int(source_rule.safe_level),float(source_rule.success),float(source_rule.no_change),float(source_rule.decrease),float(source_rule.destroy),str(source_rule.gain_text),int(source_rule.count),int(source_rule.cost),UI.safe(source_rule.basis)]
+	if prepared.has("patch523_effect_basis"):
+		text+="\n[b]현재 단계 적용 효과[/b]\n%s\n축복 옵션: %s\n" % [UI.safe(world.ENCHANT.summary(world._enhancement_kind_for_record(record),level_value,prepared)),UI.safe(world.EQUIPMENT_BLESSING.effect_text(str(record.get("grade","")),world._enhancement_kind_for_record(record),prepared))]
+		var unconnected: Array=prepared.patch523_effect_basis.get("unconnected_effect_row_ids",[])
+		if not unconnected.is_empty(): text+="이 아이템의 전체 단계 중 조건부·발동 등 미연결 원본 행 %d개: 원문 보존, 수치로 대체 적용하지 않음\n" % unconnected.size()
 	var quote: Dictionary = world.patch523_seal_quote(ids[equipment.selected],str(scroll_id))
 	if bool(quote.get("ok",false)):
 		source_action.disabled = false
@@ -147,7 +156,7 @@ func _refresh() -> void:
 	var effect_text: String = ""
 	var effects: Array = book.effect_evidence(source_id, level_value, 2 if blessing == 2 else 0)
 	if not effects.is_empty():
-		effect_text += "\n[b]해당 단계 원본 효과[/b]" + ("\n" if blessing == 2 else " · 기본계열 매칭 미확정\n")
+		effect_text += "\n[b]해당 단계 원본 효과[/b]" + ("\n" if blessing == 2 else " · 기본계열 선택: 게임 설정\n")
 		var labels: Dictionary = {"MeleeHit":"근거리 명중", "RangeHit":"원거리 명중", "MeleeDamage":"근거리 대미지", "RangeDamage":"원거리 대미지", "DamageReduction":"대미지 리덕션", "HPPotionIncreaseStatic":"물약 회복량", "HPPotionIncreasePercent":"물약 회복률", "ExperienceAdditionPercent":"경험치 증가율", "EinasadSavingPercent":"아인하사드 절약", "PotionConsumeDelayDecreasePercent":"물약 쿨타임 감소", "SpecialResistance":"특수 내성"}
 		var supported: Dictionary = {"MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","DamageReduction":"reduction","HPPotionIncreaseStatic":"potion_heal_flat","HPPotionIncreasePercent":"potion_heal_pct","ExperienceAdditionPercent":"xp_pct","EinasadSavingPercent":"ain_saving_pct","PotionConsumeDelayDecreasePercent":"potion_cooldown_pct","SpecialResistance":"stun_resistance"}
 		var expected_options: Dictionary = book.supported_seal_options(str(source_id),2).get(str(level_value), {})
@@ -180,13 +189,13 @@ func _refresh() -> void:
 			var total: int = int(row.Success) + int(row.Vaporize) + int(row.SideEffect) + int(row.Remain)
 			if total <= 0:
 				continue
-			text += "원본 단계 %d · %s\n성공 %.4f%% · 소실 %.4f%% · 부작용 %.4f%% · 유지 %.4f%%\n" % [int(row.EnchantLevel), "대상 축복 조건 미확정(원본0)" if int(row.TargetItemBlessCode) == 0 else ("축복 장비" if int(row.TargetItemBlessCode) == 2 else "일반 장비"), 100.0 * float(row.Success)/total, 100.0 * float(row.Vaporize)/total, 100.0 * float(row.SideEffect)/total, 100.0 * float(row.Remain)/total]
+			text += "원본 단계 %d · %s\n성공 %.4f%% · 소실 %.4f%% · 부작용 %.4f%% · 유지 %.4f%%\n" % [int(row.EnchantLevel), "기본 대상 선택(원본0·게임 해석)" if int(row.TargetItemBlessCode) == 0 else ("축복 장비" if int(row.TargetItemBlessCode) == 2 else "일반 장비"), 100.0 * float(row.Success)/total, 100.0 * float(row.Vaporize)/total, 100.0 * float(row.SideEffect)/total, 100.0 * float(row.Remain)/total]
 		for row: Dictionary in evidence.costs:
 			text += "원본 재료 수량 %d · 비용 값 %d(통화 미확정)\n" % [int(row.ConsumeAmount), int(row.Cost)]
 	if displayed.is_empty():
 		text += "\n선택한 장비·주문서·단계에 표시 가능한 원본 확률 행이 없습니다. 안전 강화나 확률을 추정하지 않습니다.\n"
 	text += effect_text
-	text += "\n[color=#b9a67e]인장 전용 실행은 공식 표의 확인된 대상만 사용합니다. 비용값은 원본이며 통화와 일반 주문서 수량0은 별도 게임 설정입니다. 기존 강화 실행은 기존 TWILIGHT 규칙을 유지합니다.[/color]"
+	text += "\n[color=#b9a67e]현재 강화 화면은 원본 아이템·주문서 그룹을 우선 적용합니다. 비용값은 원본이며 통화·수량0·기본축복 선택·부작용 하락폭은 별도 게임 설정입니다. 표에 없는 기존 장비는 기존 규칙을 유지합니다.[/color]"
 	detail.text = text
 
 func _install_selected(path: String) -> void:
