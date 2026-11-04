@@ -182,5 +182,17 @@ func run() -> void:
  combat.after_hit(target,true,"melee",true,false,1,1)
  expect(host.hp==previous_hp+mini(1,int(combat.value("CriticalDrainHP"))) and host.mp==previous_mp+mini(1,int(combat.value("CriticalDrainMP"))),"critical drains capped by available target resources")
  expect(combat.poison_damage(100)==int(round(100*(1-combat.value("PoisonDamageReductionPercent")/100))),"poison reduction uses percentage units")
+ # Existing game inventory diamonds pay source reset cost without debug credit.
+ rt.restore(Runtime.fresh());grant(rt,"source523_2022");rt.state.guardian_spent={"222":7}
+ host.inventory["다이아"]=1200;before=rt.state.duplicate(true);stones=int(host.inventory["수호석"])
+ offer=rt.quote("guardian_reset","joe")
+ expect(offer.ok and offer.costs["다이아"]==1200 and offer.debug_gem_cost==0,"existing inventory currency pays original reset cost")
+ host.save_error=ERR_CANT_CREATE
+ expect(not execute(rt,"guardian_reset","joe").ok and host.inventory["다이아"]==1200 and rt.state==before,"earned currency reset rolls back on save error")
+ host.save_error=OK
+ expect(execute(rt,"guardian_reset","joe").ok and host.inventory["다이아"]==0 and host.inventory["수호석"]==stones+3,"earned diamond reset uses same atomic inventory/refund path")
+ expect(not rt.state.has("guardian_wallet"),"ordinary payment does not fabricate debug wallet")
+ rt.restore(Runtime.fresh());grant(rt,"source523_2022");rt.state.guardian_spent={"222":1};host.inventory["다이아"]=1200;rt.state.guardian_wallet={"4":1200}
+ expect(execute(rt,"guardian_reset","joe").ok and rt.state.guardian_wallet["4"]==1200,"earned currency spent before manual debug credit")
  print("GUARDIAN_FOLLOWUP_TEST: %d checks, %d failures" % [checks,failures])
  host.queue_free();quit(0 if failures==0 else 1)

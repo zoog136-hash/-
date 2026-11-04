@@ -88,3 +88,10 @@ func _draw() -> void:
 				var spark: Vector2=start.lerp(end,fmod(time*.35,1.0))
 				draw_circle(spark,4,Color("b9dce6" ,.12))
 				draw_circle(spark,1.6,Color("f4e7c2"))
+
+func play_original_enchant(id: String) -> void:
+	if not buttons.has(id) or not preload("res://scripts/growth/guardian_media.gd").installed():return
+	var glow=preload("res://scripts/growth/guardian_original_glow.gd").new()
+	glow.name="GuardianOriginalGlow"
+	buttons[id].add_child(glow)
+	glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

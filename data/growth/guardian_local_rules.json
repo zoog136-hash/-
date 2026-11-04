@@ -14,7 +14,7 @@
   },
   "development": {
     "gem_grant": 1200,
-    "status": "debug_build_only_manual_grant"
+    "status": "debug_build_only_manual_grant; separate from ordinary inventory diamonds and unusable in release"
   },
   "combat": {
     "status_resolution": "existing_TWILIGHT_status_service",
@@ -34,5 +34,10 @@
   "research_limits": [
     "No authoritative current per-category stone reset/refund scope found; the reset scope and recorded-cost refund are explicitly local.",
     "No original probability or cost is replaced by a local zero/default."
-  ]
+  ],
+  "existing_game_currency": {
+    "name": "다이아",
+    "source": "scripts/loot/currency_drops.gd and loot_drop.gd; existing inventory/ground pickup",
+    "policy": "Use existing earned inventory balance first. Existing non-Aden-world1..10 material-rate drops remain unchanged. No new grant or conversion."
+  }
 }

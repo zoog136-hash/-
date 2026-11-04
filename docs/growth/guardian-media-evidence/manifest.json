@@ -1,0 +1,328 @@
+{
+  "base_sha": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "prior_phase_sha": "1b4b088415ab80cb7f9da15f492b1ea64c793400",
+  "final_sha": "PR246 HEAD; byte hashes below",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Compatibility OpenGL Mesa llvmpipe",
+  "tests": {
+    "each_of_three_input_routes_pixel_checks": 91,
+    "source_transactions": 39,
+    "combat_economy": 60,
+    "existing_currency_drops": "CURRENCY_DROP_PASS",
+    "native_ui_save_and_install": 29,
+    "core_actual_main": 32,
+    "additional_core_checks": [
+      "save_identical_payload_test",
+      "deferred_save_gate_test"
+    ],
+    "resource_atlases": 723,
+    "resource_frames": 41442,
+    "final_failures": []
+  },
+  "source_original": {
+    "schema": 1,
+    "source_version": 523,
+    "library_file_id": "libfile_0ba507ea27888191b60532f6aa6b6ff0",
+    "container": "Client/Data/UI128.dat",
+    "container_sha256": "d99c4d98453cfde8e7fd768754e6e2e42325013150b25058c51ed1d8ceaacb23",
+    "container_bytes": 11800946,
+    "source_archive": {
+      "name": "TWILIGHT_UI551_binding_animation_evidence_20261104.zip",
+      "bytes": 25261734,
+      "sha256": "6e5c636cabe48ab8d4aa4a5d6d26122c3300ca65789568668335b71fdb386d91",
+      "member": "originals/Client/Data/UI128.dat"
+    },
+    "pack": {
+      "name": "TWILIGHT_guardian523_original_glow_v1.zip",
+      "bytes": 287134,
+      "sha256": "f03b6d164e06a0c910a0ab6a422da3ca41548182eb5a24a1114af82d1a305f12"
+    },
+    "members": {
+      "UI/UI_Resource/Atlas_Z_Fx_Seet_Skilltree_EnchantActive.plist": {
+        "bytes": 21406,
+        "sha256": "02b187638cf8693b20b376bdfa5d7ef6497c0c2ccffc292d03d27f30d34b644d"
+      },
+      "UI/UI_Resource/Atlas_Z_Fx_Seet_Skilltree_EnchantActive.png": {
+        "bytes": 290279,
+        "sha256": "6bad3eb19ab1ad174ef2548292ab5bff0e0e0373ffaec78c1802f36261e6d277"
+      }
+    },
+    "local_presentation_policy": "Replay original Fx_Active layer once on successfully enchanted source skill node; current UI adapter, not a claim of full original scene reconstruction. No synthetic replacement art."
+  },
+  "new_drive_inputs": [
+    {
+      "path": "/workspace/guardian-media-inputs/TWILIGHT-source-card-ui-collections-review.zip",
+      "bytes": 7675906,
+      "sha256": "04343b1d7b90bb81928ec398357f1481723d82cece71ed58c534cfcb47ceae73",
+      "crc": "passed"
+    },
+    {
+      "path": "/workspace/guardian-media-inputs/full_resource_inventory.zip",
+      "bytes": 6087178,
+      "sha256": "d50445dbb5bab01f7118a52220d236e05a1c065b5cc14e314734facb62c6d4b8",
+      "crc": "passed"
+    }
+  ],
+  "actual_existing_currency_contract": {
+    "files": [
+      "scripts/loot/currency_drops.gd",
+      "scripts/loot_drop.gd",
+      "scripts/loot/loot_pickup_controller.gd"
+    ],
+    "unchanged_sha256": {
+      "scripts/loot/currency_drops.gd": "d9f3550131725dbe8ced4ba91a43912721ba3ac2bf7a814554c0176350783339",
+      "scripts/loot_drop.gd": "8ffcfff379bec33212674a82415cfc3a0327d177c1fd5706027358347b52baa5",
+      "scripts/loot/loot_pickup_controller.gd": "c4e94db0ccfb761e2fb7b05a4e121edcbd683725fa096575c5b7e4f7a19e0b3e"
+    },
+    "policy": "Inventory 다이아 earned through existing ground-drop/pickup path. Current1..10/material-rate and Aden-world exclusion unchanged. Ordinary currency is charged before separate debug balance; release ignores debug credit."
+  },
+  "remaining_audio": {
+    "UI_SKILLTREE_CARD_DEFAULT_FX_START": {
+      "material": [
+        {
+          "ID": 54082,
+          "Name": "UI_SKILLTREE_CARD_DEFAULT_FX_START",
+          "SoundTypeID": 52,
+          "AssetID": 203072,
+          "VolumeRatio": 100,
+          "Loop": 0
+        }
+      ],
+      "paths": [
+        "Sound/UI/90299.ogg"
+      ],
+      "csb_member": "UI/SkillTree/SkillTree_Card_Enchant_Default.csb",
+      "frame": 42,
+      "state": "OGG bytes unavailable; original sound not played"
+    },
+    "UI_SKILLTREE_SKILL": {
+      "material": [
+        {
+          "ID": 53691,
+          "Name": "UI_SKILLTREE_SKILL",
+          "SoundTypeID": 52,
+          "AssetID": 195641,
+          "VolumeRatio": 100,
+          "Loop": 0
+        }
+      ],
+      "paths": [
+        "Sound/UI/90285.ogg"
+      ],
+      "csb_member": "UI/SkillTree/SkillTree_Icon_SkillEnchant.csb",
+      "frame": 8,
+      "state": "OGG bytes unavailable; original sound not played"
+    },
+    "UI_SKILLTREE_RANDOMOPEN_FX_START": {
+      "material": [
+        {
+          "ID": 54102,
+          "Name": "UI_SKILLTREE_RANDOMOPEN_FX_START",
+          "SoundTypeID": 52,
+          "AssetID": 203092,
+          "VolumeRatio": 100,
+          "Loop": 0
+        }
+      ],
+      "paths": [
+        "Sound/UI/90301.ogg"
+      ],
+      "csb_member": "UI/SkillTree/SkillTree_Popup_SkillEnchant.csb",
+      "frame": 7,
+      "state": "OGG bytes unavailable; original sound not played"
+    },
+    "UI_SKILLTREE_RANDOMOPEN_FX_OPEN_END": {
+      "material": [
+        {
+          "ID": 54122,
+          "Name": "UI_SKILLTREE_RANDOMOPEN_FX_OPEN_END",
+          "SoundTypeID": 52,
+          "AssetID": 203112,
+          "VolumeRatio": 100,
+          "Loop": 0
+        }
+      ],
+      "paths": [
+        "Sound/UI/90303.ogg"
+      ],
+      "csb_member": "UI/SkillTree/SkillTree_RandomOpen_Enchant.csb",
+      "frame": 33,
+      "state": "OGG bytes unavailable; original sound not played"
+    },
+    "UI_SKILLTREE_RANDOMOPEN_FX_FAIL": {
+      "material": [
+        {
+          "ID": 54132,
+          "Name": "UI_SKILLTREE_RANDOMOPEN_FX_FAIL",
+          "SoundTypeID": 52,
+          "AssetID": 203122,
+          "VolumeRatio": 100,
+          "Loop": 0
+        }
+      ],
+      "paths": [
+        "Sound/UI/90304.ogg"
+      ],
+      "csb_member": "UI/SkillTree/SkillTree_RandomOpen_Enchant.csb",
+      "frame": 84,
+      "state": "OGG bytes unavailable; original sound not played"
+    },
+    "UI_SKILLTREE_RANDOMOPEN_FX_SUCCESS": {
+      "material": [
+        {
+          "ID": 54142,
+          "Name": "UI_SKILLTREE_RANDOMOPEN_FX_SUCCESS",
+          "SoundTypeID": 52,
+          "AssetID": 203132,
+          "VolumeRatio": 100,
+          "Loop": 0
+        }
+      ],
+      "paths": [
+        "Sound/UI/90305.ogg"
+      ],
+      "csb_member": "UI/SkillTree/SkillTree_RandomOpen_Enchant.csb",
+      "frame": 372,
+      "state": "OGG bytes unavailable; original sound not played"
+    }
+  },
+  "remaining_card_atlas": {
+    "plist": "UI_Resource/Atlas_SkillTree.plist",
+    "page": "Atlas_SkillTree.png",
+    "keys": [
+      "SkillTree_Card_Enchant.png",
+      "SkillTree_Card_Select.png",
+      "SkillTree_Card_Glow.png",
+      "SkillTree_Card_Enchant_Success.png",
+      "SkillTree_Card_Enchant_Fail.png"
+    ],
+    "state": "Referenced by actual CSB; bytes absent from provided3DAT and newly received Drive review/inventory inputs."
+  },
+  "denied_actions": [
+    {
+      "action": "Library download via current helper",
+      "targets": [
+        "libfile_e994888010c881918373efebb0a6201a",
+        "libfile_5a339b0b26c481919a1afc006cf89cde"
+      ],
+      "reason": "hosted apps tools/list HTTP401",
+      "status": "not downloaded; no retry/bypass"
+    },
+    {
+      "action": "Drive upload of newly created original subset",
+      "target": "existing private project handoff folder / TWILIGHT_guardian523_original_glow_v1.zip",
+      "reason": "Auto approval review: proprietary/original assets to unverified folder; use of Drive inputs did not explicitly authorize this new archive upload.",
+      "status": "denied, not executed, not retried",
+      "safer_completed_alternative": "Install original pixels directly from the already provided Library UI551 ZIP/UI128.dat. No new upload needed; confirmed through actual native UI and unchanged game-save SHA."
+    }
+  ],
+  "delivery": {
+    "new_original_pixels_in_public_git": 0,
+    "new_subset_zip_transferred": false,
+    "existing_original_library_file": "libfile_0ba507ea27888191b60532f6aa6b6ff0",
+    "existing_input_unchanged": true,
+    "private_capture_not_published": {
+      "path": "/workspace/guardian-validation/media3-screenshots/guardian-original-glow-private.png",
+      "bytes": 549828,
+      "sha256": "7f07855e201fd515f289ade0075f173f1df6a5838433c8ccc0d2045b6ded3498"
+    },
+    "public_screenshots": "Only reset screens after original effect ended; raw original atlas/private glow capture excluded."
+  },
+  "notes": [
+    "First file picker attempts did not select a FileDialog ItemList row; programmatic current_path leaves OK disabled. Final test uses real ItemList selection handler and touch confirmation in its own viewport.",
+    "Initial appended indentation parse error fixed before final UI/core verification; failed log retained.",
+    "Core harness kept original180-second limit/assertions, all three checks exited0.",
+    "Source slot60 server restriction preserved; no other branch/main merged or manual remote CI requested."
+  ],
+  "code_sha256": {
+    "data/growth/guardian_local_rules.json": "97491d23ca269396e854d2b96f8c8c39067ccd3f1a2c1e7c4e4ee237befef109",
+    "scripts/growth/growth_constellation.gd": "0ce60f4224c7adb87c1f4567b33703031475674282dc35fa03563a5a6cae658e",
+    "scripts/growth/growth_runtime.gd": "609110d864ef04fcda80373bb6dc4dc2c74b9bb32c688b13447eac0745ff9b5c",
+    "scripts/growth/growth_view.gd": "e7944eee9995b3916e22360cae76a73f5b1748409d53d5cc259f9db04d4d45bd",
+    "tests/guardian_followup_test.gd": "d3f7e0c652518478fd7c0c4a024dd5ed2aee397879d6e335e60a5fb35561b059",
+    "scripts/growth/guardian_media.gd": "d69597778c8950dea6982cfad22573249eab8863eb811651e5fe9da23ec432ee",
+    "scripts/growth/guardian_original_glow.gd": "da10b8f81c8b09ed8107397a5ff1162ad32c1aa47bb858f356a846a80b49f892",
+    "data/growth/guardian_media.json": "f06a7ff6042ddc7a52af92428eab1bd4c946fd4b2a1f219d4014a72e64107bb4",
+    "tests/guardian_media_test.gd": "ef8745e92f7cf9e708009e1a7d58b95e97dd2df6bd01d174c2cd08032a2715a8",
+    "tests/capture_guardian_media.gd": "0bbbf26351d1121adbe18f907f1a70e89fdebbe1b7bd3bfd4e61c1b1f07afa3e",
+    "tools/build_guardian_media.py": "60701b320910294b5e0d3961bc656a74cb3adc5c8c12441af30fbbefa01e196c"
+  },
+  "artifacts": {
+    "combat-economy-test.txt": {
+      "bytes": 119,
+      "sha256": "8d2f6aa68ac24e25fdc4f80cea7395a0546c39052d3d86724ea724d8d1965f59"
+    },
+    "core-checks.txt": {
+      "bytes": 117,
+      "sha256": "4e1b04ea185c3c6be7cbd82173f8b16f22cd5acd40284798c261e913f6e32a15"
+    },
+    "core_runtime_save_test.txt": {
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "currency-drops-test.txt": {
+      "bytes": 92,
+      "sha256": "09610a79b41f8813673fdf57c0a09c3490171df9c25b8063ab806efc6731b90e"
+    },
+    "deferred_save_gate_test.txt": {
+      "bytes": 115,
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    },
+    "file-dialog-probe.txt": {
+      "bytes": 733,
+      "sha256": "e72298d66f3878526f57e092af725ad9a1074666c5fac8c92999c71616fc50af"
+    },
+    "guardian-earned-diamonds-reset-confirm.png": {
+      "bytes": 774663,
+      "sha256": "cfb1853fda4e0684717aaea0d2f5273df71b65e0edfabcea5312be864e1dc306"
+    },
+    "guardian-earned-diamonds-reset-result.png": {
+      "bytes": 496275,
+      "sha256": "c04f8ee8345d54c75550a6caeae3c4bfa04a4164bdc0ef427e05d30867d3676c"
+    },
+    "import.first-attempt.txt": {
+      "bytes": 2496,
+      "sha256": "c40746d584f20d5ad13b5bdfca279f314ec48527e94ab559608d04d9059156ed"
+    },
+    "native-ui.first-attempt.txt": {
+      "bytes": 704,
+      "sha256": "83e76339037aff0d39deee714407dd11a750c2391093eeeadcc4fe16ad3528c4"
+    },
+    "native-ui.second-attempt.txt": {
+      "bytes": 704,
+      "sha256": "83e76339037aff0d39deee714407dd11a750c2391093eeeadcc4fe16ad3528c4"
+    },
+    "native-ui.txt": {
+      "bytes": 434,
+      "sha256": "118547edfb78c4784781c1714516293dc9ca24c727d667fd0e80ffe0ab05ebef"
+    },
+    "original-archive-pixels-test.txt": {
+      "bytes": 116,
+      "sha256": "e4aea0cfc34a2029563b2a202f871e776edde33b46973d3b5366e8f79417c9b5"
+    },
+    "original-dat-pixels-test.txt": {
+      "bytes": 116,
+      "sha256": "e4aea0cfc34a2029563b2a202f871e776edde33b46973d3b5366e8f79417c9b5"
+    },
+    "parse-final.txt": {
+      "bytes": 72,
+      "sha256": "6c536b7ab6a1ee8e7ac91fdd27709abb484073b092cabb70d205c4f987e47ddd"
+    },
+    "private-subset-pixels-test.txt": {
+      "bytes": 116,
+      "sha256": "e4aea0cfc34a2029563b2a202f871e776edde33b46973d3b5366e8f79417c9b5"
+    },
+    "resource-integrity.txt": {
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    "save_identical_payload_test.txt": {
+      "bytes": 140,
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    },
+    "source-transactions-test.txt": {
+      "bytes": 120,
+      "sha256": "e6b1750b48f47fb30f8305611069c0c2ef563443cb8d079ec373e59f158ed390"
+    }
+  }
+}

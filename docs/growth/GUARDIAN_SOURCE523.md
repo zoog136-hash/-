@@ -21,7 +21,7 @@
 
 현행 공식 자료에서 현대 분류별 초기화·수호석 환급 범위까지 확정하지 못해 `data/growth/guardian_local_rules.json`에 자체 정책을 분리했다. `reset.refund_rate`(기본1.0)는 설정 가능하다. 분류 단위 초기화, 실제 지출 기록 기준, 실패 지출 포함, 공용 대기시간 보존은 명시된 고정 불변조건이다. 이미 알려진 원본 비용을0으로 대체하지 않는다.
 
-게임 내부 다이아 지갑은 새 선택 필드다. 현재 게임에 구매/수급 시스템이 없으므로 개발 빌드의 **명시적인 수동 검증 지급**1200개만 연결했고, 출시용 다이아 수급/결제 체계를 만들었다고 주장하지 않는다. 실제 결제는 없다.
+초기화는 기존 게임 `inventory["다이아"]`를 우선 소비한다. 기존 `currency_drops.gd` / `loot_drop.gd`에 아덴월드 제외 유효 맵의 재료 드랍 확률과1–10개 스택 규칙이 이미 있고, 바닥 드랍→습득→인벤토리→HUD→저장이 연결돼 있다. 이 수급 API와 확률·수량·아덴 제외 규칙을 변경하지 않는다. 개발 검증1200개는 `guardian_wallet["4"]`에 별도로 남기고 일반 다이아와 구분해 표시한다. 일반 잔액이 부족한 경우에만 개발 빌드에서 검증 잔액을 사용하며 release 빌드는 이를 사용할 수 없다. 기존 코드를 재대조하여 발견한 연결로, 새 결제/현금 교환/무료 출시 지급을 추가하지 않는다.
 
 ## UI·연출
 
@@ -29,7 +29,9 @@
 
 UI551 CSB에서 카드 Fx_Start40–75, 성공5–20, 실패25–40의 정확한 Scale/Alpha 트랙을 추출해 현재 TWILIGHT 카드에 재생한다. Cocos ActionTimeline의1/60초 프레임과 speed1을 사용한다([엔진 원문](https://github.com/cocos2d/cocos2d-x/blob/v3/cocos/editor-support/cocostudio/ActionTimeline/CCActionTimeline.cpp)). 연출은 거래나 결과 선택을 실행하지 않는다. 강화 결과 라벨에도 동일한 성공/실패 부모 트랙을 적용한다.
 
-현재 제공된 UI1/UI47/UI128 DAT에는 전체 Atlas_SkillTree와 음성 OGG 바이트가 없다. 따라서 카드 픽셀은 기존 게임 아트이고 전체 원본 시각/음성 재현은 미완료다. 별도 원본 아트 검사에 필요한 `/workspace/guardian-sources/a1.zip`도 없다. 저장소 규칙에 따라 해당 원본 아트 단계는 중단하고 데이터·기능·기존 아트 UI 작업을 완료한다. 원본 시각효과는 설치된 private compositor가 바인딩을 제공할 때만 재생하고 없는 바인딩은 `original_binding_unavailable`로 기록한다.
+현재 제공된 UI1/UI47/UI128 DAT에는 전체 Atlas_SkillTree와 음성 OGG 바이트가 없다. 카드 픽셀은 기존 게임 아트이고 전체 원본 시각/음성 재현은 미완료다. 다만 UI128의 실제 광원 아틀라스40프레임을 새로 연결했다. 수호성의 `원본 UI551 자료 설치`에서 이미 보유한 `TWILIGHT_UI551_binding_animation_evidence_20261104.zip` 또는 내부 `UI128.dat`를 직접 선택한다. 전체 입력·내부 DAT·PNG/PLIST SHA를 확인한 뒤 필요한2파일만 사용자 영역에 설치하고, 설치 설정은 게임 세이브와 분리한다. 잘못된 입력은 기존 설치를 바꾸지 않는다. 신규 원본 파일을 공개 Git에 올리지 않는다.
+
+원본 `SkillTree_Icon_SkillEnchant.csb`의 Fx_Active305–383, action_tag1572849955, FileData01–39·60fps·원본 색/위치/크기·additive blend를 실제 PNG로 재생한다. 현재 게임에서는 강화 성공 노드에 한 번 재생하는 표시 어댑터이며 전체 원본 장면/활성 판정 복원이라는 주장이 아니다. 40개 atlas frame의 RGBA SHA를 Python 원본 추출과 Godot 결과로 전수 대조한다. 별도 원본 아트 검사에 필요한 `/workspace/guardian-sources/a1.zip`도 없다. 저장소 규칙에 따라 해당 원본 아트 단계는 중단하고 데이터·기능·기존 아트 UI 작업을 완료한다. 원본 시각효과는 설치된 private compositor가 바인딩을 제공할 때만 재생하고 없는 바인딩은 `original_binding_unavailable`로 기록한다.
 
 ## 보존과 제한
 
@@ -55,7 +57,7 @@ Category262 크리스터의 최신523 ServerLimitSetID는0이며508의1294를 �
 
 `data/growth/guardian_source523.json`은 선택한 원문 행·1부터 시작하는 행 번호·원본 테이블 SHA256/바이트 수를 보존한다. 원본 ZIP은 수정하지 않고 Library에 보존하며 공개 Git에 제3자 원본 아트를 추가하지 않는다.
 
-再生成/原文再照合:
+재생성/원문 대조:
 
 ```sh
 python3 tools/build_guardian_source523.py --source-dir /workspace/guardian-sources/lineagem_patch523_all_content_validated_and_508_520_deltas/content --output data/growth/guardian_source523.json --check
@@ -74,3 +76,15 @@ python3 tools/build_guardian_source523.py --source-dir /workspace/guardian-sourc
 후속 특수 탭 첫 실행은 검증 stage에 동적으로 읽는 스킬 SVG가 빠져 리소스 오류가 있었다. 기존 Git125개 SVG의 실제 바이트를 검증 stage에 복사하고 SHA 영수증을 보존했다. 최종 화면33항목은 리소스/스크립트 오류 없이 통과했다. 화면의 폭과 탭 선택 표시도 직접 확인했다.
 
 화면: [특수 탭](guardian-followup-evidence/guardian-special-ready.png), [공용 대기시간](guardian-followup-evidence/guardian-special-shared-cooldown.png), [퀵슬롯 시전](guardian-followup-evidence/guardian-quickslot-cast.png), [초기화 확인](guardian-followup-evidence/guardian-reset-confirmation.png), [초기화 결과](guardian-followup-evidence/guardian-reset-result.png), [854×480](guardian-followup-evidence/guardian-special-854x480.png).
+
+## 원본 광원·기존 다이아 소비 후속
+
+새 보유 입력: Drive `full_resource_inventory.zip`(SHA d50445dbb5bab01f7118a52220d236e05a1c065b5cc14e314734facb62c6d4b8)와 `TWILIGHT-source-card-ui-collections-review.zip`(SHA04343b1d7b90bb81928ec398357f1481723d82cece71ed58c534cfcb47ceae73)을 정상 Drive fetch로 받아 실제 바이트/CRC와 내부 자료를 읽었다. 전자는 목록·SPR이며 후자는 코드/UI 검증 자료이고 수호성 카드 아틀라스/원본 음성을 포함하지 않는다. 원본 픽셀 연결은 이미 정식 materialize한 Library UI551 입력의 UI128을 사용한다.
+
+최신 audio557 분석 ZIP(libfile_e994888010c881918373efebb0a6201a)과 구현 가이드(libfile_5a339b0b26c481919a1afc006cf89cde)의 신규 Library 다운로드는 tools/list HTTP401로 거부됐다. 재시도/우회하지 않았다. 원본 광원 편의 ZIP의 신규 Drive 업로드도 자동 승인 검토에서 거부돼 미실행이다. 그 업로드를 다른 경로로 대체하지 않았으며, 앱이 **기존 UI551 원본 ZIP을 직접 읽도록** 구현하여 신규 업로드 없이 원본을 설치할 수 있게 했다. 별도 편의 팩은 미전달이고 원본 입력 Library ID/해시를 그대로 보존한다.
+
+남은 정확한 입력은 `UI_Resource/Atlas_SkillTree.plist` 및 PNG(카드 Enchant/Success/Fail/Select/Glow 프레임), 그리고 Sound/UI/90285.ogg·90299.ogg·90301.ogg·90303.ogg·90304.ogg·90305.ogg다. SoundMaterial/Asset 조인은 [media manifest](guardian-media-evidence/manifest.json)에 기록한다. 위 파일명/이벤트의 공개 검색에서도 원본 바이트를 확인하지 못했다. 해당 음성이나 카드를 새로 만들어 원본으로 표시하지 않는다. 서버 조건60슬롯은 계속 보류한다.
+
+후속 최종 검증은 [원본 광원/다이아 manifest](guardian-media-evidence/manifest.json)에 보존한다. 기존 원본 ZIP·원본 DAT·로컬 subset의3입력 경로에서 각각91개 설치/픽셀 검증, 전투/경제60, 기존 거래39, 기존 재화 드랍, 실제 Main 저장32와 추가 게이트2개, 원본 설치/실제 강화/바닥 습득/일반 다이아 초기화/재접속 UI29가 통과했다. 원본 설치 전후 게임 세이브 SHA가 동일함도 확인했다. 723시트/41,442프레임SHA 통과. 파일 선택 fixture의 첫 실패와 수정 후 성공을 구분해 보존하며, 원본 광원 실기동 캡처는 공개하지 않고 해시/로컬 경로만 기록한다.
+
+[일반 다이아 초기화 확인](guardian-media-evidence/guardian-earned-diamonds-reset-confirm.png), [초기화 결과](guardian-media-evidence/guardian-earned-diamonds-reset-result.png).

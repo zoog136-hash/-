@@ -257,6 +257,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	var costs: Dictionary = {}
 	var points: int = 0
 	var gold_cost: int=0
+	var debug_gem_cost: int=0
 	var text: String = ""
 	match action:
 		"enhance":
@@ -365,8 +366,13 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			if guardian_spent(int(group.category_id))==0:return fail("초기화할 비용 기록이 없습니다")
 			var price: int=int(guardian_source.constant("InitializeCost"))
 			if price<=0:return fail("원본 초기화 비용 오류")
-			if int(state.get("guardian_wallet",{}).get("4",0))<price:return fail("다이아 부족 · 필요 %d" % price)
+			var earned: int=maxi(0,int(world.inventory.get("다이아",0)))
+			debug_gem_cost=maxi(0,price-earned)
+			var debug_balance: int=int(state.get("guardian_wallet",{}).get("4",0)) if OS.is_debug_build() else 0
+			if debug_gem_cost>debug_balance:return fail("다이아 부족 · 필요 %d / 게임 보유 %d" % [price,earned])
+			if price>debug_gem_cost:costs["다이아"]=price-debug_gem_cost
 			text="%s 분류 초기화 · 다이아 %d · 기록으로 확인되는 수호석 %d개 환급\n이 분류의 개방/강화를 초기화합니다. 재사용 대기시간 유지 · 분류/환급 범위는 TWILIGHT 자체 설정입니다." % [str(group.name),price,guardian_refund(int(group.category_id))]
+			if debug_gem_cost>0:text+="\n개발 검증 다이아 %d 사용 · 출시 재화와 별도" % debug_gem_cost
 			if not state.get("guardian_spent",{}).has(str(int(group.category_id))) or bool(state.get("guardian_legacy_refund_uncertain",{}).get(str(int(group.category_id)),false)):text+="\n이전 버전의 실패 강화 비용은 기록이 없어 환급액에 포함할 수 없습니다."
 		"representative":
 			if not state.nodes.has(id) or node(id).get("kind") == "stat": return fail("개방된 스킬 슬롯을 선택하세요")
@@ -389,7 +395,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	if points > int(state.points): return fail("축복 포인트 부족 · 필요 %d / 보유 %d" % [points,int(state.points)])
 	for item: String in costs:
 		if int(world.inventory.get(item,0)) < int(costs[item]): return fail("%s 부족 · 필요 %d / 보유 %d" % [item,int(costs[item]),int(world.inventory.get(item,0))])
-	return {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision,"gold_cost":gold_cost}
+	return {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision,"gold_cost":gold_cost,"debug_gem_cost":debug_gem_cost}
 
 func execute(action: String, id: String, count: int, revision: int) -> Dictionary:
 	if busy or revision != int(state.revision): return fail("중복 또는 오래된 요청 · 다시 확인하세요")
@@ -487,7 +493,7 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 			var category: int=int(group.category_id)
 			var key: String=str(category)
 			inventory["수호석"]=int(inventory.get("수호석",0))+guardian_refund(category)
-			next.guardian_wallet["4"]-=int(guardian_source.constant("InitializeCost"))
+			if int(offer.debug_gem_cost)>0:next.guardian_wallet["4"]-=int(offer.debug_gem_cost)
 			for row: Dictionary in group.nodes:
 				next.nodes.erase(row.id);next.searches.erase(row.id)
 				for field: String in ["guardian_levels","guardian_enchant_attempts"]:

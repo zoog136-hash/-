@@ -264,9 +264,11 @@ func _guardian() -> void:
 		if runtime.development: _label("개발용 연결도 · 1회 수호석 1개 / 카드 3장 / 노드당 HP 5 · 원작값 아님")
 		if not selected_node.is_empty(): _node_detail(runtime.node(selected_node))
 		if not runtime.development:
-			_label("이 분류의 기록된 수호석 지출 %d · 다이아 잔액 %d" % [runtime.guardian_spent(int(group.category_id)),int(runtime.state.get("guardian_wallet",{}).get("4",0))])
+			_label("이 분류의 기록된 수호석 지출 %d · 게임 다이아 %d" % [runtime.guardian_spent(int(group.category_id)),int(runtime.world.inventory.get("다이아",0))])
+			if OS.is_debug_build():_label("개발 검증 전용 다이아 %d · 게임 재화와 별도" % int(runtime.state.get("guardian_wallet",{}).get("4",0)))
 			_guardian_action("guardian_reset",str(group.id),"이 분류 초기화 · 기록된 수호석 환급")
 			_guardian_action("guardian_buy_coins","","명예 코인 재료 상점 · 10개")
+			_button("수호성 원본 UI551 자료 설치" if not preload("res://scripts/growth/guardian_media.gd").installed() else "원본 광원 설치됨 · 다시 선택",_open_guardian_media).name="GuardianInstallOriginalMedia"
 			if OS.is_debug_build():_guardian_action("guardian_debug_gems","","개발 검증용 다이아 +%d" % int(runtime.guardian_local_rules.development.gem_grant))
 
 func _card_selection() -> void:
@@ -421,6 +423,7 @@ func _confirm() -> void:
 		preload("res://scripts/growth/guardian_timeline.gd").play(card_faces[int(current.count)],"success" if last_reveal.won else "failure")
 	elif response.ok and current.action=="guardian_enchant":
 		preload("res://scripts/growth/guardian_timeline.gd").play(result,"success" if str(response.message).contains("강화 성공") else "failure")
+		if str(response.message).contains("강화 성공") and is_instance_valid(chart):chart.play_original_enchant(str(current.id))
 	if response.ok and current.action in ["enhance","absolute"] and is_instance_valid(diagram): diagram.reveal(previous_stage)
 	if response.ok and current.action in ["choose","representative"] and is_instance_valid(chart): chart.reveal()
 	# A second release in this frame cannot create another transaction.
@@ -460,3 +463,18 @@ func _process(delta: float) -> void:
 		var quote: Dictionary=runtime.quote(entry.action,entry.id)
 		button.disabled=not quote.ok or submitting
 		hint.text=str(quote.message)
+
+func _open_guardian_media() -> void:
+	var dialog:=FileDialog.new()
+	dialog.name="GuardianOriginalMediaFile"
+	dialog.file_mode=FileDialog.FILE_MODE_OPEN_FILE;dialog.access=FileDialog.ACCESS_FILESYSTEM
+	dialog.filters=PackedStringArray(["*.zip ; UI551 원본 ZIP / 광원 팩","*.dat ; 원본 UI128.dat"])
+	dialog.title="수호성 원본 UI551 ZIP 또는 UI128.dat 선택"
+	for button: Button in [dialog.get_ok_button(),dialog.get_cancel_button()]:button.set_script(preload("res://scripts/ui/native_touch_button.gd"))
+	add_child(dialog)
+	dialog.file_selected.connect(func(path: String) -> void:_install_guardian_media(path);dialog.queue_free())
+	dialog.canceled.connect(dialog.queue_free)
+	dialog.popup_centered_ratio(.8)
+func _install_guardian_media(path: String) -> void:
+	var installed: Dictionary=preload("res://scripts/growth/guardian_media.gd").install(path)
+	_refresh();result.visible=true;result.text=str(installed.message)
