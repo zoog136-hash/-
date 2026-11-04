@@ -12,6 +12,7 @@ const SKILL_BOOKS=preload("res://scripts/quests/quest_skillbooks523.gd")
 const FIXED=preload("res://scripts/quests/quest_fixed_cards523.gd")
 const REVIEWED_IDS: Array[int] = [177292,177322,177342,177432,306611,306621,306631,306641,859,1281,239,233,368202,369002,177192,177202,177212,177222,177232,177252,177332,177452]
 var skill_books=SKILL_BOOKS.new()
+var equipment_owner=preload("res://scripts/quests/quest_equipment523.gd").new()
 var definitions: Dictionary = {}
 var owner: WeakRef
 var ready: bool = false
@@ -27,6 +28,7 @@ func configure(world: Node) -> void:
 	owner=weakref(world)
 	definitions.clear();ready=false
 	skill_books.configure_arguments()
+	equipment_owner.configure(world)
 	if world.quest_service.source.quests.is_empty() or D.pack_identity().get("sha256")!=PIN: return
 	for id: int in REVIEWED_IDS:
 		var definition: Dictionary = D.definition_id(str(id))
@@ -154,6 +156,7 @@ func supported_held(world: Node) -> Dictionary:
 	return result
 
 func try_use_held(world: Node, id: String) -> bool:
+	if equipment_owner.activate(world,id):return true
 	var owned: Dictionary=held_binding(world,id)
 	if owned.is_empty():return false
 	if not world._patch523_item_allowed():return true

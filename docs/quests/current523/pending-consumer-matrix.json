@@ -2,8 +2,8 @@
   "source_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
   "counts_are_distinct_item_classes_not_quests_or_item_quantities": true,
   "baseline_pending_item_classes": 146,
-  "reviewed": 22,
-  "remaining": 124,
+  "reviewed": 36,
+  "remaining": 110,
   "original_constraints_waived": false,
   "contracts": {
     "contract_1": "Requires exact installed effect/equipment/currency owner and quest receipt contract; never bind by name",
@@ -17,14 +17,29 @@
     "hp233_verified": "Exact source20+2d6 and six joined source bonuses including AutoUseRegistrable=TrueFalse/1; current host heal/NPC modifiers/shared cooldown/receipt-selected debit and new native6940 gift ownership verified; see HP233.md.",
     "skillbooks_existing_verified": "Exact public245 v3 input and existing executable skill owner required. Genuine book debits/learning/immutable origin/consumable receipt/failure/reconnect verified. No lmref activation; starter-known and source class/level restrictions preserve books. Four additional exact books record learning only; see reference_learning_only.",
     "fixed_normal_cards_verified": "Four normal exact m508 stable cards, all30 actual quest-issued units, staged public243 owner+selected-item+receipt save verified. Native global NoMerge/UI enforce existing flags. Swap/exchange action absent; not equip. Separate explicit new-quest-spare option-feed host hold preserves old free copies/cost/EXP; not inferred native rule.",
-    "reference_learning_only": "Exact private v3 and source book identity required; source learning only, clear before-consumption UI, persistent cast/auto/quickslot hold. All four underlying native spell effects remain pending."
+    "reference_learning_only": "Exact private v3 and source book identity required; source learning only, clear before-consumption UI, persistent cast/auto/quickslot hold. All four underlying native spell effects remain pending.",
+    "normal_plus0_equipment": "Actual selected receipt debit -> one physical UUID -> equip, or authenticated existing369002/59062/226318 selection UUID -> equip/unequip; one confirmed save. Normal blessing/+0 known baseAC/HP/MR and compiled rank0XP only; see QUEST_EQUIPMENT.md. Source crafting/material/enhancement owners remain separate."
   },
-  "prior_public_checkpoint": "c11d7fccfcabc8c461c7701bf6de5d954745c9fc",
+  "prior_public_checkpoint": "f6dac67387aa0f315291ad330c146421e15c95b6",
   "reviewed_item_classes": [
     233,
     239,
+    240,
+    305,
+    349,
+    383,
+    587,
+    691,
+    829,
     859,
+    917,
+    1197,
     1281,
+    2772,
+    2862,
+    2872,
+    3042,
+    4971,
     177192,
     177202,
     177212,
@@ -44,7 +59,7 @@
     368202,
     369002
   ],
-  "latest_runtime_evidence": "reference-learning-validation.json",
+  "latest_runtime_evidence": "equipment-validation.json",
   "rows": [
     {
       "item_class_id": 233,
@@ -91,8 +106,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 248,
@@ -121,8 +143,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 310,
@@ -207,8 +236,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 366,
@@ -256,8 +292,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 385,
@@ -315,8 +358,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 691,
@@ -325,8 +375,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 797,
@@ -370,8 +427,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 844,
@@ -444,8 +508,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 926,
@@ -885,8 +956,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 1214,
@@ -949,8 +1027,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 2802,
@@ -979,8 +1064,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 2872,
@@ -989,8 +1081,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 3042,
@@ -999,8 +1098,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 3242,
@@ -1089,8 +1195,15 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 5021,
@@ -1815,5 +1928,27 @@
   "optional_exact_private245v3_reviewed_classes": 8,
   "counts_require_optional_input_to_be_installed": true,
   "reviewed_is_adapter_connection_not_all_effect_completion": true,
-  "learning_only_native_spell_execution_still_pending": 4
+  "learning_only_native_spell_execution_still_pending": 4,
+  "prior_counts": {
+    "reviewed": 22,
+    "remaining": 124
+  },
+  "reviewed_means_one_or_more_exact_bounded_consumers_not_all_native_states": true,
+  "new_plus0_normal_gear_ids": [
+    240,
+    305,
+    349,
+    383,
+    587,
+    691,
+    829,
+    917,
+    1197,
+    2772,
+    2862,
+    2872,
+    3042,
+    4971
+  ],
+  "counts_do_not_erase_other_native_effects_or_states": "Four learned spell effects, source gear enhancement/other blessings/proc effects and child skill-ticket effects remain separate."
 }

@@ -3419,6 +3419,8 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
+	if str(selected.get("id","")).is_empty() and quest_item_provider.equipment_owner.requires_selected(self,item_name):hud.show_message("실제 장비 개체를 선택하세요");return
+	if quest_item_provider.equipment_owner.activate(self,str(selected.get("id",""))):return
 	if item_name.begins_with("[원본 보상] "):
 		if quest_item_provider.try_use_held(self,str(selected.get("id",""))): return
 		hud.show_message("원본 보상 보관 중 · 사용 기능 연결 대기")
@@ -4569,8 +4571,9 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if equipment_collections.save_blocked:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
+	if collection_override.has("equipped_items") and not quest_item_provider.equipment_owner.authorizes_save(collection_override):return ERR_INVALID_PARAMETER
 	for key: String in collection_override:
-		if key not in ["inventory", "item_instances", "equipment_collections", "gold", "card_draw_fusion", "card_option_awakening", "card_skill_awakening", "growth", "source_dungeon523", "ainhasad_state", "experience", "source_dungeon_play", "hp", "mp", "warehouse", "inventory_automation", "quest_state", "next_item_instance_id", "level", "exp_need", "max_hp", "max_mp", "attack", "defense", "stat_points","active_item_buffs","item_use_cooldowns","original_skill_state","consumable_state"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory", "item_instances", "equipment_collections", "gold", "card_draw_fusion", "card_option_awakening", "card_skill_awakening", "growth", "source_dungeon523", "ainhasad_state", "experience", "source_dungeon_play", "hp", "mp", "warehouse", "inventory_automation", "quest_state", "next_item_instance_id", "level", "exp_need", "max_hp", "max_mp", "attack", "defense", "stat_points","active_item_buffs","item_use_cooldowns","original_skill_state","consumable_state","equipped_items"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -5484,6 +5487,7 @@ func _item_locked(item_name: String, instance_id: String = "") -> bool:
 func _unequip_item_reference(reference: String) -> void:
 	var parsed: Dictionary = _parse_enhancement_target(reference)
 	var id: String = str(parsed.get("id",""))
+	if quest_item_provider.equipment_owner.activate(self,id,"",true):return
 	if id.is_empty() and str(parsed.get("name", reference)) == equipped_ammo and not equipped_ammo.is_empty():
 		_toggle_ammo_equipped(equipped_ammo)
 		return
@@ -6622,10 +6626,13 @@ func _equip_reference_in_slot(reference: String, target: String) -> void:
 	var physical: Dictionary = item_instances[parts[1]]
 	if str(physical.get("name","")) != parts[0] or int(inventory.get(parts[0],0)) < 1: return
 	var record: Dictionary = physical.get("record",_find_catalog_item_record(parts[0]))
+	if quest_item_provider.equipment_owner.activate(self,parts[1],target):return
 	_equip_or_acquire_item(record,false,parts[1],target)
 	_request_deferred_save()
 
 func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, requested_id: String = "", requested_slot: String = "") -> void:
+	if not add_to_inventory and requested_id.is_empty() and quest_item_provider.equipment_owner.requires_selected(self,str(record.get("name",""))):hud.show_message("실제 장비 개체를 선택하세요");return
+	if not add_to_inventory and quest_item_provider.equipment_owner.activate(self,requested_id,requested_slot):return
 	if bool(record.get("source_pending_use",false)):
 		hud.show_message("원본 보상 보관 중 · 장착 기능 연결 대기")
 		return

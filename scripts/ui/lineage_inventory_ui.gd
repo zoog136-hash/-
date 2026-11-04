@@ -3,6 +3,7 @@ class_name TwilightInventoryUI
 
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
+const QUEST_GEAR=preload("res://scripts/quests/quest_equipment523.gd")
 const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
 
 signal item_activate_requested(item_name: String)
@@ -695,6 +696,10 @@ func _refresh_detail(item_name: String) -> void:
 		detail_action.tooltip_text="책을 사용해 원본 학습을 기록합니다. 시전 조건·효과 연결 전까지 실행은 보류됩니다."
 		quick_button.disabled=true
 		detail_text.text+="\n\n원본 학습 기록용 · 실행 연결 대기"
+	elif QUEST_GEAR.IDS.has(int(source_record.get("source_item_class_id",0))) or selected_id!="" and character_state.get("item_instances",{}).get(selected_id,{}).has("quest_source_input_receipt"):
+		detail_action.text="선택 개체 장착"
+		detail_action.tooltip_text="선택한 실제 보상 한 개의 검증된 +0 능력·경험치를 연결합니다. 미지원 효과는 보존합니다."
+		quick_button.disabled=true
 	else:detail_action.tooltip_text=""
 
 func _activate_selected() -> void:

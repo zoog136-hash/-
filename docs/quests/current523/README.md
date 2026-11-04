@@ -1,3 +1,7 @@
+## Current follow-up: selected equipment and rune
+
+[QUEST_EQUIPMENT.md](QUEST_EQUIPMENT.md) records actual normal +0 equipment transactions:33 held stacks checked,16 units/14 classes individually materialized and worn,17 preserved. The actual369002->59062->226318 rune keeps its UUID and two provenance records;1def/5MR/3%XP and actual UI equip/unequip/save/reconnect passed. There are36 classes with at least one bounded verified path (prior22+new14),110 with none; other blessings/enhancement/proc/material uses and four learned spell effects remain separate.7859 focused assertions include repeated unchanged-physical checks, not7859 unique features. Private rules/view stay LOCAL_ONLY; existing packs and811/822 saves remain unchanged. Earlier checkpoints below are historical.
+
 ## Current follow-up: exact reference learning
 
 Four additional source books have actual native learning/receipt/atomic-save connections, with explicit execution-pending UI and persistent cast/automatic/quickslot holds. See [REFERENCE_LEARNING.md](REFERENCE_LEARNING.md).1075 checks passed; native spell effects remain pending. New source completions remain811. Knight pending-use preview:359 with default ten consumers,351 with exact LOCAL_ONLY v3 and twelve books. The separate Mage context is354. Distinct adapter review is22/146, with124 remaining classes plus four learned spell effects still pending. Old822 saves/537 history and all existing packs remain unchanged. The older milestones below are historical evidence.

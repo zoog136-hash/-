@@ -95,6 +95,9 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 func setup(world_node: Node) -> void:
 	world = world_node
 
+var quest_equipment_receipts_present: bool=false
+var quest_equipment_receipts: Variant=[]
+
 func export_state() -> Dictionary:
 	var state: Dictionary={
 		"elemental_enchants": elemental_enchants.duplicate(true),
@@ -104,9 +107,13 @@ func export_state() -> Dictionary:
 	}
 
 	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
+	if quest_equipment_receipts_present:state["source_quest_equipment_receipts"]=quest_equipment_receipts.duplicate(true) if quest_equipment_receipts is Array or quest_equipment_receipts is Dictionary else quest_equipment_receipts
 	return state
 
 func import_state(input: Variant) -> void:
+	quest_equipment_receipts_present=input is Dictionary and input.has("source_quest_equipment_receipts")
+	var gear: Variant=input.get("source_quest_equipment_receipts",[]) if input is Dictionary else []
+	quest_equipment_receipts=gear.duplicate(true) if gear is Array or gear is Dictionary else gear
 	source_skill_book_receipts.clear()
 	elemental_enchants.clear()
 	elixirs_used = 0
