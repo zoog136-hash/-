@@ -74,9 +74,24 @@ def compile_pack(source):
             raise ValueError("unresolved material or independent mastery-service payment")
         reset_constant = next(r for r in constants if r["Name"] == "MasteryPointPurchaseResetScheduleType")
         schedule = next(r for r in read("ContentsResetScheduleType") if r["ID"] == int(reset_constant["Value"]))
+        ticket_constant = next(r for r in constants if r["Name"] == "MasteryResetTicketCurrencyID")
+        ticket_currency = next(r for r in tables["Currency"] if r["ID"] == int(ticket_constant["Value"]))
+        ticket_link = next(r for r in tables["CurrencyUnitClass"] if r["CurrencyID"] == ticket_currency["ID"])
+        ticket_item = next(r for r in item_rows if r["ID"] == ticket_link["ClassID"])
+        ticket_category = next(r for r in read("ItemCategory") if r["ID"] == ticket_item["CategoryID"])
+        ticket_grade = next(r for r in read("Grade") if r["ID"] == ticket_item["GradeID"])
+        ticket_bonuses = [r for r in read("ItemBonus") if r["ItemClassID"] == ticket_item["ID"]]
+        ticket_label = next(r["Description"] for r in read("DescData_Korean") if r["ID"] == ticket_item["IdentifiedDescID"])
+        ticket_definition = {"constant":ticket_constant,"currency":ticket_currency,"currency_link":ticket_link,
+                             "item":ticket_item,"category":ticket_category,"grade":ticket_grade,
+                             "bonuses":ticket_bonuses,"bless_codes":read("ItemBlessCode"),"label":ticket_label}
+        if ticket_currency["ID"] != 1814 or ticket_link["UnitID"] != 4 or ticket_item["ID"] != 184652 or ticket_item["TestItem"] or not ticket_category["IsStackable"] or ticket_category["IsConsumable"] or ticket_bonuses:
+            raise ValueError("unresolved mastery reset ticket identity or restrictions")
+        ticket_sha = hashlib.sha256(json.dumps(ticket_definition, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         operations = {"point_purchase": {"material": powder, "currency_link": powder_link,
                       "schedule_constant": reset_constant, "schedule": schedule,
                       "automatic_period_reset_verified": False},
+                      "reset_ticket": {"definition":ticket_definition,"definition_sha256":ticket_sha},
                       "mastery_change": {"purchase": purchase, "payment": payment,
                       "product_link": link, "product": product,
                       "from": one("DateTimes_Korean", "ID", purchase["EffectiveFromId"]), "to": one("DateTimes_Korean", "ID", purchase["EffectiveToId"]),

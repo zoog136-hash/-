@@ -7,6 +7,7 @@ var target_weapon: int = 0
 var prefix_level: int = 0
 var progress_label: Label
 var displayed_level: int = -1
+var reset_payment: String = ""
 
 func update_progress() -> void:
 	if not is_instance_valid(progress_label) or not runtime.core.levels.has(selected_weapon): return
@@ -47,8 +48,8 @@ func line(value: String) -> Label:
 	body.add_child(label)
 	return label
 
-func operation_button(id: String, title: String, action: String, weapon: int, target: int = 0, prefix: int = 0) -> void:
-	var quote: Dictionary = runtime.quote(action,weapon,target,prefix)
+func operation_button(id: String, title: String, action: String, weapon: int, target: int = 0, prefix: int = 0, payment: String = "currency") -> void:
+	var quote: Dictionary = runtime.quote(action,weapon,target,prefix,payment)
 	var button := Button.new()
 	button.name = id
 	button.text = title
@@ -73,7 +74,7 @@ func operation_button(id: String, title: String, action: String, weapon: int, ta
 				warning = "\n출발 숙련치와 옵션을 초기화하고 누적 숙련치를 합산합니다. 옵션 추가 비용은 없습니다. 이전 저장은 별도로 보존합니다.\n"+point_only_policy_text()
 			if action == "reset" and not quote.frozen_levels.is_empty(): warning += "\n자체 범위: 부분 보유 레벨 %s는 재추첨하지 않습니다. 변경 대상의 잠금 수로 원본 비용을 계산합니다." % str(quote.frozen_levels)
 			runtime.world.hud.confirm_action(title,price+warning,"실행",func(_count: int) -> void:
-				var result: Dictionary = runtime.execute(action,weapon,target,prefix,quote.before)
+				var result: Dictionary = runtime.execute(action,weapon,target,prefix,quote.before,payment)
 				runtime.world.hud.show_message(title+" 완료" if result.ok else runtime.reason_text(str(result.get("reason","실패"))))))
 	body.add_child(button)
 
@@ -150,7 +151,16 @@ func refresh() -> void:
 				body.add_child(toggle)
 		var quote: Dictionary = runtime.core.reroll_availability(runtime.state,weapon,str(runtime.balance_config.partial_reroll))
 		if quote.ok: line("재설정 대상의 잠금 %d칸 · 원본 비용 기준" % int(quote.charge.LockSlotCount))
-		operation_button("MasteryReset","숙련 옵션 재설정","reset",weapon)
+		if reset_payment.is_empty(): reset_payment = str(runtime.balance_config.reset_payment_default)
+		var payment := OptionButton.new()
+		payment.name = "MasteryResetPayment"
+		payment.add_item("재화로 지불 · 원본 아데나/다이아",0)
+		payment.add_item("숙련 옵션 변경 티켓으로 지불",1)
+		payment.select(1 if reset_payment == "ticket" else 0)
+		payment.item_selected.connect(func(index: int) -> void: reset_payment = "ticket" if index == 1 else "currency"; refresh())
+		body.add_child(payment)
+		line("선택한 수단 하나만 소모합니다. 부족해도 다른 재화로 자동 전환하지 않습니다.")
+		operation_button("MasteryReset","숙련 옵션 재설정","reset",weapon,0,0,reset_payment)
 	line("목표 무기 옵션 미리보기")
 	for purchase: Dictionary in runtime.core.tables.MasteryPointPurchaseView:
 		line("원본 숙련치 구매량 %d" % int(purchase.PointAmount))

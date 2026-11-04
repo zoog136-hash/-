@@ -1,6 +1,8 @@
 extends RefCounted
 const Core = preload("res://scripts/mastery/mastery523.gd")
 const View = preload("res://scripts/mastery/mastery_view.gd")
+const ResetTicket = preload("res://scripts/mastery/mastery_reset_ticket.gd")
+var reset_ticket = ResetTicket.new()
 var core = Core.new()
 var state: Dictionary = Core.fresh()
 var world
@@ -36,6 +38,8 @@ func _init() -> void:
 	if balance_config.partial_repair not in ["fixed_missing_values_only","preview_only"] or int(balance_config.partial_repair_cost) < 0: balance_error = "숙련 부분 복구 자체 설정 오류"
 	if not balance_config.has("partial_reroll"): balance_config.partial_reroll = "complete_levels_only"
 	if balance_config.partial_reroll not in ["complete_levels_only","block_weapon"]: balance_error = "숙련 부분 재설정 자체 설정 오류"
+	if not balance_config.has("reset_payment_default"): balance_config.reset_payment_default = "currency"
+	if balance_config.reset_payment_default not in ["currency","ticket"]: balance_error = "숙련 지불 선택 자체 설정 오류"
 
 func purchase_period(unix_time: float = -1) -> int:
 	var moment: float = Time.get_unix_time_from_system() if unix_time < 0 else unix_time
@@ -54,6 +58,11 @@ func configure(host: Node) -> void:
 	if not path.is_empty():
 		enabled = core.load_pack(path,sha)
 		problem = "" if enabled else core.problem
+	if enabled: install_reset_ticket()
+
+func install_reset_ticket() -> Dictionary:
+	if not reset_ticket.configure(core.operations.get("reset_ticket",{})): return Core.fail("ticket_source_missing")
+	return reset_ticket.install(world)
 
 func check_load(data: Dictionary) -> String:
 	if not data.has(Core.SAVE_KEY): return ""
@@ -112,6 +121,7 @@ func _commit(plan: Dictionary, resources: Dictionary) -> Dictionary:
 	state = plan.after.duplicate(true)
 	if resources.has("inventory"): world.inventory = resources.inventory.duplicate(true)
 	if resources.has("gold"): world.gold = int(resources.gold)
+	if resources.has("item_instances"): world.item_instances = resources.item_instances.duplicate(true)
 	if state.has("rng_state"): reset_rng.state = int(state.rng_state)
 	transaction_blocked = error != OK
 	busy = false
@@ -137,6 +147,7 @@ func _wallet(charge: Dictionary) -> Dictionary:
 	var currency: int = int(charge.get("CurrencyID",0))
 	var cost: int = int(charge.get("Cost",-1))
 	if cost < 0: return Core.fail("unknown_cost")
+	if currency == 1814: return reset_ticket.prepare(world,cost)
 	var bag: Dictionary = world.inventory.duplicate(true)
 	var gold: int = int(world.gold)
 	if currency == 1:
@@ -162,7 +173,20 @@ func _wallet(charge: Dictionary) -> Dictionary:
 	else: bag[name] = int(amount)-cost
 	return {"ok":true,"inventory":bag,"gold":gold}
 
-func quote(action: String, weapon: int, target: int = 0, prefix: int = 0) -> Dictionary:
+func _reset_payment(charge: Dictionary, payment: String) -> Dictionary:
+	if payment == "currency": return {"ok":true,"charge":charge.duplicate(true)}
+	if payment != "ticket": return Core.fail("unknown_payment_method")
+	if reset_ticket.definition.is_empty(): return Core.fail("ticket_source_missing")
+	if int(charge.get("TicketAmount",0)) <= 0: return Core.fail("ticket_not_applicable")
+	var selected: Dictionary = charge.duplicate(true)
+	selected["original_currency_charge"] = charge.duplicate(true)
+	selected["CurrencyID"] = int(reset_ticket.definition.currency.ID)
+	selected["Cost"] = int(charge.TicketAmount)
+	selected["payment_method"] = "ticket"
+	selected["definition_sha256"] = reset_ticket.fingerprint
+	return {"ok":true,"charge":selected}
+
+func quote(action: String, weapon: int, target: int = 0, prefix: int = 0, payment: String = "currency") -> Dictionary:
 	if not enabled or busy: return Core.fail("pack_unavailable_or_busy")
 	if transaction_blocked: return Core.fail("saved_but_activation_failed")
 	if not balance_error.is_empty(): return Core.fail(balance_error)
@@ -183,13 +207,18 @@ func quote(action: String, weapon: int, target: int = 0, prefix: int = 0) -> Dic
 		plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,_receipt("quote"),int(Time.get_datetime_dict_from_system(true).year),str(balance_config.point_only_target_options))
 	else: return Core.fail("unknown_action")
 	if not plan.ok: return plan
+	if action == "reset":
+		var chosen: Dictionary = _reset_payment(plan.charge,payment)
+		if not chosen.ok: return chosen
+		plan.charge = chosen.charge
+	elif payment != "currency": return Core.fail("unknown_payment_method")
 	var wallet: Dictionary = _wallet(plan.charge)
 	if not wallet.ok: wallet["charge"] = plan.charge; return wallet
 	return {"ok":true,"charge":plan.charge.duplicate(true),"before":state.duplicate(true),"frozen_levels":plan.get("frozen",[]).duplicate()}
 
-func execute(action: String, weapon: int, target: int, prefix: int, expected: Dictionary) -> Dictionary:
+func execute(action: String, weapon: int, target: int, prefix: int, expected: Dictionary, payment: String = "currency") -> Dictionary:
 	if not _confirmation_matches(expected): return Core.fail("stale_or_invalid_plan")
-	var quoted: Dictionary = quote(action,weapon,target,prefix)
+	var quoted: Dictionary = quote(action,weapon,target,prefix,payment)
 	if not quoted.ok: return quoted
 	if world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy(): return Core.fail("pending_card_confirmation")
 	var receipt: String = _receipt(action)
@@ -202,10 +231,14 @@ func execute(action: String, weapon: int, target: int, prefix: int, expected: Di
 		plan = core.plan_reroll(state,weapon,staged_rng,receipt,str(balance_config.color_draw_mode),str(balance_config.partial_reroll)) if action == "reset" else core.plan_acquire(state,weapon,prefix,staged_rng,receipt,acquisition_charge(),str(balance_config.color_draw_mode))
 	else: plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,receipt,int(Time.get_datetime_dict_from_system(true).year),str(balance_config.point_only_target_options))
 	if not plan.ok: return plan
+	if action == "reset": plan.charge = quoted.charge.duplicate(true)
 	var wallet: Dictionary = _wallet(plan.charge)
 	if not wallet.ok: return wallet
 	plan.after.receipts[receipt]["charge"] = plan.charge.duplicate(true)
-	return _commit(plan,{"inventory":wallet.inventory,"gold":wallet.gold})
+	if wallet.has("consumed_ids"): plan.after.receipts[receipt]["consumed_ticket_ids"] = wallet.consumed_ids.duplicate()
+	var resources: Dictionary = {"inventory":wallet.inventory,"gold":wallet.gold}
+	if wallet.has("item_instances"): resources["item_instances"] = wallet.item_instances
+	return _commit(plan,resources)
 
 func _confirmation_matches(expected: Dictionary) -> bool:
 	# Ordinary hits may add points while a modal is open. Rebuild the plan from
@@ -238,6 +271,8 @@ func normal_hit(actual_weapon: int) -> bool:
 	return true
 
 func reason_text(reason: String) -> String:
+	var ticket_errors: Dictionary = {"ticket_source_missing":"티켓 정의가 포함된 새 숙련 팩이 필요합니다","ticket_catalog_conflict":"티켓의 원본 카탈로그 정체가 일치하지 않습니다","ticket_not_applicable":"잠금이 없는 재설정은 원본 아데나 비용을 사용합니다","insufficient_verified_tickets":"정체가 확인된 잠금 해제 티켓 부족 · 이름만 같은 저장은 보존합니다","ticket_ownership_count_mismatch":"티켓 보유 수량과 개체가 일치하지 않습니다","invalid_ticket_count":"티켓 수량 오류","unknown_payment_method":"지불 수단을 다시 선택하세요"}
+	if ticket_errors.has(reason): return ticket_errors[reason]
 	if reason == "repair_preview_only": return "자체 설정에 따라 부분 복구는 미리보기만 제공합니다"
 	if reason == "no_fixed_partial_repair": return "원본 결과가 하나로 확정되는 누락 값이 없습니다. 기존 상태를 보존합니다"
 	var resolved: Dictionary = {"daily_purchase_limit":"오늘 숙련치 구매 5회 완료","level_not_reached":"숙련 레벨을 먼저 달성하세요","level_already_or_partly_owned":"이미 보유했거나 일부만 있는 레벨입니다","partial_owned_level":"일부만 남은 보유 옵션은 원래 저장을 보존하며 재설정을 보류합니다","all_fields_locked":"변경할 슬롯을 하나 이상 잠금 해제하세요"}
@@ -245,6 +280,9 @@ func reason_text(reason: String) -> String:
 	return str({"saved_but_activation_failed":"거래 결과는 저장되었습니다. 저장 데이터를 다시 불러온 뒤 계속하세요","save_protected":"저장 보호 중 · 저장 데이터를 확인하세요","insufficient_gold":"아데나 부족","insufficient_material":"재료 또는 다이아 부족","material_locked":"재료가 잠겨 있습니다","purchase_reset_boundary_unverified":"첫 구매 주기 5회 완료 · 초기화 시각 확인 대기","repeat_service_restriction_unverified":"첫 교체 완료 · 반복 구매 조건 확인 대기","variable_value_mapping_unverified":"변동 옵션은 네 슬롯 값 대응 확인 필요","locked_value_mapping_unverified":"잠금 옵션은 네 슬롯 값 대응 확인 필요","owned_options_required":"보유한 옵션과 색상이 필요합니다","operation_source_missing":"실행 정보가 포함된 새 숙련 팩 필요","color_draw_source_missing":"색상 재결정 정보가 포함된 새 팩 필요","target_option_policy_unconfirmed":"옵션 미선택 교체 시 목표 기존 옵션 처리 확인 필요","invalid_transfer":"서로 다른 숙련도를 선택하세요","option_prefix_not_acquired":"획득한 숙련도 범위를 선택하세요","stale_or_invalid_plan":"상태가 바뀌었습니다. 다시 선택하세요","backup_failed":"이전 저장 백업 실패","pending_card_confirmation":"카드 결과 확인을 먼저 완료하세요"}.get(reason,reason))
 
 func balance(currency: int) -> int:
+	if currency == 1814:
+		var owned: Dictionary = reset_ticket.owned_ids(world)
+		return owned.ids.size() if owned.ok else 0
 	if currency == 1: return int(world.gold)
 	if currency == 4: return int(world.inventory.get(world.CURRENCY_DROP.DIAMOND,0))
 	var material: Dictionary = core.operations.get("point_purchase",{}).get("material",{})
@@ -336,6 +374,7 @@ func bonus_text(bonus: Dictionary) -> String:
 	return "%s +%s" % [str(names.get(str(type.Name),"확인 중인 효과")),value]
 
 func show_panel() -> void:
+	if enabled: install_reset_ticket()
 	if not is_instance_valid(view):
 		view = View.new()
 		view.runtime = self

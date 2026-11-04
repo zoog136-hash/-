@@ -20,6 +20,8 @@
     "typed_percent_ignore": "CUSTOM_BEHAVIOR: native typed reduction-ignore formula was not found in original523, handoff report or official public search. Reuse TWILIGHT's existing percent-ignore -> damage-amplifier consumer, restricting mastery to the source melee/ranged/magic kind. Existing rounding and 0..300 percent total amplification cap are unchanged. display_only disables only this inferred effect. PvP numeric and flat-ignore conversion follow established single-player rules, not this setting.",
     "partial_repair": "CUSTOM_BEHAVIOR: explicit confirmation restores only an absent unique100%-source option in an already partly owned level with four preserved colors and another existing option. Never reroll or infer variable values, colors, locks or whole empty levels. preview_only disables writes. Backup and receipt preserve provenance; invalid saves remain protected.",
     "partial_repair_cost": "CUSTOM_BALANCE: local compatibility repair has no original price; default0 Adena, configurable. Existing purchase/reset/change fees unchanged.",
-    "partial_reroll": "CUSTOM_BEHAVIOR: complete_levels_only rerolls complete owned levels while preserving partial levels byte-equivalent in meaning. Fee uses the original row for locks on the changed scope. block_weapon restores strict legacy behavior. Unknown missing fields are never drawn."
-  }
+    "partial_reroll": "CUSTOM_BEHAVIOR: complete_levels_only rerolls complete owned levels while preserving partial levels byte-equivalent in meaning. Fee uses the original row for locks on the changed scope. block_weapon restores strict legacy behavior. Unknown missing fields are never drawn.",
+    "reset_payment_default": "CUSTOM_UI_POLICY: default currency preserves existing behavior; ticket selects only the original TicketAmount and Currency1814. No automatic fallback or mixed payment. Currency definition BM is shown using host common rarity; original grade remains in the private definition. Only source-proven normal physical tickets qualify; name-only legacy stacks and unconfirmed bless variants are preserved."
+  },
+  "reset_payment_default": "currency"
 }
