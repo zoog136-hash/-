@@ -7014,7 +7014,8 @@ func _enforce_shield_weapon_compatibility(quiet: bool = false) -> void:
 	if not (offhand_value is Dictionary):
 		return
 	var offhand: Dictionary = offhand_value as Dictionary
-	if offhand.is_empty() or _can_equip_offhand(offhand):
+	var explicit_source_rule: bool = offhand.get("source_m_native_item",false) and offhand.has("source_can_equip_with_two_handed")
+	if offhand.is_empty() or (_offhand_kind(offhand) != "shield" and not explicit_source_rule) or _can_equip_offhand(offhand):
 		return
 	var offhand_name: String = str(offhand.get("name", "방패"))
 	equipped_items["offhand"] = {}
