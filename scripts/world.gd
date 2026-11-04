@@ -2,6 +2,8 @@ extends Node2D
 class_name TwilightWorld
 
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
+const TOTEM_RUNTIME = preload("res://scripts/progression/totem_runtime.gd")
+var totems = TOTEM_RUNTIME.new()
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
@@ -641,6 +643,9 @@ func _load_data() -> void:
 		catalog_image_index[source_category] = {}
 	_build_job_classes()
 	equipment_collections.configure(self)
+	var totem_root := OS.get_environment("TWILIGHT_TOTEM_PACK")
+	if totem_root.is_empty(): totem_root = "user://original_resources/totems523"
+	if FileAccess.file_exists(totem_root.path_join("manifest.json")): totems.install(totem_root)
 	growth.configure(self)
 
 func _stash_inven_raw_options() -> void:
@@ -2607,6 +2612,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
+	var totem_changed: bool = totems.record_kill(int(monster.source_m_original.get("ID",0)))
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -2645,6 +2651,9 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	else:
 		_refresh_combat_hud()
 		_update_ain_hud()
+	if totem_changed:
+		if hud.has_method("refresh_totems"): hud.call("refresh_totems")
+		_request_deferred_save()
 	call_deferred("_ensure_monster_count")
 
 func _kill_map_id() -> String:
@@ -4398,6 +4407,9 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if totems.save_blocked or not totems.check_state(totems.export_state()).is_empty():
+		if not quiet: hud.show_message("토템 저장 보호 중 · 정상 저장을 다시 불러오세요")
+		return ERR_UNAVAILABLE
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4449,6 +4461,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"inventory": inventory,
 		"quest_state": quest_service.export_state(),
 		"equipment_collections": equipment_collections.export_state(),
+		"totem_state": totems.export_state(),
 		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
@@ -4551,6 +4564,11 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var totem_error := totems.check_state(data.get("totem_state"))
+	if not totem_error.is_empty():
+		totems.save_blocked = true
+		hud.show_message(totem_error)
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4706,6 +4724,7 @@ func _load_game(quiet: bool) -> void:
 	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
+	totems.accept_state(data.get("totem_state"))
 	growth.restore(data.get("growth",growth.empty_state()))
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
