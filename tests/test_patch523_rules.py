@@ -113,6 +113,41 @@ class AdmissionTest(unittest.TestCase):
         value=self.compile()['equipment_runtime']['101']['options']['1']['0']['stun_resistance']
         self.assertEqual(value,{'total':7,'base_key':'stun_resistance','scale':1})
 
+    def test_complete_multiple_success_views_preserve_all_qualifications(self):
+        first=self.tables['ItemCraftOutputView'][0]
+        first['Probability']=600000
+        second={**first,'ID':3,'ItemClassID':101,'Probability':300000}
+        empty={**first,'ID':4,'ItemClassID':0,'Amount':0,'Probability':100000,'ItemCraftOutputTypeID':0,'Enchant':0,'ItemBlessCodeID':1}
+        self.tables['ItemCraftOutputView']=[first,second,empty]
+        view=self.tables['ItemCraftView'][0]
+        self.tables['ItemCraftView']=[view,{**view,'ItemClassID':101}]
+        recipe=self.compile()['recipes']['patch523:17']
+        self.assertEqual(recipe['source_success_view_count'],2)
+        self.assertEqual([o['probability'] for o in recipe['outcomes']],[600000,300000,100000])
+        self.assertTrue(recipe['outcomes'][2]['empty_result'])
+        for field,value in [('LevelLimitValue',77),('ServerLimitSetID',772),('EffectiveTo',9),('PopupText',99)]:
+            with self.subTest(field=field):
+                self.tables['ItemCraftView'][1]={**view,'ItemClassID':101,field:value}
+                self.assertNotIn('patch523:17',self.compile()['recipes'])
+
+    def test_multiple_success_views_cannot_hide_or_duplicate_a_branch(self):
+        first=self.tables['ItemCraftOutputView'][0]
+        self.tables['ItemCraftOutputView']=[{**first,'Probability':600000},{**first,'ID':3,'ItemClassID':101,'Probability':400000}]
+        view=self.tables['ItemCraftView'][0]
+        for rows in [[view,view],[view,{**view,'ItemClassID':999}],[view,{**view,'ItemClassID':101},{**view,'ItemClassID':101}]]:
+            self.tables['ItemCraftView']=rows
+            self.assertNotIn('patch523:17',self.compile()['recipes'])
+
+    def test_source_drain_zero_totals_subtract_existing_flag_aliases(self):
+        self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=432,Name='AttackDrainHP',UnitID=1),dict(ID=442,Name='AttackDrainMP',UnitID=1),dict(ID=10222,Name='StrengthScale',UnitID=3)]
+        self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=432,Value=1,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=13,BonusTypeID=442,Value=1,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=14,BonusTypeID=10222,Value=50000,BonusApplicationTypeID=0,BonusApplicationTargetID=0)]
+        self.tables['ItemBonus']=[dict(ID=1,ItemClassID=101,BonusID=11)]
+        self.tables['ItemEnchantBonus']=[dict(ID=i,EnchantLevel=0,ItemEnchantBonusGroupID=3,BonusID=b,BlessCode=0) for i,b in [(7,12),(8,13),(9,14)]]
+        extra=self.compile()['equipment_runtime']['101']['extra_options']['1']['0']
+        self.assertEqual(extra['source_attack_drain_hp'],{'total':1,'base_key':'hpAbsorption','scale':1})
+        self.assertEqual(extra['source_attack_drain_mp'],{'total':1,'base_key':'mpAbsorption','scale':1})
+        self.assertEqual(extra['strPercent'],{'total':5,'base_key':'strPercent','scale':1})
+
     def rejected(self):
         self.assertEqual(self.compile()['recipes'], {})
 
@@ -315,6 +350,9 @@ class AdmissionTest(unittest.TestCase):
         self.assertTrue(result['recipes']['patch523:258618']['requires_material_selection'])
         self.assertNotIn('patch523:261764',result['recipes'])
         self.assertEqual(result['recipes']['patch523:77552']['result']['bless_code'],2)
+        self.assertEqual(len(result['raw_recipes']['views']['122114']),4)
+        self.assertEqual(sum(r['Probability'] for r in result['raw_recipes']['outputs']['122114']),1000000)
+        self.assertEqual(result['recipe_admission']['122114'],{'reason':'missing_or_ambiguous_catalog_identity','first_blocking_item_class_id':185094})
 
 
 if __name__ == '__main__':

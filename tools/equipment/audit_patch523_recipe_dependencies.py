@@ -81,6 +81,13 @@ def audit(tables, rules, catalog, drops, binding_catalog=None):
             'consumers': consumers,
         }
     dates = {r['ID']:r for r in tables.get('DateTimes_Korean',[])}
+    bonuses = {r['ID']:r for r in tables['Bonus']}
+    bonus_types = {r['ID']:r for r in tables['BonusType']}
+    permanent_titles = defaultdict(list)
+    for link in tables['ItemBonus']:
+        bonus = bonuses[link['BonusID']]
+        if bonus_types[bonus['BonusTypeID']]['Name']=='ItemCraftPermanentAppellationID':
+            permanent_titles[str(link['ItemClassID'])].append({'item_bonus_id':link['ID'],'bonus':bonus})
     rejected_detail = {}
     # Every rejected recipe is classified, including ones whose first error
     # precedes a separate catalog/server/date prerequisite. Flags overlap.
@@ -104,7 +111,9 @@ def audit(tables, rules, catalog, drops, binding_catalog=None):
                 'craft_time_type_id':view['CraftTimeTypeID'],
                 'from_row':dates.get(view['EffectiveFrom']), 'to_row':dates.get(view['EffectiveTo']),
                 'timezone_in_source':False, 'server_reset_inferred':False}
-        titles = sorted((i for i in required_ids if source_items.get(i,{}).get('CategoryID')==10204),key=int)
+        protection = sorted((i for i in required_ids if source_items.get(i,{}).get('CategoryID')==10204),key=int)
+        if protection: flags['source_protection_category_item_ids'] = protection
+        titles = {i:permanent_titles[i] for i in sorted(required_ids,key=int) if i in permanent_titles}
         if titles: flags['requires_source_title_acquisition_and_ownership_contract'] = titles
         rejected_detail[craft_id] = {'current_admission':admission,'source_flags':flags,
             'missing_catalog_ids':recipes.get(craft_id,{}).get('required_item_ids',[]),

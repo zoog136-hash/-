@@ -373,7 +373,7 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 	amount = world._elemental_damage_to_monster(maxi(1, amount), str(skill.get("element", "physical")), target)
 	var critical: bool = world.rng.randf() < world._critical_chance(world._player_critical_rate(str(skill.get("attack_type", "melee"))), target.critical_resistance)
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
-	world._deal_successful_player_hit(target, maxi(1, amount), critical)
+	world._deal_successful_player_hit(target, maxi(1, amount), critical,str(skill.get("attack_type","melee")),true)
 	_emit_verified_source_effect(skill, "impact", target.global_position)
 	if critical: _emit_verified_source_effect(skill, "critical", target.global_position)
 	if not _is_verified_source_skill(skill):

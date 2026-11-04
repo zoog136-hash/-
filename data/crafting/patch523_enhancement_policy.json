@@ -38,5 +38,18 @@
   "public_scalar_basis": [
     "https://lineagem.plaync.com/guidebook/view?title=마법사+마법",
     "https://lineagem.plaync.com/board/update/view?articleId=63865db9bd89877d499055cf"
-  ]
+  ],
+  "attribute_percent_basis": "base_plus_flat",
+  "attribute_percent_rounding": "floor",
+  "attribute_percent_origin": "Exact source Catalyst STR/DEX/INT percentages; base+flat multiplication and rounding are configurable TWILIGHT rules; no verified original complete stat formula.",
+  "attribute_public_basis": "https://lineagem.plaync.com/board/update/view?articleId=6671e038a12ede529779bffc",
+  "source_drain_scope": "normal_only",
+  "source_undead_scope": "normal_only",
+  "source_undead_damage_min": 1,
+  "source_attack_numeric_basis": "Exact source HP/MP drain increments and undead maximum. Normal-hit scope, existing always-on drain convention and uniform integer1..maximum after amplification are configurable TWILIGHT interpretation. MP transfer is bounded by target pool and player missingMP. Existing legacy HP drain behavior preserved.",
+  "source_attack_public_basis": [
+    "https://lineagem.plaync.com/board/notice/view?articleId=65b94e3899ffa12d379cc903",
+    "https://lineagem.plaync.com/board/update/view?articleId=63bdbcb88737e56595bc769b"
+  ],
+  "source_absorption_base_annotation": "refresh_exact_mp_flag_even_if_preindexed; subtract_source_zero_total_once"
 }

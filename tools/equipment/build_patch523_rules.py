@@ -192,8 +192,19 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
         quota = constraint.get('quota', {})
         expected_restriction = constraint.get('source_restriction')
         known_restriction = bool(expected_restriction and restrictions.get(craft_id) == [expected_restriction])
+        identity_fields = ('ItemClassID','Amount','Enchant','ItemBlessCodeID')
+        # A complete lottery may expose one view per success rather than a
+        # single preferred result. All qualifications must still be identical.
+        display_fields = set(identity_fields) | {'ItemCategoryID','WeaponType','EquipSlot'}
+        view_contract = len(view_rows)==1
+        if complete_source_outcomes and len(view_rows)>1:
+            view_identities = {tuple(r[k] for k in identity_fields) for r in view_rows}
+            success_rows = [r for r in outs if r['ItemCraftOutputTypeID']==1]
+            view_contract = (len(view_identities)==len(view_rows)==len(success_rows)
+                and view_identities=={tuple(r[k] for k in identity_fields) for r in success_rows}
+                and all({k:x for k,x in row.items() if k not in display_fields}=={k:x for k,x in v.items() if k not in display_fields} for row in view_rows))
         primary = next((row for row in outs if row['ItemCraftOutputTypeID']==1 and all(v[k]==row[k] for k in ['ItemClassID','Amount','Enchant','ItemBlessCodeID'])),None)
-        if probabilistic and (len(view_rows)!=1 or primary is None or not outs or any(row['ItemCraftOutputTypeID'] not in [0,1,2] or not 0<row['Probability']<=1000000 for row in outs) or sum(row['Probability'] for row in outs)!=1000000):
+        if probabilistic and (not view_contract or primary is None or not outs or any(row['ItemCraftOutputTypeID'] not in [0,1,2] or not 0<row['Probability']<=1000000 for row in outs) or sum(row['Probability'] for row in outs)!=1000000):
             reason = 'unverified_random_result_contract'
         elif not probabilistic and (len(view_rows) != 1 or v['AlwaysSuccess'] != 1 or len(outs) != 1):
             reason = 'non_single_guaranteed_result'
@@ -296,6 +307,9 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                                 'probability':row['Probability'],'label':policy['output_type_labels'][str(row['ItemCraftOutputTypeID'])],
                                 **({'inventory_key':currency_keys[str(row['ItemClassID'])]} if str(row['ItemClassID']) in currency_keys else {})})
                         recipes['patch523:'+craft_id]['outcomes']=outcomes
+                        if len(view_rows)>1:
+                            recipes['patch523:'+craft_id]['source_success_view_count']=len(view_rows)
+                            recipes['patch523:'+craft_id]['name']='원본523 · '+result['name']+' 확률 제작'
                         recipes['patch523:'+craft_id]['probability_origin']=('원본 확률 · NC 공식 재료/결과 대조' if craft_id in random_ids else '원본523 완전 결과표 · 개별 공개 표 미대조')
                         recipes['patch523:'+craft_id]['preserve_refund_instance']=bool(policy['preserve_matching_refund_instance'])
                         recipes['patch523:'+craft_id]['host_material_bindings']=[host_materials[str(row['ItemClassID'])] for row in ins if str(row['ItemClassID']) in host_materials]

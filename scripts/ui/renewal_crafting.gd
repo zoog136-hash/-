@@ -278,7 +278,10 @@ func _refresh_quote() -> void:
 	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
 	probability_summary.visible=recipe.has("outcomes") or recipe.has("craft_conditions")
 	var chances: PackedStringArray=[]
-	for outcome: Dictionary in recipe.get("outcomes",[]): chances.append("%s %.2f%%" % [str(outcome.label),float(outcome.probability)/10000.0])
+	for outcome: Dictionary in recipe.get("outcomes",[]):
+		var label: String=str(outcome.label)
+		if int(recipe.get("source_success_view_count",1))>1:label="지급 없음" if outcome.get("empty_result",false) else "%s ×%d" % [str(outcome.item),int(outcome.quantity)]
+		chances.append("%s %.2f%%" % [label,float(outcome.probability)/10000.0])
 	probability_summary.text=("원본 결과 확률 · " + " / ".join(chances)) if recipe.has("outcomes") else ""
 	if recipe.has("craft_conditions"):
 		probability_summary.text+=world.patch523_equipment.CONDITIONS.brief(recipe,world._patch523_craft_context())

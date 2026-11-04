@@ -14,7 +14,7 @@ var pack_dialog: FileDialog
 var pack_status: Label
 var catalog_dialog: FileDialog
 var catalog_status: Label
-const DEFAULT_SHA: String = "568a840bcf85a00fae740287433b8223c2ea150db7423bff34c77a6e8349d337"
+const DEFAULT_SHA: String = "e362bbaf4e957863397808127485f3dbab47ce1c7010bb47766f381ae891b7d1"
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -165,6 +165,8 @@ func _refresh() -> void:
 		labels.merge({"ArmorClass":"물리 방어력(AC)","WeaponDamageBonus":"추가 대미지","WeaponHitBonus":"무기 명중","HPPlus":"최대 HP","MPPlus":"최대 MP","CarryPlus":"무게 보너스","MagicResist":"MR","SpellPower":"SP","MeleeCritical":"근거리 치명타","RangeCritical":"원거리 치명타","MagicCritical":"마법 치명타","AttackSpeedBonus":"공격 속도","MoveSpeedBonus":"이동 속도","RegenMP":"MP 회복","PVEDamageReduction":"PVE 리덕션","PVPDamageReduction":"PVE 리덕션","PVEDamageReductionPercent":"PVE 리덕션 비율"})
 		labels.merge({"PierceDamageReductionPercent":"대미지 증가","PVEPierceDamageReductionPercent":"PVE 대미지 증가","DamageReductionPercent":"대미지 감소","IncreaseNpcItemDropAmount":"아데나 드롭량"})
 		labels.merge({"HPHealIncreasePercent":"회복 마법량","CastSpeedBonus":"시전 속도","MeleeCriticalResist":"근거리 치명타 저항","RangeCriticalResist":"원거리 치명타 저항","MeleeDamageReductionPercent":"근거리 대미지 감소","RangeDamageReductionPercent":"원거리 대미지 감소","MagicDamageReductionPercent":"마법 대미지 감소","PoisonDamageReductionPercent":"지속 대미지 감소"})
+		labels.merge({"StrengthScale":"STR 비율","DexterityScale":"DEX 비율","IntelligenceScale":"INT 비율"})
+		labels.merge({"AttackDrainHP":"공격 HP 흡수 강화량","AttackDrainMP":"공격 MP 흡수 강화량","UndeadAdditionalMaxDamage":"언데드 추가 피해 최댓값"})
 		for effect: Dictionary in effects:
 			var kind: String = str(effect.bonus_type.get("Name", ""))
 			var value: String = str(int(effect.bonus.Value))

@@ -50,6 +50,11 @@ EXTRA = {
     'RangeDamageReductionPercent':('ranged_damage_reduction_pct',10000),
     'MagicDamageReductionPercent':('magic_damage_reduction_pct',10000),
     'PoisonDamageReductionPercent':('dot_damage_reduction_pct',10000),
+    'StrengthScale':('strPercent',10000), 'DexterityScale':('dexPercent',10000),
+    'IntelligenceScale':('intPercent',10000),
+    'AttackDrainHP':('source_attack_drain_hp',1),
+    'AttackDrainMP':('source_attack_drain_mp',1),
+    'UndeadAdditionalMaxDamage':('source_undead_damage_max',1),
 }
 for _status in ['stun','hold','fear','poison','silence']:
     EXTRA['_hit_'+_status]=(_status+'_accuracy',10000)
@@ -144,7 +149,8 @@ def compile_equipment(tables, bound_items, bonuses):
                     name=qualified_name(b,types[b['BonusTypeID']]['Name'],resistance_types)
                     if name in EXTRA:
                         key,_=EXTRA[name]
-                        if key in extra and not isinstance(extra[key],dict): extra[key]={'total':extra[key],'base_key':key,'scale':1}
+                        base_key={'AttackDrainHP':'hpAbsorption','AttackDrainMP':'mpAbsorption'}.get(name,key)
+                        if key in extra and not isinstance(extra[key],dict): extra[key]={'total':extra[key],'base_key':base_key,'scale':1}
                 by_rank[str(level)] = totals
                 extra_rank[str(level)] = extra
                 invoke_rank[str(level)] = live_invokes
