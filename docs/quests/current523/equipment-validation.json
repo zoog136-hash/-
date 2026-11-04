@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "parent_public_code": "f6dac67387aa0f315291ad330c146421e15c95b6",
-  "checks": 7859,
+  "parent_public_code": "3626600e1f608e8fa2cc454b98693f10921bdceb",
+  "checks": 11425,
   "checks_include_per_unchanged_physical_assertions_not_unique_features": true,
   "tests": [
     {
@@ -102,9 +102,9 @@
     },
     {
       "case": "prior22_suppliers_and_optional_inputs_combined",
-      "log_sha256": "04f199b60cf27d00c7f33d7a82fce8c695c88e9ab357d40337d0340a295a6000",
+      "log_sha256": "de5651d5cbaf0ded0c9861ea61b53fe8887452ec35987330b64880e11cbf7cc4",
       "result": {
-        "checks": 8,
+        "checks": 9,
         "failures": [],
         "save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
         "scope": "combined optional input and original constraint smoke, not all consumer transactions or whole catalogue registration",
@@ -120,36 +120,75 @@
         "failures": [],
         "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
       }
+    },
+    {
+      "case": "MP_STR_actual_selected_UI_and_maxMP_clipping",
+      "log_sha256": "82c908fa7934a642f2b69ca43359e85d33aaba6bb2328983b532371cf45e4007",
+      "result": {
+        "actual_additional_item_classes": [
+          926,
+          2832,
+          5021
+        ],
+        "checks": 2117,
+        "controlled_mana_refill_fixture": true,
+        "failures": [],
+        "save_sha256": "c534146269ea91ac8a951cd1528ba70ee5c5b9a756476435f0a13981b8e95980",
+        "scope": "exact MP/STR existing consumers and one selected equipment transaction, not new native spell/weapon/regen engines"
+      }
+    },
+    {
+      "case": "actual_selected_weapon_bound_hit_and_immediate_reward_hold",
+      "log_sha256": "b9b35c624494897261d05012967743d2af0bdf26442d2898a5ff58abd7f376f9",
+      "result": {
+        "actual_additional_item_classes": [
+          249,
+          427
+        ],
+        "checks": 1448,
+        "controlled_target_sizes_not_natural_probabilities": true,
+        "failures": [],
+        "host_uniform1_to_source_bound_preserved": true,
+        "save_sha256": "62491cbfa45641412067f378f2adafa04b5466ff92dd7fab99e2a78cdf69c3b6",
+        "scope": "existing host size-bound weapon/hit consumers; no native combat equivalence or erosion/other flags waived"
+      }
     }
   ],
   "code_sha256": {
-    "scripts/quests/quest_equipment523.gd": "4e54df82dedb757cd8e94ec8dd661a16e4768642abca3c4fe3291ff169d48ab1",
+    "scripts/quests/quest_equipment523.gd": "61c766b295d1b89edfd396c61ca1bd4c99fb36d3672e4b3f91db5ad5bbdc5eb5",
     "scripts/quests/quest_item_provider238.gd": "cdf03fd5a66808ce608e28cdd7abe28c714c15ce5a61f889770c7d520c5f7b9c",
     "scripts/world.gd": "01f11a1617ad595da55578f4ebf898b3d0a4b9eddf1bf3a379ea469865a877ad",
     "scripts/ui/lineage_inventory_ui.gd": "6c2d9e8965b39dfcf7d0ad60403e18271da9c4346d4733a5b90b192a038c2f09",
     "scripts/consumable_service.gd": "7d81e7a3ff3db78c128162cec8712c450a2d5d988c2a6e458225bc36b16e9f6e",
-    "tests/quest_equipment523_flow_test.gd": "b249affd21d57b2996ef5ef340bfcb56e53e3c3bdd99dde25c77af6888280c20",
-    "tests/quest_equipment523_followup_test.gd": "b2529a7e54b218f1f2366ba2c8d824557dedb7ddc6594747182b4c6161c694f9",
-    "tests/quest_equipment523_inputs_test.gd": "d931e8fa0c082a32280ad9130d0130552f01362dc257e950d3d32223f4fdf9bb",
-    "tools/quests/build_quest_equipment_view.py": "2a62035725b2cf55f625933f22ea52bbdf2baf2ba251c497a29ef31125033250"
+    "tests/quest_equipment523_flow_test.gd": "6a38bbeb3a1cc3574cf16d0c438d80d204ed0c4a25f7c0fdb09e70170dc00c4a",
+    "tests/quest_equipment523_followup_test.gd": "225a2387822f66a2e6e2b04f31665f9eef3f6a924ff8ef57f879160114bd0ee1",
+    "tests/quest_equipment523_inputs_test.gd": "a59ff6cdfd26fd331f91aeb9cd7ff854e2c85498fe0c906077132efafb661150",
+    "tools/quests/build_quest_equipment_view.py": "2a62035725b2cf55f625933f22ea52bbdf2baf2ba251c497a29ef31125033250",
+    "tests/quest_equipment523_flat_test.gd": "2b17744b10bacc1cad5b0a7bdf8727f60e19ccfcaf78232bcd23e93fa30605bd",
+    "tests/quest_equipment523_weapon_test.gd": "b1ae7ebdb0ab0a10c4481a4b2316223fa9af6136841fa0a41ec65ccbd41ec76d"
   },
   "actual_initial_held_stacks": 33,
-  "actual_materialized_and_equipped_units": 16,
+  "actual_materialized_and_equipped_units": 21,
   "actual_normal_plus0_item_classes": [
     240,
+    249,
     305,
     349,
     383,
+    427,
     587,
     691,
     829,
     917,
+    926,
     1197,
     2772,
+    2832,
     2862,
     2872,
     3042,
-    4971
+    4971,
+    5021
   ],
   "actual_remaining_held_stacks": [
     {
@@ -163,27 +202,7 @@
       "bless": 1
     },
     {
-      "item_class_id": 2832,
-      "quantity": 1,
-      "bless": 1
-    },
-    {
       "item_class_id": 248,
-      "quantity": 1,
-      "bless": 1
-    },
-    {
-      "item_class_id": 926,
-      "quantity": 1,
-      "bless": 1
-    },
-    {
-      "item_class_id": 427,
-      "quantity": 1,
-      "bless": 1
-    },
-    {
-      "item_class_id": 249,
       "quantity": 1,
       "bless": 1
     },
@@ -204,11 +223,6 @@
     },
     {
       "item_class_id": 85643,
-      "quantity": 1,
-      "bless": 1
-    },
-    {
-      "item_class_id": 5021,
       "quantity": 1,
       "bless": 1
     },
@@ -254,7 +268,7 @@
   "partial_test_scope": "Two genuine same-name independently issued receipts, one consumed while the other remains; no fabricated source multiunit gear reward.",
   "legacy_collision_fixture": "Explicit synthetic legacy namespace/name competitor only, preserved unchanged. Source input and selected output are genuinely quest-produced.",
   "source_restrictions": "Test/class/level/deadline/server/unresolved class/normal blessing/current+0/locks/life/slot/offhand/weight/unknown positive effect and unknown physical metadata checks preserved.",
-  "partial_scope": "Existing host AC/HP/MR and source rank0XP consumers. Existing host weight unit policy retained; native combat/weight equivalence, enhancement/proc/other blessing/material recipes not claimed.",
+  "partial_scope": "Existing host AC/HP/MP/MR/STR, source weapon small/large/hit and source rank0XP consumers. Controlled small/large combat roll QA does not prove natural encounter probabilities or native combat formulas. Existing host weight unit policy retained; native combat/weight equivalence, enhancement/proc/other blessing/material recipes not claimed.",
   "private_input_view": {
     "path": "/tmp/q262-r5-private/quest-equipment-view.json",
     "bytes": 36196,
@@ -296,9 +310,9 @@
   },
   "class_matrix": {
     "prior_reviewed": 22,
-    "new_actual_bounded_plus0_gear_classes": 14,
-    "current_with_one_or_more_verified_paths": 36,
-    "remaining_without_verified_path": 110,
+    "new_actual_bounded_plus0_gear_classes": 19,
+    "current_with_one_or_more_verified_paths": 41,
+    "remaining_without_verified_path": 105,
     "four_learned_spell_effects_pending_separately": true,
     "remaining_gear_states_and_other_effects_not_cleared": true
   },
@@ -310,10 +324,84 @@
     "held-view.log",
     "run-view.log",
     "rune-final.log",
-    "run-final.log"
+    "run-final.log",
+    "weapons.log"
   ],
   "prior_R4_compatibility69_not_counted_as_equipment_use": true,
   "prior_R3_1075_not_rerun_or_added_to_current_checks": true,
   "whole_ci_or_manual_ci_executed": false,
-  "new_source_pack_report_capture_upload": false
+  "new_source_pack_report_capture_upload": false,
+  "missing_seed_guards": [
+    {
+      "case": "held",
+      "missing_seed_refused_before_Main": true,
+      "no_save_created": true,
+      "log_sha256": "7780d1f4a589ac7ac276e6bac845ed18d8cefabc55bdc1150fec0791ceafd099"
+    },
+    {
+      "case": "uncertain",
+      "missing_seed_refused_before_Main": true,
+      "no_save_created": true,
+      "log_sha256": "0952f3a081ecb9fed27cd5c60521c9b224f8139e82070387aa7a405f79cf0c11"
+    },
+    {
+      "case": "inputs",
+      "missing_seed_refused_before_Main": true,
+      "no_save_created": true,
+      "log_sha256": "8664b5225f47d4f5c4765ad1a87cfc80d73666db9ece51ef80d3530706a4a2d0"
+    }
+  ],
+  "case_timing": "Focused tests ran as each bounded path was added; final weapon and required core ran with final production logic. Earlier cases are preserved evidence, not claimed as a repeated complete suite on the final tree.",
+  "source_immediate_929": "Exact original UseImmediately=true remains unconsumed; normal selected-equip flow does not override it.",
+  "source_immediate_1129": "Exact actual held reward is blessing1 and UseImmediately=true; no blessing2 substitution is assumed.",
+  "remaining_gear_owner_boundaries": [
+    {
+      "item_class_ids": [
+        929,
+        1129
+      ],
+      "missing": "Exact source UseImmediately transaction; no manual-equip substitute",
+      "actual_input_untouched": true
+    },
+    {
+      "item_class_ids": [
+        248
+      ],
+      "missing": "WeaponErodeProof1 source-specific erosion/protection owner alongside10/11 damage; no flag dropped"
+    },
+    {
+      "item_class_ids": [
+        2802
+      ],
+      "missing": "RegenMP1 plus STR1 and ElementalResistance40000/application3; source timer/context and typed effect owner"
+    },
+    {
+      "item_class_ids": [
+        4851,
+        4871,
+        4921,
+        4951
+      ],
+      "missing": "Exact source RegenHP4/5/1/3 scheduling and state/save boundary; existing fixed host recovery is not source amount proof"
+    },
+    {
+      "item_class_ids": [
+        85643
+      ],
+      "missing": "RegenMP1 source timing/context owner alongside AC1/STR2"
+    },
+    {
+      "item_class_ids": [
+        9091
+      ],
+      "missing": "DamageReduction1, CanEquipWithTwoHanded1 and SpecialResistance50000/application2 typed/context owner"
+    },
+    {
+      "item_class_ids": [
+        30213
+      ],
+      "missing": "MagicDamageReductionPercent30000 typed magic-damage consumer alongside AC5/MR2"
+    }
+  ],
+  "remaining_raw_427": "One other independently issued427 receipt is preserved; this class has a verified bounded path and is not counted again as an unconnected class."
 }

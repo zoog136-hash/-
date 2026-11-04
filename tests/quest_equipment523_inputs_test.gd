@@ -8,6 +8,11 @@ func check(v: bool,label: String)->void:
  if not v:failures.append(label);printerr("QUEST_EQUIPMENT_INPUT_FAIL "+label)
 func _initialize()->void:call_deferred("run")
 func run()->void:
+ var seed: String=""
+ for arg: String in OS.get_cmdline_user_args():
+  if arg.begins_with("--seed-sha="):seed=arg.trim_prefix("--seed-sha=")
+ check(seed.length()==64 and FileAccess.file_exists("user://twilight_v20_save.json") and FileAccess.get_sha256("user://twilight_v20_save.json")==seed,"exact caller-selected QA save before Main creation")
+ if not failures.is_empty():quit(1);return
  var w: TwilightWorld=load("res://Main.tscn").instantiate();root.add_child(w);w.set_process(false);w.player.set_physics_process(false)
  check(QA.enter_game(w,"기사"),"actual Main/source character")
  var hash: String=FileAccess.get_sha256(w.save_path());var inv: Dictionary=w.inventory.duplicate(true);var physical: Dictionary=w.item_instances.duplicate(true);var claims: Dictionary=w.quest_service.claimed.duplicate(true);var slots: Array=w.quickslots.duplicate(true)

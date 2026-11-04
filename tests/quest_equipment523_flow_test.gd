@@ -29,7 +29,8 @@ func run()->void:
  for arg: String in OS.get_cmdline_user_args():
   if arg.begins_with("--seed-sha="):seed=arg.trim_prefix("--seed-sha=")
   if arg.begins_with("--mode="):mode=arg.trim_prefix("--mode=")
- check(seed.length()==64 and FileAccess.get_sha256("user://twilight_v20_save.json")==seed,"exact retained genuine producer save copied unchanged")
+ check(seed.length()==64 and FileAccess.file_exists("user://twilight_v20_save.json") and FileAccess.get_sha256("user://twilight_v20_save.json")==seed,"exact retained genuine producer save copied unchanged")
+ if not failures.is_empty():quit(1);return
  var w: TwilightWorld=make_world();var owner: RefCounted=w.quest_item_provider.equipment_owner
  check(not owner.data.is_empty(),"exact bounded gear view loaded from unchanged verified239 input")
  var claims: Dictionary=w.quest_service.claimed.duplicate(true);var slots: Array=w.quickslots.duplicate(true);var rng: int=w.rng.state;var gold: int=w.gold

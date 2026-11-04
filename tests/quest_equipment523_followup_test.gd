@@ -13,7 +13,8 @@ func run()->void:
  for arg: String in OS.get_cmdline_user_args():
   if arg.begins_with("--mode="):mode=arg.trim_prefix("--mode=")
   if arg.begins_with("--seed-sha="):seed=arg.trim_prefix("--seed-sha=")
- check(FileAccess.get_sha256("user://twilight_v20_save.json")==seed,"exact earlier genuine producer/output copied without alteration")
+ check(seed.length()==64 and FileAccess.file_exists("user://twilight_v20_save.json") and FileAccess.get_sha256("user://twilight_v20_save.json")==seed,"exact earlier genuine producer/output copied without alteration")
+ if not failures.is_empty():quit(1);return
  var w: TwilightWorld=load("res://Main.tscn").instantiate();root.add_child(w);w.set_process(false);w.player.set_physics_process(false)
  check(QA.enter_game(w,"기사"),"actual Main/class picker");var owner: RefCounted=w.quest_item_provider.equipment_owner
  var claims: Dictionary=w.quest_service.claimed.duplicate(true);var slots: Array=w.quickslots.duplicate(true);var rng: int=w.rng.state;var gold: int=w.gold;var hash: String=FileAccess.get_sha256(w.save_path())
@@ -71,7 +72,7 @@ func run()->void:
   check(w.inventory==inv and w.item_instances==p and w.equipped_items==equipped and FileAccess.get_sha256(w.save_path())==hash,"absent input blocks new owner transactions while preserving source ownership/effects/save")
  elif mode=="uncertain":
   var uid: String="224";var inv: Dictionary=w.inventory.duplicate(true);var p: Dictionary=w.item_instances.duplicate(true);var equipped: Dictionary=w.equipped_items.duplicate(true)
-  var snapshot: PackedByteArray=FileAccess.get_file_as_bytes(w.save_path());var backup:=FileAccess.open("/tmp/q262-r5/uncertain-original-save.json",FileAccess.WRITE);backup.store_buffer(snapshot);backup.close()
+  var snapshot: PackedByteArray=FileAccess.get_file_as_bytes(w.save_path());var backup:=FileAccess.open("user://quest_equipment_uncertain_original.json",FileAccess.WRITE);backup.store_buffer(snapshot);backup.close()
   w.equipment_collections.test_save_writer=func(path: String,_data: Dictionary)->Error:
    var f:=FileAccess.open(path,FileAccess.WRITE);f.store_string("{");f.close();return ERR_FILE_CANT_WRITE
   var result: Dictionary=owner.commit(w,owner.quote(w,uid));w.equipment_collections.test_save_writer=Callable()

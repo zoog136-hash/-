@@ -1,6 +1,6 @@
-## Current follow-up: selected equipment and rune
+## Current selected-equipment follow-up
 
-[QUEST_EQUIPMENT.md](QUEST_EQUIPMENT.md) records actual normal +0 equipment transactions:33 held stacks checked,16 units/14 classes individually materialized and worn,17 preserved. The actual369002->59062->226318 rune keeps its UUID and two provenance records;1def/5MR/3%XP and actual UI equip/unequip/save/reconnect passed. There are36 classes with at least one bounded verified path (prior22+new14),110 with none; other blessings/enhancement/proc/material uses and four learned spell effects remain separate.7859 focused assertions include repeated unchanged-physical checks, not7859 unique features. Private rules/view stay LOCAL_ONLY; existing packs and811/822 saves remain unchanged. Earlier checkpoints below are historical.
+[QUEST_EQUIPMENT.md](QUEST_EQUIPMENT.md) records actual21 units/19 original equipment classes individually materialized and worn;12 raw stacks remain. Genuine rune226318 retains its UUID and both proofs. AC/HP/MP/MR/STR, two weapons' damage/hit inputs, rank0XP, UI/equip/unequip, confirmed atomic save/failure/reconnect are bounded verified paths.41 of146 classes now have at least one verified consumer;105 have none. Other states/effects and four learned spell effects remain separate. 11425 incremental focused assertions include repeated unchanged-physical checks, not unique features. Private rules/view stay LOCAL_ONLY; prior packs and original811/822 saves are unchanged. Earlier checkpoints below are historical.
 
 ## Current follow-up: exact reference learning
 

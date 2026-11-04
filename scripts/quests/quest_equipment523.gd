@@ -1,6 +1,6 @@
 extends RefCounted
 ## Selected quest ownership -> staged physical gear/equip -> one durable save.
-## Exact base AC/HP/MR and compiled rank0 XP; other positive effects stay held.
+## Exact base AC/HP/MP/MR/STR and compiled rank0 XP; other positive effects stay held.
 const OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const GRANTS=preload("res://scripts/loot/patch523_item_inventory.gd")
@@ -10,7 +10,7 @@ const PIN="38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
 const RULE_SHA="5e6ffac68fab01ba6de84226c1407f3076320aa8681fb83573116a2f822cb8d6"
 const VIEW_SHA="7b023b445056cfdd79861f4327bbe6ef1a61884956682c46cefe93ac662aba30"
 const IDS=[240,248,249,305,349,383,427,587,691,829,917,926,929,1129,1197,2772,2802,2832,2862,2872,3042,4851,4871,4921,4951,4971,5021,9091,30213,85643]
-const EFFECTS={"ArmorClass":"def","HPPlus":"hpFlat","MagicResist":"mr"}
+const EFFECTS={"ArmorClass":"def","HPPlus":"hpFlat","MagicResist":"mr","MPPlus":"mpFlat","Strength":"strFlat","WeaponSmallDamage":"small_damage","WeaponLargeDamage":"large_damage","WeaponHitBonus":"hit"}
 static var cached: Dictionary={}
 var data: Dictionary={}
 var quotes: Dictionary={}
@@ -53,6 +53,9 @@ func profile(id: int,bless: int)->Dictionary:
   var name: String=str(row.bonus_type.Name)
   if row.get("IsPossession",false) or int(row.bonus.BonusApplicationTypeID)!=0 or int(row.bonus.BonusApplicationTargetID)!=0:return {}
   if name in ["EnchantEquipGroupID","EnchantBonusGroupID"]:continue
+  if name=="WeaponType":
+   if row.unit.Name!="WeaponTypeID" or int(row.bonus.Value) not in [1,6] or int(record.get("source_weapon_type_id",0))!=int(row.bonus.Value):return {}
+   continue
   if not EFFECTS.has(name) or row.unit.Name!="Value":return {}
   sums[name]=int(sums.get(name,0))+int(row.bonus.Value)
  for name: String in sums:
@@ -69,7 +72,7 @@ func effect_record(record: Dictionary)->Dictionary:
  var option: Variant=data.get("equipment_runtime",{}).get(str(int(record.source_item_class_id)),{}).get("options",{}).get("1",{}).get("0",{}).get("xp_pct",null)
  if option!=null:
   result["xp"]=float(option.get("total",0))/100.0 if option is Dictionary else float(record.get("xp",0))+float(option)/100.0
- result["quest_equipment_effect_basis"]={"rules_sha256":RULE_SHA,"item_pack_sha256":PIN,"level":0,"scope":"source_unconditional_AC_HP_MR_and_rank0_XP_only"}
+ result["quest_equipment_effect_basis"]={"rules_sha256":RULE_SHA,"item_pack_sha256":PIN,"level":0,"scope":"source_unconditional_AC_HP_MP_MR_STR_weapon_bounds_hit_and_rank0_XP_only"}
  return result
 static func fail(reason: String)->Dictionary:return {"ok":false,"saved":false,"consumed":0,"reason":reason}
 static func recognizes(world: Node,id: String)->bool:
@@ -194,6 +197,10 @@ func quote(world: Node,id: String,target: String="",remove: bool=false)->Diction
  if not eligibility.is_empty():return fail(eligibility)
  eligibility="" if remove else USE.eligibility(world,record)
  if not eligibility.is_empty():return fail(eligibility)
+ if not remove and record.slot=="weapon":
+  if not world._weapon_allowed_for_job(record,world.job_class):return fail("기존 직업별 무기 조건 미충족")
+  var offhand: Dictionary=world.equipped_items.get("offhand",{})
+  if not offhand.is_empty() and world._offhand_kind(offhand)=="shield" and not world._weapon_supports_shield(record):return fail("선택 무기·방패 공동 교체 소유자 연결 필요")
  var slot: String=world._equipment_slot_for_record(record)
  if not target.is_empty():
   if target!=slot and not (["ring1","ring2"].has(target) and ["ring1","ring2"].has(slot)):return fail("선택 장착 부위 불일치")
@@ -210,7 +217,7 @@ func quote(world: Node,id: String,target: String="",remove: bool=false)->Diction
  if not old.is_empty() and (world._item_locked(str(old.get("name","")),str(old.get("instance_id",""))) or world._item_locked(str(old.get("name","")),"")):return fail("잠긴 기존 장착 개체 보존")
  if not old.is_empty():
   var prior: Dictionary=world._source_catalog_record("아이템",old)
-  if world.ITEM_OPTIONS.attribute(prior,"CON")!=0 or int(prior.get("weightBonus",0))!=0 or float(prior.get("hpPct",0))!=0 or int(prior.get("mpFlat",0))!=0 or world._equipment_enhancement_level(slot)!=0 or world.item_instances.get(str(old.get("instance_id","")),{}).get("bless_state","normal")!="normal":return fail("기존 복합 용량·최대HP·강화 교체 거래 소유자 연결 필요")
+  if world.ITEM_OPTIONS.attribute(prior,"CON")!=0 or int(prior.get("weightBonus",0))!=0 or float(prior.get("hpPct",0))!=0 or float(prior.get("mpPct",0))!=0 or world._equipment_enhancement_level(slot)!=0 or world.item_instances.get(str(old.get("instance_id","")),{}).get("bless_state","normal")!="normal":return fail("기존 복합 용량·최대HP·강화 교체 거래 소유자 연결 필요")
  var worn: Dictionary=effect_record(record);worn["instance_id"]=output_id
  payload.equipped_items[slot]={} if remove else worn
  var weight: int=0
@@ -225,7 +232,13 @@ func quote(world: Node,id: String,target: String="",remove: bool=false)->Diction
  var next_max: int=maxi(1,int(round((world.max_hp+flat)*(1.0+percent))))
  var max_delta: int=next_max-world._effective_max_hp()
  payload["hp"]=mini(world.hp+maxi(0,max_delta),next_max)
- payload["mp"]=world.mp
+ var added_mp: int=world._catalog_stat_sum("mpFlat")
+ for current: Dictionary in world._all_equipped_records():
+  if str(current.get("slot",""))!="":added_mp+=mp_contribution(world,current)
+ added_mp+=(0 if remove else mp_contribution(world,record))-mp_contribution(world,old)
+ var flat_mp: int=world.max_mp+added_mp+world._enhancement_stat_for_slots(world.ACCESSORY_EQUIPMENT_SLOTS,"mp")+int(world.original_skills.stat("mp") if world.original_skills!=null else 0)
+ var next_max_mp: int=maxi(1,int(round(float(flat_mp)*(1.0+world._equipped_numeric_sum("mpPct")))))
+ payload["mp"]=mini(world.mp,next_max_mp)
  var state: Dictionary=world.consumable_service.export_state();var log: Variant=state.get("source_quest_equipment_receipts",[])
  if not log is Array or log.size()>=10000:return fail("장비 거래 영수증 형식·보관 한도 확인 필요")
  log=log.duplicate(true);log.append({"schema":1,"action":"unequip" if remove else "equip","source_sha256":SOURCE,"item_pack_sha256":PIN,"rules_sha256":RULE_SHA,"selected_input_id":id,"physical_id":output_id,"item_class_id":int(record.source_item_class_id),"slot":slot,"consumed":consumed,"input":owned.duplicate(true)})
@@ -264,7 +277,15 @@ func commit(world: Node,quoted: Dictionary)->Dictionary:
  world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.equipped_items=payload.equipped_items;world.hp=payload.hp;world.mp=payload.mp
  if payload.has("quest_state"):world.quest_service.import_state(payload.quest_state)
  world.consumable_service.import_state(payload.consumable_state);world.deferred_save.cancel();world._invalidate_equipment_static();world._refresh_speed_modifiers();world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory);world._update_hud()
- return {"ok":true,"saved":true,"consumed":int(quoted.consumed),"physical_id":str(quoted.output_id),"slot":str(quoted.target_slot),"source_effect_scope":"verified +0 base AC/HP/MR and rank0 XP; enhancement/proc/other effects not activated"}
+ return {"ok":true,"saved":true,"consumed":int(quoted.consumed),"physical_id":str(quoted.output_id),"slot":str(quoted.target_slot),"source_effect_scope":"verified +0 base AC/HP/MP/MR/STR, weapon bounds/hit and rank0 XP; enhancement/proc/other effects not activated"}
+static func mp_contribution(world: Node,record: Dictionary)->int:
+ var typed: int=int(record.get("mpFlat",record.get("max_mp_bonus",0)))
+ var total: int=typed
+ if typed==0:
+  for fragment: String in str(record.get("desc","")).split("·"):
+   var segment: String=fragment.strip_edges()
+   if segment.begins_with("MP ") or segment.begins_with("Max MP "):total+=maxi(0,world.ITEM_OPTIONS._signed_integer(segment.substr(3 if segment.begins_with("MP ") else 7)))
+ return total
 func authorizes_save(payload: Dictionary)->bool:return not saving_payload.is_empty() and saving_payload==payload
 func activate(world: Node,id: String,target: String="",remove: bool=false)->bool:
  if not recognizes(world,id):return false
