@@ -36,6 +36,7 @@ const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const CURRENT523_ADEN_PLAY = preload("res://scripts/maps/current523_aden_play_controller.gd")
 const CURRENT523_ADEN_PLAY_OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
+const CURRENT523_DEFINITION_PREFERENCES=preload("res://scripts/maps/current523_source_definition_preferences.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
 # Do not preload this heavy optional renderer while parsing the main game class.
@@ -8230,15 +8231,30 @@ func bind_current523_source_portal_provider(provider: RefCounted, verified_manif
 		current523_aden_play_changed.emit(current523_aden_play_active,"원문 포탈 정의 연결을 갱신했습니다.")
 	return bound
 
-func bind_current523_source_definition_pack(directory: String, expected_manifest_sha256: String) -> bool:
+func bind_current523_source_definition_pack(directory: String, expected_manifest_sha256: String, remember: bool=false) -> bool:
 	var script: Script=load("res://scripts/maps/current523_source_portal_provider.gd")
 	var candidate: RefCounted=script.new()
 	if not candidate.load_pack(directory,expected_manifest_sha256):
 		current523_aden_play_problem=str(candidate.problem); return false
+	# This trusted candidate already implements the fixed provider contract.
+	# All fallible persistence precedes the in-memory binding/generation change.
+	if remember and CURRENT523_DEFINITION_PREFERENCES.write(directory,expected_manifest_sha256)!=OK:
+		current523_aden_play_problem="원문 정의 폴더를 저장하지 못해 이전 연결을 유지합니다."; return false
 	if not bind_current523_source_portal_provider(candidate,expected_manifest_sha256):
 		current523_aden_play_problem="원문 정의 소비자를 연결하지 못했습니다."; return false
 	_current523_source_definition_provider=candidate
+	current523_aden_play_problem=""
 	return true
+
+func current523_source_definition_selection() -> Dictionary:
+	return CURRENT523_DEFINITION_PREFERENCES.read()
+
+func clear_current523_source_definition_selection() -> bool:
+	if CURRENT523_DEFINITION_PREFERENCES.disable()!=OK:
+		current523_aden_play_problem="원문 정의 연결 해제를 저장하지 못했습니다."; return false
+	var cleared: bool=bind_current523_source_portal_provider(null,"")
+	if cleared: current523_aden_play_problem=""
+	return cleared
 
 func _prepare_current523_source_definitions_from_launch() -> bool:
 	var directory: String=""
@@ -8246,12 +8262,20 @@ func _prepare_current523_source_definitions_from_launch() -> bool:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--patch523-world-links="): directory=argument.trim_prefix("--patch523-world-links=")
 		if argument.begins_with("--patch523-world-links-sha256="): pin=argument.trim_prefix("--patch523-world-links-sha256=")
-	if directory.is_empty() and pin.is_empty(): return true
+	if directory.is_empty() and pin.is_empty():
+		var stored: Dictionary=CURRENT523_DEFINITION_PREFERENCES.read()
+		if not stored.ok: current523_aden_play_problem=stored.problem; return false
+		if not stored.configured:return true
+		directory=stored.directory;pin=stored.manifest_sha256
+	# Explicit launch arguments override saved selection, including invalid ones.
 	if _current523_source_definition_provider!=null and _current523_source_definition_provider.matches_manifest(directory,pin): return true
 	return bind_current523_source_definition_pack(directory,pin)
 
 func current523_source_definition_status() -> Dictionary:
-	return _current523_source_definition_provider.cache_metrics() if _current523_source_definition_provider!=null else {}
+	if _current523_source_definition_provider==null or not _current523_source_definition_provider.matches_manifest(_current523_source_definition_provider.root,CURRENT523_DEFINITION_PREFERENCES.PIN):return {}
+	var result: Dictionary=_current523_source_definition_provider.cache_metrics()
+	result["directory"]=_current523_source_definition_provider.root
+	return result
 
 func current523_aden_source_portals() -> Array:
 	return _aden_play_controller().call("portal_evidence")

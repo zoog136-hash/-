@@ -682,6 +682,79 @@ search bounds and the17-part Drive application bundle are unchanged.
 
 
 
+## Normal Main selection and central-integration handoff
+
+The final entry-path review found a concrete connection gap:the real map UI
+remembered source/tile/cursor selection, but genuine definition binding was
+available only through launch arguments or a programmatic API. In actual Main
+with no product definition arguments and no source-map environment override,
+normal UI sourceLand1 opened with zero Portal rows; putting the definition
+folder into the old single-Aden JSON field did nothing in generic mode.
+The reproduction is retained in `normal-main-definition-repro-receipt.json`.
+
+The existing Settings now includes a definition-folder picker, verify/connect,
+status and explicit disconnect. It verifies the fixed PR230 manifest/owner
+contract and atomically remembers the selection separately from both game save
+and M cursor. Subsequent ordinary source entry/reopen uses that stored folder;
+explicit launch overrides still win, including invalid explicit overrides.
+A failed replacement or preference write preserves the old provider and stored
+bytes. A changed/missing saved definition pack leaves optional restoration in
+the preserved host, retains the M cursor, and can be repaired through the same
+UI. Explicit disconnect offers labelled geometry-only use with no Portal
+provider; it does not authorize an empty-condition transition. Genuine status
+checks the current manifest instead of presenting stale cached data as verified.
+
+Three sequential actual Main processes, using the normal installed-user host
+path and no definition CLI/source override environment, pass41 initial UI/entry,
+25 ordinary reopen/replacement and21 missing-pack/repair checks. The user-folder
+host installation links already held verified base bytes; it is storage
+deduplication, not a new independent physical copy or proof of complete game
+packaging. The original M source/tile bytes are unchanged. The final local
+Core/Main/save gate passes35 checks in64.52s. Combined local evidence
+`current523-normal-entry-final-evidence.json` has SHA256
+`58ac2f288c77569674b9c86f9b76becc0a7e1aefdae36495ccb1d3e70f856353`, recording individual test receipts
+and final code hashes.
+ The first instrumented
+run caught missing control construction, was stopped, and remains a failed log;
+that implementation error was corrected before the three passing processes.
+
+Player installation remains manual:
+
+1. The existing host application must have its ordinary compatible Aden base
+   installed in `user://source_maps_v3` or bundled at
+   `res://external_map_packs/source84_v3`. Legacy saves/return use that host;
+   its geometry is not substituted for the M source field.
+2. Download the already approved private17-part map bundle, concatenate in
+   order and verify the whole SHA/ZIP CRC and payload hashes before installation.
+   Select its source/tile folders in Settings with the exact pins above. The
+   generic whole-map bundle uses manual folder installation; the old Aden-only
+   ZIP installer does not install it. No Drive auto-download/deployment exists.
+3. Install the existing separate contract15 `world-links` data and select its
+   `manifest.json` parent folder in the new existing-Settings control. No second
+   compiler/catalog or new definition/resource pack is generated.
+4. Select the exact logical Land and an explicit verified own-QA/source point,
+   or reuse that same Land's saved M cursor. Old host/PC coordinates are never
+   reinterpreted as M coordinates. Original admission/fees/automatic triggers
+   are still distinct from this labelled own manual mode.
+
+This owned implementation is ready for central conflict integration under those
+resource prerequisites and evidence limits. There is no further independent
+map-input connection blocker identified in this pass. This does not declare
+native collision/occupancy/actor semantics, original trigger/admission/fees,
+ninth-character placement, alpha/foot placement, every-cell access or the whole
+original game/platform complete. Those exact evidence limits remain above.
+The unchanged owner loader/definition pins and private map bundle are integration
+interfaces; this branch does not modify or merge PR263/main/other features.
+
+After central conflict resolution, recheck the required local Core/save/resource
+gates and the affected normal-UI entry/persist/reopen/missing-definition repair,
+source-input interruption/stale gesture/rollback and source-cursor roundtrip
+cases on the integrated HEAD. Recheck selection/cache guards if those UI sections
+were resolved. Do not automatically repeat577/997 bulk or full/manual CI; wider
+coverage is warranted only if integration actually changes shared source
+navigation/rendering/input identity or data. No merge/deployment is performed
+by this PR232 handoff.
+
 ## Execution evidence and limits
 
 Latest complete-input checks use the source and tile pins above:

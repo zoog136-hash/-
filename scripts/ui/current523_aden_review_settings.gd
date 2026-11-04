@@ -6,6 +6,7 @@ const RAW_ENV: String = "TWILIGHT_CURRENT523_ADEN_PACK"
 const TILE_ENV: String = "TWILIGHT_CURRENT523_ADEN_TILES"
 const INSTALL = preload("res://scripts/maps/current523_aden_install.gd")
 const PREFERENCES = preload("res://scripts/maps/current523_aden_preferences.gd")
+const DEFINITIONS=preload("res://scripts/maps/current523_source_definition_preferences.gd")
 const INSTALL_STAGES = {"archive_sha256":"원본 확인", "manifest_validation":"팩 정보 확인", "inventory":"설치 파일 확인", "extract":"파일 저장", "verify":"저장 결과 확인", "reuse_verify":"기존 설치 확인", "cleanup":"임시 파일 정리"}
 const PLAY_OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 
@@ -35,6 +36,10 @@ var native_scope_status: Label
 var source_words: LineEdit
 var source_search_limit: SpinBox
 var source_portal_path: LineEdit
+var definition_path_edit: LineEdit
+var definition_connect_button: Button
+var definition_clear_button: Button
+var definition_status: Label
 var source_portal_choice: OptionButton
 var source_portal_button: Button
 var source_portal_walk_button: Button
@@ -181,8 +186,18 @@ func _build_play_options() -> void:
 	add_child(entry)
 	add_child(UI.label("전체 맵은 선택한 Land의 명시 좌표 또는 같은 Land의 저장 좌표가 필요합니다. 막힌 입장은 거부합니다.",12,UI.MUTED))
 	source_portal_path = LineEdit.new(); source_portal_path.name = "AdenSourcePortalContractPath"
-	source_portal_path.placeholder_text = "별도 원문 포탈 팩 JSON · 없으면 포탈 사용 보류"
+	source_portal_path.placeholder_text = "아덴 단일 모드 포탈 JSON · 전체 맵은 아래 정의 폴더 사용"
 	add_child(source_portal_path)
+	add_child(UI.label("전체 맵의 원문 포탈 정의 폴더 · 연결하면 다음 실행에도 확인해 사용합니다.",12,UI.MUTED))
+	var definition_row:=HBoxContainer.new();add_child(definition_row)
+	definition_path_edit=LineEdit.new();definition_path_edit.name="Current523SourceDefinitionPath"
+	definition_path_edit.placeholder_text="world-links 폴더 · manifest.json이 있는 위치"
+	definition_path_edit.size_flags_horizontal=Control.SIZE_EXPAND_FILL;definition_row.add_child(definition_path_edit)
+	definition_row.add_child(UI.button("폴더 선택",_browse.bind("definitions"),Vector2(100,40)))
+	definition_connect_button=UI.button("원문 정의 확인 · 연결",_connect_definitions,Vector2(0,40));add_child(definition_connect_button)
+	definition_clear_button=UI.button("정의 연결 해제 · 지형 이동만",_clear_definitions,Vector2(0,40));add_child(definition_clear_button)
+	definition_status=UI.label("원문 포탈 정의 미연결 · 지형 이동만 가능",12,UI.MUTED)
+	definition_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(definition_status)
 	source_portal_choice = OptionButton.new(); source_portal_choice.name = "AdenSourcePortalChoice"
 	add_child(source_portal_choice)
 	source_portal_walk_button=UI.button("원문 출발점까지 걷기 · 자동 포탈 활성 없음",_walk_to_source_portal,Vector2(0,40))
@@ -252,6 +267,7 @@ func _load_play_options() -> void:
 		tile_path_edit.text = options.tile_root
 		play_status.text = "원문 S32 자체 통행 중 · M 원작 판정 미확정" if options.navigation_profile in [PLAY_OPTIONS.SOURCE,PLAY_OPTIONS.GENERIC] else "실험 플레이 중 · 이동과 충돌은 기존 TWILIGHT 자체 설정입니다."
 	_refresh_source_portals()
+	_refresh_definition_status()
 
 
 func _play_values() -> Dictionary:
@@ -274,6 +290,28 @@ func _play_values() -> Dictionary:
 		value.source_position = saved.get("source_position",[]) if same_identity else []
 		if source_entry_enabled.button_pressed: value.source_position = [int(source_entry_x.value)+0.5,int(source_entry_y.value)+0.5]
 	return value
+
+func _refresh_definition_status() -> void:
+	if not is_instance_valid(definition_status):return
+	var current: Node=_world()
+	if current==null or not current.has_method("current523_source_definition_selection"):return
+	var stored: Dictionary=current.current523_source_definition_selection()
+	if not stored.ok:definition_status.text=stored.problem;return
+	if stored.configured and definition_path_edit.text.is_empty():definition_path_edit.text=stored.directory
+	var status: Dictionary=current.current523_source_definition_status()
+	if definition_path_edit.text.is_empty() and not status.is_empty():definition_path_edit.text=status.directory
+	definition_status.text="원문 정의 연결됨 · 원작 활성·요금 판정은 미확정" if not status.is_empty() else ("저장된 원문 정의 미연결 · 입장 시 다시 확인하거나 폴더를 연결하세요." if stored.configured else "원문 포탈 정의 미연결 · 지형 이동만 가능")
+func _connect_definitions() -> void:
+	var current: Node=_world()
+	if current==null or not current.has_method("bind_current523_source_definition_pack"):return
+	if current.bind_current523_source_definition_pack(definition_path_edit.text.strip_edges(),DEFINITIONS.PIN,true):
+		_refresh_definition_status();_refresh_source_portals()
+	else:definition_status.text="원문 정의를 연결하지 못했습니다: "+str(current.current523_aden_play_problem)
+func _clear_definitions() -> void:
+	var current: Node=_world()
+	if current!=null and current.has_method("clear_current523_source_definition_selection"):
+		if current.clear_current523_source_definition_selection():definition_path_edit.text="";_refresh_definition_status();_refresh_source_portals()
+		else:definition_status.text=str(current.current523_aden_play_problem)
 
 func _refresh_source_portals() -> void:
 	if not is_instance_valid(source_portal_choice): return
@@ -413,7 +451,7 @@ func _update_open_button() -> void:
 		play_offset_y.editable = not busy
 		source_words.editable = not busy and not playing
 		source_search_limit.editable = not busy and not playing
-		source_portal_path.editable = not busy and not playing
+		source_portal_path.editable = not busy and not playing and play_profile.selected!=3
 		source_entry_enabled.disabled = busy or playing
 		source_entry_x.editable = not busy and not playing
 		source_entry_y.editable = not busy and not playing
@@ -473,8 +511,8 @@ func _rollback() -> void:
 
 func _browse(target: String) -> void:
 	_folder_target = target
-	folder_dialog.title = "아덴 원문 팩 폴더 선택" if target == "raw" else "타일 검토 팩 폴더 선택"
-	var path: String = raw_path_edit.text if target == "raw" else tile_path_edit.text
+	folder_dialog.title = "원문 포탈 정의 폴더 선택" if target=="definitions" else ("아덴 원문 팩 폴더 선택" if target == "raw" else "타일 검토 팩 폴더 선택")
+	var path: String = definition_path_edit.text if target=="definitions" else (raw_path_edit.text if target == "raw" else tile_path_edit.text)
 	path = ProjectSettings.globalize_path(path.strip_edges())
 	if not path.is_empty() and DirAccess.dir_exists_absolute(path):
 		folder_dialog.current_dir = path
@@ -486,6 +524,8 @@ func _folder_selected(path: String) -> void:
 		raw_path_edit.text = path
 	elif _folder_target == "tiles":
 		tile_path_edit.text = path
+	elif _folder_target == "definitions":
+		definition_path_edit.text=path
 	_folder_target = ""
 	_update_open_button()
 	_refresh_path_status()

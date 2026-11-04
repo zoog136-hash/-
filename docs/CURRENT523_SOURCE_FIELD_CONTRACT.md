@@ -239,3 +239,29 @@ Source close and a successful generic source-field commit cancel held world
 pointer gestures, since the preserved host map ID alone cannot distinguish
 those fields/cameras. All fallible target checks and checkpoint persistence
 remain before commit. A failed transition preserves the valid path and gesture.
+
+
+## Ordinary Main definition selection
+
+The existing Settings panel accepts the already installed `world-links` folder
+through its folder picker and verifies the fixed production manifest before
+connecting it. Only a successful verified selection is atomically remembered in
+`user://current523_source_definitions.cfg`, separate from the game save and M
+cursor. Remembering the selection precedes the trusted in-memory provider
+commit; a failed settings write preserves the prior provider and old bytes.
+
+Without explicit definition launch arguments, normal source entry/restoration
+revalidates the saved selection. Explicit launch arguments still take precedence
+and are not silently replaced by a valid saved directory. A requested saved
+pack that is missing, corrupt or has the wrong manifest stops optional source
+restoration in the existing host; it does not reinterpret M coordinates as host
+coordinates. The UI can repair the folder selection, or explicitly disconnect
+it for labelled geometry-only use with no Portal provider. A changed manifest
+is not reported as currently verified merely because old data was cached.
+
+This selects local data, not a Drive downloader or pack deployment. The existing
+map/tile pins, owner loader, native conditions, manual-travel policy and original
+resources are unchanged. The host application still needs its normal source84
+base installed in `user://source_maps_v3` or bundled at
+`res://external_map_packs/source84_v3`; this is legacy save/return infrastructure,
+not the geometry source for M fields.
