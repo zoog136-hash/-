@@ -5,6 +5,8 @@ var hud: Node
 var world: Node
 var service
 var mode: String
+var held_choice: OptionButton
+var held_options: Array[Dictionary] = []
 var source_status: Label
 var source_only: CheckBox
 var list: ItemList
@@ -18,6 +20,8 @@ var store: CheckBox
 var sell: CheckBox
 var timeout: SpinBox
 var portal_choice: OptionButton
+var automatic_status: Label
+var resume_auto: CheckBox
 var maintenance_status: Label
 var file_dialog: FileDialog
 var source_rows: Array = []
@@ -80,6 +84,10 @@ func configure(controller: Node, operation: String) -> void:
 	category_action.name = "InventoryEquipmentCategory"
 	category_action.hide()
 	add_child(category_action)
+	held_choice = OptionButton.new()
+	held_choice.name = "Inventory523HeldIdentity"
+	held_choice.item_selected.connect(func(_index: int) -> void: _update_held_selection())
+	add_child(held_choice)
 	details = _label("")
 	var row := HBoxContainer.new()
 	add_child(row)
@@ -126,6 +134,21 @@ func configure(controller: Node, operation: String) -> void:
 	var start: Button = _button("한 번 정비 예약 · 이동진으로 걷기",_arm)
 	start.name = "MaintenanceStart"
 	add_child(start)
+	_label("AUTO 중 게임 날짜당 1회 정비 · 현재 로컬 경로 · 이동 비용0 / 보관 비용0")
+	resume_auto = CheckBox.new()
+	resume_auto.set_script(Touch)
+	resume_auto.name = "MaintenanceResumeAuto"
+	resume_auto.text = "도착 정비 후 기존 AUTO 사냥 재개"
+	resume_auto.button_pressed = bool(settings.get("automatic",{}).get("resume_auto",false))
+	add_child(resume_auto)
+	var automatic_start: Button = _button("자동 정비 켜기 · 대상·비용 확인",_enable_automatic)
+	automatic_start.name = "MaintenanceAutomaticEnable"
+	add_child(automatic_start)
+	var automatic_stop: Button = _button("자동 정비 끄기",func() -> void: _report(service.maintenance.disable_automatic()); _refresh_maintenance())
+	automatic_stop.name = "MaintenanceAutomaticDisable"
+	add_child(automatic_stop)
+	automatic_status = _label("")
+	automatic_status.name = "MaintenanceAutomaticInfo"
 	add_child(_button("정비 예약 취소",func() -> void: _report(service.maintenance.cancel()); _refresh_maintenance()))
 	maintenance_status = _label("")
 	add_child(_button("현재 보관/판매 대상 설정 비우기",func() -> void: _report(service.clear(mode)); _refresh()))
@@ -161,7 +184,9 @@ func _refresh() -> void:
 	source_rows.clear()
 	selected = -1
 	var data: Dictionary = service.source_rules.document
-	source_status.text = service.source_rules.problem if data.is_empty() else "523 원본 보관84행·매입25행 · 현재 도감 정확 ID 연결43/9행 · 확인 가격11종"
+	var registration: Dictionary = service.refresh_catalog()
+	source_status.text = service.source_rules.problem if data.is_empty() else "523 실제 등록 ID 연결 보관%d/84행·매입%d/25행 · 확인 가격11종" % [int(registration.get("deposit",0)),int(registration.get("sell",0))]
+	if not data.is_empty(): source_status.text += "\n원본 규칙상 허용 보관%d/매입%d · 소지·잠금은 별도 검사" % [int(registration.get("deposit_allowed",0)),int(registration.get("sell_allowed",0))]
 	source_only.set_pressed_no_signal(bool(service.state.get("source_only",false)))
 	for row: Dictionary in data.get("storage_rows" if mode == "deposit" else "sell_rows",[]):
 		source_rows.append(row)
@@ -174,7 +199,8 @@ func _refresh() -> void:
 		price_action.disabled = true
 	_refresh_maintenance()
 
-func _held(row: Dictionary) -> Dictionary:
+func _held_matches(row: Dictionary) -> Array[Dictionary]:
+	var matches: Array[Dictionary] = []
 	var wanted: int = int(row.ItemClassID)
 	var bless: int = int(row.get("ItemBlessCodeID",1))
 	for raw: Variant in world.inventory:
@@ -182,8 +208,8 @@ func _held(row: Dictionary) -> Dictionary:
 		if int(world.inventory[raw]) <= 0: continue
 		var record: Dictionary = world._find_catalog_item_record(name)
 		var resolved: Dictionary = service.source_rules.resolve(record)
-		if not resolved.is_empty() and int(resolved.item.id) == wanted and int(resolved.bless) == bless and service.source_rules.eligible(resolved,mode): return record
-	return {}
+		if not resolved.is_empty() and int(resolved.item.id) == wanted and int(resolved.bless) == bless and service.source_rules.eligible(resolved,mode): matches.append(record)
+	return matches
 
 func _select(index: int) -> void:
 	if index < 0 or index >= source_rows.size(): return
@@ -191,7 +217,13 @@ func _select(index: int) -> void:
 	var row: Dictionary = source_rows[index]
 	var id: String = str(int(row.ItemClassID))
 	var item: Dictionary = service.source_rules.definition(id)
-	var held: Dictionary = _held(row)
+	held_options = _held_matches(row)
+	held_choice.clear()
+	held_choice.add_item("소지한 정확한 아이템 키를 선택하세요")
+	for record: Dictionary in held_options: held_choice.add_item(str(record.name)+" · "+str(record.sourceId))
+	if held_options.size() == 1: held_choice.select(1)
+	held_choice.visible = not item.virtual
+	var held: Dictionary = _chosen_held()
 	keep.value = 0
 	for target: Dictionary in service.state.get(mode,[]):
 		if not held.is_empty() and target.name == held.name and str(target.get("id","")) == "":
@@ -210,9 +242,21 @@ func _select(index: int) -> void:
 	details.text = "#%s %s\n%s" % [id,str(item.label),"범주 선택자 · 실제 아이템 등록 안 함" if item.virtual else "원본 TestItem · 자동 처리 보류" if item.test_item else ("소지: "+str(held.name) if not held.is_empty() else "일치하는 소지품 없음 · 이름 추정 연결 안 함")]
 	if mode == "sell" and not item.virtual: details.text += "\n매입 %d 아데나 · %s" % [unit,"원본·공개 확인값" if not policy.is_empty() else "자체값(수정 가능)"]
 
+func _chosen_held() -> Dictionary:
+	return held_options[held_choice.selected-1] if held_choice.selected > 0 and held_choice.selected <= held_options.size() else {}
+
+func _update_held_selection() -> void:
+	var held: Dictionary = _chosen_held()
+	register.disabled = held.is_empty()
+	keep.value = 0
+	if held.is_empty(): return
+	for target: Dictionary in service.state.get(mode,[]):
+		if target.name == held.name and str(target.get("id","")) == "": keep.value = int(target.get("keep",0))
+	details.text = "선택한 소지 키: "+str(held.name)+" · "+str(held.sourceId)+"\n각인 표기와 축복 키·동일 이름의 다른 ID는 합치지 않습니다."
+
 func _register() -> void:
 	if selected < 0: return
-	var item: Dictionary = _held(source_rows[selected])
+	var item: Dictionary = _chosen_held()
 	if item.is_empty(): return
 	_report(service.set_target(mode,str(item.name),"",true,int(keep.value)))
 	_refresh()
@@ -229,8 +273,30 @@ func _refresh_maintenance() -> void:
 	for index: int in range(local_portals.size()):
 		portal_choice.add_item(str(local_portals[index].get("name",local_portals[index].id)))
 		if str(local_portals[index].id) == str(settings.portal_id): portal_choice.selected = index
+	var automatic: Dictionary = settings.get("automatic",{})
+	var day: int = preload("res://scripts/quests/quest_service.gd").korean_daily_key(service.maintenance._now())
+	automatic_status.text = "자동 정비 %s · 게임 날짜 %d · 오늘 %s\n재접속 후 AUTO를 직접 켜야 합니다. 새 장비 ID는 추가하지 않습니다." % ["켜짐" if automatic.get("enabled",false) else "꺼짐",day,"실행 시작됨" if int(automatic.get("last_started_day",-1)) >= day else "미실행"]
 	maintenance_status.text = service.maintenance.status if service.maintenance.status != "" else ("예약됨 · 재확인 필요" if settings.armed else "정비 예약 없음")
 	if local_portals.is_empty(): maintenance_status.text += "\n현재 맵에 확인된 이동진이 없습니다. 원본 M 이동은 기존 이동 작업의 검증이 필요합니다."
+
+func _enable_automatic() -> void:
+	if portal_choice.selected < 0 or portal_choice.selected >= local_portals.size(): hud.show_message("검증된 이동진을 선택해주세요"); return
+	var plan: Dictionary = service.maintenance.preview(store.button_pressed,sell.button_pressed)
+	if not plan.get("ok",false): _report(plan); return
+	var id: String = str(local_portals[portal_choice.selected].id)
+	var do_store: bool = store.button_pressed
+	var do_sell: bool = sell.button_pressed
+	var seconds: int = int(timeout.value)
+	var resume: bool = resume_auto.button_pressed
+	var lines: Array[String] = ["TWILIGHT 현재 맵의 기존 이동진 · 원본 M/NPC 좌표 재현 아님", "보관 → 판매 · 이동 비용0 / 보관 비용0", "AUTO 사냥 중 등록 대상이 있으면 게임 날짜당 1회 보행·정비합니다. 게임 날짜는 기존 한국05시 기준입니다.", "등록한 스택은 도착 당시 남길 수량을 유지합니다. 새 장비 ID는 추가하지 않습니다.", "기존 1회 예약은 대체합니다. 대상·가격·모드 변경 시 꺼지고, 실패/재접속 후 재확인이 필요합니다.", "도착 후 AUTO 재개: "+("켜짐" if resume else "꺼짐")]
+	for entry: Dictionary in plan.cart: lines.append("%s%s ×%d · %d 아데나" % [entry.name," ["+entry.id+"]" if entry.id != "" else "",int(entry.quantity),int(entry.payment)])
+	for skipped: String in plan.skipped: lines.append("제외 · "+skipped)
+	lines.append("현재 예상 판매 수입 %d 아데나 · 보관대상%d/판매대상%d" % [int(plan.payment),service.state.deposit.size() if do_store else 0,service.state.sell.size() if do_sell else 0])
+	var stamp: String = str(plan.stamp)
+	_confirm("자동 정비 대상·비용 확인","\n".join(lines),"자동 정비 켜기",func(_amount: int) -> void:
+		if stamp != service._stamp("maintenance"): hud.show_message("대상·상태가 변경됐습니다. 다시 확인해주세요"); return
+		_report(service.maintenance.arm(id,do_store,do_sell,seconds,false,{"setup":true,"resume_auto":resume}))
+		_refresh_maintenance())
 
 func _arm() -> void:
 	if portal_choice.selected < 0 or portal_choice.selected >= local_portals.size():

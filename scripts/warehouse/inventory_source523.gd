@@ -83,6 +83,28 @@ func install_zip(path: String) -> Dictionary:
 	problem = ""
 	return {"ok":true}
 
+static func _canonical_identity(record: Dictionary) -> Array:
+	var out: Array = []
+	for key: String in FIELDS: out.append(str(record.get(key,"")))
+	for key: String in ["source_snapshot","source_m_native_item","source_item_class_id","source_display_name","source_bless_raw"]: out.append(str(record.get(key,"")))
+	return out
+
+func registered_status(records: Array) -> Dictionary:
+	var matched: Dictionary = {}
+	for record: Dictionary in records:
+		var resolved: Dictionary = resolve(record)
+		if resolved.is_empty(): continue
+		matched[str(int(resolved.item.id))+":"+str(int(resolved.bless))] = resolved
+	var result: Dictionary = {"deposit":0,"sell":0,"deposit_allowed":0,"sell_allowed":0,"missing":[],"registered_keys":matched.size()}
+	for mode: String in ["deposit","sell"]:
+		for row: Dictionary in document.get("storage_rows" if mode == "deposit" else "sell_rows",[]):
+			var key: String = str(int(row.ItemClassID))+":"+str(int(row.get("ItemBlessCodeID",1)))
+			if matched.has(key):
+				result[mode] += 1
+				if eligible(matched[key],mode): result[mode+"_allowed"] += 1
+			else: result.missing.append({"mode":mode,"id":int(row.ItemClassID),"bless":int(row.get("ItemBlessCodeID",1)),"virtual":bool(definition(str(int(row.ItemClassID))).get("virtual",false))})
+	return result
+
 func definition(id: String) -> Dictionary:
 	return document.get("items",{}).get(id,{})
 
@@ -123,7 +145,13 @@ func eligible(resolved: Dictionary, mode: String) -> bool:
 	if resolved.is_empty(): return false
 	var row: Dictionary = resolved.item
 	if row.virtual or row.test_item or row.currency or row.equipment or not row.stackable: return false
-	if mode == "deposit": return row.is_storable and row.storage_bless.has(resolved.bless)
+	if mode == "deposit":
+		# JSON uses float numbers while resolved blessing IDs are integers.
+		# Array.has is type-sensitive; compare the source numeric IDs explicitly.
+		if not row.is_storable: return false
+		for allowed: Variant in row.storage_bless:
+			if int(allowed) == int(resolved.bless): return true
+		return false
 	return mode == "sell" and row.merchant_auto and int(resolved.bless) == 1
 
 func quote(record: Dictionary, name: String, quantity: int, id: String, inventory: Dictionary, physical: Dictionary, equipped: Dictionary, wallet: int, overrides: Dictionary) -> Dictionary:

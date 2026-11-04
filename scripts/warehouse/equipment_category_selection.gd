@@ -94,7 +94,9 @@ func _prepare(config: Dictionary, allow_custom: bool) -> Dictionary:
 	next["sell"] = targets
 	next["equipment_category"] = config.duplicate(true)
 	if owner.state.get("source_only",false): next["source_only"] = false
-	if next.has("maintenance"): next.maintenance["armed"] = false
+	if next.has("maintenance"):
+		next.maintenance["armed"] = false
+		if next.maintenance.has("automatic"): next.maintenance.automatic["enabled"] = false
 	return {"ok":true,"state":next}
 
 func preview(config: Dictionary, allow_custom: bool = false) -> Dictionary:

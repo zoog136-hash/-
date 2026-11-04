@@ -392,6 +392,7 @@ func _ready() -> void:
 	crafting.load_recipes()
 	inventory_automation.configure(self)
 	_load_data()
+	inventory_automation.refresh_catalog()
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -2414,6 +2415,7 @@ func _run_auto_hunt() -> void:
 	if not charge_skill.is_empty():
 		player.clear_click_path()
 		return
+	if inventory_automation.maintenance.try_automatic(): return
 	if _run_auto_ground_pickup():
 		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
@@ -3327,6 +3329,9 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
+	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
+		hud.show_message("원본 사용 효과 미연결 · 보관/판매 가능 · 아이템 보존")
+		return
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 상태이상 해제 물약입니다")
 		return
@@ -4229,6 +4234,9 @@ func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
+	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
+		hud.show_message("원본 사용 효과 미연결 · 아이템 보존")
+		return
 	if bool(consumable_service.call("try_use", item_name)):
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -4278,6 +4286,7 @@ func _return_to_spawn() -> void:
 	hud.show_message("현재 지역 시작 지점으로 귀환했습니다")
 
 func _on_auto_toggled(enabled: bool) -> void:
+	inventory_automation.maintenance.mode_changed(enabled)
 	loot_pickup.cancel()
 	hud.set_auto(enabled)
 	if not enabled:
@@ -5278,6 +5287,7 @@ func _use_quickslot_item(item_name: String) -> void:
 		hud.show_message("직접 사용할 수 없는 아이템입니다")
 
 func _quickslot_item_supported(item_name: String) -> bool:
+	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false): return false
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -7821,6 +7831,7 @@ func use_field_portal(portal_id: String) -> bool:
 			field_renderer.refresh_visible()
 		portal_cooldown = 2.0
 		hud.show_message(str(portal["name"]))
+		inventory_automation.maintenance.after_portal(maintenance_result)
 		return true
 	return false
 

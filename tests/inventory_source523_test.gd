@@ -28,7 +28,10 @@ func run() -> void:
 			var record: Dictionary = native(row,bless)
 			var resolved: Dictionary = rules.resolve(record)
 			check(not resolved.is_empty() and int(resolved.item.id) == int(id) and int(resolved.bless) == bless,"native ID/bless contract "+id+":"+str(bless))
-			var expected: bool = row.storage_bless.has(bless) and row.is_storable and not row.virtual and not row.test_item and not row.currency and not row.equipment and row.stackable
+			var source_member: bool = false
+			for original_row: Dictionary in rules.document.storage_rows:
+				if int(original_row.ItemClassID) == int(id) and int(original_row.ItemBlessCodeID) == bless: source_member = true
+			var expected: bool = source_member and row.is_storable and not row.virtual and not row.test_item and not row.currency and not row.equipment and row.stackable
 			check(rules.eligible(resolved,"deposit") == expected,"source storage membership "+id+":"+str(bless))
 		if not row.binding.is_empty():
 			var binding: Dictionary = row.binding.duplicate(true)
@@ -57,6 +60,14 @@ func run() -> void:
 		host.loot_catalog.by_name[protected_record.name] = protected_record
 		host.inventory[protected_record.name] = 2
 		check(not service.sale_quote(protected_record.name,1,"",host.inventory,host.item_instances,host.gold,false).get("ok",false),"actual manual/legacy fallback cannot sell virtual or TestItem "+id)
+	var flagged: Dictionary = native(rules.definition("767"))
+	flagged["source_test_item"] = true
+	host.loot_catalog.by_name[flagged.name] = flagged
+	host.inventory[flagged.name] = 2
+	check(not service.sale_quote(flagged.name,1,"",host.inventory,host.item_instances,host.gold,false).get("ok",false),"registered source TestItem protection is retained")
+	flagged["source_test_item"] = false
+	flagged["source_is_storable"] = false
+	check(not service.set_target("deposit",flagged.name,"",true).get("ok",false),"explicit registered source storage restriction retained")
 	host.free()
 	var row: Dictionary = rules.definition("767")
 	var record: Dictionary = native(row)

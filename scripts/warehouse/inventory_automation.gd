@@ -4,8 +4,10 @@ const KEY: String = "inventory_automation"
 const BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 const STORAGE = preload("res://scripts/warehouse/local_warehouse.gd")
 const SOURCE_RULES = preload("res://scripts/warehouse/inventory_source523.gd")
+const REGISTERED = preload("res://scripts/warehouse/inventory_registered523.gd")
 const EQUIPMENT_CATEGORIES = preload("res://scripts/warehouse/equipment_category_selection.gd")
 const MAINTENANCE = preload("res://scripts/warehouse/inventory_maintenance.gd")
+var registered = REGISTERED.new()
 var equipment_categories = EQUIPMENT_CATEGORIES.new()
 var source_rules = SOURCE_RULES.new()
 var maintenance = MAINTENANCE.new()
@@ -21,6 +23,12 @@ func configure(host: Node) -> void:
 	world = host
 	source_rules.load_file(SOURCE_RULES.configured_file())
 	maintenance.configure(self)
+
+func refresh_catalog() -> Dictionary:
+	if world == null or not world.get("catalog_db") is Dictionary: return {}
+	var registration: Dictionary = registered.attach(world.catalog_db,source_rules)
+	if int(registration.get("added",0)) > 0 and world.has_method("_index_catalog_item_sources"): world._index_catalog_item_sources()
+	return source_rules.registered_status(world.catalog_db.get("아이템",[]))
 
 static func valid(raw: Variant) -> bool:
 	if not raw is Dictionary: return false
@@ -80,7 +88,7 @@ func _protected(name: String, id: String, mode: String = "deposit") -> bool:
 	if world._item_locked(name, "") or world._item_locked(name, id): return true
 	if id != "" and STORAGE.equipped_id(world.equipped_items, id): return true
 	var record: Dictionary = world._find_catalog_item_record(name)
-	if name == "아데나" or record.is_empty() or bool(record.get("quest_item", false)): return true
+	if name == "아데나" or record.is_empty() or bool(record.get("quest_item", false)) or bool(record.get("source_test_item",false)): return true
 	var native: Dictionary = source_rules.resolve(record,world.item_instances.get(id,{}) if id != "" else {})
 	if not native.is_empty():
 		if native.item.virtual or native.item.test_item or native.item.currency: return true
@@ -88,7 +96,7 @@ func _protected(name: String, id: String, mode: String = "deposit") -> bool:
 	var custom: Dictionary = world.item_instances.get(id, {}).get("record", {}) if id != "" else {}
 	if bool(custom.get("quest_item", false)): return true
 	if mode == "deposit":
-		return (record.has("IsStorable") and not bool(record.IsStorable)) or (custom.has("IsStorable") and not bool(custom.IsStorable))
+		return (record.has("IsStorable") and not bool(record.IsStorable)) or (record.has("source_is_storable") and not bool(record.source_is_storable)) or (custom.has("IsStorable") and not bool(custom.IsStorable)) or (custom.has("source_is_storable") and not bool(custom.source_is_storable))
 	return bool(custom.get("bound",false)) or not bool(custom.get("tradeable",true))
 
 func contains(mode: String, name: String, id: String) -> bool:
@@ -126,7 +134,9 @@ func set_target(mode: String, name: String, id: String, selected: bool, keep: in
 func save_settings(next: Dictionary, preserve_maintenance: bool = false) -> Dictionary:
 	if busy or not valid(next): return {"ok":false,"reason":"자동 처리 설정이 유효하지 않습니다"}
 	sync_category_targets(next)
-	if not preserve_maintenance and next.has("maintenance"): next.maintenance["armed"] = false
+	if not preserve_maintenance and next.has("maintenance"):
+		next.maintenance["armed"] = false
+		if next.maintenance.has("automatic"): next.maintenance.automatic["enabled"] = false
 	busy = true
 	var error: Error = world._save_game(true, {KEY:next})
 	busy = false
@@ -157,6 +167,7 @@ func set_native_price(id: String, price: int) -> Dictionary:
 
 func sale_quote(name: String, quantity: int, id: String, inventory: Dictionary, physical: Dictionary, wallet: int, enforce_selection: bool = true) -> Dictionary:
 	var record: Dictionary = world._find_catalog_item_record(name)
+	if bool(record.get("source_test_item",false)): return {"ok":false,"reason":"원본 시험용 아이템은 매입하지 않습니다"}
 	var resolved: Dictionary = source_rules.resolve(record,physical.get(id,{}) if id != "" else {})
 	if not resolved.is_empty() and (resolved.item.virtual or resolved.item.test_item or resolved.item.currency):
 		return {"ok":false,"reason":"원본 범주 선택자·시험용·재화 아이템은 매입하지 않습니다"}

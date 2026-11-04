@@ -57,5 +57,36 @@
     "main_or_other_pr_merge": false,
     "manual_remote_ci": false
   },
-  "access_errors": "No401 or denied transfer in this component's latest source/runtime handover. No authentication changes or denial workarounds."
+  "access_errors": "No401 or denied transfer in this component's latest source/runtime handover. No authentication changes or denial workarounds.",
+  "catalog_execution_input": {
+    "file_name": "TWILIGHT_patch523_monster_drops_items_phase3_bec901d2.zip",
+    "drive_id": "1u63NshzCYQ4WAXvavGM8elqwY5Lhbfwq",
+    "drive_url": "https://drive.google.com/file/d/1u63NshzCYQ4WAXvavGM8elqwY5Lhbfwq/view?usp=drivesdk",
+    "bytes": 1770358,
+    "sha256": "91de04c0f3ed613b76a69fea992347d82bdab79b6ef316049d3f77e90a3484d7",
+    "payload_bytes": 1806317,
+    "payload_sha256": "bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3",
+    "existing_private_file_metadata_verified": true,
+    "new_upload": false,
+    "formal_download_count": 1,
+    "size_sha_zip_crc": "passed",
+    "consumer_zip": "/workspace/pr251-catalog-consumer/TWILIGHT_patch523_monster_drops_items_phase3_bec901d2.zip",
+    "actual_game_argument": "--patch523-drop-root=/workspace/pr251-catalog-consumer/unpacked/payload",
+    "existing_installed_path": "user://lineagem_patch523_drops/bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3/monster_drops.bin",
+    "source_ref_read_only": "PR238 58b07798753d56f87e08cd0cc95febffe694af37",
+    "actual_main_registered_rows": {
+      "deposit": 80,
+      "deposit_rule_allowed": 79,
+      "sell": 19
+    },
+    "inventory_or_currency_grants": false,
+    "loot_pool_expansion": false,
+    "missing_nonvirtual_ids": [
+      235,
+      237,
+      313,
+      385
+    ],
+    "library401_retry": false
+  }
 }

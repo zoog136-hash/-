@@ -78,6 +78,8 @@ func run() -> void:
 	plan = service.preview(config)
 	check(plan.ok and plan.payment == 260,"explicit configurable enchant limit uses the priced exact physical instance")
 	check(auto.set_target("sell","일반 검","normal",true,1).ok,"keep an independent pre-existing manual retention rule")
+	auto.state["maintenance"] = auto.maintenance.fresh()
+	auto.state.maintenance["automatic"] = {"mode":"twilight_existing_auto_day_once_v1","enabled":true,"resume_auto":false,"scope":auto.maintenance._scope(auto.state),"configured_day":1,"last_started_day":-1,"last_completed_day":-1,"run_day":-1}
 	plan = service.preview(config)
 	check(plan.cart.size() == 1 and plan.cart[0].id == "b" and plan.selection_state.sell.size() == 2,"category replaces only its own IDs and preserves manual retention")
 	host.fail_write = true
@@ -85,7 +87,7 @@ func run() -> void:
 	check(not service.execute(config,plan.stamp).ok and host.snapshot() == before,"final combined writer failure preserves items wallet and category metadata")
 	host.fail_write = false
 	var wallet: int = host.gold
-	check(service.execute(config,plan.stamp).ok and not host.item_instances.has("b") and host.item_instances.has("a") and host.item_instances.has("new") and host.gold == wallet+260,"only selected exact ID sold after durable commit")
+	check(service.execute(config,plan.stamp).ok and not host.item_instances.has("b") and host.item_instances.has("a") and host.item_instances.has("new") and host.gold == wallet+260 and not auto.maintenance.automatic_enabled(),"only selected exact ID sold durably; scope change disables prior automatic approval")
 	check(auto.state.equipment_category.targets.is_empty() and auto.state.equipment_category.enabled and auto.state.sell.size() == 1 and auto.state.sell[0].keep == 1,"consumed category IDs cleared; manual keep preserved")
 	before = host.snapshot()
 	check(not service.execute(config,plan.stamp).ok and host.snapshot() == before,"duplicate confirmation cannot pay twice")

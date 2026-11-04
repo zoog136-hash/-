@@ -1118,6 +1118,11 @@ func open_macro_info() -> void:
 		col.add_child(UI.section(str(pair[1]),12))
 	var routes := HBoxContainer.new()
 	col.add_child(routes)
+	var maintenance_route := UI.button("자동 정비 · 대상/비용 확인",func() -> void:
+		if not workspace.was_scroll_dragged(scroll): open_inventory_automation_settings("deposit"))
+	maintenance_route.name = "AutoMaintenanceSettings"
+	col.add_child(maintenance_route)
+	workspace.register_scroll_drag(scroll,maintenance_route)
 	for target: Array in [["skills","스킬 · 자동 사용"],["inventory","인벤토리"]]:
 		var id: String = str(target[0])
 		var route := UI.button(str(target[1]),func() -> void:
