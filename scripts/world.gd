@@ -121,6 +121,9 @@ const EXP_PROGRESSION = preload("res://scripts/experience_progression.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
+const AUTO_HUNTING_SCHEDULE = preload("res://scripts/auto_hunting/source_schedule.gd")
+var auto_hunting_schedule: RefCounted = AUTO_HUNTING_SCHEDULE.new()
+var auto_hunting_schedule_checked: bool = false
 const SOURCE_NPCS = preload("res://scripts/npc/source_npc_catalog.gd")
 const NPC_DIALOGUE_SERVICE = preload("res://scripts/npc/dialogue_service.gd")
 var dialogue_service = NPC_DIALOGUE_SERVICE.new()
@@ -2391,6 +2394,18 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		critical_chance * 100.0
 	])
 	_update_target_hud()
+
+func auto_hunting_destinations() -> Dictionary:
+	if not auto_hunting_schedule_checked:
+		auto_hunting_schedule_checked = true
+		auto_hunting_schedule.load_configured()
+	return {"entries": auto_hunting_schedule.list_destinations(), "reason": auto_hunting_schedule.problem}
+
+func auto_hunting_movement_assessment(schedule_id: int, landing_link_id: int) -> Dictionary:
+	auto_hunting_destinations()
+	# Read-only until current523 arrival geometry and operational gates are
+	# verified. This never invokes _set_map, debit, AUTO toggling or a save.
+	return auto_hunting_schedule.assess_request(schedule_id, landing_link_id, level, gold)
 
 func _run_auto_hunt() -> void:
 	if player.has_manual_movement():
