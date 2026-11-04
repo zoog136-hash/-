@@ -278,6 +278,9 @@ func _close_source(remember_disabled: bool) -> bool:
 	if is_instance_valid(_source_physics):
 		_source_physics.collision_layer = 0; _source_physics.queue_free()
 	if is_instance_valid(world) and not _prior_world.is_empty():
+		# Source fields share the preserved host map ID; it cannot invalidate
+		# a held pointer by itself when returning to another field/camera.
+		if is_instance_valid(world.world_interactions): world.world_interactions.cancel_gesture()
 		world.field_map = _prior_world.field; world.field_physics = _prior_world.physics
 		world.world_size = _prior_world.world_size; world.astar = _prior_world.astar
 		world.player.global_position = _prior_world.position
@@ -514,6 +517,7 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 	world.field_map=proposed; world.field_renderer=candidate; world.field_physics=physics
 	world.world_size=proposed.bounds.size; world.astar=proposed.astar
 	world.player.clear_click_path(); world.player.set_touch_vector(Vector2.ZERO); world.player.velocity=Vector2.ZERO
+	if is_instance_valid(world.world_interactions): world.world_interactions.cancel_gesture()
 	world.player.global_position=position
 	camera.limit_left=floori(proposed.bounds.position.x); camera.limit_top=floori(proposed.bounds.position.y)
 	camera.limit_right=ceili(proposed.bounds.end.x); camera.limit_bottom=ceili(proposed.bounds.end.y)

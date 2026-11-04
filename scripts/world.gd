@@ -1810,6 +1810,11 @@ func _set_click_destination(target: Vector2) -> void:
 	elif _native_route_pending():
 		player.clear_click_path()
 		manual_route_pending_target=destination
+	elif current523_aden_source_active():
+		# A new direct destination supersedes the old source walk even when
+		# no complete OWN route exists. Never snap to another cell or keep going.
+		player.clear_click_path(); player.velocity=Vector2.ZERO
+		hud.show_message("원문 지형에서 확인된 보행 경로가 없습니다.")
 	elif field_map is NativePngField:
 		player.clear_click_path()
 		hud.show_message("우회 경로 없음 %s (%d,%d)" % [active_map_id,roundi(target.x),roundi(target.y)])

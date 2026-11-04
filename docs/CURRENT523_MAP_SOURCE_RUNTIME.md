@@ -623,6 +623,65 @@ Exact additionally checked logical IDs (no new physical roots):
 51031 51041 51051 51068 51084 51094 51108 51132 51142 51152 51162 51172 51218 51242 51253
 ```
 
+## Interrupted movement and pending input
+
+A focused gap remained after the representative visits:invalid destination
+clicks had been checked from rest, but not while an accepted route was moving.
+Actual Main reproduced an old path continuing about30.01 world pixels during
+eight subsequent physics ticks after a new blocked or outside destination.
+The held blocked probe is `(32316,33594)`, raw pair`[1,0]`, from
+`Map/Aden/7ff8800c.s32`, SHA256
+`f736c0e91008bb2f035e8d8994871ab6f0ed8d848c5c4cb7b5225af17992da89`.
+
+Source fields now stop the superseded click route and show a no-confirmed-path
+message when the new direct destination has no complete own-policy route.
+They do not snap to another cell, enlarge the search bound, change collision or
+invent native passability. Other map input behavior is unchanged. Rejected stale
+Portal walk tickets still preserve an already accepted route:they are not new
+direct destination clicks.
+
+A second actual reproduction held a touch across source close. Because the
+source mode preserves the original host `active_map_id`, the legacy gesture's
+map-string guard did not notice the changed field/camera. Releasing the old
+touch started a one-point host route. Source close and successful generic manual
+Portal commit now cancel that pending gesture. Cancellation occurs only when
+the field really changes; a refused atomic-checkpoint commit preserves the old
+field, accepted path and touch. No Portal/admission/cost rule changes.
+
+Focused actual Main checks cover starting the existing1,077-point long route,
+blocked/outside retargeting during motion, six rapid valid destination changes,
+manual cancellation without later route resumption, definition-generation stale
+requests while another valid walk is queued, original seam movement with exact
+source/world/camera consistency, invalid restore followed by valid exact-pose
+restore, and held input during failed/successful manual1101 transition. The
+first fixed run passes62 checks. The final strengthened run passes63 and retains
+the actual physically reached fractional seam pose through later field visits:
+source`(32320.0592447917,33595.5)`, world`(41365.421875,19913.2890625)`.
+Its camera inverse error is0 and source/world roundtrip is exact. The full old
+174.579-second route was not repeated; the same original route/probes were reused
+for interruption tests. Blocked/outside continued distance is now0 pixels, and
+release after source close queues no host path.
+
+Initial diagnostic logs are retained. The open long-route start had no blocked
+cell within the small probe radius, so that negative setup was discarded in
+favor of the already verified original wall probe. A clear short route correctly
+compresses to one point; an initial point-count expectation was corrected to
+require a nonempty complete route with the exact goal and actual movement.
+Those setup assertions are not reported as product defects or clean passes.
+No original cell/geometry was invented to satisfy them.
+
+The separate new-process check passes12 checks in71.14s:the physically reached
+fractional pose is restored exactly, no cancelled path/touch resumes, and
+progress/rewards/save bytes plus host lives remain protected. This is additional
+focused interruption coverage, not another997/577 run or native collision proof.
+The final default-off Main/save gate passes35 checks in61.09s. Local combined
+evidence `current523-movement-quality-final-evidence.json` SHA256 is
+`0a8d4a7ed9a627dfa80e3e1eeb8efe28027a72479f7b2fe5bfdefa2ada60723d`. It retains the reproduction, final
+63+12+35 results and exact code hashes. Original source/tile packs, restrictions,
+search bounds and the17-part Drive application bundle are unchanged.
+
+
+
 ## Execution evidence and limits
 
 Latest complete-input checks use the source and tile pins above:

@@ -226,3 +226,16 @@ The Settings control, atomic preference readback and new-process restoration
 consume that same value. No pack/manifest rebuild or game-save migration is
 needed. Search failure does not establish native collision or grant permission
 to substitute a partial path/nearby destination.
+
+
+## Direct destination and gesture lifecycle
+
+An invalid new direct destination in active current523 source play cancels the
+superseded click path, zeros its velocity and shows a no-confirmed-route message.
+It does not change the cell predicate or invent a nearest-cell fallback. Stale
+Portal-navigation ticket refusal continues to preserve the accepted path.
+
+Source close and a successful generic source-field commit cancel held world
+pointer gestures, since the preserved host map ID alone cannot distinguish
+those fields/cameras. All fallible target checks and checkpoint persistence
+remain before commit. A failed transition preserves the valid path and gesture.
