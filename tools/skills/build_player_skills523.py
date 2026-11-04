@@ -17,8 +17,13 @@ SOURCE_SHA256 = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f483
 TABLES = ("SpellClass", "SpellLearnLimit", "Class", "SpellCost", "SpellBonus",
           "Bonus", "BonusType", "Unit", "BuffClass", "BuffBonus", "TargetKind",
           "TargettingType", "SpellMaterialType", "ItemClass", "ItemBonus",
-          "SpellChangeCastGroup", "UIUnit", "BuffGroup", "BonusApplicationType", "SpecialResistanceType")
+          "SpellChangeCastGroup", "UIUnit", "BuffGroup", "BonusApplicationType", "SpecialResistanceType",
+          "InvokeOption", "InvokeOptionType")
 RECOVERY_ROOTS = {54703, 35443, 69601, 95662}
+# Reviewed explicit edges only. No numeric SpellCompositionNode -> SpellNode join.
+EXECUTION_GRAPHS = {2: [], 2312: [], 332: [], 29142: [], 17324: [],
+    98871: [99181, 99231], 350: [119642, 120712],
+    29092: [122982, 122992], 69581: [70961, 107343, 107963, 71001]}
 
 
 def canonical(value):
@@ -95,6 +100,18 @@ def compile_pack(source: Path, bindings_path: Path):
                 and e["link"]["MinSpellLevel"] == 0 and e["bonus"]["BonusApplicationTypeID"] == 0
                 and e["bonus"]["BonusApplicationTargetID"] == 0))
             profile["components"] = [profile_for(indexed["SpellClass"][i]) for i in child_ids]
+        if spell["ID"] in EXECUTION_GRAPHS:
+            nodes = [profile_for(indexed["SpellClass"][i]) for i in EXECUTION_GRAPHS[spell["ID"]]]
+            option_ids = set()
+            for node in [profile, *nodes]:
+                entries = node["bonuses"] + [e for buff in node["buffs"] for e in buff["bonuses"]]
+                for entry in entries:
+                    if entry["type"]["Name"] == "InvokeOption" and entry["bonus"]["BonusApplicationTypeID"] == 10:
+                        option_ids.add(entry["bonus"]["BonusApplicationTargetID"])
+            profile["execution_graph"] = {"root_id": spell["ID"], "spells": nodes,
+                "invokes": [{"row": indexed["InvokeOption"][oid],
+                    "type": indexed["InvokeOptionType"][indexed["InvokeOption"][oid]["InvokeOptionTypeID"]]}
+                    for oid in sorted(option_ids)]}
         profiles[host_id] = profile
     materials = {}
     for link in tables["ItemBonus"]:
@@ -113,7 +130,7 @@ def compile_pack(source: Path, bindings_path: Path):
             "classes": tables["Class"], "materials": materials, "profiles": profiles,
             "ui_units": tables["UIUnit"], "buff_groups": tables["BuffGroup"],
             "bonus_application_types": tables["BonusApplicationType"], "special_resistance_types": tables["SpecialResistanceType"],
-            "features": ["self_recovery_components_v1"]}
+            "features": ["self_recovery_components_v1", "reviewed_execution_graphs_v1"]}
 
 
 def main():

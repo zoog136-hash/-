@@ -20,6 +20,12 @@ var last_error: String = ""
 var active_sha256: String = ""
 var estimated_rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/estimated_nodes523.json")).get("records", {})
 var recovery_rules = preload("res://scripts/skills/recovery_rules523.gd").new()
+var progression_rules = preload("res://scripts/skills/progression_rules523.gd").new()
+
+func set_progression_setting(id: String, key: String, value: float) -> bool:
+	if not progression_rules.update_setting(id,key,value):return false
+	revision+=1
+	return true
 
 func set_recovery_setting(id: String, key: String, value: float) -> bool:
 	if not recovery_rules.update_setting(id,key,value): return false
@@ -112,6 +118,7 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 				var child_id:=int(component.row.ID)
 				if not child_ids.has(child_id) or seen.has(child_id):return reject("unexpected component identity")
 				seen[child_id]=true
+		if profile.has("execution_graph") and not valid_execution(id,profile):return reject("invalid reviewed execution graph")
 		if not profile.get("target_kind") is Dictionary or int(profile.target_kind.get("ID", -1)) != int(row.TargetKindID):
 			return reject("target kind mismatch")
 		if not profile.get("targeting_type") is Dictionary or int(profile.targeting_type.get("ID", -1)) != int(row.TargettingTypeID):
@@ -128,6 +135,35 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	revision += 1
 	last_error = ""
 	return true
+
+func valid_execution(id: String, profile: Dictionary) -> bool:
+	var graph: Variant=profile.get("execution_graph")
+	if not graph is Dictionary or not graph.get("spells") is Array or not graph.get("invokes") is Array:return false
+	if progression_rules.graph_for(id,profile).is_empty():return false
+	var nodes: Dictionary={int(profile.row.ID):profile}
+	for node: Variant in graph.spells:
+		if not valid_component(node) or nodes.has(int(node.row.ID)):return false
+		nodes[int(node.row.ID)]=node
+	var options: Dictionary={}
+	for option: Variant in graph.invokes:
+		if not option is Dictionary or not option.get("row") is Dictionary or not option.get("type") is Dictionary:return false
+		if not option.row.has("ID") or not option.type.has("ID") or int(option.row.get("InvokeOptionTypeID",-1))!=int(option.type.ID) or options.has(int(option.row.ID)):return false
+		options[int(option.row.ID)]=option
+	var reached: Dictionary={int(profile.row.ID):true}
+	for _depth: int in range(nodes.size()):
+		for native_id: int in reached.keys():
+			var node: Dictionary=nodes[native_id]
+			var entries: Array=node.bonuses.duplicate()
+			for buff: Dictionary in node.buffs:entries.append_array(buff.bonuses)
+			for entry: Dictionary in entries:
+				if int(entry.link.MinSpellLevel)!=0:continue
+				var child_id:=0
+				if str(entry.type.Name) in ["ToggleOnSpellClassID","ChangeSpecialSpellClassID","RepeatingSpellBehavior","NextSpellClassID"] and str(entry.unit.Name)=="SpellClassID" and int(entry.bonus.BonusApplicationTypeID)==0 and int(entry.bonus.BonusApplicationTargetID)==0:child_id=int(entry.bonus.Value)
+				elif str(entry.type.Name)=="InvokeOption" and int(entry.bonus.BonusApplicationTypeID)==10:
+					var option: Dictionary=options.get(int(entry.bonus.BonusApplicationTargetID),{})
+					if not option.is_empty() and int(option.type.get("Param1Unit",0))==12:child_id=int(option.row.Param1)
+				if nodes.has(child_id):reached[child_id]=true
+	return reached.size()==nodes.size()
 
 static func valid_bonus(value: Variant) -> bool:
 	if not value is Dictionary: return false
@@ -181,9 +217,13 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	var row: Dictionary = profile.row
 	var estimate := estimated_rule(id) if record.has("estimated523") else {}
 	var recovery: Dictionary = recovery_rules.spec_for(id,profile)
+	var progression: Dictionary=progression_rules.spec_for(id,profile,recovery_rules.percent_denominator)
 	if not recovery.is_empty():
 		record.merge(recovery.runtime.duplicate(true),true)
 		record["recovery523"]=recovery.meta.duplicate(true)
+	if not progression.is_empty():
+		record.merge(progression.runtime.duplicate(true),true)
+		record["progression523"]=progression.meta.duplicate(true)
 	record["source523"] = {"spell_id":row.ID, "target_kind":profile.target_kind.Name,
 		"targeting_type":profile.targeting_type.Name, "cast_range_raw":row.CastRange,
 		"min_cast_range_raw":row.MinCastRange, "area_radius_raw":row.TargetAreaRadius,
@@ -206,6 +246,7 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	}.get(int(row.ID), "")
 	if not pending_note.is_empty() and recovery.is_empty(): record.source523["pending_note"] = pending_note
 	if not recovery.is_empty():record.source523["recovery"]=recovery.meta.duplicate(true)
+	if not progression.is_empty():record.source523["progression"]=progression.meta.duplicate(true)
 	if not estimate.is_empty():
 		record.source523["estimated"] = record.estimated523.duplicate(true)
 		record.source523["distance_policy"] = "TWILIGHT_ESTIMATE"
@@ -215,13 +256,19 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	# grants a book or activates a previously blocked/new spell implementation.
 	for prefix: String in bindings.get("reference_only_prefixes", []):
 		if id.begins_with(prefix) and estimate.is_empty(): return record
+	if not progression.is_empty() and str(record.activation)=="passive":
+		var class_id:=int(bindings.class_ids.get(job,-1))
+		if not profile.learn_limits.any(func(limit: Dictionary) -> bool:return int(limit.ClassID)==class_id and not bool(limit.IsTutorialSpell)):
+			record["source523_block_reason"]="523 원본 직업 학습 대상 아님"
+		else:record.source523.applied=["native_passive"]
+		return record
 	if str(record.get("activation", "")) != "active" or bool(record.get("runtime_blocked", false)): return record
 	var reason := ""
 	if int(row.SpellTypeID) == 3: reason = "523 원본은 패시브 · 기존 액티브 연결 확인 필요"
 	elif upgraded and recovery.is_empty(): reason = "523 상위 스킬 효과 연결 확인 필요"
-	elif int(row.SpellCompositionNode) != 0 and estimate.is_empty(): reason = "523 조건 노드 %d · 노드·조건 유형 정의가 없어 시전 보류" % int(row.SpellCompositionNode)
+	elif int(row.SpellCompositionNode) != 0 and estimate.is_empty() and progression.is_empty(): reason = "523 조건 노드 %d · 노드·조건 유형 정의가 없어 시전 보류" % int(row.SpellCompositionNode)
 	elif int(row.SpellCategoryID) == 184 and recovery.is_empty(): reason = "523 복합 효과 · 하위 주문의 회복·해제·보너스 연결 미완료"
-	elif int(row.SpellCategoryID) in [172,371] and estimate.is_empty(): reason = "523 조건별 하위 주문 · 분기·실행 순서 연결 미완료"
+	elif int(row.SpellCategoryID) in [172,371] and estimate.is_empty() and progression.is_empty(): reason = "523 조건별 하위 주문 · 분기·실행 순서 연결 미완료"
 	elif not profile.costs.is_empty() and recovery.get("self_cost",{}).is_empty(): reason = "523 대상별 비용 조건 연결 확인 필요"
 	elif int(row.MPCostUnit) != 1 or int(row.VPCost) != 0: reason = "523 비용 단위 연결 확인 필요"
 	elif int(row.SpellMaterialTypeID) == 0 and int(row.SpellMaterialItemAmount) != 0: reason = "523 재료 정의 확인 필요"
@@ -230,14 +277,19 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	for limit: Dictionary in profile.learn_limits:
 		if int(limit.ClassID) == native_class and not bool(limit.IsTutorialSpell): allowed = true
 	if not allowed: reason = "523 원본 직업 학습 대상 아님"
+	if not progression.is_empty() and str(record.mode)!="attack":
+		if not allowed:record["source523_block_reason"]=reason;return record
+		record.source523.applied=["native_passive" if str(record.activation)=="passive" else "native_toggle"]
+		return record
 	var targeting := int(row.TargettingTypeID)
 	var target_kind := int(row.TargetKindID)
 	var mode := str(record.get("mode", ""))
 	if not estimate.is_empty() and str(estimate.kind) == "asura": record.source523["estimated_self_only"] = true
 	var self_branch_allowed := (not estimate.is_empty() and (str(estimate.kind) == "asura" or str(estimate.kind) == "detection")) or bool(recovery.get("meta",{}).get("self_branch",false))
-	if targeting not in [1,2] or (target_kind not in [1,2,3,7,10,11,422] and not self_branch_allowed): reason = "523 대상 유형은 현재 PvE 연결 미지원"
+	if target_kind==52:reason="523 원본은 다른 플레이어 대상 · 상대 PC가 없는 현재 PvE에 확대하지 않음"
+	elif targeting not in [1,2] or (target_kind not in [1,2,3,7,10,11,422] and not self_branch_allowed): reason = "523 대상 유형은 현재 PvE 연결 미지원"
 	elif mode in ["attack","status","turn_undead"]:
-		if int(row.SpellCategoryID) not in [1,8,11] and estimate.is_empty(): reason = "523 공격·상태 실행 방식 연결 확인 필요"
+		if int(row.SpellCategoryID) not in [1,8,11] and estimate.is_empty() and progression.is_empty(): reason = "523 공격·상태 실행 방식 연결 확인 필요"
 		if target_kind == 1: reason = "523 자기 대상 효과는 적에게 적용할 수 없음"
 		if targeting == 2 and float(row.TargetAreaRadius) == 0:
 			record["shape"] = "single"
@@ -257,6 +309,7 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	# that can be erased because SpellClass.SpellMaterialTypeID happens to be 0.
 	for retained: String in bindings.retained_host_items:
 		if record.get("items", {}).has(retained): items[retained] = record.items[retained]
+	if not progression.is_empty() and str(progression.meta.kind)=="rapid":items["총알"]=int(record.hits)
 	var material_costs: Array=[{"type":int(row.SpellMaterialTypeID),"amount":int(row.SpellMaterialItemAmount)}]
 	if not self_cost.is_empty():
 		record.source523["cost_row_id"]=int(self_cost.ID)
@@ -274,6 +327,7 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	record.source523.applied = ["hp", "mp", "materials", "target_filter"]
 	if not estimate.is_empty(): record.source523.applied.append("estimated_effect")
 	if not recovery.is_empty():record.source523.applied.append("self_recovery")
+	if not progression.is_empty():record.source523.applied.append("reviewed_execution")
 	if int(row.TargetLimitCount) > 0: record["targets"] = int(row.TargetLimitCount)
 	var duration := scalar_values(profile, "SpellBuffDuration", "Seconds")
 	if mode in ["buff", "counter", "stealth"] and duration.size() == 1 and float(duration[0]) > 0:
@@ -332,6 +386,7 @@ static func detail_text(skill: Dictionary) -> String:
 	if source.has("recovery"):
 		text+="\n원본 + TWILIGHT 설정 · 자기 기본 단계\n"+str(source.recovery.summary)
 		if str(skill.id)=="lm_1fb2fb45ca7bb6e5":text+="\n파티 회복·미구현 계약 상태는 현재 싱글플레이 범위 밖"
+	if source.has("progression"):text+="\n원본 실행 연결 + TWILIGHT 설정\n"+str(source.progression.summary)
 	if source.has("estimated"):
 		text += "\nTWILIGHT 추정 적용 · 원본 노드 복원 아님\n" + str(source.estimated.summary)
 		if str(skill.get("activation", "")) == "passive": return text + "\n누적523 원문은 패시브 · 습득 후 자동 적용 · 직접 시전/재료 소비 없음"

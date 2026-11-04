@@ -96,6 +96,26 @@ class ActualSourceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "unreviewed source row"):
                 builder.compile_pack(self.source, path)
 
+    def test_reviewed_execution_graph_preserves_native_profiles_and_invoke_types(self):
+        with zipfile.ZipFile(self.source) as archive:
+            spells = builder.unique(json.loads(archive.read("content/SpellClass.json"))["rows"], "SpellClass")
+            options = builder.unique(json.loads(archive.read("content/InvokeOption.json"))["rows"], "InvokeOption")
+            kinds = builder.unique(json.loads(archive.read("content/InvokeOptionType.json"))["rows"], "InvokeOptionType")
+            found = set()
+            for profile in self.pack["profiles"].values():
+                if "execution_graph" not in profile:
+                    continue
+                graph = profile["execution_graph"]
+                found.add(graph["root_id"])
+                self.assertEqual([p["row"]["ID"] for p in graph["spells"]], builder.EXECUTION_GRAPHS[graph["root_id"]])
+                for child in graph["spells"]:
+                    self.assertEqual(child["row"], spells[child["row"]["ID"]])
+                    self.assertEqual(child["row_json"], builder.canonical(child["row"]).decode())
+                for option in graph["invokes"]:
+                    self.assertEqual(option["row"], options[option["row"]["ID"]])
+                    self.assertEqual(option["type"], kinds[option["row"]["InvokeOptionTypeID"]])
+            self.assertEqual(found, set(builder.EXECUTION_GRAPHS))
+
 
 if __name__ == "__main__":
     unittest.main()

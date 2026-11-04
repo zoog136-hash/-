@@ -202,8 +202,10 @@ func _resolved_reference(record: Dictionary) -> Dictionary:
 		resolved_signature=signature
 		resolved_cache.clear()
 	var id: String=str(record.get("id",""))
-	if not id.is_empty() and by_id.has(id) and is_same(by_id[id],record):
-		if not resolved_cache.has(id):resolved_cache[id]=_resolve_uncached(record)
+	# UI/quickslots carry exact deep copies. Canonical equality is safe to cache;
+	# altered actions keep their own resolution and cannot poison that cache.
+	if not id.is_empty() and by_id.has(id) and (is_same(by_id[id],record) or by_id[id]==record):
+		if not resolved_cache.has(id):resolved_cache[id]=_resolve_uncached(by_id[id])
 		return resolved_cache[id]
 	return _resolve_uncached(record)
 
@@ -260,8 +262,9 @@ func _ensure_stat_index() -> void:
 		if not enabled(record):continue
 		if bool(record.get("local_design",false)):
 			static_speed=maxf(static_speed,float(record.get("passive_speed",1)))
-		if str(record.mode)!="stats":continue
 		var resolved: Dictionary=_resolved_reference(record)
+		if not str(resolved.get("source523_block_reason","")).is_empty():continue
+		if str(resolved.mode)!="stats":continue
 		static_speed=maxf(static_speed,float(resolved.get("stats",{}).get("speed",1)))
 		var stats: Dictionary=resolved.get("stats",{})
 		var conditions: Dictionary=resolved.get("stat_conditions",{})

@@ -178,11 +178,16 @@ func show_skill() -> void:
 	if original and not blocked:
 		var world: Node=owner_view.hud.get_parent()
 		var skill: Dictionary=world.original_skills.catalog.resolve(selected)
+		category.text=str(selected.get("class",""))+" · "+str(selected.get("grade","일반"))+" · "+("패시브" if str(skill.get("activation","active"))=="passive" else "ON/OFF" if str(skill.get("mode",""))=="source_toggle" else "액티브")
 		learned=world.original_skills.catalog.owned(selected)
 		category.text+=" · "+("습득 완료" if learned else "미습득")
 		var rows: Array=[]
-		if not owner_view.RULES.is_passive(selected):
+		if not owner_view.RULES.is_passive(skill):
 			rows=[["소모 MP / HP","%d / %d" % [int(skill.get("mp",0)),int(skill.get("hp",0))]],["재사용","%.1f초" % (float(skill.get("cooldown",0))*world._skill_cooldown_factor())],["지속시간",SOURCE523.duration_text(skill)]]
+			if str(skill.get("progression523",{}).get("kind",""))=="repeat":
+				var firing: Dictionary=world.original_skills.progression.repeat_skill(selected)
+				if not firing.is_empty():
+					rows=[["반복 발사 MP / HP","%d / %d" % [int(firing.mp),int(firing.hp)]],["발사 재료",SOURCE523.material_text(firing)],["발사 수 / 간격","%d회 / %.2f초(TWILIGHT)" % [int(firing.hits),float(firing.cooldown)*world._skill_cooldown_factor()]],["ON/OFF 전환 소모","0 / 0"]]
 			if not str(skill.get("source523_block_reason", "")).is_empty():
 				rows[0] = ["523 원문 MP / HP","%d / %d" % [int(skill.source523.mp_cost_raw),int(skill.source523.hp_cost_raw)]]
 		rows.append(["사용 무기","제한 없음" if skill.get("weapons",[]).is_empty() else " · ".join(skill.weapons)])
@@ -192,6 +197,8 @@ func show_skill() -> void:
 			if skill.source523.applied.has("mana"): rows.append(["MP 회복","%d · 기본 단계" % int(skill.mana)])
 		info_text=_table(rows)+"\n\n[b]효과[/b]\n"+UI.safe(skill.get("runtime_desc",selected.get("desc","")))+"\n\n"+("습득 완료" if learned else UI.safe(world.original_skills.catalog.reason(selected)))
 		if skill.has("recovery523"):category.text="원본 + TWILIGHT 설정 · "+category.text
+		if skill.has("progression523"):category.text="원본 실행 + TWILIGHT 설정 · "+category.text
+		owner_view.quick_button.text="퀵슬롯 · 수동 전환" if str(skill.get("mode",""))=="source_toggle" else "퀵슬롯 · 자동"
 		if bool(selected.get("local_design",false)) and not selected.has("estimated523"):info_text=raw_skill_text
 		else: info_text+=SOURCE523.detail_text(skill)
 		if not str(skill.get("source523_block_reason", "")).is_empty():
@@ -199,7 +206,9 @@ func show_skill() -> void:
 			info_text="[color=#dfb168]"+UI.safe(skill.source523_block_reason)+"[/color]\n\n"+info_text
 	if selected.has("estimated523"): category.text="TWILIGHT 추정 · "+category.text
 	if blocked:category.text+=" · 실행 보류"
-	elif not bool(selected.get("local_design",false)):owner_view.use_button.text="패시브" if owner_view.RULES.is_passive(selected) else "스킬 사용"
+	elif not bool(selected.get("local_design",false)):
+		var runtime: Dictionary=owner_view.hud.get_parent().original_skills.catalog.resolve(selected)
+		owner_view.use_button.text="패시브 · 자동 적용" if owner_view.RULES.is_passive(runtime) else ("OFF · 비활성화" if owner_view.hud.get_parent().original_skills.progression.is_on(selected) else "ON · 활성화") if str(runtime.get("mode",""))=="source_toggle" else "스킬 사용"
 	owner_view.learn_button.visible=original and not learned and not blocked
 	owner_view.book_button.visible=original and not learned and not blocked
 	owner_view.use_button.visible=blocked or not original or learned

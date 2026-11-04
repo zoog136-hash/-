@@ -4,6 +4,7 @@ class_name TwilightOriginalSkillService
 const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
 var local_runtime = LOCAL.new()
 var estimated_nodes = preload("res://scripts/skills/estimated_nodes523.gd").new()
+var progression = preload("res://scripts/skills/progression_runtime523.gd").new()
 const Catalog = preload("res://scripts/skills/skill_catalog.gd")
 const Status = preload("res://scripts/skills/status_service.gd")
 const VFX = preload("res://scripts/skills/skill_vfx.gd")
@@ -43,9 +44,11 @@ func configure(owner: Node) -> void:
 	summons.configure(self)
 	local_runtime.configure(self)
 	estimated_nodes.configure(self)
+	progression.configure(self)
 
 func clear() -> void:
 	estimated_nodes.clear()
+	if progression.owner_ref!=null:progression.suspend()
 	if local_runtime.world != null: local_runtime.suspend()
 	summons.clear()
 	status.clear()
@@ -62,6 +65,7 @@ func tick(delta: float) -> void:
 	estimated_nodes.tick(delta)
 	status.tick(delta)
 	summons.tick(delta)
+	progression.tick(delta)
 	combat_elapsed += delta
 	recovery_elapsed += delta
 	for id: String in shields.keys():
@@ -164,6 +168,8 @@ func cost_reason(skill: Dictionary) -> String:
 	if bool(skill.get("runtime_blocked", false)): return Catalog.CURRENT.blocked_reason(skill)
 	var estimate_reason: String = estimated_nodes.cost_reason(skill)
 	if not estimate_reason.is_empty(): return estimate_reason
+	var ammo_reason: String=progression.ammo_problem(skill)
+	if not ammo_reason.is_empty():return ammo_reason
 	if world.mp < int(skill.get("mp", 0)): return "MP 부족"
 	if world.hp <= int(skill.get("hp", 0)): return "HP 부족"
 	if skill.get("source523", {}).get("applied", []).has("mana") and world.mp >= world._effective_max_mp(): return "MP가 이미 가득 참"
@@ -182,6 +188,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 		if announce: world.hud.show_message(Catalog.CURRENT.blocked_reason(skill))
 		return false
 	if local_runtime.can_disable(skill): return true
+	if progression.can_disable(skill):return true
 	skill = catalog.resolve(skill)
 	var reason := ""
 	if not catalog.owned(skill): reason = "미습득 또는 직업 제한"
@@ -200,6 +207,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 func cast(record: Dictionary) -> bool:
 	if not ready(record, true): return false
 	var skill := catalog.resolve(record)
+	if progression.is_toggle(skill):return progression.toggle(skill)
 	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.cast(skill)
 	# Cast-speed options reduce cooldown through the world's shared policy;
 	# they must not also accelerate the contact/presentation timeline.
@@ -510,6 +518,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 				if skill.has("power") and event == "on_hit" and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
 		world.skill_cooldowns[id] = float(skill.get("proc_cooldown", 0))
 	if event == "on_hit" and is_instance_valid(target) and not target.dead:
+		progression.on_normal_hit(target,source_skill)
 		local_runtime.on_hit(target,source_skill)
 		trigger_equipment(target)
 	proc_depth -= 1
@@ -563,7 +572,9 @@ func outgoing_damage(amount: int) -> int:
 		var stats: Dictionary = buff.get("skill_stats", {})
 		if world.rng.randf() < float(stats.get("doubleChance", 0)): multiplier = maxf(multiplier, float(stats.get("doubleMultiplier", 1)))
 	for record: Dictionary in catalog.records:
-		if record.mode == "amplify" and catalog.enabled(record) and world.rng.randf() < float(record.get("proc_chance", 0)): multiplier = maxf(multiplier, float(record.get("multiplier", 1)))
+		if not catalog.enabled(record):continue
+		var resolved: Dictionary=catalog.resolve(record)
+		if resolved.mode == "amplify" and world.rng.randf() < float(resolved.get("proc_chance", 0)): multiplier = maxf(multiplier, float(resolved.get("multiplier", 1)))
 	return maxi(0, int(amount * multiplier))
 
 func on_evaded(attacker: TwilightMonster) -> void:
@@ -609,6 +620,7 @@ static func roll_counter(random: RandomNumberGenerator, chance: float) -> bool:
 func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 	if not ready(skill): return false
 	skill = catalog.resolve(skill)
+	if str(skill.get("mode",""))=="source_toggle":return false
 	if str(skill.get("mode", "")) in ["attack", "status", "turn_undead"] and is_instance_valid(target) and not Catalog.SOURCE523.target_allowed(skill, target): return false
 	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.auto_wants(skill)
 	match str(skill.mode):
@@ -678,11 +690,12 @@ func remove_guardian_shield_buff(id: String) -> void:
 	vfx.remove_persistent(id)
 
 func export_state() -> Dictionary:
-	return {"local_design":local_runtime.export_state(),"toggles":toggles.duplicate(true),"shields":shields.duplicate(true),"summon":summons.export_state()}
+	return {"local_design":local_runtime.export_state(),"toggles":toggles.duplicate(true),"shields":shields.duplicate(true),"summon":summons.export_state(),"source523_toggles":progression.export_state()}
 
 func import_state(data: Dictionary) -> void:
 	clear()
 	toggles = data.get("toggles", {}).duplicate(true)
+	progression.restore(data.get("source523_toggles",{}))
 	var saved_shields: Variant = data.get("shields", {})
 	if saved_shields is Dictionary:
 		for id: String in saved_shields:
@@ -714,6 +727,9 @@ func import_state(data: Dictionary) -> void:
 				world.active_skill_buffs.erase(name)
 				continue
 		var skill := catalog.resolve(base)
+		if skill.has("progression523") and str(skill.activation)=="passive":
+			world.active_skill_buffs.erase(name)
+			continue
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		vfx.maintain(str(skill.id), world.player, float(buff.get("remaining", 0)))
 	local_runtime.restore(data.get("local_design",{}))

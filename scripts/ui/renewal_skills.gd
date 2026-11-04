@@ -247,8 +247,6 @@ func refresh() -> void:
 	for value: Variant in records:
 		if not value is Dictionary: continue
 		var record: Dictionary=value
-		var activation := str(record.get("activation","active"))
-		if bool(record.get("toggle_classified", false)) and str(record.name) == "슈팅 스타": activation = "passive"
 		if type_filter.selected != 3:
 			var allowed: Array = record.get("classes", [record.get("class", "공용")])
 			if job == "공용":
@@ -256,6 +254,9 @@ func refresh() -> void:
 			elif not allowed.has(job): continue
 		if class_only and str(record.get("class","공용"))=="공용":continue
 		if grade_filter.selected > 0 and str(record.get("grade", "")) != grade_filter.get_item_text(grade_filter.selected): continue
+		var projected: Dictionary=hud.get_parent().original_skills.catalog.resolve(record)
+		var activation := str(projected.get("activation","active"))
+		if bool(record.get("toggle_classified", false)) and str(record.name) == "슈팅 스타": activation = "passive"
 		if type_filter.selected==1 and activation=="passive": continue
 		if type_filter.selected==2 and activation!="passive": continue
 		if query!="" and not (str(record.get("name",""))+str(record.get("desc",""))+str(record.get("historical_aliases",[]))).to_lower().contains(query): continue
@@ -266,7 +267,7 @@ func refresh() -> void:
 		return str(a.get("name",""))<str(b.get("name","")) if ga==gb else ga<gb)
 	for index: int in range(filtered.size()):
 		var record: Dictionary=filtered[index]
-		var passive := RULES.is_passive(record)
+		var passive := RULES.is_passive(hud.get_parent().original_skills.catalog.resolve(record))
 		var learned: bool = hud.get_parent().original_skills.catalog.owned(record)
 		var icon: Texture2D = _icon_for_skill(record,learned)
 		var effective: Dictionary = hud.get_parent().original_skills.catalog.resolve(record)
@@ -398,7 +399,7 @@ func select_original() -> void:
 	preview_button.disabled=skill.is_empty()
 	preview_button.tooltip_text="선택한 스킬의 기존 이펙트 미리보기" if not preview_button.disabled else "미리보기를 지원하지 않는 스킬입니다."
 	var learned: bool = catalog.owned(selected)
-	var passive: bool = RULES.is_passive(selected)
+	var passive: bool = RULES.is_passive(skill)
 	var base_cooldown: float = float(skill.get("cooldown",0))
 	var final_cooldown: float = base_cooldown*world._skill_cooldown_factor()
 	var weapons: String = "제한 없음" if skill.get("weapons",[]).is_empty() else " · ".join(skill.weapons)
@@ -446,12 +447,14 @@ func _process(delta: float) -> void:
 			use_button.text = "OFF · 범위 해제" if world.original_skills.local_runtime.is_on(selected) else "ON · 활성화"
 		var registration_error: String = world._quickslot_registration_error("skill",str(selected.id))
 		var effective: Dictionary = world.original_skills.catalog.resolve(selected)
+		if effective.has("progression523"):
+			use_button.text="패시브 · 자동 적용" if str(effective.activation)=="passive" else ("OFF · 비활성화" if world.original_skills.progression.is_on(selected) else "ON · 활성화") if str(effective.mode)=="source_toggle" else "스킬 사용"
 		if not str(effective.get("source523_block_reason", "")).is_empty(): registration_error = str(effective.source523_block_reason)
 		if effective.has("source523"): use_button.tooltip_text = world.original_skills.cost_reason(effective)
 		quick_button.disabled = not registration_error.is_empty()
 		quick_button.tooltip_text = registration_error
 		var original_remain: float = float(world.skill_cooldowns.get(str(selected.name), 0))
-		cooldown.text = "패시브 적용" if RULES.is_passive(selected) and world.original_skills.catalog.owned(selected) else "재사용 %.1f초" % original_remain if original_remain > 0 else "준비됨" if world.original_skills.catalog.owned(selected) else "미습득"
+		cooldown.text = "패시브 적용" if RULES.is_passive(effective) and world.original_skills.catalog.owned(selected) else "재사용 %.1f초" % original_remain if original_remain > 0 else "준비됨" if world.original_skills.catalog.owned(selected) else "미습득"
 		if str(selected.mode) == "summon" and world.original_skills.summons.active(str(selected.id)): cooldown.text += " · 소환 %.0f초" % world.original_skills.summons.remaining
 		return
 	var remain := float(world.skill_cooldowns.get(str(selected.get("name","")),0))

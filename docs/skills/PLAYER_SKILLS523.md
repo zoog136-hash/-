@@ -2,7 +2,7 @@
 
 기준 main: `7d550a78a8fd1a95a50ebb18b38c3134380c3fa6`. 다른 PR을 병합하지 않은 독립 작업이다. 이것은 전체 원본 전투 복원 완료가 아니다.
 
-사용자 승인 후속 작업으로8종은 [TWILIGHT 추정 실행](ESTIMATED_NODES523.md)까지 연결했다. 이후 [기존7종 자기 회복·해제·보호 경로와 설정 UI](SELF_RECOVERY523.md)를 추가했다. 아래 보류/참고 전용 원칙에서 이 명시적 실행 경로를 구분하며, 원본 동일 복원 완료로 집계하지 않는다. 최신 적용팩은441 프로필에15개 하위 주문과 단위/조건 메타데이터를 더한 v2다. 기존 Library 버전1은 이전 단계 보존본이다.
+사용자 승인 후속 작업으로8종은 [TWILIGHT 추정 실행](ESTIMATED_NODES523.md)까지 연결했다. 이후 [기존7종 자기 회복·해제·보호 경로와 설정 UI](SELF_RECOVERY523.md), [기존9종 패시브·ON/OFF·반복 발사](EXISTING_SKILLS523.md)를 추가했다. 아래 보류/참고 전용 원칙에서 이 명시적 실행 경로를 구분하며, 원본 동일 복원 완료로 집계하지 않는다. 최신 로컬 적용팩은441 프로필에 회복15개 하위 주문과 추가 실행10개 주문/Invoke 정의를 더한 v3다. v3의 Drive 업로드는 거절되어 LOCAL_ONLY이며, Drive에서 검증된 v2와 기존 Library 버전1을 최신 v3 보관 성공으로 쓰지 않는다.
 
 ## 소비 경로와 범위
 
@@ -33,16 +33,18 @@
 | 명중/AC 조건 경계 | `TWILIGHT_523_hit_evasion_ac_conditions_20261104.zip` | `cba8fd3e9ea15dfbd6ec2c45ffe81bf8177da525f7afb0f3126b41d3b1330cb0` |
 | 현행 아케인 럽처 효과 연구 | `TWILIGHT_current523_ArcaneRupture_changed_effect_20261104.zip` | `016af7fe1c3dc4a9a6ee80e9503335ab9c617666088d3683946126e66dcd1d9a` |
 
-최신 별도 적용팩 `player_skills523_apply_v2.json`:4,345,285 bytes, SHA256 `3f9656d03a7a3ac040e8e16ebfcc13ac09bfe93079cac55f067673155e1713d6`. 승인된 비공유 Drive의 실제 적용팩 폴더에 저장하고, 새 소비 폴더에서 정식 다운로드·해시 확인·실제 Main 시전/UI를 검증했다. 비공개 확정 링크는 별도 인계에 기록한다. 이전 Library 버전1은4,141,471 bytes/SHA256 `66f5258c82a160e9cfa174664adb8d856981143c716e6e0d99d4e6e77b6026d6`이며 최신 팩이 아니다. Drive 보관만으로 게임에 자동 적용되지 않는다. 원본 백업 ZIP과 적용팩을 분리하며 원본 아트 전체 전달 장부를 승격하지 않는다.
+최신 로컬 적용팩 `player_skills523_apply_v3.json`:4,415,307 bytes, SHA256 `256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a`다. 실제 게임 로드·시전은 검증했으나 Drive 업로드는 자동 승인 검토가 실행 전에 거절했으며, 외부 보관·새 Drive 소비 폴더 정식 다운로드는 미완이다. 세부 상태는 [추가9종 기록](EXISTING_SKILLS523.md)을 따른다.
+
+이전 v2 `player_skills523_apply_v2.json`은4,345,285 bytes/SHA256 `3f9656d03a7a3ac040e8e16ebfcc13ac09bfe93079cac55f067673155e1713d6`이며 비공유 Drive 저장·새 소비 폴더 정식 다운로드·실제 Main 실행을 확인했다. v2는 기존7경로와 읽기 호환되지만 추가9종 실행 자료는 없다. 이전 Library 버전1은4,141,471 bytes/SHA256 `66f5258c82a160e9cfa174664adb8d856981143c716e6e0d99d4e6e77b6026d6`이다. 비공개 확정 링크는 별도 인계에 기록한다. Drive 보관만으로 게임에 자동 적용되지 않는다. 원본 백업 ZIP과 적용팩을 분리하며 원본 아트 전체 전달 장부를 승격하지 않는다.
 
 ```sh
 python3 tools/skills/build_player_skills523.py \
   --source-zip /private/lineagem_patch523_all_content_validated_and_508_520_deltas.zip \
-  --output /private/player_skills523_apply_v2.json
+  --output /private/player_skills523_apply_v3.json
 
 godot --path . -- \
-  --player-skills523-pack=/private/player_skills523_apply_v2.json \
-  --player-skills523-sha256=3f9656d03a7a3ac040e8e16ebfcc13ac09bfe93079cac55f067673155e1713d6
+  --player-skills523-pack=/private/player_skills523_apply_v3.json \
+  --player-skills523-sha256=256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a
 ```
 
 팩 경로·해시 두 인수가 모두 필요하다. 누락·해시/버전/바인딩/행 불일치는 현재 팩과 저장을 교체하지 않는다. 미설치 실행은 기존 규칙을 유지하며, 실패한 설치 요청은 스킬 화면에 기존 규칙 사용 상태를 표시한다. 팩의 프로필은 세션에 고정된다. 명시적으로 API로 재적재하면 revision으로 resolve 캐시만 무효화하고 대기 중인 공격의 스냅샷이나 저장은 수정하지 않는다.
@@ -58,6 +60,8 @@ TWILIGHT_SOURCE_MAP_PACK=/private/current-map python3 tools/ci_core.py \
 실제523 비용/화면/전투 검사는 `tests/player_skills523_live.gd`, `active_source_test_positions.gd`, `combat_test_clock.gd`를 동일한 임시 core 프로젝트에 추가하고 별도 XDG 저장소에서 스킬 팩 인수로 실행한다. core 게이트는 스킬 화면의 동적 아이콘을 모두 가져오지 않으므로 저장소의 실제 `assets/skills/`도 같은 경로에 복사한 후 다시 import한다. 대체 그림을 생성하지 않는다. `--source523-captures=/private/captures`는 실제 OpenGL 실행에서만 사용한다. 실제 상세 탭을 열고 요청한1280×720/960×540 렌더 크기를 확인한다. 전투 대상은 현재 원본 맵의 통행 가능한 위치에 둔 제어된 dummy이며 population을 멈춘다. 일반 몬스터 AI/출현이나 headless 실행을 화면 검증으로 세지 않는다.
 
 ## 이번 직접 검증
+
+추가9종은 실제 Main/current source-map/OpenGL109검사, 최종 발사 비용/정밀 설정 UI16검사, 실행 그래프/이전 v2 호환/정확한 사본 캐시12검사, 컴파일러7검사를 통과했다. 기존 정책42검사와 Main/세이브32검사, 기존 회복7종의 headless Main/UI77검사도 통과했다. 참고327개와 PC 대상6개는 활성화하지 않으며 전체146개 실플레이 완료라는 뜻이 아니다. 상세 내용은 [추가9종 기록](EXISTING_SKILLS523.md)에 있다.
 
 최신7종 경로는 실제 Drive 다운로드 팩으로 Main/current source-map/OpenGL81검사, 설정 화면13검사, 컴파일러6검사, 기존 정책42검사 및 Main/세이브32검사를 통과했다. 설정 손상 입력 검사는 예상 parse 오류1회와 기존 파일 보존을 별도로 확인했다. 자세한 범위와 실제 적용·백업 구분은 [추가 경로 기록](SELF_RECOVERY523.md)을 따른다. 아래는 이전 단계의 검증 이력이다.
 
@@ -98,4 +102,4 @@ python3 tools/skills/audit_player_skills523.py \
 
 원본 사거리·반경의 거리 함수/픽셀 환산, CastDelay의 시간·그룹·직업별 우선순위, 새 스킬 전투 구현, 조건부/대체 비용, 패시브·토글 전환, 단계별·복합·연쇄 효과, 전 상태 종류, 서버 최종 피해·명중·AC 계산, Windows/Android 실기기 검증은 미완료다. 차지의 PC 전용 후속 그로기를 NPC의 AC 감소로 만들지 않았다. Formula111은 방어111로 해석하지 않았다. 아케인 럽처119971은 무기 발동 연구이므로 일반 학습 스킬로 추가하거나 미확정 음원을 연결하지 않았다. 사용자 지정 드랍 확률·각성 비용은 변경하지 않았다.
 
-필수 공개 리소스 검사723시트/41,442프레임은 별도다. 역사적 `--source-dir` 검사는 이 세 ZIP이 아니라 `a1.zip` 등 구형6ZIP을 요구하여 해당 파일 부재로 실패했다. 이 작업은 원본 그림 복원을 수행하지 않으며, 그 실패를 성공으로 기록하지 않는다. 세 개의 이번 자료는 위 해시/CRC로, 최신 적용팩은 컴파일러의20표 원문 해시/행수 대조로 직접 검증한다.
+필수 공개 리소스 검사723시트/41,442프레임은 별도다. 역사적 `--source-dir` 검사는 이 세 ZIP이 아니라 `a1.zip` 등 구형6ZIP을 요구하여 해당 파일 부재로 실패했다. 이 작업은 원본 그림 복원을 수행하지 않으며, 그 실패를 성공으로 기록하지 않는다. 세 개의 이번 자료는 위 해시/CRC로, 최신 적용팩은 컴파일러의22표 원문 해시/행수 대조로 직접 검증한다.

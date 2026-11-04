@@ -78,6 +78,10 @@ func configure(controller: Node) -> void:
 	recovery_settings.configure(hud)
 	stack.add_child(recovery_settings)
 	stack.add_child(HSeparator.new())
+	var progression_settings:=preload("res://scripts/ui/skill_progression523_settings.gd").new()
+	progression_settings.configure(hud)
+	stack.add_child(progression_settings)
+	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("HUD 표시",18,UI.GOLD))
 	var log_toggle := CheckButton.new()
 	log_toggle.name = "CombatLogToggle"

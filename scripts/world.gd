@@ -954,7 +954,8 @@ func _effective_max_mp() -> int:
 				if typed_mp == 0 and (segment.begins_with("MP ") or segment.begins_with("Max MP ")):
 					added += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr(3 if segment.begins_with("MP ") else 7)))
 	var flat: int = max_mp + added + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp") + int(original_skills.stat("mp") if original_skills != null else 0)
-	return maxi(1, int(round(float(flat) * (1.0 + _equipped_numeric_sum("mpPct")))))
+	var skill_percent: float=original_skills.stat("mpPct") if original_skills!=null else 0.0
+	return maxi(1, int(round(float(flat) * (1.0 + _equipped_numeric_sum("mpPct") + skill_percent))))
 
 func _index_item_weights() -> void:
 	item_weight_index.clear()
@@ -2350,6 +2351,10 @@ func _attack() -> void:
 		target = _nearest_visible_monster_in_weapon_range()
 	if target == null:
 		hud.show_message("무기 사거리 안에 보이는 대상이 없습니다")
+		return
+	if original_skills!=null and original_skills.progression.try_repeat(target):
+		auto_attack_timer=_normal_attack_interval()
+		selected_monster=target
 		return
 	if not _consume_weapon_ammo():
 		auto_attack_timer = 1.0
@@ -5279,7 +5284,9 @@ func _quickslot_registration_error(kind: String, id: String) -> String:
 	if kind not in ["skill","skill_auto"]: return "등록할 수 없는 항목입니다"
 	var skill: Dictionary = _skill_record(id)
 	if skill.is_empty(): return "삭제되었거나 존재하지 않는 스킬입니다"
+	if original_skills!=null and skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:skill=original_skills.catalog.resolve(skill)
 	if _is_passive_skill(skill): return "패시브는 직접 사용할 수 없습니다"
+	if kind=="skill_auto" and str(skill.get("mode",""))=="source_toggle":return "ON/OFF는 수동 전환하고 일반 공격에서 실행합니다"
 	if kind == "skill_auto" and not SKILL_RULES.can_auto_cast(skill): return "자동사용을 지원하지 않는 스킬입니다"
 	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill): return "미습득 스킬입니다"
@@ -5325,7 +5332,10 @@ func _quickslot_pages() -> Array:
 
 func _quickslot_auto_allowed(entry: Dictionary) -> bool:
 	if entry.get("kind","") == "skill":
-		return SKILL_RULES.can_auto_cast(_skill_record(str(entry.get("skill_id",entry.get("id","")))))
+		var skill: Dictionary=_skill_record(str(entry.get("skill_id",entry.get("id",""))))
+		if original_skills!=null and skill.get("origin","") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:skill=original_skills.catalog.resolve(skill)
+		if str(skill.get("mode",""))=="source_toggle":return false
+		return SKILL_RULES.can_auto_cast(skill)
 	var record: Dictionary = _find_catalog_item_record(str(entry.get("id","")))
 	var spec: Dictionary = CONSUMABLE_RULES.definition(str(entry.get("id","")))
 	return int(record.get("heal",0)) > 0 or str(spec.get("kind","")) in ["regen","food","buff","instant_mp"]
@@ -7669,7 +7679,7 @@ func _effective_defense() -> int:
 
 func _effective_max_hp() -> int:
 	var flat_bonus: float = 0.0
-	var percent_bonus: float = 0.0
+	var percent_bonus: float = original_skills.stat("hpPct") if original_skills!=null else 0.0
 	for record: Dictionary in _all_equipped_records():
 		flat_bonus += float(record.get("hpFlat", 0.0))
 		percent_bonus += float(record.get("hpPct", 0.0))
