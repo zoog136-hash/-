@@ -1,8 +1,8 @@
 extends RefCounted
 ## Extra summon slot, never another awakening purchase/level or a main-slot sum.
 const DATA=preload("res://data/cards/base508_option_extensions.json")
+const Slots=preload("res://scripts/cards/option_slot_definitions.gd")
 const FIELD: String="native_subslot_identity"
-static var _secondary_groups: Dictionary={}
 const MAP={"HPPlus":"hpFlat","HPPlusPercent":"hpPct","Strength":"strFlat","Dexterity":"dexFlat","Intelligence":"intFlat","CarryPlus":"weightBonus","ArmorClass":"def","ArmorClassBonus":"def","AttackSpeedBonus":"attackSpeed","MoveSpeedBonus":"moveSpeedPct","PierceDamageReduction":"damage_reduction_ignore","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","SpellPower":"sp","Constitution":"conFlat","MPPlus":"mpFlat","DamageReduction":"damageReduction","MagicResist":"mr","MeleeEvasion":"dg","RangeEvasion":"er","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeCritical":"meleeCrit","RangeCritical":"rangedCrit","HPPotionIncreaseStatic":"potionHealFlat","HPPotionIncreasePercent":"potionHealPct","PVEDamageReduction":"pve_damage_reduction","PVEMeleeAdditionDamage":"pve_melee_damage","PVERangeAdditionDamage":"pve_ranged_damage","PVEMagicAdditionDamage":"pve_magic_damage"}
 static func validate(value: Dictionary) -> String:
 	var unlock_error: String=preload("res://scripts/cards/native_doll_unlock_item.gd").validate(value)
@@ -71,12 +71,10 @@ static func effects(runtime: RefCounted,identity: String) -> Dictionary:
 	return out
 
 static func secondary_groups(identity: String) -> Array:
-	if _secondary_groups.is_empty():
-		for group: Dictionary in DATA.data.option_groups:
-			if int(group.group.SlotIndex)!=11:continue
-			if not _secondary_groups.has(group.identity):_secondary_groups[group.identity]=[]
-			_secondary_groups[group.identity].append(group)
-	return _secondary_groups.get(identity,[])
+	var group: Dictionary=Slots.group_for(identity,11)
+	# This consumer is specifically the existing additional doll slot.
+	if group.is_empty() or int(group.card.BuffCardDeckID)!=2:return []
+	return [group]
 static func status_available(runtime: RefCounted,identity: String,status_id: int) -> bool:
 	for group: Dictionary in secondary_groups(identity):
 		var condition: Dictionary=runtime.core.native_conditions.evaluate(int(group.group.ServerLimitsetID),runtime.core.source_server_context)

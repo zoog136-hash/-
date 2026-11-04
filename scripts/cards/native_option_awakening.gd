@@ -1,6 +1,7 @@
 extends RefCounted
 const DATA = preload("res://data/cards/base508_option_awakening.json")
 const Native = preload("res://scripts/cards/native_collection_rules.gd")
+const Slots=preload("res://scripts/cards/option_slot_definitions.gd")
 static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 	if not Native.accepts_catalog(catalog): return legacy
 	var result: Dictionary=legacy.duplicate(true)
@@ -8,7 +9,7 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 	result.native_server_limits=DATA.data.source_server_limits
 	var source_aura_component: bool=ResourceLoader.exists("res://scripts/animation/source_awakening_aura.gd")
 	for original: Dictionary in DATA.data.definitions:
-		var row: Dictionary=original.duplicate(true)
+		var row: Dictionary=Slots.apply_reviewed_primary(original.duplicate(true))
 		for text: String in row.pending_options.duplicate():
 			if text.begins_with("원본 추가 옵션 슬롯 "):
 				row.pending_options.erase(text)

@@ -217,7 +217,10 @@ func run() -> void:
 	grown.cards[material].level=20;grown.cards[material].experience="9999999999999"
 	check(skills.accept_load({SkillRuntime.SAVE_KEY:grown}),"grown source skill state accepted")
 	var prepared: Dictionary=core.prepare_reroll(skills.export_state(),host.card_draw_fusion.owned,material,66000,0,"policy-reroll-1")
-	check(prepared.ok and prepared.spell_id==64264 and prepared.state.cards[material].level==20 and prepared.state.cards[material].experience=="9999999999999","source weighted reroll changes only skill and preserves growth")
+	check(prepared.ok and prepared.spell_id==64264 and prepared.state.cards[material].level==1 and prepared.state.cards[material].experience=="0","source weighted reroll follows user level1 zero EXP policy")
+	check(skills.export_state()==grown and prepared.state.cards[material].future_metadata==grown.cards[material].future_metadata,"preparation preserves input and unknown saved metadata")
+	var same_spell: Dictionary=core.prepare_reroll(skills.export_state(),host.card_draw_fusion.owned,material,0,0,"same-skill-reset")
+	check(same_spell.ok and same_spell.spell_id==64224 and same_spell.state.cards[material].level==1 and same_spell.state.cards[material].experience=="0","same selected skill also starts over")
 	check(not prepared.has("success_chance") and not prepared.state.cards[material].has("pity"),"no invented awakening failure or pity mechanic")
 	for seed_value: int in range(1,10000):
 		probe.seed=seed_value
@@ -230,14 +233,14 @@ func run() -> void:
 	check(not result.ok and result.code=="save_failed" and FileAccess.get_file_as_string(host.save_path())==disk_before,"failed internal reroll persistence preserves disk")
 	check(hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])==before_commit,"failed reroll persistence rolls back growth/RNG and changes no resources")
 	host.save_error=OK;result=skills._commit_confirmed_reroll(material,0,"policy-reroll-1")
-	check(result.ok and skills.progress.cards[material].spell_id==64264 and skills.progress.cards[material].level==20 and skills.progress.cards[material].experience=="9999999999999","confirmed internal reroll commits source skill with preserved level/EXP")
+	check(result.ok and skills.progress.cards[material].spell_id==64264 and skills.progress.cards[material].level==1 and skills.progress.cards[material].experience=="0","confirmed internal reroll commits source skill and growth reset")
 	var after_commit: int=hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])
 	result=skills._commit_confirmed_reroll(material,0,"policy-reroll-1")
 	check(not result.ok and result.code=="duplicate_operation" and hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])==after_commit,"repeated reroll operation cannot duplicate transaction or advance live RNG")
 	result=skills._commit_confirmed_reroll(material,0,"stale-reroll-2")
 	check(not result.ok and result.code=="stale_revision","stale revision cannot apply another reroll")
 	var saved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(host.save_path()))
-	check(saved.has("card_option_awakening") and saved.card_skill_awakening.cards[material].experience=="9999999999999","atomic writer retains option namespace with rerolled skill state")
+	check(saved.has("card_option_awakening") and saved.card_skill_awakening.cards[material].experience=="0","atomic writer retains option namespace with reset skill state")
 	check(skills.accept_load(saved) and str(skills.selection_rng.state)==str(saved.card_skill_awakening.rng_state),"saved reroll RNG/state restore together")
 	var guarded: int=hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])
 	check(not skills.request_operation(material).ok and hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])==guarded,"public paid operation remains gated despite internal policy implementation")

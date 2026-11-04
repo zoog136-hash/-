@@ -100,6 +100,8 @@ func view(category: String, target_id: String) -> Dictionary:
 	_sync_native_context()
 	if not problem.is_empty(): return Core.fail("configuration", problem)
 	var out: Dictionary = core.view(progress, world.card_draw_fusion.export_state(), int(world.gold), category, target_id)
+	if core.native_mode and bool(out.get("ok",false)):
+		out.slot_definitions=preload("res://scripts/cards/option_slot_definitions.gd").view(target_id)
 	if core.native_mode and out.get("ok",false):
 		out.source_status_reference=preload("res://scripts/cards/native_awakening_status.gd").binding(core.definition(category,target_id))
 		var collections: Variant=world.get("card_collections")

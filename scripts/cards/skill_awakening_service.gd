@@ -9,7 +9,7 @@ const MAX_REVISION: int=9007199254740000
 const BOOK_QUANTITY: int=1 # user policy, not recovered source consumption evidence
 const GRADE_NAMES: Dictionary={3:"희귀",4:"영웅",5:"전설",32:"신화",52:"유일"}
 const FEES: Dictionary={3:100000,4:500000,5:1000000,32:2000000,52:5000000}
-const REROLL_POLICY: String="source_weighted_reroll_preserve_growth"
+const REROLL_POLICY: String="source_weighted_reroll_reset_growth"
 var conditions=Conditions.new()
 var source_server_context: Dictionary={}
 var cards: Dictionary={}
@@ -109,7 +109,7 @@ func view(state: Dictionary,owned: Dictionary,identity: String,preview_level: in
 	if card.is_empty():return fail("identity","원본 카드 ID 연결 없음")
 	var entry: Dictionary=state.cards.get(identity,{"spell_id":0,"level":0,"experience":"0"})
 	var available: Dictionary=eligibility(identity)
-	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 성장 유지","unknown_rules":DATA.data.unknown_rules}
+	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 시 Lv.1 · 경험치 0부터","unknown_rules":DATA.data.unknown_rules}
 
 func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
 	return fail("runtime_transaction_required","실제 인벤토리·재화 거래는 스킬 각성 런타임에서 처리합니다")
@@ -194,15 +194,16 @@ func prepare_reroll(state: Dictionary,owned: Dictionary,identity: String,roll: i
 	var next: Dictionary=normalized_state(state)
 	var entry: Dictionary=next.cards.get(identity,{"spell_id":0,"level":1,"experience":"0"}).duplicate(true)
 	var previous: int=int(entry.spell_id)
-	# Actual source policy selected by the user: change the skill only. Preserve
-	# growth even if an old record temporarily has no assigned spell.
+	# Explicit user policy: reawakening starts again at level1 / zero EXP.
+	# Existing saves retain growth until a new paid transaction commits.
 	entry.spell_id=int(chosen.candidate.spell_id)
-	entry.level=maxi(1,int(entry.get("level",1)))
+	entry.level=1
+	entry.experience="0"
 	next.cards[identity]=entry
 	next.revision=int(next.revision)+1
 	next.last_operation_id=operation_id
 	next.reroll_policy=REROLL_POLICY
-	return {"ok":true,"state":next,"target_id":identity,"previous_spell_id":previous,"spell_id":int(entry.spell_id),"policy":REROLL_POLICY}
+	return {"ok":true,"state":next,"target_id":identity,"previous_spell_id":previous,"spell_id":int(entry.spell_id),"policy":REROLL_POLICY,"growth_reset":true}
 
 
 func request_experience_feed(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:

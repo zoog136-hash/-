@@ -8,6 +8,7 @@ var identity: String
 var level: OptionButton
 var stats: Label
 var current: Label
+var growth: Label
 var candidates: ItemList
 var effect: RichTextLabel
 var action: Button
@@ -29,7 +30,8 @@ func configure(service: RefCounted,target: String) -> void:
 	var selected_id: int=int(snapshot.entry.spell_id)
 	current.text="현재 각성 스킬 없음" if selected_id==0 else str(runtime.core.DATA.data.spells.get(str(selected_id),{}).get("name","미지원 스킬"))+" · Lv."+str(int(snapshot.entry.level))
 	if not snapshot.owned:current.text+=" · 미보유 · 조회 전용"
-	info.add_child(UI.label("저장 경험치 "+str(snapshot.entry.experience)+" · 재각성 시 경험치 유지",12,UI.MUTED))
+	growth=UI.label("저장 경험치 "+str(snapshot.entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터",12,UI.MUTED)
+	growth.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(growth)
 	if bool(snapshot.get("save_blocked",false)):info.add_child(UI.label("저장 보호 중 · 정상 저장 불러오기 필요",12,UI.GOLD))
 	var book: Label=UI.label("필요 각성서: "+str(snapshot.book.get("name","원본 연결 없음"))+" · 1장 소모",12,UI.MUTED);book.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(book)
 	level=OptionButton.new();level.name="SkillAwakeningPreviewLevel";level.custom_minimum_size.y=44
@@ -80,5 +82,7 @@ func _execute() -> void:
 	if result.ok:
 		snapshot=runtime.view(identity)
 		current.text=str(runtime.core.DATA.data.spells[str(int(snapshot.entry.spell_id))].name)+" · Lv."+str(int(snapshot.entry.level))
+		growth.text="저장 경험치 "+str(snapshot.entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터"
+		action.text="재각성"
 	else:current.text=str(result.error)
 	action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false))
