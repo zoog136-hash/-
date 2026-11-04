@@ -1,3 +1,7 @@
+## Current fresh-producer and weapon follow-up
+
+[FRESH_NATIVE.md](FRESH_NATIVE.md) records actual new Mage auto-completion -> native376/385 issuance -> real inventory use -> failure/reconnect validation, plus source weapon248 under the existing no-durability policy.49 of146 classes have at least one bounded path;97 have none. Original gear QA now has27 units/25 classes and6 raw stacks preserved. Existing Knight811 completions/326 some-use-pending preview and controlled new Mage812 are separate contexts. 790 focused assertions passed. Private input delivery is unchanged; prior checkpoints below are historical.
+
 ## Current source-regeneration follow-up
 
 [SOURCE_REGEN.md](SOURCE_REGEN.md) records two real quest potion consumers and five exact source gear regeneration connections. Amounts/duration come from source; the30second cadence is labelled TWILIGHT policy.48 of146 classes now have at least one bounded path,98 have none. Actual normal+0 gear use totals26 units/24 classes with7 raw stacks retained. New-source completions remain811; current Knight preview without skillv3 has326 some-use-pending quests. Earlier pending counts below are historical. 4318 focused assertions passed; all-effect/native-cycle/full-game completion is not claimed. Existing original saves and resource packs are unchanged.

@@ -2,8 +2,8 @@
   "source_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
   "counts_are_distinct_item_classes_not_quests_or_item_quantities": true,
   "baseline_pending_item_classes": 146,
-  "reviewed": 48,
-  "remaining": 98,
+  "reviewed": 49,
+  "remaining": 97,
   "original_constraints_waived": false,
   "contracts": {
     "contract_1": "Requires exact installed effect/equipment/currency owner and quest receipt contract; never bind by name",
@@ -21,11 +21,12 @@
     "normal_plus0_equipment": "Actual selected receipt debit -> one physical UUID -> equip, or authenticated existing369002/59062/226318 selection UUID -> equip/unequip; one confirmed save. Normal blessing/+0 known baseAC/HP/MP/MR/STR, exact weapon bounds/hit and compiled rank0XP only; see QUEST_EQUIPMENT.md. Source crafting/material/enhancement owners remain separate.",
     "source_regen_host_cadence": "Pinned source amount/duration, source conditions/receipt; existing host recovery engine with labelled30second cadence. Potion cadence configurable in ui_preferences.quest523_mp_regen_interval_seconds; invalid/zero holds. Gear uses existing clock with opt-out quest523_source_gear_regen_enabled=false. No native-cycle equivalence."
   },
-  "prior_public_checkpoint": "1b71941839c9cf49258efbdaa5b101929419a8d5",
+  "prior_public_checkpoint": "2f778b877b3dabbee5d9aa696ba8ec16f7bf378e",
   "reviewed_item_classes": [
     233,
     239,
     240,
+    248,
     249,
     305,
     349,
@@ -136,8 +137,17 @@
       "source_use_kind": "none",
       "source_activation": "none",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_1"
+      "quest_binding_reviewed": true,
+      "contract": "normal_plus0_equipment",
+      "verified_bless_raw": [
+        1
+      ],
+      "verified_enchant_level": [
+        0
+      ],
+      "source_erosion_flag_preserved": true,
+      "host_durability_disabled_not_native_erosion_engine": true,
+      "native_all_equipment_effects_completed": false
     },
     {
       "item_class_id": 249,
@@ -2003,8 +2013,8 @@
     "remaining": 110
   },
   "prior_counts": {
-    "reviewed": 41,
-    "remaining": 105
+    "reviewed": 48,
+    "remaining": 98
   },
   "reviewed_means_one_or_more_exact_bounded_consumers_not_all_native_states": true,
   "new_plus0_normal_gear_ids": [

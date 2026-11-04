@@ -57,6 +57,12 @@ func profile(id: int,bless: int)->Dictionary:
   if name in ["RegenHP","RegenMP"]:
    if id not in REGEN_GEAR or row.unit.Name!="Value" or int(row.bonus.Value)<1:return {}
    continue
+  if name=="WeaponErodeProof":
+   # Existing TWILIGHT policy has no durability/erosion consuming action.
+   # Preserve the exact immunity flag; do not invent repair or make it an
+   # enhancement-destruction exemption. Integration must retain this rule.
+   if id!=248 or row.unit.Name!="TrueFalse" or row.bonus.Value!=1:return {}
+   continue
   if name=="WeaponType":
    if row.unit.Name!="WeaponTypeID" or int(row.bonus.Value) not in [1,6] or int(record.get("source_weapon_type_id",0))!=int(row.bonus.Value):return {}
    continue
@@ -76,6 +82,7 @@ func effect_record(record: Dictionary)->Dictionary:
  var option: Variant=data.get("equipment_runtime",{}).get(str(int(record.source_item_class_id)),{}).get("options",{}).get("1",{}).get("0",{}).get("xp_pct",null)
  if option!=null:
   result["xp"]=float(option.get("total",0))/100.0 if option is Dictionary else float(record.get("xp",0))+float(option)/100.0
+ if int(record.source_item_class_id)==248:result["quest_source_weapon_erosion"]={"original_bonus_id":7213,"original_value":1,"current_host_policy":"durability_and_erosion_disabled","enhancement_destruction_exemption":false}
  var recovery: Dictionary=source_regeneration(record)
  if not recovery.is_empty():result["quest_source_regeneration"]={"amounts":recovery,"cadence":"TWILIGHT_existing_gear_recovery30s","source_interval_verified":false}
  result["quest_equipment_effect_basis"]={"rules_sha256":RULE_SHA,"item_pack_sha256":PIN,"level":0,"scope":"source_unconditional_AC_HP_MP_MR_STR_weapon_bounds_hit_and_rank0_XP_only"}
