@@ -44,7 +44,6 @@ func configure(owner: Node) -> void:
 	local_runtime.configure(self)
 
 func clear() -> void:
-	relic_buff_signature = ""
 	if local_runtime.world != null: local_runtime.suspend()
 	summons.clear()
 	status.clear()
@@ -54,15 +53,16 @@ func clear() -> void:
 	marks.clear()
 	counter_counts.clear()
 	if is_instance_valid(vfx): vfx.clear()
+	relic_buff_signature = ""
 
 func tick(delta: float) -> void:
-	refresh_relic_buffs()
 	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")))
 	local_runtime.tick(delta)
 	status.tick(delta)
 	summons.tick(delta)
 	combat_elapsed += delta
 	recovery_elapsed += delta
+	refresh_relic_buffs()
 	for id: String in shields.keys():
 		shields[id].remaining -= delta
 		if float(shields[id].remaining) <= 0:
@@ -425,7 +425,7 @@ func stack(id: String, stats: Dictionary, limit: int, duration: float) -> void:
 	stacks[id] = {"count":count,"stats":stats,"remaining":duration}
 	vfx.emit_skill(id, "impact", world.player.global_position)
 
-func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = {}) -> void:
+func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = {}, attack: Dictionary = {}) -> void:
 	if event == "on_hit" and str(source_skill.get("mode", "")) != "summon": summons.notify_attack(target)
 	# Extra hits, reflected damage, and procs do not recursively proc themselves.
 	if proc_depth > 0: return
@@ -435,10 +435,14 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 		if not catalog.enabled(base) or str(base.mode) not in ["proc","mark","toggle_proc","stack_defense","stack_attack"]: continue
 		var skill := catalog.resolve(base)
 		var expected := str(skill.get("trigger", "on_damaged" if skill.mode == "stack_defense" else "on_hit"))
-		if expected != event: continue
+		var native_delta: float = Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(skill, attack)
+		if event == "on_miss":
+			if expected != "on_hit" or native_delta <= 0: continue
+		elif expected != event: continue
 		var id := str(skill.id)
 		if float(world.skill_cooldowns.get(id, 0)) > 0: continue
-		if world.rng.randf() >= float(skill.get("proc_chance", 1)): continue
+		var chance: float = native_delta if event == "on_miss" else float(skill.get("proc_chance", 1)) + native_delta
+		if world.rng.randf() >= clampf(chance, 0, 1): continue
 		match str(skill.mode):
 			"stack_defense": stack(id, {"damageReduction":skill.get("reduction_per_stack", 1)}, int(skill.get("max_stacks", 5)), float(skill.duration))
 			"stack_attack": stack(id, {"atk":skill.get("atk_per_stack", 1),"meleeHit":skill.get("hit_per_stack", 1)}, int(skill.get("max_stacks", 5)), float(skill.duration))
@@ -478,7 +482,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 				if skill.has("mana"):
 					world.mp = mini(world._effective_max_mp(), world.mp + int(skill.mana))
 					vfx.emit_skill(id, "impact", world.player.global_position)
-				if skill.has("power") and event == "on_hit" and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
+				if skill.has("power") and event in ["on_hit", "on_miss"] and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
 		world.skill_cooldowns[id] = float(skill.get("proc_cooldown", 0))
 	if event == "on_hit" and is_instance_valid(target) and not target.dead:
 		local_runtime.on_hit(target,source_skill)
@@ -527,14 +531,30 @@ func target_damage(amount: int, target: TwilightMonster) -> int:
 	# equipment procs. Instant death intentionally bypasses that boundary.
 	return status.damage_after_reduction(amount, target)
 
-func outgoing_damage(amount: int) -> int:
+func attack_context(kind: String, by_spell: bool, hit: bool, main_target: bool = true) -> Dictionary:
+	return {"confirmed":true,"attack_type":kind,"by_spell":by_spell,"hit":hit,"main_target":main_target,"source_weapon_type":preload("res://scripts/animation/source_weapon_banks.gd").local_type(world._current_weapon_type())}
+
+func trigger_relic_miss(target: TwilightMonster, kind: String) -> void:
+	if proc_depth > 0 or not is_instance_valid(target) or target.dead: return
+	var attack: Dictionary = attack_context(kind, false, false)
+	# No new event/RNG side effects when no active native miss increment exists.
+	for base: Dictionary in catalog.records:
+		if not catalog.enabled(base) or base.mode != "proc": continue
+		if Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(catalog.resolve(base), attack) > 0:
+			trigger("on_miss", target, {}, attack)
+			return
+
+func outgoing_damage(amount: int, attack: Dictionary = {}) -> int:
 	if proc_depth > 0 or counter_depth > 0: return amount
 	var multiplier := 1.0
 	for buff: Dictionary in world.active_skill_buffs.values():
 		var stats: Dictionary = buff.get("skill_stats", {})
 		if world.rng.randf() < float(stats.get("doubleChance", 0)): multiplier = maxf(multiplier, float(stats.get("doubleMultiplier", 1)))
 	for record: Dictionary in catalog.records:
-		if record.mode == "amplify" and catalog.enabled(record) and world.rng.randf() < float(record.get("proc_chance", 0)): multiplier = maxf(multiplier, float(record.get("multiplier", 1)))
+		if record.mode != "amplify" or not catalog.enabled(record): continue
+		var skill: Dictionary = catalog.resolve(record)
+		var chance: float = float(skill.get("proc_chance", 0)) + Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(skill, attack)
+		if world.rng.randf() < clampf(chance, 0, 1): multiplier = maxf(multiplier, float(skill.get("multiplier", 1)))
 	return maxi(0, int(amount * multiplier))
 
 func on_evaded(attacker: TwilightMonster) -> void:

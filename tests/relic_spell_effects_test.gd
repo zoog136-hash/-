@@ -55,15 +55,44 @@ func _initialize() -> void:
 	check(delta("lm_888a50500b32fd03", "meleeHit", 74) == 0 and delta("lm_888a50500b32fd03", "meleeHit", 75) == 1, "Shadow Fang character gate respected")
 	check(delta("lm_bb653bb8ca9e587d", "def") == 1 and delta("lm_cb0375ba9c238726", "def") == 1, "native AC improvement maps to host positive defense")
 	check(delta("lm_a3f1da232ab333b5", "pveDamageReduction") == 1, "PvE reduction remains separate")
-	for id: String in ["lm_b9e5decfe11eb2aa", "lm_236e004c8ab51043", "lm_a0a768c51a6b7838", "lm_517ca31126a31b45", "lm_a67097404fc5663e", "lm_1fb2fb45ca7bb6e5"]:
+	for id: String in ["lm_b9e5decfe11eb2aa", "lm_236e004c8ab51043"]:
+		check(delta(id,"pvpDamageReduction") == 1 and projected(id).relic_spell_effect.training_available, "PvP source increment isolated for explicit local training " + id)
+	for id: String in ["lm_a67097404fc5663e", "lm_1fb2fb45ca7bb6e5"]:
 		var result: Dictionary = projected(id)
-		check(result.relic_spell_effect.applied.is_empty() and not result.relic_spell_effect.pending.is_empty(), "scoped/probability/child healing rules not invented " + id)
+		check(is_equal_approx(float(result.get("heal_percent",0)), .05) and bool(result.relic_spell_effect.native_definition_pending), "missing Restoration uses explicit five-percent estimate " + id)
+		check(EFFECTS.detail_text(result).contains("TWILIGHT 추정") and result.relic_spell_effect.applied[0].projection == "ESTIMATE", "estimated recovery never labeled native " + id)
+	check(is_equal_approx(delta("lm_517ca31126a31b45", "heal_percent"), .2), "Dragon Force exact self-child percentage50 to70 adds maxHP20 percent")
+	for pair: Array in [["lm_a0a768c51a6b7838", .005],["lm_2bdb65edfba2772d", .01],["lm_3728e0e8b8a822aa", .01]]:
+		var skill: Dictionary = projected(str(pair[0]))
+		check(is_equal_approx(delta(str(pair[0]), "invoke_probability"), float(pair[1])), "native invoke level difference " + str(pair[0]))
+		var rule: Dictionary = skill.relic_invoke_probability
+		# The upgrade card describes the existing base consumer, not a new action.
+		skill.id = rule.consumer; skill.mode = rule.mode
+		var attack: Dictionary = {"confirmed":true,"attack_type":"melee","by_spell":false,"hit":true,"source_weapon_type":2,"main_target":true}
+		check(is_equal_approx(EFFECTS.INVOKE.delta_for(skill, attack), float(pair[1])), "native invoke eligible normal hit " + str(pair[0]))
+		attack.by_spell = true
+		check(EFFECTS.INVOKE.delta_for(skill, attack) == 0, "native invoke never leaks to skill attacks " + str(pair[0]))
+		attack.by_spell = false; attack.hit = false
+		check(is_equal_approx(EFFECTS.INVOKE.delta_for(skill, attack), float(pair[1]) if bool(rule.allow_miss) else 0.0), "native miss flag controls increment " + str(pair[0]))
+		check(EFFECTS.INVOKE.delta_for(skill, {}) == 0, "unknown attack context cannot grant native probability " + str(pair[0]))
+	var crash: Dictionary = projected("lm_a0a768c51a6b7838")
+	var weapon_attack: Dictionary = {"confirmed":true,"attack_type":"melee","by_spell":false,"hit":true,"source_weapon_type":1}
+	check(EFFECTS.INVOKE.delta_for(crash, weapon_attack) == 0, "Crash group241 rejects swords")
+	weapon_attack.source_weapon_type = 4
+	check(is_equal_approx(EFFECTS.INVOKE.delta_for(crash, weapon_attack), .005), "Crash group241 source membership includes spear")
 	for id: String in ["lm_4f90e0d7ce272c1f", "lm_4577052891abbbc4", "lm_f3e3300d0862d21a", "lm_8187ff2de29d3853"]:
 		check(is_equal_approx(delta(id, "status_chance"), .03), "native probability +3 percentage points " + id)
 	check(is_equal_approx(delta("lm_44e63d3719e2f526", "status_chance"), .01), "Power Grip native probability +1 point")
 	var with_probability: Dictionary = projected("lm_4f90e0d7ce272c1f")
 	check(with_probability.relic_spell_effect.applied[0].projection == "CUSTOM_BALANCE" and EFFECTS.detail_text(with_probability).contains("게임 적용 설정"), "host probability formula distinguished from native increment")
 	var saved_policy: Dictionary = EFFECTS._policy_document.duplicate(true)
+	EFFECTS._policy_document.restoration_level_estimates["69601"].enabled = false
+	check(float(projected("lm_a67097404fc5663e").get("heal_percent",0)) == 0, "missing-definition estimate can be disabled")
+	EFFECTS._policy_document.restoration_level_estimates["69601"].enabled = true
+	EFFECTS._policy_document.restoration_level_estimates["69601"].bonus_fraction = .1
+	check(is_equal_approx(float(projected("lm_a67097404fc5663e").heal_percent), .1), "recovery estimate uses configured fraction")
+	check(is_equal_approx(delta("lm_517ca31126a31b45","heal_percent"), .2), "verified native Dragon Force curve takes priority over estimate settings")
+	EFFECTS._policy_document = saved_policy.duplicate(true)
 	EFFECTS._policy_document.status_probability_projection.enabled = false
 	check(delta("lm_4f90e0d7ce272c1f", "status_chance") == 0, "custom probability projection can be disabled")
 	EFFECTS._policy_document = saved_policy

@@ -19,6 +19,8 @@ var info_text: String=""
 var info_tab: Button
 var source_tab: Button
 var source_active: bool=false
+var relic_training_button: Button
+const RELIC_TRAINING=preload("res://scripts/cards/relic_pvp_training.gd")
 
 func _hero() -> HBoxContainer:
 	var surface:=PanelContainer.new()
@@ -138,6 +140,10 @@ func bind_skill(view: Node,old_scroll: ScrollContainer,side: VBoxContainer) -> C
 	var actions: Control=view.learn_button.get_parent()
 	actions.reparent(self)
 	view.summon_controls.reparent(self)
+	relic_training_button = UI.button("로컬 PvP 훈련 · 자체 규칙",_open_relic_training,Vector2(0,34))
+	relic_training_button.name = "RelicPvpTraining"
+	relic_training_button.visible = false
+	add_child(relic_training_button)
 	visibility_changed.connect(_fit_skill_chrome)
 	resized.connect(_fit_skill_chrome)
 	call_deferred("_fit_skill_chrome")
@@ -199,11 +205,30 @@ func _switch_skill_tab(show_source: bool) -> void:
 	_show_skill_tab()
 
 func _show_skill_tab() -> void:
+	if relic_training_button != null: relic_training_button.hide()
 	source_tab.set_pressed_no_signal(source_active)
 	source_tab.text="사용 정보" if source_active else "습득 · 출처"
 	source.text=raw_skill_text if source_active else info_text
 	if not owner_view.selected.is_empty():
 		var catalog: TwilightOriginalSkillCatalog = owner_view.hud.get_parent().original_skills.catalog
-		var relic_text: String = catalog.RELIC_LEVELS.EFFECTS.detail_text(catalog.resolve(owner_view.selected))
+		var resolved: Dictionary = catalog.resolve(owner_view.selected)
+		var meta: Dictionary = resolved.get("relic_spell_effect", {})
+		if bool(meta.get("estimate_declared", false)) and not category.text.contains("TWILIGHT 추정"): category.text += " · TWILIGHT 추정"
+		if relic_training_button != null: relic_training_button.visible = bool(meta.get("training_available", false))
+		var relic_text: String = catalog.RELIC_LEVELS.EFFECTS.detail_text(resolved, source_active)
 		if not relic_text.is_empty(): source.text += "\n\n" + UI.safe(relic_text)
 	scroll.scroll_vertical=0
+
+func _open_relic_training() -> void:
+	var hud: Node = owner_view.hud
+	var world: Node = hud.get_parent()
+	var config: Dictionary = RELIC_TRAINING.settings()
+	var maximum: int = clampi(int(config.get("maximum_raw_damage",1000)),1,10000)
+	var initial: int = clampi(int(config.get("default_raw_damage",100)),1,maximum)
+	var dialog: Control = hud.confirm_action("로컬 PvP 훈련 · 자체 규칙", RELIC_TRAINING.description(world,initial), "훈련 피해 적용·저장",func(count: int) -> void:
+		var result: Dictionary = RELIC_TRAINING.apply(world,count)
+		hud.show_message("자체 훈련 HP -%d · PvP 증가분 감소 %d" % [int(result.damage),int(result.reduction)] if result.ok else str(result.error)),maximum)
+	# The existing quantity confirmation owns the once-only commit guard.
+	var body: Label = dialog.panel.get_child(0).get_child(2) as Label
+	dialog.quantity.value_changed.connect(func(value: float) -> void: body.text = RELIC_TRAINING.description(world,int(value)))
+	dialog.quantity.value = initial

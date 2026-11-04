@@ -866,10 +866,10 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_context: Dictionary = {}) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
-	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
+	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage, attack_context)
 	var stolen: int = 0
 	if _has_hp_absorption():
 		# Extra damage and healing represent the exact same amount of
@@ -2363,6 +2363,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
 	if rng.randf() >= hit_chance:
 		target.show_miss()
+		if original_skills != null: original_skills.trigger_relic_miss(target, attack_kind)
 		var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
 		hud.append_log("%s %s 공격 MISS · 명중 %d / AC %d / %.1f%%" % [
 			target.monster_name,
@@ -2380,7 +2381,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, original_skills.attack_context(attack_kind, false, true) if original_skills != null else {})
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
@@ -4398,6 +4399,14 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	return _save_game_snapshot(quiet, collection_override)
+
+func _save_training_hp(remaining_hp: int) -> Error:
+	if remaining_hp < 1 or remaining_hp > hp: return ERR_INVALID_PARAMETER
+	return _save_game_snapshot(true, {}, remaining_hp)
+
+func _save_game_snapshot(quiet: bool, collection_override: Dictionary = {}, training_hp: int = -1) -> Error:
+	if training_hp != -1 and (training_hp < 1 or training_hp > hp): return ERR_INVALID_PARAMETER
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4430,7 +4439,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"experience": experience,
 		"exp_need": exp_need,
 		"experience_progression_version": EXP_PROGRESSION.CURVE_VERSION,
-		"hp": hp,
+		"hp": hp if training_hp == -1 else training_hp,
 		"max_hp": max_hp,
 		"mp": mp,
 		"max_mp": max_mp,
@@ -5687,7 +5696,7 @@ func _break_invisibility() -> void:
 func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack_kind: String="melee", main_target: bool=true, by_spell: bool=false) -> void:
 	if trigger_name=="on_hit" and hp>0:option_awakening.combat.on_hit(target,attack_kind,main_target,by_spell)
 	if trigger_name=="on_hit":skill_awakening.on_successful_hit(target)
-	if original_skills != null: original_skills.trigger(trigger_name, target)
+	if original_skills != null: original_skills.trigger(trigger_name, target, {}, original_skills.attack_context(attack_kind, by_spell, true, main_target))
 	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
 			continue
@@ -5885,7 +5894,7 @@ func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_
 		return
 	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
-	_deal_successful_player_hit(target, damage)
+	_deal_successful_player_hit(target, damage, false, original_skills.attack_context(attack_kind, false, true) if original_skills != null else {})
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
 

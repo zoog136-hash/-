@@ -12,11 +12,68 @@
     "minimum": 0.0,
     "maximum": 1.0,
     "skills": {
-      "6631": {"mode": "status", "status": "stun"},
-      "345": {"mode": "attack", "status": "fear"},
-      "65638": {"mode": "status", "status": "fear"},
-      "48611": {"mode": "status", "status": "hold"},
-      "63534": {"mode": "status", "status": "fear"}
+      "6631": {
+        "mode": "status",
+        "status": "stun"
+      },
+      "345": {
+        "mode": "attack",
+        "status": "fear"
+      },
+      "65638": {
+        "mode": "status",
+        "status": "fear"
+      },
+      "48611": {
+        "mode": "status",
+        "status": "hold"
+      },
+      "63534": {
+        "mode": "status",
+        "status": "fear"
+      }
     }
+  },
+  "invoke_probability_projection": {
+    "enabled": true,
+    "classification": "CUSTOM_BALANCE",
+    "basis": "Only the native level probability difference is added to existing host proc/amplification payloads. Native attack type, weapon membership, by-spell and miss flags gate the difference; unknown context gives no difference. On a miss, keep the previously absent host base proc and use only the confirmed native level difference."
+  },
+  "restoration_level_estimates": {
+    "69601": {
+      "enabled": true,
+      "classification": "ESTIMATE",
+      "child_spell_id": 69631,
+      "base_definition_id": 2,
+      "raised_definition_id": 12,
+      "basis": "max_hp",
+      "bonus_fraction": 0.05,
+      "basis_note": "Native Restoration definition absent after source/report/official-guide review. Conservative maxHP5% level increment, one quarter of verified Dragon Force20%; preserve existing host base recovery120, caps and costs. Official guide confirms recovery role, not this coefficient.",
+      "sources": [
+        "https://lineagem.plaync.com/guidebook/view?title=뇌신+마법"
+      ]
+    },
+    "95662": {
+      "enabled": true,
+      "classification": "ESTIMATE",
+      "child_spell_id": 95692,
+      "base_definition_id": 152,
+      "raised_definition_id": 242,
+      "basis": "max_hp",
+      "bonus_fraction": 0.05,
+      "basis_note": "Native self-recovery definition absent; do not add party recovery272. Conservative maxHP5% level increment preserves host base180 and existing overflow-shield cap/duration. Official update confirms self/party recovery and overflow role, not this coefficient.",
+      "sources": [
+        "https://lineagem.plaync.com/board/update/view?articleId=6671e038a12ede529779c000",
+        "https://lineagem.plaync.com/guidebook/view?title=마검사+마법"
+      ]
+    }
+  },
+  "pvp_training": {
+    "enabled": true,
+    "classification": "CUSTOM_RULE",
+    "default_raw_damage": 100,
+    "maximum_raw_damage": 1000,
+    "minimum_hp": 1,
+    "basis": "Opt-in local training consumer for the exact native relic-level PvP reduction delta only. Ordinary monster damage never consumes this stat. HP loss commits atomically before application; no currency/item costs or rewards. This is not a native network PvP engine."
   }
 }
