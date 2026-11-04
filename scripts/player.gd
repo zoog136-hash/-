@@ -133,6 +133,9 @@ func _physics_process(delta: float) -> void:
 	_tick_fear(delta)
 	_tick_poison(delta)
 	_tick_bleed(delta)
+	var host: Node=get_parent()
+	if host!=null and host.get("halphas_star")!=null and (host.halphas_star.combat.frozen(self) or not host.halphas_star.combat.charge.is_empty()):
+		cancel_attack();velocity=Vector2.ZERO;touch_vector=Vector2.ZERO;clear_click_path();_update_visual(delta);return
 	if is_stunned():
 		cancel_attack()
 		velocity = Vector2.ZERO

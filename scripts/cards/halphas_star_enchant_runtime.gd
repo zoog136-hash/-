@@ -7,7 +7,11 @@ const SAVE_KEY: String = "halphas_star_enchant"
 const IDENTITY: String = "source:m508:1:24504"
 const CATEGORY: String = "변신"
 const FLAT: Dictionary = {"HPPlus":"hpFlat", "MPPlus":"mpFlat", "Strength":"strFlat", "Dexterity":"dexFlat", "Intelligence":"intFlat", "Constitution":"conFlat", "Wisdom":"wisFlat", "ArmorClass":"def", "PierceDamageReduction":"damage_reduction_ignore", "MeleeDamage":"meleeDamage", "RangeDamage":"rangedDamage", "MagicDamage":"magicDamage", "HPRestoration":"hp_regen", "MPRestoration":"mp_regen"}
+const STATUS_TARGETS: Dictionary = {6:"stun",7:"hold",8:"fear",5:"dark",1:"ice"}
+const STATUS_NAMES: Dictionary = {6:"Stun",7:"Hold",8:"Fear",5:"Dark",1:"Ice"}
 const PERCENT: Dictionary = {"AttackSpeedBonus":"attackSpeed", "MoveSpeedBonus":"speedBonusPct", "CastSpeedBonus":"skillCooldownPct"}
+const Combat=preload("res://scripts/cards/halphas_combat_adapter.gd")
+var combat=Combat.new()
 var world: Node
 var progress: Dictionary = fresh()
 var rng := RandomNumberGenerator.new()
@@ -21,11 +25,12 @@ static func fresh() -> Dictionary:
 	return {"schema":1, "policy_id":"twilight-halphas-estimated-v1", "level":0, "revision":0, "attempts":0, "successes":0, "spent_gold":0, "spent_cards":0, "attempts_by_stage":[0,0,0], "consumed_by_stage":[0,0,0], "rng_state":"", "last_operation":"", "last_result":{}}
 
 func _init() -> void: rng.randomize()
-func configure(host: Node) -> void: world = host
+func configure(host: Node) -> void: world = host;combat.configure(self)
 static func integer(v: Variant, low: int, high: int) -> bool:
 	return (v is int or v is float) and is_finite(float(v)) and float(v) == floor(float(v)) and float(v) >= low and float(v) <= high
 static func validate(value: Variant) -> String:
 	if not value is Dictionary: return "할파스 강화 저장 형식 오류"
+	if not Combat.validate_player(value.get("custom_combat",{})):return "자체 상태 효과 저장 오류"
 	if value.get("schema") != 1 or value.get("policy_id") != POLICY.data.policy_id: return "할파스 강화 정책/버전 불일치"
 	for key: String in ["level","revision","attempts","successes","spent_gold","spent_cards"]:
 		if not integer(value.get(key),0,5500000000000): return "할파스 강화 저장 수치 오류: " + key
@@ -48,7 +53,7 @@ static func validate(value: Variant) -> String:
 	if total>0 and (state.is_empty() or str(value.last_operation).is_empty()): return "할파스 강화 확정 이력 누락"
 	return ""
 func export_state() -> Dictionary:
-	var out: Dictionary = progress.duplicate(true); out.rng_state = str(rng.state); return out
+	var out: Dictionary = progress.duplicate(true); out.rng_state = str(rng.state);out.custom_combat=combat.export_player();return out
 func check_load(data: Dictionary) -> String:
 	return validate(data[SAVE_KEY]) if data.has(SAVE_KEY) else ""
 func prepare_load(data: Dictionary) -> bool:
@@ -64,6 +69,7 @@ func accept_load(data: Dictionary) -> bool:
 	progress = data.get(SAVE_KEY,fresh()).duplicate(true)
 	if not str(progress.rng_state).is_empty(): rng.state=int(progress.rng_state)
 	save_blocked=false; _effect_stage=-1
+	combat.reset();combat.pending_player=progress.get("custom_combat",{}).duplicate(true)
 	if world!=null: world.set("equipment_records_dirty",true)
 	return true
 func _record(identity: String) -> Dictionary:
@@ -158,22 +164,56 @@ func attempt(identity: String, selected: Dictionary, expected_revision: int, ope
 	return {"ok":true,"success":success,"level":int(progress.level),"consumed_gold":paid_gold,"consumed_cards":paid_cards,"estimated":true}
 func active() -> bool:
 	return world!=null and not save_blocked and int(progress.level)>0 and technical_problem().is_empty() and world.card_draw_fusion.owned.get(CATEGORY,{}).get(IDENTITY,false)==true and Cards.card_id(world.equipped_catalog.get(CATEGORY,{}))==IDENTITY
+static func conditional_key(row: Dictionary) -> String:
+	var bonus: Dictionary=row.get("bonus",{})
+	var target: int=int(bonus.get("BonusApplicationTargetID",0))
+	if int(bonus.get("BonusApplicationTypeID",0))!=2 or not STATUS_TARGETS.has(target):return ""
+	if row.get("application_type",{}).get("Name")!="SpecialResistanceType" or row.get("application_target",{}).get("Name")!=STATUS_NAMES[target] or int(row.application_target.get("ID",-1))!=target:return ""
+	if row.get("unit",{}).get("Name")!="Percentage" or int(row.get("ui_unit",{}).get("Denominator",0))!=10000:return ""
+	match row.get("type",{}).get("Name"):
+		"HitSpecialResistance":return str(STATUS_TARGETS[target])+"_accuracy"
+		"SpecialResistance":return str(STATUS_TARGETS[target])+"_resistance"
+	return ""
 func effects(level: int) -> Dictionary:
 	if _effect_stage==level:return _effects
 	_effect_stage=level;_effects={}
 	for stage: int in range(1,level+1):
+		var scoped: Dictionary={}
 		for row: Dictionary in Native.DATA.data.effects:
-			if int(row.link.Enchant)!=stage or int(row.bonus.BonusApplicationTypeID)!=0 or int(row.bonus.BonusApplicationTargetID)!=0:continue
+			if int(row.link.Enchant)!=stage:continue
+			var key: String=conditional_key(row)
+			if not key.is_empty():
+				# Independent same-stage links add through TWILIGHT's existing
+				# record channel. Never flatten distinct resistance targets.
+				scoped[key]=float(scoped.get(key,0.0))+float(row.bonus.Value)/float(row.ui_unit.Denominator)
+				continue
+			if int(row.bonus.BonusApplicationTypeID)!=0 or int(row.bonus.BonusApplicationTargetID)!=0:continue
 			var kind: String = row.type.Name
 			if FLAT.has(kind):_effects[FLAT[kind]]=int(row.bonus.Value)
 			elif PERCENT.has(kind):_effects[PERCENT[kind]]=float(row.bonus.Value)/10000.0
+			elif kind=="DecreaseChargeStepTime" and row.unit.Name=="ValuePercent" and int(row.ui_unit.Denominator)==1:_effects["charge_time_reduction_pct"]=float(row.bonus.Value)
+		_effects.merge(scoped,true)
 	return _effects
+func status_hit_bonus(kind: String) -> int:
+	if kind not in STATUS_TARGETS.values():return 0
+	return catalog_bonus(kind+"_accuracy")
+static func pending_effects() -> Array[Dictionary]:
+	var pending: Array[Dictionary]=[]
+	for row: Dictionary in Native.DATA.data.effects:
+		var unconditional: bool=int(row.bonus.BonusApplicationTypeID)==0 and int(row.bonus.BonusApplicationTargetID)==0
+		if (unconditional and (FLAT.has(row.type.Name) or PERCENT.has(row.type.Name) or row.type.Name=="DecreaseChargeStepTime")) or not conditional_key(row).is_empty():continue
+		pending.append(row.duplicate(true))
+	return pending
 func catalog_bonus(key: String) -> int:
 	return int(effects(int(progress.level)).get(key,0)) if active() else 0
 func bonus_records() -> Array[Dictionary]:
 	if not active():return []
 	var stats: Dictionary = effects(int(progress.level))
-	return [{"_halphas_estimated_bonus":true,"hpFlat":stats.get("hpFlat",0),"def":stats.get("def",0),"attackSpeed":stats.get("attackSpeed",0),"speedBonusPct":stats.get("speedBonusPct",0)}]
+	var record: Dictionary={"_halphas_estimated_bonus":true,"hpFlat":stats.get("hpFlat",0),"def":stats.get("def",0),"attackSpeed":stats.get("attackSpeed",0),"speedBonusPct":stats.get("speedBonusPct",0)}
+	for kind: String in STATUS_TARGETS.values():
+		for suffix: String in ["_accuracy","_resistance"]:
+			record[kind+suffix]=stats.get(kind+suffix,0)
+	return [record]
 func apply_appearance(identity: String, expected_revision: int) -> Dictionary:
 	if busy or save_blocked:return fail("busy","강화 저장 보호 중")
 	if not technical_problem().is_empty():return fail("technical_gate",technical_problem())

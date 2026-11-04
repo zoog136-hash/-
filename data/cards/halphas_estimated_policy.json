@@ -12,5 +12,16 @@
   "failure_keeps_stage_and_target": true,
   "bonus_aggregation": "latest_value_per_supported_unconditional_type_at_or_below_stage",
   "appearance_unlock": "option_StarEnchant_at_or_below_earned_stage",
-  "note": "확률 단위·재료 덱·실패 처리·단계 효과 집계는 추정 정책이다. 원본 비용·재료 수·Probability 원값을 보존한다. 경제 수치 승인은 기능 활성화 승인이 아니므로 원본 비활성·서버 제한의 오프라인 덮어쓰기는 기본 false다."
+  "note": "확률 단위·재료 덱·실패 처리·단계 효과 집계는 추정 정책이다. 원본 비용·재료 수·Probability 원값을 보존한다. 경제 수치 승인은 기능 활성화 승인이 아니므로 원본 비활성·서버 제한의 오프라인 덮어쓰기는 기본 false다.",
+  "custom_combat": {
+    "enabled": true,
+    "provenance": "TWILIGHT custom fallback after native tables, project reports and official search",
+    "dark_hit_multiplier": 0.5,
+    "ice_blocks_movement_and_actions": true,
+    "charge_time_formula": "source_time_divided_by_one_plus_reduction_percent",
+    "charge_timeout_seconds": 3.0,
+    "charge_tile_pixels": 48.0,
+    "conditional_aggregation": "sum_independent_links_at_latest_stage_per_exact_target",
+    "note": "암흑 명중 저하·동빙 행동 봉쇄·차징 환산/시간초과/타일 환산은 자체 동작이다. 원본 비용/단계/확률과 비활성·서버 제한은 유지한다. 차징은 습득한 쇼크 스턴의 기존 비용을1회 소비한다."
+  }
 }

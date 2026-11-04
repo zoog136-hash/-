@@ -497,6 +497,7 @@ func _process(delta: float) -> void:
 	_tick_skill_cooldowns(delta)
 	if original_skills != null: original_skills.tick(delta)
 	option_awakening.combat.tick(delta)
+	halphas_star.combat.tick(delta)
 	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
 	ain_refresh_clock -= delta
@@ -1900,7 +1901,7 @@ func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
+	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)*halphas_star.combat.hit_factor(player)
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
@@ -2288,7 +2289,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 func _melee_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return PHYSICAL_RESOLUTION.physical_hit_chance(_melee_accuracy_stat(),target.hit_armor_class(),0)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(_melee_accuracy_stat(),target.hit_armor_class(),0)*halphas_star.combat.hit_factor(player)
 
 func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
@@ -2875,12 +2876,12 @@ func _monster_hit_chance(attacker: TwilightMonster, attack_type: String = "melee
 		normalized_type = "melee"
 	var accuracy: int = _monster_accuracy_for_attack_type(attacker, normalized_type)
 	if normalized_type == "magic":
-		return _magic_hit_chance(accuracy, _effective_mr())
+		return _magic_hit_chance(accuracy, _effective_mr())*halphas_star.combat.hit_factor(attacker)
 	return _physical_hit_chance(
 		accuracy,
 		_effective_ac(),
 		_avoidance_for_attack_type(normalized_type)
-	)
+	)*halphas_star.combat.hit_factor(attacker)
 
 func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee") -> bool:
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
@@ -3016,6 +3017,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			critical_chance * 100.0,
 			_damage_reduction_stat()
 		])
+	if hp>0:halphas_star.combat.incoming(attacker)
 	if hp > 0 and attacker.stun_duration > 0.0 and attacker.stun_accuracy > 0:
 		var stun_chance: float = _status_effect_chance(
 			attacker.stun_accuracy,
@@ -4883,6 +4885,7 @@ func _load_game(quiet: bool) -> void:
 				player.camera.reset_smoothing()
 	_update_job_skillbar()
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
+	halphas_star.combat.restore_player()
 	_update_hud()
 	_emit_consumable_auto_settings()
 	if not quiet:
@@ -5555,6 +5558,7 @@ func _tick_skill_cooldowns(delta: float) -> void:
 		skill_cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
+	if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty():return false
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.ready(skill, announce)
 	if not pending_attack.is_empty(): return false
 	var skill_name: String = str(skill.get("name", ""))
@@ -7879,6 +7883,7 @@ func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: 
 	pending_attack["duration"] = _skill_motion_duration(skill)
 
 func _queue_player_attack(target: TwilightMonster, kind: String, callback: Callable, duration: float, normal: bool = false, max_range: float = 0.0) -> bool:
+	if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty():return false
 	if not is_instance_valid(target) or target.dead or hp <= 0: return false
 	player.cancel_attack()
 	player.clear_click_path()
@@ -7893,6 +7898,7 @@ func _queue_player_attack(target: TwilightMonster, kind: String, callback: Calla
 	return true
 
 func _queue_player_area_attack(skill: Dictionary) -> bool:
+	if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty():return false
 	# Self-centred attacks use the same cancellable motion marker as targeted
 	# attacks, never a second SceneTree timer that survives movement/transform.
 	player.cancel_attack()
@@ -7971,6 +7977,7 @@ func _impact_player_attack(action: Dictionary) -> void:
 	resolving_combat_action = false
 
 func _clear_combat_actions() -> void:
+	halphas_star.combat.reset()
 	if is_instance_valid(presentation_audio): presentation_audio.clear()
 	if original_skills != null: original_skills.clear()
 	combat_generation += 1

@@ -67,6 +67,36 @@
       "member": "content/Unit.json",
       "bytes": 11310,
       "sha256": "5b212633235459928eb03f836ac3964d988a9851f2e7f786a04f5edbba7cba22"
+    },
+    "BonusApplicationType": {
+      "member": "content/BonusApplicationType.json",
+      "bytes": 4366,
+      "sha256": "f66a6b5f7a537f618daef95e8d990894546356359d774aa49bd53d483cc7dcbb"
+    },
+    "SpecialResistanceType": {
+      "member": "content/SpecialResistanceType.json",
+      "bytes": 982,
+      "sha256": "31ede31d0d027ee99107a9bbcc1e0d9f602d7814cc8ebd1bf6d34ebb54ada2c2"
+    },
+    "UIUnit": {
+      "member": "content/UIUnit.json",
+      "bytes": 5069,
+      "sha256": "897a028a9585815972325a25fca67dbe2d51fd9d63da9f190329d537f421a62b"
+    },
+    "ChargeBonus": {
+      "member": "content/ChargeBonus.json",
+      "bytes": 4349,
+      "sha256": "ade8c4878771abd7874e202fec4926b95ab46c813d4ac1dfa671c443f55aa3e0"
+    },
+    "ChargeEffectBonus": {
+      "member": "content/ChargeEffectBonus.json",
+      "bytes": 41744,
+      "sha256": "212a2875dce1e632fd248ba03c3880d2dc2a144585decc5eb3aa86c4b5f47c67"
+    },
+    "SpellClass": {
+      "member": "content/SpellClass.json",
+      "bytes": 22596753,
+      "sha256": "db769ac3f25723289c1a63b4d1376d2bbfe8978608461712d09ef937a47d87ce"
     }
   },
   "card": {
@@ -169,7 +199,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -198,7 +237,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -227,7 +275,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -256,7 +313,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -285,7 +351,16 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
-      }
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -314,7 +389,16 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
-      }
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -343,7 +427,16 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
-      }
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -372,6 +465,22 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 6,
+        "Name": "Stun",
+        "DescID": 210
       }
     },
     {
@@ -401,6 +510,22 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 6,
+        "Name": "Stun",
+        "DescID": 210
       }
     },
     {
@@ -430,7 +555,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -459,7 +593,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -488,7 +631,16 @@
       "unit": {
         "ID": 211,
         "Name": "ValuePercent"
-      }
+      },
+      "ui_unit": {
+        "ID": 61,
+        "UnitID": 211,
+        "UITextID": 0,
+        "Denominator": 1,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -517,6 +669,22 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 6,
+        "Name": "Stun",
+        "DescID": 210
       }
     },
     {
@@ -546,7 +714,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -575,7 +752,16 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
-      }
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -604,7 +790,16 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
-      }
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -633,7 +828,16 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
-      }
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -662,6 +866,22 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 7,
+        "Name": "Hold",
+        "DescID": 211
       }
     },
     {
@@ -691,6 +911,22 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 7,
+        "Name": "Hold",
+        "DescID": 211
       }
     },
     {
@@ -720,7 +956,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -749,7 +994,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -778,7 +1032,16 @@
       "unit": {
         "ID": 211,
         "Name": "ValuePercent"
-      }
+      },
+      "ui_unit": {
+        "ID": 61,
+        "UnitID": 211,
+        "UITextID": 0,
+        "Denominator": 1,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -807,6 +1070,22 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 8,
+        "Name": "Fear",
+        "DescID": 212
       }
     },
     {
@@ -836,7 +1115,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -865,7 +1153,16 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
-      }
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -894,7 +1191,16 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
-      }
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -923,7 +1229,16 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
-      }
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -952,6 +1267,22 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 5,
+        "Name": "Dark",
+        "DescID": 209
       }
     },
     {
@@ -981,6 +1312,22 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 5,
+        "Name": "Dark",
+        "DescID": 209
       }
     },
     {
@@ -1010,7 +1357,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1039,7 +1395,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1068,7 +1433,16 @@
       "unit": {
         "ID": 211,
         "Name": "ValuePercent"
-      }
+      },
+      "ui_unit": {
+        "ID": 61,
+        "UnitID": 211,
+        "UITextID": 0,
+        "Denominator": 1,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1097,6 +1471,22 @@
       "unit": {
         "ID": 3,
         "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 1,
+        "Name": "Ice",
+        "DescID": 206
       }
     },
     {
@@ -1126,7 +1516,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1155,7 +1554,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1184,7 +1592,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1213,7 +1630,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1242,7 +1668,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1271,7 +1706,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1300,7 +1744,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1329,7 +1782,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1358,7 +1820,16 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     },
     {
       "link": {
@@ -1387,9 +1858,396 @@
       "unit": {
         "ID": 1,
         "Name": "Value"
-      }
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
     }
   ],
+  "charge": {
+    "spell": {
+      "ID": 82,
+      "Name": "[기사] 쇼크 스턴 #스턴",
+      "DescID": 362,
+      "SpellCategoryID": 8,
+      "SpellGroupID": 7,
+      "SpellGroupLevel": 1,
+      "IsRequireSpellGroupMastery": false,
+      "TargettingTypeID": 2,
+      "TargetKindID": 11,
+      "SiegeTargetKindID": 0,
+      "TargetAreaRadius": 0,
+      "CastRange": 2,
+      "CastDelay": 8000,
+      "SpellMaterialTypeID": 0,
+      "SpellMaterialItemAmount": 0,
+      "HPCost": 0,
+      "MPCost": 13,
+      "VPCost": 0,
+      "SpellEffectTypeID": 21,
+      "EffectSpriteID": 4434,
+      "EffectExplosionSpriteID": 0,
+      "EffectSpriteActionNo": 51,
+      "EffectLightRadius": 1,
+      "CriticalEffectSpriteID": 0,
+      "FailEffectSpriteID": 0,
+      "CasterEffectSpriteID": 0,
+      "SuccessEffectSpriteID": 0,
+      "ElementalTypeID": 0,
+      "AlignmentTypeID": 2,
+      "AlignmentChangeAmount": 0,
+      "IsOverlappedDamageReduction": false,
+      "IsPierceCounterMagic": false,
+      "IconID": 154,
+      "EffectDescID": 6453,
+      "SpellTypeID": 2,
+      "UseDescID": 1,
+      "IsAuto": false,
+      "TestSpell": false,
+      "CastGroupID": 1,
+      "ScreenEffectAssetId": 0,
+      "CastingScreenEffectId": 0,
+      "CastingWeaponType": 7,
+      "CastingMotionType": 2,
+      "CanCastOnInvisible": false,
+      "IsPierceCounterAssult": false,
+      "MinCastRange": 0,
+      "CopySpellClassID": 0,
+      "ActivateIconID": 0,
+      "LearningPriority": 0,
+      "IncludeOccupyTarget": true,
+      "IncludeTargettingTarget": true,
+      "IsChangable": true,
+      "MPCostUnit": 1,
+      "IsChargeSpell": true,
+      "TargetLimitCount": 0,
+      "IsAttackRange": false,
+      "BackwardPathCount": 0,
+      "CasterEffectSpriteGroupID": 0,
+      "HostileEffectSpriteID": 0,
+      "HideCasterTime": 0,
+      "SpellCompositionNode": 0,
+      "AdditionalEffectSpriteGroupID": 0,
+      "AttackerActionTypeID": 18,
+      "TargetScreenEffectID": 0
+    },
+    "steps": [
+      {
+        "ID": 61,
+        "ChargeID": 21,
+        "Step": 1,
+        "Time": 1000,
+        "FinalStepMaxStepTime": 0,
+        "FinalStepServerCancelAddTime": 0
+      },
+      {
+        "ID": 71,
+        "ChargeID": 21,
+        "Step": 2,
+        "Time": 1000,
+        "FinalStepMaxStepTime": 3000,
+        "FinalStepServerCancelAddTime": 2000
+      }
+    ],
+    "effects": [
+      {
+        "step": 1,
+        "link": {
+          "ID": 1081,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 1,
+          "BonusID": 1189041,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189041,
+          "BonusTypeID": 7451,
+          "Value": 0,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 7451,
+          "Name": "MoveSpeedPercentDecrease",
+          "UnitID": 3,
+          "DescID": 1260511,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 1,
+        "link": {
+          "ID": 1091,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189051,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189051,
+          "BonusTypeID": 143,
+          "Value": 1,
+          "BonusApplicationTypeID": 1,
+          "BonusApplicationTargetID": 82
+        },
+        "type": {
+          "ID": 143,
+          "Name": "SpellRangeBonus",
+          "UnitID": 1,
+          "DescID": 4797,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 1,
+        "link": {
+          "ID": 1101,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189061,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189061,
+          "BonusTypeID": 7481,
+          "Value": 1250000,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 7481,
+          "Name": "DamageScale",
+          "UnitID": 3,
+          "DescID": 1264661,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 1,
+        "link": {
+          "ID": 1111,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189071,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189071,
+          "BonusTypeID": 5743,
+          "Value": 80000,
+          "BonusApplicationTypeID": 2,
+          "BonusApplicationTargetID": 6
+        },
+        "type": {
+          "ID": 5743,
+          "Name": "IgnoreSpecialResistance",
+          "UnitID": 1,
+          "DescID": 927363,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 1321,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 1,
+          "BonusID": 1189281,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189281,
+          "BonusTypeID": 7451,
+          "Value": 0,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 7451,
+          "Name": "MoveSpeedPercentDecrease",
+          "UnitID": 3,
+          "DescID": 1260511,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 1331,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189291,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189291,
+          "BonusTypeID": 143,
+          "Value": 3,
+          "BonusApplicationTypeID": 1,
+          "BonusApplicationTargetID": 82
+        },
+        "type": {
+          "ID": 143,
+          "Name": "SpellRangeBonus",
+          "UnitID": 1,
+          "DescID": 4797,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 1341,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189301,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189301,
+          "BonusTypeID": 7481,
+          "Value": 1500000,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 7481,
+          "Name": "DamageScale",
+          "UnitID": 3,
+          "DescID": 1264661,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 1351,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189311,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189311,
+          "BonusTypeID": 5743,
+          "Value": 150000,
+          "BonusApplicationTypeID": 2,
+          "BonusApplicationTargetID": 6
+        },
+        "type": {
+          "ID": 5743,
+          "Name": "IgnoreSpecialResistance",
+          "UnitID": 1,
+          "DescID": 927363,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 1,
+        "link": {
+          "ID": 3371,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 11,
+          "BonusID": 1799631,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1799631,
+          "BonusTypeID": 10601,
+          "Value": 161,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 10601,
+          "Name": "AutoTargetingIfNoTarget",
+          "UnitID": 11251,
+          "DescID": 1903261,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 3381,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 11,
+          "BonusID": 1799641,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1799641,
+          "BonusTypeID": 10601,
+          "Value": 161,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 10601,
+          "Name": "AutoTargetingIfNoTarget",
+          "UnitID": 11251,
+          "DescID": 1903261,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      }
+    ],
+    "constants": [
+      {
+        "ID": 53541,
+        "Name": "ChargeLongPressTriggerTime",
+        "Value": "200",
+        "Type": 1
+      },
+      {
+        "ID": 53551,
+        "Name": "ChargeMaxTime",
+        "Value": "3000",
+        "Type": 1
+      },
+      {
+        "ID": 53561,
+        "Name": "ChargeMinTime",
+        "Value": "100",
+        "Type": 1
+      }
+    ]
+  },
   "bonuses": [
     {
       "ID": 4,

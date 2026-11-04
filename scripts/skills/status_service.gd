@@ -87,24 +87,38 @@ func damage_after_reduction(amount: int, target: Node) -> int:
 func can_affect(skill: Dictionary, target: TwilightMonster) -> bool:
 	if not is_instance_valid(target) or target.dead: return false
 	var kind := str(skill.get("status", ""))
-	if kind not in ["stun", "hold", "fear", "silence", "slow", "poison", "bleed"] or target.status_immunities.has(kind): return false
+	if kind not in ["stun", "hold", "fear", "silence", "slow", "poison", "bleed", "dark", "ice"] or target.status_immunities.has(kind): return false
 	if kind != "slow" and float(target.get(kind + "_resistance")) >= 100: return false
 	return float(skill.get("status_chance", .6)) > 0
+
+func chance(skill: Dictionary, target: TwilightMonster, world: Node) -> float:
+	var kind: String=str(skill.get("status",""))
+	var resistance: float=0.0
+	if kind in ["stun","hold","fear","silence","poison","bleed","dark","ice"]:
+		resistance=float(target.get(kind+"_resistance"))
+	var accuracy_bonus: float=0.0
+	var halphas: Variant=world.get("halphas_star")
+	if halphas!=null:accuracy_bonus=float(halphas.status_hit_bonus(kind))/100.0
+	# Keep this service's existing resistance and boss formula. Only earned,
+	# equipped Halphas adds percentage points to the existing base chance.
+	var base: float=float(skill.get("status_chance",.6))
+	if accuracy_bonus>0.0:base=maxf(base,minf(1.0,base+accuracy_bonus))
+	var result: float=base*(1.0-clampf(resistance/100.0,0,1))
+	if target.is_boss:result*=float(rules.get("boss_chance_factor",.35))
+	return result
 
 func apply(skill: Dictionary, target: TwilightMonster, world: Node) -> bool:
 	if not can_affect(skill, target): return false
 	var kind := str(skill.get("status", ""))
-	var resistance: float = 0.0
-	if kind in ["stun","hold","fear","silence","poison","bleed"]:
-		resistance = float(target.get(kind + "_resistance"))
-	var chance := float(skill.get("status_chance", .6)) * (1.0 - clampf(resistance / 100.0, 0, 1))
-	if target.is_boss: chance *= float(rules.get("boss_chance_factor", .35))
-	if world.rng.randf() >= chance: return false
+	if kind in ["dark","ice"] and not world.halphas_star.combat.enabled():return false
+	if world.rng.randf() >= chance(skill,target,world): return false
 	var duration := float(skill.get("duration", 3))
 	var bounds: Array = skill.get("duration_bounds", [])
 	if bounds.size() == 2: duration = world.rng.randf_range(float(bounds[0]), float(bounds[1]))
 	if target.is_boss: duration *= float(rules.get("boss_duration_factor", .35))
 	match kind:
+		"dark", "ice":
+			if not world.halphas_star.combat.apply_status(target,kind,duration):return false
 		"stun": target.apply_stun(duration)
 		"hold": target.apply_hold(duration)
 		"fear": target.apply_fear(duration, world.player.global_position)

@@ -6,7 +6,9 @@ var identity: String
 var selected: Dictionary = {}
 var status_label: Label
 var last_message: String = ""
-const STAT_NAMES: Dictionary = {"hpFlat":"최대 HP", "mpFlat":"최대 MP", "strFlat":"STR", "dexFlat":"DEX", "intFlat":"INT", "conFlat":"CON", "wisFlat":"WIS", "def":"방어력", "damage_reduction_ignore":"대미지 감소 무시", "meleeDamage":"근거리 대미지", "rangedDamage":"원거리 대미지", "magicDamage":"마법 대미지", "hp_regen":"HP 회복", "mp_regen":"MP 회복", "attackSpeed":"공격 속도 %", "speedBonusPct":"이동 속도 %", "skillCooldownPct":"스킬 재사용 감소 %"}
+var charge_label: Label
+var charge_release: Button
+const STAT_NAMES: Dictionary = {"hpFlat":"최대 HP", "mpFlat":"최대 MP", "strFlat":"STR", "dexFlat":"DEX", "intFlat":"INT", "conFlat":"CON", "wisFlat":"WIS", "def":"방어력", "damage_reduction_ignore":"대미지 감소 무시", "meleeDamage":"근거리 대미지", "rangedDamage":"원거리 대미지", "magicDamage":"마법 대미지", "hp_regen":"HP 회복", "mp_regen":"MP 회복", "attackSpeed":"공격 속도 %", "speedBonusPct":"이동 속도 %", "skillCooldownPct":"스킬 재사용 감소 %", "stun_accuracy":"스턴 적중 %", "stun_resistance":"스턴 내성 %", "hold_accuracy":"홀드 적중 %", "hold_resistance":"홀드 내성 %", "fear_accuracy":"공포 적중 %", "fear_resistance":"공포 내성 %", "dark_accuracy":"암흑 적중 %", "dark_resistance":"암흑 내성 %", "ice_accuracy":"동빙 적중 %", "ice_resistance":"동빙 내성 %", "charge_time_reduction_pct":"차징 감소 %"}
 func configure(host: Node, cat: String, id: String) -> void:
 	world=host;category=cat;identity=id
 	size_flags_horizontal=Control.SIZE_EXPAND_FILL
@@ -43,7 +45,10 @@ func refresh() -> void:
 		var pieces:=PackedStringArray()
 		for key: String in state.bonuses:pieces.append(str(STAT_NAMES.get(key,key))+" +"+str(state.bonuses[key]))
 		line("획득 단계 효과 · 장착·활성 조건 충족 시 적용: "+", ".join(pieces))
-	line("조건부 상태 효과·충전 효과는 추가 연결이 필요합니다.")
+	line("상태 효과 연결 · 스턴·홀드·공포·암흑·동빙 (후반2종은 자체 동작)")
+	var pending: Label=line("암흑은 공격 명중 저하, 동빙은 이동·행동 봉쇄, 차징 시간은 자체 환산을 사용합니다.")
+	pending.name="HalphasPendingEffects"
+	line("동일 단계·상태의 독립 보너스는 현재 게임의 합산 규칙을 따릅니다.")
 	status_label=line(last_message if not last_message.is_empty() else str(state.blocked_reason))
 	status_label.name="HalphasStarEnchantStatus"
 	var actions:=HBoxContainer.new();actions.add_theme_constant_override("separation",8);add_child(actions)
@@ -52,6 +57,30 @@ func refresh() -> void:
 	_update_attempt()
 	var appearance: Button=UI.button("획득 단계 외형 적용",_appearance,Vector2(0,42));appearance.name="HalphasApplyAppearance"
 	appearance.disabled=int(state.earned_stage)<1 or not world.halphas_star.technical_problem().is_empty();add_child(appearance)
+	line("자체 전투 %s · 암흑 명중 ×%.2f · 동빙 행동 봉쇄 %s" % ["ON" if world.halphas_star.combat.enabled() else "OFF",world.halphas_star.combat.number("dark_hit_multiplier",.5,.05,1.0),"ON" if world.halphas_star.settings.custom_combat.ice_blocks_movement_and_actions else "OFF"])
+	line("자체 차징 시간 = 원본 시간 ÷ (1 + 감소%/100), 최소0.1초" if world.halphas_star.settings.custom_combat.charge_time_formula=="source_time_divided_by_one_plus_reduction_percent" else "자체 차징 시간 = 원본 시간 × (1 - 감소%/100), 최소0.1초")
+	line("습득한 쇼크 스턴만 자체 차징합니다. 해제 시 기존 시전 비용을1회 소비하고, 취소·시간초과는 소비하지 않습니다.")
+	charge_label=line("");charge_label.name="HalphasChargeState"
+	var start: Button=UI.button("자체 쇼크 스턴 차징",_charge_start,Vector2(0,42));start.name="HalphasChargeStart";start.disabled=not world.halphas_star.active() or not world.halphas_star.combat.enabled();add_child(start)
+	charge_release=UI.button("차징 해제·시전",_charge_release,Vector2(0,42));charge_release.name="HalphasChargeRelease";add_child(charge_release)
+	var cancel: Button=UI.button("차징 취소",_charge_cancel,Vector2(0,42));cancel.name="HalphasChargeCancel";add_child(cancel)
+	_process(0)
+func _process(_delta: float) -> void:
+	if not is_instance_valid(charge_label) or world==null:return
+	var info: Dictionary=world.halphas_star.combat.charge_view()
+	charge_label.text="자체 차징 · %s · %d단계 · %.2f / %.2f초" % ["진행" if info.active else "대기",info.stage,info.elapsed,info.total]
+	charge_release.disabled=not info.active or int(info.stage)<1
+func _charge_start() -> void:
+	var result: Dictionary=world.halphas_star.combat.start_charge()
+	last_message="자체 차징 시작 · 아직 소비 없음" if result.ok else str(result.error)
+	refresh()
+func _charge_release() -> void:
+	var result: Dictionary=world.halphas_star.combat.release_charge()
+	last_message="자체 차징 %d단계 시전 · 기존 비용1회 소비" % result.stage if result.ok else str(result.error)
+	refresh()
+func _charge_cancel() -> void:
+	world.halphas_star.combat.cancel_charge();last_message="자체 차징 취소 · 소비 없음";refresh()
+
 func _update_attempt() -> void:
 	var action: Button=find_child("HalphasStarEnchantAttempt",true,false)
 	if action==null:return

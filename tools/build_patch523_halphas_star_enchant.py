@@ -9,7 +9,9 @@ import zipfile
 ARCHIVE_SHA256 = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 TABLES = ("BuffCard", "BuffCardStarEnchantGroup", "BuffCardStarEnchantRule",
           "BuffCardStarEnchantBonus", "BuffCardSpriteCustomizingOption", "Grade",
-          "Currency", "ServerLimit", "ConstantData", "ContentsControl", "Bonus", "BonusType", "Unit")
+          "Currency", "ServerLimit", "ConstantData", "ContentsControl", "Bonus", "BonusType", "Unit",
+          "BonusApplicationType", "SpecialResistanceType", "UIUnit",
+          "ChargeBonus", "ChargeEffectBonus", "SpellClass")
 
 
 def build(archive: Path) -> dict:
@@ -58,12 +60,26 @@ def build(archive: Path) -> dict:
         bonus = one("Bonus", ID=link["BonusID"])
         kind = one("BonusType", ID=bonus["BonusTypeID"])
         effects.append({"link": link, "bonus": bonus, "type": kind,
-                        "unit": one("Unit", ID=kind["UnitID"])})
+                        "unit": one("Unit", ID=kind["UnitID"]),
+                        "ui_unit": one("UIUnit", UnitID=kind["UnitID"]),
+                        "application_type": one("BonusApplicationType", ID=2) if bonus["BonusApplicationTypeID"] == 2 else {},
+                        "application_target": one("SpecialResistanceType", ID=bonus["BonusApplicationTargetID"]) if bonus["BonusApplicationTypeID"] == 2 else {}})
+    charge_steps = [r for r in tables["ChargeBonus"] if r["ChargeID"] == 21]
+    charge_effects = []
+    for link in tables["ChargeEffectBonus"]:
+        steps = [r for r in charge_steps if r["ID"] == link["ChargeBonusID"]]
+        if not steps or link["TargetSpellClassID"] != 82:
+            continue
+        bonus = one("Bonus", ID=link["BonusID"])
+        typ = one("BonusType", ID=bonus["BonusTypeID"])
+        charge_effects.append({"step": steps[0]["Step"], "link": link, "bonus": bonus, "type": typ})
     return {
         "schema": 1, "source_snapshot": "patch523", "archive_sha256": ARCHIVE_SHA256,
         "source_tables": evidence, "card": card, "group": group, "rules": rules,
         "content_control": control,
         "effects": effects,
+        "charge": {"spell": one("SpellClass", ID=82), "steps": charge_steps, "effects": charge_effects,
+                   "constants": [one("ConstantData", Name=n) for n in ["ChargeLongPressTriggerTime", "ChargeMaxTime", "ChargeMinTime"]]},
         "bonuses": [r for r in tables["BuffCardStarEnchantBonus"] if r["GroupID"] == group["ID"]],
         "sprite_options": [r for r in tables["BuffCardSpriteCustomizingOption"] if r["BuffCardID"] == card["ID"]],
         "grades": [one("Grade", ID=i) for i in sorted({r["SourceGradeID"] for r in rules})],
