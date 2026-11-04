@@ -202,10 +202,10 @@ func run() -> void:
 	check(monster.source_option_debuffs.has("totem:17524"),"card pruning cannot remove Totem-owned debuff")
 	var base_reduction: int = world._damage_reduction_stat()
 	world.rng.seed = seed_for_proc([true])
-	check(world.totem_combat.incoming(monster,"melee",20) == 15 and world.totem_combat.fired.has(17514),"defence proc applies confirmed five-point reduction")
-	check(world._damage_reduction_stat() == base_reduction+5 and world.totem_combat.incoming(monster,"melee",20) == 20,"active barrier reduction is not subtracted twice")
+	check(world.totem_combat.incoming(monster,"melee",20) == 0 and world.totem_combat.fired.has(17514) and world.totem_combat.barrier_capacity == 85,"defence proc applies source five-point reduction then custom absorption")
+	check(world._damage_reduction_stat() == base_reduction+5 and world.totem_combat.incoming(monster,"melee",20) == 0 and world.totem_combat.barrier_capacity == 65,"active DR is not subtracted twice and absorption budget is consumed once")
 	world.totem_combat.tick(5.01)
-	check(world._damage_reduction_stat() == base_reduction and world.totems.row("ShieldGroup",454).is_empty(),"five-second local duration expires without invented shield body")
+	check(world._damage_reduction_stat() == base_reduction and world.totem_combat.barrier_capacity == 0 and world.totems.row("ShieldGroup",454).is_empty(),"local duration clears custom absorption without altering absent native shield definition")
 	for pair in [[206794,301664,3581],[206804,301674,65291],[206814,301684,3581]]:
 		var source_name := str(world._catalog_item_from_source_id(str(pair[2])).name)
 		var output_name := str(world._catalog_item_from_source_id(str(pair[1])).name)

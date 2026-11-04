@@ -4477,6 +4477,8 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if totem_combat.settings_blocked or not totem_combat.check_settings_load({"ui_preferences":ui_preferences}).is_empty():return ERR_INVALID_DATA
+	if collection_override.has("totem_combat_settings") and not totem_combat.valid_settings(collection_override.totem_combat_settings):return ERR_INVALID_DATA
 	if collection_override.has("totem_state") and not totems.check_state(collection_override.totem_state).is_empty(): return ERR_INVALID_DATA
 	if totems.save_blocked or not totems.check_state(totems.export_state()).is_empty():
 		if not quiet: hud.show_message("토템 저장 보호 중 · 정상 저장을 다시 불러오세요")
@@ -4496,7 +4498,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","totem_state"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","totem_state","totem_combat_settings"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4580,7 +4582,12 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet:hud.show_message(source_map_error)
 		return ERR_UNAVAILABLE
 	data.merge(equipment_collections.extra_save_fields, false)
-	data.merge(collection_override, true)
+	var staged_overrides := collection_override.duplicate(true)
+	if staged_overrides.has("totem_combat_settings"):
+		data.ui_preferences = ui_preferences.duplicate(true)
+		data.ui_preferences["totem_combat_settings"] = staged_overrides.totem_combat_settings
+		staged_overrides.erase("totem_combat_settings")
+	data.merge(staged_overrides, true)
 	var save_started_usec: int = Time.get_ticks_usec()
 	var result: Error = equipment_collections.write_save(save_path(), data)
 	_perf_log("저장", save_started_usec)
@@ -4635,6 +4642,11 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var totem_settings_error: String = totem_combat.check_settings_load(data)
+	if not totem_settings_error.is_empty():
+		totem_combat.settings_blocked = true
+		hud.show_message(totem_settings_error)
+		return
 	var totem_error := totems.check_state(data.get("totem_state"))
 	if not totem_error.is_empty():
 		totems.save_blocked = true
@@ -4796,6 +4808,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	totems.accept_state(data.get("totem_state"))
+	totem_combat.settings_blocked = false
 	totem_combat.clear()
 	growth.restore(data.get("growth",growth.empty_state()))
 	quest_service.import_state(data.get("quest_state", {}))

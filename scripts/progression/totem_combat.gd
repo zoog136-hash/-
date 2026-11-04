@@ -1,14 +1,48 @@
 extends RefCounted
-## Confirmed components on existing TWILIGHT hit boundaries; no Shield454 body.
+## Source effects plus explicitly labelled, adjustable host estimates.
+const POLICY = preload("res://scripts/progression/totem_combat_policy.gd")
+var policy = POLICY.new()
+var settings_blocked := false
 var host_ref: WeakRef
 var world: Node:
 	get: return host_ref.get_ref() if host_ref != null else null
 var barrier_remaining := 0.0
+var barrier_capacity := 0
 var busy := false
 var targets: Array[WeakRef] = []
 var fired: Array[int] = []
 
-func configure(host: Node) -> void: host_ref = weakref(host)
+func configure(host: Node) -> void:
+	host_ref = weakref(host)
+	policy.load_defaults()
+
+func settings() -> Dictionary:
+	if not policy.error.is_empty():return {}
+	var saved: Variant = world.ui_preferences.get("totem_combat_settings",policy.defaults)
+	return POLICY.normalized(saved) if POLICY.valid(saved) else {}
+
+func settings_token() -> String:
+	return JSON.stringify(settings(),"",true,true).sha256_text()
+
+func valid_settings(value: Variant) -> bool:return POLICY.valid(value)
+
+func check_settings_load(data: Dictionary) -> String:
+	var prefs: Variant = data.get("ui_preferences",{})
+	if prefs is Dictionary and prefs.has("totem_combat_settings") and not POLICY.valid(prefs.totem_combat_settings):return "토템 자체 전투 설정 저장 오류 · 기존 상태 보존"
+	return ""
+
+func apply_settings(value: Variant, token: String) -> Dictionary:
+	if settings_blocked or busy or token != settings_token():return {"ok":false,"reason":"설정 상태가 바뀌었거나 저장 보호 중입니다"}
+	if not POLICY.valid(value) or not policy.error.is_empty():return {"ok":false,"reason":"자체 전투 설정 범위·버전 오류"}
+	var next: Dictionary = POLICY.normalized(value)
+	busy = true
+	var result: Error = world._save_game(true,{"totem_combat_settings":next})
+	busy = false
+	if result != OK:return {"ok":false,"reason":"설정 저장 실패 · 이전 설정·활성 효과 보존"}
+	world.ui_preferences["totem_combat_settings"] = next
+	world.hud.show_message("자체 전투 설정 저장 · 다음 발동부터 적용")
+	world.hud.refresh_totems()
+	return {"ok":true}
 
 func effects() -> Array:
 	var result: Array = []
@@ -75,6 +109,12 @@ func on_hit(target: Node, kind: String, by_spell: bool) -> void:
 			if not supported.is_empty():
 				var duration: float = world.rng.randf_range(float(values.get("SpellDebuffMinDuration",0)),float(values.get("SpellDebuffMaxDuration",0)))
 				if target.apply_source_option_debuff("totem:"+str(int(option.ID)),duration,supported):
+					if int(option.ID) == 17524 and bool(settings().get("venom_enabled",false)):
+						var poison: Dictionary = {}
+						for bonus: Dictionary in buff_effects(int(values.BuffClassID)):poison[str(bonus.type.Name)] = int(bonus.bonus.Value)
+						if poison.has("PoisonDamageByMaxHP") and poison.has("MinPoisonDamage") and poison.has("MaxPoisonDamage"):
+							if target.configure_totem_venom("totem:17524",float(settings().venom_interval),int(poison.PoisonDamageByMaxHP),int(poison.MinPoisonDamage),int(poison.MaxPoisonDamage),POLICY.ID):
+								world.hud.append_log("토템 · 제브레퀴 중독 [자체 주기 %.2f초]" % float(settings().venom_interval))
 					targets.append(weakref(target))
 					applied = true
 					world.hud.append_log("토템 · 오시리스 시야 차단" if int(option.ID) == 17504 else "토템 · 제브레퀴 물약 회복 감소")
@@ -90,8 +130,9 @@ func active_status(totem_id: int) -> String:
 		var entry: Dictionary = target.source_option_debuffs.get(origin,{})
 		if entry.is_empty() or float(entry.remaining) <= 0:continue
 		var line := "%s · %s %.1f초" % [target.monster_name,"시야 차단" if totem_id == 4 else "물약 회복 감소",float(entry.remaining)]
+		if entry.has("venom"):line += " · 독 %d / %.2f초 [자체 처리]" % [int(entry.venom.damage),float(entry.venom.interval)]
 		if not lines.has(line):lines.append(line)
-	if totem_id == 24 and barrier_remaining > 0:lines.append("리덕션 +%d · %.1f초" % [barrier_flat(),barrier_remaining])
+	if totem_id == 24 and barrier_remaining > 0:lines.append("리덕션 +%d · %.1f초 · 흡수 잔량 %d [자체 용량]" % [barrier_flat(),barrier_remaining,barrier_capacity])
 	return "현재 발동 효과 없음" if lines.is_empty() else "\n".join(lines)
 
 func barrier_flat() -> int:
@@ -110,10 +151,13 @@ func incoming(attacker: Node, kind: String, amount: int) -> int:
 		if not values.has("SpellBuffDuration") or not roll(int(effect.raw_proc_chance)): continue
 		var was_active := barrier_remaining > 0
 		barrier_remaining = float(values.SpellBuffDuration)
+		barrier_capacity = mini(int(settings().get("shield_capacity",0)),world._effective_max_hp()) if bool(settings().get("shield_enabled",false)) else 0
 		commit_proc(option,world.totems.row("SpellClass",int(option.Param1)),world.player)
-		world.hud.append_log("토템 · 포세이돈 리덕션 적용 · 보호막 수치 미제공")
+		world.hud.append_log("토템 · 포세이돈 리덕션 적용 · 흡수 용량 %d [자체 설정]" % barrier_capacity)
 		if not was_active: amount = maxi(1,amount-barrier_flat())
-	return amount
+	var absorbed := mini(amount,barrier_capacity) if barrier_remaining > 0 else 0
+	barrier_capacity -= absorbed
+	return amount-absorbed
 
 func reconcile() -> void:
 	var enabled: Dictionary = {}
@@ -121,7 +165,9 @@ func reconcile() -> void:
 	for effect: Dictionary in effects():
 		enabled["totem:"+str(int(effect.option.ID))] = true
 		if int(effect.option.InvokeOptionTypeID) == 2: has_barrier = true
-	if not has_barrier: barrier_remaining = 0
+	if not has_barrier:
+		barrier_remaining = 0
+		barrier_capacity = 0
 	var retained: Array[WeakRef] = []
 	var seen: Dictionary = {}
 	for ref: WeakRef in targets:
@@ -134,10 +180,12 @@ func reconcile() -> void:
 
 func tick(delta: float) -> void:
 	barrier_remaining = maxf(0,barrier_remaining-maxf(0,delta))
+	if barrier_remaining <= 0:barrier_capacity = 0
 	if not targets.is_empty() or barrier_remaining > 0: reconcile()
 
 func clear() -> void:
 	barrier_remaining = 0
+	barrier_capacity = 0
 	for ref: WeakRef in targets:
 		var target: Node = ref.get_ref()
 		if is_instance_valid(target): target.prune_source_option_debuffs({},"totem:")

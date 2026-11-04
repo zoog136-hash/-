@@ -119,14 +119,14 @@ func _refresh() -> void:
 	reset.tooltip_text = str(reset_quote.get("reason","다이아 결제는 지원하지 않습니다"))
 	content.add_child(reset)
 	content.add_child(UI.label("TWILIGHT 성장 규칙 · 선택 재료 1종 사용 · 단계별 옵션 보존",12,UI.MUTED))
-	var effect_info: Dictionary = {4:"오시리스 추가 물리 피해 · 시야 차단 2~3초",14:"제브레퀴 물약 회복률 -15% · 2~3초",24:"포세이돈 리덕션 +5 · 5초"}
+	var effect_info: Dictionary = {4:"오시리스 추가 물리 피해 · 시야 차단 2~3초",14:"제브레퀴 독 [자체 처리] · 물약 회복률 -15% · 2~3초",24:"포세이돈 흡수 [자체 용량] · 리덕션 +5 · 5초"}
 	content.add_child(UI.label("Lv.10 · "+str(effect_info.get(selected_id,"")),12,UI.MUTED))
-	content.add_child(UI.label("독 피해 주기·보호막 흡수량은 미확인",12,UI.MUTED))
 	combat_status = UI.label(hud.get_parent().totem_combat.active_status(selected_id),12)
 	combat_status.name = "TotemCombatStatus"
 	combat_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	combat_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_child(combat_status)
+	_add_local_settings()
 	content.add_child(UI.label("강화석 제작 정보",14))
 	var stone_ids: Array = []
 	for material: Dictionary in preview.materials: stone_ids.append(int(material.ItemClassID))
@@ -157,3 +157,53 @@ func _refresh() -> void:
 				craft.disabled = not bool(offer.ok)
 				craft.tooltip_text = str(offer.get("reason","파편 25개 · 주문서 3장 · 아데나 100만"))
 				content.add_child(craft)
+
+func _add_local_settings() -> void:
+	var combat = hud.get_parent().totem_combat
+	content.add_child(UI.label("자체 전투 설정 · 원본 서버 규칙 아님",14))
+	content.add_child(UI.label("원본: 독 최대HP 3%·하한 750·상한 950 / 물약 회복률 -15%",12,UI.MUTED))
+	content.add_child(UI.label("자체: 매 틱 비율 피해를 상하한에 제한 · 첫 틱은 한 주기 뒤",12,UI.MUTED))
+	content.add_child(UI.label("보호막 용량은 자체 추정값 · 실제 최대HP 이하로 제한",12,UI.MUTED))
+	var current: Dictionary = combat.settings()
+	if current.is_empty() or not combat.policy.error.is_empty():
+		content.add_child(UI.label("자체 설정 오류 · 원본에서 확인된 효과만 사용",12))
+		return
+	var venom := CheckButton.new()
+	venom.text = "자체 독 피해 사용"
+	venom.name = "TotemVenomEnabled"
+	venom.button_pressed = bool(current.venom_enabled)
+	content.add_child(venom)
+	var interval := SpinBox.new()
+	interval.name = "TotemVenomInterval"
+	interval.min_value = 0.25
+	interval.max_value = 10
+	interval.step = 0.25
+	interval.prefix = "자체 독 주기"
+	interval.suffix = "초"
+	interval.value = float(current.venom_interval)
+	content.add_child(interval)
+	var shield := CheckButton.new()
+	shield.text = "자체 보호막 흡수 사용"
+	shield.name = "TotemShieldEnabled"
+	shield.button_pressed = bool(current.shield_enabled)
+	content.add_child(shield)
+	var capacity := SpinBox.new()
+	capacity.name = "TotemShieldCapacity"
+	capacity.min_value = 1
+	capacity.max_value = 100000
+	capacity.step = 1
+	capacity.prefix = "자체 흡수 용량"
+	capacity.value = int(current.shield_capacity)
+	content.add_child(capacity)
+	var token: String = combat.settings_token()
+	var apply := UI.button("자체 설정 저장 · 다음 발동부터 적용",func() -> void:
+		var next := current.duplicate(true)
+		next.venom_enabled = venom.button_pressed
+		next.venom_interval = interval.value
+		next.shield_enabled = shield.button_pressed
+		next.shield_capacity = int(capacity.value)
+		var result: Dictionary = combat.apply_settings(next,token)
+		if not result.ok:hud.show_message(str(result.reason)))
+	apply.name = "TotemLocalSettingsSave"
+	apply.disabled = combat.settings_blocked
+	content.add_child(apply)

@@ -65,6 +65,20 @@ func run() -> void:
 	check(not target.source_option_cannot_see() and target.source_option_debuffs.is_empty(),"next pooled life clears previous observer effect")
 	arena.hidden = true
 	check(not target._target_attackable() and not other._target_attackable(),"existing global concealment still blocks both observers")
+	var potion := {"type":{"Name":"HPPotionDecreasePercent"},"unit":{"Name":"Percentage"},"bonus":{"Value":150000,"BonusApplicationTypeID":0,"BonusApplicationTargetID":0}}
+	target.max_hp = 10000
+	target.hp = 1
+	var born := target.life_id
+	var deaths := [0]
+	target.died.connect(func(actor: TwilightMonster) -> void:
+		deaths[0] += 1
+		# Re-entrant pool reuse during the death callback is a new life.
+		actor.setup(record,player,arena,null))
+	check(target.apply_source_option_debuff("totem:17524",2.5,[potion]) and target.configure_totem_venom("totem:17524",1,30000,750,950,"twilight_totem_combat_v1"),"custom poison armed through real scene status consumer")
+	target.advance_source_option_debuffs(10)
+	check(deaths[0] == 1 and target.life_id == born+1 and target.hp == 1000,"catch-up poison stops at death and cannot damage re-entrant next life")
+	target.advance_source_option_debuffs(10)
+	check(deaths[0] == 1 and not target.is_poisoned(),"old poison cannot repeat death or rewards after pool reuse")
 	for mob: TwilightMonster in actors:mob.queue_free()
 	player.queue_free()
 	arena.queue_free()
