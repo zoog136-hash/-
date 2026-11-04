@@ -103,16 +103,23 @@
     "A repeated cold import was stopped to reuse Godot-generated metadata and cache for SHA-identical assets in the disposable stage"
   ],
   "remote_delivery": {
-    "status": "not_delivered",
-    "action": "create branch feature/native-pack-selection-20261104 on zoog136-hash/-",
-    "outcome": "denied twice by automatic approval review; branch and PR were not created",
-    "reason": "The user authorizes separate PR/branch work in substance, but there is still no trusted evidence identifying zoog136-hash/- as the approved repository; creating this remote branch remains an external commitment with possible code disclosure.",
-    "remote_CI": "not started; local commit uses [skip ci] by user request"
+    "status": "published",
+    "pr": "https://github.com/zoog136-hash/-/pull/236",
+    "verified_previous_head": "d417dfe2b385041ae0985d0ed162874d792ea4ad",
+    "later_validation": "current523-validation.json",
+    "remote_CI": "[skip ci]; no manual dispatch or rerun"
   },
   "not_verified": [
     "current523 complete runtime pixel pack and version-specific registry/decoder connection",
     "original M visual equivalence",
     "Android hardware",
     "full historical manual integration/visual suites"
-  ]
+  ],
+  "initial_remote_denial": {
+    "status": "not_delivered",
+    "action": "create branch feature/native-pack-selection-20261104 on zoog136-hash/-",
+    "outcome": "denied twice by automatic approval review; branch and PR were not created",
+    "reason": "The user authorizes separate PR/branch work in substance, but there is still no trusted evidence identifying zoog136-hash/- as the approved repository; creating this remote branch remains an external commitment with possible code disclosure.",
+    "remote_CI": "not started; local commit uses [skip ci] by user request"
+  }
 }

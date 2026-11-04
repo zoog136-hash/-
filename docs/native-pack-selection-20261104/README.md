@@ -27,3 +27,27 @@ Godot 4.7.2에서 합성 이미지의 실제 텍스처 로딩, 명시 선택 우
 실제 설정 창을 열어 프레임이 진행되자 기존 축소 검증 환경에서 `l1j_tw380_npc_45027/portrait.png` 누락이 드러났다. 검증 환경의 현재 맵 리소스 선택에 같은 지도·격자·리비전의 기존 추가 출현 및 서식지와 해당 검수 레코드를 포함해 해결한다. 게임 출현 데이터·NPC 정의·원본 파일은 바꾸지 않는다. 이 오류가 있던 초기 실행과 오디오 장치가 없는 환경의 초기 렌더 실행은 통과로 계산하지 않는다.
 
 최종 실행 결과는 같은 디렉터리의 `validation.json`에 기록한다. Android 실기기와 523 원본 화면의 시각적 일치는 이 작업 범위에서 검증하지 않았다. 검증된 523 실행팩과 해당 버전의 레지스트리/디코더가 이 소비자에 연결되기 전에는 523 원본 통합 완료로 보고할 수 없다.
+
+## 현행523 실물 연결 후속
+
+사용자가 새로 제공한 비공개 Drive 사본을 공식 인증으로 내려받았다. checkpoint 01~04의 8개 조각을 각각 순서대로 결합하고 조각·전체 SHA-256, ZIP CRC, 내부 파일별 크기·해시를 확인했다. 중복 없는 현행 M Sprite DAT는 69개다. 이 접근은 정상이며, 별도로 재현된 Library 전송 도우미의 `hosted apps tools/list HTTP 401`이 복구됐다는 의미는 아니다.
+
+`TWILIGHT_current523_M_map_integration_989actual_SP2_validated_PNGs_risks_20261104.zip`은 이름과 달리 PNG 989개가 아니다. 실제 내용은 **SP2 원문 989개와 확정 표준 PNG 2개**다. 픽셀 경계 정정 자료에 따라 과거 PC 참고 해독기의 픽셀·알파·타이밍·방향 해석을 M 원본 정답으로 사용하지 않는다.
+
+실제 게임의 **메뉴 → 설정 → 현행523 표준 이미지 · 원문 → 523 원문·PNG ZIP 선택**에서 이 ZIP을 설치한다. 프로그램은 전체 ZIP과 원문 목록의 고정 SHA-256을 확인한 뒤 989개 SP2 및 두 PNG의 개별 크기·해시, PNG 디코딩·치수를 검사한다. 새 사용자 폴더에 기록하고 설치 영수증을 모두 쓴 뒤 버전 폴더로 원자적으로 전환한다. 누락·손상·취소는 기존 완료 버전과 세이브를 유지하며, 미완료 staging 폴더는 선택하지 않는다. 실패한 staging 파일은 자동 삭제하지 않는다. 설치에는 원문 약 76 MB와 별도 여유 공간이 필요하다.
+
+두 이미지는 원문 PNG 바이트에서 Godot `ImageTexture`로 로드되어 설정 화면에 표시된다. `Map_Icon_Forge.png`는 60×60 RGBA, `normal_cloud.png`는 768×768 RGB다. 설치 직후와 설정 재열기에는 새 버전 미리보기를 표시하고, 일반 소비자의 선택은 재시작 전까지 세션 중 고정한다. 기존 base508 선택이나 캐릭터·도감·맵 소비자의 스냅샷 보호를 변경하지 않는다. 표시 화면의 `캐릭터 재생 미연결`은 현재 한계를 그대로 알린다.
+
+이 기능은 사용자 소유 로컬 ZIP 선택 방식이다. Drive 토큰이나 비공개 URL을 게임에 저장하지 않는다. PR에는 텍스트 코드·검증 기록만 포함하고 원본 SP2·PNG·DAT·ZIP 및 게임 화면 캡처는 포함하지 않는다. 원문은 사용자가 제공한 비공개 Drive에 보존되어 있으며, Work의 설치 결과는 임시 검증 프로필에 있다. 실행본/APK나 원본 전체 배포 팩을 새로 전달한 상태는 아니다.
+
+실물 수동 검사(자동 CI에서 비공개 ZIP을 요청하지 않음):
+
+```bash
+# 별도 XDG_DATA_HOME을 사용한 Godot 검증 프로젝트에서 실행
+godot --headless --path <검증 프로젝트> --script res://tests/current523_pack_install_local.gd -- --pack=<사용자 ZIP>
+godot --headless --path <동일 프로젝트> --script res://tests/current523_pack_install_local.gd -- --read-installed
+# 실제 Main 및 확정 소스맵 파일이 있는 검증 프로젝트에서 실행
+godot --path <Main 검증 프로젝트> --audio-driver Dummy --rendering-method gl_compatibility --script res://tests/current523_pack_main_local.gd -- --pack=<사용자 ZIP>
+```
+
+새 실물 검증·원문 해시는 [current523-validation.json](current523-validation.json)에 별도로 기록한다. 523 캐릭터/몬스터/이펙트 전체 재생에는 현행 M만으로 확인된 프레임·하위이미지·픽셀·알파·방향·타이밍 및 소비자별 레지스트리 연결이 여전히 필요하다. 원문 확보나 표준 PNG 2종 표시를 전체 523 통합으로 계산하지 않는다.

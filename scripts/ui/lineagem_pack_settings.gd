@@ -38,6 +38,7 @@ func _ready() -> void:
 	add_child(picker)
 	installer.progress.connect(func(done: int, total: int) -> void:
 		status.text = "설치 검사 중 %d / %d · 기존 팩 유지" % [done, total])
+	add_child(preload("res://scripts/ui/current523_pack_settings.gd").new())
 
 func _selected(path: String) -> void:
 	choose.disabled = true
