@@ -19,6 +19,8 @@ func run() -> void:
 	check(result.ok and result.currency_id==1 and str(result.origin).contains("TWILIGHT"),"Serin source identity plus labelled local availability")
 	check(npc.currency_for(91)==21,"clan currency remains distinct from Adena")
 	check(npc.context(40,2171).ok and npc.supports_normal_equipment(40,1),"ordinary weapons merchant is explicitly bound and normal equipment definition is original")
+	check(npc.context(514,16964).ok and int(npc.context(514,16964).minimum_level)==80,"Forgotten Island merchant uses explicit verified source spawn plus separate local level/access rule")
+	check(not npc.context(2132,45342).ok,"server-specific past-island shop is not enabled by local access assumptions")
 	check(not npc.supports_normal_equipment(40,2),"blessed equipment is not silently treated as normal")
 	check(not npc.context(28,433).ok,"numeric EarthObject ID collision cannot authorize another merchant")
 	check(not npc.context(372,37738).ok,"event merchant with no configured source spawn remains inactive")

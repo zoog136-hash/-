@@ -3,6 +3,7 @@ extends RefCounted
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
 const Economy = preload("res://scripts/shop/source523_shop_economy.gd")
 const NpcDefinitions = preload("res://scripts/shop/source523_npc_definitions.gd")
+const NpcConsumables = preload("res://scripts/shop/source523_npc_consumables.gd")
 const NpcResets = preload("res://scripts/shop/source523_npc_resets.gd")
 const SAVE_KEY: String = "source_shop"
 const LIMIT: int = 9007199254740991
@@ -96,6 +97,8 @@ func configure(host: Node) -> void:
 		world.item_db.append(record.duplicate(true))
 		world.catalog_db["아이템"].append(record)
 	world._index_item_weights()
+	var configured_source=Catalog.session()
+	if configured_source.available():bind_source(configured_source)
 
 func bind_source(source) -> void:
 	if catalog == source and not _bindings.is_empty(): return
@@ -122,6 +125,7 @@ func bind_source(source) -> void:
 		var name: String = INTANGIBLE_BINDINGS[id]
 		_bindings["34:%d" % id] = {"name":name,"record":world._find_catalog_item_record(name).duplicate(true)}
 	_bindings["4:26"] = {"gold":true,"name":"아데나"}
+	_bindings.merge(NpcConsumables.install(world,catalog))
 	npc_definitions.configure(catalog)
 	for arg: String in OS.get_cmdline_user_args():
 		if not arg.begins_with("--source523-shop-policy="): continue
@@ -475,6 +479,7 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	if profile.get("time_unrestricted")!=true:
 		local_context=npc_definitions.context(int(row.MerchantsID),id)
 		if not local_context.ok:return fail(str(local_context.reason))
+		if int(world.level)<int(local_context.get("minimum_level",0)):return fail("NPC 원격 목록 접근은 %d레벨 이상 · %s" % [int(local_context.minimum_level),str(local_context.origin)])
 		if not npc_definitions.rules.zero_hours_are_open or not npc_definitions.rules.zero_dates_are_open:return fail("NPC 0시간·0날짜 자체 동작이 비활성입니다")
 		var saved_rule: String=str(state.get("npc_rule_hashes",{}).get(str(int(row.MerchantsID)),""))
 		if not saved_rule.is_empty() and saved_rule!=str(local_context.rules_sha256):return fail("NPC 자체 규칙 변경 감지 · 기존 규칙으로 확인 필요")
@@ -511,6 +516,8 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var original_name: String=str(offer.item.get("Name",""))
 	if offer.item.get("TestItem",false) or original_name.contains("기간") or original_name.contains("삭제") or original_name.contains("이벤트"):return fail("NPC 기간제·테스트 상품 조건 미확정")
 	var quoted: Dictionary={"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":str(target.binding.name),"payment":payment,"payment_binding":binding,"goods":[token],"price_origin":str(price.origin)}
+	if target.binding.get("record",{}).has("source523_shop_use_origin") and npc_definitions.source_semantics.get("item_bless_codes",{}).get(str(int(row.get("ItemBlessCodeID",0))))!="Normal":return fail("NPC 소모품 축복·저주 스택은 별도 연결 필요")
+	if target.binding.get("record",{}).has("source523_shop_use_origin"):quoted["use_origin"]=str(target.binding.record.source523_shop_use_origin)
 	if not quota.is_empty():quoted.merge({"quota_text":quota.quota_text,"remaining":quota.remaining,"next_reset_at":quota.next_reset_at,"npc_reset_identity":quota.reset_identity})
 	if not local_context.is_empty():quoted.merge({"npc_label":local_context.label,"rule_origin":local_context.origin,"npc_merchant_id":int(row.MerchantsID),"npc_rules_sha256":local_context.rules_sha256,"npc_pack_sha256":local_context.npc_pack_sha256})
 	return quoted

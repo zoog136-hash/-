@@ -1,0 +1,22 @@
+extends "res://tests/source523_npc_local_main_test.gd"
+func run() -> void:
+	root.size=Vector2i(960,540)
+	DisplayServer.window_set_size(root.size)
+	var world: Node=load("res://Main.tscn").instantiate();root.add_child(world);freeze(world)
+	check(world.source_shop.catalog!=null and world.source_shop.catalog.available(),"installed explicit pack binds on fresh Main startup before shop opening")
+	check(world.hud.shop_view==null or not world.hud.shop_view.find_child("Source523ShopPanel",true,false),"fresh-start inventory use does not require opening the shop")
+	check(int(world.inventory.get("마나 회복 물약 (각인)",0))>0 and world.source_shop.orders().is_empty(),"fresh Main loads prior purchased/consumed source stacks without replay")
+	check(int(world._find_catalog_item_record("마나 회복 물약 (각인)").get("source523_shop_item_id",0))==385,"exact source use definition registered before save/HUD load")
+	var before: int=int(world.inventory.get("마나 회복 물약 (각인)",0))
+	world.hud.show_companion_bag();await frames()
+	var bag=world.hud.lineage_inventory_ui
+	bag._select_item("마나 회복 물약 (각인)");bag.open_detail();await frames()
+	check(not bag.detail_action.disabled,"fresh-start real inventory action is enabled")
+	tap(bag.detail_action);await frames()
+	check(int(world.inventory.get("마나 회복 물약 (각인)",0))==before-1 and world.active_item_buffs.has("마나 회복 물약 (각인)"),"real inventory use works before first shop visit after restart")
+	check(world._save_game(true)==OK,"fresh-start source consumption saves")
+	world._load_game(true);freeze(world)
+	check(int(world.inventory.get("마나 회복 물약 (각인)",0))==before-1 and world.source_shop.orders().is_empty(),"fresh-start consumption survives reload with zero replay")
+	world.queue_free();await frames()
+	print("SOURCE523_FRESH_STARTUP_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
+	quit(1 if failures else 0)

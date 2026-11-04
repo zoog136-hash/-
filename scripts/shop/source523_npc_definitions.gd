@@ -65,6 +65,8 @@ static func validate_rules(value: Variant) -> String:
 		for key: String in ["merchant_id","earth_object_id","spawn_id"]:
 			if not Catalog._integer(row.get(key)) or int(row[key])<1:return "NPC 자체 대상 연결 오류"
 		if ids.has(int(row.merchant_id)):return "중복 NPC 자체 대상"
+		if row.has("minimum_level") and (not Catalog._integer(row.minimum_level) or int(row.minimum_level)<1):return "NPC 자체 접근 레벨 오류"
+		if row.has("access_note") and (not row.access_note is String or row.access_note.is_empty()):return "NPC 자체 접근 설명 오류"
 		if row.has("equipment_mode") and row.equipment_mode!="normal_zero_only":return "NPC 장비 지급 설정 오류"
 		ids[int(row.merchant_id)]=true
 	return ""
@@ -107,5 +109,5 @@ func context(merchant_id: int, goods_id: int) -> Dictionary:
 			if spawn.SpawnManually or int(spawn.ServerLimitSetID)!=0:return {"ok":false,"reason":"NPC 수동·서버 스폰 조건 확인 필요"}
 			var currency: int=currency_for(merchant_id)
 			if currency<1:return {"ok":false,"reason":"NPC 원본 재화 연결이 유일하지 않습니다"}
-			return {"ok":true,"currency_id":currency,"label":str(rule.label),"origin":"TWILIGHT 오프라인 가정 · 0시간/0날짜 상시 · 원격 목록 거래","rules_sha256":rule_hash(merchant_id),"npc_pack_sha256":loaded_sha256}
+			return {"ok":true,"currency_id":currency,"label":str(rule.label),"origin":"TWILIGHT 오프라인 가정 · 0시간/0날짜 상시 · 원격 목록 거래"+(" · "+str(rule.access_note) if rule.has("access_note") else ""),"minimum_level":int(rule.get("minimum_level",0)),"rules_sha256":rule_hash(merchant_id),"npc_pack_sha256":loaded_sha256}
 	return {"ok":false,"reason":"설정된 NPC 객체·스폰을 원본에서 확인할 수 없습니다"}

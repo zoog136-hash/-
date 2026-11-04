@@ -265,6 +265,7 @@ func _act() -> void:
 		body = "%s ×%d회\n차감: %s ×%d\n\n%s" % [str(quote.name),count,_value_name(int(quote.payment.unit_id),int(quote.payment.class_id)),int(quote.payment.amount),body]
 		if quote.has("price_origin"):body+="\n"+str(quote.price_origin)
 		if quote.has("rule_origin"):body+="\n"+str(quote.npc_label)+"\n"+str(quote.rule_origin)
+		if quote.has("use_origin"):body+="\n"+str(quote.use_origin)
 		if quote.has("quota_text"):body+="\n"+str(quote.quota_text)
 	hud.confirm_action("원본 상점 · " + action, body, action, func(_unused: int) -> void:
 		var result: Dictionary
@@ -352,6 +353,7 @@ func _merchant_detail(id: int) -> Array[String]:
 		else:result.append(str(price.reason))
 		var quote: Dictionary=runtime.quote_merchant(id,int(quantity.value))
 		if quote.has("rule_origin"):result.insert(5,str(quote.npc_label)+"\n"+str(quote.rule_origin)+"\n")
+		if quote.has("use_origin"):result.append(str(quote.use_origin))
 		if quote.has("quota_text"):result.append(str(quote.quota_text))
 		result.append("\n"+("구매 가능 · 보관함 지급" if quote.ok else str(quote.reason)))
 	return result

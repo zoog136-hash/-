@@ -151,6 +151,120 @@ func run() -> void:
 	await capture("glenn-equipped")
 	world._load_game(true);freeze(world)
 	check(not runtime.claim(gear_order).ok and world.item_instances.has(str(new_ids[0])) and world.item_instances.has(str(new_ids[1])) and str(world.equipped_items.get("helmet",{}).get("instance_id",""))==str(new_ids[0]),"worn equipment identities and non-repeatable receipt survive reload")
+	await exercise_general_npc(world,panel)
 	world.queue_free();await frames()
 	print("SOURCE523_NPC_LOCAL_MAIN_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(1 if failures else 0)
+
+func exercise_general_npc(world: Node, panel: Node) -> void:
+	var runtime=world.source_shop
+	check(not runtime.quote_merchant(16964).ok,"80-level access remains closed below the configured gate")
+	world.level=80
+	var quote: Dictionary=runtime.quote_merchant(16964,2)
+	check(quote.ok and str(quote.npc_label).contains("아이즈") and str(quote.rule_origin).contains("지역 입장/이동 미제공"),"general island vendor has exact source identity and explicit remote-access provenance")
+	if not quote.ok:return
+	var stock: Dictionary={}
+	var coverage: Array=[]
+	for row: Dictionary in runtime.catalog.rows("MerchantGoods"):
+		var status: Dictionary=runtime.quote_merchant(int(row.ID))
+		var key: String=str(int(row.MerchantsID))
+		if not stock.has(key):stock[key]={"ready":0,"blocked":0}
+		stock[key]["ready" if status.ok else "blocked"]+=1
+		coverage.append({"merchant_id":int(row.MerchantsID),"goods_id":int(row.ID),"ready":status.ok,"reason":str(status.get("reason",""))})
+	check(coverage.size()==4328 and stock.size()==192,"actual runtime classifies every original NPC sale row and all groups")
+	check(int(stock["13"].ready)==16 and int(stock["40"].ready)==34 and int(stock["514"].ready)==16,"all executable normal stocks are checked through the existing quote engine")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--source523-coverage-output="):
+			var file:=FileAccess.open(arg.trim_prefix("--source523-coverage-output="),FileAccess.WRITE)
+			file.store_string(JSON.stringify({"scope":"actual Main, level80, isolated QA wallet; no grant by audit","groups":stock,"rows":coverage},"  "));file.close()
+	var material_names: Array=[]
+	for key: String in runtime._bindings:
+		if runtime._bindings[key].get("record",{}).has("source523_shop_item_id"):material_names.append(str(runtime._bindings[key].name))
+	check(material_names.size()==6 and not material_names.has("드래곤의 용옥"),"only six exact engraved existing-use items are registered; orb and skill books excluded")
+	var record: Dictionary=world._find_catalog_item_record("마나 회복 물약 (각인)")
+	check(int(record.get("source523_shop_item_id",0))==385 and str(record.desc).contains("TWILIGHT"),"source ID and existing host effect are labelled in inventory data")
+	var before_rows: int=world.catalog_db["아이템"].size()
+	preload("res://scripts/shop/source523_npc_consumables.gd").install(world,runtime.catalog)
+	check(world.catalog_db["아이템"].size()==before_rows,"reloading the adapter never duplicates item definitions")
+	var mana_before: int=int(world.inventory.get("마나 회복 물약 (각인)",0))
+	var base_mana: int=int(world.inventory.get("마나 회복 물약",0))
+	var gold_before: int=int(world.gold)
+	panel.mode.select(1);panel.mode.item_selected.emit(1)
+	panel.search.text="16964";panel._filter()
+	for index: int in range(panel.listing.item_count):
+		if int(panel.listing.get_item_metadata(index))==16964:panel._select(index)
+	panel.quantity.value=2;await frames()
+	check(not panel.purchase.disabled and panel.detail.text.contains("아이즈") and panel.detail.text.contains("기존 소모품 효과 재사용"),"real shop detail exposes new NPC and configured host-use provenance")
+	await capture("island-mana-available")
+	tap(panel.purchase);await frames()
+	var confirmation: Control=world.hud.get_node_or_null("Root/TwilightConfirmation")
+	if confirmation==null:check(false,"island purchase confirmation");return
+	tap(confirmation.confirm_button);await frames()
+	check(int(world.gold)==gold_before-int(quote.payment.amount) and int(world.inventory.get("마나 회복 물약 (각인)",0))==mana_before,"island purchase atomically debits the source price before receipt")
+	var order: String=str(runtime.orders()[0].id)
+	check(world._save_game(true)==OK,"new merchant pending order saves")
+	world._load_game(true);freeze(world)
+	check(runtime.orders().size()==1 and int(world.gold)==gold_before-int(quote.payment.amount),"new merchant pending payment reloads")
+	panel._build_entries();await frames()
+	tap(panel.purchase);await frames()
+	confirmation=world.hud.get_node_or_null("Root/TwilightConfirmation")
+	if confirmation==null:check(false,"island receipt confirmation");return
+	tap(confirmation.confirm_button);await frames()
+	check(int(world.inventory.get("마나 회복 물약 (각인)",0))==mana_before+2 and int(world.inventory.get("마나 회복 물약",0))==base_mana,"receipt preserves separate engraved and existing unengraved stacks")
+	check(not runtime.claim(order).ok,"new NPC receipt cannot be replayed")
+	world.hud.show_companion_bag();await frames()
+	var bag=world.hud.lineage_inventory_ui
+	bag._select_item("마나 회복 물약 (각인)");bag.open_detail();await frames()
+	check(bag.is_visible_in_tree() and bag.detail_action.is_visible_in_tree() and not bag.detail_action.disabled,"new source consumable opens a usable real inventory detail")
+	await capture("island-mana-inventory")
+	tap(bag.detail_action);await frames()
+	check(int(world.inventory.get("마나 회복 물약 (각인)",0))==mana_before+1 and world.active_item_buffs.has("마나 회복 물약 (각인)"),"actual inventory action consumes one purchased item and starts existing mana regeneration")
+	check(int(world.inventory.get("마나 회복 물약",0))==base_mana,"source item use leaves old stacks unchanged")
+	check(world._save_game(true)==OK,"consumed source stack and buff persist through real save writer")
+	world._load_game(true);freeze(world)
+	check(int(world.inventory.get("마나 회복 물약 (각인)",0))==mana_before+1 and world.active_item_buffs.has("마나 회복 물약 (각인)") and not runtime.claim(order).ok,"restart preserves use/buff and never restores paid receipt")
+	await capture("island-mana-used")
+	await exercise_all_executable_stock(world,coverage)
+
+
+func exercise_all_executable_stock(world: Node, coverage: Array) -> void:
+	var runtime=world.source_shop
+	# Isolated QA stats fund/carry the complete batch; production balance is untouched.
+	world.gold=100000000
+	world.con_stat=1000
+	var completed: int=0
+	for row: Dictionary in coverage:
+		if not row.ready:continue
+		var quote: Dictionary=runtime.quote_merchant(int(row.goods_id))
+		var name: String=str(quote.get("name",""))
+		var before: int=int(world.inventory.get(name,0))
+		var payment: int=int(quote.get("payment",{}).get("amount",0))
+		var gold: int=int(world.gold)
+		var purchase: Dictionary=runtime.buy_merchant(int(row.goods_id))
+		check(purchase.ok and int(world.gold)==gold-payment,"all executable stock debits source-priced payment: "+str(row.goods_id))
+		if not purchase.ok:continue
+		var order: String=str(purchase.order_id)
+		check(int(world.inventory.get(name,0))==before,"all stock waits for receipt: "+str(row.goods_id))
+		var receipt: Dictionary=runtime.claim(order)
+		check(receipt.ok and int(world.inventory.get(name,0))==before+int(runtime.catalog.merchant_offer(int(row.goods_id)).goods.Amount),"all executable stock grants exact real items: "+str(row.goods_id)+" "+str(receipt.get("reason","")))
+		check(not runtime.claim(order).ok,"all executable stock rejects replay: "+str(row.goods_id))
+		if receipt.ok:completed+=1
+	check(completed==66,"every executable stock item has completed a real durable payment and receipt")
+	world.hud.show_companion_bag();await frames()
+	var bag=world.hud.lineage_inventory_ui
+	var settings: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/shop/source523_npc_consumables.json"))
+	for id: String in settings.items:
+		var name: String=str(settings.items[id])
+		var spec: Dictionary=preload("res://scripts/consumable_rules.gd").definition(name)
+		if not spec.get("classes",[]).is_empty():world.job_class=str(spec.classes[0])
+		world._update_hud();await frames()
+		var before: int=int(world.inventory.get(name,0))
+		check(before>0,"purchased usable stack exists: "+id)
+		bag._select_item(name);bag.open_detail();await frames()
+		check(not bag.detail_action.disabled,"existing-use item exposes the inventory action: "+id)
+		tap(bag.detail_action);await frames()
+		check(int(world.inventory.get(name,0))==before-1,"real inventory action consumes exact source stack once: "+id)
+	check(world._save_game(true)==OK,"complete stock and all six source uses save")
+	var expected: Dictionary=JSON.parse_string(JSON.stringify(world.inventory))
+	world._load_game(true);freeze(world)
+	check(JSON.parse_string(JSON.stringify(world.inventory))==expected and runtime.orders().is_empty(),"all executable stock and uses survive restart with no pending/replayed orders")
