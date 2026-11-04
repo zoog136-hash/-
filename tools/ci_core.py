@@ -34,6 +34,7 @@ CHECKS = [
     ('symbol_history_test', []),
     ('halphas_star_enchant_test', []),
     ('halphas_star_enchant_transaction_test', []),
+    ('mastery523_main_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -287,7 +288,8 @@ def main():
                       'symbol_offline_combat_test':'SYMBOL_OFFLINE_RESULT',
                       'symbol_history_test':'SYMBOL_HISTORY_RESULT',
                       'halphas_star_enchant_test':'HALPHAS_STAR_ENCHANT_RESULT',
-                      'halphas_star_enchant_transaction_test':'HALPHAS_STAR_TRANSACTION_RESULT'}[name]
+                      'halphas_star_enchant_transaction_test':'HALPHAS_STAR_TRANSACTION_RESULT',
+                      'mastery523_main_test':'MASTERY_MAIN_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
@@ -297,5 +299,6 @@ if __name__ == '__main__':
     except Exception as error:
         print('::error title=Core gate::'+str(error).replace('%','%25').replace('\r','%0D').replace('\n','%0A'), flush=True)
         raise
+
 
 

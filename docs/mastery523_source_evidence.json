@@ -1,0 +1,141 @@
+{
+  "checked_at": "2026-11-04",
+  "game": "lineagem",
+  "original_snapshot": "523",
+  "original_source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "sources": [
+    {
+      "url": "https://probability.plaync.com/lineagem/view?probCategoryId=6656dfb696b3cf5ad823b784",
+      "publisher": "NC",
+      "version": "20261103210002",
+      "version_updated_at": "2026-11-04T06:00:30.913+09:00",
+      "facts": [
+        "Lv2-5 value variants +1/+2 weights97/3 percent",
+        "Lv6-8 value variants +1/+2/+3 weights97/2.7/0.3 percent",
+        "matching color chart lists green/blue/red/purple weights40/40/15/5 percent"
+      ],
+      "original_crosscheck": {
+        "level1_buckets": 30,
+        "levels2to5_buckets": 120,
+        "levels6to8_buckets": 90,
+        "all240_weight_sets_match": true
+      },
+      "does_not_prove": [
+        "statistical independence of color fields",
+        "per-hit point conversion",
+        "initial acquisition cost",
+        "daily reset clock hour"
+      ]
+    },
+    {
+      "url": "https://lineagem.plaync.com/guidebook/view?title=%EC%88%99%EB%A0%A8%EB%8F%84+%EC%8B%9C%EC%8A%A4%ED%85%9C",
+      "publisher": "NC",
+      "guide_id": 4414,
+      "guide_updated_at": "2025-01-02T07:35:14+09:00",
+      "facts": [
+        "ordinary hits grow equipped-weapon mastery",
+        "level-up permits option acquisition",
+        "four fields: option1 name, option1 value, option2 name, option2 value",
+        "unlocked fields reroll",
+        "daily instant point purchase cap five, shared by weapon types"
+      ],
+      "field_placement_evidence": [
+        "https://imgfiles-cdn.plaync.com/file/LineageM/download/20220221181558-wox5r6i9RxdaCUiCEAom0-v4",
+        "https://imgfiles-cdn.plaync.com/file/LineageM/download/20220221182151-MRpm4GoPkMPE5Ufk56ls0-v4"
+      ],
+      "original_crosscheck": "Each of240 source weapon/level/option buckets has a fixed BonusType across its value variants."
+    },
+    {
+      "url": "https://lineagem.plaync.com/board/notice/view?articleId=674f5c3827834c65a5c72d2d",
+      "publisher": "NC",
+      "published_at": "2024-12-03",
+      "scope": "independent mastery replacement product only; source MarketPurchase95441 -> Product133971/AdditionalService101",
+      "facts": [
+        "no purchase-count limit",
+        "base800 internal diamonds plus option selection fee",
+        "pending server-mastery selection blocks purchase"
+      ],
+      "does_not_decode": "generic MarketRestrictionType12; class-change and server-transfer policies stay distinct"
+    },
+    {
+      "url": "https://lineagem.plaync.com/board/update/view?articleId=60ad14655e566a0001de0b84",
+      "publisher": "NC",
+      "published_at": "2021-05-26",
+      "facts": [
+        "matching is granted per mastery level",
+        "each listed level independently grants HP20, MP20, MR2 or weapon damage1 according to matched grade"
+      ],
+      "scope": "The original notice lists levels1-5. The 2024 extension adds6-8; original523 maps all8 levels of each weapon to the same WeaponStepID and its60 grade-bonus rows. Existing flat-stat consumers sum each achieved owned level once; no multiplicative formula or BonusID deduplication."
+    },
+    {
+      "url": "https://lineagem.plaync.com/board/update/view?articleId=674f5c38a429a917f01d0cf6",
+      "publisher": "NC",
+      "published_at": "2024-12-03",
+      "facts": [
+        "mastery levels6-8 added",
+        "no-option transfer sums points and resets the used source mastery/options, without option fee"
+      ],
+      "does_not_prove": [
+        "an existing destination retains or clears options/colors/locks when no levels are selected"
+      ],
+      "local_fallback": "CUSTOM_BEHAVIOR preserve_existing by default, clear_existing/block_unverified configurable; confirmation and receipt identify policy; original source reset and fees retained"
+    },
+    {
+      "url": "https://lounge.plaync.com/feed/83171?country=KR&locale=ko-KR",
+      "publisher": "NC",
+      "published_at": "2026-10-06",
+      "facts": [
+        "world transfer retains higher mastery per weapon, departure wins ties",
+        "world transfer retains the smaller purchase-attempt count"
+      ],
+      "host_limit": "TWILIGHT has a local character save and intentionally separate lab/full-card/test profiles, with no account/server identity or two-server service. No automatic cross-profile sharing, server selection UI or fabricated online completion added."
+    }
+  ],
+  "local_economy": "data/config/mastery523_balance.json: CUSTOM_BALANCE and CUSTOM_BEHAVIOR; original amounts/weights and explicit user rules take precedence",
+  "access": "Anonymous public HTML, published client APIs and guide images; no credentials or access-control bypass. Full original rows, API payloads and images remain private/local.",
+  "local_evidence_sha256": {
+    "probability-api.json": "52fc96f4f0cfa0ac9a919254292fe66659ce07690a7cea594f31f71dff22d146",
+    "probability-resources.json": "19c760a7eeb3d9198c841cb20c03d14f19a36f64a95f410e694fb33deed5ac1f",
+    "probability-versions.json": "4c8b9b057bd39b1609724d788157c20ee82b3ea18f93df6d5e07ce543aa7ffe7",
+    "guide-api.json": "bc6c4a5cf08942d94d8ea76775ef037c27d86bcc819d7afcf9a786397982989e",
+    "guide-slots-0.png": "63483d23c2e92b199919b55d2cd97e970b402577ebf757dfd56abc542403a95a",
+    "guide-slots-1.png": "65cb80d8234e80709cdac448fc0afbca90525b6dceedb97af3becc5e53a422e3",
+    "mastery-notice-api.json": "96d3329825d8c923806b9a102d631bb0c989b9f467c9fe69215a98b9337bf295",
+    "mastery-20210526-api.json": "75b8d2a4492c9f8c94d385d3ee1a1ad142d365d0fa822ea8b9d38d230b1e733c",
+    "mastery-20241204-api.json": "5a2f159e14926b32cc69d699660a3333f9ecebb490ea72c2f5beb8c52f3b66b2"
+  },
+  "existing_twilight_consumers": {
+    "pvp_to_pve": {
+      "status": "EXISTING_GAME_RULE",
+      "source": "scripts/world.gd::_normalize_option_policies and scripts/inven_option_adapter.gd::OPTION_KEYS",
+      "application": "Mastery PVPMelee/PVPRange/PVPMagicAdditionDamage use existing style flat damage consumers; source rows remain unchanged."
+    },
+    "flat_reduction_ignore": {
+      "status": "EXISTING_GAME_RULE",
+      "source": "scripts/inven_option_adapter.gd and scripts/world.gd::_catalog_damage_bonus",
+      "application": "PierceDamageReduction and PiercePVPDamageReduction become the existing generic flat extra-damage field once."
+    },
+    "typed_percent_ignore": {
+      "status": "CUSTOM_BEHAVIOR_REUSING_EXISTING_CONSUMER",
+      "source": "Generic percent-ignore maps to damage_amp_pct in inven_option_adapter; world successful-hit boundary applies sum/clamp/round/target modifier/lifesteal in that order.",
+      "missing_native_fact": "No authoritative native typed reduction-ignore combat formula found in original523, prior report or official-source search.",
+      "local_policy": "style_amplifier restricts the source effect to melee/ranged/magic; display_only is configurable. Direct tagged proc damage continues to bypass normal weapon/lifesteal boundary."
+    },
+    "partial_repair": {
+      "status": "CUSTOM_BEHAVIOR",
+      "application": "Explicitly restore only one absent unique100%-source peer value where another original value and all four old colors already exist. No unknown values/colors/locks or entire empty levels are inferred.",
+      "guard": "Valid partial saves remain unchanged on load; malformed namespaces retain global overwrite protection. Repair makes exact-byte backup and durable provenance receipt."
+    },
+    "partial_reroll": {
+      "status": "CUSTOM_BEHAVIOR",
+      "application": "Reroll complete levels only, preserve every partial-level field; use original fee row for locks inside the changed scope. Strict block_weapon remains configurable."
+    }
+  },
+  "public_search_scope_20261104": {
+    "queries": [
+      "site.lineagem.plaync.com 숙련도 대미지 감소 무시 계산",
+      "site.lineagem.plaync.com 숙련도 잠금 옵션이 획득되지"
+    ],
+    "result": "Official updates document source options and historical bugs, but no native typed reduction-ignore formula or local partial-save repair semantics. Community posts not used as authoritative formula evidence. No LineageM engine/APK/XAPK discovery or analysis."
+  }
+}

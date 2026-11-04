@@ -77,6 +77,8 @@ const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const EQUIPMENT_COLLECTION_RUNTIME = preload("res://scripts/collections/equipment_collection_runtime.gd")
 var equipment_collections = EQUIPMENT_COLLECTION_RUNTIME.new()
+const MASTERY523_RUNTIME = preload("res://scripts/mastery/mastery_runtime.gd")
+var weapon_mastery = MASTERY523_RUNTIME.new()
 const CARD_COLLECTION_RUNTIME = preload("res://scripts/cards/collection_runtime.gd")
 var card_collections = CARD_COLLECTION_RUNTIME.new()
 const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
@@ -708,6 +710,7 @@ func _load_data() -> void:
 	_build_job_classes()
 	equipment_collections.configure(self)
 	growth.configure(self)
+	weapon_mastery.configure(self)
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -948,13 +951,13 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		hp = mini(_effective_max_hp(), hp + stolen)
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
 	_refresh_equipment_effects()
-	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
-	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	if attack_kind not in ["melee","ranged","magic"]:attack_kind=feedback_kind if resolving_combat_action else _current_attack_kind()
+	var kind: String = attack_kind
+	var amplification: float = clampf(float(equipment_effects.damage_amp_pct)+weapon_mastery.damage_amplification(kind,_mastery_actual_weapon_type()), 0.0, 300.0)
+	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	adjusted_damage=growth.combat.outgoing(adjusted_damage,attack_kind)
 	var before_reduction: int=adjusted_damage
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
-	var kind: String=_current_attack_kind() if attack_kind.is_empty() else attack_kind
 	var hit_context: Dictionary=context.duplicate(true)
 	hit_context.flat_reduction=maxi(0,before_reduction-adjusted_damage)
 	hit_context.pvp=bool(target.get_meta("is_player_combatant",false))
@@ -1013,7 +1016,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key) + weapon_mastery.catalog_bonus(key, _mastery_actual_weapon_type())
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -1402,6 +1405,7 @@ func _connect_signals() -> void:
 	hud.return_pressed.connect(_return_to_spawn)
 	hud.inventory_pressed.connect(_open_inventory)
 	hud.menu_pressed.connect(hud.toggle_menu)
+	hud.weapon_mastery_requested.connect(weapon_mastery.show_panel)
 	hud.map_pressed.connect(hud.toggle_map)
 	hud.map_selected.connect(_on_map_selected)
 	hud.save_pressed.connect(func() -> void: _save_game(false))
@@ -2053,7 +2057,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "melee")
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -2328,7 +2332,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "melee")
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -2392,7 +2396,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "magic")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "magic")
 	hud.append_log("%s 적중%s · %s에게 %d 마법 피해 · 명중 %.1f%% · 치명타 %.1f%%" % [
 		skill_name, " CRITICAL" if critical else "", target.monster_name, damage,
 		hit_chance * 100.0, critical_chance * 100.0
@@ -2485,9 +2489,9 @@ func _attack() -> void:
 	selected_monster = target
 	auto_attack_timer = _normal_attack_interval()
 	_break_invisibility()
-	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind), auto_attack_timer, true)
+	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind, _mastery_actual_weapon_type()), auto_attack_timer, true)
 
-func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> void:
+func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack_weapon_type: int = -1) -> void:
 	if patch523_npc_spells.blocks("CannotAttack"): return
 	if not is_instance_valid(target) or target.dead: return
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
@@ -2501,6 +2505,8 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		])
 		_update_target_hud()
 		return
+	var actual_weapon: int = _mastery_actual_weapon_type()
+	if attack_weapon_type == -1 or attack_weapon_type == actual_weapon: weapon_mastery.normal_hit(actual_weapon)
 	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
 	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
 	var damage: int = maxi(1, damage_stat + _roll_weapon_damage(target))
@@ -4690,6 +4696,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		var current: Dictionary = auto_hunting_movement_assessment(int(movement_override.get("schedule_id", -1)), int(movement_override.get("landing_link_id", -1)))
 		if not bool(current.ok) or current != movement_override: return ERR_UNAVAILABLE
 		if collection_override != AUTO_HUNTING_LOCAL.cost_override(self, current): return ERR_INVALID_PARAMETER
+	if collection_override.has("weapon_mastery523") and (not weapon_mastery.enabled or not weapon_mastery.core.validate_state(collection_override.weapon_mastery523).is_empty()): return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4704,7 +4711,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523"]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
 		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
@@ -4804,6 +4811,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if not source_map_error.is_empty():
 		if not quiet:hud.show_message(source_map_error)
 		return ERR_UNAVAILABLE
+	data.merge(weapon_mastery.save_fields(),true)
 	data.merge(equipment_collections.extra_save_fields, false)
 	data.merge(collection_override, true)
 	var save_started_usec: int = Time.get_ticks_usec()
@@ -4870,6 +4878,11 @@ func _load_game(quiet: bool) -> void:
 	var death_problem: String = death_recovery.check_load(data)
 	if not death_problem.is_empty():
 		death_recovery.save_blocked = true; hud.show_message(death_problem); return
+	var mastery_error: String = weapon_mastery.check_load(data)
+	if not mastery_error.is_empty():
+		equipment_collections.save_blocked = true
+		hud.show_message(mastery_error)
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -5040,6 +5053,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
 	death_recovery.accept_load(data)
+	weapon_mastery.accept_load(data)
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -7480,7 +7494,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 
 func _catalog_damage_bonus(kind: String) -> int:
 	# Native secondary doll effects are counted once, separately from general attack.
-	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))+halphas_star.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
+	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))+halphas_star.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,"")) + weapon_mastery.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""), _mastery_actual_weapon_type())
 	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
@@ -7502,7 +7516,7 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
-	var total: int = option_awakening.accuracy_bonus(kind)
+	var total: int = option_awakening.accuracy_bonus(kind) + weapon_mastery.catalog_bonus({"melee":"meleeHit","ranged":"rangedHit"}.get(kind,""), _mastery_actual_weapon_type())
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7510,7 +7524,7 @@ func _catalog_accuracy_bonus(kind: String) -> int:
 	return total
 
 func _catalog_critical_bonus(kind: String) -> int:
-	var total: int = 0
+	var total: int = weapon_mastery.catalog_bonus({"melee":"meleeCritical","ranged":"rangedCritical","magic":"magicCritical"}.get(kind,""), _mastery_actual_weapon_type())
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7553,6 +7567,7 @@ func _effective_move_speed_multiplier() -> float:
 
 func _effective_attack_speed_bonus_percent() -> float:
 	var total: float = original_skills.stat("attackSpeed") if original_skills != null else 0.0
+	total += weapon_mastery.catalog_bonus("attackSpeed", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
 	total += float(_active_item_buff_total("attack_speed"))
@@ -7924,7 +7939,7 @@ func _record_mr(record: Dictionary) -> int:
 	return maxi(0, int(CATALOG_EFFECTS.numeric_description_option(record, "마법 방어력(MR)")) + int(CATALOG_EFFECTS.numeric_description_option(record, "마법 방어력")) )
 
 func _effective_mr() -> int:
-	var total: int = 10 + level + _effective_attribute("WIS") * 2
+	var total: int = 10 + level + _effective_attribute("WIS") * 2 + weapon_mastery.catalog_bonus("mr", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_mr(record)
 	total += _active_skill_buff_total("mrFlat")
@@ -8043,7 +8058,7 @@ func _effective_defense() -> int:
 	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
 
 func _effective_max_hp(base_override: int = -1) -> int:
-	var flat_bonus: float = 0.0
+	var flat_bonus: float = float(weapon_mastery.catalog_bonus("hpFlat", _mastery_actual_weapon_type()))
 	var percent_bonus: float = original_skills.stat("hpPct") if original_skills!=null else 0.0
 	for record: Dictionary in _all_equipped_records():
 		flat_bonus += float(record.get("hpFlat", 0.0))
@@ -8799,4 +8814,7 @@ func resolve_patch523_npc_hit(actor: TwilightMonster, raw: int, spell: Dictionar
 
 func _resume_death523() -> void:
 	death_recovery.resume()
+
+func _mastery_actual_weapon_type() -> int:
+	return preload("res://scripts/animation/source_weapon_banks.gd").local_type(_current_weapon_type())
 
