@@ -1,0 +1,222 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-04",
+  "branch": "feature/auto-storage-sale-20261104",
+  "pr": "https://github.com/zoog136-hash/-/pull/251",
+  "previous_head": "b54f5f2f9240c017da715cbd595bba2b3418a3e8",
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "engine": "Godot 4.7.2 official ed1daf0bf",
+  "source_contract": {
+    "read_only_pr238_ref": "58b07798753d56f87e08cd0cc95febffe694af37",
+    "reader_blob": "0347d76847d3f01670f58fa273ce502b9666e9e1",
+    "drive_file_id": "1u63NshzCYQ4WAXvavGM8elqwY5Lhbfwq",
+    "zip_bytes": 1770358,
+    "zip_sha256": "91de04c0f3ed613b76a69fea992347d82bdab79b6ef316049d3f77e90a3484d7",
+    "payload_bytes": 1806317,
+    "payload_sha256": "bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3",
+    "formal_drive_download_count": 1,
+    "sha_size_zip_crc_verified": true,
+    "new_external_uploads": 0,
+    "library_401_retries": 0,
+    "actual_main_argument": "--patch523-drop-root=/workspace/pr251-catalog-consumer/unpacked/payload",
+    "existing_installed_payload_path": "user://lineagem_patch523_drops/bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3/monster_drops.bin"
+  },
+  "coverage": {
+    "baseline": {
+      "deposit": 43,
+      "sell": 9
+    },
+    "registered": {
+      "deposit": 80,
+      "deposit_total": 84,
+      "deposit_allowed": 79,
+      "sell": 19,
+      "sell_total": 25,
+      "sell_allowed": 19
+    },
+    "missing_nonvirtual_definitions": [
+      235,
+      237,
+      313,
+      385
+    ],
+    "missing_sale_definitions": [
+      235,
+      385
+    ],
+    "virtual_selectors_not_items": [
+      45011,
+      45021,
+      45031,
+      45041
+    ],
+    "existing_test_item_protected": 8271,
+    "production_ownership_grants": 0,
+    "production_loot_pool_changes": 0
+  },
+  "execution": {
+    "consumer": "existing _run_auto_hunt, existing one-shot maintenance and verified local portal",
+    "daily_key": "existing TwilightQuestService.korean_daily_key (Korean 05:00)",
+    "mode": "twilight_existing_auto_day_once_v1",
+    "local_travel_storage_cost": 0,
+    "actual_main_ui_checks": 33,
+    "isolated_explicit_inventory_fixture": true,
+    "native_m_schedule_activation_and_exact_npc_arrival": "NOT_EXECUTED: source contract/coordinates absent; no inferred NPC placement",
+    "new_scheduler_or_map_system": false
+  },
+  "validation": [
+    {
+      "log": "/tmp/registry-auto523-validation/inventory_registry523_test-last.log",
+      "checks": 40,
+      "failures": 0,
+      "sha256": "83c6bc20ac58256601b3946697db0530ef77223e3b5f38e168d6d15757fbb2b8"
+    },
+    {
+      "log": "/tmp/registry-auto523-validation/automatic-execution-final.log",
+      "checks": 32,
+      "failures": 0,
+      "sha256": "9ee8a36ec4d664efd01ca349b63067a823a325d0f639c7545c34f346bc81a0fe"
+    },
+    {
+      "log": "/tmp/registry-auto523-validation/inventory_source523_test-final.log",
+      "checks": 652,
+      "failures": 0,
+      "sha256": "8b74d82fe6721af542affad42b9762402266712c7382020a9b850cfadf474770"
+    },
+    {
+      "log": "/tmp/registry-auto523-validation/equipment_category_selection_test-last.log",
+      "checks": 39,
+      "failures": 0,
+      "sha256": "f63e3ff7d9c9941e6777983d820edd7738f88287aaefcaac6bdf76b32fcee375"
+    },
+    {
+      "log": "/tmp/registry-auto523-validation/inventory_automation_test-final.log",
+      "checks": 37,
+      "failures": 0,
+      "sha256": "a22a0ff65e182b3eb85251a8e08f22404673653b4244da31f3ce3ccbe6cbe8fa"
+    },
+    {
+      "log": "/tmp/registry-auto523-validation/inventory_maintenance_test-final.log",
+      "checks": 32,
+      "failures": 0,
+      "sha256": "9d571ed050a794fd7f48ae223523f836fbfc44e077b784f828b17e2cad81e1b0"
+    },
+    {
+      "log": "/tmp/registry-auto523-validation/ui-final.log",
+      "checks": 33,
+      "failures": 0,
+      "sha256": "01af9d274bb0ddc39a128e1e2bb3a76968d76abbded741cf5ad343898b835575"
+    },
+    {
+      "log": "/tmp/registry-auto523-validation/core.log",
+      "checks": 32,
+      "failures": 0,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    }
+  ],
+  "code_files": {
+    "scripts/ui/inventory_automation_settings.gd": {
+      "sha256": "ba0fab496018e28652441a0368bc681705e5540fbd7c674cb14c63a220550dde",
+      "bytes": 17048,
+      "tested_stage_identical": true
+    },
+    "scripts/ui/renewal_hud.gd": {
+      "sha256": "4c59a2b299dbefd7fc4642a449836801237670f358c03b9ba865b3332277ded3",
+      "bytes": 122791,
+      "tested_stage_identical": true
+    },
+    "scripts/warehouse/equipment_category_selection.gd": {
+      "sha256": "84645e91ca9a6c1b0f0bd59d4bc333f0448259ebf0eb80cbfbbe26430277b9de",
+      "bytes": 9172,
+      "tested_stage_identical": true
+    },
+    "scripts/warehouse/inventory_automation.gd": {
+      "sha256": "89b50462004ab53423e28b81cf0f8fb3f10286f705085ef74dee7febb9adaafc",
+      "bytes": 16361,
+      "tested_stage_identical": true
+    },
+    "scripts/warehouse/inventory_maintenance.gd": {
+      "sha256": "3fe55812d49f1b890c24c73be9638286a977f8f46fb8a0851eb16751f3f44a46",
+      "bytes": 17714,
+      "tested_stage_identical": true
+    },
+    "scripts/warehouse/inventory_source523.gd": {
+      "sha256": "aa56af6427544a1242108f6c86ea04f6c1a21b3fcafb0e43e6af130728571781",
+      "bytes": 10148,
+      "tested_stage_identical": true
+    },
+    "scripts/world.gd": {
+      "sha256": "5f67442e086182368c8f589ce36039ce663c6509bb5afa82bb5063bc3fe00d51",
+      "bytes": 379739,
+      "tested_stage_identical": true
+    },
+    "tests/equipment_category_selection_test.gd": {
+      "sha256": "0731e6b33fc4930cca0836ee704116e21dc2311617524e953361c8aac2aee9e8",
+      "bytes": 8590,
+      "tested_stage_identical": true
+    },
+    "tests/inventory_source523_test.gd": {
+      "sha256": "35f370481b82a2cbeaba45b989e2e799282000bbbac84a5734f4b646c85a1e0b",
+      "bytes": 6875,
+      "tested_stage_identical": true
+    },
+    "scripts/warehouse/inventory_registered523.gd": {
+      "sha256": "dbb7339353d7809a43f9d56633d5069ed135c407ce134dda8642aa4aedd3eea4",
+      "bytes": 4592,
+      "tested_stage_identical": true
+    },
+    "tests/inventory_automatic_execution_test.gd": {
+      "sha256": "2d60b80cd596e43a1778fb1922d42016b04a24250be699e5cf741e946df4c9a2",
+      "bytes": 6961,
+      "tested_stage_identical": true
+    },
+    "tests/inventory_registry523_test.gd": {
+      "sha256": "09b2c338748dfc84ae0b1a0682241c3fec04e028826481f9d232cc6018e41f9b",
+      "bytes": 3489,
+      "tested_stage_identical": true
+    },
+    "tests/inventory_registry_automatic_ui_test.gd": {
+      "sha256": "69a36003a08b5d968310780c548fb157a486b243f4f6ec9f80a28a5e34458428",
+      "bytes": 10004,
+      "tested_stage_identical": true
+    }
+  },
+  "captures": [
+    {
+      "path": "/tmp/registry-automatic523-evidence/automatic-disabled-854x480.png",
+      "bytes": 237505,
+      "sha256": "a1a4a3a28d80ed66beed1fd02344aa90c737bbf3f407cab4d6d89ef111937049",
+      "storage": "LOCAL_ONLY",
+      "visually_inspected": true
+    },
+    {
+      "path": "/tmp/registry-automatic523-evidence/automatic-target-cost-1280x720.png",
+      "bytes": 814018,
+      "sha256": "3cc3f56d5ff4e8a38bccf75770f53823e3b0f10dbce9912c9d2d44085c4fd4a5",
+      "storage": "LOCAL_ONLY",
+      "visually_inspected": true
+    },
+    {
+      "path": "/tmp/registry-automatic523-evidence/registered-blessing-1280x720.png",
+      "bytes": 890674,
+      "sha256": "27df4e7bd228ff7e75001a9f2371444aa94dc60c5bf8de4453b1f130cd68d921",
+      "storage": "LOCAL_ONLY",
+      "visually_inspected": true
+    }
+  ],
+  "limits": [
+    "stage uses existing imported cache, current source map and documented stage-only import settings",
+    "no full original-game equivalence, real-device/audio validation or remote manual/full CI",
+    "no source ZIP/BIN, real saves or captures uploaded",
+    "new catalog definitions are store/sale-only; unlinked use effects preserve item"
+  ],
+  "resource_preflight": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "result": "PASS; no art modifications"
+  },
+  "evidence_storage": "LOCAL_ONLY",
+  "evidence_commit": "534d5f2abd31694e4204f3b310c17bd59a30e1bc",
+  "evidence_scope": "Historical registry/AUTO validation at 534d5f2a; later supplier adapter uses supplier_contract_validation.json"
+}

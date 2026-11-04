@@ -241,7 +241,6 @@ func _spawn_slot(slot: Dictionary) -> void:
 	slot.remaining = 0.
 	if boss:
 		var state: Dictionary = boss_director.state_for(str(field.data.map_id),region)
-		if int(state.hp)>0: monster.hp = mini(monster.max_hp,int(state.hp)); monster.hp_bar.value = monster.hp
 		var position: Array = state.position
 		var home: Array = state.get("home",[])
 		if home.size()==2:
@@ -253,6 +252,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 			var saved := Vector2(float(position[0]),float(position[1]))
 			if destination_allowed(monster,saved) and field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(monster.home_position)<float(monster.ai.get("leash_distance",820.)):
 				monster.global_position = saved
+		restore_boss_hp(monster,state)
 		boss_director.capture(str(field.data.map_id),region,monster)
 	_update_activity(monster)
 	# Spread the first AI decision across the existing 30 Hz cadence.
@@ -347,16 +347,23 @@ func alert_social(source: TwilightMonster) -> void:
 		ally.aggro_remaining = maxf(ally.aggro_remaining,8.0)
 		ally.repath_cooldown = 0.0
 
-func summon_for(owner: TwilightMonster) -> void:
+func restore_boss_hp(monster: TwilightMonster, state: Dictionary) -> void:
+	# Resolve regional maximum at the final validated restored position.
+	if int(state.get("hp",-1)) > 0:
+		monster.hp = mini(monster.max_hp,int(state.hp))
+		monster.hp_bar.max_value = monster.max_hp; monster.hp_bar.value = monster.hp
+
+func summon_for(owner: TwilightMonster, requested: int = 2) -> Array[TwilightMonster]:
+	var spawned: Array[TwilightMonster] = []
 	var owned: int = 0
 	for value: Dictionary in summons:
 		if int(value.owner)==owner.get_instance_id() and is_instance_valid(value.monster): owned += 1
-	if owned>=4: return
+	if owned>=4: return spawned
 	var region: Dictionary = {}
 	for slot: Dictionary in slots:
 		if str(slot.region.get("mode","normal"))=="normal": region = slot.region; break
-	if region.is_empty(): return
-	for i: int in range(mini(2,4-owned)):
+	if region.is_empty() or field == null: return spawned
+	for i: int in range(mini(clampi(requested,1,4),4-owned)):
 		var p: Vector2 = owner.global_position+Vector2.from_angle(float(i)*PI)*100.
 		if not field.walkable(p) or not field.point_clear(p) or field.is_safe(p): continue
 		var record: Dictionary = (records[str(region.monster_types[i%region.monster_types.size()])] as Dictionary).duplicate(true)
@@ -374,6 +381,13 @@ func summon_for(owner: TwilightMonster) -> void:
 		monster.player_hit.connect(world._on_player_hit)
 		monster.selected.connect(world._select_monster)
 		summons.append({"owner":owner.get_instance_id(),"monster":monster})
+		spawned.append(monster)
+	return spawned
+
+func retire_summoned(monster: TwilightMonster) -> void:
+	for entry: Dictionary in summons.duplicate():
+		if entry.monster == monster: summons.erase(entry)
+	if is_instance_valid(monster): monster.queue_free()
 
 func _clear_summons(owner: int = -1) -> void:
 	for i: int in range(summons.size()-1,-1,-1):

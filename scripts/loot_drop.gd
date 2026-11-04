@@ -185,7 +185,7 @@ static func _missing(monster_name: String, grade: String) -> Dictionary:
 		push_warning("TWILIGHT_DROP_UNMAPPED_GRADE: " + report_id + " — skipped; no arbitrary substitution")
 	return {}
 
-static func _pick_equipment_entry(grade: String, monster_drops: Array[String], catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}) -> Dictionary:
+static func _pick_equipment_entry(grade: String, monster_drops: Array[String], catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}, source_weights: Dictionary = {}) -> Dictionary:
 	var by_name: Dictionary = catalog.get("by_name", {})
 	var mapped: Dictionary = catalog.get("l1j_monster_drops", {})
 	var candidates: Array[Dictionary] = []
@@ -272,6 +272,26 @@ static func _pick_equipment_entry(grade: String, monster_drops: Array[String], c
 		else: candidates.append_array(SOURCE3_REVIEWED.EXTENSIONS.candidates(grade, by_name, monster_identity))
 	if candidates.is_empty():
 		return _missing(monster_name, grade)
+	# Reweight only an existing successful-grade pool; preserve chance, count and quantity.
+	if not source_weights.is_empty():
+		var weighted: Array[Dictionary] = []
+		var total: float = 0
+		var changed: bool = false
+		for item: Dictionary in candidates:
+			var factor: float = float(source_weights.get(str(item.item_name),1.0))
+			if not is_finite(factor) or factor <= 0: factor = 1
+			changed = changed or not is_equal_approx(factor,1)
+			var weight: float = float(item.weight)*factor
+			weighted.append({"row":item,"weight":weight}); total += weight
+		if changed:
+			var draw: float = rng.randf()*total # One existing pool choice; fractions remain exact.
+			var selected: Dictionary = weighted.back().row
+			for entry: Dictionary in weighted:
+				draw -= float(entry.weight)
+				if draw <= 0:
+					selected = entry.row; break
+			var count: int = int(selected.min) if int(selected.min) == int(selected.max) else rng.randi_range(int(selected.min),int(selected.max))
+			return {"item_name":str(selected.item_name),"quantity":count}
 	var total_weight: int = 0
 	for item: Dictionary in candidates:
 		total_weight += int(item["weight"])
@@ -310,7 +330,7 @@ static func _pick_material(monster_name: String, is_boss: bool, catalog: Diction
 	return ""
 
 
-static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}, map_id: String = "") -> Array[Dictionary]:
+static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}, map_id: String = "", source_weights: Dictionary = {}) -> Array[Dictionary]:
 	var earned: Array[Dictionary] = []
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
@@ -322,7 +342,7 @@ static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: 
 		var equipment_grade: String = _roll_equipment_grade(is_boss, rng)
 		if equipment_grade.is_empty():
 			continue
-		var equipment: Dictionary = _pick_equipment_entry(equipment_grade, monster_drops, catalog, rng, monster_name, monster_identity)
+		var equipment: Dictionary = _pick_equipment_entry(equipment_grade, monster_drops, catalog, rng, monster_name, monster_identity,source_weights)
 		if not equipment.is_empty():
 			earned.append(equipment)
 	# One independent resource roll, after gear/potions; all loot remains on ground.

@@ -15,6 +15,8 @@ var available: Array[Dictionary] = []
 var high_water: int = 0
 var emitted: int = 0
 var detailed_draws: int = 0
+var impact_visual_limit: int = CAPACITY
+var impact_draws: int = 0
 var font: Font
 var visuals = VISUALS.new()
 var reduced_motion: bool = false
@@ -102,6 +104,7 @@ func clear() -> void:
 		available.append(entry)
 	active.clear()
 	detailed_draws = 0
+	impact_draws = 0
 	set_process(false)
 	queue_redraw()
 
@@ -171,6 +174,7 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	if font == null: return
 	detailed_draws = 0
+	impact_draws = 0
 	var view: Rect2 = get_viewport_rect().grow(160)
 	var canvas: Transform2D = get_global_transform_with_canvas()
 	# Corpse/rings below impacts, all text above them; pool insertion order must
@@ -205,6 +209,8 @@ func _draw() -> void:
 			if str(entry.kind) != "impact" or bool(entry.critical) != priority: continue
 			var point: Vector2 = to_local(entry.point)
 			if not view.has_point(canvas * point): continue
+			if impact_draws >= impact_visual_limit: continue
+			impact_draws += 1
 			var detailed: bool = detailed_draws < detail_limit
 			if detailed: detailed_draws += 1
 			visuals.draw_impact(self, point, entry, detailed, impact_intensity)

@@ -1,0 +1,95 @@
+{
+  "actual_source_rows": 195,
+  "conditional_rows": 15,
+  "condition_invariant_row_ids": [
+    242488,
+    243638
+  ],
+  "condition_dependent_rows": 13,
+  "point_definitions": 19,
+  "point_definition_land_counts": {
+    "46964": 17,
+    "47232": 1,
+    "47804": 1
+  },
+  "point_membership_policy": "UNVERIFIED; do not invent rectangle edge ownership or point radius",
+  "M_coordinate_evidence": {
+    "source_table_SHA_equal_to_received_patch523": true,
+    "eligible_records": 236,
+    "source_exact_records": 224,
+    "source_counterexamples": 12,
+    "no_root_pair_records": 1295,
+    "best_target_containment_of_source_exact": 131,
+    "actual_M_game_screenshots": 0,
+    "actual_M_movement_or_collision_observations": 0,
+    "PC_game_field_mapping_verified": false
+  },
+  "historical_addon_comparison": {
+    "UI_inventory_delta_is_global_resource_index": false,
+    "addon_v2_files_verified": 877,
+    "addon_v3_files_verified": 2068,
+    "target_paths_or_references": 0,
+    "raw_SP2_files": 0,
+    "latest523_pixel_evidence": false,
+    "old_code_installed_or_merged": false
+  },
+  "remaining_condition_counts": {
+    "SiegePlay": 4,
+    "LastavardHotTime": 9
+  },
+  "condition_evidence": {
+    "literal_condition_names_found_only_in": "ClientOptimizeTerritoryConditionType.json",
+    "related_tables_inspected": [
+      "WarZoneHotTime.json",
+      "WarZoneHotTimeList.json",
+      "EventScheduler.json",
+      "SiegeConstantData.json"
+    ],
+    "runtime_activation_signal_for_remaining_13": "NOT_PROVIDED; do not infer from unrelated IDs or schedules",
+    "Siege_feature_reintroduced": false
+  },
+  "full_inventory_lookup": {
+    "historical_index_read_and_verified": true,
+    "IDs_located": 5,
+    "SP2_members_located": 10,
+    "required_containers": [
+      "Client/Data/Sprite484.dat",
+      "Client/Data/Sprite609.dat"
+    ],
+    "required_raw_payload_received": false,
+    "latest523_container_identity_verified": false,
+    "failed_Library_transfer_retried": false,
+    "small_effect_SP2_received": 4,
+    "small_effect_provided_DAT_proof_matches_declared_current523": true,
+    "consumer_hashed_whole_small_effect_DAT": false,
+    "full_effect_SP2_pending": 0,
+    "full_effect_raw_IDs_pending": [],
+    "raw_SP2_received": 10,
+    "current_SPR29_received_and_compared": true
+  },
+  "own_local_mode": {
+    "default": "absent/off",
+    "bounds": "inclusive square in current game-world coordinates, independently chosen by user",
+    "configurable_half_extent": {
+      "min": 16,
+      "max": 4096,
+      "initial": 256,
+      "native_distance_claim": false
+    },
+    "source_values": "exact original Default or explicit user-selected Condition flags",
+    "native_M_coordinate_or_event_activation_claim": false,
+    "per_map": true,
+    "restores_prior_preference_outside": true,
+    "write_failure_atomic": true,
+    "actual_UI_and_restart_verified": true
+  },
+  "effect_candidate": {
+    "decoded_source_inputs": 10,
+    "models": 4,
+    "candidate_PNG": 736,
+    "current_SPR_target_declarations_equal_to_historical": true,
+    "source_FPS_ticks_preserved": true,
+    "geometry_blend_direction_trigger_meanings": "TWILIGHT candidate hypotheses; not certified M engine semantics",
+    "actual_UI_preview_and_exact_pair_runtime_adapter_verified": true
+  }
+}

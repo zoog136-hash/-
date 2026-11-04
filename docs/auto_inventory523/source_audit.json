@@ -1,0 +1,30 @@
+{
+  "source_bytes": 25031173,
+  "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "crc": "all_members_ok",
+  "tables": {
+    "StorageAutoStore": {
+      "rows": 84,
+      "unique_item_classes": 76,
+      "sha256": "8c6c4a1276a782b4f4692fe48fa34c25db5b5d659992b20e2d1804c2151f27ce",
+      "bytes": 9573,
+      "missing_item_classes": 0,
+      "not_player_tradable_rows": 60,
+      "bless_counts": {
+        "1": 76,
+        "2": 4,
+        "3": 4
+      }
+    },
+    "MerchantAutoSell": {
+      "rows": 25,
+      "unique_item_classes": 25,
+      "sha256": "9efc9455b8e8cf12dbd88c93902d054520e3da1a6e6a819fd94183c07fe4c76a",
+      "bytes": 1532,
+      "missing_item_classes": 0,
+      "not_player_tradable_rows": 23
+    }
+  },
+  "help_sequence": "explicit_selection_then_cart_then_confirm_all",
+  "native_price_in_auto_sell_table": false
+}

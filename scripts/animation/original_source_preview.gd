@@ -348,20 +348,104 @@ func _on_source_annotation(event: Dictionary) -> void:
 		spawn_source_overlay(target_id, posmod(int(event.direction) - 3, 8))
 
 func spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Vector2.INF) -> bool:
+	var ancestor: Node = self
+	while ancestor!=null:
+		if ancestor.has_method("presentation_effect_manifest"):
+			var path: String = str(ancestor.call("presentation_effect_manifest",sprite_id))
+			if not path.is_empty() and FileAccess.file_exists(path):
+				var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+				if index is Dictionary and index.get("records") is Dictionary:
+					var old_path: String = _manifest_path
+					var old_records: Dictionary = _manifest_records
+					var old_mode: String = _playback_mode
+					_manifest_path = path
+					_manifest_records = index.get("records",{})
+					_playback_mode = "compatible" # Explicit per-effect opt-in; actor mode is restored.
+					var shown: bool = _spawn_source_overlay(sprite_id,facing,world_point)
+					_manifest_path = old_path
+					_manifest_records = old_records
+					_playback_mode = old_mode
+					if shown: return true
+			break
+		ancestor = ancestor.get_parent()
+	return _spawn_source_overlay(sprite_id,facing,world_point)
+
+func _spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Vector2.INF) -> bool:
 	if _playback_mode != "compatible" or not _manifest_records.has("overlay:" + str(sprite_id)): return false
+	var selected_id: int = sprite_id
+	var ancestor: Node = self
+	while ancestor != null:
+		if ancestor.has_method("select_source_presentation_effect"):
+			selected_id = int(ancestor.call("select_source_presentation_effect",sprite_id,_manifest_records))
+			break
+		ancestor = ancestor.get_parent()
+	if selected_id != sprite_id and not _overlay_files_available(selected_id,sprite_id): selected_id = sprite_id
 	var overlay = get_script().new()
 	overlay.playback_mode_override = _playback_mode
 	var parent: Node = get_parent() if get_parent() != null else self
 	parent.add_child(overlay)
 	overlay.global_position = global_position if not world_point.is_finite() else world_point
-	if not overlay.configure("overlay:" + str(sprite_id), _manifest_path):
-		overlay.free()
-		return false
+	if not overlay.configure("overlay:" + str(selected_id), _manifest_path):
+		if selected_id == sprite_id or not overlay.configure("overlay:" + str(sprite_id), _manifest_path):
+			overlay.free()
+			return false
+		selected_id = sprite_id
+	overlay.set_meta("requested_source_effect",sprite_id)
+	overlay.set_meta("selected_source_effect",selected_id)
 	overlay._overlay_facing = facing
 	overlay.z_index = 2
 	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
 	_overlay_nodes.append(overlay)
 	overlay.advance_source(0.0, "idle", facing, 0, false)
+	return true
+
+func _overlay_record(sprite_id: int) -> Dictionary:
+	var candidate: Variant = _manifest_records.get("overlay:" + str(sprite_id),{})
+	if not candidate is Dictionary or candidate.is_empty(): return {}
+	if candidate.has("manifest"):
+		var relative: String = str(candidate.manifest)
+		if not INSTALL.safe_relative(relative): return {}
+		var path: String = INSTALL.resolve_file(_manifest_path.get_base_dir(),relative)
+		var file := FileAccess.open(path,FileAccess.READ)
+		if file == null or file.get_length()>8*1024*1024: return {}
+		file.close()
+		candidate = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return candidate if candidate is Dictionary else {}
+
+func _overlay_files_available(sprite_id: int, original_id: int = -1) -> bool:
+	var candidate: Variant = _overlay_record(sprite_id)
+	if not candidate is Dictionary: return false
+	var identity: Variant = candidate.get("source_sprite_id")
+	if not (identity is int or identity is float) or float(identity)!=float(sprite_id): return false
+	if not candidate.get("one_shot_overlay") is bool or candidate.get("one_shot_overlay") != true: return false
+	var missing: Variant = candidate.get("source_missing_attachments",[])
+	if not (missing is Array or missing is Dictionary) or not missing.is_empty(): return false
+	if bool(candidate.get("card_skill_partial_overlay",false)): return false
+	var tracks: Variant = candidate.get("tracks",{})
+	if not tracks is Dictionary: return false
+	var idle: Variant = tracks.get("idle",{})
+	if not idle is Dictionary: return false
+	if original_id >= 0:
+		var original: Dictionary = _overlay_record(original_id)
+		var original_tracks: Variant = original.get("tracks",{})
+		if not original_tracks is Dictionary: return false
+		var original_idle: Variant = original_tracks.get("idle",{})
+		if not original_idle is Dictionary: return false
+		var action: int = int(idle.get("source_action_id",-1))
+		if action < 0 or action != int(original_idle.get("source_action_id",-2)): return false
+	var directions: Variant = idle.get("directions",[])
+	if not directions is Array or directions.size()!=8: return false
+	for frames: Variant in directions:
+		if not frames is Array or frames.is_empty(): return false
+		for frame: Variant in frames:
+			if not frame is Dictionary: return false
+			var layers: Variant = frame.get("layers",[])
+			var effects: Variant = frame.get("effect_layers",[])
+			if not layers is Array or layers.is_empty() or not effects is Array: return false
+			for layer: Variant in layers + effects:
+				if not layer is Dictionary: return false
+				var relative: String = str(layer.get("path",""))
+				if not INSTALL.safe_relative(relative) or not FileAccess.file_exists(INSTALL.resolve_file(_manifest_path.get_base_dir(),relative)): return false
 	return true
 
 func notify_source_global_event(event_name: String, facing: int) -> bool:

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "history_enabled": true,
+  "save_fee_points": 0,
+  "restore_fee_points": 100,
+  "daily_reset_limit_per_emblem": 1,
+  "restore_uses_reset_quota": true,
+  "provenance": {
+    "source": "patch523 SYMBOL_POPUP_HELP LABEL10/11: real enhancement record required; no reset/save/restore at stage30. UIText56445: daily reset cap exists. UIText48572: restore requires blessing points.",
+    "unconfirmed": "Current restore product/price and numerical daily cap are not confirmed. Currency1492 Item174272 has historical deletion metadata; TestItem176932 is not a current replacement. Do not consume either.",
+    "local_values": "TWILIGHT configured policy: save0, restore100 blessing points, per-emblem daily reset1, restore shares that quota. Restore refunds current principal and spends saved principal plus fee. A saved real record is single-use; all other currencies/items/progress stay current.",
+    "day_api": "Reuse TwilightQuestService.korean_daily_key(unix_time), the existing Korean05:00 game-day API only. Never configure the system/game timezone or instantiate quest features.",
+    "authorization": "User requested completion using source/reports/search first, then configurable local rules where unavailable. Preserve actual recorded progress; no invented history or duplication."
+  }
+}
