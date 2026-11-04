@@ -1,0 +1,88 @@
+extends ScrollContainer
+var service
+var column: VBoxContainer
+var result: Label
+
+func configure(value) -> void:
+	service = value
+	name = "Death523Recovery"
+	horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	size_flags_vertical = Control.SIZE_EXPAND_FILL
+	refresh()
+
+func label(text: String) -> Label:
+	var node := Label.new()
+	node.text = text
+	node.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	node.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.add_child(node)
+	return node
+
+func button(text: String, action: Callable, control_name: String) -> Button:
+	var node := Button.new()
+	node.text = text; node.name = control_name
+	node.clip_text = true
+	node.tooltip_text = text
+	node.custom_minimum_size.y = 48
+	column.add_child(node)
+	node.pressed.connect(func() -> void:
+		if service.world.hud.workspace.was_scroll_dragged(self): return
+		action.call())
+	service.world.hud.workspace.register_scroll_drag(self,node)
+	return node
+
+func refresh() -> void:
+	for child: Node in get_children(): remove_child(child); child.queue_free()
+	column = VBoxContainer.new()
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.add_theme_constant_override("separation",10)
+	add_child(column)
+	label("무료 경험치 복구: %d / 2회 · 매일 %02d시 (UTC%+d) 갱신\n아데나 %d · 다이아 %d" % [service.free_remaining(),int(service.policy.get("reset_hour",5)),int(service.policy.get("timezone_offset_seconds",32400))/3600,service.world.gold,int(service.world.inventory.get("다이아",0))])
+	label(str(service.source.problem))
+	label("TWILIGHT 원격 복구 · 원본 경험치 손실 비율을 현재 성장 곡선에 적용합니다. 레벨은 하락하지 않습니다.\n기본 24시간 · 이후 72시간까지 다이아 복구만 가능. 아이템 추첨·아이템 복구비·다이아 환산·연장 가산·부활 회복량은 조정 가능한 자체 정책입니다.")
+	button("원본523 규칙 ZIP 불러오기",_choose_pack,"Death523Install")
+	result = label("")
+	result.name = "Death523RecoveryResult"
+	var count: int = 0
+	var entries: Array = service.state.records.duplicate()
+	entries.reverse()
+	for entry: Dictionary in entries:
+		var age: int = maxi(0,service.now()-int(entry.at))
+		var item: Dictionary = entry.item
+		var summary: String = "#%s · Lv.%d · %s\n경험치 %d %s · 아이템 %s\n%s" % [entry.id,int(entry.level),entry.map,int(entry.exp),"(복구 완료)" if entry.exp_claimed else "(미복구)","없음" if item.is_empty() else str(item.physical.name)+( " (복구 완료)" if entry.item_claimed else " (미복구)"),"기한 만료 · 기록 보존" if age >= 259200 else "남은 시간 %d분" % maxi(0,int((259200-age)/60))]
+		label(summary)
+		for kind: String in ["exp","item"]:
+			if bool(entry[kind+"_claimed"]): continue
+			count += 1
+			for mode: String in (["free","adena","gem"] if kind == "exp" else ["adena","gem"]):
+				var request: Dictionary = service.quote(str(entry.id),kind,mode)
+				var caption: String = ("경험치" if kind == "exp" else "아이템")+" · "+{"free":"무료 복구","adena":"아데나 복구","gem":"다이아 복구"}[mode]
+				if request.ok: caption += " (%d)" % int(request.cost)
+				else: caption += " · "+str(request.message)
+				var action := button(caption,func() -> void: _confirm(str(entry.id),kind,mode),"Death523_%s_%s_%s" % [entry.id,kind,mode])
+				action.disabled = not request.ok
+	if count == 0: label("복구 대기 중인 손실이 없습니다.")
+
+func _confirm(id: String, kind: String, mode: String) -> void:
+	var request: Dictionary = service.quote(id,kind,mode)
+	if not request.ok: result.text = str(request.message); return
+	var currency: String = {"free":"무료 횟수 1회","adena":"%d 아데나" % int(request.cost),"gem":"%d 다이아" % int(request.cost)}[mode]
+	service.world.hud.confirm_action("사망 복구 확인","#%s %s을 복구합니다.\n소모: %s\n%s" % [id,"경험치" if kind == "exp" else "원래 장비",currency,"자체 복구비/환산 정책 적용" if kind == "item" or mode == "gem" or not service.source.ready else "원본 레벨별 비용 · 로컬 아데나 연결"],"복구",func(_amount: int) -> void:
+		var response: Dictionary = service.recover(request)
+		refresh()
+		result.text = str(response.message)
+		service.world.hud.show_message(str(response.message)))
+
+func _choose_pack() -> void:
+	var dialog := FileDialog.new()
+	dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	dialog.access = FileDialog.ACCESS_FILESYSTEM
+	dialog.filters = PackedStringArray(["*.zip ; 최신523 원본 규칙"])
+	add_child(dialog)
+	dialog.file_selected.connect(func(path: String) -> void:
+		var problem: String = service.source.install(path)
+		refresh(); result.text = "설치 완료 · 다음 실행에도 유지됩니다" if problem.is_empty() else problem
+		dialog.queue_free())
+	dialog.canceled.connect(dialog.queue_free)
+	dialog.popup_centered_ratio(0.8)
