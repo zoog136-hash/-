@@ -1026,7 +1026,7 @@ func _equipment_attribute_bonus(stat: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.attribute(_source_catalog_record("아이템", entry as Dictionary), stat)
-	return result + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat"))
+	return result + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat") + growth.bonus(stat.to_lower()+":flat"))
 
 func _effective_attribute(stat: String) -> int:
 	var base: int = 0
@@ -7490,7 +7490,7 @@ func _critical_damage(raw_damage: int) -> int:
 # Crit damage bonuses are flat values added AFTER the base 1.5x critical hit.
 # Keep monster critical hits on _critical_damage so player gear never buffs enemies.
 func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
-	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat") + card_collections.bonus(attack_type+"_critical_damage:flat"))
+	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat") + card_collections.bonus(attack_type+"_critical_damage:flat") + growth.bonus(attack_type+"_critical_damage:flat"))
 	var option_key: String = ""
 	match attack_type:
 		"ranged":

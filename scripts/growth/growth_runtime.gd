@@ -2,6 +2,9 @@ extends RefCounted
 ## Local single-save progression. Unknown source values fail closed, never become zero costs.
 const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
 const DATA = "res://data/growth/lineage_growth.json"
+const GuardianSource = preload("res://scripts/growth/guardian_source.gd")
+var guardian_source = GuardianSource.new()
+var legacy_guardians: Array = []
 var world
 var development: bool = OS.is_debug_build() and "--growth-lab" in OS.get_cmdline_user_args()
 var lab: Dictionary = {}
@@ -31,6 +34,9 @@ func _init() -> void:
 				row.card_rule = "single_winner_without_replacement"
 				row.effects = {"max_hp:flat":int(lab.node_bonus_hp)}
 				previous = row.id
+	else:
+		legacy_guardians = config.get("guardians",[]).duplicate(true)
+		config.guardians = guardian_source.data.get("guardians",[])
 	rng.randomize()
 
 func empty_state() -> Dictionary:
@@ -63,6 +69,10 @@ func emblem(id: String) -> Dictionary:
 
 func node(id: String) -> Dictionary:
 	for group: Dictionary in config.get("guardians",[]):
+		for row: Dictionary in group.nodes:
+			if row.id == id: return row
+	# Preserve pre-523 save IDs without guessing a correspondence to source slots.
+	for group: Dictionary in legacy_guardians:
 		for row: Dictionary in group.nodes:
 			if row.id == id: return row
 	return {}
@@ -101,6 +111,23 @@ func validate(value: Variant) -> String:
 		for card: Variant in search.failed:
 			if not integer(card,0,int(search.cards)-1) or card == search.winner or seen.has(card): return "수호성 실패 카드 오류"
 			seen.append(card)
+	var levels: Variant = value.get("guardian_levels",{})
+	if not levels is Dictionary: return "수호성 강화 저장 오류"
+	for id: Variant in levels:
+		if not id is String or not guardian_source.has_node(id) or not value.nodes.has(id) or not integer(levels[id],0,int(node(id).max_level)): return "수호성 강화 단계 오류"
+	var representatives: Variant = value.get("guardian_representatives",{})
+	if not representatives is Dictionary: return "수호성 대표 저장 오류"
+	for category: Variant in representatives:
+		var id: Variant = representatives[category]
+		if not category is String or not id is String or not guardian_source.has_node(id) or not value.nodes.has(id) or node(id).kind != "invoke" or category != str(int(node(id).category_id)): return "수호성 분류별 대표 오류"
+	for id: String in value.nodes:
+		if not guardian_source.has_node(id): continue
+		for prerequisite: String in node(id).prerequisites:
+			if not value.nodes.has(prerequisite): return "수호성 선행 저장 오류"
+	for id: String in value.searches:
+		if not guardian_source.has_node(id): continue
+		var search: Dictionary = value.searches[id]
+		if int(search.cards) != int(node(id).cards) or int(search.attempts) != search.failed.size() + (1 if value.nodes.has(id) else 0): return "수호성 원본 카드 이력 오류"
 	var pending: Dictionary = value.pending
 	if not pending.is_empty():
 		if not pending.get("node") is String or node(pending.node).is_empty() or value.nodes.has(pending.node) or not integer(pending.get("cards"),2,100) or not value.searches.has(pending.node) or pending.cards != value.searches[pending.node].cards: return "수호성 선택 저장 오류"
@@ -116,13 +143,22 @@ func restore(value: Dictionary) -> void:
 		search.failed = failed
 	rerolls.clear()
 	_rebuild()
+	# Restored growth records must invalidate the host's cached stat records.
+	if world != null: world._invalidate_equipment_static()
 
 func _rebuild() -> void:
 	totals.clear()
 	for id: String in state.emblems:
 		_add_effects(emblem(id).get("effects",[])[int(progress(id).stage)])
 		if development: totals["max_hp:flat"] = float(totals.get("max_hp:flat",0))+5*int(progress(id).get("absolute",0))
-	# Official guide: only the representative guardian's option effects apply.
+	# 523 SKILLTREE_TOOLTIP PANEL_2: stats are always active; invoked skills
+	# require a separate selection per category. Do not gate stats on that selection.
+	if not development:
+		for id: String in state.nodes:
+			if guardian_source.has_node(id) and guardian_source.availability(node(id)).is_empty():
+				_add_effects(guardian_source.effects(id,guardian_level(id)))
+		return
+	# Preserve the isolated development profile's existing behavior.
 	var representative: String = str(state.representative)
 	if not representative.is_empty():
 		for group: Dictionary in config.get("guardians",[]):
@@ -137,6 +173,15 @@ func _add_effects(effects: Dictionary) -> void:
 	for key: String in effects:
 		if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent"]:
 			totals[key] = float(totals.get(key,0))+float(effects[key])
+
+func guardian_level(id: String) -> int:
+	return int(state.get("guardian_levels",{}).get(id,0))
+
+func guardian_rewards(id: String) -> Array:
+	return guardian_source.rewards(id,guardian_level(id)) if guardian_source.has_node(id) else []
+
+func guardian_representative(category: int) -> String:
+	return str(state.get("guardian_representatives",{}).get(str(category),""))
 
 func bonus(key: String) -> float:
 	return float(totals.get(key,0))
@@ -212,19 +257,49 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			if not row.get("prerequisites") is Array or not integer(row.get("cost"),1) or not integer(row.get("cards"),2,100) or row.get("card_rule") != "single_winner_without_replacement" or not row.get("effects") is Dictionary: return fail("선행 슬롯·비용·카드 수·선택 규칙·효과 미확인 · 활성화 보류")
 			for prerequisite: String in row.prerequisites:
 				if not state.nodes.has(prerequisite): return fail("선행 슬롯 미개방: "+prerequisite)
-			costs["수호석"] = int(row.cost)
+			if guardian_source.has_node(id):
+				var blocked: String = guardian_source.availability(row)
+				if not blocked.is_empty(): return fail(blocked)
+			else: costs["수호석"] = int(row.cost)
 			var failed: Array = state.searches.get(id,{}).get("failed",[])
-			text = "수호석 %d개 · 남은 카드 %d장\n실패 카드는 제거되며 매 시도 재료를 소모합니다." % [int(row.cost),int(row.cards)-failed.size()]
+			text = ("수호석 %d개 · 남은 카드 %d장\n카드 선택 시 매 시도 재료를 소모합니다." if guardian_source.has_node(id) else "수호석 %d개 · 남은 카드 %d장\n실패 카드는 제거되며 매 시도 재료를 소모합니다.") % [int(row.cost),int(row.cards)-failed.size()]
+			# Quote affordability now; actual source payment occurs on choose.
+			if world != null and guardian_source.has_node(id) and int(world.inventory.get("수호석",0)) < int(row.cost): return fail("수호석 부족 · 필요 %d" % int(row.cost))
 		"choose":
 			if state.pending.is_empty() or count < 0 or count >= int(state.pending.cards): return fail("유효하지 않은 카드 선택")
 			if state.searches[state.pending.node].failed.has(count): return fail("이미 실패한 카드입니다")
-			text = "선택한 카드 결과 확인"
+			var pending_id: String = str(state.pending.node)
+			if guardian_source.has_node(pending_id):
+				var blocked: String = guardian_source.availability(node(pending_id))
+				if not blocked.is_empty(): return fail(blocked)
+				costs["수호석"] = int(node(pending_id).cost)
+			text = "수호석 %d개 소모 · 선택한 카드 결과 확인" % int(costs["수호석"]) if costs.has("수호석") else "선택한 카드 결과 확인"
+		"guardian_enchant":
+			if not guardian_source.has_node(id) or not state.nodes.has(id): return fail("개방된 원본 슬롯이 필요합니다")
+			if not state.pending.is_empty(): return fail("진행 중인 카드 선택을 먼저 완료하세요")
+			var row: Dictionary = node(id)
+			var blocked: String = guardian_source.availability(row)
+			if not blocked.is_empty(): return fail(blocked)
+			var upgrade: Dictionary = guardian_source.upgrade(id,guardian_level(id)+1)
+			if upgrade.is_empty(): return fail("강화할 수 없는 슬롯 또는 최대 단계")
+			if int(upgrade.CurrencyID) != 822 or not integer(upgrade.CurrencyCost,1) or not integer(upgrade.Probability,0,1000000): return fail("강화 통화·확률 확인 필요")
+			costs["수호석"] = int(upgrade.CurrencyCost)
+			text = "수호성 Lv.%d → %d · 수호석 %d개 · 성공률 %.2f%%\n실패 시 재료만 소모하며 단계는 유지됩니다. 전투 발동은 준비 중입니다." % [guardian_level(id),guardian_level(id)+1,int(upgrade.CurrencyCost),float(upgrade.Probability)/10000.0]
 		"representative":
 			if not state.nodes.has(id) or node(id).get("kind") == "stat": return fail("개방된 스킬 슬롯을 선택하세요")
-			if state.representative == id: return fail("이미 대표로 설정됨")
-			# Unknown official cooldown must not be silently turned into free repeated switching.
-			if not state.representative.is_empty() and config.get("guardian_switch_seconds") == null: return fail("대표 변경 대기시간 미확인 · 변경 보류")
-			text = "대표 수호성 설정 · 미확인 스킬 피해/회복량은 발동하지 않습니다."
+			if guardian_source.has_node(id):
+				if node(id).kind != "invoke": return fail("발동 스킬 슬롯을 선택하세요 · 능력치는 상시 적용됩니다")
+				var blocked: String = guardian_source.availability(node(id))
+				if not blocked.is_empty(): return fail(blocked)
+				var current: String = guardian_representative(int(node(id).category_id))
+				if current == id: return fail("이미 분류 대표로 설정됨")
+				if not current.is_empty(): return fail("분류 대표 변경 대기시간 확인 중 · 변경 보류")
+				text = "분류별 발동 스킬 지정 · 능력치는 상시 적용됩니다. 전투 발동은 준비 중입니다."
+			else:
+				if state.representative == id: return fail("이미 대표로 설정됨")
+				# Unknown official cooldown must not be silently turned into free repeated switching.
+				if not state.representative.is_empty() and config.get("guardian_switch_seconds") == null: return fail("대표 변경 대기시간 미확인 · 변경 보류")
+				text = "대표 수호성 설정 · 미확인 스킬 피해/회복량은 발동하지 않습니다."
 		_: return fail("지원하지 않는 요청")
 	if world == null: return fail("월드 연결 없음")
 	if points > int(state.points): return fail("축복 포인트 부족 · 필요 %d / 보유 %d" % [points,int(state.points)])
@@ -287,17 +362,29 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 			var row: Dictionary = node(id)
 			if not next.searches.has(id):
 				next.searches[id] = {"cards":int(row.cards),"winner":rng.randi_range(0,int(row.cards)-1),"failed":[],"attempts":0}
-			next.searches[id].attempts += 1
+			if not guardian_source.has_node(id): next.searches[id].attempts += 1
 			next.pending = {"node":id,"cards":int(row.cards)}
 			message = "카드를 선택하세요 · 선택 대기 상태 저장됨"
 		"choose":
 			var search: Dictionary = next.searches[next.pending.node]
+			if guardian_source.has_node(str(next.pending.node)): search.attempts += 1
 			var won: bool = count == int(search.winner)
 			if won: next.nodes.append(str(next.pending.node))
 			else: search.failed.append(count)
 			message = "수호성 찾기 성공 · 슬롯 개방" if won else "수호성 찾기 실패 · 다시 도전할 수 있습니다"
 			next.pending = {}
-		"representative": next.representative = id
+		"guardian_enchant":
+			var upgrade: Dictionary = guardian_source.upgrade(id,guardian_level(id)+1)
+			var success: bool = rng.randi_range(0,999999) < int(upgrade.Probability)
+			if success:
+				if not next.has("guardian_levels"): next.guardian_levels = {}
+				next.guardian_levels[id] = guardian_level(id)+1
+			message = "수호성 강화 성공 · Lv.%d" % (guardian_level(id)+1) if success else "수호성 강화 실패 · 단계 유지"
+		"representative":
+			if guardian_source.has_node(id):
+				if not next.has("guardian_representatives"): next.guardian_representatives = {}
+				next.guardian_representatives[str(int(node(id).category_id))] = id
+			else: next.representative = id
 	next.revision += 1
 	if not validate(next).is_empty():
 		busy = false

@@ -144,7 +144,7 @@ func _refresh() -> void:
 		_button("축복의 성수(중) 사용",func() -> void: _prepare("holy_water","",1)).name = "GrowthHolyWater"
 		_button("수호석 제작 · 일반 주문서",func() -> void: _prepare("craft_stone","",1))
 		_button("수호석 제작 · 각인 주문서",func() -> void: _prepare("craft_stone_engraved","",1))
-		_label("출처: NC 공식 문양/수호성 가이드 및 확률 안내 (2026-10-24 확인)\n전체 노드 복원·특화 옵션·미확인 전투 효과는 미완료입니다.")
+		_label("출처: 누적523 수호성 테이블·원본 도움말 / 문양 공식 가이드\n능력치는 상시 적용 · 발동/사용 스킬 전투 처리는 준비 중" if mode=="guardians" and not runtime.development else "출처: NC 공식 문양/수호성 가이드 및 확률 안내 (2026-10-24 확인)\n미확인 전투 효과는 미완료입니다.")
 	call_deferred("_layout_density")
 
 func _select(id: String) -> void:
@@ -231,6 +231,7 @@ func _emblem() -> void:
 
 func _effect_text(effects: Dictionary) -> String:
 	var mapping: Dictionary = {"max_hp:flat":"HP","max_mp:flat":"MP","ac:flat":"AC","mr:flat":"MR","sp:flat":"SP","weight_bonus:flat":"무게","experience_bonus:percent":"경험치 %","potion_flat:flat":"물약 회복량","potion_percent:percent":"물약 회복률 %","damage_reduction:flat":"리덕션","potion_cooldown:percent":"물약 쿨타임 감소 %","blessing_consumption:percent":"축복 소모 감소 %","incoming_reduction:percent":"피해 감소 %","mp_regeneration:flat":"MP 회복","blessing_charge:percent":"축복 충전 %"}
+	mapping.merge({"melee_hit:flat":"근거리 명중","ranged_hit:flat":"원거리 명중","magic_hit:flat":"마법 명중","melee_damage:flat":"근거리 대미지","ranged_damage:flat":"원거리 대미지","magic_damage:flat":"마법 대미지","str:flat":"STR","dex:flat":"DEX","con:flat":"CON","int:flat":"INT","wis:flat":"WIS","melee_critical_rate:percent":"근거리 치명타 %","ranged_critical_rate:percent":"원거리 치명타 %","melee_critical_damage:flat":"근거리 치명타 대미지","ranged_critical_damage:flat":"원거리 치명타 대미지","magic_critical_damage:flat":"마법 치명타 대미지","pve_damage_reduction:flat":"PvE 리덕션"})
 	var parts: Array[String] = []
 	for key: String in effects:
 		if float(effects[key]) != 0: parts.append("%s %+d" % [str(mapping.get(key,key)),int(effects[key])])
@@ -240,12 +241,22 @@ func _guardian() -> void:
 	if not runtime.state.pending.is_empty() or not last_reveal.is_empty():
 		_card_selection()
 		return
-	_copy("대표 수호성 · "+str(runtime.node(runtime.state.representative).get("name","미설정")),body,17,Palette.GOLD)
-	_copy("슬롯 선택 → 비용 확인 → 카드 직접 선택 → 대표 설정 · 원본 배치 미확인",body)
+	_copy("수호성 · 능력치 상시 적용 / 발동 스킬은 분류별 지정" if not runtime.development else "대표 수호성 · "+str(runtime.node(runtime.state.representative).get("name","미설정")),body,17,Palette.GOLD)
+	_copy("슬롯 선택 → 비용 확인 → 카드 직접 선택 · 좌우로 움직여 연결도 확인" if not runtime.development else "개발용 수호성 연결도",body)
 	for group: Dictionary in runtime.config.guardians:
 		if group.id != selected: continue
+		var board := ScrollContainer.new()
+		board.name = "GuardianSourceBoard"
+		board.custom_minimum_size.y = 580 if not runtime.development else 340
+		board.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		board.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		body.add_child(board)
+		if not runtime.development:
+			var rep: String = runtime.guardian_representative(int(group.category_id))
+			_label("분류 발동 스킬: "+str(runtime.node(rep).get("name","미설정")))
+			if int(group.server_limit_set_id)!=0: _label("서버별 제공 조건 확인 중 · 이 분류는 개방 보류")
 		chart = preload("res://scripts/growth/growth_constellation.gd").new()
-		body.add_child(chart)
+		board.add_child(chart)
 		chart.configure(runtime,group.nodes,hud,scroll,selected_node,_show_node)
 		if runtime.development: _label("개발용 연결도 · 1회 수호석 1개 / 카드 3장 / 노드당 HP 5 · 원작값 아님")
 		if not selected_node.is_empty(): _node_detail(runtime.node(selected_node))
@@ -297,7 +308,7 @@ func _card_selection() -> void:
 			caption.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 			caption.offset_top=-23
 			caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-	var detail: Label=_copy("이번 도전 비용 차감 완료 · 닫아도 선택 대기 상태가 저장됩니다." if pending else "결과와 실패 카드 이력 저장 완료",body,12)
+	var detail: Label=_copy(("카드 선택 시 수호석 %d개 소모 · 닫아도 선택 대기 상태가 저장됩니다." % int(runtime.node(node_id).cost) if runtime.guardian_source.has_node(node_id) else "이번 도전 비용 차감 완료 · 닫아도 선택 대기 상태가 저장됩니다.") if pending else "결과와 실패 카드 이력 저장 완료",body,12)
 	detail.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	if not pending:
 		action_dock.columns=2
@@ -308,7 +319,12 @@ func _card_selection() -> void:
 func _choose_card(index: int) -> void:
 	if submitting: return
 	var offer: Dictionary=runtime.quote("choose","",index)
-	if not offer.ok: return
+	if not offer.ok:
+		result.visible=true; result.text=str(offer.message)
+		return
+	if runtime.guardian_source.has_node(str(runtime.state.pending.node)):
+		_prepare("choose","",index)
+		return
 	request={"action":"choose","id":"","count":index,"revision":int(offer.revision)}
 	_confirm()
 
@@ -319,12 +335,29 @@ func _show_node(id: String) -> void:
 
 func _node_detail(row: Dictionary) -> void:
 	_label(str(row.name))
-	var chance: Variant = row.get("proc_percent")
-	_label("발동 확률: "+("미확인" if chance == null else str(chance)+"%")+" · 피해/회복 수치 미확인")
 	var id: String = str(row.id)
-	for action: String in ["activate","representative"]:
+	var source: bool = runtime.guardian_source.has_node(id)
+	if source:
+		var level: int = runtime.guardian_level(id)
+		_label("1회 수호석 %d개 · 카드 %d장 · Lv.%d / %d" % [int(row.cost),int(row.cards),level,int(row.max_level)])
+		var previous: Array[String] = []
+		for prerequisite: String in row.prerequisites: previous.append(str(runtime.node(prerequisite).name))
+		_label("선행: "+("없음" if previous.is_empty() else " → ".join(previous)))
+		_label("능력치: "+_effect_text(runtime.guardian_source.effects(id,level)))
+		var detail: String = runtime.guardian_source.detail(id,level)
+		if not detail.is_empty(): _label(detail)
+		if int(row.max_level)>level:
+			_label("다음 강화: "+runtime.guardian_source.detail(id,level+1))
+	else:
+		var chance: Variant = row.get("proc_percent")
+		_label("발동 확률: "+("미확인" if chance == null else str(chance)+"%")+" · 피해/회복 수치 미확인")
+	var actions: Array[String] = ["activate","representative"]
+	if source and int(row.max_level)>0: actions.append("guardian_enchant")
+	for action: String in actions:
 		var offer: Dictionary = runtime.quote(action,id)
-		var b := _button("활성화" if action == "activate" else "대표 설정",func() -> void: _prepare(action,id,1))
+		var title: String = "활성화" if action == "activate" else "수호성 강화" if action == "guardian_enchant" else "분류 발동 스킬 지정" if source else "대표 설정"
+		var b := _button(title,func() -> void: _prepare(action,id,1))
+		b.name = "GuardianAction_"+action
 		b.disabled = not bool(offer.ok)
 		_label(str(offer.message))
 
@@ -350,7 +383,13 @@ func _prepare(action: String, id: String, count: int) -> void:
 	call_deferred("_scroll_confirmation")
 
 func _scroll_confirmation() -> void:
-	if is_instance_valid(confirmation) and confirmation.get_child_count()>0: scroll.ensure_control_visible(confirmation)
+	# Scroll after the new confirmation has participated in container layout.
+	# A deferred call alone can still see the previous scrollbar maximum.
+	if not is_inside_tree(): return
+	await get_tree().process_frame
+	if is_instance_valid(confirmation) and is_instance_valid(scroll) and confirmation.get_child_count()>0:
+		var button: Control=confirmation.find_child("GrowthConfirm",true,false)
+		scroll.ensure_control_visible(button if button != null else confirmation)
 
 func _confirm() -> void:
 	if submitting or request.is_empty(): return

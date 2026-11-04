@@ -67,32 +67,45 @@ func _run() -> void:
 	world.inventory["축복 부여 주문서(각인)"] = 2
 	world.inventory["마력의 돌"] = 100
 	check(act("craft_stone_engraved").ok and world.inventory["수호석"]==1,"official recipe exact consumption")
-	var n: Dictionary = rt.config.guardians[0].nodes[1]
-	n.prerequisites = []
-	n.cost = 1
-	n.cards = 3
-	n.card_rule = "single_winner_without_replacement"
-	n.effects = {"max_hp:flat":7}
-	check(act("activate",n.id).ok,"activation persists paid pending outcome")
-	check(world.inventory["수호석"]==0 and not rt.state.pending.is_empty(),"cost deducted once")
+	# Exercise the real source root and child, without replacing the shipped rules.
+	world.inventory["수호석"] = 200
+	var n: Dictionary = rt.node("source523_2022")
+	check(act("activate",n.id).ok,"source activation prepares selection")
+	check(world.inventory["수호석"]==200 and not rt.state.pending.is_empty(),"source payment waits for selection")
 	check(not act("activate",n.id).ok,"second pending activation blocked")
 	world._load_game(true)
 	check(not rt.state.pending.is_empty(),"pending survives close/load")
-	var loser: int = (int(rt.state.searches[n.id].winner)+1)%3
+	var loser: int = (int(rt.state.searches[n.id].winner)+1)%int(n.cards)
 	check(act("choose","",loser).ok and not rt.state.nodes.has(n.id),"failed card removed without unlocking")
+	check(world.inventory["수호석"]==199,"failed source attempt paid once")
 	world._load_game(true)
 	check(rt.state.searches[n.id].failed.has(loser),"failed card persists across reload")
-	world.inventory["수호석"] = 1
-	check(act("activate",n.id).ok and world.inventory["수호석"]==0,"retry consumes another stone")
+	check(act("activate",n.id).ok and world.inventory["수호석"]==199,"retry prepares without prepaying")
 	check(not act("choose","",loser).ok,"failed card cannot be selected twice")
 	check(act("choose","",int(rt.state.searches[n.id].winner)).ok and rt.state.nodes.has(n.id),"correct card unlocks")
 	check(not act("choose","",2).ok,"duplicate reveal blocked")
-	check(world._effective_max_hp()==hp_before,"unrepresented guardian gives no stats")
-	check(act("representative",n.id).ok,"representative selection")
-	check(world._effective_max_hp()==hp_before+7,"represented guardian applies effects")
+	check(act("representative",n.id).ok,"source invocation selection")
+	var hit_before: int=world._equipment_accuracy_bonus("melee")
+	check(act("activate","source523_2032").ok,"source prerequisite unlocks stat slot")
+	check(act("choose","",int(rt.state.searches.source523_2032.winner)).ok,"source stat card selected")
+	check(world._equipment_accuracy_bonus("melee")==hit_before+1,"source stats apply independently of representative")
 	world._load_game(true)
-	check(world._effective_max_hp()==hp_before+7,"reload does not double effects")
+	check(world._equipment_accuracy_bonus("melee")==hit_before+1,"reload does not double effects")
 	var saved_state: Dictionary = rt.state.duplicate(true)
+	var source_stats: Dictionary = saved_state.duplicate(true)
+	source_stats.nodes=[];source_stats.searches={};source_stats.guardian_representatives={}
+	for group: Dictionary in rt.config.guardians:
+		if int(group.server_limit_set_id)!=0: continue
+		for source_node: Dictionary in group.nodes: source_stats.nodes.append(source_node.id)
+	var source_hp: int=world._effective_max_hp()
+	var source_str: int=world._effective_attribute("STR")
+	var source_crit: int=world._player_critical_damage(100,"melee")
+	check(rt.validate(source_stats).is_empty(),"complete available source topology validates")
+	rt.restore(source_stats); world._invalidate_equipment_static()
+	check(rt.bonus("max_hp:flat")==750 and world._effective_max_hp()>=source_hp+750,"original HP rewards plus existing CON scaling reach Main")
+	check(world._effective_attribute("STR")==source_str+2,"original attribute rewards reach Main")
+	check(world._player_critical_damage(100,"melee")==source_crit+9,"original flat critical damage reaches Main")
+	rt.restore(saved_state); world._invalidate_equipment_static()
 	var mp_before: int = world._effective_max_mp()
 	var damage_before: int = world._equipment_additional_damage("melee")
 	var ac_before: int = world._effective_ac()
@@ -195,21 +208,23 @@ func _run() -> void:
 	check(rt.rerolls.is_empty(),"closing resets session odds")
 	world.hud.open_growth("guardians")
 	await process_frame
-	check(world.hud.workspace.find_child("GuardianNode_joe_0",true,false)!=null,"guardian nodes reachable")
-	var selection_node: Dictionary=rt.config.guardians[0].nodes[2]
-	selection_node.prerequisites=[]; selection_node.cost=1; selection_node.cards=3
-	selection_node.card_rule="single_winner_without_replacement"; selection_node.effects={"max_hp:flat":9}
+	check(world.hud.workspace.find_child("GuardianNode_source523_2022",true,false)!=null,"guardian nodes reachable")
+	var selection_node: Dictionary=rt.node("source523_2042")
 	world.inventory["수호석"]=5
-	check(act("activate",selection_node.id).ok,"UI card attempt starts with paid cost")
+	check(act("activate",selection_node.id).ok,"UI source card attempt starts")
 	world.hud.open_growth("guardians")
 	for i: int in range(4): await process_frame
 	view=world.hud.workspace.find_child("GrowthView",true,false)
 	var waiting_revision: int=int(rt.state.revision)
 	await create_timer(.2).timeout
 	check(view.card_faces.size()==3 and not rt.state.pending.is_empty(),"multiple cards wait for user input")
-	check(int(rt.state.revision)==waiting_revision and world.inventory["수호석"]==4,"waiting cannot auto select or charge again")
+	check(int(rt.state.revision)==waiting_revision and world.inventory["수호석"]==5,"waiting cannot auto select or charge")
 	var losing_card: int=(int(rt.state.searches[selection_node.id].winner)+1)%3
 	tap(view.find_child("GuardianCard_"+str(losing_card),true,false))
+	for i: int in range(3): await process_frame
+	var card_confirm: Control=view.find_child("GrowthConfirm",true,false)
+	check(card_confirm!=null and view.scroll.get_global_rect().has_point(card_confirm.get_global_rect().get_center()),"card confirmation visible after layout at Android landscape size")
+	tap(card_confirm)
 	for i: int in range(4): await process_frame
 	check(rt.state.searches[selection_node.id].failed.has(losing_card),"native card tap resolves selected card")
 	check(view.card_faces.size()==3 and view.card_faces[losing_card].failed,"failed result retains multiple-card context")
@@ -223,6 +238,8 @@ func _run() -> void:
 	check(view.find_child("GuardianCard_"+str(losing_card),true,false).disabled,"failed card disabled after retry/reload")
 	var winning_card: int=int(rt.state.searches[selection_node.id].winner)
 	tap(view.find_child("GuardianCard_"+str(winning_card),true,false))
+	for i: int in range(3): await process_frame
+	tap(view.find_child("GrowthConfirm",true,false))
 	for i: int in range(4): await process_frame
 	check(rt.state.nodes.has(selection_node.id) and view.card_faces[winning_card].success,"native chosen winner opens node with result in context")
 	var successful_revision: int=int(rt.state.revision)
