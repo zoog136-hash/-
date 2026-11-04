@@ -60,6 +60,13 @@ func run() -> void:
 		check(source.regions.item_count==195,"all 195 regions reach actual dropdown " + str(extent))
 		for i: int in range(source.regions.item_count):
 			check(world.source_optimization.by_id.has(int(source.regions.get_item_metadata(i))),"original row identity in UI %d" % i)
+		for id: int in [242488,169682]:
+			for i: int in range(source.regions.item_count):
+				if int(source.regions.get_item_metadata(i))!=id: continue
+				source.regions.select(i)
+				source.regions.item_selected.emit(i)
+				check(source.definition.text.contains("원본 좌표"),"original numeric bounds visible for source row %d" % id)
+				check(source.definition.text.contains("조건 전후 표시값 동일") if id==242488 else source.definition.text.contains("경계 판정 대기"),"actual invariant/point source row is explained %d" % id)
 		var index: int = -1
 		for i: int in range(source.regions.item_count):
 			var row: Dictionary = world.source_optimization.by_id[int(source.regions.get_item_metadata(i))]
@@ -67,6 +74,26 @@ func run() -> void:
 		check(index>=0,"real unconditional recommendation available")
 		source.regions.select(index)
 		source.regions.item_selected.emit(index)
+		if extent.x==1280:
+			await check_failed_store(world,host,source,scroll,save_hash)
+			world.queue_free()
+			await process_frame
+			world = load("res://Main.tscn").instantiate()
+			root.add_child(world)
+			world.set_process(false)
+			world.save_timer = -100000.0
+			check(QA.enter_game(world),"actual Main reenters after failed settings write")
+			world.player.set_physics_process(false)
+			check(world.presentation_settings==global_before,"failed writes do not appear after restart")
+			check(world.source_optimization.territories.size()==195,"previous source selection survives rejected write and restart")
+			check(FileAccess.get_sha256(save_path)==save_hash,"failed preference writes and reentry preserve game save bytes")
+			world.hud.open_settings_info()
+			await process_frame
+			host = world.hud.find_child("RenewalSettings",true,false)
+			source = host.find_child("SourceOptimizationSettings",true,false)
+			scroll = host.find_child("SettingsScroll",true,false)
+			source.regions.select(index)
+			source.regions.item_selected.emit(index)
 		await click(source.apply_button,scroll)
 		check(world.presentation_settings.hide_doll and world.presentation_settings.limit_effect_count,"actual apply button reaches game " + str(extent))
 		check(not world.get_node("Companion").visible and world.combat_vfx.impact_visual_limit==24,"real presentation changes immediately")
@@ -96,3 +123,34 @@ func run() -> void:
 	await process_frame
 	print("SOURCE_OPTIMIZATION_UI_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"viewports":["1280x720","960x540"],"native_M_coordinate_or_pixel_approval":false}))
 	quit(0 if failures.is_empty() else 1)
+
+func check_failed_store(world: TwilightWorld,host: Node,source: Node,scroll: ScrollContainer,save_hash: String) -> void:
+	var path: String = ProjectSettings.globalize_path("user://twilight_ui_settings.cfg")
+	var backup: String = path + ".failure-test-backup"
+	var preferences: Dictionary = world.presentation_settings.duplicate(true)
+	var config_before: String = host.config.encode_to_text()
+	var settings_hash: String = FileAccess.get_sha256(path)
+	var previous_source: Variant = world.source_optimization
+	check(DirAccess.rename_absolute(path,backup)==OK,"move isolated test preferences aside")
+	check(DirAccess.make_dir_absolute(path)==OK,"real filesystem rejects replacement of a directory")
+	await click(source.apply_button,scroll)
+	check(source.status.text.contains("저장하지 못했습니다"),"failed source apply is visible in actual UI")
+	check(world.presentation_settings==preferences and not host.region_override.button_pressed,"failed apply changes neither runtime nor scope control")
+	check(host.config.encode_to_text()==config_before,"failed apply preserves all preference keys in memory")
+	await click(source.zip_button,scroll)
+	source.directory_dialog.file_selected.emit(OS.get_environment("TWILIGHT_PATCH523_ZIP"))
+	source.directory_dialog.hide()
+	check(source.status.text.contains("저장하지 못했습니다") and world.source_optimization==previous_source,"failed source-path save preserves active source instance")
+	check(host.config.encode_to_text()==config_before,"failed source-path selection is not retained in memory")
+	await click(host.region_override,scroll)
+	check(not host.region_override.button_pressed and world.presentation_settings==preferences,"failed scope write rolls control back")
+	await click(host.hide_doll,scroll)
+	check(not host.hide_doll.button_pressed and world.presentation_settings==preferences,"failed global hide write rolls control back")
+	await click(host.reduced_motion,scroll)
+	check(not host.reduced_motion.button_pressed and world.presentation_settings==preferences,"failed motion preference rolls control back")
+	await click(host.impact_intensity,scroll)
+	check(host.impact_intensity.value==float(preferences.impact_intensity)*100.0 and world.presentation_settings==preferences,"failed intensity preference rolls slider and runtime back")
+	check(host.presentation_status.text.contains("저장하지 못했습니다"),"preference write failure is visible")
+	check(FileAccess.get_sha256(world.save_path())==save_hash,"failed settings transactions preserve character save")
+	check(DirAccess.remove_absolute(path)==OK and DirAccess.rename_absolute(backup,path)==OK,"restore unchanged isolated preferences file")
+	check(FileAccess.get_sha256(path)==settings_hash,"rejected writes preserve previous settings bytes")

@@ -89,6 +89,10 @@ func defaults_for(id: int) -> Dictionary:
 	if row.is_empty(): return {}
 	return {"limit_effect_count":bool(row.DefaultLowEffectCount),"hide_doll":bool(row.DefaultHideMagicDoll)}
 
+func condition_changes_settings(id: int) -> bool:
+	var row: Dictionary = by_id.get(id,{})
+	return not row.is_empty() and int(row.ConditionTypeId)!=0 and (row.DefaultLowEffectCount!=row.ConditionLowEffectCount or row.DefaultHideMagicDoll!=row.ConditionHideMagicDoll)
+
 func at_source_point(context: Dictionary) -> Dictionary:
 	if territories.is_empty(): return {"status":"source_not_loaded","settings":{}}
 	# Never accept current PC map4, a same-name map, or an unverified projection.
@@ -117,8 +121,10 @@ func at_source_point(context: Dictionary) -> Dictionary:
 		for key: String in ["DefaultLowEffectCount","DefaultHideMagicDoll","ConditionLowEffectCount","ConditionHideMagicDoll","ConditionTypeId"]:
 			if candidate[key] != row[key]: return {"status":"overlap_pending","settings":{},"matches":matches.duplicate(true)}
 	var condition: int = int(row.ConditionTypeId)
-	if condition != 0: return {"status":"condition_pending","settings":{},"row_ids":ids,"condition":conditions.get(condition,"")}
-	return {"status":"source_default","settings":defaults_for(int(row.ID)),"row_ids":ids}
+	if condition_changes_settings(int(row.ID)): return {"status":"condition_pending","settings":{},"row_ids":ids,"condition":conditions.get(condition,"")}
+	# Equal source values produce the same display under either condition state.
+	# This never asserts that a siege/hot-time condition is active or inactive.
+	return {"status":"source_default","settings":defaults_for(int(row.ID)),"row_ids":ids,"condition_invariant":condition!=0}
 
 func simplified_sprite(sprite_id: int, low: bool, records: Dictionary) -> int:
 	if not low or not simplify.has(sprite_id): return sprite_id

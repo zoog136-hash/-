@@ -1,53 +1,56 @@
 {
   "rules": {
-    "centers_resolved": 161,
-    "checks": 411,
-    "conditional": 15,
+    "centers_resolved": 163,
+    "checks": 416,
+    "conditional": 13,
     "failures": [],
     "overlapping": 0,
     "pixel_validation": "NOT_TESTED; factory probe contains no pixels",
-    "source_rows": 195
+    "source_rows": 195,
+    "boundaries": 19
   },
   "ui": {
-    "checks": 428,
+    "checks": 461,
     "failures": [],
     "native_M_coordinate_or_pixel_approval": false,
     "viewports": [
       "1280x720",
       "960x540"
-    ]
+    ],
+    "preference_write_failure_and_actual_Main_reentry": true
   },
   "engine": "Godot 4.7.2",
   "renderer": "OpenGL llvmpipe",
-  "source_coordinates_automatic": "current main exposes PC source_map84 only; M context unavailable",
+  "source_coordinates_automatic": "current PC source_map84 has no verified M transform. Received M evidence has 12/236 source coordinate counterexamples and zero actual M movement observations; not a runtime mapping proof.",
   "native_effect_pixels": "No exact 24941/24942/24943/29044/29045 files in category inventory, received 989-SP2 pack, or all 10407 entries of 69 received DATs; not global absence",
-  "inventory_followup": "Library full inventory transfer not retried. Official Drive handoff received 832677478 bytes; all 5 archive SHA/CRC, 8 split-part SHA, package manifests and 69 DAT proof SHA/CRC verified. Needed five effect IDs absent; pixels remain blocked by missing inputs.",
+  "inventory_followup": "Authorized Drive inventory copy received with expected size/SHA and full CRC verified. Historical index locates ten SP2 members in Sprite484.dat and Sprite609.dat; neither DAT is received. Latest523 payload identity remains unverified. Failed Library transfer not retried; detailed receipts remain private.",
   "remote_ci": "[skip ci]; no manual workflow runs",
   "logs": [
     {
-      "file": "source-rules.txt",
-      "sha256": "d05aaad050cc6d9f822a3b922aad822392bf4bdb896f524edcf616aee9d26629"
+      "file": "source-rules-invariant-final.txt",
+      "sha256": "8698bbabcce6b55fe1a432dc757f53ac0470bd35a4da3874b8d00c9f3a883a38"
     },
     {
-      "file": "source-zip-ui.txt",
-      "sha256": "2f16be1d5e3e3efe0fcc5b2723d77d16a6975c00fb0074cb73b33c717fad7d93"
+      "file": "source-atomic-ui-complete.txt",
+      "sha256": "e949827624903b5718b74202f89454e491e15d91e62fc6bea452956488eae8ef"
     },
     {
-      "file": "source-followup-core/core_runtime_save_test.txt",
+      "file": "source-atomic-core/core_runtime_save_test.txt",
       "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
     },
     {
-      "file": "source-followup-core/save_identical_payload_test.txt",
+      "file": "source-atomic-core/save_identical_payload_test.txt",
       "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
     },
     {
-      "file": "source-followup-core/deferred_save_gate_test.txt",
+      "file": "source-atomic-core/deferred_save_gate_test.txt",
       "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
     },
     {
-      "file": "source-followup-core/presentation_settings_test.txt",
+      "file": "source-atomic-core/presentation_settings_test.txt",
       "sha256": "a2a0b5d6e4013aabca500aeeb0728e6f20af7d9f87ddf02e3780a2948559286e"
     }
   ],
-  "drive_handoff_evidence": "PRESENTATION_SOURCE_HANDOFF.json"
+  "drive_handoff_evidence": "PRESENTATION_SOURCE_HANDOFF.json",
+  "followup_evidence": "PRESENTATION_SOURCE_FOLLOWUP.json"
 }

@@ -15,18 +15,21 @@ import zipfile
 
 TARGET_IDS = (24941, 24942, 24943, 29044, 29045)
 TARGET = re.compile(r"^Sprite/(24941|24942|24943|29044|29045)-\d+\.sp2$")
-PACKS = (
-    ("TWILIGHT_current523_M_map_integration_989actual_SP2_validated_PNGs_risks_20261104.zip",
-     "b6f665d03e84e7cd01b3dd15b60d94091b3ff762cdc58fcfd820c724aa622182", 76907660),
-    ("TWILIGHT_current523_M_only_currentSprite_originals18_checkpoint01_20261104.zip",
-     "7dfd47a9cb0f1073437933febee72a26a27159c868220b51b476226d4e9632ae", 190728359),
-    ("TWILIGHT_current523_M_only_originalSprite69_checkpoint02_20261104.zip",
-     "2280a66e69fca0f4853a6b460a9a2c315f3ebc86d46efaf83582297d6fa1091c", 189340512),
-    ("TWILIGHT_current523_M_only_originalSprite69_checkpoint03_20261104.zip",
-     "3e47d38afadc8b8c55d7528acaba5148ec4c101151fa16bc7202f66e1b23da71", 190535985),
-    ("TWILIGHT_current523_M_only_originalSprite69_checkpoint04_20261104.zip",
-     "4d6045fc087a8b2e1794776635ac84a6729423e1182a7627fe6bff17ae5a7770", 185164962),
-)
+
+def expected_archives(directory, manifest):
+    """Load owner-supplied fingerprints without publishing private receipts."""
+    rows = json.loads((manifest or directory / "presentation-audit-input.json").read_text())["archives"]
+    if not isinstance(rows, list) or len(rows) != 5:
+        raise ValueError("private manifest must identify the five handoff archives")
+    names = set()
+    for row in rows:
+        name, size, digest = row["filename"], row["bytes"], row["sha256"]
+        if (not isinstance(name, str) or Path(name).name != name or name in (".", "..")
+                or "\\" in name or name in names or type(size) is not int or size <= 0
+                or not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None):
+            raise ValueError("invalid private archive identity")
+        names.add(name)
+        yield name, digest, size
 
 
 def sha256(data):
@@ -56,14 +59,14 @@ def matching_member(name):
     return TARGET.fullmatch(name.removeprefix("selected_originals/"))
 
 
-def audit(directory):
+def audit(directory, manifest=None):
     received = []
     hits = []
     containers = 0
     nested_members = 0
     selected_sp2 = 0
     png_members = []
-    for name, expected_sha, expected_bytes in PACKS:
+    for name, expected_sha, expected_bytes in expected_archives(directory, manifest):
         path = directory / name
         with path.open("rb") as stream:
             actual_sha = hashlib.file_digest(stream, "sha256").hexdigest()
@@ -128,10 +131,11 @@ def audit(directory):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
+    parser.add_argument("--manifest", type=Path, help="Private owner manifest with five filename/bytes/sha256 records")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     try:
-        report = audit(args.directory)
+        report = audit(args.directory, args.manifest)
     except (OSError, ValueError, KeyError, zipfile.BadZipFile) as error:
         parser.exit(1, f"HANDOFF_NOT_VERIFIED: {error}\n")
     encoded = json.dumps(report, ensure_ascii=False, indent=2) + "\n"

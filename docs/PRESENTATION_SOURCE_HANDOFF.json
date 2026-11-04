@@ -1,48 +1,5 @@
 {
   "scope": "Existing user-owned Drive handoff; local bytes, exact names, SHA and CRC only",
-  "archives": [
-    {
-      "filename": "TWILIGHT_current523_M_map_integration_989actual_SP2_validated_PNGs_risks_20261104.zip",
-      "bytes": 76907660,
-      "sha256": "b6f665d03e84e7cd01b3dd15b60d94091b3ff762cdc58fcfd820c724aa622182",
-      "crc_passed": true,
-      "manifest_members_verified": 1012,
-      "nested_dat_count": 0
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_currentSprite_originals18_checkpoint01_20261104.zip",
-      "bytes": 190728359,
-      "sha256": "7dfd47a9cb0f1073437933febee72a26a27159c868220b51b476226d4e9632ae",
-      "crc_passed": true,
-      "manifest_members_verified": 38,
-      "nested_dat_count": 18
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_originalSprite69_checkpoint02_20261104.zip",
-      "bytes": 189340512,
-      "sha256": "2280a66e69fca0f4853a6b460a9a2c315f3ebc86d46efaf83582297d6fa1091c",
-      "crc_passed": true,
-      "manifest_members_verified": 36,
-      "nested_dat_count": 17
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_originalSprite69_checkpoint03_20261104.zip",
-      "bytes": 190535985,
-      "sha256": "3e47d38afadc8b8c55d7528acaba5148ec4c101151fa16bc7202f66e1b23da71",
-      "crc_passed": true,
-      "manifest_members_verified": 36,
-      "nested_dat_count": 17
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_originalSprite69_checkpoint04_20261104.zip",
-      "bytes": 185164962,
-      "sha256": "4d6045fc087a8b2e1794776635ac84a6729423e1182a7627fe6bff17ae5a7770",
-      "crc_passed": true,
-      "manifest_members_verified": 36,
-      "nested_dat_count": 17
-    }
-  ],
-  "received_archive_bytes": 832677478,
   "selected_sp2_members": 989,
   "nested_dat_containers": 69,
   "nested_dat_members_including_directory_entries": 10407,
@@ -61,78 +18,9 @@
     29044,
     29045
   ],
-  "upstream_standard_png_members": [
-    "validated_PNGs/normal_cloud.png",
-    "validated_PNGs/Map_Icon_Forge.png"
-  ],
   "sp2_pixel_or_native_render_validation": "NOT_PERFORMED; byte checks do not establish pixels",
   "global_source_absence_proven": false,
-  "full_inventory_library_transfer": "NOT_RETRIED; previous tools/list HTTP401",
-  "source_manifest": {
-    "bytes": 10420,
-    "sha256": "b3de71e193185bf848bd59004bccef3c9661b13a516760ec33e2bae52c41a8a3"
-  },
-  "split_parts": [
-    {
-      "filename": "TWILIGHT_current523_M_only_currentSprite_originals18_checkpoint01_20261104.zip.part001",
-      "bytes": 100000000,
-      "sha256": "ae76900db0d0e3bfa40faa543aac67b9bc02ea8ff355366c532e5e2978c381cd",
-      "received_size_sha_verified": true
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_currentSprite_originals18_checkpoint01_20261104.zip.part002",
-      "bytes": 90728359,
-      "sha256": "ddd319a72baf3515ec7ddb0db0720c22885e8293ec8f1c5dd87f0b4404446720",
-      "received_size_sha_verified": true
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_originalSprite69_checkpoint02_20261104.zip.part001",
-      "bytes": 100000000,
-      "sha256": "8face84455624f0a129b4203ad9f36a6a3160ddc41a497216978c0ac7c9cfdb3",
-      "received_size_sha_verified": true
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_originalSprite69_checkpoint02_20261104.zip.part002",
-      "bytes": 89340512,
-      "sha256": "344ad6030e6eb4c5bd32cef8f8ee31b4dd33322b4b7502b9b48b7f5574281565",
-      "received_size_sha_verified": true
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_originalSprite69_checkpoint03_20261104.zip.part001",
-      "bytes": 100000000,
-      "sha256": "8b2300132327e5183bb064b017ac4176348312332eec970b6bf95379bf730089",
-      "received_size_sha_verified": true
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_originalSprite69_checkpoint03_20261104.zip.part002",
-      "bytes": 90535985,
-      "sha256": "6e19c0dea96f50b2b2917cfddc1157732222ac8876d9514bf45ea8a8da7146d8",
-      "received_size_sha_verified": true
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_originalSprite69_checkpoint04_20261104.zip.part001",
-      "bytes": 100000000,
-      "sha256": "81c4e1df1f066d405bdbb16b5e895e4949f7dd6b10285815f8b08b9a1d749152",
-      "received_size_sha_verified": true
-    },
-    {
-      "filename": "TWILIGHT_current523_M_only_originalSprite69_checkpoint04_20261104.zip.part002",
-      "bytes": 85164962,
-      "sha256": "37dc074f615e05d2bdf54eea98fc156942bb6708550ff3de53d7daf511c0701c",
-      "received_size_sha_verified": true
-    }
-  ],
-  "full_inventory": {
-    "filename": "full_resource_inventory.zip",
-    "bytes": 6087178,
-    "created_at_utc": "2026-11-01T09:26:50.487386Z",
-    "outer_zip_expected_sha256": null,
-    "original_producing_environment": null,
-    "received": false,
-    "failure": "hosted apps tools/list HTTP401 before materialization; not retried",
-    "known_internal_id_to_archive_gzip_sha256": "618e1d0bc07238e9ca0b6c17e76120da9c53eeecca13005090f71a546c35b7a6",
-    "known_internal_decompressed_json_sha256": "2984f68c5cdd3bde919089510c6d5af6382b594799f8597e447c8d3eaf64c300",
-    "needed_subset": "inventory/id_to_archive.json.gz entries for 24941,24942,24943,29044,29045, preserving original container/member/size/CRC; then exact body/attachment SP2 payloads. No complete Git history or 10GB archive required for initial location lookup."
-  },
-  "access_identifiers": "Retained only in the private local handoff receipt; not needed to run this local audit."
+  "verified_existing_handoff_archives": 5,
+  "verification": "Received bytes verified against private owner manifests; ZIP CRC, package records, DAT proof SHA and nested CRC verified. Detailed receipts and access identifiers remain private.",
+  "full_inventory_followup": "A separately authorized Drive copy has now been received and verified. Five target IDs locate ten historical SP2 members in two DATs not in the received 69. Latest523 payload identity and actual SP2 receipt remain pending. Failed Library transfer not retried."
 }

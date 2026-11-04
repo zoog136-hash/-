@@ -43,9 +43,7 @@ func configure(host: Node) -> void:
 	automatic.name = "AutomaticSourceOptimization"
 	automatic.text = "원본 M 좌표에 따라 자동 적용"
 	automatic.set_pressed_no_signal(bool(world.presentation_global_settings.get("source_region_optimization",false)))
-	automatic.toggled.connect(func(enabled: bool) -> void:
-		host_settings._store("visual","source_region_optimization",enabled)
-		world.apply_presentation_settings({"source_region_optimization":enabled}))
+	automatic.toggled.connect(_automatic_changed)
 	add_child(automatic)
 	_refresh()
 
@@ -63,12 +61,19 @@ func _choose_directory(folder: bool = true) -> void:
 	directory_dialog.popup_centered_ratio(0.8)
 
 func _load_directory(path: String) -> void:
-	var result: Dictionary = world.load_source_optimization(path)
+	var result: Dictionary = world.load_source_optimization(path,func(selected: String) -> Error:
+		return host_settings.store_presentation_preferences([{"section":"source_optimization","key":"path","value":selected}]))
 	if not bool(result.ok):
 		status.text = str(result.error) + " · 기존 설정을 유지합니다."
 		return
-	host_settings._store("source_optimization","path",path)
 	_refresh()
+
+func _automatic_changed(enabled: bool) -> void:
+	if host_settings.store_presentation_preferences([{"section":"visual","key":"source_region_optimization","value":enabled}])!=OK:
+		automatic.set_pressed_no_signal(bool(world.presentation_global_settings.get("source_region_optimization",false)))
+		status.text = "자동 적용 설정을 저장하지 못했습니다. 기존 설정을 유지합니다."
+		return
+	world.apply_presentation_settings({"source_region_optimization":enabled})
 
 func _refresh() -> void:
 	regions.clear()
@@ -96,7 +101,10 @@ func _show_definition() -> void:
 	definition.text = "기본값: 이펙트 %s · 인형 %s" % ["적게" if row.DefaultLowEffectCount else "기존 표시량","숨김" if row.DefaultHideMagicDoll else "표시"]
 	if int(row.ConditionTypeId)!=0:
 		var label: String = "공성 진행" if int(row.ConditionTypeId)==1 else "라스타바드 핫타임"
-		definition.text += "\n조건(%s): 이펙트 %s · 인형 %s · 조건의 자동 판정은 미연결" % [label,"적게" if row.ConditionLowEffectCount else "기존 표시량","숨김" if row.ConditionHideMagicDoll else "표시"]
+		definition.text += "\n조건(%s): 이펙트 %s · 인형 %s" % [label,"적게" if row.ConditionLowEffectCount else "기존 표시량","숨김" if row.ConditionHideMagicDoll else "표시"]
+		definition.text += " · 조건의 자동 판정은 미연결" if world.source_optimization.condition_changes_settings(id) else " · 조건 전후 표시값 동일"
+	definition.text += "\n원본 좌표: (%d, %d) ~ (%d, %d)" % [int(row.StartX),int(row.StartY),int(row.EndX),int(row.EndY)]
+	if row.StartX==row.EndX or row.StartY==row.EndY: definition.text += " · 경계 판정 대기"
 	definition.text += "\n간소화 외형은 기존 세부 표현 선택을 따릅니다."
 
 func _apply_selected() -> void:
@@ -105,9 +113,12 @@ func _apply_selected() -> void:
 	var values: Dictionary = world.presentation_settings.duplicate(true)
 	values.merge(world.source_optimization.defaults_for(id),true)
 	values = preload("res://scripts/animation/presentation_preferences.gd").region(values)
+	if host_settings.store_presentation_preferences([
+		{"section":"visual_regions","key":host_settings.presentation_map_id,"value":values},
+		{"section":"source_optimization","key":"selected_row_id","value":id}])!=OK:
+		status.text = "지역 설정을 저장하지 못했습니다. 기존 설정을 유지합니다."
+		return
 	host_settings.region_override.set_pressed_no_signal(true)
-	host_settings._store("visual_regions",host_settings.presentation_map_id,values)
-	host_settings._store("source_optimization","selected_row_id",id)
 	world.set_region_presentation_settings(host_settings.presentation_map_id,values)
 	host_settings._sync_presentation_controls()
 	status.text = "원본 구역%d 기본값을 현재 지역에 적용했습니다." % id

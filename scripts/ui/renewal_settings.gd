@@ -20,6 +20,7 @@ var hide_doll: CheckButton
 var limit_effect_count: CheckButton
 var region_override: CheckButton
 var presentation_map_id: String = ""
+var presentation_status: Label
 
 static func apply_saved(controller: Node) -> void:
 	var saved := ConfigFile.new()
@@ -117,15 +118,13 @@ func configure(controller: Node) -> void:
 	impact_row.add_child(impact_readout)
 	impact_intensity.value_changed.connect(func(value: float) -> void:
 		impact_readout.text = "%d%%" % int(value)
-		_store("visual","impact_intensity",value/100.0)
-		_apply_presentation())
+		if _store_global_presentation("impact_intensity",value/100.0): _apply_presentation())
 	reduced_motion = CheckButton.new()
 	reduced_motion.name = "ReducedMotion"
 	reduced_motion.text = "움직임 줄이기 · 화면 흔들림 끄기"
 	reduced_motion.button_pressed = bool(config.get_value("visual","reduced_motion",false))
 	reduced_motion.toggled.connect(func(enabled: bool) -> void:
-		_store("visual","reduced_motion",enabled)
-		_apply_presentation())
+		if _store_global_presentation("reduced_motion",enabled): _apply_presentation())
 	stack.add_child(reduced_motion)
 	region_override = CheckButton.new()
 	region_override.name = "RegionPresentationOverride"
@@ -161,6 +160,9 @@ func configure(controller: Node) -> void:
 		_store_presentation("hide_doll",enabled)
 		_apply_presentation())
 	stack.add_child(hide_doll)
+	presentation_status = UI.section("",12)
+	presentation_status.name = "PresentationSettingsStatus"
+	stack.add_child(presentation_status)
 	_sync_presentation_controls()
 	stack.add_child(HSeparator.new())
 	var source_settings = preload("res://scripts/ui/source_optimization_settings.gd").new()
@@ -250,6 +252,39 @@ func _store(section: String,key: String,value: Variant) -> void:
 	var error := config.save(SETTINGS_PATH)
 	if error != OK: push_warning("Could not save UI preferences: %d" % error)
 
+func store_presentation_preferences(changes: Array) -> Error:
+	# Save one complete candidate in the same directory, then atomically replace
+	# the file. Failed writes/renames leave both the active config and file intact.
+	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(SETTINGS_PATH)):
+		presentation_status.text = "설정을 저장하지 못했습니다. 기존 설정을 유지합니다."
+		return ERR_CANT_OPEN
+	var candidate := ConfigFile.new()
+	var error: Error = candidate.parse(config.encode_to_text())
+	if error != OK: return error
+	for change: Dictionary in changes:
+		if bool(change.get("erase",false)):
+			if candidate.has_section_key(change.section,change.key): candidate.erase_section_key(change.section,change.key)
+		else: candidate.set_value(change.section,change.key,change.value)
+	var temporary: String = SETTINGS_PATH + ".tmp-" + str(Time.get_ticks_usec())
+	error = candidate.save(temporary)
+	if error == OK and FileAccess.get_file_as_string(temporary)!=candidate.encode_to_text(): error = ERR_FILE_CORRUPT
+	if error == OK:
+		error = DirAccess.rename_absolute(ProjectSettings.globalize_path(temporary),ProjectSettings.globalize_path(SETTINGS_PATH))
+	if error != OK:
+		if FileAccess.file_exists(temporary): DirAccess.remove_absolute(ProjectSettings.globalize_path(temporary))
+		presentation_status.text = "설정을 저장하지 못했습니다. 기존 설정을 유지합니다."
+		return error
+	config = candidate
+	presentation_status.text = "표시 설정을 저장했습니다."
+	return OK
+
+func _store_global_presentation(key: String,value: Variant) -> bool:
+	if store_presentation_preferences([{"section":"visual","key":key,"value":value}])==OK: return true
+	impact_intensity.set_value_no_signal(clampf(float(config.get_value("visual","impact_intensity",.85)),0.0,1.0)*100.0)
+	impact_readout.text = "%d%%" % int(impact_intensity.value)
+	reduced_motion.set_pressed_no_signal(bool(config.get_value("visual","reduced_motion",false)))
+	return false
+
 func _apply_presentation() -> void:
 	UI.set_reduced_motion(reduced_motion.button_pressed)
 	var world: Node = hud.get_parent()
@@ -279,12 +314,11 @@ func _sync_presentation_controls() -> void:
 	hide_doll.set_pressed_no_signal(bool(values.hide_doll))
 
 func _region_override_changed(enabled: bool) -> void:
-	if enabled:
-		_store("visual_regions",presentation_map_id,_presentation_values())
-	else:
-		config.erase_section_key("visual_regions",presentation_map_id)
-		var error: Error = config.save(SETTINGS_PATH)
-		if error != OK: push_warning("Could not save UI preferences: %d" % error)
+	var change: Dictionary = {"section":"visual_regions","key":presentation_map_id,"erase":not enabled,"value":_presentation_values()}
+	if store_presentation_preferences([change])!=OK:
+		region_override.set_pressed_no_signal(config.has_section_key("visual_regions",presentation_map_id))
+		_sync_presentation_controls()
+		return
 	hud.get_parent().call("set_region_presentation_settings",presentation_map_id,_presentation_values(),enabled)
 	_sync_presentation_controls()
 
@@ -292,10 +326,12 @@ func _store_presentation(key: String, value: Variant) -> void:
 	if region_override.button_pressed:
 		var values: Dictionary = _presentation_values()
 		values[key] = value
-		_store("visual_regions",presentation_map_id,values)
+		if store_presentation_preferences([{"section":"visual_regions","key":presentation_map_id,"value":values}])!=OK:
+			_sync_presentation_controls()
+			return
 		hud.get_parent().call("set_region_presentation_settings",presentation_map_id,values)
 	else:
-		_store("visual",key,value)
+		if store_presentation_preferences([{"section":"visual","key":key,"value":value}])!=OK: _sync_presentation_controls()
 
 func _volume_changed(value: float) -> void:
 	if AudioServer.get_bus_count() > 0:

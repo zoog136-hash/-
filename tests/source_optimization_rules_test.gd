@@ -38,6 +38,14 @@ func run() -> void:
 		if result.status=="source_default": resolved+=1
 		elif result.status=="condition_pending": conditional+=1
 		elif result.status=="overlap_pending": overlapping+=1
+	check(resolved==163 and conditional==13 and overlapping==0,"actual source centers: 163 equal-outcome defaults, 13 condition-dependent, 19 boundaries")
+	for id: int in [242488,243638]:
+		var row: Dictionary = owner.rules.by_id[id]
+		var center := Vector2((float(row.StartX)+float(row.EndX))*0.5,(float(row.StartY)+float(row.EndY))*0.5)
+		var result: Dictionary = owner.rules.at_source_point({"source_snapshot":"patch523","coordinate_space":"lineagem_m","verified":true,"land_id":int(row.LandID),"point":center})
+		check(not owner.rules.condition_changes_settings(id) and result.get("condition_invariant")==true and result.settings.limit_effect_count and result.settings.hide_doll,"same source values apply independently of unobserved condition %d" % id)
+	check(owner.rules.condition_changes_settings(53942),"different siege outcomes still need the real condition")
+	check(owner.rules.condition_changes_settings(104202),"different hot-time outcomes still need the real condition")
 	check(owner.rules.at_source_point({"source_snapshot":"pc","coordinate_space":"source_map84","verified":true,"land_id":4,"point":Vector2(32760,32250)}).settings.is_empty(),"same PC map4 is never M evidence")
 	check(owner.rules.at_source_point({"source_snapshot":"patch523","coordinate_space":"lineagem_m","verified":true,"land_id":4,"point":Vector2(32750,32250)}).status=="boundary_pending","unknown rectangle boundary stays pending")
 	var zip_path: String = OS.get_environment("TWILIGHT_PATCH523_ZIP")

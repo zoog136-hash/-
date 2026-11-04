@@ -8003,9 +8003,15 @@ func set_region_presentation_settings(map_id: String, settings: Dictionary, enab
 	else: presentation_region_settings.erase(map_id)
 	_refresh_presentation_settings()
 
-func load_source_optimization(path: String) -> Dictionary:
-	var result: Dictionary = source_optimization.load_zip(path) if path.get_extension().to_lower()=="zip" else source_optimization.load_directory(path)
+func load_source_optimization(path: String, before_install: Callable = Callable()) -> Dictionary:
+	var candidate = SOURCE_OPTIMIZATION.new()
+	var result: Dictionary = candidate.load_zip(path) if path.get_extension().to_lower()=="zip" else candidate.load_directory(path)
 	if bool(result.ok):
+		if before_install.is_valid():
+			var saved: Variant = before_install.call(path)
+			if not saved is int or int(saved)!=OK:
+				return {"ok":false,"error":"원본 선택을 저장하지 못했습니다. 기존 원본과 설정을 유지합니다."}
+		source_optimization = candidate
 		source_optimization_result = {"status":"manual_source_ready","settings":{}}
 		source_optimization_signature = ""
 		_update_source_optimization()
