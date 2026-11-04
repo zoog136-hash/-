@@ -71,7 +71,7 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	wallet_row.add_child(wallet)
 	var source_catalog: RefCounted = SOURCE523.session()
 	if source_catalog.available() or not source_catalog.error.is_empty():
-		var source_button: Button = UI.button("원본 상품 안내", _open_source523, Vector2(116, 34))
+		var source_button: Button = UI.button("원본 상점", _open_source523, Vector2(116, 34))
 		source_button.name = "Source523Shop"
 		source_button.disabled = not source_catalog.available()
 		source_button.tooltip_text = source_catalog.error
@@ -167,7 +167,7 @@ func _open_source523() -> void:
 			child.hide()
 	source523_panel = SOURCE523_PANEL.new()
 	add_child(source523_panel)
-	source523_panel.configure(SOURCE523.session())
+	source523_panel.configure(SOURCE523.session(), hud)
 	source523_panel.back_requested.connect(func() -> void:
 		source523_panel.hide()
 		source523_panel.queue_free()

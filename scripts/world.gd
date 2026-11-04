@@ -119,6 +119,8 @@ const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
 const AIN_OPTION_RULES = preload("res://scripts/ainhasad_option_rules.gd")
 const EXP_PROGRESSION = preload("res://scripts/experience_progression.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
+const SOURCE_SHOP = preload("res://scripts/shop/source523_shop_runtime.gd")
+var source_shop = SOURCE_SHOP.new()
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
 const SOURCE_NPCS = preload("res://scripts/npc/source_npc_catalog.gd")
@@ -389,6 +391,7 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	source_shop.configure(self)
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -4398,6 +4401,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if source_shop.save_blocked or not source_shop.check_load({SOURCE_SHOP.SAVE_KEY:collection_override.get(SOURCE_SHOP.SAVE_KEY, source_shop.export_state())}).is_empty(): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4413,7 +4417,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","next_item_instance_id","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth",SOURCE_SHOP.SAVE_KEY]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4447,6 +4451,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"stat_points": stat_points,
 		"gold": gold,
 		"inventory": inventory,
+		SOURCE_SHOP.SAVE_KEY: source_shop.export_state(),
 		"quest_state": quest_service.export_state(),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
@@ -4551,6 +4556,12 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var source_shop_error: String = source_shop.check_load(data)
+	if source_shop_error.is_empty(): source_shop_error = source_shop.prepare_load(data, save_path(), loaded_save_sha)
+	if not source_shop_error.is_empty():
+		source_shop.save_blocked = true
+		hud.show_message(source_shop_error)
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4805,6 +4816,7 @@ func _load_game(quiet: bool) -> void:
 	if enhancement_value is Dictionary:
 		enhancement_levels = enhancement_value as Dictionary
 	var stored_instances: Variant = data.get("item_instances", {})
+	source_shop.accept_load(data)
 	item_instances = stored_instances as Dictionary if stored_instances is Dictionary else {}
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)

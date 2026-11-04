@@ -4,6 +4,14 @@ signal back_requested
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
 var catalog: RefCounted
+var hud: Node
+var runtime
+var quantity: SpinBox
+var reward_step: OptionButton
+var result_label: Label
+var availability_label: Label
+var wallet_label: Label
+var selected_id: int = -1
 var mode: OptionButton
 var search: LineEdit
 var all_definitions: CheckButton
@@ -18,8 +26,12 @@ var filtered: Array = []
 var page: int = 0
 const PAGE_SIZE: int = 80
 
-func configure(source_catalog: RefCounted) -> void:
+func configure(source_catalog: RefCounted, controller: Node = null) -> void:
 	catalog = source_catalog
+	hud = controller
+	if hud != null:
+		runtime = hud.get_parent().source_shop
+		runtime.bind_source(catalog)
 	name = "Source523ShopPanel"
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -28,15 +40,16 @@ func configure(source_catalog: RefCounted) -> void:
 	var back: Button = UI.button("← 기존 상점", func() -> void: back_requested.emit(), Vector2(112, 38))
 	back.name = "SourceShopBack"
 	heading.add_child(back)
-	var title: Label = UI.label("원본 상품 안내 · 523", 17, UI.GOLD)
+	var title: Label = UI.label("원본 상점 · 523", 17, UI.GOLD)
 	heading.add_child(title)
-	add_child(UI.label("판매 조건을 확인 중입니다. 결제·보관함 수령·누적 보상은 각각 별도 처리됩니다.", 12, UI.MUTED))
+	wallet_label = UI.label("구매 후 보관함에서 수령하세요. 누적 보상은 수령 후 별도로 활성화됩니다.", 12, UI.MUTED)
+	add_child(wallet_label)
 	var filters := HBoxContainer.new()
 	add_child(filters)
 	mode = OptionButton.new()
 	mode.name = "SourceShopMode"
-	for title_text: String in ["상품", "NPC 판매", "재화", "누적 보상"]: mode.add_item(title_text)
-	mode.item_selected.connect(func(_index: int) -> void: _build_entries())
+	for title_text: String in ["상품", "NPC 판매", "재화", "누적 보상", "보관함"]: mode.add_item(title_text)
+	mode.item_selected.connect(func(_index: int) -> void: result_label.text=""; _build_entries())
 	filters.add_child(mode)
 	search = LineEdit.new()
 	search.name = "SourceShopSearch"
@@ -66,9 +79,32 @@ func configure(source_catalog: RefCounted) -> void:
 	detail.scroll_active = true
 	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	side.add_child(detail)
-	purchase = UI.button("구매 조건 확인 중", func() -> void: pass, Vector2(0, 44))
+	quantity = SpinBox.new()
+	quantity.name = "SourceShopQuantity"
+	quantity.min_value = 1
+	quantity.max_value = 1000
+	quantity.step = 1
+	quantity.value = 1
+	quantity.value_changed.connect(func(_value: float) -> void: _refresh_action())
+	side.add_child(quantity)
+	reward_step = OptionButton.new()
+	reward_step.name = "SourceShopRewardStep"
+	reward_step.add_item("일일 무료 보상", 0)
+	for step: int in range(1,7): reward_step.add_item("%d단계 보상" % step, step)
+	reward_step.item_selected.connect(func(_value: int) -> void: _refresh_action())
+	side.add_child(reward_step)
+	result_label = UI.label("", 12, UI.MUTED)
+	result_label.name = "SourceShopResult"
+	result_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	side.add_child(result_label)
+	availability_label = UI.label("", 12, UI.MUTED)
+	availability_label.name = "SourceShopAvailability"
+	availability_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	side.add_child(availability_label)
+	purchase = UI.button("상품 선택", _act, Vector2(0, 44))
 	purchase.name = "SourceShopBuy"
 	purchase.disabled = true
+	availability_label.text = ""
 	side.add_child(purchase)
 	browser.configure(listing, side, 278)
 	browser.enable_item_touch()
@@ -88,6 +124,14 @@ func configure(source_catalog: RefCounted) -> void:
 func _build_entries() -> void:
 	entries.clear()
 	all_definitions.visible = mode.selected == 0
+	quantity.visible = mode.selected in [0,1]
+	reward_step.visible = mode.selected == 3
+	if mode.selected == 4:
+		if runtime != null:
+			for order: Dictionary in runtime.orders():
+				entries.append({"id":int(order.id),"title":"주문 #%s · %s ×%d" % [order.id,str(order.get("display_name", "상품")),int(order.quantity)]})
+		_filter()
+		return
 	var table: String = ["MarketPurchase_Korean", "MerchantGoods", "Currency", "CumulativePurchase"][mode.selected]
 	var displayed: Dictionary = {}
 	if mode.selected == 0:
@@ -130,6 +174,8 @@ func _render_page() -> void:
 		_select(0)
 	else:
 		detail.text = "검색 조건에 맞는 항목이 없습니다."
+		selected_id = -1
+		_refresh_action()
 
 func _item_name(id: int) -> String:
 	var item: Dictionary = catalog.record("ItemClass", id)
@@ -142,7 +188,10 @@ func _value_name(unit: int, id: int) -> String:
 		var currency: Dictionary = catalog.record("Currency", id)
 		var title: String = catalog.label(int(currency.get("DescID", 0)))
 		return title if not title.is_empty() else str(currency.get("Name", "재화 #%d" % id))
-	if unit == 34: return str(catalog.record("IntangibleItemClass", id).get("Name", "재화 #%d" % id))
+	if unit == 34:
+		if id==1:return "마일리지"
+		if id==2:return "다이아"
+		return str(catalog.record("IntangibleItemClass", id).get("Name", "재화 #%d" % id))
 	return "%s #%d" % [catalog.unit_name(unit), id]
 
 func _date_text(row: Dictionary) -> String:
@@ -152,16 +201,93 @@ func _date_text(row: Dictionary) -> String:
 func _select(index: int) -> void:
 	if index < 0 or index >= listing.item_count: return
 	var id: int = int(listing.get_item_metadata(index))
+	selected_id = id
 	var lines: Array[String] = []
 	match mode.selected:
 		0: lines = _market_detail(id)
 		1: lines = _merchant_detail(id)
 		2: lines = _currency_detail(id)
 		3: lines = _cumulative_detail(id)
+		4: lines = _order_detail(str(id))
 	# Source descriptions may contain BBCode-like text. Never interpret it.
 	detail.text = UI.safe("\n".join(lines))
+	_refresh_action()
+
+func _refresh_action() -> void:
 	purchase.disabled = true
-	purchase.text = ["구매 조건 확인 중", "가격·구매 조건 확인 중", "재화 원천 안내", "보상 수령 조건 확인 중"][mode.selected]
+	availability_label.text = ""
+	if runtime == null:
+		purchase.text = "실제 게임에서 이용할 수 있습니다"
+		return
+	var world: Node = hud.get_parent()
+	wallet_label.text = "보유 아데나 %d · 다이아 %d · 마일리지 %d · 미수령 주문 %d" % [int(world.gold),int(world.inventory.get("다이아",0)),int(world.inventory.get("마일리지",0)),runtime.orders().size()]
+	if selected_id < 0:
+		purchase.text = "항목 선택"
+		return
+	match mode.selected:
+		0:
+			var quote: Dictionary = runtime.quote(selected_id, int(quantity.value))
+			purchase.disabled = not quote.ok
+			purchase.text = "%d회 구매 · 보관함 지급" % int(quantity.value) if quote.ok else "구매 불가"
+			availability_label.text = "구매 후 보관함에서 수령하세요" if quote.ok else str(quote.reason)
+			purchase.tooltip_text = availability_label.text
+		1:
+			var quote: Dictionary=runtime.quote_merchant(selected_id,int(quantity.value))
+			purchase.disabled=not quote.ok
+			purchase.text="%d회 구매 · 보관함 지급" % int(quantity.value) if quote.ok else "구매 불가"
+			availability_label.text=str(quote.price_origin) if quote.ok else str(quote.reason)
+		2: purchase.text = "재화 원천 안내"
+		3:
+			var view: Dictionary = runtime.cumulative_quote(selected_id, reward_step.selected)
+			purchase.disabled = not view.ok
+			purchase.text = "보상 수령" if view.ok else "수령 불가"
+			availability_label.text = "" if view.ok else str(view.reason)
+		4:
+			purchase.disabled = false
+			purchase.text = "선택 주문 수령"
+
+func _act() -> void:
+	if runtime == null or purchase.disabled or selected_id < 0: return
+	var id: int = selected_id
+	var current_mode: int = mode.selected
+	var count: int = int(quantity.value)
+	var step: int = reward_step.selected
+	var action: String = "구매" if current_mode in [0,1] else "수령"
+	var body: String = "구매 재화를 차감하고 보관함 주문으로 저장합니다. 인벤토리 지급은 보관함 수령 시 처리됩니다." if current_mode in [0,1] else "선택한 지급품과 수령 기록을 함께 저장합니다."
+	if current_mode in [0,1]:
+		var quote: Dictionary = runtime.quote(id, count) if current_mode==0 else runtime.quote_merchant(id,count)
+		if not quote.ok: _refresh_action(); return
+		body = "%s ×%d회\n차감: %s ×%d\n\n%s" % [str(quote.name),count,_value_name(int(quote.payment.unit_id),int(quote.payment.class_id)),int(quote.payment.amount),body]
+		if quote.has("price_origin"):body+="\n"+str(quote.price_origin)
+	hud.confirm_action("원본 상점 · " + action, body, action, func(_unused: int) -> void:
+		var result: Dictionary
+		match current_mode:
+			0: result = runtime.buy(id, count)
+			1: result = runtime.buy_merchant(id,count)
+			3: result = runtime.claim_cumulative(id, step)
+			4: result = runtime.claim(str(id))
+			_: return
+		result_label.text = str(result.get("reason", "거래를 완료했습니다"))
+		if result.ok:
+			hud.get_parent()._update_hud()
+			hud.refresh_inventory(hud.get_parent().inventory)
+			if result.has("order_id"):
+				mode.select(4)
+				search.set_block_signals(true)
+				search.text = ""
+				search.set_block_signals(false)
+			_build_entries()
+		else: _refresh_action())
+
+func _order_detail(id: String) -> Array[String]:
+	if runtime == null: return ["보관함을 확인할 수 없습니다"]
+	var order: Dictionary = runtime.state.orders.get(id, {})
+	if order.is_empty(): return ["주문 없음"]
+	var lines: Array[String] = ["보관함 주문 #" + id, "결제 완료 · 미수령", ""]
+	for token: Dictionary in order.goods:
+		lines.append("%s ×%d" % [_value_name(int(token.unit_id),int(token.class_id)),int(token.amount)])
+	lines.append("\n수령 시 구매 재화가 다시 차감되지 않습니다.")
+	return lines
 
 func _market_detail(id: int) -> Array[String]:
 	var offer: Dictionary = catalog.market_offer(id)
@@ -190,7 +316,10 @@ func _market_detail(id: int) -> Array[String]:
 	result.append("\n구매 제한: %d개" % offer.restrictions.size())
 	for restriction: Dictionary in offer.restrictions:
 		result.append("유형 %d · %s %d · %s %d" % [int(restriction.MarketRestrictionTypeId), catalog.unit_name(int(restriction.ValueUnitId)), int(restriction.Value), catalog.unit_name(int(restriction.DurationUnitId)), int(restriction.DurationValue)])
-	result.append("\n" + "\n".join(catalog.activation(id).reasons))
+	if runtime != null:
+		var quote: Dictionary = runtime.quote(id, int(quantity.value))
+		result.append("\n" + ("실제 구매 가능 · 보관함 지급" if quote.ok else str(quote.reason)))
+	else: result.append("\n" + "\n".join(catalog.activation(id).reasons))
 	return result
 
 func _merchant_detail(id: int) -> Array[String]:
@@ -198,7 +327,7 @@ func _merchant_detail(id: int) -> Array[String]:
 	var goods: Dictionary = offer.goods
 	var result: Array[String] = [_item_name(int(goods.ItemClassID)), "", "NPC 상점 번호: %d · 판매행 #%d" % [int(goods.MerchantsID), id],
 		"1회 상품 수량: %d · 강화: +%d" % [int(goods.Amount), int(goods.Enchant)],
-		"최종 가격: 계산식 확인 중", "", "구매 횟수 한도: %d · 계정 기준: %s" % [int(goods.LimitCount), str(goods.LimitCountPerAccount)],
+		"", "구매 횟수 한도: %d · 계정 기준: %s" % [int(goods.LimitCount), str(goods.LimitCountPerAccount)],
 		"서버 한도: %d · 갱신 유형: %d" % [int(goods.LimitServerCount), int(goods.LimitCountRefreshTypeID)],
 		"레벨: %d ~ %d" % [int(goods.LimitMinLevel), int(goods.LimitMaxLevel)],
 		"혈맹 레벨 (원문 조건별): %d / %d" % [int(goods.ClanLevelMin), int(goods.LimitMinClanLevel)],
@@ -206,7 +335,15 @@ func _merchant_detail(id: int) -> Array[String]:
 		"가입 후 일수 (원문 조건별): %d / %d" % [int(goods.DaysAfterClanJoin), int(goods.LimitDaysAfterClanJoin)],
 		"카드 조건: %d · 반복구매 카드 조건: %d" % [int(goods.LimitBuffCardID), int(goods.LimitRepeatedBuyCardID)],
 		"판매 시각: %d ~ %d · 시간: %d ~ %d" % [int(goods.LimitStartTime), int(goods.LimitEndTime), int(goods.LimitStartHour), int(goods.LimitEndHour)],
-		"\n수량·구매횟수·조건을 개별 보존합니다. 최종 가격과 제한 판정은 검증 중입니다."]
+		"\n수량·구매횟수·조건을 개별 보존합니다."]
+	if runtime!=null:
+		var price: Dictionary=runtime.merchant_price(id)
+		if price.ok:
+			result.insert(4,"1회 가격: %d · %s\n%s\n" % [int(price.amount),_value_name(int(price.unit_id),int(price.class_id)),str(price.origin)])
+			if not str(price.get("reference_url","")).is_empty():result.append("기본가 참고: "+str(price.reference_url))
+		else:result.append(str(price.reason))
+		var quote: Dictionary=runtime.quote_merchant(id,int(quantity.value))
+		result.append("\n"+("구매 가능 · 보관함 지급" if quote.ok else str(quote.reason)))
 	return result
 
 func _currency_detail(id: int) -> Array[String]:
@@ -224,13 +361,16 @@ func _cumulative_detail(id: int) -> Array[String]:
 	var data: Dictionary = catalog.record("CumulativePurchase", id)
 	var result: Array[String] = [str(data.Name), "", "기간: %s ~ %s" % [_date_text(catalog.record("DateTimes_Korean", int(data.StartTimeID))), _date_text(catalog.record("DateTimes_Korean", int(data.EndTimeID)))],
 		"서버 조건: Set %d" % int(data.ServerLimitsetID), "", "결제 → 보관함 수령 → 일일 활성화 → 보상 수령을 구분합니다.",
-		"원본 안내: 일일 05시 / 주간 수요일 05시. 현재 게임의 시간 기준은 변경하지 않습니다.", "현재 행사 활성화·대상 상품 분류·수령 처리는 미연결입니다."]
+		"원본 안내: 일일 05시 / 주간 수요일 05시. 현재 게임의 시간 기준은 변경하지 않습니다.", "행사 기간·활성 일수·지급 조건을 충족하면 수령할 수 있습니다."]
 	var steps: Array = []
 	for row: Dictionary in catalog.rows("CumulativePurchaseStep"):
 		if int(row.CumulativePurchaseID) == id: steps.append(row)
 	steps.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.Step) < int(b.Step))
 	result.append("\n일일 보상: " + _reward_text(int(data.DailyRewardID)))
 	for step: Dictionary in steps: result.append("%d단계 · %s" % [int(step.Step), _reward_text(int(step.RewardID))])
+	if runtime!=null:
+		var view: Dictionary=runtime.cumulative_view(id)
+		result.append("\n현재 활성 일수: %d" % int(view.get("activated_days",0)) if view.ok else "\n"+str(view.reason))
 	return result
 
 func _reward_text(id: int) -> String:
