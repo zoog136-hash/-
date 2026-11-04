@@ -4,6 +4,8 @@ Only host numeric consumers with matching units are emitted. Raw source tables
 remain in the private pack. Level rows are alternatives, never summed by rank.
 """
 from collections import defaultdict
+import json
+from pathlib import Path
 
 # stat key, host +0 property, denominator. Core keys use original_enhancement;
 # extra keys feed the existing typed equipment option consumers.
@@ -56,12 +58,15 @@ EXTRA = {
     'AttackDrainMP':('source_attack_drain_mp',1),
     'UndeadAdditionalMaxDamage':('source_undead_damage_max',1),
 }
+for _channel in ['fire','water','wind','earth']:
+    EXTRA['_elemental_'+_channel]=('source_elemental_flat_'+_channel,1)
+
 for _status in ['stun','hold','fear','poison','silence']:
     EXTRA['_hit_'+_status]=(_status+'_accuracy',10000)
     if _status!='stun': EXTRA['_resist_'+_status]=(_status+'_resistance',10000)
 
 
-def qualified_name(bonus, name, resistance_types):
+def qualified_name(bonus, name, resistance_types, elemental_targets=None):
     application, target = bonus['BonusApplicationTypeID'], bonus['BonusApplicationTargetID']
     if not application and not target:
         # These types require an explicit target; never turn an unknown
@@ -71,6 +76,9 @@ def qualified_name(bonus, name, resistance_types):
         status = resistance_types.get(target,'').lower()
         if status in ['stun','hold','fear','poison','silence']:
             return '_hit_'+status if name=='HitSpecialResistance' else '_stun' if status=='stun' else '_resist_'+status
+    if name=='ElementalDamage' and application==3:
+        channel=(elemental_targets or {}).get(str(target))
+        if channel in ['fire','water','wind','earth']: return '_elemental_'+channel
     if name=='IncreaseNpcItemDropAmount' and application==5 and target==26:
         return '_adena_drop'
     return None
@@ -80,6 +88,8 @@ def compile_equipment(tables, bound_items, bonuses):
     types = {r['ID']:r for r in tables['BonusType']}
     invoke_options = {r['ID']:r for r in tables.get('InvokeOption',[])}
     resistance_types = {r['ID']:r['Name'] for r in tables.get('SpecialResistanceType',[])}
+    policy=json.loads((Path(__file__).resolve().parents[2]/'data/crafting/patch523_enhancement_policy.json').read_text())
+    elemental_targets=policy.get('source_elemental_target_channels',{}) if all(r['UnitID']==1 for r in tables['BonusType'] if r['Name']=='ElementalDamage') else {}
     result = {}
     for iid, item in bound_items.items():
         raw, canonical = item['item_class'], item['catalog_record']
@@ -116,7 +126,7 @@ def compile_equipment(tables, bound_items, bonuses):
                             live_invokes.append({'row_id':row['ID'],'probability':b['Value'],'option':option,
                                                  'kind':'attack_fixed_damage' if kind==3 else 'defence_flat_reduction'})
                             continue
-                    name = qualified_name(b,name,resistance_types)
+                    name = qualified_name(b,name,resistance_types,elemental_targets)
                     if name is None:
                         skipped.add(row['ID']); continue
                     spec = FIELDS.get(name)
@@ -134,7 +144,7 @@ def compile_equipment(tables, bound_items, bonuses):
                 for row in selected:
                     if row['EnchantLevel']==0:
                         b=bonuses[str(row['BonusID'])]
-                        n=qualified_name(b,types[b['BonusTypeID']]['Name'],resistance_types)
+                        n=qualified_name(b,types[b['BonusTypeID']]['Name'],resistance_types,elemental_targets)
                         if n in FIELDS: zero_keys.add(n)
                 for name in zero_keys:
                     key, host, _ = FIELDS[name]
@@ -146,7 +156,7 @@ def compile_equipment(tables, bound_items, bonuses):
                 for row in selected:
                     if row['EnchantLevel']!=0: continue
                     b=bonuses[str(row['BonusID'])]
-                    name=qualified_name(b,types[b['BonusTypeID']]['Name'],resistance_types)
+                    name=qualified_name(b,types[b['BonusTypeID']]['Name'],resistance_types,elemental_targets)
                     if name in EXTRA:
                         key,_=EXTRA[name]
                         base_key={'AttackDrainHP':'hpAbsorption','AttackDrainMP':'mpAbsorption'}.get(name,key)

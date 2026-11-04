@@ -51,5 +51,17 @@
     "https://lineagem.plaync.com/board/notice/view?articleId=65b94e3899ffa12d379cc903",
     "https://lineagem.plaync.com/board/update/view?articleId=63bdbcb88737e56595bc769b"
   ],
-  "source_absorption_base_annotation": "refresh_exact_mp_flag_even_if_preindexed; subtract_source_zero_total_once"
+  "source_absorption_base_annotation": "refresh_exact_mp_flag_even_if_preindexed; subtract_source_zero_total_once",
+  "source_elemental_target_channels": {
+    "1": "fire",
+    "2": "water",
+    "3": "wind",
+    "4": "earth"
+  },
+  "source_elemental_scope": "normal_only",
+  "source_elemental_resistance_min": -80,
+  "source_elemental_resistance_max": 85,
+  "source_elemental_rounding": "nearest",
+  "source_elemental_basis": "Source ElementalDamage Unit1 and target1/2/3/4 values are exact. Channel mapping follows source earring identities and official Paa/Eva/Saiha/Maphr element names; no missing ElementalResistanceType foreign table is invented. Normal-hit scope, separate flat components after existing amplification, existing NPC elemental resistance range and rounding are configurable TWILIGHT rules.",
+  "source_elemental_public_basis": "https://lineagem.plaync.com/board/update/view?articleId=63865db9bd89877d499055cf"
 }

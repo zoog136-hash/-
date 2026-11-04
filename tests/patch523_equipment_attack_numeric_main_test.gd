@@ -62,35 +62,35 @@ func run() -> void:
    var skills: Object=world.original_skills;world.original_skills=null
    if key=="source_attack_drain_hp":
     world.hp=1;var legacy: int=1 if world._has_hp_absorption() else 0
-    world._deal_successful_player_hit(target,100,false,"melee",false)
+    world._deal_successful_player_hit(target,100,false,"melee",true,false)
     check(world.hp==1+legacy+int(value),"actual normal-hit source HP increment heals exact bounded amount")
-    target.hp=1;world.hp=1;world._deal_successful_player_hit(target,100,false,"melee",false)
+    target.hp=1;world.hp=1;world._deal_successful_player_hit(target,100,false,"melee",true,false)
     check(world.hp==2,"one target HP cannot create multiple stolen HP")
     target.dead=false;target.hp=target.max_hp;world.hp=1
-    world._deal_successful_player_hit(target,100,false,"magic",true)
+    world._deal_successful_player_hit(target,100,false,"magic",true,true)
     check(world.hp==1+legacy,"new source HP increment never leaks into spells under normal-only policy")
    elif key=="source_attack_drain_mp":
     target.max_mp=100;target.mp=100;world.mp=0
     var base_mp: int=int(world._equipment_inven_sum("mpAbsorption"))
-    world._deal_successful_player_hit(target,100,false,"ranged",false)
+    world._deal_successful_player_hit(target,100,false,"ranged",true,false)
     check(world.mp==int(value)+base_mp and target.mp==100-world.mp,"actual normal hit transfers exactly existing target MP")
-    target.mp=0;world.mp=0;world._deal_successful_player_hit(target,100,false,"melee",false)
+    target.mp=0;world.mp=0;world._deal_successful_player_hit(target,100,false,"melee",true,false)
     check(world.mp==0 and target.mp==0,"no MP can be created from an empty NPC pool")
-    target.mp=100;world.mp=world._effective_max_mp();world._deal_successful_player_hit(target,100,false,"melee",false)
+    target.mp=100;world.mp=world._effective_max_mp();world._deal_successful_player_hit(target,100,false,"melee",true,false)
     check(target.mp==100,"full player MP does not destroy target MP")
-    world.mp=0;world._deal_successful_player_hit(target,100,false,"magic",true)
+    world.mp=0;world._deal_successful_player_hit(target,100,false,"magic",true,true)
     check(world.mp==0 and target.mp==100,"new MP drain respects actual spell context")
    else:
     var before_rng: int=world.rng.state;var before: int=target.hp
-    world._deal_successful_player_hit(target,100,false,"melee",false)
+    world._deal_successful_player_hit(target,100,false,"melee",true,false)
     var ordinary_damage: int=before-target.hp
     check(world.rng.state==before_rng,"living target does not draw an undead bonus RNG")
     target.undead=true;target.hp=target.max_hp
     var probe:=RandomNumberGenerator.new();probe.seed=123;var amount: int=probe.randi_range(1,int(value))
-    world.rng.seed=123;world._deal_successful_player_hit(target,100,false,"melee",false)
+    world.rng.seed=123;world._deal_successful_player_hit(target,100,false,"melee",true,false)
     check(target.max_hp-target.hp==ordinary_damage+amount and world.rng.state==probe.state,"actual undead hit uses source maximum and configured integer draw once")
     target.hp=target.max_hp;world.rng.seed=123;before_rng=world.rng.state
-    world._deal_successful_player_hit(target,100,false,"magic",true)
+    world._deal_successful_player_hit(target,100,false,"magic",true,true)
     check(target.max_hp-target.hp==ordinary_damage and world.rng.state==before_rng,"undead normal-only bonus never leaks into spells")
    world.original_skills=skills;target.queue_free()
   check(world._save_game(true)==OK,"source attack/stat actual save "+key)
@@ -116,7 +116,7 @@ func run() -> void:
     target.setup(world.monster_db[0].duplicate(true),world.player,world,world._monster_texture(world.monster_db[0]))
     target.set_process(false);target.set_physics_process(false);target.hp=1000000;target.max_hp=target.hp;target.mp=10;target.max_mp=10
     var service: Object=world.original_skills;world.original_skills=null;world.hp=1;world.mp=0
-    world._deal_successful_player_hit(target,100,false,"melee",false)
+    world._deal_successful_player_hit(target,100,false,"melee",true,false)
     check(world.hp==2 and world.mp==1 and target.mp==9,"actual zero-rank source attack transfers one HP/MP without duplicate flags "+id+str(bless))
     world.original_skills=service;target.queue_free()
     check(world._save_game(true)==OK,"corrected zero absorption save")

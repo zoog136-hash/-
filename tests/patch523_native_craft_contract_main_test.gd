@@ -55,6 +55,27 @@ func run() -> void:
 	check(world.patch523_equipment.bless_code(spoof)==-1,"native raw blessing and physical blessing must agree")
 	spoof=world.item_instances["23001"].duplicate(true); spoof.record.source_m_drop_proof.required_quest_id=1
 	check(not world.patch523_equipment._state_matches(spoof,recipe.materials[0],false),"quest-restricted or disagreeing source drop provenance cannot be consumed")
+	# Synthetic supplier evidence uses the exact public f078a465 shape; this
+	# verifies the consumer contract, not natural exploration/quest supply.
+	var supplied: Dictionary=world.item_instances["23001"].duplicate(true)
+	supplied.erase("source_m_drop_proof");supplied.record.erase("source_m_drop_proof");supplied.record.erase("source_m_item_id")
+	supplied["source_m_reward_proof"]={"source_snapshot":"patch523","item_class_id":600001,"source_item_class_id":600001,"bless":1,"enchant":0,"supplier":{"fixture":"shared-public-contract"}}
+	check(world.patch523_equipment._state_matches(supplied,recipe.materials[0],false),"supplier initial receipt remains valid after legitimate current blessing/enchant change")
+	var uuid: String="beef0000000000000000000000000001"
+	var quote: Dictionary=world.patch523_equipment.quote(recipe.id,1,world.inventory,world.gold,world._patch523_craft_item_index(),{uuid:supplied},{},100,100000,{}, {},{})
+	check(quote.get("ok",false) and quote.get("consumed_ids",[])==[uuid],"shared supplier UUID is selected without coercing it to a numeric ID")
+	var locked_quote: Dictionary=world.patch523_equipment.quote(recipe.id,1,world.inventory,world.gold,world._patch523_craft_item_index(),{uuid:supplied},{},100,100000,{str(input.name)+"@@@"+uuid:true},{},{})
+	check(not locked_quote.get("ok",false),"shared supplier UUID respects original physical lock")
+	for mutation: Dictionary in [{"item_class_id":600002},{"source_item_class_id":600002},{"supplier":{}},{"bless":1.5},{"enchant":-1}]:
+		var invalid: Dictionary=supplied.duplicate(true);invalid.source_m_reward_proof.merge(mutation,true)
+		check(not world.patch523_equipment._state_matches(invalid,recipe.materials[0],false),"invalid supplier evidence preserves exact physical material "+str(mutation))
+	var pending: Dictionary=supplied.duplicate(true);pending["source_pending_use"]=true;pending["source_reward_quantity"]=3
+	check(not world.patch523_equipment._state_matches(pending,recipe.materials[0],false),"uninterpreted restricted pending quantity stays with its source owner")
+	var stack: Dictionary=native_record(600003,"fixture_receipt_stack");stack.slot="material";stack.source_is_stackable=true
+	world.patch523_equipment.data.items["600003"]={"catalog_record":stack,"item_class":{},"item_bonuses":[],"enchant_effects":[]}
+	var stack_material: Dictionary={"item":stack.name,"source_id":"600003","quantity":1,"level":0,"bless_code":1,"physical":false}
+	check(world.patch523_equipment.available_material(stack_material,{str(stack.name):3},{str(stack.name):stack},{},{},{},false)==3,"ordinary exact stack remains consumable without owned reward entities")
+	check(world.patch523_equipment.available_material(stack_material,{str(stack.name):3},{str(stack.name):stack},{"fixture-receipt":{"name":stack.name,"source_pending_use":true,"source_reward_quantity":3}},{},{},false)==0,"synthetic pending-quantity stack is protected until its receipt owner can debit it atomically")
 	var before: String=snapshot(world)
 	var sha: String=FileAccess.get_sha256(world.save_path())
 	world.source_save_blocked=true; world._craft_requested(recipe.id,1)

@@ -6,7 +6,7 @@ const ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
 const CONDITIONS = preload("res://scripts/crafting/patch523_craft_conditions.gd")
 const ENHANCEMENT = preload("res://scripts/crafting/patch523_enhancement.gd")
 const SCHEMA: String = "twilight-patch523-equipment-v1"
-const MAX_BYTES: int = 64000000
+const MAX_BYTES: int = 128 * 1024 * 1024
 const MAX_BATCH: int = 20
 var data: Dictionary = {}
 var recipes: Dictionary = {}
@@ -93,9 +93,9 @@ func load_file(path: String, expected_sha256: String) -> bool:
 static func denied(reason: String) -> Dictionary:
 	return {"ok": false, "reason": reason}
 
-func record(source_id: String) -> Dictionary:
+func record(source_id: String, stack_bless: int=1) -> Dictionary:
 	var item: Dictionary = data.get("items",{}).get(source_id,{})
-	var result: Dictionary = item.get("catalog_record",{}).duplicate(true)
+	var result: Dictionary = (item.get("stack_variants",{}).get(str(stack_bless),{}) if stack_bless!=1 else item.get("catalog_record",{})).duplicate(true)
 	var use: Dictionary = item.get("use_conditions",{})
 	if not use.is_empty(): result["patch523_item_use"]=use.duplicate(true)
 	return result
@@ -136,8 +136,8 @@ static func _source_ids_match(left: Variant, right: Variant) -> bool:
 	a.sort(); b.sort()
 	return a==b
 
-func catalog_identity_matches(item: Dictionary, source_id: String) -> bool:
-	var canonical: Dictionary=record(source_id)
+func catalog_identity_matches(item: Dictionary, source_id: String, stack_bless: int=1) -> bool:
+	var canonical: Dictionary=record(source_id,stack_bless)
 	if canonical.is_empty() or item.get("name")!=canonical.get("name") or item.get("source")!=canonical.get("source") or item.get("sourceId")!=canonical.get("sourceId"): return false
 	if canonical.get("source")=="inven": return str(item.sourceId)==source_id
 	if canonical.get("source")!="lineagem_patch523" or not canonical.get("source_m_native_item",false): return false
@@ -145,6 +145,7 @@ func catalog_identity_matches(item: Dictionary, source_id: String) -> bool:
 		if item.get(key)!=canonical.get(key): return false
 	for key: String in ["source_class_ids","source_equip_slot_ids"]:
 		if not _source_ids_match(item.get(key),canonical.get(key)): return false
+	if stack_bless!=1:return canonical.get("source_is_stackable",false) and int(item.get("source_bless_raw",0))==stack_bless and str(item.sourceId)=="m523:item:"+source_id+":bless:"+str(stack_bless)
 	return identity({"record":item})==source_id
 
 static func bless_code(physical: Dictionary) -> int:
@@ -165,6 +166,16 @@ static func _drop_proof_matches(proof: Variant, source_id: String, source_bless:
 	for row: Variant in proof.source_rows:
 		if not row is Dictionary or int(row.get("ItemClassID",0))!=int(source_id) or int(row.get("NpcClassID",0))!=int(proof.source_npc_id) or int(row.get("Bless",0))!=source_bless or int(row.get("RequiredQuestID",-1))!=0: return false
 	return true
+
+static func _reward_proof_matches(proof: Variant, source_id: String) -> bool:
+	# PR238 f078a465 acquisition evidence describes the initial grant. Current
+	# enhancement/blessing are separately checked; legitimate reforging does
+	# not rewrite or invalidate the supplier's historical receipt.
+	if not proof is Dictionary or proof.get("source_snapshot")!="patch523" or not proof.get("supplier") is Dictionary or proof.supplier.is_empty():return false
+	for key: String in ["item_class_id","source_item_class_id","bless","enchant"]:
+		var value: Variant=proof.get(key)
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=float(int(value)):return false
+	return int(proof.item_class_id)==int(source_id) and int(proof.source_item_class_id)==int(source_id) and int(proof.bless) in [1,2,3] and int(proof.enchant)>=0
 
 func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss: bool) -> bool:
 	if identity(physical) != str(material.source_id) or int(physical.get("level", -1)) != int(material.level) or bless_code(physical) != int(material.bless_code):
@@ -209,12 +220,23 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 	# only by a recipe whose original popup explicitly warns about that loss.
 	for key: Variant in physical:
 		if key not in ["name", "level", "element", "element_level", "record", "sourceId", "source_snapshot", "source_bless_code", "bless_state", "blessed"]:
+			if key=="source_m_reward_proof":
+				if not canonical.get("source_m_native_item",false) or not _reward_proof_matches(physical[key],str(material.source_id)):return false
+				continue
 			if key=="source_m_drop_proof":
 				if physical[key]!=pinned.get(key) or not _drop_proof_matches(physical[key],str(material.source_id),int(material.bless_code)): return false
 				continue
 			if key != "source_smelt" or not allow_smelt_loss:
 				return false
 	return true
+
+static func _stack_has_owned_entities(material: Dictionary, physical: Dictionary, owned_key: String) -> bool:
+	# Pending rewards/quest materials have an owner-maintained quantity and
+	# receipt. A plain name-keyed debit must never leave that entity unchanged.
+	# Until that owner's deduction contract is installed, preserve the stack.
+	for instance: Variant in physical.values():
+		if instance is Dictionary and str(instance.get("name","")) in [owned_key,str(material.item)]:return true
+	return false
 
 func available_material(material: Dictionary, inventory: Dictionary, items: Dictionary, physical: Dictionary, equipped: Dictionary, locks: Dictionary, allow_smelt_loss: bool, gold: int = -1) -> int:
 	var item_name: String = str(material.item)
@@ -224,7 +246,7 @@ func available_material(material: Dictionary, inventory: Dictionary, items: Dict
 	var owned: int = maxi(0, int(inventory.get(ownership_key(material), 0)))
 	if not bool(material.physical):
 		var item: Dictionary = items.get(item_name, {})
-		return owned if _stack_identity_matches(item,material) else 0
+		return owned if not _stack_has_owned_entities(material,physical,ownership_key(material)) and _stack_identity_matches(item,material) else 0
 	var eligible: int = 0
 	for id: Variant in physical:
 		var instance: Variant = physical[id]
@@ -239,7 +261,7 @@ func ownership_key(material: Dictionary) -> String:
 	return key if not key.is_empty() and key==str(entry.get("currency_inventory_key","")) and not bool(material.physical) and int(material.level)==0 and int(material.bless_code)==1 else ""
 
 func _stack_identity_matches(item: Dictionary, material: Dictionary) -> bool:
-	if item.get("source","") in ["inven","lineagem_patch523"]: return catalog_identity_matches(item,str(material.source_id))
+	if item.get("source","") in ["inven","lineagem_patch523"]: return catalog_identity_matches(item,str(material.source_id),1 if material.physical else int(material.bless_code))
 	if str(item.get("sourceId",""))!=str(material.source_id): return false
 	var canonical: Dictionary=record(str(material.source_id))
 	return item.get("source","")=="twilight_host_binding" and canonical.get("source","")=="twilight_host_binding" and item.get("name")==canonical.get("name") and item.get("host_kind")==canonical.get("host_kind") and item.get("host_amount")==canonical.get("host_amount")
@@ -282,13 +304,13 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	if not bool(qualification.get("ok",false)): return qualification
 	if recipe.has("outcomes") and count!=1: return denied("확률 제작은 결과를 확인하며 1회씩 진행합니다")
 	var output: Dictionary = recipe.result
-	var result_record: Dictionary = record(str(output.source_id))
+	var result_record: Dictionary = record(str(output.source_id),1 if output.physical else int(output.bless_code))
 	if ownership_key(output).is_empty(): return denied("원본 결과 재화의 정확한 보유 키가 필요합니다")
 	if result_record.is_empty() or str(result_record.get("name", "")) != str(output.item):
 		return denied("원본 결과 아이템의 정확한 ID 연결이 필요합니다")
 	var wallet_output: bool = bool(output.get("wallet_currency",false)) and str(output.source_id)=="26" and str(result_record.get("source",""))=="lineagem_patch523" and str(output.item)=="아데나" and not bool(output.physical)
 	var current_output: Dictionary = result_record if wallet_output else items.get(str(output.item), {})
-	if not wallet_output and not catalog_identity_matches(current_output,str(output.source_id)):
+	if not wallet_output and not catalog_identity_matches(current_output,str(output.source_id),1 if output.physical else int(output.bless_code)):
 		return denied("현재 게임에서 원본 결과 아이템을 사용할 수 없습니다")
 	var costs: Dictionary = {}
 	var selections: Array[String] = []
@@ -322,6 +344,8 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 						break
 			if selected != required:
 				return denied("재료의 원본 ID·강화·축복·잠금·장착 상태를 확인하세요: " + item_name)
+		elif _stack_has_owned_entities(material,physical,owned_key):
+			return denied("원본 보상 개체의 수량·제한·영수증 차감 소유자 연결이 필요합니다: "+item_name)
 		elif not _stack_identity_matches(item,material):
 			return denied("이름만 같은 재료는 사용할 수 없습니다: " + item_name)
 		costs[owned_key] = int(costs.get(owned_key, 0)) + required
@@ -332,7 +356,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 		if outcome.get("empty_result",false):continue
 		if ownership_key(outcome).is_empty(): return denied("확률 결과 재화의 정확한 보유 키가 필요합니다")
 		var candidate: Dictionary=items.get(str(outcome.item),{})
-		if not catalog_identity_matches(candidate,str(outcome.source_id)) or record(str(outcome.source_id)).get("name","")!=outcome.item:
+		if not catalog_identity_matches(candidate,str(outcome.source_id),1 if outcome.physical else int(outcome.bless_code)) or record(str(outcome.source_id),1 if outcome.physical else int(outcome.bless_code)).get("name","")!=outcome.item:
 			return denied("모든 확률 결과의 정확한 아이템 ID 연결이 필요합니다")
 		output_weight=maxi(output_weight,maxi(0,int(candidate.get("weight",3)))*int(outcome.quantity))
 	net_weight += output_weight
@@ -366,7 +390,7 @@ func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, it
 			staged_inventory.erase(item_name)
 	for id: String in approval.consumed_ids:
 		staged_physical.erase(id)
-	var output_record: Dictionary = record(str(output.source_id))
+	var output_record: Dictionary = record(str(output.source_id),1 if output.physical else int(output.bless_code))
 	var output_name: String = str(output.item)
 	var wallet_reward: int = int(approval.result_quantity) if bool(output.get("wallet_currency",false)) and str(output.source_id)=="26" else 0
 	var output_key: String=ownership_key(output)

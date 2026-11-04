@@ -166,7 +166,7 @@ func _refresh() -> void:
 		labels.merge({"PierceDamageReductionPercent":"대미지 증가","PVEPierceDamageReductionPercent":"PVE 대미지 증가","DamageReductionPercent":"대미지 감소","IncreaseNpcItemDropAmount":"아데나 드롭량"})
 		labels.merge({"HPHealIncreasePercent":"회복 마법량","CastSpeedBonus":"시전 속도","MeleeCriticalResist":"근거리 치명타 저항","RangeCriticalResist":"원거리 치명타 저항","MeleeDamageReductionPercent":"근거리 대미지 감소","RangeDamageReductionPercent":"원거리 대미지 감소","MagicDamageReductionPercent":"마법 대미지 감소","PoisonDamageReductionPercent":"지속 대미지 감소"})
 		labels.merge({"StrengthScale":"STR 비율","DexterityScale":"DEX 비율","IntelligenceScale":"INT 비율"})
-		labels.merge({"AttackDrainHP":"공격 HP 흡수 강화량","AttackDrainMP":"공격 MP 흡수 강화량","UndeadAdditionalMaxDamage":"언데드 추가 피해 최댓값"})
+		labels.merge({"ElementalDamage":"속성별 고정 추가 피해 · 개별 저항 적용(TWILIGHT 설정)","AttackDrainHP":"공격 HP 흡수 강화량","AttackDrainMP":"공격 MP 흡수 강화량","UndeadAdditionalMaxDamage":"언데드 추가 피해 최댓값"})
 		for effect: Dictionary in effects:
 			var kind: String = str(effect.bonus_type.get("Name", ""))
 			var value: String = str(int(effect.bonus.Value))
@@ -183,6 +183,9 @@ func _refresh() -> void:
 				for status: Dictionary in book.data.enchantment.get("SpecialResistanceType",[]):
 					if int(status.ID)==int(effect.bonus.BonusApplicationTargetID):status_name=str({"Stun":"스턴","Hold":"홀드","Fear":"공포","Poison":"독","Silence":"침묵"}.get(status.Name,status.Name));break
 				label=status_name+(" 적중" if kind=="HitSpecialResistance" else " 내성")
+			if kind=="ElementalDamage" and int(effect.bonus.BonusApplicationTypeID)==3:
+				var target_channel: String=str(world.PATCH523_ENHANCE.policy().get("source_elemental_target_channels",{}).get(str(int(effect.bonus.BonusApplicationTargetID)),"미확인"))
+				label=str({"fire":"불","water":"물","wind":"바람","earth":"땅"}.get(target_channel,target_channel))+" 속성 추가 피해 · 저항/범위는 TWILIGHT 설정"
 			var applied: bool = blessing == 2 and supported.has(kind) and expected_options.has(supported[kind]) and actual_options.get(supported[kind]) == expected_options[supported[kind]]
 			if prepared.get("patch523_effect_basis",{}).get("selection")=="source_exact_level":
 				applied=int(effect.row.ID) not in prepared.patch523_effect_basis.get("unconnected_effect_row_ids",[])

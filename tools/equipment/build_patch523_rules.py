@@ -137,6 +137,33 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
             continue
         if len(by_name[record['name']]) == 1:
             by_id[key] = [record]
+    stack_variants = defaultdict(dict)
+    for entry in catalog:
+        raw_id = entry.get('source_item_class_id',0)
+        if not isinstance(raw_id,(int,float)) or isinstance(raw_id,bool) or raw_id != int(raw_id):
+            continue
+        key = str(int(raw_id))
+        state = entry.get('source_bless_raw',1)
+        if state not in (2,3) or len(by_id.get(key,[])) != 1:
+            continue
+        base = by_id[key][0]
+        if (not base.get('source_m_native_item') or not base.get('source_is_stackable')
+            or entry.get('source') != 'lineagem_patch523'
+            or entry.get('sourceId') != base['sourceId']+':bless:'+str(state)
+            or entry.get('name') != base['name']+(' · 축복' if state==2 else ' · 저주')):
+            continue
+        fields = ['source_snapshot','source_item_class_id','source_display_name','source_test_item',
+                  'source_is_stackable','source_level_limit_min','source_level_limit_max',
+                  'source_class_ids','source_equip_slot_ids','slot']
+        if all(entry.get(k)==base.get(k) for k in fields) and len(by_name[entry['name']])==1:
+            stack_variants[key][str(state)] = entry
+
+    def row_record(row):
+        key = str(row['ItemClassID'])
+        if row['ItemBlessCodeID'] != 1 and categories[items[key]['CategoryID']]['IsStackable']:
+            return stack_variants.get(key,{}).get(str(row['ItemBlessCodeID']),{})
+        return by_id[key][0]
+
     use_conditions = {}
     for key, item in items.items():
         ids = sorted({r['ClassID'] for r in limits.get(key,[])})
@@ -243,14 +270,14 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                 if matches[0].get('source') == 'inven' and matches[0]['name'] not in [descriptions.get(item['DescID']), descriptions.get(item['IdentifiedDescID'])]:
                     reason = 'source_identity_name_disagreement'; break
                 stack = categories[item['CategoryID']]['IsStackable']
-                if stack and (row['Enchant'] != 0 or row['ItemBlessCodeID'] != 1):
+                if stack and (row['Enchant'] != 0 or not row_record(row)):
                     reason = 'stack_state_cannot_be_represented'; break
                 slot = matches[0].get('slot', '')
                 if not stack and slot not in ['weapon', 'helmet', 'armor', 'cloak', 'gloves', 'boots', 'shield', 'gaiters', 'shirt', 'belt', 'ring', 'earring', 'necklace', 'seal', 'rune', 'shoulder', 'insignia', 'body', 'offhand', 'tshirt', 'bracelet', 'badge', 'crystal', 'catalyst']:
                     reason = 'unmapped_physical_slot'; break
             if not reason:
                 out = primary if probabilistic else outs[0]
-                result = currency_record if out['ItemClassID']==26 else by_id[str(out['ItemClassID'])][0]
+                result = currency_record if out['ItemClassID']==26 else row_record(out)
                 material_rows, material_slots, adena = [], [], 0
                 for slot, slot_rows in group(ins, 'SlotIndex').items():
                     candidates = []
@@ -258,7 +285,7 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                         key = str(row['ItemClassID'])
                         if key == '26' and len(slot_rows)==1:
                             adena += row['Amount']; continue
-                        record = currency_record if key=='26' else by_id[key][0]
+                        record = currency_record if key=='26' else row_record(row)
                         candidates.append({'item': record['name'], 'quantity': row['Amount'], 'source_id': key,
                                            'level': row['Enchant'], 'bless_code': row['ItemBlessCodeID'],
                                            'row_id': row['ID'], 'slot_index': int(slot),
@@ -300,7 +327,7 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
                                     'bless_code':1,'physical':False,'empty_result':True,
                                     'probability':row['Probability'],'label':policy['output_type_labels']['0']})
                                 continue
-                            item=by_id[str(row['ItemClassID'])][0]
+                            item=row_record(row)
                             outcomes.append({'item':item['name'],'source_id':str(row['ItemClassID']),
                                 'quantity':row['Amount'],'level':row['Enchant'],'bless_code':row['ItemBlessCodeID'],
                                 'physical':not categories[items[str(row['ItemClassID'])]['CategoryID']]['IsStackable'],
@@ -346,6 +373,7 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
         bound_items[key] = {'catalog_record': records[0], 'item_class': items[key], 'item_bonuses': links,
                             'enchant_effects': effect_rows,
                             'use_conditions':use_conditions.get(key,{}) if ((records[0].get('source')=='inven' and records[0]['name'] in [descriptions.get(items[key]['DescID']),descriptions.get(items[key]['IdentifiedDescID'])]) or records[0].get('source_m_native_item',False)) else {}}
+        if stack_variants.get(key): bound_items[key]['stack_variants']=stack_variants[key]
         if key in currency_keys: bound_items[key]['currency_inventory_key'] = currency_keys[key]
     # Only these permanent guaranteed boxes have a fully checked contract.
     boxes = {}

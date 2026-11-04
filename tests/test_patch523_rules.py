@@ -76,6 +76,19 @@ class AdmissionTest(unittest.TestCase):
         effect=self.compile()['equipment_runtime']['101']['invokes']['1']['4'][0]
         self.assertEqual((effect['kind'],effect['option']['AttackTypeID']),('defence_flat_reduction',2))
 
+    def test_elemental_flat_amount_requires_unit_and_explicit_target(self):
+        self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=799,Name='ElementalDamage',UnitID=1)]
+        self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=799,Value=3,BonusApplicationTypeID=3,BonusApplicationTargetID=1)]
+        self.tables['ItemBonus']=[dict(ID=1,ItemClassID=101,BonusID=11)]
+        self.tables['ItemEnchantBonus']=[dict(ID=7,EnchantLevel=4,ItemEnchantBonusGroupID=3,BonusID=12,BlessCode=0)]
+        self.assertEqual(self.compile()['equipment_runtime']['101']['extra_options']['1']['4'],{'source_elemental_flat_fire':3})
+        for target in [0,5,999]:
+            self.tables['Bonus'][1]['BonusApplicationTargetID']=target
+            self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
+        self.tables['Bonus'][1]['BonusApplicationTargetID']=1
+        self.tables['BonusType'][1]['UnitID']=3
+        self.assertIn(7,self.compile()['equipment_runtime']['101']['unconnected_effect_row_ids'])
+
     def test_damage_percent_units_and_adena_exact_item_qualifier(self):
         self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=4073,Name='PierceDamageReductionPercent',UnitID=3),dict(ID=6322,Name='IncreaseNpcItemDropAmount',UnitID=211)]
         self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=4073,Value=25000,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=13,BonusTypeID=6322,Value=7,BonusApplicationTypeID=5,BonusApplicationTargetID=26)]
@@ -271,6 +284,31 @@ class AdmissionTest(unittest.TestCase):
         self.assertEqual(r['items']['101']['catalog_record']['source'],'inven')
         replaced=BUILDER.compile_rules(self.tables,{},json.dumps(self.catalog).encode(),bindings)
         self.assertEqual(replaced['items']['101']['catalog_record']['source'],'lineagem_patch523')
+
+    def test_blessed_stack_requires_actually_registered_exact_variant(self):
+        self.tables['ItemCategory'][0]['IsStackable']=True
+        self.tables['ItemCraftInput'][0]['Enchant']=0
+        self.tables['ItemCraftOutputView'][0]['Enchant']=0
+        self.tables['ItemCraftView'][0]['Enchant']=0
+        records=[]
+        for item in self.tables['ItemClass']:
+            key=str(item['ID']);label='fixture_old' if key=='101' else 'fixture_new'
+            records.append(dict(name=label+' · 원본#'+key,source_display_name=label,source='lineagem_patch523',
+                source_snapshot='patch523',sourceId='m523:item:'+key,source_item_class_id=item['ID'],
+                source_m_native_item=True,source_test_item=False,source_is_stackable=True,source_bless_raw=1,
+                source_level_limit_min=0,source_level_limit_max=0,source_class_ids=[],source_equip_slot_ids=[],slot='material'))
+        def compile_records(rows):
+            return BUILDER.compile_rules(self.tables,{},'{"아이템":[]}'.encode(),json.dumps({'아이템':rows}).encode())
+        self.assertFalse(compile_records(records)['recipes'])
+        variant={**records[0],'name':records[0]['name']+' · 축복','sourceId':records[0]['sourceId']+':bless:2','source_bless_raw':2}
+        rows=records+[variant]
+        result=compile_records(rows)
+        self.assertEqual(result['recipes']['patch523:17']['materials'][0]['item'],variant['name'])
+        self.assertEqual(result['items']['101']['stack_variants']['2']['sourceId'],variant['sourceId'])
+        for key,value in [('sourceId','m523:item:101:bless:3'),('name',records[0]['name']),('source_bless_raw',1),('source_class_ids',[9])]:
+            with self.subTest(key=key):
+                self.assertFalse(compile_records(records+[{**variant,key:value}])['recipes'])
+        self.assertFalse(compile_records(rows+[variant])['recipes'])
 
     def test_unknown_item_state_and_tests_rejected(self):
         self.tables['ItemClass'][0]['TestItem'] = True

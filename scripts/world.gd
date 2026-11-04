@@ -140,6 +140,7 @@ var crafting_log: Array[Dictionary] = []
 var patch523_crafting_usage: Dictionary = {}
 const PATCH523_CRAFT_CATALOG=preload("res://scripts/crafting/patch523_craft_catalog.gd")
 var patch523_craft_catalog_status: Dictionary={}
+var patch523_craft_item_cache: Dictionary={}
 var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
@@ -750,6 +751,7 @@ func _equipped_numeric_sum(key: String) -> float:
 
 
 func _index_catalog_item_sources() -> void:
+	patch523_craft_item_cache={}
 	catalog_item_by_source_id.clear()
 	catalog_item_variant_count.clear()
 	for value: Variant in catalog_db.get("아이템", []) as Array:
@@ -898,7 +900,7 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String="melee", by_spell: bool=false) -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String="", main_target: bool=true, by_spell: bool=false, context: Dictionary={}) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
@@ -926,6 +928,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	_refresh_equipment_effects()
 	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
+	adjusted_damage+=_source_elemental_flat_damage(target,by_spell)
 	if target.is_undead() and (not by_spell or settings.get("source_undead_scope","")=="all_successful_hits"):
 		var maximum: int=maxi(0,int(_equipment_inven_sum("source_undead_damage_max")))
 		if maximum>0:
@@ -1007,6 +1010,7 @@ func _effective_max_mp() -> int:
 	return maxi(1, int(round(float(flat) * (1.0 + _equipped_numeric_sum("mpPct")))))
 
 func _index_item_weights() -> void:
+	patch523_craft_item_cache={}
 	item_weight_index.clear()
 	var type_defaults: Dictionary = {}
 	var overrides: Dictionary = {}
@@ -1997,7 +2001,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical,"melee",true)
+	_deal_successful_player_hit(target, damage, critical,"melee",true,true)
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -2267,7 +2271,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical,"melee",true)
+	_deal_successful_player_hit(target, damage, critical,"melee",true,true)
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -2330,7 +2334,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "magic")
-	_deal_successful_player_hit(target, damage, critical,"magic",true)
+	_deal_successful_player_hit(target, damage, critical,"magic",true,true)
 	hud.append_log("%s 적중%s · %s에게 %d 마법 피해 · 명중 %.1f%% · 치명타 %.1f%%" % [
 		skill_name, " CRITICAL" if critical else "", target.monster_name, damage,
 		hit_chance * 100.0, critical_chance * 100.0
@@ -2437,7 +2441,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
-	_deal_successful_player_hit(target, damage, critical,attack_kind,false)
+	_deal_successful_player_hit(target, damage, critical,attack_kind,true,false)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
@@ -4278,6 +4282,7 @@ func _craft_item_index() -> Dictionary:
 	return loot_catalog.get("by_name", {}) as Dictionary
 
 func _patch523_craft_item_index() -> Dictionary:
+	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
 	var result: Dictionary = _craft_item_index().duplicate()
 	# The current non-equipment inventory is name-keyed. Bind only its unique
 	# catalog identity to the compiler-verified ItemClass ID; never merge aliases.
@@ -4293,6 +4298,13 @@ func _patch523_craft_item_index() -> Dictionary:
 			result["아데나"]=patch523_equipment.record("26")
 			continue
 		if binding.get("source_m_native_item",false):
+			for state: String in patch523_equipment.data.items[source_id].get("stack_variants",{}):
+				var variant: Dictionary=patch523_equipment.record(source_id,int(state))
+				var current_variant: Dictionary=_catalog_item_from_source_id(str(variant.get("sourceId","")))
+				if int(catalog_item_variant_count.get(str(variant.get("name","")),0))==1 and patch523_equipment.catalog_identity_matches(current_variant,source_id,int(state)):
+					var weighted_variant: Dictionary=current_variant.duplicate(true)
+					weighted_variant["weight"]=maxi(0,int(item_weight_index.get(str(variant.name),3)))
+					result[str(variant.name)]=weighted_variant
 			var native_entry: Dictionary=_catalog_item_from_source_id(str(binding.sourceId))
 			if int(catalog_item_variant_count.get(str(binding.name),0))==1 and patch523_equipment.catalog_identity_matches(native_entry,source_id):
 				var weighted: Dictionary=native_entry.duplicate(true)
@@ -4305,6 +4317,7 @@ func _patch523_craft_item_index() -> Dictionary:
 		var bound: Dictionary = entry.duplicate(true)
 		bound["weight"] = maxi(0, int(item_weight_index.get(item_name, 3)))
 		result[item_name] = bound
+	patch523_craft_item_cache=result
 	return result
 
 func _load_patch523_equipment() -> void:
@@ -4342,6 +4355,7 @@ func _install_patch523_equipment(path: String, expected: String) -> bool:
 	if not patch523_equipment.load_file(path, expected):
 		return false
 	patch523_material_choices.clear()
+	patch523_craft_item_cache={}
 	# Keep existing recipes, IDs and economy unchanged.
 	for key: Variant in crafting.recipes.keys():
 		if str(key).begins_with("patch523:"):
@@ -6072,7 +6086,7 @@ func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack
 			"damage":
 				if target == null or not is_instance_valid(target) or target.dead:
 					continue
-				_deal_successful_player_hit(target, maxi(1, int(skill.get("power", 1))), false,attack_kind,true)
+				_deal_successful_player_hit(target, maxi(1, int(skill.get("power", 1))), false,attack_kind,true,true)
 			"heal":
 				if hp >= _effective_max_hp():
 					continue
@@ -6221,6 +6235,19 @@ func _normal_attack_element() -> String:
 		return ELEMENT_RULES.channel(enchanted)
 	return ELEMENT_RULES.channel(str(_equipped_weapon_record().get("element", "physical")))
 
+func _source_elemental_flat_damage(target: TwilightMonster, by_spell: bool=false) -> int:
+	if target==null:return 0
+	var settings: Dictionary=PATCH523_ENHANCE.policy()
+	if by_spell and settings.get("source_elemental_scope","")!="all_successful_hits":return 0
+	var result: int=0
+	for channel: String in ["fire","water","wind","earth"]:
+		var amount: float=maxf(0.0,_equipment_inven_sum("source_elemental_flat_"+channel))
+		if amount<=0:continue
+		var resistance: float=clampf(target.elemental_resistance_percent(channel),float(settings.get("source_elemental_resistance_min",-80)),float(settings.get("source_elemental_resistance_max",85)))
+		var adjusted: float=amount*(1.0-resistance/100.0)
+		result+=maxi(0,int(floor(adjusted)) if settings.get("source_elemental_rounding","")=="floor" else int(round(adjusted)))
+	return result
+
 func _elemental_damage_to_monster(raw_damage: int, element_name: String, target: TwilightMonster) -> int:
 	var channel: String = ELEMENT_RULES.channel(element_name)
 	if channel == "physical" or target == null:
@@ -6256,7 +6283,7 @@ func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_
 		return
 	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
-	_deal_successful_player_hit(target, damage,false,attack_kind,false)
+	_deal_successful_player_hit(target, damage,false,attack_kind,true,false)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
 
@@ -6282,7 +6309,7 @@ func _resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	else:
 		var target_name: String = target.monster_name
 		hud.append_log("%s · %s 언데드 즉사!" % [str(skill.get("name", "")), target_name])
-		_deal_successful_player_hit(target, target.hp, false,"magic",true)
+		_deal_successful_player_hit(target, target.hp, false,"magic",true,true)
 	_update_target_hud()
 
 func _clear_skill_charge() -> void:
@@ -6491,7 +6518,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if critical:
 				damage = _player_critical_damage(damage, style)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
-			_deal_successful_player_hit(victim, damage, critical,style,true)
+			_deal_successful_player_hit(victim, damage, critical,style,victim==target,true)
 			_try_trigger_passives("on_hit", victim,style,victim==target,true)
 			_try_extra_weapon_hit(victim, damage, style)
 			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):
