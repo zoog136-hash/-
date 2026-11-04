@@ -116,6 +116,8 @@ func refresh(report: Dictionary={},rebuild_rows: bool=false) -> void:
 	count_label.text="보유 %s개 · 선택 %s개" % [UI.number_text(int(entry.count)),UI.number_text(int(view.quantity.value))]
 	if not warehouse and not report.is_empty():
 		view.details.text="받을 금액  "+UI.number_text(int(report.get("payment",0)))+" 아데나" if bool(report.get("ok",false)) else str(report.get("reason","매입 불가"))
+		if bool(report.get("ok",false)) and str(report.get("price_basis","")) != "":
+			view.details.text += " · "+str(report.price_basis)
 
 	if not warehouse and view.world._item_locked(str(entry.name),id):
 		view.action.disabled=true

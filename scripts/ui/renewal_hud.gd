@@ -1026,6 +1026,20 @@ func open_item_sell() -> void:
 	transaction_view = screen
 	show_companion_bag()
 
+func open_inventory_automation_settings(mode: String) -> void:
+	_open_window("inventory_automation","원본 자동 대상·로컬 정비","원본/자체 매입값 · 기존 이동진 이용 전 한 번 정비")
+	var screen := preload("res://scripts/ui/inventory_automation_settings.gd").new()
+	workspace.mount(screen)
+	screen.configure(self,mode)
+	transaction_view = screen
+
+func open_equipment_category_settings(selector_id: int = 45011) -> void:
+	_open_window("equipment_category","TWILIGHT 자체 범주 장비 선택","현재 소지한 정확한 ID만 · 미리보기 후 확인")
+	var screen := preload("res://scripts/ui/equipment_category_settings.gd").new()
+	workspace.mount(screen)
+	screen.configure(self,selector_id)
+	transaction_view = screen
+
 func _companion(section: String,title: String) -> PanelContainer:
 	if not is_instance_valid(companion_window):
 		companion_window = RenewalWindowScript.new()
@@ -1107,6 +1121,11 @@ func open_macro_info() -> void:
 		col.add_child(UI.section(str(pair[1]),12))
 	var routes := HBoxContainer.new()
 	col.add_child(routes)
+	var maintenance_route := UI.button("자동 정비 · 대상/비용 확인",func() -> void:
+		if not workspace.was_scroll_dragged(scroll): open_inventory_automation_settings("deposit"))
+	maintenance_route.name = "AutoMaintenanceSettings"
+	col.add_child(maintenance_route)
+	workspace.register_scroll_drag(scroll,maintenance_route)
 	for target: Array in [["skills","스킬 · 자동 사용"],["inventory","인벤토리"]]:
 		var id: String = str(target[0])
 		var route := UI.button(str(target[1]),func() -> void:

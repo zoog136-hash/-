@@ -157,6 +157,8 @@ var crafting = EXPANDED_CRAFTING.new()
 const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
 var warehouse = LOCAL_WAREHOUSE.new()
+const INVENTORY_AUTOMATION = preload("res://scripts/warehouse/inventory_automation.gd")
+var inventory_automation = INVENTORY_AUTOMATION.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
 
@@ -416,6 +418,7 @@ func _ready() -> void:
 	ain_service.import_state({})
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
+	inventory_automation.configure(self)
 	_load_data()
 	source_dungeon_runs.configure(self,source_dungeons)
 	source_dungeon_runs.changed.connect(_refresh_source_dungeon_panel)
@@ -424,6 +427,7 @@ func _ready() -> void:
 	dungeon_play.configure(self,source_dungeons)
 	dungeon_play.install_items()
 	dungeon_play.changed.connect(_refresh_source_dungeon_panel)
+	inventory_automation.refresh_catalog()
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -508,6 +512,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_update_source_optimization()
+	inventory_automation.maintenance.tick()
 	# No auto-save, auto-hunt or keyboard commands until the new class is
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
@@ -2493,6 +2498,7 @@ func _run_auto_hunt() -> void:
 	if not charge_skill.is_empty():
 		player.clear_click_path()
 		return
+	if inventory_automation.maintenance.try_automatic(): return
 	if _run_auto_ground_pickup():
 		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
@@ -3431,6 +3437,9 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
+	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
+		hud.show_message("원본 사용 효과 미연결 · 보관/판매 가능 · 아이템 보존")
+		return
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 상태이상 해제 물약입니다")
 		return
@@ -4138,18 +4147,23 @@ func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> v
 	# Validate the current inventory, bound flags and exact instance ID at
 	# commit time. The UI never submits the price or enhancement bonus.
 	_sync_item_instances()
-	var records: Dictionary = loot_catalog.get("by_name", {})
-	var quote: Dictionary = LOCAL_BUYBACK.quote(item_name,quantity,instance_id,inventory,records,item_instances,equipped_items,gold)
+	var quote: Dictionary = inventory_automation.sale_quote(item_name,quantity,instance_id,inventory,item_instances,gold,false)
 	if not bool(quote.get("ok",false)):
 		hud.show_message(str(quote.get("reason","매입할 수 없습니다")))
 		return
-	var transaction: Dictionary = LOCAL_BUYBACK.apply(quote,inventory,item_instances,gold)
+	var staged_inventory: Dictionary = inventory.duplicate(true)
+	var staged_instances: Dictionary = item_instances.duplicate(true)
+	var transaction: Dictionary = LOCAL_BUYBACK.apply(quote,staged_inventory,staged_instances,gold)
 	if not bool(transaction.get("ok",false)):
 		hud.show_message(str(transaction.get("reason","거래에 실패했습니다")))
 		return
+	if _save_game(true,{"inventory":staged_inventory,"item_instances":staged_instances,"gold":int(transaction.wallet)}) != OK:
+		hud.show_message("판매 저장 실패 · 아이템·아데나 보존")
+		return
+	inventory = staged_inventory
+	item_instances = staged_instances
 	gold = int(transaction["wallet"])
 	_update_hud()
-	_request_deferred_save()
 	hud.refresh_inventory(inventory)
 	hud.append_log("아이템 매입 · %s ×%d (+%d 아데나)" % [item_name,quantity,int(transaction["payment"])])
 	hud.show_message("매입 완료 · %d 아데나" % int(transaction["payment"]))
@@ -4335,6 +4349,9 @@ func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
+	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
+		hud.show_message("원본 사용 효과 미연결 · 아이템 보존")
+		return
 	if bool(consumable_service.call("try_use", item_name)):
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -4384,6 +4401,7 @@ func _return_to_spawn() -> void:
 	hud.show_message("현재 지역 시작 지점으로 귀환했습니다")
 
 func _on_auto_toggled(enabled: bool) -> void:
+	inventory_automation.maintenance.mode_changed(enabled)
 	loot_pickup.cancel()
 	hud.set_auto(enabled)
 	if not enabled:
@@ -4516,6 +4534,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if dungeon_play.save_blocked or not dungeon_play.valid(collection_override.get("source_dungeon_play",dungeon_play.state)).is_empty():return ERR_INVALID_DATA
 	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if collection_override.has("inventory_automation") and not INVENTORY_AUTOMATION.valid(collection_override.inventory_automation): return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4530,7 +4549,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4571,6 +4590,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
+		"inventory_automation": inventory_automation.state.duplicate(true),
 		"crafting_log": crafting_log,
 		"monster_world": legacy_population.export_state(),
 		"original_monster_world": original_population.export_state(),
@@ -4694,6 +4714,10 @@ func _load_game(quiet: bool) -> void:
 	if not growth_error.is_empty():
 		equipment_collections.save_blocked = true
 		hud.show_message(growth_error)
+		return
+	if data.has("inventory_automation") and not INVENTORY_AUTOMATION.valid(data.inventory_automation):
+		equipment_collections.save_blocked = true
+		hud.show_message("자동 보관·판매 설정 손상 · 기존 저장 보존")
 		return
 	var collection_error: String = equipment_collections.check_load(data)
 	if not collection_error.is_empty():
@@ -4839,6 +4863,7 @@ func _load_game(quiet: bool) -> void:
 	source_save_blocked = false
 	_clear_combat_actions()
 	warehouse.restore(data.get("warehouse", {}))
+	inventory_automation.restore(data.get("inventory_automation", {}))
 	crafting_log.clear()
 	var old_log: Variant = data.get("crafting_log", [])
 	if old_log is Array:
@@ -5393,6 +5418,7 @@ func _use_quickslot_item(item_name: String) -> void:
 		hud.show_message("직접 사용할 수 없는 아이템입니다")
 
 func _quickslot_item_supported(item_name: String) -> bool:
+	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false): return false
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -7909,6 +7935,10 @@ func use_field_portal(portal_id: String) -> bool:
 	for portal: Dictionary in field_map.data["portal"]:
 		if str(portal["id"]) != portal_id:
 			continue
+		var maintenance_result: Dictionary = inventory_automation.maintenance.before_portal(portal_id)
+		if not maintenance_result.get("ok",false):
+			hud.show_message(str(maintenance_result.get("reason","정비를 확인해 주세요")))
+			return false
 		if portal.has("target_source"):
 			if level < int(portal.get("min_level",0)) or (int(portal.get("max_level",0)) > 0 and level > int(portal.max_level)): return false
 			return SOURCE_TRAVEL.enter(self,str(portal.target_map),COORD.array_vector(portal.target_source))
@@ -7958,6 +7988,7 @@ func use_field_portal(portal_id: String) -> bool:
 			field_renderer.refresh_visible()
 		portal_cooldown = 2.0
 		hud.show_message(str(portal["name"]))
+		inventory_automation.maintenance.after_portal(maintenance_result)
 		return true
 	return false
 

@@ -1,5 +1,7 @@
 extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const AutoInventory = preload("res://scripts/ui/renewal_auto_inventory.gd")
+var auto_controls
 const TransferSheet=preload("res://scripts/ui/transfer_detail_sheet.gd")
 var transfer_sheet: RefCounted
 const BUYBACK = preload("res://scripts/shop/local_buyback.gd")
@@ -65,6 +67,9 @@ func configure(controller: Node) -> void:
 	add_child(details)
 	transfer_sheet=TransferSheet.new();transfer_sheet.bind(self,false)
 	_refresh()
+	auto_controls = AutoInventory.new()
+	add_child(auto_controls)
+	auto_controls.configure(self,"sell")
 
 func _refresh() -> void:
 	listing.clear()
@@ -72,7 +77,6 @@ func _refresh() -> void:
 	selected = -1
 	var inventory: Dictionary = world.get("inventory")
 	var instances: Dictionary = world.get("item_instances")
-	var source: Dictionary = (world.get("loot_catalog") as Dictionary).get("by_name",{})
 	var names: Array = inventory.keys()
 	names.sort()
 	var filter_kind: String = category.get_item_text(category.selected)
@@ -80,12 +84,13 @@ func _refresh() -> void:
 	for raw_name: Variant in names:
 		var name: String = str(raw_name)
 		var count: int = int(inventory[raw_name])
-		if count <= 0 or not source.has(name):
+		if count <= 0:
 			continue
 		if query != "" and not name.to_lower().contains(query):
 			continue
-		var record: Dictionary = source[name]
-		var equipment: bool = str(record.get("slot","")) not in ["","currency","consumable"]
+		var record: Dictionary = world._find_catalog_item_record(name)
+		if record.is_empty(): continue
+		var equipment: bool = str(world._enhancement_kind_for_record(record)) != ""
 		if filter_kind == "장비" and not equipment:
 			continue
 		if filter_kind == "소모품" and equipment:
@@ -107,13 +112,13 @@ func _refresh() -> void:
 	if not entries.is_empty():
 		listing.select(0)
 		_select(0)
+	if auto_controls != null: auto_controls.refresh()
 	transfer_sheet.refresh({},true)
 
 func _add_item(name: String, count: int, instance_id: String, suffix: String) -> void:
 	entries.append({"name":name,"count":count,"instance_id":instance_id})
-	var records: Dictionary = (world.get("loot_catalog") as Dictionary).get("by_name",{})
 	var images: Dictionary = hud.item_image_index.get("아이템",{})
-	listing.add_item(name + " · " + suffix,UI.item_icon(records[name],name,images))
+	listing.add_item(name + " · " + suffix,UI.item_icon(world._find_catalog_item_record(name),name,images))
 
 func _select(index: int) -> void:
 	if index < 0 or index >= entries.size():
@@ -123,19 +128,16 @@ func _select(index: int) -> void:
 	quantity.max_value = 1 if str(entry.get("instance_id","")) != "" else mini(99,int(entry["count"]))
 	quantity.value = 1
 	_quote()
+	if auto_controls != null: auto_controls.refresh()
 
 func _quote() -> void:
 	if selected < 0 or selected >= entries.size():
 		return
 	var entry: Dictionary = entries[selected]
-	var report: Dictionary = BUYBACK.quote(
-		str(entry["name"]),int(quantity.value),str(entry.get("instance_id","")),
-		world.get("inventory"),(world.get("loot_catalog") as Dictionary).get("by_name",{}),
-		world.get("item_instances"),world.get("equipped_items"),int(world.get("gold"))
-	)
+	var report: Dictionary = world.inventory_automation.sale_quote(str(entry.name),int(quantity.value),str(entry.get("instance_id","")),world.inventory,world.item_instances,int(world.gold),false)
 	details.text = "%s · %d개\n%s" % [
 		str(entry["name"]),int(quantity.value),
-		"매입 총액 %d 아데나" % int(report["payment"]) if bool(report.get("ok",false)) else str(report.get("reason","매입 불가"))
+		"매입 총액 %d 아데나 · %s" % [int(report["payment"]),str(report.get("price_basis","TWILIGHT 기존 매입가"))] if bool(report.get("ok",false)) else str(report.get("reason","매입 불가"))
 	]
 	action.disabled = not bool(report.get("ok",false))
 	transfer_sheet.refresh(report)
