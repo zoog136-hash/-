@@ -309,6 +309,7 @@ func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
 	if is_instance_valid(status_view): status_view.refresh(value)
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
+	if is_instance_valid(relic_reference_view) and relic_reference_view.active:relic_reference_view.refresh_state()
 
 func blocks_keyboard_input() -> bool:
 	if is_enhancement_presenting() or is_option_awakening_busy(): return true

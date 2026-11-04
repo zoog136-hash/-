@@ -45,6 +45,7 @@ var page_key: String=""
 var number_pattern: RegEx=RegEx.new()
 var card_frames: Control
 var hero: HBoxContainer
+var spell_level_panel: Control
 
 func configure(controller: Node) -> void:
 	hud=controller
@@ -177,6 +178,9 @@ func configure(controller: Node) -> void:
 	option_note=UI.label("",10,UI.MUTED)
 	option_note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	sheet_column.add_child(option_note)
+	spell_level_panel=preload("res://scripts/ui/relic_spell_level_panel.gd").new()
+	right.add_child(spell_level_panel)
+	spell_level_panel.configure(hud)
 	summon_row=HBoxContainer.new()
 	summon_row.name="RelicImmediateSummonRow"
 	right.add_child(summon_row)
@@ -429,6 +433,7 @@ func refresh_state(force_cards: bool=false) -> void:
 		_fill_options(record)
 	hud.catalog_equip_button.text="현재 소환 중" if hud.catalog_equip_button.disabled and not record.is_empty() else "즉시 소환"
 	status.text="현재 적용: "+str(hud.character_state.get("equipped",{}).get("성물",{}).get("name","없음"))
+	spell_level_panel.refresh()
 	preload("res://scripts/ui/source_card_presentation.gd").apply(hud)
 
 func _fill_options(record: Dictionary) -> void:

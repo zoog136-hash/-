@@ -6670,6 +6670,11 @@ func _restore_equipped_visuals() -> void:
 		_apply_relic_visual(relic_value as Dictionary)
 	_refresh_speed_modifiers()
 
+func source_relic_spell_level(source_grade_id: int, base_level: int) -> Dictionary:
+	# Source grades are explicit IDs. Do not reinterpret the current custom
+	# skill database's names/ranks as native spell identities or level curves.
+	return preload("res://scripts/cards/relic_spell_levels.gd").level_for(self, source_grade_id, base_level)
+
 func _all_equipped_records() -> Array[Dictionary]:
 	if not equipment_records_dirty:return equipment_records_cache
 	equipment_records_dirty=false
