@@ -122,7 +122,7 @@ func refresh() -> void:
 	for category: String in tab_buttons:
 		(tab_buttons[category] as Button).add_theme_stylebox_override("normal", UI.tab_frame(category == selected))
 	if selected == "daily":
-		summary.text += "  ·  매일 오전 5시(KST) 초기화"
+		summary.text += "  ·  매일 기기 로컬 시간 오전 %d시 초기화" % int(service.DAILY_RESET_HOUR)
 
 func _emit_claim(quest_id: String) -> void:
 	claim_requested.emit(quest_id)

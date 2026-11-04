@@ -9,6 +9,8 @@ const VERIFIED_SOURCE_CATALOG: String = "res://data/quests/verified_source_quest
 const CATEGORIES = ["main", "daily", "achievement"]
 const OBJECTIVES = ["kill", "collect", "level"]
 const MAX_REWARD_ITEM: int = 10000
+const DAILY_RESET_HOUR: int = 5
+const SECONDS_PER_DAY: int = 86400
 
 var quests: Array[Dictionary] = []
 var index: Dictionary = {}
@@ -17,10 +19,25 @@ var progress: Dictionary = {}
 var day_key: int = -1
 var problem: String = ""
 
-static func korean_daily_key(unix_time: int) -> int:
-	# 05:00 Korea time = 20:00 UTC of the preceding day.
-	# A fixed UTC offset is intentional for TWILIGHT's Korean playtest rules.
-	return floori(float(unix_time + 4 * 3600) / 86400.0)
+static func _legacy_korean_daily_key(unix_time: int) -> int:
+	# Schema 1 only. Never use the old server calendar for a live reset.
+	return floori(float(unix_time + 4 * 3600) / SECONDS_PER_DAY)
+
+static func local_daily_key(local_date: Dictionary) -> int:
+	# Encode civil calendar fields as a day ordinal, not an absolute deadline.
+	# Subtracting from this civil value handles midnight/month/year boundaries
+	# without assuming that a local day lasts 24 elapsed hours across DST.
+	var civil_seconds: int = Time.get_unix_time_from_datetime_dict(local_date)
+	return floori(float(civil_seconds - DAILY_RESET_HOUR * 3600) / SECONDS_PER_DAY)
+
+func _local_date(now: int = -1) -> Dictionary:
+	if now < 0:
+		# Ask the OS each time: timezone and daylight-saving changes are not cached.
+		return Time.get_datetime_dict_from_system(false)
+	# Explicit instants are used by focused checks, at the current device offset.
+	# Historical timezone conversion is intentionally not inferred from Unix time.
+	var bias: int = int(Time.get_time_zone_from_system().get("bias", 0))
+	return Time.get_datetime_dict_from_unix_time(now + bias * 60)
 
 func configure(items: Array, monsters: Array) -> bool:
 	quests.clear()
@@ -45,7 +62,7 @@ func configure(items: Array, monsters: Array) -> bool:
 	if FileAccess.file_exists(VERIFIED_SOURCE_CATALOG):
 		if not _append_catalog(VERIFIED_SOURCE_CATALOG, true, item_names, monster_names):
 			return false
-	_advance_day(int(Time.get_unix_time_from_system()))
+	_advance_day()
 	return not quests.is_empty()
 
 func _append_catalog(path: String, requires_proof: bool, item_names: Dictionary, monster_names: Dictionary) -> bool:
@@ -114,8 +131,8 @@ func _append_catalog(path: String, requires_proof: bool, item_names: Dictionary,
 		index[quest_id] = quest
 	return true
 
-func _advance_day(now: int) -> void:
-	var today: int = korean_daily_key(now)
+func _advance_day(now: int = -1) -> void:
+	var today: int = local_daily_key(_local_date(now))
 	if day_key < 0:
 		day_key = today
 	elif today > day_key:
@@ -126,7 +143,8 @@ func _advance_day(now: int) -> void:
 			if index.has(id) and str((index[id] as Dictionary).get("category", "")) == "daily":
 				progress.erase(id)
 		day_key = today
-	# Never grant a second daily reset by moving the device clock backwards.
+	# Keep the greatest observed local day, including across save/load. Moving
+	# the clock or timezone backwards cannot grant another reset for that day.
 
 func _progress_value(quest: Dictionary, level: int, inventory: Dictionary) -> int:
 	var objective: Dictionary = quest["objective"] as Dictionary
@@ -139,7 +157,7 @@ func _progress_value(quest: Dictionary, level: int, inventory: Dictionary) -> in
 	return int(progress.get(quest_id, 0))
 
 func entries(level: int, inventory: Dictionary, now: int = -1) -> Array[Dictionary]:
-	_advance_day(now if now >= 0 else int(Time.get_unix_time_from_system()))
+	_advance_day(now)
 	var result: Array[Dictionary] = []
 	for quest: Dictionary in quests:
 		var row: Dictionary = quest.duplicate(true)
@@ -150,7 +168,8 @@ func entries(level: int, inventory: Dictionary, now: int = -1) -> Array[Dictiona
 		result.append(row)
 	return result
 
-func record_kill(monster_name: String, is_boss: bool) -> void:
+func record_kill(monster_name: String, is_boss: bool, now: int = -1) -> void:
+	_advance_day(now)
 	for quest: Dictionary in quests:
 		var id: String = str(quest["id"])
 		if claimed.has(id):
@@ -163,9 +182,10 @@ func record_kill(monster_name: String, is_boss: bool) -> void:
 			continue
 		progress[id] = mini(int(objective.get("count", 1)), int(progress.get(id, 0)) + 1)
 
-func record_pickup(item_name: String, quantity: int) -> void:
+func record_pickup(item_name: String, quantity: int, now: int = -1) -> void:
 	if quantity <= 0:
 		return
+	_advance_day(now)
 	for quest: Dictionary in quests:
 		var id: String = str(quest["id"])
 		if claimed.has(id):
@@ -175,7 +195,7 @@ func record_pickup(item_name: String, quantity: int) -> void:
 			progress[id] = mini(int(objective.get("count", 1)), int(progress.get(id, 0)) + quantity)
 
 func complete_instantly(quest_id: String, level: int, now: int = -1) -> Dictionary:
-	_advance_day(now if now >= 0 else int(Time.get_unix_time_from_system()))
+	_advance_day(now)
 	var quest: Dictionary = index.get(quest_id, {})
 	if quest.is_empty():
 		return {"ok":false, "error":"퀘스트가 없습니다"}
@@ -188,18 +208,20 @@ func complete_instantly(quest_id: String, level: int, now: int = -1) -> Dictiona
 	claimed[quest_id] = true
 	return {"ok":true, "title":str(quest["title"]), "rewards":(quest["rewards"] as Dictionary).duplicate(true)}
 
-func export_state() -> Dictionary:
-	_advance_day(int(Time.get_unix_time_from_system()))
-	return {"schema_version":1, "claimed":claimed.duplicate(true), "progress":progress.duplicate(true), "day_key":day_key}
+func export_state(now: int = -1) -> Dictionary:
+	_advance_day(now)
+	return {"schema_version":2, "time_basis":"device_local", "reset_hour":DAILY_RESET_HOUR,
+		"claimed":claimed.duplicate(true), "progress":progress.duplicate(true), "day_key":day_key}
 
 func import_state(saved: Variant, now: int = -1) -> void:
 	claimed.clear()
 	progress.clear()
 	var at: int = now if now >= 0 else int(Time.get_unix_time_from_system())
-	day_key = korean_daily_key(at)
+	day_key = local_daily_key(_local_date(now))
 	if saved is Dictionary:
 		var data: Dictionary = saved as Dictionary
-		if int(data.get("schema_version", 1)) == 1:
+		var version: int = int(data.get("schema_version", 1))
+		if version in [1, 2]:
 			var saved_claimed: Variant = data.get("claimed", {})
 			var saved_progress: Variant = data.get("progress", {})
 			if saved_claimed is Dictionary:
@@ -211,5 +233,15 @@ func import_state(saved: Variant, now: int = -1) -> void:
 					if index.has(id):
 						var required: int = int(((index[id] as Dictionary).get("objective", {}) as Dictionary).get("count", 1))
 						progress[id] = clampi(int(saved_progress[id]), 0, required)
-			day_key = clampi(int(data.get("day_key", day_key)), 0, korean_daily_key(at))
-	_advance_day(at)
+			if version == 2:
+				# Do not clamp a saved future day to today: that would let a
+				# rollback followed by reload pay again when the clock catches up.
+				day_key = maxi(0, int(data.get("day_key", day_key)))
+			else:
+				# A KST day has no exact local equivalent without a saved timezone
+				# or claim instant. Preserve all records on this first local day;
+				# the next local 05:00 starts normal resets. Preserve any legacy
+				# future-day guard as a relative number of days, too.
+				var legacy_day: int = int(data.get("day_key", _legacy_korean_daily_key(at)))
+				day_key += maxi(0, legacy_day - _legacy_korean_daily_key(at))
+	_advance_day(now)

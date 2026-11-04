@@ -94,7 +94,7 @@ func start_dragon_orb() -> bool:
 	return true
 
 static func month_key() -> String:
-	var date: Dictionary = Time.get_datetime_dict_from_system()
+	var date: Dictionary = Time.get_datetime_dict_from_system(false)
 	return "%04d-%02d" % [int(date.get("year", 2026)), int(date.get("month", 1))]
 
 func may_purchase_orb() -> bool:
