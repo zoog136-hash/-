@@ -97,7 +97,9 @@ func apply(skill: Dictionary, target: TwilightMonster, world: Node) -> bool:
 	var resistance: float = 0.0
 	if kind in ["stun","hold","fear","silence","poison","bleed"]:
 		resistance = float(target.get(kind + "_resistance"))
+	resistance+=modifier(target,"status_resistance_"+str(6 if kind=="stun" else 8 if kind=="fear" else -1))
 	var chance := float(skill.get("status_chance", .6)) * (1.0 - clampf(resistance / 100.0, 0, 1))
+	chance=clampf(chance+world.growth.guardian_combat.status_hit(kind)/100,0,1)
 	if target.is_boss: chance *= float(rules.get("boss_chance_factor", .35))
 	if world.rng.randf() >= chance: return false
 	var duration := float(skill.get("duration", 3))

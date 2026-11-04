@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "base_sha": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "branch": "feature/auto-storage-sale-20261104",
+  "prior_head": "34870dff1a5b24cf6a531280f8285a5c42cd9dd3",
+  "engine": "Godot 4.7.2 official ed1daf0bf",
+  "scope": "Actual Main/current source-map; isolated user data; X11/Mesa llvmpipe/Dummy audio. Native M schedule/arrival coordinates not implemented.",
+  "source_library_file_id": "libfile_f3e9e5b322cc8191ae441565bbd24c27",
+  "source_bytes": 25031173,
+  "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "private_rule_pack": {
+    "payload_bytes": 49818,
+    "payload_sha256": "a6f06d657bc34a86d91ccbcaf9f2c836312df6e57d15d38e890aa74061b12bc5",
+    "zip_bytes": 8872,
+    "zip_sha256": "df1836767b85abd2e5f67ac023f005c80dc6df9cf8fa5022518887354eb9126d",
+    "counts": {
+      "storage_rows": 84,
+      "sell_rows": 25,
+      "items": 80,
+      "inven_storage_rows": 43,
+      "inven_sell_rows": 9,
+      "confirmed_prices": 11,
+      "virtual_selectors": 4,
+      "test_items": 5
+    }
+  },
+  "checks": [
+    {
+      "name": "core_runtime_save_test",
+      "result": "passed"
+    },
+    {
+      "name": "save_identical_payload_test",
+      "result": "passed"
+    },
+    {
+      "name": "deferred_save_gate_test",
+      "result": "passed"
+    },
+    {
+      "name": "inventory_automation_test",
+      "result": "passed"
+    },
+    {
+      "name": "warehouse_persistence_test",
+      "result": "passed"
+    },
+    {
+      "name": "shop_buyback_test",
+      "result": "passed"
+    },
+    {
+      "name": "shop_authority_test",
+      "result": "passed"
+    },
+    {
+      "name": "general_save_reservation_test",
+      "result": "passed"
+    },
+    {
+      "name": "drive-rules-final.log",
+      "checks": 650,
+      "result": "passed"
+    },
+    {
+      "name": "maintenance-final.log",
+      "checks": 32,
+      "result": "passed"
+    },
+    {
+      "name": "drive-main-ui.log",
+      "checks": 39,
+      "result": "passed"
+    },
+    {
+      "name": "automation-final.log",
+      "checks": 37,
+      "result": "passed"
+    },
+    {
+      "name": "legacy-ui-complete.log",
+      "checks": 24,
+      "result": "passed"
+    },
+    {
+      "name": "compiler.log",
+      "checks": 8,
+      "result": "passed"
+    },
+    {
+      "name": "staging-python.log",
+      "checks": 7,
+      "result": "passed"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "native/maintenance-result-1280x720.png",
+      "bytes": 1268299,
+      "sha256": "b1499c2fb7df4c01a18b1fd693d9ab4d8bc8e0294c2b72c3a8895f0612a71907"
+    },
+    {
+      "name": "native/maintenance-small-854x480.png",
+      "bytes": 238691,
+      "sha256": "4cd6b008f5c09e674c5431ef8732ae6a1fb4e4ba0029ddf5679ce892e1bcd0ce"
+    },
+    {
+      "name": "native/native-prices-1280x720.png",
+      "bytes": 877454,
+      "sha256": "190b6bdab7e1b70ff64641cf7a5924729d325692f8800b2cb8f6e554b09b09c3"
+    },
+    {
+      "name": "native/native-sale-cart-1280x720.png",
+      "bytes": 764074,
+      "sha256": "0a95e23cea5b5741f46615940c56269c729b633e35a9847dd7ec9fcc4cad6ebc"
+    },
+    {
+      "name": "legacy/sale-cart-1280x720.png",
+      "bytes": 759902,
+      "sha256": "ac760b3cef026d0b32e61caa14c75edd581f0a03fa0987b8342ac56c814a23be"
+    },
+    {
+      "name": "legacy/sale-small-854x480.png",
+      "bytes": 460339,
+      "sha256": "ab1beeff1425d98186caecd97d81651827bfc696767bfc7b968c8aa129919341"
+    },
+    {
+      "name": "legacy/warehouse-cart-1280x720.png",
+      "bytes": 743100,
+      "sha256": "18469730a989f876f0cbf599ccdf975a5a557254f860ea5a134f00d5a2db7e16"
+    },
+    {
+      "name": "legacy/warehouse-result-1280x720.png",
+      "bytes": 1288607,
+      "sha256": "4f6133a1441b23ac400fd020b05de66f5eb99643eac480248561ed02291057f8"
+    }
+  ],
+  "code_sha256": {
+    "data/automation/inventory523_prices.json": "79c4796df7cdbf33f57da302639af1621311c1e66971ad96bfd05226cca0fc9f",
+    "scripts/ui/inventory_automation_settings.gd": "ec3f8db8a50c77c40671c0269144e7205dd1fdbed040dc7e1b34a8f110250071",
+    "scripts/ui/inventory_settings_touch.gd": "2a0dc96b43571922bab515f9a5133c20dce534f32fc2cf4e53cafddd29bd76c6",
+    "scripts/ui/renewal_auto_inventory.gd": "637665646d4f930ccda1c52ce5716bd70e8e52a5a3cae3629fa4694779d74d18",
+    "scripts/ui/renewal_hud.gd": "45ffbff0009b4cc2c02433ab08c70b0a56a4013d66416198bec117414a2075c4",
+    "scripts/ui/renewal_sell.gd": "e7ee035c0fbdb1ce1d6f063e3a626eeec76237b2e16960fd4d098645d27b33d8",
+    "scripts/ui/transfer_detail_sheet.gd": "80adc71a96420384119c855c02f53a885a335e4e6c1cb18b9b92cf22253ddbd1",
+    "scripts/warehouse/inventory_automation.gd": "cdefbe62c3b3cc8897c5b5748e6d0f890e2054b546d2f61790c041eaa8acdbc7",
+    "scripts/warehouse/inventory_maintenance.gd": "a171747f8fcaccb0f275e504ae0953d61448532a3095d23dea193202f30c0dbb",
+    "scripts/warehouse/inventory_source523.gd": "19666e3a2c94775cb1a84fbee34eaad25eac422a24d7c27419907460d6e87000",
+    "scripts/world.gd": "3fc1148231495a451c4fcf53b3f230f47519530fcbb628aa7b8c6ade64078955",
+    "tests/inventory523_ui_test.gd": "5ea122629ae9b2d66428a6a510b52807f701adc66edf19dc307db164bcff893a",
+    "tests/inventory_maintenance_test.gd": "22d95bf53ba83c4b834d365084efc18e257675c36c9ecd2288a69001e67f99fd",
+    "tests/inventory_source523_test.gd": "6a41a83f98f063bd5108b1324db8f63f76e6b4cc6f058c15e0b96a1b8d5aea5f",
+    "tests/test_inventory_automation523.py": "42b570a2d6cf74e9cf920ab8eff95bd7bf82c9cc8d3da5eb0fe66c1f4ea97ee9",
+    "tools/build_inventory_automation523.py": "fcf42ccff0b67063e3639939556108679f141bc5e1b3c72d6da66559678fc54c"
+  },
+  "actual_local_portal": {
+    "id": "riverbank_return",
+    "test_start": [
+      41256,
+      -2184
+    ],
+    "portal": [
+      41256,
+      -2424
+    ],
+    "geometry": "existing authoritative source map; not newly authored or native M geometry",
+    "flow": "actual player physics -> existing deferred portal trigger -> atomic store243/sell5/retain2/+200 -> authoritative destination -> reload consumed token"
+  },
+  "stage_extra_portrait": {
+    "path": "assets/monsters/reviewed_source/l1j_tw380_npc_45041/portrait.png",
+    "bytes": 1818,
+    "sha256": "7823d0ad31becb1989d765cf3472023613bf2175d1f58b2a75142ec0a3e1bcb4"
+  },
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "result": "passed"
+  },
+  "limitations": [
+    "Cold import not claimed; existing derived cache used. Stage-only Android texture import disabled, worker cap4.",
+    "Native M landing/scheduler, virtual equipment group semantics and source full item grants remain separate; no other PR merged.",
+    "Original a1.zip missing for old resource source-dir audit; latest523 SHA/CRC verified separately.",
+    "Remote required CI skipped per user [skip ci]; no manual CI or merge.",
+    "Android/Windows devices, real audio and original full art equivalence unverified."
+  ],
+  "delivery": {
+    "schema_version": 1,
+    "component": "PR251 automatic inventory 523 rules; not a complete game/art pack",
+    "runtime_pack": {
+      "name": "TWILIGHT_inventory_rules523.zip",
+      "version": "twilight-inventory523-v1",
+      "bytes": 8872,
+      "sha256": "df1836767b85abd2e5f67ac023f005c80dc6df9cf8fa5022518887354eb9126d",
+      "payload_name": "inventory_rules523.json",
+      "payload_bytes": 49818,
+      "payload_sha256": "a6f06d657bc34a86d91ccbcaf9f2c836312df6e57d15d38e890aa74061b12bc5",
+      "drive_id": "1m_z0WWsRWTCYYI9L8sN4ePCw-yL8Drnz",
+      "drive_url": "https://drive.google.com/file/d/1m_z0WWsRWTCYYI9L8sN4ePCw-yL8Drnz/view?usp=drivesdk",
+      "drive_folder_id": "1MFX0Y8JBse38ZFmIMDB6u2sQO4NS4vca",
+      "drive_folder_url": "https://drive.google.com/drive/folders/1MFX0Y8JBse38ZFmIMDB6u2sQO4NS4vca",
+      "drive_shared": false,
+      "drive_owner_only_permissions_verified": true,
+      "fresh_consumer_download": "/workspace/inventory523-drive-consumer/TWILIGHT_inventory_rules523.zip",
+      "download_sha256_crc": "passed",
+      "godot_fresh_consumer_install_load": "passed,650 checks including manual/legacy virtual/TestItem protection",
+      "actual_main_drive_input_ui": "passed,39 checks; official Godot4.7.2 actual Main/OpenGL from fresh Drive download",
+      "install": "Menu > Warehouse/Sell > Original/Maintenance > Install523 rules ZIP; user explicitly picks this ZIP",
+      "runtime_destination": "user://inventory523/inventory_rules523.json",
+      "validation_override": "TWILIGHT_AUTO_INVENTORY523_FILE=/absolute/private/inventory_rules523.json",
+      "automatic_drive_application": false,
+      "separate_source_map_input": "TWILIGHT_SOURCE_MAP_PACK=/tmp/auto-current-map; this rules ZIP does not replace the map pack",
+      "fresh_consumer_installed_absolute_path": "/tmp/drive-rules-final-isolated/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/inventory523/inventory_rules523.json",
+      "actual_main_installed_absolute_path": "/tmp/inventory523-drive-main/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/inventory523/inventory_rules523.json"
+    },
+    "original_backup": {
+      "name": "lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+      "version": "user-supplied latest523; Library version0",
+      "bytes": 25031173,
+      "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+      "source_library_file_id": "libfile_f3e9e5b322cc8191ae441565bbd24c27",
+      "source_library_file_version": 0,
+      "drive_id": "1qCfbkTcVpehO-3oVU2mjo7atK2ErUQ0U",
+      "drive_url": "https://drive.google.com/file/d/1qCfbkTcVpehO-3oVU2mjo7atK2ErUQ0U/view?usp=drivesdk",
+      "drive_folder_id": "1BlB4_BIrvXJBMwngLbq0ZdFkeETYcC2V",
+      "drive_folder_url": "https://drive.google.com/drive/folders/1BlB4_BIrvXJBMwngLbq0ZdFkeETYcC2V",
+      "drive_shared": false,
+      "drive_owner_only_permissions_verified": true,
+      "fresh_download": "/workspace/inventory523-drive-consumer/lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+      "drive_readback_sha256_crc": "passed; new Drive object verified once",
+      "runtime_installer_input": false,
+      "original_bytes_modified": false
+    },
+    "followup_screenshots_and_audit_logs": {
+      "status": "LOCAL_ONLY",
+      "archive": "/workspace/auto-inventory523-followup-validation-20261104.zip",
+      "external_upload": "not performed under latest instruction",
+      "source_data_or_player_saves_in_archive": false
+    },
+    "github": {
+      "draft_pr": "https://github.com/zoog136-hash/-/pull/251",
+      "branch": "feature/auto-storage-sale-20261104",
+      "main_or_other_pr_merge": false,
+      "manual_remote_ci": false
+    },
+    "access_errors": "No401 or denied transfer in this component's latest source/runtime handover. No authentication changes or denial workarounds."
+  },
+  "evidence_storage": "LOCAL_ONLY; no new external screenshots/audit upload",
+  "diagnostics": "Earlier failures preserved separately: source-sell UI catalog lookup and price provenance overwriting fixed; fixture count-zero expectation and missing exact stage portrait fixed. No diagnostic log is used as a passing run."
+}

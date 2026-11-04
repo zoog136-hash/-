@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "base_sha": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "branch": "feature/auto-storage-sale-20261104",
+  "engine": "Godot 4.7.2 official ed1daf0bf",
+  "runtime_scope": "actual Main/current source-map, isolated XDG user data; not visual equivalence",
+  "source_library_file_id": "libfile_f3e9e5b322cc8191ae441565bbd24c27",
+  "source_audit": {
+    "source_bytes": 25031173,
+    "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "crc": "all_members_ok",
+    "tables": {
+      "StorageAutoStore": {
+        "rows": 84,
+        "unique_item_classes": 76,
+        "sha256": "8c6c4a1276a782b4f4692fe48fa34c25db5b5d659992b20e2d1804c2151f27ce",
+        "bytes": 9573,
+        "missing_item_classes": 0,
+        "not_player_tradable_rows": 60,
+        "bless_counts": {
+          "1": 76,
+          "2": 4,
+          "3": 4
+        }
+      },
+      "MerchantAutoSell": {
+        "rows": 25,
+        "unique_item_classes": 25,
+        "sha256": "9efc9455b8e8cf12dbd88c93902d054520e3da1a6e6a819fd94183c07fe4c76a",
+        "bytes": 1532,
+        "missing_item_classes": 0,
+        "not_player_tradable_rows": 23
+      }
+    },
+    "help_sequence": "explicit_selection_then_cart_then_confirm_all",
+    "native_price_in_auto_sell_table": false
+  },
+  "checks": [
+    {
+      "name": "core_runtime_save_test",
+      "result": "passed"
+    },
+    {
+      "name": "save_identical_payload_test",
+      "result": "passed"
+    },
+    {
+      "name": "deferred_save_gate_test",
+      "result": "passed"
+    },
+    {
+      "name": "inventory_automation_test",
+      "result": "passed"
+    },
+    {
+      "name": "warehouse_persistence_test",
+      "result": "passed",
+      "scope": "existing tests/fixtures/npc_service_field.json from main, unchanged assertions"
+    },
+    {
+      "name": "shop_buyback_test",
+      "result": "passed",
+      "scope": "existing tests/fixtures/npc_service_field.json from main, unchanged assertions"
+    },
+    {
+      "name": "shop_authority_test",
+      "result": "passed"
+    },
+    {
+      "name": "general_save_reservation_test",
+      "result": "passed"
+    }
+  ],
+  "counts": {
+    "current_main_save": 32,
+    "automation_transactions": 37,
+    "actual_opengl_ui": 24,
+    "python_core_staging": 7
+  },
+  "ui_environment": "X11/Mesa llvmpipe OpenGL compatibility; Dummy audio",
+  "screenshots": [
+    {
+      "name": "sale-cart-1280x720.png",
+      "bytes": 754665,
+      "sha256": "572cd8d05900256f5474a72ccfd0474df1773d6c0fef27d5e76470a794e93145"
+    },
+    {
+      "name": "sale-small-854x480.png",
+      "bytes": 457654,
+      "sha256": "efc021d5d71164ac6e919855d44240d356d40871e5af16e62af06527312b4e43"
+    },
+    {
+      "name": "warehouse-cart-1280x720.png",
+      "bytes": 743378,
+      "sha256": "743fb274dc288d56fd32739a759de53e17005ea23228aa1455bd264908753d45"
+    },
+    {
+      "name": "warehouse-result-1280x720.png",
+      "bytes": 1288802,
+      "sha256": "adf14c95857bdcb41e575bd3681d4202c5c6a3f5cb61e30a65c56dee9ff87f72"
+    }
+  ],
+  "code_sha256": {
+    "scripts/world.gd": "fc55df5d7acfee2365173565aa663d529ba6578dc3c2348dabcf982c849c5641",
+    "scripts/ui/renewal_warehouse.gd": "08c2a62c2945f5661e96648f9ae656378f8717499228ff75daca24ac7806323c",
+    "scripts/ui/renewal_sell.gd": "0b8baf6a1facbb8f131b17c1f5f0d0d2e2dda79a14d3cfe3263f68ca7026233f",
+    "scripts/warehouse/inventory_automation.gd": "b08deb104f1ac579b892b9363e65d84712493ca54deabe7325d1c049b6aa6ff8",
+    "scripts/ui/renewal_auto_inventory.gd": "d482e18046b7cb7e29e4ca875960f30317c63116874fc6c60280656ca76c4f63",
+    "scripts/ui/auto_inventory_confirmation.gd": "7e912257a5674f60ac2fab6642873a67d2196c918436d713cabe8477f4be40d3",
+    "tests/inventory_automation_test.gd": "c5ed2f4f3ca5f1d37bcca9456439678f861f4427b13d4d54ecb0af55927396af",
+    "tests/auto_inventory_ui_test.gd": "ddba4a4682ddb82825f9ca7f23e67b7e4f7ade37a6206a8d9b2cf0c181699ec8",
+    "tools/audit_inventory_automation_source523.py": "e2a6b3efacc0a5ed0189420e173f7d80530aa8346de37c13891fd954fece2af1"
+  },
+  "stage_additions": {
+    "portrait": {
+      "path": "assets/monsters/reviewed_source/l1j_tw380_npc_45027/portrait.png",
+      "bytes": 1027,
+      "sha256": "bd3e2b71fd8b98f228a0b9424377210ff6f8abf31b30c4f28cf7bc5feae275d8"
+    },
+    "legacy_fixture": {
+      "source": "tests/fixtures/npc_service_field.json",
+      "destination": "tests/fixtures/npc_service_field.json",
+      "bytes": 3174,
+      "sha256": "80aca3b0dfb282ed37c7eff4b6f164156aeba8a66de1d6523129eb186594127c",
+      "scope": "existing warehouse/shop NPC fixture assertions, not source-map fidelity"
+    }
+  },
+  "validation_overrides": [
+    {
+      "key": "rendering/textures/vram_compression/import_etc2_astc",
+      "value": false
+    },
+    {
+      "key": "editor/import/use_multiple_threads",
+      "value": true
+    },
+    {
+      "key": "threading/worker_pool/max_threads",
+      "value": 4
+    }
+  ],
+  "import_cache": "existing derived cache seeded; source hashes checked by importer, no cold-import claim",
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "result": "passed"
+  },
+  "initial_issues_corrected": [
+    "late-attached modal touch script needed explicit global release input processing",
+    "UI stage omitted one actual main monster portrait and the existing npc_service_field.json fixture; restored exact Git bytes",
+    "saved retention display restored on selection/window reopening"
+  ],
+  "incomplete": [
+    "native M ItemClassID/bless mapping of all84 storage/25 sell candidates to current Inven/L1J inventory",
+    "native NPC final buyback prices",
+    "native schedule/return/movement maintenance integration",
+    "Windows/Android physical devices and actual audio",
+    "full original-art fidelity/delivery; old a1.zip unavailable"
+  ],
+  "remote_ci": "required remote gates not run: user requested [skip ci]; no manual run/rerun/cancel, workflow or protection changes",
+  "artifact_delivery": {
+    "path": "/workspace/auto-inventory-validation-20261104.zip",
+    "bytes": 3348596,
+    "sha256": "24b0ea122179d7dea241285b410e54a6b852dbd90b4256965dcbe1cc0bc01ad4",
+    "status": "delivered_to_private_library",
+    "library_file_id": "libfile_2ace049706348191868c546d06b31db7",
+    "file_id": "file_00000000904481fd81a3edaaa6a0055e",
+    "library_path": "/auto-inventory-validation-20261104.zip",
+    "library_version": 0,
+    "local_library_identity": "xattrs applied successfully",
+    "download_url": "https://chatgpt.com/api/library/files/libfile_2ace049706348191868c546d06b31db7/download"
+  }
+}

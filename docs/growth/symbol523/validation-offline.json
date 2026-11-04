@@ -1,0 +1,211 @@
+{
+  "date": "2026-11-04",
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "previous_feature_commit": "894078d1161216a91c72a95604833c4078be786b",
+  "branch": "feature/twilight-symbol-523-20261104",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "scope": "All35 absolute groups and485 normal rows wired with9/15 explicitly estimated; native veil; real source84 remembered cross-map travel. Not original-server equivalence.",
+  "classification": {
+    "absolute_groups": 35,
+    "source_or_existing_consumers": 26,
+    "estimated_groups": [
+      "paagrio:5",
+      "grankain:2",
+      "grankain:3",
+      "grankain:4",
+      "grankain:5",
+      "einhasad:2",
+      "shilen:1",
+      "shilen:2",
+      "shilen:4"
+    ],
+    "normal_rows": 485,
+    "source_or_existing_normal": 470,
+    "estimated_normal": 15
+  },
+  "tests": {
+    "offline_actual_main_headless": 104,
+    "offline_native_touch_X11": 97,
+    "crossmap_native_touch_X11": 29,
+    "same_map_regression_headless": 43,
+    "source_units_and_transactions": 753,
+    "absolute_combat_regression": 75,
+    "combat_HUD_regression": 1200,
+    "actual_main_current_map_save": 32,
+    "python_core_staging": 7,
+    "failures": [],
+    "resource_integrity": {
+      "atlases": 723,
+      "frames": 41442,
+      "bytes": 233420026
+    }
+  },
+  "crossmap_test_scope": [
+    "actual wizard class selection; old NPC entry to Oman first; real visited pixel coordinates",
+    "source/pretravel backup SHA; separate target candidate and active-file pointer",
+    "Oman level25/gold1500; candidate-write failure; repeated active-pointer failure recovery",
+    "real scroll and original common teleport native confirmation; exact costs and real reload"
+  ],
+  "limitations": [
+    "Background simulation paused in UI; fixture ownership is explicit, not full natural progression",
+    "Cross-map actual runtime/render checks cover Aden/Oman1 only; remaining source84 fields not exercised",
+    "Linux llvmpipe OpenGL; VSync unsupported warning retained; Dummy audio; no Windows/Android acceptance",
+    "Original-server formulas for9groups/15normal rows remain unverified; configurable local model not native reproduction",
+    "No new original art uploaded; screenshots are LOCAL_ONLY; data-only pack and original backup have separate storage receipt",
+    "No manual remote CI; no main/other PR merge"
+  ],
+  "inputs": {
+    "data/growth/symbol_source523.json": {
+      "bytes": 687606,
+      "sha256": "20fe48a898f4939112cc2774d17212066e33f4caef208e6680edb3b7ffc9383b"
+    },
+    "data/growth/symbol_combat_policy.json": {
+      "bytes": 1113,
+      "sha256": "ad5d1f6111c6d98ea1c27d456565a38116363dac3715dc7f9be553eccd166a18"
+    },
+    "data/growth/symbol_travel_policy.json": {
+      "bytes": 740,
+      "sha256": "27c868add32e8f23ee1ed9528259f73b295a1605b0803d2e4bb7c2acd38c0adb"
+    },
+    "scripts/growth/symbol_combat.gd": {
+      "bytes": 2243,
+      "sha256": "b0b9f354142d91326e63ecab6adb5955734836bc2bd3d492b40a50f56403ad53"
+    },
+    "scripts/growth/symbol_source523.gd": {
+      "bytes": 11237,
+      "sha256": "c788bbac33a47571c412e95f63923904f8d0fb1fb7fa3a9ade04bd495b55e4ce"
+    },
+    "scripts/growth/symbol_travel.gd": {
+      "bytes": 17324,
+      "sha256": "755c64884fa3b3203b921adc0cc59c462561713b85b283bb08fffb36de3f9614"
+    },
+    "scripts/growth/symbol_travel_view.gd": {
+      "bytes": 2913,
+      "sha256": "d8735379aba475698fbf75b300611794551d80ba11aa4f50bade41b27147becb"
+    },
+    "scripts/growth/growth_runtime.gd": {
+      "bytes": 25394,
+      "sha256": "884f771dc587cca23bb15fdcbc63c78c3d2eac60d2693d63693eb119eb227a86"
+    },
+    "scripts/growth/growth_view.gd": {
+      "bytes": 24986,
+      "sha256": "ec2f30e5c3ca97670b2f524cb7b877f65e328c8fa3732866752649956cdb26c7"
+    },
+    "scripts/world.gd": {
+      "bytes": 380250,
+      "sha256": "4f0f798e1f7d857b61eaeafedaa2daa7f9d3159d5dfadce5788e6f6a677fad59"
+    },
+    "scripts/monster.gd": {
+      "bytes": 52390,
+      "sha256": "46432d59c8eec3e454013560b1e5724d0483d76152a2f52540f2bfe84e90a2c0"
+    },
+    "scripts/skills/skill_service.gd": {
+      "bytes": 37456,
+      "sha256": "a8a70f957f895a5a95a3a9339b0dac7ea0a23ffdbc02a4e7a69f4f79826d4856"
+    },
+    "tests/symbol_offline_combat_test.gd": {
+      "bytes": 10676,
+      "sha256": "bed4353c14fd034b0e5825d0ef8ac423ad59472c8b87ea02233b8c223ecdeaf4"
+    },
+    "tests/symbol_crossmap_test.gd": {
+      "bytes": 9227,
+      "sha256": "fc5112dab442b8bd89020fb51c06c58386623ced1ce7ee7042927b9c37527cdb"
+    },
+    "tests/symbol_absolute_followup_test.gd": {
+      "bytes": 9403,
+      "sha256": "61985fd8b6f0c84044e99cd0a4b4dcaac21f7747c1ae8e30e230f192e1a30bdc"
+    },
+    "tests/symbol_source523_test.gd": {
+      "bytes": 10236,
+      "sha256": "7e49050bf1e87bb5e3fc327dfacae2e2c0127f51f088ab87f81ca833b22c2325"
+    },
+    "tools/import_symbol523.py": {
+      "bytes": 14592,
+      "sha256": "1f88524a63ff834c9313abf06f7072699c771e1e91c16e5c3233898d4258fc1c"
+    },
+    "tools/ci_core.py": {
+      "bytes": 15857,
+      "sha256": "e36d4a142b4ad2d94522f3badd732958746ab827ec6d61534c712bca02bf867c"
+    }
+  },
+  "logs": {
+    "docs/growth/symbol523/evidence/offline/absolute-final.txt": {
+      "bytes": 124,
+      "sha256": "a041a5f7d8699b55c03ec13c0fa0916c452ef13a4dc89c135e2624e692489e14"
+    },
+    "docs/growth/symbol523/evidence/offline/core-final.txt": {
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "docs/growth/symbol523/evidence/offline/cross-ui-final.txt": {
+      "bytes": 432,
+      "sha256": "5c072817f20e94fa4e7215a40b237e39bb6945a6894f475574077c2b321de54e"
+    },
+    "docs/growth/symbol523/evidence/offline/crossmap-git-inputs.json": {
+      "bytes": 4810,
+      "sha256": "7f4423ac4cfa3dc62f472a2148a670d9f057ea1a12b97ab12535f2d6f9d8f2ce"
+    },
+    "docs/growth/symbol523/evidence/offline/hud-final.txt": {
+      "bytes": 99,
+      "sha256": "78b41e5ba30784e7da0cb3572577aba506ad92dec75fb7ccc14a5861d39a74d1"
+    },
+    "docs/growth/symbol523/evidence/offline/main-final.txt": {
+      "bytes": 145,
+      "sha256": "a3e866ca30b303665b5161b28377109aae4807bb73b4593703a41eba963fbdee"
+    },
+    "docs/growth/symbol523/evidence/offline/map-subset.json": {
+      "bytes": 383,
+      "sha256": "69d9829ab1a4fe43b5d2b1de2d15cb5e73118d9970e7812be2d02615adb3b7b3"
+    },
+    "docs/growth/symbol523/evidence/offline/python-core.txt": {
+      "bytes": 333,
+      "sha256": "857366cbbf1847341401c28eeff40a256bdac04af9b633a025a3561ecf70b088"
+    },
+    "docs/growth/symbol523/evidence/offline/resource-integrity.txt": {
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    "docs/growth/symbol523/evidence/offline/source-verification.json": {
+      "bytes": 4519,
+      "sha256": "1c9e5ba0ab3b75bca7328c6350f18ca20c12efac2bb3145ef785fb55984a883a"
+    },
+    "docs/growth/symbol523/evidence/offline/travel-headless-final.txt": {
+      "bytes": 143,
+      "sha256": "0a54be2f628eacc1d55756cb451c5995be741e3fa19d5bd377d1bbd2b5d2b1ea"
+    },
+    "docs/growth/symbol523/evidence/offline/ui-final.txt": {
+      "bytes": 434,
+      "sha256": "ad9d5cab6d584ed98089a268225f03c99827ea033513febb16eee03d26a1548d"
+    },
+    "docs/growth/symbol523/evidence/offline/unit-final.txt": {
+      "bytes": 117,
+      "sha256": "7d79c382306a43cc9a0aae200c9bab39edc8b6f66351c961070a5aff6713f48d"
+    }
+  },
+  "screenshots": {
+    "status": "LOCAL_ONLY",
+    "directory": "/workspace/symbol-validation/offline/screenshots",
+    "files": {
+      "symbol523-crossmap-confirm-1280x720.png": {
+        "bytes": 847680,
+        "sha256": "9ec47e1dc90486efc19e40a29a56cc12c0bb7be30ce3a553be592302de1b46b4"
+      },
+      "symbol523-crossmap-result-1280x720.png": {
+        "bytes": 510642,
+        "sha256": "774c4590c07716e89e71a398f72fdb4cab5f0a172eb57daff8cbf6813c0ce349"
+      },
+      "symbol523-estimate-policy-1280x720.png": {
+        "bytes": 931981,
+        "sha256": "4781b6ba5afd19482527138d38b8bc685329812e38f1e712d9f97cc5870aaedd"
+      },
+      "symbol523-maphr-offline-1280x720.png": {
+        "bytes": 906625,
+        "sha256": "ed0ce038b088e5fab67307a11a9c79ae1fa6f76a6312d80e4a3b71b05c59648f"
+      },
+      "symbol523-paagrio-offline-1280x720.png": {
+        "bytes": 896593,
+        "sha256": "2fccfa432b750dc151a75fd06e8910a8c2c9d1ab02dcb7ea7755cf24a0289f7a"
+      }
+    }
+  }
+}
