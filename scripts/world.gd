@@ -213,7 +213,7 @@ var equipped_items: Dictionary = {
 	"weapon": {}, "offhand": {}, "helmet": {}, "tshirt": {}, "body": {}, "pants": {}, "cloak": {},
 	"belt": {}, "earring1": {}, "earring2": {}, "ring1": {}, "ring2": {}, "seal1": {}, "seal2": {},
 	"gaiters": {}, "boots": {}, "gloves": {}, "bracelet": {}, "necklace": {}, "badge": {},
-	"crystal": {}, "catalyst": {}, "rune": {}
+	"crystal": {}, "catalyst": {}, "rune": {}, "domination_stone": {}
 }
 var enhancement_levels: Dictionary = {} # legacy name-level lookup; migration only
 var item_instances: Dictionary = {} # physical ID -> {name, level}
@@ -310,7 +310,7 @@ const SHIELD_COMPATIBLE_WEAPONS: Array[String] = ["단검", "한손검", "지팡
 const EQUIPMENT_SLOT_ORDER: Array[String] = [
 	"weapon", "offhand", "helmet", "tshirt", "body", "pants", "cloak", "shoulder", "belt",
 	"earring1", "earring2", "ring1", "ring2", "seal1", "seal2", "gaiters",
-	"boots", "gloves", "bracelet", "necklace", "badge", "crystal", "catalyst", "rune"
+	"boots", "gloves", "bracelet", "necklace", "badge", "crystal", "catalyst", "rune", "domination_stone"
 ]
 const ARMOR_EQUIPMENT_SLOTS: Array[String] = [
 	"offhand", "helmet", "tshirt", "body", "pants", "cloak", "shoulder", "gaiters", "boots", "gloves"
@@ -324,7 +324,7 @@ const EQUIPMENT_SLOT_LABELS: Dictionary = {
 	"pants":"하의", "cloak":"망토", "shoulder":"견갑", "belt":"벨트", "earring1":"귀걸이1", "earring2":"귀걸이2",
 	"ring1":"반지1", "ring2":"반지2", "seal1":"인장1", "seal2":"인장2", "gaiters":"각반",
 	"boots":"신발", "gloves":"장갑", "bracelet":"팔찌", "necklace":"목걸이", "badge":"휘장",
-	"crystal":"수정", "catalyst":"카탈리스트", "rune":"룬"
+	"crystal":"수정", "catalyst":"카탈리스트", "rune":"룬", "domination_stone":"지배석"
 }
 
 var level: int = 35
@@ -696,6 +696,13 @@ func _enrich_inven_catalog() -> void:
 
 func _source_catalog_record(category: String, saved: Dictionary) -> Dictionary:
 	if BASE508.native(saved): return BASE508.canonical(saved)
+	if category == "아이템" and saved.get("source_m_native_item",false):
+		var current: Dictionary = _catalog_item_from_source_id(str(saved.get("sourceId","")))
+		if current.get("source_m_native_item",false) and int(current.get("source_item_class_id",-1)) == int(saved.get("source_item_class_id",-2)) and str(current.get("source_display_name","")) == str(saved.get("source_display_name","")) and current.get("source_snapshot") == saved.get("source_snapshot"):
+			var updated: Dictionary = current.duplicate(true)
+			for key: String in ["instance_id","enhance_level","is_engraved","bless_state","source_m_drop_proof","source_m_reward_proof","source_m_item_id"]:
+				if saved.has(key): updated[key] = saved[key]
+			return updated
 	if str(saved.get("name", "")).is_empty():
 		return saved
 	# Exact source IDs are authoritative. Preserve explicitly typed, locally
@@ -953,7 +960,7 @@ func _skill_cooldown_factor() -> float:
 	return clampf(1.0 - (float(_catalog_stat_sum("skillCooldownPct")) + cast_bonus) / 100.0, 0.1, 1.0)
 
 func _effective_max_mp() -> int:
-	var added: int = _catalog_stat_sum("mpFlat")
+	var added: int = _catalog_stat_sum("mpFlat") + _active_item_buff_total("mp_flat")
 	for record: Dictionary in _all_equipped_records():
 		if str(record.get("slot", "")) != "":
 			var typed_mp: int = int(record.get("mpFlat", record.get("max_mp_bonus", 0)))
@@ -1049,7 +1056,7 @@ func _effective_attribute(stat: String) -> int:
 		"CHA": base = cha_stat
 		_: return 0
 	var key: String = stat.to_lower() + "Flat"
-	return base + _equipment_attribute_bonus(stat) + _catalog_stat_sum(key) + int(original_skills.stat(stat.to_lower()) if original_skills != null else 0)
+	return base + _equipment_attribute_bonus(stat) + _catalog_stat_sum(key) + _active_item_buff_total(key) + int(original_skills.stat(stat.to_lower()) if original_skills != null else 0)
 
 func _equipment_accuracy_bonus(kind: String) -> int:
 	var result: int = _equipped_bless_bonus("accuracy") if kind in ["melee", "ranged"] else 0
@@ -1095,12 +1102,20 @@ func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	var label: String = str(target.get_meta("size_class", "small")).to_lower()
 	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), label == "large")
 
-func _roll_weapon_damage(target: TwilightMonster) -> int:
+func _roll_weapon_damage(target: TwilightMonster, source_invokes: bool = false) -> int:
 	if target == null:
 		return 0
 	var is_large: bool = str(target.get_meta("size_class", "small")).to_lower() == "large"
 	var maximum: int = ITEM_OPTIONS.weapon_size_damage(_equipped_weapon_record(), is_large)
-	return rng.randi_range(1, maximum) if maximum > 0 else 0
+	var rolled: int = rng.randi_range(1, maximum) if maximum > 0 else 0
+	if not source_invokes or maximum <= 0: return rolled
+	var weapon: Dictionary = _equipped_weapon_record()
+	var extra: int = ITEM_OPTIONS.additional_damage(weapon, "melee") + _enhancement_weapon_stat("damage")
+	var scope: String = str(ui_preferences.get("patch523_weapon_double_scope", "base_flat_enchant"))
+	if scope not in ["base_flat_enchant","base_only","disabled"]: scope = "base_flat_enchant"
+	var outcome: Dictionary = LOOT_DROP.PATCH523_DROPS.weapon_invoke_roll(weapon,rolled,maximum,extra,scope,rng)
+	for message: String in outcome.fired: hud.append_log(message)
+	return int(outcome.damage)
 
 func _load_monster_sizes() -> void:
 	monster_size_index.clear()
@@ -2383,7 +2398,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		return
 	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
 	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
-	var damage: int = maxi(1, damage_stat + _roll_weapon_damage(target))
+	var damage: int = maxi(1, damage_stat + _roll_weapon_damage(target, true))
 	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
@@ -2391,6 +2406,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
 	_deal_successful_player_hit(target, damage, critical)
+	preload("res://scripts/loot/patch523_weapon_bleed.gd").on_normal_hit(self,target)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
@@ -2898,6 +2914,7 @@ func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee")
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
 func _respawn_player(message_text: String) -> void:
+	preload("res://scripts/loot/patch523_item_use.gd").clear_on_death(self)
 	var death_position: Vector2 = player.global_position
 	var death_sprite: AnimatedSprite2D = player.transform_sprite if player.transform_active else player.class_sprite
 	if not player.transform_active and player.spx_sprite != null and player.spx_sprite.visible:
@@ -3583,7 +3600,7 @@ func _sync_item_instances() -> void:
 	for raw_name: Variant in inventory.keys():
 		var name_value: String = str(raw_name)
 		var record: Dictionary = _find_catalog_item_record(name_value)
-		if _enhancement_kind_for_record(record) == "":
+		if not _needs_physical_item(record):
 			continue
 		var desired: int = maxi(0, int(inventory.get(name_value, 0)))
 		var ids: Array[String] = (ids_by_name.get(name_value, [] as Array[String]) as Array[String]).duplicate()
@@ -3595,6 +3612,9 @@ func _sync_item_instances() -> void:
 				unique_id = str(next_item_instance_id)
 			next_item_instance_id += 1
 			item_instances[unique_id] = {"name":name_value,"level":int(enhancement_levels.get(name_value, 0)) if legacy_import else 0, "element":"", "element_level":0}
+			if record.get("source_m_native_item",false):
+				item_instances[unique_id]["record"] = record.duplicate(true)
+				item_instances[unique_id]["bless_state"] = str(record.get("bless_state","normal"))
 			if not ids.is_empty():
 				var previous: Dictionary = item_instances.get(ids[0], {}) as Dictionary
 				# Only propagate custom/unique records; name-only loot cannot
@@ -3652,6 +3672,9 @@ func _enhancement_kind_for_record(record: Dictionary) -> String:
 	if ACCESSORY_EQUIPMENT_SLOTS.has(base_slot) or base_slot in ["ring", "earring", "seal"]:
 		return "accessory"
 	return ""
+
+func _needs_physical_item(record: Dictionary) -> bool:
+	return _enhancement_kind_for_record(record) != "" or (record.get("source_m_native_item",false) and record.get("slot") == "domination_stone")
 
 func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 	_sync_item_instances()
@@ -4250,6 +4273,15 @@ func _use_quick_item(item_name: String) -> void:
 	hud.show_message("사용할 수 없는 퀵 아이템입니다")
 
 func _use_healing_item(item_name: String, heal_amount: int) -> void:
+	var record: Dictionary = _find_catalog_item_record(item_name)
+	var is_source: bool = bool(record.get("source_m_native_item", false))
+	if is_source:
+		record = preload("res://scripts/loot/patch523_item_use.gd").canonical(record)
+		var problem: String = preload("res://scripts/loot/patch523_item_use.gd").eligibility(self, record)
+		if problem.is_empty(): problem = LOOT_DROP.PATCH523_DROPS.hp_use_problem(record,is_player_concealed())
+		if not problem.is_empty() or record.get("heal_spec", {}).is_empty():
+			hud.show_message(problem if not problem.is_empty() else "원본 회복 효과 미지원 · 아이템 보존")
+			return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("%s이(가) 없습니다" % item_name)
 		return
@@ -4261,14 +4293,28 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	if cooldown_left > 0.0:
 		hud.show_message("HP 물약 재사용 대기 %s" % _format_seconds_short(cooldown_left))
 		return
-	heal_amount = LOOT_DROP.PATCH523_DROPS.healing_amount(_find_catalog_item_record(item_name), rng, heal_amount)
-	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
-	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)
+	var rng_before: int = rng.state
+	heal_amount = LOOT_DROP.PATCH523_DROPS.healing_amount(record, rng, heal_amount)
+	var next_inventory: Dictionary = inventory.duplicate(true)
+	next_inventory[item_name] = int(next_inventory.get(item_name, 0)) - 1
+	if is_source and int(next_inventory[item_name]) == 0: next_inventory.erase(item_name)
+	var next_cooldowns: Dictionary = item_use_cooldowns.duplicate(true)
+	next_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
-	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
+	var next_hp: int = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
+	if is_source and _save_game(true, {"inventory":next_inventory,"item_use_cooldowns":next_cooldowns,"hp":next_hp}) != OK:
+		rng.state = rng_before
+		hud.show_message("회복 저장 실패 · 원본 물약과 HP 보존")
+		return
+	inventory = next_inventory
+	item_use_cooldowns = next_cooldowns
+	hp = next_hp
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
+	if is_source:
+		var source_visual: int = int(LOOT_DROP.PATCH523_DROPS.hp_use_metadata(record).get("consume_effect_sprite_id",0))
+		if source_visual > 0: option_awakening.combat.emit_sprite(source_visual,player)
 	_update_hud()
 
 func _return_to_spawn() -> void:
@@ -4429,7 +4475,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","active_item_buffs","item_use_cooldowns","hp","mp"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4834,6 +4880,7 @@ func _load_game(quiet: bool) -> void:
 	_attach_missing_equipment_instance_ids()
 	consumable_service.call("migrate_legacy_elemental")
 	_enforce_weapon_class_compatibility(true)
+	_enforce_patch523_equipment_requirements()
 	_enforce_shield_weapon_compatibility(true)
 	_invalidate_equipment_static()
 	_restore_equipped_visuals()
@@ -5011,6 +5058,7 @@ func _on_job_class_selected(job_name: String) -> void:
 	if BASE508.native(equipped_catalog.get("변신", {})):
 		_apply_transform_visual(equipped_catalog["변신"])
 	_enforce_weapon_class_compatibility(false)
+	_enforce_patch523_equipment_requirements()
 	_enforce_shield_weapon_compatibility(false)
 	_prune_active_skill_buffs_for_current_job()
 	_refresh_skill_stealth_visual()
@@ -6499,6 +6547,8 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 		if _is_instance_equipped(selected_id):
 			hud.show_message("이미 착용한 장비 개체입니다")
 			return
+		if record.get("source_m_native_item",false) and not (item_instances[selected_id] as Dictionary).has("record"):
+			item_instances[selected_id]["record"] = record.duplicate(true)
 		equipped_items[equip_slot] = record.duplicate(true)
 		equipped_items[equip_slot]["instance_id"] = selected_id
 		if equip_slot == "weapon":
@@ -6811,6 +6861,7 @@ func _equipment_slot_base(record: Dictionary) -> String:
 		"crystal": return "crystal"
 		"catalyst": return "catalyst"
 		"rune": return "rune"
+		"domination_stone": return "domination_stone"
 		"necklace": return "necklace"
 		"armor": return "body"
 		"accessory": return "necklace"
@@ -6931,12 +6982,26 @@ func _is_offhand_record(record: Dictionary) -> bool:
 func _weapon_supports_shield(record: Dictionary) -> bool:
 	if record.is_empty():
 		return true
+	if record.get("source_m_native_item",false) and record.get("source_is_two_handed",false): return false
 	return SHIELD_COMPATIBLE_WEAPONS.has(_normalized_weapon_type(str(record.get("type", ""))))
 
 func _current_weapon_supports_shield() -> bool:
 	return _weapon_supports_shield(_equipped_weapon_record())
 
+func _enforce_patch523_equipment_requirements() -> void:
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var record: Dictionary = _source_catalog_record("아이템",equipped_items.get(slot,{}))
+		if not record.get("source_m_native_item",false): continue
+		var problem: String = LOOT_DROP.PATCH523_DROPS.equipment_error(record,job_class,level)
+		if not problem.is_empty():
+			equipped_items[slot] = {}
+			_invalidate_equipment_static()
+			hud.append_log("원본 장비 조건에 따라 해제 · 아이템 보존 · "+str(record.name))
+
 func _can_equip_offhand(record: Dictionary) -> bool:
+	if record.get("source_m_native_item",false) and record.has("source_can_equip_with_two_handed"):
+		if record.source_can_equip_with_two_handed: return true
+		if not _current_weapon_supports_shield(): return false
 	var kind: String = _offhand_kind(record)
 	if kind == "":
 		return false
@@ -6949,7 +7014,7 @@ func _enforce_shield_weapon_compatibility(quiet: bool = false) -> void:
 	if not (offhand_value is Dictionary):
 		return
 	var offhand: Dictionary = offhand_value as Dictionary
-	if offhand.is_empty() or _offhand_kind(offhand) != "shield" or _current_weapon_supports_shield():
+	if offhand.is_empty() or _can_equip_offhand(offhand):
 		return
 	var offhand_name: String = str(offhand.get("name", "방패"))
 	equipped_items["offhand"] = {}
@@ -7681,7 +7746,7 @@ func _effective_defense() -> int:
 		bonus += float(record.get("def", 0.0))
 	var armor_enhance: int = _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "defense")
 	var accessory_enhance: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "defense")
-	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
+	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _active_item_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
 
 func _effective_max_hp() -> int:
 	var flat_bonus: float = 0.0

@@ -11,7 +11,7 @@ var paperdoll: TextureRect
 var gear_icons: Dictionary = {}
 var gear_badges: Dictionary = {}
 var equipment_caption: Label
-const EXTRA_SLOTS = [["pants","하의"],["shoulder","견갑"],["earring1","귀걸이 I"],["earring2","귀걸이 II"],["seal1","인장 I"],["seal2","인장 II"],["gaiters","각반"],["bracelet","팔찌"],["badge","휘장"],["crystal","수정"],["catalyst","카탈리스트"],["rune","룬"]]
+const EXTRA_SLOTS = [["pants","하의"],["shoulder","견갑"],["earring1","귀걸이 I"],["earring2","귀걸이 II"],["seal1","인장 I"],["seal2","인장 II"],["gaiters","각반"],["bracelet","팔찌"],["badge","휘장"],["crystal","수정"],["catalyst","카탈리스트"],["rune","룬"],["domination_stone","지배석"]]
 var equipment_page_index: int = 0
 var character_tabs: Control
 var empty_slot_art: Dictionary={}
@@ -63,12 +63,12 @@ func _build_equipment_page() -> Control:
 	left.add_child(page_row)
 	equipment_caption.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	page_row.add_child(equipment_caption)
-	for page_index: int in range(2):
+	for page_index: int in range(3):
 		var button := UI.button(str(page_index+1),func() -> void:
 			equipment_page_index = page_index
 			_layout_equipment(),Vector2(28,24))
 		button.name = "EquipmentPage%d" % page_index
-		button.tooltip_text = "기본 장비" if page_index == 0 else "추가 장비·장신구"
+		button.tooltip_text = ["기본 장비","추가 장비·장신구","원본 지배석 전용 부위 · TWILIGHT 장비창 배치"][page_index]
 		page_row.add_child(button)
 	equipment_stage = Control.new()
 	equipment_stage.name = "EquipmentPaperdoll"
@@ -123,7 +123,7 @@ func _build_equipment_page() -> Control:
 	equipment_caption.hide()
 	for button: Node in page_row.get_children():
 		if button is Button:
-			button.text="기본 장비" if button.name=="EquipmentPage0" else "추가 장비"
+			button.text="기본 장비" if button.name=="EquipmentPage0" else "지배석" if button.name=="EquipmentPage2" else "추가 장비"
 			button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 			ReferenceSurfaces.action(button)
 	equipment_stage.resized.connect(_layout_equipment)
@@ -216,16 +216,16 @@ func _layout_equipment() -> void:
 	paperdoll.size=Vector2(maxf(0,extent.x-2*(edge+14)),maxf(0,extent.y-8))
 	for key: String in equipment_buttons:
 		var second: bool=EXTRA_SLOTS.any(func(spec: Array) -> bool:return spec[0]==key)
-		equipment_buttons[key].visible=second==(equipment_page_index==1)
+		equipment_buttons[key].visible=(equipment_page_index==2 if key=="domination_stone" else second==(equipment_page_index==1) and equipment_page_index!=2)
 	var sides: Array=[
 		["helmet","weapon","body","necklace","boots","tshirt"],
 		["cloak","gloves","belt","ring1","ring2","offhand"]
 	] if equipment_page_index==0 else [
 		["shoulder","pants","gaiters","bracelet","badge","crystal"],
 		["earring1","earring2","seal1","seal2","catalyst","rune"]
-	]
+	] if equipment_page_index==1 else [["domination_stone"],[]]
 	for side: int in range(2):
-		for index: int in range(6):
+		for index: int in range(sides[side].size()):
 			var key: String=sides[side][index]
 			var button: Button=equipment_buttons[key]
 			button.custom_minimum_size=Vector2(edge,edge)
@@ -278,5 +278,5 @@ func _refresh_character() -> void:
 		badge.text = "+%d" % level if level > 0 else ""
 		button.add_theme_stylebox_override("normal",UI.item_frame(grade))
 		button.tooltip_text = "%s · %s · +%d\n클릭: 장비 선택 및 교체" % [_equipped_display_name(record),grade,level]
-	equipment_caption.text = "장착 장비  %d / 24" % filled
+	equipment_caption.text = "장착 장비  %d / %d" % [filled,(EQUIPMENT_SLOTS+EXTRA_SLOTS).size()]
 	_layout_equipment()

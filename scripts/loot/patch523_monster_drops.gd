@@ -1,7 +1,8 @@
 extends RefCounted
 ## 523 membership selects candidates; loot_drop.gd owns all chances and counts.
 const KIND = "patch523_monster_drop_membership"
-const DATA_SHA = "1d0756f1adc4de14e003af99fa487789f27d954a98e7c7e6ed7152d147164b6f"
+const DATA_SHA = "bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3"
+const PREVIOUS_DATA_SHA = "1d0756f1adc4de14e003af99fa487789f27d954a98e7c7e6ed7152d147164b6f"
 const LEGACY_DATA_SHA = "4455cbbd2e6dc5392ccb2f142d99124ad2b5966e2dbca6d5fd3bb1f7b0cde0a3"
 const FILE_NAME = "monster_drops.bin"
 const RESOURCE_PATH = "res://data/lineagem_patch523/monster_drops.bin"
@@ -18,7 +19,7 @@ static func installed_path(fingerprint: String = DATA_SHA) -> String:
 
 static func decode(packed: PackedByteArray) -> Dictionary:
 	if packed.size() > MAX_PACKED or packed.is_empty(): return {}
-	if preload("res://scripts/lineagem_pack_install.gd").sha(packed) not in [DATA_SHA, LEGACY_DATA_SHA]: return {}
+	if preload("res://scripts/lineagem_pack_install.gd").sha(packed) not in [DATA_SHA, PREVIOUS_DATA_SHA, LEGACY_DATA_SHA]: return {}
 	var raw: PackedByteArray = packed.decompress_dynamic(MAX_RAW, FileAccess.COMPRESSION_GZIP)
 	if raw.is_empty(): return {}
 	var value: Variant = JSON.parse_string(raw.get_string_from_utf8())
@@ -31,16 +32,27 @@ static func data() -> Dictionary:
 	var paths: Array[String] = []
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--patch523-drop-root="): paths.append(arg.trim_prefix("--patch523-drop-root=").path_join(FILE_NAME))
+	var explicit_count: int = paths.size()
 	paths.append(installed_path())
 	paths.append(RESOURCE_PATH)
+	paths.append(installed_path(PREVIOUS_DATA_SHA))
 	if LEGACY_DATA_SHA != DATA_SHA: paths.append(installed_path(LEGACY_DATA_SHA))
-	for path: String in paths:
+	var best_rank: int = 99
+	var versions: Array[String] = [DATA_SHA,PREVIOUS_DATA_SHA,LEGACY_DATA_SHA]
+	for index: int in range(paths.size()):
+		var path: String = paths[index]
 		if not FileAccess.file_exists(path): continue
 		var file := FileAccess.open(path, FileAccess.READ)
 		if file == null or file.get_length() > MAX_PACKED: continue
-		_data = decode(file.get_buffer(file.get_length()))
-		if not _data.is_empty(): return _data
-	return {}
+		var packed: PackedByteArray = file.get_buffer(file.get_length())
+		var rank: int = versions.find(preload("res://scripts/lineagem_pack_install.gd").sha(packed))
+		if rank < 0 or (index >= explicit_count and rank >= best_rank): continue
+		var document: Dictionary = decode(packed)
+		if document.is_empty(): continue
+		_data = document
+		best_rank = rank
+		if index < explicit_count or rank == 0: return _data
+	return _data
 
 static func identity(record: Dictionary) -> Dictionary:
 	var original: Dictionary = record.get("source_m_original", {})
@@ -93,18 +105,47 @@ static func variant_item(record: Dictionary, bless: int) -> Dictionary:
 		result["sourceId"] = str(result.sourceId) + ":bless:" + str(bless)
 	return result
 
+static func legacy_stone_variant(record: Dictionary, bless: int) -> Dictionary:
+	# Previous verified packs stored slot293 as non-wearable material, whose
+	# blessed/cursed stack names must remain addressable without merging keys.
+	if int(record.get("source_item_class_id",0)) != 323353 or record.get("slot") != "domination_stone" or bless not in [2,3]: return {}
+	var result: Dictionary = variant_item(record,bless)
+	result["name"] = str(record.name) + (" · 축복" if bless==2 else " · 저주")
+	result["sourceId"] = str(record.sourceId)+":bless:"+str(bless)
+	result["source_legacy_stack_variant"] = true
+	result["bless_state"] = "blessed" if bless==2 else "cursed"
+	return result
+
+static func expected_variant(original: Dictionary, saved: Dictionary) -> Dictionary:
+	return legacy_stone_variant(original,int(saved.get("source_bless_raw",1))) if saved.get("source_legacy_stack_variant",false) else variant_item(original,int(saved.get("source_bless_raw",1)))
+
 static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dictionary:
 	var records: Array = catalog.get("아이템", [])
 	var by_source: Dictionary = {}
-	for item: Dictionary in records: by_source[str(item.get("sourceId", ""))] = item
+	var positions: Dictionary = {}
+	for index: int in range(records.size()):
+		var item: Dictionary = records[index]
+		by_source[str(item.get("sourceId", ""))] = item
+		positions[str(item.get("sourceId", ""))] = index
 	var needed_states: Dictionary = {}
 	for rows: Array in document.get("drops", {}).values():
 		for row: Dictionary in rows:
 			var key: String = str(int(row.ItemClassID))
 			if not needed_states.has(key): needed_states[key] = {}
 			needed_states[key][int(row.Bless)] = true
+	for definition: Dictionary in document.get("item_definitions", {}).values():
+		var spec: Dictionary = definition.get("native_record", {}).get("source_use_spec", {})
+		if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] or spec.get("activation_status") != "unrestricted": continue
+		for reward: Dictionary in spec.get("rewards", []):
+			var key: String = str(int(reward.item_class_id))
+			if not needed_states.has(key): needed_states[key] = {}
+			needed_states[key][int(reward.bless_raw)] = true
 	var added: int = 0
-	for key: String in document.get("native_item_ids", []):
+	var updated: int = 0
+	var native_ids: Array = document.get("native_item_ids", []).duplicate()
+	for key: String in document.get("native_reward_item_ids", []):
+		if not native_ids.has(key): native_ids.append(key)
+	for key: String in native_ids:
 		var definition: Dictionary = document.get("item_definitions", {}).get(key, {})
 		var original: Dictionary = definition.get("native_record", {})
 		if original.is_empty(): continue
@@ -115,21 +156,43 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 		for state: int in states:
 			var item: Dictionary = variant_item(original, state)
 			var identity_key: String = str(item.sourceId)
-			if by_source.has(identity_key): continue
+			if by_source.has(identity_key):
+				var old: Dictionary = by_source[identity_key]
+				if old.get("source") == "lineagem_patch523" and old.get("source_snapshot") == "patch523" and old.get("source_m_native_item",false) and int(old.get("source_item_class_id",-1)) == int(item.get("source_item_class_id",-2)) and old.get("name") == item.get("name") and old.get("source_display_name") == item.get("source_display_name"):
+					records[int(positions[identity_key])] = item
+					by_source[identity_key] = item
+					updated += 1
+				continue
+			positions[identity_key] = records.size()
 			records.append(item)
 			by_source[identity_key] = item
 			added += 1
+		if int(original.get("source_item_class_id",0)) == 323353 and original.get("slot") == "domination_stone":
+			for state: int in [2,3]:
+				var item: Dictionary = legacy_stone_variant(original,state)
+				if not by_source.has(str(item.sourceId)):
+					positions[str(item.sourceId)] = records.size()
+					records.append(item)
+					by_source[str(item.sourceId)] = item
+					added += 1
+				else:
+					var old: Dictionary = by_source[str(item.sourceId)]
+					if old.get("source") == "lineagem_patch523" and int(old.get("source_item_class_id",0)) == 323353 and old.get("name") == item.name:
+						records[int(positions[str(item.sourceId)])] = item
+						updated += 1
 	catalog["아이템"] = records
-	return {"added":added, "native_definition_count":document.get("native_item_ids", []).size()}
+	return {"added":added,"updated":updated, "native_definition_count":document.get("native_item_ids", []).size()}
 
 static func equipment_error(item: Dictionary, job: String, level: int) -> String:
 	if not item.get("source_m_native_item", false): return ""
+	if item.get("source_test_item",false): return "원본 테스트 장비는 착용할 수 없습니다"
 	var classes: Array = item.get("source_class_names", [])
 	if not item.get("source_unresolved_class_ids", []).is_empty(): return "원본 착용 직업 조건 미확인"
 	if not classes.is_empty() and not classes.has(job): return "원본 직업 조건에 맞지 않는 장비입니다"
 	var minimum: int = int(item.get("source_level_limit_min", 0))
 	var maximum: int = int(item.get("source_level_limit_max", 0))
 	if level < minimum or (maximum > 0 and level > maximum): return "원본 장비 레벨 조건에 맞지 않습니다"
+	if level < int(item.get("source_max_level_limit_min",0)) or (int(item.get("source_max_level_limit_max",0)) > 0 and level > int(item.source_max_level_limit_max)): return "원본 최고 레벨 조건에 맞지 않습니다"
 	return ""
 
 static func healing_amount(item: Dictionary, rng: RandomNumberGenerator, fallback: int) -> int:
@@ -143,13 +206,74 @@ static func healing_amount(item: Dictionary, rng: RandomNumberGenerator, fallbac
 	for die: int in range(count): amount += rng.randi_range(1, sides)
 	return amount
 
+static func hp_use_metadata(item: Dictionary) -> Dictionary:
+	var definition: Dictionary = item_definition(item)
+	var original: Dictionary = definition.get("original_item",{})
+	var category: Dictionary = definition.get("category",{})
+	if original.is_empty() or category.get("Name") != "Potion" or not category.get("IsConsumable",false) or definition.get("native_record",{}).get("heal_spec",{}).is_empty(): return {"ok":false}
+	if original.get("TestItem",true) or int(original.get("TargettingTypeID",0)) != 1 or not str(original.get("ServiceRegionCode","")).is_empty(): return {"ok":false}
+	var allowed: Dictionary = {"HPRestoration":"Value","HPRestorationDiceNumber":"Value","HPRestorationDiceSpotCount":"Value","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"}
+	var seen: Dictionary = {}
+	var metadata: Dictionary = {"ok":true,"can_use_when_invisible":bool(original.get("CanUseWhenInvisible",false)),"consume_effect_sprite_id":0}
+	for row: Dictionary in definition.get("item_bonus",[]):
+		var kind: String = str(row.get("bonus_type",{}).get("Name",""))
+		var bonus: Dictionary = row.get("bonus",{})
+		if row.get("IsPossession",true) or int(bonus.get("BonusApplicationTypeID",-1)) != 0 or int(bonus.get("BonusApplicationTargetID",-1)) != 0 or not allowed.has(kind) or row.get("unit",{}).get("Name") != allowed[kind] or seen.has(kind): return {"ok":false}
+		seen[kind] = true
+		if kind == "ItemConsumeEffectSpriteID": metadata.consume_effect_sprite_id = int(bonus.get("Value",0))
+		if kind == "ItemConsumeDelay": metadata["source_consume_delay_ms"] = int(bonus.get("Value",-1))
+	if not seen.has("ItemConsumeDelay") or int(metadata.get("source_consume_delay_ms",-1)) < 0: return {"ok":false}
+	return metadata
+
+static func hp_use_problem(item: Dictionary, concealed: bool = false) -> String:
+	var metadata: Dictionary = hp_use_metadata(item)
+	if not metadata.get("ok",false): return "원본 회복 아이템의 지역·기간·추가 효과 미연결 · 아이템 보존"
+	if concealed and not metadata.get("can_use_when_invisible",false): return "원본 조건: 은신 중 사용할 수 없습니다"
+	return ""
+
+static func item_definition(item: Dictionary) -> Dictionary:
+	var item_id: String = str(int(item.get("source_item_class_id", -1))) if item.get("source_m_native_item", false) else str(item.get("sourceId", ""))
+	var definition: Dictionary = data().get("item_definitions", {}).get(item_id, {})
+	if definition.is_empty(): return {}
+	var expected: Dictionary = expected_variant(definition.get("native_record", {}),item) if item.get("source_m_native_item", false) else definition.get("existing_binding", {})
+	return definition if matches(item, expected) else {}
+
+static func weapon_invoke_roll(item: Dictionary, rolled: int, maximum: int, extra: int, scope: String, rng: RandomNumberGenerator) -> Dictionary:
+	var definition: Dictionary = item_definition(item)
+	var result: Dictionary = {"damage":rolled,"fired":[]}
+	if definition.get("original_item", {}).get("TestItem", true): return result
+	for effect: Dictionary in definition.get("source_invoke_options", []):
+		if effect.get("activation_status") != "unrestricted": continue
+		var kind: String = str(effect.get("kind", ""))
+		if kind not in ["normal_attack_additional_critical", "normal_attack_weapon_scale"] or (kind == "normal_attack_weapon_scale" and scope == "disabled"): continue
+		if rng.randi_range(0,999999) >= int(effect.get("probability_raw", 0)): continue
+		if kind == "normal_attack_additional_critical":
+			# Official weapon guide: claw critical selects maximum weapon base;
+			# the existing player critical damage/chance remains independent.
+			result.damage = maximum
+			result.fired.append("원본 크로우 무기 최대 대미지")
+		else:
+			# Chance and scale are source values. The component boundary is an
+			# explicitly configurable local interpretation of the public experiment.
+			var component: int = int(result.damage) + (extra if scope == "base_flat_enchant" else 0)
+			result.damage += int(round(float(component)*(float(effect.invoke_option.Param1)/1000000.0-1.0)))
+			result.fired.append("원본 이도류 배율 · 적용 범위는 TWILIGHT 보완 설정")
+	return result
+
 static func wallet_name(item: Dictionary) -> String:
+	var name_value: String = currency_identity_name(item)
+	if name_value.is_empty(): return ""
+	var id: int = int(item.get("source_item_class_id", -1))
+	var proof: Dictionary = item.get("source_m_drop_proof", {})
+	if int(proof.get("source_item_class_id", -2)) != id or int(proof.get("bless_raw", 0)) != 1 or int(proof.get("required_quest_id", -1)) != 0: return ""
+	return name_value
+
+static func currency_identity_name(item: Dictionary) -> String:
 	if not item.get("source_m_native_item", false) or item.get("source_category_name") != "Currency": return ""
+	if int(item.get("source_bless_raw", 1)) != 1: return ""
 	var id: int = int(item.get("source_item_class_id", -1))
 	var labels: Dictionary = {26:"아데나", 3242:"변신 코인", 3252:"마법인형 코인", 3631:"명예 코인", 246058:"성물 제작 코인"}
 	if not labels.has(id) or item.get("source_display_name") != labels[id]: return ""
-	var proof: Dictionary = item.get("source_m_drop_proof", {})
-	if int(proof.get("source_item_class_id", -2)) != id or int(proof.get("bless_raw", 0)) != 1 or int(proof.get("required_quest_id", -1)) != 0: return ""
 	return preload("res://scripts/loot/currency_drops.gd").canonical_name(str(labels[id]))
 
 static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary) -> Dictionary:
@@ -226,7 +350,7 @@ static func source_rows(item: Dictionary) -> Array:
 	var base: Dictionary = document.get("item_definitions", {}).get(item_id, {}).get("native_record", {})
 	var validated: bool = matches(item, binding)
 	if item.get("source_m_native_item", false) and not base.is_empty():
-		var expected: Dictionary = variant_item(base, int(item.get("source_bless_raw", 1)))
+		var expected: Dictionary = expected_variant(base,item)
 		validated = matches(item, expected)
 	if document.is_empty() or not validated: return []
 	if _sources.is_empty():
@@ -256,19 +380,64 @@ static func source_text(item: Dictionary) -> String:
 	return "\n".join(lines)
 
 static func item_details(item: Dictionary) -> String:
-	if not item.get("source_m_native_item", false): return ""
+	if not item.get("source_m_native_item", false):
+		var original: Dictionary = item_definition(item).get("native_record", {})
+		if original.get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] or original.get("source_use_spec", {}).get("activation_status") != "unrestricted": return invoke_details(item)
+		item = original
 	var lines: PackedStringArray = ["원본 아이템 #%d · %s" % [int(item.get("source_item_class_id", 0)), str(item.get("source_display_name", ""))]]
 	var labels: Dictionary = {"small_damage":"작은 대상 무기 대미지", "large_damage":"큰 대상 무기 대미지", "hit":"무기 명중", "additionalDamage":"추가 대미지", "def":"방어", "strFlat":"STR", "dexFlat":"DEX", "conFlat":"CON", "intFlat":"INT", "wisFlat":"WIS", "chaFlat":"CHA", "hpFlat":"HP", "mpFlat":"MP", "mr":"MR", "damage_reduction":"리덕션", "sp":"SP", "meleeDamage":"근거리 대미지", "rangedDamage":"원거리 대미지", "magicDamage":"마법 대미지", "meleeHit":"근거리 명중", "rangedHit":"원거리 명중", "magicHit":"마법 명중"}
 	for key: String in labels:
 		if item.has(key): lines.append("%s %+d" % [str(labels[key]), int(item[key])])
+	if item.has("xp"): lines.append("경험치 획득 +%.2f%%" % (float(item.xp)*100.0))
+	if item.get("slot") == "domination_stone": lines.append("원본 지배석 전용 장착 부위 · 게임 장비창 3쪽\n원본 탑 이동·퀘스트·세트 활성 조건은 이 장착으로 해금하지 않음")
 	var heal: Dictionary = item.get("heal_spec", {})
-	if not heal.is_empty(): lines.append("HP 회복 %d + %dD%d · 기존 물약 사용 규칙" % [int(heal.get("HPRestoration", 0)), int(heal.get("HPRestorationDiceNumber", 0)), int(heal.get("HPRestorationDiceSpotCount", 0))])
+	if not heal.is_empty():
+		lines.append("HP 회복 %d + %dD%d · 기존 물약 사용 규칙" % [int(heal.get("HPRestoration", 0)), int(heal.get("HPRestorationDiceNumber", 0)), int(heal.get("HPRestorationDiceSpotCount", 0))])
+		var problem: String = hp_use_problem(item)
+		if not problem.is_empty(): lines.append(problem)
+	var spec: Dictionary = item.get("source_use_spec", {})
+	if not spec.is_empty():
+		if spec.get("activation_status") != "unrestricted": lines.append("원본 사용 조건·효과 미지원 · 사용 시 소비하지 않음")
+		else:
+			match str(spec.get("kind", "")):
+				"fixed_card": lines.append("사용: 원본 지정 %s 카드 %s (#%d) 1장 · 확률 추첨 없음" % [str(spec.get("card_kind", "")),str(spec.get("original_card", {}).get("Name", "")),int(spec.get("card_id", 0))])
+				"source_mp_dice": lines.append("사용: MP 회복 %d + %dD%d" % [int(spec.get("base",0)),int(spec.get("dice_number",0)),int(spec.get("dice_spot_count",0))])
+				"source_timed_buff":
+					lines.append("사용: 원본 지속 버프 %d초" % int(spec.get("duration_seconds", 0)))
+					var effect_labels: Dictionary = {"def":"방어","strFlat":"STR","dexFlat":"DEX","intFlat":"INT","wisFlat":"WIS","conFlat":"CON","chaFlat":"CHA","hp_flat":"HP","mp_flat":"MP","mr":"MR","sp":"SP","melee_damage":"근거리 대미지","ranged_damage":"원거리 대미지","magic_damage":"마법 대미지","melee_accuracy":"근거리 명중","ranged_accuracy":"원거리 명중","magic_accuracy":"마법 명중","damage_reduction":"리덕션"}
+					for field: String in spec.get("typed_effects", {}): lines.append("%s %+d" % [str(effect_labels.get(field,field)),int(spec.typed_effects[field])])
+					lines.append("사망 시 유지" if spec.get("source_buff_class", {}).get("IsImmuneToDead", false) else "사망 시 해제")
+				"guaranteed_bag":
+					lines.append("사용: 원본 확정 보상 지급 · 확률 추첨 없음")
+					for reward: Dictionary in spec.get("rewards", []):
+						var label: String = str(data().get("item_definitions", {}).get(str(int(reward.item_class_id)), {}).get("native_record", {}).get("source_display_name", "아이템 #"+str(int(reward.item_class_id))))
+						lines.append("%s ×%d%s" % [label,int(reward.amount)," · 원본 직업 조건에 해당할 때" if not reward.get("class_ids", []).is_empty() else ""])
+				"source_weighted_bag", "mixed_rewards_bag":
+					lines.append("사용: 원본 확률·보상 수량 적용 · 직업 조건 보존")
+					lines.append("확률 보상 선택 횟수: TWILIGHT 자체 규칙 · 기본 1회 · 설정에서 변경 가능")
+					for reward: Dictionary in spec.get("rewards",[]).slice(0,40):
+						var label: String = str(data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{}).get("native_record",{}).get("source_display_name","아이템 #"+str(int(reward.item_class_id))))
+						var chance: String = "확정" if int(reward.entity_type_id) == 1 else "%.6f%%" % (float(reward.probability_raw)/100000.0)
+						lines.append("%s ×%d · %s%s" % [label,int(reward.amount),chance," · 원본 직업 조건" if not reward.get("class_ids",[]).is_empty() else ""])
+					if spec.get("rewards",[]).size() > 40: lines.append("외 %d개 원본 보상" % (spec.rewards.size()-40))
+			if int(spec.get("consume_delay_ms", 0)) > 0: lines.append("원본 재사용 대기 %.1f초" % (float(spec.consume_delay_ms)/1000.0))
 	var classes: Array = item.get("source_class_names", [])
 	if not classes.is_empty(): lines.append("원본 착용 직업: " + ", ".join(classes))
 	if int(item.get("source_level_limit_min", 0)) > 0: lines.append("착용 최소 레벨 %d" % int(item.source_level_limit_min))
 	if item.get("source_effect_status", "") == "partial": lines.append("일부 발동·특수 효과 미적용 · 확인된 기본 옵션만 적용")
 	if item.get("source_equipment_status", "") == "unsupported_source_slot": lines.append("원본 전용 장착 부위 미지원 · 보관 가능")
 	if item.get("source_test_item", false): lines.append("원본 테스트 아이템 · 드랍 제외")
+	var invokes: String = invoke_details(item)
+	if not invokes.is_empty(): lines.append(invokes)
+	return "\n".join(lines)
+
+static func invoke_details(item: Dictionary) -> String:
+	var lines: PackedStringArray = []
+	for effect: Dictionary in item_definition(item).get("source_invoke_options", []):
+		if effect.get("kind") == "normal_attack_additional_critical" and effect.get("activation_status") == "unrestricted": lines.append("원본 크로우: 일반 공격 무기 최대 대미지 발동 %.1f%% · 캐릭터 치명타와 별도" % (float(effect.probability_raw)/10000.0))
+		elif effect.get("kind") == "normal_attack_weapon_scale" and effect.get("activation_status") == "unrestricted": lines.append("원본 이도류: %.1f%% 확률 · 무기 배율 %.1f배\n배율 적용 범위: 공개 실험을 참고한 TWILIGHT 추정 규칙 · 설정에서 변경 가능" % [float(effect.probability_raw)/10000.0,float(effect.invoke_option.Param1)/1000000.0])
+		elif effect.get("kind") == "normal_attack_source_bleed" and effect.get("activation_status") == "unrestricted": lines.append("원본 총 출혈: %.1f%% 확률 · %d초 · %dD%d 피해\n틱 간격·HP 상한: TWILIGHT 추정 규칙 · 기본 0.75초·누적 피해 최대 HP 50%% 상한 · 설정 가능" % [float(effect.probability_raw)/10000.0,int(effect.duration_seconds),int(effect.damage_dice_number),int(effect.damage_dice_spot_count)])
+		else: lines.append("원본 무기 발동: 효과·조건 연결 미완료 · 기존 게임 발동 설정 유지")
 	return "\n".join(lines)
 
 static func install_zip(path: String) -> Dictionary:
@@ -280,7 +449,7 @@ static func install_zip(path: String) -> Dictionary:
 	var header: Variant = JSON.parse_string(zip.read_file("pack.json").get_string_from_utf8())
 	var packed: PackedByteArray = zip.read_file("payload/monster_drops.bin")
 	zip.close()
-	if not header is Dictionary or header.get("kind") != KIND or header.get("sha256") not in [DATA_SHA, LEGACY_DATA_SHA] or preload("res://scripts/lineagem_pack_install.gd").sha(packed) != header.get("sha256") or int(header.get("bytes", -1)) != packed.size() or decode(packed).is_empty():
+	if not header is Dictionary or header.get("kind") != KIND or header.get("sha256") not in [DATA_SHA, PREVIOUS_DATA_SHA, LEGACY_DATA_SHA] or preload("res://scripts/lineagem_pack_install.gd").sha(packed) != header.get("sha256") or int(header.get("bytes", -1)) != packed.size() or decode(packed).is_empty():
 		return {"ok":false, "error":"드랍 자료 버전 또는 무결성 검사 실패 · 기존 자료 유지"}
 	var fingerprint: String = str(header.sha256)
 	var target: String = installed_path(fingerprint)

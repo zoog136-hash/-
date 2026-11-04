@@ -103,6 +103,7 @@ var bleed_tick_damage: int = 0
 var bleed_tick_interval: float = 0.75
 var bleed_remaining: float = 0.0
 var bleed_tick_clock: float = 0.0
+var patch523_weapon_bleed: Dictionary = {}
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var base_move_speed: float = 90.0
@@ -143,6 +144,7 @@ func retire_for_pool() -> void:
 	damage_hit_count = 0
 	special_attack.clear()
 	source_option_debuffs.clear()
+	patch523_weapon_bleed.clear()
 	if is_instance_valid(world_controller):
 		var died_callback:=Callable(world_controller,"_on_monster_died")
 		var hit_callback:=Callable(world_controller,"_on_player_hit")
@@ -203,6 +205,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	velocity = Vector2.ZERO
 	stun_remaining = 0.; silence_remaining = 0.; hold_remaining = 0.; fear_remaining = 0.
 	poison_remaining = 0.; poison_tick_clock = 0.; bleed_remaining = 0.; bleed_tick_clock = 0.
+	patch523_weapon_bleed.clear()
 	aggro_remaining = 0.; returning_home = false
 	enraged = false; social_alert_cooldown = 0.0
 	decision_elapsed = 0.; sight_clock = 0.; sight_cached = false
@@ -352,6 +355,7 @@ func _advance_source_m_view(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	advance_source_option_debuffs(delta)
+	preload("res://scripts/loot/patch523_weapon_bleed.gd").tick(self,delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
@@ -695,7 +699,10 @@ func _tick_bleed(delta: float) -> void:
 			bleed_tick_damage = 0
 
 func is_bleeding() -> bool:
-	return bleed_remaining > 0.0 and bleed_tick_damage > 0 and not dead
+	return (bleed_remaining > 0.0 and bleed_tick_damage > 0 or not patch523_weapon_bleed.is_empty()) and not dead
+
+func apply_patch523_weapon_bleed(effect: Dictionary, interval: float, rule: String) -> void:
+	preload("res://scripts/loot/patch523_weapon_bleed.gd").apply(self,effect,interval,rule)
 
 func apply_bleed(duration: float, damage: int, interval: float = 0.75) -> void:
 	if dead:

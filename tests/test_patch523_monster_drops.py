@@ -34,6 +34,8 @@ class DropCompilerTests(unittest.TestCase):
             'ItemEquipSlot':[dict(ItemClassID=20,EquipSlotID=8)],
             'ItemBonus':[], 'Bonus':[], 'BonusType':[], 'Unit':[], 'Class':[],
             'ItemClassLimit':[], 'WeaponType':[]}
+        for name in compiler.ITEM_TABLES:
+            self.tables.setdefault(name, [])
         self.write_source()
         self.catalog = self.root/'catalog.json'
         self.item = dict(name='Sword',source='inven',sourceId='20',sourceUrl='https://lineagem.inven.co.kr/db/item/20',slot='weapon',type='sword',grade='희귀')

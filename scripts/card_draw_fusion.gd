@@ -31,6 +31,7 @@ var known_ids: Dictionary = {} # category -> id -> grade
 var owned: Dictionary = {} # category -> id -> true (permanently unlocked)
 var spare: Dictionary = {} # category -> id -> duplicate count (consumable)
 var pity: Dictionary = {} # category -> source grade -> consecutive accumulated failures
+var source_card_receipts: Array = [] # Exact fixed-item grants, including no-swap provenance.
 
 func _init() -> void:
 	rng.randomize()
@@ -46,6 +47,7 @@ static func card_id(record: Dictionary) -> String:
 	return "fallback:" + str(record.get("grade", "")) + ":" + name_value + ":" + str(record.get("type", ""))
 
 func configure(catalog: Dictionary) -> void:
+	source_card_receipts.clear()
 	preserved_unmapped_collection.clear()
 	source_merge_blocked.clear()
 	pools.clear()
@@ -140,6 +142,17 @@ func _receive(category: String, entry: Dictionary) -> Dictionary:
 
 func draw_pack(category: String) -> Dictionary:
 	return draw_cards(category, PACK_SIZE)
+
+func receive_source_card(category: String, record: Dictionary, receipt: Dictionary) -> Dictionary:
+	var identity: String = card_id(record)
+	if not CATEGORIES.has(category) or str(record.get("source", "")) != "lineagem_base508" or int(receipt.get("card_id", -1)) != int(record.get("source_card_id", -2)) or str(known_ids.get(category, {}).get(identity, "")) != str(record.get("grade", "")):
+		return {"ok":false,"error":"지급할 원본 카드 ID가 등록되지 않았습니다"}
+	var result: Dictionary = _receive(category, {"id":identity, "record":record})
+	var proof: Dictionary = receipt.duplicate(true)
+	proof["category"] = category
+	proof["identity"] = identity
+	source_card_receipts.append(proof)
+	return {"ok":true, "category":category, "results":[result]}
 
 func draw_cards(category: String, count: int) -> Dictionary:
 	# Valid counts are exactly the supported ticket sizes; validation precedes mutation.
@@ -294,10 +307,12 @@ func export_state() -> Dictionary:
 		"owned": owned.duplicate(true),
 		"spare": spare.duplicate(true),
 		"pity": pity.duplicate(true),
+		"source_card_receipts": source_card_receipts.duplicate(true),
 		"preserved_unmapped_collection": preserved_unmapped_collection.duplicate(true)
 	}
 
 func import_state(input: Variant) -> void:
+	source_card_receipts.clear()
 	for category: String in CATEGORIES:
 		owned[category] = {}
 		spare[category] = {}
@@ -305,6 +320,11 @@ func import_state(input: Variant) -> void:
 	if not (input is Dictionary):
 		return
 	var state: Dictionary = input as Dictionary
+	if state.get("source_card_receipts", []) is Array:
+		source_card_receipts = state.get("source_card_receipts", []).duplicate(true)
+		for receipt: Dictionary in source_card_receipts:
+			for field: String in ["item_class_id","card_id","bless"]:
+				if receipt.has(field): receipt[field] = int(receipt[field])
 	preserved_unmapped_collection = state.get("preserved_unmapped_collection", {}).duplicate(true)
 	var raw_owned: Variant = state.get("owned", {})
 	var raw_spare: Variant = state.get("spare", {})

@@ -131,6 +131,8 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String) -> bool:
+	var source_record: Dictionary = world.call("_find_catalog_item_record", item_name)
+	if preload("res://scripts/loot/patch523_item_use.gd").try_use(world, source_record): return true
 	if item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
 		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
 		if bool(source_result.get("handled",false)):

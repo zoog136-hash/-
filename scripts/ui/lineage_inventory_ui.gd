@@ -602,10 +602,10 @@ func _matches_category(record: Dictionary, item_name: String) -> bool:
 	var slot := str(record.get("slot", "")).to_lower()
 	var item_type := str(record.get("type", ""))
 	if category_filter == "장비":
-		return slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","necklace","armor"]
+		return slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","necklace","armor"]
 	if category_filter == "소모품":
 		return slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	return not (slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","necklace","armor","consumable"])
+	return not (slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","necklace","armor","consumable"])
 
 func _refresh_detail(item_name: String) -> void:
 	var selected_reference: String = item_name

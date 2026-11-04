@@ -74,6 +74,15 @@ def compile_pack(source: Path, catalog: Path):
         bindings[item_id] = {k: record.get(k, '') for k in ('name', 'source', 'sourceId', 'sourceUrl', 'slot', 'type', 'grade')}
         bindings[item_id]['binding_kind'] = 'native_523_definition'
         del unresolved[item_id]
+    reward_ids = {str(reward['item_class_id']) for definition in item_definitions.values()
+                  for spec in [definition['native_record'].get('source_use_spec', {})]
+                  if spec.get('kind') in ('guaranteed_bag', 'source_weighted_bag', 'mixed_rewards_bag') and spec.get('activation_status') == 'unrestricted'
+                  for reward in spec['rewards']}
+    use_counts = collections.Counter(
+        definition['native_record']['source_use_spec']['kind']
+        for definition in item_definitions.values()
+        if not definition['original_item'].get('TestItem', True)
+        and definition['native_record'].get('source_use_spec', {}).get('activation_status') == 'unrestricted')
     drops = collections.defaultdict(list)
     payloads = collections.Counter()
     pairs = collections.defaultdict(set)
@@ -85,7 +94,7 @@ def compile_pack(source: Path, catalog: Path):
         pairs[row['NpcClassID'], row['ItemClassID']].add((row['Bless'], row['RequiredQuestID']))
     document = {
         'schema': 2, 'kind': KIND, 'source_snapshot': 'patch523',
-        'policy': 'Source membership and exact item definitions. Existing positive host rates and roll counts; previously zero field high grades reuse existing boss grade rates. Quantity=1 host policy, never inferred source rates/quantities. Quest rows blocked; no quest reintroduction. Exact duplicate payloads do not add weight. Bless and quest variants remain distinct.',
+        'policy': 'Source membership and exact item definitions. Existing positive host rates and roll counts; previously zero field high grades reuse existing boss grade rates. Monster-drop quantity=1 host policy, never inferred source drop rates/quantities. Container payouts retain source quantities and complete source weights; random selection count is a configurable local rule. Quest rows blocked; no quest reintroduction. Exact duplicate payloads do not add weight. Bless and quest variants remain distinct.',
         'source_tables': provenance, 'catalog_sha256': digest(catalog.read_bytes()),
         'npcs': {str(i): {'sprite_id': r['Sprite'], 'source_name': r['Name'],
                            'display_name': descriptions.get(r['DescId'], ''),
@@ -96,12 +105,16 @@ def compile_pack(source: Path, catalog: Path):
         'drops': dict(drops), 'bindings': bindings, 'unresolved_item_ids': unresolved,
         'item_definitions': item_definitions,
         'native_item_ids': sorted(existing_catalog_gaps, key=int),
+        'native_reward_item_ids': sorted(reward_ids-existing_catalog_gaps.keys(), key=int),
+        'item_use_counts': dict(use_counts),
         'existing_catalog_gaps': existing_catalog_gaps,
         'bless_codes': {str(i): r['Name'].lower() for i, r in bless.items()},
         'counts': {'rows': len(tables['NpcItemDropView']), 'npc_classes': len(drops),
                    'item_classes': len(bindings)+len(unresolved), 'verified_item_bindings': len(bindings),
                    'existing_catalog_bindings': len(bindings)-len(existing_catalog_gaps),
                    'native_definition_bindings': len(existing_catalog_gaps),
+                   'item_definitions': len(item_definitions),
+                   'reward_definition_closure': len(set(item_definitions)-set(bindings)),
                    'unresolved_item_bindings': len(unresolved),
                    'rows_with_verified_binding': sum(str(r['ItemClassID']) in bindings for r in tables['NpcItemDropView']),
                    'quest_conditional_rows': sum(r['RequiredQuestID'] != 0 for r in tables['NpcItemDropView']),
