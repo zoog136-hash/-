@@ -107,6 +107,11 @@ var resolving_combat_action: bool = false
 var stat_hud_refresh_pending: bool = false
 const PRESENTATION = preload("res://scripts/animation/presentation_preferences.gd")
 const SOURCE_OPTIMIZATION = preload("res://scripts/animation/source_optimization.gd")
+const LOCAL_PRESENTATION = preload("res://scripts/animation/local_presentation_region.gd")
+const PRESENTATION_EFFECT_PACK = preload("res://scripts/animation/presentation_effect_pack.gd")
+var presentation_effect_pack = PRESENTATION_EFFECT_PACK.new()
+var presentation_effect_action: int = 0
+var presentation_effect_enabled: bool = false
 var source_optimization = SOURCE_OPTIMIZATION.new()
 var source_optimization_result: Dictionary = {"status":"source_not_loaded","settings":{}}
 var source_region_settings: Dictionary = {}
@@ -114,6 +119,9 @@ var source_optimization_signature: String = ""
 var presentation_global_settings: Dictionary = PRESENTATION.DEFAULTS.duplicate(true)
 var presentation_region_settings: Dictionary = {}
 var presentation_settings: Dictionary = PRESENTATION.DEFAULTS.duplicate(true)
+var local_presentation_regions: Dictionary = {}
+var local_presentation_result: Dictionary = {"status":"off","settings":{}}
+var local_presentation_signature: String = ""
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
@@ -1294,10 +1302,20 @@ func _connect_signals() -> void:
 			for map_key: String in saved_presentation.get_section_keys("visual_regions"):
 				var local: Variant = saved_presentation.get_value("visual_regions", map_key)
 				if local is Dictionary: presentation_region_settings[map_key] = PRESENTATION.region(local)
+		if saved_presentation.has_section("presentation_local_regions"):
+			for map_key: String in saved_presentation.get_section_keys("presentation_local_regions"):
+				var rule: Dictionary = LOCAL_PRESENTATION.normalized(saved_presentation.get_value("presentation_local_regions",map_key))
+				if not rule.is_empty(): local_presentation_regions[map_key] = rule
 		var source_directory: String = str(saved_presentation.get_value("source_optimization","path",saved_presentation.get_value("source_optimization","directory","")))
 		if not source_directory.is_empty():
 			if source_directory.get_extension().to_lower()=="zip": source_optimization.load_zip(source_directory)
 			else: source_optimization.load_directory(source_directory)
+		var effect_directory: String = str(saved_presentation.get_value("presentation_effect","path",""))
+		if not effect_directory.is_empty(): presentation_effect_pack.load_directory(effect_directory)
+		var effect_enabled: Variant = saved_presentation.get_value("presentation_effect","enabled",false)
+		presentation_effect_enabled = effect_enabled if effect_enabled is bool else false
+		var effect_action: Variant = saved_presentation.get_value("presentation_effect","action",0)
+		presentation_effect_action = int(effect_action) if (effect_action is int or effect_action is float) and effect_action in [0,3] else 0
 	apply_presentation_settings(PRESENTATION.normalized(presentation_global_settings))
 	player.attack_strike.connect(_release_player_attack)
 	player.attack_cancelled.connect(_cancel_player_attack)
@@ -8020,7 +8038,23 @@ func load_source_optimization(path: String, before_install: Callable = Callable(
 func select_source_presentation_effect(sprite_id: int, records: Dictionary) -> int:
 	return source_optimization.simplified_sprite(sprite_id, str(presentation_settings.effect_detail)=="low", records)
 
+func load_presentation_effect_pack(path: String, before_install: Callable = Callable()) -> Dictionary:
+	var candidate = PRESENTATION_EFFECT_PACK.new()
+	var result: Dictionary = candidate.load_directory(path)
+	if not bool(result.ok): return result
+	if before_install.is_valid():
+		var saved: Variant = before_install.call(path)
+		if not saved is int or int(saved)!=OK: return {"ok":false,"error":"효과 후보를 저장하지 못했습니다. 기존 선택을 유지합니다."}
+	presentation_effect_pack = candidate
+	return result
+
+func presentation_effect_manifest(sprite_id: int) -> String:
+	if not presentation_effect_enabled or sprite_id not in [24941,29044]: return ""
+	var path: String = str(presentation_effect_pack.manifests.get(presentation_effect_action,""))
+	return path if FileAccess.file_exists(path) else ""
+
 func _update_source_optimization() -> void:
+	_update_local_presentation()
 	if not bool(presentation_global_settings.get("source_region_optimization",false)):
 		if not source_region_settings.is_empty():
 			source_region_settings.clear()
@@ -8038,10 +8072,30 @@ func _update_source_optimization() -> void:
 	source_region_settings = result.settings
 	_refresh_presentation_settings()
 
+func set_local_presentation_region(map_id: String, value: Dictionary, erase: bool = false) -> void:
+	if erase: local_presentation_regions.erase(map_id)
+	else:
+		var rule: Dictionary = LOCAL_PRESENTATION.normalized(value)
+		if rule.is_empty(): return
+		local_presentation_regions[map_id] = rule
+	_update_local_presentation()
+
+func _update_local_presentation() -> void:
+	if not is_instance_valid(player): return
+	if not local_presentation_regions.has(active_map_id) and local_presentation_result.status=="off": return
+	var rule: Dictionary = local_presentation_regions.get(active_map_id,{})
+	var result: Dictionary = LOCAL_PRESENTATION.at_point(rule,player.global_position,source_optimization)
+	var signature: String = JSON.stringify(result)
+	if signature==local_presentation_signature: return
+	local_presentation_signature = signature
+	local_presentation_result = result
+	_refresh_presentation_settings()
+
 func _refresh_presentation_settings() -> void:
 	var source_defaults: Dictionary = presentation_global_settings.duplicate(true)
 	if bool(source_defaults.get("source_region_optimization",false)): source_defaults.merge(source_region_settings,true)
 	presentation_settings = PRESENTATION.effective(source_defaults, presentation_region_settings, active_map_id)
+	presentation_settings.merge(local_presentation_result.settings,true)
 	if is_instance_valid(companion_sprite) and is_instance_valid(player):
 		doll_motion.set_presentation_hidden(bool(presentation_settings.hide_doll), $Companion, companion_sprite, player)
 	if is_instance_valid(secondary_doll_visual):

@@ -349,6 +349,29 @@ func _on_source_annotation(event: Dictionary) -> void:
 		spawn_source_overlay(target_id, posmod(int(event.direction) - 3, 8))
 
 func spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Vector2.INF) -> bool:
+	var ancestor: Node = self
+	while ancestor!=null:
+		if ancestor.has_method("presentation_effect_manifest"):
+			var path: String = str(ancestor.call("presentation_effect_manifest",sprite_id))
+			if not path.is_empty() and FileAccess.file_exists(path):
+				var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+				if index is Dictionary and index.get("records") is Dictionary:
+					var old_path: String = _manifest_path
+					var old_records: Dictionary = _manifest_records
+					var old_mode: String = _playback_mode
+					_manifest_path = path
+					_manifest_records = index.get("records",{})
+					_playback_mode = "compatible" # Explicit per-effect opt-in; actor mode is restored.
+					var shown: bool = _spawn_source_overlay(sprite_id,facing,world_point)
+					_manifest_path = old_path
+					_manifest_records = old_records
+					_playback_mode = old_mode
+					if shown: return true
+			break
+		ancestor = ancestor.get_parent()
+	return _spawn_source_overlay(sprite_id,facing,world_point)
+
+func _spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Vector2.INF) -> bool:
 	if _playback_mode != "compatible" or not _manifest_records.has("overlay:" + str(sprite_id)): return false
 	var selected_id: int = sprite_id
 	var ancestor: Node = self

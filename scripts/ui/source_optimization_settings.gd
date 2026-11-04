@@ -11,6 +11,8 @@ var automatic: CheckButton
 var directory_dialog: FileDialog
 var choose_button: Button
 var zip_button: Button
+var local_regions: Node
+var effect_settings: Node
 
 func configure(host: Node) -> void:
 	name = "SourceOptimizationSettings"
@@ -45,6 +47,12 @@ func configure(host: Node) -> void:
 	automatic.set_pressed_no_signal(bool(world.presentation_global_settings.get("source_region_optimization",false)))
 	automatic.toggled.connect(_automatic_changed)
 	add_child(automatic)
+	local_regions = preload("res://scripts/ui/local_presentation_region_settings.gd").new()
+	add_child(local_regions)
+	local_regions.configure(self)
+	effect_settings = preload("res://scripts/ui/presentation_effect_settings.gd").new()
+	add_child(effect_settings)
+	effect_settings.configure(self)
 	_refresh()
 
 func _choose_directory(folder: bool = true) -> void:
@@ -93,6 +101,7 @@ func _refresh() -> void:
 	_show_definition()
 
 func _show_definition() -> void:
+	if is_instance_valid(local_regions): local_regions.refresh()
 	if regions.item_count==0:
 		definition.text = "원본 폴더를 선택해 주세요. 게임 기본 설정은 유지됩니다."
 		return

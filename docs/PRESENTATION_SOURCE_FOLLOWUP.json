@@ -58,6 +58,38 @@
     ],
     "required_raw_payload_received": false,
     "latest523_container_identity_verified": false,
-    "failed_Library_transfer_retried": false
+    "failed_Library_transfer_retried": false,
+    "small_effect_SP2_received": 4,
+    "small_effect_provided_DAT_proof_matches_declared_current523": true,
+    "consumer_hashed_whole_small_effect_DAT": false,
+    "full_effect_SP2_pending": 0,
+    "full_effect_raw_IDs_pending": [],
+    "raw_SP2_received": 10,
+    "current_SPR29_received_and_compared": true
+  },
+  "own_local_mode": {
+    "default": "absent/off",
+    "bounds": "inclusive square in current game-world coordinates, independently chosen by user",
+    "configurable_half_extent": {
+      "min": 16,
+      "max": 4096,
+      "initial": 256,
+      "native_distance_claim": false
+    },
+    "source_values": "exact original Default or explicit user-selected Condition flags",
+    "native_M_coordinate_or_event_activation_claim": false,
+    "per_map": true,
+    "restores_prior_preference_outside": true,
+    "write_failure_atomic": true,
+    "actual_UI_and_restart_verified": true
+  },
+  "effect_candidate": {
+    "decoded_source_inputs": 10,
+    "models": 4,
+    "candidate_PNG": 736,
+    "current_SPR_target_declarations_equal_to_historical": true,
+    "source_FPS_ticks_preserved": true,
+    "geometry_blend_direction_trigger_meanings": "TWILIGHT candidate hypotheses; not certified M engine semantics",
+    "actual_UI_preview_and_exact_pair_runtime_adapter_verified": true
   }
 }
