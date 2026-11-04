@@ -17,6 +17,7 @@ var effect_choices: OptionButton
 var effect_action: OptionButton
 var effect_choice_ids: Array[int] = [0]
 var compat_status: Label
+var extension_status: Label
 
 func _ready() -> void:
 	layer = 120
@@ -144,6 +145,33 @@ func _ready() -> void:
 		spin.value_changed.connect(func(value: float) -> void:
 			service.clear(); service.compatibility.set(property,int(value) if property == "summon_count" else value); persist_compat_settings())
 	compat_status = Label.new(); compat_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; compat_box.add_child(compat_status)
+	var extra_open := Button.new(); extra_open.name = "BossExtensionsOpen"; extra_open.text = "회복·상태·지역 NPC 규칙"; column.add_child(extra_open)
+	var extra := VBoxContainer.new(); extra.hide(); column.add_child(extra)
+	extra_open.pressed.connect(func() -> void: extra.visible = not extra.visible)
+	var extra_note := Label.new(); extra_note.text = "원문 제한·치유 감소를 소비합니다. 독 간격·회복 대상·해제 범위·반사 결합식은 자체 설정입니다.\n지역 자동 적용은 실제 source map/Land/원문 영역이 일치할 때만 합니다. 자체 문맥은 선택한 한 버프를 현재 필드의 지정 반경에 연결합니다."; extra_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; extra.add_child(extra_note)
+	for spec: Array in [["자체 회복·해제·독·NPC 버프 실행","enabled"],["자체 역치유 허용 · 물약에는 적용하지 않음","reverse_healing"],["NPC 환경 버프 소비 켜기","environment_enabled"],["일치하는 원문 Land/영역 자동 소비","native_regions"],["자체 카운터 확률·감소·반사 결합식","reaction_enabled"]]:
+		var toggle := CheckButton.new(); toggle.name = "BossExt_"+str(spec[1]); toggle.text = spec[0]; toggle.clip_text = true; toggle.button_pressed = service.extensions.get(spec[1]); extra.add_child(toggle)
+		var property: String = spec[1]
+		toggle.toggled.connect(func(value: bool) -> void:
+			if not update_extension(property,value): toggle.set_pressed_no_signal(not value))
+	var target := OptionButton.new(); target.name = "BossExt_heal_target"; target.add_item("자체 회복 대상: 플레이어 · 원문 Enemy 축"); target.add_item("자체 회복 대상: 시전자"); target.add_item("자체 회복 대상: 현재 선택 NPC"); target.select(service.extensions.heal_target); extra.add_child(target)
+	target.item_selected.connect(func(value: int) -> void:
+		if not update_extension("heal_target",value): target.select(service.extensions.heal_target))
+	for spec: Array in [["자체 독 간격(초)","poison_interval",.1,10,.1],["자체 문맥 반경(px)","own_radius",16,2048,16],["자체 반사 배율","reaction_scale",0,10,.1]]:
+		var row := HBoxContainer.new(); extra.add_child(row)
+		var label := Label.new(); label.text = spec[0]; label.size_flags_horizontal = Control.SIZE_EXPAND_FILL; row.add_child(label)
+		var spin := SpinBox.new(); spin.name = "BossExt_"+str(spec[1]); spin.min_value = spec[2]; spin.max_value = spec[3]; spin.step = spec[4]; spin.value = service.extensions.get(spec[1]); row.add_child(spin)
+		var property: String = spec[1]
+		spin.value_changed.connect(func(value: float) -> void:
+			if not update_extension(property,value): spin.set_value_no_signal(service.extensions.get(property)))
+	var bind := Button.new(); bind.name = "BossEnvironmentBind"; bind.text = "선택 지역 버프를 현재 필드/내 위치에 자체 연결"; extra.add_child(bind)
+	bind.pressed.connect(bind_environment)
+	var unbind := Button.new(); unbind.name = "BossEnvironmentUnbind"; unbind.text = "자체 지역 문맥 해제"; extra.add_child(unbind)
+	unbind.pressed.connect(func() -> void: update_extension("own_attribute",0))
+	var dismiss := Button.new(); dismiss.name = "BossEnvironmentDispel"; dismiss.text = "선택 NPC 환경 버프 해제 · 자체 재진입 정책"; extra.add_child(dismiss)
+	dismiss.pressed.connect(func() -> void:
+		extension_status.text = "해제됨 · 영역 이탈 후 재진입하면 다시 부여" if service.extensions.dismiss(service.world.selected_monster) else "해제 가능한 현재 NPC 버프 없음")
+	extension_status = Label.new(); extension_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; extra.add_child(extension_status)
 	attacks = ItemList.new(); attacks.name = "AttackList"; attacks.custom_minimum_size.y = 170; column.add_child(attacks)
 	attacks.item_selected.connect(show_attack)
 	detail = RichTextLabel.new(); detail.name = "SkillDetails"; detail.bbcode_enabled = false
@@ -162,6 +190,7 @@ func _process(_delta: float) -> void:
 	status.text = "\n".join(lines)
 	if service.compatibility.enabled:
 		status.text += "\nTWILIGHT 자체 규칙 · 후속%d / 지면%d / 소환%d" % [service.compatibility.waiting.size(),service.compatibility.zones.size(),service.compatibility.summons.size()]
+	if service.extensions.environment_enabled: status.text += "\nNPC 지역 버프 소비: %d개체 · 자체 문맥 %s" % [service.extensions.active.size(),str(service.extensions.own_attribute)]
 
 func fill_selector() -> void:
 	selector.clear()
@@ -195,6 +224,7 @@ func append_chain(chain: Dictionary, lines: PackedStringArray, depth: int = 0) -
 	if not chain.has("source"): lines.append("후속 연결: " + str(chain.get("pending","미확인"))); return lines
 	var spell: Dictionary = chain.source
 	lines.append(("후속 기술: " if depth > 0 else "기술: ") + str(spell.Name))
+	lines.append("원문 MP 소모 %d · %s / 자체 실행은 검증된 방출 시 한 번 차감" % [int(spell.get("MPCost",0)),str(service.catalog.row("Unit",int(spell.get("MPCostUnit",0))).get("Name","단위 미확정"))])
 	for edge: Dictionary in chain.get("bonuses",[]):
 		lines.append("  %s: %s (%s)" % [edge.type.get("Name","미확인"),str(edge.bonus.get("Value","?")),edge.unit.get("Name","단위 미확인")])
 		if int(edge.bonus.get("BonusApplicationTypeID",0)) != 0:
@@ -226,7 +256,8 @@ func show_attack(index: int) -> void:
 			environment_lines.append("%s · 주문 여부 %s · 원문 부여값 %s" % [str(kind.get("Name",invoke.source.get("AttackTypeID",0))),str(invoke.source.get("BySpellAttack",false)),str(invoke.edge.bonus.get("Value",0))])
 		for bonus: Dictionary in attack.buff.bonuses:
 			if bonus.type.get("Name") != "InvokeOption": environment_lines.append("%s: %s (%s)" % [str(bonus.type.get("Name","미확인")),str(bonus.bonus.get("Value",0)),str(bonus.unit.get("Name","단위 미확인"))])
-		environment_lines.append("Territory 범위와 입퇴장 처리가 확인될 때까지 자동 부여하지 않습니다.")
+		environment_lines.append("실제 Land/원문 영역 일치 또는 별도 선택한 자체 문맥에서만 소비합니다. 원문 %d · 자체 필드 %s / 반경 %.0fpx" % [int(attack.attribute.ID),service.extensions.own_map,service.extensions.own_radius])
+		environment_lines.append("소비: 근접/원거리/마법 피해·AC·MR·피해감소·조건부 카운터. HP/STR/DEX/EXP/속도 값은 아직 소비하지 않습니다.")
 		detail.text = "\n".join(environment_lines)
 		return
 	var lines: PackedStringArray = [service.support_reason(attack)]
@@ -253,6 +284,30 @@ func persist_effect_settings() -> void:
 	if effect_settings_status == null: return
 	var result: Error = service.source_effects.save_settings()
 	effect_settings_status.text = "효과 설정 저장됨 · 성장/재화 저장과 별도" if result == OK else "효과 설정 저장 실패 · 현재 세션에만 적용"
+
+func update_extension(property: String, value: Variant) -> bool:
+	var old: Variant = service.extensions.get(property)
+	service.extensions.set(property,value)
+	var result: Error = service.extensions.save_settings()
+	if result != OK: service.extensions.set(property,old)
+	else:
+		service.extensions.active.clear(); service.extensions.incoming.clear(); service.extensions.suppressed.clear()
+		if property == "enabled" and not bool(value): service.extensions.actor_buffs.clear()
+	extension_status.text = "자체 설정 저장됨 · 기존 세이브와 별도" if result == OK else "저장 실패 · 기존 설정으로 원복"
+	if selector != null: refresh_npc()
+	return result == OK
+
+func bind_environment() -> void:
+	if not environment_mode or rows.is_empty(): extension_status.text = "지역 NPC 상태에서 원문 한 행을 선택하세요"; return
+	var selected: PackedInt32Array = attacks.get_selected_items()
+	if selected.is_empty(): return
+	var old: Array = [service.extensions.own_attribute,service.extensions.own_map,service.extensions.own_center]
+	if not service.extensions.bind_current(int(rows[selected[0]].attribute.ID)): extension_status.text = "실제 현재 필드가 필요합니다"; return
+	if service.extensions.save_settings() != OK:
+		service.extensions.own_attribute = old[0]; service.extensions.own_map = old[1]; service.extensions.own_center = old[2]; extension_status.text = "저장 실패 · 기존 문맥으로 원복"
+	else:
+		service.extensions.active.clear(); service.extensions.suppressed.clear()
+		extension_status.text = "자체 문맥 연결됨 · NPC 환경 버프 소비를 켜면 현재 필드/반경에서 적용"
 
 func persist_compat_settings() -> void:
 	if compat_status == null: return

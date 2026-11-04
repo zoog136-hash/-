@@ -852,6 +852,9 @@ func elemental_resistance_percent(element_name: String) -> float:
 func take_damage(amount: int, critical: bool = false, damage_kind: String = "") -> void:
 	if dead:
 		return
+	var source523 = _patch523_service()
+	if source523 != null: amount = source523.extensions.before_damage(self,amount,damage_kind)
+	if amount <= 0: return
 	damage_hit_count += 1
 	aggro_remaining = 10.
 	if social_alert_cooldown <= 0.0 and is_instance_valid(world_controller) and world_controller.get("field_population")!=null:
@@ -1088,7 +1091,9 @@ func advance_source_option_debuffs(delta: float) -> void:
 
 func hit_armor_class() -> int:
 	# Existing local formula expects nonpositive armor; preserve raw native AC for display/audit.
-	return mini(0, armor_class) if not source_m_original.is_empty() else armor_class
+	var base: int = mini(0, armor_class) if not source_m_original.is_empty() else armor_class
+	var source523 = _patch523_service()
+	return base-int(source523.extensions.actor_values(self).get("ArmorClass",0)) if source523 != null else base
 
 func _patch523_service() -> RefCounted:
 	return world_controller.get("patch523_npc_spells") if is_instance_valid(world_controller) else null

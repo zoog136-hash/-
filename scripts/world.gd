@@ -873,7 +873,7 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, source_channel: String = "", by_spell: bool = false) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
@@ -890,7 +890,9 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
+	patch523_npc_spells.extensions.begin_incoming(target,adjusted_damage+stolen,_current_attack_kind() if source_channel.is_empty() else source_channel,by_spell)
 	target.take_damage(adjusted_damage + stolen, critical)
+	patch523_npc_spells.extensions.incoming.erase(target.get_instance_id())
 	if stolen > 0:
 		_refresh_combat_hud()
 
@@ -1904,9 +1906,10 @@ func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
+	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance+int(patch523_npc_spells.extensions.actor_values(target).get("MagicResist",0)))
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -1914,7 +1917,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
 		return false
-	if player.is_silenced():
+	if player.silence_remaining > 0:
 		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
 		return false
 	if target == null or not is_instance_valid(target) or target.dead:
@@ -1969,6 +1972,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	return bleeding
 
 func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_duration: float = 6.0, tick_damage: int = 12, tick_interval: float = 1.0, skill_name: String = "포이즌") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2021,6 +2025,7 @@ func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_durati
 	return poisoned
 
 func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration: float = 2.5, skill_name: String = "피어") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
@@ -2073,6 +2078,7 @@ func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration:
 	return feared
 
 func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: float = 2.5, skill_name: String = "홀드") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2125,6 +2131,7 @@ func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: 
 	return held
 
 func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_duration: float = 3.0, skill_name: String = "사일런스") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2177,6 +2184,7 @@ func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_dura
 	return silenced
 
 func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 10, stun_duration: float = 2.0, skill_name: String = "쇼크 스턴") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2184,7 +2192,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
 		return false
-	if player.is_silenced():
+	if player.silence_remaining > 0:
 		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
 		return false
 	if target == null or not is_instance_valid(target) or target.dead:
@@ -2239,6 +2247,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	return stunned
 
 func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill_name: String = "마법") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2318,6 +2327,7 @@ func _cast_bleed_from_hud() -> void:
 	_cast_bleed_skill(_skill_target(90.0))
 
 func _cast_combat_skill_from_hud(skill_id: String) -> void:
+	if skill_id != "attack" and patch523_npc_spells.blocks("CannotCastSkill"): return
 	match skill_id:
 		"attack":
 			_attack()
@@ -2339,6 +2349,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 			hud.show_message("알 수 없는 스킬입니다")
 
 func _attack() -> void:
+	if patch523_npc_spells.blocks("CannotAttack"): return
 	if is_instance_valid(world_interactions) and world_interactions.primary_is_npc(): return
 	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
@@ -2366,6 +2377,7 @@ func _attack() -> void:
 	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind), auto_attack_timer, true)
 
 func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> void:
+	if patch523_npc_spells.blocks("CannotAttack"): return
 	if not is_instance_valid(target) or target.dead: return
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
 	if rng.randf() >= hit_chance:
@@ -2699,6 +2711,7 @@ func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: in
 	return view
 
 func _collect_ground_drop(drop: Button) -> bool:
+	if patch523_npc_spells.blocks("CannotLoot"): return false
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
 	if not ground_loot.valid_view(drop): return false
 	var pending: Dictionary = ground_loot.records[str(drop.get_meta("id"))]
@@ -2950,6 +2963,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 		return
 	if field_map != null and field_map.is_safe(player.global_position):
 		return
+	damage_value = patch523_npc_spells.extensions.outgoing(attacker,damage_value,attack_type)
 	var normalized_type: String = attack_type
 	if normalized_type != "ranged" and normalized_type != "magic":
 		normalized_type = "melee"
@@ -2994,6 +3008,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var option_result: Dictionary=option_awakening.combat.incoming(attacker,normalized_type,reduced)
 	reduced=int(option_result.damage)
 	hp = maxi(0, hp - reduced)
+	patch523_npc_spells.extensions.on_player_event("attacked")
 	if hp>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal))
 	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
 	if hp > 0:
@@ -4172,6 +4187,7 @@ func _craft_requested(recipe_id: String, batches: int) -> void:
 		hud.call("open_crafting")
 
 func _npc_teleport_requested(map_id: String) -> void:
+	if patch523_npc_spells.blocks("CannotTeleport"): return
 	map_id = NATIVE_PNG.canonical(map_id)
 	if player.is_stunned() or player.is_feared() or player.is_held():
 		hud.show_message("이동 불가 상태에서는 텔레포트할 수 없습니다")
@@ -4263,12 +4279,13 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
-	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
+	apply_patch523_healing(maxi(1,enhanced_heal),true)
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
 	_update_hud()
 
 func _return_to_spawn() -> void:
+	if patch523_npc_spells.blocks("CannotTeleport"): return
 	if player.is_stunned() or player.is_feared():
 		hud.show_message("현재 상태에서는 귀환할 수 없습니다")
 		return
@@ -5543,6 +5560,7 @@ func _tick_skill_cooldowns(delta: float) -> void:
 		skill_cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.ready(skill, announce)
 	if not pending_attack.is_empty(): return false
 	var skill_name: String = str(skill.get("name", ""))
@@ -5569,7 +5587,7 @@ func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 		if announce:
 			hud.show_message("%s · 화살 %d개 필요" % [skill_name, required_ammo] if _is_item_equipped("화살") else "%s · 화살을 착용하세요" % skill_name)
 		return false
-	if not charge_skill.is_empty() or player.is_stunned() or player.is_feared() or (player.is_silenced() and int(skill.get("mp", 0)) > 0):
+	if not charge_skill.is_empty() or player.is_stunned() or player.is_feared() or ((player.silence_remaining > 0 or (player.source_523_spell_blocked and _skill_attack_kind(skill) == "magic")) and int(skill.get("mp",0)) > 0):
 		if announce:
 			hud.show_message("현재 상태에서는 스킬을 사용할 수 없습니다")
 		return false
@@ -5811,6 +5829,7 @@ func _cast_job_skill(skill_name: String) -> bool:
 	return success
 
 func _spend_skill_mp(skill: Dictionary) -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill") or (patch523_npc_spells.blocks("CannotCastSpell") and _skill_attack_kind(skill) == "magic"): return false
 	var mp_cost: int = maxi(0, int(skill.get("mp", 0)))
 	if mp < mp_cost:
 		hud.show_message("MP가 부족합니다")
@@ -6161,7 +6180,7 @@ func _cast_job_heal_skill(skill: Dictionary) -> bool:
 	if bool(skill.get("heal_to_full", false)):
 		amount = _effective_max_hp()
 	var before: int = hp
-	hp = mini(_effective_max_hp(), hp + amount)
+	apply_patch523_healing(amount,false)
 	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), hp - before])
 	hud.append_log("%s 회복 · HP +%d" % [str(skill.get("name", "")), hp - before])
 	return true
@@ -6211,6 +6230,7 @@ func _teleport_landing_clear(candidate: Vector2) -> bool:
 	return true
 
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
+	if patch523_npc_spells.blocks("CannotTeleport"): return false
 	if field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules() and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
 		hud.show_message("원본 규칙상 순간이동 제한 지역입니다")
 		return false
@@ -7866,6 +7886,7 @@ func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: 
 	pending_attack["duration"] = _skill_motion_duration(skill)
 
 func _queue_player_attack(target: TwilightMonster, kind: String, callback: Callable, duration: float, normal: bool = false, max_range: float = 0.0) -> bool:
+	if patch523_npc_spells.blocks("CannotAttack" if normal else "CannotCastSkill") or (kind == "magic" and patch523_npc_spells.blocks("CannotCastSpell")): return false
 	if not is_instance_valid(target) or target.dead or hp <= 0: return false
 	player.cancel_attack()
 	player.clear_click_path()
@@ -7901,6 +7922,8 @@ func _cancel_player_attack(id: int) -> void:
 		pending_attack.clear()
 
 func _release_player_attack(id: int) -> void:
+	if patch523_npc_spells.blocks("CannotAttack" if bool(pending_attack.get("normal",false)) else "CannotCastSkill"):
+		_cancel_player_attack(id); return
 	if int(pending_attack.get("id", -1)) != id: return
 	var action: Dictionary = pending_attack
 	pending_attack = {}
@@ -8125,6 +8148,21 @@ func _patch523_item_allowed() -> bool:
 	if not patch523_npc_spells.blocks("CannotUseItem"): return true
 	if is_instance_valid(hud): hud.show_message("현재 상태에서는 아이템을 사용할 수 없습니다")
 	return false
+
+func apply_patch523_healing(amount: int, potion: bool = false) -> void:
+	var adjusted: int = patch523_npc_spells.extensions.healing(amount,potion)
+	if adjusted < 0: apply_patch523_secondary_damage(-adjusted,"역치유")
+	else: hp = mini(_effective_max_hp(),hp+adjusted)
+	if adjusted > 0: patch523_npc_spells.extensions.on_player_event("healed")
+
+func apply_patch523_secondary_damage(amount: int, label: String) -> void:
+	if amount <= 0 or hp <= 0: return
+	hp = maxi(0,hp-amount)
+	player.show_status_text(label+" "+str(amount))
+	hud.append_log("%s 피해 %d · TWILIGHT 자체 결합식" % [label,amount])
+	if hp <= 0:
+		_respawn_player(label+" 피해로 사망 후 부활했습니다"); _update_hud()
+	else: _refresh_combat_hud()
 
 func resolve_patch523_npc_hit(actor: TwilightMonster, raw: int, spell: Dictionary, channel: String = "magic") -> bool:
 	# Keep one authoritative hit/crit/counter/resistance/death call. Suppress

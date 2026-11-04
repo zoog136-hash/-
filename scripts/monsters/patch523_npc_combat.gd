@@ -7,6 +7,7 @@ const PREVIOUS_EFFECT_SHA = "f9e9ce484e45e83fa0cb98a60a3778dc0f482d59968bda4c7ac
 var catalog: CATALOG = CATALOG.new()
 var source_effects = preload("res://scripts/monsters/patch523_effect_frames.gd").new()
 var compatibility = preload("res://scripts/monsters/patch523_boss_compat.gd").new()
+var extensions = preload("res://scripts/monsters/patch523_npc_extensions.gd").new()
 var world: Node
 var host_enabled: bool = false
 var pending: Dictionary = {}
@@ -40,14 +41,17 @@ func configure(scene: Node) -> bool:
 	source_effects.load_pack(effect_manifest,effect_manifest_sha)
 	var loaded: bool = FileAccess.file_exists(path) and catalog.load_pack(path, digest)
 	compatibility.configure(self)
+	extensions.configure(self)
 	return loaded
 
 func clear() -> void:
+	extensions.clear()
 	compatibility.clear()
 	if is_instance_valid(world) and is_instance_valid(world.get("player")):
 		world.player.set("source_523_movement_blocked",false)
 	var old_actions: Array = pending.values()
 	pending.clear(); cursor.clear(); followups.clear(); player_buffs.clear(); last_event.clear(); effect_status.clear()
+	sync_restrictions()
 	for action: Dictionary in old_actions:
 		var actor: Node = action.actor.get_ref()
 		if is_instance_valid(actor) and int(actor.life_id) == int(action.life) and actor.motion.get_instance_id() == int(action.motion_id) and int(actor.motion.sequence) == int(action.sequence):
@@ -59,6 +63,7 @@ func clear() -> void:
 func tick(delta: float) -> void:
 	if int(world.get("combat_generation")) != generation or int(world.get("hp")) <= 0:
 		clear(); generation = int(world.get("combat_generation"))
+	if host_enabled: extensions.tick_player(delta)
 	for id: int in player_buffs.keys():
 		player_buffs[id].remaining -= maxf(0.0,delta)
 		if float(player_buffs[id].remaining) <= 0.0: player_buffs.erase(id)
@@ -75,6 +80,8 @@ func tick(delta: float) -> void:
 		if not valid_action(actor,action) or int(actor.motion.sequence) != int(action.sequence) or actor.is_stunned() or actor.is_feared() or not actor._target_attackable() or bool(actor.get("returning_home")) or silenced_for_attack(actor,action.attack): followups.erase(key)
 	effects = effects.filter(func(effect: Node2D) -> bool: return is_instance_valid(effect) and not effect.is_queued_for_deletion())
 	compatibility.tick(delta)
+	sync_restrictions()
+	extensions.tick_environment(delta)
 
 func forget(actor: Node) -> void:
 	compatibility.forget(actor)
@@ -104,14 +111,24 @@ func status_plan(spell_id: int) -> Dictionary:
 	var buffs: Array = []
 	for value: Variant in catalog.values("SpellBonus",spell_id,"BuffClassID","BuffClassID"):
 		var id: int = int(value)
-		var supported: Dictionary = {}
-		for name: String in ["CannotMove","CannotUseItem"]:
-			if catalog.scalar("BuffBonus",id,name,"TrueFalse") == 1: supported[name] = 1
-		for name: String in ["MeleeHit","ArmorClassBonus"]:
-			var raw: Array = catalog.values("BuffBonus",id,name,"Value")
-			if raw.size() == 1: supported[name] = raw[0]
+		var supported: Dictionary = buff_values(id)
 		if not supported.is_empty(): buffs.append({"id":id,"values":supported})
 	return {"duration":duration,"buffs":buffs} if not buffs.is_empty() else {}
+
+func buff_values(id: int) -> Dictionary:
+	var result: Dictionary = {}
+	for name: String in ["CannotMove","CannotUseItem","CannotAttack","CannotCastSpell","CannotCastSkill","CannotLoot","CannotTeleport","Stunned"]:
+		if catalog.scalar("BuffBonus",id,name,"TrueFalse") == 1: result[name] = 1
+	for name: String in ["MeleeHit","ArmorClassBonus","HPHealDecreasePercent","HPPotionDecreasePercent","PoisonDamageDiceNumber","PoisonDamageDiceSpotCount","DamageReduction"]:
+		var values: Array = catalog.values("BuffBonus",id,name)
+		if values.size() == 1: result[name] = values[0]
+	return result
+
+func sync_restrictions() -> void:
+	if is_instance_valid(world) and is_instance_valid(world.get("player")):
+		world.player.set("source_523_movement_blocked",blocks("CannotMove"))
+		if world.player.has_method("set_source_523_restrictions"):
+			world.player.set_source_523_restrictions({"spell":blocks("CannotCastSpell"),"stunned":blocks("Stunned"),"attack":blocks("CannotAttack"),"skill":blocks("CannotCastSkill")})
 
 func damage_spec(attack: Dictionary, spell: Dictionary = {}) -> Dictionary:
 	var id: int = int(spell.get("ID",0))
@@ -128,9 +145,10 @@ func support_reason(attack: Dictionary) -> String:
 	var spell: Dictionary = catalog.row("SpellClass",id)
 	if spell.is_empty(): return "주문 정의 미확보"
 	if compatibility.handles(spell): return "사용 가능 · TWILIGHT 자체 후속/지면/소환 규칙"
+	if extensions.handles(spell): return "사용 가능 · 자체 대상/해제 계약"
 	if bool(spell.get("TestSpell",false)): return "테스트 정의 · 실행 보류"
 	if int(spell.get("TargettingTypeID",0)) not in [1,2] or int(spell.get("TargetKindID",0)) != 3: return "대상·장판·소환 해석 필요"
-	if int(spell.get("MPCost",0)) != 0 or int(spell.get("HPCost",0)) != 0 or int(spell.get("VPCost",0)) != 0 or int(spell.get("SpellMaterialItemAmount",0)) != 0: return "자원 소모 계약 필요"
+	if not extensions.flat_cost_supported(spell) or (int(spell.get("MPCost",0)) > 0 and not extensions.enabled): return "자원 소모 계약 필요"
 	var category: int = int(spell.get("SpellCategoryID",0))
 	if category == 4: return "회복 주문 · 대상 선택 해석 필요"
 	if category == 8: return "사용 가능 · 일부 상태" if not status_plan(id).is_empty() else "상태 수식·효과 해석 필요"
@@ -176,11 +194,11 @@ func try_begin(actor: Node, line_of_sight: bool, explicit_attack_id: int = -1) -
 	if attack.is_empty():
 		var choices: Array = []
 		for candidate: Dictionary in catalog.attack_roots(int(actor.source_m_npc_id)):
-			if supported(candidate) and not silenced_for_attack(actor,candidate): choices.append(candidate)
+			if supported(candidate) and not silenced_for_attack(actor,candidate) and extensions.can_start(actor,candidate): choices.append(candidate)
 		if choices.is_empty(): return false
 		var next: int = int(cursor.get(key,0)) % choices.size()
 		attack = choices[next]; cursor[key] = next + 1
-	if not supported(attack) or silenced_for_attack(actor,attack): return false
+	if not supported(attack) or silenced_for_attack(actor,attack) or not extensions.can_start(actor,attack): return false
 	return begin_action(actor,attack,seen,selection)
 
 func begin_action(actor: Node, attack: Dictionary, seen: Array, selection: String, spell_override: Dictionary = {}, linked: Dictionary = {}) -> bool:
@@ -225,7 +243,12 @@ func release(actor: Node, sequence: int) -> bool:
 	if native_spell and actor.is_silenced() and catalog.scalar("SpellBonus",int(spell.get("ID",0)),"IgnoreCannotCastSpell","TrueFalse") != 1: return true
 	var id: int = int(spell.get("ID",0))
 	var hit: bool = false
-	if native_spell and compatibility.handles(spell):
+	if native_spell and int(spell.get("MPCost",0)) > 0:
+		if not extensions.enabled or not extensions.flat_cost_supported(spell) or not extensions.can_pay(actor,spell): return true
+		actor.mp -= int(spell.MPCost)
+	if native_spell and extensions.handles(spell):
+		hit = extensions.release(actor,spell,true)
+	elif native_spell and compatibility.handles(spell):
 		hit = bool(compatibility.release(actor,spell,action).get("hit",false))
 	elif not native_spell or int(spell.get("SpellCategoryID",0)) == 1:
 		var dice: Dictionary = damage_spec(attack,spell)
@@ -234,7 +257,12 @@ func release(actor: Node, sequence: int) -> bool:
 		for i: int in range(int(dice.count)): raw += world.rng.randi_range(1,int(dice.spots))
 		hit = bool(world.resolve_patch523_npc_hit(actor,raw,spell,str(action.kind)))
 	else:
-		hit = world._roll_monster_hit(actor,"magic")
+		var dice: Dictionary = damage_spec(attack,spell)
+		if not dice.is_empty():
+			var raw: int = int(dice.base)
+			for n: int in int(dice.count): raw += world.rng.randi_range(1,int(dice.spots))
+			hit = bool(world.resolve_patch523_npc_hit(actor,raw,spell,str(action.kind)))
+		else: hit = world._roll_monster_hit(actor,"magic")
 	if not valid_action(actor,action): return true
 	last_event = {"phase":"impact","attack_id":attack.ID,"spell_id":id,"host_resolved":hit,"followups":catalog.spell_chain(id).get("next",[]) if native_spell else [],"followup_execution":"NextSpell pending native trigger/target; NextAttack uses explicit host-release contract"}
 	if native_spell and compatibility.handles(spell):
@@ -242,7 +270,7 @@ func release(actor: Node, sequence: int) -> bool:
 		last_event["followup_execution"] = "TWILIGHT conditional followup/ground/summon policy; native activation/geometry/membership not asserted"
 	if native_spell:
 		if hit:
-			var plan: Dictionary = status_plan(id)
+			var plan: Dictionary = {} if extensions.handles(spell) else status_plan(id)
 			if not plan.is_empty():
 				var chance: float = world._status_effect_chance(int(actor.magic_accuracy),int(actor.monster_level),int(world._effective_mr()),int(world.level))
 				if world.rng.randf() < chance:
@@ -287,6 +315,7 @@ func apply_player_buff(id: int, seconds: float, values: Dictionary) -> bool:
 				# established. Never guess a winning barrier/debuff variant.
 				return false
 	player_buffs[id] = {"id":id,"remaining":seconds,"values":values.duplicate(true)}
+	sync_restrictions()
 	return true
 
 func modifier(name: String) -> float:

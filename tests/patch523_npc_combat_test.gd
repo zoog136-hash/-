@@ -99,7 +99,7 @@ func run() -> void:
 	check(chain.next.size() == 1 and int(chain.next[0].spell.source.ID) == 104,"typed conditional followup retained")
 	check(service.catalog.values("SpellBonus",103,"NextSpellClassID").is_empty(),"conditional value not made unconditional")
 	var plan: Dictionary = service.status_plan(101)
-	check(plan.buffs.size() == 1 and plan.buffs[0].values.has("CannotUseItem") and not plan.buffs[0].values.has("CannotCastSpell"),"spell restriction not broadened into skill silence")
+	check(plan.buffs.size() == 1 and plan.buffs[0].values.has("CannotUseItem") and plan.buffs[0].values.has("CannotCastSpell") and not plan.buffs[0].values.has("CannotCastSkill"),"spell restriction consumed without inventing skill silence")
 	check(service.apply_player_buff(201,12,plan.buffs[0].values) and service.blocks("CannotUseItem"),"item restriction stored")
 	check(not service.apply_player_buff(202,12,{"CannotUseItem":1}),"nonoverlapping no-priority group not guessed")
 	service.tick(13); check(not service.blocks("CannotUseItem"),"expiration restores item use")
