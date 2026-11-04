@@ -130,6 +130,8 @@ var crafting = EXPANDED_CRAFTING.new()
 const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
 var warehouse = LOCAL_WAREHOUSE.new()
+const INVENTORY_AUTOMATION = preload("res://scripts/warehouse/inventory_automation.gd")
+var inventory_automation = INVENTORY_AUTOMATION.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
 
@@ -388,6 +390,7 @@ func _ready() -> void:
 	ain_service.import_state({})
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
+	inventory_automation.configure(self)
 	_load_data()
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
@@ -4399,6 +4402,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if collection_override.has("inventory_automation") and not INVENTORY_AUTOMATION.valid(collection_override.inventory_automation): return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4413,7 +4417,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","warehouse","inventory_automation"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4452,6 +4456,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
+		"inventory_automation": inventory_automation.state.duplicate(true),
 		"crafting_log": crafting_log,
 		"monster_world": legacy_population.export_state(),
 		"original_monster_world": original_population.export_state(),
@@ -4568,6 +4573,10 @@ func _load_game(quiet: bool) -> void:
 	if not growth_error.is_empty():
 		equipment_collections.save_blocked = true
 		hud.show_message(growth_error)
+		return
+	if data.has("inventory_automation") and not INVENTORY_AUTOMATION.valid(data.inventory_automation):
+		equipment_collections.save_blocked = true
+		hud.show_message("자동 보관·판매 설정 손상 · 기존 저장 보존")
 		return
 	var collection_error: String = equipment_collections.check_load(data)
 	if not collection_error.is_empty():
@@ -4713,6 +4722,7 @@ func _load_game(quiet: bool) -> void:
 	source_save_blocked = false
 	_clear_combat_actions()
 	warehouse.restore(data.get("warehouse", {}))
+	inventory_automation.restore(data.get("inventory_automation", {}))
 	crafting_log.clear()
 	var old_log: Variant = data.get("crafting_log", [])
 	if old_log is Array:

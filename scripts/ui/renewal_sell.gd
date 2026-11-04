@@ -1,5 +1,7 @@
 extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const AutoInventory = preload("res://scripts/ui/renewal_auto_inventory.gd")
+var auto_controls
 const TransferSheet=preload("res://scripts/ui/transfer_detail_sheet.gd")
 var transfer_sheet: RefCounted
 const BUYBACK = preload("res://scripts/shop/local_buyback.gd")
@@ -65,6 +67,9 @@ func configure(controller: Node) -> void:
 	add_child(details)
 	transfer_sheet=TransferSheet.new();transfer_sheet.bind(self,false)
 	_refresh()
+	auto_controls = AutoInventory.new()
+	add_child(auto_controls)
+	auto_controls.configure(self,"sell")
 
 func _refresh() -> void:
 	listing.clear()
@@ -107,6 +112,7 @@ func _refresh() -> void:
 	if not entries.is_empty():
 		listing.select(0)
 		_select(0)
+	if auto_controls != null: auto_controls.refresh()
 	transfer_sheet.refresh({},true)
 
 func _add_item(name: String, count: int, instance_id: String, suffix: String) -> void:
@@ -123,6 +129,7 @@ func _select(index: int) -> void:
 	quantity.max_value = 1 if str(entry.get("instance_id","")) != "" else mini(99,int(entry["count"]))
 	quantity.value = 1
 	_quote()
+	if auto_controls != null: auto_controls.refresh()
 
 func _quote() -> void:
 	if selected < 0 or selected >= entries.size():
