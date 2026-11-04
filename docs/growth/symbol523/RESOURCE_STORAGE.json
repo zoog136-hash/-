@@ -1,7 +1,7 @@
 {
   "date": "2026-11-04",
   "pr": "https://github.com/zoog136-hash/-/pull/242",
-  "functional_code_commit": "59cff43d1238abf289fae18f586ac1b9268bf3c0",
+  "functional_code_commit": "b45fa2a85f147f723a8436966daae783011d8f18",
   "separation": [
     "Code=Git feature branch/draft PR; no merge",
     "Original523 table backup=private Drive02 folder",
@@ -28,6 +28,123 @@
     "note": "Existing authorized private copy reused; older duplicate not deleted; not the latest runtime data patch."
   },
   "latest_apply_pack": {
+    "name": "TWILIGHT_PR242_SYMBOL523_RUNTIME_DATA_g35_e9_history1_v20261104_r2.zip",
+    "path": "/workspace/symbol-runtime-delivery/TWILIGHT_PR242_SYMBOL523_RUNTIME_DATA_g35_e9_history1_v20261104_r2.zip",
+    "version": "PR242-symbol523-g35-e9-history1-20261104-r2",
+    "bytes": 48630,
+    "sha256": "a56a911718ee036c41aa4d63a9cd2fd8981f0daaba958983e1c9b2eea394dce7",
+    "entries": 5,
+    "required_code_commit": "b45fa2a85f147f723a8436966daae783011d8f18",
+    "files": {
+      "data/growth/symbol_source523.json": {
+        "bytes": 687606,
+        "sha256": "20fe48a898f4939112cc2774d17212066e33f4caef208e6680edb3b7ffc9383b"
+      },
+      "data/growth/symbol_combat_policy.json": {
+        "bytes": 1113,
+        "sha256": "ad5d1f6111c6d98ea1c27d456565a38116363dac3715dc7f9be553eccd166a18"
+      },
+      "data/growth/symbol_travel_policy.json": {
+        "bytes": 740,
+        "sha256": "27c868add32e8f23ee1ed9528259f73b295a1605b0803d2e4bb7c2acd38c0adb"
+      },
+      "data/growth/symbol_history_policy.json": {
+        "bytes": 1311,
+        "sha256": "cf5762557b143170f4736faf855103dd719d998e5bde2132fc6d006a89ee5dfb"
+      }
+    },
+    "role": "LATEST_PR242_SYMBOL_RUNTIME_DATA_PATCH_HISTORY_R2",
+    "drive_file_id": "1MO0QgtM9cAXv-Dc9MMATzhkS0aKQCM_Z",
+    "drive_url": "https://drive.google.com/file/d/1MO0QgtM9cAXv-Dc9MMATzhkS0aKQCM_Z/view?usp=drivesdk",
+    "drive_folder_id": "116BtNCMBGVv9IIF1TZi9AyXQ66kHa9vL",
+    "drive_folder_url": "https://drive.google.com/drive/folders/116BtNCMBGVv9IIF1TZi9AyXQ66kHa9vL",
+    "shared": false,
+    "permission_readback": "owner-only",
+    "fresh_consumer": {
+      "status": "DOWNLOADED_VERIFIED_INSTALLED_ACTUAL_MAIN_AND_SAVE_LOADED",
+      "drive_file_id": "1MO0QgtM9cAXv-Dc9MMATzhkS0aKQCM_Z",
+      "bytes": 48630,
+      "sha256": "a56a911718ee036c41aa4d63a9cd2fd8981f0daaba958983e1c9b2eea394dce7",
+      "zip_crc": "pass",
+      "download_folder": "/workspace/symbol-drive-consumer/runtime-history",
+      "installed_project": "/workspace/symbol-drive-consumer/project",
+      "installed_files": {
+        "data/growth/symbol_source523.json": {
+          "bytes": 687606,
+          "sha256": "20fe48a898f4939112cc2774d17212066e33f4caef208e6680edb3b7ffc9383b"
+        },
+        "data/growth/symbol_combat_policy.json": {
+          "bytes": 1113,
+          "sha256": "ad5d1f6111c6d98ea1c27d456565a38116363dac3715dc7f9be553eccd166a18"
+        },
+        "data/growth/symbol_travel_policy.json": {
+          "bytes": 740,
+          "sha256": "27c868add32e8f23ee1ed9528259f73b295a1605b0803d2e4bb7c2acd38c0adb"
+        },
+        "data/growth/symbol_history_policy.json": {
+          "bytes": 1311,
+          "sha256": "cf5762557b143170f4736faf855103dd719d998e5bde2132fc6d006a89ee5dfb"
+        }
+      },
+      "code_commit": "b45fa2a85f147f723a8436966daae783011d8f18",
+      "old_data_backup": "/workspace/symbol-drive-consumer/runtime/before-history",
+      "map_input": "/workspace/symbol-core-map-pack LOCAL_ONLY existing Git-derived Aden/Oman1 subset",
+      "fresh_consumer_checks": {
+        "actual_main_current_map_save": 32,
+        "history_units": 39,
+        "failures": []
+      },
+      "runtime_data_sha_after_load": {
+        "data/growth/symbol_source523.json": "20fe48a898f4939112cc2774d17212066e33f4caef208e6680edb3b7ffc9383b",
+        "data/growth/symbol_combat_policy.json": "ad5d1f6111c6d98ea1c27d456565a38116363dac3715dc7f9be553eccd166a18",
+        "data/growth/symbol_travel_policy.json": "27c868add32e8f23ee1ed9528259f73b295a1605b0803d2e4bb7c2acd38c0adb",
+        "data/growth/symbol_history_policy.json": "cf5762557b143170f4736faf855103dd719d998e5bde2132fc6d006a89ee5dfb"
+      }
+    },
+    "not_included": [
+      "Git code; pinned functional code commit separately required",
+      "Map/art/sound/engine/APK/XAPK bundles",
+      "User saves; unrelated reports/audits/screenshots"
+    ]
+  },
+  "prior_crosslinks_input": {
+    "name": "TWILIGHT_523_symbol_guardian_crosslinks_20261104.zip",
+    "bytes": 149581,
+    "sha256": "60fa306d6310cddd4b5eb042bbf59720e6dc732d92b3438cf54044815f76811f",
+    "library_file_id": "libfile_3acd63a50c148191b10d669d77efd5e3",
+    "library_version": "NOT_REQUERIED; immutable locally verified bytes, no new Library write",
+    "local_path": "/workspace/sources/TWILIGHT_523_symbol_guardian_crosslinks_20261104.zip",
+    "storage_role": "previously authorized Library handoff input; not a runtime resource pack; no new external report upload"
+  },
+  "local_map_subset": {
+    "status": "LOCAL_ONLY",
+    "path": "/workspace/symbol-core-map-pack",
+    "files": 618,
+    "bytes": 731147235,
+    "manifest_sha256": "9df45683feb653566233d1c6a5df3b73ab2996a4b22007366d5dfdda1c2b779f",
+    "scope": "Existing Git reviewed source84_v3 Aden/Oman1 runtime subset only; no full84 visual/resource-delivery claim. Legacy Oman dependencies are in the local stage separately."
+  },
+  "manual_remote_CI": "NOT_RUN",
+  "access_denials_this_delivery": [],
+  "storage_permissions_changed": false,
+  "automatic_drive_install": false,
+  "limitations": [
+    "Only latest symbol4-file data patch48,630B; not a project-wide art/map/resource pack",
+    "Existing original backup was already verified and reused; no repeated identical original download/upload",
+    "Existing consumer folder updated to required Git code; prior JSON backed up, downloaded r2 bytes installed, isolated XDG profiles used; no new execution environment or full engine reimport",
+    "Latest post-download checks: actual Main/save32 and history units39 headless; pre-package native historyUI39; no Windows/Android/84-map/whole visual approval"
+  ],
+  "fresh_consumer_logs": {
+    "docs/growth/symbol523/evidence/history/drive-main-load.txt": {
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "docs/growth/symbol523/evidence/history/drive-history-load.txt": {
+      "bytes": 123,
+      "sha256": "a0ef22d8f8c5e5d1c83714a6c3ae8e44d1b895a64dfb08a86f9f8a83dda7d503"
+    }
+  },
+  "previous_apply_pack": {
     "name": "TWILIGHT_PR242_SYMBOL523_RUNTIME_DATA_g35_e9_v20261104.zip",
     "path": "/workspace/symbol-runtime-delivery/TWILIGHT_PR242_SYMBOL523_RUNTIME_DATA_g35_e9_v20261104.zip",
     "version": "PR242-symbol523-g35-e9-20261104",
@@ -95,43 +212,15 @@
       "Git game code; fetch pinned code commit separately",
       "Map/monster/item/image/sound/engine/APK/XAPK packs",
       "User saves; unrelated reports/audits/screenshots"
-    ]
+    ],
+    "status": "SUPERSEDED_BY_HISTORY_R2; prior verified snapshot, not latest runtime data",
+    "consumer_path_note": "Consumer project was subsequently updated to history r2; this earlier receipt records the historical verification only."
   },
-  "prior_crosslinks_input": {
-    "name": "TWILIGHT_523_symbol_guardian_crosslinks_20261104.zip",
-    "bytes": 149581,
-    "sha256": "60fa306d6310cddd4b5eb042bbf59720e6dc732d92b3438cf54044815f76811f",
-    "library_file_id": "libfile_3acd63a50c148191b10d669d77efd5e3",
-    "library_version": "NOT_REQUERIED; immutable locally verified bytes, no new Library write",
-    "local_path": "/workspace/sources/TWILIGHT_523_symbol_guardian_crosslinks_20261104.zip",
-    "storage_role": "previously authorized Library handoff input; not a runtime resource pack; no new external report upload"
-  },
-  "local_map_subset": {
-    "status": "LOCAL_ONLY",
-    "path": "/workspace/symbol-core-map-pack",
-    "files": 618,
-    "bytes": 731147235,
-    "manifest_sha256": "9df45683feb653566233d1c6a5df3b73ab2996a4b22007366d5dfdda1c2b779f",
-    "scope": "Existing Git reviewed source84_v3 Aden/Oman1 runtime subset only; no full84 visual/resource-delivery claim. Legacy Oman dependencies are in the local stage separately."
-  },
-  "manual_remote_CI": "NOT_RUN",
-  "access_denials_this_delivery": [],
-  "storage_permissions_changed": false,
-  "automatic_drive_install": false,
-  "limitations": [
-    "Only symbol runtime data patch47KB; no claim to deliver the project-wide newest resource/art/map pack",
-    "Original art release-dir ledger is unchanged; historical a1.zip source-dir unavailable, independent523 bytes verified",
-    "Fresh consumer reuses verified immutable Git resources/import caches; new installation and isolated XDG; not a full fresh engine import or new machine",
-    "Main load/save verified headless; cross-map UI was separately verified on X11 before packaging; no84map/Windows/Android/fullvisual approval"
-  ],
-  "fresh_consumer_logs": {
-    "docs/growth/symbol523/evidence/offline/drive-main-load.txt": {
-      "bytes": 207,
-      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
-    },
-    "docs/growth/symbol523/evidence/offline/drive-unit-load.txt": {
-      "bytes": 117,
-      "sha256": "7d79c382306a43cc9a0aae200c9bab39edc8b6f66351c961070a5aff6713f48d"
-    }
+  "current_local_policy": {
+    "save_fee_points": 0,
+    "restore_fee_points": 100,
+    "daily_reset_limit_per_emblem": 1,
+    "restore_uses_reset_quota": true,
+    "nature": "Explicit configurable TWILIGHT defaults; not original current-server price/numerical cap"
   }
 }
