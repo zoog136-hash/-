@@ -211,8 +211,12 @@ func _emblem() -> void:
 		var absolute_effects: Dictionary = runtime.source523.absolute_effects(selected,p.get("absolute_grades",[]))
 		for key: String in absolute_effects: effects[key] = float(effects.get(key,0))+float(absolute_effects[key])
 		var grade_names: Array[String] = []
-		for grade: Variant in p.get("absolute_grades",[]): grade_names.append(["I","II","III","IV","V"][int(grade)-1])
+		var deferred_grades: Array[String] = []
+		for grade: Variant in p.get("absolute_grades",[]):
+			if runtime.source523.absolute_block(selected,int(grade)).is_empty(): grade_names.append(["I","II","III","IV","V"][int(grade)-1])
+			else: deferred_grades.append(["I","II","III","IV","V"][int(grade)-1])
 		if not grade_names.is_empty(): _copy("절대 옵션 "+", ".join(grade_names)+" 적용",info,13,Color("d6ead9")).name = "GrowthAbsoluteStatus"
+		if not deferred_grades.is_empty(): _copy("절대 옵션 "+", ".join(deferred_grades)+" 보유 · 효과 연결 보류",info,13,Palette.MUTED)
 	var visible_effects: int=0
 	for key: String in effects:
 		if float(effects[key])==0: continue
@@ -260,10 +264,11 @@ func _emblem() -> void:
 				button.tooltip_text = str(offer.message)
 				button.name = "GrowthAbsolute_"+action+str(grade)
 		for line: String in runtime.source523.options_text(selected,int(p.stage),native_grades): _label(line)
-		_label("일부 절대 옵션은 해금 조건과 효과를 확인한 뒤 열립니다.")
+		_label("절대 옵션은 I부터 순서대로 개방합니다. 미연결 효과가 있는 등급은 보류합니다.")
 
 func _effect_text(effects: Dictionary) -> String:
 	var mapping: Dictionary = {"max_hp:flat":"HP","max_mp:flat":"MP","ac:flat":"AC","mr:flat":"MR","sp:flat":"SP","weight_bonus:flat":"무게","experience_bonus:percent":"경험치 %","potion_flat:flat":"물약 회복량","potion_percent:percent":"물약 회복률 %","damage_reduction:flat":"리덕션","potion_cooldown:percent":"물약 쿨타임 감소 %","blessing_consumption:percent":"축복 소모 감소 %","incoming_reduction:percent":"피해 감소 %","mp_regeneration:flat":"MP 회복","blessing_charge:percent":"축복 충전 %"}
+	mapping.merge({"magic_heal:percent":"회복 마법량 %","hp_drain:flat":"HP 흡수","life:flat":"생명","critical_reduction:flat":"치명타 리덕션","stunned_reduction:flat":"스턴 상태 리덕션","low_hp_reduction:percent":"HP 30% 이하 피해 감소 %","stun_hit:percent":"스턴 적중 %","stun_resistance:percent":"스턴 내성 %","fear_resistance:percent":"공포 내성 %","melee_critical_damage:flat":"근거리 치명타 대미지","ranged_critical_damage:flat":"원거리 치명타 대미지","magic_critical_damage:flat":"마법 치명타 대미지"})
 	var parts: Array[String] = []
 	for key: String in effects:
 		if float(effects[key]) != 0: parts.append("%s %+d" % [str(mapping.get(key,key)),int(effects[key])])

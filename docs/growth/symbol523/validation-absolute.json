@@ -1,0 +1,232 @@
+{
+  "date": "2026-11-04",
+  "base_sha": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "initial_commit": "d9fceac5c13e3cb117b9d4539b4c1849b42e1979",
+  "branch": "feature/twilight-symbol-523-20261104",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "environment": "Linux, actual Main/current source-map resource graph; X11 OpenGL Mesa25.0.7 llvmpipe; isolated XDG profiles and Dummy audio",
+  "source_verification": {
+    "archive_hash_crc": "pass_both",
+    "table_hashes": 20,
+    "direct_option_and_nested_rows": 532,
+    "projection_sha256": "dc1c9e5bbbb71351e9265895d8695b490052cc0de5765b83dfdd2ac9968d651c"
+  },
+  "checks_final": {
+    "source_transactions": {
+      "assertions": 753,
+      "failures": []
+    },
+    "actual_main_absolute_combat_skills_save": {
+      "assertions": 75,
+      "failures": []
+    },
+    "actual_main_native_touch_ui": {
+      "assertions": 44,
+      "failures": [],
+      "captures": 5,
+      "resolutions": [
+        [
+          1280,
+          720
+        ],
+        [
+          854,
+          480
+        ]
+      ]
+    },
+    "combat_hud": {
+      "assertions": 1200,
+      "failures": []
+    },
+    "python_staging": {
+      "tests": 7,
+      "failures": []
+    },
+    "resource_integrity": {
+      "atlases": 723,
+      "frames": 41442,
+      "bytes": 233420026,
+      "result": "pass"
+    },
+    "diff_check_and_python_compile": "pass"
+  },
+  "additional_regressions_before_final_zero_heal_optimization": {
+    "core_current_map_save": {
+      "assertions": 32,
+      "failures": []
+    },
+    "identical_payload_save": "pass; skips1 is identical-write elision, not skipped test",
+    "deferred_save": "pass",
+    "hp_absorption_and_30s_hp_mp_caps": "pass"
+  },
+  "resolved_failure": {
+    "test": "combat_hud_test.gd",
+    "initial_and_pre_optimization": "both192 maxHP/0 maxMP lookups per192hits; same performance assertion failed",
+    "cause": "existing option-awakening zero healing still queried maxHP",
+    "fix": "only query maxHP on positive healing; conditional Maphr query only when equipped",
+    "final": "1200 checks pass; test and threshold unchanged"
+  },
+  "scope_limits": [
+    "Not a complete original server combat-order or RNG reconstruction",
+    "Unsupported absolute16 groups remain blocked for acquisition; stored valid contiguous ownership preserved",
+    "10 freshly reachable /19 supported effect groups out of35; 30-stage fixtures and explicit debug material grant isolate tests",
+    "No Windows/Android/audio/framerate or original-art visual acceptance",
+    "No new art packs delivered; historic a1.zip source-dir check remains unavailable",
+    "No manual remote CI or main/other-PR merge"
+  ],
+  "inputs": {
+    "tools/import_symbol523.py": {
+      "bytes": 10505,
+      "sha256": "b2fd336642b4ad4187e281778264778b9dc2cd44c79bf07e37a925dc7371a5c9"
+    },
+    "tools/ci_core.py": {
+      "bytes": 15642,
+      "sha256": "b5e1caf47b837057bdd1cb682ecb794f1afd3af2545459a7e25a0ad58a337034"
+    },
+    "data/growth/symbol_source523.json": {
+      "bytes": 669262,
+      "sha256": "dc1c9e5bbbb71351e9265895d8695b490052cc0de5765b83dfdd2ac9968d651c"
+    },
+    "data/growth/lineage_growth.json": {
+      "bytes": 67237,
+      "sha256": "0be1b7d33a7d113cf603f72bfb8b9495ef247a6a979c931a58b7878331ef2d97"
+    },
+    "scripts/growth/symbol_source523.gd": {
+      "bytes": 9723,
+      "sha256": "412fd0415ee18152bf4a989accec6b6e60516cee7452a5574d364c988e0ace46"
+    },
+    "scripts/growth/growth_runtime.gd": {
+      "bytes": 24390,
+      "sha256": "1e022750b7f7076ee22d20aed9ace8776cb847e318c6d5c3df1130dc15f280a8"
+    },
+    "scripts/growth/growth_view.gd": {
+      "bytes": 22819,
+      "sha256": "37b4b87d9b9a7b14fc0ebb554265a7f4966c01496cbc25fbd720d69bcc331f66"
+    },
+    "scripts/skills/skill_service.gd": {
+      "bytes": 36797,
+      "sha256": "af83fda5af57de9bee3a1494c8fb6ca33f5c96bd171bd3c14fc8a87203a738b0"
+    },
+    "scripts/world.gd": {
+      "bytes": 379458,
+      "sha256": "47eae38ae1bb8c6c794a46e9455053d90b4f1b2d81745eb37f9c620575e9c630"
+    },
+    "tests/qa_symbol_absolute_world.gd": {
+      "bytes": 351,
+      "sha256": "442b7fa66f34d50523dda435cc3e4162d51aa4795e423095923c51340ed6e250"
+    },
+    "tests/symbol_absolute_followup_test.gd": {
+      "bytes": 9225,
+      "sha256": "b6e9c7c9564cf28fa0e0c0befe41b974a45bc6f9db2ba841bce8f1a446b3b2ec"
+    },
+    "tests/symbol_source523_test.gd": {
+      "bytes": 10198,
+      "sha256": "a8f6e229ce3de1a6a254c5debd6d4892ca1ff00c3663cf3de8e635b1ce7b8774"
+    },
+    "tests/symbol_source523_main_ui_test.gd": {
+      "bytes": 9988,
+      "sha256": "f52f24de94d408cc4e5a8ac1bf1e2f623201699fe063e56df97ff139a0bf80e0"
+    },
+    "tests/combat_hud_test.gd": {
+      "bytes": 7313,
+      "sha256": "40fed78ddfc5df3a1e6f5d9b4f15c5bf59e06b8a63735f1620d04c2bd42fe1bc"
+    }
+  },
+  "logs": {
+    "docs/growth/symbol523/evidence/absolute/symbol_source523_test-final.txt": {
+      "bytes": 117,
+      "sha256": "7d79c382306a43cc9a0aae200c9bab39edc8b6f66351c961070a5aff6713f48d"
+    },
+    "docs/growth/symbol523/evidence/absolute/symbol_absolute_followup_test-final.txt": {
+      "bytes": 124,
+      "sha256": "a041a5f7d8699b55c03ec13c0fa0916c452ef13a4dc89c135e2624e692489e14"
+    },
+    "docs/growth/symbol523/evidence/absolute/ui.txt": {
+      "bytes": 435,
+      "sha256": "c7297b6736f412a66d61bc2c3f584fd865fdb907e7de900aaf5e1eed11254238"
+    },
+    "docs/growth/symbol523/evidence/absolute/combat-hud-final.txt": {
+      "bytes": 99,
+      "sha256": "78b41e5ba30784e7da0cb3572577aba506ad92dec75fb7ccc14a5861d39a74d1"
+    },
+    "docs/growth/symbol523/evidence/absolute/combat-hud-before.txt": {
+      "bytes": 171,
+      "sha256": "a5fb00ab384b355383a11a73b9cacd13fbbb7b8c4818d17a6e2af76070910e20"
+    },
+    "docs/growth/symbol523/evidence/absolute/combat-hud-after.txt": {
+      "bytes": 171,
+      "sha256": "a5fb00ab384b355383a11a73b9cacd13fbbb7b8c4818d17a6e2af76070910e20"
+    },
+    "docs/growth/symbol523/evidence/absolute/core_runtime_save_test.txt": {
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "docs/growth/symbol523/evidence/absolute/save_identical_payload_test.txt": {
+      "bytes": 140,
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    },
+    "docs/growth/symbol523/evidence/absolute/deferred_save_gate_test.txt": {
+      "bytes": 115,
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    },
+    "docs/growth/symbol523/evidence/absolute/hp_mp_unique_effects_smoke_test.txt": {
+      "bytes": 170,
+      "sha256": "dad5efc3a662023be5e8a11b0fd90335178026286e719a6945f3f0cb9fa9de3b"
+    },
+    "docs/growth/symbol523/evidence/absolute/python-ci-core.txt": {
+      "bytes": 333,
+      "sha256": "8f56f65e4a024b3db136b47304e69e30d61f9a3f822680e28bd733c8e0a5898d"
+    },
+    "docs/growth/symbol523/evidence/absolute/resource-integrity.txt": {
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    "docs/growth/symbol523/evidence/absolute/source-verification.json": {
+      "bytes": 191,
+      "sha256": "65fbd465ae29efdea0c4f7d919f6c3a1a9371932e009273849082049962f49ec"
+    }
+  },
+  "screenshots": {
+    "docs/growth/symbol523/evidence/symbol523-absolute-1280x720.png": {
+      "bytes": 924128,
+      "sha256": "9fb6287cf68929117d5f199f09d6de0d628871d8b7197ea29007cdcf4f0662be",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    "docs/growth/symbol523/evidence/symbol523-enhancement-1280x720.png": {
+      "bytes": 898875,
+      "sha256": "0f751b820dcd0ca0aedd26472a3cae0e078f6fdb19d9968c9caa374a08dfec60",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    "docs/growth/symbol523/evidence/symbol523-eva-absolute-1280x720.png": {
+      "bytes": 923870,
+      "sha256": "fe5266ce7ef4e35f3155d1b06af11b11ad83786f679bdd522ead651f7f4c7445",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    "docs/growth/symbol523/evidence/symbol523-maphr-absolute-1280x720.png": {
+      "bytes": 915285,
+      "sha256": "c9715170d4fdf8ac90bf295053f4bfda4998391608c798f4c7c27d0f678b3a05",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    "docs/growth/symbol523/evidence/symbol523-ui-854x480.png": {
+      "bytes": 391682,
+      "sha256": "f6df462ca5d4dfacd86faf10914e0894985f3b961f8e655d52aeef0cb47dfb1e",
+      "dimensions": [
+        853,
+        480
+      ]
+    }
+  }
+}

@@ -130,6 +130,7 @@ func refresh_buffs_after_learning(learned_id: String) -> void:
 
 func stat(key: String) -> float:
 	var result: float = catalog.stat(key) + local_runtime.stat(key)
+	if key=="lfe" and world.get("growth")!=null: result += world.growth.bonus("life:flat")
 	for buff: Dictionary in world.active_skill_buffs.values():
 		if buff.has("skill_id"): result += float(buff.get("skill_stats", {}).get(key, 0))
 	for entry: Dictionary in stacks.values(): result += float(entry.get("stats", {}).get(key, 0)) * float(entry.get("count", 0))
@@ -393,6 +394,7 @@ func heal(skill: Dictionary, amount: int) -> void:
 	var maximum: int = world._effective_max_hp()
 	var before: int = world.hp
 	var effective := maxi(0, amount + int(stat("lfe") * float(skill.get("lfe_scale", 0))))
+	if str(skill.get("mode",""))=="heal" and world.get("growth")!=null: effective = world.growth.magic_healing(effective)
 	world.hp = mini(maximum, before + effective)
 	if bool(skill.get("overflow_shield", false)) and before + effective > maximum:
 		shields[str(skill.id)] = {"amount":mini(maximum, before + effective - maximum),"remaining":float(skill.get("duration", 12))}

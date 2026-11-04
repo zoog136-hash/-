@@ -872,10 +872,11 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		return
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
 	var stolen: int = 0
-	if _has_hp_absorption():
+	var drain: int = (1 if _has_hp_absorption() else 0)+int(growth.bonus("hp_drain:flat"))
+	if drain>0:
 		# Extra damage and healing represent the exact same amount of
 		# HP stolen from the target, capped by its remaining HP.
-		stolen = mini(1, maxi(0, target.hp))
+		stolen = mini(drain, maxi(0, target.hp))
 	if stolen > 0:
 		var previous_hp: int = hp
 		hp = mini(_effective_max_hp(), hp + stolen)
@@ -2980,7 +2981,8 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
-	reduced = growth.incoming_damage(reduced)
+	var growth_max_hp: int = _effective_max_hp() if growth.bonus("low_hp_reduction:percent")>0 else 0
+	reduced = growth.incoming_damage(reduced,critical,player.is_stunned(),hp,growth_max_hp)
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
 		if original_skills.last_evaded:
@@ -2990,7 +2992,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var option_result: Dictionary=option_awakening.combat.incoming(attacker,normalized_type,reduced)
 	reduced=int(option_result.damage)
 	hp = maxi(0, hp - reduced)
-	if hp>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal))
+	if hp>0 and int(option_result.heal)>0: hp=mini(_effective_max_hp(),hp+int(option_result.heal))
 	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
@@ -6160,6 +6162,7 @@ func _cast_job_heal_skill(skill: Dictionary) -> bool:
 	var amount: int = maxi(1, int(round(float(base_amount) * (1.0 + float(skill.get("heal_bonus_percent", 0.0)) / 100.0))))
 	if bool(skill.get("heal_to_full", false)):
 		amount = _effective_max_hp()
+	amount = growth.magic_healing(amount)
 	var before: int = hp
 	hp = mini(_effective_max_hp(), hp + amount)
 	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), hp - before])
@@ -7510,7 +7513,7 @@ func _critical_damage(raw_damage: int) -> int:
 # Crit damage bonuses are flat values added AFTER the base 1.5x critical hit.
 # Keep monster critical hits on _critical_damage so player gear never buffs enemies.
 func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
-	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat") + card_collections.bonus(attack_type+"_critical_damage:flat"))
+	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat") + card_collections.bonus(attack_type+"_critical_damage:flat") + growth.bonus(attack_type+"_critical_damage:flat"))
 	var option_key: String = ""
 	match attack_type:
 		"ranged":

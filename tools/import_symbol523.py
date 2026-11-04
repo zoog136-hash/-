@@ -27,6 +27,13 @@ ADAPTERS = {
     "ArmorClass": ("ac:flat", -1), "DamageReduction": ("damage_reduction:flat", 1),
     "DamageReductionPercent": ("incoming_reduction:percent", .0001),
     "EinasadBlessAbsolutePercent": ("blessing_charge:percent", 1),
+    "HPHealIncreasePercent": ("magic_heal:percent", .0001),
+    "AttackDrainHP": ("hp_drain:flat", 1),
+    "KarmaLife": ("life:flat", 1),
+    "CriticalDamageReduction": ("critical_reduction:flat", 1),
+    "CriticalMeleeDamage": ("melee_critical_damage:flat", 1),
+    "CriticalRangeDamage": ("ranged_critical_damage:flat", 1),
+    "CriticalMagicDamage": ("magic_critical_damage:flat", 1),
 }
 
 
@@ -50,6 +57,9 @@ def build(source: Path, crosslinks: Path) -> dict:
         normal, absolute = table("SymbolBonus"), table("SymbolAbsoluteBonusView")
         costs = table("SymbolEnchantCost")
         symbols = table("SymbolType")
+        resistance_types = {r["ID"]: r for r in table("SpecialResistanceType")}
+        intervals = table("IntervalBonus")
+        interval_categories = {r["ID"]: r for r in table("IntervalBonusCategory")}
 
         def detail(row):
             bonus = bonuses[row["BonusID"]]
@@ -58,10 +68,35 @@ def build(source: Path, crosslinks: Path) -> dict:
             mapped = {}
             if adapter and bonus["BonusApplicationTypeID"] == 0 and bonus["BonusApplicationTargetID"] == 0:
                 mapped[adapter[0]] = round(bonus["Value"] * adapter[1], 6)
+            nested = []
+            application_target = {}
+            display_name = desc.get(kind["DescID"], {}).get("Description", kind["Name"])
+            if bonus["BonusApplicationTypeID"] == 2:
+                target = resistance_types.get(bonus["BonusApplicationTargetID"], {})
+                application_target = target
+                if kind["Name"] == "SpecialResistance" and target.get("Name") in {"Stun", "Fear"}:
+                    mapped[{"Stun":"stun_resistance:percent", "Fear":"fear_resistance:percent"}[target["Name"]]] = bonus["Value"] / 10000
+                    display_name = desc[target["DescID"]]["Description"] + " 내성"
+                elif kind["Name"] == "HitSpecialResistance" and target.get("Name") == "Stun":
+                    mapped["stun_hit:percent"] = bonus["Value"] / 10000
+                    display_name = desc[target["DescID"]]["Description"] + " 적중"
+                elif kind["Name"] == "DamageReductionForSpecialDebuff" and target.get("Name") == "Stun":
+                    mapped["stunned_reduction:flat"] = bonus["Value"]
+            if kind["Name"] == "HPIntervalBonus" and bonus["Value"] == 12:
+                for interval in intervals:
+                    if interval["IntervalBonusCategory"] != 12: continue
+                    reward = bonuses[interval["BonusID"]]
+                    assert types[reward["BonusTypeID"]]["Name"] == "DamageReductionPercent"
+                    assert reward["BonusApplicationTypeID"] == reward["BonusApplicationTargetID"] == 0
+                    nested.append({"row":interval,"bonus":reward,"bonus_type":types[reward["BonusTypeID"]],"category":interval_categories[12]})
+                assert len(nested) == 1 and nested[0]["row"]["Low"] == 0 and nested[0]["row"]["High"] == 30
+                mapped["low_hp_reduction:percent"] = nested[0]["bonus"]["Value"] / 10000
             return {"row": row, "bonus": bonus, "bonus_type": kind,
                     "unit": units[kind["UnitID"]],
                     "description": desc.get(kind["DescID"], {}),
-                    "effects": mapped, "status": "applied" if mapped else "deferred"}
+                    "effects": mapped, "status": "applied" if mapped else "deferred",
+                    "display_name":display_name, "nested_intervals":nested,
+                    "application_target":application_target}
 
         emblems = {}
         for local, sid in SYMBOL_IDS.items():
@@ -120,7 +155,7 @@ def build(source: Path, crosslinks: Path) -> dict:
             "ui_evidence": cross("relevant_ui_source"),
             "local_adapters": ADAPTERS,
             "unresolved": ["ServerLimitSet1294 and shop512 direction/context",
-                           "absolute grade dependency/order", "daily reset count/reset time",
+                           "daily reset count/reset time",
                            "probability range sampling denominator and special-route event ordering",
                            "saved enhancement restoration payment/current availability",
                            "conditional and unsupported bonus combat execution"],

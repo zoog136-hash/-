@@ -26,6 +26,7 @@ CHECKS = [
     ('deferred_save_gate_test', ['--gate-only']),
     ('symbol_source523_test', []),
     ('symbol_source523_main_ui_test', []),
+    ('symbol_absolute_followup_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -257,7 +258,8 @@ def main():
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT',
                       'symbol_source523_test':'SYMBOL523_TEST',
-                      'symbol_source523_main_ui_test':'SYMBOL523_MAIN_RESULT'}[name]
+                      'symbol_source523_main_ui_test':'SYMBOL523_MAIN_RESULT',
+                      'symbol_absolute_followup_test':'SYMBOL_ABSOLUTE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

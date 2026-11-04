@@ -24,6 +24,8 @@ func apply(config: Dictionary) -> void:
 			if detail.status == "deferred" and not row.deferred_effects.has(label): row.deferred_effects.append(label)
 		for grade: int in range(1,6): row.absolute_key_costs[grade-1] = int(native.absolute[str(grade)].payment.ForceOpenCost)
 	config["source_snapshot"] = "patch523"
+	for constant: Dictionary in data.constants:
+		if constant.Name == "ProbabilityChangeCost": config.reroll_cost = int(constant.Value)
 	# Baseline odds already in the game are retained; source min/max are not
 	# themselves a declaration of a baseline or of a uniform sampling scheme.
 	# Existing offline availability is retained, without interpreting server sets.
@@ -52,8 +54,6 @@ func absolute_effects(id: String, grades: Array) -> Dictionary:
 func absolute_block(id: String, grade: int) -> String:
 	var row: Dictionary = absolute(id,grade)
 	if row.is_empty(): return "원본 절대 옵션 정의 없음"
-	# The help text proves stage30 -> absolute, not grade1 -> grade2 -> ... .
-	if grade != 1: return "절대 등급 간 해금 조건 미확정 · 보류"
 	for detail: Dictionary in row.options:
 		if detail.status != "applied": return "현재 전투에 연결되지 않은 절대 효과 · 보류"
 	return ""
@@ -70,16 +70,20 @@ func options_text(id: String, stage: int, grades: Array = []) -> Array[String]:
 	return result
 
 func option_text(detail: Dictionary) -> String:
-	var label: String = str(detail.description.get("Description",detail.bonus_type.Name))
+	var label: String = str(detail.get("display_name",detail.description.get("Description",detail.bonus_type.Name)))
+	if detail.bonus_type.Name == "HPIntervalBonus" and not detail.get("nested_intervals",[]).is_empty():
+		var interval: Dictionary = detail.nested_intervals[0]
+		return "HP %s%% 이하 피해량 감소 +%s%%" % [str(interval.row.High),str(float(interval.bonus.Value)/10000.0)]
 	var value: float = float(detail.bonus.Value)
 	var suffix: String = ""
+	if detail.bonus_type.Name=="AttackedMeleeMagicDamageScaleForArmorBreak": return label+" · 원문 단위 해석 보류"
 	match str(detail.unit.Name):
 		"Percentage": value /= 10000.0; suffix = "%"
 		"ValuePercent": suffix = "%"
 		"Value", "TrueFalse": pass
 		"Weight": value /= 100.0
 		_: return label+" · 세부 효과 확인 중"
-	return "%s %s%s%s%s" % [label,"+" if value>=0 else "",str(value),suffix," · 조건부 효과" if int(detail.bonus.BonusApplicationTypeID)!=0 else ""]
+	return "%s %s%s%s%s" % [label,"+" if value>=0 else "",str(value),suffix," · 조건부 효과" if int(detail.bonus.BonusApplicationTypeID)!=0 and detail.status!="applied" else ""]
 
 func item_key(id: int) -> String:
 	return "m523:item:"+str(id)

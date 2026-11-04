@@ -95,8 +95,13 @@ func validate(value: Variant) -> String:
 		var seen_grades: Array = []
 		for grade: Variant in grades:
 			if not integer(grade,1,5) or seen_grades.has(int(grade)) or p.stage != 30: return "절대 옵션 개방 목록 오류"
-			if not source523.absolute_block(id,int(grade)).is_empty(): return "미검증 절대 옵션 해금"
+			if source523.absolute(id,int(grade)).is_empty(): return "알 수 없는 절대 옵션"
 			seen_grades.append(int(grade))
+		# The official Symbol guide confirms sequential activation; source
+		# definitions alone did not. Preserve owned unsupported rewards as data.
+		for grade: int in seen_grades:
+			for prerequisite: int in range(1,grade):
+				if not seen_grades.has(prerequisite): return "절대 옵션 선행 등급 누락"
 		if p.stage < p.attempts or p.stage > p.attempts*3: return "문양 단계/횟수 불일치"
 	if not value.get("economy",{}) is Dictionary: return "성장 재화 이력 오류"
 	for amount: Variant in value.get("economy",{}).values():
@@ -153,7 +158,7 @@ func _rebuild() -> void:
 
 func _add_effects(effects: Dictionary) -> void:
 	for key: String in effects:
-		if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent"]:
+		if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent","magic_heal:percent","hp_drain:flat","life:flat","critical_reduction:flat","stunned_reduction:flat","low_hp_reduction:percent","fear_resistance:percent"]:
 			totals[key] = float(totals.get(key,0))+float(effects[key])
 
 func bonus(key: String) -> float:
@@ -167,6 +172,7 @@ func catalog_bonus(key: String) -> int:
 func stat_record() -> Dictionary:
 	var record: Dictionary = Stats.record(totals)
 	record["blessing_consumption_reduction_pct"] = bonus("blessing_consumption:percent")
+	record["fear_resistance"] = bonus("fear_resistance:percent")
 	return record
 
 func probabilities(id: String) -> Array:
@@ -228,6 +234,9 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			else:
 				if count not in [1,2,3,4,5]: return fail("절대 옵션 등급 오류")
 				if progress(id).get("absolute_grades",[]).has(count): return fail("이미 개방한 절대 옵션")
+				# Same official sequential requirement for point and key routes.
+				for prerequisite: int in range(1,count):
+					if not progress(id).get("absolute_grades",[]).has(prerequisite): return fail("절대 옵션 %d을 먼저 개방하세요" % prerequisite)
 				var block: String = source523.absolute_block(id,count)
 				if not block.is_empty(): return fail(block)
 				var payment: Dictionary = source523.absolute(id,count).payment
@@ -408,5 +417,15 @@ func _ledger(next: Dictionary, key: String, amount: int) -> void:
 	if not next.has("economy"): next["economy"] = {}
 	next.economy[key] = int(next.economy.get(key,0))+amount
 
-func incoming_damage(damage: int) -> int:
-	return maxi(1,int(round(float(damage)*(1.0-clampf(bonus("incoming_reduction:percent"),0,90)/100.0))))
+func magic_healing(amount: int) -> int:
+	return maxi(0,int(round(float(amount)*(1.0+bonus("magic_heal:percent")/100.0))))
+
+func incoming_damage(damage: int, critical: bool = false, stunned: bool = false, hp_before: int = -1, maximum_hp: int = -1) -> int:
+	var flat: int = int(bonus("critical_reduction:flat")) if critical else 0
+	if stunned: flat += int(bonus("stunned_reduction:flat"))
+	var percent: float = bonus("incoming_reduction:percent")
+	# IntervalBonus42/category12 plus the official guide: HP<=30%, not
+	# regeneration. Compare exact proportions, never floor 30.9% into range.
+	if maximum_hp>0 and hp_before>=0 and hp_before*100<=maximum_hp*30:
+		percent += bonus("low_hp_reduction:percent")
+	return maxi(1,int(round(float(maxi(1,damage-flat))*(1.0-clampf(percent,0,90)/100.0))))

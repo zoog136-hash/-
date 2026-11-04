@@ -112,7 +112,7 @@ func run() -> void:
 	await tap(current.find_child("GrowthTab_sayha",true,false),current)
 	var absolute: Button = current.find_child("GrowthAbsolute_absolute1",true,false)
 	check(absolute!=null and not absolute.disabled,"supported source absolute grade1 exposed")
-	check(current.find_child("GrowthAbsolute_absolute2",true,false).disabled,"unknown grade dependency stays disabled")
+	check(current.find_child("GrowthAbsolute_absolute2",true,false).disabled,"official sequential predecessor is required")
 	await tap(absolute,current)
 	check(current.request.get("action")=="absolute","absolute opens actual confirmation")
 	await confirm(current)
@@ -120,7 +120,37 @@ func run() -> void:
 	check(current.result.text.contains("절대 옵션 1 개방"),"absolute result shown")
 	check(current.find_child("GrowthAbsoluteStatus",true,false)!=null,"owned absolute status is visible in current effects")
 	await create_timer(1.4).timeout
+	world.inventory["축복의 열쇠"]=1000;current._refresh();await frames()
+	for grade: int in range(2,6):
+		await tap(current.find_child("GrowthAbsolute_absolute"+str(grade),true,false),current)
+		check(current.request.get("count")==grade,"native UI selects next source tier "+str(grade))
+		await confirm(current)
+		check(rt.progress("sayha").get("absolute_grades",[]).has(grade),"native UI commits next source tier "+str(grade))
+		await create_timer(1.4).timeout
+	check(rt.bonus("experience_bonus:percent")==75,"UI full Sayha tree reaches actual75XP bonus")
 	await screenshot("symbol523-absolute-1280x720")
+	saved=rt.state.duplicate(true);saved.points=10000
+	saved.emblems["eva"]={"stage":30,"attempts":10,"spent":0,"guaranteed":false,"absolute":0}
+	rt.restore(saved);world.inventory["축복의 열쇠"]=200
+	world.hud.open_growth("emblems");await frames();current=view()
+	rt.rng.seed=100
+	await tap(current.find_child("GrowthAbsolute_absolute_chance1",true,false),current)
+	await confirm(current);await frames()
+	check(rt.state.points==6400 and rt.progress("eva").get("absolute_grades",[]).is_empty(),"real probability button commits source3600 failed attempt without granting")
+	check(current.result.text.contains("실패"),"probability failure result visible")
+	for grade: int in [1,2]:
+		await tap(current.find_child("GrowthAbsolute_absolute"+str(grade),true,false),current)
+		await confirm(current);await create_timer(1.4).timeout
+	check(rt.bonus("magic_heal:percent")==10 and rt.bonus("potion_cooldown:percent")==20,"Eva native UI connects magic healing and independent cooldown")
+	await screenshot("symbol523-eva-absolute-1280x720")
+	saved=rt.state.duplicate(true);saved.emblems["maphr"]={"stage":30,"attempts":10,"spent":0,"guaranteed":false,"absolute":0}
+	rt.restore(saved);world.inventory["축복의 열쇠"]=100
+	world.hud.open_growth("emblems");await frames();current=view()
+	await tap(current.find_child("GrowthTab_maphr",true,false),current)
+	await tap(current.find_child("GrowthAbsolute_absolute1",true,false),current)
+	await confirm(current);await create_timer(1.4).timeout
+	check(rt.bonus("low_hp_reduction:percent")==3,"Maphr native UI commits conditional3 percent")
+	await screenshot("symbol523-maphr-absolute-1280x720")
 	var expected: Dictionary = rt.state.duplicate(true)
 	world._load_game(true)
 	world.field_population.set_process(false)
