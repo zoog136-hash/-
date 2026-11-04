@@ -913,6 +913,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	normal_damage+=preload("res://scripts/crafting/patch523_final_blow.gd").conditional_magic_damage(self,target,by_spell)
+	normal_damage+=PATCH523_EQUIPMENT_COMBAT.fear_flat_ignore(self,target,by_spell)
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
 	var stolen: int = 0
 	if _has_hp_absorption():
@@ -1135,7 +1136,7 @@ func _equipment_potion_heal_stat(label: String) -> int:
 func _equipment_additional_damage(kind: String) -> int:
 	var projected: int=0
 	if PATCH523_ENHANCE.policy().get("source_typed_flat_ignore_consumer")=="existing_typed_flat_damage_projection":projected=PATCH523_EQUIPMENT_COMBAT.typed_flat_ignore(self,kind)
-	var result: int = projected + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore"))
+	var result: int = projected + PATCH523_EQUIPMENT_COMBAT.pvp_flat_ignore(self,kind) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore"))
 	if kind in ["melee", "ranged"]:
 		result += _equipped_bless_bonus("damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
@@ -7910,7 +7911,7 @@ func _player_silence_chance(target: TwilightMonster) -> float:
 		return 0.05
 	return _status_effect_chance(
 		_silence_accuracy_stat(),
-		level,
+		PATCH523_EQUIPMENT_COMBAT.status_caster_level(self,level),
 		target.silence_resistance,
 		target.monster_level
 	)
@@ -7944,7 +7945,7 @@ func _player_hold_chance(target: TwilightMonster) -> float:
 		return 0.05
 	return _status_effect_chance(
 		_hold_accuracy_stat(),
-		level,
+		PATCH523_EQUIPMENT_COMBAT.status_caster_level(self,level),
 		target.hold_resistance,
 		target.monster_level
 	)
@@ -7978,7 +7979,7 @@ func _player_fear_chance(target: TwilightMonster) -> float:
 		return 0.05
 	return _status_effect_chance(
 		_fear_accuracy_stat(),
-		level,
+		PATCH523_EQUIPMENT_COMBAT.status_caster_level(self,level),
 		target.fear_resistance,
 		target.monster_level
 	)
@@ -8012,7 +8013,7 @@ func _player_poison_chance(target: TwilightMonster) -> float:
 		return 0.05
 	return _status_effect_chance(
 		_poison_accuracy_stat(),
-		level,
+		PATCH523_EQUIPMENT_COMBAT.status_caster_level(self,level),
 		target.poison_resistance,
 		target.monster_level
 	)
@@ -8046,7 +8047,7 @@ func _player_bleed_chance(target: TwilightMonster) -> float:
 		return 0.05
 	return _status_effect_chance(
 		_bleed_accuracy_stat(),
-		level,
+		PATCH523_EQUIPMENT_COMBAT.status_caster_level(self,level),
 		target.bleed_resistance,
 		target.monster_level
 	)
@@ -8061,7 +8062,7 @@ func _player_stun_chance(target: TwilightMonster) -> float:
 		return 0.05
 	return _status_effect_chance(
 		_stun_accuracy_stat(),
-		level,
+		PATCH523_EQUIPMENT_COMBAT.status_caster_level(self,level),
 		target.stun_resistance,
 		target.monster_level
 	)

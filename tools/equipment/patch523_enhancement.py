@@ -36,6 +36,9 @@ EXTRA = {
     'PierceMeleeDamageReduction':('source_melee_flat_reduction_ignore',1),
     'PierceRangeDamageReduction':('source_ranged_flat_reduction_ignore',1),
     'PierceMagicDamageReduction':('source_magic_flat_reduction_ignore',1),
+    'PiercePVPDamageReduction':('source_pvp_flat_reduction_ignore',1),
+    'PVPSpellByLevelAdditionLevel':('source_pvp_status_success_level',1),
+    '_fear_flat_ignore':('source_fear_flat_reduction_ignore',1),
     'PVPMeleeAdditionDamage':('pve_melee_damage',1), 'PVEMeleeAdditionDamage':('pve_melee_damage',1),
     'PVPRangeAdditionDamage':('pve_ranged_damage',1), 'PVERangeAdditionDamage':('pve_ranged_damage',1),
     'PVPMagicAdditionDamage':('pve_magic_damage',1), 'PVEMagicAdditionDamage':('pve_magic_damage',1),
@@ -81,6 +84,8 @@ def qualified_name(bonus, name, resistance_types, elemental_targets=None):
         return None if name in ['HitSpecialResistance','SpecialResistance','IncreaseNpcItemDropAmount'] else name
     if name=='MagicDamage' and application==2 and resistance_types.get(target,'').lower()=='stun':
         return '_stun_magic'
+    if name=='PierceDamageReduction' and application==2 and resistance_types.get(target,'').lower()=='fear':
+        return '_fear_flat_ignore'
     if name=='FinalBlowProbability' and application==2 and resistance_types.get(target,'').lower()=='stun':
         return '_final_blow_stun'
     if name in ['HitSpecialResistance','SpecialResistance'] and application==2:
@@ -138,7 +143,7 @@ def compile_equipment(tables, bound_items, bonuses):
                             live_invokes.append({'row_id':row['ID'],'probability':b['Value'],'option':option,
                                                  'kind':{3:'attack_fixed_damage',5:'defence_flat_reduction',6:'attack_weapon_scale'}[kind]})
                             continue
-                    if name in ['PierceMeleeDamageReduction','PierceRangeDamageReduction','PierceMagicDamageReduction'] and types[b['BonusTypeID']]['UnitID']!=1:
+                    if name in ['PierceMeleeDamageReduction','PierceRangeDamageReduction','PierceMagicDamageReduction','PiercePVPDamageReduction','PVPSpellByLevelAdditionLevel','PierceDamageReduction'] and types[b['BonusTypeID']]['UnitID']!=1:
                         skipped.add(row['ID']); continue
                     if name in ['FinalBlowProbability','FinalBlowAdditionalScale'] and types[b['BonusTypeID']]['UnitID']!=3:
                         skipped.add(row['ID']); continue

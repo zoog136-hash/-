@@ -84,5 +84,15 @@
   "source_weapon_scale_rounding": "nearest",
   "source_weapon_scale_origin": "Exact InvokeOptionType6/Param1 per million and source probability; only rolled size-specific weapon base is scaled. Normal successful hit placement before critical/element, strongest successful multiplier, rounding are TWILIGHT policy. No scale of stats, spells, drains or recursive procs.",
   "source_typed_flat_ignore_consumer": "existing_typed_flat_damage_projection",
-  "source_typed_flat_ignore_origin": "Exact Unit1 melee/range/magic PierceDamageReduction source amounts. Reuse existing TWILIGHT typed reduction-ignore-as-flat-damage interpretation. NPC AC is not asserted to be damage reduction; no original NPC DR formula is claimed. Set consumer=disabled to retain source values without this projection."
+  "source_typed_flat_ignore_origin": "Exact Unit1 melee/range/magic PierceDamageReduction source amounts. Reuse existing TWILIGHT typed reduction-ignore-as-flat-damage interpretation. NPC AC is not asserted to be damage reduction; no original NPC DR formula is claimed. Set consumer=disabled to retain source values without this projection.",
+  "source_pvp_flat_ignore_consumer": "existing_singleplayer_flat_damage_projection",
+  "source_pvp_status_level_consumer": "existing_singleplayer_status_virtual_level",
+  "source_fear_flat_ignore_consumer": "existing_flat_damage_projection",
+  "source_fear_condition_subject": "target_status",
+  "source_fear_flat_ignore_scope": "all_successful_hits",
+  "source_status_projection_origin": "Exact source Unit1 PvP flat-ignore, PvP skill-success-level and Fear8 conditional flat-ignore values. Existing TWILIGHT single-player PvP-to-PvE projection, six legacy status-chance virtual caster levels, flat-ignore-as-added-damage and ambiguous Fear affected subject/hit placement are configurable TWILIGHT interpretations. No actual player level, XP gates, native spell probability formula or NPC DR is changed. Disabled/unknown policy leaves values as source evidence only.",
+  "source_status_projection_public_basis": [
+    "https://lineagem.plaync.com/board/update/view?articleId=674f5c38a429a917f01d0cf6",
+    "https://lineagem.plaync.com/guidebook/view?title=군주+마법"
+  ]
 }

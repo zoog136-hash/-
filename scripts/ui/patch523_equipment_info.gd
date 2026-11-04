@@ -161,6 +161,7 @@ func _refresh() -> void:
 	var final_base: Dictionary=preload("res://scripts/crafting/patch523_final_blow.gd").base(book,physical.get("record",{}),blessing)
 	if not final_base.is_empty():text+="\n원본 기본 결정타 %.2f%% · 증폭 %.2f%% · 적용 범위/계산 순서는 TWILIGHT 설정\n" % [float(final_base.get("source_final_blow_chance_pct",0)),float(final_base.get("source_final_blow_amp_pct",0))]
 	text+="\n스턴 조건 주체: %s · 원본 상태6/단위/수치 보존, 주체와 계산 범위는 TWILIGHT 설정\n" % UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_stun_condition_subject","disabled")))
+	text+="\nPVP 수치의 싱글플레이어 투영: %s / 스킬 성공 가상 레벨: %s\n실제 캐릭터 레벨·경험치 불변 · 여섯 기존 상태 성공 계산만 사용(TWILIGHT 설정)\n공포8 조건: 주체 %s · 범위 %s · 처리 %s\n" % [UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_pvp_flat_ignore_consumer","disabled"))),UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_pvp_status_level_consumer","disabled"))),UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_fear_condition_subject","disabled"))),UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_fear_flat_ignore_scope","disabled"))),UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_fear_flat_ignore_consumer","disabled")))]
 	text+="\n유형별 리덕션 무시 처리: %s\n원본 수치 보존 · NPC AC/리덕션 공식 복원이 아닌 TWILIGHT 기존 추가 피해 해석\n" % UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_typed_flat_ignore_consumer","disabled")))
 	var effect_text: String = ""
 	var effects: Array = book.effect_evidence(source_id, level_value, 2 if blessing == 2 else 0)
@@ -174,7 +175,7 @@ func _refresh() -> void:
 		labels.merge({"PierceDamageReductionPercent":"대미지 증가","PVEPierceDamageReductionPercent":"PVE 대미지 증가","DamageReductionPercent":"대미지 감소","IncreaseNpcItemDropAmount":"아데나 드롭량"})
 		labels.merge({"HPHealIncreasePercent":"회복 마법량","CastSpeedBonus":"시전 속도","MeleeCriticalResist":"근거리 치명타 저항","RangeCriticalResist":"원거리 치명타 저항","MeleeDamageReductionPercent":"근거리 대미지 감소","RangeDamageReductionPercent":"원거리 대미지 감소","MagicDamageReductionPercent":"마법 대미지 감소","PoisonDamageReductionPercent":"지속 대미지 감소"})
 		labels.merge({"StrengthScale":"STR 비율","DexterityScale":"DEX 비율","IntelligenceScale":"INT 비율"})
-		labels.merge({"FinalBlowProbability":"결정타 확률","FinalBlowAdditionalScale":"결정타 증폭","ElementalDamage":"속성별 고정 추가 피해 · 개별 저항 적용(TWILIGHT 설정)","AttackDrainHP":"공격 HP 흡수 강화량","AttackDrainMP":"공격 MP 흡수 강화량","UndeadAdditionalMaxDamage":"언데드 추가 피해 최댓값"})
+		labels.merge({"PiercePVPDamageReduction":"PVP 대미지 리덕션 무시","PVPSpellByLevelAdditionLevel":"PVP 스킬 성공 레벨","FinalBlowProbability":"결정타 확률","FinalBlowAdditionalScale":"결정타 증폭","ElementalDamage":"속성별 고정 추가 피해 · 개별 저항 적용(TWILIGHT 설정)","AttackDrainHP":"공격 HP 흡수 강화량","AttackDrainMP":"공격 MP 흡수 강화량","UndeadAdditionalMaxDamage":"언데드 추가 피해 최댓값"})
 		for effect: Dictionary in effects:
 			var kind: String = str(effect.bonus_type.get("Name", ""))
 			var value: String = str(int(effect.bonus.Value))
@@ -204,7 +205,15 @@ func _refresh() -> void:
 					for live: Dictionary in world.PATCH523_EQUIPMENT_COMBAT.level_effects(prepared,level_value):
 						if int(live.row_id)==int(effect.row.ID):applied=true;break
 			var sign: String="-" if kind=="ArmorClass" else "+"
-			effect_text += "%s %s%s · %s\n" % [UI.safe(label),sign,value,"적용 연결" if applied else "참고·적용 미연결"]
+			var application_label: String="적용 연결" if applied else "참고·적용 미연결"
+			if applied and kind in ["PiercePVPDamageReduction","PVPSpellByLevelAdditionLevel"]:
+				var setting: String="source_pvp_flat_ignore_consumer" if kind=="PiercePVPDamageReduction" else "source_pvp_status_level_consumer"
+				var enabled: String="existing_singleplayer_flat_damage_projection" if kind=="PiercePVPDamageReduction" else "existing_singleplayer_status_virtual_level"
+				application_label="싱글플레이어 해석 연결(TWILIGHT)" if world.PATCH523_ENHANCE.policy().get(setting)==enabled else "설정 꺼짐·원본 보존"
+			if applied and kind=="PierceDamageReduction" and int(effect.bonus.BonusApplicationTypeID)==2 and int(effect.bonus.BonusApplicationTargetID)==8:
+				label="공포8 조건 대미지 리덕션 무시"
+				application_label="공포 상태·주체·범위 조건부 연결(TWILIGHT)" if world.PATCH523_ENHANCE.policy().get("source_fear_flat_ignore_consumer")=="existing_flat_damage_projection" and world.PATCH523_ENHANCE.policy().get("source_fear_condition_subject") in ["target_status","self_status"] and world.PATCH523_ENHANCE.policy().get("source_fear_flat_ignore_scope") in ["all_successful_hits","normal_only","spell_hits_only"] else "설정 꺼짐·원본 보존"
+			effect_text += "%s %s%s · %s\n" % [UI.safe(label),sign,value,application_label]
 	var displayed: Dictionary = {}
 	var blessing_branches: Array = [1]
 	for link: Dictionary in book.data.get("items", {}).get(str(scroll_id), {}).get("item_bonuses", []):

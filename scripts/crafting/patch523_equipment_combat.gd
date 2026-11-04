@@ -90,11 +90,10 @@ static func on_hit(world: Node,target: Node,attack_kind: String,main_target: boo
 		emit(world,effect,target)
 		if bool(target.get("dead")):break
 
-static func typed_flat_ignore(world: Node,attack_kind: String) -> int:
+static func source_integer(world: Node,key: String) -> int:
 	# Read this new field only from a current exact source derivation. An opaque
 	# same-named base/save field is not authority to grant a new numeric effect.
-	if attack_kind not in ["melee","ranged","magic"]:return 0
-	var key: String="source_"+attack_kind+"_flat_reduction_ignore"
+	if key not in ["source_melee_flat_reduction_ignore","source_ranged_flat_reduction_ignore","source_magic_flat_reduction_ignore","source_pvp_flat_reduction_ignore","source_pvp_status_success_level","source_fear_flat_reduction_ignore"]:return 0
 	var total: int=0;var visited: Dictionary={}
 	for slot: String in world.EQUIPMENT_SLOT_ORDER:
 		var worn: Dictionary=world.equipped_items.get(slot,{})
@@ -116,6 +115,32 @@ static func typed_flat_ignore(world: Node,attack_kind: String) -> int:
 		if typeof(expected) not in [TYPE_INT,TYPE_FLOAT] or typeof(actual) not in [TYPE_INT,TYPE_FLOAT] or actual!=expected or not is_finite(float(expected)) or float(expected)!=float(int(expected)) or int(expected)<0:continue
 		total+=int(expected)
 	return total
+
+static func typed_flat_ignore(world: Node,attack_kind: String) -> int:
+	if attack_kind not in ["melee","ranged","magic"]:return 0
+	return source_integer(world,"source_"+attack_kind+"_flat_reduction_ignore")
+
+static func pvp_flat_ignore(world: Node,attack_kind: String) -> int:
+	if attack_kind not in ["melee","ranged","magic"] or ENHANCE.policy().get("source_pvp_flat_ignore_consumer")!="existing_singleplayer_flat_damage_projection":return 0
+	return source_integer(world,"source_pvp_flat_reduction_ignore")
+
+static func status_caster_level(world: Node,base_level: int) -> int:
+	if ENHANCE.policy().get("source_pvp_status_level_consumer")!="existing_singleplayer_status_virtual_level":return base_level
+	# Only the existing legacy status-chance input, never player.level or XP.
+	return base_level+source_integer(world,"source_pvp_status_success_level")
+
+static func fear_flat_ignore(world: Node,target: Node,by_spell: bool) -> int:
+	var settings: Dictionary=ENHANCE.policy()
+	if settings.get("source_fear_flat_ignore_consumer")!="existing_flat_damage_projection":return 0
+	var scope: String=str(settings.get("source_fear_flat_ignore_scope","disabled"))
+	if scope!="all_successful_hits" and not (scope=="normal_only" and not by_spell) and not (scope=="spell_hits_only" and by_spell):return 0
+	var subject: Node
+	match settings.get("source_fear_condition_subject","disabled"):
+		"target_status":subject=target
+		"self_status":subject=world.player
+		_:return 0
+	if not is_instance_valid(subject) or not subject.has_method("is_feared") or not subject.call("is_feared"):return 0
+	return source_integer(world,"source_fear_flat_reduction_ignore")
 
 static func weapon_scale(world: Node,amount: int,attack_kind: String,target: Node) -> int:
 	weapon_fired.clear()
@@ -156,6 +181,9 @@ static func summary(record: Dictionary,level: int) -> String:
 	var extras: Dictionary=record.get("enhancement_extra_options",{}).get(str(clampi(level,0,21)),{})
 	for key: String in ["source_melee_flat_reduction_ignore","source_ranged_flat_reduction_ignore","source_magic_flat_reduction_ignore"]:
 		if extras.has(key):result.append("유형별 무시 처리: %s · 원본 수치와 TWILIGHT 추가 피해 투영 구분" % str(settings.get("source_typed_flat_ignore_consumer","disabled")));break
+	if extras.has("source_pvp_flat_reduction_ignore"):result.append("PVP 원본 → 싱글플레이어 추가 피해: %s/TWILIGHT 설정" % str(settings.get("source_pvp_flat_ignore_consumer","disabled")))
+	if extras.has("source_pvp_status_success_level"):result.append("스킬 성공 가상 레벨: %s/TWILIGHT 설정 · 실제 레벨/XP 불변" % str(settings.get("source_pvp_status_level_consumer","disabled")))
+	if extras.has("source_fear_flat_reduction_ignore"):result.append("공포8 조건 리덕션 무시: %s · 주체 %s · 범위 %s/TWILIGHT 설정" % [str(settings.get("source_fear_flat_ignore_consumer","disabled")),str(settings.get("source_fear_condition_subject","disabled")),str(settings.get("source_fear_flat_ignore_scope","disabled"))])
 	for effect: Dictionary in level_effects(record,level):
 		if not valid(effect):continue
 		var scope: String=str({0:"",1:"근거리 ",2:"원거리 ",3:"마법 "}.get(int(effect.option.AttackTypeID),""))
