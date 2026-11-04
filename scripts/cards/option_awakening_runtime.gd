@@ -146,9 +146,14 @@ func _transact(category: String, target_id: String, materials: Dictionary, is_at
 		return result
 	var next: Dictionary = result.state
 	next["rng_state"] = str(staged_rng.state)
+	var tj_before: Dictionary={}
 	var override: Dictionary = {SAVE_KEY: next, "card_draw_fusion": result.card_state, "gold": result.gold}
+	if is_attempt and world.has_method("_tj_capture_awakening"):
+		tj_before=world._tj_capture_awakening(category,target_id,result)
+		override["tj_coupons523"]=world.tj_coupons.core.export_state()
 	var error: Error = world._save_game(true, override)
 	if error != OK:
+		if not tj_before.is_empty():world.tj_coupons.core.state=tj_before.duplicate(true)
 		_busy = false
 		return {"ok": false, "code": "save_failed", "error": "저장 실패 · 재료·아데나·각성 진행은 변경하지 않았습니다", "snapshot": view(category, target_id)}
 	# No live mutation or result presentation occurs before this durable commit.

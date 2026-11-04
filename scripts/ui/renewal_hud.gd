@@ -917,6 +917,7 @@ func _navigate(section: String) -> void:
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
 		"skills": open_skills()
+		"tj_coupons": open_tj_coupons()
 		"quests": open_quests()
 		"shop": open_shop()
 		"npc_shop": open_npc_shop()
@@ -942,6 +943,10 @@ func confirm_action(title: String, body: String, action: String, callback: Calla
 	return dialog
 
 func _on_lineage_side_action(action_id: String) -> void:
+	if action_id == "tj_coupons":
+		if is_instance_valid(lineage_side_ui):lineage_side_ui.hide_all()
+		open_tj_coupons()
+		return
 	if action_id == "quests":
 		if is_instance_valid(lineage_side_ui):
 			lineage_side_ui.hide_all()
@@ -949,6 +954,12 @@ func _on_lineage_side_action(action_id: String) -> void:
 		return
 	super._on_lineage_side_action(action_id)
 
+
+func open_tj_coupons() -> void:
+	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
+	var view = preload("res://scripts/tj/view.gd").new()
+	workspace.mount(view)
+	view.configure(get_parent())
 
 func open_quests() -> void:
 	_open_window("quests", "퀘스트", "메인 · 일일 · 업적 · 즉시 완료")

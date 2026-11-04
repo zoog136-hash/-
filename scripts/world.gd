@@ -83,6 +83,8 @@ const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const CURRENCY_DROP = preload("res://scripts/loot/currency_drops.gd")
 const QUEST_SERVICE = preload("res://scripts/quests/quest_service.gd")
 var quest_service = QUEST_SERVICE.new()
+const TJ_RUNTIME = preload("res://scripts/tj/runtime.gd")
+var tj_coupons = TJ_RUNTIME.new()
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
 var ground_loot: TwilightGroundLootManager = GROUND_LOOT_MANAGER.new()
@@ -405,6 +407,7 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	tj_coupons.configure(self)
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -4457,6 +4460,8 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if tj_coupons.core.blocked or not tj_coupons.core.validate(tj_coupons.core.export_state()).is_empty():return ERR_FILE_CORRUPT
+	if collection_override.has("tj_coupons523") and not tj_coupons.core.validate(collection_override.tj_coupons523).is_empty():return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4472,7 +4477,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","tj_coupons523"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4507,6 +4512,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"gold": gold,
 		"inventory": inventory,
 		"quest_state": quest_service.export_state(),
+		"tj_coupons523": tj_coupons.core.export_state(),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
@@ -4622,6 +4628,12 @@ func _load_game(quiet: bool) -> void:
 	if not map84_error.is_empty():
 		source_save_blocked=true
 		hud.show_message(map84_error)
+		return
+	var tj_error: String = tj_coupons.core.validate(data.get("tj_coupons523",tj_coupons.core.empty_state()))
+	if not tj_error.is_empty():
+		tj_coupons.core.blocked=true
+		tj_coupons.core.problem=tj_error
+		hud.show_message(tj_error)
 		return
 	var growth_error: String = growth.validate(data.get("growth",growth.empty_state()))
 	if not growth_error.is_empty():
@@ -4767,6 +4779,8 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
 	quest_service.import_state(data.get("quest_state", {}))
+	tj_coupons.core.import_state(data.get("tj_coupons523",tj_coupons.core.empty_state()))
+	tj_coupons.restore_context()
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
 	source_save_blocked = false
@@ -6362,6 +6376,7 @@ func _on_card_fusion_requested(category: String, grade: String, count: int = 1) 
 	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
+	var tj_before: Dictionary = tj_coupons.core.export_state()
 	var cards_before: Dictionary = card_draw_fusion.export_state()
 	var roll_before: int = card_draw_fusion.rng.state
 	var batch: bool = count > 1
@@ -6387,7 +6402,9 @@ func _on_card_fusion_requested(category: String, grade: String, count: int = 1) 
 		var pity_card: Dictionary = result.get("pity_reward", {}) as Dictionary
 		if not pity_card.is_empty():
 			message += " · 누적 실패 보상: %s" % str(pity_card.get("name", ""))
+	tj_coupons.capture_fusion(result)
 	if _save_game(true) != OK:
+		tj_coupons.core.state=tj_before.duplicate(true)
 		card_draw_fusion.import_state(cards_before)
 		card_draw_fusion.rng.state = roll_before
 		_invalidate_equipment_static()
@@ -8266,3 +8283,8 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+func _tj_capture_awakening(category: String, identity: String, result: Dictionary) -> Dictionary:
+	var before: Dictionary=tj_coupons.core.export_state()
+	tj_coupons.capture_awakening(category,identity,result)
+	return before
