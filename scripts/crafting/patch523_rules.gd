@@ -187,7 +187,7 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 		elif key == "enhancement_options":
 			if pinned[key] != canonical.get(key, {}) and pinned[key] != supported_seal_options(str(material.source_id), int(material.bless_code)) and pinned[key] != ENHANCEMENT.prepare(self,canonical,int(material.bless_code)).get(key,{}):
 				return false
-		elif key in ["enhancement_extra_options","patch523_blessing_bonus"]:
+		elif key in ["enhancement_extra_options","patch523_blessing_bonus","patch523_invoke_options"]:
 			if pinned[key]!=ENHANCEMENT.prepare(self,canonical,int(material.bless_code)).get(key,{}): return false
 		elif key == "patch523_item_use":
 			if pinned[key]!=canonical.get(key,{}): return false

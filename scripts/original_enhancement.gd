@@ -97,4 +97,6 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 			result.append("%s %+.2f" % [label, float(bonus[key])])
 	var text: String=" · ".join(result) if not result.is_empty() else "추가 강화 옵션 없음"
 	if level==21 and record.get("patch523_effect_basis",{}).get("local_level21_extrapolation",false): text+=" · +21 효과: TWILIGHT 추정 설정"
+	var invoke_text: String=preload("res://scripts/crafting/patch523_equipment_combat.gd").summary(record,level)
+	if not invoke_text.is_empty():text+="\n"+invoke_text
 	return text

@@ -14,7 +14,7 @@ var pack_dialog: FileDialog
 var pack_status: Label
 var catalog_dialog: FileDialog
 var catalog_status: Label
-const DEFAULT_SHA: String = "b6b2589c15853b1998ecfc6484438a1fe0ef8e8e125d7d1d558e49c116f879ce"
+const DEFAULT_SHA: String = "5ecbc0537fce85e1605d998b493464d375aa263f59abe977e8484df22f569e8e"
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -28,7 +28,8 @@ func configure(controller: Node) -> void:
 	pack_sha = LineEdit.new()
 	pack_sha.name = "Patch523PackSHA"
 	pack_sha.placeholder_text = "규칙 팩 SHA256"
-	pack_sha.text = DEFAULT_SHA
+	pack_sha.text = str(world.patch523_equipment.digest) if not str(world.patch523_equipment.digest).is_empty() else DEFAULT_SHA
+	pack_sha.tooltip_text="현재 로드한 규칙의 SHA256입니다. 다른 팩으로 교체할 때는 새 파일의 SHA256을 입력하세요."
 	pack_sha.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	installation.add_child(pack_sha)
 	var install_button: Button = UI.button("규칙 팩 설치·교체", func() -> void: pack_dialog.popup_centered_ratio(.75))
@@ -161,16 +162,27 @@ func _refresh() -> void:
 		var supported: Dictionary = {"MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","DamageReduction":"reduction","HPPotionIncreaseStatic":"potion_heal_flat","HPPotionIncreasePercent":"potion_heal_pct","ExperienceAdditionPercent":"xp_pct","EinasadSavingPercent":"ain_saving_pct","PotionConsumeDelayDecreasePercent":"potion_cooldown_pct","SpecialResistance":"stun_resistance"}
 		var expected_options: Dictionary = book.supported_seal_options(str(source_id),2).get(str(level_value), {})
 		var actual_options: Dictionary = physical.get("record", {}).get("enhancement_options", {}).get(str(level_value), {})
+		labels.merge({"ArmorClass":"물리 방어력(AC)","WeaponDamageBonus":"추가 대미지","WeaponHitBonus":"무기 명중","HPPlus":"최대 HP","MPPlus":"최대 MP","CarryPlus":"무게 보너스","MagicResist":"MR","SpellPower":"SP","MeleeCritical":"근거리 치명타","RangeCritical":"원거리 치명타","MagicCritical":"마법 치명타","AttackSpeedBonus":"공격 속도","MoveSpeedBonus":"이동 속도","RegenMP":"MP 회복","PVEDamageReduction":"PVE 리덕션","PVPDamageReduction":"PVE 리덕션","PVEDamageReductionPercent":"PVE 리덕션 비율"})
 		for effect: Dictionary in effects:
 			var kind: String = str(effect.bonus_type.get("Name", ""))
 			var value: String = str(int(effect.bonus.Value))
 			if int(effect.bonus_type.get("UnitID", 0)) == 3:
 				value = "%.2f%%" % (float(effect.bonus.Value) / 10000.0)
+			elif int(effect.bonus_type.get("UnitID",0))==211:value="%.2f%%" % float(effect.bonus.Value)
+			elif int(effect.bonus_type.get("UnitID",0))==44:value="%.2f" % (float(effect.bonus.Value)/100.0)
 			var label: String = str(labels.get(kind, kind))
+			if kind=="InvokeOption":label="발동 확률"
 			if kind == "SpecialResistance" and int(effect.bonus.BonusApplicationTypeID) == 2 and int(effect.bonus.BonusApplicationTargetID) == 6:
 				label = "스턴 내성"
 			var applied: bool = blessing == 2 and supported.has(kind) and expected_options.has(supported[kind]) and actual_options.get(supported[kind]) == expected_options[supported[kind]]
-			effect_text += "%s +%s · %s\n" % [UI.safe(label), value, "적용 연결" if applied else "참고·적용 미연결"]
+			if prepared.get("patch523_effect_basis",{}).get("selection")=="source_exact_level":
+				applied=int(effect.row.ID) not in prepared.patch523_effect_basis.get("unconnected_effect_row_ids",[])
+				if kind=="InvokeOption":
+					applied=false
+					for live: Dictionary in world.PATCH523_EQUIPMENT_COMBAT.level_effects(prepared,level_value):
+						if int(live.row_id)==int(effect.row.ID):applied=true;break
+			var sign: String="-" if kind=="ArmorClass" else "+"
+			effect_text += "%s %s%s · %s\n" % [UI.safe(label),sign,value,"적용 연결" if applied else "참고·적용 미연결"]
 	var displayed: Dictionary = {}
 	var blessing_branches: Array = [1]
 	for link: Dictionary in book.data.get("items", {}).get(str(scroll_id), {}).get("item_bonuses", []):

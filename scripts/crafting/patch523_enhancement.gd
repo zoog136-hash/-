@@ -58,6 +58,14 @@ static func prepare(book: Object, record: Dictionary, blessing: int) -> Dictiona
 					next[key]=float(values["20"][key])*2.0-previous
 				values["21"]=next;local_last_rank=true
 	output["enhancement_extra_options"]=extra
+	if runtime.get("invokes") is Dictionary:
+		var invokes: Dictionary=runtime.invokes.get(str(blessing),{}).duplicate(true)
+		if settings.get("missing_level21_invoke","")=="keep_level20" and invokes.get("21",[]).is_empty() and not invokes.get("20",[]).is_empty():invokes["21"]=invokes["20"].duplicate(true)
+		var has_invokes: bool=false
+		for rows: Array in invokes.values():
+			if not rows.is_empty():has_invokes=true;break
+		if has_invokes:output["patch523_invoke_options"]=invokes
+		else:output.erase("patch523_invoke_options")
 	output["patch523_blessing_bonus"]=runtime.blessing.duplicate(true)
 	output["patch523_effect_basis"]={"sha256":book.digest,"policy_sha256":_policy_digest,"bless_code":blessing,"selection":"source_exact_level","local_level21_extrapolation":local_last_rank,"unconnected_effect_row_ids":runtime.get("unconnected_effect_row_ids",[]).duplicate()}
 	return output

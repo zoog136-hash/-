@@ -85,7 +85,7 @@ func run() -> void:
 	world.player.set_physics_process(false);world.field_population.set_process(false)
 	var book: Object=world.patch523_equipment
 	check(book.problem.is_empty() and book.recipes.size()==732,"full actual732 source pack loaded")
-	check(book.data.source_files.size()==33,"all33 pinned original tables included")
+	check(book.data.source_files.size()==(37 if book.data.enchantment.has("InvokeOption") else 33),"all pinned original tables included; explicit v8/v9 compatibility")
 	var effect_items: int=0
 	var ranks: int=0
 	var extra_consumers: int=0

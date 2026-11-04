@@ -39,14 +39,15 @@ EXTRA = {
 
 def compile_equipment(tables, bound_items, bonuses):
     types = {r['ID']:r for r in tables['BonusType']}
+    invoke_options = {r['ID']:r for r in tables.get('InvokeOption',[])}
     result = {}
     for iid, item in bound_items.items():
         raw, canonical = item['item_class'], item['catalog_record']
         if raw.get('TestItem') or canonical.get('slot') in ['consumable','material','currency','']:
             continue
-        options, extras, skipped = {}, {}, set()
+        options, extras, invokes, skipped = {}, {}, {}, set()
         for bless in [1,2]:
-            by_rank, extra_rank = {}, {}
+            by_rank, extra_rank, invoke_rank = {}, {}, {}
             # Blessed2 overrides the default0 family within each group, not
             # normal1. Default0 is selected only where no state family exists.
             groups = defaultdict(list)
@@ -57,12 +58,24 @@ def compile_equipment(tables, bound_items, bonuses):
                 codes = {r['BlessCode'] for r in rows}
                 selected += [r for r in rows if r['BlessCode'] == (bless if bless in codes else 0)]
             for level in range(22):
-                totals, extra = {}, {}
+                totals, extra, live_invokes = {}, {}, []
                 for row in selected:
                     if row['EnchantLevel'] != level:
                         continue
                     b = bonuses[str(row['BonusID'])]
                     name = types[b['BonusTypeID']]['Name']
+                    if name == 'InvokeOption' and b['BonusApplicationTypeID']==10:
+                        option=invoke_options.get(b['BonusApplicationTargetID'],{})
+                        kind=option.get('InvokeOptionTypeID')
+                        # Fully numeric source contracts only. Spell/formula,
+                        # material, weapon/shield and chained hooks stay typed
+                        # evidence until their authoritative execution contract.
+                        if (kind in [3,5] and types[b['BonusTypeID']]['UnitID']==3 and 0<=b['Value']<=1000000
+                            and all(option.get(k,0)==0 for k in ['Param2','Param3','Param4','Param5','Param6','MaterialTypeID','MaterialAmount','IsAmmoAttack','WeaponGroupID','ShieldTypeID','SuccessedInvokeOptionID','TargetKind','SiegeTargetKind'])
+                            and option.get('AttackTypeID') in [0,1,2,3] and option.get('Param1',-1)>=0):
+                            live_invokes.append({'row_id':row['ID'],'probability':b['Value'],'option':option,
+                                                 'kind':'attack_fixed_damage' if kind==3 else 'defence_flat_reduction'})
+                            continue
                     if b['BonusApplicationTypeID'] or b['BonusApplicationTargetID']:
                         if name == 'SpecialResistance' and b['BonusApplicationTypeID']==2 and b['BonusApplicationTargetID']==6:
                             name = '_stun'
@@ -100,7 +113,8 @@ def compile_equipment(tables, bound_items, bonuses):
                         if key in extra and not isinstance(extra[key],dict): extra[key]={'total':extra[key],'base_key':key,'scale':1}
                 by_rank[str(level)] = totals
                 extra_rank[str(level)] = extra
-            options[str(bless)], extras[str(bless)] = by_rank, extra_rank
+                invoke_rank[str(level)] = live_invokes
+            options[str(bless)], extras[str(bless)], invokes[str(bless)] = by_rank, extra_rank, invoke_rank
         blessing = {}
         for b in tables.get('ItemBlessBonus',[]):
             if b['ItemCategoryID']==raw['CategoryID'] and b['GradeID']==raw['GradeID'] and not b['IsTest'] and not b['IsPossession'] and b['BonusApplicationTypeID']==0 and b['BonusApplicationTargetID']==0:
@@ -108,7 +122,7 @@ def compile_equipment(tables, bound_items, bonuses):
                 if name=='ArmorClassBonus': name='ArmorClass'
                 if name in FIELDS:
                     key,_,divisor=FIELDS[name];blessing[key]=b['Value']/divisor
-        result[iid]={'options':options,'extra_options':extras,'blessing':blessing,
+        result[iid]={'options':options,'extra_options':extras,'invokes':invokes,'blessing':blessing,
                      'category_id':raw.get('CategoryID',0),'grade_id':raw.get('GradeID',0),
                      'material_id':raw.get('MaterialID',0), 'unconnected_effect_row_ids':sorted(skipped)}
     return result

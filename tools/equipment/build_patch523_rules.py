@@ -17,6 +17,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from patch523_enhancement import compile_equipment
 
 SOURCE_SHA256 = {
+    "InvokeOption": "ea1e6e99f7a501312d7e5a9d114c7edbefc18f72de1d7816abd25085a6e9939f",
+    "InvokeOptionType": "ac0d5094e7e1e63968d3215ced14f327a24c4e06e5380a4b7d0f769f92e3069a",
+    "BonusApplicationType": "f66a6b5f7a537f618daef95e8d990894546356359d774aa49bd53d483cc7dcbb",
+    "AttackType": "0f5c09bc98faeb64ce9fac30f34bd454c170a381b532c20f67a8d1c3692993b9",
     "ItemBlessBonus": "a60ee74e006d79263156a015d863d4ea28a0c3deab58afe953340ff637c3b60c",
     "Material": "693d22855f6a0fc31b774201c0b61d73feb733997b39338f94cabd1e089f00c3",
     "Unit": "5b212633235459928eb03f836ac3964d988a9851f2e7f786a04f5edbba7cba22",
@@ -357,7 +361,7 @@ def compile_rules(tables, evidence, catalog_bytes, binding_catalog_bytes=None):
     if binding_catalog_bytes is not None:
         result['binding_catalog_sha256'] = digest(binding_catalog_bytes)
     result['equipment_runtime'] = compile_equipment(tables, bound_items, bonuses)
-    result['enchantment'].update({n:tables.get(n,[]) for n in ['ItemBlessBonus','Material','Unit','UIUnit']})
+    result['enchantment'].update({n:tables.get(n,[]) for n in ['ItemBlessBonus','Material','Unit','UIUnit','InvokeOption','InvokeOptionType','BonusApplicationType','AttackType']})
     return result
 
 

@@ -19,5 +19,10 @@
   "missing_level21_effect": "continue_last_delta",
   "missing_level21_basis": "TWILIGHT approximation only for missing +21 numeric effects; source +0..+20 always win",
   "leap_disabled_bonus_presence": true,
-  "leap_disabled_basis": "TWILIGHT interpretation of BonusType8402 Value0 marker, not a source boolean assertion"
+  "leap_disabled_basis": "TWILIGHT interpretation of BonusType8402 Value0 marker, not a source boolean assertion",
+  "missing_level21_invoke": "keep_level20",
+  "duplicate_invoke_policy": "strongest_probability_per_option",
+  "invoke_order": "after_existing_damage_resolution",
+  "defence_invoke_spell_scope": "attack_type_only",
+  "invoke_basis": "Exact source fixed amount and probability. Duplicate option stacking, post-resolution ordering and defence BySpellAttack interaction are TWILIGHT interpretations; raw AttackType0=All retained."
 }

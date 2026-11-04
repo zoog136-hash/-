@@ -41,6 +41,41 @@ class AdmissionTest(unittest.TestCase):
     def compile(self):
         return BUILDER.compile_rules(self.tables, {}, json.dumps(self.catalog).encode())
 
+    def invoke_fixture(self):
+        self.tables['BonusType']=[dict(ID=71,Name='EnchantBonusGroupID',UnitID=15),dict(ID=3091,Name='InvokeOption',UnitID=3)]
+        self.tables['Bonus']=[dict(ID=11,BonusTypeID=71,Value=3,BonusApplicationTypeID=0,BonusApplicationTargetID=0),dict(ID=12,BonusTypeID=3091,Value=12345,BonusApplicationTypeID=10,BonusApplicationTargetID=99)]
+        self.tables['ItemBonus']=[dict(ID=1,ItemClassID=101,BonusID=11)]
+        self.tables['ItemEnchantBonus']=[dict(ID=7,EnchantLevel=4,ItemEnchantBonusGroupID=3,BonusID=12,BlessCode=0)]
+        option={key:0 for key in ['Param2','Param3','Param4','Param5','Param6','MaterialTypeID','MaterialAmount','WeaponGroupID','ShieldTypeID','SuccessedInvokeOptionID','TargetKind','SiegeTargetKind']}
+        option.update(ID=99,InvokeOptionTypeID=3,AttackTypeID=0,Param1=17,BySpellAttack=False)
+        self.tables['InvokeOption']=[option]
+        return option
+
+    def test_numeric_invoke_keeps_probability_and_exact_bless_family(self):
+        self.invoke_fixture()
+        normal=self.compile()['equipment_runtime']['101']['invokes']['1']['4']
+        self.assertEqual([(x['kind'],x['probability'],x['option']['Param1']) for x in normal],[('attack_fixed_damage',12345,17)])
+        self.tables['Bonus'].append({**self.tables['Bonus'][1], 'ID':13,'Value':20000})
+        self.tables['ItemEnchantBonus'].append({**self.tables['ItemEnchantBonus'][0],'ID':8,'BonusID':13,'BlessCode':2})
+        blessed=self.compile()['equipment_runtime']['101']['invokes']['2']['4']
+        self.assertEqual([x['probability'] for x in blessed],[20000])
+        self.assertEqual(self.compile()['equipment_runtime']['101']['invokes']['1']['3'],[])
+
+    def test_invoke_spell_formula_cost_and_unrepresented_attack_guards(self):
+        option=self.invoke_fixture()
+        for key,value in [('InvokeOptionTypeID',1),('Param2',42),('MaterialAmount',1),('IsAmmoAttack',True),('AttackTypeID',62),('SuccessedInvokeOptionID',12)]:
+            with self.subTest(key=key):
+                self.tables['InvokeOption']=[{**option,key:value}]
+                runtime=self.compile()['equipment_runtime']['101']
+                self.assertEqual(runtime['invokes']['1']['4'],[])
+                self.assertIn(7,runtime['unconnected_effect_row_ids'])
+
+    def test_ranged_defensive_invoke_remains_attack_scoped(self):
+        option=self.invoke_fixture()
+        self.tables['InvokeOption']=[{**option,'InvokeOptionTypeID':5,'AttackTypeID':2}]
+        effect=self.compile()['equipment_runtime']['101']['invokes']['1']['4'][0]
+        self.assertEqual((effect['kind'],effect['option']['AttackTypeID']),('defence_flat_reduction',2))
+
     def rejected(self):
         self.assertEqual(self.compile()['recipes'], {})
 
@@ -221,8 +256,8 @@ class AdmissionTest(unittest.TestCase):
         self.assertEqual({k for k,r in result['recipes'].items() if any(o.get('empty_result') for o in r.get('outcomes',[]))},
                          {'patch523:150468','patch523:150478','patch523:150488','patch523:150498','patch523:172613'})
         self.assertEqual(set(result['guaranteed_boxes']),{'30701','130611'})
-        self.assertEqual(len(result['source_files']),33)
-        for name in ['ItemBlessBonus','Material','Unit','UIUnit','ItemEnchantEquipGroupMapping','ItemEnchantScrollGroupMapping','BmItemEnchantProView','ItemEnchantCostView','ItemEnchantProbabilityView','ItemBlessEnchantProbability']:
+        self.assertEqual(len(result['source_files']),37)
+        for name in ['ItemBlessBonus','Material','Unit','UIUnit','ItemEnchantEquipGroupMapping','ItemEnchantScrollGroupMapping','BmItemEnchantProView','ItemEnchantCostView','ItemEnchantProbabilityView','ItemBlessEnchantProbability','InvokeOption','InvokeOptionType','BonusApplicationType','AttackType']:
             self.assertEqual(result['enchantment'][name],tables[name])
         # Every enchant row of every bound item remains available verbatim;
         # unsupported conditions/procs must never become a flat numeric stat.

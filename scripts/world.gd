@@ -115,6 +115,7 @@ const HP_POTION_COOLDOWN_KEY: String = "__hp_potion_shared__"
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const PATCH523_ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
+const PATCH523_EQUIPMENT_COMBAT = preload("res://scripts/crafting/patch523_equipment_combat.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
 const AIN_OPTION_RULES = preload("res://scripts/ainhasad_option_rules.gd")
@@ -3018,6 +3019,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			return
 	var option_result: Dictionary=option_awakening.combat.incoming(attacker,normalized_type,reduced)
 	reduced=int(option_result.damage)
+	reduced=PATCH523_EQUIPMENT_COMBAT.incoming(self,attacker,normalized_type,reduced)
 	hp = maxi(0, hp - reduced)
 	if hp>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal))
 	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
@@ -6029,6 +6031,7 @@ func _break_invisibility() -> void:
 	hud.append_log("공격으로 은신 해제")
 
 func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack_kind: String="melee", main_target: bool=true, by_spell: bool=false) -> void:
+	if trigger_name=="on_hit" and hp>0:PATCH523_EQUIPMENT_COMBAT.on_hit(self,target,attack_kind,main_target,by_spell)
 	if trigger_name=="on_hit" and hp>0:option_awakening.combat.on_hit(target,attack_kind,main_target,by_spell)
 	if trigger_name=="on_hit":skill_awakening.on_successful_hit(target)
 	if original_skills != null: original_skills.trigger(trigger_name, target)
