@@ -2,6 +2,9 @@ extends RefCounted
 ## Selected locations are validated against the current field and layout.
 static var POLICY: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/growth/symbol_travel_policy.json"))
 const View = preload("res://scripts/growth/symbol_travel_view.gd")
+const Maps = preload("res://scripts/maps/source_map_runtime.gd")
+const Migration = preload("res://scripts/maps/source_map_save_migration.gd")
+const Transit = preload("res://scripts/npc/teleport_policy.gd")
 var _runtime: WeakRef
 var runtime:
 	get: return _runtime.get_ref()
@@ -27,9 +30,28 @@ static func validate(value: Variant) -> String:
 func enabled() -> bool:
 	return not runtime.development and runtime.bonus("teleport_control:flag")>0
 
-func layout_key() -> String:
-	if world.field_map==null: return ""
-	return str(world.field_map.data.get("layout_revision",0))+":"+str(world.field_map.definition.get("source_sha256","")) if world.field_map is OriginalPlayableField else str(world.field_map.data.get("layout_revision",0))
+func layout_key(field: Variant = null) -> String:
+	if field==null:field=world.field_map
+	if field==null: return ""
+	return str(field.data.get("layout_revision",0))+":"+str(field.definition.get("source_sha256","")) if field is OriginalPlayableField else str(field.data.get("layout_revision",0))
+
+func destination(mark: Dictionary) -> Dictionary:
+	var point:=Vector2(float(mark.position[0]),float(mark.position[1]))
+	if mark.map_id==world.active_map_id:
+		if mark.layout_key!=layout_key():return runtime.fail("지도가 변경되었습니다 · 장소를 다시 기억하세요")
+		if not world.field_map.point_clear(point,4) or not world._is_walkable_world(point):return runtime.fail("기억한 위치로 이동할 수 없습니다")
+		return {"ok":true,"destination":point,"gold":0,"cross":false}
+	if not Maps.supports(str(mark.map_id)) or world.player.is_held() or not world.pending_map_save_record.is_empty():return runtime.fail("이 지역의 기억 장소 이동을 지금 사용할 수 없습니다")
+	var entry: Dictionary=Transit.quote(str(mark.map_id),world.maps_by_id,world.active_map_id,world.level,world.gold)
+	if not entry.ok:return runtime.fail(str(entry.reason))
+	var field=Maps.load_field(str(mark.map_id))
+	if field==null:return runtime.fail("목적지 원본 맵 팩을 검증할 수 없습니다")
+	var valid: bool=mark.layout_key==layout_key(field) and field.point_clear(point,4) and field.walkable(point)
+	var original: Dictionary={"source_map_id":int(field.definition.source_map_id),"grid_sha256":str(field.definition.source_sha256),"source":field.coordinates.source_components(point)}
+	var revision: int=int(field.data.layout_revision)
+	field.close()
+	if not valid:return runtime.fail("목적지 지형·착지점이 변경되었습니다 · 장소를 다시 기억하세요")
+	return {"ok":true,"destination":point,"gold":int(entry.price),"cross":true,"map_id":str(mark.map_id),"map_layout_revision":revision,"original_position":original}
 
 func allowed() -> bool:
 	if world.field_map==null or world.source_save_blocked or world.hp<=0 or world.player.motion.dead: return false
@@ -42,7 +64,7 @@ func marks() -> Array:
 	return runtime.state.get("teleport_bookmarks",[]).duplicate(true)
 
 func open(source: Dictionary = {}) -> void:
-	world.hud._open_window("teleport","기억 장소","에바 III · 현재 맵 기억 장소 선택")
+	world.hud._open_window("teleport","기억 장소","에바 III · 기억한 지역·위치 선택 · 기존 입장 조건 적용")
 	var view=View.new();world.hud.workspace.mount(view);view.configure(self,source)
 
 func remember(label: String, revision: int) -> Dictionary:
@@ -78,10 +100,9 @@ func quote(index: int, source: Dictionary, origin: String, revision: int) -> Dic
 	var values: Array=marks()
 	if index<0 or index>=values.size(): return runtime.fail("기억 장소를 선택하세요")
 	var mark: Dictionary=values[index]
-	if mark.map_id!=world.active_map_id: return runtime.fail("현재 맵의 기억 장소만 이동할 수 있습니다")
-	if mark.layout_key!=layout_key(): return runtime.fail("지도가 변경되었습니다 · 장소를 다시 기억하세요")
-	var destination:=Vector2(float(mark.position[0]),float(mark.position[1]))
-	if not world.field_map.point_clear(destination,4) or not world._is_walkable_world(destination): return runtime.fail("기억한 위치로 이동할 수 없습니다")
+	var landing: Dictionary=destination(mark)
+	if not landing.ok:return landing
+	var destination: Vector2=landing.destination
 	var costs: Dictionary={};var mana: int=0;var health: int=0;var cooldown: float=0;var global_cooldown: float=0;var name: String=""
 	match str(source.get("kind","")):
 		"scroll":
@@ -113,11 +134,13 @@ func quote(index: int, source: Dictionary, origin: String, revision: int) -> Dic
 	for item: String in costs:payment.append("%s %d개" % [item,int(costs[item])])
 	if mana>0:payment.append("MP %d" % mana)
 	if health>0:payment.append("HP %d" % health)
-	return {"ok":true,"message":"%s → %s · 소모: %s" % [name,str(mark.name),", ".join(payment) if not payment.is_empty() else "없음"],"costs":costs,"mana":mana,"health":health,"cooldown":maxf(0,cooldown),"global_cooldown":maxf(0,global_cooldown),"name":name,"destination":destination}
+	if int(landing.gold)>0:payment.append("지역 입장 %d 아데나" % int(landing.gold))
+	return {"ok":true,"message":"%s → %s · 소모: %s" % [name,str(mark.name),", ".join(payment) if not payment.is_empty() else "없음"],"costs":costs,"mana":mana,"health":health,"cooldown":maxf(0,cooldown),"global_cooldown":maxf(0,global_cooldown),"name":name,"destination":destination,"landing":landing}
 
 func travel(index: int, source: Dictionary, origin: String, revision: int) -> Dictionary:
 	var offer: Dictionary=quote(index,source,origin,revision)
 	if not offer.ok: return offer
+	if bool(offer.landing.cross):return _cross(offer,source)
 	runtime.busy=true
 	var inventory: Dictionary=world.inventory.duplicate(true)
 	for item: String in offer.costs: inventory[item]=int(inventory.get(item,0))-int(offer.costs[item])
@@ -154,3 +177,59 @@ func travel(index: int, source: Dictionary, origin: String, revision: int) -> Di
 		world.player.pulse_attack()
 	world._refresh_skill_stealth_visual();world._update_hud()
 	return {"ok":true,"message":"기억 장소로 순간이동했습니다 · "+str(marks()[index].name)}
+
+func _cross(offer: Dictionary, source: Dictionary) -> Dictionary:
+	runtime.busy=true
+	var old_map: String=world.active_map_id
+	var old_position: Vector2=world.player.global_position
+	# Publish a complete pre-travel checkpoint before creating a separate candidate.
+	# The old save and its SHA-proven backup never become the destination payload.
+	if world._save_game(true,{"inventory":world.inventory,"growth":runtime.state})!=OK:
+		runtime.busy=false;return runtime.fail("저장 실패 · 이동과 재료 소모를 취소했습니다")
+	var old_path: String=world.save_path()
+	var old_sha: String=FileAccess.get_sha256(old_path)
+	var backup: Dictionary=Migration.backup(old_path,old_sha)
+	if not backup.ok:runtime.busy=false;return runtime.fail(str(backup.error))
+	var data: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(old_path))
+	var landing: Dictionary=offer.landing
+	data.map_id=landing.map_id;data.map_layout_revision=landing.map_layout_revision
+	data.position=[offer.destination.x,offer.destination.y];data.original_position=landing.original_position
+	data.source_map84_layouts=Maps.saved_layouts()
+	data.gold=int(data.gold)-int(landing.gold);data.mp=int(data.mp)-int(offer.mana);data.hp=int(data.hp)-int(offer.health)
+	for item: String in offer.costs:data.inventory[item]=int(data.inventory.get(item,0))-int(offer.costs[item])
+	if source.kind!="scroll":
+		data.skill_cooldowns[offer.name]=offer.cooldown;data.skill_global_cooldown=maxf(float(data.skill_global_cooldown),float(offer.global_cooldown))
+	if source.kind=="original":
+		for key: String in data.active_skill_buffs.keys():
+			if bool(data.active_skill_buffs[key].get("stealth",false)):data.active_skill_buffs.erase(key)
+	data.growth.revision=int(data.growth.revision)+1
+	if not data.growth.has("economy"):data.growth.economy={}
+	data.growth.economy["travel_gold_spent"]=int(data.growth.economy.get("travel_gold_spent",0))+int(landing.gold)
+	for key: String in ["native_png_plan_sha256","native_png_review_sha256","oman_png_index_sha256"]:data.erase(key)
+	var field=Maps.load_field(str(landing.map_id))
+	var problem: String="목적지 원본 맵 팩을 다시 검증할 수 없습니다"
+	if field!=null:
+		problem=Maps.validate_save(data,field);field.close()
+	if not problem.is_empty() or not runtime.validate(data.growth).is_empty():runtime.busy=false;return runtime.fail("이동 저장 검증 실패 · "+problem)
+	var payload_sha: String=JSON.stringify(data,"",true,true).sha256_text()
+	var target: String=world.base_save_path()+".source-map-symbol-"+payload_sha+".json"
+	if FileAccess.file_exists(target) and FileAccess.get_sha256(target)!=payload_sha:
+		runtime.busy=false;return runtime.fail("이동 저장 후보가 변경되었습니다 · 기존 파일 보존")
+	var written: Error=OK if FileAccess.file_exists(target) else world.equipment_collections.write_save(target,data)
+	if written!=OK or FileAccess.get_sha256(target)!=payload_sha or FileAccess.get_sha256(old_path)!=old_sha:
+		runtime.busy=false;return runtime.fail("이동 저장 실패 · 기존 저장·재료 보존")
+	world.migrated_save_path=target;world._load_game(true)
+	var loaded: bool=world.active_map_id==str(landing.map_id) and world.player.global_position.is_equal_approx(offer.destination) and not world.source_save_blocked and FileAccess.get_sha256(old_path)==old_sha
+	var activation: Error=Migration.activate(world.base_save_path(),{"target_path":target,"source_save_sha256":old_sha,"backup_path":backup.path}) if loaded else ERR_UNAVAILABLE
+	if not loaded or activation!=OK:
+		world.migrated_save_path=old_path;world.source_save_blocked=false;world._load_game(true)
+		var restored: bool=world.active_map_id==old_map and world.player.global_position.is_equal_approx(old_position) and not world.source_save_blocked
+		if not restored:world.source_save_blocked=true
+		runtime.busy=false;return runtime.fail("이동 활성화 실패 · 이전 저장으로 복구했습니다" if restored else "이동 복원 보류 · 원본과 후보를 보존하고 저장을 차단했습니다")
+	runtime.busy=false
+	if source.kind=="original":
+		var record: Dictionary=world.original_skills.catalog.record_for(str(source.id))
+		world.original_skills.vfx.emit_skill(str(source.id),"impact",world.player.global_position)
+		world.original_skills.trigger("on_skill",null,world.original_skills.catalog.resolve(record))
+		world._update_hud()
+	return {"ok":true,"message":"기억한 지역·위치로 이동했습니다 · 입장 %d 아데나" % int(landing.gold)}

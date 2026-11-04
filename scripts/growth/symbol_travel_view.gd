@@ -32,7 +32,8 @@ func button(caption: String, id: String, action: Callable, parent: Node=null) ->
 func refresh() -> void:
 	revision=int(service.runtime.state.revision);selected=-1;listing.clear()
 	for row: Dictionary in service.marks():
-		listing.add_item(str(row.name)+("" if row.map_id==origin else " · 다른 맵"))
+		var region: String=str(service.world.maps_by_id.get(str(row.map_id),{}).get("name",row.map_id))
+		listing.add_item(str(row.name)+("" if row.map_id==origin else " · "+region))
 	select(-1)
 
 func select(index: int) -> void:
@@ -45,5 +46,5 @@ func show_result(outcome: Dictionary) -> void:
 
 func commit() -> void:
 	var outcome: Dictionary=service.travel(selected,source,origin,revision)
+	if outcome.ok:source={};origin=service.world.active_map_id
 	show_result(outcome)
-	if outcome.ok:source={};select(-1)

@@ -1,6 +1,7 @@
 extends RefCounted
 ## Source definitions and explicit TWILIGHT adapters; not a server emulator.
 const PATH = "res://data/growth/symbol_source523.json"
+const Combat = preload("res://scripts/growth/symbol_combat.gd")
 var data: Dictionary = {}
 
 func _init() -> void:
@@ -17,11 +18,16 @@ func apply(config: Dictionary) -> void:
 		row["verified_costs"] = {}
 		for cost: Dictionary in native.costs: row.verified_costs[str(int(cost.EnchantCount)+1)] = int(cost.Cost)
 		row.effects = native.effects.duplicate(true)
+		if not Combat.estimates():
+			for stage: Dictionary in row.effects:
+				for key: String in stage.keys():
+					if key.begins_with("local_"):stage.erase(key)
 		row["source_absolute"] = native.absolute.duplicate(true)
 		row["deferred_effects"] = []
 		for detail: Dictionary in native.normal:
 			var label: String = str(detail.description.get("Description",detail.bonus_type.Name))
 			if detail.status == "deferred" and not row.deferred_effects.has(label): row.deferred_effects.append(label)
+			if str(detail.get("local_policy","")).begins_with("estimate:") and not Combat.estimates():row.deferred_effects.append(label+" · 자체 근사 꺼짐")
 		for grade: int in range(1,6): row.absolute_key_costs[grade-1] = int(native.absolute[str(grade)].payment.ForceOpenCost)
 	config["source_snapshot"] = "patch523"
 	for constant: Dictionary in data.constants:
@@ -48,6 +54,7 @@ func absolute_effects(id: String, grades: Array) -> Dictionary:
 	var result: Dictionary = {}
 	for grade: Variant in grades:
 		for detail: Dictionary in absolute(id,int(grade)).get("options",[]):
+			if str(detail.get("local_policy","")).begins_with("estimate:") and not Combat.estimates():continue
 			for key: String in detail.effects: result[key] = float(result.get(key,0))+float(detail.effects[key])
 	return result
 
@@ -56,6 +63,7 @@ func absolute_block(id: String, grade: int) -> String:
 	if row.is_empty(): return "원본 절대 옵션 정의 없음"
 	for detail: Dictionary in row.options:
 		if detail.status != "applied": return "현재 전투에 연결되지 않은 절대 효과 · 보류"
+		if str(detail.get("local_policy","")).begins_with("estimate:") and not Combat.estimates():return "자체 전투 근사 설정이 꺼져 있습니다"
 	return ""
 
 func options_text(id: String, stage: int, grades: Array = []) -> Array[String]:
@@ -66,11 +74,21 @@ func options_text(id: String, stage: int, grades: Array = []) -> Array[String]:
 		result.append("%d단계: %s · 적용 보류" % [int(detail.row.Enchant),option_text(detail)])
 	for grade: int in range(1,6):
 		for detail: Dictionary in absolute(id,grade).get("options",[]):
-			result.append("절대 %d: %s · %s" % [grade,option_text(detail),"적용" if grades.has(grade) and detail.status=="applied" else "미개방" if detail.status=="applied" else "효과 연결 보류"])
+			var off: bool=str(detail.get("local_policy","")).begins_with("estimate:") and not Combat.estimates()
+			result.append("절대 %d: %s · %s" % [grade,option_text(detail),"자체 근사 꺼짐" if off else "적용" if grades.has(grade) and detail.status=="applied" else "미개방" if detail.status=="applied" else "효과 연결 보류"])
 	return result
 
 func option_text(detail: Dictionary) -> String:
 	var label: String = str(detail.get("display_name",detail.description.get("Description",detail.bonus_type.Name)))
+	var policy: String=str(detail.get("local_policy",""))
+	var converted: bool=not policy.is_empty()
+	var estimated: bool=policy.begins_with("estimate:")
+	if converted: label=label.replace("PVP","PVE").replace("PvP","PvE")
+	if label.is_empty():label="아머 브레이크 피해 감소"
+	var note: String=" · 자체 근사 · 설정 가능" if estimated else " · 기존 단독플레이 처리" if converted else ""
+	if converted and str(detail.bonus_type.Name).contains("PVP") and not estimated:note=" · 원본 PVP → 단독플레이 PVE"
+	if estimated and not Combat.estimates():note+=" · 꺼짐"
+	if estimated and str(detail.bonus_type.Name).contains("ScaleForArmorBreak"):return label+" +%s%%" % str(detail.effects.values()[0])+note
 	if detail.bonus_type.Name == "HPIntervalBonus" and not detail.get("nested_intervals",[]).is_empty():
 		var interval: Dictionary = detail.nested_intervals[0]
 		return "HP %s%% 이하 피해량 감소 +%s%%" % [str(interval.row.High),str(float(interval.bonus.Value)/10000.0)]
@@ -83,7 +101,7 @@ func option_text(detail: Dictionary) -> String:
 		"Value", "TrueFalse": pass
 		"Weight": value /= 100.0
 		_: return label+" · 세부 효과 확인 중"
-	return "%s %s%s%s%s" % [label,"+" if value>=0 else "",str(value),suffix," · 조건부 효과" if int(detail.bonus.BonusApplicationTypeID)!=0 and detail.status!="applied" else ""]
+	return "%s %s%s%s%s%s" % [label,"+" if value>=0 else "",str(value),suffix," · 조건부 효과" if int(detail.bonus.BonusApplicationTypeID)!=0 and detail.status!="applied" else "",note]
 
 func item_key(id: int) -> String:
 	return "m523:item:"+str(id)

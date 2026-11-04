@@ -167,6 +167,9 @@ func _select(id: String) -> void:
 func _emblem() -> void:
 	var row: Dictionary = runtime.emblem(selected)
 	var p: Dictionary = runtime.progress(selected)
+	var policy: Dictionary=runtime.Combat.policy
+	_label("자체 전투 근사 %s · 죽음 1당 피해 %.1f / 감소무시 배율 %.1f / 연속피격 %dms" % ["켜짐" if runtime.Combat.estimates() else "꺼짐",float(policy.death_damage_per_point),float(policy.ignore_percent_damage_scale),int(policy.damage_damp_window_ms)]).name="GrowthLocalCombatPolicy"
+	_label("자체 근사: 보스 연사 방어 · 돌진을 아머 브레이크로 처리 · 광역의 피해감소 무시 %.1f%%" % float(policy.npc_ignore_percent_by_boss_kind.get("nova",0)))
 	if selected=="eva":
 		_button("기억 장소 · 순간이동 조종",func() -> void: runtime.travel.open()).name="GrowthRememberedLocations"
 	var overview := HBoxContainer.new()
@@ -272,8 +275,11 @@ func _effect_text(effects: Dictionary) -> String:
 	var mapping: Dictionary = {"max_hp:flat":"HP","max_mp:flat":"MP","ac:flat":"AC","mr:flat":"MR","sp:flat":"SP","weight_bonus:flat":"무게","experience_bonus:percent":"경험치 %","potion_flat:flat":"물약 회복량","potion_percent:percent":"물약 회복률 %","damage_reduction:flat":"리덕션","potion_cooldown:percent":"물약 쿨타임 감소 %","blessing_consumption:percent":"축복 소모 감소 %","incoming_reduction:percent":"피해 감소 %","mp_regeneration:flat":"MP 회복","blessing_charge:percent":"축복 충전 %"}
 	mapping.merge({"magic_heal:percent":"회복 마법량 %","hp_drain:flat":"HP 흡수","life:flat":"생명","critical_reduction:flat":"치명타 리덕션","stunned_reduction:flat":"스턴 상태 리덕션","low_hp_reduction:percent":"HP 30% 이하 피해 감소 %","stun_hit:percent":"스턴 적중 %","stun_resistance:percent":"스턴 내성 %","fear_resistance:percent":"공포 내성 %","melee_critical_damage:flat":"근거리 치명타 대미지","ranged_critical_damage:flat":"원거리 치명타 대미지","magic_critical_damage:flat":"마법 치명타 대미지"})
 	mapping["teleport_control:flag"]="순간이동 조종"
+	mapping.merge({"pve_damage_reduction:flat":"PVE 리덕션","pve_damage_reduction:percent":"PVE 피해 감소 %","pve_melee_damage:flat":"PVE 근거리 대미지","pve_ranged_damage:flat":"PVE 원거리 대미지","pve_magic_damage:flat":"PVE 마법 대미지"})
+	mapping.merge({"veil_proc:percent":"실렌 장막 발동 %","melee_reduction_ignore:flat":"단독 근거리 리덕션 무시","ranged_reduction_ignore:flat":"단독 원거리 리덕션 무시","magic_reduction_ignore:flat":"단독 마법 리덕션 무시","pve_reduction_ignore:flat":"PVE 리덕션 무시","melee_evasion_ignore:flat":"단독 근거리 회피 무시","ranged_evasion_ignore:flat":"단독 원거리 회피 무시","local_death:flat":"자체 죽음","local_damage_damp:percent":"자체 연속피격 감소 %","local_ignore:percent":"자체 감소 무시 %","local_melee_ignore:percent":"자체 근거리 감소 무시 %","local_ranged_ignore:percent":"자체 원거리 감소 무시 %","local_magic_ignore:percent":"자체 마법 감소 무시 %","local_rapid_reduction:flat":"자체 보스 연사 리덕션","local_armorbreak_melee:percent":"자체 돌진 피해 감소 %","local_armorbreak_dark:percent":"자체 암흑 피해 감소 %","local_armorbreak_magic:percent":"자체 마법 피해 감소 %","local_reduction_efficiency:percent":"자체 감소 효율 %"})
 	var parts: Array[String] = []
 	for key: String in effects:
+		if key.begins_with("local_") and not runtime.Combat.estimates():continue
 		if float(effects[key]) != 0: parts.append("%s %+d" % [str(mapping.get(key,key)),int(effects[key])])
 	return "없음" if parts.is_empty() else " · ".join(parts)
 

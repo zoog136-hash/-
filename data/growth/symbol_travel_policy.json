@@ -2,11 +2,11 @@
   "schema": 1,
   "bookmark_limit": 16,
   "name_limit": 40,
-  "scope": "TWILIGHT current-map remembered locations; cross-map admission stays with existing services",
+  "scope": "Same-map remembered locations; cross-map only reviewed source84 fields at exact remembered coordinates, with existing NPC admission costs and staged save activation",
   "cost_policy": "Preserve scroll quantity1 and existing spell MP/HP/material/cooldown. Ring-specific discounts are not symbol bonuses.",
   "provenance": {
     "control_bonus": "patch523 SymbolAbsoluteBonusView EvaIII -> Bonus505854 TeleportControl1",
     "remembered_destination_semantics": "https://lounge.plaync.com/feed/80914?country=KR&locale=ko-KR",
-    "local_values": ["bookmark_limit", "name_limit", "current-map scope"]
+    "local_values": ["bookmark_limit", "name_limit", "cross-map routing through existing NPC admission and SHA-verified save candidates"]
   }
 }

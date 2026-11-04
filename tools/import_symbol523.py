@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Project patch523 Symbol tables without guessing missing server execution rules."""
+"""Project patch523 tables; separate original rows from authorized local models."""
 import argparse
 import hashlib
 import json
@@ -37,6 +37,36 @@ ADAPTERS = {
     "TeleportControl": ("teleport_control:flag", 1),
 }
 
+# Existing main world._normalize_option_policies converts PvP numerical
+# options to PvE for the offline game. Keep this separate from native units.
+SINGLE_PLAYER_ADAPTERS = {
+    "PVPDamageReduction": ("pve_damage_reduction:flat", 1),
+    "PVPDamageReductionPercent": ("pve_damage_reduction:percent", .0001),
+    "PVPMeleeAdditionDamage": ("pve_melee_damage:flat", 1),
+    "PVPRangeAdditionDamage": ("pve_ranged_damage:flat", 1),
+    "PVPMagicAdditionDamage": ("pve_magic_damage:flat", 1),
+    "PierceMeleeDamageReduction": ("melee_reduction_ignore:flat", 1),
+    "PierceRangeDamageReduction": ("ranged_reduction_ignore:flat", 1),
+    "PierceMagicDamageReduction": ("magic_reduction_ignore:flat", 1),
+    "PiercePVPDamageReduction": ("pve_reduction_ignore:flat", 1),
+    "PVPPierceMeleeEvasion": ("melee_evasion_ignore:flat", 1),
+    "PVPPierceRangeEvasion": ("ranged_evasion_ignore:flat", 1),
+}
+
+ESTIMATED_ADAPTERS = {
+    "KarmaDeath": ("local_death:flat", 1),
+    "DamageDampOption": ("local_damage_damp:percent", .0001),
+    "IgnoreDamageReductionPercent": ("local_ignore:percent", .0001),
+    "IgnorePVPDamageReductionPercent": ("local_ignore:percent", .0001),
+    "IgnoreMeleeDamageReductionPercent": ("local_melee_ignore:percent", .0001),
+    "IgnoreRangeDamageReductionPercent": ("local_ranged_ignore:percent", .0001),
+    "IgnoreMagicDamageReductionPercent": ("local_magic_ignore:percent", .0001),
+    "AttackedMeleeDamageScaleForArmorBreak": ("local_armorbreak_melee:percent", -.0001),
+    "AttackedDarkDamageScaleForArmorBreak": ("local_armorbreak_dark:percent", -.0001),
+    "AttackedMeleeMagicDamageScaleForArmorBreak": ("local_armorbreak_magic:percent", -.0001),
+    "ResistIgnoreDamageReductionPercent": ("local_reduction_efficiency:percent", .0001),
+}
+
 
 def build(source: Path, crosslinks: Path) -> dict:
     with zipfile.ZipFile(source) as archive, zipfile.ZipFile(crosslinks) as links:
@@ -61,17 +91,38 @@ def build(source: Path, crosslinks: Path) -> dict:
         resistance_types = {r["ID"]: r for r in table("SpecialResistanceType")}
         intervals = table("IntervalBonus")
         interval_categories = {r["ID"]: r for r in table("IntervalBonusCategory")}
+        invoke = next(r for r in table("InvokeOption") if r["ID"] == 15333)
+        invoke_type = next(r for r in table("InvokeOptionType") if r["ID"] == invoke["InvokeOptionTypeID"])
+        assert invoke_type["Name"] == "Defence_DamageReduction" and invoke["Param1"] == 300 and invoke["Param3"] == invoke["Param6"] == 0
 
         def detail(row):
             bonus = bonuses[row["BonusID"]]
             kind = types[bonus["BonusTypeID"]]
             adapter = ADAPTERS.get(kind["Name"])
+            local_policy = ""
+            if adapter is None and kind["Name"] in SINGLE_PLAYER_ADAPTERS:
+                adapter = SINGLE_PLAYER_ADAPTERS[kind["Name"]]
+                local_policy = ("TWILIGHT existing offline PvP numerical bonus to PvE"
+                                if kind["Name"].startswith("PVP") or kind["Name"] == "PiercePVPDamageReduction"
+                                else "TWILIGHT existing offline flat-ignore extra damage")
+            if adapter is None and kind["Name"] in ESTIMATED_ADAPTERS:
+                adapter = ESTIMATED_ADAPTERS[kind["Name"]]
+                local_policy = "estimate: configurable TWILIGHT combat model; not original server formula"
             mapped = {}
             if adapter and bonus["BonusApplicationTypeID"] == 0 and bonus["BonusApplicationTargetID"] == 0:
                 mapped[adapter[0]] = round(bonus["Value"] * adapter[1], 6)
             nested = []
             application_target = {}
             display_name = desc.get(kind["DescID"], {}).get("Description", kind["Name"])
+            if kind["Name"] == "InvokeOption" and bonus["BonusApplicationTypeID"] == 10 and bonus["BonusApplicationTargetID"] == 15333:
+                mapped["veil_proc:percent"] = bonus["Value"] / 10000
+                display_name = "실렌의 장막 · 피격 리덕션300 발동률"
+            if kind["Name"] == "DamageReductionForSpellAttackWeapon" and bonus["BonusApplicationTypeID"] == 221 and bonus["BonusApplicationTargetID"] == 1:
+                mapped["local_rapid_reduction:flat"] = bonus["Value"]
+                local_policy = "estimate: boss volley as rapid-fire context"
+            if kind["Name"] == "DamageDampOption" and bonus["BonusApplicationTypeID"] == 14 and bonus["BonusApplicationTargetID"] == 13:
+                mapped["local_damage_damp:percent"] = bonus["Value"] / 10000
+                local_policy = "estimate: category13 has no exported implementation; configured consecutive-hit window"
             if bonus["BonusApplicationTypeID"] == 2:
                 target = resistance_types.get(bonus["BonusApplicationTargetID"], {})
                 application_target = target
@@ -96,6 +147,7 @@ def build(source: Path, crosslinks: Path) -> dict:
                     "unit": units[kind["UnitID"]],
                     "description": desc.get(kind["DescID"], {}),
                     "effects": mapped, "status": "applied" if mapped else "deferred",
+                    "local_policy": local_policy if mapped else "",
                     "display_name":display_name, "nested_intervals":nested,
                     "application_target":application_target}
 
@@ -155,11 +207,14 @@ def build(source: Path, crosslinks: Path) -> dict:
             "delete_time_application": application_types[298],
             "ui_evidence": cross("relevant_ui_source"),
             "local_adapters": ADAPTERS,
+            "single_player_adapters": SINGLE_PLAYER_ADAPTERS,
+            "estimated_adapters": ESTIMATED_ADAPTERS,
+            "veil_invoke": {"option": invoke, "type": invoke_type},
             "unresolved": ["ServerLimitSet1294 and shop512 direction/context",
                            "daily reset count/reset time",
                            "probability range sampling denominator and special-route event ordering",
                            "saved enhancement restoration payment/current availability",
-                           "conditional and unsupported bonus combat execution"],
+                           "original server death/percent-ignore/damp/rapid-fire/armorbreak/efficiency formulas; explicit local models execute instead"],
         }
 
 

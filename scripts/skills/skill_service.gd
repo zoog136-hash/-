@@ -371,13 +371,19 @@ func physical_hit_chance(accuracy: int, target: TwilightMonster) -> float:
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
 	if target.dead: return
 	var amount := int(skill.get("power", 20)) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
+	var source_kind: String=str(skill.get("attack_type","melee"))
+	if world.get("growth")!=null:
+		amount+=int(world.growth.bonus("pve_"+source_kind+"_damage:flat"))
+		amount+=int(world.growth.bonus(source_kind+"_reduction_ignore:flat"))
+		amount+=world.growth.catalog_bonus("damage_reduction_ignore")
 	amount = int(amount * (1 + equipment_modifier(skill, "damage_percent") / 100.0))
 	amount = int(amount * (1 + equipment_modifier(skill, "level_bonus") * float(runtime_defaults.get("equipment_level_damage_percent", {}).get("value", 2)) / 100.0))
 	amount = int(amount * (1 + status.modifier(target, "taken") + (status.modifier(target,"magic_taken") if str(skill.get("attack_type", "")) == "magic" else 0)))
 	amount = world._elemental_damage_to_monster(maxi(1, amount), str(skill.get("element", "physical")), target)
 	var critical: bool = world.rng.randf() < world._critical_chance(world._player_critical_rate(str(skill.get("attack_type", "melee"))), target.critical_resistance)
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
-	world._deal_successful_player_hit(target, maxi(1, amount), critical)
+	if world.get("growth")!=null:world._deal_successful_player_hit(target, maxi(1, amount), critical, str(skill.get("attack_type","melee")))
+	else:world._deal_successful_player_hit(target, maxi(1, amount), critical)
 	_emit_verified_source_effect(skill, "impact", target.global_position)
 	if critical: _emit_verified_source_effect(skill, "critical", target.global_position)
 	if not _is_verified_source_skill(skill):

@@ -4,8 +4,10 @@ const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
 const DATA = "res://data/growth/lineage_growth.json"
 const Source523 = preload("res://scripts/growth/symbol_source523.gd")
 const Travel = preload("res://scripts/growth/symbol_travel.gd")
+const Combat = preload("res://scripts/growth/symbol_combat.gd")
 var source523 = Source523.new()
 var travel = Travel.new()
+var combat = Combat.new()
 var world
 var development: bool = OS.is_debug_build() and "--growth-lab" in OS.get_cmdline_user_args()
 var lab: Dictionary = {}
@@ -46,6 +48,7 @@ func empty_state() -> Dictionary:
 func configure(host: Node) -> void:
 	world = host
 	travel.configure(self)
+	combat.configure(self)
 	_rebuild()
 
 func seed_lab() -> void:
@@ -131,6 +134,7 @@ func validate(value: Variant) -> String:
 
 func restore(value: Dictionary) -> void:
 	state = value.duplicate(true)
+	combat.last_hit_ms=-1
 	# JSON numbers are floats; Array.has uses strict type identity in Godot.
 	# Normalize card IDs so reloading cannot make a failed card selectable again.
 	for search: Dictionary in state.searches.values():
@@ -163,7 +167,12 @@ func _rebuild() -> void:
 
 func _add_effects(effects: Dictionary) -> void:
 	for key: String in effects:
-		if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent","magic_heal:percent","hp_drain:flat","life:flat","critical_reduction:flat","stunned_reduction:flat","low_hp_reduction:percent","fear_resistance:percent","teleport_control:flag"]:
+		if key.begins_with("local_"):
+			if Combat.estimates(): totals[key]=float(totals.get(key,0))+float(effects[key])
+			continue
+		if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent","magic_heal:percent","hp_drain:flat","life:flat","critical_reduction:flat","stunned_reduction:flat","low_hp_reduction:percent","fear_resistance:percent","teleport_control:flag","pve_damage_reduction:percent"]:
+			totals[key] = float(totals.get(key,0))+float(effects[key])
+		elif key in ["veil_proc:percent","melee_reduction_ignore:flat","ranged_reduction_ignore:flat","magic_reduction_ignore:flat","pve_reduction_ignore:flat","melee_evasion_ignore:flat","ranged_evasion_ignore:flat"]:
 			totals[key] = float(totals.get(key,0))+float(effects[key])
 
 func bonus(key: String) -> float:
@@ -172,6 +181,8 @@ func bonus(key: String) -> float:
 func catalog_bonus(key: String) -> int:
 	if key == "potionHealFlat": return int(bonus("potion_flat:flat"))
 	if key == "potionHealPct": return int(bonus("potion_percent:percent"))
+	if key == "pve_damage_reduction_pct": return int(bonus("pve_damage_reduction:percent"))
+	if key == "damage_reduction_ignore": return int(bonus("pve_reduction_ignore:flat"))
 	return Stats.catalog_bonus(totals,key)
 
 func stat_record() -> Dictionary:
@@ -425,7 +436,7 @@ func _ledger(next: Dictionary, key: String, amount: int) -> void:
 func magic_healing(amount: int) -> int:
 	return maxi(0,int(round(float(amount)*(1.0+bonus("magic_heal:percent")/100.0))))
 
-func incoming_damage(damage: int, critical: bool = false, stunned: bool = false, hp_before: int = -1, maximum_hp: int = -1) -> int:
+func incoming_damage(damage: int, critical: bool = false, stunned: bool = false, hp_before: int = -1, maximum_hp: int = -1, context: Dictionary = {}) -> int:
 	var flat: int = int(bonus("critical_reduction:flat")) if critical else 0
 	if stunned: flat += int(bonus("stunned_reduction:flat"))
 	var percent: float = bonus("incoming_reduction:percent")
@@ -433,4 +444,4 @@ func incoming_damage(damage: int, critical: bool = false, stunned: bool = false,
 	# regeneration. Compare exact proportions, never floor 30.9% into range.
 	if maximum_hp>0 and hp_before>=0 and hp_before*100<=maximum_hp*30:
 		percent += bonus("low_hp_reduction:percent")
-	return maxi(1,int(round(float(maxi(1,damage-flat))*(1.0-clampf(percent,0,90)/100.0))))
+	return combat.incoming(damage,flat,percent,context)

@@ -867,7 +867,7 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String = "") -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
@@ -884,6 +884,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	_refresh_equipment_effects()
 	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
+	if attack_kind not in ["melee","ranged","magic"]:attack_kind=feedback_kind if resolving_combat_action else _current_attack_kind()
+	adjusted_damage=growth.combat.outgoing(adjusted_damage,attack_kind)
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
 	target.take_damage(adjusted_damage + stolen, critical)
 	if stolen > 0:
@@ -1063,7 +1065,7 @@ func _equipment_potion_heal_stat(label: String) -> int:
 	return sum
 
 func _equipment_additional_damage(kind: String) -> int:
-	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore"))
+	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore")) + int(growth.bonus(kind+"_reduction_ignore:flat"))
 	if kind in ["melee", "ranged"]:
 		result += _equipped_bless_bonus("damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
@@ -1078,7 +1080,7 @@ func _equipment_additional_damage(kind: String) -> int:
 					var segment: String = fragment.strip_edges()
 					if segment.begins_with("대미지 리덕션 무시"):
 						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
-	return result + int(growth.bonus(kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat"))
+	return result + int(growth.bonus(kind+"_damage:flat") + growth.bonus("pve_"+kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	# Kept for older source audit callers; not used in the live damage path.
@@ -2982,7 +2984,10 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
 	var growth_max_hp: int = _effective_max_hp() if growth.bonus("low_hp_reduction:percent")>0 else 0
-	reduced = growth.incoming_damage(reduced,critical,player.is_stunned(),hp,growth_max_hp)
+	var symbol_context: Dictionary=attacker.symbol_hit_context.duplicate(true)
+	symbol_context["channel"]="dark" if attacker.attack_element=="dark" else normalized_type
+	reduced = growth.incoming_damage(reduced,critical,player.is_stunned(),hp,growth_max_hp,symbol_context)
+	if growth.combat.veil_fired:hud.append_log("실렌의 장막 · 피격 리덕션 300")
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
 		if original_skills.last_evaded:
@@ -7232,13 +7237,13 @@ func _melee_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("meleeDamage") if original_skills != null else 0) + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage") + int(consumable_service.call("permanent_damage_bonus", "melee_damage"))
 
 func _melee_accuracy_stat() -> int:
-	return int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
+	return int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + int(growth.bonus("melee_evasion_ignore:flat")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("rangedDamage") if original_skills != null else 0) + _catalog_damage_adjustment("ranged") + _catalog_stat_sum("pve_ranged_damage") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
 
 func _ranged_accuracy_stat() -> int:
-	return int(original_skills.stat("rangedHit") if original_skills != null else 0) + level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
+	return int(original_skills.stat("rangedHit") if original_skills != null else 0) + level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + int(growth.bonus("ranged_evasion_ignore:flat")) + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
 	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("pve_magic_damage") + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))

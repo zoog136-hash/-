@@ -4,6 +4,7 @@ var failures: Array[String] = []
 var checks: int = 0
 
 class Host extends Node:
+	var rng:=RandomNumberGenerator.new()
 	var inventory: Dictionary = {}
 	var item_instances: Dictionary = {}
 	var hp: int = 1

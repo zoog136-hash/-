@@ -33,6 +33,7 @@ func canonical(value: Variant) -> Variant:
 		return out
 	return value
 func damage(hp_before: int, critical: bool=false, stunned: bool=false) -> int:
+	rt.combat.last_hit_ms=-1 # isolate each condition from the separate consecutive-hit model
 	world.hp=hp_before;world.symbol_test_critical=critical;world.player.clear_status_effects()
 	if stunned:world.player.apply_stun(2.0)
 	var original_map=world.field_map;world.field_map=null
@@ -74,7 +75,8 @@ func run() -> void:
 	var maximum: int=world._effective_max_hp()
 	check(damage(int(maximum*30/100))==97,"actual monster hit uses lowHP Maphr condition")
 	check(damage(int(maximum*30/100)+1)==100,"actual hit above threshold has no conditional reduction")
-	check(not act("maphr",2).ok,"PvP reduction not sold as NPC defense")
+	world.inventory["축복의 열쇠"]=1000
+	check(act("maphr",2).ok and rt.bonus("pve_damage_reduction:flat")==5,"existing offline PvP to PvE rule enables second tier")
 	own({"grankain":0});world.inventory["축복의 열쇠"]=100
 	check(act("grankain",1).ok,"Grankain first conditional tier now usable")
 	check(damage(10000)==90 and damage(10000,false,true)==86,"actual stunned hit subtracts source5 in existing growth adapter")
