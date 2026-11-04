@@ -22,14 +22,18 @@ static func cards() -> Dictionary:
 	return _cards
 static func _index_cards(value: Dictionary) -> void:
 	# Independent native supplements can repeat an identity. Keep its position
-	# and the last supplemental record, including its awakening readiness fields.
+	# and overlay supplied fields, retaining omitted provenance/variant metadata.
 	_by_id.clear()
 	for category: String in value.get("catalog", {}):
 		var rows: Array=[]
 		var positions: Dictionary={}
 		for record: Dictionary in value.catalog[category]:
 			var identity: String=str(record.sourceId)
-			if positions.has(identity):rows[int(positions[identity])]=record
+			if positions.has(identity):
+				var merged: Dictionary=(rows[int(positions[identity])] as Dictionary).duplicate(true)
+				merged.merge(record,true)
+				record=merged
+				rows[int(positions[identity])]=record
 			else:positions[identity]=rows.size();rows.append(record)
 			_by_id[identity]=record
 		value.catalog[category]=rows

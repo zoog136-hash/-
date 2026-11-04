@@ -2915,7 +2915,7 @@ func _respawn_player(message_text: String) -> void:
 func _on_player_poison_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
 		return
-	var poison_damage: int = maxi(1, damage_value)
+	var poison_damage: int = card_collections.incoming_damage(maxi(1, damage_value),"poison")
 	hp = maxi(0, hp - poison_damage)
 	player.show_poison_damage(poison_damage)
 	hud.append_log("독 피해 %d" % poison_damage)
@@ -2977,6 +2977,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
+	reduced = card_collections.incoming_damage(reduced,normalized_type,critical)
 	reduced = growth.incoming_damage(reduced)
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
@@ -7288,6 +7289,7 @@ func _stun_resistance_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
 	total += _active_item_buff_total("stun_resistance")
+	total += int(card_collections.interval_bonus("stun_resistance:percent",hp,_effective_max_hp()))
 	return int(original_skills.stat("stunResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _record_silence_accuracy(record: Dictionary) -> int:
@@ -7380,6 +7382,7 @@ func _fear_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_resistance(record)
+	total += int(card_collections.interval_bonus("fear_resistance:percent",hp,_effective_max_hp()))
 	return int(original_skills.stat("fearResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_fear_chance(target: TwilightMonster) -> float:

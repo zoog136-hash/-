@@ -13,6 +13,7 @@ var revision: int=0
 var rebuild_count: int=0
 var totals: Dictionary={}
 var _views: Array=[]
+var _interval_rewards: Array[Dictionary]=[]
 var _completed: Dictionary={}
 var _announced: Dictionary={}
 var _record: Dictionary={}
@@ -64,6 +65,12 @@ func _ensure() -> void:
 	if core is NativeRules:state.source_option_awakening=world.option_awakening.native_collection_state()
 	var derived: Dictionary=core.derive(state)
 	_views=derived.rows;totals=derived.totals;_completed=derived.completed
+	_interval_rewards.clear()
+	if core is NativeRules:
+		for row: Dictionary in _views:
+			if row.completed:
+				for effect: Dictionary in row.effects:
+					if NativeRules.interval_supported(effect):_interval_rewards.append(effect)
 	_record=ExistingStats.record(totals)
 	if core is NativeRules:_record.merge(NativeRules.stat_record_additions(totals),true)
 	if not _record.is_empty():
@@ -109,3 +116,35 @@ func stat_record() -> Dictionary:
 
 func source_server_context() -> Dictionary:
 	return _source_server_context.duplicate(true)
+
+func interval_bonus(code: String, hp: int, maximum: int) -> float:
+	_ensure()
+	var total: float=0.0
+	if not core is NativeRules:return total
+	for effect: Dictionary in _interval_rewards:
+		for active: Dictionary in NativeRules.interval_effects(effect,hp,maximum):
+			if Rules.effect_code(active)==code:total+=float(active.value)
+	return total
+
+func displayed_effects(row: Dictionary, maximum_preview: bool=false) -> Array:
+	var effects: Array=[]
+	for effect: Dictionary in row.effects:
+		if not core is NativeRules or not NativeRules.interval_supported(effect):effects.append(effect);continue
+		if maximum_preview:
+			var best: Dictionary={}
+			for percent: int in range(1,101):
+				for active: Dictionary in NativeRules.interval_effects(effect,percent,100):
+					var code: String=Rules.effect_code(active)
+					if not best.has(code) or float(active.value)>float(best[code].value):best[code]=active
+			effects.append_array(best.values())
+		else:effects.append_array(NativeRules.interval_effects(effect,int(world.hp),int(world._effective_max_hp())))
+	return effects
+
+func incoming_damage(amount: int, kind: String, critical: bool=false) -> int:
+	# Local pipeline policy: source flat reductions, then source percent; retain
+	# the existing minimum1 and90% cap. Other status ticks never use poison data.
+	if kind not in ["melee","ranged","magic","poison"]:return amount
+	var flat: float=bonus(kind+"_damage_reduction:flat")
+	if critical:flat+=bonus("critical_damage_reduction:flat")
+	var percent: float=clampf(bonus(kind+"_damage_reduction:percent"),0.0,90.0)
+	return maxi(1,int(round(maxf(1.0,amount-flat)*(1.0-percent/100.0))))

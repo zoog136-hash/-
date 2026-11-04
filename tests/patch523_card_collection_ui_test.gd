@@ -1,6 +1,7 @@
 extends SceneTree
 const QA=preload("res://tests/qa_class_selection.gd")
 const Presentation=preload("res://scripts/ui/source_collection_presentation.gd")
+const API=preload("res://scripts/lineagem_base508.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 var world: Node
 var checks: int=0
@@ -39,6 +40,11 @@ func run() -> void:
 	world.field_population.set_process(false)
 	for actor: Node in world.monsters_root.get_children():actor.set_process(false);actor.set_physics_process(false)
 	var hud: Node=world.hud
+	var original_icons: int=0
+	for card_category: String in Cards.CATEGORIES:
+		for card: Dictionary in world.catalog_db[card_category]:
+			if API.icon(card)!=null:original_icons+=1
+	if OS.get_environment("TWILIGHT_CARD523_REQUIRE_PIXELS")=="1":check(original_icons==701,"actual verified private pack decodes701 existing card icons; new19 remain absent")
 	for category: String in Cards.CATEGORIES:
 		world.card_draw_fusion.owned[category]={};world.card_draw_fusion.spare[category]={}
 	var cross: Dictionary={}
@@ -60,6 +66,7 @@ func run() -> void:
 			print("PATCH523_UI_STAGE ",category," ",extent)
 			hud.open_catalog(category);await frames()
 			check(hud.catalog_data[category].size()==card_counts[category],"latest523 catalog enters actual "+category)
+			await capture(str(Cards.CATEGORIES.find(category))+"-"+str(extent.x)+"-detail")
 			var entry: Button=hud.relic_reference_view.tab_buttons[2] if category=="성물" else hud.companion_detail_view.tabs[2]
 			tap(entry);await frames()
 			check(hud.active_section=="card_collections","real touch entry opens "+category)
@@ -110,5 +117,5 @@ func run() -> void:
 	check(world.card_draw_fusion.export_state()==cards_before and world.card_draw_fusion.rng.state==rng_before,"all actual UI paths preserve owned/spare/RNG")
 	check(FileAccess.get_file_as_string(world.save_path())==save_before,"UI navigation never writes player save bytes")
 	hud._close_workspace();world.queue_free();await frames()
-	print("PATCH523_CARD_UI_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"engine":Engine.get_version_info().string,"original_art":"not_installed; explicit missing states only"}))
+	print("PATCH523_CARD_UI_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"engine":Engine.get_version_info().string,"original_icons_decoded":original_icons,"original_atlas":"absent; no frame/CSB equivalence claim"}))
 	quit(0 if failures.is_empty() else 1)

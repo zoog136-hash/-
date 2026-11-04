@@ -11,8 +11,9 @@ const NATIVE_RECORD_FIELDS: Dictionary = {
 	"hold_hit:percent":"hold_accuracy"
 }
 const NATIVE_CATALOG_FIELDS: Dictionary={"pve_damage_reduction_pct":"pve_damage_reduction:percent"}
+const TYPED_DAMAGE_CODES: Array[String]=["melee_damage_reduction:flat","ranged_damage_reduction:flat","magic_damage_reduction:flat","melee_damage_reduction:percent","ranged_damage_reduction:percent","magic_damage_reduction:percent","critical_damage_reduction:flat","poison_damage_reduction:flat","poison_damage_reduction:percent"]
 static func supports_extra_code(code: String) -> bool:
-	return NATIVE_RECORD_FIELDS.has(code) or NATIVE_CATALOG_FIELDS.values().has(code)
+	return NATIVE_RECORD_FIELDS.has(code) or NATIVE_CATALOG_FIELDS.values().has(code) or TYPED_DAMAGE_CODES.has(code)
 
 # Existing World readers consume these exact record fields. They are kept
 # separate from equipment-collection policy and never flattened across scopes.
@@ -85,7 +86,7 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		if row.effects.is_empty(): problems.append("native_reward_missing")
 		for effect: Dictionary in row.effects:
 			var code: String = effect_code(effect)
-			if not bool(effect.get("native_supported", false)) or (not ExistingStats.SUPPORTED.has(code) and not EXTRA_EFFECTS.has(code) and not supports_extra_code(code)):
+			if not interval_supported(effect) and (not bool(effect.get("native_supported", false)) or (not ExistingStats.SUPPORTED.has(code) and not EXTRA_EFFECTS.has(code) and not supports_extra_code(code))):
 				var native: Dictionary = effect.get("source_original",{})
 				var target: Dictionary = native.get("application_target",{})
 				if target.get("resolved",true)==false:
@@ -151,6 +152,41 @@ func derive(card_state: Dictionary) -> Dictionary:
 		if not row.completed:continue
 		result.completed[str(row.id)]=true
 		for effect: Dictionary in row.effects:
+			if interval_supported(effect):continue
 			var code: String=effect_code(effect)
 			result.totals[code]=float(result.totals.get(code,0))+float(effect.value)
+	return result
+
+# TWILIGHT compatibility policy, not a recovered client formula: ceil the
+# clamped living HP percentage, inclusive integer source bounds, no dead bonus.
+# Each eligible collection contributes one matching branch; gaps stay zero.
+const HP_POLICY: String = "twilight_ceil_living_hp_percent_inclusive_v1"
+static func interval_supported(effect: Dictionary) -> bool:
+	var raw: Dictionary=effect.get("source_original",{})
+	if raw.get("bonus_type",{}).get("Name","")!="HPIntervalBonus" or raw.get("unit",{}).get("Name","")!="IntervalBonusCategoryID":return false
+	var branches: Array=raw.get("nested_intervals",[])
+	if branches.is_empty():return false
+	var occupied: Dictionary={}
+	for branch: Dictionary in branches:
+		var low: int=int(branch.get("Low",-1));var high: int=int(branch.get("High",101))
+		if low<0 or high>100 or low>high or int(branch.get("IntervalBonusCategory",-1))!=int(raw.bonus.Value):return false
+		if branch.get("bonus_type",{}).get("Name","")!="SpecialResistance" or branch.get("application_type",{}).get("Name","")!="SpecialResistanceType":return false
+		if branch.get("application_target",{}).get("Name","") not in ["Stun","Fear"] or branch.get("unit",{}).get("Name","")!="Percentage":return false
+		var target: Dictionary=branch.application_target
+		if int(branch.bonus.BonusApplicationTypeID)!=int(branch.application_type.ID) or int(branch.bonus.BonusApplicationTargetID)!=int(target.ID) or int(branch.bonus.BonusTypeID)!=int(branch.bonus_type.ID) or int(branch.bonus_type.UnitID)!=int(branch.unit.ID):return false
+		if float(branch.get("ui_unit",{}).get("Denominator",0))<=0 or not is_finite(float(branch.bonus.get("Value",NAN))):return false
+		for percent: int in range(low,high+1):
+			if occupied.has(percent):return false
+			occupied[percent]=true
+	return true
+
+static func interval_effects(effect: Dictionary, hp: int, maximum: int) -> Array[Dictionary]:
+	var result: Array[Dictionary]=[]
+	if not interval_supported(effect) or maximum<=0 or hp<=0:return result
+	var percent: int=int(ceil(100.0*clampi(hp,0,maximum)/maximum))
+	for branch: Dictionary in effect.source_original.nested_intervals:
+		if percent<int(branch.Low) or percent>int(branch.High):continue
+		var key: String=str(branch.application_target.Name).to_lower()+"_resistance"
+		var amount: float=float(branch.bonus.Value)/float(branch.ui_unit.Denominator)
+		result.append({"key":key,"unit":"percent","value":amount,"label":"HP 구간 · "+("스턴" if key=="stun_resistance" else "공포")+" 내성 +"+str(amount)+"%","source_interval_id":int(branch.ID),"hp_policy":HP_POLICY})
 	return result

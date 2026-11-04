@@ -41,6 +41,7 @@ var body: HBoxContainer
 var grade_side: ScrollContainer
 var compact_tabs: HBoxContainer
 var showing_effects: bool=false
+var last_health: Vector2i=Vector2i(-1,-1)
 var last_revision: int=-1
 var last_spare_hash: int=0
 var first: int=-1
@@ -164,14 +165,17 @@ func refresh() -> void:
 	if runtime==null:return
 	var spare_hash: int=hash(hud.card_collection_state.get("spare",{}))
 	var ownership_changed: bool=last_revision!=runtime.current_revision()
-	if not ownership_changed and last_spare_hash==spare_hash:return
+	var health:=Vector2i(int(runtime.world.hp),int(runtime.world._effective_max_hp()))
+	var health_changed: bool=health!=last_health
+	last_health=health
+	if not ownership_changed and last_spare_hash==spare_hash and not health_changed:return
 	last_spare_hash=spare_hash
 	if ownership_changed:
 		last_revision=runtime.revision;rows=runtime.snapshot(category,focus_card)
 		_refresh_effect_choices()
 	var old_scroll: int=list.scroll_vertical
 	_filter()
-	if ownership_changed:_totals()
+	if ownership_changed or health_changed:_totals()
 	list.set_deferred("scroll_vertical",old_scroll)
 
 func _filter() -> void:
@@ -255,7 +259,7 @@ func _fill(panel: PanelContainer,index: int) -> void:
 	var header: Label=UI.label("%s  (%d/%d)  %s" % [row.name,row.met_count,row.requirements.size(),"완성" if row.completed else "적용 보류" if not row.available else "미완성"],13,Color("82becb") if row.completed else UI.TEXT)
 	header.name="NormalCollectionTitle";header.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;header.max_lines_visible=2;header.size_flags_horizontal=Control.SIZE_EXPAND_FILL;heading.add_child(header)
 	if str(row.get("time_label",""))!="":header.text+=" · "+str(row.time_label)
-	var effects: Label=UI.label(str(row.raw_effects).replace("\n"," · "),11,UI.GOLD if row.available else UI.MUTED)
+	var effects: Label=UI.label(" · ".join(row.effects.map(func(effect: Dictionary) -> String:return SourceUI.interval_description(effect))),11,UI.GOLD if row.available else UI.MUTED)
 	effects.name="NormalCollectionReward";effects.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;effects.max_lines_visible=2
 	effects.custom_minimum_size.x=clampf(panel.size.x*.30,130,240);effects.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;heading.add_child(effects)
 	var material_row:=HBoxContainer.new();material_row.add_theme_constant_override("separation",4);column.add_child(material_row)
@@ -316,11 +320,14 @@ func _totals() -> void:
 	var active: Dictionary={};var possible: Dictionary={};var labels: Dictionary={};var units: Dictionary={}
 	for row: Dictionary in rows:
 		if not row.available:continue
-		for effect: Dictionary in row.effects:
+		for effect: Dictionary in runtime.displayed_effects(row,true):
 			var key: String=SourceUI.effect_identity(effect)
 			possible[key]=float(possible.get(key,0))+float(effect.value)
-			if row.completed:active[key]=float(active.get(key,0))+float(effect.value)
 			labels[key]=SourceUI.effect_title(effect);units[key]=effect.unit
+		if row.completed:
+			for effect: Dictionary in runtime.displayed_effects(row):
+				var key: String=SourceUI.effect_identity(effect)
+				active[key]=float(active.get(key,0))+float(effect.value)
 	for key: String in possible:
 		var line:=HBoxContainer.new();totals_body.add_child(line)
 		var label: Label=UI.label(str(labels[key]),11,UI.TEXT);label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;label.size_flags_horizontal=Control.SIZE_EXPAND_FILL;line.add_child(label)

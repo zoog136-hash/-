@@ -2,6 +2,9 @@
 import argparse, collections, copy, hashlib, json, pathlib, zipfile
 from build_base508_card_collections import CATEGORIES, FLAT, PERCENT
 
+FLAT={**FLAT,'MeleeDamageReduction':'melee_damage_reduction','RangeDamageReduction':'ranged_damage_reduction','MagicDamageReduction':'magic_damage_reduction','CriticalDamageReduction':'critical_damage_reduction','PoisonDamageReduction':'poison_damage_reduction'}
+PERCENT={**PERCENT,'MeleeDamageReductionPercent':'melee_damage_reduction','RangeDamageReductionPercent':'ranged_damage_reduction','MagicDamageReductionPercent':'magic_damage_reduction','PoisonDamageReductionPercent':'poison_damage_reduction'}
+
 FLAT_FIELDS={'HPPlus':'hpFlat','MPPlus':'mpFlat','Strength':'strFlat','Dexterity':'dexFlat','Intelligence':'intFlat','Wisdom':'wisFlat','Constitution':'conFlat','Charisma':'chaFlat','MagicResist':'mr','DamageReduction':'damage_reduction'}
 EXPECTED_SHA='d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832'
 

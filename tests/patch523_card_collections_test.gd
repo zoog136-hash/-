@@ -44,10 +44,10 @@ func run() -> void:
 	var extra: Dictionary={}
 	for record: Dictionary in catalog["변신"]:
 		if record.get("source_snapshot", "")=="patch523":extra=record.duplicate(true);break
-	extra["independent_supplement_readiness"]=true
+	extra={"sourceId":extra.sourceId,"source":"lineagem_patch523","independent_supplement_readiness":true}
 	combined.catalog["변신"].append(extra)
 	API._index_cards(combined)
-	check(combined.catalog["변신"].size()==402 and API.canonical(extra).get("independent_supplement_readiness",false),"same-ID independent supplement stays one card and preserves readiness metadata")
+	check(combined.catalog["변신"].size()==402 and API.canonical(extra).get("independent_supplement_readiness",false) and API.canonical(extra).has("source_class_variants"),"same-ID independent supplement stays one card and preserves readiness metadata")
 	API._index_cards(current)
 	var core=Native.new()
 	check(core.configure(data,catalog),"all current source joins configure: "+core.error)
@@ -85,7 +85,7 @@ func run() -> void:
 	check(core.derive({"owned":{}}).completed.is_empty(),"no acquisition grants nothing")
 	for row: Dictionary in full.rows:
 		if int(row.source_original.ID) in [14813,16521]:
-			check(not row.completed and row.problems.has("native_interval_runtime_required"),"HP interval reference never becomes flat HP")
+			check(not row.completed and not row.problems.has("native_interval_runtime_required") and row.problems.has("native_server_context_required"),"HP interval runtime connected; actual server still required")
 			check(row.effects.any(func(e: Dictionary) -> bool:return e.source_original.nested_intervals.size()==3),"exact three interval branches retained")
 	var source: Dictionary=by_set[27343]
 	var member: Dictionary=source.requirements[0]
