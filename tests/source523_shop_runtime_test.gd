@@ -54,7 +54,7 @@ func check(value: bool, message: String) -> void:
 func timestamp(text: String) -> int:
 	return int(Time.get_unix_time_from_datetime_string(text))
 
-func create_catalog() -> RefCounted:
+func create_catalog(limited_merchant: bool = false) -> RefCounted:
 	# Explicit synthetic rules: never counted as restored official server behavior.
 	var tables: Dictionary = {}
 	for table: String in Catalog.REQUIRED_TABLES: tables[table] = []
@@ -83,6 +83,7 @@ func create_catalog() -> RefCounted:
 	var merchant: Dictionary={}
 	for field: String in Catalog.FIELDS.MerchantGoods:merchant[field]=false if field in Catalog.BOOLEAN_FIELDS else 0
 	merchant.merge({"ID":1001,"MerchantsID":13,"ItemClassID":549,"Amount":2,"Percentage":118,"DialogActionTypeID":1,"AvailableSiegeTime":true,"MerchantGoodGUID":"fixture-guid","ElementalEnchant":0,"LimitClanMemberRank":false},true)
+	if limited_merchant:merchant.merge({"LimitCount":2,"LimitCountPerAccount":false,"LimitCountRefreshTypeID":1},true)
 	tables.MerchantGoods=[merchant]
 	var provenance: Dictionary = {}
 	for table: String in tables: provenance[table] = {"packed_rows":tables[table].size()}
@@ -245,6 +246,34 @@ func _run() -> void:
 	check(price.ok and price.amount==2,"local NPC rounding is explicit ceiling")
 	price=Runtime.Economy.price({"Cost":0},{"Percentage":100,"Amount":1},Runtime.Economy.defaults())
 	check(price.ok and price.amount==500 and str(price.origin).contains("기본값"),"only missing original base uses labelled local default")
+	host.free()
+	# Synthetic limited ordinary-NPC contract. Real ordinary stock has no cap.
+	context=setup(create_catalog(true));host=context.host;runtime=context.runtime
+	runtime.npc_definitions.loaded_sha256="e".repeat(64)
+	runtime.npc_definitions.records={"13":{"goods_index":{"1001":true},"object_links":[{"earth_object_id":27,"object_defined":true,"currency_defined_and_unique":true,"currency_ids":[1],"sell_action_row_ids":[9],"attributes":[],"spawns":[{"ID":4,"ServerLimitSetID":0,"SpawnManually":false}]}]}}
+	context.clock.now=timestamp("2026-11-03T04:59:58")
+	var limited: Dictionary=runtime.quote_merchant(1001,2)
+	check(limited.ok and limited.remaining==2 and str(limited.quota_text).contains("캐릭터 저장"),"character-scoped NPC quota exposes remaining allowance")
+	var limited_buy: Dictionary=runtime.buy_merchant(1001,2)
+	check(limited_buy.ok and not runtime.quote_merchant(1001).ok,"NPC allowance increments with atomic payment")
+	check(runtime.state.npc_reset_rule_hashes.has("merchant:fixture-guid"),"NPC reset identity persists with paid counter")
+	runtime.accept_load(JSON.parse_string(FileAccess.get_file_as_string(host.path)))
+	check(not runtime.quote_merchant(1001).ok,"restart cannot reset limited NPC purchases")
+	context.clock.now=timestamp("2026-11-03T04:59:59")
+	check(not runtime.quote_merchant(1001).ok,"NPC daily allowance stays closed before 05")
+	context.clock.now=timestamp("2026-11-03T05:00:00")
+	check(runtime.buy_merchant(1001).ok,"NPC daily allowance reopens at configured boundary")
+	check(runtime.calendar_offset_minutes==null,"NPC reset calendar does not alter ordinary market time")
+	context.clock.now=timestamp("2026-11-03T04:59:59")
+	check(not runtime.buy_merchant(1001).ok,"clock rollback cannot replay an old NPC allowance")
+	context.clock.now=timestamp("2026-11-03T05:00:01")
+	runtime.npc_resets.rules.offset_minutes=540
+	check(not runtime.quote_merchant(1001).ok,"reset policy changes cannot silently replenish a saved counter")
+	check(runtime.claim(limited_buy.order_id).ok,"paid limited-NPC order survives later calendar changes")
+	runtime.npc_resets.rules.offset_minutes=0
+	check(runtime.npc_resets.calendar(timestamp("2026-11-04T04:59:59"),11311,5).bucket!=runtime.npc_resets.calendar(timestamp("2026-11-04T05:00:00"),11311,5).bucket,"NPC Wednesday reset uses its independent week boundary")
+	check(runtime.npc_resets.calendar(timestamp("2026-01-31T23:00:00"),81,5).next==timestamp("2026-02-01T05:00:00"),"NPC monthly reset handles next-month boundary")
+	check(runtime.npc_resets.calendar(timestamp("2026-11-03T12:00:00"),111,0).next==0,"own lifetime mapping never replenishes automatically")
 	host.free()
 	print("Source523 commerce synthetic contracts: %d checks, %d failures" % [checks,failures])
 	quit(1 if failures else 0)

@@ -5,6 +5,7 @@ const RULES_PATH: String="res://data/shop/source523_npc_local_rules.json"
 var records: Dictionary={}
 var loaded_sha256: String=""
 var problem: String=""
+var source_semantics: Dictionary={}
 var rules: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(RULES_PATH))
 
 func configure(source) -> void:
@@ -24,6 +25,10 @@ func load_pack(path: String, expected: String, shop_sha256: String) -> bool:
 	var pack: Dictionary=parser.data
 	if pack.get("schema")!="twilight.source523.npc-definitions.v1" or pack.get("patch")!=523 or pack.get("source_zip_sha256")!=Catalog.SOURCE_SHA256 or pack.get("shop_pack_sha256")!=shop_sha256 or not pack.get("merchants") is Array:return _fail("NPC 팩과 기존 상점 팩의 원본 불일치")
 	var next: Dictionary={}
+	if not pack.get("source_semantics",{}) is Dictionary:return _fail("NPC 원본 의미 정의 형식 오류")
+	var semantics: Dictionary=pack.get("source_semantics",{})
+	for key: String in ["item_bless_codes","reset_schedule_types","refresh_constants"]:
+		if not semantics.get(key,{}) is Dictionary:return _fail("NPC 의미 정의 누락·형식 오류")
 	for row: Variant in pack.merchants:
 		if not row is Dictionary or not Catalog._integer(row.get("merchant_id")) or not row.get("goods_ids") is Array or not row.get("object_links") is Array or next.has(str(int(row.merchant_id))):return _fail("NPC 원본 연결 형식 오류")
 		var goods_index: Dictionary={}
@@ -40,6 +45,7 @@ func load_pack(path: String, expected: String, shop_sha256: String) -> bool:
 		next[str(int(row.merchant_id))]=row.duplicate(true)
 		next[str(int(row.merchant_id))]["goods_index"]=goods_index
 	records=next
+	source_semantics=semantics.duplicate(true)
 	loaded_sha256=expected.to_lower()
 	problem=""
 	return true
@@ -59,8 +65,12 @@ static func validate_rules(value: Variant) -> String:
 		for key: String in ["merchant_id","earth_object_id","spawn_id"]:
 			if not Catalog._integer(row.get(key)) or int(row[key])<1:return "NPC 자체 대상 연결 오류"
 		if ids.has(int(row.merchant_id)):return "중복 NPC 자체 대상"
+		if row.has("equipment_mode") and row.equipment_mode!="normal_zero_only":return "NPC 장비 지급 설정 오류"
 		ids[int(row.merchant_id)]=true
 	return ""
+
+func supports_normal_equipment(merchant_id: int, bless_code: int) -> bool:
+	return rule_for(merchant_id).get("equipment_mode")=="normal_zero_only" and source_semantics.get("item_bless_codes",{}).get(str(bless_code))=="Normal"
 
 func rule_hash(merchant_id: int = 0) -> String:
 	var effective: Dictionary=rules.duplicate(true)

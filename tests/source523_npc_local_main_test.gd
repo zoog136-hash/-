@@ -114,6 +114,43 @@ func run() -> void:
 	runtime.npc_definitions.rules=old_rules
 	var market_after: Dictionary=runtime.quote(1381)
 	check(market_after.ok==market_gate.ok and market_after.get("reason","")==market_gate.get("reason",""),"NPC-specific policy leaves ordinary market eligibility unchanged")
+	# The new normal-equipment path uses source semantics, never a blessed grant.
+	var helmet: String="기사의 면갑 (각인)"
+	var old_instances: Dictionary=world.item_instances.duplicate(true)
+	var helmet_before: int=int(world.inventory.get(helmet,0))
+	var gold_before_gear: int=int(world.gold)
+	quote=runtime.quote_merchant(2171,2)
+	check(quote.ok and quote.npc_label.contains("글렌") and int(quote.payment.amount)==10000,"ordinary equipment uses source Cost 1000 and Percentage 500 for two units")
+	if not quote.ok:world.queue_free();quit(1);return
+	panel.mode.select(1);panel.mode.item_selected.emit(1)
+	panel.search.text="2171";panel._filter()
+	for index: int in range(panel.listing.item_count):
+		if int(panel.listing.get_item_metadata(index))==2171:panel._select(index)
+	panel.quantity.value=2;await frames()
+	check(not panel.purchase.disabled and panel.detail.text.contains("글렌"),"Glenn's equipment stock is exposed through the real shop UI")
+	await capture("glenn-available")
+	tap(panel.purchase);await frames()
+	confirmation=world.hud.get_node_or_null("Root/TwilightConfirmation")
+	if confirmation==null:check(false,"Glenn purchase confirmation");world.queue_free();quit(1);return
+	tap(confirmation.confirm_button);await frames()
+	check(world.gold==gold_before_gear-10000 and int(world.inventory.get(helmet,0))==helmet_before,"equipment payment remains separate from inventory receipt")
+	var gear_order: String=str(runtime.orders()[0].id)
+	tap(panel.purchase);await frames()
+	confirmation=world.hud.get_node_or_null("Root/TwilightConfirmation")
+	if confirmation==null:check(false,"equipment receipt confirmation");world.queue_free();quit(1);return
+	tap(confirmation.confirm_button);await frames()
+	var new_ids: Array=[]
+	for id: String in world.item_instances:
+		if not old_instances.has(id):new_ids.append(id)
+	check(new_ids.size()==2 and int(world.inventory.get(helmet,0))==helmet_before+2,"equipment receipt creates two independent physical instances")
+	check(new_ids.all(func(id: String)->bool:return world.item_instances[id].name==helmet and int(world.item_instances[id].level)==0 and not world.item_instances[id].get("blessed",false)),"source Normal/+0 does not grant blessings or enhancements")
+	check(old_instances.keys().all(func(id: String)->bool:return JSON.parse_string(JSON.stringify(world.item_instances[id]))==JSON.parse_string(JSON.stringify(old_instances[id]))),"existing physical gear records are unchanged")
+	world._equip_reference_in_slot(helmet+"@@@"+str(new_ids[0]),"helmet")
+	check(str(world.equipped_items.get("helmet",{}).get("instance_id",""))==str(new_ids[0]),"new NPC equipment can be worn using the existing equipment system")
+	check(world._save_game(true)==OK,"new NPC equipment can be saved after wear")
+	await capture("glenn-equipped")
+	world._load_game(true);freeze(world)
+	check(not runtime.claim(gear_order).ok and world.item_instances.has(str(new_ids[0])) and world.item_instances.has(str(new_ids[1])) and str(world.equipped_items.get("helmet",{}).get("instance_id",""))==str(new_ids[0]),"worn equipment identities and non-repeatable receipt survive reload")
 	world.queue_free();await frames()
 	print("SOURCE523_NPC_LOCAL_MAIN_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(1 if failures else 0)

@@ -53,7 +53,8 @@ class NpcPackProtectionTest(unittest.TestCase):
         self.assertEqual(len(result["merchants"]), 192)
         self.assertTrue(all(not r["activation_authorized"] for r in result["merchants"]))
         payload = json.dumps(result, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode()
-        self.assertEqual(hashlib.sha256(payload).hexdigest(), "65d625bf16dcaf5aa280260082eee587801f3e2d2567d48b8444c0a14e84d2f3")
+        self.assertEqual(hashlib.sha256(payload).hexdigest(), "a3a6c7468dc67faa84465e8a64b2ea7b2102ea2bbdef3d405556221799dfe3c7")
+        self.assertEqual(result["source_semantics"]["item_bless_codes"]["1"],"Normal")
         self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), source_hash)
         self.assertEqual(hashlib.sha256(shop.read_bytes()).hexdigest(), shop_hash)
 

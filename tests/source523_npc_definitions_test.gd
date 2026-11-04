@@ -18,6 +18,8 @@ func run() -> void:
 	var result: Dictionary=npc.context(13,1952)
 	check(result.ok and result.currency_id==1 and str(result.origin).contains("TWILIGHT"),"Serin source identity plus labelled local availability")
 	check(npc.currency_for(91)==21,"clan currency remains distinct from Adena")
+	check(npc.context(40,2171).ok and npc.supports_normal_equipment(40,1),"ordinary weapons merchant is explicitly bound and normal equipment definition is original")
+	check(not npc.supports_normal_equipment(40,2),"blessed equipment is not silently treated as normal")
 	check(not npc.context(28,433).ok,"numeric EarthObject ID collision cannot authorize another merchant")
 	check(not npc.context(372,37738).ok,"event merchant with no configured source spawn remains inactive")
 	check(not npc.context(13,433).ok,"another merchant goods ID cannot use Serin's availability")

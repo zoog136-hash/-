@@ -240,6 +240,7 @@ func _refresh_action() -> void:
 				var provenance: String="TWILIGHT 자체 가격 · 오프라인 가정" if quote.has("rule_origin") else ("TWILIGHT 자체 가격" if str(quote.price_origin).contains("TWILIGHT") else "가격 출처: 상세 내용")
 				availability_label.text="%d회 · %d %s\n%s" % [int(quantity.value),int(quote.payment.amount),_value_name(int(quote.payment.unit_id),int(quote.payment.class_id)),provenance]
 			else:availability_label.text=str(quote.reason)
+			purchase.tooltip_text=str(quote.get("quota_text",availability_label.text))
 		2: purchase.text = "재화 원천 안내"
 		3:
 			var view: Dictionary = runtime.cumulative_quote(selected_id, reward_step.selected)
@@ -264,6 +265,7 @@ func _act() -> void:
 		body = "%s ×%d회\n차감: %s ×%d\n\n%s" % [str(quote.name),count,_value_name(int(quote.payment.unit_id),int(quote.payment.class_id)),int(quote.payment.amount),body]
 		if quote.has("price_origin"):body+="\n"+str(quote.price_origin)
 		if quote.has("rule_origin"):body+="\n"+str(quote.npc_label)+"\n"+str(quote.rule_origin)
+		if quote.has("quota_text"):body+="\n"+str(quote.quota_text)
 	hud.confirm_action("원본 상점 · " + action, body, action, func(_unused: int) -> void:
 		var result: Dictionary
 		match current_mode:
@@ -350,6 +352,7 @@ func _merchant_detail(id: int) -> Array[String]:
 		else:result.append(str(price.reason))
 		var quote: Dictionary=runtime.quote_merchant(id,int(quantity.value))
 		if quote.has("rule_origin"):result.insert(5,str(quote.npc_label)+"\n"+str(quote.rule_origin)+"\n")
+		if quote.has("quota_text"):result.append(str(quote.quota_text))
 		result.append("\n"+("구매 가능 · 보관함 지급" if quote.ok else str(quote.reason)))
 	return result
 

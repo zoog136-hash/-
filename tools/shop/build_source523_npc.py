@@ -19,10 +19,10 @@ def build(source, shop_pack, shop_sha256):
     report = audit(source)
     # All source links remain facts. Runtime owns the separately labelled local
     # availability policy; this compiler does not turn audit findings into grants.
-    return {"schema": "twilight.source523.npc-definitions.v1", "patch": 523,
+    return {"schema": "twilight.source523.npc-definitions.v1", "revision":2, "patch": 523,
             "source_zip_sha256": SOURCE_SHA256, "shop_pack_sha256": shop_sha256,
             "delivery": "PRIVATE_LOCAL_ONLY", "evidence": report["evidence"],
-            "merchants": report["merchants"]}
+            "source_semantics":report["source_semantics"], "merchants": report["merchants"]}
 
 
 if __name__ == "__main__":

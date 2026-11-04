@@ -16,7 +16,7 @@ TABLES = (
     "EarthObjectCategory", "EarthObjectDialogActions", "DialogActionType",
     "EarthObjectSpawn", "EarthObjectAttribute", "EarthObjectAttributeType",
     "UIMapEarthObjectInfo", "Currency", "CurrencyUnitClass",
-    "ContentsResetScheduleType", "ConstantData", "DateTimes_Korean", "ServerLimit",
+    "ContentsResetScheduleType", "ConstantData", "DateTimes_Korean", "ServerLimit", "ItemBlessCode",
 )
 
 
@@ -128,6 +128,11 @@ def audit(source):
                 raise ValueError(f"source index row count mismatch: {member}")
             evidence[name] = {"member": member, "bytes": len(payload), "sha256": digest, "rows": len(tables[name])}
     result = analyze(tables, inventory)
+    result["source_semantics"]={
+        "item_bless_codes":{str(r["ID"]):r["Name"] for r in tables["ItemBlessCode"]},
+        "reset_schedule_types":{str(r["ID"]):r["Name"] for r in tables["ContentsResetScheduleType"]},
+        "refresh_constants":{r["Name"]:r["Value"] for r in tables["ConstantData"] if r["Name"] in ["ContentsRefreshHour","ContentsRefreshMinute","ContentsRefreshSecond"]},
+    }
     result.update(source_zip_sha256=SOURCE_SHA256, evidence=evidence)
     return result
 
