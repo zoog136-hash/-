@@ -61,14 +61,17 @@ func operation_button(id: String, title: String, action: String, weapon: int, ta
 		var price: String = "%s %d" % [runtime.currency_name(int(charge.CurrencyID)),int(charge.Cost)]
 		line("비용: %s · 보유 %d" % [price,runtime.balance(int(charge.CurrencyID))])
 		if action == "change": line("기본 %d + 옵션 추가 %d" % [int(charge.BaseCost),int(charge.AdditionalCost)])
+		if action == "reset" and not quote.frozen_levels.is_empty(): line("자체 범위: 부분 보유 레벨 %s는 보존하고, 완전한 보유 레벨만 변경합니다" % str(quote.frozen_levels))
 		button.pressed.connect(func() -> void:
 			var warning: String = ""
 			if action == "change": warning = "\n출발 숙련치와 미선택 옵션은 사라집니다. 선택한 범위의 옵션은 목표 옵션을 대체하며 잠금은 초기화됩니다.\n원시 누적 숙련치를 합산합니다. 이전 저장은 별도로 보존합니다."
 			elif action == "reset": warning = "\n잠기지 않은 종류·수치 슬롯의 색상과 수치를 원본 확률로 재결정합니다. 수치 슬롯을 잠그면 해당 옵션 수치도 보존합니다."
 			elif action == "acquire": warning = "\n두 옵션 수치와 네 색상을 추첨합니다. 최초 획득 비용은 자체 설정입니다."
+			elif action == "repair": warning = "\n자체 복구: 원본 결과가 하나로 확정되는 누락 값만 복원합니다. 기존 수치·색상·잠금은 바꾸거나 재추첨하지 않습니다. 기존 저장을 별도로 보존합니다."
 			else: warning = "\n무기 통합 하루 5회. 로컬 초기화 시각은 자체 설정입니다."
 			if action == "change" and prefix == 0:
 				warning = "\n출발 숙련치와 옵션을 초기화하고 누적 숙련치를 합산합니다. 옵션 추가 비용은 없습니다. 이전 저장은 별도로 보존합니다.\n"+point_only_policy_text()
+			if action == "reset" and not quote.frozen_levels.is_empty(): warning += "\n자체 범위: 부분 보유 레벨 %s는 재추첨하지 않습니다. 변경 대상의 잠금 수로 원본 비용을 계산합니다." % str(quote.frozen_levels)
 			runtime.world.hud.confirm_action(title,price+warning,"실행",func(_count: int) -> void:
 				var result: Dictionary = runtime.execute(action,weapon,target,prefix,quote.before)
 				runtime.world.hud.show_message(title+" 완료" if result.ok else runtime.reason_text(str(result.get("reason","실패"))))))
@@ -113,6 +116,11 @@ func refresh() -> void:
 		displayed_level = level
 		if level < 8:
 			line("다음 레벨 누적 숙련치 %d" % int(runtime.core.levels[weapon][level].CumulativePoint))
+		var partial: Dictionary = runtime.core.partial_status(runtime.state,weapon)
+		if not partial.frozen.is_empty():
+			line("부분 보유 레벨 %s · 확인되지 않은 값과 색상은 보존합니다" % str(partial.frozen)).set_meta("mastery_partial_state",true)
+			for repair: Dictionary in partial.repairs: line("자체 복구 가능: Lv.%d 옵션%d · 원본 고정 결과" % [int(repair.level),int(repair.slot)])
+			operation_button("MasteryRepair","부분 옵션 복구","repair",weapon)
 		for claim_level: int in range(1,level+1):
 			if runtime.core._owned_slots(entry,weapon,claim_level).is_empty() and not entry.colors.has(str(claim_level)):
 				operation_button("MasteryAcquire_%d" % claim_level,"Lv.%d 옵션 획득" % claim_level,"acquire",weapon,0,claim_level)
@@ -120,10 +128,10 @@ func refresh() -> void:
 			var row: Dictionary = runtime.core.options[int(option.group_id)][weapon]
 			var bonus: Dictionary = runtime.core.bonuses[int(row.BonusID)]
 			var type: Dictionary = runtime.core.types[int(bonus.BonusTypeID)]
-			var supported: bool = str(type.Name) in ["MeleeHit","RangeHit","MeleeDamage","RangeDamage","MagicDamage","HPPlus","MPPlus","MagicResist","AttackSpeedBonus","MeleeCritical","RangeCritical","MagicCritical"]
+			var supported: bool = runtime.effect_supported(str(type.Name))
 			var equipped: bool = runtime.core.normalize_weapon(runtime.world._mastery_actual_weapon_type()) == weapon
 			var status: String = "레벨 미달" if int(row.level) > level else (("적용" if equipped else "무기 장착 시 적용") if supported else "현재 게임 미적용")
-			line("Lv.%d · %s · %s" % [int(row.level),runtime.bonus_text(bonus),status])
+			line("Lv.%d · %s · %s%s" % [int(row.level),runtime.bonus_text(bonus),status,runtime.application_note(str(type.Name))])
 		for level_key: String in entry.colors:
 			line("Lv.%s 색상" % level_key)
 			var colors: Array = entry.colors[level_key]
@@ -140,9 +148,8 @@ func refresh() -> void:
 				toggle.button_pressed = locks[slot]
 				toggle.toggled.connect(func(locked: bool) -> void: runtime.set_color_lock(weapon,int(level_key),slot,locked))
 				body.add_child(toggle)
-		var quote: Dictionary = runtime.core.reset_quote(runtime.state,weapon)
-		if not entry.options.is_empty():
-			line("재설정 비용: %s %d · 티켓 수 %d" % [runtime.currency_name(int(quote.get("CurrencyID",0))),int(quote.get("Cost",0)),int(quote.get("TicketAmount",0))])
+		var quote: Dictionary = runtime.core.reroll_availability(runtime.state,weapon,str(runtime.balance_config.partial_reroll))
+		if quote.ok: line("재설정 대상의 잠금 %d칸 · 원본 비용 기준" % int(quote.charge.LockSlotCount))
 		operation_button("MasteryReset","숙련 옵션 재설정","reset",weapon)
 	line("목표 무기 옵션 미리보기")
 	for purchase: Dictionary in runtime.core.tables.MasteryPointPurchaseView:

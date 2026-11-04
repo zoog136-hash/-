@@ -21,7 +21,8 @@ func _init() -> void:
 		balance_error = "숙련 자체 설정을 읽을 수 없습니다"; return
 	balance_config = parser.data
 	if balance_config.get("schema") != "twilight.mastery523.balance.v1": balance_error = "숙련 자체 설정 버전 오류"; return
-	for field: String in ["normal_hit_points","purchase_day_utc_offset_hours","purchase_day_reset_hour","acquire_currency_id","acquire_cost"]:
+	if not balance_config.has("partial_repair_cost"): balance_config.partial_repair_cost = 0
+	for field: String in ["normal_hit_points","purchase_day_utc_offset_hours","purchase_day_reset_hour","acquire_currency_id","acquire_cost","partial_repair_cost"]:
 		var value: Variant = balance_config.get(field)
 		if not (value is int or value is float) or not is_finite(float(value)) or float(value) != floorf(float(value)) or absf(float(value)) > 100000000:
 			balance_error = "숙련 자체 설정 수치 오류"; return
@@ -29,6 +30,12 @@ func _init() -> void:
 	if balance_config.get("color_draw_mode") not in ["independent_fields","shared_level"]: balance_error = "숙련 색상 자체 설정 오류"
 	if not balance_config.has("point_only_target_options"): balance_config.point_only_target_options = "preserve_existing"
 	if balance_config.point_only_target_options not in ["preserve_existing","clear_existing","block_unverified"]: balance_error = "숙련 점수 전용 교체 자체 설정 오류"
+	if not balance_config.has("typed_percent_ignore"): balance_config.typed_percent_ignore = "style_amplifier"
+	if balance_config.typed_percent_ignore not in ["style_amplifier","display_only"]: balance_error = "숙련 퍼센트 무시 자체 설정 오류"
+	if not balance_config.has("partial_repair"): balance_config.partial_repair = "fixed_missing_values_only"
+	if balance_config.partial_repair not in ["fixed_missing_values_only","preview_only"] or int(balance_config.partial_repair_cost) < 0: balance_error = "숙련 부분 복구 자체 설정 오류"
+	if not balance_config.has("partial_reroll"): balance_config.partial_reroll = "complete_levels_only"
+	if balance_config.partial_reroll not in ["complete_levels_only","block_weapon"]: balance_error = "숙련 부분 재설정 자체 설정 오류"
 
 func purchase_period(unix_time: float = -1) -> int:
 	var moment: float = Time.get_unix_time_from_system() if unix_time < 0 else unix_time
@@ -87,9 +94,9 @@ func _commit(plan: Dictionary, resources: Dictionary) -> Dictionary:
 	busy = true
 	var backup: String = ""
 	var write_path: String = world.save_path()
-	if plan.kind == "local_mastery_change" and FileAccess.file_exists(write_path):
+	if plan.kind in ["local_mastery_change","partial_option_repair"] and FileAccess.file_exists(write_path):
 		var sha: String = FileAccess.get_sha256(write_path)
-		backup = write_path+".pre-mastery-change-"+sha
+		backup = write_path+(".pre-mastery-change-" if plan.kind == "local_mastery_change" else ".pre-mastery-repair-")+sha
 		if (not FileAccess.file_exists(backup) and DirAccess.copy_absolute(write_path,backup) != OK) or FileAccess.get_sha256(backup) != sha:
 			busy = false
 			return Core.fail("backup_failed")
@@ -164,7 +171,10 @@ func quote(action: String, weapon: int, target: int = 0, prefix: int = 0) -> Dic
 	if action == "purchase":
 		plan = core.plan_purchase(state,weapon,_receipt("quote"),purchase_period())
 	elif action == "reset":
-		plan = core.reroll_availability(state,weapon)
+		plan = core.reroll_availability(state,weapon,str(balance_config.partial_reroll))
+	elif action == "repair":
+		if balance_config.partial_repair == "preview_only": return Core.fail("repair_preview_only")
+		plan = core.plan_partial_repair(state,weapon,_receipt("quote"),{"CurrencyID":1,"Cost":int(balance_config.partial_repair_cost),"provenance":"CUSTOM_BEHAVIOR"})
 	elif action == "acquire":
 		plan = core.acquire_availability(state,weapon,prefix,acquisition_charge())
 	elif action == "change":
@@ -175,7 +185,7 @@ func quote(action: String, weapon: int, target: int = 0, prefix: int = 0) -> Dic
 	if not plan.ok: return plan
 	var wallet: Dictionary = _wallet(plan.charge)
 	if not wallet.ok: wallet["charge"] = plan.charge; return wallet
-	return {"ok":true,"charge":plan.charge.duplicate(true),"before":state.duplicate(true)}
+	return {"ok":true,"charge":plan.charge.duplicate(true),"before":state.duplicate(true),"frozen_levels":plan.get("frozen",[]).duplicate()}
 
 func execute(action: String, weapon: int, target: int, prefix: int, expected: Dictionary) -> Dictionary:
 	if not _confirmation_matches(expected): return Core.fail("stale_or_invalid_plan")
@@ -185,10 +195,11 @@ func execute(action: String, weapon: int, target: int, prefix: int, expected: Di
 	var receipt: String = _receipt(action)
 	var plan: Dictionary
 	if action == "purchase": plan = core.plan_purchase(state,weapon,receipt,purchase_period())
+	elif action == "repair": plan = core.plan_partial_repair(state,weapon,receipt,{"CurrencyID":1,"Cost":int(balance_config.partial_repair_cost),"provenance":"CUSTOM_BEHAVIOR"})
 	elif action in ["reset","acquire"]:
 		var staged_rng := RandomNumberGenerator.new()
 		staged_rng.state = reset_rng.state
-		plan = core.plan_reroll(state,weapon,staged_rng,receipt,str(balance_config.color_draw_mode)) if action == "reset" else core.plan_acquire(state,weapon,prefix,staged_rng,receipt,acquisition_charge(),str(balance_config.color_draw_mode))
+		plan = core.plan_reroll(state,weapon,staged_rng,receipt,str(balance_config.color_draw_mode),str(balance_config.partial_reroll)) if action == "reset" else core.plan_acquire(state,weapon,prefix,staged_rng,receipt,acquisition_charge(),str(balance_config.color_draw_mode))
 	else: plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,receipt,int(Time.get_datetime_dict_from_system(true).year),str(balance_config.point_only_target_options))
 	if not plan.ok: return plan
 	var wallet: Dictionary = _wallet(plan.charge)
@@ -227,6 +238,8 @@ func normal_hit(actual_weapon: int) -> bool:
 	return true
 
 func reason_text(reason: String) -> String:
+	if reason == "repair_preview_only": return "자체 설정에 따라 부분 복구는 미리보기만 제공합니다"
+	if reason == "no_fixed_partial_repair": return "원본 결과가 하나로 확정되는 누락 값이 없습니다. 기존 상태를 보존합니다"
 	var resolved: Dictionary = {"daily_purchase_limit":"오늘 숙련치 구매 5회 완료","level_not_reached":"숙련 레벨을 먼저 달성하세요","level_already_or_partly_owned":"이미 보유했거나 일부만 있는 레벨입니다","partial_owned_level":"일부만 남은 보유 옵션은 원래 저장을 보존하며 재설정을 보류합니다","all_fields_locked":"변경할 슬롯을 하나 이상 잠금 해제하세요"}
 	if resolved.has(reason): return resolved[reason]
 	return str({"saved_but_activation_failed":"거래 결과는 저장되었습니다. 저장 데이터를 다시 불러온 뒤 계속하세요","save_protected":"저장 보호 중 · 저장 데이터를 확인하세요","insufficient_gold":"아데나 부족","insufficient_material":"재료 또는 다이아 부족","material_locked":"재료가 잠겨 있습니다","purchase_reset_boundary_unverified":"첫 구매 주기 5회 완료 · 초기화 시각 확인 대기","repeat_service_restriction_unverified":"첫 교체 완료 · 반복 구매 조건 확인 대기","variable_value_mapping_unverified":"변동 옵션은 네 슬롯 값 대응 확인 필요","locked_value_mapping_unverified":"잠금 옵션은 네 슬롯 값 대응 확인 필요","owned_options_required":"보유한 옵션과 색상이 필요합니다","operation_source_missing":"실행 정보가 포함된 새 숙련 팩 필요","color_draw_source_missing":"색상 재결정 정보가 포함된 새 팩 필요","target_option_policy_unconfirmed":"옵션 미선택 교체 시 목표 기존 옵션 처리 확인 필요","invalid_transfer":"서로 다른 숙련도를 선택하세요","option_prefix_not_acquired":"획득한 숙련도 범위를 선택하세요","stale_or_invalid_plan":"상태가 바뀌었습니다. 다시 선택하세요","backup_failed":"이전 저장 백업 실패","pending_card_confirmation":"카드 결과 확인을 먼저 완료하세요"}.get(reason,reason))
@@ -245,9 +258,10 @@ func catalog_bonus(key: String, actual_weapon: int) -> int:
 	if not enabled: return 0
 	var base: int = core.normalize_weapon(actual_weapon)
 	if base == 0: return 0
-	# Only exact, existing PvE consumers. PvP effects are retained and displayed,
-	# never converted to PvE. Unknown percentage/reduction semantics remain raw.
+	# Reuse TWILIGHT's explicit single-player PvP->PvE and flat-ignore rules.
+	# Keep source labels/rows immutable; percentages use a separate typed path.
 	var mapping: Dictionary = {"HPPlus":"hpFlat","MPPlus":"mpFlat","MagicResist":"mr","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeHit":"meleeHit","RangeHit":"rangedHit","AttackSpeedBonus":"attackSpeed","MeleeCritical":"meleeCritical","RangeCritical":"rangedCritical","MagicCritical":"magicCritical"}
+	mapping.merge({"PVPMeleeAdditionDamage":"meleeDamage","PVPRangeAdditionDamage":"rangedDamage","PVPMagicAdditionDamage":"magicDamage","PierceDamageReduction":"damage_reduction_ignore","PiercePVPDamageReduction":"damage_reduction_ignore"})
 	var total: int = 0
 	# One flat grant per achieved matched level, as in the official level table.
 	# Sum those grants in the existing consumers; never deduplicate BonusID
@@ -262,6 +276,32 @@ func catalog_bonus(key: String, actual_weapon: int) -> int:
 				break
 		total += int(value)
 	return total
+
+func damage_amplification(kind: String, actual_weapon: int) -> float:
+	if not enabled or balance_config.get("typed_percent_ignore") != "style_amplifier": return 0.0
+	var base: int = core.normalize_weapon(actual_weapon)
+	if base == 0: return 0.0
+	var names: Dictionary = {"melee":"IgnoreMeleeDamageReductionPercent","ranged":"IgnoreRangeDamageReductionPercent","magic":"IgnoreMagicDamageReductionPercent"}
+	if not names.has(kind): return 0.0
+	var total: float = 0.0
+	for bonus: Dictionary in core.active_options(state,base):
+		if str(bonus.type_name) != names[kind]: continue
+		var type: Dictionary = core.types[int(bonus.BonusTypeID)]
+		for unit: Dictionary in core.tables.UIUnit:
+			if int(unit.UnitID) == int(type.UnitID) and int(unit.Denominator) > 0:
+				total += float(bonus.Value)/float(unit.Denominator)
+				break
+	return total
+
+func effect_supported(type_name: String) -> bool:
+	if type_name.begins_with("Ignore") and type_name.ends_with("DamageReductionPercent"): return balance_config.get("typed_percent_ignore") == "style_amplifier"
+	return type_name in ["MeleeHit","RangeHit","MeleeDamage","RangeDamage","MagicDamage","HPPlus","MPPlus","MagicResist","AttackSpeedBonus","MeleeCritical","RangeCritical","MagicCritical","PVPMeleeAdditionDamage","PVPRangeAdditionDamage","PVPMagicAdditionDamage","PierceDamageReduction","PiercePVPDamageReduction"]
+
+func application_note(type_name: String) -> String:
+	if type_name in ["PVPMeleeAdditionDamage","PVPRangeAdditionDamage","PVPMagicAdditionDamage"]: return " · PvP→PvE (기존 단독플레이 규칙)"
+	if type_name in ["PierceDamageReduction","PiercePVPDamageReduction"]: return " · 추가 피해 적용 (기존 리덕션 무시 규칙)"
+	if type_name.begins_with("Ignore") and type_name.ends_with("DamageReductionPercent"): return " · 자체 적용: 같은 공격 종류의 피해 증폭" if effect_supported(type_name) else " · 자체 설정: 표시만"
+	return ""
 
 func set_color_lock(weapon: int, level: int, slot: int, locked: bool) -> Dictionary:
 	if not enabled: return Core.fail("pack_unavailable")

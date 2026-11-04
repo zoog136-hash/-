@@ -869,7 +869,7 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, damage_kind: String = "") -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
@@ -883,7 +883,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		hp = mini(_effective_max_hp(), hp + stolen)
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
 	_refresh_equipment_effects()
-	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
+	var kind: String = feedback_kind if damage_kind.is_empty() else damage_kind
+	var amplification: float = clampf(float(equipment_effects.damage_amp_pct)+weapon_mastery.damage_amplification(kind,_mastery_actual_weapon_type()), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
 	target.take_damage(adjusted_damage + stolen, critical)
@@ -1944,7 +1945,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "melee")
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -2214,7 +2215,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "melee")
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -2277,7 +2278,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "magic")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "magic")
 	hud.append_log("%s 적중%s · %s에게 %d 마법 피해 · 명중 %.1f%% · 치명타 %.1f%%" % [
 		skill_name, " CRITICAL" if critical else "", target.monster_name, damage,
 		hit_chance * 100.0, critical_chance * 100.0
@@ -2386,7 +2387,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack
 		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, attack_kind)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [

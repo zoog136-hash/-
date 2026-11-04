@@ -259,10 +259,13 @@ func active_matching_bonuses(state: Dictionary, weapon: int) -> Array:
 		out.append(bonus)
 	return out
 
-func reset_quote(state: Dictionary, weapon: int) -> Dictionary:
+func reset_quote(state: Dictionary, weapon: int, level_scope: Array = []) -> Dictionary:
 	if not levels.has(weapon): return {}
 	var locks: int = 0
-	for values: Array in record(state,weapon).locks.values():
+	var entry: Dictionary = record(state,weapon)
+	for key: String in entry.locks:
+		if not level_scope.is_empty() and int(key) not in level_scope: continue
+		var values: Array = entry.locks[key]
 		for locked: bool in values:
 			if locked: locks += 1
 	for row: Dictionary in tables.MasteryResetCost:
@@ -432,6 +435,7 @@ func fixed_reset_availability(state: Dictionary, weapon: int) -> Dictionary:
 		known_levels[str(row.level)] = true
 	for key: String in entry.colors:
 		if not known_levels.has(key): return fail("color_value_ownership_unverified")
+		if _owned_slots(entry,weapon,int(key)).size() != 2: return fail("partial_owned_level")
 	var charge: Dictionary = reset_quote(state,weapon)
 	if charge.is_empty() or int(charge.CurrencyID) != 1: return fail("reset_currency_unverified")
 	return {"ok":true,"charge":charge}
@@ -504,23 +508,63 @@ func acquire_availability(state: Dictionary, weapon: int, level: int, charge: Di
 	if not _owned_slots(entry,weapon,level).is_empty() or entry.colors.has(str(level)) or entry.locks.has(str(level)): return fail("level_already_or_partly_owned")
 	return {"ok":true,"charge":charge.duplicate(true)}
 
-func reroll_availability(state: Dictionary, weapon: int) -> Dictionary:
+func partial_status(state: Dictionary, weapon: int) -> Dictionary:
+	if not validate_state(state).is_empty() or not levels.has(weapon): return fail("invalid_state")
+	var entry: Dictionary = record(state,weapon)
+	var owned_levels: Dictionary = {}
+	for option: Dictionary in entry.options: owned_levels[int(options[int(option.group_id)][weapon].level)] = true
+	for section: String in ["colors","locks"]:
+		for key: String in entry[section]: owned_levels[int(key)] = true
+	var complete: Array = []
+	var frozen: Array = []
+	var repairs: Array = []
+	for level: int in owned_levels:
+		var slots: Dictionary = _owned_slots(entry,weapon,level)
+		if slots.size() == 2 and entry.colors.has(str(level)): complete.append(level); continue
+		frozen.append(level)
+		# At least one original option plus all four existing colors establishes
+		# a partial owned level. Only an absent, unique100% value can be inferred.
+		# Never draw an unknown variable value, color, lock or entire empty level.
+		if slots.size() != 1 or not entry.colors.has(str(level)): continue
+		for slot: int in [1,2]:
+			if slots.has(slot): continue
+			var candidates: Array = []
+			for group: int in options:
+				var row: Dictionary = options[group][weapon]
+				if int(row.level) == level and int(row.Slot) == slot: candidates.append(row)
+			if candidates.size() == 1 and int(candidates[0].Probability) == 1000000:
+				repairs.append({"level":level,"slot":slot,"group_id":int(candidates[0].ClassChangeMasteryBonusGroupID)})
+	complete.sort(); frozen.sort()
+	return {"ok":true,"complete":complete,"frozen":frozen,"repairs":repairs}
+
+func plan_partial_repair(state: Dictionary, weapon: int, receipt: String, charge: Dictionary) -> Dictionary:
+	var status: Dictionary = partial_status(state,weapon)
+	if not status.ok: return status
+	if status.repairs.is_empty(): return fail("no_fixed_partial_repair")
+	var after: Dictionary = state.duplicate(true)
+	var entry: Dictionary = record(state,weapon)
+	for repair: Dictionary in status.repairs: entry.options.append({"group_id":int(repair.group_id)})
+	after.weapons[str(weapon)] = entry
+	var plan: Dictionary = _plan(state,after,receipt,"partial_option_repair",charge)
+	if plan.ok: plan.after.receipts[receipt]["custom_repair"] = {"policy":"fixed_missing_values_only","restored":status.repairs.duplicate(true),"rerolled":false}
+	return plan
+
+func reroll_availability(state: Dictionary, weapon: int, partial_mode: String = "block_weapon") -> Dictionary:
 	if not validate_state(state).is_empty() or not levels.has(weapon): return fail("invalid_state")
 	var entry: Dictionary = record(state,weapon)
 	if entry.options.is_empty() or entry.colors.is_empty(): return fail("owned_options_required")
+	if partial_mode not in ["block_weapon","complete_levels_only"]: return fail("unknown_partial_reset_policy")
+	var scope: Dictionary = partial_status(state,weapon)
+	if not scope.frozen.is_empty() and partial_mode == "block_weapon": return fail("partial_owned_level")
+	if scope.complete.is_empty(): return fail("partial_owned_level")
 	var unlocked: bool = false
-	for key: String in entry.colors:
-		if _owned_slots(entry,weapon,int(key)).size() != 2: return fail("partial_owned_level")
-		for lock: bool in entry.locks.get(key,[false,false,false,false]):
+	for level: int in scope.complete:
+		for lock: bool in entry.locks.get(str(level),[false,false,false,false]):
 			if not lock: unlocked = true
-	for option: Dictionary in entry.options:
-		if not entry.colors.has(str(options[int(option.group_id)][weapon].level)): return fail("partial_owned_level")
-	for key: String in entry.locks:
-		if not entry.colors.has(key): return fail("partial_owned_level")
 	if not unlocked: return fail("all_fields_locked")
-	var charge: Dictionary = reset_quote(state,weapon)
+	var charge: Dictionary = reset_quote(state,weapon,scope.complete)
 	if charge.is_empty() or int(charge.CurrencyID) not in [1,4]: return fail("reset_currency_unverified")
-	return {"ok":true,"charge":charge}
+	return {"ok":true,"charge":charge,"levels":scope.complete,"frozen":scope.frozen}
 
 func _draw_grade(rng: RandomNumberGenerator) -> int:
 	var roll: int = rng.randi_range(0,999999)
@@ -553,12 +597,13 @@ func plan_acquire(state: Dictionary, weapon: int, level: int, rng: RandomNumberG
 	after.rng_state = str(rng.state)
 	return _plan(state,after,receipt,"level_option_acquire",available.charge)
 
-func plan_reroll(state: Dictionary, weapon: int, rng: RandomNumberGenerator, receipt: String, color_mode: String = "independent_fields") -> Dictionary:
+func plan_reroll(state: Dictionary, weapon: int, rng: RandomNumberGenerator, receipt: String, color_mode: String = "independent_fields", partial_mode: String = "block_weapon") -> Dictionary:
 	if color_mode not in ["independent_fields","shared_level"]: return fail("unknown_color_draw_policy")
-	var available: Dictionary = reroll_availability(state,weapon)
+	var available: Dictionary = reroll_availability(state,weapon,partial_mode)
 	if not available.ok: return available
 	var entry: Dictionary = record(state,weapon)
 	for key: String in entry.colors:
+		if int(key) not in available.levels: continue
 		var slots: Dictionary = _owned_slots(entry,weapon,int(key))
 		var locks: Array = entry.locks.get(key,[false,false,false,false])
 		var shared_grade: int = _draw_grade(rng) if color_mode == "shared_level" and false in locks else -1
@@ -573,4 +618,6 @@ func plan_reroll(state: Dictionary, weapon: int, rng: RandomNumberGenerator, rec
 	var after: Dictionary = state.duplicate(true)
 	after.weapons[str(weapon)] = entry
 	after.rng_state = str(rng.state)
-	return _plan(state,after,receipt,"option_field_reset",available.charge)
+	var plan: Dictionary = _plan(state,after,receipt,"option_field_reset",available.charge)
+	if plan.ok and not available.frozen.is_empty(): plan.after.receipts[receipt]["custom_partial_scope"] = {"rerolled_levels":available.levels.duplicate(),"preserved_levels":available.frozen.duplicate()}
+	return plan

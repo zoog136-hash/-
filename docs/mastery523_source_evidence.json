@@ -103,5 +103,39 @@
     "mastery-notice-api.json": "96d3329825d8c923806b9a102d631bb0c989b9f467c9fe69215a98b9337bf295",
     "mastery-20210526-api.json": "75b8d2a4492c9f8c94d385d3ee1a1ad142d365d0fa822ea8b9d38d230b1e733c",
     "mastery-20241204-api.json": "5a2f159e14926b32cc69d699660a3333f9ecebb490ea72c2f5beb8c52f3b66b2"
+  },
+  "existing_twilight_consumers": {
+    "pvp_to_pve": {
+      "status": "EXISTING_GAME_RULE",
+      "source": "scripts/world.gd::_normalize_option_policies and scripts/inven_option_adapter.gd::OPTION_KEYS",
+      "application": "Mastery PVPMelee/PVPRange/PVPMagicAdditionDamage use existing style flat damage consumers; source rows remain unchanged."
+    },
+    "flat_reduction_ignore": {
+      "status": "EXISTING_GAME_RULE",
+      "source": "scripts/inven_option_adapter.gd and scripts/world.gd::_catalog_damage_bonus",
+      "application": "PierceDamageReduction and PiercePVPDamageReduction become the existing generic flat extra-damage field once."
+    },
+    "typed_percent_ignore": {
+      "status": "CUSTOM_BEHAVIOR_REUSING_EXISTING_CONSUMER",
+      "source": "Generic percent-ignore maps to damage_amp_pct in inven_option_adapter; world successful-hit boundary applies sum/clamp/round/target modifier/lifesteal in that order.",
+      "missing_native_fact": "No authoritative native typed reduction-ignore combat formula found in original523, prior report or official-source search.",
+      "local_policy": "style_amplifier restricts the source effect to melee/ranged/magic; display_only is configurable. Direct tagged proc damage continues to bypass normal weapon/lifesteal boundary."
+    },
+    "partial_repair": {
+      "status": "CUSTOM_BEHAVIOR",
+      "application": "Explicitly restore only one absent unique100%-source peer value where another original value and all four old colors already exist. No unknown values/colors/locks or entire empty levels are inferred.",
+      "guard": "Valid partial saves remain unchanged on load; malformed namespaces retain global overwrite protection. Repair makes exact-byte backup and durable provenance receipt."
+    },
+    "partial_reroll": {
+      "status": "CUSTOM_BEHAVIOR",
+      "application": "Reroll complete levels only, preserve every partial-level field; use original fee row for locks inside the changed scope. Strict block_weapon remains configurable."
+    }
+  },
+  "public_search_scope_20261104": {
+    "queries": [
+      "site.lineagem.plaync.com 숙련도 대미지 감소 무시 계산",
+      "site.lineagem.plaync.com 숙련도 잠금 옵션이 획득되지"
+    ],
+    "result": "Official updates document source options and historical bugs, but no native typed reduction-ignore formula or local partial-save repair semantics. Community posts not used as authoritative formula evidence. No LineageM engine/APK/XAPK discovery or analysis."
   }
 }

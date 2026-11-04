@@ -1,8 +1,109 @@
 {
   "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
-  "previous_checkpoint": "c8c211d24467903ddc83f199c6073d49df32d842",
+  "previous_checkpoint": "cfc9ba88f5b66d9e8bb1a96dcac64c303078d92a",
   "godot": "4.7.2.stable.official.ed1daf0bf",
   "results": {
+    "source_engine": {
+      "result": {
+        "checks": 8157,
+        "failures": 0,
+        "source": "actual523"
+      },
+      "log_name": "mastery-effect-final-source-unit.log",
+      "log_sha256": "e637f7953b0064f9ba68c1b18098e434725876d8aba7dd09d4ad915be19f9ef1"
+    },
+    "synthetic_engine": {
+      "result": {
+        "checks": 8153,
+        "failures": 0,
+        "source": "synthetic"
+      },
+      "log_name": "mastery-effect-final-synthetic-unit.log",
+      "log_sha256": "a4443671ee14d2eae88f1e0d1e8d2c2e22ad972d33ee2b99f57b94607867aa29"
+    },
+    "source_combat_partial_repair": {
+      "result": {
+        "checks": 149,
+        "failures": [],
+        "source": "actual523"
+      },
+      "log_name": "mastery-effect-final-source-effects.log",
+      "log_sha256": "01fe0c5cf5fa0c5711bd21e52be7d2733faac9d62cb6b83da8fc9aa0ecf276e8"
+    },
+    "synthetic_combat_partial_repair": {
+      "result": {
+        "checks": 149,
+        "failures": [],
+        "source": "synthetic"
+      },
+      "log_name": "mastery-effect-final-synthetic-effects.log",
+      "log_sha256": "10286c0d69b4e66f06019376c4aecace441ea291980136657bc98a2d1fc247a0"
+    },
+    "source_progression_matching_policy": {
+      "result": {
+        "checks": 137,
+        "failures": [],
+        "source": "actual523"
+      },
+      "log_name": "mastery-effect-final-source-progression.log",
+      "log_sha256": "e2b7564294072561864b3c17085488294091cbd62c39001139ebb236d908c85e"
+    },
+    "synthetic_progression_matching_policy": {
+      "result": {
+        "checks": 121,
+        "failures": [],
+        "source": "synthetic"
+      },
+      "log_name": "mastery-effect-final-synthetic-progression.log",
+      "log_sha256": "c67e17406a0a7118998df985af3baf7b2efb6d5909845edd715587dfcffcc922"
+    },
+    "actual_main_opengl_combat_partial_repair": {
+      "result": {
+        "checks": 39,
+        "failures": [],
+        "source": "actual523"
+      },
+      "log_name": "mastery-effects-verified-opengl.log",
+      "log_sha256": "cd82610492a5d642c2a64eb0c8b879e1bd44ca2206e353887c089023fd22506b"
+    },
+    "existing_paid_operations_regression": {
+      "result": {
+        "checks": 103,
+        "failures": [],
+        "source": "actual523"
+      },
+      "log_name": "mastery-effect-regression-operations.log",
+      "log_sha256": "803c69b230fc1f5db9267e390ab0de77438cebb329e5874f3135359e53d684bd"
+    },
+    "core_main_current_map_save": {
+      "result": {
+        "checks": 32,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      },
+      "log_name": "mastery-effect-regression-core.log",
+      "log_sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "generic_main_preservation": {
+      "result": {
+        "checks": 25,
+        "failures": [],
+        "source": "synthetic"
+      },
+      "log_name": "mastery-effect-regression-main.log",
+      "log_sha256": "974682854774a5b2cd8b701bd1c18a1e656cff72e2ef024fe55959df22010a06"
+    },
+    "fresh_drive_pack_cli_install": {
+      "result": {
+        "checks": 8,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CLI_INSTALLED_PACK_MENU_SAVE_RELOAD"
+      },
+      "log_name": "mastery-drive-installed-main.log",
+      "log_sha256": "2fadbf3dd44f62c2fdaada7a8cf644074a1a44b47291011ef4e66cb399151fe2"
+    }
+  },
+  "previous_checkpoint_results": {
     "source_engine": {
       "result": {
         "checks": 8157,
@@ -67,123 +168,22 @@
       "log_sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
     }
   },
-  "previous_checkpoint_results": {
-    "source_engine": {
-      "result": {
-        "checks": 8157,
-        "failures": 0,
-        "source": "actual523"
-      },
-      "log_name": "mastery-verified-source-unit.log",
-      "log_sha256": "e637f7953b0064f9ba68c1b18098e434725876d8aba7dd09d4ad915be19f9ef1"
-    },
-    "synthetic_engine": {
-      "result": {
-        "checks": 8153,
-        "failures": 0,
-        "source": "synthetic"
-      },
-      "log_name": "mastery-verified-synthetic-unit.log",
-      "log_sha256": "a4443671ee14d2eae88f1e0d1e8d2c2e22ad972d33ee2b99f57b94607867aa29"
-    },
-    "source_progression": {
-      "result": {
-        "checks": 110,
-        "failures": [],
-        "source": "actual523"
-      },
-      "log_name": "mastery-verified-source-progression.log",
-      "log_sha256": "5e174a1c94592250989089ef84dc641f3f129038696ddc41644c767791e9c223"
-    },
-    "synthetic_progression": {
-      "result": {
-        "checks": 110,
-        "failures": [],
-        "source": "synthetic"
-      },
-      "log_name": "mastery-verified-synthetic-progression.log",
-      "log_sha256": "23a84112dc354597ac2e8f112563cbe17f27de0c68ae3899d60f2ab6dddc5062"
-    },
-    "actual_main_opengl": {
-      "result": {
-        "checks": 76,
-        "failures": [],
-        "source": "actual523"
-      },
-      "log_name": "mastery-continue-verified-opengl.log",
-      "log_sha256": "4e6fab9d38b813d3c8d214ab195c0b2803492c099013878b017b4ea64f0c1047"
-    },
-    "generic_main_preservation": {
-      "result": {
-        "checks": 25,
-        "failures": [],
-        "source": "synthetic"
-      },
-      "log_name": "mastery-continue-generic-main.log",
-      "log_sha256": "974682854774a5b2cd8b701bd1c18a1e656cff72e2ef024fe55959df22010a06"
-    },
-    "core_main_current_map_save": {
-      "result": {
-        "checks": 32,
-        "failures": [],
-        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
-      },
-      "log_name": "mastery-continue-core-main.log",
-      "log_sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
-    },
-    "identical_save": {
-      "result": {
-        "failures": [],
-        "skips": 1,
-        "writes": 2
-      },
-      "log_name": "mastery-continue-identical-save.log",
-      "log_sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
-    },
-    "deferred_save_gate": {
-      "result": {
-        "failures": []
-      },
-      "log_name": "mastery-continue-deferred-save.log",
-      "log_sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
-    }
-  },
   "python_core_staging": {
     "tests": 7,
     "failures": 0,
     "log_sha256": "45ac010275cc27408a97f3ba245c5c6d1740bdc63745f2420e3f1431be335d3d"
   },
-  "opengl": "Mesa llvmpipe; actual Main paid matching rerolls, two-green HP40 -> green/blue HP20/MP20, stale/failure/reload, destination-preserving point-only transfer and explicit custom confirmation",
+  "opengl": "Actual Main partial legacy load/explicit fixed-only repair/confirmation/cancel/failure/exact backup/scoped original fee/invalid-save protection; real monster damage and actual magic skill API kind isolation; source and local behavior labeled",
   "captures": [
     {
-      "name": "acquire.png",
-      "sha256": "dcda45186682dfaf2ba2a8772406450e9f8fc27eb8be17f9769a329a671b95f8",
-      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
+      "name": "combat-effects.png",
+      "sha256": "0bfb5a215c5ef3817ce1bfb1a52fb47ed1953b0143044aceb73a27e13ac8930d",
+      "status": "LOCAL_EVIDENCE_ONLY; not uploaded; not original-art delivery"
     },
     {
-      "name": "change.png",
-      "sha256": "1d3c1cf0481c94eddcf0ed57f70a29f8217e515e2bc760c728fbd84d5c9744e4",
-      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
-    },
-    {
-      "name": "matching.png",
-      "sha256": "74c82f181a4dbd39b2d58bd57afe0c148ed3f99ea72cda55f379528bd5f1d5be",
-      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
-    },
-    {
-      "name": "point-only.png",
-      "sha256": "c384a0181a9f1785f54ced8d45eb68428ad217105a0d6c3776196246127ab960",
-      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
-    },
-    {
-      "name": "purchase.png",
-      "sha256": "44acec1c28d64de412cfeec8d6088114fa5f447aca6f8054fe3c3871195bd960",
-      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
-    },
-    {
-      "name": "reset.png",
-      "sha256": "39ff394a19671d5c79e6964db2e72357a205352248fbee799c12423d0d666109",
-      "status": "LOCAL_EVIDENCE_ONLY; not original art delivery"
+      "name": "partial-before.png",
+      "sha256": "67593ba159ed9e24f48710d4e7f9a86b01eeb3c9ad77003e92f7fc5cb8ab8ec0",
+      "status": "LOCAL_EVIDENCE_ONLY; not uploaded; not original-art delivery"
     }
   ],
   "committed_resource_integrity": {
@@ -199,7 +199,8 @@
     "library_version": 1,
     "delivery": "LIBRARY_REPLACE_CONFIRMED; same identity; original rows not in public Git",
     "compiler_recheck": "PASS; newly rebuilt bytes identical; no new Library version needed",
-    "compiler_log_sha256": "21d90801019c07f86712c8fdef13374639020a4c957460876954e0c6bab34a07"
+    "compiler_log_sha256": "21d90801019c07f86712c8fdef13374639020a4c957460876954e0c6bab34a07",
+    "drive_delivery": "Current application and original backup received afresh and hash/format/CRC checked; actual Main CLI install8 checks passed; see mastery523_delivery.json"
   },
   "historical_source_dir": {
     "status": "FAIL",
@@ -208,19 +209,20 @@
   "official_probability_version": "20261103210002",
   "custom_balance": {
     "config": "data/config/mastery523_balance.json",
-    "sha256": "757d1c6f9b6a846d33eb79ce7902a84aa762dd54dfb5071c0c745130d2771f10",
+    "sha256": "00579ae0eb1defb53760008a9204bdc90e9449f4d3ca8437ed08259e110f17e2",
     "normal_hit_points": 10000,
     "daily_boundary": "fixed UTC+09 05:00; native hour unknown",
     "initial_option_cost": "0 Adena; native acquisition price unknown",
     "color_joint_distribution": "independent_fields default; native independence not confirmed; shared_level configurable; original weights retained",
-    "point_only_target_options": "CUSTOM_BEHAVIOR preserve_existing default; clear_existing/block_unverified configurable; UI confirmation and receipt label policy; native destination handling unconfirmed"
+    "point_only_target_options": "CUSTOM_BEHAVIOR preserve_existing default; clear_existing/block_unverified configurable; UI confirmation and receipt label policy; native destination handling unconfirmed",
+    "typed_percent_ignore": "style_amplifier default reuses existing damage-amp cap/rounding within source attack kind; display_only configurable; native formula unconfirmed",
+    "partial_repair": "fixed_missing_values_only default;0 Adena local repair cost; no RNG/unknown fields; preview_only configurable",
+    "partial_reroll": "complete_levels_only default; untouched partial levels; original fee row by changed-scope locks; block_weapon configurable"
   },
   "remaining_blocks": [
-    "Unsupported PvP/reduction consumers",
-    "Two-server atomic execution and real server/account adapter",
-    "Shared state across intentionally separate local profiles and accounts",
-    "Partial legacy owned-level repair; original partial records preserved",
-    "Android, long-session gameplay, native UI/server equivalence"
+    "Unknown missing variable values/colors/locks or whole empty levels are preserved, never silently inferred/rerolled",
+    "Actual two-server transfer and shared state across intentionally isolated local profiles have no account/server adapter",
+    "Android, long-session gameplay and original native formula/UI/server equivalence unverified"
   ],
   "remote_ci": "NOT_REQUESTED; [skip ci]; no workflow/protection changes or merges",
   "matching": "Per-achieved-owned-level original Step/Grade flat bonus; each level counted once; all15 destination damage contexts tested; no persisted calculated bonus ledger"
