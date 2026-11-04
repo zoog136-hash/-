@@ -316,6 +316,7 @@ func set_character_state(value: Dictionary) -> void:
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 
 func blocks_keyboard_input() -> bool:
+	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return true
 	if is_enhancement_presenting() or is_option_awakening_busy(): return true
 	if active_section == "option_awakening" and is_instance_valid(option_awakening_view): return true
 	var focused: Control = get_viewport().gui_get_focus_owner()
@@ -752,6 +753,7 @@ func append_log(value: String) -> void:
 		combat_log_view.text = "\n".join(log_history)
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return
 	if is_enhancement_presenting() or is_option_awakening_busy():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
@@ -929,6 +931,7 @@ func _navigate(section: String) -> void:
 		"source_dungeons": open_source_dungeons()
 		"map": toggle_map()
 		"menu": toggle_menu()
+		"death523": get_parent().death_recovery.open_ui()
 		"settings": open_settings_info()
 		"auto": open_macro_info()
 		"log": open_combat_log()
@@ -1232,7 +1235,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -1247,7 +1250,7 @@ func _build_menu_page() -> void:
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		artwork.texture = UI.icon("map" if section_id == "source_dungeons" else ("quest" if section_id == "quests" else ("inventory" if section_id == "equipment_collections" else section_id)))
+		artwork.texture = UI.icon("log" if section_id == "death523" else ("map" if section_id == "source_dungeons" else ("quest" if section_id == "quests" else ("inventory" if section_id == "equipment_collections" else section_id))))
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		artwork.position = Vector2(26,8)
@@ -2511,5 +2514,6 @@ func open_halphas_star_enchant(category: String, identity: String) -> void:
 	scroll.add_child(view)
 	view.configure(get_parent(), category, identity)
 	workspace.register_scroll_drag(scroll, view)
+
 
 

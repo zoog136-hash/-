@@ -367,6 +367,7 @@ const EQUIPMENT_SLOT_LABELS: Dictionary = {
 }
 
 var level: int = 35
+var death_recovery = preload("res://scripts/death/runtime.gd").new()
 var experience: int = 100
 var exp_need: int = maxi(1, EXP_PROGRESSION.table_requirement(35))
 var hp: int = 1832
@@ -461,6 +462,7 @@ func _ready() -> void:
 	consumable_service.call("setup", self)
 	ground_loot.configure(self)
 	loot_pickup.configure(self, ground_loot)
+	death_recovery.configure(self)
 	presentation_audio = PRESENTATION_AUDIO.new()
 	add_child(presentation_audio)
 	# Observe the existing released attack event; never drive its frame or timing.
@@ -526,6 +528,7 @@ func _ready() -> void:
 		hud.call("open_class_selection",true)
 
 func _process(delta: float) -> void:
+	if death_recovery.blocked(): return
 	patch523_npc_spells.tick(delta)
 	_update_source_optimization()
 	inventory_automation.maintenance.tick()
@@ -601,6 +604,7 @@ func _process(delta: float) -> void:
 	_update_target_hud()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if death_recovery.blocked(): return
 	if bool(hud.get("class_picker_initial")): return
 	if is_instance_valid(world_interactions): world_interactions.begin(event)
 
@@ -2423,10 +2427,12 @@ func _skill_target(max_distance: float) -> TwilightMonster:
 	return _nearest_visible_monster(max_distance)
 
 func _cast_bleed_from_hud() -> void:
+	if death_recovery.blocked(): return
 	# Backward-compatible signal used by older HUD revisions.
 	_cast_bleed_skill(_skill_target(90.0))
 
 func _cast_combat_skill_from_hud(skill_id: String) -> void:
+	if death_recovery.blocked(): return
 	if skill_id != "attack" and patch523_npc_spells.blocks("CannotCastSkill"): return
 	match skill_id:
 		"attack":
@@ -2449,6 +2455,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 			hud.show_message("알 수 없는 스킬입니다")
 
 func _attack() -> void:
+	if death_recovery.blocked(): return
 	if patch523_npc_spells.blocks("CannotAttack"): return
 	if is_instance_valid(world_interactions) and world_interactions.primary_is_npc(): return
 	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
@@ -2986,6 +2993,7 @@ func _restore_ground_drops(saved: Variant) -> void:
 	ground_loot.restore(saved)
 
 func _claim_quest(quest_id: String) -> void:
+	if death_recovery.blocked(): return
 	# The UI never decides completion, payouts or quest ownership.
 	# Claiming a newly offered quest immediately completes it by request.
 	# A failed save restores BOTH quest ownership and wallet/inventory.
@@ -3105,6 +3113,7 @@ func _respawn_player(message_text: String) -> void:
 	if source_dungeon_runs.state.active.get("host_kind","") == "twilight_local" and source_dungeon_runs.state.active.get("status","") == "active":
 		local_dungeon_failure_pending = true
 		LOCAL_TOWER.tick(self)
+	if death_recovery.blocked(): return
 	var death_position: Vector2 = player.global_position
 	var death_sprite: AnimatedSprite2D = player.transform_sprite if player.transform_active else player.class_sprite
 	if not player.transform_active and player.spx_sprite != null and player.spx_sprite.visible:
@@ -3112,7 +3121,7 @@ func _respawn_player(message_text: String) -> void:
 	var death_texture: Texture2D = death_sprite.sprite_frames.get_frame_texture(death_sprite.animation, death_sprite.frame) if death_sprite.sprite_frames != null else null
 	var death_scale: Vector2 = death_sprite.scale
 	var death_offset: Vector2 = death_sprite.position
-	_clear_combat_actions()
+	death_recovery.begin_death(message_text)
 	if combat_vfx != null and death_texture != null:
 		var death_animation: String = ""
 		# S-only refined sets author one death_2 that every facing reuses, the
@@ -3123,16 +3132,6 @@ func _respawn_player(message_text: String) -> void:
 				death_animation = candidate
 				break
 		combat_vfx.death_pose(death_position, death_texture, death_scale, death_offset, death_sprite.sprite_frames, death_animation, death_sprite.get_meta("base_scale", Vector2.ONE))
-	hp = _effective_max_hp()
-	mp = max_mp
-	gold = maxi(0, gold - 500)
-	player.clear_status_effects()
-	player.global_position = _spawn_position()
-	player.camera.reset_smoothing()
-	selected_monster = null
-	auto_target = null
-	hud.clear_target()
-	hud.show_message(message_text)
 
 func _on_player_poison_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
@@ -3563,6 +3562,7 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 	_update_hud()
 
 func _on_inventory_item_activated(item_name: String) -> void:
+	if death_recovery.blocked(): return
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
@@ -3827,7 +3827,7 @@ func _sync_item_instances() -> void:
 		var legacy_import: bool = ids.is_empty() and enhancement_levels.has(name_value)
 		while ids.size() < desired:
 			var unique_id: String = str(next_item_instance_id)
-			while item_instances.has(unique_id):
+			while item_instances.has(unique_id) or death_recovery.reserved(unique_id):
 				next_item_instance_id += 1
 				unique_id = str(next_item_instance_id)
 			next_item_instance_id += 1
@@ -4267,11 +4267,13 @@ func _auto_recharge_ain() -> void:
 				return
 
 func _buy_shop_item(item_name: String, _ui_price: int) -> void:
+	if death_recovery.blocked(): return
 	# Legacy HUD signal remains compatible but the transmitted price has no
 	# authority. Never debit a price supplied by a screen or external caller.
 	_buy_shop_bulk(item_name, 1)
 
 func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> void:
+	if death_recovery.blocked(): return
 	if _item_locked(item_name,instance_id):
 		hud.show_message("잠긴 아이템은 판매할 수 없습니다")
 		return
@@ -4302,6 +4304,7 @@ func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> v
 		hud.call("refresh_service")
 
 func _buy_shop_bulk(item_name: String, quantity: int) -> void:
+	if death_recovery.blocked(): return
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 소모품은 구매할 수 없습니다")
 		return
@@ -4391,6 +4394,7 @@ func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	)
 
 func _craft_requested(recipe_id: String, batches: int) -> void:
+	if death_recovery.blocked(): return
 	# Revalidate authoritative ingredients, wallet, weight and physical IDs.
 	# The service stages mutations and commits only if every check succeeds.
 	_sync_item_instances()
@@ -4421,6 +4425,7 @@ func _craft_requested(recipe_id: String, batches: int) -> void:
 		hud.call("open_crafting")
 
 func _npc_teleport_requested(map_id: String) -> void:
+	if death_recovery.blocked(): return
 	if patch523_npc_spells.blocks("CannotTeleport"): return
 	map_id = NATIVE_PNG.canonical(map_id)
 	if player.is_stunned() or player.is_feared() or player.is_held():
@@ -4444,6 +4449,7 @@ func _npc_teleport_requested(map_id: String) -> void:
 
 
 func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
+	if death_recovery.blocked(): return
 	if item_name == "아데나" or item_name.is_empty():
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
@@ -4478,9 +4484,11 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 		hud.call("refresh_service")
 
 func _use_potion() -> void:
+	if death_recovery.blocked(): return
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
+	if death_recovery.blocked(): return
 	if not _patch523_item_allowed(): return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
 		hud.show_message("원본 사용 효과 미연결 · 아이템 보존")
@@ -4522,6 +4530,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	_update_hud()
 
 func _return_to_spawn() -> void:
+	if death_recovery.blocked(): return
 	if patch523_npc_spells.blocks("CannotTeleport"): return
 	if player.is_stunned() or player.is_feared():
 		hud.show_message("현재 상태에서는 귀환할 수 없습니다")
@@ -4550,6 +4559,7 @@ func _open_inventory() -> void:
 	_perf_log("가방 열기", started_usec)
 
 func _on_map_selected(map_id: String) -> void:
+	if death_recovery.blocked(): return
 	hud.toggle_map()
 	_set_map(map_id, false)
 
@@ -4666,6 +4676,9 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}) -> Error:
+	if death_recovery.save_blocked or (not death_recovery.pending.is_empty() and not collection_override.has(death_recovery.KEY)): return ERR_UNAVAILABLE
+	var death_state: Dictionary = collection_override.get(death_recovery.KEY,death_recovery.export_state())
+	if not death_recovery.validate(death_state,collection_override.get("item_instances",item_instances)).is_empty(): return ERR_INVALID_DATA
 	if dungeon_play.save_blocked or not dungeon_play.valid(collection_override.get("source_dungeon_play",dungeon_play.state)).is_empty():return ERR_INVALID_DATA
 	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
@@ -4691,7 +4704,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points"]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
 		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
@@ -4722,6 +4735,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"experience": experience,
 		"exp_need": exp_need,
 		"experience_progression_version": EXP_PROGRESSION.CURVE_VERSION,
+		"death_recovery523": death_state,
 		"hp": hp,
 		"max_hp": max_hp,
 		"mp": mp,
@@ -4853,6 +4867,9 @@ func _load_game(quiet: bool) -> void:
 	if not dungeon_error.is_empty():
 		source_dungeon_runs.save_blocked=true; source_dungeon_runs.problem=dungeon_error
 		source_save_blocked=true; hud.show_message(dungeon_error); return
+	var death_problem: String = death_recovery.check_load(data)
+	if not death_problem.is_empty():
+		death_recovery.save_blocked = true; hud.show_message(death_problem); return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4997,6 +5014,8 @@ func _load_game(quiet: bool) -> void:
 		return
 	if not halphas_star.prepare_load(data):
 		hud.show_message("할파스 강화 저장 이전 백업 실패 · 기존 저장 보존");return
+	if not death_recovery.prepare_load(data,save_path()):
+		death_recovery.save_blocked = true; hud.show_message("사망 복구 이전 백업 실패 · 기존 저장 보존"); return
 	var prior_save_path: String=migrated_save_path
 	var staged_map_save: Dictionary={}
 	if bool(map_migration.changed):
@@ -5020,6 +5039,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
+	death_recovery.accept_load(data)
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -5130,6 +5150,8 @@ func _load_game(quiet: bool) -> void:
 		if str(raw_id).is_valid_int():
 			next_item_instance_id = maxi(next_item_instance_id, int(str(raw_id)) + 1)
 	next_item_instance_id = maxi(next_item_instance_id, equipment_collections.next_safe_id())
+	for death_entry: Dictionary in death_recovery.state.records:
+		if not death_entry.item.is_empty() and str(death_entry.item.id).is_valid_int(): next_item_instance_id = maxi(next_item_instance_id,int(death_entry.item.id)+1)
 	_sync_item_instances()
 	_normalize_equipment_slots()
 	_attach_missing_equipment_instance_ids()
@@ -5555,6 +5577,7 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 	_request_deferred_save()
 
 func _on_quickslot_pressed(slot_index: int) -> void:
+	if death_recovery.blocked(): return
 	if slot_index < 0 or slot_index >= quickslots.size():
 		return
 	var value: Variant = quickslots[slot_index]
@@ -6084,6 +6107,7 @@ func _skill_record(skill_name: String) -> Dictionary:
 	return skill_record_index.get(skill_name, {})
 
 func _cast_job_skill(skill_name: String) -> bool:
+	if death_recovery.blocked(): return false
 	if skill_name.begins_with("guardian:"):
 		var response: Dictionary=growth.execute("guardian_cast",skill_name.trim_prefix("guardian:"),1,int(growth.state.revision))
 		hud.show_message(str(response.message));return bool(response.ok)
@@ -6728,6 +6752,7 @@ func _on_option_awakening_attempt_requested(category: String, target_id: String)
 	hud.call("present_option_awakening_result", card, presentation, presentation_settings)
 
 func _equip_catalog(category: String, record: Dictionary) -> void:
+	if death_recovery.blocked(): return
 	if category == "아이템":
 		_equip_or_acquire_item(record)
 		return
@@ -8017,7 +8042,7 @@ func _effective_defense() -> int:
 	var accessory_enhance: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "defense")
 	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
 
-func _effective_max_hp() -> int:
+func _effective_max_hp(base_override: int = -1) -> int:
 	var flat_bonus: float = 0.0
 	var percent_bonus: float = original_skills.stat("hpPct") if original_skills!=null else 0.0
 	for record: Dictionary in _all_equipped_records():
@@ -8029,7 +8054,7 @@ func _effective_max_hp() -> int:
 	flat_bonus += float(_passive_skill_total("hpFlat"))
 	flat_bonus += float(_active_item_buff_total("hp_flat"))
 	flat_bonus += float(_equipped_bless_bonus("hp"))
-	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
+	return maxi(1, int(round(((max_hp if base_override < 0 else base_override) + flat_bonus) * (1.0 + percent_bonus))))
 
 func _blessing_consumption_reduction_percent() -> float:
 	var reduction: float = 0.0
@@ -8771,4 +8796,7 @@ func resolve_patch523_npc_hit(actor: TwilightMonster, raw: int, spell: Dictionar
 	return hp < before_hp # Final host HP outcome, not a fabricated native success.
 
 
+
+func _resume_death523() -> void:
+	death_recovery.resume()
 
