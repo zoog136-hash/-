@@ -138,3 +138,15 @@ UI는 `원본 효과 표시 · 추정 재생`과 `자체 계층 합성 · 동시
 컴파일은 `tools/monsters/build_patch523_effect_pack.py --spr-zip <SPR graph156.zip> --originals <4개 checkpoint 폴더> --catalog <npc_spells.json> --crosscheck <RESOURCE_DECLARATION_CROSSCHECK.json> --output <비공개 출력>`으로 재현한다. Python Brotli1.1.0/Pillow를 사용한다. Python4검사는 commandwise 행 이동/팔레트0/음수 floor 투영/EOF·extent 거절을 검사한다. 실제 팩114검사, Main 전투·UI·설정 재로딩·OpenGL37검사, 기존 전투46검사, 현재 Main 세이브32검사와 필수723시트 SHA 검사가 통과했다. 원본 동등성/전체 아트/Android 승인으로 확대하지 않는다.
 
 비공개 후보 효과 ZIP은15,905,429B, SHA256 `3fb94d16030860066f4099c762b4eb30b5326a88e6bd60e44adf0c3eb06e3eec`이다. manifest pin은 위와 같다. 선택 PNG526개, 원문 SP246개, 선택 SPR 감사/미수신 후보 목록을 포함한다. 별도 빈 디렉터리에 복원해 모든 PNG SHA/크기/ZIP CRC와114검사를 다시 확인했다. 자연 출현/새 보스 배치나 원본 몸체 복원을 추가한 것은 아니며, 원본 actor 바인딩과 출현을 다루는 다른 PR의 범위는 유지한다.
+
+## 최신 적용팩과 원본 백업의 구분
+
+코드 기준은 `d3f603b0c59d48064a6e5297c603e53c7b30d549`다. 게임이 소비하는 최신 효과 ZIP은 `TWILIGHT_PATCH523_BOSS_EFFECTS_RUNTIME_v1_d3f603b0_20261104.zip`이며9,871,450B / SHA256 `2165b10159a4c3ab156666e7281eca5a5ccb5a572ac2fa2c4469e7def21f22bf`다. manifest와PNG526개만 포함하며 원본 백업/감사/캡처를 설치하지 않는다. 효과 manifest pin은 `f9e9ce484e45e83fa0cb98a60a3778dc0f482d59968bda4c7ac6a8a602b79f2d`로 동일하다.
+
+함께 필요한 기술 데이터는 `TWILIGHT_PATCH523_NPC_SPELL_RUNTIME_PRIVATE_20261104.zip`,119,650B / SHA256 `bc34770cdd2a6821410df2949dec232f0c4abb266146aef197dc8d7701cb1712`다. 이 데이터의 Library ID/version은 앞 절과 같은 version1이며 효과 최신 ZIP은 Drive에만 보관했다.
+
+이전15,905,429B 혼합 팩은 `TWILIGHT_PATCH523_BOSS_EFFECTS_BACKUP_v1_d3f603b0_20261104.zip`으로 구분해 원본 백업 폴더로 이동했다. 바이트/SHA는 `3fb94d16030860066f4099c762b4eb30b5326a88e6bd60e44adf0c3eb06e3eec`로 동일하고, 선택 원문SP246개를 보존하는 혼합 백업이다. 전체69 DAT 백업이나 최신 lean 적용 ZIP으로 부르지 않는다. 원본69 DAT의 기존 Drive8개 분권과 Library4개 원본은 중복 업로드하거나 변경하지 않았다.
+
+기존 비공유 프로젝트 Drive 아래 PR250의 실제 적용팩/원본 백업 폴더를 따로 사용한다. Drive 보관은 게임 자동 다운로드/설치가 아니다. 연결 계정의 정식 다운로드 후 ZIP 크기·SHA·CRC를 확인하고 기술 데이터의 두 파일을 `user://source_npc523/`, 효과 manifest/frames를 `user://source_npc523_effects/`에 설치해야 한다. 기존 게임 세이브/설정 파일을 덮어쓰지 않는다. 시작 후 보스 기술 UI에서 전투 적용/추정 표시/자체 계층 합성을 선택한다. 별도 경로를 쓸 때는 앞 절의 manifest 경로와 SHA 인자를 사용한다.
+
+새 소비 폴더에서 최신 lean ZIP을 정식 Drive 다운로드했고, NPC 데이터는 현재 Drive 파일과 같은 기존 정식 다운로드 검증 바이트를 재사용했다. 두 ZIP과 모든 PNG SHA/크기/CRC를 검사해 빈 사용자 폴더에 설치했다. 팩 경로 인자 없이 기본 user 경로에서 효과114검사와 실제 Main/UI31검사를 통과했다. 이 회차는 headless 설치/로드 검증이며, 앞선 동일PNG의 OpenGL37검사와 구분한다. 작업환경의 PR250 코드 Main 실행 확인이며 사용자 PC 설치·main 병합·전체 원본 동등성 승인은 아니다. 이번 저장 구분 작업에서는 새 감사/보고서/캡처를 외부 업로드하지 않았다.
