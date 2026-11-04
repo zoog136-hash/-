@@ -73,3 +73,21 @@ Godot **4.7.2 ed1daf0bf**, 별도 XDG 사용자 프로필, 현재 Git 맵 팩을
 Linux llvmpipe OpenGL960×540/1280×720은 실제 렌더링이며 실기기 성능을 뜻하지 않는다. Windows/Android, 실제 오디오, 전체 과거 맵·전체 기능은 미검증이다. 초기 렌더 검사에서 UI 프레임 사이 몬스터 생성이 검사 RNG를 소비하는 비결정성을 찾아 테스트의 population을 정지하고 확인 클릭 직전에 테스트 seed를 넣었다. 게임 난수 정책은 변경하지 않았다. 최종 로그의 SCRIPT ERROR/ERROR/_FAIL은 허용하지 않는다.
 
 리소스723atlases/41442frames/233420026bytes SHA 검사는 통과했다. 과거 `--source-dir` 검사는 historical a1.zip 부재로 실패했고 현재 제공된523 ZIP3개는 별도로 SHA/CRC를 검증했다. 새 원본 아트 전체 배포/복원 완료를 주장하지 않는다. 사용자 지시에 따라 원격 CI를 수동 실행/재실행하지 않고 `[skip ci]` 커밋을 사용한다.
+
+## 통합할 때 확인할 공통 경로
+
+최종 작업 시 열린 PR237(토템),247(상점),251(자동 창고/판매)의 실제 파일 diff도 재대조했다. PR237의 전용 토템 화면과 범용 제작 화면에는 원본244153/244163/244173의 무각인 강화석→각인 강화석 교환이라는 같은 원본 행이 있다. 별도 토템 성장/초기화 엔진을 이 PR에서 중복 구현하지 않았다. 합칠 때 전용 화면과 범용 제작의 같은 원본 ID를 한 거래 계약으로 유지하고 UI 중복 노출을 정리할 수 있다. 이 PR은 전용 토템 규칙을 복사하거나 병합하지 않았다.
+
+PR247/251과 `_save_game`의 override 허용 목록·저장 payload가 공통이다. 통합 시 `next_item_instance_id`/`crafting_log`, 상점 상태, `warehouse`/`inventory_automation`을 모두 보존해야 한다. 각각의 저장 실패 보호도 합쳐서 검증해야 한다. 최신 main 단독 대비 mergeable 상태와 여러 기능 PR을 함께 합친 실행 검증은 서로 다르며 후자는 미실행이다.
+
+### 최종 로컬 검사 결과 (게임 코드 `11f55b753cc8fe6b8e2f57828f15ca7e80b4d807`)
+
+- 원본 전수/제작 조건 Python11개, CI 스테이징8개, Python 구문 통과.
+- Library v3 재다운로드 실제 규칙/상태/후보/확률·수량/설치89개에 장인 등급 자격5개를 더한 Godot94검사 통과.
+- 실제 Main 제작·확인·지갑 지급·인벤토리 상자·인장 강화·장인 자격·장착 효과·물약/스턴/경험치·저장 실패/재로드76검사 통과. 원본 없는 합성 거래 fixture는 실제 Main22검사 통과.
+- 실제 OpenGL llvmpipe960×540와1280×720 각각80검사, 각4장 캡처 통과. 최종 SCRIPT ERROR/ERROR/_FAIL 없음. Dummy audio 명시, VSync 드라이버 경고는 별도다.
+- 실제 Main/current source-map/기존 저장 보존32검사, 동일 payload 저장2write/1skip, deferred-save gate 통과.
+- 기존414제작식 원자성·346비법서/등급 제작 회귀, 실제 강화 연출17검사와 per-instance 강화/속성/이주/저장 회귀 통과.
+- 공식 공개 API 현재 버전의 인장3분기와 장인 무기3등급 전체 단계/실패 규칙 재대조 통과. 원격 CI는 수동 실행하지 않았다.
+
+캡처8장·최종 로그·공식 대조 JSON·코드 SHA를 [Library 증거 ZIP](https://chatgpt.com/api/library/files/libfile_f8704eb429008191aea653070e5486c9/download)에 보관했다. 5160969bytes, SHA256 `c6b9a9ad5614b549617b541c303ca18018368a4fdbb6a26de6d396a2667ada94`. 원본 ZIP·큰 규칙 팩·실제 사용자 세이브는 증거 ZIP에 없다. 게임 데이터 팩은 [별도 Library v3](https://chatgpt.com/api/library/files/libfile_d044c27014888191a5f78a2bf745344e/download)다. 증거와 팩 모두 새 소비 폴더로 정식 materialization하여 SHA를 재확인했다.
