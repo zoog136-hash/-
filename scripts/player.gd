@@ -87,6 +87,7 @@ func _ready() -> void:
 		original_source_manifest = installed_manifest
 	original_source_preview.name = "OriginalSourceInspection"
 	add_child(original_source_preview)
+	add_child(preload("res://scripts/resources/current523_world_preview.gd").new())
 	base_move_speed = move_speed
 	motion.strike.connect(func(id: int) -> void: attack_strike.emit(id))
 	motion.cancelled.connect(func(id: int) -> void: attack_cancelled.emit(id))
@@ -208,16 +209,10 @@ func _update_visual(delta: float) -> void:
 	var show_spx: bool = not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
 	motion.profile = transform_profile if transform_active else (spx_profile if show_spx else class_profile)
 	var show_original: bool = transform_active and original_source_preview.installed()
-	$GroundShadow.visible = not show_original and not motion.profile.embedded_shadow
-	$PlayerActionFX.visible = not show_original
+	_refresh_visual_visibility()
 	motion.advance(delta, get_position_delta() / maxf(delta, 0.001))
 	facing = motion.facing4
 	attack_clock = maxf(0.0, motion.attack_duration - motion.attack_elapsed) if motion.active else 0.0
-	class_sprite.visible = not transform_active and not show_spx
-	transform_sprite.visible = transform_active and not show_original
-	if spx_sprite != null: spx_sprite.visible = show_spx
-	if spx_effect_sprite != null:
-		spx_effect_sprite.visible = show_spx and spx_effect_sprite.sprite_frames != null
 	var active_sprite: AnimatedSprite2D = transform_sprite if transform_active else (spx_sprite if show_spx else class_sprite)
 	if show_original:
 		original_source_preview.advance_source(delta, motion.state, motion.facing8, motion.sequence, motion.active)
@@ -230,6 +225,22 @@ func _update_visual(delta: float) -> void:
 			spx_effect_sprite.transform = spx_sprite.transform
 			spx_effect_sprite.flip_h = spx_sprite.flip_h
 			spx_effect_sprite.modulate = spx_sprite.modulate
+
+func _refresh_visual_visibility() -> void:
+	# Derive current presentation instead of restoring a snapshot of an old form.
+	var show_spx: bool = not transform_active and is_instance_valid(spx_sprite) and not spx_actor_id.is_empty()
+	var show_original: bool = transform_active and is_instance_valid(original_source_preview) and original_source_preview.installed()
+	var sample: Node = get_node_or_null("Current523EstimatedWorldPreview")
+	var estimated: bool = sample != null and sample.is_player_override_active()
+	if is_instance_valid(class_sprite): class_sprite.visible = not transform_active and not show_spx and not estimated
+	if is_instance_valid(transform_sprite): transform_sprite.visible = transform_active and not show_original and not estimated
+	if is_instance_valid(spx_sprite): spx_sprite.visible = show_spx and not estimated
+	if is_instance_valid(spx_effect_sprite): spx_effect_sprite.visible = show_spx and spx_effect_sprite.sprite_frames != null and not estimated
+	if is_instance_valid(original_source_preview): original_source_preview.visible = show_original and not estimated
+	var shadow: CanvasItem = get_node_or_null("GroundShadow") as CanvasItem
+	if shadow != null: shadow.visible = not show_original and not motion.profile.embedded_shadow and not estimated
+	var effects: CanvasItem = get_node_or_null("PlayerActionFX") as CanvasItem
+	if effects != null: effects.visible = not show_original and not estimated and (motion.active or motion.move_ratio > .10)
 
 func face_target(position_value: Vector2) -> void:
 	motion.face(position_value - global_position)

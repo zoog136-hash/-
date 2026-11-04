@@ -53,3 +53,5 @@ godot --path <Main 검증 프로젝트> --audio-driver Dummy --rendering-method 
 새 실물 검증·원문 해시는 [current523-validation.json](current523-validation.json)에 별도로 기록한다. 523 캐릭터/몬스터/이펙트 전체 재생에는 현행 M만으로 확인된 프레임·하위이미지·픽셀·알파·방향·타이밍 및 소비자별 레지스트리 연결이 여전히 필요하다. 원문 확보나 표준 PNG 2종 표시를 전체 523 통합으로 계산하지 않는다.
 
 중단 작업 재개 후 원문·공개 구현·기존 소비 경로를 추가로 대조했다. DAT 69개의 내부 SP2 10,338개와 표준 Brotli 종료 989개는 정상이며, 공개 해독기를 그대로 채택할 수 없는 실물 반례를 확인했다. [재생 재조사와 정확한 재개 입력](current523-replay-investigation.md), [원문/표준 압축 독립 검사 집계](current523-source-audit.json)를 참고한다. 이 후속은 조사 기록이며 새로운 523 SP2 재생 사례나 실행 코드 변경은 없다.
+
+이후 사용자의 추정 구현 허용 및 M 엔진 조사 중단 지시에 따라 [SP2 추정 재생·설정·플레이어 표시](current523-estimated-playback.md)를 추가했다. 원문 구조와 추정 표시 정책을 구분하고 모두 설정 가능하게 한다. 새 실행 증거는 `current523-estimate-validation.json`에 기록한다. 원본 M 표시가 검증됐거나 모든 캐릭터·몬스터·이펙트가 자동 연결됐다는 뜻은 아니다.

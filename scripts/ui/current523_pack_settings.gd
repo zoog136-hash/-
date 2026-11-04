@@ -45,6 +45,7 @@ func _ready() -> void:
 	add_child(picker)
 	installer.progress.connect(func(done: int,total: int) -> void:
 		status.text = "523 원문·이미지 검사 중 %d / %d · 이전 팩 유지" % [done,total])
+	add_child(preload("res://scripts/ui/current523_sp2_viewer.gd").new())
 
 func _show_images(path: String, newly_installed: bool) -> void:
 	for child: Node in previews.get_children():
