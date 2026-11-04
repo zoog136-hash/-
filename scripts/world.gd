@@ -68,6 +68,8 @@ const CARD_COLLECTION_RUNTIME = preload("res://scripts/cards/collection_runtime.
 var card_collections = CARD_COLLECTION_RUNTIME.new()
 const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
 var growth = GROWTH.new()
+const GROWTH96 = preload("res://scripts/progression/growth96_runtime.gd")
+var growth96 = GROWTH96.new()
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
 const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.gd")
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
@@ -660,6 +662,7 @@ func _load_data() -> void:
 	_build_job_classes()
 	equipment_collections.configure(self)
 	growth.configure(self)
+	growth96.configure(self)
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -998,6 +1001,9 @@ func _index_item_weights() -> void:
 			if name_value.is_empty():
 				continue
 			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
+			if record.has("growth96_item_id"):
+				item_weight_index[name_value] = maxi(0,int(record.weight))
+				continue
 			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐":
 				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
 			item_weight_index[name_value] = maxi(0, raw_weight)
@@ -3383,6 +3389,10 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
 		return
+	if item_name.begins_with("m523-growth-item:"):
+		if item_name == GROWTH96.Source.item_key(GROWTH96.Source.TOKEN): hud.open_growth96()
+		else: hud.show_message("미개봉 성장 보상 상자입니다. 다른 출처의 뽑기권으로 자동 교환하거나 개봉하지 않습니다.")
+		return
 	var symbol_instance_id: String = str(selected.get("id",""))
 	if not symbol_instance_id.is_empty() and not growth.source523.recharge(item_instances.get(symbol_instance_id,{})).is_empty():
 		var converted: Dictionary = growth.execute("recharge",symbol_instance_id,1,int(growth.state.revision))
@@ -4246,6 +4256,9 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
+	if direction == "deposit" and record.has("growth96_item_id") and not bool(record.get("storable",false)):
+		hud.show_message("원본 성장 보상은 창고 보관이 제한되어 있습니다")
+		return
 	if record.is_empty() or int(quantity) < 1 or int(quantity) > 99:
 		hud.show_message("창고 아이템 또는 수량이 유효하지 않습니다")
 		return
@@ -4458,6 +4471,8 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if growth96.save_blocked: return ERR_FILE_CORRUPT
+	if collection_override.has("growth96") and not growth96.validate(collection_override.growth96).is_empty(): return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4472,7 +4487,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","growth96"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4509,6 +4524,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"quest_state": quest_service.export_state(),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
+		"growth96": growth96.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"crafting_log": crafting_log,
@@ -4610,6 +4626,10 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var growth96_error: String = growth96.check_load(data)
+	if not growth96_error.is_empty():
+		hud.show_message(growth96_error)
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4766,6 +4786,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
+	growth96.restore(data.get("growth96",GROWTH96.fresh()))
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -7352,7 +7373,7 @@ func _stun_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_accuracy(record)
-	return clampi(total, 0, 100)
+	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _stun_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
@@ -7377,7 +7398,7 @@ func _silence_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_silence_accuracy(record)
-	return clampi(total, 0, 100)
+	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _silence_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
@@ -7411,7 +7432,7 @@ func _hold_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_hold_accuracy(record)
-	return clampi(total, 0, 100)
+	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _hold_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
@@ -7445,7 +7466,7 @@ func _fear_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_accuracy(record)
-	return clampi(total, 0, 100)
+	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _fear_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)

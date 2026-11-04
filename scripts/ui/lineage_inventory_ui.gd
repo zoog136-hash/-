@@ -495,6 +495,7 @@ func _status_badges(record: Dictionary, item_name: String) -> String:
 	return "◆" if _is_engraved(record, item_name) else ""
 
 func _display_item_name(record: Dictionary, item_reference: String) -> String:
+	if record.has("growth96_item_id"): return str(record.get("display_name",record.get("name",item_reference)))
 	var base: String = _base_item_name(item_reference)
 	if _bless_state(record, item_reference) == "blessed" and not base.begins_with("축복받은 "):
 		return "축복받은 " + base

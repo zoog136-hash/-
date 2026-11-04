@@ -88,6 +88,8 @@ func _refresh() -> void:
 		var count: int = int(amounts[raw_name])
 		if count <= 0 or item_name == "아데나":
 			continue
+		var source_record: Dictionary = world._find_catalog_item_record(item_name)
+		if is_deposit and source_record.has("growth96_item_id") and not bool(source_record.get("storable",false)): continue
 		if not _is_equipment(item_name):
 			_add_entry(item_name, count)
 			continue
