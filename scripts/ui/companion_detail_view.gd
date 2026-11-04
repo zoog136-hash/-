@@ -36,6 +36,7 @@ var number_pattern:=RegEx.new()
 var art_column: VBoxContainer
 var apply_row: HBoxContainer
 var secondary_button: Button
+var source_craft_button: Button
 var footer_actions: HBoxContainer
 var presentation_homes: Array[Dictionary]=[]
 var catalog_style: StyleBox
@@ -161,6 +162,8 @@ func configure(controller: Node) -> void:
 	secondary_button.name="CompanionSecondarySummon"
 	secondary_button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	footer_actions.add_child(secondary_button)
+	source_craft_button=UI.button("카드 제작",func() -> void:hud.open_native_card_craft(),Vector2(0,44))
+	source_craft_button.set_script(preload("res://scripts/ui/native_touch_button.gd"));source_craft_button.name="CompanionSourceCraft";source_craft_button.size_flags_horizontal=Control.SIZE_EXPAND_FILL;source_craft_button.hide();footer_actions.add_child(source_craft_button)
 	preload("res://scripts/ui/source_card_skin.gd").style(secondary_button,"UI/Change/Change_DetailView.csb","Btn_Change_On")
 	secondary_button.pressed.connect(func() -> void:
 		var world: Node=hud.get_parent()
@@ -344,6 +347,7 @@ func decorate_roster(force: bool=false) -> void:
 	if is_instance_valid(hud.catalog_card_chrome):hud.catalog_card_chrome.refresh()
 
 func fill_options(record: Dictionary) -> void:
+	source_craft_button.visible=Cards.card_id(record)=="source:m523:2:25152"
 	for child: Node in options.get_children():options.remove_child(child);child.queue_free()
 	var grade: String=str(record.get("grade","일반"))
 	name_label.text=str(record.get("name","카드를 선택하세요"))

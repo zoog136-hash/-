@@ -13,7 +13,9 @@ CATEGORIES = {1: '변신', 2: '마법인형', 98: '성물'}
 FLAT = {'HPPlus':'hpFlat','MPPlus':'mpFlat','Strength':'strFlat','Dexterity':'dexFlat',
         'Intelligence':'intFlat','Wisdom':'wisFlat','Constitution':'conFlat',
         'Charisma':'chaFlat','MagicResist':'mr','DamageReduction':'damage_reduction',
-        'ArmorClass':'def','ArmorClassBonus':'def','PVEDamageReduction':'pve_damage_reduction'}
+        'ArmorClass':'def','ArmorClassBonus':'def','PVEDamageReduction':'pve_damage_reduction',
+        'MeleeEvasion':'dg','RangeEvasion':'er','PVEMeleeAdditionDamage':'pve_melee_damage'}
+PRIMARY_PERCENT = {'MeleeCritical':'meleeCrit','RangeCritical':'rangedCrit','MagicCritical':'magicCrit'}
 
 def build(source, base, output):
     if hashlib.sha256(source.read_bytes()).hexdigest() != SOURCE_SHA256:
@@ -78,7 +80,7 @@ def build(source, base, output):
                     record['source_stat_application'].append({'field':key,'source_bonus_id':b['ID'],'rule':'Unit1_Value_direct'})
             # Reuse existing typed stat channels. HP/XP consumers store
             # fractions; the other supported percentage channels store points.
-            field = MAP.get(t['Name'])
+            field = PRIMARY_PERCENT.get(t['Name'], MAP.get(t['Name']))
             if direct and field and t['Name'] not in FLAT:
                 amount = b['Value']; denominator = e['ui_unit'].get('Denominator', 0)
                 supported = u['Name'] == 'Value'

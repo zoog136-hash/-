@@ -88,7 +88,8 @@ func _refresh() -> void:
 		var count: int = int(amounts[raw_name])
 		if count <= 0 or item_name == "아데나":
 			continue
-		if not _is_equipment(item_name):
+		if is_deposit and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,world._find_catalog_item_record(item_name),physical):continue
+		if not _is_equipment(item_name) and not preload("res://scripts/cards/source_awakening_items.gd").has_physical_item(item_name,physical):
 			_add_entry(item_name, count)
 			continue
 		var ids: Array[String] = []

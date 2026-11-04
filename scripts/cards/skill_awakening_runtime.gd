@@ -3,6 +3,7 @@ extends RefCounted
 const Core=preload("res://scripts/cards/skill_awakening_service.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const SourceVFX=preload("res://scripts/cards/skill_awakening_source_vfx.gd")
+const Growth=preload("res://scripts/cards/skill_awakening_growth.gd")
 const SAVE_KEY: String="card_skill_awakening"
 var core=Core.new()
 var world: Node
@@ -44,7 +45,44 @@ func view(identity: String,preview_level: int=1) -> Dictionary:
 		for record: Dictionary in world.catalog_db.get(category,[]):
 			if Cards.card_id(record)==identity:snapshot.target_record=record.duplicate(true);break
 		snapshot.save_blocked=save_blocked
+		snapshot.growth_progress=Growth.view(core,progress,world.card_draw_fusion.owned,identity,world.card_draw_fusion.spare,int(world.gold))
+		snapshot.can_feed=bool(snapshot.growth_progress.get("can_feed",false)) and not save_blocked
 	return snapshot
+
+func _save_staged_state(next: Dictionary,override: Dictionary={}) -> Error:
+	var staged: Dictionary=override.duplicate(true);staged[SAVE_KEY]=next
+	if world.has_method("_skill_awakening_vitals_for_state"):staged.merge(world._skill_awakening_vitals_for_state(next))
+	var error: Error=world._save_game(true,staged)
+	if error==OK:
+		for key: String in ["hp","mp"]:
+			if staged.has(key):world.set(key,staged[key])
+	return error
+
+func request_experience_feed(identity: String,material_id: String,expected_revision: int=-1) -> Dictionary:
+	if _reroll_busy:return Core.fail("busy","이전 각성 거래 처리 중")
+	if save_blocked or not problem.is_empty():return Core.fail("save_blocked","각성 저장 보호 중")
+	_context();_reroll_busy=true
+	var revision: int=int(progress.revision) if expected_revision<0 else expected_revision
+	var prepared: Dictionary=Growth.prepare_feed(core,progress,world.card_draw_fusion.export_state(),int(world.gold),identity,material_id,revision)
+	if not prepared.ok:_reroll_busy=false;return prepared
+	var error: Error=_save_staged_state(prepared.state,{"card_draw_fusion":prepared.card_state,"gold":prepared.gold})
+	if error!=OK:_reroll_busy=false;return Core.fail("save_failed","저장 실패 · 중복 카드·아데나·경험치·레벨 보존")
+	progress=prepared.state;world.card_draw_fusion.import_state(prepared.card_state);world.gold=int(prepared.gold)
+	_has_cache=false;world.set("equipment_records_dirty",true);_reroll_busy=false
+	prepared.erase("state");prepared.erase("card_state");prepared.erase("gold");prepared.committed=true
+	if world.has_method("_update_hud"):world.call_deferred("_update_hud")
+	return prepared
+
+func on_hunt_experience(amount: int) -> Dictionary:
+	if _reroll_busy or save_blocked or not problem.is_empty():return Core.fail("save_blocked","스킬 각성 성장 보호 중")
+	_context()
+	var prepared: Dictionary=Growth.prepare_hunt(core,progress,world.card_draw_fusion.owned,world.equipped_catalog,amount)
+	if not prepared.ok or not bool(prepared.get("changed",false)):return prepared
+	var error: String=core.validate_state(prepared.state)
+	if not error.is_empty():return Core.fail("invalid_state",error)
+	# Earned hunt EXP shares the player's existing deferred save transaction.
+	progress=prepared.state;_has_cache=false;world.set("equipment_records_dirty",true)
+	return prepared
 func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 	if _reroll_busy:return Core.fail("busy","이전 각성 거래 처리 중")
 	if save_blocked or not problem.is_empty():return Core.fail("save_blocked","각성 저장 보호 중")
@@ -83,7 +121,7 @@ func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 	physicals.erase(selected)
 	var remaining: int=int(world.gold)-int(requirement.fee)
 	prepared.state.rng_state=str(staged.state)
-	var error: Error=world._save_game(true,{SAVE_KEY:prepared.state,"inventory":bag,"item_instances":physicals,"gold":remaining})
+	var error: Error=_save_staged_state(prepared.state,{"inventory":bag,"item_instances":physicals,"gold":remaining})
 	if error!=OK:
 		_reroll_busy=false
 		return Core.fail("save_failed","저장 실패 · 재화·각성서·스킬·난수 보존")
@@ -155,7 +193,7 @@ func _commit_confirmed_reroll(identity: String,expected_revision: int,operation_
 	var prepared: Dictionary=core.prepare_reroll(progress,world.card_draw_fusion.owned,identity,staged.randi_range(0,99999),expected_revision,operation_id)
 	if not prepared.ok:_reroll_busy=false;return prepared
 	prepared.state.rng_state=str(staged.state)
-	var error: Error=world._save_game(true,{SAVE_KEY:prepared.state})
+	var error: Error=_save_staged_state(prepared.state)
 	if error!=OK:
 		_reroll_busy=false
 		return Core.fail("save_failed","저장 실패 · 기존 스킬·레벨·경험치·난수 보존")

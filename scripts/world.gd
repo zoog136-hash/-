@@ -609,6 +609,8 @@ func _load_data() -> void:
 		_enrich_weapon_records(catalog_items_value as Array)
 	preload("res://scripts/cards/native_doll_unlock_item.gd").install(catalog_db)
 	preload("res://scripts/cards/native_relic_unlock_item.gd").install(catalog_db)
+	preload("res://scripts/cards/native_relic_reward_box.gd").install(catalog_db)
+	preload("res://scripts/cards/native_card_acquisition.gd").install(catalog_db)
 	preload("res://scripts/cards/skill_awakening_service.gd").install_book_definitions(catalog_db)
 	preload("res://scripts/cards/source_awakening_items.gd").install_drop_definitions(catalog_db,loot_catalog)
 	_merge_local_consumables_into_catalog()
@@ -2631,6 +2633,11 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
 	gold += gained_adena
+	var card_growth: Dictionary=skill_awakening.on_hunt_experience(gained_experience)
+	var card_leveled: bool=card_growth.get("grants",[]).any(func(grant: Dictionary) -> bool:return int(grant.get("levels_gained",0))>0)
+	if bool(card_growth.get("changed",false)):
+		_request_deferred_save()
+		if hud.has_method("refresh_card_skill_awakening_growth"):hud.call_deferred("refresh_card_skill_awakening_growth")
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	_roll_drop(monster, can_drop_equipment)
 	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
@@ -2647,7 +2654,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	# Ordinary kills only change rewards/vitals/blessing. Rebuilding every
 	# equipment, skill, collection and inventory surface here stalls the very
 	# frame in which loot appears. Level changes still publish all new stats.
-	if level != level_before:
+	if level != level_before or card_leveled:
 		_update_hud()
 	else:
 		_refresh_combat_hud()
@@ -4209,8 +4216,20 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	if record.is_empty() or int(quantity) < 1 or int(quantity) > 99:
 		hud.show_message("창고 아이템 또는 수량이 유효하지 않습니다")
 		return
+	if direction=="deposit" and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,record,item_instances):
+		hud.show_message("창고 보관이 불가능한 원본 아이템입니다")
+		return
 	_sync_item_instances()
 	var is_equipment: bool = _enhancement_kind_for_record(record) != ""
+	var source_instances: Dictionary=item_instances if direction=="deposit" else warehouse.instances
+	if preload("res://scripts/cards/source_awakening_items.gd").has_physical_item(item_name,source_instances):
+		if instance_id.is_empty() or quantity!=1 or not source_instances.has(instance_id) or source_instances[instance_id].get("name","")!=item_name or not source_instances[instance_id].get("record") is Dictionary or not preload("res://scripts/cards/source_awakening_items.gd").recognized(source_instances[instance_id].record):
+			hud.show_message("원본 각성 아이템은 개체를 선택해 한 개씩 이동하세요")
+			return
+		if direction=="deposit" and (_item_locked(item_name) or _item_locked(item_name,instance_id)):
+			hud.show_message("잠긴 원본 아이템은 보관할 수 없습니다")
+			return
+		is_equipment=true # Reuse the physical-preserving warehouse path.
 	var result: Dictionary = {}
 	if direction == "deposit":
 		result = warehouse.store(item_name,quantity,instance_id,inventory,item_instances,equipped_items,is_equipment)
@@ -7163,6 +7182,8 @@ func _catalog_damage_adjustment(kind: String) -> int:
 
 func _catalog_accuracy_bonus(kind: String) -> int:
 	var total: int = option_awakening.accuracy_bonus(kind)
+	# These source bonuses apply to NPC combat, the existing local PVE path.
+	if kind in ["melee","ranged","magic"]:total+=_catalog_stat_sum("pve_"+kind+"_hit")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7177,6 +7198,9 @@ func _catalog_critical_bonus(kind: String) -> int:
 			var normalized: Dictionary = _verified_catalog_record(category, value as Dictionary)
 			if bool(normalized.get("inven_indexed", false)):
 				continue # The source is already counted by _record_critical_bonus.
+			var critical_field: String={"melee":"meleeCrit","ranged":"rangedCrit","magic":"magicCrit"}.get(kind,"")
+			if BASE508.native(normalized) and normalized.has(critical_field):
+				continue # Typed source percentage is already counted by the same consumer.
 			total += CATALOG_EFFECTS.critical_by_style(normalized, kind)
 	return total
 
@@ -7529,7 +7553,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 		"ranged":
 			option_key = "ranged_critical_damage"
 		"magic":
-			return final_damage
+			option_key = "magic_critical_damage"
 		_:
 			option_key = "melee_critical_damage"
 	return maxi(1, final_damage + int(round(_equipped_numeric_sum(option_key))))
@@ -8120,6 +8144,15 @@ func _on_secondary_doll_requested(identity: String) -> void:
 	_update_companion(0)
 	_update_hud()
 	hud.show_message("추가 인형 소환 해제" if identity.is_empty() else "추가 인형 선택 완료"+(" · 인형 원본 리소스 설치 필요" if not is_instance_valid(secondary_doll_visual) or secondary_doll_visual.status!="source_native" else ""))
+
+func _skill_awakening_vitals_for_state(next: Dictionary) -> Dictionary:
+	var previous: Dictionary=skill_awakening.progress
+	skill_awakening.progress=next;skill_awakening._has_cache=false
+	_invalidate_equipment_static()
+	var result: Dictionary={"hp":mini(hp,_effective_max_hp()),"mp":mini(mp,_effective_max_mp())}
+	skill_awakening.progress=previous;skill_awakening._has_cache=false
+	_invalidate_equipment_static()
+	return result
 
 func _option_awakening_vitals_for_state(next: Dictionary) -> Dictionary:
 	# Compute the staged slot's caps without publishing it or changing HP/MP.

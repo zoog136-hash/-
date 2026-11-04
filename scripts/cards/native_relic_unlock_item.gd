@@ -23,7 +23,7 @@ static func unlocked(state: Dictionary) -> bool:
 
 static func record() -> Dictionary:
 	var source: Dictionary=DATA.data.unlock_item
-	return {"name":str(source.name),"source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":ITEM,"sourceId":"m523:item:"+str(ITEM),"type":"소모품","slot":"consumable","grade":str(source.grade.Name),"source_grade_id":int(source.item.GradeID),"weight":1,"stackable":true,"source_item":source.item.duplicate(true),"desc":"추가 성물 소환 해금 · 원본 에바의 계시 사용","source_image_status":"original_icon_not_installed"}
+	return {"name":str(source.name),"source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":ITEM,"sourceId":"m523:item:"+str(ITEM),"type":"소모품","slot":"consumable","grade":str(source.grade.Name),"source_grade_id":int(source.item.GradeID),"weight":1,"stackable":true,"droppable":bool(source.item.IsDroppable),"storable":bool(source.item.IsStorable),"sellable":false,"source_item":source.item.duplicate(true),"desc":"추가 성물 소환 해금 · 원본 에바의 계시 사용","source_image_status":"original_icon_not_installed"}
 
 static func exact(value: Dictionary) -> bool:
 	return value.get("source","")=="lineagem_patch523" and value.get("source_snapshot","")=="patch523" and value.get("sourceId","")=="m523:item:"+str(ITEM) and value.get("source_item_class_id",0)==ITEM

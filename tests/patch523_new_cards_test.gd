@@ -41,6 +41,12 @@ func run() -> void:
 			if int(record.source_original.server_limit_set_id)==274:limited=identity
 			if eligible.is_empty() and skills.core.eligibility(identity).ok:eligible=identity
 	check(total==717 and additions==16,"701 prior plus16 exact new awakening cards")
+	var nemesis: Dictionary=Registry.canonical({"source":"lineagem_patch523","sourceId":"m523:2:25152"})
+	check(nemesis.get("meleeCrit",0)==2 and nemesis.get("rangedCrit",0)==2 and nemesis.get("magicCrit",0)==2,"Nemesis exact ValuePercent critical bonuses reach all three typed channels")
+	var spear: Dictionary=Registry.canonical({"source":"lineagem_patch523","sourceId":"m523:1:25344"})
+	check(spear.get("dg",0)==2 and spear.get("er",0)==2,"new spearman exact melee and ranged evasion channels")
+	var warrior: Dictionary=Registry.canonical({"source":"lineagem_patch523","sourceId":"m523:1:25354"})
+	check(warrior.get("pve_melee_damage",0)==3,"new warrior source PVE melee damage channel")
 	var petal: Dictionary=Registry.canonical({"source":"lineagem_patch523","sourceId":"m523:98:25162"})
 	check(int(petal.get("def",0))==2 and str(petal.desc).contains("AC -2"),"petal source defense applies AC2 with the game display sign")
 	for card_id: int in [25182,25192,25202,25212,25324]:

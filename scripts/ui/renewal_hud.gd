@@ -87,6 +87,8 @@ const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var quest_view: Control
 var quest_refresh_pending: bool = false
+var card_skill_awakening_view: Control
+var native_card_craft_view: Control
 var workspace: PanelContainer
 var menu_page: VBoxContainer
 var menu_scroll_view: ScrollContainer
@@ -619,6 +621,8 @@ func _process(delta: float) -> void:
 	var world: Node = get_parent()
 	if world == null or not world.has_method("_update_hud"):
 		return
+	refresh_card_skill_awakening_growth()
+	if active_section=="native_card_craft" and is_instance_valid(native_card_craft_view) and not native_card_craft_view.is_queued_for_deletion():native_card_craft_view.refresh()
 	var actor: Node = world.get("player")
 	if actor != null and coordinates_readout != null:
 		coordinates_readout.text = "좌표  %d, %d" % [int(actor.global_position.x),int(actor.global_position.y)]
@@ -2429,6 +2433,16 @@ func open_growth(section: String) -> void:
 	workspace.mount(screen)
 	screen.configure(self,section)
 
+func refresh_card_skill_awakening_growth() -> void:
+	if active_section=="card_skill_awakening" and is_instance_valid(card_skill_awakening_view) and not card_skill_awakening_view.is_queued_for_deletion():card_skill_awakening_view.refresh_growth()
+
+func open_native_card_craft() -> void:
+	_open_window("native_card_craft","마법인형 카드 제작","")
+	var scroll:=ScrollContainer.new();scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;workspace.mount(scroll)
+	var view: Control=preload("res://scripts/ui/native_card_craft_view.gd").new()
+	native_card_craft_view=view
+	view.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(view);view.configure(get_parent().option_awakening)
+
 func open_card_skill_awakening(category: String, identity: String) -> void:
 	var runtime: Variant=get_parent().get("skill_awakening")
 	if runtime==null:show_message("스킬 각성 런타임 연결 없음");return
@@ -2438,6 +2452,7 @@ func open_card_skill_awakening(category: String, identity: String) -> void:
 	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
 	workspace.mount(scroll)
 	var view: Control=preload("res://scripts/ui/card_skill_awakening_view.gd").new()
+	card_skill_awakening_view=view
 	scroll.add_child(view)
 	view.configure(runtime,identity)
 	workspace.register_scroll_drag(scroll,view)

@@ -5,6 +5,8 @@ const UnlockItem=preload("res://scripts/cards/native_doll_unlock_item.gd")
 const Subslot=preload("res://scripts/cards/native_doll_subslot.gd")
 const RelicSubslot=preload("res://scripts/cards/native_relic_subslot.gd")
 const RelicUnlock=preload("res://scripts/cards/native_relic_unlock_item.gd")
+const RelicBox=preload("res://scripts/cards/native_relic_reward_box.gd")
+const Acquisition=preload("res://scripts/cards/native_card_acquisition.gd")
 const Core = preload("res://scripts/cards/option_awakening_service.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
 const DATA_PATH: String = "res://data/cards/option_awakening_cards.json"
@@ -333,6 +335,63 @@ func select_relic_subslot(identity: String) -> Dictionary:
 	for key: String in ["hp","mp"]:
 		if staged.has(key):world.set(key,staged[key])
 	return {"ok":true,"snapshot":relic_subslot_view()}
+
+func _source_item_locks(item_name: String) -> Dictionary:
+	var locks: Dictionary={}
+	if not world.has_method("_item_locked"):return locks
+	if world._item_locked(item_name):locks[item_name]=true
+	for id: String in world.item_instances:
+		if world._item_locked(item_name,id):locks[id]=true
+	return locks
+
+func nemesis_craft_view() -> Dictionary:
+	var available: int=Acquisition.available_coins(world.inventory,world.item_instances,_source_item_locks(str(Acquisition.record(3252).name)))
+	var allowed: bool=Acquisition.rules_valid() and Acquisition.time_available() and core.catalog["마법인형"].has(Acquisition.CARD) and not save_blocked and problem.is_empty()
+	return {"available_coins":available,"required_coins":Acquisition.REQUIRED,"can_craft":allowed and available>=Acquisition.REQUIRED,"save_blocked":save_blocked,"conditions_verified":allowed}
+
+func craft_nemesis() -> Dictionary:
+	if _busy:return Core.fail("busy","이전 거래 처리 중")
+	if save_blocked or not problem.is_empty() or not core.catalog["마법인형"].has(Acquisition.CARD):return Core.fail("save_blocked","카드 제작 저장 보호 중")
+	_busy=true
+	var result: Dictionary=Acquisition.prepare_craft(world.inventory,world.item_instances,int(world.next_item_instance_id),_source_item_locks(str(Acquisition.record(3252).name)))
+	if not result.ok:_busy=false;return result
+	if world._save_game(true,{"inventory":result.inventory,"item_instances":result.item_instances,"next_item_instance_id":result.next_item_instance_id})!=OK:_busy=false;return Core.fail("save_failed","저장 실패 · 제작 재료와 결과 보존")
+	world.inventory=result.inventory;world.item_instances=result.item_instances;world.next_item_instance_id=int(result.next_item_instance_id);_busy=false
+	result.erase("inventory");result.erase("item_instances");result.erase("next_item_instance_id")
+	return result
+
+func use_nemesis_ticket(item_name: String,selected_instance: String="") -> Dictionary:
+	if item_name!=str(Acquisition.record().name):return {"handled":false}
+	if _busy:return {"handled":true,"ok":false,"error":"이전 거래 처리 중"}
+	if save_blocked or not problem.is_empty() or not core.catalog["마법인형"].has(Acquisition.CARD):return {"handled":true,"ok":false,"error":"카드 획득 저장 보호 중"}
+	_busy=true
+	var result: Dictionary=Acquisition.prepare_ticket(world.inventory,world.item_instances,world.card_draw_fusion.export_state(),selected_instance,_source_item_locks(item_name))
+	result.handled=true
+	if not result.ok:_busy=false;return result
+	if world._save_game(true,{"inventory":result.inventory,"item_instances":result.item_instances,"card_draw_fusion":result.card_state})!=OK:_busy=false;return {"handled":true,"ok":false,"code":"save_failed","error":"저장 실패 · 카드권과 보유 카드 보존"}
+	world.inventory=result.inventory;world.item_instances=result.item_instances;world.card_draw_fusion.import_state(result.card_state);world.set("equipment_records_dirty",true);_bonus_signature="";_busy=false
+	result.erase("inventory");result.erase("item_instances");result.erase("card_state")
+	return result
+
+func use_relic_reward_box(item_name: String,selected_instance: String="") -> Dictionary:
+	if item_name!=str(RelicBox.record().name):return {"handled":false}
+	if _busy:return {"handled":true,"ok":false,"code":"busy","error":"이전 거래 처리 중"}
+	if save_blocked or not problem.is_empty():return {"handled":true,"ok":false,"code":"save_blocked","error":"각성 저장 보호 중 · 상자 보존"}
+	if world.has_method("_item_locked") and world._item_locked(item_name):return {"handled":true,"ok":false,"code":"locked","error":"잠긴 상자는 사용할 수 없습니다"}
+	var locks: Dictionary={}
+	if world.has_method("_item_locked"):
+		for id: String in world.item_instances:
+			if world._item_locked(item_name,id):locks[id]=true
+	_busy=true
+	var result: Dictionary=RelicBox.prepare(world.inventory,world.item_instances,int(world.next_item_instance_id),selected_instance,locks)
+	result.handled=true
+	if not result.ok:_busy=false;return result
+	var saved: Error=world._save_game(true,{"inventory":result.inventory,"item_instances":result.item_instances,"next_item_instance_id":result.next_item_instance_id})
+	if saved!=OK:_busy=false;return {"handled":true,"ok":false,"code":"save_failed","error":"저장 실패 · 상자와 내용물 보존"}
+	world.inventory=result.inventory;world.item_instances=result.item_instances;world.next_item_instance_id=int(result.next_item_instance_id)
+	_busy=false
+	result.erase("inventory");result.erase("item_instances");result.erase("next_item_instance_id")
+	return result
 
 func use_relic_unlock_item(item_name: String,selected_instance: String="") -> Dictionary:
 	if item_name!=str(RelicUnlock.record().name):return {"handled":false}

@@ -345,7 +345,7 @@ func _inventory_entries() -> Array[Dictionary]:
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
 			for id: String in instance_ids:
-				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":1})
+				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":maxi(1,int(instances[id].get("source_card_currency_quantity",1)))})
 	return entries
 
 func _refresh_inventory_grid() -> void:

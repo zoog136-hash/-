@@ -1,0 +1,1661 @@
+{
+  "schema": 1,
+  "source_snapshot": "patch523",
+  "source_zip": "lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+  "source_zip_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "reference_sha256": "d32f3cbddce846ad6855d582cb59ba38c48cd0dc5700d126a7551058428a9dbf",
+  "scope": "active_verified_secondary_relic_22182_only_existing_InvokeOption_contract",
+  "supported_card_ids": [
+    22182
+  ],
+  "supported_invoke_option_ids": [
+    16572
+  ],
+  "supported_spell_ids": [
+    89552
+  ],
+  "relic_subslot_buffs": {
+    "98:22182": {
+      "card": {
+        "ID": 22182,
+        "Name": "[성물][신화] 진명황의 보주",
+        "DescID": 1700172,
+        "BuffCardDeckID": 98,
+        "BuffClassID": 77052,
+        "GradeID": 32,
+        "DisplaySpriteID": 25454,
+        "DisplayBaseAssetID": 336732,
+        "DisplayScreenAssetID": 336722,
+        "IsNoMergeOut": true,
+        "DisplayDecoAssetID": 22052,
+        "IsNoSwapOut": false,
+        "MagicDollAwakenStatID": 88,
+        "ClassifiedByClass": false,
+        "HasHistory": true,
+        "HistoryDescID": 1700182,
+        "IllustrationAssetID": 337362,
+        "HidedIllustrationAssetID": 337372,
+        "ServerLimitSetID": 772,
+        "SpellClassID": 0,
+        "AttackTypeID": 1,
+        "GradeTierID": 102,
+        "StartDateTimeID": 0,
+        "EndDateTimeID": 0
+      },
+      "effects": [
+        {
+          "link": {
+            "ID": 402208,
+            "BuffClassID": 98108,
+            "BonusID": 2365228,
+            "CharacterLevel": 0,
+            "CharacterClass": 0,
+            "MinSpellLevel": 0
+          },
+          "bonus": {
+            "ID": 2365228,
+            "BonusTypeID": 3091,
+            "Value": 30000,
+            "BonusApplicationTypeID": 10,
+            "BonusApplicationTargetID": 16572
+          },
+          "type": {
+            "ID": 3091,
+            "Name": "InvokeOption",
+            "UnitID": 3,
+            "DescID": 539931,
+            "DescPriority": 0,
+            "IsShowOnToolTip": true,
+            "ValuePrefixDescID": 0,
+            "IsShowOnSkillToolTip": true
+          },
+          "unit": {
+            "ID": 3,
+            "Name": "Percentage"
+          },
+          "ui_unit": {
+            "ID": 3,
+            "UnitID": 3,
+            "UITextID": 0,
+            "Denominator": 10000,
+            "DescID": 3819
+          }
+        }
+      ]
+    }
+  },
+  "invoke_options": [
+    {
+      "ID": 16572,
+      "InvokeOptionTypeID": 1,
+      "AttackTypeID": 0,
+      "BySpellAttack": false,
+      "Param1": 89552,
+      "Param2": 0,
+      "AttackerEffectSpriteID": 0,
+      "TargetEffectSpriteID": 0,
+      "MaterialTypeID": 0,
+      "MaterialAmount": 0,
+      "ShownInvokerOnly": false,
+      "WeaponGroupID": 0,
+      "DescID": 1717592,
+      "IsShowOnToolTip": true,
+      "Param3": 0,
+      "ShieldTypeID": 0,
+      "SuccessedInvokeOptionID": 0,
+      "IsAmmoAttack": false,
+      "Param4": true,
+      "Param5": false,
+      "TargetEffectSpriteGroupID": 0,
+      "Param6": 0,
+      "TargetKind": 0,
+      "AttackerEffectSpriteGroupID": 0,
+      "SiegeTargetKind": 0
+    }
+  ],
+  "invoke_spells": {
+    "89552": {
+      "source_spell": {
+        "ID": 89552,
+        "Name": "[성물][진명황의 보주] 집행",
+        "DescID": 1717562,
+        "SpellCategoryID": 1,
+        "SpellGroupID": 1,
+        "SpellGroupLevel": 0,
+        "IsRequireSpellGroupMastery": false,
+        "TargettingTypeID": 2,
+        "TargetKindID": 11,
+        "SiegeTargetKindID": 0,
+        "TargetAreaRadius": 0,
+        "CastRange": 15,
+        "CastDelay": 3000,
+        "SpellMaterialTypeID": 0,
+        "SpellMaterialItemAmount": 0,
+        "HPCost": 0,
+        "MPCost": 0,
+        "VPCost": 0,
+        "SpellEffectTypeID": 21,
+        "EffectSpriteID": 25485,
+        "EffectExplosionSpriteID": 0,
+        "EffectSpriteActionNo": 0,
+        "EffectLightRadius": 6,
+        "CriticalEffectSpriteID": 0,
+        "FailEffectSpriteID": 0,
+        "CasterEffectSpriteID": 0,
+        "SuccessEffectSpriteID": 0,
+        "ElementalTypeID": 0,
+        "AlignmentTypeID": 2,
+        "AlignmentChangeAmount": 0,
+        "IsOverlappedDamageReduction": true,
+        "IsPierceCounterMagic": false,
+        "IconID": 0,
+        "EffectDescID": 1717572,
+        "SpellTypeID": 1,
+        "UseDescID": 0,
+        "IsAuto": false,
+        "TestSpell": false,
+        "CastGroupID": 1,
+        "ScreenEffectAssetId": 0,
+        "CastingScreenEffectId": 0,
+        "CastingWeaponType": 0,
+        "CastingMotionType": 9,
+        "CanCastOnInvisible": false,
+        "IsPierceCounterAssult": false,
+        "MinCastRange": 0,
+        "CopySpellClassID": 0,
+        "ActivateIconID": 0,
+        "LearningPriority": 0,
+        "IncludeOccupyTarget": true,
+        "IncludeTargettingTarget": true,
+        "IsChangable": false,
+        "MPCostUnit": 1,
+        "IsChargeSpell": false,
+        "TargetLimitCount": 0,
+        "IsAttackRange": false,
+        "BackwardPathCount": 0,
+        "CasterEffectSpriteGroupID": 0,
+        "HostileEffectSpriteID": 0,
+        "HideCasterTime": 0,
+        "SpellCompositionNode": 0,
+        "AdditionalEffectSpriteGroupID": 0,
+        "AttackerActionTypeID": 8,
+        "TargetScreenEffectID": 0
+      },
+      "effects": [
+        {
+          "link": {
+            "ID": 568702,
+            "SpellClassID": 89552,
+            "BonusID": 1635522,
+            "MinSpellLevel": 0
+          },
+          "bonus": {
+            "ID": 1635522,
+            "BonusTypeID": 62,
+            "Value": 500,
+            "BonusApplicationTypeID": 0,
+            "BonusApplicationTargetID": 0
+          },
+          "type": {
+            "ID": 62,
+            "Name": "SpellDamageBase",
+            "UnitID": 1,
+            "DescID": 4801,
+            "DescPriority": 0,
+            "IsShowOnToolTip": true,
+            "ValuePrefixDescID": 64642,
+            "IsShowOnSkillToolTip": false
+          },
+          "unit": {
+            "ID": 1,
+            "Name": "Value"
+          },
+          "ui_unit": {
+            "ID": 1,
+            "UnitID": 1,
+            "UITextID": 0,
+            "Denominator": 0,
+            "DescID": 0
+          }
+        },
+        {
+          "link": {
+            "ID": 568712,
+            "SpellClassID": 89552,
+            "BonusID": 1635532,
+            "MinSpellLevel": 0
+          },
+          "bonus": {
+            "ID": 1635532,
+            "BonusTypeID": 63,
+            "Value": 1,
+            "BonusApplicationTypeID": 0,
+            "BonusApplicationTargetID": 0
+          },
+          "type": {
+            "ID": 63,
+            "Name": "SpellDamageDiceNumber",
+            "UnitID": 1,
+            "DescID": 36352,
+            "DescPriority": 0,
+            "IsShowOnToolTip": false,
+            "ValuePrefixDescID": 0,
+            "IsShowOnSkillToolTip": false
+          },
+          "unit": {
+            "ID": 1,
+            "Name": "Value"
+          },
+          "ui_unit": {
+            "ID": 1,
+            "UnitID": 1,
+            "UITextID": 0,
+            "Denominator": 0,
+            "DescID": 0
+          }
+        },
+        {
+          "link": {
+            "ID": 568722,
+            "SpellClassID": 89552,
+            "BonusID": 1635542,
+            "MinSpellLevel": 0
+          },
+          "bonus": {
+            "ID": 1635542,
+            "BonusTypeID": 64,
+            "Value": 1,
+            "BonusApplicationTypeID": 0,
+            "BonusApplicationTargetID": 0
+          },
+          "type": {
+            "ID": 64,
+            "Name": "SpellDamageDiceSpotCount",
+            "UnitID": 1,
+            "DescID": 36342,
+            "DescPriority": 0,
+            "IsShowOnToolTip": false,
+            "ValuePrefixDescID": 0,
+            "IsShowOnSkillToolTip": false
+          },
+          "unit": {
+            "ID": 1,
+            "Name": "Value"
+          },
+          "ui_unit": {
+            "ID": 1,
+            "UnitID": 1,
+            "UITextID": 0,
+            "Denominator": 0,
+            "DescID": 0
+          }
+        },
+        {
+          "link": {
+            "ID": 568732,
+            "SpellClassID": 89552,
+            "BonusID": 1635612,
+            "MinSpellLevel": 0
+          },
+          "bonus": {
+            "ID": 1635612,
+            "BonusTypeID": 1153,
+            "Value": 1,
+            "BonusApplicationTypeID": 0,
+            "BonusApplicationTargetID": 0
+          },
+          "type": {
+            "ID": 1153,
+            "Name": "FixedMagicDamage",
+            "UnitID": 20,
+            "DescID": 281243,
+            "DescPriority": 0,
+            "IsShowOnToolTip": false,
+            "ValuePrefixDescID": 0,
+            "IsShowOnSkillToolTip": false
+          },
+          "unit": {
+            "ID": 20,
+            "Name": "TrueFalse"
+          },
+          "ui_unit": {
+            "ID": 20,
+            "UnitID": 20,
+            "UITextID": 0,
+            "Denominator": 0,
+            "DescID": 0
+          }
+        },
+        {
+          "link": {
+            "ID": 568742,
+            "SpellClassID": 89552,
+            "BonusID": 1635622,
+            "MinSpellLevel": 0
+          },
+          "bonus": {
+            "ID": 1635622,
+            "BonusTypeID": 3451,
+            "Value": 1,
+            "BonusApplicationTypeID": 0,
+            "BonusApplicationTargetID": 0
+          },
+          "type": {
+            "ID": 3451,
+            "Name": "IgnoreMagicResistance",
+            "UnitID": 20,
+            "DescID": 566531,
+            "DescPriority": 0,
+            "IsShowOnToolTip": false,
+            "ValuePrefixDescID": 0,
+            "IsShowOnSkillToolTip": false
+          },
+          "unit": {
+            "ID": 20,
+            "Name": "TrueFalse"
+          },
+          "ui_unit": {
+            "ID": 20,
+            "UnitID": 20,
+            "UITextID": 0,
+            "Denominator": 0,
+            "DescID": 0
+          }
+        },
+        {
+          "link": {
+            "ID": 568752,
+            "SpellClassID": 89552,
+            "BonusID": 1635632,
+            "MinSpellLevel": 0
+          },
+          "bonus": {
+            "ID": 1635632,
+            "BonusTypeID": 3461,
+            "Value": 1,
+            "BonusApplicationTypeID": 0,
+            "BonusApplicationTargetID": 0
+          },
+          "type": {
+            "ID": 3461,
+            "Name": "IgnoreDamageReductionCalculation",
+            "UnitID": 1,
+            "DescID": 566661,
+            "DescPriority": 0,
+            "IsShowOnToolTip": true,
+            "ValuePrefixDescID": 0,
+            "IsShowOnSkillToolTip": false
+          },
+          "unit": {
+            "ID": 1,
+            "Name": "Value"
+          },
+          "ui_unit": {
+            "ID": 1,
+            "UnitID": 1,
+            "UITextID": 0,
+            "Denominator": 0,
+            "DescID": 0
+          }
+        }
+      ]
+    }
+  },
+  "spell_material_types": [
+    {
+      "ID": 0,
+      "Name": "None",
+      "DescID": 1
+    }
+  ],
+  "source_chain": {
+    "card": {
+      "ID": 22182,
+      "Name": "[성물][신화] 진명황의 보주",
+      "DescID": 1700172,
+      "BuffCardDeckID": 98,
+      "BuffClassID": 77052,
+      "GradeID": 32,
+      "DisplaySpriteID": 25454,
+      "DisplayBaseAssetID": 336732,
+      "DisplayScreenAssetID": 336722,
+      "IsNoMergeOut": true,
+      "DisplayDecoAssetID": 22052,
+      "IsNoSwapOut": false,
+      "MagicDollAwakenStatID": 88,
+      "ClassifiedByClass": false,
+      "HasHistory": true,
+      "HistoryDescID": 1700182,
+      "IllustrationAssetID": 337362,
+      "HidedIllustrationAssetID": 337372,
+      "ServerLimitSetID": 772,
+      "SpellClassID": 0,
+      "AttackTypeID": 1,
+      "GradeTierID": 102,
+      "StartDateTimeID": 0,
+      "EndDateTimeID": 0
+    },
+    "main_buff": {
+      "ID": 77052,
+      "Name": "[성물][신화] 진명황의 보주",
+      "DescID": 1700702,
+      "EffectDescID": 1700712,
+      "OnIconID": 84328,
+      "OffIconID": 0,
+      "BuffGroupID": 2768,
+      "BuffGroupPriority": 1,
+      "IsGood": true,
+      "IsImmuneToCancellation": false,
+      "IsImmuneToDead": false,
+      "IsEraseOnAttack": false,
+      "IsEraseOnAttacked": 0,
+      "IsEraseOnMove": false,
+      "IsEraseOnSpellCastAndShieldIt": false,
+      "IsEraseOnSkillCastAndShieldIt": false,
+      "IsNotifyToParty": false,
+      "IsAuto": false,
+      "IsEraseOnItemUse": 0,
+      "IsEraseOnSpellAttacked": false,
+      "IsEraseOnSkillAttacked": false,
+      "IsEraseOnCast": false,
+      "IsEraseOnHealed": false,
+      "SubDescID": 1700722,
+      "IsEraseOnTimeEnd": true,
+      "IsShownBuffIcon": true,
+      "BuffListPriority": 5,
+      "MaxHPPercent": 0,
+      "EraseOnLevel": 0,
+      "IsAbsoluteTimeBuff": false,
+      "MaxStackCount": 0,
+      "IsEraseOnTargetChanged": false,
+      "IsHide": false,
+      "MPCostPercent": 0,
+      "MinMPCost": 0,
+      "IsOverlapByPlayer": false,
+      "IsEraseOnAttackedLimitations": 0,
+      "IsDecreaseStackOnTimeEnd": false,
+      "IsBuffGroup": true,
+      "IsObtainItemBuff": false
+    },
+    "subslot_link": {
+      "link": {
+        "ID": 405598,
+        "BuffClassID": 77052,
+        "BonusID": 2368608,
+        "CharacterLevel": 0,
+        "CharacterClass": 0,
+        "MinSpellLevel": 0
+      },
+      "bonus": {
+        "ID": 2368608,
+        "BonusTypeID": 12741,
+        "Value": 98108,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 12741,
+        "Name": "SubSlotBuffClassID",
+        "UnitID": 16,
+        "DescID": 2345711,
+        "DescPriority": 0,
+        "IsShowOnToolTip": false,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 16,
+        "Name": "BuffClassID"
+      },
+      "ui_unit": {
+        "ID": 16,
+        "UnitID": 16,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      }
+    },
+    "subslot_buff": {
+      "ID": 98108,
+      "Name": "[추가 슬롯][성물][신화] 진명황의 보주",
+      "DescID": 2473618,
+      "EffectDescID": 2473628,
+      "OnIconID": 109308,
+      "OffIconID": 0,
+      "BuffGroupID": 6028,
+      "BuffGroupPriority": 1,
+      "IsGood": true,
+      "IsImmuneToCancellation": false,
+      "IsImmuneToDead": false,
+      "IsEraseOnAttack": false,
+      "IsEraseOnAttacked": 0,
+      "IsEraseOnMove": false,
+      "IsEraseOnSpellCastAndShieldIt": false,
+      "IsEraseOnSkillCastAndShieldIt": false,
+      "IsNotifyToParty": false,
+      "IsAuto": false,
+      "IsEraseOnItemUse": 0,
+      "IsEraseOnSpellAttacked": false,
+      "IsEraseOnSkillAttacked": false,
+      "IsEraseOnCast": false,
+      "IsEraseOnHealed": false,
+      "SubDescID": 2473638,
+      "IsEraseOnTimeEnd": true,
+      "IsShownBuffIcon": true,
+      "BuffListPriority": 5,
+      "MaxHPPercent": 0,
+      "EraseOnLevel": 0,
+      "IsAbsoluteTimeBuff": false,
+      "MaxStackCount": 0,
+      "IsEraseOnTargetChanged": false,
+      "IsHide": false,
+      "MPCostPercent": 0,
+      "MinMPCost": 0,
+      "IsOverlapByPlayer": false,
+      "IsEraseOnAttackedLimitations": 0,
+      "IsDecreaseStackOnTimeEnd": false,
+      "IsBuffGroup": true,
+      "IsObtainItemBuff": false
+    },
+    "application_type": {
+      "ID": 10,
+      "Name": "InvokeOption"
+    },
+    "invoke_option_type": {
+      "ID": 1,
+      "Name": "Attack_Spell",
+      "IsDefence": false,
+      "Param1Description": "발동할 SpellClassID",
+      "Param1Unit": 12,
+      "Param2Description": "성향치값에 따른 추가 데미지 변수(신성기사)",
+      "Param2Unit": 0,
+      "Param3Description": "상대방에게 중첩해서 버프를 걸지 않음",
+      "Param3Unit": 0,
+      "Param4Description": "메인 타겟에만 인보크가 발생하게 할지 제한 여부",
+      "Param4Unit": 20,
+      "Param5Description": "공격 실패시에도 발동",
+      "Param5Unit": 20,
+      "Param6Description": "지정 스펠을 배웠을 때만 발동",
+      "Param6Unit": 12
+    }
+  },
+  "approved_contract_comparison": {
+    "reference_option_id": 10661,
+    "reference_spell_id": 67401,
+    "excluded_fields": [
+      "DescID",
+      "ID",
+      "Param1"
+    ],
+    "compared_fields": [
+      "AttackTypeID",
+      "AttackerEffectSpriteGroupID",
+      "AttackerEffectSpriteID",
+      "BySpellAttack",
+      "InvokeOptionTypeID",
+      "IsAmmoAttack",
+      "IsShowOnToolTip",
+      "MaterialAmount",
+      "MaterialTypeID",
+      "Param2",
+      "Param3",
+      "Param4",
+      "Param5",
+      "Param6",
+      "ShieldTypeID",
+      "ShownInvokerOnly",
+      "SiegeTargetKind",
+      "SuccessedInvokeOptionID",
+      "TargetEffectSpriteGroupID",
+      "TargetEffectSpriteID",
+      "TargetKind",
+      "WeaponGroupID"
+    ],
+    "all_conditions_equal": true,
+    "source_reference_option": {
+      "ID": 10661,
+      "InvokeOptionTypeID": 1,
+      "AttackTypeID": 0,
+      "BySpellAttack": false,
+      "Param1": 67401,
+      "Param2": 0,
+      "AttackerEffectSpriteID": 0,
+      "TargetEffectSpriteID": 0,
+      "MaterialTypeID": 0,
+      "MaterialAmount": 0,
+      "ShownInvokerOnly": false,
+      "WeaponGroupID": 0,
+      "DescID": 1312621,
+      "IsShowOnToolTip": true,
+      "Param3": 0,
+      "ShieldTypeID": 0,
+      "SuccessedInvokeOptionID": 0,
+      "IsAmmoAttack": false,
+      "Param4": true,
+      "Param5": false,
+      "TargetEffectSpriteGroupID": 0,
+      "Param6": 0,
+      "TargetKind": 0,
+      "AttackerEffectSpriteGroupID": 0,
+      "SiegeTargetKind": 0
+    },
+    "fixed_six_values_equal": true,
+    "fixed_values": {
+      "SpellDamageBase": 500,
+      "SpellDamageDiceNumber": 1,
+      "SpellDamageDiceSpotCount": 1,
+      "FixedMagicDamage": 1,
+      "IgnoreMagicResistance": 1,
+      "IgnoreDamageReductionCalculation": 1
+    }
+  },
+  "boundaries": [
+    "No other relic Invoke is authorized by this extraction.",
+    "Keep existing verified ownership, secondary-slot eligibility, server and time checks.",
+    "Invoke raw percentage is preserved; no new trigger, probability convention, growth rule or damage formula is introduced.",
+    "The full SpellClass row and its explicit None material type remain authoritative; art availability is separate."
+  ],
+  "source_table_sha256": {
+    "Bonus": "1189d53da7897c13ca83d559fef06410695404e1157cc2bbf8a9e48ce7f45d59",
+    "BonusApplicationType": "f66a6b5f7a537f618daef95e8d990894546356359d774aa49bd53d483cc7dcbb",
+    "BonusType": "00cedfba3cd259dfd26fbd1471dd0fb5305023da8f85ca0b262af8f9fd0c1cf1",
+    "BuffBonus": "bc634d568c070faae608d07a8bd0fc893659b5688a5e986b55ea996cef7005e2",
+    "BuffCard": "6799b9a870c65253bc9f998cb9ff964e05dda4f67511668077c4ccc24a921f96",
+    "BuffClass": "500ee8383ec3186df257437325b3307e650fd40d3b985f7ef08d54b6ee770e04",
+    "InvokeOption": "ea1e6e99f7a501312d7e5a9d114c7edbefc18f72de1d7816abd25085a6e9939f",
+    "InvokeOptionType": "ac0d5094e7e1e63968d3215ced14f327a24c4e06e5380a4b7d0f769f92e3069a",
+    "SpellBonus": "c83ac9370101f09a52ac870460d0eaf50fd7cb2bb492f29b75a2666bdb3a0787",
+    "SpellClass": "db769ac3f25723289c1a63b4d1376d2bbfe8978608461712d09ef937a47d87ce",
+    "SpellMaterialType": "b44fa20dcb66adee35de753cbdf172bfb452d30567b56b6b264ebed9c61ea5cf",
+    "UIUnit": "897a028a9585815972325a25fca67dbe2d51fd9d63da9f190329d537f421a62b",
+    "Unit": "5b212633235459928eb03f836ac3964d988a9851f2e7f786a04f5edbba7cba22"
+  },
+  "source_rows": [
+    {
+      "table": "Bonus",
+      "row_index_zero": 94699,
+      "raw": {
+        "ID": 1228721,
+        "BonusTypeID": 62,
+        "Value": 500,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 94700,
+      "raw": {
+        "ID": 1228731,
+        "BonusTypeID": 64,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 94701,
+      "raw": {
+        "ID": 1228741,
+        "BonusTypeID": 63,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 94702,
+      "raw": {
+        "ID": 1228751,
+        "BonusTypeID": 1153,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 94703,
+      "raw": {
+        "ID": 1228761,
+        "BonusTypeID": 3451,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 94704,
+      "raw": {
+        "ID": 1228771,
+        "BonusTypeID": 3461,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 133406,
+      "raw": {
+        "ID": 1623502,
+        "BonusTypeID": 134,
+        "Value": 89372,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 133408,
+      "raw": {
+        "ID": 1623512,
+        "BonusTypeID": 6582,
+        "Value": 1577288,
+        "BonusApplicationTypeID": 72,
+        "BonusApplicationTargetID": 1577938
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 133410,
+      "raw": {
+        "ID": 1623522,
+        "BonusTypeID": 5782,
+        "Value": 50000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 6
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 133412,
+      "raw": {
+        "ID": 1623532,
+        "BonusTypeID": 4581,
+        "Value": 5,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 133414,
+      "raw": {
+        "ID": 1623542,
+        "BonusTypeID": 3091,
+        "Value": 30000,
+        "BonusApplicationTypeID": 10,
+        "BonusApplicationTargetID": 16572
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 134868,
+      "raw": {
+        "ID": 1635522,
+        "BonusTypeID": 62,
+        "Value": 500,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 134869,
+      "raw": {
+        "ID": 1635532,
+        "BonusTypeID": 63,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 134870,
+      "raw": {
+        "ID": 1635542,
+        "BonusTypeID": 64,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 134877,
+      "raw": {
+        "ID": 1635612,
+        "BonusTypeID": 1153,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 134878,
+      "raw": {
+        "ID": 1635622,
+        "BonusTypeID": 3451,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 134879,
+      "raw": {
+        "ID": 1635632,
+        "BonusTypeID": 3461,
+        "Value": 1,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 211845,
+      "raw": {
+        "ID": 2365228,
+        "BonusTypeID": 3091,
+        "Value": 30000,
+        "BonusApplicationTypeID": 10,
+        "BonusApplicationTargetID": 16572
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 212453,
+      "raw": {
+        "ID": 2368608,
+        "BonusTypeID": 12741,
+        "Value": 98108,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "Bonus",
+      "row_index_zero": 216036,
+      "raw": {
+        "ID": 2399138,
+        "BonusTypeID": 6292,
+        "Value": 10,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      }
+    },
+    {
+      "table": "BonusApplicationType",
+      "row_index_zero": 10,
+      "raw": {
+        "ID": 10,
+        "Name": "InvokeOption"
+      }
+    },
+    {
+      "table": "BonusType",
+      "row_index_zero": 45,
+      "raw": {
+        "ID": 62,
+        "Name": "SpellDamageBase",
+        "UnitID": 1,
+        "DescID": 4801,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      }
+    },
+    {
+      "table": "BonusType",
+      "row_index_zero": 46,
+      "raw": {
+        "ID": 63,
+        "Name": "SpellDamageDiceNumber",
+        "UnitID": 1,
+        "DescID": 36352,
+        "DescPriority": 0,
+        "IsShowOnToolTip": false,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      }
+    },
+    {
+      "table": "BonusType",
+      "row_index_zero": 47,
+      "raw": {
+        "ID": 64,
+        "Name": "SpellDamageDiceSpotCount",
+        "UnitID": 1,
+        "DescID": 36342,
+        "DescPriority": 0,
+        "IsShowOnToolTip": false,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      }
+    },
+    {
+      "table": "BonusType",
+      "row_index_zero": 198,
+      "raw": {
+        "ID": 1153,
+        "Name": "FixedMagicDamage",
+        "UnitID": 20,
+        "DescID": 281243,
+        "DescPriority": 0,
+        "IsShowOnToolTip": false,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      }
+    },
+    {
+      "table": "BonusType",
+      "row_index_zero": 283,
+      "raw": {
+        "ID": 3091,
+        "Name": "InvokeOption",
+        "UnitID": 3,
+        "DescID": 539931,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": true
+      }
+    },
+    {
+      "table": "BonusType",
+      "row_index_zero": 307,
+      "raw": {
+        "ID": 3451,
+        "Name": "IgnoreMagicResistance",
+        "UnitID": 20,
+        "DescID": 566531,
+        "DescPriority": 0,
+        "IsShowOnToolTip": false,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      }
+    },
+    {
+      "table": "BonusType",
+      "row_index_zero": 308,
+      "raw": {
+        "ID": 3461,
+        "Name": "IgnoreDamageReductionCalculation",
+        "UnitID": 1,
+        "DescID": 566661,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      }
+    },
+    {
+      "table": "BonusType",
+      "row_index_zero": 1179,
+      "raw": {
+        "ID": 12741,
+        "Name": "SubSlotBuffClassID",
+        "UnitID": 16,
+        "DescID": 2345711,
+        "DescPriority": 0,
+        "IsShowOnToolTip": false,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      }
+    },
+    {
+      "table": "BuffBonus",
+      "row_index_zero": 19997,
+      "raw": {
+        "ID": 260292,
+        "BuffClassID": 77052,
+        "BonusID": 1623502,
+        "CharacterLevel": 0,
+        "CharacterClass": 0,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "BuffBonus",
+      "row_index_zero": 19998,
+      "raw": {
+        "ID": 260302,
+        "BuffClassID": 77052,
+        "BonusID": 1623512,
+        "CharacterLevel": 0,
+        "CharacterClass": 0,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "BuffBonus",
+      "row_index_zero": 19999,
+      "raw": {
+        "ID": 260312,
+        "BuffClassID": 77052,
+        "BonusID": 1623522,
+        "CharacterLevel": 0,
+        "CharacterClass": 0,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "BuffBonus",
+      "row_index_zero": 20000,
+      "raw": {
+        "ID": 260322,
+        "BuffClassID": 77052,
+        "BonusID": 1623532,
+        "CharacterLevel": 0,
+        "CharacterClass": 0,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "BuffBonus",
+      "row_index_zero": 20001,
+      "raw": {
+        "ID": 260332,
+        "BuffClassID": 77052,
+        "BonusID": 1623542,
+        "CharacterLevel": 0,
+        "CharacterClass": 0,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "BuffBonus",
+      "row_index_zero": 33292,
+      "raw": {
+        "ID": 402208,
+        "BuffClassID": 98108,
+        "BonusID": 2365228,
+        "CharacterLevel": 0,
+        "CharacterClass": 0,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "BuffBonus",
+      "row_index_zero": 33873,
+      "raw": {
+        "ID": 405598,
+        "BuffClassID": 77052,
+        "BonusID": 2368608,
+        "CharacterLevel": 0,
+        "CharacterClass": 0,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "BuffBonus",
+      "row_index_zero": 34223,
+      "raw": {
+        "ID": 407868,
+        "BuffClassID": 77052,
+        "BonusID": 2399138,
+        "CharacterLevel": 0,
+        "CharacterClass": 0,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "BuffCard",
+      "row_index_zero": 1001,
+      "raw": {
+        "ID": 22182,
+        "Name": "[성물][신화] 진명황의 보주",
+        "DescID": 1700172,
+        "BuffCardDeckID": 98,
+        "BuffClassID": 77052,
+        "GradeID": 32,
+        "DisplaySpriteID": 25454,
+        "DisplayBaseAssetID": 336732,
+        "DisplayScreenAssetID": 336722,
+        "IsNoMergeOut": true,
+        "DisplayDecoAssetID": 22052,
+        "IsNoSwapOut": false,
+        "MagicDollAwakenStatID": 88,
+        "ClassifiedByClass": false,
+        "HasHistory": true,
+        "HistoryDescID": 1700182,
+        "IllustrationAssetID": 337362,
+        "HidedIllustrationAssetID": 337372,
+        "ServerLimitSetID": 772,
+        "SpellClassID": 0,
+        "AttackTypeID": 1,
+        "GradeTierID": 102,
+        "StartDateTimeID": 0,
+        "EndDateTimeID": 0
+      }
+    },
+    {
+      "table": "BuffClass",
+      "row_index_zero": 3150,
+      "raw": {
+        "ID": 77052,
+        "Name": "[성물][신화] 진명황의 보주",
+        "DescID": 1700702,
+        "EffectDescID": 1700712,
+        "OnIconID": 84328,
+        "OffIconID": 0,
+        "BuffGroupID": 2768,
+        "BuffGroupPriority": 1,
+        "IsGood": true,
+        "IsImmuneToCancellation": false,
+        "IsImmuneToDead": false,
+        "IsEraseOnAttack": false,
+        "IsEraseOnAttacked": 0,
+        "IsEraseOnMove": false,
+        "IsEraseOnSpellCastAndShieldIt": false,
+        "IsEraseOnSkillCastAndShieldIt": false,
+        "IsNotifyToParty": false,
+        "IsAuto": false,
+        "IsEraseOnItemUse": 0,
+        "IsEraseOnSpellAttacked": false,
+        "IsEraseOnSkillAttacked": false,
+        "IsEraseOnCast": false,
+        "IsEraseOnHealed": false,
+        "SubDescID": 1700722,
+        "IsEraseOnTimeEnd": true,
+        "IsShownBuffIcon": true,
+        "BuffListPriority": 5,
+        "MaxHPPercent": 0,
+        "EraseOnLevel": 0,
+        "IsAbsoluteTimeBuff": false,
+        "MaxStackCount": 0,
+        "IsEraseOnTargetChanged": false,
+        "IsHide": false,
+        "MPCostPercent": 0,
+        "MinMPCost": 0,
+        "IsOverlapByPlayer": false,
+        "IsEraseOnAttackedLimitations": 0,
+        "IsDecreaseStackOnTimeEnd": false,
+        "IsBuffGroup": true,
+        "IsObtainItemBuff": false
+      }
+    },
+    {
+      "table": "BuffClass",
+      "row_index_zero": 5433,
+      "raw": {
+        "ID": 98108,
+        "Name": "[추가 슬롯][성물][신화] 진명황의 보주",
+        "DescID": 2473618,
+        "EffectDescID": 2473628,
+        "OnIconID": 109308,
+        "OffIconID": 0,
+        "BuffGroupID": 6028,
+        "BuffGroupPriority": 1,
+        "IsGood": true,
+        "IsImmuneToCancellation": false,
+        "IsImmuneToDead": false,
+        "IsEraseOnAttack": false,
+        "IsEraseOnAttacked": 0,
+        "IsEraseOnMove": false,
+        "IsEraseOnSpellCastAndShieldIt": false,
+        "IsEraseOnSkillCastAndShieldIt": false,
+        "IsNotifyToParty": false,
+        "IsAuto": false,
+        "IsEraseOnItemUse": 0,
+        "IsEraseOnSpellAttacked": false,
+        "IsEraseOnSkillAttacked": false,
+        "IsEraseOnCast": false,
+        "IsEraseOnHealed": false,
+        "SubDescID": 2473638,
+        "IsEraseOnTimeEnd": true,
+        "IsShownBuffIcon": true,
+        "BuffListPriority": 5,
+        "MaxHPPercent": 0,
+        "EraseOnLevel": 0,
+        "IsAbsoluteTimeBuff": false,
+        "MaxStackCount": 0,
+        "IsEraseOnTargetChanged": false,
+        "IsHide": false,
+        "MPCostPercent": 0,
+        "MinMPCost": 0,
+        "IsOverlapByPlayer": false,
+        "IsEraseOnAttackedLimitations": 0,
+        "IsDecreaseStackOnTimeEnd": false,
+        "IsBuffGroup": true,
+        "IsObtainItemBuff": false
+      }
+    },
+    {
+      "table": "InvokeOption",
+      "row_index_zero": 808,
+      "raw": {
+        "ID": 10661,
+        "InvokeOptionTypeID": 1,
+        "AttackTypeID": 0,
+        "BySpellAttack": false,
+        "Param1": 67401,
+        "Param2": 0,
+        "AttackerEffectSpriteID": 0,
+        "TargetEffectSpriteID": 0,
+        "MaterialTypeID": 0,
+        "MaterialAmount": 0,
+        "ShownInvokerOnly": false,
+        "WeaponGroupID": 0,
+        "DescID": 1312621,
+        "IsShowOnToolTip": true,
+        "Param3": 0,
+        "ShieldTypeID": 0,
+        "SuccessedInvokeOptionID": 0,
+        "IsAmmoAttack": false,
+        "Param4": true,
+        "Param5": false,
+        "TargetEffectSpriteGroupID": 0,
+        "Param6": 0,
+        "TargetKind": 0,
+        "AttackerEffectSpriteGroupID": 0,
+        "SiegeTargetKind": 0
+      }
+    },
+    {
+      "table": "InvokeOption",
+      "row_index_zero": 1313,
+      "raw": {
+        "ID": 16572,
+        "InvokeOptionTypeID": 1,
+        "AttackTypeID": 0,
+        "BySpellAttack": false,
+        "Param1": 89552,
+        "Param2": 0,
+        "AttackerEffectSpriteID": 0,
+        "TargetEffectSpriteID": 0,
+        "MaterialTypeID": 0,
+        "MaterialAmount": 0,
+        "ShownInvokerOnly": false,
+        "WeaponGroupID": 0,
+        "DescID": 1717592,
+        "IsShowOnToolTip": true,
+        "Param3": 0,
+        "ShieldTypeID": 0,
+        "SuccessedInvokeOptionID": 0,
+        "IsAmmoAttack": false,
+        "Param4": true,
+        "Param5": false,
+        "TargetEffectSpriteGroupID": 0,
+        "Param6": 0,
+        "TargetKind": 0,
+        "AttackerEffectSpriteGroupID": 0,
+        "SiegeTargetKind": 0
+      }
+    },
+    {
+      "table": "InvokeOptionType",
+      "row_index_zero": 1,
+      "raw": {
+        "ID": 1,
+        "Name": "Attack_Spell",
+        "IsDefence": false,
+        "Param1Description": "발동할 SpellClassID",
+        "Param1Unit": 12,
+        "Param2Description": "성향치값에 따른 추가 데미지 변수(신성기사)",
+        "Param2Unit": 0,
+        "Param3Description": "상대방에게 중첩해서 버프를 걸지 않음",
+        "Param3Unit": 0,
+        "Param4Description": "메인 타겟에만 인보크가 발생하게 할지 제한 여부",
+        "Param4Unit": 20,
+        "Param5Description": "공격 실패시에도 발동",
+        "Param5Unit": 20,
+        "Param6Description": "지정 스펠을 배웠을 때만 발동",
+        "Param6Unit": 12
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 19456,
+      "raw": {
+        "ID": 445311,
+        "SpellClassID": 67401,
+        "BonusID": 1228721,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 19458,
+      "raw": {
+        "ID": 445321,
+        "SpellClassID": 67401,
+        "BonusID": 1228731,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 19460,
+      "raw": {
+        "ID": 445331,
+        "SpellClassID": 67401,
+        "BonusID": 1228741,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 19462,
+      "raw": {
+        "ID": 445341,
+        "SpellClassID": 67401,
+        "BonusID": 1228751,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 19464,
+      "raw": {
+        "ID": 445351,
+        "SpellClassID": 67401,
+        "BonusID": 1228761,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 19466,
+      "raw": {
+        "ID": 445361,
+        "SpellClassID": 67401,
+        "BonusID": 1228771,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 31534,
+      "raw": {
+        "ID": 568702,
+        "SpellClassID": 89552,
+        "BonusID": 1635522,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 31535,
+      "raw": {
+        "ID": 568712,
+        "SpellClassID": 89552,
+        "BonusID": 1635532,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 31536,
+      "raw": {
+        "ID": 568722,
+        "SpellClassID": 89552,
+        "BonusID": 1635542,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 31537,
+      "raw": {
+        "ID": 568732,
+        "SpellClassID": 89552,
+        "BonusID": 1635612,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 31538,
+      "raw": {
+        "ID": 568742,
+        "SpellClassID": 89552,
+        "BonusID": 1635622,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellBonus",
+      "row_index_zero": 31539,
+      "raw": {
+        "ID": 568752,
+        "SpellClassID": 89552,
+        "BonusID": 1635632,
+        "MinSpellLevel": 0
+      }
+    },
+    {
+      "table": "SpellClass",
+      "row_index_zero": 5227,
+      "raw": {
+        "ID": 67401,
+        "Name": "[마법인형[발라카스] 발라카스 브레스",
+        "DescID": 1312601,
+        "SpellCategoryID": 1,
+        "SpellGroupID": 1,
+        "SpellGroupLevel": 0,
+        "IsRequireSpellGroupMastery": false,
+        "TargettingTypeID": 2,
+        "TargetKindID": 11,
+        "SiegeTargetKindID": 0,
+        "TargetAreaRadius": 0,
+        "CastRange": 15,
+        "CastDelay": 3000,
+        "SpellMaterialTypeID": 0,
+        "SpellMaterialItemAmount": 0,
+        "HPCost": 0,
+        "MPCost": 0,
+        "VPCost": 0,
+        "SpellEffectTypeID": 21,
+        "EffectSpriteID": 23084,
+        "EffectExplosionSpriteID": 0,
+        "EffectSpriteActionNo": 0,
+        "EffectLightRadius": 6,
+        "CriticalEffectSpriteID": 0,
+        "FailEffectSpriteID": 0,
+        "CasterEffectSpriteID": 0,
+        "SuccessEffectSpriteID": 0,
+        "ElementalTypeID": 0,
+        "AlignmentTypeID": 2,
+        "AlignmentChangeAmount": 0,
+        "IsOverlappedDamageReduction": true,
+        "IsPierceCounterMagic": false,
+        "IconID": 0,
+        "EffectDescID": 1312611,
+        "SpellTypeID": 1,
+        "UseDescID": 0,
+        "IsAuto": false,
+        "TestSpell": false,
+        "CastGroupID": 1,
+        "ScreenEffectAssetId": 0,
+        "CastingScreenEffectId": 0,
+        "CastingWeaponType": 0,
+        "CastingMotionType": 9,
+        "CanCastOnInvisible": false,
+        "IsPierceCounterAssult": false,
+        "MinCastRange": 0,
+        "CopySpellClassID": 0,
+        "ActivateIconID": 0,
+        "LearningPriority": 0,
+        "IncludeOccupyTarget": true,
+        "IncludeTargettingTarget": true,
+        "IsChangable": false,
+        "MPCostUnit": 1,
+        "IsChargeSpell": false,
+        "TargetLimitCount": 0,
+        "IsAttackRange": false,
+        "BackwardPathCount": 0,
+        "CasterEffectSpriteGroupID": 0,
+        "HostileEffectSpriteID": 0,
+        "HideCasterTime": 0,
+        "SpellCompositionNode": 0,
+        "AdditionalEffectSpriteGroupID": 0,
+        "AttackerActionTypeID": 8,
+        "TargetScreenEffectID": 0
+      }
+    },
+    {
+      "table": "SpellClass",
+      "row_index_zero": 7613,
+      "raw": {
+        "ID": 89552,
+        "Name": "[성물][진명황의 보주] 집행",
+        "DescID": 1717562,
+        "SpellCategoryID": 1,
+        "SpellGroupID": 1,
+        "SpellGroupLevel": 0,
+        "IsRequireSpellGroupMastery": false,
+        "TargettingTypeID": 2,
+        "TargetKindID": 11,
+        "SiegeTargetKindID": 0,
+        "TargetAreaRadius": 0,
+        "CastRange": 15,
+        "CastDelay": 3000,
+        "SpellMaterialTypeID": 0,
+        "SpellMaterialItemAmount": 0,
+        "HPCost": 0,
+        "MPCost": 0,
+        "VPCost": 0,
+        "SpellEffectTypeID": 21,
+        "EffectSpriteID": 25485,
+        "EffectExplosionSpriteID": 0,
+        "EffectSpriteActionNo": 0,
+        "EffectLightRadius": 6,
+        "CriticalEffectSpriteID": 0,
+        "FailEffectSpriteID": 0,
+        "CasterEffectSpriteID": 0,
+        "SuccessEffectSpriteID": 0,
+        "ElementalTypeID": 0,
+        "AlignmentTypeID": 2,
+        "AlignmentChangeAmount": 0,
+        "IsOverlappedDamageReduction": true,
+        "IsPierceCounterMagic": false,
+        "IconID": 0,
+        "EffectDescID": 1717572,
+        "SpellTypeID": 1,
+        "UseDescID": 0,
+        "IsAuto": false,
+        "TestSpell": false,
+        "CastGroupID": 1,
+        "ScreenEffectAssetId": 0,
+        "CastingScreenEffectId": 0,
+        "CastingWeaponType": 0,
+        "CastingMotionType": 9,
+        "CanCastOnInvisible": false,
+        "IsPierceCounterAssult": false,
+        "MinCastRange": 0,
+        "CopySpellClassID": 0,
+        "ActivateIconID": 0,
+        "LearningPriority": 0,
+        "IncludeOccupyTarget": true,
+        "IncludeTargettingTarget": true,
+        "IsChangable": false,
+        "MPCostUnit": 1,
+        "IsChargeSpell": false,
+        "TargetLimitCount": 0,
+        "IsAttackRange": false,
+        "BackwardPathCount": 0,
+        "CasterEffectSpriteGroupID": 0,
+        "HostileEffectSpriteID": 0,
+        "HideCasterTime": 0,
+        "SpellCompositionNode": 0,
+        "AdditionalEffectSpriteGroupID": 0,
+        "AttackerActionTypeID": 8,
+        "TargetScreenEffectID": 0
+      }
+    },
+    {
+      "table": "SpellMaterialType",
+      "row_index_zero": 0,
+      "raw": {
+        "ID": 0,
+        "Name": "None",
+        "DescID": 1
+      }
+    },
+    {
+      "table": "UIUnit",
+      "row_index_zero": 0,
+      "raw": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      }
+    },
+    {
+      "table": "UIUnit",
+      "row_index_zero": 2,
+      "raw": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      }
+    },
+    {
+      "table": "UIUnit",
+      "row_index_zero": 11,
+      "raw": {
+        "ID": 16,
+        "UnitID": 16,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      }
+    },
+    {
+      "table": "UIUnit",
+      "row_index_zero": 15,
+      "raw": {
+        "ID": 20,
+        "UnitID": 20,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      }
+    },
+    {
+      "table": "Unit",
+      "row_index_zero": 0,
+      "raw": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "table": "Unit",
+      "row_index_zero": 2,
+      "raw": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "table": "Unit",
+      "row_index_zero": 11,
+      "raw": {
+        "ID": 16,
+        "Name": "BuffClassID"
+      }
+    },
+    {
+      "table": "Unit",
+      "row_index_zero": 15,
+      "raw": {
+        "ID": 20,
+        "Name": "TrueFalse"
+      }
+    }
+  ]
+}

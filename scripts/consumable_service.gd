@@ -131,6 +131,23 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String,selected_instance: String="") -> bool:
+	if item_name==str(preload("res://scripts/cards/native_card_acquisition.gd").record().name):
+		var received: Dictionary=world.option_awakening.use_nemesis_ticket(item_name,selected_instance)
+		if bool(received.get("ok",false)):
+			world._update_hud();world.hud.refresh_inventory(world.inventory)
+			_message("네메시스 마법인형 획득" if bool(received.get("new",false)) else "네메시스 중복 카드 1장 획득")
+		else:_message(str(received.get("error","카드권 사용 실패")))
+		return true
+	if item_name==str(preload("res://scripts/cards/native_relic_reward_box.gd").record().name):
+		var opened: Dictionary=world.option_awakening.use_relic_reward_box(item_name,selected_instance)
+		if bool(opened.get("ok",false)):
+			world._update_hud();world.hud.refresh_inventory(world.inventory)
+			_message("상자 개봉 · 에바의 계시와 특별한 성물 소환 주문서 각 1개 획득")
+		else:_message(str(opened.get("error","상자 개봉 실패")))
+		return true
+	if item_name==str(preload("res://scripts/cards/native_relic_reward_box.gd").record(365758).name):
+		_message("추가 성물 소환 주문서의 적용·기간 규칙 확인 필요 · 아이템 보존")
+		return true
 	if item_name==str(preload("res://scripts/cards/native_relic_unlock_item.gd").record().name):
 		var result: Dictionary=world.option_awakening.use_relic_unlock_item(item_name,selected_instance)
 		if bool(result.get("handled",false)):

@@ -13,6 +13,13 @@ var candidates: ItemList
 var effect: RichTextLabel
 var action: Button
 var snapshot: Dictionary={}
+var growth_note: Label
+var growth_material: OptionButton
+var growth_feed: Button
+var growth_policy: Label
+var growth_result: Label
+var growth_signature: int=-1
+var last_growth_block: String=""
 func configure(service: RefCounted,target: String) -> void:
 	runtime=service;identity=target
 	size_flags_horizontal=Control.SIZE_EXPAND_FILL;size_flags_vertical=Control.SIZE_EXPAND_FILL
@@ -32,7 +39,7 @@ func configure(service: RefCounted,target: String) -> void:
 	if not snapshot.owned:current.text+=" · 미보유 · 조회 전용"
 	growth=UI.label("저장 경험치 "+str(snapshot.entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터",12,UI.MUTED)
 	growth.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(growth)
-	var growth_note: Label=UI.label("경험치 성장: "+str(snapshot.get("growth_readiness",{}).get("blocked_reason","재료 규칙 확인 필요")),12,UI.MUTED)
+	growth_note=UI.label("변신·인형은 사냥 경험치로 성장 · 중복 카드 합성 환산·수수료는 TWILIGHT 자체 설정 · 성물 사냥 성장은 원본 확인 필요",12,UI.MUTED)
 	growth_note.name="SkillGrowthReadiness";growth_note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(growth_note)
 	if bool(snapshot.get("save_blocked",false)):info.add_child(UI.label("저장 보호 중 · 정상 저장 불러오기 필요",12,UI.GOLD))
 	var book: Label=UI.label("필요 각성서: "+str(snapshot.book.get("name","원본 연결 없음"))+" · 1장 소모",12,UI.MUTED);book.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(book)
@@ -58,15 +65,21 @@ func configure(service: RefCounted,target: String) -> void:
 	action=UI.button("재각성" if int(snapshot.entry.spell_id)>0 else "각성",_execute,Vector2(0,44));action.name="SkillAwakeningExecute";action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false));action.tooltip_text=str(snapshot.blocked_reason)
 	action.set_script(preload("res://scripts/ui/native_touch_button.gd"))
 	add_child(action)
+	var growth_header: Label=UI.section("스킬 각성 경험치 합성",16);add_child(growth_header)
+	growth_policy=UI.label("",12,UI.MUTED);growth_policy.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(growth_policy)
+	growth_material=OptionButton.new();growth_material.name="SkillGrowthMaterial";growth_material.custom_minimum_size.y=44;add_child(growth_material)
+	growth_feed=UI.button("중복 카드 1장 합성",_feed_experience,Vector2(0,44));growth_feed.set_script(preload("res://scripts/ui/native_touch_button.gd"));growth_feed.name="SkillGrowthFeed";add_child(growth_feed)
+	growth_result=UI.label("",12,UI.GOLD);growth_result.name="SkillGrowthResult";growth_result.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(growth_result)
 	var original_action: bool=SourceSkin.button(action,"Btn_Production")
 	var note: Label=UI.label("옵션 각성과 별도 상태 · 원본 각성 재질 적용 / 반응형 배치" if original_action else "원본 각성 화면 재질 미설치",12,UI.MUTED);add_child(note)
 	_preview(0)
 	if candidates.item_count>0:candidates.select(0);_select(0)
+	refresh_growth(true)
 func _preview(index: int) -> void:
 	var data: Dictionary=runtime.view(identity,index+1)
 	var p: Dictionary=data.get("preview_profile",{})
 	stats.text="원본 레벨 프로필 없음" if p.is_empty() else "미리보기 HP +%d · 발동 %s%% · 지연 보정 -%s초 · 원본 누적 경험치 기준 %s" % [int(p.hp),str(float(p.invoke.CastSuccessProb)/100.0),str(float(p.invoke.CastDelayBonus)/1000.0),str(int(p.experience_row.CumExp))]
-	stats.tooltip_text="미리보기는 저장 레벨·보유·능력치를 변경하지 않습니다. CumExp를 임의의 레벨업/실패 공식으로 사용하지 않습니다."
+	stats.tooltip_text="미리보기는 저장 상태를 변경하지 않습니다. 원본 레벨 수치와 게임의 성장 환산·수수료 설정을 구분합니다."
 func _select(index: int) -> void:
 	if index<0 or index>=snapshot.candidates.size():return
 	var row: Dictionary=snapshot.candidates[index]
@@ -90,3 +103,38 @@ func _execute() -> void:
 		action.text="재각성"
 	else:current.text=str(result.error)
 	action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false))
+	refresh_growth(true)
+	if not result.ok:growth_result.text=str(result.error)
+
+func refresh_growth(force: bool=false) -> void:
+	if growth_material==null:return
+	runtime._context()
+	var signature: int=hash([runtime.progress.revision,runtime.world.gold,runtime.world.card_draw_fusion.owned,runtime.world.card_draw_fusion.spare,runtime.save_blocked,runtime.core.source_server_context])
+	if not force and signature==growth_signature:return
+	growth_signature=signature;snapshot=runtime.view(identity)
+	if not snapshot.ok:return
+	var entry: Dictionary=snapshot.entry
+	current.text="현재 각성 스킬 없음" if int(entry.spell_id)==0 else str(runtime.core.DATA.data.spells[str(int(entry.spell_id))].name)+" · Lv."+str(int(entry.level))
+	growth.text="저장 경험치 "+str(entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터"
+	var data: Dictionary=snapshot.growth_progress
+	var selected: String=str(growth_material.get_item_metadata(growth_material.selected)) if growth_material.selected>=0 else ""
+	growth_material.clear()
+	for row: Dictionary in data.get("materials",[]):
+		var index: int=growth_material.item_count;growth_material.add_item(str(row.name)+" · 중복 "+str(row.quantity)+"장");growth_material.set_item_metadata(index,str(row.id))
+		if str(row.id)==selected:growth_material.select(index)
+	growth_material.disabled=growth_material.item_count==0
+	growth_feed.disabled=not bool(snapshot.can_feed)
+	var quote: Dictionary=data.get("quote",{})
+	growth_policy.text="중복 카드 1장 소모 · EXP +%s · %s 아데나\n환산·수수료: TWILIGHT 자체 설정 · 별도 강화 실패 추첨 없음" % [str(quote.get("experience","-")),str(quote.get("fee","-"))]
+	if not str(data.get("next_level_experience","")).is_empty():growth_policy.text+="\n다음 레벨 누적 경험치: "+str(data.next_level_experience)
+	var blocked: String=str(data.get("blocked_reason","")) if not bool(snapshot.can_feed) else ""
+	if not blocked.is_empty():growth_result.text=blocked
+	elif growth_result.text==last_growth_block:growth_result.text=""
+	last_growth_block=blocked
+
+func _feed_experience() -> void:
+	if growth_material.selected<0:return
+	growth_feed.disabled=true
+	var result: Dictionary=runtime.request_experience_feed(identity,str(growth_material.get_item_metadata(growth_material.selected)),int(runtime.progress.revision))
+	refresh_growth(true)
+	growth_result.text="중복 카드 1장 합성 · EXP +"+str(result.granted_experience)+( " · 레벨 +"+str(result.levels_gained) if int(result.levels_gained)>0 else "") if result.ok else str(result.error)

@@ -4,6 +4,7 @@ const DATA=preload("res://data/cards/patch523_relic_subslot.json")
 const Unlock=preload("res://scripts/cards/native_relic_unlock_item.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const MAP=preload("res://scripts/cards/native_doll_subslot.gd").MAP
+const EXTRA_MAP={"PVEDamageReductionPercent":"pve_damage_reduction_pct","PVEMeleeHit":"pve_melee_hit","PVERangeHit":"pve_ranged_hit","PVEMagicHit":"pve_magic_hit","PierceMeleeEvasion":"melee_evasion_ignore","PierceRangeEvasion":"ranged_evasion_ignore","PierceMeleeDamageReduction":"melee_reduction_ignore","PierceRangeDamageReduction":"ranged_reduction_ignore","PierceMagicDamageReduction":"magic_reduction_ignore","CriticalMeleeDamage":"melee_critical_damage","CriticalRangeDamage":"ranged_critical_damage","CriticalMagicDamage":"magic_critical_damage"}
 const FIELD: String="native_relic_subslot_identity"
 
 static func identity_key(identity: String) -> String:
@@ -96,16 +97,18 @@ static func effects(runtime: RefCounted,identity: String) -> Dictionary:
 		if name_value=="StatusEffectID" and int(effect.bonus.BonusApplicationTypeID)==0 and int(effect.bonus.BonusApplicationTargetID)==0:
 			out.status_effect_ids.append(int(effect.bonus.Value));continue
 		if effect.link.has("CharacterLevel") and (int(effect.link.CharacterLevel)!=0 or int(effect.link.CharacterClass)!=0 or int(effect.link.MinSpellLevel)!=0):out.pending.append(effect);continue
+		if name_value=="InvokeOption" and identity_key(identity)=="98:22182" and int(effect.bonus.ID)==2365228 and int(effect.bonus.BonusApplicationTypeID)==10 and int(effect.bonus.BonusApplicationTargetID)==16572 and effect.unit.Name=="Percentage":
+			out.invoke_options.append(effect.duplicate(true));continue
 		# Exact secondary rows already omit XP/cooldown/skill-level options.
 		# Unsupported targeted, spell and invoke declarations remain visible.
-		if int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0 or not MAP.has(name_value):out.pending.append(effect);continue
+		if int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0 or (not MAP.has(name_value) and not EXTRA_MAP.has(name_value)):out.pending.append(effect);continue
 		var amount: float=float(effect.bonus.Value)
 		if effect.unit.Name in ["Percentage","ValuePercent","Weight"]:
 			var denominator: float=float(effect.ui_unit.get("Denominator",0))
 			if denominator<=0:out.pending.append(effect);continue
 			amount/=denominator
 		elif effect.unit.Name!="Value":out.pending.append(effect);continue
-		var key: String=MAP[name_value];out.stats[key]=float(out.stats.get(key,0))+amount
+		var key: String=EXTRA_MAP.get(name_value,MAP.get(name_value,""));out.stats[key]=float(out.stats.get(key,0))+amount
 	return out
 
 static func status_available(runtime: RefCounted,identity: String,status_id: int) -> bool:
