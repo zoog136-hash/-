@@ -31,6 +31,7 @@ jobs:
         run: |
           python3 -m compileall -q tools tests
           python3 tests/test_ci_core.py
+          python3 -m unittest discover -s tests -p test_patch523_world_links.py -v
       - name: Install pinned Godot
         shell: bash
         run: |

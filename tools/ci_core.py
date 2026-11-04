@@ -24,6 +24,7 @@ CHECKS = [
     ('core_runtime_save_test', []),
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
+    ('patch523_world_links_test', ['--patch523-game-field']),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -247,7 +248,8 @@ def main():
                 command += ['--', *user_args]
             marker = {'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
-                      'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT'}[name]
+                      'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT',
+                      'patch523_world_links_test':'PATCH523_WORLD_LINKS_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
