@@ -1,0 +1,109 @@
+{
+  "base_commit": "88e622d6978e4f0a195e49c9c7c69132a0aead92",
+  "engine": "Godot 4.7.2 stable official",
+  "renderer": "Compatibility OpenGL Mesa llvmpipe; AudioDriver Dummy with nonzero AudioEffectCapture PCM assertions",
+  "validated_file_sha256": {
+    "data/growth/guardian_authored_presentation.json": "2789ed5adc2a8060fc4e38fb144d12067c94cbbb6fad7c9ec0fd640a74a65b04",
+    "scripts/growth/guardian_authored_presentation.gd": "0b02b33a0b9794038836b2fd8e92aa98ddef6d20eab3600efaee1f5396e89ba1",
+    "scripts/growth/growth_card_face.gd": "1f68444542d1dd95d34756174c6163f8d7fb5952f3e613c60a9fd19cb2a30387",
+    "scripts/growth/growth_view.gd": "7cd0741379d66e72a7f632e77634783d050e1c99f0aa43e739a16b2c8798bb06",
+    "tests/guardian_authored_presentation_test.gd": "26f795f839981d9615d5ca212074bd46ae504eaac37f93088822ec8d32b18e36",
+    "tests/capture_guardian_authored.gd": "04aa302098ecacba5a649ef15d6d5f7e7a0b51b198a5ab1a34de6a630bbaf6af"
+  },
+  "local_results": {
+    "authored_preferences_and_mixed_audio": 32,
+    "actual_main_native_ui": 55,
+    "guardian_source_regression": 39,
+    "guardian_followup_regression": 60,
+    "core_main": 32,
+    "additional_save_gates": 2,
+    "tracked_atlases": 723,
+    "tracked_frames": 41442,
+    "original_glow_native_ui_compatibility": 29
+  },
+  "logs": {
+    "authored-unit.txt": {
+      "sha256": "7fea7a26cbdcc3d4aa6e67fb8cdc35e41f50e6c4f2dc054f0806d2c0a70aa9b2"
+    },
+    "authored-ui-final.txt": {
+      "sha256": "91ec5f20dbbce3bb7c00242dc44614b397e71a391b35f7e68b4257efcca1febe"
+    },
+    "source-regression.txt": {
+      "sha256": "e6b1750b48f47fb30f8305611069c0c2ef563443cb8d079ec373e59f158ed390"
+    },
+    "followup-regression.txt": {
+      "sha256": "8d2f6aa68ac24e25fdc4f80cea7395a0546c39052d3d86724ea724d8d1965f59"
+    },
+    "core-runtime-save.txt": {
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "save-identical.txt": {
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    },
+    "deferred-save.txt": {
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    },
+    "resource-integrity.txt": {
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    "original-media-compat.txt": {
+      "sha256": "118547edfb78c4784781c1714516293dc9ca24c727d667fd0e80ffe0ab05ebef"
+    }
+  },
+  "local_only_captures": {
+    "guardian-authored-card-off-failure.png": {
+      "path": "/workspace/guardian-validation/authored-ui-final-captures/guardian-authored-card-off-failure.png",
+      "bytes": 865632,
+      "sha256": "c1108993cac138989d8474503a47e531c1ae248b7f96f6fedcd74f8aea62af06"
+    },
+    "guardian-authored-card-success.png": {
+      "path": "/workspace/guardian-validation/authored-ui-final-captures/guardian-authored-card-success.png",
+      "bytes": 1023152,
+      "sha256": "6c0cb773423b02b09fcfd113723b647f9244089ffd7903c24ccbbb361e812c91"
+    },
+    "guardian-authored-settings-854x480.png": {
+      "path": "/workspace/guardian-validation/authored-ui-final-captures/guardian-authored-settings-854x480.png",
+      "bytes": 450264,
+      "sha256": "a04710621293880a40c73136824af5c1dc3c403cb50a662afe8d0df97864423f"
+    },
+    "guardian-authored-enchant-success.png": {
+      "path": "/workspace/guardian-validation/authored-ui-final-captures/guardian-authored-enchant-success.png",
+      "bytes": 475503,
+      "sha256": "2c14410010745ac6fa04f7c1d9158a273db346eff6a103255700a422636de16f"
+    }
+  },
+  "initial_probes": [
+    {
+      "path": "/workspace/guardian-validation/authored-ui.txt",
+      "result": "failed: QA tried scrolling action dock with non-ancestor ScrollContainer; fixed QA ancestor guard; final clean run supersedes it"
+    },
+    {
+      "result": "initial authored unit probe exited with live audio mixer resource references; fixed voice teardown and .1 second mixer release; final clean 32 checks supersede it"
+    }
+  ],
+  "original_media_status": "Original glow retained separately; full card atlas and six original UI OGG payloads remain unavailable. New fallback uses existing authored card/WAV assets only.",
+  "delivery": {
+    "local_runtime": "validated actual Main/UI/settings/game-save rollback",
+    "git": "feature branch only; final remote commit reported separately",
+    "drive": "no new file uploaded or moved in this follow-up",
+    "main": "not merged",
+    "exported_game": "not rebuilt or distributed",
+    "space": "no new preservation"
+  },
+  "unchanged_exclusions": "60 server-conditioned slots locked; no M engine/APK/XAPK, arena, Ziggurat or earlier excluded systems",
+  "existing_tracked_authored_audio": {
+    "assets/skills/audio/lm_00d9f77d3ff9315a.wav": {
+      "bytes": 4844,
+      "sha256": "b3380fccad7f54621bedd080b0b1c4c0b0a11d5bce5742d740f0f5ee6fa0ce7b"
+    },
+    "assets/skills/audio/lm_024a0e845c280295.wav": {
+      "bytes": 4844,
+      "sha256": "4339ae78c246e58fbc90c236c5fbb71e10cce42c4de8b851b119d9d0b5ef6d76"
+    },
+    "assets/skills/audio/lm_01141f56509e111e.wav": {
+      "bytes": 4844,
+      "sha256": "4c0ca684e84cdc2a5bf41ce82e636bbf7a157f283b1037f4cbc2b23cf2204120"
+    }
+  },
+  "original_compat_local_capture_directory": "/workspace/guardian-validation/authored-original-compat-captures"
+}

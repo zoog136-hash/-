@@ -23,10 +23,16 @@ var card_faces: Dictionary = {}
 var diagram: Control
 var guardian_controls: Array=[]
 var guardian_clock: float=0
+var guardian_presentation: Node
 
 func configure(owner_hud: Node, section: String) -> void:
 	hud = owner_hud
 	runtime = hud.get_parent().growth
+	if section=="guardians":
+		guardian_presentation=hud.get_parent().get_node_or_null("GuardianAuthoredPresentation")
+		if guardian_presentation==null:
+			guardian_presentation=preload("res://scripts/growth/guardian_authored_presentation.gd").new()
+			hud.get_parent().add_child(guardian_presentation)
 	mode = section
 	selected = "eva" if mode == "emblems" else "joe"
 	name = "GrowthView"
@@ -138,7 +144,9 @@ func _refresh() -> void:
 		button.add_theme_color_override("font_color",Palette.GOLD if id==selected else Palette.MUTED)
 		button.add_theme_font_size_override("font_size",14)
 	if mode == "emblems": _emblem()
-	else: _guardian()
+	else:
+		_guardian_presentation_settings()
+		_guardian()
 	confirmation = VBoxContainer.new()
 	confirmation.name = "GrowthConfirmation"
 	body.add_child(confirmation)
@@ -280,6 +288,8 @@ func _card_selection() -> void:
 	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	var subtitle: Label=_copy(str(runtime.node(node_id).name),body,14,Palette.TEXT)
 	subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	var provenance: Label=_copy("TWILIGHT 자체 카드 표시 · 원본 아님" if guardian_presentation.preferences.cards else "자체 카드 표시 꺼짐 · 번호와 결과로 선택",body,12,Palette.MUTED)
+	provenance.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	var status: Label=_copy("카드를 선택해주세요 · 남은 선택지 %d / %d" % [count-search.failed.size(),count] if pending else "슬롯 개방 성공" if last_reveal.won else "개방 실패 · 선택한 카드는 다음 도전에서 제외",body,14,Palette.GOLD if pending else Color("9bdfdb") if last_reveal.won else Color("d59a9b"))
 	status.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	var centered:=HBoxContainer.new()
@@ -305,6 +315,7 @@ func _card_selection() -> void:
 			face.failed=search.failed.has(index)
 			face.selected=not pending and int(last_reveal.index)==index
 			face.success=face.selected and bool(last_reveal.won)
+			face.authored_art=bool(guardian_presentation.preferences.cards)
 			b.mouse_entered.connect(func() -> void: face.set_interaction(true))
 			b.mouse_exited.connect(func() -> void: face.set_interaction(false))
 			b.feedback_changed.connect(face.set_interaction)
@@ -426,6 +437,15 @@ func _confirm() -> void:
 		if str(response.message).contains("강화 성공") and is_instance_valid(chart):chart.play_original_enchant(str(current.id))
 	if response.ok and current.action in ["enhance","absolute"] and is_instance_valid(diagram): diagram.reveal(previous_stage)
 	if response.ok and current.action in ["choose","representative"] and is_instance_valid(chart): chart.reveal()
+	if response.ok and mode=="guardians":
+		var cue: String=""
+		match str(current.action):
+			"activate":cue="open"
+			"choose":cue="success" if last_reveal.won else "failure"
+			"guardian_enchant":cue="success" if str(response.message).contains("강화 성공") else "failure"
+			"representative":cue="representative"
+			"guardian_reset":cue="reset"
+		if not cue.is_empty():guardian_presentation.play_confirmed(cue)
 	# A second release in this frame cannot create another transaction.
 	if response.ok and current.action in ["enhance","absolute"]:
 		# Only presentation waits. Close/back always remains available.
@@ -435,6 +455,22 @@ func _confirm() -> void:
 
 func _release_submit() -> void:
 	submitting = false
+
+func _guardian_presentation_settings() -> void:
+	_copy("TWILIGHT 자체 카드 표시·효과음 · 원본 아님 (원본 광원은 별도 유지)",body,12,Palette.MUTED).name="GuardianAuthoredNotice"
+	var settings:=HBoxContainer.new()
+	body.add_child(settings)
+	var prefs: Dictionary=guardian_presentation.preferences
+	for entry: Array in [["cards","자체 카드",not bool(prefs.cards)],["sounds","자체 효과음",not bool(prefs.sounds)],["volume","음량",((floori(float(prefs.volume)/25.0)+1)*25)%125]]:
+		var key: String=entry[0]
+		var next: Variant=entry[2]
+		var text: String=str(entry[1])+": "+(str(prefs.volume)+"%" if key=="volume" else "켜짐" if prefs[key] else "꺼짐")
+		_button(text,func() -> void:_save_guardian_presentation(key,next),settings).name="GuardianPresentation_"+key
+
+func _save_guardian_presentation(key: String,value: Variant) -> void:
+	var saved: bool=guardian_presentation.save_preference(key,value)
+	_refresh();result.visible=true
+	result.text="TWILIGHT 자체 표현 설정 저장됨" if saved else "표현 설정 저장 실패 · 이전 설정 유지"
 
 func _draw() -> void:
 	draw_texture_rect(Art.BACKDROP,Rect2(Vector2.ZERO,size),false)
