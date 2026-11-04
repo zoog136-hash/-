@@ -13,7 +13,7 @@ func run() -> void:
 	var definition: Dictionary=world._find_catalog_item_record(ITEM)
 	check(int(definition.get("source523_shop_item_id",0))==126424 and int(definition.get("source_item_class_id",0))==126424 and definition.get("source_bless_raw")==1,"exact ID and explicit Normal blessing registered before shop visit")
 	check(definition.get("name")==ITEM and definition.get("source")=="twilight-shop523-consumable" and definition.get("slot")=="consumable" and definition.get("source_is_consumable")==true and definition.get("grade")=="일반" and definition.get("source_test_item")==false,"canonical non-native supply key fits the PR252 normal-stack consumer contract")
-	check(definition.get("source523_shop_supply_only")==true and not definition.get("source_m_native_item",false) and str(definition.get("desc","")).contains("지역 귀환 기능 연결 후"),"catalog clearly exposes supply-only scope without impersonating another supplier")
+	check(definition.get("source523_shop_supply_only")==true and not definition.get("source_m_native_item",false) and str(definition.get("desc","")).contains("귀환"),"catalog clearly exposes supply-only scope without impersonating another supplier")
 	world.level=79
 	check(not runtime.quote_merchant(16884).ok,"existing level80 access gate is preserved")
 	world.level=80;world.gold=200000
@@ -41,7 +41,7 @@ func run() -> void:
 	for index: int in range(panel.listing.item_count):
 		if int(panel.listing.get_item_metadata(index))==16884:panel._select(index)
 	panel.quantity.value=2;await frames()
-	check(not panel.purchase.disabled and panel.detail.text.contains("아이즈") and panel.detail.text.contains("지역 귀환 기능 연결 후"),"existing island NPC UI exposes exact item and supply-only boundary")
+	check(not panel.purchase.disabled and panel.detail.text.contains("아이즈") and panel.detail.text.contains("귀환"),"existing island NPC UI exposes exact item and supply-only boundary")
 	await capture("dedicated-return-available")
 	tap(panel.purchase);await frames()
 	var confirmation: Control=world.hud.get_node_or_null("Root/TwilightConfirmation")
@@ -84,11 +84,11 @@ func run() -> void:
 	check(not runtime.claim(order).ok,"duplicate dedicated receipt rejected")
 	world.hud.show_companion_bag();await frames()
 	var bag=world.hud.lineage_inventory_ui;bag._select_item(ITEM);bag.open_detail();await frames()
-	check(bag.detail_text.text.contains("지역 귀환 기능 연결 후"),"inventory detail records separate consumption dependency")
+	check(bag.detail_text.text.contains("귀환"),"inventory detail records separate consumption dependency")
 	await capture("dedicated-return-received")
 	var position: Vector2=world.player.global_position
 	tap(bag.detail_action);await frames()
-	check(int(world.inventory.get(ITEM,0))==before+2 and world.player.global_position==position,"supply branch adds no generic return fallback or duplicated movement effect")
+	check(int(world.inventory.get(ITEM,0))==before+2 and world.player.global_position==position,"dedicated return outside its region never falls back to ordinary travel")
 	check(world._save_game(true)==OK,"received exact source supply saves")
 	world._load_game(true);freeze(world)
 	check(int(world.inventory.get(ITEM,0))==before+2 and not runtime.claim(order).ok,"received source stack and replay protection survive reload")

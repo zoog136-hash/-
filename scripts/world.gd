@@ -1,6 +1,9 @@
 extends Node2D
 class_name TwilightWorld
 
+signal regional_return_settings_updated
+const REGIONAL_RETURN = preload("res://scripts/quickslots/regional_return.gd")
+
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
@@ -1224,6 +1227,10 @@ func _merge_local_consumables_into_catalog() -> void:
 		{"name":"오림의 장신구 마법 주문서 (각인)", "grade":"영웅", "type":"강화주문서", "slot":"consumable", "desc":"실패 시 장신구가 유지되거나 강화 단계가 1 하락"},
 		{"name":"축복받은 오림의 장신구 마법 주문서 (각인)", "grade":"전설", "type":"강화주문서", "slot":"consumable", "desc":"실패해도 장신구 강화 단계가 유지됨"}
 	]
+	for regional_record: Dictionary in REGIONAL_RETURN.catalog_items():
+		if not seen_names.has(str(regional_record.name)):
+			catalog_items.append(regional_record)
+			seen_names[str(regional_record.name)] = true
 	for scroll_record: Dictionary in enhancement_scrolls:
 		var scroll_name: String = str(scroll_record.get("name", ""))
 		if seen_names.has(scroll_name):
@@ -1528,6 +1535,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_repath_timer = 0.0
 	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
+	_refresh_regional_return_slots()
 	_perf_log("맵 이동", map_started_usec)
 	if map_bootstrap_blocked:
 		map_bootstrap_blocked=false
@@ -2742,9 +2750,9 @@ func _refresh_inventory_hud() -> void:
 	if hud.has_method("set_quickslot_state"):
 		# Re-renders quickslot counts and hands the bag its new inventory (the bag
 		# rebuilds its slots only while open).
-		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
+		hud.call("set_quickslot_state", effective_quickslots(), inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
-		hud.call("set_quickslot_entries", quickslots)
+		hud.call("set_quickslot_entries", effective_quickslots())
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	var bag: Variant = hud.get("lineage_inventory_ui")
@@ -2753,6 +2761,7 @@ func _refresh_inventory_hud() -> void:
 	# An open character sheet shows weight-derived values; refresh it fully once.
 	if str(hud.get("active_section")) == "character":
 		stat_hud_refresh_pending = true
+	regional_return_settings_updated.emit()
 
 func _on_ground_drop_clicked(drop: Button) -> void:
 	loot_pickup.select(drop)
@@ -3332,6 +3341,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
 		return
+	if consumable_service.try_use_regional_return(item_name): return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
@@ -4335,9 +4345,10 @@ func _update_hud() -> void:
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	if hud.has_method("set_quickslot_state"):
-		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
+		hud.call("set_quickslot_state", effective_quickslots(), inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
-		hud.call("set_quickslot_entries", quickslots)
+		hud.call("set_quickslot_entries", effective_quickslots())
+	regional_return_settings_updated.emit()
 
 func _refresh_combat_hud() -> void:
 	# Only presentation limits are reused. Equipment/stat/buff changes and loads
@@ -4556,6 +4567,11 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var regional_error: String = REGIONAL_RETURN.validate_save(data)
+	if not regional_error.is_empty():
+		source_save_blocked = true
+		hud.show_message(regional_error)
+		return
 	var source_shop_error: String = source_shop.check_load(data)
 	if source_shop_error.is_empty(): source_shop_error = source_shop.prepare_load(data, save_path(), loaded_save_sha)
 	if not source_shop_error.is_empty():
@@ -4872,6 +4888,7 @@ func _load_game(quiet: bool) -> void:
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
 	_update_hud()
 	_emit_consumable_auto_settings()
+	_refresh_regional_return_slots()
 	if not quiet:
 		hud.show_message("불러오기 완료")
 
@@ -5077,7 +5094,7 @@ func _update_job_skillbar() -> void:
 	if hud.has_method("set_job_skillbar"):
 		hud.call("set_job_skillbar", _quickbar_job_skills())
 	if hud.has_method("set_quickslot_state"):
-		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
+		hud.call("set_quickslot_state", effective_quickslots(), inventory, _combined_active_buffs(), self_mode_enabled)
 
 func _sanitize_quickslots_for_current_job() -> bool:
 	_normalize_quickslots()
@@ -5252,7 +5269,7 @@ func _on_quickslot_pressed(slot_index: int) -> void:
 	var value: Variant = quickslots[slot_index]
 	if not (value is Dictionary):
 		return
-	var entry: Dictionary = value as Dictionary
+	var entry: Dictionary = REGIONAL_RETURN.effective(value, _regional_return_land(), get_regional_return_enabled(), inventory, _find_catalog_item_record)
 	if entry.is_empty():
 		hud.show_message("빈 퀵슬롯입니다")
 		return
@@ -5275,6 +5292,8 @@ func _use_quickslot_item(item_name: String) -> void:
 
 func _quickslot_item_supported(item_name: String) -> bool:
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
+	var return_record: Dictionary = _find_catalog_item_record(item_name)
+	if REGIONAL_RETURN.claims_identity(item_name, return_record): return REGIONAL_RETURN.supported(item_name, return_record)
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	return not record.is_empty() and (_is_timed_buff_item(record) or int(record.get("heal",0)) > 0)
@@ -8117,3 +8136,42 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+func get_regional_return_enabled() -> bool:
+	return ui_preferences.get(REGIONAL_RETURN.SETTING, false) == true
+
+func set_regional_return_enabled(enabled: bool) -> void:
+	if get_regional_return_enabled() == enabled: return
+	ui_preferences[REGIONAL_RETURN.SETTING] = enabled
+	_refresh_regional_return_slots()
+	_request_deferred_save()
+
+func _regional_return_land() -> int:
+	var context: Dictionary = field_map.data if field_map != null else {}
+	if field_map is OriginalPlayableField and field_map.definition.has("source_land_id"):
+		context = context.duplicate()
+		context["source_land_id"] = field_map.definition.source_land_id
+	return REGIONAL_RETURN.land_for(active_map_id, active_map, context)
+
+func effective_quickslots() -> Array:
+	var result: Array = []
+	var land: int = _regional_return_land()
+	for value: Variant in quickslots:
+		result.append(REGIONAL_RETURN.effective(value, land, get_regional_return_enabled(), inventory, _find_catalog_item_record) if value is Dictionary else {})
+	return result
+
+func _refresh_regional_return_slots() -> void:
+	if is_instance_valid(hud) and hud.has_method("set_quickslot_state"):
+		hud.set_quickslot_state(effective_quickslots(), inventory, _combined_active_buffs(), self_mode_enabled)
+	regional_return_settings_updated.emit()
+
+func regional_return_status() -> String:
+	if not get_regional_return_enabled(): return "자동 변경 꺼짐 · 원래 귀환 슬롯 사용"
+	var land: int = _regional_return_land()
+	if not REGIONAL_RETURN.DATA.data.lands.has(str(land)): return "현재 지역: 변경 대상 아님"
+	var suffix: String = " · TWILIGHT 대응 지도" if REGIONAL_RETURN.DATA.data.host_bindings.has(active_map_id) else ""
+	var key: String = REGIONAL_RETURN.target_key(126424, inventory, _find_catalog_item_record)
+	return "잊혀진 귀환 주문서 적용 · 보유 %d개%s" % [int(inventory.get(key, 0)), suffix]
+
+func regional_return_stack(item_name: String) -> Dictionary:
+	return REGIONAL_RETURN.stack_identity(item_name, _find_catalog_item_record(item_name))

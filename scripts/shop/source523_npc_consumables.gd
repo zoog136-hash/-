@@ -23,7 +23,11 @@ static func install(world, catalog) -> Dictionary:
 		var record: Dictionary=world._find_catalog_item_record(name)
 		if not record.is_empty():
 			var identity: String=str(record.get("source523_shop_item_id",record.get("native_item_id",record.get("sourceId",""))))
-			if identity!=id:continue
+			if identity!=id or record.get("source_bless_raw",1)!=1 or str(record.get("bless_state","")).to_lower() in ["blessed","cursed","축복","저주"]:continue
+			if not supply_only and not record.has("source523_shop_item_id"):
+				record["source523_shop_item_id"]=int(id)
+				record["source523_shop_use_origin"]=str(settings.origin)
+			if not supply_only and not record.has("source_bless_raw"):record["source_bless_raw"]=1
 			if supply_only:
 				if record.get("source_bless_raw",1)!=1 or int(record.get("source_item_class_id",126424))!=126424 or record.get("slot")!="consumable" or record.get("grade")!="일반" or str(record.get("bless_state","")).to_lower() in ["blessed","cursed","축복","저주"]:continue
 				_supply_metadata(record,original,str(spec.desc))
@@ -48,6 +52,7 @@ static func install(world, catalog) -> Dictionary:
 
 static func _supply_metadata(record: Dictionary, original: Dictionary, origin: String) -> void:
 	# Add supplier identity to the exact host definition; keep its existing use/desc.
+	if str(record.get("source","")).is_empty():record["source"]="twilight-shop523-consumable"
 	record.merge({"source523_shop_item_id":126424,"source523_shop_supply_only":true,
 		"source523_shop_use_origin":origin,"source_item_class_id":126424,"source_bless_raw":1,
 		"source_is_consumable":true,"source_test_item":false,"source_weight_raw":original.get("Weight",0)},true)
