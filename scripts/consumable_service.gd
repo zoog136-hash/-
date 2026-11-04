@@ -515,6 +515,9 @@ func apply_element_management(scroll_name: String, weapon_reference: String, new
 	var item: Dictionary = instances[item_id] as Dictionary
 	if str(item.get("name", "")) != item_name or int(item.get("element_level", 0)) <= 0:
 		return
+	if item.get("equipment523", {}) is Dictionary and item.get("equipment523", {}).has("elemental_smith"):
+		_apply_processed_element_management(scroll_name,item_id,item_name,new_element,kind)
+		return
 	if kind == "element_change":
 		if not RULES.ELEMENT_NAMES.has(new_element) or new_element == str(item.get("element", "")):
 			_message("기존 속성과 다른 속성을 선택하세요")
@@ -527,12 +530,51 @@ func apply_element_management(scroll_name: String, weapon_reference: String, new
 	_consume(scroll_name)
 	_message("%s [%s] 속성 %s" % [item_name, item_id, "변경 완료" if kind == "element_change" else "초기화 완료"])
 
+func _apply_processed_element_management(scroll_name: String, item_id: String, item_name: String, new_element: String, kind: String) -> void:
+	if not world.item_instances[item_id].equipment523.elemental_smith is Dictionary:
+		_message("기존 속성 세공 기록을 해석할 수 없어 장비와 주문서를 보존합니다")
+		return
+	if kind == "element_change" and (not RULES.ELEMENT_NAMES.has(new_element) or new_element == str(world.item_instances[item_id].get("element", ""))):
+		_message("기존 속성과 다른 속성을 선택하세요")
+		return
+	if world.has_method("_item_locked") and (world.call("_item_locked",item_name,item_id) or world.call("_item_locked",scroll_name,"")):
+		_message("잠긴 장비와 주문서는 사용할 수 없습니다")
+		return
+	# This legacy chooser selects a named stack, not a physical source reward.
+	# Refuse ambiguous physical scrolls rather than lose their remaining quantity.
+	for physical: Dictionary in world.item_instances.values():
+		if str(physical.get("name", "")) == scroll_name:
+			_message("물리 개체로 보관한 주문서는 정확한 개체 선택 경로가 필요합니다")
+			return
+	var staged_items: Dictionary = world.item_instances.duplicate(true)
+	var staged_inventory: Dictionary = world.inventory.duplicate(true)
+	var changed: Dictionary = staged_items[item_id]
+	changed["equipment523_retired_elemental_smith"] = changed.equipment523.elemental_smith.duplicate(true)
+	changed.equipment523.erase("elemental_smith")
+	changed["element"] = new_element if kind == "element_change" else ""
+	if kind == "element_reset": changed["element_level"] = 0
+	staged_inventory[scroll_name] = int(staged_inventory[scroll_name]) - 1
+	if int(staged_inventory[scroll_name]) == 0: staged_inventory.erase(scroll_name)
+	var saved: Error = world.call("_save_game",true,{"inventory":staged_inventory,"item_instances":staged_items})
+	if saved != OK:
+		if world.has_method("_equipment523_commit") and world.equipment523._saved_candidate(world,{"inventory":staged_inventory,"item_instances":staged_items}):
+			world.equipment523.save_blocked = true
+			world.equipment523.problem = "속성 변경 저장 후보의 활성화가 불확실합니다. 정상 저장을 다시 불러오세요."
+		_message("속성 변경 저장 실패 · 주문서와 세공 효과를 보존했습니다")
+		return
+	world.item_instances = staged_items
+	world.inventory = staged_inventory
+	world.call("_update_hud")
+	_message("%s [%s] 속성 %s · 기존 속성 세공 효과 소실" % [item_name,item_id,"변경 완료" if kind == "element_change" else "초기화 완료"])
+
 func _select_option(item_name: String, candidates: Array[String], purpose: String, choose_element: bool) -> void:
 	if candidates.is_empty():
 		return
 	var dialog: ConfirmationDialog = ConfirmationDialog.new()
 	dialog.title = "%s 선택" % item_name
 	dialog.dialog_text = "대상을 고른 다음 확인하세요. 확인 전에는 아이템이 소모되지 않습니다."
+	if purpose in ["element_change", "element_reset"]:
+		dialog.dialog_text += "\n속성 변경·초기화 시 기존 속성 세공 효과가 사라집니다."
 	var selector: OptionButton = OptionButton.new()
 	selector.custom_minimum_size = Vector2(330, 42)
 	for candidate: String in candidates:

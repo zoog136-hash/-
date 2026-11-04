@@ -1,5 +1,11 @@
 extends "res://scripts/hud_v20.gd"
 
+signal equipment523_open_requested
+signal equipment523_preview_requested(action: Dictionary)
+signal equipment523_commit_requested(action: Dictionary)
+signal equipment523_install_requested(path: String, sha256: String)
+var equipment523_view: Control
+
 # Debug-build tools. Requests are also checked by the authoritative world.
 signal card_pack_draw_requested(category: String)
 signal card_fusion_requested(category: String, grade: String, count: int)
@@ -933,6 +939,7 @@ func _navigate(section: String) -> void:
 		"enhance": _open_enhance_chooser()
 		"warehouse": open_warehouse()
 		"crafting": open_crafting()
+		"equipment523": equipment523_open_requested.emit()
 		"sell": open_item_sell()
 		_: open_catalog(section)
 
@@ -1230,7 +1237,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["equipment523","세공·제련·연금"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -2485,3 +2492,23 @@ func _refresh_source_dungeon_progress_deferred() -> void:
 	if active_section != "source_dungeons" or not is_instance_valid(workspace): return
 	var view: Node = workspace.find_child("SourceDungeonView",true,false)
 	if is_instance_valid(view) and not view.is_queued_for_deletion(): view._select(int(view.selected))
+
+
+func open_equipment523(snapshot: Dictionary) -> void:
+	_open_window("equipment523","장비 가공·연금","비용 확인 · 기존 옵션 교체 · 개체별 저장")
+	var screen := preload("res://scripts/equipment523/view.gd").new()
+	workspace.mount(screen)
+	equipment523_view = screen
+	screen.preview_requested.connect(func(action: Dictionary) -> void: equipment523_preview_requested.emit(action))
+	screen.commit_requested.connect(func(action: Dictionary) -> void: equipment523_commit_requested.emit(action))
+	screen.install_requested.connect(func(path: String, sha: String) -> void: equipment523_install_requested.emit(path,sha))
+	screen.set_snapshot(snapshot)
+
+func equipment523_refresh(snapshot: Dictionary) -> void:
+	if is_instance_valid(equipment523_view): equipment523_view.call("set_snapshot",snapshot)
+
+func equipment523_quote_result(result: Dictionary) -> void:
+	if is_instance_valid(equipment523_view): equipment523_view.call("show_quote",result)
+
+func equipment523_action_result(result: Dictionary) -> void:
+	if is_instance_valid(equipment523_view): equipment523_view.call("show_result",result)

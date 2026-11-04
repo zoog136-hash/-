@@ -31,6 +31,9 @@ jobs:
         run: |
           python3 -m compileall -q tools tests
           python3 tests/test_ci_core.py
+          python3 tests/test_five_smith_smelt.py
+          python3 tests/test_equipment523_alchemy.py
+          python3 tests/test_five_set_invoke.py
       - name: Install pinned Godot
         shell: bash
         run: |

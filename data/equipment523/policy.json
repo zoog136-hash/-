@@ -1,0 +1,53 @@
+{
+  "schema": "twilight-equipment523-policy-v1",
+  "notes": "원문 대상·확률·효과·아이템 ID를 유지합니다. 아래 비용의 미확정 부분, 0 선택자, 세트 문턱과 원소 치명타 공식은 조절 가능한 TWILIGHT 해석입니다.",
+  "costs": {
+    "elemental_smith": {
+      "gold_cost": 0,
+      "material_amount": 1,
+      "basis": "공식: 동일 속성 세공 주문서 1장. 추가 아데나 0은 TWILIGHT 설정."
+    },
+    "bless_reinforcement": {
+      "gold_cost": 0,
+      "material_amount": 1,
+      "basis": "공식: 축복 부여 주문서. 1장·추가 아데나 0은 TWILIGHT 설정."
+    },
+    "smelt": {
+      "gold_cost": 0,
+      "material_amount": 1,
+      "basis": "생명의 돌 289162. 1개·추가 아데나 0은 TWILIGHT 설정."
+    },
+    "spirit_smelt": {
+      "gold_cost": 0,
+      "material_amount": 1,
+      "basis": "원문 SpiritSmelt 코어 관계. 1개·추가 아데나 0은 TWILIGHT 설정."
+    }
+  },
+  "bless_probability_column": "Prob1",
+  "bless_probability_basis": "Prob2는 원문 전 행 0이며 정확한 의미는 미확인. Prob1 선택은 TWILIGHT 해석. 합계 100.5%인 풀은 실행 차단.",
+  "spirit_bless_zero": "wildcard",
+  "spirit_bless_zero_basis": "원문 16행 BlessCode0의 무지정 선택자 해석. 실제 축복 상태를 변경하지 않음.",
+  "smelt_expiry_unix": {},
+  "invoke_gold_cost": 0,
+  "invoke_zero_bless_selector": true,
+  "invoke_zero_level_fallback": true,
+  "invoke_basis": "원문 마법 부여 주문서 1장. 한 가변 슬롯 선택, 추가 아데나 0과 0단계/축복0 선택자는 TWILIGHT 해석. 기본 발동 보존.",
+  "set_threshold_mode": "cumulative",
+  "set_basis": "실제 장착 개체의 서로 다른 원본 품목 수만 집계. 달성한 CompletionDegree 효과 누적은 TWILIGHT 해석.",
+  "pvp_numeric_as_pve": true,
+  "pvp_basis": "기존 단독 실행 게임의 _normalize_option_policies 정책과 동일하게 PvP 수치를 PvE에 적용.",
+  "elemental_critical_multiplier": 2.0,
+  "elemental_combat_basis": "원문 원소 추가 피해·관통·치명 확률을 기존 저항 채널에 연결. 원소 치명타 배율 2배는 TWILIGHT 해석.",
+  "alchemy": {
+    "evaluation_mode": "additive_v1",
+    "cost_mode": "flat_recipe_group_v1",
+    "range_mode": "inclusive_v1",
+    "server_limit_mode": "unrestricted_only",
+    "basis": "각 재료 BasePrice+해당 강화/속성/축복 가격의 합산과 양끝 포함 구간은 TWILIGHT 해석. 원문 고정 도전 비용 Base10만/Law20만을 사용하며 점술2만은 포함하지 않음. Law20만은 NC 공식 안내 대조. 종료된 Refine은 활성화하지 않음."
+  },
+  "death_damage_per_point": 1.0,
+  "death_basis": "원문 DTH 수치 유지. DTH1당 추가 피해1은 TWILIGHT 선형 추정이며 원작 파생 공식은 미확인. 0으로 비활성화 가능.",
+  "regeneration_interval_seconds": 30,
+  "regeneration_basis": "기존 로컬 회복 간격30초에 원문 RegenHP/MP 수치를 정확히 가산. 원작 틱 공식 복원 아님.",
+  "material_expiry_unix": {}
+}

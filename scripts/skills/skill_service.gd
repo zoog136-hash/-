@@ -1,6 +1,7 @@
 extends RefCounted
 class_name TwilightOriginalSkillService
 
+const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
 const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
 var local_runtime = LOCAL.new()
 const Catalog = preload("res://scripts/skills/skill_catalog.gd")
@@ -131,6 +132,7 @@ func refresh_buffs_after_learning(learned_id: String) -> void:
 func stat(key: String) -> float:
 	var result: float = catalog.stat(key) + local_runtime.stat(key)
 	if key=="lfe" and world.get("growth")!=null: result += world.growth.bonus("life:flat")
+	if key=="lfe": result += EQUIPMENT523_COMBAT.lfe(world._all_equipped_records())
 	for buff: Dictionary in world.active_skill_buffs.values():
 		if buff.has("skill_id"): result += float(buff.get("skill_stats", {}).get(key, 0))
 	for entry: Dictionary in stacks.values(): result += float(entry.get("stats", {}).get(key, 0)) * float(entry.get("count", 0))
@@ -422,6 +424,7 @@ func heal(skill: Dictionary, amount: int) -> void:
 	var effective := maxi(0, amount + int(stat("lfe") * float(skill.get("lfe_scale", 0))))
 	if str(skill.get("mode",""))=="heal" and world.get("growth")!=null: effective = world.growth.magic_healing(effective)
 	var source_heal_input: int = effective
+	effective = EQUIPMENT523_COMBAT.magical_heal(world._all_equipped_records(),effective)
 	effective = world.patch523_npc_spells.extensions.healing(effective,false)
 	var generation: int = int(world.combat_generation)
 	world.apply_patch523_healing(source_heal_input,false)

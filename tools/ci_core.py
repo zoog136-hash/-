@@ -31,6 +31,12 @@ CHECKS = [
     ('symbol_travel_test', []),
     ('symbol_offline_combat_test', []),
     ('symbol_history_test', []),
+    ('equipment523_smith_smelt_test', []),
+    ('equipment523_set_invoke_test', []),
+    ('equipment523_alchemy_test', []),
+    ('equipment523_service_test', []),
+    ('equipment523_combat_test', []),
+    ('equipment523_element_loss_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -281,7 +287,14 @@ def main():
                       'symbol_absolute_followup_test':'SYMBOL_ABSOLUTE_RESULT',
                       'symbol_travel_test':'SYMBOL_TRAVEL_RESULT',
                       'symbol_offline_combat_test':'SYMBOL_OFFLINE_RESULT',
-                      'symbol_history_test':'SYMBOL_HISTORY_RESULT'}[name]
+                      'symbol_history_test':'SYMBOL_HISTORY_RESULT',
+                      'equipment523_smith_smelt_test':'EQUIPMENT523_SMITH_SMELT_RESULT',
+                      'equipment523_set_invoke_test':'EQUIPMENT523_SET_INVOKE_RESULT',
+                      'equipment523_alchemy_test':'EQUIPMENT523_ALCHEMY_RESULT',
+                      'equipment523_service_test':'EQUIPMENT523_SERVICE_RESULT',
+                      'equipment523_combat_test':'EQUIPMENT523_COMBAT_RESULT',
+                      'equipment523_element_loss_test':'EQUIPMENT523_ELEMENT_LOSS_RESULT',
+                      }[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
