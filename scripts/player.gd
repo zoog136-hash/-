@@ -55,6 +55,14 @@ var path_index: int = 0
 var auto_enabled: bool = false
 var manual_navigation: bool = false
 var movement_locked: bool = false
+var source_523_movement_blocked: bool = false
+var source_523_spell_blocked: bool = false
+var source_523_stunned: bool = false
+var source_523_attack_blocked: bool = false
+
+func set_source_523_restrictions(flags: Dictionary) -> void:
+	source_523_spell_blocked = bool(flags.get("spell",false)); source_523_stunned = bool(flags.get("stunned",false)); source_523_attack_blocked = bool(flags.get("attack",false))
+	if motion.active and (source_523_stunned or (source_523_spell_blocked and motion.attack_style == "magic") or source_523_attack_blocked): cancel_attack()
 var class_index: int = 0
 var facing: int = 0 # 0 down, 1 up, 2 left, 3 right
 var attack_clock: float = 0.0
@@ -147,7 +155,7 @@ func _physics_process(delta: float) -> void:
 	if not ui_blocks and Input.is_action_just_pressed("toggle_auto"):
 		set_auto_enabled(not auto_enabled)
 
-	if is_held():
+	if is_held() or source_523_movement_blocked:
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
 		clear_click_path()
@@ -620,7 +628,7 @@ func _tick_silence(delta: float) -> void:
 	silence_remaining = maxf(0.0, silence_remaining - delta)
 
 func is_silenced() -> bool:
-	return silence_remaining > 0.0
+	return silence_remaining > 0.0 or source_523_spell_blocked
 
 func apply_silence(duration: float) -> void:
 	silence_remaining = maxf(silence_remaining, maxf(0.0, duration))
@@ -631,7 +639,7 @@ func _tick_stun(delta: float) -> void:
 	stun_remaining = maxf(0.0, stun_remaining - delta)
 
 func is_stunned() -> bool:
-	return stun_remaining > 0.0
+	return stun_remaining > 0.0 or source_523_stunned
 
 func apply_stun(duration: float) -> void:
 	stun_remaining = maxf(stun_remaining, maxf(0.0, duration))

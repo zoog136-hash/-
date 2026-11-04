@@ -160,6 +160,7 @@ func spend(skill: Dictionary) -> bool:
 	return true
 
 func ready(skill: Dictionary, announce: bool = false) -> bool:
+	if world.patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if bool(skill.get("runtime_blocked", false)):
 		if announce: world.hud.show_message(Catalog.CURRENT.blocked_reason(skill))
 		return false
@@ -172,7 +173,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	elif str(skill.mode) == "summon" and (summons.active() or world.active_skill_buffs.has(str(skill.name))): reason = "가디언 또는 보호막 유지 중"
 	elif not world.pending_attack.is_empty(): reason = "시전 중"
 	elif world.hp <= 0 or world.player.motion.dead: reason = "사망 상태"
-	elif not bool(skill.get("cast_while_disabled", false)) and (world.player.is_stunned() or world.player.is_feared() or world.player.is_silenced()): reason = "상태이상으로 사용 불가"
+	elif not bool(skill.get("cast_while_disabled", false)) and (world.player.is_stunned() or world.player.is_feared() or world.player.silence_remaining > 0 or (world.player.source_523_spell_blocked and str(skill.get("attack_type","magic")) == "magic")): reason = "상태이상으로 사용 불가"
 	elif world.skill_global_cooldown > 0 or float(world.skill_cooldowns.get(str(skill.name), 0)) > 0: reason = "재사용 대기 중"
 	else: reason = cost_reason(catalog.resolve(skill))
 	if not reason.is_empty() and announce: world.hud.show_message(reason)
@@ -402,12 +403,29 @@ func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:
 	world._refresh_skill_stealth_visual()
 	world._refresh_speed_modifiers()
 
+func dispel_active_buff(name: String) -> bool:
+	if not world.active_skill_buffs.has(name): return false
+	var buff: Dictionary = world.active_skill_buffs[name]
+	var id: String = str(buff.get("skill_id",""))
+	var row: Dictionary = catalog.record_for(id)
+	if bool(row.get("local_design",false)): local_runtime.turn_off(row)
+	if str(buff.get("summon_stage","")) == "shield": remove_guardian_shield_buff(id)
+	world.active_skill_buffs.erase(name)
+	if not id.is_empty():
+		toggles.erase(id); shields.erase(id); vfx.remove_persistent(id)
+	refresh_buff_visuals()
+	return true
+
 func heal(skill: Dictionary, amount: int) -> void:
 	var maximum: int = world._effective_max_hp()
 	var before: int = world.hp
 	var effective := maxi(0, amount + int(stat("lfe") * float(skill.get("lfe_scale", 0))))
 	if str(skill.get("mode",""))=="heal" and world.get("growth")!=null: effective = world.growth.magic_healing(effective)
-	world.hp = mini(maximum, before + effective)
+	var source_heal_input: int = effective
+	effective = world.patch523_npc_spells.extensions.healing(effective,false)
+	var generation: int = int(world.combat_generation)
+	world.apply_patch523_healing(source_heal_input,false)
+	if generation != int(world.combat_generation): return
 	if bool(skill.get("overflow_shield", false)) and before + effective > maximum:
 		shields[str(skill.id)] = {"amount":mini(maximum, before + effective - maximum),"remaining":float(skill.get("duration", 12))}
 	if str(skill.get("mode", "")) == "heal" and not skill.get("stats", {}).is_empty(): apply_buff(skill)

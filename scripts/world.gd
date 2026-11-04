@@ -1,6 +1,8 @@
 extends Node2D
 class_name TwilightWorld
 
+var patch523_npc_spells = preload("res://scripts/monsters/patch523_npc_combat.gd").new()
+
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
 const SOURCE_DUNGEONS = preload("res://scripts/dungeons/source_dungeon_runtime.gd")
 var source_dungeons = SOURCE_DUNGEONS.new()
@@ -406,6 +408,10 @@ var inventory: Dictionary = {
 }
 
 func _ready() -> void:
+	if patch523_npc_spells.configure(self):
+		var source_panel = preload("res://scripts/ui/patch523_npc_panel.gd").new()
+		source_panel.service = patch523_npc_spells
+		add_child(source_panel)
 	# Apply after resource import. A project-level custom_font is loaded before
 	# first import on clean checkouts and would report a missing font loader.
 	var korean_font := FontVariation.new()
@@ -511,6 +517,7 @@ func _ready() -> void:
 		hud.call("open_class_selection",true)
 
 func _process(delta: float) -> void:
+	patch523_npc_spells.tick(delta)
 	_update_source_optimization()
 	inventory_automation.maintenance.tick()
 	# No auto-save, auto-hunt or keyboard commands until the new class is
@@ -943,7 +950,9 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	var available_hp: int=maxi(0,target.hp-stolen)
 	var available_mp: int=target.mp
 	var prior_hp: int=hp;var prior_mp: int=mp
+	patch523_npc_spells.extensions.begin_incoming(target,adjusted_damage+stolen,kind,by_spell)
 	target.take_damage(adjusted_damage + stolen, critical)
+	patch523_npc_spells.extensions.incoming.erase(target.get_instance_id())
 	growth.guardian_combat.after_hit(target,critical,kind,main_target,by_spell,available_hp,available_mp)
 	if stolen > 0 or hp!=prior_hp or mp!=prior_mp:
 		_refresh_combat_hud()
@@ -1985,9 +1994,10 @@ func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
+	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance+int(patch523_npc_spells.extensions.actor_values(target).get("MagicResist",0)))
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -1995,7 +2005,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
 		return false
-	if player.is_silenced():
+	if player.silence_remaining > 0:
 		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
 		return false
 	if target == null or not is_instance_valid(target) or target.dead:
@@ -2050,6 +2060,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	return bleeding
 
 func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_duration: float = 6.0, tick_damage: int = 12, tick_interval: float = 1.0, skill_name: String = "포이즌") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2102,6 +2113,7 @@ func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_durati
 	return poisoned
 
 func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration: float = 2.5, skill_name: String = "피어") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
@@ -2154,6 +2166,7 @@ func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration:
 	return feared
 
 func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: float = 2.5, skill_name: String = "홀드") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2206,6 +2219,7 @@ func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: 
 	return held
 
 func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_duration: float = 3.0, skill_name: String = "사일런스") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2258,6 +2272,7 @@ func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_dura
 	return silenced
 
 func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 10, stun_duration: float = 2.0, skill_name: String = "쇼크 스턴") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2265,7 +2280,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
 		return false
-	if player.is_silenced():
+	if player.silence_remaining > 0:
 		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
 		return false
 	if target == null or not is_instance_valid(target) or target.dead:
@@ -2320,6 +2335,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	return stunned
 
 func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill_name: String = "마법") -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
@@ -2399,6 +2415,7 @@ func _cast_bleed_from_hud() -> void:
 	_cast_bleed_skill(_skill_target(90.0))
 
 func _cast_combat_skill_from_hud(skill_id: String) -> void:
+	if skill_id != "attack" and patch523_npc_spells.blocks("CannotCastSkill"): return
 	match skill_id:
 		"attack":
 			_attack()
@@ -2420,6 +2437,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 			hud.show_message("알 수 없는 스킬입니다")
 
 func _attack() -> void:
+	if patch523_npc_spells.blocks("CannotAttack"): return
 	if is_instance_valid(world_interactions) and world_interactions.primary_is_npc(): return
 	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
@@ -2447,6 +2465,7 @@ func _attack() -> void:
 	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind), auto_attack_timer, true)
 
 func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> void:
+	if patch523_npc_spells.blocks("CannotAttack"): return
 	if not is_instance_valid(target) or target.dead: return
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
 	if rng.randf() >= hit_chance:
@@ -2692,11 +2711,13 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	monster.set_meta("rewarded_life_id", monster.life_id)
 	dungeon_play.monster_died(monster)
 	if bool(monster.get_meta("summoned",false)):
+		patch523_npc_spells.extensions.remaining.forget(monster)
 		# Bounded boss helpers cannot become an unlimited XP/equipment farm.
 		if monster==selected_monster: selected_monster = null
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
+	var source_reward: Dictionary = patch523_npc_spells.extensions.remaining.take_reward(monster)
 	_source_dungeon_kill(monster)
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
 	if hud.has_method("refresh_quests"):
@@ -2711,12 +2732,13 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var adena_rate: float = ain_service.adena_rate()
 	var item_adena_rate: float = 1.0 + clampf(_equipped_numeric_sum("adena_drop_pct"), 0.0, 500.0) / 100.0
 	var map_rate: float = EXP_PROGRESSION.map_exp_multiplier(_kill_map_id())
-	var gained_experience: int = maxi(0 if not monster.source_m_original.is_empty() else 1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate * map_rate)))
+	var source_experience: int = maxi(0,monster.exp_reward+int(source_reward.get("experience",0)))
+	var gained_experience: int = maxi(0 if not monster.source_m_original.is_empty() else 1, int(round(source_experience * _experience_multiplier() * exp_rate * map_rate)))
 	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
 	gold += gained_adena
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
-	_roll_drop(monster, can_drop_equipment)
+	_roll_drop(monster, can_drop_equipment,source_reward.get("weights",{}))
 	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
 	var level_before: int = level
 	_check_level_up()
@@ -2783,6 +2805,7 @@ func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: in
 	return view
 
 func _collect_ground_drop(drop: Button) -> bool:
+	if patch523_npc_spells.blocks("CannotLoot"): return false
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
 	if not ground_loot.valid_view(drop): return false
 	var pending: Dictionary = ground_loot.records[str(drop.get_meta("id"))]
@@ -2923,10 +2946,10 @@ func _claim_quest(quest_id: String) -> void:
 	hud.show_message(str(result.get("title", "")) + " · 보상 수령 완료")
 
 
-func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
+func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true, source_weights: Dictionary = {}) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
-	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity, _kill_map_id())
+	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name, monster.loot_source_identity, _kill_map_id(),source_weights)
 	if earned.is_empty():
 		return
 	var batch_id: String = ground_loot.begin_hunt_batch()
@@ -2954,9 +2977,9 @@ func _monster_accuracy_for_attack_type(attacker: TwilightMonster, attack_type: S
 		"magic":
 			return attacker.magic_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"magic")
 		"ranged":
-			return attacker.ranged_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"ranged")
+			return attacker.ranged_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"ranged")+patch523_npc_spells.extensions.remaining.accuracy(attacker,"ranged")
 		_:
-			return attacker.melee_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"melee")
+			return attacker.melee_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"melee")+patch523_npc_spells.extensions.remaining.accuracy(attacker,"melee")
 
 func _monster_hit_chance(attacker: TwilightMonster, attack_type: String = "melee") -> float:
 	if attacker == null:
@@ -3041,6 +3064,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 		return
 	if field_map != null and field_map.is_safe(player.global_position):
 		return
+	damage_value = patch523_npc_spells.extensions.outgoing(attacker,damage_value,attack_type)
 	var normalized_type: String = attack_type
 	if normalized_type != "ranged" and normalized_type != "magic":
 		normalized_type = "melee"
@@ -3095,6 +3119,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var option_result: Dictionary=option_awakening.combat.incoming(attacker,normalized_type,reduced)
 	reduced=int(option_result.damage)
 	hp = maxi(0, hp - reduced)
+	patch523_npc_spells.extensions.on_player_event("attacked")
 	if hp>0 and int(option_result.heal)+int(guardian_result.heal)>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal)+int(guardian_result.heal))
 	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
 	if hp > 0:
@@ -3377,6 +3402,7 @@ func _grant_playtest_aden() -> void:
 	_save_game(true)
 
 func _use_card_pack_item(item_name: String) -> void:
+	if not _patch523_item_allowed(): return
 	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
@@ -3586,6 +3612,7 @@ func _format_seconds_short(seconds: float) -> String:
 	return "%d초" % whole
 
 func _use_timed_item_buff(record: Dictionary) -> bool:
+	if not _patch523_item_allowed(): return false
 	var item_name: String = str(record.get("name", ""))
 	var buff: Dictionary = _timed_item_buff_from_record(record)
 	if item_name == "" or buff.is_empty():
@@ -3946,6 +3973,7 @@ func _is_item_equipped(item_name: String) -> bool:
 	return false
 
 func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
+	if not _patch523_item_allowed(): return
 	if dungeon_play.try_enhancement(scroll_name,target_name):return
 	if hud.has_method("is_enhancement_presenting") and bool(hud.call("is_enhancement_presenting")):
 		return
@@ -4099,6 +4127,7 @@ func _update_ain_hud() -> void:
 		hud.call("set_ain_state", state, inventory)
 
 func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
+	if not _patch523_item_allowed(): return false
 	var kind: String = str(spec.get("kind", ""))
 	var base_name: String = CONSUMABLE_RULES.normalize_name(item_name)
 	if kind == "ain_orb":
@@ -4290,6 +4319,7 @@ func _craft_requested(recipe_id: String, batches: int) -> void:
 		hud.call("open_crafting")
 
 func _npc_teleport_requested(map_id: String) -> void:
+	if patch523_npc_spells.blocks("CannotTeleport"): return
 	map_id = NATIVE_PNG.canonical(map_id)
 	if player.is_stunned() or player.is_feared() or player.is_held():
 		hud.show_message("이동 불가 상태에서는 텔레포트할 수 없습니다")
@@ -4349,6 +4379,7 @@ func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
+	if not _patch523_item_allowed(): return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
 		hud.show_message("원본 사용 효과 미연결 · 아이템 보존")
 		return
@@ -4367,6 +4398,7 @@ func _use_quick_item(item_name: String) -> void:
 	hud.show_message("사용할 수 없는 퀵 아이템입니다")
 
 func _use_healing_item(item_name: String, heal_amount: int) -> void:
+	if not _patch523_item_allowed(): return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("%s이(가) 없습니다" % item_name)
 		return
@@ -4382,12 +4414,13 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
-	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
+	apply_patch523_healing(maxi(1,enhanced_heal),true)
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
 	_update_hud()
 
 func _return_to_spawn() -> void:
+	if patch523_npc_spells.blocks("CannotTeleport"): return
 	if player.is_stunned() or player.is_feared():
 		hud.show_message("현재 상태에서는 귀환할 수 없습니다")
 		return
@@ -5687,6 +5720,7 @@ func _tick_skill_cooldowns(delta: float) -> void:
 		skill_cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if skill.get("origin","")=="TWILIGHT_GUARDIAN523":return bool(growth.quote("guardian_cast",str(skill.id).trim_prefix("guardian:")).ok)
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.ready(skill, announce)
 	if not pending_attack.is_empty(): return false
@@ -5714,7 +5748,7 @@ func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 		if announce:
 			hud.show_message("%s · 화살 %d개 필요" % [skill_name, required_ammo] if _is_item_equipped("화살") else "%s · 화살을 착용하세요" % skill_name)
 		return false
-	if not charge_skill.is_empty() or player.is_stunned() or player.is_feared() or (player.is_silenced() and int(skill.get("mp", 0)) > 0):
+	if not charge_skill.is_empty() or player.is_stunned() or player.is_feared() or ((player.silence_remaining > 0 or (player.source_523_spell_blocked and _skill_attack_kind(skill) == "magic")) and int(skill.get("mp",0)) > 0):
 		if announce:
 			hud.show_message("현재 상태에서는 스킬을 사용할 수 없습니다")
 		return false
@@ -5960,6 +5994,7 @@ func _cast_job_skill(skill_name: String) -> bool:
 	return success
 
 func _spend_skill_mp(skill: Dictionary) -> bool:
+	if patch523_npc_spells.blocks("CannotCastSkill") or (patch523_npc_spells.blocks("CannotCastSpell") and _skill_attack_kind(skill) == "magic"): return false
 	var mp_cost: int = maxi(0, int(skill.get("mp", 0)))
 	if mp < mp_cost:
 		hud.show_message("MP가 부족합니다")
@@ -6311,7 +6346,7 @@ func _cast_job_heal_skill(skill: Dictionary) -> bool:
 		amount = _effective_max_hp()
 	amount = growth.magic_healing(amount)
 	var before: int = hp
-	hp = mini(_effective_max_hp(), hp + amount)
+	apply_patch523_healing(amount,false)
 	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), hp - before])
 	hud.append_log("%s 회복 · HP +%d" % [str(skill.get("name", "")), hp - before])
 	return true
@@ -6361,6 +6396,7 @@ func _teleport_landing_clear(candidate: Vector2) -> bool:
 	return true
 
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
+	if patch523_npc_spells.blocks("CannotTeleport"): return false
 	if growth.travel.enabled():
 		growth.travel.open({"kind":"job","name":str(skill.name)})
 		return false
@@ -7382,7 +7418,7 @@ func _melee_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("meleeDamage") if original_skills != null else 0) + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage") + int(consumable_service.call("permanent_damage_bonus", "melee_damage"))
 
 func _melee_accuracy_stat() -> int:
-	return int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + int(growth.bonus("melee_evasion_ignore:flat")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
+	return int(patch523_npc_spells.modifier("MeleeHit")) + int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + int(growth.bonus("melee_evasion_ignore:flat")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("rangedDamage") if original_skills != null else 0) + _catalog_damage_adjustment("ranged") + _catalog_stat_sum("pve_ranged_damage") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
@@ -7683,7 +7719,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
-	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat"))
+	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat")) - int(patch523_npc_spells.modifier("ArmorClassBonus"))
 
 func _record_dg(record: Dictionary) -> int:
 	if record.has("dg"):
@@ -8041,6 +8077,7 @@ func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: 
 	pending_attack["duration"] = _skill_motion_duration(skill)
 
 func _queue_player_attack(target: TwilightMonster, kind: String, callback: Callable, duration: float, normal: bool = false, max_range: float = 0.0) -> bool:
+	if patch523_npc_spells.blocks("CannotAttack" if normal else "CannotCastSkill") or (kind == "magic" and patch523_npc_spells.blocks("CannotCastSpell")): return false
 	if not is_instance_valid(target) or target.dead or hp <= 0: return false
 	player.cancel_attack()
 	player.clear_click_path()
@@ -8076,6 +8113,8 @@ func _cancel_player_attack(id: int) -> void:
 		pending_attack.clear()
 
 func _release_player_attack(id: int) -> void:
+	if patch523_npc_spells.blocks("CannotAttack" if bool(pending_attack.get("normal",false)) else "CannotCastSkill"):
+		_cancel_player_attack(id); return
 	if int(pending_attack.get("id", -1)) != id: return
 	var action: Dictionary = pending_attack
 	pending_attack = {}
@@ -8133,6 +8172,7 @@ func _impact_player_attack(action: Dictionary) -> void:
 	resolving_combat_action = false
 
 func _clear_combat_actions() -> void:
+	patch523_npc_spells.clear()
 	if is_instance_valid(presentation_audio): presentation_audio.clear()
 	if original_skills != null: original_skills.clear()
 	combat_generation += 1
@@ -8543,3 +8583,46 @@ func _refresh_source_dungeon_panel() -> void:
 		hud.call("refresh_source_dungeon_progress")
 
 
+
+
+func _patch523_item_allowed() -> bool:
+	if not patch523_npc_spells.blocks("CannotUseItem"): return true
+	if is_instance_valid(hud): hud.show_message("현재 상태에서는 아이템을 사용할 수 없습니다")
+	return false
+
+func apply_patch523_healing(amount: int, potion: bool = false) -> void:
+	var adjusted: int = patch523_npc_spells.extensions.healing(amount,potion)
+	if adjusted < 0: apply_patch523_secondary_damage(-adjusted,"역치유")
+	else: hp = mini(_effective_max_hp(),hp+adjusted)
+	if adjusted > 0: patch523_npc_spells.extensions.on_player_event("healed")
+
+func apply_patch523_secondary_damage(amount: int, label: String) -> void:
+	if amount <= 0 or hp <= 0: return
+	hp = maxi(0,hp-amount)
+	player.show_status_text(label+" "+str(amount))
+	hud.append_log("%s 피해 %d · TWILIGHT 자체 결합식" % [label,amount])
+	if hp <= 0:
+		_respawn_player(label+" 피해로 사망 후 부활했습니다"); _update_hud()
+	else: _refresh_combat_hud()
+
+func resolve_patch523_npc_hit(actor: TwilightMonster, raw: int, spell: Dictionary, channel: String = "magic") -> bool:
+	# Keep one authoritative hit/crit/counter/resistance/death call. Suppress
+	# unrelated legacy status fields for this exact source spell only.
+	if not is_instance_valid(actor): return false
+	var life: int = actor.life_id
+	var before_hp: int = hp
+	var old: Dictionary = {}
+	for kind: String in ["stun","silence","hold","fear","poison","bleed"]:
+		for suffix: String in ["_duration","_accuracy"]:
+			var property: String = kind + suffix
+			old[property] = actor.get(property)
+			actor.set(property,0)
+	var old_element: String = actor.attack_element
+	var element: Dictionary = patch523_npc_spells.catalog.row("ElementalType",int(spell.get("ElementalTypeID",0)))
+	var channels: Dictionary = {"None":"physical","Fire":"fire","Water":"water","Air":"wind","Earth":"earth","Light":"holy","Dark":"dark"}
+	if not spell.is_empty() and channels.has(element.get("Name","")): actor.attack_element = channels[element.Name]
+	_on_player_hit(actor,raw,channel)
+	if is_instance_valid(actor) and actor.life_id == life:
+		for property: String in old: actor.set(property,old[property])
+		actor.attack_element = old_element
+	return hp < before_hp # Final host HP outcome, not a fabricated native success.
