@@ -68,6 +68,8 @@ const CARD_COLLECTION_RUNTIME = preload("res://scripts/cards/collection_runtime.
 var card_collections = CARD_COLLECTION_RUNTIME.new()
 const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
 var growth = GROWTH.new()
+const HALF_ELIXIR = preload("res://scripts/growth/half_elixir_runtime.gd")
+var half_elixir = HALF_ELIXIR.new()
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
 const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.gd")
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
@@ -660,6 +662,7 @@ func _load_data() -> void:
 	_build_job_classes()
 	equipment_collections.configure(self)
 	growth.configure(self)
+	half_elixir.configure(self)
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -904,6 +907,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	if attack_kind not in ["melee","ranged","magic"]:attack_kind=feedback_kind if resolving_combat_action else _current_attack_kind()
 	adjusted_damage=growth.combat.outgoing(adjusted_damage,attack_kind)
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
+	if attack_kind == "magic" and target.has_meta("magic_shield_reduction_percent"):
+		adjusted_damage = half_elixir.shield_damage(adjusted_damage, float(target.get_meta("magic_shield_reduction_percent")))
 	target.take_damage(adjusted_damage + stolen, critical)
 	if stolen > 0:
 		_refresh_combat_hud()
@@ -950,7 +955,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + int(half_elixir.stat_record().get(key, 0))
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -2960,7 +2965,7 @@ func _respawn_player(message_text: String) -> void:
 func _on_player_poison_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
 		return
-	var poison_damage: int = maxi(1, damage_value)
+	var poison_damage: int = half_elixir.incoming(maxi(1, damage_value), "poison", false, false, true)
 	hp = maxi(0, hp - poison_damage)
 	player.show_poison_damage(poison_damage)
 	hud.append_log("독 피해 %d" % poison_damage)
@@ -3014,7 +3019,8 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			])
 		return
 	var attacker_critical_rate: int = attacker.critical_rate_for_type(normalized_type)
-	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat())
+	var elemental_critical_resistance: int = int(half_elixir.value("ElementalCriticalResistance")) if ELEMENT_RULES.channel(attacker.attack_element) != "physical" else 0
+	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat() + elemental_critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
@@ -3022,6 +3028,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
+	reduced = half_elixir.incoming(reduced, normalized_type, attack_element != "physical")
 	var growth_max_hp: int = _effective_max_hp() if growth.bonus("low_hp_reduction:percent")>0 else 0
 	var symbol_context: Dictionary=attacker.symbol_hit_context.duplicate(true)
 	symbol_context["channel"]="dark" if attacker.attack_element=="dark" else normalized_type
@@ -3377,6 +3384,9 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
+	if not half_elixir.item_action(item_name).is_empty():
+		hud.open_half_elixir(item_name)
+		return
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 상태이상 해제 물약입니다")
 		return
@@ -4242,6 +4252,9 @@ func _npc_teleport_requested(map_id: String) -> void:
 
 
 func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
+	if direction == "deposit" and not half_elixir.storable(item_name):
+		hud.show_message("원본에서 보관할 수 없는 하프 엘릭서 품목입니다.")
+		return
 	if item_name == "아데나" or item_name.is_empty():
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
@@ -4458,6 +4471,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if half_elixir.save_blocked or not half_elixir.validate(collection_override.get("half_elixir523", half_elixir.state)).is_empty(): return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4472,7 +4486,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","half_elixir523"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4509,6 +4523,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"quest_state": quest_service.export_state(),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
+		"half_elixir523": half_elixir.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"crafting_log": crafting_log,
@@ -4610,6 +4625,11 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var half_error: String = half_elixir.validate(data.get("half_elixir523", HALF_ELIXIR.fresh()))
+	if not half_error.is_empty():
+		half_elixir.save_blocked = true
+		hud.show_message(half_error)
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4766,6 +4786,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
+	half_elixir.accept(data.get("half_elixir523", HALF_ELIXIR.fresh()))
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -6760,6 +6781,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 	if not card_collection_record.is_empty(): records.append(card_collection_record)
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
+	var half_record: Dictionary = half_elixir.stat_record()
+	if not half_record.is_empty(): records.append(half_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
 	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
 	equipment_records_cache=records
@@ -7179,7 +7202,8 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 func _catalog_damage_bonus(kind: String) -> int:
 	# Native secondary doll effects are counted once, separately from general attack.
 	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
-	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
+	var half_kind: String = {"melee":"Melee", "ranged":"Range", "magic":"Magic"}.get(kind, "")
+	var total: int = source_damage + int(half_elixir.value(half_kind + "Damage")) + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7200,7 +7224,8 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
-	var total: int = option_awakening.accuracy_bonus(kind)
+	var half_kind: String = {"melee":"Melee", "ranged":"Range", "magic":"Magic"}.get(kind, "")
+	var total: int = option_awakening.accuracy_bonus(kind) + int(half_elixir.value(half_kind + "Hit") + half_elixir.value("PVE" + half_kind + "Hit"))
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
