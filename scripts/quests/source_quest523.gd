@@ -10,6 +10,7 @@ var problem: String = "최신523 퀘스트 팩 미설치"
 var quests: Array[Dictionary] = []
 var class_ids: Dictionary = {}
 var currency_ids: Dictionary = {}
+var loaded_path: String = ""
 
 func load_pack() -> bool:
 	var path: String = USER_PATH if FileAccess.file_exists(USER_PATH) else DEV_PATH
@@ -27,10 +28,15 @@ func load_pack() -> bool:
 		problem = "퀘스트 팩 구조 오류"
 		return false
 	document = value
+	loaded_path = path
 	for link: Dictionary in document.currency_links:
 		if int(link.UnitID)==4 and bool(link.ForGive) and not currency_ids.has(int(link.ClassID)): currency_ids[int(link.ClassID)] = int(link.CurrencyID)
 	for raw: Dictionary in document.quests:
 		var row: Dictionary = raw.duplicate(true)
+		# Original QuestType=3 is Common/[일반], not the retired demo's
+		# daily bucket. The approved v1 data bytes stay immutable; original
+		# TypeID, rather than that older presentation key, is authoritative.
+		if int(row.definition.TypeID)==3: row.category="common"
 		row["objective"] = {"kind":"source", "count":1, "target":""}
 		row["rewards"] = {}
 		row["min_level"] = 1
@@ -130,7 +136,7 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 	# QuestRewardEnhancement is an optional paid boost. The original base
 	# Reward rows are granted; automatic completion never spends diamonds.
 	# NC confirmation: 2019-01-30 patch notes, additional diamond consumption.
-	var result: Dictionary = {"ok":true,"adena":0,"exp":0,"items":[],"quests":[],"pending_use":[],"optional_enhancement_unused":not row.enhancements.is_empty()}
+	var result: Dictionary = {"ok":true,"adena":0,"exp":0,"items":[],"quests":[],"pending_use":[],"ui_requests":[],"optional_enhancement_unused":not row.enhancements.is_empty()}
 	for reward: Dictionary in row.source_rewards:
 		var character: int = int(reward.CharacterClassID)
 		if character != 0 and int(context.get("class_id",-1)) < 0: return {"ok":false,"error":"직업별 보상 판별 대기"}
@@ -168,6 +174,11 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 						record["source_reward_id"] = int(reward.ID)
 					result.items.append({"record":record.duplicate(true),"quantity":amount,"source_reward_id":int(reward.ID)})
 			"NoReward": pass
+			"QuickSlotReg":
+				# Tutorial registration is a UI default, not an item quantity.
+				# Preserve its original parameters without overwriting the user's
+				# 50 existing bindings or guessing how source values 100+ map.
+				result.ui_requests.append({"reward_id":int(reward.ID),"class_id":int(reward.RewardClassID),"raw_amount":amount})
 			# Quest rewards unlock ownership, never waive a child's prerequisites.
 			"Quest": result.quests.append(int(reward.RewardClassID))
 			_: return {"ok":false,"error":"보상 미연결: "+str(reward.type_name)}

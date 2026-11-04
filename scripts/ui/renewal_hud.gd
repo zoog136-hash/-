@@ -954,7 +954,7 @@ func _on_lineage_side_action(action_id: String) -> void:
 
 
 func open_quests() -> void:
-	_open_window("quests", "퀘스트", "메인 · 일일 · 업적 · 즉시 완료")
+	_open_window("quests", "퀘스트 · 자동 완료", "메인 · 일반 · 업적 · 기타")
 	var view := QuestUI.new()
 	workspace.mount(view)
 	view.configure(get_parent())

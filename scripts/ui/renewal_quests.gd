@@ -2,7 +2,7 @@ extends VBoxContainer
 ## Paginated original quest view; only the world may grant/save rewards.
 signal claim_requested(quest_id: String)
 const UI = preload("res://scripts/ui/renewal_theme.gd")
-const CATEGORIES = {"main":"메인", "daily":"일일", "achievement":"업적", "other":"기타"}
+const CATEGORIES = {"main":"메인", "common":"일반", "achievement":"업적", "other":"기타"}
 const PAGE_SIZE = 30
 var world: Node
 var selected: String = "main"
@@ -24,17 +24,19 @@ func configure(owner_world: Node) -> void:
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_theme_constant_override("separation",6)
-	add_child(UI.section("퀘스트 · 획득 즉시 자동 완료",18))
-	var hint := UI.label("레벨·직업·선행 조건을 충족하면 자동 완료합니다. 목표 수행·NPC 복귀는 생략합니다.",12,UI.MUTED)
+	var hint := UI.label("레벨·직업·선행 조건 충족 시 자동 완료 · 목표 수행/NPC 복귀 생략",12,UI.MUTED)
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(hint)
+	var pack_row := HBoxContainer.new()
+	add_child(pack_row)
 	pack_status = UI.label("",12,UI.GOLD)
+	pack_status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pack_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	add_child(pack_status)
+	pack_row.add_child(pack_status)
 	var install := Button.new()
-	install.text = "최신523 퀘스트 팩 설치"
+	install.text = "퀘스트 팩 설치"
 	install.pressed.connect(func() -> void: picker.popup_centered_ratio(0.8))
-	add_child(install)
+	pack_row.add_child(install)
 	picker = FileDialog.new()
 	picker.access = FileDialog.ACCESS_FILESYSTEM
 	picker.file_mode = FileDialog.FILE_MODE_OPEN_FILE
@@ -52,14 +54,17 @@ func configure(owner_world: Node) -> void:
 		button.pressed.connect(_select.bind(category))
 		tabs.add_child(button)
 		tab_buttons[category] = button
+	var filters := HBoxContainer.new()
+	add_child(filters)
 	search = LineEdit.new()
+	search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	search.placeholder_text = "퀘스트 이름 · 원본 ID 검색"
 	search.text_changed.connect(func(_value: String) -> void: page=0;refresh())
-	add_child(search)
+	filters.add_child(search)
 	state_filter = OptionButton.new()
-	for label: String in ["전체 상태","완료","자동 처리 대기","잠김·보류·제외"]: state_filter.add_item(label)
+	for label: String in ["전체 상태","완료","자동 처리 대기","잠김·보류·제외","기존 완료 이력"]: state_filter.add_item(label)
 	state_filter.item_selected.connect(func(_value: int) -> void: page=0;refresh())
-	add_child(state_filter)
+	filters.add_child(state_filter)
 	summary = UI.label("",12,UI.GOLD)
 	summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(summary)
@@ -97,10 +102,20 @@ func _select(category: String) -> void:
 
 func _reward_text(quest: Dictionary) -> String:
 	var parts: PackedStringArray = []
+	if not quest.has("source_id"):
+		var past: Dictionary = quest.get("rewards",{})
+		if int(past.get("adena",0))>0: parts.append("아데나 %d" % int(past.adena))
+		if int(past.get("exp",0))>0: parts.append("EXP %d" % int(past.exp))
+		for item: Dictionary in past.get("items",[]): parts.append("%s ×%d" % [str(item.name),int(item.quantity)])
+		return " · ".join(parts)
 	var alternatives: int = 0
 	for reward: Dictionary in quest.get("source_rewards",[]):
 		if int(reward.get("RewardEnhancementTypeID",1)) != 1:
 			alternatives += 1
+			continue
+		if str(reward.get("type_name",""))=="QuickSlotReg":
+			var note: String = "퀵슬롯 기본 등록값 보관 · 현재 설정 유지"
+			if not parts.has(note): parts.append(note)
 			continue
 		var label: String = str(reward.get("source_item",{}).get("Name",reward.get("type_name","보상")))
 		if reward.get("type_name") == "Exp": label = "EXP"
@@ -117,7 +132,7 @@ func refresh() -> void:
 	var service: Variant = world.get("quest_service")
 	if service == null: return
 	if world.get("quest_auto") != null: world.quest_auto.refresh_context(world)
-	pack_status.text = "최신523 원본 %d개 · 저장된 기존 완료 이력 보존" % service.source.quests.size() if not service.source.quests.is_empty() else service.source.problem
+	pack_status.text = "최신523 · 원본 %d개 · 기존 이력 보존" % service.source.quests.size() if not service.source.quests.is_empty() else service.source.problem
 	var rows: Array[Dictionary] = []
 	var total: int = 0
 	var finished: int = 0
@@ -125,16 +140,22 @@ func refresh() -> void:
 	var query: String = search.text.strip_edges().to_lower()
 	for quest: Dictionary in service.entries(int(world.level),world.inventory):
 		if not quest.has("source_id"):
-			if not quest.completed: continue
+			if not quest.completed or state_filter.selected!=4: continue
 			quest["status_reason"] = "기존 임시 퀘스트 완료 이력"
-		if str(quest.category) != selected: continue
-		total += 1
-		if quest.completed: finished += 1
-		elif quest.available: available += 1
+		var row_category: String = "common" if not quest.has("source_id") and str(quest.category)=="daily" else str(quest.category)
+		if row_category != selected: continue
+		if quest.has("source_id"):
+			total += 1
+			if quest.completed: finished += 1
+			elif quest.available: available += 1
+			if state_filter.selected==4: continue
 		if state_filter.selected==1 and not quest.completed: continue
 		if state_filter.selected==2 and (quest.completed or not quest.available): continue
 		if state_filter.selected==3 and (quest.completed or quest.available): continue
-		if not query.is_empty() and not (str(quest.title)+" "+str(quest.get("source_id",""))).to_lower().contains(query): continue
+		if not query.is_empty():
+			if query.is_valid_int():
+				if int(quest.get("source_id",-1))!=int(query): continue
+			elif not str(quest.title).to_lower().contains(query): continue
 		rows.append(quest)
 	var pages: int = maxi(1,ceili(float(rows.size())/PAGE_SIZE))
 	page = clampi(page,0,pages-1)
@@ -148,7 +169,7 @@ func refresh() -> void:
 		var title := UI.label(str(quest.title),15,UI.GOLD)
 		title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		body.add_child(title)
-		var description: String = "원본 ID %s · %s" % [str(quest.get("source_id","기존")),str(quest.get("type_name","이력"))]
+		var description: String = "원본 ID %s · %s" % [str(int(quest.source_id)) if quest.has("source_id") else "기존",str(CATEGORIES.get(str(quest.category),"이력"))]
 		for goal: Dictionary in quest.get("goals",[]): description += "\n"+str(goal.get("description",goal.get("type_name","")))
 		var text := UI.label(description,12,UI.MUTED)
 		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -158,11 +179,13 @@ func refresh() -> void:
 		body.add_child(reward)
 		var status_text: String = "완료 · 보상 저장됨" if quest.completed else str(quest.get("status_reason","획득 대기"))
 		if quest.completed and not quest.get("rewards",{}).get("pending_use",[]).is_empty(): status_text = "완료 · 원본 보상 보관 / 일부 사용 기능 연결 대기"
+		elif quest.completed and not quest.get("rewards",{}).get("ui_requests",[]).is_empty(): status_text = "완료 · 현재 퀵슬롯 유지 / 원본 기본 등록값 보관"
 		if not quest.completed and world.get("quest_auto") != null and world.quest_auto.failures.has(str(quest.id)) and quest.available: status_text = str(world.quest_auto.failures[str(quest.id)])
 		var status := UI.label(status_text,12,UI.GOLD if quest.completed else UI.MUTED)
 		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		body.add_child(status)
 	summary.text = "%s %d개 · 완료 %d · 자동 대기 %d · 잠김/보류 %d" % [CATEGORIES[selected],total,finished,available,total-finished-available]
+	if state_filter.selected==4: summary.text="기존 완료 이력 · 원본 퀘스트 수와 구분하여 보존"
 	page_label.text = "%d / %d 페이지 · 검색 결과 %d개" % [page+1,pages,rows.size()]
 	previous.disabled = page==0
 	next.disabled = page==pages-1

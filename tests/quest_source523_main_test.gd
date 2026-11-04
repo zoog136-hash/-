@@ -1,4 +1,5 @@
 extends SceneTree
+const SOURCE = preload("res://scripts/quests/source_quest523.gd")
 const WRITER = preload("res://scripts/skills/save_writer.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 var failures: Array[String] = []
@@ -9,12 +10,18 @@ func check(ok: bool,label: String) -> void:
 	if not ok: failures.append(label);printerr("QUEST523_MAIN_FAIL: "+label)
 func normalized(value: Variant) -> Variant: return JSON.parse_string(JSON.stringify(value))
 func run() -> void:
+	var installed: bool = false
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--quest-pack="):
+			installed = SOURCE.install_zip(argument.trim_prefix("--quest-pack=")).ok
+			check(installed,"received ZIP installed into a fresh consumer profile")
 	var world: TwilightWorld = (load("res://Main.tscn") as PackedScene).instantiate() as TwilightWorld
 	root.add_child(world)
 	world.set_process(false)
 	world.player.set_physics_process(false)
 	check(QA.enter_game(world),"real class creation")
 	check(not world.source_save_blocked and world.field_map!=null,"real committed current-map pack loads")
+	if installed: check(world.quest_service.source.loaded_path==SOURCE.USER_PATH,"actual Main uses the installed received bytes")
 	check(world.quest_service.source.quests.size()==3621,"all original quests loaded into actual Main")
 	if world.source_save_blocked or world.quest_service.source.quests.size()!=3621: quit(1);return
 	world.gold = 7654321
@@ -25,6 +32,7 @@ func run() -> void:
 	var prior_hash: String = FileAccess.get_sha256(path)
 	var prior_inventory: Dictionary = world.inventory.duplicate(true)
 	var prior_instances: Dictionary = world.item_instances.duplicate(true)
+	var prior_quickslots: Array = world.quickslots.duplicate(true)
 	var before_growth: Dictionary = {}
 	for key: String in ["gold","level","experience","exp_need","hp","max_hp","mp","max_mp","attack_power","defense","stat_points"]: before_growth[key]=world.get(key)
 	world.equipment_collections.test_save_writer = func(_path: String,_data: Dictionary) -> Error: return ERR_FILE_CANT_WRITE
@@ -69,7 +77,15 @@ func run() -> void:
 	world.quest_auto.refresh_context(world)
 	var counts: Dictionary = {"completed":0,"pending_use_completed":0,"excluded":0,"locked_or_deferred":0}
 	var reasons: Dictionary = {}
+	var capabilities: Dictionary = {"reward_storage_supported":0,"with_items_pending_use":0,"unsupported_reasons":{}}
 	for row: Dictionary in world.quest_service.source.quests:
+		var checked_plan: Dictionary = world.quest_service.source.reward_plan(row,world.quest_auto.context)
+		if checked_plan.ok:
+			capabilities.reward_storage_supported+=1
+			if not checked_plan.pending_use.is_empty(): capabilities.with_items_pending_use+=1
+		else:
+			var unsupported: String = str(checked_plan.error)
+			capabilities.unsupported_reasons[unsupported]=int(capabilities.unsupported_reasons.get(unsupported,0))+1
 		if world.quest_service.claimed.has(str(row.id)):
 			counts.completed += 1
 			if not world.quest_service.source.reward_plan(row,world.quest_auto.context).get("pending_use",[]).is_empty(): counts.pending_use_completed += 1
@@ -80,8 +96,16 @@ func run() -> void:
 			reasons[reason]=int(reasons.get(reason,0))+1
 			if not row.excluded_reasons.is_empty(): counts.excluded+=1
 			else: counts.locked_or_deferred+=1
+	var held_totals: Dictionary = {}
+	for physical: Dictionary in world.item_instances.values():
+		if bool(physical.get("record",{}).get("source_pending_use",false)):
+			var name_value: String = str(physical.name)
+			held_totals[name_value]=int(held_totals.get(name_value,0))+int(physical.get("source_reward_quantity",1))
+	for name_value: String in held_totals: check(held_totals[name_value]==world.inventory[name_value],"native reward stack quantity survives physical identity projection")
 	for id: String in prior_instances: check(world.item_instances.get(id)==prior_instances[id],"existing physical item is unchanged")
 	check(int(world.inventory.get("HP 물약",0))==int(prior_inventory["HP 물약"]),"prior consumables preserved")
+	check(world.quickslots==prior_quickslots,"original tutorial registrations preserve all existing user bindings")
+	check(world.quest_service.ui_requests.has("m523:quest:59912"),"native tutorial parameters are recorded without blocking its quest chain")
 	var good_bytes: String = FileAccess.get_file_as_string(path)
 	var good: Dictionary = JSON.parse_string(good_bytes)
 	world._load_game(true)
@@ -107,7 +131,7 @@ func run() -> void:
 	restarted.set_process(false)
 	restarted.player.set_physics_process(false)
 	check(restarted.quest_service.claimed==claimed and restarted.inventory==inventory,"fresh Main instance preserves completion and rewards")
-	var summary: Dictionary = {"checks":checks,"failures":failures,"source_quests":3621,"counts":counts,"batches":batches,"remaining_reasons":reasons,"final_level":restarted.level,"physical_items":restarted.item_instances.size()}
+	var summary: Dictionary = {"checks":checks,"failures":failures,"source_quests":3621,"counts":counts,"reward_capabilities_current_game":capabilities,"batches":batches,"remaining_reasons":reasons,"initial_level":int(before_growth.level),"final_level":restarted.level,"physical_items":restarted.item_instances.size()}
 	print("QUEST523_MAIN_RESULT "+JSON.stringify(summary))
 	var output := FileAccess.open("user://quest523-main-coverage.json",FileAccess.WRITE)
 	output.store_string(JSON.stringify(summary,"\t"))

@@ -49,17 +49,21 @@ func tick(world: Node) -> void:
 	# No acquisition runs until character creation/load guards permit saving.
 	if world.source_save_blocked or world.equipment_collections.save_blocked or not world.pending_map_save_record.is_empty(): return
 	var ids: Array[String] = []
+	var offered: Dictionary = world.quest_service.claimed.duplicate()
 	for quest: Dictionary in world.quest_service.source.quests:
 		var id: String = str(quest.id)
 		if world.quest_service.claimed.has(id): continue
-		var gate: String = world.quest_service.source.gate(quest,context,world.quest_service.claimed,int(now))
+		var gate: String = world.quest_service.source.gate(quest,context,offered,int(now))
 		if not gate.is_empty(): continue
 		var plan: Dictionary = world.quest_service.source.reward_plan(quest,context)
 		if not plan.ok:
 			failures[id] = str(plan.error)
 			continue
 		ids.append(id)
-		if ids.size() == 8: break
+		offered[id] = true
+		# Parents and their newly acquired children can share one atomic write.
+		# Staging rechecks each prerequisite in the same ordered transaction.
+		if ids.size() == 32: break
 	if ids.is_empty(): return
 	complete(world,ids)
 	# Continue prerequisite chains on the next frame, without a large UI stall.
@@ -107,6 +111,7 @@ func complete(world: Node, ids: Array[String]) -> bool:
 		experience += int(plan.exp)
 		staged_state.claimed[id] = true
 		for unlocked: int in plan.quests: staged_state.unlocked["m523:quest:"+str(unlocked)] = true
+		if not plan.ui_requests.is_empty(): staged_state.ui_requests[id]=plan.ui_requests.duplicate(true)
 		completed.append(id)
 	if completed.is_empty(): return false
 	var staged: Dictionary = {"quest_state":staged_state,"inventory":staged_inventory,"item_instances":staged_instances,"next_item_instance_id":next_id,"gold":world.gold+adena,"experience":world.experience+experience}
@@ -159,8 +164,10 @@ func complete(world: Node, ids: Array[String]) -> bool:
 	service.import_state(staged_state)
 	for id: String in completed: failures.erase(id)
 	world.deferred_save.cancel()
-	world._refresh_inventory_hud()
-	world._update_hud()
+	if world.level != int(before_growth.level): world._update_hud()
+	else:
+		world._refresh_inventory_hud()
+		world._refresh_combat_hud()
 	if world.hud.has_method("refresh_quests"): world.hud.refresh_quests()
 	world.hud.append_log("원본 퀘스트 자동 완료 %d개 · 아데나 +%d · EXP +%d" % [completed.size(),adena,experience])
 	busy = false

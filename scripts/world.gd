@@ -1056,6 +1056,9 @@ func _index_item_weights() -> void:
 func _inventory_total_weight() -> int:
 	var total: int = 0
 	for name_value: Variant in inventory.keys():
+		# Held source rewards are provenance stacks until their item adapter is
+		# available; legacy default weight must not turn them into carried gear.
+		if str(name_value).begins_with("[원본 보상] "): continue
 		total += maxi(0, int(inventory.get(name_value, 0))) * maxi(0, int(item_weight_index.get(str(name_value), 0 if str(name_value) == "아데나" else 3)))
 	return total
 

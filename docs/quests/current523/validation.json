@@ -1,0 +1,102 @@
+{
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "base_main": "17f5c1e5e3922664eb89211e1510ba2f34cb225e",
+  "production_file_sha256": {
+    "scripts/world.gd": "4d0491351e14b6ec0129c11b497439b1ec45800c9cbfcc8a5d8f51d0aa5312d1",
+    "scripts/quests/quest_service.gd": "dab789ca7674fd2e6685677741c6202bf952dd7c2562d786ca9d6f0b77b4ceb2",
+    "scripts/quests/source_quest523.gd": "9388c874bbf5773d51d0d5097ea78dc7131daedaaee0f918febdb4567d8ac813",
+    "scripts/quests/quest_auto_runner.gd": "94e342959e9f8e33ad69141c75974d82245fb5e691291b14c0241bc99cb88764",
+    "scripts/ui/renewal_quests.gd": "e6e8942df7b85d402091b115ee6bbf0950051487db6dfecdef5c83bd5509669b",
+    "scripts/ui/lineage_inventory_ui.gd": "7a2d32b929a0ccfe06054e3b7079383be7e6a2dc55dc31f227a8e1cdbfaa60d8",
+    "scripts/ui/renewal_hud.gd": "55ea4be128698fe92858da89bd2230408416d2259bceeae5103dfb3a3c942321",
+    "scripts/ui/renewal_window.gd": "c315118c082c7af117f6674c3226d5c57ce70d7148ee853176a913a961ecb7eb"
+  },
+  "source_all_definitions": {
+    "checks": 10284,
+    "failures": [],
+    "gate_reasons_with_all_predecessors": {
+      "": 1186,
+      "기간 종료": 1334,
+      "선행 조건 미연결: NpcTalk": 1,
+      "연계 콘텐츠의 획득 조건 확인 필요": 679,
+      "원본 반복/초기화 규칙 확인 필요": 117,
+      "원본 운영 시간 조건 확인 필요": 128,
+      "제외 시스템 목표: ArenaWin": 31,
+      "제외 시스템 목표: ClanDonate": 128,
+      "제외 시스템 목표: ClanEnter": 1,
+      "직업 조건 미충족": 16
+    },
+    "quests_with_items_held_for_use_link": 2016,
+    "reward_storage_supported": 2675,
+    "source_quests": 3621,
+    "unsupported_reward_reasons": {
+      "보상 미연결: Buff": 3,
+      "보상 미연결: Einasad": 38,
+      "보상 미연결: PassSystemSeasonPassExp": 894,
+      "보상 미연결: Teleport": 3,
+      "원본 보상 수량의 개체 저장 연결 필요": 2,
+      "혈맹 전용 보상 제외": 6
+    }
+  },
+  "actual_main_received_pack": {
+    "batches": 26,
+    "checks": 3009,
+    "counts": {
+      "completed": 822,
+      "excluded": 160,
+      "locked_or_deferred": 2639,
+      "pending_use_completed": 537
+    },
+    "failures": [],
+    "final_level": 86,
+    "initial_level": 35,
+    "physical_items": 736,
+    "reward_capabilities_current_game": {
+      "reward_storage_supported": 2677,
+      "unsupported_reasons": {
+        "보상 미연결: Buff": 3,
+        "보상 미연결: Einasad": 38,
+        "보상 미연결: PassSystemSeasonPassExp": 894,
+        "보상 미연결: Teleport": 3,
+        "혈맹 전용 보상 제외": 6
+      },
+      "with_items_pending_use": 1940
+    },
+    "source_quests": 3621,
+    "remaining_reasons_grouped": {
+      "기간 종료": 1334,
+      "레벨 미달": 1,
+      "선행 조건 미연결: NpcTalk": 1,
+      "선행 퀘스트 미완료": 369,
+      "연계 콘텐츠의 획득 조건 확인 필요": 679,
+      "원본 반복/초기화 규칙 확인 필요": 117,
+      "원본 운영 시간 조건 확인 필요": 128,
+      "제외 시스템 목표: ArenaWin": 31,
+      "제외 시스템 목표: ClanDonate": 128,
+      "제외 시스템 목표: ClanEnter": 1,
+      "직업 조건 미충족": 10
+    }
+  },
+  "actual_opengl_ui": {
+    "checks": 752,
+    "failures": [],
+    "installed_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
+    "inventory_source_stacks": 732,
+    "source_quests": 3621
+  },
+  "existing_core_runtime_save": {
+    "checks": 44,
+    "failures": [],
+    "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+  },
+  "legacy_history_regression": "INSTANT_QUEST_PASS",
+  "committed_resource_integrity": "723 atlases / 41442 frames / 233420026 bytes; exact SHA verified",
+  "reproducible_pack_sha256": "77866c180d4224eff6d7e578759ec0820d6e50515e5c6bd8a67dc92421c20063",
+  "ui_capture_local_only": "/workspace/quest-drive-final-data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/quest523-ui",
+  "scope": "Full source projection; actual reachable fixed point for Knight; source-item use and unsupported content remain incomplete; no full CI/Android device claim",
+  "resolved_diagnostics": [
+    "Typed JSON comparison after a committed write originally caused false rollback; fixed and recovery retested.",
+    "Small-screen card area originally collapsed; corrected and a retained >=100px layout assertion passes.",
+    "Host has no audio device; final graphics check uses Dummy audio and actual OpenGL."
+  ]
+}

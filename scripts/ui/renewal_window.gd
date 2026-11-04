@@ -217,6 +217,9 @@ func fit_viewport() -> void:
 		width = viewport.x
 		height = viewport.y
 	elif not shelf and not left: height = minf(568,viewport.y-100)
+	# Quest search/filter chrome must still leave a readable card on a short
+	# landscape screen; keep the change scoped to this particular window.
+	if current_section == "quests": height = minf(600,viewport.y-24)
 	if current_section in ["character","stats"]: height = minf(610,viewport.y-100)
 	if current_section == "detailed_status": height = minf(508,viewport.y-110)
 	width = maxf(1,minf(width,viewport.x-12 if not fullscreen else viewport.x))

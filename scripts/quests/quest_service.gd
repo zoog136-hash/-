@@ -6,11 +6,12 @@ class_name TwilightQuestService
 ## This is NOT a claim that NC's official quest rewards/progress are identical.
 const LOCAL_CATALOG: String = "res://data/quests/twilight_quest_catalog.json"
 const VERIFIED_SOURCE_CATALOG: String = "res://data/quests/verified_source_quests.json"
-const CATEGORIES = ["main", "daily", "achievement", "other"]
+const CATEGORIES = ["main", "daily", "common", "achievement", "other"]
 const SOURCE = preload("res://scripts/quests/source_quest523.gd")
 var source = SOURCE.new()
 var source_context: Dictionary = {}
 var unlocked: Dictionary = {}
+var ui_requests: Dictionary = {}
 var save_blocked: bool = false
 const OBJECTIVES = ["kill", "collect", "level"]
 const MAX_REWARD_ITEM: int = 10000
@@ -36,6 +37,7 @@ func configure(items: Array, monsters: Array) -> bool:
 	problem = ""
 	save_blocked = false
 	unlocked.clear()
+	ui_requests.clear()
 	source = SOURCE.new()
 	var item_names: Dictionary = {}
 	var monster_names: Dictionary = {}
@@ -102,7 +104,9 @@ func _append_catalog(path: String, requires_proof: bool, item_names: Dictionary,
 		if not OBJECTIVES.has(kind) or required < 1 or required > 1000000 or int(quest.get("min_level", 1)) < 1:
 			problem = "Invalid quest objective: " + quest_id
 			return false
-		if (kind == "kill" and target != "*" and target != "@boss" and not monster_names.has(target)) or (kind == "collect" and not item_names.has(target)):
+		# Retired TWILIGHT rows are history labels, not native dependencies.
+		# Original-source catalogs keep their own explicit validation path.
+		if requires_proof and ((kind == "kill" and target != "*" and target != "@boss" and not monster_names.has(target)) or (kind == "collect" and not item_names.has(target))):
 			problem = "Unmapped monster/item quest target: " + quest_id
 			return false
 		var adena: int = int(rewards.get("adena", 0))
@@ -118,7 +122,7 @@ func _append_catalog(path: String, requires_proof: bool, item_names: Dictionary,
 			var reward: Dictionary = raw_reward as Dictionary
 			var name_value: String = str(reward.get("name", ""))
 			var amount: int = int(reward.get("quantity", 0))
-			if not item_names.has(name_value) or amount < 1 or amount > MAX_REWARD_ITEM:
+			if (requires_proof and not item_names.has(name_value)) or amount < 1 or amount > MAX_REWARD_ITEM:
 				problem = "Unmapped/invalid reward item: " + quest_id
 				return false
 		quest["instant_complete"] = true
@@ -133,10 +137,10 @@ func _advance_day(now: int) -> void:
 		day_key = today
 	elif today > day_key:
 		for id: Variant in claimed.keys():
-			if index.has(id) and not str(id).begins_with("m523:") and str((index[id] as Dictionary).get("category", "")) == "daily":
+			if index.has(id) and not bool((index[id] as Dictionary).get("legacy_retired",false)) and not str(id).begins_with("m523:") and str((index[id] as Dictionary).get("category", "")) == "daily":
 				claimed.erase(id)
 		for id: Variant in progress.keys():
-			if index.has(id) and not str(id).begins_with("m523:") and str((index[id] as Dictionary).get("category", "")) == "daily":
+			if index.has(id) and not bool((index[id] as Dictionary).get("legacy_retired",false)) and not str(id).begins_with("m523:") and str((index[id] as Dictionary).get("category", "")) == "daily":
 				progress.erase(id)
 		day_key = today
 	# Never grant a second daily reset by moving the device clock backwards.
@@ -225,11 +229,20 @@ static func validate_saved_state(saved: Variant) -> String:
 			elif not values[id] is bool: return "퀘스트 완료/획득 상태 오류"
 	var day: Variant = saved.get("day_key",0)
 	if not (day is int or day is float) or not is_finite(float(day)) or float(day)!=floorf(float(day)) or float(day)<-1 or float(day)>10000000: return "퀘스트 날짜 오류"
+	var requests: Variant = saved.get("ui_requests",{})
+	if not requests is Dictionary or requests.size()>20000: return "퀘스트 UI 기록 오류"
+	for id: Variant in requests:
+		if not id is String or not requests[id] is Array or requests[id].size()>128: return "퀘스트 UI 목록 오류"
+		for entry: Variant in requests[id]:
+			if not entry is Dictionary: return "퀘스트 UI 항목 오류"
+			for key: String in ["reward_id","class_id","raw_amount"]:
+				var number: Variant = entry.get(key)
+				if not (number is int or number is float) or not is_finite(float(number)) or float(number)!=floorf(float(number)) or float(number)<0 or float(number)>9007199254740991: return "퀘스트 UI 값 오류"
 	return ""
 
 func export_state() -> Dictionary:
 	_advance_day(int(Time.get_unix_time_from_system()))
-	return {"schema_version":2, "claimed":claimed.duplicate(true), "progress":progress.duplicate(true), "day_key":day_key,"unlocked":unlocked.duplicate(true)}
+	return {"schema_version":2, "claimed":claimed.duplicate(true), "progress":progress.duplicate(true), "day_key":day_key,"unlocked":unlocked.duplicate(true),"ui_requests":ui_requests.duplicate(true)}
 
 func import_state(saved: Variant, now: int = -1) -> bool:
 	var error: String = validate_saved_state(saved)
@@ -240,6 +253,7 @@ func import_state(saved: Variant, now: int = -1) -> bool:
 	claimed.clear()
 	progress.clear()
 	unlocked.clear()
+	ui_requests = saved.get("ui_requests",{}).duplicate(true)
 	save_blocked = false
 	var at: int = now if now >= 0 else int(Time.get_unix_time_from_system())
 	day_key = korean_daily_key(at)

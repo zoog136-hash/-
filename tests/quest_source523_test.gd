@@ -20,7 +20,11 @@ func run() -> void:
 	var service := SERVICE.new()
 	check(service.configure(data.get("아이템",[]),data.get("몬스터",[])),"production service configures")
 	check(service.source.quests.size()==3621,"complete private source is installed; never substitute a fixture")
+	var independent := SERVICE.new()
+	check(independent.configure([],[]) and independent.source.quests.size()==3621,"native source loading never depends on retired sample monster/item names")
 	if service.source.quests.size()!=3621: quit(1);return
+	for native: Dictionary in service.source.quests:
+		if int(native.definition.TypeID)==3: check(native.category=="common","original Common type is displayed as general quests")
 	var at: int = int(Time.get_unix_time_from_system())
 	var context: Dictionary = {"level":100,"max_level":100,"class_id":1,"source_items":{}}
 	var all_claimed: Dictionary = {}
@@ -55,6 +59,7 @@ func run() -> void:
 	check(not service.import_state({"schema_version":2,"claimed":{"m523:quest:236":1}}),"numeric completion corruption rejected")
 	check(service.save_blocked and service.claimed.has("m523:quest:236"),"rejected import protects previous live claims")
 	check(service.import_state(saved,at) and not service.save_blocked,"valid reload releases save protection")
+	check(service.import_state({"schema_version":1,"claimed":{"twilight:daily:001":true},"day_key":SERVICE.korean_daily_key(at)-5},at) and service.claimed.has("twilight:daily:001"),"retired historical daily completion survives five missed resets")
 	check(not SERVICE.validate_saved_state({"schema_version":99}).is_empty(),"future schema cannot be silently reset")
 	check(not SERVICE.validate_saved_state({"progress":{"bad":-1}}).is_empty(),"negative progress rejected")
 	check(not SOURCE.install_zip("res://project.godot").ok,"non-ZIP cannot replace installed data")

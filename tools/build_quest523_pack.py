@@ -45,6 +45,8 @@ def build(source, destination):
         return desc.get(identifier, "")
 
     def timestamp(identifier):
+        # DateTimes_Korean has no timezone field. This projection applies
+        # TWILIGHT's existing Korean clock policy, not a source timezone claim.
         row = indexes["DateTimes_Korean"].get(identifier)
         if not row:
             return None
@@ -102,8 +104,11 @@ def build(source, destination):
     destination = Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        archive.writestr("quest_pack.json", encode(header))
-        archive.writestr("quests.json", payload)
+        # Freeze v1 release metadata so the verified container reproduces byte
+        # for byte; the payload already has canonical, sorted JSON keys.
+        for name, content in [("quest_pack.json", encode(header)), ("quests.json", payload)]:
+            entry = zipfile.ZipInfo(name, date_time=(2026, 11, 4, 12, 33, 44))
+            archive.writestr(entry, content, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
     receipt = dict(header, pack_sha256=digest(destination.read_bytes()), pack_bytes=destination.stat().st_size, tables=evidence,
                    types=dict(collections.Counter(r["type_name"] for r in quests)), exclusions=dict(exclusions),
                    missing_references=sum(bool(r["blockers"]) for r in quests), source_drive_id="1EJGI2VV4u4P2yNlrMAlp0H2U28jjUH6K")

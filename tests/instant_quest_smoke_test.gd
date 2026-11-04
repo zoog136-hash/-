@@ -38,7 +38,7 @@ func _run() -> void:
 	check(bool(restored.complete_instantly("twilight:daily:001", 1, at).get("ok", false)), "daily mission may be instantly completed")
 	check(not bool(restored.complete_instantly("twilight:daily:001", 1, at).get("ok", false)), "daily cannot be claimed twice on same day")
 	var day_after: int = at + 86400
-	check(bool(restored.complete_instantly("twilight:daily:001", 1, day_after).get("ok", false)), "daily KST 05:00 rollover allows another claim")
+	check(not bool(restored.complete_instantly("twilight:daily:001", 1, day_after).get("ok", false)), "retired daily receipt survives rollover without reopening sample rewards")
 	check(not bool(restored.complete_instantly("twilight:main:001", 1, day_after).get("ok", false)), "daily reset cannot wipe main completion")
 	var prior_day: int = at - 86400
 	check(not bool(restored.complete_instantly("twilight:daily:001", 1, prior_day).get("ok", false)), "clock rollback cannot farm another daily reward")
