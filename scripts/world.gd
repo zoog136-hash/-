@@ -33,6 +33,7 @@ var loading_source_door_state: bool=false
 var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
+const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
 # Do not preload this heavy optional renderer while parsing the main game class.
@@ -385,6 +386,7 @@ func _ready() -> void:
 	korean_font.variation_opentype = {"wght":500.0}
 	ThemeDB.get_default_theme().default_font = korean_font
 	ThemeDB.fallback_font = korean_font
+	if _boot_current523_aden_review(): return
 	rng.randomize()
 	ain_service.import_state({})
 	dialogue_service.load_dialogues()
@@ -4399,6 +4401,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return ERR_UNAVAILABLE
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4520,6 +4523,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	return OK
 
 func _load_game(quiet: bool) -> void:
+	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return
 	if BASE508_TEST.enabled():return
 	if not migration_pointer_error.is_empty():migration_path_checked=false
 	save_path()
@@ -8112,6 +8116,85 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 ## Rendering and walking need independently validated M spatial semantics.
 var _current523_aden_sources: RefCounted = null
 var current523_aden_problem: String = ""
+var current523_aden_review: Control = null
+var current523_aden_review_active: bool = false
+var _current523_aden_resume: Dictionary = {}
+var _current523_aden_review_from_boot: bool = false
+signal current523_aden_review_closed
+
+func _boot_current523_aden_review() -> bool:
+	if not CURRENT523_ADEN_REVIEW.requested(): return false
+	# Enter before old map/data bootstrap. The explicitly requested inspection
+	# camera is separate from player navigation and the user's saved game.
+	_mount_current523_aden_review(true)
+	if not open_current523_aden_sources(CURRENT523_ADEN_REVIEW.argument("--aden523-pack=")):
+		current523_aden_review.call("show_problem", current523_aden_problem)
+		return true
+	current523_aden_review.call("configure", self, CURRENT523_ADEN_REVIEW.argument("--aden523-tiles="), CURRENT523_ADEN_REVIEW.argument("--aden523-member="))
+	return true
+
+func _mount_current523_aden_review(from_boot: bool) -> void:
+	_current523_aden_review_from_boot = from_boot
+	_current523_aden_resume = {"process_mode":process_mode, "children":[], "source_registry":_current523_aden_sources}
+	current523_aden_review_active = true
+	process_mode = Node.PROCESS_MODE_DISABLED
+	for child: Node in get_children():
+		var record: Dictionary = {"node":child, "process_mode":child.process_mode}
+		if child is CanvasItem or child is CanvasLayer: record.visible = child.visible
+		_current523_aden_resume.children.append(record)
+		child.process_mode = Node.PROCESS_MODE_DISABLED
+		if child is CanvasItem: child.hide()
+		elif child is CanvasLayer: child.hide()
+	var layer := CanvasLayer.new()
+	layer.name = "Current523AdenReview"
+	layer.layer = 90
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(layer)
+	current523_aden_review = CURRENT523_ADEN_REVIEW.new()
+	layer.add_child(current523_aden_review)
+	current523_aden_review.get("close_button").text = "검토 종료" if from_boot else "게임으로 복귀"
+	current523_aden_review.connect("close_requested", close_current523_aden_review)
+
+func open_current523_aden_review_ui(raw_root: String, tile_root: String) -> bool:
+	if current523_aden_review_active:
+		current523_aden_problem = "아덴 원문 검토가 이미 열려 있습니다"
+		return false
+	var candidate = CURRENT523_ADEN_PACK.new()
+	if not candidate.load_pack(raw_root):
+		current523_aden_problem = candidate.problem
+		return false
+	_mount_current523_aden_review(false)
+	_current523_aden_sources = candidate
+	if not bool(current523_aden_review.call("configure", self, tile_root, "Map/Aden/800a8000.s32")):
+		var failed_problem: String = str(current523_aden_review.get("problem"))
+		close_current523_aden_review()
+		current523_aden_problem = failed_problem
+		return false
+	current523_aden_problem = ""
+	return true
+
+func close_current523_aden_review() -> void:
+	if not current523_aden_review_active: return
+	if _current523_aden_review_from_boot:
+		get_tree().quit()
+		return
+	if is_instance_valid(current523_aden_review):
+		var layer: CanvasLayer = current523_aden_review.get_parent() as CanvasLayer
+		layer.hide()
+		layer.process_mode = Node.PROCESS_MODE_DISABLED
+		layer.queue_free()
+	current523_aden_review = null
+	current523_aden_review_active = false
+	_current523_aden_sources = _current523_aden_resume.get("source_registry")
+	process_mode = int(_current523_aden_resume.get("process_mode", Node.PROCESS_MODE_INHERIT))
+	for record: Dictionary in _current523_aden_resume.get("children", []):
+		var child: Node = record.node
+		if not is_instance_valid(child): continue
+		child.process_mode = int(record.process_mode)
+		if record.has("visible"): child.visible = bool(record.visible)
+	_current523_aden_resume.clear()
+	current523_aden_problem = ""
+	current523_aden_review_closed.emit()
 
 func open_current523_aden_sources(pack_root: String) -> bool:
 	var candidate = CURRENT523_ADEN_PACK.new()

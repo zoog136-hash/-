@@ -23,6 +23,7 @@ REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|do
 CHECKS = [
     ('core_runtime_save_test', []),
     ('current523_aden_pack_test', []),
+    ('current523_aden_review_unit_test', []),
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
 ]
@@ -248,6 +249,7 @@ def main():
                 command += ['--', *user_args]
             marker = {'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'current523_aden_pack_test':'CURRENT523_ADEN_PACK_RESULT',
+                      'current523_aden_review_unit_test':'CURRENT523_ADEN_REVIEW_UNIT_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
