@@ -225,5 +225,11 @@
     "Android, long-session gameplay and original native formula/UI/server equivalence unverified"
   ],
   "remote_ci": "NOT_REQUESTED; [skip ci]; no workflow/protection changes or merges",
-  "matching": "Per-achieved-owned-level original Step/Grade flat bonus; each level counted once; all15 destination damage contexts tested; no persisted calculated bonus ledger"
+  "matching": "Per-achieved-owned-level original Step/Grade flat bonus; each level counted once; all15 destination damage contexts tested; no persisted calculated bonus ledger",
+  "cast_fixture_api_compatibility": {
+    "status": "CHECK_ONLY_PASS",
+    "change": "Existing deterministic cast world fixture accepts the optional fourth damage-kind argument forwarded by production SkillService. All gameplay/visual assertions retained.",
+    "full_historical_visual_audit_run": false,
+    "log_sha256": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e"
+  }
 }
