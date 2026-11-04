@@ -56,7 +56,7 @@ func walk(point: Vector2) -> bool:
 	return world.player.global_position.distance_to(point)<7
 
 func enter_at(point: Vector2i) -> bool:
-	return world.open_current523_aden_play(raw_root,tile_root,{"navigation_profile":OPTIONS.SOURCE,"allowed_raw_words":OPTIONS.SOURCE_WORDS.duplicate(),"source_position":[point.x+0.5,point.y+0.5],"portal_contract":contract})
+	return world.open_current523_aden_play(raw_root,tile_root,{"navigation_profile":OPTIONS.SOURCE,"allowed_raw_words":OPTIONS.SOURCE_WORDS.duplicate(),"source_position":[point.x+0.5,point.y+0.5],"portal_contract":contract,"aden_inferred_placement_enabled":false})
 
 func run() -> void:
 	var phase: String = "entry"
@@ -90,6 +90,7 @@ func run() -> void:
 	panel.raw_path_edit.text = raw_root; panel.tile_path_edit.text = tile_root
 	panel.raw_path_edit.text_changed.emit(raw_root); panel.tile_path_edit.text_changed.emit(tile_root)
 	panel.play_profile.select(2); panel.play_profile.item_selected.emit(2)
+	panel.aden_inferred_placement.button_pressed=false # Retain historical placement-off baseline.
 	panel.source_entry_enabled.button_pressed = true
 	panel.source_entry_x.value = 33341; panel.source_entry_y.value = 33168
 	panel.source_portal_path.text = contract

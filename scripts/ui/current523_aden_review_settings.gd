@@ -35,6 +35,7 @@ var native_land_choice: OptionButton
 var native_scope_status: Label
 var source_words: LineEdit
 var source_search_limit: SpinBox
+var aden_inferred_placement: CheckBox
 var source_portal_path: LineEdit
 var definition_path_edit: LineEdit
 var definition_connect_button: Button
@@ -176,6 +177,11 @@ func _build_play_options() -> void:
 	source_search_limit=SpinBox.new();source_search_limit.name="Current523SourcePathSearchLimit"
 	source_search_limit.min_value=1;source_search_limit.max_value=65536;source_search_limit.step=1;source_search_limit.value=8192
 	add_child(source_search_limit)
+	aden_inferred_placement=CheckBox.new();aden_inferred_placement.name="Current523AdenInferredPlacement"
+	aden_inferred_placement.text="아덴 비표준 원문1개 · TWILIGHT 추정 배치 사용 (원작 위치 미확정)"
+	aden_inferred_placement.button_pressed=true;add_child(aden_inferred_placement)
+	var placement_note:=UI.label("추정 슬롯 (33472,32128) · 기존 청크와 겹치지 않습니다. 끄려면 먼저 원문 플레이를 종료하세요. 경계의 막힌 셀은 열지 않습니다.",12,UI.MUTED)
+	placement_note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(placement_note)
 	var entry := HBoxContainer.new()
 	source_entry_enabled = CheckBox.new(); source_entry_enabled.text = "원문 좌표로 입장"
 	entry.add_child(source_entry_enabled)
@@ -254,6 +260,7 @@ func _load_play_options() -> void:
 		source_words.text = ",".join(words)
 		source_portal_path.text = options.portal_contract
 		source_search_limit.value=options.get("path_search_limit",8192)
+		aden_inferred_placement.button_pressed=options.get("aden_inferred_placement_enabled",true)
 	if options.navigation_profile==PLAY_OPTIONS.GENERIC:
 		source_manifest.text=options.source_manifest_sha256
 		tile_manifest.text=options.tile_manifest_sha256
@@ -273,6 +280,7 @@ func _load_play_options() -> void:
 func _play_values() -> Dictionary:
 	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.GENERIC if play_profile.selected==3 else PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
 	if play_profile.selected in [2,3]:
+		value.aden_inferred_placement_enabled=aden_inferred_placement.button_pressed
 		value.path_search_limit=int(source_search_limit.value)
 		value.allowed_raw_words = []
 		for part: String in source_words.text.split(",",false):

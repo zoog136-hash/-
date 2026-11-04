@@ -30,6 +30,9 @@ static func validate(value: Dictionary) -> Dictionary:
 		result[key] = path.strip_edges()
 	if result.enabled and (profile not in [LEGACY,SOURCE,GENERIC] or result.raw_root.is_empty() or result.tile_root.is_empty()): return {}
 	if profile in [SOURCE,GENERIC]:
+		var inference: Variant=value.get("aden_inferred_placement_enabled",true)
+		if not inference is bool: return {}
+		result.aden_inferred_placement_enabled=inference
 		var search_limit: Variant=value.get("path_search_limit",8192)
 		if not (search_limit is int or search_limit is float) or not is_finite(float(search_limit)) or float(search_limit)!=floorf(float(search_limit)) or search_limit<1 or search_limit>65536: return {}
 		result.path_search_limit=int(search_limit)
@@ -64,6 +67,7 @@ static func read() -> Dictionary:
 	var value: Dictionary = defaults()
 	for key: String in value: value[key] = config.get_value("play", key, value[key])
 	if value.navigation_profile in [SOURCE,GENERIC]:
+		value.aden_inferred_placement_enabled=config.get_value("play","aden_inferred_placement_enabled",true)
 		for key: String in ["allowed_raw_words","source_position","portal_contract","path_search_limit"]:
 			value[key] = config.get_value("play",key,8192 if key=="path_search_limit" else (SOURCE_WORDS.duplicate() if key=="allowed_raw_words" else ([] if key=="source_position" else "")))
 	if value.navigation_profile == GENERIC:

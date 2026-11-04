@@ -141,11 +141,15 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 			return _fail("기존 아덴 그림 청크의 범위가 다릅니다.")
 		_legacy_origins[origin] = true
 	var members: Array = originals.supported_s32_members() if generic else originals.source_members()
+	var source_origins: Dictionary=value.source_chunk_origins() if source_owned else {}
 	for member: String in members:
-		var origin: Variant = REVIEW.candidate_origin(member)
-		if origin == null: continue  # Preserve the ninth-character source as unplaced.
+		# Source navigation and pixels must consume the SAME explicit placement.
+		# The legacy overlay still has no inferred member or native coordinate rule.
+		var origin: Variant = source_origins.get(member) if source_owned else REVIEW.candidate_origin(member)
+		if origin == null: continue
 		_member_origins[member] = origin
 		if _legacy_origins.has(origin):
+			if _overlap.has(origin): return _fail("표시 원문의 배치가 기존 청크와 겹칩니다.")
 			_overlap[origin] = member
 			_chunk_rects[member] = _candidate_rect(origin)
 	if _overlap.is_empty(): return _fail("기존 아덴 그림과 M 표시 후보의 공통 영역이 없습니다.")
@@ -337,6 +341,7 @@ func _build_frame() -> bool:
 		"scope_clipped_records": _scope_clipped_records,
 		"off_floor_decoration_records":_off_floor_decoration_records,
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
+	if source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
 	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.

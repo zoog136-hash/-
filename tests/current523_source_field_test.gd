@@ -69,7 +69,7 @@ func _actual_sources(root: String, pin: String) -> void:
 	for id: int in ids:
 		if definitions.size()%25==0: print("CURRENT523_SOURCE_FIELD_PROGRESS ",definitions.size(),"/",ids.size())
 		var field = FIELD.new()
-		check(field.configure_verified_catalog(catalog,pin,id),"native Land configures exact physical asset from verified snapshot: "+str(id)+" "+field.problem)
+		check(field.configure_verified_catalog(catalog,pin,id,{"aden_inferred_placement_enabled":false}),"historical placement-off Land configures exact physical asset: "+str(id)+" "+field.problem)
 		if not field.loaded: continue
 		var record: Dictionary = catalog.land_record(id)
 		var asset: Dictionary = catalog.asset_record(str(record.declaration.AssetPath))

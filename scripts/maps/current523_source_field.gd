@@ -44,6 +44,7 @@ func configure_verified_catalog(catalog: RefCounted, expected_manifest_sha256: S
 	for member: String in originals.source_members():
 		var metadata: Dictionary = originals.source_metadata(member)
 		var origin: Variant = SOURCE_PACK.candidate_origin(member)
+		if origin==null and supported.has(member): origin=_inferred_origin(member,metadata)
 		if origin==null:
 			if supported.has(member): unplaced_members.append(member)
 			else: unavailable_sources[member]=str(metadata.get("status","unsupported"))
@@ -63,6 +64,7 @@ func configure_verified_catalog(catalog: RefCounted, expected_manifest_sha256: S
 	astar=AStarGrid2D.new(); astar.region=Rect2i(0,0,1,1); astar.update()
 	definition={"map_id":"m523_land_"+str(land_id),"source_map_id":land_id,"source_asset_path":source_asset,"geographic_contract":GEOGRAPHIC_CONTRACT,"source_sha256":str(availability.source_inventory_sha256),"source_manifest_sha256":catalog_sha256,"origin":[minimum.x,minimum.y],"dimensions":[width,height],"layout_revision":5230001,"navigation":{"profile":OWN_PROFILE},"native_m_rules_verified":false}
 	var title: String = "M523 Land%d · %s" % [land_id,str(native_land.Name)]
+	if not inferred_placements.is_empty(): title+=" · TWILIGHT 추정 배치1"
 	data={"map_id":definition.map_id,"map_name":title,"short_name":"원문 지형 · 자체 통행","layout_revision":5230001,"navigation_profile":OWN_PROFILE,"spawn_position":[],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],"collision":[],"regions":[],"water":[],"roads":[],"surfaces":[],"npc_spawn":[],"monster_spawn":[],"portal":[],"navigation":{"profile":OWN_PROFILE},"camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},"streaming":{"monster_sleep_distance":1600},"native_m_rules_verified":false}
 	loaded=true
 	if interpretation.has("spawn_source"):
@@ -79,7 +81,7 @@ func region_at(_point: Vector2) -> Dictionary:
 	return {"id":"m523_land_"+str(native_land.get("ID",-1)),"name":str(data.get("map_name","원문 필드")),"type":"neutral","color":"738e81","native_m_rules_verified":false}
 
 func scope_metrics() -> Dictionary:
-	return {"loaded":loaded,"native_land_id":native_land.get("ID",-1),"native_asset_path":source_asset,"source_manifest_sha256":catalog_sha256,"expected_sources":_raw.source_members().size() if loaded else 0,"ready_placed_sources":source_origins.size(),"unplaced_sources":unplaced_members.size(),"unavailable_sources":unavailable_sources.duplicate(),"asset_status":availability.get("status","unavailable"),"native_m_rules_verified":false}
+	return {"loaded":loaded,"native_land_id":native_land.get("ID",-1),"native_asset_path":source_asset,"source_manifest_sha256":catalog_sha256,"expected_sources":_raw.source_members().size() if loaded else 0,"ready_placed_sources":source_origins.size(),"unplaced_sources":unplaced_members.size(),"inferred_placements":inferred_placements.duplicate(true),"unavailable_sources":unavailable_sources.duplicate(),"asset_status":availability.get("status","unavailable"),"native_m_rules_verified":false}
 
 func _fail(message: String) -> bool:
 	close()

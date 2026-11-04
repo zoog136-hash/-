@@ -265,3 +265,23 @@ resources are unchanged. The host application still needs its normal source84
 base installed in `user://source_maps_v3` or bundled at
 `res://external_map_packs/source84_v3`; this is legacy save/return infrastructure,
 not the geometry source for M fields.
+
+## Optional host placement of the retained Aden member
+
+`current523_aden_inferred_placement.gd` pins the literal nine-digit member, its
+original size/SHA and one otherwise vacant origin `(33472,32128)`.
+`aden_inferred_placement_enabled` defaults true after the user's explicit placement
+decision, is a strict boolean and persists with the existing play options. It is
+passed through initial fields and manual target fields; active changes are
+rejected. False retains the historical placement-off contract. Unsupported raw
+identities still cannot resolve this origin, and duplicate origins fail field
+configuration. Every earlier676 origin and raw collision word remains unchanged.
+
+`inferred_placements` in source scope/renderer metrics and `inferred_placement`
+on a cell identify `TWILIGHT_INFERRED_ADEN_FRONTIER_V1` and
+`native_placement_verified=false`. The active title and normal Settings label
+also disclose it. This is a weak categorical edge-ranked host placement, not a
+native suffix interpretation, seamless geometry guarantee, natural entrance,
+portal relocation or new movement permission. Its original neighbor remains
+blocked; the source-coordinate entry is explicit QA/own access. The retained
+17-part pack already contains the bytes and remains unchanged.

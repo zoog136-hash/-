@@ -46,6 +46,8 @@ func _initialize() -> void:
 	var source: Dictionary = valid.duplicate(true)
 	source.merge({"enabled":true,"navigation_profile":OPTIONS.SOURCE,"allowed_raw_words":[0,4,8,12,32],"source_position":[33342.5,33168.5],"portal_contract":"/private/source-portals.json"},true)
 	check(OPTIONS.validate(source).path_search_limit==8192,"old source preferences retain the original default search budget")
+	check(OPTIONS.validate(source).aden_inferred_placement_enabled,"old source preferences receive explicitly user-authorized default host placement")
+	source.aden_inferred_placement_enabled=true
 	source.path_search_limit=8192
 	check(OPTIONS.validate(source)==source,"source profile preserves separate exact-word policy and fractional source cursor")
 	for changes: Dictionary in [{"allowed_raw_words":[]},{"allowed_raw_words":[65535]},{"allowed_raw_words":[true]},{"allowed_raw_words":[4.5]},{"source_position":[INF,1]},{"source_position":[1]},{"source_position":[-1,1]},{"portal_contract":12}]:
@@ -68,6 +70,11 @@ func _initialize() -> void:
 		check(OPTIONS.validate(bad).is_empty(),"unsafe or unbounded search budget rejects")
 	generic.path_search_limit=65536
 	check(OPTIONS.write(generic)==OK and OPTIONS.read()==generic,"explicit bounded own search budget survives preference restart")
+	for bad_value: Variant in [0,1,"true",null]:
+		var bad: Dictionary=generic.duplicate(true);bad.aden_inferred_placement_enabled=bad_value
+		check(OPTIONS.validate(bad).is_empty(),"placement must be an explicit bool, never implicit permission")
+	generic.aden_inferred_placement_enabled=false
+	check(OPTIONS.write(generic)==OK and OPTIONS.read()==generic,"disabled inferred placement survives own preference restart")
 	check(FileAccess.get_sha256("user://play-options-save-sentinel.bin")==sha,"generic preferences preserve actual game save sentinel")
 	# Core checks share an isolated profile; remove only this guard's own fixture.
 	DirAccess.remove_absolute(OPTIONS.PATH)

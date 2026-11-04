@@ -5,6 +5,7 @@ class_name Current523AdenSourceField
 ## Inherited DDA/A* algorithms call this field's rules, never A3 attribute rules.
 const RAW = preload("res://scripts/maps/current523_aden_pack.gd")
 const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
+const INFERRED = preload("res://scripts/maps/current523_aden_inferred_placement.gd")
 const RAW_CACHE_LIMIT: int = 48
 const OWN_PROFILE: String = "CURRENT523_S32_OWN_ALLOWLIST_V1"
 const OWN_LAYOUT_REVISION: int = 5230001
@@ -14,6 +15,7 @@ var problem: String = ""
 var source_bounds := Rect2i()
 var source_origins: Dictionary = {}
 var unplaced_members: Array[String] = []
+var inferred_placements: Dictionary = {}
 var policy: Dictionary = {}
 var _raw = RAW.new()
 var _source_chunks: Dictionary = {}
@@ -35,6 +37,7 @@ func configure_current523(raw_root: String, interpretation: Dictionary = {}) -> 
 	var maximum := Vector2i(-2147483647, -2147483647)
 	for member: String in _raw.source_members():
 		var candidate: Variant = REVIEW.candidate_origin(member)
+		if candidate==null: candidate=_inferred_origin(member,_raw.source_metadata(member))
 		if candidate == null:
 			unplaced_members.append(member)
 			continue
@@ -44,8 +47,8 @@ func configure_current523(raw_root: String, interpretation: Dictionary = {}) -> 
 		_source_chunks[origin] = member
 		minimum = minimum.min(origin)
 		maximum = maximum.max(origin + Vector2i(64, 64))
-	if source_origins.size() != 676 or unplaced_members.size() != 1:
-		return _fail("Expected 676 candidate chunks and one unplaced literal member")
+	if source_origins.size() != 676+inferred_placements.size() or unplaced_members.size() != 1-inferred_placements.size():
+		return _fail("Expected unchanged Aden chunks and explicit optional inferred member")
 	source_bounds = Rect2i(minimum, maximum - minimum)
 	if not coordinates.configure([minimum.x, minimum.y], [source_bounds.size.x, source_bounds.size.y], policy.coordinate_mapping):
 		return _fail("Invalid own source coordinate mapping")
@@ -62,6 +65,7 @@ func configure_current523(raw_root: String, interpretation: Dictionary = {}) -> 
 		"collision":[], "regions":[], "water":[], "roads":[], "surfaces":[], "npc_spawn":[], "monster_spawn":[], "portal":[],
 		"navigation":{"profile":OWN_PROFILE}, "camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},
 		"streaming":{"monster_sleep_distance":1600}, "native_m_rules_verified":false}
+	if not inferred_placements.is_empty(): data.map_name+=" · TWILIGHT 추정 배치1"
 	loaded = true
 	if interpretation.has("spawn_source"):
 		var spawn: Variant = interpretation.spawn_source
@@ -77,6 +81,9 @@ func _configure_policy(value: Dictionary) -> bool:
 	policy = value.duplicate(true)
 	policy["profile"] = OWN_PROFILE
 	policy["native_m_rules_verified"] = false
+	var inference: Variant=value.get(INFERRED.OPTION,true)
+	if not inference is bool: return _fail("Invalid inferred Aden placement choice")
+	policy[INFERRED.OPTION]=inference
 	# Exact zero is explicitly mapped here; absent/corrupt cells never reach it.
 	# These are local choices, not a claim that PC viewer flags are M rules.
 	var words: Variant = value.get("allowed_raw_words", DEFAULT_ALLOWED_RAW_WORDS.duplicate())
@@ -103,6 +110,11 @@ func _configure_policy(value: Dictionary) -> bool:
 	if not RAW._uint(limit,65536) or int(limit)<1: return _fail("Invalid own path search limit")
 	policy["path_search_limit"] = int(limit)
 	return true
+
+func _inferred_origin(member: String, metadata: Dictionary) -> Variant:
+	var origin: Variant=INFERRED.candidate(member,metadata,bool(policy.get(INFERRED.OPTION,true)))
+	if origin!=null: inferred_placements[member]=INFERRED.record()
+	return origin
 
 func _integer_pair(value: Variant) -> bool:
 	if not value is Array or value.size() != 2: return false
@@ -160,6 +172,7 @@ func source_cell_info(source: Vector2i) -> Dictionary:
 	var origin: Vector2i = _source_origin(source)
 	if not _source_chunks.has(origin): result.status = "unregistered_chunk"; return result
 	result.member = _source_chunks[origin]
+	if inferred_placements.has(result.member): result["inferred_placement"]=inferred_placements[result.member].duplicate(true)
 	result.local_cell = source-origin
 	var row: Dictionary = _source_chunk(origin)
 	if row.is_empty(): result.status = "source_integrity_failure"; return result
@@ -259,6 +272,7 @@ func close() -> void:
 	_source_chunks.clear()
 	source_origins.clear()
 	unplaced_members.clear()
+	inferred_placements.clear()
 	_allowed_words.clear()
 	_raw_reads = 0
 	source_bounds = Rect2i()

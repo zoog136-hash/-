@@ -1,3 +1,49 @@
+## User-authorized inferred Aden placement (after 05265571)
+
+The retained literal `Map/Aden/800f7ff3e.s32` is now connected at source origin
+`(33472,32128)` by **TWILIGHT_INFERRED_ADEN_FRONTIER_V1**. This is a host placement
+selected after the user explicitly authorized inference; it is **not** evidence
+of the original ninth-character selector or native coordinates. The147,158-byte
+original remains unchanged: SHA256
+`bc79ea23c3ba0443f57f45bff55cce72390d9011c3db50b79c8c21359e143e11`.
+The source/tiles/17-part Drive pack need no rebuild or upload: they already hold
+this exact original. The code record fixes its literal member/size/hash and
+refuses any other identity. Original portal coordinates/targets are untouched.
+
+The original has79 object groups, no cover records and a two-byte `0000` tail; these local records supply no explicit global placement declaration.
+
+The placement comparison was bounded to the held Aden bytes and vacant adjacent
+slots, rather than repeating the exhausted8,311-member provenance search:
+
+| Candidate | Actual evidence and decision |
+| --- | --- |
+| First8hex `800f7ff3` | Occupied by a different original; zero corresponding floor words match. Reject rather than overwrite or silently trim. |
+| Remove interior `3`, `800f7ffe` | Also occupied.1,802/8,192 floor and7,790/8,192 attribute words match, but repeated grass/zero attributes match other chunks much more strongly. This does not establish a selector. Reject overlap. |
+| Other single-character deletion candidates | Outside the supported coordinate domain or without neighboring declared Aden chunks. No filename correction is promoted to an original fact. |
+| Vacant frontier `(33472,32128)` | Best categorical edge-family agreement among126 vacant adjacent slots:27/128 adjacent half-tile samples, versus4/128 for the next slot and zero for the rest. Exact edge reference matches are0/128. Still weak and not pixel seam continuity. One neighbor is `Map/Aden/800b7ff7.s32`. |
+
+The chosen vacant slot preserves all676 existing origins, the old field bounds,
+24/-12 coordinate basis, original bytes, stored object records, tile references
+and collision words. It adds exactly one floor owner and never overlays an
+occupied chunk. Its southern neighbor's64 first-row cells all have raw `[1,1]`
+and remain blocked by the existing own allowlist. **No connecting passage,
+portal, fee waiver or natural admission is invented.** Entry through the existing
+explicit source-coordinate Settings control is QA/own entry, not proof of an
+original entrance. Missing neighboring chunks still fail closed; decorations may
+extend beyond floor under the preexisting display policy without creating cells.
+
+The existing Settings screen exposes `Current523AdenInferredPlacement`, labelled
+“TWILIGHT 추정 배치 … 원작 위치 미확정”. It defaults on for source playback after this
+user decision and persists `aden_inferred_placement_enabled` separately from the
+game save. The active field title, source-cell evidence, geographic scope and
+renderer metrics disclose the inference. Changing it during source playback is
+rejected; return to the host first. Off restores the prior676-placed/1-unplaced
+behavior without deleting the original. If the saved cursor is inside the
+inferred slot, trying entry with it off fails and preserves the previous state;
+select an existing clear source point rather than silently relocating the player.
+Historical bulk tests explicitly choose off to retain their original baseline.
+The focused new-area tests cover on/off; the whole577/997 QA is not repeated.
+
 # Current523 source maps in the existing game
 
 This is the whole-map continuation of PR232. The immutable Aden-only packs and
@@ -681,6 +727,55 @@ evidence `current523-movement-quality-final-evidence.json` SHA256 is
 search bounds and the17-part Drive application bundle are unchanged.
 
 
+
+Focused verification of this placement is complete on actual Godot4.7.2 Main:
+
+| Scope | Actual result |
+| --- | --- |
+| New-area normal Settings entry |47 checks,122.834s. Real stored-pixel render, raw SHA/member and0/0 clear-cell evidence, all676 previous origins unchanged,677 unique floor owners, movement, blocked click cancelling its prior route, blocked southern seam, absent lateral cell, source/world inverse, touch cancellation on return, off/on UI and failed-entry preservation. Two local frames show the original forest and neighbor seam; unresolved visible tile references0. |
+| New OS process |13 checks,109.222s. Exact saved new-area cursor/progress/save restoration and movement; saved checkbox; genuine PR230 definition connection through UI; regular Land1 display; positive own-cooldown refusal followed by controlled isolated-clock advancement and exact manual1101 Land1→0. The target preserves placement-off. |
+| Main/current map/save core |35 checks,61.645s. Required local runtime/save/resource-path gate passes. |
+| Focused synthetic guards |64 options +106 renderer/projection +41 raw-field policy checks. These are fixture regressions, not original art/gameplay evidence. |
+
+The60 Main checks include a single assertion comparing all676 existing origins;
+they do not mean676 new region play sessions. Source-coordinate entry is explicit
+own/QA access. The existing577-root/997-logical-ID representative coverage is
+preserved and was not rerun. Actual render uses6,019 commands/14 atlases at the
+center and retains existing off-floor decoration behavior. The observed southern
+neighbor remains blocked; no seamless original geography or natural access is
+claimed. The normal user host pack is installed using held bytes/hardlink
+deduplication; no product definition CLI or source override environment is used.
+
+The first real attempt exposed the renderer independently ignoring the explicit
+field placement and rejecting its support area. It now consumes the SAME
+source-owned placement table as navigation, while the legacy overlay retains
+its old behavior. Later failed harness logs are retained separately: one used
+an active-source preservation helper while in the host; another froze the own
+2s cooldown without advancing its test clock. The passing helper handles host
+state explicitly and verifies cooldown refusal before the success case; no
+production admission/cooldown rule was weakened. The entry harness was later
+extended only for the separate reconnect/provider regression.
+
+Final local evidence `current523-inferred-placement-final-evidence.json` SHA256
+`a5b8e2053950484971c67914f17e10aedf4a952e8d19cc605652fa08d1f0419c`
+records source/code/frame/log/receipt hashes. Passing entry log SHA256
+`2e8efa012a58cca13ce81734b5bd2d344e24f87684d9af14c157543bec734345`;
+reconnect log SHA256
+`6156676e691d47b326bab5630bfb2f467ce3ce2a5f3788fd552622e6dc509f9b`.
+The corrected categorical ranking receipt SHA256 is
+`ef05701c331da8383ed09e2302c9583fe8df909d6b9f686b538616b18c03f49f`.
+These original-derived reports/frames remain local. No new pack/source/report/
+capture was transmitted, no other branch merged and no full/manual CI ran.
+Tracked723 atlas/41,442 frame/233,420,026-byte integrity still passes.
+
+This new code checkpoint supersedes05265571 for deliberate PR263 inclusion.
+Central conflict integration remains the263 owner's work; no integration branch
+was edited here. After conflict resolution, recheck normal Settings/new-area
+entry and saved restore, placement-off rollback, source-owned rendering on a
+regular field, input cancellation and the genuine manual Portal path, plus the
+required Main/save/resource gate. The original filename selector/native placement,
+native collision/occupancy and automatic portal activation/admission/fee remain
+unproven; the host placement only resolves the disconnected-file implementation.
 
 ## Normal Main selection and central-integration handoff
 

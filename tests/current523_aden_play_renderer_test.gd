@@ -4,6 +4,7 @@ const PLAY = preload("res://scripts/maps/current523_aden_play_renderer.gd")
 const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const COORDINATES = preload("res://scripts/maps/source_coordinates.gd")
 const FIELD = preload("res://scripts/maps/source_map_runtime_field.gd")
+const PLACEMENT = preload("res://scripts/maps/current523_aden_inferred_placement.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -56,6 +57,7 @@ func run() -> void:
 	var base := Vector2i(33408,32768)
 	check(PLAY.project_storage(coordinates, base, 128, 0) == PLAY.project_storage(coordinates, base + Vector2i(64,0), 0, 0), "horizontal chunk continuity")
 	check(PLAY.project_storage(coordinates, base, 0, 64) == PLAY.project_storage(coordinates, base + Vector2i(0,64), 0, 0), "vertical chunk continuity")
+	check(PLAY.project_storage(coordinates,PLACEMENT.ORIGIN,16,64)==PLAY.project_storage(coordinates,PLACEMENT.ORIGIN+Vector2i(0,64),16,0),"inferred slot and actual southern neighbor share projected seam coordinates; no pixel continuity claim")
 	for value: Vector2 in [Vector2.ZERO, Vector2(-48,48), Vector2(.5,-12)]:
 		check(PLAY.valid_delta(value), "bounded display offset accepted")
 	for value: Vector2 in [Vector2(49,0), Vector2(0,-49), Vector2(INF,0), Vector2(NAN,0)]:

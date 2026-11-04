@@ -130,7 +130,7 @@ func apply_options(value: Dictionary) -> bool:
 	if settings.navigation_profile==OPTIONS.GENERIC:
 		for key: String in ["source_manifest_sha256","tile_manifest_sha256","native_land_id"]:
 			if options.get(key)!=settings.get(key): problem="지역과 원본 검증 정보를 바꾸려면 원문 플레이를 종료해 주세요."; return false
-	if source_owned and (options.allowed_raw_words != settings.allowed_raw_words or options.portal_contract != settings.portal_contract or options.get("path_search_limit",8192)!=settings.get("path_search_limit",8192)):
+	if source_owned and (options.allowed_raw_words != settings.allowed_raw_words or options.portal_contract != settings.portal_contract or options.get("path_search_limit",8192)!=settings.get("path_search_limit",8192) or options.get("aden_inferred_placement_enabled",true)!=settings.get("aden_inferred_placement_enabled",true)):
 		problem = "통행 및 경로 설정과 포탈 팩을 바꾸려면 원문 플레이를 종료해 주세요."; return false
 	if source_owned: options.source_position = _source_checkpoint().source_position
 	var previous_delta := Vector2(settings.offset_x, settings.offset_y)
@@ -193,7 +193,7 @@ func _open_source(value: Dictionary) -> bool:
 	if generic and catalog==null: return false
 	var script: Script = load("res://scripts/maps/current523_source_field.gd" if generic else "res://scripts/maps/current523_aden_source_field.gd")
 	var proposed: OriginalPlayableField = script.new()
-	var interpretation: Dictionary={"allowed_raw_words":options.allowed_raw_words,"path_search_limit":options.get("path_search_limit",8192)}
+	var interpretation: Dictionary={"allowed_raw_words":options.allowed_raw_words,"path_search_limit":options.get("path_search_limit",8192),"aden_inferred_placement_enabled":options.get("aden_inferred_placement_enabled",true)}
 	var configured: bool=proposed.call("configure_verified_catalog",catalog,options.source_manifest_sha256,options.native_land_id,interpretation) if generic else proposed.call("configure_current523",options.raw_root,interpretation)
 	if not configured:
 		problem = str(proposed.get("problem")); proposed.close(); return false
@@ -473,7 +473,7 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 	var target_id: int=int(context.TargetLand.get("ID",-1))
 	var catalog: RefCounted=_catalog_for(options)
 	if catalog==null: proposed.close(); return false
-	if not proposed.configure_verified_catalog(catalog,options.source_manifest_sha256,target_id,{"allowed_raw_words":options.allowed_raw_words,"path_search_limit":options.get("path_search_limit",8192)}):
+	if not proposed.configure_verified_catalog(catalog,options.source_manifest_sha256,target_id,{"allowed_raw_words":options.allowed_raw_words,"path_search_limit":options.get("path_search_limit",8192),"aden_inferred_placement_enabled":options.get("aden_inferred_placement_enabled",true)}):
 		problem="대상 원문 필드 보류: "+str(proposed.problem); proposed.close(); return false
 	var source_cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
 	var plan: Dictionary=SOURCE_TRAVEL.plan(context,_source_field.get("_raw"),_source_field,proposed,source_cell,str(options.source_manifest_sha256))

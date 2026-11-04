@@ -114,7 +114,7 @@ func _initialize() -> void:
 
 func _real_sources(raw_root: String) -> Dictionary:
 	var field = FIELD.new()
-	check(field.configure_current523(raw_root),"complete real raw pack configures: "+field.problem)
+	check(field.configure_current523(raw_root,{"aden_inferred_placement_enabled":false}),"historical placement-off raw pack configures: "+field.problem)
 	if not field.loaded: return {}
 	check(field.registered_source_members().size() == 677 and field.source_chunk_origins().size() == 676,"all676 candidate chunks plus unplaced original retained")
 	check(field.unplaced_source_members() == ["Map/Aden/800f7ff3e.s32"],"nine-digit member stays literal and unplaced")
