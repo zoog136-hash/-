@@ -5,9 +5,11 @@ const DATA = "res://data/growth/lineage_growth.json"
 const Source523 = preload("res://scripts/growth/symbol_source523.gd")
 const Travel = preload("res://scripts/growth/symbol_travel.gd")
 const Combat = preload("res://scripts/growth/symbol_combat.gd")
+const History = preload("res://scripts/growth/symbol_history.gd")
 var source523 = Source523.new()
 var travel = Travel.new()
 var combat = Combat.new()
+var history = History.new()
 var world
 var development: bool = OS.is_debug_build() and "--growth-lab" in OS.get_cmdline_user_args()
 var lab: Dictionary = {}
@@ -49,6 +51,7 @@ func configure(host: Node) -> void:
 	world = host
 	travel.configure(self)
 	combat.configure(self)
+	history.configure(self)
 	_rebuild()
 
 func seed_lab() -> void:
@@ -82,6 +85,26 @@ func progress(id: String) -> Dictionary:
 static func integer(value: Variant, low: int = 0, high: int = 1000000000) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value)) and value >= low and value <= high
 
+func progress_error(id: String, p: Variant) -> String:
+	if not p is Dictionary: return "문양 저장 구조 오류"
+	if not integer(p.get("stage"),0,30) or not integer(p.get("attempts"),0,20) or not integer(p.get("spent")) or not p.get("guaranteed") is bool: return "문양 진행 값 오류"
+	if not integer(p.get("absolute",0),0,5) or (p.get("absolute",0)>0 and p.stage!=30): return "절대 옵션 단계 오류"
+	if not development and p.get("absolute",0)>0: return "미검증 절대 옵션 저장"
+	var grades: Variant = p.get("absolute_grades",[])
+	if not grades is Array: return "절대 옵션 개방 목록 오류"
+	var seen_grades: Array = []
+	for grade: Variant in grades:
+		if not integer(grade,1,5) or seen_grades.has(int(grade)) or p.stage != 30: return "절대 옵션 개방 목록 오류"
+		if source523.absolute(id,int(grade)).is_empty(): return "알 수 없는 절대 옵션"
+		seen_grades.append(int(grade))
+	# The official Symbol guide confirms sequential activation; source
+	# definitions alone did not. Preserve owned unsupported rewards as data.
+	for grade: int in seen_grades:
+		for prerequisite: int in range(1,grade):
+			if not seen_grades.has(prerequisite): return "절대 옵션 선행 등급 누락"
+	if p.stage < p.attempts or p.stage > p.attempts*3: return "문양 단계/횟수 불일치"
+	return ""
+
 func validate(value: Variant) -> String:
 	if not value is Dictionary: return "성장 저장 형식 오류"
 	if value.get("profile","verified") != ("development" if development else "verified"): return "일반/개발용 성장 저장을 혼용할 수 없습니다"
@@ -91,24 +114,10 @@ func validate(value: Variant) -> String:
 	if not value.get("emblems") is Dictionary or not value.get("nodes") is Array or not value.get("pending") is Dictionary or not value.get("searches") is Dictionary: return "성장 저장 구조 오류"
 	for id: Variant in value.emblems:
 		if not id is String or emblem(id).is_empty(): return "알 수 없는 문양 저장"
-		var p: Variant = value.emblems[id]
-		if not p is Dictionary: return "문양 저장 구조 오류"
-		if not integer(p.get("stage"),0,30) or not integer(p.get("attempts"),0,20) or not integer(p.get("spent")) or not p.get("guaranteed") is bool: return "문양 진행 값 오류"
-		if not integer(p.get("absolute",0),0,5) or (p.get("absolute",0)>0 and p.stage!=30): return "절대 옵션 단계 오류"
-		if not development and p.get("absolute",0)>0: return "미검증 절대 옵션 저장"
-		var grades: Variant = p.get("absolute_grades",[])
-		if not grades is Array: return "절대 옵션 개방 목록 오류"
-		var seen_grades: Array = []
-		for grade: Variant in grades:
-			if not integer(grade,1,5) or seen_grades.has(int(grade)) or p.stage != 30: return "절대 옵션 개방 목록 오류"
-			if source523.absolute(id,int(grade)).is_empty(): return "알 수 없는 절대 옵션"
-			seen_grades.append(int(grade))
-		# The official Symbol guide confirms sequential activation; source
-		# definitions alone did not. Preserve owned unsupported rewards as data.
-		for grade: int in seen_grades:
-			for prerequisite: int in range(1,grade):
-				if not seen_grades.has(prerequisite): return "절대 옵션 선행 등급 누락"
-		if p.stage < p.attempts or p.stage > p.attempts*3: return "문양 단계/횟수 불일치"
+		var problem: String = progress_error(id,value.emblems[id])
+		if not problem.is_empty(): return problem
+	var history_error: String = history.validate(value)
+	if not history_error.is_empty(): return history_error
 	if not value.get("economy",{}) is Dictionary: return "성장 재화 이력 오류"
 	var travel_error: String=Travel.validate(value.get("teleport_bookmarks",[]))
 	if not travel_error.is_empty(): return travel_error
@@ -207,6 +216,11 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	var points: int = 0
 	var text: String = ""
 	var consume_instance: String = ""
+	var transaction_day: int = -1
+	if action in ["save_emblem","restore_emblem"]:
+		var offer: Dictionary=history.quote(action,id)
+		if offer.ok and int(offer.points)>int(state.points):return fail("축복 포인트 부족 · 필요 %d / 보유 %d" % [int(offer.points),int(state.points)])
+		return offer
 	match action:
 		"enhance":
 			if emblem(id).is_empty() or count not in [1,5]: return fail("잘못된 강화 요청")
@@ -237,6 +251,11 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 						break
 				if consume_instance.is_empty(): return fail("원본 ID가 확인된 기간 없는 문양 초기화 두루마리가 필요합니다")
 			text = "초기화 · 강화 포인트 %d 환급, 확률 변경 비용 제외" % int(progress(id).spent)
+			if not development:
+				var daily: Dictionary=history.daily_offer(id)
+				if not daily.ok:return daily
+				transaction_day=int(daily.day)
+				text+="\n자체 일일 한도 · 문양별 %d/%s회 · 기존 게임05시 기준" % [int(daily.used),str(daily.limit) if int(daily.limit)>0 else "무제한"]
 		"buy_key":
 			points = int(config.blessing_key_point_cost)
 			text = "축복의 열쇠 1개 · 1,000 축복 포인트 (상점 지출은 강화 환급 제외)"
@@ -300,12 +319,13 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	if points > int(state.points): return fail("축복 포인트 부족 · 필요 %d / 보유 %d" % [points,int(state.points)])
 	for item: String in costs:
 		if int(world.inventory.get(item,0)) < int(costs[item]): return fail("%s 부족 · 필요 %d / 보유 %d" % [item,int(costs[item]),int(world.inventory.get(item,0))])
-	return {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision,"consume_instance":consume_instance}
+	return {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision,"consume_instance":consume_instance,"day":transaction_day}
 
-func execute(action: String, id: String, count: int, revision: int) -> Dictionary:
+func execute(action: String, id: String, count: int, revision: int, quote_day: int = -1) -> Dictionary:
 	if busy or revision != int(state.revision): return fail("중복 또는 오래된 요청 · 다시 확인하세요")
 	var offer: Dictionary = quote(action,id,count)
 	if not offer.ok: return offer
+	if quote_day>=0 and int(offer.get("day",-1))!=quote_day:return fail("게임 일자가 바뀌었습니다 · 비용과 횟수를 다시 확인하세요")
 	busy = true
 	var next: Dictionary = state.duplicate(true)
 	var inventory: Dictionary = world.inventory.duplicate(true)
@@ -357,7 +377,10 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 			next.points -= int(offer.points)
 			_ledger(next,"probability_spent",int(offer.points))
 			message = "확률 변경 완료 · 문양 화면을 닫으면 기본 확률로 복귀"
+		"save_emblem", "restore_emblem":
+			message=history.stage(next,action,id,offer)
 		"reset":
+			if not development:history.stage_day(next,id,int(offer.day),true)
 			next.points += int(progress(id).spent)
 			_ledger(next,"refunded",int(progress(id).spent))
 			next.emblems.erase(id)
@@ -420,7 +443,7 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 	world.inventory = inventory
 	if not str(offer.consume_instance).is_empty(): world.item_instances = instances
 	if action == "reroll": rerolls[id] = rolled
-	elif action in ["enhance","reset"]: rerolls.erase(id)
+	elif action in ["enhance","reset","restore_emblem"]: rerolls.erase(id)
 	_rebuild()
 	world._invalidate_equipment_static()
 	world.hp = mini(world.hp,world._effective_max_hp())

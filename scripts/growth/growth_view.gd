@@ -247,6 +247,15 @@ func _emblem() -> void:
 		b.tooltip_text = str(offer.message)
 		b.disabled = not bool(offer.ok)
 		_label(str(pair[1])+": "+str(offer.message))
+	if not runtime.development:
+		_label(runtime.history.status(selected))
+		for action: String in ["save_emblem","restore_emblem"]:
+			var offer: Dictionary=runtime.quote(action,selected)
+			var history_button:=_button("강화 정보 보관 · 자체 정책" if action=="save_emblem" else "보관 기록 복구 · 자체 정책",func() -> void: _prepare(action,selected,1))
+			history_button.name="GrowthHistory_"+action
+			history_button.disabled=not offer.ok
+			history_button.tooltip_text=str(offer.message)
+			_label(str(offer.message))
 	_label("절대 옵션 I~V · 30단계 완성 후 강화")
 	if runtime.development:
 		var absolute := _button("열쇠 · 절대 옵션 확정 강화",func() -> void: _prepare("absolute",selected,1))
@@ -388,7 +397,7 @@ func _prepare(action: String, id: String, count: int) -> void:
 				card.modulate=Color.WHITE if index==count else Color(.6,.6,.7)
 				card_faces[index].selected=index==count
 				card_faces[index].queue_redraw()
-	request = {"action":action,"id":id,"count":count,"revision":int(offer.revision)}
+	request = {"action":action,"id":id,"count":count,"revision":int(offer.revision),"day":int(offer.get("day",-1))}
 	for child: Node in confirmation.get_children(): confirmation.remove_child(child); child.queue_free()
 	_label(str(offer.message)+"\n진행하시겠습니까?",confirmation)
 	_button("확인",_confirm,confirmation).name = "GrowthConfirm"
@@ -406,7 +415,7 @@ func _confirm() -> void:
 	request = {}
 	var previous_stage: int=int(runtime.progress(selected).stage) if mode=="emblems" else 0
 	var pending_node: String = str(runtime.state.pending.get("node",""))
-	var response: Dictionary = runtime.execute(current.action,current.id,int(current.count),int(current.revision))
+	var response: Dictionary = runtime.execute(current.action,current.id,int(current.count),int(current.revision),int(current.get("day",-1)))
 	if response.ok and current.action=="choose":
 		last_reveal={"node":pending_node,"index":int(current.count),"won":runtime.state.nodes.has(pending_node)}
 	elif response.ok and current.action=="activate": last_reveal={}

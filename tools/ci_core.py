@@ -29,6 +29,7 @@ CHECKS = [
     ('symbol_absolute_followup_test', []),
     ('symbol_travel_test', []),
     ('symbol_offline_combat_test', []),
+    ('symbol_history_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -263,7 +264,8 @@ def main():
                       'symbol_source523_main_ui_test':'SYMBOL523_MAIN_RESULT',
                       'symbol_absolute_followup_test':'SYMBOL_ABSOLUTE_RESULT',
                       'symbol_travel_test':'SYMBOL_TRAVEL_RESULT',
-                      'symbol_offline_combat_test':'SYMBOL_OFFLINE_RESULT'}[name]
+                      'symbol_offline_combat_test':'SYMBOL_OFFLINE_RESULT',
+                      'symbol_history_test':'SYMBOL_HISTORY_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
