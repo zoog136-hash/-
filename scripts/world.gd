@@ -618,6 +618,7 @@ func _load_data() -> void:
 	_enrich_inven_catalog()
 	_index_item_weights()
 	catalog_db = BASE508.apply_catalog(catalog_db)
+	loot_catalog["patch523_by_name"] = LOOT_DROP.PATCH523_DROPS.catalog_index(catalog_db.get("아이템", []))
 	var image_index_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_IMAGE_INDEX_PATH))
 	if image_index_value is Dictionary:
 		catalog_image_index = image_index_value as Dictionary
@@ -2685,8 +2686,8 @@ func _drop_grade_color(grade: String) -> Color:
 		_:
 			return Color("eeeeee")
 
-func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: int = 1, source_batch: String = "") -> Button:
-	var view: Button = ground_loot.spawn(item_name, world_position, quantity, source_batch)
+func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: int = 1, source_batch: String = "", metadata: Dictionary = {}) -> Button:
+	var view: Button = ground_loot.spawn(item_name, world_position, quantity, source_batch, metadata)
 	if is_instance_valid(view) and is_instance_valid(presentation_audio):
 		presentation_audio.play_world("drop", world_position)
 	return view
@@ -2843,7 +2844,7 @@ func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = t
 			var drop_record: Dictionary = _find_catalog_item_record(item_name)
 			if _equipment_slot_base(drop_record) != "":
 				continue
-		_spawn_ground_drop(item_name, monster.global_position, quantity, batch_id)
+		_spawn_ground_drop(item_name, monster.global_position, quantity, batch_id, LOOT_DROP.PATCH523_DROPS.ground_metadata(entry))
 	hud.show_message("아이템이 바닥에 떨어졌습니다")
 
 

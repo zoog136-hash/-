@@ -133,6 +133,7 @@ func retire_for_pool() -> void:
 	# owners while keeping the lightweight body for the next life/region.
 	set_physics_process(false)
 	_clear_source_m_view()
+	loot_source_identity = {}
 	input_pickable = false
 	collision_layer = 0
 	collision_mask = 0
@@ -186,6 +187,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
+	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record)
+	if not patch523_identity.is_empty(): loot_source_identity = patch523_identity
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1
 	motion = MOTION.new()

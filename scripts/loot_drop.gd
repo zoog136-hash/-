@@ -1,7 +1,7 @@
 extends RefCounted
 # Equipment rates are per independent equipment roll, not guaranteed drops.
-# Field monsters: 1 equipment roll, at most Hero. Bosses: 3 equipment rolls,
-# at most Unique. One separate potion roll per kill is preserved.
+# Field monsters: 1 equipment roll. Bosses: 3 equipment rolls.
+# Existing grade weights remain; there is no separate grade eligibility cap.
 # Each roll yields at most one equipment item; rolls may yield duplicate items.
 
 const EQUIPMENT_GRADES = ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]
@@ -17,6 +17,7 @@ const MATERIAL_DROP_RATE: float = 0.28
 const BOSS_MATERIAL_DROP_RATE: float = 0.65
 const SOURCE3_REVIEWED = preload("res://scripts/loot/source3_reviewed_drop.gd")
 const CURRENCY_DROPS = preload("res://scripts/loot/currency_drops.gd")
+const PATCH523_DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
 
 static func is_boss_record(record: Dictionary) -> bool:
 	if record.has("is_boss"):
@@ -124,7 +125,7 @@ static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: D
 		if not by_name.has(item_name):
 			continue
 		var record: Dictionary = by_name[item_name] as Dictionary
-		if _is_potion(record) and str(record.get("grade", "")) != "유일":
+		if _is_potion(record):
 			configured.append(item_name)
 	# One existing potion roll (45% field / 90% boss). Extra catalog potions
 	# share that roll as rare weighted alternatives; never an extra drop roll.
@@ -148,8 +149,6 @@ static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: D
 			var item: Dictionary = by_name[name_value] as Dictionary
 			if not _is_potion(item):
 				continue
-			if str(item.get("grade", "")) == "유일" and not is_boss:
-				continue
 			var weight: int = clampi(int(row.get("weight", 0)), 0, 1000000)
 			if weight > 0:
 				choices.append({"item_name":name_value, "weight":weight})
@@ -170,7 +169,7 @@ static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: D
 	var potions: Array = catalog.get("potions", [])
 	for item_value: Variant in potions:
 		var name_value: String = str(item_value)
-		if str((by_name[name_value] as Dictionary).get("grade", "")) != "유일":
+		if _is_potion(by_name[name_value] as Dictionary):
 			return name_value
 	return ""
 
@@ -311,6 +310,8 @@ static func _pick_material(monster_name: String, is_boss: bool, catalog: Diction
 
 
 static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}, map_id: String = "") -> Array[Dictionary]:
+	if PATCH523_DROPS.native(monster_identity):
+		return roll_patch523(PATCH523_DROPS.candidates(monster_identity, catalog), is_boss, rng)
 	var earned: Array[Dictionary] = []
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
@@ -332,6 +333,24 @@ static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: 
 	# Reuse the existing material chance, with no change to old gear/potion rolls.
 	var currency_rate: float = BOSS_MATERIAL_DROP_RATE if is_boss else MATERIAL_DROP_RATE
 	earned.append_array(CURRENCY_DROPS.roll(monster_drops, monster_name, map_id, catalog, rng, currency_rate))
+	return earned
+
+static func roll_patch523(groups: Dictionary, is_boss: bool, rng: RandomNumberGenerator) -> Array[Dictionary]:
+	# Same host chances and number/order of potion/gear/material rolls.
+	# No name fallback, extra chance for duplicate source rows or inferred currency.
+	var earned: Array[Dictionary] = []
+	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
+	if rng.randf() < potion_rate:
+		var potion: Dictionary = PATCH523_DROPS.pick(groups, "potion", "", rng)
+		if not potion.is_empty(): earned.append(potion)
+	for attempt: int in range(MAX_BOSS_EQUIPMENT_ROLLS if is_boss else 1):
+		var grade: String = _roll_equipment_grade(is_boss, rng)
+		if grade.is_empty(): continue
+		var equipment: Dictionary = PATCH523_DROPS.pick(groups, "equipment", grade, rng)
+		if not equipment.is_empty(): earned.append(equipment)
+	if rng.randf() < (BOSS_MATERIAL_DROP_RATE if is_boss else MATERIAL_DROP_RATE):
+		var material: Dictionary = PATCH523_DROPS.pick(groups, "material", "", rng)
+		if not material.is_empty(): earned.append(material)
 	return earned
 
 static func roll(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "") -> Array[String]:

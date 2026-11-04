@@ -21,6 +21,9 @@ func configure(record: Dictionary, icon: Texture2D, slot: String) -> void:
 		set_meta(key, record[key])
 	set_meta("world_position", Vector2(float(record["position"][0]), float(record["position"][1])))
 	tooltip_text = "%s · %s ×%d · 선택 후 다시 눌러 줍기" % [record["item_name"], record["grade"], record["quantity"]]
+	var proof: Dictionary = record.get("item_record", {}).get("source_m_drop_proof", {})
+	if proof.get("source_snapshot") == "patch523":
+		tooltip_text += "\n523 드랍원 #%d · %s · TWILIGHT 확률·수량" % [int(proof.get("source_npc_id", 0)), {1:"일반", 2:"축복", 3:"저주"}.get(int(proof.get("bless_raw", 0)), "미지원 상태")]
 	var empty := StyleBoxEmpty.new()
 	for state: String in ["normal", "hover", "pressed", "focus"]:
 		add_theme_stylebox_override(state, empty)

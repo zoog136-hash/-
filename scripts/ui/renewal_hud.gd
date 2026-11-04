@@ -2173,6 +2173,7 @@ func _on_catalog_item_selected(index: int) -> void:
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0
 		catalog_detail.text+="\n보유 수량: %d" % owned
+		catalog_detail.text += "\n\n" + UI.safe(preload("res://scripts/loot/patch523_monster_drops.gd").source_text(selected_catalog_record))
 		match str(selected_catalog_record.get("grade_evidence","")):
 			"inven_item_quality":
 				catalog_detail.text+="\n등급 판정: 원본 아이템 DB 등급 확인"
