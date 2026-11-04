@@ -10,10 +10,12 @@ const NATIVE_RECORD_FIELDS: Dictionary = {
 	"fear_resistance:percent":"fear_resistance",
 	"hold_hit:percent":"hold_accuracy"
 }
-const NATIVE_CATALOG_FIELDS: Dictionary={"pve_damage_reduction_pct":"pve_damage_reduction:percent"}
+const NATIVE_CATALOG_FIELDS: Dictionary={"pve_damage_reduction_pct":"pve_damage_reduction:percent","damage_reduction_ignore":"damage_reduction_ignore:flat","melee_reduction_ignore":"melee_reduction_ignore:flat","ranged_reduction_ignore":"ranged_reduction_ignore:flat","magic_reduction_ignore":"magic_reduction_ignore:flat"}
+const RUNTIME_EFFECT_CODES: Array[String]=["melee_evasion_ignore:flat","ranged_evasion_ignore:flat","damage_reduction_ignore:percent","melee_reduction_ignore:percent","ranged_reduction_ignore:percent","magic_reduction_ignore:percent","pve_damage_amplification:percent","melee_critical_resistance:percent","ranged_critical_resistance:percent","magic_critical_resistance:percent","elemental_critical_resistance:percent","magic_heal:percent","weapon_block:percent","absolute_mp_regeneration:flat","blessing_charge:percent","final_blow_damage:flat","final_blow_probability:percent","final_blow_amplification:percent","while_stun_damage_reduction:flat","while_fear_damage_reduction:flat","stacked_damage_reduction:percent"]
+const LOCAL_POLICY_CODES: Array[String]=["life:flat","death:flat","magic_penetration:percent","reduction_efficiency:percent","physical_magic_defense:percent","final_blow_resistance:percent","ranged_burst_reduction:flat","spell_63_damage:flat","spell_37921_damage:flat","spell_77761_damage:flat","spell_120712_damage:flat","spell_17564_hit:percent"]
 const TYPED_DAMAGE_CODES: Array[String]=["melee_damage_reduction:flat","ranged_damage_reduction:flat","magic_damage_reduction:flat","melee_damage_reduction:percent","ranged_damage_reduction:percent","magic_damage_reduction:percent","critical_damage_reduction:flat","poison_damage_reduction:flat","poison_damage_reduction:percent"]
 static func supports_extra_code(code: String) -> bool:
-	return NATIVE_RECORD_FIELDS.has(code) or NATIVE_CATALOG_FIELDS.values().has(code) or TYPED_DAMAGE_CODES.has(code)
+	return NATIVE_RECORD_FIELDS.has(code) or NATIVE_CATALOG_FIELDS.values().has(code) or TYPED_DAMAGE_CODES.has(code) or RUNTIME_EFFECT_CODES.has(code) or LOCAL_POLICY_CODES.has(code)
 
 # Existing World readers consume these exact record fields. They are kept
 # separate from equipment-collection policy and never flattened across scopes.
@@ -86,6 +88,7 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		if row.effects.is_empty(): problems.append("native_reward_missing")
 		for effect: Dictionary in row.effects:
 			var code: String = effect_code(effect)
+			if code=="stacked_damage_reduction:percent" and not local_damp_supported(effect):problems.append("native_source_target_missing:DamageDampOption:unapproved_local_policy")
 			if not interval_supported(effect) and (not bool(effect.get("native_supported", false)) or (not ExistingStats.SUPPORTED.has(code) and not EXTRA_EFFECTS.has(code) and not supports_extra_code(code))):
 				var native: Dictionary = effect.get("source_original",{})
 				var target: Dictionary = native.get("application_target",{})
@@ -180,13 +183,18 @@ static func interval_supported(effect: Dictionary) -> bool:
 			occupied[percent]=true
 	return true
 
-static func interval_effects(effect: Dictionary, hp: int, maximum: int) -> Array[Dictionary]:
+static func interval_effects(effect: Dictionary, hp: int, maximum: int, round_up: bool=true) -> Array[Dictionary]:
 	var result: Array[Dictionary]=[]
 	if not interval_supported(effect) or maximum<=0 or hp<=0:return result
-	var percent: int=int(ceil(100.0*clampi(hp,0,maximum)/maximum))
+	var ratio: float=100.0*clampi(hp,0,maximum)/maximum
+	var percent: int=int(ceil(ratio) if round_up else floor(ratio))
 	for branch: Dictionary in effect.source_original.nested_intervals:
 		if percent<int(branch.Low) or percent>int(branch.High):continue
 		var key: String=str(branch.application_target.Name).to_lower()+"_resistance"
 		var amount: float=float(branch.bonus.Value)/float(branch.ui_unit.Denominator)
-		result.append({"key":key,"unit":"percent","value":amount,"label":"HP 구간 · "+("스턴" if key=="stun_resistance" else "공포")+" 내성 +"+str(amount)+"%","source_interval_id":int(branch.ID),"hp_policy":HP_POLICY})
+		result.append({"key":key,"unit":"percent","value":amount,"label":"HP 구간 · "+("스턴" if key=="stun_resistance" else "공포")+" 내성 +"+str(amount)+"%","source_interval_id":int(branch.ID),"hp_policy":HP_POLICY if round_up else HP_POLICY.replace("ceil","floor")})
 	return result
+
+static func local_damp_supported(effect: Dictionary) -> bool:
+	var raw: Dictionary=effect.get("source_original",{})
+	return effect.get("runtime_policy","")=="twilight_target13_stacked_reduction_v1" and raw.get("bonus_type",{}).get("Name","")=="DamageDampOption" and raw.get("application_type",{}).get("Name","")=="DamageDampOption" and int(raw.get("bonus",{}).get("BonusApplicationTargetID",0))==13 and raw.get("unit",{}).get("Name","")=="Percentage"

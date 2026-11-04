@@ -33,6 +33,7 @@ var totals_side: VBoxContainer
 var effects_group: VBoxContainer
 var totals_body: VBoxContainer
 var status_body: VBoxContainer
+var policy_button: Button
 var status_toggle: Button
 var side_columns: Label
 var effects_heading: Label
@@ -42,6 +43,7 @@ var grade_side: ScrollContainer
 var compact_tabs: HBoxContainer
 var showing_effects: bool=false
 var last_health: Vector2i=Vector2i(-1,-1)
+var last_status: int=0
 var last_revision: int=-1
 var last_spare_hash: int=0
 var first: int=-1
@@ -122,6 +124,9 @@ func configure(owner_hud: Node,value: String,identity: String="") -> void:
 	status_toggle=_button("컬렉션 현황");status_toggle.name="NormalCollectionStatusToggle";totals_side.add_child(status_toggle)
 	status_toggle.pressed.connect(_toggle_status)
 	_bind(status_toggle,"BUFFCARD_COLLECTION_EFFECT_BTN")
+	policy_button=_button("적용 규칙 · 추정 설정");policy_button.name="NormalCollectionPolicy";totals_side.add_child(policy_button)
+	policy_button.pressed.connect(func() -> void:
+		var dialog=preload("res://scripts/ui/collection_policy_view.gd").new();hud.add_child(dialog);dialog.configure(runtime))
 	var policy: Label=UI.label("최초 획득 시 자동 반영\n카드 소모 없음\n합성 후에도 달성 유지",12,UI.MUTED);policy.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;totals_side.add_child(policy)
 	resized.connect(_fit)
 	get_window().size_changed.connect(_fit)
@@ -166,7 +171,9 @@ func refresh() -> void:
 	var spare_hash: int=hash(hud.card_collection_state.get("spare",{}))
 	var ownership_changed: bool=last_revision!=runtime.current_revision()
 	var health:=Vector2i(int(runtime.world.hp),int(runtime.world._effective_max_hp()))
-	var health_changed: bool=health!=last_health
+	var status_signature: int=hash([runtime.status_active("stun"),runtime.status_active("fear")])
+	var health_changed: bool=health!=last_health or status_signature!=last_status
+	last_status=status_signature
 	last_health=health
 	if not ownership_changed and last_spare_hash==spare_hash and not health_changed:return
 	last_spare_hash=spare_hash
@@ -268,7 +275,7 @@ func _fill(panel: PanelContainer,index: int) -> void:
 	if not row.available:
 		panel.tooltip_text="자동 적용 보류: "+_reasons(row.problems)+"\n"+str(row.source.url)
 	else:panel.tooltip_text="최초 획득 자동 완성 · 카드 소모 없음\n"+str(row.source.url)
-	var native_detail: String=SourceUI.detail_tooltip(row)
+	var native_detail: String=SourceUI.detail_tooltip(row,bool(runtime.policy_values.hp_ratio_round_up))
 	if not native_detail.is_empty():panel.tooltip_text+="\n"+native_detail
 
 func _card(parent: Node,requirement: Dictionary,width: float) -> void:

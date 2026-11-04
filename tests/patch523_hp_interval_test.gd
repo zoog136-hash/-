@@ -35,6 +35,7 @@ func run() -> void:
 		for sample: Array in [[1000,0],[701,0],[700,base],[610,base],[601,base],[600,base+1],[510,base+1],[501,base+1],[500,base+2],[1,base+2],[0,0],[-1,0],[1001,0]]:
 			var active: Array=Native.interval_effects(effect,int(sample[0]),1000)
 			check((active.is_empty() and sample[1]==0) or (active.size()==1 and active[0].value==sample[1]),"ceil HP boundary "+str(row.id)+" "+str(sample[0]))
+		check(Native.interval_effects(effect,601,1000,false)[0].value==base+1,"explicit floor policy differs only at declared boundaries")
 		check(Native.interval_effects(effect,10,0).is_empty(),"invalid maximum grants nothing")
 		var bad: Dictionary=effect.duplicate(true);bad.source_original.nested_intervals[1].High=70
 		check(not Native.interval_supported(bad),"overlapping source intervals blocked")

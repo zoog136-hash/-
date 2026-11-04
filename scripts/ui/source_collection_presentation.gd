@@ -42,9 +42,14 @@ static func effect_title(effect: Dictionary) -> String:
 		label += " · 대상 %d:%d" % [int(bonus.BonusApplicationTypeID), int(bonus.BonusApplicationTargetID)]
 	return label
 
-static func detail_tooltip(row: Dictionary) -> String:
+static func detail_tooltip(row: Dictionary,round_up: bool=true) -> String:
 	var parts: Array[String] = []
 	for effect: Dictionary in row.effects:
+		var policy: String=str(effect.get("runtime_policy",""))
+		if policy=="existing_single_player_pvp_to_pve":parts.append("단독 플레이 규칙: 원본 PvP 수치를 PvE에 적용")
+		if policy.begins_with("twilight_"):parts.append("로컬 추정 동작 · 적용 규칙에서 변경 가능")
+		if policy=="local_exact_spell_identity":parts.append("원본 스킬 대상별 독립 적용 · 로컬 스킬 ID 대응 사용")
+		if policy=="twilight_target13_stacked_reduction_v1":parts.append("TWILIGHT 자체 규칙: 원본 대상13 정의 미제공 · 다른 감소 후 중첩 비율 적용")
 		var raw: Dictionary = effect.get("source_original", {})
 		var bonus: Dictionary = raw.get("bonus", {})
 		if not bonus.is_empty():
@@ -53,7 +58,7 @@ static func detail_tooltip(row: Dictionary) -> String:
 			var nested: Dictionary = interval.get("bonus", {})
 			parts.append("HP 원본 구간 %s~%s · %s · 대상 %s:%s · 원값 %s" % [interval.Low, interval.High, str(interval.get("bonus_type", {}).get("Name", "")), str(nested.get("BonusApplicationTypeID", "")), str(nested.get("BonusApplicationTargetID", "")), str(nested.get("Value", ""))])
 	if row.effects.any(func(effect: Dictionary) -> bool:return preload("res://scripts/cards/native_collection_rules.gd").interval_supported(effect)):
-		parts.append("HP 구간: 생존 HP 비율 올림 · 양 끝 포함 · 빈 구간 0 (TWILIGHT 적용 규칙)")
+		parts.append("HP 구간: 생존 HP 비율 "+("올림" if round_up else "버림")+" · 양 끝 포함 · 빈 구간 0 (TWILIGHT 적용 규칙)")
 	return "\n".join(parts)
 
 static func interval_description(effect: Dictionary) -> String:

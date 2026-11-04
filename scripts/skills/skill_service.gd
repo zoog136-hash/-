@@ -355,25 +355,25 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 
 func hit_chance(skill: Dictionary, target: TwilightMonster) -> float:
 	if str(skill.get("attack_type", "")) == "magic":
-		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), maxi(0, target.magic_resistance + int(status.modifier(target, "mr"))))
+		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), world.card_collections.magic_resistance_after_pierce(maxi(0, target.magic_resistance + int(status.modifier(target, "mr")))))
 	var accuracy: int = world._ranged_accuracy_stat() if str(skill.get("attack_type", "")) == "ranged" else world._melee_accuracy_stat()
-	return physical_hit_chance(accuracy, target)
+	return physical_hit_chance(accuracy, target, str(skill.get("attack_type","melee")))
 
-func physical_hit_chance(accuracy: int, target: TwilightMonster) -> float:
+func physical_hit_chance(accuracy: int, target: TwilightMonster, kind: String="melee") -> float:
 	# Normal attacks and physical skills read the same live, life-scoped defense.
 	# Keep the shared formula's AC normalization and nonnegative DG floor.
-	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), int(status.modifier(target, "dg")))
+	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), world.card_collections.avoidance_after_pierce(int(status.modifier(target, "dg")),kind))
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
 	if target.dead: return
-	var amount := int(skill.get("power", 20)) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
+	var amount: int = int(skill.get("power", 20)) + world.card_collections.spell_damage_bonus(skill) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
 	amount = int(amount * (1 + equipment_modifier(skill, "damage_percent") / 100.0))
 	amount = int(amount * (1 + equipment_modifier(skill, "level_bonus") * float(runtime_defaults.get("equipment_level_damage_percent", {}).get("value", 2)) / 100.0))
 	amount = int(amount * (1 + status.modifier(target, "taken") + (status.modifier(target,"magic_taken") if str(skill.get("attack_type", "")) == "magic" else 0)))
 	amount = world._elemental_damage_to_monster(maxi(1, amount), str(skill.get("element", "physical")), target)
 	var critical: bool = world.rng.randf() < world._critical_chance(world._player_critical_rate(str(skill.get("attack_type", "melee"))), target.critical_resistance)
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
-	world._deal_successful_player_hit(target, maxi(1, amount), critical)
+	world._deal_successful_player_hit(target, maxi(1, amount), critical, str(skill.get("attack_type","melee")))
 	_emit_verified_source_effect(skill, "impact", target.global_position)
 	if critical: _emit_verified_source_effect(skill, "critical", target.global_position)
 	if not _is_verified_source_skill(skill):
@@ -393,6 +393,7 @@ func heal(skill: Dictionary, amount: int) -> void:
 	var maximum: int = world._effective_max_hp()
 	var before: int = world.hp
 	var effective := maxi(0, amount + int(stat("lfe") * float(skill.get("lfe_scale", 0))))
+	effective=world.card_collections.magic_heal(effective)
 	world.hp = mini(maximum, before + effective)
 	if bool(skill.get("overflow_shield", false)) and before + effective > maximum:
 		shields[str(skill.id)] = {"amount":mini(maximum, before + effective - maximum),"remaining":float(skill.get("duration", 12))}

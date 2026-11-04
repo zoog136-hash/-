@@ -3,6 +3,7 @@ class_name TwilightMonster
 
 const BASE508 = preload("res://scripts/lineagem_base508.gd")
 var source_m_original: Dictionary = {}
+var collection_combat_context: Dictionary={}
 var source_m_npc_id: int = -1
 const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
 const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
@@ -184,6 +185,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
 	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
+	var context: Variant=record.get("collection_combat_context",{})
+	collection_combat_context=context.duplicate(true) if context is Dictionary else {}
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
 	# Full reset is required when a corpse is reused by the bounded field pool.

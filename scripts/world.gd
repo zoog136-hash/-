@@ -858,7 +858,7 @@ func _refresh_equipment_effects() -> void:
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
 	flags.hp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))
-	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
+	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat")+card_collections.bonus("absolute_mp_regeneration:flat"))
 	equipment_effects=flags
 
 func _invalidate_equipment_static() -> void:
@@ -866,9 +866,10 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String="", ordinary_attack: bool=false) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
+	normal_damage+=card_collections.death_damage_bonus()
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
 	var stolen: int = 0
 	if _has_hp_absorption():
@@ -880,10 +881,12 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		hp = mini(_effective_max_hp(), hp + stolen)
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
 	_refresh_equipment_effects()
-	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
+	var amplification: float = clampf(float(equipment_effects.damage_amp_pct)+card_collections.damage_amplification(attack_kind), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
-	target.take_damage(adjusted_damage + stolen, critical)
+	var final: Dictionary=card_collections.final_blow(adjusted_damage,rng) if ordinary_attack else {"damage":adjusted_damage,"triggered":false}
+	if final.triggered:hud.append_log("결정타 · "+target.monster_name)
+	target.take_damage(int(final.damage) + stolen, critical or bool(final.triggered))
 	if stolen > 0:
 		_refresh_combat_hud()
 
@@ -1897,7 +1900,7 @@ func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
+	return _magic_hit_chance(_magic_accuracy_stat(), card_collections.magic_resistance_after_pierce(target.magic_resistance))
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
 	if not resolving_combat_action and not pending_attack.is_empty(): return false
@@ -1940,12 +1943,12 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "melee")
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
 		return false
-	var bleed_chance: float = _player_bleed_chance(target)
+	var bleed_chance: float = clampf(_player_bleed_chance(target)+card_collections.spell_hit_bonus({"status":"bleed"})/100.0,0.0,0.95)
 	var bleeding: bool = rng.randf() < bleed_chance
 	if bleeding:
 		target.apply_bleed(bleed_duration, tick_damage, tick_interval)
@@ -2210,7 +2213,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "melee")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "melee")
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -2273,7 +2276,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _player_critical_damage(damage, "magic")
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, "magic")
 	hud.append_log("%s 적중%s · %s에게 %d 마법 피해 · 명중 %.1f%% · 치명타 %.1f%%" % [
 		skill_name, " CRITICAL" if critical else "", target.monster_name, damage,
 		hit_chance * 100.0, critical_chance * 100.0
@@ -2380,7 +2383,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical, attack_kind, true)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
@@ -2968,16 +2971,27 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 				hit_chance * 100.0
 			])
 		return
+	if card_collections.blocks_weapon_hit(normalized_type,rng):
+		damage_value=maxi(0,int(round(damage_value*(1.0-float(card_collections.policy_values.weapon_block_reduction)/100.0))))
+		hud.append_log("무기 막기 · "+attacker.monster_name)
+		if damage_value<=0:player.show_miss();return
+	var collection_context: Dictionary=card_collections.incoming_context(attacker,normalized_type)
+	var final: Dictionary=card_collections.incoming_final_blow(damage_value,normalized_type,collection_context,rng)
+	damage_value=int(final.damage)
+	if final.triggered:hud.append_log("몬스터 결정타 · "+attacker.monster_name)
+	var attack_element: String = ELEMENT_RULES.channel(attacker.attack_element)
+	collection_context.physical_magic=normalized_type=="magic" and attack_element=="physical"
 	var attacker_critical_rate: int = attacker.critical_rate_for_type(normalized_type)
-	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat())
+	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat(normalized_type,attack_element!="physical"))
 	var critical: bool = rng.randf() < critical_chance
 	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
-	var attack_element: String = ELEMENT_RULES.channel(attacker.attack_element)
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
-	reduced = _pve_damage_after_item_buffs(reduced)
-	reduced = card_collections.incoming_damage(reduced,normalized_type,critical)
+	var ignore_percent: float=card_collections.incoming_ignore(collection_context)
+	collection_context.ignore_remaining=maxf(0.0,ignore_percent-_pve_reduction_percent())
+	reduced = _pve_damage_after_item_buffs(reduced,ignore_percent)
+	reduced = card_collections.incoming_damage(reduced,normalized_type,critical,collection_context)
 	reduced = growth.incoming_damage(reduced)
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
@@ -3991,7 +4005,7 @@ func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 		hud.show_message("드래곤의 성수는 45레벨부터 사용 가능합니다")
 		return false
 	var amount: int = AIN_SERVICE.charge_amount(base_name, level)
-	amount = int(round(float(amount)*(1.0+growth.bonus("blessing_charge:percent")/100.0)))
+	amount = int(round(float(amount)*(1.0+(growth.bonus("blessing_charge:percent")+card_collections.bonus("blessing_charge:percent"))/100.0)))
 	var charged: int = ain_service.charge(amount)
 	if charged <= 0:
 		hud.show_message("아인하사드 축복이 최대치입니다")
@@ -4474,6 +4488,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
 		"card_draw_fusion": card_draw_fusion.export_state(),
+		"card_collection_policy":card_collections.export_policy(),
 		"card_option_awakening": option_awakening.export_state(),
 		"card_skill_awakening": skill_awakening.export_state(),
 		"equipped_items": equipped_items,
@@ -4787,6 +4802,7 @@ func _load_game(quiet: bool) -> void:
 	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
+	card_collections.import_policy(data.get("card_collection_policy",{}))
 	card_draw_fusion.import_state(data.get("card_draw_fusion", {}))
 	if _full_cards_playtest_active(): card_draw_fusion.grant_full_collection_for_playtest(10)
 	# Old version-1 ownership is already permanent. Derive silently before HP/MP
@@ -5702,7 +5718,7 @@ func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack
 			"damage":
 				if target == null or not is_instance_valid(target) or target.dead:
 					continue
-				_deal_successful_player_hit(target, maxi(1, int(skill.get("power", 1))), false)
+				_deal_successful_player_hit(target, maxi(1, int(skill.get("power", 1))), false, _skill_attack_kind(skill))
 			"heal":
 				if hp >= _effective_max_hp():
 					continue
@@ -5886,7 +5902,7 @@ func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_
 		return
 	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
-	_deal_successful_player_hit(target, damage)
+	_deal_successful_player_hit(target, damage, false, attack_kind)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
 
@@ -6121,7 +6137,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if critical:
 				damage = _player_critical_damage(damage, style)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
-			_deal_successful_player_hit(victim, damage, critical)
+			_deal_successful_player_hit(victim, damage, critical, style)
 			_try_trigger_passives("on_hit", victim,style,victim==target,true)
 			_try_extra_weapon_hit(victim, damage, style)
 			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):
@@ -6148,6 +6164,7 @@ func _cast_job_heal_skill(skill: Dictionary) -> bool:
 	var amount: int = maxi(1, int(round(float(base_amount) * (1.0 + float(skill.get("heal_bonus_percent", 0.0)) / 100.0))))
 	if bool(skill.get("heal_to_full", false)):
 		amount = _effective_max_hp()
+	amount=card_collections.magic_heal(amount)
 	var before: int = hp
 	hp = mini(_effective_max_hp(), hp + amount)
 	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), hp - before])
@@ -7103,7 +7120,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 		return 0.05
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
 	if original_skills != null:
-		return original_skills.physical_hit_chance(accuracy, target)
+		return original_skills.physical_hit_chance(accuracy, target, attack_kind)
 	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.hit_armor_class(),0)
 
 func _catalog_damage_bonus(kind: String) -> int:
@@ -7478,11 +7495,11 @@ func _player_stun_chance(target: TwilightMonster) -> float:
 		target.monster_level
 	)
 
-func _critical_resistance_stat() -> int:
+func _critical_resistance_stat(kind: String="",elemental: bool=false) -> int:
 	var total: int = 0
 	for record: Dictionary in _all_equipped_records():
 		total += _record_critical_resistance(record)
-	return clampi(total, 0, 50)
+	return clampi(total+int(card_collections.critical_resistance(kind,elemental)), 0, 50)
 
 func _critical_chance(attacker_critical_rate: int, defender_critical_resistance: int) -> float:
 	return clampf(float(attacker_critical_rate - defender_critical_resistance) / 100.0, 0.0, 0.50)
@@ -7576,9 +7593,9 @@ func _damage_reduction_stat() -> int:
 	total += _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "reduction")
 	return maxi(0, total)
 
-func _pve_damage_after_item_buffs(raw_damage: int) -> int:
+func _pve_damage_after_item_buffs(raw_damage: int, ignore_percent: float=0.0) -> int:
 	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
-	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct") + _catalog_stat_sum("pve_damage_reduction_pct") + int(_equipment_inven_sum("pve_damage_reduction_pct")), 0, 90)
+	var percent: float = maxf(0.0,_pve_reduction_percent()-ignore_percent)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
 	return reduced
@@ -8108,3 +8125,6 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+func _pve_reduction_percent() -> float:
+	return clampf(_active_item_buff_total("pve_damage_reduction_pct")+_active_item_buff_total("pvp_damage_reduction_pct")+_catalog_stat_sum("pvp_damage_reduction_pct")+_catalog_stat_sum("pve_damage_reduction_pct")+_equipment_inven_sum("pve_damage_reduction_pct"),0.0,90.0)

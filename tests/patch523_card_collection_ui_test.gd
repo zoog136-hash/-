@@ -116,6 +116,53 @@ func run() -> void:
 	check(view.focus_card.is_empty() and view.rows.size()==841 and view.effects_filter.selected==0,"actual reset restores the full originating category")
 	check(world.card_draw_fusion.export_state()==cards_before and world.card_draw_fusion.rng.state==rng_before,"all actual UI paths preserve owned/spare/RNG")
 	check(FileAccess.get_file_as_string(world.save_path())==save_before,"UI navigation never writes player save bytes")
+
+	# Configuration is an explicit saving action, tested after navigation's
+	# no-write assertion. All prior navigation still preserves save bytes.
+	root.size=Vector2i(854,480);DisplayServer.window_set_size(root.size);await frames()
+	view.showing_effects=true;view._fit();await frames()
+	await click(view.policy_button);await frames()
+	var compact_dialog=world.hud.get_node_or_null("CollectionPolicyDialog")
+	check(compact_dialog!=null and compact_dialog.visible and compact_dialog.size.y<=root.size.y-40,"compact estimate settings remain within actual viewport")
+	if compact_dialog!=null:
+		check(compact_dialog.get_ok_button().get_global_rect().end.y<=compact_dialog.size.y,"compact settings actions stay visible below the scroll area")
+		await capture("policy-settings-854")
+		compact_dialog.queue_free();await frames()
+	root.size=Vector2i(1280,720);DisplayServer.window_set_size(root.size);await frames()
+	view._fit();await frames()
+	await click(view.policy_button);await frames()
+	var dialog=world.hud.get_node_or_null("CollectionPolicyDialog")
+	check(dialog!=null and dialog.visible,"actual rules button opens local estimate settings")
+	if dialog!=null:
+		var spin: SpinBox=dialog.controls.death_damage_per_point
+		spin.value=2.0
+		check(dialog.server_profile.item_count>1,"settings offers exact source server-condition profiles")
+		dialog.server_profile.select(1)
+		var owner_window: Window=root if root.gui_embed_subwindows else dialog
+		var ok: Button=dialog.get_ok_button()
+		var point: Vector2=ok.get_global_transform_with_canvas()*(ok.size*.5)+(Vector2(dialog.position) if root.gui_embed_subwindows else Vector2.ZERO)
+		await capture("policy-settings-1280")
+		var motion:=InputEventMouseMotion.new();motion.position=point;motion.global_position=point;owner_window.push_input(motion,true);await frames(1)
+		for pressed: bool in [true,false]:
+			var event:=InputEventMouseButton.new();event.button_index=MOUSE_BUTTON_LEFT;event.position=point;event.global_position=point;event.pressed=pressed;event.button_mask=MOUSE_BUTTON_MASK_LEFT if pressed else 0
+			owner_window.push_input(event,true);await frames(2)
+		await frames()
+		check(float(world.card_collections.policy_values.death_damage_per_point)==2.0,"settings button applies edited estimate")
+		var saved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
+		check(saved.get("card_collection_policy",{}).get("values",{}).get("death_damage_per_point",0)==2.0,"edited local policy actually saved")
+		check(saved.card_draw_fusion==JSON.parse_string(JSON.stringify(cards_before)),"settings save preserves owned/spare ledger")
+		var policy_before: Variant=world.card_collections.export_policy()
+		var bytes_before: String=FileAccess.get_file_as_string(world.save_path())
+		world.equipment_collections.save_blocked=true
+		var failed: Dictionary=world.card_collections.apply_policy({"death_damage_per_point":3.0})
+		world.equipment_collections.save_blocked=false
+		check(not failed.ok and world.card_collections.export_policy()==policy_before and FileAccess.get_file_as_string(world.save_path())==bytes_before,"failed settings save rolls back without ledger/file changes")
+		world.card_collections.import_policy({})
+		world._load_game(true)
+		check(float(world.card_collections.policy_values.death_damage_per_point)==2.0,"actual load restores saved policy")
+		check(world.card_draw_fusion.owned==cards_before.owned and world.card_draw_fusion.spare==cards_before.spare and world.card_draw_fusion.rng.state==rng_before,"actual reload preserves original IDs/counts and acquisition RNG")
+		check(world.card_collections.source_server_context()==saved.card_collection_policy.server_context,"actual load restores explicitly selected condition profile")
+		if is_instance_valid(dialog):dialog.queue_free()
 	hud._close_workspace();world.queue_free();await frames()
 	print("PATCH523_CARD_UI_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"engine":Engine.get_version_info().string,"original_icons_decoded":original_icons,"original_atlas":"absent; no frame/CSB equivalence claim"}))
 	quit(0 if failures.is_empty() else 1)

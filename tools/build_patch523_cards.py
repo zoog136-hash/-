@@ -5,6 +5,16 @@ from build_base508_card_collections import CATEGORIES, FLAT, PERCENT
 FLAT={**FLAT,'MeleeDamageReduction':'melee_damage_reduction','RangeDamageReduction':'ranged_damage_reduction','MagicDamageReduction':'magic_damage_reduction','CriticalDamageReduction':'critical_damage_reduction','PoisonDamageReduction':'poison_damage_reduction'}
 PERCENT={**PERCENT,'MeleeDamageReductionPercent':'melee_damage_reduction','RangeDamageReductionPercent':'ranged_damage_reduction','MagicDamageReductionPercent':'magic_damage_reduction','PoisonDamageReductionPercent':'poison_damage_reduction'}
 
+# Current main's explicit single-player PvP-to-PvE rule also covers collections.
+PVP_FLAT={'PVPDamageReduction':'pve_damage_reduction','PVPMeleeAdditionDamage':'pve_melee_damage','PVPRangeAdditionDamage':'pve_ranged_damage','PVPMagicAdditionDamage':'pve_magic_damage','PiercePVPDamageReduction':'damage_reduction_ignore','PVPPierceMeleeEvasion':'melee_evasion_ignore','PVPPierceRangeEvasion':'ranged_evasion_ignore','PVPMeleeEvasion':'melee_evasion','PVPRangeEvasion':'er'}
+PVP_PERCENT={'PVPDamageReductionPercent':'pve_damage_reduction','IgnorePVPDamageReductionPercent':'damage_reduction_ignore','PVPPierceDamageReductionPercent':'pve_damage_amplification'}
+FLAT={**FLAT,**PVP_FLAT,'PierceDamageReduction':'damage_reduction_ignore','PierceMeleeDamageReduction':'melee_reduction_ignore','PierceRangeDamageReduction':'ranged_reduction_ignore','PierceMagicDamageReduction':'magic_reduction_ignore','PierceMeleeEvasion':'melee_evasion_ignore','PierceRangeEvasion':'ranged_evasion_ignore','AbsoluteRegenMP':'absolute_mp_regeneration','FinalBlowAdditionalDmg':'final_blow_damage'}
+PERCENT={**PERCENT,**PVP_PERCENT,'IgnoreDamageReductionPercent':'damage_reduction_ignore','IgnoreMeleeDamageReductionPercent':'melee_reduction_ignore','IgnoreRangeDamageReductionPercent':'ranged_reduction_ignore','IgnoreMagicDamageReductionPercent':'magic_reduction_ignore','PVEPierceDamageReductionPercent':'pve_damage_amplification','MeleeCriticalResist':'melee_critical_resistance','RangeCriticalResist':'ranged_critical_resistance','MagicCriticalResist':'magic_critical_resistance','ElementalCriticalResistance':'elemental_critical_resistance','HPHealIncreasePercent':'magic_heal','WeaponBlock':'weapon_block','EinasadBlessAbsolutePercent':'blessing_charge','FinalBlowProbability':'final_blow_probability','FinalBlowAdditionalScale':'final_blow_amplification'}
+
+FLAT={**FLAT,'KarmaLife':'life','KarmaDeath':'death'}
+PERCENT={**PERCENT,'PierceMagicShieldPercent':'magic_penetration','ResistIgnoreDamageReductionPercent':'reduction_efficiency','MeleeDmgSpellDefensivePowerPercent':'physical_magic_defense','FinalBlowResistance':'final_blow_resistance'}
+ESTIMATED={'KarmaLife':'twilight_life_healing','KarmaDeath':'twilight_death_damage','PierceMagicShieldPercent':'twilight_magic_mr_penetration','ResistIgnoreDamageReductionPercent':'twilight_ignore_counter','MeleeDmgSpellDefensivePowerPercent':'twilight_physical_magic_guard','FinalBlowResistance':'twilight_final_blow_defense','WeaponBlock':'twilight_weapon_block','FinalBlowProbability':'twilight_final_blow','FinalBlowAdditionalDmg':'twilight_final_blow','FinalBlowAdditionalScale':'twilight_final_blow'}
+
 FLAT_FIELDS={'HPPlus':'hpFlat','MPPlus':'mpFlat','Strength':'strFlat','Dexterity':'dexFlat','Intelligence':'intFlat','Wisdom':'wisFlat','Constitution':'conFlat','Charisma':'chaFlat','MagicResist':'mr','DamageReduction':'damage_reduction'}
 EXPECTED_SHA='d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832'
 
@@ -85,17 +95,29 @@ def build_collections(t,idx,catalog,hashes,evidence):
         target_raw=(verified.get('target_definition') or {}).get('raw')
         target=dict(BonusApplicationTypeID=application['ID'],target_id=bonus['BonusApplicationTargetID'],target_table=application['Name'],target_row=target_raw,resolved=application['ID']==0 or target_raw is not None)
         typ_name=typ['Name'];unit_name=unit['Name'];denom=ui.get(unit['ID'],{}).get('Denominator',0)
-        key='native_'+typ_name;local_unit='raw';amount=bonus['Value'];supported=False
+        key='native_'+typ_name;local_unit='raw';amount=bonus['Value'];supported=False;policy=''
         target_name=(target_raw or {}).get('Name','')
         scoped=None
         if application['ID']==2 and target_name in ['Stun','Hold','Fear']:
             suffix={'SpecialResistance':'resistance','HitSpecialResistance':'hit'}.get(typ_name)
             if suffix:scoped=target_name.lower()+'_'+suffix
-        if scoped and unit_name=='Percentage' and denom>0:key,local_unit,amount,supported=scoped,'percent',amount/denom,True
+        if application['Name']=='SpellClass' and target_raw is not None and typ_name=='SpellDamageBase' and unit_name=='Value':
+            key,local_unit,supported='spell_'+str(bonus['BonusApplicationTargetID'])+'_damage','flat',True;policy='local_exact_spell_identity'
+        elif application['Name']=='SpellClass' and target_raw is not None and typ_name=='SpellHitProbabilityBase' and unit_name=='Percentage' and denom>0:
+            key,local_unit,amount,supported='spell_'+str(bonus['BonusApplicationTargetID'])+'_hit','percent',amount/denom,True;policy='local_exact_spell_identity'
+        elif application['Name']=='SpellTag' and bonus['BonusApplicationTargetID']==1 and typ_name=='DamageReductionForSpellAttackWeapon' and unit_name=='Value':
+            key,local_unit,supported='ranged_burst_reduction','flat',True;policy='twilight_ranged_burst_tag1'
+        elif application['ID']==2 and target_name in ['Stun','Fear'] and typ_name=='DamageReductionForSpecialDebuff' and unit_name=='Value':
+            key,local_unit,supported='while_'+target_name.lower()+'_damage_reduction','flat',True;policy='live_exact_source_status'
+        elif typ_name=='DamageDampOption' and application['Name']=='DamageDampOption' and bonus['BonusApplicationTargetID']==13 and unit_name=='Percentage' and denom>0:
+            key,local_unit,amount,supported='stacked_damage_reduction','percent',amount/denom,True;policy='twilight_target13_stacked_reduction_v1'
+        elif scoped and unit_name=='Percentage' and denom>0:key,local_unit,amount,supported=scoped,'percent',amount/denom,True
         elif application['ID']==0 and bonus['BonusApplicationTargetID']==0:
             if typ_name in FLAT and unit_name=='Value':key,local_unit,supported=FLAT[typ_name],'flat',True
             elif typ_name in PERCENT and unit_name in ['Percentage','ValuePercent'] and denom>0:key,local_unit,amount,supported=PERCENT[typ_name],'percent',amount/denom,True
             elif typ_name=='CarryPlus' and unit_name=='Weight' and denom>0:key,local_unit,amount,supported='weight_bonus','flat',amount/denom,True
+        if supported and typ_name in ESTIMATED:policy=ESTIMATED[typ_name]
+        if supported and (typ_name in PVP_FLAT or typ_name in PVP_PERCENT):policy='existing_single_player_pvp_to_pve'
         if key=='ac' and local_unit=='flat':amount=-amount
         if (local_unit=='flat' or key=='potion_heal' and local_unit=='percent') and int(amount)!=amount:supported=False
         if isinstance(amount,float) and amount.is_integer():amount=int(amount)
@@ -103,6 +125,7 @@ def build_collections(t,idx,catalog,hashes,evidence):
         if not supported and unit_name in ['Percentage','ValuePercent','Weight'] and denom>0:display_amount=bonus['Value']/denom;display_unit='percent' if unit_name in ['Percentage','ValuePercent'] else 'flat'
         target_label=desc((target_raw or {}).get('DescID'),target_name)
         label=((target_label+' · ') if target_label else '')+f"{desc(typ['DescID'],typ_name)} {display_amount:+g}"+('%' if display_unit=='percent' else '')
+        if policy=='existing_single_player_pvp_to_pve':label=label.replace('PVP','PVE').replace('PvP','PvE')
         nested=[]
         if unit_name=='IntervalBonusCategoryID':
             label=desc(typ['DescID'],typ_name)+' · 원본 구간 조건: '+idx['IntervalBonusCategory'].get(bonus['Value'],{}).get('Name',str(bonus['Value']))
@@ -110,7 +133,7 @@ def build_collections(t,idx,catalog,hashes,evidence):
                 if interval['IntervalBonusCategory']!=bonus['Value']:continue
                 b=idx['Bonus'][interval['BonusID']];bt=idx['BonusType'][b['BonusTypeID']];a=idx['BonusApplicationType'][b['BonusApplicationTypeID']];target_table=idx.get(a['Name'],{})
                 nested.append(dict(interval,bonus=b,bonus_type=bt,unit=idx['Unit'][bt['UnitID']],ui_unit=ui.get(bt['UnitID'],{}),application_type=a,application_target=target_table.get(b['BonusApplicationTargetID'])))
-        return dict(key=key,unit=local_unit,value=amount,label=label,native_supported=supported,source_original=dict(link=link,bonus=bonus,bonus_type=typ,application_type=application,unit=unit,ui_unit=ui.get(unit['ID'],{}),application_target=target,nested_intervals=nested))
+        return dict(key=key,unit=local_unit,value=amount,label=label,native_supported=supported,runtime_policy=policy,source_original=dict(link=link,bonus=bonus,bonus_type=typ,application_type=application,unit=unit,ui_unit=ui.get(unit['ID'],{}),application_target=target,nested_intervals=nested))
     result=[]
     for row in t['BuffCardCollection']:
         if row['BuffCardDeckID'] not in CATEGORIES:continue
