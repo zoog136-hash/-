@@ -74,6 +74,7 @@ const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
+const SourceDungeonUI = preload("res://scripts/dungeons/source_dungeon_view.gd")
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
 const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const EquipmentCollectionsUI = preload("res://scripts/collections/equipment_collection_view.gd")
@@ -921,6 +922,7 @@ func _navigate(section: String) -> void:
 		"shop": open_shop()
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
+		"source_dungeons": open_source_dungeons()
 		"map": toggle_map()
 		"menu": toggle_menu()
 		"settings": open_settings_info()
@@ -1204,7 +1206,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -1214,12 +1216,12 @@ func _build_menu_page() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians"] else ("사냥·모험" if section_id in ["inventory","skills","map","quests","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians"] else ("사냥·모험" if section_id in ["inventory","skills","map","quests","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		artwork.texture = UI.icon("quest" if section_id == "quests" else ("inventory" if section_id == "equipment_collections" else section_id))
+		artwork.texture = UI.icon("map" if section_id == "source_dungeons" else ("quest" if section_id == "quests" else ("inventory" if section_id == "equipment_collections" else section_id)))
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		artwork.position = Vector2(26,8)
@@ -2439,3 +2441,11 @@ func open_card_skill_awakening(category: String, identity: String) -> void:
 	scroll.add_child(view)
 	view.configure(runtime,identity)
 	workspace.register_scroll_drag(scroll,view)
+
+
+func open_source_dungeons() -> void:
+	_open_window("source_dungeons","던전","입장 조건 · 목표 · 보상 · 등장 계획")
+	var view := SourceDungeonUI.new()
+	view.name = "SourceDungeonView"
+	workspace.mount(view)
+	view.configure(get_parent())

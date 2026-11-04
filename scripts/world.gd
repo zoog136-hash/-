@@ -2,6 +2,8 @@ extends Node2D
 class_name TwilightWorld
 
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
+const SOURCE_DUNGEONS = preload("res://scripts/dungeons/source_dungeon_runtime.gd")
+var source_dungeons = SOURCE_DUNGEONS.new()
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
@@ -384,6 +386,7 @@ func _ready() -> void:
 	korean_font.variation_opentype = {"wght":500.0}
 	ThemeDB.get_default_theme().default_font = korean_font
 	ThemeDB.fallback_font = korean_font
+	_load_source_dungeon_pack()
 	rng.randomize()
 	ain_service.import_state({})
 	dialogue_service.load_dialogues()
@@ -8105,3 +8108,31 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+
+func _load_source_dungeon_pack() -> void:
+	var path := OS.get_environment("TWILIGHT_DUNGEON523_PACK")
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--dungeon523-pack="):
+			path = argument.trim_prefix("--dungeon523-pack=")
+	if path.is_empty() and FileAccess.file_exists(SOURCE_DUNGEONS.DEFAULT_MANIFEST):
+		path = SOURCE_DUNGEONS.DEFAULT_MANIFEST
+	if not path.is_empty(): source_dungeons.load_pack(path)
+
+func install_source_dungeon_pack(path: String) -> Dictionary:
+	return source_dungeons.install_pack(path)
+
+func source_dungeon_entries(kind: String, hard: bool = false) -> Array:
+	return source_dungeons.entries(kind,hard)
+
+func source_dungeon_entry_check(kind: String, identifier: int) -> Dictionary:
+	return source_dungeons.entry_check(kind,identifier,level)
+
+func source_dungeon_tower_cost(hard: bool) -> Dictionary:
+	return source_dungeons.tower_entry_cost(hard)
+
+func source_dungeon_recharge_preview(item_id: int) -> Dictionary:
+	return source_dungeons.recharge_preview(item_id)
+
+func source_dungeon_context(land_id: int) -> Dictionary:
+	return source_dungeons.context_for_land(land_id)
