@@ -2,6 +2,17 @@ extends Node2D
 class_name TwilightWorld
 
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
+const SOURCE_DUNGEONS = preload("res://scripts/dungeons/source_dungeon_runtime.gd")
+var source_dungeons = SOURCE_DUNGEONS.new()
+const DUNGEON_RUNS = preload("res://scripts/dungeons/dungeon_run_service.gd")
+const DUNGEON_ECONOMY = preload("res://scripts/dungeons/dungeon_economy.gd")
+const LOCAL_TOWER = preload("res://scripts/dungeons/local_tower_host.gd")
+var source_dungeon_runs = DUNGEON_RUNS.new()
+var pending_dungeon_events: Dictionary = {}
+var local_dungeon_failure_pending: bool = false
+var local_dungeon_session_id: String = Crypto.new().generate_random_bytes(16).hex_encode()
+const DUNGEON_PLAY = preload("res://scripts/dungeons/dungeon_play_service.gd")
+var dungeon_play = DUNGEON_PLAY.new()
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
@@ -105,7 +116,23 @@ var pending_attack: Dictionary = {}
 var combat_generation: int = 0
 var resolving_combat_action: bool = false
 var stat_hud_refresh_pending: bool = false
-var presentation_settings: Dictionary = {"impact_intensity":0.85, "reduced_motion":false, "effect_detail":"full"}
+const PRESENTATION = preload("res://scripts/animation/presentation_preferences.gd")
+const SOURCE_OPTIMIZATION = preload("res://scripts/animation/source_optimization.gd")
+const LOCAL_PRESENTATION = preload("res://scripts/animation/local_presentation_region.gd")
+const PRESENTATION_EFFECT_PACK = preload("res://scripts/animation/presentation_effect_pack.gd")
+var presentation_effect_pack = PRESENTATION_EFFECT_PACK.new()
+var presentation_effect_action: int = 0
+var presentation_effect_enabled: bool = false
+var source_optimization = SOURCE_OPTIMIZATION.new()
+var source_optimization_result: Dictionary = {"status":"source_not_loaded","settings":{}}
+var source_region_settings: Dictionary = {}
+var source_optimization_signature: String = ""
+var presentation_global_settings: Dictionary = PRESENTATION.DEFAULTS.duplicate(true)
+var presentation_region_settings: Dictionary = {}
+var presentation_settings: Dictionary = PRESENTATION.DEFAULTS.duplicate(true)
+var local_presentation_regions: Dictionary = {}
+var local_presentation_result: Dictionary = {"status":"off","settings":{}}
+var local_presentation_signature: String = ""
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
@@ -386,12 +413,20 @@ func _ready() -> void:
 	korean_font.variation_opentype = {"wght":500.0}
 	ThemeDB.get_default_theme().default_font = korean_font
 	ThemeDB.fallback_font = korean_font
+	_load_source_dungeon_pack()
 	rng.randomize()
 	ain_service.import_state({})
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	inventory_automation.configure(self)
 	_load_data()
+	source_dungeon_runs.configure(self,source_dungeons)
+	source_dungeon_runs.changed.connect(_refresh_source_dungeon_panel)
+	DUNGEON_ECONOMY.install_definitions(self,source_dungeons)
+	LOCAL_TOWER.install_definition(self)
+	dungeon_play.configure(self,source_dungeons)
+	dungeon_play.install_items()
+	dungeon_play.changed.connect(_refresh_source_dungeon_panel)
 	inventory_automation.refresh_catalog()
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
@@ -476,6 +511,7 @@ func _ready() -> void:
 		hud.call("open_class_selection",true)
 
 func _process(delta: float) -> void:
+	_update_source_optimization()
 	inventory_automation.maintenance.tick()
 	# No auto-save, auto-hunt or keyboard commands until the new class is
 	# chosen. Otherwise a default-class save can silently bypass creation.
@@ -493,6 +529,7 @@ func _process(delta: float) -> void:
 	auto_last_position = player.global_position
 	_update_field_triggers()
 	ground_loot.tick(delta)
+	dungeon_play.tick(delta)
 	loot_pickup.tick(delta)
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
@@ -505,6 +542,8 @@ func _process(delta: float) -> void:
 	if ain_refresh_clock <= 0.0:
 		ain_refresh_clock = 1.0
 		ain_service.advance_time()
+		LOCAL_TOWER.tick(self)
+		if not source_dungeon_runs.state.active.is_empty(): _refresh_source_dungeon_panel()
 		_update_ain_hud()
 	_tick_catalog_recovery(delta)
 	_run_auto_buff_quickslots(delta)
@@ -614,6 +653,7 @@ func _load_data() -> void:
 	preload("res://scripts/cards/native_doll_unlock_item.gd").install(catalog_db)
 	preload("res://scripts/cards/skill_awakening_service.gd").install_book_definitions(catalog_db)
 	preload("res://scripts/cards/source_awakening_items.gd").install_drop_definitions(catalog_db,loot_catalog)
+	growth.source523.install(catalog_db,loot_catalog)
 	_merge_local_consumables_into_catalog()
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	_index_catalog_item_sources()
@@ -871,15 +911,17 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String="", main_target: bool=true, by_spell: bool=false, context: Dictionary={}) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
+	if target.get_meta("dungeon_play_role","")=="Boss":normal_damage=int(round(normal_damage*(1.0+dungeon_play.modifier("boss_damage")/100.0)))
 	var stolen: int = 0
-	if _has_hp_absorption():
+	var drain: int = (1 if _has_hp_absorption() else 0)+int(growth.bonus("hp_drain:flat"))
+	if drain>0:
 		# Extra damage and healing represent the exact same amount of
 		# HP stolen from the target, capped by its remaining HP.
-		stolen = mini(1, maxi(0, target.hp))
+		stolen = mini(drain, maxi(0, target.hp))
 	if stolen > 0:
 		var previous_hp: int = hp
 		hp = mini(_effective_max_hp(), hp + stolen)
@@ -887,9 +929,23 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	_refresh_equipment_effects()
 	var amplification: float = clampf(float(equipment_effects.damage_amp_pct), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
+	if attack_kind not in ["melee","ranged","magic"]:attack_kind=feedback_kind if resolving_combat_action else _current_attack_kind()
+	adjusted_damage=growth.combat.outgoing(adjusted_damage,attack_kind)
+	var before_reduction: int=adjusted_damage
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
+	var kind: String=_current_attack_kind() if attack_kind.is_empty() else attack_kind
+	var hit_context: Dictionary=context.duplicate(true)
+	hit_context.flat_reduction=maxi(0,before_reduction-adjusted_damage)
+	hit_context.pvp=bool(target.get_meta("is_player_combatant",false))
+	if not hit_context.has("final_blow"):hit_context.final_blow=growth.guardian_combat.roll(growth.guardian_combat.final_blow_chance())
+	if not hit_context.has("percent_reduction"):hit_context.percent_reduction=float(target.get_meta("source_received_reduction_percent",0))
+	adjusted_damage=growth.guardian_combat.outgoing(target,adjusted_damage,critical,kind,hit_context)
+	var available_hp: int=maxi(0,target.hp-stolen)
+	var available_mp: int=target.mp
+	var prior_hp: int=hp;var prior_mp: int=mp
 	target.take_damage(adjusted_damage + stolen, critical)
-	if stolen > 0:
+	growth.guardian_combat.after_hit(target,critical,kind,main_target,by_spell,available_hp,available_mp)
+	if stolen > 0 or hp!=prior_hp or mp!=prior_mp:
 		_refresh_combat_hud()
 
 func _tick_catalog_recovery(delta: float) -> void:
@@ -1031,7 +1087,7 @@ func _equipment_attribute_bonus(stat: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.attribute(_source_catalog_record("아이템", entry as Dictionary), stat)
-	return result + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat"))
+	return result + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat") + growth.bonus(stat.to_lower()+":flat"))
 
 func _effective_attribute(stat: String) -> int:
 	var base: int = 0
@@ -1066,7 +1122,7 @@ func _equipment_potion_heal_stat(label: String) -> int:
 	return sum
 
 func _equipment_additional_damage(kind: String) -> int:
-	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore"))
+	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore")) + int(growth.bonus(kind+"_reduction_ignore:flat"))
 	if kind in ["melee", "ranged"]:
 		result += _equipped_bless_bonus("damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
@@ -1081,7 +1137,7 @@ func _equipment_additional_damage(kind: String) -> int:
 					var segment: String = fragment.strip_edges()
 					if segment.begins_with("대미지 리덕션 무시"):
 						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
-	return result + int(growth.bonus(kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat"))
+	return result + int(growth.bonus(kind+"_damage:flat") + growth.bonus("pve_"+kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	# Kept for older source audit callers; not used in the live damage path.
@@ -1284,9 +1340,27 @@ func _connect_signals() -> void:
 	add_child(combat_flights)
 	var saved_presentation := ConfigFile.new()
 	if saved_presentation.load("user://twilight_ui_settings.cfg") == OK:
-		for key: String in presentation_settings:
-			presentation_settings[key] = saved_presentation.get_value("visual", key, presentation_settings[key])
-	apply_presentation_settings(presentation_settings)
+		for key: String in presentation_global_settings:
+			presentation_global_settings[key] = saved_presentation.get_value("visual", key, presentation_global_settings[key])
+		if saved_presentation.has_section("visual_regions"):
+			for map_key: String in saved_presentation.get_section_keys("visual_regions"):
+				var local: Variant = saved_presentation.get_value("visual_regions", map_key)
+				if local is Dictionary: presentation_region_settings[map_key] = PRESENTATION.region(local)
+		if saved_presentation.has_section("presentation_local_regions"):
+			for map_key: String in saved_presentation.get_section_keys("presentation_local_regions"):
+				var rule: Dictionary = LOCAL_PRESENTATION.normalized(saved_presentation.get_value("presentation_local_regions",map_key))
+				if not rule.is_empty(): local_presentation_regions[map_key] = rule
+		var source_directory: String = str(saved_presentation.get_value("source_optimization","path",saved_presentation.get_value("source_optimization","directory","")))
+		if not source_directory.is_empty():
+			if source_directory.get_extension().to_lower()=="zip": source_optimization.load_zip(source_directory)
+			else: source_optimization.load_directory(source_directory)
+		var effect_directory: String = str(saved_presentation.get_value("presentation_effect","path",""))
+		if not effect_directory.is_empty(): presentation_effect_pack.load_directory(effect_directory)
+		var effect_enabled: Variant = saved_presentation.get_value("presentation_effect","enabled",false)
+		presentation_effect_enabled = effect_enabled if effect_enabled is bool else false
+		var effect_action: Variant = saved_presentation.get_value("presentation_effect","action",0)
+		presentation_effect_action = int(effect_action) if (effect_action is int or effect_action is float) and effect_action in [0,3] else 0
+	apply_presentation_settings(PRESENTATION.normalized(presentation_global_settings))
 	player.attack_strike.connect(_release_player_attack)
 	player.attack_cancelled.connect(_cancel_player_attack)
 	player.attack_requested.connect(_attack)
@@ -1409,6 +1483,11 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		requested_original.close()
 		_reject_map_pack("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
 		return
+	var dungeon_run: Dictionary = source_dungeon_runs.state.active
+	if not dungeon_run.is_empty() and dungeon_run.status == "active" and map_id != str(dungeon_run.map_id):
+		var failed_run: Dictionary = source_dungeon_runs.fail_run()
+		if not failed_run.get("ok",false):
+			hud.show_message(str(failed_run.get("reason","던전 이탈을 저장할 수 없습니다."))); return
 	_clear_combat_actions()
 	manual_route_pending_target=Vector2.INF
 	if is_instance_valid(world_interactions):
@@ -1438,6 +1517,8 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_target_next_search_ms = 0
 	auto_target_failed_search_actor_count = -1
 	active_map_id = map_id
+	source_region_settings.clear()
+	source_optimization_signature = ""
 	active_map = maps_by_id[map_id] as Dictionary
 	if requested_native != null:
 		active_map = active_map.duplicate()
@@ -1530,6 +1611,8 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_repath_timer = 0.0
 	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
+	_update_source_optimization()
+	_refresh_presentation_settings()
 	_perf_log("맵 이동", map_started_usec)
 	if map_bootstrap_blocked:
 		map_bootstrap_blocked=false
@@ -2385,7 +2468,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
-	_deal_successful_player_hit(target, damage, critical)
+	_deal_successful_player_hit(target, damage, critical,attack_kind,true,false)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
@@ -2607,12 +2690,14 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	if not is_instance_valid(monster) or not monster.dead: return
 	if int(monster.get_meta("rewarded_life_id", -1)) == monster.life_id: return
 	monster.set_meta("rewarded_life_id", monster.life_id)
+	dungeon_play.monster_died(monster)
 	if bool(monster.get_meta("summoned",false)):
 		# Bounded boss helpers cannot become an unlimited XP/equipment farm.
 		if monster==selected_monster: selected_monster = null
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
+	_source_dungeon_kill(monster)
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -2711,7 +2796,10 @@ func _collect_ground_drop(drop: Button) -> bool:
 	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
 	var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
 	item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
+	var symbol_pickup: Dictionary = growth.source523.prepare_pickup(record,item_instances,next_item_instance_id)
+	item_instances = symbol_pickup.item_instances; next_item_instance_id = int(symbol_pickup.next_item_instance_id)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	_source_dungeon_pickup(record)
 	quest_service.record_pickup(item_name, quantity)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -2864,11 +2952,11 @@ func _monster_accuracy_for_attack_type(attacker: TwilightMonster, attack_type: S
 		return 0
 	match attack_type:
 		"magic":
-			return attacker.magic_accuracy
+			return attacker.magic_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"magic")
 		"ranged":
-			return attacker.ranged_accuracy
+			return attacker.ranged_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"ranged")
 		_:
-			return attacker.melee_accuracy
+			return attacker.melee_accuracy+growth.guardian_combat.npc_accuracy_delta(attacker,"melee")
 
 func _monster_hit_chance(attacker: TwilightMonster, attack_type: String = "melee") -> float:
 	if attacker == null:
@@ -2889,6 +2977,10 @@ func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee")
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
 func _respawn_player(message_text: String) -> void:
+	if not dungeon_play.state.active.is_empty() and dungeon_play.state.active.status=="active": dungeon_play.stop()
+	if source_dungeon_runs.state.active.get("host_kind","") == "twilight_local" and source_dungeon_runs.state.active.get("status","") == "active":
+		local_dungeon_failure_pending = true
+		LOCAL_TOWER.tick(self)
 	var death_position: Vector2 = player.global_position
 	var death_sprite: AnimatedSprite2D = player.transform_sprite if player.transform_active else player.class_sprite
 	if not player.transform_active and player.spx_sprite != null and player.spx_sprite.visible:
@@ -2921,7 +3013,7 @@ func _respawn_player(message_text: String) -> void:
 func _on_player_poison_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
 		return
-	var poison_damage: int = maxi(1, damage_value)
+	var poison_damage: int = growth.guardian_combat.poison_damage(maxi(1, damage_value))
 	hp = maxi(0, hp - poison_damage)
 	player.show_poison_damage(poison_damage)
 	hud.append_log("독 피해 %d" % poison_damage)
@@ -2975,25 +3067,35 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			])
 		return
 	var attacker_critical_rate: int = attacker.critical_rate_for_type(normalized_type)
-	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat())
+	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat(normalized_type))
 	var critical: bool = rng.randf() < critical_chance
-	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
+	var contextual_damage: int=maxi(1,damage_value+growth.guardian_combat.npc_damage_delta(attacker,normalized_type))
+	var incoming_damage: int = _critical_damage(contextual_damage) if critical else contextual_damage
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
 	var attack_element: String = ELEMENT_RULES.channel(attacker.attack_element)
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
-	reduced = growth.incoming_damage(reduced)
+	var growth_max_hp: int = _effective_max_hp() if growth.bonus("low_hp_reduction:percent")>0 else 0
+	var symbol_context: Dictionary=attacker.symbol_hit_context.duplicate(true)
+	symbol_context["channel"]="dark" if attacker.attack_element=="dark" else normalized_type
+	reduced = growth.incoming_damage(reduced,critical,player.is_stunned(),hp,growth_max_hp,symbol_context)
+	if growth.combat.veil_fired:hud.append_log("실렌의 장막 · 피격 리덕션 300")
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
 		if original_skills.last_evaded:
 			player.show_miss()
 			_refresh_combat_hud()
 			return
+	var guardian_context: Dictionary={"pvp":bool(attacker.get_meta("is_player_combatant",false)),"spell_tags":attacker.get_meta("source_spell_tags",[])}
+	var guardian_result: Dictionary=growth.guardian_combat.incoming(attacker,normalized_type,reduced,critical,guardian_context)
+	if guardian_result.blocked:
+		player.show_miss();_refresh_combat_hud();return
+	reduced=int(guardian_result.damage)
 	var option_result: Dictionary=option_awakening.combat.incoming(attacker,normalized_type,reduced)
 	reduced=int(option_result.damage)
 	hp = maxi(0, hp - reduced)
-	if hp>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal))
+	if hp>0 and int(option_result.heal)+int(guardian_result.heal)>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal)+int(guardian_result.heal))
 	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
@@ -3202,6 +3304,7 @@ func _scroll_kind(scroll_name: String) -> String:
 	return ""
 
 func _scroll_mode(scroll_name: String) -> String:
+	if scroll_name.begins_with("TWILIGHT · ") and scroll_name.contains("(축복)"):return "blessed_orim"
 	if scroll_name.find("축복받은 오림") >= 0:
 		return "blessed_orim"
 	if scroll_name.find("오림") >= 0:
@@ -3248,6 +3351,11 @@ func _grant_playtest_catalog_variant(source_id: String, amount: int) -> void:
 		return
 	var old_ids: Dictionary = item_instances.duplicate()
 	_grant_playtest_catalog_item(item_name, amount)
+	if growth.source523.material({"name":item_name,"record":record}):
+		var source_pickup: Dictionary = growth.source523.prepare_pickup({"item_name":item_name,"item_record":record,"quantity":clampi(amount,1,10)},item_instances,next_item_instance_id)
+		item_instances = source_pickup.item_instances; next_item_instance_id = int(source_pickup.next_item_instance_id)
+		_update_hud()
+		_save_game(true)
 	if _enhancement_kind_for_record(record) != "":
 		for raw_id: Variant in item_instances.keys():
 			if old_ids.has(raw_id):
@@ -3338,6 +3446,12 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
 		return
+	var symbol_instance_id: String = str(selected.get("id",""))
+	if not symbol_instance_id.is_empty() and not growth.source523.recharge(item_instances.get(symbol_instance_id,{})).is_empty():
+		var converted: Dictionary = growth.execute("recharge",symbol_instance_id,1,int(growth.state.revision))
+		hud.show_message(str(converted.message))
+		return
+	if dungeon_play.try_use_item(item_name,str(selected.get("id",""))):return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
@@ -3832,6 +3946,7 @@ func _is_item_equipped(item_name: String) -> bool:
 	return false
 
 func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
+	if dungeon_play.try_enhancement(scroll_name,target_name):return
 	if hud.has_method("is_enhancement_presenting") and bool(hud.call("is_enhancement_presenting")):
 		return
 	var selected: Dictionary = _parse_enhancement_target(target_name)
@@ -4416,6 +4531,8 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if dungeon_play.save_blocked or not dungeon_play.valid(collection_override.get("source_dungeon_play",dungeon_play.state)).is_empty():return ERR_INVALID_DATA
+	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("inventory_automation") and not INVENTORY_AUTOMATION.valid(collection_override.inventory_automation): return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
@@ -4432,7 +4549,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","warehouse","inventory_automation"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4442,6 +4559,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	# Transactions supply validated staged state. Commit it before mutating live resources.
 	if collection_override.is_empty(): _sync_item_instances()
 	var data: Dictionary = {
+		"source_dungeon_play":dungeon_play.snapshot(),
+		"source_dungeon523": source_dungeon_runs.state.duplicate(true),
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
 		"position": [player.global_position.x, player.global_position.y],
@@ -4571,6 +4690,13 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var play_error: String=dungeon_play.valid(data.get("source_dungeon_play",DUNGEON_PLAY.empty_state()))
+	if not play_error.is_empty():
+		dungeon_play.save_blocked=true;dungeon_play.problem=play_error;source_save_blocked=true;hud.show_message(play_error);return
+	var dungeon_error: String = source_dungeon_runs.validate(data.get("source_dungeon523",DUNGEON_RUNS.empty_state()))
+	if not dungeon_error.is_empty():
+		source_dungeon_runs.save_blocked=true; source_dungeon_runs.problem=dungeon_error
+		source_save_blocked=true; hud.show_message(dungeon_error); return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4745,6 +4871,9 @@ func _load_game(quiet: bool) -> void:
 			if raw_log is Dictionary and crafting_log.size() < 200:
 				crafting_log.append((raw_log as Dictionary).duplicate(true))
 	ain_service.import_state(data.get("ainhasad_state", {}))
+	source_dungeon_runs.restore(data.get("source_dungeon523",DUNGEON_RUNS.empty_state()))
+	dungeon_play.restore(data.get("source_dungeon_play",DUNGEON_PLAY.empty_state()))
+	pending_dungeon_events.clear()
 	level = maxi(1, int(data.get("level", level)))
 	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
 	exp_need = maxi(1, int(data.get("exp_need", exp_need)))
@@ -4883,7 +5012,9 @@ func _load_game(quiet: bool) -> void:
 				player.camera.reset_smoothing()
 	_update_job_skillbar()
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
+	if (source_dungeon_runs.has_experience_award() or dungeon_play.has_experience_award()) and experience >= exp_need: _check_level_up()
 	_update_hud()
+	_refresh_source_dungeon_panel()
 	_emit_consumable_auto_settings()
 	if not quiet:
 		hud.show_message("불러오기 완료")
@@ -5556,6 +5687,7 @@ func _tick_skill_cooldowns(delta: float) -> void:
 		skill_cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
+	if skill.get("origin","")=="TWILIGHT_GUARDIAN523":return bool(growth.quote("guardian_cast",str(skill.id).trim_prefix("guardian:")).ok)
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.ready(skill, announce)
 	if not pending_attack.is_empty(): return false
 	var skill_name: String = str(skill.get("name", ""))
@@ -5776,10 +5908,14 @@ func _ensure_skill_record_index() -> void:
 		_rebuild_skill_record_index()
 
 func _skill_record(skill_name: String) -> Dictionary:
+	if skill_name.begins_with("guardian:"):return growth.guardian_skill_record(skill_name)
 	_ensure_skill_record_index()
 	return skill_record_index.get(skill_name, {})
 
 func _cast_job_skill(skill_name: String) -> bool:
+	if skill_name.begins_with("guardian:"):
+		var response: Dictionary=growth.execute("guardian_cast",skill_name.trim_prefix("guardian:"),1,int(growth.state.revision))
+		hud.show_message(str(response.message));return bool(response.ok)
 	var skill: Dictionary = _skill_record(skill_name)
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill)
 	if skill.is_empty():
@@ -6146,7 +6282,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if critical:
 				damage = _player_critical_damage(damage, style)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
-			_deal_successful_player_hit(victim, damage, critical)
+			_deal_successful_player_hit(victim, damage, critical,style,victim==target,true)
 			_try_trigger_passives("on_hit", victim,style,victim==target,true)
 			_try_extra_weapon_hit(victim, damage, style)
 			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):
@@ -6173,6 +6309,7 @@ func _cast_job_heal_skill(skill: Dictionary) -> bool:
 	var amount: int = maxi(1, int(round(float(base_amount) * (1.0 + float(skill.get("heal_bonus_percent", 0.0)) / 100.0))))
 	if bool(skill.get("heal_to_full", false)):
 		amount = _effective_max_hp()
+	amount = growth.magic_healing(amount)
 	var before: int = hp
 	hp = mini(_effective_max_hp(), hp + amount)
 	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), hp - before])
@@ -6224,6 +6361,9 @@ func _teleport_landing_clear(candidate: Vector2) -> bool:
 	return true
 
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
+	if growth.travel.enabled():
+		growth.travel.open({"kind":"job","name":str(skill.name)})
+		return false
 	if field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules() and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
 		hud.show_message("원본 규칙상 순간이동 제한 지역입니다")
 		return false
@@ -6462,6 +6602,13 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 	var item_name: String = str(record.get("name", "아이템"))
 	if add_to_inventory:
 		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+		if growth.source523.material({"name":item_name,"record":record}):
+			var symbol_physical_id: String = str(next_item_instance_id)
+			while item_instances.has(symbol_physical_id):
+				next_item_instance_id += 1
+				symbol_physical_id = str(next_item_instance_id)
+			next_item_instance_id += 1
+			item_instances[symbol_physical_id] = {"name":item_name,"level":0,"record":record.duplicate(true)}
 		# Generated gear without static catalog rows must also acquire a physical
 		# ID and retain its schema for reload, equip and all scroll types.
 		if _enhancement_kind_for_record(record) != "" and _find_catalog_item_record(item_name).is_empty():
@@ -6599,6 +6746,7 @@ func _apply_transform_visual(record: Dictionary) -> void:
 func _apply_doll_visual(record: Dictionary) -> void:
 	player.source_visual_context = _source_visual_context()
 	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)
+	doll_motion.set_presentation_hidden(bool(presentation_settings.hide_doll), $Companion, companion_sprite, player)
 	_sync_option_awakening_aura("마법인형")
 
 func _build_directional_frames(sprite: AnimatedSprite2D, texture: Texture2D) -> void:
@@ -7128,7 +7276,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 		return 0.05
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
 	if original_skills != null:
-		return original_skills.physical_hit_chance(accuracy, target)
+		return original_skills.physical_hit_chance(accuracy, target,attack_kind)
 	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.hit_armor_class(),0)
 
 func _catalog_damage_bonus(kind: String) -> int:
@@ -7200,6 +7348,7 @@ func _effective_move_speed_multiplier() -> float:
 	multiplier += awakening_percent / 100.0
 	multiplier *= _passive_skill_speed_multiplier()
 	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
+	multiplier *= 1.0+dungeon_play.modifier("move_speed")/100.0
 	multiplier *= _inventory_encumbrance_multiplier()
 	return clampf(multiplier, 0.5, 2.5)
 
@@ -7208,6 +7357,7 @@ func _effective_attack_speed_bonus_percent() -> float:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
 	total += float(_active_item_buff_total("attack_speed"))
+	total += dungeon_play.modifier("attack_speed")
 	return maxf(0.0, total)
 
 func _effective_attack_speed_multiplier() -> float:
@@ -7232,13 +7382,13 @@ func _melee_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("meleeDamage") if original_skills != null else 0) + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage") + int(consumable_service.call("permanent_damage_bonus", "melee_damage"))
 
 func _melee_accuracy_stat() -> int:
-	return int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
+	return int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + int(growth.bonus("melee_evasion_ignore:flat")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("rangedDamage") if original_skills != null else 0) + _catalog_damage_adjustment("ranged") + _catalog_stat_sum("pve_ranged_damage") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
 
 func _ranged_accuracy_stat() -> int:
-	return int(original_skills.stat("rangedHit") if original_skills != null else 0) + level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
+	return int(original_skills.stat("rangedHit") if original_skills != null else 0) + level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + int(growth.bonus("ranged_evasion_ignore:flat")) + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
 	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("pve_magic_damage") + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
@@ -7307,6 +7457,7 @@ func _stun_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_accuracy(record)
+	total+=int(growth.guardian_combat.status_hit("stun"))
 	return clampi(total, 0, 100)
 
 func _stun_resistance_stat() -> int:
@@ -7314,6 +7465,7 @@ func _stun_resistance_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
 	total += _active_item_buff_total("stun_resistance")
+	total+=int(growth.guardian_combat.status_resistance("stun"))
 	return int(original_skills.stat("stunResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _record_silence_accuracy(record: Dictionary) -> int:
@@ -7400,12 +7552,14 @@ func _fear_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_accuracy(record)
+	total+=int(growth.guardian_combat.status_hit("fear"))
 	return clampi(total, 0, 100)
 
 func _fear_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_resistance(record)
+	total+=int(growth.guardian_combat.status_resistance("fear"))
 	return int(original_skills.stat("fearResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_fear_chance(target: TwilightMonster) -> float:
@@ -7501,11 +7655,11 @@ func _player_stun_chance(target: TwilightMonster) -> float:
 		target.monster_level
 	)
 
-func _critical_resistance_stat() -> int:
+func _critical_resistance_stat(kind: String="melee") -> int:
 	var total: int = 0
 	for record: Dictionary in _all_equipped_records():
 		total += _record_critical_resistance(record)
-	return clampi(total, 0, 50)
+	return clampi(total+int(growth.guardian_combat.critical_resistance(kind)), 0, 50)
 
 func _critical_chance(attacker_critical_rate: int, defender_critical_resistance: int) -> float:
 	return clampf(float(attacker_critical_rate - defender_critical_resistance) / 100.0, 0.0, 0.50)
@@ -7516,7 +7670,7 @@ func _critical_damage(raw_damage: int) -> int:
 # Crit damage bonuses are flat values added AFTER the base 1.5x critical hit.
 # Keep monster critical hits on _critical_damage so player gear never buffs enemies.
 func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
-	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat") + card_collections.bonus(attack_type+"_critical_damage:flat"))
+	var final_damage: int = _critical_damage(raw_damage) + int(equipment_collections.bonus(attack_type+"_critical_damage:flat") + card_collections.bonus(attack_type+"_critical_damage:flat") + growth.bonus(attack_type+"_critical_damage:flat"))
 	var option_key: String = ""
 	match attack_type:
 		"ranged":
@@ -7718,6 +7872,9 @@ func _experience_multiplier() -> float:
 func _update_companion(delta: float) -> void:
 	doll_motion.update(delta, $Companion, companion_sprite, player)
 	relic_motion.update(delta, relic_sprite, player)
+	if bool(presentation_settings.hide_doll):
+		if is_instance_valid(secondary_doll_visual): secondary_doll_visual.hide()
+		return
 	var state: Dictionary=option_awakening.subslot_view(false)
 	if not state.get("active",false):
 		if is_instance_valid(secondary_doll_visual):secondary_doll_visual.clear()
@@ -7999,17 +8156,104 @@ func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kin
 	if critical and not bool(presentation_settings.reduced_motion): player.motion.visual_hold = 0.028
 
 func apply_presentation_settings(settings: Dictionary) -> void:
-	presentation_settings = {
-		"impact_intensity":clampf(float(settings.get("impact_intensity", presentation_settings.impact_intensity)), 0.0, 1.0),
-		"reduced_motion":bool(settings.get("reduced_motion", presentation_settings.reduced_motion)),
-		"effect_detail":"low" if str(settings.get("effect_detail", presentation_settings.effect_detail)) == "low" else "full"
-	}
+	presentation_global_settings = PRESENTATION.normalized(settings, presentation_global_settings)
+	_refresh_presentation_settings()
+	_update_source_optimization()
+
+func set_region_presentation_settings(map_id: String, settings: Dictionary, enabled: bool = true) -> void:
+	if map_id.is_empty(): return
+	if enabled: presentation_region_settings[map_id] = PRESENTATION.region(settings)
+	else: presentation_region_settings.erase(map_id)
+	_refresh_presentation_settings()
+
+func load_source_optimization(path: String, before_install: Callable = Callable()) -> Dictionary:
+	var candidate = SOURCE_OPTIMIZATION.new()
+	var result: Dictionary = candidate.load_zip(path) if path.get_extension().to_lower()=="zip" else candidate.load_directory(path)
+	if bool(result.ok):
+		if before_install.is_valid():
+			var saved: Variant = before_install.call(path)
+			if not saved is int or int(saved)!=OK:
+				return {"ok":false,"error":"원본 선택을 저장하지 못했습니다. 기존 원본과 설정을 유지합니다."}
+		source_optimization = candidate
+		source_optimization_result = {"status":"manual_source_ready","settings":{}}
+		source_optimization_signature = ""
+		_update_source_optimization()
+	return result
+
+func select_source_presentation_effect(sprite_id: int, records: Dictionary) -> int:
+	return source_optimization.simplified_sprite(sprite_id, str(presentation_settings.effect_detail)=="low", records)
+
+func load_presentation_effect_pack(path: String, before_install: Callable = Callable()) -> Dictionary:
+	var candidate = PRESENTATION_EFFECT_PACK.new()
+	var result: Dictionary = candidate.load_directory(path)
+	if not bool(result.ok): return result
+	if before_install.is_valid():
+		var saved: Variant = before_install.call(path)
+		if not saved is int or int(saved)!=OK: return {"ok":false,"error":"효과 후보를 저장하지 못했습니다. 기존 선택을 유지합니다."}
+	presentation_effect_pack = candidate
+	return result
+
+func presentation_effect_manifest(sprite_id: int) -> String:
+	if not presentation_effect_enabled or sprite_id not in [24941,29044]: return ""
+	var path: String = str(presentation_effect_pack.manifests.get(presentation_effect_action,""))
+	return path if FileAccess.file_exists(path) else ""
+
+func _update_source_optimization() -> void:
+	_update_local_presentation()
+	if not bool(presentation_global_settings.get("source_region_optimization",false)):
+		if not source_region_settings.is_empty():
+			source_region_settings.clear()
+			_refresh_presentation_settings()
+		return
+	var context: Dictionary = {}
+	if field_map != null and field_map.has_method("lineagem_m_presentation_context") and is_instance_valid(player):
+		var value: Variant = field_map.call("lineagem_m_presentation_context",player.global_position)
+		if value is Dictionary: context = value
+	var result: Dictionary = source_optimization.at_source_point(context)
+	var signature: String = JSON.stringify(result)
+	if signature == source_optimization_signature: return
+	source_optimization_signature = signature
+	source_optimization_result = result
+	source_region_settings = result.settings
+	_refresh_presentation_settings()
+
+func set_local_presentation_region(map_id: String, value: Dictionary, erase: bool = false) -> void:
+	if erase: local_presentation_regions.erase(map_id)
+	else:
+		var rule: Dictionary = LOCAL_PRESENTATION.normalized(value)
+		if rule.is_empty(): return
+		local_presentation_regions[map_id] = rule
+	_update_local_presentation()
+
+func _update_local_presentation() -> void:
+	if not is_instance_valid(player): return
+	if not local_presentation_regions.has(active_map_id) and local_presentation_result.status=="off": return
+	var rule: Dictionary = local_presentation_regions.get(active_map_id,{})
+	var result: Dictionary = LOCAL_PRESENTATION.at_point(rule,player.global_position,source_optimization)
+	var signature: String = JSON.stringify(result)
+	if signature==local_presentation_signature: return
+	local_presentation_signature = signature
+	local_presentation_result = result
+	_refresh_presentation_settings()
+
+func _refresh_presentation_settings() -> void:
+	var source_defaults: Dictionary = presentation_global_settings.duplicate(true)
+	if bool(source_defaults.get("source_region_optimization",false)): source_defaults.merge(source_region_settings,true)
+	presentation_settings = PRESENTATION.effective(source_defaults, presentation_region_settings, active_map_id)
+	presentation_settings.merge(local_presentation_result.settings,true)
+	if is_instance_valid(companion_sprite) and is_instance_valid(player):
+		doll_motion.set_presentation_hidden(bool(presentation_settings.hide_doll), $Companion, companion_sprite, player)
+	if is_instance_valid(secondary_doll_visual):
+		secondary_doll_visual.visible = not bool(presentation_settings.hide_doll) and secondary_doll_visual.status == "source_native"
+		if secondary_doll_visual.visible and is_instance_valid(player):
+			secondary_doll_visual.global_position = player.global_position + Vector2(54,24)
 	if is_instance_valid(combat_vfx):
 		combat_vfx.impact_intensity = presentation_settings.impact_intensity
 		combat_vfx.reduced_motion = presentation_settings.reduced_motion
+		combat_vfx.impact_visual_limit = 24 if presentation_settings.limit_effect_count else COMBAT_VFX.CAPACITY
 		combat_vfx.detail_limit = 6 if presentation_settings.effect_detail == "low" else COMBAT_VFX.VISUALS.DETAIL_LIMIT
 	if is_instance_valid(combat_flights):
-		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" else 64
+		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" or presentation_settings.limit_effect_count else 64
 	for raw: Variant in source_awakening_auras.values():
 		if is_instance_valid(raw): raw.call("apply_settings", presentation_settings)
 	for raw: Variant in option_awakening_auras.values():
@@ -8136,3 +8380,166 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+
+func _load_source_dungeon_pack() -> void:
+	var path := OS.get_environment("TWILIGHT_DUNGEON523_PACK")
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--dungeon523-pack="):
+			path = argument.trim_prefix("--dungeon523-pack=")
+	if path.is_empty() and FileAccess.file_exists(SOURCE_DUNGEONS.DEFAULT_MANIFEST):
+		path = SOURCE_DUNGEONS.DEFAULT_MANIFEST
+	if not path.is_empty(): source_dungeons.load_pack(path)
+
+func install_source_dungeon_pack(path: String) -> Dictionary:
+	var result: Dictionary = source_dungeons.install_pack(path)
+	if bool(result.get("ok",false)): DUNGEON_ECONOMY.install_definitions(self,source_dungeons)
+	if bool(result.get("ok",false)): dungeon_play.install_items()
+	return result
+
+func source_dungeon_entries(kind: String, hard: bool = false) -> Array:
+	return source_dungeons.entries(kind,hard)
+
+func source_dungeon_entry_check(kind: String, identifier: int) -> Dictionary:
+	return source_dungeon_runs.check(identifier) if kind == "tower" else source_dungeons.entry_check(kind,identifier,level)
+
+func source_dungeon_tower_cost(hard: bool) -> Dictionary:
+	return source_dungeons.tower_entry_cost(hard)
+
+func source_dungeon_recharge_preview(item_id: int) -> Dictionary:
+	return source_dungeons.recharge_preview(item_id)
+
+func source_dungeon_context(land_id: int) -> Dictionary:
+	return source_dungeons.context_for_land(land_id)
+
+
+func source_dungeon_host_context(stage_id: int) -> Dictionary:
+	var local: Dictionary = LOCAL_TOWER.context(self,stage_id)
+	if not local.is_empty(): return local
+	# Source map owners provide this from their verified geometry/instance host.
+	# Existing PC/source84 fields have no such method and cannot be relabelled.
+	if field_map == null or not field_map.has_method("dungeon523_context"): return {}
+	var value: Variant = field_map.call("dungeon523_context",stage_id)
+	return value if value is Dictionary else {}
+
+func source_dungeon_local_cycle() -> int:
+	return LOCAL_TOWER.cycle(source_dungeon_runs.state,int(Time.get_unix_time_from_system()))
+
+func configure_source_dungeon_local(enabled: bool, time_scale: int) -> Dictionary:
+	return source_dungeon_runs.configure_local(enabled,time_scale)
+
+func source_dungeon_additional_busy() -> bool:
+	return not dungeon_play.state.active.is_empty()
+
+func source_dungeon_payment_plan(currency_id: int, amount: int) -> Dictionary:
+	return DUNGEON_ECONOMY.payment(self,currency_id,amount)
+
+func commit_dungeon_play(candidate: Dictionary, changes: Dictionary) -> Error:
+	var staged: Dictionary={"source_dungeon_play":candidate}
+	for key: String in ["inventory","item_instances","gold","experience","ainhasad_state","hp","mp"]:
+		if changes.has(key):staged[key]=changes[key]
+	var error: Error=_save_game(true,staged)
+	if error!=OK:
+		var saved: Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path())) if FileAccess.file_exists(save_path()) else {}
+		if saved is Dictionary and saved.get("source_dungeon_play",{})==JSON.parse_string(JSON.stringify(candidate,"",true,true)):
+			dungeon_play.save_blocked=true;dungeon_play.problem="던전 저장 후보의 활성화가 불확실합니다. 저장을 다시 불러오세요."
+		return error
+	if staged.has("inventory"):inventory=staged.inventory
+	if staged.has("item_instances"):item_instances=staged.item_instances
+	if staged.has("item_instances"):_invalidate_equipment_static()
+	if staged.has("gold"):gold=int(staged.gold)
+	if staged.has("experience"):experience=int(staged.experience)
+	if staged.has("ainhasad_state"):ain_service.blessing=int(staged.ainhasad_state.blessing)
+	if staged.has("hp"):hp=int(staged.hp)
+	if staged.has("mp"):mp=int(staged.mp)
+	return OK
+
+func source_dungeon_reward_plan(rows: Array, payment: Dictionary) -> Dictionary:
+	return DUNGEON_ECONOMY.rewards(self,rows,payment)
+
+func commit_source_dungeon(candidate: Dictionary, changes: Dictionary) -> Error:
+	var staged: Dictionary = {"source_dungeon523":candidate}
+	for key: String in ["inventory","item_instances","gold","experience","ainhasad_state"]:
+		if changes.has(key): staged[key] = changes[key]
+	var result: Error = _save_game(true,staged)
+	if result != OK:
+		# The save writer can commit a migration candidate before activation fails.
+		# Do not report rollback or retry a monetary delta against an uncertain file.
+		if FileAccess.file_exists(save_path()):
+			var persisted: Variant = JSON.parse_string(FileAccess.get_file_as_string(save_path()))
+			var expected: Variant = JSON.parse_string(JSON.stringify(candidate,"",true,true))
+			if persisted is Dictionary and persisted.get("source_dungeon523",{}) == expected:
+				source_dungeon_runs.save_blocked = true
+				source_dungeon_runs.problem = "던전 저장 후보는 기록되었지만 활성화가 확정되지 않았습니다. 저장을 다시 불러와 주세요."
+		return result
+	if staged.has("inventory"): inventory = staged.inventory
+	if staged.has("item_instances"): item_instances = staged.item_instances
+	if staged.has("gold"): gold = int(staged.gold)
+	if staged.has("experience"): experience = int(staged.experience)
+	if staged.has("ainhasad_state"): ain_service.blessing = int(staged.ainhasad_state.blessing)
+	return OK
+
+func source_dungeon_action(action: String, stage_id: int = 0) -> Dictionary:
+	var result: Dictionary
+	match action:
+		"begin": result = source_dungeon_runs.begin(stage_id)
+		"claim": result = source_dungeon_runs.claim()
+		"purchase": result = source_dungeon_runs.buy_attempt(stage_id)
+		"immediate": result = source_dungeon_runs.immediate(stage_id)
+		"leave": result = source_dungeon_runs.fail_run()
+		"retry": result = _retry_dungeon_events()
+		_: return {"ok":false,"reason":"알 수 없는 던전 작업입니다."}
+	if result.get("ok",false):
+		var level_before: int = level
+		_check_level_up()
+		if level != level_before: _request_deferred_save()
+		_update_hud()
+		hud.show_message("던전 기록을 저장했습니다.")
+	else: hud.show_message(str(result.get("reason"," ".join(result.get("reasons",[])))))
+	return result
+
+func _source_dungeon_kill(monster: TwilightMonster) -> void:
+	if not is_instance_valid(monster) or not monster.dead or monster.get_parent() != monsters_root: return
+	var run: Dictionary = source_dungeon_runs.state.active
+	if not run.is_empty() and run.get("host_kind","") == "twilight_local":
+		LOCAL_TOWER.kill(self,monster,run)
+		return
+	if run.is_empty() or run.status != "active" or monster.get_meta("dungeon523_run_id","") != run.id: return
+	var actor: String = str(monster.get_meta("dungeon523_actor_id",""))
+	if actor.is_empty(): return
+	_queue_dungeon_event("kill",actor+":"+str(monster.life_id),0)
+
+func _source_dungeon_pickup(drop: Dictionary) -> void:
+	var run: Dictionary = source_dungeon_runs.state.active
+	var record: Variant = drop.get("item_record",{})
+	if not run.is_empty() and run.get("host_kind","") == "twilight_local" and run.status == "active" and record is Dictionary and record.get("source","") == "twilight_local_dungeon" and record.get("dungeon_run_id","") == run.id:
+		_queue_dungeon_event("pickup",str(drop.get("id","")),int(record.get("declared_goal_id",0)))
+		return
+	if run.is_empty() or run.status != "active" or drop.get("dungeon523_run_id","") != run.id or not record is Dictionary: return
+	if record.get("source_snapshot","") != "current523" or record.get("source","") != "lineagem_current523": return
+	_queue_dungeon_event("pickup",str(drop.get("id","")),int(record.get("source_item_class_id",0)))
+
+func _queue_dungeon_event(kind: String, token: String, item_id: int) -> void:
+	if token.is_empty(): return
+	var result: Dictionary = source_dungeon_runs.record_event(kind,token,item_id)
+	if not bool(result.get("ok",false)):
+		pending_dungeon_events[kind+":"+token] = {"kind":kind,"token":token,"item_id":item_id,"run_id":str(source_dungeon_runs.state.active.get("id",""))}
+		hud.show_message(str(result.get("reason","던전 진행 저장 재시도가 필요합니다.")))
+
+func _retry_dungeon_events() -> Dictionary:
+	for key: String in pending_dungeon_events.keys():
+		var event: Dictionary = pending_dungeon_events[key]
+		var run: Dictionary = source_dungeon_runs.state.active
+		if run.is_empty() or run.status != "active" or event.get("run_id","") != run.id:
+			pending_dungeon_events.erase(key); continue
+		var result: Dictionary = source_dungeon_runs.record_event(event.kind,event.token,int(event.item_id))
+		if not bool(result.get("ok",false)): return result
+		pending_dungeon_events.erase(key)
+	return {"ok":true}
+
+
+func _refresh_source_dungeon_panel() -> void:
+	if is_instance_valid(hud) and hud.has_method("refresh_source_dungeon_progress"):
+		hud.call("refresh_source_dungeon_progress")
+
+

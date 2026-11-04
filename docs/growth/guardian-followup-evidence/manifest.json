@@ -1,0 +1,205 @@
+{
+  "base_sha": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "prior_phase_sha": "ddf83b4b68017b03321539ad5504e9914bc816bf",
+  "final_commit": "PR246 HEAD; payload hashes below avoid a self-referential Git hash",
+  "engine": "Godot4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Compatibility OpenGL Mesa llvmpipe",
+  "inputs": "Original Library identities/SHA/CRC retained in ../guardian-source523-evidence/manifest.json",
+  "scope": {
+    "slots": 172,
+    "available_slots": 112,
+    "server_guarded_slots": 60,
+    "rewards": 274,
+    "applied_stats": 142,
+    "conditional_stats": 64,
+    "invokes": 62,
+    "active": 6,
+    "spell_profiles": 55,
+    "buff_profiles": 18,
+    "original_art_newly_published": 0
+  },
+  "tests": {
+    "source_transactions": 39,
+    "followup_combat_economy": 55,
+    "growth_and_touch": 111,
+    "development_profile": 37,
+    "presentation": 11,
+    "source_ui": 35,
+    "followup_native_ui": 33,
+    "core_actual_main": 32,
+    "other_core": [
+      "save_identical_payload_test",
+      "deferred_save_gate_test"
+    ],
+    "resource_atlases": 723,
+    "resource_frames": 41442,
+    "final_failures": []
+  },
+  "ci": "User requested [skip ci]; no manual remote run/rerun, workflow/protection edits or remote cancellation. Not a remote CI pass.",
+  "notes": [
+    "Initial core concurrent run timed out at180s after printing32 passed assertions; not counted as a pass. Final exact180s harness exited0 for all3 checks without relaxing gate assertions.",
+    "Initial special-tab attempt loaded missing dynamic icons in the narrowed local validation stage. Copied125 existing Git SVGs with byte/SHA receipt; final capture33 exited0 with no resource or script errors. No production art edits.",
+    "Source slots and source costs/chances remain exact. Test-only source dictionary chance overrides are transient and never written to production JSON.",
+    "Current NoSpell hook consumes explicit source_land_group_ids. The200 original Tower Land records are not among current game maps; no real Tower/PvP battle or original server-formula equivalence claimed.",
+    "Original atlas/audio binding gaps remain; property tracks animate existing local UI art. a1.zip is absent for the separate original-art source checker."
+  ],
+  "code_sha256": {
+    "data/growth/guardian_source523.json": "765e953e12b117a8897fabe1525e6930de377ab53532f6db0c7fb1ac4c369b37",
+    "scripts/growth/growth_card_face.gd": "4b10af4e926577d39976b221e22a6911513bf2dcff19b3e15cafad5d0f05e50a",
+    "scripts/growth/growth_runtime.gd": "46c7c5f3be4a7414adf2b44d99fb8f0576527fdb3bfbb9f3ae79c62bfa514e45",
+    "scripts/growth/growth_view.gd": "d354865b605964fed377e34060bc4a199e7fb921a2a787196ba132f2c6b2e7d8",
+    "scripts/growth/guardian_source.gd": "f9c81c821a0e5243e01895bc14da48484b628c85b575c11af910293a96b94aa0",
+    "scripts/monster.gd": "0df73431fb8221f0144979c7bab5b25b714b1fc9ade58199cf4afd502851931f",
+    "scripts/skills/skill_service.gd": "d7d118d5ba9531aa53cf734d7499b4f0f8aed7e1a33443f3a3b64406edf48861",
+    "scripts/skills/status_service.gd": "c4c765bf8709eed86473764be3611bd681c1deee20a7d8a263b8fd8a540f26a2",
+    "scripts/ui/renewal_skills.gd": "5811868f81e95a2dce0c587de74ec7842e17f68256c76bbad9d15cbf8eb190f7",
+    "scripts/world.gd": "a028c92dcc287340c62d1055951c65d2864aed2b56bbce5d4b8fe55f4fe7a593",
+    "tests/growth_presentation_test.gd": "56442e9d8dc3bb03ec90bc5172442c9d8a43ae5e999d2e08ff9472c088f6d191",
+    "tools/build_guardian_source523.py": "36fffc2cbd631cd7b3c6075dbb692939e048082ee89b21965215eac478f74748",
+    "scripts/growth/guardian_combat.gd": "b04d5ece0f061dcbfd13e6dde14fbd2010968ceed2001418d9f929bbcc018198",
+    "scripts/growth/guardian_timeline.gd": "06c1799073b6d4afd9933a67a3a95cc37f3c8c4981246cb87c090cce3dc8f1bb",
+    "data/growth/guardian_local_rules.json": "f93f1ed960de3c3ff77a16aef3abeeed8b695be791babd51aa1e03d540657327",
+    "data/growth/guardian_presentation.json": "a82b7c9b7f322afbd111824bf55ccaa5b4029d0bfff3c381bca41463856a97c3",
+    "tools/build_guardian_presentation.py": "c49bcb39987f330d797b908f049842e4f916ddef4525038f2a1a11a36353ebef",
+    "tests/guardian_followup_test.gd": "3e9b7843d7587564b6aad314f0f5621c3ca0c08b3f8bf570f70c04cb3c928494",
+    "tests/capture_guardian_followup.gd": "910187d43976815c5344299843b4c21234fa7ced6575744fd9e58623b82ac41d"
+  },
+  "artifacts": {
+    "capture-followup.first-attempt.txt": {
+      "bytes": 27047,
+      "sha256": "24fc7f94f6a3638a3d144da6d8e4c71b7c0db7588887527340031a375bf8a0a2"
+    },
+    "capture-followup.txt": {
+      "bytes": 437,
+      "sha256": "437b43ef54d11f8f3e5bf7d435f7b412398d422a9f5e0f908224a50afc228cf0"
+    },
+    "capture-source523.txt": {
+      "bytes": 438,
+      "sha256": "d1dca519b2668f3a13e630e0ee35d3bd2894e2c59d2bbcda8a02a68fdeb600e3"
+    },
+    "conditional.first-attempt.txt": {
+      "bytes": 960,
+      "sha256": "123ab4eeb1bd65099edb3977b1b2bbb520ccab80d9786c2e8652d2892c433e4c"
+    },
+    "core-verified.txt": {
+      "bytes": 117,
+      "sha256": "4e1b04ea185c3c6be7cbd82173f8b16f22cd5acd40284798c261e913f6e32a15"
+    },
+    "core.parallel-timeout.txt": {
+      "bytes": 1687,
+      "sha256": "2daa6ed4f488f71ef08b6b703babe8f3fe0bcab3f19e6a78022bbea3226f661c"
+    },
+    "core_runtime_save_test.txt": {
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "deferred_save_gate_test.txt": {
+      "bytes": 115,
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    },
+    "growth-lab-test.txt": {
+      "bytes": 119,
+      "sha256": "29dcf5b5afa16a358d50ade02bc88d84972650f63afbf93a0f73fdc8219a6459"
+    },
+    "growth-presentation-test.txt": {
+      "bytes": 128,
+      "sha256": "a12c00398287a5e20e9a7860b241f3b87903a1a9d098e09424140ed5bf318722"
+    },
+    "growth-progression-test.txt": {
+      "bytes": 116,
+      "sha256": "ba17278ab463a48adfa3588a81993c6dde06fdd49b4af3b246818bb890e92cc8"
+    },
+    "guardian-523-board-1280x720.png": {
+      "bytes": 353912,
+      "sha256": "8bb59eeb6a97a5435baa3fc0f11913b904fea1693b7bb8cf5866561e3bdfb18d"
+    },
+    "guardian-523-board-854x480.png": {
+      "bytes": 235887,
+      "sha256": "fc533442dd7e73864656e13842823258e8464a804d96b4c21aa47f74ff04ae2f"
+    },
+    "guardian-523-card-failed.png": {
+      "bytes": 1050765,
+      "sha256": "8d31f2a558c5bfaa4e9307e918da1e67b5f136713d111fb6a0a9922efeb789ca"
+    },
+    "guardian-523-card-success.png": {
+      "bytes": 1096600,
+      "sha256": "e224be1bb73c3a116e1e9365987e8efdc80e461e520a24fa3247a60f55b01fc7"
+    },
+    "guardian-523-card-waiting.png": {
+      "bytes": 1108795,
+      "sha256": "5492c04baca8ace195860f327464943932ccf3f8717e934d3e8e355831e3ca76"
+    },
+    "guardian-523-detail.png": {
+      "bytes": 426172,
+      "sha256": "faceb2408b37c87ff32c1bfee6066661d5147bbc323e458e3af7919839933645"
+    },
+    "guardian-523-enchant-preview.png": {
+      "bytes": 556432,
+      "sha256": "aa4be630c9784281284722dfaef4a8ab72ff3f602f5c4254db7274cf51b97b3b"
+    },
+    "guardian-523-enchant-result.png": {
+      "bytes": 578501,
+      "sha256": "803f88c4d6bda4f93aa580be79ea09ef93c4d5a7a4bea4e8994b3b22bda6b622"
+    },
+    "guardian-523-server-condition.png": {
+      "bytes": 236768,
+      "sha256": "0899b430e607b5cb8277ada4e7a56dcaed90332bdf8e9ca204bd6a25807bb5e2"
+    },
+    "guardian-followup-test.txt": {
+      "bytes": 119,
+      "sha256": "8bec5a63f2ca278d7d58d3f8ef1dba90369952f94b35947aa94432e676d8f664"
+    },
+    "guardian-quickslot-cast.png": {
+      "bytes": 1952695,
+      "sha256": "180d86731f2eb2c4740599f187b0ae9dba7b1969d231467884f8935259911aa9"
+    },
+    "guardian-reset-confirmation.png": {
+      "bytes": 695540,
+      "sha256": "5288f4d3bc7e280d7b9a72601ba8c58ffb87d41146b16e0241a758e6655cc7af"
+    },
+    "guardian-reset-result.png": {
+      "bytes": 484920,
+      "sha256": "ec1a0f5d35bb6ff7209e75f011e7bb25657292e06856a48c38fe1a66e7592e4f"
+    },
+    "guardian-source523-test.txt": {
+      "bytes": 120,
+      "sha256": "e6b1750b48f47fb30f8305611069c0c2ef563443cb8d079ec373e59f158ed390"
+    },
+    "guardian-special-854x480.png": {
+      "bytes": 645742,
+      "sha256": "6911e19402c113ea080a83e1f91e9371f8a068dcfbadd3ad31f0d4acd65b9449"
+    },
+    "guardian-special-ready.png": {
+      "bytes": 1503274,
+      "sha256": "9e974f4b13ee993b539fb68ab52f961f343237f486b307b99c8b66f1bf994ef7"
+    },
+    "guardian-special-shared-cooldown.png": {
+      "bytes": 1499103,
+      "sha256": "c76d935ae474551ea0829d9feb71915f06ddb632364d6f00618cbf75a448de73"
+    },
+    "import-final.txt": {
+      "bytes": 27594,
+      "sha256": "3e635ed04aeadfd5c87870dfa4162156c35b376b3186e6da7030c53f535b919a"
+    },
+    "resource-integrity.txt": {
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    "save_identical_payload_test.txt": {
+      "bytes": 140,
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    },
+    "source-projection.txt": {
+      "bytes": 107,
+      "sha256": "8f20757ec689d5a71702018cb4b239da81bc370f9bb5fa504de3ca8a04431819"
+    },
+    "transactions.first-attempt.txt": {
+      "bytes": 1194,
+      "sha256": "296a24f755edcfdc1b23b5acaa067dcc7639d31db351343f3e9db2d142b192d8"
+    },
+    "ui-skill-stage-additions.json": {
+      "bytes": 28878,
+      "sha256": "8546f927d82b548972065861aa02bc257f5c1776422ef8c3ef4de4be7301081e"
+    }
+  }
+}

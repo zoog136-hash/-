@@ -1,0 +1,229 @@
+{
+  "schema": 1,
+  "authority": "UI551 property timelines, existing TWILIGHT card art; no original atlas/audio claim",
+  "source_library_file": "libfile_0ba507ea27888191b60532f6aa6b6ff0",
+  "decoded_trees_sha256": "e1375352364323ab8331a8cb15158e2a957d783e362b7c8c7fc33c1736dd0571",
+  "fps": 60,
+  "fps_evidence": "https://github.com/cocos2d/cocos2d-x/blob/v3/cocos/editor-support/cocostudio/ActionTimeline/CCActionTimeline.cpp",
+  "clips": {
+    "open": {
+      "member": "UI/SkillTree/SkillTree_Card_Enchant_Default.csb",
+      "action_tag": 1875673952,
+      "source_clip": {
+        "name": "Fx_Start",
+        "start": 40,
+        "end": 75
+      },
+      "speed": 1.0,
+      "tracks": [
+        {
+          "property": "Scale",
+          "action_tag": 1875673952,
+          "frames": [
+            {
+              "kind": "scale",
+              "index": 35,
+              "tween": true,
+              "value": [
+                1.0,
+                1.0
+              ]
+            },
+            {
+              "kind": "scale",
+              "index": 40,
+              "tween": true,
+              "value": [
+                0.148499995470047,
+                0.148499995470047
+              ]
+            },
+            {
+              "kind": "scale",
+              "index": 42,
+              "tween": true,
+              "value": [
+                0.148499995470047,
+                0.148499995470047
+              ]
+            },
+            {
+              "kind": "scale",
+              "index": 49,
+              "tween": true,
+              "value": [
+                1.0492000579833984,
+                1.0492000579833984
+              ]
+            },
+            {
+              "kind": "scale",
+              "index": 75,
+              "tween": true,
+              "value": [
+                1.0,
+                1.0
+              ]
+            }
+          ]
+        },
+        {
+          "property": "Alpha",
+          "action_tag": 1875673952,
+          "frames": [
+            {
+              "kind": "int",
+              "index": 25,
+              "tween": true,
+              "value": 255
+            },
+            {
+              "kind": "int",
+              "index": 40,
+              "tween": true,
+              "value": 0
+            },
+            {
+              "kind": "int",
+              "index": 42,
+              "tween": true,
+              "value": 0
+            },
+            {
+              "kind": "int",
+              "index": 45,
+              "tween": true,
+              "value": 255
+            }
+          ]
+        }
+      ]
+    },
+    "success": {
+      "member": "UI/SkillTree/SkillTree_Card_Enchant_Result.csb",
+      "action_tag": 1382326551,
+      "source_clip": {
+        "name": "Fx_Success_Start",
+        "start": 5,
+        "end": 20
+      },
+      "speed": 1.0,
+      "tracks": [
+        {
+          "property": "Scale",
+          "action_tag": 1382326551,
+          "frames": [
+            {
+              "kind": "scale",
+              "index": 5,
+              "tween": true,
+              "value": [
+                0.8399999737739563,
+                0.8399999737739563
+              ]
+            },
+            {
+              "kind": "scale",
+              "index": 10,
+              "tween": true,
+              "value": [
+                1.0499999523162842,
+                1.0499999523162842
+              ]
+            },
+            {
+              "kind": "scale",
+              "index": 20,
+              "tween": true,
+              "value": [
+                1.0,
+                1.0
+              ]
+            }
+          ]
+        },
+        {
+          "property": "Alpha",
+          "action_tag": 1382326551,
+          "frames": [
+            {
+              "kind": "int",
+              "index": 5,
+              "tween": true,
+              "value": 0
+            },
+            {
+              "kind": "int",
+              "index": 10,
+              "tween": true,
+              "value": 255
+            }
+          ]
+        }
+      ]
+    },
+    "failure": {
+      "member": "UI/SkillTree/SkillTree_Card_Enchant_Result.csb",
+      "action_tag": 1831005125,
+      "source_clip": {
+        "name": "Fx_Fail_Start",
+        "start": 25,
+        "end": 40
+      },
+      "speed": 1.0,
+      "tracks": [
+        {
+          "property": "Scale",
+          "action_tag": 1831005125,
+          "frames": [
+            {
+              "kind": "scale",
+              "index": 25,
+              "tween": true,
+              "value": [
+                0.8399999737739563,
+                0.8399999737739563
+              ]
+            },
+            {
+              "kind": "scale",
+              "index": 30,
+              "tween": true,
+              "value": [
+                1.0499999523162842,
+                1.0499999523162842
+              ]
+            },
+            {
+              "kind": "scale",
+              "index": 40,
+              "tween": true,
+              "value": [
+                1.0,
+                1.0
+              ]
+            }
+          ]
+        },
+        {
+          "property": "Alpha",
+          "action_tag": 1831005125,
+          "frames": [
+            {
+              "kind": "int",
+              "index": 25,
+              "tween": true,
+              "value": 0
+            },
+            {
+              "kind": "int",
+              "index": 30,
+              "tween": true,
+              "value": 255
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

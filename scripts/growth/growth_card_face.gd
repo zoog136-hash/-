@@ -1,9 +1,10 @@
 extends Control
-## Static card state. No inferred flip animation or automatic outcome.
+## Existing TWILIGHT card art; UI551 property timelines are applied by the view.
 const Art = preload("res://scripts/growth/growth_art.gd")
 var failed: bool = false
 var selected: bool = false
 var success: bool = false
+var authored_art: bool = true
 var highlight: float = 0.0:
 	set(value):
 		highlight=value
@@ -27,7 +28,11 @@ func _draw() -> void:
 	if not failed:
 		for i: int in range(3):
 			draw_rect(rect.grow(3+i*2),Color("d8be82",highlight*(.045-i*.01)),false,2)
-	draw_texture_rect(Art.card(false),rect,false,Color(.27,.26,.31,.65) if failed else Color.WHITE.lerp(Color(1.15,1.1,.98),highlight))
+	if authored_art:
+		draw_texture_rect(Art.card(false),rect,false,Color(.27,.26,.31,.65) if failed else Color.WHITE.lerp(Color(1.15,1.1,.98),highlight))
+	else:
+		draw_rect(rect,Color("172434"))
+		draw_rect(rect,Color("897454"),false,1)
 	if failed:
 		var center: Vector2=rect.get_center()
 		draw_circle(center,13,Color(.03,.025,.035,.86))
