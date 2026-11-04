@@ -12,6 +12,7 @@ func run() -> void:
 	root.add_child(world)
 	world.set_process(false); world.save_timer = -100000
 	check(QA.enter_game(world),"actual Main and class selection")
+	check(world.field_map != null and is_instance_valid(world.field_renderer) and not world.map_bootstrap_blocked and world.process_mode != Node.PROCESS_MODE_DISABLED,"verified current source map boots before UI/combat checks")
 	world.player.set_physics_process(false)
 	var service = world.patch523_npc_spells
 	check(not service.catalog.content.is_empty(),"actual Main loaded private catalog")
@@ -22,6 +23,7 @@ func run() -> void:
 	check(panel.get_node("BossSkillsButton") is Button,"reachable game button")
 	var saved_inventory: Dictionary = world.inventory.duplicate(true)
 	var saved_hp: int = world.hp
+	var saved_max_hp: int = world.max_hp
 	world.inventory["HP 물약"] = 3; world.hp = 1
 	var potion_plan: Dictionary = service.status_plan(47873)
 	check(not potion_plan.is_empty(),"actual death potion item restriction resolves")
@@ -57,9 +59,9 @@ func run() -> void:
 	actor.source_m_npc_id = 60303; actor.source_m_original = service.catalog.row("NpcClass",60303).duplicate(true)
 	actor.global_position = world.player.global_position+Vector2(24,0)
 	actor.magic_accuracy = 1000000; actor.stun_duration = 10; actor.stun_accuracy = 100
-	world.hp = 100000000; world.rng.seed = 123456
+	world.max_hp = 100000000; world.hp = 100000000; world.rng.seed = 123456
 	service.host_enabled = true
-	check(service.try_begin(actor,true),"actual Monster begins typed source attack")
+	check(service.try_begin(actor,true,209093),"actual Monster begins exact source root attack")
 	var hp_before: int = world.hp
 	actor.motion.advance(.65,Vector2.ZERO)
 	check(world.hp < hp_before and service.last_event.get("phase") == "impact","real ActorMotion strike reaches world damage once")
@@ -67,9 +69,18 @@ func run() -> void:
 	actor._release_attack(actor.motion.sequence)
 	check(world.hp == after,"real duplicate strike cannot damage")
 	check(actor.stun_duration == 10 and actor.stun_accuracy == 100 and not world.player.is_stunned(),"unrelated legacy status suppressed and restored")
+	check(int(service.followups[actor.get_instance_id()].attack.ID) == 208983,"actual source209093 queues208983")
+	actor.motion.advance(1.0,Vector2.ZERO)
+	actor._tick_ai(2.0)
+	check(service.last_event.get("selection") == "exact_source_NextAttack_at_host_clock" and int(service.last_event.get("attack_id",0)) == 208983,"actual Monster AI consumes exact followup after recovery")
+	var before_followup: int = world.hp
+	world.rng.seed = 42 # Stable host RNG; magic accuracy still uses the production hit roll.
+	actor.motion.advance(.65,Vector2.ZERO)
+	check(world.hp < before_followup and int(service.last_event.get("attack_id",0)) == 208983,"actual queued attack reaches single host damage path: " + JSON.stringify(service.last_event))
 	service.clear(); actor.free()
-	world.field_map = old_field; world.astar = old_astar; world.player.global_position = old_position; world.hp = saved_hp
+	world.field_map = old_field; world.astar = old_astar; world.player.global_position = old_position; world.max_hp = saved_max_hp; world.hp = saved_hp
 	service.host_enabled = false
+	world._refresh_combat_hud()
 	panel.get_node("BossSkillsButton").pressed.emit()
 	check(panel.panel.visible,"actual game button opens inspector")
 	panel.selector.select(panel.ids.find(89102)); panel.refresh_npc()
@@ -79,23 +90,28 @@ func run() -> void:
 	check(index >= 0,"forewarning reachable from actual UI attack list")
 	panel.attacks.select(index); panel.show_attack(index)
 	check(panel.detail.text.contains("NextSpellClassID") and panel.detail.text.contains("88832"),"UI includes indirect followup source definition")
+	panel.selector.select(panel.ids.find(60303)); panel.refresh_npc()
+	for i: int in range(panel.rows.size()):
+		if int(panel.rows[i].ID) == 209093: index = i
+	panel.attacks.select(index); panel.show_attack(index)
+	check(panel.detail.text.contains("NextAttack → 208983"),"actual UI shows exact attack graph edge separately from NextSpell")
 	var output: String = ""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--patch523-screen-dir="): output = arg.trim_prefix("--patch523-screen-dir=")
 	if not output.is_empty():
 		DirAccess.make_dir_recursive_absolute(output)
-		await process_frame; await RenderingServer.frame_post_draw
+		await process_frame; await process_frame; await RenderingServer.frame_post_draw
 		check(root.get_texture().get_image().save_png(output.path_join("boss-skills-main.png")) == OK,"actual Main boss UI captured")
 	var mode: OptionButton = panel.find_child("NpcSourceMode",true,false) as OptionButton
 	mode.select(1); mode.item_selected.emit(1)
 	panel.selector.select(panel.ids.find(53)); panel.refresh_npc()
 	check(panel.rows.size() == 1 and panel.detail.text.contains("171713"),"bounded regional NPC buff reachable in UI")
 	if not output.is_empty():
-		await process_frame; await RenderingServer.frame_post_draw
+		await process_frame; await process_frame; await RenderingServer.frame_post_draw
 		check(root.get_texture().get_image().save_png(output.path_join("npc-environment-main.png")) == OK,"actual Main regional UI captured")
 		root.content_scale_size = Vector2i(480,800)
 		root.size = Vector2i(480,800)
-		await process_frame; await process_frame; await RenderingServer.frame_post_draw
+		await process_frame; await process_frame; await process_frame; await RenderingServer.frame_post_draw
 		check(panel.panel.size.x <= 456 and panel.panel.size.y <= 776,"small viewport panel stays within screen")
 		check(root.get_texture().get_image().save_png(output.path_join("npc-environment-small.png")) == OK,"small viewport Main UI captured")
 	world.queue_free(); await process_frame

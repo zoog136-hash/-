@@ -57,6 +57,37 @@ func row(table: String, id: int) -> Dictionary:
 func owned(table: String, id: int) -> Array:
 	return indexes.get(table, {}).get(str(id), [])
 
+func attack(npc_id: int, attack_id: int) -> Dictionary:
+	for source: Dictionary in owned("NpcAttack",npc_id):
+		if int(source.ID) == attack_id and int(source.NpcClassID) == npc_id: return source
+	return {}
+
+func attack_roots(npc_id: int) -> Array:
+	var incoming: Dictionary = {}
+	for source: Dictionary in owned("NpcAttack",npc_id):
+		var next: int = int(source.get("NextAttack",0))
+		if next > 0 and not attack(npc_id,next).is_empty(): incoming[next] = true
+	var roots: Array = []
+	for source: Dictionary in owned("NpcAttack",npc_id):
+		if not incoming.has(int(source.ID)): roots.append(source)
+	return roots
+
+func attack_chain(npc_id: int, attack_id: int, visited: Array = []) -> Dictionary:
+	if visited.has(attack_id) or visited.size() >= 32: return {"id":attack_id,"pending":"cycle_or_depth_limit"}
+	var source: Dictionary = attack(npc_id,attack_id)
+	if source.is_empty(): return {"id":attack_id,"pending":"missing_or_different_npc_attack"}
+	var result: Dictionary = {"source":source}
+	var next: int = int(source.get("NextAttack",0))
+	if next > 0:
+		var seen: Array = visited.duplicate(); seen.append(attack_id)
+		result["next"] = attack_chain(npc_id,next,seen)
+	return result
+
+func ai_evidence(npc_id: int) -> Dictionary:
+	var ids: Array = []
+	for source: Dictionary in attack_roots(npc_id): ids.append(int(source.ID))
+	return {"native_ai_id_raw":row("NpcClass",npc_id).get("AI",0),"host_graph_root_ids":ids,"native_ai_definition":"not_resolved_by_NpcClass_AI_integer","host_policy":"graph roots then exact NextAttack; existing clock; no source Prob denominator/phase inferred"}
+
 func bonuses(table: String, id: int) -> Array:
 	var result: Array = []
 	for link: Dictionary in owned(table, id):

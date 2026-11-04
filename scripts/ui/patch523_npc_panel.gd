@@ -58,7 +58,7 @@ func _ready() -> void:
 	selector.fit_to_longest_item = false; selector.clip_text = true
 	selector.item_selected.connect(func(_index: int) -> void: refresh_npc())
 	var note := Label.new()
-	note.text = "전투 적용 시 현재 게임의 시전 시간·범위·명중 규칙을 사용합니다.\n원본 AI·미확인 후속 발동은 보류하며, 시각효과는 설치된 원본만 표시합니다."
+	note.text = "전투 적용 시 현재 게임의 시간·범위·명중 규칙을 사용합니다.\nNextAttack 연결은 기존 전투 시계로 진행하며, 원본 AI·미해석 NextSpell·시각효과는 별도로 보류합니다."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(note)
 	attacks = ItemList.new(); attacks.name = "AttackList"; attacks.custom_minimum_size.y = 170; column.add_child(attacks)
@@ -144,8 +144,16 @@ func show_attack(index: int) -> void:
 		detail.text = "\n".join(environment_lines)
 		return
 	var lines: PackedStringArray = [service.support_reason(attack)]
+	var npc_id: int = int(ids[maxi(0,selector.selected)])
+	lines.append("AI 원문 ID: %d · 호스트 공격 그래프 시작점 %d개" % [int(service.catalog.ai_evidence(npc_id).native_ai_id_raw),service.catalog.attack_roots(npc_id).size()])
 	if bool(attack.get("IsSpell",false)):
 		lines = append_chain(service.catalog.spell_chain(int(attack.SpellID)),lines)
 	else: lines.append("원문 기본 공격: %s + %sd%s" % [str(attack.get("DiceBonus",0)),str(attack.get("DiceCount",0)),str(attack.get("DiceSpots",0))])
+	var chain: Dictionary = service.catalog.attack_chain(npc_id,int(attack.ID))
+	while chain.has("next"):
+		chain = chain.next
+		if chain.has("source"):
+			lines.append("NextAttack → %d · %s" % [int(chain.source.ID),service.support_reason(chain.source)])
+		else: lines.append("NextAttack → %d · %s" % [int(chain.get("id",0)),str(chain.get("pending","미확인"))])
 	lines.append("실행 중인 게임 전투 규칙을 사용하며, 원본의 미확인 확률·시간·범위·후속 발동은 별도입니다.")
 	detail.text = "\n".join(lines)

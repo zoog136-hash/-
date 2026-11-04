@@ -8126,7 +8126,7 @@ func _patch523_item_allowed() -> bool:
 	if is_instance_valid(hud): hud.show_message("현재 상태에서는 아이템을 사용할 수 없습니다")
 	return false
 
-func resolve_patch523_npc_hit(actor: TwilightMonster, raw: int, spell: Dictionary) -> bool:
+func resolve_patch523_npc_hit(actor: TwilightMonster, raw: int, spell: Dictionary, channel: String = "magic") -> bool:
 	# Keep one authoritative hit/crit/counter/resistance/death call. Suppress
 	# unrelated legacy status fields for this exact source spell only.
 	if not is_instance_valid(actor): return false
@@ -8141,8 +8141,8 @@ func resolve_patch523_npc_hit(actor: TwilightMonster, raw: int, spell: Dictionar
 	var old_element: String = actor.attack_element
 	var element: Dictionary = patch523_npc_spells.catalog.row("ElementalType",int(spell.get("ElementalTypeID",0)))
 	var channels: Dictionary = {"None":"physical","Fire":"fire","Water":"water","Air":"wind","Earth":"earth","Light":"holy","Dark":"dark"}
-	if channels.has(element.get("Name","")): actor.attack_element = channels[element.Name]
-	_on_player_hit(actor,raw,"magic")
+	if not spell.is_empty() and channels.has(element.get("Name","")): actor.attack_element = channels[element.Name]
+	_on_player_hit(actor,raw,channel)
 	if is_instance_valid(actor) and actor.life_id == life:
 		for property: String in old: actor.set(property,old[property])
 		actor.attack_element = old_element

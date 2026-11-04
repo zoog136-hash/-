@@ -44,6 +44,14 @@ func run() -> void:
 	check(environment.size() == 1 and int(environment[0].attribute.TerritoryID) == 171713,"jail buff retains bounded territory")
 	check(environment[0].buff.invokes.size() == 10,"all jail defence branches preserved")
 	check(c.content.tables.LandAttribute.size() == 183,"all source environmental NPC buffs retained")
+	var attacks: Dictionary = c.attack_chain(60303,209093)
+	check(int(attacks.next.source.ID) == 208983 and int(attacks.next.source.SpellID) == 43423,"actual Kurts NextAttack chain preserves exact source target")
+	check(service.supported(c.attack(60303,209093)) and service.supported(c.attack(60303,208753)),"source self enemy and basic damage components supported")
+	check(c.attack(60303,209073).is_empty() and c.attack_chain(60303,209083).next.pending == "missing_or_different_npc_attack","dangling source reference remains pending")
+	var root_ids: Array = []
+	for source: Dictionary in c.attack_roots(60303): root_ids.append(int(source.ID))
+	check(root_ids.has(209093) and not root_ids.has(208983),"source child is not selected as an independent root")
+	check(c.scalar("SpellBonus",121718,"IgnoreCannotCastSpell","TrueFalse") == 1 and c.scalar("SpellBonus",121718,"IgnoreCannotCastSkill","TrueFalse") == 1,"actual Hardin caster flags stay separate from target restrictions")
 	var counts: Dictionary = {}
 	for entry: Dictionary in c.content.tables.NpcAttack.values():
 		var reason: String = service.support_reason(entry.row)
