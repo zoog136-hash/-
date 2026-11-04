@@ -17,20 +17,15 @@ TARGET_IDS = (24941, 24942, 24943, 29044, 29045)
 TARGET = re.compile(r"^Sprite/(24941|24942|24943|29044|29045)-\d+\.sp2$")
 PACKS = (
     ("TWILIGHT_current523_M_map_integration_989actual_SP2_validated_PNGs_risks_20261104.zip",
-     "b6f665d03e84e7cd01b3dd15b60d94091b3ff762cdc58fcfd820c724aa622182", 76907660,
-     "1hAunwy9n96sb5yH9Gxfk4arQihp7-GSQ"),
+     "b6f665d03e84e7cd01b3dd15b60d94091b3ff762cdc58fcfd820c724aa622182", 76907660),
     ("TWILIGHT_current523_M_only_currentSprite_originals18_checkpoint01_20261104.zip",
-     "7dfd47a9cb0f1073437933febee72a26a27159c868220b51b476226d4e9632ae", 190728359,
-     None),
+     "7dfd47a9cb0f1073437933febee72a26a27159c868220b51b476226d4e9632ae", 190728359),
     ("TWILIGHT_current523_M_only_originalSprite69_checkpoint02_20261104.zip",
-     "2280a66e69fca0f4853a6b460a9a2c315f3ebc86d46efaf83582297d6fa1091c", 189340512,
-     None),
+     "2280a66e69fca0f4853a6b460a9a2c315f3ebc86d46efaf83582297d6fa1091c", 189340512),
     ("TWILIGHT_current523_M_only_originalSprite69_checkpoint03_20261104.zip",
-     "3e47d38afadc8b8c55d7528acaba5148ec4c101151fa16bc7202f66e1b23da71", 190535985,
-     None),
+     "3e47d38afadc8b8c55d7528acaba5148ec4c101151fa16bc7202f66e1b23da71", 190535985),
     ("TWILIGHT_current523_M_only_originalSprite69_checkpoint04_20261104.zip",
-     "4d6045fc087a8b2e1794776635ac84a6729423e1182a7627fe6bff17ae5a7770", 185164962,
-     None),
+     "4d6045fc087a8b2e1794776635ac84a6729423e1182a7627fe6bff17ae5a7770", 185164962),
 )
 
 
@@ -68,7 +63,7 @@ def audit(directory):
     nested_members = 0
     selected_sp2 = 0
     png_members = []
-    for name, expected_sha, expected_bytes, drive_id in PACKS:
+    for name, expected_sha, expected_bytes in PACKS:
         path = directory / name
         with path.open("rb") as stream:
             actual_sha = hashlib.file_digest(stream, "sha256").hexdigest()
@@ -109,7 +104,7 @@ def audit(directory):
                 dats += 1
             containers += dats
             received.append({"filename": name, "bytes": expected_bytes,
-                             "sha256": actual_sha, "drive_file_id": drive_id,
+                             "sha256": actual_sha,
                              "crc_passed": True, "manifest_members_verified": manifest_members,
                              "nested_dat_count": dats})
     found_ids = {int(matching_member(hit["member"])[1]) for hit in hits}
