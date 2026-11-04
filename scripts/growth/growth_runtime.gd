@@ -277,7 +277,8 @@ func guardian_representative(category: int) -> String:
 	return str(state.get("guardian_representatives",{}).get(str(category),""))
 
 func bonus(key: String) -> float:
-	return float(totals.get(key,0))
+	var additional: float = world.growth96.bonus(key) if is_instance_valid(world) and world.get("growth96") != null else 0.0
+	return float(totals.get(key,0)) + additional
 
 func catalog_bonus(key: String) -> int:
 	if key == "potionHealFlat": return int(bonus("potion_flat:flat"))

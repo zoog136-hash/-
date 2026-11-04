@@ -83,6 +83,10 @@ const CARD_COLLECTION_RUNTIME = preload("res://scripts/cards/collection_runtime.
 var card_collections = CARD_COLLECTION_RUNTIME.new()
 const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
 var growth = GROWTH.new()
+const GROWTH96 = preload("res://scripts/progression/growth96_runtime.gd")
+var growth96 = GROWTH96.new()
+const HALF_ELIXIR = preload("res://scripts/growth/half_elixir_runtime.gd")
+var half_elixir = HALF_ELIXIR.new()
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
 const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.gd")
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
@@ -248,6 +252,7 @@ var catalog_item_variant_count: Dictionary = {} # name -> count; never dedupe ro
 var verified_catalog_options: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
+var combinations=preload("res://scripts/combinations/runtime.gd").new()
 var card_draw_fusion: TwilightCardDrawFusion = CARD_DRAW_FUSION.new()
 var equipped_catalog: Dictionary = {"변신": {}, "마법인형": {}, "성물": {}}
 var equipped_items: Dictionary = {
@@ -259,6 +264,7 @@ var equipped_items: Dictionary = {
 var enhancement_levels: Dictionary = {} # legacy name-level lookup; migration only
 var item_instances: Dictionary = {} # physical ID -> {name, level}
 var next_item_instance_id: int = 1
+var spell_group_conversion=preload("res://scripts/skills/spell_group_conversion.gd").new()
 var class_index: int = 0
 var companion_velocity: Vector2 = Vector2.ZERO
 var active_map: Dictionary = {}
@@ -455,6 +461,7 @@ func _ready() -> void:
 			return
 		active_map_id=test_map
 	card_draw_fusion.configure(catalog_db)
+	combinations.configure(self)
 	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
 	halphas_star.configure(self)
@@ -568,6 +575,7 @@ func _process(delta: float) -> void:
 		if not source_dungeon_runs.state.active.is_empty(): _refresh_source_dungeon_panel()
 		_update_ain_hud()
 	_tick_catalog_recovery(delta)
+	combinations.tick(delta)
 	_run_auto_buff_quickslots(delta)
 	_run_auto_item_quickslots(delta)
 	save_timer += delta
@@ -660,6 +668,7 @@ func _load_data() -> void:
 	if original_skills == null:
 		original_skills = ORIGINAL_SKILLS.new()
 		original_skills.configure(self)
+	spell_group_conversion.configure(self)
 	skills_db = original_skills.catalog.records.duplicate(true)
 	_rebuild_skill_record_index()
 	_ensure_ammo_items()
@@ -711,6 +720,8 @@ func _load_data() -> void:
 	equipment_collections.configure(self)
 	growth.configure(self)
 	weapon_mastery.configure(self)
+	growth96.configure(self)
+	half_elixir.configure(self)
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -931,6 +942,7 @@ func _refresh_equipment_effects() -> void:
 	equipment_effects=flags
 
 func _invalidate_equipment_static() -> void:
+	combinations.invalidate()
 	card_collections.invalidate()
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
@@ -960,6 +972,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
 	var hit_context: Dictionary=context.duplicate(true)
 	hit_context.flat_reduction=maxi(0,before_reduction-adjusted_damage)
+	if attack_kind == "magic" and target.has_meta("magic_shield_reduction_percent"):
+		adjusted_damage = half_elixir.shield_damage(adjusted_damage, float(target.get_meta("magic_shield_reduction_percent")))
 	hit_context.pvp=bool(target.get_meta("is_player_combatant",false))
 	if not hit_context.has("final_blow"):hit_context.final_blow=growth.guardian_combat.roll(growth.guardian_combat.final_blow_chance())
 	if not hit_context.has("percent_reduction"):hit_context.percent_reduction=float(target.get_meta("source_received_reduction_percent",0))
@@ -1016,7 +1030,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key) + weapon_mastery.catalog_bonus(key, _mastery_actual_weapon_type())
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key) + weapon_mastery.catalog_bonus(key, _mastery_actual_weapon_type()) + combinations.catalog_bonus(key) + int(half_elixir.stat_record().get(key, 0))
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -1065,6 +1079,9 @@ func _index_item_weights() -> void:
 			if name_value.is_empty():
 				continue
 			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
+			if record.has("growth96_item_id"):
+				item_weight_index[name_value] = maxi(0,int(record.weight))
+				continue
 			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐":
 				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
 			item_weight_index[name_value] = maxi(0, raw_weight)
@@ -1125,6 +1142,7 @@ func _effective_attribute(stat: String) -> int:
 		"INT": base = int_stat
 		"WIS": base = wis_stat
 		"CHA": base = cha_stat
+		"DTH": return combinations.catalog_bonus("dthFlat")
 		_: return 0
 	var key: String = stat.to_lower() + "Flat"
 	return base + _equipment_attribute_bonus(stat) + _catalog_stat_sum(key) + int(original_skills.stat(stat.to_lower()) if original_skills != null else 0)
@@ -2956,6 +2974,7 @@ func _collect_ground_drop(drop: Button) -> bool:
 ## what changed. Equipment, stats and buffs still go through _update_hud.
 func _refresh_inventory_hud() -> void:
 	_sync_item_instances()
+	combinations.invalidate();combinations.reconcile()
 	# Carried weight feeds the encumbrance movement multiplier.
 	_refresh_speed_modifiers()
 	var state: Variant = hud.get("character_state")
@@ -3142,7 +3161,7 @@ func _respawn_player(message_text: String) -> void:
 func _on_player_poison_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
 		return
-	var poison_damage: int = growth.guardian_combat.poison_damage(maxi(1, damage_value))
+	var poison_damage: int = growth.guardian_combat.poison_damage(half_elixir.incoming(maxi(1, damage_value), "poison", false, false, true))
 	hp = maxi(0, hp - poison_damage)
 	player.show_poison_damage(poison_damage)
 	hud.append_log("독 피해 %d" % poison_damage)
@@ -3197,7 +3216,8 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			])
 		return
 	var attacker_critical_rate: int = attacker.critical_rate_for_type(normalized_type)
-	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat(normalized_type))
+	var elemental_critical_resistance: int = int(half_elixir.value("ElementalCriticalResistance")) if ELEMENT_RULES.channel(attacker.attack_element) != "physical" else 0
+	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat(normalized_type) + elemental_critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	var contextual_damage: int=maxi(1,damage_value+growth.guardian_combat.npc_damage_delta(attacker,normalized_type))
 	var incoming_damage: int = _critical_damage(contextual_damage) if critical else contextual_damage
@@ -3206,6 +3226,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
+	reduced = half_elixir.incoming(reduced, normalized_type, attack_element != "physical")
 	var growth_max_hp: int = _effective_max_hp() if growth.bonus("low_hp_reduction:percent")>0 else 0
 	var symbol_context: Dictionary=attacker.symbol_hit_context.duplicate(true)
 	symbol_context["channel"]="dark" if attacker.attack_element=="dark" else normalized_type
@@ -3574,11 +3595,18 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
 		hud.show_message("원본 사용 효과 미연결 · 보관/판매 가능 · 아이템 보존")
 		return
+	if not half_elixir.item_action(item_name).is_empty():
+		hud.open_half_elixir(item_name)
+		return
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 상태이상 해제 물약입니다")
 		return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
+		return
+	if item_name.begins_with("m523-growth-item:"):
+		if item_name == GROWTH96.Source.item_key(GROWTH96.Source.TOKEN): hud.open_growth96()
+		else: hud.show_message("미개봉 성장 보상 상자입니다. 다른 출처의 뽑기권으로 자동 교환하거나 개봉하지 않습니다.")
 		return
 	var symbol_instance_id: String = str(selected.get("id",""))
 	if not symbol_instance_id.is_empty() and not growth.source523.recharge(item_instances.get(symbol_instance_id,{})).is_empty():
@@ -4456,10 +4484,16 @@ func _npc_teleport_requested(map_id: String) -> void:
 
 func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
 	if death_recovery.blocked(): return
+	if direction == "deposit" and not half_elixir.storable(item_name):
+		hud.show_message("원본에서 보관할 수 없는 하프 엘릭서 품목입니다.")
+		return
 	if item_name == "아데나" or item_name.is_empty():
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
+	if direction == "deposit" and record.has("growth96_item_id") and not bool(record.get("storable",false)):
+		hud.show_message("원본 성장 보상은 창고 보관이 제한되어 있습니다")
+		return
 	if record.is_empty() or int(quantity) < 1 or int(quantity) > 99:
 		hud.show_message("창고 아이템 또는 수량이 유효하지 않습니다")
 		return
@@ -4600,6 +4634,7 @@ func _update_hud() -> void:
 	character_state["equipped_ammo"] = equipped_ammo
 	character_state["enhancement_levels"] = enhancement_levels
 	character_state["item_instances"] = item_instances
+	character_state["combination_death_stat"]=_effective_attribute("DTH")
 	character_state["gold"] = gold
 	character_state["equipment_collection_bonuses"] = equipment_collections.totals.duplicate(true)
 	character_state["card_collection_bonuses"] = card_collections.totals.duplicate(true)
@@ -4697,6 +4732,15 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not bool(current.ok) or current != movement_override: return ERR_UNAVAILABLE
 		if collection_override != AUTO_HUNTING_LOCAL.cost_override(self, current): return ERR_INVALID_PARAMETER
 	if collection_override.has("weapon_mastery523") and (not weapon_mastery.enabled or not weapon_mastery.core.validate_state(collection_override.weapon_mastery523).is_empty()): return ERR_INVALID_DATA
+	if growth96.save_blocked: return ERR_FILE_CORRUPT
+	if collection_override.has("growth96") and not growth96.validate(collection_override.growth96).is_empty(): return ERR_INVALID_DATA
+	if combinations.save_blocked:return ERR_UNAVAILABLE
+	if collection_override.has("combination523") and not combinations.check_load(collection_override).is_empty():return ERR_INVALID_DATA
+	if half_elixir.save_blocked or not half_elixir.validate(collection_override.get("half_elixir523", half_elixir.state)).is_empty(): return ERR_INVALID_DATA
+	if spell_group_conversion.save_blocked:
+		if not quiet:hud.show_message("계열 전환 저장 손상 · 기존 파일을 보존합니다. 정상 백업을 불러오세요.")
+		return ERR_FILE_CORRUPT
+	if collection_override.has("spell_group_conversion") and not spell_group_conversion.validate(collection_override.spell_group_conversion).is_empty():return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4711,7 +4755,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state"]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
 		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
@@ -4763,6 +4807,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"quest_state": quest_service.export_state(),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
+		"growth96": growth96.state.duplicate(true),
+		"half_elixir523": half_elixir.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"inventory_automation": inventory_automation.state.duplicate(true),
@@ -4779,6 +4825,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"active_skill_buffs": active_skill_buffs,
 		"skill_cooldowns": skill_cooldowns,
 		"skill_global_cooldown": skill_global_cooldown,
+		"spell_group_conversion": spell_group_conversion.export_state(),
 		"original_skill_state": original_skills.catalog.export_state() if original_skills != null else {},
 		"original_combat_state": original_skills.export_state() if original_skills != null else {},
 		"active_item_buffs": active_item_buffs,
@@ -4786,6 +4833,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"consumable_state": consumable_service.call("export_state"),
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
+		"combination523":combinations.export_state(),
 		"card_draw_fusion": card_draw_fusion.export_state(),
 		"card_option_awakening": option_awakening.export_state(),
 		"card_skill_awakening": skill_awakening.export_state(),
@@ -4883,6 +4931,21 @@ func _load_game(quiet: bool) -> void:
 		equipment_collections.save_blocked = true
 		hud.show_message(mastery_error)
 		return
+	var growth96_error: String = growth96.check_load(data)
+	if not growth96_error.is_empty():
+		hud.show_message(growth96_error)
+		return
+	var combination_error: String=combinations.check_load(data)
+	if not combination_error.is_empty():
+		combinations.save_blocked=true;hud.show_message(combination_error);return
+	var half_error: String = half_elixir.validate(data.get("half_elixir523", HALF_ELIXIR.fresh()))
+	if not half_error.is_empty():
+		half_elixir.save_blocked = true
+		hud.show_message(half_error)
+		return
+	var group_error:String=spell_group_conversion.validate(data.get("spell_group_conversion", {"schema":1,"source_snapshot":"patch523","classes":{}}))
+	if not group_error.is_empty():
+		spell_group_conversion.save_blocked=true;hud.show_message(group_error);return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -5051,9 +5114,12 @@ func _load_game(quiet: bool) -> void:
 	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
+	spell_group_conversion.restore(data.get("spell_group_conversion", {"schema":1,"source_snapshot":"patch523","classes":{}}))
 	growth.restore(data.get("growth",growth.empty_state()))
 	death_recovery.accept_load(data)
 	weapon_mastery.accept_load(data)
+	growth96.restore(data.get("growth96",GROWTH96.fresh()))
+	half_elixir.accept(data.get("half_elixir523", HALF_ELIXIR.fresh()))
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -5137,6 +5203,7 @@ func _load_game(quiet: bool) -> void:
 	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
+	combinations.accept_load(data)
 	card_draw_fusion.import_state(data.get("card_draw_fusion", {}))
 	if _full_cards_playtest_active(): card_draw_fusion.grant_full_collection_for_playtest(10)
 	# Old version-1 ownership is already permanent. Derive silently before HP/MP
@@ -6230,6 +6297,8 @@ func _elemental_damage_to_monster(raw_damage: int, element_name: String, target:
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("element_bonus_" + channel, 0.0))
 	var modified: int = ELEMENT_RULES.damage_with_bonus(raw_damage, bonus)
+	var source_element: int=int({"fire":1,"water":2,"wind":3,"earth":4}.get(channel,0))
+	if source_element>0:modified+=int(combinations.amount("ElementalDamage",source_element))
 	if channel == "holy" and target.is_undead():
 		modified = ELEMENT_RULES.damage_with_bonus(modified, float(_active_skill_buff_total("holy_vs_undead")))
 	return ELEMENT_RULES.damage_after_resistance(modified, target.elemental_resistance_percent(channel))
@@ -7057,6 +7126,7 @@ func _restore_equipped_visuals() -> void:
 	_refresh_speed_modifiers()
 
 func _all_equipped_records() -> Array[Dictionary]:
+	combinations.reconcile()
 	if not equipment_records_dirty:return equipment_records_cache
 	equipment_records_dirty=false
 	equipment_record_rebuilds+=1
@@ -7069,12 +7139,16 @@ func _all_equipped_records() -> Array[Dictionary]:
 		var item_value: Variant = equipped_items.get(slot, {})
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
 			records.append(_source_catalog_record("아이템", item_value as Dictionary))
+	var combination_record: Dictionary=combinations.stat_record()
+	if not combination_record.is_empty():records.append(combination_record)
 	var collection_record: Dictionary = equipment_collections.stat_record()
 	if not collection_record.is_empty(): records.append(collection_record)
 	var card_collection_record: Dictionary = card_collections.stat_record()
 	if not card_collection_record.is_empty(): records.append(card_collection_record)
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
+	var half_record: Dictionary = half_elixir.stat_record()
+	if not half_record.is_empty(): records.append(half_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
 	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
 	for record: Dictionary in halphas_star.bonus_records(): records.append(record)
@@ -7494,8 +7568,9 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 
 func _catalog_damage_bonus(kind: String) -> int:
 	# Native secondary doll effects are counted once, separately from general attack.
-	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))+halphas_star.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,"")) + weapon_mastery.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""), _mastery_actual_weapon_type())
-	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
+	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))+halphas_star.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,"")) + weapon_mastery.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""), _mastery_actual_weapon_type())+int(combinations.amount({"melee":"MeleeDamage","ranged":"RangeDamage"}.get(kind,"")))
+	var half_kind: String = {"melee":"Melee", "ranged":"Range", "magic":"Magic"}.get(kind, "")
+	var total: int = source_damage + int(half_elixir.value(half_kind + "Damage")) + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7516,7 +7591,8 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
-	var total: int = option_awakening.accuracy_bonus(kind) + weapon_mastery.catalog_bonus({"melee":"meleeHit","ranged":"rangedHit"}.get(kind,""), _mastery_actual_weapon_type())
+	var half_kind: String = {"melee":"Melee", "ranged":"Range", "magic":"Magic"}.get(kind, "")
+	var total: int = option_awakening.accuracy_bonus(kind) + weapon_mastery.catalog_bonus({"melee":"meleeHit","ranged":"rangedHit"}.get(kind,""), _mastery_actual_weapon_type())+int(combinations.amount({"melee":"MeleeHit","ranged":"RangeHit","magic":"MagicHit"}.get(kind,""))) + int(half_elixir.value(half_kind + "Hit") + half_elixir.value("PVE" + half_kind + "Hit"))
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7544,7 +7620,7 @@ func _record_move_speed_multiplier(record: Dictionary) -> float:
 	return clampf(value, 0.5, 2.0)
 
 func _record_attack_speed_percent(record: Dictionary) -> float:
-	if bool(record.get("_equipment_collection_bonus",false)) or bool(record.get("_card_collection_bonus",false)):
+	if bool(record.get("_combination_bonus",false)) or bool(record.get("_equipment_collection_bonus",false)) or bool(record.get("_card_collection_bonus",false)):
 		return maxf(0.0,float(record.get("collection_attack_speed",0.0)))
 	var value: float = CATALOG_EFFECTS.attack_speed_percent(record)
 	if str(record.get("slot", "")) == "weapon":
@@ -7672,7 +7748,7 @@ func _stun_accuracy_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_accuracy(record)
 	total+=int(growth.guardian_combat.status_hit("stun"))
-	return clampi(total, 0, 100)
+	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _stun_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
@@ -7698,7 +7774,7 @@ func _silence_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_silence_accuracy(record)
-	return clampi(total, 0, 100)
+	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _silence_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
@@ -7732,7 +7808,7 @@ func _hold_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_hold_accuracy(record)
-	return clampi(total, 0, 100)
+	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _hold_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
@@ -7767,7 +7843,7 @@ func _fear_accuracy_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_accuracy(record)
 	total+=int(growth.guardian_combat.status_hit("fear"))
-	return clampi(total, 0, 100)
+	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _fear_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
@@ -8247,6 +8323,8 @@ func _skill_attack_kind(skill: Dictionary) -> String:
 	return "melee"
 
 func _skill_motion_duration(skill: Dictionary) -> float:
+	if skill.has("combination_charge_step_seconds"):
+		return combinations.charge_step_duration(float(skill.combination_charge_step_seconds))
 	return clampf(maxf(0.42, SKILL_RULES.global_cooldown_seconds(skill)) / _effective_attack_speed_multiplier(), 0.14, 0.85)
 
 func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: float) -> void:

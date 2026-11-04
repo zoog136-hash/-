@@ -132,6 +132,7 @@ func owned(record: Dictionary) -> bool:
 	return permitted(record) and int(learned.get(str(record.get("id", "")), 0)) > 0
 
 func enabled(record: Dictionary) -> bool:
+	if world.get("spell_group_conversion")!=null and not world.spell_group_conversion.allows(record):return false
 	if bool(record.get("runtime_blocked", false)): return false
 	if not owned(record): return false
 	if level_locked(record):return false
