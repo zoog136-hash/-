@@ -74,6 +74,11 @@ const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_
 var option_awakening = OPTION_AWAKENING.new()
 const SKILL_AWAKENING=preload("res://scripts/cards/skill_awakening_runtime.gd")
 var skill_awakening=SKILL_AWAKENING.new()
+const EXPEDITION_CATALOG = preload("res://scripts/expedition/source_catalog.gd")
+var expedition_catalog = EXPEDITION_CATALOG.new()
+var expedition_pack_checked: bool = false
+const EXPEDITION_LOCAL = preload("res://scripts/expedition/local_runtime.gd")
+var expedition_local = EXPEDITION_LOCAL.new()
 var option_awakening_auras: Dictionary = {}
 var source_awakening_auras: Dictionary = {}
 const SOURCE_AWAKENING_AURA = preload("res://scripts/animation/source_awakening_aura.gd")
@@ -402,6 +407,7 @@ func _ready() -> void:
 	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
 	if not skill_awakening.configure(self):push_error(skill_awakening.problem)
+	expedition_local.world = self
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
@@ -494,6 +500,7 @@ func _process(delta: float) -> void:
 	_tick_skill_cooldowns(delta)
 	if original_skills != null: original_skills.tick(delta)
 	option_awakening.combat.tick(delta)
+	expedition_local.tick(delta)
 	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
 	ain_refresh_clock -= delta
@@ -4399,6 +4406,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if expedition_local.save_blocked or not expedition_local.validate(collection_override.get(EXPEDITION_LOCAL.KEY, expedition_local.export_state())).is_empty():return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4413,7 +4421,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth",EXPEDITION_LOCAL.KEY]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4488,6 +4496,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if field_map is RemakePlayableField and field_map.png_game_pack!=null and not bool(field_map.get_meta("source_map84",false)):
 		data["oman_png_index_sha256"]=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")
 	data["source_npc_state"]=SOURCE_NPCS.export_state()
+	if expedition_local.namespace_present:
+		data[EXPEDITION_LOCAL.KEY] = expedition_local.export_state()
 	if not SOURCE_NPCS.validate_state(data.source_npc_state).is_empty():return ERR_UNAVAILABLE
 	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
 	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
@@ -4551,6 +4561,11 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var expedition_error: String = expedition_local.check_load(data)
+	if not expedition_error.is_empty():
+		expedition_local.save_blocked = true
+		hud.show_message(expedition_error)
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4703,6 +4718,7 @@ func _load_game(quiet: bool) -> void:
 	if not skill_awakening.accept_load(data):
 		migrated_save_path=prior_save_path
 		return
+	expedition_local.restore(data)
 	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
@@ -8086,6 +8102,51 @@ func set_source_character_gender(gender_id: int) -> bool:
 	_update_hud()
 	_save_game(true)
 	return true
+
+func get_expedition_catalog() -> RefCounted:
+	if not expedition_pack_checked:
+		expedition_pack_checked = true
+		var path := ""
+		var checksum := ""
+		for argument: String in OS.get_cmdline_user_args():
+			if argument.begins_with("--expedition523-pack="):
+				path = argument.trim_prefix("--expedition523-pack=")
+			elif argument.begins_with("--expedition523-sha256="):
+				checksum = argument.trim_prefix("--expedition523-sha256=")
+		if not path.is_empty() or not checksum.is_empty():
+			expedition_catalog.install(path, checksum)
+	return expedition_catalog
+
+func expedition_owned_cards() -> Array:
+	# Match canonical source identity and deck, never names or legacy integer IDs.
+	var result: Array = []
+	for category: String in CARD_DRAW_FUSION.CATEGORIES:
+		var deck: int = {"변신": 1, "마법인형": 2, "성물": 98}.get(category, 0)
+		for card: Dictionary in catalog_db.get(category, []):
+			var identity := CARD_DRAW_FUSION.card_id(card)
+			var source_id := int(card.get("source_card_id", 0))
+			if card.get("source") != "lineagem_base508" or str(card.get("sourceId", "")) != "m508:%d:%d" % [deck, source_id]:
+				continue
+			if card_draw_fusion.owned.get(category, {}).get(identity, false) != true:
+				continue
+			var entry: Dictionary = skill_awakening.progress.cards.get(identity, {})
+			# Corrupt/blocked skill saves cannot supply an eligible level.
+			var level := 0 if skill_awakening.save_blocked or not skill_awakening.problem.is_empty() else int(entry.get("level", 0))
+			if not skill_awakening.core.spell_allowed(identity, int(entry.get("spell_id", 0))) or skill_awakening.core.profile(identity, level).is_empty():
+				level = 0
+			result.append({"source_id": source_id, "owned": true, "skill_awaken_level": level, "identity": identity})
+	return result
+
+func inspect_expedition(spot_id: int, identities: Array) -> Dictionary:
+	var selected: Array = []
+	for identity in identities:
+		for card: Dictionary in expedition_owned_cards():
+			if card.identity == identity:
+				selected.append(card)
+	return get_expedition_catalog().inspect(spot_id, selected)
+
+func request_expedition_start(spot_id: int, identities: Array) -> Dictionary:
+	return expedition_local.start(spot_id, identities)
 
 func set_source_card_visual_option(source_id: String, active_option_id: int) -> bool:
 	if active_option_id < 0: return false

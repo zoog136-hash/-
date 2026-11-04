@@ -913,6 +913,7 @@ func _navigate(section: String) -> void:
 		"equipment_collections": open_equipment_collections()
 		"card_collections": open_normal_card_collections(normal_card_collection_category,normal_card_collection_focus)
 		"emblems", "guardians": open_growth(section)
+		"expedition": open_expedition()
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
@@ -1204,7 +1205,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["expedition","인형 탐험"],["map","월드맵"],["quests","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -2426,6 +2427,13 @@ func open_growth(section: String) -> void:
 	var screen := preload("res://scripts/growth/growth_view.gd").new()
 	workspace.mount(screen)
 	screen.configure(self,section)
+
+func open_expedition() -> void:
+	var world: Node = get_parent()
+	_open_window("expedition", "인형 탐험·변신 파견·성령 수집", "원본 조건·비용·시간 · 이벤트·정산 대기")
+	var screen := preload("res://scripts/expedition/source_view.gd").new()
+	workspace.mount(screen)
+	screen.configure(world.get_expedition_catalog(), world.expedition_owned_cards(), world.expedition_local, self)
 
 func open_card_skill_awakening(category: String, identity: String) -> void:
 	var runtime: Variant=get_parent().get("skill_awakening")
