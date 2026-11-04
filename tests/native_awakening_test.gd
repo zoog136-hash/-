@@ -145,7 +145,7 @@ func run() -> void:
 	var profiles: int=0
 	for identity: String in core.cards:
 		if not core.profile(identity,1).is_empty():profiles+=1
-	check(core.cards.size()==701 and core.pools.size()==15 and core.DATA.data.spells.size()==72 and profiles==523,"701 source identities, 15 live pools, 72 spells, 523 level profiles")
+	check(core.cards.size()==717 and core.pools.size()==15 and core.DATA.data.spells.size()==72 and profiles==539,"701 preserved plus16 new source identities, 15 live pools, 72 spells, 539 level profiles")
 	check(core.candidates(material).size()==5 and core.select_candidate(material,65999).candidate.spell_id==64224 and core.select_candidate(material,66000).candidate.spell_id==64264,"source candidate-weight boundary separate from proc chance")
 	check(not core.select_candidate(material,100000).ok,"selection denominator is exact 100000")
 	var state: Dictionary=Skill.fresh_state();state.cards[material]={"spell_id":64224,"level":1,"experience":"1234567890123","future_metadata":{"v":1.5}}

@@ -126,7 +126,7 @@ func run() -> void:
 	options.progress.cards["마법인형"][mariela]={"experience":0,"awakened":true,"attempts":1,"failures":0};options.progress.revision+=1
 	host.equipped_catalog["마법인형"]=options.core.catalog["마법인형"][mariela]
 	var mariela_records: Array=options.bonus_records().filter(func(row: Dictionary) -> bool:return str(row.origin)=="마법인형:"+mariela)
-	check(mariela_records.size()==1 and mariela_records[0].xp==7 and mariela_records[0].weightBonus==500 and mariela_records[0].blessing_consumption_reduction_pct==3,"patch523 Mariela primary economy reaches actual bonus records once")
+	check(mariela_records.size()==1 and is_equal_approx(float(mariela_records[0].xp),0.07) and mariela_records[0].weightBonus==500 and mariela_records[0].blessing_consumption_reduction_pct==3,"patch523 Mariela primary economy reaches actual bonus records once in fractional XP units")
 	check(options.bonus_records().filter(func(row: Dictionary) -> bool:return str(row.origin)=="마법인형:"+mariela).size()==1,"repeat Mariela refresh does not stack")
 	host.equipped_catalog["마법인형"]={}
 	check(options.bonus_records().all(func(row: Dictionary) -> bool:return str(row.origin)!="마법인형:"+mariela),"unequip removes Mariela primary economy")

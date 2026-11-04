@@ -102,7 +102,7 @@ func bonus_records() -> Array[Dictionary]:
 	_signature=signature;_has_cache=true;_records.clear()
 	for category: String in Cards.CATEGORIES:
 		var record: Dictionary=world.equipped_catalog.get(category,{})
-		if record.get("source","")!="lineagem_base508":continue
+		if not preload("res://scripts/lineagem_base508.gd").native(record):continue
 		var identity: String=Cards.card_id(record)
 		if world.card_draw_fusion.owned.get(category,{}).get(identity,false)!=true or not core.eligibility(identity).ok:continue
 		var entry: Dictionary=progress.cards.get(identity,{})
@@ -120,7 +120,7 @@ func on_successful_hit(target: Node) -> void:
 	for category: String in Cards.CATEGORIES:
 		if bool(target.get("dead")):break
 		var record: Dictionary=world.equipped_catalog.get(category,{})
-		if record.get("source","")!="lineagem_base508":continue
+		if not preload("res://scripts/lineagem_base508.gd").native(record):continue
 		var identity: String=Cards.card_id(record)
 		if world.card_draw_fusion.owned.get(category,{}).get(identity,false)!=true:continue
 		var entry: Dictionary=progress.cards.get(identity,{})

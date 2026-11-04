@@ -33,7 +33,7 @@ static func accepts_catalog(catalog: Dictionary) -> bool:
 		var records: Array = catalog.get(category, [])
 		if records.is_empty(): return false
 		for record: Dictionary in records:
-			if record.get("source", "") != "lineagem_base508": return false
+			if not preload("res://scripts/lineagem_base508.gd").native(record): return false
 	return true
 
 func configure(data: Dictionary, catalog: Dictionary) -> bool:

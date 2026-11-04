@@ -374,7 +374,7 @@ func _render() -> void:
 		lines.append("\n[color=#afa28d]미지원 효과는 전투 능력치에 반영되지 않습니다.[/color]")
 	for slot: Dictionary in snapshot.get("slot_definitions",[]):
 		if int(slot.group.SlotIndex)!=11:continue
-		var slot_title: String="추가 인형 슬롯 각성 효과" if snapshot.get("category","")=="마법인형" else "추가 성물 슬롯 각성 효과 · 장착 연결 준비 중"
+		var slot_title: String="추가 인형 슬롯 각성 효과" if snapshot.get("category","")=="마법인형" else "추가 성물 슬롯 각성 효과"
 		lines.append("\n[b]"+slot_title+"[/b]")
 		for option: String in slot.labels:lines.append("• "+UI.safe(option))
 	_options.text = "\n".join(lines)

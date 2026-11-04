@@ -2,6 +2,7 @@ extends RefCounted
 ## Verified client snapshot definitions. Source IDs are namespaced; never match old IDs by integer/name.
 const CARD_PATH = "res://data/lineagem_base508/cards.json"
 const NPC_PATH = "res://data/lineagem_base508/npc_classes.json"
+const PATCH523=preload("res://data/cards/patch523_new_cards.json")
 static var _cards: Dictionary = {}
 static var _by_id: Dictionary = {}
 static var _npcs: Dictionary = {}
@@ -10,11 +11,14 @@ static func cards() -> Dictionary:
 		var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CARD_PATH))
 		if value is Dictionary and value.get("source_snapshot", "") == "base508":
 			_cards = value
+			for category: String in PATCH523.data.catalog:
+				_cards.catalog[category].append_array(PATCH523.data.catalog[category].duplicate(true))
+			_cards.supplement_snapshots=["patch523"]
 			for category: String in value.get("catalog", {}):
 				for record: Dictionary in value.catalog[category]: _by_id[str(record.sourceId)] = record
 	return _cards
 static func native(record: Dictionary) -> bool:
-	return record.get("source", "") == "lineagem_base508"
+	return record.get("source", "") in ["lineagem_base508","lineagem_patch523"]
 static func canonical(record: Dictionary) -> Dictionary:
 	if not native(record): return record
 	cards()
@@ -102,6 +106,9 @@ static func source_class_id(localized_class_name: String) -> int:
 	return int(matches[0]) if matches.size() == 1 else 0
 static func select_visual(record: Dictionary, context: Dictionary = {}) -> Dictionary:
 	var canonical_record: Dictionary = canonical(record)
+	# A declared sprite number does not prove byte-identical art across snapshots.
+	if canonical_record.get("source_snapshot","")=="patch523":
+		return {"status":"selection_pending","reason":"patch523_original_pack_required","declared_sprite_ids":canonical_record.get("source_inworld_sprite_ids",[]).duplicate()}
 	var card_id: int = int(canonical_record.get("source_card_id", -1))
 	var rule: Dictionary = identity_rules().get(card_id, {})
 	if rule.is_empty():

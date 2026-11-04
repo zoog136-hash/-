@@ -302,7 +302,7 @@ func refresh() -> void:
 	var identity: String=Cards.card_id(record)
 	var skill_button: Button=footer_actions.find_child("CompanionQuickRegister",true,false)
 	skill_button.disabled=not preload("res://scripts/ui/source_card_presentation.gd").native(record)
-	skill_button.tooltip_text="원본 카드 스킬 각성 · 비용 미확정 실행은 차단"
+	skill_button.tooltip_text="각성서 1장과 표시된 아데나 소모 · 재각성 시 Lv.1·경험치 0부터"
 	var key: String=category+identity+str(hash(record.get("sourceOptions",[])))
 	if key!=selected_key:
 		selected_key=key
@@ -377,7 +377,7 @@ func fill_options(record: Dictionary) -> void:
 
 func _refresh_secondary(record: Dictionary) -> void:
 	if secondary_button==null:return
-	secondary_button.visible=category=="마법인형" and record.get("source","")=="lineagem_base508"
+	secondary_button.visible=category=="마법인형" and preload("res://scripts/lineagem_base508.gd").native(record)
 	if not secondary_button.visible:return
 	var world: Node=hud.get_parent()
 	if world==null or not world.has_method("_on_secondary_doll_requested"):secondary_button.disabled=true;return

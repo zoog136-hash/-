@@ -94,6 +94,7 @@ var relic_motion: TwilightRelicMotion = RELIC_MOTION.new()
 const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
 var doll_motion: TwilightFollowerMotion = FOLLOWER_MOTION.new()
 var secondary_doll_visual: Node2D
+var secondary_relic_visual: Node2D
 const COMBAT_VFX = preload("res://scripts/animation/combat_vfx.gd")
 var combat_vfx: TwilightCombatVFX = null
 var feedback_kind: String = "melee"
@@ -607,6 +608,7 @@ func _load_data() -> void:
 		CURRENCY_DROP.ensure_items(catalog_items_value as Array)
 		_enrich_weapon_records(catalog_items_value as Array)
 	preload("res://scripts/cards/native_doll_unlock_item.gd").install(catalog_db)
+	preload("res://scripts/cards/native_relic_unlock_item.gd").install(catalog_db)
 	preload("res://scripts/cards/skill_awakening_service.gd").install_book_definitions(catalog_db)
 	preload("res://scripts/cards/source_awakening_items.gd").install_drop_definitions(catalog_db,loot_catalog)
 	_merge_local_consumables_into_catalog()
@@ -785,7 +787,10 @@ func _normalize_option_policies() -> void:
 					entry["sourceOptions"] = normalized_options
 
 func _verified_catalog_record(category: String, source_record: Dictionary) -> Dictionary:
-	if BASE508.native(source_record): return BASE508.canonical(source_record)
+	if BASE508.native(source_record):
+		var canonical: Dictionary=BASE508.canonical(source_record)
+		if canonical.get("source_snapshot","")=="patch523" and not _patch523_card_available(category,canonical):return {}
+		return canonical
 	source_record = _source_catalog_record(category, source_record)
 	var category_values: Dictionary = verified_catalog_options.get(category, {}) as Dictionary
 	var name_value: String = str(source_record.get("name", ""))
@@ -1312,6 +1317,8 @@ func _connect_signals() -> void:
 		hud.connect("card_fusion_requested", _on_card_fusion_requested)
 	if hud.has_signal("secondary_doll_requested"):
 		hud.connect("secondary_doll_requested",_on_secondary_doll_requested)
+	if hud.has_signal("secondary_relic_requested"):
+		hud.connect("secondary_relic_requested",_on_secondary_relic_requested)
 	if hud.has_signal("option_awakening_open_requested"):
 		hud.connect("option_awakening_open_requested", _on_option_awakening_open_requested)
 		hud.connect("option_awakening_feed_requested", _on_option_awakening_feed_requested)
@@ -3235,8 +3242,20 @@ func _grant_playtest_catalog_variant(source_id: String, amount: int) -> void:
 		hud.show_message("유효하지 않은 도감 원본 ID")
 		return
 	var item_name: String = str(record.get("name", ""))
-	# Non-equipment inventory is still name-keyed: do not merge distinct
-	# source records into a counterfeit legacy item stack.
+	if preload("res://scripts/cards/source_awakening_items.gd").recognized(record):
+		# Explicit source-ID debug acquisition creates provenance for these new
+		# items only. Existing name-only inventory is never backfilled.
+		var quantity: int=clampi(amount,1,10)
+		var staged: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup({"item_record":record,"item_name":item_name,"quantity":quantity},item_instances,next_item_instance_id)
+		if int(staged.created)!=quantity:hud.show_message("원본 재료 개체 생성 실패");return
+		var bag: Dictionary=inventory.duplicate(true);bag[item_name]=int(bag.get(item_name,0))+quantity
+		if _save_game(true,{"inventory":bag,"item_instances":staged.item_instances,"next_item_instance_id":staged.next_item_instance_id})!=OK:
+			hud.show_message("저장 실패 · 테스트 재료 지급 취소");return
+		inventory=bag;item_instances=staged.item_instances;next_item_instance_id=int(staged.next_item_instance_id)
+		_update_hud();hud.refresh_inventory(inventory)
+		hud.show_message("테스트 원본 재료 지급 · %s ×%d" % [item_name,quantity])
+		return
+	# Other non-equipment inventory is name-keyed without physical provenance.
 	if _enhancement_kind_for_record(record) == "" and int(catalog_item_variant_count.get(item_name, 0)) > 1:
 		hud.show_message("동명이인 비장비 아이템은 ID별 지급 준비 중")
 		return
@@ -3332,7 +3351,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
-	if bool(consumable_service.call("try_use", item_name)):
+	if bool(consumable_service.call("try_use", item_name,str(selected.get("id","")))):
 		return
 	var kind: String = _scroll_kind(item_name)
 	if kind != "":
@@ -4413,7 +4432,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","next_item_instance_id","hp","mp","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -6394,6 +6413,11 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		return
 	if not equipped_catalog.has(category):
 		return
+	if record.get("source","")=="lineagem_patch523":
+		record=BASE508.canonical(record)
+		if not _patch523_card_available(category,record):
+			hud.show_message("카드 보유·원본 서버·기간 조건 확인이 필요합니다")
+			return
 	var old_max_hp: int = _effective_max_hp()
 	equipped_catalog[category] = record.duplicate(true)
 	_invalidate_equipment_static()
@@ -6417,6 +6441,11 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 	hud.show_message("%s 장착: %s" % [category, str(record.get("name", ""))])
 	hud.append_log("%s 적용 · %s" % [category, str(record.get("name", ""))])
 	_update_hud()
+
+func _patch523_card_available(category: String,record: Dictionary) -> bool:
+	if not card_draw_fusion.owned.get(category,{}).get(CARD_DRAW_FUSION.card_id(record),false):return false
+	option_awakening._sync_native_context()
+	return option_awakening.core.native_material_available(record)
 
 func _equip_reference_in_slot(reference: String, target: String) -> void:
 	var parts: PackedStringArray = reference.split("@@@")
@@ -6566,8 +6595,12 @@ func _apply_transform_visual(record: Dictionary) -> void:
 	if BASE508.native(visual_record):
 		var selected: Dictionary = player.original_source_preview.source_selection_status
 		if selected.get("status", "") == "selection_pending":
-			hud.show_message("원본 변신 외형 선택 대기 · 캐릭터 직업과 성별을 확인하세요")
-			hud.append_log("원본 변신 외형 선택 대기 · 직업/성별 문맥 필요")
+			if selected.get("reason","")=="patch523_original_pack_required":
+				hud.show_message("원본 변신 리소스 설치 필요")
+				hud.append_log("523 변신 원본 팩 연결 대기")
+			else:
+				hud.show_message("원본 변신 외형 선택 대기 · 캐릭터 직업과 성별을 확인하세요")
+				hud.append_log("원본 변신 외형 선택 대기 · 직업/성별 문맥 필요")
 	_sync_option_awakening_aura("변신")
 
 func _apply_doll_visual(record: Dictionary) -> void:
@@ -7692,6 +7725,10 @@ func _experience_multiplier() -> float:
 func _update_companion(delta: float) -> void:
 	doll_motion.update(delta, $Companion, companion_sprite, player)
 	relic_motion.update(delta, relic_sprite, player)
+	_update_secondary_doll(delta)
+	_update_secondary_relic(delta)
+
+func _update_secondary_doll(delta: float) -> void:
 	var state: Dictionary=option_awakening.subslot_view(false)
 	if not state.get("active",false):
 		if is_instance_valid(secondary_doll_visual):secondary_doll_visual.clear()
@@ -7701,6 +7738,18 @@ func _update_companion(delta: float) -> void:
 		secondary_doll_visual.name="SecondarySourceDoll";add_child(secondary_doll_visual)
 	var record: Dictionary=option_awakening.core.catalog["마법인형"].get(state.identity,{})
 	secondary_doll_visual.update_source(delta,self,record)
+
+func _update_secondary_relic(delta: float) -> void:
+	var state: Dictionary=option_awakening.relic_subslot_view(false)
+	if not state.get("active",false):
+		if is_instance_valid(secondary_relic_visual):secondary_relic_visual.clear()
+		return
+	if not is_instance_valid(secondary_relic_visual):
+		secondary_relic_visual=preload("res://scripts/cards/native_doll_subslot_visual.gd").new()
+		secondary_relic_visual.category="성물";secondary_relic_visual.follow_offset=Vector2(-54,24)
+		secondary_relic_visual.name="SecondarySourceRelic";add_child(secondary_relic_visual)
+	var record: Dictionary=option_awakening.core.catalog["성물"].get(state.identity,{})
+	secondary_relic_visual.update_source(delta,self,record)
 
 # Playable-field services: renderer, physics, population and HUD remain separate.
 func _setup_field_services() -> void:
@@ -8071,6 +8120,26 @@ func _on_secondary_doll_requested(identity: String) -> void:
 	_update_companion(0)
 	_update_hud()
 	hud.show_message("추가 인형 소환 해제" if identity.is_empty() else "추가 인형 선택 완료"+(" · 인형 원본 리소스 설치 필요" if not is_instance_valid(secondary_doll_visual) or secondary_doll_visual.status!="source_native" else ""))
+
+func _option_awakening_vitals_for_state(next: Dictionary) -> Dictionary:
+	# Compute the staged slot's caps without publishing it or changing HP/MP.
+	# There is no await between staging and restoration.
+	var previous: Dictionary=option_awakening.progress
+	option_awakening.progress=next
+	_invalidate_equipment_static()
+	var result: Dictionary={"hp":mini(hp,_effective_max_hp()),"mp":mini(mp,_effective_max_mp())}
+	option_awakening.progress=previous
+	_invalidate_equipment_static()
+	return result
+
+func _on_secondary_relic_requested(identity: String) -> void:
+	if _option_awakening_busy():return
+	var result: Dictionary=option_awakening.select_relic_subslot(identity)
+	if not result.ok:hud.show_message(str(result.error));return
+	hp=mini(hp,_effective_max_hp());mp=mini(mp,_effective_max_mp())
+	_update_companion(0);_update_hud()
+	if is_instance_valid(hud.relic_reference_view):hud.relic_reference_view.refresh_state()
+	hud.show_message("추가 성물 소환 해제" if identity.is_empty() else "추가 성물 선택 완료"+(" · 성물 원본 리소스 설치 필요" if not is_instance_valid(secondary_relic_visual) or secondary_relic_visual.status!="source_native" else ""))
 
 func _source_visual_context() -> Dictionary:
 	var options: Dictionary = source_card_visual_options.duplicate(true)

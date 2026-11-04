@@ -5,6 +5,7 @@ signal card_pack_draw_requested(category: String)
 signal card_fusion_requested(category: String, grade: String, count: int)
 signal blessing_target_requested(scroll_name: String, target_reference: String)
 signal secondary_doll_requested(identity: String)
+signal secondary_relic_requested(identity: String)
 signal option_awakening_open_requested(category: String, target_id: String)
 signal option_awakening_feed_requested(category: String, target_id: String, materials: Dictionary)
 signal option_awakening_attempt_requested(category: String, target_id: String)
@@ -309,6 +310,7 @@ func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
 	if is_instance_valid(status_view): status_view.refresh(value)
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
+	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 
 func blocks_keyboard_input() -> bool:
 	if is_enhancement_presenting() or is_option_awakening_busy(): return true

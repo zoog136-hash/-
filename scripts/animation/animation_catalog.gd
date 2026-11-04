@@ -27,7 +27,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	result.profile_id = key
 	result.resource_path_hint = resource
 	# Native pixels bypass all portrait rigs and later catalog appearance overrides.
-	if record.get("source", "") == "lineagem_base508":
+	if record.get("source", "") in ["lineagem_base508","lineagem_patch523"]:
 		result.pixel_scale = 1.0
 		result.embedded_shadow = true
 		return result

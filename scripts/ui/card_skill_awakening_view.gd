@@ -32,6 +32,8 @@ func configure(service: RefCounted,target: String) -> void:
 	if not snapshot.owned:current.text+=" · 미보유 · 조회 전용"
 	growth=UI.label("저장 경험치 "+str(snapshot.entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터",12,UI.MUTED)
 	growth.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(growth)
+	var growth_note: Label=UI.label("경험치 성장: "+str(snapshot.get("growth_readiness",{}).get("blocked_reason","재료 규칙 확인 필요")),12,UI.MUTED)
+	growth_note.name="SkillGrowthReadiness";growth_note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(growth_note)
 	if bool(snapshot.get("save_blocked",false)):info.add_child(UI.label("저장 보호 중 · 정상 저장 불러오기 필요",12,UI.GOLD))
 	var book: Label=UI.label("필요 각성서: "+str(snapshot.book.get("name","원본 연결 없음"))+" · 1장 소모",12,UI.MUTED);book.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(book)
 	level=OptionButton.new();level.name="SkillAwakeningPreviewLevel";level.custom_minimum_size.y=44
@@ -53,7 +55,9 @@ func configure(service: RefCounted,target: String) -> void:
 	var reason: Label=UI.label(str(snapshot.blocked_reason),13,UI.MUTED);reason.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(reason)
 	if not snapshot.eligibility.ok:
 		var eligibility: Label=UI.label(str(snapshot.eligibility.error),13,UI.GOLD);add_child(eligibility)
-	action=UI.button("재각성" if int(snapshot.entry.spell_id)>0 else "각성",_execute,Vector2(0,44));action.name="SkillAwakeningExecute";action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false));action.tooltip_text=str(snapshot.blocked_reason);add_child(action)
+	action=UI.button("재각성" if int(snapshot.entry.spell_id)>0 else "각성",_execute,Vector2(0,44));action.name="SkillAwakeningExecute";action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false));action.tooltip_text=str(snapshot.blocked_reason)
+	action.set_script(preload("res://scripts/ui/native_touch_button.gd"))
+	add_child(action)
 	var original_action: bool=SourceSkin.button(action,"Btn_Production")
 	var note: Label=UI.label("옵션 각성과 별도 상태 · 원본 각성 재질 적용 / 반응형 배치" if original_action else "원본 각성 화면 재질 미설치",12,UI.MUTED);add_child(note)
 	_preview(0)

@@ -18,18 +18,19 @@ func active() -> Dictionary:
 	runtime._sync_native_context()
 	for category: String in Cards.CATEGORIES:
 		var record: Dictionary=runtime.world.equipped_catalog.get(category,{})
-		if record.get("source","")!="lineagem_base508":continue
+		if not preload("res://scripts/lineagem_base508.gd").native(record):continue
 		var identity: String=Cards.card_id(record)
 		if runtime.is_awakened(category,identity):out[identity]=runtime.core.definition(category,identity)
 	var main: Dictionary=runtime.world.equipped_catalog.get("마법인형",{})
-	if main.get("source","")=="lineagem_base508":
+	if preload("res://scripts/lineagem_base508.gd").native(main):
 		var identity: String=Cards.card_id(main)
 		if runtime.core.owned({"owned":runtime.world.card_draw_fusion.owned},"마법인형",identity) and runtime.core.native_material_available(main):_add_doll_invokes(out,identity,false)
 	var secondary: Dictionary=runtime.subslot_view(false)
 	if secondary.active:_add_doll_invokes(out,str(secondary.identity),true)
 	return out
 func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void:
-	var row: Dictionary=DATA.data.subslot_buffs.get(identity,{}) if secondary else DATA.data.primary_doll_buffs.get(identity,{})
+	var supplement: Dictionary=preload("res://data/cards/patch523_new_cards.json").data
+	var row: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").subslot_row(identity) if secondary else DATA.data.primary_doll_buffs.get(identity,supplement.primary_doll_buffs.get(identity,{}))
 	if row.is_empty():return
 	var rows: Array=[]
 	for effect: Dictionary in row.effects:

@@ -6,7 +6,7 @@ static var _cache: Dictionary={}
 
 static func _key(identity: String,slot: int) -> String:
 	var parts: PackedStringArray=identity.split(":")
-	if parts.size()!=4 or parts[0]!="source" or parts[1]!="m508" or slot not in [1,11]:return ""
+	if parts.size()!=4 or parts[0]!="source" or parts[1] not in ["m508","m523"] or slot not in [1,11]:return ""
 	for index: int in [2,3]:
 		if not parts[index].is_valid_int() or str(int(parts[index]))!=parts[index] or int(parts[index])<=0:return ""
 	return parts[2]+":"+parts[3]+":"+str(slot)
@@ -26,6 +26,8 @@ static func group_for(identity: String,slot: int) -> Dictionary:
 	return _cache[key].duplicate(true)
 
 static func compatible_primary(identity: String) -> bool:
+	if identity.begins_with("source:m523:"):
+		return preload("res://data/cards/patch523_new_cards.json").data.skill_cards.has(identity)
 	return _key(identity,1) in DATA.data.reviewed_primary_keys
 
 static func apply_reviewed_primary(row: Dictionary) -> Dictionary:

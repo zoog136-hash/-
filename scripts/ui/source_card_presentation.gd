@@ -7,7 +7,7 @@ const LIMIT: int = 96
 static var textures: Dictionary = {}
 
 static func native(record: Dictionary) -> bool:
-	return record.get("source", "") == "lineagem_base508"
+	return record.get("source", "") in ["lineagem_base508","lineagem_patch523"]
 
 static func detail(record: Dictionary, acquired: bool, detail_view: bool = true) -> Dictionary:
 	if not native(record):
@@ -17,6 +17,8 @@ static func detail(record: Dictionary, acquired: bool, detail_view: bool = true)
 	var api: Script = load(SOURCE_API)
 	if api == null: return {"status":"runtime_missing", "texture":null}
 	var canonical: Dictionary = api.canonical(record)
+	if canonical.get("source_snapshot","")=="patch523":
+		return {"status":"missing","role":"DisplayBaseAssetID","path":str(canonical.get("source_ui_assets",{}).get("DisplayBaseAssetID",{}).get("path","")),"texture":null,"reason":"patch523_original_pack_required"}
 	var assets: Dictionary = canonical.get("source_ui_assets", {})
 	# Render inspection: DisplayScreenAssetID can be an additive-only effect
 	# (e.g. black_wizard_A); it must never replace the portrait. Its original
@@ -84,3 +86,12 @@ static func apply(hud: Node) -> void:
 	var applied: bool = identity == CARDS.card_id(equipped)
 	hud.catalog_equip_button.disabled = not acquired or applied
 	hud.catalog_equip_button.text = "미보유 · 조회 전용" if not acquired else "현재 적용 중" if applied else {"변신":"변신", "마법인형":"소환", "성물":"성물 적용"}.get(hud.catalog_category, "적용")
+	if canonical_record_snapshot(record)=="patch523" and acquired and not applied:
+		var world: Node=hud.get_parent()
+		if world!=null and world.has_method("_patch523_card_available") and not world._patch523_card_available(hud.catalog_category,record):
+			hud.catalog_equip_button.disabled=true
+			hud.catalog_equip_button.text="원본 조건 확인 필요"
+			hud.catalog_equip_button.tooltip_text="카드의 서버·기간 조건을 확인해야 적용할 수 있습니다"
+
+static func canonical_record_snapshot(record: Dictionary) -> String:
+	return str(record.get("source_snapshot",record.get("source_original",{}).get("source_snapshot","")))

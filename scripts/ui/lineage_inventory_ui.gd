@@ -240,9 +240,10 @@ func _build_inventory() -> void:
 	detail_buttons.add_theme_constant_override("separation", 5)
 	detail.add_child(detail_buttons)
 	detail_action = Button.new()
+	detail_action.set_script(preload("res://scripts/ui/native_touch_button.gd"))
 	detail_action.text = "사용 / 장착"
 	detail_action.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	detail_action.custom_minimum_size.y = 42
+	detail_action.custom_minimum_size.y = 44
 	detail_action.disabled = true
 	detail_action.add_theme_stylebox_override("normal", _style(Color(0.10,0.075,0.04,1), GOLD))
 	detail_action.pressed.connect(_activate_selected)
