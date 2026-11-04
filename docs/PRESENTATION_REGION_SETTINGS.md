@@ -33,7 +33,7 @@
 
 작은 효과의 원본 ID·one-shot 모델·기존 효과와 동일한 원본 action ID·8방향 트랙·필수 파일·누락 부착물 여부를 확인한다. 후보가 없거나 불완전하거나 구성에 실패하면 기존 효과로 돌아간다. 기존 strict/compatible 모드와 원본 프레임·좌표·재생/블렌드 정책을 유지한다. 새로운 픽셀·FPS·합성 규칙은 만들지 않는다.
 
-실제 SPR 선언을 추가 확인했다.24941은 부착24942/24943,29044는 부착29045를 참조하며 두 본체 모두 action0/3과 명시적인36/24 프레임율 선언을 가진다. 수집된 분류별 SP2 입력 목록에는 이5개 접두사의 파일이0개다. 이는 해당 전달 목록의 한계이며 전체 원본의 전역 부재 증명이 아니다. 실제 두 효과/부착물 픽셀을 이 환경에 설치·렌더한 결과는 없다. factory probe는 픽셀 없이 선택·실패 시 원복 경로만 검사하며 원본 시각 검증으로 집계하지 않는다.
+실제 SPR 선언을 추가 확인했다.24941은 부착24942/24943,29044는 부착29045를 참조하며 두 본체 모두 action0/3과 명시적인36/24 프레임율 선언을 가진다. 수집된 분류별 SP2 입력 목록에는 이5개 접두사의 파일이0개다. 추가로 공식 Drive에서 실제 수신한989-SP2 묶음과69개 DAT 내부10,407항목에도 해당5개 ID 파일이0개다. 이는 검사한 전달 자료의 한계이며 전체 원본의 전역 부재 증명이 아니다. 실제 두 효과/부착물 픽셀을 이 환경에 설치·렌더한 결과는 없다. factory probe는 픽셀 없이 선택·실패 시 원복 경로만 검사하며 원본 시각 검증으로 집계하지 않는다.
 
 `UIFlashEffectHideList`90행은 보존하지만, 원본 UI 레이아웃/노드 이름을 TWILIGHT에 임의 대응시켜 숨기지 않는다.
 
@@ -42,7 +42,11 @@
 - Library `libfile_f3e9e5b322cc8191ae441565bbd24c27` 정식 read/materialize, 제공 ZIP25,031,173B의 전체CRC 통과. SHA256 `d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832`.
 - `python3 tools/audit_territory_optimization.py <content directory>`가 원본4표 SHA를 전수 고정 검사한다. 195행 기본 플래그는 저효과/숨김 동시176, 모두 해제15, 저효과만1, 숨김만3이다. 원본에는 수치 예산이 없다. 508/520의193행을523의195행으로 가장하지 않는다.
 - SPR 자료: Library `libfile_44951912853c8191936fbe5da3abd2e9` 정식 read/materialize,3,051,421B·CRC 통과, SHA256 `eb01668a69a6c0a8531147be4c05e4f9b559f0440fbbff92375ef99e8377b778`. 원본30 SPR 선언은 외부 작업 폴더에 보존한다.
-- 추가 원본 픽셀 위치를 확인하려던 `full_resource_inventory.zip` (`libfile_94a2f364bb648191b04b6b92baa4cfe4`)의 공식 list→download 전송이 helper의 tools/list HTTP401로 실패했다. 해당 파일을 다른 경로로 우회 다운로드하지 않았다. 이 후속 픽셀 취득 단계는 접근 연결 복구 또는 해당 자료의 명시적 새 전달이 필요하다.
+- 추가 원본 픽셀 위치를 확인하려던 `full_resource_inventory.zip` (`libfile_94a2f364bb648191b04b6b92baa4cfe4`, `file_0000000033f881fd8c6ae69c3eac3152`,6,087,178B, 생성2026-11-01T09:26:50.487386Z)의 공식 list→download 전송이 helper의 tools/list HTTP401로 실패했다. 실패 전송을 재시도하거나 접근 제한을 우회하지 않았다. 해당 ZIP 자체의 기대 SHA와 정확한 생성 환경은 현재 확인할 수 없다. 내부 `inventory/id_to_archive.json.gz` SHA와 해독 JSON SHA는 인접 감사 자료에서 확인했으며 ZIP 자체의 SHA와 구분해 영수증에 기록했다.
+- 사용자가 지정한 [Drive 인계 폴더](https://drive.google.com/drive/folders/175uMlTLScgwBlAYocO5Lu8KZNZgbQwES)의 매니페스트·989-SP2 묶음·checkpoint01~04를 공식 인증으로 읽고 이 환경에 수신했다. 재업로드·권한 변경은 하지 않았다. 전체832,677,478B,8개 분할 조각과 합친4개 ZIP 및 SP2 묶음의 SHA·크기·전체CRC가 일치했다. 각 패키지 명세와69개 DAT 원문 proof SHA 및 내부CRC도 통과했다. Drive의 접근 문제와 효과 자료 부재를 구분한다.
+- 이 Drive 묶음의 표준 확정 PNG는 upstream이 전달한 `normal_cloud.png`와 `Map_Icon_Forge.png`2개뿐이다. SP2 전체의 픽셀·알파·프레임·원본 렌더 해석은 검증되지 않았다. 두 효과에 대신 사용하지 않는다.
+- 수신 근거·각 ZIP/조각의 Drive ID·SHA는 `PRESENTATION_SOURCE_HANDOFF.json`에 있다. private 수신 경로는 `/workspace/source-effects/drive-handoff/`이며 원문을 Git에 넣지 않았다. 재현: `python3 tools/audit_presentation_source_handoff.py <수신 폴더> --output <검사 결과 JSON>`. 도구는 네트워크 접근 없이 SHA 고정5개 ZIP의 CRC/명세와 모든 DAT 내부를 확인한다. 누락 파일·잘못된 SHA는 실패한다.
+- 정확한 재개 입력은 전체 인벤토리의5개 ID24941/24942/24943/29044/29045 항목(원본 아카이브·멤버·크기·CRC 보존)과 해당 본체/부착물 SP2 원문이다. 위치 확인에 대용량 Git 이력이나10GB 전체 클라이언트가 필요한 것은 아니다. 해당 자료가 실제로 전달될 때까지 픽셀 적용 단계만 보류한다.
 - 역사적6 ZIP용 `--source-dir` 검사는 기존 `a1.zip` 부재로 실패한다. 제공523 ZIP의 독립 검증과 구분하며 원본 아트 변환·배포 완료를 주장하지 않는다.
 
 ## 검증과 재현
