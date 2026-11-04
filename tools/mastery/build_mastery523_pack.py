@@ -25,12 +25,12 @@ def compile_pack(source):
         if z.testzip() is not None:
             raise ValueError("source CRC mismatch")
         evidence = {}
-        def read(name):
+        def read(name, unique_ids=True):
             member = "content/" + name + ".json"
             payload = z.read(member)
             evidence[name] = {"member": member, "sha256": hashlib.sha256(payload).hexdigest()}
             rows = json.loads(payload)["rows"]
-            if len({r["ID"] for r in rows}) != len(rows):
+            if unique_ids and len({r["ID"] for r in rows}) != len(rows):
                 raise ValueError("duplicate source ID: " + name)
             evidence[name]["rows"] = len(rows)
             return rows
@@ -57,6 +57,35 @@ def compile_pack(source):
         tables["UIUnit"] = [r for r in read("UIUnit") if r["UnitID"] in unit_ids]
         for name in ("Class", "WeaponType", "Currency", "CurrencyUnitClass"):
             tables[name] = read(name)
+        constants = read("ConstantData")
+        item_rows = read("ItemClass")
+        def one(name, key, value):
+            matches = [r for r in read(name, False) if r.get(key) == value]
+            if len(matches) != 1:
+                raise ValueError("ambiguous operation row: " + name)
+            return matches[0]
+        purchase = one("MarketPurchase_Korean", "ID", 95441)
+        payment = one("MarketPayment_Korean", "ID", purchase["MarketPaymentID"])
+        link = one("MarketPurchaseProduct", "MarketPurchaseID", purchase["ID"])
+        product = one("MarketProduct", "ID", link["MarketProductID"])
+        powder_link = next(r for r in tables["CurrencyUnitClass"] if r["CurrencyID"] == 1682)
+        powder = next(r for r in item_rows if r["ID"] == powder_link["ClassID"])
+        if powder_link["UnitID"] != 4 or powder["ID"] != 117544 or payment["UnitID"] != 201 or payment["ClassID"] != 4 or purchase["AdditionalCurrencyID"] != 4 or product["UnitID"] != 281 or product["ClassID"] != 101 or product["Amount"] != 1:
+            raise ValueError("unresolved material or independent mastery-service payment")
+        reset_constant = next(r for r in constants if r["Name"] == "MasteryPointPurchaseResetScheduleType")
+        schedule = next(r for r in read("ContentsResetScheduleType") if r["ID"] == int(reset_constant["Value"]))
+        operations = {"point_purchase": {"material": powder, "currency_link": powder_link,
+                      "schedule_constant": reset_constant, "schedule": schedule,
+                      "automatic_period_reset_verified": False},
+                      "mastery_change": {"purchase": purchase, "payment": payment,
+                      "product_link": link, "product": product,
+                      "from": one("DateTimes_Korean", "ID", purchase["EffectiveFromId"]), "to": one("DateTimes_Korean", "ID", purchase["EffectiveToId"]),
+                      "restrictions": [r for r in read("MarketPurchaseRestriction", False) if r.get("MarketPurchaseId") == purchase["ID"]],
+                      "repeat_restriction_verified": False},
+                      "reset_color_draws": [r for r in read("UIStaticTextData_Korean", False)
+                          if r.get("TextDesc", "") in {
+                              "MASTERY_POPUP_HELP\\ND_MASTERY_HELP01\\ND_STEP_3\\ND_TEXT\\TEXT_HELP",
+                              "MASTERY_POPUP_HELP\\ND_MASTERY_HELP02\\ND_STEP_7\\ND_TEXT\\TEXT_HELP"}]}
         groups, probability = {}, {}
         for row in tables["MasteryBonusView"]:
             level = levels[row["MasteryWeaponLevelID"]]
@@ -77,7 +106,7 @@ def compile_pack(source):
         if len(tables["ClassChangeMasteryWeaponType"]) != 29 or any(r["ToCharacterClass"] not in classes or r["ToWeaponType"] not in weapons for r in tables["ClassChangeMasteryWeaponType"]):
             raise ValueError("unresolved class destination")
         return {"schema": "twilight.mastery523.v1", "source_sha256": SOURCE_SHA,
-                "private_original_data": True, "tables": tables, "evidence": evidence}
+                "private_original_data": True, "tables": tables, "operations": operations, "evidence": evidence}
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

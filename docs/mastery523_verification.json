@@ -1,21 +1,9 @@
 {
   "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "previous_checkpoint": "14cf81d4746417ecf5f9404ea45598191e543a92",
   "godot": "4.7.2.stable.official.ed1daf0bf",
-  "source_engine": {
-    "checks": 8129,
-    "failures": 0,
-    "correspondence_pairs": 8100
-  },
-  "synthetic_engine": {
-    "checks": 8129,
-    "failures": 0
-  },
-  "python_core_staging": {
-    "tests": 7,
-    "failures": 0
-  },
   "results": {
-    "core": {
+    "core_after_operations": {
       "result": {
         "checks": 32,
         "failures": [],
@@ -23,29 +11,7 @@
       },
       "log_sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
     },
-    "identical_save": {
-      "result": {
-        "failures": [],
-        "skips": 1,
-        "writes": 2
-      },
-      "log_sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
-    },
-    "deferred_save": {
-      "result": {
-        "failures": []
-      },
-      "log_sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
-    },
-    "mastery_actual_main": {
-      "result": {
-        "checks": 25,
-        "failures": [],
-        "source": "actual523"
-      },
-      "log_sha256": "3b386f6f034714e32058025de4abb906ec75f0abcbc3eceac80ac4dcd3b59896"
-    },
-    "mastery_synthetic_main": {
+    "mastery_main_fixture_after_operations": {
       "result": {
         "checks": 25,
         "failures": [],
@@ -53,30 +19,78 @@
       },
       "log_sha256": "974682854774a5b2cd8b701bd1c18a1e656cff72e2ef024fe55959df22010a06"
     },
-    "opengl": {
+    "paid_operations_headless": {
       "result": {
-        "checks": 9,
+        "checks": 45,
         "failures": [],
-        "scope": "ACTUAL_MAIN_OPENGL; NATIVE_UI_EQUIVALENCE_NOT_CLAIMED"
+        "source": "actual523"
       },
-      "log_sha256": "61571235adab1b889c5cbbf859daa0589fb5c4e96fa4a3e9b54f3884b203474b"
+      "log_sha256": "c28c8d220b392354dfc375bb4543ba574d7377200420337beededa6bb5836399"
+    },
+    "paid_operations_opengl_and_durable_reconciliation": {
+      "result": {
+        "checks": 52,
+        "failures": [],
+        "source": "actual523"
+      },
+      "log_sha256": "1ca35204c503f92d3c1d76593e7f23f9b377315068b6a318eea612b7be919fb0"
+    },
+    "source_engine": {
+      "checks": 8156,
+      "failures": 0,
+      "log_sha256": "6d471bf287372b0063137b8edc05cf0845d339e7ebe1c47347d161653360319a"
+    },
+    "synthetic_engine": {
+      "checks": 8152,
+      "failures": 0,
+      "log_sha256": "aeab3d0f9d7fe4b2cfe44644e7bedb46af82bdfeea43ed204f8a9396d640c1d6"
     }
   },
+  "python_core_staging": {
+    "tests": 7,
+    "failures": 0
+  },
+  "opengl": "Mesa llvmpipe; actual Main + confirmations + purchase/reset/change + reload",
+  "captures": [
+    {
+      "name": "change.png",
+      "sha256": "170012a54d61d84970bb61161c4430b199ece4707605bc1bdb07b53b6841b97d",
+      "status": "LOCAL_EVIDENCE_ONLY"
+    },
+    {
+      "name": "purchase.png",
+      "sha256": "4ab3a79c6c61828da666c22e7188aafe53bfc6aa93720961bb1feb5312a8817a",
+      "status": "LOCAL_EVIDENCE_ONLY"
+    },
+    {
+      "name": "reset.png",
+      "sha256": "07b4f6b384426f1bc5704439a3401d21572db09c34f3f401f5c1203e94dfdb6d",
+      "status": "LOCAL_EVIDENCE_ONLY"
+    }
+  ],
   "committed_resource_integrity": {
     "atlases": 723,
     "frames": 41442,
     "bytes": 233420026,
     "status": "PASS"
   },
+  "private_pack": {
+    "bytes": 235676,
+    "sha256": "671fd9b307182e0ed8b8789124ea5710aa766d3de20c74df381455abf2bd9d6b",
+    "library_version": 1,
+    "delivery": "LIBRARY_REPLACE_CONFIRMED; same identity; original rows not in public Git"
+  },
   "historical_source_dir": {
     "status": "FAIL",
-    "reason": "a1.zip unavailable; current523 ZIP hashes and CRC independently verified"
+    "reason": "a1.zip absent; both current523 ZIPs separately hash/CRC verified"
   },
-  "private_pack": {
-    "bytes": 231363,
-    "sha256": "81ace0f6d5e33ecee2d962065913af44a34095bfd8c026bb2e1fb8f2c6f401f2",
-    "delivery": "LIBRARY_CREATE_CONFIRMED; source rows not in public Git"
-  },
-  "remote_ci": "NOT_REQUESTED; user requested [skip ci]",
-  "scope": "PARTIAL gameplay: point purchase, native reset roll, service point conversion/payment, matching activation and two-server commit remain blocked; Android untested"
+  "remaining_blocks": [
+    "Automatic daily purchase reset after first five purchases: native offset unknown",
+    "Variable-value or locked-slot reroll and initial four-value acquisition mapping",
+    "Repeated market service after first local change: restriction12 unknown",
+    "Point-only change onto an existing-option destination: handling unknown",
+    "Native server conversion/caps and two-server atomic execution",
+    "Matching-bonus stacking and original UI/Android equivalence"
+  ],
+  "remote_ci": "NOT_REQUESTED; commits use [skip ci]"
 }

@@ -9,6 +9,7 @@ var options: Dictionary = {}
 var bonuses: Dictionary = {}
 var types: Dictionary = {}
 var problem: String = ""
+var operations: Dictionary = {}
 
 static func fresh() -> Dictionary:
 	return {"version":1,"weapons":{},"receipts":{}}
@@ -24,14 +25,25 @@ static func point_text(value: Variant) -> bool:
 	return value.length() < MAX_POINT_TEXT.length() or (value.length() == MAX_POINT_TEXT.length() and value <= MAX_POINT_TEXT)
 
 func load_pack(path: String, sha256: String) -> bool:
-	if sha256.length() != 64 or not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != sha256:
+	if sha256.length() != 64 or not FileAccess.file_exists(path):
 		problem = "숙련 원본 팩 해시 또는 경로 오류"
 		return false
-	if FileAccess.get_file_as_bytes(path).size() > 8 * 1024 * 1024:
+	var file := FileAccess.open(path,FileAccess.READ)
+	if file == null: problem = "숙련 팩 읽기 실패"; return false
+	var size: int = file.get_length()
+	if size > 8 * 1024 * 1024:
+		file.close()
 		problem = "숙련 팩 크기 초과"
 		return false
+	var bytes: PackedByteArray = file.get_buffer(size)
+	file.close()
+	var context := HashingContext.new()
+	context.start(HashingContext.HASH_SHA256)
+	context.update(bytes)
+	if bytes.size() != size or context.finish().hex_encode() != sha256:
+		problem = "숙련 원본 팩 해시 오류"; return false
 	var parser := JSON.new()
-	if parser.parse(FileAccess.get_file_as_string(path)) != OK or not parser.data is Dictionary:
+	if parser.parse(bytes.get_string_from_utf8()) != OK or not parser.data is Dictionary:
 		problem = "숙련 팩 형식 오류"
 		return false
 	return configure(parser.data)
@@ -47,6 +59,7 @@ func configure(pack: Dictionary) -> bool:
 	options = staged.options
 	bonuses = staged.bonuses
 	types = staged.types
+	operations = staged.operations
 	problem = ""
 	return true
 
@@ -55,6 +68,8 @@ func _configure(pack: Dictionary) -> bool:
 		problem = "숙련 팩 스키마 오류"
 		return false
 	tables = pack.tables.duplicate(true)
+	if not pack.get("operations",{}) is Dictionary: problem = "숙련 실행 자료 형식 오류"; return false
+	operations = pack.get("operations",{}).duplicate(true)
 	for name: String in ["MasteryWeaponType","MasteryWeaponStep","MasteryWeaponLevelView","MasteryBonusView","MasteryGradeView","MasteryGradeMatchingBonus","MasteryPointPayment","MasteryPointPurchaseView","MasteryResetCost","ClassChangeMasteryLevelCost","ClassChangeMasteryWeaponType","MasteryChangeLevelCost","Bonus","BonusType","UIUnit","Class","WeaponType","Currency","CurrencyUnitClass"]:
 		if not tables.get(name) is Array:
 			problem = "숙련 원본 표 누락: " + name
@@ -139,9 +154,15 @@ func validate_state(state: Variant) -> String:
 	if not state is Dictionary or state.get("version") != 1 or not state.get("weapons") is Dictionary or not state.get("receipts") is Dictionary:
 		return "숙련 저장 형식 오류"
 	if state.receipts.size() > 10000: return "숙련 영수증 수 초과"
+	var purchases: int = 0
 	for receipt: Variant in state.receipts:
 		if not receipt is String or receipt.is_empty() or receipt.length() > 160 or not state.receipts[receipt] is Dictionary:
 			return "숙련 영수증 형식 오류"
+		if state.receipts[receipt].get("kind") == "point_purchase": purchases += 1
+	var count: Variant = state.get("purchase_count",purchases)
+	if purchases > 0 and not state.has("purchase_count"): return "숙련 구매 횟수 누락"
+	if (not count is int and not count is float) or count != int(count) or count < 0 or count > 5 or int(count) != purchases: return "숙련 구매 이력 오류"
+	if state.has("rng_state") and not (point_text(state.rng_state) or (state.rng_state is String and state.rng_state.begins_with("-") and (point_text(state.rng_state.substr(1)) or state.rng_state == "-9223372036854775808"))): return "숙련 난수 저장 오류"
 	for key: Variant in state.weapons:
 		if not key is String or not key.is_valid_int() or str(int(key)) != key or not levels.has(int(key)):
 			return "숙련 무기 ID 오류"
@@ -316,4 +337,88 @@ func plan_server_import(destination: Dictionary, departure: Dictionary, comparis
 		plan.departure_after.weapons = {}
 		plan.departure_after.receipts[receipt] = {"kind":"server_departure"}
 		plan["requires_two_sided_commit"] = true
+	return plan
+
+func plan_purchase(state: Dictionary, weapon: int, receipt: String) -> Dictionary:
+	if not validate_state(state).is_empty(): return fail("invalid_state")
+	if not operations.get("point_purchase") is Dictionary: return fail("operation_source_missing")
+	var count: int = int(state.get("purchase_count",0))
+	var payment: Dictionary = {}
+	for row: Dictionary in tables.MasteryPointPayment:
+		if int(row.Count) == count+1: payment = row
+	if payment.is_empty(): return fail("purchase_reset_boundary_unverified")
+	if tables.MasteryPointPurchaseView.size() != 1: return fail("point_amount_ambiguous")
+	var plan: Dictionary = plan_points(state,weapon,str(int(tables.MasteryPointPurchaseView[0].PointAmount)),receipt)
+	if not plan.ok: return plan
+	plan.kind = "point_purchase"
+	plan.after.receipts[receipt] = {"kind":"point_purchase","payment_id":int(payment.ID)}
+	plan.after.purchase_count = count+1
+	plan.charge = payment.duplicate(true)
+	return plan
+
+func fixed_reset_availability(state: Dictionary, weapon: int) -> Dictionary:
+	if not validate_state(state).is_empty() or not levels.has(weapon): return fail("invalid_state")
+	if not operations.get("reset_color_draws") is Array or operations.reset_color_draws.size() != 2: return fail("color_draw_source_missing")
+	var entry: Dictionary = record(state,weapon)
+	if entry.colors.is_empty() or entry.options.is_empty(): return fail("owned_options_required")
+	for locks: Array in entry.locks.values():
+		if true in locks: return fail("locked_value_mapping_unverified")
+	var known_levels: Dictionary = {}
+	for option: Dictionary in entry.options:
+		var row: Dictionary = options[int(option.group_id)][weapon]
+		if int(row.Probability) != 1000000: return fail("variable_value_mapping_unverified")
+		known_levels[str(row.level)] = true
+	for key: String in entry.colors:
+		if not known_levels.has(key): return fail("color_value_ownership_unverified")
+	var charge: Dictionary = reset_quote(state,weapon)
+	if charge.is_empty() or int(charge.CurrencyID) != 1: return fail("reset_currency_unverified")
+	return {"ok":true,"charge":charge}
+
+func plan_fixed_reset(state: Dictionary, weapon: int, rng: RandomNumberGenerator, receipt: String) -> Dictionary:
+	var availability: Dictionary = fixed_reset_availability(state,weapon)
+	if not availability.ok: return availability
+	var entry: Dictionary = record(state,weapon)
+	for key: String in entry.colors:
+		for slot: int in 4:
+			var roll: int = rng.randi_range(0,999999)
+			var found: bool = false
+			for grade: Dictionary in tables.MasteryGradeView:
+				roll -= int(grade.Probability)
+				if roll < 0: entry.colors[key][slot] = int(grade.GradeID); found = true; break
+			if not found: return fail("color_probability_invalid")
+	var after: Dictionary = state.duplicate(true)
+	after.weapons[str(weapon)] = entry
+	after.rng_state = str(rng.state)
+	# Every existing value in this path has exactly one 100% source outcome.
+	# Values remain the same without guessing four-color/Slot1/2 coupling.
+	return _plan(state,after,receipt,"fixed_value_color_reset",availability.charge)
+
+func plan_local_change(state: Dictionary, source: int, target: int, class_id: int, prefix: int, receipt: String, year: int) -> Dictionary:
+	if not validate_state(state).is_empty(): return fail("invalid_state")
+	var service: Dictionary = operations.get("mastery_change",{})
+	if service.is_empty(): return fail("operation_source_missing")
+	if not bool(service.purchase.OnSale) or year <= int(service.from.Year) or year >= int(service.to.Year): return fail("service_sale_boundary_unverified")
+	# The unresolved generic MarketPurchaseRestriction is not ignored: only
+	# the first local use is enabled until repeated-use conditions are known.
+	for past: Dictionary in state.get("receipts",{}).values():
+		if past.get("kind") == "local_mastery_change": return fail("repeat_service_restriction_unverified")
+	if not point_text(record(state,source).points) or not point_text(record(state,target).points): return fail("invalid_points")
+	var source_points: int = int(record(state,source).points)
+	var target_points: int = int(record(state,target).points)
+	if source_points > int(MAX_POINT_TEXT)-target_points: return fail("point_overflow")
+	# TWILIGHT stores the source raw cumulative integer, so the documented sum
+	# is exact. No level copy, scaling, rounding or invented cap is applied.
+	var plan: Dictionary = plan_class_change(state,source,target,class_id,prefix,str(source_points+target_points),receipt)
+	if not plan.ok: return plan
+	var additional: int = 0
+	if prefix > 0:
+		var fee: Dictionary = transfer_cost(prefix,"mastery_change")
+		if fee.is_empty(): return fail("additional_cost_missing")
+		additional = int(fee.CurrencyCost)
+	var currency: int = int(service.payment.ClassID)
+	if int(service.payment.UnitID) != 201 or currency != int(service.purchase.AdditionalCurrencyID): return fail("additional_currency_unresolved")
+	plan.kind = "local_mastery_change"
+	plan.after.receipts[receipt] = {"kind":"local_mastery_change","purchase_id":int(service.purchase.ID),"point_policy":"raw_cumulative_integer_sum"}
+	plan.service_confirmation_required = false
+	plan.charge = {"CurrencyID":currency,"Cost":int(service.payment.Amount)+additional,"BaseCost":int(service.payment.Amount),"AdditionalCost":additional,"MarketPurchaseID":int(service.purchase.ID)}
 	return plan

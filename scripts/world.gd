@@ -4403,6 +4403,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if collection_override.has("weapon_mastery523") and (not weapon_mastery.enabled or not weapon_mastery.core.validate_state(collection_override.weapon_mastery523).is_empty()): return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4417,7 +4418,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","weapon_mastery523"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -7148,7 +7149,7 @@ func _catalog_accuracy_bonus(kind: String) -> int:
 	return total
 
 func _catalog_critical_bonus(kind: String) -> int:
-	var total: int = 0
+	var total: int = weapon_mastery.catalog_bonus({"melee":"meleeCritical","ranged":"rangedCritical","magic":"magicCritical"}.get(kind,""), _mastery_actual_weapon_type())
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7190,6 +7191,7 @@ func _effective_move_speed_multiplier() -> float:
 
 func _effective_attack_speed_bonus_percent() -> float:
 	var total: float = original_skills.stat("attackSpeed") if original_skills != null else 0.0
+	total += weapon_mastery.catalog_bonus("attackSpeed", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
 	total += float(_active_item_buff_total("attack_speed"))
