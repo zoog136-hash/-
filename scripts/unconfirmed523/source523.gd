@@ -325,7 +325,7 @@ func can_own_item(item_id: int, context: Dictionary = {}) -> bool:
 	return bool(item_eligibility(item_id, context).ok)
 
 func resolve_reward(reward_id: int, context: Dictionary, selection: Dictionary = {}, rng: RandomNumberGenerator = null) -> Dictionary:
-	var state: Dictionary = {"leaves":0,"assumptions":[]}
+	var state: Dictionary = {"leaves":0,"assumptions":[],"no_reward_ids":[]}
 	var initial_rng_state: int = rng.state if rng != null else 0
 	var result: Dictionary = _resolve(reward_id, context, selection, rng, [], state)
 	if not result.ok:
@@ -333,6 +333,7 @@ func resolve_reward(reward_id: int, context: Dictionary, selection: Dictionary =
 			rng.state = initial_rng_state
 		return result
 	result["assumptions"] = state.assumptions
+	result["no_reward_ids"] = state.no_reward_ids
 	return result
 
 func _resolve(id: int, context: Dictionary, selection: Dictionary, rng: RandomNumberGenerator, chain: Array, state: Dictionary) -> Dictionary:
@@ -350,7 +351,7 @@ func _resolve(id: int, context: Dictionary, selection: Dictionary, rng: RandomNu
 		return _fail("reward_character_class_limit")
 	var type_id: int = int(reward.get("RewardTypeID", 0))
 	var type: Dictionary = row("RewardType", type_id)
-	var expected: Dictionary = {1:"Exp",2:"Item",5:"Einasad",6:"Gem",101:"RandomReward",111:"SelectReward",124:"ComplexReward",172:"PassSystemSeasonPassExp",184:"Bonus"}
+	var expected: Dictionary = {1:"Exp",2:"Item",5:"Einasad",6:"Gem",91:"NoReward",101:"RandomReward",111:"SelectReward",124:"ComplexReward",172:"PassSystemSeasonPassExp",184:"Bonus"}
 	if not expected.has(type_id) or str(type.get("Name", "")) != str(expected[type_id]):
 		return _fail("unsupported_reward_type:%d" % type_id)
 	var amount: int = int(reward.get("Amount", 0))
@@ -361,6 +362,11 @@ func _resolve(id: int, context: Dictionary, selection: Dictionary, rng: RandomNu
 		return _fail("nested_reward_amount_unsupported")
 	if int(reward.get("RewardEnhancementTypeID", 1)) != 1:
 		return _fail("reward_enhancement_requires_material_rule")
+	if type_id == 91:
+		# This source type explicitly delivers no reward, including rows whose
+		# ClassID is a display reference. Never turn that reference into an item.
+		state.no_reward_ids.append(id)
+		return {"ok":true,"error":"","rewards":[]}
 	var next_chain: Array = chain.duplicate()
 	next_chain.append(id)
 	if type_id == 101:
@@ -457,6 +463,93 @@ func _resolve_entities(entities: Array, context: Dictionary, selection: Dictiona
 		rewards.append_array(child.rewards)
 	return {"ok":true,"error":"","rewards":rewards}
 
+func reward_choices(reward_id: int, context: Dictionary = {}, selection: Dictionary = {}) -> Dictionary:
+	# A preview never rolls RNG or requests choices from an unselected branch.
+	var result: Dictionary = {"ok":true,"error":"","choices":[],"deferred_random":[],"walk_count":0}
+	var error: String = _choice_walk(reward_id,context,selection,[],result)
+	if not error.is_empty():
+		return {"ok":false,"error":error,"choices":[],"deferred_random":[]}
+	result.erase("walk_count")
+	return result
+
+func _choice_walk(id: int, context: Dictionary, selection: Dictionary, chain: Array, result: Dictionary) -> String:
+	result.walk_count = int(result.walk_count)+1
+	if int(result.walk_count) > MAX_REWARD_LEAVES:
+		return "reward_preview_limit"
+	if id in chain or chain.size() >= MAX_REWARD_DEPTH:
+		return "reward_cycle_or_depth_limit"
+	var reward: Dictionary = row("Reward",id)
+	if reward.is_empty():
+		return "unknown_reward:%d" % id
+	if bool(reward.get("ClanOnly",false)):
+		return "clan_reward_excluded"
+	var character_class: int = int(reward.get("CharacterClassID",0))
+	if character_class != 0 and context.has("class_id") and character_class != int(context.class_id):
+		return "reward_character_class_limit"
+	var next_chain: Array = chain.duplicate()
+	next_chain.append(id)
+	var type_id: int = int(reward.get("RewardTypeID",0))
+	var class_id: int = int(reward.get("RewardClassID",0))
+	if type_id == 101:
+		var candidates: Array = []
+		for entity: Dictionary in find_rows("RandomRewardEntityView","RandomRewardID",class_id):
+			candidates.append(int(entity.get("RewardID",0)))
+		if candidates.is_empty() or row("RandomReward",class_id).is_empty():
+			return "random_reward_pool_missing"
+		result.deferred_random.append({"reward_id":id,"candidate_reward_ids":candidates})
+	elif type_id == 111:
+		var definition: Dictionary = row("SelectReward",class_id)
+		if definition.is_empty():
+			return "selection_definition_missing"
+		return _choice_group(find_rows("SelectRewardEntity","SelectRewardID",class_id),int(definition.get("SelectMaxCount",0)),id,context,selection,next_chain,result)
+	elif type_id == 124:
+		var groups: Array = find_rows("ComplexReward","ComplexRewardGroupID",class_id)
+		if row("ComplexRewardGroup",class_id).is_empty() or groups.is_empty():
+			return "complex_group_missing"
+		for group: Dictionary in groups:
+			var entities: Array = find_rows("ComplexRewardEntity","ComplexRewardID",int(group.ID))
+			var maximum: int = int(group.get("MaxCount",0))
+			match int(group.get("ComplexRewardTypeID",0)):
+				4:
+					if maximum <= 0 or entities.size() != maximum:
+						return "complex_guaranteed_count_ambiguous"
+					for entity: Dictionary in entities:
+						var error: String = _choice_walk(int(entity.get("RewardID",0)),context,selection,next_chain,result)
+						if not error.is_empty(): return error
+				14:
+					var error: String = _choice_group(entities,maximum,int(group.ID),context,selection,next_chain,result)
+					if not error.is_empty(): return error
+				24:
+					if maximum != 1: return "complex_multi_draw_policy_unknown"
+					result.deferred_random.append({"reward_id":id,"complex_reward_id":int(group.ID),"candidate_reward_ids":entities.map(func(entity: Dictionary) -> int: return int(entity.get("RewardID",0)))})
+				_:
+					return "unsupported_complex_reward_type"
+	return ""
+
+func _choice_group(entities: Array, maximum: int, key: int, context: Dictionary, selection: Dictionary, chain: Array, result: Dictionary) -> String:
+	if maximum <= 0 or entities.is_empty(): return "invalid_selection_count"
+	var chosen: Variant = selection.get(key,selection.get(str(key),null))
+	var options: Array = []
+	for entity: Dictionary in entities:
+		options.append({"value":int(entity.get("ID",0)),"reward_id":int(entity.get("RewardID",0))})
+	if chosen == null:
+		result.choices.append({"key":"selection.%d" % key,"selection_key":key,"options":options,"count":maximum,"min_count":1,"max_count":maximum})
+		return ""
+	if not chosen is Array or chosen.is_empty() or chosen.size() > maximum: return "invalid_selection_count"
+	var seen: Dictionary = {}
+	for entity_id: Variant in chosen:
+		if (not entity_id is int and not entity_id is float) or float(entity_id) != float(int(entity_id)) or seen.has(int(entity_id)):
+			return "duplicate_or_invalid_selection"
+		seen[int(entity_id)] = true
+		var found: bool = false
+		for entity: Dictionary in entities:
+			if int(entity.get("ID",0)) == int(entity_id):
+				found = true
+				var error: String = _choice_walk(int(entity.get("RewardID",0)),context,selection,chain,result)
+				if not error.is_empty(): return error
+		if not found: return "selection_entity_outside_group"
+	return ""
+
 func _resolve_selection(entities: Array, maximum: int, key: int, context: Dictionary, selection: Dictionary, rng: RandomNumberGenerator, chain: Array, state: Dictionary) -> Dictionary:
 	var chosen: Variant = selection.get(key,selection.get(str(key),null))
 	if not chosen is Array or chosen.is_empty():
@@ -501,10 +594,13 @@ func _resolve_weighted(pool: Array, context: Dictionary, selection: Dictionary, 
 
 func bonus_stats(bonus_ids: Array, context: Dictionary = {}) -> Dictionary:
 	var stats: Dictionary = {}
+	var conditional_stats: Dictionary = {"undead":{},"pvp":{}}
 	var effects: Array = []
 	var unsupported: Array = []
-	var flat: Dictionary = {"MeleeDamage":"melee_damage","MeleeHit":"melee_hit","MagicDamage":"magic_damage","MagicHit":"magic_hit","RangeDamage":"ranged_damage","RangeHit":"ranged_hit","HPPlus":"max_hp","MPPlus":"max_mp","ArmorClass":"ac","ArmorClassBonus":"ac","Strength":"str","Intelligence":"int","Wisdom":"wis","Dexterity":"dex","Constitution":"con","Charisma":"cha","RegenMP":"mp_regeneration","SpellPower":"sp","MagicResist":"mr","DamageReduction":"damage_reduction","HPPotionIncreaseStatic":"potion_flat","CarryPlus":"weight_bonus","MaxCarryPlus":"weight_bonus","RangeEvasion":"er","CriticalMeleeDamage":"melee_critical_damage","CriticalRangeDamage":"ranged_critical_damage","CriticalMagicDamage":"magic_critical_damage"}
-	var percent: Dictionary = {"ExperienceAdditionPercent":"experience_bonus","AbsoluteExperienceAdditionPercent":"experience_bonus","AttackSpeedBonus":"attack_speed","MoveSpeedBonus":"movement_speed","HPPotionIncreasePercent":"potion_percent","MeleeCritical":"melee_critical_rate","RangeCritical":"ranged_critical_rate","DamageReductionPercent":"incoming_reduction"}
+	var flat: Dictionary = {"MeleeDamage":"melee_damage","MeleeHit":"melee_hit","MagicDamage":"magic_damage","MagicHit":"magic_hit","RangeDamage":"ranged_damage","RangeHit":"ranged_hit","HPPlus":"max_hp","MPPlus":"max_mp","ArmorClass":"ac","ArmorClassBonus":"ac","Strength":"str","Intelligence":"int","Wisdom":"wis","Dexterity":"dex","Constitution":"con","Charisma":"cha","RegenMP":"mp_regeneration","SpellPower":"sp","MagicResist":"mr","DamageReduction":"damage_reduction","PVEDamageReduction":"pve_damage_reduction","PierceDamageReduction":"damage_reduction_ignore","HPPotionIncreaseStatic":"potion_flat","CarryPlus":"weight_bonus","MaxCarryPlus":"weight_bonus","RangeEvasion":"er","CriticalMeleeDamage":"melee_critical_damage","CriticalRangeDamage":"ranged_critical_damage","CriticalMagicDamage":"magic_critical_damage"}
+	var percent: Dictionary = {"ExperienceAdditionPercent":"experience_bonus","AbsoluteExperienceAdditionPercent":"experience_bonus","AttackSpeedBonus":"attack_speed","MoveSpeedBonus":"movement_speed","CastSpeedBonus":"cast_speed","HPPotionIncreasePercent":"potion_percent","MeleeCritical":"melee_critical_rate","RangeCritical":"ranged_critical_rate","DamageReductionPercent":"incoming_reduction","IgnoreMeleeDamageReductionPercent":"ignore_melee_damage_reduction","IgnoreRangeDamageReductionPercent":"ignore_ranged_damage_reduction","IgnoreMagicDamageReductionPercent":"ignore_magic_damage_reduction"}
+	var conditional_flat: Dictionary = {"UndeadAdditionalMaxDamage":["undead","undead_additional_max_damage"],"PVPDamageReduction":["pvp","pvp_damage_reduction"],"PVPMeleeAdditionDamage":["pvp","pvp_melee_damage"],"PVPRangeAdditionDamage":["pvp","pvp_ranged_damage"],"PVPMagicAdditionDamage":["pvp","pvp_magic_damage"]}
+	var conditional_percent: Dictionary = {"PVPDamageReductionPercent":["pvp","pvp_damage_reduction"],"PVPPierceDamageReductionPercent":["pvp","pvp_damage_reduction_ignore"]}
 	for bonus_id in bonus_ids:
 		var bonus: Dictionary = row("Bonus",int(bonus_id))
 		var type: Dictionary = row("BonusType",int(bonus.get("BonusTypeID",-1))) if not bonus.is_empty() else {}
@@ -516,13 +612,32 @@ func bonus_stats(bonus_ids: Array, context: Dictionary = {}) -> Dictionary:
 			continue
 		var name: String = effect.name
 		var raw: float = float(effect.raw_value)
+		effect["applied"] = false
 		if effect.unit in ["Percentage","ValuePercent","MillionPercentage"]:
 			effect["percentage_points"] = raw / 10000.0
 			effect["ratio"] = raw / 1000000.0
-		var conditional: bool = int(effect.application_type_id) != 0 or int(effect.application_target_id) != 0 or name.begins_with("PVP") or "Undead" in name or "By" in name or "OnTarget" in name
+		var application: bool = int(effect.application_type_id) != 0 or int(effect.application_target_id) != 0
+		var conditional_mapping: Array = []
+		var conditional_value: float = raw
+		var suffix: String = ":flat"
+		if not application and conditional_flat.has(name) and effect.unit == "Value":
+			conditional_mapping = conditional_flat[name]
+		elif not application and conditional_percent.has(name) and effect.unit in ["Percentage","ValuePercent","MillionPercentage"]:
+			conditional_mapping = conditional_percent[name]
+			conditional_value = raw / 10000.0
+			suffix = ":percent"
+		if not conditional_mapping.is_empty():
+			var condition: String = str(conditional_mapping[0])
+			var conditional_key: String = str(conditional_mapping[1])+suffix
+			conditional_stats[condition][conditional_key] = float(conditional_stats[condition].get(conditional_key,0.0))+conditional_value
+			effect.merge({"condition":condition,"stat_key":conditional_key,"value":conditional_value,"reason":"target_context_required"})
+			effects.append(effect)
+			continue
+		var conditional: bool = application or name.begins_with("PVP") or "Undead" in name or "By" in name or "OnTarget" in name
 		if conditional:
 			effect["reason"] = "conditional_effect_requires_consumer"
 			effects.append(effect)
+			unsupported.append(effect.duplicate(true))
 			continue
 		var key: String = ""
 		var value: float = raw
@@ -542,5 +657,6 @@ func bonus_stats(bonus_ids: Array, context: Dictionary = {}) -> Dictionary:
 		stats[key] = float(stats.get(key,0.0)) + value
 		effect["stat_key"] = key
 		effect["value"] = value
+		effect["applied"] = true
 		effects.append(effect)
-	return {"stats":stats,"effects":effects,"unsupported":unsupported}
+	return {"stats":stats,"conditional_stats":conditional_stats,"effects":effects,"unsupported":unsupported}

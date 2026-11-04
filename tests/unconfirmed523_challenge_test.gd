@@ -44,6 +44,7 @@ func _run() -> void:
 	var domain = Domain.new()
 	domain.setup(_fixture())
 	_exercise(domain)
+	_hp_crossings(domain)
 	var directory: String = OS.get_environment("TWILIGHT_SOURCE523_DIR")
 	if not directory.is_empty():
 		var source = Source.new()
@@ -225,6 +226,70 @@ func _exercise(domain) -> void:
 	context.time_policy.utc_offset_minutes = 0.5
 	_check(_start(domain, 5, context, state).get("error") == "challenge_clock_policy_invalid", "fractional timezone offset rejected")
 
+func _hp_crossings(domain) -> void:
+	var context: Dictionary = _context()
+	var state: Dictionary = _start(domain, 701, context, domain.initial_state()).state
+	var before: Dictionary = state.duplicate(true)
+	_check(domain.has_hp_section_crossing(101781, 200, 199, 303, state), "raw HP crosses66 without rounded-percent loss")
+	_check(not domain.has_hp_section_crossing(101781, 201, 200, 303, state), "raw HP still above66 does not cross early")
+	_check(domain.has_hp_section_crossing(101781, 199, 198, 300, state), "raw exact66 boundary inclusive")
+	_check(not domain.has_hp_section_crossing(101781, 198, 197, 300, state), "raw already-at-threshold does not cross again")
+	_check(domain.has_hp_section_crossing(101781, 5944751508129055, 5944751508129054, 9007199254740991, state), "bounded large HP crossproducts remain exact")
+	_check(domain.has_hp_section_crossing(101781, 200.0, 199.0, 303.0, state), "integral JSON HP supported")
+	_check(not domain.has_hp_section_crossing(999, 100, 0, 100, state), "unknown source NPC cannot award sections")
+	_check(not domain.has_hp_section_crossing(101781, 100, 0, 100, domain.initial_state()), "no active run has no pending HP sections")
+	_check(not domain.has_hp_section_crossing(101781, 100, 0, 100, {}), "invalid state cannot expose HP crossing")
+	var failed: Dictionary = state.duplicate(true)
+	failed.active.failed = true
+	_check(not domain.has_hp_section_crossing(101781, 100, 0, 100, failed), "failed run has no pending HP sections")
+	var invalid: Array = [
+		[50, 50, 100], [50, 60, 100], [100, 50, 0], [100, 50, -1],
+		[101, 50, 100], [100, 101, 100], [100, -1, 100], [-1, 0, 100],
+		[100, 50.5, 100], [100.5, 50, 101], [100, 50, 100.5],
+		[100, 50, 9007199254740992], [100, NAN, 100], [100, 50, INF],
+		[true, 0, 100], [100, "50", 100], [100, 50, null]]
+	for index: int in range(invalid.size()):
+		var values: Array = invalid[index]
+		_check(not domain.has_hp_section_crossing(101781, values[0], values[1], values[2], state), "invalid/healing HP observation ignored %d" % index)
+	_check(state == before, "HP observer predicate preserves complete input state")
+	var above: Dictionary = domain.event({"kind": "npc_hp", "npc_id": 101781, "previous_hp": 201, "hp": 200, "max_hp": 303,
+		"previous_hp_percent": 100, "hp_percent": 0, "event_id": "raw-above"}, context, state)
+	_check(bool(above.get("ok", false)) and above.state.active.extra_sections.is_empty(), "raw HP overrides rounded legacy percentages")
+	var malformed: Dictionary = domain.event({"kind": "npc_hp", "npc_id": 101781, "previous_hp": 100,
+		"previous_hp_percent": 100, "hp_percent": 0, "event_id": "raw-incomplete"}, context, state)
+	_check(bool(malformed.get("ok", false)) and malformed.state.active.extra_sections.is_empty(), "incomplete raw HP cannot fall back to legacy percentages")
+	var crossed: Dictionary = domain.event({"kind": "npc_hp", "npc_id": 101781, "previous_hp": 200, "hp": 199, "max_hp": 303, "event_id": "raw66"}, context, state)
+	_check(bool(crossed.get("ok", false)) and crossed.state.active.extra_sections == [61], "raw event awards exact66 section only")
+	_check(state == before, "raw HP event proposal preserves source state")
+	state = crossed.state
+	_check(not domain.has_hp_section_crossing(101781, 200, 199, 303, state), "already-earned crossing is filtered before World event emission")
+	_check(domain.event({"kind": "npc_hp", "npc_id": 101781, "previous_hp": 200, "hp": 199, "max_hp": 303, "event_id": "raw66"}, context, state).get("error") == "challenge_event_duplicate", "raw HP event replay identity rejected")
+	state = domain.event({"kind": "npc_hp", "npc_id": 101781, "previous_hp": 200, "hp": 199, "max_hp": 303, "event_id": "raw66-again"}, context, state).state
+	_check(state.active.extra_sections == [61], "different event identity cannot duplicate earned HP section")
+	_check(domain.has_hp_section_crossing(101781, 100, 99, 300, state), "pending exact33 crossing remains available")
+	state = domain.event({"kind": "npc_hp", "npc_id": 101781, "previous_hp": 100, "hp": 99, "max_hp": 300, "event_id": "raw33"}, context, state).state
+	_check(state.active.extra_sections == [61, 71], "raw event awards exact33 section")
+	_check(domain.has_hp_section_crossing(101781, 1, 0, 300, state), "raw lethal HP crossing preserves zero section")
+	state = domain.event({"kind": "npc_hp", "npc_id": 101781, "previous_hp": 1, "hp": 0, "max_hp": 300, "event_id": "raw0"}, context, state).state
+	state = _kill(domain, context, state, 1, 101781).state
+	_check(state.active.extra_sections == [61, 71, 81], "following exact-NPC kill cannot duplicate raw zero section")
+	_check(not domain.has_hp_section_crossing(101781, 300, 0, 300, state), "no event emitted after all matching sections earned")
+	var play: Dictionary = domain.propose({"op": "challenge_claim"}, context, state)
+	_check(bool(play.get("ok", false)) and play.rewards.size() == 5, "raw HP sections flow through normal completion reward transaction")
+	state = _start(domain, 701, context, domain.initial_state()).state
+	state = _kill(domain, context, state, 1, 101781).state
+	_check(state.active.extra_sections == [81], "exact-NPC kill retains zero-only fallback without HP history")
+	state = _start(domain, 701, context, domain.initial_state()).state
+	state = domain.event({"kind": "npc_hp", "npc_id": 101781, "previous_hp": 300, "hp": 0, "max_hp": 300, "event_id": "one-hit"}, context, state).state
+	_check(state.active.extra_sections == [61, 71, 81], "one real HP hit can cross every pending section")
+	var duplicate_fixture: Fixture = _fixture()
+	duplicate_fixture.data.ChallengeExtraRewardSection.append(duplicate_fixture.data.ChallengeExtraRewardSection[0].duplicate(true))
+	var duplicate_domain = Domain.new()
+	duplicate_domain.setup(duplicate_fixture)
+	state = _start(duplicate_domain, 701, context, duplicate_domain.initial_state()).state
+	state = duplicate_domain.event({"kind": "npc_hp", "npc_id": 101781, "previous_hp": 300, "hp": 0, "max_hp": 300, "event_id": "duplicate-section"}, context, state).state
+	_check(state.active.extra_sections == [61, 71, 81] and duplicate_domain.validate_state(state).is_empty(), "duplicate source section ID awards once")
+
 func _source_contract(domain, source) -> void:
 	var context: Dictionary = _context()
 	var initial: Dictionary = domain.initial_state()
@@ -283,11 +348,45 @@ func _source_contract(domain, source) -> void:
 		_check(bool(claimed.get("ok", false)) and claimed.rewards.size() == 2 and int(claimed.rewards[0].amount) == 10000000, "source active completion exp10M andbox %d" % id)
 		var instant: Dictionary = domain.propose({"op": "challenge_instant", "challenge_id": id}, context, initial)
 		_check(bool(instant.get("ok", false)) and instant.costs == [{"kind": "currency", "id": 764, "amount": 3}] and instant.rewards.size() == 2, "source exact instant price completion-only %d" % id)
+		_source_hp_sections(domain, source, id, context, started.state, metadata.play_reward_sections)
 	_check(active_count == 6, "only six renewal challenges active")
 	_check(domain.view(_context(), initial).rows.size() == 69, "all69 visible without mutating state")
 	_check(int(domain.metadata(5).goals[0].GoalClassID) == 858 and int(domain.metadata(8).goals[0].Amount) == 5 and int(domain.metadata(14).goals[0].GoalTypeID) == 30, "Baphomet Ghast prison source identity retained")
 	var rejected: Dictionary = domain.propose({"op": "challenge_start", "challenge_id": 5, "local_policy": true}, _context(), initial)
 	_check(rejected.get("error") == "challenge_source_inactive", "inactive historical challenge never enabled by local policy")
+
+func _source_hp_sections(domain, source, challenge_id: int, context: Dictionary, state: Dictionary, sections: Array) -> void:
+	if sections.is_empty():
+		return
+	var npcs: Dictionary = {}
+	var expected_ids: Array = []
+	for section: Dictionary in sections:
+		npcs[int(section.NpcClassID)] = true
+		expected_ids.append(int(section.ID))
+	var before: Dictionary = state.duplicate(true)
+	var staged: Dictionary = state
+	_check(not domain.has_hp_section_crossing(999, 303, 0, 303, state), "source play sections reject arbitrary local NPC %d" % challenge_id)
+	for npc_id: int in npcs:
+		_check(domain.has_hp_section_crossing(npc_id, 303, 0, 303, staged), "source NPC has pending raw HP sections %d:%d" % [challenge_id, npc_id])
+		var observed: Dictionary = domain.event({"kind": "npc_hp", "npc_id": npc_id, "previous_hp": 303, "hp": 0, "max_hp": 303,
+			"event_id": "source-hp:%d:%d" % [challenge_id, npc_id]}, context, staged)
+		_check(bool(observed.get("ok", false)), "source raw HP event accepted %d:%d" % [challenge_id, npc_id])
+		if not bool(observed.get("ok", false)):
+			return
+		staged = observed.state
+		_check(not domain.has_hp_section_crossing(npc_id, 303, 0, 303, staged), "source earned NPC sections filter further HP events %d:%d" % [challenge_id, npc_id])
+	_check(state == before, "source raw HP event transaction preserves input %d" % challenge_id)
+	var earned_ids: Array = staged.active.extra_sections.duplicate()
+	expected_ids.sort()
+	earned_ids.sort()
+	_check(earned_ids == expected_ids, "all original HP sections earned from matching source NPCs %d" % challenge_id)
+	var extra_count: int = 0
+	for link: Dictionary in source.rows("ChallengeExtraReward"):
+		if int(link.SectionID) in expected_ids:
+			extra_count += 1
+	staged = _kill(domain, context, staged, 0).state
+	var claimed: Dictionary = domain.propose({"op": "challenge_claim"}, context, staged)
+	_check(bool(claimed.get("ok", false)) and claimed.rewards.size() == 2 + extra_count, "all source extra rewards join normal completion once %d" % challenge_id)
 
 func _fixture() -> Fixture:
 	var fixture: Fixture = Fixture.new()

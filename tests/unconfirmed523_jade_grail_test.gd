@@ -51,6 +51,7 @@ func _run() -> void:
 		_check(actual.rows("ItemGraceSetBonus").size() == 112, "source523 all112 set effect rows")
 		_check(actual.rows("ItemGracePrefixForSet").size() == 84, "source523 all84 prefix requirements")
 		_check(actual_domain._jade.size() == 12, "source523 exactly12 rechargeable items")
+		_audit_source_effects(actual_domain)
 		if OS.get_environment("TWILIGHT_523_ALLOW_TEST_SOURCE") == "1" and ResourceLoader.exists("res://scripts/unconfirmed523/source523.gd"):
 			var facade_script: GDScript = load("res://scripts/unconfirmed523/source523.gd")
 			var facade = facade_script.new()
@@ -68,6 +69,77 @@ func _run() -> void:
 	else:
 		printerr("UNCONFIRMED523_JADE_GRAIL_FAILED: " + ", ".join(failures))
 		quit(1)
+
+func _audit_source_effects(domain) -> void:
+	var all_links: Array = domain._rows("ItemGraceBonus").duplicate(true)
+	all_links.append_array(domain._rows("ItemGraceSetBonus"))
+	for link: Dictionary in domain._rows("ItemBonus"):
+		if int(link.get("ItemClassID",0)) in [338438,338448,338458] and bool(link.get("IsPossession",false)): all_links.append(link)
+	var ids: Dictionary = {}
+	var families: Dictionary = {}
+	var zero_count: int = 0
+	for link: Dictionary in all_links:
+		var id: int = int(link.get("BonusID",0))
+		if id == 0: zero_count += 1; continue
+		ids[id] = true
+		var raw: Dictionary = domain._row("Bonus",id)
+		var type_id: int = int(raw.get("BonusTypeID",0))
+		var unit: int = int(domain._row("BonusType",type_id).get("UnitID",0))
+		var output: Dictionary = {"stats":{},"conditional_stats":{"undead":{},"pvp":{}},"effects":[],"unsupported":[]}
+		domain._add_effect(output,id,{}, {"origin":"raw_audit"})
+		_check(output.effects.size() == 1 and int(output.effects[0].raw_value) == int(raw.get("Value",0)) and int(output.effects[0].unit_id) == unit,"source effect preserves raw value and unit " + str(id))
+		_check(int(raw.get("BonusApplicationTypeID",0)) == 0 and int(raw.get("BonusApplicationTargetID",0)) == 0 and domain.STAT_KEYS.has(type_id) or type_id == 12338,"source full grail application and type audit " + str(id))
+		if type_id in [5681,5691,5701,7304,7818,11134]:
+			if not families.has(type_id): families[type_id] = []
+			families[type_id].append(id)
+			var effect: Dictionary = output.effects[0]
+			if type_id in [7304,7818,11134]:
+				_check(output.stats.is_empty() and not effect.applied and str(effect.reason).ends_with("_context_required") and not output.conditional_stats[effect.condition].is_empty(),"source target-scoped effect never leaks to ordinary stats " + str(id))
+			else:
+				_check(unit == 3 and int(raw.Value) == 10000 and is_equal_approx(float(effect.value),1.0),"source channel percentage raw10000 is one percentage point " + str(id))
+	_check(all_links.size() == 152 and zero_count == 6 and ids.size() == 146,"source all152grail links and146nonzero IDs covered including sixempty absolute qualifications")
+	var expected: Dictionary = {5681:[2251904],5691:[2251934],5701:[2251964],7304:[2252034,2252044,2252054],7818:[],11134:[]}
+	for id: int in range(2250064,2250204,10): expected[7818].append(id)
+	for id: int in range(2250204,2250334,10): expected[11134].append(id)
+	expected[11134].append(2250374)
+	for type_id: int in expected:
+		families[type_id].sort(); expected[type_id].sort()
+		_check(families[type_id] == expected[type_id],"source complete conditional family exact IDs " + str(type_id))
+	var reachable: Dictionary = {}
+	var passes: Dictionary = {}
+	for tier: Dictionary in domain._rows("PassSystemLevel"):
+		for field: String in ["RewardID","PremiumRewardID"]:
+			var reward: Dictionary = domain._row("Reward",int(tier.get(field,0)))
+			if int(reward.get("RewardTypeID",0)) != 184: continue
+			reachable[int(reward.ID)] = int(reward.RewardClassID)
+			passes[int(tier.PassSystemID)] = true
+	var hp_ids: Array = []; var exp_count: int = 0; var unique_bonus: Dictionary = {}
+	for id: int in reachable:
+		var bonus: Dictionary = domain._row("Bonus",int(reachable[id]))
+		unique_bonus[int(reachable[id])] = true
+		var type_id: int = int(bonus.get("BonusTypeID",0))
+		_check(int(bonus.get("BonusApplicationTypeID",0)) == 0 and int(bonus.get("BonusApplicationTargetID",0)) == 0 and type_id in [17,133],"source reachable pass184 has no unresolved condition " + str(id))
+		if type_id == 17:
+			hp_ids.append(int(bonus.ID))
+			_check(int(bonus.Value) == 30000 and int(domain._row("BonusType",type_id).UnitID) == 1,"source pass HP bonus is literal30000HP " + str(id))
+		else:
+			exp_count += 1
+			_check(int(bonus.Value) in [20000,30000,50000,100000] and int(domain._row("BonusType",type_id).UnitID) == 3,"source pass XP bonus uses exact percentage units " + str(id))
+	hp_ids.sort()
+	_check(reachable.size() == 59 and passes.size() == 29 and unique_bonus.size() == 59 and exp_count == 55 and hp_ids == [2133354,2133364,2133834,2133844],"source complete59reachablepass184audit55EXPand4HP across29passes")
+	_check(not reachable.has(381814) and not reachable.has(381824) and not reachable.has(408318),"source orphaned Reward184 rows are not claimed reachable")
+	for id: int in passes:
+		_check(int(domain._row("PassSystem",id).get("PassSystemTypeID",0)) == 12,"source reachable bonus belongs to season pass " + str(id))
+	var direct_xp: Dictionary = {}
+	for link: Dictionary in domain._rows("QuestReward"):
+		var reward: Dictionary = domain._row("Reward",int(link.get("RewardID",0)))
+		if int(reward.get("RewardTypeID",0)) != 172: continue
+		direct_xp[int(reward.ID)] = true
+		_check(int(domain._row("PassSystem",int(reward.get("RewardClassID",0))).get("PassSystemTypeID",0)) == 12 and int(reward.get("Amount",0)) > 0,"source exact direct pass XP target and amount " + str(reward.ID))
+	var all_xp: Dictionary = {}
+	for reward: Dictionary in domain._rows("Reward"):
+		if int(reward.get("RewardTypeID",0)) == 172: all_xp[int(reward.ID)] = true
+	_check(all_xp.size() == 894 and direct_xp.size() == 894 and all_xp == direct_xp,"all894rawReward172 leaves have directQuestRewardedges for future caller port")
 
 func _exercise(domain, scope: String) -> void:
 	var state: Dictionary = domain.initial_state()

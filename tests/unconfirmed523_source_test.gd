@@ -20,7 +20,7 @@ func run() -> void:
 		"ItemClass":[{"ID":26,"Name":"fixture coin","TestItem":false},{"ID":7,"Name":"fixture dated item","TestItem":false},{"ID":8,"Name":"fixture class item","TestItem":false,"LevelLimitMin":10},{"ID":9,"Name":"fixture DateTime item","TestItem":false}],
 		"ItemClassLimit":[{"ItemClassID":8,"ClassID":2}],
 		"ItemBonus":[{"ID":1,"ItemClassID":7,"BonusID":8},{"ID":2,"ItemClassID":9,"BonusID":10}],
-		"RewardType":[{"ID":1,"Name":"Exp"},{"ID":2,"Name":"Item"},{"ID":5,"Name":"Einasad"},{"ID":6,"Name":"Gem"},{"ID":101,"Name":"RandomReward"},{"ID":111,"Name":"SelectReward"},{"ID":124,"Name":"ComplexReward"},{"ID":172,"Name":"PassSystemSeasonPassExp"},{"ID":184,"Name":"Bonus"}],
+		"RewardType":[{"ID":1,"Name":"Exp"},{"ID":2,"Name":"Item"},{"ID":5,"Name":"Einasad"},{"ID":6,"Name":"Gem"},{"ID":91,"Name":"NoReward"},{"ID":101,"Name":"RandomReward"},{"ID":111,"Name":"SelectReward"},{"ID":124,"Name":"ComplexReward"},{"ID":172,"Name":"PassSystemSeasonPassExp"},{"ID":184,"Name":"Bonus"}],
 		"Reward":[
 			{"ID":1,"RewardTypeID":2,"RewardClassID":26,"Amount":3,"ItemBlessCodeID":2,"Enchant":4},
 			{"ID":2,"RewardTypeID":5,"RewardClassID":1859,"Amount":500},
@@ -37,15 +37,20 @@ func run() -> void:
 			{"ID":13,"RewardTypeID":6,"RewardClassID":777,"Amount":7},
 			{"ID":14,"RewardTypeID":1,"RewardClassID":281,"Amount":1000},
 			{"ID":15,"RewardTypeID":184,"RewardClassID":1,"Amount":1},
-			{"ID":16,"RewardTypeID":2,"RewardClassID":26,"Amount":1,"UseImmediately":true}],
+			{"ID":16,"RewardTypeID":2,"RewardClassID":26,"Amount":1,"UseImmediately":true},
+			{"ID":17,"RewardTypeID":91,"RewardClassID":26,"Amount":1},
+			{"ID":18,"RewardTypeID":111,"RewardClassID":12,"Amount":0},
+			{"ID":19,"RewardTypeID":101,"RewardClassID":34,"Amount":1},
+			{"ID":20,"RewardTypeID":124,"RewardClassID":23,"Amount":0},
+			{"ID":21,"RewardTypeID":2,"RewardClassID":26,"Amount":1,"RewardEnhancementTypeID":11}],
 		"RewardAttribute":[],
-		"SelectReward":[{"ID":11,"SelectMaxCount":1}],
-		"SelectRewardEntity":[{"ID":101,"SelectRewardID":11,"RewardID":1},{"ID":102,"SelectRewardID":11,"RewardID":2}],
-		"ComplexRewardGroup":[{"ID":21},{"ID":22}],
-		"ComplexReward":[{"ID":201,"ComplexRewardGroupID":21,"ComplexRewardTypeID":4,"MaxCount":1},{"ID":202,"ComplexRewardGroupID":21,"ComplexRewardTypeID":14,"MaxCount":1},{"ID":203,"ComplexRewardGroupID":22,"ComplexRewardTypeID":4,"MaxCount":2}],
-		"ComplexRewardEntity":[{"ID":301,"ComplexRewardID":201,"RewardID":1},{"ID":302,"ComplexRewardID":202,"RewardID":2},{"ID":303,"ComplexRewardID":203,"RewardID":1},{"ID":304,"ComplexRewardID":203,"RewardID":6}],
-		"RandomReward":[{"ID":31},{"ID":32},{"ID":33}],
-		"RandomRewardEntityView":[{"RandomRewardID":31,"RewardID":1},{"RandomRewardID":31,"RewardID":2},{"RandomRewardID":32,"RewardID":8,"Probability":1000000},{"RandomRewardID":33,"RewardID":1,"Probability":0}],
+		"SelectReward":[{"ID":11,"SelectMaxCount":1},{"ID":12,"SelectMaxCount":1}],
+		"SelectRewardEntity":[{"ID":101,"SelectRewardID":11,"RewardID":1},{"ID":102,"SelectRewardID":11,"RewardID":2},{"ID":103,"SelectRewardID":12,"RewardID":3},{"ID":104,"SelectRewardID":12,"RewardID":1}],
+		"ComplexRewardGroup":[{"ID":21},{"ID":22},{"ID":23}],
+		"ComplexReward":[{"ID":201,"ComplexRewardGroupID":21,"ComplexRewardTypeID":4,"MaxCount":1},{"ID":202,"ComplexRewardGroupID":21,"ComplexRewardTypeID":14,"MaxCount":1},{"ID":203,"ComplexRewardGroupID":22,"ComplexRewardTypeID":4,"MaxCount":2},{"ID":204,"ComplexRewardGroupID":23,"ComplexRewardTypeID":24,"MaxCount":1}],
+		"ComplexRewardEntity":[{"ID":301,"ComplexRewardID":201,"RewardID":1},{"ID":302,"ComplexRewardID":202,"RewardID":2},{"ID":303,"ComplexRewardID":203,"RewardID":1},{"ID":304,"ComplexRewardID":203,"RewardID":6},{"ID":305,"ComplexRewardID":204,"RewardID":3,"Probability":1000000}],
+		"RandomReward":[{"ID":31},{"ID":32},{"ID":33},{"ID":34}],
+		"RandomRewardEntityView":[{"RandomRewardID":31,"RewardID":1},{"RandomRewardID":31,"RewardID":2},{"RandomRewardID":32,"RewardID":8,"Probability":1000000},{"RandomRewardID":33,"RewardID":1,"Probability":0},{"RandomRewardID":34,"RewardID":3}],
 		"Bonus":[{"ID":1,"BonusTypeID":1,"Value":5},{"ID":2,"BonusTypeID":133,"Value":125000},{"ID":3,"BonusTypeID":301,"Value":4},{"ID":4,"BonusTypeID":7304,"Value":9},{"ID":5,"BonusTypeID":5031,"Value":3},{"ID":6,"BonusTypeID":1,"Value":100,"BonusApplicationTypeID":2},{"ID":7,"BonusTypeID":17,"Value":25},{"ID":8,"BonusTypeID":492,"Value":2026010100},{"ID":9,"BonusTypeID":21,"Value":3},{"ID":10,"BonusTypeID":492,"Value":0,"BonusApplicationTypeID":298,"BonusApplicationTargetID":1}],
 		"BonusApplicationType":[{"ID":298,"Name":"DateTime"}],
 		"BonusType":[{"ID":1,"Name":"MeleeDamage","UnitID":1},{"ID":17,"Name":"HPPlus","UnitID":1},{"ID":21,"Name":"ArmorClass","UnitID":1},{"ID":133,"Name":"ExperienceAdditionPercent","UnitID":3},{"ID":301,"Name":"PVPDamageReduction","UnitID":1},{"ID":7304,"Name":"UndeadAdditionalMaxDamage","UnitID":1},{"ID":5031,"Name":"SelectRewardClassID","UnitID":10454},{"ID":492,"Name":"DeleteTime","UnitID":162}],
@@ -54,6 +59,8 @@ func run() -> void:
 		"DateTimes_Korean":[{"ID":1,"Year":2026,"Month":1,"Day":1,"Hour":9,"Minute":0},{"ID":2,"Year":2026,"Month":2,"Day":30,"Hour":1,"Minute":0}],
 		"Duplicate":[{"ID":1,"Value":1},{"ID":1,"Value":2},{"ID":2,"Value":3}]
 	}
+	tables.BonusType.append_array([{"ID":140,"Name":"CastSpeedBonus","UnitID":3},{"ID":4581,"Name":"PierceDamageReduction","UnitID":1},{"ID":5681,"Name":"IgnoreMeleeDamageReductionPercent","UnitID":3},{"ID":7818,"Name":"PVPDamageReductionPercent","UnitID":3}])
+	tables.Bonus.append_array([{"ID":11,"BonusTypeID":140,"Value":100000},{"ID":12,"BonusTypeID":4581,"Value":3},{"ID":13,"BonusTypeID":5681,"Value":150000},{"ID":14,"BonusTypeID":7818,"Value":50000},{"ID":15,"BonusTypeID":7818,"Value":100000,"BonusApplicationTypeID":2}])
 	for table in tables:
 		var file: FileAccess = FileAccess.open(directory.path_join(str(table)+".json"),FileAccess.WRITE)
 		file.store_string("\ufeff"+JSON.stringify({"rows":tables[table]}))
@@ -98,6 +105,17 @@ func run() -> void:
 	var pass_bonus: Dictionary = source.resolve_reward(15,pass_context)
 	check(pass_bonus.ok and pass_bonus.rewards[0].kind == "bonus" and pass_bonus.rewards[0].pass_id == 12 and pass_bonus.rewards[0].expires_at == 2000,"pass bonus leaf preserves season expiry")
 	check(not source.resolve_reward(16,context).ok,"immediate-use item requires a host consumer")
+	check(not source.resolve_reward(21,context).ok,"paid quest tier is never confused with equipment enchant")
+	var no_reward: Dictionary = source.resolve_reward(17,context)
+	check(no_reward.ok and no_reward.rewards.is_empty() and no_reward.no_reward_ids == [17],"NoReward display reference never grants its referenced item")
+	var outer: Dictionary = source.reward_choices(18,context)
+	check(outer.ok and outer.choices.size() == 1 and outer.choices[0].key == "selection.18","unselected nested branch asks only its outer choice")
+	var selected: Dictionary = source.reward_choices(18,context,{18:[103]})
+	check(selected.choices.size() == 1 and selected.choices[0].key == "selection.3","explicit branch reveals only its own nested choice")
+	check(source.reward_choices(18,context,{18:[104]}).choices.is_empty(),"unselected sibling never requests a choice")
+	check(not source.reward_choices(18,context,{18:[999]}).ok,"preview validates selection IDs")
+	check(source.reward_choices(19,context).choices.is_empty() and source.reward_choices(19,context).deferred_random.size() == 1,"random preview defers branch-specific choices without rolling")
+	check(source.reward_choices(20,context).choices.is_empty() and source.reward_choices(20,context).deferred_random.size() == 1,"weighted complex preview defers branch-specific choices")
 	check(not source.resolve_reward(3,context).ok,"selection never grants every option implicitly")
 	check(source.resolve_reward(3,context,{3:[102]}).rewards[0].kind == "blessing","explicit selection entity")
 	check(not source.resolve_reward(3,context,{3:[101,102]}).ok,"selection maximum enforced")
@@ -121,8 +139,14 @@ func run() -> void:
 	check(bonuses.stats["melee_damage:flat"] == 5 and bonuses.stats["max_hp:flat"] == 25,"unconditional native bonus keys")
 	check(bonuses.stats["experience_bonus:percent"] == 12.5,"scaled percent raw/10000 yields percentage points")
 	check(source.bonus_stats([9]).stats["ac:flat"] == -3,"source AC minus-prefix maps to signed native AC")
-	check(bonuses.unsupported.size() == 1 and bonuses.unsupported[0].unit == "RewardID","reward reference is not mistaken for numeric stat")
+	check(bonuses.unsupported.size() == 2 and bonuses.unsupported[0].unit == "RewardID","reward references and unresolved application contexts retain unsupported metadata")
 	check(bonuses.effects.size() == 6,"conditional PvP/undead/application effects preserved without unconditional addition")
+	check(bonuses.conditional_stats.pvp["pvp_damage_reduction:flat"] == 4 and bonuses.conditional_stats.undead["undead_additional_max_damage:flat"] == 9,"recognized target effects have separate conditional consumers")
+	check(not bonuses.stats.has("pvp_damage_reduction:flat") and not bonuses.stats.has("undead_additional_max_damage:flat"),"target effects never enter unconditional totals")
+	var combat: Dictionary = source.bonus_stats([11,12,13,14,15],{"pvp":true,"undead":true})
+	check(combat.stats["cast_speed:percent"] == 10 and combat.stats["damage_reduction_ignore:flat"] == 3 and combat.stats["ignore_melee_damage_reduction:percent"] == 15,"source combat keys preserve flat and scaled percent units")
+	check(combat.conditional_stats.pvp["pvp_damage_reduction:percent"] == 5 and not combat.stats.has("pvp_damage_reduction:percent"),"declared PvP context still cannot leak target stats into global totals")
+	check(combat.unsupported.size() == 1 and combat.unsupported[0].bonus_id == 15,"unresolved application condition is not treated as unconditional PvP bonus")
 	var invalid_zip = Source.new()
 	check(not invalid_zip.load_zip(directory.path_join("Reward.json")).ok,"nonmatching ZIP size rejected")
 	var actual_directory: String = OS.get_environment("TWILIGHT_523_SOURCE_DIR")
@@ -136,6 +160,32 @@ func run() -> void:
 		check(actual.region_allowed(512,{"service_region":"KR","world_no":1}),"actual ServerLimit512 KR world1")
 		var actual_bonus: Dictionary = actual.bonus_stats([22])
 		check(actual_bonus.stats.get("con:flat",0) == 30,"actual Bonus22 resolves BonusType45 Constitution")
+		var empty_count: int = 0
+		var pass_bonus_ids: Array = []
+		var actual_context: Dictionary = {"now":1793800800,"level":89,"class_id":1,"service_region":"KR","world_no":1,"pass_id":724,"pass_expires_at":1796392800,"twilight_policy":{"random_reward_weight_mode":"equal_estimate"}}
+		for reward: Dictionary in actual.rows("Reward"):
+			if int(reward.RewardTypeID) == 91:
+				var empty_result: Dictionary = actual.resolve_reward(int(reward.ID),actual_context)
+				if empty_result.ok and empty_result.rewards.is_empty(): empty_count += 1
+			if int(reward.RewardTypeID) == 184: pass_bonus_ids.append(int(reward.RewardClassID))
+		check(empty_count == 15,"all fifteen actual NoReward rows deliver no item, currency, or invented effect")
+		var all_pass_bonuses: Dictionary = actual.bonus_stats(pass_bonus_ids)
+		check(pass_bonus_ids.size() == 62 and all_pass_bonuses.unsupported.is_empty() and all_pass_bonuses.effects.size() == 62,"all sixty-two source pass bonuses resolve through native stat units")
+		var planner_count: int = 0
+		for reward: Dictionary in actual.rows("Reward"):
+			if int(reward.RewardTypeID) in [101,111,124]:
+				var plan: Dictionary = actual.reward_choices(int(reward.ID))
+				if plan.ok: planner_count += 1
+		check(planner_count == 1634,"whole-source nested planner accepts 1634 graphs and retains sole unknown multi-draw Test graph rejection")
+		var audit_directory: String = OS.get_environment("TWILIGHT_523_AUDIT_DIR")
+		if not audit_directory.is_empty():
+			_write_coverage(actual,actual_context,audit_directory,"after")
+			var baseline_path: String = OS.get_environment("TWILIGHT_523_BASELINE_SCRIPT")
+			if not baseline_path.is_empty():
+				var baseline_script: GDScript = load(baseline_path)
+				var baseline = baseline_script.new()
+				check(baseline.configure_directory(actual_directory).ok,"read-only frozen HEAD baseline loaded for actual before/after ID audit")
+				_write_coverage(baseline,actual_context,audit_directory,"before")
 	var actual_zip: String = OS.get_environment("TWILIGHT_523_SOURCE_ZIP")
 	if not actual_zip.is_empty():
 		var packed = Source.new()
@@ -149,3 +199,41 @@ func run() -> void:
 			check(not installed.install_zip(actual_zip).ok,"loaded source install requires restart")
 	print("UNCONFIRMED523 SOURCE: %d checks, %d failures" % [checks,failures])
 	quit(1 if failures else 0)
+
+func _write_coverage(source: Object, context: Dictionary, directory: String, phase: String) -> void:
+	# Read-only audit: no inventory, live ledger, or caller RNG is mutated.
+	# Explicit first-option fixture selections assess the resolver; the report
+	# keeps their policy separate from source-supported/no-selection outcomes.
+	var choices: Dictionary = {}
+	for reward: Dictionary in source.rows("Reward"):
+		if int(reward.RewardTypeID) == 111:
+			var entities: Array = source.find_rows("SelectRewardEntity","SelectRewardID",int(reward.RewardClassID))
+			if not entities.is_empty(): choices[int(reward.ID)] = [int(entities[0].ID)]
+	for group: Dictionary in source.rows("ComplexReward"):
+		if int(group.ComplexRewardTypeID) == 14:
+			var entities: Array = source.find_rows("ComplexRewardEntity","ComplexRewardID",int(group.ID))
+			if not entities.is_empty(): choices[int(group.ID)] = [int(entities[0].ID)]
+	var allowed: Array = []
+	var blocked: Dictionary = {}
+	var per_type: Dictionary = {}
+	for reward: Dictionary in source.rows("Reward"):
+		var id: int = int(reward.ID)
+		var ctx: Dictionary = context.duplicate(true)
+		# Source class restrictions are assessed separately, never discarded.
+		if int(reward.get("CharacterClassID",0)) != 0: ctx.class_id = int(reward.CharacterClassID)
+		var rng := RandomNumberGenerator.new()
+		rng.seed = 523 + id
+		var resolved: Dictionary = source.resolve_reward(id,ctx,choices,rng)
+		var type_key: String = str(int(reward.RewardTypeID))
+		if not per_type.has(type_key): per_type[type_key] = {"allowed_ids":[],"blocked_ids":[]}
+		if resolved.ok:
+			allowed.append(id); per_type[type_key].allowed_ids.append(id)
+		else:
+			var error: String = str(resolved.get("error","unknown_error"))
+			if not blocked.has(error): blocked[error] = []
+			blocked[error].append(id); per_type[type_key].blocked_ids.append(id)
+	var file: FileAccess = FileAccess.open(directory.path_join("actual_resolver_coverage_"+phase+".json"),FileAccess.WRITE)
+	check(file != null,"private actual source coverage audit writable")
+	if file != null:
+		file.store_string(JSON.stringify({"source_sha256":Source.SOURCE_SHA256,"phase":phase,"method":"Every Reward row, exact class context, source eligibility retained, explicit first-option fixture selection, deterministic per-root RNG, declared equal_estimate TWILIGHT policy. Resolving one selected outcome does not prove every optional/random branch claimable.","context":context,"total":source.rows("Reward").size(),"allowed_ids":allowed,"blocked_by_error":blocked,"per_type":per_type},"\t")+"\n")
+		file.close()

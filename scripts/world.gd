@@ -948,8 +948,13 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	var hit_context: Dictionary=context.duplicate(true)
 	hit_context.flat_reduction=maxi(0,before_reduction-adjusted_damage)
 	hit_context.pvp=bool(target.get_meta("is_player_combatant",false))
+	hit_context.undead=target.is_undead()
 	if not hit_context.has("final_blow"):hit_context.final_blow=growth.guardian_combat.roll(growth.guardian_combat.final_blow_chance())
 	if not hit_context.has("percent_reduction"):hit_context.percent_reduction=float(target.get_meta("source_received_reduction_percent",0))
+	var source_combat: Dictionary=unconfirmed523.combat_context(kind,hit_context)
+	if int(source_combat.undead_max_damage)>0:
+		adjusted_damage+=rng.randi_range(1,int(source_combat.undead_max_damage))
+	hit_context=unconfirmed523.outgoing_context(kind,hit_context)
 	adjusted_damage=growth.guardian_combat.outgoing(target,adjusted_damage,critical,kind,hit_context)
 	var available_hp: int=maxi(0,target.hp-stolen)
 	var available_mp: int=target.mp
@@ -1904,6 +1909,36 @@ func _set_click_destination(target: Vector2) -> void:
 	elif field_map is NativePngField:
 		player.clear_click_path()
 		hud.show_message("우회 경로 없음 %s (%d,%d)" % [active_map_id,roundi(target.x),roundi(target.y)])
+
+func _unconfirmed_monster_entered(node: Node) -> void:
+	if node is TwilightMonster:
+		# Population setup runs immediately after add/reparent. Observe its final
+		# HP and source identity after that setup, including each pooled life.
+		_watch_unconfirmed_monster.call_deferred(weakref(node))
+
+func _watch_unconfirmed_monster(reference: WeakRef) -> void:
+	var monster: TwilightMonster = reference.get_ref() as TwilightMonster
+	if not is_instance_valid(monster) or monster.get_parent() != monsters_root or not is_instance_valid(monster.hp_bar): return
+	var callback: Callable = monster.get_meta("unconfirmed523_hp_callback",Callable())
+	if not callback.is_valid():
+		callback = _unconfirmed_monster_hp_changed.bind(reference)
+		monster.set_meta("unconfirmed523_hp_callback",callback)
+	if not monster.hp_bar.value_changed.is_connected(callback):
+		monster.hp_bar.value_changed.connect(callback)
+	monster.set_meta("unconfirmed523_hp",{"life":monster.life_id,"npc":monster.source_m_npc_id,"maximum":monster.max_hp,"hp":monster.hp,"serial":0})
+
+func _unconfirmed_monster_hp_changed(_value: float, reference: WeakRef) -> void:
+	var monster: TwilightMonster = reference.get_ref() as TwilightMonster
+	if not is_instance_valid(monster) or monster.get_parent() != monsters_root: return
+	var before: Dictionary = monster.get_meta("unconfirmed523_hp",{})
+	var observed: Dictionary = {"life":monster.life_id,"npc":monster.source_m_npc_id,"maximum":monster.max_hp,"hp":monster.hp,"serial":int(before.get("serial",0))+1}
+	monster.set_meta("unconfirmed523_hp",observed)
+	# Setup, healing and changes to maximum HP are not threshold damage.
+	if before.is_empty() or before.life != observed.life or before.npc != observed.npc or before.maximum != observed.maximum or observed.npc <= 0 or observed.hp >= before.hp: return
+	if not unconfirmed523.domains.has("challenge") or not unconfirmed523.state.domains.has("challenge"): return
+	var domain = unconfirmed523.domains.challenge
+	if not domain.has_hp_section_crossing(int(observed.npc),int(before.hp),int(observed.hp),int(observed.maximum),unconfirmed523.state.domains.challenge): return
+	unconfirmed523.record_event("npc_hp",{"npc_id":observed.npc,"previous_hp":before.hp,"hp":observed.hp,"max_hp":observed.maximum,"event_id":"hp:%s:%d:%d:%d"%[active_map_id,monster.get_instance_id(),monster.life_id,observed.serial]})
 
 func _spawn_monsters(count: int) -> void:
 	var spawnable: Array = MONSTER_CATALOG.spawnable_records(monster_db)
@@ -3129,6 +3164,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			_refresh_combat_hud()
 			return
 	var guardian_context: Dictionary={"pvp":bool(attacker.get_meta("is_player_combatant",false)),"spell_tags":attacker.get_meta("source_spell_tags",[])}
+	reduced=unconfirmed523.incoming_damage(reduced,normalized_type,guardian_context)
 	var guardian_result: Dictionary=growth.guardian_combat.incoming(attacker,normalized_type,reduced,critical,guardian_context)
 	if guardian_result.blocked:
 		player.show_miss();_refresh_combat_hud();return
@@ -5034,6 +5070,9 @@ func _load_game(quiet: bool) -> void:
 	consumable_service.call("migrate_legacy_elemental")
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
+	# Source possession/pass bonuses must use the restored ownership and
+	# character before the saved HP is clamped to its effective maximum.
+	unconfirmed523.rebuild()
 	_invalidate_equipment_static()
 	_restore_equipped_visuals()
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
@@ -7956,6 +7995,7 @@ func _setup_field_services() -> void:
 	y_sort_enabled = true
 	monsters_root.y_sort_enabled = true
 	monsters_root.z_index = 0
+	monsters_root.child_entered_tree.connect(_unconfirmed_monster_entered)
 	player.z_index = 0
 	$Companion.z_index = 0
 	field_population = FIELD_POPULATION.new()

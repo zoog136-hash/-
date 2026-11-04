@@ -13,6 +13,9 @@ var save_blocked: bool = false
 var busy: bool = false
 var totals: Dictionary = {}
 var effect_details: Dictionary = {}
+var conditional_totals: Dictionary = {"undead":{},"pvp":{}}
+var _prepared_rewards: Dictionary = {}
+var _committing_plan: String = ""
 var _expiry_signature: String = ""
 var _event_nonce: String = Crypto.new().generate_random_bytes(12).hex_encode()
 var _last_survival_tick: String = ""
@@ -21,7 +24,7 @@ var _source_configured: bool = false
 var policy_problem: String = ""
 const POLICY_PATH: String = "res://data/unconfirmed523/twilight_policy.json"
 var test_now: int = 0
-var policy: Dictionary = {"luckybag_random_mode":"source_weights", "random_reward_weight_mode":"equal_estimate", "attendance_blessing_base":200}
+var policy: Dictionary = {"luckybag_random_mode":"source_weights", "random_reward_weight_mode":"equal_estimate", "attendance_blessing_base":200,"conditional_percent_mode":"percentage_points_estimate","undead_damage_mode":"uniform_1_to_max_estimate","luckybag_final_scope":"source_item","luckybag_final_completion":"once"}
 
 func configure(host: Node) -> void:
 	world = host
@@ -68,6 +71,8 @@ func check_load(data: Dictionary) -> String:
 	return validate(data.get(SAVE_KEY,fresh()))
 
 func restore(data: Dictionary) -> void:
+	_prepared_rewards.clear()
+	_committing_plan = ""
 	var next: Variant = data.get(SAVE_KEY,fresh())
 	problem = validate(next)
 	if not problem.is_empty(): save_blocked = true; return
@@ -105,6 +110,18 @@ func advance_time() -> void:
 			var response: Dictionary = domains.challenge.event({"kind":"survival_tick","event_id":tick,"alive":int(world.hp)>0},tick_context,state.domains.challenge)
 			if bool(response.get("ok",false)): state.domains.challenge = response.state
 	var signature: String = str(world.ain_service.dragon_orb_expires_at > effective_now()) + ":" + str(world.level)
+	# Only owned physical grails participate. This 1Hz edge check uses indexed
+	# source limits per distinct item ID, without rebuilding full context/tables.
+	if domains.has("jade_grail") and domains.jade_grail.has_method("is_grail_item"):
+		var eligibility: Dictionary = {}
+		var clock: int = effective_now()
+		var limit_context: Dictionary = {"now":clock,"nowUnix":clock,"level":int(world.level),"class_id":int(world.BASE508.source_class_id(str(world.job_class))),"service_region":"KR","world_no":1,"time_policy":_time_policy(),"enforce_item_use_limits":true}
+		for uid: String in world.item_instances:
+			var physical: Dictionary = world.item_instances[uid]
+			var id: int = native_id(physical.get("record",{}))
+			if not domains.jade_grail.is_grail_item(id): continue
+			if not eligibility.has(id): eligibility[id] = source.item_eligibility(id,limit_context)
+			signature += ":" + uid + ":" + str(_physical_expired(physical,clock)) + ":" + str(eligibility[id]) + ":" + str(_quantity(physical))
 	for reward: Dictionary in state.get("bonus_rewards",[]):
 		signature += ":" + str(int(reward.get("expires_at",0)) == 0 or int(reward.expires_at) > effective_now())
 	if signature != _expiry_signature:
@@ -116,7 +133,8 @@ func now() -> int:
 	return test_now if test_now > 0 else int(Time.get_unix_time_from_system())
 
 func context() -> Dictionary:
-	var ctx: Dictionary = {"nowUnix":now(),"now":now(),"level":int(world.level),"max_level":int(world.level),"max_level_basis":"local_monotonic_level","class_id":int(world.BASE508.source_class_id(str(world.job_class))),"region":"KR","service_region":"KR","world_no":1,"map_id":str(world.active_map_id),"owned":{},"currencies":{"1":int(world.gold)},"instances":{},"equipped":{},"ain":world.ain_service.export_state(),"event_counters":state.event_counters.duplicate(true),"completed_quests":{},"pass_exp":{},"twilight_policy":policy.duplicate(true),"time_policy":_time_policy()}
+	var clock: int = effective_now()
+	var ctx: Dictionary = {"nowUnix":clock,"now":clock,"level":int(world.level),"max_level":int(world.level),"max_level_basis":"local_monotonic_level","class_id":int(world.BASE508.source_class_id(str(world.job_class))),"region":"KR","service_region":"KR","world_no":1,"map_id":str(world.active_map_id),"owned":{},"currencies":{"1":int(world.gold)},"instances":{},"equipped":{},"ain":world.ain_service.export_state(),"event_counters":state.event_counters.duplicate(true),"completed_quests":{},"pass_exp":{},"twilight_policy":policy.duplicate(true),"time_policy":_time_policy()}
 	var assigned: Dictionary = {}
 	for uid: String in world.item_instances:
 		var raw: Dictionary = world.item_instances[uid]
@@ -131,6 +149,8 @@ func context() -> Dictionary:
 			if record.has("source_item_class_id") or str(record.get("sourceId","")).begins_with("m523:item:") or str(record.get("sourceId","")).begins_with("m508:item:"): ctx["ownership_error"] = "원본 개체 ID 충돌"
 			continue
 		if quantity < 1 or quantity > 1000000000: ctx["ownership_error"] = "원본 아이템 수량 오류"; continue
+		var receipt_error: String = _grant_receipt_error(raw,sid,quantity)
+		if not receipt_error.is_empty(): ctx["ownership_error"] = receipt_error; continue
 		if int(assigned[item_name]) > int(world.inventory.get(item_name,0)): ctx["ownership_error"] = "원본 아이템 개체와 가방 수량 불일치"; continue
 		if _physical_expired(raw,maxi(now(),int(state.domains.get("jade_grail",{}).get("latest_at",0)))): continue
 		var item: Dictionary = raw.duplicate(true)
@@ -229,6 +249,9 @@ func execute(key: String, request: Dictionary, revision: int = -1, expected: Str
 	if failure.is_empty(): failure = validate(next)
 	if not failure.is_empty(): busy = false; return _fail(failure)
 	staged[SAVE_KEY] = next
+	return _publish(staged,proposal.get("rewards",[]),proposal.get("assumptions",[]))
+
+func _publish(staged: Dictionary, rewards: Array = [], assumptions: Array = []) -> Dictionary:
 	var result: Error = world._save_game(true,staged)
 	if result != OK:
 		busy = false
@@ -243,12 +266,140 @@ func execute(key: String, request: Dictionary, revision: int = -1, expected: Str
 	world.ain_service.import_state(staged.ainhasad_state)
 	world.experience = staged.experience; world.level = staged.level; world.exp_need = staged.exp_need; world.stat_points = staged.stat_points
 	world.next_item_instance_id = staged.next_item_instance_id
-	state = next
+	state = staged[SAVE_KEY].duplicate(true)
 	busy = false
+	_prepared_rewards.clear()
 	rebuild()
 	world._update_hud()
 	world.hud.refresh_inventory(world.inventory)
-	return {"ok":true,"revision":state.revision,"rewards":proposal.get("rewards",[]),"assumptions":proposal.get("assumptions",[])}
+	return {"ok":true,"revision":state.revision,"rewards":rewards.duplicate(true),"assumptions":assumptions.duplicate(true)}
+
+func prepare_pass_reward(proof: Dictionary) -> Dictionary:
+	# Host-only port for a future Quest523 claim adapter. This validates the raw
+	# quest->reward edge, but deliberately does not certify quest completion.
+	# The upstream owner must commit its claim state with this staged payload.
+	if busy or save_blocked or not problem.is_empty(): return _fail("추가 콘텐츠 거래·저장 보호 중")
+	if not source.ready() or not _source_configured or not domains.has("events"): return _fail("원본523 패스 연결 필요")
+	if proof.get("schema") != 1 or str(proof.get("source_sha256","")) != Source.SOURCE_SHA256: return _fail("원본 패스 지급 증명 버전·SHA 오류")
+	if not _integer(proof.get("quest_id"),1) or not _integer(proof.get("reward_id"),1): return _fail("원본 패스 지급 ID 오류")
+	var claim_id: String = str(proof.get("claim_id",""))
+	if not proof.get("claim_id") is String or claim_id.is_empty() or claim_id.length() > 96: return _fail("검증된 상위 청구 ID 필요")
+	var quest_id: int = int(proof.quest_id); var reward_id: int = int(proof.reward_id)
+	var linked: bool = false
+	for link: Dictionary in source.rows("QuestReward"):
+		if int(link.get("QuestID",0)) == quest_id and int(link.get("RewardID",0)) == reward_id: linked = true; break
+	var raw: Dictionary = source.row("Reward",reward_id)
+	if not linked or int(raw.get("RewardTypeID",0)) != 172: return _fail("원본 퀘스트·시즌 경험치 연결 오류")
+	var pass_id: int = int(raw.get("RewardClassID",0))
+	var ctx: Dictionary = context()
+	if ctx.has("ownership_error"): return _fail(str(ctx.ownership_error))
+	var availability: String = _pass_reward_available(pass_id,ctx)
+	if not availability.is_empty(): return _fail(availability)
+	var receipt: String = "source_grant:quest523:pass_exp:%d:%d:%s" % [quest_id,reward_id,claim_id.sha256_text()]
+	if state.event_receipts.has(receipt): return _fail("이미 반영한 원본 패스 지급")
+	var resolved: Dictionary = source.resolve_reward(reward_id,ctx)
+	if not bool(resolved.get("ok",false)): return resolved
+	var next: Dictionary = state.duplicate(true)
+	next.revision = int(next.revision)+1
+	next.event_receipts[receipt] = true
+	var staged: Dictionary = _stage_world()
+	for reward: Dictionary in resolved.get("rewards",[]):
+		if str(reward.get("kind","")) != "pass_exp" or int(reward.get("id",0)) != pass_id: return _fail("직접 패스 지급 외 보상은 별도 검증 필요")
+		var error: String = _reward(reward,staged,next,ctx)
+		if not error.is_empty(): return _fail(error)
+	if resolved.get("rewards",[]).is_empty(): return _fail("원본 패스 지급 보상 누락")
+	var validation: String = validate(next)
+	if not validation.is_empty(): return _fail(validation)
+	staged = {SAVE_KEY:next}
+	var token: String = Crypto.new().generate_random_bytes(16).hex_encode()
+	if _prepared_rewards.size() >= 32: _prepared_rewards.erase(_prepared_rewards.keys()[0])
+	_prepared_rewards[token] = {"staged":staged,"fingerprint":fingerprint(),"state_hash":JSON.stringify(state).sha256_text(),"policy_hash":JSON.stringify([policy,time_policy]).sha256_text(),"pass_id":pass_id,"rewards":resolved.rewards.duplicate(true),"receipt":receipt}
+	return {"ok":true,"plan_id":token,"staged":staged.duplicate(true),"rewards":resolved.rewards.duplicate(true),"receipt_id":receipt,"boundary":"upstream_claim_must_join_same_write; pass_time_policy_is_device_local_by_default"}
+
+func begin_prepared_commit(plan_id: String) -> Dictionary:
+	# The returned copy can be combined with the upstream claim owner's staged
+	# state. STRICT synchronous critical section: begin -> writer -> finish,
+	# with no await/yield and before applying upstream live state.
+	if busy or save_blocked or not problem.is_empty(): return _fail("추가 콘텐츠 거래·저장 보호 중")
+	if not _prepared_rewards.has(plan_id): return _fail("준비된 패스 지급이 없거나 이미 사용됨")
+	var plan: Dictionary = _prepared_rewards[plan_id]
+	if fingerprint() != plan.fingerprint or JSON.stringify(state).sha256_text() != plan.state_hash or JSON.stringify([policy,time_policy]).sha256_text() != plan.policy_hash: return _fail("준비 후 보유·진행·정책이 변경되었습니다")
+	var available: String = _pass_reward_available(int(plan.pass_id),context())
+	if not available.is_empty(): return _fail(available)
+	busy = true
+	_committing_plan = plan_id
+	return {"ok":true,"staged":plan.staged.duplicate(true)}
+
+func finish_prepared_commit(plan_id: String, result: Error, written: Dictionary) -> Dictionary:
+	# Call only after the same World writer completed. A failed/uncertain write
+	# blocks retries just like ordinary item/RNG transactions.
+	if not busy or _committing_plan != plan_id or not _prepared_rewards.has(plan_id): return _fail("준비된 지급 커밋 순서 오류")
+	var plan: Dictionary = _prepared_rewards[plan_id]
+	_committing_plan = ""
+	if result != OK:
+		busy = false; save_blocked = true; _prepared_rewards.clear()
+		problem = "저장 결과 확인 필요 · 재시도 전 저장을 다시 불러오세요 (%d)" % result
+		return _fail(problem)
+	if fingerprint() != plan.fingerprint or JSON.stringify(state).sha256_text() != plan.state_hash or JSON.stringify([policy,time_policy]).sha256_text() != plan.policy_hash:
+		busy = false; save_blocked = true; _prepared_rewards.clear()
+		problem = "합성 저장 중 보유·진행·정책 변경 확인 필요 · 현재 진행 보존"
+		return _fail(problem)
+	for key: String in plan.staged:
+		if not written.has(key) or not _same_progress(written[key],plan.staged[key]):
+			busy = false; save_blocked = true; _prepared_rewards.clear()
+			problem = "합성 저장 내용 확인 필요 · 원본 진행 보존"
+			return _fail(problem)
+	_apply_prepared_state(plan.staged)
+	return {"ok":true,"revision":state.revision,"rewards":plan.rewards.duplicate(true)}
+
+func cancel_prepared(plan_id: String) -> bool:
+	if busy and _committing_plan == plan_id: return false
+	return _prepared_rewards.erase(plan_id)
+
+func _stage_world() -> Dictionary:
+	return {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":int(world.gold),"ainhasad_state":world.ain_service.export_state().duplicate(true),"experience":int(world.experience),"level":int(world.level),"exp_need":int(world.exp_need),"stat_points":int(world.stat_points),"next_item_instance_id":int(world.next_item_instance_id)}
+
+func _apply_prepared_state(staged: Dictionary) -> void:
+	# Direct Reward172 changes only this namespace. The upstream owner applies
+	# its own staged claim/costs after the same writer succeeds.
+	state = staged[SAVE_KEY].duplicate(true)
+	busy = false
+	_prepared_rewards.clear()
+	rebuild()
+	world._update_hud()
+	world.hud.refresh_inventory(world.inventory)
+
+func _pass_reward_available(pass_id: int, ctx: Dictionary) -> String:
+	var pass_row: Dictionary = source.row("PassSystem",pass_id)
+	if pass_row.is_empty() or int(pass_row.get("PassSystemTypeID",0)) != 12: return "원본 시즌 패스 대상 오류"
+	if not bool(pass_row.get("IsActive",false)): return "비활성 원본 시즌 패스"
+	if not source.region_allowed(int(pass_row.get("ServerLimitSetID",0)),ctx): return "원본 시즌 패스 지역·서버 제한"
+	for field: String in ["SeasonStartDateTimeID","SeasonEndDateTimeID"]:
+		var date_id: int = int(pass_row.get(field,0))
+		if date_id == 0: continue
+		var stamp: int = int(source.timestamp(date_id,ctx))
+		if stamp < 0: return "원본 시즌 패스 시간 확인 필요"
+		if field == "SeasonStartDateTimeID" and effective_now() < stamp: return "원본 시즌 패스 시작 전"
+		if field == "SeasonEndDateTimeID" and effective_now() >= stamp: return "원본 시즌 패스 종료"
+	return ""
+
+func _grant_receipt_error(physical: Dictionary, item_id: int, remaining: int) -> String:
+	if not physical.has("quest_reward_receipt"): return ""
+	# PR262's issued quantity is immutable proof. The physical remaining stack
+	# is a separate field and may decrease after an exact-instance consumption.
+	var proof: Variant = physical.quest_reward_receipt
+	if not proof is Dictionary or proof.get("schema") != 1 or str(proof.get("source_sha256","")) != Source.SOURCE_SHA256: return "원본 퀘스트 지급 증명 오류"
+	for field: String in ["quest_id","reward_id","item_class_id","bless_code_id","quantity"]:
+		if not _integer(proof.get(field),1): return "원본 퀘스트 지급 증명 값 오류"
+	if int(proof.item_class_id) != item_id or remaining > int(proof.quantity): return "원본 퀘스트 발행·잔여 수량 불일치"
+	var record: Dictionary = physical.get("record",{})
+	var bless: int = int(physical.get("bless_code",record.get("source_bless_code_id",record.get("source_bless_code",1))))
+	if int(proof.bless_code_id) not in [1,2,3] or bless != int(proof.bless_code_id): return "원본 퀘스트 축복 증명 불일치"
+	var reward: Dictionary = source.row("Reward",int(proof.reward_id))
+	if int(reward.get("RewardTypeID",0)) != 2 or int(reward.get("RewardClassID",0)) != item_id or int(reward.get("ItemBlessCodeID",1)) != int(proof.bless_code_id) or int(proof.quantity) > int(reward.get("Amount",0)): return "원본 퀘스트 지급 보상 연결 오류"
+	for link: Dictionary in source.rows("QuestReward"):
+		if int(link.get("QuestID",0)) == int(proof.quest_id) and int(link.get("RewardID",0)) == int(proof.reward_id): return ""
+	return "원본 퀘스트 지급 출처 연결 오류"
 
 func _cost(cost: Dictionary, staged: Dictionary, ctx: Dictionary) -> String:
 	var amount: int = int(cost.get("amount",0)); var id: int = int(cost.get("id",0))
@@ -272,13 +423,18 @@ func _cost(cost: Dictionary, staged: Dictionary, ctx: Dictionary) -> String:
 			if amount == 0: return ""
 		return "재화 부족"
 	if str(cost.get("kind","")) != "item": return "알 수 없는 비용 종류"
+	if cost.has("instance_id"):
+		if not cost.instance_id is String or str(cost.instance_id).is_empty(): return "비용 개체 ID 오류"
+		if cost.has("expected_quantity") and not _integer(cost.expected_quantity,1): return "비용 개체 수량 오류"
+		return _debit_item(id,amount,staged,ctx,str(cost.instance_id),int(cost.get("expected_quantity",-1)))
 	return _debit_item(id,amount,staged,ctx)
 
-func _debit_item(id: int, amount: int, staged: Dictionary, ctx: Dictionary) -> String:
+func _debit_item(id: int, amount: int, staged: Dictionary, ctx: Dictionary, instance_id: String = "", expected_quantity: int = -1) -> String:
 	var eligibility: Dictionary = source.item_eligibility(id,ctx)
 	if not bool(eligibility.get("ok",false)): return str(eligibility.get("error","비용 아이템 사용 제한"))
 	var pending: int = amount
 	for uid: String in staged.item_instances.keys():
+		if not instance_id.is_empty() and uid != instance_id: continue
 		var item: Dictionary = staged.item_instances[uid]
 		if native_id(item.get("record",{})) != id: continue
 		if not ctx.instances.has(uid): continue
@@ -287,6 +443,8 @@ func _debit_item(id: int, amount: int, staged: Dictionary, ctx: Dictionary) -> S
 		var record: Dictionary = item.get("record",{})
 		var quantity: int = _quantity(item)
 		if quantity <= 0: return "원본 아이템 수량 오류"
+		if expected_quantity >= 0 and quantity != expected_quantity: return "비용 개체 수량이 변경되었습니다"
+		if not instance_id.is_empty() and quantity < amount: return "지정한 비용 개체 수량 부족"
 		var take: int = mini(pending,quantity)
 		var name_value: String = str(item.get("name",""))
 		if int(staged.inventory.get(name_value,0)) < take: return "개체·가방 수량 불일치"
@@ -299,6 +457,7 @@ func _debit_item(id: int, amount: int, staged: Dictionary, ctx: Dictionary) -> S
 			staged.item_instances[uid] = item
 		pending -= take
 		if pending == 0: return ""
+	if not instance_id.is_empty(): return "지정한 원본 개체를 사용할 수 없습니다"
 	for name_value: String in ctx.get("stacks",{}):
 		var stack: Dictionary = ctx.stacks[name_value]
 		if int(stack.sourceID) != id or bool(stack.get("locked",false)): continue
@@ -351,22 +510,44 @@ func stage_item(staged: Dictionary, id: int, amount: int, enchant: int = 0, bles
 	if amount <= 0 or amount > 1000000000 or enchant < 0 or bless_code not in [1,2,3]: return "아이템 보상 범위 오류"
 	var item: Dictionary = source.row("ItemClass",id)
 	if item.is_empty(): return "아이템 원본 ID 누락"
-	var eligibility: Dictionary = source.item_eligibility(id,{"now":now(),"nowUnix":now(),"level":int(staged.get("level",world.level)),"service_region":"KR","time_policy":_time_policy()})
+	var eligibility: Dictionary = source.item_eligibility(id,{"now":effective_now(),"nowUnix":effective_now(),"level":int(staged.get("level",world.level)),"service_region":"KR","time_policy":_time_policy()})
 	if not bool(eligibility.get("ok",false)): return str(eligibility.get("error","아이템 보상 제한"))
+	var life: Dictionary = _item_life(id)
+	if not str(life.get("error","")).is_empty(): return str(life.error)
+	var issued_at: int = effective_now()
 	var label: String = "%s [523:%d]" % [str(item.get("Name","아이템")),id]
 	var grade_names: Dictionary = {1:"일반",2:"고급",3:"희귀",4:"영웅",5:"전설",6:"신화",7:"유일"}
-	var per_copy: bool = int(item.get("MaxStackAmount",1)) <= 1
-	if per_copy and amount > 10000: return "물리 아이템 보상 개수 상한"
-	var count: int = amount if per_copy else 1
+	var maximum: int = maxi(1,int(item.get("MaxStackAmount",1)))
+	var count: int = ceili(float(amount)/float(maximum))
+	if count > 10000: return "물리 아이템 보상 개수 상한"
+	var remaining: int = amount
 	for _index: int in range(count):
-		var quantity: int = 1 if per_copy else amount
+		var quantity: int = mini(maximum,remaining)
+		remaining -= quantity
 		var record: Dictionary = {"name":label,"type":"원본 아이템","slot":"","grade":grade_names.get(int(item.get("GradeID",1)),"일반"),"source":"lineagem_patch523","source_snapshot":"patch523","sourceId":"m523:item:%d" % id,"source_item_class_id":id,"source_reward_quantity":quantity,"source_original_item":item.duplicate(true),"source_bless_code":bless_code,"desc":"원본523 보상 · 효과 연결은 콘텐츠별로 확인됩니다"}
 		var uid: String = str(int(staged.next_item_instance_id))
 		while staged.item_instances.has(uid): staged.next_item_instance_id += 1; uid = str(int(staged.next_item_instance_id))
 		staged.next_item_instance_id += 1
 		staged.inventory[label] = int(staged.inventory.get(label,0))+quantity
 		staged.item_instances[uid] = {"name":label,"level":enchant,"record":record,"source_reward_quantity":quantity,"bless_code":bless_code,"blessed":bless_code==2,"bless_state":"blessed" if bless_code==2 else "normal"}
+		if int(life.seconds) > 0:
+			for scope: Dictionary in [record,staged.item_instances[uid]]:
+				scope["issued_at"] = issued_at
+				scope["expires_at"] = issued_at+int(life.seconds)
+				scope["source_life_seconds"] = int(life.seconds)
 	return ""
+
+func _item_life(id: int) -> Dictionary:
+	var links: Array = source.find_rows("ItemBonus","ItemClassID",id) if source.has_method("find_rows") else source.rows("ItemBonus")
+	var seconds: int = 0
+	for link: Dictionary in links:
+		if int(link.get("ItemClassID",0)) != id: continue
+		var bonus_row: Dictionary = source.row("Bonus",int(link.get("BonusID",0)))
+		if int(bonus_row.get("BonusTypeID",0)) != 422: continue
+		var type_row: Dictionary = source.row("BonusType",422)
+		if seconds != 0 or str(type_row.get("Name","")) != "Life" or int(type_row.get("UnitID",0)) != 17 or not _integer(bonus_row.get("Value"),1) or int(bonus_row.Value) > 2147483647 or int(bonus_row.get("BonusApplicationTypeID",0)) != 0 or int(bonus_row.get("BonusApplicationTargetID",0)) != 0: return {"error":"원본 아이템 수명 단위·기간 확인 필요"}
+		seconds = int(bonus_row.Value)
+	return {"seconds":seconds}
 
 func record_event(kind: String, payload: Dictionary = {}) -> void:
 	if save_blocked or not source.ready() or not _source_configured: return
@@ -378,7 +559,12 @@ func record_event(kind: String, payload: Dictionary = {}) -> void:
 	if not _integer(payload.get("amount",1),1): return
 	if not state.has("event_receipts"): state.event_receipts = {}
 	state.event_receipts[event_id] = true
-	if state.event_receipts.size() > 8192: state.event_receipts.erase(state.event_receipts.keys()[0])
+	if state.event_receipts.size() > 8192:
+		# Transaction receipts must survive the bounded live-event replay window.
+		var live_receipts: Array = []
+		for old_id: String in state.event_receipts:
+			if not old_id.begins_with("source_grant:"): live_receipts.append(old_id)
+		for index: int in range(maxi(0,live_receipts.size()-8192)): state.event_receipts.erase(live_receipts[index])
 	var amount: int = int(payload.get("amount",1))
 	state.event_counters[kind] = int(state.event_counters.get(kind,0))+amount
 	var source_id: int = int(payload.get("source_id",0))
@@ -401,29 +587,32 @@ func record_event(kind: String, payload: Dictionary = {}) -> void:
 	state.revision = int(state.revision)+1
 
 func rebuild() -> void:
-	totals.clear(); effect_details.clear()
+	totals.clear(); effect_details.clear(); conditional_totals = {"undead":{},"pvp":{}}
 	if world == null or not source.ready() or not _source_configured: return
 	if domains.has("jade_grail") and state.domains.has("jade_grail"):
 		effect_details = domains.jade_grail.bonuses(context(),state.domains.jade_grail)
 		var mapping: Dictionary = {"melee_damage":"melee_damage:flat","ranged_damage":"ranged_damage:flat","magic_damage":"magic_damage:flat","melee_accuracy":"melee_hit:flat","ranged_accuracy":"ranged_hit:flat","magic_accuracy":"magic_hit:flat","armor_class":"ac:flat","max_hp":"max_hp:flat","exp_bonus_pct":"experience_bonus:percent","damage_reduction":"damage_reduction:flat","pve_damage_reduction":"pve_damage_reduction:flat","move_speed_bonus":"movement_speed:percent","attack_speed_bonus":"attack_speed:percent","hp_potion_recovery_pct":"potion_percent:percent","cast_speed_bonus":"cast_speed:percent","damage_reduction_ignore":"damage_reduction_ignore:flat","ignore_melee_damage_reduction_pct":"ignore_melee_damage_reduction:percent","ignore_ranged_damage_reduction_pct":"ignore_ranged_damage_reduction:percent","ignore_magic_damage_reduction_pct":"ignore_magic_damage_reduction:percent"}
 		for key: String in effect_details.get("stats",{}):
-			if key in ["ignore_melee_damage_reduction_pct","ignore_ranged_damage_reduction_pct","ignore_magic_damage_reduction_pct"]:
-				for effect: Dictionary in effect_details.get("effects",[]):
-					if str(effect.get("key","")) == key:
-						effect.applied = false
-						effect.reason = "unsupported_combat_consumer"
-						effect_details.unsupported.append(effect.duplicate(true))
-				continue
 			var canonical: String = str(mapping.get(key,key))
 			var value: float = float(effect_details.stats[key])
 			if key == "armor_class": value = -value
 			totals[canonical] = float(totals.get(canonical,0))+value
+		var scoped_mapping: Dictionary = {"undead_additional_max_damage":"undead_additional_max_damage:flat","pvp_damage_reduction_pct":"pvp_damage_reduction:percent","pvp_damage_reduction_ignore_pct":"pvp_damage_reduction_ignore:percent"}
+		for scope: String in conditional_totals:
+			for key: String in effect_details.get("conditional_stats",{}).get(scope,{}):
+				conditional_totals[scope][str(scoped_mapping.get(key,key))] = float(effect_details.conditional_stats[scope][key])
 	var ids: Array = []
 	for reward: Dictionary in state.get("bonus_rewards",[]):
 		if int(reward.get("expires_at",0)) == 0 or int(reward.expires_at) > effective_now(): ids.append(int(reward.id))
 	if not ids.is_empty():
 		var earned: Dictionary = source.bonus_stats(ids,context())
 		for key: String in earned.get("stats",{}): totals[key] = float(totals.get(key,0))+float(earned.stats[key])
+		for scope: String in conditional_totals:
+			for key: String in earned.get("conditional_stats",{}).get(scope,{}):
+				conditional_totals[scope][key] = float(conditional_totals[scope].get(key,0))+float(earned.conditional_stats[scope][key])
+		# Earned pass effects need the same raw evidence as possessed grail effects.
+		effect_details["earned"] = earned.duplicate(true)
+	effect_details["combat_policy"] = {"percent":policy.get("conditional_percent_mode","disabled"),"undead":policy.get("undead_damage_mode","disabled"),"percent_semantics":"TWILIGHT_estimate_percentage_point_budget","undead_semantics":"TWILIGHT_estimate_physical_uniform_1_to_source_max"}
 	if world.ain_service != null:
 		var jade: Dictionary = state.domains.get("jade_grail",{}).get("jade",{})
 		var matches_timer: bool = not jade.is_empty() and int(jade.get("used_at",0))+int(jade.get("duration",0)) == int(world.ain_service.dragon_orb_expires_at)
@@ -434,6 +623,34 @@ func jade_status() -> Dictionary:
 
 func bonus(key: String) -> float:
 	return float(totals.get(key,0))
+
+func combat_context(kind: String, target_context: Dictionary = {}) -> Dictionary:
+	# These APIs consume explicit engine flags, never names or inferred PvP status.
+	var result: Dictionary = {"percent_ignore":0.0,"pvp_reduction_percent":0.0,"undead_max_damage":0,"policy":policy.get("conditional_percent_mode","disabled"),"undead_policy":policy.get("undead_damage_mode","disabled")}
+	if kind not in ["melee","ranged","magic"]: return result
+	if str(policy.get("conditional_percent_mode","disabled")) == "percentage_points_estimate":
+		result.percent_ignore = maxf(0,bonus("ignore_%s_damage_reduction:percent" % kind))
+		if target_context.get("pvp") == true:
+			result.percent_ignore += maxf(0,float(conditional_totals.pvp.get("pvp_damage_reduction_ignore:percent",0)))
+			result.pvp_reduction_percent = clampf(float(conditional_totals.pvp.get("pvp_damage_reduction:percent",0)),0,100)
+	if target_context.get("undead") == true and kind in ["melee","ranged"] and str(policy.get("undead_damage_mode","disabled")) == "uniform_1_to_max_estimate":
+		result.undead_max_damage = maxi(0,int(conditional_totals.undead.get("undead_additional_max_damage:flat",0)))
+	return result
+
+func outgoing_context(kind: String, hit_context: Dictionary) -> Dictionary:
+	var result: Dictionary = hit_context.duplicate(true)
+	var scoped: Dictionary = combat_context(kind,hit_context)
+	var budget: float = maxf(0,float(hit_context.get("percent_reduction",0)))
+	# The existing guardian consumer applies this budget once. A separate final
+	# damage multiplier here would count the target's reduction twice.
+	result.percent_reduction = maxf(0,budget-float(scoped.percent_ignore))
+	result.source523_percent_ignore = minf(budget,float(scoped.percent_ignore))
+	return result
+
+func incoming_damage(amount: int, kind: String, attacker_context: Dictionary) -> int:
+	if amount <= 0: return amount
+	var scoped: Dictionary = combat_context(kind,attacker_context)
+	return maxi(1,int(round(float(amount)*(1.0-float(scoped.pvp_reduction_percent)/100.0))))
 
 func stat_record() -> Dictionary:
 	var result: Dictionary = StatAdapter.record(totals)
@@ -489,7 +706,15 @@ static func _owned_in(instances: Dictionary, id: int) -> int:
 
 func _empty_progress(value: Dictionary) -> bool:
 	for key: String in value.domains:
-		if not domains.has(key) or not _same_progress(value.domains[key],domains[key].initial_state()): return false
+		if not domains.has(key): return false
+		var saved: Dictionary = value.domains[key]
+		var initial: Dictionary = domains[key].initial_state()
+		# The public pre-final-reward namespace predates this optional empty map.
+		# Compare an isolated default; never rewrite the owned saved dictionary.
+		if key == "events" and not saved.has("final_progress") and initial.get("final_progress") is Dictionary and initial.final_progress.is_empty():
+			saved = saved.duplicate(true)
+			saved.final_progress = {}
+		if not _same_progress(saved,initial): return false
 	return value.event_counters.is_empty() and value.get("bonus_rewards",[]).is_empty() and value.get("event_receipts",{}).is_empty()
 
 static func _integer(value: Variant, minimum: int) -> bool:
@@ -535,6 +760,30 @@ func apply_policy_config(value: Variant) -> Dictionary:
 				if setting not in ["equal_estimate","disabled"]: return _fail("무작위 보상 추정 설정 오류")
 			"attendance_blessing_base":
 				if not _integer(setting,1) or int(setting) > 999999: return _fail("출석 축복 기본량 범위 오류")
+			"conditional_percent_mode":
+				if setting not in ["percentage_points_estimate","disabled"]: return _fail("조건부 비율 전투 정책 오류")
+			"undead_damage_mode":
+				if setting not in ["uniform_1_to_max_estimate","disabled"]: return _fail("언데드 추가 대미지 정책 오류")
+			"luckybag_final_scope":
+				if setting != "source_item": return _fail("상자 확정 보상 이력 범위 오류")
+			"luckybag_final_completion":
+				if setting not in ["once","cycle"]: return _fail("상자 확정 보상 완료 정책 오류")
+			"luckybag_final_rules":
+				if not setting is Dictionary: return _fail("상자 확정 보상 설정 오류")
+				for bag: Variant in setting:
+					if not bag is String or not str(bag).is_valid_int() or int(str(bag)) <= 0 or not setting[bag] is Dictionary: return _fail("상자 확정 보상 풀 오류")
+					var rule: Dictionary = setting[bag]
+					if not _integer(rule.get("uses"),1) or int(rule.uses) > 100000: return _fail("상자 확정 보상 사용 횟수 오류")
+					for field: Variant in rule:
+						match str(field):
+							"uses": pass
+							"completion":
+								if rule[field] not in ["once","cycle"]: return _fail("상자 확정 보상 완료 정책 오류")
+							"scope":
+								if rule[field] != "source_item": return _fail("상자 확정 보상 이력 범위 오류")
+							"final_rewards":
+								if rule[field] != "all": return _fail("상자 확정 보상 항목 정책 오류")
+							_: return _fail("지원하지 않는 상자 확정 보상 설정")
 			"luckybag_selection_counts":
 				if not setting is Dictionary: return _fail("상자 선택 수 설정 오류")
 				for bag: Variant in setting:

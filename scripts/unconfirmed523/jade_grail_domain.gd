@@ -87,6 +87,9 @@ func setup(source: Object) -> void:
 func initial_state() -> Dictionary:
 	return {"version": 1, "rng_state": 52371, "latest_at": 0, "jade": {}, "grails": {}}
 
+func is_grail_item(item_id: int) -> bool:
+	return _grail.has(item_id)
+
 func validate_state(value: Variant) -> String:
 	if not value is Dictionary:
 		return "jade_grail_state_not_dictionary"
@@ -125,6 +128,7 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 		return {"title": "용옥 · 성배 은총", "notes": [error], "rows": rows}
 	var effective_context: Dictionary = context.duplicate(true)
 	effective_context.nowUnix = maxi(int(context.get("nowUnix", 0)), int(state.latest_at))
+	effective_context.now = effective_context.nowUnix
 	var status: Dictionary = jade_status(effective_context, state)
 	rows.append({"id": "jade_status", "label": "드래곤의 보호", "detail": "남은 시간 %d초 · 보호 단계 %d · 경험치 ×%.1f · 아데나 ×%.1f" % [status.remaining, status.protection_level, status.exp_multiplier, status.adena_multiplier], "actions": []})
 	for item_id: Variant in _jade:
@@ -262,22 +266,23 @@ func bonuses(context: Dictionary, state: Dictionary) -> Dictionary:
 		return result
 	var effective_context: Dictionary = context.duplicate(true)
 	effective_context.nowUnix = maxi(int(context.get("nowUnix", 0)), int(state.latest_at))
+	effective_context.now = effective_context.nowUnix
 	var owned: Dictionary = _owned_grails(effective_context)
 	var qualified: Dictionary = {}
 	for instance_id: Variant in owned:
 		var item_id: int = int(owned[instance_id].sourceID)
-		if not _item_eligibility(_row("ItemClass", item_id), context).is_empty():
+		if not _item_eligibility(_row("ItemClass", item_id), effective_context).is_empty():
 			continue
 		for link: Dictionary in _item_bonuses.get(item_id, []):
 			if bool(link.get("IsPossession", false)):
-				_add_effect(result, int(link.get("BonusID", 0)), context, {"origin": "possession", "instance_id": str(instance_id)})
+				_add_effect(result, int(link.get("BonusID", 0)), effective_context, {"origin": "possession", "instance_id": str(instance_id)})
 		var grace: Dictionary = state.grails.get(str(instance_id), {})
 		if grace.is_empty() or int(grace.item_id) != item_id:
 			continue
 		for prefix: int in [int(grace.absolute_prefix_id), int(grace.base_prefix_id)]:
 			if prefix > 0:
 				var link: Dictionary = _prefix_link(int(grace.grace_id), prefix, int(_row("ItemGracePrefix", prefix).get("SlotNumber", 0)))
-				_add_effect(result, int(link.get("BonusID", 0)), context, {"origin": "grace", "instance_id": str(instance_id), "prefix_id": prefix})
+				_add_effect(result, int(link.get("BonusID", 0)), effective_context, {"origin": "grace", "instance_id": str(instance_id), "prefix_id": prefix})
 		for grace_set: Dictionary in _rows("ItemGraceSet"):
 			var set_id: int = int(grace_set.get("ID", 0))
 			if int(grace_set.get("GraceID", 0)) != int(grace.grace_id):
@@ -300,7 +305,7 @@ func bonuses(context: Dictionary, state: Dictionary) -> Dictionary:
 				continue
 			if not threshold in active_thresholds:
 				active_thresholds.append(threshold)
-			_add_effect(result, int(link.get("BonusID", 0)), context, {"origin": "set", "set_id": int(set_id), "threshold": threshold})
+			_add_effect(result, int(link.get("BonusID", 0)), effective_context, {"origin": "set", "set_id": int(set_id), "threshold": threshold})
 		result.sets.append({"set_id": int(set_id), "count": count, "thresholds": active_thresholds, "policy": "TWILIGHT cumulative thresholds" if stack_set_thresholds else "TWILIGHT highest threshold"})
 	return result
 
@@ -328,6 +333,10 @@ func _add_effect(result: Dictionary, bonus_id: int, context: Dictionary, metadat
 		value /= 10000.0
 	effect.key = stat_key
 	effect.value = value
+	# Source names encode these scopes even when application IDs are both zero.
+	# Keep a canonical target-only view; the host chooses a real combat target.
+	effect.application_type_id = int(bonus.get("BonusApplicationTypeID", 0))
+	effect.application_target_id = int(bonus.get("BonusApplicationTargetID", 0))
 	var condition: String = "undead" if type_id == 7304 else "pvp" if type_id in [7818, 11134] else ""
 	effect.condition = condition
 	if reason.is_empty() and not condition.is_empty():
@@ -380,7 +389,7 @@ func _item_eligibility(item: Dictionary, context: Dictionary) -> String:
 		bridge.service_region = str(context.get("region", "KR"))
 		bridge.enforce_item_use_limits = true
 		if not bridge.has("time_policy"):
-			bridge.time_policy = {"utc_offset_minutes": 540}
+			bridge.time_policy = {"utc_offset_minutes": int(Time.get_time_zone_from_system().get("bias", 0))}
 		var eligibility: Variant = _source.call("item_eligibility", int(item.get("ID", 0)), bridge)
 		if not eligibility is Dictionary or not bool(eligibility.get("ok", false)):
 			var reason: String = str(eligibility.get("error", "item_eligibility_invalid")) if eligibility is Dictionary else "item_eligibility_invalid"

@@ -99,7 +99,7 @@ func setup(source: Object) -> void:
 		_item_contracts[str(item_id)].append({"type": type_id, "target": int(bonus.get("Value", 0))})
 
 func initial_state() -> Dictionary:
-	return {"schema": 1, "attendance": {}, "passes": {}, "rng_state": "52338039", "roulette_pool": 0, "uses": {}, "quest_progress": {}, "quest_claims": {}, "latest_at": 0}
+	return {"schema": 1, "attendance": {}, "passes": {}, "rng_state": "52338039", "roulette_pool": 0, "uses": {}, "quest_progress": {}, "quest_claims": {}, "latest_at": 0, "final_progress": {}}
 
 func validate_state(value: Variant) -> String:
 	if not value is Dictionary or not _whole(value.get("schema"), 1) or int(value.schema) != 1:
@@ -108,6 +108,9 @@ func validate_state(value: Variant) -> String:
 		return "출석/패스 진행 정보가 손상되었습니다."
 	if not _whole(value.get("latest_at", 0), 0):
 		return "콘텐츠 진행 시각이 손상되었습니다."
+	var final_error := _validate_final_progress(value.get("final_progress", {}))
+	if not final_error.is_empty():
+		return final_error
 	if not value.get("rng_state") is String or not str(value.rng_state).is_valid_int():
 		return "보상 난수 상태가 손상되었습니다."
 	if not _whole(value.get("roulette_pool", 0), 0):
@@ -197,7 +200,7 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 			var detail := _reward_summary(int(reward.RewardID), context)
 			if int(reward.get("Goal", 0)) > 0:
 				detail += " · 누적 출석 %d회" % int(reward.Goal)
-			result.rows.append({"id": "attendance:%s:%s" % [key, index], "label": "%s %d회 (v%d)" % [label, index, int(version.Version)], "detail": "%s · %s" % [detail, "수령 가능" if reason.is_empty() else reason], "actions": [_reward_action("수령", request, int(reward.RewardID))] if reason.is_empty() else []})
+			result.rows.append({"id": "attendance:%s:%s" % [key, index], "label": "%s %d회 (v%d)" % [label, index, int(version.Version)], "detail": "%s · %s" % [detail, "수령 가능" if reason.is_empty() else reason], "actions": [_reward_action("수령", request, int(reward.RewardID), context)] if reason.is_empty() else []})
 	for pass_row in _rows("PassSystem"):
 		if not _pass_available(pass_row, context).is_empty():
 			continue
@@ -231,7 +234,7 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 				var reason := _tier_reason(pass_row, tier, premium, context, state)
 				var reward_id := int(tier.get("PremiumRewardID" if premium else "RewardID", 0))
 				var threshold := "캐릭터 레벨 %d" % int(tier.Level) if int(pass_row.get("PassSystemTypeID", 0)) == 2 else "패스 경험치 %d" % int(tier.get("Experience", 0))
-				result.rows.append({"id": "pass:%d:%d:%s" % [pass_id, int(tier.ID), str(premium)], "label": "%d 단계 %d %s" % [pass_id, int(tier.Level), "프리미엄" if premium else "기본"], "detail": "%s · %s · %s" % [_reward_summary(reward_id, context), threshold, "수령 가능" if reason.is_empty() else reason], "actions": [_reward_action("수령", {"action": "pass_claim", "pass_id": pass_id, "level_id": int(tier.ID), "premium": premium}, reward_id)] if reason.is_empty() else []})
+				result.rows.append({"id": "pass:%d:%d:%s" % [pass_id, int(tier.ID), str(premium)], "label": "%d 단계 %d %s" % [pass_id, int(tier.Level), "프리미엄" if premium else "기본"], "detail": "%s · %s · %s" % [_reward_summary(reward_id, context), threshold, "수령 가능" if reason.is_empty() else reason], "actions": [_reward_action("수령", {"action": "pass_claim", "pass_id": pass_id, "level_id": int(tier.ID), "premium": premium}, reward_id, context)] if reason.is_empty() else []})
 	for item_key in _item_contracts:
 		var item_id := int(item_key)
 		var owned := _count(context.get("owned", {}), item_id)
@@ -246,6 +249,15 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 		if reason.is_empty() and not contract.is_empty():
 			var action := {"label": "열기", "request": request}
 			if int(contract.type) == 110:
+				var reward_reason := _luckybag_reward_reason(int(contract.target), context)
+				if not reward_reason.is_empty():
+					action["disabled"] = true
+					var display_reason := reward_reason
+					if reward_reason.ends_with(": test_item"):
+						display_reason = "시험용 보상 포함 · 현재 상자를 열 수 없습니다."
+					elif reward_reason.ends_with(": item_expired"):
+						display_reason = "만료된 보상 포함 · 현재 상자를 열 수 없습니다."
+					detail += " · " + display_reason
 				var entries := _eligible_bag(int(contract.target), context)
 				var options: Array = []
 				var total := 0
@@ -257,10 +269,33 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 				if not options.is_empty():
 					action["required_choices"] = [{"key": "luckybag_selection", "options": options, "count": _selection_count(int(contract.target), context)}]
 				detail += " · LuckyBag %d · 원문 가중치 합 %d · TWILIGHT 원문 가중치 1회 추첨" % [int(contract.target), total]
+				if _has_final_reward(int(contract.target)):
+					var rule := _final_rule(item_id, int(contract.target), context)
+					if bool(rule.get("ok", false)):
+						var progress: Dictionary = state.get("final_progress", {}).get(str(item_id), {})
+						var displayed := int(progress.get("opened", 0)) % int(rule.uses) if str(rule.completion) == "cycle" else mini(int(progress.get("opened", 0)), int(rule.uses))
+						detail += " · TWILIGHT 누적 사용 %d/%d · 완료 보상 %s" % [displayed, int(rule.uses), "수령 완료" if int(progress.get("completed", 0)) > 0 and str(rule.completion) == "once" else ("매 주기" if str(rule.completion) == "cycle" else "1회")]
+					else:
+						action["disabled"] = true
+						detail += " · " + str(rule.get("error", "완료 보상 규칙 확인 필요"))
 			else:
-				var choices := _reward_choices(int(contract.target))
+				var choices := _reward_choices(int(contract.target), context)
 				if not choices.is_empty():
 					action["required_choices"] = choices
+			if (int(contract.type) == 110 and _has_final_reward(int(contract.target))) or _has_life_bonus(item_id):
+				var units := _owned_units(item_id, context)
+				if units.size() == 1:
+					request["instance_id"] = str(units[0].instance_id)
+				elif units.size() > 1:
+					var instance_options: Array = []
+					for index in range(units.size()):
+						instance_options.append({"label": "보유 상자 %d · 수량 %d" % [index + 1, int(units[index].quantity_before)], "value": str(units[index].instance_id)})
+					var requirements: Array = action.get("required_choices", [])
+					requirements.append({"key": "instance_id", "label": "사용할 보유 상자", "options": instance_options, "count": 1})
+					action["required_choices"] = requirements
+				else:
+					action["disabled"] = true
+					detail += " · 사용 가능한 실제 개체 확인 필요"
 			actions.append(action)
 		else:
 			detail += " · " + reason
@@ -381,15 +416,23 @@ func propose(request: Dictionary, context: Dictionary, state: Dictionary) -> Dic
 			if _count(context.get("owned", {}), item_id) <= 0:
 				return _failure("보유한 원본 상자가 없습니다.")
 			var contract: Dictionary = _item_contracts[str(item_id)][0]
+			var costs: Array = [{"kind": "item", "id": item_id, "amount": 1}]
+			var unit: Dictionary = {}
+			if (int(contract.type) == 110 and _has_final_reward(int(contract.target))) or _has_life_bonus(item_id):
+				var binding := _bind_owned_unit(item_id, request, context)
+				if not bool(binding.get("ok", false)):
+					return binding
+				unit = binding.unit
+				costs = [{"kind": "item", "id": item_id, "amount": 1, "instance_id": str(unit.instance_id), "expected_quantity": int(unit.quantity_before)}]
 			var resolved: Dictionary
 			if int(contract.type) == 110:
-				resolved = _open_luckybag(int(contract.target), request, context, next)
+				resolved = _open_luckybag(int(contract.target), request, context, next, unit)
 			else:
 				resolved = _resolve(int(contract.target), request, context, next)
 			if not bool(resolved.get("ok", false)):
 				return resolved
 			_record_item_use(item_id, context, next)
-			return _success(next, [{"kind": "item", "id": item_id, "amount": 1}], resolved.rewards)
+			return _success(next, costs, resolved.rewards, resolved.get("assumptions", []))
 		"roulette_inspect":
 			if not _whole(request.get("pool_id"), 1):
 				return _failure("추첨 풀 번호가 올바르지 않습니다.")
@@ -652,8 +695,8 @@ func _row(table: String, id: int) -> Dictionary:
 		return {}
 	return _source.call("row", table, id)
 
-func _success(state: Dictionary, costs: Array, rewards: Array) -> Dictionary:
-	return {"ok": true, "error": "", "state": state, "costs": costs, "rewards": rewards, "rng_state": state.rng_state}
+func _success(state: Dictionary, costs: Array, rewards: Array, assumptions: Array = []) -> Dictionary:
+	return {"ok": true, "error": "", "state": state, "costs": costs, "rewards": rewards, "rng_state": state.rng_state, "assumptions": assumptions.duplicate(true)}
 
 func _failure(error: String) -> Dictionary:
 	return {"ok": false, "error": error}
@@ -664,6 +707,10 @@ func _item_reason(item_id: int, context: Dictionary, state: Dictionary = {}) -> 
 	var item := _row("ItemClass", item_id)
 	if item.is_empty() or bool(item.get("TestItem", false)):
 		return "일반 플레이용 원본 상자가 아닙니다."
+	if _source.has_method("item_eligibility"):
+		var eligibility: Dictionary = _source.call("item_eligibility", item_id, context)
+		if not bool(eligibility.get("ok", false)):
+			return "원문 상자 제한을 충족하지 못해 보존합니다: " + str(eligibility.get("error", "unknown"))
 	var region := str(item.get("ServiceRegionCode", ""))
 	if not region.is_empty() and region != str(context.get("region", "KR")):
 		return "현재 지역에서 사용할 수 없는 상자입니다."
@@ -701,6 +748,19 @@ func _item_reason(item_id: int, context: Dictionary, state: Dictionary = {}) -> 
 			6714:
 				if not _server_ok(int(bonus.get("Value", 0)), context):
 					return "현재 서버에서 사용할 수 없는 상자입니다."
+			11883, 5253:
+				# UI visibility and prohibition on extending an expiry do not
+				# themselves consume, grant or extend anything when opening.
+				var type := _row("BonusType", type_id)
+				var expected := "UIShowFilter" if type_id == 11883 else "CannotExtendDeleteTime"
+				if str(type.get("Name", "")) != expected or int(bonus.get("Value", 0)) != 1 or int(bonus.get("BonusApplicationTypeID", 0)) != 0 or int(bonus.get("BonusApplicationTargetID", 0)) != 0:
+					return "상자 표시/삭제 제한 메타데이터가 올바르지 않습니다."
+			422:
+				var life := _life_rule(item_id)
+				if not bool(life.get("ok", false)):
+					return str(life.get("error", "원문 상자 수명을 확인할 수 없습니다."))
+				if _owned_units(item_id, context).is_empty():
+					return "지급 시각과 원문 수명이 확인된 실제 상자가 필요합니다."
 			451, 1022:
 				var interval := int(bonus.get("Value", 0))
 				var key := "item:%d" % item_id
@@ -755,24 +815,35 @@ func _eligible_bag(bag_id: int, context: Dictionary) -> Array:
 		result.append(entity)
 	return result
 
-func _open_luckybag(bag_id: int, request: Dictionary, context: Dictionary, next: Dictionary) -> Dictionary:
+func _luckybag_reward_reason(bag_id: int, context: Dictionary) -> String:
+	# Shared read-only gate for the owned-bag view and committed opening. A
+	# preview checks every eligible leaf without resolving or rolling rewards.
 	for raw_entity in _luckybags.get(str(bag_id), []):
 		if int(raw_entity.get("LimitClass", 10000)) != 10000 and not _class_limits.has(str(int(raw_entity.get("ID", 0)))):
-			return _failure("원문 보상 직업 제한을 해석할 수 없어 상자를 보존합니다.")
+			return "원문 보상 직업 제한을 해석할 수 없어 상자를 보존합니다."
 	var entries := _eligible_bag(bag_id, context)
 	if entries.is_empty() or _row("LuckyBagClass", bag_id).is_empty():
-		return _failure("현재 직업의 원문 상자 보상 풀이 없습니다.")
+		return "현재 직업의 원문 상자 보상 풀이 없습니다."
+	for entity in entries:
+		if int(entity.get("ItemAmount", 0)) <= 0 or _row("ItemClass", int(entity.get("ItemClassID", 0))).is_empty():
+			return "원문 상자 보상 아이템을 확인할 수 없습니다."
+		if _source.has_method("item_eligibility"):
+			var eligibility: Dictionary = _source.call("item_eligibility", int(entity.ItemClassID), context)
+			if not bool(eligibility.get("ok", false)):
+				return "상자 보상 제한을 충족하지 못해 보존합니다: " + str(eligibility.get("error", "unknown"))
+	return ""
+
+func _open_luckybag(bag_id: int, request: Dictionary, context: Dictionary, next: Dictionary, unit: Dictionary = {}) -> Dictionary:
+	var reason := _luckybag_reward_reason(bag_id, context)
+	if not reason.is_empty():
+		return _failure(reason)
+	var entries := _eligible_bag(bag_id, context)
 	var guaranteed: Array = []
+	var final_entries: Array = []
 	var random_entries: Array = []
 	var choices: Array = []
 	var total := 0
 	for entity in entries:
-		if int(entity.get("ItemAmount", 0)) <= 0 or _row("ItemClass", int(entity.get("ItemClassID", 0))).is_empty():
-			return _failure("원문 상자 보상 아이템을 확인할 수 없습니다.")
-		if _source.has_method("item_eligibility"):
-			var eligibility: Dictionary = _source.call("item_eligibility", int(entity.ItemClassID), context)
-			if not bool(eligibility.get("ok", false)):
-				return _failure("상자 보상 제한을 충족하지 못해 보존합니다: " + str(eligibility.get("error", "unknown")))
 		match int(entity.get("LuckyBagEntityTypeID", -1)):
 			0:
 				var weight := int(entity.get("Probability", 0))
@@ -783,6 +854,8 @@ func _open_luckybag(bag_id: int, request: Dictionary, context: Dictionary, next:
 					total += weight
 			1:
 				guaranteed.append(entity)
+			2:
+				final_entries.append(entity)
 			3:
 				choices.append(entity)
 			_:
@@ -805,6 +878,13 @@ func _open_luckybag(bag_id: int, request: Dictionary, context: Dictionary, next:
 					found = true
 			if not found:
 				return _failure("현재 상자/직업에서 고를 수 없는 보상입니다.")
+	var final_plan: Dictionary = {}
+	if not final_entries.is_empty():
+		final_plan = _plan_final_reward(int(request.get("item_id", 0)), bag_id, final_entries, unit, context, next)
+		if not bool(final_plan.get("ok", false)):
+			return final_plan
+		if bool(final_plan.get("due", false)):
+			guaranteed.append_array(final_entries)
 	if not random_entries.is_empty():
 		var policy: Dictionary = context.get("twilight_policy", {})
 		var mode := str(policy.get("luckybag_random_mode", "source_weights"))
@@ -828,7 +908,13 @@ func _open_luckybag(bag_id: int, request: Dictionary, context: Dictionary, next:
 	var rewards: Array = []
 	for entity in guaranteed:
 		rewards.append({"kind": "item", "id": int(entity.ItemClassID), "amount": int(entity.ItemAmount), "enchant": int(entity.get("ItemEnchant", 0)), "bless_code": int(entity.get("ItemBlessCodeID", 1))})
-	return {"ok": true, "rewards": rewards}
+	var assumptions: Array = []
+	if not final_plan.is_empty():
+		if not next.has("final_progress"):
+			next.final_progress = {}
+		next.final_progress[str(int(request.item_id))] = final_plan.progress
+		assumptions.append(final_plan.assumption)
+	return {"ok": true, "rewards": rewards, "assumptions": assumptions}
 
 func _selection_count(bag_id: int, context: Dictionary) -> int:
 	var policy: Dictionary = context.get("twilight_policy", {})
@@ -894,14 +980,29 @@ func _reward_summary(reward_id: int, context: Dictionary = {}) -> String:
 	var type := _row("RewardType", int(reward.get("RewardTypeID", 0)))
 	return "보상: %s" % str(type.get("Name", "정보 확인 필요"))
 
-func _reward_action(label: String, request: Dictionary, reward_id: int) -> Dictionary:
+func _reward_action(label: String, request: Dictionary, reward_id: int, context: Dictionary = {}) -> Dictionary:
 	var action := {"label": label, "request": request}
-	var choices := _reward_choices(reward_id)
+	var choices := _reward_choices(reward_id, context)
 	if not choices.is_empty():
 		action["required_choices"] = choices
 	return action
 
-func _reward_choices(reward_id: int, depth: int = 0) -> Array:
+func _reward_choices(reward_id: int, context: Dictionary = {}) -> Array:
+	if _source.has_method("reward_choices"):
+		var planned: Dictionary = _source.call("reward_choices", reward_id, context)
+		var choices: Array = []
+		if not bool(planned.get("ok", false)):
+			return choices
+		for requirement in planned.get("choices", []):
+			var choice: Dictionary = requirement.duplicate(true)
+			for option in choice.get("options", []):
+				option["label"] = _reward_summary(int(option.get("reward_id", 0)), context)
+			choices.append(choice)
+		return choices
+	return _fixture_reward_choices(reward_id)
+
+func _fixture_reward_choices(reward_id: int, depth: int = 0) -> Array:
+	# Minimal source doubles used by focused tests need no production planner.
 	if depth > 12:
 		return []
 	var reward := _row("Reward", reward_id)
@@ -925,7 +1026,7 @@ func _reward_choices(reward_id: int, depth: int = 0) -> Array:
 				if int(group.get("ComplexRewardTypeID", 0)) == 14:
 					options.append({"label": _reward_summary(int(entity.get("RewardID", 0))), "value": int(entity.get("ID", 0))})
 				else:
-					result.append_array(_reward_choices(int(entity.get("RewardID", 0)), depth + 1))
+					result.append_array(_fixture_reward_choices(int(entity.get("RewardID", 0)), depth + 1))
 			if not options.is_empty():
 				result.append({"key": "selection.%d" % int(group.ID), "options": options, "count": int(group.get("MaxCount", 1)), "min_count": 1, "max_count": int(group.get("MaxCount", 1))})
 	return result
@@ -1091,3 +1192,195 @@ func _validate_quest_token(token: String) -> String:
 	elif str(parts[2]) != "season":
 		return "시즌 패스 퀘스트 기간이 손상되었습니다."
 	return ""
+
+func _has_final_reward(bag_id: int) -> bool:
+	for entity in _luckybags.get(str(bag_id), []):
+		if int(entity.get("LuckyBagEntityTypeID", -1)) == 2:
+			return true
+	return false
+
+func _final_rule(item_id: int, bag_id: int, context: Dictionary) -> Dictionary:
+	# The source declares delayed FinalReward rows but carries no numeric history
+	# field. Korean story/shop descriptions prove 7 uses for 8951 (222101,
+	# 222501,253943) and 10 for test item7091 (179491). Scope and repetition
+	# below are explicit TWILIGHT policies, never inferred physical charges.
+	var source_uses := 0
+	if item_id == 8951 and bag_id == 1991:
+		source_uses = 7
+	elif item_id == 7091 and bag_id == 981:
+		source_uses = 10
+	var policy: Dictionary = context.get("twilight_policy", {})
+	var rules: Variant = policy.get("luckybag_final_rules", {})
+	if not rules is Dictionary:
+		return _failure("TWILIGHT 완료 보상 설정이 올바르지 않습니다.")
+	var configured: Variant = rules.get(str(bag_id), {})
+	if not configured is Dictionary:
+		return _failure("TWILIGHT 상자별 완료 보상 설정이 올바르지 않습니다.")
+	if source_uses == 0 and configured.is_empty():
+		return _failure("원문 완료 사용 횟수가 없어 명시적인 TWILIGHT 설정이 필요합니다.")
+	var uses: Variant = configured.get("uses", source_uses)
+	var completion := str(configured.get("completion", policy.get("luckybag_final_completion", "once")))
+	var scope := str(configured.get("scope", policy.get("luckybag_final_scope", "source_item")))
+	if not _whole(uses, 1) or int(uses) > 100000 or completion not in ["once", "cycle"] or scope != "source_item":
+		return _failure("TWILIGHT 누적 사용/완료 보상 범위 설정이 올바르지 않습니다.")
+	if source_uses > 0 and int(uses) != source_uses:
+		return _failure("확인된 원문 완료 사용 횟수는 TWILIGHT 설정으로 변경할 수 없습니다.")
+	if source_uses == 0 and str(configured.get("final_rewards", "")) != "all":
+		return _failure("미확인 완료 보상의 지급 방식을 TWILIGHT 설정에서 명시하세요.")
+	if source_uses > 0 and str(configured.get("final_rewards", "all")) != "all":
+		return _failure("지원하지 않는 TWILIGHT 완료 보상 지급 방식입니다.")
+	if item_id == 8951 and bag_id == 1991:
+		var finals: Array = []
+		for entity in _luckybags.get("1991", []):
+			if int(entity.get("LuckyBagEntityTypeID", -1)) == 2:
+				finals.append(entity)
+		if finals.size() != 1 or int(finals[0].get("ID", 0)) != 19111 or int(finals[0].get("ItemClassID", 0)) != 8361 or int(finals[0].get("ItemAmount", 0)) != 4:
+			return _failure("원문 7회 완료 보상 연결이 변경되어 상자를 보존합니다.")
+	return {"ok": true, "uses": int(uses), "completion": completion, "scope": scope, "source_uses": source_uses, "final_rewards": "all"}
+
+func _owned_units(item_id: int, context: Dictionary) -> Array:
+	var result: Array = []
+	var needs_life := _has_life_bonus(item_id)
+	var life := _life_rule(item_id) if needs_life else {}
+	if needs_life and not bool(life.get("ok", false)):
+		return result
+	var instances: Variant = context.get("instances", {})
+	if not instances is Dictionary:
+		return result
+	for key in instances:
+		var physical: Variant = instances[key]
+		if not key is String or str(key).is_empty() or not physical is Dictionary:
+			continue
+		if int(physical.get("sourceID", 0)) != item_id or str(physical.get("instance_id", key)) != str(key):
+			continue
+		if bool(physical.get("locked", false)) or bool(physical.get("equipped", false)) or bool(physical.get("sealed", false)):
+			continue
+		var record: Dictionary = physical.get("record", {})
+		var quantity: Variant = physical.get("quantity", physical.get("source_reward_quantity", record.get("source_reward_quantity", 1)))
+		var bless: Variant = physical.get("bless_code", record.get("bless_code", 2 if bool(physical.get("blessed", false)) else 1))
+		if not _whole(quantity, 1) or int(quantity) > 1000000000 or not _whole(bless, 1) or int(bless) > 3:
+			continue
+		# Preserve the record verbatim, including any issued receipt. Its proof
+		# quantity is never decremented or reinterpreted as remaining inventory.
+		var unit := {"instance_id": str(key), "source_item_id": item_id, "quantity_before": int(quantity), "bless_code": int(bless), "source_record": record.duplicate(true), "source_record_sha256": _receipt_digest(record)}
+		if needs_life:
+			var issued: Variant = physical.get("issued_at", record.get("issued_at"))
+			var expiry: Variant = physical.get("expires_at", record.get("expires_at"))
+			var seconds: Variant = physical.get("source_life_seconds", record.get("source_life_seconds"))
+			if not _whole(issued, 0) or not _whole(expiry, 1) or not _whole(seconds, 1) or int(seconds) != int(life.seconds) or int(expiry) != int(issued) + int(life.seconds) or int(context.get("now", 0)) < int(issued) or int(context.get("now", 0)) >= int(expiry):
+				continue
+			var matches := true
+			for field in ["issued_at", "expires_at", "source_life_seconds"]:
+				if physical.has(field) and record.has(field) and physical[field] != record[field]:
+					matches = false
+			if not matches:
+				continue
+			unit["issued_at"] = int(issued)
+			unit["expires_at"] = int(expiry)
+			unit["source_life_seconds"] = int(seconds)
+		if physical.has("quest_reward_receipt"):
+			if not physical.quest_reward_receipt is Dictionary:
+				continue
+			unit["quest_reward_receipt"] = physical.quest_reward_receipt.duplicate(true)
+			unit["quest_reward_receipt_sha256"] = _receipt_digest(physical.quest_reward_receipt)
+		result.append(unit)
+	return result
+
+func _has_life_bonus(item_id: int) -> bool:
+	for bonus in _item_bonuses.get(str(item_id), []):
+		if int(bonus.get("BonusTypeID", 0)) == 422:
+			return true
+	return false
+
+func _life_rule(item_id: int) -> Dictionary:
+	var definitions: Array = []
+	for bonus in _item_bonuses.get(str(item_id), []):
+		if int(bonus.get("BonusTypeID", 0)) == 422:
+			definitions.append(bonus)
+	var type := _row("BonusType", 422)
+	var unit := _row("Unit", int(type.get("UnitID", 0)))
+	if definitions.size() != 1 or str(type.get("Name", "")) != "Life" or str(unit.get("Name", "")) != "Seconds":
+		return _failure("원문 상자 수명 단위를 확인할 수 없어 보존합니다.")
+	var bonus: Dictionary = definitions[0]
+	if int(bonus.get("BonusApplicationTypeID", 0)) != 0 or int(bonus.get("BonusApplicationTargetID", 0)) != 0 or not _whole(bonus.get("Value"), 1):
+		return _failure("조건부 상자 수명을 해석할 수 없어 보존합니다.")
+	return {"ok": true, "seconds": int(bonus.Value)}
+
+func _bind_owned_unit(item_id: int, request: Dictionary, context: Dictionary) -> Dictionary:
+	var units := _owned_units(item_id, context)
+	var requested: Variant = request.get("instance_id", "")
+	if requested is Array:
+		if requested.size() != 1 or not requested[0] is String:
+			return _failure("사용할 실제 상자를 하나 선택하세요.")
+		requested = requested[0]
+	if not requested is String:
+		return _failure("실제 상자 식별자가 올바르지 않습니다.")
+	if str(requested).is_empty() and units.size() == 1:
+		requested = str(units[0].instance_id)
+	for unit in units:
+		if str(unit.instance_id) == str(requested):
+			return {"ok": true, "unit": unit}
+	return _failure("사용 가능한 실제 상자를 선택하고 보유 상태를 다시 확인하세요.")
+
+func _plan_final_reward(item_id: int, bag_id: int, finals: Array, unit: Dictionary, context: Dictionary, state: Dictionary) -> Dictionary:
+	var rule := _final_rule(item_id, bag_id, context)
+	if not bool(rule.get("ok", false)):
+		return rule
+	if unit.is_empty() or int(unit.get("source_item_id", 0)) != item_id:
+		return _failure("완료 보상은 실제 보유 개체의 사용 기록이 필요합니다.")
+	var key := str(item_id)
+	var progress: Dictionary = state.get("final_progress", {}).get(key, {"bag_id": bag_id, "uses": int(rule.uses), "completion": str(rule.completion), "scope": "source_item", "opened": 0, "completed": 0, "units": {}}).duplicate(true)
+	if int(progress.get("bag_id", 0)) != bag_id or int(progress.get("uses", 0)) != int(rule.uses) or str(progress.get("completion", "")) != str(rule.completion):
+		return _failure("기존 완료 보상 진행과 설정이 달라 기록을 보존합니다.")
+	var token := "%s:%d" % [str(unit.instance_id), int(unit.quantity_before)]
+	if progress.units.has(token):
+		return _failure("이미 사용한 실제 상자 단위입니다. 보유 상태를 다시 불러오세요.")
+	progress.units[token] = unit.duplicate(true)
+	progress.opened = int(progress.opened) + 1
+	var completions := int(progress.opened) / int(rule.uses)
+	if str(rule.completion) == "once":
+		completions = mini(1, completions)
+	var due := completions > int(progress.completed)
+	progress.completed = completions
+	var final_ids: Array = []
+	for entry in finals:
+		final_ids.append(int(entry.get("ID", 0)))
+	return {"ok": true, "progress": progress, "due": due, "assumption": {"policy": "TWILIGHT", "rule": "observed_consumed_unit_counter", "source_item_id": item_id, "luckybag_class_id": bag_id, "source_required_uses": int(rule.source_uses), "configured_uses": int(rule.uses), "scope": "source_item", "completion": str(rule.completion), "final_entity_ids": final_ids, "source_fields_retained": true, "physical_charges_inferred": false}}
+
+func _validate_final_progress(value: Variant) -> String:
+	if not value is Dictionary:
+		return "완료 보상 사용 기록이 손상되었습니다."
+	for key in value:
+		var progress: Variant = value[key]
+		if not key is String or not str(key).is_valid_int() or int(key) <= 0 or not progress is Dictionary:
+			return "완료 보상 상자 식별자가 손상되었습니다."
+		if not _whole(progress.get("bag_id"), 1) or not _whole(progress.get("uses"), 1) or int(progress.uses) > 100000 or not _whole(progress.get("opened"), 0) or not _whole(progress.get("completed"), 0):
+			return "완료 보상 누적 횟수가 손상되었습니다."
+		if str(progress.get("completion", "")) not in ["once", "cycle"] or str(progress.get("scope", "")) != "source_item" or not progress.get("units") is Dictionary:
+			return "완료 보상 범위 기록이 손상되었습니다."
+		if progress.units.size() != int(progress.opened):
+			return "완료 보상 사용 개체와 횟수가 일치하지 않습니다."
+		var expected := int(progress.opened) / int(progress.uses)
+		if str(progress.completion) == "once":
+			expected = mini(1, expected)
+		if int(progress.completed) != expected:
+			return "완료 보상 지급 기록이 횟수와 일치하지 않습니다."
+		var valid_contract := false
+		for contract in _item_contracts.get(str(key), []):
+			valid_contract = valid_contract or (int(contract.get("type", 0)) == 110 and int(contract.get("target", 0)) == int(progress.bag_id))
+		if not valid_contract or not _has_final_reward(int(progress.bag_id)):
+			return "원문 완료 보상 상자와 저장 기록이 일치하지 않습니다."
+		for token in progress.units:
+			var unit: Variant = progress.units[token]
+			if not token is String or not unit is Dictionary or not unit.get("instance_id") is String or str(unit.instance_id).is_empty() or int(unit.get("source_item_id", 0)) != int(key) or not _whole(unit.get("quantity_before"), 1) or not _whole(unit.get("bless_code"), 1) or int(unit.bless_code) > 3 or not unit.get("source_record") is Dictionary:
+				return "완료 보상 사용 영수증이 손상되었습니다."
+			if str(token) != "%s:%d" % [str(unit.instance_id), int(unit.quantity_before)] or str(unit.get("source_record_sha256", "")) != _receipt_digest(unit.source_record):
+				return "완료 보상 개체 증거가 일치하지 않습니다."
+			if unit.has("quest_reward_receipt") and (not unit.quest_reward_receipt is Dictionary or str(unit.get("quest_reward_receipt_sha256", "")) != _receipt_digest(unit.quest_reward_receipt)):
+				return "완료 보상 원본 지급 영수증이 일치하지 않습니다."
+	return ""
+
+func _receipt_digest(record: Dictionary) -> String:
+	# Godot JSON parsing turns integral numbers into floats. Normalize through
+	# the same JSON representation before hashing so a save/reload is stable.
+	return JSON.stringify(JSON.parse_string(JSON.stringify(record))).sha256_text()

@@ -62,16 +62,37 @@ class Host extends Node:
 	func _invalidate_equipment_static() -> void: cache_invalidations += 1
 class Source extends RefCounted:
 	var available: bool = true
+	var pass_active: bool = true
+	var server_allowed: bool = true
+	var pass_end: int = 0
+	var extra_leaf: bool = false
+	var item_cutoff: int = 0
 	var last_error: String = "fixture source unavailable"
 	func ready() -> bool: return available
 	func rows(table: String) -> Array:
 		if table == "CurrencyUnitClass": return [{"ID":1,"CurrencyID":9,"UnitID":4,"ClassID":100,"ForGive":false,"ConsumePriority":0},{"ID":2,"CurrencyID":9,"UnitID":4,"ClassID":101,"ForGive":true,"ConsumePriority":0}]
+		if table == "QuestReward": return [{"QuestID":77,"RewardID":500},{"QuestID":77,"RewardID":1000}]
+		if table == "ItemBonus": return [{"ItemClassID":400,"BonusID":4000},{"ItemClassID":401,"BonusID":4001}]
 		return []
 	func row(table: String,id: int) -> Dictionary:
 		if table == "ItemClass" and id in [100,101,200,300]: return {"ID":id,"Name":"fixture " + str(id),"CategoryID":78 if id == 100 else 10291 if id == 300 else 10,"MaxStackAmount":1 if id == 200 else 999999,"GradeID":3}
+		if table == "ItemClass" and id in [400,401]: return {"ID":id,"Name":"Life fixture","MaxStackAmount":1 if id == 400 else 3,"GradeID":3}
+		if table == "Bonus" and id in [4000,4001]: return {"ID":id,"BonusTypeID":422,"Value":86400 if id == 4000 else 259200}
 		if table == "Bonus": return {"ID":id}
+		if table == "BonusType" and id == 422: return {"ID":422,"Name":"Life","UnitID":17}
+		if table == "Reward" and id == 500: return {"ID":500,"RewardTypeID":172,"RewardClassID":724,"Amount":60}
+		if table == "Reward" and id == 1000: return {"ID":1000,"RewardTypeID":2,"RewardClassID":100,"Amount":4,"ItemBlessCodeID":1}
+		if table == "PassSystem" and id == 724: return {"ID":724,"PassSystemTypeID":12,"IsActive":pass_active,"ServerLimitSetID":1,"SeasonEndDateTimeID":1 if pass_end > 0 else 0}
 		return {}
-	func item_eligibility(_id: int,_context: Dictionary) -> Dictionary: return {"ok":true}
+	func region_allowed(_id: int,_ctx: Dictionary) -> bool: return server_allowed
+	func timestamp(_id: int,_ctx: Dictionary) -> int: return pass_end
+	func resolve_reward(_id: int,_ctx: Dictionary) -> Dictionary:
+		var rewards: Array = [{"kind":"pass_exp","id":724,"amount":60}]
+		if extra_leaf: rewards.append({"kind":"unsupported","id":1,"amount":1})
+		return {"ok":true,"rewards":rewards}
+	func item_eligibility(id: int,ctx: Dictionary) -> Dictionary:
+		if id == 200 and item_cutoff > 0 and int(ctx.get("now",0)) >= item_cutoff: return {"ok":false,"error":"item_expired"}
+		return {"ok":true}
 	func bonus_stats(_ids: Array,_context: Dictionary) -> Dictionary: return {"stats":{"ac:flat":-2.0,"experience_bonus:percent":5.0}}
 class Domain extends RefCounted:
 	func view(_ctx: Dictionary,_state: Dictionary) -> Dictionary: return {"title":"fixture","notes":[],"rows":[]}
@@ -100,14 +121,24 @@ class Challenge extends Domain:
 		if value.kind == "survival_tick": next.ticks += 1
 		if value.kind == "map_change": next.active.failed = true
 		return {"ok":true,"state":next}
+class FinalDomain extends Domain:
+	func initial_state() -> Dictionary:
+		var result: Dictionary = super.initial_state()
+		result.final_progress = {}
+		return result
 class Jade extends RefCounted:
 	var stack_set_thresholds: bool = true
 	var protection_dispatch: Dictionary = {1:54252,14:66574}
 	var percent_ignore: bool = false
+	var only_owned: bool = false
+	var source_cutoff: int = 0
 	func initial_state() -> Dictionary: return {"version":1,"latest_at":0,"jade":{}}
 	func validate_state(_value: Variant) -> String: return ""
-	func bonuses(_ctx: Dictionary,_state: Dictionary) -> Dictionary:
-		var result: Dictionary = {"stats":{"armor_class":1.0},"effects":[],"unsupported":[]}
+	func is_grail_item(id: int) -> bool: return id == 200
+	func bonuses(ctx: Dictionary,_state: Dictionary) -> Dictionary:
+		var armor: float = 1.0
+		if only_owned and (int(ctx.owned.get("200",0)) == 0 or (source_cutoff > 0 and int(ctx.now) >= source_cutoff)): armor = 0
+		var result: Dictionary = {"stats":{"armor_class":armor},"conditional_stats":{"undead":{"undead_additional_max_damage":5},"pvp":{"pvp_damage_reduction_pct":20,"pvp_damage_reduction_ignore_pct":2}},"effects":[],"unsupported":[]}
 		if percent_ignore:
 			result.stats.ignore_melee_damage_reduction_pct = 1.0
 			result.effects.append({"key":"ignore_melee_damage_reduction_pct","applied":true,"type_id":5681,"raw_value":10000})
@@ -287,7 +318,7 @@ func _run() -> void:
 	check(runtime.catalog_bonus("damage_reduction_ignore") == 2,"existing catalog damage path receives canonical flat ignore")
 	runtime.domains.jade_grail.percent_ignore = true
 	runtime.rebuild()
-	check(is_zero_approx(runtime.bonus("ignore_melee_damage_reduction:percent")) and not runtime.effect_details.effects[0].applied and runtime.effect_details.unsupported[0].reason == "unsupported_combat_consumer" and int(runtime.effect_details.unsupported[0].raw_value) == 10000,"unconsumed percentage ignore retains source evidence and explicit unsupported flag")
+	check(is_equal_approx(runtime.bonus("ignore_melee_damage_reduction:percent"),1.0) and int(runtime.effect_details.effects[0].raw_value) == 10000 and runtime.effect_details.combat_policy.percent == "percentage_points_estimate","target consumer retains raw percent ignore and labels local formula estimate")
 	world.free()
 
 	f = fixture(); runtime = f.runtime; world = f.world
@@ -321,5 +352,169 @@ func _run() -> void:
 	var ordered: Array = View.usable_first(presentation)
 	check(ordered.map(func(row: Dictionary): return row.id) == ["active_a","active_b","inactive","disabled"],"enabled-action rows display first with stable order in both groups")
 	check(ordered.size() == presentation.size() and presentation[0].id == "inactive","display priority retains every row and leaves source rows untouched")
+	_followup_ports()
 	if failures.is_empty(): print("UNCONFIRMED523_HOST_OK: %d assertions" % checks); quit(0)
 	else: printerr("UNCONFIRMED523_HOST_FAILED: " + ", ".join(failures)); quit(1)
+
+func _followup_ports() -> void:
+	var f: Dictionary = fixture()
+	var runtime = f.runtime
+	var world = f.world
+	runtime.domains.jade_grail.percent_ignore = true
+	runtime.rebuild()
+	check(runtime.combat_context("melee",{}).undead_max_damage == 0 and runtime.combat_context("melee",{}).pvp_reduction_percent == 0,"scoped grail bonuses never become ordinary PvE effects")
+	check(runtime.combat_context("melee",{"undead":true}).undead_max_damage == 5 and runtime.combat_context("magic",{"undead":true}).undead_max_damage == 0,"source undead maximum uses explicit target and physical attack policy")
+	var hit: Dictionary = {"pvp":true,"percent_reduction":10.0,"flat_reduction":20,"critical":true}
+	var adjusted: Dictionary = runtime.outgoing_context("melee",hit)
+	check(adjusted.percent_reduction == 7.0 and adjusted.source523_percent_ignore == 3.0 and hit.percent_reduction == 10.0 and adjusted.flat_reduction == 20,"typed and PvP ignore share existing percent budget without mutating context or flat restoration")
+	check(runtime.outgoing_context("ranged",{"percent_reduction":10.0}).percent_reduction == 10.0 and runtime.outgoing_context("melee",{"percent_reduction":0.5}).percent_reduction == 0.0,"ignore respects attack kind and observed reduction budget")
+	check(runtime.incoming_damage(100,"melee",{}) == 100 and runtime.incoming_damage(100,"melee",{"pvp":true}) == 80 and runtime.incoming_damage(0,"melee",{"pvp":true}) == 0,"incoming source reduction requires real PvP and preserves zero damage")
+	check(runtime.apply_policy_config({"policy":{"conditional_percent_mode":"disabled","undead_damage_mode":"disabled"}}).ok and runtime.outgoing_context("melee",hit).percent_reduction == 10.0 and runtime.combat_context("melee",{"undead":true}).undead_max_damage == 0,"adjustable estimate policies can disable both consumers without altering source rows")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	world.item_instances = {"proof_stack":{"name":"native stack","source_reward_quantity":4,"record":{"source_item_class_id":100,"sourceId":"m523:item:100","source_reward_quantity":4,"source_bless_code_id":1},"quest_reward_receipt":{"schema":1,"quest_id":77,"reward_id":1000,"item_class_id":100,"bless_code_id":1,"source_sha256":Runtime.Source.SOURCE_SHA256,"quantity":4}}}
+	var proof_before: Dictionary = world.item_instances.proof_stack.quest_reward_receipt.duplicate(true)
+	var staged: Dictionary = runtime._stage_world()
+	var error: String = runtime._cost({"kind":"item","id":100,"amount":1,"instance_id":"proof_stack","expected_quantity":4},staged,runtime.context())
+	check(error.is_empty() and staged.item_instances.proof_stack.source_reward_quantity == 3 and staged.item_instances.proof_stack.quest_reward_receipt == proof_before and world.item_instances.proof_stack.source_reward_quantity == 4,"exact owned consumption stages remaining stack and preserves immutable issued proof and live state")
+	check(not runtime._cost({"kind":"item","id":100,"amount":1,"instance_id":"proof_stack","expected_quantity":4},staged,runtime.context()).is_empty(),"same physical unit snapshot cannot be debited twice")
+	check(not runtime._cost({"kind":"item","id":100,"amount":1,"instance_id":"missing"},runtime._stage_world(),runtime.context()).is_empty(),"instance-bound debit cannot fall through to another stack")
+	world.item_instances.proof_stack.locked = true
+	check(not runtime._cost({"kind":"item","id":100,"amount":1,"instance_id":"proof_stack"},runtime._stage_world(),runtime.context()).is_empty(),"exact instance costs retain lock protection")
+	world.item_instances.proof_stack.locked = false
+	world.item_instances.proof_stack.quest_reward_receipt.quantity = 3
+	check(runtime.context().has("ownership_error") and not runtime.execute("events",{}).ok and world.save_calls == 0,"remaining greater than issued proof fails before any write")
+	world.item_instances.proof_stack.quest_reward_receipt.quantity = 4
+	world.item_instances.proof_stack.quest_reward_receipt.bless_code_id = 2
+	check(runtime.context().has("ownership_error"),"receipt blessing is matched to actual source physical record")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	var proof: Dictionary = {"schema":1,"quest_id":77,"reward_id":500,"source_sha256":Runtime.Source.SOURCE_SHA256,"claim_id":"upstream:77:local-day:once"}
+	var initial: Dictionary = runtime.state.duplicate(true)
+	var prepared: Dictionary = runtime.prepare_pass_reward(proof)
+	check(prepared.ok and runtime.state == initial and world.save_calls == 0 and int(prepared.staged.unconfirmed523.domains.events.passes["724"].experience) == 60,"pass reward preparation resolves exact source target without live mutation or write")
+	prepared.staged.unconfirmed523.domains.events.passes["724"].experience = 999
+	var beginning: Dictionary = runtime.begin_prepared_commit(prepared.plan_id)
+	check(beginning.ok and beginning.staged.keys() == ["unconfirmed523"] and int(beginning.staged.unconfirmed523.domains.events.passes["724"].experience) == 60 and runtime.busy,"prepared preview mutation cannot alter opaque plan and pass patch owns only its namespace")
+	beginning.staged["upstream_claim_fixture"] = {"claimed":true}
+	var write_result: Error = world._save_game(true,beginning.staged)
+	var committed: Dictionary = runtime.finish_prepared_commit(prepared.plan_id,write_result,beginning.staged)
+	check(committed.ok and world.save_calls == 1 and world.disk.upstream_claim_fixture.claimed and int(runtime.context().pass_exp["724"]) == 60,"two-phase port commits source pass XP and caller-staged claim in one writer payload")
+	check(not runtime.prepare_pass_reward(proof).ok and not runtime.begin_prepared_commit(prepared.plan_id).ok,"durable namespaced source grant and single-use plan reject duplicate claim")
+	for i: int in range(8200): runtime.state.event_receipts["old:%d" % i] = true
+	runtime.record_event("pickup",{"event_id":"after_many_kills","amount":1})
+	check(runtime.state.event_receipts.has(prepared.receipt_id),"pass grant dedup receipt outlives bounded live event replay receipts")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	prepared = runtime.prepare_pass_reward(proof)
+	world.gold += 1
+	check(not runtime.begin_prepared_commit(prepared.plan_id).ok and world.save_calls == 0,"prepared source grant becomes stale after ownership or funds change")
+	world.gold -= 1
+	check(runtime.cancel_prepared(prepared.plan_id) and not runtime.begin_prepared_commit(prepared.plan_id).ok,"cancelled prepared grant leaves no claim or consumption")
+	runtime.source.extra_leaf = true
+	check(not runtime.prepare_pass_reward(proof).ok and runtime.state == runtime.fresh() and world.save_calls == 0,"unsupported composite leaf fails all staged pass state before write")
+	runtime.source.extra_leaf = false
+	runtime.source.pass_active = false
+	check(not runtime.prepare_pass_reward(proof).ok,"direct pass port preserves source active flag")
+	runtime.source.pass_active = true; runtime.source.server_allowed = false
+	check(not runtime.prepare_pass_reward(proof).ok,"direct pass port preserves source server limit")
+	runtime.source.server_allowed = true; runtime.source.pass_end = runtime.now()
+	check(not runtime.prepare_pass_reward(proof).ok,"direct pass port enforces season expiry at boundary")
+	runtime.source.pass_end = 0
+	var bad: Dictionary = proof.duplicate(true); bad.source_sha256 = "wrong"
+	check(not runtime.prepare_pass_reward(bad).ok,"source grant proof requires exact original archive SHA")
+	bad = proof.duplicate(true); bad.quest_id = 78
+	check(not runtime.prepare_pass_reward(bad).ok,"source grant proof must match raw QuestReward edge")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	prepared = runtime.prepare_pass_reward(proof)
+	beginning = runtime.begin_prepared_commit(prepared.plan_id)
+	initial = runtime.state.duplicate(true)
+	world.save_result = ERR_CANT_CREATE
+	write_result = world._save_game(true,beginning.staged)
+	check(not runtime.finish_prepared_commit(prepared.plan_id,write_result,beginning.staged).ok and runtime.save_blocked and runtime.state == initial and world.gold == 1000 and world.disk.is_empty(),"failed composite writer preserves live progression funds RNG and blocks uncertain retry")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	prepared = runtime.prepare_pass_reward(proof)
+	beginning = runtime.begin_prepared_commit(prepared.plan_id)
+	beginning.staged.unconfirmed523.domains.events.passes["724"].experience = 600
+	check(not runtime.finish_prepared_commit(prepared.plan_id,OK,beginning.staged).ok and runtime.save_blocked and runtime.state == runtime.fresh(),"mismatched published composite payload blocks live application")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	prepared = runtime.prepare_pass_reward(proof)
+	beginning = runtime.begin_prepared_commit(prepared.plan_id)
+	runtime.record_event("pickup",{"event_id":"interleaved_authoritative_event","amount":1})
+	var interleaved: Dictionary = runtime.state.duplicate(true)
+	check(not runtime.finish_prepared_commit(prepared.plan_id,OK,beginning.staged).ok and runtime.save_blocked and runtime.state == interleaved and int(runtime.state.event_counters.pickup) == 1,"yield/interleaved live event cannot be overwritten by a prepared grant and forces uncertain-save protection")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	staged = runtime._stage_world()
+	check(runtime.stage_item(staged,400,2).is_empty() and staged.item_instances.size() == 2,"source nonstack Life grants create independent exact physical copies")
+	var issued: int = runtime.now()
+	for physical: Dictionary in staged.item_instances.values():
+		check(int(physical.issued_at) == issued and int(physical.expires_at) == issued+86400 and int(physical.record.source_life_seconds) == 86400 and physical.record.expires_at == physical.expires_at,"new Life grant preserves exact source seconds and acquisition provenance on physical and record")
+	check(runtime.stage_item(staged,401,4).is_empty() and staged.item_instances.size() == 4,"native stack maximum splits timed grants without merging distinct physical expiry")
+	runtime.test_now += 10
+	check(runtime.stage_item(staged,401,1).is_empty() and staged.item_instances.size() == 5,"later Life grant receives a fresh physical identity rather than extending an earlier stack")
+	var expiries: Dictionary = {}
+	for physical: Dictionary in staged.item_instances.values():
+		if Runtime.native_id(physical.record) == 401: expiries[int(physical.expires_at)] = true
+	check(expiries.size() == 2,"distinct Life acquisition timestamps retain distinct expiries")
+	world.inventory = staged.inventory; world.item_instances = staged.item_instances
+	runtime.test_now = issued+86400
+	check(int(runtime.context().owned.get("400",0)) == 0 and int(runtime.context().owned.get("401",0)) == 5,"physical Life expiry removes only due copies from usable ownership without deleting them")
+	check(world.item_instances.size() == 5,"expiry preserves physical evidence and inventory ownership")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	world.inventory["grail"] = 1
+	world.item_instances = {"grail":{"name":"grail","record":{"source_item_class_id":200,"sourceId":"m523:item:200"},"expires_at":runtime.now()+2}}
+	runtime.domains.jade_grail.only_owned = true
+	runtime.advance_time()
+	var invalidations: int = world.cache_invalidations
+	check(runtime.bonus("ac:flat") == -1,"owned physical grail applies before its timestamp cutoff")
+	runtime.test_now += 1; runtime.advance_time()
+	check(world.cache_invalidations == invalidations,"physical expiry observation does not rebuild while eligibility is unchanged")
+	runtime.test_now += 1; runtime.advance_time()
+	check(world.cache_invalidations == invalidations+1 and runtime.bonus("ac:flat") == 0 and world.item_instances.has("grail"),"physical grail cutoff rebuilds and invalidates cached stats without discarding owned record")
+	runtime.test_now -= 1; runtime.advance_time()
+	check(runtime.bonus("ac:flat") == 0 and runtime.context().now == runtime.effective_now(),"clock rollback cannot reactivate expired physical grail effects")
+	world.item_instances.grail.erase("expires_at")
+	runtime.source.item_cutoff = runtime.effective_now()+2
+	runtime.domains.jade_grail.source_cutoff = runtime.source.item_cutoff
+	runtime.test_now = runtime.effective_now()
+	runtime.advance_time(); invalidations = world.cache_invalidations
+	runtime.test_now += 2; runtime.advance_time()
+	check(world.cache_invalidations == invalidations+1 and runtime.bonus("ac:flat") == 0,"owned source eligibility cutoff invalidates stats using bounded per-source checks")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	check(runtime.apply_policy_config({"policy":{"luckybag_final_scope":"source_item","luckybag_final_completion":"once","luckybag_final_rules":{"1991":{"uses":7,"completion":"cycle","scope":"source_item","final_rewards":"all"}}}}).ok,"strict final reward policy accepts explicit source pool rule")
+	var policy_saved: Dictionary = runtime.policy.duplicate(true)
+	check(not runtime.apply_policy_config({"policy":{"luckybag_final_rules":{"1991":{"uses":7,"unknown":true}}}}).ok and runtime.policy == policy_saved,"unknown final reward policy fields fail atomically")
+	check(not runtime.apply_policy_config({"policy":{"luckybag_final_rules":{"1991":{"uses":0}}}}).ok and not runtime.apply_policy_config({"policy":{"luckybag_final_scope":"account"}}).ok,"invalid final reward threshold and unsupported history scope stay blocked")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	runtime.domains.events = FinalDomain.new()
+	var legacy: Dictionary = runtime.fresh()
+	legacy.domains.events.erase("final_progress")
+	legacy = JSON.parse_string(JSON.stringify(legacy))
+	var legacy_copy: Dictionary = legacy.duplicate(true)
+	runtime.source.available = false
+	runtime.restore({"unconfirmed523":legacy})
+	check(not runtime.save_blocked and runtime.state == legacy_copy and not runtime.state.domains.events.has("final_progress"),"public empty pre-final-progress JSON save remains packless-compatible without rewriting owned progress")
+	legacy.domains.events.claims.paid = true
+	runtime.restore({"unconfirmed523":legacy})
+	check(runtime.save_blocked and runtime.state == legacy,"real legacy claim progress remains protected when original pack is absent")
+	legacy = legacy_copy.duplicate(true); legacy.domains.events.erase("claims")
+	runtime.restore({"unconfirmed523":legacy})
+	check(runtime.save_blocked,"optional empty final-progress normalization cannot mask other missing saved fields")
+	world.free()

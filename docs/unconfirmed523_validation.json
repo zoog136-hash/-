@@ -246,11 +246,12 @@
   ],
   "remaining": [
     "native dungeon geometry/server/multiplayer and original Orim character/skill/map host",
-    "unsupported FinalReward and reward kinds preserve owned containers/claims",
+    "all18 native FinalReward pools remain gated by source consumer/reward TestItem or expiry, or unknown native final history/threshold rules; source gates retained",
+    "all10 native Complex consumers retain TestItem/expiry on consumer or mandatory leaf; execution support is separate from eligibility",
     "growth-pass original quest prerequisites remain locked without verified completion IDs",
-    "conditional or unconsumed combat effects explicitly retained as unsupported",
+    "actual PR262 Quest523 same-write pass-exp adapter and joint894 reward integration; generic synchronous port only",
     "all natural supply/use/effects/art of all source items",
-    "latest-main integration/required merge gates are separate; this is a Draft"
+    "central PR263 latest-main integration and remote coordination; public HEAD unchanged"
   ],
   "code_sha256": {
     "scripts/world.gd": "52e6af4fc109d817796babf79a32b396f01166c610a16b092b20a230bc6fb8f9",
@@ -292,5 +293,226 @@
     "docs/UNCONFIRMED523.md",
     "docs/unconfirmed523_validation.json"
   ],
-  "generated_uid_policy": "Godot-generated .gd.uid cache files remain ignored by the existing repository policy; new scripts use explicit res:// paths."
+  "generated_uid_policy": "Godot-generated .gd.uid cache files remain ignored by the existing repository policy; new scripts use explicit res:// paths.",
+  "baseline_public_head": "6bf89f6435cbd8e68bf60ad528430486dc339c68",
+  "baseline_evidence_note": "Existing tests/code hashes record the public baseline. Local followup tests and hashes below supersede only changed code; no remote update is performed.",
+  "local_followup": {
+    "status": "complete locally, validated and ready for central publication coordination; no remote update",
+    "parent_public_head": "6bf89f6435cbd8e68bf60ad528430486dc339c68",
+    "remote_mutations": false,
+    "new_environment": false,
+    "new_pr": false,
+    "source_resources_staged": false,
+    "audit": {
+      "Reward_rows": 36038,
+      "resolver_fixture_before": 24759,
+      "resolver_fixture_after": 24774,
+      "new_NoReward": 15,
+      "new_resolver_regressions": 0,
+      "resolver_scope": "deterministic selected-branch source fixture contexts, not current claimability/natural supply",
+      "selection_consumers": 3359,
+      "complex_consumers": 10,
+      "metadata_consumer_gate_removals": 78,
+      "new_end_to_end_selection_consumers_at_declared_profile": 77,
+      "complex_current_native_end_to_end_openable": 0,
+      "final_pools": 18,
+      "final_current_native_end_to_end_openable": 0,
+      "final8951_blocker": "probability entity18901 rewards TestItem8961; all-leaf rejection preserved",
+      "Challenge_definitions": 69,
+      "Challenge_active": 6,
+      "Challenge_HP_sections": 27,
+      "Challenge_extra_reward_links": 108,
+      "pass172_rows_and_direct_QuestReward_edges": 894,
+      "PR262_readonly_contract_head": "ee4856dda9793aca27af3fd9dffea7bb486ba51f",
+      "coverage_does_not_prove": "ordinary acquisition, all original maps, production Quest523 joint claims or current Test/expired native consumers",
+      "typed_proposal_fixture_before_allowed": 368,
+      "typed_proposal_fixture_after_allowed": 445,
+      "typed_proposal_fixture_after_rejected": 2924,
+      "typed_proposal_fixture_new_rejections": 0,
+      "typed_explicit_choice_paths": 5886
+    },
+    "diagnostics": [
+      "First actual Main91 had1 fixture failure: level89 cannot start source Challenge701 (max51). Fixture corrected to721 (min70); source gates unchanged.",
+      "First events actualsource expectations assumed8951 reward leaf was eligible and complex167404 mandatory leaf unexpired; source Test8961 and expired155994 were discovered, production gates preserved, expectations corrected.",
+      "First separate-process46 passed all assertions but emitted X11 BadShmSeg; same profile retested on Xvfb with MIT-SHM disabled, without changing game code or save rules.",
+      "Pixel inspection found8951 opening button enabled despite correct commit rejection; same source guard reused in owned-bag view and verified by6009 focused checks; fresh Main UI captures pending."
+    ],
+    "tests": [
+      {
+        "name": "source parser/resolver/private source audit",
+        "checks": 73,
+        "status": "passed",
+        "engine": "Godot4.7.2"
+      },
+      {
+        "name": "events all3369 before/after and source final pools",
+        "checks": 6009,
+        "status": "passed",
+        "engine": "Godot4.7.2",
+        "coverage": "all3369carrier/5886paths plusreadonlynativeLuckyBagviewgates; ownershipfixtures, no natural supply",
+        "prior_checks_before_final_owned_bag_view_fix": 6001
+      },
+      {
+        "name": "Challenge all69/all27HP/all108extra",
+        "checks": 694,
+        "status": "passed",
+        "engine": "Godot4.7.2"
+      },
+      {
+        "name": "runtime host receipts/prepared pass/TTL/save gates",
+        "checks": 113,
+        "status": "passed",
+        "engine": "Godot4.7.2"
+      },
+      {
+        "name": "jade grail pass raw-source and facade audits",
+        "checks": 1610,
+        "status": "passed",
+        "engine": "Godot4.7.2",
+        "coverage": "all146 unique Grail bonuses,59 reachable pass184 bonuses,894 direct pass172 QuestReward edges"
+      },
+      {
+        "name": "actual Main OpenGL native combat/HP/pass port/Test leaf/atomic saves",
+        "checks": 99,
+        "status": "passed",
+        "engine": "Godot4.7.2",
+        "scope": "real World/Monster/renderer/writer plus explicit ownership,controlledsourceNPCidentity andpassXPfixtures; no naturalacquisition claim"
+      },
+      {
+        "name": "unchanged required Core Runtime Save",
+        "checks": 44,
+        "status": "passed",
+        "engine": "Godot4.7.2",
+        "scope": "unchanged original assertions via real-resource-byte loader"
+      },
+      {
+        "name": "separate-process Main reload/captures before final bag-view guard",
+        "checks": 46,
+        "status": "passed",
+        "engine": "Godot4.7.2",
+        "scope": "same saved profile/coldfullHP/eight blocked cube instances/all durable namespaces/nativeUI6captures",
+        "display_note": "clean repeat on MIT-SHM disabled Xvfb passed46 with no ERROR lines; earlier diagnostic log retained"
+      },
+      {
+        "name": "final Main separate-process native UI and both-resolution captures",
+        "checks": 50,
+        "status": "passed",
+        "engine": "Godot4.7.2",
+        "scope": "full saved-profile reload/fullHP/nativeIDs/durable namespaces plus source-blocked8951 nativebutton/reason at both resolutions",
+        "display": "OpenGL Mesa25 llvmpipe; Xvfb MIT-SHM disabled;0ERROR lines; VSync unsupported warning only"
+      }
+    ],
+    "synchronous_pass_port": "prepare -> begin -> one caller-owned World save including upstream claim -> finish; no await; own namespace patch only; no Quest523 ledger copied; interleaving or uncertain write blocks application",
+    "time_boundary": "device-local naive source dates vs PR262 UTC+9; no global clock/local-time feature applied",
+    "implementation_fixes": [
+      "rawHP section observer consumes actual Monster HP with exactNPC/pending/pooledlife guards",
+      "source scoped percent ignore uses one target reduction budget; source PvP and undead stay conditional with disableable explicit estimates",
+      "restored source possession bonuses rebuild before saved HP clamp",
+      "physical/source eligibility edges invalidate cached grail stats at expiry",
+      "optionalempty final_progress migration preserves frozen-public empty save without source pack",
+      "new source Life grants stamp actual issued/expiry and never infer old acquisition time",
+      "unknown/interleaved/failed composite save preserves live state and blocks retry pending reload",
+      "ownedLuckyBagview reuses exactreadonlyopeningrewardgate; Test/expiredleafreason visible withdisabledaction; eligiblebagsremainenabled; no preview RNG"
+    ],
+    "audit_profile": {
+      "now": "2026-11-04T12:00:00Z",
+      "region": "KR",
+      "level": 90,
+      "max_level": 90,
+      "class_id": 1,
+      "offset_minutes": 0,
+      "ownership": "explicit exact source-ID physical unit fixtures",
+      "selection": "5886 explicit choice paths, not natural acquisition"
+    },
+    "resource_integrity": {
+      "status": "passed",
+      "atlases": 723,
+      "frames": 41442,
+      "bytes": 233420026
+    },
+    "changed_existing_public_files": [
+      "data/unconfirmed523/twilight_policy.json",
+      "docs/UNCONFIRMED523.md",
+      "docs/unconfirmed523_validation.json",
+      "scripts/unconfirmed523/challenge_domain.gd",
+      "scripts/unconfirmed523/events_domain.gd",
+      "scripts/unconfirmed523/jade_grail_domain.gd",
+      "scripts/unconfirmed523/runtime.gd",
+      "scripts/unconfirmed523/source523.gd",
+      "scripts/world.gd",
+      "tests/unconfirmed523_challenge_test.gd",
+      "tests/unconfirmed523_events_test.gd",
+      "tests/unconfirmed523_host_test.gd",
+      "tests/unconfirmed523_jade_grail_test.gd",
+      "tests/unconfirmed523_main_test.gd",
+      "tests/unconfirmed523_source_test.gd"
+    ],
+    "code_sha256": {
+      "data/unconfirmed523/twilight_policy.json": "f8e05170bf485584c8ccd4961a504af9bcb9ce8f342e486c0c579c87a409092b",
+      "scripts/unconfirmed523/challenge_domain.gd": "3fb1e0352c67799deacc1f59af7126c4fd8ee31e3a424d881fd611204b633b6e",
+      "scripts/unconfirmed523/events_domain.gd": "29e537cdc35fe12e0a48721bea816b1ba1d6e045362b795471161ea3538bc6e8",
+      "scripts/unconfirmed523/jade_grail_domain.gd": "3500d83bcd9051f0d5d786a31cb7a4c0c28b5d8a42bf8c0fcdcbf3c481ac9cb2",
+      "scripts/unconfirmed523/runtime.gd": "b864d7acc32a81c85a49e0b36b412e4775bc9105ce6f31d97a72e4956dcf4b84",
+      "scripts/unconfirmed523/source523.gd": "7790b5f46b2b817acb067e8d370a7ec7ff0472f69f0e5af97dc3f8d662780477",
+      "scripts/world.gd": "ccd7606e4b6912532b5fb4534bee79859c66320989923a7a3bdd37050fd20063",
+      "tests/unconfirmed523_challenge_test.gd": "89c66edce0a7dceea76fcd82a086a4746a0d75970053038bd5a6e2c60402d9e4",
+      "tests/unconfirmed523_events_test.gd": "b6f79bfa007a9de5408976d291036b0c4fd355219db0b2205538d2713b2d932d",
+      "tests/unconfirmed523_host_test.gd": "6d7a003d446e1ffe87f7c3c013f745179048bcf8dbffb92e04d843984f0c47c1",
+      "tests/unconfirmed523_jade_grail_test.gd": "38e103da9393c34136a2270b5a7498fff3cf5f608650e1fa42f4954bc98f583f",
+      "tests/unconfirmed523_main_test.gd": "dcf75eeea505569dd63bcb16c7953f71ec06e771ba3e4b6afa6e405a999e7769",
+      "tests/unconfirmed523_source_test.gd": "d823f98ff903fa1dc5945673b8f14bd1d509ecc25539cdfb92a1b744c0124473"
+    },
+    "final_code_scope": "15 existing previously public files; no new resource/code paths",
+    "visual_verification": {
+      "images": 6,
+      "requested_pixels": [
+        [
+          1280,
+          720
+        ],
+        [
+          854,
+          480
+        ]
+      ],
+      "actual_pixels": [
+        [
+          1280,
+          720
+        ],
+        [
+          853,
+          480
+        ]
+      ],
+      "small_viewport_reason": "existing keep-aspect output, not image resampling",
+      "source_background": "existing private Aden personal derived cache",
+      "review": "all6 original captures visually inspected; blockedreason/button readable and currentChallenge actions visible",
+      "published": false
+    },
+    "review": {
+      "mode": "independent read-only review",
+      "fixed": [
+        "HP restoration order",
+        "physical grail expiry cache",
+        "strict final policy validation",
+        "source-known use-count override",
+        "synchronous prepared-state interleaving guard",
+        "optional empty legacy event state compatibility",
+        "owned-bag view mirrors leaf rejection"
+      ],
+      "production_Quest523_joint_adapter": false
+    },
+    "final_log_sha256": {
+      "followup-source-tests.log": "dbef545d7bb1be64e3fdeb9bafa08d13172c892a4c4d56c1468e679b4b35b605",
+      "followup-events/events-ui-final-regression.log": "c4d812101c95c9cb6ba3a143377035fb4ded95c824f49ed7f58b85b7f4722697",
+      "followup-challenge/challenge-source.log": "5ea7eac087b7f3a33f67af0b8f2715f2613fa95d5929b67b8c15a67dbf7925f7",
+      "followup-host.log": "dcedfc52c220ce472f13e35e8955ab3c7f81b027f80bb6aae6f60c32060703d3",
+      "followup-jade-grail-source.log": "3720783ef94a55d5ae87058a6f500d77e313534e6763cabedefd20771dd6540b",
+      "followup-main-final.log": "d39b80c44b8de9f9419fd85dcff9ed5f54b988a66eeb9bd03f3795c5c182aa43",
+      "followup-core.log": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "followup-main-ui-reviewed.log": "af0d930282a1b971e48fcbfec23a3b94cb6961ddf2ad9b73b05892d2114bfd1e",
+      "followup-resource-integrity.log": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    }
+  }
 }

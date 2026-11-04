@@ -9,6 +9,7 @@ const RESET_HOUR: int = 5
 const RETRY_PAYMENT_ID: int = 51
 const LOCAL_POLICY: String = "current_map_kill_estimate_v1"
 const SURVIVAL_TICK_GRACE: int = 5
+const MAX_CROSSING_HP: int = 9007199254740991
 const SUPPORTED_TYPES: Array[int] = [1, 3, 30, 72, 261, 574, 1011, 1031]
 
 var _source: Object
@@ -297,6 +298,24 @@ func propose(request: Dictionary, context: Dictionary, state: Dictionary) -> Dic
 	result.ain = ain
 	return result
 
+## Pure observer filter: only pending sections for the actual source NPC matter.
+## Bound integral HP before multiplying by 100 to keep every comparison exact
+## within int64, including HP values restored from JSON as integral floats.
+func has_hp_section_crossing(npc_id: int, previous_hp: Variant, hp: Variant, max_hp: Variant, state: Dictionary) -> bool:
+	if not _integer(max_hp, 1, MAX_CROSSING_HP) or not _integer(previous_hp, 0, int(max_hp)) or not _integer(hp, 0, int(max_hp)) or hp >= previous_hp:
+		return false
+	if not validate_state(state).is_empty():
+		return false
+	var active: Dictionary = state.active
+	if active.is_empty() or bool(active.failed):
+		return false
+	for section: Dictionary in _sections.get(int(active.challenge_id), []):
+		if int(section.get("ID", 0)) in active.extra_sections or int(section.get("NpcClassID", 0)) != npc_id:
+			continue
+		if _crosses_hp_threshold(section.get("HPPercentThreshold"), int(previous_hp), int(hp), int(max_hp)):
+			return true
+	return false
+
 func event(input: Dictionary, context: Dictionary, state: Dictionary) -> Dictionary:
 	var checked: String = _check_context(context, state)
 	if not checked.is_empty():
@@ -380,17 +399,30 @@ func event(input: Dictionary, context: Dictionary, state: Dictionary) -> Diction
 			active.progress[key] = mini(int(goal.Amount), int(active.progress[key]) + 1)
 	# A source HP section requires exact source-NPC evidence. Generic local kills
 	# never synthesize earlier thresholds or section steps.
+	var previous_hp: Variant = input.get("previous_hp_percent")
+	var hp: Variant = input.get("hp_percent")
+	var maximum_hp: Variant = 100
+	# A supplied raw observation is authoritative; incomplete or invalid raw HP
+	# must not silently fall back to rounded percentages from the same event.
+	if input.has("previous_hp") or input.has("hp") or input.has("max_hp"):
+		previous_hp = input.get("previous_hp")
+		hp = input.get("hp")
+		maximum_hp = input.get("max_hp")
+	var hp_crossed: bool = kind == "npc_hp" and has_hp_section_crossing(npc_id, previous_hp, hp, maximum_hp, staged)
 	for section: Dictionary in _sections.get(int(active.challenge_id), []):
 		var section_id: int = int(section.get("ID", 0))
 		if section_id in active.extra_sections or int(section.get("NpcClassID", 0)) != npc_id:
 			continue
 		var threshold: int = int(section.get("HPPercentThreshold", -1))
 		var crossed: bool = kind == "kill" and threshold == 0
-		if kind == "npc_hp" and _integer(input.get("previous_hp_percent"), 0, 100) and _integer(input.get("hp_percent"), 0, 100):
-			crossed = int(input.previous_hp_percent) > threshold and int(input.hp_percent) <= threshold
+		if hp_crossed:
+			crossed = _crosses_hp_threshold(section.get("HPPercentThreshold"), int(previous_hp), int(hp), int(maximum_hp))
 		if crossed:
 			active.extra_sections.append(section_id)
 	return _success(staged)
+
+func _crosses_hp_threshold(threshold: Variant, previous_hp: int, hp: int, max_hp: int) -> bool:
+	return _integer(threshold, 0, 100) and previous_hp * 100 > int(threshold) * max_hp and hp * 100 <= int(threshold) * max_hp
 
 func _claim(context: Dictionary, staged: Dictionary) -> Dictionary:
 	var active: Dictionary = staged.active

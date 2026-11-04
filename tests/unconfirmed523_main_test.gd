@@ -103,6 +103,12 @@ func _button(node: Node, text_value: String):
 		if found != null: return found
 	return null
 
+func _has_label(node: Node, text_value: String) -> bool:
+	if node is Label and text_value in node.text: return true
+	for child: Node in node.get_children():
+		if _has_label(child,text_value): return true
+	return false
+
 func ownership() -> Array:
 	return [world.gold,world.inventory.duplicate(true),world.item_instances.duplicate(true),world.next_item_instance_id,rt.state.duplicate(true),world.ain_service.export_state()]
 
@@ -155,6 +161,72 @@ func persist_state(next: Dictionary) -> bool:
 	rt.rebuild()
 	return true
 
+func combat_and_hp_fixtures() -> void:
+	# Real Monster and World consumers; this actor/identity is explicit test
+	# setup, not a source-map spawn or natural NPC/supply claim.
+	var monster = world.MONSTER_SCENE.instantiate()
+	world.monsters_root.add_child(monster)
+	monster.setup({"name":"conditional consumer fixture","hp":10000,"lv":1},world.player,world,null)
+	monster.set_physics_process(false)
+	await frames()
+	var totals: Dictionary = rt.totals.duplicate(true)
+	var conditional: Dictionary = rt.conditional_totals.duplicate(true)
+	monster.set_meta("source_received_reduction_percent",50)
+	world._deal_successful_player_hit(monster,100,false,"melee",true,false,{"final_blow":false})
+	var baseline: int = 10000-monster.hp
+	monster.hp=10000;monster.hp_bar.value=monster.hp
+	rt.totals["ignore_melee_damage_reduction:percent"]=10
+	world._deal_successful_player_hit(monster,100,false,"melee",true,false,{"final_blow":false})
+	check(10000-monster.hp == baseline+10,"actual Main typed ignore reduces one existing percentage budget")
+	rt.totals=totals
+	monster.set_meta("source_received_reduction_percent",0)
+	monster.hp=10000;monster.hp_bar.value=monster.hp
+	world._deal_successful_player_hit(monster,100,false,"melee",true,false,{"final_blow":false})
+	baseline=10000-monster.hp
+	monster.undead=true
+	rt.conditional_totals.undead={"undead_additional_max_damage:flat":5}
+	var minimum: int=9999;var maximum: int=0
+	for trial: int in range(30):
+		monster.hp=10000;monster.hp_bar.value=monster.hp
+		world._deal_successful_player_hit(monster,100,false,"melee",true,false,{"final_blow":false})
+		var extra: int=10000-monster.hp-baseline
+		minimum=mini(minimum,extra);maximum=maxi(maximum,extra)
+	check(minimum>=1 and maximum<=5 and minimum<maximum,"actual Main undead physical rolls stay within source maximum and vary")
+	monster.hp=10000;monster.hp_bar.value=monster.hp
+	world._deal_successful_player_hit(monster,100,false,"magic",true,true,{"final_blow":false})
+	check(10000-monster.hp == baseline,"source undead physical policy does not add damage to magic")
+	rt.conditional_totals=conditional
+	var started: Dictionary=rt.execute("challenge",{"op":"challenge_start","challenge_id":721,"local_policy":true})
+	if check(started.get("ok",false),"actual Main local Challenge721 starts for HP consumer fixture"):
+		monster.max_hp=101;monster.hp=101;monster.hp_bar.max_value=101;monster.hp_bar.value=101
+		monster.source_m_npc_id=101841
+		world._watch_unconfirmed_monster(weakref(monster))
+		monster.take_damage(34)
+		check(rt.state.domains.challenge.active.extra_sections.is_empty(),"raw HP67of101 stays above66percent without rounding into section")
+		monster.take_damage(1)
+		check(rt.state.domains.challenge.active.extra_sections == [241],"actual Monster HP signal crosses exact source66percent section once")
+		monster.hp=90;monster.hp_bar.value=90
+		monster.take_damage(25)
+		check(rt.state.domains.challenge.active.extra_sections == [241],"healing and repeated threshold crossing cannot duplicate section")
+		monster.take_damage(32)
+		check(rt.state.domains.challenge.active.extra_sections == [241,251],"actual subsequent HP loss crosses second source section")
+		check(rt.execute("challenge",{"op":"challenge_abandon"}).get("ok",false),"HP fixture abandons without minting completion or section rewards")
+	monster.queue_free()
+	await frames()
+
+func final_cube_fixtures() -> void:
+	var staged: Dictionary={"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"next_item_instance_id":int(world.next_item_instance_id)}
+	if not check(rt.stage_item(staged,8951,8).is_empty(),"explicit fixture stages eight separate native8951 units"): return
+	if not check(world._save_game(true,staged)==OK,"cube ownership fixture uses existing atomic writer"): return
+	for key: String in staged: world.set(key,staged[key])
+	check(ids_for(8951).size()==8,"source MaxStack1 preserves eight distinct cube identities")
+	var before: Array=ownership()
+	var disk: String=FileAccess.get_sha256(world.save_path())
+	var rejected: Dictionary=rt.execute("events",{"action":"consume_item","item_id":8951})
+	check(not rejected.get("ok",false) and same(before,ownership()),"actual8951 graph TestItem8961 blocks before consuming ownership counter rewards or RNG")
+	check(FileAccess.get_sha256(world.save_path())==disk,"source TestItem leaf rejection preserves exact durable bytes")
+	check(rt.state.domains.events.final_progress.get("8951",{}).is_empty(),"blocked native final bag creates no fictitious seventh completion history")
+
 func finish() -> void:
 	print("UNCONFIRMED523_MAIN_RESULT " + JSON.stringify({"phase":phase,"checks":checks,"failures":failures,"raw_resource_paths":loader.read_paths.size(),"scope":"ACTUAL_MAIN_PRIVATE_SOURCE_ATOMIC_SAVE_UI; EXPLICIT_OWNERSHIP_AND_PASS_XP_FIXTURES"}))
 	if is_instance_valid(world): world.queue_free()
@@ -171,6 +243,13 @@ func captures() -> void:
 		for tab: String in ["events","jade_grail","challenge"]:
 			world.hud.open_unconfirmed523(tab)
 			await frames()
+			if tab == "events":
+				screen().search_text="container:8951"
+				screen().refresh()
+				await frames()
+				var blocked_button = _button(screen().body,"열기")
+				check(blocked_button != null and blocked_button.disabled,"native owned8951 button reflects source TestItem leaf rejection")
+				check(_has_label(screen().body,"시험용 보상 포함"),"native owned8951 view explains the preserved source restriction")
 			if tab == "challenge":
 				var has_start: bool = false
 				for card: Node in screen().body.get_children():
@@ -223,6 +302,7 @@ func run() -> void:
 	check(world._effective_max_hp() == initial_hp + 50,"owned blessed source grail adds actual Main max HP50")
 	check(is_equal_approx(world._experience_multiplier(),initial_xp+0.01),"owned source grail adds actual Main experience1percent")
 	check(rt.context().owned.get("355334",0) == 6 and ids_for(338438).size() == 1,"native ownership IDs and exact stack quantity visible to domain")
+	await combat_and_hp_fixtures()
 	var native_totals: Dictionary = rt.totals.duplicate(true)
 	var cooldown_before: float = world._skill_cooldown_factor()
 	var damage_before: int = world._catalog_damage_bonus("melee")
@@ -277,6 +357,11 @@ func run() -> void:
 	check(claim.get("ok",false) and rt.state.bonus_rewards.size() == 1,"actual source Bonus184 pass tier persists one receipt")
 	check(is_equal_approx(world._experience_multiplier(),pre_pass_xp+0.03),"claimed source Bonus184 contributes actual Main experience3percent")
 	check(not rt.execute("events",{"action":"pass_claim","pass_id":724,"level_id":17384,"premium":false}).get("ok",false),"pass bonus tier cannot be claimed twice")
+	var before_port: Dictionary=rt.state.duplicate(true)
+	var pass_plan: Dictionary=rt.prepare_pass_reward({"schema":1,"quest_id":101864,"reward_id":434674,"source_sha256":SOURCE.SOURCE_SHA256,"claim_id":"explicit_port_fixture_only"})
+	if check(pass_plan.get("ok",false),"actual source Quest101864 Reward434674 Pass724 prepares future host port"):
+		check(int(pass_plan.staged.unconfirmed523.domains.events.passes["724"].experience)==int(before_port.domains.events.passes["724"].experience)+60,"prepared pass patch preserves exact source60XP target")
+		check(rt.cancel_prepared(pass_plan.plan_id) and same(rt.state,before_port),"cancelled source pass port never claims quest or mutates production progression")
 	print("UNCONFIRMED523_MAIN_STAGE: UI cancellation, attendance and pass claims checked")
 	var grail_id: String = str(ids_for(338438)[0])
 	var request: Dictionary = {"op":"grail_roll","instance_id":grail_id}
@@ -329,6 +414,7 @@ func run() -> void:
 		rt.rebuild()
 	check(world.ain_service.last_orb_purchase_month == monthly_before and rt.state.domains.jade_grail.jade.is_empty(),"existing monthly orb retains entitlement without a duplicate source-jade timer")
 	check(world.ain_service.protected_drops() and is_equal_approx(world.ain_service.experience_rate(),4.0) and is_equal_approx(world.ain_service.adena_rate(),1.5),"actual existing Ain consumer supplies zero-blessing jade protection")
+	await final_cube_fixtures()
 	var live: Array = ownership()
 	var valid_bytes: PackedByteArray = FileAccess.get_file_as_bytes(world.save_path())
 	var valid: Dictionary = JSON.parse_string(valid_bytes.get_string_from_utf8())
@@ -343,13 +429,15 @@ func run() -> void:
 	check(WRITER.write(world.save_path(),valid) == OK,"restore exact valid save payload after corruption probe")
 	world._load_game(true); freeze()
 	check(not rt.save_blocked and same(live,ownership()),"valid reload restores gate without losing native ownership")
+	world.hp=world._effective_max_hp()
 	check(world._save_game(true) == OK,"final integrated state saves through production writer")
 	var saved: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 	var namespaces: Dictionary = {}
 	for key: String in ["unconfirmed523","inventory","item_instances","equipped_items","equipment_collections","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","source_dungeon_play","warehouse","inventory_automation","ainhasad_state"]:
 		check(saved.has(key),"existing save namespace retained " + key)
 		namespaces[key] = saved.get(key)
-	var marker: Dictionary = {"save_path":world.save_path(),"save_hash":FileAccess.get_sha256(world.save_path()),"namespaces":namespaces,"gold":world.gold,"grail_id":grail_id,"hp_bonus":rt.bonus("max_hp:flat"),"xp_bonus":rt.bonus("experience_bonus:percent"),"prefixes":rt.state.domains.jade_grail.grails[grail_id].duplicate(true)}
+	var marker: Dictionary = {"save_path":world.save_path(),"save_hash":FileAccess.get_sha256(world.save_path()),"namespaces":namespaces,"gold":world.gold,"grail_id":grail_id,"hp_bonus":rt.bonus("max_hp:flat"),"xp_bonus":rt.bonus("experience_bonus:percent"),"prefixes":rt.state.domains.jade_grail.grails[grail_id].duplicate(true),"clock":rt.test_now}
+	marker["full_hp"]=world.hp
 	var output: FileAccess = FileAccess.open(MARKER,FileAccess.WRITE)
 	output.store_string(JSON.stringify(marker)); output.close()
 	check(not FileAccess.file_exists(world.save_path()+".tmp"),"atomic writer leaves no unfinished temporary save")
@@ -359,9 +447,12 @@ func run() -> void:
 func reload_phase() -> void:
 	var marker: Variant = JSON.parse_string(FileAccess.get_file_as_string(MARKER))
 	if not check(marker is Dictionary,"separate-process initial evidence present"): return
+	rt.test_now=int(marker.get("clock",NOW))
+	rt.rebuild()
 	check(world.save_path() == str(marker.save_path),"new process resolves same active save path")
 	check(FileAccess.get_sha256(world.save_path()) == str(marker.save_hash),"ordinary new-process boot preserves exact save bytes")
 	check(world.gold == int(marker.gold),"new process restores exact committed wallet")
+	check(world.hp == int(marker.full_hp) and world.hp == world._effective_max_hp(),"cold reload preserves full HP including restored grail possession bonus")
 	for key: String in marker.namespaces:
 		var saved: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 		check(same(saved.get(key),marker.namespaces[key]),"new process preserves durable namespace " + key)
@@ -370,3 +461,4 @@ func reload_phase() -> void:
 	check(same(rt.state.domains.jade_grail.grails[str(marker.grail_id)],marker.prefixes),"new process preserves exact physical grail prefixes")
 	check(is_equal_approx(rt.bonus("max_hp:flat"),float(marker.hp_bonus)) and is_equal_approx(rt.bonus("experience_bonus:percent"),float(marker.xp_bonus)),"new process rebuilds actual source stat contributions")
 	check(not rt.save_blocked and not world.source_save_blocked,"new process preserves valid source save gate")
+	check(ids_for(8951).size()==8 and rt.state.domains.events.final_progress.get("8951",{}).is_empty(),"cold restart preserves all blocked native cube units without invented final history")
