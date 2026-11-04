@@ -1,0 +1,204 @@
+{
+  "status": "VALIDATED_FOR_APPROVED_DRAFT_PUBLICATION",
+  "observed_utc": "2026-11-04T12:57:32.108375+00:00",
+  "repository": "zoog136-hash/-",
+  "branch": "feature/protection523-20261104",
+  "base_sha": "1d8bd5e0fde9ea0d74bd39b036184b49cab21d12",
+  "publication_reason": "User explicitly approved publishing this feature code/tests/brief documentation on its feature branch and a Draft PR; commit uses [skip ci]. Actual published SHA and PR are recorded by Git history and the PR description.",
+  "source": {
+    "bytes": 25031173,
+    "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "zip_crc": "PASS",
+    "all_content_tables": 1065,
+    "all_content_rows": 2323700,
+    "normal_items": 6,
+    "disabled_items": 1,
+    "item_bonus_rows": 60,
+    "normal_item_bonus_rows": 52,
+    "bonus_types": 9,
+    "normal_recipes": 6,
+    "related_group604_buffs": 21,
+    "related_group604_items": 23,
+    "runtime_capsule_bytes": 91452,
+    "runtime_capsule_sha256": "a94475ac15454668ad1983de0b326b0c4be7e149bca02c342d913d5eef6bfa2d"
+  },
+  "engine": "Godot 4.7.2 official ed1daf0bf",
+  "render": "OpenGL Mesa llvmpipe; Dummy audio; native art equivalence and physical devices not verified",
+  "runs": [
+    {
+      "log": "/workspace/protection523-private/main-test-r2.log",
+      "sha256": "8369e0532746df5eddb06bf9cfa1d7f499d2e46c6ac8d5b2d874a5aecf599111",
+      "result": {
+        "checks": 184,
+        "failures": [],
+        "scope": "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+      },
+      "scope": "preceding headless full six-tier Main phase",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/ui1280-r2.log",
+      "sha256": "8974aadbd908b669da9c8527517313c568eae1dfb80061d10d47f12fbc93eeb9",
+      "result": {
+        "checks": 206,
+        "failures": [],
+        "scope": "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+      },
+      "scope": "actual OpenGL 1280x720 full six-tier UI, ownership/combat/respawn",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/ui854.log",
+      "sha256": "ac088c43aa4708a7e8810b04caae56c10b891e1bd871696cfd5a1287809a93b4",
+      "result": {
+        "checks": 212,
+        "failures": [],
+        "scope": "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+      },
+      "scope": "actual OpenGL 854x480 full six-tier pointer UI, ownership/combat/respawn",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/reconnect-final.log",
+      "sha256": "e384ffcab56f89044b8edf2c8902a2e7756bba67d09759206a0fedc6c90eb7df",
+      "result": {
+        "checks": 9,
+        "failures": [],
+        "scope": "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+      },
+      "scope": "fresh process, source pointer, all titles/cooldowns/ownership",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/ledger-final-r2.log",
+      "sha256": "c8d4e4aa9a74e6bf131ca8b0571a22c2aa1d452b25169ded51d796db0940adc3",
+      "result": {
+        "checks": 16,
+        "failures": []
+      },
+      "scope": "final code: PR239 ledger, live identity, malformed own namespace, migration defaults",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/core_runtime_save_test-final.log",
+      "sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      },
+      "scope": "final code: actual Main/current source map/save preservation",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/save_identical_payload_test-final.log",
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b",
+      "result": {
+        "failures": [],
+        "skips": 1,
+        "writes": 2
+      },
+      "scope": "final code: identical-payload writer gate",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/deferred_save_gate_test-final.log",
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9",
+      "result": {
+        "failures": []
+      },
+      "scope": "final code: deferred save gate",
+      "engine_errors": []
+    }
+  ],
+  "late_change_boundary": "After the 212 UI checks, only generic crafting-ledger and ordinary-save/migration guards changed; final ledger16 and core44 plus both save gates cover those final changes. UI code and native six-tier numeric rules stayed the same.",
+  "screenshots": [
+    {
+      "path": "/workspace/protection523-private/captures1280-r2/all-tiers.png",
+      "bytes": 893968,
+      "sha256": "899f6cac0c2d18aca00a2898cdc0a829d85170cb5dc4b1313304b0b9b8ac9d11"
+    },
+    {
+      "path": "/workspace/protection523-private/captures1280-r2/before-craft.png",
+      "bytes": 910857,
+      "sha256": "a6c1dc342889ffd466d3c828d6286706ab4ef5680d5483fd8d95fc6528022885"
+    },
+    {
+      "path": "/workspace/protection523-private/captures854/all-tiers.png",
+      "bytes": 247005,
+      "sha256": "d30bb935539e5afcd3e43ce773a52fafc89c17d7d58b745a171eea8d4ff2f135"
+    },
+    {
+      "path": "/workspace/protection523-private/captures854/before-craft.png",
+      "bytes": 258263,
+      "sha256": "793de3c216a0d532844b75cc7fbbda5dcf604783d63aef5af3537d7485efe47e"
+    }
+  ],
+  "files": {
+    "scripts/world.gd": {
+      "bytes": 391254,
+      "sha256": "a5c53afe2988586a30f02923c82fa3a269b7e3e84f6226aa70dfb587ea7f1db1"
+    },
+    "scripts/ui/renewal_hud.gd": {
+      "bytes": 122237,
+      "sha256": "a4aaf15268ac3c018b282757f7cf80277de8945feb5fe63d3c1af7145e0539d9"
+    },
+    "scripts/protection/protection523_source.gd": {
+      "bytes": 13426,
+      "sha256": "015f6c5cc58bd7c14646238127580221991802b6969b805e43656cc2733d4f3f"
+    },
+    "scripts/protection/protection523_runtime.gd": {
+      "bytes": 19256,
+      "sha256": "182453d4cc8df3b845d1744d3d5741be14905d58e101d9fa5b799802d9155773"
+    },
+    "scripts/protection/protection523_panel.gd": {
+      "bytes": 9401,
+      "sha256": "95aad9513ca9cdf3b879082b10e8a30ce1bdb5402604620958757e2fce52f571"
+    },
+    "data/protection/protection523_policy.json": {
+      "bytes": 528,
+      "sha256": "99c56c3c78fc309f64022709b8d891e344a2846b07c8f840b03bbeb12eb2025d"
+    },
+    "tests/protection523_main_test.gd": {
+      "bytes": 16996,
+      "sha256": "56261339092cefd0f77ca2213bc63486f37d63202bca971946379bb2d66a4e6c"
+    },
+    "tests/protection523_ledger_test.gd": {
+      "bytes": 4155,
+      "sha256": "8ac46145ab4f7e437d307c3e55904663e47342e6bb5231c9b87b11a87b019947"
+    },
+    "tools/protection/audit_protection523.py": {
+      "bytes": 8604,
+      "sha256": "08530a5d0279865a3071b8398b5d3400a1e0eb69a4a401843a28fbd5babde031"
+    },
+    "docs/protection/PROTECTION523.md": {
+      "bytes": 9439,
+      "sha256": "eb28f5216097b2370fcd484e3272d8165589ca2049572aaddc5bd0bbca51a360"
+    }
+  },
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "status": "PASS; original-art delivery remains separate"
+  },
+  "historical_source_dir_check": "BLOCKED: /workspace/protection523-private/a1.zip absent; current523 ZIP independently SHA/CRC verified",
+  "prior_report": "identified; Library helper HTTP401, no retry; no readable Library text; parent supplied findings checked against actual original",
+  "remaining": {
+    "upstream_supply": "Normal3 recipe47273 and original full level-quest reward contracts are outside this task. No free scrolls or test bag80548 supply added. Existing quest_state and instant-completion policy preserved.",
+    "unmerged_dependencies": "PR239 generic crafting quota integration and PR238 combined native-item installation not merged/run together. Exact contracts and guards audited.",
+    "art": "Original ItemConsumeEffectSpriteID rendering not restored; existing TWILIGHT status feedback only."
+  },
+  "remote_ci": "not run; no merge/rebase; no workflow or branch-protection changes",
+  "capacity_cleanup": {
+    "receipt": "/workspace/protection523-private/safe-cache-cleanup.json",
+    "removed_package_index_files": 6,
+    "removed_file_bytes": 21572489,
+    "actual_reclaimed_bytes": 0,
+    "before_free_bytes": 9069096960,
+    "after_unlink_free_bytes": 9069084672,
+    "filesystem": "workspace overlay; /tmp a separate filesystem",
+    "protected": "Git, all worktrees, raw inputs, reports, packs, backups, executables, current import cache, evidence, saves/profiles preserved"
+  },
+  "publication_boundary": "Private source ZIP, report, runtime capsule, raw mapping/audit outputs, backups, logs, screenshots and QA profiles are excluded. No main/other PR merge or rebase."
+}

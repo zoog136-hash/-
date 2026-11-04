@@ -1,6 +1,9 @@
 extends Node2D
 class_name TwilightWorld
 
+const PROTECTION523 = preload("res://scripts/protection/protection523_runtime.gd")
+var protection523 = PROTECTION523.new()
+
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
@@ -405,6 +408,7 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	protection523.setup(self)
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -3017,7 +3021,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat())
 	var critical: bool = rng.randf() < critical_chance
 	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
-	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
+	var reduced: int = maxi(1, incoming_damage - int(protection523.effects().title_flat)) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
 	var attack_element: String = ELEMENT_RULES.channel(attacker.attack_element)
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
@@ -3388,6 +3392,9 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		var converted: Dictionary = growth.execute("recharge",symbol_instance_id,1,int(growth.state.revision))
 		hud.show_message(str(converted.message))
 		return
+	if protection523.managed(_find_catalog_item_record(item_name)):
+		_request_protection523_use(item_name)
+		return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
@@ -3522,6 +3529,12 @@ func _format_seconds_short(seconds: float) -> String:
 	return "%d초" % whole
 
 func _use_timed_item_buff(record: Dictionary) -> bool:
+	if protection523.legacy_group_blocked(record):
+		hud.show_message("Group604 가호 버프가 활성화되어 있습니다 · 비중첩")
+		return false
+	if protection523.managed(record):
+		hud.show_message("원본 가호는 명예 코인 확인 후 사용하세요")
+		return false
 	var item_name: String = str(record.get("name", ""))
 	var buff: Dictionary = _timed_item_buff_from_record(record)
 	if item_name == "" or buff.is_empty():
@@ -4076,6 +4089,9 @@ func _buy_shop_item(item_name: String, _ui_price: int) -> void:
 	_buy_shop_bulk(item_name, 1)
 
 func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> void:
+	if protection523.managed(_find_catalog_item_record(item_name)):
+		hud.show_message("원본 가호는 일반 매입 대상이 아닙니다")
+		return
 	if _item_locked(item_name,instance_id):
 		hud.show_message("잠긴 아이템은 판매할 수 없습니다")
 		return
@@ -4242,6 +4258,9 @@ func _npc_teleport_requested(map_id: String) -> void:
 
 
 func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
+	if direction == "deposit" and protection523.managed(_find_catalog_item_record(item_name)):
+		hud.show_message("원본 가호는 창고 보관 불가 아이템입니다")
+		return
 	if item_name == "아데나" or item_name.is_empty():
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
@@ -4457,6 +4476,10 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if protection523.save_blocked:
+		if not quiet: hud.show_message("가호 저장 보호 중 · 정상 저장을 다시 불러오세요")
+		return ERR_UNAVAILABLE
+	if not PROTECTION523.validate(collection_override.get("protection523",protection523.snapshot())).is_empty(): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4472,7 +4495,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","protection523","crafting_log"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4507,6 +4530,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"gold": gold,
 		"inventory": inventory,
 		"quest_state": quest_service.export_state(),
+		"protection523": protection523.snapshot(),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
@@ -4610,6 +4634,17 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var protection_error: String = PROTECTION523.validate(data.get("protection523",PROTECTION523.fresh()))
+	if not protection_error.is_empty():
+		protection523.save_blocked = true
+		hud.show_message(protection_error)
+		return
+	if not data.has("protection523"):
+		var protection_backup: String = save_path()+".pre-protection523-"+loaded_save_sha
+		if (not FileAccess.file_exists(protection_backup) and DirAccess.copy_absolute(save_path(),protection_backup)!=OK) or FileAccess.get_sha256(protection_backup)!=loaded_save_sha:
+			protection523.save_blocked = true
+			hud.show_message("가호 이전 백업 실패 · 기존 저장 보존")
+			return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4767,6 +4802,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
 	quest_service.import_state(data.get("quest_state", {}))
+	protection523.load_state(data)
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
 	source_save_blocked = false
@@ -7642,11 +7678,16 @@ func _damage_reduction_stat() -> int:
 		total += _record_damage_reduction(record)
 	total += _active_item_buff_total("damage_reduction")
 	total += _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "reduction")
+	total += int(protection523.effects().title_flat)
 	return maxi(0, total)
 
 func _pve_damage_after_item_buffs(raw_damage: int) -> int:
-	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
-	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct") + _catalog_stat_sum("pve_damage_reduction_pct") + int(_equipment_inven_sum("pve_damage_reduction_pct")), 0, 90)
+	var protection: Dictionary = protection523.effects()
+	var projection: bool = bool(protection523.state.policy.project_pvp_to_pve)
+	var protection_flat: int = int(protection.possession_flat)+int(protection.active_flat) if projection else 0
+	var protection_percent: float = float(protection.possession_percent_raw)/10000.0 if projection else 0.0
+	var reduced: int = maxi(1, raw_damage - protection_flat - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
+	var percent: float = clampf(protection_percent + float(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct") + _catalog_stat_sum("pve_damage_reduction_pct") + int(_equipment_inven_sum("pve_damage_reduction_pct"))), 0.0, 90.0)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
 	return reduced
@@ -8266,3 +8307,13 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+func _request_protection523_use(item_name: String) -> void:
+	var quote: Dictionary = protection523.quote_use(item_name)
+	if not bool(quote.get("ok",false)):
+		hud.show_message(str(quote.get("error","가호 사용 조건을 확인하세요")))
+		return
+	var definition: Dictionary = quote.definition
+	hud.confirm_action(str(definition.name),"명예 코인 10개 소모 · %d분 · 해당 가호 재사용 1시간\n가호 본체는 보존하며 다른 Group604 가호 버프를 교체합니다." % (int(definition.duration)/60),"가호 사용",func(_count: int = 1) -> void:
+		var result: Dictionary = protection523.use(item_name)
+		if not bool(result.get("ok",false)): hud.show_message(str(result.get("error","가호 사용 실패"))))
