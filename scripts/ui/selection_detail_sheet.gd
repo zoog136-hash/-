@@ -202,4 +202,8 @@ func _show_skill_tab() -> void:
 	source_tab.set_pressed_no_signal(source_active)
 	source_tab.text="사용 정보" if source_active else "습득 · 출처"
 	source.text=raw_skill_text if source_active else info_text
+	if not owner_view.selected.is_empty():
+		var catalog: TwilightOriginalSkillCatalog = owner_view.hud.get_parent().original_skills.catalog
+		var relic_text: String = catalog.RELIC_LEVELS.EFFECTS.detail_text(catalog.resolve(owner_view.selected))
+		if not relic_text.is_empty(): source.text += "\n\n" + UI.safe(relic_text)
 	scroll.scroll_vertical=0

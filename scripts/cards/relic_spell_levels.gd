@@ -4,6 +4,7 @@ extends RefCounted
 const BASE = preload("res://scripts/lineagem_base508.gd")
 const CARDS = preload("res://scripts/card_draw_fusion.gd")
 const CONDITIONS = preload("res://scripts/cards/source_collection_conditions.gd")
+const EFFECTS = preload("res://scripts/cards/relic_spell_effects.gd")
 const SOURCE_SHA256: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const SOURCE_BYTES: int = 25031173
 const INSTALLED: String = "user://source_rules/relic-patch523.zip"
@@ -47,7 +48,9 @@ static func _checked(path: String) -> Dictionary:
 	var mappings: Array = _table(archive, "BuffCardTranscendence")
 	var links: Array = _table(archive, "BuffCardTranscendenceBonus")
 	var server_rows: Array = _table(archive, "ServerLimit")
+	var spell_profiles: Dictionary = EFFECTS.build(archive, cards, bonuses, types, units)
 	archive.close()
+	if spell_profiles.size() != 119: return {"ok":false, "error":"source_spell_join_invalid"}
 	if cards.is_empty() or bonuses.is_empty() or types.is_empty() or units.is_empty() or applications.is_empty() or grades.is_empty() or descriptions.is_empty() or server_rows.is_empty() or mappings.size() != 59 or links.size() != 13:
 		return {"ok":false, "error":"source_join_invalid"}
 	var groups: Dictionary = {}
@@ -73,7 +76,7 @@ static func _checked(path: String) -> Dictionary:
 			return {"ok":false, "error":"source_join_invalid"}
 		mapping_ids[int(mapping.ID)] = true
 		rows[card_id] = {"mapping":mapping, "card":cards[card_id], "effects":groups[int(mapping.TranscendenceGroupID)]}
-	return {"ok":true, "rows":rows, "groups":groups, "server_rows":server_rows, "source_sha256":SOURCE_SHA256}
+	return {"ok":true, "rows":rows, "groups":groups, "server_rows":server_rows, "source_sha256":SOURCE_SHA256, "spell_profiles":spell_profiles}
 
 static func load_source(path: String) -> Dictionary:
 	var candidate: Dictionary = _checked(path)
@@ -147,7 +150,7 @@ static func view(record: Dictionary, acquired: bool = false, equipped: Dictionar
 	for effect: Dictionary in row.effects:
 		var target: int = int(effect.bonus.BonusApplicationTargetID)
 		amounts[target] = int(amounts.get(target, 0)) + int(effect.bonus.Value)
-	return {"ok":true, "code":code, "active":code == "ready", "effects":row.effects.duplicate(true), "bonus_by_grade":amounts, "mapping":row.mapping.duplicate(true), "card":row.card.duplicate(true), "eligibility":eligibility, "source_snapshot":"patch523", "combat_values_connected":false}
+	return {"ok":true, "code":code, "active":code == "ready", "effects":row.effects.duplicate(true), "bonus_by_grade":amounts, "mapping":row.mapping.duplicate(true), "card":row.card.duplicate(true), "eligibility":eligibility, "source_snapshot":"patch523", "combat_values_connected":true}
 
 static func for_world(world: Node, record: Dictionary) -> Dictionary:
 	var identity: String = CARDS.card_id(record)
@@ -157,4 +160,16 @@ static func for_world(world: Node, record: Dictionary) -> Dictionary:
 static func level_for(world: Node, source_grade_id: int, base_level: int) -> Dictionary:
 	var snapshot: Dictionary = for_world(world, world.equipped_catalog.get("성물", {}))
 	var bonus: int = int(snapshot.bonus_by_grade.get(source_grade_id, 0)) if snapshot.active and base_level >= 0 else 0
-	return {"base_level":base_level, "bonus":bonus, "effective_level":base_level + bonus, "source_grade_id":source_grade_id, "code":snapshot.code, "combat_values_connected":false}
+	return {"base_level":base_level, "bonus":bonus, "effective_level":base_level + bonus, "source_grade_id":source_grade_id, "code":snapshot.code, "combat_values_connected":ensure_loaded()}
+
+static func state_key(world: Node) -> int:
+	ensure_loaded()
+	return hash([revision, world.equipped_catalog.get("성물", {}), world.card_draw_fusion.owned.get("성물", {}), world.card_collections.source_server_context()])
+
+static func project(world: Node, record: Dictionary, identity: Dictionary, enabled: bool) -> Dictionary:
+	if not ensure_loaded(): return record
+	var profile: Dictionary = _rules.spell_profiles.get(str(identity.get("id", "")), {})
+	if profile.is_empty() or not EFFECTS.identity_matches(identity, profile): return record
+	if bool(record.get("runtime_blocked", false)) or not str(record.get("source523_block_reason", "")).is_empty(): enabled = false
+	# learned=1 is ownership in this host, not native spell level progression.
+	return EFFECTS.project(record, profile, level_for(world, int(profile.binding.grade_id), 0), int(world.level), enabled)

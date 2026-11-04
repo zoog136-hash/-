@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "classification": "CUSTOM_BALANCE",
+  "basis": "Use verified patch523 level-0 to level-1 probability differences. Project them into existing host status_chance; preserve host resistance, boss factors, costs and failure behavior. This projection is a configurable TWILIGHT rule, not a claim about the full native hit formula.",
+  "research_date": "2026-11-04",
+  "sources": [
+    "https://about.ncsoft.com/news/article/lineagem-update-20210127",
+    "https://probability.plaync.com/lineagem/view?probCategoryId=6656df8e96b3cf5ad823b780"
+  ],
+  "status_probability_projection": {
+    "enabled": true,
+    "minimum": 0.0,
+    "maximum": 1.0,
+    "skills": {
+      "6631": {"mode": "status", "status": "stun"},
+      "345": {"mode": "attack", "status": "fear"},
+      "65638": {"mode": "status", "status": "fear"},
+      "48611": {"mode": "status", "status": "hold"},
+      "63534": {"mode": "status", "status": "fear"}
+    }
+  }
+}

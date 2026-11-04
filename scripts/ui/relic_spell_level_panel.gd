@@ -64,5 +64,5 @@ func refresh() -> void:
 	values.text = " · ".join(lines) if not lines.is_empty() else "이 성물에 연결된 레벨 보너스 없음" if snapshot.ok else "원본 규칙 자료를 불러오세요."
 	var labels: Dictionary = {"ready":"현재 소환에 연결됨", "not_owned":"미보유 · 조회 전용", "not_equipped":"소환 시 적용되는 레벨 규칙", "no_source_mapping":"원본에 레벨 보너스 매핑 없음", "server_context_missing":"서버 조건 확인 필요", "server_ineligible":"현재 서버 조건 불충족", "server_definition_missing":"서버 조건 정의 미확인", "time_condition_unresolved":"이벤트 기간 조건 확인 필요", "catalog_identity_missing":"현재 등록 카드와 원본 ID 연결 없음", "catalog_source_changed":"현재 카드와 최신 원본 조건 대조 필요"}
 	status.text = str(labels.get(snapshot.code, "최신 누적 523 원본 규칙 자료 필요"))
-	if not lines.is_empty(): status.text += "\n현재 스킬의 레벨별 전투 수치 연결은 확인 중입니다."
+	if not lines.is_empty(): status.text += "\n확인된 피해·MP 회복·능력치 증가분 적용. 스킬 상세에서 적용 수치와 미확인 조건을 확인하세요."
 	import_button.text = "원본 규칙 자료 교체" if RULES.ensure_loaded() else "원본 규칙 자료 불러오기"

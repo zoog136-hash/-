@@ -20,6 +20,7 @@ var toggles: Dictionary = {}
 var counter_counts: Dictionary = {}
 var combat_elapsed: float = 100
 var recovery_elapsed: float = 0
+var relic_buff_signature: String = ""
 var event_counts: Dictionary = {}
 var last_evaded: bool = false
 var equipment_links: Dictionary = {}
@@ -43,6 +44,7 @@ func configure(owner: Node) -> void:
 	local_runtime.configure(self)
 
 func clear() -> void:
+	relic_buff_signature = ""
 	if local_runtime.world != null: local_runtime.suspend()
 	summons.clear()
 	status.clear()
@@ -54,6 +56,7 @@ func clear() -> void:
 	if is_instance_valid(vfx): vfx.clear()
 
 func tick(delta: float) -> void:
+	refresh_relic_buffs()
 	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")))
 	local_runtime.tick(delta)
 	status.tick(delta)
@@ -128,7 +131,25 @@ func refresh_buffs_after_learning(learned_id: String) -> void:
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		buff["speed"] = float(buff.skill_stats.get("speed", 1))
 
+func refresh_relic_buffs() -> void:
+	var signature: String = catalog._lineage_signature() + catalog._relic_signature()
+	if signature == relic_buff_signature: return
+	relic_buff_signature = signature
+	for buff: Dictionary in world.active_skill_buffs.values():
+		var base: Dictionary = catalog.record_for(str(buff.get("skill_id", "")))
+		if base.is_empty(): continue
+		var skill: Dictionary = catalog.resolve(base)
+		if not catalog.RELIC_LEVELS.EFFECTS.needs_buff_refresh(base): continue
+		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
+		buff["speed"] = float(buff.skill_stats.get("speed", 1))
+	# Never extend remaining time, cast, spend, heal or write a save on refresh.
+	world.hp = mini(world.hp, world._effective_max_hp())
+	world.mp = mini(world.mp, world._effective_max_mp())
+	world._refresh_speed_modifiers()
+	if world.player != null: world.player.set_skill_speed_multiplier(world._active_skill_speed_multiplier())
+
 func stat(key: String) -> float:
+	refresh_relic_buffs()
 	var result: float = catalog.stat(key) + local_runtime.stat(key)
 	for buff: Dictionary in world.active_skill_buffs.values():
 		if buff.has("skill_id"): result += float(buff.get("skill_stats", {}).get(key, 0))
@@ -587,6 +608,9 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 	var multiplier := 1.0
 	for buff: Dictionary in world.active_skill_buffs.values(): multiplier *= float(buff.get("skill_stats", {}).get("receivedMultiplier", 1))
 	var reduction := stat("damageReduction") + stat("receivedReduction")
+	# This entry point receives TwilightMonster attacks, so keep native PvE
+	# reduction separate from general/PvP stats.
+	reduction += stat("pveDamageReduction")
 	if kind != "magic": reduction += stat("physicalReduction")
 	if kind == "ranged": reduction += stat("rangedReduction")
 	var result := maxi(0, int(amount * multiplier) - int(reduction))

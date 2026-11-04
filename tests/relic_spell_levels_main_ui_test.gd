@@ -73,7 +73,7 @@ func run() -> void:
 	check(panel.snapshot.active and panel.status.text.contains("현재 소환"), "live result reflects actual equipped card")
 	check(hud.relic_reference_view.status.text.contains(str(record.name)), "existing current-summon label refreshes with the new bonus panel")
 	check(world.source_relic_spell_level(1, 0).effective_level == 1 and world.source_relic_spell_level(4, 0).effective_level == 0, "actual Main grade-specific level modifier")
-	check(not world.source_relic_spell_level(1, 0).combat_values_connected and panel.status.text.contains("전투 수치"), "unmapped combat values are explicitly pending")
+	check(world.source_relic_spell_level(1, 0).combat_values_connected and panel.status.text.contains("적용"), "verified native deltas connected with detail guidance")
 	for extent: Vector2i in [Vector2i(1280,720), Vector2i(854,480)]:
 		root.size = extent; DisplayServer.window_set_size(extent); await frames(8)
 		hud._set_catalog_detail_view(true); await frames(4)

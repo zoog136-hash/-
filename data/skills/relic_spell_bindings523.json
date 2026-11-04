@@ -1,0 +1,967 @@
+{
+  "schema_version": 1,
+  "source_zip_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "reviewed_bindings_commit": "e1c8c9de73b92e91686d9474f162881c4c19bd90",
+  "reviewed_bindings_sha256": "d7541c9cd4081802aad850d21e5001276330b09217e50278ddc6a2e98be138ca",
+  "identity_fields": [
+    "id",
+    "name",
+    "class",
+    "origin",
+    "activation"
+  ],
+  "skills": {
+    "lm_0f78dd70d9994d34": {
+      "spell_id": 1,
+      "row_sha256": "e8a885f030514fc834d8761003fc52b5c5d2bef28a19c13911b5931443631a9f",
+      "spell_card_id": 14681,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "4c2ac8db816e7e6e71eb07dff04ef7a17258ae361e184d57e50aff83b1b08768"
+    },
+    "lm_d44e85981c877135": {
+      "spell_id": 2,
+      "row_sha256": "9a43d21cd2bca99fb1c0cbe9d58e41fbde2ef5585b31d356c3acef6a263f8557",
+      "spell_card_id": 14701,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "af7caa601ff4263e85e2e673ae3b2827d28a257d7a2cbb71c5ec48f3c214f4ff"
+    },
+    "lm_ea8ce04ed942acae": {
+      "spell_id": 65,
+      "row_sha256": "9a66caa0eb4ce9956f37289df68d6af26109ef4224b4e3122958622169d4cd75",
+      "spell_card_id": 14671,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "ce82fb2b8bd31026dafa6d06b66cfb00389822c2764b82b999767133cc762439"
+    },
+    "lm_09a971bf26507878": {
+      "spell_id": 80,
+      "row_sha256": "9f64949b9e2e9942b113474df8c007fdafc9d6a7cf276b4091a713be7fbfc6b3",
+      "spell_card_id": 14691,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "0ce74ea926cb0b930e753a236496b64f5b4eb38a4f7768c87240852507f75ce2"
+    },
+    "lm_2b058c083f711c56": {
+      "spell_id": 73,
+      "row_sha256": "755a11d4293f96bce928ab1fdb943a8283ed96a9865cb3ab5d4898586be026d0",
+      "spell_card_id": 14741,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "029f3140a5844f7416bd59d48accd899a8431d52297293fcc3b4dd981146b260"
+    },
+    "lm_1ec7e7edbce9ac29": {
+      "spell_id": 74,
+      "row_sha256": "b67814df025b8c893711756b8e07c1b75412abf961c333ae609925f79028d70d",
+      "spell_card_id": 14711,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "d33b96267bbe61055c1fa813436741be895ee96a75f9827b26fc836e0d8a0392"
+    },
+    "lm_f5a081bdcc706114": {
+      "spell_id": 1113,
+      "row_sha256": "9e814bab6f36d9e83d0d8a58fda22f1eb02a7ce9dfb3aab58d977549e54992e4",
+      "spell_card_id": 14731,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "3cdcc738153537875d8692a65a3d3eb573acbe0372c2105bdbbf73ad4f691e92"
+    },
+    "lm_9f340db69e8b2702": {
+      "spell_id": 2312,
+      "row_sha256": "429a1119c074fcd589378c48f46f23a0aad8bebdb16b38ed5a88dd2d2e26c5f7",
+      "spell_card_id": 15401,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "2e2cb5419eef96f0512c04c096a36aada67c8de2f29b2fa37b77d9bb52cf917b"
+    },
+    "lm_027e64c9f1bac62b": {
+      "spell_id": 66714,
+      "row_sha256": "6d576dc45c9d1b028ca737e00e412539153f57006313b1842c34a42a3dd63f76",
+      "spell_card_id": 19184,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "9416e1573577f1a1fbb794d7eb99d9b0157cd9b233f0efa14f0c22980ef4bca3"
+    },
+    "lm_cd78ab3abe724dd9": {
+      "spell_id": 64023,
+      "row_sha256": "cc7640aa7b4195c62f34f4a87b34244dd4766bfe61218e0fe5c9ff8301fd7ea0",
+      "spell_card_id": 18733,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "d4bf2bacf52f1d2e9401c59db2619f1a7c0998458dbf9135768606de6cc4716a"
+    },
+    "lm_557685a136a4e076": {
+      "spell_id": 64033,
+      "row_sha256": "b4c5478c783c38ea80cf797cbb5197db2537c5fd4778ad2ba315568125ebcf22",
+      "spell_card_id": 18743,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "59b7f6a0466493e0f324149f402cedf6446da56fa227547741d5baa8d46a7be0"
+    },
+    "lm_b9e5decfe11eb2aa": {
+      "spell_id": 33162,
+      "row_sha256": "86942ed750598abedb7478344957baffbafd06c0b8ba619974a71bfdcddca35c",
+      "spell_card_id": 15421,
+      "grade_id": 4,
+      "has_level_buff": true,
+      "host_identity_sha256": "2e5465ca2998733deba166170d74e3e92d7a66b94735c2339139e1ecc413710d"
+    },
+    "lm_02f61be31e7d1953": {
+      "spell_id": 37931,
+      "row_sha256": "c6746aa0f1fd330d318befc740541dd1fff9694ca8e3c7b4eafca275aed8c83b",
+      "spell_card_id": 15431,
+      "grade_id": 4,
+      "has_level_buff": true,
+      "host_identity_sha256": "f35bd5592a5926177c45c90bcdbd482256721f72db35485c59b67ba4222386d2"
+    },
+    "lm_4f90e0d7ce272c1f": {
+      "spell_id": 6631,
+      "row_sha256": "1184252f3b7ccef86e675e0ad5980b13798aa5f1fd833ee1215ab3eb70d8dded",
+      "spell_card_id": 15441,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "607f9cba748ca058df7c3402930549fa7852b924c21985b926e522a119cc2c75"
+    },
+    "lm_43e9715d967ef3cb": {
+      "spell_id": 82,
+      "row_sha256": "7596478927d231a7e86e3cae737beba71e1c231beefdbc13644bd9fef5cb1c87",
+      "spell_card_id": 15541,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "bd5b0677ee5b752204a952ab8b764f215926663729bc888f065cfc6d229547fd"
+    },
+    "lm_11ab17290e72e63f": {
+      "spell_id": 99841,
+      "row_sha256": "c16e62be15269c56ddef83f2b944195c765c4d98bf890e7dda31459d4dcc5eba",
+      "spell_card_id": 23581,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "1cb2934c3587bde271bbe81c8923e380c3f2ee9ce36e6f545f8af385e4dada46"
+    },
+    "lm_d7327307e9e26525": {
+      "spell_id": 55484,
+      "row_sha256": "b00b260a7d001a230d1b313e1ec7f787f974462d7604221f0dda2d91c44b98af",
+      "spell_card_id": 17521,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "584fb9e24f3a1bd29b35c08a35a8ecd3e22dfd6d2d3ce7747b68486f05587373"
+    },
+    "lm_49b706864a6aaa2f": {
+      "spell_id": 55504,
+      "row_sha256": "1983d853323e3d29319b0ae4ed776d70f56cc8c1dc8f4c969a76e54e43d3a254",
+      "spell_card_id": 17541,
+      "grade_id": 5,
+      "has_level_buff": false,
+      "host_identity_sha256": "640555fba2c1c05b52433effdb6bf96300b60ebe7a26d4e6ed960f2d65e5de43"
+    },
+    "lm_8d11f90e2d104a0a": {
+      "spell_id": 83,
+      "row_sha256": "f2e17bb7a583168afe2d83f15308686e65291891405de98eee7c023d7cb98054",
+      "spell_card_id": 15531,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "2e6dd30fd2d222039db43eabde0a912f7dbf94c20207d7fe36386d79d2e0fb41"
+    },
+    "lm_65f006389e02d9fe": {
+      "spell_id": 57104,
+      "row_sha256": "05fc069bf7492c011a9de15b334d5c3de8aa2cd895488eb3feaf2cb24f0d1475",
+      "spell_card_id": 17481,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "183a6a52f8e721959cabebf81734ec71bbb483dd4409d4c73f00bc35b3c35d32"
+    },
+    "lm_166e70cf3dd74e26": {
+      "spell_id": 85,
+      "row_sha256": "73d34e99df23192e64dd4226432a52b0a36ac73b1d283fbceb96fe47b0eee5cc",
+      "spell_card_id": 15581,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "b91674c29a8042a54ee5f490e378b3128d1f828c4ff1ce92920fd4b5fdc4f124"
+    },
+    "lm_310e7f51a839530f": {
+      "spell_id": 98871,
+      "row_sha256": "516e97b30e1a060d877a48f6c1decbc65db9a07e49cd9f4d56fd928e56944908",
+      "spell_card_id": 23271,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "b667a6ad9521e5393371a94390a46f76f307a229e07e1c66cb673b39222663cc"
+    },
+    "lm_62bee07ed64c92aa": {
+      "spell_id": 54703,
+      "row_sha256": "af1f068e7ad8d7102ce9bd8e712e0871f6e378860ab43a225db44e5ab38642a3",
+      "spell_card_id": 15481,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "7d751df0488e4df048846e1b0e79cbfbb7c4353fda4971e42d490cd0b429e66e"
+    },
+    "lm_b9f1605d690c64f7": {
+      "spell_id": 350,
+      "row_sha256": "fcff90770eb4375a2c31f1eca6fdc833dae05a577ad25625635529c480dae0c5",
+      "spell_card_id": 16291,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "ba5741550b0f995be3e7c0ee6b9b28f1e3a72fc2e7f047f6c31f28721afab810"
+    },
+    "lm_0fa8b37f33c7f9d6": {
+      "spell_id": 349,
+      "row_sha256": "ac3d010bd7d9b339f852ab270f28d4b43f5426a99dd2d7de74ca26f1aa699373",
+      "spell_card_id": 16321,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "0ec56743382b1c367297561aa8a7f2936ed6d077f1136a66a6f6c4eb913db2d2"
+    },
+    "lm_d274a7aba69c1486": {
+      "spell_id": 2262,
+      "row_sha256": "bbcce8283210e22c95c6112a483275c162d4f11064a3bc04eb419a73d0998e91",
+      "spell_card_id": 16311,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "36ed4f45a9a048bbd9f96c1fbbd6ca87828f54db3f45a18d9815d5e0d8c10804"
+    },
+    "lm_53daff6929e9ebb1": {
+      "spell_id": 90,
+      "row_sha256": "d353e4f46a93b263529f96bd2dfb410a74ae253ffb610fccc24794671fd6d685",
+      "spell_card_id": 16251,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "bab7a774c54871379bc1c6b3cdfcb9e4df0017ada741f9ec8383abb7b0a99f95"
+    },
+    "lm_024a0e845c280295": {
+      "spell_id": 69,
+      "row_sha256": "6de07119d452d2991829dcda3b33daffe58778051013a4165cfb365fd29f39a4",
+      "spell_card_id": 14971,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "b5ff4b38ff61aebfca85cf6297822a13749e1711066b6ef65a0d21654b494697"
+    },
+    "lm_d23194d0b63ee4e1": {
+      "spell_id": 332,
+      "row_sha256": "2d939cc778d1954a1992a3c85a4a31bfb3a4dad9002c4fcefa184d6362040d91",
+      "spell_card_id": 15001,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "9fc02312729de1fa8034a9c5a2885578cfcaf73186226c9e1504f021def01a46"
+    },
+    "lm_e8236ca60328dd0a": {
+      "spell_id": 64,
+      "row_sha256": "723a37354c398bf2e9f9903d649c73bf5f036b2ca97260f03cbb660c826e00a0",
+      "spell_card_id": 14991,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "879621f5bca0971091c83b6d170b7a927e8d58b3e816f70b6e71c82e8426ade3"
+    },
+    "lm_8a8cc8a1b79e85f5": {
+      "spell_id": 60,
+      "row_sha256": "9c1cdfda82bb74dcd75a10bf37648c491ddcd8f4ae8864d15f42952659c26ff0",
+      "spell_card_id": 14931,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "1ac6e7ce1b99d39bcbe041b581c0c81fb74d9cc6e7eefdeb6ea1f56e3f44542c"
+    },
+    "lm_f5125fc718ebf071": {
+      "spell_id": 47432,
+      "row_sha256": "4e58a1651cadc300c8a812219f81fa6f1a69c3384bc72473cffc12ff952268e4",
+      "spell_card_id": 14961,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "c4de1bb4078f071b7588929725e15a6c463f0ab73540ca3f12405633aff075c2"
+    },
+    "lm_7b6bd6ce56189fbc": {
+      "spell_id": 71,
+      "row_sha256": "488522a2da851c202ecda06eb50e9efbc7d494833ab6adf28efaf5e321fc9c4e",
+      "spell_card_id": 14981,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "f953e0288dcd60ded0ec1f94284a9af660fcc71d2730a2365ad83d2c748009e8"
+    },
+    "lm_19edb16ff7370abe": {
+      "spell_id": 346,
+      "row_sha256": "f6623752ee2d74a63d25d984c82effff9aadf359896c03544e764e742ae959c3",
+      "spell_card_id": 15011,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "5868cb567046a178057268d4b1e41443fbb7b0c2f6289a508c81798669447b48"
+    },
+    "lm_b1922663d36bc890": {
+      "spell_id": 333,
+      "row_sha256": "6aa1370d6b7416c79cab2f396d861c4b171120eda221b176526aed04e49b31c0",
+      "spell_card_id": 15041,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "ff29928ad0d32da49bf48f4323d23d0bb974055c0786698c97718f376520685b"
+    },
+    "lm_81c8985fec94cf55": {
+      "spell_id": 47412,
+      "row_sha256": "412e0d16c43495fd224fc34fd5f8aa1417928c25ed574453b07138b322ae200a",
+      "spell_card_id": 15081,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "767d7f17cd45547aa746914bd95e4d608fd5b73d1936faff4a873572d341f065"
+    },
+    "lm_4e78c9f1a828730a": {
+      "spell_id": 47,
+      "row_sha256": "4fcc7421499e2afd22b34bc026a3e21643bb2cfdeea5a3d06e7256edec13d524",
+      "spell_card_id": 15061,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "92ee2a4f310348894e246918184aae5db947628d41e04bc76cb2d4eb0d60f8de"
+    },
+    "lm_45cdacd8a42d0e5a": {
+      "spell_id": 62,
+      "row_sha256": "4583f61b2344cf1dc78399112e06a95192020222e4924a16f461db2bc860cbdd",
+      "spell_card_id": 14571,
+      "grade_id": 5,
+      "has_level_buff": false,
+      "host_identity_sha256": "86af04826e6542d5714bfa12b70f9680d80b88df92aae3476df1c7ccdb4d4fbe"
+    },
+    "lm_b39dbcf394503410": {
+      "spell_id": 63,
+      "row_sha256": "e2857023d844c736b990621dd8db82898ee3e56660e67f2a42c4a6b400478749",
+      "spell_card_id": 14561,
+      "grade_id": 5,
+      "has_level_buff": false,
+      "host_identity_sha256": "1f87424c818bafcec135a24fa48048986f9389d5f225772d0b6652ee385a3a21"
+    },
+    "lm_4577052891abbbc4": {
+      "spell_id": 345,
+      "row_sha256": "4d4ffad979d86682a16c2082dd2f3f1346996f3ef978e61c821d8468c699d8a6",
+      "spell_card_id": 15071,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "8c72bf79adbe849694c86d313e22b03b842c0abba6fbba554072a81f61089571"
+    },
+    "lm_01141f56509e111e": {
+      "spell_id": 591,
+      "row_sha256": "bacba7819506f8b895401b6614efba3e982e115289d3717ae6d36381e63a32ee",
+      "spell_card_id": 14581,
+      "grade_id": 5,
+      "has_level_buff": true,
+      "host_identity_sha256": "783999879fe401ff1efd688d22ad7e17822f5a9f4182e8a0ad0adb4e20746171"
+    },
+    "lm_caa09311e43909ab": {
+      "spell_id": 28644,
+      "row_sha256": "a2b2601614039270d1da9dcd86e51ed174b4f012a30af280d85274020817d889",
+      "spell_card_id": 14601,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "baefcb85be1486622f55628b773f5b175f1e9e97a54073b5eb3b8f2320cdc549"
+    },
+    "lm_9c43d699f7956f55": {
+      "spell_id": 78,
+      "row_sha256": "352502bd7b56978ad2d96c9ac7d2e135cdd77ad425184ba6a152f04c83c38950",
+      "spell_card_id": 14941,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "95a4a308422da48f462fd398e8ccc8ce6c18ae857c91a4d99fee435dce74aed8"
+    },
+    "lm_19a961b42a074ce1": {
+      "spell_id": 37901,
+      "row_sha256": "5f3301891af4c44a89bd4bd2775748ba5100cdd6b3bf2cce524f07639bca8197",
+      "spell_card_id": 14621,
+      "grade_id": 5,
+      "has_level_buff": false,
+      "host_identity_sha256": "d5484ef6518f470b7c4b53e1e1e9e6db282241ff89f97a18d03b5ad962ad6dbf"
+    },
+    "lm_a2061de276f9426d": {
+      "spell_id": 64083,
+      "row_sha256": "d7c85d16771d9c05eced88bd19723009253c13d3cccb10b69b87b4029b68a8b9",
+      "spell_card_id": 18783,
+      "grade_id": 5,
+      "has_level_buff": false,
+      "host_identity_sha256": "26ea01c1b7396141649b912a6161634258e7c42745df1b532f46a04fe7477236"
+    },
+    "lm_50ae0cb7d44b7546": {
+      "spell_id": 6133,
+      "row_sha256": "e13eddd94d770007f2e230acdc08da9910157c03baf3b8a79620dc82ba969fe4",
+      "spell_card_id": 16831,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "a8d71c6a4064367f51aec7ecfe236b37f834c77a4e82b8168d9153b0285aedb3"
+    },
+    "lm_888a50500b32fd03": {
+      "spell_id": 6213,
+      "row_sha256": "9d66cfecaa6b4d8867aa3e7083712fa07b5f4634937785b12706ac3f3c3262ca",
+      "spell_card_id": 16941,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "a5eacbfba88a5a5f7267b7a5563eb440d502e42de034bc98aa7fd2d5cad10233"
+    },
+    "lm_973b29c604744901": {
+      "spell_id": 6193,
+      "row_sha256": "0a1364c5c759abbd856a5a0f1cf71fe90fe40e53d5635c41364fe5acb9b3a8af",
+      "spell_card_id": 16951,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "7d7fbc414c56f7be185850028013067f092dbf765ae13d66af6c22e8d8c6a7a9"
+    },
+    "lm_6dd9dff05d36d6fd": {
+      "spell_id": 37991,
+      "row_sha256": "ea52f8e8a8586158c5c5124ae43e2e93660480203d6ba324d1aceea32fef27a3",
+      "spell_card_id": 16891,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "2fe88a6291763cf69a01c6cc7a06c9b5ba696cb744bc40a16e1729d2ef85cfac"
+    },
+    "lm_b6e46e806faf7eac": {
+      "spell_id": 6143,
+      "row_sha256": "5bce4e55b4a6ac8418092238f69ea0a2128935f06a4804caa8b629c26e72a4ee",
+      "spell_card_id": 16881,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "f10ef5c9192a6ef4bf11fb8f3e2180dca50559c8611a4092c368de6bfdea243c"
+    },
+    "lm_340e4a181238773c": {
+      "spell_id": 6203,
+      "row_sha256": "bb7bdf89add79f222ffb749e8dc3989495f3f0fb125dd7d161d9bfebacb8a346",
+      "spell_card_id": 16901,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "0f7bfeb013b5a05189db084bb24f58e61c67c22897a6e947d61d7b797907fcf9"
+    },
+    "lm_00d9f77d3ff9315a": {
+      "spell_id": 6173,
+      "row_sha256": "45e46d894be9aabc834459cb6dc0662bcb0a3a9570f065b9ed4b782a6e537ec3",
+      "spell_card_id": 16931,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "dc69c8bd22541cd558cefd7da104c29d5f95e079400afb68648432a8356237f6"
+    },
+    "lm_051ed12dad8a2421": {
+      "spell_id": 6103,
+      "row_sha256": "7e61dcadcd3154726ef4ae3db867a8e6a4b944c540191df10b49c7ef1f8a9253",
+      "spell_card_id": 16851,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "1273954e33f81159b7a0b38178bbe6531597001884e9676041dfffd50bead12e"
+    },
+    "lm_8e2c8c76c068ae0e": {
+      "spell_id": 57982,
+      "row_sha256": "d627de1b340376a19de1bc2fa1f14585fe38d42de82f0a114253a10abf7e4d78",
+      "spell_card_id": 17912,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "99075d48b9be38356a25204c0449e536117b384c10c1472aa3e0f2e264fdadb3"
+    },
+    "lm_795059827558bc19": {
+      "spell_id": 17324,
+      "row_sha256": "d7c45aa721556251ded134609dc6fa56e3ee8455bad3dc098ece34ad95e1ab87",
+      "spell_card_id": 14351,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "2d2137b99330a05dc615ef3a48bef03b63c0d2713bdb6b930dd4d792523dfcfd"
+    },
+    "lm_9f4be293cf774c31": {
+      "spell_id": 18304,
+      "row_sha256": "bbc0d660bc30cc5a047a9c273022651b57b8ec0efd4369479a977d887b18967b",
+      "spell_card_id": 14381,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "70ee780f6d6c7692819ba0c689c8c16ab9ef5e058728a881e4001e35b740b53a"
+    },
+    "lm_78adb9ff02d926d2": {
+      "spell_id": 17404,
+      "row_sha256": "34f16ec917da5dce14151ddc8503781d8ba11ec0f5cda5ff514f12c693e7e8da",
+      "spell_card_id": 14491,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "7b0f6ea16348dde019ddc8d8e55c9718368ca8ea512f9637ec54628ec72a5982"
+    },
+    "lm_45d35daedfc527c9": {
+      "spell_id": 29092,
+      "row_sha256": "bb043cea142008f3a1d0a30fe5b9758e8e972a9a5d881400ba19f18bf09f4dca",
+      "spell_card_id": 16771,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "bfa31caec0352a1b3ddf08e863a7249c8a1dff021fc9070a05234aa17f1d8a1c"
+    },
+    "lm_7d4f31d336a3441f": {
+      "spell_id": 29142,
+      "row_sha256": "024ff65c1f65dc9584c1656285350da4457f738d963703e6b7d82980346d22ae",
+      "spell_card_id": 16731,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "0bb3a868f7cf28a5325398248d7d479da7b1f0aa88fd6fcfd529bb1b4a43d983"
+    },
+    "lm_a3f1da232ab333b5": {
+      "spell_id": 49411,
+      "row_sha256": "9df4b82dd35f2fc05335bac45d3838ef5ce8f633a8ca89efc9231302821b9be8",
+      "spell_card_id": 16801,
+      "grade_id": 4,
+      "has_level_buff": true,
+      "host_identity_sha256": "91954123aeb0383952751215a37b643c01841a129e2daa03ead80cb8fd62a722"
+    },
+    "lm_cbed42cb19ad70d5": {
+      "spell_id": 58071,
+      "row_sha256": "b85ee2ddf7fc2d1fd644ce327667411e420ed8ad66e7677addeea2d43a818015",
+      "spell_card_id": 17961,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "c7c7463603106a80673d0caed9c5d52935e629a4219fab3f85e6e94d2286f3d4"
+    },
+    "lm_57fedb578e5ba9de": {
+      "spell_id": 29152,
+      "row_sha256": "6fa2e2a56244e97eed97f8f0b91e47d195081f1edc4b47ed23ca10238888a34e",
+      "spell_card_id": 16741,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "47d2e24fff6a0eb99d3e34738a36b38fa516d38a5b42b420945210efde41645a"
+    },
+    "lm_517ca31126a31b45": {
+      "spell_id": 35443,
+      "row_sha256": "fe9846359227ae1ae6c7aad45db14a011343446a53f616800e8cab77fbe3553f",
+      "spell_card_id": 16721,
+      "grade_id": 5,
+      "has_level_buff": false,
+      "host_identity_sha256": "acdfbd34825889bcb05bd9c288a7fc60f3edfa4c40182a1441317da8041ffb18"
+    },
+    "lm_bb653bb8ca9e587d": {
+      "spell_id": 34832,
+      "row_sha256": "b800e5f5b34aec7d000437ca6045a09cb92ff8bf72b76032fa08dcd768798e95",
+      "spell_card_id": 16121,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "51ef08327c464562590aaef0b1ae4297d329266b50e8d322cb83d92fd8873890"
+    },
+    "lm_898a1396425611d9": {
+      "spell_id": 66724,
+      "row_sha256": "4627aa00554f12805831e0ed835c42b95e5b97b3ee74774419ef0f433733ec12",
+      "spell_card_id": 19194,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "8c2bed110f2e160671f07986ee3765baf2a2715a340889ac213722c49d6bcfac"
+    },
+    "lm_79c6d115ab78c4f0": {
+      "spell_id": 65823,
+      "row_sha256": "f37bd31df2b497c01fe4ec17d8741f792340786697ac08b361649895d33fd577",
+      "spell_card_id": 19043,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "fd4e2ed85d8fae23d585afd5bed71d87d92b2aa4ae8343c04c4da043a3cd2c6b"
+    },
+    "lm_82baa209008667a5": {
+      "spell_id": 34922,
+      "row_sha256": "f7b614c6977a91b3f8a7f6db752b663d70aa6b9156bc6301bc88308120bfd560",
+      "spell_card_id": 16081,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "de5f361f7c6a83541267afd7a866f16ea5d93219c0c9f78aff6f4cc0dbf1cda8"
+    },
+    "lm_08706dec751c5272": {
+      "spell_id": 34842,
+      "row_sha256": "afb80e899edda0ec56717b320888268253622b491cf9662cca0988b7fec1a0a6",
+      "spell_card_id": 16101,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "a7339f1930a9f567703f98712e328b93b8893db396fdcc289c929c50880546b2"
+    },
+    "lm_f3e3300d0862d21a": {
+      "spell_id": 65638,
+      "row_sha256": "8712309cca3d0aca300b795c90c564b8050f054b35c941cccd472405dc106ca0",
+      "spell_card_id": 18928,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "b514fd1508934e68d4e9377841c94a93845dddc5fa232cf2df1e7027d6c7d1c2"
+    },
+    "lm_53156d9253e5ff70": {
+      "spell_id": 48621,
+      "row_sha256": "b688e0b3bd21c1f0fc5a576469d35f1ddcb5e6301168b40056819bc3b4a81f0e",
+      "spell_card_id": 15171,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "7ac0e2d9489418d1bad8976cf98ce49064fb39b618338c38925a02a6a0b47127"
+    },
+    "lm_c7ca41d471a6b497": {
+      "spell_id": 49001,
+      "row_sha256": "2eb9b06b512ea634fab7d185b4c5755465c9f2f6ac5f96bf95900f97ea5b5be2",
+      "spell_card_id": 15131,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "3b0c3a802399cfbdbadf94fa51e8611b8ead03cda87a40b637913724b81762ed"
+    },
+    "lm_b0fcd0837af62d0e": {
+      "spell_id": 52601,
+      "row_sha256": "00e36fe29ad8f353436f3daf13437cbda75f00005f5aaa7548c87f0370b58bea",
+      "spell_card_id": 15091,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "97ce34cdf6101ad9dc3e13761c90d2b18ca65ea9f533a9e92429b24f33d5d427"
+    },
+    "lm_a0a768c51a6b7838": {
+      "spell_id": 48471,
+      "row_sha256": "0581f42d08a140b0a953f2e6f44eaf971621c677a19c50a12ebd3eacc4aa376b",
+      "spell_card_id": 15141,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "54a443cf468510a2cbbbbfd2e8f428c041d914bde0e1704575aacb718216fd94"
+    },
+    "lm_3e85ef069e985c91": {
+      "spell_id": 48551,
+      "row_sha256": "30450f1430a52a8de6944695240452726b9fa0a31bba12c04baaf075d66e1518",
+      "spell_card_id": 15161,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "4fbb3fd21644c2db0d85ceb370a17cea07b44c84358a873a6901e93fed770d3a"
+    },
+    "lm_44e63d3719e2f526": {
+      "spell_id": 48611,
+      "row_sha256": "2917574b35c33be0a561994d475684272970b7ab87fc91befaf3c8ed6226e85b",
+      "spell_card_id": 15211,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "a5a508ed2780f23fed0f80177151837ab909f3da3e0906674dea5005b7f722b0"
+    },
+    "lm_1b64099d7f5fa562": {
+      "spell_id": 41501,
+      "row_sha256": "0800ee84c7e76a278d147139437111e3242941327c94c9c7c885f08b2350eea2",
+      "spell_card_id": 15791,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "37157dde61b33dc5fa98f1484e1eca5901c10e1ad7a9aa19ca819dfa0f6ad43a"
+    },
+    "lm_6180fb91c86cccfc": {
+      "spell_id": 41521,
+      "row_sha256": "89d536dfb1b5f255056d3220dab7447df81734f848ea8cb7c4e9b16c194a6bad",
+      "spell_card_id": 15761,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "7b9f329f135c2a2c98efd0d3a77f86bd7d6fdd3788659c3408f31b7e31d5a59d"
+    },
+    "lm_4d801bcff76fbaa1": {
+      "spell_id": 41571,
+      "row_sha256": "f7d91662fbd626019998713320c376475cede957cc32763d96c396b07c316ea4",
+      "spell_card_id": 15721,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "1c38f22af21d0b41706dd7563a5944aa09f96b65d3b2118718a4e284f2605d06"
+    },
+    "lm_1f56e0b2accb39f2": {
+      "spell_id": 61564,
+      "row_sha256": "25a0108b926d0fd423d0912c6b3510a16c5c360ed29190e130158d4c633b3f44",
+      "spell_card_id": 18064,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "822ff1f8c7b544aea364698883812643dcb7563cff9071b9c00a7add3da64e98"
+    },
+    "lm_7be766a6d31b4ac1": {
+      "spell_id": 63584,
+      "row_sha256": "040f275aa5e035ccfaae4936687e2d8cdf88425f850aa58354a1f54234ac756e",
+      "spell_card_id": 18644,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "88bd30d93efc4f262025899c14d513cfef7c41f3944a14513553e5d7cb00a73c"
+    },
+    "lm_86d332ddfb0de110": {
+      "spell_id": 63554,
+      "row_sha256": "772ba4b7d4fa5284a5573e4f08534bddd9be5ec53a97238df3ef17e14c61a548",
+      "spell_card_id": 18614,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "dd96a83cb39f87a8f72821025655dd192858a4acf56d49bea558d531690e47a8"
+    },
+    "lm_0f572c008c5be944": {
+      "spell_id": 63614,
+      "row_sha256": "4f8c8eb135cc954a5f79847850bdb3dc9550b2290d57ad4281543f9ab0919d6f",
+      "spell_card_id": 18674,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "3a7ab5ea8d26a09b67deb485c4ce0d759447c04ec79916aef463f5289fa1bbb3"
+    },
+    "lm_a67dae07b4f0608a": {
+      "spell_id": 62974,
+      "row_sha256": "4f616c97bbc894d2c98eba75f0ae9b241088982c011d74c9f9322ca3a554cc55",
+      "spell_card_id": 18474,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "a3d589239749af7bcd8229ed8c55f4012315212b34dbc51dd470834a8ce8c422"
+    },
+    "lm_ad6488f0cedbc544": {
+      "spell_id": 62684,
+      "row_sha256": "68dc21a7f9a44306fb9c1b9d110c6b7e68c75d0e80d48681e63735e61ceb596a",
+      "spell_card_id": 18334,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "b0b09e353aeb849fed461671db587592c53c8d2129744258a708d1a87020862b"
+    },
+    "lm_8187ff2de29d3853": {
+      "spell_id": 63534,
+      "row_sha256": "46ff4cfb036298f7ba187fa917f07ff869e514bab9f0a9cf0bc42efcb154a65e",
+      "spell_card_id": 18594,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "84bce75c2e7f64739b593a7409c4c40fb527741fad87ae03ff7dd6d579ae93d8"
+    },
+    "lm_9833c88190974e17": {
+      "spell_id": 69551,
+      "row_sha256": "c9c3a2c8ade2caf1dc54423b5c203c08f87576d1b7d0ed33c1a7742e9bb2476d",
+      "spell_card_id": 19651,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "35a1f48a5b3be8544d6b512f74f2df65b158d7f30c21d9eff562cd6c9c97dcdf"
+    },
+    "lm_4732c18977938cdb": {
+      "spell_id": 69721,
+      "row_sha256": "2da29c292e0399e3ff8ac9193fc5af3228c27a35c9a0494774f11db54b5d13b2",
+      "spell_card_id": 19581,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "ac7dff67358683213bf67bf751104cf3da24106645512282d38252b8ee25c844"
+    },
+    "lm_cb0375ba9c238726": {
+      "spell_id": 69701,
+      "row_sha256": "d55eb2170f4684484f332fdca24af53c70ec0ee7783ebe05d464f3013cd4516f",
+      "spell_card_id": 19621,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "180b0c20df715196f958adf776f19f9793292db2eaeebe77d04307bcf579a008"
+    },
+    "lm_8009dbbae892b539": {
+      "spell_id": 69691,
+      "row_sha256": "b2138155476145cacd208d604e3503e51047bde6cc26fb78e3af232ab8048580",
+      "spell_card_id": 19611,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "ccbba4bb0c5b86f26ef6d6d16952f933269689596cf9d35822fcce20a1ca8bef"
+    },
+    "lm_a1e31e333a2b59f0": {
+      "spell_id": 69731,
+      "row_sha256": "a0c737821e091c6a920b31df4dd44cbf2cf5e5511758e7726b12b4dd010a390d",
+      "spell_card_id": 19571,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "c7ee6897cb04b74cce28c8847fb36350b5a3efb97e63fd680158a34fa9b1ab37"
+    },
+    "lm_236e004c8ab51043": {
+      "spell_id": 69711,
+      "row_sha256": "d8123bf7efe67e0071398fdd1a3412e8c583711c9c2ebf8feab65d5e69db5c69",
+      "spell_card_id": 19631,
+      "grade_id": 4,
+      "has_level_buff": true,
+      "host_identity_sha256": "556f553849d8857a1c21c00bd35647c258e21de6bdd2c77111009080b1128a55"
+    },
+    "lm_dcb006041216f9c6": {
+      "spell_id": 69291,
+      "row_sha256": "43db5fadd216a98a0be5dc98138463cbd7d5b04bc4ef40880e67e75ac3a5a56b",
+      "spell_card_id": 19401,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "acd08c8cdcf88248a9b5b165035ce1864e315b40bf5586ba2b9bf73256dfecd7"
+    },
+    "lm_06640b26b09a5bc8": {
+      "spell_id": 70371,
+      "row_sha256": "e80f31a0462d8f3984dcb4104cb0edc1e4484b0a9bdf5c331db288578a3eee03",
+      "spell_card_id": 19761,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "945588dcfb510ebe024d886e94e572132a34092e6bbac8974e02b610f0f3bb8e"
+    },
+    "lm_50e70d4996958fe4": {
+      "spell_id": 70141,
+      "row_sha256": "f3d7b681458f6c61c055da06b9715b5a9d873224a2a4040f4ec1a6eb0c659507",
+      "spell_card_id": 19661,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "3f11dd8771bb5a3b372f9b77a7ae3f79c8252550b5fc0bd89d20f3fa65bb7c6b"
+    },
+    "lm_b08f206fe97abc83": {
+      "spell_id": 69581,
+      "row_sha256": "3bac8ea03e953cae47aa9331b37563f2e6b4064ee09a2de0c6bd43a98c1a9c1c",
+      "spell_card_id": 19551,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "68e7ddbfe671e26928a2666e164f35c5f60d81337c641077d6bcdaf3d98cc114"
+    },
+    "lm_5050c9dd5325eaa6": {
+      "spell_id": 69571,
+      "row_sha256": "b6db4fdb17467e9acffae38569a2824f2380de91a1075c58b4f2067f78f9a024",
+      "spell_card_id": 19531,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "8d5bbfb97145bfb40e29f6b8002d0f223d77d76063252572c57f440603fafce1"
+    },
+    "lm_eb050c341381a33f": {
+      "spell_id": 70261,
+      "row_sha256": "78a028c69c78df457883584c5e20eff29165b015118289dc73ee10b4dc94de1b",
+      "spell_card_id": 19711,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "3a9986d845ec0915ec2d6abdede3d7791901fa4759de33d69d94b6d107c26b25"
+    },
+    "lm_77160df91e7c0f69": {
+      "spell_id": 70151,
+      "row_sha256": "4804d16b9198e4e424c4a1759f2361ed01ccb4d7e868ff5a4ee57e1c73c76610",
+      "spell_card_id": 19671,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "495dee1170032485e601f778bd3b92e9f28d0e2b45480f5d93ce4387f0d997a0"
+    },
+    "lm_2bdb65edfba2772d": {
+      "spell_id": 70271,
+      "row_sha256": "19ab150886ddcd74f362d0b4f4b4e3982eddea47a7e25487ac2c65c954b2f94d",
+      "spell_card_id": 19721,
+      "grade_id": 4,
+      "has_level_buff": true,
+      "host_identity_sha256": "f6bca5d4ff9a90b7f1c376af51600414eeea1aee5b533a753f9ea6123ccf388e"
+    },
+    "lm_a67097404fc5663e": {
+      "spell_id": 69601,
+      "row_sha256": "a386fcd00448d2b607053e6b3620a91a6729142480785e4758fa0e33d82d8dc2",
+      "spell_card_id": 19541,
+      "grade_id": 5,
+      "has_level_buff": false,
+      "host_identity_sha256": "41456f1c8013f2f6032899bec60871975e05c206f4347a33a19e8e64a8e20857"
+    },
+    "lm_d838833181972fc2": {
+      "spell_id": 95822,
+      "row_sha256": "b10c573db46c4d2e9b6de8e44ac72643eb94081a9b19f21f865162c2880816fc",
+      "spell_card_id": 22992,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "b46b83bc2f2515077e1b846587536396074147dcef8adb5f52beff34aa5f10f2"
+    },
+    "lm_595fcc13ff154a41": {
+      "spell_id": 95092,
+      "row_sha256": "a6691030f5cbcf056f2e8419d0a7bd115b8a721d37d99e980433385eb486d48c",
+      "spell_card_id": 22742,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "02e13dd300e27088f60452fe670a418975b19c55a58840764cb7609f99b3ec6d"
+    },
+    "lm_ae1f5ae2a470e772": {
+      "spell_id": 95872,
+      "row_sha256": "8b26a55c192ace744b9f40831c1520dbf5656996ce60c7a5d9ff866648fa423b",
+      "spell_card_id": 23042,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "2e40666dc475a8febe17c93da7dca0e5defb65e8cf2d9ffeb07e7c6726c32e4b"
+    },
+    "lm_4746a9b100e660f3": {
+      "spell_id": 95802,
+      "row_sha256": "79bb0a52f37c1542992911cb33ce44b9bd7ece3537ee35f5599adbfca8d2576c",
+      "spell_card_id": 22962,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "2af60b500d260ed3c4698ad9800cd7599509087f0e63b947dcf36ce0347d2718"
+    },
+    "lm_36641c582649e3a0": {
+      "spell_id": 95542,
+      "row_sha256": "ae021cd23ffcdcef6c5d8902900ad7e07cfdb8ae8008b9ed74505ef9bc54a720",
+      "spell_card_id": 22932,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "0984e58be5062c953ba6eaf256e3a32a93ef4627ce52e300940c3240a259017e"
+    },
+    "lm_dbd7171c47b097a1": {
+      "spell_id": 96002,
+      "row_sha256": "1507ff0f9c4ba548287ddb955d5d039da2390e1928d9f80b90ca3f4d5558f6cd",
+      "spell_card_id": 23092,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "e0392f269c3bb41dcc079d6c2a25a359da0214048974a0d70975445125851613"
+    },
+    "lm_3728e0e8b8a822aa": {
+      "spell_id": 95152,
+      "row_sha256": "cd28d87062222851d71a2a04c1801d4e388fce94734b1bbc9f067fa00e67d865",
+      "spell_card_id": 22802,
+      "grade_id": 1,
+      "has_level_buff": true,
+      "host_identity_sha256": "97003755252730922f11b3e38812e9b6edd196c16f4319a6fc702479098b9a50"
+    },
+    "lm_e2abc3ddcf8d7cfb": {
+      "spell_id": 95102,
+      "row_sha256": "379eac2af93f7f892fadf51a703a79f39c7f80c5b5de881974a0d8764b83c1d5",
+      "spell_card_id": 22782,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "b742075383c7fd2a01c564e3fca1ad6e5199dbdcd4535573485116b533f333a7"
+    },
+    "lm_333c37f7ef5e166e": {
+      "spell_id": 95172,
+      "row_sha256": "eb3148e518e58e3e778cc74397ce62c4aee95e114f52ab44bec035b792423165",
+      "spell_card_id": 22842,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "0a8a8c74c845096e0914e6eb26807c2e6ed27f76f1b584d7ad2aaf0c9bd6c196"
+    },
+    "lm_9e207b108d2877cd": {
+      "spell_id": 95062,
+      "row_sha256": "9e5db07e3cd798e2fdbfaefbb17e93ff9cd4190f41ea284cc04c1d4e78847304",
+      "spell_card_id": 22722,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "0b90c0c2ada41b25b55afec06c1513c4802983a313c7844e607e464b4eef5b46"
+    },
+    "lm_21741c93e22e101f": {
+      "spell_id": 95852,
+      "row_sha256": "c40b465d3a0d134534b59dc088a5fb24914fe064e405ea38fba50b1d6fcccf61",
+      "spell_card_id": 23022,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "1ae7e651c58c7b443c323154c58788af310abf83df809f99bf0f85a0a5d2b46e"
+    },
+    "lm_66e64468fd21c8c6": {
+      "spell_id": 95982,
+      "row_sha256": "afc8b71036be02df4ea9410dd5fa45ca86f8404de123f5a3a2c28bface74a733",
+      "spell_card_id": 23082,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "dbb4e27efc8e3093eeecc35473bfeb23a090bd81658d79e9ea2a7607f3994575"
+    },
+    "lm_1fb2fb45ca7bb6e5": {
+      "spell_id": 95662,
+      "row_sha256": "57e827b6c31cab7555e005f5bb3f81ba15f6ce24739a18325ce7e2a0c262b711",
+      "spell_card_id": 23062,
+      "grade_id": 5,
+      "has_level_buff": false,
+      "host_identity_sha256": "80405bd4d86c1b6b27f4d7dcd519778eb5b3a356a30a125f84137621adc19cf8"
+    },
+    "lm_a3383b96fe98e15b": {
+      "spell_id": 95792,
+      "row_sha256": "145796c1904a452765a44d77955ca751d841c8b0cb860fc906ae644c352bccc3",
+      "spell_card_id": 22942,
+      "grade_id": 5,
+      "has_level_buff": false,
+      "host_identity_sha256": "a4041ca4a50d90d89b650a4cef1b8d0560ab2fa981be23a39624bc35ef695b12"
+    },
+    "lm_94eeee6b651ccee8": {
+      "spell_id": 96022,
+      "row_sha256": "799ff09d46f5b99ce2f61072386f7218d9c44e34030b3a3c88d63ff4eba1259a",
+      "spell_card_id": 23102,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "65068f42ceb8cf0fa7687b2da8760583822b6c539fedc27ed736d094b6ea01af"
+    },
+    "lm_f12bc8283c022ec2": {
+      "spell_id": 95602,
+      "row_sha256": "dfcaea798033da5e32f061aa6cad7175e736cfb0a8da2d97256c24b09c412017",
+      "spell_card_id": 22872,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "e49c0a081e9c823952a9f888b11e1e1db53bcff0137c0cee2a5c99b86ba18a5f"
+    },
+    "lm_df2656bb3d14d806": {
+      "spell_id": 38021,
+      "row_sha256": "c30bc864528e523368ff03a940e755dfc6316e91bbb73af0cbe3286b72cf584c",
+      "spell_card_id": 14331,
+      "grade_id": 32,
+      "has_level_buff": false,
+      "host_identity_sha256": "c99137855c58f4edf659bc604bb85e2a1dc798534536aabf40592bb6fdce3195"
+    },
+    "lm_e35a5e1482fc0950": {
+      "spell_id": 81,
+      "row_sha256": "0c347fe8761c74a48d8bb38442461eb32b5f98e5cba524dec640292c5cb987f3",
+      "spell_card_id": 14771,
+      "grade_id": 1,
+      "has_level_buff": false,
+      "host_identity_sha256": "ff6494adeb44e16ce08e2e4f98c3390fd3d36d0a0cda95cfc116168cd7c952fd"
+    },
+    "lm_09370fb0d313977d": {
+      "spell_id": 65803,
+      "row_sha256": "3011b9ff10ca3c94d922024c988bd56ea0621e6123f3c951dc121140a66e4b5e",
+      "spell_card_id": 19023,
+      "grade_id": 4,
+      "has_level_buff": false,
+      "host_identity_sha256": "ec44d0cfb8b96c34f2c2b5c4e3ce099773df125ac3b06d4602bb00749a39852b"
+    }
+  }
+}
