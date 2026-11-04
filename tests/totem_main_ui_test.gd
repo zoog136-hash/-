@@ -64,6 +64,31 @@ func run() -> void:
 	for child in view.content.get_children():
 		if child is Button: check(child.disabled,"unconfirmed upgrade action disabled")
 	check(world.inventory == inventory_before and world.gold == gold_before,"browsing consumes no resources")
+	for pair in [[244173,301664,347164],[244163,301674,347174],[244153,301684,347184]]:
+		var input: Dictionary = world._catalog_item_from_source_id(str(pair[1]))
+		var output: Dictionary = world._catalog_item_from_source_id(str(pair[2]))
+		check(not input.is_empty() and not output.is_empty(),"exact source material identities")
+		if input.is_empty() or output.is_empty(): continue
+		world.inventory[input.name] = 1
+		var before_output := int(world.inventory.get(output.name,0))
+		check(world._totem_convert_requested(pair[0]),"actual deterministic conversion transaction")
+		check(int(world.inventory.get(input.name,0)) == 0 and int(world.inventory.get(output.name,0)) == before_output+1 and world.gold == gold_before,"one input one output no extra cost")
+		check(not world._totem_convert_requested(pair[0]),"insufficient input cannot repeat")
+	var locked_input: Dictionary = world._catalog_item_from_source_id("301664")
+	world.inventory[locked_input.name] = 1
+	if not world.ui_preferences.has("item_locks"): world.ui_preferences.item_locks = {}
+	world.ui_preferences.item_locks[locked_input.name] = true
+	check(not world._totem_convert_requested(244173) and world.inventory[locked_input.name] == 1,"locked material preserved")
+	world.ui_preferences.item_locks.erase(locked_input.name)
+	world.source_save_blocked = true
+	check(not world._totem_convert_requested(244173) and world.inventory[locked_input.name] == 1,"failed save preserves conversion input")
+	world.source_save_blocked = false
+	view.get_child(0).get_child(0).pressed.emit()
+	var conversion: Button = view.find_child("TotemConvert_244173",true,false)
+	check(conversion != null and not conversion.disabled,"conversion usable on existing Totem screen")
+	if conversion != null:
+		conversion.pressed.emit()
+		check(int(world.inventory.get(locked_input.name,0)) == 0,"screen signal executes conversion")
 	world.totems.state["4"] = {"active":false,"kills":2999,"level":0,"selected":{}}
 	# Exercise the existing live death adapter with an explicit source-ID probe.
 	# This does not assert a native boss spawn or native combat simulation.

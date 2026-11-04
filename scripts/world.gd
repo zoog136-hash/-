@@ -1340,6 +1340,7 @@ func _connect_signals() -> void:
 		hud.connect("npc_teleport_requested", _npc_teleport_requested)
 	if hud.has_signal("craft_requested"):
 		hud.connect("craft_requested", _craft_requested)
+	hud.totem_conversion_requested.connect(_totem_convert_requested)
 	if hud.has_signal("shop_sell_requested"):
 		hud.connect("shop_sell_requested", _sell_shop_item)
 	if hud.has_signal("npc_dialogue_action_requested"):
@@ -4131,6 +4132,47 @@ func _buy_reviewed_shop_item(vendor_id: String, item_name: String, quantity: int
 
 func _craft_item_index() -> Dictionary:
 	return loot_catalog.get("by_name", {}) as Dictionary
+
+func totem_conversion_quote(recipe_id: int) -> Dictionary:
+	if totems.save_blocked: return {"ok":false,"reason":"토템 저장 보호 중"}
+	for recipe: Dictionary in totems.recipes():
+		if int(recipe.view.ItemCraftID) != recipe_id: continue
+		if int(recipe.view.AlwaysSuccess) != 1 or recipe.inputs.size() != 1 or recipe.outputs.size() != 1: break
+		var input: Dictionary = recipe.inputs[0]
+		var output: Dictionary = recipe.outputs[0]
+		if int(input.Amount) != 1 or int(output.Amount) != 1 or int(output.Probability) != 1000000: break
+		var source: Dictionary = _catalog_item_from_source_id(str(int(input.ItemClassID)))
+		var target: Dictionary = _catalog_item_from_source_id(str(int(output.ItemClassID)))
+		if source.is_empty() or target.is_empty() or source.get("slot") != "material" or target.get("slot") != "material": break
+		var from_name := str(source.name)
+		var to_name := str(target.name)
+		if from_name == to_name or _item_locked(from_name): return {"ok":false,"reason":"잠긴 재료는 전환할 수 없습니다"}
+		if int(inventory.get(from_name,0)) < 1: return {"ok":false,"reason":"일반 강화석이 부족합니다"}
+		var stack_limit := int(totems.row("ItemClass",int(output.ItemClassID)).get("MaxStackAmount",0))
+		if stack_limit > 0 and int(inventory.get(to_name,0)) >= stack_limit: return {"ok":false,"reason":"각인 강화석 보유 한도 초과"}
+		var weight := _inventory_total_weight() - int(item_weight_index.get(from_name,3)) + int(item_weight_index.get(to_name,3))
+		if weight > _carrying_capacity(): return {"ok":false,"reason":"인벤토리 무게 한도 초과"}
+		return {"ok":true,"input":from_name,"output":to_name}
+	return {"ok":false,"reason":"원본 제작·아이템 연결 확인 대기"}
+
+func _totem_convert_requested(recipe_id: int) -> bool:
+	var quote := totem_conversion_quote(recipe_id)
+	if not bool(quote.ok):
+		hud.show_message(str(quote.reason))
+		return false
+	var staged := inventory.duplicate(true)
+	staged[quote.input] = int(staged[quote.input])-1
+	if staged[quote.input] == 0: staged.erase(quote.input)
+	staged[quote.output] = int(staged.get(quote.output,0))+1
+	if _save_game(true,{"inventory":staged}) != OK:
+		hud.show_message("전환 저장 실패 · 재료 보존")
+		return false
+	inventory.clear()
+	inventory.merge(staged,true)
+	_update_hud()
+	hud.refresh_totems()
+	hud.show_message("전환 완료 · %s × 1" % quote.output)
+	return true
 
 func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()

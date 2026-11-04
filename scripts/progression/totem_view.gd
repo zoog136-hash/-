@@ -82,4 +82,12 @@ func _refresh() -> void:
 			slots[slot].append("%s × %d" % [runtime.item_name(int(input.ItemClassID)),int(input.Amount)])
 		for choices: Array in slots.values():
 			content.add_child(UI.label(" / ".join(PackedStringArray(choices)),12))
-	content.add_child(UI.label("제작 재료 안내 · 제작 실행 연결 대기",12,UI.MUTED))
+		if recipe.inputs.size() == 1 and recipe.outputs.size() == 1:
+			var recipe_id := int(recipe.view.ItemCraftID)
+			var quote: Dictionary = hud.get_parent().totem_conversion_quote(recipe_id)
+			var convert := UI.button("각인 강화석으로 전환 × 1",func() -> void: hud.totem_conversion_requested.emit(recipe_id))
+			convert.name = "TotemConvert_%d" % recipe_id
+			convert.disabled = not bool(quote.ok)
+			convert.tooltip_text = str(quote.get("reason","일반 강화석 1개 소모"))
+			content.add_child(convert)
+	content.add_child(UI.label("일반 강화석 제작은 재료 식별 연결 확인 대기",12,UI.MUTED))

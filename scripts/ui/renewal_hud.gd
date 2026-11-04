@@ -20,6 +20,7 @@ signal reviewed_shop_buy_requested(vendor_id: String, item_name: String, quantit
 signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
 signal npc_teleport_requested(map_id: String)
 signal craft_requested(recipe_id: String, batch: int)
+signal totem_conversion_requested(recipe_id: int)
 signal shop_sell_requested(item_name: String, quantity: int, instance_id: String)
 signal npc_dialogue_action_requested(npc_id: String, node_id: String, action: String)
 signal quest_complete_requested(quest_id: String)
