@@ -58,7 +58,7 @@ godot --path . -- \
 
 정식 인증으로 전달받은 추가 비공개 SP2 989개 ZIP은 실제 원본 75,664,378B와 서로 다른 filename ID 973개를 포함한다. 현재 그래프의 Spell/Invoke 효과 Sprite 참조 70종과 직접 ID 교집합은 0이며, 보스 보고서가 구체적으로 선언한 물리 SP2 멤버 11개도 이 ZIP에 없다. NPC 몸체 Sprite와 직접 ID 교집합도 없다. 이는 이 전달본의 직접 파일명·선언 멤버 대조 결과이며, 전체 클라이언트 부재나 완전한 SPR alias 전개 결과로 확대하지 않는다.
 
-검증된 표준 PNG 2개는 `normal_cloud.png`와 `Map_Icon_Forge.png`이며 보스 효과가 아니다. 포함된 bbox/EOF 후보 디코더 결과도 픽셀 순서·색상·알파·FPS·액션 승인으로 승격하지 않았다. 따라서 이번 산출물의 원본 보스 VFX 픽셀/정확한 시전 동작/전체 boss 아트 상태는 **미전달**이다. 감사 도구는 아래와 같이 원본을 실행하지 않고 registry/SHA/CRC와 참조를 대조한다.
+검증된 표준 PNG 2개는 `normal_cloud.png`와 `Map_Icon_Forge.png`이며 보스 효과가 아니다. 포함된 bbox/EOF 후보 디코더 결과도 픽셀 순서·색상·알파·FPS·액션 승인으로 승격하지 않았다. 이 직접 ID 대조 시점에는 원본 보스 VFX 픽셀/정확한 시전 동작/전체 boss 아트가 **미전달**이었다. 후속 SPR/69 DAT 소비와 후보 표시 구현은 아래 최신 절에 기록한다. 감사 도구는 아래와 같이 원본을 실행하지 않고 registry/SHA/CRC와 참조를 대조한다.
 
 ```sh
 python3 tools/monsters/audit_patch523_boss_payload.py \
@@ -105,3 +105,36 @@ TWILIGHT_SOURCE_MAP_PACK=/private/verified-current-map \
   --patch523-npc-sha256=ca260fc0481076fd9de0327cbb4b24df45d75d47d16b4fc6578713a44aff4a64 \
   --patch523-screen-dir=/private/screens
 ```
+
+## 최신: 전체 선택 SPR 추적과 원본 유래 효과의 자체 재생
+
+추가 정식 Library materialize에서 현행 SPR 원문30개와 `originalSprite69`의 네 체크포인트를 실제 수신했다. xattrs·ZIP CRC·각 DAT의 현행523 manifest 증거/바이트/SHA를 확인했다. 최신 manifest가 그대로 유지한508 바이트를 사용했으며 구형 소스1·2나 PC 이미지로 교체하지 않았다.
+
+| 입력 | 바이트 | SHA256 |
+|---|---:|---|
+| SPR graph156 선언 팩 | 84,488,816 | `311b22774e923a48640e677d15c5ebcc0bc4035487debea435806a0747d0dae8` |
+| currentSprite originals18 checkpoint01 | 190,728,359 | `7dfd47a9cb0f1073437933febee72a26a27159c868220b51b476226d4e9632ae` |
+| originalSprite69 checkpoint02 | 189,340,512 | `2280a66e69fca0f4853a6b460a9a2c315f3ebc86d46efaf83582297d6fa1091c` |
+| originalSprite69 checkpoint03 | 190,535,985 | `3e47d38afadc8b8c55d7528acaba5148ec4c101151fa16bc7202f66e1b23da71` |
+| originalSprite69 checkpoint04 | 185,164,962 | `4d6045fc087a8b2e1794776635ac84a6729423e1182a7627fe6bff17ae5a7770` |
+
+효과70종과 보고서11멤버의 선언을 합친 시작점73개에서 **선언170개·명시 참조97개**를 끝까지 따라갔다. 선택 범위에서 중복/누락 선언이나 header alias는 없었다. 독립 원문 스캔으로 alias/shadow/clothes/clothe 구문과 전체 선택 참조가 일치함을 확인했다. 앞선 직접ID 교집합0을 alias 부재의 근거로 사용하지 않았다. 69개 현행 DAT에서 이 그래프의 SP2 **46개**를 새로 찾았다. 122개 미수신 후보의 정확한 컨테이너/멤버/크기/CRC는 비공개 감사 팩에 별도로 기록하며, 실제 수신하지 않은 멤버의 SHA를 만들지 않는다. 보고서11개는 이69 DAT에도 없다.
+
+현재 실행 팩은 효과17종 / root+child 트랙34개 / PNG526개(9,811,262B)다. 단일 계층5종은218·2177·2232·11736·11737이고 나머지12종은 모든 필요한 child 파일을 확보한 자체 합성이다. 정확한 액션0·flag0만 소비한다. 누락 child, 범위 밖 프레임, 미지원 액션/방향은 전체 효과를 보류하며 부분 body나 다른 효과로 대체하지 않는다.7361은 전체 decoded texture가64MiB를 초과해 제외했다. 런타임도 효과 전체/동시 표시64MiB와16노드 예산을 검사한다.
+
+원본SP2를 commandwise 모델로 읽고, 모든 출력 프레임의 픽셀 범위가 해당 M 원문 half-open extent와 정확히 맞는지 검사했다. 기존 grouped-row 결과를 재활용하지 않았다. RGB565 변환·내부 픽셀 순서·알파·blend·층 동기화는 실제 M 런타임 동등성 승인이 아니다. [공개 PakViewer SP2 구현](https://github.com/tony1223/PakViewer/blob/fbad69239e3e3c12ec18dfc7722bed284be093cc/src/Lin.Helper.Core/Sprite/L1SP2.cs)을 확인했지만, PC 도구의 해석보다 제공된 M 원문/extent 반례 근거를 우선했다. 기본24FPS는 기존 TWILIGHT compatibility policy를 참고한 **자체 추정값**이며 M의 확정 기본값으로 기록하지 않는다.
+
+UI는 `원본 효과 표시 · 추정 재생`과 `자체 계층 합성 · 동시 시작/1회 재생`을 각각 선택한다. 둘 다 기본은 꺼짐이다. 명시 SPR FPS가 있으면 우선하고, 없으면 설정 FPS(1~120)를 사용한다. 투명도·크기·일반/가산 합성을 조절할 수 있다. child에 자체 액션0이 있으면 우선하고, 없으면 부모의 정확한 프레임 인덱스를 공유하는 **자체 동작**으로 분리했다. clamp나 임의 프레임 치환은 하지 않는다. UI 미리보기는 패널을 닫고 실제 월드에서 재생한다. 전투에서는 정확한 Spell Sprite 필드의 기존 발동 경로에 붙으며, 데스 포션47873의 아이템 제한과2232 효과를 실제 Monster/ActorMotion에서 확인했다.
+
+시각 설정은 `user://patch523_effect_settings.cfg`에 따로 저장한다. 성장·장비·아이템·재화/중복 지급·기존 게임 세이브 형식은 바꾸지 않는다. 원본 입력/원문 값은 보존한다. 효과 프레임이 피해·전투 시계·명중 판정을 구동하지 않는다. M 엔진/APK/XAPK 탐색은 사용자 지시에 따라 진행하지 않는다.
+
+런타임 파일은 비공개 팩을 `user://source_npc523_effects/`에 풀거나 아래 경로/핀을 지정한다. 원본 이미지는 Git에 추가하지 않았다.
+
+```sh
+--patch523-effect-manifest=/private/effects/manifest.json \
+--patch523-effect-manifest-sha256=f9e9ce484e45e83fa0cb98a60a3778dc0f482d59968bda4c7ac6a8a602b79f2d
+```
+
+컴파일은 `tools/monsters/build_patch523_effect_pack.py --spr-zip <SPR graph156.zip> --originals <4개 checkpoint 폴더> --catalog <npc_spells.json> --crosscheck <RESOURCE_DECLARATION_CROSSCHECK.json> --output <비공개 출력>`으로 재현한다. Python Brotli1.1.0/Pillow를 사용한다. Python4검사는 commandwise 행 이동/팔레트0/음수 floor 투영/EOF·extent 거절을 검사한다. 실제 팩114검사, Main 전투·UI·설정 재로딩·OpenGL37검사, 기존 전투46검사, 현재 Main 세이브32검사와 필수723시트 SHA 검사가 통과했다. 원본 동등성/전체 아트/Android 승인으로 확대하지 않는다.
+
+비공개 후보 효과 ZIP은15,905,429B, SHA256 `3fb94d16030860066f4099c762b4eb30b5326a88e6bd60e44adf0c3eb06e3eec`이다. manifest pin은 위와 같다. 선택 PNG526개, 원문 SP246개, 선택 SPR 감사/미수신 후보 목록을 포함한다. 별도 빈 디렉터리에 복원해 모든 PNG SHA/크기/ZIP CRC와114검사를 다시 확인했다. 자연 출현/새 보스 배치나 원본 몸체 복원을 추가한 것은 아니며, 원본 actor 바인딩과 출현을 다루는 다른 PR의 범위는 유지한다.

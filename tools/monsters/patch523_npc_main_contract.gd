@@ -77,6 +77,20 @@ func run() -> void:
 	world.rng.seed = 42 # Stable host RNG; magic accuracy still uses the production hit roll.
 	actor.motion.advance(.65,Vector2.ZERO)
 	check(world.hp < before_followup and int(service.last_event.get("attack_id",0)) == 208983,"actual queued attack reaches single host damage path: " + JSON.stringify(service.last_event))
+	if not service.source_effects.records.is_empty():
+		var toggle: CheckButton = panel.find_child("SourceEffectToggle",true,false) as CheckButton
+		toggle.button_pressed = true
+		var fps: SpinBox = panel.find_child("Effect_fallback_fps",true,false) as SpinBox
+		fps.value = 30
+		var restored = preload("res://scripts/monsters/patch523_effect_frames.gd").new()
+		restored.load_settings()
+		check(restored.enabled and restored.fallback_fps == 30,"actual UI visual preferences persist independently")
+		actor.motion.advance(1.0,Vector2.ZERO); actor.attack_cooldown = 0
+		actor.source_m_npc_id = 63663; actor.source_m_original = service.catalog.row("NpcClass",63663).duplicate(true)
+		world.rng.seed = 123456
+		check(service.try_begin(actor,true,225833),"actual death potion source attack begins")
+		actor.motion.advance(.65,Vector2.ZERO)
+		check(service.blocks("CannotUseItem") and service.effects.size() == 1,"actual strike applies source restriction and exact2232 frame effect")
 	service.clear(); actor.free()
 	world.field_map = old_field; world.astar = old_astar; world.player.global_position = old_position; world.max_hp = saved_max_hp; world.hp = saved_hp
 	service.host_enabled = false
@@ -114,7 +128,36 @@ func run() -> void:
 		await process_frame; await process_frame; await process_frame; await RenderingServer.frame_post_draw
 		check(panel.panel.size.x <= 456 and panel.panel.size.y <= 776,"small viewport panel stays within screen")
 		check(root.get_texture().get_image().save_png(output.path_join("npc-environment-small.png")) == OK,"small viewport Main UI captured")
+	if not service.source_effects.records.is_empty():
+		mode.select(0); mode.item_selected.emit(0)
+		panel.selector.select(panel.ids.find(63663)); panel.refresh_npc()
+		for i: int in range(panel.rows.size()):
+			if int(panel.rows[i].ID) == 225833: index = i
+		panel.attacks.select(index); panel.show_attack(index)
+		check(not panel.effect_preview.disabled and panel.preview_sprite == 2232,"actual UI offers exact source effect for selected spell")
+		panel.effect_preview.pressed.emit()
+		check(not panel.panel.visible and service.effects.size() == 1,"actual preview button shows world effect and clears view")
+		if not output.is_empty():
+			root.content_scale_size = Vector2i(1280,720); root.size = Vector2i(1280,720)
+			await process_frame; await process_frame; await RenderingServer.frame_post_draw
+			check(root.get_texture().get_image().save_png(output.path_join("source-effect-main.png")) == OK,"actual source effect candidate rendered on Main")
+		service.clear()
+		panel.get_node("BossSkillsButton").pressed.emit()
+		panel.selector.select(panel.ids.find(53064)); panel.refresh_npc()
+		for i: int in range(panel.rows.size()):
+			if int(panel.rows[i].ID) == 216043: index = i
+		panel.attacks.select(index); panel.show_attack(index)
+		var composition: CheckButton = panel.find_child("SourceEffectComposition",true,false) as CheckButton
+		composition.button_pressed = true
+		var preferences = preload("res://scripts/monsters/patch523_effect_frames.gd").new(); preferences.load_settings()
+		check(preferences.compose_children and panel.preview_sprite == 6530,"actual composite preference persists and exact child effect is selected")
+		panel.effect_preview.pressed.emit()
+		check(service.effects.size() == 1 and service.effects[0].layer_effects.size() == 1,"actual UI previews full6530 plus6529 source layers")
+		if not output.is_empty():
+			await process_frame; await process_frame; await RenderingServer.frame_post_draw
+			check(root.get_texture().get_image().save_png(output.path_join("source-composite-main.png")) == OK,"actual inferred child composition renders on Main")
+		service.clear()
 	world.queue_free(); await process_frame
 	if failed: quit(1); return
-	print("PATCH523_NPC_MAIN_OK checks=",checks," hidden_execution_fixture=true; source_body_and_VFX_pixels_not_delivered")
+	print("PATCH523_NPC_MAIN_OK checks=",checks," hidden_execution_fixture=true; boss_body_native_equivalence=false; candidate_effects=",service.source_effects.records.size())
 	quit()

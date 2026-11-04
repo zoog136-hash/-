@@ -2,7 +2,9 @@ extends RefCounted
 ## Optional host-clock adapter. Does not claim native AI/selection/geometry/formulas.
 const DEFAULT_MANIFEST_SHA = "ca260fc0481076fd9de0327cbb4b24df45d75d47d16b4fc6578713a44aff4a64"
 const CATALOG = preload("res://scripts/monsters/patch523_npc_catalog.gd")
+const DEFAULT_EFFECT_SHA = "f9e9ce484e45e83fa0cb98a60a3778dc0f482d59968bda4c7ac6a8a602b79f2d"
 var catalog: CATALOG = CATALOG.new()
+var source_effects = preload("res://scripts/monsters/patch523_effect_frames.gd").new()
 var world: Node
 var host_enabled: bool = false
 var pending: Dictionary = {}
@@ -28,6 +30,11 @@ func configure(scene: Node) -> bool:
 	if path.is_empty():
 		path = "user://source_npc523/manifest.json"
 		digest = DEFAULT_MANIFEST_SHA
+	source_effects.load_settings()
+	if effect_manifest.is_empty():
+		effect_manifest = "user://source_npc523_effects/manifest.json"
+		effect_manifest_sha = DEFAULT_EFFECT_SHA
+	source_effects.load_pack(effect_manifest,effect_manifest_sha)
 	return FileAccess.file_exists(path) and catalog.load_pack(path, digest)
 
 func clear() -> void:
@@ -65,7 +72,7 @@ func forget(actor: Node) -> void:
 	var action: Dictionary = pending.get(actor.get_instance_id(),{})
 	pending.erase(actor.get_instance_id()); cursor.erase(actor.get_instance_id()); followups.erase(actor.get_instance_id())
 	for effect: Node2D in effects.duplicate():
-		if is_instance_valid(effect) and effect.get_parent() == actor:
+		if is_instance_valid(effect) and (effect.get_parent() == actor or int(effect.get_meta("patch523_owner_id",0)) == actor.get_instance_id()):
 			effect.clear(); effect.queue_free(); effects.erase(effect)
 	if not action.is_empty() and int(actor.life_id) == int(action.life) and actor.motion.get_instance_id() == int(action.motion_id) and int(actor.motion.sequence) == int(action.sequence): actor.motion.cancel_attack()
 
@@ -255,6 +262,12 @@ func modifier(name: String) -> float:
 func blocks(name: String) -> bool:
 	return modifier(name) > 0
 
+func remaining_effect_bytes() -> int:
+	var result: int = 64*1024*1024
+	for effect: Node2D in effects:
+		if is_instance_valid(effect) and not effect.is_queued_for_deletion(): result -= int(effect.get_meta("patch523_frame_bytes",0))
+	return maxi(0,result)
+
 func emit_effect(actor: Node, spell: Dictionary, field: String, point: Vector2) -> bool:
 	var sprite: int = int(spell.get(field,0))
 	if sprite <= 0: return false
@@ -263,6 +276,15 @@ func emit_effect(actor: Node, spell: Dictionary, field: String, point: Vector2) 
 	if field == "EffectSpriteID" and int(spell.get("EffectSpriteActionNo",0)) != 0:
 		effect_status[key].state = "exact_nonzero_action_binding_required"
 		last_event["effect_pending"] = "exact_nonzero_action_binding_required"; return false
+	if source_effects.records.has(str(sprite)):
+		if effects.size() >= 16: return false
+		var candidate: Node2D = source_effects.make_effect(sprite,0,remaining_effect_bytes())
+		if candidate == null:
+			effect_status[key].state = "candidate_disabled_budget_or_frame_rejected"; return false
+		candidate.set_meta("patch523_owner_id",actor.get_instance_id())
+		world.add_child(candidate); candidate.global_position = point; effects.append(candidate)
+		effect_status[key].state = "M_source_pixels_candidate_raster_timing_blend; native_runtime_not_verified"
+		return true
 	if effect_manifest.is_empty() or not FileAccess.file_exists(effect_manifest) or effects.size() >= 16:
 		effect_status[key].state = "original_overlay_not_installed_or_budget_full"
 		last_event["effect_pending"] = "original_overlay_not_installed_or_budget_full"; return false

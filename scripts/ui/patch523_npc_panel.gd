@@ -9,6 +9,9 @@ var status: Label
 var environment_mode: bool = false
 var ids: Array = []
 var rows: Array = []
+var effect_preview: Button
+var effect_settings_status: Label
+var preview_sprite: int = 0
 
 func _ready() -> void:
 	layer = 120
@@ -61,6 +64,39 @@ func _ready() -> void:
 	note.text = "전투 적용 시 현재 게임의 시간·범위·명중 규칙을 사용합니다.\nNextAttack 연결은 기존 전투 시계로 진행하며, 원본 AI·미해석 NextSpell·시각효과는 별도로 보류합니다."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(note)
+	var effect_note := Label.new()
+	effect_note.text = "원본 효과 팩 %d종 · 픽셀 해석·합성·기본 속도는 추정 설정입니다.\n명시된 SPR 속도가 있으면 우선하며 전투 시간·피해에는 영향을 주지 않습니다." % service.source_effects.records.size()
+	effect_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; column.add_child(effect_note)
+	var effect_toggle := CheckButton.new(); effect_toggle.name = "SourceEffectToggle"
+	effect_toggle.text = "원본 효과 표시 · 추정 재생"; effect_toggle.button_pressed = service.source_effects.enabled
+	effect_toggle.toggled.connect(func(value: bool) -> void:
+		service.source_effects.enabled = value; persist_effect_settings())
+	column.add_child(effect_toggle)
+	var composition := CheckButton.new(); composition.name = "SourceEffectComposition"
+	composition.text = "자체 계층 합성 · 동시 시작/1회 재생"; composition.clip_text = true
+	composition.button_pressed = service.source_effects.compose_children
+	composition.toggled.connect(func(value: bool) -> void:
+		service.source_effects.compose_children = value; persist_effect_settings())
+	column.add_child(composition)
+	var knobs := HBoxContainer.new(); column.add_child(knobs)
+	for spec: Array in [["속도", "fallback_fps",1.0,120.0,1.0],["투명도","opacity",0.0,1.0,.1],["크기","visual_scale",.25,2.0,.05]]:
+		var stack := VBoxContainer.new(); knobs.add_child(stack)
+		var label := Label.new(); label.text = spec[0]; stack.add_child(label)
+		var spin := SpinBox.new(); spin.name = "Effect_"+str(spec[1])
+		spin.min_value = spec[2]; spin.max_value = spec[3]; spin.step = spec[4]
+		spin.value = service.source_effects.get(spec[1]); stack.add_child(spin)
+		var property: String = spec[1]
+		spin.value_changed.connect(func(value: float) -> void:
+			service.source_effects.set(property,value); persist_effect_settings())
+	var blend := OptionButton.new(); blend.name = "SourceEffectBlend"
+	blend.add_item("추정 가산 합성"); blend.add_item("일반 알파 합성")
+	blend.select(0 if service.source_effects.additive else 1)
+	blend.item_selected.connect(func(index: int) -> void:
+		service.source_effects.additive = index == 0; persist_effect_settings())
+	column.add_child(blend)
+	effect_preview = Button.new(); effect_preview.name = "SourceEffectPreview"; effect_preview.text = "선택 기술의 원본 효과 미리보기"
+	effect_preview.pressed.connect(preview_effect); column.add_child(effect_preview)
+	effect_settings_status = Label.new(); effect_settings_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; column.add_child(effect_settings_status)
 	attacks = ItemList.new(); attacks.name = "AttackList"; attacks.custom_minimum_size.y = 170; column.add_child(attacks)
 	attacks.item_selected.connect(show_attack)
 	detail = RichTextLabel.new(); detail.name = "SkillDetails"; detail.bbcode_enabled = false
@@ -133,6 +169,7 @@ func show_attack(index: int) -> void:
 	if index < 0 or index >= rows.size(): return
 	attacks.ensure_current_is_visible()
 	var attack: Dictionary = rows[index]
+	preview_sprite = 0; effect_preview.disabled = true
 	if environment_mode:
 		var environment_lines: PackedStringArray = [str(attack.buff.source.get("Name","NPC 상태")),"영역 %s · %s" % [str(attack.attribute.TerritoryID),str(attack.territory.get("Name","랜드 전체 조건"))],"방어 반응 조건 · 최종 수식/적용 시점은 해석 대기"]
 		for invoke: Dictionary in attack.buff.invokes:
@@ -147,6 +184,9 @@ func show_attack(index: int) -> void:
 	var npc_id: int = int(ids[maxi(0,selector.selected)])
 	lines.append("AI 원문 ID: %d · 호스트 공격 그래프 시작점 %d개" % [int(service.catalog.ai_evidence(npc_id).native_ai_id_raw),service.catalog.attack_roots(npc_id).size()])
 	if bool(attack.get("IsSpell",false)):
+		var spell: Dictionary = service.catalog.row("SpellClass",int(attack.SpellID))
+		preview_sprite = service.source_effects.first_sprite(spell)
+		effect_preview.disabled = preview_sprite <= 0
 		lines = append_chain(service.catalog.spell_chain(int(attack.SpellID)),lines)
 	else: lines.append("원문 기본 공격: %s + %sd%s" % [str(attack.get("DiceBonus",0)),str(attack.get("DiceCount",0)),str(attack.get("DiceSpots",0))])
 	var chain: Dictionary = service.catalog.attack_chain(npc_id,int(attack.ID))
@@ -157,3 +197,22 @@ func show_attack(index: int) -> void:
 		else: lines.append("NextAttack → %d · %s" % [int(chain.get("id",0)),str(chain.get("pending","미확인"))])
 	lines.append("실행 중인 게임 전투 규칙을 사용하며, 원본의 미확인 확률·시간·범위·후속 발동은 별도입니다.")
 	detail.text = "\n".join(lines)
+
+func persist_effect_settings() -> void:
+	if effect_settings_status == null: return
+	var result: Error = service.source_effects.save_settings()
+	effect_settings_status.text = "효과 설정 저장됨 · 성장/재화 저장과 별도" if result == OK else "효과 설정 저장 실패 · 현재 세션에만 적용"
+
+func preview_effect() -> void:
+	if preview_sprite <= 0: return
+	if not service.source_effects.enabled:
+		effect_settings_status.text = "추정 재생을 켜면 확인한 원본 프레임을 표시합니다."; return
+	if service.effects.size() >= 16: return
+	var effect: Node2D = service.source_effects.make_effect(preview_sprite,0,service.remaining_effect_bytes())
+	if effect == null:
+		effect_settings_status.text = "계층 합성 설정·효과 메모리 한도·원본 팩 파일을 확인하세요."; return
+	service.world.player.add_child(effect)
+	effect.global_position = service.world.player.global_position
+	service.effects.append(effect)
+	effect_settings_status.text = "원본 효과 %d · 추정 재생 중" % preview_sprite
+	panel.hide()
