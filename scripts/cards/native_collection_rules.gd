@@ -33,7 +33,7 @@ static func accepts_catalog(catalog: Dictionary) -> bool:
 		var records: Array = catalog.get(category, [])
 		if records.is_empty(): return false
 		for record: Dictionary in records:
-			if record.get("source", "") != "lineagem_base508": return false
+			if not preload("res://scripts/lineagem_base508.gd").native(record): return false
 	return true
 
 func configure(data: Dictionary, catalog: Dictionary) -> bool:
@@ -42,7 +42,8 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 	for entry: Dictionary in NativeOptionData.data.definitions:
 		native_option_bindings[entry.id]={"group_id":int(entry.native_source.group.ID),"card_id":int(entry.native_source.card.ID),"limits":entry.native_source.limits}
 	conditions.configure(data.get("source_server_limits",[]))
-	if data.get("source_snapshot", "") != "base508" or not accepts_catalog(catalog):
+	var snapshot: String = str(data.get("source_snapshot", ""))
+	if snapshot not in ["base508", "patch523"] or not accepts_catalog(catalog):
 		return _fail("원본 카드 컬렉션과 카드 정체성이 일치하지 않습니다")
 	var known: Dictionary = {}
 	for category: String in Cards.CATEGORIES:
@@ -56,7 +57,7 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		var category: String = str(row.get("category", ""))
 		if not identity.begins_with("base508:collection:") or seen.has(identity) or not known.has(category): return _fail("원본 컬렉션 ID/분류 오류")
 		seen[identity] = true
-		if row.get("source", {}).get("snapshot", "") != "base508" or not row.get("source_original") is Dictionary: return _fail("원본 컬렉션 출처 누락")
+		if row.get("source", {}).get("snapshot", "") != snapshot or not row.get("source_original") is Dictionary: return _fail("원본 컬렉션 출처 누락")
 		if not row.get("requirements") is Array or row.requirements.is_empty() or not row.get("effects") is Array: return _fail("원본 컬렉션 조건/보상 누락")
 		# User explicitly removed time limits. Preserve every original date row
 		# and retain server/awakening restrictions; no save mutation is involved.
@@ -68,8 +69,14 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		for requirement: Dictionary in row.requirements:
 			var key: String = str(requirement.get("id", ""))
 			var member: Dictionary = requirement.get("source_original", {})
-			if str(requirement.get("category", "")) != category or not known[category].has(key): return _fail("원본 컬렉션 구성 카드 정체성 누락")
-			var record: Dictionary = known[category][key]
+			# Collection deck and member card deck are distinct source identities.
+			# Current523 has32 members from another deck; join the member's own ID.
+			var member_category: String = str(requirement.get("category", ""))
+			if not known.has(member_category) or not known[member_category].has(key): return _fail("원본 컬렉션 구성 카드 정체성 누락")
+			var record: Dictionary = known[member_category][key]
+			var expected_deck: int = {"변신":1,"마법인형":2,"성물":98}[member_category]
+			if int(record.get("source_deck_id", expected_deck)) != expected_deck:
+				return _fail("원본 구성 카드 덱 불일치")
 			if int(record.get("source_card_id", -1)) != int(member.get("BuffCardID", -2)): return _fail("원본 BuffCardID 조인 불일치")
 			if int(member.get("BuffCardCollectionID", -1)) != int(row.source_original.get("ID", -2)) or members.has(key): return _fail("원본 컬렉션 구성 중복/세트 불일치")
 			members[key] = true

@@ -7,7 +7,7 @@ const LIMIT: int = 96
 static var textures: Dictionary = {}
 
 static func native(record: Dictionary) -> bool:
-	return record.get("source", "") == "lineagem_base508"
+	return record.get("source", "") in ["lineagem_base508","lineagem_patch523"]
 
 static func detail(record: Dictionary, acquired: bool, detail_view: bool = true) -> Dictionary:
 	if not native(record):
@@ -17,6 +17,9 @@ static func detail(record: Dictionary, acquired: bool, detail_view: bool = true)
 	var api: Script = load(SOURCE_API)
 	if api == null: return {"status":"runtime_missing", "texture":null}
 	var canonical: Dictionary = api.canonical(record)
+	if canonical.get("source_snapshot", "") == "patch523":
+		var declared: Variant = canonical.get("source_ui_assets", {}).get("DisplayBaseAssetID")
+		return {"status":"missing","role":"DisplayBaseAssetID","path":str(declared.get("path", "")) if declared is Dictionary else "","texture":null,"reason":"patch523_original_pack_required"}
 	var assets: Dictionary = canonical.get("source_ui_assets", {})
 	# Render inspection: DisplayScreenAssetID can be an additive-only effect
 	# (e.g. black_wizard_A); it must never replace the portrait. Its original

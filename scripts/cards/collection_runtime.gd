@@ -3,7 +3,7 @@ extends RefCounted
 ## sole acquisition ledger. Loading old owned cards is silent and idempotent.
 const Rules=preload("res://scripts/cards/collection_rules.gd")
 const NativeRules=preload("res://scripts/cards/native_collection_rules.gd")
-const NATIVE_PATH: String="res://data/cards/base508_collections.json"
+const NATIVE_PATH: String="res://data/cards/patch523_collections.json"
 const ExistingStats=preload("res://scripts/collections/equipment_collection_stats.gd")
 const PATH: String="res://data/cards/normal_collections.json"
 var world: Node
@@ -89,7 +89,7 @@ func snapshot(category: String="",card_id: String="") -> Array:
 	_ensure()
 	var rows: Array=[]
 	for row: Dictionary in _views:
-		if not category.is_empty() and str(row.category)!=category:continue
+		if card_id.is_empty() and not category.is_empty() and str(row.category)!=category:continue
 		if not card_id.is_empty() and not row.requirements.any(func(requirement: Dictionary) -> bool:return str(requirement.id)==card_id and str(requirement.category)==category):continue
 		rows.append(row.duplicate(true))
 	return rows

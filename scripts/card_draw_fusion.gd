@@ -70,6 +70,8 @@ func configure(catalog: Dictionary) -> void:
 					continue
 				identities[identity] = grade
 				if bool(record.get("source_merge_out_disabled", false)): source_merge_blocked[category + ":" + identity] = true
+				# Register new source identities without guessing original gacha pools.
+				if bool(record.get("source_draw_pool_pending",false)):continue
 				# Source special/event definitions remain addressable without inventing fusion tiers.
 				if not GRADES.has(grade): continue
 				var grade_cards: Array = grade_pools[grade] as Array
