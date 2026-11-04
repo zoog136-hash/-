@@ -609,6 +609,7 @@ func _load_data() -> void:
 	preload("res://scripts/cards/native_doll_unlock_item.gd").install(catalog_db)
 	preload("res://scripts/cards/skill_awakening_service.gd").install_book_definitions(catalog_db)
 	preload("res://scripts/cards/source_awakening_items.gd").install_drop_definitions(catalog_db,loot_catalog)
+	growth.source523.install(catalog_db,loot_catalog)
 	_merge_local_consumables_into_catalog()
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	_index_catalog_item_sources()
@@ -2705,6 +2706,8 @@ func _collect_ground_drop(drop: Button) -> bool:
 	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
 	var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
 	item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
+	var symbol_pickup: Dictionary = growth.source523.prepare_pickup(record,item_instances,next_item_instance_id)
+	item_instances = symbol_pickup.item_instances; next_item_instance_id = int(symbol_pickup.next_item_instance_id)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
 	quest_service.record_pickup(item_name, quantity)
 	if hud.has_method("refresh_quests"):
@@ -3242,6 +3245,11 @@ func _grant_playtest_catalog_variant(source_id: String, amount: int) -> void:
 		return
 	var old_ids: Dictionary = item_instances.duplicate()
 	_grant_playtest_catalog_item(item_name, amount)
+	if growth.source523.material({"name":item_name,"record":record}):
+		var source_pickup: Dictionary = growth.source523.prepare_pickup({"item_name":item_name,"item_record":record,"quantity":clampi(amount,1,10)},item_instances,next_item_instance_id)
+		item_instances = source_pickup.item_instances; next_item_instance_id = int(source_pickup.next_item_instance_id)
+		_update_hud()
+		_save_game(true)
 	if _enhancement_kind_for_record(record) != "":
 		for raw_id: Variant in item_instances.keys():
 			if old_ids.has(raw_id):
@@ -3328,6 +3336,11 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
+		return
+	var symbol_instance_id: String = str(selected.get("id",""))
+	if not symbol_instance_id.is_empty() and not growth.source523.recharge(item_instances.get(symbol_instance_id,{})).is_empty():
+		var converted: Dictionary = growth.execute("recharge",symbol_instance_id,1,int(growth.state.revision))
+		hud.show_message(str(converted.message))
 		return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
@@ -6436,6 +6449,13 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 	var item_name: String = str(record.get("name", "아이템"))
 	if add_to_inventory:
 		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+		if growth.source523.material({"name":item_name,"record":record}):
+			var symbol_physical_id: String = str(next_item_instance_id)
+			while item_instances.has(symbol_physical_id):
+				next_item_instance_id += 1
+				symbol_physical_id = str(next_item_instance_id)
+			next_item_instance_id += 1
+			item_instances[symbol_physical_id] = {"name":item_name,"level":0,"record":record.duplicate(true)}
 		# Generated gear without static catalog rows must also acquire a physical
 		# ID and retain its schema for reload, equip and all scroll types.
 		if _enhancement_kind_for_record(record) != "" and _find_catalog_item_record(item_name).is_empty():

@@ -2,6 +2,8 @@ extends RefCounted
 ## Local single-save progression. Unknown source values fail closed, never become zero costs.
 const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
 const DATA = "res://data/growth/lineage_growth.json"
+const Source523 = preload("res://scripts/growth/symbol_source523.gd")
+var source523 = Source523.new()
 var world
 var development: bool = OS.is_debug_build() and "--growth-lab" in OS.get_cmdline_user_args()
 var lab: Dictionary = {}
@@ -18,6 +20,7 @@ static func fresh() -> Dictionary:
 func _init() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(DATA))
 	if parsed is Dictionary: config = parsed
+	if not development: source523.apply(config)
 	if development:
 		lab = JSON.parse_string(FileAccess.get_file_as_string("res://data/growth/lab_profile.json"))
 		state["profile"] = "development"
@@ -87,7 +90,17 @@ func validate(value: Variant) -> String:
 		if not integer(p.get("stage"),0,30) or not integer(p.get("attempts"),0,20) or not integer(p.get("spent")) or not p.get("guaranteed") is bool: return "문양 진행 값 오류"
 		if not integer(p.get("absolute",0),0,5) or (p.get("absolute",0)>0 and p.stage!=30): return "절대 옵션 단계 오류"
 		if not development and p.get("absolute",0)>0: return "미검증 절대 옵션 저장"
+		var grades: Variant = p.get("absolute_grades",[])
+		if not grades is Array: return "절대 옵션 개방 목록 오류"
+		var seen_grades: Array = []
+		for grade: Variant in grades:
+			if not integer(grade,1,5) or seen_grades.has(int(grade)) or p.stage != 30: return "절대 옵션 개방 목록 오류"
+			if not source523.absolute_block(id,int(grade)).is_empty(): return "미검증 절대 옵션 해금"
+			seen_grades.append(int(grade))
 		if p.stage < p.attempts or p.stage > p.attempts*3: return "문양 단계/횟수 불일치"
+	if not value.get("economy",{}) is Dictionary: return "성장 재화 이력 오류"
+	for amount: Variant in value.get("economy",{}).values():
+		if not integer(amount): return "성장 재화 이력 오류"
 	var unique: Array = []
 	for id: Variant in value.nodes:
 		if not id is String or node(id).is_empty() or unique.has(id): return "수호성 슬롯 저장 오류"
@@ -114,6 +127,10 @@ func restore(value: Dictionary) -> void:
 		var failed: Array = []
 		for card: Variant in search.failed: failed.append(int(card))
 		search.failed = failed
+	for p: Dictionary in state.emblems.values():
+		var grades: Array = []
+		for grade: Variant in p.get("absolute_grades",[]): grades.append(int(grade))
+		if p.has("absolute_grades"): p.absolute_grades = grades
 	rerolls.clear()
 	_rebuild()
 
@@ -122,6 +139,7 @@ func _rebuild() -> void:
 	for id: String in state.emblems:
 		_add_effects(emblem(id).get("effects",[])[int(progress(id).stage)])
 		if development: totals["max_hp:flat"] = float(totals.get("max_hp:flat",0))+5*int(progress(id).get("absolute",0))
+		else: _add_effects(source523.absolute_effects(id,progress(id).get("absolute_grades",[])))
 	# Official guide: only the representative guardian's option effects apply.
 	var representative: String = str(state.representative)
 	if not representative.is_empty():
@@ -162,9 +180,11 @@ func fail(message: String) -> Dictionary:
 
 func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	if config.is_empty(): return fail("성장 설정을 읽을 수 없습니다")
+	if world == null: return fail("월드 연결 없음")
 	var costs: Dictionary = {}
 	var points: int = 0
 	var text: String = ""
+	var consume_instance: String = ""
 	match action:
 		"enhance":
 			if emblem(id).is_empty() or count not in [1,5]: return fail("잘못된 강화 요청")
@@ -178,26 +198,51 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 		"reroll":
 			if emblem(id).is_empty() or progress(id).stage >= 30 or progress(id).attempts >= 20 or progress(id).guaranteed: return fail("확률 변경 불가")
 			if not integer(config.get("reroll_cost"),1): return fail("확률 변경 비용 미확인")
-			var base_odds: Array = config.probabilities_by_target_stage[mini(29,int(progress(id).stage))]
-			if float(base_odds[1]) < 1.0 or float(base_odds[2]) < 1.0: return fail("확률 변경 경계값 처리 미확인 · 변경 보류")
+			if not development and source523.probability_rows(int(progress(id).stage)).is_empty(): return fail("원본 확률 범위 없음")
 			points = int(config.reroll_cost)
 			text = "확률 변경 · 축복 포인트 %d (초기화 환급 제외)" % points
 		"reset":
 			if emblem(id).is_empty() or progress(id).attempts == 0: return fail("초기화할 강화 기록이 없습니다")
+			if progress(id).stage >= 30: return fail("완성한 30단계 문양은 초기화할 수 없습니다")
 			if not integer(config.get("reset_cost"),1): return fail("초기화 두루마리 필요 수량 미확인 · 초기화 보류")
-			costs["문양 초기화 두루마리"] = int(config.reset_cost)
+			if development: costs["문양 초기화 두루마리"] = int(config.reset_cost)
+			else:
+				for instance_id: String in world.item_instances:
+					var instance: Dictionary = world.item_instances[instance_id]
+					if source523.reset_material(instance) and int(world.inventory.get(str(instance.name),0))>0:
+						consume_instance = instance_id
+						costs[str(instance.name)] = 1
+						break
+				if consume_instance.is_empty(): return fail("원본 ID가 확인된 기간 없는 문양 초기화 두루마리가 필요합니다")
 			text = "초기화 · 강화 포인트 %d 환급, 확률 변경 비용 제외" % int(progress(id).spent)
 		"buy_key":
 			points = int(config.blessing_key_point_cost)
-			text = "축복의 열쇠 1개 · 1,000 축복 포인트 (절대 옵션은 개발 모드에서만 검증 가능)"
-		"absolute":
+			text = "축복의 열쇠 1개 · 1,000 축복 포인트 (상점 지출은 강화 환급 제외)"
+		"absolute", "absolute_chance":
 			if emblem(id).is_empty() or progress(id).stage<30: return fail("30단계 문양이 필요합니다")
-			if not development: return fail("전체 절대 옵션 효과/초기화 규칙 미확인 · 일반 플레이 잠금")
-			var tier: int = int(progress(id).get("absolute",0))
-			if tier>=5: return fail("절대 옵션 V 달성")
-			costs["축복의 열쇠"] = int(emblem(id).absolute_key_costs[tier])
-			text = "절대 옵션 %d 확정 · 열쇠 %d개\n개발용 효과: HP +5 / 원작 효과 아님" % [tier+1,int(costs["축복의 열쇠"])]
+			if development:
+				var tier: int = int(progress(id).get("absolute",0))
+				if tier>=5: return fail("절대 옵션 V 달성")
+				costs["축복의 열쇠"] = int(emblem(id).absolute_key_costs[tier])
+				text = "절대 옵션 %d 확정 · 열쇠 %d개\n개발용 효과: HP +5 / 원작 효과 아님" % [tier+1,int(costs["축복의 열쇠"])]
+			else:
+				if count not in [1,2,3,4,5]: return fail("절대 옵션 등급 오류")
+				if progress(id).get("absolute_grades",[]).has(count): return fail("이미 개방한 절대 옵션")
+				var block: String = source523.absolute_block(id,count)
+				if not block.is_empty(): return fail(block)
+				var payment: Dictionary = source523.absolute(id,count).payment
+				if action == "absolute": costs["축복의 열쇠"] = int(payment.ForceOpenCost)
+				else: points = int(payment.OpenCost)
+				text = "절대 옵션 %d · %s\n확률 강화 비용은 일반 강화 초기화 환급에 포함되지 않습니다." % [count,"열쇠 %d개 확정" % int(payment.ForceOpenCost) if action == "absolute" else "%d 축복 포인트 · 성공률 %.1f%%" % [points,float(payment.OpenProbability)/10000.0]]
+		"recharge":
+			var instance: Dictionary = world.item_instances.get(id,{}) if world != null else {}
+			var definition: Dictionary = source523.recharge(instance)
+			if definition.is_empty(): return fail("충전 아이템의 원본 식별·사용 조건을 확인할 수 없습니다")
+			costs[definition.name] = 1
+			consume_instance = id
+			text = "%s 1개 → 축복 포인트 %d" % [str(definition.name),int(definition.amount)]
 		"holy_water":
+			if not development: return fail("원본 충전 아이템을 인벤토리에서 선택하세요 · 이름만으로 이관하지 않습니다")
 			costs["축복의 성수(중)"] = 1
 			text = "축복의 성수(중) 1개 → 축복 포인트 100"
 		"craft_stone", "craft_stone_engraved":
@@ -230,7 +275,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	if points > int(state.points): return fail("축복 포인트 부족 · 필요 %d / 보유 %d" % [points,int(state.points)])
 	for item: String in costs:
 		if int(world.inventory.get(item,0)) < int(costs[item]): return fail("%s 부족 · 필요 %d / 보유 %d" % [item,int(costs[item]),int(world.inventory.get(item,0))])
-	return {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision}
+	return {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision,"consume_instance":consume_instance}
 
 func execute(action: String, id: String, count: int, revision: int) -> Dictionary:
 	if busy or revision != int(state.revision): return fail("중복 또는 오래된 요청 · 다시 확인하세요")
@@ -239,6 +284,7 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 	busy = true
 	var next: Dictionary = state.duplicate(true)
 	var inventory: Dictionary = world.inventory.duplicate(true)
+	var instances: Dictionary = world.item_instances.duplicate(true) if not str(offer.consume_instance).is_empty() else {}
 	for item: String in offer.costs:
 		inventory[item] = int(inventory.get(item,0))-int(offer.costs[item])
 	var message: String = "완료"
@@ -254,11 +300,16 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 				var roll: float = rng.randf()*100.0
 				var jump: int = 1 if roll < float(odds[0]) else 2 if roll < float(odds[0])+float(odds[1]) else 3
 				var cost: int = int(cost_for(id,int(p.attempts)))
+				var previous_stage: int = int(p.stage)
 				p.stage = mini(30,int(p.stage)+jump)
 				p.attempts += 1
 				p.spent += cost
 				next.points -= cost
-				p.guaranteed = jump >= 2 and rng.randf() < 0.01
+				# Preserve TWILIGHT's existing event order, but never invent a 1%
+				# route where the actual source stage explicitly supplies zero.
+				var special: float = 0.01 if development else source523.special_rate(previous_stage,jump)
+				p.guaranteed = jump >= 2 and rng.randf() < special
+				_ledger(next,"enhancement_spent",cost)
 				jumps.append(jump)
 			next.emblems[id] = p
 			message = "강화 결과 %s → %d단계 (%d/20회)" % [str(jumps),int(p.stage),int(p.attempts)]
@@ -266,22 +317,54 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 			var base: Array = config.probabilities_by_target_stage[mini(29,int(progress(id).stage))]
 			var two: float = maxf(0,float(base[1])+float(rng.randi_range(-10,10))/10.0)
 			var three: float = maxf(0,float(base[2])+float(rng.randi_range(-10,10))/10.0)
+			if not development:
+				# Explicit local sampler: inclusive 0.1 percentage-point grid.
+				# This derives candidate counts from each row; no fixed 21.
+				two = 0.0; three = 0.0
+				for row: Dictionary in source523.probability_rows(int(progress(id).stage)):
+					var delta: int = int(row.DeltaEnchant)
+					if delta not in [2,3]: continue
+					var candidates: int = int((int(row.MaxProbability)-int(row.MinProbability))/1000)
+					var chance: float = float(int(row.MinProbability)+rng.randi_range(0,candidates)*1000)/10000.0
+					if delta == 2: two = chance
+					else: three = chance
 			rolled = [100.0-two-three,two,three]
 			next.points -= int(offer.points)
+			_ledger(next,"probability_spent",int(offer.points))
 			message = "확률 변경 완료 · 문양 화면을 닫으면 기본 확률로 복귀"
 		"reset":
 			next.points += int(progress(id).spent)
+			_ledger(next,"refunded",int(progress(id).spent))
 			next.emblems.erase(id)
+			if not str(offer.consume_instance).is_empty(): instances.erase(str(offer.consume_instance))
 			message = "강화 초기화 · 사용한 강화 포인트 환급 완료"
 		"buy_key":
 			next.points -= int(offer.points)
+			_ledger(next,"shop_spent",int(offer.points))
 			inventory["축복의 열쇠"] = int(inventory.get("축복의 열쇠",0))+1
-		"absolute":
+		"absolute", "absolute_chance":
 			var p: Dictionary = progress(id)
-			p.absolute = int(p.get("absolute",0))+1
+			if development:
+				p.absolute = int(p.get("absolute",0))+1
+				message = "개발용 절대 옵션 %d · HP +5 (원작 효과 아님)" % p.absolute
+			else:
+				next.points -= int(offer.points)
+				_ledger(next,"absolute_spent",int(offer.points))
+				var success: bool = action == "absolute" or rng.randf()*1000000.0 < float(source523.absolute(id,count).payment.OpenProbability)
+				if success:
+					var grades: Array = p.get("absolute_grades",[]).duplicate()
+					grades.append(count)
+					p["absolute_grades"] = grades
+				message = "절대 옵션 %d 개방" % count if success else "절대 옵션 강화 실패"
 			next.emblems[id] = p
-			message = "개발용 절대 옵션 %d · HP +5 (원작 효과 아님)" % p.absolute
-		"holy_water": next.points += 100
+		"holy_water":
+			next.points += 100
+			_ledger(next,"recharged",100)
+		"recharge":
+			var definition: Dictionary = source523.recharge(instances[id])
+			next.points += int(definition.amount)
+			_ledger(next,"recharged",int(definition.amount))
+			instances.erase(id)
 		"craft_stone", "craft_stone_engraved": inventory["수호석"] = int(inventory.get("수호석",0))+1
 		"activate":
 			var row: Dictionary = node(id)
@@ -302,12 +385,15 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 	if not validate(next).is_empty():
 		busy = false
 		return fail("성장 상태 검증 실패")
-	var error: Error = world._save_game(true,{"inventory":inventory,"growth":next})
+	var overrides: Dictionary = {"inventory":inventory,"growth":next}
+	if not str(offer.consume_instance).is_empty(): overrides["item_instances"] = instances
+	var error: Error = world._save_game(true,overrides)
 	if error != OK:
 		busy = false
 		return fail("저장 실패 · 재료와 성장 상태를 변경하지 않았습니다 (%d)" % error)
 	state = next
 	world.inventory = inventory
+	if not str(offer.consume_instance).is_empty(): world.item_instances = instances
 	if action == "reroll": rerolls[id] = rolled
 	elif action in ["enhance","reset"]: rerolls.erase(id)
 	_rebuild()
@@ -317,6 +403,10 @@ func execute(action: String, id: String, count: int, revision: int) -> Dictionar
 	world._update_hud()
 	busy = false
 	return {"ok":true,"message":message}
+
+func _ledger(next: Dictionary, key: String, amount: int) -> void:
+	if not next.has("economy"): next["economy"] = {}
+	next.economy[key] = int(next.economy.get(key,0))+amount
 
 func incoming_damage(damage: int) -> int:
 	return maxi(1,int(round(float(damage)*(1.0-clampf(bonus("incoming_reduction:percent"),0,90)/100.0))))

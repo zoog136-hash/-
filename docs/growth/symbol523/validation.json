@@ -1,0 +1,272 @@
+{
+  "base_sha": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "branch": "feature/twilight-symbol-523-20261104",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "platform": "Linux X11 OpenGL4.5 Mesa25.0.7 llvmpipe",
+  "source_verification": {
+    "tables": 17,
+    "direct_rows_compared": 913,
+    "archive_crc": "passed_both",
+    "projection_sha256": "a770787a52e5b7d81d7572deb8d34a3a0c94b5cb0e34c3d8340fa9d99b2569d1",
+    "bytes": 625608
+  },
+  "checks": {
+    "source_runtime": {
+      "assertions": 753,
+      "failures": []
+    },
+    "actual_main_ui": {
+      "assertions": 29,
+      "failures": [],
+      "resolutions": [
+        [
+          1280,
+          720
+        ],
+        [
+          854,
+          480
+        ]
+      ],
+      "captures": 3,
+      "input": "native InputEventScreenTouch",
+      "audio": "Dummy; sound untested",
+      "background_simulation": "paused for UI isolation"
+    },
+    "prior_growth_guardian_regression": {
+      "assertions": 104,
+      "failures": []
+    },
+    "actual_main_current_map_save": {
+      "assertions": 32,
+      "failures": [],
+      "visual_equivalence_tested": false
+    },
+    "identical_save": {
+      "writes": 2,
+      "identical_write_elisions": 1,
+      "failures": []
+    },
+    "deferred_save": {
+      "failures": []
+    },
+    "python_staging_regression": {
+      "tests": 7,
+      "failures": []
+    },
+    "committed_resource_integrity": {
+      "atlases": 723,
+      "frames": 41442,
+      "bytes": 233420026,
+      "passed": true
+    }
+  },
+  "source_archives": [
+    {
+      "name": "lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+      "bytes": 25031173,
+      "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+    },
+    {
+      "name": "TWILIGHT_523_symbol_guardian_crosslinks_20261104.zip",
+      "bytes": 149581,
+      "sha256": "60fa306d6310cddd4b5eb042bbf59720e6dc732d92b3438cf54044815f76811f"
+    }
+  ],
+  "projection": {
+    "symbols": 7,
+    "enhancement_cost_rows": 140,
+    "normal_option_rows": 485,
+    "normal_applied_rows": 463,
+    "normal_deferred_rows": 22,
+    "absolute_option_rows": 46,
+    "absolute_grade_groups": 35,
+    "currently_usable_absolute_grade_groups": [
+      "sayha:1"
+    ],
+    "probability_rows": 87,
+    "recharge_definitions": 103,
+    "usable_recharge_definitions": 10,
+    "source_dates": 44
+  },
+  "validation_stage": {
+    "resource_graph_files_before_portrait_fix": 11146,
+    "resource_graph_bytes_before_portrait_fix": 1564142163,
+    "extra_committed_portraits": 128,
+    "extra_portrait_bytes": 718556,
+    "production_project_unchanged": true,
+    "stage_only_overrides": {
+      "rendering/textures/vram_compression/import_etc2_astc": false,
+      "editor/import/use_multiple_threads": true,
+      "threading/worker_pool/max_threads": 4
+    }
+  },
+  "earlier_attempts": [
+    {
+      "result": "failed",
+      "cause": "current UI background spawns referenced128 real portrait files deferred by the staging actor filter",
+      "resolution": "preserve exact committed portrait paths; no replacement assets"
+    },
+    {
+      "result": "failed assertion",
+      "cause": "deep Dictionary equality distinguishes JSON numeric types; all stored values were unchanged",
+      "resolution": "compare all keys and values after integral numeric canonicalization"
+    },
+    {
+      "result": "failed setup",
+      "cause": "OpenGL ALSA device unavailable",
+      "resolution": "explicit Dummy audio for the UI-only final check"
+    },
+    {
+      "result": "failed prior test expectation",
+      "cause": "prior reduction expectation omitted newly connected unconditional Einhasad3%",
+      "resolution": "assert exact source Grankain10% plus Einhasad3% using the existing local adapter"
+    }
+  ],
+  "code_inputs": [
+    {
+      "path": "scripts/growth/growth_runtime.gd",
+      "sha256": "2b241d4a9dd660bcb3b96beab6ab96bd4330e47675d4497bdc198588b56c38c0"
+    },
+    {
+      "path": "scripts/growth/growth_view.gd",
+      "sha256": "5be33bf2deb99d852bc7eee7d28c0e2d520df5c9618881c6c603825313391fd6"
+    },
+    {
+      "path": "scripts/growth/symbol_source523.gd",
+      "sha256": "6da64ff0d19f545957d434915fe3360dbcb6f2b9f033e63fe53098525ca77ad3"
+    },
+    {
+      "path": "scripts/world.gd",
+      "sha256": "0626894a519f6d86e5535475d577c454b7f9a0f000c631ee4c6130b6fd8e9f2f"
+    },
+    {
+      "path": "tools/import_symbol523.py",
+      "sha256": "3a36b71ee419b902f1647417e204efe080dafd7f1ffcb596776db6cd9c7c0c2e"
+    },
+    {
+      "path": "tools/ci_core.py",
+      "sha256": "5026c48ee7fbfd0a1fc53935f2c409fd27b81844053611f84564ec1db17128ed"
+    },
+    {
+      "path": "tests/symbol_source523_test.gd",
+      "sha256": "ad9c555a5283bf0fa5e30876fee9303012593b02d1ece1248bf87c4719321457"
+    },
+    {
+      "path": "tests/symbol_source523_main_ui_test.gd",
+      "sha256": "8d4a47af7a5851790326b555b4a2a92427acc9eab446d658418321198112bb1b"
+    },
+    {
+      "path": "tests/growth_progression_test.gd",
+      "sha256": "f55c887ddbebfda762637653f6e9d450309bd11862112c6aaf1163360af14bf4"
+    },
+    {
+      "path": "data/growth/symbol_source523.json",
+      "sha256": "a770787a52e5b7d81d7572deb8d34a3a0c94b5cb0e34c3d8340fa9d99b2569d1"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/growth/symbol523/evidence/core-runtime-save.txt",
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/deferred-save.txt",
+      "bytes": 115,
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/growth-regression.txt",
+      "bytes": 116,
+      "sha256": "01961fa6b2f379e5a339fee8d1833647aa21d3ada6e29c0c5c90dd107b2d815b"
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/main-ui.txt",
+      "bytes": 435,
+      "sha256": "e170ed11d8c7a2f41a8ffd977c997cfd251180892ec1e4d6ac8c1e1f691dc407"
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/save-identical.txt",
+      "bytes": 140,
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/source-runtime.txt",
+      "bytes": 117,
+      "sha256": "7d79c382306a43cc9a0aae200c9bab39edc8b6f66351c961070a5aff6713f48d"
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/source-verification.json",
+      "bytes": 191,
+      "sha256": "fa30ff81c4800f006d4faffca8ba17909cab7da15f7adb32ad933661e1aa8911"
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/symbol523-absolute-1280x720.png",
+      "bytes": 923238,
+      "sha256": "422709e06dec4585ac680fb744fb5b2d084cd8e18d552b0cd9a377578c7817dc",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/symbol523-enhancement-1280x720.png",
+      "bytes": 898811,
+      "sha256": "ddb47f345a298ac7c735bf6f11749c84fcf9b2e9ee57d914b4de5b45a002feda",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/symbol523-ui-854x480.png",
+      "bytes": 378685,
+      "sha256": "91aef9a6433dee4ade55041b026d819c41ac3c4459ab51ddf35af27662370086",
+      "dimensions": [
+        853,
+        480
+      ]
+    },
+    {
+      "path": "docs/growth/symbol523/evidence/ui-extra-paths.json",
+      "bytes": 31854,
+      "sha256": "362e34f122bb4ca302eccac9fdb17f47971fd0d79b90dd088e55cea5a306af1e"
+    }
+  ],
+  "remote_ci": "not requested; commits use [skip ci]; no manual run/rerun/cancel",
+  "merge_status": "main unchanged; no merge performed",
+  "unresolved": [
+    "ServerLimitSet1294 and shop512 direction/context",
+    "absolute grade dependency/order",
+    "daily reset count/reset time",
+    "probability range sampling denominator and special-route event ordering",
+    "saved enhancement restoration payment/current availability",
+    "conditional and unsupported bonus combat execution",
+    "normal acquisition/drop probabilities for newly sourced materials are not invented",
+    "historical --source-dir blocked: /workspace/sources/a1.zip missing",
+    "Android/Windows devices, audio and original-art equivalence not validated"
+  ],
+  "original_resource_delivery": "no new original art pack delivered; existing ledger remains unchanged",
+  "material_condition_audit": {
+    "source_table": "ItemClassLimit",
+    "source_table_sha256": "4abd1181fd1406ef81715ac8c977ece2e8b1298075af126318ecbdc8fc42c8b6",
+    "item_ids": [
+      117284,
+      117294,
+      117304,
+      118143,
+      163724,
+      163734,
+      163744,
+      197491,
+      197501,
+      197511,
+      231772
+    ],
+    "matching_class_limit_rows": 0,
+    "all_level_limits": 0,
+    "all_service_region_codes": "empty",
+    "all_can_use_when_invisible": true
+  }
+}
