@@ -28,6 +28,10 @@ var play_button: Button
 var play_apply_button: Button
 var play_stop_button: Button
 var play_status: Label
+var source_manifest: LineEdit
+var tile_manifest: LineEdit
+var native_land_choice: OptionButton
+var native_scope_status: Label
 var source_words: LineEdit
 var source_portal_path: LineEdit
 var source_portal_choice: OptionButton
@@ -128,7 +132,7 @@ func _build() -> void:
 
 func _build_play_options() -> void:
 	add_child(HSeparator.new())
-	add_child(UI.section("아덴 원문 실험 플레이", 18))
+	add_child(UI.section("523 원문 맵 플레이", 18))
 	var note: Label = UI.label("원문 S32 통행은 공급된 지형·속성을 자체 해석합니다. 이전 TWILIGHT 통행과 별개이며 M 원작 판정은 미확정입니다.", 13, UI.MUTED)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(note)
@@ -137,8 +141,22 @@ func _build_play_options() -> void:
 	play_profile.add_item("자체 통행 설정을 선택해 주세요")
 	play_profile.add_item("기존 TWILIGHT 아덴 통행 · 자체 설정")
 	play_profile.add_item("원문 S32 속성 기반 · 자체 통행")
+	play_profile.add_item("전체 맵 카탈로그 · 논리 Land 선택")
 	play_profile.item_selected.connect(_play_choice_changed)
 	add_child(play_profile)
+	source_manifest=LineEdit.new(); source_manifest.name="Current523SourceManifestSHA256"
+	source_manifest.placeholder_text="전체 원문 카탈로그 SHA256 · source523.json"
+	add_child(source_manifest)
+	tile_manifest=LineEdit.new(); tile_manifest.name="Current523TileManifestSHA256"
+	tile_manifest.placeholder_text="타일 팩 SHA256 · tilepack523.json"
+	add_child(tile_manifest)
+	add_child(UI.label("전체 맵 모드는 위 원문/타일 폴더와 각 검증값을 사용합니다. 목록에 있는 지역도 실제 원문과 타일이 없으면 입장할 수 없습니다.",12,UI.MUTED))
+	var refresh: Button=UI.button("카탈로그 확인 · 지역 목록 읽기",_reload_native_lands,Vector2(0,40))
+	refresh.name="ReloadCurrent523NativeLands"; add_child(refresh)
+	native_land_choice=OptionButton.new(); native_land_choice.name="Current523NativeLandChoice"
+	native_land_choice.item_selected.connect(_native_land_changed); add_child(native_land_choice)
+	native_scope_status=UI.label("카탈로그를 확인하면 논리 Land와 원문 확보 범위를 표시합니다.",12,UI.MUTED)
+	native_scope_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; add_child(native_scope_status)
 	source_words = LineEdit.new()
 	source_words.name = "AdenSourceAllowedWords"
 	source_words.text = "0,4,8,12,32"
@@ -153,7 +171,7 @@ func _build_play_options() -> void:
 		control.min_value = 0; control.max_value = 65535; control.step = 1; control.custom_minimum_size = Vector2(125,36)
 		entry.add_child(control)
 	add_child(entry)
-	add_child(UI.label("좌표를 지정하지 않으면 저장된 원문 위치 또는 현재 위치의 소스 좌표를 사용합니다. 막힌 입장은 거부합니다.",12,UI.MUTED))
+	add_child(UI.label("전체 맵은 선택한 Land의 명시 좌표 또는 같은 Land의 저장 좌표가 필요합니다. 막힌 입장은 거부합니다.",12,UI.MUTED))
 	source_portal_path = LineEdit.new(); source_portal_path.name = "AdenSourcePortalContractPath"
 	source_portal_path.placeholder_text = "별도 원문 포탈 팩 JSON · 없으면 포탈 사용 보류"
 	add_child(source_portal_path)
@@ -203,44 +221,57 @@ func _offset_control(node_name: String) -> SpinBox:
 
 func _load_play_options() -> void:
 	var options: Dictionary = PLAY_OPTIONS.read()
-	play_profile.select(2 if options.navigation_profile == PLAY_OPTIONS.SOURCE else (1 if options.navigation_profile == PLAY_OPTIONS.LEGACY else 0))
-	if options.navigation_profile == PLAY_OPTIONS.SOURCE:
+	play_profile.select(3 if options.navigation_profile==PLAY_OPTIONS.GENERIC else 2 if options.navigation_profile == PLAY_OPTIONS.SOURCE else (1 if options.navigation_profile == PLAY_OPTIONS.LEGACY else 0))
+	if options.navigation_profile in [PLAY_OPTIONS.SOURCE,PLAY_OPTIONS.GENERIC]:
 		var words: Array[String] = []
 		for word: int in options.allowed_raw_words: words.append(str(word))
 		source_words.text = ",".join(words)
 		source_portal_path.text = options.portal_contract
+	if options.navigation_profile==PLAY_OPTIONS.GENERIC:
+		source_manifest.text=options.source_manifest_sha256
+		tile_manifest.text=options.tile_manifest_sha256
+		raw_path_edit.text=options.raw_root; tile_path_edit.text=options.tile_root
+		_reload_native_lands(int(options.native_land_id))
 	play_offset_x.value = options.offset_x
 	play_offset_y.value = options.offset_y
 	var current: Node = _world()
 	if current != null and bool(current.get("current523_aden_play_active")):
 		raw_path_edit.text = options.raw_root
 		tile_path_edit.text = options.tile_root
-		play_status.text = "원문 S32 자체 통행 중 · M 원작 판정 미확정" if options.navigation_profile == PLAY_OPTIONS.SOURCE else "실험 플레이 중 · 이동과 충돌은 기존 TWILIGHT 자체 설정입니다."
+		play_status.text = "원문 S32 자체 통행 중 · M 원작 판정 미확정" if options.navigation_profile in [PLAY_OPTIONS.SOURCE,PLAY_OPTIONS.GENERIC] else "실험 플레이 중 · 이동과 충돌은 기존 TWILIGHT 자체 설정입니다."
 	_refresh_source_portals()
 
 
 func _play_values() -> Dictionary:
-	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
-	if play_profile.selected == 2:
+	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.GENERIC if play_profile.selected==3 else PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
+	if play_profile.selected in [2,3]:
 		value.allowed_raw_words = []
 		for part: String in source_words.text.split(",",false):
 			if not part.strip_edges().is_valid_int(): value.allowed_raw_words = []; break
 			value.allowed_raw_words.append(int(part.strip_edges()))
 		value.portal_contract = source_portal_path.text.strip_edges()
 		var saved: Dictionary = PLAY_OPTIONS.read()
-		value.source_position = saved.get("source_position",[]) if saved.navigation_profile == PLAY_OPTIONS.SOURCE else []
+		var same_identity: bool=saved.navigation_profile==value.navigation_profile
+		if play_profile.selected==3:
+			value.source_manifest_sha256=source_manifest.text.strip_edges()
+			value.tile_manifest_sha256=tile_manifest.text.strip_edges()
+			value.native_land_id=native_land_choice.get_selected_id() if native_land_choice.selected>=0 else -1
+			value.portal_contract=""
+			same_identity=same_identity and saved.get("native_land_id",-1)==value.native_land_id and saved.get("source_manifest_sha256","")==value.source_manifest_sha256 and saved.raw_root==raw_path_edit.text.strip_edges()
+		value.source_position = saved.get("source_position",[]) if same_identity else []
 		if source_entry_enabled.button_pressed: value.source_position = [int(source_entry_x.value)+0.5,int(source_entry_y.value)+0.5]
 	return value
 
 func _refresh_source_portals() -> void:
 	if not is_instance_valid(source_portal_choice): return
+	source_portal_button.text="TWILIGHT 자체 수동 이동 · 원작 활성 조건 미확정" if play_profile.selected==3 else "현재 출발 셀의 원문 포탈 사용"
 	var selected: int = source_portal_choice.get_selected_id() if source_portal_choice.item_count>0 else -1
 	source_portal_choice.clear()
 	var current: Node = _world()
 	if current == null or not current.has_method("current523_aden_source_portals"): return
 	for row: Dictionary in current.call("current523_aden_source_portals"):
-		var note: String = "원문 양끝 대조" if row.get("activation_candidate",false) else "보류"
-		source_portal_choice.add_item("%d · %s → %s · %s" % [int(row.id),str(row.source_position),str(row.get("landing_position")),note],int(row.id))
+		var note: String = "자체 수동 · 사용 시 양끝 검사" if play_profile.selected==3 else ("원문 양끝 대조" if row.get("activation_candidate",false) else "보류")
+		source_portal_choice.add_item("%d · %s → %s · %s" % [int(row.id),str(row.source_position),("Land%d · " % int(row.target_land_id) if row.has("target_land_id") else "")+str(row.get("landing_position")),note],int(row.id))
 		if int(row.id)==selected: source_portal_choice.select(source_portal_choice.item_count-1)
 
 func _use_source_portal() -> void:
@@ -250,6 +281,7 @@ func _use_source_portal() -> void:
 
 
 func _play_choice_changed(_index: int) -> void:
+	_refresh_source_portals()
 	_update_open_button()
 
 
@@ -349,7 +381,7 @@ func _update_open_button() -> void:
 		raw_browse_button.disabled = busy or playing
 		tile_browse_button.disabled = busy or playing
 	if is_instance_valid(play_button):
-		play_button.disabled = busy or playing or current == null or not current.has_method("open_current523_aden_play") or play_profile.selected not in [1,2] or raw_path_edit.text.strip_edges().is_empty() or tile_path_edit.text.strip_edges().is_empty()
+		play_button.disabled = busy or playing or current == null or not current.has_method("open_current523_aden_play") or play_profile.selected not in [1,2,3] or raw_path_edit.text.strip_edges().is_empty() or tile_path_edit.text.strip_edges().is_empty()
 		play_apply_button.disabled = busy or not playing
 		play_stop_button.disabled = busy or (not playing and not PLAY_OPTIONS.read().enabled)
 		play_profile.disabled = busy or playing
@@ -489,3 +521,27 @@ func _exit_tree() -> void:
 		folder_dialog.hide()
 	if is_instance_valid(zip_dialog):
 		zip_dialog.hide()
+
+func _reload_native_lands(preferred_id: int = -1) -> void:
+	if not is_instance_valid(native_land_choice): return
+	native_land_choice.clear()
+	var script: Script=load("res://scripts/maps/current523_source_pack.gd")
+	var catalog: RefCounted=script.new()
+	if not catalog.load_catalog(raw_path_edit.text.strip_edges(),source_manifest.text.strip_edges().to_lower()):
+		native_scope_status.text="카탈로그 확인 실패: "+str(catalog.problem); return
+	var ready_lands: int=0
+	var included_lands: int=0
+	for row: Dictionary in catalog.catalog_lands():
+		if row.policy_status!="classified" or not row.excluded_content.is_empty(): continue
+		var declaration: Dictionary=row.declaration
+		var asset: Dictionary=catalog.asset_record(str(declaration.AssetPath))
+		var ready: int=int(asset.get("ready_count",0))
+		included_lands+=1
+		if ready>0: ready_lands+=1
+		native_land_choice.add_item("%d · %s · %s · 원문 %d/%d" % [int(declaration.ID),str(declaration.Name),str(declaration.AssetPath),ready,int(asset.get("source_count",0))],int(declaration.ID))
+		if int(declaration.ID)==preferred_id: native_land_choice.select(native_land_choice.item_count-1)
+	native_scope_status.text="범위 내 논리 Land %d개 · 실제 원문이 일부라도 있는 Land %d개. 공유 폴더와 논리 지역은 별개이며 미수신 셀은 거부합니다." % [included_lands,ready_lands]
+
+func _native_land_changed(_index: int) -> void:
+	# A cursor from a different logical Land must never become an implicit entry.
+	source_entry_enabled.button_pressed=false

@@ -8167,7 +8167,7 @@ func open_current523_aden_play(raw_root: String, tile_root: String, options: Dic
 	var opened: bool = bool(controller.call("open", requested))
 	current523_aden_play_active = bool(controller.get("active"))
 	current523_aden_play_problem = str(controller.get("problem"))
-	var description: String = "S32 원문 지형·속성의 자체 해석으로 이동합니다. M 원작 판정은 미확정입니다." if options.get("navigation_profile")==CURRENT523_ADEN_PLAY_OPTIONS.SOURCE else "기존 TWILIGHT 통행을 사용하는 아덴 실험 플레이입니다."
+	var description: String = "S32 원문 지형·속성의 자체 해석으로 이동합니다. M 원작 판정은 미확정입니다." if options.get("navigation_profile") in [CURRENT523_ADEN_PLAY_OPTIONS.SOURCE,CURRENT523_ADEN_PLAY_OPTIONS.GENERIC] else "기존 TWILIGHT 통행을 사용하는 아덴 실험 플레이입니다."
 	if opened and not current523_aden_play_problem.is_empty(): description += " · 포탈 보류: "+current523_aden_play_problem
 	current523_aden_play_changed.emit(current523_aden_play_active, description if opened else current523_aden_play_problem)
 	return opened
@@ -8197,6 +8197,26 @@ func current523_aden_play_metrics() -> Dictionary:
 func current523_aden_source_active() -> bool:
 	return current523_aden_play_active and _current523_aden_play_controller != null and bool(_current523_aden_play_controller.get("source_owned"))
 
+func prepare_current523_source_landing(raw_root: String, source_manifest_sha256: String, native_land_id: int, declared_bounds: Array, selection_policy: String = "EXACT_POINT_ONLY", allowed_raw_words: Array = CURRENT523_ADEN_PLAY_OPTIONS.SOURCE_WORDS) -> Dictionary:
+	# Pure geographic preflight. It grants no admission, fee, prerequisite or
+	# LandTeleport permission; the calling feature owns those native rules.
+	var script: Script=load("res://scripts/maps/current523_source_field.gd")
+	var candidate=script.new()
+	if not candidate.configure_catalog(raw_root,source_manifest_sha256,native_land_id,{"allowed_raw_words":allowed_raw_words}):
+		var failure: Dictionary={"ok":false,"reason":str(candidate.problem),"native_landing_rule_verified":false}
+		candidate.close(); return failure
+	var result: Dictionary=candidate.choose_source_landing(declared_bounds,selection_policy)
+	candidate.close()
+	return result
+
+func current523_source_geographic_contract() -> Dictionary:
+	return _aden_play_controller().call("source_geographic_contract")
+
+func bind_current523_source_portal_provider(provider: RefCounted, verified_manifest_sha256: String) -> bool:
+	var bound: bool=_aden_play_controller().call("bind_source_portal_provider",provider,verified_manifest_sha256)
+	if bound: current523_aden_play_changed.emit(current523_aden_play_active,"원문 포탈 정의 연결을 갱신했습니다.")
+	return bound
+
 func current523_aden_source_portals() -> Array:
 	return _aden_play_controller().call("portal_evidence")
 
@@ -8221,7 +8241,7 @@ func _restore_current523_aden_play() -> void:
 func _current523_source_restore_requested() -> bool:
 	if active_map_id!="aden_world" or CURRENT523_ADEN_REVIEW.requested(): return false
 	var options: Dictionary = CURRENT523_ADEN_PLAY_OPTIONS.read()
-	return bool(options.enabled) and options.navigation_profile==CURRENT523_ADEN_PLAY_OPTIONS.SOURCE
+	return bool(options.enabled) and options.navigation_profile in [CURRENT523_ADEN_PLAY_OPTIONS.SOURCE,CURRENT523_ADEN_PLAY_OPTIONS.GENERIC]
 
 func _exit_tree() -> void:
 	if _current523_aden_play_controller != null:

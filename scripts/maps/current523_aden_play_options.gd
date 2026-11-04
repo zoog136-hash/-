@@ -4,6 +4,7 @@ const PATH = "user://current523_aden_play.cfg"
 const NONE = "NONE"
 const LEGACY = "TWILIGHT_ADEN_NAVIGATION_V1"
 const SOURCE = "CURRENT523_S32_OWN_ALLOWLIST_V1"
+const GENERIC = "CURRENT523_GENERIC_S32_OWN_ALLOWLIST_V1"
 const SOURCE_WORDS: Array[int] = [0,4,8,12,32]
 const GRID_SHA256 = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const LAYOUT_REVISION = 2026102904
@@ -17,7 +18,7 @@ static func validate(value: Dictionary) -> Dictionary:
 	if not value.get("enabled", false) is bool: return {}
 	result.enabled = value.get("enabled", false)
 	var profile: Variant = value.get("navigation_profile", NONE)
-	if profile not in [NONE, LEGACY, SOURCE]: return {}
+	if profile not in [NONE, LEGACY, SOURCE, GENERIC]: return {}
 	result.navigation_profile = profile
 	for key: String in ["offset_x", "offset_y"]:
 		var number: Variant = value.get(key, 0)
@@ -27,8 +28,8 @@ static func validate(value: Dictionary) -> Dictionary:
 		var path: Variant = value.get(key, "")
 		if not path is String or path.length() > 4096 or path.to_utf8_buffer().has(0): return {}
 		result[key] = path.strip_edges()
-	if result.enabled and (profile not in [LEGACY,SOURCE] or result.raw_root.is_empty() or result.tile_root.is_empty()): return {}
-	if profile == SOURCE:
+	if result.enabled and (profile not in [LEGACY,SOURCE,GENERIC] or result.raw_root.is_empty() or result.tile_root.is_empty()): return {}
+	if profile in [SOURCE,GENERIC]:
 		var words: Variant = value.get("allowed_raw_words", SOURCE_WORDS.duplicate())
 		if not words is Array or words.is_empty() or words.size()>256: return {}
 		result.allowed_raw_words = []
@@ -44,6 +45,14 @@ static func validate(value: Dictionary) -> Dictionary:
 		var contract: Variant = value.get("portal_contract", "")
 		if not contract is String or contract.length()>4096 or contract.to_utf8_buffer().has(0): return {}
 		result.portal_contract = contract.strip_edges()
+	if profile == GENERIC:
+		for key: String in ["source_manifest_sha256","tile_manifest_sha256"]:
+			var digest: Variant = value.get(key,"")
+			if not digest is String or digest.length()!=64 or not digest.is_valid_hex_number(false): return {}
+			result[key]=digest.to_lower()
+		var land: Variant=value.get("native_land_id",-1)
+		if not (land is int or land is float) or not is_finite(float(land)) or float(land)!=floorf(float(land)) or land<0 or land>2147483647: return {}
+		result.native_land_id=int(land)
 	return result
 
 static func read() -> Dictionary:
@@ -51,9 +60,12 @@ static func read() -> Dictionary:
 	if config.load(PATH) != OK: return defaults()
 	var value: Dictionary = defaults()
 	for key: String in value: value[key] = config.get_value("play", key, value[key])
-	if value.navigation_profile == SOURCE:
+	if value.navigation_profile in [SOURCE,GENERIC]:
 		for key: String in ["allowed_raw_words","source_position","portal_contract"]:
 			value[key] = config.get_value("play",key,SOURCE_WORDS.duplicate() if key=="allowed_raw_words" else ([] if key=="source_position" else ""))
+	if value.navigation_profile == GENERIC:
+		for key: String in ["source_manifest_sha256","tile_manifest_sha256","native_land_id"]:
+			value[key]=config.get_value("play",key,-1 if key=="native_land_id" else "")
 	var checked: Dictionary = validate(value)
 	return defaults() if checked.is_empty() else checked
 

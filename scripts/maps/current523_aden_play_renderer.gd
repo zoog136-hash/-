@@ -4,6 +4,8 @@ extends "res://scripts/maps/source_map_runtime_renderer.gd"
 signal safe_return_requested(reason: String)
 
 const RAW = preload("res://scripts/maps/current523_aden_pack.gd")
+const GENERIC_RAW = preload("res://scripts/maps/current523_source_pack.gd")
+const GENERIC_TILES = preload("res://scripts/maps/current523_tile_pack.gd")
 const TILES = preload("res://scripts/maps/current523_tile_review_pack.gd")
 const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const GRID_SHA256: String = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
@@ -78,7 +80,7 @@ func _ready() -> void:
 	set_process(false)
 
 
-func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_root: String, visual_delta: Vector2) -> bool:
+func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_root: String, visual_delta: Vector2, tile_manifest_sha256: String = "") -> bool:
 	if _configured:
 		return false
 	problem = ""
@@ -89,10 +91,19 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	if not is_instance_valid(actor) or not actor.is_inside_tree() or not actor.global_position.is_finite():
 		return _fail("현재 플레이어 위치를 확인할 수 없습니다.")
 	if not valid_delta(visual_delta): return _fail("표시 오프셋은 각 축 -48~48픽셀이어야 합니다.")
-	var originals = RAW.new()
-	if not originals.load_pack(raw_root): return _fail(originals.problem)
-	var tiles = TILES.new()
-	if not tiles.load_pack(tile_root): return _fail(tiles.problem)
+	var generic: bool=bool(value.get_meta("current523_generic_field",false))
+	var originals: RefCounted
+	var tiles: RefCounted
+	if generic:
+		originals=GENERIC_RAW.new()
+		if not originals.load_pack(raw_root,str(value.get("catalog_sha256")),str(value.get("source_asset"))): return _fail(originals.problem)
+		tiles=GENERIC_TILES.new()
+		if not tiles.load_pack(tile_root,tile_manifest_sha256): return _fail(tiles.problem)
+	else:
+		originals=RAW.new()
+		if not originals.load_pack(raw_root): return _fail(originals.problem)
+		tiles=TILES.new()
+		if not tiles.load_pack(tile_root): return _fail(tiles.problem)
 	field = value
 	source = value as OriginalPlayableField
 	player = actor
@@ -118,7 +129,7 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 		if int(bounds[2]) - origin.x != 63 or int(bounds[3]) - origin.y != 63 or origin.x % 64 != 0 or origin.y % 64 != 0:
 			return _fail("기존 아덴 그림 청크의 범위가 다릅니다.")
 		_legacy_origins[origin] = true
-	var members: Array = originals.source_members()
+	var members: Array = originals.supported_s32_members() if generic else originals.source_members()
 	for member: String in members:
 		var origin: Variant = REVIEW.candidate_origin(member)
 		if origin == null: continue  # Preserve the ninth-character source as unplaced.
@@ -284,6 +295,7 @@ func _build_frame() -> bool:
 				if ref == 4294967295: raw_ff += 1; continue
 				var tile_id: int = ref >> 8
 				if not _tile_pack.has_tile(tile_id): return _fail("해결되지 않은 M 타일 원문: " + str(tile_id))
+				if _tile_pack.has_method("has_subimage") and not _tile_pack.call("has_subimage",tile_id,ref & 255): return _fail("원문에 없는 하위 타일 번호: %d/%d" % [tile_id,ref & 255])
 				if count >= DRAW_COMMAND_LIMIT or (not atlases.has(tile_id) and atlases.size() >= VISIBLE_ATLAS_LIMIT):
 					return _fail("M 표시 실험의 타일 또는 아틀라스 예산을 초과했습니다.")
 				if not atlases.has(tile_id):
@@ -301,13 +313,14 @@ func _build_frame() -> bool:
 	_frame_atlases = atlases
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
 	_metrics = {"display_profile": "CURRENT523_S32_SOURCE_FIELD_OWN_INTERPRETATION" if source_owned else "M_DISPLAY_WITH_TWILIGHT_SOURCE360_NAVIGATION_ASSUMPTION",
-		"registered_sources": 677, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": 677 - _member_origins.size(),
+		"registered_sources": _raw_sources.source_members().size() if _raw_sources!=null else 0, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,(_raw_sources.source_members().size() if _raw_sources!=null else 0)-_member_origins.size()),
 		"overlap_chunks": _overlap.size(), "visible_chunks": visible.size(), "cached_chunks": _raw_chunks.size(),
 		"visible_atlases": atlases.size(), "cached_atlases": _tile_pack.cache_size(), "draw_commands": count,
 		"uninterpreted_ffffffff_words": raw_ff, "unresolved_refs": 0, "budget_skips": 0, "skipped_chunks": 0,
 		"visual_delta": [_visual_delta.x, _visual_delta.y], "M_attributes_used": source_owned,
 		"scope_clipped_records": _scope_clipped_records,
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
+	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.
 	return true

@@ -54,6 +54,14 @@ func _initialize() -> void:
 	var bad_source: Dictionary = source.duplicate(true); bad_source.source_position=[NAN,1]
 	check(OPTIONS.write(bad_source)==ERR_INVALID_PARAMETER and FileAccess.get_sha256(OPTIONS.PATH)==source_sha,"invalid source cursor preserves accepted settings bytes")
 	check(FileAccess.get_sha256("user://play-options-save-sentinel.bin")==sha,"source preferences leave ordinary game-save bytes unchanged")
+	var generic: Dictionary=source.duplicate(true)
+	generic.merge({"navigation_profile":OPTIONS.GENERIC,"source_manifest_sha256":"a".repeat(64),"tile_manifest_sha256":"b".repeat(64),"native_land_id":1,"source_position":[32668.5,32803.5]},true)
+	check(OPTIONS.validate(generic)==generic,"generic native Land profile keeps explicit resource pins and separate cursor")
+	for changes: Dictionary in [{"source_manifest_sha256":""},{"source_manifest_sha256":"g".repeat(64)},{"tile_manifest_sha256":17},{"native_land_id":true},{"native_land_id":-1},{"native_land_id":1.5}]:
+		var bad: Dictionary=generic.duplicate(true); bad.merge(changes,true)
+		check(OPTIONS.validate(bad).is_empty(),"generic identity or resource pin rejects invalid input")
+	check(OPTIONS.write(generic)==OK and OPTIONS.read()==generic,"generic logical identity pins and cursor survive preference restart")
+	check(FileAccess.get_sha256("user://play-options-save-sentinel.bin")==sha,"generic preferences preserve actual game save sentinel")
 	# Core checks share an isolated profile; remove only this guard's own fixture.
 	DirAccess.remove_absolute(OPTIONS.PATH)
 	DirAccess.remove_absolute("user://play-options-save-sentinel.bin")

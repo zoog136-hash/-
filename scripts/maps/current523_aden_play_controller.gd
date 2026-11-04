@@ -19,6 +19,12 @@ var _source_physics: StaticBody2D
 var _prior_world: Dictionary = {}
 var _paused_nodes: Array[Dictionary] = []
 var _portals: RefCounted
+# PR230 owns definition verification and tables. This optional bridge consumes
+# copied contexts from that module; it is not a second definition catalog.
+const DEFINITION_PACK_SHA256="2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
+const SOURCE_TRAVEL=preload("res://scripts/maps/current523_source_travel.gd")
+var _source_portal_provider: RefCounted
+var _source_travel_busy: bool=false
 
 func configure(world: Node) -> void:
 	_world_ref = weakref(world)
@@ -30,7 +36,7 @@ func open(value: Dictionary) -> bool:
 	problem = ""
 	if active: problem = "아덴 실험 플레이가 이미 실행 중입니다."; return false
 	var world: Node = _world()
-	if value.get("navigation_profile") == OPTIONS.SOURCE: return _open_source(value)
+	if value.get("navigation_profile") in [OPTIONS.SOURCE,OPTIONS.GENERIC]: return _open_source(value)
 	problem = OPTIONS.qualify(world)
 	if not problem.is_empty(): return false
 	if bool(world.get("current523_aden_review_active")): problem = "원문 검토를 닫은 뒤 실험 플레이를 시작해 주세요."; return false
@@ -97,8 +103,12 @@ func apply_options(value: Dictionary) -> bool:
 	# Changing resource roots requires a new validated entry, not an in-place swap.
 	if options.raw_root != settings.raw_root or options.tile_root != settings.tile_root:
 		problem = "원본 팩을 바꾸려면 실험 플레이를 종료해 주세요."; return false
+	if settings.navigation_profile==OPTIONS.GENERIC:
+		for key: String in ["source_manifest_sha256","tile_manifest_sha256","native_land_id"]:
+			if options.get(key)!=settings.get(key): problem="지역과 원본 검증 정보를 바꾸려면 원문 플레이를 종료해 주세요."; return false
 	if source_owned and (options.allowed_raw_words != settings.allowed_raw_words or options.portal_contract != settings.portal_contract):
 		problem = "통행 해석과 포탈 팩을 바꾸려면 원문 플레이를 종료해 주세요."; return false
+	if source_owned: options.source_position = _source_checkpoint().source_position
 	var previous_delta := Vector2(settings.offset_x, settings.offset_y)
 	if not bool(_renderer.call("set_visual_delta", Vector2(options.offset_x, options.offset_y))):
 		problem = str(_renderer.get("problem"))
@@ -133,7 +143,7 @@ func _build_notice(world: Node) -> void:
 	row.add_theme_constant_override("separation", 12)
 	panel.add_child(row)
 	var label: Label = UI.label("아덴 M 타일 실험 플레이\n통행: 기존 TWILIGHT 자체 설정 · M 좌표/발/충돌 미확정", 14, UI.TEXT)
-	if source_owned: label.text = "아덴 523 원문 플레이\nS32 속성 기반 자체 통행 · M 원작 판정 미확정"
+	if source_owned: label.text = str(_source_field.data.map_name)+"\nS32 속성 기반 자체 통행 · M 원작 판정 미확정"
 	row.add_child(label)
 	var button: Button = UI.button("기존 지도로 복귀", _return_pressed, Vector2(150, 42))
 	button.name = "ReturnFromAdenPlayButton"
@@ -154,11 +164,15 @@ func _open_source(value: Dictionary) -> bool:
 	var prior_renderer: Variant = world.get("field_renderer")
 	if not prior_field is OriginalPlayableField or not is_instance_valid(prior_renderer) or not is_instance_valid(world.get("player")):
 		problem = "복귀할 지도와 캐릭터를 확인하지 못했습니다."; return false
-	var script: Script = load("res://scripts/maps/current523_aden_source_field.gd")
+	var generic: bool=options.navigation_profile==OPTIONS.GENERIC
+	var script: Script = load("res://scripts/maps/current523_source_field.gd" if generic else "res://scripts/maps/current523_aden_source_field.gd")
 	var proposed: OriginalPlayableField = script.new()
-	if not proposed.call("configure_current523", options.raw_root, {"allowed_raw_words":options.allowed_raw_words}):
+	var configured: bool=proposed.call("configure_catalog",options.raw_root,options.source_manifest_sha256,options.native_land_id,{"allowed_raw_words":options.allowed_raw_words}) if generic else proposed.call("configure_current523",options.raw_root,{"allowed_raw_words":options.allowed_raw_words})
+	if not configured:
 		problem = str(proposed.get("problem")); proposed.close(); return false
 	var source_position: Array = options.source_position
+	if generic and source_position.is_empty():
+		problem="선택한 논리 Land의 원문 입장 좌표를 지정해 주세요. 다른 지도의 좌표를 재사용하지 않습니다."; proposed.close(); return false
 	if source_position.is_empty(): source_position = prior_field.coordinates.source_components(world.player.global_position)
 	var position: Vector2 = proposed.coordinates.components_to_world(source_position)
 	if not proposed.point_clear(position,4):
@@ -176,7 +190,7 @@ func _open_source(value: Dictionary) -> bool:
 	candidate.name = "Current523AdenSourceRenderer"
 	candidate.process_mode = Node.PROCESS_MODE_DISABLED; candidate.hide()
 	world.add_child(candidate)
-	var valid: bool = candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y))
+	var valid: bool = candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.get("tile_manifest_sha256","")))
 	world.player.global_position = actor_position
 	camera.limit_left = old_camera.left; camera.limit_top = old_camera.top; camera.limit_right = old_camera.right; camera.limit_bottom = old_camera.bottom
 	camera.reset_smoothing(); camera.force_update_scroll()
@@ -217,6 +231,8 @@ func _open_source(value: Dictionary) -> bool:
 	candidate.safe_return_requested.connect(_renderer_problem.bind(candidate))
 	candidate.process_mode = Node.PROCESS_MODE_INHERIT; candidate.show()
 	world.field_minimap.configure(world,proposed)
+	world.region_id=""
+	world.hud.set_map_name(str(proposed.data.map_name))
 	_build_notice(world)
 	_load_portals()
 	return true
@@ -254,6 +270,8 @@ func _close_source(remember_disabled: bool) -> bool:
 		if world.is_inside_tree() and not world.is_queued_for_deletion():
 			if world.field_population.get("field")==null: world.field_population.configure(world,world.field_map)
 			world.field_minimap.configure(world,world.field_map)
+			world.region_id=""
+			world.hud.set_map_name(str(world.field_map.region_at(world.player.global_position).get("name",world.active_map.get("name",""))))
 	if _source_field != null: _source_field.close()
 	if is_instance_valid(_notice): _notice.queue_free()
 	_renderer = null; _source_physics = null; _source_field = null; _prior = null; _notice = null; _portals = null
@@ -289,7 +307,7 @@ func save_source_progress(quiet: bool, collection_override: Dictionary) -> Error
 	return result
 
 func _load_portals() -> void:
-	if settings.portal_contract.is_empty(): return
+	if settings.navigation_profile==OPTIONS.GENERIC or settings.portal_contract.is_empty(): return
 	var script: Script = load("res://scripts/maps/current523_aden_source_portals.gd")
 	if script == null: return
 	var catalog: RefCounted = script.new()
@@ -297,12 +315,34 @@ func _load_portals() -> void:
 	else: problem = str(catalog.get("problem"))
 
 func portal_evidence() -> Array:
+	if source_owned and settings.navigation_profile==OPTIONS.GENERIC:
+		if _source_portal_provider==null: return []
+		var rows: Variant=_source_portal_provider.call("portal_evidence_for_land",int(settings.native_land_id),str(_source_field.get("source_asset")))
+		if not rows is Array: return []
+		var result: Array=[]
+		for row: Variant in rows:
+			if not row is Dictionary or not SOURCE_TRAVEL._uint(row.get("ID"),2147483647): continue
+			var id: int=int(row.ID)
+			var context: Dictionary=portal_context(id)
+			if not context.has("Portal") or not context.has("TargetTerritory"): continue
+			var portal: Dictionary=context.Portal
+			var territory: Dictionary=context.TargetTerritory
+			if int(portal.get("ID",-1))!=id or int(portal.get("SourceLandID",-1))!=int(settings.native_land_id): continue
+			var point: Variant=null
+			if territory.get("StartX")==territory.get("EndX") and territory.get("StartY")==territory.get("EndY"): point=[territory.StartX,territory.StartY]
+			result.append({"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","native_m_rules_verified":false})
+		return result
 	return _portals.call("portal_evidence") if source_owned and _portals != null else []
 
 func portal_context(id: int) -> Dictionary:
+	if source_owned and settings.navigation_profile==OPTIONS.GENERIC:
+		if _source_portal_provider==null: return {}
+		var context: Variant=_source_portal_provider.call("portal_context_for_land",int(settings.native_land_id),str(_source_field.get("source_asset")),id)
+		return context.duplicate(true) if context is Dictionary and _source_context_shape(context) else {}
 	return _portals.call("portal_context",id) if source_owned and _portals != null else {}
 
 func use_source_portal(id: int) -> bool:
+	if source_owned and settings.navigation_profile==OPTIONS.GENERIC: return _use_generic_source_portal(id)
 	var world: Node = _world()
 	problem = ""
 	if not source_owned or not active or _portals == null:
@@ -328,3 +368,115 @@ func use_source_portal(id: int) -> bool:
 	world.player.clear_click_path(); world.player.velocity = Vector2.ZERO; world.player.set_touch_vector(Vector2.ZERO)
 	world.portal_cooldown = 2.0
 	return true
+
+func bind_source_portal_provider(provider: RefCounted, verified_manifest_sha256: String) -> bool:
+	# The caller is PR230's verified definition loader, not arbitrary JSON input.
+	# Comparing this pin does not authenticate an untrusted provider by itself.
+	if _source_travel_busy: return false
+	if provider==null:
+		_source_portal_provider=null; return true
+	if verified_manifest_sha256!=DEFINITION_PACK_SHA256 or not provider.has_method("portal_evidence_for_land") or not provider.has_method("portal_context_for_land"):
+		problem="검증된 523 포탈 정의 제공자의 연결 계약이 필요합니다."; return false
+	_source_portal_provider=provider
+	return true
+
+func _use_generic_source_portal(id: int) -> bool:
+	problem=""
+	var world: Node=_world()
+	if _source_travel_busy or not active or not source_owned or _source_portal_provider==null or not is_instance_valid(world):
+		problem="검증된 원문 포탈 정의 연결이 없습니다."; return false
+	if world.player.auto_enabled or world.player.is_stunned() or world.player.is_held() or not world.charge_skill.is_empty() or float(world.portal_cooldown)>0:
+		problem="현재 이동 상태에서는 자체 수동 포탈을 사용할 수 없습니다."; return false
+	_source_travel_busy=true
+	var result: bool=_prepare_generic_source_travel(id,world)
+	_source_travel_busy=false
+	return result
+
+func _prepare_generic_source_travel(id: int,world: Node) -> bool:
+	var context: Dictionary=portal_context(id)
+	if not context.has("Portal") or not context.Portal is Dictionary or int(context.Portal.get("ID",-1))!=id or not context.has("TargetLand") or not context.TargetLand is Dictionary:
+		problem="포탈의 원문 정의를 확인하지 못했습니다."; return false
+	var script: Script=load("res://scripts/maps/current523_source_field.gd")
+	var proposed: OriginalPlayableField=script.new()
+	var options: Dictionary=settings.duplicate(true)
+	var target_id: int=int(context.TargetLand.get("ID",-1))
+	if not proposed.configure_catalog(options.raw_root,options.source_manifest_sha256,target_id,{"allowed_raw_words":options.allowed_raw_words}):
+		problem="대상 원문 필드 보류: "+str(proposed.problem); proposed.close(); return false
+	var source_cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
+	var plan: Dictionary=SOURCE_TRAVEL.plan(context,_source_field.get("_raw"),_source_field,proposed,source_cell,str(options.source_manifest_sha256))
+	if not plan.get("ok",false):
+		problem="자체 수동 이동 보류: "+str(plan.get("reason","unknown")); proposed.close(); return false
+	var destination: Vector2i=plan.target_position
+	var position: Vector2=proposed.coordinates.to_world(Vector2(destination))
+	proposed.data.spawn_position=[position.x,position.y]
+	var previous_position: Vector2=world.player.global_position
+	var camera: Camera2D=world.player.camera
+	var previous_camera: Dictionary={"left":camera.limit_left,"top":camera.limit_top,"right":camera.limit_right,"bottom":camera.limit_bottom}
+	world.player.global_position=position
+	camera.limit_left=floori(proposed.bounds.position.x); camera.limit_top=floori(proposed.bounds.position.y)
+	camera.limit_right=ceili(proposed.bounds.end.x); camera.limit_bottom=ceili(proposed.bounds.end.y)
+	camera.reset_smoothing(); camera.force_update_scroll()
+	var candidate=RENDERER.new()
+	candidate.name="Current523GenericTravelRenderer"
+	candidate.process_mode=Node.PROCESS_MODE_DISABLED; candidate.hide(); world.add_child(candidate)
+	var valid: bool=candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.tile_manifest_sha256))
+	world.player.global_position=previous_position
+	camera.limit_left=previous_camera.left; camera.limit_top=previous_camera.top; camera.limit_right=previous_camera.right; camera.limit_bottom=previous_camera.bottom
+	camera.reset_smoothing(); camera.force_update_scroll()
+	if not valid:
+		problem="도착 화면 확인 실패: "+str(candidate.problem); candidate.queue_free(); proposed.close(); return false
+	var physics: StaticBody2D=proposed.build_physics(world)
+	physics.collision_layer=0; physics.process_mode=Node.PROCESS_MODE_DISABLED
+	options.native_land_id=target_id; options.source_position=[destination.x+0.5,destination.y+0.5]
+	if OPTIONS.write(options)!=OK:
+		problem="목적지 위치를 저장하지 못해 현재 원문 필드를 보존합니다."
+		candidate.queue_free(); physics.queue_free(); proposed.close(); return false
+	# All fallible validation and the atomic checkpoint precede the commit.
+	# The initial host snapshot/paused actors are retained across every hop.
+	var previous_field: OriginalPlayableField=_source_field
+	var previous_renderer: FieldRenderer=_renderer
+	var previous_physics: StaticBody2D=_source_physics
+	previous_renderer.hide(); previous_renderer.process_mode=Node.PROCESS_MODE_DISABLED
+	previous_physics.collision_layer=0; previous_physics.process_mode=Node.PROCESS_MODE_DISABLED
+	_source_field=proposed; _renderer=candidate; _source_physics=physics; settings=options
+	world.field_map=proposed; world.field_renderer=candidate; world.field_physics=physics
+	world.world_size=proposed.bounds.size; world.astar=proposed.astar
+	world.player.clear_click_path(); world.player.set_touch_vector(Vector2.ZERO); world.player.velocity=Vector2.ZERO
+	world.player.global_position=position
+	camera.limit_left=floori(proposed.bounds.position.x); camera.limit_top=floori(proposed.bounds.position.y)
+	camera.limit_right=ceili(proposed.bounds.end.x); camera.limit_bottom=ceili(proposed.bounds.end.y)
+	camera.reset_smoothing(); camera.force_update_scroll()
+	physics.collision_layer=4; physics.process_mode=Node.PROCESS_MODE_INHERIT
+	candidate.safe_return_requested.connect(_renderer_problem.bind(candidate))
+	candidate.process_mode=Node.PROCESS_MODE_INHERIT; candidate.show()
+	world.field_minimap.configure(world,proposed); world.region_id=""; world.hud.set_map_name(str(proposed.data.map_name))
+	if is_instance_valid(_notice): _notice.queue_free()
+	_build_notice(world)
+	world.portal_cooldown=2.0
+	previous_renderer.queue_free(); previous_physics.queue_free(); previous_field.close()
+	return true
+
+func _source_context_shape(context: Dictionary) -> bool:
+	for name: String in ["Portal","SourceLand","TargetTerritory","TargetLand"]:
+		if not context.get(name) is Dictionary: return false
+	var portal: Dictionary=context.Portal
+	var territory: Dictionary=context.TargetTerritory
+	for key: String in ["ID","SourceLandID","AssetID","TargetTerritoryID"]:
+		if not SOURCE_TRAVEL._uint(portal.get(key),2147483647): return false
+	for key: String in ["SourceX","SourceY"]:
+		if not SOURCE_TRAVEL._uint(portal.get(key),65535): return false
+	for key: String in ["ID","LandID","DescID"]:
+		if not SOURCE_TRAVEL._uint(territory.get(key),2147483647): return false
+	for key: String in ["StartX","StartY","EndX","EndY"]:
+		if not SOURCE_TRAVEL._uint(territory.get(key),65535): return false
+	for land: Dictionary in [context.SourceLand,context.TargetLand]:
+		if not SOURCE_TRAVEL._uint(land.get("ID"),2147483647) or not land.get("AssetPath") is String: return false
+	return true
+
+func source_geographic_contract() -> Dictionary:
+	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC or _source_field==null: return {}
+	var world: Node=_world()
+	if not is_instance_valid(world) or world.field_map!=_source_field: return {}
+	var contract: Dictionary=_source_field.call("source_geographic_contract")
+	contract.current_source_components=_source_field.coordinates.source_components(world.player.global_position)
+	return contract

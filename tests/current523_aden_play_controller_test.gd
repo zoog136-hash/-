@@ -15,6 +15,13 @@ class DisplayProbe extends FieldRenderer:
 		delta = value
 		return true
 
+class ProviderProbe extends RefCounted:
+	var context: Dictionary={"Portal":{"ID":1101,"SourceLandID":1,"SourceX":32668,"SourceY":32803,"AssetID":0,"TargetTerritoryID":173094},"TargetTerritory":{"ID":173094,"DescID":0,"LandID":0,"StartX":32477,"StartY":32855,"EndX":32477,"EndY":32855},"SourceLand":{"ID":1,"AssetPath":"1/"},"TargetLand":{"ID":0,"AssetPath":"0/"}}
+	func portal_evidence_for_land(land_id: int,asset: String) -> Array:
+		return [{"ID":1101}] if land_id==1 and asset=="1/" else []
+	func portal_context_for_land(land_id: int,asset: String,id: int) -> Dictionary:
+		return context if land_id==1 and asset=="1/" and id==1101 else {}
+
 func check(value: bool, label: String) -> void:
 	checks += 1
 	if not value: failures.append(label)
@@ -46,5 +53,29 @@ func _initialize() -> void:
 	controller.set("_renderer", null)
 	display.free()
 	DirAccess.remove_absolute(OPTIONS.PATH)
+	var generic=CONTROLLER.new()
+	generic.source_owned=true; generic.active=true
+	generic.settings={"navigation_profile":OPTIONS.GENERIC,"native_land_id":1}
+	check(generic.portal_evidence().is_empty() and generic.portal_context(1101).is_empty(),"generic portals remain unavailable without native definition provider")
+	check(not generic.use_source_portal(1101),"missing source portal provider preserves runtime")
+	var provider=ProviderProbe.new()
+	check(not generic.bind_source_portal_provider(provider,"0".repeat(64)),"unverified definition manifest pin rejects provider")
+	check(not generic.bind_source_portal_provider(RefCounted.new(),CONTROLLER.DEFINITION_PACK_SHA256),"missing provider methods rejects before activation")
+	check(generic.bind_source_portal_provider(provider,CONTROLLER.DEFINITION_PACK_SHA256),"explicit verified caller can bind definition provider contract")
+	var script: Script=load("res://scripts/maps/current523_source_field.gd")
+	var source=script.new(); source.source_asset="1/"
+	generic.set("_source_field",source)
+	var context: Dictionary=generic.portal_context(1101)
+	context.Portal.SourceLandID=4
+	check(generic.portal_context(1101).Portal.SourceLandID==1,"returned portal context cannot mutate provider rows")
+	check(generic.portal_evidence().size()==1 and not generic.portal_evidence()[0].activation_candidate,"native row presence does not assert manual endpoint admission or original trigger")
+	var original_context: Dictionary=provider.context.duplicate(true)
+	for malformed: Dictionary in [{"Portal":[]},{"Portal":{"ID":NAN}},{"TargetTerritory":{}},{"TargetLand":{"ID":0.5,"AssetPath":"0/"}}]:
+		provider.context=original_context.duplicate(true); provider.context.merge(malformed,true)
+		check(generic.portal_context(1101).is_empty() and generic.portal_evidence().is_empty(),"malformed provider context safely rejects before projection/conversion")
+	provider.context=original_context
+	check(not generic.use_source_portal(1101),"provider binding without a live world cannot move actors")
+	check(generic.bind_source_portal_provider(null,"") and generic.portal_evidence().is_empty(),"provider can detach without changing source field")
+	source.close()
 	print("CURRENT523_ADEN_PLAY_CONTROLLER_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"fixture_only":true}))
 	quit(0 if failures.is_empty() else 1)

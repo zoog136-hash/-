@@ -1,5 +1,10 @@
 # Current523 Aden originals, installation and experimental play
 
+> The whole-map continuation and generic pack/UI/runtime scope are recorded in
+> [CURRENT523_MAP_SOURCE_RUNTIME.md](CURRENT523_MAP_SOURCE_RUNTIME.md).
+> The Aden-only versions and evidence below keep their original scope.
+
+
 Base main: `7d550a78a8fd1a95a50ebb18b38c3134380c3fa6`; feature PR232.
 The current523 LineageM originals have a hash-bound Main API, a resource
 installer and a Godot tile review screen in the existing settings window.
