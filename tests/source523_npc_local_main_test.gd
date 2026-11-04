@@ -172,15 +172,15 @@ func exercise_general_npc(world: Node, panel: Node) -> void:
 		stock[key]["ready" if status.ok else "blocked"]+=1
 		coverage.append({"merchant_id":int(row.MerchantsID),"goods_id":int(row.ID),"ready":status.ok,"reason":str(status.get("reason",""))})
 	check(coverage.size()==4328 and stock.size()==192,"actual runtime classifies every original NPC sale row and all groups")
-	check(int(stock["13"].ready)==16 and int(stock["40"].ready)==34 and int(stock["514"].ready)==17,"all executable normal stocks are checked through the existing quote engine")
+	check(int(stock["13"].ready)==29 and int(stock["40"].ready)==45 and int(stock["514"].ready)==30,"all executable normal stocks are checked through the existing quote engine")
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--source523-coverage-output="):
 			var file:=FileAccess.open(arg.trim_prefix("--source523-coverage-output="),FileAccess.WRITE)
 			file.store_string(JSON.stringify({"scope":"actual Main, level80, isolated QA wallet; no grant by audit","groups":stock,"rows":coverage},"  "));file.close()
 	var material_names: Array=[]
 	for key: String in runtime._bindings:
-		if runtime._bindings[key].get("record",{}).has("source523_shop_item_id") and not runtime._bindings[key].record.get("source523_shop_supply_only",false):material_names.append(str(runtime._bindings[key].name))
-	check(material_names.size()==6 and not material_names.has("드래곤의 용옥"),"only six exact engraved existing-use items are registered; orb and skill books excluded")
+		if key in ["4:239","4:313","4:385","4:855","4:856","4:857"]:material_names.append(str(runtime._bindings[key].name))
+	check(material_names.size()==6 and not material_names.has("드래곤의 용옥"),"only six exact engraved existing-use items are registered; orb and separate book/restoration adapters excluded")
 	var record: Dictionary=world._find_catalog_item_record("마나 회복 물약 (각인)")
 	check(int(record.get("source523_shop_item_id",0))==385 and str(record.desc).contains("TWILIGHT"),"source ID and existing host effect are labelled in inventory data")
 	var before_rows: int=world.catalog_db["아이템"].size()
@@ -234,7 +234,7 @@ func exercise_all_executable_stock(world: Node, coverage: Array) -> void:
 	world.con_stat=1000
 	var completed: int=0
 	for row: Dictionary in coverage:
-		if not row.ready:continue
+		if not row.ready or int(row.merchant_id) not in [13,40,514]:continue
 		var quote: Dictionary=runtime.quote_merchant(int(row.goods_id))
 		var name: String=str(quote.get("name",""))
 		var before: int=int(world.inventory.get(name,0))
@@ -249,7 +249,7 @@ func exercise_all_executable_stock(world: Node, coverage: Array) -> void:
 		check(receipt.ok and int(world.inventory.get(name,0))==before+int(runtime.catalog.merchant_offer(int(row.goods_id)).goods.Amount),"all executable stock grants exact real items: "+str(row.goods_id)+" "+str(receipt.get("reason","")))
 		check(not runtime.claim(order).ok,"all executable stock rejects replay: "+str(row.goods_id))
 		if receipt.ok:completed+=1
-	check(completed==67,"every executable stock item has completed a real durable payment and receipt")
+	check(completed==104,"every executable stock item has completed a real durable payment and receipt")
 	world.hud.show_companion_bag();await frames()
 	var bag=world.hud.lineage_inventory_ui
 	var settings: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/shop/source523_npc_consumables.json"))

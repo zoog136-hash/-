@@ -4,6 +4,8 @@ const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
 const Economy = preload("res://scripts/shop/source523_shop_economy.gd")
 const NpcDefinitions = preload("res://scripts/shop/source523_npc_definitions.gd")
 const NpcConsumables = preload("res://scripts/shop/source523_npc_consumables.gd")
+const InventoryTickets = preload("res://scripts/shop/source523_inventory_tickets.gd")
+const SkillBooks = preload("res://scripts/shop/source523_skill_books.gd")
 const NpcResets = preload("res://scripts/shop/source523_npc_resets.gd")
 const SAVE_KEY: String = "source_shop"
 const LIMIT: int = 9007199254740991
@@ -28,6 +30,7 @@ var policy_sha256: String = ""
 var npc_definitions = NpcDefinitions.new()
 var npc_resets = NpcResets.new()
 ## Regression-only clock, like the existing test save writer; never supplied by UI.
+var inventory_tickets = InventoryTickets.new()
 var test_clock: Callable
 
 static func fresh_state() -> Dictionary:
@@ -38,6 +41,9 @@ static func integer(value: Variant) -> bool:
 
 static func validate(value: Variant) -> String:
 	if not value is Dictionary or value.get("version") != 1: return "상점 저장 버전 오류"
+	if value.has("ticket_redemption"):
+		var ticket_error: String=InventoryTickets.validate_state(value.ticket_redemption)
+		if not ticket_error.is_empty():return ticket_error
 	if value.has("policy_sha256") and (not value.policy_sha256 is String or (not value.policy_sha256.is_empty() and (value.policy_sha256.length()!=64 or not value.policy_sha256.is_valid_hex_number(false)))):return "상점 저장 정책 해시 오류"
 	if value.has("npc_rule_hashes"):
 		if not value.npc_rule_hashes is Dictionary:return "NPC 자체 규칙 저장 형식 오류"
@@ -126,6 +132,12 @@ func bind_source(source) -> void:
 		_bindings["34:%d" % id] = {"name":name,"record":world._find_catalog_item_record(name).duplicate(true)}
 	_bindings["4:26"] = {"gold":true,"name":"아데나"}
 	_bindings.merge(NpcConsumables.install(world,catalog))
+	_bindings.merge(SkillBooks.install(world,catalog))
+	_bindings.merge(preload("res://scripts/shop/source523_wisdom.gd").install(world,catalog))
+	_bindings.merge(preload("res://scripts/shop/source523_ammo.gd").install(world,catalog))
+	_bindings.merge(preload("res://scripts/shop/source523_restoration.gd").install(world,catalog))
+	inventory_tickets.configure(self)
+	_bindings.merge(inventory_tickets.install())
 	npc_definitions.configure(catalog)
 	for arg: String in OS.get_cmdline_user_args():
 		if not arg.begins_with("--source523-shop-policy="): continue
@@ -373,7 +385,7 @@ func _start() -> Dictionary:
 		return fail("이전 저장 활성화 실패 · 구매하지 않았습니다")
 	return {"ok":true}
 
-func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dictionary, next_instance: int) -> Dictionary:
+func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dictionary, next_instance: int, extra: Dictionary = {}) -> Dictionary:
 	if not integer(gold) or next_instance < 1 or next_instance > LIMIT:
 		_busy = false
 		return fail("거래 후 재화·장비 번호 범위 오류")
@@ -382,7 +394,11 @@ func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dict
 	next["policy_sha256"]=policy_sha256
 	var error: String = validate(next)
 	if not error.is_empty(): _busy = false; return fail(error)
-	var result: Error = world._save_game(true, {SAVE_KEY:next,"inventory":inventory,"gold":gold,"item_instances":instances,"next_item_instance_id":next_instance})
+	for key: String in extra:
+		if key!="card_draw_fusion":_busy=false;return fail("미지원 티켓 원자 저장 필드")
+	var overrides: Dictionary={SAVE_KEY:next,"inventory":inventory,"gold":gold,"item_instances":instances,"next_item_instance_id":next_instance}
+	overrides.merge(extra,false)
+	var result: Error = world._save_game(true, overrides)
 	if result != OK:
 		_busy = false
 		return fail("저장 실패 · 재화·보관함·인벤토리를 변경하지 않았습니다")
@@ -471,8 +487,11 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var profile: Dictionary=merchant_prices.get(str(id),{})
 	if quantity<1 or quantity>1000:return fail("구매 수량 오류")
 	var row: Dictionary=offer.goods
-	for key: String in ["ClanLevelMin","LimitMinClanLevel","DaysAfterClanJoin","LimitDaysAfterClanJoin","LimitServerCount","LimitBuffCardID","LimitRepeatedBuyCardID","Enchant","ElementalEnchant"]:
+	for key: String in ["ClanLevelMin","LimitMinClanLevel","DaysAfterClanJoin","LimitDaysAfterClanJoin","LimitServerCount","LimitBuffCardID","Enchant","ElementalEnchant"]:
 		if int(row.get(key,0))!=0:return fail("NPC의 혈맹·서버·카드·장비 조건 미해석")
+	if int(row.get("LimitRepeatedBuyCardID",0))>0:
+		var qualification: Dictionary=SkillBooks.qualification(world,row)
+		if not qualification.ok:return fail(str(qualification.reason))
 	if row.get("LimitClanMemberRank",false) or row.get("AvailableSiegeTime")!=true or row.get("LimitNotInSiegeTime")!=false:return fail("NPC 공성·혈맹 권한 조건 미해석")
 	if int(row.get("DialogActionTypeID",0))!=1:return fail("NPC 원본 판매 동작 조건 미충족")
 	var local_context: Dictionary={}
@@ -509,6 +528,8 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var token: Dictionary=_token(4,int(row.ItemClassID),int(count.value))
 	var target: Dictionary=_resolve(token,true,world.inventory,int(world.gold))
 	if not target.ok:return target
+	var stack_limit: int=int(target.binding.get("record",{}).get("source_max_stack",0))
+	if stack_limit>0 and int(world.inventory.get(str(target.binding.get("name","")),0))>stack_limit-int(count.value):return fail("원본 단일 스택 수량 한도 초과")
 	if target.binding.get("name")=="드래곤의 용옥":return fail("드래곤의 용옥은 기존 전용 상점의 월 1회·가격 규칙을 이용하세요")
 	if not world._enhancement_kind_for_record(target.binding.get("record",{})).is_empty():
 		var record: Dictionary=target.binding.get("record",{})
@@ -553,8 +574,10 @@ func _grant(goods: Array, inventory: Dictionary, gold: int, instances: Dictionar
 		else:
 			var name: String = str(binding.name)
 			if int(inventory.get(name, 0)) > LIMIT - amount: return fail("아이템 보유 범위 초과")
-			inventory[name] = int(inventory.get(name, 0)) + amount
 			var record: Dictionary = binding.get("record", {})
+			var stack_limit: int = int(record.get("source_max_stack",0))
+			if stack_limit>0 and int(inventory.get(name,0))>stack_limit-amount:return fail("원본 단일 스택 수량 한도 초과 · 보관함 주문 유지")
+			inventory[name] = int(inventory.get(name, 0)) + amount
 			if not world._enhancement_kind_for_record(record).is_empty():
 				if amount > 1000: return fail("한 번에 수령할 장비가 너무 많습니다")
 				for unused: int in range(amount):
@@ -656,3 +679,17 @@ func claim_cumulative(id: int, step: int) -> Dictionary:
 	var result: Dictionary = _commit(next, granted.inventory, int(granted.gold), granted.instances, int(granted.next_id))
 	if result.ok: result["reason"] = "누적 보상 수령 완료"
 	return result
+
+func quote_inventory_ticket(item_key: String, selection: Dictionary = {}) -> Dictionary:
+	return inventory_tickets.quote(item_key,selection)
+
+func use_inventory_ticket(item_key: String, selection: Dictionary = {}) -> Dictionary:
+	var result: Dictionary=inventory_tickets.use_ticket(item_key,selection)
+	result["handled"]=InventoryTickets.claims(world._find_catalog_item_record(item_key))
+	return result
+
+func try_use_inventory_ticket(item_key: String) -> bool:
+	if not InventoryTickets.claims(world._find_catalog_item_record(item_key)):return false
+	var result: Dictionary=use_inventory_ticket(item_key)
+	world.hud.show_message(str(result.get("message",result.get("reason","티켓 처리 결과 확인 필요"))))
+	return true

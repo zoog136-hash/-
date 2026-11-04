@@ -621,6 +621,8 @@ func _refresh_detail(item_reference: String) -> void:
 		var description: String = str(item.get("desc",item.get("description","")))
 		if not description.is_empty(): lines.append(UI.safe(description))
 	if not selected_id.is_empty(): lines.append("강화  +%d" % _enhance_level(item_reference))
+	if preload("res://scripts/shop/source523_inventory_tickets.gd").claims(item):
+		lines.append(preload("res://scripts/shop/source523_inventory_tickets.gd").UI_POLICY_TEXT)
 	detail_text.text = "\n".join(lines) if not lines.is_empty() else "표시할 추가 효과가 없습니다."
 	if controller != null:
 		var reason: String = controller.get_parent()._quickslot_registration_error("item",item_name)

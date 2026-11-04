@@ -2,6 +2,7 @@ extends Node2D
 class_name TwilightWorld
 
 signal regional_return_settings_updated
+const SOURCE_AMMO = preload("res://scripts/shop/source523_ammo.gd")
 const REGIONAL_RETURN = preload("res://scripts/quickslots/regional_return.gd")
 
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
@@ -2361,15 +2362,16 @@ func _attack() -> void:
 	if target == null:
 		hud.show_message("무기 사거리 안에 보이는 대상이 없습니다")
 		return
+	var source_ammo: Dictionary=SOURCE_AMMO.selected(self,_weapon_ammo_family())
 	if not _consume_weapon_ammo():
 		auto_attack_timer = 1.0
 		return
 	selected_monster = target
 	auto_attack_timer = _normal_attack_interval()
 	_break_invisibility()
-	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind), auto_attack_timer, true)
+	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind, source_ammo), auto_attack_timer, true)
 
-func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> void:
+func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, source_ammo: Dictionary = {}) -> void:
 	if not is_instance_valid(target) or target.dead: return
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
 	if rng.randf() >= hit_chance:
@@ -2384,7 +2386,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		return
 	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
 	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
-	var damage: int = maxi(1, damage_stat + _roll_weapon_damage(target))
+	var damage: int = maxi(1, damage_stat + _roll_weapon_damage(target) + SOURCE_AMMO.roll(source_ammo,target,rng))
 	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
@@ -2895,6 +2897,7 @@ func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee")
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
 func _respawn_player(message_text: String) -> void:
+	preload("res://scripts/shop/source523_wisdom.gd").clear_on_death(self)
 	var death_position: Vector2 = player.global_position
 	var death_sprite: AnimatedSprite2D = player.transform_sprite if player.transform_active else player.class_sprite
 	if not player.transform_active and player.spx_sprite != null and player.spx_sprite.visible:
@@ -3341,6 +3344,8 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
 		return
+	if source_shop.try_use_inventory_ticket(item_name):return
+	if preload("res://scripts/shop/source523_skill_books.gd").try_use(self,item_name): return
 	if consumable_service.try_use_regional_return(item_name): return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
@@ -4825,7 +4830,7 @@ func _load_game(quiet: bool) -> void:
 	if equipped_items_value is Dictionary:
 		equipped_items = equipped_items_value as Dictionary
 	equipped_ammo = str(data.get("equipped_ammo", ""))
-	if equipped_ammo not in ["화살", "총알"]:
+	if equipped_ammo not in ["화살", "총알"] and SOURCE_AMMO.definition(_find_catalog_item_record(equipped_ammo)).is_empty():
 		equipped_ammo = ""
 	ammo_unequipped = bool(data.get("ammo_unequipped", false))
 	var enhancement_value: Variant = data.get("enhancement_levels", enhancement_levels)
@@ -5583,7 +5588,10 @@ func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 				hud.show_message("%s · 현재 무기로 사용할 수 없는 스킬입니다" % skill_name)
 			return false
 	var required_ammo: int = maxi(0, int(skill.get("ammo_per_hit", 0))) * maxi(1, int(skill.get("hits", 1)))
-	if required_ammo > 0 and (not _ammo_worn("화살", true) or int(inventory.get("화살", 0)) < required_ammo):
+	var skill_ammo: String = _skill_ammo_name()
+	var ammo_record: Dictionary = _find_catalog_item_record(skill_ammo)
+	var invalid_source: bool = ammo_record.get("source")=="twilight-shop523-ammo" and SOURCE_AMMO.definition(ammo_record).is_empty()
+	if required_ammo > 0 and (invalid_source or not _ammo_worn(skill_ammo, true) or int(inventory.get(skill_ammo, 0)) < required_ammo):
 		if announce:
 			hud.show_message("%s · 화살 %d개 필요" % [skill_name, required_ammo] if _is_item_equipped("화살") else "%s · 화살을 착용하세요" % skill_name)
 		return false
@@ -5833,11 +5841,26 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 	if mp < mp_cost:
 		hud.show_message("MP가 부족합니다")
 		return false
-	mp -= mp_cost
 	var required_ammo: int = maxi(0, int(skill.get("ammo_per_hit", 0))) * maxi(1, int(skill.get("hits", 1)))
+	var ammo_key: String = _skill_ammo_name()
+	var source_record: Dictionary = _find_catalog_item_record(ammo_key)
+	var source_ammo: bool = source_record.get("source")=="twilight-shop523-ammo"
+	var old_mp: int = mp
+	var old_ammo: int = int(inventory.get(ammo_key,0))
+	if required_ammo>0 and source_ammo and (SOURCE_AMMO.definition(source_record).is_empty() or old_ammo<required_ammo or not _ammo_worn(ammo_key,true)):
+		hud.show_message("원본 탄약 정체·수량·착용 조건 미충족")
+		return false
+	mp -= mp_cost
 	if required_ammo > 0:
-		inventory["화살"] = int(inventory.get("화살", 0)) - required_ammo
+		inventory[ammo_key] = old_ammo - required_ammo
+		if source_ammo and _save_game(true)!=OK:
+			mp=old_mp;inventory[ammo_key]=old_ammo
+			hud.show_message("스킬 탄약 저장 실패 · MP·탄약 보존")
+			return false
 	return true
+
+func _skill_ammo_name() -> String:
+	return _current_ammo_name() if _weapon_ammo_family()=="화살" else "화살"
 
 
 func _try_active_counterattack(attacker: TwilightMonster, attack_kind: String, received_damage: int) -> bool:
@@ -7040,11 +7063,22 @@ func _nearest_visible_monster_in_weapon_range() -> TwilightMonster:
 			best = monster
 	return best
 
-func _current_ammo_name() -> String:
+func _weapon_ammo_family() -> String:
+	if _current_weapon_type()=="건틀렛":
+		var chosen: Dictionary=SOURCE_AMMO.definition(_find_catalog_item_record(equipped_ammo))
+		if not chosen.is_empty() and chosen.family=="스팅":return "스팅"
 	var weapon: Dictionary = _equipped_weapon_record()
 	if weapon.has("ammo"):
 		return str(weapon.get("ammo", ""))
 	return _weapon_ammo_from_type(_current_weapon_type())
+
+func _current_ammo_name() -> String:
+	var family: String=_weapon_ammo_family()
+	var record: Dictionary=_find_catalog_item_record(equipped_ammo)
+	if record.get("source")=="twilight-shop523-ammo":
+		var spec: Dictionary=SOURCE_AMMO.definition(record)
+		if spec.is_empty() or str(spec.family)==family:return equipped_ammo
+	return family
 
 func _weapon_intrinsic_attack_speed_percent(record: Dictionary) -> float:
 	if record.is_empty():
@@ -7063,6 +7097,11 @@ func _ensure_inventory_ammo_defaults() -> void:
 func _consume_weapon_ammo() -> bool:
 	var ammo_name: String = _current_ammo_name()
 	if ammo_name == "": return true
+	var source_record: Dictionary=_find_catalog_item_record(ammo_name)
+	var is_source: bool=source_record.get("source")=="twilight-shop523-ammo"
+	if is_source and SOURCE_AMMO.definition(source_record).is_empty():
+		hud.show_message("탄약 원본 정체 불일치 · 소지 스택 보존")
+		return false
 	if not _ammo_worn(ammo_name, true):
 		var now_worn: int = Time.get_ticks_msec()
 		if now_worn-ammo_notice_at >= 3000:
@@ -7077,6 +7116,10 @@ func _consume_weapon_ammo() -> bool:
 			hud.show_message("%s 부족 · 공격 대기 (AUTO 유지)" % ammo_name)
 		return false
 	inventory[ammo_name] = count-1
+	if is_source and _save_game(true)!=OK:
+		inventory[ammo_name]=count
+		hud.show_message("탄약 저장 실패 · 발사 취소·수량 보존")
+		return false
 	# One arrow per shot used to rebuild the whole HUD (equipment, cards,
 	# collections, inventory) on every bow attack, which stuttered combat.
 	# Only the counters that show ammo need refreshing.
@@ -7092,7 +7135,7 @@ func _refresh_ammo_counters() -> void:
 func _is_ammo_record(record: Dictionary) -> bool:
 	# Name-based: the source catalog may type 화살 differently from the
 	# fallback "탄약" record, and only these two stacks feed weapons.
-	return str(record.get("name", "")) in ["화살", "총알"]
+	return str(record.get("name", "")) in ["화살", "총알"] or not SOURCE_AMMO.definition(record).is_empty()
 
 ## True when `ammo_name` is worn. Unless the player explicitly took ammo off,
 ## the ammo the current weapon needs is worn automatically (old saves, new

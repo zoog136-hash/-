@@ -132,6 +132,8 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String) -> bool:
+	if preload("res://scripts/shop/source523_wisdom.gd").try_use(world,item_name):return true
+	if preload("res://scripts/shop/source523_restoration.gd").try_use(world,item_name):return true
 	if try_use_regional_return(item_name): return true
 	if item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
 		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
@@ -693,8 +695,41 @@ func try_use_regional_return(item_name: String) -> bool:
 	if stack.is_empty():
 		_message("귀환 주문서의 원본 ID·이름·Normal 스택 확인 실패 · 아이템 보존")
 		return true
+	if stack.origin == "patch523_native_normal" and int(stack.item_class_id) == 239:
+		var outcome: Dictionary=use_owned_native_return(item_name)
+		_message(str(outcome.get("message",outcome.get("reason","귀환 결과 확인 필요"))))
+		return true
 	if int(world.inventory.get(item_name, 0)) <= 0:
 		_message("아이템이 없습니다: "+item_name)
 		return true
 	_use_return(item_name)
 	return true
+
+## Result contract for external reward producers. Issuance/receipt is their transaction.
+## Cross-map native travel needs its owner's atomic destination contract; preserve stock.
+func use_owned_native_return(item_name: String) -> Dictionary:
+	var record: Dictionary=world._find_catalog_item_record(item_name)
+	var stack: Dictionary=REGIONAL_RETURN.stack_identity(item_name,record)
+	var result: Dictionary={"ok":false,"saved":false,"handled":REGIONAL_RETURN.claims_identity(item_name,record),"consumed":0,"inventory_key":item_name,"source_item_id":239}
+	if stack.is_empty() or stack.get("origin")!="patch523_native_normal" or int(stack.get("item_class_id",0))!=239:
+		result["reason"]="정확한 원본239 Normal 소지 키가 필요합니다 · 주문서 보존";return result
+	if int(world.inventory.get(item_name,0))<1 or world._item_locked(item_name,"") or int(world.hp)<=0 or _player_busy_for_travel():
+		result["reason"]="소지량·잠금·생존·이동 상태 조건 미충족 · 주문서 보존";return result
+	if str(world.active_map_id)!="aden_world" or world.field_map==null:
+		result["reason"]="이 지역의 원자 귀환 목적지 연결이 필요합니다 · 주문서 보존";return result
+	var destination: Vector2=_safe_region_position()
+	if destination==Vector2.INF:destination=world._spawn_position()
+	if not destination.is_finite() or not world.field_map.walkable(destination) or not world.field_map.point_clear(destination):
+		result["reason"]="검증된 기존 아덴 귀환 위치 없음 · 주문서 보존";return result
+	var old_position: Vector2=world.player.global_position
+	var old_count: int=int(world.inventory[item_name])
+	_teleport_player(destination)
+	world.inventory[item_name]=old_count-1
+	if old_count==1:world.inventory.erase(item_name)
+	var save_error: Error=world._save_game(true)
+	if save_error!=OK:
+		world.inventory[item_name]=old_count;_teleport_player(old_position);world._update_hud()
+		result["save_error"]=save_error;result["reason"]="귀환 저장 실패 · 위치와 정확한 원본 주문서 보존";return result
+	world.hud.refresh_inventory(world.inventory);world._update_hud()
+	result.merge({"ok":true,"saved":true,"handled":true,"consumed":1,"map_id":str(world.active_map_id),"position":[destination.x,destination.y],"message":"아덴 마을로 귀환했습니다 · TWILIGHT 기존 목적지"},true)
+	return result

@@ -671,12 +671,17 @@ func _refresh_detail(item_name: String) -> void:
 		lines.append("무게    %d" % int(record.get("weight", 0)))
 	if lines.is_empty():
 		lines.append("등록된 상세 옵션이 없습니다.")
+	var is_source_ticket: bool = preload("res://scripts/shop/source523_inventory_tickets.gd").claims(record)
+	if is_source_ticket:
+		lines.append(preload("res://scripts/shop/source523_inventory_tickets.gd").UI_POLICY_TEXT)
 	detail_text.text = "\n".join(lines)
 
 	var is_consumable := slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	var is_ammo: bool = item_name in ["화살", "총알"]
+	var is_ammo: bool = item_name in ["화살", "총알"] or not preload("res://scripts/shop/source523_ammo.gd").definition(record).is_empty()
 	if is_ammo:
 		detail_action.text = "해제" if equipped else "착용"
+	elif is_source_ticket:
+		detail_action.text = "사용"
 	elif is_consumable:
 		detail_action.text = "사용"
 	elif equipped:
@@ -686,7 +691,7 @@ func _refresh_detail(item_name: String) -> void:
 	detail_action.disabled = amount <= 0 or (equipped and not is_consumable)
 	if is_ammo:
 		detail_action.disabled = amount <= 0 and not equipped
-	quick_button.disabled = amount <= 0 or not is_consumable
+	quick_button.disabled = is_source_ticket or amount <= 0 or not is_consumable
 
 func _activate_selected() -> void:
 	if selected_item == "":

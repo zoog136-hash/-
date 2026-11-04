@@ -134,7 +134,7 @@ func enabled(record: Dictionary) -> bool:
 	var required: Array = record.get("weapons", [])
 	return required.is_empty() or required.has(world._current_weapon_type())
 
-func reason(record: Dictionary, buying: bool = false) -> String:
+func reason(record: Dictionary, buying: bool = false, supplied_book: String = "") -> String:
 	if record.is_empty(): return "스킬 정보 없음"
 	if not permitted(record): return "현재 직업에서 습득 불가"
 	if bool(record.get("runtime_blocked", false)):
@@ -146,7 +146,7 @@ func reason(record: Dictionary, buying: bool = false) -> String:
 	for required: String in rel.get("requires_skill", []):
 		if int(learned.get(required, 0)) < int(rel.get("requires_skill_level", {}).get(required, 1)):
 			return "선행 스킬 필요: " + str(record_for(required).get("name", required))
-	if not buying and int(world.inventory.get(str(record.book_name), 0)) < 1: return "스킬북 필요"
+	if not buying and int(world.inventory.get(supplied_book if not supplied_book.is_empty() else str(record.book_name), 0)) < 1: return "스킬북 필요"
 	return ""
 
 func buy_book(key: String) -> bool:
@@ -165,23 +165,43 @@ func buy_book(key: String) -> bool:
 	world._save_game(true)
 	return true
 
-func learn(key: String) -> bool:
+func learn(key: String, supplied_book: String = "") -> bool:
 	var record := record_for(key)
-	var blocked := reason(record)
+	if not supplied_book.is_empty() and not preload("res://scripts/shop/source523_skill_books.gd").registered(world,supplied_book,key):
+		world.hud.show_message("스킬북 원본 정체 불일치 · 보존")
+		return false
+	if not supplied_book.is_empty():
+		var definition: Dictionary = world._find_catalog_item_record(supplied_book)
+		var native_reason: String = preload("res://scripts/shop/source523_skill_books.gd").learn_reason(world,preload("res://scripts/shop/source523_skill_books.gd").contract(int(definition.source_item_class_id)))
+		if not native_reason.is_empty():world.hud.show_message(native_reason);return false
+	var blocked := reason(record,false,supplied_book)
 	if not blocked.is_empty():
 		world.hud.show_message(blocked)
 		return false
 	# Validate every prerequisite before consuming the book. An UNKNOWN original
 	# prerequisite is displayed as unknown; it is not invented by this service.
-	world.inventory[str(record.book_name)] -= 1
+	var book: String = supplied_book if not supplied_book.is_empty() else str(record.book_name)
+	var before_count: int = int(world.inventory.get(book,0))
+	var before_revision: int = revision
+	var before_learned: Dictionary = learned.duplicate(true)
+	var before_buffs: Dictionary = world.active_skill_buffs.duplicate(true)
+	world.inventory[book] = before_count - 1
 	learned[str(record.id)] = 1
 	revision += 1
 	world.original_skills.refresh_buffs_after_learning(str(record.id))
+	if not supplied_book.is_empty() and world._save_game(true) != OK:
+		world.inventory[book] = before_count
+		learned = before_learned
+		world.active_skill_buffs = before_buffs
+		revision = before_revision
+		world._update_hud()
+		world.hud.show_message("습득 저장 실패 · 스킬북과 습득 상태 보존")
+		return false
 	if str(record.activation) == "passive":
 		world.original_skills.vfx.emit_skill(str(record.id), "learn", world.player.global_position)
 	world._refresh_speed_modifiers()
 	world._update_hud()
-	world._save_game(true)
+	if supplied_book.is_empty():world._save_game(true)
 	world.hud.show_message(str(record.name) + " 습득")
 	return true
 
