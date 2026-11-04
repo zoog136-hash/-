@@ -7,7 +7,11 @@ const DISABLED_ID := 327823
 const SOURCE_DIR := "user://protection523/source"
 const RUNTIME_DIR := "user://protection523/runtime"
 const POINTER := "user://protection523/active.json"
-const CAPSULE_SHA := "a94475ac15454668ad1983de0b326b0c4be7e149bca02c342d913d5eef6bfa2d"
+const LEGACY_CAPSULE_SHA := "a94475ac15454668ad1983de0b326b0c4be7e149bca02c342d913d5eef6bfa2d"
+const MATERIAL_CAPSULE_SHA := "5009ae003c2be60aa3a2d88efe96b9d97280e178be85048f6e69aafcbee21d3f"
+const CAPSULE_SHA := "aefe4f39ba5574dc3dab70feb8a623567efc84b8e94888494a59a8dfa6d606c1"
+const QUEST_MATERIAL_IDS := [96004,96014,200698]
+const SUPPLY_RECIPE_IDS := [37044,47273]
 
 static func denied(message: String) -> Dictionary:
 	return {"ok":false,"error":message}
@@ -51,7 +55,14 @@ static func extract(path: String) -> Dictionary:
 	var hashes: Dictionary = {}
 	var raw: Dictionary = {}
 	var all_ids: Array = IDS.duplicate()
-	all_ids.append_array([DISABLED_ID,123373,200698,3631])
+	all_ids.append_array([DISABLED_ID,123373,200698,3631,96004,96014])
+	raw.MaterialReward = []
+	for row: Dictionary in select_rows(zip,"Reward","RewardClassID",QUEST_MATERIAL_IDS,hashes):
+		if int(row.RewardTypeID) == 2: raw.MaterialReward.append(row)
+	raw.MaterialQuestReward = select_rows(zip,"QuestReward","RewardID",ids(raw.MaterialReward,"ID"),hashes)
+	raw.SupplyRecipeView = select_rows(zip,"ItemCraftView","ItemCraftID",SUPPLY_RECIPE_IDS,hashes)
+	for table: String in ["ItemCraftInput","ItemCraftOutputView","ItemCraftRestriction"]:
+		raw["Supply"+table] = select_rows(zip,table,"ItemCraftID",SUPPLY_RECIPE_IDS,hashes)
 	raw.Group604BuffClass = select_rows(zip,"BuffClass","BuffGroupID",[604],hashes)
 	var shared_buffs: Array = ids(raw.Group604BuffClass,"ID")
 	var shared_bonus: Array = select_rows(zip,"Bonus","BonusTypeID",[78],hashes)
@@ -158,7 +169,29 @@ static func compile(capsule: Dictionary) -> Dictionary:
 			"title":title,"title_buff":title_buff,"title_flat":title_flat,
 			"recipe":recipe,"inputs":inputs,"restriction":limits[0],"output":outputs[0]}
 		if definitions[key].name.is_empty() or int(use.get("2312",0)) != 3631 or int(use.get("2322",0)) != 10: return denied("가호 이름·명예 코인 계약 불일치")
-	return {"ok":true,"definitions":definitions,"items":items,"descriptions":desc,"source_sha256":SOURCE_SHA,
+	var material_rewards := index(raw.get("MaterialReward",[]))
+	var material_quests: Dictionary = {}
+	for link: Dictionary in raw.get("MaterialQuestReward",[]):
+		var key := str(int(link.RewardID))
+		if not material_quests.has(key): material_quests[key] = []
+		material_quests[key].append(int(link.QuestID))
+	var supply_recipes: Dictionary = {}
+	if not raw.get("SupplyRecipeView") is Array or raw.SupplyRecipeView.size() != 2 or not raw.get("SupplyItemCraftRestriction") is Array or not raw.SupplyItemCraftRestriction.is_empty(): return denied("정상 가호 공급 제작식·제한 확인 필요")
+	for view: Dictionary in raw.SupplyRecipeView:
+		var recipe_id := int(view.ItemCraftID)
+		var item_id := int(view.ItemClassID)
+		if recipe_id not in SUPPLY_RECIPE_IDS or item_id not in [75764,123373] or int(view.AlwaysSuccess) != 1 or int(view.ServerLimitSetID) != 0 or int(view.LevelLimitValue) != 0 or int(view.EffectiveFrom) != 1 or int(view.EffectiveTo) != 3 or bool(view.IsCoalitionItem) or int(view.CraftGroupTypeID) != 0 or bool(view.NoRepeat): return denied("정상 가호 공급 제작 조건 미지원")
+		var inputs: Array = []
+		var outputs: Array = []
+		for row: Dictionary in raw.get("SupplyItemCraftInput",[]):
+			if int(row.ItemCraftID) == recipe_id:
+				if int(row.Amount) != 1 or int(row.Enchant) != 0 or int(row.ItemBlessCodeID) != 1 or int(row.ItemHoningEpithetID) != 0: return denied("정상 가호 공급 재료 상태 미지원")
+				inputs.append(row)
+		for row: Dictionary in raw.get("SupplyItemCraftOutputView",[]):
+			if int(row.ItemCraftID) == recipe_id: outputs.append(row)
+		if inputs.size() != 2 or outputs.size() != 1 or int(outputs[0].Probability) != 1000000 or int(outputs[0].Amount) != 1 or int(outputs[0].ItemClassID) != item_id or int(outputs[0].Enchant) != 0 or int(outputs[0].ItemBlessCodeID) != 1: return denied("정상 가호 공급 제작 입출력 미지원")
+		supply_recipes[str(item_id)] = {"id":item_id,"name":str(desc.get(str(int(items[str(item_id)].IdentifiedDescID)),{}).get("Description","")),"recipe":view,"inputs":inputs,"output":outputs[0]}
+	return {"ok":true,"definitions":definitions,"items":items,"descriptions":desc,"supply_recipes":supply_recipes,"material_rewards":material_rewards,"material_quests":material_quests,"source_sha256":SOURCE_SHA,
 		"group604_item_ids":ids(raw.get("Group604ItemBonus",[]),"ItemClassID")}
 
 static func install(path: String) -> Dictionary:
@@ -191,6 +224,12 @@ static func restore() -> Dictionary:
 	if pointer.get("source_sha256") != SOURCE_SHA or pointer.get("schema") != 1: return denied("가호 설치 출처 손상")
 	var digest := str(pointer.get("sha256",""))
 	if digest.length() != 64 or digest != digest.to_lower() or not digest.is_valid_hex_number(false): return denied("가호 설치 해시 손상")
+	if digest in [LEGACY_CAPSULE_SHA,MATERIAL_CAPSULE_SHA]:
+		# Reuse the already installed, pinned source ZIP. Retain the old capsule
+		# and replace the active pointer only after a complete verified install.
+		var backup := SOURCE_DIR + "/" + SOURCE_SHA + ".zip"
+		if FileAccess.file_exists(backup) and FileAccess.get_sha256(backup) == SOURCE_SHA: return install(backup)
+		return denied("기존 가호 원본 ZIP 확인 후 다시 설치해 주세요")
 	if not CAPSULE_SHA.is_empty() and digest != CAPSULE_SHA: return denied("가호 실행 데이터 출처 확인 필요")
 	var runtime := RUNTIME_DIR + "/" + digest + ".json"
 	if not FileAccess.file_exists(runtime): return denied("가호 실행 데이터 파일 누락")

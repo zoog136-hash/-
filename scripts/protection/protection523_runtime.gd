@@ -81,6 +81,15 @@ func snapshot() -> Dictionary:
 	return out
 
 func load_state(data: Dictionary) -> bool:
+	var quests: Variant = data.get("quest_state",{})
+	if quests is Dictionary and world.quest_service.get("source") == null:
+		for key: Variant in quests.get("claimed",{}):
+			if str(key).begins_with("m523:"):
+				# An older quest service drops native receipt IDs on import. Do not
+				# let this independent feature erase a newer provider's save.
+				save_blocked = true
+				problem = "원본 퀘스트 저장을 보존합니다 · 호환 공급자 코드가 필요합니다"
+				return false
 	var candidate: Variant = data.get(SAVE_KEY,fresh())
 	if not data.has(SAVE_KEY):
 		candidate.policy.project_pvp_to_pve = bool(policy.get("project_pvp_to_pve",true))
@@ -130,6 +139,7 @@ func register_missing() -> void:
 	binding_catalog_size = -1
 
 func source_id(record: Dictionary) -> int:
+	if bool(record.get("source_pending_use",false)): return pending_material_id(record)
 	var id := 0
 	var source_id_value := str(record.get("sourceId",""))
 	# PR227's established currency is a host wallet, without a native ID.
@@ -170,7 +180,58 @@ func records_for(item_id: int) -> Array:
 			if not binding_cache.has(id): binding_cache[id] = []
 			binding_cache[id].append(raw)
 		binding_catalog_size = records.size()
-	return binding_cache.get(item_id,[])
+	var result: Array = binding_cache.get(item_id,[]).duplicate()
+	# PR262 stores native reward stacks as physical provenance records, rather
+	# than inventing ordinary catalog items. Read that same ownership authority.
+	for physical: Dictionary in world.item_instances.values():
+		var record: Dictionary = physical.get("record",{})
+		if pending_material_id(record) != item_id: continue
+		var known := false
+		for existing: Dictionary in result:
+			if existing.get("name") == record.get("name"): known = true
+		if not known: result.append(record)
+	return result
+
+func pending_material_id(record: Dictionary) -> int:
+	if source.is_empty() or not record.get("source_pending_use") is bool or not bool(record.source_pending_use): return 0
+	if not integer(record.get("source_item_class_id"),1): return 0
+	var id := int(record.get("source_item_class_id",0))
+	if id not in Source.QUEST_MATERIAL_IDS or not source.items.has(str(id)): return 0
+	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("sourceId") != "m523:item:%d" % id: return 0
+	var original: Dictionary = source.items[str(id)]
+	if record.get("source_original_item") != original or record.get("name") != "[원본 보상] "+str(original.Name) or record.get("source_display_name") != original.Name: return 0
+	if record.get("slot") != "quest_reward" or not record.get("quest_item") is bool or not bool(record.quest_item) or not integer(record.get("source_bless_code_id"),1,1) or not record.get("source_use_immediately") is bool or bool(record.source_use_immediately): return 0
+	if not integer(record.get("source_reward_id"),1): return 0
+	var rid := str(int(record.source_reward_id))
+	var reward: Dictionary = source.get("material_rewards",{}).get(rid,{})
+	if int(reward.get("RewardTypeID",0)) != 2 or int(reward.get("RewardClassID",0)) != id or int(reward.get("ItemBlessCodeID",0)) != 1 or int(reward.get("RewardEnhancementTypeID",0)) != 1 or bool(reward.get("UseImmediately",true)) or bool(reward.get("ClanOnly",true)): return 0
+	# Eligibility and all rewards belong to PR262. A consumer checks its durable
+	# completed quest receipt; it never clears dates/class/predecessor gates.
+	for qid: int in source.get("material_quests",{}).get(rid,[]):
+		var claimed: Variant = world.quest_service.claimed.get("m523:quest:%d" % qid,false)
+		if claimed is bool and claimed: return id
+	return 0
+
+func pending_quantity(key: String, item_id: int, instances: Dictionary) -> int:
+	var amount := 0
+	var by_reward: Dictionary = {}
+	for physical: Dictionary in instances.values():
+		if str(physical.get("name","")) != key: continue
+		var record: Dictionary = physical.get("record",{})
+		if pending_material_id(record) != item_id or not integer(physical.get("level"),0,0) or not integer(physical.get("source_reward_quantity"),1,10000): return -1
+		var count := int(physical.source_reward_quantity)
+		var rid := str(int(record.source_reward_id))
+		by_reward[rid] = int(by_reward.get(rid,0))+count
+		if int(by_reward[rid]) > int(source.material_rewards[rid].Amount): return -1
+		amount += count
+	return amount
+
+func record_for_key(key: String) -> Dictionary:
+	var catalog: Dictionary = world._find_catalog_item_record(key)
+	if source_id(catalog) > 0: return catalog
+	for physical: Dictionary in world.item_instances.values():
+		if str(physical.get("name","")) == key and pending_material_id(physical.get("record",{})) > 0: return physical.record
+	return {}
 
 func managed(record: Dictionary) -> bool:
 	var id := source_id(record)
@@ -183,8 +244,10 @@ func owned_key(item_id: int, inventory: Dictionary) -> String:
 	var found := ""
 	for record: Dictionary in records_for(item_id):
 		var key := str(record.name)
-		if source_id(record) != item_id or source_id(world._find_catalog_item_record(key)) != item_id: continue
+		if source_id(record) != item_id or source_id(record_for_key(key)) != item_id: continue
 		if not integer(inventory.get(key,0),0,1500000000) or int(inventory.get(key,0)) < 1: continue
+		if bool(record.get("source_pending_use",false)):
+			if pending_quantity(key,item_id,world.item_instances) != int(inventory[key]): continue
 		# Unknown physical or quest/provenance stacks must not be consumed as
 		# unmarked legacy materials just because they share a source ID.
 		if str(record.get("sourceId","")).begins_with("m523:item:") and str(record.get("source","")) != "protection523":
@@ -194,7 +257,20 @@ func owned_key(item_id: int, inventory: Dictionary) -> String:
 	return found
 
 func locked(key: String) -> bool:
-	return bool(world.ui_preferences.get("item_locks",{}).get(key,false))
+	var locks: Dictionary = world.ui_preferences.get("item_locks",{})
+	if bool(locks.get(key,false)): return true
+	for id: String in world.item_instances:
+		if str(world.item_instances[id].get("name","")) == key and bool(locks.get(key+"@@@"+id,false)): return true
+	return false
+
+func craft_recipe(recipe_id: int) -> Dictionary:
+	# Public delegation point for PR239. This owner alone consumes input and
+	# commits the real body, Appellation IDs, lifetime ledger and crafting log.
+	for item_id: int in Source.IDS:
+		if int(source.get("definitions",{}).get(str(item_id),{}).get("recipe",{}).get("ItemCraftID",0)) == recipe_id: return craft(item_id)
+	for item_id: int in [75764,123373]:
+		if int(source.get("supply_recipes",{}).get(str(item_id),{}).get("recipe",{}).get("ItemCraftID",0)) == recipe_id: return craft_supply(item_id)
+	return fail("가호 획득 소유자의 제작식이 아닙니다")
 
 func effects() -> Dictionary:
 	var out := {"possession_flat":0,"possession_percent_raw":0,"active_flat":0,"title_flat":0,"active_id":0,"remaining":0}
@@ -223,6 +299,7 @@ func fail(message: String) -> Dictionary:
 
 func ready_action() -> Dictionary:
 	if busy or save_blocked or world.source_save_blocked or world.equipment_collections.save_blocked: return fail("저장 보호 중 · 가호와 재료를 보존합니다")
+	if world.quest_service.get("save_blocked") == true: return fail("퀘스트 저장 보호 중 · 원본 보상 재료를 보존합니다")
 	if source.is_empty(): return fail(problem)
 	if bool(policy.get("elapsed_while_closed",true)) and int(Time.get_unix_time_from_system()) < int(state.last_seen): return fail("시각 역행 감지 · 마지막 저장 시각 이후 다시 이용하세요")
 	if world.hp <= 0: return fail("부활 후 이용하세요")
@@ -281,26 +358,75 @@ func quote_craft(item_id: int) -> Dictionary:
 		if int(extra.get("schema",0)) != 1 or not extra.get("recipes") is Dictionary or bool(extra.get("blocked",false)): return fail("기존 일반 제작 제한 장부 확인 필요")
 		if extra.recipes.has(str(recipe_id)) or extra.recipes.has("patch523:%d" % recipe_id): return fail("일반 제작 제한 이력 확인 필요")
 	if not owned_key(item_id,world.inventory).is_empty(): return fail("이미 보유한 가호입니다")
+	var materials := material_keys(d.inputs)
+	if not bool(materials.ok): return materials
+	var outputs := records_for(item_id)
+	if outputs.size() != 1: return fail("제작 결과 소지키가 모호합니다")
+	return {"ok":true,"definition":d,"input_keys":materials.input_keys,"output_key":str(outputs[0].name)}
+
+func material_keys(inputs: Array) -> Dictionary:
 	var keys: Array = []
-	for input: Dictionary in d.inputs:
+	for input: Dictionary in inputs:
 		if int(input.Amount) != 1 or int(input.Enchant) != 0 or int(input.ItemBlessCodeID) != 1 or int(input.get("ItemHoningEpithetID",0)) != 0: return fail("미지원 가호 재료 상태")
 		var key := owned_key(int(input.ItemClassID),world.inventory)
 		if key.is_empty() or locked(key): return fail("정확한 재료 ID%d 1개가 필요합니다 · 잠금·중복 소지키 확인" % int(input.ItemClassID))
 		for instance: Dictionary in world.item_instances.values():
-			if str(instance.get("name","")) == key: return fail("물리 장비로 저장된 재료는 별도 정체 확인이 필요합니다")
+			if str(instance.get("name","")) == key and not bool(instance.get("record",{}).get("source_pending_use",false)): return fail("물리 장비로 저장된 재료는 별도 정체 확인이 필요합니다")
 		keys.append(key)
+	return {"ok":true,"input_keys":keys}
+
+func quote_supply(item_id: int) -> Dictionary:
+	var ready := ready_action()
+	if not bool(ready.ok): return ready
+	if not source.get("supply_recipes",{}).has(str(item_id)): return fail("가호 공급 전용 제작식이 아닙니다")
+	var d: Dictionary = source.supply_recipes[str(item_id)]
+	if not owned_key(item_id,world.inventory).is_empty(): return fail("이미 보유한 정상 가호입니다")
+	var materials := material_keys(d.inputs)
+	if not bool(materials.ok): return materials
 	var outputs := records_for(item_id)
 	if outputs.size() != 1: return fail("제작 결과 소지키가 모호합니다")
-	return {"ok":true,"definition":d,"input_keys":keys,"output_key":str(outputs[0].name)}
+	return {"ok":true,"definition":d,"input_keys":materials.input_keys,"output_key":str(outputs[0].name)}
+
+func consume_materials(keys: Array) -> Dictionary:
+	var inventory: Dictionary = world.inventory.duplicate(true)
+	var instances: Dictionary = world.item_instances.duplicate(true)
+	for key: String in keys:
+		inventory[key] = int(inventory[key])-1
+		if int(inventory[key]) == 0: inventory.erase(key)
+		if bool(record_for_key(key).get("source_pending_use",false)):
+			var consumed := false
+			for physical_id: String in instances.keys():
+				var physical: Dictionary = instances[physical_id]
+				if str(physical.get("name","")) != key: continue
+				var count := int(physical.source_reward_quantity)-1
+				if count == 0: instances.erase(physical_id)
+				else: physical.source_reward_quantity = count
+				consumed = true
+				break
+			if not consumed: return fail("원본 보상 개체 수량 확인 필요 · 재료 보존")
+	return {"ok":true,"inventory":inventory,"item_instances":instances}
+
+func craft_supply(item_id: int) -> Dictionary:
+	var quote := quote_supply(item_id)
+	if not bool(quote.ok): return quote
+	var materials := consume_materials(quote.input_keys)
+	if not bool(materials.ok): return materials
+	materials.inventory[quote.output_key] = 1
+	var log: Array[Dictionary] = world.crafting_log.duplicate(true)
+	log.append({"recipe_id":"patch523:%d" % int(quote.definition.recipe.ItemCraftID),"batch":1,"output":quote.output_key,"quantity":1,"gold":0,"at":now(),"source_sha256":Source.SOURCE_SHA})
+	if log.size() > 200: log.pop_front()
+	# Source has no quota rows for these two recipes. Do not invent the six
+	# later titles or their character-once ledger for an upstream material.
+	return commit({"inventory":materials.inventory,"item_instances":materials.item_instances,SAVE_KEY:snapshot(),"crafting_log":log},"정상 가호 확정 제작 · "+str(quote.definition.name))
 
 func craft(item_id: int) -> Dictionary:
 	var quote := quote_craft(item_id)
 	if not bool(quote.ok): return quote
 	var d: Dictionary = quote.definition
-	var inventory: Dictionary = world.inventory.duplicate(true)
-	for key: String in quote.input_keys:
-		inventory[key] = int(inventory[key])-1
-		if int(inventory[key]) == 0: inventory.erase(key)
+	var materials := consume_materials(quote.input_keys)
+	if not bool(materials.ok): return materials
+	var inventory: Dictionary = materials.inventory
+	var instances: Dictionary = materials.item_instances
 	inventory[quote.output_key] = 1
 	var next := snapshot()
 	var recipe_id := int(d.recipe.ItemCraftID)
@@ -309,7 +435,7 @@ func craft(item_id: int) -> Dictionary:
 	var log: Array[Dictionary] = world.crafting_log.duplicate(true)
 	log.append({"recipe_id":"patch523:%d" % recipe_id,"batch":1,"output":quote.output_key,"quantity":1,"gold":0,"at":now(),"source_sha256":Source.SOURCE_SHA})
 	if log.size() > 200: log.pop_front()
-	return commit({"inventory":inventory,SAVE_KEY:next,"crafting_log":log},"가호 확정 제작 · 영구 호칭 획득 · 일반 리덕션 +%d" % int(d.title_flat))
+	return commit({"inventory":inventory,"item_instances":instances,SAVE_KEY:next,"crafting_log":log},"가호 확정 제작 · 영구 호칭 획득 · 일반 리덕션 +%d" % int(d.title_flat))
 
 func set_policy(project_to_pve: bool, group_policy: String) -> Dictionary:
 	if group_policy not in ["keep_stronger","replace"]: return fail("알 수 없는 비중첩 정책")
@@ -326,6 +452,7 @@ func commit(staged: Dictionary, message: String) -> Dictionary:
 		busy = false
 		return fail("저장 실패 · 가호·명예 코인·제작 재료·호칭을 보존했습니다")
 	if staged.has("inventory"): world.inventory = staged.inventory
+	if staged.has("item_instances"): world.item_instances = staged.item_instances
 	if staged.has("crafting_log"): world.crafting_log = staged.crafting_log
 	state = staged[SAVE_KEY]
 	busy = false

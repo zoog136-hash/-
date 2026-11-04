@@ -77,6 +77,19 @@ func run() -> void:
 	world = scene.instantiate()
 	root.add_child(world)
 	stop_actors()
+	if "--missing-current-pack-only" in OS.get_cmdline_user_args():
+		check(world.source_save_blocked and world.map_bootstrap_blocked,"actual current-map missing pack blocks saves")
+		var before: Variant = norm(world.inventory)
+		var existed: bool = FileAccess.file_exists(world.save_path())
+		var digest := FileAccess.get_sha256(world.save_path()) if existed else ""
+		check(world._save_game(true) != OK,"actual current-map missing pack rejects writer")
+		check(norm(world.inventory) == before,"missing pack preserves memory")
+		check(FileAccess.file_exists(world.save_path()) == existed and (not existed or FileAccess.get_sha256(world.save_path()) == digest),"missing pack preserves prior file presence and bytes")
+		await finish()
+		return
+	if "--supply-main-ui" in OS.get_cmdline_user_args():
+		await run_supply_ui()
+		return
 	check(QA.enter_game(world),"actual class selection")
 	var service: RefCounted = world.protection523
 	check(not service.source.is_empty(),"verified source installed in actual Main")
@@ -281,7 +294,97 @@ func run() -> void:
 	await finish()
 
 func finish() -> void:
-	print("PROTECTION523_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"scope":"actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"}))
+	var scope := "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+	if "--supply-main-ui" in OS.get_cmdline_user_args(): scope = "actual Main on existing validation map; catalog Source-ID QA supply materials; not natural quest acquisition or current source-map integration"
+	if "--missing-current-pack-only" in OS.get_cmdline_user_args(): scope = "actual Main missing current source-map pack negative guard only; not passing current-map integration gate"
+	print("PROTECTION523_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"scope":scope}))
 	world.queue_free()
 	await process_frame
 	quit(0 if failures.is_empty() else 1)
+
+func run_supply_ui() -> void:
+	# Explicit existing validation-map mode; production missing-pack guards and
+	# current source-map gate remain unchanged. Materials are QA fixtures.
+	check("--legacy-map-layouts" in OS.get_cmdline_user_args(),"explicit existing validation map mode")
+	world._set_map("faith_01",false)
+	stop_actors()
+	check(world.active_map_id == "faith_01" and not world.source_save_blocked and not world.map_bootstrap_blocked,"existing validation map loads without clearing protection guards")
+	check(QA.enter_game(world),"actual Main class selection")
+	var service: RefCounted = world.protection523
+	check(not service.source.is_empty(),"actual verified source installed")
+	if service.source.is_empty() or world.source_save_blocked: await finish(); return
+	if "--reload-only" in OS.get_cmdline_user_args():
+		check(service.state.crafted.size() == 6 and service.state.titles.size() == 6,"new process retains six body/title receipts")
+		check(int(world.inventory.get(service.owned_key(371108,world.inventory),0)) == 1,"new process retains final body")
+		check(int(world.inventory.get("명예 코인",0)) == 40 and int(world.inventory.get("축복의 두루마리",0)) == 0,"new process retains exact consumed costs")
+		check(not service.quote_craft(371108).ok and not service.quote_use(service.owned_key(371108,world.inventory)).ok,"new process preserves craft quota and cooldown")
+		check(world._save_game(true) == OK,"reconnected actual Main remains writable")
+		world.hud.open_protection523()
+		await capture("supply-reconnected")
+		await finish()
+		return
+	var old_quests: Variant = norm(world.quest_service.export_state())
+	var old_instances: Variant = norm(world.item_instances)
+	for pair: Array in [[96004,1],[96014,2],[200698,6]]:
+		var records: Array = service.records_for(int(pair[0]))
+		check(records.size() == 1,"unambiguous existing catalog source identity %d" % int(pair[0]))
+		if records.size() != 1: await finish(); return
+		world.inventory[str(records[0].name)] = int(pair[1])
+	world.inventory["명예 코인"] = 100
+	service.state = Runtime.fresh()
+	service.reset_clock()
+	check(world._save_game(true) == OK,"isolated source-ID material fixture saved")
+	world.hud.toggle_menu()
+	var entry: Button = world.hud.workspace.find_child("MenuTile_protection523",true,false)
+	check(entry != null,"normal menu entry exists")
+	if entry != null: entry.pressed.emit()
+	var panel: Node = world.hud.workspace.find_child("Protection523Panel",true,false)
+	check(panel != null,"normal menu opens upstream and six-tier UI")
+	if panel == null: await finish(); return
+	for id: int in [75764,123373,200723,245718,297828,328254,346911,371108]:
+		var icon: TextureRect = panel.find_child("ProtectionIcon_%d" % id,true,false)
+		check(icon != null and icon.texture != null,"existing source-ID catalog icon rendered %d" % id)
+	await capture("supply-before")
+	var before: Variant = norm(world.inventory)
+	panel.request_supply(75764)
+	await reject()
+	check(norm(world.inventory) == before and world.crafting_log.is_empty(),"upstream cancel leaves inventory and ledger unchanged")
+	var first_key: String = service.owned_key(96004,world.inventory)
+	world.ui_preferences.item_locks[first_key] = true
+	check(not service.quote_supply(75764).ok,"actual inventory lock blocks supply")
+	world.ui_preferences.item_locks.erase(first_key)
+	var disk := FileAccess.get_sha256(world.save_path())
+	world.equipment_collections.test_save_writer = func(_path: String,_data: Dictionary) -> Error: return ERR_CANT_CREATE
+	panel.request_supply(75764)
+	await accept()
+	check(norm(world.inventory) == before and FileAccess.get_sha256(world.save_path()) == disk,"actual upstream save failure preserves memory and disk")
+	world.equipment_collections.test_save_writer = Callable()
+	for id: int in [75764,123373]:
+		panel.refresh()
+		var craft_button: Button = panel.find_child("ProtectionSupplyCraft_%d" % id,true,false)
+		check(craft_button != null and not craft_button.disabled,"actual supply button enabled %d" % id)
+		if craft_button != null: await pointer_press(craft_button,panel)
+		await accept()
+		check(not service.owned_key(id,world.inventory).is_empty(),"actual pointer craft creates exact upstream identity %d" % id)
+		check(service.state.titles.is_empty() and service.state.crafted.is_empty(),"upstream never invents permanent title or once-only quota")
+	check(not service.quote_supply(75764).ok and not service.quote_supply(123373).ok,"consumed material cannot be spent twice")
+	for id: int in Source.IDS:
+		panel.refresh()
+		var craft_button: Button = panel.find_child("ProtectionCraft_%d" % id,true,false)
+		check(craft_button != null and not craft_button.disabled,"actual six-tier craft enabled %d" % id)
+		if craft_button != null: await pointer_press(craft_button,panel)
+		await accept()
+		var key: String = service.owned_key(id,world.inventory)
+		check(not key.is_empty() and service.state.titles.has(int(service.source.definitions[str(id)].title.ID)),"actual craft commits body and Appellation together %d" % id)
+		world.hud.inventory_item_activated.emit(key)
+		await accept()
+		check(int(service.effects().active_id) == id and int(world.inventory.get(key,0)) == 1,"actual inventory activation retains body %d" % id)
+	check(service.state.crafted.size() == 6 and service.state.titles.size() == 6 and int(service.effects().title_flat) == 7,"six independent permanent title receipts applied")
+	check(int(world.inventory.get("명예 코인",0)) == 40,"actual six activations consume sixty coins")
+	check(norm(world.quest_service.export_state()) == old_quests and norm(world.item_instances) == old_instances,"unrelated quests and physical ownership preserved")
+	check(world._save_game(true) == OK,"full source supply fixture chain durably saved")
+	panel.refresh()
+	panel.scroll_host.ensure_control_visible(panel.find_child("ProtectionCard_371108",true,false))
+	await capture("supply-final")
+	print("PROTECTION523_SUPPLY_UI_SCOPE existing validation map; catalog Source-ID QA materials; not natural quest acquisition/current source-map integration")
+	await finish()

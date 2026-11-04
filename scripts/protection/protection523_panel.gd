@@ -1,8 +1,10 @@
 extends VBoxContainer
 const Source = preload("res://scripts/protection/protection523_source.gd")
+const ItemArt = preload("res://scripts/ui/item_icon_art.gd")
 var hud: Node
 var runtime: RefCounted
 var rows: Dictionary = {}
+var supply_rows: Dictionary = {}
 var status: Label
 var summary: Label
 var cards: VBoxContainer
@@ -28,6 +30,24 @@ func button(text: String, node_name: String, parent: Node, callback: Callable) -
 	parent.add_child(value)
 	if scroll_host != null: hud.workspace.register_scroll_drag(scroll_host,value)
 	return value
+
+func item_heading(item_id: int, title: String, parent: Node, font_size: int) -> void:
+	var heading := HBoxContainer.new()
+	parent.add_child(heading)
+	var records: Array = runtime.records_for(item_id)
+	if records.size() == 1:
+		# Reuse the existing source-ID catalog image, without synthesizing missing
+		# art or claiming equivalence with the separate native523 archive.
+		var texture: Texture2D = ItemArt.render(str(records[0].get("image_path","")))
+		if texture != null:
+			var icon := TextureRect.new()
+			icon.name = "ProtectionIcon_%d" % item_id
+			icon.texture = texture
+			icon.custom_minimum_size = Vector2(64,64)
+			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			heading.add_child(icon)
+	label_text(title,heading).add_theme_font_size_override("font_size",font_size)
 
 func configure(owner_hud: Node) -> void:
 	hud = owner_hud
@@ -80,13 +100,26 @@ func rebuild() -> void:
 		cards.remove_child(child)
 		child.queue_free()
 	rows.clear()
+	supply_rows.clear()
 	if runtime.source.is_empty(): return
+	label_text("먼저 정상의 가호 재료를 준비하세요",cards)
+	label_text("달성 퀘스트에서 정상의 가호(1단)과 축복의 두루마리를 수령한 뒤 제작합니다. 퀘스트의 기간·직업·선행 획득 조건을 유지하며, 이 화면에서 재료를 지급하지 않습니다.",cards)
+	for item_id: int in [75764,123373]:
+		var d: Dictionary = runtime.source.get("supply_recipes",{}).get(str(item_id),{})
+		if d.is_empty(): continue
+		var card := VBoxContainer.new()
+		card.name = "ProtectionSupplyCard_%d" % item_id
+		cards.add_child(card)
+		item_heading(item_id,str(d.name),card,18)
+		var detail := label_text("",card)
+		var craft := button("원본 재료로 정상 가호 제작","ProtectionSupplyCraft_%d" % item_id,card,func() -> void: request_supply(item_id))
+		supply_rows[str(item_id)] = {"detail":detail,"craft":craft}
 	for item_id: int in Source.IDS:
 		var d: Dictionary = runtime.source.definitions[str(item_id)]
 		var card := VBoxContainer.new()
 		card.name = "ProtectionCard_%d" % item_id
 		cards.add_child(card)
-		label_text(str(d.name),card).add_theme_font_size_override("font_size",20)
+		item_heading(item_id,str(d.name),card,20)
 		label_text("보유: PvP 리덕션 +%d · PvP 감소 +%.2f%%\n사용: PvP 리덕션 +%d · %d분 · 재사용 %d분\n명예 코인 %d개 소모 · 가호 본체 유지" % [
 			int(d.possession_flat),float(d.possession_percent_raw)/10000.0,int(d.buff_flat),int(d.duration)/60,int(d.cooldown)/60,int(d.material_amount)],card)
 		var detail := label_text("",card)
@@ -135,6 +168,14 @@ func request_craft(item_id: int) -> void:
 		" + ".join(quote.input_keys),str(d.name),int(d.title_flat),int(d.recipe.ItemCraftID)],"확정 제작",
 		func(_count: int = 1) -> void: show_result(runtime.craft(item_id)))
 
+func request_supply(item_id: int) -> void:
+	var quote: Dictionary = runtime.quote_supply(item_id)
+	if not bool(quote.get("ok",false)):
+		show_result(quote)
+		return
+	hud.confirm_action("정상 가호 확정 제작","%s\n→ %s 1개\n표시된 재료를 각각 1개 소비합니다. 영구 호칭은 불멸·파멸 단계 제작에서 획득합니다." % [" + ".join(quote.input_keys),str(quote.definition.name)],"확정 제작",
+		func(_count: int = 1) -> void: show_result(runtime.craft_supply(item_id)))
+
 func refresh() -> void:
 	var effect: Dictionary = runtime.effects()
 	summary.text = "적용: 보유 PvP 리덕션 +%d / PvP 감소 +%.2f%% · 사용 버프 +%d (%d초) · 영구 호칭 일반 리덕션 +%d" % [
@@ -142,6 +183,17 @@ func refresh() -> void:
 	if runtime.source.is_empty():
 		status.text = runtime.problem
 		return
+	for key: String in supply_rows:
+		var quote: Dictionary = runtime.quote_supply(int(key))
+		var d: Dictionary = runtime.source.supply_recipes[key]
+		var ingredients: Array[String] = []
+		for input: Dictionary in d.inputs:
+			var item: Dictionary = runtime.source.items[str(int(input.ItemClassID))]
+			var label: String = str(runtime.source.descriptions.get(str(int(item.IdentifiedDescID)),{}).get("Description","원본 재료"))
+			var owned: String = runtime.owned_key(int(input.ItemClassID),hud.get_parent().inventory)
+			ingredients.append("%s 1개 · 소지 %d" % [label,int(hud.get_parent().inventory.get(owned,0))])
+		supply_rows[key].detail.text = " + ".join(ingredients)+"\n"+("제작 가능" if bool(quote.get("ok",false)) else str(quote.get("error","")))
+		supply_rows[key].craft.disabled = not bool(quote.get("ok",false))
 	for key: String in rows:
 		var item_id := int(key)
 		var d: Dictionary = runtime.source.definitions[key]
