@@ -2,9 +2,11 @@ extends RefCounted
 ## Optional host-clock adapter. Does not claim native AI/selection/geometry/formulas.
 const DEFAULT_MANIFEST_SHA = "ca260fc0481076fd9de0327cbb4b24df45d75d47d16b4fc6578713a44aff4a64"
 const CATALOG = preload("res://scripts/monsters/patch523_npc_catalog.gd")
-const DEFAULT_EFFECT_SHA = "f9e9ce484e45e83fa0cb98a60a3778dc0f482d59968bda4c7ac6a8a602b79f2d"
+const DEFAULT_EFFECT_SHA = "507d5e16fe860ad38960adabc2673693fb9479adff3e4b5294561c78c73c54cf"
+const PREVIOUS_EFFECT_SHA = "f9e9ce484e45e83fa0cb98a60a3778dc0f482d59968bda4c7ac6a8a602b79f2d"
 var catalog: CATALOG = CATALOG.new()
 var source_effects = preload("res://scripts/monsters/patch523_effect_frames.gd").new()
+var compatibility = preload("res://scripts/monsters/patch523_boss_compat.gd").new()
 var world: Node
 var host_enabled: bool = false
 var pending: Dictionary = {}
@@ -34,10 +36,14 @@ func configure(scene: Node) -> bool:
 	if effect_manifest.is_empty():
 		effect_manifest = "user://source_npc523_effects/manifest.json"
 		effect_manifest_sha = DEFAULT_EFFECT_SHA
+		if FileAccess.file_exists(effect_manifest) and FileAccess.get_sha256(effect_manifest) == PREVIOUS_EFFECT_SHA: effect_manifest_sha = PREVIOUS_EFFECT_SHA
 	source_effects.load_pack(effect_manifest,effect_manifest_sha)
-	return FileAccess.file_exists(path) and catalog.load_pack(path, digest)
+	var loaded: bool = FileAccess.file_exists(path) and catalog.load_pack(path, digest)
+	compatibility.configure(self)
+	return loaded
 
 func clear() -> void:
+	compatibility.clear()
 	if is_instance_valid(world) and is_instance_valid(world.get("player")):
 		world.player.set("source_523_movement_blocked",false)
 	var old_actions: Array = pending.values()
@@ -61,14 +67,17 @@ func tick(delta: float) -> void:
 	for key: int in pending.keys():
 		var action: Dictionary = pending[key]
 		var actor: Node = action.actor.get_ref()
-		if not valid_action(actor,action) or not actor.motion.active or int(actor.motion.sequence) != int(action.sequence): pending.erase(key)
+		if not valid_action(actor,action) or not actor.motion.active or int(actor.motion.sequence) != int(action.sequence):
+			compatibility.remove_marker(action.get("compat_warning")); pending.erase(key)
 	for key: int in followups.keys():
 		var action: Dictionary = followups[key]
 		var actor: Node = action.actor.get_ref()
 		if not valid_action(actor,action) or int(actor.motion.sequence) != int(action.sequence) or actor.is_stunned() or actor.is_feared() or not actor._target_attackable() or bool(actor.get("returning_home")) or silenced_for_attack(actor,action.attack): followups.erase(key)
 	effects = effects.filter(func(effect: Node2D) -> bool: return is_instance_valid(effect) and not effect.is_queued_for_deletion())
+	compatibility.tick(delta)
 
 func forget(actor: Node) -> void:
+	compatibility.forget(actor)
 	var action: Dictionary = pending.get(actor.get_instance_id(),{})
 	pending.erase(actor.get_instance_id()); cursor.erase(actor.get_instance_id()); followups.erase(actor.get_instance_id())
 	for effect: Node2D in effects.duplicate():
@@ -118,6 +127,7 @@ func support_reason(attack: Dictionary) -> String:
 	var id: int = int(attack.get("SpellID",0))
 	var spell: Dictionary = catalog.row("SpellClass",id)
 	if spell.is_empty(): return "주문 정의 미확보"
+	if compatibility.handles(spell): return "사용 가능 · TWILIGHT 자체 후속/지면/소환 규칙"
 	if bool(spell.get("TestSpell",false)): return "테스트 정의 · 실행 보류"
 	if int(spell.get("TargettingTypeID",0)) not in [1,2] or int(spell.get("TargetKindID",0)) != 3: return "대상·장판·소환 해석 필요"
 	if int(spell.get("MPCost",0)) != 0 or int(spell.get("HPCost",0)) != 0 or int(spell.get("VPCost",0)) != 0 or int(spell.get("SpellMaterialItemAmount",0)) != 0: return "자원 소모 계약 필요"
@@ -139,6 +149,15 @@ func try_begin(actor: Node, line_of_sight: bool, explicit_attack_id: int = -1) -
 	if not host_enabled or not valid_actor(actor) or not line_of_sight: return false
 	if pending.has(actor.get_instance_id()) or actor.motion.active or float(actor.attack_cooldown) > 0 or actor.is_stunned() or actor.is_feared() or not actor._target_attackable(): return false
 	if actor.global_position.distance_to(world.player.global_position) > float(actor.current_attack_range()): return false
+	if explicit_attack_id < 0:
+		var linked: Dictionary = compatibility.take_ready(actor)
+		if not linked.is_empty():
+			var source_attack: Dictionary = linked.action.attack
+			var child_spell: Dictionary = catalog.row("SpellClass",int(linked.spell_id))
+			if compatibility.handles(child_spell) and not (actor.is_silenced() and catalog.scalar("SpellBonus",int(child_spell.ID),"IgnoreCannotCastSpell","TrueFalse") != 1):
+				var began: bool = begin_action(actor,source_attack,[],"host_conditional_NextSpell_at_source_minimum_delay",child_spell,linked)
+				if began: compatibility.waiting.erase(linked)
+				return began
 	var key: int = actor.get_instance_id()
 	var attack: Dictionary = {}
 	var seen: Array = []
@@ -162,23 +181,33 @@ func try_begin(actor: Node, line_of_sight: bool, explicit_attack_id: int = -1) -
 		var next: int = int(cursor.get(key,0)) % choices.size()
 		attack = choices[next]; cursor[key] = next + 1
 	if not supported(attack) or silenced_for_attack(actor,attack): return false
+	return begin_action(actor,attack,seen,selection)
+
+func begin_action(actor: Node, attack: Dictionary, seen: Array, selection: String, spell_override: Dictionary = {}, linked: Dictionary = {}) -> bool:
+	var key: int = actor.get_instance_id()
 	var native_spell: bool = bool(attack.get("IsSpell",false))
 	var kind: String = "magic" if native_spell else str(actor.current_attack_type())
 	var style: String = "magic" if native_spell else (str(actor.motion.profile.motion_style) if kind == "melee" else ("bow" if kind == "ranged" else "magic"))
 	var sequence: int = actor.motion.begin_attack(minf(.68,float(actor.attack_interval)*.75),world.player.global_position-actor.global_position,style,actor.motion.profile.marker_for(style))
 	if sequence < 0: return false
 	pending[key] = {"actor":weakref(actor),"life":actor.life_id,"generation":world.combat_generation,"target":world.player.get_instance_id(),"sequence":sequence,"motion_id":actor.motion.get_instance_id(),"attack":attack,"reach":float(actor.current_attack_range()),"kind":kind,"chain":seen}
+	if not spell_override.is_empty():
+		pending[key]["spell_override"] = spell_override
+		pending[key]["compat_point"] = linked.point
+		pending[key]["compat_warning"] = linked.marker
 	actor.attack_cooldown = preload("res://scripts/monsters/monster_ai_policy.gd").attack_interval(float(actor.attack_interval),bool(actor.enraged))
 	actor.velocity = Vector2.ZERO
-	var spell: Dictionary = catalog.row("SpellClass",int(attack.get("SpellID",0))) if native_spell else {}
+	var spell: Dictionary = spell_override if not spell_override.is_empty() else catalog.row("SpellClass",int(attack.get("SpellID",0))) if native_spell else {}
 	world.show_combat_number(actor.global_position+Vector2(0,-actor.visual_height-22),str(spell.get("Name","기본 공격")),Color("efbd75"))
-	last_event = {"phase":"cast","attack_id":attack.ID,"spell_id":attack.get("SpellID",0),"selection":selection,"native_cast_delay_raw":spell.get("CastDelay",0),"native_fixed_delay_raw":attack.get("FixedDelayTime",0)}
+	last_event = {"phase":"cast","attack_id":attack.ID,"spell_id":spell.get("ID",0),"selection":selection,"native_cast_delay_raw":spell.get("CastDelay",0),"native_fixed_delay_raw":attack.get("FixedDelayTime",0)}
 	if native_spell: emit_effect(actor,spell,"CasterEffectSpriteID",actor.global_position)
 	return true
 
 func cancel(actor: Node, sequence: int) -> void:
+	compatibility.cancel(actor,sequence)
 	var action: Dictionary = pending.get(actor.get_instance_id(),{})
-	if int(action.get("sequence",-1)) == sequence: pending.erase(actor.get_instance_id())
+	if int(action.get("sequence",-1)) == sequence:
+		compatibility.remove_marker(action.get("compat_warning")); pending.erase(actor.get_instance_id())
 	var queued: Dictionary = followups.get(actor.get_instance_id(),{})
 	if int(queued.get("sequence",-1)) == sequence: followups.erase(actor.get_instance_id())
 
@@ -187,15 +216,18 @@ func release(actor: Node, sequence: int) -> bool:
 	var action: Dictionary = pending.get(key,{})
 	if action.is_empty() or int(action.sequence) != sequence: return false
 	pending.erase(key) # Consume before callbacks and reentrant death/map transitions.
+	compatibility.remove_marker(action.get("compat_warning"))
 	if not valid_action(actor,action) or actor.motion.sequence != sequence or not actor.motion.active or not actor.motion.released or actor.is_stunned() or actor.is_feared() or not actor._target_attackable(): return true
 	if actor.global_position.distance_to(world.player.global_position) > float(action.reach) or not world._has_line_of_sight_world(actor.global_position,world.player.global_position): return true
 	var attack: Dictionary = action.attack
 	var native_spell: bool = bool(attack.get("IsSpell",false))
-	if silenced_for_attack(actor,attack): return true
-	var spell: Dictionary = catalog.row("SpellClass",int(attack.get("SpellID",0))) if native_spell else {}
+	var spell: Dictionary = action.get("spell_override",catalog.row("SpellClass",int(attack.get("SpellID",0))) if native_spell else {})
+	if native_spell and actor.is_silenced() and catalog.scalar("SpellBonus",int(spell.get("ID",0)),"IgnoreCannotCastSpell","TrueFalse") != 1: return true
 	var id: int = int(spell.get("ID",0))
 	var hit: bool = false
-	if not native_spell or int(spell.get("SpellCategoryID",0)) == 1:
+	if native_spell and compatibility.handles(spell):
+		hit = bool(compatibility.release(actor,spell,action).get("hit",false))
+	elif not native_spell or int(spell.get("SpellCategoryID",0)) == 1:
 		var dice: Dictionary = damage_spec(attack,spell)
 		if dice.is_empty(): return true
 		var raw: int = int(dice.base)
@@ -205,6 +237,9 @@ func release(actor: Node, sequence: int) -> bool:
 		hit = world._roll_monster_hit(actor,"magic")
 	if not valid_action(actor,action): return true
 	last_event = {"phase":"impact","attack_id":attack.ID,"spell_id":id,"host_resolved":hit,"followups":catalog.spell_chain(id).get("next",[]) if native_spell else [],"followup_execution":"NextSpell pending native trigger/target; NextAttack uses explicit host-release contract"}
+	if native_spell and compatibility.handles(spell):
+		last_event["host_compat_rules"] = compatibility.last_event.duplicate(true)
+		last_event["followup_execution"] = "TWILIGHT conditional followup/ground/summon policy; native activation/geometry/membership not asserted"
 	if native_spell:
 		if hit:
 			var plan: Dictionary = status_plan(id)
@@ -217,7 +252,7 @@ func release(actor: Node, sequence: int) -> bool:
 		var center: Vector2 = actor.global_position if int(spell.get("TargettingTypeID",0)) == 1 else world.player.global_position
 		emit_effect(actor,spell,"EffectSpriteID",center)
 		if hit: emit_effect(actor,spell,"EffectExplosionSpriteID",world.player.global_position)
-	queue_next_attack(actor,action)
+	if not action.has("spell_override"): queue_next_attack(actor,action)
 	return true
 
 func queue_next_attack(actor: Node, action: Dictionary) -> void:
@@ -273,18 +308,20 @@ func emit_effect(actor: Node, spell: Dictionary, field: String, point: Vector2) 
 	if sprite <= 0: return false
 	var key: String = "%d:%s" % [int(spell.get("ID",0)),field]
 	effect_status[key] = {"sprite_id":sprite,"state":"pending"}
-	if field == "EffectSpriteID" and int(spell.get("EffectSpriteActionNo",0)) != 0:
-		effect_status[key].state = "exact_nonzero_action_binding_required"
-		last_event["effect_pending"] = "exact_nonzero_action_binding_required"; return false
+	var requested_action: int = int(spell.get("EffectSpriteActionNo",0)) if field == "EffectSpriteID" else -1
 	if source_effects.records.has(str(sprite)):
 		if effects.size() >= 16: return false
-		var candidate: Node2D = source_effects.make_effect(sprite,0,remaining_effect_bytes())
+		var pose: Variant = actor.get("motion")
+		var candidate: Node2D = source_effects.make_effect(sprite,requested_action,remaining_effect_bytes(),int(pose.facing8) if pose != null else 0)
 		if candidate == null:
 			effect_status[key].state = "candidate_disabled_budget_or_frame_rejected"; return false
 		candidate.set_meta("patch523_owner_id",actor.get_instance_id())
 		world.add_child(candidate); candidate.global_position = point; effects.append(candidate)
 		effect_status[key].state = "M_source_pixels_candidate_raster_timing_blend; native_runtime_not_verified"
 		return true
+	if requested_action > 0:
+		effect_status[key].state = "exact_nonzero_action_binding_required"
+		last_event["effect_pending"] = "exact_nonzero_action_binding_required"; return false
 	if effect_manifest.is_empty() or not FileAccess.file_exists(effect_manifest) or effects.size() >= 16:
 		effect_status[key].state = "original_overlay_not_installed_or_budget_full"
 		last_event["effect_pending"] = "original_overlay_not_installed_or_budget_full"; return false

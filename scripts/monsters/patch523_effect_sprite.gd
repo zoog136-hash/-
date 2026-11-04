@@ -11,13 +11,16 @@ var own_total: float = 0
 var decoded_budget: int = 0
 var layer_effects: Array[Node2D] = []
 var timing_origin: String = ""
+var selected_direction: int = 0
+var source_action_id: int = 0
 
-func configure(root: String, record: Dictionary, fallback_fps: float, alpha: float, factor: float, additive: bool) -> bool:
+func configure(root: String, record: Dictionary, fallback_fps: float, alpha: float, factor: float, additive: bool, direction: int = 0) -> bool:
 	var declared: Variant = record.get("source_fps")
 	var fps: float = float(declared) if declared != null else fallback_fps
 	if not is_finite(fps) or fps < 1 or fps > 120: return false
 	timing_origin = "SPR_explicit" if declared != null else "host_estimated_configurable_FPS"
-	frames = record.frames.duplicate(true)
+	selected_direction = posmod(direction,8); source_action_id = int(record.source_action_id)
+	frames = (record.directions[str(selected_direction)] if int(record.get("source_direction_flag",0)) == 1 else record.frames).duplicate(true)
 	var budget: int = 0
 	for frame: Dictionary in frames:
 		var path: String = root.path_join(frame.path)
@@ -41,7 +44,7 @@ func configure(root: String, record: Dictionary, fallback_fps: float, alpha: flo
 	own_total = total; decoded_budget = budget
 	for layer: Dictionary in record.get("children",[]):
 		var child: Node2D = get_script().new()
-		if not child.configure(root,layer,fallback_fps,alpha,1.0,additive): child.free(); return false
+		if not child.configure(root,layer,fallback_fps,alpha,1.0,additive,direction): child.free(); return false
 		decoded_budget += int(child.decoded_budget)
 		if decoded_budget > 64*1024*1024: child.free(); return false
 		child.z_index = -1 if layer.get("host_layer_kind") == "shadow" else 1

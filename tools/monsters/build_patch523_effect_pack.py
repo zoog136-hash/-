@@ -153,21 +153,30 @@ def run(a):
  def compile_layer(sid, parent_action=None, visited=()):
    if sid in visited or len(visited)>=8: raise ValueError('layer cycle/depth bound')
    owner,actions=original_spr.resolve(ds,sid); links=original_spr.resolve_references(ds,sid)
-   inherited=0 not in actions
-   if inherited and parent_action is None: raise ValueError('no explicit action0; no default-action substitution')
-   action=parent_action if inherited else actions[0]
-   if action['errors'] or action['declared_flag']!=0: raise ValueError('unsupported source action/flag')
-   addresses={original_spr.frame_address(g,0,0) for g,f,t in action['tokens']}
+   # Keep a sole nonzero source action under its real ID. Runtime auto-selection
+   # is a separate opt-in host policy; explicit source action0 is never replaced.
+   inherited=not actions
+   if inherited and parent_action is None: raise ValueError('no source action')
+   if not inherited and 0 not in actions and len(actions)!=1: raise ValueError('ambiguous action selection')
+   action=parent_action if inherited else actions[0] if 0 in actions else next(iter(actions.values()))
+   flag=action['declared_flag']
+   if action['errors'] or flag not in (0,1): raise ValueError('unsupported source action/flag')
+   directions=range(8) if flag==1 else range(1)
+   addresses={original_spr.frame_address(g,d,flag) for d in directions for g,f,t in action['tokens']}
    parsed={}
    for chunk,bit in addresses:
     member=f'Sprite/{owner}-{chunk}.sp2'
     if member not in members: raise ValueError('missing exact '+member)
     pal,groups,body=decode(members[member]['raw']); parsed[chunk]=(pal,groups)
-   frames=[]
-   for i,(g,f,ticks) in enumerate(action['tokens']):
-    chunk,bit=original_spr.frame_address(g,0,0);pal,groups=parsed[chunk]
-    image,offset,extent=raster(pal,groups[bit],f); context=sha(action['raw_body'].encode())[:16];rel=f'frames/{sid}_{context}/{i}.png'; target=out/rel;target.parent.mkdir(parents=True,exist_ok=True);image.save(target)
-    frames.append({'path':rel,'bytes':target.stat().st_size,'sha256':sha(target.read_bytes()),'offset':offset,'size':list(image.size),'source_ticks':ticks,'source_frame':f,'source_extent_halfopen':extent})
+   direction_frames={}
+   for direction in directions:
+    frames=[]
+    for i,(g,f,ticks) in enumerate(action['tokens']):
+     chunk,bit=original_spr.frame_address(g,direction,flag);pal,groups=parsed[chunk]
+     image,offset,extent=raster(pal,groups[bit],f); context=sha(action['raw_body'].encode())[:16]
+     rel=f'frames/{sid}_{context}/'+(f'd{direction}/' if flag else '')+f'{i}.png'; target=out/rel;target.parent.mkdir(parents=True,exist_ok=True);image.save(target)
+     frames.append({'path':rel,'bytes':target.stat().st_size,'sha256':sha(target.read_bytes()),'offset':offset,'size':list(image.size),'source_ticks':ticks,'source_frame':f,'source_group_bit':bit,'source_chunk':chunk,'source_extent_halfopen':extent})
+    direction_frames[str(direction)]=frames
    children=[]
    for kind,entries in links.items():
     for ref in entries:
@@ -175,9 +184,9 @@ def run(a):
      for target in ref['targets']:
       child=compile_layer(target,action,visited+(sid,));child['host_layer_kind']=kind;children.append(child)
    if len(children)>8: raise ValueError('layer count bound')
-   budget=sum(f['size'][0]*f['size'][1]*4 for f in frames)+sum(c['runtime_rgba_bytes'] for c in children)
+   budget=max(sum(f['size'][0]*f['size'][1]*4 for f in frames) for frames in direction_frames.values())+sum(c['runtime_rgba_bytes'] for c in children)
    if budget>64*1024*1024: raise ValueError('complete effect exceeds host64MiB decoded texture budget')
-   return {'source_sprite_id':sid,'source_owner_id':owner,'source_action_id':0,'source_fps':action['fps'],'frames':frames,'source_raw_body':action['raw_body'],'source_attributes':[d['body'] for d in ds[sid][0].directives if d['code']==104],'references':refs.get(sid,[]),'children':children,'runtime_rgba_bytes':budget,'action_origin':'host_estimated_parent_frame_indices' if inherited else 'own_SPR_action0','composition_origin':'host_independent_same_start_once; source_layer_sync_blend_not_verified'}
+   return {'source_sprite_id':sid,'source_owner_id':owner,'source_action_id':action['code'],'source_action_ids':sorted(actions),'source_direction_flag':flag,'source_fps':action['fps'],'frames':direction_frames['0'],'directions':direction_frames if flag else {},'source_raw_body':action['raw_body'],'source_attributes':[d['body'] for d in ds[sid][0].directives if d['code']==104],'references':refs.get(sid,[]),'children':children,'runtime_rgba_bytes':budget,'action_origin':'host_estimated_parent_frame_indices' if inherited else 'own_SPR_action'+str(action['code']),'composition_origin':'host_independent_same_start_once; source_layer_sync_blend_not_verified','facing_origin':'literal stored group chosen by configurable host direction; native physical facing map not verified'}
  for sid in sorted(refs):
   try:
    records[str(sid)]=compile_layer(sid)

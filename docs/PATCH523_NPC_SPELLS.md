@@ -106,7 +106,7 @@ TWILIGHT_SOURCE_MAP_PACK=/private/verified-current-map \
   --patch523-screen-dir=/private/screens
 ```
 
-## 최신: 전체 선택 SPR 추적과 원본 유래 효과의 자체 재생
+## v1 기록: 전체 선택 SPR 추적과 원본 유래 효과의 자체 재생
 
 추가 정식 Library materialize에서 현행 SPR 원문30개와 `originalSprite69`의 네 체크포인트를 실제 수신했다. xattrs·ZIP CRC·각 DAT의 현행523 manifest 증거/바이트/SHA를 확인했다. 최신 manifest가 그대로 유지한508 바이트를 사용했으며 구형 소스1·2나 PC 이미지로 교체하지 않았다.
 
@@ -139,7 +139,7 @@ UI는 `원본 효과 표시 · 추정 재생`과 `자체 계층 합성 · 동시
 
 비공개 후보 효과 ZIP은15,905,429B, SHA256 `3fb94d16030860066f4099c762b4eb30b5326a88e6bd60e44adf0c3eb06e3eec`이다. manifest pin은 위와 같다. 선택 PNG526개, 원문 SP246개, 선택 SPR 감사/미수신 후보 목록을 포함한다. 별도 빈 디렉터리에 복원해 모든 PNG SHA/크기/ZIP CRC와114검사를 다시 확인했다. 자연 출현/새 보스 배치나 원본 몸체 복원을 추가한 것은 아니며, 원본 actor 바인딩과 출현을 다루는 다른 PR의 범위는 유지한다.
 
-## 최신 적용팩과 원본 백업의 구분
+## v1 기록: 적용팩과 원본 백업의 구분
 
 코드 기준은 `d3f603b0c59d48064a6e5297c603e53c7b30d549`다. 게임이 소비하는 최신 효과 ZIP은 `TWILIGHT_PATCH523_BOSS_EFFECTS_RUNTIME_v1_d3f603b0_20261104.zip`이며9,871,450B / SHA256 `2165b10159a4c3ab156666e7281eca5a5ccb5a572ac2fa2c4469e7def21f22bf`다. manifest와PNG526개만 포함하며 원본 백업/감사/캡처를 설치하지 않는다. 효과 manifest pin은 `f9e9ce484e45e83fa0cb98a60a3778dc0f482d59968bda4c7ac6a8a602b79f2d`로 동일하다.
 
@@ -150,3 +150,38 @@ UI는 `원본 효과 표시 · 추정 재생`과 `자체 계층 합성 · 동시
 기존 비공유 프로젝트 Drive 아래 PR250의 실제 적용팩/원본 백업 폴더를 따로 사용한다. Drive 보관은 게임 자동 다운로드/설치가 아니다. 연결 계정의 정식 다운로드 후 ZIP 크기·SHA·CRC를 확인하고 기술 데이터의 두 파일을 `user://source_npc523/`, 효과 manifest/frames를 `user://source_npc523_effects/`에 설치해야 한다. 기존 게임 세이브/설정 파일을 덮어쓰지 않는다. 시작 후 보스 기술 UI에서 전투 적용/추정 표시/자체 계층 합성을 선택한다. 별도 경로를 쓸 때는 앞 절의 manifest 경로와 SHA 인자를 사용한다.
 
 새 소비 폴더에서 최신 lean ZIP을 정식 Drive 다운로드했고, NPC 데이터는 현재 Drive 파일과 같은 기존 정식 다운로드 검증 바이트를 재사용했다. 두 ZIP과 모든 PNG SHA/크기/CRC를 검사해 빈 사용자 폴더에 설치했다. 팩 경로 인자 없이 기본 user 경로에서 효과114검사와 실제 Main/UI31검사를 통과했다. 이 회차는 headless 설치/로드 검증이며, 앞선 동일PNG의 OpenGL37검사와 구분한다. 작업환경의 PR250 코드 Main 실행 확인이며 사용자 PC 설치·main 병합·전체 원본 동등성 승인은 아니다. 이번 저장 구분 작업에서는 새 감사/보고서/캡처를 외부 업로드하지 않았다.
+
+## 최신 v2: 조건부 후속 시전·지속 지면·자체 소환
+
+`patch523_boss_compat.gd`는 원문에서 빠진 실행 계약만 별도 TWILIGHT 정책으로 보충한다. 보스 기술 UI에서 전투 적용과 `TWILIGHT 자체 보스 규칙 설정 → 자체 후속·지면·소환 켜기`를 선택한다. 기본은 꺼짐이며88822/88832의 확정 `TestSpell=true`는 지우지 않는다. 이 두 기술은 `원문 TestSpell을 자체 검증에 허용`까지 별도로 켜야 실행한다. 실제 원본 NPC ID/Sprite·life·generation·target·중단 검사는 그대로 적용한다. 자연 출현 위치나 미확보 원본 보스 몸체를 새로 만드는 기능은 아니다.
+
+| 항목 | 원문 확인값 | TWILIGHT 자체 정책 |
+|---|---|---|
+| 후속 시전 |88822 →88832, NextSpellDelay3000ms, BonusApplicationType1의 네임스페이스는 SpellClass | 시전 방출 후 예약 또는 기존 호스트 명중 판정 통과 후 예약. 원문1을 ‘명중 성공’으로 바꾸지 않음. 원문 지연 이후 기존 회복·공격 시계와 시야/거리/침묵 권한을 모두 통과해야 시전 |
+| 지면 피해 |88832의400000+10d10,100ms 간격, SequenceSpellPlate1=true | 기본 반경96px·정사각형·3초·반복. UI로 반경16~320px, 원/정사각형, 수명0.1~30초, 단일/반복, 같은 시전자 교체/중첩(전체8개 상한)을 선택 |
+| 소환 |48013/48023의 category19, NpcSummonSet2053/2063, 확인된 소모량0 | 기존 FieldPopulation의 일반 지역 몬스터를 자체 소환물로 사용. 기본2개·20초, UI로1~4개·1~120초. 기존 소유자 상한4개와 모듈 전체8개 상한 적용. 원작 진주 구성·외형과 같다고 주장하지 않음 |
+
+최신523 전체 Content와 기존 분석 보고서에는 해당 NpcSummonSet의 실제 멤버 테이블·장판 기하/지속시간 계약이 없다. [공식 파푸리온 업데이트](https://lineagem.plaync.com/board/update/view?articleId=64e50cb8dcb9de6d1abff1f9), [공식 레이드 업데이트](https://lineagem.plaync.com/board/update/view?articleId=6a690338065bf16436e45e12)도 확인했으나 이 정확한 ID의 실행 계약을 확보하지 못했다. 위 자체 값의 수치 근거로 해당 공지를 사용하지 않았다. 기존 호스트 API의 소환 수·상한과 명시한 자체 정책을 사용한다. 공개 검색값이나 원문을 나중에 확인하면 추정값보다 우선한다.
+
+예고 지점을 방출 시 고정하고 동일 기하로 화면 표시와 범위 판정을 한다. 표시는 `TWILIGHT 예고/지속효과`이며 자체 도형이다. 원본 이펙트가 없는 것을 다른 원작 이미지로 대체하지 않는다. 장판의 각100ms 피해는 기존 authoritative 피해 경로로 한 번만 전달한다. 중복 방출·사망·재입장·맵 변경·취소·시야 차단·generation 변경 시 남은 호출과 표시가 정리된다. 지연된 틱은 프레임당32회로 제한한다.
+
+소환물은 기존 `summoned=true` 보상 차단 경로를 사용한다. 경험치·아이템·재화·성장 보상을 지급하지 않으며 중복 사망 신호도 지급으로 이어지지 않는다. 설정은 `user://patch523_boss_rules.cfg`에 따로 저장한다. 예약 후속·장판·소환물은 임시 전투 상태이며 기존 성장 세이브에 넣지 않는다. 정상 로드는 임시 상태를 정리하고, 누락 맵 팩으로 거절된 로드는 기존 임시 상태/세이브 바이트를 보존한다.
+
+### v2 원본 유래 효과와 설치
+
+동일하게 확보한 최신 SPR30개·DAT69개·선택 SP246개에서 flag1의 실제 저장 그룹8개를 모두 컴파일하고, 단일 명시 액션3을0으로 바꾸지 않고 보존했다. 기존17종에4073·4183·7501·11738·11742를 더해 **22종·root/child 트랙42개·PNG868개(13,808,736B)**다. 각 출력은 원문 half-open extent와 대조한다. 원본 없는 방향의 mirroring/다른 프레임 치환은 하지 않는다.
+
+UI에서 원문 그룹0~7과 호스트 방향 연동을 조절하며, 물리 방향의 대응은 추정이라고 표시한다. 명시 SpriteActionNo는 그대로 지킨다. 액션 미지정 필드의 단일 비영 액션 자동 선택은 별도 기본 꺼짐 설정이다. 수동 미리보기는 원문4183의 실제 액션3을 명시 선택할 수 있다. Invoke에서만 참조한 효과도 원문 선택기에 표시하지만, 미리보기를 원작 전투 발동 검증으로 취급하지 않는다. RGB/알파/기본FPS/합성/child 동기화의 원작 동등성은 여전히 미확정이다.
+
+최신 게임 적용 ZIP은 `TWILIGHT_PATCH523_BOSS_EFFECTS_RUNTIME_v2_20261104.zip`, **13,902,126B**, SHA256 `c4cb57c88b71f2cb36a354ba514994477fee5cd82bfafe550bad01d503aa837d`다. manifest와PNG868개만 포함하며, 기존 비공유 Drive의 실제 적용 폴더에 보관한다. 새 원문/감사/보고서/캡처는 업로드하지 않았다. v1 혼합 원본 백업15,905,429B와 전체69 DAT의 기존 보관 사본은 변경하지 않았다. 기술 데이터119,650B도 같은 v1을 사용한다.
+
+```sh
+--patch523-effect-manifest=/private/effects-v2/manifest.json \
+--patch523-effect-manifest-sha256=507d5e16fe860ad38960adabc2673693fb9479adff3e4b5294561c78c73c54cf
+```
+
+정식 Drive 재다운로드로 최신 ZIP의 바이트·SHA·CRC를 확인한 뒤 빈 소비 폴더에 설치했다. NPC 데이터는 기존 정식 다운로드의 동일 SHA 검증 바이트를 재사용했다. 모든 방향/child를 포함한 PNG868개의 크기·SHA를 다시 대조했다. 기본 `user://source_npc523_effects/` 및 `user://source_npc523/` 경로로도 읽는다. 기존 v1 효과 manifest pin 역시 계속 수용한다. Drive 저장이 사용자 PC의 자동 설치를 뜻하지는 않는다.
+
+검증 도구는 `tools/monsters/patch523_boss_compat_contract.gd`, `patch523_boss_compat_main_contract.gd`, `patch523_effects_contract.gd`, 기존 `patch523_npc_main_contract.gd`다. 별도 XDG 사용자 디렉터리와 검증된 현재 맵 팩을 사용한다. 실제 Main 검사는 원본 몸체 대신 숨긴 정확한 ID 실행 fixture를 사용한다. 자체 규칙31검사, 실제 효과157검사/기존v1의114검사, 실제 Main 전투·효과/UI OpenGL43검사, 새 설치의 실제 Main 후속·장판·소환 타격/보상·설정/UI/저장 OpenGL27검사, 기존 전투46/원문25/현재 Main 세이브32, Python codec4/catalog4 및 필수723시트 SHA 검사가 통과했다. 화면11장·로그·설치 영수증은 LOCAL_ONLY이며 신규 외부 업로드하지 않았다. 원격 CI의 수동 실행·재실행과 다른 PR/main 병합은 하지 않는다.
+
+남은 입력은 정확한11개 원문 SP2 멤버와 아직 수신하지 못한 다른 효과 후보다. 원작 AI/NextSpell 조건/장판/소환 구성 동등성을 완료했다고 주장하지 않는다. M 엔진/APK/XAPK·투기장·지구라트 기능은 작업에서 제외한다. 보스 SpellClass가 기존 효과 이름을 참조하는 것은 해당 던전 기능을 구현한 것이 아니다.

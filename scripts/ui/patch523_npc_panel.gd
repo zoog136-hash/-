@@ -12,6 +12,11 @@ var rows: Array = []
 var effect_preview: Button
 var effect_settings_status: Label
 var preview_sprite: int = 0
+var preview_action: int = 0
+var effect_choices: OptionButton
+var effect_action: OptionButton
+var effect_choice_ids: Array[int] = [0]
+var compat_status: Label
 
 func _ready() -> void:
 	layer = 120
@@ -40,7 +45,7 @@ func _ready() -> void:
 	palette.set_color("default_color","RichTextLabel",Color("eadfc8"))
 	panel.theme = palette
 	add_child(panel)
-	var scroll := ScrollContainer.new(); scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var scroll := ScrollContainer.new(); scroll.name = "BossSkillsScroll"; scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	panel.add_child(scroll)
 	var column := VBoxContainer.new(); column.size_flags_horizontal = Control.SIZE_EXPAND_FILL; scroll.add_child(column)
 	var top := HBoxContainer.new(); column.add_child(top)
@@ -51,7 +56,7 @@ func _ready() -> void:
 		environment_mode = index == 1
 		fill_selector()
 	)
-	var combat_toggle := CheckButton.new(); combat_toggle.text = "전투에 해석된 효과만 적용"; combat_toggle.clip_text = true; combat_toggle.button_pressed = service.host_enabled
+	var combat_toggle := CheckButton.new(); combat_toggle.name = "BossCombatToggle"; combat_toggle.text = "전투에 해석된 효과만 적용"; combat_toggle.clip_text = true; combat_toggle.button_pressed = service.host_enabled
 	combat_toggle.toggled.connect(func(enabled: bool) -> void:
 		service.clear()
 		service.host_enabled = enabled
@@ -61,7 +66,7 @@ func _ready() -> void:
 	selector.fit_to_longest_item = false; selector.clip_text = true
 	selector.item_selected.connect(func(_index: int) -> void: refresh_npc())
 	var note := Label.new()
-	note.text = "전투 적용 시 현재 게임의 시간·범위·명중 규칙을 사용합니다.\nNextAttack 연결은 기존 전투 시계로 진행하며, 원본 AI·미해석 NextSpell·시각효과는 별도로 보류합니다."
+	note.text = "전투 적용 시 현재 게임의 시간·범위·명중 규칙을 사용합니다.\nNextAttack은 기존 시계로 진행합니다. 일부 NextSpell·지면·소환은 아래 자체 규칙을 별도로 켜면 실행합니다."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(note)
 	var effect_note := Label.new()
@@ -94,9 +99,51 @@ func _ready() -> void:
 	blend.item_selected.connect(func(index: int) -> void:
 		service.source_effects.additive = index == 0; persist_effect_settings())
 	column.add_child(blend)
+	var direction_row := HBoxContainer.new(); column.add_child(direction_row)
+	var direction_label := Label.new(); direction_label.text = "원문 그룹/방향(추정)"; direction_row.add_child(direction_label)
+	var direction := SpinBox.new(); direction.name = "SourceEffectDirection"; direction.min_value = 0; direction.max_value = 7; direction.step = 1; direction.value = service.source_effects.source_direction; direction_row.add_child(direction)
+	direction.value_changed.connect(func(value: float) -> void:
+		service.source_effects.source_direction = int(value); persist_effect_settings())
+	for spec: Array in [["호스트 방향 연동 · 물리 대응은 추정","follow_host_facing"],["단일 명시 액션 자동 선택 · 발동은 추정","single_action_fallback"]]:
+		var toggle := CheckButton.new(); toggle.name = "SourceEffect_"+str(spec[1]); toggle.text = spec[0]; toggle.clip_text = true
+		toggle.button_pressed = service.source_effects.get(spec[1]); column.add_child(toggle)
+		var property: String = spec[1]
+		toggle.toggled.connect(func(value: bool) -> void:
+			service.source_effects.set(property,value); persist_effect_settings())
+	effect_choices = OptionButton.new(); effect_choices.name = "SourceEffectChoice"
+	effect_choices.add_item("효과 원문 검토 · 전투 발동과 별도")
+	var source_ids: Array[int] = []
+	for key: String in service.source_effects.records: source_ids.append(int(key))
+	source_ids.sort()
+	for id: int in source_ids:
+		effect_choice_ids.append(id); effect_choices.add_item("원문 Sprite %d" % id)
+	effect_choices.item_selected.connect(func(index: int) -> void: set_preview_sprite(effect_choice_ids[index]))
+	column.add_child(effect_choices)
+	effect_action = OptionButton.new(); effect_action.name = "SourceEffectAction"; column.add_child(effect_action)
 	effect_preview = Button.new(); effect_preview.name = "SourceEffectPreview"; effect_preview.text = "선택 기술의 원본 효과 미리보기"
 	effect_preview.pressed.connect(preview_effect); column.add_child(effect_preview)
 	effect_settings_status = Label.new(); effect_settings_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; column.add_child(effect_settings_status)
+	var compat_open := Button.new(); compat_open.name = "BossCompatOpen"; compat_open.text = "TWILIGHT 자체 보스 규칙 설정"; column.add_child(compat_open)
+	var compat_box := VBoxContainer.new(); compat_box.hide(); column.add_child(compat_box)
+	compat_open.pressed.connect(func() -> void: compat_box.visible = not compat_box.visible)
+	var compat_note := Label.new()
+	compat_note.text = "원문 지연·피해·간격은 우선합니다. 범위·수명·발동 조건·소환 구성은 자체 규칙입니다.\n소환은 현재 지역의 기존 일반 몬스터를 사용하며 EXP·아이템·재화를 지급하지 않습니다."
+	compat_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; compat_box.add_child(compat_note)
+	for spec: Array in [["자체 후속·지면·소환 켜기","enabled"],["원문 TestSpell을 자체 검증에 허용","allow_test_definitions"],["자체 발동 조건: 호스트 명중 판정 통과","trigger_on_hit"],["자체 범위: 정사각형 (끄면 원)","ground_box"],["자체 반복 피해 · 원문 간격 우선","ground_repeat"],["자체 장판 중첩 허용 (상한8)","ground_stack"],["중단 시 예약 후속 취소","cancel_on_interrupt"]]:
+		var toggle := CheckButton.new(); toggle.name = "BossCompat_"+str(spec[1]); toggle.text = spec[0]; toggle.clip_text = true
+		toggle.button_pressed = service.compatibility.get(spec[1]); compat_box.add_child(toggle)
+		var property: String = spec[1]
+		toggle.toggled.connect(func(value: bool) -> void:
+			service.clear(); service.compatibility.set(property,value); persist_compat_settings())
+	for spec: Array in [["자체 지면 반경(px)","ground_radius",16,320,1],["자체 지면 수명(초)","ground_seconds",.1,30,.1],["자체 소환 수(상한4)","summon_count",1,4,1],["자체 소환 수명(초)","summon_seconds",1,120,1]]:
+		var row := HBoxContainer.new(); compat_box.add_child(row)
+		var label := Label.new(); label.text = spec[0]; label.size_flags_horizontal = Control.SIZE_EXPAND_FILL; label.clip_text = true; row.add_child(label)
+		var spin := SpinBox.new(); spin.name = "BossCompat_"+str(spec[1]); spin.min_value = spec[2]; spin.max_value = spec[3]; spin.step = spec[4]
+		spin.value = service.compatibility.get(spec[1]); row.add_child(spin)
+		var property: String = spec[1]
+		spin.value_changed.connect(func(value: float) -> void:
+			service.clear(); service.compatibility.set(property,int(value) if property == "summon_count" else value); persist_compat_settings())
+	compat_status = Label.new(); compat_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; compat_box.add_child(compat_status)
 	attacks = ItemList.new(); attacks.name = "AttackList"; attacks.custom_minimum_size.y = 170; column.add_child(attacks)
 	attacks.item_selected.connect(show_attack)
 	detail = RichTextLabel.new(); detail.name = "SkillDetails"; detail.bbcode_enabled = false
@@ -113,6 +160,8 @@ func _process(_delta: float) -> void:
 	for buff: Dictionary in service.player_buffs.values():
 		lines.append("%s · %.1f초" % [service.catalog.row("BuffClass",int(buff.id)).get("Name","상태"),float(buff.remaining)])
 	status.text = "\n".join(lines)
+	if service.compatibility.enabled:
+		status.text += "\nTWILIGHT 자체 규칙 · 후속%d / 지면%d / 소환%d" % [service.compatibility.waiting.size(),service.compatibility.zones.size(),service.compatibility.summons.size()]
 
 func fill_selector() -> void:
 	selector.clear()
@@ -149,7 +198,7 @@ func append_chain(chain: Dictionary, lines: PackedStringArray, depth: int = 0) -
 	for edge: Dictionary in chain.get("bonuses",[]):
 		lines.append("  %s: %s (%s)" % [edge.type.get("Name","미확인"),str(edge.bonus.get("Value","?")),edge.unit.get("Name","단위 미확인")])
 		if int(edge.bonus.get("BonusApplicationTypeID",0)) != 0:
-			lines.append("  적용 조건: %s / 대상: %s" % [str(edge.bonus.BonusApplicationTypeID),str(edge.bonus.BonusApplicationTargetID)])
+			lines.append("  원문 적용: %s / 값: %s" % [str(service.catalog.row("BonusApplicationType",int(edge.bonus.BonusApplicationTypeID)).get("Name",edge.bonus.BonusApplicationTypeID)),str(edge.bonus.BonusApplicationTargetID)])
 		if edge.type.get("Name") == "BuffClassID":
 			var buff: Dictionary = service.catalog.buff_details(int(edge.bonus.Value))
 			lines.append("상태: " + str(buff.source.get("Name","미확인")))
@@ -169,7 +218,7 @@ func show_attack(index: int) -> void:
 	if index < 0 or index >= rows.size(): return
 	attacks.ensure_current_is_visible()
 	var attack: Dictionary = rows[index]
-	preview_sprite = 0; effect_preview.disabled = true
+	set_preview_sprite(0)
 	if environment_mode:
 		var environment_lines: PackedStringArray = [str(attack.buff.source.get("Name","NPC 상태")),"영역 %s · %s" % [str(attack.attribute.TerritoryID),str(attack.territory.get("Name","랜드 전체 조건"))],"방어 반응 조건 · 최종 수식/적용 시점은 해석 대기"]
 		for invoke: Dictionary in attack.buff.invokes:
@@ -185,9 +234,11 @@ func show_attack(index: int) -> void:
 	lines.append("AI 원문 ID: %d · 호스트 공격 그래프 시작점 %d개" % [int(service.catalog.ai_evidence(npc_id).native_ai_id_raw),service.catalog.attack_roots(npc_id).size()])
 	if bool(attack.get("IsSpell",false)):
 		var spell: Dictionary = service.catalog.row("SpellClass",int(attack.SpellID))
-		preview_sprite = service.source_effects.first_sprite(spell)
-		effect_preview.disabled = preview_sprite <= 0
+		set_preview_sprite(service.source_effects.first_sprite(spell))
 		lines = append_chain(service.catalog.spell_chain(int(attack.SpellID)),lines)
+		if bool(spell.get("TestSpell",false)): lines.append("원문 TestSpell=true · 자체 검증 허용 선택과 별도 보존")
+		if service.compatibility.handles(spell):
+			lines.append("TWILIGHT 자체 규칙 · 범위 %.0fpx / 지면 %.1f초 / 중첩 %s / 소환 %d개 %.1f초" % [service.compatibility.ground_radius,service.compatibility.ground_seconds,str(service.compatibility.ground_stack),service.compatibility.summon_count,service.compatibility.summon_seconds])
 	else: lines.append("원문 기본 공격: %s + %sd%s" % [str(attack.get("DiceBonus",0)),str(attack.get("DiceCount",0)),str(attack.get("DiceSpots",0))])
 	var chain: Dictionary = service.catalog.attack_chain(npc_id,int(attack.ID))
 	while chain.has("next"):
@@ -203,12 +254,34 @@ func persist_effect_settings() -> void:
 	var result: Error = service.source_effects.save_settings()
 	effect_settings_status.text = "효과 설정 저장됨 · 성장/재화 저장과 별도" if result == OK else "효과 설정 저장 실패 · 현재 세션에만 적용"
 
+func persist_compat_settings() -> void:
+	if compat_status == null: return
+	compat_status.text = "자체 보스 규칙 저장됨 · 기존 세이브와 별도" if service.compatibility.save_settings() == OK else "저장 실패 · 현재 세션에만 적용"
+	if not environment_mode:
+		var selected: PackedInt32Array = attacks.get_selected_items()
+		for i: int in rows.size():
+			var spell: Dictionary = service.catalog.row("SpellClass",int(rows[i].get("SpellID",0)))
+			attacks.set_item_text(i,str(spell.get("Name","기본 공격"))+" · "+service.support_reason(rows[i]))
+		if not rows.is_empty(): show_attack(int(selected[0]) if not selected.is_empty() else 0)
+
+func set_preview_sprite(id: int) -> void:
+	preview_sprite = id; preview_action = 0
+	if effect_choices != null: effect_choices.select(maxi(0,effect_choice_ids.find(id)))
+	if effect_action != null:
+		effect_action.clear()
+		if id > 0 and service.source_effects.records.has(str(id)):
+			preview_action = int(service.source_effects.records[str(id)].source_action_id)
+			effect_action.add_item("확인한 원문 액션 %d · 미리보기에서 명시 선택" % preview_action)
+	if effect_preview != null:
+		effect_preview.disabled = id <= 0
+		effect_preview.text = "선택 원문 효과 미리보기 · 전투 발동과 별도"
+
 func preview_effect() -> void:
 	if preview_sprite <= 0: return
 	if not service.source_effects.enabled:
 		effect_settings_status.text = "추정 재생을 켜면 확인한 원본 프레임을 표시합니다."; return
 	if service.effects.size() >= 16: return
-	var effect: Node2D = service.source_effects.make_effect(preview_sprite,0,service.remaining_effect_bytes())
+	var effect: Node2D = service.source_effects.make_effect(preview_sprite,preview_action,service.remaining_effect_bytes(),int(service.world.player.facing8))
 	if effect == null:
 		effect_settings_status.text = "계층 합성 설정·효과 메모리 한도·원본 팩 파일을 확인하세요."; return
 	service.world.player.add_child(effect)

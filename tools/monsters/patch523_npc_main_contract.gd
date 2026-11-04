@@ -157,6 +157,29 @@ func run() -> void:
 			await process_frame; await process_frame; await RenderingServer.frame_post_draw
 			check(root.get_texture().get_image().save_png(output.path_join("source-composite-main.png")) == OK,"actual inferred child composition renders on Main")
 		service.clear()
+		if service.source_effects.records.has("4073"):
+			var choices: OptionButton = panel.find_child("SourceEffectChoice",true,false) as OptionButton
+			var selected: int = panel.effect_choice_ids.find(4073)
+			choices.select(selected); choices.item_selected.emit(selected)
+			(panel.find_child("SourceEffectDirection",true,false) as SpinBox).value = 5
+			(panel.find_child("SourceEffect_follow_host_facing",true,false) as CheckButton).button_pressed = true
+			var reloaded = preload("res://scripts/monsters/patch523_effect_frames.gd").new(); reloaded.load_settings()
+			check(reloaded.source_direction == 5 and reloaded.follow_host_facing,"actual direction UI persists source group and explicit host mapping")
+			panel.effect_preview.pressed.emit()
+			check(service.effects.size() == 1 and service.effects[0].selected_direction == posmod(5+int(world.player.facing8),8),"actual UI selects full stored direction group without mirroring")
+			if not output.is_empty():
+				await process_frame; await process_frame; await RenderingServer.frame_post_draw
+				check(root.get_texture().get_image().save_png(output.path_join("source-direction-main.png")) == OK,"actual stored direction group rendered on Main")
+			service.clear()
+			selected = panel.effect_choice_ids.find(4183)
+			choices.select(selected); choices.item_selected.emit(selected)
+			check(panel.preview_action == 3 and not service.source_effects.single_action_fallback,"manual source action3 preview preserves original ID with auto fallback disabled")
+			panel.effect_preview.pressed.emit()
+			check(service.effects.size() == 1 and service.effects[0].source_action_id == 3,"actual preview runs source action3 without renaming to0")
+			if not output.is_empty():
+				await process_frame; await process_frame; await RenderingServer.frame_post_draw
+				check(root.get_texture().get_image().save_png(output.path_join("source-action3-main.png")) == OK,"actual original action3 rendered on Main")
+			service.clear()
 	world.queue_free(); await process_frame
 	if failed: quit(1); return
 	print("PATCH523_NPC_MAIN_OK checks=",checks," hidden_execution_fixture=true; boss_body_native_equivalence=false; candidate_effects=",service.source_effects.records.size())

@@ -11,6 +11,9 @@ var opacity: float = 1.0
 var visual_scale: float = 1.0
 var additive: bool = true
 var compose_children: bool = false
+var source_direction: int = 0
+var follow_host_facing: bool = false
+var single_action_fallback: bool = false
 
 func load_settings() -> void:
 	var config := ConfigFile.new()
@@ -22,6 +25,9 @@ func load_settings() -> void:
 	visual_scale = bounded(config.get_value("effects","visual_scale",1.0),.25,2,1)
 	additive = bool(config.get_value("effects","additive",true))
 	compose_children = bool(config.get_value("effects","compose_children",false))
+	source_direction = int(bounded(config.get_value("effects","source_direction",0),0,7,0))
+	follow_host_facing = bool(config.get_value("effects","follow_host_facing",false))
+	single_action_fallback = bool(config.get_value("effects","single_action_fallback",false))
 
 func bounded(value: Variant, low: float, high: float, fallback: float) -> float:
 	if not value is int and not value is float: return fallback
@@ -29,7 +35,7 @@ func bounded(value: Variant, low: float, high: float, fallback: float) -> float:
 
 func save_settings() -> Error:
 	var config := ConfigFile.new()
-	for key: String in ["enabled","fallback_fps","opacity","visual_scale","additive","compose_children"]:
+	for key: String in ["enabled","fallback_fps","opacity","visual_scale","additive","compose_children","source_direction","follow_host_facing","single_action_fallback"]:
 		config.set_value("effects",key,get(key))
 	config.set_value("effects","schema",1)
 	# This visual preference is separate from progression/currency/save migration.
@@ -52,13 +58,29 @@ func load_pack(path: String, digest: String) -> bool:
 
 func valid_row(row: Variant, id: String, depth: int = 0) -> bool:
 	if depth > 8: return false
-	if not row is Dictionary or str(int(row.get("source_sprite_id",-1))) != id or int(row.get("source_action_id",-1)) != 0 or not row.get("frames") is Array: return false
-	if row.frames.is_empty() or row.frames.size() > 256: return false
+	if not row is Dictionary or str(int(row.get("source_sprite_id",-1))) != id or int(row.get("source_action_id",-1)) < 0 or int(row.get("source_action_id",-1)) > 255 or not row.get("frames") is Array: return false
 	var source_fps: Variant = row.get("source_fps")
 	if source_fps != null and (not source_fps is int and not source_fps is float): return false
 	if source_fps != null and (not is_finite(float(source_fps)) or float(source_fps) < 1 or float(source_fps) > 120): return false
+	if not valid_frames(row.frames): return false
+	var flag: int = int(row.get("source_direction_flag",0))
+	var directions: Variant = row.get("directions",{})
+	if not directions is Dictionary or flag not in [0,1]: return false
+	if flag == 1:
+		if directions.size() != 8: return false
+		for direction: int in 8:
+			if not directions.has(str(direction)) or not valid_frames(directions[str(direction)]): return false
+		if directions["0"] != row.frames: return false
+	var children: Variant = row.get("children",[])
+	if not children is Array or children.size() > 8: return false
+	for child: Variant in children:
+		if not child is Dictionary or not valid_row(child,str(int(child.get("source_sprite_id",-1))),depth+1): return false
+	return true
+
+func valid_frames(frames: Variant) -> bool:
+	if not frames is Array or frames.is_empty() or frames.size() > 256: return false
 	var ticks: float = 0
-	for frame: Variant in row.frames:
+	for frame: Variant in frames:
 		if not frame is Dictionary: return false
 		var relative: String = str(frame.get("path",""))
 		if relative.is_absolute_path() or ".." in relative.split("/") or relative.contains("\\") or relative.contains(":") or not relative.begins_with("frames/") or not relative.ends_with(".png"): return false
@@ -71,18 +93,21 @@ func valid_row(row: Variant, id: String, depth: int = 0) -> bool:
 		if not is_finite(duration) or duration < 0 or duration > 10000: return false
 		ticks += duration
 	if ticks <= 0: return false
-	var children: Variant = row.get("children",[])
-	if not children is Array or children.size() > 8: return false
-	for child: Variant in children:
-		if not child is Dictionary or not valid_row(child,str(int(child.get("source_sprite_id",-1))),depth+1): return false
 	return true
 
-func make_effect(sprite_id: int, action: int = 0, remaining_bytes: int = 64*1024*1024) -> Node2D:
-	if not enabled or action != 0 or not records.has(str(sprite_id)): return null
+func make_effect(sprite_id: int, action: int = -1, remaining_bytes: int = 64*1024*1024, host_facing: int = 0) -> Node2D:
+	if not enabled or not records.has(str(sprite_id)): return null
+	var record: Dictionary = records[str(sprite_id)]
+	var actual_action: int = int(record.source_action_id)
+	if action >= 0 and action != actual_action: return null
+	if action < 0 and actual_action != 0:
+		var source_actions: Array = record.get("source_action_ids",[])
+		if not single_action_fallback or source_actions.size() != 1 or int(source_actions[0]) != actual_action: return null
 	if not compose_children and not records[str(sprite_id)].get("children",[]).is_empty(): return null
 	if int(records[str(sprite_id)].get("runtime_rgba_bytes",64*1024*1024+1)) > remaining_bytes: return null
 	var result = EFFECT.new()
-	if not result.configure(root_path,records[str(sprite_id)],fallback_fps,opacity,visual_scale,additive):
+	var direction: int = posmod(source_direction+(host_facing if follow_host_facing else 0),8)
+	if not result.configure(root_path,record,fallback_fps,opacity,visual_scale,additive,direction):
 		error = "frame_hash_or_size_rejected"; result.free(); return null
 	result.set_meta("patch523_frame_bytes",result.decoded_budget)
 	return result
@@ -90,5 +115,5 @@ func make_effect(sprite_id: int, action: int = 0, remaining_bytes: int = 64*1024
 func first_sprite(spell: Dictionary) -> int:
 	for key: String in ["CasterEffectSpriteID","EffectSpriteID","EffectExplosionSpriteID","SuccessEffectSpriteID","FailEffectSpriteID"]:
 		var id: int = int(spell.get(key,0))
-		if records.has(str(id)) and (key != "EffectSpriteID" or int(spell.get("EffectSpriteActionNo",0)) == 0): return id
+		if records.has(str(id)) and (key != "EffectSpriteID" or int(spell.get("EffectSpriteActionNo",0)) == int(records[str(id)].source_action_id)): return id
 	return 0
