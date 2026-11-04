@@ -117,12 +117,12 @@ static func install_source(path: String) -> Dictionary:
 	return {"ok":true, "cards":_rules.rows.size(), "groups":_rules.groups.size()}
 
 static func _canonical(record: Dictionary) -> Dictionary:
-	if record.get("source") != "lineagem_base508" or int(record.get("source_deck_id", -1)) != 98: return {}
+	if not BASE.native(record) or int(record.get("source_deck_id", -1)) != 98: return {}
 	if _catalog.is_empty():
 		for row: Dictionary in BASE.cards().get("catalog", {}).get("성물", []): _catalog[str(row.sourceId)] = row
 	var key: String = str(record.get("sourceId", ""))
 	var current: Dictionary = _catalog.get(key, {})
-	if current.is_empty() or int(record.get("source_card_id", -1)) != int(current.source_card_id) or key != "m508:98:" + str(int(current.source_card_id)): return {}
+	if current.is_empty() or record.get("source") != current.get("source") or int(current.get("source_deck_id", -1)) != 98 or int(record.get("source_card_id", -1)) != int(current.source_card_id): return {}
 	return current
 
 static func view(record: Dictionary, acquired: bool = false, equipped: Dictionary = {}, context: Dictionary = {}) -> Dictionary:

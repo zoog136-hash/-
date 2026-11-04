@@ -8,6 +8,7 @@ var values: Label
 var import_button: Button
 var picker: FileDialog
 var snapshot: Dictionary = {}
+var _state_signature: int = 0
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -33,6 +34,17 @@ func configure(controller: Node) -> void:
 	picker.file_selected.connect(_selected)
 	add_child(picker)
 
+func _state_key() -> int:
+	var world: Node = hud.get_parent()
+	var equipped: Dictionary = world.equipped_catalog.get("성물", {})
+	return hash([RULES.revision, equipped.get("source", ""), equipped.get("sourceId", ""), equipped.get("source_card_id", -1), equipped.get("source_deck_id", -1), world.card_draw_fusion.owned.get("성물", {}), world.card_collections.source_server_context()])
+
+func _process(_delta: float) -> void:
+	# Observe the existing state without rewriting the shared HUD publisher.
+	# This also catches load/server-context changes while this page stays open.
+	if hud != null and is_visible_in_tree() and _state_signature != _state_key():
+		hud.relic_reference_view.refresh_state()
+
 func _selected(path: String) -> void:
 	picker.hide()
 	var result: Dictionary = RULES.install_source(path)
@@ -43,6 +55,7 @@ func _selected(path: String) -> void:
 	refresh()
 
 func refresh() -> void:
+	_state_signature = _state_key()
 	var record: Dictionary = hud.selected_catalog_record if hud.catalog_category == "성물" else {}
 	snapshot = RULES.for_world(hud.get_parent(), record)
 	var lines: Array[String] = []

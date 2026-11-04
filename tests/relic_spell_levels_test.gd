@@ -42,7 +42,8 @@ func _initialize() -> void:
 		if int(record.source_card_id) == 23531: unique = record
 		if int(snapshot.card.ServerLimitSetID) == 772: limited = record
 		if int(snapshot.card.StartDateTimeID) != 0: event = record
-	check(matched == 58 and mappings.has(25162), "58 existing identities, new World Tree card retained without a grant")
+	var new_registered: bool = BASE.cards().catalog["성물"].any(func(row: Dictionary) -> bool: return int(row.get("source_card_id", 0)) == 25162)
+	check(matched == (59 if new_registered else 58) and mappings.has(25162), "all58 base identities retained; World Tree only when separately registered")
 	check(RULES.view(hero, true, hero).bonus_by_grade == {1:1}, "hero boosts only common source grade")
 	check(RULES.view(legendary, true, legendary).bonus_by_grade == {1:1, 4:1}, "legendary exact target grades")
 	check(RULES.view(myth, true, myth).bonus_by_grade == {1:1, 4:1, 5:1}, "myth exact target grades")
