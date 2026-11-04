@@ -4,6 +4,10 @@ class_name TwilightWorld
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
 const SOURCE_DUNGEONS = preload("res://scripts/dungeons/source_dungeon_runtime.gd")
 var source_dungeons = SOURCE_DUNGEONS.new()
+const DUNGEON_RUNS = preload("res://scripts/dungeons/dungeon_run_service.gd")
+const DUNGEON_ECONOMY = preload("res://scripts/dungeons/dungeon_economy.gd")
+var source_dungeon_runs = DUNGEON_RUNS.new()
+var pending_dungeon_events: Dictionary = {}
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
@@ -392,6 +396,9 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	source_dungeon_runs.configure(self,source_dungeons)
+	source_dungeon_runs.changed.connect(_refresh_source_dungeon_panel)
+	DUNGEON_ECONOMY.install_definitions(self,source_dungeons)
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -1407,6 +1414,11 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		requested_original.close()
 		_reject_map_pack("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
 		return
+	var dungeon_run: Dictionary = source_dungeon_runs.state.active
+	if not dungeon_run.is_empty() and dungeon_run.status == "active" and map_id != str(dungeon_run.map_id):
+		var failed_run: Dictionary = source_dungeon_runs.fail_run()
+		if not failed_run.get("ok",false):
+			hud.show_message(str(failed_run.get("reason","던전 이탈을 저장할 수 없습니다."))); return
 	_clear_combat_actions()
 	manual_route_pending_target=Vector2.INF
 	if is_instance_valid(world_interactions):
@@ -2610,6 +2622,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
+	_source_dungeon_kill(monster)
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -2709,6 +2722,7 @@ func _collect_ground_drop(drop: Button) -> bool:
 	var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
 	item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	_source_dungeon_pickup(record)
 	quest_service.record_pickup(item_name, quantity)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -4401,6 +4415,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4416,7 +4431,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4426,6 +4441,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	# Transactions supply validated staged state. Commit it before mutating live resources.
 	if collection_override.is_empty(): _sync_item_instances()
 	var data: Dictionary = {
+		"source_dungeon523": source_dungeon_runs.state.duplicate(true),
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
 		"position": [player.global_position.x, player.global_position.y],
@@ -4554,6 +4570,10 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var dungeon_error: String = source_dungeon_runs.validate(data.get("source_dungeon523",DUNGEON_RUNS.empty_state()))
+	if not dungeon_error.is_empty():
+		source_dungeon_runs.save_blocked=true; source_dungeon_runs.problem=dungeon_error
+		source_save_blocked=true; hud.show_message(dungeon_error); return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4723,6 +4743,8 @@ func _load_game(quiet: bool) -> void:
 			if raw_log is Dictionary and crafting_log.size() < 200:
 				crafting_log.append((raw_log as Dictionary).duplicate(true))
 	ain_service.import_state(data.get("ainhasad_state", {}))
+	source_dungeon_runs.restore(data.get("source_dungeon523",DUNGEON_RUNS.empty_state()))
+	pending_dungeon_events.clear()
 	level = maxi(1, int(data.get("level", level)))
 	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
 	exp_need = maxi(1, int(data.get("exp_need", exp_need)))
@@ -4861,7 +4883,9 @@ func _load_game(quiet: bool) -> void:
 				player.camera.reset_smoothing()
 	_update_job_skillbar()
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
+	if source_dungeon_runs.has_experience_award() and experience >= exp_need: _check_level_up()
 	_update_hud()
+	_refresh_source_dungeon_panel()
 	_emit_consumable_auto_settings()
 	if not quiet:
 		hud.show_message("불러오기 완료")
@@ -8120,13 +8144,15 @@ func _load_source_dungeon_pack() -> void:
 	if not path.is_empty(): source_dungeons.load_pack(path)
 
 func install_source_dungeon_pack(path: String) -> Dictionary:
-	return source_dungeons.install_pack(path)
+	var result: Dictionary = source_dungeons.install_pack(path)
+	if bool(result.get("ok",false)): DUNGEON_ECONOMY.install_definitions(self,source_dungeons)
+	return result
 
 func source_dungeon_entries(kind: String, hard: bool = false) -> Array:
 	return source_dungeons.entries(kind,hard)
 
 func source_dungeon_entry_check(kind: String, identifier: int) -> Dictionary:
-	return source_dungeons.entry_check(kind,identifier,level)
+	return source_dungeon_runs.check(identifier) if kind == "tower" else source_dungeons.entry_check(kind,identifier,level)
 
 func source_dungeon_tower_cost(hard: bool) -> Dictionary:
 	return source_dungeons.tower_entry_cost(hard)
@@ -8136,3 +8162,96 @@ func source_dungeon_recharge_preview(item_id: int) -> Dictionary:
 
 func source_dungeon_context(land_id: int) -> Dictionary:
 	return source_dungeons.context_for_land(land_id)
+
+
+func source_dungeon_host_context(stage_id: int) -> Dictionary:
+	# Source map owners provide this from their verified geometry/instance host.
+	# Existing PC/source84 fields have no such method and cannot be relabelled.
+	if field_map == null or not field_map.has_method("dungeon523_context"): return {}
+	var value: Variant = field_map.call("dungeon523_context",stage_id)
+	return value if value is Dictionary else {}
+
+func source_dungeon_payment_plan(currency_id: int, amount: int) -> Dictionary:
+	return DUNGEON_ECONOMY.payment(self,currency_id,amount)
+
+func source_dungeon_reward_plan(rows: Array, payment: Dictionary) -> Dictionary:
+	return DUNGEON_ECONOMY.rewards(self,rows,payment)
+
+func commit_source_dungeon(candidate: Dictionary, changes: Dictionary) -> Error:
+	var staged: Dictionary = {"source_dungeon523":candidate}
+	for key: String in ["inventory","item_instances","gold","experience","ainhasad_state"]:
+		if changes.has(key): staged[key] = changes[key]
+	var result: Error = _save_game(true,staged)
+	if result != OK:
+		# The save writer can commit a migration candidate before activation fails.
+		# Do not report rollback or retry a monetary delta against an uncertain file.
+		if FileAccess.file_exists(save_path()):
+			var persisted: Variant = JSON.parse_string(FileAccess.get_file_as_string(save_path()))
+			var expected: Variant = JSON.parse_string(JSON.stringify(candidate,"",true,true))
+			if persisted is Dictionary and persisted.get("source_dungeon523",{}) == expected:
+				source_dungeon_runs.save_blocked = true
+				source_dungeon_runs.problem = "던전 저장 후보는 기록되었지만 활성화가 확정되지 않았습니다. 저장을 다시 불러와 주세요."
+		return result
+	if staged.has("inventory"): inventory = staged.inventory
+	if staged.has("item_instances"): item_instances = staged.item_instances
+	if staged.has("gold"): gold = int(staged.gold)
+	if staged.has("experience"): experience = int(staged.experience)
+	if staged.has("ainhasad_state"): ain_service.blessing = int(staged.ainhasad_state.blessing)
+	return OK
+
+func source_dungeon_action(action: String, stage_id: int = 0) -> Dictionary:
+	var result: Dictionary
+	match action:
+		"begin": result = source_dungeon_runs.begin(stage_id)
+		"claim": result = source_dungeon_runs.claim()
+		"purchase": result = source_dungeon_runs.buy_attempt(stage_id)
+		"immediate": result = source_dungeon_runs.immediate(stage_id)
+		"leave": result = source_dungeon_runs.fail_run()
+		"retry": result = _retry_dungeon_events()
+		_: return {"ok":false,"reason":"알 수 없는 던전 작업입니다."}
+	if result.get("ok",false):
+		var level_before: int = level
+		_check_level_up()
+		if level != level_before: _request_deferred_save()
+		_update_hud()
+		hud.show_message("던전 기록을 저장했습니다.")
+	else: hud.show_message(str(result.get("reason"," ".join(result.get("reasons",[])))))
+	return result
+
+func _source_dungeon_kill(monster: TwilightMonster) -> void:
+	if not is_instance_valid(monster) or not monster.dead or monster.get_parent() != monsters_root: return
+	var run: Dictionary = source_dungeon_runs.state.active
+	if run.is_empty() or run.status != "active" or monster.get_meta("dungeon523_run_id","") != run.id: return
+	var actor: String = str(monster.get_meta("dungeon523_actor_id",""))
+	if actor.is_empty(): return
+	_queue_dungeon_event("kill",actor+":"+str(monster.life_id),0)
+
+func _source_dungeon_pickup(drop: Dictionary) -> void:
+	var run: Dictionary = source_dungeon_runs.state.active
+	var record: Variant = drop.get("item_record",{})
+	if run.is_empty() or run.status != "active" or drop.get("dungeon523_run_id","") != run.id or not record is Dictionary: return
+	if record.get("source_snapshot","") != "current523" or record.get("source","") != "lineagem_current523": return
+	_queue_dungeon_event("pickup",str(drop.get("id","")),int(record.get("source_item_class_id",0)))
+
+func _queue_dungeon_event(kind: String, token: String, item_id: int) -> void:
+	if token.is_empty(): return
+	var result: Dictionary = source_dungeon_runs.record_event(kind,token,item_id)
+	if not bool(result.get("ok",false)):
+		pending_dungeon_events[kind+":"+token] = {"kind":kind,"token":token,"item_id":item_id,"run_id":str(source_dungeon_runs.state.active.get("id",""))}
+		hud.show_message(str(result.get("reason","던전 진행 저장 재시도가 필요합니다.")))
+
+func _retry_dungeon_events() -> Dictionary:
+	for key: String in pending_dungeon_events.keys():
+		var event: Dictionary = pending_dungeon_events[key]
+		var run: Dictionary = source_dungeon_runs.state.active
+		if run.is_empty() or run.status != "active" or event.get("run_id","") != run.id:
+			pending_dungeon_events.erase(key); continue
+		var result: Dictionary = source_dungeon_runs.record_event(event.kind,event.token,int(event.item_id))
+		if not bool(result.get("ok",false)): return result
+		pending_dungeon_events.erase(key)
+	return {"ok":true}
+
+
+func _refresh_source_dungeon_panel() -> void:
+	if is_instance_valid(hud) and hud.has_method("refresh_source_dungeon_progress"):
+		hud.call("refresh_source_dungeon_progress")

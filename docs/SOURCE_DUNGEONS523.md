@@ -9,12 +9,18 @@ can select an entry, compare normal versus immediate-completion rewards, inspect
 Orim's authored spawn schedule, check entry readiness, and import verified data
 through the screen. Back navigation returns to the existing menu.
 
-**This is a playable-game inspection screen and verified rule-data connection.
-Dungeon entry, combat, payments, reward grants, progress and time-pool mutations
-are not implemented.** The entry check reports the minimum level, Orim's closed
-declarations and the missing execution connection. There is no working Enter or
-Claim button. Opening this screen must not spend currency, move the player or
-rewrite the save. This PR does not reintroduce quests, pets, clans or sieges.
+**The execution layer now implements Tower attempt payments, goal progress,
+explicit exit failure, extra-attempt purchase, normal/immediate settlements,
+receipt deduplication and save/load protection.** Its actual Main UI exposes
+start, instant completion, purchase, claim, forfeit and progress-save retry.
+
+**Production Tower entry/field combat remains blocked:** no current Main map
+implements a verified latest523 dungeon-instance/clock/eligibility host. The
+financial tests use an explicitly labelled completed-run fixture; they are not
+original dungeon battle or map evidence. Orim stays closed and its unknown RNG
+and Care rules are not implemented. Special-dungeon arrival/time-pool handlers
+remain missing. Opening the inspection screen still spends/grants nothing and
+preserves the save. Quests, pets, clans and sieges are not reintroduced.
 
 ## Source availability and preservation
 
@@ -71,7 +77,7 @@ also be selected with `TWILIGHT_DUNGEON523_PACK=/path/to/manifest.json` or
 
 | Definition | Connected scope | Execution still missing |
 | --- | --- | --- |
-| Trial Tower | 200 Stage IDs; 200 territory/Land paths and goals; 1200 normal/1380 immediate reward links; 200 exact purchase/payment/product round trips | Stage host, clear history, mode attempts, next-day eligibility, exact timer units, failure/exit handling, atomic currency and payout adapters |
+| Trial Tower | 200 Stage IDs; 200 territory/Land paths and goals; 1200 normal/1380 immediate reward links; 200 exact purchase/payment/product round trips | Verified source map/clock/eligibility host, transport and original NPC combat; ledger/payment/payout implementation is described below |
 | Orim | 20 Stage IDs on10 shared Lands; 2110 exact spawn rows; 60 time sections; 80 base/60 Care/140 weighted lucky reward links | Relative/random/group placement, original NPC combat host, clock semantics, boundary inclusion, Care trigger and lucky RNG/count selection |
 | Special dungeons | 22 definitions; exact teleport costs, currencies, prerequisites, destination territories, direct Land attributes and time-group links | Verified target map entry, all admission conditions, server/time-window combination and dedicated combat/reward handlers |
 | Dungeon time | 176 independent groups; 317 direct Land links; 450 consumable recharge items into51 groups with an explicit3600-second effect | Cap/reset/carryover/offline policies and actual item consumption |
@@ -104,12 +110,14 @@ Link test item185124 is not mapped to an invented ordinary recharge group.
 
 ## Validation and remaining delivery work
 
-Private test logs, exact code/input hashes and six actual Main viewport captures
+Private test logs, exact code/input hashes and actual Main viewport captures
 are retained in Library `libfile_76c3a981061081919d9c912846d96d6d`
-(`TWILIGHT_523_dungeon_UI_local_evidence_20261104.zip`, version0,
-5933789 bytes, SHA256
-`41192de23b2c4f532b265e5f7862ff91566cfa3f6c54ff093d93a42cdff775bc`).
-The evidence does not contain the source archives or a dungeon execution build.
+(`TWILIGHT_523_dungeon_UI_local_evidence_20261104.zip`, version1,
+12966511 bytes, SHA256
+`79fc3fc95729b7edf3087179c8d94b05511ac91ede1ccbef3e14a1cc41274b99`).
+Version1 preserves the initial evidence and adds execution logs, twelve exact
+code hashes, six refreshed inspection captures and two explicitly fixture-labelled
+payout captures. It contains neither source archives nor a dungeon execution build.
 
 - Independent actual-source comparison: **11146 checks passed**.
 - Godot4.7.2 real-pack runtime: **97 checks passed**, including mode identity,
@@ -121,11 +129,11 @@ The evidence does not contain the source archives or a dungeon execution build.
 - Historical `--source-dir` art audit fails because `a1.zip` is unavailable in
   this environment. This is separate from the four523 ZIPs above. No original-art
   transformation or full art delivery is claimed.
-- Actual Main OpenGL UI: **30 checks /0 failures**, six1280×720 viewport captures,
+- Actual Main inspection OpenGL UI: **30 checks /0 failures**, six1280×720 viewport captures,
   including menu mouse input, mode selection, distinct rewards, readiness
   results, file-picker/import callback, invalid replacement, back navigation and
   unchanged save bytes/currency/inventory/map/position. No hardware touch or
-  dungeon combat/payout acceptance is claimed.
+  dungeon combat acceptance is claimed. Payout testing is described separately below.
 - Actual Main without the optional pack: **11 checks passed**. The menu opens an
   empty, guarded screen and preserves save bytes, inventory, currency and map.
 - Actual current-map/save core: **32 checks passed**; existing identical-save and
@@ -140,6 +148,83 @@ The evidence does not contain the source archives or a dungeon execution build.
   run. User instruction forbids unnecessary remote CI: no manual CI run/retry;
   the task commit uses `[skip ci]`. Unrun remote CI is not reported as passing.
 
-Resume actual dungeon gameplay only after verified map/NPC host integration and
-the missing execution policies are available. Do not turn metadata readiness
-checks into entry, spend or reward mutations.
+Resume production entry only after the actual latest523 instance host and
+remaining execution evidence are connected. Runtime metadata/JSON flags alone
+must never authorize spending or rewards.
+
+
+## Execution and settlement continuation
+
+`dungeon_run_service.gd` owns a versioned `source_dungeon523` save ledger. It binds
+Stage ID, normal/hard mode, monotonic run ID and a reviewed clock-contract/cycle.
+A successful normal entry consumes one Ain10 payment, not both cost constants.
+A separate source-declared Gem4×50 purchase adds one attempt per mode-cycle.
+Normal/hard counts remain separate; static Stage.IsOpen is not used as player
+progression. Earlier-cycle clears qualify immediate completion only with the
+same clock contract and a verified host's exact eligible reward-ID list.
+
+Only a current field's compiled `dungeon523_context(stage_id)` method can supply
+the host. Existing source84/PC fields expose no such method. No debug switch,
+user-supplied manifest boolean, shared AssetPath or Land number can activate it.
+The host must verify the M523 source identity, Stage/Land/mode, current instance,
+landing/collision, admission/season restrictions, daily cycle, combat/timer state,
+and exact normal/immediate reward eligibility. Current production host count is
+**zero**, including coincidentally equal numeric map IDs. Tower has200 distinct
+Lands sharing12 AssetPaths (`13246/` through `13257/`); Orim has10 distinct Lands
+sharing10 paths (`13459/` through `13468/`). Geometry reuse must not merge stages.
+
+The run service accepts only events from the active run. Main's kill callback
+requires a dead actor in the current monster root, with the matching run ID and
+a host-assigned stable actor identity plus pooled life ID. Goal pickups require
+an actual consumed floor drop with matching run/current523 item identity. Item
+135434 is the collection goal, not the327824 reward token. Duplicate event tokens
+are ignored; pending save failures are retried with their original run ID and
+cannot leak into a later run. Explicit map exit/forfeit stores failure without
+refunding the entry payment. Disconnect/restart exceptions are not guessed.
+
+Completion requires both the table goals and host-confirmed combat/time and
+reward eligibility. A persisted cleared run enables **보상 받기**. Normal and
+immediate reward plans use the exact separate source rows. Raw delivery types
+1/2 stay in receipts; this code does not assign them invented server meanings.
+Unknown delivery eligibility is a host blocker. Orim RNG, Care combination and
+its missing admission currency enum are not synthesized.
+
+`dungeon_economy.gd` binds source Adena26 to existing gold and the explicitly
+mapped coin/token IDs to existing currency inventory. It registers the two Tower
+token definitions without gifting any. Currency764 consumes only physical
+Item549 records with a current523 namespaced identity; anonymous diamonds and
+Item113892 remain untouched. EXP281 uses the existing TWILIGHT progression
+service after durable credit; a reload normalizes any already credited pending
+level-ups without awarding the settlement again. This is existing local balance,
+not a newly claimed original EXP formula.
+
+Payment, inventory/physical IDs, gold/EXP and the updated ledger are submitted to
+the existing Main atomic writer together. Live economics publish only after
+success. A failed write preserves the prior live state and receipt. If a save
+candidate reached disk but migration activation failed, further transactions
+block until reload reconciles it; the code does not falsely report rollback or
+blindly repeat a monetary delta. Malformed schema, unknown stages, incomplete
+clears, invalid budgets or altered reward rows reject before character mutation.
+Old saves gain an empty ledger; original map/equipment/card/boss/save guards stay.
+
+Focused continuation checks:
+
+- Source-backed host/clock contract tests:76 passed. **The host/clock are fixtures**,
+  including source goal42/Item135434, payment rollback, duplicate lives/claims,
+  next-cycle eligibility, exact Item549 consumption, distinct rewards/EXP, extra
+  purchase limit and failure without refund.
+- Actual Main/UI/atomic-save checks:28 passed with two fixture-labelled captures.
+  These exercise real inventory/gold payout, persistence, failed-save retry,
+  replay after reload, uncertain candidate reconciliation, stale event discard
+  and corrupt-ledger preservation. **The cleared-run evidence is synthetic**;
+  actual original-map entry or dungeon combat is not counted as tested.
+- Actual inspection UI:30 checks and six refreshed OpenGL captures passed.
+- Current-map/save core:32 passed after the new save integration; existing
+  identical-save and deferred-save guards also passed without errors.
+
+Remaining production blockers are concrete: the22 original M asset roots need a
+real reviewed instance/arrival/collision/NPC host; the05:00 cycle time zone and
+season/admission/timer semantics need evidence; reward timing eligibility must
+come from that host; Orim's closed controls and missing server rules and the
+special-dungeon time cap/reset/carryover handlers remain unresolved. This is a
+continuation beyond UI-only code, not completion of all requested dungeons.

@@ -155,6 +155,7 @@ func entry_check(kind: String, identifier: int, player_level: int) -> Dictionary
 	if entry.is_empty(): return {"ok":false,"reasons":["던전 자료가 없습니다."]}
 	var reasons: Array[String] = []
 	var minimum := 0
+	var maximum := 0
 	if kind == "tower": minimum = int(entry.stage.MinLevel)
 	elif kind == "orim":
 		for attr: Dictionary in entry.place.attributes:
@@ -162,11 +163,19 @@ func entry_check(kind: String, identifier: int, player_level: int) -> Dictionary
 	elif kind == "special":
 		for requirement: Dictionary in entry.prerequisites:
 			if requirement.type == "MinLevel": minimum = maxi(minimum,int(requirement.row.Value))
+			if requirement.type == "MaxLevel": maximum = int(requirement.row.Value) if maximum == 0 else mini(maximum,int(requirement.row.Value))
 	if player_level < minimum: reasons.append("%d레벨부터 입장할 수 있습니다." % minimum)
+	if maximum > 0 and player_level > maximum: reasons.append("%d레벨까지만 입장할 수 있습니다." % maximum)
 	if kind == "orim": reasons.append("현재 자료에서 오림의 흔적은 닫혀 있습니다.")
 	# Static IsOpen is preserved for display, never mistaken for player progression.
-	reasons.append("입장·전투 연결 준비 중입니다.")
-	return {"ok":false,"minimum_level":minimum,"reasons":reasons}
+	if kind == "special":
+		var lands: Array[String] = []
+		for target: Dictionary in entry.destinations:
+			var land := str(int(target.place.land.ID))
+			if not land in lands: lands.append(land)
+		reasons.append("원본 Land %s의 착지·충돌·시간 풀 실행 연결이 필요합니다." % ", ".join(lands))
+	else: reasons.append("입장·전투·보상 판정 연결 준비 중입니다.")
+	return {"ok":false,"minimum_level":minimum,"maximum_level":maximum,"reasons":reasons}
 
 func recharge_preview(item_id: int) -> Dictionary:
 	var row: Dictionary = recharge_by_item.get(item_id,{})

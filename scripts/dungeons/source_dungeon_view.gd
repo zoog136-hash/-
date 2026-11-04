@@ -10,6 +10,7 @@ var notice: Label
 var reward_mode: OptionButton
 var rows: Array = []
 var selected: int = -1
+var execution_buttons: Dictionary = {}
 const FAMILIES: Array = [["tower",false],["tower",true],["orim",false],["orim",true],["special",false],["rechargers",false]]
 
 func configure(controller: Node) -> void:
@@ -61,6 +62,19 @@ func configure(controller: Node) -> void:
 	condition_button.custom_minimum_size.y = 42
 	condition_button.pressed.connect(_check_entry)
 	add_child(condition_button)
+	var actions := HBoxContainer.new()
+	actions.name = "DungeonExecutionActions"
+	add_child(actions)
+	for pair: Array in [["begin","도전 시작"],["immediate","즉시 완료"],["purchase","추가 횟수 구매"],["claim","보상 받기"],["leave","도전 포기"],["retry","저장 재시도"]]:
+		var action: String = str(pair[0])
+		var button := preload("res://scripts/ui/native_touch_button.gd").new()
+		button.name = "DungeonAction_" + action
+		button.text = str(pair[1])
+		button.custom_minimum_size.y = 38
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.pressed.connect(_perform.bind(action))
+		execution_buttons[action] = button
+		actions.add_child(button)
 	_refresh()
 
 func _choose_pack() -> void:
@@ -91,6 +105,7 @@ func _refresh() -> void:
 	reward_mode.visible = _kind() == "tower"
 	condition_button.visible = _kind() != "rechargers"
 	condition_button.disabled = rows.is_empty()
+	for button: Button in execution_buttons.values(): button.visible = _kind() == "tower"; button.disabled = true
 	if rows.is_empty():
 		notice.text = "던전 자료를 불러오면 입장 조건과 보상을 확인할 수 있습니다."
 		if not str(world.source_dungeons.last_error).is_empty(): notice.text += " " + str(world.source_dungeons.last_error)
@@ -144,6 +159,7 @@ func _select(index: int) -> void:
 		lines.append("이동 비용: %d %s" % [int(entry.teleport.TeleportCost),str(entry.currency.name)])
 		for condition: Dictionary in entry.prerequisites:
 			if condition.type == "MinLevel": lines.append("필요 레벨: %d" % int(condition.row.Value))
+			if condition.type == "MaxLevel": lines.append("최대 레벨: %d" % int(condition.row.Value))
 		for destination: Dictionary in entry.destinations:
 			lines.append("목적지: " + str(destination.place.name))
 			for group: Dictionary in destination.place.time_groups:
@@ -182,6 +198,13 @@ func _select(index: int) -> void:
 			for spawn: Dictionary in entry.spawns:
 				lines.append("%d초 · 수량 설정 %d%s" % [int(spawn.Second),int(spawn.Count)," · 그룹 구성 확인 중" if int(spawn.NpcGroupID) != 0 else ""])
 		lines.append("입장·전투·보상 지급 연결 준비 중입니다.")
+	if _kind() == "tower":
+		var run: Dictionary = world.source_dungeon_runs.state.active
+		if not run.is_empty():
+			lines.append("도전 상태: " + str({"active":"진행 중","cleared":"클리어 · 보상 수령 가능","failed":"실패 · 입장 비용 미환급"}.get(run.status,run.status)))
+			for goal: Dictionary in entry.goals:
+				lines.append("목표 진행: %d / %d" % [int(run.counts.get(str(int(goal.row.ID)),0)),int(goal.row.Amount)])
+		_update_actions(entry)
 	details.text = "\n".join(lines)
 
 func _check_entry() -> void:
@@ -190,3 +213,29 @@ func _check_entry() -> void:
 	var identifier := int(entry.row.ID) if _kind() == "special" else int(entry.stage.ID)
 	var result: Dictionary = world.source_dungeon_entry_check(_kind(),identifier)
 	notice.text = " ".join(result.get("reasons",[]))
+
+
+func _update_actions(entry: Dictionary) -> void:
+	if world.source_dungeon_runs.busy or world.source_dungeon_runs.save_blocked:
+		for button: Button in execution_buttons.values():
+			button.disabled = true
+			button.tooltip_text = str(world.source_dungeon_runs.problem)
+		return
+	var stage_id := int(entry.stage.ID)
+	var normal: Dictionary = world.source_dungeon_runs.check(stage_id)
+	var immediate: Dictionary = world.source_dungeon_runs.check(stage_id,true)
+	execution_buttons.begin.disabled = not normal.ok
+	execution_buttons.begin.tooltip_text = " ".join(normal.reasons)
+	execution_buttons.immediate.disabled = not immediate.ok
+	execution_buttons.immediate.tooltip_text = " ".join(immediate.reasons)
+	var run: Dictionary = world.source_dungeon_runs.state.active
+	execution_buttons.claim.disabled = run.is_empty() or run.get("status","") != "cleared" or int(run.get("stage_id",0)) != stage_id
+	execution_buttons.leave.disabled = run.is_empty() or run.get("status","") != "active"
+	execution_buttons.retry.disabled = world.pending_dungeon_events.is_empty()
+	execution_buttons.purchase.disabled = world.source_dungeon_runs.context(stage_id).is_empty()
+
+func _perform(action: String) -> void:
+	if selected < 0 or selected >= rows.size() or _kind() != "tower": return
+	var result: Dictionary = world.source_dungeon_action(action,int(rows[selected].stage.ID))
+	_select(selected)
+	notice.text = "처리를 저장했습니다." if result.get("ok",false) else str(result.get("reason"," ".join(result.get("reasons",[]))))

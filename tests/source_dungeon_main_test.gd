@@ -86,7 +86,7 @@ func run() -> void:
 		check(view.rows.size() == 100,"actual Main loaded normal tower")
 		check(view.details.text.contains("70000") and view.details.text.contains("아인하사드"),"normal rewards and entry currency visible")
 		await click(view.condition_button)
-		check(view.notice.text.contains("70레벨") and view.notice.text.contains("준비 중"),"entry check shows level and unresolved execution result")
+		check(view.notice.text.contains("70레벨") and view.notice.text.contains("Land"),"entry check shows level and unresolved execution result")
 		await capture("tower-normal")
 		view.reward_mode.select(1)
 		view.reward_mode.item_selected.emit(1)

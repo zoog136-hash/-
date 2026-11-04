@@ -75,6 +75,7 @@ const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
 const SourceDungeonUI = preload("res://scripts/dungeons/source_dungeon_view.gd")
+var dungeon_progress_refresh_pending: bool = false
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
 const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const EquipmentCollectionsUI = preload("res://scripts/collections/equipment_collection_view.gd")
@@ -2449,3 +2450,15 @@ func open_source_dungeons() -> void:
 	view.name = "SourceDungeonView"
 	workspace.mount(view)
 	view.configure(get_parent())
+
+
+func refresh_source_dungeon_progress() -> void:
+	if active_section != "source_dungeons" or dungeon_progress_refresh_pending: return
+	dungeon_progress_refresh_pending = true
+	call_deferred("_refresh_source_dungeon_progress_deferred")
+
+func _refresh_source_dungeon_progress_deferred() -> void:
+	dungeon_progress_refresh_pending = false
+	if active_section != "source_dungeons" or not is_instance_valid(workspace): return
+	var view: Node = workspace.find_child("SourceDungeonView",true,false)
+	if is_instance_valid(view) and not view.is_queued_for_deletion(): view._select(int(view.selected))
