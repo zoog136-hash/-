@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "inputs": {
+    "source_zip_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "coordinate_zip": {
+      "bytes": 616779,
+      "sha256": "b406f8265b4710d3d75b937f716eab6aece16f3bbfbd5f3e8308d70174530f91"
+    },
+    "correction_zip": {
+      "bytes": 3518,
+      "sha256": "7e957580c404247b8b959306f74bceb96d4731fe3421af35e4ed1dd9de45df15"
+    },
+    "original_Portal_table_sha256": "af434065337cfd2b8c3fab9887ce5d3569ce6651d122a05288769d487df78a45",
+    "all_three_M_input_tables_match_current523_bytes": true,
+    "all_three_input_ZIP_CRC": "PASS"
+  },
+  "recomputed_source_declaration_comparison": {
+    "eligible": 236,
+    "exact": 224,
+    "unmatched": 12
+  },
+  "upstream_reported_M_runtime_collision_steps": 0,
+  "raw_S32_offset_recheck_this_audit": "NOT_PERFORMED; ORIGINAL125_S32_FILES_NOT_IN_COORDINATE_PACKAGE",
+  "arrival_region_count": 87,
+  "typed_Portal_target_to_auto_landing_ID_matches": [],
+  "geometric_hints_only": [
+    {
+      "schedule_id": 464,
+      "landing_link_id": 1612,
+      "landing_territory_id": 114162,
+      "land_id": 284,
+      "asset_path": "284/",
+      "portal_id": 507,
+      "declared_point_territory_id": 174884,
+      "declared_point": [
+        32673,
+        32796
+      ],
+      "on_end_boundary": true,
+      "typed_auto_portal_link": false,
+      "safe_cell_certified": false,
+      "reason": "GEOMETRIC_HINT_ONLY; ENDPOINT_AND_NAVIGATION_CONTRACT_UNVERIFIED"
+    },
+    {
+      "schedule_id": 624,
+      "landing_link_id": 1752,
+      "landing_territory_id": 114302,
+      "land_id": 43193,
+      "asset_path": "13125/",
+      "portal_id": 14193,
+      "declared_point_territory_id": 179094,
+      "declared_point": [
+        32665,
+        32895
+      ],
+      "on_end_boundary": true,
+      "typed_auto_portal_link": false,
+      "safe_cell_certified": false,
+      "reason": "GEOMETRIC_HINT_ONLY; ENDPOINT_AND_NAVIGATION_CONTRACT_UNVERIFIED"
+    }
+  ],
+  "pixel_decoder_evidence_qualified_as_M_navigation": false,
+  "old_pixel_QA_not_independent_M_format_specification": true,
+  "qualified_arrival_cells": 0,
+  "runtime_transitions_activated": 0,
+  "scope": "ACTUAL_DRIVE_INPUT_BYTES_AND_M_DECLARATION_CROSSCHECK; NO_COORDINATE_OR_COLLISION_INFERENCE"
+}

@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "scope": "original Gem fee with opt-in TWILIGHT inventory wallet",
+  "source_currency": {
+    "id": 4,
+    "name": "Gem",
+    "display_name": "다이아"
+  },
+  "original_amounts_preserved": true,
+  "grants_or_adena_conversion": false,
+  "checks": {
+    "source_python": 8,
+    "source_catalog": 231,
+    "wallet_and_source_unit": 108,
+    "latest_aden_gem_main": 79,
+    "ui_unit": 10,
+    "existing_save_baseline": 32
+  },
+  "actual_aden_gem_destinations": 3,
+  "verified_cases": [
+    "policy cancellation",
+    "insufficient balance",
+    "inventory lock",
+    "atomic save failure preservation",
+    "reentrant and duplicate rejection",
+    "reload",
+    "exact balance to zero",
+    "Adena independence"
+  ],
+  "ui_method": "Godot production controls; OS pointer/touch devices not tested",
+  "native_M_coordinate_collision_equivalence_verified": false
+}

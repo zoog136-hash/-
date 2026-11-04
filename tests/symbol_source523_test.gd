@@ -49,7 +49,10 @@ func run() -> void:
 	host = Host.new(); root.add_child(host)
 	rt = Growth.new(); rt.configure(host)
 	check(not rt.development and rt.config.get("source_snapshot")=="patch523","production uses523")
-	check(rt.config.guardians.size()==6 and rt.config.guardians[0].nodes.size()==11,"guardian catalogue untouched")
+	check(rt.legacy_guardians.size()==6 and rt.legacy_guardians[0].nodes.size()==11,"legacy guardian catalogue preserved")
+	var guardian_count: int = 0
+	for group: Dictionary in rt.config.guardians: guardian_count += group.nodes.size()
+	check(rt.config.guardians==rt.guardian_source.data.guardians and rt.config.guardians.size()==6 and guardian_count==172,"production guardian catalogue preserves all source523 slots")
 	check(rt.source523.data.recharge.size()==103,"103 distinct recharge definitions")
 	check(rt.source523.data.probabilities.size()==87,"87 probability rows")
 	var expiry_found: bool = false
