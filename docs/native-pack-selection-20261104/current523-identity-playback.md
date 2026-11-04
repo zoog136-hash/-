@@ -17,20 +17,26 @@ An active installed original actor now takes precedence over this comparison,
 including direct presentation calls. Its pose clock, sequence, weapon handling,
 visibility and existing pack files remain owned by the PR217 consumer.
 
-The actual transformation delta is434→450 roots, with no removed old roots:
+The source transformation delta is434→450 roots, with no removed old roots.
+The user cancelled all16 additional roots; they are excluded from implementation,
+source-file searches and remaining-work counts:
 27349,27521,29212,29244,29311,29317,29562,29565,29568,29625,29690,29695,
 29701,29706,29711,29716. Fourteen belong to new transformation cards;29568 is a
 new variant for card11152, and29625 is the added variant shared by cards24241,
-24842,24852. The total card delta is19 (14 transformations,4 dolls,1 relic);
-catalog/stat/collection definitions belong to PR249 and are not recreated here.
+24842,24852. Keep those four existing cards and their original variants unchanged;
+do not add29568 or29625. The cancelled roots were never registered in this branch's
+701-card catalog or26-actor comparison pack, so there is no runtime entity or
+installed pack to delete. The source-only19-card delta (14 transformations,
+4 dolls,1 relic) is historical input metadata, not a count of enabled additions.
+Card/stat/collection definitions belong to PR249 and are not recreated here.
 
-No new523-only actor is claimed connected by the26 comparison pack. The existing
-full-source audit reports141 missing generic body/shadow/clothing SP2 files across
-the14 new roots whose current declarations are available;27349 and27521 require
-the current list27 declarations before exact physical files can be named. The
-three new doll/relic roots with declarations lack their idle/walk files too;
-22590 needs current list22 and27547 has no current declaration here. These are
-specific delta-input gaps in this environment, not missing PR217701-card work.
+No new523-only actor is claimed connected by the26 comparison pack. Previous
+160-body/141-generic-layer input-gap reports for the cancelled transformations
+remain historical evidence only; they no longer block this PR or request further
+downloads. Original source files, private packs, audit history and user saves are
+preserved. The separate three new doll/relic roots with declarations still lack
+their idle/walk files;22590 needs current list22 and27547 has no current declaration
+here. These remaining doll/relic input gaps are not missing PR217701-card work.
 Earlier331 pending clocks and source attachment exclusions are not treated as
 unfinished transformation integration or reopened by this audit.
 
