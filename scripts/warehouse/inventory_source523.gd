@@ -10,6 +10,7 @@ const SHOP = preload("res://scripts/shop/shop_catalog.gd")
 const FIELDS = ["name","source","sourceId","sourceUrl","slot","type","grade"]
 var document: Dictionary = {}
 var problem: String = "523 원본 규칙을 설치해 주세요"
+var registered_records: Array = []
 
 static func configured_file() -> String:
 	var configured: String = OS.get_environment("TWILIGHT_AUTO_INVENTORY523_FILE")
@@ -90,6 +91,7 @@ static func _canonical_identity(record: Dictionary) -> Array:
 	return out
 
 func registered_status(records: Array) -> Dictionary:
+	registered_records = records
 	var matched: Dictionary = {}
 	for record: Dictionary in records:
 		var resolved: Dictionary = resolve(record)
@@ -110,6 +112,7 @@ func definition(id: String) -> Dictionary:
 
 func resolve(record: Dictionary, physical: Dictionary = {}) -> Dictionary:
 	if document.is_empty() or record.is_empty(): return {}
+	if record.get("source") == "twilight-shop523-consumable": return _resolve_shop_stack(record,physical)
 	var id: String = str(record.get("sourceId",""))
 	var bless: int = 1
 	if record.get("source") == "inven":
@@ -137,6 +140,29 @@ func resolve(record: Dictionary, physical: Dictionary = {}) -> Dictionary:
 	var caption: String = "" if bless == 1 else " · "+("축복" if bless == 2 else "저주")
 	if str(record.get("sourceId","")) != "m523:item:"+id+suffix or str(record.get("name","")) != str(row.label)+" · 원본#"+id+caption: return {}
 	return {"item":row,"bless":bless,"identity":"m523_explicit_class_and_bless"}
+
+func _resolve_shop_stack(record: Dictionary, physical: Dictionary) -> Dictionary:
+	# PR247 9b2cb076's runtime catalog contract, not a save-string migration.
+	# Only the two already-supplied automation targets are accepted. No records,
+	# ownership, use effects, aliases or blessing variants are created here.
+	var raw_id: Variant = record.get("source523_shop_item_id")
+	if not _integer(raw_id) or int(raw_id) not in [313,385] or not physical.is_empty(): return {}
+	var registered: int = 0
+	for candidate: Dictionary in registered_records:
+		if candidate.get("name") == record.get("name"):
+			if not is_same(candidate,record): return {}
+			registered += 1
+	if registered != 1: return {}
+	var id: int = int(raw_id)
+	var row: Dictionary = definition(str(id))
+	if row.is_empty() or record.get("name") != row.label or record.get("grade") != row.grade or record.get("slot") != "consumable": return {}
+	if record.get("kind") != ("teleport" if id == 313 else "regen") or record.get("type") != ("이동주문서" if id == 313 else "회복물약"): return {}
+	if record.get("source523_shop_use_origin") != "TWILIGHT 기존 소모품 효과 재사용 · 원본 각인 ID/스택 보존" or str(record.get("sourceId","")) != "": return {}
+	if record.get("blessed",false) or str(record.get("bless_state","")).to_lower() not in ["","normal"]: return {}
+	if record.has("source_bless_raw") and (not _integer(record.source_bless_raw) or int(record.source_bless_raw) != 1): return {}
+	if record.has("source_item_class_id") and (not _integer(record.source_item_class_id) or int(record.source_item_class_id) != id): return {}
+	if record.get("source_test_item",false): return {}
+	return {"item":row,"bless":1,"identity":"pr247_registered_normal_engraved_stack"}
 
 static func _integer(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floorf(float(value))

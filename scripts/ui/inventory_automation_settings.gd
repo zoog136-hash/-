@@ -187,6 +187,11 @@ func _refresh() -> void:
 	var registration: Dictionary = service.refresh_catalog()
 	source_status.text = service.source_rules.problem if data.is_empty() else "523 실제 등록 ID 연결 보관%d/84행·매입%d/25행 · 확인 가격11종" % [int(registration.get("deposit",0)),int(registration.get("sell",0))]
 	if not data.is_empty(): source_status.text += "\n원본 규칙상 허용 보관%d/매입%d · 소지·잠금은 별도 검사" % [int(registration.get("deposit_allowed",0)),int(registration.get("sell_allowed",0))]
+	var pending: Array[String] = []
+	for missing: Dictionary in registration.get("missing",[]):
+		if int(missing.id) in [235,237,313,385] and not pending.has(str(int(missing.id))): pending.append(str(int(missing.id)))
+	pending.sort()
+	if not pending.is_empty(): source_status.text += "\n원본 정의 확인 · 공급자 카탈로그 등록 대기: "+", ".join(pending)
 	source_only.set_pressed_no_signal(bool(service.state.get("source_only",false)))
 	for row: Dictionary in data.get("storage_rows" if mode == "deposit" else "sell_rows",[]):
 		source_rows.append(row)
@@ -220,7 +225,7 @@ func _select(index: int) -> void:
 	held_options = _held_matches(row)
 	held_choice.clear()
 	held_choice.add_item("소지한 정확한 아이템 키를 선택하세요")
-	for record: Dictionary in held_options: held_choice.add_item(str(record.name)+" · "+str(record.sourceId))
+	for record: Dictionary in held_options: held_choice.add_item(str(record.name)+" · "+_registered_key(record))
 	if held_options.size() == 1: held_choice.select(1)
 	held_choice.visible = not item.virtual
 	var held: Dictionary = _chosen_held()
@@ -245,6 +250,9 @@ func _select(index: int) -> void:
 func _chosen_held() -> Dictionary:
 	return held_options[held_choice.selected-1] if held_choice.selected > 0 and held_choice.selected <= held_options.size() else {}
 
+func _registered_key(record: Dictionary) -> String:
+	return "shop523:item:"+str(int(record.source523_shop_item_id))+" · 일반 축복ID1" if record.get("source") == "twilight-shop523-consumable" else str(record.get("sourceId",""))
+
 func _update_held_selection() -> void:
 	var held: Dictionary = _chosen_held()
 	register.disabled = held.is_empty()
@@ -252,7 +260,7 @@ func _update_held_selection() -> void:
 	if held.is_empty(): return
 	for target: Dictionary in service.state.get(mode,[]):
 		if target.name == held.name and str(target.get("id","")) == "": keep.value = int(target.get("keep",0))
-	details.text = "선택한 소지 키: "+str(held.name)+" · "+str(held.sourceId)+"\n각인 표기와 축복 키·동일 이름의 다른 ID는 합치지 않습니다."
+	details.text = "선택한 소지 키: "+str(held.name)+" · "+_registered_key(held)+"\n각인 표기와 축복 키·동일 이름의 다른 ID는 합치지 않습니다."
 
 func _register() -> void:
 	if selected < 0: return
