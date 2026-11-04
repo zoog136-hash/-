@@ -95,6 +95,33 @@ class AdmissionTest(unittest.TestCase):
         self.tables['ItemCraftInput'][0]['ItemHoningEpithetID'] = 7
         self.rejected()
 
+    def test_item_use_conditions_are_not_craft_restrictions(self):
+        self.tables['Class'] = [dict(ID=3,DescID=300)]
+        self.tables['DescData_Korean'].append(dict(ID=300,Description='마법사'))
+        self.tables['ItemClassLimit'] = [dict(ItemClassID=102,ClassID=3)]
+        self.tables['ItemClass'][1]['LevelLimitMin'] = 68
+        result=self.compile()
+        self.assertIn('patch523:17',result['recipes'])
+        use=result['items']['102']['use_conditions']
+        self.assertEqual((use['min_level'],use['class_ids'],use['class_names']),(68,[3],['마법사']))
+        self.tables['ItemClassLimit'][0]['ClassID']=999
+        self.rejected()
+
+    def test_original_large_currency_is_not_replaced_by_host_cap(self):
+        self.tables['ItemClass'].append(dict(ID=26,DescID=26,IdentifiedDescID=26,CategoryID=1,TestItem=False,ServiceRegionCode='',LevelLimitMin=0,LevelLimitMax=0))
+        self.tables['DescData_Korean'].append(dict(ID=26,Description='아데나'))
+        self.tables['ItemCraftInput'].append(dict(ID=4,ItemCraftID=17,SlotIndex=2,ItemClassID=26,Amount=500000000,Enchant=0,ItemBlessCodeID=1,ItemHoningEpithetID=0))
+        self.assertEqual(self.compile()['recipes']['patch523:17']['adena'],500000000)
+
+    def test_wallet_candidates_preserve_deliberate_alternative(self):
+        self.tables['ItemClass'].append(dict(ID=26,DescID=26,IdentifiedDescID=26,CategoryID=1,TestItem=False,ServiceRegionCode='',LevelLimitMin=0,LevelLimitMax=0))
+        self.tables['DescData_Korean'].append(dict(ID=26,Description='아데나'))
+        self.tables['ItemCraftInput'].append(dict(ID=4,ItemCraftID=17,SlotIndex=1,ItemClassID=26,Amount=500000000,Enchant=0,ItemBlessCodeID=1,ItemHoningEpithetID=0))
+        recipe=self.compile()['recipes']['patch523:17']
+        self.assertEqual(recipe['adena'],0)
+        self.assertTrue(recipe['requires_material_selection'])
+        self.assertEqual([(m['source_id'],m['wallet']) for m in recipe['material_slots'][0]['candidates']],[('101',False),('26',True)])
+
     def test_wrong_source_bytes_rejected_before_projection(self):
         saved = BUILDER.SOURCE_SHA256
         try:
@@ -113,9 +140,9 @@ class AdmissionTest(unittest.TestCase):
         tables,evidence=BUILDER.read_source(directory)
         catalog=(Path(__file__).resolve().parents[1]/'data/catalog_v19.json').read_bytes()
         result=BUILDER.compile_rules(tables,evidence,catalog)
-        self.assertEqual(len(result['recipes']),244)
+        self.assertEqual(len(result['recipes']),345)
         self.assertEqual(set(result['guaranteed_boxes']),{'30701','130611'})
-        self.assertEqual(len(result['source_files']),28)
+        self.assertEqual(len(result['source_files']),29)
         for table,key in [('ItemCraftInput','inputs'),('ItemCraftOutputView','outputs'),('ItemCraftView','views'),('ItemCraftRestriction','restrictions')]:
             restored=[row for rows in result['raw_recipes'][key].values() for row in rows]
             self.assertEqual(sorted(restored,key=lambda r:json.dumps(r,sort_keys=True)), sorted(tables[table],key=lambda r:json.dumps(r,sort_keys=True)))

@@ -129,6 +129,7 @@ const EXPANDED_CRAFTING = preload("res://scripts/crafting/expanded_crafting.gd")
 var crafting = EXPANDED_CRAFTING.new()
 const PATCH523_EQUIPMENT = preload("res://scripts/crafting/patch523_rules.gd")
 var patch523_equipment = PATCH523_EQUIPMENT.new()
+const PATCH523_ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
 const PATCH523_SEAL_ACTIONS = preload("res://scripts/crafting/patch523_seal_actions.gd")
 const PATCH523_STORE = preload("res://scripts/crafting/patch523_pack_store.gd")
 var patch523_material_choices: Dictionary = {}
@@ -3344,6 +3345,11 @@ func _on_inventory_item_activated(item_name: String) -> void:
 			if patch523_equipment.record(source_id).get("name","")==item_name:
 				hud.open_patch523_equipment_info()
 				return
+	var source_use_record: Dictionary = _patch523_use_record(str(selected.get("name",item_name))+ ("@@@"+str(selected.id) if not str(selected.get("id","")).is_empty() else ""))
+	var source_use_reason: String = PATCH523_ITEM_USE.reason(source_use_record,level,BASE508.source_class_id(job_class))
+	if not source_use_reason.is_empty():
+		hud.show_message(source_use_reason)
+		return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
@@ -4167,6 +4173,13 @@ func _patch523_craft_item_index() -> Dictionary:
 	# The current non-equipment inventory is name-keyed. Bind only its unique
 	# catalog identity to the compiler-verified ItemClass ID; never merge aliases.
 	for source_id: String in patch523_equipment.data.get("items", {}):
+		var binding: Dictionary=patch523_equipment.record(source_id)
+		if binding.get("source","")=="twilight_host_binding":
+			var spec: Dictionary=CONSUMABLE_RULES.definition(str(binding.name))
+			if spec.get("kind")==binding.get("host_kind") and int(spec.get("amount",0))==int(binding.get("host_amount",-1)):
+				binding["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
+				result[str(binding.name)]=binding
+			continue
 		if source_id=="26":
 			result["아데나"]=patch523_equipment.record("26")
 			continue
@@ -4222,10 +4235,19 @@ func _refresh_patch523_equipment_options() -> void:
 
 func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	_sync_item_instances()
+	var previous_rng: int=rng.state
+	var outcome_roll: int=-1
+	if patch523_equipment.recipes.get(recipe_id,{}).has("outcomes"):
+		var quote: Dictionary=_craft_quote(recipe_id,batches)
+		if not bool(quote.get("ok",false)):
+			hud.show_message(str(quote.get("reason","제작 조건을 확인하세요")))
+			return
+		outcome_roll=rng.randi_range(0,999999)
 	var transaction: Dictionary = patch523_equipment.execute(recipe_id, batches, inventory, gold,
 		_patch523_craft_item_index(), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
-		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}))
+		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll)
 	if not bool(transaction.get("ok", false)):
+		rng.state=previous_rng
 		hud.show_message(str(transaction.get("reason", "원본 제작에 실패했습니다")))
 		return
 	var staged_log: Array[Dictionary] = crafting_log.duplicate(true)
@@ -4238,7 +4260,8 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 		"gold": int(transaction.gold_after), "next_item_instance_id": int(transaction.next_instance_id), "crafting_log": staged_log}
 	# No state is consumed on disk-write failure, unavailable map or save guards.
 	if _save_game(true, staged) != OK:
-		hud.show_message("저장 실패 · 재료·장비·아데나를 보존했습니다")
+		rng.state=previous_rng
+		hud.show_message("저장 실패 · 재료·장비·아데나·난수 상태를 보존했습니다")
 		return
 	inventory = staged.inventory
 	item_instances = staged.item_instances
@@ -4247,7 +4270,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	crafting_log = staged_log
 	hud.refresh_inventory(inventory)
 	_update_hud()
-	hud.show_message("원본 제작 완료 · %s ×%d" % [str(transaction.result_name), int(transaction.result_quantity)])
+	hud.show_message("원본 제작 %s · %s ×%d" % [str(transaction.get("outcome_label","완료")), str(transaction.result_name), int(transaction.result_quantity)])
 	hud.append_log("원본523 제작 · " + recipe_id)
 	if hud.has_method("open_crafting"):
 		hud.call("open_crafting")
@@ -5023,6 +5046,7 @@ func _load_game(quiet: bool) -> void:
 	_attach_missing_equipment_instance_ids()
 	_refresh_patch523_equipment_options()
 	consumable_service.call("migrate_legacy_elemental")
+	_enforce_patch523_equipment_use()
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
 	_invalidate_equipment_static()
@@ -5200,6 +5224,7 @@ func _on_job_class_selected(job_name: String) -> void:
 		_apply_transform_visual(record)
 	if BASE508.native(equipped_catalog.get("변신", {})):
 		_apply_transform_visual(equipped_catalog["변신"])
+	_enforce_patch523_equipment_use()
 	_enforce_weapon_class_compatibility(false)
 	_enforce_shield_weapon_compatibility(false)
 	_prune_active_skill_buffs_for_current_job()
@@ -6651,6 +6676,11 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 				new_id = str(next_item_instance_id)
 			next_item_instance_id += 1
 			item_instances[new_id] = {"name":item_name, "level":0, "element":"", "element_level":0, "record":record.duplicate(true)}
+	var effective_use: Dictionary = _patch523_use_record(item_name + ("@@@"+requested_id if not requested_id.is_empty() else ""))
+	var source_use_reason: String = PATCH523_ITEM_USE.reason(effective_use if not effective_use.is_empty() else record,level,BASE508.source_class_id(job_class))
+	if not source_use_reason.is_empty():
+		hud.show_message(source_use_reason)
+		return
 	var source_slot: String = str(record.get("slot", ""))
 	if source_slot == "weapon" and not _weapon_allowed_for_job(record, job_class):
 		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
@@ -7158,6 +7188,29 @@ func _weapon_allowed_for_job(record: Dictionary, target_job: String) -> bool:
 	if not (allowed_value is Array):
 		return false
 	return (allowed_value as Array).has(weapon_type)
+
+func _patch523_use_record(reference: String) -> Dictionary:
+	var selected: Dictionary = _parse_enhancement_target(reference)
+	var record: Dictionary = _find_catalog_item_record(str(selected.name))
+	var id: String = str(selected.get("id",""))
+	if not id.is_empty() and item_instances.has(id): record=item_instances[id].get("record",record)
+	if record.has("patch523_item_use"): return record
+	if record.get("source","")!="inven": return record
+	var canonical: Dictionary = patch523_equipment.record(str(record.get("sourceId","")))
+	if canonical.get("name")!=record.get("name") or not canonical.has("patch523_item_use"): return record
+	var result: Dictionary=record.duplicate(true)
+	result["patch523_item_use"]=canonical.patch523_item_use.duplicate(true)
+	return result
+
+func _enforce_patch523_equipment_use() -> void:
+	# Keep the physical item and its saved metadata; only disallowed equipment
+	# slots are cleared on class change/load. No acquisition is lost.
+	for slot: String in equipped_items:
+		var worn: Dictionary = equipped_items[slot]
+		if worn.is_empty() or not worn.has("patch523_item_use"): continue
+		if not PATCH523_ITEM_USE.reason(worn,level,BASE508.source_class_id(job_class)).is_empty():
+			equipped_items[slot]={}
+			_invalidate_equipment_static()
 
 func _enforce_weapon_class_compatibility(quiet: bool = false) -> void:
 	var weapon: Dictionary = _equipped_weapon_record()

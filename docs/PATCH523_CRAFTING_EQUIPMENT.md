@@ -4,7 +4,7 @@
 
 ## 실제 적용
 
-기존 414개 TWILIGHT 제작식에 원본523 제작식 **244개**를 추가한다. ItemClass ID, 현재 Inven 카탈로그 ID, 한국어 DescID/IdentifiedDescID 이름이 모두 일치해야 실행한다. 출력 강화·축복은 원본의 명시된 결과로 새 물리 ID에 기록한다. 기존 상점 가격·각성 비용·일반 강화 설정은 그대로다. 원본 제작1572의 오크족 토템(각인)100개→20000아데나는 인벤토리에 화폐 아이템을 만들지 않고 실제 지갑에 지급한다. 출력 수치도 원본값이다.
+기존 414개 TWILIGHT 제작식에 원본523 제작식 **345개**(확정334·확률11)를 추가한다. ItemClass ID, 현재 Inven 카탈로그 ID, 한국어 DescID/IdentifiedDescID 이름이 모두 일치해야 실행한다. 출력 강화·축복은 원본의 명시된 결과로 새 물리 ID에 기록한다. 기존 상점 가격·각성 비용·일반 강화 설정은 그대로다. 원본 제작1572의 오크족 토템(각인)100개→20000아데나는 인벤토리에 화폐 아이템을 만들지 않고 실제 지갑에 지급한다. 출력 수치도 원본값이다.
 
 같은 SlotIndex의 복수 재료는 UI에서 사용자가 원본 행 하나를 직접 선택한다. 임의 선택하거나 전부 소비하지 않는다. 원본 서버의 자동 후보 선택 알고리즘을 복원했다는 주장이 아닌, 원본 후보를 사용하는 명시적 TWILIGHT 선택 계약이다. 선택 전 실행은 거부한다. 64개 속성 귀걸이 변환과 룬 변환을 포함하며, 입력의 강화·축복·속성·제련 효과를 결과에 복사하지 않는다. 원본 제련 소실 경고가 있는 제작만 알려진 제련 상태를 소비하고 확인창에 경고한다. 알 수 없는 인스턴스 옵션은 보호한다.
 
@@ -40,9 +40,9 @@
 
 공개 Git에는 코드·검사·작은 공개 확률/자체 경제 설정과 이 문서만 넣는다. 원문 행·분석 ZIP·이미지와 큰 런타임 JSON은 Git에 넣지 않는다. Library 같은 파일 ID의 버전을 갱신했고 공식 materialization으로 소비 폴더에 재다운로드하여 실제 파일로 검증했다.
 
-- Library: `libfile_d044c27014888191a5f78a2bf745344e`, **version3**.
-- 파일: `patch523-equipment-rules.json`, **29404466 bytes**.
-- SHA256: `88afcae4886e8286b6074fcebec74ba6cbd9e9a5dfe0621c31a80f3dd4337f37`.
+- Library: `libfile_d044c27014888191a5f78a2bf745344e`, **version4**.
+- 파일: `patch523-equipment-rules.json`, **29942517 bytes**.
+- SHA256: `d2af6eb5cf84314616e60f249539754ddbebbdf36fd759897c8d43b4dd3ea7f5`.
 - 소비 복원 경로: `/workspace/consumer523/patch523-equipment-rules.json`. Work 경로는 임시이며 영구 전달은 Library 파일이다.
 
 ```sh
@@ -52,7 +52,7 @@ python3 tools/equipment/build_patch523_rules.py \
   --output /private/patch523-equipment-rules.json
 
 TWILIGHT_PATCH523_EQUIPMENT_RULES=/private/patch523-equipment-rules.json \
-TWILIGHT_PATCH523_EQUIPMENT_SHA256=88afcae4886e8286b6074fcebec74ba6cbd9e9a5dfe0621c31a80f3dd4337f37 \
+TWILIGHT_PATCH523_EQUIPMENT_SHA256=d2af6eb5cf84314616e60f249539754ddbebbdf36fd759897c8d43b4dd3ea7f5 \
 godot --path .
 ```
 
@@ -60,7 +60,7 @@ godot --path .
 
 원본 누적523 ZIP SHA는 `d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832`, 제작 심층 ZIP `ed26d0f3e48c58f60c403e8a526d5786139476dcbd716c7f029365425d8e4b85`, 인장 심층 ZIP `e55db3ae269d5d73bdc902c924d65da5a9d94f3fb74f26016f683d6682246c08`이다. 세 파일을 해당 환경에서 Library materialization하여 읽고 전체 ZIP CRC/SHA를 확인했다.
 
-컴파일러는28개 현재 표의 바이트 SHA를 고정한다. 제작 입력46254행, 출력30384행, 뷰1653행(고유1650ID), 제한16462행을 원문 조회에 보존한다. 확정 단일 결과·고유 현재 ID·명시 후보·유효 기간·서버/플레이어 조건 등의 실행 조건을 만족한244개가 활성이다. 나머지1406개는 무작위/복수 결과389, 카탈로그 미매핑/중복382, 아이템 상태33, 서버/플레이어 조건490, 아이템 조건76, 물리 슬롯10, 기간/시간26개다. 경제값 자체 설정 승인으로 서버 자격·갱신 횟수·이벤트 기간을 무시하지 않는다. 뷰 없는261764/261774를 무제한 보장 강화로 노출하지 않는다.
+컴파일러는29개 현재 표의 바이트 SHA를 고정한다. 제작 입력46254행, 출력30384행, 뷰1653행(고유1650ID), 제한16462행을 원문 조회에 보존한다. 확정 단일 결과·고유 현재 ID·명시 후보·유효 기간·서버/플레이어 조건 등의 실행 조건을 만족한345개가 활성이다. 나머지1305개는 미지원 단일/복수 결과334, 카탈로그 미매핑/중복430, 서버/플레이어 조건490, 아이템 조건14, 물리 슬롯11, 기간/시간26개다. 경제값 자체 설정 승인으로 서버 자격·갱신 횟수·이벤트 기간을 무시하지 않는다. 뷰 없는261764/261774를 무제한 보장 강화로 노출하지 않는다.
 
 수호/회복161효과, Bm 확률723행과 원본 소비량·축복 분기를 조회한다. 모든 Bm 확률을 전체 장비에 일반화하지 않는다. 전체 원본 무기/갑옷·특수 주문서 자격, 일반 인장 효과의 raw0 매칭, 다중 장착 그룹/슬롯 개방, 원본 창고 조건, 세공/제련/연금술/발동 훅 전체는 미완료다. 기능이 없는 장비를 임의 공급하지 않는다.
 
@@ -80,7 +80,7 @@ Linux llvmpipe OpenGL960×540/1280×720은 실제 렌더링이며 실기기 성�
 
 PR247/251과 `_save_game`의 override 허용 목록·저장 payload가 공통이다. 통합 시 `next_item_instance_id`/`crafting_log`, 상점 상태, `warehouse`/`inventory_automation`을 모두 보존해야 한다. 각각의 저장 실패 보호도 합쳐서 검증해야 한다. 최신 main 단독 대비 mergeable 상태와 여러 기능 PR을 함께 합친 실행 검증은 서로 다르며 후자는 미실행이다.
 
-### 최종 로컬 검사 결과 (게임 코드 `11f55b753cc8fe6b8e2f57828f15ca7e80b4d807`)
+### 이전244개 단계 검사 (게임 코드 `11f55b753cc8fe6b8e2f57828f15ca7e80b4d807`, 팩v3)
 
 - 원본 전수/제작 조건 Python11개, CI 스테이징8개, Python 구문 통과.
 - Library v3 재다운로드 실제 규칙/상태/후보/확률·수량/설치89개에 장인 등급 자격5개를 더한 Godot94검사 통과.
@@ -90,4 +90,32 @@ PR247/251과 `_save_game`의 override 허용 목록·저장 payload가 공통이
 - 기존414제작식 원자성·346비법서/등급 제작 회귀, 실제 강화 연출17검사와 per-instance 강화/속성/이주/저장 회귀 통과.
 - 공식 공개 API 현재 버전의 인장3분기와 장인 무기3등급 전체 단계/실패 규칙 재대조 통과. 원격 CI는 수동 실행하지 않았다.
 
-캡처8장·최종 로그·공식 대조 JSON·코드 SHA를 [Library 증거 ZIP](https://chatgpt.com/api/library/files/libfile_f8704eb429008191aea653070e5486c9/download)에 보관했다. 5160969bytes, SHA256 `c6b9a9ad5614b549617b541c303ca18018368a4fdbb6a26de6d396a2667ada94`. 원본 ZIP·큰 규칙 팩·실제 사용자 세이브는 증거 ZIP에 없다. 게임 데이터 팩은 [별도 Library v3](https://chatgpt.com/api/library/files/libfile_d044c27014888191a5f78a2bf745344e/download)다. 증거와 팩 모두 새 소비 폴더로 정식 materialization하여 SHA를 재확인했다.
+캡처8장·최종 로그·공식 대조 JSON·코드 SHA를 [Library 증거 ZIP](https://chatgpt.com/api/library/files/libfile_f8704eb429008191aea653070e5486c9/download)에 보관했다. 5160969bytes, SHA256 `c6b9a9ad5614b549617b541c303ca18018368a4fdbb6a26de6d396a2667ada94`. 원본 ZIP·큰 규칙 팩·실제 사용자 세이브는 증거 ZIP에 없다. 이 증거 ZIP은 이전244개 단계다. 최신 게임 데이터 팩은 [별도 Library v4](https://chatgpt.com/api/library/files/libfile_d044c27014888191a5f78a2bf745344e/download)다. 증거와 팩 모두 새 소비 폴더로 정식 materialization하여 SHA를 재확인했다.
+
+## 후속 실행 연결: 원본345 제작식
+
+이전244개에서 **101개**를 추가했다. 이 중 확률 제작11개는 [NC 제작 공개 표](https://probability.plaync.com/lineagem/view?probCategoryId=6656e08396b3cf5ad823b793) 버전20261103210002와 원본 ItemCraftInput/Output/View를 대조한다. 현재 실행 가능한11개는 티셔츠/견갑8개(실패90%의 원래+9 장비 반환/성공10%의 영웅+0), 지배석 상자3개(각인 성공90%/무각인 대성공10%)다. 표 전체에서 재료 슬롯·이름·수량·강화·축복 및 결과·수량·상태·확률이 모두 같은55계약을 확인했다. 나머지는 카탈로그/아이템 조건 때문에 아직 실행하지 않는다. 55개를 모두 실행했다고 주장하지 않는다.
+
+`tools/equipment/verify_public_crafting.py --content /private/current523/content --public-table /private/craft-section-0.json --output /private/verified-crafting.json`으로 실제 원본29표 SHA와 공개 표를 다시 대조한다. 공개 스냅샷은 사이트의 public /contents→/resources 전체 페이지 응답이다. 외부 인증·계정 데이터·비공개 토큰을 사용하지 않는다. 모든 확률은 원본이며 새 확률을 추정하지 않았다.
+
+원본 ItemClassLimit는 아이템 사용 직업이고 ItemClass.LevelLimitMin/Max는 사용 레벨이다. 제작 조건은 별도 ItemCraftRestriction/View에서 검사한다. 제작 재료를 소비하는 것과 아이템을 장착/사용하는 것을 분리했다. 새로운 물리 출력에 사용 조건을 저장하고 기존 BASE508.source_class_id로 실제13직업을 연결한다. 인벤토리·제작 상세에 조건이 표시되고, 맞지 않는 직업의 사용 버튼/실제 사용을 거부한다. 직업 변경/로드 시 허용되지 않는 슬롯만 해제하며 장비 자체는 보존한다. 저장된 물리 조건은 팩 없이 재로드해도 유지한다. 전체 스택의 새로운 네이티브 효과나 오만 이동을 구현했다는 뜻은 아니다. 스택 사용 조건 조회는 현재 팩이 필요하다.
+
+보류33개의 원인은 원본 비용 누락이 아니라 컴파일러의1억 재료 상한에 원본2.5억/5억 아데나가 걸린 것이었다. 지갑 재료만10억까지 정확한 정수로 허용하고 일반 재료 상한은 유지한다. 같은 SlotIndex의43개 결제 후보도 사용자가 원본 행을 선택한다. 예: 제작120 드래곤 슬레이어의 **5억 아데나 또는 드래곤 다이아몬드2000개**, 두 값을 함께 소비하지 않는다. 선택 전 실행을 거부하고 실제 선택 비용을 화면·확인창에 표시한다.
+
+`data/crafting/patch523_crafting_policy.json`은 원본과 구분하는 두 TWILIGHT 호환 설정을 가진다. 원본 재료549를 기존 동명의 게임 소모품 스택에 연결하며 기존 kind=ain_charge/amount100을 검증한다. 원본의 충전 보너스와 기존 게임의 충전량이 같다고 주장하지 않고 기존 충전량100·가격50000을 바꾸지 않는다. 호환 설정은 제작 전용 index에만 적용하며 전역 카탈로그/원본 ID/기존 저장을 덮지 않는다. 실제 코드의 kind/amount가 바뀌면 해당 연결은 거부한다. 이 연결을 사용하는63개 제작식에 호환 출처를 표시한다.
+
+두 번째 설정은 실패 보상과 소비 장비의 원본 ID·강화·축복이 모두 같을 때 기존 물리 ID/기록을 보존하는 처리다. 원본이 정의하는 반환 품목/단계/수량은 유지하고, 동일 ID 보존 자체는 TWILIGHT 설정으로 표시한다. 성공은 원본 출력의 새 ID를 만든다. 확률 제작은1회씩 확인하며, 실제 원본 확률과 재료 연결을 항상 보이는 영역·상세·확인창에 표시한다. 모든 결과의 정확한 ID와 가장 무거운 결과까지 검사하고, 추첨 후 저장 실패는 난수 상태도 복구한다. 여러 출력이 동시에 지급되지 않는다.
+
+통합 시 PR247의 원본549 등록과 이 호환 연결의 재료 정의도 함께 확인해야 한다. 기존 PR237/247/251의 저장 허용 키 합집합·토템 교환 중복 기록은 그대로 적용한다. 다른 PR을 임의 병합하지 않았다.
+
+## 보관과 실제 적용 구분 (v4)
+
+현재 게임이 소비하는 것은 **제작 규칙 JSON 데이터 팩**이며 전체 게임/원본 아트 팩이 아니다. `patch523-equipment-rules.json` Library 파일ID `libfile_d044c27014888191a5f78a2bf745344e`의 확정 **v4**,29942517bytes,SHA256 `d2af6eb5cf84314616e60f249539754ddbebbdf36fd759897c8d43b4dd3ea7f5`다. 승인된 비공유 Drive 프로젝트의 `01_실제적용팩_current523_제작장비_PR239`에는 같은 바이트를 `patch523-equipment-rules-v4-345.json`으로 보관한다. 폴더/파일 모두 owner-only·shared=false를 읽어 확인했고 공유 권한을 바꾸지 않았다. 정확한 비공유 Drive 링크는 작업 인계에 기록한다.
+
+원본 보존용은 별도 `02_원본소스_보존`의 기존 `lineagem_patch523_all_content_validated_and_508_520_deltas.zip`(patch523,25031173bytes,SHA256 `d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832`)이다. 동일 원본을 다시 업로드하지 않았다. 해당 Drive 원본 사본을 내려받아 SHA·전체 ZIP CRC를 확인했다. 입력 분석 ZIP/캡처/감사 자료는 새 Drive 업로드에 포함하지 않았다.
+
+Drive의 보관 파일은 자동 적용되지 않는다. PR239 코드에서 정보 화면의 파일 선택 설치기를 사용하거나 `TWILIGHT_PATCH523_EQUIPMENT_RULES`/`TWILIGHT_PATCH523_EQUIPMENT_SHA256`을 지정해야 한다. 설치는 `user://patch523-equipment/<SHA>/rules.json`과 활성 포인터 `user://patch523-equipment-active.json`을 사용한다. 원본 백업 ZIP은 여기에 설치하지 않는다.
+
+Drive에서 새 소비 폴더 `/workspace/drive-consumer239/runtime/patch523-equipment-rules-v4-345.json`로 인증된 raw-file 다운로드를 받아 바이트/SHA/JSON/345개 정의를 검사했다. JSON이므로 ZIP CRC 대상은 아니며 원본 백업 ZIP은 별도로 CRC를 검사했다. 실제 Godot102검사에서 이 Drive 사본의 로드·관리 폴더 복사·포인터 복원을 통과했다. QA 설치 실제 경로는 `/tmp/equipment-drive239-unit/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/patch523-equipment/d2af6eb5cf84314616e60f249539754ddbebbdf36fd759897c8d43b4dd3ea7f5/rules.json`이다. 이 Linux QA 경로는 사용자 PC의 설치 경로가 아니며 일반 표기는 위 user:// 계약이다.
+
+최신 원본/제작 Python14·staging8·Godot 규칙102·기존 실제Main76·현재 맵/기존 저장32검사는 통과했다. 신규 제작·장착 자격·원본 확률·결제 선택·실패 반환·저장/재로드의 실제 화면 검사는 별도 인계 결과를 따른다. 새 캡처/로그는 `/workspace/equipment523-logs/v4-drive-ui-*`의 **LOCAL_ONLY**이며 최신 사용자 지시에 따라 새 외부 업로드를 하지 않는다. 이전244개 단계의 Library 증거 ZIP을 최신345개 검증으로 세지 않는다. Drive 원본/적용팩, Library 버전, 코드 PR, 로컬 QA 적용을 구분한다.
