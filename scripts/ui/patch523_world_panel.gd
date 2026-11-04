@@ -5,7 +5,10 @@ const LINKS = preload("res://scripts/maps/patch523_world_links.gd")
 const POLICY = preload("res://scripts/monsters/patch523_spawn_policy.gd")
 const HOST_PORTALS = preload("res://scripts/maps/host_portal_navigation.gd")
 const PORTAL_SOURCE = preload("res://scripts/maps/patch523_portal_source_evidence.gd")
+const ARRIVAL = preload("res://scripts/maps/patch523_portal_arrival.gd")
 var portal_source = PORTAL_SOURCE.new()
+var inspect_arrival: Button
+var last_arrival_check: Dictionary = {}
 var world: Node
 var links: RefCounted
 var summary: Label
@@ -66,6 +69,10 @@ func configure(controller: Node) -> void:
 	action.disabled = true
 	action.hide()
 	right.add_child(action)
+	inspect_arrival = UI.button("도착 계약 확인", check_arrival, Vector2(180,36))
+	inspect_arrival.name = "InspectSourceArrival"
+	inspect_arrival.hide()
+	right.add_child(inspect_arrival)
 	navigate = UI.button("이동석으로 이동", navigate_selected, Vector2(180,36))
 	navigate.name = "NavigateHostPortal"
 	navigate.hide()
@@ -141,6 +148,7 @@ func filter_rows() -> void:
 		detail.text = "표시할 항목이 없습니다. 검색어 또는 현재 생성 상태를 확인하세요."
 		action.hide()
 		navigate.hide()
+		inspect_arrival.hide()
 
 func show_entry(index: int) -> void:
 	if index < 0 or index >= visible_entries.size(): return
@@ -148,6 +156,8 @@ func show_entry(index: int) -> void:
 	var lines: Array[String] = [str(entry.title), ""]
 	action.hide()
 	navigate.hide()
+	inspect_arrival.hide()
+	last_arrival_check.clear()
 	if entry.kind == "live":
 		var slot: Dictionary = entry.slot
 		lines.append("현재 게임에 이미 설정된 사냥터입니다.")
@@ -193,8 +203,26 @@ func show_entry(index: int) -> void:
 		else: lines.append("도착 영역의 선택 규칙과 포탈의 트리거·활성 조건이 미확인이라 이동을 보류합니다.")
 		lines.append("기존 게임의 이동석과 같은 경로라고 추정하지 않습니다.")
 		action.show()
+		inspect_arrival.show()
 		action.tooltip_text = "원본 포탈의 트리거·활성 조건·도착 규칙 확인이 필요합니다."
 	detail.text = "\n".join(lines)
+
+func check_arrival() -> void:
+	var selection: PackedInt32Array = rows.get_selected_items()
+	if selection.is_empty() or selection[0] >= visible_entries.size(): return
+	var entry: Dictionary = visible_entries[selection[0]]
+	if entry.kind != "portal": return
+	show_entry(selection[0])
+	last_arrival_check = ARRIVAL.inspect(links, int(entry.data.portal.ID), world.field_map)
+	var contract: Dictionary = last_arrival_check.contract
+	if contract.is_empty(): return
+	var context: Dictionary = contract.conditions
+	var report: String = "도착 계약: %s\n도착 Land %d · AssetPath %s\n%s" % ["원본 명시점" if contract.arrival_kind == "EXACT_POINT" else "영역 · 선택 규칙 필요", int(contract.target_namespace.land_id), str(contract.target_namespace.asset_path), str(last_arrival_check.reason)]
+	report += "\n도착 지역 속성 %d행 · 시간 제한 %d행 · 주간 연결 %d행" % [context.target_land_attributes.size(), context.land_time_limits.size(), context.land_weekly_links.size()]
+	report += "\n별도 LandTeleport 경로 %d건 · 해당 비용·전제조건을 이 포탈에 적용하지 않습니다." % context.separate_land_teleport_routes.size()
+	report += "\n포탈 비용·활성·트리거는 미확정입니다. 기존 PC 지형을 M 원본 좌표로 간주하지 않습니다."
+	detail.text = report + "\n\n" + detail.text
+	detail.scroll_to_line(0)
 
 func navigate_selected() -> void:
 	var selection: PackedInt32Array = rows.get_selected_items()

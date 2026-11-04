@@ -24,6 +24,9 @@ func spawn_conditions(pack_id: int) -> Dictionary:
 func portal_context(portal_id: int) -> Dictionary:
 	return world_links.portal_context(portal_id) if world_links != null else {}
 
+func portal_contract(portal_id: int) -> Dictionary:
+	return world_links.portal_contract(portal_id) if world_links != null else {}
+
 func configure_source(pack: RefCounted, certificate: String, legacy_root: String, legacy_map: String, review_population: bool=false) -> bool:
 	var candidate=SOURCE_NAV.new()
 	if not candidate.configure(pack,certificate,legacy_root,legacy_map):return false

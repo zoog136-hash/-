@@ -77,6 +77,9 @@ func _initialize() -> void:
 		field.data = {"portal": [{"id": "preserved"}], "monster_spawn": [{"id": "preserved"}]}
 		check(field.configure_world_links(spec.root, spec.sha), "actual game field binds cumulative523 definitions")
 		check(field.portal_evidence().size() == 1 and field.spawn_evidence().size() == 2, "actual field exposes portal and spawn links")
+		var arrival: Dictionary = field.portal_contract(12)
+		check(arrival.arrival_kind == "EXACT_POINT" and int(arrival.declared_arrival[0]) == 10 and int(arrival.declared_arrival[1]) == 20 and not arrival.travel_enabled, "actual field exposes immutable declared arrival without enabling travel")
+		check(arrival.conditions.separate_land_teleport_routes[0].land_teleport[0].TeleportCost == 10000 and not arrival.portal_cost_known, "field contract retains separate route price without charging this portal")
 		check(field.data.portal == [{"id": "preserved"}] and field.data.monster_spawn == [{"id": "preserved"}], "binding preserves gameplay placements")
 		check(not field.configure_world_links(spec.root, "0".repeat(64)) and field.spawn_evidence().size() == 2, "rejected update preserves existing field binding")
 	var file := FileAccess.open(spec.root.path_join("conditions.json"), FileAccess.WRITE)

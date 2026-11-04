@@ -212,3 +212,22 @@ func portal_context(portal_id: int) -> Dictionary:
 			"competition_dungeon_land": dungeon_links, "competition_dungeons": dungeons,
 			"competition_dungeon_views": dungeon_views, "separate_land_teleport_routes": separate_routes}
 	return {}
+
+func portal_contract(portal_id: int) -> Dictionary:
+	# Content declarations are authoritative; raw packed candidates never land actors.
+	if not loaded: return {}
+	for link: Dictionary in shard.portals:
+		if int(link.portal.ID) != portal_id: continue
+		var target: Dictionary = link.target_territory
+		var exact: bool = target.StartX == target.EndX and target.StartY == target.EndY
+		return {"schema": 1, "source_snapshot": "patch523", "manifest_sha256": manifest_sha256,
+			"portal_id": portal_id, "declaration": link.duplicate(true),
+			"source_namespace": {"land_id": int(land.ID), "asset_path": str(land.AssetPath)},
+			"target_namespace": {"land_id": int(link.target_land.ID), "asset_path": str(link.target_land.AssetPath)},
+			"source_point": [link.portal.SourceX, link.portal.SourceY],
+			"arrival_kind": "EXACT_POINT" if exact else "REGION_REQUIRES_SELECTION_POLICY",
+			"declared_arrival": [target.StartX, target.StartY] if exact else [],
+			"declared_region": [target.StartX, target.StartY, target.EndX, target.EndY],
+			"conditions": portal_context(portal_id), "portal_cost_known": false,
+			"trigger_geometry_known": false, "activation_known": false, "travel_enabled": false}
+	return {}
