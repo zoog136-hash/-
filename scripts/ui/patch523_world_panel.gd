@@ -5,7 +5,10 @@ const LINKS = preload("res://scripts/maps/patch523_world_links.gd")
 const POLICY = preload("res://scripts/monsters/patch523_spawn_policy.gd")
 const HOST_PORTALS = preload("res://scripts/maps/host_portal_navigation.gd")
 const PORTAL_SOURCE = preload("res://scripts/maps/patch523_portal_source_evidence.gd")
-const ARRIVAL = preload("res://scripts/maps/patch523_portal_arrival.gd")
+const SOURCE_RUNTIME = preload("res://scripts/maps/patch523_source_portal_bridge.gd")
+var source_runtime = SOURCE_RUNTIME.new()
+var source_selection: Dictionary = {}
+var last_source_result: Dictionary = {}
 var portal_source = PORTAL_SOURCE.new()
 var inspect_arrival: Button
 var last_arrival_check: Dictionary = {}
@@ -64,7 +67,7 @@ func configure(controller: Node) -> void:
 	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	detail.custom_minimum_size = Vector2(240,240)
 	right.add_child(detail)
-	action = UI.button("포탈 이동 보류", func() -> void: pass, Vector2(180,36))
+	action = UI.button("원문 포탈 사용", use_source_portal, Vector2(180,36))
 	action.name = "SourcePortalTravel"
 	action.disabled = true
 	action.hide()
@@ -146,7 +149,9 @@ func filter_rows() -> void:
 	if not visible_entries.is_empty(): rows.select(0); show_entry(0)
 	else:
 		detail.text = "표시할 항목이 없습니다. 검색어 또는 현재 생성 상태를 확인하세요."
+		source_selection.clear()
 		action.hide()
+		action.disabled = true
 		navigate.hide()
 		inspect_arrival.hide()
 
@@ -158,6 +163,7 @@ func show_entry(index: int) -> void:
 	navigate.hide()
 	inspect_arrival.hide()
 	last_arrival_check.clear()
+	source_selection.clear()
 	if entry.kind == "live":
 		var slot: Dictionary = entry.slot
 		lines.append("현재 게임에 이미 설정된 사냥터입니다.")
@@ -199,12 +205,17 @@ func show_entry(index: int) -> void:
 		lines.append("원본 출발: (%d, %d)" % [int(data.portal.SourceX), int(data.portal.SourceY)])
 		lines.append("원본 도착 영역: (%d, %d) ~ (%d, %d)" % [int(target.StartX), int(target.StartY), int(target.EndX), int(target.EndY)])
 		lines.append_array(PORTAL_SOURCE.display_lines(portal_source.for_portal(int(data.portal.ID))))
-		if data.arrival_selection == "EXACT_POINT": lines.append("원본 도착점은 확인됐지만, 포탈의 트리거·활성 조건이 미확인이라 이동을 보류합니다.")
+		var state: Dictionary = SOURCE_RUNTIME.inspect(world, links, int(data.portal.ID))
+		if state.request_enabled: lines.append("소스 필드 자체 통행에서 명시 사용 요청이 가능합니다. 원작의 자동 트리거·활성 규칙을 확정한 것은 아닙니다.")
+		elif data.arrival_selection == "EXACT_POINT": lines.append("원본 도착점은 확인됐지만 현재 실행 조건을 확인하지 못해 사용을 보류합니다.")
 		else: lines.append("도착 영역의 선택 규칙과 포탈의 트리거·활성 조건이 미확인이라 이동을 보류합니다.")
 		lines.append("기존 게임의 이동석과 같은 경로라고 추정하지 않습니다.")
 		action.show()
 		inspect_arrival.show()
-		action.tooltip_text = "원본 포탈의 트리거·활성 조건·도착 규칙 확인이 필요합니다."
+		source_selection = state.receipt
+		action.disabled = not state.request_enabled
+		action.text = "원문 포탈 사용" if state.request_enabled else "원문 포탈 사용 보류"
+		action.tooltip_text = str(state.reason)
 	detail.text = "\n".join(lines)
 
 func check_arrival() -> void:
@@ -213,7 +224,7 @@ func check_arrival() -> void:
 	var entry: Dictionary = visible_entries[selection[0]]
 	if entry.kind != "portal": return
 	show_entry(selection[0])
-	last_arrival_check = ARRIVAL.inspect(links, int(entry.data.portal.ID), world.field_map)
+	last_arrival_check = SOURCE_RUNTIME.inspect(world, links, int(entry.data.portal.ID))
 	var contract: Dictionary = last_arrival_check.contract
 	if contract.is_empty(): return
 	var context: Dictionary = contract.conditions
@@ -223,6 +234,16 @@ func check_arrival() -> void:
 	report += "\n포탈 비용·활성·트리거는 미확정입니다. 기존 PC 지형을 M 원본 좌표로 간주하지 않습니다."
 	detail.text = report + "\n\n" + detail.text
 	detail.scroll_to_line(0)
+
+func use_source_portal() -> void:
+	last_source_result = source_runtime.request(world, links, source_selection.duplicate(true))
+	world.hud.show_message(str(last_source_result.reason))
+	if last_source_result.ok:
+		world.hud._close_workspace()
+	else:
+		detail.text = str(last_source_result.reason) + "\n\n" + detail.text
+		detail.scroll_to_line(0)
+		action.disabled = true
 
 func navigate_selected() -> void:
 	var selection: PackedInt32Array = rows.get_selected_items()

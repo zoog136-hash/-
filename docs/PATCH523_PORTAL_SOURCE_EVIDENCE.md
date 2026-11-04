@@ -43,41 +43,49 @@ single declared point. There are91 point arrivals and2 region-only arrivals
 LandTeleport routes, costs and prerequisites remain separate travel routes.
 No portal fee, trigger or activation is inferred from an empty condition list.
 
-The map panel's **도착 계약 확인** button calls the read-only
-`patch523_portal_arrival.inspect(catalog, portal_id, destination_field)` API.
-It checks source geometry availability rather than interpreting a PC field's
-numeric map ID as an M Land. Even a successful landing preflight returns
-`travel_enabled=false`: it is not portal execution. It never writes a player
-position, queues travel, charges currency, samples a region or corrects a raw
-packed candidate. Region-only arrivals remain held without a selection policy.
+The map panel's **도착 계약 확인** and **원문 포탈 사용** buttons now consume
+PR232's public Main API, read at commit
+`f8cf6c2ad803d7d66fdd4590cf2e960e823c9476`:
 
-A future source-coordinate field must provide `portal_geometry_contract()` with:
+- `current523_aden_source_portals()`
+- `current523_aden_source_portal_context(id)`
+- `use_current523_aden_source_portal(id)`
 
-```
-schema: 1
-source_snapshot: patch523
-coordinate_space: LINEAGEM_WORLD_SOURCE_CELLS_V1
-definition_manifest_sha256: <active verified world-links manifest SHA256>
-land_id: <exact destination M LandID>
-asset_path: <exact destination M AssetPath>
-geometry_sha256: <source geometry SHA256>
-collision_scope: EXPLICIT_LOCAL_POLICY
-traversal_policy_id: <explicit configured local traversal policy>
-actor_foot_policy_id: <explicit configured actor-foot projection policy>
-```
+The actual source field metadata key in that implementation is
+`current523_source_field`. The source mode must be active and loaded. The bridge
+matches the selected runtime Portal/TargetTerritory/TargetLand and exact source
+and landing points against PR230's verified declarations. It requires a unique
+list/context match, verified raw endpoint candidate and actual source-cell
+member/hash/policy verdicts at both endpoints. Actor position must be the exact
+source cell; no trigger radius is introduced. It checks cooldown, living state,
+AUTO, immobilization and charge state before delegating.
 
-Its methods must include `source_cell_supplied(Vector2i)`, `source_to_world`,
-`world_to_source`, `point_clear(point, padding)` and `line_clear(from, to)`.
-Coverage and clearance results must be actual booleans. The preflight verifies
-the declared point's supplied chunk, finite projection and inverse roundtrip,
-floor/occupancy and the existing TWILIGHT4px eight-offset footprint. Geometry
-and foot policy are explicitly local, not claimed as verified M collision.
-The current PR230 host field and the inspected PR232 renderer at
-`f7ee56c478142efba6d9e1062a14482a95e60675` over legacy traversal do not implement
-this source-coordinate landing interface.
-No PR232 code is imported here; source geometry and portal activation remain
-separate dependencies.
+The selected field instance, active definition SHA and runtime context digest
+form a selection receipt. Replaced fields and changed contracts require a fresh
+selection. The request rechecks current state and calls the public execution API
+once; a reentrant request is rejected. The runtime owns the final attribute,
+movement, destination-rendering and rollback checks. This bridge never writes
+player position or currency, creates terrain, samples a destination, substitutes
+a PC field or restores over a controller-owned safe return. A failed backend
+request stays visible in the panel; success closes it. A false return that
+changed field/position is reported separately and is never automatically retried.
 
-`patch523_portal_arrival_test.gd` checks all93 real declaration contracts and
-unsafe landing rejection. Its successful geometry adapter is synthetic test
-data, not an original map installation or a completed physical arrival.
+PR232's documented default own policy accepts both endpoints only for335/343.
+That is distinct from30 raw source/destination matches,31 Aden raw source
+matches and93 declarations. The bridge does not hardcode335/343 as universally
+active: it consumes the installed field's current policy verdict and still
+requires exact actor location and final runtime authorization. Other configured
+policies may differ. Portal350's raw candidate never replaces its M declaration.
+
+This PR230 branch does not install or copy PR232's source-field runtime or its
+private source/portal resources. With those APIs absent the actual Main panel
+holds the request with `source_runtime_api_required`. Positive API and widget
+probes are synthetic; they do not establish real M-field movement on this
+branch. Integration must provide the three public methods and the actual active
+source field together. Source endpoint files, rendering and failure rollback
+remain owned and tested by PR232. No other PR is merged here.
+
+The earlier `patch523_portal_arrival.inspect` helper is retained as an independent
+read-only strict geometry-preflight utility, with its synthetic regression test.
+Its proposed `portal_geometry_contract` interface is not required by the PR232
+public-API bridge and is no longer described as the integration blocker.

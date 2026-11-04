@@ -82,7 +82,7 @@ func run() -> void:
 		check(panel.detail.text.contains("Map/Aden/80157ff7.s32@154102") and panel.detail.text.contains("현행 DAT"), "UI exposes row-level source provenance")
 		check(panel.action.visible and panel.action.disabled and not panel.navigate.visible, "source research does not enable travel")
 		await click(panel.inspect_arrival)
-		check(panel.last_arrival_check.code == "source_geometry_api_required" and not panel.last_arrival_check.travel_enabled, "actual legacy game field cannot certify M arrival")
+		check(panel.last_arrival_check.code == "source_runtime_api_required" and not panel.last_arrival_check.request_enabled, "actual branch without PR232 cannot request source movement")
 		check(panel.detail.text.contains("도착 계약: 원본 명시점") and panel.detail.text.contains("AssetPath Aden/") and panel.detail.text.contains("해당 비용·전제조건을 이 포탈에 적용하지 않습니다"), "actual contract UI shows namespace and separated conditions")
 		check(panel.detail.text.begins_with("도착 계약:"), "contract action shows its result above the source evidence")
 		check(int(panel.last_arrival_check.contract.declared_arrival[0]) == 34275 and int(panel.last_arrival_check.contract.declared_arrival[1]) == 32222, "UI contract retains M declaration despite raw mismatch")
