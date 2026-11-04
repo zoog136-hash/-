@@ -42,8 +42,7 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	clear()
 	if manifest_path.is_empty() or not FileAccess.file_exists(manifest_path): return false
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
-	if not parsed is Dictionary or int(parsed.get("schema", 0)) != 1: return false
-	if str(parsed.get("mode", "")) != "literal_body_shadow_inspection_only": return false
+	if not INSTALL.card_manifest_problem(parsed).is_empty(): return false
 	var records: Dictionary = parsed.get("records", {})
 	_manifest_records = records
 	var selection: Dictionary = preload("res://scripts/lineagem_base508.gd").select_visual_key(key, context)
@@ -370,7 +369,7 @@ func notify_source_global_event(event_name: String, facing: int) -> bool:
 	# unspecified clock remain labelled compatibility, never recovered M semantics.
 	if _playback_mode != "compatible" or _manifest_path.is_empty(): return false
 	var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(_manifest_path))
-	if not index is Dictionary: return false
+	if not INSTALL.card_manifest_problem(index).is_empty(): return false
 	var definition: Dictionary = index.get("source_global_effects", {}).get(event_name, {})
 	if definition.get("source_table", "") != "ConstantData": return false
 	return spawn_source_overlay(int(definition.get("sprite_id", 0)), facing)
@@ -380,7 +379,7 @@ func notify_source_spell_event(source_spell_id: int, stage: String, world_point:
 	var path: String = _manifest_path if manifest_path.is_empty() else manifest_path
 	if path.is_empty() or not FileAccess.file_exists(path): return false
 	var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-	if not index is Dictionary: return false
+	if not INSTALL.card_manifest_problem(index).is_empty(): return false
 	var row: Dictionary = index.get("source_spell_bindings", {}).get(str(source_spell_id), {})
 	if row.is_empty(): return false
 	var fields: Dictionary = {"cast":"CasterEffectSpriteID","impact":"EffectExplosionSpriteID","success":"SuccessEffectSpriteID","fail":"FailEffectSpriteID","critical":"CriticalEffectSpriteID","effect":"EffectSpriteID"}

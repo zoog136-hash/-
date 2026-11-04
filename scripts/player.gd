@@ -82,14 +82,11 @@ var attack_visual_duration: float = 0.42
 var physics_delta: float = 1.0 / 60.0
 
 func _ready() -> void:
-	var installed_manifest: String = preload("res://scripts/lineagem_pack_install.gd").active_root().path_join("manifest.json")
+	var installed_manifest: String = preload("res://scripts/lineagem_pack_install.gd").active_manifest()
 	if FileAccess.file_exists(installed_manifest):
 		original_source_manifest = installed_manifest
 	original_source_preview.name = "OriginalSourceInspection"
 	add_child(original_source_preview)
-	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--lineagem-original-preview="):
-			original_source_manifest = argument.trim_prefix("--lineagem-original-preview=")
 	base_move_speed = move_speed
 	motion.strike.connect(func(id: int) -> void: attack_strike.emit(id))
 	motion.cancelled.connect(func(id: int) -> void: attack_cancelled.emit(id))

@@ -1,0 +1,118 @@
+{
+  "checked_at_utc": "2026-11-04T08:03:15.483584+00:00",
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "branch": "feature/native-pack-selection-20261104",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "tests": {
+    "core_runtime_save_test": {
+      "status": "passed",
+      "log_sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd",
+      "summaries": [
+        "CORE_RUNTIME_SAVE_RESULT {\"checks\":32,\"failures\":[],\"scope\":\"ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED\"}"
+      ]
+    },
+    "deferred_save_gate_test": {
+      "status": "passed",
+      "log_sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9",
+      "summaries": [
+        "DEFERRED_SAVE_GATE_RESULT {\"failures\":[]}"
+      ]
+    },
+    "import": {
+      "status": "passed",
+      "log_sha256": "54b04815ca1cd5e78397ce6c7accf46c8b3648624b6cc3c23daf8e3df4799ce1",
+      "summaries": []
+    },
+    "lineagem_pack_resolution_test": {
+      "status": "passed",
+      "log_sha256": "dc698f8787bd1511622c5c2df9d2c6bbe53d0f92b3e8fcf47d9a2e2c7d184187",
+      "summaries": [
+        "LINEAGEM_PACK_RESOLUTION_RESULT {\"checks\":10,\"failures\":[]}",
+        "LINEAGEM_PACK_RESOLUTION_OK checks=10"
+      ]
+    },
+    "lineagem_pack_settings_main_test": {
+      "status": "passed",
+      "log_sha256": "e871bb63be4b0b3588ef8814cb2078c000c4cdc19029b782eec7429b86931cba",
+      "summaries": [
+        "LINEAGEM_PACK_SETTINGS_RESULT {\"checks\":13,\"failures\":[]}"
+      ]
+    },
+    "lineagem_pack_settings_opengl": {
+      "status": "passed",
+      "log_sha256": "bf9b62ee6c6d73f9491e011329ae30b8634fd0f1b12ce6c645e74e76c047cd8f",
+      "summaries": [
+        "LINEAGEM_PACK_SETTINGS_RESULT {\"checks\":15,\"failures\":[]}"
+      ]
+    },
+    "save_identical_payload_test": {
+      "status": "passed",
+      "log_sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b",
+      "summaries": [
+        "SAVE_IDENTICAL_PAYLOAD_RESULT {\"failures\":[],\"skips\":1,\"writes\":2}"
+      ]
+    }
+  },
+  "additional_checks": {
+    "installer_smoke": "LINEAGEM_PACK_INSTALL_SMOKE failures=0",
+    "python_staging_tests": "7 passed",
+    "python_syntax": "passed",
+    "git_diff_check": "passed",
+    "resource_integrity": {
+      "atlases": 723,
+      "frames": 41442,
+      "bytes": 233420026,
+      "status": "passed"
+    }
+  },
+  "exact_production_stage": {
+    "files": 7499,
+    "bytes": 1568980916,
+    "receipt_sha256": "1bc6971740a06e65b1bd42026af220511315c2a5c37ecac1d8975274440861a8",
+    "runtime_scripts_match_local_source": true,
+    "current_map_monster_names": 62,
+    "all_current_appended_population_art_included": true
+  },
+  "render": {
+    "backend": "OpenGL 4.5 Compatibility Mesa llvmpipe",
+    "size": [
+      1280,
+      720
+    ],
+    "audio": "Dummy; audio playback not tested",
+    "local_inspected_capture_sha256": "468f7c523fe83cb00ad85d7110770ca250e99ec261de9209931e5f5e7d7be684",
+    "image_uploaded_or_committed": false
+  },
+  "input_delivery": {
+    "analysis_523_content_zip": {
+      "bytes": 25031173,
+      "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+      "crc": "passed"
+    },
+    "analysis_523_byte_qa_zip": {
+      "bytes": 1485593,
+      "sha256": "5420df9bb61849c16026ea7c3fadddf919b18313f7fdef29e5691bfd62934476",
+      "crc": "passed"
+    },
+    "normal_drive_access": "succeeded; first preserved base508 part downloaded and SHA matched; full ZIP not restored",
+    "historical_source_ledger_check": "failed: /workspace/resource-source/a1.zip not accessible"
+  },
+  "initial_failed_runs": [
+    "ALSA device unavailable in first rendered attempt; rerun uses Dummy audio",
+    "Reduced stage omitted active appended population portrait 45027; fixed stage selection, retained source bytes, reimported and reran all five checks",
+    "A repeated cold import was stopped to reuse Godot-generated metadata and cache for SHA-identical assets in the disposable stage"
+  ],
+  "remote_delivery": {
+    "status": "not_delivered",
+    "action": "create branch feature/native-pack-selection-20261104 on zoog136-hash/-",
+    "outcome": "denied twice by automatic approval review; branch and PR were not created",
+    "reason": "The user authorizes separate PR/branch work in substance, but there is still no trusted evidence identifying zoog136-hash/- as the approved repository; creating this remote branch remains an external commitment with possible code disclosure.",
+    "remote_CI": "not started; local commit uses [skip ci] by user request"
+  },
+  "not_verified": [
+    "current523 complete runtime pixel pack and version-specific registry/decoder connection",
+    "original M visual equivalence",
+    "Android hardware",
+    "full historical manual integration/visual suites"
+  ]
+}

@@ -63,6 +63,7 @@ static func npc_record(source_id: int, local_context: Dictionary) -> Dictionary:
 		result["source_m_level_origin"] = "local_compatibility_only_native_level_unknown"
 	return result
 static func asset_path(source_path: String) -> String:
+	if not preload("res://scripts/lineagem_pack_install.gd").active_manifest_problem().is_empty(): return ""
 	# One exact source-table / physical-archive case mismatch, verified by source bytes.
 	var physical: String = source_path
 	if source_path == "Image/UIImage/Illust_Legend_WorldTree_Helm_ON.png":

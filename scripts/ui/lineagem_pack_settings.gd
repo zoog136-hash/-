@@ -15,7 +15,8 @@ func _ready() -> void:
 	add_child(title)
 	status = Label.new()
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	status.text = "변신·인형·성물: %s · 몬스터: %s" % ["설치됨" if FileAccess.file_exists(INSTALLER.active_root().path_join("manifest.json")) else "미설치", "설치됨" if FileAccess.file_exists(INSTALLER.monster_root().path_join("manifest.json")) else "미설치"]
+	var cards_problem: String = INSTALLER.active_manifest_problem()
+	status.text = "변신·인형·성물: %s · 몬스터: %s" % ["연결됨" if cards_problem.is_empty() else cards_problem, "설치됨" if FileAccess.file_exists(INSTALLER.monster_root().path_join("manifest.json")) else "미설치"]
 	add_child(status)
 	choose = Button.new()
 	choose.name = "InstallLineageMOfflinePack"
@@ -45,4 +46,9 @@ func _selected(path: String) -> void:
 	var result: Dictionary = await installer.install_zip(path)
 	choose.disabled = false
 	cancel.visible = false
-	status.text = "설치 완료 · 게임을 완전히 종료한 뒤 다시 실행하세요." if result.ok else str(result.error)
+	if not result.ok:
+		status.text = str(result.error)
+	elif INSTALLER.preview_selection(OS.get_cmdline_user_args()).specified:
+		status.text = "설치 완료 · 새 팩을 쓰려면 실행 시 지정한 원본 팩 옵션을 해제하고 게임을 다시 실행하세요."
+	else:
+		status.text = "설치 완료 · 게임을 완전히 종료한 뒤 다시 실행하세요."
