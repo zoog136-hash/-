@@ -176,7 +176,15 @@ native definition contract. Exact Land.ID and AssetPath remain separate.
 Native Land restrictions and unresolved time/weekly/competition conditions hold
 the own manual action and appear as `원문 조건 보류` in the existing Settings UI.
 Territory-scoped rules are evaluated only within their declared scope; unknown
-scope/type stays held. Native activation, cost and region arrival semantics are
+scope/type stays held. Current523 exactType8/NoTeleport andType13/NoTeleportCome,
+Unit20=TrueFalse, Value0 with all three original parameters present andzero are
+copied into `declared_inactive_restrictions` with `side=source/target`; they are
+not active holds. Unknown type/unit, missing/nonzero parameters or unresolved
+scope cannot use that exception. The original Unit table and all26 compiled
+condition tables were checked against the complete original Content archive;
+this adapter does not add another runtime catalog. The existing UI shows the
+inactive declaration alongside other remaining holds. This is no authorization,
+fee waiver or verification of automatic entry. Native activation, cost and region arrival semantics are
 not invented. Separate LandTeleport costs/prerequisites remain separate raw
 contracts; a shared target does not assign their fee to a Portal. The provider
 never changes native `activation_known=false` or `travel_enabled=false` into

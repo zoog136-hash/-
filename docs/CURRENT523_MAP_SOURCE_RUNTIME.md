@@ -384,14 +384,89 @@ The held1,150 original Portal rows expose only `AssetID`, `ID`, `SourceLandID`,
 `content/Portal.json` as198,209 bytes, SHA256
 `af434065337cfd2b8c3fab9887ce5d3569ce6651d122a05288769d487df78a45`.
 Those fields provide no trigger extent, activation clock or Portal fee contract;
-separate LandTeleport definitions do not fill that gap automatically. A fresh
-all-table typed-FK review cannot be claimed from this environment:the ledger's
-full Content archive path under `/workspace/scratch/b20f9af62341/` is absent.
-The expected file is `lineagem_patch523_all_content_validated_and_508_520_deltas.zip`,
-SHA256`d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832`.
-The verified compiled26-table definition context, original map bytes and prior
-reports remain available. No replacement rule/fee is invented from the absent
-archive, field names or empty conditions; no new transmission was attempted.
+separate LandTeleport definitions do not fill that gap automatically.
+
+The prior local materialization gap was resolved using the already-held
+private [current523 Content archive](https://drive.google.com/file/d/1EJGI2VV4u4P2yNlrMAlp0H2U28jjUH6K/view?usp=drivesdk)
+through official authenticated Drive fetch, then consuming its returned file
+reference in this executor. No producer-local path or guessed URL was used.
+The local file is now
+`/workspace/aden-validation/current523-content-verified/lineagem_patch523_all_content_validated_and_508_520_deltas.zip`:
+25,031,173 bytes, SHA256
+`d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832`.
+All1,075 ZIP entries passed CRC. Every actual Content table was checked against
+both the real index and package manifest:1,065 tables,2,323,700 rows,
+457,729,872 original JSON bytes. Original JSON SHA/size/CRC, strict JSON keys and
+constants, actual row counts and complete field sets agree. All26 production
+condition tables match the original rows with numeric/boolean types preserved.
+The original archive remains private; this is analysis input, not a new runtime
+map pack or a claim that the table ZIP is automatically installed in game.
+
+Reproduce without extracting the457MB original JSON:
+
+```sh
+python3 tools/map_restore/verify_current523_content_tables.py /private/content523.zip \
+  --production-conditions /private/world-links/conditions.json \
+  --output /private/new-content-verification.json
+```
+
+The full-schema and typed-reference review found:
+
+- Portal1,150 rows have no direct fee/activation column. The only other
+  Portal-named field is `ClanRaidClass.PortalEarthObjectClassID`, a different
+  object-class namespace. This field-name review does not prove that all runtime
+  relationships are explicit foreign keys or that original activation is absent.
+- LandTeleport has674 routes,691 separate territory links and278 prerequisite
+  links. The checked Portal/Land/Attribute/Type/Unit and
+  LandTeleport/Currency/Territory/Prerequisite references have no missing keys.
+  Only5 Portal rows share a target Territory with an independent LandTeleport;
+  that equality does not transfer its admission or fee contract.
+- Territories.ID0 is a declared `None` sentinel. Land.ID0 and LandTeleport.ID0
+  are real definitions; the latter costs100,000 Currency1. Zero IDs must not be
+  discarded globally or interpreted as a free route.
+- Cells882 rows reference Location/CellSubGroup; CellSubGroup154 rows reference
+  Land/CellGroup. Their schema provides no S32 terrain passability truth table.
+  This does not reopen excluded minigame/guild/siege gameplay.
+- LandAttributeType8 is `NoTeleport`, Unit20 `TrueFalse`; three original global
+  rows explicitly haveValue0 andParam1/2/3zero. One belongs to ordinary
+  Land47111 (`13313/`); the other two remain excluded siege Lands. No current
+  type is named `NoTeleportGo`. Unknown names/units, missing or nonzero
+  parameters and unknown scopes remain held.
+
+The correction separates these explicitly false teleport restrictions
+from active/unresolved holds. Contexts retain copied raw type/attribute evidence
+and source/target scope as `declared_inactive_restrictions`; the existing Settings
+list displays `원문 NoTeleport=false` alongside remaining `원문 조건 보류`.
+This grants no travel permission. Land47111 still retainsBlockLoginEnter,
+LandTimeLimitGroup41 and other unresolved original conditions. Native
+`activation_known` and `travel_enabled` remainfalse. The unused compatibility
+check for nonexistentNoTeleportGo was removed; missing parameter values are no
+longer implicitly considered zero for a false restriction.
+
+Local analysis receipts under `current523-content-verified/` are
+`all1065_actual_table_validation_and_reference_columns.json` SHA256
+`48a38bd97495659fa5ccf5ce5dc5b0f6dacb26193ab053fba4b0999cceaa1639`,
+and `typed_map_relations_source_review.json` SHA256
+`02c9a7d892f172a7231beacf812fa1d0a73415a4c851728d57eb1032a6c31941`.
+They remain local; no report/resource/capture was uploaded. The historical
+missing-path receipt is retained as historical evidence, not a current blocker.
+Original JSON row byte offsets were independently checked before normalization:
+Unit20 at963, LandAttributeType8 at600, LandAttribute152191 at548,721,
+Land47111 at183,062 and Portal18111 at163,680 in their respective original
+Content members (including original BOM bytes). Original S32 source-neighbor,
+source, destination and blocked-cell pairs were checked by byte offsets/hash as
+well. The local `inactive_original_row_and_cell_byte_proofs.json` receipt has
+SHA256 `48f0ae84020cbcf561757a683f15566f9d86cb3792bd7db6fb6c03e74f7213bf`.
+This proves bytes and declarations, not native activation or collision semantics.
+
+
+Only the newly received Content input was additionally scanned for the exact
+case-insensitive literal `800f7ff3e`:all1,065 original table payloads, no match.
+This supplies no placement rule. The prior8,311-member duplicate/placement
+investigation was not repeated. The new local receipt
+`new_content_exact_unplaced_literal_search.json` has SHA256
+`b8982955b066f585f20de4d8dd229c6ab6458e3030e4b5f399e78c183140d3e3`.
+
 
 Precisely missing are a trusted origin/variant selector for the literal member,
 a native movement truth table separating static terrain from occupancy and actor
@@ -400,12 +475,36 @@ semantics. Empty condition rows provide none of those facts. No grounded
 placement or automatic activation policy was established, so the source remains
 losslessly unplaced and native automatic activation held. This is an evidence
 limit, not an access denial. No original engine/APK/XAPK, unrecognized binary or
-additional resource download/upload was used. Local evidence receipt SHA256 is
+additional resource upload was used in that earlier placement investigation.
+Its historical local evidence receipt SHA256 is
 `486f1604d0d702dbd9206aa16df8f8c28b57680c112a6236384939ad9ff7abcf`.
 
 ## Execution evidence and limits
 
 Latest complete-input checks use the source and tile pins above:
+
+- Current523 explicit inactive restriction correction:37 actual Main/UI checks in
+  106.85s and19 new-process checks in71.91s on nativeLand47111 (`13313/`).
+  The existing Settings scroller visibly exposesNoTeleport=false and remaining
+  conditions. Ordinary player physics reachesPortal18111's exact declared
+  source; an original raw[1,0] neighbor rejects path and physical entry. Stale
+  definition requests and held transitions preserve field/state/save bytes;
+  new-process restoration retains exact cursor, raw inactive evidence, all
+  remaining holds and safe initial-host return. This is focused regression of
+  an already covered root, not additional577-root or native activation coverage.
+- The genuine provider passes26 unit checks with the unchanged original owner
+  and pinned definition pack, including copied raw inactive rows and safeguards
+  for missing/nonzero parameters, wrong units, unknown types and scoped rules.
+  An initial stateless invocation emitted unwritable default log/data-directory
+  errors; it is not counted as a clean run. The recorded rerun uses an isolated
+  writable XDG profile and has no runtime/parsing errors.
+
+- Final default-off Main/save regression passes35 checks in87.90s. Existing
+  tracked resource integrity remains723 atlases /41,442 frames /233,420,026 bytes.
+  The combined local receipt `current523-inactive-restriction-final-evidence.json`
+  has SHA256 `ad98d8c2589898bb293d57ae789a2b3621bfea2d2e8a73df5a540542d6835348`;
+  it pins code file hashes and individual entry/reconnect/provider/core receipts.
+  No full577-root rerun or full/manual CI was invoked for this bounded change.
 
 - Final actual Main run on the already authenticated Drive fresh-consumer
   installation:all577 distinct ordinary physical roots pass12,558 checks in

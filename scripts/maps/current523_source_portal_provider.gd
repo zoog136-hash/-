@@ -47,10 +47,23 @@ func portal_evidence_for_land(land_id: int, exact_asset: String) -> Array:
 		if record.get("portal") is Dictionary: result.append(record.portal.duplicate(true))
 	return result
 
+static func _declared_inactive_restriction(type: Dictionary, row: Dictionary) -> bool:
+	# Current523 Unit20=TrueFalse. Exact known negative restrictions only;
+	# zero on an unknown type, another unit or a parameterized row is not permission.
+	var expected_name: String={8:"NoTeleport",13:"NoTeleportCome"}.get(int(type.get("ID",-1)),"")
+	if expected_name.is_empty() or type.get("Name")!=expected_name or type.get("UnitID")!=20: return false
+	for key: String in ["Value","Param1","Param2","Param3"]:
+		if not (row.get(key) is int or row.get(key) is float) or row[key]!=0: return false
+	return true
+
 func _attribute_holds(definition: RefCounted, land_id: int, point: Vector2i) -> Array:
+	return _attribute_evaluation(definition,land_id,point).holds
+
+func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i) -> Dictionary:
 	var types: Dictionary={}
 	for row: Dictionary in definition.context_rows("LandAttributeType"): types[int(row.ID)]=row
 	var result: Array=[]
+	var inactive: Array=[]
 	for row: Dictionary in definition.context_rows("LandAttribute"):
 		if int(row.get("LandID",-1))!=land_id: continue
 		var territory_id: int=int(row.get("TerritoryID",0))
@@ -64,9 +77,10 @@ func _attribute_holds(definition: RefCounted, land_id: int, point: Vector2i) -> 
 		# These declarations do not authorize entry or a teleport: this adapter
 		# neither creates bookmarks nor changes depth/manner mechanics.
 		if name in ["NoBookmark","Underground","IgnoreMannerMode"]: continue
-		if name in ["NoTeleportCome","NoTeleportGo"] and type.get("UnitID")==20 and row.get("Value")==0: continue
+		if _declared_inactive_restriction(type,row):
+			inactive.append({"type":type.duplicate(true),"row":row.duplicate(true)}); continue
 		result.append({"reason":"native_attribute_requires_policy","type":type.duplicate(true),"row":row.duplicate(true)})
-	return result
+	return {"holds":result,"declared_inactive":inactive}
 
 func portal_context_for_land(land_id: int, exact_asset: String, portal_id: int) -> Dictionary:
 	var source: RefCounted=_definition(land_id,exact_asset)
@@ -82,14 +96,21 @@ func portal_context_for_land(land_id: int, exact_asset: String, portal_id: int) 
 	var holds: Array=[]
 	if territory.StartX!=territory.EndX or territory.StartY!=territory.EndY: holds.append({"reason":"native_region_arrival_policy_unverified"})
 	var source_point:=Vector2i(int(portal.SourceX),int(portal.SourceY))
-	holds.append_array(_attribute_holds(source,land_id,source_point))
+	var source_attributes: Dictionary=_attribute_evaluation(source,land_id,source_point)
+	holds.append_array(source_attributes.holds)
+	var inactive: Array=[]
+	for item: Dictionary in source_attributes.declared_inactive:
+		var evidence: Dictionary=item.duplicate(true); evidence["side"]="source"; inactive.append(evidence)
 	if territory.StartX==territory.EndX and territory.StartY==territory.EndY:
-		holds.append_array(_attribute_holds(target,int(target_land.ID),Vector2i(int(territory.StartX),int(territory.StartY))))
+		var target_attributes: Dictionary=_attribute_evaluation(target,int(target_land.ID),Vector2i(int(territory.StartX),int(territory.StartY)))
+		holds.append_array(target_attributes.holds)
+		for item: Dictionary in target_attributes.declared_inactive:
+			var evidence: Dictionary=item.duplicate(true); evidence["side"]="target"; inactive.append(evidence)
 	for table: String in ["LandTimeLimit","LandWeeklyOpenTime","CompetitionDungeonLand"]:
 		for row: Dictionary in source.context_rows(table):
 			var id: int=int(row.get("LandID",row.get("LandId",-1)))
 			if id in [land_id,int(target_land.ID)]: holds.append({"reason":"native_land_condition_requires_policy","table":table,"row":row.duplicate(true)})
-	return {"Portal":portal.duplicate(true),"SourceLand":source.land.duplicate(true),"TargetTerritory":territory.duplicate(true),"TargetLand":target_land.duplicate(true),"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","native_definition_contract":contract.duplicate(true),"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_m_rules_verified":false}
+	return {"Portal":portal.duplicate(true),"SourceLand":source.land.duplicate(true),"TargetTerritory":territory.duplicate(true),"TargetLand":target_land.duplicate(true),"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","native_definition_contract":contract.duplicate(true),"declared_inactive_restrictions":inactive,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_m_rules_verified":false}
 
 func cache_metrics() -> Dictionary:
 	return {"cached_native_lands":_lands.size(),"maximum_native_lands":MAX_CACHED_LANDS,"definition_manifest_sha256":MANIFEST_SHA256 if loaded else ""}
