@@ -52,6 +52,21 @@
       "member": "content/ContentsControl.json",
       "bytes": 15155,
       "sha256": "1bc9a1d681db659e9f4347904f2aed80856209fbebcdc91ed57cec8247d7dfe8"
+    },
+    "Bonus": {
+      "member": "content/Bonus.json",
+      "bytes": 34575811,
+      "sha256": "1189d53da7897c13ca83d559fef06410695404e1157cc2bbf8a9e48ce7f45d59"
+    },
+    "BonusType": {
+      "member": "content/BonusType.json",
+      "bytes": 317249,
+      "sha256": "00cedfba3cd259dfd26fbd1471dd0fb5305023da8f85ca0b262af8f9fd0c1cf1"
+    },
+    "Unit": {
+      "member": "content/Unit.json",
+      "bytes": 11310,
+      "sha256": "5b212633235459928eb03f836ac3964d988a9851f2e7f786a04f5edbba7cba22"
     }
   },
   "card": {
@@ -126,6 +141,1255 @@
     "Enable": false,
     "ServerLimitSetID": 274
   },
+  "effects": [
+    {
+      "link": {
+        "ID": 4,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2125914
+      },
+      "bonus": {
+        "ID": 2125914,
+        "BonusTypeID": 17,
+        "Value": 10000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 17,
+        "Name": "HPPlus",
+        "UnitID": 1,
+        "DescID": 517,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 14,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2125924
+      },
+      "bonus": {
+        "ID": 2125924,
+        "BonusTypeID": 17,
+        "Value": 20000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 17,
+        "Name": "HPPlus",
+        "UnitID": 1,
+        "DescID": 517,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 24,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2125934
+      },
+      "bonus": {
+        "ID": 2125934,
+        "BonusTypeID": 17,
+        "Value": 30000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 17,
+        "Name": "HPPlus",
+        "UnitID": 1,
+        "DescID": 517,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 34,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144724
+      },
+      "bonus": {
+        "ID": 2144724,
+        "BonusTypeID": 18,
+        "Value": 10000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 18,
+        "Name": "MPPlus",
+        "UnitID": 1,
+        "DescID": 518,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 44,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144734
+      },
+      "bonus": {
+        "ID": 2144734,
+        "BonusTypeID": 35,
+        "Value": 190000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 35,
+        "Name": "AttackSpeedBonus",
+        "UnitID": 3,
+        "DescID": 535,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 54,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144744
+      },
+      "bonus": {
+        "ID": 2144744,
+        "BonusTypeID": 34,
+        "Value": 250000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 34,
+        "Name": "MoveSpeedBonus",
+        "UnitID": 3,
+        "DescID": 534,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 64,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144754
+      },
+      "bonus": {
+        "ID": 2144754,
+        "BonusTypeID": 140,
+        "Value": 250000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 140,
+        "Name": "CastSpeedBonus",
+        "UnitID": 3,
+        "DescID": 5726,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 74,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144764
+      },
+      "bonus": {
+        "ID": 2144764,
+        "BonusTypeID": 5782,
+        "Value": 300000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 6
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 84,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144774
+      },
+      "bonus": {
+        "ID": 2144774,
+        "BonusTypeID": 145,
+        "Value": 300000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 6
+      },
+      "type": {
+        "ID": 145,
+        "Name": "SpecialResistance",
+        "UnitID": 3,
+        "DescID": 5728,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 94,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144784
+      },
+      "bonus": {
+        "ID": 2144784,
+        "BonusTypeID": 4581,
+        "Value": 20,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 4581,
+        "Name": "PierceDamageReduction",
+        "UnitID": 1,
+        "DescID": 794521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 104,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144794
+      },
+      "bonus": {
+        "ID": 2144794,
+        "BonusTypeID": 41,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 41,
+        "Name": "Strength",
+        "UnitID": 1,
+        "DescID": 521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 114,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144804
+      },
+      "bonus": {
+        "ID": 2144804,
+        "BonusTypeID": 7471,
+        "Value": 40,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 7471,
+        "Name": "DecreaseChargeStepTime",
+        "UnitID": 211,
+        "DescID": 1260971,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 211,
+        "Name": "ValuePercent"
+      }
+    },
+    {
+      "link": {
+        "ID": 124,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144814
+      },
+      "bonus": {
+        "ID": 2144814,
+        "BonusTypeID": 5782,
+        "Value": 100000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 6
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 134,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144834
+      },
+      "bonus": {
+        "ID": 2144834,
+        "BonusTypeID": 18,
+        "Value": 20000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 18,
+        "Name": "MPPlus",
+        "UnitID": 1,
+        "DescID": 518,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 144,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144844
+      },
+      "bonus": {
+        "ID": 2144844,
+        "BonusTypeID": 35,
+        "Value": 380000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 35,
+        "Name": "AttackSpeedBonus",
+        "UnitID": 3,
+        "DescID": 535,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 154,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144854
+      },
+      "bonus": {
+        "ID": 2144854,
+        "BonusTypeID": 34,
+        "Value": 500000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 34,
+        "Name": "MoveSpeedBonus",
+        "UnitID": 3,
+        "DescID": 534,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 164,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144864
+      },
+      "bonus": {
+        "ID": 2144864,
+        "BonusTypeID": 140,
+        "Value": 500000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 140,
+        "Name": "CastSpeedBonus",
+        "UnitID": 3,
+        "DescID": 5726,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 174,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144874
+      },
+      "bonus": {
+        "ID": 2144874,
+        "BonusTypeID": 5782,
+        "Value": 600000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 7
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 184,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144884
+      },
+      "bonus": {
+        "ID": 2144884,
+        "BonusTypeID": 145,
+        "Value": 600000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 7
+      },
+      "type": {
+        "ID": 145,
+        "Name": "SpecialResistance",
+        "UnitID": 3,
+        "DescID": 5728,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 194,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144894
+      },
+      "bonus": {
+        "ID": 2144894,
+        "BonusTypeID": 4581,
+        "Value": 40,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 4581,
+        "Name": "PierceDamageReduction",
+        "UnitID": 1,
+        "DescID": 794521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 204,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144904
+      },
+      "bonus": {
+        "ID": 2144904,
+        "BonusTypeID": 41,
+        "Value": 4,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 41,
+        "Name": "Strength",
+        "UnitID": 1,
+        "DescID": 521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 214,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144914
+      },
+      "bonus": {
+        "ID": 2144914,
+        "BonusTypeID": 7471,
+        "Value": 80,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 7471,
+        "Name": "DecreaseChargeStepTime",
+        "UnitID": 211,
+        "DescID": 1260971,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 211,
+        "Name": "ValuePercent"
+      }
+    },
+    {
+      "link": {
+        "ID": 224,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144924
+      },
+      "bonus": {
+        "ID": 2144924,
+        "BonusTypeID": 5782,
+        "Value": 200000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 8
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 234,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144934
+      },
+      "bonus": {
+        "ID": 2144934,
+        "BonusTypeID": 18,
+        "Value": 30000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 18,
+        "Name": "MPPlus",
+        "UnitID": 1,
+        "DescID": 518,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 244,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144944
+      },
+      "bonus": {
+        "ID": 2144944,
+        "BonusTypeID": 35,
+        "Value": 570000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 35,
+        "Name": "AttackSpeedBonus",
+        "UnitID": 3,
+        "DescID": 535,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 254,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144954
+      },
+      "bonus": {
+        "ID": 2144954,
+        "BonusTypeID": 34,
+        "Value": 750000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 34,
+        "Name": "MoveSpeedBonus",
+        "UnitID": 3,
+        "DescID": 534,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 264,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144964
+      },
+      "bonus": {
+        "ID": 2144964,
+        "BonusTypeID": 140,
+        "Value": 750000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 140,
+        "Name": "CastSpeedBonus",
+        "UnitID": 3,
+        "DescID": 5726,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 274,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144974
+      },
+      "bonus": {
+        "ID": 2144974,
+        "BonusTypeID": 5782,
+        "Value": 900000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 5
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 284,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144984
+      },
+      "bonus": {
+        "ID": 2144984,
+        "BonusTypeID": 145,
+        "Value": 900000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 5
+      },
+      "type": {
+        "ID": 145,
+        "Name": "SpecialResistance",
+        "UnitID": 3,
+        "DescID": 5728,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 294,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144994
+      },
+      "bonus": {
+        "ID": 2144994,
+        "BonusTypeID": 4581,
+        "Value": 60,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 4581,
+        "Name": "PierceDamageReduction",
+        "UnitID": 1,
+        "DescID": 794521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 304,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2145004
+      },
+      "bonus": {
+        "ID": 2145004,
+        "BonusTypeID": 41,
+        "Value": 6,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 41,
+        "Name": "Strength",
+        "UnitID": 1,
+        "DescID": 521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 314,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2145014
+      },
+      "bonus": {
+        "ID": 2145014,
+        "BonusTypeID": 7471,
+        "Value": 120,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 7471,
+        "Name": "DecreaseChargeStepTime",
+        "UnitID": 211,
+        "DescID": 1260971,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 211,
+        "Name": "ValuePercent"
+      }
+    },
+    {
+      "link": {
+        "ID": 324,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2145024
+      },
+      "bonus": {
+        "ID": 2145024,
+        "BonusTypeID": 5782,
+        "Value": 300000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 1
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      }
+    },
+    {
+      "link": {
+        "ID": 334,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145084
+      },
+      "bonus": {
+        "ID": 2145084,
+        "BonusTypeID": 1,
+        "Value": 10,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 1,
+        "Name": "MeleeDamage",
+        "UnitID": 1,
+        "DescID": 5657,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 344,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145114
+      },
+      "bonus": {
+        "ID": 2145114,
+        "BonusTypeID": 4,
+        "Value": 10,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 4,
+        "Name": "MagicDamage",
+        "UnitID": 1,
+        "DescID": 5660,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 354,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145124
+      },
+      "bonus": {
+        "ID": 2145124,
+        "BonusTypeID": 10,
+        "Value": 10,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 10,
+        "Name": "RangeDamage",
+        "UnitID": 1,
+        "DescID": 5664,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 364,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145334
+      },
+      "bonus": {
+        "ID": 2145334,
+        "BonusTypeID": 42,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 42,
+        "Name": "Intelligence",
+        "UnitID": 1,
+        "DescID": 522,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 374,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145344
+      },
+      "bonus": {
+        "ID": 2145344,
+        "BonusTypeID": 44,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 44,
+        "Name": "Dexterity",
+        "UnitID": 1,
+        "DescID": 523,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 384,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145354
+      },
+      "bonus": {
+        "ID": 2145354,
+        "BonusTypeID": 45,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 45,
+        "Name": "Constitution",
+        "UnitID": 1,
+        "DescID": 525,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 394,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145364
+      },
+      "bonus": {
+        "ID": 2145364,
+        "BonusTypeID": 43,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 43,
+        "Name": "Wisdom",
+        "UnitID": 1,
+        "DescID": 524,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 404,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145374
+      },
+      "bonus": {
+        "ID": 2145374,
+        "BonusTypeID": 21,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 21,
+        "Name": "ArmorClass",
+        "UnitID": 1,
+        "DescID": 527,
+        "DescPriority": 1,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 109832,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 414,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145384
+      },
+      "bonus": {
+        "ID": 2145384,
+        "BonusTypeID": 23,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 23,
+        "Name": "HPRestoration",
+        "UnitID": 1,
+        "DescID": 528,
+        "DescPriority": 0,
+        "IsShowOnToolTip": false,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    },
+    {
+      "link": {
+        "ID": 424,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145394
+      },
+      "bonus": {
+        "ID": 2145394,
+        "BonusTypeID": 22,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 22,
+        "Name": "MPRestoration",
+        "UnitID": 1,
+        "DescID": 5672,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      }
+    }
+  ],
   "bonuses": [
     {
       "ID": 4,

@@ -129,6 +129,7 @@ func run() -> void:
 				scroll.ensure_control_visible(check_button)
 				await settle()
 				await tap(check_button)
+				action = hud.workspace.find_child("HalphasStarEnchantAttempt", true, false)
 				check(root.get_visible_rect().encloses(action.get_global_rect()), "disabled attempt remains visible beside recheck")
 			var status: Label = hud.workspace.find_child("HalphasStarEnchantStatus", true, false)
 			check(status != null and status.text.begins_with("확인 결과") and status.text.contains("소모되지 않습니다"), "blocked UI result shown after actual click")

@@ -74,6 +74,8 @@ const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_
 var option_awakening = OPTION_AWAKENING.new()
 const SKILL_AWAKENING=preload("res://scripts/cards/skill_awakening_runtime.gd")
 var skill_awakening=SKILL_AWAKENING.new()
+const HALPHAS_STAR = preload("res://scripts/cards/halphas_star_enchant_runtime.gd")
+var halphas_star = HALPHAS_STAR.new()
 var option_awakening_auras: Dictionary = {}
 var source_awakening_auras: Dictionary = {}
 const SOURCE_AWAKENING_AURA = preload("res://scripts/animation/source_awakening_aura.gd")
@@ -401,6 +403,7 @@ func _ready() -> void:
 	card_draw_fusion.configure(catalog_db)
 	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
+	halphas_star.configure(self)
 	if not skill_awakening.configure(self):push_error(skill_awakening.problem)
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
@@ -857,8 +860,8 @@ func _refresh_equipment_effects() -> void:
 		if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"):
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
-	flags.hp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))
-	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
+	flags.hp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))+halphas_star.catalog_bonus("hp_regen")
+	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))+halphas_star.catalog_bonus("mp_regen")
 	equipment_effects=flags
 
 func _invalidate_equipment_static() -> void:
@@ -929,7 +932,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -4399,6 +4402,8 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if halphas_star.save_blocked:return ERR_UNAVAILABLE
+	if collection_override.has(HALPHAS_STAR.SAVE_KEY) and not halphas_star.check_load(collection_override).is_empty():return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4413,7 +4418,19 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","halphas_star_enchant","source_visual_context"]: return ERR_INVALID_PARAMETER
+	if collection_override.has("source_visual_context"):
+		var visual: Variant=collection_override.source_visual_context
+		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
+		var expected: Dictionary=source_card_visual_options.duplicate(true)
+		var desired: Variant=visual.active_card_options.get("m508:1:24504",0)
+		var earned: int=int(collection_override.get(HALPHAS_STAR.SAVE_KEY,halphas_star.progress).get("level",0))
+		var allowed: bool=false
+		for option: Dictionary in preload("res://scripts/cards/native_halphas_star_enchant.gd").DATA.data.sprite_options:
+			if desired==option.ID and int(option.StarEnchant)<=earned:allowed=true
+		if not allowed:return ERR_INVALID_DATA
+		expected["m508:1:24504"]=desired
+		if expected!=visual.active_card_options:return ERR_INVALID_DATA
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4475,6 +4492,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"card_draw_fusion": card_draw_fusion.export_state(),
 		"card_option_awakening": option_awakening.export_state(),
 		"card_skill_awakening": skill_awakening.export_state(),
+		"halphas_star_enchant": halphas_star.export_state(),
 		"equipped_items": equipped_items,
 		"equipped_ammo": equipped_ammo,
 		"ammo_unequipped": ammo_unequipped,
@@ -4565,6 +4583,9 @@ func _load_game(quiet: bool) -> void:
 		hud.show_message(map84_error)
 		return
 	var growth_error: String = growth.validate(data.get("growth",growth.empty_state()))
+	var halphas_error: String = halphas_star.check_load(data)
+	if not halphas_error.is_empty():
+		halphas_star.save_blocked=true;hud.show_message(halphas_error);return
 	if not growth_error.is_empty():
 		equipment_collections.save_blocked = true
 		hud.show_message(growth_error)
@@ -4686,6 +4707,8 @@ func _load_game(quiet: bool) -> void:
 		equipment_collections.save_blocked = true
 		hud.show_message("각성 저장 이전 실패 · 기존 저장을 보존합니다")
 		return
+	if not halphas_star.prepare_load(data):
+		hud.show_message("할파스 강화 저장 이전 백업 실패 · 기존 저장 보존");return
 	var prior_save_path: String=migrated_save_path
 	var staged_map_save: Dictionary={}
 	if bool(map_migration.changed):
@@ -4703,6 +4726,8 @@ func _load_game(quiet: bool) -> void:
 	if not skill_awakening.accept_load(data):
 		migrated_save_path=prior_save_path
 		return
+	if not halphas_star.accept_load(data):
+		migrated_save_path=prior_save_path;return
 	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
@@ -6691,6 +6716,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 	if not growth_record.is_empty(): records.append(growth_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
 	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
+	for record: Dictionary in halphas_star.bonus_records(): records.append(record)
 	equipment_records_cache=records
 	return equipment_records_cache
 
@@ -7107,7 +7133,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 
 func _catalog_damage_bonus(kind: String) -> int:
 	# Native secondary doll effects are counted once, separately from general attack.
-	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
+	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))+halphas_star.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
 	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
