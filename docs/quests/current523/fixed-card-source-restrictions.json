@@ -5,7 +5,7 @@
   "actual_main_matching_catalog": true,
   "total": 31,
   "test_item_blocked": 27,
-  "non_test_blocked_by_unverified_no_swap_no_merge_owner": 4,
+  "non_test_blocked_by_unverified_no_swap_no_merge_owner": 0,
   "source_conditions_waived": false,
   "rows": [
     {
@@ -647,7 +647,7 @@
       "original_card_no_merge_out": true,
       "original_card_start_datetime_id": 0,
       "original_card_end_datetime_id": 0,
-      "status": "native_no_swap_no_merge_enforcement_owner_required",
+      "status": "verified_normal_quest_card_owner_bridge; global merge/UI enforced; no consuming swap action; separate labelled host hold on new quest duplicate option materials",
       "original_card_server_limit_set_id": 0,
       "original_card_grade_id": 2,
       "original_card_deck_id": 1
@@ -670,7 +670,7 @@
       "original_card_no_merge_out": true,
       "original_card_start_datetime_id": 0,
       "original_card_end_datetime_id": 0,
-      "status": "native_no_swap_no_merge_enforcement_owner_required",
+      "status": "verified_normal_quest_card_owner_bridge; global merge/UI enforced; no consuming swap action; separate labelled host hold on new quest duplicate option materials",
       "original_card_server_limit_set_id": 0,
       "original_card_grade_id": 3,
       "original_card_deck_id": 1
@@ -693,7 +693,7 @@
       "original_card_no_merge_out": true,
       "original_card_start_datetime_id": 0,
       "original_card_end_datetime_id": 0,
-      "status": "native_no_swap_no_merge_enforcement_owner_required",
+      "status": "verified_normal_quest_card_owner_bridge; global merge/UI enforced; no consuming swap action; separate labelled host hold on new quest duplicate option materials",
       "original_card_server_limit_set_id": 0,
       "original_card_grade_id": 4,
       "original_card_deck_id": 1
@@ -716,10 +716,13 @@
       "original_card_no_merge_out": true,
       "original_card_start_datetime_id": 0,
       "original_card_end_datetime_id": 0,
-      "status": "native_no_swap_no_merge_enforcement_owner_required",
+      "status": "verified_normal_quest_card_owner_bridge; global merge/UI enforced; no consuming swap action; separate labelled host hold on new quest duplicate option materials",
       "original_card_server_limit_set_id": 0,
       "original_card_grade_id": 5,
       "original_card_deck_id": 1
     }
-  ]
+  ],
+  "predecessor_public_head": "22c7ea4c1fa238adf8655cb0c976a76ac4a6bb69",
+  "non_test_connected_with_existing_native_global_merge_and_no_swap_action": 4,
+  "option_feed_is_not_native_merge": true
 }

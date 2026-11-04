@@ -32,7 +32,7 @@ func run()->void:
 	check(not world.quest_service.validate_saved_state(invalid).is_empty(),"native grant without completion relation rejected")
 	var calls: Array[int]=[0]
 	world.equipment_collections.test_save_writer=func(_p: String,_d: Dictionary)->Error:calls[0]+=1;return ERR_FILE_CANT_WRITE
-	for item: int in [859,1281,239,233,368202,369002,177192,177202,177212,177222,177232,177252,177332,177452]:
+	for item: int in [859,1281,239,233,368202,369002,177192,177202,177212,177222,177232,177252,177332,177452,306611,306621,306631,306641]:
 		var key: String=""
 		for rows: Array in state.item_grants.values():
 			for receipt: Dictionary in rows:

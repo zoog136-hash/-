@@ -10,22 +10,6 @@
   "equipment_contract_gap": "Current raw source_pending_use guard blocks equip, and these legacy mutators do not return an atomic selected receipt/debit/equipment-state result. Pack equipment effects are explicitly partial; no full native equipment/effect completion asserted. Coordinate exact public owner rather than copy gear/craft/ticket engines here.",
   "rows": [
     {
-      "id": 239,
-      "test": false,
-      "slot": "consumable",
-      "type": "텔레포트 주문서",
-      "source_grade_id": 1,
-      "record_keys": [
-        "source_unresolved_class_ids",
-        "source_effect_status",
-        "source_effect_scope"
-      ],
-      "activation": null,
-      "source_effect_status": "partial",
-      "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
-      "source_unresolved_class_ids": []
-    },
-    {
       "id": 240,
       "test": false,
       "slot": "helmet",
@@ -1145,5 +1129,6 @@
       "source_effect_scope": "unconditional_flat_equipment_hp_mp_potion_fixed_card_typed_buffs_source_rewards",
       "source_unresolved_class_ids": []
     }
-  ]
+  ],
+  "prior_auxiliary_row_error_corrected": "previous audit accidentally retained reviewed239 while total70 described unreviewed items; current rows exactly match matrix unreviewed none70; no source/save changes"
 }

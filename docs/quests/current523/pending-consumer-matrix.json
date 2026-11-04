@@ -2,22 +2,23 @@
   "source_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
   "counts_are_distinct_item_classes_not_quests_or_item_quantities": true,
   "baseline_pending_item_classes": 146,
-  "reviewed": 14,
-  "remaining": 132,
+  "reviewed": 18,
+  "remaining": 128,
   "original_constraints_waived": false,
   "contracts": {
     "contract_1": "Requires exact installed effect/equipment/currency owner and quest receipt contract; never bind by name",
     "contract_2": "Shared consumer explicitly blocks source effects/requirements; keep original blockers",
     "contract_4": "Reviewed actual quest grant and selected held-instance receipt adapter; see consumer-validation.json",
-    "contract_5": "Public243 957b8853 receive_source_card exists and all31 targets match the actual registered original catalog; source TestItem blocks27, native NoSwapOut+NoMergeOut require an actual downstream enforcement owner for the remaining4. No card grant or restriction waiver.",
+    "contract_5": "Remaining27 actual source TestItem=true fixed-card classes stay blocked. Four normal native NoMerge/NoSwap identities are verified through the current staged owner and existing consuming boundaries; see FIXED_CARDS.md.",
     "contract_6": "Four lmref targets stay blocked; exact v3 profiles/bindings have been privately reconstructed and checked. Existing8 executable bindings have a bounded quest ownership/debit+learning+consumable receipt atomic adapter. See skillbook-source-audit.json and CONSUMER_FOLLOWUP.md; no441-skill claim.",
     "contract_7": "368202 box input consumption and exact class-owned output implemented/verified for genuine old and new quest issues; thirteen child skill-ticket effect owners remain separate and unimplemented here.",
     "contract_8": "369002 actual existing selection UI and confirm-time selected ownership plus output gear/input receipt atomic transaction verified. Output ownership only; rune wear/effects remain equipment-owner scope.",
     "return239_verified": "Narrow PR247 bc0ce721 common movement/result consumer plus exact quest receipt bridge implemented; same verified aden_world only. See RETURN239.md and return239-validation.json.",
     "hp233_verified": "Exact source20+2d6 and six joined source bonuses including AutoUseRegistrable=TrueFalse/1; current host heal/NPC modifiers/shared cooldown/receipt-selected debit and new native6940 gift ownership verified; see HP233.md.",
-    "skillbooks_existing_verified": "Exact public245 v3 input and existing executable skill owner required. Genuine book debits/learning/immutable origin/consumable receipt/failure/reconnect verified. No lmref activation; starter-known and source class/level restrictions preserve books."
+    "skillbooks_existing_verified": "Exact public245 v3 input and existing executable skill owner required. Genuine book debits/learning/immutable origin/consumable receipt/failure/reconnect verified. No lmref activation; starter-known and source class/level restrictions preserve books.",
+    "fixed_normal_cards_verified": "Four normal exact m508 stable cards, all30 actual quest-issued units, staged public243 owner+selected-item+receipt save verified. Native global NoMerge/UI enforce existing flags. Swap/exchange action absent; not equip. Separate explicit new-quest-spare option-feed host hold preserves old free copies/cost/EXP; not inferred native rule."
   },
-  "prior_public_checkpoint": "050525ff711b07e81169e53af0bb806adb9c9785",
+  "prior_public_checkpoint": "22c7ea4c1fa238adf8655cb0c976a76ac4a6bb69",
   "reviewed_item_classes": [
     233,
     239,
@@ -31,10 +32,14 @@
     177252,
     177332,
     177452,
+    306611,
+    306621,
+    306631,
+    306641,
     368202,
     369002
   ],
-  "latest_runtime_evidence": "consumer-followup-validation.json",
+  "latest_runtime_evidence": "fixed-card-validation.json",
   "rows": [
     {
       "item_class_id": 233,
@@ -1550,13 +1555,13 @@
       "source_use_kind": "fixed_card",
       "source_activation": "unrestricted",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_5",
+      "quest_binding_reviewed": true,
+      "contract": "fixed_normal_cards_verified",
       "public243_receive_contract_available": true,
       "original_item_test": false,
       "original_card_no_swap_out": true,
       "original_card_no_merge_out": true,
-      "actual_constraint_status": "native_no_swap_no_merge_enforcement_owner_required"
+      "actual_constraint_status": "global_native_merge_enforced; consuming_swap_absent; explicit_host_option_hold_new_spares_only"
     },
     {
       "item_class_id": 306621,
@@ -1565,13 +1570,13 @@
       "source_use_kind": "fixed_card",
       "source_activation": "unrestricted",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_5",
+      "quest_binding_reviewed": true,
+      "contract": "fixed_normal_cards_verified",
       "public243_receive_contract_available": true,
       "original_item_test": false,
       "original_card_no_swap_out": true,
       "original_card_no_merge_out": true,
-      "actual_constraint_status": "native_no_swap_no_merge_enforcement_owner_required"
+      "actual_constraint_status": "global_native_merge_enforced; consuming_swap_absent; explicit_host_option_hold_new_spares_only"
     },
     {
       "item_class_id": 306631,
@@ -1580,13 +1585,13 @@
       "source_use_kind": "fixed_card",
       "source_activation": "unrestricted",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_5",
+      "quest_binding_reviewed": true,
+      "contract": "fixed_normal_cards_verified",
       "public243_receive_contract_available": true,
       "original_item_test": false,
       "original_card_no_swap_out": true,
       "original_card_no_merge_out": true,
-      "actual_constraint_status": "native_no_swap_no_merge_enforcement_owner_required"
+      "actual_constraint_status": "global_native_merge_enforced; consuming_swap_absent; explicit_host_option_hold_new_spares_only"
     },
     {
       "item_class_id": 306641,
@@ -1595,13 +1600,13 @@
       "source_use_kind": "fixed_card",
       "source_activation": "unrestricted",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_5",
+      "quest_binding_reviewed": true,
+      "contract": "fixed_normal_cards_verified",
       "public243_receive_contract_available": true,
       "original_item_test": false,
       "original_card_no_swap_out": true,
       "original_card_no_merge_out": true,
-      "actual_constraint_status": "native_no_swap_no_merge_enforcement_owner_required"
+      "actual_constraint_status": "global_native_merge_enforced; consuming_swap_absent; explicit_host_option_hold_new_spares_only"
     },
     {
       "item_class_id": 339714,
@@ -1793,7 +1798,7 @@
       "contract": "contract_8"
     }
   ],
-  "default_item_pack_reviewed_classes": 6,
+  "default_item_pack_reviewed_classes": 10,
   "optional_exact_private245v3_reviewed_classes": 8,
   "counts_require_optional_input_to_be_installed": true
 }

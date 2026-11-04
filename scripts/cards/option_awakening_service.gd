@@ -207,7 +207,12 @@ func view(state: Dictionary, card_state: Dictionary, gold: int, category: String
 	if not problem.is_empty(): return fail("configuration", problem)
 	var row: Dictionary = definition(category, identity)
 	if row.is_empty(): return fail("unavailable", "이 카드는 현재 옵션 각성을 지원하지 않습니다")
-	if row.has("native_source"):return NativeEconomy.view(self,state,card_state,gold,category,identity)
+	if row.has("native_source"):
+		var snapshot: Dictionary=NativeEconomy.view(self,state,card_state,gold,category,identity)
+		var held: int=0
+		for material_id: String in catalog.get(category,{}):held+=Cards.quest_reserved_spare(card_state,category,material_id)
+		if snapshot.get("ok",false) and held>0:snapshot["policy_note"]=str(snapshot.get("policy_note",""))+" · TWILIGHT 보관 정책: 새 퀘스트 사본 "+str(held)+"장 옵션 주입 연결 확인 중·소유 보존"
+		return snapshot
 	var entry: Dictionary = card_progress(state, category, identity)
 	var availability: Dictionary=native_eligibility(category,identity)
 	var rule: Dictionary = policy.grades[row.grade]
@@ -217,7 +222,7 @@ func view(state: Dictionary, card_state: Dictionary, gold: int, category: String
 	for material_id: String in catalog[category]:
 		var record: Dictionary = catalog[category][material_id]
 		var grade: String = str(record.get("grade", ""))
-		var count: int = int(spares.get(material_id, 0))
+		var count: int = Cards.outgoing_material_spare(card_state,category,material_id)
 		if not rule.material_experience.has(grade) or count <= 0 or not owned(card_state, category, material_id) or not native_material_available(record): continue
 		material_rows.append({"id": material_id, "record": record.duplicate(true), "spare": count, "experience_per_card": int(rule.material_experience[grade])})
 	var required: int = int(policy.experience_required)
@@ -252,6 +257,8 @@ func _can_prepare(state: Dictionary, card_state: Dictionary, gold: int, category
 func prepare_feed(state: Dictionary, card_state: Dictionary, gold: int, category: String, identity: String, materials: Dictionary) -> Dictionary:
 	var guard: Dictionary = _can_prepare(state, card_state, gold, category, identity)
 	if not bool(guard.ok): return guard
+	for material_id: Variant in materials:
+		if material_id is String and integer(materials[material_id]) and Cards.quest_reserved_spare(card_state,category,material_id)>0 and int(materials[material_id])>Cards.outgoing_material_spare(card_state,category,material_id):return fail("quest_source_copy_reserved","TWILIGHT 보관 정책 · 새 퀘스트 카드 사본의 옵션 주입 연결 확인 필요")
 	if definition(category,identity).has("native_source"):return NativeEconomy.feed(self,state,card_state,gold,category,identity,materials)
 	var entry: Dictionary = card_progress(state, category, identity)
 	var required: int = int(policy.experience_required)
@@ -341,3 +348,6 @@ func native_material_available(record: Dictionary) -> bool:
 	if raw.get("source_snapshot","")!="base508" or not raw.has("server_limit_set_id"):return false
 	if int(raw.get("start_datetime_id",0))!=0 or int(raw.get("end_datetime_id",0))!=0:return false
 	return native_conditions.evaluate(int(raw.server_limit_set_id),source_server_context).status in ["unrestricted","eligible"]
+
+func available_material_spare(cards: Dictionary,category: String,identity: String)->int:
+	return Cards.outgoing_material_spare(cards,category,identity)

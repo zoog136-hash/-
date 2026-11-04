@@ -1,0 +1,80 @@
+{
+  "public245_ref": "655355575705f42036c6169341047dd288247819",
+  "existing_public_local_design_git_blob": "dc52fbee5bdb3534e1a91267b9abd6bb809c37b9",
+  "actual_local_design_sha256": "267745ed92bc30dac78142a7de52dbde7ae096d19691dbf986f67bfbc0ed0958",
+  "source_v3_existing_reused": true,
+  "whole_reference_engine_or_alias_added": false,
+  "rows": [
+    {
+      "item_class_id": 177292,
+      "source_spell_id": 347,
+      "stable_existing_id": "lmref_558f725f5e8c3350",
+      "exact_public245_binding_match": true,
+      "spell_row_sha256": "5dadf2372e8b948e5fceceacaa06309225b3e22b82b8ca0c17f1e60f00328269",
+      "public_existing_local_runtime": false,
+      "declared_local_design": null,
+      "current_local_mode": null,
+      "source_target_kind": "All",
+      "source_targeting_type": "Self",
+      "source_mastery_waived": false,
+      "quest_book_consumed_for_this_audit": false,
+      "missing_owner_boundary": "No explicit current executable local design; catalog official_pending. Source self MP regeneration5/duration300 still needs real actor timing/buff ownership contract."
+    },
+    {
+      "item_class_id": 177322,
+      "source_spell_id": 358,
+      "stable_existing_id": "lmref_b2f791c9662ba809",
+      "exact_public245_binding_match": true,
+      "spell_row_sha256": "44834d756fa97b20524742fc49a23c6f6c4c1e19c1d7dd6b68b32229554899ed",
+      "public_existing_local_runtime": false,
+      "declared_local_design": null,
+      "current_local_mode": null,
+      "source_target_kind": "InvisibleObject",
+      "source_targeting_type": "Self",
+      "source_mastery_waived": false,
+      "quest_book_consumed_for_this_audit": false,
+      "missing_owner_boundary": "No explicit current executable local design; catalog official_pending. Source InvisibleObject/Self cancellation group29 and IgnoreSpellCannotAttack1 needs exact detection/cancellation owner, not counter-detection37051 alias."
+    },
+    {
+      "item_class_id": 177342,
+      "source_spell_id": 1133,
+      "stable_existing_id": "lmref_caf0662f0a311237",
+      "exact_public245_binding_match": true,
+      "spell_row_sha256": "293aac2d9d72792bd54e205e974d06a8c32346e05a51852649b1dff916951b57",
+      "public_existing_local_runtime": true,
+      "declared_local_design": true,
+      "current_local_mode": "attack",
+      "source_target_kind": "TargetNEnemy",
+      "source_targeting_type": "SingleObject",
+      "source_mastery_waived": false,
+      "quest_book_consumed_for_this_audit": false,
+      "missing_owner_boundary": "Current generic attack lacks validation of source RequiredChangeCastGroupSpellClassID47372; existing fixed local55 damage/area policy does not prove original8d4/current source casting graph semantics.",
+      "source_required_change_cast_spell": 47372,
+      "public_local_power": 55
+    },
+    {
+      "item_class_id": 177432,
+      "source_spell_id": 70,
+      "stable_existing_id": "lmref_64f77fcd9c52a02b",
+      "exact_public245_binding_match": true,
+      "spell_row_sha256": "fd1a8345fc9f8f144a069cb1c486f0ca36045aeaff0dcfc5533111cd15835ee9",
+      "public_existing_local_runtime": true,
+      "declared_local_design": true,
+      "current_local_mode": "buff",
+      "source_target_kind": "All",
+      "source_targeting_type": "Self",
+      "source_mastery_waived": false,
+      "quest_book_consumed_for_this_audit": false,
+      "existing_matching_facts": {
+        "mp_cost": 20,
+        "self_target": true,
+        "duration_seconds": 1800,
+        "armor_bonus": 3
+      },
+      "missing_owner_boundary": "SkillService.apply_buff stores name/skill_id/stats/remaining; no native BuffGroup5 priority1/cancellation-immunity enforcement or compatibility result contract. Existing local self-buff exists; it is not evidence of full source buff behavior.",
+      "source_buff_group_id": 5,
+      "source_buff_group_priority": 1,
+      "source_buff_immune_to_cancellation": true
+    }
+  ]
+}
