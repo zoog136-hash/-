@@ -96,6 +96,7 @@ const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const CURRENCY_DROP = preload("res://scripts/loot/currency_drops.gd")
 const QUEST_SERVICE = preload("res://scripts/quests/quest_service.gd")
 var quest_service = QUEST_SERVICE.new()
+var quest_auto = preload("res://scripts/quests/quest_auto_runner.gd").new()
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
 var ground_loot: TwilightGroundLootManager = GROUND_LOOT_MANAGER.new()
@@ -524,6 +525,7 @@ func _process(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
+	quest_auto.tick(self)
 	if stat_hud_refresh_pending:
 		_update_hud()
 	_advance_native_route_preparation()
@@ -2885,65 +2887,11 @@ func _restore_ground_drops(saved: Variant) -> void:
 	ground_loot.restore(saved)
 
 func _claim_quest(quest_id: String) -> void:
-	# The UI never decides completion, payouts or quest ownership.
-	# Claiming a newly offered quest immediately completes it by request.
-	# A failed save restores BOTH quest ownership and wallet/inventory.
-	var before_quests: Dictionary = quest_service.export_state()
-	var result: Dictionary = quest_service.complete_instantly(quest_id, level)
-	if not bool(result.get("ok", false)):
-		hud.show_message(str(result.get("error", "퀘스트를 완료할 수 없습니다")))
+	if quest_id.begins_with("m523:quest:"):
+		quest_auto.complete(self,[quest_id])
 		return
-	var rewards: Dictionary = result.get("rewards", {})
-	var additions: Dictionary = {}
-	var catalog: Dictionary = loot_catalog.get("by_name", {})
-	for raw: Variant in rewards.get("items", []):
-		if not (raw is Dictionary):
-			quest_service.import_state(before_quests)
-			hud.show_message("퀘스트 보상 데이터가 손상되었습니다")
-			return
-		var reward: Dictionary = raw as Dictionary
-		var name_value: String = str(reward.get("name", ""))
-		var amount: int = int(reward.get("quantity", 0))
-		if not catalog.has(name_value) or amount <= 0 or amount > 10000:
-			quest_service.import_state(before_quests)
-			hud.show_message("검증되지 않은 퀘스트 보상입니다")
-			return
-		# A quest reward cannot fabricate enhanced physical equipment or card
-		# ownership using only a display name.
-		var record: Dictionary = catalog[name_value] as Dictionary
-		if str(record.get("slot", "")) not in ["consumable", "currency"]:
-			quest_service.import_state(before_quests)
-			hud.show_message("장비 보상은 고유 ID 검증 후 지급할 수 있습니다")
-			return
-		additions[name_value] = int(additions.get(name_value, 0)) + amount
-	var gold_before: int = gold
-	var experience_before: int = experience
-	var items_before: Dictionary = inventory.duplicate(true)
-	gold += int(rewards.get("adena", 0))
-	experience += int(rewards.get("exp", 0))
-	for name_value: String in additions:
-		inventory[name_value] = int(inventory.get(name_value, 0)) + int(additions[name_value])
-	var saved: Error = _save_game(true)
-	if saved != OK:
-		gold = gold_before
-		experience = experience_before
-		inventory = items_before
-		quest_service.import_state(before_quests)
-		if hud.has_method("refresh_quests"):
-			hud.call("refresh_quests")
-		hud.show_message("퀘스트 보상 저장 실패 · 재화/완료 상태 복구")
-		return
-	var level_before: int = level
-	_check_level_up()
-	if level != level_before:
-		_request_deferred_save()
-	_update_hud()
-	hud.refresh_inventory(inventory)
-	if hud.has_method("refresh_quests"):
-		hud.call("refresh_quests")
-	hud.append_log("퀘스트 즉시 완료 · %s (+%d 아데나 / +%d EXP)" % [
-		str(result.get("title", "")), int(rewards.get("adena", 0)), int(rewards.get("exp", 0))])
-	hud.show_message(str(result.get("title", "")) + " · 보상 수령 완료")
+	hud.show_message("임시 퀘스트는 종료되었습니다 · 최신523 원본 팩을 설치하세요")
+	return
 
 
 func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true, source_weights: Dictionary = {}) -> void:
@@ -3286,7 +3234,7 @@ func _on_stat_increase_requested(stat_name: String) -> void:
 	_update_hud()
 	_request_deferred_save()
 
-func _check_level_up() -> void:
+func _check_level_up(quiet: bool = false) -> void:
 	var gained_stat_points: bool = false
 	while experience >= exp_need:
 		experience -= exp_need
@@ -3300,6 +3248,7 @@ func _check_level_up() -> void:
 		defense += 1
 		var awarded_points: int = _stat_points_for_level_up(level)
 		stat_points += awarded_points
+		if quiet: continue
 		if awarded_points > 0:
 			gained_stat_points = true
 			hud.show_message("레벨 업! Lv.%d · 스탯 포인트 +%d" % [level, awarded_points])
@@ -3320,6 +3269,7 @@ func _select_nearest_target() -> void:
 	hud.show_message("대상 선택: %s" % target.monster_name)
 
 func _scroll_kind(scroll_name: String) -> String:
+	if scroll_name.begins_with("[원본 보상] "): return ""
 	if scroll_name.find("무기 마법 주문서") >= 0:
 		return "weapon"
 	if scroll_name.find("갑옷 마법 주문서") >= 0:
@@ -3463,6 +3413,9 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
+	if item_name.begins_with("[원본 보상] "):
+		hud.show_message("원본 보상 보관 중 · 사용 기능 연결 대기")
+		return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
 		hud.show_message("원본 사용 효과 미연결 · 보관/판매 가능 · 아이템 보존")
 		return
@@ -3866,6 +3819,8 @@ func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dic
 		var identified: Dictionary = _catalog_item_from_source_id(source_id)
 		return identified if str(identified.get("name", "")) == item_name else {}
 	# Indexed, self-validating equivalent of the previous one-name find_many scan.
+	if item_name.begins_with("[원본 보상] "):
+		return quest_auto.held_record(item_name,item_instances)
 	return ITEM_CATALOG_LOOKUP.find_one([catalog_db.get("아이템", []), item_db], item_instances, item_name)
 
 func _safe_enhancement_level(kind: String) -> int:
@@ -4170,6 +4125,9 @@ func _buy_shop_item(item_name: String, _ui_price: int) -> void:
 	_buy_shop_bulk(item_name, 1)
 
 func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> void:
+	if item_name.begins_with("[원본 보상] "):
+		hud.show_message("원본 보상 보관 중 · 사용/이동 기능 연결 대기")
+		return
 	if _item_locked(item_name,instance_id):
 		hud.show_message("잠긴 아이템은 판매할 수 없습니다")
 		return
@@ -4342,6 +4300,9 @@ func _npc_teleport_requested(map_id: String) -> void:
 
 
 func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
+	if item_name.begins_with("[원본 보상] "):
+		hud.show_message("원본 보상 보관 중 · 사용/이동 기능 연결 대기")
+		return
 	if item_name == "아데나" or item_name.is_empty():
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
@@ -4379,6 +4340,9 @@ func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
+	if item_name.begins_with("[원본 보상] "):
+		hud.show_message("원본 보상 보관 중 · 사용/이동 기능 연결 대기")
+		return
 	if not _patch523_item_allowed(): return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
 		hud.show_message("원본 사용 효과 미연결 · 아이템 보존")
@@ -4566,6 +4530,8 @@ func _perf_log(label: String, started_usec: int) -> void:
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if dungeon_play.save_blocked or not dungeon_play.valid(collection_override.get("source_dungeon_play",dungeon_play.state)).is_empty():return ERR_INVALID_DATA
 	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
+	if quest_service.save_blocked:return ERR_UNAVAILABLE
+	if collection_override.has("quest_state") and not QUEST_SERVICE.validate_saved_state(collection_override.quest_state).is_empty():return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("inventory_automation") and not INVENTORY_AUTOMATION.valid(collection_override.inventory_automation): return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
@@ -4582,7 +4548,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory", "item_instances", "equipment_collections", "gold", "card_draw_fusion", "card_option_awakening", "card_skill_awakening", "growth", "source_dungeon523", "ainhasad_state", "experience", "source_dungeon_play", "hp", "mp", "warehouse", "inventory_automation", "quest_state", "next_item_instance_id", "level", "exp_need", "max_hp", "max_mp", "attack", "defense", "stat_points"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4730,6 +4696,11 @@ func _load_game(quiet: bool) -> void:
 	if not dungeon_error.is_empty():
 		source_dungeon_runs.save_blocked=true; source_dungeon_runs.problem=dungeon_error
 		source_save_blocked=true; hud.show_message(dungeon_error); return
+	var quest_error: String = QUEST_SERVICE.validate_saved_state(data.get("quest_state",{}))
+	if not quest_error.is_empty():
+		quest_service.save_blocked = true
+		hud.show_message(quest_error+" · 기존 저장 보존")
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -6630,6 +6601,9 @@ func _equip_reference_in_slot(reference: String, target: String) -> void:
 	_request_deferred_save()
 
 func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, requested_id: String = "", requested_slot: String = "") -> void:
+	if bool(record.get("source_pending_use",false)):
+		hud.show_message("원본 보상 보관 중 · 장착 기능 연결 대기")
+		return
 	# A physical item with a source ID outranks the legacy name-only lookup.
 	if requested_id != "" and item_instances.has(requested_id):
 		var pinned: Variant = (item_instances[requested_id] as Dictionary).get("record", {})

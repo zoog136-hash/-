@@ -344,7 +344,7 @@ func _inventory_entries() -> Array[Dictionary]:
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
 			for id: String in instance_ids:
-				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":1})
+				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":int((instances[id] as Dictionary).get("source_reward_quantity",1))})
 	return entries
 
 func _refresh_inventory_grid() -> void:
@@ -612,7 +612,7 @@ func _refresh_detail(item_name: String) -> void:
 	var selected_id: String = _ref_instance_id(item_name)
 	item_name = _base_item_name(item_name)
 	var record := _find_item_record(selected_reference)
-	var amount := 1 if selected_id != "" else int(inventory.get(item_name, 0))
+	var amount: int = int((character_state.get("item_instances",{}).get(selected_id,{}) as Dictionary).get("source_reward_quantity",1)) if selected_id != "" else int(inventory.get(item_name, 0))
 	var grade := str(record.get("grade", "일반"))
 	var item_type := str(record.get("type", "기타"))
 	var slot := str(record.get("slot", ""))

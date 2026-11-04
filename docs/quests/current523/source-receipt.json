@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "kind": "twilight-quests-current523",
+  "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "payload_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
+  "quests": 3621,
+  "bytes": 9884157,
+  "pack_sha256": "77866c180d4224eff6d7e578759ec0820d6e50515e5c6bd8a67dc92421c20063",
+  "pack_bytes": 570245,
+  "tables": {
+    "QuestView": {
+      "rows": 3621,
+      "sha256": "fd8e6faba48ff909fa7185bc2666b98f65a64c7f1d89c14c40626feb26ec5289"
+    },
+    "QuestType": {
+      "rows": 20,
+      "sha256": "50fc0035e5887b9db604ebf33862022b82abc079359730a0e2ce8ff86f1fd8d9"
+    },
+    "QuestLevel": {
+      "rows": 6,
+      "sha256": "9856978c4cce547bbe1ff525c083ecb859426aec3961db15bbbff6c4c169f25d"
+    },
+    "QuestPrerequisite": {
+      "rows": 2183,
+      "sha256": "518d3c170a70e19206dae5692331c16695a8102a65086aa6e348f8995e944fab"
+    },
+    "Prerequisite": {
+      "rows": 3626,
+      "sha256": "b3beababa954708c0a38e394e5f3a177245df2c396136a7dc66fb2761be3fb65"
+    },
+    "PrerequisiteType": {
+      "rows": 25,
+      "sha256": "5a9ccbaea69f12e0a23942bb50fb1548c0aaaa2edcb1e2fa712ecf81802a50d0"
+    },
+    "QuestGoal": {
+      "rows": 4245,
+      "sha256": "9c5416bef23d5a5f8b8f23562ea540c1e185eebdd792f35a45d9c442e1bc6b4c"
+    },
+    "Goal": {
+      "rows": 5528,
+      "sha256": "7c55e868fd11a63969aabb96f308797471295ae1b0cd674cf8f286e9b230fdab"
+    },
+    "GoalType": {
+      "rows": 116,
+      "sha256": "3bed0080d3aa119845612d356e75f7cc98bf96b19536b6bdcd5b53d7d8027129"
+    },
+    "QuestReward": {
+      "rows": 6276,
+      "sha256": "8fcf1b95f801e946d5778b18503bd185353c5a7c0575345ab3ed9597df3ceec1"
+    },
+    "Reward": {
+      "rows": 36038,
+      "sha256": "f3b313d9e03dd815d36af50f362b89f23b142849abe8f76cb555319a2d93bdfc"
+    },
+    "RewardType": {
+      "rows": 25,
+      "sha256": "dbb1424dfa0d97662a43e235d549a770f6751512f014d5792862386e633b1c5c"
+    },
+    "QuestRewardEnhancement": {
+      "rows": 450,
+      "sha256": "c59180601aeb4da8628a25a4c0e1564eb7351378c6e7e62daeb01bad2a88017b"
+    },
+    "RewardEnhancement": {
+      "rows": 456,
+      "sha256": "9e9f01755208ee511ad7acb7f8562a926e77ed481d38e153afc0b7866433825d"
+    },
+    "ItemClass": {
+      "rows": 34743,
+      "sha256": "adaf246e6a70c2e24f144a5147bebaff27e9168bc5a74da8bcf871ca1287a165"
+    },
+    "DescData_Korean": {
+      "rows": 298319,
+      "sha256": "af6a4bb11358bfeb2adeed63f27ec7f353770a07f36474481cec87ce0a2bfb9c"
+    },
+    "DateTimes_Korean": {
+      "rows": 35181,
+      "sha256": "5867945da984e08459eb43649e3b4dff75424abab11e459f00a1832440d560a5"
+    },
+    "Class": {
+      "rows": 17,
+      "sha256": "3760aaf5d51b118947bfc272ca55d60e8ee72e89c4ba38b736eeec05c7c4d5a8"
+    },
+    "StartingQuest": {
+      "rows": 12,
+      "sha256": "49f5c5aecc816585a8ed3b07be41ded7f40c28fa0155a429ec06c09fb14a4e08"
+    },
+    "Currency": {
+      "rows": 272,
+      "sha256": "9569dfe7a443af5f828a486265ce289762a1493e2b4554d359c0f2ad939f916a"
+    },
+    "CurrencyUnitClass": {
+      "rows": 279,
+      "sha256": "c926e3dcdbad43a354922275f0a07053b6c09ba2d49730eb36e72b1c83dacb39"
+    }
+  },
+  "types": {
+    "Main": 1017,
+    "Common": 591,
+    "Achievement": 196,
+    "Title": 128,
+    "WeeklyRepeat": 1,
+    "Account": 51,
+    "WorldCharacters": 5,
+    "PassSystemGrow": 364,
+    "PassSystemSeason": 894,
+    "AccountAchievement": 81,
+    "Promotion": 17,
+    "DominationStone": 225,
+    "HideHudAccount": 35,
+    "HiddenCharacter": 13,
+    "HiddenServer": 3
+  },
+  "exclusions": {
+    "제외 시스템 목표: ClanEnter": 1,
+    "제외 시스템 목표: ClanDonate": 128,
+    "제외 시스템 목표: ArenaWin": 31
+  },
+  "missing_references": 0,
+  "source_drive_id": "1EJGI2VV4u4P2yNlrMAlp0H2U28jjUH6K"
+}

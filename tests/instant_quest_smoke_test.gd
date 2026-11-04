@@ -20,7 +20,7 @@ func _run() -> void:
 		return
 	var service := SERVICE.new()
 	check(service.configure(db.get("아이템", []), db.get("몬스터", [])), "quest schema and current game IDs validate: " + service.problem)
-	var at: int = 1793670000
+	var at: int = int(Time.get_unix_time_from_system()) # use the active high-water day
 	var original_count: int = service.entries(1, {}, at).size()
 	check(original_count >= 10, "main, daily and achievement quest definitions loaded")
 	check(not bool(service.complete_instantly("invalid:quest:id", 1, at).get("ok", false)), "unknown quest never pays")
