@@ -8,6 +8,9 @@ var state: Dictionary = {}
 var pack_sha: String = ""
 var last_error: String = ""
 var save_blocked: bool = false
+var revision: int = 0
+var map_contexts: Dictionary = {}
+const LOCAL_POLICY = "twilight_totem_v1"
 
 func _json(path: String) -> Variant:
 	if not FileAccess.file_exists(path): return null
@@ -29,6 +32,18 @@ func install(root: String) -> bool:
 		last_error = "토템 팩 형식 오류"
 		return false
 	var candidate: Dictionary = body.tables
+	var contexts: Variant = body.get("map_contexts",{})
+	if not contexts is Dictionary:
+		last_error = "토템 지역 연결 형식 오류"
+		return false
+	for key: Variant in contexts:
+		if not key is String or not contexts[key] is Array:
+			last_error = "토템 지역 연결 형식 오류"
+			return false
+		for land: Variant in contexts[key]:
+			if not land is Dictionary or not _integer(land.get("ID"),0,2147483647) or not land.get("AssetPath") is String:
+				last_error = "토템 Land 연결 형식 오류"
+				return false
 	for table: String in CORE_COUNTS:
 		if not candidate.get(table) is Array or candidate[table].size() != CORE_COUNTS[table]:
 			last_error = "토템 핵심 표 누락: " + table
@@ -42,7 +57,7 @@ func install(root: String) -> bool:
 				last_error = "토템 행 형식 오류"
 				return false
 	var required := {
-		"Totem":["ID","NpcGroupID","ActivationKillCount","DescID"],
+		"Totem":["ID","NpcGroupID","ActivationKillCount","DescID","MapBuffClassID"],
 		"TotemLevel":["ID","TotemID","Level","Probability"],
 		"TotemMaterial":["ID","TotemLevelID","ItemClassID","Amount","SlotIndex"],
 		"TotemBonus":["ID","TotemLevelID","BonusID","SlotIndex","Probability"],
@@ -50,6 +65,12 @@ func install(root: String) -> bool:
 		"Bonus":["ID","BonusTypeID","Value"],"BonusType":["ID","UnitID","DescID"],
 		"UIUnit":["ID","UnitID","Denominator"],
 		"NpcClassForNpcGroup":["NpcGroupID","NpcClassID"],
+		"TotemResetCost":["ID","CurrencyID","Amount"],
+		"CurrencyUnitClass":["CurrencyID","UnitID","ClassID"],
+		"ItemClass":["ID","DescID"],
+		"BuffBonus":["BuffClassID","BonusID"],"SpellBonus":["SpellClassID","BonusID"],
+		"InvokeOption":["ID","InvokeOptionTypeID","Param1","Param2"],
+		"SpellClass":["ID","CastDelay"],
 		"ItemCraftView":["ItemCraftID","ItemClassID","Amount"],
 		"ItemCraftInput":["ItemCraftID","ItemClassID","Amount","SlotIndex"],
 		"ItemCraftOutputView":["ItemCraftID","ItemClassID","Amount"]}
@@ -69,6 +90,7 @@ func install(root: String) -> bool:
 		last_error = "토템 정의 또는 기존 진행도와 호환되지 않습니다"
 		return false
 	pack_sha = str(manifest.sha256)
+	map_contexts = contexts.duplicate(true)
 	last_error = ""
 	return true
 
@@ -112,15 +134,20 @@ func progress(id: int) -> Dictionary:
 	return state.get(str(id),{"active":false,"kills":0,"level":0,"selected":{}}).duplicate(true)
 
 func export_state() -> Dictionary:
-	return {"version":1,"totems":state.duplicate(true)}
+	return {"version":2,"policy":LOCAL_POLICY,"revision":revision,"totems":state.duplicate(true)}
 
 func _integer(value: Variant, low: int, high: int) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value)) and float(value) >= low and float(value) <= high
 
 func check_state(value: Variant) -> String:
 	if value == null: return ""
-	if not value is Dictionary or value.size() != 2 or value.get("version") != 1 or not value.get("totems") is Dictionary:
+	if not value is Dictionary or not value.get("totems") is Dictionary:
 		return "토템 저장 형식 오류"
+	if value.get("version") == 1:
+		if value.size() != 2: return "토템 저장 형식 오류"
+	elif value.get("version") == 2:
+		if value.size() != 4 or value.get("policy") != LOCAL_POLICY or not _integer(value.get("revision"),0,2147483647): return "토템 로컬 규칙·저장 버전 오류"
+	else: return "지원하지 않는 토템 저장 버전"
 	for id: Variant in value.totems:
 		if not id is String or not str(id).is_valid_int(): return "토템 저장 ID 오류"
 		var p: Variant = value.totems[id]
@@ -146,6 +173,7 @@ func accept_state(value: Variant) -> bool:
 		last_error = error
 		return false
 	state = {} if value == null else value.totems.duplicate(true)
+	revision = 0 if value == null else int(value.get("revision",0))
 	save_blocked = false
 	return true
 
@@ -163,6 +191,7 @@ func record_kill(npc_class_id: int) -> bool:
 		p.active = int(p.kills) >= int(totem.ActivationKillCount)
 		state[str(int(totem.ID))] = p
 		changed = true
+	if changed: revision += 1
 	return changed
 
 func level_definition(id: int, level: int) -> Dictionary:
@@ -183,7 +212,7 @@ func level_preview(id: int, level: int) -> Dictionary:
 		if not pools.has(slot): pools[slot] = []
 		# Value zero remains a real candidate. These weights are never success odds.
 		pools[slot].append({"source":candidate.duplicate(true),"bonus":typed_bonus(int(candidate.BonusID))})
-	return {"level":def,"materials":materials,"option_pools":pools,"upgrade_available":false,"reason":"강화 전이·재료 대체·확률 절차 확인 대기"}
+	return {"level":def,"materials":materials,"option_pools":pools,"upgrade_available":true,"success_fraction":float(def.Probability)/1000000.0,"policy":LOCAL_POLICY}
 
 func _candidate_exists(id: int, level: int, slot: String, bonus_id: int) -> bool:
 	for candidate: Dictionary in level_preview(id,level).get("option_pools",{}).get(slot,[]):
@@ -203,6 +232,37 @@ func description(id: int) -> String:
 
 func item_name(id: int) -> String:
 	return description(int(row("ItemClass",id).get("DescID",0)))
+
+func selected_bonuses() -> Array:
+	var result: Array = []
+	for def: Dictionary in rows("Totem"):
+		var p := progress(int(def.ID))
+		if not bool(p.active): continue
+		for stage: Dictionary in p.selected.values():
+			for id: Variant in stage.values(): result.append(typed_bonus(int(id)))
+	return result
+
+func bonus(type_name: String) -> int:
+	var value := 0
+	for effect: Dictionary in selected_bonuses():
+		if effect.type.get("Name") == type_name and int(effect.bonus.get("BonusApplicationTypeID",0)) == 0: value += int(effect.bonus.Value)
+	return value
+
+func stat_record() -> Dictionary:
+	var result := {"mr":bonus("MagicResist"),"damage_reduction":bonus("DamageReduction"),"xp":float(bonus("ExperienceAdditionPercent"))/1000000.0}
+	return {} if result.mr == 0 and result.damage_reduction == 0 and result.xp == 0 else result
+
+func map_experience_fraction(land_id: int, asset_path: String) -> float:
+	var amount := 0.0
+	for def: Dictionary in rows("Totem"):
+		if not bool(progress(int(def.ID)).active): continue
+		for land: Dictionary in map_contexts.get(str(int(def.ID)),[]):
+			if int(land.ID) != land_id or str(land.AssetPath) != asset_path: continue
+			for link: Dictionary in rows("BuffBonus"):
+				if int(link.BuffClassID) != int(def.MapBuffClassID): continue
+				var b := typed_bonus(int(link.BonusID))
+				if b.type.get("Name") == "ExperienceAdditionPercent": amount = maxf(amount,float(b.bonus.Value)/1000000.0)
+	return amount
 
 func resonance() -> Dictionary:
 	var total := 0

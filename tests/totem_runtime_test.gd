@@ -36,7 +36,7 @@ func _initialize() -> void:
 		for level in range(1,11):
 			var stage: Dictionary = runtime.level_preview(id,level)
 			check(stage.materials.size() == 2,"two separate material rows")
-			check(not stage.upgrade_available,"unknown transition policy cannot spend")
+			check(stage.upgrade_available and stage.policy == Runtime.LOCAL_POLICY and is_equal_approx(stage.success_fraction,float(stage.level.Probability)/1000000.0),"explicit local target-level policy keeps source success axis separate")
 			for slot: String in stage.option_pools:
 				pools += 1
 				var weights := 0
@@ -63,6 +63,7 @@ func _initialize() -> void:
 	check(runtime.progress(4).kills == 3000,"activation counter capped")
 	var roundtrip := runtime.export_state()
 	check(runtime.accept_state(roundtrip),"state roundtrip")
+	check(runtime.accept_state({"version":1,"totems":roundtrip.totems}) and runtime.export_state().version == 2,"v1 state upgrades without losing activation or selected outcomes")
 	for total in range(31):
 		runtime.state = {}
 		var remaining := total
@@ -103,5 +104,10 @@ func _initialize() -> void:
 		invoke_values.append(float(candidate.bonus.bonus.Value)/float(candidate.bonus.ui_unit.Denominator))
 	check(invoke_values == [0.5,1.0,1.5],"combat proc values differ from selection and success")
 	check(runtime.rows("ShieldGroup").size() == 1 and runtime.row("ShieldGroup",454).is_empty(),"missing shield body not substituted")
+	runtime.state = {"4":{"active":true,"kills":3000,"level":0,"selected":{}}}
+	for land: Dictionary in runtime.map_contexts.get("4",[]):
+		check(is_equal_approx(runtime.map_experience_fraction(int(land.ID),str(land.AssetPath)),0.05),"exact native Land and asset enables regional EXP")
+		check(runtime.map_experience_fraction(int(land.ID),"unrelated/") == 0,"same Land with wrong asset is rejected")
+	check(runtime.map_experience_fraction(13158,"13158/") == 0,"legacy asset number is not native Land identity")
 	print("TOTEM_RUNTIME checks=%d failures=%d" % [checks,failed])
 	quit(1 if failed else 0)

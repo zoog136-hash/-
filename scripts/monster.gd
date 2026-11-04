@@ -1053,8 +1053,10 @@ func apply_source_option_debuff(origin: String,duration: float,effects: Array) -
 		if effect.type.Name not in ["HPHealDecreasePercent","HPPotionDecreasePercent"] or effect.unit.Name!="Percentage" or int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0:return false
 	source_option_debuffs[origin]={"remaining":duration,"effects":effects.duplicate(true)}
 	return true
-func prune_source_option_debuffs(enabled: Dictionary) -> void:
+func prune_source_option_debuffs(enabled: Dictionary, origin_prefix: String = "") -> void:
 	for origin: String in source_option_debuffs.keys():
+		if origin_prefix.is_empty() and origin.begins_with("totem:"): continue
+		if not origin_prefix.is_empty() and not origin.begins_with(origin_prefix): continue
 		if dead or not enabled.has(origin):source_option_debuffs.erase(origin)
 func source_option_healing(amount: int,potion: bool=false) -> int:
 	var maximum: int=0

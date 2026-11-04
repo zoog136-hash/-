@@ -43,6 +43,7 @@ class TotemSourceTest(unittest.TestCase):
         self.assertEqual(len(first["table_counts"]), 43)
         body = json.loads((self.root / "first/totem_data.json").read_bytes())
         self.assertEqual(len(body["tables"]["TotemBonus"]), 94)
+        self.assertEqual(sorted(len(v) for v in body["map_contexts"].values()), [2, 2, 3])
 
     def test_existing_pack_preserved(self):
         output = self.root / "existing"

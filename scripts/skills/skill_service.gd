@@ -504,7 +504,8 @@ func next_chain_target(previous: TwilightMonster, visited: Array[TwilightMonster
 func target_damage(amount: int, target: TwilightMonster) -> int:
 	# One common successful-hit boundary covers normal attacks, skills and
 	# equipment procs. Instant death intentionally bypasses that boundary.
-	return status.damage_after_reduction(amount, target)
+	var pierce: float = world.totem_reduction_pierce() if world.has_method("totem_reduction_pierce") else 0.0
+	return status.damage_after_reduction(amount, target, pierce)
 
 func outgoing_damage(amount: int) -> int:
 	if proc_depth > 0 or counter_depth > 0: return amount

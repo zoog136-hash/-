@@ -43,7 +43,23 @@ def build(source, research, output):
                     raise ValueError(f"Incomplete core table: {table}")
         if len(evidence) != 1294 or len(tables) != 43:
             raise ValueError("Unexpected evidence coverage")
-        body = json.dumps({"schema": 1, "source_version": 523, "tables": tables},
+        def source_rows(name):
+            return json.loads(original.read(f"content/{name}.json").decode("utf-8-sig"))["rows"]
+        # Original activation groups -> spawn pack -> territory -> exact Land.
+        # This is a documented local region binding, not an invented legacy map alias.
+        spawns = source_rows("NpcSpawnPackNpcClassView")
+        links = source_rows("NpcSpawnPackTerritory")
+        territories = {r["ID"]: r for r in source_rows("Territories")}
+        lands = {r["ID"]: r for r in source_rows("Land")}
+        contexts = {}
+        for totem in tables["Totem"]:
+            ids = {r["NpcClassID"] for r in tables["NpcClassForNpcGroup"] if r["NpcGroupID"] == totem["NpcGroupID"]}
+            packs = {r["NpcSpawnPackID"] for r in spawns if r["NpcClassID"] in ids}
+            land_ids = {territories[r["TerritoriesID"]]["LandID"] for r in links if r["NpcSpawnPackID"] in packs}
+            contexts[str(totem["ID"])] = [lands[id] for id in sorted(land_ids)]
+        if sorted(len(v) for v in contexts.values()) != [2, 2, 3]:
+            raise ValueError("Unexpected Totem region closure; review before changing bindings")
+        body = json.dumps({"schema": 1, "source_version": 523, "tables": tables, "map_contexts": contexts},
                           ensure_ascii=False, separators=(",", ":")).encode()
         manifest = {"schema": 1, "source_version": 523, "sha256": digest(body),
                     "source_zip_sha256": digest(source.read_bytes()),

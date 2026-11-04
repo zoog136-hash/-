@@ -4,6 +4,8 @@ class_name TwilightWorld
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
 const TOTEM_RUNTIME = preload("res://scripts/progression/totem_runtime.gd")
 var totems = TOTEM_RUNTIME.new()
+var totem_actions = preload("res://scripts/progression/totem_actions.gd").new()
+var totem_combat = preload("res://scripts/progression/totem_combat.gd").new()
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
@@ -496,6 +498,7 @@ func _process(delta: float) -> void:
 	_tick_skill_cooldowns(delta)
 	if original_skills != null: original_skills.tick(delta)
 	option_awakening.combat.tick(delta)
+	totem_combat.tick(delta)
 	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
 	ain_refresh_clock -= delta
@@ -646,6 +649,8 @@ func _load_data() -> void:
 	var totem_root := OS.get_environment("TWILIGHT_TOTEM_PACK")
 	if totem_root.is_empty(): totem_root = "user://original_resources/totems523"
 	if FileAccess.file_exists(totem_root.path_join("manifest.json")): totems.install(totem_root)
+	totem_actions.configure(self)
+	totem_combat.configure(self)
 	growth.configure(self)
 
 func _stash_inven_raw_options() -> void:
@@ -934,7 +939,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + (totems.bonus("PVEDamageReduction") if key == "pve_damage_reduction" else 0)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -1341,6 +1346,7 @@ func _connect_signals() -> void:
 	if hud.has_signal("craft_requested"):
 		hud.connect("craft_requested", _craft_requested)
 	hud.totem_conversion_requested.connect(_totem_convert_requested)
+	hud.totem_action_requested.connect(_totem_action_requested)
 	if hud.has_signal("shop_sell_requested"):
 		hud.connect("shop_sell_requested", _sell_shop_item)
 	if hud.has_signal("npc_dialogue_action_requested"):
@@ -2987,6 +2993,8 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
+	var totem_reduction: int = totems.bonus({"melee":"MeleeDamageReductionPercent","ranged":"RangeDamageReductionPercent","magic":"MagicDamageReductionPercent"}.get(normalized_type,""))
+	reduced = maxi(1,int(round(float(reduced)*(1.0-clampf(float(totem_reduction)/1000000.0,0,1)))))
 	reduced = growth.incoming_damage(reduced)
 	if original_skills != null:
 		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
@@ -2995,7 +3003,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			_refresh_combat_hud()
 			return
 	var option_result: Dictionary=option_awakening.combat.incoming(attacker,normalized_type,reduced)
-	reduced=int(option_result.damage)
+	reduced=totem_combat.incoming(attacker,normalized_type,int(option_result.damage))
 	hp = maxi(0, hp - reduced)
 	if hp>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal))
 	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
@@ -4130,6 +4138,26 @@ func _buy_reviewed_shop_item(vendor_id: String, item_name: String, quantity: int
 		hud.call("refresh_shop")
 
 
+func _totem_action_requested(action: String, id: int, material_id: int, revision: int) -> void:
+	var result: Dictionary = totem_actions.execute(action,id,material_id,revision)
+	if not result.ok: hud.show_message(str(result.reason))
+
+func totem_reduction_pierce() -> float:
+	return float(totems.resonance().pierce_reduction_fraction)
+
+func totem_map_context() -> Dictionary:
+	# Native M Land identity only; never confuse a PC map number with Land.ID.
+	if field_map != null and field_map.has_method("actor_contract"):
+		var pack: Variant = field_map.get("source_pack")
+		if pack != null and pack.has_method("geographic_contract"):
+			var contract: Dictionary = pack.geographic_contract()
+			if contract.get("edition") == "LineageM_base508": return contract
+	return {}
+
+func totem_map_experience() -> float:
+	var context := totem_map_context()
+	return totems.map_experience_fraction(int(context.get("land_id",-1)),str(context.get("asset_path","")))
+
 func _craft_item_index() -> Dictionary:
 	return loot_catalog.get("by_name", {}) as Dictionary
 
@@ -4449,6 +4477,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if collection_override.has("totem_state") and not totems.check_state(collection_override.totem_state).is_empty(): return ERR_INVALID_DATA
 	if totems.save_blocked or not totems.check_state(totems.export_state()).is_empty():
 		if not quiet: hud.show_message("토템 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
@@ -4467,7 +4496,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","totem_state"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4767,6 +4796,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	totems.accept_state(data.get("totem_state"))
+	totem_combat.clear()
 	growth.restore(data.get("growth",growth.empty_state()))
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
@@ -5746,7 +5776,9 @@ func _break_invisibility() -> void:
 	hud.append_log("공격으로 은신 해제")
 
 func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack_kind: String="melee", main_target: bool=true, by_spell: bool=false) -> void:
-	if trigger_name=="on_hit" and hp>0:option_awakening.combat.on_hit(target,attack_kind,main_target,by_spell)
+	if trigger_name=="on_hit" and hp>0:
+		option_awakening.combat.on_hit(target,attack_kind,main_target,by_spell)
+		if main_target: totem_combat.on_hit(target,attack_kind,by_spell)
 	if trigger_name=="on_hit":skill_awakening.on_successful_hit(target)
 	if original_skills != null: original_skills.trigger(trigger_name, target)
 	for skill: Dictionary in _non_original_skill_rows():
@@ -6748,6 +6780,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 	if not collection_record.is_empty(): records.append(collection_record)
 	var card_collection_record: Dictionary = card_collections.stat_record()
 	if not card_collection_record.is_empty(): records.append(card_collection_record)
+	var totem_record: Dictionary = totems.stat_record()
+	if not totem_record.is_empty(): records.append(totem_record)
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
@@ -7169,7 +7203,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 func _catalog_damage_bonus(kind: String) -> int:
 	# Native secondary doll effects are counted once, separately from general attack.
 	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
-	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
+	var total: int = totems.bonus({"melee":"MeleeDamage","ranged":"RangeDamage","magic":"MagicDamage"}.get(kind,"")) + source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7190,7 +7224,7 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
-	var total: int = option_awakening.accuracy_bonus(kind)
+	var total: int = option_awakening.accuracy_bonus(kind) + totems.bonus({"melee":"MeleeHit","ranged":"RangeHit","magic":"MagicHit"}.get(kind,""))
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7279,7 +7313,7 @@ func _magic_damage_stat() -> int:
 	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("pve_magic_damage") + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
 
 func _magic_accuracy_stat() -> int:
-	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
+	return totems.bonus("MagicHit") + level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
 
 func _spell_power_stat() -> int:
 	var defaults: Dictionary = original_skills.runtime_defaults if original_skills != null else {}
@@ -7564,7 +7598,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
-	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat"))
+	return -(_effective_defense() + dex_ac_bonus) - totems.bonus("ArmorClass") + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat"))
 
 func _record_dg(record: Dictionary) -> int:
 	if record.has("dg"):
@@ -7632,7 +7666,7 @@ func _damage_reduction_stat() -> int:
 		total += _record_damage_reduction(record)
 	total += _active_item_buff_total("damage_reduction")
 	total += _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "reduction")
-	return maxi(0, total)
+	return maxi(0, total + totem_combat.barrier_flat())
 
 func _pve_damage_after_item_buffs(raw_damage: int) -> int:
 	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
@@ -7748,7 +7782,7 @@ func _experience_multiplier() -> float:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("xp", 0.0))
-	return maxf(1.0, 1.0 + bonus + float(_active_item_buff_total("xp")) / 100.0)
+	return maxf(1.0, 1.0 + bonus + totem_map_experience() + float(_active_item_buff_total("xp")) / 100.0)
 
 func _update_companion(delta: float) -> void:
 	doll_motion.update(delta, $Companion, companion_sprite, player)
