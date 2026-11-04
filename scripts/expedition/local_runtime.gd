@@ -1,5 +1,6 @@
 extends "res://scripts/expedition/legacy_runtime.gd"
 
+const DISPATCH=preload("res://scripts/expedition/dispatch_rules.gd")
 const MODEL = preload("res://scripts/expedition/estimated_simulation.gd")
 var random = RandomNumberGenerator.new()
 var clock: Callable
@@ -11,7 +12,7 @@ func _init() -> void:
 	state = fresh_estimate()
 
 static func fresh_estimate() -> Dictionary:
-	return {"version": 2, "source_sha256": SOURCE.SOURCE_SHA256, "revision": 0, "jobs": [], "attempts": {}, "day": 0, "rng_state": "", "storage": {}, "issued": {}, "receipts": {}}
+	return {"version": 2, "source_sha256": SOURCE.SOURCE_SHA256, "revision": 0, "jobs": [], "attempts": {}, "day": 0, "rng_state": "", "storage": {}, "issued": {}, "receipts": {}, "local_diamonds":0}
 
 func now() -> int:
 	return int(clock.call()) if clock.is_valid() else int(Time.get_unix_time_from_system())
@@ -44,7 +45,8 @@ func validate(v: Variant) -> String:
 		if not integer(v.get(field)) or v[field] < 0 or v[field] >= MAX_INTEGER: return "탐험 저장 정수 오류"
 	if not v.get("jobs") is Array or v.jobs.size() > 15 or not v.get("attempts") is Dictionary or not _rng_text(v.get("rng_state")) or not _valid_loot(v.get("storage")) or v.storage.size() > 75 or not v.get("issued") is Dictionary or not v.get("receipts") is Dictionary: return "탐험 저장 구조 오류"
 	for k in v.attempts:
-		if k not in ["2", "98"] or not integer(v.attempts[k]) or v.attempts[k] < 0 or v.attempts[k] > 15: return "탐험 일일 횟수 오류"
+		if k not in ["1", "2", "98"] or not integer(v.attempts[k]) or v.attempts[k] < 0 or v.attempts[k] > 15: return "탐험 일일 횟수 오류"
+	if not integer(v.get("local_diamonds",0)) or int(v.get("local_diamonds",0))<0 or int(v.get("local_diamonds",0))>1000000000:return "탐험 로컬 다이아 잔액 오류"
 	var ids := {}
 	var identities := {}
 	var spots := {}
@@ -53,12 +55,19 @@ func validate(v: Variant) -> String:
 		if not job is Dictionary or not job.get("sim") is Dictionary: return "탐험 시뮬레이션 기록 누락"
 		for f in ["id", "spot_id", "group_id", "deck_id", "cost", "duration", "remaining", "completion_reward_id"]:
 			if not integer(job.get(f)) or job[f] < 0 or job[f] >= MAX_INTEGER: return "탐험 기록 정수 오류"
-		if job.id < 1 or job.id > v.revision or job.spot_id < 1 or job.group_id < 1 or int(job.deck_id) not in [2, 98] or int(job.duration) != 28800 or job.remaining > job.duration or job.completion_reward_id < 1 or job.cost < 1: return "탐험 기록 범위 오류"
+		if job.id < 1 or job.id > v.revision or job.spot_id < 1 or job.group_id < 1 or int(job.deck_id) not in [1, 2, 98] or int(job.duration) != 28800 or job.remaining > job.duration or job.completion_reward_id < 1 or job.cost < 1: return "탐험 기록 범위 오류"
 		if not job.get("identity") is String or not job.identity.begins_with("source:m508:%d:" % int(job.deck_id)): return "탐험 카드 ID 오류"
 		var parts: PackedStringArray = job.identity.split(":")
 		if parts.size() != 4 or not parts[3].is_valid_int() or str(int(parts[3])) != parts[3] or int(parts[3]) < 1: return "탐험 카드 정규형 오류"
-		if ids.has(str(int(job.id))) or identities.has(job.identity) or spots.has(str(int(job.spot_id))) or v.receipts.has(str(int(job.id))): return "탐험 중복/기수령 기록 오류"
-		ids[str(int(job.id))] = true; identities[job.identity] = true; spots[str(int(job.spot_id))] = true
+		if ids.has(str(int(job.id))) or spots.has(str(int(job.spot_id))) or v.receipts.has(str(int(job.id))): return "탐험 중복/기수령 기록 오류"
+		ids[str(int(job.id))] = true; spots[str(int(job.spot_id))] = true
+		var members:Variant=job.get("member_ids",[job.identity])
+		if not members is Array or members.size()!=(4 if int(job.deck_id)==1 else 1) or job.identity not in members:return "탐험 파견 카드 수 오류"
+		for member in members:
+			if not member is String or not member.begins_with("source:m508:%d:"%int(job.deck_id)) or identities.has(member):return "탐험 파견 카드 중복·계열 오류"
+			var fields:PackedStringArray=member.split(":")
+			if fields.size()!=4 or not fields[3].is_valid_int() or str(int(fields[3]))!=fields[3] or int(fields[3])<1:return "탐험 파견 카드 정규형 오류"
+			identities[member]=true
 		var deck := str(int(job.deck_id)); counts[deck] = int(counts.get(deck, 0))+1
 		if counts[deck] > 5: return "탐험 동시 횟수 오류"
 		var s: Dictionary = job.sim
@@ -66,6 +75,15 @@ func validate(v: Variant) -> String:
 		for f in ["level", "hp", "max_hp", "elapsed", "next_event", "events", "resurrections", "last_wall"]:
 			if not integer(s.get(f)) or s[f] < 0 or s[f] >= MAX_INTEGER: return "탐험 상태 정수 오류"
 		if s.level < 1 or s.level > 20 or s.max_hp < 1 or s.hp > s.max_hp or s.elapsed > job.duration or job.remaining != job.duration-s.elapsed or s.next_event <= s.elapsed or s.resurrections > 3 or not s.get("exp") is String or not s.exp.is_valid_int() or str(int(s.exp)) != s.exp or int(s.exp) < 0 or int(s.exp) > 9999999999999: return "탐험 상태 범위 오류"
+		if job.has("buff_ids"):
+			if not job.buff_ids is Array or job.buff_ids.size() > 3: return "탐험 버프 기록 오류"
+			var buff_seen := {}
+			for id in job.buff_ids:
+				if not integer(id) or id < 1 or buff_seen.has(int(id)): return "탐험 버프 ID 오류"
+				buff_seen[int(id)] = true
+			for field in ["potion_heal","potion_interval","next_potion"]:
+				if not integer(s.get(field)) or s[field] < 0: return "탐험 회복제 저장 오류"
+			if s.potion_heal > 1000 or (s.potion_heal > 0 and (s.potion_interval != 900 or s.next_potion <= s.elapsed or int(s.next_potion)%900 != 0)) or (s.potion_heal == 0 and (s.potion_interval != 0 or s.next_potion != 0)): return "탐험 회복제 주기 오류"
 		if job.get("status") not in ["running", "dead", "completed"]: return "탐험 상태 오류"
 		if (job.status == "dead") != (s.hp == 0) or (job.status == "completed" and job.remaining != 0) or (job.status == "running" and job.remaining == 0): return "탐험 생존·완료 상태 불일치"
 	for k in v.issued:
@@ -115,13 +133,85 @@ func before_save() -> bool:
 func attempts_used(deck: String) -> int:
 	return 0 if today() > int(state.get("day", 0)) else int(state.attempts.get(deck, 0))
 
-func prepare(spot_id: int, identities: Array) -> Dictionary:
+func inspect_for_start(spot_id:int,identities:Array)->Dictionary:
+	var inspection:Dictionary=world.inspect_expedition(spot_id,identities)
+	if int(inspection.get("spot",{}).get("BuffCardDeckID",0))!=1 or not inspection.get("static_conditions_met",false):return inspection
+	var party:Dictionary=DISPATCH.plan(world.get_expedition_catalog(),inspection.cards,MODEL.policy())
+	if not party.ok:inspection.static_conditions_met=false;return inspection
+	var detail:Dictionary=world.get_expedition_catalog().group_detail(spot_id,int(party.group_id))
+	inspection.merge(detail,true);inspection.group_id=party.group_id;inspection.party=party;inspection.representative_identity=party.representative.identity
+	return inspection
+
+func diamond_balance()->int:
+	return int(state.get("local_diamonds",0))
+
+func exchange_diamonds(amount:int)->Dictionary:
+	if world==null or save_blocked or not validate(state).is_empty() or int(state.version)!=2 or not MODEL.valid_policy(MODEL.policy()):return _fail("유효한 탐험 저장·설정이 필요합니다.")
+	if amount<1 or amount>1000 or diamond_balance()+amount>1000000000:return _fail("로컬 다이아 교환 수량 오류")
+	var cost:int=amount*int(MODEL.policy().local_diamond_adena_price)
+	if int(world.gold)<cost:return _fail("로컬 다이아 교환 아데나 부족")
+	if not _backup_before_first_start():return _fail("로컬 다이아 교환 전 저장 백업 실패")
+	var next:Dictionary=state.duplicate(true);next.local_diamonds=diamond_balance()+amount;next.revision=int(next.revision)+1
+	if not _commit(next,{"gold":int(world.gold)-cost}):return _fail(last_error)
+	world.gold-=cost;world.call_deferred("_update_hud")
+	return {"ok":true,"message":"TWILIGHT 탐험 로컬다이아%d개 교환 · 자체 교환비 아데나%d"%[amount,cost]}
+
+func buff_options(deck: int) -> Array:
+	var options: Array = []
+	if world == null or not world.get_expedition_catalog().ready(): return options
+	var catalog: RefCounted = world.get_expedition_catalog()
+	for buff: Dictionary in catalog.rows("MagicDollExpeditionBuff"):
+		if int(buff.BuffCardDeckID) != deck or int(buff.CostCurrencyID) not in [1,4] or int(buff.Cost)<=0: continue
+		var bonus: Dictionary = catalog.record("MagicDollExpeditionBonus", int(buff.MagicDollExpeditionBonusID))
+		var type := int(bonus.get("MagicDollExpeditionBonusTypeID", 0))
+		if type not in [1,11,21]: continue
+		options.append({"buff":buff,"bonus":bonus,"supported":(int(buff.CostCurrencyID)==1 and type in [1,11]) or (int(buff.CostCurrencyID)==4 and type==21)})
+	return options
+
+func _buff_plan(deck: int, ids: Array) -> Dictionary:
+	if ids.size() > 3: return _fail("버프는 종류별1개씩 선택하세요.")
+	var result := {"ok":true,"cost":0,"hp":0,"heal":0,"interval":0,"luck":0,"diamonds":0,"ids":[]}
+	var kinds := {}
+	for id in ids:
+		if not integer(id) or result.ids.has(int(id)): return _fail("잘못되거나 중복된 버프 ID")
+		var matched := false
+		for option: Dictionary in buff_options(deck):
+			if int(option.buff.ID) != int(id): continue
+			var type := int(option.bonus.MagicDollExpeditionBonusTypeID)
+			if not option.supported or kinds.has(type): return _fail("현재 재화로 사용할 수 없는 버프 또는 중복 종류")
+			matched = true; kinds[type] = true; result.ids.append(int(id))
+			if int(option.buff.CostCurrencyID)==1:result.cost += int(option.buff.Cost)
+			else:result.diamonds += int(option.buff.Cost)
+			if type==21:result.luck=int(option.bonus.Value)
+			if type == 1: result.hp = int(option.bonus.Value)
+			if type == 11:
+				result.heal = int(option.bonus.Value)
+				result.interval = 900 if deck==1 else _constant(world.get_expedition_catalog(),("MagicDoll" if deck == 2 else "HolyStuff")+"ExpeditionPotionInterval")
+		if not matched: return _fail("해당 계열 원본 버프가 없습니다.")
+	if result.heal > 0 and result.interval != 900: return _fail("원본 회복제 주기 확인 필요")
+	return result
+
+func prepare(spot_id: int, identities: Array, buff_ids: Array = []) -> Dictionary:
 	var result := super.prepare(spot_id, identities)
 	if not result.ok: return result
 	if not MODEL.valid_policy(MODEL.policy()): return _fail("추정 규칙 설정이 잘못되었습니다.")
-	var profile: Dictionary = world.skill_awakening.core.profile(str(result.identity), int(result.inspection.cards[0].skill_awaken_level))
+	var rep:Dictionary=result.inspection.get("party",{}).get("representative",result.inspection.cards[0])
+	var profile:Dictionary=world.skill_awakening.core.profile(str(result.identity),int(rep.skill_awaken_level)).duplicate(true)
+	result.level=int(rep.skill_awaken_level)
+	if int(result.inspection.spot.BuffCardDeckID)==1:
+		var hp_values:Array[int]=[]
+		for member:Dictionary in result.inspection.cards:
+			var member_profile:Dictionary=world.skill_awakening.core.profile(str(member.identity),int(member.skill_awaken_level))
+			if member_profile.is_empty():return _fail("변신 파견 카드 HP 프로필 누락")
+			hp_values.append(int(member_profile.hp))
+		profile.hp=hp_values.reduce(func(a:int,b:int)->int:return a+b,0) if MODEL.policy().get("dispatch_hp","sum")=="sum" else hp_values.min()
 	if profile.is_empty(): return _fail("카드의 원본 HP·경험치 연결이 없습니다.")
-	result.profile = profile
+	var buffs := _buff_plan(int(result.inspection.spot.BuffCardDeckID),buff_ids)
+	if not buffs.ok: return buffs
+	result.profile = profile; result.buffs = buffs; result.entry_cost = int(result.cost)
+	result.cost = int(result.cost)+int(buffs.cost)
+	if int(world.gold) < int(result.cost): return _fail("입장비·선택 버프 아데나 부족")
+	if diamond_balance()<int(buffs.diamonds):return _fail("TWILIGHT 탐험 로컬다이아 부족 · 원본 버프 비용은10다이아입니다.")
 	return result
 
 func _commit(next: Dictionary, overrides: Dictionary = {}) -> bool:
@@ -138,8 +228,8 @@ func _commit(next: Dictionary, overrides: Dictionary = {}) -> bool:
 	last_error = ""
 	return true
 
-func start(spot_id: int, identities: Array) -> Dictionary:
-	var p := prepare(spot_id, identities)
+func start(spot_id: int, identities: Array, buff_ids: Array = []) -> Dictionary:
+	var p := prepare(spot_id, identities, buff_ids)
 	if not p.ok: return p
 	if not _backup_before_first_start(): return _fail("출발 전 저장 원본 백업 실패")
 	var next := state.duplicate(true)
@@ -147,8 +237,24 @@ func start(spot_id: int, identities: Array) -> Dictionary:
 	next.revision = int(next.revision)+1
 	var rng := RandomNumberGenerator.new(); rng.state = random.state
 	var i: Dictionary = p.inspection
-	var job := {"id": int(next.revision), "spot_id": spot_id, "group_id": int(i.group_id), "deck_id": int(i.spot.BuffCardDeckID), "cost": int(p.cost), "identity": p.identity, "duration": int(i.spot.TimeLimitSecond), "remaining": int(i.spot.TimeLimitSecond), "status": "running", "completion_reward_id": int(i.completion[0].reward.ID)}
-	MODEL.initialize(job, int(p.profile.hp), int(i.cards[0].skill_awaken_level), rng.randi(), MODEL.policy(), now())
+	var job := {"id": int(next.revision), "spot_id": spot_id, "group_id": int(i.group_id), "deck_id": int(i.spot.BuffCardDeckID), "cost": int(p.entry_cost), "identity": p.identity, "duration": int(i.spot.TimeLimitSecond), "remaining": int(i.spot.TimeLimitSecond), "status": "running", "completion_reward_id": int(i.completion[0].reward.ID)}
+	var run_policy:Dictionary=MODEL.policy()
+	var extra_hp:=0;var extra_heal:=0;var synergy_luck:=0
+	if int(job.deck_id)==1:
+		job.member_ids=identities.duplicate();job.synergy_ids=i.party.synergy_ids.duplicate()
+		extra_hp=int(i.party.effects.hp);extra_heal=int(i.party.effects.heal)
+		synergy_luck=int(i.party.effects.luck_seconds)
+		run_policy.monster_win_permyriad=mini(10000,int(run_policy.monster_win_permyriad)+int(i.party.effects.win_permyriad))
+		run_policy.dispatch_rest_hp_percent=int(i.party.effects.rest_hp_percent)
+	var luck:int=maxi(int(p.buffs.luck),synergy_luck) if run_policy.get("luck_stacking","maximum")=="maximum" else int(p.buffs.luck)+synergy_luck
+	run_policy.event_interval_seconds=maxi(60,int(run_policy.event_interval_seconds)-luck)
+	if int(p.buffs.diamonds)>0:next.local_diamonds=diamond_balance()-int(p.buffs.diamonds)
+	MODEL.initialize(job, int(p.profile.hp)+int(p.buffs.hp)+extra_hp, int(p.level), rng.randi(), run_policy, now())
+	if not p.buffs.ids.is_empty() or extra_heal>0:
+		job.buff_ids = p.buffs.ids.duplicate()
+		job.sim.potion_heal = int(p.buffs.heal)+extra_heal
+		job.sim.potion_interval = 900 if extra_heal>0 else int(p.buffs.interval)
+		job.sim.next_potion = int(job.sim.potion_interval)
 	next.rng_state = str(rng.state); next.jobs.append(job); next.attempts[p.deck] = int(next.attempts.get(p.deck, 0))+1
 	if not _commit(next, {"gold": int(world.gold)-int(p.cost)}): return _fail(last_error)
 	world.gold -= int(p.cost); world.call_deferred("_update_hud")
@@ -198,15 +304,19 @@ func resurrect(job_id: int) -> Dictionary:
 	for job: Dictionary in next.jobs:
 		if int(job.id) != job_id: continue
 		var spot: Dictionary = world.get_expedition_catalog().record("MagicDollExpeditionSpot", int(job.spot_id))
+
 		if job.status != "dead" or int(job.sim.resurrections) >= int(spot.get("ResurrectionLimit", 0)): return _fail("부활 가능한 사망 탐험이 아닙니다.")
-		var cost := int(job.cost)*int(job.sim.policy.resurrection_cost_multiplier_permyriad)/10000
+		var dispatch:bool=int(job.deck_id)==1
+		var cost:int=0 if dispatch else int(job.cost)*int(job.sim.policy.resurrection_cost_multiplier_permyriad)/10000
+		if dispatch and diamond_balance()<50:return _fail("원본 파견 부활50다이아 · TWILIGHT 탐험 로컬다이아 부족")
+		if dispatch:next.local_diamonds=diamond_balance()-50
 		if int(world.gold) < cost: return _fail("부활 아데나 부족")
 		job.sim.hp = maxi(1, int(job.sim.max_hp)*int(job.sim.policy.resurrection_hp_permyriad)/10000)
 		job.sim.resurrections = int(job.sim.resurrections)+1; job.sim.last_wall = now(); job.status = "completed" if job.remaining == 0 else "running"
 		next.revision = int(next.revision)+1
 		if not _commit(next, {"gold": int(world.gold)-cost}): return _fail(last_error)
 		world.gold -= cost; world.call_deferred("_update_hud")
-		return {"ok": true, "message": "부활 완료 · 추정 비용 아데나 %d" % cost}
+		return {"ok": true, "message": "부활 완료 · 원본 비용50 로컬다이아" if dispatch else "부활 완료 · 추정 비용 아데나 %d" % cost}
 	return _fail("해당 탐험이 없습니다.")
 
 func settlement_view(job_id: int) -> Dictionary:
@@ -222,8 +332,8 @@ func settlement_view(job_id: int) -> Dictionary:
 		return contract
 	return _fail("수령했거나 존재하지 않는 탐험입니다.")
 
-func _skill_reward(identity: String, amount: int) -> Dictionary:
-	var progress: Dictionary = world.skill_awakening.export_state()
+func _skill_reward(identity: String, amount: int, base_progress:Dictionary={}) -> Dictionary:
+	var progress: Dictionary = base_progress.duplicate(true) if not base_progress.is_empty() else world.skill_awakening.export_state()
 	var entry: Dictionary = progress.cards.get(identity, {})
 	if amount <= 0 or entry.is_empty() or int(entry.get("level", 0)) >= 20: return {"state": progress, "applied": 0}
 	var card: Dictionary = world.skill_awakening.core.cards.get(identity, {})
@@ -253,7 +363,12 @@ func claim(job_id: int, abort: bool = false) -> Dictionary:
 		if amount > 0: next.storage[k] = int(next.storage.get(k, 0))+amount
 	if next.storage.size() > 75: return _fail("탐험 보관함75칸이 가득 찼습니다. 먼저 인벤토리로 옮기세요.")
 	var xp := int(job.sim.exp)*factor/10000
-	var skill := _skill_reward(str(job.identity), xp)
+	var skill:Dictionary={"state":world.skill_awakening.export_state(),"applied":0}
+	var recipients:Array=job.get("member_ids",[job.identity]).duplicate();recipients.sort()
+	for index in range(recipients.size()):
+		var gain:int=xp
+		if recipients.size()>1 and job.sim.policy.get("dispatch_experience","split_total")=="split_total":gain=xp/recipients.size()+(1 if index<xp%recipients.size() else 0)
+		skill=_skill_reward(str(recipients[index]),gain,skill.state)
 	if not world.skill_awakening.core.validate_state(skill.state).is_empty(): return _fail("카드 경험치 저장 검증 실패")
 	var receipt := {"job_id": job_id, "aborted": abort, "exp": xp, "claimed_at": now(), "policy": job.sim.policy.policy_id}
 	next.jobs = next.jobs.filter(func(r: Dictionary) -> bool: return int(r.id) != job_id)
@@ -326,6 +441,17 @@ func install_inventory_definitions() -> void:
 			world.catalog_db["아이템"].append({"name": str(state.issued[key]), "source": "lineagem_patch523", "source_snapshot": "patch523", "sourceId": "m523:expedition:"+key, "source_item_class_id": id, "source_item": item, "expedition_key": key, "slot": "material", "type": "탐험 보상", "grade": {1:"일반",2:"고급",3:"희귀",4:"영웅",5:"전설",32:"신화",52:"유일"}.get(int(item.get("GradeID", 1)), "일반"), "stackable": true, "desc": "원본 ID·축복·강화를 보존한 탐험 보상"})
 	world._index_catalog_item_sources()
 
+func compatible_skill_book(key:String)->Dictionary:
+	if world==null or not _valid_loot({key:1}) or not key.ends_with(":1:0") or not world.get_expedition_catalog().ready():return {}
+	var catalog:RefCounted=world.get_expedition_catalog();var id:int=int(key.split(":")[0])
+	for book:Dictionary in world.skill_awakening.core.DATA.data.books:
+		if int(book.item_row.ID)!=id:continue
+		if catalog.record("ItemClass",id)!=book.item_row or catalog.record("ItemBonus",int(book.item_bonus_row.ID))!=book.item_bonus_row or catalog.record("Bonus",int(book.bonus_row.ID))!=book.bonus_row:continue
+		var canonical:Dictionary=world._find_catalog_item_record(str(book.name))
+		if canonical.get("source")!="lineagem_base508" or canonical.get("sourceId")!="m508:item:"+str(id):continue
+		return canonical.duplicate(true)
+	return {}
+
 func withdraw(key: String, amount: int = 1) -> Dictionary:
 	if world == null or save_blocked or not validate(state).is_empty() or int(state.version) != 2 or not _valid_loot({key: 1}) or not world.get_expedition_catalog().ready(): return _fail("유효한 탐험 저장·원본 팩이 필요합니다.")
 	if amount < 1 or int(state.storage.get(key, 0)) < amount: return _fail("보관함 수량 부족")
@@ -337,6 +463,21 @@ func withdraw(key: String, amount: int = 1) -> Dictionary:
 	next.storage[key] = int(next.storage[key])-amount
 	if next.storage[key] == 0: next.storage.erase(key)
 	next.issued[key] = name; next.revision = int(next.revision)+1
-	if not _commit(next, {"inventory": bag}): return _fail(last_error)
-	world.inventory = bag; install_inventory_definitions(); world.call_deferred("_update_hud")
+	var overrides:Dictionary={"inventory":bag}
+	var skill_book:Dictionary=compatible_skill_book(key)
+	if not skill_book.is_empty():
+		if amount>1000:return _fail("각성서는 한 번에1000개까지 수령할 수 있습니다.")
+		# Exact, unchanged source book identity is adapted to the existing native
+		# awakening API. Catalog/inventory keep patch523 provenance and typed name.
+		var physicals:Dictionary=world.item_instances.duplicate(true)
+		skill_book.name=name;skill_book.expedition_key=key;skill_book.source_origin_snapshot="patch523";skill_book.source_compatibility="exact_ItemClass_ItemBonus_Bonus_match"
+		for index in range(amount):
+			var physical_id:String="expedition-book:%s:%d:%d"%[key,int(next.revision),index]
+			if physicals.has(physical_id):return _fail("각성서 물리 ID 충돌 · 기존 저장 보존")
+			physicals[physical_id]={"name":name,"level":0,"element":"","element_level":0,"record":skill_book.duplicate(true)}
+		overrides.item_instances=physicals
+	if not _commit(next, overrides): return _fail(last_error)
+	world.inventory = bag
+	if overrides.has("item_instances"):world.item_instances=overrides.item_instances
+	install_inventory_definitions(); world.call_deferred("_update_hud")
 	return {"ok": true, "message": "인벤토리 수령 완료"}

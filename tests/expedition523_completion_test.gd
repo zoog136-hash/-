@@ -231,6 +231,148 @@ func run() -> void:
 	world.expedition_local.advance(1)
 	confirm()
 	check(not world.expedition_local.state.storage.has("166594:1:0"), "UI opening tolerates unrelated timer checkpoint")
+	check(world.expedition_local.claim(int(world.expedition_local.state.jobs[0].id),true).ok,"finish parallel timer fixture")
+	# Optional source Adena buffs are purchased with departure in one transaction.
+	world.gold = 300000; check(world._save_game(true)==OK,"buff fixture checkpoint")
+	view._select_spot()
+	for i in range(view.card_picker.item_count):
+		if view.card_picker.get_item_metadata(i).identity == identity: view.card_picker.select(i)
+	var hp_button := view.find_child("ExpeditionBuff_1",true,false) as CheckButton
+	var potion_button := view.find_child("ExpeditionBuff_11",true,false) as CheckButton
+	var luck_button := view.find_child("ExpeditionBuff_21",true,false) as CheckButton
+	check(hp_button != null and potion_button != null and not luck_button.disabled,"UI source HP/potion/luck choices with separate local Diamond wallet")
+	hp_button.button_pressed = true; potion_button.button_pressed = true; view._render()
+	var prepared: Dictionary = world.expedition_local.prepare(1,[identity],[1,11])
+	check(prepared.ok and prepared.cost==160000 and prepared.entry_cost==10000 and prepared.buffs.cost==150000,"source entry plus both exact native buff costs")
+	check(not world.expedition_local.prepare(1,[identity],[1,1]).ok and not world.expedition_local.prepare(1,[identity],[21]).ok,"duplicate buff and unfunded local currency reject before payment")
+	unchanged = snapshot(); disk = FileAccess.get_sha256(path)
+	world.equipment_collections.save_blocked = true
+	check(not world.request_expedition_start(1,[identity],[1,11]).ok and snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"failed combined purchase preserves Gold buffs and RNG")
+	world.equipment_collections.save_blocked = false
+	view.start_button.pressed.emit(); confirm()
+	check(world.gold==140000 and world.expedition_local.state.jobs[0].cost==10000 and world.expedition_local.state.jobs[0].sim.max_hp==630,"UI purchases buffs and preserves original entry fee for resurrection")
+	await process_frame
+	policy_only(71); world.expedition_local.state.jobs[0].sim.hp=400
+	check(world._save_game(true)==OK,"potion progress baseline")
+	unchanged=snapshot(); disk=FileAccess.get_sha256(path)
+	world.equipment_collections.save_blocked=true
+	world.expedition_local.advance(900)
+	check(snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"failed healing/event checkpoint preserves HP clock and RNG")
+	world.equipment_collections.save_blocked=false
+	world.expedition_local.advance(900)
+	var healed: Dictionary=world.expedition_local.state.jobs[0].duplicate(true)
+	check(healed.sim.hp==450 and healed.sim.next_potion==1800 and healed.sim.elapsed==900,"source50HP every900sec independently of event clock")
+	var chunk_a:=healed.duplicate(true); var chunk_b:=healed.duplicate(true)
+	Model.step(chunk_a,1800,catalog); Model.step(chunk_b,900,catalog); Model.step(chunk_b,900,catalog)
+	check(chunk_a==chunk_b,"potion offline batch equals incremental saved RNG model")
+	var invalid:Dictionary=world.expedition_local.export_state();invalid.jobs[0].sim.next_potion=900
+	check(not world.expedition_local.validate(invalid).is_empty(),"invalid potion clock rejected")
+	disk=FileAccess.get_sha256(path);world._load_game(true)
+	check(FileAccess.get_sha256(path)==disk and world.expedition_local.state.jobs[0].sim.hp==450 and world.expedition_local.state.jobs[0].buff_ids.size()==2 and int(world.expedition_local.state.jobs[0].buff_ids[0])==1 and int(world.expedition_local.state.jobs[0].buff_ids[1])==11,"reload preserves paid buffs and healing clock without replay")
+	view._refresh_jobs()
+	if not capture.is_empty():
+		(view.find_child("ExpeditionChoicesScroll",true,false) as ScrollContainer).ensure_control_visible(potion_button)
+		await capture_state("buffs")
+	# Four-card dispatch uses real source cards, source synergies and saved ownership.
+	check(world.expedition_local.claim(int(world.expedition_local.state.jobs[0].id),true).ok,"finish buff fixture without refund")
+	world.gold=1000000
+	var party_ids:Array=[];var preferred:={};var hp_sum:=0
+	for evidence:Dictionary in catalog.synergy_evidence():
+		if int(evidence.synergy.ID)==34:
+			for member:Dictionary in evidence.members:preferred[int(member.BuffCardID)]=true
+	for card:Dictionary in world.catalog_db.get("변신",[]):
+		if not preferred.has(int(card.get("source_card_id",0))) or card.get("source")!="lineagem_base508":continue
+		var member_id:String=world.CARD_DRAW_FUSION.card_id(card)
+		var spells:Array=world.skill_awakening.core.candidates(member_id)
+		if spells.is_empty():continue
+		world.card_draw_fusion.owned["변신"][member_id]=true
+		world.skill_awakening.progress.cards[member_id]={"spell_id":int(spells[0].spell_id),"level":5,"experience":"0"}
+		party_ids.append(member_id);hp_sum+=int(world.skill_awakening.core.profile(member_id,5).hp)
+	check(party_ids.size()==4,"actual four-card native synergy roster present")
+	if party_ids.size()!=4:finish(true);return
+	check(world._save_game(true)==OK,"dispatch ownership checkpoint")
+	view.spot_picker.select(view.spot_picker.get_item_index(274));view.spot_picker.item_selected.emit(view.spot_picker.selected)
+	for i in range(view.card_picker.item_count):
+		if view.card_picker.get_item_metadata(i).identity in party_ids:view.card_picker.select(i,false)
+	view._render()
+	var dispatch:Dictionary=world.expedition_local.prepare(274,party_ids)
+	check(dispatch.ok and dispatch.inspection.party.synergy_ids.has(34) and not view.start_button.disabled,"actual UI source four-card eligibility and matched synergy")
+	if not dispatch.ok or view.start_button.disabled:
+		printerr("DISPATCH_PREPARE_DIAGNOSTIC ",dispatch.get("error","")," selected=",view.selected_identities())
+		finish(true);return
+	unchanged=snapshot();disk=FileAccess.get_sha256(path);world.equipment_collections.save_blocked=true
+	check(not world.request_expedition_start(274,party_ids).ok and snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"failed dispatch preserves four reservations cost and RNG")
+	world.equipment_collections.save_blocked=false
+	view.start_button.pressed.emit();confirm()
+	check(world.gold==960000 and world.expedition_local.state.jobs[0].member_ids.size()==4 and world.expedition_local.state.jobs[0].sim.max_hp==hp_sum+2000,"UI starts source40000 dispatch with pooledHP and source2000 synergy")
+	await process_frame
+	check(party_ids.all(func(id:Variant)->bool:return world.expedition_local.reserved(str(id))) and not world.request_expedition_start(284,party_ids).ok,"all four members reserved across different source castles")
+	var equip_before:String=JSON.stringify(world.equipped_catalog)
+	for card:Dictionary in world.catalog_db.get("변신",[]):
+		if world.CARD_DRAW_FUSION.card_id(card)==party_ids[0]:world._equip_catalog("변신",card)
+	check(JSON.stringify(world.equipped_catalog)==equip_before,"dispatch member cannot become active transformation")
+	job_id=int(world.expedition_local.state.jobs[0].id);policy_only(81);world.expedition_local.advance(540)
+	check(int(world.expedition_local.state.jobs[0].sim.exp)==16800000,"native party experience event preserved")
+	policy_only(71);world.expedition_local.advance(28260)
+	check(world.expedition_local.state.jobs[0].status=="completed","four-card dispatch completes")
+	view._refresh_jobs();await capture_state("dispatch")
+	view.claim_button.pressed.emit();confirm()
+	var split_ok:=true
+	var exp_floor:int=int(world.skill_awakening.core.experiences["1:4"].CumExp)
+	for id in party_ids:
+		if int(world.skill_awakening.progress.cards[id].experience)!=exp_floor+4200000 or world.expedition_local.reserved(id):split_ok=false
+	check(split_ok and not world.expedition_local.claim(job_id).ok,"party XP split once and all four reservations released")
+	await process_frame
+	check(world.request_expedition_start(274,party_ids).ok,"completed party can depart again")
+	job_id=int(world.expedition_local.state.jobs[0].id);policy_only(101);world.expedition_local.state.jobs[0].sim.hp=1
+	world.expedition_local.advance(540);var gold_before:int=world.gold
+	check(world.expedition_local.state.jobs[0].status=="dead" and not world.expedition_local.resurrect(job_id).ok and world.gold==gold_before,"source50Diamond resurrection never substituted with Adena")
+	unchanged=snapshot();disk=FileAccess.get_sha256(path);world.equipment_collections.save_blocked=true
+	check(not world.expedition_local.exchange_diamonds(50).ok and snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"failed local currency exchange preserves Gold and Diamond balance")
+	world.equipment_collections.save_blocked=false
+	view.diamond_amount.value=50;(view.find_child("ExpeditionExchangeDiamonds",true,false) as Button).pressed.emit();confirm()
+	check(world.expedition_local.diamond_balance()==50 and world.gold==gold_before-500000,"UI local Diamond exchange uses explicit configurable TWILIGHT rate")
+	await process_frame
+	unchanged=snapshot();world.equipment_collections.save_blocked=true
+	check(not world.expedition_local.resurrect(job_id).ok and snapshot()==unchanged,"failed native50Diamond resurrection preserves wallet and death")
+	world.equipment_collections.save_blocked=false
+	view._refresh_jobs();view.revive_button.pressed.emit();confirm()
+	check(world.expedition_local.diamond_balance()==0 and world.gold==gold_before-500000 and world.expedition_local.state.jobs[0].status=="running","UI party revival consumes native50Diamond without another Adena debit")
+	await process_frame
+	check(world.expedition_local.claim(job_id,true).ok,"revived party independently supports abort recovery")
+	view.diamond_amount.value=10;(view.find_child("ExpeditionExchangeDiamonds",true,false) as Button).pressed.emit();confirm()
+	await process_frame
+	view._select_spot()
+	for i in range(view.card_picker.item_count):
+		if view.card_picker.get_item_metadata(i).identity in party_ids:view.card_picker.select(i,false)
+	var dispatch_luck:=view.find_child("ExpeditionBuff_84",true,false) as CheckButton
+	dispatch_luck.button_pressed=true;view._render();view.start_button.pressed.emit();confirm()
+	check(world.expedition_local.diamond_balance()==0 and world.expedition_local.state.jobs[0].sim.policy.event_interval_seconds==480,"UI native10Diamond luck reduces9min to8min")
+	await process_frame
+	view._refresh_jobs();await capture_state("luck")
+	var bad_wallet:Dictionary=world.expedition_local.export_state();bad_wallet.local_diamonds=-1
+	check(not world.expedition_local.validate(bad_wallet).is_empty(),"negative Diamond save rejected")
+	# Native reward book adapter preserves existing fees/reroll rules and item locks.
+	var requirement:Dictionary=world.skill_awakening.core.book_requirement(identity)
+	var book_key:String=Model.key(int(requirement.item_class_id))
+	world.expedition_local.state.storage[book_key]=1
+	check(not world.expedition_local.compatible_skill_book(book_key).is_empty(),"latest source book item/effect/link exactly match existing awakening identity")
+	check(world.expedition_local.withdraw(book_key).ok,"reward book withdraw creates typed inventory and canonical compatible physical instance")
+	var book_name:String=world.expedition_local.state.issued[book_key]
+	disk=FileAccess.get_sha256(path);world._load_game(true)
+	check(FileAccess.get_sha256(path)==disk and int(world.inventory.get(book_name,0))==1,"source book physical compatibility survives byte-preserving reload")
+	world.gold=maxi(int(world.gold),int(requirement.fee)+10000)
+	check(world._save_game(true)==OK,"book fee baseline")
+	unchanged=snapshot();disk=FileAccess.get_sha256(path);world.equipment_collections.save_blocked=true
+	check(not world.skill_awakening.request_operation(identity).ok and snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"failed existing awakening transaction preserves expedition book fee and RNG")
+	world.equipment_collections.save_blocked=false
+	var paid_before:int=world.gold
+	world.hud.open_card_skill_awakening("마법인형",identity)
+	var awakening_view:Control=world.hud.workspace.find_child("CardSkillAwakeningView",true,false)
+	check(awakening_view!=null and not awakening_view.action.disabled,"existing actual skill awakening UI accepts the source reward book")
+	if awakening_view!=null:awakening_view.action.pressed.emit()
+	check(world.gold==paid_before-int(requirement.fee) and int(world.inventory.get(book_name,0))==0,"source reward book works through existing UI/API and unchanged user fee")
+	check(not world.expedition_local.state.storage.has(book_key),"consumed reward book not regenerated from expedition storage")
 	finish(true)
 
 func finish(source: bool) -> void:

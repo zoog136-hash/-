@@ -84,10 +84,13 @@ func _constant(catalog: RefCounted, name: String) -> int:
 
 func reserved(identity: String) -> bool:
 	for job: Dictionary in state.jobs:
-		if job.identity == identity: return true
+		if identity in job.get("member_ids",[job.identity]): return true
 	return false
 
-func prepare(spot_id: int, identities: Array) -> Dictionary:
+func inspect_for_start(spot_id:int,identities:Array)->Dictionary:
+	return world.inspect_expedition(spot_id,identities)
+
+func prepare(spot_id: int, identities: Array, _buff_ids: Array = []) -> Dictionary:
 	if world == null or busy or save_blocked or not validate(state).is_empty():
 		return _fail("탐험 저장 보호 또는 거래 처리 중")
 	if not world.pending_map_save_record.is_empty():
@@ -95,33 +98,34 @@ func prepare(spot_id: int, identities: Array) -> Dictionary:
 	var catalog: RefCounted = world.get_expedition_catalog()
 	if not catalog.ready():
 		return _fail(catalog.error)
-	var inspection: Dictionary = world.inspect_expedition(spot_id, identities)
+	var inspection: Dictionary = inspect_for_start(spot_id, identities)
 	if not inspection.get("static_conditions_met", false):
 		return _fail("원본 카드 수·소유·계열·등급·스킬각성 조건 미충족")
 	var spot: Dictionary = inspection.spot
-	if int(spot.CardCount) != 1 or int(spot.BuffCardDeckID) not in [2, 98] or identities.size() != 1:
-		return _fail("변신4장의 대표 보상 그룹·시너지 판정은 미확정")
+	if identities.size()!=int(spot.CardCount) or (int(spot.CardCount)==1 and int(spot.BuffCardDeckID) not in [2,98]) or (int(spot.CardCount)==4 and int(spot.BuffCardDeckID)!=1) or int(spot.CardCount) not in [1,4]:
+		return _fail("원본 장소의 계열·필요 카드 수를 확인하세요")
 	for equipped: Dictionary in world.equipped_catalog.values():
-		if CARDS.card_id(equipped) == str(identities[0]):
+		if CARDS.card_id(equipped) in identities:
 			return _fail("현재 소환·장착 중인 카드는 출발할 수 없습니다.")
-	if str(world.option_awakening.progress.get("native_subslot_identity", "")) == str(identities[0]):
+	if str(world.option_awakening.progress.get("native_subslot_identity", "")) in identities:
 		return _fail("현재 추가 슬롯에 소환 중인 카드는 출발할 수 없습니다.")
-	var card: Dictionary = catalog.record("BuffCard", int(inspection.cards[0].source_id))
-	if int(spot.ServerLimitsetID) != 0 or int(card.ServerLimitSetID) != 0 or int(card.StartDateTimeID) != 0 or int(card.EndDateTimeID) != 0:
-		return _fail("해당 장소·카드의 서버·기간 조건 확인 필요")
+	if int(spot.ServerLimitsetID)!=0: return _fail("해당 장소의 서버 조건 확인 필요")
+	for selected:Dictionary in inspection.cards:
+		var card:Dictionary=catalog.record("BuffCard",int(selected.source_id))
+		if int(card.ServerLimitSetID)!=0 or int(card.StartDateTimeID)!=0 or int(card.EndDateTimeID)!=0:return _fail("해당 카드의 서버·기간 조건 확인 필요")
 	if int(spot.ExpeditionCostCurrencyID) != 1 or int(spot.ExpeditionCost) < 1 or int(spot.TimeLimitSecond) != 28800:
 		return _fail("실행 가능한 원본 비용·시간 연결 없음")
 	if inspection.completion.size() != 1 or int(inspection.completion[0].reward.get("RewardTypeID", 0)) != 2:
 		return _fail("완주 보상의 명시적 연결 없음")
 	var deck := str(int(spot.BuffCardDeckID))
-	var prefix := "MagicDoll" if int(spot.BuffCardDeckID) == 2 else "HolyStuff"
+	var prefix:String={1:"Polymorph",2:"MagicDoll",98:"HolyStuff"}.get(int(spot.BuffCardDeckID),"")
 	var concurrent := _constant(catalog, prefix+"ExpeditionMaxCount")
 	var limit := _constant(catalog, prefix+"ExpeditionDailyLimit")
 	if concurrent != 5 or limit != 15:
 		return _fail("원본 동시·횟수 상수 연결 없음")
 	var count := 0
 	for job: Dictionary in state.jobs:
-		if job.identity == identities[0] or int(job.spot_id) == spot_id:
+		if int(job.spot_id) == spot_id or identities.any(func(id:Variant)->bool:return reserved(str(id))):
 			return _fail("이미 탐험 기록에 사용 중인 카드 또는 장소")
 		if str(int(job.deck_id)) == deck: count += 1
 	if count >= concurrent:
@@ -130,7 +134,7 @@ func prepare(spot_id: int, identities: Array) -> Dictionary:
 		return _fail("일일15회 탐험 상한")
 	if int(world.gold) < int(spot.ExpeditionCost):
 		return _fail("아데나 부족")
-	return {"ok": true, "inspection": inspection, "cost": int(spot.ExpeditionCost), "identity": str(identities[0]), "deck": deck}
+	return {"ok": true, "inspection": inspection, "cost": int(spot.ExpeditionCost), "identity": str(inspection.get("representative_identity",identities[0])), "deck": deck}
 
 func _backup_before_first_start() -> bool:
 	if namespace_present:

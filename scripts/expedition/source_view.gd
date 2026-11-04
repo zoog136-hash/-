@@ -21,6 +21,10 @@ var revive_button: Button
 var abort_button: Button
 var storage_picker: OptionButton
 var storage_rows: Array = []
+var diamond_title:Label
+var diamond_amount:SpinBox
+var buff_choices: VBoxContainer
+var buff_checks: Array[CheckButton] = []
 var storage_title: Label
 var open_button: Button
 var withdraw_button: Button
@@ -61,15 +65,29 @@ func configure(source: RefCounted, cards: Array, local_runtime: RefCounted = nul
 		spot_picker.add_item("%s · %s" % [_deck_name(int(spot.BuffCardDeckID)), spot.Name], int(spot.ID))
 	choices.add_child(spot_picker)
 	var hint := Label.new()
-	hint.text = "소유 카드 선택 (인형·성물 1장 / 변신 4장). 레벨은 스킬각성 레벨입니다."
+	hint.text = "소유 카드 선택 (인형·성물 1장 / 변신 4장). 다시 누르면 선택 해제. 레벨은 스킬각성 레벨입니다."
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	choices.add_child(hint)
 	card_picker = ItemList.new()
 	card_picker.name = "ExpeditionOwnedCards"
-	card_picker.select_mode = ItemList.SELECT_MULTI
+	card_picker.select_mode = ItemList.SELECT_TOGGLE
 	card_picker.custom_minimum_size.y = 88
 	card_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	choices.add_child(card_picker)
+	var buff_hint := Label.new()
+	buff_hint.text = "선택 버프 · 이번 탐험에만 적용 (원본 비용)"
+	buff_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	choices.add_child(buff_hint)
+	diamond_title=Label.new();diamond_title.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;choices.add_child(diamond_title)
+	var exchange_row:=HBoxContainer.new();choices.add_child(exchange_row)
+	diamond_amount=SpinBox.new();diamond_amount.name="ExpeditionDiamondAmount";diamond_amount.min_value=1;diamond_amount.max_value=1000;diamond_amount.value=10;exchange_row.add_child(diamond_amount)
+	var exchange_button:=Button.new();exchange_button.name="ExpeditionExchangeDiamonds";exchange_button.text="로컬다이아 교환";exchange_row.add_child(exchange_button)
+	exchange_button.pressed.connect(func()->void:
+		var amount:int=int(diamond_amount.value);var cost:int=amount*int(runtime.rules_view().local_diamond_adena_price)
+		hud.confirm_action("TWILIGHT 탐험 로컬다이아","아데나%d → 로컬다이아%d\nTWILIGHT 자체 교환비입니다. 게임 내부 탐험에만 사용합니다. 원본의 유료 구매나 운영 서버 재화와 연결되지 않습니다."%[cost,amount],"교환",func(_count:int=1)->void:
+			var result:Dictionary=runtime.exchange_diamonds(amount);result_message=str(result.get("message",result.get("error","")));_render()))
+	buff_choices = VBoxContainer.new()
+	choices.add_child(buff_choices)
 	var group_hint := Label.new()
 	group_hint.text = "확인할 보상표 그룹 (보상표가 있어도 출발 가능을 뜻하지 않습니다)"
 	group_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -153,9 +171,22 @@ func _grade_name(grade: int) -> String:
 	return {0: "제한 없음", 1: "일반", 2: "고급", 3: "희귀", 4: "영웅", 5: "전설", 32: "신화", 52: "유일"}.get(grade, "원본 등급 %d" % grade)
 
 func _select_spot() -> void:
+	if runtime != null and runtime.world != null: owned_cards = runtime.world.expedition_owned_cards()
 	current_spot = spot_picker.get_selected_id()
 	var spot: Dictionary = catalogue.record("MagicDollExpeditionSpot", current_spot)
 	card_picker.clear()
+	for child in buff_choices.get_children(): buff_choices.remove_child(child); child.queue_free()
+	buff_checks.clear()
+	if runtime != null:
+		for option: Dictionary in runtime.buff_options(int(spot.BuffCardDeckID)):
+			var button := CheckButton.new()
+			var type := int(option.bonus.MagicDollExpeditionBonusTypeID)
+			button.text = ("HP +%d" % int(option.bonus.Value) if type == 1 else ("회복제 +%d / 900초" % int(option.bonus.Value) if type == 11 else "행운"))+" · "+("아데나 " if int(option.buff.CostCurrencyID)==1 else "로컬다이아 ")+str(int(option.buff.Cost))
+			button.name = "ExpeditionBuff_"+str(int(option.buff.ID))
+			button.disabled = not option.supported
+			button.tooltip_text = "출발과 함께 원본 비용을 소모합니다. 로컬다이아는 TWILIGHT 탐험 전용 내부 재화입니다. HP·회복량·60초 행운은 원본이며, 동시 효과 순서와 중첩은 TWILIGHT 설정입니다."
+			button.set_meta("buff_id",int(option.buff.ID)); buff_choices.add_child(button); buff_checks.append(button)
+			button.toggled.connect(func(_on: bool) -> void: _render())
 	for card: Dictionary in owned_cards:
 		var source: Dictionary = catalogue.record("BuffCard", int(card.source_id))
 		if int(source.get("BuffCardDeckID", 0)) != int(spot.BuffCardDeckID):
@@ -174,6 +205,12 @@ func selected_cards() -> Array:
 		result.append(card_picker.get_item_metadata(index).duplicate(true))
 	return result
 
+func selected_buffs() -> Array:
+	var result: Array = []
+	for button in buff_checks:
+		if button.button_pressed: result.append(int(button.get_meta("buff_id")))
+	return result
+
 func selected_identities() -> Array:
 	var result: Array = []
 	for card: Dictionary in selected_cards():
@@ -190,6 +227,7 @@ func _process(delta: float) -> void:
 func _refresh_jobs() -> void:
 	if runtime == null: return
 	job_label.text = result_message
+	diamond_title.text="TWILIGHT 탐험 로컬다이아 %d · 자체 교환비1개=아데나%d"%[runtime.diamond_balance(),int(runtime.rules_view().local_diamond_adena_price)]
 	var selected_job := 0
 	if job_picker.selected >= 0:
 		selected_job = int(job_picker.get_item_metadata(job_picker.selected))
@@ -252,6 +290,7 @@ func _job_action(action: String) -> void:
 	if not view.ok: return
 	var body := "완주 보상과 카드 경험치를1회 수령합니다."
 	if action == "revive": body = "아데나 %d 소모 · HP50%%로 부활합니다. 비용은 TWILIGHT 추정 설정입니다." % (int(view.job.cost)*int(view.job.sim.policy.resurrection_cost_multiplier_permyriad)/10000)
+	if action=="revive" and int(view.job.deck_id)==1:body="원본 파견 비용50다이아 · HP50%로 부활합니다. TWILIGHT 탐험 로컬다이아 잔액에서 소모합니다."
 	if action == "abort": body = "탐험을 중단하고 발견한 아이템·경험치의%.1f%%를 수령합니다. 회수율은 추정 설정이며 완료 상자는 없습니다." % (float(view.job.sim.policy.abort_recovery_permyriad)/100.0)
 	hud.confirm_action("탐험 처리", body, {"claim":"보상 받기", "revive":"부활", "abort":"중단"}.get(action, action), func(_count: int = 1) -> void:
 		var result: Dictionary = runtime.resurrect(id) if action == "revive" else runtime.claim(id, action == "abort")
@@ -260,7 +299,7 @@ func _job_action(action: String) -> void:
 
 func _show_rules() -> void:
 	var p: Dictionary = runtime.rules_view()
-	details.text = "원본 유지: 장소·카드 조건·입장비·8시간·HP·경험치·보상 후보와 가중치·부활 상한3회·부활HP50%%.\n\nTWILIGHT 추정 설정:\n%d초마다 일반 이벤트를 선택합니다.\n상대 비중: 발견%d / 없음%d / 경험치%d / 몬스터%d / 넘어짐%d / 휴식%d\n몬스터 Lv.5 기본 승률%.1f%%, 이후 레벨당+%.1f%%p, 상한%.1f%%. 패배 피해는 원본 일반 몬스터 HPDecrease 중앙값입니다.\n부활 비용=입장비×%.2f. 중단 회수율%.1f%%.\n생존해8시간을 채우면 원본 완료 상자를 받습니다. 상자1개는 원본 후보 가중치로%d회 개봉합니다.\n오프라인 진행:%s · 초기화:UTC %.1f 기준05시\n공식 서버 수식이 아니며 별도 설정 파일에서 조정할 수 있습니다.\n서버·기간 제한이나4장 파견의 미확정 활성 조건을 추정으로 해제하지 않습니다." % [int(p.event_interval_seconds), int(p.normal_event_weights["61"]), int(p.normal_event_weights["71"]), int(p.normal_event_weights["81"]), int(p.normal_event_weights["91"]), int(p.normal_event_weights["101"]), int(p.normal_event_weights["111"]), float(p.monster_win_permyriad)/100.0, float(p.win_bonus_per_level)/100.0, float(p.maximum_win_permyriad)/100.0, float(p.resurrection_cost_multiplier_permyriad)/10000.0, float(p.abort_recovery_permyriad)/100.0, int(p.completion_box_draws), "사용" if p.offline_progress else "미사용", float(p.daily_reset_utc_offset_minutes)/60.0]
+	details.text = "원본 유지: 장소·카드 조건·입장비·8시간·HP·경험치·보상 후보와 가중치·부활 상한3회·부활HP50%%.\n\nTWILIGHT 추정 설정:\n%d초마다 일반 이벤트를 선택합니다.\n상대 비중: 발견%d / 없음%d / 경험치%d / 몬스터%d / 넘어짐%d / 휴식%d\n몬스터 Lv.5 기본 승률%.1f%%, 이후 레벨당+%.1f%%p, 상한%.1f%%. 패배 피해는 원본 일반 몬스터 HPDecrease 중앙값입니다.\n부활 비용=입장비×%.2f. 중단 회수율%.1f%%.\n생존해8시간을 채우면 원본 완료 상자를 받습니다. 상자1개는 원본 후보 가중치로%d회 개봉합니다.\n오프라인 진행:%s · 초기화:UTC %.1f 기준05시\n공식 서버 수식이 아니며 별도 설정 파일에서 조정할 수 있습니다.\n서버·기간 제한은 해제하지 않습니다. 변신4장 파견은 대표 그룹·합산 HP·경험치 분배·시너지 조합을 별도 TWILIGHT 규칙으로 처리합니다. 원본50다이아 부활과10다이아 행운 구매는 TWILIGHT 탐험 로컬다이아에서 소모합니다. 교환비는 자체 설정입니다." % [int(p.event_interval_seconds), int(p.normal_event_weights["61"]), int(p.normal_event_weights["71"]), int(p.normal_event_weights["81"]), int(p.normal_event_weights["91"]), int(p.normal_event_weights["101"]), int(p.normal_event_weights["111"]), float(p.monster_win_permyriad)/100.0, float(p.win_bonus_per_level)/100.0, float(p.maximum_win_permyriad)/100.0, float(p.resurrection_cost_multiplier_permyriad)/10000.0, float(p.abort_recovery_permyriad)/100.0, int(p.completion_box_draws), "사용" if p.offline_progress else "미사용", float(p.daily_reset_utc_offset_minutes)/60.0]
 
 func _show_settlement() -> void:
 	if runtime == null or job_picker.selected < 0: return
@@ -282,13 +321,14 @@ func _confirm_start() -> void:
 	if runtime == null or hud == null: return
 	var ids := selected_identities()
 	var spot_id := current_spot
-	var prepared: Dictionary = runtime.prepare(spot_id, ids)
+	var buffs := selected_buffs()
+	var prepared: Dictionary = runtime.prepare(spot_id, ids, buffs)
 	if not prepared.ok:
 		result_message = str(prepared.error)
 		_refresh_jobs()
 		return
-	hud.confirm_action("탐험 출발", "아데나 %d 소모 ·8시간\n원본 수치를 우선하며, 부족한 전투·이벤트 규칙은 TWILIGHT 추정 설정으로 진행합니다.\n사망 시 부활하거나 중단할 수 있고, 생존 완주하면 완료 상자를 받습니다.\n상세 수치는 '원본·추정 규칙 안내'에서 확인하세요." % int(prepared.cost), "출발", func(_count: int = 1) -> void:
-		var result: Dictionary = runtime.start(spot_id, ids)
+	hud.confirm_action("탐험 출발", "아데나 %d 소모 (입장 %d + 버프 %d) + 로컬다이아 %d ·8시간\n원본 수치를 우선하며, 부족한 전투·이벤트 규칙은 TWILIGHT 추정 설정으로 진행합니다.\n사망 시 부활하거나 중단할 수 있고, 생존 완주하면 완료 상자를 받습니다.\n상세 수치는 '원본·추정 규칙 안내'에서 확인하세요." % [int(prepared.cost),int(prepared.entry_cost),int(prepared.buffs.cost),int(prepared.buffs.diamonds)], "출발", func(_count: int = 1) -> void:
+		var result: Dictionary = runtime.start(spot_id, ids, buffs)
 		result_message = str(result.get("message", result.get("error", "")))
 		_render())
 
@@ -310,9 +350,14 @@ func _render() -> void:
 	for reason in inspection.reasons:
 		state_label.text += "\n" + str(reason)
 	if runtime != null:
-		var availability: Dictionary = runtime.prepare(current_spot, selected_identities())
+		var availability: Dictionary = runtime.prepare(current_spot, selected_identities(),selected_buffs())
 		start_button.disabled = not availability.ok
 		state_label.text += "\n" + ("출발 가능 · 원본 수치 + TWILIGHT 추정 규칙" if availability.ok else str(availability.error))
+		if availability.ok and availability.inspection.has("party"):
+			var representative:Dictionary=catalogue.record("BuffCard",int(availability.inspection.party.representative.source_id))
+			var synergy_names:PackedStringArray=[]
+			for id in availability.inspection.party.synergy_ids:synergy_names.append(str(catalogue.record("BuffCardExpeditionSynergy",int(id)).get("Name",id)))
+			state_label.text += "\nTWILIGHT 추정 파견 규칙: 대표 %s · 팀HP %s · 경험치 %s\n활성 시너지: %s" % [str(representative.get("Name","")),"합산" if runtime.rules_view().get("dispatch_hp","sum")=="sum" else "최저값","균등 분배" if runtime.rules_view().get("dispatch_experience","split_total")=="split_total" else "각 카드 전량"," / ".join(synergy_names) if not synergy_names.is_empty() else "없음"]
 	_refresh_jobs()
 	var currency_name := "아데나" if currency.get("Name") == "Adena" else str(currency.get("Name", spot.ExpeditionCostCurrencyID))
 	var text := "%s\n시간 %d시간 (%d초) · 비용 %s %d · 필요 카드 %d장\n최소 등급 %s (원본 ID %d, 순위 %d)\n위치 원값 (%d, %d) · 서버 제한 %d · 부활 한도 %d\n" % [spot.Name, int(spot.TimeLimitSecond) / 3600, int(spot.TimeLimitSecond), currency_name, int(spot.ExpeditionCost), int(spot.CardCount), _grade_name(int(spot.MinGrade)), int(spot.MinGrade), int(min_grade.get("GradeValue", -1)), int(spot.CoordinateX), int(spot.CoordinateY), int(spot.ServerLimitsetID), int(spot.ResurrectionLimit)]
@@ -338,7 +383,7 @@ func _render() -> void:
 		var event: Dictionary = event_entry.event
 		text += "이벤트 %d · 최소 등급 ID %d · 스킬각성 Lv.%d · 보너스타입 %d · 원값 %d\n" % [int(event.ID), int(event.MinGradeID), int(event.MinLevel), int(event_entry.bonus.get("MagicDollExpeditionBonusTypeID", 0)), int(event_entry.bonus.get("Value", 0))]
 	if int(spot.BuffCardDeckID) == 1:
-		text += "\n시너지 원본 구성 (활성·효과 계산 미확정):\n"
+		text += "\n시너지 원본 구성 (조합 조건은 TWILIGHT 설정, 효과 수치는 원본):\n"
 		for synergy: Dictionary in catalogue.synergy_evidence():
 			text += "%s · 서버 제한 %d\n" % [synergy.synergy.Name, int(synergy.synergy.ServerLimitsetID)]
 			for member: Dictionary in synergy.members:

@@ -14,6 +14,13 @@ static func valid_policy(p: Variant) -> bool:
 	if int(p.event_interval_seconds) < 60 or int(p.event_interval_seconds) > 28800 or int(p.completion_box_draws) < 1 or int(p.completion_box_draws) > 10 or int(p.daily_reset_hour_utc) != 5 or int(p.resurrection_hp_permyriad) != 5000 or int(p.resurrection_cost_multiplier_permyriad) < 0 or int(p.resurrection_cost_multiplier_permyriad) > 100000 or absi(int(p.daily_reset_utc_offset_minutes)) > 840: return false
 	for k in ["monster_win_permyriad", "win_bonus_per_level", "maximum_win_permyriad", "resurrection_hp_permyriad", "abort_recovery_permyriad"]:
 		if int(p[k]) < 0 or int(p[k]) > 10000: return false
+	if p.get("potion_tie_order","before_event") not in ["before_event","after_event"]: return false
+	if p.get("dispatch_representative","lowest_grade_then_level") not in ["lowest_grade_then_level","highest_grade_then_level"] or p.get("dispatch_hp","sum") not in ["sum","minimum"] or p.get("dispatch_experience","split_total") not in ["split_total","each_total"]:return false
+	for key in ["dispatch_synergy_members","dispatch_monster_damage_multiplier"]:
+		var value:Variant=p.get(key,4)
+		if not (value is int or value is float) or float(value)!=floorf(float(value)) or int(value)<1 or int(value)>(4 if key=="dispatch_synergy_members" else 10):return false
+	var diamond_price:Variant=p.get("local_diamond_adena_price",10000)
+	if not (diamond_price is int or diamond_price is float) or float(diamond_price)!=floorf(float(diamond_price)) or diamond_price<1 or diamond_price>100000000 or p.get("luck_stacking","maximum") not in ["maximum","additive"]:return false
 	if not p.get("normal_event_weights") is Dictionary: return false
 	var total := 0
 	for type in TYPES:
@@ -54,7 +61,8 @@ static func step(job: Dictionary, seconds: int, catalog: RefCounted) -> Dictiona
 	var rng := RandomNumberGenerator.new()
 	rng.state = int(s.rng_state)
 	var target := mini(int(job.duration), int(s.elapsed)+seconds)
-	if int(s.next_event) > target:
+	var potion_at := int(s.get("next_potion",0)) if int(s.get("potion_heal",0)) > 0 else 2147483647
+	if mini(int(s.next_event),potion_at) > target:
 		s.elapsed = target
 		job.remaining = maxi(0, int(job.duration)-target)
 		if job.remaining == 0: job.status = "completed"
@@ -78,7 +86,13 @@ static func step(job: Dictionary, seconds: int, catalog: RefCounted) -> Dictiona
 	damage.sort()
 	var representative_damage := damage[damage.size()/2] if not damage.is_empty() else 1
 	var economic := false
-	while int(s.next_event) <= target and job.status == "running":
+	while mini(int(s.next_event),potion_at) <= target and job.status == "running":
+		if potion_at < int(s.next_event) or (potion_at == int(s.next_event) and p.get("potion_tie_order","before_event") == "before_event"):
+			s.elapsed = potion_at
+			s.hp = mini(int(s.max_hp),int(s.hp)+int(s.potion_heal))
+			s.next_potion = potion_at+int(s.potion_interval); potion_at = int(s.next_potion)
+			s.last_event = "회복제 · HP 회복"; economic = true
+			continue
 		s.elapsed = int(s.next_event)
 		s.next_event = int(s.next_event)+int(p.event_interval_seconds)
 		var event := choose(events, "weight", rng)
@@ -89,13 +103,14 @@ static func step(job: Dictionary, seconds: int, catalog: RefCounted) -> Dictiona
 			61:
 				var pool: Array = []
 				for row: Dictionary in detail.event_rewards:
-					if int(row.MagicDollExpeditionSpotRewardTypeID) != 0: continue
+					if int(row.MagicDollExpeditionSpotRewardTypeID) not in ([0,4,14,24] if int(job.get("deck_id",2))==1 else [0]): continue
 					if not row.IsSpecial or special_allowed: pool.append(row)
 				var selected := choose(pool, "Probability", rng)
 				var reward: Dictionary = catalog.record("Reward", int(selected.get("RewardID", 0)))
 				if int(reward.get("RewardTypeID", 0)) != 2: return {"economic": true, "error": "탐험 보상 타입 연결 오류"}
 				add_loot(s.loot, int(reward.RewardClassID), int(reward.Amount), int(reward.get("ItemBlessCodeID", 1)), 0)
 				s.last_event = "아이템 발견"
+				s.last_reward_id=int(selected.RewardID);s.last_reward_type=int(selected.MagicDollExpeditionSpotRewardTypeID)
 			71: s.last_event = "아무 일도 없음"
 			81:
 				s.exp = str(mini(9999999999999, int(s.exp)+maxi(0, int(event.value))))
@@ -103,16 +118,19 @@ static func step(job: Dictionary, seconds: int, catalog: RefCounted) -> Dictiona
 			91:
 				var chance := mini(int(p.maximum_win_permyriad), int(p.monster_win_permyriad)+maxi(0, int(s.level)-5)*int(p.win_bonus_per_level))
 				if rng.randi_range(0, 9999) >= chance:
-					s.hp = maxi(0, int(s.hp)-representative_damage)
+					s.hp = maxi(0, int(s.hp)-representative_damage*(int(p.get("dispatch_monster_damage_multiplier",4)) if int(job.get("deck_id",2))==1 else 1))
 					s.last_event = "몬스터 조우 · 패배"
 				else: s.last_event = "몬스터 조우 · 승리"
 			101:
 				s.hp = maxi(0, int(s.hp)-maxi(0, int(event.value)))
 				s.last_event = "넘어짐"
 			111:
-				s.hp = mini(int(s.max_hp), int(s.hp)+maxi(0, int(event.value)))
+				s.hp = mini(int(s.max_hp), int(s.hp)+maxi(0, int(event.value))*(100+int(p.get("dispatch_rest_hp_percent",0)))/100)
 				s.last_event = "휴식"
-		if int(s.hp) == 0: job.status = "dead"
+		if int(s.hp) == 0:
+			job.status = "dead"
+			# In after_event mode, death suppresses the same-instant potion.
+			if int(s.get("potion_heal",0)) > 0 and int(s.next_potion) <= int(s.elapsed): s.next_potion = int(s.next_potion)+int(s.potion_interval)
 	if job.status == "running": s.elapsed = target
 	job.remaining = maxi(0, int(job.duration)-int(s.elapsed))
 	if job.status == "running" and job.remaining == 0:

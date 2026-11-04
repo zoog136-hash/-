@@ -35,6 +35,26 @@
     "completion_box_draws": "custom: one weighted source row per consumed box; AbleMultiple alone does not prove count",
     "daily_reset_hour_utc": "source: CHANGE_EXPLOREVIEW ND_EXPLORE TEXT_NOTICE_2 says05:00; timezone is separate custom field",
     "daily_reset_utc_offset_minutes": "custom: local standalone UTC default; configurable offset",
-    "offline_progress": "custom: deterministic wall-time replay with persisted per-job RNG"
-  }
+    "offline_progress": "custom: deterministic wall-time replay with persisted per-job RNG",
+    "potion_tie_order": "custom: same-timestamp potion before event, configurable before_event/after_event",
+    "buff_hp_and_heal": "source: DescData_Korean484472/484482/1712072/1712082 confirms flat HP+200 and50HP per15min",
+    "dispatch_representative": "custom: lowest source grade then skill level, source ID tie break; source does not define mixed-party group",
+    "dispatch_hp": "custom: sum four source card HP values",
+    "dispatch_synergy_members": "custom: activate native source effect when all four selected cards belong to its unrestricted member pool",
+    "dispatch_experience": "custom: divide native party EXP equally, remainder in canonical identity order",
+    "dispatch_monster_damage_multiplier": "custom: scale representative source monster damage by four for pooled party HP",
+    "dispatch_synergy_values": "source: native HP/healing/luck seconds/rest HP% and UIUnit3 denominator10000 for win%",
+    "local_diamond_adena_price": "custom: internal TWILIGHT expedition-only Diamond wallet, explicit optional10000Adena exchange per unit; no cash purchase or paid-service integration",
+    "luck_stacking": "custom: maximum source reduction when paid luck and synergy coexist; configurable maximum/additive",
+    "diamond_buff_cost": "source: native Currency4 cost10 and60sec reduction; amount unchanged",
+    "dispatch_resurrection_cost": "source: official2025-12-03 note says50Diamonds; no direct Adena substitution"
+  },
+  "potion_tie_order": "before_event",
+  "dispatch_representative": "lowest_grade_then_level",
+  "dispatch_hp": "sum",
+  "dispatch_synergy_members": 4,
+  "dispatch_experience": "split_total",
+  "dispatch_monster_damage_multiplier": 4,
+  "local_diamond_adena_price": 10000,
+  "luck_stacking": "maximum"
 }

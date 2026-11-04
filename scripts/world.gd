@@ -8158,8 +8158,8 @@ func inspect_expedition(spot_id: int, identities: Array) -> Dictionary:
 				selected.append(card)
 	return get_expedition_catalog().inspect(spot_id, selected)
 
-func request_expedition_start(spot_id: int, identities: Array) -> Dictionary:
-	return expedition_local.start(spot_id, identities)
+func request_expedition_start(spot_id: int, identities: Array, buff_ids: Array = []) -> Dictionary:
+	return expedition_local.start(spot_id, identities, buff_ids)
 
 func set_source_card_visual_option(source_id: String, active_option_id: int) -> bool:
 	if active_option_id < 0: return false

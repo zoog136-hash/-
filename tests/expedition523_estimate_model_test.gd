@@ -1,6 +1,7 @@
 extends SceneTree
 const Catalog = preload("res://scripts/expedition/source_catalog.gd")
 const Model = preload("res://scripts/expedition/estimated_simulation.gd")
+const Dispatch=preload("res://scripts/expedition/dispatch_rules.gd")
 const Runtime = preload("res://scripts/expedition/local_runtime.gd")
 var failures: Array[String] = []
 var checks := 0
@@ -54,6 +55,31 @@ func _initialize() -> void:
 			check(find.sim.loot.size() == 1 and find.sim.events == 1, "source item reward keeps typed quantity")
 			var exp := job(4, only(81)); Model.step(exp, 28800, catalog)
 			check(int(exp.sim.exp) == 53*4200000, "source expedition experience amount preserved")
+			var potion := job(11,only(101))
+			potion.sim.elapsed=2160; potion.remaining=26640; potion.sim.next_event=2700
+			potion.sim.hp=1; potion.sim.potion_heal=50; potion.sim.potion_interval=900; potion.sim.next_potion=2700
+			var after := potion.duplicate(true); after.sim.policy.potion_tie_order="after_event"
+			Model.step(potion,540,catalog); Model.step(after,540,catalog)
+			check(potion.status=="running" and potion.sim.hp==31 and after.status=="dead" and after.sim.next_potion==3600,"configurable equal-time event/potion order and death clock")
+			var expected_effects:Dictionary={4:{"luck_seconds":30},14:{"win_permyriad":100},24:{"heal":100},34:{"hp":2000},44:{"hp":1000},54:{"rest_hp_percent":5}}
+			for evidence:Dictionary in catalog.synergy_evidence():
+				var roster:Array=[]
+				for member:Dictionary in evidence.members.slice(0,4):roster.append({"source_id":int(member.BuffCardID),"identity":"source:m508:1:"+str(int(member.BuffCardID)),"skill_awaken_level":5,"owned":true})
+				var party:Dictionary=Dispatch.plan(catalog,roster,Model.policy())
+				var synergy_id:int=int(evidence.synergy.ID)
+				if synergy_id==64:
+					check(not party.ok or not party.synergy_ids.has(64),"source restricted synergy never unlocked by estimates")
+					continue
+				var exact:bool=party.ok and party.synergy_ids.has(synergy_id)
+				if exact:
+					for field in expected_effects[synergy_id]:exact=exact and int(party.effects[field])==int(expected_effects[synergy_id][field])
+				check(exact,"native source synergy effect "+str(synergy_id))
+				if synergy_id==34:
+					roster[0].skill_awaken_level=20
+					var low:Dictionary=Dispatch.plan(catalog,roster,Model.policy())
+					var higher:Dictionary=Model.policy();higher.dispatch_representative="highest_grade_then_level"
+					var high:Dictionary=Dispatch.plan(catalog,roster,higher)
+					check(int(low.representative.skill_awaken_level)==5 and int(high.representative.skill_awaken_level)==20,"mixed-party representative policy configurable without modifying source groups")
 			var successes := 0
 			for seed in range(100):
 				var sample := job(seed+100, Model.policy()); Model.step(sample, 28800, catalog)
