@@ -122,8 +122,11 @@ const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
 const AUTO_HUNTING_SCHEDULE = preload("res://scripts/auto_hunting/source_schedule.gd")
+const AUTO_HUNTING_LOCAL = preload("res://scripts/auto_hunting/local_movement.gd")
 var auto_hunting_schedule: RefCounted = AUTO_HUNTING_SCHEDULE.new()
 var auto_hunting_schedule_checked: bool = false
+var auto_hunting_local: RefCounted = AUTO_HUNTING_LOCAL.new()
+var auto_hunting_move_in_progress: bool = false
 const SOURCE_NPCS = preload("res://scripts/npc/source_npc_catalog.gd")
 const NPC_DIALOGUE_SERVICE = preload("res://scripts/npc/dialogue_service.gd")
 var dialogue_service = NPC_DIALOGUE_SERVICE.new()
@@ -2403,9 +2406,67 @@ func auto_hunting_destinations() -> Dictionary:
 
 func auto_hunting_movement_assessment(schedule_id: int, landing_link_id: int) -> Dictionary:
 	auto_hunting_destinations()
-	# Read-only until current523 arrival geometry and operational gates are
-	# verified. This never invokes _set_map, debit, AUTO toggling or a save.
-	return auto_hunting_schedule.assess_request(schedule_id, landing_link_id, level, gold)
+	return auto_hunting_local.assess(self, auto_hunting_schedule.request_definition(schedule_id, landing_link_id, level, gold))
+
+func auto_hunting_destination_saveable(point: Vector2) -> bool:
+	# Match the existing save/reentry contract, including its bounded route
+	# search. Never weaken that contract to make a destination appear usable.
+	return SOURCE_MAP84.valid_position(field_map, [point.x, point.y])
+
+func auto_hunting_local_settings() -> Dictionary:
+	return auto_hunting_local.get_settings()
+
+func auto_hunting_set_local_settings(value: Dictionary) -> Dictionary:
+	if auto_hunting_move_in_progress: return AUTO_HUNTING_LOCAL.fail("BUSY", "지역 이동 처리 중입니다")
+	return auto_hunting_local.update_settings(value)
+
+func auto_hunting_move(schedule_id: int, landing_link_id: int) -> Dictionary:
+	if auto_hunting_move_in_progress: return AUTO_HUNTING_LOCAL.fail("BUSY", "지역 이동 처리 중입니다")
+	auto_hunting_move_in_progress = true
+	var quote: Dictionary = auto_hunting_movement_assessment(schedule_id, landing_link_id)
+	if not bool(quote.ok):
+		auto_hunting_move_in_progress = false
+		return quote
+	# Persist the validated destination and original fee before changing live
+	# state. Save faults leave position, gold, AUTO, paths and items untouched.
+	var error: Error = _save_game(true, {"gold": gold - int(quote.price)}, quote)
+	if error != OK:
+		auto_hunting_move_in_progress = false
+		return AUTO_HUNTING_LOCAL.fail("SAVE_FAILED", "이동 저장 실패 · 위치와 아데나를 유지합니다")
+	gold -= int(quote.price)
+	player.global_position = quote.destination
+	player.velocity = Vector2.ZERO
+	player.clear_click_path()
+	player.set_touch_vector(Vector2.ZERO)
+	# Only transient actions are cancelled: _clear_combat_actions also clears
+	# persistent buffs/summons, which this same-map transaction must preserve.
+	combat_generation += 1
+	pending_attack.clear()
+	player.cancel_attack()
+	if is_instance_valid(combat_flights): combat_flights.clear()
+	if is_instance_valid(world_interactions): world_interactions.clear_selection()
+	loot_pickup.cancel()
+	manual_route_pending_target = Vector2.INF
+	selected_monster = null
+	auto_target = null
+	auto_target_failed_paths.clear()
+	auto_target_next_search_ms = 0
+	auto_target_failed_search_actor_count = -1
+	auto_repath_timer = 0.0
+	auto_attack_timer = 0.0
+	auto_stuck_time = 0.0
+	player.camera.reset_smoothing()
+	player.camera.force_update_scroll()
+	if is_instance_valid(field_renderer): field_renderer.refresh_visible()
+	hud.clear_target()
+	deferred_save.cancel()
+	_update_hud()
+	quote["code"] = "MOVED"
+	quote["reason"] = "지역 이동 완료 · %d 아데나 소모 · TWILIGHT 자체 정책" % int(quote.price)
+	hud.show_message(quote.reason)
+	hud.append_log(quote.reason)
+	auto_hunting_move_in_progress = false
+	return quote
 
 func _run_auto_hunt() -> void:
 	if player.has_manual_movement():
@@ -4412,8 +4473,13 @@ func _perf_log(label: String, started_usec: int) -> void:
 	if elapsed_usec >= PERF_LOG_THRESHOLD_USEC:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
-func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if not movement_override.is_empty():
+		if not auto_hunting_move_in_progress or not pending_map_save_record.is_empty(): return ERR_UNAVAILABLE
+		var current: Dictionary = auto_hunting_movement_assessment(int(movement_override.get("schedule_id", -1)), int(movement_override.get("landing_link_id", -1)))
+		if not bool(current.ok) or current != movement_override: return ERR_UNAVAILABLE
+		if collection_override != {"gold": gold - int(current.price)}: return ERR_INVALID_PARAMETER
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4506,6 +4572,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if not SOURCE_NPCS.validate_state(data.source_npc_state).is_empty():return ERR_UNAVAILABLE
 	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
 	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
+	if not movement_override.is_empty(): data.merge(AUTO_HUNTING_LOCAL.save_fields(self, movement_override), true)
 	var source_map_error: String=SOURCE_MAP84.validate_save(data,field_map)
 	if not source_map_error.is_empty():
 		if not quiet:hud.show_message(source_map_error)

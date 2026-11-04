@@ -77,7 +77,7 @@ func destination(schedule_id: int) -> Dictionary:
 	result["runtime_enabled"] = false
 	return result
 
-func assess_request(schedule_id: int, landing_link_id: int, level: int, wallet: int) -> Dictionary:
+func request_definition(schedule_id: int, landing_link_id: int, level: int, wallet: int) -> Dictionary:
 	if not loaded: return _blocked("PACK_UNAVAILABLE", problem)
 	if not _entries.has(schedule_id): return _blocked("UNKNOWN_SCHEDULE", "자동사냥 지역을 다시 선택해 주세요")
 	var entry: Dictionary = _entries[schedule_id]
@@ -101,10 +101,8 @@ func assess_request(schedule_id: int, landing_link_id: int, level: int, wallet: 
 	var cost: int = int(entry.teleport.TeleportCost)
 	if wallet < cost:
 		return _blocked("INSUFFICIENT_ADENA", "이동에 필요한 아데나가 부족합니다")
-	# Gates apply even to exact-point regions. Source flags, review-projected
-	# fields, and a walkable legacy tile do not prove current523 arrival safety.
-	# Do not call the local NPC teleport policy: its costs/spawns are unrelated.
-	var result := _blocked("UNVERIFIED_ARRIVAL", "도착 위치와 지역 이동 조건 확인 전에는 이동할 수 없습니다")
+	# Source eligibility is separate from a chosen TWILIGHT movement policy.
+	var result: Dictionary = {"ok": true, "code": "SOURCE_COST_ELIGIBLE"}
 	result["schedule_id"] = schedule_id
 	result["landing_link_id"] = landing_link_id
 	result["price"] = cost
@@ -112,6 +110,14 @@ func assess_request(schedule_id: int, landing_link_id: int, level: int, wallet: 
 	result["recommend_level"] = int(entry.schedule.RecommendLevel)
 	result["landing"] = selected.duplicate(true)
 	result["hunting_territory"] = entry.hunting_territory.duplicate(true) if entry.hunting_territory is Dictionary else null
+	return result
+
+func assess_request(schedule_id: int, landing_link_id: int, level: int, wallet: int) -> Dictionary:
+	var result: Dictionary = request_definition(schedule_id, landing_link_id, level, wallet)
+	if not bool(result.get("ok", false)): return result
+	result.ok = false
+	result.code = "UNVERIFIED_ARRIVAL"
+	result.reason = "도착 위치와 지역 이동 조건 확인 전에는 이동할 수 없습니다"
 	return result
 
 static func _blocked(code: String, reason: String) -> Dictionary:
