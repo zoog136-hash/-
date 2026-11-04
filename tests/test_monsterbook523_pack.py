@@ -58,8 +58,8 @@ class SourcePackTest(unittest.TestCase):
                 data = archive.read('content/' + name + '.json')
                 self.assertEqual(hashlib.sha256(data).hexdigest(), evidence['sha256'])
                 self.assertEqual(len(data), evidence['bytes'])
-        for link_name, foreign, table in [('MonsterBookLevelBonus', 'BonusID', 'Bonus'), ('MonsterBookLevelReward', 'RewardID', 'Reward')]:
-            self.assertEqual({r[foreign] for r in self.pack['tables'][link_name]}, {r['ID'] for r in self.pack['tables'][table]})
+        self.assertEqual({r['BonusID'] for r in self.pack['tables']['MonsterBookLevelBonus']} | {r['BonusID'] for r in self.pack['tables']['ItemBonus']}, {r['ID'] for r in self.pack['tables']['Bonus']})
+        self.assertEqual({r['RewardID'] for r in self.pack['tables']['MonsterBookLevelReward']}, {r['ID'] for r in self.pack['tables']['Reward']})
 
     def test_wrong_snapshot_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

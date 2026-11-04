@@ -36,16 +36,23 @@ def compile_pack(source: Path) -> dict:
         books = tables['MonsterBook']
         groups = {r['NpcGroupID'] for r in books if r['NpcGroupID'] != 0}
         tables['NpcClassForNpcGroup'] = [r for r in read('NpcClassForNpcGroup') if r['NpcGroupID'] in groups]
-        tables['Bonus'] = select('Bonus', {r['BonusID'] for r in tables['MonsterBookLevelBonus']})
+        item_ids = {r['RewardClassID'] for r in read('Reward') if r['RewardTypeID'] == 2 and r['ID'] in {x['RewardID'] for x in tables['MonsterBookLevelReward']}}
+        tables['ItemBonus'] = [r for r in read('ItemBonus') if r['ItemClassID'] in item_ids]
+        tables['Bonus'] = select('Bonus', {r['BonusID'] for r in tables['MonsterBookLevelBonus']} | {r['BonusID'] for r in tables['ItemBonus']})
         tables['BonusType'] = select('BonusType', {r['BonusTypeID'] for r in tables['Bonus']})
         tables['Reward'] = select('Reward', {r['RewardID'] for r in tables['MonsterBookLevelReward']})
         tables['RewardType'] = select('RewardType', {r['RewardTypeID'] for r in tables['Reward']})
         tables['Unit'] = select('Unit', {r['UnitID'] for r in tables['BonusType']})
+        unit_ids = {r['ID'] for r in tables['Unit']}
+        tables['UIUnit'] = [r for r in read('UIUnit') if r['UnitID'] in unit_ids]
         tables['ItemClass'] = select('ItemClass', {r['RewardClassID'] for r in tables['Reward'] if r['RewardTypeID'] == 2})
+        tables['ItemCategory'] = select('ItemCategory', {r['CategoryID'] for r in tables['ItemClass']})
+        tables['Grade'] = select('Grade', {r['GradeID'] for r in tables['ItemClass']})
         tables['Currency'] = select('Currency', {r['CurrencyID'] for r in tables['MonsterBookLevel'] if r['CurrencyID']})
         date_ids = {r[k] for r in books for k in ['StartDateTimeID', 'CountingEndDateTimeID', 'EndDateTimeID'] if r[k]}
+        date_ids |= {r['BonusApplicationTargetID'] for r in tables['Bonus'] if r['BonusApplicationTypeID'] == 298 and r['BonusApplicationTargetID']}
         tables['DateTimes_Korean'] = select('DateTimes_Korean', date_ids)
-        desc_ids = {r[k] for n in ['BonusType', 'RewardType', 'Currency', 'ItemClass'] for r in tables[n] for k in ['DescID'] if r.get(k)}
+        desc_ids = {r[k] for n in ['BonusType', 'RewardType', 'Currency', 'ItemClass', 'ItemCategory', 'Grade'] for r in tables[n] for k in ['DescID'] if r.get(k)}
         tables['DescData_Korean'] = select('DescData_Korean', desc_ids)
         ids = {r['ID'] for r in books}
         levels = tables['MonsterBookLevel']

@@ -481,6 +481,7 @@ func _process(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
+	monsterbook523_runtime.tick()
 	if stat_hud_refresh_pending:
 		_update_hud()
 	_advance_native_route_preparation()
@@ -863,7 +864,7 @@ func _refresh_equipment_effects() -> void:
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
 	flags.hp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))
-	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
+	flags.mp_tick_amount=(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"mp_recovery")>0 else 0)+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))+int(monsterbook523_runtime.extra_stats().get("mp_regeneration",0))
 	equipment_effects=flags
 
 func _invalidate_equipment_static() -> void:
@@ -934,7 +935,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + monsterbook523_runtime.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -2612,7 +2613,6 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
-	monsterbook523_runtime.on_death(monster)
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -2643,6 +2643,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		auto_target = null
 	if monster.get_parent() == monsters_root and is_instance_valid(combat_corpses):
 		monster.reparent(combat_corpses, true)
+	monsterbook523_runtime.on_death(monster)
 	# Ordinary kills only change rewards/vitals/blessing. Rebuilding every
 	# equipment, skill, collection and inventory surface here stalls the very
 	# frame in which loot appears. Level changes still publish all new stats.
@@ -3327,6 +3328,10 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 	_update_hud()
 
 func _on_inventory_item_activated(item_name: String) -> void:
+	var source_reward: Dictionary = _find_catalog_item_record(_parse_enhancement_target(item_name).name)
+	if source_reward.get("monsterbook_source_item",false):
+		hud.show_message("원본 도감 보상 보유 중 · 사용 규칙은 별도 연결됩니다")
+		return
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
 	if CONSUMABLE_RULES.is_removed_item(item_name):
@@ -4193,6 +4198,9 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
+	if record.get("monsterbook_source_item",false) and not record.get("storable",false):
+		hud.show_message("원본 보관 제한 아이템입니다")
+		return
 	if record.is_empty() or int(quantity) < 1 or int(quantity) > 99:
 		hud.show_message("창고 아이템 또는 수량이 유효하지 않습니다")
 		return
@@ -4421,7 +4429,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","monsterbook523"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","monsterbook523","experience","exp_need","level","max_hp","max_mp","hp","mp","attack","defense","stat_points"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4799,6 +4807,7 @@ func _load_game(quiet: bool) -> void:
 	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
+	monsterbook523_runtime.reset_pending()
 	monsterbook523.import_state(data.get("monsterbook523", {"schema":1,"books":{}}))
 	monsterbook523_runtime.save_blocked = false
 	card_draw_fusion.import_state(data.get("card_draw_fusion", {}))
@@ -6702,6 +6711,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 	if not collection_record.is_empty(): records.append(collection_record)
 	var card_collection_record: Dictionary = card_collections.stat_record()
 	if not card_collection_record.is_empty(): records.append(card_collection_record)
+	var monsterbook_record: Dictionary = monsterbook523_runtime.stat_record()
+	if not monsterbook_record.is_empty(): records.append(monsterbook_record)
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
@@ -7511,7 +7522,7 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 		"ranged":
 			option_key = "ranged_critical_damage"
 		"magic":
-			return final_damage
+			return final_damage + int(monsterbook523_runtime.extra_stats().get("magic_critical_damage",0))
 		_:
 			option_key = "melee_critical_damage"
 	return maxi(1, final_damage + int(round(_equipped_numeric_sum(option_key))))
@@ -7680,7 +7691,7 @@ func _effective_defense() -> int:
 	var accessory_enhance: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "defense")
 	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
 
-func _effective_max_hp() -> int:
+func _effective_max_hp(base_hp: int = -1) -> int:
 	var flat_bonus: float = 0.0
 	var percent_bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
@@ -7692,7 +7703,7 @@ func _effective_max_hp() -> int:
 	flat_bonus += float(_passive_skill_total("hpFlat"))
 	flat_bonus += float(_active_item_buff_total("hp_flat"))
 	flat_bonus += float(_equipped_bless_bonus("hp"))
-	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
+	return maxi(1, int(round(((max_hp if base_hp < 0 else base_hp) + flat_bonus) * (1.0 + percent_bonus))))
 
 func _blessing_consumption_reduction_percent() -> float:
 	var reduction: float = 0.0

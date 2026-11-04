@@ -59,6 +59,11 @@ func run() -> void:
 	world.save_timer = -100000.0
 	check(QA.enter_game(world), "actual Main class confirmation")
 	world.player.set_physics_process(false)
+	# This retained test exercises the explicit external adapter contract.
+	world.monsterbook523_runtime.action_authority = Callable()
+	world.monsterbook523_runtime.credit_authority = Callable()
+	world.monsterbook523_runtime.clock_authority = Callable()
+	world.monsterbook523_runtime.settlement = Callable()
 	check(world.monsterbook523.loaded(), "actual Main consumed private523 pack with digest")
 	if not world.monsterbook523.loaded():
 		world.queue_free()

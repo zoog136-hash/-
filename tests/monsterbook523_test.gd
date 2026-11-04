@@ -135,5 +135,23 @@ func _initialize() -> void:
 	var bad_group := receipt("begin_epoch", 1, 13, "historic")
 	bad_group.reset_approved = true
 	check(not service.apply_confirmed(bad_group, sink) and service.export_state() == prior, "zero-group historical book not repopulated")
+	# Default UI must not claim an unsupported selected stage changes combat.
+	var runtime = preload("res://scripts/monsterbook/monsterbook523_runtime.gd").new()
+	runtime.catalog = service
+	runtime.local.configure(runtime,null)
+	runtime.local.unix_clock = func() -> int: return int(Time.get_unix_time_from_datetime_string("2026-10-20T00:00:00"))
+	var local_state := service.export_state()
+	var target_levels := service.levels(5903)
+	var target_id: int = int(target_levels[1].ID)
+	var target_epoch: String = runtime.local.epoch(5903)
+	local_state.books['5903'] = {"sequence":1,"current_epoch":target_epoch,"epochs":{target_epoch:{"counts":{},"registered":[target_id],"claimed":[],"effective_levels":[]}}}
+	check(service.import_state(local_state),"registered unsupported stage fixture preserves exact source")
+	check(runtime.local.status("effects",5903,target_id) == "전투에 연결 가능한 옵션 없음","unsupported-only stage cannot falsely report combat application")
+	var broken_wallet := service.export_state()
+	broken_wallet.local_economy = {"schema":1,"gems":10,"acquired":9,"spent":0,"provenance":"twilight_custom_internal_gems_v1"}
+	check(not service.import_state(broken_wallet) and service.export_state() == local_state,"inconsistent internal currency ledger rejected atomically")
+	var broken_conversion := service.export_state()
+	broken_conversion.books['5903'].epochs[target_epoch].reward_conversions = {"1":{"source_amount":1,"local_exp":-1,"numerator":1,"denominator":1,"provenance":"test"}}
+	check(not service.import_state(broken_conversion) and service.export_state() == local_state,"malformed EXP settlement record rejected before replacing save")
 	print("MONSTERBOOK523_TEST checks=%d failed=%d" % [checks, failed])
 	quit(1 if failed else 0)

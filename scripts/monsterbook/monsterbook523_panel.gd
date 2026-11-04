@@ -113,31 +113,61 @@ func show_selected() -> void:
 	var book: Dictionary = book_service.row("MonsterBook", selected_id)
 	var period: Dictionary = book_service.raw_period(selected_id)
 	_text(str(book.Name), UI.GOLD)
-	_text("집계: %s ~ %s\n옵션 종료: %s · 원문 한국 날짜, 시간대 판정 대기" % [_date(period.StartDateTimeID), _date(period.CountingEndDateTimeID), _date(period.EndDateTimeID)], UI.MUTED)
+	_text("집계: %s ~ %s\n옵션 종료: %s · 한국 날짜 표기" % [_date(period.StartDateTimeID), _date(period.CountingEndDateTimeID), _date(period.EndDateTimeID)], UI.MUTED)
 	if int(book.NpcGroupID) == 0:
 		_text("현재 대상 연결이 없는 과거 정의입니다. 기존 기록을 조회할 수 있습니다.", UI.MUTED)
 	var progress: Dictionary = book_service.progress(selected_id)
+	var live: RefCounted = world.get("monsterbook523_runtime")
+	if live.action_authority == Callable(live.local,"action_receipt"):
+		var phase: String = live.local.window_problem(selected_id)
+		_text("자동 집계 중 · 기존 게임의 인정 처치 기준" if phase.is_empty() else phase, UI.GOLD)
+		var saved: Dictionary = book_service.export_state().books.get(str(selected_id),{})
+		if not saved.is_empty() and saved.get("current_epoch","") != live.local.epoch(selected_id): _text("이전 기간 기록 · 이번 기간 첫 인정 처치에서 새로 집계합니다",UI.MUTED)
+	if progress.has("kill_count"): _text("이번 기간 총 인정 처치: %d" % int(progress.kill_count))
+	if not live.pending_deaths.is_empty(): _text("저장 재시도 대기 중 · 보상 상태는 변경하지 않습니다",UI.MUTED)
+	if live.action_authority == Callable(live.local,"action_receipt"):
+		_text("게임 다이아: %d · 도감 즉시 완료용" % live.economy.gems())
+		var rate: int = int(live.economy.BALANCE.data.adena_per_internal_gem)
+		_text("자체 설정: 1 다이아 = %d 아데나 · EXP는 기존 성수 균형 비율로 환산" % rate,UI.MUTED)
+		var exchange := UI.button("다이아 10개 교환 · %d 아데나" % (10*rate),_exchange,Vector2(240,36))
+		exchange.name = "MonsterBookExchange"
+		exchange.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
+		exchange.scroll_host = scroll_host
+		exchange.scroll_area = stage_scroll
+		exchange.disabled = not live.local.window_problem(selected_id).is_empty() or world.gold < 10*rate
+		detail.add_child(exchange)
 	for stage: Dictionary in book_service.levels(selected_id):
 		var level_id := int(stage.ID)
 		var registered: bool = progress.get("registered", []).has(level_id)
 		var claimed: bool = progress.get("claimed", []).has(level_id)
 		_text("Lv.%d · 처치 %d / %d · %s · %s" % [int(stage.Level), int(progress.get("counts", {}).get(str(level_id), 0)), int(stage.Amount), "등록 완료" if registered else "미등록", "보상 수령 완료" if claimed else "보상 미수령"], UI.GOLD)
 		var currency := _description("Currency", int(stage.CurrencyID)) if int(stage.CurrencyID) else "없음"
-		_text("등록 비용: %s %d" % [currency, int(stage.CurrencyCost)])
+		_text("원본 즉시 완료 비용: %s %d · 일반 처치 달성은 무료" % [currency, int(stage.CurrencyCost)])
 		if stage.bonuses.is_empty(): _text("단계 옵션 없음", UI.MUTED)
 		for bonus: Dictionary in stage.bonuses:
 			var type: Dictionary = book_service.row("BonusType", int(bonus.BonusTypeID))
 			var unit: Dictionary = book_service.row("Unit", int(type.get("UnitID", 0)))
 			_text("옵션: %s · %s %s (원문 단위)" % [_description("BonusType", int(bonus.BonusTypeID)), str(bonus.Value), str(unit.get("Name", ""))])
+			var pending_bonus: String = live.bonus_status(bonus)
+			if not pending_bonus.is_empty(): _text(pending_bonus,UI.MUTED)
+		if not stage.bonuses.is_empty(): _text("선택 적용 중" if progress.get("effective_levels",[]).has(level_id) else "이 단계 옵션을 선택해 적용할 수 있습니다 · 단계 합산은 자동 추정하지 않습니다",UI.MUTED)
 		for reward: Dictionary in stage.rewards:
 			var title := _description("RewardType", int(reward.RewardTypeID))
 			if int(reward.RewardTypeID) == 2:
 				title = _description("ItemClass", int(reward.RewardClassID))
-			_text("보상: %s × %d" % [title, int(reward.Amount)])
+			var paid: bool = book_service.reward_claimed(selected_id, level_id, int(reward.ID))
+			_text("보상: %s × %d · %s" % [title, int(reward.Amount), "수령 완료" if paid else "미수령"])
+			if int(reward.RewardTypeID) == 1 and live.action_authority == Callable(live.local,"action_receipt"):
+				_text("TWILIGHT 자체 환산 EXP: %d" % live.economy.experience_amount(reward),UI.MUTED)
+			if not paid and live.action_authority == Callable(live.local,"action_receipt"):
+				var pending: String = live.items.reward_problem(reward)
+				if not pending.is_empty(): _text(pending, UI.MUTED)
 		var actions := HBoxContainer.new()
 		detail.add_child(actions)
-		for action: String in ["register", "claim"]:
-			var label: String = "등록" if action == "register" else "보상 받기"
+		var stage_actions: Array = ["register","claim","instant"] if int(stage.CurrencyCost) > 0 else ["register","claim"]
+		if not stage.bonuses.is_empty(): stage_actions.append("effects")
+		for action: String in stage_actions:
+			var label: String = "옵션 적용" if action == "effects" else ("즉시 완료 · %d" % int(stage.CurrencyCost) if action == "instant" else ("달성 기록" if action == "register" else "보상 받기"))
 			var button := UI.button(label, _request.bind(action, level_id), Vector2(112, 36))
 			button.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
 			button.scroll_host = scroll_host
@@ -152,6 +182,13 @@ func show_selected() -> void:
 				note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 				note.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				detail.add_child(note)
+
+
+func _exchange() -> void:
+	if scroll_host.was_scroll_dragged(stage_scroll): return
+	var outcome: Dictionary = world.monsterbook523_runtime.economy.exchange(10)
+	result.text = str(outcome.message)
+	show_selected()
 
 func _request(action: String, level_id: int) -> void:
 	if scroll_host.was_scroll_dragged(stage_scroll): return

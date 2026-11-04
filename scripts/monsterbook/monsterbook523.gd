@@ -6,6 +6,7 @@ signal changed
 const SCHEMA := "twilight.monsterbook523.v1"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const TABLES := ["MonsterBook", "MonsterBookLevel", "MonsterBookLevelBonus", "MonsterBookLevelReward", "NpcClassForNpcGroup", "Bonus", "BonusType", "Reward", "RewardType", "Currency", "DateTimes_Korean", "Unit", "ItemClass", "DescData_Korean"]
+const OPTIONAL_TABLES := ["ItemCategory", "Grade", "ItemBonus", "UIUnit"]
 var _tables: Dictionary = {}
 var _indexes: Dictionary = {}
 var _state: Dictionary = {"schema": 1, "books": {}}
@@ -39,7 +40,8 @@ func load_pack(path: String, expected_sha: String) -> bool:
 		return _fail("pack_source")
 	var tables: Dictionary = model.tables
 	var indexes: Dictionary = {}
-	for table: String in TABLES:
+	for table: String in TABLES + OPTIONAL_TABLES:
+		if table in OPTIONAL_TABLES and not tables.has(table): continue
 		if not tables.get(table) is Array:
 			return _fail("missing_table:" + table)
 		var index: Dictionary = {}
@@ -151,12 +153,22 @@ func import_state(value: Variant) -> bool:
 	# fields so registered/claimed IDs still match integer UI/receipt IDs after
 	# a real save round trip; preserve all unknown extension fields untouched.
 	_state.schema = 1
+	if _state.has("local_economy"):
+		for field: String in ["schema","gems","acquired","spent"]: _state.local_economy[field] = int(_state.local_economy[field])
+	for record: Dictionary in _state.get("source_items",{}).values():
+		for field: String in ["source_item_class_id","weight","price"]:
+			record[field] = int(record[field])
 	for book: Dictionary in _state.books.values():
 		book.sequence = int(book.sequence)
 		for progress_value: Dictionary in book.epochs.values():
+			for conversion: Dictionary in progress_value.get("reward_conversions",{}).values():
+				for field: String in ["source_amount","local_exp","numerator","denominator"]: conversion[field] = int(conversion[field])
+			for field: String in ["kill_count", "first_stage_kill_count"]:
+				if progress_value.has(field): progress_value[field] = int(progress_value[field])
 			for id: Variant in progress_value.counts:
 				progress_value.counts[id] = int(progress_value.counts[id])
-			for field: String in ["registered", "claimed", "effective_levels"]:
+			for field: String in ["registered", "claimed", "effective_levels", "reward_claims"]:
+				if not progress_value.has(field): continue
 				var canonical: Array = []
 				for id: Variant in progress_value[field]: canonical.append(int(id))
 				progress_value[field] = canonical
@@ -166,12 +178,23 @@ func import_state(value: Variant) -> bool:
 static func valid_state(value: Variant) -> bool:
 	if not value is Dictionary or value.get("schema") != 1 or not value.get("books") is Dictionary:
 		return false
+	if value.has("local_economy"):
+		var wallet: Variant = value.local_economy
+		if not wallet is Dictionary or wallet.get("schema") != 1 or wallet.get("provenance") != "twilight_custom_internal_gems_v1": return false
+		for field: String in ["gems","acquired","spent"]:
+			if not _integer(wallet.get(field)): return false
+		if int(wallet.gems) + int(wallet.spent) != int(wallet.acquired): return false
+	if value.has("source_items"):
+		if not value.source_items is Dictionary: return false
+		for name: Variant in value.source_items:
+			if not name is String or not preload("res://scripts/monsterbook/monsterbook523_items.gd").valid_record(name,value.source_items[name]): return false
 	for key: Variant in value.books:
 		if not str(key).is_valid_int() or int(str(key)) <= 0:
 			return false
 		var book: Variant = value.books[key]
 		if not book is Dictionary or not _integer(book.get("sequence")) or not book.get("epochs") is Dictionary or not book.get("current_epoch") is String:
 			return false
+		if book.has("max_clock") and (not book.max_clock is String or not valid_clock(book.max_clock)): return false
 		if not book.epochs.has(book.current_epoch):
 			return false
 		for epoch: Variant in book.epochs:
@@ -183,7 +206,18 @@ static func valid_state(value: Variant) -> bool:
 			for id: Variant in progress.counts:
 				if not str(id).is_valid_int() or int(str(id)) <= 0 or not _integer(progress.counts[id]):
 					return false
-			for field: String in ["registered", "claimed", "effective_levels"]:
+			for optional: String in ["kill_count", "first_stage_kill_count"]:
+				if progress.has(optional) and not _integer(progress[optional]): return false
+			if progress.has("reward_conversions"):
+				if not progress.reward_conversions is Dictionary: return false
+				for id: Variant in progress.reward_conversions:
+					if not str(id).is_valid_int() or int(str(id)) <= 0: return false
+					var conversion: Variant = progress.reward_conversions[id]
+					if not conversion is Dictionary or not conversion.get("provenance") is String: return false
+					for field: String in ["source_amount","local_exp","numerator","denominator"]:
+						if not _integer(conversion.get(field)) or int(conversion[field]) <= 0: return false
+			for field: String in ["registered", "claimed", "effective_levels", "reward_claims"]:
+				if field == "reward_claims" and not progress.has(field): continue
 				if not progress.get(field) is Array:
 					return false
 				var seen: Dictionary = {}
@@ -248,6 +282,11 @@ func apply_confirmed(receipt: Dictionary, commit: Callable) -> bool:
 	if not valid_clock(clock): return _fail("source_clock_required")
 	if epoch.is_empty():
 		return _fail("epoch_required")
+	if receipt.get("protect_clock", false) and str(saved.get("max_clock", "")) > clock: return _fail("clock_rollback")
+	if action in ["count","instant_complete"] and receipt.get("start_epoch", false):
+		if receipt.get("reset_approved") != true or saved.epochs.has(epoch): return _fail("reset_not_confirmed")
+		saved.epochs[epoch] = {"counts": {}, "registered": [], "claimed": [], "effective_levels": [], "reward_claims": [], "kill_count": 0}
+		saved.current_epoch = epoch
 	if action == "begin_epoch":
 		if receipt.get("reset_approved") != true or saved.epochs.has(epoch) or not _within(book_id, clock, "CountingEndDateTimeID"):
 			return _fail("reset_not_confirmed")
@@ -265,8 +304,9 @@ func apply_confirmed(receipt: Dictionary, commit: Callable) -> bool:
 			var matches: bool = false
 			for candidate: Dictionary in target_books(int(receipt.npc_class_id)):
 				matches = matches or int(candidate.ID) == book_id
-			if not matches or not receipt.get("level_ids") is Array or receipt.level_ids.is_empty():
+			if not matches or not receipt.get("level_ids") is Array or (receipt.level_ids.is_empty() and receipt.get("track_only") != true):
 				return _fail("count_target_or_stages")
+			stage["kill_count"] = int(stage.get("kill_count", 0)) + 1
 			var seen: Dictionary = {}
 			for id: Variant in receipt.level_ids:
 				if not _level_belongs(id, book_id) or seen.has(int(id)):
@@ -274,6 +314,77 @@ func apply_confirmed(receipt: Dictionary, commit: Callable) -> bool:
 				seen[int(id)] = true
 				var key := str(int(id))
 				stage.counts[key] = int(stage.counts.get(key, 0)) + 1
+			# Existing host credited deaths can complete the unambiguous first stage.
+			# The original CurrencyCost is preserved; no Gem payment is inferred.
+			var achieved: int = int(receipt.get("achieve_level_id", 0))
+			if achieved > 0 and _level_belongs(achieved, book_id) and int(row("MonsterBookLevel", achieved).get("Level", 0)) == 1 and int(stage.counts.get(str(achieved), 0)) >= int(row("MonsterBookLevel", achieved).Amount) and not stage.registered.has(achieved):
+				stage.registered.append(achieved)
+				if stage.effective_levels.is_empty(): stage.effective_levels = [achieved]
+				stage["first_stage_kill_count"] = int(stage.kill_count)
+				quote["auto_achieved"] = achieved
+		"achieve":
+			var level_id: Variant = receipt.get("level_id")
+			if not _level_belongs(level_id, book_id) or int(row("MonsterBookLevel", int(level_id)).get("Level", 0)) != 1 or not _within(book_id, clock, "CountingEndDateTimeID") or int(stage.counts.get(str(int(level_id)), 0)) < int(row("MonsterBookLevel", int(level_id)).Amount) or stage.registered.has(level_id): return _fail("achievement_not_eligible")
+			stage.registered.append(int(level_id))
+			if stage.effective_levels.is_empty(): stage.effective_levels = [int(level_id)]
+		"instant_complete":
+			var level_id: Variant = receipt.get("level_id")
+			if not _level_belongs(level_id,book_id) or stage.registered.has(level_id) or not _within(book_id,clock,"CountingEndDateTimeID"): return _fail("instant_not_eligible")
+			var level := row("MonsterBookLevel",int(level_id))
+			# Complete exactly the paid stage. Never fabricate kill credit.
+			for prior: Dictionary in levels(book_id):
+				if int(prior.Level) < int(level.Level) and not stage.registered.has(int(prior.ID)): return _fail("prior_stage_required")
+			var wallet: Dictionary = proposed.get("local_economy",{})
+			if int(level.CurrencyID) != 4 or row("Currency",int(level.CurrencyID)).get("Name") != "Gem" or int(level.CurrencyCost) <= 0 or int(wallet.get("gems",0)) < int(level.CurrencyCost): return _fail("instant_gems_required")
+			wallet.gems = int(wallet.gems) - int(level.CurrencyCost)
+			wallet.spent = int(wallet.spent) + int(level.CurrencyCost)
+			proposed.local_economy = wallet
+			stage.registered.append(int(level_id))
+			quote["level"] = level
+			quote["currency"] = row("Currency",int(level.CurrencyID))
+		"claim_rewards":
+			var level_id: Variant = receipt.get("level_id")
+			if not _level_belongs(level_id, book_id) or not stage.registered.has(level_id) or stage.claimed.has(level_id) or receipt.get("claim_window_approved") != true or not receipt.get("reward_ids") is Array or receipt.reward_ids.is_empty(): return _fail("claim_not_eligible")
+			var all_rewards := _linked("MonsterBookLevelReward", int(level_id), "RewardID", "Reward")
+			var requested: Dictionary = {}
+			var paid: Array = stage.get("reward_claims", []).duplicate()
+			var rewards: Array = []
+			for id: Variant in receipt.reward_ids:
+				if not _integer(id) or requested.has(int(id)) or paid.has(int(id)): return _fail("reward_already_claimed")
+				requested[int(id)] = true
+			for reward: Dictionary in all_rewards:
+				if requested.has(int(reward.ID)):
+					rewards.append(reward)
+					paid.append(int(reward.ID))
+			if rewards.size() != requested.size(): return _fail("reward_identity")
+			stage["reward_claims"] = paid
+			var complete: bool = true
+			for reward: Dictionary in all_rewards: complete = complete and paid.has(int(reward.ID))
+			if complete: stage.claimed.append(int(level_id))
+			quote["level"] = row("MonsterBookLevel", int(level_id))
+			quote["rewards"] = rewards
+			if receipt.has("reward_conversions"):
+				if not receipt.reward_conversions is Dictionary: return _fail("reward_conversion_identity")
+				var conversions: Dictionary = stage.get("reward_conversions",{}).duplicate(true)
+				for key: String in receipt.reward_conversions:
+					var conversion: Dictionary = receipt.reward_conversions[key]
+					var reward := row("Reward",int(key))
+					if not requested.has(int(key)) or int(reward.get("RewardTypeID",0)) != 1 or conversion.get("source_amount") != reward.Amount or not _integer(conversion.get("local_exp")) or int(conversion.local_exp) <= 0: return _fail("reward_conversion_identity")
+					conversions[key] = conversion.duplicate(true)
+				stage["reward_conversions"] = conversions
+			if receipt.has("source_item_records"):
+				if not receipt.source_item_records is Dictionary: return _fail("source_item_identity")
+				var records: Dictionary = proposed.get("source_items",{}).duplicate(true)
+				for name: String in receipt.source_item_records:
+					var record: Variant = receipt.source_item_records[name]
+					if not preload("res://scripts/monsterbook/monsterbook523_items.gd").valid_record(name,record): return _fail("source_item_identity")
+					var matches: bool = false
+					for reward: Dictionary in rewards:
+						if int(reward.RewardTypeID) == 2 and int(reward.RewardClassID) == int(record.source_item_class_id) and record.source_reward == reward and record.source_original == row("ItemClass",int(record.source_item_class_id)): matches = true
+					if not matches: return _fail("source_item_reward_identity")
+					if records.has(name) and records[name].get("sourceId") != record.sourceId: return _fail("source_item_collision")
+					records[name] = record.duplicate(true)
+				proposed["source_items"] = records
 		"register", "claim":
 			var level_id: Variant = receipt.get("level_id")
 			if not _level_belongs(level_id, book_id):
@@ -301,6 +412,7 @@ func apply_confirmed(receipt: Dictionary, commit: Callable) -> bool:
 				selected.append(int(id))
 			stage.effective_levels = selected
 		_: return _fail("unknown_transition")
+	if receipt.get("protect_clock", false): saved["max_clock"] = clock
 	saved.sequence = int(receipt.sequence)
 	proposed.books[str(book_id)] = saved
 	if not valid_state(proposed):
@@ -327,3 +439,22 @@ func effective_bonuses(book_id: int, source_clock: String) -> Array:
 	for id: Variant in progress(book_id).get("effective_levels", []):
 		result.append_array(_linked("MonsterBookLevelBonus", int(id), "BonusID", "Bonus"))
 	return result
+
+func reward_claimed(book_id: int, level_id: int, reward_id: int) -> bool:
+	var saved := progress(book_id)
+	return saved.get("claimed", []).has(level_id) or saved.get("reward_claims", []).has(reward_id)
+
+func current_period(book_id: int, clock: String) -> String:
+	if not valid_clock(clock): return "unknown"
+	var period := raw_period(book_id)
+	var start := _clock(period.StartDateTimeID)
+	var end := _clock(period.EndDateTimeID)
+	var counting_end := _clock(period.CountingEndDateTimeID)
+	if start.is_empty() or end.is_empty() or counting_end.is_empty(): return "unknown"
+	if clock < start: return "not_started"
+	if clock >= end: return "ended"
+	if clock >= counting_end: return "options_only"
+	return "counting"
+
+func table_rows(table: String) -> Array:
+	return _tables.get(table, []).duplicate(true)
