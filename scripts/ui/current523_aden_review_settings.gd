@@ -43,6 +43,8 @@ var source_entry_x: SpinBox
 var source_entry_y: SpinBox
 var _world_ref: WeakRef
 var _built: bool = false
+var _native_catalog: RefCounted
+var _native_catalog_loads: int = 0
 var _folder_target: String = ""
 
 
@@ -548,11 +550,23 @@ func _exit_tree() -> void:
 
 func _reload_native_lands(preferred_id: int = -1) -> void:
 	if not is_instance_valid(native_land_choice): return
+	var previous_id: int=native_land_choice.get_selected_id() if native_land_choice.item_count>0 else -1
+	if preferred_id<0: preferred_id=previous_id
 	native_land_choice.clear()
 	var script: Script=load("res://scripts/maps/current523_source_pack.gd")
-	var catalog: RefCounted=script.new()
-	if not catalog.load_catalog(raw_path_edit.text.strip_edges(),source_manifest.text.strip_edges().to_lower()):
-		native_scope_status.text="카탈로그 확인 실패: "+str(catalog.problem); return
+	var directory: String=raw_path_edit.text.strip_edges()
+	var pin: String=source_manifest.text.strip_edges().to_lower()
+	# Revalidate bytes on every refresh; parse only a new verified identity.
+	# A rejected candidate must not replace the previously valid catalog.
+	var catalog: RefCounted=_native_catalog
+	var same_catalog: bool=catalog!=null and catalog.matches_manifest(directory,pin)
+	if not same_catalog:
+		var candidate: RefCounted=script.new()
+		if not candidate.load_catalog(directory,pin):
+			native_scope_status.text="카탈로그 확인 실패: "+str(candidate.problem)
+			if is_instance_valid(source_entry_enabled): source_entry_enabled.button_pressed=false
+			return
+		_native_catalog=candidate; _native_catalog_loads+=1; catalog=candidate
 	var ready_lands: int=0
 	var included_lands: int=0
 	for row: Dictionary in catalog.catalog_lands():
@@ -564,6 +578,8 @@ func _reload_native_lands(preferred_id: int = -1) -> void:
 		if ready>0: ready_lands+=1
 		native_land_choice.add_item("%d · %s · %s · 원문 %d/%d" % [int(declaration.ID),str(declaration.Name),str(declaration.AssetPath),ready,int(asset.get("source_count",0))],int(declaration.ID))
 		if int(declaration.ID)==preferred_id: native_land_choice.select(native_land_choice.item_count-1)
+	if is_instance_valid(source_entry_enabled) and (not same_catalog or native_land_choice.get_selected_id()!=previous_id):
+		source_entry_enabled.button_pressed=false
 	native_scope_status.text="범위 내 논리 Land %d개 · 실제 원문이 일부라도 있는 Land %d개. 공유 폴더와 논리 지역은 별개이며 미수신 셀은 거부합니다." % [included_lands,ready_lands]
 
 func _native_land_changed(_index: int) -> void:

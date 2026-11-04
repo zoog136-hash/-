@@ -479,6 +479,150 @@ additional resource upload was used in that earlier placement investigation.
 Its historical local evidence receipt SHA256 is
 `486f1604d0d702dbd9206aa16df8f8c28b57680c112a6236384939ad9ff7abcf`.
 
+## Additional public parser evidence, kept separate from M rules
+
+The held nine-character original is147,158 bytes with SHA256
+`bc79ea23c3ba0443f57f45bff55cce72390d9011c3db50b79c8c21359e143e11`.
+Its standard Git blob hash (`blob <length>\0` plus original bytes) is
+`e59b6e941ce13091f8945edb3b4dd2c798b47e35`, matching the public tree metadata
+for `data/4/800F7FF3E.s32` atL1MapGen revision
+`9b94e284585ae9717dd4aa858fe7b249c4d1fc70`. This is a byte-identity/provenance
+observation using held M bytes and public metadata; no PC asset was fetched or
+installed. That revision's [MapFileName parser](https://github.com/zajako/L1MapGen/blob/9b94e284585ae9717dd4aa858fe7b249c4d1fc70/src/jp/mapgen/MapFileName.java)
+requires a full eight-hex match, and its [filter](https://github.com/zajako/L1MapGen/blob/9b94e284585ae9717dd4aa858fe7b249c4d1fc70/src/jp/mapgen/MapFileFilter.java)
+rejects invalid names. Thus shared historical bytes do not supply a ninth-digit
+selector or origin. The original stays unplaced and unchanged. Local comparison
+receipt `current523-nine-character-public-blob-comparison.json` SHA256:
+`4f6436590561c19a341d3f3a1eaef3cfbf801efeb7b527d1242ebf40e5434c44`.
+
+The same project's [PC writer](https://github.com/zajako/L1MapGen/blob/9b94e284585ae9717dd4aa858fe7b249c4d1fc70/src/jp/mapgen/writer/V1MapWriter.java)
+separates movement and arrow-passage tests, includes an explicitly uncertain
+zero-upper-bits fallback and rewrites some complete output chunks as margins.
+Its [loader](https://github.com/zajako/L1MapGen/blob/9b94e284585ae9717dd4aa858fe7b249c4d1fc70/src/jp/mapgen/L1MapPart.java)
+reads8,192 16-bit S32 values, while the [V2 writer](https://github.com/zajako/L1MapGen/blob/9b94e284585ae9717dd4aa858fe7b249c4d1fc70/src/jp/mapgen/writer/V2MapWriter.java)
+writes one byte per value. This lossy PC conversion cannot authorize a change
+to M collision, safe/combat zones or original high bits. The own allowlist stays
+separate and unchanged; no new tool binary or original engine was run.
+
+PakViewer's [MTil correction](https://github.com/tony1223/PakViewer/commit/d77d720bb35f24fa695bea98efb150ebc0b90305)
+and [pinned parser](https://github.com/tony1223/PakViewer/blob/d77d720bb35f24fa695bea98efb150ebc0b90305/src/Lin.Helper.Core/Tile/MTil.cs)
+were compared narrowly with the existing decoder:the0x40 default and0x01 table
+selection agree; conversion preserves lower flag bits except adding its separate
+compression bit. Our decoder already preserves original flags and never adds an
+overlay-specific alpha rule. Four held originals, TI2 IDs0/141/1211/3599, passed
+raw SHA/strict decode/byte roundtrip and their existing coverage RGBA hashes.
+Tile141 has44 nonempty special-flag frames;3599 has8, including raw0x12. This
+checks retained bytes and current coverage, not native compositing or a run of
+the public viewer. No pixel counterexample justified changing the decoder or
+packs. The7557 full suite was not repeated. Local narrow receipt
+`new_mtil_d77d720_narrow_actual_samples.json` SHA256:
+`90cd2e9a5356417173da236284b5db2dd44322760b88934b5e6640fadde977c2`.
+
+## Remaining logical identities: actual Main delta
+
+The577-root play evidence originally visited577 logical IDs. Earlier11-region,
+portal, long-route and inactive-restriction Main checks used those same IDs;
+the separate997-field audit was static source-class verification. Exactly420
+ordinary logical IDs on107 already-tested physical roots therefore remained.
+The new QA plan subtracts actual passed IDs, verifies source/physical-proof pins
+and every selected PR230 shard/condition-file identity, and reuses the existing
+original clear/blocked/outside probes for each exact declared AssetPath. These
+are explicitly labelled own QA coordinates, not natural entries or admission.
+No input or geometry pack was rebuilt/downloaded.
+
+All420 were actually selected through existing Settings and opened in Main.
+Checks cover exact Land declaration/field map ID/HUD/minimap, separate field
+state, genuine owning definition shard, complete raw Land attributes/time/weekly/
+competition links and all own Portal rows, physical walking and blocked motion,
+outside refusal, failed-entry preservation, actual save, teardown/reentry and
+exact pose/identity restoration. Portal-less siblings do not inherit a shared
+root's Portal.405 IDs have attributes,91 have time-limit links and2 have
+competition links; those rows remain raw/held rather than granting admission.
+Land49722 and49752 each retain14 attributes and three different Portals. Their
+cross-logical stale-request rejection was verified even with identical actor
+position on the same geometry. Same-logical teardown/reentry also rejects the
+old request.
+
+The three-ID pilot passes116 checks in66.466 Godot seconds; the remaining417
+pass17,466 checks in1,215.915 seconds, with70-entry progress checkpoints and no
+failed ID. These17,582 new checks are distinct from the preserved12,558 physical
+checks. Their disjoint ID union equals all997 ordinary IDs, with no excluded
+Land added. This establishes representative QA execution per logical identity,
+not every cell, logical entrance, server/event period, original NPC/combat state
+or native admission. Per-ID restore uses the actual restore method after
+teardown within the process; it is not997 new OS processes. Previous separate
+new-process evidence remains valid for its stated scope.
+
+The existing UI was reparsing its17MB catalog on every source entry/restore.
+It now caches one verified identity and rehashes current bytes before reuse.
+A rejected candidate cannot replace the valid parsed cache or show its stale
+listing. Runtime and UI caches are separate; each parsed its catalog once per
+bulk process. Independent reproduction also found refresh changed12582 toLand0
+while retaining the old explicit-coordinate checkbox, and a rejected pin left
+that checkbox active. Refresh now retains the selected ID for the same verified
+catalog; a different identity/selection or rejected candidate clears that input.
+This changes no source coordinates, stored cursor, geography, allowlist or fee.
+The focused real-Settings tests distinguish component checks from actual Main.
+After the final selection/input guard,8 actual-Settings component checks pass in
+53.31s and a deliberately focused three-ID Main regression passes119 checks in
+73.671 Godot seconds. Those repeated IDs are not counted as additional coverage.
+The final default-off Main/save gate passes35 checks in61.13s. Combined local
+receipt `current523-logical-scope-final-evidence.json` SHA256 is
+`563fb9dd79a3433697268dfe9a28e26e57db14b24f061fa3dcd762da3fc06396`;
+it records code hashes, source/provenance receipts and individual test results.
+The environment transport lost a wait handle during refresh, but the original
+Main process and flushed progress survived; its successful result was recovered
+without launching another copy or repeating completed logical slices.
+
+
+The local delta receipt `current523-remaining420-actual-main-delta.json` has
+SHA256 `6ca73f585ec2102ecb640863505e20b45f2bb87d11f2318f3146ce34471e2bc0`.
+It includes exact old/new/combined ID sets and the individual row/result hashes.
+The420-ID set SHA256 (sorted compact JSON) is
+`9cd891e6a453a40dfdb5e2ea9924eae597b4a375bc9c3dc3c8af3e5bab1f4e34`.
+Recreate the private input with `tools/map_restore/make_current523_logical_cases.py`
+using the exact source/physical-case/passed-row/owner pins above; its output
+matches2,260,219 bytes/SHA256
+`a51c280da5c9015b62ec654e7440d340362e9b0796f1571a44d7e1d9fe3dcc90`.
+The generator refuses a destination within Git or the original source tree and
+creates owner-only output. Original rows/probes and screenshots remain private.
+Run `tests/current523_logical_lands_main_test.gd` with an explicit bounded
+`--start`/`--limit`, source/tile/definition pins and new local progress destination;
+completed ID slices need not be repeated.
+
+Exact additionally checked logical IDs (no new physical roots):
+
+```text
+12156 12362 12372 12442 12582 12592 22582 22592 22821 22961 42851 42861 42983 43014 43043
+43053 43073 43083 43093 43103 43112 43123 43163 43173 43383 43413 43423 43433 43443 43453
+43722 43752 43762 43772 43782 43792 43812 43822 43832 43842 43981 44183 44193 44203 44213
+44222 44223 44232 44233 44242 44243 44262 44272 44282 44292 44302 44312 44322 44332 44342
+44352 44362 44372 44382 44392 44413 44431 44441 44461 44471 44481 44494 44514 44521 44542
+44671 44763 44773 44783 44793 44803 44813 44823 44833 44843 44853 44863 44873 44883 44893
+44903 44913 44923 44933 44943 44953 44973 45003 45111 45121 45141 45151 45181 45213 45231
+45374 45384 45394 45404 45414 45434 45444 45454 45464 45484 45494 45504 45514 45524 45534
+45544 45554 45564 45584 45594 45604 45614 45624 45634 45644 45654 45664 45684 45694 45704
+45714 45724 45734 45744 45754 45764 45784 45794 45804 45814 45824 45834 45844 45854 45864
+45884 45894 45904 45914 45924 45934 45944 45954 45964 45984 45994 46004 46014 46024 46034
+46044 46054 46064 46084 46094 46104 46114 46124 46134 46144 46154 46164 46184 46194 46204
+46214 46224 46234 46244 46254 46264 46284 46294 46304 46314 46324 46334 46344 46354 46382
+46383 46423 46443 46463 46473 46503 46541 46591 46623 46713 46723 46733 46761 46803 46823
+46843 46853 46893 46903 46913 46964 46983 47001 47002 47211 47222 47272 47283 47433 47671
+47693 47783 47911 47921 47931 48024 48044 48063 48073 48152 48262 48272 48282 48292 48302
+48313 48332 48378 48403 48443 48458 48473 48494 48504 48611 48622 48633 48644 48654 48664
+48674 48684 48694 48704 48714 48724 48734 48748 48758 48908 48928 48952 48973 49144 49154
+49212 49252 49262 49274 49293 49338 49392 49402 49412 49422 49502 49521 49593 49604 49653
+49658 49663 49693 49703 49721 49722 49732 49742 49752 49762 49772 49788 49811 49821 49834
+49844 49854 49864 49874 49884 49894 49904 49914 49924 49934 49944 49954 49964 49974 49984
+49994 50004 50014 50024 50034 50044 50054 50064 50074 50084 50094 50104 50114 50124 50134
+50144 50154 50164 50174 50184 50194 50204 50214 50224 50234 50244 50254 50264 50274 50284
+50294 50304 50314 50324 50334 50344 50354 50364 50374 50384 50394 50404 50414 50424 50434
+50444 50454 50464 50474 50484 50494 50504 50514 50524 50534 50544 50554 50564 50574 50584
+50594 50604 50614 50624 50634 50644 50654 50664 50674 50684 50694 50704 50714 50724 50734
+50744 50754 50764 50774 50784 50794 50804 50814 50824 50921 50941 50951 50971 50981 51011
+51031 51041 51051 51068 51084 51094 51108 51132 51142 51152 51162 51172 51218 51242 51253
+```
+
 ## Execution evidence and limits
 
 Latest complete-input checks use the source and tile pins above:
@@ -510,8 +654,9 @@ Latest complete-input checks use the source and tile pins above:
   installation:all577 distinct ordinary physical roots pass12,558 checks in
   1,436.192 Godot seconds (1,450.89s outer runtime). The visited AssetPath set
   exactly equals the577-root normal catalog; those fields contain all6,557 placed
-  S32 packets. These are representative probes per physical root, not997 distinct
+  S32 packets. These are representative probes per physical root, not by themselves997 distinct
   logical-Land gameplay visits or every-cell/every-portal/native admission tests.
+  The separately recorded420-ID delta above fills representative logical-ID QA.
 - Every root checks actual entry/GL frame/HUD/minimap, player-physics walking,
   blocked-cell physical refusal, outside-field path denial, original host return,
   actual game save, field teardown and the real source-restore entry method.

@@ -150,6 +150,17 @@ valid cache. Field registries remain independent; original packet bytes are
 verified on read and decoded tile atlases remain bounded to32. This avoids
 reparsing the17MB catalog for every region/restore.
 
+The existing Settings Land selector also retains one successfully verified
+catalog identity. Every refresh still checks directory/pin and current manifest
+bytes; only a new valid identity is parsed. A missing path, wrong pin or changed
+manifest clears the proposed listing without replacing the previous valid
+parsed cache. Same-identity refresh retains the selected logical ID. A rejected
+candidate, different directory/pin or changed selected ID clears the uncommitted
+explicit-coordinate checkbox; stored cursors are preserved. This UI cache and
+the play controller cache are separate objects;
+neither shares mutable per-field state or bypasses original checks on read.
+
+
 PR232 reuses PR230's unchanged `patch523_world_links.gd` at owner commit
 `5d1b1bdb0b00b855ffd87036a2e5f6b274ffa3eb`, Git blob
 `0fcb00cba1d6ca7e5f2ea2e12aee187d622551e0`. It does not copy a second compiler or
