@@ -109,6 +109,12 @@ var ranged_critical_rate: int = 5
 var magic_critical_rate: int = 5
 var critical_resistance: int = 0
 var stun_accuracy: int = 0
+var dark_resistance: int=0
+var ice_resistance: int=0
+var dark_accuracy: int=0
+var ice_accuracy: int=0
+var dark_duration: float=0.0
+var ice_duration: float=0.0
 var stun_resistance: int = 0
 var stun_duration: float = 0.0
 var stun_remaining: float = 0.0
@@ -242,6 +248,10 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	path_index = 0
 	velocity = Vector2.ZERO
 	stun_remaining = 0.; silence_remaining = 0.; hold_remaining = 0.; fear_remaining = 0.
+	for kind: String in ["dark","ice"]:
+		set(kind+"_resistance",clampi(int(record.get(kind+"_resistance",0)),0,100))
+		set(kind+"_accuracy",clampi(int(record.get(kind+"_accuracy",0)),0,100))
+		set(kind+"_duration",clampf(float(record.get(kind+"_duration",0)),0,30))
 	poison_remaining = 0.; poison_tick_clock = 0.; bleed_remaining = 0.; bleed_tick_clock = 0.
 	aggro_remaining = 0.; returning_home = false
 	enraged = false; social_alert_cooldown = 0.0
@@ -392,6 +402,9 @@ func _advance_source_m_view(delta: float) -> void:
 	if is_instance_valid(source_m_view):
 		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
 
+func custom_frozen() -> bool:
+	return is_instance_valid(world_controller) and world_controller.get("halphas_star")!=null and world_controller.halphas_star.combat.frozen(self)
+
 func _physics_process(delta: float) -> void:
 	var source523 = _patch523_service()
 	if source523 != null and not dead: source523.extensions.remaining.sync_actor(self)
@@ -427,11 +440,11 @@ func _physics_process(delta: float) -> void:
 	if ai.is_empty() or decision_elapsed>=decision_interval:
 		_tick_ai(decision_elapsed)
 		decision_elapsed = 0.
-	elif not motion.active and not is_stunned() and not is_held():
+	elif not motion.active and not is_stunned() and not is_held() and not custom_frozen():
 		# Decisions/status clocks run at 30 Hz. Movement, facing, animation and
 		# strike markers still advance every physics frame at the engine cadence.
 		_move_on_map()
-	if is_stunned() or is_feared(): motion.cancel_attack()
+	if is_stunned() or is_feared() or custom_frozen(): motion.cancel_attack()
 	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
 	if is_instance_valid(species_visual) and species_visual.warning_active:
 		species_visual.warning_progress = clampf(motion.attack_elapsed / maxf(.01, motion.attack_duration * motion.attack_hit_ratio), 0.0, 1.0)
@@ -470,10 +483,10 @@ func _tick_ai(delta: float) -> void:
 		show_status_text("ENRAGE")
 	enraged = next_enraged
 	_refresh_overhead_ui(distance)
-	if is_stunned() or is_feared():
+	if is_stunned() or is_feared() or custom_frozen():
 		motion.cancel_attack()
 		if is_instance_valid(species_visual): species_visual.warning_active = false
-		velocity = _fear_velocity() if is_feared() and not is_held() else Vector2.ZERO
+		velocity = _fear_velocity() if is_feared() and not is_held() and not custom_frozen() else Vector2.ZERO
 		path = PackedVector2Array(); path_index = 0
 		_move_on_map()
 		return
@@ -1060,7 +1073,7 @@ func _release_attack(id: int) -> void:
 	var source523 = _patch523_service()
 	if source523 != null and source523.release(self,id): return
 	if not is_instance_valid(target_player): return
-	if is_stunned() or is_feared(): return
+	if is_stunned() or is_feared() or custom_frozen(): return
 	if id==special_sequence:
 		_resolve_special()
 		return
@@ -1161,4 +1174,5 @@ func source_523_speed_factor() -> float:
 func effective_source_attribute(attribute: String) -> float:
 	if is_instance_valid(world_controller) and world_controller.get("growth")!=null:return float(world_controller.growth.guardian_combat.attribute(self,attribute).after)
 	return float(source_m_original.get(attribute.capitalize(),0))
+
 

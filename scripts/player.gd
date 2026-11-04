@@ -141,6 +141,9 @@ func _physics_process(delta: float) -> void:
 	_tick_fear(delta)
 	_tick_poison(delta)
 	_tick_bleed(delta)
+	var host: Node=get_parent()
+	if host!=null and host.get("halphas_star")!=null and (host.halphas_star.combat.frozen(self) or not host.halphas_star.combat.charge.is_empty()):
+		cancel_attack();velocity=Vector2.ZERO;touch_vector=Vector2.ZERO;clear_click_path();_update_visual(delta);return
 	if is_stunned():
 		cancel_attack()
 		velocity = Vector2.ZERO
@@ -688,4 +691,5 @@ func has_manual_movement() -> bool:
 	if manual_navigation and path_index < click_path.size(): return true
 	var ui_blocks: bool = get_parent().get("hud") != null and get_parent().hud.has_method("blocks_keyboard_input") and get_parent().hud.blocks_keyboard_input()
 	return not ui_blocks and (touch_vector.length_squared() > 0.01 or Input.get_vector("move_left", "move_right", "move_up", "move_down").length_squared() > 0.01)
+
 

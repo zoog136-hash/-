@@ -193,7 +193,8 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	if progression.can_disable(skill):return true
 	skill = catalog.resolve(skill)
 	var reason := ""
-	if not catalog.owned(skill): reason = "미습득 또는 직업 제한"
+	if world.halphas_star.combat.frozen(world.player) or not world.halphas_star.combat.charge.is_empty():reason="자체 동빙 또는 차징 중"
+	elif not catalog.owned(skill): reason = "미습득 또는 직업 제한"
 	elif str(skill.activation) == "passive": reason = "패시브 기술"
 	elif catalog.level_locked(skill): reason = "Lv.%d 필요" % catalog.minimum_level_for(skill)
 	elif not catalog.enabled(skill): reason = "속성 계열 또는 사용 무기 제한"
@@ -413,7 +414,7 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 
 func hit_chance(skill: Dictionary, target: TwilightMonster) -> float:
 	if str(skill.get("attack_type", "")) == "magic":
-		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), maxi(0, target.magic_resistance + int(status.modifier(target, "mr"))))
+		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), maxi(0, target.magic_resistance + int(status.modifier(target, "mr"))))*world.halphas_star.combat.hit_factor(world.player)
 	var accuracy: int = world._ranged_accuracy_stat() if str(skill.get("attack_type", "")) == "ranged" else world._melee_accuracy_stat()
 	return physical_hit_chance(accuracy, target,str(skill.get("attack_type","melee")))
 
@@ -422,7 +423,7 @@ func physical_hit_chance(accuracy: int, target: TwilightMonster,attack_kind: Str
 	# Keep the shared formula's AC normalization and nonnegative DG floor.
 	var avoidance: float=status.modifier(target,"er" if attack_kind=="ranged" else "dg")
 	if bool(target.get_meta("is_player_combatant",false)):avoidance-=world.growth.guardian_combat.value("PVPPierceRangeEvasion" if attack_kind=="ranged" else "PVPPierceMeleeEvasion")
-	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), int(avoidance))
+	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), int(avoidance))*world.halphas_star.combat.hit_factor(world.player)
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
 	if target.dead: return
@@ -772,5 +773,6 @@ func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vecto
 
 func _is_verified_source_skill(skill: Dictionary) -> bool:
 	return skill.has("source_m_spell_id") and str(skill.get("source_m_snapshot", "")) == "base508"
+
 
 

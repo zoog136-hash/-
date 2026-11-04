@@ -1,0 +1,4665 @@
+{
+  "schema": 1,
+  "source_snapshot": "patch523",
+  "archive_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "source_tables": {
+    "BuffCard": {
+      "member": "content/BuffCard.json",
+      "bytes": 948924,
+      "sha256": "6799b9a870c65253bc9f998cb9ff964e05dda4f67511668077c4ccc24a921f96"
+    },
+    "BuffCardStarEnchantGroup": {
+      "member": "content/BuffCardStarEnchantGroup.json",
+      "bytes": 116,
+      "sha256": "da9b06bcda517fa56df58938fcf994346cd9ca5239a07dbbcf4a5207fddcbfde"
+    },
+    "BuffCardStarEnchantRule": {
+      "member": "content/BuffCardStarEnchantRule.json",
+      "bytes": 755,
+      "sha256": "c848f5029c8bc7a3fc32df8cf3b3573a9d58151a312080edbf67f062341d5f53"
+    },
+    "BuffCardStarEnchantBonus": {
+      "member": "content/BuffCardStarEnchantBonus.json",
+      "bytes": 4358,
+      "sha256": "70325fa14227e6a54b51e5269bc4ca3c1b0d7008111afd3f24dd8f8a4d88404c"
+    },
+    "BuffCardSpriteCustomizingOption": {
+      "member": "content/BuffCardSpriteCustomizingOption.json",
+      "bytes": 847,
+      "sha256": "a6a8b7548c8931285cd04972aa3729d13f6c7acac72f52eacb1e9bcff558971e"
+    },
+    "Grade": {
+      "member": "content/Grade.json",
+      "bytes": 1999,
+      "sha256": "7ccc62ce1c95ff02cb833e09a68469a1f66ff739db0ada613e4fd498226984da"
+    },
+    "Currency": {
+      "member": "content/Currency.json",
+      "bytes": 57525,
+      "sha256": "9569dfe7a443af5f828a486265ce289762a1493e2b4554d359c0f2ad939f916a"
+    },
+    "ServerLimit": {
+      "member": "content/ServerLimit.json",
+      "bytes": 654291,
+      "sha256": "b2611a95203a121a8311a7ea712478e9e68e3caab5bd422ea03c84428bb4fc73"
+    },
+    "ConstantData": {
+      "member": "content/ConstantData.json",
+      "bytes": 57677,
+      "sha256": "b4edf5085fe342cf2a317f8eac59e2d2c946ee87527ea30396e45e72ac2a0549"
+    },
+    "ContentsControl": {
+      "member": "content/ContentsControl.json",
+      "bytes": 15155,
+      "sha256": "1bc9a1d681db659e9f4347904f2aed80856209fbebcdc91ed57cec8247d7dfe8"
+    },
+    "Bonus": {
+      "member": "content/Bonus.json",
+      "bytes": 34575811,
+      "sha256": "1189d53da7897c13ca83d559fef06410695404e1157cc2bbf8a9e48ce7f45d59"
+    },
+    "BonusType": {
+      "member": "content/BonusType.json",
+      "bytes": 317249,
+      "sha256": "00cedfba3cd259dfd26fbd1471dd0fb5305023da8f85ca0b262af8f9fd0c1cf1"
+    },
+    "Unit": {
+      "member": "content/Unit.json",
+      "bytes": 11310,
+      "sha256": "5b212633235459928eb03f836ac3964d988a9851f2e7f786a04f5edbba7cba22"
+    },
+    "BonusApplicationType": {
+      "member": "content/BonusApplicationType.json",
+      "bytes": 4366,
+      "sha256": "f66a6b5f7a537f618daef95e8d990894546356359d774aa49bd53d483cc7dcbb"
+    },
+    "SpecialResistanceType": {
+      "member": "content/SpecialResistanceType.json",
+      "bytes": 982,
+      "sha256": "31ede31d0d027ee99107a9bbcc1e0d9f602d7814cc8ebd1bf6d34ebb54ada2c2"
+    },
+    "UIUnit": {
+      "member": "content/UIUnit.json",
+      "bytes": 5069,
+      "sha256": "897a028a9585815972325a25fca67dbe2d51fd9d63da9f190329d537f421a62b"
+    },
+    "ChargeBonus": {
+      "member": "content/ChargeBonus.json",
+      "bytes": 4349,
+      "sha256": "ade8c4878771abd7874e202fec4926b95ab46c813d4ac1dfa671c443f55aa3e0"
+    },
+    "ChargeEffectBonus": {
+      "member": "content/ChargeEffectBonus.json",
+      "bytes": 41744,
+      "sha256": "212a2875dce1e632fd248ba03c3880d2dc2a144585decc5eb3aa86c4b5f47c67"
+    },
+    "SpellClass": {
+      "member": "content/SpellClass.json",
+      "bytes": 22596753,
+      "sha256": "db769ac3f25723289c1a63b4d1376d2bbfe8978608461712d09ef937a47d87ce"
+    }
+  },
+  "card": {
+    "ID": 24504,
+    "Name": "[변신][유일] 해방된 할파스",
+    "DescID": 2294324,
+    "BuffCardDeckID": 1,
+    "BuffClassID": 90624,
+    "GradeID": 52,
+    "DisplaySpriteID": 28439,
+    "DisplayBaseAssetID": 391784,
+    "DisplayScreenAssetID": 391794,
+    "IsNoMergeOut": true,
+    "DisplayDecoAssetID": 22052,
+    "IsNoSwapOut": false,
+    "MagicDollAwakenStatID": 174,
+    "ClassifiedByClass": true,
+    "HasHistory": true,
+    "HistoryDescID": 2294334,
+    "IllustrationAssetID": 390994,
+    "HidedIllustrationAssetID": 391004,
+    "ServerLimitSetID": 772,
+    "SpellClassID": 0,
+    "AttackTypeID": 1,
+    "GradeTierID": 202,
+    "StartDateTimeID": 0,
+    "EndDateTimeID": 0
+  },
+  "group": {
+    "ID": 4,
+    "BuffCardID": 24504,
+    "ServerLimitsetID": 274
+  },
+  "rules": [
+    {
+      "ID": 4,
+      "GroupID": 4,
+      "Enchant": 1,
+      "Probability": 1000000,
+      "SourceGradeID": 52,
+      "SourceAmount": 1,
+      "CurrencyID": 1,
+      "CurrencyCost": 5500000,
+      "ServerLimitsetID": 0
+    },
+    {
+      "ID": 14,
+      "GroupID": 4,
+      "Enchant": 2,
+      "Probability": 666000,
+      "SourceGradeID": 52,
+      "SourceAmount": 2,
+      "CurrencyID": 1,
+      "CurrencyCost": 5500000,
+      "ServerLimitsetID": 0
+    },
+    {
+      "ID": 24,
+      "GroupID": 4,
+      "Enchant": 3,
+      "Probability": 333000,
+      "SourceGradeID": 52,
+      "SourceAmount": 3,
+      "CurrencyID": 1,
+      "CurrencyCost": 5500000,
+      "ServerLimitsetID": 0
+    }
+  ],
+  "content_control": {
+    "ID": 1154,
+    "Name": "BuffCardStarEnchantPolymorph",
+    "Enable": false,
+    "ServerLimitSetID": 274
+  },
+  "effects": [
+    {
+      "link": {
+        "ID": 4,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2125914
+      },
+      "bonus": {
+        "ID": 2125914,
+        "BonusTypeID": 17,
+        "Value": 10000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 17,
+        "Name": "HPPlus",
+        "UnitID": 1,
+        "DescID": 517,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 14,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2125924
+      },
+      "bonus": {
+        "ID": 2125924,
+        "BonusTypeID": 17,
+        "Value": 20000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 17,
+        "Name": "HPPlus",
+        "UnitID": 1,
+        "DescID": 517,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 24,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2125934
+      },
+      "bonus": {
+        "ID": 2125934,
+        "BonusTypeID": 17,
+        "Value": 30000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 17,
+        "Name": "HPPlus",
+        "UnitID": 1,
+        "DescID": 517,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 34,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144724
+      },
+      "bonus": {
+        "ID": 2144724,
+        "BonusTypeID": 18,
+        "Value": 10000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 18,
+        "Name": "MPPlus",
+        "UnitID": 1,
+        "DescID": 518,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 44,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144734
+      },
+      "bonus": {
+        "ID": 2144734,
+        "BonusTypeID": 35,
+        "Value": 190000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 35,
+        "Name": "AttackSpeedBonus",
+        "UnitID": 3,
+        "DescID": 535,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 54,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144744
+      },
+      "bonus": {
+        "ID": 2144744,
+        "BonusTypeID": 34,
+        "Value": 250000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 34,
+        "Name": "MoveSpeedBonus",
+        "UnitID": 3,
+        "DescID": 534,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 64,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144754
+      },
+      "bonus": {
+        "ID": 2144754,
+        "BonusTypeID": 140,
+        "Value": 250000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 140,
+        "Name": "CastSpeedBonus",
+        "UnitID": 3,
+        "DescID": 5726,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 74,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144764
+      },
+      "bonus": {
+        "ID": 2144764,
+        "BonusTypeID": 5782,
+        "Value": 300000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 6
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 6,
+        "Name": "Stun",
+        "DescID": 210
+      }
+    },
+    {
+      "link": {
+        "ID": 84,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144774
+      },
+      "bonus": {
+        "ID": 2144774,
+        "BonusTypeID": 145,
+        "Value": 300000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 6
+      },
+      "type": {
+        "ID": 145,
+        "Name": "SpecialResistance",
+        "UnitID": 3,
+        "DescID": 5728,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 6,
+        "Name": "Stun",
+        "DescID": 210
+      }
+    },
+    {
+      "link": {
+        "ID": 94,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144784
+      },
+      "bonus": {
+        "ID": 2144784,
+        "BonusTypeID": 4581,
+        "Value": 20,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 4581,
+        "Name": "PierceDamageReduction",
+        "UnitID": 1,
+        "DescID": 794521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 104,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144794
+      },
+      "bonus": {
+        "ID": 2144794,
+        "BonusTypeID": 41,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 41,
+        "Name": "Strength",
+        "UnitID": 1,
+        "DescID": 521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 114,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144804
+      },
+      "bonus": {
+        "ID": 2144804,
+        "BonusTypeID": 7471,
+        "Value": 40,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 7471,
+        "Name": "DecreaseChargeStepTime",
+        "UnitID": 211,
+        "DescID": 1260971,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 211,
+        "Name": "ValuePercent"
+      },
+      "ui_unit": {
+        "ID": 61,
+        "UnitID": 211,
+        "UITextID": 0,
+        "Denominator": 1,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 124,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2144814
+      },
+      "bonus": {
+        "ID": 2144814,
+        "BonusTypeID": 5782,
+        "Value": 100000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 6
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 6,
+        "Name": "Stun",
+        "DescID": 210
+      }
+    },
+    {
+      "link": {
+        "ID": 134,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144834
+      },
+      "bonus": {
+        "ID": 2144834,
+        "BonusTypeID": 18,
+        "Value": 20000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 18,
+        "Name": "MPPlus",
+        "UnitID": 1,
+        "DescID": 518,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 144,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144844
+      },
+      "bonus": {
+        "ID": 2144844,
+        "BonusTypeID": 35,
+        "Value": 380000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 35,
+        "Name": "AttackSpeedBonus",
+        "UnitID": 3,
+        "DescID": 535,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 154,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144854
+      },
+      "bonus": {
+        "ID": 2144854,
+        "BonusTypeID": 34,
+        "Value": 500000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 34,
+        "Name": "MoveSpeedBonus",
+        "UnitID": 3,
+        "DescID": 534,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 164,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144864
+      },
+      "bonus": {
+        "ID": 2144864,
+        "BonusTypeID": 140,
+        "Value": 500000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 140,
+        "Name": "CastSpeedBonus",
+        "UnitID": 3,
+        "DescID": 5726,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 174,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144874
+      },
+      "bonus": {
+        "ID": 2144874,
+        "BonusTypeID": 5782,
+        "Value": 600000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 7
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 7,
+        "Name": "Hold",
+        "DescID": 211
+      }
+    },
+    {
+      "link": {
+        "ID": 184,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144884
+      },
+      "bonus": {
+        "ID": 2144884,
+        "BonusTypeID": 145,
+        "Value": 600000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 7
+      },
+      "type": {
+        "ID": 145,
+        "Name": "SpecialResistance",
+        "UnitID": 3,
+        "DescID": 5728,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 7,
+        "Name": "Hold",
+        "DescID": 211
+      }
+    },
+    {
+      "link": {
+        "ID": 194,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144894
+      },
+      "bonus": {
+        "ID": 2144894,
+        "BonusTypeID": 4581,
+        "Value": 40,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 4581,
+        "Name": "PierceDamageReduction",
+        "UnitID": 1,
+        "DescID": 794521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 204,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144904
+      },
+      "bonus": {
+        "ID": 2144904,
+        "BonusTypeID": 41,
+        "Value": 4,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 41,
+        "Name": "Strength",
+        "UnitID": 1,
+        "DescID": 521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 214,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144914
+      },
+      "bonus": {
+        "ID": 2144914,
+        "BonusTypeID": 7471,
+        "Value": 80,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 7471,
+        "Name": "DecreaseChargeStepTime",
+        "UnitID": 211,
+        "DescID": 1260971,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 211,
+        "Name": "ValuePercent"
+      },
+      "ui_unit": {
+        "ID": 61,
+        "UnitID": 211,
+        "UITextID": 0,
+        "Denominator": 1,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 224,
+        "GroupID": 4,
+        "Enchant": 2,
+        "BonusID": 2144924
+      },
+      "bonus": {
+        "ID": 2144924,
+        "BonusTypeID": 5782,
+        "Value": 200000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 8
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 8,
+        "Name": "Fear",
+        "DescID": 212
+      }
+    },
+    {
+      "link": {
+        "ID": 234,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144934
+      },
+      "bonus": {
+        "ID": 2144934,
+        "BonusTypeID": 18,
+        "Value": 30000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 18,
+        "Name": "MPPlus",
+        "UnitID": 1,
+        "DescID": 518,
+        "DescPriority": 2,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 244,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144944
+      },
+      "bonus": {
+        "ID": 2144944,
+        "BonusTypeID": 35,
+        "Value": 570000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 35,
+        "Name": "AttackSpeedBonus",
+        "UnitID": 3,
+        "DescID": 535,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 254,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144954
+      },
+      "bonus": {
+        "ID": 2144954,
+        "BonusTypeID": 34,
+        "Value": 750000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 34,
+        "Name": "MoveSpeedBonus",
+        "UnitID": 3,
+        "DescID": 534,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 264,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144964
+      },
+      "bonus": {
+        "ID": 2144964,
+        "BonusTypeID": 140,
+        "Value": 750000,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 140,
+        "Name": "CastSpeedBonus",
+        "UnitID": 3,
+        "DescID": 5726,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 274,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144974
+      },
+      "bonus": {
+        "ID": 2144974,
+        "BonusTypeID": 5782,
+        "Value": 900000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 5
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 5,
+        "Name": "Dark",
+        "DescID": 209
+      }
+    },
+    {
+      "link": {
+        "ID": 284,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144984
+      },
+      "bonus": {
+        "ID": 2144984,
+        "BonusTypeID": 145,
+        "Value": 900000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 5
+      },
+      "type": {
+        "ID": 145,
+        "Name": "SpecialResistance",
+        "UnitID": 3,
+        "DescID": 5728,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 5,
+        "Name": "Dark",
+        "DescID": 209
+      }
+    },
+    {
+      "link": {
+        "ID": 294,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2144994
+      },
+      "bonus": {
+        "ID": 2144994,
+        "BonusTypeID": 4581,
+        "Value": 60,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 4581,
+        "Name": "PierceDamageReduction",
+        "UnitID": 1,
+        "DescID": 794521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 304,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2145004
+      },
+      "bonus": {
+        "ID": 2145004,
+        "BonusTypeID": 41,
+        "Value": 6,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 41,
+        "Name": "Strength",
+        "UnitID": 1,
+        "DescID": 521,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 314,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2145014
+      },
+      "bonus": {
+        "ID": 2145014,
+        "BonusTypeID": 7471,
+        "Value": 120,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 7471,
+        "Name": "DecreaseChargeStepTime",
+        "UnitID": 211,
+        "DescID": 1260971,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 211,
+        "Name": "ValuePercent"
+      },
+      "ui_unit": {
+        "ID": 61,
+        "UnitID": 211,
+        "UITextID": 0,
+        "Denominator": 1,
+        "DescID": 3819
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 324,
+        "GroupID": 4,
+        "Enchant": 3,
+        "BonusID": 2145024
+      },
+      "bonus": {
+        "ID": 2145024,
+        "BonusTypeID": 5782,
+        "Value": 300000,
+        "BonusApplicationTypeID": 2,
+        "BonusApplicationTargetID": 1
+      },
+      "type": {
+        "ID": 5782,
+        "Name": "HitSpecialResistance",
+        "UnitID": 3,
+        "DescID": 944532,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 3,
+        "Name": "Percentage"
+      },
+      "ui_unit": {
+        "ID": 3,
+        "UnitID": 3,
+        "UITextID": 0,
+        "Denominator": 10000,
+        "DescID": 3819
+      },
+      "application_type": {
+        "ID": 2,
+        "Name": "SpecialResistanceType"
+      },
+      "application_target": {
+        "ID": 1,
+        "Name": "Ice",
+        "DescID": 206
+      }
+    },
+    {
+      "link": {
+        "ID": 334,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145084
+      },
+      "bonus": {
+        "ID": 2145084,
+        "BonusTypeID": 1,
+        "Value": 10,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 1,
+        "Name": "MeleeDamage",
+        "UnitID": 1,
+        "DescID": 5657,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 344,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145114
+      },
+      "bonus": {
+        "ID": 2145114,
+        "BonusTypeID": 4,
+        "Value": 10,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 4,
+        "Name": "MagicDamage",
+        "UnitID": 1,
+        "DescID": 5660,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 354,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145124
+      },
+      "bonus": {
+        "ID": 2145124,
+        "BonusTypeID": 10,
+        "Value": 10,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 10,
+        "Name": "RangeDamage",
+        "UnitID": 1,
+        "DescID": 5664,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 364,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145334
+      },
+      "bonus": {
+        "ID": 2145334,
+        "BonusTypeID": 42,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 42,
+        "Name": "Intelligence",
+        "UnitID": 1,
+        "DescID": 522,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 374,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145344
+      },
+      "bonus": {
+        "ID": 2145344,
+        "BonusTypeID": 44,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 44,
+        "Name": "Dexterity",
+        "UnitID": 1,
+        "DescID": 523,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 384,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145354
+      },
+      "bonus": {
+        "ID": 2145354,
+        "BonusTypeID": 45,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 45,
+        "Name": "Constitution",
+        "UnitID": 1,
+        "DescID": 525,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 394,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145364
+      },
+      "bonus": {
+        "ID": 2145364,
+        "BonusTypeID": 43,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 43,
+        "Name": "Wisdom",
+        "UnitID": 1,
+        "DescID": 524,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 64642,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 404,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145374
+      },
+      "bonus": {
+        "ID": 2145374,
+        "BonusTypeID": 21,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 21,
+        "Name": "ArmorClass",
+        "UnitID": 1,
+        "DescID": 527,
+        "DescPriority": 1,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 109832,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 414,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145384
+      },
+      "bonus": {
+        "ID": 2145384,
+        "BonusTypeID": 23,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 23,
+        "Name": "HPRestoration",
+        "UnitID": 1,
+        "DescID": 528,
+        "DescPriority": 0,
+        "IsShowOnToolTip": false,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    },
+    {
+      "link": {
+        "ID": 424,
+        "GroupID": 4,
+        "Enchant": 1,
+        "BonusID": 2145394
+      },
+      "bonus": {
+        "ID": 2145394,
+        "BonusTypeID": 22,
+        "Value": 3,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "type": {
+        "ID": 22,
+        "Name": "MPRestoration",
+        "UnitID": 1,
+        "DescID": 5672,
+        "DescPriority": 0,
+        "IsShowOnToolTip": true,
+        "ValuePrefixDescID": 0,
+        "IsShowOnSkillToolTip": false
+      },
+      "unit": {
+        "ID": 1,
+        "Name": "Value"
+      },
+      "ui_unit": {
+        "ID": 1,
+        "UnitID": 1,
+        "UITextID": 0,
+        "Denominator": 0,
+        "DescID": 0
+      },
+      "application_type": {},
+      "application_target": {}
+    }
+  ],
+  "charge": {
+    "spell": {
+      "ID": 82,
+      "Name": "[기사] 쇼크 스턴 #스턴",
+      "DescID": 362,
+      "SpellCategoryID": 8,
+      "SpellGroupID": 7,
+      "SpellGroupLevel": 1,
+      "IsRequireSpellGroupMastery": false,
+      "TargettingTypeID": 2,
+      "TargetKindID": 11,
+      "SiegeTargetKindID": 0,
+      "TargetAreaRadius": 0,
+      "CastRange": 2,
+      "CastDelay": 8000,
+      "SpellMaterialTypeID": 0,
+      "SpellMaterialItemAmount": 0,
+      "HPCost": 0,
+      "MPCost": 13,
+      "VPCost": 0,
+      "SpellEffectTypeID": 21,
+      "EffectSpriteID": 4434,
+      "EffectExplosionSpriteID": 0,
+      "EffectSpriteActionNo": 51,
+      "EffectLightRadius": 1,
+      "CriticalEffectSpriteID": 0,
+      "FailEffectSpriteID": 0,
+      "CasterEffectSpriteID": 0,
+      "SuccessEffectSpriteID": 0,
+      "ElementalTypeID": 0,
+      "AlignmentTypeID": 2,
+      "AlignmentChangeAmount": 0,
+      "IsOverlappedDamageReduction": false,
+      "IsPierceCounterMagic": false,
+      "IconID": 154,
+      "EffectDescID": 6453,
+      "SpellTypeID": 2,
+      "UseDescID": 1,
+      "IsAuto": false,
+      "TestSpell": false,
+      "CastGroupID": 1,
+      "ScreenEffectAssetId": 0,
+      "CastingScreenEffectId": 0,
+      "CastingWeaponType": 7,
+      "CastingMotionType": 2,
+      "CanCastOnInvisible": false,
+      "IsPierceCounterAssult": false,
+      "MinCastRange": 0,
+      "CopySpellClassID": 0,
+      "ActivateIconID": 0,
+      "LearningPriority": 0,
+      "IncludeOccupyTarget": true,
+      "IncludeTargettingTarget": true,
+      "IsChangable": true,
+      "MPCostUnit": 1,
+      "IsChargeSpell": true,
+      "TargetLimitCount": 0,
+      "IsAttackRange": false,
+      "BackwardPathCount": 0,
+      "CasterEffectSpriteGroupID": 0,
+      "HostileEffectSpriteID": 0,
+      "HideCasterTime": 0,
+      "SpellCompositionNode": 0,
+      "AdditionalEffectSpriteGroupID": 0,
+      "AttackerActionTypeID": 18,
+      "TargetScreenEffectID": 0
+    },
+    "steps": [
+      {
+        "ID": 61,
+        "ChargeID": 21,
+        "Step": 1,
+        "Time": 1000,
+        "FinalStepMaxStepTime": 0,
+        "FinalStepServerCancelAddTime": 0
+      },
+      {
+        "ID": 71,
+        "ChargeID": 21,
+        "Step": 2,
+        "Time": 1000,
+        "FinalStepMaxStepTime": 3000,
+        "FinalStepServerCancelAddTime": 2000
+      }
+    ],
+    "effects": [
+      {
+        "step": 1,
+        "link": {
+          "ID": 1081,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 1,
+          "BonusID": 1189041,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189041,
+          "BonusTypeID": 7451,
+          "Value": 0,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 7451,
+          "Name": "MoveSpeedPercentDecrease",
+          "UnitID": 3,
+          "DescID": 1260511,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 1,
+        "link": {
+          "ID": 1091,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189051,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189051,
+          "BonusTypeID": 143,
+          "Value": 1,
+          "BonusApplicationTypeID": 1,
+          "BonusApplicationTargetID": 82
+        },
+        "type": {
+          "ID": 143,
+          "Name": "SpellRangeBonus",
+          "UnitID": 1,
+          "DescID": 4797,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 1,
+        "link": {
+          "ID": 1101,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189061,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189061,
+          "BonusTypeID": 7481,
+          "Value": 1250000,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 7481,
+          "Name": "DamageScale",
+          "UnitID": 3,
+          "DescID": 1264661,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 1,
+        "link": {
+          "ID": 1111,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189071,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189071,
+          "BonusTypeID": 5743,
+          "Value": 80000,
+          "BonusApplicationTypeID": 2,
+          "BonusApplicationTargetID": 6
+        },
+        "type": {
+          "ID": 5743,
+          "Name": "IgnoreSpecialResistance",
+          "UnitID": 1,
+          "DescID": 927363,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 1321,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 1,
+          "BonusID": 1189281,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189281,
+          "BonusTypeID": 7451,
+          "Value": 0,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 7451,
+          "Name": "MoveSpeedPercentDecrease",
+          "UnitID": 3,
+          "DescID": 1260511,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 1331,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189291,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189291,
+          "BonusTypeID": 143,
+          "Value": 3,
+          "BonusApplicationTypeID": 1,
+          "BonusApplicationTargetID": 82
+        },
+        "type": {
+          "ID": 143,
+          "Name": "SpellRangeBonus",
+          "UnitID": 1,
+          "DescID": 4797,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 1341,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189301,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189301,
+          "BonusTypeID": 7481,
+          "Value": 1500000,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 7481,
+          "Name": "DamageScale",
+          "UnitID": 3,
+          "DescID": 1264661,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 1351,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 11,
+          "BonusID": 1189311,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1189311,
+          "BonusTypeID": 5743,
+          "Value": 150000,
+          "BonusApplicationTypeID": 2,
+          "BonusApplicationTargetID": 6
+        },
+        "type": {
+          "ID": 5743,
+          "Name": "IgnoreSpecialResistance",
+          "UnitID": 1,
+          "DescID": 927363,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 1,
+        "link": {
+          "ID": 3371,
+          "ChargeBonusID": 61,
+          "ChargeTriggerType": 11,
+          "BonusID": 1799631,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1799631,
+          "BonusTypeID": 10601,
+          "Value": 161,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 10601,
+          "Name": "AutoTargetingIfNoTarget",
+          "UnitID": 11251,
+          "DescID": 1903261,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      },
+      {
+        "step": 2,
+        "link": {
+          "ID": 3381,
+          "ChargeBonusID": 71,
+          "ChargeTriggerType": 11,
+          "BonusID": 1799641,
+          "TargetSpellClassID": 82
+        },
+        "bonus": {
+          "ID": 1799641,
+          "BonusTypeID": 10601,
+          "Value": 161,
+          "BonusApplicationTypeID": 0,
+          "BonusApplicationTargetID": 0
+        },
+        "type": {
+          "ID": 10601,
+          "Name": "AutoTargetingIfNoTarget",
+          "UnitID": 11251,
+          "DescID": 1903261,
+          "DescPriority": 0,
+          "IsShowOnToolTip": false,
+          "ValuePrefixDescID": 0,
+          "IsShowOnSkillToolTip": false
+        }
+      }
+    ],
+    "constants": [
+      {
+        "ID": 53541,
+        "Name": "ChargeLongPressTriggerTime",
+        "Value": "200",
+        "Type": 1
+      },
+      {
+        "ID": 53551,
+        "Name": "ChargeMaxTime",
+        "Value": "3000",
+        "Type": 1
+      },
+      {
+        "ID": 53561,
+        "Name": "ChargeMinTime",
+        "Value": "100",
+        "Type": 1
+      }
+    ]
+  },
+  "bonuses": [
+    {
+      "ID": 4,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2125914
+    },
+    {
+      "ID": 14,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2125924
+    },
+    {
+      "ID": 24,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2125934
+    },
+    {
+      "ID": 34,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144724
+    },
+    {
+      "ID": 44,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144734
+    },
+    {
+      "ID": 54,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144744
+    },
+    {
+      "ID": 64,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144754
+    },
+    {
+      "ID": 74,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144764
+    },
+    {
+      "ID": 84,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144774
+    },
+    {
+      "ID": 94,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144784
+    },
+    {
+      "ID": 104,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144794
+    },
+    {
+      "ID": 114,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144804
+    },
+    {
+      "ID": 124,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2144814
+    },
+    {
+      "ID": 134,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144834
+    },
+    {
+      "ID": 144,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144844
+    },
+    {
+      "ID": 154,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144854
+    },
+    {
+      "ID": 164,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144864
+    },
+    {
+      "ID": 174,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144874
+    },
+    {
+      "ID": 184,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144884
+    },
+    {
+      "ID": 194,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144894
+    },
+    {
+      "ID": 204,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144904
+    },
+    {
+      "ID": 214,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144914
+    },
+    {
+      "ID": 224,
+      "GroupID": 4,
+      "Enchant": 2,
+      "BonusID": 2144924
+    },
+    {
+      "ID": 234,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2144934
+    },
+    {
+      "ID": 244,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2144944
+    },
+    {
+      "ID": 254,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2144954
+    },
+    {
+      "ID": 264,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2144964
+    },
+    {
+      "ID": 274,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2144974
+    },
+    {
+      "ID": 284,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2144984
+    },
+    {
+      "ID": 294,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2144994
+    },
+    {
+      "ID": 304,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2145004
+    },
+    {
+      "ID": 314,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2145014
+    },
+    {
+      "ID": 324,
+      "GroupID": 4,
+      "Enchant": 3,
+      "BonusID": 2145024
+    },
+    {
+      "ID": 334,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145084
+    },
+    {
+      "ID": 344,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145114
+    },
+    {
+      "ID": 354,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145124
+    },
+    {
+      "ID": 364,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145334
+    },
+    {
+      "ID": 374,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145344
+    },
+    {
+      "ID": 384,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145354
+    },
+    {
+      "ID": 394,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145364
+    },
+    {
+      "ID": 404,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145374
+    },
+    {
+      "ID": 414,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145384
+    },
+    {
+      "ID": 424,
+      "GroupID": 4,
+      "Enchant": 1,
+      "BonusID": 2145394
+    }
+  ],
+  "sprite_options": [
+    {
+      "ID": 4,
+      "Name": "[변신] 해방된 할파스 1단계 스프라이트",
+      "BuffCardID": 24504,
+      "StarEnchant": 1,
+      "UnitID": 13,
+      "Value": 3784,
+      "DisplayBaseAssetID": 391803,
+      "DisplayScreenAssetID": 391793
+    },
+    {
+      "ID": 14,
+      "Name": "[변신] 해방된 할파스 2단계 스프라이트",
+      "BuffCardID": 24504,
+      "StarEnchant": 2,
+      "UnitID": 13,
+      "Value": 3794,
+      "DisplayBaseAssetID": 391843,
+      "DisplayScreenAssetID": 391833
+    },
+    {
+      "ID": 24,
+      "Name": "[변신] 해방된 할파스 3단계 스프라이트",
+      "BuffCardID": 24504,
+      "StarEnchant": 3,
+      "UnitID": 13,
+      "Value": 3804,
+      "DisplayBaseAssetID": 391823,
+      "DisplayScreenAssetID": 391813
+    }
+  ],
+  "grades": [
+    {
+      "ID": 52,
+      "Name": "Grade7",
+      "DescID": 873672,
+      "DropItemEffectSpriteID": 23206,
+      "ColorID": 21212,
+      "GradeValue": 7,
+      "IsItemInfoVisible": true
+    }
+  ],
+  "currencies": [
+    {
+      "ID": 1,
+      "Name": "Adena",
+      "ExchangeRate": 1,
+      "AssetID": 22162,
+      "IconID": 2932,
+      "DescID": 729841,
+      "LockedAssetID": 0
+    }
+  ],
+  "max_level": {
+    "ID": 55344,
+    "Name": "StarEnchantMaxLevel",
+    "Value": "3",
+    "Type": 1
+  },
+  "server_limits": [
+    {
+      "ID": 218384,
+      "ServerLimitSetID": 772,
+      "WorldNo": 1,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218394,
+      "ServerLimitSetID": 772,
+      "WorldNo": 2,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218404,
+      "ServerLimitSetID": 772,
+      "WorldNo": 3,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218414,
+      "ServerLimitSetID": 772,
+      "WorldNo": 4,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218424,
+      "ServerLimitSetID": 772,
+      "WorldNo": 5,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218434,
+      "ServerLimitSetID": 772,
+      "WorldNo": 6,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218444,
+      "ServerLimitSetID": 772,
+      "WorldNo": 7,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218454,
+      "ServerLimitSetID": 772,
+      "WorldNo": 8,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218464,
+      "ServerLimitSetID": 772,
+      "WorldNo": 9,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218474,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218484,
+      "ServerLimitSetID": 772,
+      "WorldNo": 11,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218494,
+      "ServerLimitSetID": 772,
+      "WorldNo": 12,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218504,
+      "ServerLimitSetID": 772,
+      "WorldNo": 13,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218514,
+      "ServerLimitSetID": 772,
+      "WorldNo": 14,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218524,
+      "ServerLimitSetID": 772,
+      "WorldNo": 15,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218534,
+      "ServerLimitSetID": 772,
+      "WorldNo": 16,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218544,
+      "ServerLimitSetID": 772,
+      "WorldNo": 17,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218554,
+      "ServerLimitSetID": 772,
+      "WorldNo": 18,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218564,
+      "ServerLimitSetID": 772,
+      "WorldNo": 19,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218574,
+      "ServerLimitSetID": 772,
+      "WorldNo": 20,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218584,
+      "ServerLimitSetID": 772,
+      "WorldNo": 21,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218594,
+      "ServerLimitSetID": 772,
+      "WorldNo": 22,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218604,
+      "ServerLimitSetID": 772,
+      "WorldNo": 23,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218614,
+      "ServerLimitSetID": 772,
+      "WorldNo": 24,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218624,
+      "ServerLimitSetID": 772,
+      "WorldNo": 25,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218634,
+      "ServerLimitSetID": 772,
+      "WorldNo": 26,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218644,
+      "ServerLimitSetID": 772,
+      "WorldNo": 27,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218654,
+      "ServerLimitSetID": 772,
+      "WorldNo": 28,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218664,
+      "ServerLimitSetID": 772,
+      "WorldNo": 29,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218674,
+      "ServerLimitSetID": 772,
+      "WorldNo": 30,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218684,
+      "ServerLimitSetID": 772,
+      "WorldNo": 31,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218694,
+      "ServerLimitSetID": 772,
+      "WorldNo": 32,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218704,
+      "ServerLimitSetID": 772,
+      "WorldNo": 33,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218714,
+      "ServerLimitSetID": 772,
+      "WorldNo": 34,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218724,
+      "ServerLimitSetID": 772,
+      "WorldNo": 35,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218734,
+      "ServerLimitSetID": 772,
+      "WorldNo": 36,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218744,
+      "ServerLimitSetID": 772,
+      "WorldNo": 37,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218754,
+      "ServerLimitSetID": 772,
+      "WorldNo": 38,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218764,
+      "ServerLimitSetID": 772,
+      "WorldNo": 39,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218774,
+      "ServerLimitSetID": 772,
+      "WorldNo": 40,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218784,
+      "ServerLimitSetID": 772,
+      "WorldNo": 41,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218794,
+      "ServerLimitSetID": 772,
+      "WorldNo": 42,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218804,
+      "ServerLimitSetID": 772,
+      "WorldNo": 43,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218814,
+      "ServerLimitSetID": 772,
+      "WorldNo": 44,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218824,
+      "ServerLimitSetID": 772,
+      "WorldNo": 45,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218834,
+      "ServerLimitSetID": 772,
+      "WorldNo": 46,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218844,
+      "ServerLimitSetID": 772,
+      "WorldNo": 47,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218854,
+      "ServerLimitSetID": 772,
+      "WorldNo": 48,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218864,
+      "ServerLimitSetID": 772,
+      "WorldNo": 49,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218874,
+      "ServerLimitSetID": 772,
+      "WorldNo": 50,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218884,
+      "ServerLimitSetID": 772,
+      "WorldNo": 51,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218894,
+      "ServerLimitSetID": 772,
+      "WorldNo": 52,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218904,
+      "ServerLimitSetID": 772,
+      "WorldNo": 53,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218914,
+      "ServerLimitSetID": 772,
+      "WorldNo": 54,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218924,
+      "ServerLimitSetID": 772,
+      "WorldNo": 55,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218934,
+      "ServerLimitSetID": 772,
+      "WorldNo": 56,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218944,
+      "ServerLimitSetID": 772,
+      "WorldNo": 57,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218954,
+      "ServerLimitSetID": 772,
+      "WorldNo": 58,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218964,
+      "ServerLimitSetID": 772,
+      "WorldNo": 59,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218974,
+      "ServerLimitSetID": 772,
+      "WorldNo": 60,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218984,
+      "ServerLimitSetID": 772,
+      "WorldNo": 61,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 218994,
+      "ServerLimitSetID": 772,
+      "WorldNo": 62,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219004,
+      "ServerLimitSetID": 772,
+      "WorldNo": 63,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219014,
+      "ServerLimitSetID": 772,
+      "WorldNo": 64,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219024,
+      "ServerLimitSetID": 772,
+      "WorldNo": 65,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219034,
+      "ServerLimitSetID": 772,
+      "WorldNo": 66,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219044,
+      "ServerLimitSetID": 772,
+      "WorldNo": 67,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219054,
+      "ServerLimitSetID": 772,
+      "WorldNo": 68,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219064,
+      "ServerLimitSetID": 772,
+      "WorldNo": 69,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219074,
+      "ServerLimitSetID": 772,
+      "WorldNo": 70,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219084,
+      "ServerLimitSetID": 772,
+      "WorldNo": 71,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219094,
+      "ServerLimitSetID": 772,
+      "WorldNo": 72,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219104,
+      "ServerLimitSetID": 772,
+      "WorldNo": 73,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219114,
+      "ServerLimitSetID": 772,
+      "WorldNo": 74,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219124,
+      "ServerLimitSetID": 772,
+      "WorldNo": 75,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219134,
+      "ServerLimitSetID": 772,
+      "WorldNo": 76,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219144,
+      "ServerLimitSetID": 772,
+      "WorldNo": 77,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219154,
+      "ServerLimitSetID": 772,
+      "WorldNo": 78,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219164,
+      "ServerLimitSetID": 772,
+      "WorldNo": 79,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219174,
+      "ServerLimitSetID": 772,
+      "WorldNo": 80,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219184,
+      "ServerLimitSetID": 772,
+      "WorldNo": 81,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219194,
+      "ServerLimitSetID": 772,
+      "WorldNo": 82,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219204,
+      "ServerLimitSetID": 772,
+      "WorldNo": 83,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219214,
+      "ServerLimitSetID": 772,
+      "WorldNo": 84,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219224,
+      "ServerLimitSetID": 772,
+      "WorldNo": 85,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219234,
+      "ServerLimitSetID": 772,
+      "WorldNo": 86,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219244,
+      "ServerLimitSetID": 772,
+      "WorldNo": 87,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219254,
+      "ServerLimitSetID": 772,
+      "WorldNo": 88,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219264,
+      "ServerLimitSetID": 772,
+      "WorldNo": 89,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219274,
+      "ServerLimitSetID": 772,
+      "WorldNo": 90,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219284,
+      "ServerLimitSetID": 772,
+      "WorldNo": 91,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219294,
+      "ServerLimitSetID": 772,
+      "WorldNo": 92,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219304,
+      "ServerLimitSetID": 772,
+      "WorldNo": 93,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219314,
+      "ServerLimitSetID": 772,
+      "WorldNo": 94,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219324,
+      "ServerLimitSetID": 772,
+      "WorldNo": 95,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219334,
+      "ServerLimitSetID": 772,
+      "WorldNo": 96,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219344,
+      "ServerLimitSetID": 772,
+      "WorldNo": 97,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219354,
+      "ServerLimitSetID": 772,
+      "WorldNo": 98,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219364,
+      "ServerLimitSetID": 772,
+      "WorldNo": 99,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219374,
+      "ServerLimitSetID": 772,
+      "WorldNo": 100,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219384,
+      "ServerLimitSetID": 772,
+      "WorldNo": 101,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219394,
+      "ServerLimitSetID": 772,
+      "WorldNo": 102,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219404,
+      "ServerLimitSetID": 772,
+      "WorldNo": 103,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219414,
+      "ServerLimitSetID": 772,
+      "WorldNo": 104,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219424,
+      "ServerLimitSetID": 772,
+      "WorldNo": 105,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219434,
+      "ServerLimitSetID": 772,
+      "WorldNo": 106,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219444,
+      "ServerLimitSetID": 772,
+      "WorldNo": 107,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219454,
+      "ServerLimitSetID": 772,
+      "WorldNo": 108,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219464,
+      "ServerLimitSetID": 772,
+      "WorldNo": 109,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219474,
+      "ServerLimitSetID": 772,
+      "WorldNo": 110,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219484,
+      "ServerLimitSetID": 772,
+      "WorldNo": 111,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219494,
+      "ServerLimitSetID": 772,
+      "WorldNo": 112,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219504,
+      "ServerLimitSetID": 772,
+      "WorldNo": 113,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219514,
+      "ServerLimitSetID": 772,
+      "WorldNo": 114,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219524,
+      "ServerLimitSetID": 772,
+      "WorldNo": 115,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219534,
+      "ServerLimitSetID": 772,
+      "WorldNo": 116,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219544,
+      "ServerLimitSetID": 772,
+      "WorldNo": 117,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219554,
+      "ServerLimitSetID": 772,
+      "WorldNo": 118,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219564,
+      "ServerLimitSetID": 772,
+      "WorldNo": 119,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219574,
+      "ServerLimitSetID": 772,
+      "WorldNo": 120,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219584,
+      "ServerLimitSetID": 772,
+      "WorldNo": 121,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219594,
+      "ServerLimitSetID": 772,
+      "WorldNo": 122,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219604,
+      "ServerLimitSetID": 772,
+      "WorldNo": 123,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219614,
+      "ServerLimitSetID": 772,
+      "WorldNo": 124,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219624,
+      "ServerLimitSetID": 772,
+      "WorldNo": 125,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219634,
+      "ServerLimitSetID": 772,
+      "WorldNo": 126,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219644,
+      "ServerLimitSetID": 772,
+      "WorldNo": 127,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219654,
+      "ServerLimitSetID": 772,
+      "WorldNo": 128,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219664,
+      "ServerLimitSetID": 772,
+      "WorldNo": 129,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219674,
+      "ServerLimitSetID": 772,
+      "WorldNo": 130,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219684,
+      "ServerLimitSetID": 772,
+      "WorldNo": 131,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219694,
+      "ServerLimitSetID": 772,
+      "WorldNo": 132,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219704,
+      "ServerLimitSetID": 772,
+      "WorldNo": 133,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219714,
+      "ServerLimitSetID": 772,
+      "WorldNo": 134,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219724,
+      "ServerLimitSetID": 772,
+      "WorldNo": 135,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219734,
+      "ServerLimitSetID": 772,
+      "WorldNo": 136,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219744,
+      "ServerLimitSetID": 772,
+      "WorldNo": 137,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219754,
+      "ServerLimitSetID": 772,
+      "WorldNo": 138,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219764,
+      "ServerLimitSetID": 772,
+      "WorldNo": 139,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219774,
+      "ServerLimitSetID": 772,
+      "WorldNo": 140,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219784,
+      "ServerLimitSetID": 772,
+      "WorldNo": 141,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219794,
+      "ServerLimitSetID": 772,
+      "WorldNo": 142,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219804,
+      "ServerLimitSetID": 772,
+      "WorldNo": 143,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219814,
+      "ServerLimitSetID": 772,
+      "WorldNo": 144,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219824,
+      "ServerLimitSetID": 772,
+      "WorldNo": 145,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219834,
+      "ServerLimitSetID": 772,
+      "WorldNo": 146,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219844,
+      "ServerLimitSetID": 772,
+      "WorldNo": 147,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219854,
+      "ServerLimitSetID": 772,
+      "WorldNo": 148,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219864,
+      "ServerLimitSetID": 772,
+      "WorldNo": 149,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219874,
+      "ServerLimitSetID": 772,
+      "WorldNo": 150,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219884,
+      "ServerLimitSetID": 772,
+      "WorldNo": 151,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219894,
+      "ServerLimitSetID": 772,
+      "WorldNo": 152,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219904,
+      "ServerLimitSetID": 772,
+      "WorldNo": 153,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219914,
+      "ServerLimitSetID": 772,
+      "WorldNo": 154,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219924,
+      "ServerLimitSetID": 772,
+      "WorldNo": 155,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219934,
+      "ServerLimitSetID": 772,
+      "WorldNo": 156,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219944,
+      "ServerLimitSetID": 772,
+      "WorldNo": 157,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219954,
+      "ServerLimitSetID": 772,
+      "WorldNo": 158,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219964,
+      "ServerLimitSetID": 772,
+      "WorldNo": 159,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219974,
+      "ServerLimitSetID": 772,
+      "WorldNo": 160,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219984,
+      "ServerLimitSetID": 772,
+      "WorldNo": 161,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 219994,
+      "ServerLimitSetID": 772,
+      "WorldNo": 162,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220004,
+      "ServerLimitSetID": 772,
+      "WorldNo": 163,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220014,
+      "ServerLimitSetID": 772,
+      "WorldNo": 164,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220024,
+      "ServerLimitSetID": 772,
+      "WorldNo": 165,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220034,
+      "ServerLimitSetID": 772,
+      "WorldNo": 166,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220044,
+      "ServerLimitSetID": 772,
+      "WorldNo": 167,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220054,
+      "ServerLimitSetID": 772,
+      "WorldNo": 168,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220064,
+      "ServerLimitSetID": 772,
+      "WorldNo": 169,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220074,
+      "ServerLimitSetID": 772,
+      "WorldNo": 170,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220084,
+      "ServerLimitSetID": 772,
+      "WorldNo": 171,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220094,
+      "ServerLimitSetID": 772,
+      "WorldNo": 172,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220104,
+      "ServerLimitSetID": 772,
+      "WorldNo": 173,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220114,
+      "ServerLimitSetID": 772,
+      "WorldNo": 174,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220124,
+      "ServerLimitSetID": 772,
+      "WorldNo": 175,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220134,
+      "ServerLimitSetID": 772,
+      "WorldNo": 176,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220144,
+      "ServerLimitSetID": 772,
+      "WorldNo": 177,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220154,
+      "ServerLimitSetID": 772,
+      "WorldNo": 178,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220164,
+      "ServerLimitSetID": 772,
+      "WorldNo": 179,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220174,
+      "ServerLimitSetID": 772,
+      "WorldNo": 180,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220184,
+      "ServerLimitSetID": 772,
+      "WorldNo": 181,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220194,
+      "ServerLimitSetID": 772,
+      "WorldNo": 182,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220204,
+      "ServerLimitSetID": 772,
+      "WorldNo": 183,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220214,
+      "ServerLimitSetID": 772,
+      "WorldNo": 184,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220224,
+      "ServerLimitSetID": 772,
+      "WorldNo": 185,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220234,
+      "ServerLimitSetID": 772,
+      "WorldNo": 186,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220244,
+      "ServerLimitSetID": 772,
+      "WorldNo": 187,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220254,
+      "ServerLimitSetID": 772,
+      "WorldNo": 188,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220264,
+      "ServerLimitSetID": 772,
+      "WorldNo": 189,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220274,
+      "ServerLimitSetID": 772,
+      "WorldNo": 190,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220284,
+      "ServerLimitSetID": 772,
+      "WorldNo": 211,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220294,
+      "ServerLimitSetID": 772,
+      "WorldNo": 212,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220304,
+      "ServerLimitSetID": 772,
+      "WorldNo": 213,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220314,
+      "ServerLimitSetID": 772,
+      "WorldNo": 214,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220324,
+      "ServerLimitSetID": 772,
+      "WorldNo": 215,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220334,
+      "ServerLimitSetID": 772,
+      "WorldNo": 216,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220344,
+      "ServerLimitSetID": 772,
+      "WorldNo": 217,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220354,
+      "ServerLimitSetID": 772,
+      "WorldNo": 218,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220364,
+      "ServerLimitSetID": 772,
+      "WorldNo": 219,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220374,
+      "ServerLimitSetID": 772,
+      "WorldNo": 220,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220384,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10001,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220394,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10002,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220404,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10003,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220414,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10004,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220424,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10005,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220434,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10006,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220444,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10007,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220454,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10008,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220464,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10009,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220474,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10010,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220484,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10011,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220494,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10012,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220504,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10013,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220514,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10014,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220524,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10015,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220534,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10016,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220544,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10017,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220554,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10018,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220564,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10019,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220574,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10022,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220584,
+      "ServerLimitSetID": 772,
+      "WorldNo": 191,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220594,
+      "ServerLimitSetID": 772,
+      "WorldNo": 192,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220604,
+      "ServerLimitSetID": 772,
+      "WorldNo": 193,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220614,
+      "ServerLimitSetID": 772,
+      "WorldNo": 194,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220624,
+      "ServerLimitSetID": 772,
+      "WorldNo": 195,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220634,
+      "ServerLimitSetID": 772,
+      "WorldNo": 196,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220644,
+      "ServerLimitSetID": 772,
+      "WorldNo": 197,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220654,
+      "ServerLimitSetID": 772,
+      "WorldNo": 198,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220664,
+      "ServerLimitSetID": 772,
+      "WorldNo": 199,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220674,
+      "ServerLimitSetID": 772,
+      "WorldNo": 200,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220684,
+      "ServerLimitSetID": 772,
+      "WorldNo": 201,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220694,
+      "ServerLimitSetID": 772,
+      "WorldNo": 202,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220704,
+      "ServerLimitSetID": 772,
+      "WorldNo": 203,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220714,
+      "ServerLimitSetID": 772,
+      "WorldNo": 204,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220724,
+      "ServerLimitSetID": 772,
+      "WorldNo": 205,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220734,
+      "ServerLimitSetID": 772,
+      "WorldNo": 206,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220744,
+      "ServerLimitSetID": 772,
+      "WorldNo": 207,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220754,
+      "ServerLimitSetID": 772,
+      "WorldNo": 208,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220764,
+      "ServerLimitSetID": 772,
+      "WorldNo": 209,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220774,
+      "ServerLimitSetID": 772,
+      "WorldNo": 210,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220784,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10020,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220794,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10021,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 220804,
+      "ServerLimitSetID": 772,
+      "WorldNo": 1,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220814,
+      "ServerLimitSetID": 772,
+      "WorldNo": 2,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220824,
+      "ServerLimitSetID": 772,
+      "WorldNo": 3,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220834,
+      "ServerLimitSetID": 772,
+      "WorldNo": 4,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220844,
+      "ServerLimitSetID": 772,
+      "WorldNo": 5,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220854,
+      "ServerLimitSetID": 772,
+      "WorldNo": 6,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220864,
+      "ServerLimitSetID": 772,
+      "WorldNo": 7,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220874,
+      "ServerLimitSetID": 772,
+      "WorldNo": 8,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220884,
+      "ServerLimitSetID": 772,
+      "WorldNo": 9,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220894,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220904,
+      "ServerLimitSetID": 772,
+      "WorldNo": 11,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220914,
+      "ServerLimitSetID": 772,
+      "WorldNo": 12,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220924,
+      "ServerLimitSetID": 772,
+      "WorldNo": 13,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220934,
+      "ServerLimitSetID": 772,
+      "WorldNo": 14,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220944,
+      "ServerLimitSetID": 772,
+      "WorldNo": 15,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220954,
+      "ServerLimitSetID": 772,
+      "WorldNo": 16,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220964,
+      "ServerLimitSetID": 772,
+      "WorldNo": 17,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220974,
+      "ServerLimitSetID": 772,
+      "WorldNo": 18,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220984,
+      "ServerLimitSetID": 772,
+      "WorldNo": 19,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 220994,
+      "ServerLimitSetID": 772,
+      "WorldNo": 20,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221004,
+      "ServerLimitSetID": 772,
+      "WorldNo": 21,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221014,
+      "ServerLimitSetID": 772,
+      "WorldNo": 22,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221024,
+      "ServerLimitSetID": 772,
+      "WorldNo": 23,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221034,
+      "ServerLimitSetID": 772,
+      "WorldNo": 24,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221044,
+      "ServerLimitSetID": 772,
+      "WorldNo": 25,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221054,
+      "ServerLimitSetID": 772,
+      "WorldNo": 26,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221064,
+      "ServerLimitSetID": 772,
+      "WorldNo": 27,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221074,
+      "ServerLimitSetID": 772,
+      "WorldNo": 28,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221084,
+      "ServerLimitSetID": 772,
+      "WorldNo": 29,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221094,
+      "ServerLimitSetID": 772,
+      "WorldNo": 30,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221104,
+      "ServerLimitSetID": 772,
+      "WorldNo": 31,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221114,
+      "ServerLimitSetID": 772,
+      "WorldNo": 32,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221124,
+      "ServerLimitSetID": 772,
+      "WorldNo": 33,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221134,
+      "ServerLimitSetID": 772,
+      "WorldNo": 34,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221144,
+      "ServerLimitSetID": 772,
+      "WorldNo": 35,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221154,
+      "ServerLimitSetID": 772,
+      "WorldNo": 36,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221164,
+      "ServerLimitSetID": 772,
+      "WorldNo": 37,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221174,
+      "ServerLimitSetID": 772,
+      "WorldNo": 38,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221184,
+      "ServerLimitSetID": 772,
+      "WorldNo": 39,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221194,
+      "ServerLimitSetID": 772,
+      "WorldNo": 40,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221204,
+      "ServerLimitSetID": 772,
+      "WorldNo": 41,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221214,
+      "ServerLimitSetID": 772,
+      "WorldNo": 42,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221224,
+      "ServerLimitSetID": 772,
+      "WorldNo": 43,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221234,
+      "ServerLimitSetID": 772,
+      "WorldNo": 44,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221244,
+      "ServerLimitSetID": 772,
+      "WorldNo": 45,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221254,
+      "ServerLimitSetID": 772,
+      "WorldNo": 46,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221264,
+      "ServerLimitSetID": 772,
+      "WorldNo": 47,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221274,
+      "ServerLimitSetID": 772,
+      "WorldNo": 48,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221284,
+      "ServerLimitSetID": 772,
+      "WorldNo": 49,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221294,
+      "ServerLimitSetID": 772,
+      "WorldNo": 50,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221304,
+      "ServerLimitSetID": 772,
+      "WorldNo": 51,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221314,
+      "ServerLimitSetID": 772,
+      "WorldNo": 52,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221324,
+      "ServerLimitSetID": 772,
+      "WorldNo": 53,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221334,
+      "ServerLimitSetID": 772,
+      "WorldNo": 54,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221344,
+      "ServerLimitSetID": 772,
+      "WorldNo": 55,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221354,
+      "ServerLimitSetID": 772,
+      "WorldNo": 56,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221364,
+      "ServerLimitSetID": 772,
+      "WorldNo": 57,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221374,
+      "ServerLimitSetID": 772,
+      "WorldNo": 58,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221384,
+      "ServerLimitSetID": 772,
+      "WorldNo": 59,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221394,
+      "ServerLimitSetID": 772,
+      "WorldNo": 60,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221404,
+      "ServerLimitSetID": 772,
+      "WorldNo": 61,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221414,
+      "ServerLimitSetID": 772,
+      "WorldNo": 62,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221424,
+      "ServerLimitSetID": 772,
+      "WorldNo": 63,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221434,
+      "ServerLimitSetID": 772,
+      "WorldNo": 64,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221444,
+      "ServerLimitSetID": 772,
+      "WorldNo": 65,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221454,
+      "ServerLimitSetID": 772,
+      "WorldNo": 66,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221464,
+      "ServerLimitSetID": 772,
+      "WorldNo": 67,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221474,
+      "ServerLimitSetID": 772,
+      "WorldNo": 68,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221484,
+      "ServerLimitSetID": 772,
+      "WorldNo": 69,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221494,
+      "ServerLimitSetID": 772,
+      "WorldNo": 70,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221504,
+      "ServerLimitSetID": 772,
+      "WorldNo": 71,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221514,
+      "ServerLimitSetID": 772,
+      "WorldNo": 72,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221524,
+      "ServerLimitSetID": 772,
+      "WorldNo": 73,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221534,
+      "ServerLimitSetID": 772,
+      "WorldNo": 74,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221544,
+      "ServerLimitSetID": 772,
+      "WorldNo": 75,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221554,
+      "ServerLimitSetID": 772,
+      "WorldNo": 76,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221564,
+      "ServerLimitSetID": 772,
+      "WorldNo": 77,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221574,
+      "ServerLimitSetID": 772,
+      "WorldNo": 78,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221584,
+      "ServerLimitSetID": 772,
+      "WorldNo": 79,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221594,
+      "ServerLimitSetID": 772,
+      "WorldNo": 80,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221604,
+      "ServerLimitSetID": 772,
+      "WorldNo": 81,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221614,
+      "ServerLimitSetID": 772,
+      "WorldNo": 82,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221624,
+      "ServerLimitSetID": 772,
+      "WorldNo": 85,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221634,
+      "ServerLimitSetID": 772,
+      "WorldNo": 201,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221644,
+      "ServerLimitSetID": 772,
+      "WorldNo": 202,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221654,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10001,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221664,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10002,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221674,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10003,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221684,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10004,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221694,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10005,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221704,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10006,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221714,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10007,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221724,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10008,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221734,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10009,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221744,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10101,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221754,
+      "ServerLimitSetID": 772,
+      "WorldNo": 20001,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221764,
+      "ServerLimitSetID": 772,
+      "WorldNo": 301,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221774,
+      "ServerLimitSetID": 772,
+      "WorldNo": 302,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 221784,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10201,
+      "ServiceRegionCode": "TW"
+    },
+    {
+      "ID": 234124,
+      "ServerLimitSetID": 772,
+      "WorldNo": 20001,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 234234,
+      "ServerLimitSetID": 772,
+      "WorldNo": 999,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 234294,
+      "ServerLimitSetID": 772,
+      "WorldNo": 10999,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 234354,
+      "ServerLimitSetID": 772,
+      "WorldNo": 20999,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 266588,
+      "ServerLimitSetID": 772,
+      "WorldNo": 30001,
+      "ServiceRegionCode": "KR"
+    },
+    {
+      "ID": 266598,
+      "ServerLimitSetID": 772,
+      "WorldNo": 30001,
+      "ServiceRegionCode": "TW"
+    }
+  ],
+  "unresolved_server_limit_sets": [
+    274
+  ],
+  "unresolved_semantics": [
+    "probability_scale",
+    "material_deck_and_duplicate_policy",
+    "failure_stage_and_target_policy",
+    "stage_bonus_aggregation"
+  ],
+  "execution": "blocked_pending_source_semantics"
+}

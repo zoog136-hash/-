@@ -57,6 +57,8 @@ var option_awakening_state: Dictionary = {}
 var option_awakening_snapshot: Dictionary = {}
 var option_awakening_view: Control
 var option_awakening_button: Button
+var halphas_star_enchant_button: Button
+const HalphasStarEnchant = preload("res://scripts/cards/native_halphas_star_enchant.gd")
 var option_awakening_catalog_status: Label
 var option_awakening_catalog_border: Control
 var option_awakening_reveal: Control
@@ -1528,6 +1530,10 @@ func _build_catalog_panel() -> void:
 	option_awakening_button.custom_minimum_size.y = 48
 	option_awakening_button.pressed.connect(_request_option_awakening_open)
 	right.add_child(option_awakening_button)
+	halphas_star_enchant_button = UI.button("성급 강화", _request_halphas_star_enchant, Vector2(0, 48))
+	halphas_star_enchant_button.name = "OpenHalphasStarEnchant"
+	halphas_star_enchant_button.hide()
+	right.add_child(halphas_star_enchant_button)
 	# Card ownership is a new sidecar state; existing catalog/equip behavior is
 	# preserved to avoid invalidating old playtest saves. No paid/free packs
 	# exist yet: only debug builds can generate 11-card top-tier samples.
@@ -1722,6 +1728,8 @@ func _refresh_option_awakening_markers() -> void:
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
 
 func _refresh_option_awakening_entry() -> void:
+	if is_instance_valid(halphas_star_enchant_button):
+		halphas_star_enchant_button.visible = HalphasStarEnchant.is_target(catalog_category, selected_catalog_record)
 	if not is_instance_valid(option_awakening_button):
 		return
 	var category_valid: bool = CARD_RULES.CATEGORIES.has(catalog_category)
@@ -2481,3 +2489,22 @@ func _refresh_source_dungeon_progress_deferred() -> void:
 	if active_section != "source_dungeons" or not is_instance_valid(workspace): return
 	var view: Node = workspace.find_child("SourceDungeonView",true,false)
 	if is_instance_valid(view) and not view.is_queued_for_deletion(): view._select(int(view.selected))
+
+func _request_halphas_star_enchant() -> void:
+	open_halphas_star_enchant(catalog_category, CARD_RULES.card_id(selected_catalog_record))
+
+func open_halphas_star_enchant(category: String, identity: String) -> void:
+	var snapshot: Dictionary = HalphasStarEnchant.from_world(get_parent(), category, identity)
+	if not snapshot.ok:
+		show_message(str(snapshot.get("error", "성급 강화 대상이 아닙니다")))
+		return
+	_open_window("halphas_star_enchant", "해방된 할파스 성급 강화", "")
+	var scroll := ScrollContainer.new()
+	scroll.name = "HalphasStarEnchantScroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var view := preload("res://scripts/ui/halphas_star_enchant_view.gd").new()
+	scroll.add_child(view)
+	view.configure(get_parent(), category, identity)
+	workspace.register_scroll_drag(scroll, view)
+
