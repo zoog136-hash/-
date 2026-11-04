@@ -192,6 +192,62 @@ The role/direction checks decode560 first-frame body samples. Host-compatible
 playback remains labelled; complete
 native FPS/blend/AI or native geographic placement are separate claims.
 
+## Current category rules and the next resource contract
+
+Automatic target acquisition now consumes the current523
+`NpcCategory.IsAutoSelectable` boolean. It checks the automatic distance/path
+scanner, cached target and automatic weapon fallback. Manual nearest selection,
+explicit ordered selection, manual attack/skill targeting and damage reception
+retain their existing behavior. An explicitly selected actor remains the manual
+priority while AUTO is on; this flag is an acquisition rule, not attack immunity.
+The guard summon's automatic fallback follows the same rule. Explicit summon
+designation and retaliation remain available, bound to that actor's current
+`life_id` and current monster root so pool reuse cannot inherit an old exception.
+Monster setup/retirement/rejection clear the category metadata. Legacy actors
+retain their previous default. Source data and character-save schemas are unchanged.
+
+The map inspector shows the original automatic-selection rule beside live native
+actors and source class definitions. Current flags come from523 category rows;
+the retained508 source context and pixels stay separate. No guessed setting is
+needed for these known booleans.
+
+The next verified resource is NPC93102 / Sprite26579, exact view554792 / link200832,
+source Land4. Its native contract and category15 pass523 checks. Restore only its
+additional files while reusing the unchanged existing14 subset:
+
+```sh
+python3 tools/monsters/restore_base508_host14_pixels.py \
+  --source-zip /private/base508-monsters-source671-install.zip \
+  --base-subset /private/host14-pixels \
+  --extra-context 93102:554792:200832 \
+  --output /private/contract15-pixels
+```
+
+The combined subset has15 records,211 SP2 packets and227 files /20,457,157 bytes.
+Manifest SHA256 is
+`4e2cd7aca0cdab69856d0623b598ec38c8a3f1c0c767f7bbb563c3f42e3cac91`.
+It shares198 immutable base assets, writes28 new assets and a separate manifest,
+and reads zero existing base assets from the source ZIP. Source metadata and all
+six guard contexts remain unchanged. The guard is verified through the existing
+factory/renderer/targeting API in a controlled Main probe; no new production
+encounter, position or activation rule is added.
+
+`patch523_extra_target_contract_test.gd` checks the new contract and40 first-frame
+role/direction body samples. `auto_selection_order_test.gd` covers automatic versus
+manual acquisition, cached targets, summon exceptions and stale pooled lives.
+`patch523_auto_target_main_test.gd` exercises actual AUTO/manual UI, source
+inspection, guard rendering, pooled category replacement and byte-identical forced
+character save. A resource bundle can contain this subset under `monsters/` and
+the separately verified definition pack under `world-links/`; extract outside the
+project and point the two launch arguments at those directories. It still needs
+the existing TWILIGHT executable/code and verified map pack. Drive storage alone
+does not install or activate it. Preserve larger monster installations; this
+bounded bundle is not their replacement.
+`package_patch523_resource_bundle.py` verifies both component manifest pins and
+their complete resource closure, then packages only runtime files, an inventory
+and launch instructions. Reports and captures are excluded. Resource delivery
+and source backups remain separate from the code PR and from actual game load.
+
 The focused game-field test is an adapter harness, not a terrain or actual
 original-map playthrough. The cumulative523 verifier compares every exported
 Land/Territory/portal/relation and every per-Land class/context row against the

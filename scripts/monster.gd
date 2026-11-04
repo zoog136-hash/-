@@ -3,6 +3,7 @@ class_name TwilightMonster
 
 const BASE508 = preload("res://scripts/lineagem_base508.gd")
 var source_m_original: Dictionary = {}
+var source_targeting: Dictionary = {}
 var source_m_npc_id: int = -1
 const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
 const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
@@ -129,6 +130,7 @@ var roaming_radius: float = 180.0
 var roam_clock: float = 0.0
 
 func retire_for_pool() -> void:
+	source_targeting.clear()
 	# Death presentation is complete before this is called. Release all visual
 	# owners while keeping the lightweight body for the next life/region.
 	set_physics_process(false)
@@ -169,6 +171,7 @@ func retire_for_pool() -> void:
 	drop_items.clear()
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> bool:
+	source_targeting.clear()
 	source_option_debuffs.clear()
 	_clear_source_m_view()
 	var incoming: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
@@ -195,6 +198,13 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
 	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
+	if source_m_npc_id >= 0:
+		source_targeting = record.get("source_m_targeting", {}).duplicate(true)
+		if source_targeting.is_empty():
+			var category: Dictionary = record.get("source_m_context", {}).get("category", {})
+			source_targeting = {"snapshot":"base508", "category_id":category.get("ID", -1)}
+			for flag: String in ["IsAutoSelectable", "IsSelectable"]:
+				if category.get(flag) is bool: source_targeting[flag] = category[flag]
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
 	# Full reset is required when a corpse is reused by the bounded field pool.
@@ -350,6 +360,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	return true
 
 func _reject_patch523_spawn(reason: String) -> bool:
+	source_targeting.clear()
 	retire_for_pool()
 	dead = true
 	hp = 0
@@ -367,6 +378,9 @@ func _clear_source_m_view() -> void:
 		source_m_view.hide()
 		source_m_view.queue_free()
 	source_m_view = null
+
+func permits_auto_selection() -> bool:
+	return source_targeting.is_empty() or (source_targeting.get("IsAutoSelectable") is bool and source_targeting.IsAutoSelectable)
 
 func _advance_source_m_view(delta: float) -> void:
 	if is_instance_valid(source_m_view):

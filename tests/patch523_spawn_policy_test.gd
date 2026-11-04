@@ -14,6 +14,7 @@ class CatalogFixture extends RefCounted:
 	var npcs: Dictionary = {}
 	var territories: Dictionary = {}
 	var conditions: Dictionary = {}
+	var categories: Array = []
 	func _init() -> void:
 		# Existing committed native context; mutations below are explicit fixtures.
 		var joined: Dictionary = preload("res://scripts/monsters/base508_monster_context.gd").context(90, 762, 558)
@@ -21,7 +22,9 @@ class CatalogFixture extends RefCounted:
 		shard = {"spawn_views": [joined.spawn_view.duplicate(true)], "spawn_relations": [joined.territory_link.duplicate(true)]}
 		npcs = {90: joined.npc.duplicate(true)}
 		territories[int(joined.territory.ID)] = joined.territory.duplicate(true)
+		categories = [joined.category.duplicate(true)]
 	func pack_conditions(_id: int) -> Dictionary: return conditions
+	func context_rows(table: String) -> Array: return categories.duplicate(true) if table == "NpcCategory" else []
 	func record() -> Dictionary:
 		var key: String = "lineagem_base508:npc:90:spawn:762:territory:558"
 		return {"source": "lineagem_base508", "sourceId": key, "source_m_npc_id": 90, "source_m_sprite_id": npcs[90].Sprite, "source_m_spawn_view_id": 762, "source_m_territory_link_id": 558,
@@ -42,6 +45,12 @@ func _initialize() -> void:
 	check(admitted.record.hp == record.hp and admitted.record.lv == record.lv and admitted.record.atk == 7 and admitted.record.speed == 111.0, "existing record parameters retained")
 	check(admitted.record.sourceId == record.sourceId and JSON.stringify(record) == original, "identity and input immutable")
 	check(admitted.record.source_m_patch523_admission.placement_policy == "EXISTING_HOST_POSITION_COUNT_RESPAWN_RETAINED", "host geometry/clock policy labelled")
+	check(admitted.record.source_m_targeting.IsAutoSelectable == false and admitted.record.source_m_targeting.IsSelectable == true, "latest source category keeps automatic and manual selection separate")
+	catalog.categories[0].IsAutoSelectable = true
+	check(POLICY.admit(record, "aden_world", catalog).record.source_m_targeting.IsAutoSelectable == true and JSON.stringify(record) == original, "latest category overrides without rewriting original508 context")
+	catalog.categories[0].IsAutoSelectable = 1
+	check(POLICY.admit(record, "aden_world", catalog).reason == "patch523_target_category_required", "unknown category flag is held")
+	catalog.categories[0].IsAutoSelectable = false
 	for flag: Variant in [0, 2, null, false, "1"]:
 		catalog.shard.spawn_views[0].IsSpawn = flag
 		check(not POLICY.admit(record, "aden_world", catalog).ok, "reject inactive/conditional/unknown flag " + str(flag))

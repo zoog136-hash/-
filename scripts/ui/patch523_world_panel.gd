@@ -85,6 +85,13 @@ static func hold_text(reason: String) -> String:
 	if reason == "patch523_original_pixels_not_ready": return "원본 몬스터 리소스 확인 필요"
 	return "원본 연결 또는 조건 확인 필요"
 
+static func targeting_text(category: Dictionary) -> String:
+	if not category.get("IsAutoSelectable") is bool: return "자동 대상 선택 규칙 확인 필요"
+	var text: String = "자동 대상 탐색 가능" if category.IsAutoSelectable else "자동 대상 탐색 제외"
+	if category.get("IsSelectable") == true: text += " · 직접 선택 가능"
+	elif category.get("IsSelectable") == false: text += " · 원본 직접 선택 제외"
+	return text
+
 func refresh() -> void:
 	entries.clear()
 	var active: String = str(world.active_map.get("name", world.active_map_id))
@@ -142,6 +149,7 @@ func show_entry(index: int) -> void:
 		lines.append("위치·수량·재생성 주기는 기존 게임 설정을 유지합니다.")
 		if slot.has("patch523_spawn_hold"): lines.append("생성 보류: " + hold_text(str(slot.patch523_spawn_hold)))
 		var actor: Variant = slot.get("monster")
+		if is_instance_valid(actor) and not actor.source_targeting.is_empty(): lines.append(targeting_text(actor.source_targeting))
 		if is_instance_valid(actor) and not actor.get_meta("patch523_spawn_admission", {}).is_empty():
 			lines.append("이 개체는 누적523의 명시적 출현 정의 검사를 통과했습니다.")
 		else: lines.append("기존 게임 개체입니다. 리니지M 원본 배치로 판정하지 않습니다.")
@@ -155,6 +163,8 @@ func show_entry(index: int) -> void:
 			if member.definition_state == "EXPLICIT_IS_SPAWN_0": state = "원본 정의에서 생성 제외"
 			elif member.definition_state != "DEFINED_IS_SPAWN_1_ACTIVATION_UNKNOWN": state = "조건 확인 필요"
 			lines.append("%s [NPC %d] · 레벨 %s\n%s · 서버 조건 %s" % [str(member.npc_class.get("Name", "NPC")), int(view.NpcClassID), str(view.NpcLevel), state, str(view.ServerLimitSetID)])
+			for category: Dictionary in links.context_rows("NpcCategory"):
+				if category.ID == member.npc_class.get("Category"): lines.append(targeting_text(category)); break
 		var conditions: Dictionary = links.pack_conditions(int(data.relation.NpcSpawnPackID))
 		if not conditions.NpcSpawnPackSchedulePeriod.is_empty() or not conditions.DaynightSpawnPack.is_empty() or not conditions.WorldBossRaidView.is_empty(): lines.append("기간·주야·보스 일정 조건이 있어 자동 생성을 보류합니다.")
 		lines.append("\n이 영역을 생성 개체 수나 확정된 개별 위치로 사용하지 않습니다.")

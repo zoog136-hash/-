@@ -101,7 +101,14 @@ static func admit(record: Dictionary, host_map_id: String, explicit_catalog: Ref
 	# explicit adapter; do not silently label old stats or occupancy as latest.
 	for key: String in ["Sprite", "HP", "MP", "AC", "MR", "Exp", "Category", "IsOccupyLandTile", "TestNPC"]:
 		if latest_npc.get(key) != baseline.npc.get(key) or prior.npc.get(key) != baseline.npc.get(key): return hold("patch523_npc_contract_changed")
+	if not catalog.has_method("context_rows"): return hold("patch523_target_category_required")
+	var category: Dictionary = row_with_id(catalog.context_rows("NpcCategory"), int(latest_npc.Category))
+	if not category.get("IsAutoSelectable") is bool or not category.get("IsSelectable") is bool:
+		return hold("patch523_target_category_required")
 	var result: Dictionary = record.duplicate(true)
+	# Consume current selection flags separately; preserve the508 source context.
+	result.source_m_targeting = {"snapshot":"patch523", "category_id":category.ID,
+		"IsAutoSelectable":category.IsAutoSelectable, "IsSelectable":category.IsSelectable}
 	result.source_m_patch523_admission = {"snapshot": "patch523", "manifest_sha256": catalog.manifest_sha256,
 		"npc_id": npc_id, "spawn_view_id": view_id, "territory_link_id": link_id,
 		"is_spawn": view.IsSpawn, "server_limit_set_id": view.ServerLimitSetID,

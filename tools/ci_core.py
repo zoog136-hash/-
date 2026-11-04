@@ -27,6 +27,7 @@ CHECKS = [
     ('patch523_world_links_test', ['--patch523-game-field']),
     ('patch523_spawn_policy_test', []),
     ('host_portal_navigation_test', []),
+    ('auto_selection_order_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -253,7 +254,8 @@ def main():
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT',
                       'patch523_world_links_test':'PATCH523_WORLD_LINKS_RESULT',
                       'patch523_spawn_policy_test':'PATCH523_SPAWN_POLICY_RESULT',
-                      'host_portal_navigation_test':'HOST_PORTAL_NAVIGATION_RESULT'}[name]
+                      'host_portal_navigation_test':'HOST_PORTAL_NAVIGATION_RESULT',
+                      'auto_selection_order_test':'AUTO_SELECTION_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
