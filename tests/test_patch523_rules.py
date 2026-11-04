@@ -102,6 +102,36 @@ class AdmissionTest(unittest.TestCase):
         self.tables['ItemCraftView'][0]['Enchant'] = 8
         self.rejected()
 
+    def test_complete_original_critical_contract_is_not_normalized_or_relabelled_public(self):
+        self.tables['ItemCraftOutputView'][0]['Probability']=990000
+        self.tables['ItemCraftOutputView'].append({**self.tables['ItemCraftOutputView'][0],
+            'ID':3,'ItemClassID':101,'ItemCraftOutputTypeID':2,'Probability':10000})
+        recipe=self.compile()['recipes']['patch523:17']
+        self.assertEqual([r['probability'] for r in recipe['outcomes']],[990000,10000])
+        self.assertIn('개별 공개 표 미대조',recipe['probability_origin'])
+        self.tables['ItemCraftOutputView'][1]['Probability']=9999
+        self.rejected()
+        self.tables['ItemCraftOutputView'][1]['Probability']=10000
+        self.tables['ItemCraftOutputView'][1]['ItemCraftOutputTypeID']=12
+        self.rejected()
+
+    def test_character_max_level_condition_stays_separate_from_craft_level(self):
+        self.tables['ItemClass'][1]['MaxLevelLimitMin']=68
+        result=self.compile()
+        self.assertEqual(result['items']['102']['use_conditions']['min_level'],68)
+        self.assertNotIn('craft_conditions',result['recipes']['patch523:17'])
+
+    def test_only_explicit_zero_item_failure_is_a_valid_empty_outcome(self):
+        self.tables['ItemCraftOutputView'][0]['Probability']=800000
+        self.tables['ItemCraftOutputView'].append({**self.tables['ItemCraftOutputView'][0],
+            'ID':3,'ItemClassID':0,'Amount':0,'Enchant':0,'ItemBlessCodeID':1,
+            'ItemCraftOutputTypeID':0,'Probability':200000})
+        result=self.compile()['recipes']['patch523:17']['outcomes']
+        self.assertTrue(result[1]['empty_result'])
+        self.assertEqual((result[1]['source_id'],result[1]['quantity'],result[1]['probability']),('0',0,200000))
+        self.tables['ItemCraftOutputView'][1]['Amount']=1
+        self.rejected()
+
     def test_id_collision_requires_exact_localized_identity(self):
         self.tables['DescData_Korean'][0]['Description'] = 'different_source_item'
         self.rejected()
@@ -115,7 +145,7 @@ class AdmissionTest(unittest.TestCase):
         for item in self.tables['ItemClass']:
             key=str(item['ID']); label='fixture_old' if key=='101' else 'fixture_new'
             records.append(dict(name=label+' · 원본#'+key,source_display_name=label,source='lineagem_patch523',
-                source_snapshot='patch523',sourceId='m523:item:'+key,source_item_class_id=item['ID'],
+                source_snapshot='patch523',sourceId='m523:item:'+key,source_item_class_id=float(item['ID']),
                 source_m_native_item=True,source_test_item=False,source_is_stackable=False,
                 source_level_limit_min=0,source_level_limit_max=0,source_class_ids=[],source_equip_slot_ids=[],slot='earring'))
         original=json.dumps({'아이템':[]}).encode()
@@ -130,8 +160,10 @@ class AdmissionTest(unittest.TestCase):
                 damaged=copy.deepcopy(records);damaged[0][key]=value
                 self.assertFalse(BUILDER.compile_rules(self.tables,{},original,json.dumps({'아이템':damaged}).encode())['recipes'])
         # Supplementing a catalog must not replace an existing unique Inven identity.
-        r=BUILDER.compile_rules(self.tables,{},json.dumps(self.catalog).encode(),bindings)
+        r=BUILDER.compile_rules(self.tables,{},json.dumps(self.catalog).encode(),json.dumps({'아이템':self.catalog['아이템']+records}).encode())
         self.assertEqual(r['items']['101']['catalog_record']['source'],'inven')
+        replaced=BUILDER.compile_rules(self.tables,{},json.dumps(self.catalog).encode(),bindings)
+        self.assertEqual(replaced['items']['101']['catalog_record']['source'],'lineagem_patch523')
 
     def test_unknown_item_state_and_tests_rejected(self):
         self.tables['ItemClass'][0]['TestItem'] = True
@@ -185,7 +217,9 @@ class AdmissionTest(unittest.TestCase):
         tables,evidence=BUILDER.read_source(directory)
         catalog=(Path(__file__).resolve().parents[1]/'data/catalog_v19.json').read_bytes()
         result=BUILDER.compile_rules(tables,evidence,catalog)
-        self.assertEqual(len(result['recipes']),347)
+        self.assertEqual(len(result['recipes']),352)
+        self.assertEqual({k for k,r in result['recipes'].items() if any(o.get('empty_result') for o in r.get('outcomes',[]))},
+                         {'patch523:150468','patch523:150478','patch523:150488','patch523:150498','patch523:172613'})
         self.assertEqual(set(result['guaranteed_boxes']),{'30701','130611'})
         self.assertEqual(len(result['source_files']),29)
         for table,key in [('ItemCraftInput','inputs'),('ItemCraftOutputView','outputs'),('ItemCraftView','views'),('ItemCraftRestriction','restrictions')]:

@@ -12,7 +12,9 @@ var source_action: Button
 var pack_sha: LineEdit
 var pack_dialog: FileDialog
 var pack_status: Label
-const DEFAULT_SHA: String = "4b19ea09453b6244ea1b6f308e17e097edba7e83b36cab89ffcc1c5c4a079ee8"
+var catalog_dialog: FileDialog
+var catalog_status: Label
+const DEFAULT_SHA: String = "55742a65350649f5efc044fa06e7ab4d8f762a106c7b040366e75c0b4e2824dd"
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -42,6 +44,22 @@ func configure(controller: Node) -> void:
 	pack_status = UI.label("설치된 규칙은 사용자 폴더에 보관하고 다음 실행에 자동 복원합니다.", 11, UI.MUTED)
 	pack_status.name = "Patch523PackInstallStatus"
 	add_child(pack_status)
+	var catalog_install: Button=UI.button("제작 아이템 자료 ZIP 설치",func() -> void: catalog_dialog.popup_centered_ratio(.75))
+	catalog_install.name="Patch523InstallCraftCatalog"
+	add_child(catalog_install)
+	catalog_dialog=FileDialog.new()
+	catalog_dialog.name="Patch523CraftCatalogDialog"
+	catalog_dialog.file_mode=FileDialog.FILE_MODE_OPEN_FILE
+	catalog_dialog.access=FileDialog.ACCESS_FILESYSTEM
+	catalog_dialog.filters=PackedStringArray(["*.zip ; 검증된523 공통 아이템 자료"])
+	catalog_dialog.file_selected.connect(func(path: String) -> void:
+		if world.install_patch523_craft_catalog_zip(path): catalog_status.text="제작 아이템 자료 등록 완료 · 추가 %d개" % int(world.patch523_craft_catalog_status.get("added",0))
+		else: catalog_status.text=world.PATCH523_CRAFT_CATALOG.problem)
+	add_child(catalog_dialog)
+	catalog_status=UI.label("제작 재료·결과의 정확한 아이템 정체를 등록합니다.",11,UI.MUTED)
+	catalog_status.name="Patch523CraftCatalogStatus"
+	if world.patch523_craft_catalog_status.get("ok",false):catalog_status.text="공통 제작 아이템 %d개 등록됨 · 검증된 설치 자료" % int(world.patch523_craft_catalog_status.get("registered_count",0))
+	add_child(catalog_status)
 	equipment = OptionButton.new()
 	equipment.name = "Patch523EquipmentChoice"
 	equipment.custom_minimum_size.y = 42
@@ -84,6 +102,23 @@ func configure(controller: Node) -> void:
 		scroll.add_item(str(item.catalog_record.name))
 	equipment.item_selected.connect(func(_i: int) -> void: _refresh())
 	scroll.item_selected.connect(func(_i: int) -> void: _refresh())
+	# Keep source actions inside short windows while the growing installation/
+	# evidence area scrolls. Rich source details must not collapse to zero height.
+	var viewport:=ScrollContainer.new()
+	viewport.name="Patch523EquipmentScroll"
+	viewport.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	viewport.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	var content:=VBoxContainer.new()
+	content.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	for child: Node in get_children():
+		if child is Control and child!=source_action and child!=actions:
+			remove_child(child);content.add_child(child)
+	add_child(viewport);viewport.add_child(content);move_child(viewport,0)
+	detail.custom_minimum_size.y=180
+	detail.size_flags_vertical=Control.SIZE_FILL
+	detail.fit_content=true
+	detail.scroll_active=false
+	hud.workspace.register_scroll_drag(viewport,content)
 	_refresh()
 
 func _refresh() -> void:

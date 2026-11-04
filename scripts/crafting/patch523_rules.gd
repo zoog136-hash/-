@@ -20,6 +20,11 @@ static func valid_material(value: Variant) -> bool:
 		if typeof(value.get(key)) not in [TYPE_INT,TYPE_FLOAT] or float(value[key]) != float(int(value[key])): return false
 	return int(value.quantity)>0 and int(value.quantity)<=(1000000000 if str(value.source_id)=="26" and bool(value.get("wallet",false)) else 100000000) and int(value.level)>=0 and int(value.level)<=21 and int(value.bless_code) in [1,2] and typeof(value.get("physical"))==TYPE_BOOL
 
+static func valid_outcome(value: Variant) -> bool:
+	if not value is Dictionary: return false
+	if not value.get("empty_result",false): return valid_material(value)
+	return value.get("empty_result")==true and value.get("source_id")=="0" and value.get("item")=="지급 없음" and value.get("label")=="실패" and value.get("quantity")==0 and value.get("level")==0 and value.get("bless_code")==1 and value.get("physical")==false and not value.has("inventory_key")
+
 func load_file(path: String, expected_sha256: String) -> bool:
 	problem = ""
 	if expected_sha256.length() != 64 or not FileAccess.file_exists(path):
@@ -59,7 +64,7 @@ func load_file(path: String, expected_sha256: String) -> bool:
 				problem="원본 제작 결과 분기 구조 오류"; return false
 			var total: int=0
 			for outcome: Variant in value.outcomes:
-				if not valid_material(outcome) or typeof(outcome.get("probability")) not in [TYPE_INT,TYPE_FLOAT] or float(outcome.probability)!=float(int(outcome.probability)) or int(outcome.probability)<1:
+				if not valid_outcome(outcome) or typeof(outcome.get("probability")) not in [TYPE_INT,TYPE_FLOAT] or float(outcome.probability)!=float(int(outcome.probability)) or int(outcome.probability)<1:
 					problem="원본 제작 확률 구조 오류"; return false
 				total+=int(outcome.probability)
 			if total!=1000000:
@@ -213,7 +218,7 @@ func available_material(material: Dictionary, inventory: Dictionary, items: Dict
 	if bool(material.get("wallet",false)) and str(material.source_id)=="26": return maxi(0,gold)
 	if bool(locks.get(item_name, false)):
 		return 0
-	var owned: int = maxi(0, int(inventory.get(item_name, 0)))
+	var owned: int = maxi(0, int(inventory.get(ownership_key(material), 0)))
 	if not bool(material.physical):
 		var item: Dictionary = items.get(item_name, {})
 		return owned if _stack_identity_matches(item,material) else 0
@@ -223,6 +228,12 @@ func available_material(material: Dictionary, inventory: Dictionary, items: Dict
 		if instance is Dictionary and instance.get("name", "") == item_name and not _worn(equipped, str(id)) and not bool(locks.get(item_name + "@@@" + str(id), false)) and _state_matches(instance, material, allow_smelt_loss):
 			eligible += 1
 	return mini(owned, eligible)
+
+func ownership_key(material: Dictionary) -> String:
+	if not material.has("inventory_key"): return str(material.item)
+	var key: String=str(material.inventory_key)
+	var entry: Dictionary=data.get("items",{}).get(str(material.source_id),{})
+	return key if not key.is_empty() and key==str(entry.get("currency_inventory_key","")) and not bool(material.physical) and int(material.level)==0 and int(material.bless_code)==1 else ""
 
 func _stack_identity_matches(item: Dictionary, material: Dictionary) -> bool:
 	if item.get("source","") in ["inven","lineagem_patch523"]: return catalog_identity_matches(item,str(material.source_id))
@@ -269,6 +280,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	if recipe.has("outcomes") and count!=1: return denied("확률 제작은 결과를 확인하며 1회씩 진행합니다")
 	var output: Dictionary = recipe.result
 	var result_record: Dictionary = record(str(output.source_id))
+	if ownership_key(output).is_empty(): return denied("원본 결과 재화의 정확한 보유 키가 필요합니다")
 	if result_record.is_empty() or str(result_record.get("name", "")) != str(output.item):
 		return denied("원본 결과 아이템의 정확한 ID 연결이 필요합니다")
 	var wallet_output: bool = bool(output.get("wallet_currency",false)) and str(output.source_id)=="26" and str(result_record.get("source",""))=="lineagem_patch523" and str(output.item)=="아데나" and not bool(output.physical)
@@ -284,11 +296,12 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	for material: Dictionary in recipe.materials:
 		if bool(material.get("wallet",false)) and str(material.source_id)=="26": continue
 		var item_name: String = str(material.item)
+		var owned_key: String=ownership_key(material)
 		var required: int = int(material.quantity) * count
 		var item: Dictionary = items.get(item_name, {})
-		if required < 1 or bool(locks.get(item_name, false)):
+		if required < 1 or owned_key.is_empty() or bool(locks.get(item_name, false)) or bool(locks.get(owned_key,false)):
 			return denied("잠긴 재료 또는 중복 재료는 사용할 수 없습니다")
-		if int(inventory.get(item_name, 0)) < required + int(costs.get(item_name, 0)):
+		if int(inventory.get(owned_key, 0)) < required + int(costs.get(owned_key, 0)):
 			return denied(item_name + " 재료가 부족합니다")
 		if bool(material.physical):
 			var candidates: Array = physical.keys()
@@ -308,11 +321,13 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 				return denied("재료의 원본 ID·강화·축복·잠금·장착 상태를 확인하세요: " + item_name)
 		elif not _stack_identity_matches(item,material):
 			return denied("이름만 같은 재료는 사용할 수 없습니다: " + item_name)
-		costs[item_name] = int(costs.get(item_name, 0)) + required
+		costs[owned_key] = int(costs.get(owned_key, 0)) + required
 		net_weight -= maxi(0, int(item.get("weight", 3))) * required
 	var produced: int = int(output.quantity) * count
 	var output_weight: int=maxi(0,int(current_output.get("weight",3)))*produced
 	for outcome: Dictionary in recipe.get("outcomes",[]):
+		if outcome.get("empty_result",false):continue
+		if ownership_key(outcome).is_empty(): return denied("확률 결과 재화의 정확한 보유 키가 필요합니다")
 		var candidate: Dictionary=items.get(str(outcome.item),{})
 		if not catalog_identity_matches(candidate,str(outcome.source_id)) or record(str(outcome.source_id)).get("name","")!=outcome.item:
 			return denied("모든 확률 결과의 정확한 아이템 ID 연결이 필요합니다")
@@ -351,7 +366,8 @@ func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, it
 	var output_record: Dictionary = record(str(output.source_id))
 	var output_name: String = str(output.item)
 	var wallet_reward: int = int(approval.result_quantity) if bool(output.get("wallet_currency",false)) and str(output.source_id)=="26" else 0
-	if wallet_reward==0: staged_inventory[output_name] = int(staged_inventory.get(output_name, 0)) + int(approval.result_quantity)
+	var output_key: String=ownership_key(output)
+	if wallet_reward==0 and not output.get("empty_result",false): staged_inventory[output_key] = int(staged_inventory.get(output_key, 0)) + int(approval.result_quantity)
 	var counter: int = maxi(1, next_id)
 	if bool(output.physical):
 		for _i: int in range(int(approval.result_quantity)):

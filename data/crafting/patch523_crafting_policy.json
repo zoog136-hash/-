@@ -93,5 +93,39 @@
         "clock_origin": "TWILIGHT 일정 설정: 서버 정기점검 대신 매주 수요일05:00 KST를 로컬 캐릭터 세이브에 적용. 원본 점검 실제 시각 복원이 아님"
       }
     }
-  }
+  },
+  "source_currency_bindings": {
+    "3242": {
+      "source_names": [
+        "변신 코인",
+        "변신 제작 코인"
+      ],
+      "inventory_key": "변신 제작 코인",
+      "origin": "확인된 원본 Currency ID를 기존 TWILIGHT 재화 키로1:1 정산; 수량/가격 변경 없음"
+    },
+    "3252": {
+      "source_names": [
+        "마법인형 코인",
+        "마법인형 제작 코인"
+      ],
+      "inventory_key": "마법인형 제작 코인",
+      "origin": "확인된 원본 Currency ID를 기존 TWILIGHT 재화 키로1:1 정산; 수량/가격 변경 없음"
+    },
+    "3631": {
+      "source_names": [
+        "명예 코인"
+      ],
+      "inventory_key": "명예 코인",
+      "origin": "확인된 원본 Currency ID를 기존 TWILIGHT 재화 키로1:1 정산; 수량/가격 변경 없음"
+    },
+    "246058": {
+      "source_names": [
+        "성물 제작 코인"
+      ],
+      "inventory_key": "성물 제작 코인",
+      "origin": "확인된 원본 Currency ID를 기존 TWILIGHT 재화 키로1:1 정산; 수량/가격 변경 없음"
+    }
+  },
+  "allow_complete_source_outcome_contracts": true,
+  "complete_source_outcome_origin": "원본0/1/2 결과가 모두 있고 양수 확률 합계가1,000,000인 경우만 허용; 조건/정체/기간 검사는 유지; 원문 확률/수량 수정 없음"
 }

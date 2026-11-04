@@ -136,6 +136,8 @@ var patch523_material_choices: Dictionary = {}
 const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
 var patch523_crafting_usage: Dictionary = {}
+const PATCH523_CRAFT_CATALOG=preload("res://scripts/crafting/patch523_craft_catalog.gd")
+var patch523_craft_catalog_status: Dictionary={}
 var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
@@ -619,6 +621,7 @@ func _load_data() -> void:
 	preload("res://scripts/cards/source_awakening_items.gd").install_drop_definitions(catalog_db,loot_catalog)
 	_merge_local_consumables_into_catalog()
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
+	patch523_craft_catalog_status=PATCH523_CRAFT_CATALOG.register(catalog_db,PATCH523_CRAFT_CATALOG.available())
 	_index_catalog_item_sources()
 	_load_verified_catalog_options()
 	_stash_inven_raw_options()
@@ -4187,7 +4190,9 @@ func _patch523_craft_item_index() -> Dictionary:
 		if binding.get("source_m_native_item",false):
 			var native_entry: Dictionary=_catalog_item_from_source_id(str(binding.sourceId))
 			if int(catalog_item_variant_count.get(str(binding.name),0))==1 and patch523_equipment.catalog_identity_matches(native_entry,source_id):
-				result[str(binding.name)]=native_entry
+				var weighted: Dictionary=native_entry.duplicate(true)
+				weighted["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
+				result[str(binding.name)]=weighted
 			continue
 		var entry: Dictionary = _catalog_item_from_source_id(source_id)
 		var item_name: String = str(entry.get("name", ""))
@@ -4207,6 +4212,19 @@ func _load_patch523_equipment() -> void:
 	if path.is_empty(): return
 	if not _install_patch523_equipment(path, expected):
 		push_warning(patch523_equipment.problem)
+
+func install_patch523_craft_catalog_zip(path: String) -> bool:
+	var installed: Dictionary=PATCH523_CRAFT_CATALOG.install_zip(path)
+	if installed.is_empty(): return false
+	var result: Dictionary=PATCH523_CRAFT_CATALOG.register(catalog_db,installed.document)
+	if not result.get("ok",false):
+		PATCH523_CRAFT_CATALOG.problem=str(result.get("reason","공통 아이템 등록 실패")); return false
+	patch523_craft_catalog_status=result
+	_index_catalog_item_sources(); _index_item_weights()
+	if is_instance_valid(hud):
+		hud.set_catalog_data(catalog_db,catalog_image_index)
+		hud.refresh_inventory(inventory)
+	return true
 
 func install_patch523_equipment_file(path: String, expected: String) -> bool:
 	var installed: Dictionary = PATCH523_STORE.install(path, expected)
@@ -4278,7 +4296,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	patch523_crafting_usage=staged.patch523_crafting_usage
 	hud.refresh_inventory(inventory)
 	_update_hud()
-	hud.show_message("원본 제작 %s · %s ×%d" % [str(transaction.get("outcome_label","완료")), str(transaction.result_name), int(transaction.result_quantity)])
+	hud.show_message(("원본 제작 %s · 지급 없음" % str(transaction.get("outcome_label","실패"))) if int(transaction.result_quantity)==0 else ("원본 제작 %s · %s ×%d" % [str(transaction.get("outcome_label","완료")), str(transaction.result_name), int(transaction.result_quantity)]))
 	hud.append_log("원본523 제작 · " + recipe_id)
 	if hud.has_method("open_crafting"):
 		hud.call("open_crafting")

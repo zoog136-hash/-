@@ -16,12 +16,24 @@ import zlib
 from build_patch523_rules import read_source
 
 
-def audit(tables, rules, catalog, drops):
+def audit(tables, rules, catalog, drops, binding_catalog=None):
     by_id, by_name = defaultdict(list), Counter()
     for record in catalog['아이템']:
         by_name[record['name']] += 1
         if record.get('source') == 'inven':
             by_id[str(record.get('sourceId', ''))].append(record)
+    for record in (binding_catalog or {}).get('아이템', []):
+        value = record.get('source_item_class_id')
+        if isinstance(value,bool) or not isinstance(value,(int,float)) or value<=0 or value!=int(value):
+            continue
+        key = str(int(value))
+        canonical = rules.get('items', {}).get(key, {}).get('catalog_record', {})
+        if (record.get('source')=='lineagem_patch523' and record.get('source_m_native_item') is True
+            and canonical.get('source_m_native_item') is True
+            and record.get('sourceId')==canonical.get('sourceId')=='m523:item:'+key
+            and record.get('name')==canonical.get('name')):
+            by_id[key]=[record]
+            by_name[record['name']]+=1
     source_items = {str(row['ID']): row for row in tables['ItemClass']}
     descriptions = {row['ID']: row['Description'].strip() for row in tables['DescData_Korean']}
     drop_ids = {str(row['ItemClassID']) for row in drops}
@@ -91,6 +103,8 @@ def main():
     parser.add_argument('--rules', type=Path, required=True)
     parser.add_argument('--catalog', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--binding-catalog', type=Path)
+    parser.add_argument('--native-bin', type=Path)
     args = parser.parse_args()
     if args.output.resolve().is_relative_to(Path(__file__).resolve().parents[2]):
         raise ValueError('private source audit must remain outside public Git')
@@ -104,7 +118,18 @@ def main():
     rules = json.loads(args.rules.read_text())
     if rules.get('snapshot') != 'patch523' or rules.get('catalog_sha256') != hashlib.sha256(args.catalog.read_bytes()).hexdigest():
         raise ValueError('rules and current catalog do not match')
-    result = audit(tables, rules, json.loads(args.catalog.read_text()), drops)
+    binding = None
+    if rules.get('binding_catalog_sha256'):
+        if args.binding_catalog is None or hashlib.sha256(args.binding_catalog.read_bytes()).hexdigest()!=rules['binding_catalog_sha256']:
+            raise ValueError('actual registered binding catalog is required and must match')
+        binding=json.loads(args.binding_catalog.read_text())
+    result = audit(tables, rules, json.loads(args.catalog.read_text()), drops, binding)
+    if args.native_bin:
+        native=args.native_bin.read_bytes()
+        if len(native)!=1806317 or hashlib.sha256(native).hexdigest()!='bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3':
+            raise ValueError('shared native BIN differs from approved input')
+        result['pr238_pack_bytes_verified_by_this_audit']=True
+    if binding is not None: result['actual_registered_catalog_sha256']=rules['binding_catalog_sha256']
     result['source_drop_table_sha256'] = entry['sha256']
     result['rules_sha256'] = hashlib.sha256(args.rules.read_bytes()).hexdigest()
     args.output.parent.mkdir(parents=True, exist_ok=True)
