@@ -87,14 +87,19 @@ class CoreStageTest(unittest.TestCase):
             live='assets/actors/eight_direction/current/SpriteFrames.tres'
             inactive='assets/actors/eight_direction/inactive/SpriteFrames.tres'
             records={
-                'data/maps/source_map_runtime.json':{'maps':{'aden_world':{'gameplay_snapshot':'res://data/maps/current.json'}}},
+                'data/maps/source_map_runtime.json':{'maps':{'aden_world':{'gameplay_snapshot':'res://data/maps/current.json','grid_sha256':'current-grid','layout_revision':7}}},
                 'data/maps/current.json':{'gameplay':{'monster_spawn':[{'monster_types':['Scout']}]}},
                 'data/game_db_v17.json':{'몬스터':[{'name':'Scout'}]},
+                'data/monsters/reviewed_source_monsters.json':{'records':[{'name':'Appended','source_portrait':'res://assets/monsters/reviewed_source/current-extra/portrait.png'}]},
+                'data/monsters/source3_map_spawns.json':{'rows':[{'map_id':'aden_world','grid_sha256':'current-grid','layout_revision':7,'name':'Appended'}, {'map_id':'aden_world','grid_sha256':'old-grid','layout_revision':7,'name':'Inactive'}]},
+                'data/monsters/local_source_habitats.json':{'rows':[{'map_id':'other-map','grid_sha256':'current-grid','layout_revision':7,'monster_types':['Inactive']}]},
                 'data/combat_animation_profiles.json':{'profiles':{'class:0':{'frames_path':'res://'+live},'monster:Scout':{'frames_path':'res://'+live},'monster:Inactive':{'frames_path':'res://'+inactive}}},
             }
             for name,value in records.items():
                 p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(value))
-            (root/'scripts/main.gd').write_text('const DATA="res://data/combat_animation_profiles.json"')
+            extra=root/'assets/monsters/reviewed_source/current-extra/portrait.png'
+            extra.parent.mkdir(parents=True,exist_ok=True);extra.write_bytes(b'immutable current appended population fixture')
+            (root/'scripts/main.gd').write_text('const DATA="res://data/combat_animation_profiles.json"\nconst DB="res://data/game_db_v17.json"\nconst REVIEWED="res://data/monsters/reviewed_source_monsters.json"')
             for path in [live,inactive]:
                 p=root/path;p.parent.mkdir(parents=True,exist_ok=True)
                 image=str(p.parent.relative_to(root))+'/idle.png'
@@ -104,7 +109,8 @@ class CoreStageTest(unittest.TestCase):
             selected={row['path'] for row in result['files']}
             self.assertTrue({live,live.replace('SpriteFrames.tres','idle.png')} <= selected)
             self.assertNotIn(inactive,selected)
-            self.assertEqual(result['current_actor_scope']['monster_names'],['Scout'])
+            self.assertEqual(result['current_actor_scope']['monster_names'],['Appended','Scout'])
+            self.assertIn(str(extra.relative_to(root)),selected)
             self.assertIn(inactive,{row['path'] for row in result['deferred_actor_imports']})
             self.assertEqual((root/'data/combat_animation_profiles.json').read_bytes(),(Path(temporary)/'stage/data/combat_animation_profiles.json').read_bytes())
 

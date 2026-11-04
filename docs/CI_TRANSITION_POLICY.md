@@ -28,7 +28,9 @@ SourceMap field; current map and save compatibility is tested in the core gate.
 This separation does not establish visual equivalence or original-art delivery.
 
 The cold importer includes every monster type in the current Aden gameplay
-snapshot, every class bank and direct code/scene resource references. It does
+snapshot and the existing populations appended for that same map/grid/revision,
+including their reviewed source records, every class bank and direct code/scene
+resource references. It does
 not import inactive historical actor banks during Main/save validation. Catalog
 bytes remain unchanged, the structural resource graph is still checked, and
 deferred actor paths with Git blob identifiers are recorded separately in the

@@ -25,6 +25,8 @@ CHECKS = [
     ('core_runtime_save_test', []),
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
+    ('lineagem_pack_resolution_test', []),
+    ('lineagem_pack_settings_main_test', ['--settings-test-snapshot523', '--lineagem-original-preview=user://settings-test-523.json']),
     ('presentation_settings_test', []),
     ('symbol_source523_test', []),
     ('symbol_source523_main_ui_test', []),
@@ -57,15 +59,30 @@ def current_actor_scope(read, exists):
     if not exists(policy_path):
         return None  # small standalone staging fixtures / pre-source-map trees
     policy = json.loads(read(policy_path))
-    snapshot = policy['maps']['aden_world']['gameplay_snapshot'].removeprefix('res://')
+    current_map = policy['maps']['aden_world']
+    snapshot = current_map['gameplay_snapshot'].removeprefix('res://')
     if '..' in PurePosixPath(snapshot).parts or not snapshot.startswith('data/'):
         raise ValueError('unsafe current gameplay snapshot')
     gameplay = json.loads(read(snapshot))['gameplay']
     names = {name for region in gameplay['monster_spawn'] for name in region['monster_types']}
+    # Main appends these existing populations after loading the snapshot.
+    # Include their current-grid resources too; opening a real UI allows the
+    # population child to drain its queue even while World._process is paused.
+    for path in ['data/monsters/source3_map_spawns.json', 'data/monsters/local_source_habitats.json']:
+        if not exists(path):
+            continue
+        for row in json.loads(read(path)).get('rows', []):
+            if (row.get('map_id') == 'aden_world'
+                    and row.get('grid_sha256') == current_map.get('grid_sha256')
+                    and row.get('layout_revision') == current_map.get('layout_revision')):
+                names.update(row.get('monster_types', [row['name']] if 'name' in row else []))
     profiles = json.loads(read('data/combat_animation_profiles.json'))['profiles']
     keys = {key for key in profiles if key.startswith('class:') or key in {'monster:'+n for n in names}}
     records = [profiles[key] for key in sorted(keys)]
     records += [row for row in json.loads(read('data/game_db_v17.json'))['몬스터'] if row['name'] in names]
+    for path in ['data/monsters/reviewed_source_monsters.json', 'data/monsters/reviewed_source_additions.json']:
+        if exists(path):
+            records += [row for row in json.loads(read(path)).get('records', []) if row.get('name') in names]
     # Source-map startup appends these exact-ID spawns after the gameplay
     # snapshot. Rendered UI tests yield frames, allowing their spawn queue to
     # drain; their real portraits/tracks must not be classified as inactive.
@@ -74,7 +91,7 @@ def current_actor_scope(read, exists):
     reviewed_path = 'data/monsters/reviewed_source_monsters.json'
     if exists(spawn_path) and exists(reviewed_path):
         source_ids = {row['game_source_id'] for row in json.loads(read(spawn_path))['rows']
-                      if row['map_id'] == 'aden_world'}
+                      if row['map_id'] == 'aden_world' and 'game_source_id' in row}
         records += [{'source_portrait': row.get('source_portrait', ''),
                      'animation_profile': row.get('animation_profile', {})}
                     for row in json.loads(read(reviewed_path))['records']
@@ -280,6 +297,8 @@ def main():
                       'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT',
+                      'lineagem_pack_resolution_test':'LINEAGEM_PACK_RESOLUTION_RESULT',
+                      'lineagem_pack_settings_main_test':'LINEAGEM_PACK_SETTINGS_RESULT',
                       'presentation_settings_test':'PRESENTATION_SETTINGS_RESULT',
                       'symbol_source523_test':'SYMBOL523_TEST',
                       'symbol_source523_main_ui_test':'SYMBOL523_MAIN_RESULT',
