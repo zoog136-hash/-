@@ -60,6 +60,10 @@ func _build() -> void:
 	# https://lineagem-jp.com/guides/lm/guides/item_enchant
 	size_flags_vertical=Control.SIZE_EXPAND_FILL
 	size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	if not hud.get_parent().patch523_equipment.data.is_empty():
+		var source_info: Button = UI.button("원본 강화 정보", func() -> void: hud.open_patch523_equipment_info())
+		source_info.name = "Patch523ForgeInfoButton"
+		add_child(source_info)
 	add_child(UI.label("강화 주문서를 선택하세요." if mode=="scroll" else "축복할 장비를 선택하세요." if mode=="blessing" else "강화할 아이템을 선택하세요.",15,UI.TEXT))
 	browser=Browser.new()
 	browser.size_flags_vertical=Control.SIZE_EXPAND_FILL

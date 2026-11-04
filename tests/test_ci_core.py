@@ -15,6 +15,22 @@ CORE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(CORE)
 
 class CoreStageTest(unittest.TestCase):
+    def test_current_source_placement_identities_join_actor_scope(self):
+        files = {
+            'data/maps/source_map_runtime.json': {'maps':{'aden_world':{'gameplay_snapshot':'res://data/current.json'}}},
+            'data/current.json': {'gameplay':{'monster_spawn':[{'monster_types':['Authored']}] }},
+            'data/combat_animation_profiles.json': {'profiles':{}},
+            'data/game_db_v17.json': {'몬스터':[]},
+            'data/monsters/source3_map_spawns.json': {'rows':[{'map_id':'aden_world','game_source_id':'source:current'}, {'map_id':'other','game_source_id':'source:other'}]},
+            'data/monsters/reviewed_source_monsters.json': {'records':[
+                {'sourceId':'source:current','name':'Current NPC','source_portrait':'res://assets/monsters/reviewed_source/current/portrait.png'},
+                {'sourceId':'source:other','name':'Other NPC','source_portrait':'res://assets/monsters/reviewed_source/other/portrait.png'}]},
+        }
+        result=CORE.current_actor_scope(lambda p:json.dumps(files[p]).encode(), lambda p:p in files)
+        self.assertIn('assets/monsters/reviewed_source/current/portrait.png',result['paths'])
+        self.assertNotIn('assets/monsters/reviewed_source/other/portrait.png',result['paths'])
+        self.assertIn('Current NPC',result['monster_names'])
+
     def fixture(self, root):
         files = {
             'project.godot':'config_version=5\n',

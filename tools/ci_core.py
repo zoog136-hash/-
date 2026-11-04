@@ -24,6 +24,8 @@ CHECKS = [
     ('core_runtime_save_test', []),
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
+    ('patch523_equipment_test', []),
+    ('patch523_equipment_main_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -55,6 +57,19 @@ def current_actor_scope(read, exists):
     keys = {key for key in profiles if key.startswith('class:') or key in {'monster:'+n for n in names}}
     records = [profiles[key] for key in sorted(keys)]
     records += [row for row in json.loads(read('data/game_db_v17.json'))['몬스터'] if row['name'] in names]
+    # UI tests advance real Main frames, allowing the current source-placement
+    # queue to drain. Its explicit NPC identities are additional live actors;
+    # they are not part of the authored monster_spawn name list above.
+    placement_path = 'data/monsters/source3_map_spawns.json'
+    reviewed_path = 'data/monsters/reviewed_source_monsters.json'
+    if exists(placement_path) and exists(reviewed_path):
+        placements = json.loads(read(placement_path))
+        source_ids = {str(row['game_source_id']) for row in placements.get('rows', [])
+                      if row.get('map_id') == 'aden_world'}
+        reviewed = json.loads(read(reviewed_path))
+        live_source = [row for row in reviewed.get('records', []) if str(row.get('sourceId', '')) in source_ids]
+        records += live_source
+        names.update(row['name'] for row in live_source)
     for path, field in [('data/monsters/reviewed_existing_visuals.json','bindings'),
                         ('data/visuals/runtime_manifest.json','monsters')]:
         if exists(path):
@@ -247,7 +262,9 @@ def main():
                 command += ['--', *user_args]
             marker = {'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
-                      'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT'}[name]
+                      'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT',
+                      'patch523_equipment_test':'PATCH523_EQUIPMENT_RESULT',
+                      'patch523_equipment_main_test':'PATCH523_MAIN_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

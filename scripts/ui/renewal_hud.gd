@@ -75,6 +75,7 @@ const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
+const Patch523EquipmentInfo = preload("res://scripts/ui/patch523_equipment_info.gd")
 const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const EquipmentCollectionsUI = preload("res://scripts/collections/equipment_collection_view.gd")
 var equipment_collection_button: Button
@@ -1010,8 +1011,15 @@ func open_npc_teleport() -> void:
 	screen.configure(self)
 
 func open_crafting() -> void:
-	_open_window("crafting","제작 장인","재료·비용 검사 · TWILIGHT 자체 제작식")
+	var source_note: String = " / 원본523 확정 제작" if not get_parent().patch523_equipment.data.is_empty() else ""
+	_open_window("crafting","제작 장인","재료·비용 검사 · 자체 제작식" + source_note)
 	var screen := CraftUI.new()
+	workspace.mount(screen)
+	screen.configure(self)
+
+func open_patch523_equipment_info() -> void:
+	_open_window("patch523_equipment", "원본 장비 강화 정보", "원본523 확률·재료 조회 · 현재 강화 정책 보존")
+	var screen := Patch523EquipmentInfo.new()
 	workspace.mount(screen)
 	screen.configure(self)
 

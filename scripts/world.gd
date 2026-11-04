@@ -127,6 +127,8 @@ var dialogue_service = NPC_DIALOGUE_SERVICE.new()
 const LOCAL_CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
 const EXPANDED_CRAFTING = preload("res://scripts/crafting/expanded_crafting.gd")
 var crafting = EXPANDED_CRAFTING.new()
+const PATCH523_EQUIPMENT = preload("res://scripts/crafting/patch523_rules.gd")
+var patch523_equipment = PATCH523_EQUIPMENT.new()
 const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
 var warehouse = LOCAL_WAREHOUSE.new()
@@ -389,6 +391,7 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	_load_patch523_equipment()
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -4123,14 +4126,74 @@ func _buy_reviewed_shop_item(vendor_id: String, item_name: String, quantity: int
 func _craft_item_index() -> Dictionary:
 	return loot_catalog.get("by_name", {}) as Dictionary
 
+func _load_patch523_equipment() -> void:
+	var path: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES")
+	var expected: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_SHA256")
+	if path.is_empty():
+		return
+	if not _install_patch523_equipment(path, expected):
+		push_warning(patch523_equipment.problem)
+
+func _install_patch523_equipment(path: String, expected: String) -> bool:
+	if not patch523_equipment.load_file(path, expected):
+		return false
+	# Keep existing recipes, IDs and economy unchanged.
+	for key: Variant in crafting.recipes.keys():
+		if str(key).begins_with("patch523:"):
+			crafting.recipes.erase(key)
+	crafting.recipes.merge(patch523_equipment.recipes.duplicate(true))
+	return true
+
+func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
+	_sync_item_instances()
+	var transaction: Dictionary = patch523_equipment.execute(recipe_id, batches, inventory, gold,
+		_craft_item_index(), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
+		next_item_instance_id, ui_preferences.get("item_locks", {}))
+	if not bool(transaction.get("ok", false)):
+		hud.show_message(str(transaction.get("reason", "원본 제작에 실패했습니다")))
+		return
+	var staged_log: Array[Dictionary] = crafting_log.duplicate(true)
+	staged_log.append({"recipe_id": recipe_id, "batch": batches, "output": str(transaction.result_name),
+		"quantity": int(transaction.result_quantity), "gold": int(transaction.cost),
+		"rules_sha256": patch523_equipment.digest, "at": Time.get_unix_time_from_system()})
+	if staged_log.size() > 200:
+		staged_log.pop_front()
+	var staged: Dictionary = {"inventory": transaction.inventory, "item_instances": transaction.item_instances,
+		"gold": int(transaction.gold_after), "next_item_instance_id": int(transaction.next_instance_id), "crafting_log": staged_log}
+	# No state is consumed on disk-write failure, unavailable map or save guards.
+	if _save_game(true, staged) != OK:
+		hud.show_message("저장 실패 · 재료·장비·아데나를 보존했습니다")
+		return
+	inventory = staged.inventory
+	item_instances = staged.item_instances
+	gold = int(staged.gold)
+	next_item_instance_id = int(staged.next_item_instance_id)
+	crafting_log = staged_log
+	hud.refresh_inventory(inventory)
+	_update_hud()
+	hud.show_message("원본 제작 완료 · %s ×%d" % [str(transaction.result_name), int(transaction.result_quantity)])
+	hud.append_log("원본523 제작 · " + recipe_id)
+	if hud.has_method("open_crafting"):
+		hud.call("open_crafting")
+
+# Inspection API: exact original branches, not a replacement economy/rate table.
+func patch523_enhancement_evidence(item_id: int, scroll_id: int, level_value: int, target_bless: int, scroll_bless: int) -> Dictionary:
+	return patch523_equipment.enhancement_evidence(item_id, scroll_id, level_value, target_bless, scroll_bless)
+
 func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()
+	if recipe_id.begins_with("patch523:"):
+		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
+			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}))
 	return crafting.quote(
 		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
 		equipped_items, _inventory_total_weight(), _carrying_capacity()
 	)
 
 func _craft_requested(recipe_id: String, batches: int) -> void:
+	if recipe_id.begins_with("patch523:"):
+		_patch523_craft_requested(recipe_id, batches)
+		return
 	# Revalidate authoritative ingredients, wallet, weight and physical IDs.
 	# The service stages mutations and commits only if every check succeeds.
 	_sync_item_instances()
@@ -4413,7 +4476,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","next_item_instance_id","crafting_log"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
