@@ -127,3 +127,33 @@ Godot_v4.7.2-stable_linux.x86_64 --path . --script res://tests/expedition523_com
 전체 게임플레이/Android 실기기/운영 서버 동등성/원본 아트 전체 전달을 주장하지 않는다. 역사적 아트 검사기의 `--source-dir`가 요구하는 `a1.zip`은 이번 데이터3ZIP과 별개이며 기존 리소스 장부를 승격하지 않는다. `[skip ci]`를 유지하고 원격 CI를 수동 실행/재실행하거나 다른 PR/main을 병합하지 않는다. 원격 CI 미실행은 통과가 아니다.
 
 최종 로컬 결과(2026-11-04): Drive 수신 적용 JSON으로 실제 Main/OpenGL200검사·16캡처(1280×720/960×540), 원본 카탈로그67, 파견/시너지 포함 모델22, 실제 Main/current source-map·역사적 저장32와 동일/지연 저장 게이트가 실패0이다. 기존138검사에 원본 신규 카드의 완주 발견품 정산·수령·각성 UI·파견·재접속/중복 보호를 더했다. 별도 실제 Main 인벤토리109검사에서 고정 카드21종의 정확한 지급과 제한7종의 보존·재접속을 확인했다. 원본/등록 계약1481검사에서는 실제 PR249720행을 대조했다. 공용 소비자 자체는 합성 계약 fixture이며 다른 미병합 PR의 실제 효과를 실행한 결과가 아니다. Git 리소스723시트/41,442프레임 SHA검사도 통과했다. 렌더링은 Linux llvmpipe이며 사용자 기기/Android 검증은 아니다.
+## Local follow-up after public df76940f (not published)
+
+The optional producer boundary reads PR239 `432ee5a6587d2b870fe917ea9f030088f91df9ad`.
+An integrated host may expose `patch523_open_expedition_enhancement(key)` to open
+the exact issued137/138 target picker. The producer delegates before its unsupported
+item fallback. Opening returns `committed=false`; it is not a debit, grant, RNG
+advance, save, or another receipt acknowledgement. Missing owner capability and
+orphaned typed scroll keys preserve stock and cannot enter legacy substring use.
+
+Issued materials use the published `patch523_expedition_materials.owned()` reader
+only when the real host has its native crafting context, executor and item index.
+The context must contain the same expedition owner. After exact ownership admission
+the existing owner crafting UI opens; recipe/server/calendar/quantity/lock checks,
+debit/refund, output/usage/log/RNG and the single durable save remain with PR239.
+The producer never renames the issued namespace or adds `source_m_native_item`.
+
+The bounded local proof test uses actual Main, held unchanged v8 input, real storage
+withdrawals and the exact published ownership reader. It distinguishes ownership
+from recipe qualification, and absence of a combined crafting/enhancement host from
+a successful transaction. It does not import the owner's World/engine or replace
+the completed318box/195ticket/15restart evidence with mock success.
+
+Owner-reported recipe restrictions remain separate:292302/292312/292322/292332
+require server772,282863 server762, and216053 has no ItemCraftView. The held v8
+input lacks341344/341354/341364; no replacement definitions/policies are invented.
+Positive end-to-end execution must use the real combined host: producer claim/open/
+withdraw -> inventory activation -> owner target/recipe selection -> confirmation
+-> exact typed debit/refund/output/usage/RNG -> single save and reconnect. Preserve
+the owner's `patch523_crafting_usage` save field and source conditions in that host.
+No completed dependency count is increased by a UI opening or ownership proof.

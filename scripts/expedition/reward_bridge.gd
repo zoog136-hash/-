@@ -9,6 +9,7 @@ const TICKET_POLICY_TEXT="TWILIGHT 소지 티켓1개 소비 · 원본 추첨 풀
 const DROP_SCRIPT="res://scripts/loot/patch523_monster_drops.gd"
 const USE_SCRIPT="res://scripts/loot/patch523_item_use.gd"
 const SUPPLIER_SCRIPT="res://scripts/loot/patch523_item_inventory.gd"
+const MATERIAL_SCRIPT="res://scripts/crafting/patch523_expedition_materials.gd"
 
 static func untagged(name:String)->String:
 	var value:String=name.strip_edges()
@@ -54,6 +55,33 @@ static func shop(world:Node)->Variant:
 	var service:Variant=host_property(world,"source_shop")
 	var runtime:Variant=host_property(world,"expedition_local")
 	return service if service!=null else (runtime.reward_recipients.get("source_shop") if runtime!=null else null)
+
+static func open_issued_owner_ui(world:Node,key:String,item_name:String)->Dictionary:
+	# A capability boundary, not another craft/enhancement executor. Selection
+	# does not debit, roll, save, or acknowledge a new producer receipt.
+	var parts:PackedStringArray=key.split(":")
+	if parts.size()!=3:return {"handled":false}
+	if int(parts[0]) in [137,138]:
+		if not world.has_method("patch523_open_expedition_enhancement"):
+			return {"handled":true,"ok":false,"committed":false,"error":"원본 탐험 주문서의 강화 소유자가 미설치입니다 · 주문서 보존"}
+		var opened:Variant=world.call("patch523_open_expedition_enhancement",item_name)
+		if opened is Dictionary and opened.get("handled",false):return opened
+		return {"handled":true,"ok":false,"committed":false,"error":"원본 강화 소유자의 선택 결과를 확인하세요 · 자동 재시도 안함"}
+	if not world.has_method("_patch523_craft_context") or not world.has_method("_patch523_craft_requested") or not world.has_method("_patch523_craft_item_index") or not ResourceLoader.exists(MATERIAL_SCRIPT):return {"handled":false}
+	var owner:Variant=host_property(world,"expedition_local")
+	var book:Variant=host_property(world,"patch523_equipment")
+	var helper:Script=load(MATERIAL_SCRIPT)
+	if int(parts[0]) not in helper.get_script_constant_map().get("IDS",[]):return {"handled":false}
+	var context:Variant=world.call("_patch523_craft_context")
+	if book==null or not context is Dictionary or context.get("expedition_owner")!=owner:return {"handled":true,"ok":false,"committed":false,"error":"탐험 재료의 제작 소유자 연결 확인 필요 · 재료 보존"}
+	var material:Dictionary={"source_id":parts[0],"item":book.record(parts[0]).get("name",""),"physical":false,"bless_code":int(parts[1]),"level":int(parts[2])}
+	var owned:Dictionary=helper.owned(book,material,world.inventory,world.item_instances,world.ui_preferences.get("item_locks",{}),context)
+	if not owned.has(item_name):return {"handled":true,"ok":false,"committed":false,"error":"원본 재료의 발급·소지 증명 확인 필요 · 재료 보존"}
+	# Ownership admission is not recipe/server qualification. Those conditions
+	# remain with the real owner's quote/execute/one-save path.
+	if not world.hud.has_method("open_crafting"):return {"handled":true,"ok":false,"committed":false,"error":"원본 제작 화면 미설치 · 재료 보존"}
+	world.hud.open_crafting()
+	return {"handled":true,"ok":true,"committed":false,"stage":"recipe_selection","message":"제작법을 선택하고 원본 조건을 확인하세요"}
 
 static func claim_selection(world:Node,saved:Dictionary,entity_id:int)->bool:
 	# The owner's dialog confirms later. Recheck our receipt and lock at that

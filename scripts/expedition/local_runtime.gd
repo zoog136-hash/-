@@ -552,7 +552,10 @@ func receive_card(key:String,item_name:String)->Dictionary:
 
 func inventory_activation(item_name:String) -> Dictionary:
 	var belongs:bool=state.get("native_handoffs",{}).has(item_name) or state.get("issued",{}).values().has(item_name)
-	if not belongs:return {"handled":false}
+	if not belongs:
+		# A stale visible tag is refusal evidence only, never ownership proof.
+		if item_name.contains(" (탐험 137:") or item_name.contains(" (탐험 138:"):return {"handled":true,"ok":false,"committed":false,"error":"탐험 주문서 발급 장부를 확인하세요 · 주문서 보존"}
+		return {"handled":false}
 	if world==null or save_blocked or not validate(state).is_empty():return {"handled":true,"ok":false,"error":"탐험 저장 보호 중"}
 	if world._item_locked(item_name,""):return {"handled":true,"ok":false,"error":"잠긴 탐험 보상은 사용할 수 없습니다"}
 	var handoffs:Dictionary=state.get("native_handoffs",{})
@@ -571,6 +574,8 @@ func inventory_activation(item_name:String) -> Dictionary:
 	for key:String in state.get("issued",{}):
 		if state.issued[key]!=item_name:continue
 		if not world.get_expedition_catalog().ready():return {"handled":true,"ok":false,"error":"원본 탐험 팩이 필요합니다. 아이템은 보존됩니다."}
+		var owner_ui:Dictionary=REWARD_BRIDGE.open_issued_owner_ui(world,key,item_name)
+		if owner_ui.get("handled",false):return owner_ui
 		var result:Dictionary
 		if not world.get_expedition_catalog().completion_box_candidates(int(key.split(":")[0])).is_empty():result=open_box(key,-1,item_name)
 		elif not compatible_skill_book(key).is_empty():result={"ok":false,"error":"카드 상세의 스킬 각성에서 사용할 수 있는 각성서입니다."}
