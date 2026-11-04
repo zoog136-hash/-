@@ -77,7 +77,7 @@ func destination(schedule_id: int) -> Dictionary:
 	result["runtime_enabled"] = false
 	return result
 
-func request_definition(schedule_id: int, landing_link_id: int, level: int, wallet: int) -> Dictionary:
+func request_definition(schedule_id: int, landing_link_id: int, level: int, wallet: int, gems: int = -1) -> Dictionary:
 	if not loaded: return _blocked("PACK_UNAVAILABLE", problem)
 	if not _entries.has(schedule_id): return _blocked("UNKNOWN_SCHEDULE", "자동사냥 지역을 다시 선택해 주세요")
 	var entry: Dictionary = _entries[schedule_id]
@@ -96,16 +96,25 @@ func request_definition(schedule_id: int, landing_link_id: int, level: int, wall
 		min_level = maxi(min_level, int(condition.definition.Value))
 	if level < min_level:
 		return _blocked("MIN_LEVEL", "%d레벨부터 입장할 수 있습니다" % min_level)
-	if str(entry.currency.Name) != "Adena" or int(entry.currency.ID) != 1:
+	var currency_id: int = int(entry.currency.ID)
+	var is_adena: bool = currency_id == 1 and str(entry.currency.Name) == "Adena"
+	var is_gem: bool = currency_id == 4 and str(entry.currency.Name) == "Gem" and gems >= 0
+	if not is_adena and not is_gem:
 		return _blocked("UNSUPPORTED_CURRENCY", "이동 재화를 확인할 수 없습니다")
 	var cost: int = int(entry.teleport.TeleportCost)
-	if wallet < cost:
+	if is_adena and wallet < cost:
 		return _blocked("INSUFFICIENT_ADENA", "이동에 필요한 아데나가 부족합니다")
+	if is_gem and gems < cost:
+		return _blocked("INSUFFICIENT_GEM", "이동에 필요한 다이아가 부족합니다 · 원본 Gem ID4")
 	# Source eligibility is separate from a chosen TWILIGHT movement policy.
 	var result: Dictionary = {"ok": true, "code": "SOURCE_COST_ELIGIBLE"}
 	result["schedule_id"] = schedule_id
 	result["landing_link_id"] = landing_link_id
 	result["price"] = cost
+	result["currency_id"] = currency_id
+	result["currency_name"] = str(entry.currency.Name)
+	result["currency_asset_id"] = int(entry.currency.AssetID)
+	result["currency_label"] = "아데나" if is_adena else "다이아 (Gem ID4)"
 	result["min_level"] = min_level
 	result["recommend_level"] = int(entry.schedule.RecommendLevel)
 	result["landing"] = selected.duplicate(true)

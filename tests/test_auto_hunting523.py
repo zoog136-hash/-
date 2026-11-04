@@ -1,5 +1,6 @@
 """Exact source joins and private pack delivery; no gameplay fixtures substituted."""
 import importlib.util
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -82,6 +83,21 @@ class SourceTests(unittest.TestCase):
             self.assertEqual(entry['hunting_territory'], independent['HuntingRegion'].get('raw') if entry['schedule']['TerritoryID'] != 0 else None)
             self.assertEqual([d['territory'] for d in entry['destinations']],
                              [d['Territory']['raw'] for d in independent['LandingRoutes']['Destinations']])
+
+    def test_gem_currency_id_and_korean_wallet_label_are_source_backed(self):
+        gem = next(row for row in self.tables['Currency'] if row['Name'] == 'Gem')
+        self.assertEqual((gem['ID'], gem['AssetID'], gem['DescID']), (4, 22192, 729861))
+        with zipfile.ZipFile(self.source) as archive:
+            raw = archive.read('content/DescData_Korean.json')
+            self.assertEqual(hashlib.sha256(raw).hexdigest(), 'af6a4bb11358bfeb2adeed63f27ec7f353770a07f36474481cec87ce0a2bfb9c')
+            names = json.loads(raw.decode('utf-8-sig'))['rows']
+            self.assertEqual(next(row['Description'] for row in names if row['ID'] == gem['DescID']), '다이아')
+            keys = json.loads(archive.read('content/CurrencyKey.json').decode('utf-8-sig'))['rows']
+            self.assertEqual(next(row['CurrencyID'] for row in keys if row['Name'] == 'Gem'), 4)
+        entries = [entry for entry in self.payload['entries'] if entry['currency']['Name'] == 'Gem']
+        self.assertEqual(len(entries), 23)
+        self.assertTrue(all(entry['currency'] == gem for entry in entries))
+        # This verifies the source name/ID, not the local inventory backing policy.
 
     def test_repeat_is_exact_and_conflict_is_preserved(self):
         with tempfile.TemporaryDirectory() as directory:

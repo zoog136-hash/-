@@ -10,7 +10,7 @@ class TestWorld extends Node:
 	var settings={"enabled":true,"end_inclusive":true,"search_order":"center_first"}
 	var moves:int=0
 	func auto_hunting_destinations()->Dictionary:
-		return {"entries":[{"schedule":{"ID":4,"RecommendLevel":17},"teleport":{"TeleportCost":8000},"currency":{"Name":"Adena"},"prerequisites":[],"hunting_territory":null,
+		return {"entries":[{"schedule":{"ID":4,"RecommendLevel":17},"teleport":{"TeleportCost":8000},"currency":{"Name":"Adena","ID":1},"prerequisites":[],"hunting_territory":null,
 			"destinations":[{"territory":{"Name":"unit destination"},"link":{"ID":662}}]}]}
 	func auto_hunting_local_settings()->Dictionary:return settings.duplicate(true)
 	func auto_hunting_set_local_settings(value:Dictionary)->Dictionary:settings=value.duplicate(true);return {"ok":true}

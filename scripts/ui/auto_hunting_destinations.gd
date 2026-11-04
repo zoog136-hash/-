@@ -8,11 +8,14 @@ var landings: OptionButton
 var details: Label
 var status: Label
 var local_enabled: CheckBox
+var gem_enabled: CheckBox
+var entry_area_enabled: CheckBox
 var end_rule: OptionButton
 var search_order: OptionButton
 var move_button: Button
 var owner_scroll: ScrollContainer
 var selected_id: int = -1
+var detail_summary: String = ""
 
 func configure(owner_world: Node) -> void:
 	world = owner_world
@@ -50,7 +53,7 @@ func configure(owner_world: Node) -> void:
 	status.name = "AutoHuntingMovementStatus"
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(status)
-	var policy_note: Label = UI.label("TWILIGHT 자체 이동 · 현재 아덴 전용\n원본 M 좌표·통행 재현이 아닙니다. 원본 착지 범위를 현재 아덴 셀에 대응하며, 기존 통행·점유 검사를 통과한 곳만 사용합니다.", 13)
+	var policy_note: Label = UI.label("TWILIGHT 자체 이동 · 현재 아덴 / 용의 계곡 던전 5층 안에서 사용\n원본 M 좌표·통행 재현이 아닙니다. 원본 착지 범위를 현재 지형 셀에 대응하며, 기존 통행·점유 검사를 통과한 곳만 사용합니다.", 13)
 	policy_note.name = "AutoHuntingLocalPolicyNote"
 	policy_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(policy_note)
@@ -58,6 +61,16 @@ func configure(owner_world: Node) -> void:
 	local_enabled.name = "AutoHuntingLocalEnabled"
 	local_enabled.text = "TWILIGHT 자체 이동 사용"
 	add_child(local_enabled)
+	gem_enabled = CheckBox.new()
+	gem_enabled.name = "AutoHuntingGemWalletEnabled"
+	gem_enabled.text = "인벤토리 다이아를 Gem ID4 잔액으로 사용 (TWILIGHT 정책)"
+	gem_enabled.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	add_child(gem_enabled)
+	entry_area_enabled = CheckBox.new()
+	entry_area_enabled.name = "AutoHuntingEntryAreaEnabled"
+	entry_area_enabled.text = "입장점 주변 착지 허용 (자체 정책 · 지형/NPC/포탈 검사 유지)"
+	entry_area_enabled.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	add_child(entry_area_enabled)
 	var rules := HBoxContainer.new()
 	end_rule = OptionButton.new()
 	end_rule.name = "AutoHuntingEndRule"
@@ -88,10 +101,14 @@ func configure(owner_world: Node) -> void:
 	if owner_scroll != null:
 		world.hud.workspace.register_scroll_drag(owner_scroll, move_button)
 		world.hud.workspace.register_scroll_drag(owner_scroll, local_enabled)
+		world.hud.workspace.register_scroll_drag(owner_scroll, gem_enabled)
+		world.hud.workspace.register_scroll_drag(owner_scroll, entry_area_enabled)
 		world.hud.workspace.register_scroll_drag(owner_scroll, end_rule)
 		world.hud.workspace.register_scroll_drag(owner_scroll, search_order)
 	_sync_settings()
 	local_enabled.toggled.connect(func(_enabled: bool) -> void: _settings_changed())
+	gem_enabled.toggled.connect(func(_enabled: bool) -> void: _settings_changed())
+	entry_area_enabled.toggled.connect(func(_enabled: bool) -> void: _settings_changed())
 	end_rule.item_selected.connect(func(_index: int) -> void: _settings_changed())
 	search_order.item_selected.connect(func(_index: int) -> void: _settings_changed())
 	regions.item_selected.connect(_select_region)
@@ -109,8 +126,8 @@ func _select_region(index: int) -> void:
 	var minimum: int = 0
 	for condition: Dictionary in entry.prerequisites:
 		if str(condition.type.Name) == "MinLevel": minimum = maxi(minimum, int(condition.definition.Value))
-	var cost: String = "%d 아데나" % int(entry.teleport.TeleportCost) if entry.currency.Name == "Adena" else "%d %s" % [int(entry.teleport.TeleportCost), str(entry.currency.Name)]
-	details.text = "이동 비용 %s\n%s\n%s" % [cost,
+	var cost: String = "%d 아데나" % int(entry.teleport.TeleportCost) if entry.currency.Name == "Adena" else "%d 다이아 (Gem ID4)" % int(entry.teleport.TeleportCost)
+	detail_summary = "이동 비용 %s\n%s\n%s" % [cost,
 		"입장 Lv.%d 이상" % minimum if minimum > 0 else "별도 레벨 입장 조건 없음",
 		"사냥 영역 미지정 · 도착 지역만 제공" if entry.hunting_territory == null else "사냥 영역과 도착 지역은 별도 지정"]
 	_select_landing(0)
@@ -120,12 +137,18 @@ func _select_landing(index: int) -> void:
 	var entry: Dictionary = entries[selected_id]
 	if index < 0 or index >= entry.destinations.size(): return
 	var assessment: Dictionary = world.call("auto_hunting_movement_assessment", int(entry.schedule.ID), int(entry.destinations[index].link.ID))
+	details.text = detail_summary
+	if int(entry.currency.ID) == 4 and world.has_method("auto_hunting_gem_wallet"):
+		var wallet: Dictionary = world.call("auto_hunting_gem_wallet")
+		details.text += "\n보유 다이아 %d" % int(wallet.balance) if bool(wallet.ok) else "\n" + str(wallet.reason)
 	status.text = str(assessment.get("reason", "이동 조건 확인 중"))
 	move_button.disabled = not bool(assessment.get("ok", false))
 
 func _sync_settings() -> void:
 	var value: Dictionary = world.call("auto_hunting_local_settings")
 	local_enabled.set_pressed_no_signal(bool(value.enabled))
+	gem_enabled.set_pressed_no_signal(bool(value.get("gem_wallet_enabled", false)))
+	entry_area_enabled.set_pressed_no_signal(bool(value.get("allow_entry_area", false)))
 	end_rule.select(0 if bool(value.end_inclusive) else 1)
 	search_order.select(0 if value.search_order == "center_first" else 1)
 
@@ -134,7 +157,7 @@ func _settings_changed() -> void:
 		_sync_settings()
 		return
 	var result: Dictionary = world.call("auto_hunting_set_local_settings", {"enabled": local_enabled.button_pressed,
-		"end_inclusive": end_rule.selected == 0, "search_order": "center_first" if search_order.selected == 0 else "coordinate_order"})
+		"end_inclusive": end_rule.selected == 0, "search_order": "center_first" if search_order.selected == 0 else "coordinate_order", "gem_wallet_enabled": gem_enabled.button_pressed, "allow_entry_area": entry_area_enabled.button_pressed})
 	_sync_settings()
 	_refresh_assessment()
 	if not bool(result.ok): status.text = str(result.reason)

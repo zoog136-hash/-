@@ -2406,7 +2406,16 @@ func auto_hunting_destinations() -> Dictionary:
 
 func auto_hunting_movement_assessment(schedule_id: int, landing_link_id: int) -> Dictionary:
 	auto_hunting_destinations()
-	return auto_hunting_local.assess(self, auto_hunting_schedule.request_definition(schedule_id, landing_link_id, level, gold))
+	var entry: Dictionary = auto_hunting_schedule.destination(schedule_id)
+	var gems: int = -1
+	if not entry.is_empty() and int(entry.currency.ID) == 4 and str(entry.currency.Name) == "Gem":
+		var wallet: Dictionary = auto_hunting_local.gem_wallet(self)
+		if not bool(wallet.ok): return wallet
+		gems = int(wallet.balance)
+	return auto_hunting_local.assess(self, auto_hunting_schedule.request_definition(schedule_id, landing_link_id, level, gold, gems))
+
+func auto_hunting_gem_wallet() -> Dictionary:
+	return auto_hunting_local.gem_wallet(self)
 
 func auto_hunting_destination_saveable(point: Vector2) -> bool:
 	# Match the existing save/reentry contract, including its bounded route
@@ -2429,11 +2438,13 @@ func auto_hunting_move(schedule_id: int, landing_link_id: int) -> Dictionary:
 		return quote
 	# Persist the validated destination and original fee before changing live
 	# state. Save faults leave position, gold, AUTO, paths and items untouched.
-	var error: Error = _save_game(true, {"gold": gold - int(quote.price)}, quote)
+	var staged_cost: Dictionary = AUTO_HUNTING_LOCAL.cost_override(self, quote)
+	var error: Error = _save_game(true, staged_cost, quote)
 	if error != OK:
 		auto_hunting_move_in_progress = false
-		return AUTO_HUNTING_LOCAL.fail("SAVE_FAILED", "이동 저장 실패 · 위치와 아데나를 유지합니다")
-	gold -= int(quote.price)
+		return AUTO_HUNTING_LOCAL.fail("SAVE_FAILED", "이동 저장 실패 · 위치와 재화를 유지합니다")
+	if int(quote.currency_id) == 1: gold = int(staged_cost.gold)
+	else: inventory = staged_cost.inventory
 	player.global_position = quote.destination
 	player.velocity = Vector2.ZERO
 	player.clear_click_path()
@@ -2460,9 +2471,10 @@ func auto_hunting_move(schedule_id: int, landing_link_id: int) -> Dictionary:
 	if is_instance_valid(field_renderer): field_renderer.refresh_visible()
 	hud.clear_target()
 	deferred_save.cancel()
+	if int(quote.currency_id) == 4: hud.refresh_inventory(inventory)
 	_update_hud()
 	quote["code"] = "MOVED"
-	quote["reason"] = "지역 이동 완료 · %d 아데나 소모 · TWILIGHT 자체 정책" % int(quote.price)
+	quote["reason"] = "지역 이동 완료 · %d %s 소모 · TWILIGHT 자체 정책" % [int(quote.price), str(quote.currency_label)]
 	hud.show_message(quote.reason)
 	hud.append_log(quote.reason)
 	auto_hunting_move_in_progress = false
@@ -4479,7 +4491,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not auto_hunting_move_in_progress or not pending_map_save_record.is_empty(): return ERR_UNAVAILABLE
 		var current: Dictionary = auto_hunting_movement_assessment(int(movement_override.get("schedule_id", -1)), int(movement_override.get("landing_link_id", -1)))
 		if not bool(current.ok) or current != movement_override: return ERR_UNAVAILABLE
-		if collection_override != {"gold": gold - int(current.price)}: return ERR_INVALID_PARAMETER
+		if collection_override != AUTO_HUNTING_LOCAL.cost_override(self, current): return ERR_INVALID_PARAMETER
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")

@@ -5,6 +5,14 @@ const COORDINATES = preload("res://scripts/maps/source_coordinates.gd")
 class TestField extends RefCounted:
 	var coordinates = COORDINATES.new()
 	func world_to_cell(point: Vector2) -> Vector2i: return coordinates.world_to_cell(point)
+class LandingField extends RefCounted:
+	var reservations: Array = []
+	var data: Dictionary = {"npc_spawn":[],"portal":[]}
+	func walkable(_point: Vector2) -> bool: return true
+	func point_clear(_point: Vector2, _radius: float) -> bool: return true
+class LandingWorld extends Node:
+	var field_map: RefCounted = LandingField.new()
+	func _teleport_landing_clear(_point: Vector2) -> bool: return true
 var checks: int = 0
 var failures: Array[String] = []
 func check(ok: bool, label: String) -> void:
@@ -37,7 +45,7 @@ func run() -> void:
 	var policy = POLICY.new()
 	policy.settings_path="user://local-policy-unit.json"
 	check(not policy.get_settings().enabled, "new user keeps movement disabled until own-policy opt in")
-	var value := {"enabled":true,"end_inclusive":false,"search_order":"coordinate_order"}
+	var value := {"enabled":true,"end_inclusive":false,"search_order":"coordinate_order","gem_wallet_enabled":false,"allow_entry_area":false}
 	check(policy.update_settings(value).ok, "policy settings saved atomically")
 	var reopened=POLICY.new(); reopened.settings_path=policy.settings_path
 	check(reopened.get_settings()==value,"settings survive new instance")
@@ -48,5 +56,24 @@ func run() -> void:
 	var damaged:=FileAccess.open("user://local-policy-corrupt.json",FileAccess.WRITE);damaged.store_string("{");damaged.close()
 	var corrupt=POLICY.new();corrupt.settings_path="user://local-policy-corrupt.json"
 	check(not corrupt.get_settings().enabled and not corrupt.problem.is_empty(),"corrupt settings safely disable without parse errors")
+	var world := LandingWorld.new()
+	root.add_child(world)
+	check(POLICY.safe_point(world,Vector2.ZERO),"clear fixture has no invented collision")
+	world.field_map.data.npc_spawn=[{"position":[0,0]}]
+	check(not POLICY.safe_point(world,Vector2.ZERO) and not POLICY.safe_point(world,Vector2(63,0)),"installed NPC absent from reservation array still blocks landing")
+	check(POLICY.safe_point(world,Vector2(64,0)),"existing64px actor buffer boundary preserved")
+	world.field_map.data.npc_spawn=[]
+	world.field_map.data.portal=[{"position":[0,0],"radius":100}]
+	check(not POLICY.safe_point(world,Vector2(103,0)) and POLICY.safe_point(world,Vector2(104,0)),"actual large portal trigger plus body radius respected without reservation")
+	world.field_map.data.portal=[]
+	world.field_map.reservations=[{"center":[0,0],"radius":64.0}]
+	check(not POLICY.safe_point(world,Vector2.ZERO),"entry exclusion remains intact")
+	world.field_map.data.spawn_position=[0,0]
+	check(POLICY.safe_point(world,Vector2.ZERO,true),"explicit entry policy allows only clear entry buffer")
+	world.field_map.data.npc_spawn=[{"position":[0,0]}]
+	check(not POLICY.safe_point(world,Vector2.ZERO,true),"entry opt in never bypasses installed NPC")
+	world.field_map.data.npc_spawn=[];world.field_map.data.portal=[{"position":[0,0],"radius":18}]
+	check(not POLICY.safe_point(world,Vector2.ZERO,true),"entry opt in never bypasses portal")
+	world.queue_free()
 	print("AUTO_HUNT_LOCAL_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"synthetic_geometry":true}))
 	quit(0 if failures.is_empty() else 1)
