@@ -1,6 +1,10 @@
 extends Node2D
 class_name TwilightWorld
 
+const MONSTERBOOK523_RUNTIME = preload("res://scripts/monsterbook/monsterbook523_runtime.gd")
+var monsterbook523_runtime = MONSTERBOOK523_RUNTIME.new()
+var monsterbook523 = monsterbook523_runtime.catalog
+
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
@@ -389,6 +393,7 @@ func _ready() -> void:
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
+	monsterbook523_runtime.configure(self)
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -2607,6 +2612,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
+	monsterbook523_runtime.on_death(monster)
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -4398,6 +4404,8 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if monsterbook523_runtime.save_blocked: return ERR_FILE_CORRUPT
+	if collection_override.has("monsterbook523") and not monsterbook523.valid_state(collection_override.monsterbook523): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4413,7 +4421,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","monsterbook523"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4448,6 +4456,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"gold": gold,
 		"inventory": inventory,
 		"quest_state": quest_service.export_state(),
+		"monsterbook523": monsterbook523.export_state(),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
@@ -4551,6 +4560,10 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	if not monsterbook523.valid_state(data.get("monsterbook523", {"schema":1,"books":{}})):
+		monsterbook523_runtime.save_blocked = true
+		hud.show_message("몬스터 도감 기록 손상 · 원본 저장을 보존합니다")
+		return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4786,6 +4799,8 @@ func _load_game(quiet: bool) -> void:
 	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
+	monsterbook523.import_state(data.get("monsterbook523", {"schema":1,"books":{}}))
+	monsterbook523_runtime.save_blocked = false
 	card_draw_fusion.import_state(data.get("card_draw_fusion", {}))
 	if _full_cards_playtest_active(): card_draw_fusion.grant_full_collection_for_playtest(10)
 	# Old version-1 ownership is already permanent. Derive silently before HP/MP
@@ -7107,7 +7122,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 
 func _catalog_damage_bonus(kind: String) -> int:
 	# Native secondary doll effects are counted once, separately from general attack.
-	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
+	var source_damage: int=monsterbook523_runtime.flat_bonus({"melee":"MeleeDamage","ranged":"RangeDamage","magic":"MagicDamage"}.get(kind,"")) + option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
 	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
@@ -7129,7 +7144,7 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
-	var total: int = option_awakening.accuracy_bonus(kind)
+	var total: int = option_awakening.accuracy_bonus(kind) + monsterbook523_runtime.flat_bonus({"melee":"MeleeHit","ranged":"RangeHit","magic":"MagicHit"}.get(kind,""))
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7548,6 +7563,7 @@ func _effective_mr() -> int:
 	var total: int = 10 + level + _effective_attribute("WIS") * 2
 	for record: Dictionary in _all_equipped_records():
 		total += _record_mr(record)
+	total += monsterbook523_runtime.flat_bonus("MagicResist")
 	total += _active_skill_buff_total("mrFlat")
 	total += _active_item_buff_total("mr")
 	total += _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "mr")
@@ -7569,6 +7585,7 @@ func _damage_reduction_stat() -> int:
 	var total: int = 0
 	for record: Dictionary in _all_equipped_records():
 		total += _record_damage_reduction(record)
+	total += monsterbook523_runtime.flat_bonus("DamageReduction")
 	total += _active_item_buff_total("damage_reduction")
 	total += _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "reduction")
 	return maxi(0, total)
@@ -8105,3 +8122,10 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_update_hud()
 	_save_game(true)
 	return true
+
+# Dedicated MonsterBook API; never changes population/spawn definitions.
+func monsterbook_action_status(action: String, book_id: int, level_id: int) -> String:
+	return monsterbook523_runtime.action_status(action, book_id, level_id)
+
+func request_monsterbook_action(action: String, book_id: int, level_id: int) -> Dictionary:
+	return monsterbook523_runtime.request_action(action, book_id, level_id)
