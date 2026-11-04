@@ -7,6 +7,7 @@ extends VBoxContainer
 # selected ID, quantity limit, readiness decision and effect implementation.
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
+const SOURCE523=preload("res://scripts/skills/player_skills523.gd")
 var owner_view: Node
 var picture: TextureRect
 var title: Label
@@ -181,10 +182,19 @@ func show_skill() -> void:
 		category.text+=" · "+("습득 완료" if learned else "미습득")
 		var rows: Array=[]
 		if not owner_view.RULES.is_passive(selected):
-			rows=[["소모 MP / HP","%d / %d" % [int(skill.get("mp",0)),int(skill.get("hp",0))]],["재사용","%.1f초" % (float(skill.get("cooldown",0))*world._skill_cooldown_factor())],["지속시간","%.1f초" % float(skill.get("duration",0))]]
+			rows=[["소모 MP / HP","%d / %d" % [int(skill.get("mp",0)),int(skill.get("hp",0))]],["재사용","%.1f초" % (float(skill.get("cooldown",0))*world._skill_cooldown_factor())],["지속시간",SOURCE523.duration_text(skill)]]
+			if not str(skill.get("source523_block_reason", "")).is_empty():
+				rows[0] = ["523 원문 MP / HP","%d / %d" % [int(skill.source523.mp_cost_raw),int(skill.source523.hp_cost_raw)]]
 		rows.append(["사용 무기","제한 없음" if skill.get("weapons",[]).is_empty() else " · ".join(skill.weapons)])
+		if skill.has("source523"):
+			rows.append(["523 대상",SOURCE523.target_text(skill.source523)])
+			if not skill.source523.applied.is_empty(): rows.append(["시전 재료",SOURCE523.material_text(skill)])
 		info_text=_table(rows)+"\n\n[b]효과[/b]\n"+UI.safe(selected.get("desc",""))+"\n\n"+("습득 완료" if learned else UI.safe(world.original_skills.catalog.reason(selected)))
 		if bool(selected.get("local_design",false)):info_text=raw_skill_text
+		else: info_text+=SOURCE523.detail_text(skill)
+		if not str(skill.get("source523_block_reason", "")).is_empty():
+			category.text+=" · 523 사용 보류"
+			info_text="[color=#dfb168]"+UI.safe(skill.source523_block_reason)+"[/color]\n\n"+info_text
 	if blocked:category.text+=" · 실행 보류"
 	elif not bool(selected.get("local_design",false)):owner_view.use_button.text="패시브" if owner_view.RULES.is_passive(selected) else "스킬 사용"
 	owner_view.learn_button.visible=original and not learned and not blocked

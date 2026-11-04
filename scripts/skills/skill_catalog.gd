@@ -5,6 +5,8 @@ class_name TwilightOriginalSkillCatalog
 ## The old game DB remains untouched, but its synthesized skills are not active.
 const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
 var current_official = CURRENT.new()
+const SOURCE523 = preload("res://scripts/skills/player_skills523.gd")
+var source523 = SOURCE523.new()
 const ROOT_PATH := "res://data/skills/"
 var records: Array = []
 var by_id: Dictionary = {}
@@ -70,6 +72,7 @@ func configure(owner: Node) -> void:
 		if str(fact.hp_display).is_valid_int(): row.class_costs[job]["hp"]=int(fact.hp_display)
 		row.class_references[job]=fact.duplicate(true)
 	relations.merge(current_official.local_design.get("relations",{}))
+	source523.configure_arguments()
 	seed_starters()
 
 
@@ -188,7 +191,7 @@ func learn(key: String) -> bool:
 func _lineage_signature() -> String:
 	# Tests and migration adapters may edit learned directly; hash catches those
 	# alongside the normal learn/import revision without touching old save data.
-	return "%d|%s|%d|%d" % [revision,str(world.job_class),hash(learned),records.size()]
+	return "%d|%s|%d|%d|%d" % [revision,str(world.job_class),hash(learned),records.size(),source523.revision]
 
 func _resolved_reference(record: Dictionary) -> Dictionary:
 	var signature: String=_lineage_signature()
@@ -235,7 +238,7 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 			result.official["source_url"]=record.class_references[job].source_url
 			result.official["learning_level"]=result.minimum_level
 			result.official["mp_cost"]=result.mp
-	return result
+	return source523.apply_to(result,job,family.size() > 1)
 
 func _current_stat_signature() -> String:
 	var equipped: Variant=world.equipped_items.get("weapon",{})

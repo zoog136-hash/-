@@ -143,19 +143,31 @@ func equipment_modifier(skill: Dictionary, key: String) -> float:
 				result += float(entry.get(key, 0))
 	return result
 
+func material_plan(skill: Dictionary) -> Dictionary:
+	var spent: Dictionary = {}
+	for item: String in skill.get("items", {}):
+		var remaining: int = int(skill.items[item])
+		for key: String in Catalog.SOURCE523.inventory_keys(skill, item):
+			var available: int = maxi(0,int(world.inventory.get(key,0))-int(spent.get(key,0)))
+			var amount: int = mini(remaining,available)
+			if amount > 0: spent[key] = int(spent.get(key,0)) + amount
+			remaining -= amount
+		if remaining > 0: return {"reason":"%s %d개 필요" % [item,int(skill.items[item])],"spent":{}}
+	return {"reason":"","spent":spent}
+
 func cost_reason(skill: Dictionary) -> String:
+	if not str(skill.get("source523_block_reason", "")).is_empty(): return str(skill.source523_block_reason)
 	if bool(skill.get("runtime_blocked", false)): return Catalog.CURRENT.blocked_reason(skill)
 	if world.mp < int(skill.get("mp", 0)): return "MP 부족"
 	if world.hp <= int(skill.get("hp", 0)): return "HP 부족"
-	for item: String in skill.get("items", {}):
-		if int(world.inventory.get(item, 0)) < int(skill.items[item]): return "%s %d개 필요" % [item, int(skill.items[item])]
-	return ""
+	return str(material_plan(skill).reason)
 
 func spend(skill: Dictionary) -> bool:
 	if not cost_reason(skill).is_empty(): return false
+	var plan: Dictionary = material_plan(skill)
 	world.mp -= int(skill.get("mp", 0))
 	world.hp -= int(skill.get("hp", 0))
-	for item: String in skill.get("items", {}): world.inventory[item] = int(world.inventory.get(item, 0)) - int(skill.items[item])
+	for item: String in plan.spent: world.inventory[item] = int(world.inventory.get(item,0)) - int(plan.spent[item])
 	return true
 
 func ready(skill: Dictionary, announce: bool = false) -> bool:
@@ -189,6 +201,7 @@ func cast(record: Dictionary) -> bool:
 	if mode in ["attack", "status", "turn_undead"] and str(skill.get("shape", "single")) != "self_circle":
 		target = world._skill_target(float(skill.get("range", 240)))
 		if not is_instance_valid(target) or target.dead: return false
+		if not Catalog.SOURCE523.target_allowed(skill, target): return false
 	if mode == "turn_undead" and turn_undead_chance(skill, target) <= 0:
 		world.hud.show_message("턴 언데드 대상이 아니거나 즉사 면역입니다")
 		return false
@@ -276,12 +289,14 @@ func targets(skill: Dictionary, primary: TwilightMonster) -> Array[TwilightMonst
 	var result: Array[TwilightMonster] = []
 	var origin: Vector2 = world.player.global_position
 	var shape := str(skill.get("shape", "single"))
-	if shape == "single" and is_instance_valid(primary): return [primary]
+	if shape == "single" and is_instance_valid(primary):
+		return [primary] if Catalog.SOURCE523.target_allowed(skill, primary) else []
 	var center: Vector2 = primary.global_position if is_instance_valid(primary) else origin
 	var radius := float(skill.get("radius", skill.get("range", 160)))
 	for child: Node in world.monsters_root.get_children():
 		if not child is TwilightMonster or child.dead: continue
 		var monster := child as TwilightMonster
+		if not Catalog.SOURCE523.target_allowed(skill, monster): continue
 		if not world._has_line_of_sight_world(origin, monster.global_position): continue
 		var include := monster.global_position.distance_to(center) <= radius
 		if shape == "line":
@@ -559,6 +574,7 @@ static func roll_counter(random: RandomNumberGenerator, chance: float) -> bool:
 func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 	if not ready(skill): return false
 	skill = catalog.resolve(skill)
+	if str(skill.get("mode", "")) in ["attack", "status", "turn_undead"] and is_instance_valid(target) and not Catalog.SOURCE523.target_allowed(skill, target): return false
 	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.auto_wants(skill)
 	match str(skill.mode):
 		"turn_undead": return turn_undead_chance(skill, target) > 0
