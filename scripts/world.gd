@@ -105,7 +105,10 @@ var pending_attack: Dictionary = {}
 var combat_generation: int = 0
 var resolving_combat_action: bool = false
 var stat_hud_refresh_pending: bool = false
-var presentation_settings: Dictionary = {"impact_intensity":0.85, "reduced_motion":false, "effect_detail":"full"}
+const PRESENTATION = preload("res://scripts/animation/presentation_preferences.gd")
+var presentation_global_settings: Dictionary = PRESENTATION.DEFAULTS.duplicate(true)
+var presentation_region_settings: Dictionary = {}
+var presentation_settings: Dictionary = PRESENTATION.DEFAULTS.duplicate(true)
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
@@ -1279,9 +1282,13 @@ func _connect_signals() -> void:
 	add_child(combat_flights)
 	var saved_presentation := ConfigFile.new()
 	if saved_presentation.load("user://twilight_ui_settings.cfg") == OK:
-		for key: String in presentation_settings:
-			presentation_settings[key] = saved_presentation.get_value("visual", key, presentation_settings[key])
-	apply_presentation_settings(presentation_settings)
+		for key: String in presentation_global_settings:
+			presentation_global_settings[key] = saved_presentation.get_value("visual", key, presentation_global_settings[key])
+		if saved_presentation.has_section("visual_regions"):
+			for map_key: String in saved_presentation.get_section_keys("visual_regions"):
+				var local: Variant = saved_presentation.get_value("visual_regions", map_key)
+				if local is Dictionary: presentation_region_settings[map_key] = PRESENTATION.region(local)
+	apply_presentation_settings(PRESENTATION.normalized(presentation_global_settings))
 	player.attack_strike.connect(_release_player_attack)
 	player.attack_cancelled.connect(_cancel_player_attack)
 	player.attack_requested.connect(_attack)
@@ -1525,6 +1532,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_repath_timer = 0.0
 	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
+	_refresh_presentation_settings()
 	_perf_log("맵 이동", map_started_usec)
 	if map_bootstrap_blocked:
 		map_bootstrap_blocked=false
@@ -6573,6 +6581,7 @@ func _apply_transform_visual(record: Dictionary) -> void:
 func _apply_doll_visual(record: Dictionary) -> void:
 	player.source_visual_context = _source_visual_context()
 	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)
+	doll_motion.set_presentation_hidden(bool(presentation_settings.hide_doll), $Companion, companion_sprite, player)
 	_sync_option_awakening_aura("마법인형")
 
 func _build_directional_frames(sprite: AnimatedSprite2D, texture: Texture2D) -> void:
@@ -7692,6 +7701,9 @@ func _experience_multiplier() -> float:
 func _update_companion(delta: float) -> void:
 	doll_motion.update(delta, $Companion, companion_sprite, player)
 	relic_motion.update(delta, relic_sprite, player)
+	if bool(presentation_settings.hide_doll):
+		if is_instance_valid(secondary_doll_visual): secondary_doll_visual.hide()
+		return
 	var state: Dictionary=option_awakening.subslot_view(false)
 	if not state.get("active",false):
 		if is_instance_valid(secondary_doll_visual):secondary_doll_visual.clear()
@@ -7968,17 +7980,30 @@ func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kin
 	if critical and not bool(presentation_settings.reduced_motion): player.motion.visual_hold = 0.028
 
 func apply_presentation_settings(settings: Dictionary) -> void:
-	presentation_settings = {
-		"impact_intensity":clampf(float(settings.get("impact_intensity", presentation_settings.impact_intensity)), 0.0, 1.0),
-		"reduced_motion":bool(settings.get("reduced_motion", presentation_settings.reduced_motion)),
-		"effect_detail":"low" if str(settings.get("effect_detail", presentation_settings.effect_detail)) == "low" else "full"
-	}
+	presentation_global_settings = PRESENTATION.normalized(settings, presentation_global_settings)
+	_refresh_presentation_settings()
+
+func set_region_presentation_settings(map_id: String, settings: Dictionary, enabled: bool = true) -> void:
+	if map_id.is_empty(): return
+	if enabled: presentation_region_settings[map_id] = PRESENTATION.region(settings)
+	else: presentation_region_settings.erase(map_id)
+	_refresh_presentation_settings()
+
+func _refresh_presentation_settings() -> void:
+	presentation_settings = PRESENTATION.effective(presentation_global_settings, presentation_region_settings, active_map_id)
+	if is_instance_valid(companion_sprite) and is_instance_valid(player):
+		doll_motion.set_presentation_hidden(bool(presentation_settings.hide_doll), $Companion, companion_sprite, player)
+	if is_instance_valid(secondary_doll_visual):
+		secondary_doll_visual.visible = not bool(presentation_settings.hide_doll) and secondary_doll_visual.status == "source_native"
+		if secondary_doll_visual.visible and is_instance_valid(player):
+			secondary_doll_visual.global_position = player.global_position + Vector2(54,24)
 	if is_instance_valid(combat_vfx):
 		combat_vfx.impact_intensity = presentation_settings.impact_intensity
 		combat_vfx.reduced_motion = presentation_settings.reduced_motion
+		combat_vfx.impact_visual_limit = 24 if presentation_settings.limit_effect_count else COMBAT_VFX.CAPACITY
 		combat_vfx.detail_limit = 6 if presentation_settings.effect_detail == "low" else COMBAT_VFX.VISUALS.DETAIL_LIMIT
 	if is_instance_valid(combat_flights):
-		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" else 64
+		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" or presentation_settings.limit_effect_count else 64
 	for raw: Variant in source_awakening_auras.values():
 		if is_instance_valid(raw): raw.call("apply_settings", presentation_settings)
 	for raw: Variant in option_awakening_auras.values():

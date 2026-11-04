@@ -4,6 +4,7 @@ extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Dialog = preload("res://scripts/ui/renewal_dialog.gd")
 const SETTINGS_PATH = "user://twilight_ui_settings.cfg"
+const PREFS = preload("res://scripts/animation/presentation_preferences.gd")
 const SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
 var hud: Node
 var config: ConfigFile = ConfigFile.new()
@@ -15,6 +16,10 @@ var impact_intensity: HSlider
 var impact_readout: Label
 var reduced_motion: CheckButton
 var effect_detail: OptionButton
+var hide_doll: CheckButton
+var limit_effect_count: CheckButton
+var region_override: CheckButton
+var presentation_map_id: String = ""
 
 static func apply_saved(controller: Node) -> void:
 	var saved := ConfigFile.new()
@@ -36,6 +41,7 @@ func configure(controller: Node) -> void:
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	config.load(SETTINGS_PATH)
+	presentation_map_id = str(hud.get_parent().get("active_map_id"))
 	var scroller := ScrollContainer.new()
 	scroller.name = "SettingsScroll"
 	scroller.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -121,6 +127,13 @@ func configure(controller: Node) -> void:
 		_store("visual","reduced_motion",enabled)
 		_apply_presentation())
 	stack.add_child(reduced_motion)
+	region_override = CheckButton.new()
+	region_override.name = "RegionPresentationOverride"
+	region_override.text = "현재 지역 별도 설정 · " + str(hud.get_parent().get("active_map").get("name",presentation_map_id))
+	region_override.set_pressed_no_signal(config.has_section_key("visual_regions",presentation_map_id))
+	region_override.toggled.connect(_region_override_changed)
+	stack.add_child(region_override)
+	stack.add_child(UI.section("별도 설정을 끄면 기본 표시 설정으로 돌아갑니다.",12))
 	var detail_row := HBoxContainer.new()
 	stack.add_child(detail_row)
 	detail_row.add_child(UI.label("이펙트 세부 표현",14))
@@ -131,9 +144,24 @@ func configure(controller: Node) -> void:
 	effect_detail.add_item("간소화")
 	effect_detail.select(1 if str(config.get_value("visual","effect_detail","full")) == "low" else 0)
 	effect_detail.item_selected.connect(func(index: int) -> void:
-		_store("visual","effect_detail","low" if index == 1 else "full")
+		_store_presentation("effect_detail","low" if index == 1 else "full")
 		_apply_presentation())
 	detail_row.add_child(effect_detail)
+	limit_effect_count = CheckButton.new()
+	limit_effect_count.name = "LimitEffectCount"
+	limit_effect_count.text = "동시 이펙트 수 줄이기"
+	limit_effect_count.toggled.connect(func(enabled: bool) -> void:
+		_store_presentation("limit_effect_count",enabled)
+		_apply_presentation())
+	stack.add_child(limit_effect_count)
+	hide_doll = CheckButton.new()
+	hide_doll.name = "HideDoll"
+	hide_doll.text = "마법인형 외형 숨기기 · 능력치 유지"
+	hide_doll.toggled.connect(func(enabled: bool) -> void:
+		_store_presentation("hide_doll",enabled)
+		_apply_presentation())
+	stack.add_child(hide_doll)
+	_sync_presentation_controls()
 	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("월드 외형",18,UI.GOLD))
 	stack.add_child(UI.section("지도 좌표·충돌·몬스터 배치를 변경하지 않는 시각 설정입니다.",12))
@@ -225,8 +253,45 @@ func _apply_presentation() -> void:
 		world.call("apply_presentation_settings",{
 			"impact_intensity":impact_intensity.value/100.0,
 			"reduced_motion":reduced_motion.button_pressed,
-			"effect_detail":"low" if effect_detail.selected == 1 else "full"
+			"effect_detail":config.get_value("visual","effect_detail","full"),
+			"limit_effect_count":config.get_value("visual","limit_effect_count",false),
+			"hide_doll":config.get_value("visual","hide_doll",false)
 		})
+
+func _presentation_values() -> Dictionary:
+	var result: Dictionary = {}
+	for key: String in PREFS.REGION_KEYS:
+		result[key] = config.get_value("visual",key,"full" if key == "effect_detail" else false)
+	result = PREFS.region(PREFS.normalized(result))
+	if region_override.button_pressed:
+		var local: Variant = config.get_value("visual_regions",presentation_map_id,{})
+		if local is Dictionary: result.merge(PREFS.region(local),true)
+	return result
+
+func _sync_presentation_controls() -> void:
+	var values: Dictionary = _presentation_values()
+	effect_detail.select(1 if str(values.effect_detail) == "low" else 0)
+	limit_effect_count.set_pressed_no_signal(bool(values.limit_effect_count))
+	hide_doll.set_pressed_no_signal(bool(values.hide_doll))
+
+func _region_override_changed(enabled: bool) -> void:
+	if enabled:
+		_store("visual_regions",presentation_map_id,_presentation_values())
+	else:
+		config.erase_section_key("visual_regions",presentation_map_id)
+		var error: Error = config.save(SETTINGS_PATH)
+		if error != OK: push_warning("Could not save UI preferences: %d" % error)
+	hud.get_parent().call("set_region_presentation_settings",presentation_map_id,_presentation_values(),enabled)
+	_sync_presentation_controls()
+
+func _store_presentation(key: String, value: Variant) -> void:
+	if region_override.button_pressed:
+		var values: Dictionary = _presentation_values()
+		values[key] = value
+		_store("visual_regions",presentation_map_id,values)
+		hud.get_parent().call("set_region_presentation_settings",presentation_map_id,values)
+	else:
+		_store("visual",key,value)
 
 func _volume_changed(value: float) -> void:
 	if AudioServer.get_bus_count() > 0:
