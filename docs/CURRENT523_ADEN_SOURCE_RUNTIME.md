@@ -3,11 +3,12 @@
 Base main: `7d550a78a8fd1a95a50ebb18b38c3134380c3fa6`; feature PR232.
 The current523 LineageM originals have a hash-bound Main API, a resource
 installer and a Godot tile review screen in the existing settings window.
-An optional experimental mode also displays these tiles while the existing
-TWILIGHT Aden field runs player movement and collision. Main entry, actual
-player motion, blocked-cell rejection, boundary rejection, return, normal save
-and a new-process reconnect were exercised. Native M collision, actor alignment
-and portal behavior remain unverified; this is not complete M mainland parity.
+The source-field mode now loads the supplied S32 terrain and attributes into
+an independent movement field. Its own configurable interpretation replaces
+the older TWILIGHT navigation during that mode. The earlier display over old
+TWILIGHT navigation remains a separate compatibility experiment. Native M
+collision, actor alignment and portal behavior remain unverified; this is not
+complete M mainland parity.
 M engine/APK/XAPK exploration remains stopped.
 
 ## Open it from the game
@@ -67,7 +68,106 @@ godot --path . -- --aden523-review \
   --aden523-member=Map/Aden/80138007.s32
 ```
 
-## Optional local gameplay
+## Source-based gameplay
+
+Select **원문 S32 속성 기반 · 자체 통행** in the existing settings panel. The
+raw and tile folders come from the installed private pack. Optional entry X/Y
+values identify source cells; the runtime places the actor at the explicitly
+chosen display cell center. A blocked or missing entry is rejected without
+nearest-cell replacement. Without an entry override, it uses the separately
+saved source cursor or the current actor's source coordinates. This projection
+and actor foot point remain application conventions rather than native M facts.
+
+`current523_aden_source_field.gd` loads every676 canonical filename placement
+and retains the ninth-character source as unplaced. Bounds derive from the
+source union `(32256,31936,2048,2112)`. It reads two original u16 attribute words
+and two u32 floor references for each cell. The default own interpretation
+accepts exact words `[0,4,8,12,32]` in both halves and rejects either floor
+sentinel `0xffffffff`. Zero is explicitly mapped by this policy; absent chunks,
+invalid bytes, `0xffff`, other words and unplaced sources never become zero
+floor. The allowlist is editable in Settings and stored separately from raw
+inputs. The lower-level API also supports bounded masks. No source value is
+rewritten and no M safety/PVP meaning is assigned.
+
+The choice follows original-byte inventory, prior reports and a fresh primary
+source check of the public [L1MapViewer editing code](https://github.com/tony1223/L1MapViewer/blob/main/MapForm.cs),
+which uses bit0 for its own passability editor. That is PC tool guidance, not M
+engine evidence. Existing M-byte analysis found78612 nonreciprocal pairs in
+the viewer's directional candidate. This implementation therefore uses an
+explicit conservative exact-word policy with symmetric endpoint checks and
+both side cells required for diagonals. It reuses DDA/A* algorithms through
+these source-field predicates, without loading A3 grids, old geography, doors,
+NPC positions or monster placements. A per-field48-chunk LRU bounds raw reads.
+
+On entry, Main replaces its field/physics/minimap and renderer with the S32
+field. The prior field is retained only for safe return and save compatibility.
+Its renderer and collision streaming are disabled; prior actors/boss HUD are
+hidden and paused, and cannot be selected or damaged as source-field actors.
+Selections, gestures, charge routes and pending attacks are cleared. This PR
+does not invent M spawns or reimplement PR230's population contract. The M
+Gate/Obstacle/InteractionCell namespaces and typed occupancy states remain
+separate and unexecuted; excluded siege/arena features are not introduced.
+
+Normal progress saves through the existing writer with its original spatial
+identity. Only the source cursor goes into the separate atomic play config.
+A committed inventory save is never reported failed merely because the cursor
+write fails, avoiding caller refunds of already committed transactions.
+Source-session restoration suppresses host encounter admission until the own
+field is ready; original boss state stays preserved. Returning explicitly
+restores the original field, body, camera, actor position and population.
+Unsupported return-scroll/ground-drop operations are held with visible reasons
+and preserve inventory. These limits must not be described as complete M
+combat or floor-item integration.
+
+## Guarded source portals
+
+Download [TWILIGHT_current523_Aden_source_portals_v1.json](https://drive.google.com/file/d/1r3NHS_NeV3iYeT80qn-6haAJA9KM5Sx5/view)
+from the application folder and enter its local path in the source portal field.
+It is392459bytes, SHA256
+`350176c5a55d349ec1b4e0b861b29b48499c9b5c32471c89b3ef86d03ea19767`.
+The runtime checks that fixed digest, the three native table identities and
+the raw source inventory. The resource was uploaded to the existing owner-only
+Drive folder, downloaded through normal authentication and rehashed successfully.
+
+The private compiler preserves all93 native Land4 declarations and89 named raw
+records, including exact labels/offsets/bytes. There are31 Aden-internal exact
+source matches and30 matching source/destination candidates. The default own
+cell policy accepts both endpoints of only **Portal335 and Portal343**;30 is
+not an active-portal count. Portal350's mismatch, other-Land inputs, rectangles
+without an exact landing and unmatched records remain blocked. Use the explicit
+portal button while standing in its exact declared source cell. This supplies
+no inferred trigger radius, reverse link, fee or borrowed LandTeleport rule.
+The caller checks actor state, cooldown, both actual endpoint members/hashes,
+configured clear flags and arrival rendering before completing movement.
+
+PR230's pinned contract documentation at `a1fec5e2` was read without merging
+its branch. The controller exposes copied `portal_evidence()` and
+`portal_context(id)` data. Main exposes `current523_aden_source_portals()`,
+`current523_aden_source_portal_context(id)` and the explicit
+`use_current523_aden_source_portal(id)` request. Evidence rows contain exact
+`portal`, `target_territory`, `target_land`, `source_position`, optional exact
+`landing_position`, member/hash `source_support`/`target_support`,
+`activation_candidate`, raw record IDs and blockers. Runtime authorization
+requires the actual source field; the resource never pre-authorizes movement.
+It does not duplicate PR230's
+spawn/condition catalog, host portal navigation or original-data UI.
+
+The newly supplied parent handoff
+`M523_PR232_PR230_map_source_crosslinks_20261104.zip` was formally downloaded
+from private Drive:389919bytes, SHA256
+`7fa773dfa1e040ba6afc9eed917b90f1a6bbca4cd64fbef44b0b85fe3697c71f`,
+with ZIP CRC pass. `HANDOFF_KO.txt` and the row-wise evidence preserve the
+additional50 global target4/Land4 relations, of which31 are Aden-internal.
+The other19 have no corresponding full source member in this consumer's
+677-Aden-only input. Their metadata does not substitute for missing fields.
+The reproducible parent-crosslink verifier checked all65 ZIP entries by CRC,
+all64 manifest payloads, all50 row relations, all113 linked current M rows and
+the independent review. It reread31 Aden records at exact offsets in14
+SHA-matched source files, reproducing30 candidates and Portal350's mismatch.
+The supplied current31/retained50819 provenance distinction and35 numeric
+AssetPath counterexamples prohibit a global raw-targetword=LandID conversion.
+
+## Earlier compatibility experiment
 
 In **메뉴 → 설정 → 아덴 원문 검토**, explicitly select
 **기존 TWILIGHT 아덴 통행 · 자체 설정** and press **실험 플레이 시작**.
@@ -132,9 +232,10 @@ coordinates, checked14 Aden tail records at their original byte offsets in9
 hash-matched M files, and reproduced10 exact Portal.SourceX/Y matches plus4
 counterexamples. Portal332's matching source does not make its packed target
 correct: the candidate target differs from the declared territory by3 cells.
-These partial matches do not establish M projection, actor feet, odd-x rules,
-collision or executable travel. No portal from this evidence is activated as
-an inferred movement rule, and no original record is repaired.
+These partial matches do not establish M projection, actor feet, odd-x rules
+or collision. The source-field adapter's separate native-row/raw-endpoint and
+actual-field checks above govern explicit own movement; no original record
+is repaired.
 
 Subsequent parent analysis distinguishes duplicated `sanga in 1/2` records,
 including the copy in `80137ff6.s32` matching Portal341/342. It also reports
@@ -142,7 +243,9 @@ including the copy in `80137ff6.s32` matching Portal341/342. It also reports
 matched Aden-internal records. Portal350 at `80157ff7.s32@154102` has matching
 source(34117,32254), but raw target candidate(34278,32224) differs from declared
 Territory173424(34275,32222). These additional findings were supplied by the
-parent, not independently rerun by this consumer. They do not authorize a
+parent and subsequently independently checked against the newly received
+handoff and actual Aden sources by `verify_current523_parent_crosslinks.py`.
+They do not authorize a
 global target-word interpretation or replacement of declared destinations.
 
 Current original TI2 selection:2866files,97365118bytes. Source inventory:
@@ -194,6 +297,46 @@ bound separately from the coverage atlas. Every stored pixel must fit without
 clipping or duplicate writes.
 
 ## Verification and delivery
+
+Latest source-field follow-up, using the physically downloaded and newly
+installed Drive pack:
+
+- Godot real-source field:4819checks passed across all676 placed chunks, with
+  whole-file/section digests and three independently read cell pairs per chunk.
+  This proves source loading and the own policy, not native movement semantics.
+- Pinned portal contract plus actual source field:150checks passed; only335/343
+  accepted under the default own policy. Python portal/crosslink/staging/transfer
+  guards:28tests passed. The new handoff's all50 relations and113 native rows
+  independently match, with31 actual Aden records reread and19 external source
+  records left metadata-only.
+- Actual Main source entry/movement/Portal335/save:35checks,78.50s. New-process
+  source cursor/progression/boss/save preservation:9checks,78.24s. Multiple
+  source regions/seams/Portal343/boundary/failure return:38checks,117.24s. All
+  retain the original180s per-process limit. Tested entry sources were
+  (33341,33168) in`80088006`,(34002,32326) in`80137ff9`,(33471,32769) in
+  `800a8000`, and(32319,33595) in`7ff8800c`. Actual seam motion crossed
+  `800a8000→800b8000` and`7ff8800c→7ff9800c`. Portal335 arrived at
+  (33365,33153);343 at(34006,32302). Failed350/other-Land/repeat use preserved
+  position and protected state. Real return-scroll use and drop attempts
+  preserved an existing QA stack of2items. Budget failure restored the exact
+  old field/position with previous preferences unchanged.
+- Initial source entry caught an always-busy dictionary/string conversion in
+  the portal caller; the corrected caller passed the actual portal button.
+  Initial reconnect equality failed with unchanged save SHA. The follow-up
+  suppresses host encounter admission during own-source restore and preserves
+  full JSON precision in QA snapshots; final complete equality passes. Failed
+  logs remain separate from passing evidence.
+- Final default-off direct core:35/20/17/12/48/39/102/8/41/42 checks plus
+  identical/deferred-save regressions passed. Main took99.48s within180s;
+  synthetic source/portal guards remain explicitly separate from real sources.
+  Resource integrity remains723atlases/41442frames/233420026bytes.
+
+The actual player physics, source field, UI and portal adapters ran under
+Godot4.7.2/OpenGL/Xvfb/llvmpipe. Population/combat were controlled in the harness;
+there is no claim of every cell being play-tested, M NPC placement, native M
+collision/alpha/actor feet, full combat, floor-drop integration or other Lands.
+All native declarations and original bytes stay preserved; excluded
+engine/APK/arena/siege investigations remain stopped.
 
 Run direct guards with Godot4.7.2 and an isolated user profile:
 
@@ -332,10 +475,16 @@ Both backups were freshly downloaded through normal authenticated Drive access
 into a new consumer folder. Complete SHA256, ZIP CRC and all3543 original member
 hashes passed; owner-only permission metadata was verified. For the application
 pack, authenticated part streams and concatenated SHA passed, while full ZIP
-CRC and fresh user-folder installation/load passed using the same-SHA local
-ZIP. Physically reconstructing a downloaded Drive ZIP and installing that
-newly downloaded file as one direct chain has **not** been performed. These
-separate checks must not be described as that missing end-to-end chain.
+CRC and fresh user-folder installation/load initially passed using the same-SHA
+local ZIP. The later direct chain is now complete: all five parts were formally
+downloaded again for this explicit request, physically reassembled in a new
+consumer folder, checked by individual/full SHA and ZIP CRC, installed into a
+new user folder and loaded through actual Main. All45 UI checks passed in
+154.54s with6412 written/rehash-verified payloads and31523 rendered commands.
+Source gameplay tests consume those newly installed folders, rather than the
+earlier generated pack folders. The task-owned earlier installation and an
+identical generated ZIP duplicate were replaced to fit available disk; original
+source inputs, saves, downloaded ZIP, backup packs and code history remain.
 
 The historical source-dir ledger still requires absent `a1.zip`; that is not a
 pass for the old six-archive ledger. The actual supplied523 ZIPs passed separate

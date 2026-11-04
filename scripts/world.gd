@@ -873,6 +873,7 @@ func _invalidate_equipment_static() -> void:
 	equipment_records_dirty=true
 
 func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
+	if current523_aden_source_active(): return
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
@@ -1525,7 +1526,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			player.camera.reset_smoothing();player.camera.force_update_scroll()
 			field_renderer.refresh_visible()
 		_apply_saved_visual_mode()
-		field_population.configure(self, field_map)
+		# A saved source-field session must not create host encounters before its
+		# own field is restored. Existing boss data is imported/exported unchanged.
+		field_population.configure(self, null if _current523_source_restore_requested() else field_map)
 	else:
 		_spawn_monsters(9)
 	field_minimap.configure(self, field_map)
@@ -2301,6 +2304,7 @@ func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
 
 func _skill_target(max_distance: float) -> TwilightMonster:
+	if current523_aden_source_active(): return null
 	# Explicit target selection is authoritative. A spell may fail against a
 	# distant/obstructed target, but may never silently strike a different mob.
 	if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty():
@@ -2342,6 +2346,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 			hud.show_message("알 수 없는 스킬입니다")
 
 func _attack() -> void:
+	if current523_aden_source_active(): return
 	if is_instance_valid(world_interactions) and world_interactions.primary_is_npc(): return
 	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
@@ -2495,6 +2500,7 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 	return find_world_path(player.global_position, target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
+	if current523_aden_source_active(): return null
 	var best: TwilightMonster = null
 	var best_distance: float = max_distance
 	for node: Node in monsters_root.get_children():
@@ -2532,6 +2538,7 @@ func _has_line_of_sight_world(from_position: Vector2, to_position: Vector2) -> b
 	return true
 
 func _nearest_visible_monster(max_distance: float) -> TwilightMonster:
+	if current523_aden_source_active(): return null
 	var best: TwilightMonster = null
 	var best_distance: float = max_distance
 	for node: Node in monsters_root.get_children():
@@ -2562,6 +2569,7 @@ func _remember_auto_target_path_failure(monster: TwilightMonster) -> void:
 	auto_target_failed_paths[_auto_target_failure_key(monster)] = Time.get_ticks_msec() + AUTO_TARGET_FAILED_PATH_RETRY_MS
 
 func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false) -> TwilightMonster:
+	if current523_aden_source_active(): return null
 	# Distance-first preserves the previous nearest-reachable rule, while
 	# avoiding an expensive A*/source route for every closer actor seen so far.
 	var candidates: Array[Dictionary] = []
@@ -2949,6 +2957,7 @@ func _on_player_bleed_tick(damage_value: int) -> void:
 		_refresh_combat_hud()
 
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String) -> void:
+	if current523_aden_source_active(): return
 	if attacker == null or not is_instance_valid(attacker) or attacker.dead or hp <= 0:
 		return
 	if field_map != null and field_map.is_safe(player.global_position):
@@ -4409,6 +4418,8 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return ERR_UNAVAILABLE
+	if current523_aden_play_active and _current523_aden_play_controller != null and bool(_current523_aden_play_controller.get("source_owned")) and not bool(_current523_aden_play_controller.get("saving_prior_snapshot")):
+		return _current523_aden_play_controller.call("save_source_progress",quiet,collection_override)
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
@@ -4530,6 +4541,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	return OK
 
 func _load_game(quiet: bool) -> void:
+	if current523_aden_play_active: close_current523_aden_play(false)
 	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return
 	if BASE508_TEST.enabled():return
 	if not migration_pointer_error.is_empty():migration_path_checked=false
@@ -7004,6 +7016,7 @@ func _target_in_current_weapon_range(target: TwilightMonster) -> bool:
 	return target != null and _weapon_cell_distance(target) <= _current_attack_range_cells()
 
 func _nearest_visible_monster_in_weapon_range() -> TwilightMonster:
+	if current523_aden_source_active(): return null
 	var best: TwilightMonster = null
 	var best_distance: float = INF
 	var range_cells: int = _current_attack_range_cells()
@@ -8071,9 +8084,15 @@ func constrain_original_motion(actor: CharacterBody2D) -> void:
 			if not actor.test_move(actor.global_transform,target-actor.global_position): actor.velocity = Vector2.ZERO
 
 func return_from_original_map() -> bool:
+	if current523_aden_source_active():
+		close_current523_aden_play()
+		return true
 	return SOURCE_TRAVEL.return_home(self)
 
 func _drop_inventory_reference(reference: String, target: Vector2) -> bool:
+	if current523_aden_source_active():
+		hud.show_message("원문 필드의 바닥 아이템 저장 연결은 아직 지원하지 않아 아이템을 보존합니다.")
+		return false
 	return INVENTORY_GROUND_TRANSFER.drop(self,reference,target)
 
 func _on_secondary_doll_requested(identity: String) -> void:
@@ -8148,7 +8167,9 @@ func open_current523_aden_play(raw_root: String, tile_root: String, options: Dic
 	var opened: bool = bool(controller.call("open", requested))
 	current523_aden_play_active = bool(controller.get("active"))
 	current523_aden_play_problem = str(controller.get("problem"))
-	current523_aden_play_changed.emit(current523_aden_play_active, "기존 TWILIGHT 통행을 사용하는 아덴 실험 플레이입니다." if opened else current523_aden_play_problem)
+	var description: String = "S32 원문 지형·속성의 자체 해석으로 이동합니다. M 원작 판정은 미확정입니다." if options.get("navigation_profile")==CURRENT523_ADEN_PLAY_OPTIONS.SOURCE else "기존 TWILIGHT 통행을 사용하는 아덴 실험 플레이입니다."
+	if opened and not current523_aden_play_problem.is_empty(): description += " · 포탈 보류: "+current523_aden_play_problem
+	current523_aden_play_changed.emit(current523_aden_play_active, description if opened else current523_aden_play_problem)
 	return opened
 
 func close_current523_aden_play(remember_disabled: bool = true, reason: String = "") -> void:
@@ -8173,13 +8194,34 @@ func apply_current523_aden_play_options(options: Dictionary) -> bool:
 func current523_aden_play_metrics() -> Dictionary:
 	return _aden_play_controller().call("metrics")
 
+func current523_aden_source_active() -> bool:
+	return current523_aden_play_active and _current523_aden_play_controller != null and bool(_current523_aden_play_controller.get("source_owned"))
+
+func current523_aden_source_portals() -> Array:
+	return _aden_play_controller().call("portal_evidence")
+
+func current523_aden_source_portal_context(id: int) -> Dictionary:
+	return _aden_play_controller().call("portal_context",id)
+
+func use_current523_aden_source_portal(id: int) -> bool:
+	var result: bool = _aden_play_controller().call("use_source_portal",id)
+	current523_aden_play_problem = str(_aden_play_controller().get("problem"))
+	current523_aden_play_changed.emit(current523_aden_play_active,"원문 포탈로 이동했습니다." if result else current523_aden_play_problem)
+	return result
+
 func _restore_current523_aden_play() -> void:
 	if not is_inside_tree() or is_queued_for_deletion() or current523_aden_play_active or current523_aden_review_active or CURRENT523_ADEN_REVIEW.requested(): return
 	var options: Dictionary = CURRENT523_ADEN_PLAY_OPTIONS.read()
 	if not options.enabled: return
 	# Other maps keep their normal presentation; this never redirects travel.
 	if active_map_id != "aden_world": return
-	open_current523_aden_play(options.raw_root, options.tile_root, options)
+	if not open_current523_aden_play(options.raw_root, options.tile_root, options) and field_population.get("field")==null:
+		field_population.configure(self,field_map)
+
+func _current523_source_restore_requested() -> bool:
+	if active_map_id!="aden_world" or CURRENT523_ADEN_REVIEW.requested(): return false
+	var options: Dictionary = CURRENT523_ADEN_PLAY_OPTIONS.read()
+	return bool(options.enabled) and options.navigation_profile==CURRENT523_ADEN_PLAY_OPTIONS.SOURCE
 
 func _exit_tree() -> void:
 	if _current523_aden_play_controller != null:

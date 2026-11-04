@@ -3,6 +3,8 @@ extends RefCounted
 const PATH = "user://current523_aden_play.cfg"
 const NONE = "NONE"
 const LEGACY = "TWILIGHT_ADEN_NAVIGATION_V1"
+const SOURCE = "CURRENT523_S32_OWN_ALLOWLIST_V1"
+const SOURCE_WORDS: Array[int] = [0,4,8,12,32]
 const GRID_SHA256 = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const LAYOUT_REVISION = 2026102904
 const OFFSET_LIMIT = 48
@@ -15,7 +17,7 @@ static func validate(value: Dictionary) -> Dictionary:
 	if not value.get("enabled", false) is bool: return {}
 	result.enabled = value.get("enabled", false)
 	var profile: Variant = value.get("navigation_profile", NONE)
-	if profile not in [NONE, LEGACY]: return {}
+	if profile not in [NONE, LEGACY, SOURCE]: return {}
 	result.navigation_profile = profile
 	for key: String in ["offset_x", "offset_y"]:
 		var number: Variant = value.get(key, 0)
@@ -25,7 +27,23 @@ static func validate(value: Dictionary) -> Dictionary:
 		var path: Variant = value.get(key, "")
 		if not path is String or path.length() > 4096 or path.to_utf8_buffer().has(0): return {}
 		result[key] = path.strip_edges()
-	if result.enabled and (profile != LEGACY or result.raw_root.is_empty() or result.tile_root.is_empty()): return {}
+	if result.enabled and (profile not in [LEGACY,SOURCE] or result.raw_root.is_empty() or result.tile_root.is_empty()): return {}
+	if profile == SOURCE:
+		var words: Variant = value.get("allowed_raw_words", SOURCE_WORDS.duplicate())
+		if not words is Array or words.is_empty() or words.size()>256: return {}
+		result.allowed_raw_words = []
+		for word: Variant in words:
+			if not (word is int or word is float) or not is_finite(float(word)) or float(word)!=floorf(float(word)) or word<0 or word>=65535: return {}
+			if not result.allowed_raw_words.has(int(word)): result.allowed_raw_words.append(int(word))
+		result.allowed_raw_words.sort()
+		var point: Variant = value.get("source_position", [])
+		if not point is Array or point.size() not in [0,2]: return {}
+		for number: Variant in point:
+			if not (number is int or number is float) or not is_finite(float(number)) or number<0 or number>=65536: return {}
+		result.source_position = point.duplicate()
+		var contract: Variant = value.get("portal_contract", "")
+		if not contract is String or contract.length()>4096 or contract.to_utf8_buffer().has(0): return {}
+		result.portal_contract = contract.strip_edges()
 	return result
 
 static func read() -> Dictionary:
@@ -33,6 +51,9 @@ static func read() -> Dictionary:
 	if config.load(PATH) != OK: return defaults()
 	var value: Dictionary = defaults()
 	for key: String in value: value[key] = config.get_value("play", key, value[key])
+	if value.navigation_profile == SOURCE:
+		for key: String in ["allowed_raw_words","source_position","portal_contract"]:
+			value[key] = config.get_value("play",key,SOURCE_WORDS.duplicate() if key=="allowed_raw_words" else ([] if key=="source_position" else ""))
 	var checked: Dictionary = validate(value)
 	return defaults() if checked.is_empty() else checked
 

@@ -52,6 +52,8 @@ static func project_storage(coordinates: RefCounted, origin: Vector2i, half_x: i
 
 
 static func profile_problem(value: PlayableField) -> String:
+	if value != null and bool(value.get_meta("current523_source_field",false)):
+		return "" if bool(value.get("loaded")) else "M 원문 필드를 확인하지 못했습니다."
 	if value == null or not value is RemakePlayableField or not bool(value.get_meta("source_map84", false)):
 		return "기존 아덴 통행 필드가 필요합니다."
 	if value.definition.get("map_id") != "aden_world" or value.definition.get("source_map_id") != 4 or value.definition.get("source_sha256") != GRID_SHA256:
@@ -94,7 +96,12 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	field = value
 	source = value as OriginalPlayableField
 	player = actor
-	record = value.get("runtime_record")
+	var source_owned: bool = bool(value.get_meta("current523_source_field",false))
+	if source_owned:
+		record = {"chunks":[]}
+		for origin: Vector2i in value.source_chunk_origins().values():
+			record.chunks.append({"world_bounds":[origin.x,origin.y,origin.x+63,origin.y+63]})
+	else: record = value.get("runtime_record")
 	_raw_sources = originals
 	_tile_pack = tiles
 	_visual_delta = visual_delta
@@ -108,7 +115,7 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 		for component: Variant in bounds:
 			if not RAW._uint(component, 65535): return _fail("기존 아덴 그림 영역 좌표가 유효하지 않습니다.")
 		var origin := Vector2i(int(bounds[0]), int(bounds[1]))
-		if int(bounds[2]) - origin.x != 63 or int(bounds[3]) - origin.y != 63 or (origin.x - GRID_ORIGIN.x) % 64 != 0 or (origin.y - GRID_ORIGIN.y) % 64 != 0:
+		if int(bounds[2]) - origin.x != 63 or int(bounds[3]) - origin.y != 63 or origin.x % 64 != 0 or origin.y % 64 != 0:
 			return _fail("기존 아덴 그림 청크의 범위가 다릅니다.")
 		_legacy_origins[origin] = true
 	var members: Array = originals.source_members()
@@ -169,6 +176,10 @@ func frame_metrics() -> Dictionary:
 
 func _scope_problem() -> String:
 	if field == null or not is_instance_valid(player): return "기존 아덴 필드가 없습니다."
+	if bool(field.get_meta("current523_source_field",false)):
+		if not bool(field.get("loaded")) or not str(field.get("problem")).is_empty(): return "M 원문 이동 필드에 오류가 있어 복귀합니다."
+		if not player.global_position.is_finite() or not support_world_point(player.global_position) or not field.point_clear(player.global_position,4): return "원문 자체 통행의 지원 영역 밖이므로 복귀합니다."
+		return ""
 	if field.definition.get("source_map_id") != 4 or field.definition.get("map_id") != "aden_world" or field.definition.get("source_sha256") != GRID_SHA256:
 		return "기존 아덴 필드가 변경되어 표시 실험을 종료합니다."
 	var grid: Variant = field.get("raw_grid")
@@ -288,14 +299,15 @@ func _build_frame() -> bool:
 	_frame_commands.clear()
 	for layer: int in commands: _frame_commands[layer] = PackedInt64Array(commands[layer])
 	_frame_atlases = atlases
-	_metrics = {"display_profile": "M_DISPLAY_WITH_TWILIGHT_SOURCE360_NAVIGATION_ASSUMPTION",
+	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
+	_metrics = {"display_profile": "CURRENT523_S32_SOURCE_FIELD_OWN_INTERPRETATION" if source_owned else "M_DISPLAY_WITH_TWILIGHT_SOURCE360_NAVIGATION_ASSUMPTION",
 		"registered_sources": 677, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": 677 - _member_origins.size(),
 		"overlap_chunks": _overlap.size(), "visible_chunks": visible.size(), "cached_chunks": _raw_chunks.size(),
 		"visible_atlases": atlases.size(), "cached_atlases": _tile_pack.cache_size(), "draw_commands": count,
 		"uninterpreted_ffffffff_words": raw_ff, "unresolved_refs": 0, "budget_skips": 0, "skipped_chunks": 0,
-		"visual_delta": [_visual_delta.x, _visual_delta.y], "M_attributes_used": false,
+		"visual_delta": [_visual_delta.x, _visual_delta.y], "M_attributes_used": source_owned,
 		"scope_clipped_records": _scope_clipped_records,
-		"native_M_rules_verified": false, "navigation_owner": "EXISTING_TWILIGHT_FIELD"}
+		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.
 	return true
@@ -341,12 +353,13 @@ func _draw_tiles(canvas: Node2D) -> void:
 
 
 func _draw() -> void:
-	if _configured: super._draw()  # Preserve existing dynamic-door presentation.
+	if _configured and not bool(field.get_meta("current523_source_field",false)): super._draw()
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	# set_process(false) alone does not disable the inherited door input hook.
 	if not _configured or _return_pending or not is_inside_tree() or not is_visible_in_tree() or field == null or not is_instance_valid(player): return
+	if bool(field.get_meta("current523_source_field",false)): return
 	super._unhandled_input(event)
 
 

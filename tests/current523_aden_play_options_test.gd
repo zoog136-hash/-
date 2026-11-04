@@ -43,6 +43,17 @@ func _initialize() -> void:
 	config.load(OPTIONS.PATH)
 	check(config.get_value("other", "keep", 0) == 523, "unrelated preference fields survive")
 	check(FileAccess.get_sha256("user://play-options-save-sentinel.bin") == sha, "play preferences never write game saves")
+	var source: Dictionary = valid.duplicate(true)
+	source.merge({"enabled":true,"navigation_profile":OPTIONS.SOURCE,"allowed_raw_words":[0,4,8,12,32],"source_position":[33342.5,33168.5],"portal_contract":"/private/source-portals.json"},true)
+	check(OPTIONS.validate(source)==source,"source profile preserves separate exact-word policy and fractional source cursor")
+	for changes: Dictionary in [{"allowed_raw_words":[]},{"allowed_raw_words":[65535]},{"allowed_raw_words":[true]},{"allowed_raw_words":[4.5]},{"source_position":[INF,1]},{"source_position":[1]},{"source_position":[-1,1]},{"portal_contract":12}]:
+		var bad: Dictionary = source.duplicate(true); bad.merge(changes,true)
+		check(OPTIONS.validate(bad).is_empty(),"unsafe source policy or cursor rejects: "+str(changes))
+	check(OPTIONS.write(source)==OK and OPTIONS.read()==source,"source policy and cursor survive own settings readback")
+	var source_sha: String = FileAccess.get_sha256(OPTIONS.PATH)
+	var bad_source: Dictionary = source.duplicate(true); bad_source.source_position=[NAN,1]
+	check(OPTIONS.write(bad_source)==ERR_INVALID_PARAMETER and FileAccess.get_sha256(OPTIONS.PATH)==source_sha,"invalid source cursor preserves accepted settings bytes")
+	check(FileAccess.get_sha256("user://play-options-save-sentinel.bin")==sha,"source preferences leave ordinary game-save bytes unchanged")
 	# Core checks share an isolated profile; remove only this guard's own fixture.
 	DirAccess.remove_absolute(OPTIONS.PATH)
 	DirAccess.remove_absolute("user://play-options-save-sentinel.bin")

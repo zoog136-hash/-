@@ -28,6 +28,13 @@ var play_button: Button
 var play_apply_button: Button
 var play_stop_button: Button
 var play_status: Label
+var source_words: LineEdit
+var source_portal_path: LineEdit
+var source_portal_choice: OptionButton
+var source_portal_button: Button
+var source_entry_enabled: CheckBox
+var source_entry_x: SpinBox
+var source_entry_y: SpinBox
 var _world_ref: WeakRef
 var _built: bool = false
 var _folder_target: String = ""
@@ -122,15 +129,39 @@ func _build() -> void:
 func _build_play_options() -> void:
 	add_child(HSeparator.new())
 	add_child(UI.section("아덴 원문 실험 플레이", 18))
-	var note: Label = UI.label("M 원문을 표시하며 기존 TWILIGHT 이동·충돌·전투를 사용합니다. M 원작 통행이 아니며 전체 본토 지원은 미확정입니다.", 13, UI.MUTED)
+	var note: Label = UI.label("원문 S32 통행은 공급된 지형·속성을 자체 해석합니다. 이전 TWILIGHT 통행과 별개이며 M 원작 판정은 미확정입니다.", 13, UI.MUTED)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(note)
 	play_profile = OptionButton.new()
 	play_profile.name = "AdenPlayNavigationProfile"
 	play_profile.add_item("자체 통행 설정을 선택해 주세요")
 	play_profile.add_item("기존 TWILIGHT 아덴 통행 · 자체 설정")
+	play_profile.add_item("원문 S32 속성 기반 · 자체 통행")
 	play_profile.item_selected.connect(_play_choice_changed)
 	add_child(play_profile)
+	source_words = LineEdit.new()
+	source_words.name = "AdenSourceAllowedWords"
+	source_words.text = "0,4,8,12,32"
+	source_words.placeholder_text = "허용할 원문 값 · 쉼표로 구분"
+	add_child(UI.label("S32 자체 해석 허용값 · 두 반쪽이 모두 해당하고 바닥 원문이 있어야 이동합니다. 나머지는 거부합니다.",12,UI.MUTED))
+	add_child(source_words)
+	var entry := HBoxContainer.new()
+	source_entry_enabled = CheckBox.new(); source_entry_enabled.text = "원문 좌표로 입장"
+	entry.add_child(source_entry_enabled)
+	source_entry_x = SpinBox.new(); source_entry_y = SpinBox.new()
+	for control: SpinBox in [source_entry_x,source_entry_y]:
+		control.min_value = 0; control.max_value = 65535; control.step = 1; control.custom_minimum_size = Vector2(125,36)
+		entry.add_child(control)
+	add_child(entry)
+	add_child(UI.label("좌표를 지정하지 않으면 저장된 원문 위치 또는 현재 위치의 소스 좌표를 사용합니다. 막힌 입장은 거부합니다.",12,UI.MUTED))
+	source_portal_path = LineEdit.new(); source_portal_path.name = "AdenSourcePortalContractPath"
+	source_portal_path.placeholder_text = "별도 원문 포탈 팩 JSON · 없으면 포탈 사용 보류"
+	add_child(source_portal_path)
+	source_portal_choice = OptionButton.new(); source_portal_choice.name = "AdenSourcePortalChoice"
+	add_child(source_portal_choice)
+	source_portal_button = UI.button("현재 출발 셀의 원문 포탈 사용",_use_source_portal,Vector2(0,40))
+	source_portal_button.name = "UseAdenSourcePortalButton"
+	add_child(source_portal_button)
 	var offsets := HBoxContainer.new()
 	add_child(offsets)
 	offsets.add_child(UI.label("표시 보정 X", 13))
@@ -172,18 +203,50 @@ func _offset_control(node_name: String) -> SpinBox:
 
 func _load_play_options() -> void:
 	var options: Dictionary = PLAY_OPTIONS.read()
-	play_profile.select(1 if options.navigation_profile == PLAY_OPTIONS.LEGACY else 0)
+	play_profile.select(2 if options.navigation_profile == PLAY_OPTIONS.SOURCE else (1 if options.navigation_profile == PLAY_OPTIONS.LEGACY else 0))
+	if options.navigation_profile == PLAY_OPTIONS.SOURCE:
+		var words: Array[String] = []
+		for word: int in options.allowed_raw_words: words.append(str(word))
+		source_words.text = ",".join(words)
+		source_portal_path.text = options.portal_contract
 	play_offset_x.value = options.offset_x
 	play_offset_y.value = options.offset_y
 	var current: Node = _world()
 	if current != null and bool(current.get("current523_aden_play_active")):
 		raw_path_edit.text = options.raw_root
 		tile_path_edit.text = options.tile_root
-		play_status.text = "실험 플레이 중 · 이동과 충돌은 기존 TWILIGHT 자체 설정입니다."
+		play_status.text = "원문 S32 자체 통행 중 · M 원작 판정 미확정" if options.navigation_profile == PLAY_OPTIONS.SOURCE else "실험 플레이 중 · 이동과 충돌은 기존 TWILIGHT 자체 설정입니다."
+	_refresh_source_portals()
 
 
 func _play_values() -> Dictionary:
-	return {"navigation_profile":PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE, "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
+	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
+	if play_profile.selected == 2:
+		value.allowed_raw_words = []
+		for part: String in source_words.text.split(",",false):
+			if not part.strip_edges().is_valid_int(): value.allowed_raw_words = []; break
+			value.allowed_raw_words.append(int(part.strip_edges()))
+		value.portal_contract = source_portal_path.text.strip_edges()
+		var saved: Dictionary = PLAY_OPTIONS.read()
+		value.source_position = saved.get("source_position",[]) if saved.navigation_profile == PLAY_OPTIONS.SOURCE else []
+		if source_entry_enabled.button_pressed: value.source_position = [int(source_entry_x.value)+0.5,int(source_entry_y.value)+0.5]
+	return value
+
+func _refresh_source_portals() -> void:
+	if not is_instance_valid(source_portal_choice): return
+	var selected: int = source_portal_choice.get_selected_id() if source_portal_choice.item_count>0 else -1
+	source_portal_choice.clear()
+	var current: Node = _world()
+	if current == null or not current.has_method("current523_aden_source_portals"): return
+	for row: Dictionary in current.call("current523_aden_source_portals"):
+		var note: String = "원문 양끝 대조" if row.get("activation_candidate",false) else "보류"
+		source_portal_choice.add_item("%d · %s → %s · %s" % [int(row.id),str(row.source_position),str(row.get("landing_position")),note],int(row.id))
+		if int(row.id)==selected: source_portal_choice.select(source_portal_choice.item_count-1)
+
+func _use_source_portal() -> void:
+	var current: Node = _world()
+	if current != null and source_portal_choice.item_count>0:
+		current.call("use_current523_aden_source_portal",source_portal_choice.get_selected_id())
 
 
 func _play_choice_changed(_index: int) -> void:
@@ -217,6 +280,7 @@ func _stop_play() -> void:
 
 func _on_play_changed(active: bool, detail: String) -> void:
 	if active: _load_play_options()
+	else: _refresh_source_portals()
 	play_status.text = detail
 	_update_open_button()
 
@@ -285,12 +349,18 @@ func _update_open_button() -> void:
 		raw_browse_button.disabled = busy or playing
 		tile_browse_button.disabled = busy or playing
 	if is_instance_valid(play_button):
-		play_button.disabled = busy or playing or current == null or not current.has_method("open_current523_aden_play") or play_profile.selected != 1 or raw_path_edit.text.strip_edges().is_empty() or tile_path_edit.text.strip_edges().is_empty()
+		play_button.disabled = busy or playing or current == null or not current.has_method("open_current523_aden_play") or play_profile.selected not in [1,2] or raw_path_edit.text.strip_edges().is_empty() or tile_path_edit.text.strip_edges().is_empty()
 		play_apply_button.disabled = busy or not playing
 		play_stop_button.disabled = busy or (not playing and not PLAY_OPTIONS.read().enabled)
 		play_profile.disabled = busy or playing
 		play_offset_x.editable = not busy
 		play_offset_y.editable = not busy
+		source_words.editable = not busy and not playing
+		source_portal_path.editable = not busy and not playing
+		source_entry_enabled.disabled = busy or playing
+		source_entry_x.editable = not busy and not playing
+		source_entry_y.editable = not busy and not playing
+		source_portal_button.disabled = busy or not playing or source_portal_choice.item_count==0
 
 
 func _browse_zip() -> void:

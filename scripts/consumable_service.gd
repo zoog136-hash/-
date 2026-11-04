@@ -235,6 +235,9 @@ func _safe_region_position() -> Vector2:
 	return result
 
 func _use_return(item_name: String) -> void:
+	if world.has_method("current523_aden_source_active") and world.call("current523_aden_source_active"):
+		_message("원문 필드의 귀환 주문서 연결은 보류 중입니다. 주문서를 보존합니다. 화면의 지도 복귀를 사용해 주세요.")
+		return
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 귀환할 수 없습니다")
 		return
