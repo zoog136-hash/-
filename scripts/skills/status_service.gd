@@ -110,6 +110,7 @@ func chance(skill: Dictionary, target: TwilightMonster, world: Node) -> float:
 	var growth: Variant=world.get("growth")
 	var guardian: Variant=growth.get("guardian_combat") if growth!=null else null
 	if guardian!=null:result+=float(guardian.status_hit(kind))/100.0
+	if kind=="bleed":result+=world.card_collections.spell_hit_bonus(skill)/100.0
 	result=clampf(result,0,1)
 	if target.is_boss:result*=float(rules.get("boss_chance_factor",.35))
 	return result

@@ -1,0 +1,234 @@
+{
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "quest_base_main": "f4cc0138613a6c98898c57d479b5247a849b96ab",
+  "last_public_quest_head_before_this_change": "ee4856dda9793aca27af3fd9dffea7bb486ba51f",
+  "read_only_observed_remote_main": "c043715af47a8b3a8a14e49882488c5f1020484e",
+  "main_rebase_or_merge_performed": false,
+  "production_file_sha256": {
+    "scripts/world.gd": "c94a6f8c9a61278d3cf754e4d07b886de3f772b3a2a31b1aa8c51a15f67be033",
+    "scripts/quests/quest_auto_runner.gd": "c85b7fc6094283f1341c10435f5e12aed6ecccccf6ed67959fc49be9560c0eea",
+    "scripts/quests/quest_service.gd": "1961a52091455a443ceb3eb836917ef7808f28a65c7ede7a55b2cc386c2f843f",
+    "scripts/quests/source_quest523.gd": "a44ea8472fe0427a0d60e572875b78d08e32148159eb11bb731587b51a941fcd",
+    "scripts/quests/quest_item_provider238.gd": "25c021d366780c23930e971edbd2eb2f2a7e3a2e30ad223e5fe439a1adcbea90",
+    "scripts/quests/quest_reward_ownership.gd": "4e19cda2009bdec144996f2ddfdb08c9a89b124a80b41b467721542e93b1a7af",
+    "scripts/quests/quest_held_use238.gd": "183b15c949840a0be9b7f859f09be4dc2bca4f5467a0e8bc25d8e1cb4ac37eac"
+  },
+  "shared_module_provenance": "provider238-contract.json",
+  "tests": {
+    "full_source": {
+      "log_sha256": "2412a903161046ca61a1ddef2a5b35b9280954ce8ad2ccd883bfed2082c836fb",
+      "local_log": "/workspace/scratch/quest-supplier-source.log",
+      "result": {
+        "checks": 10346,
+        "failures": [],
+        "gate_reasons_with_all_predecessors": {
+          "": 1186,
+          "기간 종료": 1334,
+          "선행 조건 미연결: NpcTalk": 1,
+          "연계 콘텐츠의 획득 조건 확인 필요": 679,
+          "원본 반복/초기화 규칙 확인 필요": 117,
+          "원본 운영 시간 조건 확인 필요": 128,
+          "제외 시스템 목표: ArenaWin": 31,
+          "제외 시스템 목표: ClanDonate": 128,
+          "제외 시스템 목표: ClanEnter": 1,
+          "직업 조건 미충족": 16
+        },
+        "original_level_goals": {
+          "blocked_by_other_original_conditions": 46,
+          "currently_open_underlevel_checks": 58,
+          "total": 104
+        },
+        "quests_with_items_held_for_use_link": 2016,
+        "reward_storage_supported": 2675,
+        "source_quests": 3621,
+        "unsupported_reward_reasons": {
+          "보상 미연결: Buff": 3,
+          "보상 미연결: Einasad": 38,
+          "보상 미연결: PassSystemSeasonPassExp": 894,
+          "보상 미연결: Teleport": 3,
+          "원본 보상 수량의 개체 저장 연결 필요": 2,
+          "혈맹 전용 보상 제외": 6
+        }
+      }
+    },
+    "binding": {
+      "log_sha256": "7b53f56796c75fd0501bcdec00ec817b7d2f8cad6ed3651f87ea82871d696717",
+      "local_log": "/workspace/scratch/quest-supplier-binding.log",
+      "result": {
+        "checks": 18,
+        "consumer": "symbol_source523.material/recharge",
+        "external_pr_consumers_installed": false,
+        "failures": [],
+        "real_source_item_id": 117304
+      }
+    },
+    "core": {
+      "log_sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "local_log": "/workspace/scratch/quest-supplier-core.log",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    },
+    "historical_opengl_ui": {
+      "log_sha256": "4e17f6bee776067c2a55f4ac226bd7633dec52d1e4be34e44f22b67efac2e410",
+      "local_log": "/workspace/scratch/quest-supplier-historical-ui.log",
+      "result": {
+        "checks": 754,
+        "failures": [],
+        "installed_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
+        "inventory_source_stacks": 732,
+        "source_quests": 3621
+      }
+    },
+    "held_selected_opengl_ui": {
+      "log_sha256": "279b5c70624d2e6de9ca918013f89cd7273deeeca497512bc5420a0c56c983f2",
+      "local_log": "/workspace/scratch/quest-supplier-held-ui.log",
+      "result": {
+        "checks": 36,
+        "failures": [],
+        "final_save_sha256": "8c3b93d199b3ad9838f27d74ad9002d1a4560a123350e5d2bebcfbc3d0865cb4",
+        "item_ids": [
+          859,
+          1281
+        ],
+        "scope": "real old811 receipt-selected partial use; no mass conversion/regrant; old822 without receipts blocked",
+        "source_seed_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92"
+      }
+    },
+    "actual_symbol_use": {
+      "log_sha256": "4dcdb9965b6da44bc95a72314badf9a0abed6d6acc89bbb606082ee1d081d26a",
+      "local_log": "/workspace/scratch/quest-supplier-symbol-final.log",
+      "result": {
+        "charge_per_item": 1000,
+        "checks": 27,
+        "external_pr_consumers_installed": false,
+        "failures": [],
+        "final_save_sha256": "da4e6ea2d2852cc255bb6527046669f0dc99694f6ea5c59558416c2f82e9a07d",
+        "input_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+        "item_class_id": 117304,
+        "original_conditions_waived": false,
+        "quest": "m523:quest:101242",
+        "reward_id": 421582,
+        "source_quantity": 3,
+        "total_charge": 3000
+      }
+    },
+    "actual_native_use": {
+      "log_sha256": "1ba0d9438c8b9606b83e1713c1c95155db06e7fd14ceb86f9c8bf84aab4e2af6",
+      "local_log": "/workspace/scratch/quest-supplier-native-final.log",
+      "result": {
+        "checks": 31,
+        "completed": 811,
+        "failures": [],
+        "final_save_sha256": "43125d1b128369b4523b43b4573b9646524b1cb9be593a3a4d8124b31a2df982",
+        "item_class_ids": [
+          859,
+          1281
+        ],
+        "native_receipt_quests": 65,
+        "pack_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+        "pending_use_completed": 480,
+        "pre_postwrite_save_sha256": "fb891f64844194ef25333df05ff1b9d3a6be4ff1e0a0a6048f2d3cc9a5cd517f",
+        "same_batch_held_instances": 16,
+        "scope": "Actual source acquisition to shared supplier,inventory use,buff/box effects,atomic save,failure recovery and reload; no old-save conversion",
+        "source_quantities": {
+          "859": 66,
+          "1281": 23
+        }
+      }
+    },
+    "missing_provider": {
+      "log_sha256": "11eb1dee499d4c3c7ec4bb4c25780860d93ec3a060d41b4ef46d3dabde082927",
+      "local_log": "/workspace/scratch/quest-supplier-missing-final.log",
+      "result": {
+        "checks": 14,
+        "failures": [],
+        "scope": "actual source-granted inventory and receipts survive absent optional provider; no fixtures/grants",
+        "source_save_sha256": "43125d1b128369b4523b43b4573b9646524b1cb9be593a3a4d8124b31a2df982"
+      }
+    },
+    "normal_pack_install": {
+      "log_sha256": "201e20b02b838e2bee0434e38213dbb775916f1fa6f5a7bf0714b00d8c63b0d9",
+      "local_log": "/workspace/scratch/quest-provider238-install.log",
+      "result": {
+        "checks": 11,
+        "failures": [],
+        "provider_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+        "reviewed_item_ids": [
+          859,
+          1281
+        ],
+        "source_items": 34743
+      }
+    }
+  },
+  "preserved_original_save_profiles": {
+    "quest-current-main-data": {
+      "sha256": "13e6d609f5fabf8cc7f1fd4a49c9432c379ad2e94b966978f547206b15a39ade",
+      "source_claimed": 822,
+      "total_claimed_including_legacy": 823,
+      "physical_instances": 736,
+      "quickslots": 50,
+      "byte_identical": true
+    },
+    "quest-level-data": {
+      "sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+      "source_claimed": 811,
+      "total_claimed_including_legacy": 812,
+      "physical_instances": 697,
+      "quickslots": 50,
+      "byte_identical": true
+    }
+  },
+  "evidence_scope": {
+    "original_quest_definitions": 3621,
+    "fresh_actual_completions": 811,
+    "completed_quests_with_some_item_use_pending_without_provider": 526,
+    "completed_quests_with_some_item_use_pending_with_two_reviewed_consumers": 480,
+    "baseline_distinct_pending_item_classes": 146,
+    "reviewed_item_classes": [
+      859,
+      1281
+    ],
+    "source_data_and_user_conditions_waived": false,
+    "historical822_without_receipts_pending": 537,
+    "whole_original_game_complete": false,
+    "all_classes_or_native_art_proven": false
+  },
+  "earlier_harness_failures": {
+    "initial_native_run": "JSON numeric comparison and default fresh-save skill quickslot sanitizer changed the harness expectation; retained local logs quest-native238-flow.log and quest-native238-flow-final.log",
+    "resolution": "Normalize both numeric representations; test explicit valid50-slot edit fixture without adding item ownership. Current31 checks pass; actual historical user save tested separately unchanged.",
+    "masked_production_failures": false
+  },
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "original_game_art_not_in_public_repo": true
+  },
+  "delivery": {
+    "quest_v1_unchanged": "delivery.json",
+    "normal_item_pack_existing_drive_file": "1yhPldWHmsnf758yFfwrJO7v9ZrB91oNa",
+    "normal_pack_root_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+    "game_drive_auto_download": false,
+    "new_pack_or_report_upload": false,
+    "current_code_in_existing_draft_pr262_only": true
+  },
+  "not_run": [
+    "full/manual CI",
+    "main/other PR merge",
+    "all source skill/card/equipment consumers",
+    "Android/engine/APK",
+    "map generation or full map pack duplicate download"
+  ],
+  "denied_action": {
+    "action": "GitHub PR262 title/body metadata update",
+    "status": "DENIED_NOT_EXECUTED",
+    "reason": "Automatic approval review requires explicit authorization for modifying PR metadata; parent instructed no retry.",
+    "retried": false
+  },
+  "recorded_checkpoint": "76a721f0c6d2dba3aa2a9ab02ddb1567650d5777",
+  "later_return239_extension": "return239-validation.json"
+}

@@ -7,6 +7,7 @@ const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
 var hud: Node
 var world: Node
 var listing: ItemList
+var probability_summary: Label
 var detail: RichTextLabel
 var amount: SpinBox
 var action: Button
@@ -20,6 +21,7 @@ var layout: Control
 var product: TextureRect
 var product_name: Label
 var product_grade: Label
+var candidate_box: VBoxContainer
 var material_grid: GridContainer
 var material_scroll: ScrollContainer
 var material_rows: Array[Dictionary]=[]
@@ -41,10 +43,13 @@ func configure(controller: Node) -> void:
 	# https://www.lineagem.com.tw/make/make-shields
 	filters = HBoxContainer.new()
 	add_child(filters)
+	var source_info: Button = UI.button("원본 강화 정보", func() -> void: hud.open_patch523_equipment_info())
+	source_info.name = "Patch523EquipmentInfoButton"
+	filters.add_child(source_info)
 	category_filter = OptionButton.new()
 	category_filter.name = "CraftCategoryFilter"
 	category_filter.custom_minimum_size.y=40
-	for title: String in ["전체", "물약", "무기", "방어구", "장신구"]:
+	for title: String in ["전체", "물약", "무기", "방어구", "장신구", "재료"]:
 		category_filter.add_item(title)
 	category_filter.select(0)
 	category_filter.item_selected.connect(func(_selected: int) -> void: _rebuild_listing())
@@ -135,11 +140,19 @@ func configure(controller: Node) -> void:
 	amount.value_changed.connect(func(_value: float) -> void:_refresh_quote())
 	quantity.add_child(amount)
 	information.add_child(UI.label("재료 · 사용 가능 / 필요",13,UI.GOLD))
+	candidate_box=VBoxContainer.new()
+	candidate_box.name="Patch523MaterialCandidates"
+	information.add_child(candidate_box)
 	material_grid=GridContainer.new()
 	material_grid.columns=2
 	material_grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	information.add_child(material_grid)
 	hud.workspace.register_scroll_drag(material_scroll,material_grid)
+	probability_summary=UI.label("",12,UI.GOLD)
+	probability_summary.name="Patch523CraftOdds"
+	probability_summary.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	probability_summary.hide()
+	inspector.add_child(probability_summary)
 	price=HBoxContainer.new()
 	inspector.add_child(price)
 	price.add_child(UI.label("제작 비용",13,UI.MUTED))
@@ -242,6 +255,7 @@ func _select(index: int) -> void:
 	if index < 0 or index >= recipe_ids.size():
 		return
 	current_id = recipe_ids[index]
+	amount.max_value=1 if world.crafting.recipes.get(current_id,{}).has("outcomes") else 20
 	_refresh_quote()
 
 func _refresh_quote() -> void:
@@ -249,27 +263,78 @@ func _refresh_quote() -> void:
 		return
 	var service: Object = world.get("crafting")
 	var recipe: Dictionary = (service.get("recipes") as Dictionary).get(current_id,{})
+	if current_id.begins_with("patch523:"):
+		var selection: Dictionary = world.patch523_equipment.material_selection(current_id, world.patch523_material_choices.get(current_id, {}))
+		if selection.get("recipe") is Dictionary: recipe = selection.recipe
 	var count: int = int(amount.value)
 	var quote: Dictionary = world.call("_craft_quote",current_id,count)
 	var result: Dictionary=recipe.get("result",{})
 	var output_name: String=str(result.get("item",""))
-	var items: Dictionary=world._craft_item_index()
+	var items: Dictionary=world._patch523_craft_item_index() if current_id.begins_with("patch523:") else world._craft_item_index()
 	var output: Dictionary=items.get(output_name,{})
 	if material_recipe!=current_id:
 		_build_materials(recipe,items)
 		UI.apply_item_visual(product,output,output_name,hud.item_image_index.get("아이템",{}),"detail")
-	product_name.text=output_name+" ×"+str(int(result.get("quantity",0))*count)
+	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
+	probability_summary.visible=recipe.has("outcomes") or recipe.has("craft_conditions")
+	var chances: PackedStringArray=[]
+	for outcome: Dictionary in recipe.get("outcomes",[]):
+		var label: String=str(outcome.label)
+		if int(recipe.get("source_success_view_count",1))>1:label="지급 없음" if outcome.get("empty_result",false) else "%s ×%d" % [str(outcome.item),int(outcome.quantity)]
+		chances.append("%s %.2f%%" % [label,float(outcome.probability)/10000.0])
+	probability_summary.text=("원본 결과 확률 · " + " / ".join(chances)) if recipe.has("outcomes") else ""
+	if recipe.has("craft_conditions"):
+		probability_summary.text+=world.patch523_equipment.CONDITIONS.brief(recipe,world._patch523_craft_context())
+	probability_summary.tooltip_text=world.patch523_craft_condition_summary(recipe) if source_recipe else ""
+	if not recipe.get("host_material_bindings",[]).is_empty(): probability_summary.text+=" · 게임 재료 연결 적용"
+
+	var state_label: String = (" +%d · %s" % [int(result.get("level", 0)), "축복" if int(result.get("bless_code", 1)) == 2 else "일반"]) if source_recipe and not bool(result.get("wallet_currency",false)) else ""
+	product_name.text=output_name+state_label+" ×"+str(int(result.get("quantity",0))*count)
 	product_name.add_theme_color_override("font_color",UI.grade(str(output.get("grade","일반"))))
 	product_grade.text=str(output.get("grade","일반"))+" · "+str(recipe.get("category",""))
 	for row: Dictionary in material_rows:
 		var available: int=_available_material(str(row.item),items)
+		if source_recipe:
+			available = world.patch523_equipment.available_material(row.source_material, world.inventory, items, world.item_instances, world.equipped_items, world.ui_preferences.get("item_locks", {}), int(recipe.get("popup_text_id", 0)) != 0, int(world.gold),world._patch523_craft_context())
 		var required: int=int(row.unit)*count
 		(row.count as Label).text=UI.number_text(available)+" / "+UI.number_text(required)
 		(row.count as Label).add_theme_color_override("font_color",UI.grade("고급") if available>=required else Color("ec8075"))
-		(row.panel as Control).tooltip_text=str(row.item)+" · 전체 보유 "+str(int((world.inventory as Dictionary).get(row.item,0)))+"\n장착·강화·속성·축복·개별 옵션 장비는 제외됩니다."
-	cost.text=UI.number_text(int(recipe.get("adena",0))*count)+" 아데나"
+		var owned_key: String=world.patch523_equipment.ownership_key(row.source_material) if source_recipe else str(row.item)
+		(row.panel as Control).tooltip_text=str(row.item)+" · 전체 보유 "+str(int((world.inventory as Dictionary).get(owned_key,0)))+("\n표시된 원본 ID·강화·축복 조건과 일치하는 미장착·잠금 해제 재료만 사용합니다." if source_recipe else "\n장착·강화·속성·축복·개별 옵션 장비는 제외됩니다.")
+	if source_recipe and quote.get("ok",false):
+		for debit: Dictionary in quote.get("material_rows",[]):
+			for row: Dictionary in material_rows:
+				if str(row.source_material.source_id)==str(debit.source_id):(row.panel as Control).tooltip_text+="\n실제 소비: %s ×%d" % [str(debit.key),int(debit.quantity)]
+	cost.text=UI.number_text(world.patch523_equipment.recipe_cost(recipe,count) if source_recipe else int(recipe.get("adena",0))*count)+" 아데나"
 	wallet.text="보유 아데나  "+UI.number_text(int(world.gold))
 	detail.text="[color=#79bf83]제작 가능[/color]" if bool(quote.get("ok",false)) else "[color=#ec8075]"+UI.safe(quote.get("reason","제작 불가"))+"[/color]"
+	if bool(result.get("wallet_currency",false)):
+		detail.text += "\n제작 결과 아데나는 지갑에 지급합니다."
+	if result.has("inventory_key"): detail.text+="\n원본 코인 수량을 보유 재화 [%s]에 그대로 적립합니다." % UI.safe(str(result.inventory_key))
+	var source_use: String = world.PATCH523_ITEM_USE.summary(world.patch523_equipment.record(str(result.get("source_id","")))) if source_recipe else ""
+	if not source_use.is_empty(): detail.text += "\n" + UI.safe(source_use)
+	if source_recipe:
+		var condition_text: String=world.patch523_craft_condition_summary(recipe)
+		if not condition_text.is_empty(): detail.text+="\n"+UI.safe(condition_text)
+		detail.text += "\n원본523 %s · 표시된 강화·축복 상태의 재료만 사용합니다." % ("확률 제작" if recipe.has("outcomes") else "확정 제작")
+		for binding: Dictionary in recipe.get("host_material_bindings",[]):
+			detail.text += "\n" + UI.safe(str(binding.binding_origin))
+		if recipe.has("outcomes") and bool(recipe.get("preserve_refund_instance",false)):
+			detail.text += "\n게임 설정: 같은 장비의 실패 반환은 물리 ID와 기록을 보존합니다."
+		for outcome: Dictionary in recipe.get("outcomes",[]):
+			detail.text += ("\n%s %.4f%% · 지급 없음" % [UI.safe(str(outcome.label)),float(outcome.probability)/10000.0]) if outcome.get("empty_result",false) else ("\n%s %.4f%% · %s +%d ×%d" % [UI.safe(str(outcome.label)),float(outcome.probability)/10000.0,UI.safe(str(outcome.item)),int(outcome.level),int(outcome.quantity)])
+		if recipe.has("probability_origin"):detail.text+="\n"+UI.safe(str(recipe.probability_origin))
+		if recipe.has("missing_failure_policy"):
+			var failure: Dictionary=recipe.missing_failure_policy
+			detail.text+="\nTWILIGHT 누락 실패 정책 · 재료 %s / 비용 %s" % ["소모" if failure.consume_materials_on_failure else "보존","소모" if failure.consume_fee_on_failure else "보존"]
+		if str(result.get("source_id", "")) in ["30671", "130551"] and int(result.get("bless_code", 1)) == 2:
+			detail.text += "\n축복 인장의 해당 단계 명중·대미지·리덕션·물약·경험치·아인하사드·스턴 내성·쿨타임 효과를 적용합니다."
+		for material: Dictionary in recipe.get("materials", []):
+			if material.has("inventory_key"): detail.text+="\n보유 재화 [%s]에서 원본 수량을 사용합니다." % UI.safe(str(material.inventory_key))
+			if bool(material.get("physical", false)):
+				detail.text += "\n%s +%d · %s" % [UI.safe(material.item), int(material.level), "축복" if int(material.bless_code) == 2 else "일반"]
+		if int(recipe.get("popup_text_id", 0)) != 0:
+			detail.text += "\n[color=#ec8075]재료 장비의 속성 제련 효과는 결과물에 계승되지 않습니다.[/color]"
 	action.disabled = not bool(quote.get("ok",false))
 	_update_action_label()
 
@@ -277,11 +342,34 @@ func _clear_materials() -> void:
 	material_rows.clear()
 	material_recipe=""
 	for child: Node in material_grid.get_children():child.free()
+	for child: Node in candidate_box.get_children():
+		candidate_box.remove_child(child)
+		child.queue_free()
 
 func _build_materials(recipe: Dictionary,items: Dictionary) -> void:
 	_clear_materials()
 	material_recipe=current_id
 	material_scroll.scroll_vertical=0
+	for source_slot: Dictionary in recipe.get("material_slots", []):
+		var candidates: Array = source_slot.candidates
+		if candidates.size() < 2: continue
+		var slot_key: String = str(int(source_slot.slot_index))
+		candidate_box.add_child(UI.label("재료 슬롯 %s · 후보 1종을 선택" % slot_key, 12, UI.GOLD))
+		var chooser := OptionButton.new()
+		chooser.name = "Patch523Candidate_" + slot_key
+		chooser.custom_minimum_size.y = 40
+		chooser.add_item("재료 후보 선택…")
+		for material: Dictionary in candidates:
+			chooser.add_item("아데나 ×%d · 지갑" % int(material.quantity) if bool(material.get("wallet",false)) else "%s +%d · %s ×%d" % [str(material.item),int(material.level),"축복" if int(material.bless_code)==2 else "일반",int(material.quantity)])
+			if int(world.patch523_material_choices.get(current_id, {}).get(slot_key, -1)) == int(material.row_id): chooser.select(chooser.item_count-1)
+		chooser.item_selected.connect(func(index: int) -> void:
+			var chosen: Dictionary = world.patch523_material_choices.get(current_id, {}).duplicate(true)
+			if index == 0: chosen.erase(slot_key)
+			else: chosen[slot_key] = int(candidates[index-1].row_id)
+			world.patch523_material_choices[current_id] = chosen
+			material_recipe = ""
+			_refresh_quote())
+		candidate_box.add_child(chooser)
 	for raw: Variant in recipe.get("materials",[]):
 		if not raw is Dictionary:continue
 		var material: Dictionary=raw
@@ -317,7 +405,7 @@ func _build_materials(recipe: Dictionary,items: Dictionary) -> void:
 		text.add_child(title)
 		var counter: Label=UI.label("",13)
 		text.add_child(counter)
-		material_rows.append({"item":item_name,"unit":int(material.get("quantity",0)),"count":counter,"panel":panel})
+		material_rows.append({"item":item_name,"unit":int(material.get("quantity",0)),"count":counter,"panel":panel,"source_material":material.duplicate(true)})
 
 func _available_material(item_name: String,items: Dictionary) -> int:
 	var owned: int=int((world.inventory as Dictionary).get(item_name,0))
@@ -338,5 +426,17 @@ func _craft() -> void:
 		var count: int = int(amount.value)
 		var report: Dictionary = world._craft_quote(id,count)
 		if not bool(report.get("ok",false)): return
-		hud.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다." % count,"제작",func(_amount: int) -> void:
+		var recipe: Dictionary = world.crafting.recipes.get(id, {})
+		var warning: String = "\n재료 장비의 속성 제련 효과는 계승되지 않습니다." if int(recipe.get("popup_text_id", 0)) != 0 else ""
+		if id.begins_with("patch523:"): warning += "\n아데나 소모: %s" % UI.number_text(int(report.cost))
+		if recipe.has("craft_conditions"): warning+="\n"+world.patch523_craft_condition_summary(recipe)
+		if recipe.get("result",{}).has("inventory_key"): warning+="\n원본 결과를 보유 재화 [%s]에 적립합니다." % str(recipe.result.inventory_key)
+		for outcome: Dictionary in recipe.get("outcomes",[]):
+			warning += ("\n%s %.4f%% → 지급 없음" % [str(outcome.label),float(outcome.probability)/10000.0]) if outcome.get("empty_result",false) else ("\n%s %.4f%% → %s +%d ×%d" % [str(outcome.label),float(outcome.probability)/10000.0,str(outcome.item),int(outcome.level),int(outcome.quantity)])
+		if not recipe.get("host_material_bindings",[]).is_empty(): warning += "\n게임 설정: 원본549 재료를 기존 드래곤 다이아몬드 스택에 연결합니다."
+		if recipe.has("outcomes"): warning += "\n결과는 저장 후 확정됩니다."
+		if recipe.has("missing_failure_policy"):
+			var failure: Dictionary=recipe.missing_failure_policy
+			warning+="\n누락 실패는 TWILIGHT 설정: 지급 없음 · 재료 %s / 비용 %s" % ["소모" if failure.consume_materials_on_failure else "보존","소모" if failure.consume_fee_on_failure else "보존"]
+		hud.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning],"제작",func(_amount: int) -> void:
 			hud.emit_signal("craft_requested",id,count))

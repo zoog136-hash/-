@@ -66,15 +66,13 @@ static func effective(entry: Dictionary, land_id: int, enabled: bool, inventory:
 	if not enabled or str(entry.get("kind", "")) != "item": return result
 	var key: String = str(entry.get("id", ""))
 	var source_id: int = int(stack_identity(key, _lookup(key, resolver)).get("item_class_id", 0))
-	for group: Dictionary in DATA.data.groups:
-		if int(group.ItemClassID) != source_id: continue
-		for change: Dictionary in DATA.data.changes:
-			if int(change.QuickSlotChangeID) != int(group.ID) or int(change.LandID) != land_id: continue
-			var target_name: String = target_key(int(change.ItemClassID), inventory, resolver)
-			result["id"] = target_name
-			result["regional_original_id"] = str(entry.id)
-			result["regional_land_id"] = land_id
-			return result
+	if not DATA.data.lands.has(str(land_id)):return result
+	for approved: Variant in DATA.data.source_item_ids:
+		if int(approved)!=source_id:continue
+		result["id"] = target_key(int(DATA.data.target_item_id), inventory, resolver)
+		result["regional_original_id"] = str(entry.id)
+		result["regional_land_id"] = land_id
+		return result
 	return result
 
 static func catalog_items() -> Array:

@@ -79,5 +79,5 @@ func run() -> void:
 	check(world._save_game(true) == OK, "restart fixture committed")
 	world.queue_free()
 	await process_frame
-	print("REGIONAL_SUPPLY_RESULT ", JSON.stringify({"checks":checks,"failures":failures,"supplier_execution":"not run; exact supplier record through controlled floor input","ordinary_target_acquisition":"not implemented"}))
+	print("REGIONAL_SUPPLY_RESULT ", JSON.stringify({"checks":checks,"failures":failures,"supplier_execution":"not run; exact supplier record through controlled floor input","ordinary_target_acquisition":"not exercised by this provider fixture; see actual shop purchase test"}))
 	quit(0 if failures.is_empty() else 1)

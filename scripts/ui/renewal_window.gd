@@ -207,7 +207,7 @@ func fit_viewport() -> void:
 	var viewport: Vector2 = available.size/scale
 	var shelf: bool = current_section in ["inventory","skills","menu","quickbind"]
 	var left: bool = current_section in ["character","stats","warehouse","sell"]
-	var fullscreen: bool = current_section in ["변신","마법인형","성물","card_collections","shop","map","class_select","아이템","option_awakening","emblems","guardians"]
+	var fullscreen: bool = current_section in ["변신","마법인형","성물","card_collections","shop","map","class_select","아이템","option_awakening","emblems","guardians","expedition"]
 	var width: float = 378 if shelf or left else 840
 	var height: float = minf(508,viewport.y-150)
 	if current_section == "menu": width = 450
@@ -217,6 +217,9 @@ func fit_viewport() -> void:
 		width = viewport.x
 		height = viewport.y
 	elif not shelf and not left: height = minf(568,viewport.y-100)
+	# Quest search/filter chrome must still leave a readable card on a short
+	# landscape screen; keep the change scoped to this particular window.
+	if current_section == "quests": height = minf(600,viewport.y-24)
 	if current_section in ["character","stats"]: height = minf(610,viewport.y-100)
 	if current_section == "detailed_status": height = minf(508,viewport.y-110)
 	width = maxf(1,minf(width,viewport.x-12 if not fullscreen else viewport.x))

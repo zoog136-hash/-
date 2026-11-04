@@ -1,6 +1,7 @@
 extends RefCounted
 ## Verified client snapshot definitions. Source IDs are namespaced; never match old IDs by integer/name.
 const CARD_PATH = "res://data/lineagem_base508/cards.json"
+const CURRENT_CARD_PATH = "res://data/lineagem_base508/cards_patch523.json"
 const NPC_PATH = "res://data/lineagem_base508/npc_classes.json"
 static var _cards: Dictionary = {}
 static var _by_id: Dictionary = {}
@@ -9,12 +10,60 @@ static func cards() -> Dictionary:
 	if _cards.is_empty():
 		var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CARD_PATH))
 		if value is Dictionary and value.get("source_snapshot", "") == "base508":
+			# m508 is the persisted identity namespace. Updating definition bytes
+			# must not rename owned cards or reinterpret legacy numeric save keys.
+			var current: Variant = JSON.parse_string(FileAccess.get_file_as_string(CURRENT_CARD_PATH))
+			if current is Dictionary and current.get("source_snapshot", "") == "patch523" and current.get("existing_identity_namespace", "") == "m508" and current.get("new_identity_namespace", "") == "m523":
+				value["catalog"] = current.catalog
+				value["content_snapshot"] = "patch523"
+				value["current_source_table_sha256"] = current.source_table_sha256
+				# Supplements enrich an existing stable identity, never append cards.
+				var support: Dictionary=preload("res://scripts/cards/patch523_slot_data.gd").new_cards
+				for category: String in support.catalog:
+					for supplement: Dictionary in support.catalog[category]:
+						for index: int in range(value.catalog[category].size()):
+							if value.catalog[category][index].sourceId==supplement.sourceId:
+								value.catalog[category][index]=merge_metadata(value.catalog[category][index],supplement)
+								break
 			_cards = value
-			for category: String in value.get("catalog", {}):
-				for record: Dictionary in value.catalog[category]: _by_id[str(record.sourceId)] = record
+			_index_cards(value)
 	return _cards
+static func _index_cards(value: Dictionary) -> void:
+	# Independent native supplements can repeat an identity. Keep its position
+	# and overlay supplied fields, retaining omitted provenance/variant metadata.
+	_by_id.clear()
+	for category: String in value.get("catalog", {}):
+		var rows: Array=[]
+		var positions: Dictionary={}
+		for record: Dictionary in value.catalog[category]:
+			var identity: String=str(record.sourceId)
+			if positions.has(identity):
+				var merged: Dictionary=(rows[int(positions[identity])] as Dictionary).duplicate(true)
+				merged=merge_metadata(merged,record)
+				record=merged
+				rows[int(positions[identity])]=record
+			else:positions[identity]=rows.size();rows.append(record)
+			_by_id[identity]=record
+		value.catalog[category]=rows
+
+static func merge_metadata(base: Dictionary, supplement: Dictionary) -> Dictionary:
+	var merged: Dictionary=base.duplicate(true)
+	for key: Variant in supplement:
+		var next: Variant=supplement[key]
+		if next is Dictionary and merged.get(key) is Dictionary:
+			merged[key]=merge_metadata(merged[key],next)
+		elif key=="sourceOptions":merged[key]=next.duplicate(true)
+		elif next is Array and merged.get(key) is Array:
+			# A repeated source row is one declaration, not another stat award.
+			var rows: Array=merged[key].duplicate(true)
+			for entry: Variant in next:
+				if not entry in rows:rows.append(entry.duplicate(true) if entry is Dictionary or entry is Array else entry)
+			merged[key]=rows
+		else:merged[key]=next.duplicate(true) if next is Dictionary or next is Array else next
+	return merged
+
 static func native(record: Dictionary) -> bool:
-	return record.get("source", "") == "lineagem_base508"
+	return record.get("source", "") in ["lineagem_base508","lineagem_patch523"]
 static func canonical(record: Dictionary) -> Dictionary:
 	if not native(record): return record
 	cards()
@@ -77,6 +126,7 @@ static func icon(record: Dictionary) -> Texture2D:
 	if not native(record):
 		var legacy: String = str(record.get("image_path", ""))
 		return load(legacy) as Texture2D if not legacy.is_empty() and ResourceLoader.exists(legacy) else null
+	if record.get("source_snapshot", "") == "patch523": return null
 	var asset: Variant = record.get("source_ui_assets", {}).get("DisplayBaseAssetID")
 	if not asset is Dictionary: return null
 	var path: String = asset_path(str(asset.get("path", "")))
@@ -103,6 +153,8 @@ static func source_class_id(localized_class_name: String) -> int:
 	return int(matches[0]) if matches.size() == 1 else 0
 static func select_visual(record: Dictionary, context: Dictionary = {}) -> Dictionary:
 	var canonical_record: Dictionary = canonical(record)
+	if canonical_record.get("source_snapshot", "") == "patch523":
+		return {"status":"selection_pending","reason":"patch523_original_pack_required","declared_sprite_ids":canonical_record.get("source_inworld_sprite_ids",[]).duplicate()}
 	var card_id: int = int(canonical_record.get("source_card_id", -1))
 	var rule: Dictionary = identity_rules().get(card_id, {})
 	if rule.is_empty():

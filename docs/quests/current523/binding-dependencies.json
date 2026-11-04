@@ -1,0 +1,103 @@
+{
+  "checked_scope": "Quest reward consumer binding only; no map environment, branch merge, producer reimplementation or pack transfer",
+  "quest_pack_unchanged": {
+    "version": "v1",
+    "bytes": 570245,
+    "sha256": "77866c180d4224eff6d7e578759ec0820d6e50515e5c6bd8a67dc92421c20063"
+  },
+  "actual_current_consumer": {
+    "path": "scripts/growth/symbol_source523.gd",
+    "methods": [
+      "material",
+      "recharge"
+    ],
+    "verified_original_reward_item_id": 117304,
+    "checks": 18,
+    "scope": "Exact record acceptance and production recharge-definition lookup, without waiving the original quest period or prerequisite",
+    "original_quest_gate_bypassed": false,
+    "new_actual_item_use_from_quest_verified": true,
+    "actual_main_ownership_use_save_reload_checks": 27,
+    "actual_source_quest_id": 101242,
+    "actual_source_reward_id": 421582
+  },
+  "read_only_provider_contracts": [
+    {
+      "pr": 238,
+      "head": "f078a4651d53a2e0681e339ee4c4e81151e34e55",
+      "methods": [
+        "patch523_monster_drops.data",
+        "variant_item",
+        "expected_variant",
+        "patch523_item_use.canonical",
+        "try_use"
+      ],
+      "current_game_consumer_present": "Two reviewed exact consumers859/1281 via unchanged shared modules; other effects remain separate",
+      "scope": "Pinned verified pack, batch supplier and source receipt; no catalog-only completion claim"
+    },
+    {
+      "pr": 239,
+      "head": "904c9dc892bb1e057c85d10aab2be1d7171893ae",
+      "methods": [
+        "patch523_rules.record",
+        "catalog_identity_matches",
+        "available_material",
+        "patch523_item_use.definition"
+      ],
+      "current_game_consumer_present": false,
+      "scope": "No copying crafting/equipment execution into quest branch"
+    },
+    {
+      "pr": 231,
+      "head": "76c9e38e90fdbb77ec13931e7e0e319486b8559c",
+      "current_game_consumer_present": "Existing base508 awakening subset only; latest523 extra-relic consumer absent",
+      "scope": "No promotion of base508/name-only items to latest523 quest ownership"
+    },
+    {
+      "pr": 249,
+      "head": "cd71bc2de336d5d8c1aa547f7e838f788d0015a6",
+      "current_game_consumer_present": false,
+      "scope": "Latest523 card catalog presence on an unmerged branch is not live acquisition or item-use integration"
+    }
+  ],
+  "reason": "Expired periods, other class/prerequisite paths, excluded systems, content acquisition, reset policy and item-use adapters are distinct categories; none are waived",
+  "pre_level_goal_fix_runtime_scope": {
+    "initial_knight_completed": 822,
+    "completed_with_item_use_pending": 537,
+    "excluded": 160,
+    "other_locked_expired_or_deferred": 2639
+  },
+  "level_goal_fix": {
+    "raw_level_goals": 104,
+    "predicate_ids": [
+      1
+    ],
+    "class_ids": [
+      0
+    ],
+    "minimum_amount": 1,
+    "maximum_amount": 97,
+    "rule": "Source Level goals remain level eligibility; other performance objectives are skipped by explicit automatic-completion policy",
+    "quest96": {
+      "quest_id": 96201,
+      "source_parent_quest_id": 92794,
+      "required_level": 96,
+      "level_goal_amount_is_not_waived": true,
+      "original_box_item_id": 346921,
+      "old_saved_completion_at_level86": "preserved; never revoked or regranted"
+    },
+    "current_fresh_runtime": {
+      "completed": 811,
+      "pending_use_completed": 526,
+      "excluded": 160,
+      "other_locked_expired_or_deferred": 2650,
+      "claimed_above_current_level": []
+    },
+    "whole_input_check": {
+      "blocked_by_other_original_conditions": 46,
+      "currently_open_underlevel_checks": 58,
+      "total": 104
+    },
+    "historical_save_policy": "Keep existing822 claims/items and never grant them again; counts reduced by level eligibility, not by completing item-use adapters"
+  },
+  "provider238_contract": "provider238-contract.json"
+}

@@ -185,6 +185,10 @@ func spend(skill: Dictionary) -> bool:
 	return true
 
 func ready(skill: Dictionary, announce: bool = false) -> bool:
+	var source_status: Dictionary=catalog.source_learning_status(skill)
+	if not source_status.is_empty():
+		if announce:world.hud.show_message(str(source_status.message))
+		return false
 	if world.patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if bool(skill.get("runtime_blocked", false)):
 		if announce: world.hud.show_message(Catalog.CURRENT.blocked_reason(skill))
@@ -414,7 +418,7 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 
 func hit_chance(skill: Dictionary, target: TwilightMonster) -> float:
 	if str(skill.get("attack_type", "")) == "magic":
-		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), maxi(0, target.magic_resistance + int(status.modifier(target, "mr"))))*world.halphas_star.combat.hit_factor(world.player)
+		return world._magic_hit_chance(world._magic_accuracy_stat() + int(stat("magicPenetration")), world.card_collections.magic_resistance_after_pierce(maxi(0, target.magic_resistance + int(status.modifier(target, "mr")))))*world.halphas_star.combat.hit_factor(world.player)
 	var accuracy: int = world._ranged_accuracy_stat() if str(skill.get("attack_type", "")) == "ranged" else world._melee_accuracy_stat()
 	return physical_hit_chance(accuracy, target,str(skill.get("attack_type","melee")))
 
@@ -423,11 +427,11 @@ func physical_hit_chance(accuracy: int, target: TwilightMonster,attack_kind: Str
 	# Keep the shared formula's AC normalization and nonnegative DG floor.
 	var avoidance: float=status.modifier(target,"er" if attack_kind=="ranged" else "dg")
 	if bool(target.get_meta("is_player_combatant",false)):avoidance-=world.growth.guardian_combat.value("PVPPierceRangeEvasion" if attack_kind=="ranged" else "PVPPierceMeleeEvasion")
-	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), int(avoidance))*world.halphas_star.combat.hit_factor(world.player)
+	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), world.card_collections.avoidance_after_pierce(int(avoidance),attack_kind))*world.halphas_star.combat.hit_factor(world.player)
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
 	if target.dead: return
-	var amount := int(skill.get("power", 20)) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
+	var amount := int(skill.get("power", 20)) + world.card_collections.spell_damage_bonus(skill) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
 	var source_kind: String=str(skill.get("attack_type","melee"))
 	if world.get("growth")!=null:
 		amount+=int(world.growth.bonus("pve_"+source_kind+"_damage:flat"))
@@ -475,6 +479,9 @@ func heal(skill: Dictionary, amount: int) -> void:
 	var before: int = world.hp
 	var effective := maxi(0, amount + int(stat("lfe") * float(skill.get("lfe_scale", 0))))
 	if str(skill.get("mode",""))=="heal" and world.get("growth")!=null: effective = world.growth.magic_healing(effective)
+	effective=world.card_collections.magic_heal(effective)
+	if str(skill.get("mode","")) in world.PATCH523_ENHANCE.policy().get("healing_magic_modes",[]):
+		effective=maxi(0,int(round(float(effective)*(1.0+maxf(0.0,world._equipment_inven_sum("healing_magic_pct"))/100.0))))
 	var source_heal_input: int = effective
 	effective = world.patch523_npc_spells.extensions.healing(effective,false)
 	var generation: int = int(world.combat_generation)

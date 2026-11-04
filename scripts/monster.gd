@@ -4,6 +4,7 @@ class_name TwilightMonster
 const BASE508 = preload("res://scripts/lineagem_base508.gd")
 var source_m_original: Dictionary = {}
 var source_targeting: Dictionary = {}
+var collection_combat_context: Dictionary={}
 var source_m_npc_id: int = -1
 const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
 const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
@@ -148,6 +149,7 @@ var bleed_tick_damage: int = 0
 var bleed_tick_interval: float = 0.75
 var bleed_remaining: float = 0.0
 var bleed_tick_clock: float = 0.0
+var patch523_weapon_bleed: Dictionary = {}
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var base_move_speed: float = 90.0
@@ -181,6 +183,7 @@ func retire_for_pool() -> void:
 	# owners while keeping the lightweight body for the next life/region.
 	set_physics_process(false)
 	_clear_source_m_view()
+	loot_source_identity = {}
 	input_pickable = false
 	collision_layer = 0
 	collision_mask = 0
@@ -190,6 +193,7 @@ func retire_for_pool() -> void:
 	damage_hit_count = 0
 	special_attack.clear()
 	source_option_debuffs.clear()
+	patch523_weapon_bleed.clear()
 	if is_instance_valid(world_controller):
 		var died_callback:=Callable(world_controller,"_on_monster_died")
 		var hit_callback:=Callable(world_controller,"_on_player_hit")
@@ -253,8 +257,12 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			source_targeting = {"snapshot":"base508", "category_id":category.get("ID", -1)}
 			for flag: String in ["IsAutoSelectable", "IsSelectable"]:
 				if category.get(flag) is bool: source_targeting[flag] = category[flag]
+	var context: Variant=record.get("collection_combat_context",{})
+	collection_combat_context=context.duplicate(true) if context is Dictionary else {}
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
+	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record)
+	if not patch523_identity.is_empty(): loot_source_identity = patch523_identity
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1
 	reveal_lock523 = 0
@@ -275,6 +283,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 		set(kind+"_accuracy",clampi(int(record.get(kind+"_accuracy",0)),0,100))
 		set(kind+"_duration",clampf(float(record.get(kind+"_duration",0)),0,30))
 	poison_remaining = 0.; poison_tick_clock = 0.; bleed_remaining = 0.; bleed_tick_clock = 0.
+	patch523_weapon_bleed.clear()
 	aggro_remaining = 0.; returning_home = false
 	enraged = false; social_alert_cooldown = 0.0
 	decision_elapsed = 0.; sight_clock = 0.; sight_cached = false
@@ -455,6 +464,7 @@ func _physics_process(delta: float) -> void:
 			hp_bar.max_value=effective_hp;hp_bar.value=hp
 	tick_reveal523(delta)
 	advance_source_option_debuffs(delta)
+	preload("res://scripts/loot/patch523_weapon_bleed.gd").tick(self,delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
@@ -813,7 +823,10 @@ func _tick_bleed(delta: float) -> void:
 			bleed_tick_damage = 0
 
 func is_bleeding() -> bool:
-	return bleed_remaining > 0.0 and bleed_tick_damage > 0 and not dead
+	return (bleed_remaining > 0.0 and bleed_tick_damage > 0 or not patch523_weapon_bleed.is_empty()) and not dead
+
+func apply_patch523_weapon_bleed(effect: Dictionary, interval: float, rule: String) -> void:
+	preload("res://scripts/loot/patch523_weapon_bleed.gd").apply(self,effect,interval,rule)
 
 func apply_bleed(duration: float, damage: int, interval: float = 0.75) -> void:
 	if dead:

@@ -17,6 +17,7 @@ var travel = Travel.new()
 var combat = Combat.new()
 var history = History.new()
 var world
+# Nullable published source-material capability; no substitute consumer.
 var development: bool = OS.is_debug_build() and "--growth-lab" in OS.get_cmdline_user_args()
 var lab: Dictionary = {}
 var config: Dictionary = {}

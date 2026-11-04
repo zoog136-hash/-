@@ -1,0 +1,146 @@
+{
+  "scope": "Quest supplier/receipt/selected-instance adapters only. No whole foreign branch merge, no map modification, no original rows in public Git.",
+  "pr238_public_head": "f078a4651d53a2e0681e339ee4c4e81151e34e55",
+  "unchanged_shared_modules": [
+    {
+      "path": "scripts/loot/patch523_monster_drops.gd",
+      "sha256": "0ae5689e47ce0ee40e4f35db0d6c55beb9692346745bc86a2d7bc1445de930a0",
+      "upstream_git_blob": "ad97d7fd5bc4d2f794a01c1b4705ff815d5f656f"
+    },
+    {
+      "path": "scripts/loot/patch523_item_catalog.gd",
+      "sha256": "3090124c97fb17ac650ccff834c1a64b51ef307cdaa9a0a94c8aa973f897ae02",
+      "upstream_git_blob": "13bdca1e421262cba4b65e72c21106d9bc820888"
+    },
+    {
+      "path": "scripts/loot/patch523_item_inventory.gd",
+      "sha256": "1996cbacffb4e1d95d7f36ac3fc52fe7d7e9959c5259ae4fb38e35b54388e84b",
+      "upstream_git_blob": "1aa86eced85bab7b685bf22c80a93d000731a3fa"
+    },
+    {
+      "path": "scripts/loot/patch523_item_use.gd",
+      "sha256": "6c36776f3f5ce2eb0cb1d23f817bd38d8afeda90c24322d5c8445c74101ca075",
+      "upstream_git_blob": "4c6ef48be290a1eb9c6912383e7d4b76d03d436c"
+    },
+    {
+      "path": "scripts/loot/patch523_ammo.gd",
+      "sha256": "b1bf0d48c5305aa3b9062c80b91c7cdd7308884293676ab222c6794a353366b3",
+      "upstream_git_blob": "add63d8e2cf07c337c751360022dbfd4323125de"
+    },
+    {
+      "path": "scripts/loot/patch523_skill_book.gd",
+      "sha256": "2620f23c4831ec9b1e8aa642abe2e18cf493ede6dad2a2de10e0d455959ee069",
+      "upstream_git_blob": "f2eb6d4a74017597ec568482e2b7c4f9d546c802"
+    },
+    {
+      "path": "scripts/ui/patch523_reward_choice.gd",
+      "sha256": "62c76b47cb253858b505b2c143533cf787e04f5b8c80b79192ffe993864605e2",
+      "upstream_git_blob": "8df6972c7c790517709584b3dd3678e3445bede0"
+    }
+  ],
+  "reviewed_item_classes": [
+    859,
+    1281
+  ],
+  "installed_normal_pack": {
+    "existing_drive_file_id": "1yhPldWHmsnf758yFfwrJO7v9ZrB91oNa",
+    "zip_bytes": 23637249,
+    "zip_sha256": "fb2a4de030b7d302fd7d8d2c541ca3cc8d1fbe246cf67ef574d812d3ccb6fc8d",
+    "bin_bytes": 3050707,
+    "bin_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+    "gzip_sidecars": 136,
+    "definitions": 34743,
+    "actual_download_crc_install_checks": 11,
+    "quest_original_row_comparison": "Full sidecar definitions for859/1281 must equal independently pinned QuestReward source_item; root summary TestItem flag alone is insufficient",
+    "automatic_drive_download": false,
+    "new_upload": false
+  },
+  "runtime_scenarios": {
+    "without_native_pack": {
+      "source_completed": 811,
+      "completed_with_item_use_pending": 526,
+      "distinct_pending_item_classes": 146
+    },
+    "with_reviewed_native_pack_fresh_source_acquisition": {
+      "source_completed": 811,
+      "completed_with_item_use_pending": 480,
+      "excluded": 160,
+      "locked_or_deferred": 2650,
+      "level": 86,
+      "reviewed_item_classes": 2,
+      "native_receipt_quests": 65,
+      "source_quantity_by_item_class": {
+        "859": 66,
+        "1281": 23
+      },
+      "fully_resolved_pending_quests": 46,
+      "not_adapter_count": true
+    },
+    "historical_822_without_receipts": {
+      "source_completed": 822,
+      "completed_with_item_use_pending": 537,
+      "mass_conversion": false,
+      "regrant": false
+    }
+  },
+  "dependencies": [
+    {
+      "pr": 256,
+      "head": "c69b71a66d2f457066591434fefb2001dfbc6885",
+      "runtime": "scripts/protection/protection523_runtime.gd",
+      "accepted_recipe_argument": "exact ItemCraftID, never result ItemClassID",
+      "body_ids": [
+        200723,
+        245718,
+        297828,
+        328254,
+        346911,
+        371108
+      ],
+      "disabled_id": 327823,
+      "quest_material_ids": [
+        96004,
+        96014,
+        200698
+      ],
+      "intersection_with146_pending_item_classes": [],
+      "current_world_owner_installed": false,
+      "status": "No eligible real quest-produced protection input in current811 baseline; do not fabricate ownership or duplicate subsystem"
+    },
+    {
+      "pr": 247,
+      "head": "bc0ce7215b53ef970a58f13ddbeecf7e6641330c",
+      "runtime": "scripts/consumable_service.gd",
+      "required_api": "world.consumable_service.use_owned_native_return(item_key:String)->Dictionary",
+      "success_requires": "ok && saved && consumed==1",
+      "current_world_api_present": false,
+      "pending_original239": {
+        "physical_stacks": 57,
+        "quantity": 212,
+        "quests": 57
+      },
+      "held_key_accepted_by_owner": false,
+      "status": "BLOCKED: API is absent in quest base; held quest records are not the accepted native Normal stack. No rename, provenance fabrication, independent debit or second save. Needs installed owner and explicit receipt-aware held-input adapter or new native grant proof.",
+      "ticket_ids": [
+        166744,
+        254088,
+        342064,
+        342074,
+        352054,
+        352064
+      ],
+      "intersection_with146_pending_item_classes": [],
+      "ticket_extension_sha256": "d25d89d1e16800141e1d7ac2e4341515931b857878b50e76eb0431f2622ae08e",
+      "ticket_extension_currently_installed": false
+    }
+  ],
+  "publication": {
+    "pr": 262,
+    "title_body_update": "DENIED_NOT_EXECUTED_DO_NOT_RETRY",
+    "main_or_other_pr_merge": false,
+    "full_or_manual_ci": false,
+    "new_engine_apk": false
+  },
+  "recorded_checkpoint": "76a721f0c6d2dba3aa2a9ab02ddb1567650d5777",
+  "later_return239_extension": "return239-validation.json"
+}

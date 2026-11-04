@@ -23,6 +23,18 @@ REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|do
 CHECKS = [
     ('player_skills523_policy_test', []),
     ('core_runtime_save_test', []),
+    ('current523_aden_pack_test', []),
+    ('current523_aden_review_unit_test', []),
+    ('current523_aden_preferences_test', []),
+    ('current523_aden_install_test', []),
+    ('current523_aden_play_options_test', []),
+    ('current523_aden_play_renderer_test', []),
+    ('current523_aden_play_controller_test', []),
+    ('current523_aden_source_field_test', []),
+    ('current523_aden_source_portals_test', []),
+    ('current523_source_pack_test', []),
+    ('current523_source_field_test', []),
+    ('current523_source_travel_test', []),
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
     ('lineagem_pack_resolution_test', []),
@@ -41,6 +53,12 @@ CHECKS = [
     ('patch523_spawn_policy_test', []),
     ('host_portal_navigation_test', []),
     ('auto_selection_order_test', []),
+    ('patch523_monster_drops_test', []),
+    ('expedition523_catalog_test', []),
+    ('expedition523_estimate_model_test', []),
+    ('expedition523_main_ui_test', []),
+    ('patch523_equipment_test', []),
+    ('patch523_equipment_main_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -80,27 +98,27 @@ def current_actor_scope(read, exists):
                     and row.get('grid_sha256') == current_map.get('grid_sha256')
                     and row.get('layout_revision') == current_map.get('layout_revision')):
                 names.update(row.get('monster_types', [row['name']] if 'name' in row else []))
+    source_ids = set()
+    spawn_path = 'data/monsters/source3_map_spawns.json'
+    pinned_identity = bool(current_map.get('grid_sha256')) and current_map.get('layout_revision') is not None
+    if exists(spawn_path):
+        for row in json.loads(read(spawn_path)).get('rows', []):
+            if row.get('map_id') != 'aden_world' or 'game_source_id' not in row:
+                continue
+            if pinned_identity and (row.get('grid_sha256') != current_map['grid_sha256']
+                                    or row.get('layout_revision') != current_map['layout_revision']):
+                continue
+            source_ids.add(str(row['game_source_id']))
     profiles = json.loads(read('data/combat_animation_profiles.json'))['profiles']
     keys = {key for key in profiles if key.startswith('class:') or key in {'monster:'+n for n in names}}
     records = [profiles[key] for key in sorted(keys)]
     records += [row for row in json.loads(read('data/game_db_v17.json'))['몬스터'] if row['name'] in names]
     for path in ['data/monsters/reviewed_source_monsters.json', 'data/monsters/reviewed_source_additions.json']:
         if exists(path):
-            records += [row for row in json.loads(read(path)).get('records', []) if row.get('name') in names]
-    # Source-map startup appends these exact-ID spawns after the gameplay
-    # snapshot. Rendered UI tests yield frames, allowing their spawn queue to
-    # drain; their real portraits/tracks must not be classified as inactive.
-    source_ids = set()
-    spawn_path = 'data/monsters/source3_map_spawns.json'
-    reviewed_path = 'data/monsters/reviewed_source_monsters.json'
-    if exists(spawn_path) and exists(reviewed_path):
-        source_ids = {row['game_source_id'] for row in json.loads(read(spawn_path))['rows']
-                      if row['map_id'] == 'aden_world' and 'game_source_id' in row}
-        records += [{'source_portrait': row.get('source_portrait', ''),
-                     'animation_profile': row.get('animation_profile', {})}
-                    for row in json.loads(read(reviewed_path))['records']
-                    if row.get('sourceId') in source_ids]
-
+            live_source = [row for row in json.loads(read(path)).get('records', [])
+                           if row.get('name') in names or str(row.get('sourceId', '')) in source_ids]
+            records += live_source
+            names.update(row['name'] for row in live_source if 'name' in row)
     for path, field in [('data/monsters/reviewed_existing_visuals.json','bindings'),
                         ('data/visuals/runtime_manifest.json','monsters')]:
         if exists(path):
@@ -197,12 +215,9 @@ def stage(root: Path, destination: Path) -> dict:
             if PurePosixPath(path).suffix in {'.gd','.tscn'}:
                 actor_queue += [m.group(1).removeprefix('res://') for m in REFERENCE.finditer(read(path).decode())]
         live = set()
-        # Source monster expansion can replace a current roster record after
-        # the static name join. Its bound portrait is also used while the UI
-        # is open and initial spawns drain. Keep these small portraits without
-        # importing every inactive animation bank.
-        live.update(p for p in selected if p.startswith('assets/monsters/reviewed_source/')
-                    and p.endswith('/portrait.png'))
+        # Exact current-grid source IDs above already retain appended actors'
+        # portraits/tracks, including replacements not in the frozen name join.
+        # Do not re-pin every stale portrait merely because its catalog is read.
         while actor_queue:
             path = actor_queue.pop()
             if path in live or not path.startswith(ACTOR_PREFIXES) or not PurePosixPath(path).suffix or '%' in path:
@@ -299,6 +314,18 @@ def main():
                 command += ['--', *user_args]
             marker = {'player_skills523_policy_test':'SKILLS523_POLICY_RESULT',
                       'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
+                      'current523_aden_pack_test':'CURRENT523_ADEN_PACK_RESULT',
+                      'current523_aden_review_unit_test':'CURRENT523_ADEN_REVIEW_UNIT_RESULT',
+                      'current523_aden_preferences_test':'CURRENT523_ADEN_PREFERENCES_RESULT',
+                      'current523_aden_install_test':'CURRENT523_INSTALL_FOCUSED_RESULT',
+                      'current523_aden_play_options_test':'CURRENT523_ADEN_PLAY_OPTIONS_RESULT',
+                      'current523_aden_play_renderer_test':'CURRENT523_ADEN_PLAY_RENDERER_RESULT',
+                      'current523_aden_play_controller_test':'CURRENT523_ADEN_PLAY_CONTROLLER_RESULT',
+                      'current523_aden_source_field_test':'CURRENT523_ADEN_SOURCE_FIELD_RESULT',
+                      'current523_aden_source_portals_test':'CURRENT523_ADEN_SOURCE_PORTALS_RESULT',
+                      'current523_source_pack_test':'CURRENT523_SOURCE_PACK_RESULT',
+                      'current523_source_field_test':'CURRENT523_SOURCE_FIELD_RESULT',
+                      'current523_source_travel_test':'CURRENT523_SOURCE_TRAVEL_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT',
                       'lineagem_pack_resolution_test':'LINEAGEM_PACK_RESOLUTION_RESULT',
@@ -316,7 +343,16 @@ def main():
                       'patch523_world_links_test':'PATCH523_WORLD_LINKS_RESULT',
                       'patch523_spawn_policy_test':'PATCH523_SPAWN_POLICY_RESULT',
                       'host_portal_navigation_test':'HOST_PORTAL_NAVIGATION_RESULT',
-                      'auto_selection_order_test':'AUTO_SELECTION_RESULT'}[name]
+                      'auto_selection_order_test':'AUTO_SELECTION_RESULT',
+                      'patch523_monster_drops_test':'PATCH523_MONSTER_DROPS_RESULT',
+                      'expedition523_catalog_test':'EXPEDITION523_CATALOG_RESULT',
+                      'expedition523_estimate_model_test':'EXPEDITION523_ESTIMATE_MODEL_RESULT',
+                      'expedition523_main_ui_test':'EXPEDITION523_MAIN_UI_RESULT',
+                      'patch523_equipment_test':'PATCH523_EQUIPMENT_RESULT',
+                      'patch523_equipment_main_test':'PATCH523_MAIN_RESULT'}[name]
+
+
+
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

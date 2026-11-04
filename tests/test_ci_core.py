@@ -15,6 +15,22 @@ CORE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(CORE)
 
 class CoreStageTest(unittest.TestCase):
+    def test_current_source_placement_identities_join_actor_scope(self):
+        files = {
+            'data/maps/source_map_runtime.json': {'maps':{'aden_world':{'gameplay_snapshot':'res://data/current.json'}}},
+            'data/current.json': {'gameplay':{'monster_spawn':[{'monster_types':['Authored']}] }},
+            'data/combat_animation_profiles.json': {'profiles':{}},
+            'data/game_db_v17.json': {'몬스터':[]},
+            'data/monsters/source3_map_spawns.json': {'rows':[{'map_id':'aden_world','game_source_id':'source:current'}, {'map_id':'other','game_source_id':'source:other'}]},
+            'data/monsters/reviewed_source_monsters.json': {'records':[
+                {'sourceId':'source:current','name':'Current NPC','source_portrait':'res://assets/monsters/reviewed_source/current/portrait.png'},
+                {'sourceId':'source:other','name':'Other NPC','source_portrait':'res://assets/monsters/reviewed_source/other/portrait.png'}]},
+        }
+        result=CORE.current_actor_scope(lambda p:json.dumps(files[p]).encode(), lambda p:p in files)
+        self.assertIn('assets/monsters/reviewed_source/current/portrait.png',result['paths'])
+        self.assertNotIn('assets/monsters/reviewed_source/other/portrait.png',result['paths'])
+        self.assertIn('Current NPC',result['monster_names'])
+
     def fixture(self, root):
         files = {
             'project.godot':'config_version=5\n',
@@ -120,6 +136,37 @@ class CoreStageTest(unittest.TestCase):
             (root/'Main.tscn').write_text('[ext_resource path="res://assets/not-committed.png"]')
             with self.assertRaises(FileNotFoundError):CORE.stage(root,Path(temporary)/'stage')
             self.assertFalse((Path(temporary)/'stage').exists())
+
+    def test_current_source_spawn_portraits_and_animation_are_in_scope(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
+            live='assets/monsters/reviewed_source/source-live/'
+            inactive='assets/monsters/reviewed_source/source-stale/'
+            records={
+                'data/maps/source_map_runtime.json':{'maps':{'aden_world':{'gameplay_snapshot':'res://data/maps/current.json','grid_sha256':'pinned-grid','layout_revision':523}}},
+                'data/maps/current.json':{'gameplay':{'monster_spawn':[]}},
+                'data/monsters/source3_map_spawns.json':{'rows':[
+                    {'map_id':'aden_world','grid_sha256':'pinned-grid','layout_revision':523,'name':'Live','game_source_id':'source-live'},
+                    {'map_id':'aden_world','grid_sha256':'stale-grid','layout_revision':523,'name':'Stale','game_source_id':'source-stale'}]},
+                'data/game_db_v17.json':{'몬스터':[]},
+                'data/combat_animation_profiles.json':{'profiles':{}},
+                'data/monsters/reviewed_source_monsters.json':{'records':[
+                    {'name':'Live','sourceId':'source-live','source_portrait':'res://'+live+'portrait.png','animation_profile':{'frames_path':'res://'+live+'frames.tres'}},
+                    {'name':'Stale','sourceId':'source-stale','source_portrait':'res://'+inactive+'portrait.png','animation_profile':{'frames_path':'res://'+inactive+'frames.tres'}}]},
+            }
+            for name,value in records.items():
+                p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(value))
+            for prefix in [live,inactive]:
+                p=root/(prefix+'frames.tres');p.parent.mkdir(parents=True,exist_ok=True)
+                p.write_text('[gd_resource type="SpriteFrames" format=3]\n[ext_resource type="Texture2D" path="res://'+prefix+'idle.png"]\n')
+                for image in ['portrait.png','idle.png']:(root/(prefix+image)).write_bytes(b'unchanged fixture art')
+            # Production code resolves these catalogs dynamically.
+            (root/'scripts/main.gd').write_text('const SOURCES="res://data/monsters/reviewed_source_monsters.json"')
+            result=CORE.stage(root,Path(temporary)/'stage')
+            selected={row['path'] for row in result['files']}
+            self.assertTrue({live+'portrait.png',live+'frames.tres',live+'idle.png'}<=selected)
+            self.assertNotIn(inactive+'portrait.png',selected)
+            self.assertEqual(result['current_actor_scope']['monster_names'],['Live'])
 
     def test_missing_shader_preload_fails_before_engine_import(self):
         with tempfile.TemporaryDirectory() as temporary:

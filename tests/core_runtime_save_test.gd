@@ -57,6 +57,10 @@ func run() -> void:
 	world.gold = 7654321
 	check(world._save_game(true) == OK, "real atomic initial save")
 	var original_path: String = world.save_path()
+	var before_aden_registry: String = FileAccess.get_sha256(original_path)
+	check(not world.open_current523_aden_sources(ProjectSettings.globalize_path("user://absent-current523-aden")), "missing current523 Aden source registry rejects")
+	check(world.current523_aden_source_members().is_empty(), "missing current523 Aden registry stays empty")
+	check(FileAccess.get_sha256(original_path) == before_aden_registry and world.active_map_id == "aden_world", "rejected current523 source registration preserves save and current map")
 	var baseline: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(original_path))
 	check(baseline.has("card_option_awakening"), "option awakening save namespace present")
 	check(baseline.has("card_skill_awakening"), "skill awakening save namespace present")

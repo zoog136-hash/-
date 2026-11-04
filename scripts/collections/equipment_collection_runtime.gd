@@ -137,7 +137,7 @@ func accept_load(data: Dictionary) -> bool:
 func next_safe_id() -> int:
 	var result: int = 1
 	for id: String in progress.receipts:
-		if id.is_valid_int(): result = maxi(result,int(id)+1)
+		if id.is_valid_int() and id.length() <= 18: result = maxi(result,int(id)+1)
 	return result
 
 func write_save(path: String, data: Dictionary) -> Error:

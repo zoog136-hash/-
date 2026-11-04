@@ -29,7 +29,7 @@ static func _item(items: Dictionary, name: String) -> Dictionary:
 
 static func _is_equipment(record: Dictionary) -> bool:
 	var slot: String = str(record.get("slot",""))
-	return slot != "" and slot != "consumable" and slot != "currency"
+	return slot != "" and slot != "consumable" and slot != "currency" and slot != "material"
 
 static func _equipped(equipped: Dictionary,id: String) -> bool:
 	for raw: Variant in equipped.values():

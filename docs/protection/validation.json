@@ -1,0 +1,432 @@
+{
+  "status": "LOCAL_VISUAL_ADAPTER_VALIDATED_NOT_PUBLISHED_ORIGINAL_FX_PIXELS_PENDING",
+  "observed_utc": "2026-11-04T15:23:01.306278+00:00",
+  "repository": "zoog136-hash/-",
+  "branch": "feature/protection523-20261104",
+  "base_sha": "1d8bd5e0fde9ea0d74bd39b036184b49cab21d12",
+  "publication_reason": "User explicitly approved publishing this feature code/tests/brief documentation on its feature branch and a Draft PR; commit uses [skip ci]. Actual published SHA and PR are recorded by Git history and the PR description.",
+  "source": {
+    "bytes": 25031173,
+    "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "zip_crc": "PASS",
+    "all_content_tables": 1065,
+    "all_content_rows": 2323700,
+    "normal_items": 6,
+    "disabled_items": 1,
+    "item_bonus_rows": 60,
+    "normal_item_bonus_rows": 52,
+    "bonus_types": 9,
+    "normal_recipes": 6,
+    "related_group604_buffs": 21,
+    "related_group604_items": 23,
+    "runtime_capsule_bytes": 98166,
+    "runtime_capsule_sha256": "aefe4f39ba5574dc3dab70feb8a623567efc84b8e94888494a59a8dfa6d606c1"
+  },
+  "engine": "Godot 4.7.2 official ed1daf0bf",
+  "render": "OpenGL Mesa llvmpipe; Dummy audio; native art equivalence and physical devices not verified",
+  "late_change_boundary": "Final supplement code tested by all bounded runs above.1280test predates only test scope labels/final UI refresh;854covers final UI refresh. Negative missing-pack branch added after UI run; not a current-map positive gate.",
+  "files": {
+    "scripts/world.gd": {
+      "bytes": 391254,
+      "sha256": "a5c53afe2988586a30f02923c82fa3a269b7e3e84f6226aa70dfb587ea7f1db1"
+    },
+    "scripts/ui/renewal_hud.gd": {
+      "bytes": 122237,
+      "sha256": "a4aaf15268ac3c018b282757f7cf80277de8945feb5fe63d3c1af7145e0539d9"
+    },
+    "scripts/protection/protection523_source.gd": {
+      "bytes": 17014,
+      "sha256": "f12dc422750b91d88c751874465306d55339857f8426809cb963355089ff98a5"
+    },
+    "scripts/protection/protection523_runtime.gd": {
+      "bytes": 29266,
+      "sha256": "078cc36222c40dc22206ae8e6b8c6f0294f79d4fa76ba3580797749d9037a207"
+    },
+    "scripts/protection/protection523_panel.gd": {
+      "bytes": 12532,
+      "sha256": "9d84acfc4491f6bcc6691437931ead39e492a182c615b5c067638a1e4e5ccdf0"
+    },
+    "data/protection/protection523_policy.json": {
+      "bytes": 528,
+      "sha256": "99c56c3c78fc309f64022709b8d891e344a2846b07c8f840b03bbeb12eb2025d"
+    },
+    "tests/protection523_main_test.gd": {
+      "bytes": 24629,
+      "sha256": "3efaf1d5063ec469a8693e284f3752337538e162c926d5ab8a86a8768c4c0a24"
+    },
+    "tests/protection523_ledger_test.gd": {
+      "bytes": 21080,
+      "sha256": "f0e2c4647fdab016b8c917bdfb0aa690ec6c0ed5730392c4fe75ca1e3fcfdf8b"
+    },
+    "tools/protection/audit_protection523.py": {
+      "bytes": 8604,
+      "sha256": "08530a5d0279865a3071b8398b5d3400a1e0eb69a4a401843a28fbd5babde031"
+    },
+    "docs/protection/PROTECTION523.md": {
+      "bytes": 12124,
+      "sha256": "b5fbbfa61ce94d8b748f5f8d0ea94f6d3973c8d5e315934aca349b3c055d7258"
+    }
+  },
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "status": "PASS in feature checkout; unchanged HEAD byte-verified/hardlinked resources; original delivery separate",
+    "log_sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+  },
+  "historical_source_dir_check": "BLOCKED: /workspace/protection523-private/a1.zip absent; current523 ZIP independently SHA/CRC verified",
+  "prior_report": "Actual supported Library materialization read59,124B/CRC/SHA8ffd049d... verified. Earlier helper401 not retried.",
+  "remaining": {
+    "natural_supply": "PR262 provider HEAD7292da8e... unmerged; no combined Main quest acquisition run. Eligibility/dates/class/predecessors remain provider authority.",
+    "unmerged_dependencies": "PR239/238 not merged/run together; craft_recipe(recipeID) delegation exposed without pre-mutation. Parent coordinates.",
+    "current_map_gate": "NOT_RUN / NOT_PASSED: existing environment lacks required Aden source84_v3 pack; no725MB download while map priority. Production guard unchanged; negative5checks only.",
+    "art": "Existing8Source-ID catalog icons visually checked/rendered. No exact523 archive pixel equivalence claimed. Sprite22514/25084/26810/28052/28915/29723 frame/offset/layer bytes unverified; no candidate24941/29044 substitution.",
+    "platforms": "Windows/Android physical device and native audio not tested"
+  },
+  "remote_ci": "not run; no merge/rebase; no workflow or branch-protection changes",
+  "publication_boundary": "Private source ZIP, report, runtime capsule, raw mapping/audit outputs, backups, logs, screenshots and QA profiles are excluded. No main/other PR merge or rebase.",
+  "followup_material_adapter": {
+    "provider_head": "7292da8e722d3e12acc9a33e00078640e6355dfc",
+    "parent_pr256_head": "993ee88328dfc4cc1cae9dea01e1d2eeeb13a863",
+    "capsule_sha256": "aefe4f39ba5574dc3dab70feb8a623567efc84b8e94888494a59a8dfa6d606c1",
+    "capsule_bytes": 98166,
+    "material_reward_rows": 11,
+    "upstream_recipes": [
+      37044,
+      47273
+    ],
+    "duplicate_quest_engine": "excluded; prior draft remains private paused patch",
+    "quest_completion": "read only",
+    "api": "world.protection523.craft_recipe(recipeID) before generic consumption/quota/log mutation",
+    "title_owner": "Appellation1173/1508/1788/2144/2521/2658 atomic with6realoutputs; separate from PR258"
+  },
+  "historical_runs": [
+    {
+      "log": "/workspace/protection523-private/main-test-r2.log",
+      "sha256": "8369e0532746df5eddb06bf9cfa1d7f499d2e46c6ac8d5b2d874a5aecf599111",
+      "result": {
+        "checks": 184,
+        "failures": [],
+        "scope": "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+      },
+      "scope": "preceding headless full six-tier Main phase",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/ui1280-r2.log",
+      "sha256": "8974aadbd908b669da9c8527517313c568eae1dfb80061d10d47f12fbc93eeb9",
+      "result": {
+        "checks": 206,
+        "failures": [],
+        "scope": "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+      },
+      "scope": "actual OpenGL 1280x720 full six-tier UI, ownership/combat/respawn",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/ui854.log",
+      "sha256": "ac088c43aa4708a7e8810b04caae56c10b891e1bd871696cfd5a1287809a93b4",
+      "result": {
+        "checks": 212,
+        "failures": [],
+        "scope": "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+      },
+      "scope": "actual OpenGL 854x480 full six-tier pointer UI, ownership/combat/respawn",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/reconnect-final.log",
+      "sha256": "e384ffcab56f89044b8edf2c8902a2e7756bba67d09759206a0fedc6c90eb7df",
+      "result": {
+        "checks": 9,
+        "failures": [],
+        "scope": "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+      },
+      "scope": "fresh process, source pointer, all titles/cooldowns/ownership",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/ledger-final-r2.log",
+      "sha256": "c8d4e4aa9a74e6bf131ca8b0571a22c2aa1d452b25169ded51d796db0940adc3",
+      "result": {
+        "checks": 16,
+        "failures": []
+      },
+      "scope": "final code: PR239 ledger, live identity, malformed own namespace, migration defaults",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/core_runtime_save_test-final.log",
+      "sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      },
+      "scope": "final code: actual Main/current source map/save preservation",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/save_identical_payload_test-final.log",
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b",
+      "result": {
+        "failures": [],
+        "skips": 1,
+        "writes": 2
+      },
+      "scope": "final code: identical-payload writer gate",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/deferred_save_gate_test-final.log",
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9",
+      "result": {
+        "failures": []
+      },
+      "scope": "final code: deferred save gate",
+      "engine_errors": []
+    }
+  ],
+  "historical_screenshots": [
+    {
+      "path": "/workspace/protection523-private/captures1280-r2/all-tiers.png",
+      "bytes": 893968,
+      "sha256": "899f6cac0c2d18aca00a2898cdc0a829d85170cb5dc4b1313304b0b9b8ac9d11"
+    },
+    {
+      "path": "/workspace/protection523-private/captures1280-r2/before-craft.png",
+      "bytes": 910857,
+      "sha256": "a6c1dc342889ffd466d3c828d6286706ab4ef5680d5483fd8d95fc6528022885"
+    },
+    {
+      "path": "/workspace/protection523-private/captures854/all-tiers.png",
+      "bytes": 247005,
+      "sha256": "d30bb935539e5afcd3e43ce773a52fafc89c17d7d58b745a171eea8d4ff2f135"
+    },
+    {
+      "path": "/workspace/protection523-private/captures854/before-craft.png",
+      "bytes": 258263,
+      "sha256": "793de3c216a0d532844b75cc7fbbda5dcf604783d63aef5af3537d7485efe47e"
+    }
+  ],
+  "historical_run_boundary": "993ee883 prior environment / preceding implementation; not rerun as final supplement integration evidence",
+  "runs": [
+    {
+      "log": "/workspace/protection523-private/material-supply-contract-final3.log",
+      "sha256": "822ad18616a59cc6c42b28083aca7e57b248ba675b0e690ac32575575307136c",
+      "result": {
+        "checks": 96,
+        "failures": [],
+        "scope": "actual523 rows; PR262 physical contract fixture; no combined Main or natural-supply claim"
+      },
+      "scope": "actual523 eleven material Reward rows; PR262 physical contract fixture; delegated132033/37044/47273",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/loader-supply-migration.log",
+      "sha256": "2250d454818b796064aa58851882c70f427a6083af69de4e2fa04ea664698d66",
+      "result": {
+        "checks": 8,
+        "failures": [],
+        "scope": "real source ZIP install/loader; isolated user directory; no Main scene"
+      },
+      "scope": "real prior installed capsule to final98166B capsule; source ZIP and old capsule retained",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/loader-supply-reconnect.log",
+      "sha256": "fdd6c1429c4df50dc0d30e2bac3880d1bb349152aeb4523eafd2a508c8ab5b22",
+      "result": {
+        "checks": 6,
+        "failures": [],
+        "scope": "real source ZIP install/loader; isolated user directory; no Main scene"
+      },
+      "scope": "new process pinned source/capsule loader",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/main-supply720-r3.log",
+      "sha256": "34d43aeaed8edb6b547b719b572af2550689c50dd0b4763b283770688bef4c8d",
+      "result": {
+        "checks": 77,
+        "failures": [],
+        "scope": "actual Main, original523 six definitions, source-material QA fixture, real UI/atomic save; upstream quest suppliers separate"
+      },
+      "scope": "actual Main/OpenGL1280x720 existing validation map; Source-ID catalog material fixture; not natural acquisition",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/main-supply480.log",
+      "sha256": "0522242ff54de605a4b671e014e129c5b011abb740e63424a29843139a94353b",
+      "result": {
+        "checks": 77,
+        "failures": [],
+        "scope": "actual Main on existing validation map; catalog Source-ID QA supply materials; not natural quest acquisition or current source-map integration"
+      },
+      "scope": "actual Main/OpenGL854x480 existing validation map; pointer crafting/use/cancel/failure and catalog icons",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/main-supply-reconnect.log",
+      "sha256": "1337f52f658fa947d5dcddff13daba63f8d118f4cf8e387fdc6407dceafa9426",
+      "result": {
+        "checks": 11,
+        "failures": [],
+        "scope": "actual Main on existing validation map; catalog Source-ID QA supply materials; not natural quest acquisition or current source-map integration"
+      },
+      "scope": "actual Main new process, existing validation map, all6body/title/cooldowns/costs",
+      "engine_errors": []
+    },
+    {
+      "log": "/workspace/protection523-private/main-missing-pack-final.log",
+      "sha256": "c419345032c7f255bce439fd344a11efcde256722796255536e2c3faec581450",
+      "result": {
+        "checks": 5,
+        "failures": [],
+        "scope": "actual Main missing current source-map pack negative guard only; not passing current-map integration gate"
+      },
+      "scope": "actual Main/current source-map missing pack negative save protection only",
+      "engine_errors": []
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "/workspace/protection523-private/captures-supply720-r3/supply-before.png",
+      "bytes": 647440,
+      "sha256": "2dd39cf5af2fda9512afa58549e855613a121143020c982d114605e175a57308"
+    },
+    {
+      "path": "/workspace/protection523-private/captures-supply720-r3/supply-final.png",
+      "bytes": 623819,
+      "sha256": "53d176d4685736743bf70d192b70bcd6a2bccd0d7bcffa140829121ab7ed49bb"
+    },
+    {
+      "path": "/workspace/protection523-private/captures-supply480/supply-before.png",
+      "bytes": 223092,
+      "sha256": "eb92b8d5d35b71a952945f2980a86b8d34da213458cacf306a20eb88d8102e79"
+    },
+    {
+      "path": "/workspace/protection523-private/captures-supply480/supply-final.png",
+      "bytes": 212800,
+      "sha256": "85bb488ffdbcffb9f18b5936ece7102d108b34c6b9616ac9b8b78291ebb7903f"
+    },
+    {
+      "path": "/workspace/protection523-private/captures-supply720-reconnect/supply-reconnected.png",
+      "bytes": 655456,
+      "sha256": "811b7b2823ae60e543a2130baec37489bc6a03c96dd644e2091ca39c6e4e2da5"
+    }
+  ],
+  "historical_capacity_cleanup": {
+    "receipt": "/workspace/protection523-private/safe-cache-cleanup.json",
+    "removed_package_index_files": 6,
+    "removed_file_bytes": 21572489,
+    "actual_reclaimed_bytes": 0,
+    "before_free_bytes": 9069096960,
+    "after_unlink_free_bytes": 9069084672,
+    "filesystem": "workspace overlay; /tmp a separate filesystem",
+    "protected": "Git, all worktrees, raw inputs, reports, packs, backups, executables, current import cache, evidence, saves/profiles preserved"
+  },
+  "capacity_cleanup": {
+    "current_phase_deleted_files": 0,
+    "free_bytes": 29322625024,
+    "original_work_and_Git_and_private_inputs_and_all_QA_profiles": "preserved"
+  },
+  "art_inputs_receipt": {
+    "path": "/workspace/protection523-private/reused-gaho-icon-receipts.json",
+    "sha256": "8b32f6a2d431cfc481a9bde2ec5572f1e09fdcb6c8cf7115dabb29f83b3ad22b",
+    "kind": "already tracked Inven source-ID catalog pixels, not verified native523 archive bytes",
+    "public_binary_changes": 0
+  },
+  "followup_publication": {
+    "action": "GitHub create_tree on existing base tree f8f80c31626a066393fd03be07539294d2cb63aa",
+    "repository": "zoog136-hash/-",
+    "approved_text_files": 7,
+    "utf8_bytes": 120988,
+    "status": "failed HTTP422 timeout; immutable tree creation outcome unconfirmed; no SHA returned",
+    "message": "Sorry, your request timed out. It's likely that your input was too large to process.",
+    "commit_creation_requested": false,
+    "branch_update_requested": false,
+    "pr_update_requested": false,
+    "remote_pr_head_rechecked": "993ee88328dfc4cc1cae9dea01e1d2eeeb13a863",
+    "draft": true,
+    "merged": false,
+    "remote_retries_after_error": 0,
+    "superseded_by_successful_remote_head": "c69b71a66d2f457066591434fefb2001dfbc6885"
+  },
+  "visual_followup": {
+    "observed_utc": "2026-11-04T22:48:18.382413+00:00",
+    "local_parent": "2a73457ee8efab6b8ad884035c346702b8b6fdd6",
+    "fixed_remote_head": "c69b71a66d2f457066591434fefb2001dfbc6885",
+    "publication": "LOCAL_ONLY_NO_REMOTE_WRITES_THIS_PHASE",
+    "pr236_api_head": "1c1a90d7e1f49f4387f28757c3992a5c37b03ef7",
+    "source_field": "ItemBonus -> BonusType107 ItemConsumeEffectSpriteID",
+    "sprite_ids": [
+      22514,
+      25084,
+      26810,
+      28052,
+      28915,
+      29723
+    ],
+    "api": "player.original_source_preview.spawn_source_overlay(sprite_id,facing,player.global_position)",
+    "trigger": "TWILIGHT after successful atomic use commit; native client timing unverified",
+    "source_pixels_frames_offsets_layers": "not installed/verified for six target overlays; old compositor owns rendering when exact bindings are present",
+    "binding_inventory": {
+      "workspace_manifest_record_maps_checked": 2,
+      "exact_overlay_hits": [],
+      "downloaded_new_resource_bytes": 0
+    },
+    "new_resource_download_bytes": 0,
+    "new_resource_uploads": 0,
+    "source_capsule_byte_changes": 0,
+    "new_public_files": 0,
+    "runs": [
+      {
+        "log": "/workspace/protection523-private/gaho-visual-contract.log",
+        "sha256": "f806988c242948fa24214c1d34949faefc215ec5dd96f9f2a3c6132b9f9bc148",
+        "result": {
+          "checks": 69,
+          "failures": [],
+          "scope": "real523 sprite IDs; compositor-call fixture; source pixels/offsets/layers absent; not native visual proof"
+        },
+        "scope": "actual523 IDs and compositor accept/reject fixture; no source-pixel proof",
+        "engine_errors": []
+      },
+      {
+        "log": "/workspace/protection523-private/gaho-visual-material-regression.log",
+        "sha256": "822ad18616a59cc6c42b28083aca7e57b248ba675b0e690ac32575575307136c",
+        "result": {
+          "checks": 96,
+          "failures": [],
+          "scope": "actual523 rows; PR262 physical contract fixture; no combined Main or natural-supply claim"
+        },
+        "scope": "unchanged eleven-row material consumption/atomic save contract regression",
+        "engine_errors": []
+      },
+      {
+        "log": "/workspace/protection523-private/gaho-visual-main720.log",
+        "sha256": "1a9d24e7dcec6c09edb2edb6254f554a7882c09dc6625b0ad640ec2bf5708efb",
+        "result": {
+          "checks": 89,
+          "failures": [],
+          "scope": "actual Main on existing validation map; catalog Source-ID QA supply materials; not natural quest acquisition or current source-map integration"
+        },
+        "scope": "actual Main1280x720; source overlay API called with exact6IDs; missing input negative branch; validation map/material fixture",
+        "engine_errors": []
+      },
+      {
+        "log": "/workspace/protection523-private/gaho-visual-reconnect.log",
+        "sha256": "1337f52f658fa947d5dcddff13daba63f8d118f4cf8e387fdc6407dceafa9426",
+        "result": {
+          "checks": 11,
+          "failures": [],
+          "scope": "actual Main on existing validation map; catalog Source-ID QA supply materials; not natural quest acquisition or current source-map integration"
+        },
+        "scope": "actual Main fresh process854x480; gameplay receipts/cooldowns and body preserved",
+        "engine_errors": []
+      }
+    ],
+    "resource_integrity_log_sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57",
+    "remaining": "Real six-effect input/install/render. Central PR263/239/262 owns map/natural supply integration; no other domain files modified."
+  }
+}
