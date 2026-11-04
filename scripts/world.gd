@@ -1997,7 +1997,7 @@ func _spawn_monsters(count: int) -> void:
 		monster.position = monsters_root.to_local(_random_walkable_position(player.global_position, 360.0, 1200.0))
 		monsters_root.add_child(monster)
 		var texture: Texture2D = _monster_texture(record)
-		monster.setup(record, player, self, texture)
+		if not monster.setup(record, player, self, texture): continue
 		monster.set_meta("size_class", _monster_size_class(record))
 		monster.died.connect(_on_monster_died)
 		monster.player_hit.connect(_on_player_hit)
@@ -2524,7 +2524,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 		_:
 			hud.show_message("알 수 없는 스킬입니다")
 
-func _attack() -> void:
+func _attack(automatic_acquisition: bool = false) -> void:
 	if death_recovery.blocked(): return
 	if patch523_npc_spells.blocks("CannotAttack"): return
 	if is_instance_valid(world_interactions) and world_interactions.primary_is_npc(): return
@@ -2535,13 +2535,14 @@ func _attack() -> void:
 	var attack_kind: String = _current_attack_kind()
 	var target: TwilightMonster = selected_monster
 	var target_usable: bool = is_instance_valid(target) and not target.dead
+	if target_usable and automatic_acquisition: target_usable = target.permits_auto_selection()
 	if target_usable:
 		target_usable = _target_in_current_weapon_range(target)
 	if target_usable:
 		target_usable = _has_line_of_sight_world(player.global_position, target.global_position)
 	if not target_usable:
 		if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
-		target = _nearest_visible_monster_in_weapon_range()
+		target = _nearest_visible_monster_in_weapon_range(automatic_acquisition)
 	if target == null:
 		hud.show_message("무기 사거리 안에 보이는 대상이 없습니다")
 		return
@@ -2680,13 +2681,17 @@ func _run_auto_hunt() -> void:
 	if player.has_manual_movement():
 		auto_stuck_time = 0.0
 		return
+	var manual_priority: TwilightMonster = null
 	if is_instance_valid(world_interactions):
 		if world_interactions.pointer != -2: return
 		if world_interactions.primary_is_npc(): return
 		var priority: TwilightMonster = world_interactions.primary_monster()
 		if priority != null:
+			manual_priority = priority
 			auto_target = priority
 			selected_monster = priority
+	# The source flag restricts acquisition, not damage or an explicit selection.
+	if is_instance_valid(auto_target) and auto_target != manual_priority and not auto_target.permits_auto_selection(): auto_target = null
 	if not pending_attack.is_empty(): return
 	if player.is_stunned() or player.is_feared():
 		player.clear_click_path()
@@ -2702,7 +2707,7 @@ func _run_auto_hunt() -> void:
 			selected_monster = null
 			player.clear_click_path()
 			return
-		auto_target = _nearest_reachable_monster(99999.0)
+		auto_target = _nearest_reachable_monster(99999.0, false, true)
 		auto_target_failed_search_actor_count = monsters_root.get_child_count()
 		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
 		if _native_route_pending():auto_stuck_time=0.0
@@ -2720,7 +2725,7 @@ func _run_auto_hunt() -> void:
 	if _target_in_current_weapon_range(auto_target) and can_see:
 		player.clear_click_path()
 		if auto_attack_timer <= 0.0:
-			_attack()
+			_attack(manual_priority == null)
 		return
 	if player.is_held():
 		player.clear_click_path()
@@ -2745,7 +2750,7 @@ func _run_auto_hunt() -> void:
 				return
 			if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
 			_remember_auto_target_path_failure(auto_target)
-			auto_target = _nearest_reachable_monster(99999.0)
+			auto_target = _nearest_reachable_monster(99999.0, false, true)
 			if auto_target == null:
 				auto_target_failed_search_actor_count = monsters_root.get_child_count()
 				auto_target_next_search_ms = Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
@@ -2836,7 +2841,7 @@ func _remember_auto_target_path_failure(monster: TwilightMonster) -> void:
 	if auto_target_failed_paths.size() >= 512: auto_target_failed_paths.clear()
 	auto_target_failed_paths[_auto_target_failure_key(monster)] = Time.get_ticks_msec() + AUTO_TARGET_FAILED_PATH_RETRY_MS
 
-func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false) -> TwilightMonster:
+func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false, automatic_acquisition: bool = false) -> TwilightMonster:
 	# Distance-first preserves the previous nearest-reachable rule, while
 	# avoiding an expensive A*/source route for every closer actor seen so far.
 	var candidates: Array[Dictionary] = []
@@ -2847,6 +2852,7 @@ func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false
 		if not node is TwilightMonster: continue
 		var monster: TwilightMonster = node
 		if monster.dead or monster.is_queued_for_deletion(): continue
+		if automatic_acquisition and not monster.permits_auto_selection(): continue
 		var distance_squared: float = origin.distance_squared_to(monster.global_position)
 		if distance_squared < max_distance_squared:
 			candidates.append({"actor":monster, "distance_squared":distance_squared, "order":order})
@@ -7688,7 +7694,7 @@ func _weapon_cell_distance(target: TwilightMonster) -> int:
 func _target_in_current_weapon_range(target: TwilightMonster) -> bool:
 	return target != null and _weapon_cell_distance(target) <= _current_attack_range_cells()
 
-func _nearest_visible_monster_in_weapon_range() -> TwilightMonster:
+func _nearest_visible_monster_in_weapon_range(automatic_acquisition: bool = false) -> TwilightMonster:
 	var best: TwilightMonster = null
 	var best_distance: float = INF
 	var range_cells: int = _current_attack_range_cells()
@@ -7698,6 +7704,7 @@ func _nearest_visible_monster_in_weapon_range() -> TwilightMonster:
 		var monster: TwilightMonster = node
 		if monster.dead or _weapon_cell_distance(monster) > range_cells:
 			continue
+		if automatic_acquisition and not monster.permits_auto_selection(): continue
 		if not _has_line_of_sight_world(player.global_position, monster.global_position):
 			continue
 		var distance: float = player.global_position.distance_to(monster.global_position)

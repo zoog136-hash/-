@@ -2311,6 +2311,8 @@ func toggle_map() -> void:
 	_open_window("map","월드맵","지역을 선택하면 기존 이동 기능으로 해당 지역에 진입합니다.")
 	var col: VBoxContainer=workspace.column()
 	col.add_child(UI.label("WORLD OF ADEN",20,UI.GOLD))
+	col.add_child(UI.button("포탈·출현 정보", func() -> void: preload("res://scripts/ui/patch523_world_panel.gd").open(self), Vector2(180,36)))
+	col.get_child(col.get_child_count()-1).name = "OpenWorldLinks"
 	var row := HBoxContainer.new()
 	row.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	col.add_child(row)

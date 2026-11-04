@@ -11,8 +11,16 @@ var skill: Dictionary = {}
 var remaining: float = 0
 var generation: int = -1
 var order: String = "guard"
-var designated: WeakRef
-var threat: WeakRef
+var designated_life: int = -1
+var threat_life: int = -1
+var designated: WeakRef:
+	set(value):
+		designated = value
+		designated_life = reference_life(value)
+var threat: WeakRef:
+	set(value):
+		threat = value
+		threat_life = reference_life(value)
 var pending_hit: Dictionary = {}
 var attack_clock: float = 0
 var path_clock: float = 0
@@ -118,17 +126,21 @@ func notify_attack(enemy: TwilightMonster) -> void:
 func notify_threat(enemy: TwilightMonster) -> void:
 	if active() and is_instance_valid(enemy) and not enemy.dead: threat = weakref(enemy)
 
-func living(reference: WeakRef) -> TwilightMonster:
+static func reference_life(reference: WeakRef) -> int:
+	var value: Variant = reference.get_ref() if reference != null else null
+	return int(value.life_id) if is_instance_valid(value) and value is TwilightMonster else -1
+
+func living(reference: WeakRef, expected_life: int) -> TwilightMonster:
 	if reference == null: return null
 	var enemy: Node = reference.get_ref()
-	return enemy as TwilightMonster if is_instance_valid(enemy) and enemy is TwilightMonster and not enemy.dead else null
+	return enemy as TwilightMonster if is_instance_valid(enemy) and enemy is TwilightMonster and not enemy.dead and not enemy.is_queued_for_deletion() and enemy.life_id == expected_life and enemy.get_parent() == world.monsters_root else null
 
 func choose_target() -> TwilightMonster:
 	if order in ["follow","stay"]: return null
-	var enemy := living(designated)
-	if enemy == null and order == "guard": enemy = living(threat)
+	var enemy := living(designated, designated_life)
+	if enemy == null and order == "guard": enemy = living(threat, threat_life)
 	if enemy == null and order == "guard" and world.player.auto_enabled:
-		enemy = world.selected_monster if is_instance_valid(world.selected_monster) and not world.selected_monster.dead else null
+		enemy = world.selected_monster if is_instance_valid(world.selected_monster) and not world.selected_monster.dead and world.selected_monster.permits_auto_selection() else null
 	if enemy != null and enemy.global_position.distance_to(world.player.global_position) > float(skill.summon_leash): return null
 	return enemy
 
@@ -179,7 +191,7 @@ func tick(delta: float) -> void:
 func release_hit() -> void:
 	var event := pending_hit.duplicate(false)
 	pending_hit.clear()
-	var enemy := living(event.get("target"))
+	var enemy := living(event.get("target"), int(event.get("life", -1)))
 	if not active() or enemy == null or int(event.generation) != world.combat_generation or enemy.life_id != int(event.life): return
 	if actor.global_position.distance_to(enemy.global_position) > float(skill.summon_attack_range) or not world._has_line_of_sight_world(actor.global_position,enemy.global_position): return
 	actor.finish_strike(float(skill.summon_recovery_time))

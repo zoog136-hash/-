@@ -37,6 +37,10 @@ CHECKS = [
     ('halphas_star_enchant_test', []),
     ('halphas_star_enchant_transaction_test', []),
     ('mastery523_main_test', []),
+    ('patch523_world_links_test', ['--patch523-game-field']),
+    ('patch523_spawn_policy_test', []),
+    ('host_portal_navigation_test', []),
+    ('auto_selection_order_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -308,7 +312,11 @@ def main():
                       'symbol_history_test':'SYMBOL_HISTORY_RESULT',
                       'halphas_star_enchant_test':'HALPHAS_STAR_ENCHANT_RESULT',
                       'halphas_star_enchant_transaction_test':'HALPHAS_STAR_TRANSACTION_RESULT',
-                      'mastery523_main_test':'MASTERY_MAIN_RESULT'}[name]
+                      'mastery523_main_test':'MASTERY_MAIN_RESULT',
+                      'patch523_world_links_test':'PATCH523_WORLD_LINKS_RESULT',
+                      'patch523_spawn_policy_test':'PATCH523_SPAWN_POLICY_RESULT',
+                      'host_portal_navigation_test':'HOST_PORTAL_NAVIGATION_RESULT',
+                      'auto_selection_order_test':'AUTO_SELECTION_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

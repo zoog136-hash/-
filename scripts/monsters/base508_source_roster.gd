@@ -43,12 +43,16 @@ static func for_spawn(source_key: String, host_map_id: String, manifest_path: St
 	var context: Dictionary = _data.get("contexts", {}).get(source_key, {})
 	if context.is_empty():
 		var full_record: Dictionary = _full_record(source_key, manifest_path, {"source_m_allow_contextual":allow_contextual})
-		if not full_record.is_empty(): full_record["catalog_only"] = false
+		if not full_record.is_empty():
+			full_record["catalog_only"] = false
+			full_record["source_m_runtime_host_map"] = host_map_id
 		return full_record
 	var row: Dictionary = _by_npc.get(int(context.npc_id), {})
 	if not row.get("host_maps", []).has(host_map_id): return {}
 	var result: Dictionary = record(source_key, manifest_path)
-	if not result.is_empty(): result["catalog_only"] = false
+	if not result.is_empty():
+		result["catalog_only"] = false
+		result["source_m_runtime_host_map"] = host_map_id
 	return result
 static func primary_keys() -> Array:
 	var result: Array = []
