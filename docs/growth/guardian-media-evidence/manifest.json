@@ -212,13 +212,14 @@
       "action": "Drive upload of newly created original subset",
       "target": "existing private project handoff folder / TWILIGHT_guardian523_original_glow_v1.zip",
       "reason": "Auto approval review: proprietary/original assets to unverified folder; use of Drive inputs did not explicitly authorize this new archive upload.",
-      "status": "denied, not executed, not retried",
-      "safer_completed_alternative": "Install original pixels directly from the already provided Library UI551 ZIP/UI128.dat. No new upload needed; confirmed through actual native UI and unchanged game-save SHA."
+      "status": "Initially denied; subsequently completed once after explicit user approval. No workaround.",
+      "safer_completed_alternative": "Install original pixels directly from the already provided Library UI551 ZIP/UI128.dat. No new upload needed; confirmed through actual native UI and unchanged game-save SHA.",
+      "approved_result": "approved-drive-delivery.json; re-downloaded ZIP SHA/CRC and91 installation/pixel checks passed"
     }
   ],
   "delivery": {
     "new_original_pixels_in_public_git": 0,
-    "new_subset_zip_transferred": false,
+    "new_subset_zip_transferred": true,
     "existing_original_library_file": "libfile_0ba507ea27888191b60532f6aa6b6ff0",
     "existing_input_unchanged": true,
     "private_capture_not_published": {
@@ -226,7 +227,9 @@
       "bytes": 549828,
       "sha256": "7f07855e201fd515f289ade0075f173f1df6a5838433c8ccc0d2045b6ded3498"
     },
-    "public_screenshots": "Only reset screens after original effect ended; raw original atlas/private glow capture excluded."
+    "public_screenshots": "Only reset screens after original effect ended; raw original atlas/private glow capture excluded.",
+    "approved_drive_delivery_receipt": "approved-drive-delivery.json",
+    "source_archive_direct_install_remains_supported": true
   },
   "notes": [
     "First file picker attempts did not select a FileDialog ItemList row; programmatic current_path leaves OK disabled. Final test uses real ItemList selection handler and touch confirmation in its own viewport.",
@@ -323,6 +326,14 @@
     "source-transactions-test.txt": {
       "bytes": 120,
       "sha256": "e6b1750b48f47fb30f8305611069c0c2ef563443cb8d079ec373e59f158ed390"
+    },
+    "approved-drive-delivery.json": {
+      "bytes": 655,
+      "sha256": "ad1659e2f234f4172a8d11e89a768260b85b15e1cc7343c319d469d49045b806"
+    },
+    "approved-drive-delivery-test.txt": {
+      "bytes": 116,
+      "sha256": "e4aea0cfc34a2029563b2a202f871e776edde33b46973d3b5366e8f79417c9b5"
     }
   }
 }

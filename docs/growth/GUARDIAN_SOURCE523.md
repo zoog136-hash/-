@@ -81,7 +81,7 @@ python3 tools/build_guardian_source523.py --source-dir /workspace/guardian-sourc
 
 새 보유 입력: Drive `full_resource_inventory.zip`(SHA d50445dbb5bab01f7118a52220d236e05a1c065b5cc14e314734facb62c6d4b8)와 `TWILIGHT-source-card-ui-collections-review.zip`(SHA04343b1d7b90bb81928ec398357f1481723d82cece71ed58c534cfcb47ceae73)을 정상 Drive fetch로 받아 실제 바이트/CRC와 내부 자료를 읽었다. 전자는 목록·SPR이며 후자는 코드/UI 검증 자료이고 수호성 카드 아틀라스/원본 음성을 포함하지 않는다. 원본 픽셀 연결은 이미 정식 materialize한 Library UI551 입력의 UI128을 사용한다.
 
-최신 audio557 분석 ZIP(libfile_e994888010c881918373efebb0a6201a)과 구현 가이드(libfile_5a339b0b26c481919a1afc006cf89cde)의 신규 Library 다운로드는 tools/list HTTP401로 거부됐다. 재시도/우회하지 않았다. 원본 광원 편의 ZIP의 신규 Drive 업로드도 자동 승인 검토에서 거부돼 미실행이다. 그 업로드를 다른 경로로 대체하지 않았으며, 앱이 **기존 UI551 원본 ZIP을 직접 읽도록** 구현하여 신규 업로드 없이 원본을 설치할 수 있게 했다. 별도 편의 팩은 미전달이고 원본 입력 Library ID/해시를 그대로 보존한다.
+최신 audio557 분석 ZIP(libfile_e994888010c881918373efebb0a6201a)과 구현 가이드(libfile_5a339b0b26c481919a1afc006cf89cde)의 신규 Library 다운로드는 tools/list HTTP401로 거부됐다. 재시도/우회하지 않았다. 원본 광원 편의 ZIP의 신규 Drive 업로드는 처음 자동 승인 검토에서 거부됐다. 이후 사용자의 명시적 승인에 따라 같은 비공유 프로젝트 폴더에1회 정상 업로드했고, Drive에서 다시 내려받아287,134바이트/SHA256/ZIP CRC/설치·픽셀91항목을 확인했다. [전달 영수증](guardian-media-evidence/approved-drive-delivery.json)에 정확한 Drive 링크와 해시를 기록한다. 원본 입력 Library ID/해시는 보존하며, 앱의 **기존 UI551 원본 ZIP 직접 설치**도 계속 지원한다.
 
 남은 정확한 입력은 `UI_Resource/Atlas_SkillTree.plist` 및 PNG(카드 Enchant/Success/Fail/Select/Glow 프레임), 그리고 Sound/UI/90285.ogg·90299.ogg·90301.ogg·90303.ogg·90304.ogg·90305.ogg다. SoundMaterial/Asset 조인은 [media manifest](guardian-media-evidence/manifest.json)에 기록한다. 위 파일명/이벤트의 공개 검색에서도 원본 바이트를 확인하지 못했다. 해당 음성이나 카드를 새로 만들어 원본으로 표시하지 않는다. 서버 조건60슬롯은 계속 보류한다.
 
