@@ -1,0 +1,296 @@
+{
+  "schema": 1,
+  "base_main": "f4cc0138613a6c98898c57d479b5247a849b96ab",
+  "observed_later_main": "c043715af47a8b3a8a14e49882488c5f1020484e",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "ultra",
+  "workflow": "one selected environment; one feature branch and Draft PR; no main/other PR merge, rebase or force push",
+  "included": [
+    "attendance/pass and pass-specific actual event goals",
+    "owned LuckyBag and select/complex rewards; roulette display audit",
+    "source jade eligibility/lifetimes and existing single Ain timer",
+    "physical grail grace/possession/set bonuses",
+    "ordinary Challenge69 metadata/six active current-map host entries"
+  ],
+  "excluded": [
+    "honing/smithing/refining/alchemy/equipment sets/invoke replacement per latest scope change",
+    "clan/siege/pets/arena/ziggurat",
+    "general quest engine duplication",
+    "existing Orim/TrialTower and other active PR implementations"
+  ],
+  "source": {
+    "file": "lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+    "bytes": 25031173,
+    "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "zip_crc": "all entries passed in selected environment",
+    "content_tables": 1065,
+    "original_bytes_published": false,
+    "original_storage": "existing owner-private Drive pack reused; no new pack upload"
+  },
+  "map_validation": {
+    "basis": "existing base-main source84_v3 personal derived cache",
+    "materialized_files": 607,
+    "executed_map": "aden_world",
+    "other_maps_tested": false,
+    "map_source_or_pack_modified": false,
+    "world_hook": "forwards a validated map change to the new Challenge consumer only"
+  },
+  "tests": [
+    {
+      "name": "source reader/rewards/install",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 60,
+      "scope": "authored fixtures + actual directory + exact ZIP/index/hash/atomic install"
+    },
+    {
+      "name": "events final real source",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 55,
+      "scope": "full private source; synthetic edge cases; before final presentation-only reward text"
+    },
+    {
+      "name": "events presentation",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 19,
+      "scope": "synthetic final parser/state checks"
+    },
+    {
+      "name": "reward labels",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 8,
+      "scope": "read-only summary/immutability fixture"
+    },
+    {
+      "name": "jade and grail",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 233,
+      "scope": "authored fixtures + full source + shared reader; additional 30000 sampling pairs"
+    },
+    {
+      "name": "Challenge",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 611,
+      "scope": "all69 definitions and related joins plus active transactions and explicit local-host fixtures"
+    },
+    {
+      "name": "transaction host final",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 66,
+      "scope": "staging/failure/restart gates/currency/native ownership/events/expiry/config/view ordering"
+    },
+    {
+      "name": "actual Main OpenGL functional",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 87,
+      "scope": "actual Main/current Aden/native UI signals/atomic writer; explicit source ownership and pass XP fixtures"
+    },
+    {
+      "name": "new process reload",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 36,
+      "scope": "same actual committed Main profile reopened in a separate process"
+    },
+    {
+      "name": "unchanged required Core",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 44,
+      "scope": "unchanged core_runtime_save_test.gd via real-byte resource bootstrap; current source map and save preservation"
+    },
+    {
+      "name": "post-presentation OpenGL reload/captures",
+      "engine": "Godot 4.7.2 stable ed1daf0bf",
+      "status": "passed",
+      "checks": 44,
+      "scope": "36 reload + 6 captures + 2 enabled Challenge first-page checks"
+    }
+  ],
+  "resource_integrity": {
+    "status": "passed",
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "original_resources_delivery_claim": "unchanged; not all originals integrated/delivered"
+  },
+  "visual": {
+    "renderer": "OpenGL Compatibility Mesa25.0.7 llvmpipe",
+    "audio_output": "Dummy device for environment; real WAV bytes loaded",
+    "window_requests": [
+      [
+        1280,
+        720
+      ],
+      [
+        854,
+        480
+      ]
+    ],
+    "actual_viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        853,
+        480
+      ]
+    ],
+    "small_viewport_note": "Godot keep-aspect letterboxing; no resampling",
+    "artifacts": [
+      {
+        "file": "unconfirmed523-challenge-1280x720.png",
+        "actual_viewport_pixels": [
+          1280,
+          720
+        ],
+        "bytes": 883865,
+        "sha256": "23b27f243a4356664e69cb791e93373cdbbcca77698e586d966a4f15c3767695"
+      },
+      {
+        "file": "unconfirmed523-challenge-854x480.png",
+        "actual_viewport_pixels": [
+          853,
+          480
+        ],
+        "bytes": 204711,
+        "sha256": "f05bfb3382621c0210085432c3b6b53e30473eea353584841db0acfcd870da3e"
+      },
+      {
+        "file": "unconfirmed523-events-1280x720.png",
+        "actual_viewport_pixels": [
+          1280,
+          720
+        ],
+        "bytes": 933161,
+        "sha256": "812e7035953752a301387a4121ee16a1069fe69f51b59f48a5d34f3cc9937b3e"
+      },
+      {
+        "file": "unconfirmed523-events-854x480.png",
+        "actual_viewport_pixels": [
+          853,
+          480
+        ],
+        "bytes": 182014,
+        "sha256": "cfc005a7133135765c1a68c9d8f106493319d1130a5e24d44cae37e5247068eb"
+      },
+      {
+        "file": "unconfirmed523-jade_grail-1280x720.png",
+        "actual_viewport_pixels": [
+          1280,
+          720
+        ],
+        "bytes": 884321,
+        "sha256": "4d8b59a99250a0b25ff136a47c87ceeb406591a742c5a9b2b1cae32311ec6200"
+      },
+      {
+        "file": "unconfirmed523-jade_grail-854x480.png",
+        "actual_viewport_pixels": [
+          853,
+          480
+        ],
+        "bytes": 144750,
+        "sha256": "29ba742c4b89b0e5bae6abd23f0ac69c27a7e5bead61ea7189c04a79d2c6ab42"
+      }
+    ],
+    "artifact_publication": "private local verification only; images excluded from Git",
+    "last_help_wording_changed_after_capture": true,
+    "scope": "layout and usable-action visibility; physical touch/device/whole-original-visual equivalence not tested"
+  },
+  "regression": {
+    "test": "core_runtime_save_test.gd: migrated save commits and activates safely",
+    "initial_checks": 44,
+    "initial_failures": 1,
+    "expected": "_save_game(true) == OK after historical save migration",
+    "observed": {
+      "assertion": "failed",
+      "runtime_validate_error": "",
+      "empty_progress": false,
+      "save_blocked": true
+    },
+    "state_key": "unconfirmed523.domains",
+    "cause": "new runtime compared JSON float numeric defaults with integer dictionaries as unequal",
+    "fix": "numeric-safe recursive exact-structure defaults comparison; retain genuine-progress pack gate and reject missing subdomains",
+    "production_fix_file": "scripts/unconfirmed523/runtime.gd",
+    "existing_test_assertions_changed": false,
+    "final_checks": 44,
+    "final_failures": 0
+  },
+  "diagnostic_history": [
+    "Initial Main fixture tried to grant source TestItem139931; corrected fixture without weakening production TestItem denial.",
+    "Main strict Ain reload comparison detected only legitimate last_regen_at update by existing Ain.import_state/advance_time; all balances/expiry/progress/RNG remain exact.",
+    "GitHub503 during derived map cache fetch recovered by bounded object batches; no duplicate original download.",
+    "Full editor import was stopped after class scan; Main/Core use a test-only real-byte resource loader, not replacement art.",
+    "ALSA device unavailable; graphical test uses Dummy output, no sound-output claim."
+  ],
+  "blocked_reads": {
+    "reports": 5,
+    "status": "not downloaded/read",
+    "error": "Library helper tools/list HTTP401",
+    "bypass_or_retry": false,
+    "continuation": "trusted handoff facts plus direct full source and official NC research"
+  },
+  "not_run": [
+    "manual/remote/full CI dispatch",
+    "Android device",
+    "full editor import",
+    "full original map/actor/visual equivalence"
+  ],
+  "remaining": [
+    "native dungeon geometry/server/multiplayer and original Orim character/skill/map host",
+    "unsupported FinalReward and reward kinds preserve owned containers/claims",
+    "growth-pass original quest prerequisites remain locked without verified completion IDs",
+    "conditional or unconsumed combat effects explicitly retained as unsupported",
+    "all natural supply/use/effects/art of all source items",
+    "latest-main integration/required merge gates are separate; this is a Draft"
+  ],
+  "code_sha256": {
+    "scripts/world.gd": "52e6af4fc109d817796babf79a32b396f01166c610a16b092b20a230bc6fb8f9",
+    "scripts/ui/renewal_hud.gd": "f9d41753a34acb1d590e28a1b20ab50753f1fc5567c772649f589947c62aeff3",
+    "scripts/ainhasad_service.gd": "f2df3c27b317f7078697feb45937fe628e1148f53e14c02c9261a16329ebafe1",
+    "scripts/unconfirmed523/challenge_domain.gd": "ecb0d567a34f018d50ca992bd9e30ae0cb1b31e8f31ec05ac5ee77e844377b21",
+    "scripts/unconfirmed523/events_domain.gd": "9088f9652324d4a0a0d7ce4f9306a62a4fa237b7066147b7cc101b232c06809b",
+    "scripts/unconfirmed523/jade_grail_domain.gd": "059aaf1364785a01ed10dbd5b3c2b841f9f4d4d335ca902698010e967d9d6ea4",
+    "scripts/unconfirmed523/runtime.gd": "2fcd313f14f20155f8f45850ddb7fa6973ae8da9af93086d81900baa0cc8885f",
+    "scripts/unconfirmed523/source523.gd": "86f048babe19f173a862a419b9f1080931b4ecd71748b0798226b91236d6e451",
+    "scripts/unconfirmed523/view.gd": "9c2e21f8a2316ff7a187b0d52e7face30e913558a8dbd5b0ddb4cf88e3bd039d",
+    "data/unconfirmed523/twilight_policy.json": "3e993381f3ef448924384d1869e4c5380baae443b5c293070865bba27ecda0f7",
+    "tests/unconfirmed523_challenge_test.gd": "2fa22a1e79ef1d86af9e57e0d1a1a4c4bde3ba201d3836f8a69f6eb120da0e34",
+    "tests/unconfirmed523_core_wrapper.gd": "1a423baae62a927d01907033cb44c15e9d6affe13663be2ab5b6db379a26fa00",
+    "tests/unconfirmed523_events_test.gd": "2cf52993b1d7b200ea8c2528e803942fef7851a087e48c33d39ad779a57c80f5",
+    "tests/unconfirmed523_host_test.gd": "4457a95e5487ac022506edd46b9367f128079fc8a4885012c5cfd52a099db71b",
+    "tests/unconfirmed523_jade_grail_test.gd": "ccbe4456ca708f28c14a9953cb68c22ec0e15f2c4f9e10b31d84111e8766b340",
+    "tests/unconfirmed523_main_test.gd": "b7058f88e24c837c95300a124cf26f5b4ce02b411695e7f50c9e2e69dc2ecbee",
+    "tests/unconfirmed523_source_test.gd": "a403146078a58ca177594bde1619bdab38378566eb83562d7a3b1a142c834818"
+  },
+  "published_files": [
+    "scripts/world.gd",
+    "scripts/ui/renewal_hud.gd",
+    "scripts/ainhasad_service.gd",
+    "scripts/unconfirmed523/challenge_domain.gd",
+    "scripts/unconfirmed523/events_domain.gd",
+    "scripts/unconfirmed523/jade_grail_domain.gd",
+    "scripts/unconfirmed523/runtime.gd",
+    "scripts/unconfirmed523/source523.gd",
+    "scripts/unconfirmed523/view.gd",
+    "data/unconfirmed523/twilight_policy.json",
+    "tests/unconfirmed523_challenge_test.gd",
+    "tests/unconfirmed523_core_wrapper.gd",
+    "tests/unconfirmed523_events_test.gd",
+    "tests/unconfirmed523_host_test.gd",
+    "tests/unconfirmed523_jade_grail_test.gd",
+    "tests/unconfirmed523_main_test.gd",
+    "tests/unconfirmed523_source_test.gd",
+    "docs/UNCONFIRMED523.md",
+    "docs/unconfirmed523_validation.json"
+  ],
+  "generated_uid_policy": "Godot-generated .gd.uid cache files remain ignored by the existing repository policy; new scripts use explicit res:// paths."
+}

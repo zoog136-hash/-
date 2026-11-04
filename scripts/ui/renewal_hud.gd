@@ -924,6 +924,7 @@ func _navigate(section: String) -> void:
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
 		"source_dungeons": open_source_dungeons()
+		"unconfirmed523": open_unconfirmed523()
 		"map": toggle_map()
 		"menu": toggle_menu()
 		"settings": open_settings_info()
@@ -961,6 +962,12 @@ func open_quests() -> void:
 	view.claim_requested.connect(func(quest_id: String) -> void:
 		quest_complete_requested.emit(quest_id))
 	quest_view = view
+
+func open_unconfirmed523(section: String = "events") -> void:
+	_open_window("unconfirmed523","출석 · 패스 · 생활 콘텐츠","원본523 조건 · 보유 아이템 · 기존 저장")
+	var screen=preload("res://scripts/unconfirmed523/view.gd").new()
+	workspace.mount(screen)
+	screen.configure(get_parent().unconfirmed523,section)
 
 func refresh_quests() -> void:
 	# Cheap on kills/pickups. Rebuild only the currently open quest page,
@@ -1226,7 +1233,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["unconfirmed523","출석·패스·생활"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):

@@ -81,6 +81,8 @@ const CARD_COLLECTION_RUNTIME = preload("res://scripts/cards/collection_runtime.
 var card_collections = CARD_COLLECTION_RUNTIME.new()
 const GROWTH = preload("res://scripts/growth/growth_runtime.gd")
 var growth = GROWTH.new()
+const UNCONFIRMED523 = preload("res://scripts/unconfirmed523/runtime.gd")
+var unconfirmed523 = UNCONFIRMED523.new()
 const CARD_DRAW_FUSION = preload("res://scripts/card_draw_fusion.gd")
 const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.gd")
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
@@ -549,6 +551,7 @@ func _process(delta: float) -> void:
 	if ain_refresh_clock <= 0.0:
 		ain_refresh_clock = 1.0
 		ain_service.advance_time()
+		unconfirmed523.advance_time()
 		LOCAL_TOWER.tick(self)
 		if not source_dungeon_runs.state.active.is_empty(): _refresh_source_dungeon_panel()
 		_update_ain_hud()
@@ -694,6 +697,7 @@ func _load_data() -> void:
 	_build_job_classes()
 	equipment_collections.configure(self)
 	growth.configure(self)
+	unconfirmed523.configure(self)
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -999,7 +1003,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + unconfirmed523.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -1010,6 +1014,7 @@ func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 
 func _skill_cooldown_factor() -> float:
 	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
+	cast_bonus += unconfirmed523.bonus("cast_speed:percent")
 	return clampf(1.0 - (float(_catalog_stat_sum("skillCooldownPct")) + cast_bonus) / 100.0, 0.1, 1.0)
 
 func _effective_max_mp() -> int:
@@ -1117,7 +1122,7 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.accuracy(_source_catalog_record("아이템", entry as Dictionary), kind)
-	return result + int(growth.bonus(kind+"_hit:flat") + equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat") + card_collections.bonus(kind+"_hit:flat") + card_collections.bonus("pve_"+kind+"_hit:flat"))
+	return result + int(growth.bonus(kind+"_hit:flat") + equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat") + card_collections.bonus(kind+"_hit:flat") + card_collections.bonus("pve_"+kind+"_hit:flat") + unconfirmed523.bonus(kind+"_hit:flat"))
 
 func _equipment_potion_heal_stat(label: String) -> int:
 	var sum: int = 0
@@ -1146,7 +1151,7 @@ func _equipment_additional_damage(kind: String) -> int:
 					var segment: String = fragment.strip_edges()
 					if segment.begins_with("대미지 리덕션 무시"):
 						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
-	return result + int(growth.bonus(kind+"_damage:flat") + growth.bonus("pve_"+kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat"))
+	return result + int(growth.bonus(kind+"_damage:flat") + growth.bonus("pve_"+kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat") + unconfirmed523.bonus(kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	# Kept for older source audit callers; not used in the live damage path.
@@ -1525,6 +1530,8 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_target_failed_paths.clear()
 	auto_target_next_search_ms = 0
 	auto_target_failed_search_actor_count = -1
+	if active_map_id != map_id:
+		unconfirmed523.record_event("map_change",{"event_id":"map:%s:%s:%d"%[active_map_id,map_id,Time.get_ticks_usec()],"map_id":map_id})
 	active_map_id = map_id
 	source_region_settings.clear()
 	source_optimization_signature = ""
@@ -2730,6 +2737,12 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var can_drop_equipment: bool = ain_service.protected_drops()
 	var exp_rate: float = ain_service.experience_rate()
 	var adena_rate: float = ain_service.adena_rate()
+	if ain_service.source_jade_level_override >= 0:
+		var source_protection: Dictionary=unconfirmed523.jade_status()
+		if not source_protection.has("error") and not source_protection.is_empty():
+			can_drop_equipment=bool(source_protection.protected_drops)
+			exp_rate=float(source_protection.exp_multiplier)
+			adena_rate=float(source_protection.adena_multiplier)
 	var item_adena_rate: float = 1.0 + clampf(_equipped_numeric_sum("adena_drop_pct"), 0.0, 500.0) / 100.0
 	var map_rate: float = EXP_PROGRESSION.map_exp_multiplier(_kill_map_id())
 	var source_experience: int = maxi(0,monster.exp_reward+int(source_reward.get("experience",0)))
@@ -2739,7 +2752,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	gold += gained_adena
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	_roll_drop(monster, can_drop_equipment,source_reward.get("weights",{}))
-	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
+	var blessing_spent: int=ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
 	var level_before: int = level
 	_check_level_up()
 	if player.auto_enabled:
@@ -2758,6 +2771,8 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	else:
 		_refresh_combat_hud()
 		_update_ain_hud()
+	unconfirmed523.record_event("kill",{"source_id":int(monster.source_m_npc_id),"npc_id":int(monster.source_m_npc_id),"event_id":"%s:%d:%d"%[active_map_id,monster.get_instance_id(),monster.life_id],"player_credit":true,"amount":1})
+	if blessing_spent>0:unconfirmed523.record_event("blessing_use",{"amount":blessing_spent,"event_id":"blessing:%s:%d:%d"%[active_map_id,monster.get_instance_id(),monster.life_id]})
 	call_deferred("_ensure_monster_count")
 
 func _kill_map_id() -> String:
@@ -2823,6 +2838,7 @@ func _collect_ground_drop(drop: Button) -> bool:
 	item_instances = symbol_pickup.item_instances; next_item_instance_id = int(symbol_pickup.next_item_instance_id)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
 	_source_dungeon_pickup(record)
+	unconfirmed523.record_event("pickup",{"source_id":UNCONFIRMED523.native_id(record.get("item_record",{})),"event_id":str(record.get("id","")),"amount":quantity})
 	quest_service.record_pickup(item_name, quantity)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -3000,6 +3016,7 @@ func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee")
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
 func _respawn_player(message_text: String) -> void:
+	unconfirmed523.record_event("player_death",{"event_id":"death:%d"%Time.get_ticks_usec()})
 	if not dungeon_play.state.active.is_empty() and dungeon_play.state.active.status=="active": dungeon_play.stop()
 	if source_dungeon_runs.state.active.get("host_kind","") == "twilight_local" and source_dungeon_runs.state.active.get("status","") == "active":
 		local_dungeon_failure_pending = true
@@ -3463,6 +3480,7 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
+	if unconfirmed523.try_use(item_name):return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
 		hud.show_message("원본 사용 효과 미연결 · 보관/판매 가능 · 아이템 보존")
 		return
@@ -4033,6 +4051,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		result_type = "success"
 		result_message = "강화 성공! +%d %s" % [result_level, target_name]
 		hud.append_log("강화 성공 · +%d %s" % [result_level, target_name])
+		unconfirmed523.record_event("enchant_success",{"amount":1,"source_id":UNCONFIRMED523.native_id(item_instances[item_id].get("record",{})),"event_id":"enchant:%s:%d"%[item_id,Time.get_ticks_usec()]})
 	elif roll < success_chance + no_change_chance:
 		hud.append_log("강화 실패(유지) · +%d %s" % [current_level, target_name])
 	elif roll < success_chance + no_change_chance + decrease_chance:
@@ -4313,6 +4332,7 @@ func _craft_requested(recipe_id: String, batches: int) -> void:
 	hud.refresh_inventory(inventory)
 	hud.append_log("제작 완료 · %s ×%d" % [output_name,output_quantity])
 	hud.show_message("제작 완료 · %s ×%d" % [output_name,output_quantity])
+	unconfirmed523.record_event("craft",{"amount":output_quantity,"source_id":UNCONFIRMED523.native_id(_find_catalog_item_record(output_name)),"event_id":"craft:%s:%d"%[recipe_id,Time.get_ticks_usec()]})
 	_update_hud()
 	_save_game(true)
 	if hud.has_method("open_crafting"):
@@ -4380,6 +4400,7 @@ func _use_potion() -> void:
 
 func _use_quick_item(item_name: String) -> void:
 	if not _patch523_item_allowed(): return
+	if unconfirmed523.try_use(item_name):return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
 		hud.show_message("원본 사용 효과 미연결 · 아이템 보존")
 		return
@@ -4453,6 +4474,7 @@ func _on_map_selected(map_id: String) -> void:
 
 func _update_hud() -> void:
 	stat_hud_refresh_pending = false
+	unconfirmed523.rebuild()
 	# Every equipment, enhancement, card, collection, growth, awakening,
 	# passive-learning and load transaction publishes through this entry point.
 	_invalidate_equipment_static()
@@ -4564,6 +4586,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if unconfirmed523.save_blocked or not unconfirmed523.validate(collection_override.get("unconfirmed523",unconfirmed523.state)).is_empty():return ERR_INVALID_DATA
 	if dungeon_play.save_blocked or not dungeon_play.valid(collection_override.get("source_dungeon_play",dungeon_play.state)).is_empty():return ERR_INVALID_DATA
 	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
@@ -4582,7 +4605,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","unconfirmed523","next_item_instance_id","level","exp_need","stat_points"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4592,6 +4615,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	# Transactions supply validated staged state. Commit it before mutating live resources.
 	if collection_override.is_empty(): _sync_item_instances()
 	var data: Dictionary = {
+		"unconfirmed523":unconfirmed523.snapshot(),
 		"source_dungeon_play":dungeon_play.snapshot(),
 		"source_dungeon523": source_dungeon_runs.state.duplicate(true),
 		"map_id": active_map_id,
@@ -4723,6 +4747,9 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var extra_error: String=unconfirmed523.check_load(data)
+	if not extra_error.is_empty():
+		unconfirmed523.save_blocked=true;unconfirmed523.problem=extra_error;hud.show_message(extra_error);return
 	var play_error: String=dungeon_play.valid(data.get("source_dungeon_play",DUNGEON_PLAY.empty_state()))
 	if not play_error.is_empty():
 		dungeon_play.save_blocked=true;dungeon_play.problem=play_error;source_save_blocked=true;hud.show_message(play_error);return
@@ -4890,6 +4917,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
+	unconfirmed523.restore(data)
 	quest_service.import_state(data.get("quest_state", {}))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -6899,6 +6927,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 	if not card_collection_record.is_empty(): records.append(card_collection_record)
 	var growth_record: Dictionary = growth.stat_record()
 	if not growth_record.is_empty(): records.append(growth_record)
+	var extra_record: Dictionary = unconfirmed523.stat_record()
+	if not extra_record.is_empty(): records.append(extra_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
 	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
 	equipment_records_cache=records
