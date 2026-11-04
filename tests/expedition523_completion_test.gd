@@ -3,6 +3,21 @@ const QA = preload("res://tests/qa_class_selection.gd")
 const Runtime = preload("res://scripts/expedition/local_runtime.gd")
 const Model = preload("res://scripts/expedition/estimated_simulation.gd")
 const Writer = preload("res://scripts/skills/save_writer.gd")
+# This fixture checks the shared PR238 adapter contract, not a merged consumer.
+class NativeConsumerContract extends RefCounted:
+	var document:Dictionary={"item_definitions":{}}
+	func data()->Dictionary:return document
+	func variant_item(record:Dictionary,bless:int)->Dictionary:
+		var result:Dictionary=record.duplicate(true);result.source_bless_raw=bless
+		if bless!=1:result.name=str(result.name)+" · "+("축복" if bless==2 else "저주");result.sourceId=str(result.sourceId)+":bless:"+str(bless)
+		return result
+	func matches(a:Dictionary,b:Dictionary)->bool:
+		for field in ["name","source","sourceId","sourceUrl","slot","type","grade"]:
+			if str(a.get(field,""))!=str(b.get(field,"")):return false
+		return not a.is_empty() and not b.is_empty()
+	func equipment(_record:Dictionary)->bool:return false
+	func currency_identity_name(record:Dictionary)->String:return str(record.get("contract_wallet",""))
+
 var failures: Array[String] = []
 var checks := 0
 var world: TwilightWorld
@@ -373,6 +388,61 @@ func run() -> void:
 	if awakening_view!=null:awakening_view.action.pressed.emit()
 	check(world.gold==paid_before-int(requirement.fee) and int(world.inventory.get(book_name,0))==0,"source reward book works through existing UI/API and unchanged user fee")
 	check(not world.expedition_local.state.storage.has(book_key),"consumed reward book not regenerated from expedition storage")
+	# Existing completion/book routes remain local. Other item effects belong to
+	# PR238/239/247/251; test the exact source-ID handoff without copying them.
+	var gift_key:String="113912:1:0"
+	world.expedition_local.state.storage[gift_key]=2
+	check(world.expedition_local.withdraw(gift_key,2).ok,"source gift inventory receipt before shared consumer installation")
+	var gift_name:String=world.expedition_local.state.issued[gift_key]
+	var gift_record:Dictionary=world._find_catalog_item_record(gift_name)
+	check(gift_record.has("IsStorable") and gift_record.IsStorable==catalog.record("ItemClass",113912).IsStorable and gift_record.tradeable==catalog.record("ItemClass",113912).IsTradable,"native storage/trade restrictions propagate to actual inventory record")
+	unchanged=snapshot();disk=FileAccess.get_sha256(path)
+	world._on_inventory_item_activated(gift_name)
+	check(snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"missing shared consumer preserves gift instead of attempting completion box")
+	var ordinary:Dictionary=world.expedition_local.inventory_activation("체력 회복제")
+	check(not ordinary.handled,"unrelated ordinary inventory route unchanged")
+	var provider:=NativeConsumerContract.new()
+	var native:Dictionary={"name":"원본 소비자 계약 검사용 카드","source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":113912,"sourceId":"m523:item:113912","sourceUrl":"","slot":"material","type":"카드","grade":"희귀","source_m_native_item":true,"source_bless_raw":1,"source_use_spec":{"kind":"fixed_card","activation_status":"unrestricted"}}
+	provider.document.item_definitions["113912"]={"original_item":catalog.record("ItemClass",113912).duplicate(true),"native_record":native.duplicate(true)}
+	world.catalog_db["아이템"].append(native.duplicate(true));world._index_catalog_item_sources()
+	world.expedition_local.reward_item_provider=provider
+	provider.document.item_definitions["113912"].original_item.Cost+=1
+	check(not world.expedition_local.inventory_activation(gift_name).ok and snapshot()==unchanged,"mismatched full original definition cannot become native consumer item")
+	provider.document.item_definitions["113912"].original_item=catalog.record("ItemClass",113912).duplicate(true)
+	world.ui_preferences.item_locks[gift_name]=true;unchanged=snapshot()
+	check(not world.expedition_local.inventory_activation(gift_name).ok and snapshot()==unchanged,"locked reward cannot bypass item lock through native handoff")
+	world.ui_preferences.item_locks.erase(gift_name)
+	world.equipment_collections.save_blocked=true
+	check(not world.expedition_local.inventory_activation(gift_name).ok and snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"failed exact-ID handoff preserves quantity wallet RNG and disk")
+	world.equipment_collections.save_blocked=false
+	world._on_inventory_item_activated(gift_name)
+	check(not world.inventory.has(gift_name) and int(world.inventory.get(native.name,0))==2 and world.expedition_local.state.native_handoffs.get(native.name)==gift_key,"actual inventory activation atomically hands off both source copies without granting effect")
+	disk=FileAccess.get_sha256(path);world._load_game(true)
+	check(FileAccess.get_sha256(path)==disk and world.expedition_local.state.native_handoffs.get(native.name)==gift_key,"native consumer handoff survives restart without replay")
+	world.expedition_local.reward_item_provider=null;unchanged=snapshot()
+	world._on_inventory_item_activated(str(native.name))
+	check(snapshot()==unchanged,"missing consumer after reload cannot fall into name-based legacy use")
+	world.expedition_local.reward_item_provider=provider
+	check(not world.expedition_local.inventory_activation(str(native.name)).handled,"verified native item re-enters existing host consumer pipeline")
+	# Wallet identity is supplied by the shared provider, never inferred from a label.
+	var coin_key:String="3242:1:0"
+	world.expedition_local.state.storage[coin_key]=3
+	check(world.expedition_local.withdraw(coin_key,3).ok,"source currency receipt retains typed identity")
+	var coin_name:String=world.expedition_local.state.issued[coin_key]
+	var coin:Dictionary=native.duplicate(true);coin.name="원본 소비자 계약 검사용 주화";coin.sourceId="m523:item:3242";coin.source_item_class_id=3242;coin.contract_wallet="변신 코인";coin.source_use_spec={}
+	provider.document.item_definitions["3242"]={"original_item":catalog.record("ItemClass",3242).duplicate(true),"native_record":coin.duplicate(true)}
+	world.catalog_db["아이템"].append(coin.duplicate(true));world._index_catalog_item_sources()
+	var coin_before:int=int(world.inventory.get("변신 코인",0))
+	unchanged=snapshot();disk=FileAccess.get_sha256(path);world.equipment_collections.save_blocked=true
+	check(not world.expedition_local.inventory_activation(coin_name).ok and snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"failed wallet handoff preserves source stack and existing wallet")
+	world.equipment_collections.save_blocked=false
+	world._on_inventory_item_activated(coin_name)
+	check(not world.inventory.has(coin_name) and int(world.inventory.get("변신 코인",0))==coin_before+3,"source currency transfers exact quantity to provider wallet without exchange")
+	unchanged=snapshot();world._on_inventory_item_activated(coin_name)
+	check(snapshot()==unchanged,"repeated source currency activation cannot duplicate wallet credit")
+	world.expedition_local.reward_item_provider=null
+	var invalid_handoff:Dictionary=world.expedition_local.export_state();invalid_handoff.native_handoffs[native.name]="113912:01:0"
+	check(not world.expedition_local.validate(invalid_handoff).is_empty(),"noncanonical handoff save rejected")
 	finish(true)
 
 func finish(source: bool) -> void:

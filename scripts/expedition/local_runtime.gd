@@ -6,6 +6,7 @@ var random = RandomNumberGenerator.new()
 var clock: Callable
 var migration_backup_pending: bool = false
 var last_error: String = ""
+var reward_item_provider: Variant = null # Optional shared native-item adapter; defaults to the host loader.
 
 func _init() -> void:
 	random.randomize()
@@ -86,6 +87,10 @@ func validate(v: Variant) -> String:
 			if s.potion_heal > 1000 or (s.potion_heal > 0 and (s.potion_interval != 900 or s.next_potion <= s.elapsed or int(s.next_potion)%900 != 0)) or (s.potion_heal == 0 and (s.potion_interval != 0 or s.next_potion != 0)): return "탐험 회복제 주기 오류"
 		if job.get("status") not in ["running", "dead", "completed"]: return "탐험 상태 오류"
 		if (job.status == "dead") != (s.hp == 0) or (job.status == "completed" and job.remaining != 0) or (job.status == "running" and job.remaining == 0): return "탐험 생존·완료 상태 불일치"
+	var handoffs:Variant=v.get("native_handoffs",{})
+	if not handoffs is Dictionary or handoffs.size()>1000:return "탐험 소비자 연결 기록 오류"
+	for name in handoffs:
+		if not name is String or name.is_empty() or name.length()>2048 or not handoffs[name] is String or not _valid_loot({handoffs[name]:1}):return "탐험 소비자 연결 정규형 오류"
 	for k in v.issued:
 		if not _valid_loot({k: 1}) or not v.issued[k] is String or not v.issued[k].ends_with(" (탐험 "+k+")"): return "탐험 인벤토리 연결 오류"
 	for k in v.receipts:
@@ -424,6 +429,83 @@ func open_box(key: String, expected_revision: int = -1, from_inventory: String =
 	world.call_deferred("_update_hud")
 	return {"ok": true, "message": "상자1개 개봉 · 원본 가중치%d회 추첨" % draws, "candidate": outcomes[0], "candidates": outcomes}
 
+func _reward_provider() -> Variant:
+	if reward_item_provider!=null:return reward_item_provider
+	if world==null:return null
+	var constants:Dictionary=world.get_script().get_script_constant_map()
+	var loot:Variant=constants.get("LOOT_DROP")
+	if loot==null or not loot is Script:return null
+	return loot.get_script_constant_map().get("PATCH523_DROPS")
+
+func _native_target(key:String) -> Dictionary:
+	if world==null or not _valid_loot({key:1}) or not world.get_expedition_catalog().ready():return _fail("원본 탐험 자료를 확인해야 합니다.")
+	var parts:PackedStringArray=key.split(":")
+	if int(parts[2])!=0:return _fail("강화된 보상은 전용 아이템 기능 연결이 필요합니다.")
+	var provider:Variant=_reward_provider()
+	if provider==null:return _fail("이 보상의 전용 사용 기능이 아직 연결되지 않았습니다. 아이템은 보존됩니다.")
+	var definition:Dictionary=provider.data().get("item_definitions",{}).get(parts[0],{})
+	var source:Dictionary=world.get_expedition_catalog().record("ItemClass",int(parts[0]))
+	if definition.get("original_item",{})!=source:return _fail("보상과 소비자의 원본 아이템 정의가 다릅니다. 아이템은 보존됩니다.")
+	var base:Dictionary=definition.get("native_record",{})
+	var target:Dictionary=provider.variant_item(base,int(parts[1]))
+	if target.is_empty() or not target.get("source_m_native_item",false) or int(target.get("source_item_class_id",0))!=int(parts[0]) or target.get("source_snapshot")!="patch523" or int(target.get("source_bless_raw",1))!=int(parts[1]) or provider.equipment(target):return _fail("이 보상의 전용 소비자 연결을 확인해야 합니다.")
+	var registered:Dictionary=world._find_catalog_item_record(str(target.get("name","")))
+	if not provider.matches(registered,target):return _fail("보상의 원본 소비자가 설치·등록되지 않았습니다. 아이템은 보존됩니다.")
+	var wallet:String=provider.currency_identity_name(target)
+	var spec:Dictionary=target.get("source_use_spec",{})
+	if wallet.is_empty() and (spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["fixed_card","source_timed_buff","source_mp_dice","guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]):return _fail("이 보상의 원본 사용 조건은 전용 기능에서 확인해야 합니다. 아이템은 보존됩니다.")
+	return {"ok":true,"record":target,"wallet":wallet}
+
+func _inventory_handoff(key:String,item_name:String) -> Dictionary:
+	var target:Dictionary=_native_target(key)
+	if not target.ok:return target
+	if world._item_locked(item_name,""):return _fail("잠긴 탐험 보상은 소비자에 전달할 수 없습니다.")
+	var amount:int=int(world.inventory.get(item_name,0))
+	if amount<1 or amount>1000000000:return _fail("소지한 탐험 보상 수량을 확인하세요.")
+	var destination:String=str(target.record.name) if str(target.wallet).is_empty() else str(target.wallet)
+	if destination==item_name:return _fail("보상 소비자 정체가 중복되어 연결을 보류합니다.")
+	var next:Dictionary=state.duplicate(true)
+	var bag:Dictionary=world.inventory.duplicate(true)
+	bag.erase(item_name)
+	var overrides:Dictionary={"inventory":bag}
+	if destination=="아데나":
+		if int(world.gold)>MAX_INTEGER-amount:return _fail("보상 재화의 저장 범위를 초과합니다.")
+		overrides.gold=int(world.gold)+amount
+	else:
+		if int(bag.get(destination,0))>MAX_INTEGER-amount:return _fail("보상 수량의 저장 범위를 초과합니다.")
+		bag[destination]=int(bag.get(destination,0))+amount
+		if str(target.wallet).is_empty():
+			if not next.has("native_handoffs"):next.native_handoffs={}
+			next.native_handoffs[destination]=key
+	next.revision=int(next.revision)+1
+	if not _commit(next,overrides):return _fail(last_error)
+	world.inventory=bag
+	if overrides.has("gold"):world.gold=int(overrides.gold)
+	world.call_deferred("_update_hud")
+	return {"ok":true,"message":"원본 ID·축복을 확인해 기존 아이템 기능으로 연결했습니다: "+destination,"native_handoff":true}
+
+func inventory_activation(item_name:String) -> Dictionary:
+	var belongs:bool=state.get("native_handoffs",{}).has(item_name) or state.get("issued",{}).values().has(item_name)
+	if not belongs:return {"handled":false}
+	if world==null or save_blocked or not validate(state).is_empty():return {"handled":true,"ok":false,"error":"탐험 저장 보호 중"}
+	var handoffs:Dictionary=state.get("native_handoffs",{})
+	if handoffs.has(item_name):
+		var target:Dictionary=_native_target(str(handoffs[item_name]))
+		if not target.ok:return {"handled":true,"ok":false,"error":target.error}
+		if str(target.record.name)!=item_name:return {"handled":true,"ok":false,"error":"보상의 소비자 정체가 변경되었습니다. 아이템은 보존됩니다."}
+		# The verified host's existing normal item pipeline owns the effect/debit.
+		return {"handled":false}
+	for key:String in state.get("issued",{}):
+		if state.issued[key]!=item_name:continue
+		if not world.get_expedition_catalog().ready():return {"handled":true,"ok":false,"error":"원본 탐험 팩이 필요합니다. 아이템은 보존됩니다."}
+		var result:Dictionary
+		if not world.get_expedition_catalog().completion_box_candidates(int(key.split(":")[0])).is_empty():result=open_box(key,-1,item_name)
+		elif not compatible_skill_book(key).is_empty():result={"ok":false,"error":"카드 상세의 스킬 각성에서 사용할 수 있는 각성서입니다."}
+		else:result=_inventory_handoff(key,item_name)
+		result.handled=true
+		return result
+	return {"handled":false}
+
 func inventory_name(key: String) -> String:
 	var item: Dictionary = world.get_expedition_catalog().record("ItemClass", int(key.split(":")[0]))
 	return str(item.get("Name", "원본 아이템"))+" (탐험 "+key+")"
@@ -436,9 +518,11 @@ func install_inventory_definitions() -> void:
 		if item.is_empty(): continue
 		var found := false
 		for r: Dictionary in world.catalog_db.get("아이템", []):
-			if r.get("sourceId") == "m523:expedition:"+key: found = true; break
+			if r.get("sourceId") == "m523:expedition:"+key:
+				r.IsStorable=bool(item.IsStorable);r.tradeable=bool(item.IsTradable);r.bound=not bool(item.IsTradable);r.droppable=bool(item.IsDroppable)
+				found = true; break
 		if not found:
-			world.catalog_db["아이템"].append({"name": str(state.issued[key]), "source": "lineagem_patch523", "source_snapshot": "patch523", "sourceId": "m523:expedition:"+key, "source_item_class_id": id, "source_item": item, "expedition_key": key, "slot": "material", "type": "탐험 보상", "grade": {1:"일반",2:"고급",3:"희귀",4:"영웅",5:"전설",32:"신화",52:"유일"}.get(int(item.get("GradeID", 1)), "일반"), "stackable": true, "desc": "원본 ID·축복·강화를 보존한 탐험 보상"})
+			world.catalog_db["아이템"].append({"name": str(state.issued[key]), "source": "lineagem_patch523", "source_snapshot": "patch523", "sourceId": "m523:expedition:"+key, "source_item_class_id": id, "source_item": item, "expedition_key": key, "slot": "material", "type": "탐험 보상", "grade": {1:"일반",2:"고급",3:"희귀",4:"영웅",5:"전설",32:"신화",52:"유일"}.get(int(item.get("GradeID", 1)), "일반"), "stackable": true, "IsStorable":bool(item.IsStorable), "tradeable":bool(item.IsTradable), "bound":not bool(item.IsTradable), "droppable":bool(item.IsDroppable), "desc": "원본 ID·축복·강화를 보존한 탐험 보상"})
 	world._index_catalog_item_sources()
 
 func compatible_skill_book(key:String)->Dictionary:

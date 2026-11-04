@@ -3336,11 +3336,11 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
 		return
-	# Typed expedition items must not fall through name-based legacy scroll rules.
-	for source_key: String in expedition_local.state.get("issued", {}):
-		if expedition_local.state.issued[source_key] != item_name: continue
-		var outcome: Dictionary = expedition_local.open_box(source_key, -1, item_name)
-		hud.show_message(str(outcome.get("message", outcome.get("error", "탐험 재료의 사용 규칙은 아직 연결되지 않았습니다."))))
+	# Completion boxes stay local; other source items enter a shared consumer
+	# only after an atomic, exact-ID native handoff. Missing consumers preserve them.
+	var expedition_use:Dictionary=expedition_local.inventory_activation(item_name)
+	if expedition_use.get("handled",false):
+		hud.show_message(str(expedition_use.get("message",expedition_use.get("error","탐험 보상 확인 필요"))))
 		return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
