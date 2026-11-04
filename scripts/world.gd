@@ -305,6 +305,7 @@ var equipment_effects: Dictionary = {}
 var equipment_effect_rebuilds: int = 0
 var equipment_records_dirty: bool = true
 var equipment_records_cache: Array[Dictionary] = []
+var equipment523_records_cache: Array[Dictionary] = []
 var equipment_record_rebuilds: int = 0
 const UNIQUE_RECOVERY_INTERVAL: float = 30.0
 const UNIQUE_RECOVERY_AMOUNT: int = 5
@@ -779,6 +780,8 @@ func _equipment_inven_sum(key: String) -> float:
 		if raw is Dictionary and not (raw as Dictionary).is_empty():
 			var record: Dictionary = _source_catalog_record("아이템", raw as Dictionary)
 			total += float(record.get(key, 0.0))
+	for record: Dictionary in _equipment523_bonus_records():
+		total += float(record.get(key, 0.0))
 	return total
 
 func _equipped_numeric_sum(key: String) -> float:
@@ -1037,7 +1040,7 @@ func _skill_cooldown_factor() -> float:
 func _effective_max_mp() -> int:
 	var added: int = _catalog_stat_sum("mpFlat")
 	for record: Dictionary in _all_equipped_records():
-		if str(record.get("slot", "")) != "":
+		if str(record.get("slot", "")) != "" or bool(record.get("equipment523_synthetic", false)):
 			var typed_mp: int = int(record.get("mpFlat", record.get("max_mp_bonus", 0)))
 			added += typed_mp
 			var description: String = str(record.get("desc", ""))
@@ -1118,6 +1121,8 @@ func _equipment_attribute_bonus(stat: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.attribute(_source_catalog_record("아이템", entry as Dictionary), stat)
+	for record: Dictionary in _equipment523_bonus_records():
+		result += ITEM_OPTIONS.attribute(record, stat)
 	return result + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat") + growth.bonus(stat.to_lower()+":flat"))
 
 func _effective_attribute(stat: String) -> int:
@@ -1139,17 +1144,21 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			result += ITEM_OPTIONS.accuracy(_source_catalog_record("아이템", entry as Dictionary), kind)
+	for record: Dictionary in _equipment523_bonus_records():
+		result += ITEM_OPTIONS.accuracy(record, kind)
 	return result + int(growth.bonus(kind+"_hit:flat") + equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat") + card_collections.bonus(kind+"_hit:flat") + card_collections.bonus("pve_"+kind+"_hit:flat"))
 
 func _equipment_potion_heal_stat(label: String) -> int:
 	var sum: int = 0
+	var typed_key: String = "potionHealFlat" if label == "물약 회복량" else "potionHealPct"
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if not (entry is Dictionary) or (entry as Dictionary).is_empty():
 			continue
 		var record: Dictionary = _source_catalog_record("아이템", entry as Dictionary)
-		var typed_key: String = "potionHealFlat" if label == "물약 회복량" else "potionHealPct"
 		sum += int(record.get(typed_key, ITEM_OPTIONS._description_bonus(record, label)))
+	for record: Dictionary in _equipment523_bonus_records():
+		sum += int(record.get(typed_key, 0))
 	return sum
 
 func _equipment_additional_damage(kind: String) -> int:
@@ -1168,6 +1177,9 @@ func _equipment_additional_damage(kind: String) -> int:
 					var segment: String = fragment.strip_edges()
 					if segment.begins_with("대미지 리덕션 무시"):
 						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
+	for record: Dictionary in _equipment523_bonus_records():
+		result += ITEM_OPTIONS.additional_damage(record, kind)
+		result += int(record.get("damage_reduction_ignore", record.get("damageReductionIgnore", 0)))
 	return result + int(growth.bonus(kind+"_damage:flat") + growth.bonus("pve_"+kind+"_damage:flat") + equipment_collections.bonus(kind+"_damage:flat") + equipment_collections.bonus("pve_"+kind+"_damage:flat") + card_collections.bonus(kind+"_damage:flat") + card_collections.bonus("pve_"+kind+"_damage:flat"))
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
@@ -7021,9 +7033,14 @@ func _all_equipped_records() -> Array[Dictionary]:
 	if not growth_record.is_empty(): records.append(growth_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
 	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
-	records.append_array(equipment523.records(self))
+	equipment523_records_cache = equipment523.records(self)
+	records.append_array(equipment523_records_cache)
 	equipment_records_cache=records
 	return equipment_records_cache
+
+func _equipment523_bonus_records() -> Array[Dictionary]:
+	_all_equipped_records()
+	return equipment523_records_cache
 
 func _normalized_weapon_type(raw_type: String) -> String:
 	var value: String = raw_type.strip_edges()

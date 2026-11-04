@@ -120,11 +120,65 @@ func _initialize() -> void:
 	service.problem = "fixture"
 	service.after_load(world)
 	check(not service.save_blocked and service.problem.is_empty(),"successful reload can clear an uncertain-save guard")
+	check_quest_receipts(service,world)
 	check_alchemy(service,world)
 	world.free()
 	print("equipment523 service checks=%d failed=%d" % [checks,failures])
 	print("EQUIPMENT523_SERVICE_RESULT ",JSON.stringify({"checks":checks,"failures":[] if failures == 0 else ["failed"]}))
 	quit(1 if failures else 0)
+
+func check_quest_receipts(service, world: World) -> void:
+	service.store.pack = fixture()
+	service.store.pack.items["169994"]["raw"] = {"ID":169994,"Name":"[내부-주문서] 원문 이름","GradeID":3}
+	var original: Dictionary = {"ID":169994,"Name":"[내부-주문서] 원문 이름","GradeID":3,"unretained_source_field":7}
+	var held: Dictionary = {"name":"[원본 보상] [내부-주문서] 원문 이름","source":"lineagem_patch523","source_snapshot":"patch523","sourceId":"m523:item:169994","source_item_class_id":169994,"source_original_item":original.duplicate(true),"source_bless_code_id":1,"source_reward_id":44,"source_pending_use":true}
+	var foreign: Dictionary = held.duplicate(true)
+	foreign.source = "another_supplier"
+	var inventory: Dictionary = {held.name:3,"다른 공급 보상":3}
+	var instances: Dictionary = {"held":{"name":held.name,"level":0,"record":held.duplicate(true),"source_reward_quantity":3},"foreign":{"name":"다른 공급 보상","record":foreign.duplicate(true),"source_reward_quantity":3}}
+	check(service._source(held) == 169994 and service._source(foreign) == 0,"legacy dictionary reward requires exact source namespace, original fields, ID and distinct display prefix")
+	var restored_held: Dictionary = JSON.parse_string(JSON.stringify(held))
+	check(service._source(restored_held) == 169994,"legacy original row identity survives a JSON save roundtrip")
+	var display_alias: Dictionary = held.duplicate(true)
+	display_alias.name = "[원본 보상] " + str(service.store.pack.items["169994"].name)
+	check(service._source(display_alias) == 0,"quest reward uses the original ItemClass Name rather than a distinct DescData display label")
+	var error: String = service._consume(inventory,instances,{"name":held.name,"instance_id":"held","quantity":3},1)
+	check(error.is_empty() and instances.held.source_reward_quantity == 2 and inventory[held.name] == 2 and instances.held.record.source_original_item == original,"receipt-free legacy dictionary reward consumes 3 to 2 without changing original evidence")
+	check(instances.foreign.source_reward_quantity == 3 and inventory["다른 공급 보상"] == 3 and instances.foreign.record.source == "another_supplier","receipt-free debit preserves another supplier and physical ID")
+	var changed: Dictionary = held.duplicate(true)
+	changed.source_original_item.GradeID = 4
+	check(service._source(changed) == 0,"legacy dictionary reward rejects altered source fields")
+	changed = held.duplicate(true)
+	changed.name = "주문서"
+	check(service._source(changed) == 0,"dictionary source evidence cannot bypass its exact reward identity through a registered alias")
+	for invalid_quantity: Variant in [2.5,"3",true]:
+		var malformed: Dictionary = {"record":ticket,"source_reward_quantity":invalid_quantity}
+		check(service._quantity(malformed) == -1,"malformed physical quantities are preserved without rounding or coercion")
+	var sword: Dictionary = {"name":"검","sourceId":"91","slot":"weapon"}
+	world.inventory = {"검":1,held.name:3}
+	world.item_instances = {"t":{"name":"검","level":0,"record":sword},"held":{"name":held.name,"level":0,"record":held.duplicate(true),"source_reward_quantity":3,"quest_reward_receipt":{"schema":1,"quest_id":"m523:quest:9","reward_id":44,"item_class_id":169994,"bless_code_id":1,"source_sha256":"fixture-source","quantity":3}}}
+	world.catalog_db["아이템"] = [sword]
+	world.equipped_items.clear()
+	var info: Dictionary = service._info(world,"held",world.item_instances.held)
+	check(info.get("quest_reward_receipt",false) and info.get("quantity") == 3,"recognized quest receipt remains visible with an explicit ownership flag")
+	var before: String = JSON.stringify([world.inventory,world.item_instances])
+	var random_before: int = world.rng.state
+	var q: Dictionary = service.quote(world,{"kind":"invoke_replacement","target_id":"t","material_ids":["held"],"slot":3})
+	check(not q.get("ok",false) and str(q.get("error","")).contains("사용 영수증") and JSON.stringify([world.inventory,world.item_instances]) == before and world.rng.state == random_before,"quest receipt material quote clearly refuses consumption and preserves receipt, remainder and RNG")
+	inventory = world.inventory.duplicate(true)
+	instances = world.item_instances.duplicate(true)
+	error = service._consume(inventory,instances,{"name":held.name,"instance_id":"held","quantity":3},1)
+	check(not error.is_empty() and instances.held.quest_reward_receipt.quantity == 3 and instances.held.source_reward_quantity == 3 and inventory[held.name] == 3,"defensive debit preserves immutable grant quantity and live remainder")
+	world.item_instances.held.source_reward_quantity = 2
+	world.inventory[held.name] = 2
+	check(service._quantity(world.item_instances.held) == 2 and world.item_instances.held.quest_reward_receipt.quantity == 3,"recognized historical remainder does not equate original grant and remaining quantity")
+	var restored_receipt: Dictionary = JSON.parse_string(JSON.stringify(world.item_instances.held))
+	check(service._quantity(restored_receipt) == 2 and restored_receipt.quest_reward_receipt.quantity == 3,"JSON-restored receipt retains separate exact grant and remainder quantities")
+	var ticket: Dictionary = {"name":"주문서","sourceId":"169994","slot":"consumable"}
+	world.inventory = {"주문서":3}
+	world.item_instances = {"bad":{"name":"주문서","record":ticket,"source_reward_quantity":3,"quest_reward_receipt":null}}
+	world.catalog_db["아이템"] = [ticket]
+	check(service._entries(world).is_empty(),"unknown quest receipt cannot escape through a same-name virtual stack")
 
 func check_alchemy(service, world: World) -> void:
 	world.equipped_items.clear()

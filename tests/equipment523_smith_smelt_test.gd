@@ -85,13 +85,20 @@ func _initialize() -> void:
 	quit(1 if failures else 0)
 
 func _test_saved_effects() -> void:
-	var pack: Dictionary = _pack()
+	# Production rules are JSON-loaded; preserve their numeric representation.
+	var pack: Dictionary = JSON.parse_string(JSON.stringify(_pack()))
 	var ctx: Dictionary = _context()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 523
 	var q: Dictionary = Smith.quote(pack, {"kind":"smelt"}, ctx)
 	var saved: Dictionary = Smith.roll(pack, q, rng).state
 	_check(Smith.active_effects(pack, ctx.target, "smelt", saved, 1000).size() == 2, "authoritative saved smelt effects apply")
+	var reloaded: Dictionary = JSON.parse_string(JSON.stringify(saved))
+	_check(Smith.active_effects(pack, ctx.target, "smelt", reloaded, 1000).size() == 2, "JSON integral floats retain authoritative saved effects")
+	for invalid: Variant in ["1", true, 1.5, 999, null]:
+		var bad_ids: Dictionary = reloaded.duplicate(true)
+		bad_ids.smelt.bonus_ids[0] = invalid
+		_check(Smith.active_effects(pack, ctx.target, "smelt", bad_ids, 1000).is_empty(), "JSON malformed bonus identity cannot coerce into an effect")
 	var altered: Dictionary = saved.duplicate(true)
 	altered.smelt.slots[0].raw = pack.tables.ItemSmeltBonus[2].duplicate(true)
 	_check(Smith.active_effects(pack, ctx.target, "smelt", altered, 1000).is_empty(), "different source pool cannot inject an otherwise valid bonus row")

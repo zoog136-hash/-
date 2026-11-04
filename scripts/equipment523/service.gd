@@ -46,10 +46,13 @@ func snapshot(world: Node) -> Dictionary:
 	var active: Array = _equipped(world)
 	var sets: Dictionary = SetInvoke.equipped(store.pack,active,policy,_now()) if not store.pack.is_empty() else {"details":[]}
 	var state_exists: bool = false
+	var receipt_count: int = 0
 	for value: Variant in world.item_instances.values():
 		if value is Dictionary and value.has("equipment523"): state_exists = true
+		if value is Dictionary and value.has("quest_reward_receipt"): receipt_count += 1
 	var status: String = problem if not problem.is_empty() else store.status
 	if store.pack.is_empty() and state_exists: status += " · 저장된 가공 기록은 보존하며 팩이 없으면 효과를 적용하지 않습니다."
+	if receipt_count > 0: status += " · 원본 퀘스트 보상 %d개는 사용 영수증 연결 전 재료로 소비할 수 없습니다." % receipt_count
 	var unproven: int = 0
 	for info: Dictionary in entries:
 		for kind: String in ["elemental_smith","bless_reinforcement","smelt","spirit_smelt"]:
@@ -92,6 +95,7 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 		var id: String = str(raw_id)
 		if id == target_id or chosen.has(id) or not by_id.has(id): return Common.fail("대상과 재료가 같거나 선택한 개체가 중복·누락되었습니다.")
 		var info: Dictionary = by_id[id]
+		if bool(info.get("quest_reward_receipt",false)): return Common.fail("원본 퀘스트 보상은 사용 영수증 연결 전 재료로 소비할 수 없습니다. 지급 기록과 잔여 수량을 보존합니다.")
 		if bool(info.get("locked",false)) or bool(info.get("equipped",false)): return Common.fail("재료의 장착과 잠금을 해제하세요.")
 		if kind == "alchemy" and bool(info.get("virtual_stack",false)): return Common.fail("연금 재료는 원본 ID가 확인된 실제 개체를 선택하세요.")
 		var expiry: String = _expiry_error(info)
@@ -268,6 +272,19 @@ func on_hit(world: Node, target: Node, attack_kind: String = "melee", main_targe
 func _source(record: Dictionary) -> int:
 	var host_id: String = str(record.get("sourceId",""))
 	var name: String = str(record.get("name",""))
+	var original: Variant = record.get("source_original_item",false)
+	# PR262's older held rewards use a complete ItemClass row and a distinct
+	# exact prefix. Compare every source field retained by the rules compiler.
+	if original is Dictionary:
+		var original_id: int = int(record.get("source_item_class_id",0))
+		var source_item: Dictionary = Common.item(store.pack,original_id)
+		var raw: Dictionary = source_item.get("raw",{})
+		if original_id <= 0 or raw.is_empty() or int(original.get("ID",0)) != original_id: return 0
+		if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or host_id != "m523:item:" + str(original_id): return 0
+		if str(original.get("Name","")) == "" or name != "[원본 보상] " + str(original.Name): return 0
+		for key: Variant in raw:
+			if not original.has(key) or original[key] != raw[key]: return 0
+		return original_id
 	var binding: Variant = store.pack.get("bindings",{}).get(host_id,{})
 	if binding is Dictionary and not binding.is_empty() and binding.get("name") == name: return int(binding.get("source_id",0))
 	var id: int = int(record.get("source_item_class_id",0))
@@ -300,13 +317,15 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 	var bless: int = int(physical.get("source_bless_code",record.get("source_bless_code_id",1)))
 	if physical.has("blessed") or physical.has("bless_state") or record.has("blessed") or record.has("bless_state") or name.begins_with("축복받은 "): bless = 2 if blessed else 1
 	if bless not in [1,2]: return {}
+	if physical.has("quest_reward_receipt") and int(physical.quest_reward_receipt.bless_code_id) != bless: return {}
 	var worn: bool = false
 	for equipped: Variant in world.equipped_items.values():
 		if equipped is Dictionary and str(equipped.get("instance_id","")) == id: worn = true
 	var locked: bool = bool(world.call("_item_locked",name,id)) if world.has_method("_item_locked") else false
 	var info: Dictionary = {"source_id":source,"instance_id":id,"name":name,"level":int(physical.get("level",0)),"bless_code":bless,
 		"element_type":int({"fire":1,"water":2,"wind":3,"earth":4}.get(str(physical.get("element","")),0)),"element_level":int(physical.get("element_level",0)),
-		"state":state.duplicate(true),"record":record.duplicate(true),"equipped":worn,"locked":locked,"quantity":quantity,"amount":quantity}
+		"state":state.duplicate(true),"record":record.duplicate(true),"equipped":worn,"locked":locked,"quantity":quantity,"amount":quantity,
+		"quest_reward_receipt":physical.has("quest_reward_receipt")}
 	for key: String in ["expires_unix","expiry_unix"]:
 		if physical.has(key): info[key] = physical[key]
 		elif record.has(key): info[key] = record[key]
@@ -315,10 +334,33 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 
 func _quantity(physical: Dictionary) -> int:
 	var record: Variant = physical.get("record",{})
-	var a: int = int(physical.get("source_reward_quantity",1))
-	var b: int = int(record.get("source_reward_quantity",a)) if record is Dictionary else a
+	var a: int = _positive_integer(physical.get("source_reward_quantity",1))
+	var b: int = _positive_integer(record.get("source_reward_quantity",a)) if record is Dictionary else a
+	if a <= 0 or b <= 0: return -1
 	if physical.has("source_reward_quantity") and record is Dictionary and record.has("source_reward_quantity") and a != b: return -1
+	if physical.has("quest_reward_receipt"):
+		# Receipt quantity is the immutable original grant, not the remainder.
+		# Only recognizable records remain visible; every receipt is blocked at
+		# quote/debit until the quest consumption journal can commit atomically.
+		var receipt: Variant = physical.get("quest_reward_receipt")
+		if not receipt is Dictionary or not record is Dictionary or receipt.get("schema") != 1: return -1
+		if receipt.get("source_sha256") != store.pack.get("source_sha256"): return -1
+		var item_id: int = _positive_integer(receipt.get("item_class_id"))
+		var reward_id: int = _positive_integer(receipt.get("reward_id"))
+		var granted: int = _positive_integer(receipt.get("quantity"))
+		var quest_id: String = str(receipt.get("quest_id",""))
+		var quest_number: String = quest_id.trim_prefix("m523:quest:")
+		if item_id <= 0 or reward_id <= 0 or granted < b or b <= 0 or _source(record) != item_id: return -1
+		if not quest_number.is_valid_int() or int(quest_number) <= 0 or quest_id != "m523:quest:" + str(int(quest_number)): return -1
+		var receipt_bless: int = _positive_integer(receipt.get("bless_code_id"))
+		if receipt_bless not in [1,2]: return -1
+		if record.has("source_reward_id") and record.source_reward_id != reward_id: return -1
+		if record.has("source_bless_code_id") and record.source_bless_code_id != receipt.bless_code_id: return -1
 	return b
+
+func _positive_integer(value: Variant) -> int:
+	if not (value is int or value is float) or not is_finite(float(value)) or float(value) != floorf(float(value)) or value < 1 or value > 9007199254740991: return 0
+	return int(value)
 
 func _equipped(world: Node) -> Array:
 	var out: Array = []
@@ -356,7 +398,7 @@ func _entries(world: Node) -> Array:
 		var name: String = str(record.get("name",""))
 		if source <= 0 or _is_equipment(world,record): continue
 		if not candidates.has(name): candidates[name] = {}
-		candidates[name][str(source)] = record
+		if not candidates[name].has(str(source)): candidates[name][str(source)] = record
 		if not source_names.has(str(source)): source_names[str(source)] = {}
 		source_names[str(source)][name] = true
 	for name: Variant in candidates:
@@ -428,7 +470,9 @@ func _consume(inventory: Dictionary, physical: Dictionary, info: Dictionary, amo
 	var id: String = str(info.instance_id)
 	if amount < 1 or int(inventory.get(name,0)) < amount or int(info.quantity) < amount: return "보유 재료 수량이 변경되었습니다."
 	if not bool(info.get("virtual_stack",false)):
-		if not physical.has(id) or _quantity(physical[id]) != int(info.quantity): return "보유 재료 개체가 변경되었습니다."
+		if not physical.get(id) is Dictionary: return "보유 재료 개체가 변경되었습니다."
+		if physical[id].has("quest_reward_receipt"): return "원본 퀘스트 보상은 사용 영수증 연결 전 재료로 소비할 수 없습니다. 지급 기록과 잔여 수량을 보존합니다."
+		if _quantity(physical[id]) != int(info.quantity): return "보유 재료 개체가 변경되었습니다."
 		var remaining: int = int(info.quantity) - amount
 		if remaining == 0: physical.erase(id)
 		else:

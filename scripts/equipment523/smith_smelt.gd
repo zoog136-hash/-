@@ -294,8 +294,16 @@ static func active_effects(pack: Dictionary, target: Dictionary, kind: String, s
 				return none
 		else:
 			return none
-	if identities != stored.get("bonus_ids", []):
+	# JSON numbers reload as floats. Array/Dictionary equality is type-strict,
+	# although an individual integral float compares exactly to its integer ID.
+	# Preserve list shape, order and every authoritative ID; reject strings,
+	# booleans, fractions and mismatches rather than coercing/truncating them.
+	var saved_ids: Variant = stored.get("bonus_ids", [])
+	if not saved_ids is Array or saved_ids.size() != identities.size():
 		return none
+	for index: int in range(identities.size()):
+		if typeof(saved_ids[index]) not in [TYPE_INT, TYPE_FLOAT] or saved_ids[index] != identities[index]:
+			return none
 	return Common.effect_records(pack, active_ids)
 
 static func _pool_check(pack: Dictionary, pool: Array, weight: String) -> Dictionary:

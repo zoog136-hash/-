@@ -33,6 +33,23 @@ func freeze(world: Node) -> void:
 	world.player.set_physics_process(false)
 	world.player.auto_enabled = false
 	world.monsters_root.process_mode = Node.PROCESS_MODE_DISABLED
+	# Population queues run on independent Nodes and otherwise advance world RNG.
+	for population: Variant in [world.field_population,world.legacy_population,world.original_population]:
+		if is_instance_valid(population):
+			population.set_process(false)
+			population.set_physics_process(false)
+
+func unchanged(world: Node, before: Variant, before_rng: int, before_disk: String) -> bool:
+	var after: Variant = normalized([world.inventory,world.item_instances,world.gold,world.next_item_instance_id])
+	var changed: Array[String] = []
+	var fields: Array[String] = ["inventory","item_instances","gold","next_item_instance_id"]
+	for index: int in range(fields.size()):
+		if after[index] != before[index]: changed.append(fields[index])
+	var rng_same: bool = world.rng.state == before_rng
+	var disk_same: bool = FileAccess.get_sha256(world.save_path()) == before_disk
+	if not changed.is_empty() or not rng_same or not disk_same:
+		print("EQUIPMENT523_MAIN_DIAG "+JSON.stringify({"changed":changed,"rng_same":rng_same,"disk_same":disk_same,"before_rng":before_rng,"after_rng":world.rng.state}))
+	return changed.is_empty() and rng_same and disk_same
 
 func run() -> void:
 	check(not OS.get_environment("TWILIGHT_SOURCE_MAP_PACK").is_empty(),"explicit verified source-map pack")
@@ -113,13 +130,13 @@ func run() -> void:
 	view._preview.pressed.emit()
 	check(not view._confirm.disabled and view._commit.disabled,"preview exposes costs and requires consumption confirmation")
 	view.get_node("ContentScroll").find_child("CancelOperation",true,false).pressed.emit()
-	check(normalized([world.inventory,world.item_instances,world.gold,world.next_item_instance_id]) == before and world.rng.state == before_rng and FileAccess.get_sha256(world.save_path()) == before_disk,"actual UI cancel preserves ownership, wallet, RNG and save bytes")
+	check(unchanged(world,before,before_rng,before_disk),"actual UI cancel preserves ownership, wallet, RNG and save bytes")
 	view._preview.pressed.emit()
 	view._confirm.button_pressed = true
 	check(not view._commit.disabled,"actual confirmation enables one execution")
 	world.equipment_collections.test_save_writer = func(_path: String,_data: Dictionary) -> Error: return ERR_CANT_CREATE
 	view._commit.pressed.emit()
-	check(normalized([world.inventory,world.item_instances,world.gold,world.next_item_instance_id]) == before and world.rng.state == before_rng and FileAccess.get_sha256(world.save_path()) == before_disk,"production atomic writer failure preserves live state, RNG and exact durable bytes")
+	check(unchanged(world,before,before_rng,before_disk),"production atomic writer failure preserves live state, RNG and exact durable bytes")
 	world.equipment_collections.test_save_writer = Callable()
 	view._preview.pressed.emit()
 	view._confirm.button_pressed = true
@@ -192,7 +209,7 @@ func reload_proof() -> void:
 	check(world.equipment523.store.sha256 == proof.get("pack_sha256") and not world.equipment523.store.pack.is_empty(),"fresh process loads the verified installed mechanics cache")
 	check(normalized(world.item_instances.get(TARGET,{}).get("equipment523",{})) == proof.get("namespace"),"fresh process restores exact processing state")
 	check(normalized(world.item_instances.get(OTHER,{})) == proof.get("other"),"fresh process preserves the other identical item")
-	check(stats(world) == proof.get("stats"),"fresh process restores actual processed statistics")
+	check(same_stats(world,proof.get("stats",{})),"fresh process restores actual processed statistics")
 	check(int(world.item_instances.get(MATERIAL,{}).get("source_reward_quantity",0)) == 4,"fresh process preserves the remaining selected material stack")
 	check(FileAccess.get_sha256(str(proof.get("save_path",""))) == proof.get("save_sha256"),"fresh process load preserves exact durable save bytes")
 	world.queue_free()
@@ -232,6 +249,18 @@ func select(option: OptionButton, id: String) -> bool:
 			option.select(index)
 			option.item_selected.emit(index)
 			return true
+	return false
+
+func same_stats(world: Node, expected: Dictionary) -> bool:
+	# The JSON proof stores PackedStringArray as Array; compare its saved form.
+	var actual: Dictionary = JSON.parse_string(JSON.stringify(stats(world),"",true,true))
+	expected = JSON.parse_string(JSON.stringify(expected,"",true,true))
+	if actual == expected: return true
+	var differences: Array[Dictionary] = []
+	for key: Variant in actual:
+		if actual[key] != expected.get(key):
+			differences.append({"key":key,"actual":actual[key],"expected":expected.get(key),"actual_type":typeof(actual[key]),"expected_type":typeof(expected.get(key))})
+	print("EQUIPMENT523_MAIN_STAT_DIAG "+JSON.stringify({"differences":differences},"",true,true))
 	return false
 
 func stats(world: Node) -> Dictionary:

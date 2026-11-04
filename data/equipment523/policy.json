@@ -34,7 +34,6 @@
   "invoke_basis": "원문 마법 부여 주문서 1장. 한 가변 슬롯 선택, 추가 아데나 0과 0단계/축복0 선택자는 TWILIGHT 해석. 기본 발동 보존.",
   "set_threshold_mode": "cumulative",
   "set_basis": "실제 장착 개체의 서로 다른 원본 품목 수만 집계. 달성한 CompletionDegree 효과 누적은 TWILIGHT 해석.",
-  "pvp_numeric_as_pve": true,
   "pvp_basis": "기존 단독 실행 게임의 _normalize_option_policies 정책과 동일하게 PvP 수치를 PvE에 적용.",
   "elemental_critical_multiplier": 2.0,
   "elemental_combat_basis": "원문 원소 추가 피해·관통·치명 확률을 기존 저항 채널에 연결. 원소 치명타 배율 2배는 TWILIGHT 해석.",
@@ -47,7 +46,6 @@
   },
   "death_damage_per_point": 1.0,
   "death_basis": "원문 DTH 수치 유지. DTH1당 추가 피해1은 TWILIGHT 선형 추정이며 원작 파생 공식은 미확인. 0으로 비활성화 가능.",
-  "regeneration_interval_seconds": 30,
   "regeneration_basis": "기존 로컬 회복 간격30초에 원문 RegenHP/MP 수치를 정확히 가산. 원작 틱 공식 복원 아님.",
   "material_expiry_unix": {}
 }

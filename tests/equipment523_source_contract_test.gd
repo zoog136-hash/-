@@ -18,6 +18,7 @@ var equip_slots: Dictionary = {}
 var representatives: Dictionary = {}
 var host_sources: Dictionary = {}
 var host_warnings: Dictionary = {}
+var json_guards_checked: Dictionary = {}
 var rng := RandomNumberGenerator.new()
 
 class HitHost extends Node:
@@ -168,6 +169,23 @@ func _smith_case(domain: String, kind: String, target: Dictionary, material: Dic
 	_check(domain,actual == expected,label+" active effects match selected authoritative bonus IDs")
 	var restored: Dictionary = JSON.parse_string(JSON.stringify(state))
 	_check(domain,Smith.active_effects(pack,target,kind,restored,2000000000,policy) == active,label+" state JSON roundtrip (not Main/save-file verification)")
+	if not json_guards_checked.has(kind) and not active.is_empty():
+		json_guards_checked[kind] = true
+		_json_identity_guards(domain,target,kind,restored)
+
+func _json_identity_guards(domain: String, target: Dictionary, kind: String, restored: Dictionary) -> void:
+	var expected: int = int(restored[kind].bonus_ids[0])
+	for invalid: Variant in [str(expected), true, float(expected)+0.5, expected+1, null]:
+		var corrupted: Dictionary = restored.duplicate(true)
+		corrupted[kind].bonus_ids[0] = invalid
+		_check(domain,Smith.active_effects(pack,target,kind,corrupted,2000000000,policy).is_empty(),"JSON bonus ID rejects wrong type/fraction/identity: "+str(invalid))
+	for invalid_shape: Variant in [{"0":expected}, [], [expected,expected,expected,expected]]:
+		var corrupted: Dictionary = restored.duplicate(true)
+		corrupted[kind].bonus_ids = invalid_shape
+		_check(domain,Smith.active_effects(pack,target,kind,corrupted,2000000000,policy).is_empty(),"JSON bonus IDs reject incorrect shape/length")
+	var wrong_row: Dictionary = restored.duplicate(true)
+	wrong_row[kind].slots[0].raw.BonusID = expected+1
+	_check(domain,Smith.active_effects(pack,target,kind,wrong_row,2000000000,policy).is_empty(),"JSON authority still rejects modified original row")
 
 func _elemental() -> void:
 	var domain := "elemental_smith"
@@ -335,8 +353,14 @@ func _sets() -> void:
 			_check(domain,not C.item(pack,int(member.ItemClassID)).is_empty(),"exact set member source item exists")
 			_host_registration(domain,int(member.ItemClassID))
 			members.append(_target(int(member.ItemClassID)))
+		if members.is_empty():
+			var orphan_bonus_count: int = 0
+			for row: Dictionary in C.rows(pack,"ItemSetBonus"):
+				if int(row.ItemSetID) == int(definition.ID): orphan_bonus_count += 1
+			_check(domain,int(definition.ID) == 10244 and orphan_bonus_count == 0 and int(definition.get("BuffClassID",0)) == 0,"known unused source definition10244 has zero memberships, bonus rows and BuffClass")
+			_note(domain,{"set_id":int(definition.ID),"source_memberships":0,"source_bonus_rows":orphan_bonus_count,"reason":"unused original definition; full original ItemForItemSet and ItemSetBonus have no links; no synthetic members or runtime success counted"})
+			continue
 		_check(domain,not members.is_empty(),"set has original members="+str(int(definition.ID)))
-		if members.is_empty(): continue
 		for count: int in range(1,members.size()+1):
 			var worn: Array = members.slice(0,count)
 			var result: Dictionary = Sets.equipped(pack,worn,policy)
