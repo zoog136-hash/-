@@ -19,6 +19,21 @@ var source_option_debuffs: Dictionary={}
 var ai: Dictionary = {}
 var aggro_remaining: float = 0.0
 var life_id: int = 0
+var concealed523: bool = false
+var reveal_lock523: float = 0.0
+
+func set_concealed523(value: bool) -> bool:
+	if value and reveal_lock523 > 0: return false
+	concealed523 = value
+	modulate.a = .15 if value else 1.0
+	return true
+
+func reveal523(seconds: float) -> void:
+	set_concealed523(false)
+	reveal_lock523 = maxf(reveal_lock523, seconds)
+
+func tick_reveal523(delta: float) -> void:
+	reveal_lock523 = maxf(0, reveal_lock523 - delta)
 var species_visual: TwilightMonsterVisual
 var special_sequence: int = -1
 var special_attack: Dictionary = {} # authoritative warning geometry for this action
@@ -188,6 +203,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1
+	reveal_lock523 = 0
+	set_concealed523(bool(record.get("estimated_concealed", false)))
 	motion = MOTION.new()
 	motion_connected = false
 	dead = false
@@ -348,6 +365,7 @@ func _advance_source_m_view(delta: float) -> void:
 		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
 
 func _physics_process(delta: float) -> void:
+	tick_reveal523(delta)
 	advance_source_option_debuffs(delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)

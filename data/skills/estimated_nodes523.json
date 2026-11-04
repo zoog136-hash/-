@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "status": "USER_AUTHORIZED_TWILIGHT_ESTIMATE",
+  "scope": "Eight reviewed composition references only; original node graph and server formula are not restored.",
+  "records": {
+    "lm_b39dbcf394503410": {
+      "spell_id": 63,
+      "composition": 31,
+      "kind": "damage",
+      "summary": "기존 TWILIGHT 단일 마법 피해240 · 추정 재사용2초",
+      "estimated_fields": [
+        "power",
+        "cooldown",
+        "cast_time",
+        "range",
+        "branch"
+      ],
+      "new_reference_runtime": false,
+      "runtime": {
+        "mode": "attack"
+      }
+    },
+    "lm_8e2c8c76c068ae0e": {
+      "spell_id": 57982,
+      "composition": 21,
+      "kind": "recovery",
+      "summary": "HP100 회복 · 5초 동안 근거리/원거리 회피+8 (추정)",
+      "estimated_fields": [
+        "heal",
+        "duration",
+        "stats",
+        "cooldown",
+        "branch"
+      ],
+      "new_reference_runtime": false,
+      "runtime": {
+        "mode": "heal",
+        "heal": 100,
+        "stats": {
+          "dg": 8,
+          "er": 8
+        },
+        "duration": 5,
+        "cooldown": 10
+      }
+    },
+    "lm_57fedb578e5ba9de": {
+      "spell_id": 29152,
+      "composition": 1072,
+      "kind": "grab",
+      "summary": "대상 앞 접근 후 홀드3~6초 · 성공 확률60% · 무대상 전방 대시 (추정)",
+      "estimated_fields": [
+        "duration_bounds",
+        "status_chance",
+        "cooldown",
+        "range",
+        "dash_distance",
+        "branch"
+      ],
+      "new_reference_runtime": false,
+      "runtime": {
+        "mode": "status",
+        "status": "hold",
+        "duration_bounds": [
+          3,
+          6
+        ],
+        "status_chance": 0.6,
+        "dash_distance": 120,
+        "cooldown": 8,
+        "range": 180,
+        "shape": "single",
+        "targets": 1,
+        "attack_type": "melee"
+      }
+    },
+    "lmref_a145521a8b2fa008": {
+      "spell_id": 37051,
+      "composition": 804,
+      "kind": "detection",
+      "summary": "주변360 거리 은신 탐지 · 자신/대상의 재은신8초 차단 (추정)",
+      "estimated_fields": [
+        "radius",
+        "cooldown",
+        "duration",
+        "book_cost",
+        "branch"
+      ],
+      "new_reference_runtime": true,
+      "runtime": {
+        "mode": "detect",
+        "activation": "active",
+        "local_design": true,
+        "local_kind": "generic",
+        "runtime_blocked": false,
+        "origin": "LINEAGEM_CURRENT_LOCAL_20261029",
+        "power": 0,
+        "mp": 0,
+        "hp": 0,
+        "items": {},
+        "stats": {},
+        "range": 192,
+        "radius": 360,
+        "targets": 1,
+        "shape": "single",
+        "duration": 8,
+        "cooldown": 8,
+        "cast_time": 0.42,
+        "global_cooldown": 0.3,
+        "attack_type": "none",
+        "weapons": [],
+        "trigger": "always",
+        "book_cost": 100000,
+        "book_name": "마법서 (카운터 디텍션)",
+        "grade": "영웅"
+      }
+    },
+    "lmref_abb46932647df2be": {
+      "spell_id": 45192,
+      "composition": 942,
+      "kind": "stun",
+      "summary": "단일 대상 스턴2~4초 · 성공 확률60% · 사거리192/활240 (추정)",
+      "estimated_fields": [
+        "range",
+        "duration_bounds",
+        "status_chance",
+        "cooldown",
+        "book_cost",
+        "branch"
+      ],
+      "new_reference_runtime": true,
+      "runtime": {
+        "mode": "status",
+        "activation": "active",
+        "local_design": true,
+        "local_kind": "generic",
+        "runtime_blocked": false,
+        "origin": "LINEAGEM_CURRENT_LOCAL_20261029",
+        "power": 0,
+        "mp": 0,
+        "hp": 0,
+        "items": {},
+        "stats": {},
+        "range": 192,
+        "radius": 128,
+        "targets": 1,
+        "shape": "single",
+        "duration": 5,
+        "cooldown": 10,
+        "cast_time": 0.42,
+        "global_cooldown": 0.3,
+        "attack_type": "none",
+        "weapons": [],
+        "trigger": "always",
+        "status": "stun",
+        "status_chance": 0.6,
+        "duration_bounds": [
+          2,
+          4
+        ],
+        "book_cost": 400000,
+        "book_name": "정령의 수정 (엘리멘탈 스턴)",
+        "grade": "전설",
+        "bow_range": 240
+      }
+    },
+    "lmref_32fab3b95ec26e3d": {
+      "spell_id": 70071,
+      "composition": 613,
+      "kind": "protection",
+      "summary": "물리 피해5 추가 경감(원거리 추가3) · 피격 시35%로 보호막80/5초 · 발동 간격15초 (추정)",
+      "estimated_fields": [
+        "stats",
+        "shield_chance",
+        "shield_amount",
+        "shield_duration",
+        "shield_cooldown",
+        "book_cost",
+        "branch"
+      ],
+      "new_reference_runtime": true,
+      "runtime": {
+        "mode": "stats",
+        "activation": "passive",
+        "local_design": true,
+        "local_kind": "generic",
+        "runtime_blocked": false,
+        "origin": "LINEAGEM_CURRENT_LOCAL_20261029",
+        "power": 0,
+        "mp": 0,
+        "hp": 0,
+        "items": {},
+        "stats": {
+          "physicalReduction": 5,
+          "rangedReduction": 3
+        },
+        "range": 192,
+        "radius": 128,
+        "targets": 1,
+        "shape": "single",
+        "duration": 5,
+        "cooldown": 0,
+        "cast_time": 0.42,
+        "global_cooldown": 0.3,
+        "attack_type": "none",
+        "weapons": [],
+        "trigger": "always",
+        "shield_chance": 0.35,
+        "shield_amount": 80,
+        "shield_duration": 5,
+        "shield_cooldown": 15,
+        "book_cost": 400000,
+        "book_name": "비전서 (썬더 프로텍션(미스틱))",
+        "grade": "전설"
+      }
+    },
+    "lmref_b864ab63b5fc91ed": {
+      "spell_id": 87228,
+      "composition": 1132,
+      "kind": "asura",
+      "summary": "자신 강화8초: 공격+20·근거리 명중+5·피해 경감5 (추정). 원본 PC 대상 제어를 몬스터에게 확대하지 않음",
+      "estimated_fields": [
+        "stats",
+        "duration",
+        "cooldown",
+        "book_cost",
+        "self_branch"
+      ],
+      "new_reference_runtime": true,
+      "runtime": {
+        "mode": "buff",
+        "activation": "active",
+        "local_design": true,
+        "local_kind": "generic",
+        "runtime_blocked": false,
+        "origin": "LINEAGEM_CURRENT_LOCAL_20261029",
+        "power": 0,
+        "mp": 0,
+        "hp": 0,
+        "items": {},
+        "stats": {
+          "atk": 20,
+          "meleeHit": 5,
+          "damageReduction": 5
+        },
+        "range": 192,
+        "radius": 128,
+        "targets": 1,
+        "shape": "single",
+        "duration": 8,
+        "cooldown": 45,
+        "cast_time": 0.42,
+        "global_cooldown": 0.3,
+        "attack_type": "none",
+        "weapons": [
+          "체인소드"
+        ],
+        "trigger": "always",
+        "book_cost": 1000000,
+        "book_name": "투사의 서판 (아수라)",
+        "grade": "신화"
+      }
+    },
+    "lmref_5537debb655c3399": {
+      "spell_id": 49211,
+      "composition": 1142,
+      "kind": "breath",
+      "summary": "체인소드로 단일 대상 스턴2~4초 · 성공 확률60% (추정)",
+      "estimated_fields": [
+        "range",
+        "duration_bounds",
+        "status_chance",
+        "cooldown",
+        "book_cost",
+        "branch"
+      ],
+      "new_reference_runtime": true,
+      "runtime": {
+        "mode": "status",
+        "activation": "active",
+        "local_design": true,
+        "local_kind": "generic",
+        "runtime_blocked": false,
+        "origin": "LINEAGEM_CURRENT_LOCAL_20261029",
+        "power": 0,
+        "mp": 0,
+        "hp": 0,
+        "items": {},
+        "stats": {},
+        "range": 192,
+        "radius": 128,
+        "targets": 1,
+        "shape": "single",
+        "duration": 5,
+        "cooldown": 12,
+        "cast_time": 0.42,
+        "global_cooldown": 0.3,
+        "attack_type": "none",
+        "weapons": [
+          "체인소드"
+        ],
+        "trigger": "always",
+        "status": "stun",
+        "status_chance": 0.6,
+        "duration_bounds": [
+          2,
+          4
+        ],
+        "book_cost": 1000000,
+        "book_name": "투사의 서판 (브레스 스턴)",
+        "grade": "신화"
+      }
+    }
+  }
+}

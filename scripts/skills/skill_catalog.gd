@@ -73,6 +73,9 @@ func configure(owner: Node) -> void:
 		row.class_references[job]=fact.duplicate(true)
 	relations.merge(current_official.local_design.get("relations",{}))
 	source523.configure_arguments()
+	for record: Dictionary in records:
+		source523.prepare_estimate(record)
+		record["effect"] = effect_for(record)
 	seed_starters()
 
 
@@ -101,7 +104,7 @@ static func effect_for(record: Dictionary) -> String:
 		"turn_undead": return "turnUndead"
 		"status": return str(record.get("status", "stun"))
 		"heal", "convert", "cleanse", "local_heal": return "heal"
-		"buff", "counter", "local_buff": return "defBuff"
+		"buff", "counter", "local_buff", "detect": return "defBuff"
 		"teleport": return "teleport"
 		"stealth": return "invisibility"
 		"taunt", "toggle_proc", "summon": return "utility"
@@ -191,7 +194,7 @@ func learn(key: String) -> bool:
 func _lineage_signature() -> String:
 	# Tests and migration adapters may edit learned directly; hash catches those
 	# alongside the normal learn/import revision without touching old save data.
-	return "%d|%s|%d|%d|%d" % [revision,str(world.job_class),hash(learned),records.size(),source523.revision]
+	return "%d|%s|%d|%d|%d|%d" % [revision,str(world.job_class),hash(learned),records.size(),source523.revision,hash(world.equipped_items.get("weapon",{}))]
 
 func _resolved_reference(record: Dictionary) -> Dictionary:
 	var signature: String=_lineage_signature()
@@ -238,6 +241,7 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 			result.official["source_url"]=record.class_references[job].source_url
 			result.official["learning_level"]=result.minimum_level
 			result.official["mp_cost"]=result.mp
+	if result.has("bow_range") and world._current_weapon_type() == "활": result["range"] = float(result.bow_range)
 	return source523.apply_to(result,job,family.size() > 1)
 
 func _current_stat_signature() -> String:

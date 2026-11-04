@@ -18,6 +18,31 @@ var bindings: Dictionary = {}
 var revision: int = 0
 var last_error: String = ""
 var active_sha256: String = ""
+var estimated_rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/estimated_nodes523.json")).get("records", {})
+
+func estimated_rule(id: String) -> Dictionary:
+	var rule: Dictionary = estimated_rules.get(id, {})
+	var profile: Dictionary = profiles.get(id, {})
+	if rule.is_empty() or profile.is_empty(): return {}
+	if int(profile.row.ID) != int(rule.spell_id) or int(profile.row.SpellCompositionNode) != int(rule.composition): return {}
+	return rule
+
+func prepare_estimate(record: Dictionary) -> void:
+	var rule := estimated_rule(str(record.get("id", "")))
+	if rule.is_empty(): return
+	# The user explicitly authorized local estimates for these eight references.
+	# Mutate the existing dictionary so roster/UI/save identities remain shared.
+	record.merge(rule.runtime.duplicate(true), true)
+	record["estimated523"] = {"composition":rule.composition,"kind":rule.kind,"summary":rule.summary,"fields":rule.estimated_fields.duplicate()}
+	record["desc"] = str(rule.summary)
+	if bool(rule.new_reference_runtime):
+		var native_class := int(bindings.class_ids.get(str(record["class"]), -1))
+		for limit: Dictionary in profiles[str(record.id)].learn_limits:
+			if int(limit.ClassID) == native_class and not bool(limit.IsTutorialSpell): record["minimum_level"] = int(limit.CharacterMinLevel)
+		record["design_provenance"] = {}
+		for key: String in rule.runtime: record.design_provenance[key] = {"value":record[key],"status":"local_design","basis":"사용자 승인 · 누적523 8종 추정 구현"}
+	# Feed known native costs into the existing book/material UI as well as cast.
+	record.merge(apply_to(record.duplicate(true), str(record["class"]), false), true)
 
 func configure_arguments() -> void:
 	var path := ""
@@ -118,6 +143,7 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	if not profiles.has(id): return record
 	var profile: Dictionary = profiles[id]
 	var row: Dictionary = profile.row
+	var estimate := estimated_rule(id) if record.has("estimated523") else {}
 	record["source523"] = {"spell_id":row.ID, "target_kind":profile.target_kind.Name,
 		"targeting_type":profile.targeting_type.Name, "cast_range_raw":row.CastRange,
 		"min_cast_range_raw":row.MinCastRange, "area_radius_raw":row.TargetAreaRadius,
@@ -139,18 +165,22 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		95662:"복합 효과 보류: 회복량 정의표 없음 · 자신/파티 회복·보호막·해제 미연결"
 	}.get(int(row.ID), "")
 	if not pending_note.is_empty(): record.source523["pending_note"] = pending_note
+	if not estimate.is_empty():
+		record.source523["estimated"] = record.estimated523.duplicate(true)
+		record.source523["distance_policy"] = "TWILIGHT_ESTIMATE"
+		record.source523["time_policy"] = "TWILIGHT_ESTIMATE"
 	# Passive/effect/upgrade execution and learning/ownership stay with the host.
 	# Current-reference/local-design rows gain evidence only. A client row never
 	# grants a book or activates a previously blocked/new spell implementation.
 	for prefix: String in bindings.get("reference_only_prefixes", []):
-		if id.begins_with(prefix): return record
+		if id.begins_with(prefix) and estimate.is_empty(): return record
 	if str(record.get("activation", "")) != "active" or bool(record.get("runtime_blocked", false)): return record
 	var reason := ""
 	if int(row.SpellTypeID) == 3: reason = "523 원본은 패시브 · 기존 액티브 연결 확인 필요"
 	elif upgraded: reason = "523 상위 스킬 효과 연결 확인 필요"
-	elif int(row.SpellCompositionNode) != 0: reason = "523 조건 노드 %d · 노드·조건 유형 정의가 없어 시전 보류" % int(row.SpellCompositionNode)
+	elif int(row.SpellCompositionNode) != 0 and estimate.is_empty(): reason = "523 조건 노드 %d · 노드·조건 유형 정의가 없어 시전 보류" % int(row.SpellCompositionNode)
 	elif int(row.SpellCategoryID) == 184: reason = "523 복합 효과 · 하위 주문의 회복·해제·보너스 연결 미완료"
-	elif int(row.SpellCategoryID) in [172,371]: reason = "523 조건별 하위 주문 · 분기·실행 순서 연결 미완료"
+	elif int(row.SpellCategoryID) in [172,371] and estimate.is_empty(): reason = "523 조건별 하위 주문 · 분기·실행 순서 연결 미완료"
 	elif not profile.costs.is_empty(): reason = "523 대상별 비용 조건 연결 확인 필요"
 	elif int(row.MPCostUnit) != 1 or int(row.VPCost) != 0: reason = "523 비용 단위 연결 확인 필요"
 	elif int(row.SpellMaterialTypeID) == 0 and int(row.SpellMaterialItemAmount) != 0: reason = "523 재료 정의 확인 필요"
@@ -162,9 +192,11 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	var targeting := int(row.TargettingTypeID)
 	var target_kind := int(row.TargetKindID)
 	var mode := str(record.get("mode", ""))
-	if targeting not in [1,2] or target_kind not in [1,2,3,7,10,11,422]: reason = "523 대상 유형은 현재 PvE 연결 미지원"
+	if not estimate.is_empty() and str(estimate.kind) == "asura": record.source523["estimated_self_only"] = true
+	var estimated_self := not estimate.is_empty() and (str(estimate.kind) == "asura" or str(estimate.kind) == "detection")
+	if targeting not in [1,2] or (target_kind not in [1,2,3,7,10,11,422] and not estimated_self): reason = "523 대상 유형은 현재 PvE 연결 미지원"
 	elif mode in ["attack","status","turn_undead"]:
-		if int(row.SpellCategoryID) not in [1,8,11]: reason = "523 공격·상태 실행 방식 연결 확인 필요"
+		if int(row.SpellCategoryID) not in [1,8,11] and estimate.is_empty(): reason = "523 공격·상태 실행 방식 연결 확인 필요"
 		if target_kind == 1: reason = "523 자기 대상 효과는 적에게 적용할 수 없음"
 		if targeting == 2 and float(row.TargetAreaRadius) == 0:
 			record["shape"] = "single"
@@ -192,6 +224,7 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		items[str(bridge.inventory_key)] = int(items.get(str(bridge.inventory_key), 0)) + int(row.SpellMaterialItemAmount)
 	record["items"] = items
 	record.source523.applied = ["hp", "mp", "materials", "target_filter"]
+	if not estimate.is_empty(): record.source523.applied.append("estimated_effect")
 	if int(row.TargetLimitCount) > 0: record["targets"] = int(row.TargetLimitCount)
 	var duration := scalar_values(profile, "SpellBuffDuration", "Seconds")
 	if mode in ["buff", "counter", "stealth"] and duration.size() == 1 and float(duration[0]) > 0:
@@ -216,6 +249,7 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	return record
 
 static func target_allowed(skill: Dictionary, target: TwilightMonster) -> bool:
+	if is_instance_valid(target) and target.concealed523: return false
 	if not skill.has("source523"): return true
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return false
 	if not is_instance_valid(target) or target.dead: return false
@@ -224,6 +258,8 @@ static func target_allowed(skill: Dictionary, target: TwilightMonster) -> bool:
 	return kind in ["All", "AllButMe", "Enemy", "TargetNEnemy", "AttackableNPC"]
 
 static func target_text(source: Dictionary) -> String:
+	if bool(source.get("estimated_self_only", false)): return "자신 강화 (추정 분기)"
+	if str(source.target_kind) == "InvisibleAndMeButCompany": return "자신과 주변 은신 대상 (아군 제외)"
 	var target: String = {"Me":"자신", "All":"모두", "AllButMe":"자신 제외", "Enemy":"적", "TargetNEnemy":"선택 대상과 적", "AttackableNPC":"공격 가능한 NPC", "Undead":"언데드", "PCButMe":"다른 플레이어", "PCButCompany":"아군 제외 플레이어"}.get(str(source.target_kind), "확인 필요")
 	if str(source.targeting_type) == "Self": target = "자신" if float(source.area_radius_raw) == 0 else "자신 주변 · " + target
 	return target
@@ -243,6 +279,9 @@ static func detail_text(skill: Dictionary) -> String:
 	if not skill.has("source523"): return ""
 	var source: Dictionary = skill.source523
 	var text := "\n\n523 원본 대상: " + target_text(source)
+	if source.has("estimated"):
+		text += "\nTWILIGHT 추정 적용 · 원본 노드 복원 아님\n" + str(source.estimated.summary)
+		if str(skill.get("activation", "")) == "passive": return text + "\n누적523 원문은 패시브 · 습득 후 자동 적용 · 직접 시전/재료 소비 없음"
 	if source.has("pending_note"): text += "\n" + str(source.pending_note)
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return text + "\n" + str(skill.source523_block_reason)
 	if source.applied.is_empty():
@@ -257,10 +296,13 @@ static func detail_text(skill: Dictionary) -> String:
 	if source.applied.has("mana"):
 		text += "\nMP 회복: %d (원본 기본 단계 · 최대 MP까지)" % int(skill.mana)
 	if bool(source.get("pending_chain", false)): text += "\n추가 연계 효과: 발동 조건 확인 전 적용 보류"
-	text += "\n523 원본 비용·대상 제한 적용\n거리·시전 시간·전투 수식은 기존 게임 설정"
+	text += "\n523 원본 비용 적용"
+	text += "\n거리·효과·분기·재사용은 TWILIGHT 추정 · 최종 전투 수식은 기존 게임 설정" if source.has("estimated") else "·대상 제한 적용\n거리·시전 시간·전투 수식은 기존 게임 설정"
 	return text
 
 static func duration_text(skill: Dictionary) -> String:
-	if skill.get("source523", {}).get("applied", []).has("duration_bounds"):
-		return "%.1f~%.1f초" % [float(skill.duration_bounds[0]), float(skill.duration_bounds[1])]
+	if skill.get("source523", {}).get("applied", []).has("duration_bounds") or (skill.has("estimated523") and str(skill.get("mode", "")) == "status"):
+		var bounds: Array = skill.get("duration_bounds", [])
+		if bounds.size() == 2: return "%.1f~%.1f초" % [float(bounds[0]), float(bounds[1])]
+	if skill.get("estimated523", {}).get("kind", "") == "damage": return "즉시"
 	return "%.1f초" % float(skill.get("duration", 0))

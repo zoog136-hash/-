@@ -191,11 +191,12 @@ func show_skill() -> void:
 			if not skill.source523.applied.is_empty(): rows.append(["시전 재료",SOURCE523.material_text(skill)])
 			if skill.source523.applied.has("mana"): rows.append(["MP 회복","%d · 기본 단계" % int(skill.mana)])
 		info_text=_table(rows)+"\n\n[b]효과[/b]\n"+UI.safe(selected.get("desc",""))+"\n\n"+("습득 완료" if learned else UI.safe(world.original_skills.catalog.reason(selected)))
-		if bool(selected.get("local_design",false)):info_text=raw_skill_text
+		if bool(selected.get("local_design",false)) and not selected.has("estimated523"):info_text=raw_skill_text
 		else: info_text+=SOURCE523.detail_text(skill)
 		if not str(skill.get("source523_block_reason", "")).is_empty():
 			category.text+=" · 523 사용 보류"
 			info_text="[color=#dfb168]"+UI.safe(skill.source523_block_reason)+"[/color]\n\n"+info_text
+	if selected.has("estimated523"): category.text="TWILIGHT 추정 · "+category.text
 	if blocked:category.text+=" · 실행 보류"
 	elif not bool(selected.get("local_design",false)):owner_view.use_button.text="패시브" if owner_view.RULES.is_passive(selected) else "스킬 사용"
 	owner_view.learn_button.visible=original and not learned and not blocked

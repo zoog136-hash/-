@@ -2293,6 +2293,7 @@ func _roll_melee_hit(target: TwilightMonster) -> bool:
 func _skill_target(max_distance: float) -> TwilightMonster:
 	# Explicit target selection is authoritative. A spell may fail against a
 	# distant/obstructed target, but may never silently strike a different mob.
+	if is_instance_valid(selected_monster) and selected_monster.concealed523: return null
 	if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty():
 		if not world_interactions.valid(world_interactions.selections[0]):
 			world_interactions.prune()
@@ -2490,7 +2491,7 @@ func _nearest_monster(max_distance: float) -> TwilightMonster:
 	for node: Node in monsters_root.get_children():
 		if node is TwilightMonster:
 			var monster: TwilightMonster = node
-			if monster.dead:
+			if monster.dead or monster.concealed523:
 				continue
 			var distance: float = player.global_position.distance_to(monster.global_position)
 			if distance < best_distance:
@@ -2528,7 +2529,7 @@ func _nearest_visible_monster(max_distance: float) -> TwilightMonster:
 		if not (node is TwilightMonster):
 			continue
 		var monster: TwilightMonster = node
-		if monster.dead:
+		if monster.dead or monster.concealed523:
 			continue
 		var distance: float = player.global_position.distance_to(monster.global_position)
 		if distance >= best_distance:

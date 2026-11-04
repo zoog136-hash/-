@@ -3,6 +3,7 @@ class_name TwilightOriginalSkillService
 
 const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
 var local_runtime = LOCAL.new()
+var estimated_nodes = preload("res://scripts/skills/estimated_nodes523.gd").new()
 const Catalog = preload("res://scripts/skills/skill_catalog.gd")
 const Status = preload("res://scripts/skills/status_service.gd")
 const VFX = preload("res://scripts/skills/skill_vfx.gd")
@@ -41,8 +42,10 @@ func configure(owner: Node) -> void:
 	owner.add_child(vfx)
 	summons.configure(self)
 	local_runtime.configure(self)
+	estimated_nodes.configure(self)
 
 func clear() -> void:
+	estimated_nodes.clear()
 	if local_runtime.world != null: local_runtime.suspend()
 	summons.clear()
 	status.clear()
@@ -56,6 +59,7 @@ func clear() -> void:
 func tick(delta: float) -> void:
 	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")))
 	local_runtime.tick(delta)
+	estimated_nodes.tick(delta)
 	status.tick(delta)
 	summons.tick(delta)
 	combat_elapsed += delta
@@ -158,6 +162,8 @@ func material_plan(skill: Dictionary) -> Dictionary:
 func cost_reason(skill: Dictionary) -> String:
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return str(skill.source523_block_reason)
 	if bool(skill.get("runtime_blocked", false)): return Catalog.CURRENT.blocked_reason(skill)
+	var estimate_reason: String = estimated_nodes.cost_reason(skill)
+	if not estimate_reason.is_empty(): return estimate_reason
 	if world.mp < int(skill.get("mp", 0)): return "MP 부족"
 	if world.hp <= int(skill.get("hp", 0)): return "HP 부족"
 	if skill.get("source523", {}).get("applied", []).has("mana") and world.mp >= world._effective_max_mp(): return "MP가 이미 가득 참"
@@ -199,10 +205,18 @@ func cast(record: Dictionary) -> bool:
 	skill["cast_time"] = float(skill.get("cast_time", .42))
 	var mode := str(skill.mode)
 	var target: TwilightMonster = null
+	var dash_only := false
 	if mode in ["attack", "status", "turn_undead"] and str(skill.get("shape", "single")) != "self_circle":
 		target = world._skill_target(float(skill.get("range", 240)))
-		if not is_instance_valid(target) or target.dead: return false
-		if not Catalog.SOURCE523.target_allowed(skill, target): return false
+		if not is_instance_valid(target) or target.dead:
+			# An explicit unreachable selection never redirects into a dash.
+			if estimated_nodes.kind(skill) == "grab" and not is_instance_valid(world.selected_monster) and world.world_interactions.selections.is_empty(): dash_only = true
+			else: return false
+		if not dash_only and not Catalog.SOURCE523.target_allowed(skill, target): return false
+	var dash_end := Vector2.INF
+	if estimated_nodes.kind(skill) == "grab":
+		dash_end = estimated_nodes.dash_plan(skill, target)
+		if not dash_end.is_finite(): return false
 	if mode == "turn_undead" and turn_undead_chance(skill, target) <= 0:
 		world.hud.show_message("턴 언데드 대상이 아니거나 즉사 면역입니다")
 		return false
@@ -217,6 +231,7 @@ func cast(record: Dictionary) -> bool:
 			return false
 	# Validation ends here. Costs and cooldowns happen once, before the marker.
 	if not spend(skill): return false
+	if dash_end.is_finite(): estimated_nodes.move_to(dash_end)
 	var id := str(skill.id)
 	var cooldown: float = float(skill.get("cooldown", 0)) * world._skill_cooldown_factor()
 	cooldown *= clampf(1 - equipment_modifier(skill, "cooldown_percent") / 100.0, .1, 1)
@@ -227,7 +242,9 @@ func cast(record: Dictionary) -> bool:
 	_emit_verified_source_effect(skill, "cast", world.player.global_position)
 	match mode:
 		"attack", "status", "turn_undead":
-			if str(skill.get("shape", "single")) == "self_circle":
+			if dash_only:
+				world.player.pulse_attack()
+			elif str(skill.get("shape", "single")) == "self_circle":
 				if not world._queue_player_area_attack(skill): return false
 			else:
 				var kind := str(skill.get("attack_type", "magic"))
@@ -236,6 +253,7 @@ func cast(record: Dictionary) -> bool:
 				world.pending_attack["original_skill"] = skill
 				world.pending_attack["original_target_life_id"] = target.life_id
 		"buff", "counter", "stealth": apply_buff(skill)
+		"detect": estimated_nodes.detect(skill)
 		"heal":
 			Status.cleanse(world.player, skill.get("statuses", []))
 			var amount := int(skill.get("heal", 0)) + int(world._effective_max_hp() * float(skill.get("heal_percent", 0)))
@@ -585,6 +603,7 @@ func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 		"heal": return float(world.hp) / float(world._effective_max_hp()) <= float(skill.get("auto_hp_threshold", .65))
 		"convert": return float(world.mp) / float(world._effective_max_mp()) <= .35 and float(world.hp) / float(world._effective_max_hp()) > .55
 		"cleanse": return world.player.is_poisoned()
+		"detect": return not estimated_nodes.hidden_targets(skill).is_empty()
 		"buff", "counter": return not world.active_skill_buffs.has(str(skill.name))
 		"summon": return not summons.active() and not world.active_skill_buffs.has(str(skill.name))
 		"status":
@@ -611,6 +630,7 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 	if kind == "ranged": reduction += stat("rangedReduction")
 	var result := maxi(0, int(amount * multiplier) - int(reduction))
 	if kind != "magic": result = int(result * (1 - clampf(stat("physicalResistance") / 100.0,0,.8)))
+	estimated_nodes.incoming(result, attacker)
 	# Convert before the triggering hit is applied, including lethal damage.
 	summons.intercept(result)
 	for id: String in shields.keys():
@@ -629,6 +649,10 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 
 func remove_guardian_shield_buff(id: String) -> void:
 	var record := catalog.record_for(id)
+	if estimated_nodes.kind(record) == "protection":
+		world.active_skill_buffs.erase(str(record.name))
+		vfx.remove_persistent(id)
+		return
 	if record.is_empty() or str(record.mode) != "summon": return
 	var name := str(record.name)
 	if str(world.active_skill_buffs.get(name,{}).get("summon_stage","")) != "shield": return

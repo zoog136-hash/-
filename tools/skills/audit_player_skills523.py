@@ -66,17 +66,21 @@ def audit(source: Path, bindings_path: Path):
                         restorations.append({"spell_id": spell_id, **entry})
             graph[str(root)] = {"spell_ids": sorted(seen), "edges": edges, "unresolved_restorations": restorations}
         native_node_refs = {int(spells[i]["SpellCompositionNode"]) for i in selected if spells[i]["SpellCompositionNode"]}
+        all_compositions = {int(row["SpellCompositionNode"]) for row in spells.values() if row["SpellCompositionNode"]}
         result = {"source_zip_sha256": SOURCE_SHA256, "source_table_count": len(index),
             "bound_screen_items": len(bindings["skills"]), "unique_bound_spell_ids": len(selected),
             "bound_categories": dict(sorted(Counter(spells[i]["SpellCategoryID"] for i in selected).items())),
             "missing_definition_tables": absent, "referenced_composition_nodes": sorted(native_node_refs),
-            "missing_referenced_node_rows": sorted(native_node_refs - nodes.keys()),
+            "direct_id_join_unresolved": sorted(native_node_refs - nodes.keys()),
+            "composition_to_node_id_join_confirmed": False,
+            "all_composition_values": len(all_compositions),
+            "direct_id_matches_across_all_compositions": len(all_compositions & nodes.keys()),
             "time_distance_columns": [name for name in spells[349] if any(token in name for token in ("Range", "Radius", "Delay"))],
             "typed_delay_bonuses": [{"name": row["Name"], "unit": units[row["UnitID"]]["Name"]}
                                     for row in types.values() if row["Name"] in ("NextSpellDelay", "SpellCastDelayIncreaseAbsolute", "EachSpellCastDelayIncreaseAbsolute")],
             "timing_constant_names": [row["Name"] for row in table("ConstantData") if any(token in row["Name"] for token in ("CastDelay", "GroupDelay", "ComboSpellWarmUp"))],
             "selected_graphs": graph,
-            "interpretation": "Typed delay modifiers do not establish SpellClass delay conversion or contact/cooldown priority. Graph edges preserve source conditions; execution order, node enums and missing Restoration definitions are not inferred."}
+            "interpretation": "SpellCompositionNode to SpellNode.ID is not a proven FK: only16 of85 composition values match IDs. The eight unresolved direct joins are not proven missing native node rows. User-authorized estimates implement named skill behavior separately from the original graph. Typed delay modifiers do not establish base delay conversion or contact/cooldown priority."}
         return result
 
 

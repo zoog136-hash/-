@@ -19,6 +19,17 @@ class CostHost extends Node:
 	var skill_global_cooldown: float = 0
 	var skill_cooldowns: Dictionary = {}
 	var active_skill_buffs: Dictionary = {}
+	var equipped_items: Dictionary = {}
+class DashPlayer extends Node2D:
+	var motion: Dictionary = {"direction":Vector2.RIGHT}
+class DashField extends RefCounted:
+	var wall_x: float = 40
+	func point_clear(point: Vector2, _radius: float) -> bool: return point.x < wall_x
+class DashWorld extends Node:
+	var player = DashPlayer.new()
+	var field_map = DashField.new()
+	func _is_walkable_world(_point: Vector2) -> bool: return true
+	func _has_line_of_sight_world(_from: Vector2, _to: Vector2) -> bool: return true
 
 func _initialize() -> void: call_deferred("run")
 
@@ -148,6 +159,30 @@ func run() -> void:
 	var selected_enemy := TwilightMonster.new()
 	check(service.auto_wants(self_buff,selected_enemy),"an unrelated selected enemy cannot block an automatic self buff")
 	selected_enemy.free()
+	var uninstalled: Dictionary={"id":"lmref_a145521a8b2fa008","runtime_blocked":true}
+	adapter.prepare_estimate(uninstalled)
+	check(uninstalled.runtime_blocked and not uninstalled.has("estimated523"),"estimate cannot activate an identity without its installed source profile")
+	adapter.profiles[uninstalled.id]={"row":{"ID":37051,"SpellCompositionNode":999999}}
+	adapter.prepare_estimate(uninstalled)
+	check(uninstalled.runtime_blocked and not uninstalled.has("estimated523"),"wrong composition cannot borrow a named skill estimate")
+	var detection_profile := profile()
+	detection_profile.row.merge({"ID":37051,"SpellCompositionNode":804,"SpellCategoryID":371,"TargettingTypeID":1,"TargetKindID":103,"TargetAreaRadius":15},true)
+	detection_profile.learn_limits=[{"ClassID":3,"IsTutorialSpell":false,"CharacterMinLevel":70}]
+	detection_profile.target_kind={"Name":"InvisibleAndMeButCompany"}
+	detection_profile.targeting_type={"Name":"Self"}
+	adapter.profiles[uninstalled.id]=detection_profile
+	uninstalled.merge({"class":"마법사","name":"합성 탐지","classes":["마법사"]},true)
+	adapter.prepare_estimate(uninstalled)
+	check(not uninstalled.runtime_blocked and uninstalled.mode=="detect" and uninstalled.minimum_level==70,"reviewed estimate promotes existing identity while retaining native learn limit")
+	check(uninstalled.mp==17 and uninstalled.hp==12 and uninstalled.items=={"합성 재료":2},"estimated effect does not replace installed native costs with invented values")
+	check(SOURCE.detail_text(uninstalled).contains("TWILIGHT 추정 적용"),"estimated execution remains visibly distinct from native restoration")
+	var dash_world := DashWorld.new()
+	var planner = preload("res://scripts/skills/estimated_nodes523.gd").new()
+	planner.world=dash_world
+	check(not planner.dash_plan({"dash_distance":120},null).is_finite(),"dash rejects obstructed footprint even when endpoint navigation and line of sight allow it")
+	dash_world.field_map.wall_x=INF
+	check(planner.dash_plan({"dash_distance":120},null)==Vector2(120,0),"unobstructed no-target dash preserves intended distance")
+	dash_world.player.free();dash_world.free()
 	cost_host.free()
 	print("SKILLS523_POLICY_RESULT ", JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
