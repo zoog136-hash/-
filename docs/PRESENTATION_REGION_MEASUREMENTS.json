@@ -1,0 +1,60 @@
+{
+  "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "limits": "CPU microbenchmark and software OpenGL frozen effects only; no Android/Windows FPS or native doll pack verification",
+  "samples": [
+    {
+      "hidden": false,
+      "kind": "follower",
+      "median_us_per_10000": 104451
+    },
+    {
+      "hidden": true,
+      "kind": "follower",
+      "median_us_per_10000": 6339
+    },
+    {
+      "hidden": false,
+      "kind": "follower",
+      "median_us_per_10000": 107965
+    },
+    {
+      "budget": 160,
+      "detailed": 32,
+      "draw_calls": 772.0,
+      "impacts_drawn": 128,
+      "kind": "OpenGL_redraw",
+      "median_us": 52230,
+      "p95_us": 121990,
+      "records": 145
+    },
+    {
+      "budget": 24,
+      "detailed": 24,
+      "draw_calls": 587.0,
+      "impacts_drawn": 24,
+      "kind": "OpenGL_redraw",
+      "median_us": 33906,
+      "p95_us": 80501,
+      "records": 145
+    },
+    {
+      "budget": 160,
+      "detailed": 32,
+      "draw_calls": 772.0,
+      "impacts_drawn": 128,
+      "kind": "OpenGL_redraw",
+      "median_us": 66859,
+      "p95_us": 131444,
+      "records": 145
+    }
+  ],
+  "viewports": [
+    "(1280, 720)",
+    "(960, 540)"
+  ],
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "background_ai_disabled_during_samples": true,
+  "note": "Frame latency includes engine scheduling/frame cap and software GL variance. Do not convert to target-device FPS. Same 145 records retained in all three passes."
+}

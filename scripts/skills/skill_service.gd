@@ -54,7 +54,7 @@ func clear() -> void:
 	if is_instance_valid(vfx): vfx.clear()
 
 func tick(delta: float) -> void:
-	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")))
+	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")), bool(world.presentation_settings.get("limit_effect_count", false)))
 	local_runtime.tick(delta)
 	status.tick(delta)
 	summons.tick(delta)
