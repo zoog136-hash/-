@@ -87,6 +87,14 @@ python3 tests/test_auto_hunting523.py
 `tests/auto_hunting523_main_ui_test.gd`: 실제 Main의 메뉴 → AUTO 창 → 지역/복수 도착지 선택, 상태 결과, 지도·위치·재화·장비·AUTO·저장 바이트 보존을 검사한다.
 자체 경로 탐색이나 지역 이동 성공의 증거로 계산하지 않는다.
 
+로컬 최종 결과: 실제 Main/UI262검사, 팩 없는 Main/UI12검사, OpenGL1280×720 화면263검사 통과.
+87개 착지 선택은 실제 UI 신호로 검사했다. OS 포인터·터치 조작 시험은 아니다.
+현재 맵·세이브32검사, 동일 저장 중복 쓰기 방지, deferred-save gate도 오류0으로 통과했다.
+화면을 실제로 확인했으며 캡처는 로컬 검사 자료로만 보존했다.
+첫 Main/UI 실행의 시험용 stage 초상화 누락은 main의 정확한 blob으로 보충한 후 재검사했다.
+Godot 임포트/오디오 환경의 실패 시도와 최종 검사 영수증은 [validation.json](auto_hunting523/validation.json)에 기록했다.
+원격 CI는 로컬 성공과 별도이며 draft PR에서 상태를 확인해야 한다.
+
 공개 시트723/41,442프레임 SHA 무결성 검사 통과.
 옛 `--source-dir` 장부 검사는 `/workspace/autohunt-source/a1.zip` 부재로 실패했다.
 523 두 ZIP의 실제 SHA/전체CRC 검증과 구분한다.
