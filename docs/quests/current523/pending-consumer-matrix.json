@@ -2,8 +2,8 @@
   "source_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
   "counts_are_distinct_item_classes_not_quests_or_item_quantities": true,
   "baseline_pending_item_classes": 146,
-  "reviewed": 3,
-  "remaining": 143,
+  "reviewed": 4,
+  "remaining": 142,
   "original_constraints_waived": false,
   "contracts": {
     "contract_1": "Requires exact installed effect/equipment/currency owner and quest receipt contract; never bind by name",
@@ -13,17 +13,19 @@
     "contract_6": "PR245 catalog.source523 profiles+bindings.skills exact spell_id/row_sha256/row_json and common original_skill_state+consumable_state atomic owner are absent in this base; preserve source learning conditions",
     "contract_7": "Event box outputs thirteen skill-card packs; their actual skill acquisition consumers are absent; full producer/use/reconnect validation remains pending",
     "contract_8": "Persistent selectable-reward owner and output equipment receipt transaction require actual UI/selection/save validation; temporary held consumer view cannot own a pending selection",
-    "return239_verified": "Narrow PR247 bc0ce721 common movement/result consumer plus exact quest receipt bridge implemented; same verified aden_world only. See RETURN239.md and return239-validation.json."
+    "return239_verified": "Narrow PR247 bc0ce721 common movement/result consumer plus exact quest receipt bridge implemented; same verified aden_world only. See RETURN239.md and return239-validation.json.",
+    "hp233_verified": "Exact source20+2d6 and six joined source bonuses including AutoUseRegistrable=TrueFalse/1; current host heal/NPC modifiers/shared cooldown/receipt-selected debit and new native6940 gift ownership verified; see HP233.md."
   },
-  "prior_public_checkpoint": "76a721f0c6d2dba3aa2a9ab02ddb1567650d5777",
+  "prior_public_checkpoint": "bb480da497c4851baf811e9d74b04f6dfd8a679c",
   "reviewed_item_classes": [
     859,
     1281,
-    239
+    239,
+    233
   ],
-  "latest_runtime_evidence": "return239-validation.json",
+  "latest_runtime_evidence": "hp233-validation.json",
   "rows": [
-    {"item_class_id":233,"physical_stacks":72,"quantity":6940,"source_use_kind":"none","source_activation":"none","blocked_reasons":[],"quest_binding_reviewed":false,"contract":"contract_1"},
+    {"item_class_id":233,"physical_stacks":72,"quantity":6940,"source_use_kind":"source_hp_dice","source_activation":"six_source_joins_verified","blocked_reasons":[],"quest_binding_reviewed":true,"contract":"hp233_verified"},
     {"item_class_id":235,"physical_stacks":2,"quantity":2,"source_use_kind":"source_timed_buff","source_activation":"blocked","blocked_reasons":["unsupported_item_bonus:ConsumeTerritoryClassID","unsupported_buff_effect:MoveSpeedBonus","unsupported_buff_effect:AttackSpeedBonus","conditional_buff_effect:RunSpritePoint","unsupported_buff_effect:CastSpeedBonus","no_supported_buff_effects","unsupported_buff_priority_or_spell_level_rule"],"quest_binding_reviewed":false,"contract":"contract_2"},
     {"item_class_id":239,"physical_stacks":57,"quantity":212,"source_use_kind":"none","source_activation":"none","blocked_reasons":[],"quest_binding_reviewed":true,"contract":"return239_verified"},
     {"item_class_id":240,"physical_stacks":1,"quantity":1,"source_use_kind":"none","source_activation":"none","blocked_reasons":[],"quest_binding_reviewed":false,"contract":"contract_1"},

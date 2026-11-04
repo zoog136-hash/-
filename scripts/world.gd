@@ -4370,6 +4370,10 @@ func _use_quick_item(item_name: String) -> void:
 	hud.show_message("사용할 수 없는 퀵 아이템입니다")
 
 func _use_healing_item(item_name: String, heal_amount: int) -> void:
+	var native: Dictionary=_find_catalog_item_record(item_name)
+	if native.get("source_m_native_item",false) and int(native.get("source_item_class_id",0))==233:
+		preload("res://scripts/loot/quest_hp233_use.gd").use(self,native)
+		return
 	if not _patch523_item_allowed(): return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("%s이(가) 없습니다" % item_name)
@@ -4390,6 +4394,16 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
 	_update_hud()
+
+func _source_hp_potion_parameters(heal_amount: int) -> Dictionary:
+	# Existing host potion bonuses and shared cooldown, used by the verified
+	# source dice consumer without replacing the NPC healing adjustment/event.
+	var enhanced: int=maxi(1,heal_amount+_catalog_stat_sum("potionHealFlat")+_equipment_potion_heal_stat("물약 회복량")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_flat")+int(original_skills.stat("potionFlat") if original_skills!=null else 0))
+	enhanced+=int(round(float(heal_amount)*float(_catalog_stat_sum("potionHealPct")+_equipment_potion_heal_stat("물약 회복률")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_pct"))/100.0))
+	return {"heal_amount":maxi(1,enhanced),"cooldown_key":HP_POTION_COOLDOWN_KEY,"cooldown_seconds":HP_POTION_COOLDOWN_SECONDS*(1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)}
+
+func _source_hp_potion_committed(amount: int) -> void:
+	if amount>0:patch523_npc_spells.extensions.on_player_event("healed")
 
 func _return_to_spawn() -> void:
 	if patch523_npc_spells.blocks("CannotTeleport"): return
@@ -5248,6 +5262,7 @@ func _sanitize_quickslots_for_current_job() -> bool:
 		if entry.is_empty(): continue
 		if str(entry.get("kind", "")) == "item":
 			if not _quickslot_item_supported(str(entry.get("id",""))):
+				if quest_item_provider.retains_issued_reference(self,str(entry.get("id",""))):continue
 				quickslots[index] = {}
 				changed = true
 			continue

@@ -19,6 +19,7 @@ func run()->void:
 	check(QA.enter_game(world) and not world.quest_item_provider.ready,"real Main loads safely with the shared item pack absent")
 	check(not world.quest_service.item_grants.is_empty() and norm(world.quest_service.item_grants)==original.quest_state.item_grants,"unavailable provider does not discard native grant receipts")
 	check(norm(world.inventory)==original.inventory and norm(world.item_instances)==original.item_instances,"all real native and held ownership survives missing pack load")
+	check(norm(world.quickslots)==original.quickslots,"all50 saved source item references survive missing optional pack without permitting use")
 	var state: Dictionary=world.quest_service.export_state()
 	check(world.quest_service.validate_saved_state(state).is_empty(),"receipt validation does not depend on optional pack availability")
 	var qid: String=str(state.item_grants.keys()[0])
@@ -31,7 +32,7 @@ func run()->void:
 	check(not world.quest_service.validate_saved_state(invalid).is_empty(),"native grant without completion relation rejected")
 	var calls: Array[int]=[0]
 	world.equipment_collections.test_save_writer=func(_p: String,_d: Dictionary)->Error:calls[0]+=1;return ERR_FILE_CANT_WRITE
-	for item: int in [859,1281,239]:
+	for item: int in [859,1281,239,233]:
 		var key: String=""
 		for rows: Array in state.item_grants.values():
 			for receipt: Dictionary in rows:

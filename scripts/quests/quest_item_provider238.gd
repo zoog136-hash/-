@@ -5,8 +5,9 @@ const USE = preload("res://scripts/loot/patch523_item_use.gd")
 const GRANTS = preload("res://scripts/loot/patch523_item_inventory.gd")
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
 const HELD_USE = preload("res://scripts/quests/quest_held_use238.gd")
+const HP233 = preload("res://scripts/loot/quest_hp233_use.gd")
 const PIN = "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
-const REVIEWED_IDS: Array[int] = [859,1281,239]
+const REVIEWED_IDS: Array[int] = [859,1281,239,233]
 var definitions: Dictionary = {}
 var owner: WeakRef
 var ready: bool = false
@@ -27,6 +28,8 @@ func configure(world: Node) -> void:
 		var spec: Dictionary = definition.get("native_record",{}).get("source_use_spec",{})
 		if id==239:
 			if not world.consumable_service.has_method("use_owned_native_return"):continue
+		elif id==233:
+			if not HP233.metadata(D.variant_item(definition.get("native_record",{}),1)).get("ok",false):continue
 		elif spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","guaranteed_bag"]: continue
 		definitions[id]=definition
 		_register(world,definition.native_record,1)
@@ -44,6 +47,7 @@ func _register(world: Node, original: Dictionary, bless: int) -> void:
 	# never replace another supplier's metadata or widen the monster loot pool.
 	record["source_automation_catalog_only"]=true
 	record["quest238_definition_only"]=true
+	if int(record.get("source_item_class_id",0))==233 and HP233.metadata(record).get("auto_use_registrable",false):record["source_automation_catalog_only"]=false
 	world.catalog_db["아이템"].append(record)
 	world.catalog_item_by_source_id[str(record.sourceId)]=record
 
@@ -65,6 +69,15 @@ func resolve(reward: Dictionary) -> Dictionary:
 func handles(record: Dictionary) -> bool:
 	return ready and record.get("source_m_native_item",false) and definitions.has(int(record.get("source_item_class_id",0)))
 
+func retains_issued_reference(world: Node, item_key: String) -> bool:
+	# Preserve an unavailable saved reference; this never permits use, new
+	# registration, fallback identity or a reward grant when a pack is absent.
+	for quest_id: String in world.quest_service.item_grants:
+		if world.quest_service.claimed.get(quest_id)!=true:continue
+		for receipt: Dictionary in world.quest_service.item_grants[quest_id]:
+			if not receipt.has("origin") and receipt.inventory_key==item_key and receipt.get("pack_sha256")==PIN and REVIEWED_IDS.has(int(receipt.item_class_id)):return true
+	return false
+
 func try_use_inventory(world: Node, item_key: String) -> bool:
 	if try_use(world,world._find_catalog_item_record(item_key)):return true
 	for rows: Array in world.quest_service.item_grants.values():
@@ -76,6 +89,8 @@ func try_use_inventory(world: Node, item_key: String) -> bool:
 
 func try_use(world: Node, record: Dictionary) -> bool:
 	if not handles(record): return false
+	if world.quest_service.save_blocked:
+		world.hud.show_message("저장 보호 중 · 정상 저장 불러오기 필요");return true
 	if not world._patch523_item_allowed():return true
 	if world._item_locked(str(record.name),""):
 		world.hud.show_message("잠긴 원본 아이템은 소비하지 않습니다")
@@ -85,12 +100,13 @@ func try_use(world: Node, record: Dictionary) -> bool:
 	if int(record.get("source_item_class_id",0))==239:
 		var result: Dictionary=world.consumable_service.use_owned_native_return(str(record.name))
 		world.hud.show_message(str(result.get("message",result.get("reason","귀환 결과 확인 필요"))))
+	elif int(record.get("source_item_class_id",0))==233:handled=HP233.use(world,record)
 	else:handled=USE.try_use(world,record)
 	if FileAccess.get_sha256(world.save_path())!=before:
 		var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 		var aligned: bool=durable is Dictionary
 		if aligned:
-			for key: String in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns"]:
+			for key: String in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns","hp"]:
 				if durable.get(key)!=JSON.parse_string(JSON.stringify(world.get(key))):aligned=false;break
 		if not aligned:
 			# The unchanged shared consumer may report an error after the atomic

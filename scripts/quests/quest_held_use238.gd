@@ -4,6 +4,7 @@ extends RefCounted
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
 const USE = preload("res://scripts/loot/patch523_item_use.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
+const HP233 = preload("res://scripts/loot/quest_hp233_use.gd")
 
 class View extends Node:
 	const BASE508 = preload("res://scripts/lineagem_base508.gd")
@@ -28,6 +29,10 @@ class View extends Node:
 	func _format_seconds_short(value: float) -> String:return host._format_seconds_short(value)
 	func _effective_max_hp() -> int:return host._effective_max_hp()
 	func _effective_max_mp() -> int:return host._effective_max_mp()
+	func _patch523_item_allowed() -> bool:return host._patch523_item_allowed()
+	func _item_locked(key: String, id: String="") -> bool:return host._item_locked(key,id)
+	func _source_hp_potion_parameters(amount: int) -> Dictionary:return host._source_hp_potion_parameters(amount)
+	func _source_hp_potion_committed(amount: int) -> void:host._source_hp_potion_committed(amount)
 	func _refresh_speed_modifiers() -> void:host._refresh_speed_modifiers()
 	func _update_hud() -> void:host._update_hud()
 	func _find_catalog_item_record(name_value: String) -> Dictionary:return host._find_catalog_item_record(name_value)
@@ -35,7 +40,7 @@ class View extends Node:
 	func _save_game(_quiet: bool, overrides: Dictionary) -> Error:
 		if committed or not OWN.current(host,prepared):return ERR_INVALID_DATA
 		for key: String in overrides:
-			if key not in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns"]:return ERR_INVALID_PARAMETER
+			if key not in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns","hp"]:return ERR_INVALID_PARAMETER
 		var proposed: Variant=overrides.get("inventory")
 		if not proposed is Dictionary:return ERR_INVALID_DATA
 		var virtual_key: String=str(canonical.name)
@@ -52,6 +57,9 @@ class View extends Node:
 			if delta>0:payload.inventory[key]=int(payload.inventory.get(key,0))+delta
 		for key: String in ["active_item_buffs","item_use_cooldowns"]:
 			if overrides.has(key):payload[key]=overrides[key].duplicate(true)
+		if overrides.has("hp"):
+			if int(canonical.get("source_item_class_id",0))!=233 or not overrides.hp is int or overrides.hp<host.hp or overrides.hp>host._effective_max_hp():return ERR_INVALID_DATA
+			payload["hp"]=overrides.hp
 		# Persist the proven binding/use without converting or regranting the
 		# held inventory. Original grant quantity and receipt remain immutable.
 		var receipt: Dictionary=OWN.use_state(host,prepared,D.DATA_SHA)
@@ -75,6 +83,7 @@ class View extends Node:
 		host.inventory=payload.inventory;host.item_instances=payload.item_instances
 		if payload.has("active_item_buffs"):host.active_item_buffs=payload.active_item_buffs
 		if payload.has("item_use_cooldowns"):host.item_use_cooldowns=payload.item_use_cooldowns
+		if payload.has("hp"):host.hp=int(payload.hp)
 		host.quest_service.import_state(state)
 		host.deferred_save.cancel()
 		committed=true
@@ -89,7 +98,7 @@ static func perform(world: Node, prepared: Dictionary, canonical: Dictionary) ->
 	view.initial_inventory=view.inventory.duplicate(true);view.initial_instances=view.item_instances.duplicate(true)
 	view.active_item_buffs=world.active_item_buffs.duplicate(true);view.item_use_cooldowns=world.item_use_cooldowns.duplicate(true)
 	view.gold=world.gold;view.hp=world.hp;view.mp=world.mp
-	var handled: bool=USE.try_use(view,canonical)
+	var handled: bool=HP233.use(view,canonical) if int(canonical.get("source_item_class_id",0))==233 else USE.try_use(view,canonical)
 	var result: Dictionary={"handled":handled,"committed":view.committed,"uncertain":view.uncertain}
 	view.free()
 	return result
