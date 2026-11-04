@@ -9,6 +9,7 @@ const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd"
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ORIGINAL_SOURCE = preload("res://scripts/animation/original_source_preview.gd")
 var original_source_preview = ORIGINAL_SOURCE.new()
+var current523_identity_actor = preload("res://scripts/resources/current523_identity_actor.gd").new()
 var original_source_manifest: String = ""
 var source_visual_context: Dictionary = {}
 const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd")
@@ -88,6 +89,7 @@ func _ready() -> void:
 	original_source_preview.name = "OriginalSourceInspection"
 	add_child(original_source_preview)
 	add_child(preload("res://scripts/resources/current523_world_preview.gd").new())
+	add_child(current523_identity_actor)
 	base_move_speed = move_speed
 	motion.strike.connect(func(id: int) -> void: attack_strike.emit(id))
 	motion.cancelled.connect(func(id: int) -> void: attack_cancelled.emit(id))
@@ -232,6 +234,7 @@ func _refresh_visual_visibility() -> void:
 	var show_original: bool = transform_active and is_instance_valid(original_source_preview) and original_source_preview.installed()
 	var sample: Node = get_node_or_null("Current523EstimatedWorldPreview")
 	var estimated: bool = sample != null and sample.is_player_override_active()
+	estimated = estimated or (is_instance_valid(current523_identity_actor) and current523_identity_actor.is_player_override_active())
 	if is_instance_valid(class_sprite): class_sprite.visible = not transform_active and not show_spx and not estimated
 	if is_instance_valid(transform_sprite): transform_sprite.visible = transform_active and not show_original and not estimated
 	if is_instance_valid(spx_sprite): spx_sprite.visible = show_spx and not estimated
@@ -320,6 +323,7 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 	var previous_native_key: String = transform_profile.profile_id if transform_profile != null else ""
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
 	transform_profile.resource_path_hint = path
+	current523_identity_actor.configure(transform_profile.profile_id, source_visual_context)
 	# Reapplying the same native identity must not reset its pose/event timeline.
 	var selected: Dictionary = preload("res://scripts/lineagem_base508.gd").select_visual_key(transform_profile.profile_id, source_visual_context) if transform_profile.profile_id.begins_with("transform:m508:") else {}
 	var unchanged_native: bool = previous_native_key == transform_profile.profile_id and selected.get("status", "") == "selected" and int(selected.get("sprite_id", -2)) == previous_native_sprite and original_source_preview._manifest_path == original_source_manifest and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0)) == int(source_visual_context.get("source_weapon_type",0))
@@ -421,6 +425,7 @@ func set_source_weapon_visual(weapon: String) -> void:
 	var native_weapon:int=preload("res://scripts/animation/source_weapon_banks.gd").local_type(weapon)
 	source_visual_context["source_weapon_type"]=native_weapon
 	source_visual_context["local_weapon_type"]=weapon
+	current523_identity_actor.update_context(source_visual_context)
 	if original_source_preview.installed() and transform_profile != null and transform_profile.profile_id.begins_with("transform:m508:") and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0))!=native_weapon:
 		if original_source_preview.configure(transform_profile.profile_id,original_source_manifest,source_visual_context):
 			original_source_preview.advance_source(0.0,motion.state,motion.facing8,motion.sequence,motion.active)
@@ -455,6 +460,7 @@ func _direction_animation_name(direction_value: int) -> String:
 		_: return "dir_down"
 
 func clear_transform_visual() -> void:
+	current523_identity_actor.clear()
 	original_source_preview.clear()
 	transform_active = false
 	motion.profile = class_profile
@@ -462,6 +468,7 @@ func clear_transform_visual() -> void:
 	transform_sprite.stop()
 	transform_sprite.visible = false
 	class_sprite.visible = true
+	_refresh_visual_visibility()
 
 func set_equipment_speed_multipliers(move_multiplier: float, attack_multiplier: float) -> void:
 	equipment_move_speed_multiplier = clampf(move_multiplier, 0.5, 2.5)

@@ -40,7 +40,7 @@ func run() -> void:
 		while panel.installer.busy: await process_frame
 		check(not panel.choose.disabled and not panel.cancel.visible,"installer controls restored")
 		check(panel.previews.get_child_count() == 2,"two actual standard PNGs displayed after selection")
-		check(panel.status.text.contains("캐릭터 재생 미연결"),"raw SP2 storage remains explicitly separate")
+		check(panel.status.text.contains("정체 표시 팩은 아래에서 별도 선택"),"raw SP2 storage remains explicitly separate")
 		check(panel.status.text.contains("설치 완료"),"install result visible")
 	check(not PACK.latest_root().is_empty(),"verified version is committed on disk")
 	check(FileAccess.get_sha256(save_path) == before_save,"UI installation preserves original save bytes")

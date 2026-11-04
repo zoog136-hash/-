@@ -46,6 +46,7 @@ func _ready() -> void:
 	installer.progress.connect(func(done: int,total: int) -> void:
 		status.text = "523 원문·이미지 검사 중 %d / %d · 이전 팩 유지" % [done,total])
 	add_child(preload("res://scripts/ui/current523_sp2_viewer.gd").new())
+	add_child(preload("res://scripts/ui/current523_identity_settings.gd").new())
 
 func _show_images(path: String, newly_installed: bool) -> void:
 	for child: Node in previews.get_children():
@@ -63,7 +64,7 @@ func _show_images(path: String, newly_installed: bool) -> void:
 		preview.texture = texture
 		previews.add_child(preview)
 		loaded += 1
-	status.text = "523 PNG %d/2 표시 · SP2 원문 989개 검증 보관 · 캐릭터 재생 미연결" % loaded
+	status.text = "523 PNG %d/2 표시 · SP2 원문 989개 검증 보관 · 정체 표시 팩은 아래에서 별도 선택" % loaded
 	if loaded != 2: status.text = "523 이미지 누락·변경 · 다른 버전 이미지로 대체하지 않습니다."
 	elif newly_installed: status.text += " · 설치 완료, 재실행 후 사용"
 
