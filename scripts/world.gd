@@ -6214,6 +6214,9 @@ func _teleport_landing_clear(candidate: Vector2) -> bool:
 	return true
 
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
+	if growth.travel.enabled():
+		growth.travel.open({"kind":"job","name":str(skill.name)})
+		return false
 	if field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules() and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
 		hud.show_message("원본 규칙상 순간이동 제한 지역입니다")
 		return false

@@ -65,8 +65,8 @@ func run() -> void:
 	check(act("eva",1).ok and act("eva",2).ok,"Eva first two tiers now usable")
 	check(rt.bonus("magic_heal:percent")==10 and rt.bonus("potion_cooldown:percent")==20,"magic healing and potion cooldown use different channels")
 	before=rt.state.duplicate(true)
-	check(not act("eva",3).ok and rt.state==before,"teleport control remains blocked without a consumer")
-	check(not act("eva",4).ok,"known fourth-tier effect still requires third-tier ownership")
+	check(act("eva",3).ok and rt.bonus("teleport_control:flag")==1,"Eva third tier now enables remembered travel")
+	check(act("eva",4).ok,"fourth tier follows owned third-tier control")
 	own({"maphr":0});world.inventory["축복의 열쇠"]=100
 	check(act("maphr",1).ok and rt.bonus("low_hp_reduction:percent")==3,"Maphr interval nested bonus resolved")
 	check(rt.incoming_damage(100,false,false,300,1000)==97,"30 percent inclusive lowHP boundary")

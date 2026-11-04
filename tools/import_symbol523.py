@@ -34,6 +34,7 @@ ADAPTERS = {
     "CriticalMeleeDamage": ("melee_critical_damage:flat", 1),
     "CriticalRangeDamage": ("ranged_critical_damage:flat", 1),
     "CriticalMagicDamage": ("magic_critical_damage:flat", 1),
+    "TeleportControl": ("teleport_control:flag", 1),
 }
 
 

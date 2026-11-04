@@ -167,6 +167,8 @@ func _select(id: String) -> void:
 func _emblem() -> void:
 	var row: Dictionary = runtime.emblem(selected)
 	var p: Dictionary = runtime.progress(selected)
+	if selected=="eva":
+		_button("기억 장소 · 순간이동 조종",func() -> void: runtime.travel.open()).name="GrowthRememberedLocations"
 	var overview := HBoxContainer.new()
 	body.add_child(overview)
 	diagram = Diagram.new()
@@ -269,6 +271,7 @@ func _emblem() -> void:
 func _effect_text(effects: Dictionary) -> String:
 	var mapping: Dictionary = {"max_hp:flat":"HP","max_mp:flat":"MP","ac:flat":"AC","mr:flat":"MR","sp:flat":"SP","weight_bonus:flat":"무게","experience_bonus:percent":"경험치 %","potion_flat:flat":"물약 회복량","potion_percent:percent":"물약 회복률 %","damage_reduction:flat":"리덕션","potion_cooldown:percent":"물약 쿨타임 감소 %","blessing_consumption:percent":"축복 소모 감소 %","incoming_reduction:percent":"피해 감소 %","mp_regeneration:flat":"MP 회복","blessing_charge:percent":"축복 충전 %"}
 	mapping.merge({"magic_heal:percent":"회복 마법량 %","hp_drain:flat":"HP 흡수","life:flat":"생명","critical_reduction:flat":"치명타 리덕션","stunned_reduction:flat":"스턴 상태 리덕션","low_hp_reduction:percent":"HP 30% 이하 피해 감소 %","stun_hit:percent":"스턴 적중 %","stun_resistance:percent":"스턴 내성 %","fear_resistance:percent":"공포 내성 %","melee_critical_damage:flat":"근거리 치명타 대미지","ranged_critical_damage:flat":"원거리 치명타 대미지","magic_critical_damage:flat":"마법 치명타 대미지"})
+	mapping["teleport_control:flag"]="순간이동 조종"
 	var parts: Array[String] = []
 	for key: String in effects:
 		if float(effects[key]) != 0: parts.append("%s %+d" % [str(mapping.get(key,key)),int(effects[key])])

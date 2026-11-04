@@ -186,6 +186,9 @@ func cast(record: Dictionary) -> bool:
 	# they must not also accelerate the contact/presentation timeline.
 	skill["cast_time"] = float(skill.get("cast_time", .42))
 	var mode := str(skill.mode)
+	if mode=="teleport" and world.get("growth")!=null and world.growth.travel.enabled():
+		world.growth.travel.open({"kind":"original","id":str(record.id)})
+		return false # Selection has not cast or spent anything yet.
 	var target: TwilightMonster = null
 	if mode in ["attack", "status", "turn_undead"] and str(skill.get("shape", "single")) != "self_circle":
 		target = world._skill_target(float(skill.get("range", 240)))

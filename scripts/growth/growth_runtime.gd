@@ -3,7 +3,9 @@ extends RefCounted
 const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
 const DATA = "res://data/growth/lineage_growth.json"
 const Source523 = preload("res://scripts/growth/symbol_source523.gd")
+const Travel = preload("res://scripts/growth/symbol_travel.gd")
 var source523 = Source523.new()
+var travel = Travel.new()
 var world
 var development: bool = OS.is_debug_build() and "--growth-lab" in OS.get_cmdline_user_args()
 var lab: Dictionary = {}
@@ -43,6 +45,7 @@ func empty_state() -> Dictionary:
 
 func configure(host: Node) -> void:
 	world = host
+	travel.configure(self)
 	_rebuild()
 
 func seed_lab() -> void:
@@ -104,6 +107,8 @@ func validate(value: Variant) -> String:
 				if not seen_grades.has(prerequisite): return "절대 옵션 선행 등급 누락"
 		if p.stage < p.attempts or p.stage > p.attempts*3: return "문양 단계/횟수 불일치"
 	if not value.get("economy",{}) is Dictionary: return "성장 재화 이력 오류"
+	var travel_error: String=Travel.validate(value.get("teleport_bookmarks",[]))
+	if not travel_error.is_empty(): return travel_error
 	for amount: Variant in value.get("economy",{}).values():
 		if not integer(amount): return "성장 재화 이력 오류"
 	var unique: Array = []
@@ -158,7 +163,7 @@ func _rebuild() -> void:
 
 func _add_effects(effects: Dictionary) -> void:
 	for key: String in effects:
-		if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent","magic_heal:percent","hp_drain:flat","life:flat","critical_reduction:flat","stunned_reduction:flat","low_hp_reduction:percent","fear_resistance:percent"]:
+		if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent","magic_heal:percent","hp_drain:flat","life:flat","critical_reduction:flat","stunned_reduction:flat","low_hp_reduction:percent","fear_resistance:percent","teleport_control:flag"]:
 			totals[key] = float(totals.get(key,0))+float(effects[key])
 
 func bonus(key: String) -> float:
