@@ -35,6 +35,10 @@ static func record(key: String) -> Dictionary:
 	var value: Variant = (_data.get("catalog", {}) as Dictionary).get(key, {})
 	return value as Dictionary if value is Dictionary else {}
 
+static func catalog_texture_available(key: String) -> bool:
+	var info: Dictionary = record(key)
+	return not info.is_empty() and _texture(str(info.get("atlas", ""))) != null
+
 static func _safe(path: String) -> bool:
 	return path.begins_with("res://assets/") and not path.contains("..") and not path.contains("\\")
 
@@ -44,10 +48,14 @@ static func _texture(path: String) -> Texture2D:
 		_texture_order.erase(path)
 		_texture_order.append(path)
 		return _textures[path] as Texture2D
-	if not ResourceLoader.exists(path):
-		_missing[path] = "missing texture"
-		return null
-	var result: Texture2D = load(path) as Texture2D
+	var result: Texture2D = null
+	if path.begins_with("res://assets/catalog_motion/"):
+		result = preload("res://scripts/resources/private_catalog_motion.gd").texture(path)
+	if result == null:
+		if not ResourceLoader.exists(path):
+			_missing[path] = "missing texture"
+			return null
+		result = load(path) as Texture2D
 	if result == null: return null
 	_textures[path] = result
 	_texture_order.append(path)

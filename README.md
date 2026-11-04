@@ -6,6 +6,7 @@
 
 ## 프로젝트 실행
 - Godot 4.7.2에서 `project.godot`을 열고 `Main.tscn`을 실행합니다.
+- 구형 호환 외형 팩을 별도로 설치할 때는 선택적으로 `CatalogPackSetup.tscn`을 실행합니다. 일반 시작은 이 팩을 강제하지 않습니다. 이 설치기는 현행 M523 원본팩의 설치·검증을 대신하지 않습니다.
 - Windows 휴대용 실행 ZIP은 별도의 GitHub Actions 검증 산출물에 있으며, 저장소 소스와 별개입니다.
 - Android ARM64 디버그 테스트 APK는 `export_presets.cfg`와 `.github/workflows/twilight-android-playtest-apk.yml`을 사용하여 생성합니다. 직접 APK를 실행하면 모바일 편집기 경고 화면을 거치지 않습니다.
 - 주요 키: WASD/방향키 이동, Space 공격, T 자동사냥, I 인벤토리, M 메뉴, Tab 지도, F5 저장, F9 불러오기.

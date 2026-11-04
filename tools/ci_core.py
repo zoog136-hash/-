@@ -80,7 +80,7 @@ def ensure_objects(root: Path, objects: list[str]):
                        input='\n'.join(missing)+'\n', text=True, check=True,
                        stdout=subprocess.DEVNULL)
 
-def stage(root: Path, destination: Path) -> dict:
+def stage(root: Path, destination: Path, external_catalog: bool = False) -> dict:
     if destination.exists() and {p.name for p in destination.iterdir()} != {'.godot'}:
         raise ValueError('stage must be new; refusing to overwrite an existing project')
     tree = {}
@@ -98,10 +98,21 @@ def stage(root: Path, destination: Path) -> dict:
             return p.read_bytes()
         return git(root, 'show', 'HEAD:' + path)
     selected = {'project.godot', 'Main.tscn'}
+    startup = re.search(r'(?m)^run/main_scene="res://([^"\n]+)"', read('project.godot').decode())
+    if startup:
+        path = startup.group(1)
+        if '..' in PurePosixPath(path).parts or PurePosixPath(path).is_absolute() or '\\' in path:
+            raise ValueError('unsafe startup scene: ' + path)
+        if not exists(path):
+            raise FileNotFoundError('required startup scene ' + path)
+        selected.add(path)
     selected.update(str(p.relative_to(root)) for folder in ['scripts', 'data', 'scenes', 'addons', 'shaders']
                     for p in (root / folder).rglob('*') if p.is_file())
     selected.update('tests/' + name + '.gd' for name, _ in CHECKS)
     selected.add('tests/qa_class_selection.gd')
+    if external_catalog:
+        selected.add('tests/private_catalog_main_test.gd')
+        selected.add('CatalogPackSetup.tscn')
     # Code/scenes are graph roots. Data is copied to retain dynamic catalog
     # access, but only catalogs referenced by code seed additional art.
     queue = [p for p in selected if not p.startswith('data/')]
@@ -168,6 +179,11 @@ def stage(root: Path, destination: Path) -> dict:
                 deferred.append({'path':path, 'git_blob':tree.get(path),
                                  'reason':'inactive actor; full animation audit remains manual'})
         scope['paths'] = sorted(live)
+    # Check the complete reference graph first. This explicit variant then
+    # removes only catalog atlas inputs so the installer/World test cannot
+    # accidentally pass by consuming committed textures instead of the ZIP.
+    external_paths = sorted(p for p in selected if p.startswith('assets/catalog_motion/')) if external_catalog else []
+    selected.difference_update(external_paths)
     print('CORE_RESOURCE_GRAPH',len(selected),'files; metadata',len(scanned),
           'inactive actor imports deferred',len(deferred), flush=True)
     ensure_objects(root, sorted({tree[p] for p in selected if p in tree and not (root/p).is_file()}))
@@ -202,7 +218,7 @@ def stage(root: Path, destination: Path) -> dict:
         entry = next(r for r in receipts if r['path']=='project.godot')
         entry['source_sha256'] = entry['sha256']
         entry['stage_sha256'] = hashlib.sha256(project.read_bytes()).hexdigest()
-    result = {'revision':git(root,'rev-parse','HEAD').decode().strip(), 'files':receipts, 'validation_overrides':overrides, 'current_actor_scope':scope,
+    result = {'revision':git(root,'rev-parse','HEAD').decode().strip(), 'files':receipts, 'external_catalog_paths':external_paths, 'validation_overrides':overrides, 'current_actor_scope':scope,
               'deferred_actor_imports':deferred, 'guarded_or_dynamic_literals':sorted(unresolved),
               'scope':'production Main core; not full art/gameplay acceptance'}
     (destination / 'core-resource-paths.json').write_text(json.dumps(result, indent=2))
@@ -227,10 +243,11 @@ def main():
     parser.add_argument('--godot', required=True)
     parser.add_argument('--logs', type=Path, required=True)
     parser.add_argument('--prepare-only', action='store_true')
+    parser.add_argument('--catalog-pack', type=Path, help='Validate optional compatibility setup and real Main with embedded catalog absent and this verified ZIP installed')
     args = parser.parse_args()
     root, target, logs = args.root.resolve(), args.stage.resolve(), args.logs.resolve()
     logs.mkdir(parents=True, exist_ok=True)
-    manifest = stage(root, target)
+    manifest = stage(root, target, external_catalog=args.catalog_pack is not None)
     (logs / 'resource-paths.json').write_text(json.dumps(manifest, indent=2))
     print('CORE_RESOURCE_PATHS', len(manifest['files']), sum(r['bytes'] for r in manifest['files']), flush=True)
     if args.prepare_only:
@@ -241,6 +258,10 @@ def main():
     with tempfile.TemporaryDirectory(prefix='twilight-core-') as profile:
         env.update(XDG_DATA_HOME=profile + '/data', XDG_CONFIG_HOME=profile + '/config', XDG_CACHE_HOME=profile + '/cache')
         run([args.godot, '--headless', '--path', str(target), '--editor', '--import', '--quit'], target, logs/'import.txt', env, 1800)
+        if args.catalog_pack is not None:
+            env['TWILIGHT_PRIVATE_TEST_ROOT'] = profile
+            run([args.godot, '--headless', '--path', str(target), '--script', 'res://tests/private_catalog_main_test.gd', '--', str(args.catalog_pack.resolve())],
+                target, logs/'private_catalog_main_test.txt', env, 240, 'PRIVATE_CATALOG_MAIN_RESULT')
         for name, user_args in CHECKS:
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:

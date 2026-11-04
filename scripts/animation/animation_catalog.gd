@@ -47,7 +47,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	if not settings.has("attack_hit_ratio"): result.attack_hit_ratio = PROFILE.hit_ratio(result.motion_style)
 	if not settings.has("movement_fps"): result.movement_fps = 7.0 if result.motion_style == "heavy" else 9.0
 	var authored: Dictionary = VISUALS.record(key)
-	if result.frames_path.is_empty() and not authored.is_empty() and ResourceLoader.exists(str(authored.get("atlas", ""))):
+	if result.frames_path.is_empty() and not authored.is_empty() and VISUALS.catalog_texture_available(key):
 		# Keep gameplay hit ratios and attack clocks. Only pose/anchor metadata
 		# belongs to the generated local atlas.
 		result.frames_path = str(authored.atlas)
