@@ -3329,6 +3329,11 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 	consumable_service.call("apply_bless_scroll", scroll_name, target_reference)
 	_update_hud()
 
+func stage_source_item_grants(grants:Array,supplier:Dictionary)->Dictionary:
+	var service:Variant=EXPEDITION_LOCAL.REWARD_BRIDGE.supplier()
+	if service==null:return {"ok":false,"error":"원본 공급 소비자 미설치 · 기존 보유 보존"}
+	return service.stage(self,grants,supplier)
+
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
@@ -3342,7 +3347,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	# only after an atomic, exact-ID native handoff. Missing consumers preserve them.
 	var expedition_use:Dictionary=expedition_local.inventory_activation(item_name)
 	if expedition_use.get("handled",false):
-		hud.show_message(str(expedition_use.get("message",expedition_use.get("error","탐험 보상 확인 필요"))))
+		if expedition_use.has("message") or expedition_use.has("error"):hud.show_message(str(expedition_use.get("message",expedition_use.get("error",""))))
 		return
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
@@ -4032,24 +4037,29 @@ func _buy_shop_item(item_name: String, _ui_price: int) -> void:
 	_buy_shop_bulk(item_name, 1)
 
 func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> void:
+	var source_restriction:String=expedition_local.transfer_restriction(item_name,"sell")
+	if not source_restriction.is_empty():hud.show_message(source_restriction);return
 	if _item_locked(item_name,instance_id):
 		hud.show_message("잠긴 아이템은 판매할 수 없습니다")
 		return
 	# Validate the current inventory, bound flags and exact instance ID at
 	# commit time. The UI never submits the price or enhancement bonus.
 	_sync_item_instances()
-	var records: Dictionary = loot_catalog.get("by_name", {})
+	var records: Dictionary = _craft_item_index()
 	var quote: Dictionary = LOCAL_BUYBACK.quote(item_name,quantity,instance_id,inventory,records,item_instances,equipped_items,gold)
 	if not bool(quote.get("ok",false)):
 		hud.show_message(str(quote.get("reason","매입할 수 없습니다")))
 		return
-	var transaction: Dictionary = LOCAL_BUYBACK.apply(quote,inventory,item_instances,gold)
+	var staged_inventory:Dictionary=inventory.duplicate(true)
+	var staged_instances:Dictionary=item_instances.duplicate(true)
+	var transaction: Dictionary = LOCAL_BUYBACK.apply(quote,staged_inventory,staged_instances,gold)
 	if not bool(transaction.get("ok",false)):
 		hud.show_message(str(transaction.get("reason","거래에 실패했습니다")))
 		return
-	gold = int(transaction["wallet"])
+	if _save_game(true,{"inventory":staged_inventory,"item_instances":staged_instances,"gold":int(transaction.wallet)})!=OK:
+		hud.show_message("판매 저장 실패 · 아이템·재화 보존");return
+	inventory=staged_inventory;item_instances=staged_instances;gold = int(transaction["wallet"])
 	_update_hud()
-	_request_deferred_save()
 	hud.refresh_inventory(inventory)
 	hud.append_log("아이템 매입 · %s ×%d (+%d 아데나)" % [item_name,quantity,int(transaction["payment"])])
 	hud.show_message("매입 완료 · %d 아데나" % int(transaction["payment"]))
@@ -4136,7 +4146,9 @@ func _buy_reviewed_shop_item(vendor_id: String, item_name: String, quantity: int
 
 
 func _craft_item_index() -> Dictionary:
-	return loot_catalog.get("by_name", {}) as Dictionary
+	var result:Dictionary=(loot_catalog.get("by_name", {}) as Dictionary).duplicate()
+	result.merge(expedition_local.received_material_records(),false)
+	return result
 
 func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()
@@ -4149,29 +4161,29 @@ func _craft_requested(recipe_id: String, batches: int) -> void:
 	# Revalidate authoritative ingredients, wallet, weight and physical IDs.
 	# The service stages mutations and commits only if every check succeeds.
 	_sync_item_instances()
+	var staged_inventory:Dictionary=inventory.duplicate(true)
+	var staged_instances:Dictionary=item_instances.duplicate(true)
 	var transaction: Dictionary = crafting.execute(
-		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
+		recipe_id, batches, staged_inventory, gold, _craft_item_index(), staged_instances,
 		equipped_items, _inventory_total_weight(), _carrying_capacity(), next_item_instance_id
 	)
 	if not bool(transaction.get("ok", false)):
 		hud.show_message(str(transaction.get("reason", "제작에 실패했습니다")))
 		return
-	gold = int(transaction["gold_after"])
-	next_item_instance_id = int(transaction["next_instance_id"])
-	var output_name: String = str(transaction["result_name"])
-	var output_quantity: int = int(transaction["result_quantity"])
-	crafting_log.append({
-		"recipe_id":recipe_id, "batch":batches, "output":output_name,
-		"quantity":output_quantity, "gold":int(transaction["cost"]),
-		"at":Time.get_unix_time_from_system()
-	})
-	if crafting_log.size() > 200:
-		crafting_log.pop_front()
+	var staged_log:Array=crafting_log.duplicate(true)
+	var output_name:String=str(transaction.result_name)
+	var output_quantity:int=int(transaction.result_quantity)
+	staged_log.append({"recipe_id":recipe_id,"batch":batches,"output":output_name,"quantity":output_quantity,"gold":int(transaction.cost),"at":Time.get_unix_time_from_system()})
+	if staged_log.size()>200:staged_log.pop_front()
+	if _save_game(true,{"inventory":staged_inventory,"item_instances":staged_instances,"gold":int(transaction.gold_after),"next_item_instance_id":int(transaction.next_instance_id),"crafting_log":staged_log})!=OK:
+		hud.show_message("제작 저장 실패 · 재료·결과·재화 보존")
+		return
+	inventory=staged_inventory;item_instances=staged_instances;gold=int(transaction.gold_after);next_item_instance_id=int(transaction.next_instance_id)
+	crafting_log.assign(staged_log)
 	hud.refresh_inventory(inventory)
 	hud.append_log("제작 완료 · %s ×%d" % [output_name,output_quantity])
 	hud.show_message("제작 완료 · %s ×%d" % [output_name,output_quantity])
 	_update_hud()
-	_save_game(true)
 	if hud.has_method("open_crafting"):
 		hud.call("open_crafting")
 
@@ -4205,14 +4217,19 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	if record.is_empty() or int(quantity) < 1 or int(quantity) > 99:
 		hud.show_message("창고 아이템 또는 수량이 유효하지 않습니다")
 		return
+	var source_restriction:String=expedition_local.transfer_restriction(item_name,direction)
+	if not source_restriction.is_empty() or _item_locked(item_name,instance_id):hud.show_message(source_restriction if not source_restriction.is_empty() else "잠긴 아이템은 이동할 수 없습니다");return
 	_sync_item_instances()
+	var staged_inventory:Dictionary=inventory.duplicate(true)
+	var staged_instances:Dictionary=item_instances.duplicate(true)
+	var staged_warehouse=LOCAL_WAREHOUSE.new();staged_warehouse.stacks=warehouse.stacks.duplicate(true);staged_warehouse.instances=warehouse.instances.duplicate(true)
 	var is_equipment: bool = _enhancement_kind_for_record(record) != ""
 	var result: Dictionary = {}
 	if direction == "deposit":
-		result = warehouse.store(item_name,quantity,instance_id,inventory,item_instances,equipped_items,is_equipment)
+		result = staged_warehouse.store(item_name,quantity,instance_id,staged_inventory,staged_instances,equipped_items,is_equipment)
 	elif direction == "withdraw":
-		result = warehouse.retrieve(
-			item_name,quantity,instance_id,inventory,item_instances,is_equipment,
+		result = staged_warehouse.retrieve(
+			item_name,quantity,instance_id,staged_inventory,staged_instances,is_equipment,
 			_inventory_total_weight(),_carrying_capacity(),maxi(0,int(item_weight_index.get(item_name,3)))
 		)
 	else:
@@ -4221,11 +4238,10 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	if not bool(result.get("ok",false)):
 		hud.show_message(str(result.get("reason","창고 이용에 실패했습니다")))
 		return
-	# Physical instance IDs and their enchant/element/custom-record metadata
-	# are moved, not re-created. The original save schema is extended only
-	# with an optional warehouse field (legacy saves default to empty).
+	if _save_game(true,{"inventory":staged_inventory,"item_instances":staged_instances,"warehouse":staged_warehouse.snapshot()})!=OK:
+		hud.show_message("창고 저장 실패 · 소지품·창고 보존");return
+	inventory=staged_inventory;item_instances=staged_instances;warehouse.stacks=staged_warehouse.stacks;warehouse.instances=staged_warehouse.instances
 	_update_hud()
-	_request_deferred_save()
 	hud.append_log("창고 %s · %s ×%d" % ["보관" if direction == "deposit" else "찾기",item_name,quantity])
 	hud.show_message("창고 이용 완료")
 	if hud.has_method("refresh_service"):
@@ -4430,7 +4446,9 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth",EXPEDITION_LOCAL.KEY]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","active_item_buffs","item_use_cooldowns","crafting_log","next_item_instance_id","warehouse","source_shop",EXPEDITION_LOCAL.KEY]: return ERR_INVALID_PARAMETER
+	var peer_shop:Variant=EXPEDITION_LOCAL.REWARD_BRIDGE.shop(self)
+	if collection_override.has("source_shop") and peer_shop==null:return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4507,6 +4525,13 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	data["source_npc_state"]=SOURCE_NPCS.export_state()
 	if expedition_local.namespace_present:
 		data[EXPEDITION_LOCAL.KEY] = expedition_local.export_state()
+	if peer_shop!=null:
+		var peer_state:Dictionary=collection_override.get("source_shop",peer_shop.export_state())
+		if not peer_shop.validate(peer_state).is_empty():return ERR_UNAVAILABLE
+		if FileAccess.file_exists(save_path()):
+			var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
+			if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
+		data["source_shop"]=peer_state.duplicate(true)
 	if not SOURCE_NPCS.validate_state(data.source_npc_state).is_empty():return ERR_UNAVAILABLE
 	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
 	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
@@ -4575,6 +4600,10 @@ func _load_game(quiet: bool) -> void:
 		expedition_local.save_blocked = true
 		hud.show_message(expedition_error)
 		return
+	var peer_shop:Variant=EXPEDITION_LOCAL.REWARD_BRIDGE.shop(self)
+	if peer_shop!=null:
+		var peer_error:String=peer_shop.check_load(data)
+		if not peer_error.is_empty():peer_shop.save_blocked=true;hud.show_message(peer_error);return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4728,6 +4757,7 @@ func _load_game(quiet: bool) -> void:
 		migrated_save_path=prior_save_path
 		return
 	expedition_local.restore(data)
+	if peer_shop!=null:peer_shop.accept_load(data)
 	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
 	SOURCE_MAP84.accept_layouts(data)
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))

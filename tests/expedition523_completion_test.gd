@@ -397,12 +397,13 @@ func run() -> void:
 	var gift_record:Dictionary=world._find_catalog_item_record(gift_name)
 	check(gift_record.has("IsStorable") and gift_record.IsStorable==catalog.record("ItemClass",859).IsStorable and gift_record.tradeable==catalog.record("ItemClass",859).IsTradable,"native storage/trade restrictions propagate to actual inventory record")
 	unchanged=snapshot();disk=FileAccess.get_sha256(path)
+	world.expedition_local.reward_item_provider=NativeConsumerContract.new()
 	world._on_inventory_item_activated(gift_name)
 	check(snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"missing shared consumer preserves gift instead of attempting completion box")
 	var ordinary:Dictionary=world.expedition_local.inventory_activation("체력 회복제")
 	check(not ordinary.handled,"unrelated ordinary inventory route unchanged")
 	var provider:=NativeConsumerContract.new()
-	var native:Dictionary={"name":"원본 소비자 계약 검사용 버프","source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":859,"sourceId":"m523:item:859","sourceUrl":"","slot":"material","type":"카드","grade":"희귀","source_m_native_item":true,"source_bless_raw":1,"source_use_spec":{"kind":"source_timed_buff","activation_status":"unrestricted"}}
+	var native:Dictionary={"name":"원본 소비자 계약 검사용 버프","source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":859,"sourceId":"m523:item:859","sourceUrl":"","slot":"material","type":"카드","grade":"희귀","source_m_native_item":true,"source_test_item":false,"source_bless_raw":1,"source_use_spec":{"kind":"source_timed_buff","activation_status":"unrestricted"}}
 	provider.document.item_definitions["859"]={"original_item":catalog.record("ItemClass",859).duplicate(true),"native_record":native.duplicate(true)}
 	world.catalog_db["아이템"].append(native.duplicate(true));world._index_catalog_item_sources()
 	world.expedition_local.reward_item_provider=provider
@@ -423,21 +424,21 @@ func run() -> void:
 	world._on_inventory_item_activated(str(native.name))
 	check(snapshot()==unchanged,"missing consumer after reload cannot fall into name-based legacy use")
 	world.expedition_local.reward_item_provider=provider
-	check(not world.expedition_local.inventory_activation(str(native.name)).handled,"verified native item re-enters existing host consumer pipeline")
+	check(world.expedition_local.inventory_activation(str(native.name)).handled,"native item is protected until its real consumer executes")
 	# Wallet identity is supplied by the shared provider, never inferred from a label.
 	var coin_key:String="3242:1:0"
 	world.expedition_local.state.storage[coin_key]=3
 	check(world.expedition_local.withdraw(coin_key,3).ok,"source currency receipt retains typed identity")
 	var coin_name:String=world.expedition_local.state.issued[coin_key]
-	var coin:Dictionary=native.duplicate(true);coin.name="원본 소비자 계약 검사용 주화";coin.sourceId="m523:item:3242";coin.source_item_class_id=3242;coin.contract_wallet="변신 코인";coin.source_use_spec={}
+	var coin:Dictionary=native.duplicate(true);coin.name="원본 소비자 계약 검사용 주화";coin.sourceId="m523:item:3242";coin.source_item_class_id=3242;coin.contract_wallet="변신 제작 코인";coin.source_use_spec={}
 	provider.document.item_definitions["3242"]={"original_item":catalog.record("ItemClass",3242).duplicate(true),"native_record":coin.duplicate(true)}
 	world.catalog_db["아이템"].append(coin.duplicate(true));world._index_catalog_item_sources()
-	var coin_before:int=int(world.inventory.get("변신 코인",0))
+	var coin_before:int=int(world.inventory.get("변신 제작 코인",0))
 	unchanged=snapshot();disk=FileAccess.get_sha256(path);world.equipment_collections.save_blocked=true
 	check(not world.expedition_local.inventory_activation(coin_name).ok and snapshot()==unchanged and FileAccess.get_sha256(path)==disk,"failed wallet handoff preserves source stack and existing wallet")
 	world.equipment_collections.save_blocked=false
 	world._on_inventory_item_activated(coin_name)
-	check(not world.inventory.has(coin_name) and int(world.inventory.get("변신 코인",0))==coin_before+3,"source currency transfers exact quantity to provider wallet without exchange")
+	check(not world.inventory.has(coin_name) and int(world.inventory.get("변신 제작 코인",0))==coin_before+3,"source currency transfers exact quantity to provider wallet without exchange")
 	unchanged=snapshot();world._on_inventory_item_activated(coin_name)
 	check(snapshot()==unchanged,"repeated source currency activation cannot duplicate wallet credit")
 	world.expedition_local.reward_item_provider=null

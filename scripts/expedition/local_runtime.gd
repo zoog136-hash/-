@@ -1,5 +1,6 @@
 extends "res://scripts/expedition/legacy_runtime.gd"
 
+const REWARD_BRIDGE=preload("res://scripts/expedition/reward_bridge.gd")
 const REWARD_CARDS=preload("res://scripts/expedition/reward_cards.gd")
 const DISPATCH=preload("res://scripts/expedition/dispatch_rules.gd")
 const MODEL = preload("res://scripts/expedition/estimated_simulation.gd")
@@ -8,6 +9,7 @@ var clock: Callable
 var migration_backup_pending: bool = false
 var last_error: String = ""
 var reward_item_provider: Variant = null # Optional shared native-item adapter; defaults to the host loader.
+var reward_recipients:Dictionary={} # Optional actual consumer instances; never serialized.
 
 func _init() -> void:
 	random.randomize()
@@ -435,27 +437,44 @@ func _reward_provider() -> Variant:
 	if world==null:return null
 	var constants:Dictionary=world.get_script().get_script_constant_map()
 	var loot:Variant=constants.get("LOOT_DROP")
-	if loot==null or not loot is Script:return null
-	return loot.get_script_constant_map().get("PATCH523_DROPS")
+	if loot!=null and loot is Script:
+		var registered:Variant=loot.get_script_constant_map().get("PATCH523_DROPS")
+		if registered!=null:return registered
+	return REWARD_BRIDGE.provider()
 
 func _native_target(key:String) -> Dictionary:
 	if world==null or not _valid_loot({key:1}) or not world.get_expedition_catalog().ready():return _fail("원본 탐험 자료를 확인해야 합니다.")
 	var parts:PackedStringArray=key.split(":")
 	if int(parts[2])!=0:return _fail("강화된 보상은 전용 아이템 기능 연결이 필요합니다.")
-	var provider:Variant=_reward_provider()
-	if provider==null:return _fail("이 보상의 전용 사용 기능이 아직 연결되지 않았습니다. 아이템은 보존됩니다.")
-	var definition:Dictionary=provider.data().get("item_definitions",{}).get(parts[0],{})
 	var source:Dictionary=world.get_expedition_catalog().record("ItemClass",int(parts[0]))
+	var restriction:String=REWARD_BRIDGE.protected_reason(source)
+	if not restriction.is_empty():return _fail(restriction)
+	var existing:Dictionary=REWARD_BRIDGE.existing_target(world,source,int(parts[1]),int(parts[2]))
+	if not existing.is_empty():return existing
+	var material:Dictionary=REWARD_BRIDGE.registered_material_target(world,source,int(parts[1]),int(parts[2]),reward_recipients)
+	if not material.is_empty():return material
+	var provider:Variant=_reward_provider()
+	if provider==null:return _fail("이 보상의 전용 소비자/정체 계약이 아직 연결되지 않았습니다. 아이템은 보존됩니다.")
+	var definition:Dictionary=REWARD_BRIDGE.definition(provider,parts[0])
 	if definition.get("original_item",{})!=source:return _fail("보상과 소비자의 원본 아이템 정의가 다릅니다. 아이템은 보존됩니다.")
-	var base:Dictionary=definition.get("native_record",{})
-	var target:Dictionary=provider.variant_item(base,int(parts[1]))
-	if target.is_empty() or not target.get("source_m_native_item",false) or int(target.get("source_item_class_id",0))!=int(parts[0]) or target.get("source_snapshot")!="patch523" or int(target.get("source_bless_raw",1))!=int(parts[1]) or provider.equipment(target):return _fail("이 보상의 전용 소비자 연결을 확인해야 합니다.")
+	var target:Dictionary=provider.variant_item(definition.get("native_record",{}),int(parts[1]))
+	if target.is_empty() or target.get("source_test_item",true) or not target.get("source_m_native_item",false) or int(target.get("source_item_class_id",0))!=int(parts[0]) or target.get("source_snapshot")!="patch523" or int(target.get("source_bless_raw",1))!=int(parts[1]) or provider.equipment(target):return _fail("이 보상의 전용 소비자 연결을 확인해야 합니다.")
+	var action:Dictionary=target
+	var consumer:Variant=REWARD_BRIDGE.consumer()
+	if REWARD_BRIDGE.exposes(consumer,"action_record"):action=consumer.action_record(world,target)
+	var spec:Dictionary=action.get("source_use_spec",{})
+	var use_ready:bool=spec.get("activation_status")=="unrestricted" and spec.get("kind") in ["source_timed_buff","source_mp_dice","guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward"]
+	var receiver:String=REWARD_BRIDGE.recipient(world,target,source,reward_recipients)
+	if not use_ready and receiver.is_empty():return _fail("원본 사용 조건 또는 재료 소비자가 미연결입니다. 아이템은 보존됩니다.")
 	var registered:Dictionary=world._find_catalog_item_record(str(target.get("name","")))
+	if registered.is_empty() and REWARD_BRIDGE.consumer()!=null:
+		# Register only this verified reward definition, never the other PR's loot pool.
+		var conflicts:Array=world.catalog_db.get("아이템",[]).filter(func(r:Dictionary)->bool:return r.get("name")==target.name or r.get("sourceId")==target.sourceId)
+		if not conflicts.is_empty():return _fail("보상 카탈로그 정체 충돌 · 기존 정의 보존")
+		world.catalog_db["아이템"].append(target.duplicate(true));world._index_catalog_item_sources()
+		registered=world._find_catalog_item_record(str(target.name))
 	if not provider.matches(registered,target):return _fail("보상의 원본 소비자가 설치·등록되지 않았습니다. 아이템은 보존됩니다.")
-	var wallet:String=provider.currency_identity_name(target)
-	var spec:Dictionary=target.get("source_use_spec",{})
-	if wallet.is_empty() and (spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["fixed_card","source_timed_buff","source_mp_dice","guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]):return _fail("이 보상의 원본 사용 조건은 전용 기능에서 확인해야 합니다. 아이템은 보존됩니다.")
-	return {"ok":true,"record":target,"wallet":wallet}
+	return {"ok":true,"record":target,"wallet":"","kind":"native" if use_ready else "native_material","recipient":receiver}
 
 func _inventory_handoff(key:String,item_name:String) -> Dictionary:
 	var target:Dictionary=_native_target(key)
@@ -467,13 +486,27 @@ func _inventory_handoff(key:String,item_name:String) -> Dictionary:
 	if destination==item_name:return _fail("보상 소비자 정체가 중복되어 연결을 보류합니다.")
 	var next:Dictionary=state.duplicate(true)
 	var bag:Dictionary=world.inventory.duplicate(true)
-	bag.erase(item_name)
 	var overrides:Dictionary={"inventory":bag}
-	if destination=="아데나":
+	if target.get("kind")=="native" and REWARD_BRIDGE.supplier()!=null:
+		# The supplier stages a complete candidate from the current live baseline.
+		# Debit this receipt from that candidate, then commit its output and our
+		# ledger together; never merge it over an independently debited inventory.
+		var parts:PackedStringArray=key.split(":")
+		var staged:Dictionary=world.stage_source_item_grants([{"item_class_id":int(parts[0]),"amount":amount,"bless_raw":int(parts[1]),"enchant":int(parts[2])}],{"kind":"expedition523_receipt","source_snapshot":"patch523","receipt_key":key,"revision":int(next.revision)+1})
+		if not staged.get("ok",false):return staged
+		overrides=staged.overrides
+		bag=overrides.inventory
+		if int(bag.get(item_name,0))!=amount:return _fail("보상 후보의 원본 소지 수량 불일치 · 아이템 보존")
+		bag.erase(item_name)
+		if not next.has("native_handoffs"):next.native_handoffs={}
+		next.native_handoffs[destination]=key
+	elif destination=="아데나":
 		if int(world.gold)>MAX_INTEGER-amount:return _fail("보상 재화의 저장 범위를 초과합니다.")
+		bag.erase(item_name)
 		overrides.gold=int(world.gold)+amount
 	else:
 		if int(bag.get(destination,0))>MAX_INTEGER-amount:return _fail("보상 수량의 저장 범위를 초과합니다.")
+		bag.erase(item_name)
 		bag[destination]=int(bag.get(destination,0))+amount
 		if str(target.wallet).is_empty():
 			if not next.has("native_handoffs"):next.native_handoffs={}
@@ -481,6 +514,7 @@ func _inventory_handoff(key:String,item_name:String) -> Dictionary:
 	next.revision=int(next.revision)+1
 	if not _commit(next,overrides):return _fail(last_error)
 	world.inventory=bag
+	if overrides.has("item_instances"):world.item_instances=overrides.item_instances
 	if overrides.has("gold"):world.gold=int(overrides.gold)
 	world.call_deferred("_update_hud")
 	return {"ok":true,"message":"원본 ID·축복을 확인해 기존 아이템 기능으로 연결했습니다: "+destination,"native_handoff":true}
@@ -520,13 +554,20 @@ func inventory_activation(item_name:String) -> Dictionary:
 	var belongs:bool=state.get("native_handoffs",{}).has(item_name) or state.get("issued",{}).values().has(item_name)
 	if not belongs:return {"handled":false}
 	if world==null or save_blocked or not validate(state).is_empty():return {"handled":true,"ok":false,"error":"탐험 저장 보호 중"}
+	if world._item_locked(item_name,""):return {"handled":true,"ok":false,"error":"잠긴 탐험 보상은 사용할 수 없습니다"}
 	var handoffs:Dictionary=state.get("native_handoffs",{})
 	if handoffs.has(item_name):
 		var target:Dictionary=_native_target(str(handoffs[item_name]))
 		if not target.ok:return {"handled":true,"ok":false,"error":target.error}
 		if str(target.record.name)!=item_name:return {"handled":true,"ok":false,"error":"보상의 소비자 정체가 변경되었습니다. 아이템은 보존됩니다."}
-		# The verified host's existing normal item pipeline owns the effect/debit.
-		return {"handled":false}
+		if target.get("kind") in ["legacy_material","native_material"]:return {"handled":true,"ok":true,"message":"정확한 재료 소지 키입니다. 기존 제작·보관·판매 메뉴에서 사용하세요."}
+		var consumer:Variant=REWARD_BRIDGE.consumer()
+		if consumer==null:return {"handled":true,"ok":false,"error":"원본 소비자 실행 코드 미설치 · 아이템 보존"}
+		var handled:bool=bool(consumer.try_use(world,target.record))
+		if handled and world.hud.has_meta("patch523_reward_choice"):
+			var dialog:Variant=world.hud.get_meta("patch523_reward_choice")
+			if is_instance_valid(dialog) and dialog.record.get("name")==item_name:dialog.use_service=REWARD_BRIDGE
+		return {"handled":handled}
 	for key:String in state.get("issued",{}):
 		if state.issued[key]!=item_name:continue
 		if not world.get_expedition_catalog().ready():return {"handled":true,"ok":false,"error":"원본 탐험 팩이 필요합니다. 아이템은 보존됩니다."}
@@ -534,10 +575,40 @@ func inventory_activation(item_name:String) -> Dictionary:
 		if not world.get_expedition_catalog().completion_box_candidates(int(key.split(":")[0])).is_empty():result=open_box(key,-1,item_name)
 		elif not compatible_skill_book(key).is_empty():result={"ok":false,"error":"카드 상세의 스킬 각성에서 사용할 수 있는 각성서입니다."}
 		elif not REWARD_CARDS.fixed_target(world.get_expedition_catalog(),int(key.split(":")[0])).is_empty():result=receive_card(key,item_name)
+		elif int(key.split(":")[0]) in REWARD_BRIDGE.OWNED_TICKETS:
+			var shop:Variant=REWARD_BRIDGE.shop(world)
+			if not REWARD_BRIDGE.exposes(shop,"use_inventory_ticket"):result=_fail("검증된 소지 티켓 소비자 미설치 · 티켓 보존")
+			else:
+				# The owner saves debit/cards/independent RNG/counter together.
+				# Do not debit, grant, or commit again; handled is recognition only.
+				result=shop.use_inventory_ticket(item_name,{})
+				if not result.get("ok",false):result.error=str(result.get("reason","티켓 소비 실패 · 소지품 보존"))
 		else:result=_inventory_handoff(key,item_name)
 		result.handled=true
 		return result
 	return {"handled":false}
+
+func received_material_records()->Dictionary:
+	var result:Dictionary={}
+	if world==null or not world.get_expedition_catalog().ready():return result
+	for name:String in state.get("native_handoffs",{}):
+		var key:String=str(state.native_handoffs[name]);var fields:PackedStringArray=key.split(":")
+		var source:Dictionary=world.get_expedition_catalog().record("ItemClass",int(fields[0]))
+		var target:Dictionary=REWARD_BRIDGE.existing_target(world,source,int(fields[1]),int(fields[2]))
+		if target.get("kind")=="legacy_material" and target.record.name==name:result[name]=target.record
+	return result
+
+func transfer_restriction(item_name:String,operation:String)->String:
+	var key:String=str(state.get("native_handoffs",{}).get(item_name,""))
+	if key.is_empty():
+		for source_key:String in state.get("issued",{}):
+			if state.issued[source_key]==item_name:key=source_key;break
+	if key.is_empty():return ""
+	if not world.get_expedition_catalog().ready():return "원본 팩이 필요합니다 · 아이템 보존"
+	var item:Dictionary=world.get_expedition_catalog().record("ItemClass",int(key.split(":")[0]))
+	if operation=="deposit" and not bool(item.get("IsStorable",false)):return "원본 보관 제한 아이템입니다"
+	if operation=="sell" and (not bool(item.get("IsTradable",false)) or not REWARD_BRIDGE.protected_reason(item).is_empty()):return "원본 판매 제한 아이템입니다"
+	return ""
 
 func inventory_name(key: String) -> String:
 	var item: Dictionary = world.get_expedition_catalog().record("ItemClass", int(key.split(":")[0]))
@@ -553,9 +624,10 @@ func install_inventory_definitions() -> void:
 		for r: Dictionary in world.catalog_db.get("아이템", []):
 			if r.get("sourceId") == "m523:expedition:"+key:
 				r.IsStorable=bool(item.IsStorable);r.tradeable=bool(item.IsTradable);r.bound=not bool(item.IsTradable);r.droppable=bool(item.IsDroppable)
+				if id in REWARD_BRIDGE.OWNED_TICKETS:r.desc=REWARD_BRIDGE.TICKET_POLICY_TEXT
 				found = true; break
 		if not found:
-			world.catalog_db["아이템"].append({"name": str(state.issued[key]), "source": "lineagem_patch523", "source_snapshot": "patch523", "sourceId": "m523:expedition:"+key, "source_item_class_id": id, "source_item": item, "expedition_key": key, "slot": "material", "type": "탐험 보상", "grade": {1:"일반",2:"고급",3:"희귀",4:"영웅",5:"전설",32:"신화",52:"유일"}.get(int(item.get("GradeID", 1)), "일반"), "stackable": true, "IsStorable":bool(item.IsStorable), "tradeable":bool(item.IsTradable), "bound":not bool(item.IsTradable), "droppable":bool(item.IsDroppable), "desc": "원본 ID·축복·강화를 보존한 탐험 보상"})
+			world.catalog_db["아이템"].append({"name": str(state.issued[key]), "source": "lineagem_patch523", "source_snapshot": "patch523", "sourceId": "m523:expedition:"+key, "source_item_class_id": id, "source_item": item, "expedition_key": key, "slot": "material", "type": "탐험 보상", "grade": {1:"일반",2:"고급",3:"희귀",4:"영웅",5:"전설",32:"신화",52:"유일"}.get(int(item.get("GradeID", 1)), "일반"), "stackable": true, "IsStorable":bool(item.IsStorable), "tradeable":bool(item.IsTradable), "bound":not bool(item.IsTradable), "droppable":bool(item.IsDroppable), "desc": REWARD_BRIDGE.TICKET_POLICY_TEXT if id in REWARD_BRIDGE.OWNED_TICKETS else "원본 ID·축복·강화를 보존한 탐험 보상"})
 	world._index_catalog_item_sources()
 
 func compatible_skill_book(key:String)->Dictionary:
