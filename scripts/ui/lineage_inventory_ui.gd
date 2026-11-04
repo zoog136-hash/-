@@ -3,6 +3,7 @@ class_name TwilightInventoryUI
 
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
+const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
 
 signal item_activate_requested(item_name: String)
 signal quickslot_requested(item_name: String)
@@ -687,6 +688,14 @@ func _refresh_detail(item_name: String) -> void:
 	if is_ammo:
 		detail_action.disabled = amount <= 0 and not equipped
 	quick_button.disabled = amount <= 0 or not is_consumable
+	var source_record: Dictionary=record
+	if selected_id!="":source_record=character_state.get("item_instances",{}).get(selected_id,{}).get("record",record)
+	if SOURCE_LEARNING.MAP.has(int(source_record.get("source_item_class_id",0))):
+		detail_action.text="학습 기록"
+		detail_action.tooltip_text="책을 사용해 원본 학습을 기록합니다. 시전 조건·효과 연결 전까지 실행은 보류됩니다."
+		quick_button.disabled=true
+		detail_text.text+="\n\n원본 학습 기록용 · 실행 연결 대기"
+	else:detail_action.tooltip_text=""
 
 func _activate_selected() -> void:
 	if selected_item == "":

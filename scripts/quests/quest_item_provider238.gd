@@ -10,7 +10,7 @@ const CHOICE = preload("res://scripts/quests/quest_choice523.gd")
 const PIN = "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
 const SKILL_BOOKS=preload("res://scripts/quests/quest_skillbooks523.gd")
 const FIXED=preload("res://scripts/quests/quest_fixed_cards523.gd")
-const REVIEWED_IDS: Array[int] = [306611,306621,306631,306641,859,1281,239,233,368202,369002,177192,177202,177212,177222,177232,177252,177332,177452]
+const REVIEWED_IDS: Array[int] = [177292,177322,177342,177432,306611,306621,306631,306641,859,1281,239,233,368202,369002,177192,177202,177212,177222,177232,177252,177332,177452]
 var skill_books=SKILL_BOOKS.new()
 var definitions: Dictionary = {}
 var owner: WeakRef
@@ -41,7 +41,8 @@ func configure(world: Node) -> void:
 			var identity: Dictionary=skill_books.identity(D.variant_item(definition.get("native_record",{}),1))
 			if identity.is_empty():continue
 			var skill: Dictionary=world.original_skills.catalog.record_for(str(identity.local_skill_id))
-			if skill.get("id")!=identity.local_skill_id or bool(skill.get("runtime_blocked",false)):continue
+			if skill.get("id")!=identity.local_skill_id:continue
+			if bool(skill.get("runtime_blocked",false)) and not SKILL_BOOKS.REFERENCE.matches(id,int(spec.get("spell_class_id",0)),str(identity.local_skill_id),str(spec.get("source_spell_row_sha256",""))):continue
 		elif spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","guaranteed_bag","source_selectable_reward"]: continue
 		definitions[id]=definition
 		_register(world,definition.native_record,1)

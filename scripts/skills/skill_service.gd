@@ -160,6 +160,10 @@ func spend(skill: Dictionary) -> bool:
 	return true
 
 func ready(skill: Dictionary, announce: bool = false) -> bool:
+	var source_status: Dictionary=catalog.source_learning_status(skill)
+	if not source_status.is_empty():
+		if announce:world.hud.show_message(str(source_status.message))
+		return false
 	if world.patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if bool(skill.get("runtime_blocked", false)):
 		if announce: world.hud.show_message(Catalog.CURRENT.blocked_reason(skill))

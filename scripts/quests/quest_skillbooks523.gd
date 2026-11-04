@@ -9,7 +9,8 @@ const PACK_SHA="256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a
 const BINDING_SHA="497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346"
 const SOURCE_SHA="d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const ITEM_PIN="38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
-const IDS=[177192,177202,177212,177222,177232,177252,177332,177452]
+const REFERENCE=preload("res://scripts/quests/quest_reference_learning.gd")
+const IDS=[177292,177322,177342,177432,177192,177202,177212,177222,177232,177252,177332,177452]
 const BINDINGS_PATH="res://data/skills/player_skills523_bindings.json"
 var profiles: Dictionary={}
 var bindings: Dictionary={}
@@ -45,7 +46,7 @@ func configure_arguments()->void:
 func identity(record: Dictionary)->Dictionary:
  if active_sha256!=PACK_SHA or int(record.get("source_item_class_id",0)) not in IDS:return {}
  var result: Dictionary=BOOK.resolve(self,record.get("source_use_spec",{}))
- if str(result.get("local_skill_id","")).begins_with("lmref_"):return {}
+ if str(result.get("local_skill_id","")).begins_with("lmref_") and not REFERENCE.matches(int(record.get("source_item_class_id",0)),int(record.get("source_use_spec",{}).get("spell_class_id",0)),str(result.local_skill_id),str(record.get("source_use_spec",{}).get("source_spell_row_sha256",""))):return {}
  return result
 func fail(world: Node,reason: String)->Dictionary:
  world.hud.show_message(reason+" · 스킬서 보존")
@@ -66,13 +67,20 @@ func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
  error=BOOK.source_limit_problem(world,spec)
  if not error.is_empty():return fail(world,error)
  var target: Dictionary=identity(canonical)
- if target.is_empty():return fail(world,"검증된 v3 입력·실행 가능한 기존 스킬 연결 필요")
+ if target.is_empty():return fail(world,"검증된 v3 입력·정확한 기존 학습 ID 연결 필요")
  var catalog: Object=world.original_skills.catalog
  var key: String=str(target.local_skill_id)
  var skill: Dictionary=catalog.record_for(key)
- if skill.get("id")!=key or bool(skill.get("runtime_blocked",false)):return fail(world,"현재 실행 소유자 미지원")
- error=catalog.reason(skill,true)
- if not error.is_empty():return fail(world,error)
+ var learning_only: bool=REFERENCE.matches(int(canonical.source_item_class_id),int(spec.spell_class_id),key,str(spec.source_spell_row_sha256))
+ if skill.get("id")!=key:return fail(world,"정확한 기존 학습 ID 확인 필요")
+ if learning_only:
+  if catalog.learned.has(key) and catalog.learned[key]!=0:return fail(world,"이미 학습 기록이 있습니다")
+  for required: String in catalog.relations.get(key,{}).get("requires_skill",[]):
+   if int(catalog.learned.get(required,0))<int(catalog.relations[key].get("requires_skill_level",{}).get(required,1)):return fail(world,"기존 선행 스킬 조건 미충족")
+ else:
+  if bool(skill.get("runtime_blocked",false)):return fail(world,"현재 실행 소유자 미지원")
+  error=catalog.reason(skill,true)
+  if not error.is_empty():return fail(world,error)
  var inventory_key: String=str(canonical.name)
  var prepared: Dictionary={}
  var input_proof: Dictionary={}
@@ -100,10 +108,16 @@ func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
   payload["inventory"]=USE.debit(world,inventory_key)
  var learned: Dictionary=catalog.export_state()
  learned.learned[key]=1
+ var source_learning: Dictionary={}
+ if learning_only:
+  source_learning=REFERENCE.make_record(world,int(canonical.source_item_class_id))
+  if not learned.has("source_quest_knowledge"):learned["source_quest_knowledge"]={}
+  learned.source_quest_knowledge[key]=source_learning.duplicate(true)
  var consumables: Dictionary=world.consumable_service.export_state()
  if not consumables.get("source_skill_book_receipts",[]) is Array:return fail(world,"학습 영수증 저장 형식 확인 필요")
  var receipts: Array=consumables.get("source_skill_book_receipts",[]).duplicate(true)
  receipts.append({"source_snapshot":"patch523","source_sha256":SOURCE_SHA,"item_pack_sha256":ITEM_PIN,"skill_pack_sha256":PACK_SHA,"item_class_id":int(canonical.source_item_class_id),"bless_raw":int(canonical.source_bless_raw),"card_id":int(spec.card_id),"spell_class_id":int(spec.spell_class_id),"spell_row_sha256":str(spec.source_spell_row_sha256),"local_skill_id":key,"cannot_swap":bool(spec.get("buff_card_cannot_swap",false)),"cannot_stack_card":bool(spec.get("cannot_stack_card",false)),"input":input_proof})
+ if learning_only:receipts[-1]["source_learning_record"]=source_learning.duplicate(true)
  consumables["source_skill_book_receipts"]=receipts
  payload["original_skill_state"]=learned;payload["consumable_state"]=consumables
  payload["item_use_cooldowns"]=USE.next_cooldowns(world,canonical,spec)
@@ -127,9 +141,10 @@ func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
  world.item_use_cooldowns=payload.item_use_cooldowns
  world.consumable_service.import_state(consumables)
  # Adopt only the staged learning map; unrelated quickslots/archives are not migrated.
+ catalog.source_quest_knowledge=learned.get("source_quest_knowledge",{}).duplicate(true)
  catalog.learned=learned.learned.duplicate(true);catalog.revision+=1
  world.original_skills.refresh_buffs_after_learning(key)
  world.deferred_save.cancel();world._refresh_speed_modifiers()
  world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory);world._update_hud()
- world.hud.show_message(str(skill.name)+" 습득 · 원본 주문 #"+str(int(spec.spell_class_id)))
- return {"handled":true,"ok":true,"saved":true,"consumed":1,"local_skill_id":key,"physical_id":physical_id}
+ world.hud.show_message(str(skill.name)+" 원본 학습 완료 · 실행 대기" if learning_only else str(skill.name)+" 습득 · 원본 주문 #"+str(int(spec.spell_class_id)))
+ return {"handled":true,"ok":true,"saved":true,"consumed":1,"local_skill_id":key,"physical_id":physical_id,"learning_only":learning_only,"execution_allowed":not learning_only}

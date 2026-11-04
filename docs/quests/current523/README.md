@@ -1,3 +1,7 @@
+## Current follow-up: exact reference learning
+
+Four additional source books have actual native learning/receipt/atomic-save connections, with explicit execution-pending UI and persistent cast/automatic/quickslot holds. See [REFERENCE_LEARNING.md](REFERENCE_LEARNING.md).1075 checks passed; native spell effects remain pending. New source completions remain811. Knight pending-use preview:359 with default ten consumers,351 with exact LOCAL_ONLY v3 and twelve books. The separate Mage context is354. Distinct adapter review is22/146, with124 remaining classes plus four learned spell effects still pending. Old822 saves/537 history and all existing packs remain unchanged. The older milestones below are historical evidence.
+
 # PR229 후속 — 최신523 퀘스트 전수 투영과 자동 완료
 
 원본 `QuestView` **3,621개 전체**를 읽고 원본 ID·목표·선행 조건·보상·운영 기간을 연결했다. 기존 보고서의 3,376개를 고정값으로 사용하지 않았다. 원본 전체 정의의 반영과 모든 보상의 사용 기능 완성은 구분한다. **전체 게임 기능 완료 상태는 아니다.**
@@ -75,3 +79,5 @@
 전수 정의 10,346개 검사, 새 소비 폴더 실제 Main 3,010개 검사, 원본 보상 연결18개 검사, 기존822개 저장본의 실제 OpenGL UI 752개 검사, 기존 Core 44개 검사가 통과했다. 관련 실행 결과와 코드/소비 파일 해시는 `validation.json`에 기록했다. 필수 시트 723개·41,442프레임의 기존 리소스 무결성 검사도 유지한다. 전체 수동 CI, Android 실기기, 모든 직업의 플레이나 모든 원본 보상의 사용 기능을 완료한 증거로 확대하지 않는다. 새 커밋은 `[skip ci]`이며 PR은 Draft로 유지한다.
 
 PR238 소비 연결의 최신 실행 결과는 [consumer-validation.json](consumer-validation.json)에 별도로 기록한다. 전수 정의·Core·영수증 없는 과거 저장본의 OpenGL UI를 재검사하고, 실제 원본 지급→소지→사용/출력→실패 보존→재접속 및 선택한 기존 보관 개체의 부분 사용을 검증했다. [pending-consumer-matrix.json](pending-consumer-matrix.json)은 기존526개 대기 퀘스트에 포함된146종 아이템의 소비 분류와 남은 계약을 기록한다. 이146종을 퀘스트 수나 지급 개수로 쓰지 않는다.
+
+The pending-use preview re-evaluates original CharacterClassID reward rows for the current class. A read-only comparison on the same owned save confirmed Knight351/Mage354 without changing bytes: two Knight-only versus five Mage-only pending quest rows, including Mage RewardID5462/Item177292 that was not issued under the old class. This does not issue or convert ownership and is not a count of raw physical stacks.

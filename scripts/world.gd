@@ -5459,6 +5459,8 @@ func _quickslot_registration_error(kind: String, id: String) -> String:
 	if kind not in ["skill","skill_auto"]: return "등록할 수 없는 항목입니다"
 	var skill: Dictionary = _skill_record(id)
 	if skill.is_empty(): return "삭제되었거나 존재하지 않는 스킬입니다"
+	var source_status: Dictionary=original_skills.catalog.source_learning_status(skill)
+	if not source_status.is_empty():return str(source_status.message)
 	if _is_passive_skill(skill): return "패시브는 직접 사용할 수 없습니다"
 	if kind == "skill_auto" and not SKILL_RULES.can_auto_cast(skill): return "자동사용을 지원하지 않는 스킬입니다"
 	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"

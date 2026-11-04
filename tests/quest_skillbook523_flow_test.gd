@@ -94,9 +94,8 @@ func run()->void:
  var level: int=w.level;w.level=0;activate(w,input);w.level=level
  check(w.inventory==inventory and FileAccess.get_sha256(path)==hash,"native learning minimum level is retained")
  for id: int in [177292,177322,177342,177432]:
-  var blocked: Dictionary=owned(w,id,false) if not fresh else {}
-  if not blocked.is_empty():activate(w,blocked)
-  check(reader.identity(D.variant_item(D.definition_id(str(id)).native_record,1)).is_empty(),"reference-only local target remains blocked "+str(id))
+  var reference_identity: Dictionary=reader.identity(D.variant_item(D.definition_id(str(id)).native_record,1))
+  check(not reference_identity.is_empty() and not w.original_skills.catalog.enabled(w.original_skills.catalog.record_for(str(reference_identity.local_skill_id))),"exact reference learning identity is known while execution stays closed before its separate learning test "+str(id))
  check(w.inventory==inventory and w.original_skills.catalog.export_state()==learned and FileAccess.get_sha256(path)==hash,"reference guards preserve all owned books/skills")
  w.equipment_collections.test_save_writer=func(_p: String,_d: Dictionary)->Error:return ERR_FILE_CANT_WRITE
  activate(w,input)
@@ -127,5 +126,5 @@ func run()->void:
  w.queue_free();await process_frame;w=make_world("마법사")
  check(norm(w.inventory)==durable.inventory and norm(w.item_instances)==durable.item_instances and norm(w.original_skills.catalog.export_state())==durable.original_skill_state and norm(w.consumable_service.export_state())==durable.consumable_state,"fresh Main restores exact source learning,receipts and stock")
  check(w.consumable_service.export_state().source_skill_book_receipts.size()==4 and w.quest_service.claimed==claims and norm(w.quickslots)==norm(slots),"four real learned-book receipts/claims/50slots survive reconnect")
- print("QUEST_SKILLBOOK_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"mode":"real_native_quest_books" if fresh else "real_held_quest_books","initial_source_completions":initial_completed,"initial_pending_use_completed":initial_pending,"skill_pack_sha256":BOOK.PACK_SHA,"learned_source_spell_ids":[74,73,1113,81],"starter_already_known_preserved":[2,65,1,80],"reference_targets_preserved":[347,358,1133,70],"original_seed_sha256":seed,"final_save_sha256":FileAccess.get_sha256(path),"scope":"genuine quest issue/ownership to existing skill learning, one atomic save and reconnect; no new spell/cast execution/reference activation"}))
+ print("QUEST_SKILLBOOK_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"mode":"real_native_quest_books" if fresh else "real_held_quest_books","initial_source_completions":initial_completed,"initial_pending_use_completed":initial_pending,"skill_pack_sha256":BOOK.PACK_SHA,"learned_source_spell_ids":[74,73,1113,81],"starter_already_known_preserved":[2,65,1,80],"reference_targets_not_consumed_in_this_legacy_regression":[347,358,1133,70],"original_seed_sha256":seed,"final_save_sha256":FileAccess.get_sha256(path),"scope":"genuine quest issue/ownership to existing skill learning, one atomic save and reconnect; no new spell/cast execution/reference activation"}))
  w.queue_free();await process_frame;quit(0 if failures.is_empty() else 1)

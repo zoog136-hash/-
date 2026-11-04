@@ -5,6 +5,8 @@ class_name TwilightOriginalSkillCatalog
 ## The old game DB remains untouched, but its synthesized skills are not active.
 const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
 var current_official = CURRENT.new()
+const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
+var source_quest_knowledge: Dictionary={}
 const ROOT_PATH := "res://data/skills/"
 var records: Array = []
 var by_id: Dictionary = {}
@@ -122,6 +124,7 @@ func permitted(record: Dictionary) -> bool:
 	return record.get("classes", [record.get("class")]).has(world.job_class)
 
 func owned(record: Dictionary) -> bool:
+	if not source_learning_status(record).is_empty():return false
 	if bool(record.get("runtime_blocked", false)): return false
 	return permitted(record) and int(learned.get(str(record.get("id", "")), 0)) > 0
 
@@ -135,6 +138,8 @@ func enabled(record: Dictionary) -> bool:
 	return required.is_empty() or required.has(world._current_weapon_type())
 
 func reason(record: Dictionary, buying: bool = false) -> String:
+	var source_status: Dictionary=source_learning_status(record)
+	if not source_status.is_empty():return str(source_status.message)
 	if record.is_empty(): return "스킬 정보 없음"
 	if not permitted(record): return "현재 직업에서 습득 불가"
 	if bool(record.get("runtime_blocked", false)):
@@ -280,13 +285,21 @@ func speed() -> float:
 	_ensure_stat_index()
 	return static_speed
 
+func source_learning_status(record: Dictionary)->Dictionary:
+	var key: String=str(record.get("id",""))
+	if not source_quest_knowledge.has(key):return {}
+	return SOURCE_LEARNING.status(source_quest_knowledge,learned,key)
+
 func export_state() -> Dictionary:
-	return {"schema_version":1, "learned":learned.duplicate(true), "archived":archived.duplicate(true),"class_slots":class_slots.duplicate(true),"schools":schools.duplicate(true)}
+	var state: Dictionary={"schema_version":1, "learned":learned.duplicate(true), "archived":archived.duplicate(true),"class_slots":class_slots.duplicate(true),"schools":schools.duplicate(true)}
+	if not source_quest_knowledge.is_empty():state["source_quest_knowledge"]=source_quest_knowledge.duplicate(true)
+	return state
 
 func import_state(data: Dictionary) -> void:
 	learned.clear()
 	# Keep unknown future IDs without activating them; round trips are lossless.
 	var state: Dictionary = data.get("original_skill_state", {})
+	source_quest_knowledge=SOURCE_LEARNING.restore(state,data)
 	learned = state.get("learned", {}).duplicate(true)
 	archived = state.get("archived", {}).duplicate(true)
 	class_slots = state.get("class_slots", {}).duplicate(true)

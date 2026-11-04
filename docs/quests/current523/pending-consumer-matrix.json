@@ -2,23 +2,24 @@
   "source_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
   "counts_are_distinct_item_classes_not_quests_or_item_quantities": true,
   "baseline_pending_item_classes": 146,
-  "reviewed": 18,
-  "remaining": 128,
+  "reviewed": 22,
+  "remaining": 124,
   "original_constraints_waived": false,
   "contracts": {
     "contract_1": "Requires exact installed effect/equipment/currency owner and quest receipt contract; never bind by name",
     "contract_2": "Shared consumer explicitly blocks source effects/requirements; keep original blockers",
     "contract_4": "Reviewed actual quest grant and selected held-instance receipt adapter; see consumer-validation.json",
     "contract_5": "Remaining27 actual source TestItem=true fixed-card classes stay blocked. Four normal native NoMerge/NoSwap identities are verified through the current staged owner and existing consuming boundaries; see FIXED_CARDS.md.",
-    "contract_6": "Four lmref targets stay blocked; exact v3 profiles/bindings have been privately reconstructed and checked. Existing8 executable bindings have a bounded quest ownership/debit+learning+consumable receipt atomic adapter. See skillbook-source-audit.json and CONSUMER_FOLLOWUP.md; no441-skill claim.",
+    "contract_6": "Four exact reference books now have native SpellLearnLimit checks, actual selected-owned-unit debit + source knowledge + input/use receipt in one confirmed save. Native spell execution remains blocked by a persistent new-source-learning-only hold. No generic cast activation or old-knowledge conversion. See REFERENCE_LEARNING.md.",
     "contract_7": "368202 box input consumption and exact class-owned output implemented/verified for genuine old and new quest issues; thirteen child skill-ticket effect owners remain separate and unimplemented here.",
     "contract_8": "369002 actual existing selection UI and confirm-time selected ownership plus output gear/input receipt atomic transaction verified. Output ownership only; rune wear/effects remain equipment-owner scope.",
     "return239_verified": "Narrow PR247 bc0ce721 common movement/result consumer plus exact quest receipt bridge implemented; same verified aden_world only. See RETURN239.md and return239-validation.json.",
     "hp233_verified": "Exact source20+2d6 and six joined source bonuses including AutoUseRegistrable=TrueFalse/1; current host heal/NPC modifiers/shared cooldown/receipt-selected debit and new native6940 gift ownership verified; see HP233.md.",
-    "skillbooks_existing_verified": "Exact public245 v3 input and existing executable skill owner required. Genuine book debits/learning/immutable origin/consumable receipt/failure/reconnect verified. No lmref activation; starter-known and source class/level restrictions preserve books.",
-    "fixed_normal_cards_verified": "Four normal exact m508 stable cards, all30 actual quest-issued units, staged public243 owner+selected-item+receipt save verified. Native global NoMerge/UI enforce existing flags. Swap/exchange action absent; not equip. Separate explicit new-quest-spare option-feed host hold preserves old free copies/cost/EXP; not inferred native rule."
+    "skillbooks_existing_verified": "Exact public245 v3 input and existing executable skill owner required. Genuine book debits/learning/immutable origin/consumable receipt/failure/reconnect verified. No lmref activation; starter-known and source class/level restrictions preserve books. Four additional exact books record learning only; see reference_learning_only.",
+    "fixed_normal_cards_verified": "Four normal exact m508 stable cards, all30 actual quest-issued units, staged public243 owner+selected-item+receipt save verified. Native global NoMerge/UI enforce existing flags. Swap/exchange action absent; not equip. Separate explicit new-quest-spare option-feed host hold preserves old free copies/cost/EXP; not inferred native rule.",
+    "reference_learning_only": "Exact private v3 and source book identity required; source learning only, clear before-consumption UI, persistent cast/auto/quickslot hold. All four underlying native spell effects remain pending."
   },
-  "prior_public_checkpoint": "22c7ea4c1fa238adf8655cb0c976a76ac4a6bb69",
+  "prior_public_checkpoint": "c11d7fccfcabc8c461c7701bf6de5d954745c9fc",
   "reviewed_item_classes": [
     233,
     239,
@@ -30,7 +31,11 @@
     177222,
     177232,
     177252,
+    177292,
+    177322,
     177332,
+    177342,
+    177432,
     177452,
     306611,
     306621,
@@ -39,7 +44,7 @@
     368202,
     369002
   ],
-  "latest_runtime_evidence": "fixed-card-validation.json",
+  "latest_runtime_evidence": "reference-learning-validation.json",
   "rows": [
     {
       "item_class_id": 233,
@@ -1326,8 +1331,10 @@
       "source_use_kind": "source_skill_book",
       "source_activation": "unrestricted",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_6"
+      "quest_binding_reviewed": true,
+      "contract": "reference_learning_only",
+      "learning_connected": true,
+      "native_spell_execution_completed": false
     },
     {
       "item_class_id": 177322,
@@ -1336,8 +1343,10 @@
       "source_use_kind": "source_skill_book",
       "source_activation": "unrestricted",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_6"
+      "quest_binding_reviewed": true,
+      "contract": "reference_learning_only",
+      "learning_connected": true,
+      "native_spell_execution_completed": false
     },
     {
       "item_class_id": 177332,
@@ -1357,8 +1366,10 @@
       "source_use_kind": "source_skill_book",
       "source_activation": "unrestricted",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_6"
+      "quest_binding_reviewed": true,
+      "contract": "reference_learning_only",
+      "learning_connected": true,
+      "native_spell_execution_completed": false
     },
     {
       "item_class_id": 177432,
@@ -1367,8 +1378,10 @@
       "source_use_kind": "source_skill_book",
       "source_activation": "unrestricted",
       "blocked_reasons": [],
-      "quest_binding_reviewed": false,
-      "contract": "contract_6"
+      "quest_binding_reviewed": true,
+      "contract": "reference_learning_only",
+      "learning_connected": true,
+      "native_spell_execution_completed": false
     },
     {
       "item_class_id": 177452,
@@ -1800,5 +1813,7 @@
   ],
   "default_item_pack_reviewed_classes": 10,
   "optional_exact_private245v3_reviewed_classes": 8,
-  "counts_require_optional_input_to_be_installed": true
+  "counts_require_optional_input_to_be_installed": true,
+  "reviewed_is_adapter_connection_not_all_effect_completion": true,
+  "learning_only_native_spell_execution_still_pending": 4
 }
