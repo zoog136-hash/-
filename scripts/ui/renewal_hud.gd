@@ -2173,6 +2173,8 @@ func _on_catalog_item_selected(index: int) -> void:
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0
 		catalog_detail.text+="\n보유 수량: %d" % owned
+		var native_details: String = preload("res://scripts/loot/patch523_monster_drops.gd").item_details(selected_catalog_record)
+		if not native_details.is_empty(): catalog_detail.text += "\n\n" + UI.safe(native_details)
 		catalog_detail.text += "\n\n" + UI.safe(preload("res://scripts/loot/patch523_monster_drops.gd").source_text(selected_catalog_record))
 		match str(selected_catalog_record.get("grade_evidence","")):
 			"inven_item_quality":

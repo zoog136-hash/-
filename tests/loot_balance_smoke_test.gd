@@ -38,9 +38,8 @@ func _run() -> void:
 	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["전설"]) - 0.002) < 0.000000001, "boss Legendary rate must be 0.2%")
 	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["신화"]) - 0.00025) < 0.000000001, "boss Mythic rate must be 0.025%")
 	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["유일"]) - 0.00001) < 0.000000001, "boss Unique rate must be 0.001%")
-	_check(not LOOT.NORMAL_EQUIPMENT_RATES.has("전설"), "normal monsters cannot roll Legendary")
-	_check(not LOOT.NORMAL_EQUIPMENT_RATES.has("신화"), "normal monsters cannot roll Mythic")
-	_check(not LOOT.NORMAL_EQUIPMENT_RATES.has("유일"), "normal monsters cannot roll Unique")
+	for grade: String in ["전설", "신화", "유일"]:
+		_check(float(LOOT.NORMAL_EQUIPMENT_RATES.get(grade, 0.0)) == float(LOOT.BOSS_EQUIPMENT_RATES[grade]), "field high grade uses existing positive game rate: "+grade)
 	_check(absf(LOOT.NORMAL_POTION_RATE - 0.45) < 0.000001, "normal potion rate must remain 45%")
 	_check(absf(LOOT.BOSS_POTION_RATE - 0.90) < 0.000001, "boss potion rate must remain 90%")
 	var equipment_pools: Dictionary = catalog["equipment_by_grade"]

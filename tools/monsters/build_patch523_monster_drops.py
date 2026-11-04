@@ -9,9 +9,13 @@ import json
 from pathlib import Path
 import zipfile
 import zlib
+try:
+    from .patch523_item_definitions import ITEM_TABLES, compile_items
+except ImportError:
+    from patch523_item_definitions import ITEM_TABLES, compile_items
 
-TABLES = ('NpcClass', 'NpcCategory', 'ItemClass', 'NpcItemDropView',
-          'ItemBlessCode', 'DescData_Korean')
+TABLES = tuple(dict.fromkeys(('NpcClass', 'NpcCategory', 'ItemClass', 'NpcItemDropView',
+          'ItemBlessCode', 'DescData_Korean', *ITEM_TABLES)))
 KIND = 'patch523_monster_drop_membership'
 
 def digest(data):
@@ -28,7 +32,7 @@ def compile_pack(source: Path, catalog: Path):
         if (len(raw) != entry['bytes'] or digest(raw) != entry['sha256'] or
                 f'{zlib.crc32(raw):08x}' != entry['crc32'] or len(rows) != entry['row_count']):
             raise ValueError('source index mismatch: '+name)
-        if len({r['ID'] for r in rows}) != len(rows):
+        if rows and 'ID' in rows[0] and len({r['ID'] for r in rows}) != len(rows):
             raise ValueError('duplicate source ID: '+name)
         tables[name] = rows
         provenance[name] = entry
@@ -62,6 +66,14 @@ def compile_pack(source: Path, catalog: Path):
             unresolved[str(item_id)] = reason
             continue
         bindings[str(item_id)] = {k: item.get(k, '') for k in ('name', 'source', 'sourceId', 'sourceUrl', 'slot', 'type', 'grade')}
+    existing_catalog_gaps = unresolved.copy()
+    item_definitions = compile_items(tables, descriptions,
+                                    {r['ItemClassID'] for r in tables['NpcItemDropView']}, bindings)
+    for item_id, reason in existing_catalog_gaps.items():
+        record = item_definitions[item_id]['native_record']
+        bindings[item_id] = {k: record.get(k, '') for k in ('name', 'source', 'sourceId', 'sourceUrl', 'slot', 'type', 'grade')}
+        bindings[item_id]['binding_kind'] = 'native_523_definition'
+        del unresolved[item_id]
     drops = collections.defaultdict(list)
     payloads = collections.Counter()
     pairs = collections.defaultdict(set)
@@ -72,8 +84,8 @@ def compile_pack(source: Path, catalog: Path):
         payloads[tuple(row[k] for k in ('NpcClassID', 'ItemClassID', 'Bless', 'RequiredQuestID'))] += 1
         pairs[row['NpcClassID'], row['ItemClassID']].add((row['Bless'], row['RequiredQuestID']))
     document = {
-        'schema': 1, 'kind': KIND, 'source_snapshot': 'patch523',
-        'policy': 'Source membership only. Existing host rates, roll counts and quantity=1. No inferred source rates/quantities. Quest rows blocked; no quest reintroduction. Exact duplicate payloads do not add weight. Bless and quest variants remain distinct.',
+        'schema': 2, 'kind': KIND, 'source_snapshot': 'patch523',
+        'policy': 'Source membership and exact item definitions. Existing positive host rates and roll counts; previously zero field high grades reuse existing boss grade rates. Quantity=1 host policy, never inferred source rates/quantities. Quest rows blocked; no quest reintroduction. Exact duplicate payloads do not add weight. Bless and quest variants remain distinct.',
         'source_tables': provenance, 'catalog_sha256': digest(catalog.read_bytes()),
         'npcs': {str(i): {'sprite_id': r['Sprite'], 'source_name': r['Name'],
                            'display_name': descriptions.get(r['DescId'], ''),
@@ -82,9 +94,14 @@ def compile_pack(source: Path, catalog: Path):
                            'attackable': categories[r['Category']]['IsAttackable']}
                  for i, r in npcs.items()},
         'drops': dict(drops), 'bindings': bindings, 'unresolved_item_ids': unresolved,
+        'item_definitions': item_definitions,
+        'native_item_ids': sorted(existing_catalog_gaps, key=int),
+        'existing_catalog_gaps': existing_catalog_gaps,
         'bless_codes': {str(i): r['Name'].lower() for i, r in bless.items()},
         'counts': {'rows': len(tables['NpcItemDropView']), 'npc_classes': len(drops),
                    'item_classes': len(bindings)+len(unresolved), 'verified_item_bindings': len(bindings),
+                   'existing_catalog_bindings': len(bindings)-len(existing_catalog_gaps),
+                   'native_definition_bindings': len(existing_catalog_gaps),
                    'unresolved_item_bindings': len(unresolved),
                    'rows_with_verified_binding': sum(str(r['ItemClassID']) in bindings for r in tables['NpcItemDropView']),
                    'quest_conditional_rows': sum(r['RequiredQuestID'] != 0 for r in tables['NpcItemDropView']),
@@ -97,7 +114,7 @@ def write_pack(document, output: Path):
     raw = (json.dumps(document, ensure_ascii=False, separators=(',', ':'))+'\n').encode()
     packed = gzip.compress(raw, mtime=0)
     (output/'monster_drops.bin').write_bytes(packed)
-    header = {'schema': 1, 'kind': KIND, 'source_snapshot': 'patch523',
+    header = {'schema': document['schema'], 'kind': KIND, 'source_snapshot': 'patch523',
               'sha256': digest(packed), 'bytes': len(packed), 'counts': document['counts']}
     (output/'manifest.json').write_text(json.dumps(header, ensure_ascii=False, indent=2)+'\n')
     with zipfile.ZipFile(output/'TWILIGHT_patch523_monster_drops.zip', 'w', zipfile.ZIP_DEFLATED) as archive:

@@ -1,12 +1,18 @@
 extends RefCounted
 # Equipment rates are per independent equipment roll, not guaranteed drops.
 # Field monsters: 1 equipment roll. Bosses: 3 equipment rolls.
-# Existing grade weights remain; there is no separate grade eligibility cap.
+# Positive field weights and boss weights remain. Previously absent field grades
+# reuse the existing game-wide boss grade rates instead of becoming a zero cap.
 # Each roll yields at most one equipment item; rolls may yield duplicate items.
 
 const EQUIPMENT_GRADES = ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]
-const NORMAL_EQUIPMENT_RATES = {"일반":0.001, "고급":0.001, "희귀":0.001, "영웅":0.00015}
 const BOSS_EQUIPMENT_RATES = {"일반":0.001, "고급":0.001, "희귀":0.001, "영웅":0.01, "전설":0.002, "신화":0.00025, "유일":0.00001}
+const NORMAL_EQUIPMENT_RATES = {
+	"일반":0.001, "고급":0.001, "희귀":0.001, "영웅":0.00015,
+	"전설": BOSS_EQUIPMENT_RATES["전설"],
+	"신화": BOSS_EQUIPMENT_RATES["신화"],
+	"유일": BOSS_EQUIPMENT_RATES["유일"],
+}
 const MAX_BOSS_EQUIPMENT_ROLLS: int = 3
 const NORMAL_POTION_RATE: float = 0.45
 const BOSS_POTION_RATE: float = 0.90
@@ -37,7 +43,7 @@ static func _is_equipment(record: Dictionary) -> bool:
 	if bool(record.get("crafting_scroll",false)):
 		return bool(record.get("drop_as_equipment",false)) and str(record.get("slot","")) == "consumable"
 	var slot: String = str(record.get("slot", ""))
-	return not slot.is_empty() and slot != "currency" and slot != "consumable"
+	return not slot.is_empty() and slot not in ["currency", "consumable", "material"]
 
 static func build_catalog(items: Array) -> Dictionary:
 	var by_name: Dictionary = {}
@@ -110,7 +116,11 @@ static func build_catalog(items: Array) -> Dictionary:
 
 static func _roll_equipment_grade(is_boss: bool, rng: RandomNumberGenerator) -> String:
 	var rates: Dictionary = BOSS_EQUIPMENT_RATES if is_boss else NORMAL_EQUIPMENT_RATES
-	var roll: float = rng.randf()
+	return equipment_grade_for_draw(rates, rng.randf())
+
+static func equipment_grade_for_draw(rates: Dictionary, roll: float) -> String:
+	# A pure draw adapter permits exact boundary regression tests, including
+	# the formerly unreachable field legendary/mythic/unique intervals.
 	var cumulative: float = 0.0
 	for grade: String in EQUIPMENT_GRADES:
 		cumulative += float(rates.get(grade, 0.0))
@@ -351,6 +361,11 @@ static func roll_patch523(groups: Dictionary, is_boss: bool, rng: RandomNumberGe
 	if rng.randf() < (BOSS_MATERIAL_DROP_RATE if is_boss else MATERIAL_DROP_RATE):
 		var material: Dictionary = PATCH523_DROPS.pick(groups, "material", "", rng)
 		if not material.is_empty(): earned.append(material)
+	# Same additional currency chance and plain configured-row quantity=1 as
+	# currency_drops.gd. Membership is explicit; no global currency fallback.
+	if rng.randf() < (BOSS_MATERIAL_DROP_RATE if is_boss else MATERIAL_DROP_RATE):
+		var currency: Dictionary = PATCH523_DROPS.pick(groups, "currency", "", rng)
+		if not currency.is_empty(): earned.append(currency)
 	return earned
 
 static func roll(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "") -> Array[String]:

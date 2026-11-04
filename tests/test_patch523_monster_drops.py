@@ -5,8 +5,10 @@ from pathlib import Path
 import tempfile
 import unittest
 import zlib
+import sys
 
 SCRIPT = Path(__file__).resolve().parents[1]/'tools/monsters/build_patch523_monster_drops.py'
+sys.path.insert(0, str(SCRIPT.parent))
 spec = importlib.util.spec_from_file_location('patch523_drops', SCRIPT)
 compiler = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(compiler)
@@ -22,10 +24,16 @@ class DropCompilerTests(unittest.TestCase):
         self.tables = {
             'NpcClass':[dict(ID=10,Sprite=100,Name='variant-10',DescId=1,TestNPC=False,Category=1)],
             'NpcCategory':[dict(ID=1,IsShowDropInfo=True,IsAttackable=True)],
-            'ItemClass':[dict(ID=20,DescID=2,IdentifiedDescID=2)],
+            'ItemClass':[dict(ID=20,Name='source-sword',DescID=2,IdentifiedDescID=2,CategoryID=1,GradeID=3)],
             'NpcItemDropView':rows,
             'ItemBlessCode':[dict(ID=1,Name='Normal'),dict(ID=2,Name='Blessed')],
-            'DescData_Korean':[dict(ID=1,Description='NPC'),dict(ID=2,Description='Sword')]}
+            'DescData_Korean':[dict(ID=1,Description='NPC'),dict(ID=2,Description='Sword'),dict(ID=3,Description='희귀')],
+            'ItemCategory':[dict(ID=1,Name='Weapon',DescID=2,IsConsumable=False,IsStackable=False)],
+            'Grade':[dict(ID=3,Name='Grade3',DescID=3)],
+            'EquipSlot':[dict(ID=8,Name='WeaponHold',DescID=2)],
+            'ItemEquipSlot':[dict(ItemClassID=20,EquipSlotID=8)],
+            'ItemBonus':[], 'Bonus':[], 'BonusType':[], 'Unit':[], 'Class':[],
+            'ItemClassLimit':[], 'WeaponType':[]}
         self.write_source()
         self.catalog = self.root/'catalog.json'
         self.item = dict(name='Sword',source='inven',sourceId='20',sourceUrl='https://lineagem.inven.co.kr/db/item/20',slot='weapon',type='sword',grade='희귀')
@@ -66,10 +74,12 @@ class DropCompilerTests(unittest.TestCase):
             with self.subTest(key=key):
                 self.write_catalog([{**self.item,key:value}])
                 pack = compiler.compile_pack(self.root,self.catalog)
-                self.assertEqual(pack['bindings'],{})
-                self.assertIn('20',pack['unresolved_item_ids'])
+                self.assertEqual(pack['bindings']['20']['binding_kind'],'native_523_definition')
+                self.assertIn('20',pack['existing_catalog_gaps'])
+                self.assertEqual(pack['bindings']['20']['sourceId'],'m523:item:20')
+                self.assertEqual(pack['unresolved_item_ids'],{})
         self.write_catalog([self.item,{**self.item,'sourceId':'21'}])
-        self.assertEqual(compiler.compile_pack(self.root,self.catalog)['bindings'],{})
+        self.assertEqual(compiler.compile_pack(self.root,self.catalog)['bindings']['20']['sourceId'],'m523:item:20')
 
     def test_tampered_source_rejected(self):
         path = self.root/'content/NpcItemDropView.json'

@@ -610,6 +610,7 @@ func _load_data() -> void:
 	preload("res://scripts/cards/skill_awakening_service.gd").install_book_definitions(catalog_db)
 	preload("res://scripts/cards/source_awakening_items.gd").install_drop_definitions(catalog_db,loot_catalog)
 	_merge_local_consumables_into_catalog()
+	LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(), catalog_db)
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	_index_catalog_item_sources()
 	_load_verified_catalog_options()
@@ -643,6 +644,14 @@ func _load_data() -> void:
 	_build_job_classes()
 	equipment_collections.configure(self)
 	growth.configure(self)
+
+func _refresh_patch523_drop_catalog() -> void:
+	LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(), catalog_db)
+	loot_catalog["patch523_by_name"] = LOOT_DROP.PATCH523_DROPS.catalog_index(catalog_db.get("아이템", []))
+	_index_catalog_item_sources()
+	_index_item_weights()
+	hud.set_catalog_data(catalog_db, catalog_image_index)
+	_refresh_inventory_hud()
 
 func _stash_inven_raw_options() -> void:
 	# Preserve authoritative raw source clauses for audit while displaying
@@ -2703,10 +2712,14 @@ func _collect_ground_drop(drop: Button) -> bool:
 	if record.is_empty(): return false
 	var item_name: String = str(record["item_name"])
 	var quantity: int = int(record["quantity"])
+	var wallet_item: String = LOOT_DROP.PATCH523_DROPS.wallet_name(record.get("item_record", {}))
 	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
 	var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
 	item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
-	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	if wallet_item == "아데나": gold += quantity
+	else:
+		var inventory_key: String = wallet_item if not wallet_item.is_empty() else item_name
+		inventory[inventory_key] = int(inventory.get(inventory_key, 0)) + quantity
 	quest_service.record_pickup(item_name, quantity)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -2716,6 +2729,7 @@ func _collect_ground_drop(drop: Button) -> bool:
 	hud.show_message("%s 획득" % item_name)
 	var pickup_hud_started_usec: int = Time.get_ticks_usec()
 	_refresh_inventory_hud()
+	if not wallet_item.is_empty(): _update_hud()
 	_perf_log("습득 HUD 갱신", pickup_hud_started_usec)
 	if bool(record.get("player_dropped",false)): _request_deferred_save()
 	return true
@@ -4247,6 +4261,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	if cooldown_left > 0.0:
 		hud.show_message("HP 물약 재사용 대기 %s" % _format_seconds_short(cooldown_left))
 		return
+	heal_amount = LOOT_DROP.PATCH523_DROPS.healing_amount(_find_catalog_item_record(item_name), rng, heal_amount)
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
 	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
@@ -6447,6 +6462,10 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 			next_item_instance_id += 1
 			item_instances[new_id] = {"name":item_name, "level":0, "element":"", "element_level":0, "record":record.duplicate(true)}
 	var source_slot: String = str(record.get("slot", ""))
+	var native_rejection: String = LOOT_DROP.PATCH523_DROPS.equipment_error(record, job_class, level)
+	if not native_rejection.is_empty():
+		hud.show_message(native_rejection)
+		return
 	if source_slot == "weapon" and not _weapon_allowed_for_job(record, job_class):
 		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
 		hud.show_message("%s 클래스는 %s 무기를 착용할 수 없습니다" % [job_class, weapon_type])
