@@ -155,9 +155,42 @@ clicks the actual map UI, walks with player physics into an existing trigger and
 checks the existing authored arrival, save/inventory/boss preservation and a real
 host monster's damage/death/reward/respawn lifecycle. The test advances the
 existing respawn clock; it adds no production placement or timer.
-Retrieval of the existing optional monster pack failed at Library helper
-tools/list HTTP401 in this consumer; positive original-M pixel execution is
-therefore not claimed. Current Main's existing source3 actors and UI did run.
+The older Library handoff download still fails at helper tools/list HTTP401.
+An independently authorized Drive source671 installer now supplies the existing
+14 contracts'508 source pixels. Its40 parts and complete ZIP SHA/CRC were
+verified: 1,339,066,288 bytes, SHA256
+`88b3f4470664571f1f6b2894602fa7a6895cc0443a9ac2f5c914f206ba2b876e`.
+This is not an assertion that the older handoffs are identical or that508 art
+is the latest523 art. The original671 installer remains in its existing private
+Drive storage; no source art goes into this repo.
+
+Restore a bounded private test subset from that complete installer:
+
+```sh
+python3 tools/monsters/restore_base508_host14_pixels.py \
+  --source-zip /private/base508-monsters-source671-install.zip \
+  --output /private/host14-pixels
+```
+
+The result retains14 exact existing contracts,184 original SP2 packets and their
+unchanged track files:199 files /13,869,752 bytes. Manifest SHA256 is
+`5eff1f07482988ca7a5606a174ac4fba35785496ba176a9e9b6a0212d58b1a82`.
+Use a fresh isolated profile and append
+`--lineagem-monster-pack=/private/host14-pixels/manifest.json` beside the523
+options. Keep any existing larger installation; this subset is not its upgrade.
+The compiler verifies the pinned complete source, inventories, selected payload
+hashes, NPC/Sprite/view/link pairs and each referenced model/pixel. Its selected
+files reproduce identically. It neither adopts other PR code nor adds an encounter.
+
+`tests/base508_monster_host_ports_test.gd -- --check-game-actors` checks all14
+actual Monster replacements with the523 options, native HP/level, absent
+unverified loot, body texture decoding, five roles/eight directions and pooled
+return to legacy state. `tests/patch523_native_population_main_test.gd` starts
+actual Main with the same private flags and exercises an existing native orc
+slot, its live admission UI, real damage/death and existing respawn service.
+The role/direction checks decode560 first-frame body samples. Host-compatible
+playback remains labelled; complete
+native FPS/blend/AI or native geographic placement are separate claims.
 
 The focused game-field test is an adapter harness, not a terrain or actual
 original-map playthrough. The cumulative523 verifier compares every exported
