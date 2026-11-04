@@ -441,7 +441,7 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
 	if world.get("growth")!=null:
 		world._deal_successful_player_hit(target, maxi(1, amount), critical,str(skill.get("attack_type","magic")),str(skill.get("shape","single"))!="area" or target==world.selected_monster,true)
-	else:world._deal_successful_player_hit(target, maxi(1, amount), critical)
+	else:world._deal_successful_player_hit(target, maxi(1, amount), critical,str(skill.get("attack_type","melee")))
 	_emit_verified_source_effect(skill, "impact", target.global_position)
 	if critical: _emit_verified_source_effect(skill, "critical", target.global_position)
 	if not _is_verified_source_skill(skill):
@@ -596,7 +596,8 @@ func next_chain_target(previous: TwilightMonster, visited: Array[TwilightMonster
 func target_damage(amount: int, target: TwilightMonster) -> int:
 	# One common successful-hit boundary covers normal attacks, skills and
 	# equipment procs. Instant death intentionally bypasses that boundary.
-	return status.damage_after_reduction(amount, target)
+	var pierce: float = world.totem_reduction_pierce() if world.has_method("totem_reduction_pierce") else 0.0
+	return status.damage_after_reduction(amount, target, pierce)
 
 func outgoing_damage(amount: int) -> int:
 	if proc_depth > 0 or counter_depth > 0: return amount

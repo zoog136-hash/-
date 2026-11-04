@@ -21,6 +21,8 @@ signal reviewed_shop_buy_requested(vendor_id: String, item_name: String, quantit
 signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
 signal npc_teleport_requested(map_id: String)
 signal craft_requested(recipe_id: String, batch: int)
+signal totem_conversion_requested(recipe_id: int)
+signal totem_action_requested(action: String, totem_id: int, material_id: int, revision: int)
 signal shop_sell_requested(item_name: String, quantity: int, instance_id: String)
 signal npc_dialogue_action_requested(npc_id: String, node_id: String, action: String)
 signal quest_complete_requested(quest_id: String)
@@ -78,6 +80,7 @@ const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
 const AutoHuntingDestinationsUI = preload("res://scripts/ui/auto_hunting_destinations.gd")
+const Fishing523UI = preload("res://scripts/fishing/fishing_view.gd")
 const SourceDungeonUI = preload("res://scripts/dungeons/source_dungeon_view.gd")
 var dungeon_progress_refresh_pending: bool = false
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
@@ -100,6 +103,7 @@ var menu_scroll_view: ScrollContainer
 var menu_category_filter: OptionButton
 var menu_tiles: Array[Control] = []
 var active_section: String = ""
+var totem_view: Control
 var buff_row: HBoxContainer
 var exp_readout: Label
 var currency_readout: Label
@@ -926,9 +930,12 @@ func _navigate(section: String) -> void:
 		"equipment_collections": open_equipment_collections()
 		"growth96": open_growth96()
 		"combinations": open_combinations()
+		"totems": open_totems()
 		"card_collections": open_normal_card_collections(normal_card_collection_category,normal_card_collection_focus)
+		"monsterbook523": open_monsterbook523()
 		"emblems", "guardians": open_growth(section)
 		"half_elixir": open_half_elixir()
+		"titles": open_titles523()
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
@@ -937,11 +944,13 @@ func _navigate(section: String) -> void:
 			_open_window("spell_groups","스킬 계열 전환", "")
 			var view=load("res://scripts/ui/spell_group_conversion_view.gd").new()
 			view.configure(get_parent());workspace.mount(view)
+		"tj_coupons": open_tj_coupons()
 		"quests": open_quests()
 		"shop": open_shop()
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
 		"source_dungeons": open_source_dungeons()
+		"fishing523": open_fishing523()
 		"map": toggle_map()
 		"menu": toggle_menu()
 		"death523": get_parent().death_recovery.open_ui()
@@ -964,6 +973,10 @@ func confirm_action(title: String, body: String, action: String, callback: Calla
 	return dialog
 
 func _on_lineage_side_action(action_id: String) -> void:
+	if action_id == "tj_coupons":
+		if is_instance_valid(lineage_side_ui):lineage_side_ui.hide_all()
+		open_tj_coupons()
+		return
 	if action_id == "quests":
 		if is_instance_valid(lineage_side_ui):
 			lineage_side_ui.hide_all()
@@ -971,6 +984,12 @@ func _on_lineage_side_action(action_id: String) -> void:
 		return
 	super._on_lineage_side_action(action_id)
 
+
+func open_tj_coupons() -> void:
+	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
+	var view = preload("res://scripts/tj/view.gd").new()
+	workspace.mount(view)
+	view.configure(get_parent())
 
 func open_quests() -> void:
 	_open_window("quests", "퀘스트", "메인 · 일일 · 업적 · 즉시 완료")
@@ -1248,22 +1267,22 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["weapon_mastery","무기 숙련"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["source_dungeons","던전"],["fishing523","낚시·교환"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
 				_navigate(section_id),Vector2(92,88))
-		if section_id in ["emblems","guardians","growth96","combinations"]:
+		if section_id in ["emblems","guardians","growth96","combinations","titles","totems","monsterbook523"]:
 			button.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians","growth96","combinations","half_elixir"] else ("사냥·모험" if section_id in ["inventory","skills","map","quests","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians","growth96","combinations","half_elixir","titles","totems"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		artwork.texture = UI.icon("character" if section_id == "growth96" else ("log" if section_id == "death523" else ("map" if section_id == "source_dungeons" else ("quest" if section_id == "quests" else ("inventory" if section_id == "equipment_collections" else section_id)))))
+		artwork.texture = UI.icon("character" if section_id == "growth96" else ("log" if section_id == "death523" else ("map" if section_id == "source_dungeons" else ("quest" if section_id in ["quests","monsterbook523"] else ("inventory" if section_id in ["equipment_collections","totems"] else section_id)))))
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		artwork.position = Vector2(26,8)
@@ -2553,3 +2572,29 @@ func open_half_elixir(item_name: String = "") -> void:
 	workspace.mount(view)
 	view.configure(self)
 	if not item_name.is_empty(): view.offer_item(item_name)
+
+
+func open_titles523() -> void:
+	_open_window("titles","작위 심사","")
+	var screen := preload("res://scripts/titles/title_view523.gd").new()
+	workspace.mount(screen)
+	screen.configure(self)
+func open_totems() -> void:
+	_open_window("totems","토템","활성화 진행도 · 성장 정보 · 공명")
+	totem_view = preload("res://scripts/progression/totem_view.gd").new()
+	workspace.mount(totem_view)
+	totem_view.configure(self)
+
+func refresh_totems() -> void:
+	if active_section == "totems" and is_instance_valid(totem_view) and not totem_view.is_queued_for_deletion() and totem_view.content != null:
+		totem_view._refresh()
+func open_monsterbook523() -> void:
+	_open_window("monsterbook523", "몬스터 도감", "처치 누적 · 단계 등록 · 옵션 · 보상 기록")
+	var screen := preload("res://scripts/monsterbook/monsterbook523_panel.gd").new()
+	workspace.mount(screen)
+	screen.configure(get_parent())
+func open_fishing523() -> void:
+	_open_window("fishing523", "낚시·대회·장비 교환", "원본 523 규칙과 명시적인 TWILIGHT 자체 공간")
+	var screen := Fishing523UI.new()
+	workspace.mount(screen)
+	screen.configure(self)

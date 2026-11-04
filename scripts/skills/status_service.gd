@@ -79,10 +79,12 @@ func modifier(target: Node, key: String) -> float:
 		return 0.0
 	return float(entry.get("values", {}).get(key, 0))
 
-func damage_after_reduction(amount: int, target: Node) -> int:
+func damage_after_reduction(amount: int, target: Node, pierce_fraction: float = 0.0) -> int:
 	# CUSTOM_BALANCE: the stored -3 reduction is a flat +3 received-damage
 	# modifier after scaling, not an asserted original NPC defense formula.
-	return maxi(1, amount - int(modifier(target, "reduction")))
+	var reduction := int(modifier(target,"reduction"))
+	var effective := float(reduction)*(1.0-clampf(pierce_fraction,0,1)) if reduction > 0 else float(reduction)
+	return maxi(1,int(round(float(amount)-effective)))
 
 func can_affect(skill: Dictionary, target: TwilightMonster) -> bool:
 	if not is_instance_valid(target) or target.dead: return false

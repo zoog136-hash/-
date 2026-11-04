@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "source_snapshot": "patch523",
+  "source_archive_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "table_sha256": {
+    "QuickSlotChange": "bd311ee3e7cd4b8eaf2e71cd99a6895c6be89bc8b4354b3356e5147785979734",
+    "QuickSlotChangeData": "8aea9a115fd2df4c0276433171e312095a36bbddded623d99ff3f5a9b2320bcd",
+    "Land": "8778d18d8c23a0ccb0a555f495e056987796232c616dec805dfb4c4d633b0ef9",
+    "ItemClass": "adaf246e6a70c2e24f144a5147bebaff27e9168bc5a74da8bcf871ca1287a165",
+    "DescData_Korean": "af6a4bb11358bfeb2adeed63f27ec7f353770a07f36474481cec87ce0a2bfb9c",
+    "ItemBonus": "2bdc0f98cd68c1b6f10c572cbba5f1ab22b6f20588e54a279133beecf9dfc815",
+    "Bonus": "1189d53da7897c13ca83d559fef06410695404e1157cc2bbf8a9e48ce7f45d59",
+    "BonusType": "00cedfba3cd259dfd26fbd1471dd0fb5305023da8f85ca0b262af8f9fd0c1cf1",
+    "Grade": "7ccc62ce1c95ff02cb833e09a68469a1f66ff739db0ada613e4fd498226984da"
+  },
+  "groups": [
+    {
+      "ID": 4,
+      "ItemClassID": 239
+    },
+    {
+      "ID": 23,
+      "ItemClassID": 282783
+    },
+    {
+      "ID": 34,
+      "ItemClassID": 295514
+    }
+  ],
+  "changes": [
+    {
+      "ID": 4,
+      "QuickSlotChangeID": 4,
+      "ItemClassID": 126424,
+      "LandID": 44544
+    },
+    {
+      "ID": 14,
+      "QuickSlotChangeID": 4,
+      "ItemClassID": 126424,
+      "LandID": 44614
+    },
+    {
+      "ID": 24,
+      "QuickSlotChangeID": 4,
+      "ItemClassID": 126424,
+      "LandID": 47722
+    },
+    {
+      "ID": 43,
+      "QuickSlotChangeID": 23,
+      "ItemClassID": 126424,
+      "LandID": 44544
+    },
+    {
+      "ID": 53,
+      "QuickSlotChangeID": 23,
+      "ItemClassID": 126424,
+      "LandID": 44614
+    },
+    {
+      "ID": 63,
+      "QuickSlotChangeID": 23,
+      "ItemClassID": 126424,
+      "LandID": 47722
+    },
+    {
+      "ID": 74,
+      "QuickSlotChangeID": 34,
+      "ItemClassID": 126424,
+      "LandID": 44544
+    },
+    {
+      "ID": 84,
+      "QuickSlotChangeID": 34,
+      "ItemClassID": 126424,
+      "LandID": 44614
+    },
+    {
+      "ID": 94,
+      "QuickSlotChangeID": 34,
+      "ItemClassID": 126424,
+      "LandID": 47722
+    }
+  ],
+  "items": {
+    "239": {
+      "name": "귀환 주문서 (각인)",
+      "grade": "일반",
+      "aliases": [
+        "귀환 주문서"
+      ],
+      "infinite": false
+    },
+    "282783": {
+      "name": "유일한 귀환 주문서 (각인)",
+      "grade": "유일",
+      "aliases": [],
+      "infinite": true
+    },
+    "295514": {
+      "name": "무한한 귀환 주문서 (각인)",
+      "grade": "신화",
+      "aliases": [],
+      "infinite": true
+    },
+    "126424": {
+      "name": "잊혀진 귀환 주문서 (각인)",
+      "grade": "일반",
+      "aliases": [],
+      "infinite": false
+    }
+  },
+  "lands": {
+    "44544": {
+      "ID": 44544,
+      "Name": "[잊혀진 섬] 01. 잊혀진 섬 필드",
+      "AssetPath": "13202/",
+      "LandChannelTypeID": 0,
+      "IdealNumberOfPlayer": 0,
+      "BackgroundTypeId": 0,
+      "ExcludeManner": false,
+      "ContentDirectionID": 21,
+      "ContentInstanceID": 2
+    },
+    "44614": {
+      "ID": 44614,
+      "Name": "[잊혀진 섬] 02. 골렘 연구소",
+      "AssetPath": "13209/",
+      "LandChannelTypeID": 0,
+      "IdealNumberOfPlayer": 0,
+      "BackgroundTypeId": 0,
+      "ExcludeManner": false,
+      "ContentDirectionID": 21,
+      "ContentInstanceID": 2
+    },
+    "47722": {
+      "ID": 47722,
+      "Name": "[잊혀진 섬] 04. NEW_골렘 연구소",
+      "AssetPath": "13379/",
+      "LandChannelTypeID": 0,
+      "IdealNumberOfPlayer": 0,
+      "BackgroundTypeId": 0,
+      "ExcludeManner": false,
+      "ContentDirectionID": 21,
+      "ContentInstanceID": 2
+    }
+  },
+  "host_bindings": {
+    "source_70": {
+      "land_id": 44544,
+      "return_map": "source_70",
+      "return_mode": "spawn",
+      "estimated": true,
+      "basis": "TWILIGHT existing Forgotten Island name; separate PC coordinate layout, not M coordinate equivalence"
+    }
+  }
+}

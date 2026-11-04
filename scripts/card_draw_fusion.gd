@@ -220,6 +220,10 @@ func fuse(category: String, grade: String) -> Dictionary:
 			extras.erase(identity)
 		else:
 			extras[identity] = remaining
+	var tj_event: Dictionary = {}
+	if not success:
+		var raw_grade: int = int(selected.record.get("source_original", {}).get("grade_id", 0))
+		tj_event = {"adapter":"fusion","history_type":{"변신":1,"마법인형":11,"성물":21}.get(category,0),"deck":{"변신":1,"마법인형":2,"성물":98}.get(category,0),"grade":raw_grade,"success_candidates":_tj_candidate_ids(category,target_grade),"fail_candidates":_tj_candidate_ids(category,grade)}
 	var awarded: Dictionary = _receive(category, selected)
 	var bonus: Dictionary = {}
 	var counter: Dictionary = pity[category] as Dictionary
@@ -235,7 +239,7 @@ func fuse(category: String, grade: String) -> Dictionary:
 	return {
 		"ok": true, "category": category, "from_grade": grade,
 		"to_grade": outcome_grade, "success": success, "consumed": required,
-		"result": awarded, "pity_reward": bonus,
+		"result": awarded, "pity_reward": bonus, "tj_event":tj_event,
 		"pity_progress": int(counter.get(grade, 0))
 	}
 
@@ -272,6 +276,7 @@ func fuse_many(category: String, grade: String, times: int) -> Dictionary:
 			successes += 1
 		var awarded: Dictionary = (single.get("result", {}) as Dictionary).duplicate(true)
 		awarded["fusion_success"] = succeeded
+		awarded["tj_event"] = single.get("tj_event",{})
 		results.append(awarded)
 		var bonus: Dictionary = single.get("pity_reward", {}) as Dictionary
 		if not bonus.is_empty():
@@ -338,3 +343,10 @@ func import_state(input: Variant) -> void:
 			var counter: Dictionary = pity[category] as Dictionary
 			for grade: String in PITY_GRADES:
 				counter[grade] = clampi(int((saved_pity as Dictionary).get(grade, 0)), 0, PITY_LIMIT - 1)
+
+func _tj_candidate_ids(category: String, grade: String) -> Array:
+	var ids: Array=[]
+	for entry: Dictionary in pools.get(category,{}).get(grade,[]):
+		var id: int=int(entry.record.get("source_card_id",0))
+		if id>0:ids.append(str(id))
+	return ids

@@ -2,6 +2,7 @@ extends Node
 class_name TwilightConsumableService
 
 # An isolated runtime extension; world map/rendering/combat animation are not changed.
+const REGIONAL_RETURN = preload("res://scripts/quickslots/regional_return.gd")
 const RULES = preload("res://scripts/consumable_rules.gd")
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
@@ -131,6 +132,7 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String) -> bool:
+	if try_use_regional_return(item_name): return true
 	if item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
 		if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
 		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
@@ -141,6 +143,7 @@ func try_use(item_name: String) -> bool:
 			else:_message(str(source_result.get("error","해금 아이템 사용 실패")))
 			return true
 	var spec: Dictionary = RULES.definition(item_name)
+	if spec.is_empty() and REGIONAL_RETURN.supported(item_name): spec = {"kind":"return"}
 	if spec.is_empty():
 		return false
 	if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
@@ -179,7 +182,8 @@ func _message(value: String) -> void:
 
 func _consume(item_name: String) -> void:
 	var inv: Dictionary = world.get("inventory") as Dictionary
-	inv[item_name] = maxi(0, int(inv.get(item_name, 0)) - 1)
+	var infinite: bool = bool(world.regional_return_stack(item_name).get("infinite", false))
+	inv[item_name] = maxi(0, int(inv.get(item_name, 0)) - (0 if infinite else 1))
 	if int(inv.get(item_name, 0)) == 0:
 		inv.erase(item_name)
 	world.hud.refresh_inventory(inv)
@@ -237,6 +241,14 @@ func _safe_region_position() -> Vector2:
 	return result
 
 func _use_return(item_name: String) -> void:
+	# A current source field cannot inherit a PC destination from its host ID.
+	var current_field: Variant = world.get("field_map")
+	if current_field is OriginalPlayableField and bool(current_field.get_meta("source_map84",false)):
+		_message("현재 원본 지도의 검증된 귀환 목적지가 연결되지 않았습니다 · 주문서 보존")
+		return
+	if int(world.regional_return_stack(item_name).get("item_class_id", 0)) == 126424:
+		_use_regional_return(item_name)
+		return
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 귀환할 수 없습니다")
 		return
@@ -258,7 +270,7 @@ func _use_return(item_name: String) -> void:
 	else:
 		_teleport_player(world.call("_spawn_position"))
 	_consume(item_name)
-	_message("아덴 마을로 귀환했습니다")
+	_message("아덴 마을로 귀환했습니다" + (" · TWILIGHT 귀환 효과" if world.regional_return_stack(item_name).get("origin") == "patch523_native_normal" else ""))
 
 func _random_destination() -> Vector2:
 	var field: Variant = world.get("field_map")
@@ -651,3 +663,49 @@ func apply_element_scroll(scroll_name: String, weapon_reference: String, element
 		"성공" if success else "실패/무기 유지",
 		previous_level + (1 if success else 0), chance
 	])
+
+func _use_regional_return(item_name: String) -> void:
+	if _player_busy_for_travel():
+		_message("현재 상태에서는 귀환할 수 없습니다")
+		return
+	var land: int = world._regional_return_land()
+	if not REGIONAL_RETURN.DATA.data.lands.has(str(land)):
+		_message("잊혀진 귀환 주문서는 잊혀진 섬에서만 사용할 수 있습니다")
+		return
+	var field: Variant = world.field_map
+	var binding: Dictionary = REGIONAL_RETURN.DATA.data.host_bindings.get(world.active_map_id, {})
+	if field == null or binding.is_empty() or int(binding.get("land_id", 0)) != land or str(binding.get("return_mode", "")) != "spawn" or str(binding.get("return_map", "")) != str(world.active_map_id):
+		_message("이 지역의 귀환 목적지가 아직 연결되지 않았습니다 · 주문서 보존")
+		return
+	var destination: Vector2 = world._spawn_position()
+	if not field.walkable(destination) or not field.point_clear(destination):
+		_message("안전한 귀환 위치를 확인할 수 없습니다 · 주문서 보존")
+		return
+	var old_position: Vector2 = world.player.global_position
+	var old_count: int = int(world.inventory.get(item_name, 0))
+	_teleport_player(destination)
+	world.inventory[item_name] = old_count - 1
+	if old_count == 1: world.inventory.erase(item_name)
+	var save_error: Error = world._save_game(true)
+	if save_error != OK:
+		world.inventory[item_name] = old_count
+		_teleport_player(old_position)
+		world._update_hud()
+		_message("귀환 저장 실패 · 위치와 주문서를 보존했습니다")
+		return
+	world.hud.refresh_inventory(world.inventory)
+	world._update_hud()
+	_message("잊혀진 섬 시작 지점으로 귀환 · TWILIGHT 대응 지도")
+
+func try_use_regional_return(item_name: String) -> bool:
+	var record: Dictionary = world._find_catalog_item_record(item_name)
+	if not REGIONAL_RETURN.claims_identity(item_name, record): return false
+	var stack: Dictionary = REGIONAL_RETURN.stack_identity(item_name, record)
+	if stack.is_empty():
+		_message("귀환 주문서의 원본 ID·이름·Normal 스택 확인 실패 · 아이템 보존")
+		return true
+	if int(world.inventory.get(item_name, 0)) <= 0:
+		_message("아이템이 없습니다: "+item_name)
+		return true
+	_use_return(item_name)
+	return true
