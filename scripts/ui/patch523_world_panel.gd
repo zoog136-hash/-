@@ -3,6 +3,7 @@ extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const LINKS = preload("res://scripts/maps/patch523_world_links.gd")
 const POLICY = preload("res://scripts/monsters/patch523_spawn_policy.gd")
+const HOST_PORTALS = preload("res://scripts/maps/host_portal_navigation.gd")
 var world: Node
 var links: RefCounted
 var summary: Label
@@ -11,6 +12,7 @@ var search: LineEdit
 var rows: ItemList
 var detail: RichTextLabel
 var action: Button
+var navigate: Button
 var entries: Array = []
 var visible_entries: Array = []
 
@@ -32,7 +34,7 @@ func configure(controller: Node) -> void:
 	add_child(tools)
 	mode = OptionButton.new()
 	mode.name = "LinkMode"
-	for title: String in ["현재 게임의 생성 상태", "아덴 본토 · 출현 정의", "아덴 본토 · 포탈 정의"]: mode.add_item(title)
+	for title: String in ["현재 게임의 생성 상태", "아덴 본토 · 출현 정의", "아덴 본토 · 포탈 정의", "현재 게임 이동석"]: mode.add_item(title)
 	tools.add_child(mode)
 	search = LineEdit.new()
 	search.name = "LinkSearch"
@@ -62,6 +64,10 @@ func configure(controller: Node) -> void:
 	action.disabled = true
 	action.hide()
 	right.add_child(action)
+	navigate = UI.button("이동석으로 이동", navigate_selected, Vector2(180,36))
+	navigate.name = "NavigateHostPortal"
+	navigate.hide()
+	right.add_child(navigate)
 	mode.item_selected.connect(func(_index: int) -> void: search.text = ""; refresh())
 	search.text_changed.connect(func(_value: String) -> void: filter_rows())
 	rows.item_selected.connect(show_entry)
@@ -104,6 +110,11 @@ func refresh() -> void:
 	elif mode.selected == 2 and links.loaded:
 		for entry: Dictionary in links.portal_evidence():
 			entries.append({"title": "포탈 %d → %s [%d]" % [int(entry.portal.ID), str(entry.target_land.get("Name", "목적 지역")), int(entry.target_land.ID)], "kind": "portal", "data": entry})
+	elif mode.selected == 3 and world.field_map != null:
+		for portal: Dictionary in world.field_map.data.get("portal", []):
+			var target_id: String = world.NATIVE_PNG.canonical(str(portal.get("target_map", "")))
+			var target: Dictionary = world.maps_by_id.get(target_id, {})
+			entries.append({"title": "%s → %s" % [str(portal.get("name", portal.get("id", "이동석"))), str(target.get("name", target_id))], "kind": "host_portal", "receipt": HOST_PORTALS.capture(world, portal)})
 	filter_rows()
 
 func filter_rows() -> void:
@@ -116,12 +127,14 @@ func filter_rows() -> void:
 	else:
 		detail.text = "표시할 항목이 없습니다. 검색어 또는 현재 생성 상태를 확인하세요."
 		action.hide()
+		navigate.hide()
 
 func show_entry(index: int) -> void:
 	if index < 0 or index >= visible_entries.size(): return
 	var entry: Dictionary = visible_entries[index]
 	var lines: Array[String] = [str(entry.title), ""]
 	action.hide()
+	navigate.hide()
 	if entry.kind == "live":
 		var slot: Dictionary = entry.slot
 		lines.append("현재 게임에 이미 설정된 사냥터입니다.")
@@ -145,6 +158,14 @@ func show_entry(index: int) -> void:
 		var conditions: Dictionary = links.pack_conditions(int(data.relation.NpcSpawnPackID))
 		if not conditions.NpcSpawnPackSchedulePeriod.is_empty() or not conditions.DaynightSpawnPack.is_empty() or not conditions.WorldBossRaidView.is_empty(): lines.append("기간·주야·보스 일정 조건이 있어 자동 생성을 보류합니다.")
 		lines.append("\n이 영역을 생성 개체 수나 확정된 개별 위치로 사용하지 않습니다.")
+	elif entry.kind == "host_portal":
+		var state: Dictionary = HOST_PORTALS.inspect(world, entry.receipt)
+		lines.append("현재 게임에 이미 연결된 이동석입니다.")
+		lines.append("기존 통행 격자로 걸어가며, 도착하면 기존 포탈 규칙이 적용됩니다.")
+		lines.append("리니지M 원본 포탈과 같은 연결이라고 추정하지 않습니다.")
+		lines.append("\n" + str(state.reason))
+		navigate.disabled = not state.ok
+		navigate.show()
 	else:
 		var data: Dictionary = entry.data
 		var target: Dictionary = data.target_territory
@@ -157,3 +178,15 @@ func show_entry(index: int) -> void:
 		action.show()
 		action.tooltip_text = "원본 포탈의 트리거·활성 조건·도착 규칙 확인이 필요합니다."
 	detail.text = "\n".join(lines)
+
+func navigate_selected() -> void:
+	var selection: PackedInt32Array = rows.get_selected_items()
+	if selection.is_empty() or selection[0] >= visible_entries.size(): return
+	var entry: Dictionary = visible_entries[selection[0]]
+	if entry.kind != "host_portal": return
+	var result: Dictionary = HOST_PORTALS.walk_to(world, entry.receipt)
+	world.hud.show_message(str(result.reason))
+	if result.ok: world.hud._close_workspace()
+	else:
+		detail.text += "\n\n" + str(result.reason)
+		navigate.disabled = true

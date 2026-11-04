@@ -60,6 +60,19 @@ travel stays disabled. Without a verified definition pack, current host state
 remains visible and original-data modes are disabled. Inspecting the window does
 not move actors or write saves.
 
+The **Current game portals** (`현재 게임 이동석`) mode lists the active host
+field's existing triggers (38 in current Aden). Select an entry and use
+**Walk to portal** (`이동석으로 이동`) to queue the ordinary manual walking path.
+The existing arrival trigger performs the existing travel; this action never
+sets the player's position. It rejects stale field/portal data, invalid arrival
+positions, blocked paths, routes intercepted by another trigger, automatic
+hunting, movement impairments and active charge skills before changing movement.
+Unreachable routes preserve the previous movement/pickup state. Destination map
+loading and any original travel restrictions remain enforced by the existing
+travel code. The actual Main test covers one authored same-map portal; other
+destinations are not claimed as individually exercised. This host mode works
+without the optional M definition pack and does not activate native M portals.
+
 `FieldPopulation._spawn_slot()` checks resolved native identity before allocating
 a node. `Monster.setup()` returns success/failure and independently checks incoming
 and resolved records, covering direct, summoned and pooled lives. Rejected actors
@@ -136,6 +149,12 @@ delayed/no-floor boss state, direct/pooled rejection, the actual summon helper
 with a named floor fixture, save/inventory/boss preservation and map UI. Under
 OpenGL, `--patch523-capture-dir=/private/evidence` saves actual screenshots.
 These are focused desktop checks, not original-M pixel/AI/device approval.
+`tests/host_portal_navigation_test.gd` checks navigation rejection/state
+preservation. `tests/host_portal_gameplay_test.gd` starts Main without the M pack,
+clicks the actual map UI, walks with player physics into an existing trigger and
+checks the existing authored arrival, save/inventory/boss preservation and a real
+host monster's damage/death/reward/respawn lifecycle. The test advances the
+existing respawn clock; it adds no production placement or timer.
 Retrieval of the existing optional monster pack failed at Library helper
 tools/list HTTP401 in this consumer; positive original-M pixel execution is
 therefore not claimed. Current Main's existing source3 actors and UI did run.
