@@ -223,6 +223,7 @@ var catalog_item_variant_count: Dictionary = {} # name -> count; never dedupe ro
 var verified_catalog_options: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
+var combinations=preload("res://scripts/combinations/runtime.gd").new()
 var card_draw_fusion: TwilightCardDrawFusion = CARD_DRAW_FUSION.new()
 var equipped_catalog: Dictionary = {"변신": {}, "마법인형": {}, "성물": {}}
 var equipped_items: Dictionary = {
@@ -415,6 +416,7 @@ func _ready() -> void:
 			return
 		active_map_id=test_map
 	card_draw_fusion.configure(catalog_db)
+	combinations.configure(self)
 	if not card_collections.configure(self):push_error(card_collections.problem)
 	option_awakening.configure(self)
 	if not skill_awakening.configure(self):push_error(skill_awakening.problem)
@@ -519,6 +521,7 @@ func _process(delta: float) -> void:
 		ain_service.advance_time()
 		_update_ain_hud()
 	_tick_catalog_recovery(delta)
+	combinations.tick(delta)
 	_run_auto_buff_quickslots(delta)
 	_run_auto_item_quickslots(delta)
 	save_timer += delta
@@ -880,6 +883,7 @@ func _refresh_equipment_effects() -> void:
 	equipment_effects=flags
 
 func _invalidate_equipment_static() -> void:
+	combinations.invalidate()
 	card_collections.invalidate()
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
@@ -950,7 +954,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
+	return result + combinations.catalog_bonus(key) + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -1058,6 +1062,7 @@ func _effective_attribute(stat: String) -> int:
 		"INT": base = int_stat
 		"WIS": base = wis_stat
 		"CHA": base = cha_stat
+		"DTH": return combinations.catalog_bonus("dthFlat")
 		_: return 0
 	var key: String = stat.to_lower() + "Flat"
 	return base + _equipment_attribute_bonus(stat) + _catalog_stat_sum(key) + int(original_skills.stat(stat.to_lower()) if original_skills != null else 0)
@@ -2770,6 +2775,7 @@ func _collect_ground_drop(drop: Button) -> bool:
 ## what changed. Equipment, stats and buffs still go through _update_hud.
 func _refresh_inventory_hud() -> void:
 	_sync_item_instances()
+	combinations.invalidate();combinations.reconcile()
 	# Carried weight feeds the encumbrance movement multiplier.
 	_refresh_speed_modifiers()
 	var state: Variant = hud.get("character_state")
@@ -4375,6 +4381,7 @@ func _update_hud() -> void:
 	character_state["equipped_ammo"] = equipped_ammo
 	character_state["enhancement_levels"] = enhancement_levels
 	character_state["item_instances"] = item_instances
+	character_state["combination_death_stat"]=_effective_attribute("DTH")
 	character_state["gold"] = gold
 	character_state["equipment_collection_bonuses"] = equipment_collections.totals.duplicate(true)
 	character_state["card_collection_bonuses"] = card_collections.totals.duplicate(true)
@@ -4458,6 +4465,8 @@ func _perf_log(label: String, started_usec: int) -> void:
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
+	if combinations.save_blocked:return ERR_UNAVAILABLE
+	if collection_override.has("combination523") and not combinations.check_load(collection_override).is_empty():return ERR_INVALID_DATA
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
@@ -4472,7 +4481,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","combination523"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4531,6 +4540,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"consumable_state": consumable_service.call("export_state"),
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
+		"combination523":combinations.export_state(),
 		"card_draw_fusion": card_draw_fusion.export_state(),
 		"card_option_awakening": option_awakening.export_state(),
 		"card_skill_awakening": skill_awakening.export_state(),
@@ -4610,6 +4620,9 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var combination_error: String=combinations.check_load(data)
+	if not combination_error.is_empty():
+		combinations.save_blocked=true;hud.show_message(combination_error);return
 	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
 	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
@@ -4845,6 +4858,7 @@ func _load_game(quiet: bool) -> void:
 	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
+	combinations.accept_load(data)
 	card_draw_fusion.import_state(data.get("card_draw_fusion", {}))
 	if _full_cards_playtest_active(): card_draw_fusion.grant_full_collection_for_playtest(10)
 	# Old version-1 ownership is already permanent. Derive silently before HP/MP
@@ -5917,6 +5931,8 @@ func _elemental_damage_to_monster(raw_damage: int, element_name: String, target:
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("element_bonus_" + channel, 0.0))
 	var modified: int = ELEMENT_RULES.damage_with_bonus(raw_damage, bonus)
+	var source_element: int=int({"fire":1,"water":2,"wind":3,"earth":4}.get(channel,0))
+	if source_element>0:modified+=int(combinations.amount("ElementalDamage",source_element))
 	if channel == "holy" and target.is_undead():
 		modified = ELEMENT_RULES.damage_with_bonus(modified, float(_active_skill_buff_total("holy_vs_undead")))
 	return ELEMENT_RULES.damage_after_resistance(modified, target.elemental_resistance_percent(channel))
@@ -6742,6 +6758,7 @@ func _restore_equipped_visuals() -> void:
 	_refresh_speed_modifiers()
 
 func _all_equipped_records() -> Array[Dictionary]:
+	combinations.reconcile()
 	if not equipment_records_dirty:return equipment_records_cache
 	equipment_records_dirty=false
 	equipment_record_rebuilds+=1
@@ -6754,6 +6771,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 		var item_value: Variant = equipped_items.get(slot, {})
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
 			records.append(_source_catalog_record("아이템", item_value as Dictionary))
+	var combination_record: Dictionary=combinations.stat_record()
+	if not combination_record.is_empty():records.append(combination_record)
 	var collection_record: Dictionary = equipment_collections.stat_record()
 	if not collection_record.is_empty(): records.append(collection_record)
 	var card_collection_record: Dictionary = card_collections.stat_record()
@@ -7178,7 +7197,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 
 func _catalog_damage_bonus(kind: String) -> int:
 	# Native secondary doll effects are counted once, separately from general attack.
-	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))
+	var source_damage: int=option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))+int(combinations.amount({"melee":"MeleeDamage","ranged":"RangeDamage"}.get(kind,"")))
 	var total: int = source_damage + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
@@ -7200,7 +7219,7 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
-	var total: int = option_awakening.accuracy_bonus(kind)
+	var total: int = option_awakening.accuracy_bonus(kind)+int(combinations.amount({"melee":"MeleeHit","ranged":"RangeHit","magic":"MagicHit"}.get(kind,"")))
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -7228,7 +7247,7 @@ func _record_move_speed_multiplier(record: Dictionary) -> float:
 	return clampf(value, 0.5, 2.0)
 
 func _record_attack_speed_percent(record: Dictionary) -> float:
-	if bool(record.get("_equipment_collection_bonus",false)) or bool(record.get("_card_collection_bonus",false)):
+	if bool(record.get("_combination_bonus",false)) or bool(record.get("_equipment_collection_bonus",false)) or bool(record.get("_card_collection_bonus",false)):
 		return maxf(0.0,float(record.get("collection_attack_speed",0.0)))
 	var value: float = CATALOG_EFFECTS.attack_speed_percent(record)
 	if str(record.get("slot", "")) == "weapon":
@@ -7919,6 +7938,8 @@ func _skill_attack_kind(skill: Dictionary) -> String:
 	return "melee"
 
 func _skill_motion_duration(skill: Dictionary) -> float:
+	if skill.has("combination_charge_step_seconds"):
+		return combinations.charge_step_duration(float(skill.combination_charge_step_seconds))
 	return clampf(maxf(0.42, SKILL_RULES.global_cooldown_seconds(skill)) / _effective_attack_speed_multiplier(), 0.14, 0.85)
 
 func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: float) -> void:
