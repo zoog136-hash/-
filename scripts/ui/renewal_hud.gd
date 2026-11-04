@@ -74,6 +74,7 @@ const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
+const Fishing523UI = preload("res://scripts/fishing/fishing_view.gd")
 const SourceDungeonUI = preload("res://scripts/dungeons/source_dungeon_view.gd")
 var dungeon_progress_refresh_pending: bool = false
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
@@ -924,6 +925,7 @@ func _navigate(section: String) -> void:
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
 		"source_dungeons": open_source_dungeons()
+		"fishing523": open_fishing523()
 		"map": toggle_map()
 		"menu": toggle_menu()
 		"settings": open_settings_info()
@@ -1207,7 +1209,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["fishing523","낚시·교환"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -2462,3 +2464,9 @@ func _refresh_source_dungeon_progress_deferred() -> void:
 	if active_section != "source_dungeons" or not is_instance_valid(workspace): return
 	var view: Node = workspace.find_child("SourceDungeonView",true,false)
 	if is_instance_valid(view) and not view.is_queued_for_deletion(): view._select(int(view.selected))
+
+func open_fishing523() -> void:
+	_open_window("fishing523", "낚시·대회·장비 교환", "원본 523 규칙과 명시적인 TWILIGHT 자체 공간")
+	var screen := Fishing523UI.new()
+	workspace.mount(screen)
+	screen.configure(self)

@@ -14,6 +14,9 @@ var local_dungeon_session_id: String = Crypto.new().generate_random_bytes(16).he
 const DUNGEON_PLAY = preload("res://scripts/dungeons/dungeon_play_service.gd")
 var dungeon_play = DUNGEON_PLAY.new()
 
+const FISHING523 = preload("res://scripts/fishing/fishing_runtime.gd")
+var fishing523 = FISHING523.new()
+
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
 const DB_PATH: String = "res://data/game_db_v17.json"
@@ -681,6 +684,7 @@ func _load_data() -> void:
 		catalog_image_index[source_category] = {}
 	_build_job_classes()
 	equipment_collections.configure(self)
+	fishing523.configure(self)
 	growth.configure(self)
 
 func _stash_inven_raw_options() -> void:
@@ -4495,6 +4499,7 @@ func _perf_log(label: String, started_usec: int) -> void:
 		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
+	if fishing523.blocked or not fishing523.check_state(collection_override.get("fishing523", fishing523.state)): return ERR_INVALID_DATA
 	if dungeon_play.save_blocked or not dungeon_play.valid(collection_override.get("source_dungeon_play",dungeon_play.state)).is_empty():return ERR_INVALID_DATA
 	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
 	if BASE508_TEST.enabled():return ERR_UNAVAILABLE
@@ -4512,7 +4517,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	for key: String in collection_override:
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","fishing523","next_item_instance_id"]: return ERR_INVALID_PARAMETER
 	if "--png-review" in OS.get_cmdline_user_args():
 		if not quiet: hud.show_message("PNG 검수 중에는 기존 저장을 덮어쓰지 않습니다")
 		return ERR_UNAVAILABLE
@@ -4549,6 +4554,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}) -> Error:
 		"gold": gold,
 		"inventory": inventory,
 		"quest_state": quest_service.export_state(),
+		"fishing523": fishing523.state.duplicate(true),
 		"equipment_collections": equipment_collections.export_state(),
 		"growth": growth.state.duplicate(true),
 		"ground_drops": _ground_drops_snapshot(),
@@ -4652,6 +4658,10 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	if not fishing523.check_state(data.get("fishing523", FISHING523.fresh_state())):
+		fishing523.blocked = true
+		hud.show_message("낚시 저장 상태가 손상되었습니다. 기존 저장을 보존합니다.")
+		return
 	var play_error: String=dungeon_play.valid(data.get("source_dungeon_play",DUNGEON_PLAY.empty_state()))
 	if not play_error.is_empty():
 		dungeon_play.save_blocked=true;dungeon_play.problem=play_error;source_save_blocked=true;hud.show_message(play_error);return
@@ -4816,6 +4826,7 @@ func _load_game(quiet: bool) -> void:
 	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	growth.restore(data.get("growth",growth.empty_state()))
 	quest_service.import_state(data.get("quest_state", {}))
+	fishing523.restore(data.get("fishing523", FISHING523.fresh_state()))
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
 	source_save_blocked = false
