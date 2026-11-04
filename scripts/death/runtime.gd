@@ -15,7 +15,7 @@ var death_overlay: Control
 var test_clock: Callable
 
 static func fresh() -> Dictionary:
-	return {"version":1,"revision":0,"next_id":1,"dead_id":"","last_time":0,"free_day":-1,"free_used":0,"records":[]}
+	return {"version":1,"revision":0,"next_id":1,"dead_id":"","last_time":0,"free_day":-1,"free_used":0,"records":[],"slot_expansions":{"exp":0,"item":0}}
 
 func configure(host) -> void:
 	world = host
@@ -25,6 +25,10 @@ func configure(host) -> void:
 		if not (policy.get(key) is int or policy.get(key) is float) or not is_finite(float(policy.get(key))): save_blocked = true
 	if not save_blocked:
 		if float(policy.item_loss_percent) < 0 or float(policy.item_loss_percent) > 100 or float(policy.restart_hp_fraction) <= 0 or float(policy.restart_hp_fraction) > 1 or float(policy.restart_mp_fraction) < 0 or float(policy.restart_mp_fraction) > 1 or int(policy.adena_per_gem) < 1 or int(policy.item_recovery_adena) < 0 or int(policy.extended_gem_per_hour) < 0 or int(policy.reset_hour) < 0 or int(policy.reset_hour) > 23: save_blocked = true
+	for key: String in ["certificate_per_recovery","base_recovery_slots","maximum_slot_expansions"]:
+		if not integer(policy.get(key),1) or float(policy.get(key,0)) > 1000: save_blocked = true
+	for key: String in ["death_stat_exp_reduction_percent_per_point","death_stat_item_reduction_percent_per_point","death_stat_custom_cap","death_stat_maximum_reduction_percent"]:
+		if not (policy.get(key) is int or policy.get(key) is float) or not is_finite(float(policy.get(key))) or float(policy.get(key)) < 0 or float(policy.get(key)) > 100: save_blocked = true
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--death523-source="): source.load_pack(argument.trim_prefix("--death523-source="))
 	source.fallback_loss_percent = clampf(float(policy.get("fallback_exp_loss_percent",5.0)),0.0,100.0)
@@ -52,6 +56,10 @@ func validate(raw: Variant, live: Dictionary = {}) -> String:
 	for key: String in ["version","revision","next_id","last_time","free_used"]:
 		if not integer(raw.get(key)): return "사망 복구 숫자 오류: "+key
 	if int(raw.version) != 1 or int(raw.next_id) < 1 or int(raw.free_used) > 2 or not integer(raw.get("free_day"),-1) or not raw.get("dead_id") is String or not raw.get("records") is Array: return "사망 복구 저장 버전/횟수 오류"
+	if raw.has("slot_expansions"):
+		if not raw.slot_expansions is Dictionary: return "복구 슬롯 저장 오류"
+		for kind: String in ["exp","item"]:
+			if not integer(raw.slot_expansions.get(kind)): return "복구 슬롯 수치 오류"
 	var ids: Dictionary = {}
 	var physical_ids: Dictionary = {}
 	var dead_found: bool = str(raw.dead_id).is_empty()
@@ -104,6 +112,7 @@ func prepare_load(data: Dictionary, path: String) -> bool:
 
 func accept_load(data: Dictionary) -> void:
 	state = data.get(KEY,fresh()).duplicate(true)
+	if not state.has("slot_expansions"): state.slot_expansions = {"exp":0,"item":0}
 	pending.clear(); save_blocked = false; clock_floor = int(state.last_time)
 	world.call_deferred("_resume_death523")
 
@@ -131,11 +140,36 @@ func death_policy() -> Dictionary:
 	p["exempt"] = bool(p.no_penalty) or (safe and not bool(p.npc_penalty))
 	return p
 
-func _select_loss() -> Dictionary:
+func death_stats() -> Dictionary:
+	var value: int = 0
+	var seen: Dictionary = {}
+	if source.ready:
+		for raw: Variant in world.equipped_items.values():
+			if not raw is Dictionary: continue
+			var id: String = str(raw.get("instance_id",""))
+			if id.is_empty() or seen.has(id) or not world.item_instances.has(id): continue
+			seen[id] = true
+			var physical: Dictionary = world.item_instances[id]
+			var item_name: String = str(physical.get("name",""))
+			if item_name != str(raw.get("name","")) or int(world.inventory.get(item_name,0)) < 1: continue
+			var record: Dictionary = physical.get("record",{})
+			if record.is_empty():
+				if int(world.catalog_item_variant_count.get(item_name,0)) > 1: continue
+				record = world._find_catalog_item_record(item_name)
+			var sid: String = str(physical.get("sourceId",record.get("sourceId","")))
+			if str(record.get("name","")) != item_name or not source.matches_item(record,sid) or bool(source.items[sid].TestItem): continue
+			value += int(source.item_death_stats.get(sid,0))
+	value = clampi(value,0,int(policy.get("death_stat_custom_cap",50)))
+	# Native equipment declares KarmaDeath, but no server reduction formula
+	# exists. These two coefficients and cap are explicitly local policy.
+	var maximum: float = float(policy.get("death_stat_maximum_reduction_percent",90.0))
+	return {"value":value,"exp_reduction":clampf(value*float(policy.get("death_stat_exp_reduction_percent_per_point",1.0)),0,maximum),"item_reduction":clampf(value*float(policy.get("death_stat_item_reduction_percent_per_point",1.0)),0,maximum)}
+
+func _select_loss(reduction: float = 0.0) -> Dictionary:
 	if not source.ready: return {}
 	var draw := RandomNumberGenerator.new()
 	draw.randomize()
-	if draw.randf()*100.0 >= float(policy.get("item_loss_percent",5.0)): return {}
+	if draw.randf()*100.0 >= float(policy.get("item_loss_percent",5.0))*(1.0-reduction/100.0): return {}
 	var candidates: Array = []
 	for id: String in world.item_instances:
 		var physical: Dictionary = world.item_instances[id]
@@ -158,9 +192,13 @@ func begin_death(cause: String) -> void:
 		var p: Dictionary = death_policy()
 		var next: Dictionary = export_state()
 		var lost: int = 0 if p.exempt or p.no_exp else source.exp_loss(world.level,world.experience,world.exp_need)
-		var item: Dictionary = {} if p.exempt or p.no_item or world.level < 30 else _select_loss()
+		var stats: Dictionary = death_stats()
+		lost = int(floor(lost*(1.0-float(stats.exp_reduction)/100.0)))
+		var item_exempt: bool = world.level <= 30 or (source.ready and int(source.row(world.level).get("DropRate",0)) <= 0)
+		var item: Dictionary = {} if p.exempt or p.no_item or item_exempt else _select_loss(float(stats.item_reduction))
 		var id: String = str(int(next.next_id))
 		var entry: Dictionary = {"id":id,"at":now(),"map":world.active_map_id,"cause":cause,"level":world.level,"exp":lost,"cost":source.cost(world.level),"exp_claimed":lost == 0,"item":item,"item_claimed":item.is_empty(),"revived":false,"full_revive":bool(p.full_revive),"source_rules":source.ready,"exempt":p.exempt}
+		entry["death_stat_policy"] = stats
 		next.last_time = int(entry.at)
 		next.next_id = int(next.next_id)+1; next.revision = int(next.revision)+1
 		next.dead_id = id; next.records.append(entry)
@@ -209,18 +247,78 @@ func _day(timestamp: int) -> int:
 func free_remaining() -> int:
 	return 2 if _day(now()) > int(state.free_day) else maxi(0,2-int(state.free_used))
 
+func slot_capacity(kind: String) -> int:
+	return int(policy.get("base_recovery_slots",5))+int(state.get("slot_expansions",{}).get(kind,0))
+
+func active_losses(kind: String) -> Array:
+	var out: Array = []
+	for entry: Dictionary in state.records:
+		if not bool(entry[kind+"_claimed"]) and now()-int(entry.at) < 259200: out.append(str(entry.id))
+	return out
+
+func certificate_wallet() -> Dictionary:
+	if not source.ready: return {}
+	for id: String in ["198494","895"]:
+		var item_name: String = str(source.certificates.get(id,""))
+		if item_name.is_empty() or world._item_locked(item_name) or not integer(world.inventory.get(item_name,0),int(policy.get("certificate_per_recovery",1))): continue
+		# Existing stack wallets are keyed by exact localized name. Reject a
+		# conflicting catalog identity or physical object rather than consuming
+		# a similarly named equipment/event variant or leaving an orphan ID.
+		if int(world.catalog_item_variant_count.get(item_name,0)) > 1: continue
+		var record: Dictionary = world._find_catalog_item_record(item_name)
+		if not record.is_empty() and not source.matches_item(record,id): continue
+		var physical_conflict: bool = false
+		for physical: Dictionary in world.item_instances.values():
+			if str(physical.get("name","")) == item_name: physical_conflict = true; break
+		if not physical_conflict: return {"source_id":id,"name":item_name}
+	return {}
+
+func quote_slot(kind: String) -> Dictionary:
+	if kind not in ["exp","item"] or blocked() or save_blocked or busy: return fail("슬롯을 확장할 수 없는 상태입니다")
+	if not source.ready or not source.slot_offers.has(kind): return fail("원본523 슬롯 구매 정의가 필요합니다")
+	var offer: Dictionary = source.slot_offers[kind]
+	var owned: int = int(state.get("slot_expansions",{}).get(kind,0))
+	if owned+int(offer.amount) > int(policy.get("maximum_slot_expansions",45)): return fail("자체 정책의 슬롯 확장 한도입니다")
+	if int(world.inventory.get("다이아",0)) < int(offer.cost): return fail("다이아가 부족합니다")
+	return {"ok":true,"kind":kind,"cost":int(offer.cost),"amount":int(offer.amount),"revision":state.revision,"purchase_id":int(offer.purchase_id),"message":""}
+
+func expand_slot(request: Dictionary) -> Dictionary:
+	var current: Dictionary = quote_slot(str(request.get("kind","")))
+	if not current.ok: return current
+	for key: String in ["cost","amount","revision","purchase_id"]:
+		if current[key] != request.get(key): return fail("슬롯 또는 비용이 바뀌었습니다. 다시 확인하세요")
+	busy = true
+	var next: Dictionary = export_state()
+	if not next.has("slot_expansions"): next.slot_expansions = {"exp":0,"item":0}
+	next.slot_expansions[current.kind] = int(next.slot_expansions[current.kind])+int(current.amount)
+	next.revision = int(next.revision)+1
+	var inventory: Dictionary = world.inventory.duplicate(true)
+	inventory["다이아"] = int(inventory.get("다이아",0))-int(current.cost)
+	next["last_slot_receipt"] = {"at":now(),"kind":current.kind,"cost":current.cost,"amount":current.amount,"purchase_id":current.purchase_id}
+	if world._save_game(true,{"inventory":inventory,KEY:next}) != OK:
+		busy = false; return fail("저장 실패 · 다이아와 슬롯을 보존했습니다")
+	state = next; world.inventory = inventory; busy = false; world._update_hud()
+	return {"ok":true,"message":"복구 슬롯 확장 완료 · 저장했습니다"}
+
 func quote(id: String, kind: String, mode: String) -> Dictionary:
 	if blocked() or save_blocked or busy: return fail("사망 또는 저장 보호 중입니다")
-	if kind not in ["exp","item"] or mode not in ["free","adena","gem"]: return fail("알 수 없는 복구 요청")
+	if kind not in ["exp","item"] or mode not in ["free","adena","gem","certificate"]: return fail("알 수 없는 복구 요청")
 	var entry: Dictionary = _entry(id)
 	if entry.is_empty() or bool(entry.get(kind+"_claimed",true)): return fail("이미 복구했거나 없는 내역입니다")
 	var age: int = maxi(0,now()-int(entry.at))
 	if age >= 259200: return fail("복구 기한 72시간이 지났습니다")
+	if active_losses(kind).find(id) >= slot_capacity(kind): return fail("복구 슬롯 대기 중 · 앞선 내역 복구 또는 슬롯 확장")
 	if age >= 86400 and mode != "gem": return fail("24시간 이후에는 다이아 복구만 가능합니다")
 	if mode == "free" and (kind != "exp" or free_remaining() <= 0): return fail("경험치 무료 복구 횟수가 없습니다")
+	var certificate: Dictionary = {}
+	if mode == "certificate":
+		if kind != "exp" or free_remaining() > 0: return fail("구호증서는 무료 경험치 복구 2회 소진 후 사용합니다")
+		certificate = certificate_wallet()
+		if certificate.is_empty(): return fail("잠금 없는 원본 영구 구호증서가 부족합니다")
 	var adena: int = int(entry.cost)
 	if kind == "item": adena = maxi(1,int(policy.get("item_recovery_adena",10000)))
 	var cost: int = 0 if mode == "free" else adena
+	if mode == "certificate": cost = int(policy.get("certificate_per_recovery",1))
 	if mode == "gem":
 		cost = maxi(1,int(ceil(float(adena)/maxi(1,int(policy.get("adena_per_gem",1000))))))
 		if age >= 86400: cost += int(ceil(float(age-86400+1)/3600.0))*int(policy.get("extended_gem_per_hour",1))
@@ -231,18 +329,20 @@ func quote(id: String, kind: String, mode: String) -> Dictionary:
 		if ownership({"item_instances":world.item_instances,"warehouse":world.warehouse.snapshot(),"equipment_collections":world.equipment_collections.export_state(),"ground_drops":world._ground_drops_snapshot()}).has(str(entry.item.id)): return fail("같은 물리 장비 ID가 이미 존재합니다")
 		var weight: int = int(world.item_weight_index.get(str(physical.name),3))
 		if world._inventory_total_weight()+weight > world._carrying_capacity(): return fail("소지품 무게가 초과됩니다")
-	return {"ok":true,"id":id,"kind":kind,"mode":mode,"cost":cost,"revision":state.revision,"age":age,"message":""}
+	return {"ok":true,"id":id,"kind":kind,"mode":mode,"cost":cost,"revision":state.revision,"age":age,"certificate":certificate,"message":""}
 
 func recover(request: Dictionary) -> Dictionary:
 	var current: Dictionary = quote(str(request.get("id","")),str(request.get("kind","")),str(request.get("mode","")))
 	if not current.ok: return current
 	if current.revision != request.get("revision") or current.cost != request.get("cost"): return fail("내역 또는 비용이 바뀌었습니다. 다시 확인하세요")
+	if current.certificate != request.get("certificate",{}): return fail("구호증서 종류가 바뀌었습니다. 다시 확인하세요")
 	busy = true
 	var next: Dictionary = export_state()
 	var entry: Dictionary = _staged_entry(next,str(current.id))
 	var fields: Dictionary = {"gold":world.gold,"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true)}
 	if current.mode == "adena": fields.gold -= int(current.cost)
 	if current.mode == "gem": fields.inventory["다이아"] = int(fields.inventory.get("다이아",0))-int(current.cost)
+	if current.mode == "certificate": fields.inventory[current.certificate.name] = int(fields.inventory.get(current.certificate.name,0))-int(current.cost)
 	if current.mode == "free":
 		if _day(now()) > int(next.free_day): next.free_day = _day(now()); next.free_used = 0
 		next.free_used = int(next.free_used)+1
@@ -253,6 +353,7 @@ func recover(request: Dictionary) -> Dictionary:
 		fields.item_instances[str(entry.item.id)] = entry.item.physical.duplicate(true)
 	entry[str(current.kind)+"_claimed"] = true
 	entry[str(current.kind)+"_receipt"] = {"at":now(),"mode":current.mode,"cost":current.cost}
+	if current.mode == "certificate": entry[str(current.kind)+"_receipt"]["certificate"] = current.certificate.duplicate(true)
 	next.revision = int(next.revision)+1; fields[KEY] = next
 	var result: Error = world._save_game(true,fields)
 	if result != OK: busy = false; return fail("저장 실패 · 재화·무료 횟수·복구 대상을 보존했습니다")
@@ -307,7 +408,7 @@ static func fail(message: String) -> Dictionary:
 	return {"ok":false,"message":message}
 
 func open_ui() -> void:
-	world.hud.call("_open_window","death523","사망 복구","무료 경험치 복구 하루 2회 · 아이템은 물리 ID 그대로 복원")
+	world.hud.call("_open_window","death523","사망 복구","무료 경험치 복구 기본 2회 · 아이템은 물리 ID 그대로 복원")
 	view = preload("res://scripts/death/recovery_ui.gd").new()
 	world.hud.workspace.mount(view)
 	view.configure(self)

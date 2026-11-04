@@ -215,19 +215,15 @@
   ],
   "remote_ci": "not manually run; skip ci requested; not claimed passing",
   "remaining": [
-    "Native M geography/coordinates not inferred from existing PC map IDs; explicit attribute API only",
-    "Alignment/Death-stat/PvP refund, gear destruction, rescue certificates, protection items and slot expansion remain separate",
-    "Targeted network resurrection and original art/engine equivalence not implemented",
-    "Windows/Android devices and audio not verified"
+    "Native M geography/coordinates require explicit M Land mapping; no PC ID guessing",
+    "Alignment/PvP kill/refund/rank domains absent from this branch; no merge from other PR/main",
+    "Native server probability/formulas, dated/event certificate variants, card/buff/rank Death-stat owners outside equipped-gear subset",
+    "Protection1032 has no Bonus instances; no new destructive gear loss or invented gaho consumption",
+    "Targeted/network resurrection and original art/engine equivalence not implemented",
+    "Windows/Android devices and audio not verified",
+    "Remote main advanced; final PR mergeability reported separately, no merge or rebase performed"
   ],
-  "blockers": [
-    {
-      "action": "Materialize existing death analysis report",
-      "target": "TWILIGHT_523_death_recovery_resurrection_cost_count_constraints_20261104.zip",
-      "status": "not downloaded",
-      "reason": "Current official Library download helper tools/list HTTP401; not bypassed. Independent private Drive latest523 original and existing implementation guide were read."
-    }
-  ],
+  "blockers": [],
   "evidence": "Local-only logs and screenshots, hashes appended before commit",
   "local_evidence": [
     {
@@ -274,21 +270,6 @@
       "path": "/workspace/death-stage-additions.json",
       "bytes": 191,
       "sha256": "156b28a4149bf03d01e90eacfbccc29f3c6fde2601f59e0348480974e835913a"
-    },
-    {
-      "path": "/workspace/death523-dead-1280.png",
-      "bytes": 1049531,
-      "sha256": "3b5e15e1783fb728bf499ec7e8db12aa83021781b85307c89c10fcc0c46f86d2"
-    },
-    {
-      "path": "/workspace/death523-recovery-1280.png",
-      "bytes": 899577,
-      "sha256": "65a204ec887dad8fe344d3b4887f6e37805456c14bb7e935705816085485eff2"
-    },
-    {
-      "path": "/workspace/death523-recovery-854.png",
-      "bytes": 260327,
-      "sha256": "92345346a6b3b3b74eec73ca36ba7a31393d49f40320e1ae17a3f33720cb52c1"
     },
     {
       "path": "/workspace/death-required-logs/core_runtime_save_test.log",
@@ -339,5 +320,203 @@
       "path": "data/config/death523_policy.json",
       "sha256": "7e8894aef8acc1fc3068c39ce999aaa1c2fa4247837f90c1dfd72872f4c69f07"
     }
-  ]
+  ],
+  "followup": {
+    "prior_commit": "4e8d7c35b48aaf9eef573397b7b7f894a33427e9",
+    "same_pr": 253,
+    "observed_main": "fd3ef6bad12bd030cb40946bf9b96a5a35bf8d94",
+    "main_or_other_pr_merged": false,
+    "scope": [
+      "Permanent native895/198494 recovery currencies; exact stack identity, locks, free2 exhausted,24h, atomic receipt",
+      "Typed Gem namespaces and native50Gem/one-slot purchase paths; persisted separate capacities; nondeleting overflow",
+      "Owned equipped physical IDs -> ItemBonus/KarmaDeath3103; configurable local loss relief and saved death snapshot",
+      "Exact original cumulative decimal integers above2^53; safe configurable projection for placeholder high-level progression",
+      "Native DropRate0 up to level30 disables item selection; XP boundary remains30"
+    ],
+    "source_report": {
+      "filename": "TWILIGHT_523_death_recovery_resurrection_cost_count_constraints_20261104.zip",
+      "bytes": 193834,
+      "sha256": "56dd78722147c5161268861a6100f915c9aafaf7e94f9a65205fe3a179dc9f5e",
+      "members": 28,
+      "crc": "passed",
+      "read": "REPORT_KO.md; received through official existing private Drive fetch; initial Library401 not retried"
+    },
+    "checks": {
+      "actual_main_headless": {
+        "checks": 114,
+        "failures": [],
+        "checkpoint": "before exposing existing90percent reduction cap as a config key; final OpenGL validates superset"
+      },
+      "identical_payload": {
+        "writes": 2,
+        "skips": 1,
+        "failures": []
+      },
+      "deferred_save_gate": {
+        "failures": []
+      },
+      "actual_main_opengl": {
+        "checks": 115,
+        "failures": [],
+        "resolutions": [
+          "1280x720",
+          "854x480"
+        ],
+        "renderer": "Godot4.7.2 Mesa llvmpipe Compatibility; Dummy audio",
+        "checkpoint": "full consumer/stat/slot UI validation before final additional physical-name guard; focused identity7 validates that guard"
+      },
+      "physical_identity": {
+        "checks": 7,
+        "failures": [],
+        "final_extra_physical_name_guard": true
+      },
+      "core_runtime_save": {
+        "checks": 32,
+        "failures": []
+      }
+    },
+    "native_boundary_audit": {
+      "BlockDeathPenalty_Bonus_instances": 0,
+      "ExpRestoreCostDecProb_Bonus_instances": 0,
+      "ItemRestoreCostDecProb_Bonus_instances": 0,
+      "unconditional_equipment_KarmaDeath_ItemBonus_rows": 61,
+      "gaho_ItemClass_ids_checked": [
+        200723,
+        245718,
+        297828,
+        328254,
+        346911,
+        371108
+      ],
+      "gaho_death_exemption_enabled": false,
+      "gear_destruction_enabled": false,
+      "alignment_state_in_branch_and_observed_main_world": "absent; no new PvP domain created"
+    },
+    "retained_failed_attempts": {
+      "headless1": "launch used unsupported --source-map-pack argument rather than required TWILIGHT_SOURCE_MAP_PACK; production save correctly refused missing map; failed run terminated; no pass claimed"
+    },
+    "local_evidence": [
+      {
+        "path": "/workspace/death-followup-final.log",
+        "bytes": 241,
+        "sha256": "6b688efabb36da18e2c5e8fa24138b7c96e4372c1ba0aa9a33b59162eeae29ed",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-ui.log",
+        "bytes": 536,
+        "sha256": "e3614c1cf318da4e41acb33df21dd4d25716827a5f8630335553536355bd4eec",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-identity.log",
+        "bytes": 197,
+        "sha256": "c9c4ba5530001c65ae5673effa0c484b85356502538ce08d9a6e86997f0e66c6",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-core_runtime_save_test.log",
+        "bytes": 207,
+        "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-save_identical_payload_test.log",
+        "bytes": 140,
+        "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-deferred_save_gate_test.log",
+        "bytes": 115,
+        "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-resource.log",
+        "bytes": 219,
+        "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-dead-1280.png",
+        "bytes": 1048842,
+        "sha256": "ecf7c0c915e93f05965c97dee65ca46ae93d433cb9ea901cd2c35a938bb14495",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-recovery-1280.png",
+        "bytes": 931800,
+        "sha256": "086d135cd5ec881e49a3ad8292d633a9cecfb9626ed7d0d0b9458975cfddffb4",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-recovery-854.png",
+        "bytes": 299802,
+        "sha256": "00132e107b0b3805eb1863f11168b5b2d816bacd44fdd66d8733b6faf93fbda6",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-certificate-confirm-1280.png",
+        "bytes": 759038,
+        "sha256": "e0de70042b9ff7c2af87e8a7212358ff51de280232d848144abcba8646a6566d",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-slot-confirm-1280.png",
+        "bytes": 784035,
+        "sha256": "78afd3ca4f213b34f64b9c21c2bd179ad488e8f6361cba246c47be19b5ec5393",
+        "delivery": "LOCAL_ONLY"
+      }
+    ],
+    "file_hashes": [
+      {
+        "path": "scripts/death/runtime.gd",
+        "sha256": "c77a1873492134b2a19011240f8c6ce22ea8c664955195c317b8ad730f85a973"
+      },
+      {
+        "path": "scripts/death/source_rules.gd",
+        "sha256": "5ec644b6fd41a42b71dd153285ad54796bcc0d5cea8d9dfb80e51bad04af6955"
+      },
+      {
+        "path": "scripts/death/recovery_ui.gd",
+        "sha256": "089b983adeec51a733aca745840d2d9b560a0bd1743ea22130501e8e0e072131"
+      },
+      {
+        "path": "tests/death523_main_test.gd",
+        "sha256": "c3d8302d7fc55401b26e8dd395268712e4eb4d50ea910ad07881ede421b1eca5"
+      },
+      {
+        "path": "tests/death523_identity_test.gd",
+        "sha256": "afb921c1ae40915747433ef77d86a293008e690c7a25e09c9f24438c1bf89e08"
+      },
+      {
+        "path": "data/config/death523_policy.json",
+        "sha256": "16ba78aea297bcc4982b851c9ab3895613a0ed4c100d984108eed0e90b9d888a"
+      },
+      {
+        "path": "docs/DEATH_RECOVERY523.md",
+        "sha256": "5f3ca2441fd14b312052411e2ea3f3c3dde2bd8b2765be71eddaba6059b4b7e2"
+      }
+    ]
+  },
+  "initial_validation_commit": "4e8d7c35b48aaf9eef573397b7b7f894a33427e9",
+  "initial_screenshot_checksums": [
+    {
+      "path": "/workspace/death523-dead-1280.png",
+      "bytes": 1049531,
+      "sha256": "3b5e15e1783fb728bf499ec7e8db12aa83021781b85307c89c10fcc0c46f86d2"
+    },
+    {
+      "path": "/workspace/death523-recovery-1280.png",
+      "bytes": 899577,
+      "sha256": "65a204ec887dad8fe344d3b4887f6e37805456c14bb7e935705816085485eff2"
+    },
+    {
+      "path": "/workspace/death523-recovery-854.png",
+      "bytes": 260327,
+      "sha256": "92345346a6b3b3b74eec73ca36ba7a31393d49f40320e1ae17a3f33720cb52c1"
+    }
+  ],
+  "initial_evidence_note": "Top-level checks and code hashes describe initial4e8d7c35. Initial screenshot hashes are historical; those local output paths were overwritten by follow-up captures. Current screenshot/code hashes and results are in followup."
 }

@@ -9,5 +9,13 @@
   "timezone_offset_seconds": 32400,
   "reset_hour": 5,
   "fallback_exp_loss_percent": 5.0,
-  "fallback_adena_level_squared": 12
+  "fallback_adena_level_squared": 12,
+  "certificate_per_recovery": 1,
+  "base_recovery_slots": 5,
+  "maximum_slot_expansions": 45,
+  "death_stat_exp_reduction_percent_per_point": 1.0,
+  "death_stat_item_reduction_percent_per_point": 1.0,
+  "death_stat_custom_cap": 50,
+  "death_stat_maximum_reduction_percent": 90.0,
+  "slot_overflow_policy": "TWILIGHT_CUSTOM_POLICY: preserve every record and physical item; oldest active losses occupy slots, overflow becomes available as earlier losses are recovered or slots expand. Native server behavior/caps and certificate quantity are not in523."
 }

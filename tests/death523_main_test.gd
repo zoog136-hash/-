@@ -47,6 +47,8 @@ func run() -> void:
 	var service = world.death_recovery
 	check(service.source.ready,"real pinned523 source archive")
 	check(service.source.experience.size() == 160,"all original experience rows")
+	check(service.source.row(159).CumulativeExperience == "20556137784927015" and service.source.row(160).CumulativeExperience == "20556137784927016","native cumulative integers above2pow53 stay exact decimal strings")
+	check(service.source.exp_loss(97,50000,100000) == 5000,"placeholder high-level native curve uses configurable custom projection without overflow")
 	var original_pack: String = service.source.PATH
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--death523-source="): original_pack = argument.trim_prefix("--death523-source=")
@@ -74,6 +76,13 @@ func run() -> void:
 	check(FileAccess.get_sha256(path+".pre-death523-"+old_sha) == old_sha,"exact pre-migration backup")
 	check(service.free_remaining() == 2,"user base free recoveries is2")
 	check(world._save_game(true) == OK,"migrated ledger saves with existing progression")
+	var prior_ledger: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	prior_ledger[service.KEY].erase("slot_expansions")
+	check(Writer.write(path,prior_ledger) == OK,"original PR253 ledger fixture without slot fields")
+	var prior_sha: String = FileAccess.get_sha256(path)
+	world._load_game(true)
+	await process_frame
+	check(service.slot_capacity("exp") == 5 and service.slot_capacity("item") == 5 and FileAccess.get_sha256(path) == prior_sha,"old ledger defaults slots without rewriting save bytes")
 	var record: Dictionary = {}
 	for candidate: Dictionary in world.catalog_db.get("아이템",[]):
 		var sid: String = str(candidate.get("sourceId",""))
@@ -199,6 +208,7 @@ func run() -> void:
 	check(service.resurrect().ok,"third death restart")
 	id2 = str(service.state.records[-1].id)
 	check(not service.quote(id2,"exp","free").ok and service.quote(id2,"exp","adena").ok,"third free blocked, paid recovery offered")
+	id2 = await test_consumers(world,service,id2)
 	var time2: int = int(service.state.records[-1].at)
 	service.test_clock = func() -> int: return time2+86400
 	check(not service.quote(id2,"exp","adena").ok and service.quote(id2,"exp","gem").ok,"24hour extension is gem only")
@@ -224,3 +234,143 @@ func run() -> void:
 	world.queue_free()
 	await process_frame
 	quit(0 if failures.is_empty() else 1)
+
+func test_consumers(world, service, id: String) -> String:
+	check(service.source.certificates.get("895") == "구호 증서" and service.source.certificates.get("198494") == "구호 증서 (각인)","permanent certificates use exact native Currency identities")
+	check(service.source.slot_offers.exp.purchase_id == 57324 and service.source.slot_offers.item.purchase_id == 57334 and service.source.slot_offers.exp.behavior_id == 34 and service.source.slot_offers.item.behavior_id == 74,"typed purchase graphs keep behavior IDs separate from currencies")
+	check(service.source.slot_offers.exp.cost == 50 and service.source.slot_offers.item.cost == 50,"both native currency namespaces resolve to50Gem")
+	var certificate: String = "구호 증서 (각인)"
+	world.inventory[certificate] = 2
+	world.inventory["구호 증서 (이벤트)"] = 99
+	service.state.free_used = 1
+	check(not service.quote(id,"exp","certificate").ok,"certificate cannot precede remaining user free quota")
+	service.state.free_used = 2
+	world.ui_preferences.item_locks[certificate] = true
+	check(not service.quote(id,"exp","certificate").ok,"locked certificate never consumed; event stack not substituted")
+	world.ui_preferences.item_locks.erase(certificate)
+	world.item_instances["900010"] = {"name":certificate,"level":0}
+	check(not service.quote(id,"exp","certificate").ok,"physical object conflict rejects ambiguous certificate wallet")
+	world.item_instances.erase("900010")
+	check(not service.quote(str(service.state.records[0].id),"item","certificate").ok,"certificate is experience recovery currency only")
+	var q: Dictionary = service.quote(id,"exp","certificate")
+	check(q.ok and q.certificate.source_id == "198494" and q.cost == 1,"certificate quote pins exact engraved ID and configurable quantity")
+	var xp: int = world.experience
+	var gold: int = world.gold
+	var gems: int = int(world.inventory["다이아"])
+	var lost: int = int(service._entry(id).exp)
+	check(world._save_game(true) == OK,"production save before certificate transaction")
+	var sha: String = FileAccess.get_sha256(world.save_path())
+	world.equipment_collections.test_save_writer = func(_path: String,_data: Dictionary) -> Error: return ERR_CANT_CREATE
+	check(not service.recover(q).ok and int(world.inventory[certificate]) == 2 and world.experience == xp and service.free_remaining() == 0 and FileAccess.get_sha256(world.save_path()) == sha,"certificate writer failure preserves stack EXP quota and save")
+	world.equipment_collections.test_save_writer = Callable()
+	service.open_ui()
+	await process_frame
+	await tap(service.view.find_child("Death523_%s_exp_certificate" % id,true,false))
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("/workspace/death523-certificate-confirm-1280.png")
+	await tap(world.hud.get_node("Root").find_child("CancelTransaction",true,false))
+	check(int(world.inventory[certificate]) == 2 and world.experience == xp,"actual certificate confirmation cancel preserves stack and EXP")
+	await tap(service.view.find_child("Death523_%s_exp_certificate" % id,true,false))
+	await tap(world.hud.get_node("Root").find_child("ConfirmTransaction",true,false))
+	check(int(world.inventory[certificate]) == 1 and world.experience == xp+lost and world.gold == gold and int(world.inventory["다이아"]) == gems and service.free_remaining() == 0,"actual certificate UI consumes one exact stack and restores100percent once")
+	check(not service.recover(q).ok and service._entry(id).exp_receipt.certificate.source_id == "198494","certificate duplicate rejected and typed receipt retained")
+	world._load_game(true)
+	await process_frame
+	check(int(world.inventory[certificate]) == 1 and service._entry(id).exp_claimed and service.free_remaining() == 0,"certificate receipt stack and fixed quota survive actual reconnect")
+	await test_equipped_death_stat(world,service)
+	var slot: Dictionary = service.quote_slot("exp")
+	check(slot.ok and slot.cost == 50 and slot.amount == 1,"slot expansion quote is native50Gem for one slot")
+	sha = FileAccess.get_sha256(world.save_path())
+	world.equipment_collections.test_save_writer = func(_path: String,_data: Dictionary) -> Error: return ERR_CANT_CREATE
+	check(not service.expand_slot(slot).ok and service.slot_capacity("exp") == 5 and int(world.inventory["다이아"]) == gems and FileAccess.get_sha256(world.save_path()) == sha,"slot writer failure preserves wallet capacity and bytes")
+	world.equipment_collections.test_save_writer = Callable()
+	service.open_ui()
+	await process_frame
+	await tap(service.view.find_child("Death523Slot_exp",true,false))
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png("/workspace/death523-slot-confirm-1280.png")
+	await tap(world.hud.get_node("Root").find_child("CancelTransaction",true,false))
+	check(service.slot_capacity("exp") == 5 and int(world.inventory["다이아"]) == gems,"actual slot expansion cancel preserves wallet")
+	await tap(service.view.find_child("Death523Slot_exp",true,false))
+	await tap(world.hud.get_node("Root").find_child("ConfirmTransaction",true,false))
+	check(service.slot_capacity("exp") == 6 and service.slot_capacity("item") == 5 and int(world.inventory["다이아"]) == gems-50,"actual expansion UI commits only chosen kind and50Gem")
+	check(not service.expand_slot(slot).ok and int(world.inventory["다이아"]) == gems-50,"stale duplicate expansion cannot charge again")
+	check(service.expand_slot(service.quote_slot("item")).ok and service.slot_capacity("item") == 6 and int(world.inventory["다이아"]) == gems-100,"item expansion resolves its different native currency namespace")
+	world._load_game(true)
+	await process_frame
+	check(service.slot_capacity("exp") == 6 and service.slot_capacity("item") == 6 and int(world.inventory["다이아"]) == gems-100,"both paid slot kinds and wallet survive reconnect")
+	service.policy.maximum_slot_expansions = 1
+	check(not service.quote_slot("exp").ok,"configurable expansion cap prevents further charges")
+	service.policy.maximum_slot_expansions = 45
+	var malformed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
+	malformed[service.KEY].slot_expansions.exp = -1
+	check(not service.check_load(malformed).is_empty(),"corrupt slot state rejected before load")
+	# Three real deaths with a deliberately small local QA capacity. Overflow
+	# remains escrowed; it unlocks as an older loss is recovered, without deletion.
+	service.policy.base_recovery_slots = 1
+	var prior_count: int = service.state.records.size()
+	var physical: Dictionary = world.item_instances.duplicate(true)
+	var latest: String = ""
+	for index: int in range(3):
+		world.field_map._build_entry_reach()
+		for flat: int in world.field_map.entry_cells:
+			var point: Vector2 = world.field_map.cell_to_world(Vector2i(flat%world.field_map.width,flat/world.field_map.width))
+			if not world.field_map.is_safe(point) and world.field_map.point_clear(point,4): world.player.global_position = point; break
+		world.hp = 1
+		world._on_player_poison_tick(2)
+		check(service.resurrect().ok,"overflow fixture actual death and restart")
+		latest = str(service.state.records[-1].id)
+	check(service.state.records.size() == prior_count+3 and not service.quote(latest,"exp","adena").ok and equal(world.item_instances,physical),"overflow preserves every record and physical item while waiting")
+	var earliest: String = str(service.active_losses("exp")[0])
+	check(service.recover(service.quote(earliest,"exp","adena")).ok and service.quote(latest,"exp","adena").ok,"recovering earlier record unlocks overflow without deletion or payment")
+	world.inventory.erase(certificate)
+	check(not service.quote(latest,"exp","certificate").ok,"event certificates never replace missing permanent currency")
+	service.policy.base_recovery_slots = 5
+	return latest
+
+func test_equipped_death_stat(world, service) -> void:
+	var record: Dictionary = {}
+	for candidate: Dictionary in world.catalog_db.get("아이템",[]):
+		var sid: String = str(candidate.get("sourceId",""))
+		if candidate.get("slot","") == "ring" and service.source.matches_item(candidate,sid) and int(service.source.item_death_stats.get(sid,0)) == 3: record = candidate; break
+	check(not record.is_empty(),"existing catalog and native ItemBonus share exact Death-stat ring identity")
+	if record.is_empty(): return
+	var equipment: Dictionary = world.equipped_items.duplicate(true)
+	world.equipped_items.clear()
+	var item_name: String = str(record.name)
+	var count: int = int(world.inventory.get(item_name,0))
+	world.inventory[item_name] = count+1
+	world.item_instances["900020"] = {"name":item_name,"record":record.duplicate(true),"level":0,"element":"","element_level":0}
+	world.next_item_instance_id = maxi(world.next_item_instance_id,900021)
+	world._equip_or_acquire_item(record,false,"900020","ring1")
+	check(world._is_instance_equipped("900020") and service.death_stats().value == 3,"real existing equip action derives native KarmaDeath from owned physical ID")
+	world.equipped_items["ring2"] = world.equipped_items.ring1.duplicate(true)
+	check(service.death_stats().value == 3,"same physical ID in two slots never doubles Death-stat")
+	world.equipped_items.erase("ring2")
+	world.item_instances["900020"].record.name = "unrelated name"
+	check(service.death_stats().value == 0,"wrong-name native ID cannot grant Death-stat")
+	world.item_instances["900020"].record.name = item_name
+	check(service.death_stats().exp_reduction == 3.0 and service.death_stats().item_reduction == 3.0,"explicit configurable custom coefficients affect only derived existing stat")
+	var xp: int = world.experience
+	var expected: int = int(floor(service.source.exp_loss(world.level,xp,world.exp_need)*0.97))
+	world.field_map._build_entry_reach()
+	for flat: int in world.field_map.entry_cells:
+		var point: Vector2 = world.field_map.cell_to_world(Vector2i(flat%world.field_map.width,flat/world.field_map.width))
+		if not world.field_map.is_safe(point) and world.field_map.point_clear(point,4): world.player.global_position = point; break
+	world.hp = 1
+	world._on_player_poison_tick(2)
+	var entry: Dictionary = service.state.records[-1]
+	check(int(entry.exp) == expected and world.experience == xp-expected and int(entry.death_stat_policy.value) == 3,"actual lethal transaction applies and persists snapshot of equipped Death-stat loss relief")
+	check(service.resurrect().ok,"Death-stat death restarts through same resurrection service")
+	check(service.recover(service.quote(str(entry.id),"exp","adena")).ok and world.experience == xp,"recovery returns exact reduced escrow rather than unreduced EXP")
+	world._load_game(true)
+	await process_frame
+	check(service.death_stats().value == 3 and int(service._entry(str(entry.id)).death_stat_policy.value) == 3,"owned equipped stat and applied death snapshot survive reconnect")
+	world.equipped_items = equipment
+	world.item_instances.erase("900020")
+	if count == 0: world.inventory.erase(item_name)
+	else: world.inventory[item_name] = count
+	world._invalidate_equipment_static()
+	world._update_hud()
