@@ -8254,6 +8254,15 @@ func current523_aden_source_portals() -> Array:
 func current523_aden_source_portal_context(id: int) -> Dictionary:
 	return _aden_play_controller().call("portal_context",id)
 
+func current523_source_portal_navigation_ticket(id: int) -> Dictionary:
+	return _aden_play_controller().call("portal_navigation_ticket",id)
+
+func walk_to_current523_source_portal(id: int, ticket: Dictionary) -> bool:
+	var result: bool=_aden_play_controller().call("walk_to_source_portal",id,ticket)
+	current523_aden_play_problem=str(_aden_play_controller().get("problem"))
+	current523_aden_play_changed.emit(current523_aden_play_active,"원문 출발점까지 걷습니다. 도착해도 자동 포탈은 활성화하지 않습니다." if result else current523_aden_play_problem)
+	return result
+
 func use_current523_aden_source_portal(id: int) -> bool:
 	var result: bool = _aden_play_controller().call("use_source_portal",id)
 	current523_aden_play_problem = str(_aden_play_controller().get("problem"))

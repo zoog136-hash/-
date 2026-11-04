@@ -25,6 +25,7 @@ const DEFINITION_PACK_SHA256="2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291
 const SOURCE_TRAVEL=preload("res://scripts/maps/current523_source_travel.gd")
 var _source_portal_provider: RefCounted
 var _source_travel_busy: bool=false
+var _portal_definition_generation: int=0
 const GENERIC_CATALOG=preload("res://scripts/maps/current523_source_pack.gd")
 const GENERIC_TILES=preload("res://scripts/maps/current523_tile_pack.gd")
 var _cached_catalog: RefCounted
@@ -357,7 +358,7 @@ func portal_evidence() -> Array:
 			if int(portal.get("ID",-1))!=id or int(portal.get("SourceLandID",-1))!=int(settings.native_land_id): continue
 			var point: Variant=null
 			if territory.get("StartX")==territory.get("EndX") and territory.get("StartY")==territory.get("EndY"): point=[territory.StartX,territory.StartY]
-			result.append({"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","definition_hold":context.get("source_travel_hold",""),"definition_owner":context.get("definition_owner","CALLER_SUPPLIED"),"native_m_rules_verified":false})
+			result.append({"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","definition_hold":context.get("source_travel_hold",""),"definition_owner":context.get("definition_owner","CALLER_SUPPLIED"),"navigation_ticket":_navigation_ticket_for_context(id,context),"native_m_rules_verified":false})
 		return result
 	return _portals.call("portal_evidence") if source_owned and _portals != null else []
 
@@ -401,10 +402,45 @@ func bind_source_portal_provider(provider: RefCounted, verified_manifest_sha256:
 	# Comparing this pin does not authenticate an untrusted provider by itself.
 	if _source_travel_busy: return false
 	if provider==null:
+		_portal_definition_generation+=1
 		_source_portal_provider=null; return true
 	if verified_manifest_sha256!=DEFINITION_PACK_SHA256 or not provider.has_method("portal_evidence_for_land") or not provider.has_method("portal_context_for_land"):
 		problem="검증된 523 포탈 정의 제공자의 연결 계약이 필요합니다."; return false
 	_source_portal_provider=provider
+	_portal_definition_generation+=1
+	return true
+
+func portal_navigation_ticket(id: int) -> Dictionary:
+	return _navigation_ticket_for_context(id,portal_context(id))
+
+func _navigation_ticket_for_context(id: int, context: Dictionary) -> Dictionary:
+	# Ephemeral UI request identity, never an admission/activation decision.
+	var world: Node=_world()
+	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC or _source_field==null or _source_portal_provider==null or not is_instance_valid(world): return {}
+	if world.field_map!=_source_field or world.field_renderer!=_renderer or world.field_physics!=_source_physics: return {}
+	if not _source_context_shape(context) or context.Portal.ID!=id or context.SourceLand!=_source_field.get("native_land") or context.Portal.SourceLandID!=context.SourceLand.ID: return {}
+	return {"field_instance":_source_field.get_instance_id(),"definition_generation":_portal_definition_generation,"portal":context.Portal.duplicate(true),"source_manifest_sha256":settings.source_manifest_sha256,"actor_position":world.player.global_position}
+
+func walk_to_source_portal(id: int, ticket: Dictionary) -> bool:
+	problem=""
+	var world: Node=_world()
+	if ticket.is_empty() or ticket!=portal_navigation_ticket(id):
+		problem="지도·원문 정의·캐릭터 위치가 바뀌었습니다. 포탈 목록을 새로 열어 주세요."; return false
+	if _source_travel_busy or world.player.auto_enabled or world.player.is_stunned() or world.player.is_held() or not world.charge_skill.is_empty():
+		problem="현재 이동 상태에서는 원문 출발점으로 걸어갈 수 없습니다."; return false
+	var cell:=Vector2i(int(ticket.portal.SourceX),int(ticket.portal.SourceY))
+	if _source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin==cell:
+		problem="이미 원문 출발 셀에 있습니다. 자동 포탈 활성은 수행하지 않습니다."; return false
+	var target: Vector2=_source_field.coordinates.to_world(Vector2(cell))
+	if not _source_field.point_clear(target,4.0):
+		problem="원문 출발 셀이 현재 자체 통행에서 차단됩니다."; return false
+	var route: PackedVector2Array=world.find_world_path(world.player.global_position,target)
+	if route.is_empty() or route[route.size()-1]!=target:
+		problem="원문 출발점까지 확인된 보행 경로가 없습니다."; return false
+	if ticket!=portal_navigation_ticket(id):
+		problem="경로 확인 중 지도·원문 정의·캐릭터 위치가 바뀌었습니다."; return false
+	# All checks precede the only movement write. No position/save/fee/portal use.
+	world.player.set_manual_click_path(route,target)
 	return true
 
 func _use_generic_source_portal(id: int) -> bool:

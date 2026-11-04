@@ -182,3 +182,16 @@ contracts; a shared target does not assign their fee to a Portal. The provider
 never changes native `activation_known=false` or `travel_enabled=false` into
 true. The optional button remains an explicitly labelled TWILIGHT own manual
 geographic action; this is not automatic original-M portal admission.
+
+## Source-point navigation requests
+
+`world.current523_source_portal_navigation_ticket(portal_id)` returns an
+in-memory request identity for the active generic field and current actor.
+`world.walk_to_current523_source_portal(portal_id, ticket)` validates the field
+instance, definition generation, manifest, native Portal row and exact actor
+position, then queues an ordinary physical walking path to the declared source
+cell. It refuses stale/missing requests, blocked endpoints and incomplete routes
+before changing movement. Tickets are ephemeral; do not persist or reuse them
+after movement, field teardown or definition rebinding. They are not native
+admission credentials. The existing Settings button consumes the same contract;
+arrival does not activate a portal or use the separate manual transition API.

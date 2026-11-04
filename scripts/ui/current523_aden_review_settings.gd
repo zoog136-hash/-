@@ -36,6 +36,7 @@ var source_words: LineEdit
 var source_portal_path: LineEdit
 var source_portal_choice: OptionButton
 var source_portal_button: Button
+var source_portal_walk_button: Button
 var source_entry_enabled: CheckBox
 var source_entry_x: SpinBox
 var source_entry_y: SpinBox
@@ -64,8 +65,8 @@ func _build() -> void:
 	_built = true
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	add_theme_constant_override("separation", 8)
-	add_child(UI.section("아덴 원문 검토", 18))
-	var note: Label = UI.label("좌표와 표시 방식은 검토 중입니다. 캐릭터 보행은 아직 구현되지 않았습니다.", 13, UI.MUTED)
+	add_child(UI.section("맵 원문 검토", 18))
+	var note: Label = UI.label("검토 보기는 표시용입니다. 아래 맵 플레이에서 원문 지형과 자체 통행으로 걸을 수 있습니다. 원작 판정은 미확정입니다.", 13, UI.MUTED)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(note)
 	var install_row := HBoxContainer.new()
@@ -177,6 +178,9 @@ func _build_play_options() -> void:
 	add_child(source_portal_path)
 	source_portal_choice = OptionButton.new(); source_portal_choice.name = "AdenSourcePortalChoice"
 	add_child(source_portal_choice)
+	source_portal_walk_button=UI.button("원문 출발점까지 걷기 · 자동 포탈 활성 없음",_walk_to_source_portal,Vector2(0,40))
+	source_portal_walk_button.name="WalkToCurrent523SourcePortalButton"
+	add_child(source_portal_walk_button)
 	source_portal_button = UI.button("현재 출발 셀의 원문 포탈 사용",_use_source_portal,Vector2(0,40))
 	source_portal_button.name = "UseAdenSourcePortalButton"
 	add_child(source_portal_button)
@@ -272,7 +276,15 @@ func _refresh_source_portals() -> void:
 	for row: Dictionary in current.call("current523_aden_source_portals"):
 		var note: String = ("원문 조건 보류" if not str(row.get("definition_hold","")).is_empty() else "자체 수동 · 사용 시 양끝 검사") if play_profile.selected==3 else ("원문 양끝 대조" if row.get("activation_candidate",false) else "보류")
 		source_portal_choice.add_item("%d · %s → %s · %s" % [int(row.id),str(row.source_position),("Land%d · " % int(row.target_land_id) if row.has("target_land_id") else "")+str(row.get("landing_position")),note],int(row.id))
+		source_portal_choice.set_item_metadata(source_portal_choice.item_count-1,row.get("navigation_ticket",{}))
 		if int(row.id)==selected: source_portal_choice.select(source_portal_choice.item_count-1)
+
+func _walk_to_source_portal() -> void:
+	var current: Node=_world()
+	if current==null or source_portal_choice.item_count==0: return
+	var ticket: Variant=source_portal_choice.get_item_metadata(source_portal_choice.selected)
+	if ticket is Dictionary and current.call("walk_to_current523_source_portal",source_portal_choice.get_selected_id(),ticket):
+		current.hud.workspace.hide()
 
 func _use_source_portal() -> void:
 	var current: Node = _world()
@@ -393,6 +405,7 @@ func _update_open_button() -> void:
 		source_entry_x.editable = not busy and not playing
 		source_entry_y.editable = not busy and not playing
 		source_portal_button.disabled = busy or not playing or source_portal_choice.item_count==0
+		source_portal_walk_button.disabled = busy or not playing or play_profile.selected!=3 or source_portal_choice.item_count==0
 
 
 func _browse_zip() -> void:

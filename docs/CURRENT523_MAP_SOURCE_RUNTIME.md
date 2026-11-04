@@ -269,6 +269,70 @@ Both original endpoint pairs are `[0,0]`. Portal523's declared807/808 endpoints
 both contain `[0,1]`; the default own policy rejects them. Declaration coordinates
 are preserved rather than changed to force travel.
 
+## Walk to a declared source point
+
+The existing Settings portal list now has **원문 출발점까지 걷기 · 자동 포탈 활성 없음**.
+It queues the ordinary player-physics path to the original `Portal.SourceX/Y`
+in the current exact Land. It never sets the actor position, selects a nearby
+replacement, spends a separate route's fee, grants admission or invokes a portal.
+Arrival still leaves native automatic activation unimplemented. The explicit own
+manual transition button and its native-condition holds remain separate.
+
+The UI stores an ephemeral navigation ticket with field instance, source manifest,
+definition-binding generation, original Portal row and actor world position.
+Requests recheck that identity before and after path preparation. Same-Land
+close/reopen, definition rebind and even a changed actor position invalidate an
+old request. Active auto-hunting/charge/impairments, already-at-source, blocked
+source endpoints, missing/partial routes and absent tickets are refused before
+changing a queued route. Geometry, raw-word collision, renderer, packet bytes,
+source checkpoints and game-save formats are unchanged.
+
+`tests/current523_source_portal_walk_main_test.gd` uses the genuine definition
+pack and actual Settings/player physics:67 checks pass in132.47s. It walks from
+a verified own QA neighbor to native Portal313's exact Land1 source cell, invokes
+the real Main trigger updater after arrival, confirms no automatic transition,
+and checks stale actor/provider/field requests and blocked native523 endpoints.
+Rejected requests preserve existing movement, field, renderer, physics,
+preferences, stored save bytes and protected state. The test's capture and logs
+remain local under `display/source-portal-walk-walk02/`. The original577-root /
+12,558-check checkpoint remains evidence for its stated full physical-map scope;
+this focused UI/navigation change does not rerun that24-minute suite.
+The default-off Main/save gate also passes35 checks in72.65s on this continuation
+(`current523-portalwalk-core-save-receipt.json`). Focused walk log SHA256 is
+`c2bca6eb8b610036093fe67fe4b939d59697a7ac2a07574f3746571efaff662c`.
+
+## Remaining native evidence reviewed
+
+The nine-character original is still the only non-eight-character S32 name in
+all8,311 entries of the previously received original-member index. Its exact
+SHA occurs only in its own entry, including across the complete ordinary6,570
+scope; it is not an exact payload duplicate in those indices. The complete
+index SHA256 is`eed9bf9379e83af4e43ae325138e732b7e7fdab55c01b4f8215c9cbbe97a01a2`.
+This metadata comparison reads no additional excluded-mode original bytes.
+The original two-byte zero tail supplies no portal coordinate anchor.
+
+The previously referenced public viewer was checked at pinned revision
+`364fcff15ea019e5a9329170aaf7e245404ebba6`. Its
+[M data-source reader](https://github.com/tony1223/L1MapViewer/blob/364fcff15ea019e5a9329170aaf7e245404ebba6/Sources/LineageMDataSource.cs)
+accepts eight-hex map names and contains no selector/placement contract for this
+suffix. Its [attribute decoder](https://github.com/tony1223/L1MapViewer/blob/364fcff15ea019e5a9329170aaf7e245404ebba6/Helper/Layer3AttributeDecoder.cs)
+and direction service document that tool's own flag interpretation, not verified
+M movement semantics. None of those source observations supplies native origin,
+variant selection, actor-foot, collision or automatic-portal authority.
+The existing typed movement, obstacle, interaction-cell and portal reports were
+reviewed; their separate terrain/occupancy/actor-state namespaces and explicit
+counterexamples remain intact.
+
+Precisely missing are a trusted origin/variant selector for the literal member,
+a native movement truth table separating static terrain from occupancy and actor
+state, and native portal trigger geometry plus runtime activation/admission/fee
+semantics. Empty condition rows provide none of those facts. No grounded
+placement or automatic activation policy was established, so the source remains
+losslessly unplaced and native automatic activation held. This is an evidence
+limit, not an access denial. No original engine/APK/XAPK, unrecognized binary or
+additional resource download/upload was used. Local evidence receipt SHA256 is
+`486f1604d0d702dbd9206aa16df8f8c28b57680c112a6236384939ad9ff7abcf`.
+
 ## Execution evidence and limits
 
 Latest complete-input checks use the source and tile pins above:
@@ -335,7 +399,8 @@ Latest complete-input checks use the source and tile pins above:
   renderer105 authored display/guard checks. Authored cases are not original-M
   behavior evidence. All original native Portal350 coordinates remain unchanged.
 - Default-off actual Main/core save preservation:35 checks, rerun on the final
-  code in66.06s (`current523-followup-core-save-receipt.json`). Tracked resource
+  full-map checkpoint in66.06s (`current523-followup-core-save-receipt.json`);
+  the portal-walk continuation passes again in72.65s as recorded above. Tracked resource
   integrity:723 atlases /41,442 frames /233,420,026 bytes, unchanged.
 - Python source builder11, TI2 builder21 and core harness8 focused tests pass.
   Source-pack snapshot isolation and matching external-pin checks also pass.
