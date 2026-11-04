@@ -7,6 +7,7 @@ const TILE_ENV: String = "TWILIGHT_CURRENT523_ADEN_TILES"
 const INSTALL = preload("res://scripts/maps/current523_aden_install.gd")
 const PREFERENCES = preload("res://scripts/maps/current523_aden_preferences.gd")
 const INSTALL_STAGES = {"archive_sha256":"원본 확인", "manifest_validation":"팩 정보 확인", "inventory":"설치 파일 확인", "extract":"파일 저장", "verify":"저장 결과 확인", "reuse_verify":"기존 설치 확인", "cleanup":"임시 파일 정리"}
+const PLAY_OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 
 var raw_path_edit: LineEdit
 var tile_path_edit: LineEdit
@@ -20,6 +21,13 @@ var install_button: Button
 var cancel_button: Button
 var rollback_button: Button
 var installer: Node
+var play_profile: OptionButton
+var play_offset_x: SpinBox
+var play_offset_y: SpinBox
+var play_button: Button
+var play_apply_button: Button
+var play_stop_button: Button
+var play_status: Label
 var _world_ref: WeakRef
 var _built: bool = false
 var _folder_target: String = ""
@@ -32,9 +40,12 @@ func configure(world: Node) -> void:
 	if not _built:
 		_build()
 		_load_paths()
+		_load_play_options()
 	var current: Node = _world()
 	if current != null and current.has_signal("current523_aden_review_closed"):
 		current.connect("current523_aden_review_closed", _on_review_closed)
+	if current != null and current.has_signal("current523_aden_play_changed"):
+		current.connect("current523_aden_play_changed", _on_play_changed)
 	_update_open_button()
 
 
@@ -82,6 +93,7 @@ func _build() -> void:
 	status_label.name = "ReviewStatus"
 	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(status_label)
+	_build_play_options()
 	folder_dialog = FileDialog.new()
 	folder_dialog.name = "AdenReviewFolderDialog"
 	folder_dialog.file_mode = FileDialog.FILE_MODE_OPEN_DIR
@@ -105,6 +117,108 @@ func _build() -> void:
 	installer.finished.connect(_install_finished)
 	add_child(installer)
 	visibility_changed.connect(_visibility_changed)
+
+
+func _build_play_options() -> void:
+	add_child(HSeparator.new())
+	add_child(UI.section("아덴 원문 실험 플레이", 18))
+	var note: Label = UI.label("M 원문을 표시하며 기존 TWILIGHT 이동·충돌·전투를 사용합니다. M 원작 통행이 아니며 전체 본토 지원은 미확정입니다.", 13, UI.MUTED)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	add_child(note)
+	play_profile = OptionButton.new()
+	play_profile.name = "AdenPlayNavigationProfile"
+	play_profile.add_item("자체 통행 설정을 선택해 주세요")
+	play_profile.add_item("기존 TWILIGHT 아덴 통행 · 자체 설정")
+	play_profile.item_selected.connect(_play_choice_changed)
+	add_child(play_profile)
+	var offsets := HBoxContainer.new()
+	add_child(offsets)
+	offsets.add_child(UI.label("표시 보정 X", 13))
+	play_offset_x = _offset_control("AdenPlayOffsetX")
+	offsets.add_child(play_offset_x)
+	offsets.add_child(UI.label("Y", 13))
+	play_offset_y = _offset_control("AdenPlayOffsetY")
+	offsets.add_child(play_offset_y)
+	var hint: Label = UI.label("보정은 화면에만 적용합니다. M 발 기준은 미확정이며 원본·캐릭터 위치는 바꾸지 않습니다.", 12, UI.MUTED)
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	add_child(hint)
+	var actions := HBoxContainer.new()
+	add_child(actions)
+	play_button = UI.button("실험 플레이 시작", _open_play, Vector2(0, 42))
+	play_button.name = "StartAdenPlayButton"
+	actions.add_child(play_button)
+	play_apply_button = UI.button("표시 보정 적용", _apply_play_options, Vector2(0, 42))
+	play_apply_button.name = "ApplyAdenPlayOffsetButton"
+	actions.add_child(play_apply_button)
+	play_stop_button = UI.button("기존 지도 · 실험 해제", _stop_play, Vector2(0, 42))
+	play_stop_button.name = "StopAdenPlayButton"
+	actions.add_child(play_stop_button)
+	play_status = UI.label("자체 통행 설정을 선택하면 아덴에서 실험 플레이를 시작할 수 있습니다.", 13, UI.MUTED)
+	play_status.name = "AdenPlayStatus"
+	play_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	add_child(play_status)
+
+
+func _offset_control(node_name: String) -> SpinBox:
+	var control := SpinBox.new()
+	control.name = node_name
+	control.min_value = -PLAY_OPTIONS.OFFSET_LIMIT
+	control.max_value = PLAY_OPTIONS.OFFSET_LIMIT
+	control.step = 1
+	control.suffix = "px"
+	control.custom_minimum_size = Vector2(100, 36)
+	return control
+
+
+func _load_play_options() -> void:
+	var options: Dictionary = PLAY_OPTIONS.read()
+	play_profile.select(1 if options.navigation_profile == PLAY_OPTIONS.LEGACY else 0)
+	play_offset_x.value = options.offset_x
+	play_offset_y.value = options.offset_y
+	var current: Node = _world()
+	if current != null and bool(current.get("current523_aden_play_active")):
+		raw_path_edit.text = options.raw_root
+		tile_path_edit.text = options.tile_root
+		play_status.text = "실험 플레이 중 · 이동과 충돌은 기존 TWILIGHT 자체 설정입니다."
+
+
+func _play_values() -> Dictionary:
+	return {"navigation_profile":PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE, "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
+
+
+func _play_choice_changed(_index: int) -> void:
+	_update_open_button()
+
+
+func _open_play() -> void:
+	if installer.busy: return
+	var current: Node = _world()
+	if current == null or not current.has_method("open_current523_aden_play"): return
+	var opened: bool = bool(current.call("open_current523_aden_play", raw_path_edit.text.strip_edges(), tile_path_edit.text.strip_edges(), _play_values()))
+	if opened:
+		var hud: Variant = current.get("hud")
+		if is_instance_valid(hud) and is_instance_valid(hud.workspace): hud.workspace.hide()
+	else:
+		play_status.text = "실험 플레이를 열지 못했습니다: " + str(current.get("current523_aden_play_problem"))
+	_update_open_button()
+
+
+func _apply_play_options() -> void:
+	var current: Node = _world()
+	if current != null and current.has_method("apply_current523_aden_play_options"):
+		current.call("apply_current523_aden_play_options", _play_values())
+
+
+func _stop_play() -> void:
+	var current: Node = _world()
+	if current != null and current.has_method("close_current523_aden_play"):
+		current.call("close_current523_aden_play")
+
+
+func _on_play_changed(active: bool, detail: String) -> void:
+	if active: _load_play_options()
+	play_status.text = detail
+	_update_open_button()
 
 
 func _path_edit(node_name: String) -> LineEdit:
@@ -141,6 +255,8 @@ func _disconnect_world() -> void:
 	var current: Node = _world()
 	if current != null and current.has_signal("current523_aden_review_closed") and current.is_connected("current523_aden_review_closed", _on_review_closed):
 		current.disconnect("current523_aden_review_closed", _on_review_closed)
+	if current != null and current.has_signal("current523_aden_play_changed") and current.is_connected("current523_aden_play_changed", _on_play_changed):
+		current.disconnect("current523_aden_play_changed", _on_play_changed)
 
 
 func _path_changed(_text: String) -> void:
@@ -158,15 +274,23 @@ func _update_open_button() -> void:
 		return
 	var current: Node = _world()
 	var busy: bool = is_instance_valid(installer) and installer.busy
-	open_button.disabled = busy or current == null or not current.has_method("open_current523_aden_review_ui") or raw_path_edit.text.strip_edges().is_empty() or tile_path_edit.text.strip_edges().is_empty()
+	var playing: bool = current != null and bool(current.get("current523_aden_play_active"))
+	open_button.disabled = busy or playing or current == null or not current.has_method("open_current523_aden_review_ui") or raw_path_edit.text.strip_edges().is_empty() or tile_path_edit.text.strip_edges().is_empty()
 	if is_instance_valid(install_button):
-		install_button.disabled = busy
+		install_button.disabled = busy or playing
 		cancel_button.disabled = not busy
-		rollback_button.disabled = busy or PREFERENCES.selection(true).raw.is_empty()
-		raw_path_edit.editable = not busy
-		tile_path_edit.editable = not busy
-		raw_browse_button.disabled = busy
-		tile_browse_button.disabled = busy
+		rollback_button.disabled = busy or playing or PREFERENCES.selection(true).raw.is_empty()
+		raw_path_edit.editable = not busy and not playing
+		tile_path_edit.editable = not busy and not playing
+		raw_browse_button.disabled = busy or playing
+		tile_browse_button.disabled = busy or playing
+	if is_instance_valid(play_button):
+		play_button.disabled = busy or playing or current == null or not current.has_method("open_current523_aden_play") or play_profile.selected != 1 or raw_path_edit.text.strip_edges().is_empty() or tile_path_edit.text.strip_edges().is_empty()
+		play_apply_button.disabled = busy or not playing
+		play_stop_button.disabled = busy or (not playing and not PLAY_OPTIONS.read().enabled)
+		play_profile.disabled = busy or playing
+		play_offset_x.editable = not busy
+		play_offset_y.editable = not busy
 
 
 func _browse_zip() -> void:

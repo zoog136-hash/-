@@ -26,6 +26,9 @@ CHECKS = [
     ('current523_aden_review_unit_test', []),
     ('current523_aden_preferences_test', []),
     ('current523_aden_install_test', []),
+    ('current523_aden_play_options_test', []),
+    ('current523_aden_play_renderer_test', []),
+    ('current523_aden_play_controller_test', []),
     ('save_identical_payload_test', []),
     ('deferred_save_gate_test', ['--gate-only']),
 ]
@@ -271,6 +274,9 @@ def main():
                       'current523_aden_review_unit_test':'CURRENT523_ADEN_REVIEW_UNIT_RESULT',
                       'current523_aden_preferences_test':'CURRENT523_ADEN_PREFERENCES_RESULT',
                       'current523_aden_install_test':'CURRENT523_INSTALL_FOCUSED_RESULT',
+                      'current523_aden_play_options_test':'CURRENT523_ADEN_PLAY_OPTIONS_RESULT',
+                      'current523_aden_play_renderer_test':'CURRENT523_ADEN_PLAY_RENDERER_RESULT',
+                      'current523_aden_play_controller_test':'CURRENT523_ADEN_PLAY_CONTROLLER_RESULT',
                       'save_identical_payload_test':'SAVE_IDENTICAL_PAYLOAD_RESULT',
                       'deferred_save_gate_test':'DEFERRED_SAVE_GATE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)

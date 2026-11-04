@@ -34,6 +34,8 @@ var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
+const CURRENT523_ADEN_PLAY = preload("res://scripts/maps/current523_aden_play_controller.gd")
+const CURRENT523_ADEN_PLAY_OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
 const NATIVE_PNG_RENDERER_PATH: String = "res://scripts/maps/native_png_renderer.gd"
 # Do not preload this heavy optional renderer while parsing the main game class.
@@ -473,6 +475,7 @@ func _ready() -> void:
 	world_interactions.configure(self)
 	if creating_character and DisplayServer.get_name() != "headless":
 		hud.call("open_class_selection",true)
+	_restore_current523_aden_play.call_deferred()
 
 func _process(delta: float) -> void:
 	# No auto-save, auto-hunt or keyboard commands until the new class is
@@ -1407,6 +1410,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		requested_original.close()
 		_reject_map_pack("오만 PNG 팩 누락·손상: 현재 지역과 저장을 유지합니다")
 		return
+	# Restore the retained renderer before the existing map lifecycle releases it.
+	# Requested experimental presentation can reapply on a supported destination.
+	if current523_aden_play_active: close_current523_aden_play(false)
 	_clear_combat_actions()
 	manual_route_pending_target=Vector2.INF
 	if is_instance_valid(world_interactions):
@@ -1533,6 +1539,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		map_bootstrap_blocked=false
 		process_mode=map_prior_process_mode
 		if not FileAccess.file_exists(save_path()):source_save_blocked=false
+	_restore_current523_aden_play.call_deferred()
 
 func _reject_map_pack(message: String) -> void:
 	hud.show_message(message)
@@ -8121,6 +8128,63 @@ var current523_aden_review_active: bool = false
 var _current523_aden_resume: Dictionary = {}
 var _current523_aden_review_from_boot: bool = false
 signal current523_aden_review_closed
+var current523_aden_play_active: bool = false
+var current523_aden_play_problem: String = ""
+var _current523_aden_play_controller: RefCounted
+signal current523_aden_play_changed(active: bool, detail: String)
+
+func _aden_play_controller() -> RefCounted:
+	if _current523_aden_play_controller == null:
+		_current523_aden_play_controller = CURRENT523_ADEN_PLAY.new()
+		_current523_aden_play_controller.call("configure", self)
+	return _current523_aden_play_controller
+
+func open_current523_aden_play(raw_root: String, tile_root: String, options: Dictionary) -> bool:
+	var requested: Dictionary = options.duplicate(true)
+	requested.enabled = true
+	requested.raw_root = raw_root
+	requested.tile_root = tile_root
+	var controller: RefCounted = _aden_play_controller()
+	var opened: bool = bool(controller.call("open", requested))
+	current523_aden_play_active = bool(controller.get("active"))
+	current523_aden_play_problem = str(controller.get("problem"))
+	current523_aden_play_changed.emit(current523_aden_play_active, "기존 TWILIGHT 통행을 사용하는 아덴 실험 플레이입니다." if opened else current523_aden_play_problem)
+	return opened
+
+func close_current523_aden_play(remember_disabled: bool = true, reason: String = "") -> void:
+	var controller: RefCounted = _aden_play_controller()
+	var saved: bool = bool(controller.call("close", remember_disabled))
+	current523_aden_play_active = false
+	current523_aden_play_problem = reason
+	var detail: String = "기존 지도로 복귀했습니다." if reason.is_empty() else "실험 플레이 종료: " + reason
+	if not saved: detail += " 자동 시작 해제 설정은 저장하지 못했습니다."
+	current523_aden_play_changed.emit(false, detail)
+	if is_instance_valid(hud) and not reason.is_empty(): hud.show_message(detail)
+
+func apply_current523_aden_play_options(options: Dictionary) -> bool:
+	var controller: RefCounted = _aden_play_controller()
+	var value: Dictionary = (controller.get("settings") as Dictionary).duplicate(true)
+	value.merge(options, true)
+	var applied: bool = bool(controller.call("apply_options", value))
+	current523_aden_play_problem = str(controller.get("problem"))
+	current523_aden_play_changed.emit(current523_aden_play_active, "자체 표시 보정을 적용했습니다." if applied else current523_aden_play_problem)
+	return applied
+
+func current523_aden_play_metrics() -> Dictionary:
+	return _aden_play_controller().call("metrics")
+
+func _restore_current523_aden_play() -> void:
+	if not is_inside_tree() or is_queued_for_deletion() or current523_aden_play_active or current523_aden_review_active or CURRENT523_ADEN_REVIEW.requested(): return
+	var options: Dictionary = CURRENT523_ADEN_PLAY_OPTIONS.read()
+	if not options.enabled: return
+	# Other maps keep their normal presentation; this never redirects travel.
+	if active_map_id != "aden_world": return
+	open_current523_aden_play(options.raw_root, options.tile_root, options)
+
+func _exit_tree() -> void:
+	if _current523_aden_play_controller != null:
+		_current523_aden_play_controller.call("close", false)
+	current523_aden_play_active = false
 
 func _boot_current523_aden_review() -> bool:
 	if not CURRENT523_ADEN_REVIEW.requested(): return false
@@ -8156,6 +8220,9 @@ func _mount_current523_aden_review(from_boot: bool) -> void:
 	current523_aden_review.connect("close_requested", close_current523_aden_review)
 
 func open_current523_aden_review_ui(raw_root: String, tile_root: String) -> bool:
+	if current523_aden_play_active:
+		current523_aden_problem = "실험 플레이를 종료한 뒤 원문 검토를 열어 주세요."
+		return false
 	if current523_aden_review_active:
 		current523_aden_problem = "아덴 원문 검토가 이미 열려 있습니다"
 		return false
