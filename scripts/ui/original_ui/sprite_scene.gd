@@ -414,6 +414,7 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_text",label)
 		var text_options: Dictionary=options.duplicate(true)
 		text_options.text=text_value
+		text_options["_cocos_wrap"]=text_binding.get("cocos_wrap",false)
 		var text_result: Dictionary=label.configure(font_value,text_options,Vector2(widget.size[0],widget.size[1]))
 		if not text_result.ok:
 			_build_error=str(text_result.error)+":"+str(widget.name);label.free();node.free();return null
