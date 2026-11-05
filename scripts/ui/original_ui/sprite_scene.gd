@@ -23,12 +23,14 @@ var _bindings: Dictionary={}
 var excluded_audio_events: Array[Dictionary]=[]
 var _entered_frames: Dictionary={}
 var _audio_frame_offsets: Dictionary={}
+var _resolved_assets: Dictionary={}
 
 func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindings: Dictionary={}) -> Dictionary:
 	if not source_tree.is_empty(): return {"ok":false,"error":"already_configured"}
 	unresolved_bindings.clear()
 	excluded_audio_events.clear()
 	_audio_frame_offsets.clear()
+	_resolved_assets.clear()
 	_build_error=""
 	inspection_only=inspect_only
 	_bindings=bindings.duplicate()
@@ -103,10 +105,12 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button","LoadingBar","Particle","CheckBox","ScrollView"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","TextBMFont","Button","LoadingBar","Particle","CheckBox","ScrollView"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
+	if binding.get("role")=="source_asset":
+		if node.classname not in ["Sprite","ImageView"] or not binding.get("asset_ref") is Dictionary:problems.append("source_asset_node_or_reference_missing")
 	if binding.has("visible") and not binding.visible is bool:problems.append("source_visibility_value_missing")
 	if binding.has("displaystate") and not binding.displaystate is bool:problems.append("source_displaystate_value_missing")
 	if binding.has("selected") and not binding.selected is bool:problems.append("source_selection_value_missing")
@@ -149,11 +153,12 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if inspection_only or binding.get("role")!="button":unresolved_bindings.append(str(widget.name)+":original_button_service_binding")
 		if not inspection_only and not (binding.get("role")=="button" and ((binding.get("activate") is Callable and binding.activate.is_valid()) or binding.get("displaystate")==false)): problems.append("unconnected_source_button")
 		if str(options.get("text","")).contains("\n"): problems.append("unsupported_button_text_layout")
-	if node.classname=="Text":
+	if node.classname in ["Text","TextBMFont"]:
 		if inspection_only or binding.get("role") not in ["static_source_text","source_text"]:unresolved_bindings.append(str(widget.name)+":source_text_requires_live_binding")
 		if not inspection_only and binding.get("role") not in ["static_source_text","source_text"]: problems.append("unconnected_source_text")
 		if binding.get("role")=="source_text" and not binding.get("text") is String:problems.append("source_text_value_missing")
-		if int(options.get("fontSize",0))<=0: problems.append("invalid_source_font_size")
+		if node.classname=="Text" and int(options.get("fontSize",0))<=0:problems.append("invalid_source_font_size")
+		if node.classname=="TextBMFont" and (bool(widget.ignoreSize) or bool(widget.flipX) or bool(widget.flipY)):problems.append("unimplemented_bitmap_intrinsic_size_or_flip")
 	if node.classname=="LoadingBar":
 		var connected: bool=binding.get("role")=="source_percent" and (binding.get("percent") is int or binding.get("percent") is float) and is_finite(float(binding.percent))
 		if binding.get("role")=="source_percent" and not connected:problems.append("source_percent_value_missing")
@@ -325,9 +330,30 @@ func _build(source: Dictionary) -> Node2D:
 		if not text_result.ok:
 			_build_error=str(text_result.error)+":"+str(widget.name);label.free();node.free();return null
 		origin.add_child(label)
-	if source.classname=="ImageView":
-		var texture: Texture2D=source_pack.texture(options.fileNameData,true)
-		if texture==null: node.free(); return null
+	if source.classname=="TextBMFont":
+		var font_result: Dictionary=source_pack.bitmap_font(options.fileNameData)
+		if not font_result.get("ok",false):
+			_build_error=str(font_result.get("error","source_bitmap_font_unavailable"))+":"+str(widget.name)
+			node.free();return null
+		var text_binding: Dictionary=_bindings.get(int(source._offset),{})
+		var text_options: Dictionary=options.duplicate(true)
+		if text_binding.get("role")=="source_text":text_options.text=text_binding.text
+		var label=preload("res://scripts/ui/original_ui/source_bitmap_text.gd").new()
+		var configured: Dictionary=label.configure(font_result.font_data,text_options,Vector2(widget.size[0],widget.size[1]))
+		if not configured.get("ok",false):
+			_build_error=str(configured.get("error","source_bitmap_text_unavailable"))+":"+str(widget.name)
+			label.free();node.free();return null
+		label.name="OriginalBitmapText"
+		origin.add_child(label)
+		node.set_meta("source_bitmap_text",label)
+	var bound_texture: Texture2D
+	if source.classname in ["ImageView","Sprite"]:
+		bound_texture=_node_texture(source,options.fileNameData)
+		var excluded: bool=bool(_resolved_assets.get(int(source._offset),{}).get("excluded_from_connection",false))
+		if bound_texture==null and not excluded:node.free();return null
+		if excluded:node.set_meta("source_asset_excluded",true)
+	if source.classname=="ImageView" and bound_texture!=null:
+		var texture: Texture2D=bound_texture
 		var picture: Control
 		if bool(options.scale9Enabled):
 			var nine=preload("res://scripts/ui/original_ui/source_scale9.gd").new()
@@ -354,17 +380,16 @@ func _build(source: Dictionary) -> Node2D:
 		origin.add_child(picture)
 		node.set_meta("source_image",picture)
 	if source.classname=="Sprite":
-		var texture: Texture2D=source_pack.texture(options.fileNameData,true)
-		if texture==null: node.free(); return null
+		var texture: Texture2D=bound_texture
 		var sprite:=Sprite2D.new()
 		sprite.name="OriginalPixels"
 		sprite.texture=texture
 		sprite.centered=false
-		sprite.position.y=-texture.get_height()
+		sprite.position.y=-texture.get_height() if texture!=null else -float(widget.size[1])
 		sprite.flip_h=bool(widget.flipX)
 		sprite.flip_v=bool(widget.flipY)
-		sprite.material=BLEND.material(texture,_blend(options))
-		if sprite.material==null:
+		if texture!=null:sprite.material=BLEND.material(texture,_blend(options))
+		if texture!=null and sprite.material==null:
 			_build_error="original_material_unavailable";sprite.free();node.free();return null
 		node.set_meta("source_blend",_blend(options))
 		var destination:=BackBufferCopy.new()
@@ -374,7 +399,9 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_sprite",sprite)
 		node.set_meta("source_anchor",widget.anchorPoint)
 		node.set_meta("source_origin",origin)
+		if texture!=null and _bindings.get(int(source._offset),{}).get("role")=="source_asset":origin.position=Vector2(-float(widget.anchorPoint[0])*texture.get_width(),float(widget.anchorPoint[1])*texture.get_height())
 		_texture_refs[int(source._offset)]=options.fileNameData.duplicate(true)
+	if _resolved_assets.has(int(source._offset)):node.set_meta("source523_original_asset",_resolved_assets[int(source._offset)].duplicate(true))
 	var child_origin: Node=origin
 	if source.classname in ["Panel","ListView","ScrollView"] and bool(options.clipEnabled):
 		# The original transparent Panel clips its children to the source size.
@@ -425,7 +452,7 @@ func _build(source: Dictionary) -> Node2D:
 		if source.classname=="ListView":
 			# CSLoader inserts Widget children as custom items. A non-Widget
 			# child requires its exact loader semantics before it can render.
-			if child.classname not in ["Panel","ListView","ImageView","Button","Text","LoadingBar"]:
+			if child.classname not in ["Panel","ListView","ImageView","Button","Text","TextBMFont","LoadingBar"]:
 				_build_error="unverified_original_list_child:"+str(child.classname);node.free();return null
 			var item_options: Dictionary=child.options.get("widgetOptions",child.options)
 			list_items.append({"size":built.get_meta("source_size"),"anchor":item_options.anchorPoint,"ignore_size":bool(item_options.ignoreSize)})
@@ -446,6 +473,16 @@ func _build(source: Dictionary) -> Node2D:
 			if not position_value.is_finite():_build_error="source_list_position_invalid";node.free();return null
 			child_origin.position=Vector2(position_value.x,-position_value.y)
 	return node
+
+func _node_texture(source: Dictionary, original_reference: Dictionary) -> Texture2D:
+	var binding: Dictionary=_bindings.get(int(source._offset),{})
+	if binding.get("role")!="source_asset":return source_pack.texture(original_reference,true)
+	var resolved: Dictionary=preload("res://scripts/ui/original_ui/source_asset_pixels.gd").resolve(binding.asset_ref)
+	if not resolved.get("ok",false):
+		_build_error=str(resolved.get("error","source_image_unavailable"))
+		return null
+	_resolved_assets[int(source._offset)]=resolved.evidence
+	return resolved.texture
 
 func play(source_clip: String, repeat: bool=false) -> Dictionary:
 	for clip: Dictionary in source_tree.get("animationList",[]):
@@ -489,6 +526,10 @@ func _seek_frame(frame_number: float) -> void:
 		else: following=selected
 		var target: Node2D=_tags.get(int(timeline.actionTag))
 		if target==null: continue
+		# An original-owner dummy declaration omits pixels, not its source
+		# node or unrelated controls. A later texture/blend track cannot revive
+		# that excluded resource by displaying a source sample instead.
+		if bool(target.get_meta("source_asset_excluded",false)) and timeline.property in ["FileData","BlendFunc"]:continue
 		if timeline.property=="FrameEvent":
 			var key: int=int(timeline._offset)
 			if _entered_frames.get(key,-1)!=int(selected._offset):
@@ -532,7 +573,7 @@ func _seek_frame(frame_number: float) -> void:
 			var extent: Array=target.get_meta("source_size")
 			if target.has_meta("source_sprite"):
 				var texture: Texture2D=target.get_meta("source_sprite").texture
-				extent=[texture.get_width(),texture.get_height()]
+				if texture!=null:extent=[texture.get_width(),texture.get_height()]
 			target.set_meta("source_anchor",anchor.duplicate())
 			target.get_node("SourceContentOrigin").position=Vector2(-float(anchor[0])*float(extent[0]),float(anchor[1])*float(extent[1]))
 		elif timeline.property=="Alpha":
@@ -590,6 +631,7 @@ func _clear() -> void:
 	source_nodes.clear()
 	_tags.clear()
 	_texture_refs.clear()
+	_resolved_assets.clear()
 
 static func _blend(options: Dictionary) -> String:
 	var value: Variant=options.get("blendFunc")
@@ -636,6 +678,7 @@ func _sync_source_display(node: Node, inherited: Color) -> void:
 		if node.has_meta("source_loading_bar"):MATERIAL.bind_tree_display(node.get_meta("source_loading_bar"),display)
 		if node.has_meta("source_panel"):node.get_meta("source_panel").set_source_display(display)
 		if node.has_meta("source_text"):node.get_meta("source_text").modulate=display
+		if node.has_meta("source_bitmap_text"):node.get_meta("source_bitmap_text").set_source_display(display)
 		if node.has_meta("source_checkbox"):node.get_meta("source_checkbox").set_source_display(display)
 		if node.has_meta("source_button"):node.get_meta("source_button").set_source_display(display)
 	for child: Node in node.get_children():_sync_source_display(child,display)
@@ -656,7 +699,9 @@ func project_player(project_offsets: Array[int]) -> Dictionary:
 
 func set_bound_text(source_offset: int, value: String) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
-	if node==null or _bindings.get(source_offset,{}).get("role")!="source_text" or not node.has_meta("source_text"):return {"ok":false,"error":"source_text_binding_missing"}
+	if node==null or _bindings.get(source_offset,{}).get("role")!="source_text":return {"ok":false,"error":"source_text_binding_missing"}
+	if node.has_meta("source_bitmap_text"):return node.get_meta("source_bitmap_text").set_source_text(value)
+	if not node.has_meta("source_text"):return {"ok":false,"error":"source_text_binding_missing"}
 	return node.get_meta("source_text").set_source_text(value)
 
 func set_bound_percent(source_offset: int, value: float) -> Dictionary:

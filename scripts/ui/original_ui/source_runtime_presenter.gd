@@ -5,6 +5,8 @@ extends Node
 const SCENE=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const MENU=preload("res://scripts/ui/original_ui/source_menu_adapter.gd")
 const SESSION=preload("res://scripts/ui/original_ui/source_service_session.gd")
+const EVENT_CONTROLLER=preload("res://scripts/ui/original_ui/source_event_controller.gd")
+const EVENT_SCREENS=preload("res://scripts/ui/original_ui/source_event_screen_bindings.gd")
 signal content_presented(scene: Node2D, session: RefCounted)
 var _runtime: WeakRef
 var _pack: RefCounted
@@ -12,6 +14,7 @@ var _routes: Dictionary={}
 var _scene: Node2D
 var _session: RefCounted
 var _menus: Dictionary={}
+var _event_controllers: Dictionary={}
 
 func attach(runtime: Object, pack: RefCounted) -> Dictionary:
 	if not is_instance_valid(runtime) or not runtime.has_method("bind_presentation"):return {"ok":false,"code":"source_runtime_unavailable"}
@@ -32,6 +35,20 @@ func register_content(section: String, focus_kind: String, member: String, sourc
 	if not _routes.has(section):_routes[section]={}
 	_routes[section][focus_kind]={"member":member,"sha256":source_sha256,"mount":weakref(mount),"bindings":binding_factory}
 	return {"ok":true}
+
+func register_event_content(kind: String, mount: Node2D, remaining_factory: Callable) -> Dictionary:
+	var controller=EVENT_CONTROLLER.new()
+	var configured: Dictionary=controller.configure(_pack,kind,remaining_factory)
+	if not configured.get("ok",false):return configured
+	var root: Dictionary=EVENT_SCREENS.ROOTS[kind]
+	var registered: Dictionary=register_content("events",kind,root.member,root.sha256,mount,Callable(controller,"build"))
+	if not registered.get("ok",false):return registered
+	var previous: RefCounted=_event_controllers.get(kind)
+	var previous_callback: Callable=Callable(previous,"bind_presented") if previous!=null else Callable()
+	if previous_callback.is_valid() and content_presented.is_connected(previous_callback):content_presented.disconnect(previous_callback)
+	_event_controllers[kind]=controller
+	content_presented.connect(controller.bind_presented)
+	return {"ok":true,"controller":controller,"member":root.member,"transaction_performed":false}
 
 func mount_menu(button_id: int, mount: Node2D) -> Dictionary:
 	var runtime: Object=_runtime.get_ref() if _runtime!=null else null

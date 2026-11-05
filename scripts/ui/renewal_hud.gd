@@ -2657,6 +2657,10 @@ func register_original_ui_content(section: String, focus_kind: String, member: S
 	if not is_instance_valid(original_ui_runtime_presenter):return {"ok":false,"code":"source_runtime_not_bound"}
 	return original_ui_runtime_presenter.register_content(section,focus_kind,member,source_sha256,mount,binding_factory)
 
+func register_original_event_content(kind: String, mount: Node2D, remaining_factory: Callable) -> Dictionary:
+	if not is_instance_valid(original_ui_runtime_presenter):return {"ok":false,"code":"source_runtime_not_bound"}
+	return original_ui_runtime_presenter.register_event_content(kind,mount,remaining_factory)
+
 func close_original_ui_content() -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):return {"ok":true,"closed":true}
 	return original_ui_runtime_presenter.close_content()
@@ -2678,3 +2682,30 @@ func bind_original_equipment_callbacks(preview_handler: Callable, commit_handler
 	original_equipment_ui_adapter.preview_requested.connect(preview_handler)
 	original_equipment_ui_adapter.commit_requested.connect(commit_handler)
 	return {"ok":true,"adapter":original_equipment_ui_adapter,"transaction_performed":false}
+
+func present_original_alchemy(source_pack: RefCounted, mount: Node2D, remaining_bindings: Dictionary, selected_action: Dictionary) -> Dictionary:
+	# PR265's existing host has already attached its preview/commit handlers.
+	# Mount the actual source root and connect those handlers' endpoint, rather
+	# than instantiating the old generic equipment form in this game path.
+	if not is_instance_valid(original_equipment_ui_adapter):return {"ok":false,"code":"source_equipment_handlers_unavailable"}
+	if not is_instance_valid(mount) or not mount.is_inside_tree():return {"ok":false,"code":"source_mount_unavailable"}
+	if selected_action.get("kind")!="alchemy":return {"ok":false,"code":"source_operation_mismatch"}
+	var source_bindings: Dictionary=preload("res://scripts/ui/original_ui/source_alchemy_bindings.gd").build(source_pack,original_equipment_ui_adapter,remaining_bindings)
+	if not source_bindings.get("ok",false):return source_bindings
+	var source_scene=preload("res://scripts/ui/original_ui/sprite_scene.gd").new()
+	var configured: Dictionary=source_scene.configure(source_pack,source_bindings.member,false,source_bindings.bindings)
+	if not configured.get("ok",false):
+		source_scene.free()
+		return configured
+	# Preserve the previous presentation until the full new source contract
+	# is accepted. Opening/replacing it performs no equipment transaction.
+	original_equipment_ui_adapter.close()
+	original_equipment_ui_adapter.select_action(selected_action)
+	mount.add_child(source_scene)
+	var bound: Dictionary=original_equipment_ui_adapter.bind_source_scene(source_scene)
+	if not bound.get("ok",false):
+		source_scene.visible=false
+		source_scene.process_mode=Node.PROCESS_MODE_DISABLED
+		source_scene.queue_free()
+		return bound
+	return {"ok":true,"source":source_bindings.member,"scene":source_scene,"adapter":original_equipment_ui_adapter,"transaction_performed":false}

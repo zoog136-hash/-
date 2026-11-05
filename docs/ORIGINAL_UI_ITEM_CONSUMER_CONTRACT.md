@@ -384,3 +384,80 @@ the concrete helpers' `{ok,member,sha256,bindings}` descriptor. The presenter
 propagates a factory failure unchanged and requires descriptor member/hash to
 match the already registered original root. An incomplete-screen marker never
 bypasses strict node/data/input validation. This integration is also unexecuted.
+
+## Concrete event and game callers (unexecuted)
+
+`hud.register_original_event_content(kind,mount,remaining_factory)` now registers
+Attendance_All or Pass_All through `source_event_controller.gd` with the runtime
+presenter. The existing source menu's request_menu -> prepared service model ->
+strict source scene path therefore consumes concrete event model adapters.
+The factory receives `(model,model_adapter)` and supplies the remaining original
+node bindings. An explicitly requested pass_id/version_id is retained; a sole
+available source identity can be selected without choosing an arbitrary first
+record. Multiple identities still need their original selection controls.
+The controller forwards service action_result without automatically confirming.
+The known daily/promotion source tab buttons switch their actual ProjectNodes;
+second-promotion version routing and decorative On/Off variants are not guessed.
+
+`source_pass_model_adapter.gd` uses the public events service's actual
+request.action fields. Original Btn_Buy_Common 16964 begins the selected pass's
+pass_purchase/premium=false ref, and Btn_BuyPremium 13548 uses premium=true.
+Original Mission_All receive button 7736 begins pass_quest_claim for its selected
+quest. Missing offers use the original disabled renderer with no activation;
+prices, entitlement and eligibility are not recomputed. Tier claimed markers
+use the service's exact `<tier ID>:base|premium` keys. Original literal labels
+remain source text. The supplied purchase branches have no unambiguous price
+text nodes, so cost arrays remain available as original service data without
+inventing a new price label or currency icon. Root claim-all 7352, dynamic list
+placement and the original confirmation presentation remain incomplete.
+
+`source_attendance_model_adapter.gd` binds source version/reward-index identities
+to the service's existing progress key and claimed markers. Daily's stack-day
+text reads that progress count. Daily/Promotion Btn_Close dismiss the session.
+Special attendance purchase has no action in this ABI and remains disabled;
+it is not reused as a claim control. Original Slot/SlotBonus buttons are
+Button_Tooltip: they forward their exact row and server reward alternatives to
+the existing tooltip handler, never begin a reward claim. A slot requires an
+actual reward image reference and quantity binding, so source sample icons and
+888 placeholders cannot be presented as its real reward. The actual source
+claim presentation event still needs its matching original caller.
+
+`hud.present_original_alchemy(pack,mount,remaining_bindings,selected_action)`
+now configures and mounts the exact Alchemy_All root, binds the existing
+PR265 equipment endpoint to that strict scene, and forwards its canonical
+selected alchemy action. The host's existing preview_requested/commit_requested
+handlers remain the sole service entry. A rejected new source contract preserves
+the previous scene; successful replacement/close disables the old input.
+Unknown quantity/recipe/material/result mappings are not supplied or hidden.
+
+## Original bitmap text and existing image-owner consumption (unexecuted)
+
+The supplied TextBMFont nodes can now consume their original text .fnt and page
+PNG through source_pack.bitmap_font(), source_bitmap_font_data.gd and
+source_bitmap_text.gd. Glyph rectangles, offsets, xAdvance, kerning, native line
+height and final-glyph width come from the descriptor and retained Cocos
+LabelTextFormatter code. Original page regions are displayed directly, with the
+source widget transform and color cascade; no glyph image or substitute font is
+created. The current subset requires fixed widget size, no flips, unpacked
+channel-15 glyphs and a single BMP text line. Other formats remain explicit
+failures. Attendance's original Text_day now receives its native reward index
+through the existing set_bound_text path.
+
+A Sprite/ImageView binding `{role:"source_asset",asset_ref:row_asset_reference}`
+now calls PR270's existing `source523_source_ui_images.resolve(reference)` API.
+The public contract read for this connection is
+`da175ceb5696e061029512e4f203a77949f5ec9a`, file
+`scripts/ui/source523_source_ui_images.gd` (blob
+`23ae5eeabbf3909e8ddad875fb609caa92da078d`). Its owner validates AssetView,
+AssetType, declared path, selected pack, bytes and source exclusions. The UI
+retains original hierarchy, transforms, clipping and blend tracks. PNG pixels
+receive the existing Cocos upload premultiplication; the original source files
+are not changed. Missing owner API/pack/assets fail without using the CSB sample
+as replacement. Explicit owner source_dummy_excluded results omit only those
+pixels while retaining original nodes/records; they are not usage successes.
+No ItemClass, reward, transaction or image-pack implementation is copied.
+
+These are code connections only, not newly observed game actions or pixels.
+No new test, render, audit, quality run or CI was executed. The previous
+524/560 dependency and 317/560 inspection checkpoints remain unchanged; there
+is no updated full-screen completion numerator or 95% actual-use claim.

@@ -8,6 +8,7 @@ var last_error: String=""
 var _pages: Dictionary={}
 var _textures: Dictionary={}
 var _fonts: Dictionary={}
+var _bitmap_fonts: Dictionary={}
 
 func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	var manifest_path: String=pack_root.path_join("original_ui.json")
@@ -44,6 +45,7 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	_pages.clear()
 	_textures.clear()
 	_fonts.clear()
+	_bitmap_fonts.clear()
 	last_error=""
 	return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
 
@@ -187,6 +189,29 @@ func font(reference: Dictionary) -> FontFile:
 		last_error="source_font_invalid:"+member; return null
 	_fonts[member]=original
 	return original
+
+func bitmap_font(reference: Dictionary) -> Dictionary:
+	if int(reference.get("resourceType",0))!=0 or not str(reference.get("plistFile","")).is_empty():return {"ok":false,"error":"source_bitmap_resource_type"}
+	var member: String=_member(str(reference.get("path","")))
+	if not _safe_member(member) or not member.ends_with(".fnt") or not manifest.get("files",{}).has(member):return {"ok":false,"error":"source_bitmap_descriptor_missing"}
+	if _bitmap_fonts.has(member):return {"ok":true,"font_data":_bitmap_fonts[member].duplicate(true)}
+	var path: String=root.path_join("originals").path_join(member)
+	if FileAccess.get_sha256(path)!=manifest.files[member].sha256:return {"ok":false,"error":"source_bitmap_descriptor_hash"}
+	var parsed: Dictionary=preload("res://scripts/ui/original_ui/source_bitmap_font_data.gd").parse(FileAccess.get_file_as_bytes(path))
+	if not parsed.get("ok",false):return parsed
+	var data: Dictionary=parsed.font_data
+	var pages: Dictionary={}
+	for page_id: int in data.pages:
+		var page_member: String=member.get_base_dir().path_join(str(data.pages[page_id].file))
+		if not _safe_member(page_member) or not manifest.files.has(page_member):return {"ok":false,"error":"source_bitmap_page_missing"}
+		var original: Texture2D=texture({"path":page_member,"resourceType":0},true)
+		if original==null:return {"ok":false,"error":"source_bitmap_page_unavailable"}
+		if original.get_width()!=int(data.common.scaleW) or original.get_height()!=int(data.common.scaleH):return {"ok":false,"error":"source_bitmap_page_dimensions"}
+		pages[page_id]=original
+	data["page_textures"]=pages
+	data["member"]=member
+	_bitmap_fonts[member]=data
+	return {"ok":true,"font_data":data.duplicate(true)}
 
 func particle(reference: Dictionary) -> Dictionary:
 	if int(reference.get("resourceType",0))!=0 or not str(reference.get("plistFile","")).is_empty():return {"ok":false,"error":"particle_resource_type"}
