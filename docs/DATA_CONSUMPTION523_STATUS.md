@@ -68,6 +68,22 @@ Archive bytes, compressed members, JSON bytes and generated cache bytes remain
 separate. No original tables, private delivery references, packs or saves are
 included in this PR.
 
+The common reader preserves explicit `TWILIGHT_PATCH523_CONTENT` selection and
+the existing growth→death→title priority. Later alternatives are the already
+defined canonical original-ZIP receivers for TJ, relic spell levels,
+unconfirmed523, spell-group conversion and the half-elixir path bearing this
+exact source SHA. Existing large item/card/NPC/skill/shop readers can therefore
+reuse an original archive already installed for one of those consumers. These
+are optional locations for the same pinned definition bytes, not old card/
+monster packs or generated caches. No file is copied or installed, no saved
+binding is selected from a folder and no original is counted again.
+
+An explicitly empty environment value fails. Only an actual file-not-found
+result permits the next implicit location; inaccessible/present/invalid inputs
+do not select another source. Existing source byte/SHA/ZIP/table guards remain.
+Adding the unconfirmed523 location lets CommonSource reuse its archive; it does
+not replace that domain runtime's separate before-setup source selection.
+
 The private ledger retains every table, parser/compiler candidates, consumer,
 caller, owner, storage contract and remaining uncertainty. Reviewed code chains
 currently cover selected rows/fields in 122 tables. This is static connection
