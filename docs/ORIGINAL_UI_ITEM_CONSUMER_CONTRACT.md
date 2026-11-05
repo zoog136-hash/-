@@ -183,3 +183,13 @@ nonempty missing original font path still fails. No font is downloaded,
 generated or substituted. Host-system font bytes are not original UI inventory
 member bytes and must not be counted toward source usage. This path has not
 been executed under the current no-new-checks instruction.
+
+Explicit TextOptions line-height overflow now follows the already referenced
+Cocos 3.6 LabelTextFormatter rule: use whole available font lines for vertical
+alignment, then stop on a newline when the next line begins below one common
+line height. Button titles retain their separate dimensionless-label behavior.
+Unsupported automatic word wrapping remains unavailable. Nonzero serialized
+shadow blur is retained as metadata; the pinned Cocos 3.6 Label::enableShadow
+implementation forces the effective blur radius to zero. This implements that
+source behavior rather than drawing a new blur. These changes remain untested
+and do not increase render or gameplay-completion counts.

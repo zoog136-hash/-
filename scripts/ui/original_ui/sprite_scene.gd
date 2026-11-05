@@ -127,12 +127,11 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if node.classname=="Button":
 		if inspection_only or binding.get("role")!="button":unresolved_bindings.append(str(widget.name)+":original_button_service_binding")
 		if not inspection_only and not (binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_button")
-		if str(options.get("text","")).contains("\n") or int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_button_text_layout_or_blur")
+		if str(options.get("text","")).contains("\n"): problems.append("unsupported_button_text_layout")
 	if node.classname=="Text":
 		if inspection_only or binding.get("role") not in ["static_source_text","source_text"]:unresolved_bindings.append(str(widget.name)+":source_text_requires_live_binding")
 		if not inspection_only and binding.get("role") not in ["static_source_text","source_text"]: problems.append("unconnected_source_text")
 		if binding.get("role")=="source_text" and not binding.get("text") is String:problems.append("source_text_value_missing")
-		if int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_text_shadow_blur")
 		if int(options.get("fontSize",0))<=0: problems.append("invalid_source_font_size")
 	if node.classname=="LoadingBar":
 		var connected: bool=binding.get("role")=="source_percent" and (binding.get("percent") is int or binding.get("percent") is float) and is_finite(float(binding.percent))
