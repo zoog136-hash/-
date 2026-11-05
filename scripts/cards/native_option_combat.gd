@@ -78,7 +78,7 @@ func incoming(attacker: Node,kind: String,amount: int) -> Dictionary:
 		if int(option.InvokeOptionTypeID)==5:
 			if int(option.MaterialAmount)!=0 or int(option.Param3)!=0:continue
 			if roll(int(effect.weight)):
-				result.damage=maxi(0,int(result.damage)-int(option.Param1));fired.append(int(option.ID));emit_option_effect(option,"TargetEffectSpriteID",runtime.world.player)
+				result.damage=maxi(0,int(result.damage)-int(option.Param1));fired.append(int(option.ID));emit_option_pair(option,attacker,runtime.world.player)
 		elif int(option.InvokeOptionTypeID)==2:
 			if bool(option.BySpellAttack)!=(kind=="magic") or amount<int(option.Param2) or int(option.Param3)!=0 or int(option.MaterialAmount)!=0:continue
 			var key: String="native_option|"+str(effect.origin)+"|"+str(int(option.Param1))
@@ -91,6 +91,7 @@ func incoming(attacker: Node,kind: String,amount: int) -> Dictionary:
 				var amount_healed: int=int(healing.HPRestoration)
 				for die: int in range(int(healing.get("HPRestorationDiceNumber",0))):amount_healed+=runtime.world.rng.randi_range(1,int(healing.HPRestorationDiceSpotCount))
 				result.heal+=amount_healed;cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));emit_spell(spell.source_spell,runtime.world.player)
+				emit_option_pair(option,attacker,runtime.world.player)
 	busy=false
 	return result
 func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_spell: bool=false) -> void:
@@ -112,7 +113,9 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 			if not roll(int(effect.weight)):continue
 			var damage: int=int(fixed.SpellDamageBase)
 			for die: int in range(int(fixed.SpellDamageDiceNumber)):damage+=runtime.world.rng.randi_range(1,int(fixed.SpellDamageDiceSpotCount))
-			emit_spell(spell.source_spell,target);target.take_damage(damage,false,"magic")
+			emit_spell(spell.source_spell,target)
+			emit_option_pair(option,runtime.world.player,target)
+			target.take_damage(damage,false,"magic")
 			cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));continue
 		var buffs: Array=[];var low: int=0;var high: int=0
 		for bonus: Dictionary in spell.effects:
@@ -124,6 +127,7 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 		if not roll(int(effect.weight)):continue
 		if target.apply_source_option_debuff(str(effect.origin),low,buffs):
 			cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));emit_spell(spell.source_spell,target)
+			emit_option_pair(option,runtime.world.player,target)
 			var found: bool=false
 			for ref: WeakRef in targets:
 				if ref.get_ref()==target:found=true;break
@@ -150,6 +154,14 @@ func emit_spell(spell: Dictionary,target: Node2D) -> void:
 			if preview.has_method("notify_source_spell_event") and not manifest.is_empty() and preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):visual_results[str(sprite)]="played_original";continue
 			if preview.has_method("notify_current_source_spell_event") and preview.notify_current_source_spell_event(spell,stage,target.global_position,facing):visual_results[str(sprite)]="played_current_source";continue
 		emit_sprite(sprite,target)
+func emit_option_pair(option: Dictionary,attacker: Node,target: Node) -> void:
+	# Called only inside an already accepted Invoke branch. The existing owner
+	# supplies both participants; visual selection never rolls or fires an option.
+	if is_instance_valid(attacker) and attacker is Node2D:
+		emit_option_effect(option,"AttackerEffectSpriteID",attacker)
+	if is_instance_valid(target) and target is Node2D:
+		emit_option_effect(option,"TargetEffectSpriteID",target)
+
 func emit_option_effect(option: Dictionary,field: String,target: Node2D) -> void:
 	var sprite: int=int(option.get(field,0))
 	if sprite<=0 or not is_instance_valid(target):return
