@@ -139,8 +139,12 @@ factory는 추정하지 않는다. 메인 HUD 부분팩의 전체 parent metadat
 `configure_from_settings(world)`가 처리한다. 설치기는 등록기를 만들거나 호출하지
 않고 기존 cfg의7개 키만 준비한다: enabled, contract_path, contract_sha256,
 offered_worlds, coordinate_policy, ratio_scale, source_anchor_offset.
-기존 cfg는 유효성·활성 상태와 관계없이 읽거나 덮어쓰지 않는다. 없을 때만
-기본 enabled=false로 만들며, 명시된 활성 값이 없다고 true를 추정하지 않는다.
+기존 cfg는 유효성·활성 상태와 관계없이 읽거나 덮어쓰지 않는다. 새 설치용 활성
+선택이 명시돼 있고 실제 설치 코드·원본 조건이 모두 갖춰지면 enabled=true로 만든다.
+코드가 없거나 입력이 부족하면 cfg 자체를 만들지 않는다. 비활성 placeholder가
+이후 자동 활성화를 막지 않도록 하며, 나중에 같은 명령으로 호환 코드를 받았을 때
+기존 cfg가 없으면 이 조건을 다시 적용한다. 명시적 활성 선택이 없는 경우에도
+cfg 생성을 보류한다. 기존 false/true 설정은 설치기가 만든 과거 파일이라도 보존한다.
 offered_worlds는 10진 문자열 Land ID와 명시적 UIMapWorld.ID를 그대로 전달한다.
 선택적 label은 실제 원문 World.Name만 사용하고, 생략하면 기존 소비자가 읽는다.
 Land를 World로 대신하거나 첫 후보를 자동 선택하지 않는다.
@@ -150,6 +154,15 @@ source_anchor_offset=[0.5,0.5]는 전달된 TWILIGHT 자체 정책이다. 원작
 공식 좌표 공식으로 표시하지 않는다. 기존 소비자가 원본 UI의 실제 선택 후에만
 이미지를 표시하고, 필드·관계·세션·입력 판정을 수행한다. UI v5, 이미지18ZIP,
 관계 JSON과 cfg는 별도 입력이다. 경로 준비가 실제 표시·보행 성공을 뜻하지 않는다.
+
+코드 준비 여부는 실제 설치 대상 Git stage에서 기존 owner의 startup·등록·입력·
+보행·Object 필드 경계·이미지 선택 API를 읽어 판정한다. PR 번호나 모듈 파일명만으로
+통합됐다고 가정하지 않는다. 이는 정적 계약 확인이며 Godot 실행 검증이 아니다.
+공급된 v5 맵 노드 scope, 모든 UI 원본, 이미지 manifest·dummy 선언과 명시 World의
+실제 PNG 입력도 확인한다. 시작 시 확인했던 코드·입력 SHA를 다시 대조한다.
+Android에서 원본 행 버튼을 실제 선택할 경로도 필요하다. 설치기는 touch emulation을
+변경하지 않으며, native touch가 없는 mouse-only 코드와 emulation=false 조합은
+자동 활성화 조건을 충족하지 않는다. 다른 그림이나 새 입력기로 대체하지 않는다.
 
 새 cfg의 관계 경로는 공유 저장소의
 `.TWILIGHT_Play.resources/pinned-contracts/<원문 SHA>/`에 고정한다. 이 원본은

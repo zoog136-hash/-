@@ -460,9 +460,155 @@ def persistent_contract(source, root, digest):
     return destination
 
 
-def descriptor(plan, resources, persistent_contracts=None):
+def gd_function(source, name):
+    """Read a named existing function; never import or execute game code."""
+    source = re.sub(r'(?m)^\s*#.*$', '', source)
+    if name is None:
+        return re.sub(r'\s+', '', source)
+    match = re.search(r'(?ms)^(?:static\s+)?func\s+' + re.escape(name) +
+                      r'\s*\(.*?(?=^(?:static\s+)?func\s+|\Z)', source)
+    return re.sub(r'\s+', '', match.group(0)) if match else ''
+
+
+def world_map_code_contract(code_root):
+    # These are existing owner interfaces/call boundaries, not PR-number or
+    # filename-only assertions. Changed code is read from the actual Git stage.
+    requirements = {
+        'scripts/world.gd': [('_ready', ['_bind_current523_world_map_from_settings.call_deferred()']),
+            ('_world_map_input', ['res://scripts/maps/current523_world_map_input.gd', 'add_child']),
+            ('_bind_current523_world_map_from_settings', ['configure_from_settings']),
+            ('bind_current523_world_map', ['configure'])],
+        'scripts/maps/current523_world_map_input.gd': [(None, ['user://current523_world_map.cfg']),
+            ('configure_from_settings', ['open_contract', 'configure']),
+            ('configure', ['bind_original_world_map', 'Callable(self,"context")', 'Callable(self,"input")',
+                           'original_world_map_image_clicked']),
+            ('_on_image_clicked', ['COORDINATES.project', 'WALK.request']),
+            ('input', ['InputEventScreenTouch', 'InputEventScreenDrag'])],
+        'scripts/maps/current523_world_map_coordinates.gd': [(None, ['OWN_SOURCE_CELL_CENTER_FIELD_RATIO_V1']),
+            ('project', [])],
+        'scripts/maps/current523_world_map_walk.gd': [('ticket', []),
+            ('request', ['point_clear', 'find_world_path', 'set_manual_click_path'])],
+        'scripts/ui/renewal_hud.gd': [(None, ['original_world_map_image_clicked']),
+            ('_bind_selected_original_main_ui', []), ('bind_original_world_map', []),
+            ('toggle_map', ['has_world_map_binding'])],
+        'scripts/ui/original_ui/source_main_hud.gd': [('bind_world_map', ['configure']),
+            ('toggle_world_map', []), (None, ['world_image_clicked'])],
+        'scripts/ui/original_ui/source_main_world_map.gd': [('open', ['notfield_mapisObject', 'is_instance_valid(field_map)']),
+            ('image_pixel_at', []), ('submit_world_image_click', []), ('set_scroll_position', []),
+            ('scroll_geometry', []), ('_route_source_input', ['InputEventScreenTouch', 'InputEventScreenDrag']),
+            (None, ['configure_nodes', 'project_player'])],
+        'scripts/ui/original_ui/source_main_map_bindings.gd': [('build_map_scene', ['field_map:Object']),
+            ('bind_area_presented', ['field_map:Object']), ('select_world', ['apply_declared_field_image']),
+            ('viewport_to_world_image_pixel', []), ('submit_world_image_click', []),
+            (None, ['apply_field_world'])],
+        'scripts/ui/original_ui/sprite_scene.gd': [('configure_nodes', []), ('project_player', []),
+            ('set_bound_source_asset_result', [])],
+        'scripts/ui/original_ui/source_scroll.gd': [('bind_input', []), ('_forward_input', []),
+            (None, ['gui_input', 'input_control'])],
+        'scripts/ui/original_ui/source_button.gd': [('_source_input', [])],
+        'scripts/maps/source523_map_image_adapter.gd': [('open_contract', []), ('world_candidates', ['Object']),
+            ('resolve_field_world', ['Object']), ('apply_field_world', ['Object']),
+            ('_field_context', ['current523_source_field']), ('resolve_world', ['IMAGES.resolve_asset_value'])],
+        'scripts/ui/source523_image_assets.gd': [('_ensure_selection', ['TWILIGHT_SOURCE523_IMAGES',
+            'TWILIGHT_SOURCE523_IMAGES_SHA256']), ('selected', []), ('active', ['_ensure_selection']),
+            ('configure', ['PACK.open']),
+            ('resolve_asset_value', []), ('resolve_asset', [])],
+        'scripts/resources/source523_image_pack.gd': [('open', []), ('resolve_asset', []),
+            (None, ['source523-exact-original-image-pack', 'patch523', 'unchanged_original_file_bytes'])],
+        'scripts/ui/original_ui/source_main_selection.gd': [('selected_pack', ['TWILIGHT_SOURCE_UI',
+            'TWILIGHT_SOURCE_UI_SHA256', '.open('])],
+        'scripts/ui/original_ui/source_pack.gd': [('open', []), (None, ['twilight-original-ui-v1', 'original_ui.json'])],
+    }
+    evidence = {'ready': False, 'files': {}, 'blockers': []}
+    if code_root is None:
+        evidence['blockers'].append('Target runtime code is not staged yet')
+        return evidence
+    sources = {}
+    for name, functions in requirements.items():
+        path = inside(code_root, name)
+        if not path.is_file() or path.stat().st_size > 16 * 1024 * 1024:
+            evidence['blockers'].append('Missing owner module: ' + name)
+            continue
+        source = path.read_text(encoding='utf-8')
+        sources[name] = source
+        evidence['files'][name] = sha256_file(path)
+        for function, markers in functions:
+            body = gd_function(source, function)
+            if not body or any(marker not in body for marker in markers):
+                evidence['blockers'].append('Missing owner boundary: ' + name + ':' + str(function or 'module'))
+    project = inside(code_root, 'project.godot')
+    if project.is_file():
+        evidence['project_sha256'] = sha256_file(project)
+        project_source = re.sub(r'(?m)^\s*;.*$', '', project.read_text(encoding='utf-8'))
+        mouse_emulation = re.search(r'(?ms)^\[input_devices\]\s*(.*?)(?=^\[|\Z)', project_source)
+        setting = re.search(r'(?m)^pointing/emulate_mouse_from_touch\s*=\s*(true|false)\s*$',
+                            mouse_emulation.group(1)) if mouse_emulation else None
+        mouse_emulation = setting.group(1) == 'true' if setting else None
+    else:
+        mouse_emulation = False
+    button = gd_function(sources.get('scripts/ui/original_ui/source_button.gd', ''), '_source_input')
+    touch = button.find('InputEventScreenTouch')
+    mouse_only = button.find('not event is InputEventMouseButton'.replace(' ', ''))
+    native_touch = touch >= 0 and (mouse_only < 0 or touch < mouse_only) and '.pressed' in button
+    evidence['requires_mouse_emulation'] = not native_touch
+    if mouse_emulation is False and not native_touch:
+        evidence['blockers'].append('Original World row has no declared Android touch activation path')
+    evidence['ready'] = not evidence['blockers']
+    return evidence
+
+
+def world_map_input_contract(result, resources, bindings, main_ui):
+    evidence = {'ready': False, 'files': {}, 'blockers': []}
+    def require(key, path, digest, size=None):
+        if (not path.is_file() or sha256_file(path) != pin(digest)
+                or size is not None and path.stat().st_size != size):
+            evidence['blockers'].append('Missing/mismatched world-map input: ' + key)
+        else:
+            evidence['files'][key] = {'path': str(path), 'sha256': digest}
+    if main_ui is None or 'main_ui' not in result:
+        evidence['blockers'].append('Main UI original selection is absent')
+    else:
+        root = Path(result['main_ui']['root'])
+        require('main_ui_manifest', root / 'original_ui.json', result['main_ui']['manifest_sha256'])
+        scopes = {'UI/MapScene.csb': [132], 'UI/Map/Map_All.csb': [35332,34904,30312,29552,29228,31656],
+                  'UI/Map/Map_Tab_Area.csb': [44440,37316], 'UI/Map/Map_List_Button.csb': [7440,4508,7492,4560]}
+        for member, offsets in scopes.items():
+            scene = main_ui['scenes'].get(member, {})
+            if (not isinstance(scene, dict)
+                    or not set(offsets).issubset(main_ui.get('node_scopes', {}).get(member, []))
+                    or not set(offsets).issubset(scene.get('_selected_source_offsets', []))):
+                evidence['blockers'].append('Original map control scope is absent: ' + member)
+        if main_ui.get('externally_bound_texture_nodes', {}).get('UI/Map/Map_Tab_Area.csb') != [44440]:
+            evidence['blockers'].append('Original World-image slot declaration is absent')
+        for member, record in main_ui['files'].items():
+            require('main_ui:' + member, inside(root, 'originals/' + member), record['sha256'], record['bytes'])
+    if 'images' not in result:
+        evidence['blockers'].append('Original image pack selection is absent')
+    else:
+        root = Path(result['images']['root'])
+        require('image_manifest', root / 'manifest.json', result['images']['manifest_sha256'])
+        supplement = bindings['images'].get('required_supplement')
+        if not supplement:
+            evidence['blockers'].append('Original dummy declarations are absent')
+        else:
+            require('image_dummy', inside(root, supplement['path']), supplement['sha256'], supplement['bytes'])
+        images = bindings['world_map'].get('required_world_images', [])
+        covered = set()
+        for image in images:
+            require('world_image:' + str(image['world_id']), inside(root, image['path']),
+                    image['sha256'], image['bytes'])
+            covered.add((str(image['land_id']), image['world_id']))
+        offers = {(land, offer['world_id']) for land, offer in bindings['world_map']['offered_worlds'].items()}
+        if not offers or covered != offers:
+            evidence['blockers'].append('Exact offered World image inputs are not supplied')
+    evidence['ready'] = not evidence['blockers']
+    return evidence
+
+
+def descriptor(plan, resources, persistent_contracts=None, code_root=None):
     bindings = plan['bindings']
     result = {'schema': 1}
+    main_ui_document = None
     if 'maps' in bindings:
         row = bindings['maps']
         raw = inside(resources, row['source_root'])
@@ -499,6 +645,7 @@ def descriptor(plan, resources, persistent_contracts=None):
                 or not isinstance(manifest.get('blockers'), list) or manifest['blockers']):
             raise ValueError('Main UI original pack contract is incomplete or has blockers')
         result['main_ui'] = {'root': str(root), 'manifest_sha256': row['manifest_sha256']}
+        main_ui_document = manifest
     if 'world_map' in bindings:
         row = bindings['world_map']
         path = inside(resources, row['contract_path'])
@@ -511,11 +658,12 @@ def descriptor(plan, resources, persistent_contracts=None):
         for source in row.get('source_manifests', []):
             if not matches(inside(resources, source['path']), source):
                 raise ValueError('World-map relation source receipt mismatch')
-        enabled = row.get('enabled', False)
+        activation = row.get('enabled')
+        enabled = activation if isinstance(activation, bool) else False
         offered = row.get('offered_worlds', {})
         scale = row.get('ratio_scale', 1.0)
         offset = row.get('source_anchor_offset', [0.5, 0.5])
-        if not isinstance(enabled, bool) or not isinstance(offered, dict):
+        if activation is not None and not isinstance(activation, bool) or not isinstance(offered, dict):
             raise ValueError('World-map selection requires explicit boolean/offered dictionary')
         for land, offer in offered.items():
             if (not isinstance(land, str) or not re.fullmatch(r'0|[1-9][0-9]*', land)
@@ -535,6 +683,16 @@ def descriptor(plan, resources, persistent_contracts=None):
                                'contract_sha256': digest, 'offered_worlds': offered,
                                'coordinate_policy': row['coordinate_policy'],
                                'ratio_scale': scale, 'source_anchor_offset': offset}
+        code = world_map_code_contract(code_root)
+        inputs = world_map_input_contract(result, resources, bindings, main_ui_document)
+        if activation is None:
+            inputs['blockers'].append('Explicit fresh world-map activation choice is absent')
+            inputs['ready'] = False
+        result['world_map'].update(code_contract=code, input_contract=inputs,
+                                 ready_for_fresh_install=code['ready'] and inputs['ready'])
+        if code_root is not None:
+            for blocker in code['blockers'] + inputs['blockers']:
+                log('WORLD MAP PENDING: ' + blocker)
     if 'map_definitions' in bindings:
         row = bindings['map_definitions']
         directory = inside(resources, row['directory'])
@@ -786,8 +944,6 @@ def install(args):
             files[name] = file_record(target)
         bridge = Path(__file__).with_name('private_source_bootstrap.gd')
         copy_file(bridge, inside(stage, GENERATED[1]))
-        json_write(stage / GENERATED[0], descriptor(plan, resource_root,
-                    persistent_contracts=resources / 'pinned-contracts'))
         project = stage / 'project.godot'
         text = project.read_text(encoding='utf-8')
         if '[autoload]' in text:
@@ -797,6 +953,8 @@ def install(args):
         else:
             text += '\n[autoload]\nTwilightPrivateSources="*res://%s"\n' % GENERATED[1]
         project.write_text(text, encoding='utf-8')
+        json_write(stage / GENERATED[0], descriptor(plan, resource_root,
+                    persistent_contracts=resources / 'pinned-contracts', code_root=stage))
         for name in ('project.godot', *GENERATED):
             files[name] = file_record(inside(stage, name))
         state = {'schema': 1, 'code_sha': commit, 'plan_sha256': plan_digest, 'files': files,

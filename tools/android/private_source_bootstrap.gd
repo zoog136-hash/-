@@ -295,6 +295,31 @@ func _prepare_selection_config(path: String, section: String, next: Dictionary, 
 	if maximum > 0 and bytes.size() > maximum: return _fail("새 원본 연결 설정이 공개 크기 한도를 넘었습니다.")
 	return {"ok":true,"write":{"path":path,"bytes":bytes}}
 
+func _world_map_prerequisites(value: Dictionary) -> bool:
+	# Evidence describes the actual installed source bytes, not assumed PR merges.
+	if value.get("ready_for_fresh_install",false) != true: return false
+	if not value.has("enabled") or not value.enabled is bool: return false
+	var code: Variant = value.get("code_contract")
+	var inputs: Variant = value.get("input_contract")
+	if not code is Dictionary or code.get("ready") != true or not code.get("files") is Dictionary or code.files.is_empty(): return false
+	if not inputs is Dictionary or inputs.get("ready") != true or not inputs.get("files") is Dictionary or inputs.files.is_empty(): return false
+	if code.get("requires_mouse_emulation",false) and not bool(ProjectSettings.get_setting("input_devices/pointing/emulate_mouse_from_touch",false)): return false
+	for key: String in ["main_ui_manifest","image_manifest","image_dummy"]:
+		if not inputs.files.has(key): return false
+	var offers: Variant = value.get("offered_worlds")
+	if not offers is Dictionary or offers.is_empty(): return false
+	for land: String in offers:
+		if not offers[land] is Dictionary or not _integer(offers[land].get("world_id")) or int(offers[land].world_id) <= 0: return false
+		if not inputs.files.has("world_image:"+str(int(offers[land].world_id))): return false
+	for name: String in code.files:
+		if name != "project.godot" and not name.begins_with("scripts/"): return false
+		if name.contains(":") or name.contains("\\") or name.split("/").has(".."): return false
+		if not _pinned(ProjectSettings.globalize_path("res://"+name),code.files[name]): return false
+	for key: String in inputs.files:
+		var entry: Variant = inputs.files[key]
+		if not entry is Dictionary or not _pinned(_absolute(entry.get("path")),entry.get("sha256")): return false
+	return true
+
 func _prepare_world_map(value: Dictionary) -> Dictionary:
 	var settings: String = "user://current523_world_map.cfg"
 	# A preexisting selection, including malformed or disabled data, belongs to
@@ -302,6 +327,11 @@ func _prepare_world_map(value: Dictionary) -> Dictionary:
 	if FileAccess.file_exists(settings) or DirAccess.dir_exists_absolute(settings): return {"ok":true}
 	var user_directory := DirAccess.open("user://")
 	if user_directory != null and user_directory.is_link("current523_world_map.cfg"): return {"ok":true}
+	if not _world_map_prerequisites(value):
+		print("월드 지도 자동 연결 대기: 설치 코드와 원본 입력의 계약이 준비되면 새 설정을 생성합니다. 기존 설정은 보존합니다.")
+		# Do not create a disabled placeholder: a later compatible update must be
+		# able to activate this still-absent cfg without replacing user settings.
+		return {"ok":true}
 	var contract: String = _absolute(value.get("contract_path"))
 	var contract_pin: Variant = value.get("contract_sha256")
 	if not _pinned(contract,contract_pin): return {"ok":false}
@@ -312,7 +342,7 @@ func _prepare_world_map(value: Dictionary) -> Dictionary:
 	file.close()
 	if not document is Dictionary or not document.get("image_infos") is Array:
 		return _fail("월드 지도 원본 관계 문서의 image_infos 계약이 다릅니다.")
-	var enabled: Variant = value.get("enabled",false)
+	var enabled: Variant = value.enabled
 	if not enabled is bool: return _fail("월드 지도 연결의 활성 선택은 명시적인 bool이어야 합니다.")
 	var offered: Variant = value.get("offered_worlds")
 	if not offered is Dictionary: return _fail("월드 지도는 명시적으로 공급된 Land별 World 선택이 필요합니다.")
