@@ -40,6 +40,7 @@ func configure(owner: Node) -> void:
 	vfx = VFX.new()
 	vfx.name = "OriginalSkillVFX"
 	vfx.z_index = 12
+	vfx.source_only_policy = _source_only_skill_presentation
 	owner.add_child(vfx)
 	summons.configure(self)
 	local_runtime.configure(self)
@@ -795,6 +796,9 @@ func import_state(data: Dictionary) -> void:
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		vfx.maintain(str(skill.id), world.player, float(buff.get("remaining", 0)))
 	local_runtime.restore(data.get("local_design",{}))
+
+func _source_only_skill_presentation() -> bool:
+	return is_instance_valid(world) and is_instance_valid(world.player) and world.player.original_source_preview.current523_source_only_presentation()
 
 func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vector2) -> void:
 	if _is_verified_source_skill(skill):

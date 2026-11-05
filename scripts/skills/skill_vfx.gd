@@ -24,6 +24,7 @@ var epoch: int = 0
 var detail_limit: int = MAX_EFFECTS
 var low_detail: bool = false
 var use_private_sources: bool = true
+var source_only_policy: Callable
 var audio_pool: TwilightOriginalSkillAudio
 var similar_bridge = SIMILAR_BRIDGE.new()
 var spx_bridge: TwilightSkillSPXBridge = SPX_BRIDGE.new()
@@ -192,10 +193,13 @@ func _clip_duration(frames: SpriteFrames, phase: String) -> float:
 		seconds += frames.get_frame_duration(phase, frame) / frames.get_animation_speed(phase)
 	return seconds
 
+func _source_only() -> bool:
+	return source_only_policy.is_valid() and bool(source_only_policy.call())
+
 func emit_skill(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF, context: Dictionary = {}) -> void:
 	# Preserve PR122's source event routing while retaining authored VFX layers.
 	var world := get_parent()
-	if world != null and world.get("combat_vfx") != null:
+	if not _source_only() and world != null and world.get("combat_vfx") != null:
 		if world.combat_vfx.source_skill_event(id, phase, point): return
 	_emit(id, phase, point, end, context)
 
@@ -204,6 +208,10 @@ func _emit(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF
 	# Audio remains at the authoritative event even when the visual pool is full.
 	if phase in ["cast", "impact", "status", "resist"] and is_instance_valid(audio_pool): audio_pool.play_skill(id, point, phase)
 	phase_started.emit(id, phase, point)
+	# Typed current-source effects are dispatched by the admitted skill owner.
+	# Missing originals cannot reopen similar/SPX/authored visual substitutes.
+	# Keep the existing audio and phase notification above this visual boundary.
+	if _source_only(): return {}
 	if live.size() >= detail_limit:
 		dropped += 1
 		return {}
@@ -241,6 +249,11 @@ func flight_options(id: String) -> Dictionary:
 
 func _flight_step(flight: Dictionary, id: String, token: Dictionary) -> bool:
 	if int(token.epoch) != epoch: return false
+	if _source_only():
+		_flight_end(token)
+		# The host flight treats true as a claimed visual route and suppresses
+		# its drawn substitute. Its motion, obstruction and hit callback continue.
+		return true
 	var pose := _flight_visual_pose(flight, id, token)
 	var direction: Vector2 = pose.direction
 	var visual_point: Vector2 = pose.point
@@ -293,6 +306,7 @@ func _flight_end(token: Dictionary) -> void:
 
 func maintain(id: String, node: Node2D, duration: float) -> void:
 	if persistent.has(id): remove_persistent(id)
+	if _source_only(): return
 	persistent[id] = {"target":weakref(node), "remaining":duration, "visual":{}, "retry":0.0}
 	set_process(true)
 
@@ -362,6 +376,13 @@ func clear() -> void:
 	set_process(false)
 
 func _process(delta: float) -> void:
+	if _source_only():
+		# Retire previously configured substitute visuals after a policy change.
+		# Do not clear the audio pool or touch skill/buff gameplay ownership.
+		persistent.clear()
+		for index: int in range(live.size() - 1, -1, -1): _retire(index)
+		set_process(false)
+		return
 	for index: int in range(live.size() - 1, -1, -1):
 		var item: Dictionary = live[index]
 		item.age += delta
