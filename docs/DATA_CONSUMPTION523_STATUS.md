@@ -48,6 +48,14 @@ action binding remain the respective resource owners' inputs. This records
 published integration adoption; it is not a merge, code duplication or observed
 gameplay in this data Draft. All those later integration changes are unverified.
 
+The later269 checkpoint `f11fcbab7c8635537bac049606b061b94f7ba2ed` records
+current typed-supply prototypes/schema2 receipts, immutable issuance quantity
+and actual physical remainder, and the shared whole-candidate grant boundary.
+Historical schema1 supply receipts remain separate, as does the pending old
+schema3 source-item save marker. These are supplier/save contracts owned by269.
+The acquisition descriptors' `schema:1` in this data Draft is a different
+definition-model schema and is not upgraded or presented as a supplier receipt.
+
 ## Fixed input and evidence
 
 The existing private current523 archive was received through authenticated Drive
@@ -1029,6 +1037,22 @@ ownership transaction contract remains a PR269 handoff; weights or drop-view
 references do not establish normal acquisition. Class change,
 domination stones, symbols, guardian slots and mastery already have partial
 consumers and must not be reported wholly unused.
+
+For the published unconfirmed523 numeric consumers, the existing
+`source523.load_zip(path)` already supplies Jade/Grail's ItemBonus/BuffBonus/
+ItemClass→Bonus and ItemGrace/Prefix/Set reads, and the ordinary trial's
+Challenge/Goal/Reward input. The reviewed `runtime.configure(host)` selects only
+its dedicated default ZIP before domain setup; it does not select the common
+held archive. That runtime/source instance and setup caller are not present in
+this standalone checkout. A data adapter cannot replace it with CommonSource's
+rows: its `resolve_reward`, `region_allowed` and bonus/stat contracts also belong
+to the existing source/domain owner. The narrow integration needed is to select
+the common archive through the existing `source.load_zip(path)` before setup
+when the dedicated implicit input is actually missing, preserving existing/
+explicit input failures and state. No duplicate backend, fake receiver or unused
+standalone join API is added here. Attendance/pass and description work remain
+lower priority. This is that specific receiver boundary, not a claim that all
+unresolved tables lack consumers or inputs.
 
 ## Validation status
 
