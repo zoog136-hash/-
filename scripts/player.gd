@@ -337,7 +337,7 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 	current523_identity_actor.configure(transform_profile.profile_id, source_visual_context)
 	# Reapplying the same native identity must not reset its pose/event timeline.
 	var selected: Dictionary = preload("res://scripts/lineagem_base508.gd").select_visual_key(transform_profile.profile_id, source_visual_context) if transform_profile.profile_id.begins_with("transform:m508:") else {}
-	var unchanged_native: bool = previous_native_key == transform_profile.profile_id and selected.get("status", "") == "selected" and int(selected.get("sprite_id", -2)) == previous_native_sprite and original_source_preview._manifest_path == original_source_manifest and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0)) == int(source_visual_context.get("source_weapon_type",0))
+	var unchanged_native: bool = (previous_native_key == transform_profile.profile_id and selected.get("status", "") == "selected" and int(selected.get("sprite_id", -2)) == previous_native_sprite and original_source_preview._manifest_path == original_source_manifest and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0)) == int(source_visual_context.get("source_weapon_type",0))) or original_source_preview.current523_card_matches(transform_profile.profile_id,source_visual_context)
 	# Native sc/mu composition and origin remain unverified.
 	if unchanged_native or original_source_preview.configure(transform_profile.profile_id, original_source_manifest, source_visual_context):
 		transform_active = true
@@ -349,7 +349,7 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 			original_source_preview.notify_source_global_event("polymorph", motion.facing8)
 		return
 	# A verified identity with missing pixels/variant context never borrows legacy artwork.
-	if transform_profile.profile_id.begins_with("transform:m508:"):
+	if transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:"):
 		transform_active = false
 		transform_sprite.hide()
 		class_sprite.show()
@@ -437,7 +437,7 @@ func set_source_weapon_visual(weapon: String) -> void:
 	source_visual_context["source_weapon_type"]=native_weapon
 	source_visual_context["local_weapon_type"]=weapon
 	current523_identity_actor.update_context(source_visual_context)
-	if original_source_preview.installed() and transform_profile != null and transform_profile.profile_id.begins_with("transform:m508:") and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0))!=native_weapon:
+	if original_source_preview.installed() and transform_profile != null and (transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:")) and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0))!=native_weapon:
 		if original_source_preview.configure(transform_profile.profile_id,original_source_manifest,source_visual_context):
 			original_source_preview.advance_source(0.0,motion.state,motion.facing8,motion.sequence,motion.active)
 	if spx_sprite == null or spx_actor_id.is_empty(): return

@@ -7,6 +7,7 @@ var source_targeting: Dictionary = {}
 var collection_combat_context: Dictionary={}
 var source_m_npc_id: int = -1
 const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
+const CURRENT523_SOURCE_M_VIEW = preload("res://scripts/monsters/current523_source_bank_view.gd")
 const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
 var source_m_view: SOURCE_M_VIEW = null
 var mp: int = 0
@@ -234,6 +235,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 		return _reject_patch523_spawn(str(admission.reason))
 	source_record = admission.record
 	remove_meta("patch523_spawn_hold")
+	if has_meta("current523_source_bank_selection"): remove_meta("current523_source_bank_selection")
 	if source_record.has("source_m_asset_manifest_path"):
 		var native_view := SOURCE_M_VIEW.new()
 		if native_view.configure(source_record, str(source_record.source_m_asset_manifest_path)):
@@ -242,9 +244,19 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			add_child(source_m_view)
 		else:
 			native_view.free() # Retain the prior actor/stats if any original pixel fails verification.
-			if admission.applied: return _reject_patch523_spawn("patch523_original_pixels_not_ready")
-	elif admission.applied:
-		return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+	# The current bank supplies visuals only for the same already-admitted source
+	# encounter. It cannot create a binding, placement, stat update or spawn context.
+	if not is_instance_valid(source_m_view) and admission.applied:
+		var current_view := CURRENT523_SOURCE_M_VIEW.new()
+		if current_view.configure_admitted(source_record,admission):
+			record = source_record
+			source_m_view = current_view
+			add_child(source_m_view)
+			set_meta("current523_source_bank_selection",current_view.selection_status.duplicate(true))
+		else:
+			set_meta("current523_source_bank_selection",current_view.selection_status.duplicate(true))
+			current_view.free()
+			return _reject_patch523_spawn("patch523_original_pixels_not_ready")
 	set_meta("patch523_spawn_admission", record.get("source_m_patch523_admission", {}).duplicate(true))
 	# Only an exact namespaced source ID opts into native stats. No name/Sprite/legacy-ID guessing.
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))

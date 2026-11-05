@@ -1,0 +1,287 @@
+extends RefCounted
+## Pinned, opt-in source-action metadata. No installation, role inference or events.
+const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
+const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
+const MAX_JSON = 16 * 1024 * 1024
+var _root: String = ""
+var _manifest_path: String = ""
+var _manifest_sha: String = ""
+var _manifest: Dictionary = {}
+var _actor_pins: Dictionary = {}
+var _parsed: Dictionary = {}
+var _parse_order: Array[String] = []
+static var _crc_table: Array[int] = []
+
+static func fail(message: String) -> Dictionary:
+	return {"ok":false,"error":message}
+
+static func integer(value: Variant, minimum: int = 0, maximum: int = 2147483647) -> bool:
+	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value)) and float(value) >= minimum and float(value) <= maximum
+
+static func digest(bytes: PackedByteArray) -> String:
+	var context := HashingContext.new()
+	context.start(HashingContext.HASH_SHA256)
+	context.update(bytes)
+	return context.finish().hex_encode()
+
+static func valid_sha(value: Variant) -> bool:
+	if not value is String or value.length() != 64: return false
+	for character: String in value:
+		if not character in "0123456789abcdef": return false
+	return true
+
+static func valid_crc(value: Variant) -> bool:
+	if not value is String or value.length() != 8: return false
+	for character: String in value:
+		if not character in "0123456789abcdef": return false
+	return true
+
+static func crc32(bytes: PackedByteArray) -> String:
+	if _crc_table.is_empty():
+		for index: int in range(256):
+			var entry: int = index
+			for bit: int in range(8): entry = (entry >> 1) ^ (0xedb88320 if (entry & 1) != 0 else 0)
+			_crc_table.append(entry)
+	var value: int = 0xffffffff
+	for byte: int in bytes: value = _crc_table[(value ^ byte) & 255] ^ (value >> 8)
+	return "%08x" % ((value ^ 0xffffffff) & 0xffffffff)
+
+func _json(path: String, expected: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null or file.get_length() <= 0 or file.get_length() > MAX_JSON: return fail("Missing or oversized bank JSON: " + path)
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	if not valid_sha(expected) or digest(bytes) != expected: return fail("Bank JSON SHA256 mismatch: " + path)
+	var value: Variant = JSON.parse_string(bytes.get_string_from_utf8())
+	return {"ok":true,"value":value} if value is Dictionary else fail("Bank JSON is not an object.")
+
+func _pins_valid() -> bool:
+	if FileAccess.get_sha256(_manifest_path) != _manifest_sha: return false
+	for path: String in _actor_pins:
+		if FileAccess.get_sha256(path) != _actor_pins[path]: return false
+	return true
+
+func _member(member: String) -> Dictionary:
+	var spec: Variant = _manifest.get("members", {}).get(member)
+	if not spec is Dictionary or spec.get("member") != member or spec.get("path") != "raw/" + member or not INSTALL.safe_relative(str(spec.get("path", ""))): return fail("Invalid exact raw member path: " + member)
+	var supplied_sha: bool = valid_sha(spec.get("sha256"))
+	var received: bool = spec.has("sha256") and spec.sha256 == null and spec.get("stage") == "received_not_additionally_validated"
+	if not integer(spec.get("bytes"), 1, DECODER.MAX_INPUT_BYTES) or (not supplied_sha and not received): return fail("Invalid raw member identity: " + member)
+	if received:
+		var identity: Variant = spec.get("source_identity")
+		if not valid_crc(spec.get("crc32")) or spec.get("source_receipt_id") != member or not identity is Dictionary or identity.get("source_snapshot") != "patch523" or identity.get("basis") != "supplied_exact_current523_member_archive_bytes_crc_domain": return fail("Missing explicit received current523 identity: " + member)
+		var manifest_reference: Variant = identity.get("source_manifest_reference")
+		var reference_supplied: bool = (manifest_reference is String and not manifest_reference.is_empty()) or (manifest_reference is Dictionary and not manifest_reference.is_empty())
+		if not identity.get("archive") is String or str(identity.archive).is_empty() or not reference_supplied: return fail("Missing supplied source domain: " + member)
+		var whole_manifest: Variant = identity.get("whole_current523_manifest_match")
+		var container_sha: Variant = identity.get("container_sha256")
+		if whole_manifest != null and whole_manifest != true: return fail("Contradictory supplied current523 container identity: " + member)
+		if container_sha != null and not valid_sha(container_sha): return fail("Invalid supplied source container identity: " + member)
+		if whole_manifest != true and identity.get("version_basis") != "retained508_outer_manifest": return fail("Missing exact retained source version basis: " + member)
+	var file := FileAccess.open(_root.path_join(spec.path), FileAccess.READ)
+	if file == null or file.get_length() != int(spec.bytes): return fail("Original SP2 missing or changed size: " + member)
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	# Recheck the actual bytes before every cache use, including texture cache hits.
+	if supplied_sha and digest(bytes) != spec.sha256: return fail("Original SP2 SHA256 mismatch: " + member)
+	if received and crc32(bytes) != spec.crc32: return fail("Received original SP2 CRC32 mismatch: " + member)
+	if not _parsed.has(member):
+		var parsed: Dictionary = DECODER.parse(bytes)
+		if not parsed.ok: return parsed
+		var budget: int = parsed.body.size()
+		for cached: Dictionary in _parsed.values(): budget += cached.body.size()
+		while not _parse_order.is_empty() and (_parsed.size() >= 3 or budget > 32 * 1024 * 1024):
+			var oldest: String = _parse_order.pop_front()
+			budget -= _parsed[oldest].body.size()
+			_parsed.erase(oldest)
+		_parsed[member] = parsed
+		_parse_order.append(member)
+	return {"ok":true,"parsed":_parsed[member],"sha256":spec.sha256,"crc32":spec.get("crc32"),"stage":spec.get("stage","sha256_pinned_raw_member"),"source_receipt_id":spec.get("source_receipt_id"),"source_identity":spec.get("source_identity")}
+
+func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
+	if not _pins_valid(): return fail("Pinned source bank metadata changed.")
+	var source: Dictionary = _member(str(layer.get("member", "")))
+	if not source.ok: return source
+	var parsed: Dictionary = source.parsed
+	var group_index: int = -1
+	for index: int in range(parsed.groups.size()):
+		if int(parsed.groups[index].bit) == int(layer.get("group_bit", -1)): group_index = index
+	if group_index < 0 or not integer(layer.get("frame_index"), 0, 255): return fail("Stored SP2 direction/frame is unavailable.")
+	var group: Dictionary = parsed.groups[group_index]
+	var frame_index: int = int(layer.frame_index)
+	if frame_index >= group.frames.size(): return fail("Stored SP2 frame is out of range.")
+	var frame: Dictionary = group.frames[frame_index]
+	var result: Dictionary = DECODER.render(parsed, group_index, frame_index) if pixels else {"ok":true,"offset":frame.bounds.position,"empty":frame.empty}
+	if result.ok:
+		result["provenance"] = {"member":layer.member,"raw_sha256":source.sha256,"raw_crc32":source.crc32,"source_stage":source.stage,"source_receipt_id":source.source_receipt_id,"source_identity":source.source_identity,"stored_bit":int(layer.group_bit),"frame_index":frame_index,"layer_id":int(layer.source_sprite_id),"kind":layer.kind,"empty":bool(frame.empty)}
+	return result
+
+func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
+	var evidence: Variant = record.get("source_layer_declarations")
+	if not evidence is Array: return fail("Literal source layer attributes were not supplied.")
+	var matches: Array = []
+	for item: Variant in evidence:
+		if item is Dictionary and item.get("kind") == kind and integer(item.get("source_sprite_id")) and int(item.source_sprite_id) == sprite: matches.append(item)
+	if matches.size() != 1: return fail("Missing or ambiguous literal layer declaration.")
+	var item: Dictionary = matches[0]
+	var path: Variant = item.get("declaration_path")
+	if not path is Array or path.is_empty(): return fail("Invalid literal layer declaration path.")
+	var expected: Array = []
+	for proof: Variant in record.source_proof.declarations:
+		if not proof is Dictionary or not proof.get("declaration_path") is Array: return fail("Invalid source layer proof.")
+		var candidate: Array = proof.declaration_path
+		if candidate.is_empty() or not candidate[-1] is Dictionary or not integer(candidate[-1].get("sprite_id")): return fail("Invalid source layer declaration identity.")
+		if proof.get("kind") == kind and int(candidate[-1].sprite_id) == sprite: expected = candidate
+	if expected.size() != path.size(): return fail("Layer declaration evidence differs from source proof.")
+	var attributes: Array = []
+	var unresolved: bool = false
+	for index: int in range(path.size()):
+		if not path[index] is Dictionary: return fail("Invalid literal layer declaration.")
+		var declaration: Dictionary = path[index]
+		var base: Dictionary = declaration.duplicate(true)
+		base.erase("literal_attribute_directives")
+		if base != expected[index] or not valid_sha(base.get("source_sha256")): return fail("Layer declaration source identity differs.")
+		var directives: Variant = declaration.get("literal_attribute_directives")
+		if not directives is Array: return fail("Missing literal attribute directives.")
+		for directive: Variant in directives:
+			if not directive is Dictionary or not integer(directive.get("code")) or int(directive.code) != 104 or not directive.get("body") is String or not integer(directive.get("line"), 1): return fail("Invalid literal attribute directive.")
+			attributes.append(directive.body)
+			if not str(directive.body).is_valid_int(): unresolved = true
+	if path.size() > 1 and not attributes.is_empty(): unresolved = true
+	return {"ok":true,"attributes":attributes,"unresolved":unresolved,"declarations":path}
+
+func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary) -> Dictionary:
+	_root = manifest_path.get_base_dir()
+	_manifest_path = manifest_path
+	_manifest_sha = expected_sha
+	_manifest.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
+	var loaded: Dictionary = _json(manifest_path, expected_sha)
+	if not loaded.ok: return loaded
+	_manifest = loaded.value
+	if _manifest.get("schema") != 1 or _manifest.get("kind") != "current523_reference_sp2_action_bank" or _manifest.get("source_snapshot") != "patch523": return fail("Not an exact current523 reference source bank.")
+	var contract: Variant = _manifest.get("consumer_contract")
+	if not contract is Dictionary or contract.get("format") != "current523_identity_roles_v1" or contract.get("native_dispatch_verified") != false or contract.get("selection") != "explicit_source_actor_id_and_source_action_id" or contract.get("loop") != "unknown_requires_explicit_caller_policy" or contract.get("timing") not in ["source_explicit_fps_and_duration_ticks_only","source_explicit_or_existing_host_policy"]: return fail("Unsupported source bank consumer contract.")
+	if contract.get("timing") == "source_explicit_or_existing_host_policy" and (contract.get("host_timing_opt_in") != true or contract.get("source_fps_policy") != "preserve_literal_value_including_null"): return fail("Host timing requires the explicit literal-FPS preservation contract.")
+	if source_actor_id < 0 or bindings.is_empty() or bindings.size() > 16 or bindings.size() != loop_policy.size(): return fail("Explicit source action bindings and loop policy are required for each role.")
+	if not _manifest.get("actors") is Dictionary or not _manifest.get("members") is Dictionary: return fail("Missing source bank registry.")
+	var entries: Variant = _manifest.actors.get("sprite:" + str(source_actor_id))
+	if not entries is Dictionary: return fail("Exact source actor ID is absent.")
+	var tracks: Dictionary = {}
+	var record: Dictionary = {"source_sprite_id":source_actor_id,"tracks":tracks,"source_snapshot":"patch523"}
+	var independent_by_role: Dictionary = {}
+	record["independent_source_layers"] = independent_by_role
+	for role: Variant in bindings:
+		if not role is String or role.is_empty() or not integer(bindings[role]) or not loop_policy.has(role) or not loop_policy[role] is bool: return fail("Each caller role needs an exact action ID and explicit boolean loop policy.")
+		var action_id: int = int(bindings[role])
+		var entry: Variant = entries.get(str(action_id))
+		if not entry is Dictionary or entry.get("path") != "actors/%d/action-%d.json" % [source_actor_id,action_id] or not valid_sha(entry.get("sha256")): return fail("Exact source action record is absent or unsafe.")
+		var actor_path: String = _root.path_join(entry.path)
+		loaded = _json(actor_path, entry.sha256)
+		if not loaded.ok: return loaded
+		_actor_pins[actor_path] = entry.sha256
+		var source: Dictionary = loaded.value
+		if source.get("schema") != 1 or source.get("source_snapshot") != "patch523" or source.get("consumer_contract") != contract: return fail("Source action snapshot/contract mismatch.")
+		var actor: Variant = source.get("actor")
+		var proof: Variant = source.get("source_proof")
+		var source_role: String = "source_action:" + str(action_id)
+		if not actor is Dictionary or not proof is Dictionary or actor.get("source_sprite_id") != source_actor_id or proof.get("root_sprite_id") != source_actor_id or not actor.get("roles") is Dictionary or actor.roles.size() != 1: return fail("Source action actor identity mismatch.")
+		var track: Variant = actor.roles.get(source_role)
+		if not source.get("compact_roles") is Dictionary or not proof.get("roles") is Dictionary: return fail("Missing exact compact action/source roles.")
+		var compact: Variant = source.compact_roles.get(source_role)
+		var action: Variant = proof.roles.get(source_role)
+		if not track is Dictionary or not compact is Dictionary or not action is Dictionary or not proof.get("declarations") is Array: return fail("Missing exact source action proof.")
+		var source_fps: Variant = track.get("fps")
+		var explicit_timing: bool = integer(source_fps, 1, 10000)
+		var pending_timing: bool = source_fps == null and contract.get("timing") == "source_explicit_or_existing_host_policy"
+		if track.get("source_action_id") != action_id or compact.get("source_action_id") != action_id or compact.get("source_sprite_id") != source_actor_id or action.get("code") != action_id or (not explicit_timing and not pending_timing) or source_fps != action.get("fps") or source_fps != compact.get("fps") or track.get("loop") != null or compact.get("loop") != null or not valid_sha(action.get("source_sha256")): return fail("Invalid preserved source timing/action identity.")
+		var key_pattern := RegEx.new()
+		var source_name_pattern := RegEx.new()
+		source_name_pattern.compile("^list_[0-9]+\\.spr$")
+		if not action.get("source_file") is String or source_name_pattern.search(action.source_file) == null: return fail("Invalid exact SPR source filename.")
+		key_pattern.compile("^" + str(action.get("source_file", "")).replace(".", "\\.") + ":B[0-9]+:A" + str(action_id) + "$")
+		if not source.get("action_key") is String or key_pattern.search(source.action_key) == null or track.get("source_file") != action.get("source_file") or track.get("source_line") != action.get("source_line"): return fail("Exact source action key/provenance mismatch.")
+		var tokens: Variant = compact.get("tokens")
+		var layer_specs: Variant = compact.get("layers")
+		var directions: Variant = track.get("directions")
+		if not tokens is Array or tokens.is_empty() or tokens.size() > 4096 or tokens != action.get("tokens") or not layer_specs is Array or layer_specs.is_empty() or layer_specs.size() > 64 or not directions is Array or directions.size() != 8 or not integer(compact.get("declared_flag"),0,1) or compact.declared_flag != action.get("declared_flag"): return fail("Invalid source tokens, layers or directions.")
+		var annotations: Variant = action.get("source_annotations",[])
+		if not annotations is Array: return fail("Invalid literal source annotations.")
+		for annotation: Variant in annotations:
+			if not annotation is Dictionary or not integer(annotation.get("token_index"),0,tokens.size()-1) or not annotation.get("raw") is String: return fail("Invalid literal source annotation token.")
+		var body_layers: int = 0
+		for layer: Variant in layer_specs:
+			if not layer is Dictionary: return fail("Invalid compact layer specification.")
+			if layer.get("kind") == "body":
+				body_layers += 1
+				if layer.get("source_sprite_id") != proof.get("body_sprite_id"): return fail("Exact resolved body ID differs from source proof.")
+		if body_layers != 1: return fail("Exact source action requires one body layer.")
+		var expanded: Array = []
+		var total_ticks: int = 0
+		for token: Variant in tokens:
+			if not token is Array or token.size() != 3 or not integer(token[0]) or not integer(token[1],0,255) or not integer(token[2]): return fail("Invalid literal source frame token.")
+			total_ticks += int(token[2])
+		if total_ticks <= 0 or total_ticks > 2147483647: return fail("Source duration has no positive bounded total.")
+		for direction: int in range(8):
+			var frames: Variant = directions[direction]
+			if not frames is Array or frames.size() != tokens.size(): return fail("Source direction token count differs.")
+			var converted: Array = []
+			for index: int in range(frames.size()):
+				var frame: Variant = frames[index]
+				var token: Array = tokens[index]
+				if not frame is Dictionary or frame.get("duration_ticks") != token[2] or not frame.get("layers") is Array or frame.layers.size() != layer_specs.size(): return fail("Source frame timing/layers differ from literal tokens.")
+				var shown: Dictionary = {"source_ticks":int(token[2]),"duration":float(token[2])/float(source_fps) if explicit_timing else 0.0,"source_group":int(token[0]),"source_frame":int(token[1]),"layers":[],"effect_layers":[]}
+				for layer_index: int in range(frame.layers.size()):
+					var layer: Variant = frame.layers[layer_index]
+					var spec: Variant = layer_specs[layer_index]
+					if not layer is Dictionary or not spec is Dictionary or layer.get("kind") not in ["body","shadow","clothes"] or layer.get("kind") != spec.get("kind") or not integer(layer.get("source_sprite_id")) or layer.source_sprite_id != spec.get("source_sprite_id"): return fail("Invalid literal layer identity.")
+					var address: int = int(token[0]) + (direction if int(compact.declared_flag) == 1 else 0)
+					var member: String = "Sprite/%d-%d.sp2" % [int(layer.source_sprite_id),address & ~7]
+					if layer.get("member") != member or layer.get("group_bit") != (address & 7) or layer.get("frame_index") != token[1]: return fail("Literal source address differs from identity contract.")
+					var attributes: Dictionary = _attributes(source, layer.kind, int(layer.source_sprite_id))
+					if not attributes.ok: return attributes
+					var picture: Dictionary = render_layer(layer, false)
+					if not picture.ok: return picture
+					if layer.kind == "body" and bool(picture.empty): return fail("Exact source action has an empty body frame.")
+					var converted_layer: Dictionary = layer.duplicate(true)
+					converted_layer.merge({"path":"raw/"+member,"texture_key":"%s:%d:%d" % [member,int(layer.group_bit),int(layer.frame_index)],"offset":[picture.offset.x,picture.offset.y],"layer_id":int(layer.source_sprite_id),"source_attributes":attributes.attributes,"source_attribute_declarations":attributes.declarations,"source_attributes_unresolved":attributes.unresolved,"blend_status":"source_attributes_preserved_M_equation_unverified","frame_provenance":picture.provenance})
+					if layer.kind == "clothes": shown.effect_layers.append(converted_layer)
+					else: shown.layers.append(converted_layer)
+				converted.append(shown)
+			expanded.append(converted)
+		tracks[role] = {"source_action_id":action_id,"source_action_key":source.action_key,"source_sprite_id":source_actor_id,"source_annotations":annotations.duplicate(true),"fps":source_fps,"effective_fps":source_fps if explicit_timing else 0.0,"loop":loop_policy[role],"directions":expanded,"static_pending_timing":not explicit_timing,"timing_origin":"SPR_explicit_section" if explicit_timing else "strict_unresolved"}
+		var independent: Variant = source.get("independent_source_layers",[])
+		if not independent is Array: return fail("Invalid independent source layer declarations.")
+		independent_by_role[role] = []
+		for attachment: Variant in independent:
+			if not attachment is Dictionary or attachment.get("kind") not in ["clothes","shadow"] or not integer(attachment.get("from_sprite_id")) or not integer(attachment.get("target_sprite_id"),1) or attachment.get("parent_action_id") != action_id or attachment.get("child_action_id") != action_id or attachment.get("dispatch_policy") != "host_parent_role_starts_child_own_source_action_native_dispatch_unverified": return fail("Invalid independent source layer action dispatch.")
+			var target_id: int = int(attachment.target_sprite_id)
+			var child_key: String = "sprite:" + str(target_id)
+			var child_path: String = "actors/%d/action-%d.json" % [target_id,action_id]
+			var child_registry: Variant = _manifest.actors.get(child_key,{})
+			if attachment.get("child_actor_key") != child_key or attachment.get("child_action_path") != child_path or not child_registry is Dictionary: return fail("Independent layer has no exact child actor registry.")
+			var child_entry: Variant = child_registry.get(str(action_id))
+			if not child_entry is Dictionary or child_entry.get("path") != child_path or not valid_sha(child_entry.get("sha256")) or not attachment.get("child_source_action_key") is String: return fail("Independent layer child source action is unavailable.")
+			var declaration: Variant = attachment.get("source_declaration")
+			var source_code: int = 101 if attachment.kind == "shadow" else 105
+			if not declaration is Dictionary or declaration.get("code") != source_code or not integer(declaration.get("sprite_id")) or not declaration.get("body") is String or declaration.get("body") != attachment.get("source_reference") or not valid_sha(declaration.get("source_sha256")) or not integer(declaration.get("source_line"),1) or not declaration.get("source_file") is String or source_name_pattern.search(declaration.source_file) == null: return fail("Independent layer literal source declaration is unavailable.")
+			var values: PackedStringArray = str(declaration.body).replace("\t"," ").replace("\r"," ").replace("\n"," ").strip_edges().split(" ",false)
+			if values.is_empty(): return fail("Independent literal layer target is missing.")
+			if source_code == 105 and (values.size() < 2 or not values[0].is_valid_int() or int(values[0]) != values.size()-1): return fail("Invalid independent literal 105 count.")
+			var target_values: PackedStringArray = values.slice(1) if source_code == 105 else values
+			var declared_target: bool = false
+			for value: String in target_values:
+				if not value.is_valid_int(): return fail("Invalid independent literal layer target.")
+				if int(value) == target_id: declared_target = true
+			if not declared_target: return fail("Independent layer target is absent from literal source declaration.")
+			var owner_proven: bool = false
+			for owner: Dictionary in proof.declarations:
+				var effective_owner: bool = false
+				var literal_owner: bool = false
+				for owner_path: Dictionary in owner.get("declaration_path",[]):
+					if owner_path.get("sprite_id") == attachment.from_sprite_id: effective_owner = true
+					if owner_path.get("sprite_id") == declaration.sprite_id and owner_path.get("source_file") == declaration.source_file and owner_path.get("source_sha256") == declaration.source_sha256: literal_owner = true
+				if effective_owner and literal_owner: owner_proven = true
+			if not owner_proven: return fail("Independent layer declaration owner is absent from source proof.")
+			independent_by_role[role].append(attachment.duplicate(true))
+	if not _pins_valid(): return fail("Source metadata changed while loading.")
+	return {"ok":true,"record":record,"tracks":tracks,"manifest_sha256":expected_sha,"source_actor_id":source_actor_id,"purpose":"diagnostic_reference_preview","installed_in_main_this_run":false}

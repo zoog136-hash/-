@@ -34,6 +34,26 @@ class SourceSemantics(unittest.TestCase):
         ds=self.read_text('#19339 1 body\n105.clothes(1 19340 19341)\n')
         r=ds[19339][0].references[0]
         self.assertFalse(r['count_valid']);self.assertEqual(r['targets'],[19340,19341])
+    def test_source_singular_clothe_is_retained_and_replaces_inherited_clothes(self):
+        # Exact source spelling and ID relation from list_24.spr L1399. This
+        # tests declarations only; it is not pixel or native playback evidence.
+        ds=self.read_text('#1 1 base\n105.clothes(1 2)\n#24117 1=1 child\n105.clothe(1 24118)\n')
+        refs=spr.resolve_references(ds,24117)
+        self.assertEqual(set(refs),{'clothes'})
+        self.assertEqual(refs['clothes'][0]['targets'],[24118])
+        self.assertEqual(refs['clothes'][0]['source_name'],'clothe')
+        self.assertTrue(refs['clothes'][0]['count_valid'])
+        self.assertEqual(ds[24117][0].directives[0]['name'],'clothe')
+    def test_singular_clothe_count_errors_remain_visible(self):
+        ds=self.read_text('#24117 1 body\n105.clothe(2 24118)\n')
+        ref=spr.resolve_references(ds,24117)['clothes'][0]
+        self.assertFalse(ref['count_valid'])
+        self.assertEqual(ref['raw'],'2 24118')
+    def test_existing_reference_serialization_stays_unchanged(self):
+        ds=self.read_text('#1 1 body\n101.shadow(2)\n105.clothes(1 3)\n')
+        self.assertEqual(ds[1][0].references,[
+            {'kind':'shadow','targets':[2],'raw':'2','count_valid':True},
+            {'kind':'clothes','targets':[3],'raw':'1 3','count_valid':True}])
     def test_cycles_and_duplicate_ids_fail_resolution(self):
         ds=self.read_text('#1 1=2 a\n#2 1=1 b\n')
         with self.assertRaises(ValueError):spr.resolve(ds,1)
