@@ -2664,3 +2664,17 @@ func close_original_ui_content() -> Dictionary:
 func mount_original_ui_menu(button_id: int, mount: Node2D) -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):return {"ok":false,"code":"source_runtime_not_bound"}
 	return original_ui_runtime_presenter.mount_menu(button_id,mount)
+
+var original_equipment_ui_adapter: Node
+
+func bind_original_equipment_callbacks(preview_handler: Callable, commit_handler: Callable) -> Dictionary:
+	if not preview_handler.is_valid() or not commit_handler.is_valid():return {"ok":false,"code":"source_equipment_handlers_unavailable"}
+	if is_instance_valid(original_equipment_ui_adapter):
+		original_equipment_ui_adapter.cancel()
+		original_equipment_ui_adapter.queue_free()
+	original_equipment_ui_adapter=preload("res://scripts/ui/original_ui/source_equipment_adapter.gd").new()
+	original_equipment_ui_adapter.name="OriginalEquipmentSourceCallbacks"
+	add_child(original_equipment_ui_adapter)
+	original_equipment_ui_adapter.preview_requested.connect(preview_handler)
+	original_equipment_ui_adapter.commit_requested.connect(commit_handler)
+	return {"ok":true,"adapter":original_equipment_ui_adapter,"transaction_performed":false}

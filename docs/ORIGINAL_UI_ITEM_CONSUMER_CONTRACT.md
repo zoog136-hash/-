@@ -251,3 +251,26 @@ names, placeholder strings and missing pixels are not classified as dummies.
 Original files/receipts/packs and fixed inventory denominators remain retained;
 dummy exclusion is never reported as actual source consumption. The separately
 excluded undeclared 135 links remain separate from dummy classification.
+
+## Existing equipment caller endpoint (unexecuted)
+
+`hud.bind_original_equipment_callbacks(preview_handler, commit_handler)` returns
+a nonvisual `source_equipment_adapter.gd` endpoint with PR265's existing
+`preview_requested(action)` / `commit_requested(action)` and
+`set_snapshot(data)` / `show_quote(quote)` / `show_result(result)` interface.
+Reference service/view head: `6957f1a5ca3901c416a0cb63629f839e6a7ebe0a`.
+The integration owner supplies its existing handlers and the original controls'
+canonical selection dictionary. This endpoint does not instantiate the former
+VBoxContainer form, choose a recipe/material, calculate costs or execute saves.
+Original controls can bind `select_action`, `request_preview`,
+`set_confirmation`, `request_commit`, `cancel` and `close`; quote/result signals
+forward the existing host's dictionaries without invented display messages.
+A request acknowledgement is not an operation result.
+
+The retained Alchemy_All source declares Btn_Alchemy and quantity controls
+Btn_10 / Btn_100 / Btn_1000 / Btn_Max. The current equipment view's request shape
+contains kind, target_id, material_ids, recipe_type and slot. No confirmed
+mapping of those original quantity controls to that request is supplied here;
+they are not assigned guessed batch behavior or hidden to make a scene pass.
+Source root/node/selection/confirmation mappings remain required before that
+whole screen can be mounted in strict mode. No new run or test was performed.
