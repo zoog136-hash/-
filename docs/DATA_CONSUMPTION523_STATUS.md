@@ -90,8 +90,15 @@ the later recovery UI/certificate/expiry coverage. The cause is not classified
 as pre-existing or a regression. Logs are retained privately. No further
 investigation or rerun is started under the latest scope instruction.
 
-The already-running Core continuation retains its original check set and error
-rules; pending checks are not passes. Controlled ownership fixtures are distinct
-from normal acquisition or gameplay coverage. Resource checks verify the existing
-723 sheets, not complete original art delivery. No remote/manual CI, main merge,
-workflow change, new art or source pack publication is part of this Draft.
+The Core continuation retained its original error rules:33 checks passed, two
+failed (`halphas_star_enchant_transaction_test`, `auto_selection_order_test`),
+and three were not run when further dispatch stopped under the latest user
+instruction. The auto-selection check reported a resource still in use at exit;
+the star transaction check reported probability assertions. These remain failures;
+their causes were not investigated further. The original failing policy-host
+attempt and all completed logs are retained. This Draft is not a passing full gate.
+
+Controlled ownership fixtures are distinct from normal acquisition or gameplay
+coverage. Resource checks verify the existing723 sheets, not complete original
+art delivery. No remote/manual CI, main merge, workflow change, new art or source
+pack publication is part of this Draft.
