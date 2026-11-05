@@ -78,7 +78,7 @@ func incoming(attacker: Node,kind: String,amount: int) -> Dictionary:
 		if int(option.InvokeOptionTypeID)==5:
 			if int(option.MaterialAmount)!=0 or int(option.Param3)!=0:continue
 			if roll(int(effect.weight)):
-				result.damage=maxi(0,int(result.damage)-int(option.Param1));fired.append(int(option.ID));emit_sprite(int(option.TargetEffectSpriteID),runtime.world.player)
+				result.damage=maxi(0,int(result.damage)-int(option.Param1));fired.append(int(option.ID));emit_option_effect(option,"TargetEffectSpriteID",runtime.world.player)
 		elif int(option.InvokeOptionTypeID)==2:
 			if bool(option.BySpellAttack)!=(kind=="magic") or amount<int(option.Param2) or int(option.Param3)!=0 or int(option.MaterialAmount)!=0:continue
 			var key: String="native_option|"+str(effect.origin)+"|"+str(int(option.Param1))
@@ -150,6 +150,17 @@ func emit_spell(spell: Dictionary,target: Node2D) -> void:
 			if preview.has_method("notify_source_spell_event") and not manifest.is_empty() and preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):visual_results[str(sprite)]="played_original";continue
 			if preview.has_method("notify_current_source_spell_event") and preview.notify_current_source_spell_event(spell,stage,target.global_position,facing):visual_results[str(sprite)]="played_current_source";continue
 		emit_sprite(sprite,target)
+func emit_option_effect(option: Dictionary,field: String,target: Node2D) -> void:
+	var sprite: int=int(option.get(field,0))
+	if sprite<=0 or not is_instance_valid(target):return
+	emit_sprite(sprite,target)
+	if visual_results.get(str(sprite),"")=="played_original":return
+	var preview: Variant=null
+	for property: Dictionary in runtime.world.player.get_property_list():
+		if property.name=="original_source_preview":preview=runtime.world.player.get(property.name);break
+	if preview!=null and preview.has_method("notify_current_source_invoke_effect") and preview.notify_current_source_invoke_effect(option,field,target.global_position,5):
+		visual_results[str(sprite)]="played_current_invoke_source"
+
 func emit_sprite(sprite: int,target: Node2D,current_item: Dictionary={}) -> void:
 	# Existing private source compositor only. Missing bindings remain absent.
 	if sprite<=0 or not is_instance_valid(target):return

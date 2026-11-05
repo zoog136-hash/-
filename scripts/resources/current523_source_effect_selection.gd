@@ -90,6 +90,28 @@ static func select_spell_row(spell: Dictionary, stage: String, source_snapshot: 
 		"gameplay_admission":"existing_caller_only; no_spell_or_bonus_activation_by_visual_loader"}
 	return _selected(supplied,sprite,action,"spell_effect","lineagem_%s:spell:%d:%s" % [source_snapshot,int(native.ID),stage],reference,source_snapshot)
 
+static func select_invoke_effect(original_option: Dictionary, field: String, context: Dictionary = {}) -> Dictionary:
+	# The invoke owner has already admitted the event. This selects only its
+	# declared visual and never evaluates chance, damage or invoke conditions.
+	if field not in ["TargetEffectSpriteID","AttackerEffectSpriteID"] or not BANK.integer(original_option.get("ID"),1): return fail("current523_invoke_effect_complete_source_option_and_field_required")
+	var supplied: Dictionary = SOURCE.source_tables(context,["InvokeOption"])
+	if not supplied.ok: return supplied
+	var native: Dictionary = supplied.by_id.get("InvokeOption",{}).get(int(original_option.ID),{})
+	if native.is_empty() or native != original_option: return fail("current523_invoke_effect_complete_option_definition_differs")
+	var reference: Dictionary = {"table":"InvokeOption","row":native.duplicate(true),"field":field,
+		"action_field":"sole_original_SPR_action_host_policy",
+		"gameplay_admission":"existing_invoke_owner_only; no_callback_chance_damage_ownership_or_save_changes_by_visual_loader"}
+	var invoke_type: int = _source_integer(native.get("InvokeOptionTypeID"))
+	if invoke_type < 0: return fail("current523_invoke_effect_source_option_type_missing",reference)
+	# ElementalArrow remains archived-unused or consumer-unconfirmed. This is
+	# an InvokeOption path hold, not a ban on a Sprite shared by other callers.
+	if invoke_type == 34: return fail("current523_invoke_effect_elemental_arrow_consumer_unconfirmed",reference)
+	var sprite: int = _source_integer(native.get(field))
+	if sprite <= 0: return fail("current523_invoke_effect_source_sprite_missing",reference)
+	var action: Dictionary = _action(supplied.options,sprite)
+	if not action.ok: return action
+	return _selected(supplied,sprite,action,"invoke_effect","current523:invoke:%d:%s" % [int(native.ID),field],reference,"patch523")
+
 static func select_item_consume(original_item: Dictionary, requested_sprite: int, context: Dictionary = {}) -> Dictionary:
 	# The item owner has already admitted and completed its use. This selects
 	# only that existing caller's requested display; it applies no item bonus.

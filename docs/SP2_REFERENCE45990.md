@@ -213,6 +213,11 @@ full spell row and existing effect/success events. Source-only presentation
 does not use an old manifest as a prerequisite or fallback. Current selection
 must match that whole row; invoke activation, probabilities and combat logic
 are unchanged. A Sprite ID alone cannot admit a new current effect.
+The existing incoming invoke's target-effect callback likewise supplies its
+whole original InvokeOption row to the typed current selector. Only the declared
+attacker/target effect fields are accepted. Archived or consumer-unconfirmed
+ElementalArrow type34 remains held on this call path; shared normal Sprite
+consumers are preserved.
 
 Card skill awakening uses a full-row current source request under the final
 source-only policy, without old/partial pack fallbacks. Current results retain the

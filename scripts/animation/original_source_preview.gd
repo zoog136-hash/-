@@ -545,7 +545,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if not _reference_attachment_parent.is_empty(): purpose = "existing_npc_independent_source_layer" if consumer == "npc" else "existing_card_independent_source_layer"
 		elif not _reference_overlay_parent.is_empty(): purpose = "existing_npc_source_overlay" if consumer == "npc" else "existing_card_source_overlay"
 		elif not card_consumer: purpose = "diagnostic_reference_preview"
-		if consumer in ["spell_effect","global_effect","item_effect"]: purpose = "existing_typed_effect_source_layer" if not _reference_attachment_parent.is_empty() else "existing_typed_source_effect"
+		if consumer in ["spell_effect","global_effect","item_effect","invoke_effect"]: purpose = "existing_typed_effect_source_layer" if not _reference_attachment_parent.is_empty() else "existing_typed_source_effect"
 		if consumer == "awakening": purpose = "existing_awakening_source_layer" if not _reference_attachment_parent.is_empty() else "existing_enabled_source_awakening"
 		var scene: Node = get_tree().current_scene if is_inside_tree() else null
 		var in_main: bool = card_consumer and scene != null and scene.scene_file_path == "res://Main.tscn" and scene.is_ancestor_of(self)
@@ -951,6 +951,12 @@ func notify_current_source_item_consume(original_item: Dictionary, requested_spr
 	var selected: Dictionary = CURRENT523_EFFECT.select_item_consume(original_item,requested_sprite,supplied_context)
 	return _spawn_current523_source_effect(selected,world_point,facing)
 
+func notify_current_source_invoke_effect(original_option: Dictionary, field: String, world_point: Vector2, facing: int, context: Dictionary = {}) -> bool:
+	var supplied_context: Dictionary = _reference_request_context.duplicate(true)
+	supplied_context.merge(context,true)
+	var selected: Dictionary = CURRENT523_EFFECT.select_invoke_effect(original_option,field,supplied_context)
+	return _spawn_current523_source_effect(selected,world_point,facing)
+
 func make_current_source_spell_effect(spell: Dictionary, stage: String, facing: int, context: Dictionary = {}, texture_budget_bytes: int = 0) -> Node2D:
 	# The existing owner adopts/positions/advances the returned node. This factory
 	# does not parent it, render its first frame or create a gameplay trigger.
@@ -979,7 +985,7 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:
 	source_effect_status = selected.duplicate(true)
 	if not bool(selected.get("ok",false)): return null
-	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect"] or not selected.get("source_reference") is Dictionary: return null
+	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect"] or not selected.get("source_reference") is Dictionary: return null
 	if texture_budget_bytes < 0:
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"
