@@ -27,6 +27,27 @@ compiled-pack preference/selected-cache adapters. Those earlier checkpoints
 remain history, not a final fallback or new gameplay evidence. Missing new
 original input stays unavailable. All implementations remain unexecuted.
 
+Integration269 subsequently published
+`b37e5b941d189351906a4a60e411ad1d07566aeb` and
+`docs/REST_INTEGRATION_CURRENT523_SOURCE_ONLY.md`. Its
+`skill_awakening_runtime.request_operation(identity,materials)` accepts the
+selected `materials.physical_id`; its
+`option_awakening_runtime.use_native_unlock_item(item_name,selected_instance)`
+adopts the original doll-unlock input through the shared owned-card-material
+boundary. Exact physical/receipt/source-row/quantity debit and one-save result
+staging are that owner's code. The earlier standalone legacy guards described
+below are retained checkpoint history, not a remaining whole-system approval
+gap to reimplement here. The current native item DTO/drop effects/ownership
+contract remains with269.
+
+That same checkpoint rechecks the saved fishing-contest admitted contract at
+claim and holds older unproven contests. It also replaces old PACK.actor/VIEW
+spawn prerequisites with an exact current NPC/spawn/territory tuple followed
+by Sprite272's published selector. Current bank bytes/configuration and effect
+action binding remain the respective resource owners' inputs. This records
+published integration adoption; it is not a merge, code duplication or observed
+gameplay in this data Draft. All those later integration changes are unverified.
+
 ## Fixed input and evidence
 
 The existing private current523 archive was received through authenticated Drive
@@ -538,12 +559,11 @@ slot-pack input are not loaded. Original pool100000 and invoke10000 contracts
 remain guarded; Test/dummy and missing/ambiguous typed references are not
 activated. The existing save schema's base508 namespace remains ABI, while new
 book definitions/requirements label their actual patch523/archive origin.
-PR269 already has a new typed awakening supplier path. The base508-only
-physical-book guard in this Draft's older
-`skill_awakening_runtime.request_operation()` is a legacy entrypoint boundary,
-not a claim that all awakening remains base508-only. New definitions should reach
-the typed owner path; this Draft does not relabel old inventory or modify
-debit/receipt/save code to bypass the older guard.
+PR269's later `b37e5b94` checkpoint adopts this input in
+`skill_awakening_runtime.request_operation()` through the selected
+`materials.physical_id` and shared owned-material contract. This Draft's older
+standalone guard is retained history. Its debit/receipt/save implementation is
+not duplicated here.
 
 `patch523_slot_data._load_pack()` now calls
 `current523_relic_input.build()` for its new memory model. The former file loader
@@ -570,10 +590,10 @@ probabilities, rolls, SCALE, costs, conditions, ownership and saving are retaine
 Missing input supplies empty shapes with problems, without an old-data fallback.
 
 The new doll-unlock record also declares patch523/archive origin separately
-from its saved item namespace. Its existing `exact()` physical-book guard still
-requires base508 origin and therefore rejects the new record; PR269 must adopt
-the actual new provenance at that ownership boundary. The save marker stays its
-existing ABI. Empty definition/install paths fail explicitly; old records are
+from its saved item namespace. The older standalone `exact()` guard's source
+contradiction was subsequently resolved by269's `b37e5b94` selected owned-input
+path. Its approval, physical debit and save are not recreated here. The save
+marker stays its existing ABI. Empty definition/install paths fail explicitly; old records are
 not relabeled, aliased, removed or consumed through an invented migration.
 New summon metadata likewise does not claim new pixel evidence.
 
@@ -697,14 +717,38 @@ withheld as a whole without renormalizing its remaining weights. If withholding
 would remove a supported exchange's required output, the raw model is not
 activated: the existing exchange executor can otherwise debit an item after an
 empty reward result. Existing cast/minigame/exchange policies, RNG, grants and
-saving are unchanged. PR269 still owns the exact saved-contest boundary:
-`claim_contest()` does not re-evaluate retained unavailable/time metadata or
-`rules.failure` before settling an old contest. Existing saved contests are
-preserved, not erased or granted from a substituted definition.
+saving are unchanged in this Draft. PR269's later `b37e5b94` checkpoint now
+rechecks the exact saved contest/rule/fish/rank/reward/item/input contract at
+claim. Older contests without that proof remain preserved and held rather than
+being erased or granted from substituted definitions. Its settlement and save
+code is not duplicated here.
 
 These later inputs have not been compiled, loaded or executed. Existing parser
 counters/declared table sizes are input metadata, not new audit measurements,
 completed functions or gameplay coverage.
+
+`source523_inventory_tickets.configure()` previously left its definition input
+empty without an explicit private ticket extension. With no explicit ticket
+path/SHA argument it now calls `load_original()` and
+`current523_ticket_input.build()`. The public ticket compiler's exact six item
+bindings follow ItemBonus→MarketPurchaseID→original purchase/product/bonus
+relations→declared GotChaClassID unit→GotChaEntityView's declared BuffCardID
+unit and exact ClassID/BuffCardID identity. Required item/grade labels remain
+selected original reads. No new ticket, pool membership or item supplier is
+invented.
+
+The existing full-pool1,000,000 guard runs before explicit exclusions; any
+declared excluded ticket/source/member withholds the whole model without
+renormalizing or silently removing an outcome. `blocked_pools` retains input
+failure evidence. Both explicit file and original input enter the same existing
+six-ticket/schema/relations/count/pool acceptance before replacing `document`
+and `loaded_sha`. Empty/bare/invalid explicit path/SHA choices are not bypassed.
+The original memory bytes' actual SHA is retained separately from
+`model_input_identity.archive`. Existing saved ticket policy mismatches remain
+blocked; a newly constructed model is not labeled with a former file digest.
+Quote, owned-ticket identity, item-definition installation, original card/server/
+time admission, RNG, costs, issuance, receipts and final saving are unchanged.
+Those execution/ownership contracts remain269's implementation.
 
 The existing `spell_group_conversion.configure()` also reads the held common
 archive when its dedicated default ZIP is actually absent and no environment/
