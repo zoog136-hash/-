@@ -299,3 +299,22 @@ the two Fx_Alchemy_MagicBall instances (3292/3016), and Alchemy_Roulette (2720).
 Caller-provided child bindings are retained; absent ones start as empty strict
 binding maps. Interactive/dynamic child content still fails without its real
 contract. This mounts no source-free replacement and is unexecuted/untested.
+
+`source_event_screen_bindings.gd` now retains exact supplied Attendance_All and
+Pass_All component identities and wires their serialized child ProjectNode
+scopes. For the pass component, original close node 29652 uses session.close.
+Explicit caller assignments for source action nodes 16964/13548/7352 resolve
+only an exact row_id/action_ref in the prepared pass model. The factory does
+not choose a pass, premium tier, reward or claim-all behavior. Attendance reward
+actions remain in their original child-slot contract, not inferred from dates
+or labels. Both factories return complete_screen_contract:false; unresolved
+child/list/tab/data handlers still prevent strict presentation. They do not
+establish a MainMenu-to-content invocation contract on their own.
+
+`declared_pass_node(pack, row.source_ui)` consumes the existing ABI's exact
+PassSystem namespace/ID, source_records.PassSystem.PassImageNode and matching
+native_fields.PassImageNode string. It resolves only one identically named node
+in the retained Pass_All source and returns its original descriptor and asset
+roles. A missing/ambiguous node fails. No image role or child filename is guessed,
+and this resolver does not claim the three pass asset roles are fully mapped.
+These source-component connections are implemented without new execution/tests.
