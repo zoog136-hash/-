@@ -172,15 +172,42 @@ func _deck_name(deck: int) -> String:
 func _grade_name(grade: int) -> String:
 	return {0: "제한 없음", 1: "일반", 2: "고급", 3: "희귀", 4: "영웅", 5: "전설", 32: "신화", 52: "유일"}.get(grade, "원본 등급 %d" % grade)
 
-func _card_label(card:Dictionary)->String:
+func _card_label(card:Dictionary, image_evidence: Dictionary = {})->String:
 	var source:Dictionary=catalogue.record("BuffCard",int(card.source_id))
-	return "%s · 스킬각성 Lv.%d"%[source.get("Name",str(card.source_id)),int(card.skill_awaken_level)]+(" · 원본 이미지 미설치" if card.get("visual_pending",false) else "")
+	var pending: bool=bool(card.get("visual_pending",false))
+	if not image_evidence.is_empty():pending=not bool(image_evidence.get("source_image_loaded",false))
+	return "%s · 스킬각성 Lv.%d"%[source.get("Name",str(card.source_id)),int(card.skill_awaken_level)]+(" · 원본 이미지 미설치" if pending else "")
+
+func _card_image(card: Dictionary, source: Dictionary, deck_id: int) -> Dictionary:
+	if not IMAGES.selected():return {}
+	var image: Dictionary={"ok":false,"status":"source_buff_card_identity_required","texture":null,"provenance":{},"actual_game_consumption_observed":false}
+	var card_id: Variant=card.get("source_id")
+	# This exact row comes from the separately pinned current expedition
+	# catalogue. BuffCard.ID never substitutes for its declared AssetView ID.
+	if catalogue.ready() and IMAGES.PACK._integer(card_id) and int(card_id)>0 and source.get("ID")==card_id and source.get("BuffCardDeckID")==deck_id:
+		image=IMAGES.resolve_asset_value(source.get("DisplayBaseAssetID"))
+	var provenance: Dictionary=image.get("provenance",{}).duplicate(true)
+	provenance["card_source_relation"]={"source_table":"BuffCard","source_id":source.get("ID"),"source_field":"DisplayBaseAssetID","source_asset_value":source.get("DisplayBaseAssetID"),"source_deck_id":source.get("BuffCardDeckID"),"caller_source_id":card_id,"caller_card_identity":str(card.get("identity","")),"source_archive_sha256":catalogue.SOURCE_SHA256,"catalogue_pack_sha256":catalogue.pack_sha256}
+	image["provenance"]=provenance
+	image["source_image_loaded"]=image.get("ok",false) and image.get("texture") is Texture2D
+	return image
+
+func _bind_card_image(index: int, card: Dictionary, source: Dictionary, deck_id: int) -> void:
+	var image: Dictionary=_card_image(card,source,deck_id)
+	card_picker.set_item_icon(index,image.get("texture") as Texture2D)
+	var evidence: Dictionary=image.duplicate(true);evidence.erase("texture")
+	var images: Dictionary=card_picker.get_meta("source523_card_images",{})
+	if evidence.is_empty():images.erase(index)
+	else:images[index]=evidence
+	card_picker.set_meta("source523_card_images",images)
+	card_picker.set_item_text(index,_card_label(card,evidence))
 
 func _select_spot() -> void:
 	if runtime != null and runtime.world != null: owned_cards = runtime.world.expedition_owned_cards()
 	current_spot = spot_picker.get_selected_id()
 	var spot: Dictionary = catalogue.record("MagicDollExpeditionSpot", current_spot)
 	card_picker.clear()
+	card_picker.set_meta("source523_card_images",{})
 	for child in buff_choices.get_children(): buff_choices.remove_child(child); child.queue_free()
 	buff_checks.clear()
 	if runtime != null:
@@ -199,6 +226,7 @@ func _select_spot() -> void:
 			continue
 		var index := card_picker.add_item(_card_label(card))
 		card_picker.set_item_metadata(index, card)
+		_bind_card_image(index,card,source,int(spot.BuffCardDeckID))
 	group_picker.clear()
 	for group: Dictionary in catalogue.rows("MagicDollExpeditionGroup"):
 		if int(group.BuffCardDeckID) == int(spot.BuffCardDeckID):
@@ -376,7 +404,9 @@ func _render() -> void:
 			for current: Dictionary in owned_cards:
 				if current.identity != previous.identity: continue
 				card_picker.set_item_metadata(index, current)
-				card_picker.set_item_text(index,_card_label(current))
+				var source: Dictionary=catalogue.record("BuffCard",int(current.source_id))
+				var image_deck: int=int(catalogue.record("MagicDollExpeditionSpot",current_spot).get("BuffCardDeckID",0))
+				_bind_card_image(index,current,source,image_deck)
 	var inspection: Dictionary = catalogue.inspect(current_spot, selected_cards())
 	var spot: Dictionary = inspection.spot
 	var currency: Dictionary = catalogue.record("Currency", int(spot.ExpeditionCostCurrencyID))

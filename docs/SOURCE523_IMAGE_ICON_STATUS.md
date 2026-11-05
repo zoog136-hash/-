@@ -488,6 +488,38 @@ an `lm_*` binding. UI267 may reuse this read-only image API on its existing
 quickslot targets; image playback remains with its shared player. Existing
 registration IDs, cooldowns, costs, actions and saves are preserved.
 
+Expedition-issued inventory items now retain their original ItemClass row in
+the shared presenter. Their exact issued ItemClass/bless/enchant key remains
+separate from ownership and consumer admission. The selected image pack still
+requires full canonical ItemClass equality and its original exclusion rules.
+The equipment window also preserves the source record from the same equipped
+physical instance ID when its presentation snapshot omits that identity.
+
+Existing expedition card supplements retain a complete original BuffCard row
+without the catalog's structured source_ui_assets. The current card presenter
+now consumes that issuer's exact card/deck/grade identity and the original
+DisplayBaseAssetID/IllustrationAssetID/HidedIllustrationAssetID declarations.
+Existing structured role declarations retain priority. Asset IDs resolve through
+the current original-image pack; no card ID or filename substitutes for them.
+This records the preserved supplier row as input provenance, not a new canonical
+BuffCard-table validation by the image pack. Missing, zero, excluded and
+unsupported assets retain their own status.
+
+The existing TJ coupon selector and selected-coupon action consume the pinned
+producer's complete ItemClass rows through the shared canonical item reader.
+Its success/failure card lists consume that producer's original BuffCard
+DisplayBaseAssetID, keeping the independent candidate card ID and deck intact.
+Original ZIP identity belongs to the existing TJ parser; the image pack validates
+the selected asset and original bytes. This adds no candidate, failure history,
+coupon activation, redemption rule or save change.
+
+The expedition's existing owned-card selection list also uses the opened source
+catalog's exact BuffCard ID, actual spot deck and declared DisplayBaseAssetID.
+Its existing identity metadata and dispatch inputs stay unchanged. The image
+metadata retains both the source catalog's selected pack pin and the image
+loader's provenance. A loaded source image removes the old missing-image suffix
+from that row's text without rewriting its source definition-only marker.
+
 These are written caller connections, not observations of game consumption.
 No additional tests, execution, rendering, CI, source recount or quality audit
 was performed for these changes.

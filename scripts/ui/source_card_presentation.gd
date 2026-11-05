@@ -5,6 +5,7 @@ const SOURCE_API = "res://scripts/lineagem_base508.gd"
 const CARDS = preload("res://scripts/card_draw_fusion.gd")
 const IMAGES523 = preload("res://scripts/ui/source523_image_assets.gd")
 const LEGACY_ATLAS = preload("res://scripts/ui/source_ui_atlas.gd")
+const EXPEDITION_CARDS = preload("res://scripts/expedition/reward_cards.gd")
 const LIMIT: int = 96
 static var textures: Dictionary = {}
 
@@ -61,29 +62,69 @@ static func _current_detail(record: Dictionary, acquired: bool, detail_view: boo
 	for role: String in roles:
 		var asset: Variant = assets.get(role)
 		if not asset is Dictionary or str(asset.get("path","")).is_empty(): continue
-		var id: Variant = asset.get("asset_id")
-		var result: Dictionary = {"status":"missing","texture":null,"role":role,"path":str(asset.path),
-			"source_id":str(record.get("sourceId","")),"source_asset_id":0,"reason":"source_asset_identity_required",
-			"actual_game_consumption_observed":false}
-		if not (id is int or id is float) or not is_finite(float(id)) or float(id) != floor(float(id)) or float(id) <= 0: return result
-		result.source_asset_id = int(id)
-		var original: Dictionary = IMAGES523.resolve_asset(int(id),-1,str(asset.path))
-		result.reason = str(original.get("status","source523_image_unavailable"))
-		result["provenance"] = original.get("provenance",{}).duplicate(true)
-		if result.reason == "source_dummy_excluded":
-			# This excludes only the image asset explicitly declared by the source.
-			# It does not change the card record or try another presentation role.
-			result.status = "source_dummy_excluded"
-			result["source_status"] = "source_dummy_excluded"
-			result["error"] = original.get("error","source_dummy_excluded")
-			result.texture = null
-			return result
-		if bool(original.get("ok",false)) and original.get("texture") is Texture2D:
-			result.status = "original"
-			result.texture = original.texture
-			result["source523_verified_original"] = true
+		return _current_asset(record,role,asset.get("asset_id"),str(asset.path))
+	return _expedition_current_detail(record,roles)
+
+static func _current_asset(record: Dictionary, role: String, id: Variant, declared_path: String = "", card_source: Dictionary = {}) -> Dictionary:
+	var result: Dictionary = {"status":"missing","texture":null,"role":role,"path":declared_path,
+		"source_id":str(record.get("sourceId","")),"source_asset_id":0,"reason":"source_asset_identity_required",
+		"actual_game_consumption_observed":false}
+	if not (id is int or id is float) or not is_finite(float(id)) or float(id) != floor(float(id)) or float(id) <= 0: return result
+	result.source_asset_id = int(id)
+	var original: Dictionary = IMAGES523.resolve_asset(int(id),-1,declared_path)
+	result.reason = str(original.get("status","source523_image_unavailable"))
+	result["provenance"] = original.get("provenance",{}).duplicate(true)
+	if not card_source.is_empty(): result.provenance["card_source"] = card_source.duplicate(true)
+	if declared_path.is_empty(): result.path = str(result.provenance.get("path",""))
+	if result.reason == "source_dummy_excluded":
+		# An excluded declared asset never tries another presentation role.
+		result.status = "source_dummy_excluded"
+		result["source_status"] = "source_dummy_excluded"
+		result["error"] = original.get("error","source_dummy_excluded")
 		return result
-	return {"status":"undeclared","texture":null,"actual_game_consumption_observed":false}
+	if bool(original.get("ok",false)) and original.get("texture") is Texture2D:
+		result.status = "original"
+		result.texture = original.texture
+		result["source523_verified_original"] = true
+	return result
+
+static func _expedition_current_detail(record: Dictionary, roles: Array[String]) -> Dictionary:
+	var result: Dictionary = {"status":"undeclared","texture":null,"source_id":str(record.get("sourceId","")),
+		"actual_game_consumption_observed":false}
+	if record.get("source_expedition_definition_only") != true: return result
+	result.status = "missing"
+	result["reason"] = "source_expedition_card_identity_required"
+	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("source_content_snapshot") != "patch523": return result
+	var raw: Variant = record.get("source_original_card")
+	if not raw is Dictionary or raw.is_empty(): return result
+	for field: String in ["ID","BuffCardDeckID","GradeID"]:
+		if not IMAGES523.PACK._integer(raw.get(field)) or int(raw[field]) <= 0: return result
+	for field: String in ["source_card_id","source_deck_id","source_grade_id"]:
+		if not IMAGES523.PACK._integer(record.get(field)) or int(record[field]) <= 0: return result
+	var deck: int = int(raw.BuffCardDeckID)
+	if not EXPEDITION_CARDS.CATEGORIES.has(deck): return result
+	var issuer_catalog: Dictionary = {}
+	issuer_catalog[EXPEDITION_CARDS.CATEGORIES[deck]] = [record]
+	if EXPEDITION_CARDS.registered(issuer_catalog,raw).is_empty(): return result
+	var supplied_sha: String = IMAGES523.PACK._canonical_row_sha(raw)
+	if supplied_sha.is_empty(): return result
+	var card_source: Dictionary = {"identity_basis":"preserved_expedition_buffcard_source_row",
+		"source_table":"BuffCard","source_snapshot":"patch523","source_card_id":int(raw.ID),
+		"source_deck_id":deck,"source_grade_id":int(raw.GradeID),"supplied_buffcard_row_sha256":supplied_sha}
+	result["reason"] = "source_buffcard_asset_role_undeclared"
+	result["provenance"] = {"card_source":card_source}
+	for role: String in roles:
+		if not raw.has(role): continue
+		result["role"] = role
+		var asset_id: Variant = raw[role]
+		if not IMAGES523.PACK._integer(asset_id) or int(asset_id) < 0:
+			result.reason = "source_asset_identity_required"
+			return result
+		if int(asset_id) == 0:
+			result.reason = "zero_sentinel"
+			continue
+		return _current_asset(record,role,asset_id,"",card_source)
+	return result
 
 static func apply(hud: Node) -> void:
 	var preview: TextureRect = hud.catalog_preview
@@ -124,7 +165,9 @@ static func apply(hud: Node) -> void:
 		badge.tooltip_text = "원본에서 더미로 선언된 이미지 자산 · " + str(result.get("reason","source_dummy_excluded")) + " · " + str(result.get("path",""))
 	elif canonical_record_snapshot(record)=="patch523":
 		badge.tooltip_text = "검증된 원본 초상화" if result.get("source523_verified_original",false) else "원본 초상화 또는 선언된 화면 리소스 연결 대기"
-	preview.set_meta("original_card_asset", result)
+	var evidence: Dictionary = result.duplicate(true)
+	evidence.erase("texture")
+	preview.set_meta("original_card_asset", evidence)
 	var equipped: Dictionary = hud.character_state.get("equipped", {}).get(hud.catalog_category, {})
 	var applied: bool = identity == CARDS.card_id(equipped)
 	hud.catalog_equip_button.disabled = not acquired or applied

@@ -365,8 +365,23 @@ static func _original_symbol_item(record: Dictionary) -> bool:
 	if not row is Dictionary or not PACK._integer(id) or int(id) <= 0: return false
 	return record.get("sourceId") == "m523:item:" + str(int(id)) and row.get("ID") == id and record.get("source_grade_id") == row.get("GradeID")
 
+static func _original_expedition_item(record: Dictionary) -> bool:
+	# local_runtime.install_inventory_definitions preserves this original row
+	# and the exact issued ItemClass/bless/enchant key. This is display identity,
+	# independent of the receipt, ownership or native-consumer admission.
+	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("slot") != "material" or record.get("type") != "탐험 보상": return false
+	var row: Variant = record.get("source_item")
+	var id: Variant = record.get("source_item_class_id")
+	var key: Variant = record.get("expedition_key")
+	if not row is Dictionary or not PACK._integer(id) or int(id) <= 0 or row.get("ID") != id or not key is String: return false
+	var parts: PackedStringArray = key.split(":")
+	if parts.size() != 3: return false
+	for part: String in parts:
+		if not part.is_valid_int() or str(int(part)) != part or int(part) < 0: return false
+	return parts[0] == str(int(id)) and record.get("sourceId") == "m523:expedition:" + key
+
 static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _shop_item_class_id(record) > 0)
+	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _shop_item_class_id(record) > 0)
 
 static func _item_presentation_info(id: int, title: String, source_id: String = "") -> Dictionary:
 	return {"source_id":source_id,"name":title,
@@ -385,12 +400,14 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 		return shop_image
 	var quest_record: bool = _original_quest_item(record)
 	var symbol_record: bool = _original_symbol_item(record)
-	if not recognized_item(record) and (_original_reward_item(record) or quest_record or symbol_record):
-		var original_row: Dictionary = record.source_original_item if quest_record or symbol_record else record.source_original
+	var expedition_record: bool = _original_expedition_item(record)
+	if not recognized_item(record) and (_original_reward_item(record) or quest_record or symbol_record or expedition_record):
+		var original_row: Dictionary = record.source_original_item if quest_record or symbol_record else record.source_item if expedition_record else record.source_original
 		var supplied: Dictionary = describe_item_class_row(original_row,str(record.get("name",fallback_name)))
 		supplied["source_id"] = str(record.get("sourceId",""))
 		supplied["source_record_snapshot"] = str(record.get("source_snapshot",""))
-		supplied["source_record_kind"] = "quest_pending_reward" if quest_record else "symbol_material" if symbol_record else "monsterbook_source_item" if record.get("monsterbook_source_item",false) == true else "growth96_item"
+		supplied["source_record_kind"] = "quest_pending_reward" if quest_record else "symbol_material" if symbol_record else "expedition_issued_item" if expedition_record else "monsterbook_source_item" if record.get("monsterbook_source_item",false) == true else "growth96_item"
+		if expedition_record: supplied["source_expedition_issued_key"] = record.expedition_key
 		return supplied
 	var info: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
 	if not recognized_item(record): return info
