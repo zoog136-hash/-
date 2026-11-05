@@ -30,6 +30,19 @@ func action_callback(row_id: String, action_ref: String) -> Callable:
 			if str(action.get("action_ref",""))==action_ref:matches+=1
 	return Callable(self,"begin").bind(action_ref) if _active and matches==1 else Callable()
 
+func action_binding(row_id: String, action_ref: String) -> Dictionary:
+	var found: Array[Dictionary]=[]
+	for row: Dictionary in _model.get("content",{}).get("rows",[]):
+		if str(row.get("id",""))!=row_id:continue
+		for action: Dictionary in row.get("action_refs",[]):
+			if str(action.get("action_ref",""))==action_ref:found.append(action)
+	if not _active or found.size()!=1:return {"ok":false,"code":"source_action_not_in_model"}
+	var data: Dictionary=found[0].get("data",{})
+	# These are the service's supplied availability fields, not UI-owned
+	# eligibility, dummy classification, price or progress calculations.
+	var unavailable: bool=bool(data.get("disabled",false)) or data.has("choice_error")
+	return {"ok":true,"binding":{"role":"button","displaystate":not unavailable,"activate":Callable() if unavailable else Callable(self,"begin").bind(action_ref)},"data":data.duplicate(true)}
+
 func begin(action_ref: String) -> Dictionary:
 	var service: Object=_live_service()
 	if service==null:return _unavailable()

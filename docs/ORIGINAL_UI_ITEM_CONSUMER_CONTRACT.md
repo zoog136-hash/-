@@ -235,3 +235,19 @@ invalidating local callbacks, and does not close a newer prepared page. Frame
 event handlers dispatch only for mounted presentations; loader-initialization
 seeks do not invoke game handlers before the original scene has entered the
 game tree. These lifecycle connections have not been run/tested.
+
+`session.action_binding(row_id, action_ref)` returns an exact-row Button binding
+using only availability fields supplied by the existing service (`disabled` or
+`choice_error`). An unavailable action retains the original disabled renderer
+without installing an activation callback. Enabling a declared control later
+requires an existing valid activation binding; the renderer cannot invent one.
+This is presentation of the service's result, not a dummy classifier or a copy
+of eligibility/cost rules. This helper and disabled-control path are unexecuted.
+
+Explicit original dummy declarations must be filtered by their existing source
+owner before content/action registration. No confirmed UI dummy-ID/declaration
+list is supplied in the retained UI contracts. Empty containers, unfamiliar
+names, placeholder strings and missing pixels are not classified as dummies.
+Original files/receipts/packs and fixed inventory denominators remain retained;
+dummy exclusion is never reported as actual source consumption. The separately
+excluded undeclared 135 links remain separate from dummy classification.

@@ -127,7 +127,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	for field: String in ["frameEvent","callBackType","callBackName"]:
 		if widget.get(field)!=null and not str(widget[field]).is_empty():
 			if inspection_only or binding.get("role") not in ["button","checkbox"]:unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
-			var connected_callback: bool=binding.get("role") in ["button","checkbox"] and binding.get("activate") is Callable and binding.activate.is_valid()
+			var connected_callback: bool=binding.get("role") in ["button","checkbox"] and ((binding.get("activate") is Callable and binding.activate.is_valid()) or binding.get("displaystate")==false)
 			var declared_type: bool=field=="callBackType" and (str(widget[field])=="Click" or (str(widget[field])=="Event" and binding.get("role")=="checkbox"))
 			var declared_name: bool=field=="callBackName" and str(binding.get("callback_name",""))==str(widget[field]) and str(widget.get("callBackType","")) in ["Click","Event"]
 			var source_touch: bool=direct_input and ((field=="callBackType" and str(widget[field])=="Touch") or (field=="callBackName" and str(widget.get("callBackType",""))=="Touch" and str(binding.get("callback_name",""))==str(widget[field])))
@@ -138,11 +138,11 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if not inspection_only and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","consume"]: problems.append("unconnected_source_input")
 	if node.classname=="CheckBox":
 		if inspection_only or binding.get("role")!="checkbox":unresolved_bindings.append(str(widget.name)+":original_checkbox_service_binding")
-		if not inspection_only and not (binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid()):problems.append("unconnected_source_checkbox")
+		if not inspection_only and not (binding.get("role")=="checkbox" and ((binding.get("activate") is Callable and binding.activate.is_valid()) or binding.get("displaystate")==false)):problems.append("unconnected_source_checkbox")
 		if bool(widget.flipX) or bool(widget.flipY):problems.append("unverified_checkbox_flip")
 	if node.classname=="Button":
 		if inspection_only or binding.get("role")!="button":unresolved_bindings.append(str(widget.name)+":original_button_service_binding")
-		if not inspection_only and not (binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_button")
+		if not inspection_only and not (binding.get("role")=="button" and ((binding.get("activate") is Callable and binding.activate.is_valid()) or binding.get("displaystate")==false)): problems.append("unconnected_source_button")
 		if str(options.get("text","")).contains("\n"): problems.append("unsupported_button_text_layout")
 	if node.classname=="Text":
 		if inspection_only or binding.get("role") not in ["static_source_text","source_text"]:unresolved_bindings.append(str(widget.name)+":source_text_requires_live_binding")
@@ -265,7 +265,7 @@ func _build(source: Dictionary) -> Node2D:
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if binding.has("displaystate"):checkbox.set_source_state("normal" if binding.displaystate else "disabled")
 		if binding.has("selected"):checkbox.set_selected(binding.selected)
-		if not inspection_only and binding.get("role")=="checkbox":checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
+		if not inspection_only and binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid():checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
 	if source.classname=="Button":
 		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
 		var configured: Dictionary=button.configure(source_pack,options)
@@ -276,7 +276,7 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_button",button)
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if binding.has("displaystate"):button.set_source_state("normal" if binding.displaystate else "disabled")
-		if not inspection_only and binding.get("role")=="button":button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
+		if not inspection_only and binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid():button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
 	if source.classname=="Particle":
 		var emitter=preload("res://scripts/ui/original_ui/source_particle.gd").new()
 		var configured: Dictionary=emitter.configure(source_pack,options)
@@ -649,6 +649,7 @@ func set_bound_displaystate(source_offset: int, value: bool) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
 	var binding: Dictionary=_bindings.get(source_offset,{})
 	if node==null or not binding.has("displaystate"):return {"ok":false,"error":"source_displaystate_binding_missing"}
+	if value and not (binding.get("activate") is Callable and binding.activate.is_valid()):return {"ok":false,"error":"source_activation_binding_missing"}
 	if binding.get("role")=="button" and node.has_meta("source_button"):return node.get_meta("source_button").set_source_state("normal" if value else "disabled")
 	if binding.get("role")=="checkbox" and node.has_meta("source_checkbox"):return node.get_meta("source_checkbox").set_source_state("normal" if value else "disabled")
 	return {"ok":false,"error":"source_displaystate_binding_missing"}
