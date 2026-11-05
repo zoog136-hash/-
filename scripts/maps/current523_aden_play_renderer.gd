@@ -8,6 +8,7 @@ const GENERIC_RAW = preload("res://scripts/maps/current523_source_pack.gd")
 const GENERIC_TILES = preload("res://scripts/maps/current523_tile_pack.gd")
 const TILES = preload("res://scripts/maps/current523_tile_review_pack.gd")
 const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
+const STATIC_SPR = preload("res://scripts/maps/current523_static_spr.gd")
 const GRID_SHA256: String = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const GRID_ORIGIN: Vector2i = Vector2i(32448, 32064)
 const GRID_SIZE: Vector2i = Vector2i(1856, 1536)
@@ -28,6 +29,8 @@ var _raw_sources: RefCounted
 var _tile_pack: RefCounted
 var _visual_delta := Vector2.ZERO
 var _tile_ground: Node2D
+var _static_spr: Node2D
+var _static_tails: Dictionary = {}
 var _configured: bool = false
 var _return_pending: bool = false
 var _member_origins: Dictionary = {}
@@ -158,6 +161,17 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	if not field.point_clear(player.global_position, 4.0):
 		return _fail("기존 통행 API에서 현재 위치를 확인하지 못했습니다.")
 	_ensure_ground()
+	var spr_options: Dictionary = STATIC_SPR.read_options()
+	if spr_options.enabled:
+		if not source_owned: return _fail("정적 SPR 자체 표시는 원문 통행 필드에서만 지원합니다.")
+		_static_spr=STATIC_SPR.new()
+		_static_spr.name="Current523SourceStaticSPR"
+		if not _static_spr.configure(spr_options,field.coordinates):
+			var detail: String=_static_spr.problem
+			_static_spr.free();_static_spr=null
+			return _fail(detail)
+		add_child(_static_spr)
+		_static_spr.position=_visual_delta
 	if not _build_frame(): return false
 	_configured = true
 	y_sort_enabled = true
@@ -192,12 +206,15 @@ func set_visual_delta(value: Vector2) -> bool:
 	if not valid_delta(value): return false
 	_visual_delta = value
 	if is_instance_valid(_tile_ground): _tile_ground.position = value
+	if is_instance_valid(_static_spr): _static_spr.position = value
 	if _configured: refresh_visible()
 	return _configured
 
 
 func frame_metrics() -> Dictionary:
-	return _metrics.duplicate(true)
+	var result: Dictionary=_metrics.duplicate(true)
+	if is_instance_valid(_static_spr): result["static_spr"]=_static_spr.metrics()
+	return result
 
 
 func _scope_problem() -> String:
@@ -250,6 +267,13 @@ func _read_chunk(member: String) -> Dictionary:
 	var decoded: Dictionary = _raw_sources.read_member(member)
 	if decoded.is_empty(): _fail(_raw_sources.problem); return {}
 	var origin: Vector2i = _member_origins[member]
+	if is_instance_valid(_static_spr):
+		var tail: Dictionary=STATIC_SPR.parse_tail(decoded.sections.tail,int(_raw_sources.source_metadata(member).get("core_end",0)))
+		if tail.ok:
+			for row: Dictionary in tail.records:
+				row["source_member"]=member
+				row["source_sha256"]=decoded.source_sha256
+		_static_tails[member]=tail
 	var layers: Dictionary = {}
 	var floor_bytes: PackedByteArray = decoded.sections.floor
 	for index: int in range(8192): _append(layers, origin, index & 127, index >> 7, floor_bytes.decode_u32(index * 4), -2)
@@ -269,7 +293,9 @@ func _read_chunk(member: String) -> Dictionary:
 	for layer: int in layers: packed[layer] = PackedInt64Array(layers[layer])
 	_raw_chunks[member] = packed
 	_raw_recent.append(member)
-	while _raw_recent.size() > RAW_CHUNK_LIMIT: _raw_chunks.erase(_raw_recent.pop_front())
+	while _raw_recent.size() > RAW_CHUNK_LIMIT:
+		var oldest: String=_raw_recent.pop_front()
+		_raw_chunks.erase(oldest);_static_tails.erase(oldest)
 	return packed
 
 
@@ -342,6 +368,15 @@ func _build_frame() -> bool:
 		"off_floor_decoration_records":_off_floor_decoration_records,
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
 	if source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
+	if is_instance_valid(_static_spr):
+		var static_records: Array[Dictionary]=[]
+		var malformed: int=0
+		for member: String in visible:
+			var tail: Dictionary=_static_tails.get(member,{})
+			if not tail.get("ok",false): malformed+=1;continue
+			static_records.append_array(tail.records)
+		_static_spr.refresh(static_records,malformed)
+		_metrics["static_spr"]=_static_spr.metrics()
 	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.
