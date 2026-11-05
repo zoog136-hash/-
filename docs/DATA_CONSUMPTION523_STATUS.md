@@ -320,6 +320,25 @@ migrating state or committing a save. Existing requirement/effect readers then
 receive that same accepted data through their existing methods. All these
 later connections are unexecuted and unverified.
 
+The existing title configure path now reuses its existing `load_zip()` parser
+with the held common archive only when neither an input attempt nor live source
+data exists and the dedicated installed title archive is absent. The source
+reader records input selection even on failure, so invalid explicit choices do
+not trigger a different default. The removed word lists remain removed, and the
+personal filter fields remain disabled. Trial/Goal/QuestView/NPC/bonus/item
+readers and title actions/saves are unchanged.
+
+Growth96's source loader likewise reuses the common archive only for an absent
+default with no explicit path/environment source. Its original size/hash,
+current-version, RewardType and TestItem guards and all claim/state/save code
+remain intact. Death source `load_default_source()` reuses its complete existing
+parser only for a missing dedicated archive. The runtime now tracks explicit
+source arguments, including empty/bare ones, and does not try another default
+after their failure. Existing ready data, the exact large-integer Experience
+parser, NoDeath boundary, recovery seal and all death/economic/save behavior
+are retained. These are original input-selection changes, not new mechanics or
+new gameplay observations.
+
 The continuing read-only closures also include BuffClass7,297,860,
 BuffBonus6,005,262, SpellBonus5,997,214 and GachaCraftOutput3,321,937 original JSON bytes. These are the
 recorded sizes of the input tables, not an assertion that all their rows are now

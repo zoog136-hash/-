@@ -23,6 +23,7 @@ var powder_drop_rows: Array[Dictionary] = []
 var powder_npcs: Dictionary = {}
 var minimum_level: int = 85
 var daily_limit: int = 10
+var input_selected: bool = false
 var problem: String = "작위 원본을 설치해 주세요."
 
 static func rows(zip: ZIPReader, name: String) -> Array:
@@ -56,6 +57,8 @@ static func sequence(definitions: Dictionary, links: Array, previous: String, fo
 	return result if result.size() == definitions.size() else []
 
 func load_zip(path: String) -> String:
+	# Remember an attempted explicit input even when its existing guards reject it.
+	input_selected = true
 	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != SHA: return "작위 원본523 SHA 불일치·누락"
 	var zip := ZIPReader.new()
 	if zip.open(path) != OK: return "작위 원본 ZIP 열기 실패"

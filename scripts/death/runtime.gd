@@ -31,11 +31,20 @@ func configure(host) -> void:
 		if not integer(policy.get(key),1) or float(policy.get(key,0)) > 1000: save_blocked = true
 	for key: String in ["death_stat_exp_reduction_percent_per_point","death_stat_item_reduction_percent_per_point","death_stat_custom_cap","death_stat_maximum_reduction_percent"]:
 		if not (policy.get(key) is int or policy.get(key) is float) or not is_finite(float(policy.get(key))) or float(policy.get(key)) < 0 or float(policy.get(key)) > 100: save_blocked = true
+	var explicit_source: bool = false
 	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--death523-source="): source.load_pack(argument.trim_prefix("--death523-source="))
+		if argument == "--death523-source":
+			explicit_source = true
+			source.problem = "명시한 사망 원본 경로가 없습니다 · 기존 자료 보존"
+		elif argument.begins_with("--death523-source="):
+			explicit_source = true
+			if not source.load_pack(argument.trim_prefix("--death523-source=")):
+				source.problem = "명시한 사망 원본을 읽을 수 없습니다 · 기존 자료 보존"
 	source.fallback_loss_percent = clampf(float(policy.get("fallback_exp_loss_percent",5.0)),0.0,100.0)
 	source.fallback_cost_factor = clampi(int(policy.get("fallback_adena_level_squared",12)),0,1000000)
-	if not source.ready: source.load_pack()
+	# UNVERIFIED: empty/bare/invalid explicit choices never trigger a second
+	# default or common-source load. Failed imports retain already-ready data.
+	if not explicit_source and not source.ready: source.load_default_source()
 
 func now() -> int:
 	var wall: int = int(test_clock.call()) if test_clock.is_valid() else int(Time.get_unix_time_from_system())

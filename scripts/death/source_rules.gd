@@ -2,6 +2,7 @@ extends RefCounted
 ## Reads the pinned, private original archive. No original rows are vendored.
 const SHA: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const PATH: String = "user://source_rules/death523.zip"
+const CommonSource = preload("res://scripts/resources/current523_definition_rows.gd")
 const REVIEWED_ITEM_EXEMPTION_LEVEL: int = 30
 # Applied only to the pre-existing local item-loss exemption. Experience has
 # its own source-table boundary and must not use this scalar as a global gate.
@@ -18,6 +19,14 @@ var slot_offers: Dictionary = {}
 var item_death_stats: Dictionary = {}
 var ready: bool = false
 var problem: String = "원본523 미설치 · TWILIGHT 추정 정책"
+
+func load_default_source() -> bool:
+	# UNVERIFIED: reuse the existing exact original parser, without copying or
+	# replacing source files. A present default, including an invalid one,
+	# remains authoritative and must never be bypassed by another archive.
+	if FileAccess.file_exists(PATH): return load_pack(PATH)
+	var existing: String = CommonSource.archive_path()
+	return load_pack(existing) if not existing.is_empty() else false
 
 func load_pack(path: String = PATH) -> bool:
 	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != SHA: return false

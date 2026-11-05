@@ -1,5 +1,6 @@
 extends RefCounted
 ## Private source tables stay outside Git. This adapter retains their original rows.
+const COMMON_SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const ZIP_BYTES := 25031173
 const ZIP_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const INSTALLED := "user://growth96_definitions/source.zip"
@@ -40,7 +41,13 @@ func load_source(path: String = "") -> bool:
 	current_version = -1
 	if path.is_empty():
 		path = OS.get_environment("TWILIGHT_PATCH523_CONTENT")
-		if path.is_empty(): path = INSTALLED
+		if path.is_empty():
+			path = INSTALLED
+			# Only an absent default permits the common reader's already supplied
+			# archive. Explicit or existing invalid inputs still fail below.
+			if not FileAccess.file_exists(INSTALLED) and not DirAccess.dir_exists_absolute(INSTALLED):
+				var shared_path: String = COMMON_SOURCE.archive_path()
+				if not shared_path.is_empty(): path = shared_path
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file == null:
 		problem = "검증된 523 원본 정의 ZIP을 선택해 주세요. 보유 아이템을 자동 지급하지 않습니다."

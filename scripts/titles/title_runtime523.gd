@@ -1,6 +1,7 @@
 extends RefCounted
 const Source = preload("res://scripts/titles/title_source523.gd")
 const Personal = preload("res://scripts/titles/title_personal523.gd")
+const CommonSource = preload("res://scripts/resources/current523_definition_rows.gd")
 var personal = Personal.new()
 const POLICY = "res://data/titles/local_policy523.json"
 var source = Source.new()
@@ -24,6 +25,11 @@ func _init() -> void:
 
 func configure(host: Node) -> void:
 	world = host
+	# Existing selections and live source data take priority. Reuse the exact
+	# title parser only when the separate title input has never been selected.
+	if not source.input_selected and source.stages.is_empty() and not source.problem.is_empty():
+		var path: String = Source.INSTALLED if FileAccess.file_exists(Source.INSTALLED) else CommonSource.archive_path()
+		if not path.is_empty(): source.problem = source.load_zip(path)
 	bind_material()
 
 func bind_material() -> void:
