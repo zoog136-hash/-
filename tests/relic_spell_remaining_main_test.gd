@@ -25,7 +25,7 @@ func freeze() -> void:
 	for actor: Node in world.monsters_root.get_children(): actor.set_physics_process(false)
 func relic(id: int) -> void:
 	if id == 0:
-		world.equipped_catalog["성물"] = {}; world._invalidate_equipment_static(); world._refresh_speed_modifiers(); return
+		world._equip_catalog("성물", {}); return
 	for record: Dictionary in world.catalog_db["성물"]:
 		if int(record.get("source_card_id", 0)) == id:
 			world.card_draw_fusion.owned["성물"][CARDS.card_id(record)] = true
@@ -83,8 +83,10 @@ func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--source-zip="): source = arg.trim_prefix("--source-zip=")
 		if arg.begins_with("--captures="): captures = arg.trim_prefix("--captures=")
+	print("RELIC_MAIN_PHASE instantiate")
 	world = load("res://Main.tscn").instantiate(); root.add_child(world); await frames(6)
 	check(QA.enter_game(world, "광전사"), "real Main class confirmation")
+	print("RELIC_MAIN_PHASE initial_ready")
 	freeze(); world._clear_monsters(); world.level = 90
 	service = world.original_skills; catalog = service.catalog
 	check(RULES.install_source(source).get("ok", false), "durable verified source installation")
@@ -129,6 +131,9 @@ func run() -> void:
 	var before_hp: int = dummy.hp; world.rng.seed = seed_value
 	world._deal_successful_player_hit(dummy,10,false,"melee",true,false,{},true)
 	var improved_damage: int = before_hp - dummy.hp
+	before_hp = dummy.hp; world.rng.seed = seed_value
+	world._deal_successful_player_hit(dummy,10,false,"melee")
+	check(improved_damage > before_hp-dummy.hp,"secondary hit keeps main ordinary-attack flag and receives no unconfirmed native increment")
 	relic(0); before_hp = dummy.hp; world.rng.seed = seed_value
 	world._deal_successful_player_hit(dummy,10,false,"melee",true,false,{},true)
 	check(improved_damage > before_hp - dummy.hp, "actual damage boundary consumes Rune source increment")
@@ -141,7 +146,7 @@ func run() -> void:
 	service.event_counts.clear(); world.rng.seed = seed_value
 	world._try_trigger_passives("on_hit",dummy,"melee",true,false)
 	check(event_count(str(lightning.id)) == 1, "Mystic ancestry applies native chance to existing base consumer")
-	check(catalog.resolve(lightning).relic_invoke_probability.consumer == lightning.id, "upgrade card never becomes a separate proc")
+	check(catalog.resolve(lightning).get("relic_invoke_probability",{}).get("consumer","") == lightning.id, "upgrade card never becomes a separate proc")
 	var miss_seed: int = misses_with_proc_seed(); check(miss_seed >= 0, "normal-miss probability fixture")
 	relic(0); service.event_counts.clear(); world.rng.seed = miss_seed
 	world._resolve_normal_attack(dummy,"melee")
@@ -152,6 +157,7 @@ func run() -> void:
 	check(event_count(str(lightning.id)) == 1, "native Param5 allows only added chance on an actual missed normal attack")
 	check(world.inventory == inventory and world.mp == mp_before, "native miss invoke preserves existing no-cost passive behavior")
 	await show_skill(lightning, "lightning-miss", "명중·빗나감")
+	print("RELIC_MAIN_PHASE native_healing")
 	change_job("투사")
 	var dragon: Dictionary = catalog.record_for("드래곤 포스"); catalog.learned[str(dragon.id)] = 1
 	relic(21518)
@@ -162,7 +168,7 @@ func run() -> void:
 	mp_before = world.mp; inventory = world.inventory.duplicate(true)
 	check(world._cast_job_skill(str(dragon.id)) and world.hp == expected_hp, "actual Dragon Force cast heals host amount plus maxHP20 percent")
 	check(world.mp == mp_before-int(heal_skill.mp) and int(world.inventory["명예 코인"]) == int(inventory["명예 코인"])-10, "Dragon Force retains one existing cost")
-	var hp_before: int = world.hp; world.mp = 0; world.skill_global_cooldown = 0; world.skill_cooldowns.clear()
+	var hp_before: int = world.hp; inventory = world.inventory.duplicate(true); world.mp = 0; world.skill_global_cooldown = 0; world.skill_cooldowns.clear()
 	check(not world._cast_job_skill(str(dragon.id)) and world.hp == hp_before and world.inventory == inventory, "insufficient MP never grants child healing")
 	relic(0); check(is_equal_approx(float(catalog.resolve(dragon).get("heal_percent",0)), .5), "release removes derived recovery fraction")
 	relic(21518); await show_skill(dragon, "dragon-recovery", "최대 HP의 +20.00%p", Vector2i(854,480))
@@ -195,7 +201,20 @@ func run() -> void:
 	relic(0); var monster_without: int = service.incoming_damage(dummy,"magic",100)
 	check(monster_with == monster_without, "PvP increment never leaks into ordinary monster damage")
 	relic(21518); await show_skill(protection,"thunder-pvp-pending","PvP 소비자 연결 대기")
-	change_job("기사")
+	var vitality: Dictionary=catalog.record_for("썬더 바이탈");catalog.learned[str(vitality.id)]=1
+	var enhanced_cap: int=world._effective_max_hp()
+	world._equip_catalog("성물",{})
+	check(enhanced_cap>world._effective_max_hp(),"source vitality fixture really loses a relic-derived HP cap on release")
+	relic(21518);world.hp=world._effective_max_hp();world.mp=world._effective_max_mp()
+	check(world._save_game(true)==OK,"source cap release baseline committed")
+	var full_hp: int=world.hp;var full_mp: int=world.mp
+	var buffs_before: Dictionary=world.active_skill_buffs.duplicate(true)
+	var release_hash: String=FileAccess.get_sha256(world.save_path())
+	world.equipment_collections.save_blocked=true;world._equip_catalog("성물",{})
+	check(world.hp==full_hp and world.mp==full_mp and world.active_skill_buffs==buffs_before,"failed cap-lowering release preserves live HP MP and buff state")
+	check(int(world.equipped_catalog["성물"].source_card_id)==21518 and FileAccess.get_sha256(world.save_path())==release_hash,"failed cap-lowering release preserves primary and exact saved bytes")
+	world.equipment_collections.save_blocked=false
+	change_job("군주")
 	var brave: Dictionary = catalog.record_for("브레이브 아머"); catalog.learned[str(brave.id)] = 1
 	relic(21518); await show_skill(brave,"brave-pvp-pending","PvP 소비자 연결 대기")
 	check(service.stat("pvpDamageReduction") == 1, "Brave Armor retains source-only PvP increment")
@@ -211,7 +230,11 @@ func run() -> void:
 	check(world._save_game(true) == OK,"real integrated baseline save")
 	var state_before: Dictionary = world.option_awakening.export_state().duplicate(true)
 	var hash_before: String = FileAccess.get_sha256(world.save_path())
+	check(world._save_game(true,{"equipped_catalog":world.equipped_catalog.duplicate(true),"hp":world.hp,"mp":world.mp}) == ERR_INVALID_DATA and FileAccess.get_sha256(world.save_path()) == hash_before,"unsealed card snapshot cannot bypass shared owner boundary")
+	var primary_before: String = CARDS.card_id(world.equipped_catalog["성물"])
 	world.equipment_collections.save_blocked = true
+	relic(21428)
+	check(CARDS.card_id(world.equipped_catalog["성물"]) == primary_before and FileAccess.get_sha256(world.save_path()) == hash_before,"failed primary save preserves source level and exact save")
 	world.option_awakening.select_relic_subslot("source:m508:98:20578")
 	check(world.option_awakening.export_state() == state_before and FileAccess.get_sha256(world.save_path()) == hash_before,"failed slot save preserves exact card state and save bytes")
 	world.equipment_collections.save_blocked = false
@@ -223,15 +246,16 @@ func run() -> void:
 	check(world._save_game(true) == OK,"integrated card/skill/HP/MP durable snapshot")
 	var durable: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 	var durable_hash: String = FileAccess.get_sha256(world.save_path())
+	print("RELIC_MAIN_PHASE reconnect")
 	world.queue_free(); await frames(4)
 	RULES._rules.clear(); RULES._default_checked = false
-	world = load("res://Main.tscn").instantiate(); root.add_child(world); await frames(6)
-	check(QA.enter_game(world,"기사"),"actual Main re-entry class flow")
+	world = load("res://Main.tscn").instantiate(); world.set_process(false); root.add_child(world); freeze(); await frames(6)
+	check(QA.enter_game(world,"군주"),"actual Main re-entry class flow")
 	freeze(); service=world.original_skills; catalog=service.catalog
 	check(RULES.ensure_loaded() and FileAccess.get_sha256(RULES.INSTALLED) == RULES.SOURCE_SHA256,"fresh re-entry reads installed verified source")
 	check(normalized(world.option_awakening.export_state()) == durable.card_option_awakening,"re-entry preserves exact slot/awakening state")
 	check(normalized(world.equipped_catalog) == durable.equipped_catalog and normalized(world.inventory) == durable.inventory and world.gold == int(durable.gold),"re-entry preserves equipped cards and resources")
-	check(world.hp == int(durable.hp) and world.mp == int(durable.mp),"re-entry preserves exact current HP/MP")
+	check(world.hp == int(durable.hp) and world.mp == int(durable.mp),"re-entry preserves exact current HP/MP (%d/%d -> %d/%d)" % [int(durable.hp),int(durable.mp),world.hp,world.mp])
 	check(world.option_awakening.relic_subslot_view().active and service.stat("pvpDamageReduction") == 1 and int(RULES.level_for(world,4,0).bonus) == before_level,"re-entry recomputes source effects once alongside native slot")
 	check(FileAccess.get_sha256(world.save_path()) == durable_hash,"re-entry never rewrites progression save")
 	print("RELIC_SPELL_REMAINING_MAIN_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"renderer":DisplayServer.get_name()}))

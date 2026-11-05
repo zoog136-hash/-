@@ -93,7 +93,7 @@ func run() -> void:
 	check(world.equipped_catalog["성물"].is_empty() and world.source_relic_spell_level(1, 0).bonus == 0, "existing release flow removes modifier")
 	check(not panel.snapshot.active and hud.relic_reference_view.status.text.contains("없음"), "release updates both result labels without manual refresh")
 	check(world.inventory == inventory and world.gold == gold and world.card_draw_fusion.export_state() == cards, "passive actions spend no inventory gold or awakening materials")
-	check(FileAccess.get_sha256(world.save_path()) == save_hash, "UI import summon preview and release do not force unrelated saves")
+	check(JSON.parse_string(FileAccess.get_file_as_string(world.save_path())).equipped_catalog == JSON.parse_string(JSON.stringify(world.equipped_catalog)), "release persists exact selection through current atomic card writer")
 	hud.open_catalog("변신"); await frames(4)
 	check(not panel.is_visible_in_tree(), "relic-only controls hide after navigation")
 	print("RELIC_SPELL_LEVEL_MAIN_UI_RESULT ", JSON.stringify({"checks":checks, "failures":failures, "renderer":DisplayServer.get_name()}))

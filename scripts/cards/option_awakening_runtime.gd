@@ -332,7 +332,7 @@ func select_relic_subslot(identity: String) -> Dictionary:
 	if not core.validate_state(next,{"owned":world.card_draw_fusion.owned}).is_empty():_busy=false;return Core.fail("invalid_state","추가 성물 저장 검증 실패")
 	var staged: Dictionary={SAVE_KEY:next}
 	if world.has_method("_option_awakening_vitals_for_state"):staged.merge(world._option_awakening_vitals_for_state(next))
-	var error: Error=world._save_game(true,staged)
+	var error: Error=world._save_card_selection(true,staged) if world.has_method("_save_card_selection") else world._save_game(true,staged)
 	if error!=OK:_busy=false;return Core.fail("save_failed","저장 실패 · 기존 추가 성물 보존")
 	progress=next;_bonus_signature="";world.set("equipment_records_dirty",true);_busy=false
 	for key: String in ["hp","mp"]:

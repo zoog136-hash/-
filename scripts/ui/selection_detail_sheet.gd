@@ -232,4 +232,3 @@ func _show_skill_tab() -> void:
 		var relic_text: String = catalog.RELIC_LEVELS.EFFECTS.detail_text(resolved, source_active)
 		if not relic_text.is_empty(): source.text += "\n\n" + UI.safe(relic_text)
 	scroll.scroll_vertical=0
-

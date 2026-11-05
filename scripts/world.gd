@@ -1,6 +1,8 @@
 extends Node2D
 class_name TwilightWorld
 
+var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd").new()
+
 var patch523_npc_spells = preload("res://scripts/monsters/patch523_npc_combat.gd").new()
 const MONSTERBOOK523_RUNTIME = preload("res://scripts/monsterbook/monsterbook523_runtime.gd")
 var monsterbook523_runtime = MONSTERBOOK523_RUNTIME.new()
@@ -5587,6 +5589,9 @@ func _prepare_patch523_item_save_backup() -> Error:
 	source_item_backup_checked_path = target
 	return OK
 
+func _save_card_selection(quiet: bool, staged: Dictionary) -> Error:
+	return card_selection_saves.commit(self, quiet, staged)
+
 func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}) -> Error:
 	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return ERR_UNAVAILABLE
 	if current523_aden_play_active and _current523_aden_play_controller != null and bool(_current523_aden_play_controller.get("source_owned")) and not bool(_current523_aden_play_controller.get("saving_prior_snapshot")):
@@ -7454,7 +7459,7 @@ func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_
 		return
 	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
-	_deal_successful_player_hit(target, damage, false, attack_kind, true, false, {}, true)
+	_deal_successful_player_hit(target, damage, false, attack_kind)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
 
@@ -7987,12 +7992,17 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		# Evaluate both primary/secondary effects together, then persist caps and
 		# the selection before publishing any UI, visuals or live-state changes.
 		var previous: Dictionary=equipped_catalog
+		var previous_vitals := Vector2i(hp,mp)
+		var previous_buffs: Dictionary=active_skill_buffs.duplicate(true)
 		var next: Dictionary=previous.duplicate(true);next[category]=record.duplicate(true)
 		equipped_catalog=next;_invalidate_equipment_static()
-		var staged_hp: int=mini(hp+maxi(0,_effective_max_hp()-old_max_hp),_effective_max_hp())
-		var staged_mp: int=mini(mp,_effective_max_mp())
+		var next_max_hp: int=_effective_max_hp()
+		var next_max_mp: int=_effective_max_mp()
+		var staged_hp: int=mini(previous_vitals.x+maxi(0,next_max_hp-old_max_hp),next_max_hp)
+		var staged_mp: int=mini(previous_vitals.y,next_max_mp)
 		equipped_catalog=previous;_invalidate_equipment_static()
-		if _save_game(true,{"equipped_catalog":next,"hp":staged_hp,"mp":staged_mp})!=OK:
+		_restore_card_selection_preview(previous_vitals,previous_buffs)
+		if _save_card_selection(true,{"equipped_catalog":next,"hp":staged_hp,"mp":staged_mp})!=OK:
 			hud.show_message("저장 실패 · 기존 카드·추가 슬롯·HP/MP 보존")
 			return
 		equipped_catalog=next;hp=staged_hp;mp=staged_mp
@@ -10012,10 +10022,22 @@ func _skill_awakening_vitals_for_state(next: Dictionary) -> Dictionary:
 
 func _option_awakening_vitals_for_state(next: Dictionary) -> Dictionary:
 	var previous: Dictionary=option_awakening.progress
+	var previous_vitals := Vector2i(hp,mp)
+	var previous_buffs: Dictionary=active_skill_buffs.duplicate(true)
 	option_awakening.progress=next;_invalidate_equipment_static()
-	var result: Dictionary={"hp":mini(hp,_effective_max_hp()),"mp":mini(mp,_effective_max_mp())}
+	var result: Dictionary={"hp":mini(previous_vitals.x,_effective_max_hp()),"mp":mini(previous_vitals.y,_effective_max_mp())}
 	option_awakening.progress=previous;_invalidate_equipment_static()
+	_restore_card_selection_preview(previous_vitals,previous_buffs)
 	return result
+
+func _restore_card_selection_preview(vitals: Vector2i, buffs: Dictionary) -> void:
+	# Resolving temporary source levels may refresh derived buffs and clamp
+	# live vitals. A quote must restore those before the atomic writer runs.
+	active_skill_buffs=buffs
+	hp=vitals.x;mp=vitals.y
+	if original_skills != null:
+		original_skills.relic_buff_signature=""
+		original_skills.refresh_relic_buffs()
 
 func _on_secondary_relic_requested(identity: String) -> void:
 	if _option_awakening_busy():return

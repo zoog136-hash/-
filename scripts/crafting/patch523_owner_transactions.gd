@@ -68,6 +68,8 @@ static func override_error(world: Node,staged: Dictionary) -> String:
 static func nonquest_vital_owner(world: Node,staged: Dictionary) -> String:
 	# Each namespace retains its own validator at the shared writer boundary.
 	# This classification never permits progression fields without quest_state.
+	var cards: Variant = world.get("card_selection_saves")
+	if cards is RefCounted and cards.get_script() == preload("res://scripts/cards/card_selection_save.gd") and cards.authorizes(staged): return "card_owner"
 	var provider: Variant=world.get("quest_item_provider")
 	if staged.has("equipped_items"):
 		if provider!=null and provider.equipment_owner.authorizes_save(staged):return "sealed_quest_equipment"

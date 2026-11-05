@@ -107,5 +107,5 @@ func _initialize() -> void:
 	tampered.name = "same ID, altered record"
 	check(not EFFECTS.identity_matches(tampered, RULES._rules.spell_profiles[tampered.id]), "ID alone cannot authorize altered host")
 	check(records["lm_e8236ca60328dd0a"].get("relic_spell_effect") == null, "projections leave original records immutable")
-	print("RELIC_SPELL_EFFECT_RESULT ", JSON.stringify({"checks":checks, "failures":failures, "bindings":RULES._rules.spell_profiles.size(), "connected_skills":connected, "pending_skills":pending}))
+	print("RELIC_SPELL_EFFECT_RESULT ", JSON.stringify({"checks":checks, "failures":failures, "bindings":RULES._rules.spell_profiles.size(), "projected_skills":connected, "scope":"SOURCE_LEVEL_PROJECTION; BASE_TARGET_GATES_AUDITED_SEPARATELY", "pending_skills":pending}))
 	quit(0 if failures.is_empty() else 1)
