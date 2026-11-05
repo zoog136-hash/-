@@ -686,6 +686,40 @@ IDs and owner exclusions retain their existing behavior. This adds no category
 representative image or second image lookup. These action hookups are
 unexecuted and unverified.
 
+### Explicit NPC illustration consumer
+
+The held original NPC definition declares `NpcClass.IllustAssetID`. This is an
+AssetView key, resolved through that row's actual AssetType and literal path.
+It is not restricted to the `Image/NPC` asset type. NpcClass IDs, actor Sprite
+IDs, names, `UINpcClassAssetMapping.ScreenMessageImgAssetId` and
+`ImmediatelyCombinationImgAssetId` remain separate identities/roles.
+
+The existing NPC skill inspector now passes each existing NPC selector row's
+exact `NpcClass.ID` and its original `IllustAssetID` from the pinned NPC catalog
+to the shared original-image resolver. Its existing OptionButton receives the
+resulting texture; source row, snapshot/archive and declared field remain in
+texture-free metadata. Switching to the existing Land/environment selector
+clears the NPC images and does not interpret Land IDs as NPCs. Zero, absent,
+excluded and unsupported assets retain their own result, without another image.
+The image pack validates the asset and original bytes; it does not claim a
+canonical NpcClass-table check. The inspector's IDs, attack selection, combat,
+effects, spawning, input and saves retain their existing behavior.
+
+This establishes a source-backed illustration role and an existing selector
+consumer, not every NPC portrait or actual game-use counts. The current dialogue
+source-NPC dialogue records use L1J identities; the current resolved model does
+not supply an authoritative current523 `NpcClassID` relation. The original
+`NpcDialogue_All` Sprite4912 is also outside
+the published dialogue text/button scope. A real dialogue portrait still needs
+that typed caller identity and the UI owner's scope/binding for the authored
+target. The source editor preview is not substituted. NpcInteraction arguments
+are not interpreted without their missing type contract; a DescId or text/name
+match is not a dialogue/portrait relation.
+
+This NPC selector connection is unexecuted and unverified. No additional tests,
+game execution, rendering, CI, source-byte audit or original pixel creation was
+performed.
+
 Existing spell-group review and confirmation buttons additionally consume the
 quote's declared GameClassSpellGroupCostView.ItemClassID image, preserving the
 independent SpellGroup choice and payment/commit data. Shared item views also

@@ -200,6 +200,7 @@ func _process(_delta: float) -> void:
 
 func fill_selector() -> void:
 	selector.clear()
+	if selector.has_meta("source523_npc_images"): selector.remove_meta("source523_npc_images")
 	ids = []
 	for source_id: Variant in service.catalog.content.get("boss_npc_ids",[]): ids.append(int(source_id))
 	if environment_mode:
@@ -210,7 +211,33 @@ func fill_selector() -> void:
 		ids.sort()
 	for id: Variant in ids:
 		selector.add_item(str(service.catalog.row("Land" if environment_mode else "NpcClass",int(id)).get("Name",id)))
+		if not environment_mode: _bind_npc_illustration(selector.item_count - 1,int(id))
 	refresh_npc()
+
+func _bind_npc_illustration(index: int, npc_id: int) -> void:
+	if not SourceImages.selected(): return
+	var row: Dictionary = service.catalog.row("NpcClass",npc_id)
+	var image: Dictionary = {"ok":false,"status":"source_npc_illustration_identity_required","texture":null,"provenance":{}}
+	if SourceImages.PACK._integer(row.get("ID")) and int(row.ID) == npc_id and npc_id > 0:
+		# IllustAssetID is an explicit AssetView key. NpcClass IDs, actor Sprite
+		# IDs, names and screen-message/combination images are separate roles.
+		# The declared asset may have any supported original image type.
+		image = SourceImages.resolve_asset_value(row.get("IllustAssetID"))
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	var source_entry: Dictionary = service.catalog.content.get("tables",{}).get("NpcClass",{}).get(str(npc_id),{})
+	evidence["npc_source_relation"] = {"source_table":"NpcClass","source_id":npc_id,
+		"source_field":"IllustAssetID","source_asset_value":row.get("IllustAssetID"),
+		"source_row_1based":source_entry.get("source_row_1based"),
+		"source_snapshot":service.catalog.content.get("source_snapshot"),
+		"source_archive_sha256":service.catalog.content.get("source_archive_sha256"),
+		"identity_basis":"existing_pinned_npc_catalog_row_and_declared_illustration_asset",
+		"image_pack_canonical_npc_row_check":false}
+	selector.set_item_icon(index,image.get("texture") as Texture2D)
+	selector.expand_icon = true
+	var originals: Dictionary = selector.get_meta("source523_npc_images",{})
+	originals[str(npc_id)] = evidence
+	selector.set_meta("source523_npc_images",originals)
 
 func refresh_npc() -> void:
 	if selector == null or ids.is_empty(): return
