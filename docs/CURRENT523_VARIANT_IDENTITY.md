@@ -2,7 +2,8 @@
 
 The actual World source-ID lookup now resolves an absent m523:item:ID:bless:2/3
 through the existing variant factory only when its normal base is already
-registered as the exact current original non-equipment item. The full original
+registered as the exact current original non-equipment item. The actual current_original_native_projection registration must include the
+ItemClassID with no pending ambiguity, and must identify the same archive. The full original
 row and ItemBlessCode row must exist and must not be excluded. Existing explicit
 variant entries, including conflicts, are never repaired or replaced.
 

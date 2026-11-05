@@ -3,7 +3,7 @@ extends RefCounted
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 
-static func missing_variant(registered: Dictionary,source_id: String) -> Dictionary:
+static func missing_variant(registered: Dictionary,source_id: String,registration: Dictionary) -> Dictionary:
 	# An existing explicit record, including a conflict/empty entry, wins. This
 	# only resolves the qualified namespace emitted by the existing factory.
 	if registered.has(source_id) or source_id.length()>96:return {}
@@ -11,6 +11,7 @@ static func missing_variant(registered: Dictionary,source_id: String) -> Diction
 	if parts.size()!=5 or parts[0]!="m523" or parts[1]!="item" or parts[3]!="bless" or parts[4] not in ["2","3"] or not parts[2].is_valid_int():return {}
 	var item_id: int=int(parts[2]);var bless: int=int(parts[4])
 	if item_id<=0 or str(item_id)!=parts[2]:return {}
+	if registration.get("mode")!="current_original_native_projection" or registration.get("source_definition_archive")!=SOURCE.identity() or not registration.get("registered_definition_ids",[]).has(str(item_id)) or registration.get("pending",{}).has(str(item_id)):return {}
 	var base_id: String="m523:item:"+parts[2]
 	var value: Variant=registered.get(base_id)
 	if not value is Dictionary:return {}

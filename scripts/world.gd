@@ -977,7 +977,7 @@ func _catalog_item_from_source_id(source_id: String) -> Dictionary:
 	if catalog_item_by_source_id.has(source_id):
 		var source: Variant = catalog_item_by_source_id[source_id]
 		return source as Dictionary if source is Dictionary else {}
-	return preload("res://scripts/loot/current523_item_variant_identity.gd").missing_variant(catalog_item_by_source_id,source_id)
+	return preload("res://scripts/loot/current523_item_variant_identity.gd").missing_variant(catalog_item_by_source_id,source_id,catalog_db.get("patch523_crafting_catalog_contract",{}))
 
 func _normalize_option_policies() -> void:
 	# Single-player rule: original PvP numerical bonuses become PvE bonuses;
