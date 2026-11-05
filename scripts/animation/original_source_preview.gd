@@ -72,12 +72,13 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	_current523_source_only = source_only
 	if source_only:
 		clear()
-		_reference_request_context = context.duplicate(true)
 	elif _configure_existing_source(key, manifest_path, context):
 		# Keep an explicitly supplied source-bank configuration available to
 		# later effect requests without replacing this working actor.
 		_reference_request_context = context.duplicate(true)
 		return true
+	# A pending body must not discard the independent spell/item/invoke input.
+	_reference_request_context = context.duplicate(true)
 	var selected: Dictionary = CURRENT523_BANK.select_card(key, context)
 	if source_only:
 		selected["source_only"] = true
@@ -89,7 +90,11 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	if not selected.ok:
 		source_selection_status = selected
 		return false
-	if not _configure_selected_roles(selected,"idle"):
+	var configured: bool = _configure_selected_roles(selected,"idle")
+	# Role installation clears the preview, including its request context.
+	# Restore the caller's context on both success and missing-body outcomes.
+	_reference_request_context = context.duplicate(true)
+	if not configured:
 		source_selection_status = selected.duplicate(true)
 		source_selection_status["status"] = "selection_pending"
 		source_selection_status["reason"] = str(reference_bank_status.get("error","current523_source_action_unavailable"))
@@ -97,7 +102,6 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 			source_selection_status["source_exclusion"] = reference_bank_status.source_exclusion.duplicate(true)
 		return false
 	_reference_card_context = selected.duplicate(true)
-	_reference_request_context = context.duplicate(true)
 	source_selection_status = selected.duplicate(true)
 	source_weapon_status = {"requested_weapon_type":selected.source_weapon_type,"state":"current523_explicit_host_primary_source_actions","source_actions":selected.role_actions.duplicate(),"M_client_equivalence_verified":false}
 	source_weapon_status["run_status"] = selected.get("run_status",{}).duplicate(true)
@@ -343,6 +347,15 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 	visible = true
 	return true
 
+func _prune_source_overlays() -> void:
+	# Completed one-shots remain as freed handles until their next owner call.
+	# Check validity before converting a handle to the typed Node2D array.
+	var live: Array[Node2D] = []
+	for overlay: Variant in _overlay_nodes:
+		if is_instance_valid(overlay) and overlay is Node2D and not overlay.is_queued_for_deletion():
+			live.append(overlay)
+	_overlay_nodes = live
+
 func clear() -> void:
 	_reference_bank = null
 	source_effect_status.clear()
@@ -371,7 +384,7 @@ func clear() -> void:
 	_annotation_clock = -0.000000001
 	_annotation_track_key = ""
 	_is_overlay = false
-	for overlay: Node2D in _overlay_nodes:
+	for overlay: Variant in _overlay_nodes:
 		if is_instance_valid(overlay): overlay.free()
 	_overlay_nodes.clear()
 	_release_reference_texture_charges()
@@ -747,7 +760,7 @@ func _spawn_reference_overlay(binding: Dictionary, parent_track: Dictionary, tok
 	overlay._overlay_facing = stored_direction
 	overlay.global_position = global_position
 	overlay.z_index = 2
-	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
+	_prune_source_overlays()
 	_overlay_nodes.append(overlay)
 	overlay.advance_reference_source(0.0,"idle",stored_direction)
 	return true
@@ -830,7 +843,7 @@ func _spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = V
 	overlay.set_meta("selected_source_effect",selected_id)
 	overlay._overlay_facing = facing
 	overlay.z_index = 2
-	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
+	_prune_source_overlays()
 	_overlay_nodes.append(overlay)
 	overlay.advance_source(0.0, "idle", facing, 0, false)
 	return true
@@ -977,7 +990,7 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_frame_unavailable"))
 		overlay.free()
 		return false
-	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
+	_prune_source_overlays()
 	_overlay_nodes.append(overlay)
 	source_effect_status["status"] = "configured_existing_source_effect"
 	return true
