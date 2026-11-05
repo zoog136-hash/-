@@ -243,10 +243,11 @@ func try_use_held(world: Node, id: String) -> bool:
 			world.hud.show_message(str(equipped.get("message",equipped.get("reason","퀘스트 탄약의 실제 소지 개체 착용 연결 대기"))))
 			if equipped.get("ok",false) and equipped.get("saved",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
 			return true
-		if original_definition.get("native_record",{}).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]:
+		var original_record: Dictionary=D.variant_item(original_definition.get("native_record",{}),int(original_owned.bless_code_id))
+		if original_definition.get("native_record",{}).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"] or native_ammo.call("held_scalar_supported",original_record) or int(original_owned.item_class_id) in [239,310]:
 			var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 			var used: Dictionary=stock.call("use_owned_original",world,original_owned.source_item,{"physical_id":id,"quantity":1,"expected_quantity":original_owned.quantity,"expected_remaining":int(original_owned.quantity)-1,"quest_reward_receipt":world.item_instances[id].quest_reward_receipt.duplicate(true)})
-			world.hud.show_message(str(used.get("message",used.get("reason","원본 상자 수령·사용 소유자 연결 대기"))))
+			world.hud.show_message(str(used.get("message",used.get("reason","원본 소지 효과 사용 결과 확인 필요"))))
 			if used.get("ok",false) and used.get("saved",false) and used.get("consumed")==1:
 				world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory)
 			return used.get("handled",false)

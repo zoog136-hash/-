@@ -27,13 +27,20 @@ static func metadata(record: Dictionary) -> Dictionary:
 		if kind=="ItemConsumeEffectSpriteID":result["consume_effect_sprite_id"]=int(bonus.get("Value",0))
 	return result if seen.size()==6 and int(result.get("source_consume_delay_ms",-1))>=0 else {"ok":false}
 
-static func use(world: Node, saved: Dictionary) -> bool:
-	if int(saved.get("source_item_class_id",0))!=233:return false
+static func current_metadata(record: Dictionary) -> Dictionary:
+	if D.current_original_definition(record).is_empty():return {"ok":false}
+	var id: int=int(record.get("source_item_class_id",0))
+	if id==233:return metadata(record)
+	if id in [237,236]:return load("res://scripts/loot/current523_native_stack.gd").call("restoration_metadata",record)
+	return D.hp_use_metadata(record)
+
+static func use(world: Node, saved: Dictionary, current_original_hp: bool=false) -> bool:
+	if not current_original_hp and int(saved.get("source_item_class_id",0))!=233:return false
 	if world.quest_service.save_blocked:
 		world.hud.show_message("저장 보호 중 · 정상 저장 불러오기 필요");return true
 	var record: Dictionary=USE.canonical(saved)
 	var problem: String=USE.eligibility(world,record)
-	var details: Dictionary=metadata(record)
+	var details: Dictionary=current_metadata(record) if current_original_hp else metadata(record)
 	if problem.is_empty():problem=D.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 	if problem.is_empty() and not details.get("ok",false):problem="원본 회복제의 효과·사용·등록 조건 미지원 · 아이템 보존"
 	if problem.is_empty() and not details.can_use_when_invisible and world.is_player_concealed():problem="원본 조건: 은신 중 사용할 수 없습니다"

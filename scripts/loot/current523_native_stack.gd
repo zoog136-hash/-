@@ -700,6 +700,11 @@ static func use_owned_original(world: Node,original_item: Dictionary,request: Di
 		return result
 	return try_use(world,str(owned.record.name),str(request.physical_id))
 
+static func held_scalar_supported(record: Dictionary) -> bool:
+	# Existing source-validated effect owners only; no name mapping or unknown HP admission.
+	var effect: Dictionary=profile(record)
+	return effect.get("kind") in ["hp","mp","buff"]
+
 static func use_quest_original_bag(world: Node,original_item: Dictionary,request: Dictionary) -> Dictionary:
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return _failure("원본 상자 저장 보호 중")
 	var uid: String=str(request.physical_id);var owned: Dictionary=QUEST_OWN.proof(world,uid)
@@ -722,6 +727,15 @@ static func use_quest_original_bag(world: Node,original_item: Dictionary,request
 		var cure_owner: Script=load("res://scripts/quests/quest_cure310.gd")
 		if cure_owner.call("profile",record).is_empty():return _failure("원본310 해독 효과 계약 불일치 · 소유 보존")
 		return cure_owner.call("perform",world,record,uid)
+	if held_scalar_supported(record):
+		var prepared: Dictionary=QUEST_OWN.prepare_debit(world,uid,1)
+		if not prepared.get("ok",false) or prepared.get("ownership")!=owned:return _failure("선택 원문 효과 소지 상태 변경 · 소유 보존")
+		# The existing isolated consumer view runs its effect with candidate RNG.
+		# Its common receipt/debit + effect + cooldown save is the only commit.
+		var held: Script=load("res://scripts/quests/quest_held_use238.gd")
+		var result: Dictionary=held.call("perform",world,prepared,record)
+		var saved: bool=bool(result.get("committed",false))
+		return {"ok":saved,"saved":saved,"handled":true,"consumed":1 if saved else 0,"uncertain":bool(result.get("uncertain",false)),"source_item_id":int(owned.item_class_id),"physical_id":uid,"reason":"원본 효과 사용 저장 완료" if saved else "원본 효과 소비가 확정되지 않았습니다 · 재시도 전 소유 상태 확인"}
 	var spec: Dictionary=record.get("source_use_spec",{})
 	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"] or spec.get("activation_status")!="unrestricted":return _failure("원본 퀘스트 아이템의 현재 효과 소유자 연결 대기")
 	if world.is_player_concealed() and not spec.get("can_use_when_invisible",false):return _failure("원본 조건: 은신 중 사용할 수 없습니다")
