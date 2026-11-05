@@ -72,7 +72,8 @@ func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 		var text_options: Dictionary=options.duplicate(true)
 		text_options.hAlignment=1
 		text_options.vAlignment=1
-		label.configure(font,text_options,extent)
+		var text_result: Dictionary=label.configure(font,text_options,extent)
+		if not text_result.ok:label.free();_title=null;return text_result
 		label.modulate=label.source_color(options.textColor)
 		label.set_meta("source_title_base_color",label.modulate)
 		add_child(label)

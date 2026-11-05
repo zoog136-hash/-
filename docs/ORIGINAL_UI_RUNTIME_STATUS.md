@@ -430,3 +430,17 @@ The 41 affected source candidates rendered 36 entries and rejected five for
 remaining nested source contracts/features. The tracked inspection union is
 224 entries, with original button-state captures; service bindings remain
 separately reported.
+
+### Explicit source text lines and complete container receipt
+
+Explicit source newlines now draw with their supplied font, alignment, shadow
+and outline. Multiline text requiring unimplemented word wrapping or clipping
+is still rejected rather than silently rearranged. The targeted 52-entry run
+rendered 19 and rejected 33, bringing the tracked inspection union to 243.
+
+All 154 current523 UI containers completed exact expected size/SHA1 validation.
+Their index contains 8,303 files and resolves 524/560 tracked dependency closures.
+The 36 unresolved closures reference 25 absent file paths and/or 38 missing
+atlas frame names. A search of every received original atlas found none of those
+38 names, including aliases. Missing references remain explicit; no old or
+similar-looking asset was substituted. This receipt is not full UI completion.

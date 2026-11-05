@@ -126,7 +126,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if node.classname=="Text":
 		if inspection_only or binding.get("role")!="static_source_text":unresolved_bindings.append(str(widget.name)+":source_text_requires_live_binding")
 		if not inspection_only and binding.get("role")!="static_source_text": problems.append("unconnected_source_text")
-		if str(options.get("text","")).contains("\n") or int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_text_layout_or_blur")
+		if int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_text_shadow_blur")
 		if int(options.get("fontSize",0))<=0: problems.append("invalid_source_font_size")
 	if node.classname=="LoadingBar":
 		unresolved_bindings.append(str(widget.name)+":source_percent_requires_live_binding")
@@ -243,7 +243,9 @@ func _build(source: Dictionary) -> Node2D:
 		var label=preload("res://scripts/ui/original_ui/source_text.gd").new()
 		label.name="OriginalText"
 		node.set_meta("source_text",label)
-		label.configure(font_value,options,Vector2(widget.size[0],widget.size[1]))
+		var text_result: Dictionary=label.configure(font_value,options,Vector2(widget.size[0],widget.size[1]))
+		if not text_result.ok:
+			_build_error=str(text_result.error)+":"+str(widget.name);label.free();node.free();return null
 		origin.add_child(label)
 	if source.classname=="ImageView":
 		var texture: Texture2D=source_pack.texture(options.fileNameData,true)
