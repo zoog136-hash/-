@@ -1,0 +1,25 @@
+{
+  "schema": "twilight.current523.npc-range-input-policy.v1",
+  "source_snapshot": "patch523",
+  "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "enabled": true,
+  "origin": "twilight_adjustable_numeric_estimate",
+  "source_raw_range_unit_scale": "unconfirmed",
+  "native_grid_scale_recovered": false,
+  "raw_attack_range_to_host_length": 58.0,
+  "scope": "all_already_admitted_owner_NpcAttack_rows_have_one_identical_positive_Range",
+  "host_range_contract": "existing_record_attack_range_and_current_attack_range_retained",
+  "calibration_status": "no_exact_original_attack_to_host_length_calibration",
+  "initial_numeric_basis": {
+    "reader": "Monster.current_attack_range",
+    "existing_melee_default": 58,
+    "existing_ranged_default": 220,
+    "existing_magic_default": 280,
+    "chosen_host_reference": 58,
+    "assumed_raw_reference_for_this_estimate": 1,
+    "note": "58 / 1 is an adjustable TWILIGHT numeric choice using the existing melee host default. It does not establish a native range unit; 220/280 are context only, never selection rules."
+  },
+  "mobile_distance_context_reference": "https://lineagem.plaync.com/guidebook/view?title=%EB%AC%B4%EA%B8%B0+%EC%95%84%EC%9D%B4%ED%85%9C",
+  "reference_limit": "The official mobile weapon guide discusses cell-based basic attack distances. It does not define NpcAttack.Range's internal scale or any conversion to TWILIGHT host length.",
+  "note": "Independent of the player distance policy. No max/min, attack selection, spell-override precedence or range checker is introduced. Mixed, missing, zero, excluded or nonpositive owner ranges preserve the existing host input; existing silence fallback remains unchanged."
+}

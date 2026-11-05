@@ -5,6 +5,35 @@ bounded source fields to existing gameplay consumers. It does not complete all
 original definitions or establish 95% use.
 The reviewed baseline is main `1333851bb2eb193a6ac1fc3e3b852787c08994ff`.
 
+## Existing priority and count checkpoint
+
+The fixed source ledger remains private `inventory.json` for current523,
+archive SHA `d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832`:
+1,065 **tables**,2,323,700 rows and457,729,872 uncompressed JSON bytes.
+This denominator preserves deferred and excluded source; it is not a newly
+counted eligible-table denominator. No new inventory or recount was run.
+
+At code checkpoint `2c3485823aee92f73c71a9852a602cf12527696a`, a live adjusted
+rank after deferred descriptions, banned words and explicit dummy exclusions
+is **not recorded**. Same-cutoff fully connected, partly connected and
+unconnected whole-table counts are each **not recorded**, and consequently
+an exact remaining-table count in that adjusted scope is **not recorded**.
+The old static122 or712 labels must not substitute for those current values.
+
+The already recorded larger-input priorities are ItemClass44,095,017 bytes,
+Bonus34,575,811, SpellClass22,596,753, LuckyBagEntityView17,073,327,
+Reward13,234,439, ItemCraftOutputView11,140,223 and ItemCraftInput10,217,120.
+These are source JSON byte sizes, not ZIP/cache/file/package sizes or consumed
+bytes. The current concrete code path is bound `SpellClass` distance fields
+into the existing skill-range/radius readers, together with LuckyBag's
+entity/type/item/class-limit joins and declared exclusions. The subsequent
+NPC selected-attack range boundary is being handled from `NpcAttack` and its
+existing actor reader. A path reads several tables; this is not a claim that
+one entire table is completed at each listed rank. Reference graph reads,
+partial fields, the whole held ZIP or unexecuted code do not establish whole
+table gameplay adoption. Descriptions stay deferred, banned words inactive
+and explicit dummy evidence separately preserved.
+
 ## Current original numeric inputs — unverified
 
 Existing gameplay readers now receive additional original numeric fields.
@@ -47,6 +76,51 @@ source identity, exact binding and actual policy-byte SHA. MinCastRange remains
 raw because there is no existing receiver; CastDelay, cooldown, shape, target
 filters, effects, progression, ownership and saves are unchanged. This is
 unexecuted input code, not whole-spell coverage or observed casting.
+
+The [official mobile knight-magic guide](https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC+%EB%A7%88%EB%B2%95)
+describes energy bolt's target within10 cells. This supports distance context;
+it does not establish the internal523 raw unit or a host-length conversion.
+The independent scale settings therefore remain explicit estimates.
+
+NPC attack distance is now supplied at an existing earlier input as well:
+successful `project_actor_record(record)` → private
+`_project_uniform_attack_range_input(record,source)` → `record.attack_range`
+→ `Monster._setup_animation()` → `configured_attack_range` →
+`current_attack_range()`. Existing attack start, pursuit and captured release
+reach consequently use the same accessor. No release-only range substitution,
+new checker or attack chooser is added; existing silence fallback stays.
+
+This narrow input requires the exact current registry/archive/full NPC row,
+admitted ID/Sprite/DescId identity and every already admitted attack belonging
+to that owner. Each attack must equal its unique pinned original full row and
+retain the exact owner; all must have one identical positive integral Range.
+Missing/mixed/zero/excluded attack rows keep the earlier host input. No larger
+attack set is admitted, and max/min, attack selection or SpellClass/child-spell
+override precedence is not inferred.
+
+`data/monsters/current523_npc_range_input_policy.json` independently enables
+and configures `raw_attack_range_to_host_length`, initially58.0. The numerical
+basis is the existing host melee default58 with an explicitly assumed raw1;
+**no exact original-to-host attack calibration exists**. Existing ranged220
+and magic280 are context, not new selection rules. Native range units/grid
+remain unconfirmed. Missing/disabled/invalid policy keeps existing input.
+`source_m_npc_range_input_policy` records the actual policy-byte SHA, source,
+admitted registry payload SHA/attack IDs, raw Range and prior/derived host
+lengths. Original attack values, choice, AI, clock, geometry, effects, ownership
+and saves remain. The [official mobile weapon guide](https://lineagem.plaync.com/guidebook/view?title=%EB%AC%B4%EA%B8%B0+%EC%95%84%EC%9D%B4%ED%85%9C)
+provides cell-based basic-distance context, not NpcAttack raw units or the host
+conversion. This path remains uncompiled/unexecuted/unverified and does not
+complete the NpcAttack table or establish observed gameplay adoption.
+
+The remaining mixed-Range contract is precise: today
+`patch523_npc_combat.begin_action()` selects an attack and captures reach from
+the actor's generic `current_attack_range()`, while earlier start/tracking use
+that accessor before selection. The existing owner must supply one consistent
+selected-attack planning/reach contract across those stages, including any
+child-spell override precedence, before different original attack ranges can
+be adopted. This reader already retains exact admitted attack IDs/full rows
+and Range; it does not choose a maximum/minimum or alter AI to supply a missing
+receiver. This is a hold for mixed admitted ranges only, not all NPC tables.
 
 The weight adapter requires the current archive identity, original typed native
 projection marker, matching source item identity, explicit non-Test provenance

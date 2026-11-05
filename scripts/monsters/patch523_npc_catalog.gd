@@ -10,6 +10,7 @@ const NPC_STAT_FIELDS = {"hp":"HP","mp":"MP","ac":"AC","mr":"MR","xp":"Exp"}
 const ATTACK_STRUCTURE_FIELDS = ["ID","NpcClassID","SpellID","NextAttack","MotionType","WeaponType","AttackType","ChangeTarget","Range","Prob","FixedDelayTime","DiceCount","DiceSpots","DiceBonus"]
 const SPELL_ATTACK_VIEW_FIELDS = ["ID","NpcClassID","SpellID","MotionType","WeaponType","Range"]
 const NUMERIC_INPUT_POLICY_PATH = "res://data/monsters/current523_numeric_input_policy.json"
+const NPC_RANGE_INPUT_POLICY_PATH = "res://data/monsters/current523_npc_range_input_policy.json"
 const NPC_RESISTANCE_FIELDS = {"fire":"FireResistance","water":"WaterResistance","earth":"EarthResistance","wind":"AirResistance"}
 var content: Dictionary = {}
 var error: String = ""
@@ -285,7 +286,8 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 	result["source_m_definition_archive_sha256"] = SOURCE_SHA
 	for field_name: String in NPC_STAT_FIELDS:
 		result[field_name] = int(source[NPC_STAT_FIELDS[field_name]])
-	return _project_numeric_resistance_input(result,source)
+	result = _project_numeric_resistance_input(result,source)
+	return _project_uniform_attack_range_input(result,source)
 
 func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -> Dictionary:
 	# Called only after the same exact actor/source admission above. This is an
@@ -329,6 +331,70 @@ func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -
 		"source":source_identity.duplicate(true),"npc_class_id":source.ID,"source_raw_unit_scale":"unconfirmed",
 		"raw_resistance_to_host_percent":multiplier,"fields":fields,
 		"native_server_damage_formula_recovered":false,"host_formula":"existing_host_formula_retained"}
+	return record
+
+func _project_uniform_attack_range_input(record: Dictionary, source: Dictionary) -> Dictionary:
+	# A single existing actor-level receiver is valid only when every already
+	# admitted attack of this owner supplies the same positive original Range.
+	# No unadmitted relation, max/min, attack choice or spell range is consulted.
+	if not source_available or source_mode!="current523_original" or content.get("input_kind")!="twilight.current523.npc-input.v1" or content.get("source_archive_sha256")!=SOURCE_SHA: return record
+	var identity: Dictionary = DEFINITIONS.identity()
+	if identity.is_empty() or identity.get("source_sha256")!=SOURCE_SHA or identity!=source_identity: return record
+	if not source_integer(source.get("ID")): return record
+	var npc_id := int(source.ID)
+	var admitted: Dictionary = admitted_source_identities.get(str(npc_id),{})
+	if admitted.get("source_archive_sha256")!=SOURCE_SHA: return record
+	for pair: Array in [["npc_class_id","ID"],["sprite","Sprite"],["desc_id","DescId"]]:
+		if not source_integer(admitted.get(pair[0])) or not source_integer(source.get(pair[1])) or admitted[pair[0]]!=source[pair[1]]: return record
+	var selected_npc: Dictionary = content.get("tables",{}).get("NpcClass",{}).get(str(npc_id),{}).get("row",{})
+	if selected_npc!=source or DEFINITIONS.row("NpcClass",npc_id)!=source or not DEFINITIONS.declared_exclusion("NpcClass",source).is_empty(): return record
+	var file := FileAccess.open(NPC_RANGE_INPUT_POLICY_PATH,FileAccess.READ)
+	if file==null: return record
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	var parser := JSON.new()
+	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return record
+	var policy: Dictionary = parser.data
+	if policy.get("schema")!="twilight.current523.npc-range-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
+	if not policy.get("enabled") is bool or not policy.enabled or policy.get("origin")!="twilight_adjustable_numeric_estimate": return record
+	if policy.get("source_raw_range_unit_scale")!="unconfirmed" or policy.get("native_grid_scale_recovered")!=false or policy.get("host_range_contract")!="existing_record_attack_range_and_current_attack_range_retained": return record
+	var scale: Variant = policy.get("raw_attack_range_to_host_length")
+	if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<=0.0: return record
+	var selected_attacks: Variant = content.get("tables",{}).get("NpcAttack",{})
+	if not selected_attacks is Dictionary: return record
+	var uniform: Variant = null
+	var attack_ids: Array = []
+	for key: Variant in selected_attacks:
+		var entry: Variant = selected_attacks[key]
+		if not entry is Dictionary or not entry.get("row") is Dictionary: return record
+		var attack: Dictionary = entry.row
+		if not source_integer(attack.get("NpcClassID")): return record
+		if int(attack.NpcClassID)!=npc_id: continue
+		if not source_integer(attack.get("ID")) or not source_integer(attack.get("Range")) or float(attack.Range)<=0.0: return record
+		var attack_id := int(attack.ID)
+		if not key is String or key!=str(attack_id) or attack_id in attack_ids: return record
+		var originals: Array[Dictionary] = DEFINITIONS.related("NpcAttack","ID",attack_id)
+		if originals.size()!=1 or originals[0]!=attack or not DEFINITIONS.declared_exclusion("NpcAttack",originals[0]).is_empty(): return record
+		if uniform==null: uniform = attack.Range
+		elif uniform!=attack.Range: return record
+		attack_ids.append(attack_id)
+	if attack_ids.is_empty(): return record
+	var length: float = float(uniform)*float(scale)
+	if not is_finite(length) or length<=0.0: return record
+	var hashing := HashingContext.new()
+	hashing.start(HashingContext.HASH_SHA256)
+	hashing.update(bytes)
+	var policy_sha: String = hashing.finish().hex_encode()
+	var prior: Variant = record.get("attack_range")
+	record["attack_range"] = length
+	record["source_m_npc_range_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
+		"policy_path":NPC_RANGE_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
+		"source":identity,"npc_class_id":npc_id,"admitted_actor_identity":admitted.duplicate(true),
+		"admitted_registry_payload_sha256":source_model_sha256,"admitted_attack_ids":attack_ids,
+		"source_field":"NpcAttack.Range","uniform_raw_range":uniform,"raw_attack_range_to_host_length":float(scale),
+		"prior_host_attack_range":prior,"host_length_input":length,"source_raw_range_unit_scale":"unconfirmed",
+		"native_grid_scale_recovered":false,"calibration_status":policy.get("calibration_status"),
+		"host_range_contract":"existing_record_attack_range_and_current_attack_range_retained"}
 	return record
 
 func attack(npc_id: int, attack_id: int) -> Dictionary:
