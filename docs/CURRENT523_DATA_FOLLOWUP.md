@@ -291,3 +291,15 @@ sum. General melee/ranged/magic hit operands and existing collection/card/
 guardian accuracy contributions stay separate; no PvP hit effect is activated.
 The existing chance formulas and evasion-ignore callers are unchanged. This
 additional PvE item-accuracy connection remains unverified.
+
+The existing conditional_magic_damage() and final-blow totals calls now also
+receive native base MagicDamage Value and FinalBlowProbability Percentage
+operands whose application explicitly resolves to SpecialResistanceType.Stun.
+ItemOptions.additional_original_conditional() uses the same exact source-row,
+mapped-ID and explicit-field guards. The existing owner still decides hit scope
+and self/target status through its published configurable TWILIGHT policy;
+the source reference alone is not described as proving that direction. No
+new condition, subject, cast, probability roll, final-blow order or stun effect
+is introduced. Missing/unsupported declarations supply no operand. Other
+conditional meanings and the enhancement-only fear-ignore owner stay separate.
+These actual conditional caller inputs remain unverified.

@@ -59,6 +59,16 @@ static func additional_original_status(record: Dictionary, status: String, kind:
 			if record.has(alias): return 0.0
 	return _additional_original_operand(record,status+"_"+kind,["HitSpecialResistance" if kind=="accuracy" else "SpecialResistance"],"Percentage",10000.0,status)
 
+static func additional_original_conditional(record: Dictionary, key: String) -> float:
+	# The existing final-blow owner chooses self/target status and hit scope.
+	# This supplies only the original operand after that caller's condition gate.
+	var inputs: Dictionary = {
+		"source_stun_magic_damage":["MagicDamage","Value",1.0],
+		"source_final_blow_stun_chance_pct":["FinalBlowProbability","Percentage",10000.0]}
+	if not inputs.has(key): return 0.0
+	var input: Array = inputs[key]
+	return _additional_original_operand(record,key,[input[0]],input[1],input[2],"stun")
+
 static func additional_original_element(record: Dictionary, channel: String, kind: String, channels: Variant) -> float:
 	if kind not in ["damage","resistance"] or channel not in ["fire","water","wind","earth","all"] or (channel=="all" and kind!="resistance"): return 0.0
 	if not channels is Dictionary: return 0.0
