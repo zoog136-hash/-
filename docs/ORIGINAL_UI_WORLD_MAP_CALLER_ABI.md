@@ -144,3 +144,29 @@ selected original image availability, cell/ImageInfo registration, and any
 additional original candidate-list layout. Missing inputs are not filled with
 new nodes, preview art or inferred formulas. All code here remains unexecuted
 and unverified; no new tests, game run, render, audit or CI were performed.
+
+## Native Android touch input (unexecuted)
+
+`source_button.gd` now exposes
+`handle_native_touch(event: InputEvent, viewport_position: Vector2) -> Dictionary`
+and `cancel_native_touch()`. The existing source button Control, Canvas transform,
+clip ancestors, pressed/disabled state and activation callback are retained.
+A captured native finger activates once on an uncanceled inside release; moving
+outside disarms it. Other fingers, cancellation, hidden/disabled controls and
+emulated mouse duplication cannot activate it. No threshold or new selection
+policy is added. Direct GUI-native events use the same implementation.
+
+`source_main_world_map.gd` registers the actual original row7440/4508 and
+close29552 button instances. Its native touch router invokes this API with
+viewport points; source callbacks still select only the explicit offered World
+or close the same source map. It does not synthesize a mouse click or enable
+project touch emulation. User cfg/save data are unchanged.
+
+Touches in original Scroll44388 are converted into its existing input Control's
+local coordinates and forwarded through the unchanged input_handler(event,
+context) ABI, preserving finger identity. ScreenDrag relative/velocity use that
+same inverse basis. Existing map input owns click/drag/cell/movement decisions.
+Captured input is canceled on focus loss, viewport resize or source-map close;
+visible TwilightConfirmation blocks new native source gestures. No test, game
+run, render or CI was executed; this is a code connection, not an Android
+physical-device result.

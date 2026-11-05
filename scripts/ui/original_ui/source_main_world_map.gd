@@ -13,6 +13,12 @@ var _input_handler: Callable
 var _scene: Node2D
 var _area: Node2D
 var _field: WeakRef
+var _hud: WeakRef
+var _native_buttons: Array[WeakRef]=[]
+var _touch_button: WeakRef
+var _button_touch: int=-1
+var _scroll_touch: int=-1
+var _scroll_touch_point: Vector2
 var last_result: Dictionary={}
 var last_input_result: Variant
 
@@ -24,6 +30,7 @@ func configure(pack: RefCounted, hud: Node, mount: Node2D, image_adapter: RefCou
 	var configured: Dictionary=bindings.configure(pack,hud,image_adapter)
 	if not configured.get("ok",false):return configured
 	_pack=pack
+	_hud=weakref(hud)
 	_bindings=bindings
 	_mount=weakref(mount)
 	_context_provider=context_provider
@@ -77,12 +84,114 @@ func open() -> Dictionary:
 	_scene=scene
 	_area=child.player
 	_field=weakref(field_map)
+	_native_buttons.clear()
+	var map_all: Dictionary=scene.project_player([132])
+	var map_row: Dictionary=child.player.project_player([Bindings.AREA_AUTHORED_ROW])
+	if map_all.get("ok",false):_register_native_button(map_all.player,29552)
+	if map_row.get("ok",false):
+		_register_native_button(map_row.player,7440)
+		_register_native_button(map_row.player,4508)
 	scene.z_index=150
 	mount.add_child(scene)
+	if not get_window().focus_exited.is_connected(_cancel_native_input):get_window().focus_exited.connect(_cancel_native_input)
+	if not get_viewport().size_changed.is_connected(_cancel_native_input):get_viewport().size_changed.connect(_cancel_native_input)
 	set_process(true)
 	# The original offered row is visible; it has not been selected here.
 	# No image or Ratio/Base fields are inferred from current Land/map IDs.
 	return _remember({"ok":true,"source_scene_presented":true,"offered_world_id":offered,"selected_world_id":0,"world_auto_selected":false,"image_applied":false,"original_ui_member":contract.member,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":contract.area_contract.unresolved_fields})
+
+func _register_native_button(renderer: Node2D, offset: int) -> void:
+	var node: Variant=renderer.get("source_nodes").get(offset)
+	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
+	if is_instance_valid(button) and button.has_method("handle_native_touch"):_native_buttons.append(weakref(button))
+
+func _input(event: InputEvent) -> void:
+	if not is_open() or not _scene.is_visible_in_tree() or (not event is InputEventScreenTouch and not event is InputEventScreenDrag):return
+	if _native_touch_blocked():
+		_cancel_native_input()
+		return
+	var captured: Object=_touch_button.get_ref() if _touch_button!=null else null
+	if captured!=null:
+		if event.index==_button_touch:
+			captured.call("handle_native_touch",event,event.position)
+			if event is InputEventScreenTouch and not event.pressed:
+				_touch_button=null
+				_button_touch=-1
+		get_viewport().set_input_as_handled()
+		return
+	if _scroll_touch>=0:
+		if event.index==_scroll_touch:
+			_scroll_touch_point=event.position
+			_forward_native_scroll(event)
+			if event is InputEventScreenTouch and not event.pressed:_scroll_touch=-1
+		get_viewport().set_input_as_handled()
+		return
+	if not event is InputEventScreenTouch or not event.pressed or event.canceled:return
+	for reference: WeakRef in _native_buttons:
+		var button: Object=reference.get_ref()
+		if button==null:continue
+		var accepted: Dictionary=button.call("handle_native_touch",event,event.position)
+		if not accepted.get("handled",false):continue
+		_touch_button=weakref(button)
+		_button_touch=event.index
+		get_viewport().set_input_as_handled()
+		return
+	var control: Control=_scroll_control()
+	if control!=null and _inside_source_control(control,event.position):
+		_scroll_touch=event.index
+		_scroll_touch_point=event.position
+		_forward_native_scroll(event)
+		get_viewport().set_input_as_handled()
+
+func _forward_native_scroll(event: InputEvent) -> void:
+	var control: Control=_scroll_control()
+	if control==null:return
+	var inverse: Transform2D=control.get_global_transform_with_canvas().affine_inverse()
+	var local: Variant=event.duplicate()
+	local.position=inverse*event.position
+	if local is InputEventScreenDrag:
+		local.relative=inverse.basis_xform(event.relative)
+		local.velocity=inverse.basis_xform(event.velocity)
+	# Same callback/context as mouse GUI input; the existing map owner keeps
+	# native finger identity, click/drag decisions and cell/movement policy.
+	_route_source_input(local)
+
+func _scroll_control() -> Control:
+	if not is_instance_valid(_area):return null
+	var node: Variant=_area.get("source_nodes").get(44388)
+	var scroll: Variant=node.get_meta("source_scroll",null) if is_instance_valid(node) else null
+	return scroll.input_control() if is_instance_valid(scroll) and scroll.has_method("input_control") else null
+
+func _native_touch_blocked() -> bool:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var root: Node=hud.get_node_or_null("Root") if hud!=null else null
+	if root==null:return true
+	for child: Node in root.get_children():
+		if child.name=="TwilightConfirmation" and child is CanvasItem and child.is_visible_in_tree() and not child.is_queued_for_deletion():return true
+	return false
+
+func _cancel_native_input() -> void:
+	_touch_button=null
+	_button_touch=-1
+	for reference: WeakRef in _native_buttons:
+		var button: Object=reference.get_ref()
+		if button!=null:button.call("cancel_native_touch")
+	if _scroll_touch>=0:
+		var canceled:=InputEventScreenTouch.new()
+		canceled.index=_scroll_touch
+		canceled.position=_scroll_touch_point
+		canceled.pressed=false
+		canceled.canceled=true
+		_scroll_touch=-1
+		if is_open():_forward_native_scroll(canceled)
+
+static func _inside_source_control(control: Control, point: Vector2) -> bool:
+	if not control.is_visible_in_tree() or not Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point):return false
+	var parent: Node=control.get_parent()
+	while parent!=null:
+		if parent is Control and parent.clip_contents and not Rect2(Vector2.ZERO,parent.size).has_point(parent.get_global_transform_with_canvas().affine_inverse()*point):return false
+		parent=parent.get_parent()
+	return true
 
 func _route_source_input(event: InputEvent) -> void:
 	if not is_open() or not is_instance_valid(_area) or not _input_handler.is_valid():return
@@ -132,6 +241,11 @@ func close() -> Dictionary:
 	return _remember({"ok":true,"closed":true,"game_state_written":false})
 
 func _clear_presented() -> void:
+	_cancel_native_input()
+	_native_buttons.clear()
+	if is_inside_tree():
+		if get_window().focus_exited.is_connected(_cancel_native_input):get_window().focus_exited.disconnect(_cancel_native_input)
+		if get_viewport().size_changed.is_connected(_cancel_native_input):get_viewport().size_changed.disconnect(_cancel_native_input)
 	if is_instance_valid(_scene):
 		_scene.visible=false
 		_scene.process_mode=Node.PROCESS_MODE_DISABLED
