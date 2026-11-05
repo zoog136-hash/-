@@ -259,6 +259,9 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	# Only an exact namespaced source ID opts into native stats. No name/Sprite/legacy-ID guessing.
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
 	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
+	var definition_service: Variant = world_ref.get("patch523_npc_spells") if is_instance_valid(world_ref) else null
+	if source_m_npc_id >= 0 and definition_service != null:
+		record = definition_service.catalog.project_actor_record(record)
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
 	if source_m_npc_id >= 0:
 		source_targeting = record.get("source_m_targeting", {}).duplicate(true)
