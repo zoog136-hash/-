@@ -85,6 +85,12 @@ static func describe(item_id: int, include_descriptions: bool = false) -> Dictio
 	elif test:
 		blockers.append("source_TestItem_true")
 		result["excluded"] = true
+	var exclusion: Dictionary = SOURCE.declared_exclusion("ItemClass",item)
+	if not exclusion.is_empty():
+		result["excluded"] = true
+		result["declared_exclusion"] = exclusion
+		blockers.append("source_declared_dummy")
+		return result
 	if not compiled.is_empty():
 		result.category = compiled.get("category",{}).duplicate(true)
 		result.grade = compiled.get("grade",{}).duplicate(true)
