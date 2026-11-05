@@ -135,10 +135,17 @@ func npc_territory_records() -> Array:
 					"placement_status":"CLIENT_TERRITORY_ONLY","runtime_confirmed_source_cell":null})
 	return records
 
+func is_explicit_spawn_disabled(record: Dictionary) -> bool:
+	var raw: Variant = record.get("is_spawn_raw")
+	return (raw is int or raw is float) and is_finite(float(raw)) and float(raw) == 0.0
+
 func register_source_npc_instance(instance_id: String, record: Dictionary, source_cell: Vector2i, placement_confirmed: Variant) -> bool:
 	if not loaded or not placement_confirmed is bool or not placement_confirmed or not COORDINATE_CONTRACT.accepts_record(manifest,record): return false
 	var class_id: Variant = record.get("npc_class_id")
 	if not (class_id is int or class_id is float) or not is_finite(float(class_id)) or float(class_id) != floorf(float(class_id)): return false
+	if is_explicit_spawn_disabled(record):
+		unregister_npc_occupancy(instance_id)
+		return false
 	return register_npc_occupancy(instance_id,int(class_id),source_cell)
 
 func collision_state(source_cell: Vector2i) -> String:

@@ -1,5 +1,6 @@
 extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var hud
 var runtime
 var body: VBoxContainer
@@ -46,6 +47,43 @@ func action(text_value: String, callback: Callable) -> Button:
 	body.add_child(button)
 	return button
 
+func _item_image(item_key: String, declared_item_class: bool = false) -> Dictionary:
+	if not IMAGES.selected(): return {}
+	# rules.items is indexed directly from the source ItemClass table. A
+	# fishing location, Fish ID or host equipment key cannot supply this row.
+	var source_row: Dictionary = runtime.rules.items.get(item_key, {})
+	if source_row.is_empty() and declared_item_class and item_key.is_valid_int():
+		return IMAGES.describe_item_class(int(item_key))
+	return IMAGES.describe_item_class_row(source_row)
+
+func _bind_item_button(button: Button, item_key: String, declared_item_class: bool = false) -> void:
+	button.icon = null
+	for key: String in ["source523_image", "source523_image_provenance", "source523_image_status"]:
+		if button.has_meta(key): button.remove_meta(key)
+	var image_info: Dictionary = _item_image(item_key, declared_item_class)
+	if image_info.is_empty(): return
+	button.icon = image_info.get("texture") as Texture2D
+	button.expand_icon = true
+	var evidence: Dictionary = image_info.duplicate(true)
+	evidence.erase("texture")
+	button.set_meta("source523_image", evidence)
+	button.set_meta("source523_image_provenance", image_info.get("provenance", {}).duplicate(true))
+	button.set_meta("source523_image_status", str(image_info.get("source_status", image_info.get("reason", ""))))
+
+func _bind_item_entry(list, index: int, item_key: String, declared_item_class: bool = false) -> void:
+	list.set_item_icon(index, null)
+	var images: Dictionary = list.get_meta("source523_item_images", {})
+	images.erase(index)
+	var image_info: Dictionary = _item_image(item_key, declared_item_class)
+	if not image_info.is_empty():
+		list.set_item_icon(index, image_info.get("texture") as Texture2D)
+		var evidence: Dictionary = image_info.duplicate(true)
+		evidence.erase("texture")
+		images[index] = evidence
+	if images.is_empty():
+		if list.has_meta("source523_item_images"): list.remove_meta("source523_item_images")
+	else: list.set_meta("source523_item_images", images)
+
 func show_result(result: Dictionary) -> void:
 	status_label.text = str(result.get("message", ""))
 	refresh()
@@ -85,8 +123,10 @@ func build_fish() -> void:
 	label("자체 게임 시간 (운영체제 시각은 변경하지 않습니다.)")
 	body.add_child(hour)
 	rods = OptionButton.new()
+	rods.expand_icon = true
 	for id: String in runtime.rules.rods:
 		rods.add_item("%s ×%d" % [runtime.rules.item_name(id), int(runtime.state.items.get(id, 0))], int(id))
+		_bind_item_entry(rods, rods.item_count - 1, id)
 	body.add_child(rods)
 	action("낚싯대 %d개로 시작" % int(runtime.policy.cast_cost), func() -> void:
 		var rod: int = rods.get_selected_id()
@@ -126,10 +166,11 @@ func build_fish() -> void:
 		var goods_id: int = int(goods.ID)
 		var item: String = str(int(goods.ItemClassID))
 		var cost: int = int(runtime.rules.items[item].Cost) * int(goods.Percentage) / 100
-		action("%s %d개 구매 · 주화 %d · 레벨 %d" % [runtime.rules.item_name(item), int(goods.Amount), cost, int(goods.LimitMinLevel)], func() -> void:
+		var purchase: Button = action("%s %d개 구매 · 주화 %d · 레벨 %d" % [runtime.rules.item_name(item), int(goods.Amount), cost, int(goods.LimitMinLevel)], func() -> void:
 			var token: String = runtime.request_id()
 			var revision: int = int(runtime.state.revision)
 			confirm("낚싯대 구매", "표시된 낚시 주화를 지불합니다.", func() -> Dictionary: return runtime.buy_rod(goods_id, token, revision)))
+		_bind_item_button(purchase, item, true)
 
 func build_exchange() -> void:
 	var host_policy := CheckButton.new()
@@ -150,6 +191,9 @@ func build_exchange() -> void:
 		var index: int = equipment_list.add_item("+%d %s · 실물 %s%s" % [int(item.get("level", 0)), str(item.get("name", "")), id, " · " + reason if not reason.is_empty() else ""])
 		equipment_list.set_item_metadata(index, id)
 		equipment_list.set_item_disabled(index, not reason.is_empty())
+		var source_record: Dictionary = item.get("record", {})
+		if IMAGES.recognized_item(source_record):
+			_bind_item_entry(equipment_list, index, str(IMAGES.item_class_id(source_record)), true)
 	action("선택한 실물 장비 교환", func() -> void:
 		var ids: Array = []
 		for index: int in equipment_list.get_selected_items(): ids.append(str(equipment_list.get_item_metadata(index)))
@@ -172,20 +216,25 @@ func build_bag() -> void:
 		if int(runtime.state.items[id]) <= 0: continue
 		label("%s (#%s) ×%d" % [runtime.rules.item_name(id), id, int(runtime.state.items[id])])
 		if runtime.CARD_ITEMS.has(id):
-			action("해당 폴 변신 카드 사용", func() -> void:
+			var use_card: Button = action("해당 폴 변신 카드 사용", func() -> void:
 				var token: String = runtime.request_id()
 				var revision: int = int(runtime.state.revision)
-				confirm("변신 카드 사용", "아이템 1개를 사용해 정확한 원본 ID의 변신을 획득합니다.", func() -> Dictionary: return runtime.use_card(id, token, revision))).name = "FishingCard_" + id
+				confirm("변신 카드 사용", "아이템 1개를 사용해 정확한 원본 ID의 변신을 획득합니다.", func() -> Dictionary: return runtime.use_card(id, token, revision)))
+			use_card.name = "FishingCard_" + id
+			_bind_item_button(use_card, id)
 		elif runtime.has_bag(id):
-			action("%s 열기" % runtime.rules.item_name(id), func() -> void:
+			var open_bag: Button = action("%s 열기" % runtime.rules.item_name(id), func() -> void:
 				var token: String = runtime.request_id()
 				var revision: int = int(runtime.state.revision)
-				confirm("보물 상자 사용", "아이템 1개를 사용합니다. 원본 확정 보상은 그대로 지급하고 확률 보상은 별도로 1종 판정합니다.", func() -> Dictionary: return runtime.open_treasure(id, token, revision))).name = "FishingBag_" + id
+				confirm("보물 상자 사용", "아이템 1개를 사용합니다. 원본 확정 보상은 그대로 지급하고 확률 보상은 별도로 1종 판정합니다.", func() -> Dictionary: return runtime.open_treasure(id, token, revision)))
+			open_bag.name = "FishingBag_" + id
+			_bind_item_button(open_bag, id)
 		elif id != "303031" and not runtime.rules.rods.has(id):
-			action("기존 가방으로 1개 이동", func() -> void:
+			var transfer: Button = action("기존 가방으로 1개 이동", func() -> void:
 				var token: String = runtime.request_id()
 				var revision: int = int(runtime.state.revision)
 				confirm("가방으로 이동", "정확한 원본 ID를 확인한 경우에만 기존 가방으로 이동합니다.", func() -> Dictionary: return runtime.transfer_to_inventory(id, token, revision)))
+			_bind_item_button(transfer, id)
 	for id: String in runtime.state.journal:
 		var entry: Dictionary = runtime.state.journal[id]
 		label("수첩: %s · %d마리 · 최대 길이 %d (원본 단위)" % [str(runtime.rules.row("Fish", int(id)).get("Name", id)), int(entry.count), int(entry.max_length)])

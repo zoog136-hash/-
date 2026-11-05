@@ -1,6 +1,8 @@
 extends VBoxContainer
 const Source = preload("res://scripts/protection/protection523_source.gd")
 const ItemArt = preload("res://scripts/ui/item_icon_art.gd")
+const SourceImages = preload("res://scripts/ui/source523_image_assets.gd")
+const ItemVisual = preload("res://scripts/ui/item_visual.gd")
 var hud: Node
 var runtime: RefCounted
 var rows: Dictionary = {}
@@ -31,21 +33,40 @@ func button(text: String, node_name: String, parent: Node, callback: Callable) -
 	if scroll_host != null: hud.workspace.register_scroll_drag(scroll_host,value)
 	return value
 
+func bind_item_icon(value: Button, item_class_id: int) -> void:
+	value.icon = null
+	for key: String in ["source523_image", "source523_image_provenance", "source523_image_status"]:
+		if value.has_meta(key): value.remove_meta(key)
+	if item_class_id <= 0 or not SourceImages.selected(): return
+	# The caller supplies the declared ItemClass or ItemCraftOutputView item,
+	# never a protection group, appellation or consume-sprite identifier.
+	var source_row: Dictionary = runtime.source.get("items",{}).get(str(item_class_id),{})
+	var image_info: Dictionary = SourceImages.describe_item_class_row(source_row) if not source_row.is_empty() else SourceImages.describe_item_class(item_class_id)
+	value.icon = image_info.get("texture") as Texture2D
+	value.expand_icon = true
+	var evidence: Dictionary = image_info.duplicate(true)
+	evidence.erase("texture")
+	value.set_meta("source523_image",evidence)
+	value.set_meta("source523_image_provenance",image_info.get("provenance",{}).duplicate(true))
+	value.set_meta("source523_image_status",str(image_info.get("source_status",image_info.get("reason",""))))
+
 func item_heading(item_id: int, title: String, parent: Node, font_size: int) -> void:
 	var heading := HBoxContainer.new()
 	parent.add_child(heading)
 	var records: Array = runtime.records_for(item_id)
 	if records.size() == 1:
-		# Reuse the existing source-ID catalog image, without synthesizing missing
-		# art or claiming equivalence with the separate native523 archive.
-		var texture: Texture2D = ItemArt.render(str(records[0].get("image_path","")))
-		if texture != null:
+		# Explicit native image selection uses the shared verified resolver;
+		# other records retain their existing catalog image route.
+		var source_image: bool = SourceImages.handles_item(records[0])
+		var texture: Texture2D = null if source_image else ItemArt.render(str(records[0].get("image_path","")))
+		if texture != null or source_image:
 			var icon := TextureRect.new()
 			icon.name = "ProtectionIcon_%d" % item_id
 			icon.texture = texture
 			icon.custom_minimum_size = Vector2(64,64)
 			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			if source_image: ItemVisual.apply(icon,records[0],str(records[0].get("name",title)),{},"list")
 			heading.add_child(icon)
 	label_text(title,heading).add_theme_font_size_override("font_size",font_size)
 
@@ -182,6 +203,10 @@ func refresh() -> void:
 		int(effect.possession_flat),float(effect.possession_percent_raw)/10000.0,int(effect.active_flat),int(effect.remaining),int(effect.title_flat)]
 	if runtime.source.is_empty():
 		status.text = runtime.problem
+		for entry: Dictionary in supply_rows.values(): bind_item_icon(entry.craft,0)
+		for entry: Dictionary in rows.values():
+			bind_item_icon(entry.use,0)
+			bind_item_icon(entry.craft,0)
 		return
 	for key: String in supply_rows:
 		var quote: Dictionary = runtime.quote_supply(int(key))
@@ -194,6 +219,7 @@ func refresh() -> void:
 			ingredients.append("%s 1개 · 소지 %d" % [label,int(hud.get_parent().inventory.get(owned,0))])
 		supply_rows[key].detail.text = " + ".join(ingredients)+"\n"+("제작 가능" if bool(quote.get("ok",false)) else str(quote.get("error","")))
 		supply_rows[key].craft.disabled = not bool(quote.get("ok",false))
+		bind_item_icon(supply_rows[key].craft,int(d.output.ItemClassID))
 	for key: String in rows:
 		var item_id := int(key)
 		var d: Dictionary = runtime.source.definitions[key]
@@ -202,6 +228,8 @@ func refresh() -> void:
 		var craft: Dictionary = runtime.quote_craft(item_id)
 		rows[key].use.disabled = not bool(use.get("ok",false))
 		rows[key].craft.disabled = not bool(craft.get("ok",false))
+		bind_item_icon(rows[key].use,int(d.item.ID))
+		bind_item_icon(rows[key].craft,int(d.output.ItemClassID))
 		var ingredients: Array[String] = []
 		for input: Dictionary in d.inputs:
 			var item: Dictionary = runtime.source.items.get(str(int(input.ItemClassID)),{})

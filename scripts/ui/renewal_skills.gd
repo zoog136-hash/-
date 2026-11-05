@@ -8,6 +8,7 @@ const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
 const RULES = preload("res://scripts/skill_rules.gd")
 const SOURCE523 = preload("res://scripts/skills/player_skills523.gd")
+const Source523Images = preload("res://scripts/ui/source523_skill_buff_images.gd")
 var hud: Node
 var records: Array = []
 var filtered: Array = []
@@ -270,21 +271,27 @@ func refresh() -> void:
 		var ga: int=UI.GRADES.keys().find(str(a.get("grade","일반")))
 		var gb: int=UI.GRADES.keys().find(str(b.get("grade","일반")))
 		return str(a.get("name",""))<str(b.get("name","")) if ga==gb else ga<gb)
+	var original_images: Dictionary = {}
+	cards.add_theme_font_size_override("font_size",11 if Source523Images.selected() else 1)
 	for index: int in range(filtered.size()):
 		var record: Dictionary=filtered[index]
 		var passive := RULES.is_passive(hud.get_parent().original_skills.catalog.resolve(record))
 		var source_known: bool=not hud.get_parent().original_skills.catalog.source_learning_status(record).is_empty()
 		var learned: bool = hud.get_parent().original_skills.catalog.owned(record) or source_known
-		var icon: Texture2D = _icon_for_skill(record,learned)
+		var source_image: Dictionary = Source523Images.describe_skill(record)
+		var icon: Texture2D = source_image.get("texture") if source_image.handled else _icon_for_skill(record,learned)
 		var effective: Dictionary = hud.get_parent().original_skills.catalog.resolve(record)
 		var subtitle: String = CURRENT.mode_label(record) if bool(record.get("runtime_blocked", false)) else "패시브" if passive else "MP %d" % int(effective.get("mp",0))
-		cards.add_item(" ",icon)
+		cards.add_item(Source523Images.missing_label(source_image) if source_image.handled and icon == null else " ",icon)
 		cards.set_item_metadata(index,str(record.get("id",record.get("name",""))))
+		if source_image.handled:
+			original_images[str(record.get("id",""))] = Source523Images.evidence(source_image)
 		cards.set_item_tooltip(index,("원본 학습 · 실행 대기 · " if source_known else "미구현 · " if bool(record.get("runtime_blocked",false)) else "습득 · " if learned else "미습득 · ")+str(record.get("name",""))+" · "+subtitle)
 		var color: Color=UI.grade(str(record.get("grade","일반"))) if learned else Color("aaa7a1")
-		cards.set_item_icon_modulate(index,Color.WHITE if learned else Color(.68,.68,.68,.62))
+		cards.set_item_icon_modulate(index,Color.WHITE if source_image.handled or learned else Color(.68,.68,.68,.62))
 		cards.set_item_custom_fg_color(index,color)
 		cards.set_item_custom_bg_color(index,Color(color,.07))
+	cards.set_meta("source523_images",original_images)
 	if filtered.is_empty():
 		_clear_selection()
 	else:
@@ -296,6 +303,8 @@ func refresh() -> void:
 		cards.get_v_scroll_bar().set_deferred("value",scroll_position)
 
 func _icon_for_skill(record: Dictionary, learned: bool) -> Texture2D:
+	var original: Dictionary = Source523Images.describe_skill(record)
+	if original.handled: return original.get("texture") as Texture2D
 	var path: String = str(record.get("icon",""))
 	if not learned and not path.is_empty() and unlearned_icons.has(path):
 		return unlearned_icons[path] as Texture2D
@@ -336,6 +345,7 @@ func select(index: int) -> void:
 		preview_vfx.clear()
 		preview_container.hide()
 	selected=filtered[index]
+	_bind_skill_action_images(selected)
 	summon_controls.hide()
 	learn_button.disabled=true
 	book_button.disabled=true
@@ -382,6 +392,7 @@ func select(index: int) -> void:
 
 func _clear_selection() -> void:
 	selected={}
+	_bind_skill_action_images({})
 	detail.text="검색 조건에 맞는 스킬이 없습니다."
 	cooldown.text=""
 	for button: Button in [learn_button,book_button,use_button,quick_button,preview_button]:
@@ -394,6 +405,20 @@ func _clear_selection() -> void:
 	preview_vfx.clear()
 	preview_container.hide()
 	selection_sheet.show_skill()
+
+func _bind_skill_action_images(record: Dictionary) -> void:
+	# These existing actions use this selected skill record. Book/reagent
+	# controls retain their separate, not-yet-declared item image identities.
+	for button: Button in [learn_button,use_button,quick_button]:
+		button.icon = null
+		if button.has_meta("source523_skill_image"): button.remove_meta("source523_skill_image")
+	if record.is_empty() or not Source523Images.selected(): return
+	var image: Dictionary = Source523Images.describe_skill(record,"IconID")
+	var evidence: Dictionary = Source523Images.evidence(image)
+	for button: Button in [learn_button,use_button,quick_button]:
+		button.icon = image.get("texture") as Texture2D
+		button.expand_icon = true
+		button.set_meta("source523_skill_image",evidence.duplicate(true))
 
 func original_field_text(value: String, field: Dictionary) -> String:
 	var display := UI.safe(value)
@@ -597,6 +622,17 @@ func _show_guardian_special() -> void:
 		guardian_cast_buttons[id]=button;guardian_special.add_child(button)
 		var quick: Button=_guardian_special_button(str(rt.node(id).name)+" · 퀵슬롯 등록",func() -> void:hud._open_quickslot_picker("skill","guardian:"+id,str(rt.node(id).name)),Vector2(220,44))
 		quick.name="GuardianQuick_"+id;guardian_special.add_child(quick)
+		var image: Dictionary = {}
+		var rewards: Array = rt.guardian_rewards(id)
+		if Source523Images.selected() and rewards.size() == 1 and rewards[0] is Dictionary and rewards[0].get("spell") is Dictionary:
+			image = Source523Images.describe_spell_class_row(rewards[0].spell, "IconID")
+		for action_button: Button in [button, quick]:
+			action_button.icon = null
+			if action_button.has_meta("source523_skill_image"): action_button.remove_meta("source523_skill_image")
+			if not image.is_empty():
+				action_button.icon = image.get("texture") as Texture2D
+				action_button.expand_icon = true
+				action_button.set_meta("source523_skill_image", Source523Images.evidence(image))
 	if guardian_cast_buttons.is_empty():guardian_special.add_child(UI.label("질리언의 사용 스킬을 개방하면 여기에 표시됩니다.",14))
 	guardian_special.add_child(_guardian_special_button("명예 코인 10개 구입 · TWILIGHT 재료 상점",func() -> void:
 		var response: Dictionary=rt.execute("guardian_buy_coins","",1,int(rt.state.revision));guardian_result.text=str(response.message),Vector2(220,48)))

@@ -1,5 +1,6 @@
 extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 const AutoInventory = preload("res://scripts/ui/renewal_auto_inventory.gd")
 var auto_controls
 const TransferSheet=preload("res://scripts/ui/transfer_detail_sheet.gd")
@@ -116,9 +117,16 @@ func _refresh() -> void:
 	transfer_sheet.refresh({},true)
 
 func _add_item(name: String, count: int, instance_id: String, suffix: String) -> void:
-	entries.append({"name":name,"count":count,"instance_id":instance_id})
+	var catalog_record: Dictionary=world._find_catalog_item_record(name)
+	var source_record: Dictionary=catalog_record
+	var physical: Variant=world.item_instances.get(instance_id)
+	if physical is Dictionary:
+		var original: Variant=physical.get("record")
+		if original is Dictionary and SOURCE_IMAGES.recognized_item(original): source_record=original
+	entries.append({"name":name,"count":count,"instance_id":instance_id,"record":source_record.duplicate(true)})
 	var images: Dictionary = hud.item_image_index.get("아이템",{})
-	listing.add_item(name + " · " + suffix,UI.item_icon(world._find_catalog_item_record(name),name,images))
+	var visual_record: Dictionary=source_record if SOURCE_IMAGES.handles_item(source_record) else catalog_record
+	listing.add_item(name + " · " + suffix,UI.item_icon(visual_record,name,images))
 
 func _select(index: int) -> void:
 	if index < 0 or index >= entries.size():

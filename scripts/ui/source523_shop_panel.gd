@@ -3,6 +3,7 @@ extends VBoxContainer
 signal back_requested
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var catalog: RefCounted
 var hud: Node
 var runtime
@@ -89,6 +90,7 @@ func configure(source_catalog: RefCounted, controller: Node = null) -> void:
 	side.add_child(quantity)
 	reward_step = OptionButton.new()
 	reward_step.name = "SourceShopRewardStep"
+	reward_step.expand_icon = true
 	reward_step.add_item("일일 무료 보상", 0)
 	for step: int in range(1,7): reward_step.add_item("%d단계 보상" % step, step)
 	reward_step.item_selected.connect(func(_value: int) -> void: _refresh_action())
@@ -129,7 +131,7 @@ func _build_entries() -> void:
 	if mode.selected == 4:
 		if runtime != null:
 			for order: Dictionary in runtime.orders():
-				entries.append({"id":int(order.id),"title":"주문 #%s · %s ×%d" % [order.id,str(order.get("display_name", "상품")),int(order.quantity)]})
+				entries.append({"id":int(order.id),"title":"주문 #%s · %s ×%d" % [order.id,str(order.get("display_name", "상품")),int(order.quantity)],"source_table":"source_shop_order","source_order":order})
 		_filter()
 		return
 	var table: String = ["MarketPurchase_Korean", "MerchantGoods", "Currency", "CumulativePurchase"][mode.selected]
@@ -148,7 +150,7 @@ func _build_entries() -> void:
 		elif mode.selected == 2:
 			var translated: String = catalog.label(int(row.get("DescID", 0)))
 			if not translated.is_empty(): title = translated
-		entries.append({"id":id, "title":title})
+		entries.append({"id":id, "title":title,"source_table":table,"source_row":row})
 	_filter()
 
 func _filter() -> void:
@@ -161,11 +163,19 @@ func _filter() -> void:
 
 func _render_page() -> void:
 	listing.clear()
+	var original_images: Dictionary = {}
 	var start: int = page * PAGE_SIZE
 	for index: int in range(start, mini(start + PAGE_SIZE, filtered.size())):
 		var entry: Dictionary = filtered[index]
-		listing.add_item("%s  · #%d" % [entry.title, int(entry.id)])
+		var original: Dictionary = _entry_image(entry) if IMAGES.selected() else {}
+		listing.add_item("%s  · #%d" % [entry.title, int(entry.id)],original.get("texture") as Texture2D)
 		listing.set_item_metadata(listing.item_count - 1, int(entry.id))
+		if not original.is_empty():
+			var evidence: Dictionary = original.duplicate(true)
+			evidence.erase("texture")
+			evidence["source_table"] = str(entry.get("source_table",""))
+			original_images[str(entry.id)] = evidence
+	listing.set_meta("source523_images",original_images)
 	listing.force_update_list_size()
 	previous.disabled = page <= 0
 	next.disabled = start + PAGE_SIZE >= filtered.size()
@@ -177,6 +187,106 @@ func _render_page() -> void:
 		detail.text = "검색 조건에 맞는 항목이 없습니다."
 		selected_id = -1
 		_refresh_action()
+
+func _entry_image(entry: Dictionary) -> Dictionary:
+	var row: Dictionary = entry.get("source_row",{})
+	match str(entry.get("source_table","")):
+		"MarketPurchase_Korean", "Currency":
+			return IMAGES.resolve_asset_value(row.get("AssetID"))
+		"MerchantGoods":
+			var id: Variant = row.get("ItemClassID")
+			if (id is int or id is float) and is_finite(float(id)) and float(id) == floor(float(id)) and float(id) > 0:
+				return IMAGES.describe_item_class(int(id))
+		"source_shop_order":
+			return _order_item_image(entry.get("source_order", {}), str(entry.id))
+	return {}
+
+func _typed_item_image(value: Variant) -> Dictionary:
+	if not (value is int or value is float) or not is_finite(float(value)) or float(value) != floor(float(value)) or float(value) < 0:
+		return IMAGES.describe_item_class(-1)
+	return IMAGES.describe_item_class(int(value))
+
+func _order_item_image(order: Dictionary, order_id: String = "") -> Dictionary:
+	# The order provider resolves unit 4 as ItemClass. A bundle never borrows
+	# one member's icon as its representative image.
+	var goods: Variant = order.get("goods")
+	if not goods is Array or goods.size() != 1 or not goods[0] is Dictionary: return {}
+	var token: Dictionary = goods[0]
+	if token.get("unit_id") != 4: return {}
+	var image: Dictionary = _typed_item_image(token.get("class_id"))
+	image["presentation_relation"] = {"namespace":"source_shop_order.goods","order_id":str(order.get("id", order_id)),"unit_id":4,"field":"class_id"}
+	return image
+
+func _missing_reward_image(reason: String, relation: Dictionary) -> Dictionary:
+	return {"route":"source523_images","status":"original_icon_not_installed","source_status":reason,"reason":reason,"texture":null,"provenance":{},"presentation_relation":relation,"actual_game_consumption_observed":false}
+
+func _cumulative_reward_image(event: Dictionary, step: int) -> Dictionary:
+	var reward_id: int = int(event.get("DailyRewardID", 0)) if step == 0 else 0
+	var relation: Dictionary = {"source_table":"CumulativePurchase","source_id":event.get("ID"),"source_field":"DailyRewardID"}
+	if step > 0:
+		var found: bool = false
+		for row: Dictionary in catalog.rows("CumulativePurchaseStep"):
+			if row.get("CumulativePurchaseID") != selected_id or row.get("Step") != step: continue
+			if found: return _missing_reward_image("ambiguous_cumulative_reward_step", relation)
+			found = true
+			reward_id = int(row.get("RewardID", 0))
+			relation = {"source_table":"CumulativePurchaseStep","source_id":row.get("ID"),"source_field":"RewardID"}
+		if not found: return _missing_reward_image("missing_cumulative_reward_step", relation)
+	relation["reward_id"] = reward_id
+	if reward_id == 0: return _missing_reward_image("zero_sentinel", relation)
+	var reward: Dictionary = catalog.record("Reward", reward_id)
+	if reward.is_empty(): return _missing_reward_image("missing_source_reward", relation)
+	var type: Dictionary = catalog.record("RewardType", int(reward.get("RewardTypeID", 0)))
+	if type.get("Name") != "Item": return _missing_reward_image("unsupported_reward_icon_role", relation)
+	# RewardClassID belongs to ItemClass only after the source RewardType join.
+	var image: Dictionary = _typed_item_image(reward.get("RewardClassID"))
+	relation["reward_field"] = "RewardClassID"
+	image["presentation_relation"] = relation
+	return image
+
+func _refresh_payout_images() -> void:
+	if purchase.has_meta("source523_payout_image"):
+		purchase.icon = null
+		for key: String in ["source523_payout_image", "source523_image", "source523_image_provenance", "source523_image_status"]:
+			if purchase.has_meta(key): purchase.remove_meta(key)
+	for index: int in range(reward_step.item_count): reward_step.set_item_icon(index, null)
+	if reward_step.has_meta("source523_reward_images"): reward_step.remove_meta("source523_reward_images")
+	if not IMAGES.selected() or selected_id < 0: return
+	var selected_image: Dictionary = {}
+	if mode.selected in [0, 1]:
+		# The selected row already resolved its explicit Market/ItemClass role.
+		# Preserve that same image result, including missing and owner exclusion.
+		var originals: Dictionary = listing.get_meta("source523_images", {})
+		for index: int in listing.item_count:
+			if listing.get_item_metadata(index) != selected_id: continue
+			var evidence: Variant = originals.get(str(selected_id))
+			if evidence is Dictionary:
+				selected_image = evidence.duplicate(true)
+				selected_image["texture"] = listing.get_item_icon(index)
+			break
+	elif mode.selected == 3:
+		var event: Dictionary = catalog.record("CumulativePurchase", selected_id)
+		if event.is_empty(): return
+		var images: Dictionary = {}
+		for index: int in range(reward_step.item_count):
+			var image: Dictionary = _cumulative_reward_image(event, reward_step.get_item_id(index))
+			reward_step.set_item_icon(index, image.get("texture") as Texture2D)
+			var step_evidence: Dictionary = image.duplicate(true)
+			step_evidence.erase("texture")
+			images[index] = step_evidence
+			if index == reward_step.selected: selected_image = image
+		reward_step.set_meta("source523_reward_images", images)
+	elif mode.selected == 4 and runtime != null:
+		selected_image = _order_item_image(runtime.state.orders.get(str(selected_id), {}), str(selected_id))
+	if selected_image.is_empty(): return
+	purchase.icon = selected_image.get("texture") as Texture2D
+	purchase.expand_icon = true
+	var action_evidence: Dictionary = selected_image.duplicate(true)
+	action_evidence.erase("texture")
+	purchase.set_meta("source523_payout_image", true)
+	purchase.set_meta("source523_image", action_evidence)
+	purchase.set_meta("source523_image_provenance", selected_image.get("provenance", {}).duplicate(true))
+	purchase.set_meta("source523_image_status", str(selected_image.get("source_status", selected_image.get("status", selected_image.get("reason", "")))))
 
 func _item_name(id: int) -> String:
 	var item: Dictionary = catalog.record("ItemClass", id)
@@ -215,6 +325,7 @@ func _select(index: int) -> void:
 	_refresh_action()
 
 func _refresh_action() -> void:
+	_refresh_payout_images()
 	purchase.disabled = true
 	availability_label.text = ""
 	if runtime == null:
@@ -234,6 +345,7 @@ func _refresh_action() -> void:
 			purchase.tooltip_text = availability_label.text
 		1:
 			var quote: Dictionary=runtime.quote_merchant(selected_id,int(quantity.value))
+			_apply_quoted_item_image(quote)
 			purchase.disabled=not quote.ok
 			purchase.text="%d회 구매 · 보관함 지급" % int(quantity.value) if quote.ok else "구매 불가"
 			if quote.ok:
@@ -251,6 +363,31 @@ func _refresh_action() -> void:
 			purchase.disabled = false
 			purchase.text = "선택 주문 수령"
 
+func _apply_quoted_item_image(quote: Dictionary) -> void:
+	if not IMAGES.selected(): return
+	var source: Variant=quote.get("source_reference")
+	if not source is Dictionary: return
+	var reference: Variant=source.get("item")
+	if not reference is Dictionary or reference.get("kind")!="twilight.current523.item-data.v1": return
+	var goods: Variant=source.get("goods")
+	var image: Dictionary
+	if not goods is Dictionary or goods.get("ID")!=selected_id or goods.get("ItemClassID")!=reference.get("item_class_id"):
+		image={"status":"source_reference_item_identity_mismatch","texture":null,"provenance":{},"actual_game_consumption_observed":false}
+	else:
+		image=IMAGES.describe_item_reference(reference)
+	# Keep the purchase state with the existing quote. This is only its row icon.
+	for index: int in listing.item_count:
+		if listing.get_item_metadata(index)!=selected_id: continue
+		listing.set_item_icon(index,image.get("texture") as Texture2D)
+		var evidence: Dictionary=image.duplicate(true)
+		evidence.erase("texture")
+		evidence["source_table"]="MerchantGoods"
+		var originals: Dictionary=listing.get_meta("source523_images",{}).duplicate(true)
+		originals[str(selected_id)]=evidence
+		listing.set_meta("source523_images",originals)
+		_refresh_payout_images()
+		break
+
 func _act() -> void:
 	if runtime == null or purchase.disabled or selected_id < 0: return
 	var id: int = selected_id
@@ -267,7 +404,7 @@ func _act() -> void:
 		if quote.has("rule_origin"):body+="\n"+str(quote.npc_label)+"\n"+str(quote.rule_origin)
 		if quote.has("use_origin"):body+="\n"+str(quote.use_origin)
 		if quote.has("quota_text"):body+="\n"+str(quote.quota_text)
-	hud.confirm_action("원본 상점 · " + action, body, action, func(_unused: int) -> void:
+	var confirmation: Control = hud.confirm_action("원본 상점 · " + action, body, action, func(_unused: int) -> void:
 		var result: Dictionary
 		match current_mode:
 			0: result = runtime.buy(id, count)
@@ -286,6 +423,20 @@ func _act() -> void:
 				search.set_block_signals(false)
 			_build_entries()
 		else: _refresh_action())
+	if confirmation == null: return
+	var confirm_button: Variant = confirmation.get("confirm_button")
+	if not confirm_button is Button: return
+	confirm_button.icon = null
+	for key: String in ["source523_image", "source523_image_provenance", "source523_image_status"]:
+		if confirm_button.has_meta(key): confirm_button.remove_meta(key)
+	if current_mode not in [0, 1] or not IMAGES.selected() or not purchase.has_meta("source523_payout_image"): return
+	# This confirmation performs the same selected action; its icon is not a
+	# representative chosen from the order or product contents.
+	confirm_button.icon = purchase.icon
+	confirm_button.expand_icon = true
+	confirm_button.set_meta("source523_image", purchase.get_meta("source523_image", {}).duplicate(true))
+	confirm_button.set_meta("source523_image_provenance", purchase.get_meta("source523_image_provenance", {}).duplicate(true))
+	confirm_button.set_meta("source523_image_status", purchase.get_meta("source523_image_status", ""))
 
 func _order_detail(id: String) -> Array[String]:
 	if runtime == null: return ["보관함을 확인할 수 없습니다"]

@@ -6,6 +6,7 @@ const EXPECTED_JOBS: Array[String] = [
 ]
 
 var failures: Array[String] = []
+var legacy_mythic_jobs: Dictionary = {}
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -41,9 +42,20 @@ func _run() -> void:
 			var profile: Dictionary = value as Dictionary
 			var job_name: String = str(profile.get("name", ""))
 			seen[job_name] = true
-			var image_path: String = str(profile.get("image_path", ""))
-			if image_path == "" or not ResourceLoader.exists(image_path):
-				_fail("%s representative mythic image is missing: %s" % [job_name, image_path])
+			# Since 577a5f4 classes come from independent BASE508 source class
+			# definitions and are deliberately not bound to a mythic card. Only
+			# the legacy (no source definition) path still requires the card art.
+			var source_class: Variant = profile.get("source_class", null)
+			if source_class is Dictionary:
+				if str((source_class as Dictionary).get("name", "")) != job_name:
+					_fail("%s source class definition is missing or mismatched" % job_name)
+				if str(profile.get("transform_name", "")) != "" or str(profile.get("image_path", "")) != "":
+					_fail("%s source class must not invent a mythic card binding" % job_name)
+			else:
+				var image_path: String = str(profile.get("image_path", ""))
+				if image_path == "" or not ResourceLoader.exists(image_path):
+					_fail("%s representative mythic image is missing: %s" % [job_name, image_path])
+				legacy_mythic_jobs[job_name] = true
 		for job_name: String in EXPECTED_JOBS:
 			if not seen.has(job_name):
 				_fail("missing job class: " + job_name)
@@ -76,7 +88,7 @@ func _run() -> void:
 		if not (quickbar_value is Array) or (quickbar_value as Array).is_empty():
 			_fail("%s quickbar is empty" % job_name)
 		var transform_value: Variant = world.call("_job_transform_record", job_name)
-		if not (transform_value is Dictionary) or (transform_value as Dictionary).is_empty():
+		if legacy_mythic_jobs.has(job_name) and (not (transform_value is Dictionary) or (transform_value as Dictionary).is_empty()):
 			_fail("%s mythic transform record is missing" % job_name)
 
 	world.queue_free()
@@ -85,7 +97,7 @@ func _run() -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("JOB_SMOKE_OK: 13 jobs, mythic visuals, class skills and quickbars validated")
+		print("JOB_SMOKE_OK: 13 jobs, source class definitions (legacy mythic visuals where used), class skills and quickbars validated")
 		quit(0)
 	else:
 		print("JOB_SMOKE_FAILED: %d failure(s)" % failures.size())

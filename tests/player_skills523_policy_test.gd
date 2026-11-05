@@ -13,6 +13,11 @@ class ReadyPlayer extends Node2D:
 class Patch523Spells extends RefCounted:
 	var blocked: bool = false
 	func blocks(_kind: String) -> bool: return blocked
+class HalphasCombat extends RefCounted:
+	var charge: Dictionary = {}
+	func frozen(_actor) -> bool: return false
+class HalphasStar extends RefCounted:
+	var combat = HalphasCombat.new()
 class CostHost extends Node:
 	var patch523_npc_spells = Patch523Spells.new()
 	var halphas_star = preload("res://scripts/cards/halphas_star_enchant_runtime.gd").new()

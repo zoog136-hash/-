@@ -76,8 +76,65 @@ func mask(c: Vector2i) -> int:
 	if not contains(c):return 0
 	var key: int=c.y*width+c.x
 	if masks.has(key):return int(masks[key])
+	var result: int=_mask_from_neighbourhood(c)
+	masks[key]=result
+	return result
+
+## Reference definition of mask(): the bit set of can_step() for each heading.
+## Kept for verification; mask() computes the same bits from one 3x3 read.
+func mask_reference(c: Vector2i) -> int:
+	if not contains(c):return 0
 	var result: int=0
 	for heading: int in range(8):
 		if can_step(c,heading):result|=1<<heading
-	masks[key]=result
 	return result
+
+# Every cell edge()/can_step() reads for headings around c lies in c's 3x3
+# neighbourhood, so read contains/tile/open-door state once per cell (index
+# (dy+1)*3+(dx+1)) and evaluate the same rules locally.
+func _mask_from_neighbourhood(c: Vector2i) -> int:
+	var inside: Array[bool]=[]
+	var tiles:=PackedInt32Array()
+	var opened: Array[bool]=[]
+	inside.resize(9);tiles.resize(9);opened.resize(9)
+	for dy: int in range(-1,2):
+		for dx: int in range(-1,2):
+			var n: Vector2i=c+Vector2i(dx,dy)
+			var i: int=(dy+1)*3+(dx+1)
+			inside[i]=contains(n)
+			opened[i]=open_doors.has(n)
+			tiles[i]=((int(bytes[n.y*width+n.x])&124)|3 if opened[i] else int(bytes[n.y*width+n.x])) if inside[i] else 0
+	var result: int=0
+	for heading: int in range(8):
+		var offset: Vector2i=DIRS[heading]
+		if not _local_edge(inside,tiles,opened,Vector2i.ZERO,heading):continue
+		if heading%2==0:
+			result|=1<<heading
+			continue
+		var hx: int=2 if offset.x>0 else 6
+		var hy: int=4 if offset.y>0 else 0
+		if _local_edge(inside,tiles,opened,Vector2i.ZERO,hx) and _local_edge(inside,tiles,opened,Vector2i.ZERO,hy) and _local_edge(inside,tiles,opened,Vector2i(offset.x,0),hy) and _local_edge(inside,tiles,opened,Vector2i(0,offset.y),hx):
+			result|=1<<heading
+	return result
+
+# edge(c+from, heading) evaluated on the 3x3 snapshot. Only calls whose cells
+# stay inside the snapshot are made by _mask_from_neighbourhood().
+func _local_edge(inside: Array[bool], tiles: PackedInt32Array, opened: Array[bool], from: Vector2i, heading: int) -> bool:
+	var to: Vector2i=from+DIRS[heading]
+	var ia: int=(from.y+1)*3+(from.x+1)
+	var ib: int=(to.y+1)*3+(to.x+1)
+	if not inside[ia] or not inside[ib]:return false
+	var a: int=tiles[ia]
+	var b: int=tiles[ib]
+	if (b&128)!=0 or (b&3)==0:return false
+	if heading%2==0 and (opened[ia] or opened[ib]) and (a&3)!=0:return true
+	match heading:
+		0:return (a&2)!=0
+		1:return (tiles[(from.y)*3+(from.x+1)]&1)!=0 or (tiles[(from.y+1)*3+(from.x+2)]&2)!=0
+		2:return (a&1)!=0
+		3:return (tiles[(from.y+2)*3+(from.x+1)]&1)!=0
+		4:return (b&2)!=0
+		5:return (b&3)!=0
+		6:return (b&1)!=0
+		7:return (tiles[(from.y+1)*3+(from.x)]&2)!=0
+	return false

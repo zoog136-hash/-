@@ -78,7 +78,7 @@ func incoming(attacker: Node,kind: String,amount: int) -> Dictionary:
 		if int(option.InvokeOptionTypeID)==5:
 			if int(option.MaterialAmount)!=0 or int(option.Param3)!=0:continue
 			if roll(int(effect.weight)):
-				result.damage=maxi(0,int(result.damage)-int(option.Param1));fired.append(int(option.ID));emit_sprite(int(option.TargetEffectSpriteID),runtime.world.player)
+				result.damage=maxi(0,int(result.damage)-int(option.Param1));fired.append(int(option.ID));emit_option_effect(option,"TargetEffectSpriteID",runtime.world.player)
 		elif int(option.InvokeOptionTypeID)==2:
 			if bool(option.BySpellAttack)!=(kind=="magic") or amount<int(option.Param2) or int(option.Param3)!=0 or int(option.MaterialAmount)!=0:continue
 			var key: String="native_option|"+str(effect.origin)+"|"+str(int(option.Param1))
@@ -142,14 +142,26 @@ func emit_spell(spell: Dictionary,target: Node2D) -> void:
 		var sprite: int=int(spell.get(field,0))
 		if sprite<=0 or seen.has(sprite):continue
 		seen[sprite]=true
-		if preview!=null and preview.has_method("notify_source_spell_event") and not manifest.is_empty():
+		if preview!=null and (preview.has_method("notify_current_source_spell_event") or (preview.has_method("notify_source_spell_event") and not manifest.is_empty())):
 			var live: Array[Node2D]=[]
 			for node: Variant in preview._overlay_nodes:
 				if is_instance_valid(node):live.append(node)
 			preview._overlay_nodes=live
-			if preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):visual_results[str(sprite)]="played_original";continue
+			if preview.has_method("notify_source_spell_event") and not manifest.is_empty() and preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):visual_results[str(sprite)]="played_original";continue
+			if preview.has_method("notify_current_source_spell_event") and preview.notify_current_source_spell_event(spell,stage,target.global_position,facing):visual_results[str(sprite)]="played_current_source";continue
 		emit_sprite(sprite,target)
-func emit_sprite(sprite: int,target: Node2D) -> void:
+func emit_option_effect(option: Dictionary,field: String,target: Node2D) -> void:
+	var sprite: int=int(option.get(field,0))
+	if sprite<=0 or not is_instance_valid(target):return
+	emit_sprite(sprite,target)
+	if visual_results.get(str(sprite),"")=="played_original":return
+	var preview: Variant=null
+	for property: Dictionary in runtime.world.player.get_property_list():
+		if property.name=="original_source_preview":preview=runtime.world.player.get(property.name);break
+	if preview!=null and preview.has_method("notify_current_source_invoke_effect") and preview.notify_current_source_invoke_effect(option,field,target.global_position,5):
+		visual_results[str(sprite)]="played_current_invoke_source"
+
+func emit_sprite(sprite: int,target: Node2D,current_item: Dictionary={}) -> void:
 	# Existing private source compositor only. Missing bindings remain absent.
 	if sprite<=0 or not is_instance_valid(target):return
 	visual_results[str(sprite)]="original_binding_unavailable"
@@ -157,13 +169,17 @@ func emit_sprite(sprite: int,target: Node2D) -> void:
 	var preview: Variant=null
 	for property: Dictionary in player.get_property_list():
 		if property.name=="original_source_preview":preview=player.get(property.name);break
-	if preview!=null and preview.has_method("spawn_source_overlay"):
+	if preview!=null and (preview.has_method("spawn_source_overlay") or (not current_item.is_empty() and preview.has_method("notify_current_source_item_consume"))):
 		# Shared compositor cleanup must accept freed handles before its typed filter.
 		var live: Array[Node2D]=[]
 		for node: Variant in preview._overlay_nodes:
 			if is_instance_valid(node):live.append(node)
 		preview._overlay_nodes=live
-		if preview.spawn_source_overlay(sprite,5,target.global_position):visual_results[str(sprite)]="played_original"
+		if preview.has_method("spawn_source_overlay") and preview.spawn_source_overlay(sprite,5,target.global_position):
+			visual_results[str(sprite)]="played_original"
+			return
+		if not current_item.is_empty() and preview.has_method("notify_current_source_item_consume") and preview.notify_current_source_item_consume(current_item,sprite,target.global_position,5):
+			visual_results[str(sprite)]="played_current_item_source"
 
 func _invoke_spell(identity: int) -> Dictionary:
 	return INPUT.session().invoke_spells.get(str(identity),RELIC.relic_combat.invoke_spells.get(str(identity),{}))

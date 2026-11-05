@@ -16,6 +16,7 @@ static func frame_ref(record: Dictionary) -> Dictionary:
 
 static func icon(record: Dictionary, portrait: Texture2D) -> Texture2D:
 	if portrait==null: return null
+	if not ATLAS.LEGACY_CARD_PACK_FINAL_USE: return portrait
 	var identity: String = str(record.get("sourceId",""))
 	if icons.has(identity): return icons[identity]
 	var ref: Dictionary = frame_ref(record)
@@ -36,6 +37,9 @@ static func icon(record: Dictionary, portrait: Texture2D) -> Texture2D:
 	return texture
 
 static func style(button: Button, path: String, node_name: String) -> void:
+	if not ATLAS.LEGACY_CARD_PACK_FINAL_USE:
+		restore(button)
+		return
 	if not button.has_meta("original_ui_saved_styles"):
 		var previous: Dictionary = {}
 		for state: String in ["normal","pressed","disabled","hover"]:
@@ -72,6 +76,9 @@ static func tabs(buttons: Array[Button]) -> void:
 		style(buttons[index],"UI/Change/Change_WinTotal.csb",nodes[index])
 
 static func surface(hud: Node) -> bool:
+	if not ATLAS.LEGACY_CARD_PACK_FINAL_USE:
+		restore_surface(hud)
+		return false
 	var companion_active: bool = is_instance_valid(hud.companion_detail_view) and hud.companion_detail_view.active
 	var relic_active: bool = is_instance_valid(hud.relic_reference_view) and hud.relic_reference_view.active
 	if not companion_active and not relic_active: return false
@@ -97,6 +104,7 @@ static func restore_surface(hud: Node) -> void:
 		panel.remove_meta("source_saved_panel_style")
 
 static func frame_status(record: Dictionary) -> String:
+	if not ATLAS.LEGACY_CARD_PACK_FINAL_USE: return "legacy_card_pack_excluded"
 	var ref: Dictionary=frame_ref(record)
 	if ref.is_empty(): return "undeclared"
 	return "original" if ATLAS.frame(ref.plist,ref.key)!=null else "missing"

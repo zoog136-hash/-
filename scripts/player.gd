@@ -68,6 +68,7 @@ var class_index: int = 0
 var facing: int = 0 # 0 down, 1 up, 2 left, 3 right
 var attack_clock: float = 0.0
 var transform_active: bool = false
+var _source_only_transform_key: String = ""
 var transform_bob_clock: float = 0.0
 var stun_remaining: float = 0.0
 var silence_remaining: float = 0.0
@@ -89,6 +90,14 @@ var equipment_move_speed_multiplier: float = 1.0
 var attack_speed_multiplier: float = 1.0
 var attack_visual_duration: float = 0.42
 var physics_delta: float = 1.0 / 60.0
+
+# Child nodes created at member init are only parented in _ready. If the player
+# is freed before entering the tree, free those orphans instead of leaking them.
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_PREDELETE: return
+	for orphan: Variant in [original_source_preview, current523_identity_actor]:
+		if is_instance_valid(orphan) and orphan is Node and (orphan as Node).get_parent() == null:
+			(orphan as Node).free()
 
 func _ready() -> void:
 	var installed_manifest: String = preload("res://scripts/lineagem_pack_install.gd").active_manifest()
@@ -222,6 +231,7 @@ func _update_visual(delta: float) -> void:
 	var show_spx: bool = not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
 	motion.profile = transform_profile if transform_active else (spx_profile if show_spx else class_profile)
 	var show_original: bool = transform_active and original_source_preview.installed()
+	var source_only_pending: bool = not _source_only_transform_key.is_empty() and original_source_preview.current523_source_required(_source_only_transform_key) and not show_original
 	_refresh_visual_visibility()
 	motion.advance(delta, get_position_delta() / maxf(delta, 0.001))
 	facing = motion.facing4
@@ -229,7 +239,7 @@ func _update_visual(delta: float) -> void:
 	var active_sprite: AnimatedSprite2D = transform_sprite if transform_active else (spx_sprite if show_spx else class_sprite)
 	if show_original:
 		original_source_preview.advance_source(delta, motion.state, motion.facing8, motion.sequence, motion.active)
-	else:
+	elif not source_only_pending:
 		motion.apply(active_sprite, active_sprite.get_meta("base_scale", Vector2.ONE))
 	if spx_effect_sprite != null and spx_effect_sprite.visible:
 		if spx_effect_sprite.sprite_frames.has_animation(spx_sprite.animation):
@@ -243,18 +253,19 @@ func _refresh_visual_visibility() -> void:
 	# Derive current presentation instead of restoring a snapshot of an old form.
 	var show_spx: bool = not transform_active and is_instance_valid(spx_sprite) and not spx_actor_id.is_empty()
 	var show_original: bool = transform_active and is_instance_valid(original_source_preview) and original_source_preview.installed()
+	var source_only_pending: bool = not _source_only_transform_key.is_empty() and original_source_preview.current523_source_required(_source_only_transform_key) and not show_original
 	var sample: Node = get_node_or_null("Current523EstimatedWorldPreview")
 	var estimated: bool = sample != null and sample.is_player_override_active()
 	estimated = estimated or (is_instance_valid(current523_identity_actor) and current523_identity_actor.is_player_override_active())
-	if is_instance_valid(class_sprite): class_sprite.visible = not transform_active and not show_spx and not estimated
-	if is_instance_valid(transform_sprite): transform_sprite.visible = transform_active and not show_original and not estimated
-	if is_instance_valid(spx_sprite): spx_sprite.visible = show_spx and not estimated
-	if is_instance_valid(spx_effect_sprite): spx_effect_sprite.visible = show_spx and spx_effect_sprite.sprite_frames != null and not estimated
+	if is_instance_valid(class_sprite): class_sprite.visible = not source_only_pending and not transform_active and not show_spx and not estimated
+	if is_instance_valid(transform_sprite): transform_sprite.visible = not source_only_pending and transform_active and not show_original and not estimated
+	if is_instance_valid(spx_sprite): spx_sprite.visible = not source_only_pending and show_spx and not estimated
+	if is_instance_valid(spx_effect_sprite): spx_effect_sprite.visible = not source_only_pending and show_spx and spx_effect_sprite.sprite_frames != null and not estimated
 	if is_instance_valid(original_source_preview): original_source_preview.visible = show_original and not estimated
 	var shadow: CanvasItem = get_node_or_null("GroundShadow") as CanvasItem
-	if shadow != null: shadow.visible = not show_original and not motion.profile.embedded_shadow and not estimated
+	if shadow != null: shadow.visible = not source_only_pending and not show_original and not motion.profile.embedded_shadow and not estimated
 	var effects: CanvasItem = get_node_or_null("PlayerActionFX") as CanvasItem
-	if effects != null: effects.visible = not show_original and not estimated and (motion.active or motion.move_ratio > .10)
+	if effects != null: effects.visible = not source_only_pending and not show_original and not estimated and (motion.active or motion.move_ratio > .10)
 
 func face_target(position_value: Vector2) -> void:
 	motion.face(position_value - global_position)
@@ -334,10 +345,16 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 	var previous_native_key: String = transform_profile.profile_id if transform_profile != null else ""
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
 	transform_profile.resource_path_hint = path
-	current523_identity_actor.configure(transform_profile.profile_id, source_visual_context)
+	var source_required: bool = original_source_preview.current523_source_required(transform_profile.profile_id)
+	_source_only_transform_key = transform_profile.profile_id if source_required else ""
+	if source_required:
+		current523_identity_actor.clear()
+		transform_sprite.stop()
+		transform_sprite.sprite_frames = null
+	else: current523_identity_actor.configure(transform_profile.profile_id, source_visual_context)
 	# Reapplying the same native identity must not reset its pose/event timeline.
-	var selected: Dictionary = preload("res://scripts/lineagem_base508.gd").select_visual_key(transform_profile.profile_id, source_visual_context) if transform_profile.profile_id.begins_with("transform:m508:") else {}
-	var unchanged_native: bool = previous_native_key == transform_profile.profile_id and selected.get("status", "") == "selected" and int(selected.get("sprite_id", -2)) == previous_native_sprite and original_source_preview._manifest_path == original_source_manifest and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0)) == int(source_visual_context.get("source_weapon_type",0))
+	var selected: Dictionary = preload("res://scripts/lineagem_base508.gd").select_visual_key(transform_profile.profile_id, source_visual_context) if not source_required and transform_profile.profile_id.begins_with("transform:m508:") else {}
+	var unchanged_native: bool = (not source_required and previous_native_key == transform_profile.profile_id and selected.get("status", "") == "selected" and int(selected.get("sprite_id", -2)) == previous_native_sprite and original_source_preview._manifest_path == original_source_manifest and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0)) == int(source_visual_context.get("source_weapon_type",0))) or original_source_preview.current523_card_matches(transform_profile.profile_id,source_visual_context)
 	# Native sc/mu composition and origin remain unverified.
 	if unchanged_native or original_source_preview.configure(transform_profile.profile_id, original_source_manifest, source_visual_context):
 		transform_active = true
@@ -345,14 +362,14 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 		class_sprite.hide()
 		transform_sprite.hide()
 		if not unchanged_native: original_source_preview.advance_source(0.0, motion.state, motion.facing8, motion.sequence, motion.active)
-		if transform_profile.profile_id.begins_with("transform:m508:") and (previous_native_key != transform_profile.profile_id or previous_native_sprite != int(original_source_preview._record.get("source_sprite_id", -1))):
+		if (transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:")) and (previous_native_key != transform_profile.profile_id or previous_native_sprite != int(original_source_preview._record.get("source_sprite_id", -1))):
 			original_source_preview.notify_source_global_event("polymorph", motion.facing8)
 		return
 	# A verified identity with missing pixels/variant context never borrows legacy artwork.
-	if transform_profile.profile_id.begins_with("transform:m508:"):
+	if source_required:
 		transform_active = false
 		transform_sprite.hide()
-		class_sprite.show()
+		_refresh_visual_visibility()
 		return
 	# PR122 local-only comparison, NOT a production transformation approval.
 	# Both forms preserve catalog timing, combat, physics and default art.
@@ -437,7 +454,7 @@ func set_source_weapon_visual(weapon: String) -> void:
 	source_visual_context["source_weapon_type"]=native_weapon
 	source_visual_context["local_weapon_type"]=weapon
 	current523_identity_actor.update_context(source_visual_context)
-	if original_source_preview.installed() and transform_profile != null and transform_profile.profile_id.begins_with("transform:m508:") and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0))!=native_weapon:
+	if original_source_preview.installed() and transform_profile != null and (transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:")) and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0))!=native_weapon:
 		if original_source_preview.configure(transform_profile.profile_id,original_source_manifest,source_visual_context):
 			original_source_preview.advance_source(0.0,motion.state,motion.facing8,motion.sequence,motion.active)
 	if spx_sprite == null or spx_actor_id.is_empty(): return
@@ -471,6 +488,7 @@ func _direction_animation_name(direction_value: int) -> String:
 		_: return "dir_down"
 
 func clear_transform_visual() -> void:
+	_source_only_transform_key = ""
 	current523_identity_actor.clear()
 	original_source_preview.clear()
 	transform_active = false
