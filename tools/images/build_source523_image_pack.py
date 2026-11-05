@@ -17,6 +17,7 @@ IMAGE_TYPES = {1, 3, 5, 6, 7, 9, 10, 11, 82, 143, 161}
 CONSUMER_FIELDS = {'ItemClass': ['IconID'], 'SpellClass': ['IconID', 'ActivateIconID'],
                    'BuffClass': ['OnIconID', 'OffIconID']}
 SOURCE_TABLES = ['AssetView', 'AssetType', 'Icon', *CONSUMER_FIELDS]
+DUMMY_IMAGE_TABLE = 'UIBuffCardDummyImagePath'
 COMPONENTS = {'retained_noncard_lineage14964', 'changed4_current523',
               'retained_historical_card_lineage1216'}
 
@@ -225,7 +226,12 @@ def main():
                if r['path'].startswith('current523-originals/') and r['path'].endswith('.dat')}
     require(len(changed) == 4, 'Exactly four current changed DAT identities required')
     tables, table_raw, source_files = {}, {}, {}
-    for name in SOURCE_TABLES:
+    source_tables = list(SOURCE_TABLES)
+    # Preserve the original declaration and all image members. Runtime excludes
+    # these exact source-declared dummy assets without rewriting the inventory.
+    if any(row.get('path') == 'content/' + DUMMY_IMAGE_TABLE + '.json' for row in source_index):
+        source_tables.append(DUMMY_IMAGE_TABLE)
+    for name in source_tables:
         data = (args.tables / (name + '.json')).read_bytes()
         tables[name] = validate_table(name, data, source_index)
         table_raw[name] = data

@@ -110,6 +110,36 @@ the UI owner's pack before replacing scene bindings. No scene/clip bindings are
 generated from the image inventory. The UI player's code and exact scene pack
 must be installed separately; absent inputs remain an explicit missing result.
 
+## Explicit original dummy-image exclusions
+
+`UIBuffCardDummyImagePath` is the original declaration used for this exclusion.
+Its full-source-index identity is 42 declaration rows / 4,577 bytes, SHA-256
+`31d596dd086deac145dd7db8e7d24bc4db4c2cc6f558577a1f0871e460286a41`.
+The reader consumes the exact table's `AssetID` entries and excludes their
+canonical typed paths from image connection, including exact path aliases.
+It records the original table hash, row/index, declared asset ID and exclusion
+reason in provenance and returns `source_dummy_excluded` with no texture.
+
+Item and card consumers preserve that result in their existing status metadata
+and clear the image. Normal item/card identity, ownership, eligibility and
+transactions remain with their existing services. The existing TestItem rule
+is a separate source declaration. Names, missing pixels and missing caller
+inputs do not establish a dummy classification.
+
+The source index already pinned by the private base manifest identifies this
+table. The exact original `source/UIBuffCardDummyImagePath.json` is an additive
+private supplement; the base manifest, original images and 18 delivery ZIPs
+are preserved. If the source index declares the table but its exact bytes are
+unavailable, the new reader cannot open that pack for image connection. The
+builder includes the declaration table when present in the original index.
+
+All inventory rows and original byte denominators above remain fixed. Excluded
+dummy resources remain preserved, and exclusion does not count as gameplay
+use. Unique excluded-file/byte totals have not been newly measured. These code
+changes and the supplement have not been executed or newly validated.
+The additive declaration ZIP was delivered to the same existing private Drive
+folder. No base ZIP was reuploaded and no sharing permission was added.
+
 ## Delivery and remaining connections
 
 The exact private runtime pack and 18 ZIP delivery parts are preserved locally.

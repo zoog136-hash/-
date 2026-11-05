@@ -5,6 +5,7 @@ extends RefCounted
 const IMAGE_TYPES: Array[int] = [1, 3, 5, 6, 7, 9, 10, 11, 82, 143, 161]
 const CONSUMER_FIELDS: Dictionary = {"ItemClass":["IconID"], "SpellClass":["IconID","ActivateIconID"], "BuffClass":["OnIconID","OffIconID"]}
 const TABLE_KEYS: Dictionary = {"AssetView":"AssetId", "AssetType":"ID", "Icon":"ID", "ItemClass":"ID", "SpellClass":"ID", "BuffClass":"ID"}
+const DUMMY_IMAGE_TABLE: String = "UIBuffCardDummyImagePath"
 var _root: String = ""
 var _manifest_sha: String = ""
 var _manifest: Dictionary = {}
@@ -14,6 +15,9 @@ var _icons: Dictionary = {}
 var _consumers: Dictionary = {}
 var _source_tables: Dictionary = {}
 var _textures: Dictionary = {}
+var _dummy_assets: Dictionary = {}
+var _dummy_paths: Dictionary = {}
+var _dummy_source: Dictionary = {}
 
 static func _failure(status: String, message: String, provenance: Dictionary = {}) -> Dictionary:
 	return {"ok":false, "status":status, "status_type":status, "error":message, "texture":null, "provenance":provenance}
@@ -204,12 +208,65 @@ func _open_verified() -> Dictionary:
 			for field: String in CONSUMER_FIELDS[table]:
 				if item.roles.get(field) != row.get(field) or not _integer(item.roles.get(field)): return _failure("consumer_contract","Consumer role differs from exact source.")
 			_consumers[table][int(row.ID)] = item
+	return _load_dummy_declarations(source.value)
+
+func _load_dummy_declarations(source_index: Array) -> Dictionary:
+	# The manifest-pinned full source index already declares this original
+	# table. A supplement can add its exact bytes without replacing originals,
+	# rewriting the base manifest or reducing the inventory denominator.
+	var matches: Array = []
+	for entry: Variant in source_index:
+		if entry is Dictionary and entry.get("path") == "content/" + DUMMY_IMAGE_TABLE + ".json":
+			matches.append(entry)
+	if matches.is_empty():
+		_dummy_source = {"status":"not_declared_by_source_index"}
+		return {"ok":true}
+	if matches.size() != 1:
+		return _failure("source_dummy_declaration_contract","Duplicate original dummy-image table declaration.")
+	var entry: Dictionary = matches[0]
+	if entry.get("version") != 523 or entry.get("status") != "strict_json_pass" or entry.get("member_crc_verified") != true or not _integer(entry.get("row_count")) or int(entry.row_count) < 0:
+		return _failure("source_dummy_declaration_contract","Original dummy-image table identity is incomplete.")
+	var spec: Dictionary = {"path":"source/" + DUMMY_IMAGE_TABLE + ".json","bytes":entry.get("bytes"),"sha256":entry.get("sha256")}
+	var loaded: Dictionary = _json(spec)
+	if not loaded.get("ok",false):
+		var missing: Dictionary = _failure("source_dummy_declarations_unavailable","Install the exact original dummy-image declaration table before connecting this pack.")
+		missing["details"] = loaded
+		return missing
+	if not loaded.value is Dictionary or not loaded.value.get("rows") is Array or loaded.value.rows.size() != int(entry.row_count):
+		return _failure("source_dummy_declaration_contract","Original dummy-image rows differ from their indexed identity.")
+	var ids: Dictionary = {}
+	for index: int in loaded.value.rows.size():
+		var row: Variant = loaded.value.rows[index]
+		if not row is Dictionary:
+			return _failure("source_dummy_declaration_contract","Original dummy-image row is invalid.")
+		for field: String in ["ID","BuffCardDeckID","GradeID","AssetID"]:
+			if not _integer(row.get(field)) or int(row[field]) <= 0:
+				return _failure("source_dummy_declaration_contract","Original dummy-image identity is invalid.")
+		var id: int = int(row.ID)
+		var asset_id: int = int(row.AssetID)
+		if ids.has(id) or not _assets.has(asset_id):
+			return _failure("source_dummy_declaration_contract","Original dummy-image declaration has a duplicate row or missing asset identity.")
+		ids[id] = true
+		var evidence: Dictionary = {"source_table":DUMMY_IMAGE_TABLE,"source_table_sha256":spec.sha256,
+			"source_row_index_zero":index,"source_row_canonical_sha256":_canonical_row_sha(row),
+			"source_row":row.duplicate(true),"declared_asset_id":asset_id}
+		if not _dummy_assets.has(asset_id): _dummy_assets[asset_id] = []
+		_dummy_assets[asset_id].append(evidence)
+		var path: String = str(_assets[asset_id].path)
+		if not path.is_empty():
+			if not _dummy_paths.has(path): _dummy_paths[path] = []
+			_dummy_paths[path].append(evidence)
+	_dummy_source = {"status":"original_dummy_images_excluded","source_table":DUMMY_IMAGE_TABLE,
+		"source_table_sha256":spec.sha256,"source_file":spec.path,"source_file_bytes":spec.bytes,
+		"declaration_rows":loaded.value.rows.size(),"declared_assets":_dummy_assets.size(),
+		"inventory_preserved":true,"excluded_is_not_gameplay_use":true}
 	return {"ok":true}
 
 func metadata() -> Dictionary:
 	return {"schema":1,"source_snapshot":"patch523","source_version":523,"manifest_sha256":_manifest_sha,
 		"source_tables":_manifest.get("source_tables",{}).duplicate(true),"pack_members":_members.size(),
 		"actual_game_consumption_observed":false,
+		"source_dummy_exclusions":_dummy_source.duplicate(true),
 		"source_current_catalog_complete":_manifest.get("metrics",{}).get("source_current_catalog_complete",false),
 		"whole_current_source_denominator":_manifest.get("metrics",{}).get("whole_current_source_denominator")}.duplicate(true)
 
@@ -254,6 +311,15 @@ func resolve_asset(asset_id: int, expected_type: int = -1, declared_path: String
 	provenance["asset_type_table_sha256"] = _manifest.source_tables.AssetType.sha256
 	if expected_type != -1 and int(asset.asset_type_id) != expected_type: return _failure("asset_type_mismatch","Expected AssetType differs.",provenance)
 	if not declared_path.is_empty() and declared_path != asset.path: return _failure("declared_path_mismatch","Declared literal path differs.",provenance)
+	var excluded: Array = _dummy_assets.get(asset_id,_dummy_paths.get(str(asset.path),[]))
+	if not excluded.is_empty():
+		provenance["source_dummy_declarations"] = excluded.duplicate(true)
+		provenance["source_dummy_policy"] = _dummy_source.duplicate(true)
+		var blocked: Dictionary = _failure("source_dummy_excluded","An explicit original dummy-image declaration excludes this asset from connection.",provenance)
+		blocked["excluded_from_connection"] = true
+		blocked["original_inventory_preserved"] = true
+		blocked["actual_game_consumption_observed"] = false
+		return blocked
 	if asset.status != "verified_original":
 		if asset.status == "unsupported_csb": provenance["owner_note"] = "AssetType101 belongs to the existing UI owner."
 		return _failure(str(asset.status),"Exact source asset has no supported verified original image.",provenance)

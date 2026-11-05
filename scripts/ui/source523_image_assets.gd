@@ -137,6 +137,13 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 	info["reason"] = info.source_status
 	info["provenance"] = result.get("provenance",{}).duplicate(true)
 	info["path"] = str(info.provenance.get("path",""))
+	if info.source_status == "source_dummy_excluded":
+		# Exclude only the reader's explicitly declared image asset. Keep the
+		# existing missing-image label route and preserve the item record.
+		info["source_image_dummy_excluded"] = true
+		info["source_error"] = str(result.get("error",info.source_status))
+		info["texture"] = null
+		return info
 	if bool(result.get("ok",false)) and result.get("texture") is Texture2D:
 		info.status = "original_linked"
 		info.texture = result.texture
@@ -145,6 +152,7 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 
 static func missing_label(info: Dictionary) -> String:
 	match str(info.get("reason","")):
+		"source_dummy_excluded": return "원본 더미 제외"
 		"unsupported_csb": return "효과 미연결"
 		"source_test_item_excluded": return "원본 제외"
 		"missing_consumer_key", "missing_icon_key", "zero_sentinel": return "정체 미확인"

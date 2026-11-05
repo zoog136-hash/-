@@ -66,6 +66,14 @@ static func _current_detail(record: Dictionary, acquired: bool, detail_view: boo
 		var original: Dictionary = IMAGES523.resolve_asset(int(id),-1,str(asset.path))
 		result.reason = str(original.get("status","source523_image_unavailable"))
 		result["provenance"] = original.get("provenance",{}).duplicate(true)
+		if result.reason == "source_dummy_excluded":
+			# This excludes only the image asset explicitly declared by the source.
+			# It does not change the card record or try another presentation role.
+			result.status = "source_dummy_excluded"
+			result["source_status"] = "source_dummy_excluded"
+			result["error"] = original.get("error","source_dummy_excluded")
+			result.texture = null
+			return result
 		if bool(original.get("ok",false)) and original.get("texture") is Texture2D:
 			result.status = "original"
 			result.texture = original.texture
@@ -99,15 +107,17 @@ static func apply(hud: Node) -> void:
 	var owned: Dictionary = hud.card_collection_state.get("owned", {}).get(hud.catalog_category, {})
 	var acquired: bool = owned.get(identity, false) == true
 	var result: Dictionary = detail(record, acquired)
-	preview.texture = result.get("texture")
+	preview.texture = null if result.get("status","") == "source_dummy_excluded" else result.get("texture")
 	preview.self_modulate = Color.WHITE if acquired or result.get("source523_verified_original",false) else Color(.68,.68,.68,.62)
-	badge.text = "원본 카드 연결 미설치" if result.status == "runtime_missing" else "원본 이미지 미설치" if result.status in ["missing", "unreadable"] else "원본 이미지 미지정" if result.status == "undeclared" else "" if original_background else "원본 화면 배경 연결 대기"
+	badge.text = "원본 더미 이미지 제외" if result.status == "source_dummy_excluded" else "원본 카드 연결 미설치" if result.status == "runtime_missing" else "원본 이미지 미설치" if result.status in ["missing", "unreadable"] else "원본 이미지 미지정" if result.status == "undeclared" else "" if original_background else "원본 화면 배경 연결 대기"
 	var frame_status: String = preload("res://scripts/ui/source_card_skin.gd").frame_status(record)
 	if badge.text.is_empty() and frame_status!="original":
 		badge.text="원본 목록 프레임 미지정" if frame_status=="undeclared" else "원본 목록 프레임 미설치"
 	badge.visible = not badge.text.is_empty()
 	badge.tooltip_text = str(result.get("path", ""))
-	if canonical_record_snapshot(record)=="patch523":
+	if result.get("status","") == "source_dummy_excluded":
+		badge.tooltip_text = "원본에서 더미로 선언된 이미지 자산 · " + str(result.get("reason","source_dummy_excluded")) + " · " + str(result.get("path",""))
+	elif canonical_record_snapshot(record)=="patch523":
 		badge.tooltip_text = "검증된 원본 초상화" if result.get("source523_verified_original",false) else "원본 초상화 또는 선언된 화면 리소스 연결 대기"
 	preview.set_meta("original_card_asset", result)
 	var equipped: Dictionary = hud.character_state.get("equipped", {}).get(hud.catalog_category, {})
