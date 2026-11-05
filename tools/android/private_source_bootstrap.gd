@@ -134,6 +134,11 @@ func _prepare() -> Dictionary:
 		# Do not mount other controls or invent a World/coordinate selection here.
 		environment.TWILIGHT_SOURCE_UI = main_ui_root
 		environment.TWILIGHT_SOURCE_UI_SHA256 = str(main_ui.manifest_sha256).to_lower()
+	if descriptor.has("world_map"):
+		if not descriptor.world_map is Dictionary: return _fail("월드 지도 선택 설정 형식이 다릅니다.")
+		var world_map_write: Dictionary = _prepare_world_map(descriptor.world_map)
+		if not world_map_write.get("ok",false): return world_map_write
+		if world_map_write.has("write"): writes.append(world_map_write.write)
 	if descriptor.has("ui_icons"):
 		if not descriptor.ui_icons is Dictionary: return _fail("원본 UI 아이콘 선택 설정 형식이 다릅니다.")
 		var icons: Dictionary = descriptor.ui_icons
@@ -290,6 +295,64 @@ func _prepare_selection_config(path: String, section: String, next: Dictionary, 
 	if maximum > 0 and bytes.size() > maximum: return _fail("새 원본 연결 설정이 공개 크기 한도를 넘었습니다.")
 	return {"ok":true,"write":{"path":path,"bytes":bytes}}
 
+func _prepare_world_map(value: Dictionary) -> Dictionary:
+	var settings: String = "user://current523_world_map.cfg"
+	# A preexisting selection, including malformed or disabled data, belongs to
+	# the user. Do not read, normalize, relocate or overwrite any of its bytes.
+	if FileAccess.file_exists(settings) or DirAccess.dir_exists_absolute(settings): return {"ok":true}
+	var user_directory := DirAccess.open("user://")
+	if user_directory != null and user_directory.is_link("current523_world_map.cfg"): return {"ok":true}
+	var contract: String = _absolute(value.get("contract_path"))
+	var contract_pin: Variant = value.get("contract_sha256")
+	if not _pinned(contract,contract_pin): return {"ok":false}
+	var file := FileAccess.open(contract,FileAccess.READ)
+	if file == null or file.get_length() <= 0 or file.get_length() > 4 * 1024 * 1024:
+		return _fail("월드 지도 원본 관계 파일의 공개 크기 한도와 접근 상태를 확인하세요.")
+	var document: Variant = JSON.parse_string(file.get_as_text().trim_prefix(String.chr(0xfeff)))
+	file.close()
+	if not document is Dictionary or not document.get("image_infos") is Array:
+		return _fail("월드 지도 원본 관계 문서의 image_infos 계약이 다릅니다.")
+	var enabled: Variant = value.get("enabled",false)
+	if not enabled is bool: return _fail("월드 지도 연결의 활성 선택은 명시적인 bool이어야 합니다.")
+	var offered: Variant = value.get("offered_worlds")
+	if not offered is Dictionary: return _fail("월드 지도는 명시적으로 공급된 Land별 World 선택이 필요합니다.")
+	var offers: Dictionary = {}
+	for land: Variant in offered:
+		if not land is String or not land.is_valid_int() or str(land.to_int()) != land or not _integer(land.to_int()):
+			return _fail("월드 지도 offer의 Land ID는 정확한 10진수 String이어야 합니다.")
+		var offer: Variant = offered[land]
+		if not offer is Dictionary or not _integer(offer.get("world_id")) or int(offer.world_id) == 0:
+			return _fail("월드 지도 offer에는 명시적인 양의 UIMapWorld.ID가 필요합니다.")
+		var selected: Dictionary = {"world_id":int(offer.world_id)}
+		if offer.has("label"):
+			if not offer.label is String or offer.label.is_empty():
+				return _fail("명시한 월드 지도 label은 실제 비어 있지 않은 String이어야 합니다.")
+			selected.label = offer.label
+		# Omitting label leaves the exact source World's Name lookup to its
+		# existing owner. The bridge never creates a display name or first offer.
+		offers[land] = selected
+	var policy: Variant = value.get("coordinate_policy","OWN_SOURCE_CELL_CENTER_FIELD_RATIO_V1")
+	if policy != "OWN_SOURCE_CELL_CENTER_FIELD_RATIO_V1":
+		return _fail("월드 지도의 기존 자체 좌표 정책만 연결할 수 있습니다.")
+	var ratio: Variant = value.get("ratio_scale",1.0)
+	if not (ratio is int or ratio is float) or not is_finite(float(ratio)) or ratio <= 0 or ratio > 1000000:
+		return _fail("월드 지도 ratio_scale이 기존 자체 정책 범위를 벗어났습니다.")
+	var anchor: Variant = value.get("source_anchor_offset",[0.5,0.5])
+	if not anchor is Array or anchor.size() != 2:
+		return _fail("월드 지도 source_anchor_offset에는 원본 셀 기준 두 수가 필요합니다.")
+	for number: Variant in anchor:
+		if not (number is int or number is float) or not is_finite(float(number)) or absf(float(number)) > 1:
+			return _fail("월드 지도 source_anchor_offset이 기존 자체 정책 범위를 벗어났습니다.")
+	var config := ConfigFile.new()
+	config.set_value("world_map","enabled",enabled)
+	config.set_value("world_map","contract_path",contract)
+	config.set_value("world_map","contract_sha256",str(contract_pin).to_lower())
+	config.set_value("world_map","offered_worlds",offers)
+	config.set_value("world_map","coordinate_policy",policy)
+	config.set_value("world_map","ratio_scale",float(ratio))
+	config.set_value("world_map","source_anchor_offset",anchor.duplicate())
+	return {"ok":true,"write":{"path":settings,"bytes":config.encode_to_text().to_utf8_buffer(),"create_only":true}}
+
 func _prepare_bank(value: Dictionary) -> Dictionary:
 	if value.get("schema") != 1 or value.get("enabled") != true or value.get("source_snapshot") != "patch523":
 		return _fail("원본 Sprite 은행의 공개 설정 계약이 다릅니다.")
@@ -319,13 +382,19 @@ func _cleanup_pending(staged: Array[Dictionary]) -> void:
 	for item: Dictionary in staged:
 		if FileAccess.file_exists(item.temporary): DirAccess.remove_absolute(item.temporary)
 
+func _settings_path_exists(path: String) -> bool:
+	if FileAccess.file_exists(path) or DirAccess.dir_exists_absolute(path): return true
+	var directory := DirAccess.open(path.get_base_dir())
+	return directory != null and directory.is_link(path.get_file())
+
 func _commit_writes(writes: Array) -> bool:
 	var staged: Array[Dictionary] = []
 	# Stage and preserve every old configuration before publishing any replacement.
 	for write: Dictionary in writes:
 		var path: String = ProjectSettings.globalize_path(str(write.path))
+		if write.get("create_only",false) and _settings_path_exists(path): continue
 		var suffix: String = str(OS.get_process_id()) + "-" + str(Time.get_ticks_usec())
-		var item: Dictionary = {"path":path,"temporary":path+".private-source-pending-"+suffix,"backup":"","existed":FileAccess.file_exists(path)}
+		var item: Dictionary = {"path":path,"temporary":path+".private-source-pending-"+suffix,"backup":"","existed":FileAccess.file_exists(path),"create_only":bool(write.get("create_only",false))}
 		if DirAccess.dir_exists_absolute(path):
 			_problem = "설정 파일 위치에 기존 폴더가 있어 보존했습니다."
 			_cleanup_pending(staged)
@@ -353,6 +422,7 @@ func _commit_writes(writes: Array) -> bool:
 			_problem = "새 원본 설정의 임시 저장이 실패했습니다."
 			_cleanup_pending(staged)
 			return false
+		if item.create_only: item.written_sha256 = FileAccess.get_sha256(item.temporary)
 		if item.existed:
 			item.backup = path + ".before-private-source-" + suffix
 			if FileAccess.file_exists(item.backup) or DirAccess.copy_absolute(path,item.backup) != OK:
@@ -361,6 +431,9 @@ func _commit_writes(writes: Array) -> bool:
 				return false
 	var committed: Array[Dictionary] = []
 	for item: Dictionary in staged:
+		if item.create_only and _settings_path_exists(item.path):
+			DirAccess.remove_absolute(item.temporary)
+			continue
 		if DirAccess.rename_absolute(item.temporary,item.path) == OK:
 			committed.append(item)
 			continue
@@ -370,6 +443,8 @@ func _commit_writes(writes: Array) -> bool:
 				var restore: String = previous.path + ".private-source-restore-" + str(Time.get_ticks_usec())
 				if DirAccess.copy_absolute(previous.backup,restore) != OK or DirAccess.rename_absolute(restore,previous.path) != OK:
 					_problem += " 이전 설정 자동 복구도 실패했습니다. before-private-source 백업을 보존했습니다."
+			elif previous.create_only and FileAccess.get_sha256(previous.path) != str(previous.written_sha256):
+				_problem += " 다른 프로세스가 변경한 월드 지도 설정은 보존했습니다."
 			elif DirAccess.remove_absolute(previous.path) != OK:
 				_problem += " 새 설정 일부가 남았습니다."
 		_cleanup_pending(staged)

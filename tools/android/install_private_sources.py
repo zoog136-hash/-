@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 import fcntl
 import hashlib
 import json
+import math
 import os
 from pathlib import Path, PurePosixPath
 import re
@@ -411,8 +412,12 @@ def prepare_resources(plan, downloaded, resources, cache):
                 raise ValueError('Unsupported pack format')
             for name, record in payload.items():
                 inventory[pack['install_root'] + '/' + name] = record
+        retained = []
+        if 'world_map' in plan['bindings']:
+            retained.append(plan['bindings']['world_map']['contract_path'])
+            retained.extend(x['path'] for x in plan['bindings']['world_map'].get('source_manifests', []))
         state = {'schema': 1, 'identity': identity, 'files': inventory,
-                 'directories': managed_directories(inventory)}
+                 'directories': managed_directories(inventory), 'retained_files': retained}
         json_write(stage / RESOURCE_STATE, state)
         # Verify descriptor bindings before making this resource version visible.
         descriptor(plan, stage)
@@ -425,7 +430,37 @@ def prepare_resources(plan, downloaded, resources, cache):
         raise
 
 
-def descriptor(plan, resources):
+def persistent_contract(source, root, digest):
+    """Retain immutable relation bytes referenced by a never-overwritten cfg.
+
+    This source copy is deliberately outside full-version ownership cleanup,
+    like the original archive cache. Existing user settings may still select
+    this exact pin after newer input versions have been installed.
+    """
+    directory = inside(root, pin(digest))
+    directory.mkdir(parents=True, exist_ok=True)
+    destination = inside(directory, source.name)
+    record = file_record(source)
+    if record['sha256'] != digest:
+        raise ValueError('Persistent relation source pin mismatch')
+    if destination.exists():
+        if not matches(destination, record):
+            raise ValueError('Persistent relation input changed; retained without overwrite')
+        return destination
+    fd, name = tempfile.mkstemp(prefix='.relation-', dir=directory)
+    os.close(fd)
+    temporary = Path(name)
+    try:
+        copy_file(source, temporary)
+        if not matches(temporary, record):
+            raise ValueError('Persistent relation copy did not retain its source identity')
+        os.replace(temporary, destination)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return destination
+
+
+def descriptor(plan, resources, persistent_contracts=None):
     bindings = plan['bindings']
     result = {'schema': 1}
     if 'maps' in bindings:
@@ -464,6 +499,42 @@ def descriptor(plan, resources):
                 or not isinstance(manifest.get('blockers'), list) or manifest['blockers']):
             raise ValueError('Main UI original pack contract is incomplete or has blockers')
         result['main_ui'] = {'root': str(root), 'manifest_sha256': row['manifest_sha256']}
+    if 'world_map' in bindings:
+        row = bindings['world_map']
+        path = inside(resources, row['contract_path'])
+        digest = pin(row['contract_sha256'])
+        if sha256_file(path) != digest:
+            raise ValueError('World-map relation pin mismatch')
+        document = read_json(path, maximum=4 * 1024 * 1024)
+        if not isinstance(document, dict) or not isinstance(document.get('image_infos'), list):
+            raise ValueError('World-map relation input does not match the existing adapter')
+        for source in row.get('source_manifests', []):
+            if not matches(inside(resources, source['path']), source):
+                raise ValueError('World-map relation source receipt mismatch')
+        enabled = row.get('enabled', False)
+        offered = row.get('offered_worlds', {})
+        scale = row.get('ratio_scale', 1.0)
+        offset = row.get('source_anchor_offset', [0.5, 0.5])
+        if not isinstance(enabled, bool) or not isinstance(offered, dict):
+            raise ValueError('World-map selection requires explicit boolean/offered dictionary')
+        for land, offer in offered.items():
+            if (not isinstance(land, str) or not re.fullmatch(r'0|[1-9][0-9]*', land)
+                    or len(land) > 10 or int(land) > 2147483647
+                    or not isinstance(offer, dict) or type(offer.get('world_id')) is not int
+                    or not 1 <= offer['world_id'] <= 2147483647
+                    or 'label' in offer and (not isinstance(offer['label'], str) or not offer['label'])):
+                raise ValueError('World-map offer requires exact decimal Land and explicit World ID')
+        if (row.get('coordinate_policy') != 'OWN_SOURCE_CELL_CENTER_FIELD_RATIO_V1'
+                or type(scale) not in (int, float) or not math.isfinite(scale) or not 0 < scale <= 1000000
+                or not isinstance(offset, list) or len(offset) != 2
+                or any(type(x) not in (int, float) or not math.isfinite(x) or abs(x) > 1 for x in offset)):
+            raise ValueError('World-map OWN coordinate configuration is invalid')
+        if persistent_contracts is not None:
+            path = persistent_contract(path, persistent_contracts, digest)
+        result['world_map'] = {'enabled': enabled, 'contract_path': str(path),
+                               'contract_sha256': digest, 'offered_worlds': offered,
+                               'coordinate_policy': row['coordinate_policy'],
+                               'ratio_scale': scale, 'source_anchor_offset': offset}
     if 'map_definitions' in bindings:
         row = bindings['map_definitions']
         directory = inside(resources, row['directory'])
@@ -548,6 +619,12 @@ def clean_owned(root, state, filename):
     """Delete only unchanged, receipt-owned old runtime copies; no glob/rmtree."""
     preserved = []
     for name, record in state.get('files', {}).items():
+        # A preexisting, never-overwritten world-map cfg can point at an older
+        # version's original relation. Retain those source paths as well as the
+        # new stable copy, including receipts written by older installers.
+        if filename == RESOURCE_STATE and (name in state.get('retained_files', [])
+                or PurePosixPath(name).name == 'all331_current_file_identity_and_pixel_anchor_contracts523.json'):
+            continue
         path = inside(root, name)
         if matches(path, record):
             path.unlink()
@@ -565,7 +642,7 @@ def clean_owned(root, state, filename):
     try:
         root.rmdir()
     except OSError:
-        log('Preserved non-managed/modified files in ' + str(root))
+        log('Preserved source, user or modified files in ' + str(root))
     return preserved
 
 
@@ -709,7 +786,8 @@ def install(args):
             files[name] = file_record(target)
         bridge = Path(__file__).with_name('private_source_bootstrap.gd')
         copy_file(bridge, inside(stage, GENERATED[1]))
-        json_write(stage / GENERATED[0], descriptor(plan, resource_root))
+        json_write(stage / GENERATED[0], descriptor(plan, resource_root,
+                    persistent_contracts=resources / 'pinned-contracts'))
         project = stage / 'project.godot'
         text = project.read_text(encoding='utf-8')
         if '[autoload]' in text:

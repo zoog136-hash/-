@@ -101,6 +101,7 @@ startup bridge가 처리한다. 이것은 APK 생성/설치 또는 Android 앱 �
 | 공통523 원문 ZIP | `TWILIGHT_PATCH523_CONTENT`, growth/death/title/relic의 기존 `user://` 원본 ZIP 위치 |
 | 새 이미지 manifest + dummy 보충 원문 | `TWILIGHT_SOURCE523_IMAGES`, `TWILIGHT_SOURCE523_IMAGES_SHA256` |
 | 별도로 공급된 메인 HUD 원본 부분팩 | `TWILIGHT_SOURCE_UI`, `TWILIGHT_SOURCE_UI_SHA256`; root/original_ui.json |
+| 원본 월드맵 관계와 명시적 offer | 없을 때만 `user://current523_world_map.cfg` `[world_map]` 준비; 기존 파일 보존 |
 | 실제 UI 부분팩과 selection JSON이 모두 있을 때 | `TWILIGHT_SOURCE523_UI_ICONS`, `TWILIGHT_SOURCE523_UI_ICONS_SHA256` |
 | 새 Sprite 은행이 실제 공급됐을 때 | `user://current523_source_bank.json` schema1의 tables_zip/manifest_path/manifest_sha256/overlay_whitelist_* |
 
@@ -132,7 +133,29 @@ pin만 전달하고 기존 지연 선택·binding consumer에 맡긴다. 이 입
 `ui_icons` 선택과 다르다. manifest는 기존 loader와 같은128MiB 제한 및 schema,
 scenes/files/atlases/blockers 계약을 확인한다. UI267의 화면 mount나 binding
 factory는 추정하지 않는다. 메인 HUD 부분팩의 전체 parent metadata가 다른 노드
-활성화나 전체560UI 완료를 뜻하지 않으며, 미확정 World·맵 입력·좌표를 지정하지 않는다.
+활성화나 전체560UI 완료를 뜻하지 않는다.
+
+월드맵의 등록·문맥·입력·이동은 기존 map owner의
+`configure_from_settings(world)`가 처리한다. 설치기는 등록기를 만들거나 호출하지
+않고 기존 cfg의7개 키만 준비한다: enabled, contract_path, contract_sha256,
+offered_worlds, coordinate_policy, ratio_scale, source_anchor_offset.
+기존 cfg는 유효성·활성 상태와 관계없이 읽거나 덮어쓰지 않는다. 없을 때만
+기본 enabled=false로 만들며, 명시된 활성 값이 없다고 true를 추정하지 않는다.
+offered_worlds는 10진 문자열 Land ID와 명시적 UIMapWorld.ID를 그대로 전달한다.
+선택적 label은 실제 원문 World.Name만 사용하고, 생략하면 기존 소비자가 읽는다.
+Land를 World로 대신하거나 첫 후보를 자동 선택하지 않는다.
+
+`OWN_SOURCE_CELL_CENTER_FIELD_RATIO_V1`, ratio_scale=1.0,
+source_anchor_offset=[0.5,0.5]는 전달된 TWILIGHT 자체 정책이다. 원작 M의
+공식 좌표 공식으로 표시하지 않는다. 기존 소비자가 원본 UI의 실제 선택 후에만
+이미지를 표시하고, 필드·관계·세션·입력 판정을 수행한다. UI v5, 이미지18ZIP,
+관계 JSON과 cfg는 별도 입력이다. 경로 준비가 실제 표시·보행 성공을 뜻하지 않는다.
+
+새 cfg의 관계 경로는 공유 저장소의
+`.TWILIGHT_Play.resources/pinned-contracts/<원문 SHA>/`에 고정한다. 이 원본은
+이전 실행 리소스 정리와 분리해 보존한다. 기존 사용자 cfg가 과거 버전 경로를
+참조할 수도 있으므로 과거 버전의 같은 관계 원문·출처도 정리에서 보존한다.
+기존 cfg를 새 경로로 고쳐 쓰거나, 관계 JSON을 재작성해 pin을 바꾸지 않는다.
 
 ## 비공개 인계 schema1
 
@@ -149,7 +172,7 @@ data를 거부한다. 토큰과 원본 자산은 포함하지 않는다. 이 입
 install_root를 갖는다. format은 `joined-zip`, `zip`, `file`이다. files는 각각
 공식 file_id/name/bytes/sha256을 갖고 joined-zip은 order와 전체 bytes/sha256도
 필요하다. depends_on은 이미 설치한 새 팩만 참조한다. `bindings`는
-maps/map_definitions/map_static_spr/tables/images/main_ui/ui_icons/source_bank의 공식 상대 경로와 pin만 사용한다.
+maps/map_definitions/map_static_spr/tables/images/main_ui/world_map/ui_icons/source_bank의 공식 상대 경로와 pin만 사용한다.
 include_prefixes는 `/`로 끝나면 폴더 하위 전체, 그 외는 정확한 ZIP member만
 추출한다. PR230 전달 ZIP에서는 world-links만 설치해 동봉된 구형 monsters는
 의존성에 넣지 않는다. SP2/SPR도 소비자에 필요한 원문과 metadata만 추출한다.
