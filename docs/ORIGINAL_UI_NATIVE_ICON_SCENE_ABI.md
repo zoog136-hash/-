@@ -115,3 +115,56 @@ not been verified. No
 new start/loop policy or frame-only reconstruction is inferred. A changed
 source descriptor receives its newly prepared instance instead. This handoff
 has not been executed or tested.
+
+## UI-owned original target values for image270
+
+These exact values are from the already retained current523 original component
+records. UI267 owns this half of the registration; image270 need not invent or
+reconstruct the slot placement from its selected icon scene.
+
+| Field | Inventory | Quickslot |
+| --- | --- | --- |
+| Component | `UI/CommonUi/Common_Slot.csb` | `UI/MainFloating/Slot_Skill.csb` |
+| Component SHA256 | `b0153e2324de4789e3a5f1d09030f370ed109583e893247656bee5affa3520d6` | `a2ef732cf9cee265b9dab0cee379ffab47fab6c2cc3b520d4d0cfd3eb3ad2c81` |
+| Sprite offset/name | `15012 / Sp_IconSample` | `18488 / Sp_IconSample` |
+| Original position, x-right/y-up | `(0,0)` | `(-0.5,1)` |
+| Original anchor | `(0.5,0.5)` | `(0.5,0.5)` |
+| Original size | `(64,64)` | `(64,64)` |
+| Original scale / rotation / flips | `(1,1) / (0,0) / false,false` | `(1,1) / (0,0) / false,false` |
+| Native local anchor position, y-down | `(0,0)` | `(-0.5,-1)` |
+| Native preview content origin | `(-32,32)` | `(-32,32)` |
+| Original Sprite blend | `(770,771)` | `(770,1)` |
+| Original ancestor offsets | `Node220 -> Sprite15012` | `Node232 -> Nd_Skill_1:16896 -> Sprite18488` |
+
+The Common_Slot root is position0/anchor0/size0/scale1/rotation0. The Slot_Skill
+root has the same identity fields; its original Nd_Skill_1 has position
+`(-0.0003000000142492354,0)`, anchor0/size0/scale1/rotation0. This small serialized
+translation is preserved, not rounded away. Inventory slot-set and quickslot
+page/project ancestors remain the actual original instances. Their transforms
+are already applied by the UI player; an image owner must not apply them again.
+
+The actual attachment parent is `slot_player.source_nodes[15012 or18488]`,
+the authored Sprite anchor Node2D. It is not the preview content origin and
+there is no64x64 fitting operation. The callback receives this original target
+in `context.source_slot_contract`: its existing four target identity fields,
+exact original_widget_options/blend, stable_component_target and
+ui_attachment_frame are now supplied by UI267. Runtime manifest_sha256 is the
+selected UI pack's pin (combined v6 is
+`3e775a796e2d1d1e14775313e587f870d7d0773b03da9a18803a78c4afe63304`);
+the component/hash/node tuple is separately stable across compositions.
+
+Image270 e50c6abf owns the canonical selected CSB member/hash/opened pack,
+original root declaration and any original clip/repeat declaration. UI267
+owns the target point above, actual attachment, lifecycle and input. Neither
+side needs to wait for the other's complete contract.
+
+The remaining narrow relation is **selected CSB root origin -> authored Sprite
+anchor**, expressed by actual original `registration.source_basis` and
+original_registration_confirmed. The slot's source anchor, an identity CSB root
+or a canonical AssetView path alone does not prove the original client's
+cross-component relation. UI metadata therefore declares
+ui_target_declared_by_original=true but
+ui_attachment_frame.root_relation_to_csb_origin_confirmed=false. No confirmation
+or relative offset is fabricated. Unknown repeat remains a separate per-scene
+playback field. These inputs remain pending; this target declaration is not
+proof of a rendered or game-consumed CSB icon.

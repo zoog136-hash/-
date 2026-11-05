@@ -845,7 +845,11 @@ static func external_scene_slot_contract(pack: RefCounted, member: String, sourc
 	if raw.get("classname")!="Sprite":return {"ok":false,"error":"source_asset_slot_original_sprite_required"}
 	var options: Dictionary=raw.options
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
-	return {"ok":true,"schema":"twilight-native-icon-scene-slot-v1","member":member,"source_sha256":tree.get("_source_sha256"),"manifest_sha256":pack.manifest_sha256,"node_offset":source_offset,"registration_space":"authored_sprite_anchor","original_widget_options":widget.duplicate(true),"original_blend_func":options.get("blendFunc").duplicate(),"fit_or_offset_inferred":false,"original_client_registration_confirmed":false}
+	var position: Array=widget.position
+	var anchor: Array=widget.anchorPoint
+	var size: Array=widget.size
+	var identity: Dictionary={"member":member,"source_sha256":tree.get("_source_sha256"),"node_offset":source_offset}
+	return {"ok":true,"schema":"twilight-native-icon-scene-slot-v1","member":member,"source_sha256":tree.get("_source_sha256"),"manifest_sha256":pack.manifest_sha256,"node_offset":source_offset,"registration_space":"authored_sprite_anchor","original_widget_options":widget.duplicate(true),"original_blend_func":options.get("blendFunc").duplicate(),"stable_component_target":identity,"ui_target_declared_by_original":true,"ui_attachment_frame":{"parent":"actual_source_nodes_entry","node_offset":source_offset,"source_position":position.duplicate(),"source_axes":"x_right_y_up","native_position":Vector2(float(position[0]),-float(position[1])),"native_axes":"x_right_y_down","authored_anchor":anchor.duplicate(),"authored_size":size.duplicate(),"native_preview_content_origin":Vector2(-float(anchor[0])*float(size[0]),float(anchor[1])*float(size[1])),"scene_parent_is_preview_content_origin":false,"root_relation_to_csb_origin_confirmed":false},"fit_or_offset_inferred":false,"original_client_registration_confirmed":false}
 
 func set_bound_source_visual_result(source_offset: int, owner_result: Dictionary) -> Dictionary:
 	if owner_result.get("source_scene_descriptor") is Dictionary:return set_bound_source_scene_result(source_offset,owner_result.source_scene_descriptor)
