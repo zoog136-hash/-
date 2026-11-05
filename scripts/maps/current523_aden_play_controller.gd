@@ -23,6 +23,7 @@ var _portals: RefCounted
 # copied contexts from that module; it is not a second definition catalog.
 const DEFINITION_PACK_SHA256="2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
 const SOURCE_TRAVEL=preload("res://scripts/maps/current523_source_travel.gd")
+const ACTOR_CONTEXT=preload("res://scripts/maps/current523_map_runtime_context.gd")
 var _source_portal_provider: RefCounted
 var _source_travel_busy: bool=false
 var _portal_definition_generation: int=0
@@ -369,7 +370,10 @@ func portal_evidence() -> Array:
 			var level_notes: Array[String]=[]
 			for condition: Dictionary in context.get("actor_level_conditions",[]):
 				level_notes.append("%s %s=%d · 현재%d · %s"%[str(condition.get("side","")),str(condition.type.Name),int(condition.threshold),int(condition.actor_level),"충족" if bool(condition.fulfilled) else "미충족"])
-			result.append({"declared_inactive_restrictions":inactive_names,"actor_level_notes":level_notes,"configured_arrival_policy":settings.get("portal_landing_policy","EXACT_POINT_ONLY"),"target_declared_bounds":[territory.StartX,territory.StartY,territory.EndX,territory.EndY],"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","definition_hold":context.get("source_travel_hold",""),"definition_owner":context.get("definition_owner","CALLER_SUPPLIED"),"navigation_ticket":_navigation_ticket_for_context(id,context),"native_m_rules_verified":false})
+			var calendar_notes: Array[String]=[]
+			for condition: Dictionary in context.get("land_time_conditions",[]):
+				calendar_notes.append("Land%d · 시간그룹%d 달력:%s · 공유 시간풀 연결 대기"%[int(condition.land_id),int(condition.calendar.group.ID),str(condition.calendar.status)])
+			result.append({"declared_inactive_restrictions":inactive_names,"actor_level_notes":level_notes,"calendar_notes":calendar_notes,"configured_arrival_policy":settings.get("portal_landing_policy","EXACT_POINT_ONLY"),"target_declared_bounds":[territory.StartX,territory.StartY,territory.EndX,territory.EndY],"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","definition_hold":context.get("source_travel_hold",""),"definition_owner":context.get("definition_owner","CALLER_SUPPLIED"),"navigation_ticket":_navigation_ticket_for_context(id,context),"native_m_rules_verified":false})
 		return result
 	return _portals.call("portal_evidence") if source_owned and _portals != null else []
 
@@ -378,10 +382,14 @@ func portal_context(id: int) -> Dictionary:
 		if _source_portal_provider==null: return {}
 		var context: Variant
 		var world: Node=_world()
-		if _source_portal_provider.has_method("portal_context_for_actor") and is_instance_valid(world):
+		var actor_state: Dictionary=ACTOR_CONTEXT.capture(world)
+		if _source_portal_provider.has_method("portal_context_for_actor_state") and is_instance_valid(world):
+			context=_source_portal_provider.call("portal_context_for_actor_state",int(settings.native_land_id),str(_source_field.get("source_asset")),id,actor_state)
+		elif _source_portal_provider.has_method("portal_context_for_actor") and is_instance_valid(world):
 			# Authoritative current game state, never a level supplied by the UI.
 			context=_source_portal_provider.call("portal_context_for_actor",int(settings.native_land_id),str(_source_field.get("source_asset")),id,world.get("level"))
 		else:context=_source_portal_provider.call("portal_context_for_land",int(settings.native_land_id),str(_source_field.get("source_asset")),id)
+		if context is Dictionary:context["runtime_condition_identity"]=ACTOR_CONTEXT.identity(actor_state)
 		return context.duplicate(true) if context is Dictionary and _source_context_shape(context) else {}
 	return _portals.call("portal_context",id) if source_owned and _portals != null else {}
 
@@ -435,7 +443,7 @@ func _navigation_ticket_for_context(id: int, context: Dictionary) -> Dictionary:
 	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC or _source_field==null or _source_portal_provider==null or not is_instance_valid(world): return {}
 	if world.field_map!=_source_field or world.field_renderer!=_renderer or world.field_physics!=_source_physics: return {}
 	if not _source_context_shape(context) or context.Portal.ID!=id or context.SourceLand!=_source_field.get("native_land") or context.Portal.SourceLandID!=context.SourceLand.ID: return {}
-	return {"field_instance":_source_field.get_instance_id(),"definition_generation":_portal_definition_generation,"portal":context.Portal.duplicate(true),"source_manifest_sha256":settings.source_manifest_sha256,"actor_position":world.player.global_position,"actor_condition_level":context.get("actor_condition_level",null)}
+	return {"field_instance":_source_field.get_instance_id(),"definition_generation":_portal_definition_generation,"portal":context.Portal.duplicate(true),"source_manifest_sha256":settings.source_manifest_sha256,"actor_position":world.player.global_position,"actor_condition_level":context.get("actor_condition_level",null),"runtime_condition_identity":context.get("runtime_condition_identity",{}).duplicate(true)}
 
 func walk_to_source_portal(id: int, ticket: Dictionary) -> bool:
 	problem=""
@@ -485,13 +493,16 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 		problem="대상 원문 필드 보류: "+str(proposed.problem); proposed.close(); return false
 	var territory: Dictionary=context.TargetTerritory
 	if (territory.StartX!=territory.EndX or territory.StartY!=territory.EndY) and options.get("portal_landing_policy","EXACT_POINT_ONLY")=="OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1":
-		if not _source_portal_provider.has_method("portal_context_for_actor_at_landing"):
+		if not _source_portal_provider.has_method("portal_context_for_actor_at_landing") and not _source_portal_provider.has_method("portal_context_for_actor_state_at_landing"):
 			problem="면적 도착 셀의 원문 조건을 연결할 정의 제공자가 없습니다.";proposed.close();return false
 		var bounds: Array=[territory.StartX,territory.StartY,territory.EndX,territory.EndY]
 		var landing: Dictionary=proposed.choose_source_landing(bounds,"OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1")
 		if not landing.get("ok",false):
 			problem="선언 영역 안의 자체 안전 착지 보류: "+str(landing.get("reason","unknown"));proposed.close();return false
-		var selected_context: Variant=_source_portal_provider.call("portal_context_for_actor_at_landing",int(settings.native_land_id),str(_source_field.get("source_asset")),id,world.get("level"),landing.source_cell,"OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1")
+		var selected_context: Variant
+		if _source_portal_provider.has_method("portal_context_for_actor_state_at_landing"):
+			selected_context=_source_portal_provider.call("portal_context_for_actor_state_at_landing",int(settings.native_land_id),str(_source_field.get("source_asset")),id,ACTOR_CONTEXT.capture(world),landing.source_cell,"OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1")
+		else:selected_context=_source_portal_provider.call("portal_context_for_actor_at_landing",int(settings.native_land_id),str(_source_field.get("source_asset")),id,world.get("level"),landing.source_cell,"OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1")
 		if not selected_context is Dictionary or not _source_context_shape(selected_context):
 			problem="선택한 도착 셀의 원문 조건을 읽지 못했습니다.";proposed.close();return false
 		for key: String in ["Portal","SourceLand","TargetTerritory","TargetLand"]:

@@ -1,6 +1,9 @@
 extends RefCounted
 ## Narrow consumer of PR230's unchanged production loader. No second catalog.
 const OWNER=preload("res://scripts/maps/patch523_world_links.gd")
+const SERVER=preload("res://scripts/cards/source_collection_conditions.gd")
+const WINDOWS=preload("res://scripts/crafting/patch523_craft_conditions.gd")
+const CIVIL=preload("res://scripts/monsterbook/monsterbook523_clock.gd")
 const MANIFEST_SHA256="2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
 const MAX_CACHED_LANDS=4
 var loaded: bool=false
@@ -8,13 +11,14 @@ var root: String=""
 var problem: String=""
 var _lands: Dictionary={}
 var _recent: Array[String]=[]
+var _date_indexes: Dictionary={}
 
 func load_pack(directory: String, expected_sha256: String) -> bool:
 	if expected_sha256!=MANIFEST_SHA256: problem="원문 정의팩 SHA가 다릅니다."; return false
 	if not _manifest_has_pin(directory): problem="원문 정의 manifest가 없거나 변경되었습니다."; return false
 	var candidate:=OWNER.new()
 	if not candidate.load_land(directory,0,"0/",expected_sha256): problem=candidate.problem; return false
-	root=directory; loaded=true; problem=""; _lands.clear(); _recent.clear()
+	root=directory; loaded=true; problem=""; _lands.clear(); _recent.clear();_date_indexes.clear()
 	_lands["0:0/"]=candidate; _recent.append("0:0/")
 	return true
 
@@ -111,7 +115,72 @@ func portal_context_for_actor(land_id: int, exact_asset: String, portal_id: int,
 func portal_context_for_actor_at_landing(land_id: int, exact_asset: String, portal_id: int, actor_level: Variant, source_cell: Vector2i, selection_policy: String) -> Dictionary:
 	return _portal_context(land_id,exact_asset,portal_id,actor_level,{"source_cell":source_cell,"selection_policy":selection_policy})
 
-func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_level: Variant=null, own_landing: Dictionary={}) -> Dictionary:
+func portal_context_for_actor_state(land_id: int, exact_asset: String, portal_id: int, actor_state: Dictionary) -> Dictionary:
+	return _portal_context(land_id,exact_asset,portal_id,actor_state.get("level"),{},actor_state)
+
+func portal_context_for_actor_state_at_landing(land_id: int, exact_asset: String, portal_id: int, actor_state: Dictionary, source_cell: Vector2i, selection_policy: String) -> Dictionary:
+	return _portal_context(land_id,exact_asset,portal_id,actor_state.get("level"),{"source_cell":source_cell,"selection_policy":selection_policy},actor_state)
+
+func _date_row(definition: RefCounted, table: String, id: int) -> Dictionary:
+	if not _date_indexes.has(table):
+		var index: Dictionary={}
+		for row: Dictionary in definition.context_rows(table):
+			if not OWNER._integer(row.get("ID")):continue
+			var key: int=int(row.ID)
+			index[key]={} if index.has(key) else row.duplicate(true)
+		_date_indexes[table]=index
+	return (_date_indexes[table].get(id,{}) as Dictionary).duplicate(true)
+
+func _date_window(definition: RefCounted, group: Dictionary, actor_state: Dictionary) -> Dictionary:
+	var result: Dictionary={"status":"context_missing","native_calendar_boundary_verified":false,"boundary":"start_inclusive_end_exclusive","group":group.duplicate(true)}
+	if not OWNER._integer(group.get("StartDateTimeID")) or not OWNER._integer(group.get("EndDateTimeID")):
+		result.status="date_reference_invalid";return result
+	var start: int=int(group.StartDateTimeID);var end: int=int(group.EndDateTimeID)
+	if start==0 and end==0:result.status="not_declared";return result
+	if start<1 or end<1:result.status="date_reference_incomplete";return result
+	var profile: Variant=actor_state.get("server_profile")
+	if not profile is Dictionary or not SERVER.valid_context(profile):return result
+	var table: String={"KR":"DateTimes_Korean","TW":"DateTimes_Taiwanese","JP":"DateTimes_Japanese","CN":"DateTimes_Chinese"}.get(str(profile.ServiceRegionCode),"")
+	if table.is_empty():result.status="service_date_table_unresolved";return result
+	result["date_table"]=table;result["server_profile"]=profile.duplicate(true)
+	var first: Dictionary=_date_row(definition,table,start)
+	var last: Dictionary=_date_row(definition,table,end)
+	result["source_start"]=first;result["source_end"]=last
+	if first.is_empty() or last.is_empty():result.status="date_definition_missing";return result
+	if not CIVIL.valid(CIVIL.format_row(first)) or not CIVIL.valid(CIVIL.format_row(last)):
+		result.status="source_civil_date_invalid";return result
+	if not str(actor_state.get("calendar_hold","")).is_empty():result["reason"]=actor_state.calendar_hold;return result
+	var offset: Variant=actor_state.get("calendar_offset_minutes")
+	if not WINDOWS.integer(offset,-840,840) or not WINDOWS.integer(actor_state.get("now_unix"),0,4102444800):return result
+	var origin: String=str(actor_state.get("calendar_clock_origin",""))
+	if origin.is_empty():return result
+	var first_fields: Dictionary={"year":int(first.Year),"month":int(first.Month),"day":int(first.Day),"hour":int(first.Hour),"minute":int(first.Minute),"second":0}
+	var last_fields: Dictionary={"year":int(last.Year),"month":int(last.Month),"day":int(last.Day),"hour":int(last.Hour),"minute":int(last.Minute),"second":0}
+	var window: Dictionary={"source_start":first,"source_end":last,"start_unix":Time.get_unix_time_from_datetime_dict(first_fields)-int(offset)*60,"end_unix":Time.get_unix_time_from_datetime_dict(last_fields)-int(offset)*60,"utc_offset_minutes":int(offset),"clock_origin":origin,"boundary":"start_inclusive_end_exclusive"}
+	if not WINDOWS.valid_window(window):result.status="source_window_invalid";return result
+	result["window"]=window
+	result.status="open" if actor_state.now_unix>=window.start_unix and actor_state.now_unix<window.end_unix else "closed"
+	return result
+
+func _land_time_conditions(definition: RefCounted, land_id: int, actor_state: Dictionary) -> Dictionary:
+	var result: Dictionary={"holds":[],"evaluations":[]}
+	for row: Dictionary in definition.context_rows("LandTimeLimit"):
+		if int(row.get("LandID",-1))!=land_id:continue
+		var group: Dictionary={}
+		for candidate: Dictionary in definition.context_rows("LandTimeLimitGroup"):
+			if candidate.get("ID")==row.get("LandTimeLimitGroupID"):
+				if not group.is_empty():group={};break
+				group=candidate.duplicate(true)
+		if group.is_empty():result.holds.append({"reason":"land_time_group_unresolved","row":row.duplicate(true)});continue
+		var calendar: Dictionary=_date_window(definition,group,actor_state)
+		result.evaluations.append({"land_id":land_id,"row":row.duplicate(true),"calendar":calendar})
+		if calendar.status not in ["open","not_declared"]:result.holds.append({"reason":"land_date_window_"+str(calendar.status),"row":row.duplicate(true),"calendar":calendar.duplicate(true)})
+		# A calendar result is never elapsed-time ownership. Existing dungeon
+		# pools cannot grant map entry unless their accounting owns this session.
+		result.holds.append({"reason":"native_land_time_pool_owner_required","row":row.duplicate(true),"group":group.duplicate(true)})
+	return result
+
+func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_level: Variant=null, own_landing: Dictionary={}, actor_state: Dictionary={}) -> Dictionary:
 	var source: RefCounted=_definition(land_id,exact_asset)
 	if source==null: return {}
 	var contract: Dictionary=source.portal_contract(portal_id)
@@ -148,11 +217,18 @@ func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_le
 			var evidence: Dictionary=item.duplicate(true);evidence["side"]="target";actor_conditions.append(evidence)
 		for item: Dictionary in target_attributes.declared_inactive:
 			var evidence: Dictionary=item.duplicate(true); evidence["side"]="target"; inactive.append(evidence)
-	for table: String in ["LandTimeLimit","LandWeeklyOpenTime","CompetitionDungeonLand"]:
+	var time_conditions: Array=[]
+	var time_lands: Dictionary={}
+	time_lands[land_id]=source
+	time_lands[int(target_land.ID)]=target
+	for affected_land: int in time_lands:
+		var conditions: Dictionary=_land_time_conditions(time_lands[affected_land],affected_land,actor_state)
+		holds.append_array(conditions.holds);time_conditions.append_array(conditions.evaluations)
+	for table: String in ["LandWeeklyOpenTime","CompetitionDungeonLand"]:
 		for row: Dictionary in source.context_rows(table):
 			var id: int=int(row.get("LandID",row.get("LandId",-1)))
 			if id in [land_id,int(target_land.ID)]: holds.append({"reason":"native_land_condition_requires_policy","table":table,"row":row.duplicate(true)})
-	return {"Portal":portal.duplicate(true),"SourceLand":source.land.duplicate(true),"TargetTerritory":territory.duplicate(true),"TargetLand":target_land.duplicate(true),"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","native_definition_contract":contract.duplicate(true),"declared_inactive_restrictions":inactive,"actor_condition_level":actor_level,"actor_level_conditions":actor_conditions,"own_arrival_policy":arrival_policy,"own_arrival_source_cell":[selected_point.x,selected_point.y] if selected_point is Vector2i else [],"native_landing_rule_verified":false,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_m_rules_verified":false}
+	return {"Portal":portal.duplicate(true),"SourceLand":source.land.duplicate(true),"TargetTerritory":territory.duplicate(true),"TargetLand":target_land.duplicate(true),"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","native_definition_contract":contract.duplicate(true),"declared_inactive_restrictions":inactive,"actor_condition_level":actor_level,"actor_level_conditions":actor_conditions,"land_time_conditions":time_conditions,"own_arrival_policy":arrival_policy,"own_arrival_source_cell":[selected_point.x,selected_point.y] if selected_point is Vector2i else [],"native_landing_rule_verified":false,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_m_rules_verified":false}
 
 func cache_metrics() -> Dictionary:
 	return {"cached_native_lands":_lands.size(),"maximum_native_lands":MAX_CACHED_LANDS,"definition_manifest_sha256":MANIFEST_SHA256 if loaded else ""}

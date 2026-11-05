@@ -407,6 +407,8 @@ func _refresh_source_portals() -> void:
 		if not inactive.is_empty(): note+=" · 원문 "+", ".join(inactive)
 		var level_notes: Array=row.get("actor_level_notes",[])
 		if not level_notes.is_empty():note+=" · "+" / ".join(level_notes)
+		var calendar_notes: Array=row.get("calendar_notes",[])
+		if not calendar_notes.is_empty():note+=" · "+" / ".join(calendar_notes)
 		if row.get("landing_position")==null and row.get("configured_arrival_policy")==PLAY_OPTIONS.OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1:
 			note+=" · 자체 영역 착지 선택 후 조건 판정"
 		source_portal_choice.add_item("%d · %s → %s · %s" % [int(row.id),str(row.source_position),("Land%d · " % int(row.target_land_id) if row.has("target_land_id") else "")+str(row.get("landing_position")),note],int(row.id))

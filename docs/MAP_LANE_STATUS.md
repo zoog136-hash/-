@@ -514,3 +514,68 @@ portal_landing_policy="OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1"
 **추가 테스트·검증·품질 평가 실행 없이 작성한 미검증 연결 코드**다.
 신규 실제 이동/충돌/재접속 통과 수나95% 사용률을 만들어 보고하지 않는다.
 이전577/997 지역 및 Main 결과는 이전 범위로 보존하며 이번 변경의 통과로 승계하지 않는다.
+
+
+## 기존 시간·서버 소비자 재사용:맵 기간 조건 연결
+
+제외 항목이나 자식 규칙을 다시 찾지 않고 남은 기간 소비 경로를 이어 연결했다.
+별도 서버 선택기·달력·구매/던전 시간 풀을 만들지 않고 다음 기존 계약을 재사용한다.
+
+- collection_runtime.source_server_context():선택된 source_snapshot/ServiceRegionCode/WorldNo의 복사본.
+- source_collection_conditions.valid_context():명시된 서버 프로필 형식. 언어·Land·OS에서 서버를 고르지 않는다.
+- source523_shop_runtime의 명시적 calendar_offset_minutes/server_context/clock_highwater와 저장 차단 상태.
+- monsterbook523_clock의 civil date 형식/윤년 처리.
+- patch523_craft_conditions.valid_window():원문 날짜·명시 UTC offset과 Unix구간의 일치 및 기존 시작 포함/끝 제외 계약.
+
+새 `current523_map_runtime_context.capture()`가 이 기존 값을 읽고 컨트롤러가
+정의 provider에 전달한다. 서버 snapshot 표식을 다른 버전으로 덮어쓰지 않는다.
+카드 프로필과 기존 상점의 region/world가 정확히 일치하고 시간대가 명시되어 있으며
+상점 상태가 정상이고 시스템 시각이 기존 highwater보다 이전이 아닐 때만 달력
+문맥을 제공한다. 미설정·충돌·역행에는 보류한다. 상점 거래·보상/시간 풀·세이브를
+호출/변경하지 않는다. ticket 문맥에는 서버/달력 선택 신원을 포함하되 매초 변하는
+now_unix를 넣지 않아 시각 흐름만으로 걷기 요청이 무효화되지 않게 했다.
+
+provider는 기존 검증 정의팩의 LandTimeLimit→LandTimeLimitGroup→지역별
+DateTimes 원문 참조를 실제 출발/도착 Land에 연결한다. 선택된 ServiceRegionCode에
+해당하는 날짜 표만 읽고 일반DateTimes나 빈JP/CN 표를 KR로 대신하지 않는다.
+유효한 원문 StartDateTimeID/EndDateTimeID와 기존 명시 시간대가 모두 있어야
+공통 구간 소비자로 open/closed를 판정한다.0/0은 달력 구간 미지정일 뿐 무제한
+플레이를 뜻하지 않으며,한쪽 참조 누락·유효하지 않은 날짜/정책에는 보류한다.
+시작 포함/끝 제외는 기존 공유 소비자의 명시 정책이며 M 원작 경계 동등성은
+확정하지 않는다. 새 시간 수치나 UTC기준을 추정해 넣지 않았다.
+
+달력 개방과 잔여시간 소유권은 별개다. 기존 dungeon_play.pool()는 해당 던전
+실행의 저장/차감 주체이며 이 M 맵 세션을 소유하지 않는다. 잔여시간을 읽어 입장만
+허용하고 실제 차감하지 않는 경로를 만들지 않았다. LandTimeLimit은 계속
+native_land_time_pool_owner_required로 보류하며,기간이 닫힘/미확인인 이유도
+별도로 소비한다. 주간 행은 기존 RAW_SERVICE_REGION_TIMES;
+NO_UTC_OR_WEEKDAY_INFERENCE 계약으로 남긴다. 상점 구매 주간 reset을 맵 개방
+스케줄로 바꾸거나 ServiceTypeID13을 ServerLimitSetID13으로 혼동하지 않는다.
+
+기존 포탈 목록 문구에 달력 판정과 공유 시간풀 연결 대기를 연결했다. 새 UI나
+이미지·Sprite·프레임·PC 호환은 만들지 않았다. 자동 활성·원작 충돌·기타 서버/기간
+조건을 충족한 것으로 주장하지 않으며 이전 레벨·안전 착지·제외 코드는 유지한다.
+
+**추가 테스트·검증·품질 평가 실행 없이 작성한 미검증 연결 코드**다.
+원문·팩·세이브를 변경하지 않았으며 실제 실행/새 지역 플레이 통과나95% 소비 수치를
+추가하지 않는다. 원본 판정 값과 공유 소비자/자체 달력 정책의 경계를 보존한다.
+
+
+주간 조건의 필요한 모바일 원문/공식 자료 탐색도 좁은 범위에서 진행했다.
+보유 관련 스키마에는 WeekTypeID 이름 대응 enum이 없고 WeeklyOpenTime/Group은
+ID,GroupSet은 연결만 담고 있다. 찾은 모바일 공식 개방/대기 안내도 raw WeekTypeID나
+WaitingMinutes 필드의 의미와 연결하지 않는다. 따라서0과1~7을 일요일/ISO요일이나
+매일로 임의 해석하지 않았고,대기 시간이 개방 전/후인지·입장 가능 단계·Duration에
+대기 시간이 포함되는지·주 경계 규칙도 미확정으로 남긴다. PC 자료는 사용하지 않았다.
+
+원작 충돌 속성/방향/점유 및 자동 포탈 활성도 확인된 M 실행 계약이 없어 기존 자체
+통행/수동 이동과 구분한다. 달력 판정 연결을 잔여시간 차감·주간 개방·서버 입장 조건
+전체의 완료로 표시하지 않는다. 이 범위는 원본 파일 수신 재시도나 제외 기록 조사로
+해결할 문제가 아니며,해당 M 실행 계약/공유 시간 세션 소유 API가 필요한 미완이다.
+
+
+좁은 모바일 공개 자료의 예시는 아래 공식 안내다. 콘텐츠의 입장/대기 단계를
+설명하지만 current523의 raw 요일·대기 필드 대응표로 사용하지 않았다.
+
+- https://lineagem.plaync.com/board/update/view?articleId=614b51737d8aed0001f1861b&viewMode=list
+- https://lineagem.plaync.com/board/update/view?articleId=64adadb891718b4f9bc918a1
