@@ -46,12 +46,11 @@ func configure(host) -> void:
 			var result: Dictionary=world.tj_coupons.grant_for_test(str(coupons.get_item_metadata(coupons.selected)))
 			status.text=str(result.get("error","테스트 쿠폰 지급 저장 완료"));refresh())
 	refresh()
-	if world.tj_coupons.core.definitions.is_empty() and FileAccess.file_exists(preload("res://scripts/tj/source523.gd").CACHE):
-		choose.disabled=true;status.text="설치된 최신 원본을 백그라운드에서 검증하고 있습니다."
-		var loaded: bool=await world.tj_coupons.install_async(preload("res://scripts/tj/source523.gd").CACHE)
-		if not is_instance_valid(self):return
+	if world.tj_coupons.core.definitions.is_empty():
+		choose.disabled=true;status.text="보유한 최신 원본을 읽고 있습니다."
+		var loaded: bool=world.tj_coupons.load_default_source()
 		choose.disabled=false;refresh()
-		if not loaded:status.text="설치된 원본을 검증하지 못했습니다. 소유 쿠폰과 저장은 유지합니다."
+		if not loaded:status.text=world.tj_coupons.source_problem
 func refresh() -> void:
 	coupons.clear()
 	var service=world.tj_coupons.core

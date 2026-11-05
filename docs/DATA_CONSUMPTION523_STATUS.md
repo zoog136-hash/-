@@ -683,6 +683,28 @@ active payment definitions. Existing policies, group eligibility, quotes,
 physical allocations, learned skills, costs and final saves are unchanged. No
 new class/skill identity or inferred conversion namespace is created.
 
+`tj.runtime.load_default_source()` is called by the existing TJ page when its
+definitions are empty. It reads the existing `user://tj523-source.zip` first;
+only an actual missing file selects the common pinned archive. Access, SHA,
+ZIP and parser errors do not bypass that dedicated input. The same full-source
+SHA/1,065-member/20-required-table/10-profile/139-coupon acceptance runs before
+the staged result replaces `core.definitions`. `source_input_identity`,
+`source_state` and `source_problem` describe definition input, not coupon/card
+ownership or an installed compiled pack. No archive is copied, source is
+installed, startup parser is added or save binding is created.
+
+The complete raw coupon/card dictionaries remain available as `raw_coupons`
+and `raw_cards`. After the original acceptance guards, actual boolean TestItem
+and the shared explicit-dummy evidence separate `excluded_coupons`/
+`excluded_cards` from the active dictionaries. Excluded rows cannot become
+active through the existing debug coupon path. The owner-supplied dummy SPI
+must be present to supply additional declarations; missing evidence does not
+become a name heuristic. Existing manual install/worker code, policy, seasons,
+expiry interpretation, candidate selection, retry execution, physical supply,
+receipts and saves remain unchanged. Current card records already expose the
+same-original `source_original.deck_id`/`grade_id` fields read by TJ redemption;
+this input change does not authorize a new reward or candidate namespace.
+
 The existing guardian source now obtains matching selected rows during initial
 data adoption and through `rewards()`, `upgrade()`, `constant()` and
 `spell_name()`. Existing `data.spells`/`data.buffs` source/effect fields also feed
