@@ -305,9 +305,6 @@ func _save_static_spr() -> void:
 	if not bindings is Dictionary:
 		spr_status.text="파일/저장 그룹 지정은 SPR ID·원문 선택자별 JSON 객체여야 합니다. 이전 설정을 유지합니다.";return
 	var value: Dictionary={"enabled":spr_enabled.button_pressed,"source_root":spr_root.text,"declaration_path":spr_declaration.text,"group_bit":int(spr_group.value),"fps":spr_fps.value,"anchor_x":int(spr_anchor_x.value),"anchor_y":int(spr_anchor_y.value),"layer":int(spr_layer.value),"action_overrides":actions,"frame_bindings":bindings}
-	# Preserve the explicitly opted-in compatibility policy without adding a
-	# fabricated original-game UI or turning the policy on with a settings save.
-	value["shadow_policy"]=STATIC_SPR.read_options().shadow_policy
 	var error: Error=STATIC_SPR.save_options(value)
 	spr_status.text="저장됨 · 다음 원문 맵 입장에 적용합니다. 원문에 없는 동작·프레임은 표시하지 않습니다. 동작 선택·틱/초·앵커·레이어는 자체 설정입니다." if error==OK else "설정을 저장하지 못했습니다. 이전 설정과 현재 맵을 유지합니다: "+error_string(error)
 
