@@ -378,3 +378,9 @@ no-new-checks instruction. Existing dependency/inspection counts and actual-game
 consumption claims remain unchanged. Still required are the per-screen caller's
 content-root entry/mount, row-to-node/data mapping, tab/variant visibility,
 original scroll controller and confirmation/tooltip presentation contracts.
+
+Registered binding factories may return either the exact-offset binding map or
+the concrete helpers' `{ok,member,sha256,bindings}` descriptor. The presenter
+propagates a factory failure unchanged and requires descriptor member/hash to
+match the already registered original root. An incomplete-screen marker never
+bypasses strict node/data/input validation. This integration is also unexecuted.

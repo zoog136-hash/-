@@ -71,6 +71,16 @@ func present(section: String) -> Dictionary:
 	var bindings: Variant=route.bindings.call(model.duplicate(true),session)
 	if not bindings is Dictionary:
 		session.invalidate();return {"ok":false,"code":"source_node_contract_missing"}
+	# Concrete source factories return their exact member/hash alongside the
+	# node map. Preserve their failure and identity boundary instead of
+	# passing factory metadata to the renderer as if it were node offsets.
+	if bindings.has("ok"):
+		var descriptor: Dictionary=bindings
+		if not descriptor.get("ok",false):
+			session.invalidate();return descriptor
+		if descriptor.get("member")!=route.member or descriptor.get("sha256")!=route.sha256 or not descriptor.get("bindings") is Dictionary:
+			session.invalidate();return {"ok":false,"code":"source_binding_factory_identity_mismatch"}
+		bindings=descriptor.bindings
 	var scene=SCENE.new()
 	var configured: Dictionary=scene.configure(_pack,str(route.member),false,bindings)
 	if not configured.ok:
