@@ -247,6 +247,12 @@ v23의 새 소비 기능은 PR280 코드와 별도 호환 조건을 요구한다
 mandatory_source_blockers로 다운로드·설치 전에 중단한다. 해당 조건이 해소된 공식
 코드와 정확한 최종 목록을 확인한 뒤에만 한 번의 게시/목록 교체 대상으로 확정한다.
 
+선택된 최신 계약은 원본 ZIP 다운로드 전에 실제 main의 세 manifest reader와
+32MiB/16MiB 분리 한도, UI identity-before-validation 및 거절 시 원복 경계를 읽기로
+대조한다. 공개 PR commit의 존재를 main 통합이나 실행 성공으로 대신하지 않는다.
+설치기가 PR을 합치지 않으며 기존 실행본을 바꾸기 전에 미충족 계약으로 중단한다.
+현재 승인 후보는 v23을 유지하며 선택적 v29로 자동 변경하지 않는다.
+
 UI267의 후속 공개 체크포인트
 `8486e6f59358d0066baad2163ff428cda6ed6d31`도 같은 v6 ZIP과 manifest pin을
 사용한다. CSB 아이콘의 부착·해제·동일 장면 재사용은 기존 UI/image owner의

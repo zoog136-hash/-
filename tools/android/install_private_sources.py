@@ -1095,6 +1095,35 @@ def additional_ui_code_contracts(code_root, specifications):
         'Owner script boundaries only; independent of main/world activation')
 
 
+def ui_identity_order_contract(code_root):
+    name = 'scripts/ui/original_ui/sprite_scene.gd'
+    evidence, sources = source_contract_evidence(code_root, {name: [('configure', [])]})
+    body = gd_function(sources.get(name, ''), 'configure')
+    validate = body.find('_validate(')
+    commit = body.find('source_tree=tree')
+    assigned = [body.find('source_pack=pack'), body.find('source_member=member')]
+    rejection = body[validate:commit] if 0 <= validate < commit else ''
+    if (validate < 0 or any(index < 0 or index >= validate for index in assigned)
+            or not all(marker in rejection for marker in ('source_pack=null', 'source_member=""', 'unsupported_source_scene'))):
+        evidence['blockers'].append('UI source identity must be staged before validation and cleared on rejection before tree commit')
+    evidence['ready'] = not evidence['blockers']
+    return evidence
+
+
+def preflight_required_code(plan, code_root):
+    if not plan.get('enforce_selected_source_contracts'):
+        return
+    bank = plan['bindings']['source_bank']
+    ui = plan['bindings']['main_ui']
+    contracts = [source_bank_code_contract(code_root, bank['required_manifest_bytes']),
+                 combined_ui_code_contract(code_root, ui.get('code_components', [])),
+                 ui_identity_order_contract(code_root)]
+    contracts.extend(additional_ui_code_contracts(code_root, ui['feature_code_requirements']).values())
+    blockers = [message for contract in contracts for message in contract['blockers']]
+    if blockers:
+        raise ValueError('Selected official resources require compatible actual main code: ' + '; '.join(blockers))
+
+
 def source_bank_code_contract(code_root, manifest_bytes=None):
     requirements = {
         'scripts/resources/current523_source_bank.gd': [('options',
@@ -1103,7 +1132,7 @@ def source_bank_code_contract(code_root, manifest_bytes=None):
             ('source_tables', ['options(context)', '_load_tables']),
             ('select_card', ['options(context)', '_load_tables'])],
         'scripts/resources/reference_sp2_bank.gd': [('load_bank',
-            ['_root=manifest_path.get_base_dir()', '_json(manifest_path,expected_sha)',
+            ['_root=manifest_path.get_base_dir()', '_json(manifest_path,expected_sha',
              'current523_reference_sp2_action_bank', 'source_dummy_exclusion_policy',
              '_install_source_exclusions()', 'source_actor_admission']),
             ('_source_reference_instances', ['SOURCE_REFERENCE_INSTANCE_POLICY'])],
@@ -1124,16 +1153,31 @@ def source_bank_code_contract(code_root, manifest_bytes=None):
             ['source_m_current523_final']), ('select', ['definition_selection_only',
             'runtime_actor_registry_required', 'current523_complete_original_npc_definition_differs'])],
     }
-    evidence, _ = source_contract_evidence(code_root, requirements)
+    large_manifest = manifest_bytes is not None and manifest_bytes > 16 * 1024 * 1024
+    if large_manifest:
+        requirements['scripts/resources/reference_sp2_bank.gd'].extend([
+            ('load_bank', ['_json(manifest_path,expected_sha,true)']),
+            ('_json', ['manifest_json:bool=false', 'MAX_MANIFEST_JSONifmanifest_jsonelseMAX_JSON', 'digest(bytes)!=expected'])])
+        checks = [('_bank', ['file.get_length()>BANK.MAX_MANIFEST_JSON',
+                            'BANK.valid_sha(expected)', 'FileAccess.get_sha256(path)!=expected'])]
+        requirements['scripts/resources/current523_source_effect_selection.gd'].extend(checks)
+        requirements['scripts/resources/current523_source_awakening_selection.gd'] = checks
+    evidence, sources = source_contract_evidence(code_root, requirements)
     if manifest_bytes is not None:
         evidence['manifest_bytes'] = manifest_bytes
-        loader = inside(code_root, 'scripts/resources/reference_sp2_bank.gd') if code_root else None
-        source = loader.read_text(encoding='utf-8') if loader and loader.is_file() else ''
-        limit = re.search(r'(?m)^const\s+MAX_JSON\s*=\s*(\d+)\s*\*\s*1024\s*\*\s*1024\s*$', source)
-        capacity = int(limit.group(1)) * 1024 * 1024 if limit else None
+        source = sources.get('scripts/resources/reference_sp2_bank.gd', '')
+        def capacity_for(name):
+            match = re.search(r'(?m)^const\s+' + name + r'\s*=\s*(\d+)(\s*\*\s*1024\s*\*\s*1024)?\s*$', source)
+            return int(match.group(1)) * (1024 * 1024 if match.group(2) else 1) if match else None
+        action_capacity = capacity_for('MAX_JSON')
+        capacity = capacity_for('MAX_MANIFEST_JSON') if large_manifest else action_capacity
         evidence['loader_json_capacity'] = capacity
+        evidence['individual_action_json_capacity'] = action_capacity
+        evidence['all_three_manifest_readers_required'] = large_manifest
+        if large_manifest and (capacity != 32 * 1024 * 1024 or action_capacity != 16 * 1024 * 1024):
+            evidence['blockers'].append('Required split 32MiB manifest / 16MiB action limits are not present')
         if capacity is None or manifest_bytes > capacity:
-            evidence['blockers'].append('Pinned manifest exceeds actual loader MAX_JSON or its capacity is undeclared')
+            evidence['blockers'].append('Pinned manifest exceeds actual manifest reader capacity or it is undeclared')
         evidence['ready'] = not evidence['blockers']
     evidence['scope'] = 'Published source-bank consumer boundaries; runtime admission/restoration remain unverified'
     return evidence
@@ -1377,6 +1421,8 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
                 for component, evidence in features.items():
                     for blocker in evidence['blockers']:
                         log('UI FEATURE CODE PENDING [' + component + ']: ' + blocker)
+        if row.get('require_source_identity_order'):
+            result['main_ui']['identity_order_contract'] = ui_identity_order_contract(code_root)
         main_ui_document = manifest
     if 'world_map' in bindings:
         row = bindings['world_map']
@@ -1716,13 +1762,14 @@ def install(args):
             log('HANDOFF PENDING: ' + str(message))
         if root.exists() and not owned_state(root) and any(root.iterdir()):
             raise ValueError('Existing folder has no ownership receipt from this installer; no automatic takeover')
+        code_root, commit, code_inventory = packed_code(work)
+        preflight_required_code(plan, code_root)
         transport = DriveTransport(work / 'bundles', token_file=args.token_file,
                                    remote=None if args.token_file else args.remote,
                                    workers=args.workers, progress=log)
         # Bulk ZIPs only: future unknown inputs are never substituted with old packs.
         downloaded = transport.download_many(needed_transport_files(plan['packs'], work))
         resource_root, resource_state = prepare_resources(plan, downloaded, resources, work)
-        code_root, commit, code_inventory = packed_code(work)
         stage = Path(tempfile.mkdtemp(prefix='.' + root.name + '.next-', dir=root.parent))
         files = {}
         log('Preparing new runtime locally; the current game remains in place.')
